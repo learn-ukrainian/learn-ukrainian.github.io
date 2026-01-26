@@ -1,45 +1,36 @@
-title: Українські землі у ВКЛ
-phase: B2.3b [Українська історія]
-pedagogy: CBI
+id: b2-hist-26
+title: 'Українські землі у ВКЛ'
+subtitle: 'Регіональна автономія та магнатська влада'
+slug: ukrainski-zemli-u-vkl
+version: '2.0'
+phase: 'B2.3b [Українська історія]'
 focus: history
-word_target: 4000
-register: публіцистичний
+pedagogy: CBI
+word_target: 4065
 duration: 90
 transliteration: none
 tags:
 - history
-- medieval
+- vkl
 - autonomy
-- volhynia
-- kyiv
-- podillia
+- gediminids
 grammar:
-- Регіональний наратив
-- Офіційно-діловий стиль документів
-vocabulary_focus: null
+- Administrative terminology
+- Regional descriptions
 objectives:
-- Учень може пояснювати специфіку автономного статусу Волині та Київщини
-- Учень може аналізувати роль магнатських родів у збереженні державності
-- Учень може описувати соціальний устрій та побут українських земель у ВКЛ
+- Учень може пояснити специфіку автономії Волині та Київщини
+- Учень може аналізувати роль магнатів у збереженні державності
+- Учень може описувати соціальний устрій земель у ВКЛ
 vocabulary_count: 32
-slug: ukrainski-zemli-u-vkl
 content_outline:
 - section: Вступ
   words: 727
-- section: 'Регіональна автономія: Київ, Волинь, Поділля'
-  words: 727
-- section: 'Соціальний устрій: Анатомія вільного суспільства'
-  words: 727
 - section: Читання
-  words: 363
+  words: 2500
 - section: Первинні джерела
-  words: 363
+  words: 400
 - section: Деколонізаційний погляд
-  words: 363
-- section: Есе
-  words: 363
-- section: Потрібно більше практики?
-  words: 367
+  words: 438
 naturalness:
   score: 9
   status: PASS

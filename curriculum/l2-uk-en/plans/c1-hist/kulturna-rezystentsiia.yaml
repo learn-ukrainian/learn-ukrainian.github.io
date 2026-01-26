@@ -1,0 +1,87 @@
+module: kulturna-rezystentsiia
+level: c1-hist
+sequence: 126
+version: '1.0'
+title: 'Культурна резистенція: Стратегії виживання'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Як виживає культура
+  words: 451
+  subsections:
+  - Культурна резистенція — що це
+  - Не пасивність — активна стратегія
+  - Від козаків до сьогодні
+  - Структура модуля
+- section: Закодовані послання
+  words: 790
+  subsections:
+  - Езопова мова в літературі
+  - Символіка в мистецтві
+  - «Дозволене» про «заборонене»
+  - Як читати між рядків
+- section: Підпілля
+  words: 677
+  subsections:
+  - Самвидав — механізм
+  - Таємні бібліотеки
+  - Домашні концерти
+  - Мережі довіри
+- section: Подвійне життя
+  words: 677
+  subsections:
+  - Публічна лояльність
+  - Приватна резистенція
+  - Ціна компромісу
+  - Хто витримав
+- section: Церква як схованка
+  words: 564
+  subsections:
+  - УГКЦ — підпільна церква
+  - Мова богослужіння
+  - Обряд як ідентичність
+  - Священники-резистенти
+- section: Підсумок
+  words: 341
+  subsections:
+  - Резистенція — не героїзм, а стратегія
+  - Культура — не слабкість, а сила
+  - Перехід до громадянського суспільства
+word_target: 3500
+vocabulary:
+- культурна резистенція
+- стратегія виживання
+- самвидав
+- езопова мова
+- підпілля
+- подвійне життя
+- закодоване послання
+- мережа довіри
+- церква-схованка
+- компроміс
+- УГКЦ
+- криптографія
+- цензура
+- самоцензура
+- культурна травма
+activities:
+- type: strategy-analysis
+  focus: Map cultural survival strategies
+- type: text-analysis
+  focus: Aesopian language — examples and decoding
+- type: network-study
+  focus: How samvydav networks functioned
+- type: church-role
+  focus: UGCC underground church as cultural refuge
+- type: essay-response
+  focus: Яка стратегія культурного виживання була найефективнішою?
+sources:
+- name: Самвидав (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Самвидав
+  type: reference
+  notes: Samvydav
+- name: Культурний спротив (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Культурний_спротив
+  type: reference
+  notes: Cultural resistance

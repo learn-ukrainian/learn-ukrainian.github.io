@@ -2,7 +2,7 @@
 
 ## Introduction / Вступ
 
-**Ласкаво просимо до одного з найцікавіших викликів української граматики!** Ви вже знаєте числа — один, два, десять. Але чи знаєте ви, що форма іменника змінюється залежно від того, яке число стоїть перед ним? Це не просто додавання «-s» як у англійській мові. В українській мові числівники «керують» іменниками, змушуючи їх приймати різні відмінки. Це може здатися складним на перший погляд, але як тільки ви зрозумієте логіку «трьох зон», ви зможете рахувати будь-що: від гривень у гаманці до днів відпустки. Сьогодні ми опануємо цю систему, яка є ключем до справжньої розмовної впевненості. Кожне нове число — це крок до мовної майстерності!
+**Ласкаво просимо до одного з найцікавіших викликів української граматики!** Ви вже знаєте числа — один, два, десять. Але чи знаєте ви про зміну форми іменника? Вона залежить від числа перед ним. Це не просто додавання «-s» як у англійській мові. В українській мові числівники «керують» іменниками, змушуючи їх приймати різні відмінки. Це може здатися складним на перший погляд. Але після вивчення логіки «трьох зон» ви зможете рахувати будь-що. Від гривень у гаманці до днів відпустки! Сьогодні ми опануємо цю систему, яка є ключем до справжньої розмовної впевненості. Кожне нове число — це крок до мовної майстерності!
 
 In English, counting is simple: "one book, two books, ten books." The noun only has two states: singular and plural. Ukrainian, however, preserves an ancient logic that divides numbers into three distinct agreement zones. Depending on the number, the noun could be in the Nominative Singular, Genitive Singular, or Genitive Plural. This system reflects the historical development of Slavic languages and is essential for everything from shopping to telling your age. By the end of this module, you'll be able to navigate the "1-2-5" rule with surgical precision. Let's dive into the logic of counting! Кожне нове слово — це ваша перемога на шляху до знань.
 
@@ -18,7 +18,7 @@ In English, counting is simple: "one book, two books, ten books." The noun only 
 
 ### 1. The Three Counting Zones (Три зони узгодження)
 
-Українська мова ділить всі числа на три групи за типом узгодження з іменником. Уявіть це як три різні правила для різних «територій» чисел. Завжди дивіться на число і запитуйте себе: «У якій зоні я зараз?» Це допоможе вам миттєво вибрати правильну форму слова, роблячи ваше мовлення точним та природним для носіїв мови.
+Українська мова ділить всі числа на три групи за типом узгодження з іменником. Уявіть це як три різні правила для різних «територій» чисел. Завжди дивіться на число і запитуйте себе: «У якій зоні я зараз?» Це допоможе швидко вибрати правильну форму. Ваше мовлення стане природним для носіїв мови.
 
 **Зона 1: Число 1 (Одиничне правило)**
 Тут логіка подібна до англійської. Іменник стоїть у Називному відмінку однини. Однак, на відміну від англійської, числівник «один» повинен узгоджуватися з родом іменника:
@@ -26,7 +26,7 @@ In English, counting is simple: "one book, two books, ten books." The noun only 
 - **один** студент (чоловічий рід)
 - **одна** книга (жіночий рід)
 - **одне** вікно (середній рід)
-  Це правило діє для всіх чисел, що закінчуються на «один» (21, 51, 101), за винятком числа 11, яке має свою особливу історію.
+  Це правило діє для всіх чисел на «один» (21, 51, 101). Виняток — число 11, яке має особливу історію.
 
 ---
 
@@ -46,39 +46,43 @@ In English, counting is simple: "one book, two books, ten books." The noun only 
 - **п'ять** студент**ів** (багато студентів)
 - **десять** книг (багато книг)
 - **двадцять** вік**он** (багато вікон)
-  Цікаво, що форма Родового множини використовується також для нуля (нуль градусів) та невизначених кількостей (багато книг, кілька днів).
+  Цікаво, що форма Родового множини також для нуля (нуль градусів). І для невизначених кількостей (багато книг, кілька днів).
 
 ### 2. The Last Digit Rule and the 11-14 Exception (Правило останньої цифри)
 
 Для великих чисел (наприклад, 25, 53, 131) правило узгодження завжди визначається **останнім словом або останньою цифрою** числа. Це дозволяє граматичній системі залишатися стабільною навіть при рахуванні мільйонів.
 
-- Якщо число закінчується на **1** (крім 11) → використовуйте Зону 1: одна грив**ня** (21, 131).
-- Якщо закінчується на **2, 3, 4** (крім 12-14) → використовуйте Зону 2: три грив**ні** (23, 144).
-- Якщо закінчується на **5-9** або **0** → використовуйте Зону 3: п'ять грив**ень** (25, 100).
+- Якщо число закінчується на **1** (крім 11) → Зона 1.
+- Якщо закінчується на **2, 3, 4** (крім 12-14) → Зона 2.
+- Якщо закінчується на **5-9** або **0** → Зона 3.
 
 > [!important] **The 11-14 Exception: The Slavic Stubbornness**
 > Важливо запам'ятати! Хоча числа **11, 12, 13, 14** закінчуються на 1, 2, 3, 4, вони **завжди** належать до **Зони 3** (Genitive Plural).
 >
 > - одинадцять студент**ів** (не студент!)
 > - чотирнадцять книг (не книги!)
->   Це історична особливість. У мові ці числа сприймаються як частина великого "десятка" (наприклад, "одинадцять" буквально означало "один на десять"), а отже — як "багато".
+>   Це історична особливість. У мові ці числа сприймаються як частина великого "десятка". Наприклад, "одинадцять" буквально означало "один на десять". А отже — вони позначають "багато".
 
-### 3. The Grammar of Zero and Non-Specific Quantities (Нуль та багато)
+### 3. Zero and Non-Specific Quantities (Нуль та багато)
 
-In Ukrainian, it’s not just specific numbers that trigger these rules. The concepts of "zero," "many," and "several" also follow the logic of **Zone 3**. This is because they represent a collective quantity rather than individual items.
+In Ukrainian, it's not just specific numbers that trigger these case rules. The concepts of "zero," "many," "several," and "a bit" also follow the logic of **Zone 3** (Genitive Plural). This is because they represent a collective quantity rather than individual items you can count one by one. Think of Zone 3 as the language's way of expressing "mass" or "uncountable" quantities.
 
-- **Нуль (0):** нуль балів, нуль градусів (Zero points, zero degrees).
-- **Багато (Many):** багато людей, багато грошей (Many people, many money).
-- **Кілька (Several):** кілька днів, кілька хвилин (Several days, several minutes).
-- **Трохи (A bit):** трохи цукру (A bit of sugar).
+У Ukrainian мові правила узгодження працюють не лише з конкретними числами. Слова «нуль», «багато», «кілька» та «трохи» також використовують **Зону 3** (Родовий множини). Це логічно, бо вони позначають загальну кількість, а не окремі предмети.
 
-By understanding this connection, you realize that Zone 3 (Genitive Plural) is actually the most common state for objects when we are not counting them specifically one by one. It is the default "mass" form of the language.
+- **Нуль:** нуль балів, нуль градусів.
+- **Багато:** багато людей, багато грошей.
+- **Кілька:** кілька днів, кілька хвилин.
+- **Трохи:** трохи цукру.
+
+By understanding this connection, you realize that Zone 3 is actually the most common state for objects when we are not counting them specifically one by one. It is the default "mass" form of the language. Майстерність у використанні Зони 3 відкриває двері до природного мовлення!
 
 ### 4. Practical Application: Money, Time & Gender (Гроші, час і рід)
 
+Counting money is the most common situation where you'll apply these numeral agreement rules in everyday life. Ukrainian currency (hryvnia) is feminine, the dollar is masculine, and the euro is neuter. This makes them perfect examples to demonstrate how gender affects the numeral forms. Notice especially how the numeral "два" changes depending on the gender of the noun it modifies.
+
 Рахування грошей — це найчастіша ситуація, де ви будете застосовувати ці правила. Давайте подивимося на приклад з жіночим родом (гривня) та чоловічим родом (долар, євро). Зверніть увагу на зміну числівника "два" залежно від роду іменника.
 
-| Число  | Гривня (f)                 | Долар (m)                  | Євро (n)                 |
+| Число  | Гривня                     | Долар                      | Євро                     |
 | :----- | :------------------------- | :------------------------- | :----------------------- |
 | **1**  | одна грив**ня**            | один долар                 | одне євро                |
 | **2**  | дві грив**ні**             | два долар**и**             | два євр**а**             |
@@ -153,10 +157,9 @@ Change the number and adjust the noun.
 
 У цьому модулі ми опанували мистецтво узгодження чисел з речами:
 
-- Вивчили три зони: **Зона 1** (однина), **Зона 2** (2-4, р.в. однини), **Зона 3** (5-20, р.в. множини).
-- Зрозуміли «правило останньої цифри» для складних чисел.
-- Запам'ятали виняток для чисел **11–14**, які завжди потребують множини.
-- Потренувалися рахувати гроші та продукти в реальних ситуаціях на ринку.
+- Опанували систему трьох зон узгодження чисел з іменниками.
+- Навчилися застосовувати «правило останньої цифри» для великих чисел.
+- Потренувалися рахувати гроші та продукти на ринку.
 
 Mastering this agreement system is a huge milestone on your way to B1 independence. It marks the transition from speaking with simple building blocks to using the full structural logic of the Ukrainian language. Continue practicing by counting everything you see around you!
 

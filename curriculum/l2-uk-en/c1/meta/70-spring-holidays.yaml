@@ -8,18 +8,39 @@ pedagogy: CBI
 duration: 120
 transliteration: none
 tags:
-  - culture
-  - holidays
-  - easter
-  - traditions
+- culture
+- holidays
+- easter
+- traditions
 grammar:
-  - ritual songs analysis
-  - imperative in invocations
+- ritual songs analysis
+- imperative in invocations
 objectives:
-  - Learner can describe the rituals of the spring cycle (Stritennia, Easter)
-  - Learner can explain the symbolism of pysanka and paska
-  - Learner can analyze the lyrics of vesnianky (spring songs)
-  - Learner can discuss the concept of "summoning spring"
+- Learner can describe the rituals of the spring cycle (Stritennia, Easter)
+- Learner can explain the symbolism of pysanka and paska
+- Learner can analyze the lyrics of vesnianky (spring songs)
+- Learner can discuss the concept of "summoning spring"
 vocabulary_count: 30
 vocab_count: 30
 slug: 70-spring-holidays
+content_outline:
+- section: Вступ — весняний цикл
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Хрестини: baptism, godparents'' role, gifts'
+  - 'Сватання: matchmaking, formal proposal'
+  - 'Заручини: engagement rituals'
+  - 'Весілля: multi-day celebration, rituals'
+  - 'Посаг: dowry traditions'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

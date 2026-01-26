@@ -1,22 +1,44 @@
 module: c1-57
-title: 'Народна медицина'
-subtitle: 'Ukrainian Traditional Healing'
+title: Народна медицина
+subtitle: Ukrainian Traditional Healing
 version: '2.0'
-phase: 'C1.5 Folk Culture & Fine Arts'
-focus: 'vocabulary'
-pedagogy: 'Immersion & Analysis'
+phase: C1.5 Folk Culture & Fine Arts
+focus: vocabulary
+pedagogy: Immersion & Analysis
 duration: 120
 transliteration: none
 tags:
-  - culture
-  - folk-medicine
-  - herbs
+- culture
+- folk-medicine
+- herbs
 grammar:
-  - 'Medical and herbal terminology'
-  - 'Descriptive and instructive registers'
+- Medical and herbal terminology
+- Descriptive and instructive registers
 objectives:
-  - 'Learner understands the social role of healers (знахарі) in traditional Ukrainian society'
-  - 'Learner can identify common medicinal plants and their symbolic meanings'
-  - 'Learner can analyze the structure of healing incantations (замовляння)'
+- Learner understands the social role of healers (знахарі) in traditional Ukrainian
+  society
+- Learner can identify common medicinal plants and their symbolic meanings
+- Learner can analyze the structure of healing incantations (замовляння)
 vocabulary_count: 30
 slug: 57-narodna-medytsyna
+content_outline:
+- section: Вступ — Народна медицина
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Колядки (Christmas carols): structure, themes, performers'
+  - 'Щедрівки (New Year songs): wishes, symbolic meanings'
+  - 'Веснянки (spring songs): calling spring, circle dances'
+  - 'Купальські пісні: midsummer night traditions'
+  - Regional variations in ritual song traditions
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

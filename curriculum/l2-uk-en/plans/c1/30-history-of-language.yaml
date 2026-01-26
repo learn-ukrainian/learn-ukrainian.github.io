@@ -1,0 +1,96 @@
+module: 30-history-of-language
+level: c1
+sequence: 30
+version: '2.0'
+title: 'Історія мови: Від Русі до сьогодення'
+focus: history
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Історія української мови
+  url: https://r2u.org.ua/
+  type: primary
+  notes: Comprehensive language history
+- name: Шевельов - Історична фонологія
+  url: https://mova.info/
+  type: reference
+  notes: Academic linguistic history
+content_outline:
+- section: Вступ — Давньоруський період
+  words: 500
+  points:
+  - Праслов'янська спадщина
+  - Давньоруська мова
+  - Формування східнослов'янських мов
+- section: Середньоукраїнська доба
+  words: 700
+  points:
+  - XIV-XVIII століття
+  - Вплив церковнослов'янської
+  - Козацька доба
+- section: Мовні заборони
+  words: 800
+  points:
+  - Валуєвський циркуляр (1863)
+  - Емський указ (1876)
+  - Наслідки для мови
+- section: Відродження мови
+  words: 600
+  points:
+  - Котляревський та нова література
+  - Шевченко і літературна мова
+  - Стандартизація
+- section: Радянський період
+  words: 600
+  points:
+  - Українізація 1920-х
+  - Репресії 1930-х
+  - Русифікація
+- section: Сучасний період
+  words: 500
+  points:
+  - Незалежність
+  - Мовний закон 2019
+  - Мовна ситуація сьогодні
+- section: Практичне завдання
+  words: 300
+  points:
+  - Аналіз історичних текстів
+  - Дискусія про мовну політику
+  - Порівняльний аналіз періодів
+word_target: 4000
+vocabulary:
+  required:
+  - давньоруський (Old East Slavic)
+  - праслов'янський (Proto-Slavic)
+  - церковнослов'янський (Church Slavonic)
+  - стандартизація (standardization)
+  - українізація (Ukrainization)
+  - русифікація (Russification)
+  - мовна політика (language policy)
+  - лінгвоцид (linguicide)
+  - відродження (revival)
+  - кодифікація (codification)
+  recommended:
+  - глотоцид (glottocide)
+  - літературна мова (literary language)
+  - койне (koine)
+  - діахронія (diachrony)
+  - етимологія (etymology)
+  forbidden: []
+activities:
+  types_required:
+  - group-sort
+  - quiz
+  - cloze
+  - fill-in
+  - match-up
+  - true-false
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c1-31 (Diaspora Ukrainian)
+- c1-47 (Archaic Verb Forms)
+- c1-35 (C1.2 Checkpoint)

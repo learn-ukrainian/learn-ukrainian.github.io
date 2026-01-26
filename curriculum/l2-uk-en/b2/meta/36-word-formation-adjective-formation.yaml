@@ -28,3 +28,38 @@ slug: 36-word-formation-adjective-formation
 naturalness:
   score: 9
   status: PASS
+content_outline:
+- section: Вступ — прикметники
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Suffix -ський/-цький (belonging/origin)
+  words: 400
+  points:
+  - Україна → український (Ukrainian)
+  - Німеччина → німецький (German)
+  - місто → міський (urban)
+  - село → сільський (rural)
+- section: Suffix -ний/-альний (quality/relation)
+  words: 400
+  points:
+  - нація → національний (national)
+  - музика → музикальний / музичний (musical)
+  - центр → центральний (central)
+  - професія → професійний (professional)
+- section: Compound Adjectives
+  words: 400
+  points:
+  - синьо-жовтий (blue-yellow)
+  - білолиций (white-faced)
+  - науково-публіцистичний (scientific-journalistic)
+  - головнокомандувач → who is head commander
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

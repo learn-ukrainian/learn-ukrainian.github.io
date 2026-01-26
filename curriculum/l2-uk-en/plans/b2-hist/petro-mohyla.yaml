@@ -1,0 +1,105 @@
+module: petro-mohyla
+level: b2-hist
+sequence: 35
+version: '1.0'
+title: 'Петро Могила: Реформатор церкви'
+focus: history
+pedagogy: CBI
+objectives:
+- Understand the significance of Petro Mohyla's educational reforms
+- Analyze the impact of the Kyiv-Mohyla Academy on Ukrainian culture
+- Discuss the 'Mohylian Era' in Ukrainian history
+- Use religious and educational terminology of the 17th century
+content_outline:
+- section: Вступ
+  words: 500
+  subsections:
+  - Crisis of Orthodoxy post-Union
+  - Need for new strategy
+- section: Шлях до митри
+  words: 900
+  subsections:
+  - Moldovan origins
+  - Western education
+  - Military service
+  - Tonsure at Lavra
+- section: Заснування Академії
+  words: 900
+  subsections:
+  - Merger of schools (1632)
+  - Latin curriculum for Orthodox defense
+  - Resistance from traditionalists
+  - Role of 'spudei' (students)
+- section: Реформатор церкви
+  words: 600
+  subsections:
+  - Legalization of hierarchy (1632/1633)
+  - Rebuilding St. Sophia and Desyatynna
+  - Liturgical reforms (Trebnyk)
+  - Discipline and education of clergy
+- section: Спадщина Могили
+  words: 250
+  subsections:
+  - Kyiv as the 'New Jerusalem'
+  - Baroque culture
+  - Lasting impact on Ukrainian identity
+- section: Читання
+  words: 50
+  subsections:
+  - Primary sources assignment
+- section: Первинні джерела
+  words: 500
+  subsections:
+  - Testament of Mohyla
+  - Inscription on Desyatynna
+  - Linguistic analysis
+- section: Деколонізаційний погляд
+  words: 150
+  subsections:
+  - Myth of Latinization
+  - Intellectual sovereignty
+  - Summary of achievements
+  - Reflection on 'Western tools for Eastern faith'
+- section: Потрібно більше практики?
+  words: 15
+  subsections:
+  - Engagement
+word_target: 4000
+vocabulary:
+- митрополит
+- академія
+- реформа
+- колегіум
+- полеміка
+- православ'я
+- унія
+- руїна
+- канонізація
+- друкарня
+- спудей
+- риторика
+- латина
+- бароко
+- меценат
+activities:
+- type: quiz
+  focus: comprehension
+- type: match-up
+  focus: vocabulary
+- type: fill-in
+  focus: context
+- type: true-false
+  focus: facts
+- type: unjumble
+  focus: syntax
+- type: error-correction
+  focus: grammar
+- type: cloze
+  focus: reconstruction
+sources:
+- name: Історія України-Руси
+  url: http://litopys.org.ua/hrushrus/iur.htm
+  type: secondary
+- name: Petro Mohyla (Encyclopedia of Ukraine)
+  url: http://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CM%5CO%5CMohylaPetro.htm
+  type: reference

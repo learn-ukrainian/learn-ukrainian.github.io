@@ -1,0 +1,79 @@
+module: at-the-pharmacy
+level: a2
+sequence: 60
+version: '2.0'
+title: At the Pharmacy
+subtitle: Buying Medicine
+focus: practical
+pedagogy: PPP
+objectives:
+- Learner can ask for medicine by symptoms
+- Learner can understand dosage instructions
+- Learner can read medicine labels
+- Learner can discuss side effects
+content_outline:
+- section: 'Introduction: Ukrainian Pharmacies'
+  words: 100
+  points:
+  - Pharmacy types (аптека)
+  - Over-the-counter vs prescription
+  - Pharmacy vocabulary overview
+- section: Asking for Medicine
+  words: 200
+  points:
+  - Мені потрібно щось від...
+  - Describing symptoms
+  - Common ailments
+- section: Understanding Labels
+  words: 200
+  points:
+  - дозування, застосування
+  - протипоказання
+  - Reading instructions
+- section: Dosage Instructions
+  words: 200
+  points:
+  - таблетка, капсула, сироп
+  - раз на день, двічі на день
+  - Before/after meals
+- section: Side Effects and Warnings
+  words: 150
+  points:
+  - побічні ефекти
+  - Allergies and interactions
+  - When to see a doctor
+- section: 'Practice: Pharmacy Dialogue'
+  words: 150
+  points:
+  - Buy medicine for common ailments
+  - Ask about dosage
+word_target: 1000
+vocabulary:
+  required:
+  - аптека (pharmacy)
+  - ліки (medicine)
+  - таблетка (pill)
+  - рецепт (prescription)
+  - дозування (dosage)
+  - біль (pain)
+  - кашель (cough)
+  - температура (fever)
+  recommended:
+  - сироп (syrup)
+  - мазь (ointment)
+  - побічний ефект (side effect)
+  - протипоказання (contraindication)
+  - алергія (allergy)
+  - фармацевт (pharmacist)
+  forbidden: []
+activities:
+  types_required:
+  - vocabulary-drill
+  - dialogue
+  - role-play
+  - fill-in
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a2-61 (Hotel Accommodation)

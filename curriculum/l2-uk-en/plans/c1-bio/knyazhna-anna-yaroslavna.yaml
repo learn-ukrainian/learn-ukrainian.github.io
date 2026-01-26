@@ -1,0 +1,116 @@
+module: knyazhna-anna-yaroslavna
+level: c1-bio
+sequence: 5
+version: '2.0'
+title: 'Княжна Анна Ярославна: Королева Франції'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти роль Анни Ярославни в історії Європи
+- Проаналізувати вплив Київської Русі на міжнародну політику XI століття
+- Вивчити біографічну лексику та історичну термінологію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Анна_Ярославна
+    title: Анна Ярославна (Wikipedia UA)
+    notes: Biography, French queenship, regency
+  secondary:
+  - url: https://uk.wikipedia.org/wiki/Реймське_Євангеліє
+    title: Реймське Євангеліє
+    notes: Her legacy in France
+  - url: https://uk.wikipedia.org/wiki/Генріх_I_(король_Франції)
+    title: Генріх I (король Франції)
+    notes: Context of her marriage
+content_outline:
+- section: Вступ — Руська принцеса на французькому троні
+  words: 400
+  subsections:
+  - Унікальність Анни в європейській історії
+  - Значення для української та французької пам'яті
+  - Джерела про її життя
+- section: Дитинство в Києві
+  words: 600
+  subsections:
+  - Народження та походження по материнській лінії
+  - Освіта при дворі Ярослава
+  - Грамотність та культура
+  - Порівняння Києва та Парижа XI століття
+- section: Шлюб із Генріхом I
+  words: 700
+  subsections:
+  - Посольство до Києва
+  - Чому Генріх обрав руську принцесу
+  - Подорож до Франції
+  - Весілля в Реймсі 1051 року
+- section: Королева Франції
+  words: 700
+  subsections:
+  - Народження синів (Філіп, Роберт, Гуго)
+  - Політичний вплив
+  - Підписи на документах кирилицею
+  - Реймське Євангеліє
+- section: Вдівство та регентство
+  words: 700
+  subsections:
+  - Смерть Генріха 1060 року
+  - Регентство при малолітньому Філіпі
+  - Шлюб із Раулем де Крепі
+  - Скандал та церковне засудження
+- section: Останні роки та спадщина
+  words: 600
+  subsections:
+  - Монастир у Санлісі
+  - Смерть та поховання
+  - Пам'ять про Анну у Франції
+  - Сучасні вшанування
+- section: Підсумок — Міст між світами
+  words: 300
+  subsections:
+  - Анна як символ зв'язків Русі з Європою
+  - Її роль у жіночій історії
+  - Спадщина для України
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - княжна
+  - королева
+  - регент
+  - посольство
+  - грамотність
+  - вінчання
+  - вдова
+  - спадкоємець
+  - монастир
+  - євангеліє
+  recommended:
+  - придане
+  - династичний
+  - коронація
+  - печатка
+  - абатство
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  - critical-analysis
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-04 (Yaroslav Mudryi - father)
+  related:
+  - c1-bio-04 (Yaroslav Mudryi - father and his dynasty)
+  - c1-bio-06 (Mykhailo Chernihivskyi - later period)
+  - c1-bio-07 (Roksolana - another Ukrainian woman abroad)
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

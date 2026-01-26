@@ -1,0 +1,87 @@
+module: ukrainske-pytannia-xxi
+level: c1-hist
+sequence: 134
+version: '1.0'
+title: Українське питання XXI століття
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Українське питання
+  words: 451
+  subsections:
+  - «Українське питання» — історичний термін
+  - Чи воно вирішене?
+  - Що означає для XXI століття
+  - Структура модуля
+- section: Всі теми разом
+  words: 790
+  subsections:
+  - Історіографія — як ми знаємо
+  - Джерела — на чому базуємось
+  - Механізми — як працює імперія
+  - Агентність — як Україна відповідає
+- section: Російське питання
+  words: 677
+  subsections:
+  - Імперія — чи може існувати без України
+  - Війна — не тільки територія
+  - Що Росія втрачає
+  - Майбутнє російсько-українських відносин
+- section: Європейське питання
+  words: 677
+  subsections:
+  - ЄС — чи готовий до України
+  - Україна — чи готова до ЄС
+  - Що означає інтеграція
+  - Ризики і можливості
+- section: Глобальне значення
+  words: 564
+  subsections:
+  - Україна як прецедент
+  - Міжнародний порядок
+  - Деколонізація XXI століття
+  - Що світ вчиться від України
+- section: Підсумок
+  words: 341
+  subsections:
+  - Українське питання — відкрите
+  - Відповідь пишеться зараз
+  - Перехід до фінального синтезу
+word_target: 3500
+vocabulary:
+- «українське питання»
+- імперія
+- деколонізація
+- інтеграція
+- міжнародний порядок
+- прецедент
+- агентність
+- майбутнє
+- суверенітет
+- самовизначення
+- «кінець історії»
+- мультиполярність
+- постколоніалізм
+- глобальний Південь
+- трансформація
+activities:
+- type: integration
+  focus: Connect all course themes
+- type: russia-analysis
+  focus: What does Ukraine mean for Russia's future?
+- type: europe-analysis
+  focus: EU-Ukraine integration challenges
+- type: global-significance
+  focus: Ukraine as global precedent
+- type: essay-response
+  focus: Чи 'українське питання' вирішене?
+sources:
+- name: Україна у XXI столітті (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Історія_України#XXI_століття
+  type: reference
+  notes: 21st century Ukraine
+- name: Російсько-українська війна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Російсько-українська_війна
+  type: reference
+  notes: Current war

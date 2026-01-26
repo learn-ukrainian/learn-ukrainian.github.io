@@ -1,0 +1,87 @@
+module: zhinky-v-revoiuutsiiakh
+level: c1-hist
+sequence: 130
+version: '1.0'
+title: 'Жінки в революціях: Прихована історія'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Невидимі героїні
+  words: 451
+  subsections:
+  - Жінки в українській історії — де вони?
+  - Прихована агентність
+  - Від 1917 до 2022
+  - Структура модуля
+- section: 1917-1921 — Революція і війна
+  words: 677
+  subsections:
+  - Жіночі організації УНР
+  - Олена Теліга — символ
+  - Медицина і тил
+  - Чому забули
+- section: 1990 — Гранітна революція
+  words: 564
+  subsections:
+  - Студентки — половина учасників
+  - Організаторки
+  - Чому в історії — тільки чоловіки
+  - Приклади
+- section: 2004 і 2014
+  words: 790
+  subsections:
+  - Помаранчева — жінки на сцені
+  - Євромайдан — жінки в бою
+  - «Жіноча сотня»
+  - Волонтерство — переважно жіноче
+- section: 2022 — Нова видимість
+  words: 677
+  subsections:
+  - Жінки в ЗСУ
+  - Волонтерки
+  - Політичне лідерство
+  - Зміна наративу
+- section: Підсумок
+  words: 341
+  subsections:
+  - Жінки завжди були
+  - Історію писали чоловіки
+  - Перехід до 2022 мобілізації
+word_target: 3500
+vocabulary:
+- жіночий рух
+- прихована історія
+- агентність
+- волонтерка
+- «Жіноча сотня»
+- гендер
+- лідерство
+- видимість
+- наратив
+- героїня
+- фемінізм
+- патріархат
+- «невидима праця»
+- Теліга
+- рівність
+activities:
+- type: recovery-study
+  focus: Recover women's roles in 1917-1921
+- type: visibility-analysis
+  focus: Why women disappeared from revolutionary history
+- type: maidan-women
+  focus: Women at Euromaidan — roles and recognition
+- type: 2022-change
+  focus: How 2022 changed women's visibility
+- type: essay-response
+  focus: Чому жінок 'забули' в українській революційній історії?
+sources:
+- name: Жіночий рух в Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Жіночий_рух_в_Україні
+  type: reference
+  notes: Women's movement
+- name: Євромайдан (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Євромайдан
+  type: reference
+  notes: Women at Euromaidan

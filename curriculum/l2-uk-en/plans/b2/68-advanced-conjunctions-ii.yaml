@@ -1,0 +1,22 @@
+module: 68-advanced-conjunctions-ii
+level: b2
+sequence: 68
+version: '1.0'
+title: 'Складні Сполучники II: Час та Умова'
+subtitle: Advanced Conjunctions II - Temporal and Conditional
+focus: grammar
+pedagogy: Grammar
+objectives:
+- Учень може будувати складні часові ланцюжки для опису послідовних та паралельних подій
+- Учень вміє розрізняти реальні та гіпотетичні умови, використовуючи відповідні сполучники
+- Учень розуміє використання сполучників щойно та відколи в історичних та особистих розповідях
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

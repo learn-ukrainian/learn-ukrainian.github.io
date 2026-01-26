@@ -1,0 +1,100 @@
+module: hramoty-ta-akty
+level: c1-hist
+sequence: 17
+version: '1.0'
+title: 'Грамоти та акти: Княжі документи'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Документи vs. літописи
+  words: 400
+  subsections:
+  - Що таке грамота?
+  - Чим документи відрізняються від літописів?
+  - Типи княжих документів
+  - Чому важливі для історика
+- section: Типологія документів
+  words: 600
+  subsections:
+  - Жалувані грамоти — пожалування земель
+  - Договірні грамоти — між князями
+  - Уставні грамоти — закони
+  - Духовні грамоти — заповіти
+  - Церковні акти
+- section: Дипломатика — наука про документи
+  words: 600
+  subsections:
+  - Що таке дипломатика?
+  - Формуляр документа — структура
+  - Печатки і підписи
+  - Як визначити автентичність
+  - Підробки — навіщо і як
+- section: Ключові документи
+  words: 700
+  subsections:
+  - Грамота Мстислава Володимировича (1130)
+  - Руська Правда — збірник законів
+  - Церковний устав Володимира
+  - Договори з Візантією
+- section: Фрагмент — Грамота Мстислава
+  words: 500
+  subsections:
+  - Текст (з глосами)
+  - Формуляр — як побудовано
+  - Що дізнаємося про суспільство?
+  - Мова документа
+- section: Берестяні грамоти — особливий випадок
+  words: 400
+  subsections:
+  - Новгородські знахідки
+  - Побутове листування
+  - Унікальне вікно в повсякдення
+  - Українські приклади
+- section: Підсумок
+  words: 300
+  subsections:
+  - Документи як доповнення до літописів
+  - Критичний підхід — ті ж правила
+  - Підготовка до козацьких документів
+word_target: 3500
+vocabulary:
+- грамота
+- акт
+- дипломатика
+- формуляр
+- печатка
+- жалувана грамота
+- договір
+- устав
+- заповіт
+- автентичність
+- протограф
+- список
+- канцелярія
+- скрипторій
+- підробка
+activities:
+- type: reading
+  focus: Mstislav's Charter with glosses
+- type: critical-analysis
+  focus: Apply diplomatic method — analyze formulary
+- type: comparative-study
+  focus: Compare Kyivan charter with Western European charter
+- type: reading
+  focus: Identify potential forgery signs in a document
+- type: essay-response
+  focus: Чому документи важливіші за літописи для соціальної історії?
+sources:
+- name: Грамота (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Грамота
+  type: reference
+  notes: Document types
+- name: Давньоруські грамоти
+  url: https://uk.wikipedia.org/wiki/Давньоруські_грамоти
+  type: reference
+  notes: Overview of princely documents
+- name: Берестяні грамоти
+  url: https://uk.wikipedia.org/wiki/Берестяні_грамоти
+  type: reference
+  notes: Birch bark letters

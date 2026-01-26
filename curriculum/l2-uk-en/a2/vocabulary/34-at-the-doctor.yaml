@@ -134,3 +134,100 @@ items:
   translation: paint, dye
   pos: noun
   gender: f
+- lemma: лікарня
+  ipa: /likˈarnja/
+  translation: hospital
+  pos: noun
+  gender: f
+- lemma: таблетка
+  ipa: /tablˈɛtka/
+  translation: pill, tablet
+  pos: noun
+  gender: f
+- lemma: рука
+  ipa: /ruˈka/
+  translation: hand, arm
+  pos: noun
+  gender: f
+- lemma: оглядати
+  ipa: /oɦlˈjadatɪ/
+  translation: to examine, to inspect
+  pos: verb
+- lemma: хвороба
+  ipa: /xʋɔrˈɔba/
+  translation: illness, disease
+  pos: noun
+  gender: f
+- lemma: однина
+  ipa: /odnɪˈna/
+  translation: singular (number)
+  pos: noun
+  gender: f
+- lemma: множина
+  ipa: /mnɔʒɪˈna/
+  translation: plural (number)
+  pos: noun
+  gender: f
+- lemma: температура
+  ipa: /tɛmpɛraˈtura/
+  translation: temperature
+  pos: noun
+  gender: f
+- lemma: кашель
+  ipa: /ˈkaʃɛlʲ/
+  translation: cough
+  pos: noun
+  gender: m
+- lemma: горло
+  ipa: /ˈhɔrlɔ/
+  translation: throat
+  pos: noun
+  gender: n
+- lemma: живіт
+  ipa: /ʒɪˈʋit/
+  translation: stomach, belly
+  pos: noun
+  gender: m
+- lemma: спина
+  ipa: /spɪˈna/
+  translation: back
+  pos: noun
+  gender: f
+- lemma: голова
+  ipa: /hɔlɔˈʋa/
+  translation: head
+  pos: noun
+  gender: f
+- lemma: очі
+  ipa: /ˈot͡ʃi/
+  translation: eyes
+  pos: noun
+  gender: n
+- lemma: ноги
+  ipa: /ˈnɔhɪ/
+  translation: legs, feet
+  pos: noun
+  gender: f
+- lemma: зуби
+  ipa: /ˈzubɪ/
+  translation: teeth
+  pos: noun
+  gender: m
+- lemma: руки
+  ipa: /ˈrukɪ/
+  translation: hands, arms (plural)
+  pos: noun
+  gender: f
+- lemma: боліти
+  ipa: /bɔlˈitɪ/
+  translation: to hurt, to ache
+  pos: verb
+- lemma: хворіти
+  ipa: /xʋɔrˈitɪ/
+  translation: to be ill, to be sick
+  pos: verb
+- lemma: ліки
+  ipa: /lˈikɪ/
+  translation: medicine, medication
+  pos: noun
+  gender: n

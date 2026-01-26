@@ -1,0 +1,109 @@
+module: 14-stylistic-connectors
+level: b2
+sequence: 14
+version: '1.0'
+title: Стилістичні сполучники
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Ukrainian State Standard 2024 - Connectors
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Connector inventory for B2 level
+- name: Сучасна українська літературна мова - Сполучники
+  url: https://uk.wikipedia.org/wiki/Сполучник
+  type: secondary
+  notes: Classification of Ukrainian connectors
+- name: CEFR B2 Cohesion
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 text cohesion requirements
+content_outline:
+- section: Вступ — Сполучники як засіб зв'язку
+  words: 400
+  points:
+  - Роль сполучників у побудові тексту
+  - Різниця між простими та стилістичними сполучниками
+  - Регістр і вибір сполучників
+- section: Сполучники протиставлення
+  words: 700
+  points:
+  - Проте, втім (however)
+  - Зате (but on the other hand)
+  - Натомість (instead)
+  - Навпаки (on the contrary)
+  - Стилістичні відтінки кожного
+- section: Сполучники приєднання
+  words: 600
+  points:
+  - Причому (moreover/and)
+  - До того ж (besides)
+  - Крім того (in addition)
+  - Тим більше (especially/all the more)
+  - Контексти вживання
+- section: Сполучники наслідку
+  words: 600
+  points:
+  - Тому (therefore)
+  - Отже (thus/so)
+  - Відтак (consequently)
+  - Внаслідок чого (as a result of which)
+  - Формальність кожного варіанту
+- section: Допустові сполучники
+  words: 700
+  points:
+  - Хоча (although)
+  - Незважаючи на те що (despite the fact that)
+  - Попри те що (despite)
+  - Дарма що (even though - colloquial)
+  - Регістрові відмінності
+- section: Вибір за регістром
+  words: 500
+  points:
+  - Формальні варіанти (офіційний стиль)
+  - Нейтральні варіанти (загальне вживання)
+  - Неформальні варіанти (розмовний стиль)
+  - Типові помилки змішування регістрів
+- section: Практика і підсумок
+  words: 300
+  points:
+  - Інтеграція у власне мовлення
+  - Елегантність вираження думок
+  - Підготовка до модуля 15
+word_target: 3800
+vocabulary:
+  required:
+  - сполучник (connector/conjunction)
+  - протиставлення (contrast)
+  - приєднання (addition)
+  - наслідок (consequence)
+  - допуст (concession)
+  - проте (however)
+  - втім (nevertheless)
+  - причому (moreover)
+  - отже (thus)
+  - незважаючи на (despite)
+  recommended:
+  - зв'язність (cohesion)
+  - текстовий зв'язок (textual connection)
+  - логічні відношення (logical relations)
+  - елегантність (elegance)
+  - стилістичний відтінок (stylistic nuance)
+  forbidden: []
+activities:
+  types_required:
+  - group-sort
+  - error-correction
+  - quiz
+  - fill-in
+  - essay-response
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b2-15 (Register Introduction)
+- 'b2-22 (Register: Literary Ukrainian)'
+- b2-25 (B2.1b Checkpoint)

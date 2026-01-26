@@ -1,0 +1,96 @@
+module: capstone-revision
+level: c2
+sequence: 92
+version: '2.0'
+title: Дипломний проєкт — Редагування
+focus: practice
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Редагування наукового тексту — Практичний посібник
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Guidelines for editing academic texts
+- name: Культура наукової мови
+  url: https://lcorp.ulif.org.ua/
+  type: reference
+  notes: Scientific language culture and norms
+- name: Типові помилки в академічних текстах
+  url: https://naqa.gov.ua/
+  type: secondary
+  notes: Common errors in Ukrainian academic writing
+content_outline:
+- section: Вступ — Редагування як етап творення
+  words: 400
+  points:
+  - Різниця між написанням і редагуванням
+  - Рівні редагування (зміст, структура, мова)
+  - Відстань від тексту перед редагуванням
+- section: Змістове редагування
+  words: 700
+  points:
+  - Перевірка логіки аргументації
+  - Узгодженість тез і доказів
+  - Повнота розкриття теми
+  - Відповідність меті та завданням
+- section: Структурне редагування
+  words: 600
+  points:
+  - Пропорційність розділів
+  - Логічні переходи між частинами
+  - Абзацна структура
+  - Когезія (зв'язність тексту)
+- section: Мовне редагування
+  words: 700
+  points:
+  - Відповідність науковому стилю
+  - Термінологічна послідовність
+  - Усунення повторів і штампів
+  - Синтаксична різноманітність
+- section: Робота зі зворотним зв'язком
+  words: 500
+  points:
+  - Отримання відгуків від рецензентів
+  - Інтерпретація критики
+  - Пріоритизація змін
+  - Обґрунтування авторських рішень
+- section: Практика — Редагування роботи
+  words: 800
+  points:
+  - Самоперевірка за чеклістом
+  - Редагування одного розділу (повний цикл)
+  - Обмін роботами для взаємного рецензування
+  - Інтеграція зворотного зв'язку
+word_target: 4000
+vocabulary:
+  required:
+  - редагування (editing/revision)
+  - змістове редагування (content editing)
+  - структурне редагування (structural editing)
+  - мовне редагування (language editing)
+  - когезія (cohesion)
+  - узгодженість (consistency)
+  - рецензування (reviewing)
+  - зворотний зв'язок (feedback)
+  - чеклист (checklist)
+  - доопрацювання (revision)
+  recommended:
+  - штамп (cliche)
+  - тавтологія (tautology)
+  - плеоназм (pleonasm)
+  - пасивний стан (passive voice)
+  - номіналізація (nominalization)
+  forbidden: []
+activities:
+  types_required:
+  - match-up
+  - essay-response
+  - quiz
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-93 (Capstone Polish)
+- c2-94 (Capstone Defense)

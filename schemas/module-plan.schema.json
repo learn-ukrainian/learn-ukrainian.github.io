@@ -1,0 +1,245 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/module-plan.schema.json",
+  "title": "Module Plan",
+  "description": "Schema for individual module plans (plans/{level}/{slug}.yaml)",
+  "type": "object",
+  "required": ["module", "level", "sequence", "version", "title", "focus", "pedagogy", "objectives", "content_outline", "word_target"],
+  "properties": {
+    "module": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "description": "Module slug (e.g., 01-how-to-talk-about-grammar)"
+    },
+    "level": {
+      "type": "string",
+      "pattern": "^(a1|a2|b1|b2|c1|c2|b2-hist|b2-pro|c1-bio|c1-hist|c1-pro|c2-pro|lit)$"
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Module number within the level"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+$"
+    },
+    "title": {
+      "type": "string",
+      "description": "Module title in Ukrainian"
+    },
+    "subtitle": {
+      "type": "string",
+      "description": "Optional English subtitle"
+    },
+    "focus": {
+      "type": "string",
+      "enum": ["grammar", "vocabulary", "cultural", "history", "biography", "literature", "integration", "checkpoint", "professional"],
+      "description": "Primary focus of the module"
+    },
+    "pedagogy": {
+      "type": "string",
+      "enum": ["TTT", "PPP", "seminar", "workshop", "review"],
+      "description": "Teaching approach"
+    },
+    "objectives": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "description": "Learning objectives"
+    },
+    "content_outline": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["section", "words"],
+        "properties": {
+          "section": {
+            "type": "string",
+            "description": "Section title (will become H2 header)"
+          },
+          "words": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Target word count for this section"
+          },
+          "subsections": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "H3 subsections within this section"
+          },
+          "key_concepts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Key concepts/vocabulary to introduce"
+          },
+          "primary_sources": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Required primary source excerpts (for history/lit modules)"
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "word_target": {
+      "type": "integer",
+      "minimum": 500,
+      "description": "Total word count target (excluding summary)"
+    },
+    "word_tolerance": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 0.2,
+      "default": 0.05,
+      "description": "Acceptable tolerance (e.g., 0.05 = ±5%)"
+    },
+    "vocabulary": {
+      "type": "object",
+      "properties": {
+        "required": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "description": "Words that MUST appear in content"
+        },
+        "recommended": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Words that MAY appear"
+        },
+        "forbidden": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Words that MUST NOT appear (too advanced)"
+        }
+      }
+    },
+    "activities": {
+      "type": "object",
+      "required": ["types_required", "min_items_per_type"],
+      "properties": {
+        "types_required": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "quiz", "fill-in", "match-up", "true-false", "unjumble",
+              "group-sort", "anagram", "error-correction", "cloze",
+              "select", "translate", "mark-the-words", "highlight-morphemes",
+              "essay-response", "comparative-study", "reading",
+              "critical-analysis", "authorial-intent"
+            ]
+          },
+          "description": "Activity types that must be present"
+        },
+        "min_items_per_type": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Minimum items for each required type"
+        },
+        "total_min_items": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Minimum total activity items"
+        },
+        "no_mirroring": {
+          "type": "boolean",
+          "default": true,
+          "description": "Activities must not copy lesson text verbatim"
+        }
+      }
+    },
+    "connects_to": {
+      "type": "object",
+      "properties": {
+        "previous": {
+          "type": ["string", "null"]
+        },
+        "next": {
+          "type": ["string", "null"]
+        },
+        "related": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Links to related modules"
+    },
+    "constraints": {
+      "type": "object",
+      "properties": {
+        "min_engagement_boxes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "min_examples": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "immersion_target": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "naturalness_threshold": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "min_primary_sources": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "For history/literature modules"
+        }
+      },
+      "description": "Override level constraints if needed"
+    },
+    "sources": {
+      "type": ["object", "array"],
+      "description": "Primary and secondary sources for content"
+    },
+    "changelog": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["version", "date", "changes"],
+        "properties": {
+          "version": {
+            "type": "string",
+            "pattern": "^[0-9]+\\.[0-9]+$"
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "changes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          }
+        }
+      },
+      "description": "Version history for plan changes (per Epic #465 review)"
+    }
+  },
+  "additionalProperties": false
+}

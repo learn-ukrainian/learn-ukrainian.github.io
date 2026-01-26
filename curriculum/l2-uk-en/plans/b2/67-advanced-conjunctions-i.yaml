@@ -1,0 +1,22 @@
+module: 67-advanced-conjunctions-i
+level: b2
+sequence: 67
+version: '1.0'
+title: 'Складні Сполучники I: Причина та Допуск'
+subtitle: Advanced Conjunctions I - Causal and Concessive
+focus: grammar
+pedagogy: Grammar
+objectives:
+- Учень може будувати складні причинно-наслідкові ланцюжки, використовуючи різноманітні сполучники
+- Учень вміє висловлювати допуск та протиставлення в офіційному та публіцистичному стилях
+- Учень розуміє стилістичні відтінки між бо, тому що та оскільки
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

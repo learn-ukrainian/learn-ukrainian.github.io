@@ -1,0 +1,80 @@
+module: shopping-services
+level: a2
+sequence: 53
+version: '2.0'
+title: Shopping and Services
+subtitle: Buying and Paying
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can buy items in a shop
+- Learner can ask for price and pay
+- Learner can use service vocabulary (checkout, receipt)
+- Learner can describe payment methods
+content_outline:
+- section: 'Introduction: Shopping in Ukraine'
+  words: 100
+  points:
+  - Types of stores
+  - Shopping culture
+  - Payment methods
+- section: In the Store
+  words: 200
+  points:
+  - магазин, супермаркет, ринок
+  - продавець, покупець
+  - Finding products
+- section: Prices and Paying
+  words: 200
+  points:
+  - Скільки коштує?
+  - платити карткою/готівкою
+  - Accusative for prices
+- section: At the Checkout
+  words: 200
+  points:
+  - каса, чек, здача
+  - знижка, акція
+  - Checkout dialogue
+- section: Services
+  words: 150
+  points:
+  - хімчистка, перукарня
+  - ремонт, доставка
+  - Service vocabulary
+- section: 'Practice: Shopping Dialogue'
+  words: 150
+  points:
+  - Buy items in a store
+  - Ask about services
+word_target: 1000
+vocabulary:
+  required:
+  - магазин (store)
+  - ціна (price)
+  - купувати (to buy)
+  - платити (to pay)
+  - гроші (money)
+  - картка (card)
+  - готівка (cash)
+  - чек (receipt)
+  recommended:
+  - знижка (discount)
+  - каса (checkout)
+  - здача (change)
+  - пакет (bag)
+  - примірка (fitting room)
+  - розмір (size)
+  forbidden: []
+activities:
+  types_required:
+  - vocabulary-drill
+  - dialogue
+  - role-play
+  - fill-in
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a2-54 (Sports and Fitness)
+- a2-63 (At the Bank)

@@ -1,0 +1,77 @@
+module: regions-east
+level: b1
+sequence: 73
+version: '2.0'
+title: 'Українські регіони: Схід'
+subtitle: Eastern Ukraine - Industrial Heritage and Academic Excellence
+focus: culture
+pedagogy: CBI
+objectives:
+- Learner can discuss Eastern Ukraine's industrial heritage and academic centers
+- Learner can understand authentic texts about Kharkiv, Slobozhanshchyna, and Donbas
+- Learner can use regional vocabulary to describe Eastern Ukrainian culture and identity
+- Learner can compare Eastern Ukrainian traditions with other regions
+content_outline:
+- section: 'Introduction: Eastern Ukraine'
+  words: 150
+  points:
+  - Geographic overview
+  - Historical development
+  - Cultural characteristics
+- section: Kharkiv and Slobozhanshchyna
+  words: 250
+  points:
+  - Харків, Слобожанщина
+  - Academic traditions
+  - Cultural institutions
+- section: Donbas Region
+  words: 250
+  points:
+  - Донбас, Донецьк, Луганськ
+  - Industrial heritage
+  - Working-class culture
+- section: Eastern Ukrainian Identity
+  words: 250
+  points:
+  - Language situation
+  - Soviet-era influences
+  - Contemporary transformations
+- section: War and Resilience
+  words: 200
+  points:
+  - 2014 and beyond
+  - Displacement and adaptation
+  - Cultural preservation
+- section: 'Practice: Regional Discussion'
+  words: 100
+  points:
+  - Discuss Eastern Ukraine
+  - Compare with other regions
+word_target: 1200
+vocabulary:
+  required:
+  - Харків (Kharkiv)
+  - Слобожанщина (Slobozhanshchyna)
+  - Донбас (Donbas)
+  - промисловість (industry)
+  - спадщина (heritage)
+  - університет (university)
+  - ідентичність (identity)
+  - регіон (region)
+  recommended:
+  - академічний (academic)
+  - робітничий (working-class)
+  - переселенці (displaced persons)
+  - стійкість (resilience)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - reading
+  - discussion
+  - matching
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-74 (Regions South)

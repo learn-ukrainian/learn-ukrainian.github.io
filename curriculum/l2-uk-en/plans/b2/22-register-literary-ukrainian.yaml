@@ -1,0 +1,22 @@
+module: 22-register-literary-ukrainian
+level: b2
+sequence: 22
+version: '1.0'
+title: Регістр — Літературна українська
+subtitle: Мова художньої літератури
+focus: grammar
+pedagogy: TTT
+objectives:
+- Учень може розпізнавати характерні ознаки літературного стилю
+- Учень може аналізувати стилістичні засоби в художніх текстах
+- Учень може трансформувати нейтральний текст у літературний стиль
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

@@ -1,29 +1,95 @@
 module: b1-47
-title: 'Пасивні конструкції: повна система'
-subtitle: Passive Constructions - Complete System
-version: '1.0'
-phase: B1.4 Advanced Grammar
-pedagogy: TTT
+id: b1-47
+slug: passive-constructions
+title: "Пасивні конструкції: повна система"
+subtitle: "Passive Constructions - Complete System"
+version: '2.0'
+phase: "B1.4a [Participles]"
 focus: grammar
+pedagogy: TTT
+register: розмовний
 duration: 90
 transliteration: none
-tags:
-- grammar
-- passive
-- voice
-- constructions
-grammar:
-- Три типи пасивних конструкцій
-- Пасив з дієприкметником
-- Пасив з короткою формою
-- Зворотний пасив (-ся)
 objectives:
-- Учень може розрізняти три типи пасивних конструкцій
-- Учень може трансформувати активні речення в пасивні
-- Учень розуміє стилістичні відтінки кожного типу пасиву
-vocabulary_count: 25
-vocab_count: 30
-slug: 47-passive-constructions
+  - "Learner can distinguish three types of passive constructions"
+  - "Learner can transform active sentences to passive"
+  - "Learner understands stylistic nuances of each passive type"
+  - "Learner can choose appropriate passive for context"
+grammar:
+  - "Три типи пасивних конструкцій"
+  - "Пасив з дієприкметником (participle passive)"
+  - "Пасив з короткою формою (short form passive)"
+  - "Зворотний пасив (-ся reflexive passive)"
+word_target: 1200
+content_outline:
+  - section: "Introduction: Ukrainian Passive System"
+    words: 150
+    points:
+      - "Three passive types overview"
+      - "Active vs passive voice"
+      - "When to use passive"
+  - section: "Participle Passive"
+    words: 200
+    points:
+      - "Книга була написана"
+      - "Agreement with subject"
+      - "бути + participle"
+  - section: "Short Form Passive"
+    words: 200
+    points:
+      - "Книгу написано"
+      - "Impersonal, no agreement"
+      - "Accusative object pattern"
+  - section: "Reflexive Passive (-ся)"
+    words: 250
+    points:
+      - "Книга пишеться"
+      - "Process emphasis"
+      - "Agent rare or impossible"
+  - section: "Choosing the Right Passive"
+    words: 250
+    points:
+      - "Context and style factors"
+      - "Register considerations"
+      - "Avoiding passive overuse"
+  - section: "Practice: Active to Passive"
+    words: 150
+    points:
+      - "Transform with all three types"
+      - "Compare meanings"
+vocabulary_hints:
+  required:
+    - пасивний стан (passive voice)
+    - активний стан (active voice)
+    - зворотний (reflexive)
+    - трансформація (transformation)
+    - конструкція (construction)
+    - стиль (style)
+    - бути (to be)
+    - -ся (reflexive suffix)
+  recommended:
+    - наголос (emphasis)
+    - агент дії (agent of action)
+    - регістр (register)
+    - уникати (to avoid)
+activity_hints:
+  - type: transformation
+    focus: "Active to three passive types"
+    items: 25
+  - type: multiple-choice
+    focus: "Choose best passive type"
+    items: 20
+  - type: fill-in
+    focus: "Complete passive sentences"
+    items: 15
+  - type: writing
+    focus: "Write using varied passives"
+    items: 10
+prerequisites:
+  - b1-46 (Past Passive Participles 2)
+connects_to:
+  - b1-48 (Diminutives Master Class)
 naturalness:
   score: 9
   status: PASS
+  justification: "Complete passive system integration"

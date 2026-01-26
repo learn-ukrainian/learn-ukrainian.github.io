@@ -1,0 +1,97 @@
+module: zakhid-1918
+level: c1-hist
+sequence: 95
+version: '1.0'
+title: '1918-1921: Чому Антанта не допомогла УНР?'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Забуті союзники
+  words: 400
+  subsections:
+  - УНР шукала допомоги
+  - Антанта — не допомогла
+  - Паттерн починається
+  - Структура модуля
+- section: Контекст — Хто був Антанта
+  words: 500
+  subsections:
+  - Британія, Франція, США
+  - Перемога у Першій світовій
+  - Переформатування Європи
+  - Принцип самовизначення — для кого
+- section: Чому Україну ігнорували
+  words: 700
+  subsections:
+  - Невідома країна
+  - «Мала Росія» — стереотип
+  - Підтримка білих — проти червоних
+  - Польща — важливіша
+- section: Паризька конференція
+  words: 600
+  subsections:
+  - Українська делегація — не допущена
+  - Лобіювання — провал
+  - Про Україну — без України
+  - Результат — ніякої підтримки
+- section: Франція і Одеса
+  words: 500
+  subsections:
+  - Французькі війська в Одесі
+  - Підтримка білих, не українців
+  - Швидкий відступ
+  - Ілюзії розвіяні
+- section: Наслідки
+  words: 500
+  subsections:
+  - УНР — сама проти всіх
+  - Поразка — частково через це
+  - Урок — Захід не допоможе
+- section: Підсумок
+  words: 300
+  subsections:
+  - Перша зрада Заходу
+  - Паттерн встановлено
+  - Перехід до Ялти
+word_target: 3500
+vocabulary:
+- Антанта
+- Паризька конференція
+- самовизначення
+- визнання
+- делегація
+- лобіювання
+- інтервенція
+- білі
+- ігнорування
+- зрада
+- Вільсон
+- 14 пунктів
+- мирна конференція
+- геополітика
+- буферна держава
+activities:
+- type: diplomatic-analysis
+  focus: Why wasn't Ukraine recognized at Paris?
+- type: perception-study
+  focus: How did the West see Ukraine in 1918?
+- type: comparative-study
+  focus: Poland vs. Ukraine — different treatment
+- type: source-analysis
+  focus: Ukrainian delegation reports from Paris
+- type: essay-response
+  focus: Чому принцип самовизначення не поширився на Україну?
+sources:
+- name: Паризька мирна конференція (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Паризька_мирна_конференція
+  type: reference
+  notes: Peace conference
+- name: Антанта (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Антанта
+  type: reference
+  notes: Allied powers
+- name: Українська місія в Парижі (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_місія_в_Парижі
+  type: reference
+  notes: Ukrainian delegation

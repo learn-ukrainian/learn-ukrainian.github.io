@@ -1,0 +1,95 @@
+module: syntez-moderni-dzherela
+level: c1-hist
+sequence: 38
+version: '1.0'
+title: 'Синтез: Джерела нової доби'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Від козаків до XX століття
+  words: 400
+  subsections:
+  - Огляд модулів 29-37
+  - Нові типи джерел
+  - Нові проблеми
+  - Мета синтезу
+- section: Типологія джерел XIX-XX ст.
+  words: 600
+  subsections:
+  - Політичні маніфести
+  - Імперські документи (заборони)
+  - Публіцистика
+  - Усна історія
+  - Архівні документи
+  - Таблиця порівняння
+- section: Особливості модерних джерел
+  words: 600
+  subsections:
+  - Більша кількість — більше голосів
+  - Масова грамотність — ширший спектр
+  - Преса — новий тип джерела
+  - Фотографія і кіно
+  - Проблема надлишку
+- section: Джерела репресій
+  words: 600
+  subsections:
+  - Імперські vs. радянські
+  - Як читати мову репресора
+  - Голос жертви — де шукати
+  - Етичні питання
+- section: Методологічні уроки
+  words: 500
+  subsections:
+  - Порівняння офіційного і підпільного
+  - Імперський дискурс — розпізнавання
+  - Пропаганда vs. документ
+  - Усна історія — місце в дослідженні
+- section: Практикум
+  words: 500
+  subsections:
+  - Одна подія — різні джерела
+  - 'Наприклад: 1933 рік'
+  - Радянські документи + свідчення + преса
+  - Комплексна реконструкція
+- section: Підсумок
+  words: 300
+  subsections:
+  - Готовність до дисидентських джерел
+  - Чек-ліст для модерних джерел
+  - Від минулого до сучасності
+word_target: 3500
+vocabulary:
+- синтез
+- типологія
+- модерний
+- публіцистика
+- преса
+- репресія
+- офіційний
+- підпільний
+- пропаганда
+- комплексний
+- масмедіа
+- фотодокумент
+- кіно хроніка
+- цензура
+- самвидав
+activities:
+- type: essay-response
+  focus: Create source matrix for modules 29-37
+- type: multi-source-analysis
+  focus: One event from 4+ source types
+- type: methodology
+  focus: Create checklist for analyzing 20th-century sources
+- type: essay-response
+  focus: Чим джерела XX ст. відрізняються від козацьких?
+sources:
+- name: Джерелознавство (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Джерелознавство
+  type: reference
+  notes: Source studies
+- name: Історичне джерело
+  url: https://uk.wikipedia.org/wiki/Історичне_джерело
+  type: reference
+  notes: Source types

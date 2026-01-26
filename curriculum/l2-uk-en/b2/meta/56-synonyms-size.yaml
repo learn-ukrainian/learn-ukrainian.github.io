@@ -25,3 +25,32 @@ slug: 56-synonyms-size
 naturalness:
   score: 9
   status: PASS
+content_outline:
+- section: Вступ — Розмір і Масштаб
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Big
+  words: 500
+  points:
+  - великий (big - neutral)
+  - здоровенний (huge - colloquial)
+  - велетенський (gigantic - from "giant")
+  - величезний (enormous - emphatic)
+  - грандіозний (grand - impressive)
+- section: Small
+  words: 500
+  points:
+  - малий (small - neutral)
+  - маленький (little - diminutive)
+  - крихітний (tiny - very small)
+  - мізерний (minuscule - negligible)
+  - мініатюрний (miniature - cute small)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

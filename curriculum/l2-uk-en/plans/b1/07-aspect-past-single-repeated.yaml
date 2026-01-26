@@ -1,0 +1,84 @@
+module: 07-aspect-past-single-repeated
+level: b1
+sequence: 7
+version: '1.0'
+title: 'Вид у минулому: одного разу vs щодня'
+subtitle: 'Aspect in Past: Single vs Repeated Actions'
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can distinguish single from repeated past actions
+- Learner can select correct aspect based on time markers
+- Learner understands how frequency affects aspect choice
+- Learner can transform between single and habitual narratives
+sources:
+- name: Ukrainian State Standard 2024 - Past Tense Aspect
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official rules for aspect in past tense contexts
+- name: Ukrainian Aspectual Pairs
+  url: https://uk.wikipedia.org/wiki/Видові_пари_дієслів
+  type: reference
+  notes: Comprehensive list of aspectual pairs
+content_outline:
+- section: Тест
+  words: 120
+  points:
+  - Compare two narratives
+  - Deduce rule (One vs Many)
+- section: Пояснення
+  words: 700
+  points:
+  - Single events (markers: once, that time)
+  - Repeated actions (markers: always, often)
+  - Contrast table
+  - Special cases (once, long ago)
+- section: Практика
+  words: 300
+  points:
+  - Selection algorithm
+  - Common mistakes
+  - Aspect in daily life
+- section: Діалоги
+  words: 350
+  points:
+  - School memories
+  - Summer stories
+  - Work experience
+- section: Підсумок
+  words: 230
+  points:
+  - Summary of markers
+  - Self-check
+word_target: 1700
+vocabulary:
+  required:
+  - одного разу (once)
+  - щодня (every day)
+  - часто (often)
+  - іноді (sometimes)
+  - зазвичай (usually)
+  - того разу (that time)
+  - того дня (that day)
+  - завжди (always)
+  - ніколи (never)
+  - рідко (rarely)
+  recommended:
+  - регулярно (regularly)
+  - постійно (constantly)
+  - вперше (for the first time)
+  - востаннє (for the last time)
+  - неодноразово (repeatedly)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - quiz
+  - match-up
+  - cloze
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-08 (Aspect in past - result vs process)
+- b1-14 (Aspect integration practice)

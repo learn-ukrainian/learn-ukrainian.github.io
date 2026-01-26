@@ -1,0 +1,95 @@
+module: syntez-rehionalna-riznomanitnist
+level: c1-hist
+sequence: 80
+version: '1.0'
+title: 'Синтез: Регіональна різноманітність'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Єдність у різноманітності
+  words: 400
+  subsections:
+  - Огляд модулів 70-79
+  - Регіони — не перешкода
+  - Єдина нація — різні шляхи
+  - Мета синтезу
+- section: Порівняльна таблиця регіонів
+  words: 600
+  subsections:
+  - Захід vs. Схід vs. Південь vs. Центр
+  - Імперський досвід
+  - Церква
+  - Мова
+  - Національна свідомість
+- section: Чому різні траєкторії?
+  words: 700
+  subsections:
+  - Імперії — ключ до розуміння
+  - Австрія дала шанс
+  - Росія — русифікація
+  - Різний час «пробудження»
+- section: Чи є «справжні українці»?
+  words: 600
+  subsections:
+  - Міф «західників»
+  - Міф «русифікованого сходу»
+  - Реальність — спектр
+  - Ідентичність — процес
+- section: 2014 і 2022 — перевірка
+  words: 500
+  subsections:
+  - Майдан — не тільки Київ
+  - 2014 — Схід і Південь
+  - 2022 — загальна мобілізація
+  - Регіоналізм vs. патріотизм
+- section: Майбутнє регіонів
+  words: 400
+  subsections:
+  - Децентралізація
+  - Регіональна ідентичність в єдиній державі
+  - Європейський досвід
+  - Україна після війни
+- section: Підсумок
+  words: 300
+  subsections:
+  - Різноманітність — сила
+  - Єдність — вибір
+  - Перехід до імперських механізмів
+word_target: 3500
+vocabulary:
+- синтез
+- регіональна різноманітність
+- єдність
+- траєкторія
+- ідентичність
+- децентралізація
+- національна свідомість
+- спектр
+- порівняння
+- інтеграція
+- регіоналізм
+- федералізм
+- унітарна держава
+- субнаціональний
+- територіальна цілісність
+activities:
+- type: essay-response
+  focus: Create regional diversity map of Ukraine
+- type: comparative-table
+  focus: All regions — key characteristics
+- type: 2014-2022-analysis
+  focus: How regions responded to crises
+- type: future-scenarios
+  focus: Regional Ukraine after victory — what model?
+- type: essay-response
+  focus: Чи регіональні відмінності загрожують єдності України?
+sources:
+- name: Регіони України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Регіони_України
+  type: reference
+  notes: Regional overview
+- name: Українська ідентичність (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_ідентичність
+  type: reference
+  notes: Identity studies

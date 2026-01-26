@@ -1,0 +1,93 @@
+module: syntez-rozdorizhzhia
+level: c1-hist
+sequence: 94
+version: '1.0'
+title: 'Синтез: Закономірність чи випадок?'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Паттерни на роздоріжжях
+  words: 400
+  subsections:
+  - Огляд модулів 89-93
+  - Чи є закономірності
+  - Роль вибору vs. структури
+  - Мета синтезу
+- section: Порівняння поворотних точок
+  words: 600
+  subsections:
+  - 1654 → 1709 → 1917 → 1991 → 2004 → 2014
+  - Що спільного
+  - Що відрізняється
+  - Таблиця порівняння
+- section: Структурні фактори
+  words: 700
+  subsections:
+  - Геополітичне положення
+  - Ресурси — завжди обмежені
+  - Зовнішні актори — завжди присутні
+  - Внутрішня єдність — варіативна
+- section: Роль агентності
+  words: 600
+  subsections:
+  - Лідери мають вибір
+  - Помилки і правильні рішення
+  - Народ як актор (2004, 2014, 2022)
+  - Зростання агентності з часом
+- section: Чи можна передбачити
+  words: 500
+  subsections:
+  - Закономірності — так
+  - Конкретний результат — ні
+  - Цінність історичного аналізу
+  - Підготовка до майбутнього
+- section: 2022 — найбільше роздоріжжя
+  words: 400
+  subsections:
+  - Всі попередні досвіди
+  - Чому результат інший
+  - Новий етап історії?
+- section: Підсумок
+  words: 300
+  subsections:
+  - Історія — не випадкова, але не детермінована
+  - Роль вибору зростає
+  - Перехід до Заходу
+word_target: 3500
+vocabulary:
+- синтез
+- закономірність
+- випадок
+- поворотна точка
+- структурний фактор
+- агентність
+- детермінований
+- контрфактичний
+- паттерн
+- вибір
+- історичний аналіз
+- геополітичний
+- варіативний
+- передбачуваність
+- телеологія
+activities:
+- type: essay-response
+  focus: Create master turning points comparison
+- type: pattern-analysis
+  focus: What patterns emerge across turning points?
+- type: agency-analysis
+  focus: How has Ukrainian agency grown over time?
+- type: methodology-reflection
+  focus: What can and can't historical analysis predict?
+- type: essay-response
+  focus: Чи можна передбачити наступне роздоріжжя української історії?
+sources:
+- name: Історія України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Історія_України
+  type: reference
+  notes: General history
+- name: Контрфактична історія (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Контрфактична_історія
+  type: reference
+  notes: Methodology

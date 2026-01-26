@@ -1,0 +1,105 @@
+module: 19-register-official-legal
+level: b2
+sequence: 19
+version: '1.0'
+title: 'Офіційно-діловий стиль: документи, закони, заяви'
+focus: style
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Ukrainian State Standard 2024 - Official Style
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official document standards
+- name: Офіційно-діловий стиль
+  url: https://uk.wikipedia.org/wiki/Офіційно-діловий_стиль
+  type: secondary
+  notes: Official-business style conventions
+- name: CEFR B2 Formal Writing
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 formal document comprehension
+content_outline:
+- section: Вступ — Офіційно-діловий стиль
+  words: 400
+  points:
+  - Визначення та сфера застосування
+  - Підстилі (законодавчий, адміністративний, дипломатичний)
+  - Основні ознаки
+- section: Мовні засоби офіційного стилю
+  words: 700
+  points:
+  - Безособові конструкції -но/-то
+  - Стандартизовані звороти
+  - Канцеляризми та кліше
+  - Складні номінальні групи
+- section: Типи документів
+  words: 600
+  points:
+  - Заява
+  - Наказ
+  - Протокол
+  - Акт
+- section: Структура офіційних документів
+  words: 600
+  points:
+  - Реквізити документа
+  - Адресат та адресант
+  - Основна частина
+  - Підпис та дата
+- section: Законодавчі тексти
+  words: 600
+  points:
+  - Мова законів
+  - Типові конструкції
+  - Посилання на статті
+  - Читання та розуміння законів
+- section: Типові помилки
+  words: 500
+  points:
+  - Надмірна канцелярщина
+  - Русизми в офіційних документах
+  - Неправильне вживання кліше
+  - Сучасні норми
+- section: Практика і підсумок
+  words: 400
+  points:
+  - Написання заяв
+  - Аналіз офіційних документів
+  - Підготовка до модуля 20
+word_target: 3800
+vocabulary:
+  required:
+  - офіційно-діловий стиль (official-business style)
+  - заява (application/statement)
+  - наказ (order/decree)
+  - протокол (minutes/protocol)
+  - акт (act/document)
+  - реквізит (requisite/detail)
+  - канцеляризм (bureaucratese)
+  - кліше (cliché/set phrase)
+  - постанова (resolution)
+  - розпорядження (directive)
+  recommended:
+  - юридичний (legal)
+  - адміністративний (administrative)
+  - законодавство (legislation)
+  - нормативний акт (normative act)
+  - стаття (article - of law)
+  forbidden: []
+activities:
+  types_required:
+  - error-correction
+  - reading
+  - quiz
+  - fill-in
+  - essay-response
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- 'b2-20 (Register: Medical Ukrainian)'
+- b2-25 (B2.1b Checkpoint)
+- b2-81 (Professional Communication II)

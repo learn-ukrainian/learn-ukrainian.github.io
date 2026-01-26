@@ -1,0 +1,97 @@
+# B2-HIST Level Plan - Ukrainian History Track
+# Source of truth: docs/l2-uk-en/B2-HIST-CURRICULUM-PLAN.md
+
+level: b2-hist
+track: history
+version: "1.0"
+status: in_progress
+prerequisite: "B2 Core (M01-70)"
+vocabulary_target: 2640
+immersion: "100%"
+
+phases:
+  - id: HIST.1
+    name: "Origins & Early Civilizations"
+    modules: [1, 8]
+    focus: "Trypillian, Scythians, Greek colonies, Slavic origins"
+    era: "5500 BCE - 9th c. CE"
+
+  - id: HIST.2
+    name: "Kyivan Rus"
+    modules: [9, 20]
+    focus: "Early rulers, Christianization, golden age, fragmentation"
+    era: "9th-13th c."
+
+  - id: HIST.3
+    name: "Mongol Era & Galicia-Volhynia"
+    modules: [21, 28]
+    focus: "Mongol invasion, Danylo Halytsky, regional kingdoms"
+    era: "13th-14th c."
+
+  - id: HIST.4
+    name: "Lithuanian-Polish Era"
+    modules: [29, 40]
+    focus: "Grand Duchy of Lithuania, Rzeczpospolita, Union of Brest"
+    era: "14th-17th c."
+
+  - id: HIST.5
+    name: "Rise of Cossacks"
+    modules: [41, 50]
+    focus: "Cossack origins, Zaporozhian Sich, early hetmans"
+    era: "15th-17th c."
+
+  - id: HIST.6
+    name: "Khmelnytsky & Cossack State"
+    modules: [51, 62]
+    focus: "Khmelnytsky uprising, Treaty of Pereyaslav, Ruin"
+    era: "1648-1687"
+
+  - id: HIST.7
+    name: "Mazepa & End of Hetmanate"
+    modules: [63, 74]
+    focus: "Mazepa, Poltava, abolition of Hetmanate"
+    era: "1687-1775"
+
+  - id: HIST.8
+    name: "Imperial Era"
+    modules: [75, 86]
+    focus: "Russian and Austrian rule, national awakening"
+    era: "1775-1914"
+
+  - id: HIST.9
+    name: "WWI & Revolution"
+    modules: [87, 98]
+    focus: "World War I, UNR, ZUNR, War of Independence"
+    era: "1914-1921"
+
+  - id: HIST.10
+    name: "Soviet Period & Tragedies"
+    modules: [99, 108]
+    focus: "Ukrainization, Holodomor, WWII, OUN-UPA"
+    era: "1921-1945"
+
+  - id: HIST.11
+    name: "Post-War Soviet Ukraine"
+    modules: [109, 118]
+    focus: "Stalin's last years, Thaw, Sixtiers, Stagnation"
+    era: "1945-1985"
+
+  - id: HIST.12
+    name: "Independence & Modern Era"
+    modules: [119, 130]
+    focus: "Perestroika, Independence, Orange Revolution, Euromaidan"
+    era: "1985-2014"
+
+  - id: HIST.13
+    name: "Russian Aggression"
+    modules: [131, 140]
+    focus: "Crimea annexation, Donbas war, Full-scale invasion"
+    era: "2014-2024"
+
+notes: |
+  B2-HIST is a content-based instruction track covering Ukrainian
+  history from prehistory to present. Expanded to 140 modules to
+  align with Ukrainian school curriculum (Issue #423).
+
+  Each phase ends with a synthesis module (syntez-).
+  Modules with slug prefix indicate chronological era.

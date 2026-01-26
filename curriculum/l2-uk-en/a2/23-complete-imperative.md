@@ -18,7 +18,9 @@ You already know some commands from A1 like «Скажіть, будь ласк�
 
 ### 1. Direct Commands: The Core System (2-га особа: ти/ви)
 
-To form the imperative for "you," start with the **3rd person plural** present tense stem (they-form) and drop the ending. Then, follow these patterns based on the last sound:
+To form the imperative for "you," start with the **3rd person plural** present tense stem (they-form) and drop the ending. Then, follow these patterns based on the last sound.
+
+Щоб утворити наказову форму, візьміть основу дієслова від форми «вони» та додайте потрібне закінчення. Вибір закінчення залежить від останнього звука основи та наголосу.
 
 1. **Stem ends in a vowel**: Add **-й** (sg) / **-йте** (pl).
    - Чита**ють** -> чита**й**! / чита**йте**!
@@ -28,7 +30,7 @@ To form the imperative for "you," start with the **3rd person plural** present t
    - Пиш**уть** -> пиш**и**! / пиш**іть**!
    - Говор**ять** -> говор**и**! / говор**іть**!
 
-3. **Stem ends in a consonant with stress on the stem**: Add **-ь** (sg) / **-ьте** (pl).
+3. **When stress falls on the root, not the ending**: Use **-ь** (sg) / **-ьте** (pl).
    - Ставл**ять** -> став**ь**! / став**ьте**!
    - Сяд**уть** -> сяд**ь**! / сяд**ьте**!
 
@@ -36,29 +38,33 @@ To form the imperative for "you," start with the **3rd person plural** present t
 
 Ukrainian doesn't need a helping word like "let's." We have a unique suffix **-мо** that we add to the singular imperative form. It sounds much more authentic than the common mistake of saying «Давай...».
 
-- Йди (go) -> **Йдімо! / Ходімо!** (Let's go!)
-- Читай (read) -> **Читаймо!** (Let's read!)
-- Пиши (write) -> **Пишімо!** (Let's write!)
-- Почни (start) -> **Почнімо!** (Let's start!)
+В українській мові для форми «давайте зробимо» ми просто додаємо суфікс **-мо** до форми однини. Це звучить природно та по-українськи! Наприклад: «Ходімо!» (Let's go!), «Пишімо!» (Let's write!).
+
+- Йди -> **Йдімо! / Ходімо!**
+- Читай -> **Читаймо!**
+- Пиши -> **Пишімо!**
+- Почни -> **Почнімо!**
 
 ### 3. Indirect Wishes: Let It Be! (3-тя особа: хай/нехай)
 
 When you want to express a command or wish for someone not present (he, she, they), we use the particles **хай** or **нехай** followed by the regular present tense verb.
 
-- **хай** — informal, conversational.
-- **нехай** — formal, literary, or poetic.
+Коли потрібно висловити команду для когось відсутнього, використовуйте частки **хай** або **нехай**. Додайте дієслово у теперішньому часі.
 
-**Приклади (Examples):**
+- **хай** — розмовний стиль, неформально.
+- **нехай** — урочистий, літературний, поетичний стиль.
 
-- **Хай** він сам вирішує. (Let him decide himself.)
-- **Нехай** здійсняться ваші мрії! (May your dreams come true!)
-- **Хай** живе Україна! (Long live Ukraine!)
+**Приклади:**
+
+- **Хай** він сам вирішує.
+- **Нехай** здійсняться ваші мрії!
+- **Хай** живе Україна!
 
 ### 4. Irregular Imperative Stars (Винятки)
 
 Some of the most used verbs in daily life have slightly unique imperative forms. You should memorize these as "survival" vocabulary.
 
-| Інфінітив | Ти (Singular) | Ви (Plural)  | Переклад |
+| Інфінітив | Ти (однина) | Ви (множина) | Переклад |
 | :-------- | :------------ | :----------- | :------- |
 | **їсти**  | **їж**        | **їжте**     | eat      |
 | **пити**  | **пий**       | **пийте**    | drink    |

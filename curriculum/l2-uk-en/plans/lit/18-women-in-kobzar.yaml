@@ -1,0 +1,104 @@
+module: 18-women-in-kobzar
+level: lit
+sequence: 18
+version: '1.0'
+title: Жіноча доля в "Кобзарі"
+subtitle: 'Women in Kobzar: The Tragic Archetype'
+focus: literature
+pedagogy: seminar
+objectives:
+- Analyze the archetype of the Tragic Mother (Pokrytka) in Shevchenko's works
+- Compare the characters of Kateryna and Hanna (Naimychka)
+- Discuss Shevchenko's ethical evolution from romanticism to realism
+- Identify the function of diminutives in creating emotional pathos
+sources:
+  primary:
+  - url: https://www.ukrlib.com.ua/books/printit.php?tid=6
+    title: Катерина — поема
+    notes: Рання поема про покритку
+  - url: https://www.ukrlib.com.ua/books/printit.php?tid=30
+    title: Наймичка — поема
+    notes: Зріла поема про матір
+  secondary:
+  - url: https://www.ukrlib.com.ua/analiz/printit.php?tid=6
+    title: Жіночі образи у Шевченка
+    notes: Літературознавчий аналіз
+content_outline:
+- section: Вступ
+  words: 500
+  subsections:
+  - Чому жінки — центральні персонажі
+  - Біографічний контекст (сирітство)
+  - Емпатія як творчий метод
+- section: Катерина
+  words: 800
+  subsections:
+  - Сюжет поеми
+  - Образ покритки в суспільстві
+  - Критика подвійних стандартів
+- section: Наймичка
+  words: 800
+  subsections:
+  - Сюжет поеми
+  - Образ матері-страдниці
+  - Порівняння з "Катериною"
+- section: Архетип Трагічної Матері
+  words: 700
+  subsections:
+  - Покритка, наймичка, удова
+  - Самотність і жертовність
+  - Україна як мати
+- section: Димінутиви та емоційний пафос
+  words: 500
+  subsections:
+  - Пестлива лексика у жіночих образах
+  - Функція димінутивів
+  - Катарсис через мову
+- section: Підсумок
+  words: 400
+  subsections:
+  - Унікальність Шевченкової емпатії
+  - Порівняння з іншими авторами
+  - Сучасне прочитання
+word_target: 4500
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - покритка
+  - наймичка
+  - архетип
+  - жертовність
+  - емпатія
+  - пафос
+  - димінутив
+  - катарсис
+  - удова
+  - сирота
+  recommended:
+  - подвійні стандарти
+  - страдниця
+  - ганьба
+  - матір
+  - доля
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: lit-12 (The Ballads — жіночі образи)
+  related:
+  - lit-19 (Diary — внутрішній світ)
+  - lit-20 (Cult of Shevchenko — рецепція)
+constraints:
+  min_engagement_boxes: 3
+  min_examples: 15
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

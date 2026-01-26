@@ -1,0 +1,97 @@
+module: 12-research-article
+level: c1
+sequence: 12
+version: '2.0'
+title: Жанр — Наукова стаття
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Вимоги до наукових публікацій
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official requirements for Ukrainian academic articles
+- name: IMRaD Structure Guidelines
+  url: https://mova.info/
+  type: secondary
+  notes: International research article structure
+content_outline:
+- section: Вступ — Що таке наукова стаття?
+  words: 400
+  points:
+  - Визначення та цілі наукової статті
+  - Типи наукових статей
+  - Українські вимоги до публікацій
+- section: Структура IMRaD
+  words: 800
+  points:
+  - Вступ (Introduction) — проблема, мета, гіпотеза
+  - Методи (Methods) — як проводилося дослідження
+  - Результати (Results) — що виявлено
+  - Обговорення (Discussion) — що це означає
+- section: Назва та ключові слова
+  words: 500
+  points:
+  - Формулювання інформативної назви
+  - Вибір ключових слів
+  - Оптимізація для пошуку
+- section: Анотація (Abstract)
+  words: 600
+  points:
+  - Структура анотації (мета, методи, результати, висновки)
+  - Обсяг і стиль
+  - Типові помилки
+- section: Висновки та література
+  words: 600
+  points:
+  - Формулювання висновків
+  - Оформлення списку літератури
+  - Імплікації та перспективи
+- section: Мова наукової статті
+  words: 700
+  points:
+  - Безособовий стиль
+  - Термінологія
+  - Типові фрази кожного розділу
+- section: Практика аналізу статей
+  words: 400
+  points:
+  - Читання та аналіз зразків
+  - Ідентифікація структурних елементів
+  - Критичне оцінювання
+word_target: 4000
+vocabulary:
+  required:
+  - стаття (article)
+  - анотація (abstract)
+  - методологія (methodology)
+  - результати (results)
+  - обговорення (discussion)
+  - висновки (conclusions)
+  - ключові слова (keywords)
+  - література (references)
+  - гіпотеза (hypothesis)
+  - дослідження (research)
+  recommended:
+  - публікація (publication)
+  - рецензування (peer review)
+  - редакція (editorial board)
+  - фахове видання (professional journal)
+  - імпакт-фактор (impact factor)
+  forbidden: []
+activities:
+  types_required:
+  - group-sort
+  - quiz
+  - essay-response
+  - cloze
+  - fill-in
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c1-13 (Abstract Writing)
+- c1-14 (Literature Review)
+- c1-19 (Article Critique)

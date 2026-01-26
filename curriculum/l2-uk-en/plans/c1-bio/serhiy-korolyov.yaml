@@ -1,0 +1,109 @@
+module: serhiy-korolyov
+level: c1-bio
+sequence: 117
+version: '2.0'
+title: 'Сергій Корольов: Батько космічної ери'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Корольов_Сергій_Павлович
+    title: Сергій Корольов (Wikipedia UA)
+    notes: Biography, space achievements, Ukrainian origins
+  secondary:
+  - url: https://uk.wikipedia.org/wiki/Житомирський_меморіальний_музей_космонавтики_імені_Сергія_Павловича_Корольова
+    title: Музей космонавтики Корольова в Житомирі
+    notes: Museum in his birthplace
+  - url: https://uk.wikipedia.org/wiki/ГУЛАГ
+    title: ГУЛАГ
+    notes: His imprisonment
+content_outline:
+- section: Вступ — Українець, який відкрив космос
+  words: 444
+  subsections:
+  - Корольов як творець радянської космічної програми
+  - Українське походження та приховане ім'я
+  - Жертва ГУЛАГу, що став "головним конструктором"
+- section: Українське коріння
+  words: 666
+  subsections:
+  - Народження в Житомирі (1907)
+  - Дитинство в українській родині
+  - Мати — вчителька, говорила українською
+  - Освіта в Київському політехнічному інституті
+- section: Ракетна мрія
+  words: 666
+  subsections:
+  - Захоплення авіацією з молодості
+  - Перші ракетні експерименти
+  - Створення ракетного науково-дослідного інституту
+  - Арешт і вирок (1938)
+- section: ГУЛАГ і виживання
+  words: 777
+  subsections:
+  - 6 років у таборах та "шарашках"
+  - Робота у в'язничних конструкторських бюро
+  - Підірване здоров'я
+  - Звільнення та реабілітація
+- section: Творець космічної ери
+  words: 888
+  subsections:
+  - Перша міжконтинентальна ракета (1957)
+  - Перший супутник (Спутник-1)
+  - Перший космонавт (Гагарін, 1961)
+  - Секретне ім'я "Головний конструктор"
+- section: Спадщина та повернення в Україну
+  words: 559
+  subsections:
+  - Рання смерть (1966)
+  - Музей у Житомирі
+  - Визнання українського походження
+  - Корольов як символ повернутої спадщини
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - конструктор
+  - ракета
+  - космонавт
+  - супутник
+  - ГУЛАГ
+  - '"шарашка"'
+  - секретний
+  - походження
+  - спадщина
+  - реабілітація
+  recommended:
+  - траєкторія
+  - орбіта
+  - запуск
+  - міжконтинентальний
+  - конструкторське бюро
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: Space race historical context
+  related:
+  - c1-bio-118 (Kondratiuk - intellectual predecessor)
+  - c1-bio-119 (Puliui - earlier reclaimed figure)
+  - c1-bio-112 (Yevhen Paton - contemporary engineer)
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

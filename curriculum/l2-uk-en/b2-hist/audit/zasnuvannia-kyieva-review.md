@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M06 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:23:17
+**Generated:** 2026-01-25 22:22:24
 
 ## Configuration
 **Type:** B2-history
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4242/4000 (raw: 4598)
+- **Words:** ✅ 4084/4000 (raw: 4369)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/2 types
@@ -59,12 +59,12 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 9 | 3 | 100% | 24% | 23.8% |
+| primary_sources | 10 | 3 | 100% | 24% | 23.8% |
 | engagement | 12 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 7 | 4 | 100% | 10% | 9.5% |
-| visual | 14 | 4 | 100% | 10% | 9.5% |
+| visual | 12 | 4 | 100% | 10% | 9.5% |
 | variety | 0.99 | - | 99% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 16 | 3 | 100% | 5% | 4.8% |
@@ -81,6 +81,6 @@
 | **Первинні джерела** | ✅ | 242 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 359 | Included in Core |
 | **Археологічні свідчення** | ⚪️ | 334 | Skipped |
-| **Есе** | ⚪️ | 383 | Skipped |
+| **Хронологія: Легенди та археологія** | ✅ | 225 | Included in Core |
 | **Підсумок** | ✅ | 227 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 243 | Skipped |

@@ -1,0 +1,88 @@
+module: ruina-i
+level: b2-hist
+sequence: 58
+version: '1.0'
+title: 'Руїна I: Виговщина і розкол'
+focus: history
+pedagogy: CBI
+objectives:
+- Учень може пояснити причини громадянської війни (Руїни)
+- Учень може проаналізувати наслідки Конотопської битви
+- Учень може оцінити роль Чорної ради 1663 року в розколі України
+content_outline:
+- section: 'Вступ: Епоха великих надій і розчарувань'
+  words: 400
+  subsections:
+  - Definition of 'The Ruin' (1657-1687)
+  - The vacuum of power after Khmelnytsky
+- section: 'Гетьман Іван Виговський: Курс на Європу'
+  words: 600
+  subsections:
+  - Vyhovsky's biography and political program
+  - The suppression of the Pushkar uprising
+  - 'Foreign policy: balancing between Moscow and Warsaw'
+- section: Гадяцька унія і війна з Москвою
+  words: 500
+  subsections:
+  - The failure of the alliance with Moscow
+  - The signing of the Treaty of Hadiach (brief recap)
+  - The start of the Muscovite-Ukrainian war
+- section: 'Конотопська битва 1659: Втрачена перемога'
+  words: 800
+  subsections:
+  - The siege of Konotop by Trubetskoy
+  - 'Tactics of the battle: deceptive retreat'
+  - The defeat of the Muscovite cavalry and its consequences
+- section: Падіння Виговського і початок хаосу
+  words: 500
+  subsections:
+  - The uprising of Ivan Sirko in Zaporizhzhia
+  - The election of Yurii Khmelnytsky
+  - The Chudniv campaign and the split of the state
+- section: 'Чорна рада 1663: Тріумф охлократії'
+  words: 600
+  subsections:
+  - The struggle for power on the Left Bank
+  - Somko vs. Briukhovetsky
+  - The 'Black Council' in Nizhyn and its tragic outcome
+- section: 'Первинні джерела: Літопис Самовидця'
+  words: 300
+  subsections:
+  - Reading excerpts about the Black Council
+- section: Деколонізаційний погляд
+  words: 300
+  subsections:
+  - The myth of 'civil war' vs. foreign intervention
+  - Moscow's role in deepening the split
+word_target: 4000
+vocabulary:
+- руїна
+- розкол
+- чорна рада
+- охлократія
+- міжусобиця
+- булава
+- промосковський
+- пропольський
+- лівобережжя
+- правобережжя
+activities:
+- type: reading
+  focus: Analysis of the Black Council description
+- type: quiz
+  focus: Chronology of the Ruin and key figures
+- type: essay-response
+  focus: 'Causes of the Ruin: internal or external?'
+- type: comparative-study
+  focus: Vyhovsky vs. Briukhovetsky policies
+- type: true-false
+  focus: Facts about Konotop and Nizhyn
+sources:
+- name: The Ruin - Encyclopedia of Ukraine
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CR%5CU%5CRuin.htm
+  type: reference
+  notes: Overview of the period
+- name: Chronicle of Eyewitness
+  url: http://litopys.org.ua/samovyd/sam.htm
+  type: primary
+  notes: Primary source for the period

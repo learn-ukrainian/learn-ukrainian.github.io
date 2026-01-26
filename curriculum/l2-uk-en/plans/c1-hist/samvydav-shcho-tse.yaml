@@ -1,0 +1,100 @@
+module: samvydav-shcho-tse
+level: c1-hist
+sequence: 39
+version: '1.0'
+title: 'Самвидав: Що це було?'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Підпільна література
+  words: 400
+  subsections:
+  - Що таке самвидав?
+  - Чому виник — цензура
+  - Форми — машинопис, копії
+  - Значення для опору
+- section: Історія самвидаву
+  words: 600
+  subsections:
+  - Витоки — 1950-60-ті
+  - «Відлига» — відносна свобода
+  - Шістдесятники — нове покоління
+  - Повернення репресій
+- section: Як працював самвидав
+  words: 600
+  subsections:
+  - Техніка — друкарська машинка
+  - Копіювання — 5-7 копій
+  - Розповсюдження — ланцюжки
+  - Ризики — що загрожувало
+  - Вивезення на Захід
+- section: Типи текстів
+  words: 500
+  subsections:
+  - Літературні твори
+  - Хроніки репресій
+  - Звернення і петиції
+  - Переклади
+  - Історичні дослідження
+- section: Український самвидав — особливості
+  words: 600
+  subsections:
+  - Національне питання — центральне
+  - Мова як опір
+  - «Український вісник» Чорновола
+  - Зв'язок із загальносоюзним
+- section: Фрагмент — Перший номер
+  words: 500
+  subsections:
+  - Текст (з глосами)
+  - Мета видання
+  - Тон і стиль
+  - Аудиторія
+- section: Підсумок
+  words: 300
+  subsections:
+  - Самвидав як феномен
+  - Значення для історії
+  - Підготовка до наступних модулів
+word_target: 3500
+vocabulary:
+- самвидав
+- цензура
+- підпільний
+- машинопис
+- копіювання
+- розповсюдження
+- опір
+- дисидент
+- репресія
+- хроніка
+- тамвидав
+- відлига
+- шістдесятники
+- КГБ
+- обшук
+activities:
+- type: reading
+  focus: Sample samvydav text — introduction to a publication
+- type: process-analysis
+  focus: Map the samvydav production and distribution network
+- type: risk-assessment
+  focus: What were the risks at each stage?
+- type: comparative-study
+  focus: Compare Ukrainian samvydav with Russian
+- type: essay-response
+  focus: Чому самвидав був ефективним способом опору?
+sources:
+- name: Самвидав (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Самвидав
+  type: reference
+  notes: Overview
+- name: Український самвидав
+  url: https://uk.wikipedia.org/wiki/Український_самвидав
+  type: reference
+  notes: Ukrainian samizdat specifically
+- name: Архів самвидаву
+  url: https://diasporiana.org.ua/
+  type: primary
+  notes: Diaspora digital archive

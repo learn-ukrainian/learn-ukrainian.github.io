@@ -1,0 +1,106 @@
+module: lexical-stylistics
+level: c2
+sequence: 12
+version: '2.0'
+title: Лексична стилістика — Точність слововживання
+focus: stylistics
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Караванський С. Практичний словник синонімів
+  url: https://r2u.org.ua/
+  type: primary
+  notes: Canonical Ukrainian synonym dictionary
+- name: Словник української мови в 11 томах
+  url: https://sum.in.ua/
+  type: reference
+  notes: Authoritative definitions and usage notes
+- name: Ukrainian State Standard 2024 — Lexical precision
+  url: https://mon.gov.ua/
+  type: reference
+  notes: C2 requirements for word choice
+content_outline:
+- section: Вступ — Чому кожне слово важливе
+  words: 400
+  points:
+  - Лексична стилістика як наука
+  - Денотація vs конотація
+  - Стилістичне забарвлення слова
+- section: Синоніми — мистецтво вибору
+  words: 700
+  points:
+  - Типи синонімів (абсолютні, часткові)
+  - Стилістичні відтінки синонімів
+  - Контекстуальні синоніми
+  - Уникнення тавтології
+- section: Антоніми — сила контрасту
+  words: 600
+  points:
+  - Типи антонімів
+  - Антитеза як прийом
+  - Оксиморон
+  - Контекстуальні антоніми
+- section: Омоніми та пароніми
+  words: 600
+  points:
+  - Омоніми — гра слів
+  - Пароніми — типові помилки
+  - Каламбур у різних стилях
+  - Редагування паронімічних помилок
+- section: Стилістично маркована лексика
+  words: 700
+  points:
+  - Архаїзми для урочистості
+  - Неологізми для свіжості
+  - Діалектизми для колориту
+  - Жаргонізми для автентичності
+- section: Тропи — лексичні образи
+  words: 600
+  points:
+  - Метафора і метонімія
+  - Гіпербола і литота
+  - Епітет і порівняння
+  - Евфемізм і перифраз
+- section: Практикум — Робота зі словом
+  words: 400
+  points:
+  - Вибір найточнішого синоніма
+  - Заміна нейтральної лексики на маркованову
+  - Аналіз лексичних засобів у тексті
+  - Редагування для стилістичної точності
+word_target: 4000
+vocabulary:
+  required:
+  - синонім (synonym)
+  - антонім (antonym)
+  - омонім (homonym)
+  - паронім (paronym)
+  - денотація (denotation)
+  - конотація (connotation)
+  - троп (trope)
+  - архаїзм (archaism)
+  - неологізм (neologism)
+  - евфемізм (euphemism)
+  recommended:
+  - каламбур (pun)
+  - антитеза (antithesis)
+  - оксиморон (oxymoron)
+  - литота (litotes)
+  - перифраз (periphrasis)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - fill-in
+  - match-up
+  - error-correction
+  - critical-analysis
+  - essay-response
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-13 (Syntactic stylistics complements lexical)
+- c2-21 (Stylistic devices mastery)
+- c2-14 (Individual voice through word choice)

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M22 | **Phase:** HIST.3 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:22:33
+**Generated:** 2026-01-25 22:22:36
 
 ## Configuration
 **Type:** B2-history
@@ -39,7 +39,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 5372/4000 (raw: 5523)
+- **Words:** ✅ 4682/4000 (raw: 4831)
 - **Activities:** ✅ 10/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 10/2 types
@@ -51,7 +51,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⚠️ Too many activities: 10 (target 3-9)
-- **Immersion:** 🇺🇦 98.9% (target 90-100% (history))
+- **Immersion:** 🇺🇦 98.8% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -63,16 +63,16 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 10 | 3 | 100% | 24% | 23.8% |
+| primary_sources | 8 | 3 | 100% | 24% | 23.8% |
 | engagement | 8 | 6 | 100% | 14% | 14.3% |
-| timeline_markers | 22 | 10 | 100% | 14% | 14.3% |
+| timeline_markers | 19 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 3 | 4 | 75% | 10% | 7.1% |
 | visual | 5 | 4 | 100% | 10% | 9.5% |
-| variety | 0.98 | - | 98% | 5% | 4.7% |
+| variety | 0.99 | - | 99% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 31 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **97.5%** |
+| questions | 30 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **97.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -83,6 +83,5 @@
 | **Читання: Життя та опір Михайла Чернігівського** | ✅ | 2162 | Included in Core |
 | **Первинні джерела** | ✅ | 727 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 630 | Included in Core |
-| **Есе** | ⚪️ | 690 | Skipped |
 | **Підсумок** | ✅ | 175 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 244 | Skipped |

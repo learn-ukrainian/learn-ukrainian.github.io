@@ -1,29 +1,97 @@
 module: a2-45
-title: Food and Cooking
-subtitle: In the Kitchen
-version: '1.0'
-phase: A2.3
+id: a2-45
+slug: food-and-cooking
+title: "Food and Cooking"
+subtitle: "In the Kitchen"
+version: '2.0'
+phase: "A2.5 [Vocabulary Expansion]"
+focus: vocabulary
 pedagogy: PPP
+register: розмовний
 duration: 60
 transliteration: none
-tags:
-- vocabulary
-- food
-- cooking
-- kitchen
-grammar:
-- imperative in recipes (наріж, звари)
-- instrumental for tools (ножем, ложкою)
-- cooking verbs
-- tastes and textures
 objectives:
-- Learner can follow a simple recipe in Ukrainian
-- Learner can describe cooking methods
-- Learner can use kitchen vocabulary
-- Learner can give instructions using the imperative
-vocabulary_count: 25
-slug: 45-food-and-cooking
-focus: vocabulary
+  - "Learner can follow a simple recipe in Ukrainian"
+  - "Learner can describe cooking methods"
+  - "Learner can use kitchen vocabulary"
+  - "Learner can give instructions using the imperative"
+grammar:
+  - "Imperative in recipes (наріж, звари)"
+  - "Instrumental for tools (ножем, ложкою)"
+  - "Cooking verbs and sequences"
+word_target: 1000
+content_outline:
+  - section: "Introduction: Ukrainian Kitchen"
+    words: 100
+    points:
+      - "Cooking culture in Ukraine"
+      - "Traditional dishes"
+      - "Kitchen vocabulary"
+  - section: "Kitchen Equipment"
+    words: 200
+    points:
+      - "ніж, ложка, виделка"
+      - "каструля, сковорода, духовка"
+      - "Using instrumental case"
+  - section: "Cooking Verbs"
+    words: 200
+    points:
+      - "варити, смажити, пекти"
+      - "різати, змішувати, додавати"
+      - "Imperative forms for instructions"
+  - section: "Tastes and Textures"
+    words: 150
+    points:
+      - "солодкий, солоний, кислий, гіркий"
+      - "м'який, твердий, хрусткий"
+      - "Describing food"
+  - section: "Following a Recipe"
+    words: 200
+    points:
+      - "Recipe structure"
+      - "Ingredients and quantities"
+      - "Step-by-step instructions"
+  - section: "Practice: Cook a Dish"
+    words: 150
+    points:
+      - "Read and follow a recipe"
+      - "Describe cooking process"
+vocabulary_hints:
+  required:
+    - варити (to boil/cook)
+    - смажити (to fry)
+    - пекти (to bake)
+    - різати (to cut)
+    - каструля (pot)
+    - сковорода (pan)
+    - духовка (oven)
+    - рецепт (recipe)
+  recommended:
+    - змішувати (to mix)
+    - додавати (to add)
+    - солодкий (sweet)
+    - солоний (salty)
+    - інгредієнт (ingredient)
+    - страва (dish)
+activity_hints:
+  - type: vocabulary-drill
+    focus: "Kitchen and cooking words"
+    items: 30
+  - type: sequencing
+    focus: "Order recipe steps"
+    items: 15
+  - type: fill-in
+    focus: "Complete cooking instructions"
+    items: 20
+  - type: dialogue
+    focus: "Cooking conversation"
+    items: 8
+prerequisites:
+  - a2-44 (Checkpoint Word Formation)
+  - a1-18 (Food and Shopping)
+connects_to:
+  - a2-46 (Home and Furniture)
 naturalness:
   score: 10
   status: PASS
+  justification: "Practical cooking vocabulary"

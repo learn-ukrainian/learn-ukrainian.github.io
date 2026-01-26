@@ -1,0 +1,99 @@
+module: universaly-unr
+level: c1-hist
+sequence: 34
+version: '1.0'
+title: Універсали УНР
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Чотири кроки до незалежності
+  words: 400
+  subsections:
+  - 1917-1918 — революційний рік
+  - Чотири універсали Центральної Ради
+  - Від автономії до незалежності
+  - Чому така еволюція
+- section: Історичний контекст
+  words: 500
+  subsections:
+  - Лютнева революція 1917
+  - Центральна Рада — як виникла
+  - Грушевський — лідер
+  - Відносини з Тимчасовим урядом
+- section: Перший універсал (10 червня 1917)
+  words: 600
+  subsections:
+  - Текст (з глосами)
+  - Автономія — не незалежність
+  - Чому ще не сепарація
+  - Реакція Петрограда
+- section: Від другого до третього
+  words: 500
+  subsections:
+  - Другий універсал — компроміс
+  - Жовтневий переворот
+  - Третій універсал — УНР проголошено
+  - Федерація vs. незалежність
+- section: Четвертий універсал (22 січня 1918)
+  words: 700
+  subsections:
+  - Текст (з глосами)
+  - Самостійна, ні від кого незалежна
+  - Чому саме тоді
+  - Брестський мир — контекст
+  - Соціальні реформи в універсалі
+- section: Порівняльний аналіз
+  words: 500
+  subsections:
+  - Еволюція риторики
+  - Від «народ український» до «нація»
+  - Таблиця — чотири універсали
+  - Історична логіка
+- section: Підсумок
+  words: 300
+  subsections:
+  - Універсали як свідчення
+  - Чому не вдалося?
+  - Зв'язок із 1991
+word_target: 3500
+vocabulary:
+- універсал
+- Центральна Рада
+- автономія
+- незалежність
+- федерація
+- самостійність
+- проголошення
+- соціальні реформи
+- еволюція
+- Брестський мир
+- тимчасовий уряд
+- жовтневий переворот
+- сепаратизм
+- делегація
+- ратифікація
+activities:
+- type: reading
+  focus: First and Fourth Universals side by side
+- type: evolution-analysis
+  focus: Track language change across four universals
+- type: comparative-study
+  focus: Compare UNR Universals with Khmelnytsky's Universals
+- type: essay-response
+  focus: What if independence declared earlier/later?
+- type: essay-response
+  focus: Чому Центральна Рада так повільно йшла до незалежності?
+sources:
+- name: Універсали Центральної Ради (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Універсали_Центральної_Ради
+  type: reference
+  notes: Overview of four Universals
+- name: Перший універсал
+  url: https://uk.wikisource.org/wiki/Перший_Універсал_Української_Центральної_Ради
+  type: primary
+  notes: First Universal text
+- name: Четвертий універсал
+  url: https://uk.wikisource.org/wiki/Четвертий_Універсал_Української_Центральної_Ради
+  type: primary
+  notes: Fourth Universal text

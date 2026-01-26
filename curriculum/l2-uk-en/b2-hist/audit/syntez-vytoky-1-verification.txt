@@ -1,0 +1,62 @@
+
+========================================
+  📋 Loaded Metadata from YAML sidecar
+
+📋 Auditing: B2 M08 — Синтез: Від Трипілля до Києва
+   File: curriculum/l2-uk-en/b2-hist/syntez-vytoky-1.md | Target: 3000 words
+  📋 Required activity types from meta: critical-analysis, essay-response, reading
+  📋 Template: docs/l2-uk-en/templates/b2-history-synthesis-module-template.md (pedagogy: CBI)
+
+  ⚠️ HYDRATION NOTE: Outline sums to 4496, exceeding word_target 3000
+     Additional 1496 words (allowed for content depth)
+
+  📊 Section Word Analysis:
+     Огляд періоду                 1533 / 1553  ✅ (-20)
+     Ключові теми                  1096 / 1118  ✅ (-22)
+     Первинні джерела               733 /  567  ✅ (+166)
+     Текст: Тяглість у сьогодення   348 /  385  ✅ (-37)
+     Підсумкове есе                 689 /  546  ✅ (+143)
+     Словник епохи: Витоки           80 /   84  ✅ (-4)
+     Підсумок                       105 /  150  ❌ (-45)
+     Потрібно більше практики?       89 /   93  ✅ (-4)
+     ─────────────────────────────────────────────────────
+     TOTAL                         4673 / 4496  ✅ (+177)
+
+📋 Auditing: B2 M08 — Синтез: Від Трипілля до Києва
+   File: curriculum/l2-uk-en/b2-hist/syntez-vytoky-1.md | Target: 3000 words
+
+  📋 Found YAML activities file (11 activities)
+  > Джерела: Голос демократії: 3 items (min 3)
+  > Аналіз: Спадщина Свободи: 1 items (min 1)
+  > Україна як цивілізаційний синтез: 1 items (min 1)
+  > Скіфи vs Слов’яни: Військова тактика: 1 items (min 1)
+  > Джерела: Скіфська незламність: 3 items (min 3)
+  > Аналіз: Міф про спільну колиску: 1 items (min 1)
+  > Еволюція Витоків: 10 items (min 8)
+  > Епохи та їхні здобутки: 12 items (min 8)
+  > Міфи та факти про витоки: 10 items (min 8)
+  > Виправляємо історичні помилки (Quiz): 10 items (min 8)
+  > Відновлення історичних тез: 8 items (min 6)
+
+--- STRICT GATES (Level B2) ---
+Words        ✅ 4610/3000 (raw: 5156)
+Activities   ✅ 11/10
+Density      ✅ All > 14
+Unique_types ✅ 8/4 types
+Priority     ✅ Priority types used
+Engagement   ✅ 11/4
+Audio        ℹ️ No audio
+Vocab        ⚠️ 15 < 20 (soft target)
+Structure    ✅ Valid Structure
+Lint         ✅ Clean Format
+Pedagogy     ✅ Level-appropriate
+Content_heavy ℹ️ N/A (standard module)
+Grammar      ℹ️ N/A (covered by naturalness)
+Naturalness  ✅ 9/10 (High)
+Activity_quality 📋 Quality validation available (optional)
+Immersion    🇺🇦 98.8% (target 90-100% (synthesis))
+Richness     ✅ 99% (history)
+
+Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/audit/syntez-vytoky-1-review.md
+
+✅ AUDIT PASSED.

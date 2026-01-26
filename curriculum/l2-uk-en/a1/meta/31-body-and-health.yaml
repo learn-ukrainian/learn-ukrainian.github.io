@@ -1,28 +1,97 @@
 module: a1-31
-title: Body & Health
-subtitle: At the Doctor's
-version: '1.0'
-phase: A1.3 - Consolidation
+id: a1-31
+slug: body-and-health
+title: "Body & Health"
+subtitle: "At the Doctor's"
+version: '2.0'
+phase: "A1.3 [Consolidation]"
+focus: vocabulary
 pedagogy: PPP
-focus: grammar
-duration: 60 min
-transliteration: first-occurrence
-tags:
-  - body
-  - health
-  - doctor
-  - pharmacy
-grammar:
-  - Pain expressions (Болить + body part)
-  - Health vocabulary
+register: розмовний
+duration: 60
+transliteration: none
 objectives:
-  - Learner can name body parts
-  - Learner can describe symptoms (what hurts)
-  - Learner can communicate at the doctor's office
-  - Learner can ask for medicine at a pharmacy
-vocabulary_count: 30
-vocab_count: 35
-slug: 31-body-and-health
+  - "Learner can name body parts"
+  - "Learner can describe symptoms (what hurts)"
+  - "Learner can communicate at the doctor's office"
+  - "Learner can ask for medicine at a pharmacy"
+grammar:
+  - "Pain expressions (У мене болить + body part)"
+  - "Health vocabulary"
+  - "Impersonal necessity (треба + infinitive)"
+word_target: 1000
+content_outline:
+  - section: "Introduction: Health Communication"
+    words: 100
+    points:
+      - "Essential health vocabulary"
+      - "Communicating symptoms"
+      - "Doctor and pharmacy visits"
+  - section: "Body Parts"
+    words: 250
+    points:
+      - "голова, шия, плече"
+      - "рука, нога, спина"
+      - "живіт, груди, горло"
+  - section: "Expressing Pain"
+    words: 200
+    points:
+      - "У мене болить голова"
+      - "Болить живіт/горло"
+      - "Мені погано (I feel bad)"
+  - section: "Common Symptoms"
+    words: 200
+    points:
+      - "температура, кашель, нежить"
+      - "Я хворий/хвора (I'm sick)"
+      - "Мене нудить (I feel nauseous)"
+  - section: "At the Doctor/Pharmacy"
+    words: 150
+    points:
+      - "Мені потрібен лікар"
+      - "Де аптека? (Where's the pharmacy?)"
+      - "Мені потрібні ліки (I need medicine)"
+  - section: "Practice: Doctor Visit Role-Play"
+    words: 100
+    points:
+      - "Describe symptoms"
+      - "Understand basic instructions"
+vocabulary_hints:
+  required:
+    - голова (head)
+    - рука (arm/hand)
+    - нога (leg/foot)
+    - живіт (stomach)
+    - горло (throat)
+    - болить (hurts)
+    - лікар (doctor)
+    - аптека (pharmacy)
+  recommended:
+    - температура (temperature/fever)
+    - кашель (cough)
+    - ліки (medicine)
+    - хворий (sick)
+    - здоровий (healthy)
+    - рецепт (prescription)
+activity_hints:
+  - type: vocabulary-drill
+    focus: "Body parts"
+    items: 25
+  - type: fill-in
+    focus: "Complete symptom descriptions"
+    items: 20
+  - type: dialogue
+    focus: "Doctor visit conversation"
+    items: 8
+  - type: role-play
+    focus: "Pharmacy scenario"
+    items: 5
+prerequisites:
+  - a1-30 (Prepositions III)
+connects_to:
+  - a1-32 (My Family)
+  - a1-42 (Emergencies)
 naturalness:
   score: 10
   status: PASS
+  justification: "Essential health vocabulary"

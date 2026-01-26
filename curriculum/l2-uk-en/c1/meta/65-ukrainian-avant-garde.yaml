@@ -8,18 +8,39 @@ pedagogy: CBI
 duration: 120
 transliteration: none
 tags:
-  - culture
-  - art
-  - avant-garde
-  - history
+- culture
+- art
+- avant-garde
+- history
 grammar:
-  - art analysis vocabulary
-  - stylistic descriptions
+- art analysis vocabulary
+- stylistic descriptions
 objectives:
-  - Learner can discuss the Ukrainian Avant-Garde movement and its key figures
-  - Learner can analyze avant-garde artworks using appropriate terminology
-  - Learner can explain the impact of Ukrainian artists on world modernism
-  - Learner can describe the connection between folk art and avant-garde
+- Learner can discuss the Ukrainian Avant-Garde movement and its key figures
+- Learner can analyze avant-garde artworks using appropriate terminology
+- Learner can explain the impact of Ukrainian artists on world modernism
+- Learner can describe the connection between folk art and avant-garde
 vocabulary_count: 30
 vocab_count: 30
 slug: 65-ukrainian-avant-garde
+content_outline:
+- section: Вступ — Український авангард
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Знахарство: healers and their social role'
+  - 'Лікарські рослини: herbs and their uses'
+  - 'Замовляння: healing incantations'
+  - 'Народні засоби: remedies for common ailments'
+  - Integration with modern medicine
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

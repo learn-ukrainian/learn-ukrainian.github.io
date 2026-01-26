@@ -1,0 +1,50 @@
+module: 24-smart-shopping
+level: a2
+sequence: 24
+version: '2.0'
+title: Smart Shopping
+subtitle: Comparisons and Choices
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can compare products using comparative adjectives
+- Learner can ask for recommendations and advice
+- Learner can negotiate prices and ask for discounts
+- Learner can express purchase decisions politely
+sources:
+- name: Ukrainian State Standard 2024 - Shopping
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Communicative requirements for shopping and negotiation
+- name: Cultural Guide to Ukrainian Markets
+  url: https://uk.wikipedia.org/wiki/Ринок
+  type: reference
+  notes: Social etiquette of bargaining in Ukraine
+content_outline:
+- section: Introduction / Вступ
+  words: 200
+  points:
+  - The philosophy of a 'Bazar' vs a 'Supermarket'
+  - The value of comparison skills
+- section: Presentation / Презентація
+  words: 600
+  points:
+  - 'Key vocabulary: Price, Discount, Change, Receipt'
+  - 'Comparison phrases: Який кращий? Цей дешевший.'
+  - 'Negotiation logic: Чи можна дешевше?'
+  - 'Refusal etiquette: Я ще подумаю.'
+  - 'Digital Shopping: Кошик, оформити замовлення.'
+- section: Practice / Практика
+  words: 150
+  points:
+  - Role-play scenario: Market bargaining
+  - Price calculation exercises
+- section: Dialogues / Діалоги
+  words: 50
+  points:
+  - Choosing clothes or electronics in a store
+word_target: 1000
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

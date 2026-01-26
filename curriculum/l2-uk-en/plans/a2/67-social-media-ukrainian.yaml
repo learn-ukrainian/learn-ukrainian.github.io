@@ -1,0 +1,79 @@
+module: social-media-ukrainian
+level: a2
+sequence: 67
+version: '2.0'
+title: Social Media Ukrainian
+subtitle: Digital Life
+focus: practical
+pedagogy: PPP
+objectives:
+- Learner can navigate Ukrainian social media interfaces
+- Learner can write comments and posts
+- Learner can understand digital slang
+- Learner can manage profile settings
+content_outline:
+- section: 'Introduction: Social Media in Ukraine'
+  words: 100
+  points:
+  - Popular platforms
+  - Digital culture
+  - Social media vocabulary
+- section: Profile and Settings
+  words: 200
+  points:
+  - профіль, налаштування
+  - Privacy options
+  - Account management
+- section: Posts and Content
+  words: 200
+  points:
+  - пост, фото, відео
+  - Writing captions
+  - Sharing content
+- section: Interaction
+  words: 200
+  points:
+  - лайк, коментар, репост
+  - Writing comments
+  - Reacting to posts
+- section: Digital Slang
+  words: 150
+  points:
+  - Internet abbreviations
+  - Emoji usage
+  - Trending expressions
+- section: 'Practice: Social Media Activity'
+  words: 150
+  points:
+  - Write posts and comments
+  - Navigate interfaces
+word_target: 1000
+vocabulary:
+  required:
+  - профіль (profile)
+  - пост (post)
+  - лайк (like)
+  - коментар (comment)
+  - підписник (follower)
+  - підписатися (to subscribe)
+  - поділитися (to share)
+  - сторіз (stories)
+  recommended:
+  - стрічка (feed)
+  - хештег (hashtag)
+  - репост (repost)
+  - приватність (privacy)
+  - блокувати (to block)
+  - сповіщення (notification)
+  forbidden: []
+activities:
+  types_required:
+  - vocabulary-drill
+  - matching
+  - writing
+  - fill-in
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a2-68 (Texting and Messaging)

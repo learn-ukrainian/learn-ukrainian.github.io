@@ -1,0 +1,22 @@
+module: 50-kolyskovi-ta-dumy
+level: c1
+sequence: 50
+version: '2.0'
+title: 'Колискові та думи: Від колиски до вічності'
+subtitle: 'Lullabies and Dumas: From Cradle to Eternity'
+focus: history
+pedagogy: CBI
+objectives:
+- Understand the role of lullabies in early linguistic development and enculturation
+- Analyze the structure and historical significance of Ukrainian Dumas
+- Compare the intimate register of lullabies with the epic register of dumas
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

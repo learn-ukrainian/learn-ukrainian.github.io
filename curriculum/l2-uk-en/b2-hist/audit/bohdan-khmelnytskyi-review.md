@@ -1,8 +1,8 @@
 # Audit Report: M52 — bohdan-khmelnytskyi.md
 **Level:** B2 | **Module:** M52 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 3000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 20:21:54
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 22:22:56
 
 ## Configuration
 **Type:** B2-biography
@@ -39,41 +39,41 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 3455/3000 (raw: 3505)
+- **Words:** ✅ 4266/3000 (raw: 4316)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/5
+- **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⚠️ 1 fill-in with year answers
-- **Immersion:** 🇺🇦 99.7% (target 90-100% (biography))
-- **Richness:** ❌ 92% < 95% min (biography)
+- **Immersion:** 🇺🇦 99.6% (target 90-100% (biography))
+- **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 92% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 4 | 4 | 100% | 19% | 19.0% |
-| engagement | 5 | 6 | 83% | 14% | 11.9% |
-| quotes | 2 | 3 | 67% | 14% | 9.6% |
+| primary_sources | 8 | 4 | 100% | 19% | 19.0% |
+| engagement | 6 | 6 | 100% | 14% | 14.3% |
+| quotes | 3 | 3 | 100% | 14% | 14.3% |
 | cultural | 6 | 4 | 100% | 10% | 9.5% |
-| visual | 5 | 4 | 100% | 10% | 9.5% |
+| visual | 6 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
-| legacy | 11 | 2 | 100% | 10% | 9.5% |
-| variety | 1.00 | - | 100% | 5% | 4.8% |
+| legacy | 14 | 2 | 100% | 10% | 9.5% |
+| variety | 0.99 | - | 99% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 3 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **92.9%** |
+| **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -81,10 +81,10 @@
 | **Intro/Narrative** | ✅ | 85 | Included in Core |
 | **Вступ: Батько нації чи суперечлива фігура?** | ✅ | 401 | Included in Core |
 | **Ранні роки: Освіта і служба** | ⚪️ | 591 | Skipped |
-| **Особиста драма як іскра повстання** | ⚪️ | 463 | Skipped |
-| **Геній дипломатії та війни** | ⚪️ | 552 | Skipped |
-| **Будівничий держави** | ⚪️ | 336 | Skipped |
-| **Первинні джерела: Листи та промови** | ✅ | 354 | Included in Core |
-| **Деколонізаційний погляд: Лідер, а не васал** | ✅ | 342 | Included in Core |
+| **Особиста драма як іскра повстання** | ⚪️ | 645 | Skipped |
+| **Геній дипломатії та війни** | ⚪️ | 737 | Skipped |
+| **Будівничий держави** | ⚪️ | 521 | Skipped |
+| **Первинні джерела: Листи та промови** | ✅ | 503 | Included in Core |
+| **Деколонізаційний погляд: Лідер, а не васал** | ✅ | 451 | Included in Core |
 | **Читання** | ✅ | 163 | Included in Core |
-| **Підсумок** | ✅ | 168 | Included in Core |
+| **Підсумок** | ✅ | 169 | Included in Core |

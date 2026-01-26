@@ -1,24 +1,45 @@
 module: c1-90
-title: 'Практика II — Високе мистецтво'
-subtitle: 'Practice II — Fine Arts'
+title: Практика II — Високе мистецтво
+subtitle: Practice II — Fine Arts
 version: '2.0'
-phase: 'C1.5 Folk Culture & Fine Arts'
+phase: C1.5 Folk Culture & Fine Arts
 focus: practice
-pedagogy: 'Immersion & Analysis'
+pedagogy: Immersion & Analysis
 duration: 120
 transliteration: none
 tags:
-  - arts
-  - music
-  - painting
-  - theater
-  - architecture
+- arts
+- music
+- painting
+- theater
+- architecture
 grammar:
-  - 'Integrated Stylistic Analysis'
-  - 'Comparative Art Register'
+- Integrated Stylistic Analysis
+- Comparative Art Register
 objectives:
-  - 'Review and integrate knowledge of Ukrainian fine arts'
-  - 'Analyze the contribution of Ukrainian artists to world culture'
-  - 'Master high-register arts vocabulary'
+- Review and integrate knowledge of Ukrainian fine arts
+- Analyze the contribution of Ukrainian artists to world culture
+- Master high-register arts vocabulary
 vocabulary_count: 25
 slug: 90-praktyka-2-vysoke-mystetstvo
+content_outline:
+- section: Вступ — Високе мистецтво
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - Review of classical music (M62-154)
+  - Review of opera and vocal arts (M65-156)
+  - Review of visual arts (M67-158)
+  - Review of ballet and theater (M69-161)
+  - Review of architecture (M72)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

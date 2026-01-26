@@ -1,0 +1,99 @@
+module: lysty-mazepy
+level: c1-hist
+sequence: 26
+version: '1.0'
+title: 'Листи Мазепи: Дипломат і меценат'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Мазепа у листах
+  words: 400
+  subsections:
+  - Листування як джерело
+  - Чому важливі приватні документи?
+  - Мазепа — багатогранна постать
+  - Що збереглося
+- section: Типи кореспонденції
+  words: 500
+  subsections:
+  - Дипломатичні листи — до царя
+  - Внутрішня кореспонденція — старшина
+  - Приватні листи
+  - Меценатське листування — культура
+- section: Мазепа-дипломат
+  words: 700
+  subsections:
+  - Листи до Петра І
+  - Тон — підданий чи союзник?
+  - Що Мазепа просив
+  - Як маневрував
+  - Останні листи перед зрадою
+- section: Фрагмент — Лист до Петра I
+  words: 600
+  subsections:
+  - Текст (з глосами)
+  - Формули ввічливості
+  - Прихований зміст
+  - Що не сказано
+- section: Мазепа-меценат
+  words: 600
+  subsections:
+  - Листування про церкви
+  - Підтримка освіти
+  - Культурний патронат
+  - Інший образ — не тільки політик
+- section: Критика джерела
+  words: 400
+  subsections:
+  - Офіційні листи — маска
+  - Що можна дізнатися
+  - Порівняння з іншими джерелами
+  - Чи знаємо «справжнього» Мазепу?
+- section: Підсумок
+  words: 300
+  subsections:
+  - Листування як вікно в епоху
+  - Складність постаті
+  - Зв'язок із циклом кооптації
+word_target: 3500
+vocabulary:
+- листування
+- кореспонденція
+- дипломатія
+- меценатство
+- ввічливість
+- підданий
+- зрада
+- маневрування
+- патронат
+- анафема
+- епістолярний
+- ритуал
+- титулатура
+- челобитна
+- грамота
+activities:
+- type: reading
+  focus: Letter to Peter I with glosses
+- type: between-the-lines
+  focus: What is NOT said in an official letter?
+- type: comparative-study
+  focus: Compare letter tone before and after 1708
+- type: character-study
+  focus: Reconstruct Mazepa's personality from letters
+- type: essay-response
+  focus: Чи можна зрозуміти Мазепу через його листування?
+sources:
+- name: Іван Мазепа (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Іван_Мазепа
+  type: reference
+  notes: Hetman biography
+- name: Листування Мазепи
+  url: https://litopys.org.ua/
+  type: primary
+  notes: Correspondence collection
+- name: Мазепа як меценат
+  url: https://uk.wikipedia.org/wiki/Меценатство_Івана_Мазепи
+  type: reference
+  notes: Cultural patronage

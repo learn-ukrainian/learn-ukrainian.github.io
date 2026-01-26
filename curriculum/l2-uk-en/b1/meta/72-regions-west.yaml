@@ -1,27 +1,94 @@
 module: b1-72
-title: 'Українські регіони: Захід'
-subtitle: Western Ukraine - Regions and Heritage
+id: b1-72
+slug: regions-west
+title: "Українські регіони: Захід"
+subtitle: "Western Ukraine - Regions and Heritage"
 version: '2.0'
-phase: B1.7 Contemporary Ukraine
+phase: "B1.7 [Contemporary Ukraine]"
 focus: culture
 pedagogy: CBI
+register: розмовний
 duration: 90
 transliteration: none
-grammar:
-- reading comprehension
-- cultural vocabulary in context
-tags:
-- cultural
-- regions
-- western-ukraine
 objectives:
-- Learner can discuss Western Ukraine's regions and cultural heritage
-- Learner can understand authentic texts about Lviv, Galicia, and Zakarpattia
-- Learner can use regional vocabulary to describe Western Ukrainian culture
-- Learner can compare Western Ukrainian traditions with other regions
-vocabulary_count: 52
-vocab_count: 52
-slug: 72-regions-west
+  - "Learner can discuss Western Ukraine's regions and cultural heritage"
+  - "Learner can understand authentic texts about Lviv, Galicia, and Zakarpattia"
+  - "Learner can use regional vocabulary to describe Western Ukrainian culture"
+  - "Learner can compare Western Ukrainian traditions with other regions"
+grammar:
+  - "Reading comprehension strategies"
+  - "Cultural vocabulary in context"
+  - "Descriptive language patterns"
+word_target: 1200
+content_outline:
+  - section: "Introduction: Western Ukraine"
+    words: 150
+    points:
+      - "Geographic overview"
+      - "Historical context"
+      - "Cultural distinctiveness"
+  - section: "Galicia and Lviv"
+    words: 250
+    points:
+      - "Львів, Галичина"
+      - "Historical architecture"
+      - "Coffee culture and traditions"
+  - section: "Zakarpattia"
+    words: 250
+    points:
+      - "Закарпаття, Ужгород"
+      - "Multi-ethnic heritage"
+      - "Mountain culture"
+  - section: "Volyn and Podillia"
+    words: 250
+    points:
+      - "Волинь, Поділля"
+      - "Religious heritage"
+      - "Local traditions"
+  - section: "Western Ukrainian Identity"
+    words: 200
+    points:
+      - "Language features"
+      - "Cultural practices"
+      - "Regional pride"
+  - section: "Practice: Cultural Discussion"
+    words: 100
+    points:
+      - "Compare regions"
+      - "Discuss heritage"
+vocabulary_hints:
+  required:
+    - регіон (region)
+    - спадщина (heritage)
+    - традиція (tradition)
+    - архітектура (architecture)
+    - Галичина (Galicia)
+    - Закарпаття (Zakarpattia)
+    - Львів (Lviv)
+    - культура (culture)
+  recommended:
+    - кав'ярня (coffee shop)
+    - гори (mountains)
+    - етнічний (ethnic)
+    - ідентичність (identity)
+activity_hints:
+  - type: reading
+    focus: "Authentic texts about Western Ukraine"
+    items: 15
+  - type: matching
+    focus: "Match regions to features"
+    items: 20
+  - type: fill-in
+    focus: "Complete cultural descriptions"
+    items: 15
+  - type: discussion
+    focus: "Compare regional cultures"
+    items: 10
+prerequisites:
+  - b1-71 (Emotional Intelligence)
+connects_to:
+  - b1-73 (Regions East)
 naturalness:
   score: 9
   status: PASS
+  justification: "Essential regional cultural knowledge"

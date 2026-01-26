@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M125 | **Phase:** B2.3d | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 20:23:15
+**Generated:** 2026-01-25 22:23:43
 
 ## Configuration
 **Type:** B2-history
@@ -55,7 +55,7 @@
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ❌ 2072/4000 (raw: 2297)
+- **Words:** ❌ 1843/4000 (raw: 2025)
 - **Activities:** ✅ 16/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 12/2 types
@@ -67,7 +67,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ⚠️ Too many activities: 16 (target 3-9)
-- **Immersion:** 🇺🇦 97.4% (target 90-100% (history))
+- **Immersion:** 🇺🇦 97.0% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -79,15 +79,15 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 13 | 3 | 100% | 24% | 23.8% |
+| primary_sources | 12 | 3 | 100% | 24% | 23.8% |
 | engagement | 6 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
-| decolonization | 15 | 2 | 100% | 14% | 14.3% |
+| decolonization | 13 | 2 | 100% | 14% | 14.3% |
 | cultural | 3 | 4 | 75% | 10% | 7.1% |
-| visual | 7 | 4 | 100% | 10% | 9.5% |
+| visual | 5 | 4 | 100% | 10% | 9.5% |
 | variety | 0.99 | - | 99% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 12 | 3 | 100% | 5% | 4.8% |
+| questions | 11 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **97.6%** |
 
 ## Section Audit
@@ -100,7 +100,6 @@
 | **Історичний наратив: Хроніка узурпації** | ⚪️ | 847 | Skipped |
 | **Первинні джерела** | ✅ | 112 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 96 | Included in Core |
-| **Есе** | ⚪️ | 229 | Skipped |
 | **Порівняльний аналіз** | ✅ | 128 | Included in Core |
 | **Підсумок** | ✅ | 65 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 69 | Skipped |

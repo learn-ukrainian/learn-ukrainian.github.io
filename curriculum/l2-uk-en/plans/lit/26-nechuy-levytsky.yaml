@@ -1,0 +1,104 @@
+module: 26-nechuy-levytsky
+level: lit
+sequence: 26
+version: '1.0'
+title: 'Іван Нечуй-Левицький: Літописець Українського Села'
+subtitle: 'Ivan Nechuy-Levytsky: Chronicler of the Ukrainian Village'
+focus: literature
+pedagogy: seminar
+objectives:
+- Зрозуміти роль Нечуя-Левицького у становленні українського реалізму
+- Проаналізувати біографічні фактори, що вплинули на творчість
+- Дослідити особливості "візуального" стилю письма
+- Оцінити внесок у зображення сільського життя
+sources:
+  primary:
+  - url: https://www.ukrlib.com.ua/bio/printit.php?tid=1646
+    title: Біографія Івана Нечуя-Левицького
+    notes: Офіційна біографія на UkrLib
+  - url: https://www.ukrlib.com.ua/bio/printit.php?tid=1647
+    title: Життя та творчість Івана Нечуя-Левицького
+    notes: Розширена біографічна стаття
+  secondary:
+  - url: https://uk.wikipedia.org/wiki/Нечуй-Левицький_Іван_Семенович
+    title: Нечуй-Левицький — Вікіпедія
+    notes: Загальний контекст
+content_outline:
+- section: Вступ — Від Куліша до Нечуя
+  words: 500
+  subsections:
+  - Перехід від романтизму до реалізму
+  - Чому Нечуй-Левицький важливий
+  - Структура фінального етапу курсу
+- section: Дитинство і середовище (1838-1859)
+  words: 700
+  subsections:
+  - Село Стеблів і родина священика
+  - Київська семінарія та духовна академія
+  - Перші враження від сільського життя
+- section: Учительські роки і перші твори
+  words: 700
+  subsections:
+  - Робота вчителем (1865-1885)
+  - '"Дві московки" — дебют (1868)'
+  - Співпраця з Кулішем і львівською "Правдою"
+- section: Золота доба творчості (1878-1884)
+  words: 800
+  subsections:
+  - '"Микола Джеря" (1878) — епос кріпацтва'
+  - '"Кайдашева сім\'я" (1879) — сімейна сага'
+  - '"Старосвітські батюшки та матушки" (1884)'
+- section: Візуальний стиль Нечуя
+  words: 600
+  subsections:
+  - Етнографічна точність
+  - Мова як інструмент реалізму
+  - Конфлікт з "галицькою" нормою
+- section: Підсумок — Останні роки і спадщина
+  words: 400
+  subsections:
+  - Київський період (1885-1918)
+  - Злиденна смерть генія
+  - Чому його читають досі
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - реалізм
+  - етнографія
+  - побут
+  - село
+  - кріпацтво
+  - священик
+  - повість
+  - оповідання
+  - семінарія
+  - академія
+  recommended:
+  - псевдонім
+  - дебют
+  - хроніка
+  - злидні
+  - спадщина
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - cloze
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: 25-cyrillo-methodian-brotherhood
+  related:
+  - lit-27 (Кайдашева сім'я — персонажі)
+  - lit-30 (Микола Джеря)
+constraints:
+  min_engagement_boxes: 3
+  min_examples: 15
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

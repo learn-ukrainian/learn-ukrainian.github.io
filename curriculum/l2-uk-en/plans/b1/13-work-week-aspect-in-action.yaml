@@ -1,0 +1,77 @@
+module: 13-work-week-aspect-in-action
+level: b1
+sequence: 13
+version: '1.0'
+title: 'Робочий тиждень: вид у дії'
+subtitle: Work Week - Aspect in Real-Life Context
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can describe work routines using correct aspect
+- Learner can report completed and ongoing tasks
+- Learner can use aspect naturally in professional contexts
+sources:
+- name: Ukrainian Business Communication
+  url: https://uk.wikipedia.org/wiki/Ділове_мовлення
+  type: reference
+  notes: Work-related vocabulary and contexts
+- name: Ukrainian State Standard 2024 - Professional Communication
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Aspect in workplace scenarios
+content_outline:
+- section: Тест
+  words: 150
+  points:
+  - 'Diagnostic contrast for робочий тиждень: вид у дії'
+  - No explanation, just observation
+  - Engage critical thinking
+- section: Пояснення
+  words: 800
+  points:
+  - Aspect in workplace context
+  - Plans and tasks (ДВ)
+  - Progress reports (НДВ)
+  - Weekly communication patterns
+- section: Практика
+  words: 400
+  points:
+  - Decision-making framework
+  - Comparative examples
+  - Common mistakes section
+- section: Діалоги
+  words: 150
+  points:
+  - 5-6 authentic dialogues
+  - Grammar in natural context
+  - Various situations
+word_target: 1500
+vocabulary:
+  required:
+  - завдання (task)
+  - звіт (report)
+  - зустріч (meeting)
+  - дедлайн (deadline)
+  - проект (project)
+  - колега (colleague)
+  - начальник (boss)
+  - офіс (office)
+  - робочий день (workday)
+  - робочий тиждень (work week)
+  recommended:
+  - презентація (presentation)
+  - нарада (meeting/conference)
+  - план (plan)
+  - графік (schedule)
+  - відпустка (vacation/leave)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - cloze
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-14 (Aspect integration practice)
+- b1-61 (Professional communication)

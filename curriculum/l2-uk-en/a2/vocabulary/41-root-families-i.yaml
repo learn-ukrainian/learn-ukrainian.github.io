@@ -499,3 +499,8 @@ items:
   ipa: ''
   translation: distractor
   pos: adj
+- lemma: хід
+  ipa: /xid/
+  translation: move, motion, course
+  pos: noun
+  gender: m

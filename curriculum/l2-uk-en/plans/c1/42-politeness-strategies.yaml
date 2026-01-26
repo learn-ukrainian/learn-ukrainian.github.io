@@ -1,0 +1,22 @@
+module: 42-politeness-strategies
+level: c1
+sequence: 42
+version: '1.0'
+title: 'Стратегії ввічливості: Прагматика спілкування'
+subtitle: 'Politeness Strategies: Communication Pragmatics'
+focus: style
+pedagogy: Sociolinguistics
+objectives:
+- Learner can apply complex politeness strategies in varied social contexts
+- Learner can analyze cultural nuances of Ukrainian etiquette
+- Learner can mitigate face-threatening acts using linguistic markers
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

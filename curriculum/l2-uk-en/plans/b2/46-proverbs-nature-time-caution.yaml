@@ -1,0 +1,22 @@
+module: 46-proverbs-nature-time-caution
+level: b2
+sequence: 46
+version: '1.0'
+title: 'Прислів''я II: Природа, час і обережність'
+subtitle: 'Proverbs II: Nature, Time & Caution'
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Learner can recognize and interpret 16 core Ukrainian proverbs about nature, time, and caution
+- Learner can use proverbs appropriately to give advice about planning, risk, and patience
+- Learner understands the cultural values embedded in Ukrainian folk wisdom about natural cycles and prudence
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

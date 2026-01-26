@@ -1,0 +1,57 @@
+
+========================================
+  📋 Loaded Metadata from YAML sidecar
+
+📋 Auditing: B2 M25 — Бояри і шляхта: Соціальні верстви
+   File: curriculum/l2-uk-en/b2-hist/boiare-i-shliakhta.md | Target: 4000 words
+  📋 Template: docs/l2-uk-en/templates/b2-history-module-template.md (pedagogy: CBI)
+  ⚠️  Outline compliance: 1 errors, 0 warnings
+     ❌ [SECTION_LENGTH_MISMATCH] Section 'Читання' is under target word count.
+
+  ⚠️ HYDRATION NOTE: Outline sums to 4016, exceeding word_target 4000
+     Additional 16 words (allowed for content depth)
+
+  📊 Section Word Analysis:
+     Контекст                    633 /  600  ✅ (+33)
+     Читання                    1498 / 2400  ❌ (-902)
+     Первинні джерела            641 /  275  ✅ (+366)
+     Деколонізаційний погляд     568 /  600  ✅ (-32)
+     Потрібно більше практики?   243 /  141  ✅ (+102)
+     ──────────────────────────────────────────────────
+     TOTAL                      3583 / 4016  ❌ (-433)
+
+📋 Auditing: B2 M25 — Бояри і шляхта: Соціальні верстви
+   File: curriculum/l2-uk-en/b2-hist/boiare-i-shliakhta.md | Target: 4000 words
+
+  📋 Found YAML activities file (5 activities)
+  > Гарантії прав та вольностей: 3 items (min 1)
+  > Аналіз позиції боярства: 1 items (min 1)
+  > Аналіз трансформації еліти: 1 items (min 1)
+  > Шляхтич vs Холоп: 1 items (min 1)
+  > Есе: Еліта та нація: 1 items (min 1)
+
+--- STRICT GATES (Level B2) ---
+Words        ⚠️ 3989/4000 (raw: 4135) (11 short)
+Activities   ✅ 5/3
+Density      ✅ All > 1
+Unique_types ✅ 5/2 types
+Priority     ✅ Priority types used
+Engagement   ✅ 8/5
+Audio        ℹ️ No audio
+Vocab        ⚠️ 0 < 20 (soft target)
+Structure    ✅ Valid Structure
+Lint         ✅ Clean Format
+Pedagogy     ✅ Level-appropriate
+Content_heavy ✅ Content-heavy OK (5 activities)
+Grammar      ℹ️ N/A (covered by naturalness)
+Naturalness  ✅ 9/10 (High)
+Activity_quality 📋 Quality validation available (optional)
+Immersion    🇺🇦 97.9% (target 90-100% (history))
+Richness     ✅ 99% (history)
+
+Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/audit/boiare-i-shliakhta-review.md
+
+❌ AUDIT FAILED. Correct errors before proceeding.
+
+Critical Failures:
+  • 1 Outline Compliance Errors

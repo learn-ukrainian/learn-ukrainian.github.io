@@ -1,33 +1,97 @@
 module: a1-19
-title: At the Café
-subtitle: Ordering Food and Drinks in Ukrainian
-version: '1.0'
-phase: A1.2
+id: a1-19
+slug: at-the-cafe
+title: "At the Café"
+subtitle: "Ordering Food and Drinks in Ukrainian"
+version: '2.0'
+phase: "A1.2 [Navigation]"
+focus: practical
 pedagogy: PPP
-focus: grammar
+register: розмовний
 duration: 60
 transliteration: none
-phonetics: ipa
-tags:
-  - functional
-  - café
-  - ordering
-  - restaurant
-  - food
-  - drinks
-  - politeness
-grammar:
-  - Functional integration of Accusative, Genitive, and Locative cases
-  - Polite imperative forms (принесіть, візьміть)
-  - Future tense (візьму from взяти)
 objectives:
-  - Learner can order food and drinks at a café
-  - Learner can ask for recommendations
-  - Learner can request the bill
-  - Learner can use functional phrases with Accusative, Genitive, and Locative cases
-vocabulary_count: 24
-vocab_count: 24
-slug: 19-at-the-cafe
+  - "Learner can order food and drinks at a café"
+  - "Learner can ask for recommendations"
+  - "Learner can request the bill"
+  - "Learner can use polite forms and cases correctly"
+grammar:
+  - "Integration of Accusative, Genitive, Locative"
+  - "Polite imperatives (принесіть, візьміть)"
+  - "Future tense preview (візьму)"
+word_target: 900
+content_outline:
+  - section: "Introduction: Café Culture"
+    words: 100
+    points:
+      - "Ukrainian café traditions"
+      - "Useful phrases"
+      - "Polite communication"
+  - section: "Ordering Food"
+    words: 200
+    points:
+      - "Мені, будь ласка... (For me, please...)"
+      - "Я візьму... (I'll take...)"
+      - "Принесіть, будь ласка... (Please bring...)"
+  - section: "Menu Items"
+    words: 200
+    points:
+      - "Coffee drinks: еспресо, капучіно, лате"
+      - "Tea and other: чай, сік, вода"
+      - "Snacks: круасан, тістечко, сендвіч"
+  - section: "Special Requests"
+    words: 150
+    points:
+      - "без цукру (without sugar)"
+      - "з молоком (with milk)"
+      - "гарячий/холодний (hot/cold)"
+  - section: "The Bill"
+    words: 150
+    points:
+      - "Рахунок, будь ласка (The bill, please)"
+      - "Скільки з мене? (How much do I owe?)"
+      - "Paying and tipping"
+  - section: "Practice: Café Role-Play"
+    words: 100
+    points:
+      - "Order a complete meal"
+      - "Handle problems"
+vocabulary_hints:
+  required:
+    - кава (coffee)
+    - чай (tea)
+    - меню (menu)
+    - рахунок (bill)
+    - офіціант (waiter)
+    - замовляти (to order)
+    - принести (to bring)
+    - будь ласка (please)
+  recommended:
+    - круасан (croissant)
+    - тістечко (pastry)
+    - еспресо (espresso)
+    - капучіно (cappuccino)
+    - чайові (tip)
+    - картка (card)
+activity_hints:
+  - type: dialogue
+    focus: "Complete café ordering"
+    items: 8
+  - type: role-play
+    focus: "Customer and waiter"
+    items: 6
+  - type: fill-in
+    focus: "Complete ordering phrases"
+    items: 15
+  - type: listening
+    focus: "Understand café dialogue"
+    items: 10
+prerequisites:
+  - a1-18 (Food and Shopping)
+connects_to:
+  - a1-20 (Checkpoint Navigation)
+  - a1-36 (At the Restaurant)
 naturalness:
   score: 10
   status: PASS
+  justification: "Practical café skills"

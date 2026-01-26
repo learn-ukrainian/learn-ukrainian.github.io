@@ -1,0 +1,99 @@
+module: litopys-samovidtsia
+level: c1-hist
+sequence: 20
+version: '1.0'
+title: 'Літопис Самовидця: Голос очевидця'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Найстаріший козацький літопис
+  words: 400
+  subsections:
+  - Чому «Самовидець» — очевидець
+  - Найменш стилізований з трьох
+  - Цінність безпосередності
+  - Хронологія — 1648-1702
+- section: Питання авторства
+  words: 500
+  subsections:
+  - Анонімність — хто написав?
+  - Гіпотези — Роман Ракушка-Романовський?
+  - Внутрішні свідчення тексту
+  - Чому важко встановити
+- section: Зміст і структура
+  words: 600
+  subsections:
+  - Від 1648 до 1702 року
+  - Хмельницький — детально
+  - Руїна — хаос і громадянська війна
+  - Останні гетьмани
+  - Що охоплено, що пропущено
+- section: Особливості стилю
+  words: 500
+  subsections:
+  - Простий, діловий стиль
+  - Мінімум риторики
+  - Фактографічність
+  - Мова — українська канцелярська
+- section: Фрагмент — Початок повстання 1648
+  words: 700
+  subsections:
+  - Текст (з глосами)
+  - Як описано Хмельницького
+  - Перші перемоги
+  - Позиція автора — за чи проти?
+- section: Критика джерела
+  words: 500
+  subsections:
+  - Очевидець — але з якої позиції?
+  - Що автор міг знати, чого не міг
+  - Пізніші редакції — що додано?
+  - Порівняння з іншими джерелами
+- section: Підсумок
+  words: 300
+  subsections:
+  - Найближче до «первинного» джерела
+  - Цінність для історика
+  - Зв'язок із наступними літописами
+word_target: 3500
+vocabulary:
+- самовидець
+- анонімний
+- фактографічний
+- канцелярський стиль
+- Руїна
+- громадянська війна
+- повстання
+- гетьман
+- козацтво
+- очевидець
+- датування
+- хронологія
+- атрибуція
+- лаконічний
+- неупереджений
+activities:
+- type: reading
+  focus: 1648 uprising beginning passage
+- type: critical-analysis
+  focus: What can an eyewitness know vs. what they can't?
+- type: comparative-study
+  focus: Compare Samovydets on 1648 with Polish sources
+- type: reading
+  focus: Analyze author's attitude to Khmelnytsky
+- type: essay-response
+  focus: Чи означає 'очевидець' об'єктивність?
+sources:
+- name: Літопис Самовидця (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Літопис_Самовидця
+  type: reference
+  notes: Overview
+- name: Літопис Самовидця (текст)
+  url: https://litopys.org.ua/samovyd/sam.htm
+  type: primary
+  notes: Full text
+- name: Хмельниччина
+  url: https://uk.wikipedia.org/wiki/Хмельниччина
+  type: reference
+  notes: Historical context

@@ -1,0 +1,22 @@
+module: 39-register-religious-epistolary
+level: b2
+sequence: 39
+version: '1.0'
+title: Регістр — Релігійний та епістолярний стилі
+subtitle: Мова духовності та листування
+focus: grammar
+pedagogy: TTT
+objectives:
+- Учень може розпізнавати характерні ознаки релігійного стилю
+- Учень може писати формальні та неформальні листи українською
+- Учень може трансформувати текст між формальним та неформальним регістрами
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

@@ -1,0 +1,77 @@
+module: practical-intro
+level: a2
+sequence: 57
+version: '2.0'
+title: Practical Intro
+subtitle: Real World Ukrainian
+focus: practical
+pedagogy: PPP
+objectives:
+- Learner can identify all 7 cases in context
+- Learner can choose correct verb aspect
+- Learner can fix common grammar mistakes
+- Learner can build complex sentences
+content_outline:
+- section: 'Introduction: Practical Ukrainian'
+  words: 100
+  points:
+  - From theory to practice
+  - Real-world communication
+  - Practical scenarios overview
+- section: Case Review in Context
+  words: 150
+  points:
+  - Nominative, accusative, genitive
+  - Dative, instrumental, locative
+  - Vocative for addressing
+- section: Aspect in Daily Life
+  words: 150
+  points:
+  - When to use perfective
+  - When to use imperfective
+  - Common aspect pairs
+- section: Common Mistakes
+  words: 150
+  points:
+  - Case confusion
+  - Aspect errors
+  - Word order issues
+- section: Building Sentences
+  words: 150
+  points:
+  - Simple to complex
+  - Conjunctions and connectors
+  - Natural word order
+- section: 'Practice: Error Correction'
+  words: 100
+  points:
+  - Identify and fix errors
+  - Apply rules in context
+word_target: 800
+vocabulary:
+  required:
+  - речення (sentence)
+  - слово (word)
+  - граматика (grammar)
+  - правило (rule)
+  - помилка (mistake)
+  - правильно (correctly)
+  - неправильно (incorrectly)
+  - контекст (context)
+  recommended:
+  - відмінок (case)
+  - вид (aspect)
+  - сполучник (conjunction)
+  - порядок (order)
+  forbidden: []
+activities:
+  types_required:
+  - error-correction
+  - sentence-building
+  - fill-in
+  - quiz
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a2-58 (Practical Warm-up)

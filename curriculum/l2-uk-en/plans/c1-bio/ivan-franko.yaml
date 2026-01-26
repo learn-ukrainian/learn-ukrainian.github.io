@@ -1,0 +1,105 @@
+module: ivan-franko
+level: c1-bio
+sequence: 28
+version: '2.0'
+title: 'Іван Франко: Каменяр'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Франко_Іван_Якович
+    title: Іван Франко (Wikipedia UA)
+    notes: Comprehensive biography of the titan of Ukrainian culture
+  secondary:
+  - url: https://ifnan.gov.ua/
+    title: Інститут Івана Франка НАН України
+    notes: Academic institution dedicated to Franko studies
+content_outline:
+- section: Вступ — Титан праці
+  words: 400
+  subsections:
+  - Письменник, поет, вчений, громадський діяч
+  - Символ Галичини і всієї України
+  - Автор понад 6000 творів
+- section: Юність у Нагуєвичах (1856-1874)
+  words: 600
+  subsections:
+  - Народження в родині сільського коваля
+  - Рання освіта та таланти
+  - Смерть батька та вплив мачухи
+  - Дрогобицька гімназія
+- section: Студентські роки (1874-1880)
+  words: 800
+  subsections:
+  - Львівський університет
+  - Участь у соціалістичному русі
+  - Перші арешти
+  - Початок літературної діяльності
+- section: Каменяр української культури (1880-1905)
+  words: 800
+  subsections:
+  - «Мойсей», «Захар Беркут», «Перехресні стежки»
+  - Наукова діяльність та докторат
+  - Журналістика та редакторська робота
+  - Номінація на Нобелівську премію (1916)
+- section: Хвороба та останні роки (1905-1916)
+  words: 700
+  subsections:
+  - Прогресуюча хвороба
+  - Продовження творчої роботи
+  - Перша світова війна
+  - Смерть у Львові
+- section: Спадщина — Вічний каменяр
+  words: 700
+  subsections:
+  - Вплив на українську літературу
+  - Франко як національний символ
+  - Університет та інститути його імені
+  - Актуальність ідей Франка сьогодні
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - каменяр
+  - титан
+  - письменник
+  - громадський діяч
+  - соціалізм
+  - наукова діяльність
+  - журналіст
+  - редактор
+  - поема
+  - повість
+  recommended:
+  - позитивізм
+  - народництво
+  - просвіта
+  - Галичина
+  - національне відродження
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-27
+  related:
+  - c1-bio-20
+  - c1-bio-40
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

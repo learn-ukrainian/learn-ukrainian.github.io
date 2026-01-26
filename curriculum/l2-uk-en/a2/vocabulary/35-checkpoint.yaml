@@ -18,3 +18,23 @@ items:
   ipa: /upɛrˈɛd/
   translation: forward
   pos: adv
+- lemma: однина
+  ipa: /odnɪˈna/
+  translation: singular (number)
+  pos: noun
+  gender: f
+- lemma: множина
+  ipa: /mnɔʒɪˈna/
+  translation: plural (number)
+  pos: noun
+  gender: f
+- lemma: займенник
+  ipa: /zajmˈɛnnɪk/
+  translation: pronoun
+  pos: noun
+  gender: m
+- lemma: антецедент
+  ipa: /antɛt͡sɛdˈɛnt/
+  translation: antecedent
+  pos: noun
+  gender: m

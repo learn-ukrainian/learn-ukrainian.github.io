@@ -1,0 +1,77 @@
+module: ukrainian-cuisine
+level: b1
+sequence: 85
+version: '2.0'
+title: Українська кухня
+subtitle: Ukrainian Cuisine and Food Culture
+focus: culture
+pedagogy: CBI
+objectives:
+- Learner can discuss Ukrainian regional cuisines in context
+- Learner can understand authentic texts about Ukrainian food traditions
+- Learner can use food-related vocabulary to describe dishes and cooking methods
+- Learner can compare Ukrainian cuisine with their own food culture
+content_outline:
+- section: 'Introduction: Ukrainian Food'
+  words: 150
+  points:
+  - Cuisine overview
+  - Regional traditions
+  - Food culture significance
+- section: Traditional Dishes
+  words: 250
+  points:
+  - борщ, вареники, голубці
+  - Preparation methods
+  - Regional variations
+- section: Holiday Food
+  words: 250
+  points:
+  - кутя, паска, узвар
+  - Christmas Eve dishes
+  - Easter traditions
+- section: Modern Ukrainian Cuisine
+  words: 250
+  points:
+  - Contemporary restaurants
+  - Fusion trends
+  - Chef culture
+- section: Regional Specialties
+  words: 200
+  points:
+  - Western, Eastern differences
+  - Local ingredients
+  - Seasonal dishes
+- section: 'Practice: Food Discussion'
+  words: 100
+  points:
+  - Describe favorite dishes
+  - Compare cuisines
+word_target: 1200
+vocabulary:
+  required:
+  - борщ (borscht)
+  - вареники (varenyky)
+  - голубці (holubtsi)
+  - сало (salo)
+  - страва (dish)
+  - смак (taste)
+  - готувати (to cook)
+  - рецепт (recipe)
+  recommended:
+  - кутя (kutia)
+  - паска (paska)
+  - галушки (halushky)
+  - узвар (uzvar)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - reading
+  - discussion
+  - matching
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-86 (Ukrainian Holidays and Festivals)

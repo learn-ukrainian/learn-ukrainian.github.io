@@ -1,30 +1,55 @@
 id: 94
-slug: 'b2-final-exam'
-title: 'B2 Підсумковий іспит'
-subtitle: 'B2 Final Exam'
+slug: b2-final-exam
+title: B2 Підсумковий іспит
+subtitle: B2 Final Exam
 version: '2.0'
-phase: 'B2.4 Communication Skills Checkpoint'
-pedagogy: 'TTT'
-focus: 'checkpoint'
+phase: B2.4 Communication Skills Checkpoint
+pedagogy: TTT
+focus: checkpoint
 duration: 180
-transliteration: 'none'
+transliteration: none
 immersion: 100
 tags:
-  - checkpoint
-  - final-exam
-  - integration
-  - communication-skills
+- checkpoint
+- final-exam
+- integration
+- communication-skills
 grammar:
-  - 'Integration of M85-93 Communication Skills'
-  - 'Comprehensive review and testing'
+- Integration of M85-93 Communication Skills
+- Comprehensive review and testing
 objectives:
-  - 'Learner can write professional emails and reports'
-  - 'Learner can analyze news and media critically'
-  - 'Learner can deliver effective presentations'
-  - 'Learner can participate in professional discussions'
-  - 'Learner can self-assess readiness for C1 level'
+- Learner can write professional emails and reports
+- Learner can analyze news and media critically
+- Learner can deliver effective presentations
+- Learner can participate in professional discussions
+- Learner can self-assess readiness for C1 level
 vocabulary_count: 45
-register: 'varies'
+register: varies
 naturalness:
   score: 8
-  status: "PASS"
+  status: PASS
+content_outline:
+- section: Вступ — B2 Підсумковий іспит
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Основний матеріал
+  words: 600
+  points:
+  - Теоретичні основи
+  - Приклади та ілюстрації
+  - Типові помилки та як їх уникати
+- section: Поглиблене вивчення
+  words: 600
+  points:
+  - Додаткові випадки
+  - Контекстуальне використання
+  - Стилістичні нюанси
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

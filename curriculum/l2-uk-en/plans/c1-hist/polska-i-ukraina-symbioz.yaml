@@ -1,0 +1,91 @@
+module: polska-i-ukraina-symbioz
+level: c1-hist
+sequence: 114
+version: '1.0'
+title: 'Польща і Україна: Симбіоз і конфлікт'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — 600 років разом
+  words: 451
+  subsections:
+  - Найскладніші відносини в Європі
+  - Спільна держава — 400 років
+  - Конфлікт і співпраця
+  - Структура модуля
+- section: Люблінська унія 1569
+  words: 677
+  subsections:
+  - Об'єднання в одну державу
+  - Що отримала Україна
+  - Шляхта — українська еліта
+  - Полонізація
+- section: Козацькі повстання
+  words: 790
+  subsections:
+  - Наливайко, Жмайло
+  - Хмельницький 1648
+  - Ріки крові
+  - Але не етнічна війна
+- section: Під розділами
+  words: 677
+  subsections:
+  - 1795 — кінець Речі Посполитої
+  - Спільна неволя
+  - Польське повстання 1863
+  - Українці — союзники чи конкуренти
+- section: Спільна культура
+  words: 564
+  subsections:
+  - Мова — взаємовпливи
+  - Костюшко, Міцкевич — походження
+  - Архітектура Львова
+  - Що залишилось
+- section: Підсумок
+  words: 341
+  subsections:
+  - Симбіоз і конфлікт — одночасно
+  - Неможливо спростити
+  - Перехід до 1918-1920
+word_target: 3500
+vocabulary:
+- симбіоз
+- конфлікт
+- Річ Посполита
+- унія
+- шляхта
+- полонізація
+- козацьке повстання
+- поділи
+- спільна неволя
+- взаємовплив
+- магнат
+- кресови
+- руська мова
+- сарматизм
+- гайдамаки
+activities:
+- type: historical-analysis
+  focus: 400 years of Polish-Ukrainian shared state
+- type: complexity-analysis
+  focus: Why 1648 was not ethnic cleansing
+- type: cultural-study
+  focus: Polish-Ukrainian cultural symbiosis
+- type: comparative-perspective
+  focus: Polish and Ukrainian views on shared history
+- type: essay-response
+  focus: Чи Польща була колонізатором України?
+sources:
+- name: Польсько-українські відносини (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Польсько-українські_відносини
+  type: reference
+  notes: Relations overview
+- name: Річ Посполита (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Річ_Посполита
+  type: reference
+  notes: Commonwealth period
+- name: Козацько-польські війни (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Козацько-польські_війни
+  type: reference
+  notes: Cossack-Polish wars

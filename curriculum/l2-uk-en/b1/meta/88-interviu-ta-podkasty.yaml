@@ -1,26 +1,94 @@
 module: b1-88
-title: Інтерв'ю та подкасти
-subtitle: Interviews and Podcasts
+id: b1-88
+slug: interviu-ta-podkasty
+title: "Інтерв'ю та подкасти"
+subtitle: "Listening to Ukrainian Interviews and Podcasts"
 version: '2.0'
-phase: B1.8 Skills & Integration
+phase: "B1.8 [Skills & Integration]"
 focus: skills
 pedagogy: CBI
+register: розмовний
 duration: 90
 transliteration: none
-tags:
-- integration
-- listening
-- audio comprehension
-- note-taking
-grammar: []
 objectives:
-- Learner can apply listening strategies to authentic Ukrainian interviews and podcasts
-- Learner can identify main points and key information in spoken discourse
-- Learner can take effective notes while listening to Ukrainian audio content
-- Learner is prepared for autonomous listening practice at B2
-vocabulary_count: 38
-vocab_count: 38
-slug: 88-interviu-ta-podkasty
+  - "Learner can apply listening strategies to authentic Ukrainian interviews and podcasts"
+  - "Learner can identify main points and key information in spoken discourse"
+  - "Learner can take effective notes while listening to Ukrainian audio content"
+  - "Learner is prepared for autonomous listening practice at B2"
+grammar:
+  - "Listening comprehension strategies"
+  - "Note-taking techniques"
+  - "Spoken discourse markers"
+word_target: 1200
+content_outline:
+  - section: "Introduction: Listening Skills"
+    words: 150
+    points:
+      - "Listening strategies"
+      - "Ukrainian podcast landscape"
+      - "Interview formats"
+  - section: "Listening Strategies"
+    words: 250
+    points:
+      - "Pre-listening preparation"
+      - "Active listening"
+      - "Post-listening review"
+  - section: "Note-Taking"
+    words: 250
+    points:
+      - "Note-taking vocabulary"
+      - "Abbreviation systems"
+      - "Organizing information"
+  - section: "Interview Features"
+    words: 250
+    points:
+      - "Question types"
+      - "Response patterns"
+      - "Turn-taking"
+  - section: "Podcast Genres"
+    words: 200
+    points:
+      - "News podcasts"
+      - "Educational content"
+      - "Recommended shows"
+  - section: "Practice: Listening Tasks"
+    words: 100
+    points:
+      - "Listen and summarize"
+      - "Discuss content"
+vocabulary_hints:
+  required:
+    - інтерв'ю (interview)
+    - подкаст (podcast)
+    - слухати (to listen)
+    - ведучий (host)
+    - гість (guest)
+    - питання (question)
+    - відповідь (answer)
+    - запис (recording)
+  recommended:
+    - нотатки (notes)
+    - тема (topic)
+    - обговорення (discussion)
+    - випуск (episode)
+activity_hints:
+  - type: listening
+    focus: "Authentic interview excerpts"
+    items: 15
+  - type: note-taking
+    focus: "Practice note-taking"
+    items: 15
+  - type: matching
+    focus: "Match speakers to opinions"
+    items: 20
+  - type: discussion
+    focus: "Discuss podcast topics"
+    items: 10
+prerequisites:
+  - b1-87 (News Reading)
+connects_to:
+  - b1-89 (Checkpoint Grammar Synthesis)
 naturalness:
   score: 9
   status: PASS
+  justification: "Essential listening skills for B2 preparation"

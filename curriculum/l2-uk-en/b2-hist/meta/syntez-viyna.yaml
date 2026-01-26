@@ -1,26 +1,105 @@
-title: 'Синтез: Війна за існування'
-subtitle: 'Synthesis: War for Existence'
+module: b2-hist-138
+id: b2-hist-138
+slug: syntez-viyna
+title: "Синтез: Війна за існування"
+subtitle: "Synthesis: War for Existence"
 version: '2.0'
-phase: B2.3e War for Existence
+phase: "HIST.13 [Full-Scale War]"
 focus: history
-word_target: 3000
 pedagogy: CBI
+register: публіцистичний
 duration: 150
 transliteration: none
-tags:
-- history
-- synthesis
-- war
-- modern-ukraine
-grammar:
-- Analytical writing
-- Cause-effect structures
 objectives:
-- Синтезувати знання про події 2014-2024 років
-- Аналізувати причинно-наслідкові зв'язки сучасної війни
-- Формулювати аргументовані висновки про майбутнє України
-vocabulary_count: 30
-slug: syntez-viyna-za-isnuvannya
+  - "Учень може синтезувати знання про російсько-українську війну 2014-2024"
+  - "Учень може пояснити причини та цілі російської агресії"
+  - "Учень може проаналізувати чинники українського спротиву"
+  - "Учень може оцінити глобальне значення війни"
+grammar:
+  - "Аналітичний стиль"
+  - "Причинно-наслідкові конструкції"
+  - "Складнопідрядні речення"
+word_target: 3000
+content_outline:
+  - section: "Вступ: Війна за майбутнє"
+    words: 300
+    points:
+      - "2014-2024: десятиліття війни"
+      - "Від Криму до повномасштабного вторгнення"
+      - "Чому ця війна змінює світ"
+  - section: "Етапи війни"
+    words: 600
+    points:
+      - "Анексія Криму (2014)"
+      - "Війна на Донбасі (2014-2022)"
+      - "Повномасштабне вторгнення (2022)"
+      - "Оборона та контрнаступ"
+  - section: "Причини та мотиви"
+    words: 700
+    points:
+      - "Імперська ідеологія Росії"
+      - "«Русский мир» та неоколоніалізм"
+      - "Страх перед українською демократією"
+      - "Геополітичні розрахунки Кремля"
+  - section: "Чинники спротиву"
+    words: 600
+    points:
+      - "Українська ідентичність та нація"
+      - "Реформи армії після 2014"
+      - "Громадянське суспільство"
+      - "Міжнародна підтримка"
+  - section: "Деколонізаційний погляд"
+    words: 400
+    points:
+      - "Російський наратив: «денацифікація»"
+      - "Реальність: колоніальна війна"
+      - "Геноцидний характер агресії"
+  - section: "Підсумок: Глобальне значення"
+    words: 400
+    points:
+      - "Україна та світовий порядок"
+      - "Від жертви до суб'єкта історії"
+      - "Майбутнє: перемога та відбудова"
+vocabulary_hints:
+  required:
+    - синтез (synthesis)
+    - агресія (aggression)
+    - спротив (resistance)
+    - вторгнення (invasion)
+    - окупація (occupation)
+    - анексія (annexation)
+    - геноцид (genocide)
+    - ідентичність (identity)
+  recommended:
+    - контрнаступ (counteroffensive)
+    - деокупація (de-occupation)
+    - санкції (sanctions)
+    - зброя (weapons)
+    - стійкість (resilience)
+    - перемога (victory)
+activity_hints:
+  - type: reading
+    focus: "Порівняльний аналіз етапів війни"
+    source: "Аналітичні матеріали"
+    items: 4
+  - type: quiz
+    focus: "Війна 2014-2024: синтез"
+    items: 15
+  - type: match-up
+    focus: "Етап → ключові події"
+    items: 10
+  - type: timeline
+    focus: "Хронологія війни"
+    items: 12
+  - type: essay-response
+    focus: "Чому Україна чинить спротив російській агресії?"
+    word_target: 300
+prerequisites:
+  - b2-hist-137 (Злочини та стійкість)
+connects_to:
+  - b2-hist-139 (Шлях до перемоги)
+  - b2-hist-140 (Підсумок курсу)
 naturalness:
-  score: 9
+  score: 10
   status: PASS
+  justification: "Академічний український для синтетичного аналізу"

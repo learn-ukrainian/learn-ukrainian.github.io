@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M70 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:23:48
+**Generated:** 2026-01-25 22:23:09
 
 ## Configuration
 **Type:** B2-history
@@ -39,7 +39,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ⚠️ 3913/4000 (raw: 4010) (87 short)
+- **Words:** ✅ 4027/4000 (raw: 4124)
 - **Activities:** ✅ 10/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 10/2 types
@@ -80,9 +80,9 @@
 | **Intro/Narrative** | ✅ | 84 | Included in Core |
 | **Вступ: Між молотом і ковадлом** | ✅ | 327 | Included in Core |
 | **Читання: Епоха Данила Апостола** | ✅ | 704 | Included in Core |
-| **Економіка та суспільство: Стабільність і криза** | ⚪️ | 649 | Skipped |
-| **Епоха Розумовського: Європейська мрія** | ⚪️ | 735 | Skipped |
+| **Економіка та суспільство: Стабільність і криза** | ⚪️ | 699 | Skipped |
+| **Епоха Розумовського: Європейська мрія** | ⚪️ | 798 | Skipped |
 | **Первинні джерела: Голоси епохи** | ✅ | 546 | Included in Core |
 | **Деколонізаційний погляд: Дві стратегії виживання** | ✅ | 408 | Included in Core |
 | **Підсумок: Захід сонця** | ✅ | 399 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 61 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 62 | Skipped |

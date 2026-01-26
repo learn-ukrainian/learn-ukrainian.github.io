@@ -31,3 +31,31 @@ slug: 37-word-formation-adverbs-integration
 naturalness:
   score: 9
   status: PASS
+content_outline:
+- section: Вступ — прислівники та інтеграція
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Adverbs from Adjectives
+  words: 500
+  points:
+  - швидкий → швидко (quickly)
+  - гарний → гарно (well, nicely)
+  - добрий → добре (well)
+  - український → по-українськи (in Ukrainian)
+- section: Diminutives and Augmentatives
+  words: 500
+  points:
+  - хлопець → хлопчик (little boy)
+  - донька → донечка (dear daughter)
+  - вітер → вітрище (strong wind)
+  - великий → величезний (huge)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

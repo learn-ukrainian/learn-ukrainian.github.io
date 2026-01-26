@@ -1,0 +1,77 @@
+module: ukrainian-cinema-and-tv
+level: b1
+sequence: 77
+version: '2.0'
+title: Українське кіно та серіали
+subtitle: Ukrainian Cinema and Television
+focus: culture
+pedagogy: CBI
+objectives:
+- Learner can discuss Ukrainian films and television series
+- Learner can understand authentic texts about Ukrainian cinema
+- Learner can use film industry vocabulary in context
+- Learner can compare Ukrainian cinema with their own cultural experience
+content_outline:
+- section: 'Introduction: Ukrainian Cinema'
+  words: 150
+  points:
+  - Cinema history overview
+  - Soviet and post-Soviet era
+  - Contemporary renaissance
+- section: Classic Ukrainian Films
+  words: 250
+  points:
+  - Dovzhenko legacy
+  - Classic directors
+  - Cultural milestones
+- section: Contemporary Cinema
+  words: 250
+  points:
+  - Modern directors
+  - War documentaries
+  - International recognition
+- section: Ukrainian Television
+  words: 250
+  points:
+  - Popular series
+  - Comedy and drama
+  - Streaming platforms
+- section: Film Industry Today
+  words: 200
+  points:
+  - Production companies
+  - Film festivals
+  - Future trends
+- section: 'Practice: Film Discussion'
+  words: 100
+  points:
+  - Recommend films
+  - Discuss preferences
+word_target: 1200
+vocabulary:
+  required:
+  - фільм (film)
+  - кіно (cinema)
+  - серіал (TV series)
+  - режисер (director)
+  - актор/акторка (actor/actress)
+  - документальний (documentary)
+  - жанр (genre)
+  - прем'єра (premiere)
+  recommended:
+  - комедія (comedy)
+  - драма (drama)
+  - історичний фільм (historical film)
+  - кінофестиваль (film festival)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - reading
+  - discussion
+  - matching
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-78 (Technology and Startups)

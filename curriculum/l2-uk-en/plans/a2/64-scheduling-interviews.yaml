@@ -1,0 +1,79 @@
+module: scheduling-interviews
+level: a2
+sequence: 64
+version: '2.0'
+title: Scheduling Interviews
+subtitle: Job Search and Interviews
+focus: practical
+pedagogy: PPP
+objectives:
+- Learner can arrange a job interview
+- Learner can describe their professional background
+- Learner can ask about salary and duties
+- Learner can use formal language for business
+content_outline:
+- section: 'Introduction: Job Search in Ukraine'
+  words: 100
+  points:
+  - Job market basics
+  - Finding job openings
+  - Interview vocabulary
+- section: Arranging an Interview
+  words: 200
+  points:
+  - призначити співбесіду
+  - Confirming time and place
+  - Preparing documents
+- section: Your Background
+  words: 200
+  points:
+  - досвід роботи
+  - освіта, навички
+  - Describing qualifications
+- section: Interview Questions
+  words: 200
+  points:
+  - Common questions
+  - Answering about yourself
+  - Questions to ask
+- section: Salary and Conditions
+  words: 150
+  points:
+  - зарплата, графік
+  - Benefits and vacation
+  - Negotiating terms
+- section: 'Practice: Job Interview'
+  words: 150
+  points:
+  - Schedule interview
+  - Answer interview questions
+word_target: 1000
+vocabulary:
+  required:
+  - співбесіда (interview)
+  - резюме (resume)
+  - вакансія (vacancy)
+  - досвід (experience)
+  - зарплата (salary)
+  - обов'язки (duties)
+  - навички (skills)
+  - кандидат (candidate)
+  recommended:
+  - HR-менеджер (HR manager)
+  - графік (schedule)
+  - випробувальний (probation)
+  - соціальний пакет (benefits)
+  - відпустка (vacation)
+  - підвищення (promotion)
+  forbidden: []
+activities:
+  types_required:
+  - vocabulary-drill
+  - dialogue
+  - speaking
+  - role-play
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a2-65 (Giving Directions)

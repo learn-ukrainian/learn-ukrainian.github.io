@@ -1,0 +1,109 @@
+module: yevhen-paton
+level: c1-bio
+sequence: 112
+version: '2.0'
+title: 'Євген Патон: Батько українського мостобудування'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Патон_Євген_Оскарович
+    title: Євген Патон (Wikipedia UA)
+    notes: Biography, engineering achievements, institute
+  secondary:
+  - url: https://uk.wikipedia.org/wiki/Інститут_електрозварювання_імені_Є._О._Патона
+    title: Інститут електрозварювання
+    notes: Institute he founded
+  - url: https://uk.wikipedia.org/wiki/Міст_Патона
+    title: Міст Патона
+    notes: Kyiv bridge named after him
+content_outline:
+- section: Вступ — Інженер, який з'єднав береги
+  words: 457
+  subsections:
+  - Патон як засновник української школи зварювання
+  - Мости та технології, що змінили інженерію
+  - Київський міст як символ його спадщини
+- section: Від Росії до України
+  words: 571
+  subsections:
+  - Народження в Ніцці (1870)
+  - Інженерна освіта в Петербурзі
+  - Переїзд до Києва (1904)
+  - Вибір України як батьківщини
+- section: Мостобудівник
+  words: 800
+  subsections:
+  - Проектування мостів через Дніпро
+  - Інновації в конструкції мостів
+  - Підготовка українських інженерів
+  - Київський політехнічний інститут
+- section: Революція зварювання
+  words: 914
+  subsections:
+  - Заснування Інституту електрозварювання (1934)
+  - Автоматичне зварювання
+  - Застосування у танкобудуванні (WWII)
+  - Підвищення продуктивності в 10 разів
+- section: Післявоєнні досягнення
+  words: 571
+  subsections:
+  - Відбудова зруйнованих мостів
+  - Новий міст через Дніпро (1953)
+  - Підготовка наступного покоління
+  - Робота до останнього дня життя
+- section: Спадщина двох поколінь
+  words: 687
+  subsections:
+  - Смерть 1953 року
+  - Син Борис — продовжувач справи
+  - Інститут Патона — світовий лідер
+  - Міст Патона — пам'ятка Києва
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - мостобудування
+  - електрозварювання
+  - інженер
+  - конструкція
+  - інститут
+  - автоматизація
+  - продуктивність
+  - технологія
+  - проект
+  - школа
+  recommended:
+  - балка
+  - опора
+  - прогін
+  - метал
+  - плавлення
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: Basic understanding of engineering
+  related:
+  - c1-bio-113 (Boris Paton - his son)
+  - c1-bio-117 (Korolyov - contemporary engineer)
+  - c1-bio-114 (Amosov - same era scientist)
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

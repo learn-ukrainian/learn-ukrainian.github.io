@@ -1,0 +1,79 @@
+module: nature-and-weather
+level: a2
+sequence: 47
+version: '2.0'
+title: Nature and Weather
+subtitle: The World Around Us
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can describe weather conditions in detail
+- Learner can talk about seasons and climate
+- Learner can describe landscapes
+- Learner can discuss nature and environment
+content_outline:
+- section: 'Introduction: Ukrainian Nature'
+  words: 100
+  points:
+  - Ukraine's diverse landscapes
+  - Climate zones
+  - Nature vocabulary expansion
+- section: Weather in Detail
+  words: 200
+  points:
+  - 'Temperature: спекотно, морозно'
+  - 'Precipitation: злива, град, туман'
+  - Weather forecasts
+- section: Landscapes
+  words: 200
+  points:
+  - гора, долина, рівнина
+  - річка, озеро, море
+  - ліс, степ, пустеля
+- section: Flora and Fauna
+  words: 200
+  points:
+  - 'Trees: дуб, береза, сосна'
+  - 'Animals: ведмідь, вовк, олень'
+  - Birds and insects
+- section: Environmental Topics
+  words: 150
+  points:
+  - довкілля (environment)
+  - забруднення, захист природи
+  - Climate change basics
+- section: 'Practice: Describe Nature'
+  words: 150
+  points:
+  - Describe a landscape
+  - Weather reports
+word_target: 1000
+vocabulary:
+  required:
+  - погода (weather)
+  - клімат (climate)
+  - гора (mountain)
+  - ліс (forest)
+  - річка (river)
+  - дощ (rain)
+  - сніг (snow)
+  - природа (nature)
+  recommended:
+  - туман (fog)
+  - град (hail)
+  - озеро (lake)
+  - степ (steppe)
+  - довкілля (environment)
+  - тварина (animal)
+  forbidden: []
+activities:
+  types_required:
+  - vocabulary-drill
+  - matching
+  - speaking
+  - fill-in
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a2-48 (Emotions and Personality)

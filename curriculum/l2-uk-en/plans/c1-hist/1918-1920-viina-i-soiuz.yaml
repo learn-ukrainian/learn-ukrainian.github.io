@@ -1,0 +1,91 @@
+module: 1918-1920-viina-i-soiuz
+level: c1-hist
+sequence: 115
+version: '1.0'
+title: '1918-1920: Війна і союз одночасно'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Парадокс 1918-1920
+  words: 451
+  subsections:
+  - Війна в Галичині
+  - Союз проти більшовиків
+  - Одночасно
+  - Структура модуля
+- section: Війна за Львів 1918-1919
+  words: 790
+  subsections:
+  - ЗУНР vs Польща
+  - «Орлята Львова»
+  - Україна програє
+  - Наслідки поразки
+- section: Варшавський договір 1920
+  words: 677
+  subsections:
+  - Петлюра і Пілсудський
+  - Умови союзу
+  - Ціна — Галичина
+  - Чому Петлюра погодився
+- section: Київська операція
+  words: 677
+  subsections:
+  - Спільний похід
+  - Взяття Києва
+  - Радянський контрнаступ
+  - «Чудо на Віслі»
+- section: Ризький мир 1921
+  words: 564
+  subsections:
+  - Україну поділили
+  - Без участі українців
+  - Петлюра — зраджений союзник
+  - Наслідки на 20 років
+- section: Підсумок
+  words: 341
+  subsections:
+  - Війна і союз — не протиріччя
+  - Спільний ворог — більшовики
+  - Перехід до Волині 1943
+word_target: 3500
+vocabulary:
+- парадокс
+- війна
+- союз
+- ЗУНР
+- «Орлята Львова»
+- Варшавський договір
+- Київська операція
+- «Чудо на Віслі»
+- Ризький мир
+- зрада
+- Пілсудський
+- федералізм
+- інтервенція
+- прометеїзм
+- «санітарний кордон»
+activities:
+- type: critical-analysis
+  focus: How war and alliance coexisted 1918-1920
+- type: treaty-analysis
+  focus: Warsaw Treaty 1920 — terms and consequences
+- type: comparative-study
+  focus: Polish vs Ukrainian views on 1920 alliance
+- type: essay-response
+  focus: What if Petliura refused alliance?
+- type: essay-response
+  focus: Чи Петлюра зрадив Галичину?
+sources:
+- name: Українсько-польська війна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українсько-польська_війна
+  type: reference
+  notes: War in Galicia
+- name: Варшавський договір 1920 (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Варшавський_договір_(1920)
+  type: reference
+  notes: Petliura-Piłsudski alliance
+- name: Радянсько-польська війна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Радянсько-польська_війна
+  type: reference
+  notes: Soviet-Polish war

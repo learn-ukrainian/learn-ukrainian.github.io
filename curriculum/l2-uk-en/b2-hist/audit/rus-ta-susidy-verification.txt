@@ -1,0 +1,62 @@
+
+========================================
+  📋 Loaded Metadata from YAML sidecar
+
+📋 Auditing: B2 M19 — Русь та сусіди: Візантія, Польща, Угорщина
+   File: curriculum/l2-uk-en/b2-hist/rus-ta-susidy.md | Target: 4000 words
+  📋 Required activity types from meta: essay-response, fill-in, match-up, quiz, reading
+  📋 Template: docs/l2-uk-en/templates/b2-history-module-template.md (pedagogy: CBI)
+  ⚠️  Outline compliance: 0 errors, 3 warnings
+     ⚠️ [EXTRA_SECTION_IN_MARKDOWN] Section 'Деколонізаційний погляд' found in markdown but not in outline.
+     ⚠️ [EXTRA_SECTION_IN_MARKDOWN] Section 'Читання' found in markdown but not in outline.
+     ⚠️ [EXTRA_SECTION_IN_MARKDOWN] Section 'Первинні джерела' found in markdown but not in outline.
+
+  📊 Section Word Analysis:
+     Вступ — Русь у міжнародному контексті   660 /  529  ✅ (+131)
+     Русь і Візантія                         809 /  823  ✅ (-14)
+     Русь і Польща                           623 /  706  ⚠️ (-83)
+     Русь і Угорщина                         513 /  646  ❌ (-133)
+     Степові сусіди                          623 /  706  ⚠️ (-83)
+     Скандинавія та Захід                    492 /  590  ⚠️ (-98)
+     ──────────────────────────────────────────────────────────────
+     TOTAL                                  3720 / 4000  ❌ (-280)
+
+📋 Auditing: B2 M19 — Русь та сусіди: Візантія, Польща, Угорщина
+   File: curriculum/l2-uk-en/b2-hist/rus-ta-susidy.md | Target: 4000 words
+
+  📋 Found YAML activities file (12 activities)
+  > Джерело: Угода 911 року: 3 items (min 1)
+  > Джерело: Лист Анни Ярославни (міфічний): 3 items (min 1)
+  > Перевірка розуміння: Дипломатія Русі: 8 items (min 8)
+  > Династичні шлюби: 12 items (min 8)
+  > Лексика: Дипломатія: 10 items (min 8)
+  > Виправте помилки в історичному тексті: 8 items (min 6)
+  > Есе: Русь як європейська держава: 1 items (min 1)
+  > Факти про Русь: Правда чи Міф?: 10 items (min 8)
+  > Хронологія дипломатії: 12 items (min 8)
+  > Порівняння: Дипломатія Русі та Візантії: 1 items (min 1)
+  > Дипломатична та політична термінологія: 15 items (min 8)
+  > Географія сусідів Русі: 8 items (min 8)
+
+--- STRICT GATES (Level B2) ---
+Words        ✅ 4569/4000 (raw: 4616)
+Activities   ✅ 12/3
+Density      ✅ All > 1
+Unique_types ✅ 8/2 types
+Priority     ✅ Priority types used
+Engagement   ✅ 6/5
+Audio        ℹ️ No audio
+Vocab        ⚠️ 0 < 20 (soft target)
+Structure    ✅ Valid Structure
+Lint         ✅ Clean Format
+Pedagogy     ✅ Level-appropriate
+Content_heavy ⚠️ Too many activities: 12 (target 3-9)
+Grammar      ℹ️ N/A (covered by naturalness)
+Naturalness  ✅ 9/10 (High)
+Activity_quality 📋 Quality validation available (optional)
+Immersion    🇺🇦 99.7% (target 90-100% (history))
+Richness     ✅ 100% (history)
+
+Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/audit/rus-ta-susidy-review.md
+
+✅ AUDIT PASSED.

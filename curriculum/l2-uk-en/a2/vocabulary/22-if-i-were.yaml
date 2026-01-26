@@ -104,3 +104,47 @@ items:
   translation: condition, term
   pos: noun
   gender: f
+- lemma: мабуть
+  ipa: /maˈbutʲ/
+  translation: perhaps, probably, maybe
+  pos: adv
+- lemma: поїхати
+  ipa: /poˈjixatɪ/
+  translation: to go (by vehicle), to leave (perfective)
+  pos: verb
+- lemma: купити
+  ipa: /kuˈpɪtɪ/
+  translation: to buy (perfective)
+  pos: verb
+- lemma: обов'язково
+  ipa: /oboˈvʲazkoʋo/
+  translation: definitely, necessarily, for sure
+  pos: adv
+- lemma: би
+  ipa: /bɪ/
+  translation: would (conditional particle)
+  pos: particle
+- lemma: б
+  ipa: /b/
+  translation: would (conditional particle, short form)
+  pos: particle
+- lemma: якби
+  ipa: /jakˈbɪ/
+  translation: if (unreal condition)
+  pos: conj
+- lemma: якщо
+  ipa: /ˈjakʃt͡ʃo/
+  translation: if (real condition)
+  pos: conj
+- lemma: можливо
+  ipa: /moʒlˈɪʋo/
+  translation: possibly, maybe
+  pos: adv
+- lemma: певно
+  ipa: /ˈpɛʋno/
+  translation: probably, certainly
+  pos: adv
+- lemma: піти
+  ipa: /piˈtɪ/
+  translation: to go (on foot, perfective)
+  pos: verb

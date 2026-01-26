@@ -1,0 +1,102 @@
+module: universaly-khmelnytkoho
+level: c1-hist
+sequence: 23
+version: '1.0'
+title: Універсали Хмельницького
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Голос гетьмана
+  words: 400
+  subsections:
+  - Що таке універсал?
+  - Хмельницький як автор
+  - Політична риторика XVII ст.
+  - Чому це важливе джерело
+- section: Типи універсалів
+  words: 500
+  subsections:
+  - Військові — заклики до повстання
+  - Адміністративні — накази
+  - Дипломатичні — до іноземних володарів
+  - Привілейні — пожалування
+  - Формуляр — структура документа
+- section: Ключові універсали
+  words: 700
+  subsections:
+  - Перші заклики 1648 року
+  - Звернення до козаків
+  - Звернення до селян
+  - Дипломатичні — до Москви, Варшави
+  - Еволюція риторики
+- section: Фрагмент — Універсал 1648 року
+  words: 600
+  subsections:
+  - Текст (з глосами)
+  - До кого звернено
+  - Аргументація — чому повстання справедливе
+  - Релігійні мотиви
+  - Соціальні мотиви
+- section: Політична риторика
+  words: 600
+  subsections:
+  - Образ ворога — поляки, євреї
+  - Образ «народу руського»
+  - Легітимація насильства
+  - Православ'я як ідентичність
+  - Порівняння з польською пропагандою
+- section: Критика джерела
+  words: 400
+  subsections:
+  - Пропаганда vs. реальні наміри
+  - Що замовчано
+  - Різні аудиторії — різні меседжі
+  - Як верифікувати
+- section: Підсумок
+  words: 300
+  subsections:
+  - Універсали як первинне джерело
+  - Голос влади — критичне читання
+  - Зв'язок із Переяславом
+word_target: 3500
+vocabulary:
+- універсал
+- гетьман
+- риторика
+- пропаганда
+- легітимація
+- формуляр
+- повстання
+- православ'я
+- народ руський
+- привілей
+- інвектива
+- апеляція
+- декларація
+- маніфест
+- публіцистика
+activities:
+- type: reading
+  focus: 1648 Universal with glosses
+- type: critical-analysis
+  focus: Identify persuasive techniques
+- type: comparative-study
+  focus: Compare early vs. late Khmelnytsky universals
+- type: critical-analysis
+  focus: Who is the audience? What is the purpose?
+- type: essay-response
+  focus: Як Хмельницький виправдовував повстання?
+sources:
+- name: Універсал (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Універсал_(документ)
+  type: reference
+  notes: Document type
+- name: Богдан Хмельницький
+  url: https://uk.wikipedia.org/wiki/Богдан_Хмельницький
+  type: reference
+  notes: Hetman biography
+- name: Універсали Хмельницького (колекція)
+  url: https://litopys.org.ua/
+  type: primary
+  notes: Document collection

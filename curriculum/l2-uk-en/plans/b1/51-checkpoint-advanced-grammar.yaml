@@ -1,0 +1,78 @@
+module: checkpoint-advanced-grammar
+level: b1
+sequence: 51
+version: '2.0'
+title: 'Контрольна точка: Просунута граматика'
+subtitle: Advanced Grammar Phase Checkpoint
+focus: checkpoint
+pedagogy: TTT
+objectives:
+- Learner can demonstrate mastery of advanced grammar forms
+- Learner can integrate knowledge from M42-M50
+- Learner can form and use adverbial and passive participles
+- Learner can self-assess readiness for Vocabulary Expansion phase
+content_outline:
+- section: 'Pre-Test: Self-Assessment'
+  words: 100
+  points:
+  - Review B1.4 objectives
+  - Identify strengths and gaps
+  - Set checkpoint goals
+- section: Participles Review
+  words: 200
+  points:
+  - Adverbial participles (-ючи, -вши)
+  - Active and passive participles
+  - Stylistic choices
+- section: Passive Voice Review
+  words: 200
+  points:
+  - Three passive construction types
+  - Short vs full forms
+  - Context-appropriate selection
+- section: Diminutives and Numerals Review
+  words: 200
+  points:
+  - Diminutive pragmatics
+  - Collective vs cardinal numerals
+  - Fractions and percentages
+- section: Comprehensive Assessment
+  words: 200
+  points:
+  - All B1.4 structures
+  - Error analysis
+  - Proficiency check
+- section: Feedback and Planning
+  words: 100
+  points:
+  - Review results
+  - Plan for B1.5
+  - Identify review needs
+word_target: 1000
+vocabulary:
+  required:
+  - контрольна точка (checkpoint)
+  - оцінювання (assessment)
+  - дієприкметник (participle)
+  - дієприслівник (adverbial participle)
+  - пасивний стан (passive voice)
+  - демінутив (diminutive)
+  - збірний числівник (collective numeral)
+  - інтеграція (integration)
+  recommended:
+  - готовність (readiness)
+  - прогрес (progress)
+  - майстерність (mastery)
+  - самооцінка (self-assessment)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - quiz
+  - writing
+  - transformation
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-52 (Abstract Concepts Ideas)

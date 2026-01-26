@@ -1,0 +1,104 @@
+# Level Plan: LIT (Ukrainian Literature Track)
+# Post-C1 specialization track
+
+level: lit
+track: literature
+version: "1.0"
+
+overview:
+  total_modules: 30
+  description: "Deep study of classic Ukrainian literature through original texts, literary analysis, and cultural context"
+  prerequisites: [c1]
+  target_audience: "Advanced learners seeking literary and cultural mastery"
+
+# Primary source of truth
+sources:
+  primary: "ukrlib (Ukrainian digital library - ukrlib.com.ua)"
+  supplementary:
+    - "Ukrainian literary criticism"
+    - "Historical context from Ukrainian sources"
+  note: "All texts and analysis based on Ukrainian scholarship, avoiding Russian imperial interpretations"
+
+# Vocabulary scope
+vocabulary:
+  cumulative_from: [a1, a2, b1, b2, c1]
+  new_words: 1500
+  focus_areas:
+    - "Literary terminology (жанр, метафора, алегорія)"
+    - "Archaic/historical vocabulary from texts"
+    - "Church Slavonic elements"
+    - "Regional dialects in literature"
+
+# Literary periods and authors covered
+grammar:
+  - "Archaic grammatical forms (Eneida, older texts)"
+  - "Dialectal features in realist prose"
+  - "Stylistic analysis techniques"
+  - "Literary Ukrainian vs vernacular"
+
+# Module phases by author/period
+phases:
+  - name: "Котляревський"
+    modules: [1, 5]
+    focus: "Father of modern Ukrainian literature - Eneida and Natalka Poltavka"
+    author: "Іван Котляревський (1769-1838)"
+    key_works:
+      - "Енеїда (1798-1842)"
+      - "Наталка Полтавка (1819)"
+
+  - name: "Квітка-Основ'яненко"
+    modules: [6, 10]
+    focus: "First Ukrainian prose writer - ethnographic realism"
+    author: "Григорій Квітка-Основ'яненко (1778-1843)"
+    key_works:
+      - "Маруся (1834)"
+      - "Конотопська відьма (1833)"
+
+  - name: "Шевченко"
+    modules: [11, 20]
+    focus: "National poet - Kobzar, poetry analysis, cultural impact"
+    author: "Тарас Шевченко (1814-1861)"
+    key_works:
+      - "Кобзар (1840)"
+      - "Гайдамаки (1841)"
+      - "Сон (1844)"
+      - "Заповіт (1845)"
+
+  - name: "Куліш"
+    modules: [21, 25]
+    focus: "Historical novel, language standardization, Cyrillo-Methodian Brotherhood"
+    author: "Пантелеймон Куліш (1819-1897)"
+    key_works:
+      - "Чорна рада (1857)"
+
+  - name: "Нечуй-Левицький"
+    modules: [26, 30]
+    focus: "Realist prose - village life, social critique"
+    author: "Іван Нечуй-Левицький (1838-1918)"
+    key_works:
+      - "Кайдашева сім'я (1879)"
+      - "Микола Джеря (1878)"
+
+# Constraints for all modules
+constraints:
+  min_word_target: 3000
+  max_word_target: 5000
+  min_engagement_boxes: 3
+  min_examples: 15
+  immersion_target: 1.0  # 100% Ukrainian
+  naturalness_threshold: 8
+  min_primary_sources: 2  # At least 2 text excerpts per module
+
+# Pedagogical approach
+pedagogy_notes:
+  approach: "seminar"
+  structure:
+    - "Text excerpt with glossary"
+    - "Literary analysis in Ukrainian"
+    - "Historical/cultural context"
+    - "Discussion questions"
+    - "Comparative analysis (where applicable)"
+  decolonization:
+    - "Present Ukrainian literature as independent tradition, not 'branch' of Russian"
+    - "Highlight anti-imperial themes in texts"
+    - "Use Ukrainian literary criticism, not Russian/Soviet interpretations"

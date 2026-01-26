@@ -1,0 +1,91 @@
+module: volyn-i-pamiat
+level: c1-hist
+sequence: 116
+version: '1.0'
+title: 'Волинь 1943: Трагедія і контекст'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Найболючіша тема
+  words: 451
+  subsections:
+  - Волинь 1943 — незагоєна рана
+  - Не виправдання, а розуміння
+  - Контекст ≠ виправдання
+  - Структура модуля
+- section: Контекст — що передувало
+  words: 790
+  subsections:
+  - Міжвоєнний період — дискримінація
+  - Пацифікації 1930-х
+  - Нацистська окупація
+  - Голод і насильство з усіх боків
+- section: Акція «Антиполяк»
+  words: 677
+  subsections:
+  - Рішення ОУН-УПА
+  - Масштаб — цифри
+  - Методи — жорстокість
+  - Чому так — версії
+- section: Польська відповідь
+  words: 564
+  subsections:
+  - Армія Крайова
+  - Українські жертви
+  - Не лише «одна сторона»
+  - Масштаб відповіді
+- section: Пам'ять і політика
+  words: 677
+  subsections:
+  - Польська пам'ять — «Wołyń»
+  - Українська пам'ять — контекст
+  - Законодавчі війни
+  - Інструменталізація
+- section: Підсумок
+  words: 341
+  subsections:
+  - Трагедія — для обох народів
+  - Визнання без релятивізації
+  - Перехід до 2022
+word_target: 3500
+vocabulary:
+- Волинська трагедія
+- ОУН-УПА
+- Армія Крайова
+- контекст
+- жертва
+- злочин
+- пацифікація
+- етнічна чистка
+- пам'ять
+- примирення
+- «Wołyń»
+- геноцид
+- інструменталізація
+- декретизація
+- колабораціонізм
+activities:
+- type: context-analysis
+  focus: What preceded Volhynia 1943
+- type: source-comparison
+  focus: Polish vs Ukrainian sources on Volhynia
+- type: memory-politics
+  focus: How Volhynia is used politically
+- type: ethical-analysis
+  focus: Context vs justification — where's the line?
+- type: essay-response
+  focus: Як говорити про Волинь без релятивізації?
+sources:
+- name: Волинська трагедія (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Волинська_трагедія
+  type: reference
+  notes: Volhynia tragedy
+- name: ОУН-УПА (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_повстанська_армія
+  type: reference
+  notes: UPA context
+- name: Армія Крайова (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Армія_Крайова
+  type: reference
+  notes: AK context

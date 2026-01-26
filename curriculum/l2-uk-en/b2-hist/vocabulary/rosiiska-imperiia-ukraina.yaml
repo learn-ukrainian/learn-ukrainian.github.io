@@ -1,0 +1,128 @@
+module: rosiiska-imperiia-ukraina
+level: B2
+version: '2.0'
+items:
+  - lemma: губернія
+    ipa: /ɦʊˈbɛrnʲija/
+    translation: governorate / province
+    pos: noun
+    gender: f
+  - lemma: самодержавство
+    ipa: /samoˈdɛrʒaut͡swo/
+    translation: autocracy / absolutism
+    pos: noun
+    gender: n
+  - lemma: кріпацтво
+    ipa: /kriˈpat͡stwo/
+    translation: serfdom
+    pos: noun
+    gender: n
+  - lemma: чиновник
+    ipa: /t͡ʃɪˈnɔunɪk/
+    translation: official / bureaucrat
+    pos: noun
+    gender: m
+  - lemma: уніфікація
+    ipa: /unʲifiˈkat͡sʲija/
+    translation: unification / standardization
+    pos: noun
+    gender: f
+  - lemma: асиміляція
+    ipa: /asɪmʲiˈlʲat͡sʲija/
+    translation: assimilation
+    pos: noun
+    gender: f
+  - lemma: рекрутчина
+    ipa: /ˈrɛkrʊtt͡ʃɪnɐ/
+    translation: recruit duty (long-term military service)
+    pos: noun
+    gender: f
+  - lemma: дворянство
+    ipa: /dwoˈrʲanstwo/
+    translation: nobility / gentry
+    pos: noun
+    gender: n
+  - lemma: привілеї
+    ipa: /prɪwiˈɫɛji/
+    translation: privileges
+    pos: noun
+    gender: pl
+  - lemma: цензура
+    ipa: /t͡sɛnˈzurɐ/
+    translation: censorship
+    pos: noun
+    gender: f
+  - lemma: малоросія
+    ipa: /mɐɫoˈrɔsʲija/
+    translation: Little Russia (imperial term for Ukraine)
+    pos: noun
+    gender: f
+  - lemma: окраїна
+    ipa: /oˈkrajinɐ/
+    translation: outskirts / borderland
+    pos: noun
+    gender: f
+  - lemma: придушення
+    ipa: /prɪˈduʃɛnʲːɐ/
+    translation: suppression / crushing
+    pos: noun
+    gender: n
+  - lemma: повстання
+    ipa: /pousˈtanʲːɐ/
+    translation: uprising / rebellion
+    pos: noun
+    gender: n
+  - lemma: інтелігенція
+    ipa: /inʲtɛlʲiˈɦɛnt͡sʲija/
+    translation: intelligentsia / intellectuals
+    pos: noun
+    gender: f
+  - lemma: автономізм
+    ipa: /autoˈnɔmʲizm/
+    translation: autonomism
+    pos: noun
+    gender: m
+  - lemma: бюрократія
+    ipa: /bʲuroˈkratʲija/
+    translation: bureaucracy
+    pos: noun
+    gender: f
+  - lemma: колоніалізм
+    ipa: /koɫonʲiɐˈlʲizm/
+    translation: colonialism
+    pos: noun
+    gender: m
+  - lemma: експлуатація
+    ipa: /ɛksplʊɐˈtat͡sʲija/
+    translation: exploitation
+    pos: noun
+    gender: f
+  - lemma: межа осілості
+    ipa: /mɛˈʒa oˈsʲiɫosʲtʲi/
+    translation: Pale of Settlement
+    pos: noun
+    gender: f
+  - lemma: русифікація
+    ipa: /rʊsɪfiˈkat͡sʲija/
+    translation: Russification
+    pos: noun
+    gender: f
+  - lemma: провінція
+    ipa: /proˈwinʲt͡sʲija/
+    translation: province
+    pos: noun
+    gender: f
+  - lemma: казенний
+    ipa: /kɐˈzɛnːɪj/
+    translation: state-owned / treasury-owned
+    pos: adjective
+  - lemma: тягар
+    ipa: /tʲɐˈɦar/
+    translation: burden
+    pos: noun
+    gender: m
+  - lemma: відродження
+    ipa: /widˈrɔdʒɛnʲːɐ/
+    translation: revival / rebirth
+    pos: noun
+    gender: n

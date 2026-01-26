@@ -1,28 +1,94 @@
 module: b1-42
-title: Дієприслівники недоконаного виду
-subtitle: Adverbial Participles - Imperfective (-ючи/-ачи)
-version: '1.0'
-phase: B1.4 Advanced Grammar
-pedagogy: TTT
+id: b1-42
+slug: adverbial-participles-imperfective
+title: "Дієприслівники недоконаного виду"
+subtitle: "Adverbial Participles - Imperfective (-ючи/-ачи)"
+version: '2.0'
+phase: "B1.4a [Participles]"
 focus: grammar
+pedagogy: TTT
+register: розмовний
 duration: 90
 transliteration: none
-tags:
-- grammar
-- participles
-- adverbial-participles
-- imperfective
-grammar:
-- Дієприслівники недоконаного виду
-- Суфікси -ючи/-ачи
-- Одночасність дій
 objectives:
-- Learner can form imperfective adverbial participles using -ючи/-ачи suffixes
-- Learner can use adverbial participles to express simultaneous actions
-- Learner understands when imperfective participles are preferred over perfective
-vocabulary_count: 20
-vocab_count: 40
-slug: 42-adverbial-participles-imperfective
+  - "Learner can form imperfective adverbial participles using -ючи/-ачи suffixes"
+  - "Learner can use adverbial participles to express simultaneous actions"
+  - "Learner understands when imperfective participles are preferred"
+  - "Learner can replace subordinate clauses with adverbial participles"
+grammar:
+  - "Дієприслівники недоконаного виду"
+  - "Суфікси -ючи/-ачи formation rules"
+  - "Одночасність дій (simultaneous actions)"
+word_target: 1200
+content_outline:
+  - section: "Introduction: What Are Adverbial Participles?"
+    words: 150
+    points:
+      - "Дієприслівники as verbal adverbs"
+      - "Difference from дієприкметники"
+      - "Function in sentences"
+  - section: "Formation: -ючи/-ачи Suffixes"
+    words: 250
+    points:
+      - "From imperfective verb stem"
+      - "-ючи after vowels and soft consonants"
+      - "-ачи after hard consonants"
+  - section: "Expressing Simultaneous Actions"
+    words: 250
+    points:
+      - "Читаючи книгу, він слухав музику"
+      - "Same subject requirement"
+      - "Replacing коли + verb clauses"
+  - section: "Common Imperfective Participles"
+    words: 250
+    points:
+      - "роблячи, читаючи, слухаючи"
+      - "бігаючи, гуляючи, розмовляючи"
+      - "Irregular forms"
+  - section: "Stylistic Considerations"
+    words: 200
+    points:
+      - "Literary vs conversational usage"
+      - "When to avoid participles"
+      - "Modern Ukrainian norms"
+  - section: "Practice: Simultaneous Actions"
+    words: 100
+    points:
+      - "Form participles from verbs"
+      - "Transform clauses to participles"
+vocabulary_hints:
+  required:
+    - дієприслівник (adverbial participle)
+    - недоконаний вид (imperfective aspect)
+    - одночасність (simultaneity)
+    - суфікс (suffix)
+    - читаючи (while reading)
+    - роблячи (while doing)
+    - слухаючи (while listening)
+    - бачачи (while seeing)
+  recommended:
+    - підмет (subject)
+    - трансформація (transformation)
+    - підрядне речення (subordinate clause)
+    - замінювати (to replace)
+activity_hints:
+  - type: transformation
+    focus: "Verb to participle conversion"
+    items: 25
+  - type: fill-in
+    focus: "Complete sentences with participles"
+    items: 20
+  - type: sentence-combining
+    focus: "Combine with adverbial participles"
+    items: 15
+  - type: error-correction
+    focus: "Fix participle formation errors"
+    items: 10
+prerequisites:
+  - b1-41 (Checkpoint Complex Sentences 2)
+connects_to:
+  - b1-43 (Adverbial Participles Perfective)
 naturalness:
   score: 9
   status: PASS
+  justification: "Essential participle formation"

@@ -1,0 +1,22 @@
+module: 36-metaphor-simile
+level: c1
+sequence: 36
+version: '1.0'
+title: 'Метафора та порівняння: Образна мова'
+subtitle: 'Metaphor & Simile: Figurative Language'
+focus: style
+pedagogy: Immersion
+objectives:
+- Distinguish between direct and extended metaphors
+- Use simile markers correctly in context
+- Identify and analyze personification in literary texts
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

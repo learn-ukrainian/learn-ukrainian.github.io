@@ -1,0 +1,59 @@
+
+========================================
+  📋 Loaded Metadata from YAML sidecar
+
+📋 Auditing: B2 M20 — Синтез: Київська Русь — спадщина
+   File: curriculum/l2-uk-en/b2-hist/syntez-kyivska-rus.md | Target: 4000 words
+  📋 Required activity types from meta: comparative-study, essay-response, fill-in, group-sort, match-up, quiz
+  📋 Template: docs/l2-uk-en/templates/b2-history-module-template.md (pedagogy: CBI)
+  ⚠️  Outline compliance: 0 errors, 3 warnings
+     ⚠️ [EXTRA_SECTION_IN_MARKDOWN] Section 'Деколонізаційний погляд' found in markdown but not in outline.
+     ⚠️ [EXTRA_SECTION_IN_MARKDOWN] Section 'Читання' found in markdown but not in outline.
+     ⚠️ [EXTRA_SECTION_IN_MARKDOWN] Section 'Первинні джерела' found in markdown but not in outline.
+
+  📊 Section Word Analysis:
+     Вступ — Три століття Русі          285 /  444  ❌ (-159)
+     Політичний розвиток                434 /  666  ❌ (-232)
+     Культурні досягнення               877 /  722  ✅ (+155)
+     Суспільство та економіка           856 /  611  ✅ (+245)
+     Русь у Європі                      394 /  555  ❌ (-161)
+     Спадщина Русі — хто спадкоємець?   569 /  666  ⚠️ (-97)
+     Ключові терміни та дати            372 /  336  ✅ (+36)
+     ─────────────────────────────────────────────────────────
+     TOTAL                             3787 / 4000  ❌ (-213)
+
+📋 Auditing: B2 M20 — Синтез: Київська Русь — спадщина
+   File: curriculum/l2-uk-en/b2-hist/syntez-kyivska-rus.md | Target: 4000 words
+
+  📋 Found YAML activities file (8 activities)
+  > Хронологія епохи: 15 items (min 8)
+  > Узагальнення: Політична історія: 8 items (min 8)
+  > Князі та їхні досягнення: 15 items (min 1)
+  > Терміни епохи: 10 items (min 8)
+  > Деколонізація: Спадщина Русі: 1 items (min 1)
+  > Есе: Ідентичність через історію: 1 items (min 1)
+  > Русь і Європа: 1 items (min 1)
+  > Факти про Русь: Правда чи Міф?: 10 items (min 8)
+
+--- STRICT GATES (Level B2) ---
+Words        ✅ 4748/4000 (raw: 4885)
+Activities   ✅ 8/3
+Density      ✅ All > 1
+Unique_types ✅ 8/2 types
+Priority     ✅ Priority types used
+Engagement   ✅ 5/5
+Audio        ℹ️ No audio
+Vocab        ⚠️ 0 < 20 (soft target)
+Structure    ✅ Valid Structure
+Lint         ✅ Clean Format
+Pedagogy     ✅ Level-appropriate
+Content_heavy ✅ Content-heavy OK (8 activities)
+Grammar      ℹ️ N/A (covered by naturalness)
+Naturalness  ✅ 9/10 (High)
+Activity_quality 📋 Quality validation available (optional)
+Immersion    🇺🇦 99.6% (target 90-100% (history))
+Richness     ✅ 97% (history)
+
+Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/audit/syntez-kyivska-rus-review.md
+
+✅ AUDIT PASSED.

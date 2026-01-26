@@ -1,0 +1,103 @@
+module: contemporary-literature
+level: c2
+sequence: 38
+version: '2.0'
+title: Сучасна українська література
+focus: literature
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Сучасна українська література — Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Сучасна_українська_література
+  type: reference
+  notes: Overview of contemporary literary scene
+- name: Видавництво Фабула / Клуб сімейного дозвілля
+  url: https://ukrlib.com.ua/
+  type: primary
+  notes: Contemporary Ukrainian authors
+- name: Літературні премії України
+  url: https://uk.wikipedia.org/wiki/Категорія:Літературні_премії_України
+  type: reference
+  notes: Prize-winning contemporary literature
+content_outline:
+- section: Вступ — Літературний ландшафт сьогодення
+  words: 500
+  points:
+  - Періодизація сучасної літератури
+  - Від постмодернізму до нового реалізму
+  - Війна і література
+- section: Провідні автори покоління
+  words: 700
+  points:
+  - Жадан і його вплив
+  - Андрухович продовжує писати
+  - Курков між мовами
+  - Жіночі голоси (Забужко, Матіос)
+- section: Нове покоління
+  words: 600
+  points:
+  - Автори 2010-х і 2020-х
+  - Тематичні тенденції
+  - Формальні експерименти
+  - Дебютанти і премії
+- section: Жанрові трансформації
+  words: 700
+  points:
+  - Історичний роман сьогодні
+  - Детектив і трилер
+  - Фантастика і фентезі
+  - Автобіографічна проза
+- section: Поезія XXI століття
+  words: 600
+  points:
+  - Від Бу-Ба-Бу до сьогодення
+  - Слем-поезія і перформанс
+  - Поезія соціальних мереж
+  - Війна і поезія
+- section: Видавнича індустрія
+  words: 500
+  points:
+  - Провідні видавництва
+  - Книжкові ярмарки
+  - Переклад української літератури світом
+  - Цифрова література
+- section: Підсумок
+  words: 400
+  points:
+  - Як слідкувати за літературним процесом
+  - Рекомендації для читання
+  - Власна позиція в літературному полі
+word_target: 4000
+vocabulary:
+  required:
+  - сучасний (contemporary)
+  - постмодернізм (postmodernism)
+  - тенденція (trend)
+  - покоління (generation)
+  - дебют (debut)
+  - премія (prize/award)
+  - видавництво (publishing house)
+  - ярмарок (fair/market)
+  - війна (war)
+  - ідентичність (identity)
+  recommended:
+  - автофікшн (autofiction)
+  - магічний реалізм (magical realism)
+  - слем (slam poetry)
+  - трилер (thriller)
+  - бестселер (bestseller)
+  forbidden: []
+activities:
+  types_required:
+  - essay-response
+  - quiz
+  - comparative-study
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-39 (Digital Literature)
+- c2-40 (Literary Prizes & Canon)
+- c2-41 (Literary Community)

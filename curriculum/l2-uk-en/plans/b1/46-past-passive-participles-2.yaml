@@ -1,0 +1,77 @@
+module: past-passive-participles-2
+level: b1
+sequence: 46
+version: '2.0'
+title: 'Пасивні дієприкметники: коротка форма'
+subtitle: Past Passive Participles II - Short Forms (-но/-то)
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can form short passive participles using -но/-то
+- Learner can use impersonal passive constructions
+- Learner understands difference between full and short forms
+- Learner can choose appropriate form for context
+content_outline:
+- section: 'Introduction: Short Passive Forms'
+  words: 150
+  points:
+  - What are short forms
+  - Impersonal passive meaning
+  - No gender/number agreement
+- section: 'Formation: -но/-то Suffixes'
+  words: 250
+  points:
+  - написано, зроблено, прочитано
+  - вибито, відкрито, закрито
+  - Same stem as full form
+- section: Impersonal Passive Constructions
+  words: 250
+  points:
+  - Листа написано (The letter has been written)
+  - Agent in instrumental (ким?)
+  - Object in accusative or nominative
+- section: Full vs Short Form
+  words: 250
+  points:
+  - Лист написаний vs Листа написано
+  - Stylistic differences
+  - Focus and emphasis
+- section: Common Short Form Expressions
+  words: 200
+  points:
+  - Заборонено (forbidden)
+  - Дозволено (permitted)
+  - Signs and announcements
+- section: 'Practice: Short Passive Forms'
+  words: 100
+  points:
+  - Transform full to short
+  - Create impersonal sentences
+word_target: 1200
+vocabulary:
+  required:
+  - коротка форма (short form)
+  - безособовий (impersonal)
+  - написано (written - impersonal)
+  - зроблено (done - impersonal)
+  - заборонено (forbidden)
+  - дозволено (permitted)
+  - відкрито (opened - impersonal)
+  - завершено (completed)
+  recommended:
+  - наголос (emphasis)
+  - орудний відмінок (instrumental case)
+  - агент (agent)
+  - оголошення (announcement)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - translation
+  - transformation
+  - multiple-choice
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-47 (Passive Constructions)

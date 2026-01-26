@@ -1,0 +1,23 @@
+module: 37-word-formation-adverbs-integration
+level: b2
+sequence: 37
+version: '1.0'
+title: 'Словотворення: прислівники та інтеграція'
+subtitle: Творення прислівників від прикметників і повторення словотвірних моделей
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can form adverbs from adjectives using Ukrainian patterns
+- Learner can distinguish between adverb formation patterns (-о, -е, по-...-ськи)
+- Learner can recognize and use diminutives and augmentatives
+- Learner can integrate word formation knowledge across noun, adjective, and adverb categories
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

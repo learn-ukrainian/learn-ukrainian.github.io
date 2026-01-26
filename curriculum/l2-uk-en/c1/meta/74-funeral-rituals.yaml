@@ -8,18 +8,39 @@ pedagogy: CBI
 duration: 120
 transliteration: none
 tags:
-  - culture
-  - rituals
-  - funeral
-  - family
+- culture
+- rituals
+- funeral
+- family
 grammar:
-  - euphemisms for death
-  - memorial phrases
+- euphemisms for death
+- memorial phrases
 objectives:
-  - Learner can describe the traditional funeral rites (vigil, burial, meal)
-  - Learner can explain the concept of "holosinnya" (ritual lamentation)
-  - Learner can use respectful vocabulary to talk about death and memory
-  - Learner can discuss the significance of memorial days (Provody)
+- Learner can describe the traditional funeral rites (vigil, burial, meal)
+- Learner can explain the concept of "holosinnya" (ritual lamentation)
+- Learner can use respectful vocabulary to talk about death and memory
+- Learner can discuss the significance of memorial days (Provody)
 vocabulary_count: 30
 vocab_count: 30
 slug: 74-funeral-rituals
+content_outline:
+- section: Вступ — похорон
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - Geographic isolation and archaic preservation
+  - 'Древляни heritage: pre-Christian traces'
+  - 'Unique ritual traditions: купальські вогні'
+  - 'Folk architecture: хата на курячих ніжках'
+  - 'Musical traditions: archaic songs'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

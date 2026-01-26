@@ -1,0 +1,22 @@
+module: 95-shevchenko-poeziia
+level: c1
+sequence: 95
+version: '2.0'
+title: 'Шевченко: Поезія'
+subtitle: 'Shevchenko: Poetry'
+focus: literature
+pedagogy: Literary Analysis
+objectives:
+- Analyze major poetic works of Taras Shevchenko
+- Understand the structure and themes of Kobzar
+- Identify key poetic techniques and folk elements
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

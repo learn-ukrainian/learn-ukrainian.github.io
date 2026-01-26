@@ -1,0 +1,102 @@
+module: 11-multi-clause-sentences
+level: b2
+sequence: 11
+version: '1.0'
+title: Багатоскладні речення
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Ukrainian State Standard 2024 - Syntax
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Complex sentence structure requirements for B2
+- name: Сучасна українська літературна мова - Синтаксис
+  url: https://uk.wikipedia.org/wiki/Синтаксис
+  type: secondary
+  notes: Academic reference for sentence structure
+- name: CEFR B2 Grammar Complexity
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 complex sentence requirements
+content_outline:
+- section: Вступ — Багатоскладні речення
+  words: 400
+  points:
+  - Різниця між простими та складними реченнями
+  - Типи зв'язку в складних реченнях
+  - Чому це важливо для вираження складних думок
+- section: Складносурядні речення
+  words: 700
+  points:
+  - Сполучники і, та, а, але, або, чи
+  - Протиставні відношення (а, але, проте)
+  - Розділові відношення (або, чи)
+  - Приєднувальні відношення (і, та)
+- section: Складнопідрядні речення з одним підрядним
+  words: 600
+  points:
+  - Типи підрядних речень (означальні, з'ясувальні, обставинні)
+  - Сполучники та сполучні слова
+  - Позиція підрядного речення
+- section: Складнопідрядні речення з кількома підрядними
+  words: 700
+  points:
+  - Послідовне підпорядкування
+  - Однорідне підпорядкування
+  - Неоднорідне підпорядкування
+  - Комбіновані типи
+- section: Вкладені підрядні речення
+  words: 600
+  points:
+  - Структура вкладених речень
+  - Обмеження глибини вкладення
+  - Стилістичні міркування
+- section: Пунктуація у багатоскладних реченнях
+  words: 500
+  points:
+  - Кома між частинами складносурядного речення
+  - Кома перед підрядними сполучниками
+  - Виділення вставлених підрядних речень
+  - Типові помилки
+- section: Практика і підсумок
+  words: 300
+  points:
+  - Побудова складних речень
+  - Аналіз структури речень
+  - Підготовка до модуля 12
+word_target: 3800
+vocabulary:
+  required:
+  - складносурядне речення (compound sentence)
+  - складнопідрядне речення (complex sentence)
+  - підрядне речення (subordinate clause)
+  - головне речення (main clause)
+  - сполучник (conjunction)
+  - сполучне слово (relative word)
+  - послідовне підпорядкування (sequential subordination)
+  - однорідне підпорядкування (homogeneous subordination)
+  - пунктуація (punctuation)
+  - кома (comma)
+  recommended:
+  - вкладене речення (embedded clause)
+  - синтаксис (syntax)
+  - зв'язок (connection)
+  - структура (structure)
+  - ясність (clarity)
+  forbidden: []
+activities:
+  types_required:
+  - error-correction
+  - quiz
+  - fill-in
+  - essay-response
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b2-12 (Parenthetical Expressions)
+- b2-14 (Stylistic Connectors)
+- b2-25 (B2.1b Checkpoint)

@@ -1,32 +1,96 @@
 module: a1-14
-title: Mine and Yours
-subtitle: Possessive Pronouns in Ukrainian
-version: '1.0'
-phase: A1.2
-pedagogy: PPP
+id: a1-14
+slug: mine-and-yours
+title: "Mine and Yours"
+subtitle: "Possessive Pronouns in Ukrainian"
+version: '2.0'
+phase: "A1.2 [Navigation]"
 focus: grammar
-duration: 60 min
+pedagogy: PPP
+register: розмовний
+duration: 60
 transliteration: none
-phonetics: ipa
-tags:
-  - possessives
-  - pronouns
-  - agreement
-  - gender
-  - ownership
-grammar:
-  - possessive pronouns
-  - gender agreement
-  - invariant vs variable
 objectives:
-  - Learner can use possessive pronouns мій/твій/його/її/наш/ваш/їхній
-  - Learner can match possessive pronouns to noun gender (m/f/n/pl)
-  - Learner can ask and answer simple questions about possession
-  - Learner can distinguish between інваріантні (його, її) and змінні (мій, твій)
-    possessives
-vocabulary_count: 20
-vocab_count: 25
-slug: 14-mine-and-yours
+  - "Learner can use possessive pronouns мій/твій/його/її/наш/ваш/їхній"
+  - "Learner can match possessive pronouns to noun gender (m/f/n/pl)"
+  - "Learner can ask and answer questions about possession"
+  - "Learner can distinguish variable and invariable possessives"
+grammar:
+  - "Possessive pronouns"
+  - "Gender agreement"
+  - "Variable vs invariable forms"
+word_target: 900
+content_outline:
+  - section: "Introduction: Whose Is It?"
+    words: 100
+    points:
+      - "Possession in Ukrainian"
+      - "Two types of possessives"
+      - "Agreement with noun"
+  - section: "Variable Possessives (мій, твій, наш, ваш)"
+    words: 250
+    points:
+      - "мій/моя/моє/мої (my)"
+      - "твій/твоя/твоє/твої (your informal)"
+      - "наш/наша/наше/наші (our)"
+      - "ваш/ваша/ваше/ваші (your formal/plural)"
+  - section: "Invariable Possessives (його, її, їхній)"
+    words: 200
+    points:
+      - "його (his) - never changes"
+      - "її (her) - never changes"
+      - "їхній/їхня/їхнє/їхні (their) - changes"
+  - section: "Agreement Practice"
+    words: 150
+    points:
+      - "мій брат, моя сестра, моє місто"
+      - "Match to noun gender"
+      - "Common mistakes"
+  - section: "Asking About Possession"
+    words: 100
+    points:
+      - "Чий? Чия? Чиє? Чиї?"
+      - "Whose book is this?"
+      - "Answer patterns"
+  - section: "Practice: What's Yours?"
+    words: 100
+    points:
+      - "Describe your possessions"
+      - "Ask about others' things"
+vocabulary_hints:
+  required:
+    - мій (my m.)
+    - моя (my f.)
+    - твій (your m.)
+    - його (his)
+    - її (her)
+    - наш (our)
+    - чий (whose m.)
+    - чия (whose f.)
+  recommended:
+    - ваш (your formal)
+    - їхній (their)
+    - свій (one's own)
+    - річ (thing)
+activity_hints:
+  - type: fill-in
+    focus: "Complete with correct possessive"
+    items: 25
+  - type: matching
+    focus: "Match possessive to gender"
+    items: 20
+  - type: transformation
+    focus: "Change gender of possessives"
+    items: 15
+  - type: dialogue
+    focus: "Whose is this? conversations"
+    items: 6
+prerequisites:
+  - a1-13 (The Locative)
+connects_to:
+  - a1-15 (Around the City)
+  - a1-32 (My Family)
 naturalness:
-  score: 9
+  score: 10
   status: PASS
+  justification: "Clear possessive system"

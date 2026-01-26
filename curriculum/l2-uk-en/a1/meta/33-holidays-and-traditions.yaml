@@ -1,29 +1,97 @@
 module: a1-33
-title: Holidays & Traditions
-subtitle: Свята і традиції
-version: '1.0'
-phase: A1.3 - Consolidation
+id: a1-33
+slug: holidays-and-traditions
+title: "Holidays & Traditions"
+subtitle: "Свята і традиції"
+version: '2.0'
+phase: "A1.3 [Consolidation]"
+focus: cultural
 pedagogy: PPP
-focus: grammar
-duration: 60 min
-transliteration: first-occurrence
-tags:
-  - holidays
-  - traditions
-  - greetings
-  - celebrations
-grammar:
-  - Holiday greetings
-  - Date expressions (Genitive)
-  - Wish expressions
+register: розмовний
+duration: 60
+transliteration: none
 objectives:
-  - Learner can name major Ukrainian holidays
-  - Learner can give holiday greetings
-  - Learner can talk about birthday celebrations
-  - Learner can express wishes
-vocabulary_count: 30
-vocab_count: 27
-slug: 33-holidays-and-traditions
+  - "Learner can name major Ukrainian holidays"
+  - "Learner can give holiday greetings"
+  - "Learner can talk about birthday celebrations"
+  - "Learner can express wishes"
+grammar:
+  - "Holiday greetings (З + Instrumental)"
+  - "Date expressions with Genitive"
+  - "Wish expressions (Бажаю + Genitive)"
+word_target: 1000
+content_outline:
+  - section: "Introduction: Ukrainian Holidays"
+    words: 100
+    points:
+      - "Ukraine's holiday calendar"
+      - "Traditions and celebrations"
+      - "Greetings and wishes"
+  - section: "Major Holidays"
+    words: 250
+    points:
+      - "Новий рік, Різдво"
+      - "Великдень, День незалежності"
+      - "День народження"
+  - section: "Holiday Greetings"
+    words: 200
+    points:
+      - "З Новим роком! (Happy New Year!)"
+      - "З днем народження! (Happy Birthday!)"
+      - "З Різдвом Христовим!"
+  - section: "Wishes and Toasts"
+    words: 200
+    points:
+      - "Бажаю щастя, здоров'я"
+      - "Многая літа! (Many years!)"
+      - "За + accusative (toasting)"
+  - section: "Dates and Celebrations"
+    words: 150
+    points:
+      - "Date format: day + genitive month"
+      - "When is your birthday?"
+      - "Planning celebrations"
+  - section: "Practice: Holiday Wishes"
+    words: 100
+    points:
+      - "Write holiday greetings"
+      - "Celebrate a birthday"
+vocabulary_hints:
+  required:
+    - свято (holiday)
+    - Новий рік (New Year)
+    - Різдво (Christmas)
+    - день народження (birthday)
+    - вітати (to congratulate)
+    - бажати (to wish)
+    - подарунок (gift)
+    - святкувати (to celebrate)
+  recommended:
+    - Великдень (Easter)
+    - щастя (happiness)
+    - здоров'я (health)
+    - успіх (success)
+    - торт (cake)
+    - свічка (candle)
+activity_hints:
+  - type: vocabulary-drill
+    focus: "Holiday names and greetings"
+    items: 25
+  - type: matching
+    focus: "Match holidays to dates"
+    items: 15
+  - type: fill-in
+    focus: "Complete holiday wishes"
+    items: 20
+  - type: dialogue
+    focus: "Birthday party conversation"
+    items: 6
+prerequisites:
+  - a1-23 (What Time Is It)
+  - a1-32 (My Family)
+connects_to:
+  - a1-34 (Checkpoint Core Grammar)
 naturalness:
   score: 10
   status: PASS
+  justification: "Essential cultural knowledge"

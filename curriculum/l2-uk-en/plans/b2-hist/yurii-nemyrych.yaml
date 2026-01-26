@@ -1,0 +1,96 @@
+module: yurii-nemyrych
+level: b2-hist
+sequence: 57
+version: '1.0'
+title: 'Юрій Немирич: Гадяцька угода'
+focus: history
+pedagogy: CBI
+objectives:
+- Учень може пояснити суть проекту 'Великого Князівства Руського'
+- Учень може проаналізувати причини провалу Гадяцької угоди
+- Учень може оцінити роль Юрія Немирича як інтелектуала в політиці
+content_outline:
+- section: Вступ
+  words: 400
+  subsections:
+  - 'Nemyrych as a unique figure: intellectual and politician'
+  - The crisis after Khmelnytsky's death
+- section: 'Юрій Немирич: Портрет інтелектуала'
+  words: 600
+  subsections:
+  - Education in Europe (Leiden, Oxford, Paris)
+  - Protestant faith (Arianism) and tolerance
+  - Political career in the Commonwealth
+- section: 'Гадяцька угода 1658: Проект трьох народів'
+  words: 800
+  subsections:
+  - The concept of the Grand Duchy of Rus'
+  - 'Equality of rights: religion, language, administration'
+  - The vision of a federal state
+- section: Освіта і культура в проекті Немирича
+  words: 500
+  subsections:
+  - Plans for two academies (universities)
+  - Freedom of the press and schools
+  - Intellectual foundation for the state
+- section: 'Конотопська битва: Тріумф зброї'
+  words: 600
+  subsections:
+  - The war with Muscovy (1658-1659)
+  - Victory at Konotop as a defense of the Treaty
+  - Vyhovsky's military leadership
+- section: 'Крах великої ідеї: Чому не вийшло?'
+  words: 500
+  subsections:
+  - Internal opposition (Pushkar, Barabash)
+  - Muscovite propaganda and incitement of the masses
+  - The tragic death of Nemyrych
+- section: Читання
+  words: 250
+  subsections:
+  - Analysis of the Hadiach Treaty text
+- section: Первинні джерела
+  words: 300
+  subsections:
+  - Analysis of Nemyrych's speech to the Sejm
+- section: Деколонізаційний погляд
+  words: 300
+  subsections:
+  - Hadiach as an alternative to Pereiaslav
+  - The myth of 'inevitable unity' with Russia
+- section: Підсумок
+  words: 150
+  subsections:
+  - Final evaluation of the project
+word_target: 4000
+vocabulary:
+- федерація
+- канцлер
+- шляхта
+- сенат
+- академія
+- триєдина держава
+- аріанин
+- унія
+- розкол
+- Руїна
+activities:
+- type: reading
+  focus: Analysis of the Hadiach Treaty text
+- type: quiz
+  focus: Biography of Nemyrych and terms of the treaty
+- type: essay-response
+  focus: Why the European choice failed in the 17th century
+- type: comparative-study
+  focus: Pereiaslav vs. Hadiach models
+- type: true-false
+  focus: Facts about the Grand Duchy of Rus'
+sources:
+- name: The Treaty of Hadiach - Encyclopedia of Ukraine
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CH%5CA%5CHadiachTreatyof.htm
+  type: reference
+  notes: Academic summary
+- name: Yurii Nemyrych's Speech
+  url: http://litopys.org.ua/
+  type: primary
+  notes: Original text of the speech

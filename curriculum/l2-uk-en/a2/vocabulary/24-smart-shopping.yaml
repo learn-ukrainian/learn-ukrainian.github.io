@@ -2,58 +2,330 @@ module: 24-smart-shopping
 level: A2
 version: '2.0'
 items:
-- lemma: грам
-  ipa: /ɦram/
-  translation: gram
-  pos: noun
-- lemma: еко-торбинка
-  ipa: /ɛkɔ-tɔrbˈɪnka/
-  translation: eco-bag
+- lemma: ціна
+  ipa: /t͡sinˈa/
+  translation: price
   pos: noun
   gender: f
-- lemma: капуста
-  ipa: /kapˈusta/
-  translation: cabbage
+- lemma: знижка
+  ipa: /znˈɪʒka/
+  translation: discount
   pos: noun
   gender: f
-- lemma: крамниця
-  ipa: /kramnˈɪt͡sja/
-  translation: shop, store
-  pos: noun
-  gender: f
-- lemma: літр
-  ipa: /litr/
-  translation: liter
-  pos: noun
-- lemma: найдешевший
-  ipa: /najdɛʃˈɛʋʃɪj/
-  translation: the cheapest
-  pos: adj
-- lemma: обман
-  ipa: /ɔbmˈan/
-  translation: deceit, fraud
+- lemma: чек
+  ipa: /t͡ʃɛk/
+  translation: receipt, bill
   pos: noun
   gender: m
-- lemma: пакет
-  ipa: /pakˈɛt/
-  translation: packet, package, plastic bag
-  pos: noun
-  gender: m
-- lemma: пляма
-  ipa: /plˈjama/
-  translation: stain, spot
+- lemma: решта
+  ipa: /rˈɛʃta/
+  translation: change (money back)
   pos: noun
   gender: f
-- lemma: рольовий
-  ipa: /rɔlʲɔʋˈɪj/
-  translation: role-playing (adj)
-  pos: adj
-- lemma: торгуватися
-  ipa: /tɔrɦuʋˈatɪsja/
-  translation: to bargain
-  pos: verb
+- lemma: готівка
+  ipa: /ɦotˈiʋka/
+  translation: cash
+  pos: noun
+  gender: f
+- lemma: карта
+  ipa: /kˈarta/
+  translation: card
+  pos: noun
+  gender: f
 - lemma: цінник
   ipa: /t͡sinnˈɪk/
   translation: price tag
   pos: noun
   gender: m
+- lemma: кошик
+  ipa: /kɔʃˈɪk/
+  translation: basket, shopping cart
+  pos: noun
+  gender: m
+- lemma: замовлення
+  ipa: /zamɔʋlˈɛnnja/
+  translation: order
+  pos: noun
+  gender: n
+- lemma: доставка
+  ipa: /dɔstˈaʋka/
+  translation: delivery
+  pos: noun
+  gender: f
+- lemma: відгук
+  ipa: /ʋidɦˈuk/
+  translation: review, feedback
+  pos: noun
+  gender: m
+- lemma: наявність
+  ipa: /najaʋnˈistʲ/
+  translation: availability
+  pos: noun
+  gender: f
+- lemma: порекомендувати
+  ipa: /pɔrɛkɔmɛnduˈʋatɪ/
+  translation: to recommend (perfective)
+  pos: verb
+- lemma: купити
+  ipa: /kuˈpɪtɪ/
+  translation: to buy (perfective)
+  pos: verb
+- lemma: різниця
+  ipa: /riznˈɪt͡sja/
+  translation: difference
+  pos: noun
+  gender: f
+- lemma: виробник
+  ipa: /ʋɪrˈɔbnɪk/
+  translation: manufacturer, producer
+  pos: noun
+  gender: m
+- lemma: надійний
+  ipa: /nadˈijɪnɪj/
+  translation: reliable
+  pos: adj
+- lemma: бренд
+  ipa: /brɛnd/
+  translation: brand
+  pos: noun
+  gender: m
+- lemma: дешевший
+  ipa: /dɛʃˈɛʋʃɪj/
+  translation: cheaper
+  pos: adj
+- lemma: дорого
+  ipa: /dˈɔrɔɦɔ/
+  translation: expensive, expensively
+  pos: adv
+- lemma: підходити
+  ipa: /pidxɔˈdɪtɪ/
+  translation: to suit, to fit
+  pos: verb
+- lemma: подумати
+  ipa: /pɔduˈmatɪ/
+  translation: to think (perfective)
+  pos: verb
+- lemma: базар
+  ipa: /bazˈar/
+  translation: market, bazaar
+  pos: noun
+  gender: m
+- lemma: супермаркет
+  ipa: /supɛrmarkˈɛt/
+  translation: supermarket
+  pos: noun
+  gender: m
+- lemma: ринок
+  ipa: /rˈɪnɔk/
+  translation: market
+  pos: noun
+  gender: m
+- lemma: солодкий
+  ipa: /sɔlˈɔdkɪj/
+  translation: sweet
+  pos: adj
+- lemma: свіжий
+  ipa: /sʋˈiʒɪj/
+  translation: fresh
+  pos: adj
+- lemma: торгуватися
+  ipa: /tɔrɦuʋˈatɪsja/
+  translation: to bargain, to haggle
+  pos: verb
+- lemma: еко-торбинка
+  ipa: /ɛkɔ-tɔrbˈɪnka/
+  translation: eco-bag
+  pos: noun
+  gender: f
+- lemma: пакет
+  ipa: /pakˈɛt/
+  translation: packet, package, plastic bag
+  pos: noun
+  gender: m
+- lemma: крамниця
+  ipa: /kramnˈɪt͡sja/
+  translation: shop, store
+  pos: noun
+  gender: f
+- lemma: товар
+  ipa: /tɔʋˈar/
+  translation: goods, product
+  pos: noun
+  gender: m
+- lemma: вибирати
+  ipa: /ʋɪbɪrˈatɪ/
+  translation: to choose, to select
+  pos: verb
+- lemma: варіант
+  ipa: /ʋarˈiant/
+  translation: variant, option
+  pos: noun
+  gender: m
+- lemma: оформити
+  ipa: /ɔfɔrmˈɪtɪ/
+  translation: to place (an order), to formalize (perfective)
+  pos: verb
+- lemma: кращий
+  ipa: /krˈaʃt͡ʃɪj/
+  translation: better
+  pos: adj
+- lemma: найдешевший
+  ipa: /najdɛʃˈɛʋʃɪj/
+  translation: the cheapest
+  pos: adj
+- lemma: найпопулярніший
+  ipa: /najpɔpulˈjarnijʃɪj/
+  translation: the most popular
+  pos: adj
+- lemma: швидкий
+  ipa: /ʃʋˈɪdkɪj/
+  translation: fast, quick
+  pos: adj
+- lemma: акція
+  ipa: /ˈakt͡sija/
+  translation: sale, promotion, action
+  pos: noun
+  gender: f
+- lemma: розпродаж
+  ipa: /rɔzprˈɔdaʒ/
+  translation: clearance sale
+  pos: noun
+  gender: m
+- lemma: якість
+  ipa: /jakˈistʲ/
+  translation: quality
+  pos: noun
+  gender: f
+- lemma: вартість
+  ipa: /ʋˈartistʲ/
+  translation: cost, value
+  pos: noun
+  gender: f
+- lemma: вигідний
+  ipa: /ʋˈiɦidnɪj/
+  translation: profitable, advantageous
+  pos: adj
+- lemma: порівнювати
+  ipa: /pɔriʋnˈjuʋatɪ/
+  translation: to compare
+  pos: verb
+- lemma: рекомендувати
+  ipa: /rɛkɔmɛnduˈʋatɪ/
+  translation: to recommend
+  pos: verb
+- lemma: радити
+  ipa: /radˈɪtɪ/
+  translation: to advise
+  pos: verb
+- lemma: пропонувати
+  ipa: /prɔpɔnuˈʋatɪ/
+  translation: to offer, to propose
+  pos: verb
+- lemma: краще
+  ipa: /krˈaʃt͡ʃɛ/
+  translation: better (adverb)
+  pos: adv
+- lemma: взяти
+  ipa: /ʋzjatˈɪ/
+  translation: to take (perfective)
+  pos: verb
+- lemma: преміум
+  ipa: /prɛmˈium/
+  translation: premium
+  pos: noun
+  gender: m
+- lemma: ввічливий
+  ipa: /ʋʋˈit͡ʃlɪʋɪj/
+  translation: polite
+  pos: adj
+- lemma: відмова
+  ipa: /ʋidmˈɔʋa/
+  translation: refusal
+  pos: noun
+  gender: f
+- lemma: брати
+  ipa: /brˈatɪ/
+  translation: to take (imperfective)
+  pos: verb
+- lemma: гривня
+  ipa: /ɦrˈɪʋnja/
+  translation: hryvnia (Ukrainian currency)
+  pos: noun
+  gender: f
+- lemma: гроші
+  ipa: /ɦrɔʃˈi/
+  translation: money
+  pos: noun
+  gender: pl
+- lemma: торговий
+  ipa: /tɔrɦˈɔʋɪj/
+  translation: shopping, trade (adj)
+  pos: adj
+- lemma: центр
+  ipa: /t͡sɛntr/
+  translation: center
+  pos: noun
+  gender: m
+- lemma: аптека
+  ipa: /aptˈɛka/
+  translation: pharmacy
+  pos: noun
+  gender: f
+- lemma: туфлі
+  ipa: /tˈufli/
+  translation: shoes
+  pos: noun
+  gender: pl
+- lemma: черга
+  ipa: /t͡ʃɛrɦˈa/
+  translation: queue, line
+  pos: noun
+  gender: f
+- lemma: точний
+  ipa: /tˈɔt͡ʃnɪj/
+  translation: exact, precise
+  pos: adj
+- lemma: традиційний
+  ipa: /tradɪt͡sijˈnɪj/
+  translation: traditional
+  pos: adj
+- lemma: інший
+  ipa: /ˈinʃɪj/
+  translation: other, different
+  pos: adj
+- lemma: готовий
+  ipa: /ɦotˈɔʋɪj/
+  translation: ready
+  pos: adj
+- lemma: дивитися
+  ipa: /dɪʋˈɪtɪsja/
+  translation: to look, to watch
+  pos: verb
+- lemma: використовувати
+  ipa: /ʋɪkɔrɪstˈɔʋuʋatɪ/
+  translation: to use
+  pos: verb
+- lemma: вирішувати
+  ipa: /ʋɪriˈʃuʋatɪ/
+  translation: to decide, to solve
+  pos: verb
+- lemma: економити
+  ipa: /ɛkɔnˈɔmɪtɪ/
+  translation: to save (money), to economize
+  pos: verb
+- lemma: знаходити
+  ipa: /znaxˈɔdɪtɪ/
+  translation: to find
+  pos: verb
+- lemma: шукати
+  ipa: /ʃukˈatɪ/
+  translation: to look for, to search
+  pos: verb
+- lemma: невигідний
+  ipa: /nɛʋˈiɦidnɪj/
+  translation: unprofitable, disadvantageous
+  pos: adj
+- lemma: ідеально
+  ipa: /idɛˈalʲnɔ/
+  translation: ideally, perfectly
+  pos: adv

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M119 | **Phase:** B2.3d | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 20:22:53
+**Generated:** 2026-01-25 22:23:39
 
 ## Configuration
 **Type:** B2-history
@@ -52,7 +52,7 @@
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ❌ 2012/4000 (raw: 2239)
+- **Words:** ❌ 1672/4000 (raw: 1845)
 - **Activities:** ✅ 13/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 9/2 types
@@ -64,7 +64,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ⚠️ Too many activities: 13 (target 3-9)
-- **Immersion:** 🇺🇦 97.4% (target 90-100% (history))
+- **Immersion:** 🇺🇦 96.8% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -81,10 +81,10 @@
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 4 | 4 | 100% | 10% | 9.5% |
-| visual | 6 | 4 | 100% | 10% | 9.5% |
-| variety | 0.97 | - | 97% | 5% | 4.6% |
+| visual | 4 | 4 | 100% | 10% | 9.5% |
+| variety | 0.98 | - | 98% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 16 | 3 | 100% | 5% | 4.8% |
+| questions | 15 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
@@ -100,6 +100,5 @@
 | **Шлях до 24 серпня** | ⚪️ | 136 | Skipped |
 | **Референдум 1 грудня: Тріумф волі** | ⚪️ | 221 | Skipped |
 | **Деколонізаційний погляд** | ✅ | 90 | Included in Core |
-| **Есе** | ⚪️ | 340 | Skipped |
 | **Підсумок** | ✅ | 89 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 97 | Skipped |

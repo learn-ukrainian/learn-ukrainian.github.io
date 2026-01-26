@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M05 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:22:55
+**Generated:** 2026-01-25 22:22:24
 
 ## Configuration
 **Type:** B2-history
@@ -36,7 +36,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4679/4000 (raw: 4990)
+- **Words:** ✅ 4583/4000 (raw: 4892)
 - **Activities:** ✅ 7/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -79,7 +79,6 @@
 | **Вступ** | ✅ | 435 | Included in Core |
 | **Читання** | ✅ | 2399 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 193 | Included in Core |
-| **Первинні джерела** | ✅ | 258 | Included in Core |
-| **Есе** | ⚪️ | 862 | Skipped |
+| **Первинні джерела** | ✅ | 1024 | Included in Core |
 | **Підсумок** | ✅ | 200 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 142 | Skipped |

@@ -28,3 +28,38 @@ slug: 33-word-formation-person-suffixes
 naturalness:
   score: 9
   status: PASS
+content_outline:
+- section: Вступ — суфікси на позначення осіб
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Suffix -ар/-яр (profession/activity)
+  words: 400
+  points:
+  - бібліотека → бібліотекар (librarian)
+  - ворота → воротар (goalkeeper)
+  - вівці → вівчар (shepherd)
+  - камінь → каменяр (stonemason)
+- section: Suffix -ач (agent of action)
+  words: 400
+  points:
+  - викладати → викладач (lecturer)
+  - читати → читач (reader)
+  - глядіти → глядач (viewer)
+  - слухати → слухач (listener)
+- section: Suffix -ник (activity/role)
+  words: 400
+  points:
+  - робота → робітник (worker)
+  - письмо → письменник (writer)
+  - праця → працівник (employee)
+  - учень → учeник → ученик (student)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

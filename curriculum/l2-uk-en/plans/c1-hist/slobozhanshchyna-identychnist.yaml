@@ -1,0 +1,99 @@
+module: slobozhanshchyna-identychnist
+level: c1-hist
+sequence: 76
+version: '1.0'
+title: 'Слобожанщина: Формування ідентичності'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — «Слободи» — вільні землі
+  words: 400
+  subsections:
+  - Слобожанщина — де це
+  - Назва — від «слобода»
+  - Козацьке заселення
+  - Структура модуля
+- section: Заселення (XVII ст.)
+  words: 600
+  subsections:
+  - Втечі з Правобережжя
+  - Козацькі полки — Харківський, Сумський, та ін.
+  - Росія запрошує — чому
+  - Особливий статус
+- section: Слобідське козацтво
+  words: 600
+  subsections:
+  - Козацька організація
+  - Відмінності від Запорожжя
+  - Служба Росії
+  - Скасування — 1765
+- section: Харків — культурний центр
+  words: 700
+  subsections:
+  - Заснування — 1654
+  - Університет — 1804
+  - Харківська школа романтиків
+  - Котляревський, Квітка-Основ'яненко
+  - Перша столиця УРСР
+- section: Русифікація
+  words: 500
+  subsections:
+  - Раніше, ніж деінде
+  - Близькість до Росії
+  - Мовний зсув
+  - Але збереження ідентичності
+- section: Сучасна Слобожанщина
+  words: 400
+  subsections:
+  - Харківська область
+  - «Другий фронт» 2022
+  - Деокупація
+  - Українська ідентичність під тиском
+- section: Підсумок
+  words: 300
+  subsections:
+  - Слобожанщина — козацька, але інша
+  - Харків — українське місто
+  - Перехід до Донбасу
+word_target: 3500
+vocabulary:
+- Слобожанщина
+- слобода
+- козацький полк
+- заселення
+- русифікація
+- культурний центр
+- ідентичність
+- романтизм
+- прикордоння
+- автономія
+- Харківська школа
+- етнічна межа
+- мовний зсув
+- регіональна свідомість
+- колонізація
+activities:
+- type: settlement-analysis
+  focus: Who settled Slobozhanshchyna and why
+- type: cultural-analysis
+  focus: Kharkiv as Ukrainian cultural center — key figures
+- type: comparative-study
+  focus: Slobozhanshchyna vs. Zaporozhian Cossacks
+- type: contemporary-analysis
+  focus: Kharkiv 2022 — Ukrainian identity under siege
+- type: essay-response
+  focus: Чому Харків став культурною столицею України у XIX ст.?
+sources:
+- name: Слобідська Україна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Слобідська_Україна
+  type: reference
+  notes: Regional overview
+- name: Слобідські козацькі полки (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Слобідські_козацькі_полки
+  type: reference
+  notes: Cossack regiments
+- name: Харків (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Харків
+  type: reference
+  notes: City history

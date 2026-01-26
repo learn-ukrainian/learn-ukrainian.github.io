@@ -1,0 +1,20 @@
+module: pomarancheva-revoliutsiia
+level: b2-hist
+sequence: 0
+version: '1.0'
+title: Помаранчева революція
+focus: history
+pedagogy: CBI
+objectives:
+- Understand the causes and timeline of the Orange Revolution
+- 'Identify key figures: Yushchenko, Tymoshenko'
+- Explain the role of civil society and peaceful protest
+- Analyze the significance of the 2004 Supreme Court decision
+content_outline:
+- section: 'Медіа та суспільство: Інформаційний прорив'
+  words: 250
+  subsections:
+  - Role of 'Channel 5' vs state censorship
+  - Internet (Ukrayinska Pravda) and SMS coordination
+  - Information warfare
+word_target: 4000

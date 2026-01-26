@@ -1,24 +1,105 @@
-title: УПА і збройний опір
-subtitle: UPA and Armed Resistance
+module: b2-hist-106
+id: b2-hist-106
+slug: upa
+title: "УПА: Збройний опір"
+subtitle: "UPA: The Armed Resistance"
 version: '2.0'
-phase: B2.3c Trauma & Resistance
+phase: "HIST.10 [WWII & Soviet Terror]"
 focus: history
-word_target: 4000
 pedagogy: CBI
+register: публіцистичний
 duration: 120
 transliteration: none
-tags:
-- history
-- wwii
-- resistance
-grammar:
-- Historical narrative register
 objectives:
-- Learner understands the role of the Ukrainian Insurgent Army (UPA) during WWII.
-- Learner can analyze primary sources from the resistance movement.
-- Learner understands the 'war on two fronts' concept.
-vocabulary_count: 15
-slug: upa-i-zbroinyi-opir
+  - "Учень може описати створення та діяльність УПА"
+  - "Учень може пояснити концепцію «війни на два фронти»"
+  - "Учень може проаналізувати контроверсійні аспекти історії УПА"
+  - "Учень може оцінити роль УПА в боротьбі за незалежність"
+grammar:
+  - "Минулий час у воєнному наративі"
+  - "Військова лексика"
+  - "Пасивні конструкції"
+word_target: 4000
+content_outline:
+  - section: "Вступ: Війна на два фронти"
+    words: 400
+    points:
+      - "1942: створення УПА"
+      - "Проти нацистів і більшовиків"
+      - "Чому збройний опір"
+  - section: "Створення та організація"
+    words: 800
+    points:
+      - "ОУН та шлях до УПА"
+      - "Командири: Шухевич, Клячківський"
+      - "Структура та організація"
+      - "Ідеологія та цілі"
+  - section: "Бойовий шлях"
+    words: 1000
+    points:
+      - "Боротьба з німцями"
+      - "Боротьба з радянською владою"
+      - "Волинська трагедія"
+      - "Операція «Вісла»"
+      - "Опір до 1950-х років"
+  - section: "Первинні джерела"
+    words: 800
+    points:
+      - "Документи УПА"
+      - "Спогади учасників"
+      - "Радянські документи"
+  - section: "Деколонізаційний погляд"
+    words: 500
+    points:
+      - "Радянський наратив: «бандерівці»"
+      - "Контроверсії та складна правда"
+      - "УПА в сучасній пам'яті"
+  - section: "Підсумок: Спадщина"
+    words: 500
+    points:
+      - "Загибель Шухевича (1950)"
+      - "Визнання УПА"
+      - "УПА та сучасна війна"
+vocabulary_hints:
+  required:
+    - УПА (UPA)
+    - повстанці (insurgents)
+    - опір (resistance)
+    - партизани (partisans)
+    - окупація (occupation)
+    - незалежність (independence)
+    - командир (commander)
+    - підпілля (underground)
+  recommended:
+    - бункер (bunker)
+    - криївка (hideout)
+    - диверсія (sabotage)
+    - пропаганда (propaganda)
+    - репресії (repressions)
+    - депортація (deportation)
+activity_hints:
+  - type: reading
+    focus: "Документи та спогади учасників УПА"
+    source: "Архівні матеріали"
+    items: 4
+  - type: quiz
+    focus: "Українська Повстанська Армія"
+    items: 15
+  - type: match-up
+    focus: "Подія → дата та наслідки"
+    items: 10
+  - type: fill-in
+    focus: "Військова лексика"
+    items: 10
+  - type: essay-response
+    focus: "Чому історія УПА залишається контроверсійною?"
+    word_target: 250
+prerequisites:
+  - b2-hist-105 (ОУН)
+connects_to:
+  - b2-hist-107 (Завершення війни)
+  - b2-hist-109 (Депортації)
 naturalness:
-  score: 9
+  score: 10
   status: PASS
+  justification: "Академічний український для воєнної історії"

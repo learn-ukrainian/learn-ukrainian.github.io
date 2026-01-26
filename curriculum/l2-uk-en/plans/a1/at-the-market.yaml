@@ -1,0 +1,79 @@
+module: at-the-market
+level: a1
+sequence: 37
+version: '2.0'
+title: At the Market
+subtitle: Buying Fresh Produce
+focus: practical
+pedagogy: PPP
+objectives:
+- Learner can buy fresh produce at a market
+- Learner can ask about prices and quantities
+- Learner can negotiate politely
+- Learner can describe what they want
+content_outline:
+- section: 'Introduction: Ukrainian Markets'
+  words: 100
+  points:
+  - Market culture in Ukraine
+  - Fresh produce shopping
+  - Interaction with vendors
+- section: Approaching a Vendor
+  words: 150
+  points:
+  - Добрий день!
+  - Скільки коштує...?
+  - Можна подивитися?
+- section: Asking for Products
+  words: 200
+  points:
+  - Дайте, будь ласка, кілограм...
+  - Мені потрібно два кілограми...
+  - Ще щось? - Ні, це все.
+- section: Quantities and Prices
+  words: 150
+  points:
+  - За кілограм, за штуку
+  - Скільки з мене? (How much do I owe?)
+  - Тримайте здачу
+- section: Quality and Selection
+  words: 100
+  points:
+  - Свіжий/свіжа (fresh)
+  - Стиглий (ripe)
+  - Choosing produce
+- section: 'Practice: Market Shopping'
+  words: 100
+  points:
+  - Complete market transaction
+  - Buy multiple items
+word_target: 800
+vocabulary:
+  required:
+  - ринок (market)
+  - кілограм (kilogram)
+  - штука (piece)
+  - свіжий (fresh)
+  - овочі (vegetables)
+  - фрукти (fruits)
+  - скільки (how much)
+  - дайте (give me)
+  recommended:
+  - здача (change)
+  - продавець (vendor)
+  - яблука (apples)
+  - картопля (potatoes)
+  - помідори (tomatoes)
+  - огірки (cucumbers)
+  forbidden: []
+activities:
+  types_required:
+  - dialogue
+  - role-play
+  - fill-in
+  - listening
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a1-38 (At the Store)

@@ -1,0 +1,86 @@
+module: kozatske-viisko
+level: b2-hist
+sequence: 48
+version: '1.0'
+title: Козацьке військо та озброєння
+focus: history
+pedagogy: CBI
+objectives:
+- Учень може описати структуру та ієрархію козацького війська
+- Учень може аналізувати типи озброєння та їхнє походження
+- Учень може пояснити тактичні переваги козацької піхоти та кавалерії
+content_outline:
+- section: 'Вступ: Феномен козацького війська'
+  words: 400
+  subsections:
+  - Universal military service and democracy
+  - International reputation of Cossack mercenaries
+- section: 'Структура та Ієрархія: Від коша до полку'
+  words: 600
+  subsections:
+  - The role of the Hetman and General Staff
+  - Territorial and functional divisions
+  - Discipline and military code
+- section: 'Озброєння: Шабля, самопал та гармата'
+  words: 600
+  subsections:
+  - 'Individual weaponry: fire and steel'
+  - The cult of the sabre (shablya)
+  - 'Artillery: mobility and psychological impact'
+- section: 'Тактика бою: Козацький табір та розвідка'
+  words: 600
+  subsections:
+  - The 'tabor' as a defensive fort
+  - Cossack 'plastuny' (scouts)
+  - Siege warfare and river raids
+- section: 'Символіка та Клейноди: Знаки влади'
+  words: 400
+  subsections:
+  - Bulava, bunchuk, and seals
+  - The sacred meaning of the banner (khoruhva)
+- section: 'Читання: Опис козацького вишколу'
+  words: 250
+  subsections:
+  - Account of a foreign observer on Cossack training
+- section: 'Первинні джерела: Голоси епохи'
+  words: 300
+  subsections:
+  - Analysis of official documents and letters
+- section: Деколонізаційний погляд
+  words: 400
+  subsections:
+  - Cossacks as a modern professional army, not a 'rabble'
+  - Influence on European military science
+  - Ukraine's military subjectivity
+word_target: 4000
+vocabulary:
+- булава
+- пернач
+- самопал
+- шабля
+- гармата
+- полк
+- сотня
+- кіш
+- обоз
+- хоругва
+activities:
+- type: reading
+  focus: Primary sources on military structure
+- type: quiz
+  focus: Terminology and hierarchy
+- type: essay-response
+  focus: Cossack military ethics and modern parallels
+- type: comparative-study
+  focus: Cossack vs Western European military organization
+- type: true-false
+  focus: Facts about weaponry and ranks
+sources:
+- name: Military Art of Ukrainian Cossacks
+  url: https://resource.history.org.ua/item/0002345
+  type: academic
+  notes: Detailed analysis of tactics
+- name: Cossack Weaponry - Museum Project
+  url: https://warmuseum.kyiv.ua
+  type: reference
+  notes: Visual and technical details

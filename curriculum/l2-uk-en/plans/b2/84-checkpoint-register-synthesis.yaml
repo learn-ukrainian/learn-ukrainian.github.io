@@ -1,0 +1,21 @@
+module: 84-checkpoint-register-synthesis
+level: b2
+sequence: 84
+version: '2.0'
+title: 'Checkpoint: Register Synthesis (Синтез регістрів)'
+subtitle: Confirm register readiness before communication skills
+focus: checkpoint
+pedagogy: Test
+objectives:
+- Demonstrate B2 level proficiency
+- Pass final comprehensive assessment
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

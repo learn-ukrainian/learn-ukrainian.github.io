@@ -1,0 +1,23 @@
+module: 44-complex-syntax-ellipsis-parcelling
+level: b2
+sequence: 44
+version: '1.0'
+title: 'Складний синтаксис: еліпсис і парцеляція'
+subtitle: Omitted words and stylistic fragmentation
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can recognize elliptical constructions in authentic Ukrainian texts
+- Learner can produce parcelled sentences for stylistic effect
+- Learner can recover omitted elements in elliptical speech
+- Learner can transform standard sentences using parcelling
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

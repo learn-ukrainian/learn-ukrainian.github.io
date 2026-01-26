@@ -1,8 +1,8 @@
 # Audit Report: M25 — 25-checkpoint-aspect-comparison.md
 **Level:** A2 | **Module:** M25 | **Phase:** A2.2 | **Pedagogy:** TTT | **Target:** 800
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 23:52:14
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-26 09:20:44
 
 ## Configuration
 **Type:** A2-checkpoint
@@ -37,19 +37,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1145/800 (raw: 1253)
+- **Words:** ✅ 1502/800 (raw: 1638)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 10
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 4/3
+- **Engagement:** ✅ 3/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 16/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 71.8% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 60.4% (checkpoint - no gate)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
@@ -58,11 +58,10 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Огляд / Overview** | ⚪️ | 250 | Skipped |
-| **Skill 1: Verbal Aspect (Вид дієслова: Процес та результат)** | ⚪️ | 81 | Skipped |
-| **Skill 2: Degrees of Comparison (Ступені порівняння)** | ⚪️ | 51 | Skipped |
-| **Skill 3: Modality (Умовний та наказовий способи)** | ⚪️ | 65 | Skipped |
-| **Skill 4: Numeral Agreement (Узгодження числівників)** | ⚪️ | 39 | Skipped |
-| **Practice / Практика (The Mega-Review)** | ✅ | 151 | Included in Core |
+| **Skill 1: Verbal Aspect (Вид дієслова: Процес та результат)** | ⚪️ | 200 | Skipped |
+| **Skill 2: Degrees of Comparison (Ступені порівняння)** | ⚪️ | 146 | Skipped |
+| **Skill 3: Modality (Умовний та наказовий способи)** | ⚪️ | 203 | Skipped |
+| **Skill 4: Numeral Agreement (Узгодження числівників)** | ⚪️ | 195 | Skipped |
 | **Dialogue / Діалог: Synthesis (Синтез навичок)** | ✅ | 256 | Included in Core |
 | **Integration Challenge / Інтеграційне завдання** | ⚪️ | 106 | Skipped |
 | **Підсумок / Summary** | ✅ | 84 | Included in Core |

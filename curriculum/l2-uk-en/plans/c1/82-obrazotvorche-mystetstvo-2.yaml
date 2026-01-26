@@ -1,0 +1,22 @@
+module: 82-obrazotvorche-mystetstvo-2
+level: c1
+sequence: 82
+version: '2.0'
+title: Образотворче мистецтво II
+subtitle: Visual Arts II — From Socialist Realism to Present
+focus: fine-arts
+pedagogy: CBI
+objectives:
+- Learner understands the impact of Soviet repression on Ukrainian art.
+- Learner can analyze the works of folk masters like Prymachenko and Bilokur.
+- Learner explores the contemporary art scene in Ukraine.
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

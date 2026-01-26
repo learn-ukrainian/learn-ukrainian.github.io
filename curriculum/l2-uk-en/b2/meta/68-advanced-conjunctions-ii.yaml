@@ -29,3 +29,32 @@ slug: 68-advanced-conjunctions-ii
 naturalness:
   score: 9
   status: PASS
+content_outline:
+- section: Вступ — Час та Умова
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Temporal Conjunctions
+  words: 500
+  points:
+  - коли (when - general)
+  - щойно (as soon as)
+  - після того як (after)
+  - перед тим як (before)
+  - поки (while)
+- section: Conditional Conjunctions
+  words: 500
+  points:
+  - якщо (if - neutral)
+  - якби (if - counterfactual)
+  - коли б (if/when - conditional)
+  - у випадку якщо (in case)
+  - за умови що (on condition that)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

@@ -1,0 +1,95 @@
+module: syntez-kozatski-dzherela
+level: c1-hist
+sequence: 28
+version: '1.0'
+title: 'Синтез: Голоси козацької доби'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Що ми вивчили
+  words: 400
+  subsections:
+  - Огляд модулів 19-27
+  - Різноманітність козацьких джерел
+  - Мета синтезу — системний погляд
+- section: Типологія козацьких джерел
+  words: 600
+  subsections:
+  - Літописи — три головні
+  - Документи — універсали, статті
+  - Листування — дипломатичне, приватне
+  - Правові документи — Конституція, суди
+  - Таблиця порівняння
+- section: Голоси епохи — хто говорить?
+  words: 700
+  subsections:
+  - Старшина — домінуючий голос
+  - Рядові козаки — де їхній голос?
+  - Селяни — майже мовчать
+  - Жінки — відсутні
+  - Інші — поляки, росіяни
+- section: Що джерела кажуть vs. що замовчують
+  words: 600
+  subsections:
+  - Героїзація vs. критика
+  - Внутрішні конфлікти — приховані
+  - Насильство — як описано
+  - Соціальні протиріччя
+  - Реконструкція замовчаного
+- section: Методологічні уроки
+  words: 500
+  subsections:
+  - Порівняння джерел — ключ до правди
+  - Критика упередженості
+  - Польські джерела — альтернатива
+  - Російські джерела — інша перспектива
+  - Комплексний підхід
+- section: Практикум — комплексний аналіз
+  words: 500
+  subsections:
+  - Одна подія — кілька джерел
+  - 'Наприклад: Полтава в різних джерелах'
+  - Що збігається, що суперечить
+  - Реконструкція події
+- section: Підсумок
+  words: 200
+  subsections:
+  - Від середньовіччя до модерну
+  - Чек-ліст для козацьких джерел
+  - Підготовка до XIX-XX ст.
+word_target: 3500
+vocabulary:
+- синтез
+- типологія
+- голос / голоси
+- замовчування
+- реконструкція
+- комплексний підхід
+- упередженість
+- старшина
+- рядовий козак
+- альтернативна перспектива
+- просопографія
+- соціальна історія
+- мікроісторія
+- субалтерн
+- агенція
+activities:
+- type: essay-response
+  focus: Create comprehensive source matrix for modules 19-27
+- type: multi-source-analysis
+  focus: One event from 4+ sources — compare
+- type: gap-analysis
+  focus: What social groups are missing from sources?
+- type: essay-response
+  focus: Чий голос домінує в козацьких джерелах і чому?
+sources:
+- name: Козацькі літописи (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Козацькі_літописи
+  type: reference
+  notes: Overview
+- name: Джерелознавство
+  url: https://uk.wikipedia.org/wiki/Джерелознавство
+  type: reference
+  notes: Source studies

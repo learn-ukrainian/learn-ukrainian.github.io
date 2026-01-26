@@ -1,7 +1,7 @@
 # Audit Report: M106 — babyn-yar.md
 **Level:** B2 | **Module:** M106 | **Phase:** HIST.10 | **Pedagogy:** Not Specified | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 20:21:51
+**Generated:** 2026-01-25 22:23:31
 
 ## Configuration
 **Type:** B2-history

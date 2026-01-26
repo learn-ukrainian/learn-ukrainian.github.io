@@ -1,0 +1,24 @@
+module: news-analysis-advanced
+level: b2
+sequence: 90
+version: '2.0'
+title: 'Аналіз новин: Поглиблено'
+subtitle: Advanced media literacy and critical news analysis
+focus: grammar
+pedagogy: CBI
+objectives:
+- Learner can identify editorial bias and political perspectives in news coverage
+- Learner can compare how different sources cover the same event
+- Learner can recognize propaganda techniques and rhetorical manipulation
+- Learner can evaluate source credibility and verify information
+- Learner can analyze framing, tone, and linguistic choices in journalism
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

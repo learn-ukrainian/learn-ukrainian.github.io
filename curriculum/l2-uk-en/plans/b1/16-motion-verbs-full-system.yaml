@@ -1,0 +1,78 @@
+module: 16-motion-verbs-full-system
+level: b1
+sequence: 16
+version: '1.0'
+title: 'Дієслова руху: повна система'
+subtitle: Motion Verbs - The Full System
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner knows all 14 motion verb pairs
+- Learner understands unidirectional vs multidirectional
+- Learner can choose correct motion verb for context
+sources:
+- name: Ukrainian State Standard 2024 - Motion Verbs
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official system of motion verb pairs
+- name: Ukrainian Motion Verbs (Wikipedia)
+  url: https://uk.wikipedia.org/wiki/Дієслова_руху
+  type: reference
+  notes: Complete list of motion verb pairs
+content_outline:
+- section: Вступ
+  words: 200
+  points:
+  - Content for Вступ
+  - Examples and explanation
+  - Practice or application
+- section: Пояснення
+  words: 350
+  points:
+  - Content for Пояснення
+  - Examples and explanation
+  - Practice or application
+- section: Практика
+  words: 900
+  points:
+  - Content for Практика
+  - Examples and explanation
+  - Practice or application
+- section: Діалоги
+  words: 400
+  points:
+  - Content for Діалоги
+  - Examples and explanation
+  - Practice or application
+word_target: 1500
+vocabulary:
+  required:
+  - односпрямований (unidirectional)
+  - різноспрямований (multidirectional)
+  - йти/ходити (to go on foot)
+  - їхати/їздити (to go by vehicle)
+  - бігти/бігати (to run)
+  - летіти/літати (to fly)
+  - пливти/плавати (to swim/sail)
+  - нести/носити (to carry)
+  - вести/водити (to lead)
+  - везти/возити (to transport)
+  recommended:
+  - лізти/лазити (to climb)
+  - повзти/повзати (to crawl)
+  - тягти/тягати (to pull)
+  - котити/качати (to roll)
+  - брести/бродити (to wade)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - group-sort
+  - match-up
+  - quiz
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-17 (Motion - coming & going)
+- b1-25 (Motion verbs checkpoint)

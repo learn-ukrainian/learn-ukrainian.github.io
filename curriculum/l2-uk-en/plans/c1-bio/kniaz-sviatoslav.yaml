@@ -1,0 +1,117 @@
+module: kniaz-sviatoslav
+level: c1-bio
+sequence: 2
+version: '2.0'
+title: 'Князь Святослав: Воїн-завойовник'
+focus: biography
+pedagogy: seminar
+objectives:
+- Learner understands the geopolitical strategy of Sviatoslav Ihorovych
+- Learner can analyze the impact of the destruction of the Khazar Khaganate
+- Learner masters biographical and military terminology at C1 level
+- Learner can compare the leadership styles of Olga and Sviatoslav
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Святослав_Ігорович
+    title: Святослав Ігорович (Wikipedia UA)
+    notes: Military campaigns, death, historical significance
+  - url: https://uk.wikipedia.org/wiki/Повість_минулих_літ
+    title: Повість минулих літ
+    notes: Chronicle accounts of campaigns
+  secondary:
+  - url: https://uk.wikipedia.org/wiki/Хозарський_каганат
+    title: Хозарський каганат
+    notes: Context for Khazar campaign
+content_outline:
+- section: Вступ — Воїн на троні
+  words: 400
+  subsections:
+  - Контраст між 'м'якою силою' Ольги та 'твердою силою' Святослава
+  - 'Значення постаті: Святослав як ''український Александр Македонський'''
+  - Чому він важливий для сучасної мілітарної ідентичності (гасло ССО)
+- section: 'Життєпис: Ранні роки'
+  words: 400
+  subsections:
+  - Дитинство в Києві та вплив трагічної загибелі Ігоря
+  - Виховання варязькими воєводами Асмудом та Свенельдом
+  - 'Похід на древлян 946 року: перший кинутий спис у 4 роки'
+- section: 'Життєпис: Східний похід та Крах Хазарії'
+  words: 800
+  subsections:
+  - Економічна логіка знищення хазарської монополії на Волзі
+  - Стратегія обходу степу через ліси в'ятичів та басейн Оки
+  - Падіння Ітіля у 965 році та зникнення Каганату з мапи історії
+- section: 'Життєпис: Балканська мрія та Облога Доростола'
+  words: 800
+  subsections:
+  - Проект перенесення столиці до Переяславця на Дунаї
+  - 'Конфлікт із Візантією: Битва під Аркадіополем'
+  - 'Облога Доростола 971 року: героїчний опір та договір з Цимісхієм'
+- section: 'Життєпис: Загибель на порогах'
+  words: 400
+  subsections:
+  - 'Повернення до Києва: зимівля в Білобережжі та голод'
+  - Пастка печенігів біля порогів та роль візантійської дипломатії
+  - 'Легенда про чашу з черепа: визнання доблесті ворогом'
+- section: 'Історичний контекст: Русь у X столітті'
+  words: 400
+  subsections:
+  - 'Геополітичний ландшафт: Між Другим Римом та Шовковим шляхом'
+  - 'Військова організація: ''Ефект пардуса'' (швидкість та мобільність)'
+  - 'Мова та культура: Зіткнення язичницького етосу та християнської дипломатії'
+- section: 'Порівняльний аналіз: Творець (Ольга) vs Завойовник (Святослав)'
+  words: 400
+  subsections:
+  - Порівняння внутрішньої розбудови інституцій та зовнішньої експансії
+  - 'Симбіоз: Чому Русі потрібен був і Скелет (Ольга), і М''язи (Святослав)'
+  - 'Спадщина: Як перемоги Святослава уможливили реформи Володимира'
+- section: 'Спадщина: Від Князя до ЗСУ'
+  words: 400
+  subsections:
+  - 'Деколонізація: Повернення ''оселедця'' та ''сережки'' як українських символів'
+  - 'Сучасна військова символіка: Святослав як патрон Сил спеціальних операцій'
+  - Кодекс честі 'Іду на ви!'
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - воїн
+  - завойовник
+  - каганат
+  - похід
+  - дружина
+  - печеніги
+  - пороги
+  - засідка
+  - данник
+  - договір
+  recommended:
+  - чаша
+  - череп
+  - здобич
+  - облога
+  - перемога
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-01 (Knyahynia Olha - mother)
+  related:
+  - c1-bio-03 (Volodymyr Velykyi - son)
+  - c1-bio-04 (Yaroslav Mudryi - grandson's era)
+  - c1-bio-06 (Mykhailo Chernihivskyi - later Mongol threat parallel)
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

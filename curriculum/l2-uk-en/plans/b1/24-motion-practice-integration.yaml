@@ -1,0 +1,80 @@
+module: 24-motion-practice-integration
+level: b1
+sequence: 24
+version: '2.0'
+title: 'Дієслова руху: практика та інтеграція'
+subtitle: 'Motion verbs: practice and integration'
+focus: grammar
+pedagogy: TTT
+objectives:
+- Master complex travel narratives
+- Correctly use prepositions with specific motion prefixes
+- Understand and use high-frequency motion idioms
+sources:
+- name: Ukrainian State Standard 2024 - Motion and Prepositions
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official guidance on preposition-verb combinations
+- name: Ukrainian Motion Verbs
+  url: https://uk.wikipedia.org/wiki/Дієслова_руху
+  type: reference
+  notes: Comprehensive motion verb reference
+- name: Ukrainian Prepositions
+  url: https://uk.wikipedia.org/wiki/Прийменник
+  type: reference
+  notes: Preposition usage with motion verbs
+content_outline:
+- section: Тест
+  words: 100
+  points:
+  - Content for Тест
+  - Examples and explanation
+  - Practice or application
+- section: Пояснення
+  words: 900
+  points:
+  - Content for Пояснення
+  - Examples and explanation
+  - Practice or application
+- section: Практика
+  words: 100
+  points:
+  - Content for Практика
+  - Examples and explanation
+  - Practice or application
+- section: Діалоги
+  words: 250
+  points:
+  - Content for Діалоги
+  - Examples and explanation
+  - Practice or application
+word_target: 1500
+vocabulary:
+  required:
+  - спочатку (at first)
+  - потім (then)
+  - нарешті (finally)
+  - напрямок (direction)
+  - траєкторія (trajectory)
+  - маршрут (route)
+  - повернути (to turn)
+  - прямо (straight)
+  - праворуч (to the right)
+  - ліворуч (to the left)
+  recommended:
+  - на розі (at the corner)
+  - на перехресті (at the intersection)
+  - світлофор (traffic light)
+  - пішохідний перехід (pedestrian crossing)
+  - кілька кварталів (a few blocks)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - quiz
+  - cloze
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-25 (Checkpoint - motion verbs)

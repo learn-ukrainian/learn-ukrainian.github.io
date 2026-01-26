@@ -1,0 +1,96 @@
+module: translation-practice-ii
+level: c2
+sequence: 87
+version: '2.0'
+title: Практика перекладу II — Спеціалізований переклад
+focus: practice
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Карабан — Переклад науково-технічної літератури
+  url: https://uk.wikipedia.org/wiki/Карабан_В'ячеслав_Іванович
+  type: primary
+  notes: Standard textbook for technical translation Ukrainian-English
+- name: ISO 17100 — Translation Services Requirements
+  url: https://www.iso.org/
+  type: reference
+  notes: International standard for translation quality
+- name: Державний стандарт термінології
+  url: https://dstu-online.com/
+  type: reference
+  notes: Ukrainian terminology standardization
+content_outline:
+- section: Вступ — Світ спеціалізованого перекладу
+  words: 500
+  points:
+  - Види спеціалізованого перекладу
+  - Вимоги до технічного перекладача
+  - Ринок перекладацьких послуг в Україні
+- section: Науковий і технічний переклад
+  words: 700
+  points:
+  - Термінологічна точність
+  - Робота з терміносистемами
+  - Стандарти оформлення (ДСТУ)
+  - Переклад формул, таблиць, графіків
+- section: Юридичний переклад
+  words: 700
+  points:
+  - Особливості правничої мови
+  - Еквівалентність правових понять
+  - Переклад договорів і контрактів
+  - Сертифікований переклад документів
+- section: Медичний переклад
+  words: 600
+  points:
+  - Латинська термінологія
+  - Переклад медичної документації
+  - Фармацевтична література
+  - Етичні аспекти медичного перекладу
+- section: Інструменти перекладача
+  words: 500
+  points:
+  - CAT-системи (Trados, MemoQ)
+  - Термінологічні бази
+  - Машинний переклад як допоміжний інструмент
+  - Контроль якості перекладу
+- section: Практична майстерня
+  words: 700
+  points:
+  - Переклад технічного тексту
+  - Переклад юридичного документа
+  - Створення термінологічного глосарію
+  - Редагування машинного перекладу
+word_target: 4000
+vocabulary:
+  required:
+  - технічний переклад (technical translation)
+  - термін (term)
+  - терміносистема (terminology system)
+  - юридичний переклад (legal translation)
+  - медичний переклад (medical translation)
+  - CAT-система (CAT tool)
+  - термінологічна база (terminology database)
+  - глосарій (glossary)
+  - машинний переклад (machine translation)
+  - контроль якості (quality control)
+  recommended:
+  - локалізація (localization)
+  - постредагування (post-editing)
+  - пам'ять перекладів (translation memory)
+  - сертифікований переклад (certified translation)
+  - апостиль (apostille)
+  forbidden: []
+activities:
+  types_required:
+  - critical-analysis
+  - essay-response
+  - quiz
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-88 (Interpretation Basics)
+- c2-89 (Capstone Topic Selection)

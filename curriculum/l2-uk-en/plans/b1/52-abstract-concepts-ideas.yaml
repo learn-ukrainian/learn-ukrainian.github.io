@@ -1,0 +1,77 @@
+module: abstract-concepts-ideas
+level: b1
+sequence: 52
+version: '2.0'
+title: 'Абстрактні концепції: ідеї та думки'
+subtitle: 'Abstract Concepts: Ideas and Thoughts'
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can use 35 abstract concept words in context
+- Learner can distinguish between ідея/думка/концепція/теорія
+- Learner can form natural collocations with abstract nouns
+- Learner can discuss abstract topics fluently
+content_outline:
+- section: 'Introduction: Abstract Vocabulary'
+  words: 150
+  points:
+  - Why abstract words matter
+  - Beyond concrete nouns
+  - Intellectual discourse
+- section: Ideas and Thoughts
+  words: 250
+  points:
+  - ідея, думка, погляд, переконання
+  - мати/висловлювати ідею
+  - Collocations and usage
+- section: Concepts and Theories
+  words: 250
+  points:
+  - концепція, теорія, гіпотеза
+  - розробляти теорію
+  - Academic context
+- section: Values and Beliefs
+  words: 250
+  points:
+  - цінність, принцип, ідеал
+  - дотримуватися принципу
+  - Ethical vocabulary
+- section: Abstract Qualities
+  words: 200
+  points:
+  - істина, правда, справедливість
+  - свобода, рівність
+  - Philosophical terms
+- section: 'Practice: Using Abstracts'
+  words: 100
+  points:
+  - Build collocations
+  - Discuss abstract topics
+word_target: 1200
+vocabulary:
+  required:
+  - ідея (idea)
+  - думка (thought/opinion)
+  - концепція (concept)
+  - теорія (theory)
+  - погляд (view)
+  - переконання (belief/conviction)
+  - цінність (value)
+  - принцип (principle)
+  recommended:
+  - гіпотеза (hypothesis)
+  - істина (truth)
+  - справедливість (justice)
+  - ідеал (ideal)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - discussion
+  - collocation
+  - matching
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-53 (Abstract Concepts Processes)

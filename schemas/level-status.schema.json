@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/level-status.schema.json",
+  "title": "Level Status",
+  "description": "Schema for level-wide status tracking (status/{level}.yaml)",
+  "type": "object",
+  "required": ["level", "updated", "summary", "modules"],
+  "properties": {
+    "level": {
+      "type": "string",
+      "pattern": "^(a1|a2|b1|b2|c1|c2|b2-hist|b2-pro|c1-bio|c1-hist|c1-pro|c2-pro|lit)$",
+      "description": "Level identifier"
+    },
+    "updated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of last status update"
+    },
+    "summary": {
+      "type": "object",
+      "required": ["total", "planned", "content", "activities", "reviewed"],
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of modules in level"
+        },
+        "planned": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Modules with plan files"
+        },
+        "content": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Modules with content written"
+        },
+        "activities": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Modules with activities completed"
+        },
+        "reviewed": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Modules that passed review"
+        }
+      },
+      "additionalProperties": false
+    },
+    "modules": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/moduleStatus"
+      },
+      "description": "Per-module status keyed by slug"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "moduleStatus": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["planned", "content", "activities", "reviewed"],
+          "description": "Current stage: planned → content → activities → reviewed"
+        },
+        "plan_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+$",
+          "description": "Version of plan file used"
+        },
+        "content_words": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Word count of content file"
+        },
+        "word_target": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Target word count from plan"
+        },
+        "activity_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of activities"
+        },
+        "naturalness": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "description": "Naturalness score (1-10)"
+        },
+        "last_updated": {
+          "type": "string",
+          "format": "date",
+          "description": "Date of last modification"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Optional notes about module status"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

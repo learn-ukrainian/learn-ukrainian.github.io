@@ -26,3 +26,32 @@ slug: 57-synonyms-movement
 naturalness:
   score: 9
   status: PASS
+content_outline:
+- section: Вступ — Рух і Пересування
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Walk
+  words: 500
+  points:
+  - йти (go - general, one direction)
+  - ходити (walk - repeated, habitual)
+  - крокувати (stride - deliberate steps)
+  - брести (trudge - tired walking)
+  - тупати (stomp - heavy steps)
+- section: Run
+  words: 500
+  points:
+  - бігти (run - one direction)
+  - бігати (run - repeated)
+  - мчати (race - very fast)
+  - нестися (dash - uncontrolled)
+  - чимчикувати (scurry - quick small steps)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

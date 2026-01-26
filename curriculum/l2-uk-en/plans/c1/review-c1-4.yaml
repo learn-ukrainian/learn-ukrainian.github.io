@@ -1,0 +1,22 @@
+module: 46-review-c1-4
+level: c1
+sequence: 1
+version: '1.0'
+title: 'Огляд етапу C1.4: Стилістика та регістри'
+subtitle: 'Stage C1.4 Review: Stylistics and Registers'
+focus: style
+pedagogy: Review
+objectives:
+- Learner can flexibly switch between formal, intimate, and slang registers
+- Learner can express degrees of certainty and politeness appropriate to the context
+- Learner can identify and correct stylistic errors
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

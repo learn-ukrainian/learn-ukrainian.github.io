@@ -1,8 +1,8 @@
 # Audit Report: M37 — bukovyna-zakarpattia.md
 **Level:** B2 | **Module:** M37 | **Phase:** B2.3a | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:21:56
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 22:22:46
 
 ## Configuration
 **Type:** B2-history
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4007/4000 (raw: 4262)
+- **Words:** ❌ 3736/4000 (raw: 3926)
 - **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 8/2 types
@@ -49,7 +49,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (8 activities)
-- **Immersion:** 🇺🇦 98.4% (target 90-100% (history))
+- **Immersion:** 🇺🇦 98.3% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -61,12 +61,12 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 12 | 3 | 100% | 24% | 23.8% |
+| primary_sources | 11 | 3 | 100% | 24% | 23.8% |
 | engagement | 7 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 17 | 4 | 100% | 10% | 9.5% |
-| visual | 7 | 4 | 100% | 10% | 9.5% |
+| visual | 5 | 4 | 100% | 10% | 9.5% |
 | variety | 0.99 | - | 99% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 13 | 3 | 100% | 5% | 4.8% |
@@ -82,8 +82,8 @@
 | **Закарпаття: від угорського панування до опришків** | ⚪️ | 694 | Skipped |
 | **Культурний опір та збереження ідентичності** | ✅ | 631 | Included in Core |
 | **Читання** | ✅ | 323 | Included in Core |
-| **Первинні джерела** | ✅ | 352 | Included in Core |
+| **Первинні джерела** | ✅ | 354 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 366 | Included in Core |
-| **Есе** | ⚪️ | 431 | Skipped |
-| **Підсумок** | ✅ | 185 | Included in Core |
+| **Повсякденне життя: Мульткультурний Вавилон** | ✅ | 157 | Included in Core |
+| **Підсумок** | ✅ | 186 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 101 | Skipped |

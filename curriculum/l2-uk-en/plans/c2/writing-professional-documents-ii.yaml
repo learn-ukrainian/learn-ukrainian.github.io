@@ -1,0 +1,93 @@
+module: writing-professional-documents-ii
+level: c2
+sequence: 53
+version: '2.0'
+title: Написання професійних документів II — Пропозиції та презентації
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Фонд державного майна України — тендерна документація
+  url: https://www.spfu.gov.ua/
+  type: reference
+  notes: Examples of professional proposals and tender documentation
+- name: Національне агентство з питань державної служби
+  url: https://nads.gov.ua/
+  type: reference
+  notes: Standards for official presentations and proposals
+- name: Prozorro — публічні закупівлі
+  url: https://prozorro.gov.ua/
+  type: reference
+  notes: Real examples of professional proposals in procurement
+content_outline:
+- section: Вступ — Переконливе професійне письмо
+  words: 400
+  points:
+  - Від інформування до переконання
+  - Аналіз авдиторії та мети
+  - Етика переконання в професійному контексті
+- section: Пропозиція — Структура та зміст
+  words: 800
+  points:
+  - Типи пропозицій (проєктні, комерційні, наукові)
+  - Стандартна структура пропозиції
+  - Обґрунтування та аргументація
+- section: Бізнес-план та обґрунтування проєкту
+  words: 700
+  points:
+  - Ключові елементи бізнес-плану
+  - Фінансове обґрунтування
+  - Оцінка ризиків та SWOT-аналіз
+- section: Письмова презентація
+  words: 600
+  points:
+  - Структура письмової презентації
+  - Візуальні елементи (таблиці, графіки)
+  - Адаптація до формату (слайди, документ)
+- section: Тендерна документація
+  words: 600
+  points:
+  - Специфіка тендерних пропозицій
+  - Вимоги та критерії оцінки
+  - Типові помилки
+- section: Практичні вправи
+  words: 600
+  points:
+  - Написання короткої пропозиції
+  - Підготовка письмової презентації
+  - Критичний аналіз зразків
+word_target: 4000
+vocabulary:
+  required:
+  - пропозиція (proposal)
+  - обґрунтування (justification)
+  - бізнес-план (business plan)
+  - проєкт (project)
+  - презентація (presentation)
+  - тендер (tender)
+  - критерій (criterion)
+  - бюджет (budget)
+  - ризик (risk)
+  - оцінка (assessment/evaluation)
+  recommended:
+  - SWOT-аналіз (SWOT analysis)
+  - рентабельність (profitability)
+  - конкурентоспроможність (competitiveness)
+  - етапність (phasing)
+  - індикатор успіху (success indicator)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - fill-in
+  - critical-analysis
+  - essay-response
+  - comparative-study
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-54 (Professional Oral Communication)
+- c2-56 (Professional Correspondence)
+- c2-71 (Professional Portfolio I)

@@ -8,18 +8,39 @@ pedagogy: CBI
 duration: 120
 transliteration: none
 tags:
-  - culture
-  - architecture
-  - home
-  - traditions
+- culture
+- architecture
+- home
+- traditions
 grammar:
-  - architectural terminology
-  - spatial descriptions
+- architectural terminology
+- spatial descriptions
 objectives:
-  - Learner can describe the structure and layout of a traditional Ukrainian house
-  - Learner can explain the symbolic meaning of the "red corner" (pokut') and the stove
-  - Learner can distinguish regional architectural styles (clay-walled vs. wooden)
-  - Learner can discuss the role of the house in family rituals
+- Learner can describe the structure and layout of a traditional Ukrainian house
+- Learner can explain the symbolic meaning of the "red corner" (pokut') and the stove
+- Learner can distinguish regional architectural styles (clay-walled vs. wooden)
+- Learner can discuss the role of the house in family rituals
 vocabulary_count: 30
 vocab_count: 30
 slug: 68-ukrainian-house
+content_outline:
+- section: Вступ — архітектура та побут
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Святвечір: Christmas Eve traditions, 12 dishes'
+  - 'Коляда: caroling groups, star, costumes'
+  - 'Маланка: New Year''s Eve, masquerades'
+  - 'Водохреща: Epiphany, water blessing, ice swimming'
+  - Modern adaptations of winter traditions
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

@@ -1,0 +1,99 @@
+module: tretia-khvylia-dipivtsi
+level: c1-hist
+sequence: 66
+version: '1.0'
+title: 'Третя хвиля: ДіПі (1945-1950)'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Хто такі ДіПі?
+  words: 400
+  subsections:
+  - Displaced Persons — визначення
+  - Масштаби — мільйони людей
+  - Хто серед українців
+  - Структура модуля
+- section: Як опинилися на Заході
+  words: 600
+  subsections:
+  - Остарбайтери — примусові робітники
+  - Біженці 1944 — хто тікав
+  - Вояки — дивізія, УПА
+  - Політична еміграція
+- section: Табори ДіПі
+  words: 700
+  subsections:
+  - Німеччина — основний регіон
+  - Австрія — менша кількість
+  - Організація життя
+  - Культурне життя — школи, театри, преса
+  - «Маленька Україна» в таборах
+- section: Загроза репатріації
+  words: 600
+  subsections:
+  - Ялтинські угоди — примусова репатріація
+  - Операція «Кіл Хаул»
+  - Як уникали видачі
+  - Трагедії — хто не уник
+- section: Еміграція до «третіх країн»
+  words: 500
+  subsections:
+  - США — закон 1948
+  - Канада — повоєнна імміграція
+  - Австралія — нові громади
+  - Південна Америка — продовження
+- section: Спадщина третьої хвилі
+  words: 400
+  subsections:
+  - Інтелектуальний потенціал
+  - Інституції — УВАН, НТШ
+  - Політична активність
+  - Антирадянська діяльність
+- section: Підсумок
+  words: 300
+  subsections:
+  - ДіПі — найосвіченіша хвиля
+  - Збереження культури
+  - Вплив на незалежність 1991
+word_target: 3500
+vocabulary:
+- переміщена особа
+- ДіПі
+- репатріація
+- примусова репатріація
+- остарбайтер
+- табір
+- біженець
+- Ялта
+- еміграція
+- «третя країна»
+- УНРРА
+- ІРО
+- таборове життя
+- культурна еліта
+- антирадянський
+activities:
+- type: critical-analysis
+  focus: Daily life in DP camps — sources
+- type: critical-analysis
+  focus: How did Yalta agreements affect Ukrainians?
+- type: comparative-study
+  focus: Compare three emigration waves
+- type: reading
+  focus: Profiles of key DP-era figures
+- type: essay-response
+  focus: Чому третю хвилю називають 'найосвіченішою'?
+sources:
+- name: Переміщені особи (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Переміщені_особи
+  type: reference
+  notes: DP overview
+- name: Табори ДіПі (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Табори_переміщених_осіб
+  type: reference
+  notes: DP camps
+- name: Українські ДіПі (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українці_серед_переміщених_осіб
+  type: reference
+  notes: Ukrainian DPs specifically

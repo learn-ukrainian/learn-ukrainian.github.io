@@ -1,0 +1,77 @@
+module: reported-questions-commands
+level: b1
+sequence: 40
+version: '2.0'
+title: Непрямі питання та накази
+subtitle: Reported Questions & Commands
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can report questions using indirect speech
+- Learner can report commands and requests using щоб
+- Learner can choose appropriate structures for different speech acts
+- Learner can transform all speech types
+content_outline:
+- section: 'Introduction: Beyond Statements'
+  words: 150
+  points:
+  - Reporting questions
+  - Reporting commands
+  - Structural differences
+- section: Yes/No Questions
+  words: 250
+  points:
+  - Він запитав, чи...
+  - чи as question introducer
+  - Word order in indirect questions
+- section: Wh-Questions
+  words: 250
+  points:
+  - Вона запитала, що/де/коли...
+  - Question word retention
+  - Tense changes in questions
+- section: Reported Commands
+  words: 250
+  points:
+  - Він сказав, щоб я...
+  - щоб + past form structure
+  - Positive and negative commands
+- section: Reported Requests
+  words: 200
+  points:
+  - просити/попросити, щоб
+  - благати, наполягати
+  - Request vs command nuances
+- section: 'Practice: All Speech Types'
+  words: 100
+  points:
+  - Report questions and commands
+  - Mixed transformation
+word_target: 1200
+vocabulary:
+  required:
+  - питання (question)
+  - наказ (command)
+  - прохання (request)
+  - чи (whether)
+  - запитати (to ask)
+  - наказати (to order)
+  - просити (to request)
+  - щоб (that - subjunctive)
+  recommended:
+  - поцікавитися (to wonder)
+  - вимагати (to demand)
+  - умовляти (to persuade)
+  - заборонити (to forbid)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - error-correction
+  - writing
+  - transformation
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-41 (Checkpoint Complex Sentences 2)

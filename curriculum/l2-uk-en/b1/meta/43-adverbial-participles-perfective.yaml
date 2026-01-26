@@ -1,28 +1,94 @@
 module: b1-43
-title: Дієприслівники доконаного виду
-subtitle: Adverbial Participles - Perfective (-вши/-ши)
-version: '1.0'
-phase: B1.4 Advanced Grammar
-pedagogy: TTT
+id: b1-43
+slug: adverbial-participles-perfective
+title: "Дієприслівники доконаного виду"
+subtitle: "Adverbial Participles - Perfective (-вши/-ши)"
+version: '2.0'
+phase: "B1.4a [Participles]"
 focus: grammar
+pedagogy: TTT
+register: розмовний
 duration: 90
 transliteration: none
-tags:
-- grammar
-- participles
-- adverbial-participles
-- perfective
-grammar:
-- Дієприслівники доконаного виду
-- Суфікси -вши/-ши
-- Попередність дій
 objectives:
-- Learner can form perfective adverbial participles using -вши/-ши suffixes
-- Learner can use adverbial participles to express prior completed actions
-- Learner can distinguish between imperfective and perfective adverbial participles
-vocabulary_count: 20
-vocab_count: 17
-slug: 43-adverbial-participles-perfective
+  - "Learner can form perfective adverbial participles using -вши/-ши suffixes"
+  - "Learner can use participles to express prior completed actions"
+  - "Learner can distinguish imperfective vs perfective adverbial participles"
+  - "Learner can sequence actions using perfective participles"
+grammar:
+  - "Дієприслівники доконаного виду"
+  - "Суфікси -вши/-ши formation rules"
+  - "Попередність дій (prior actions)"
+word_target: 1200
+content_outline:
+  - section: "Introduction: Completed Prior Actions"
+    words: 150
+    points:
+      - "Perfective vs imperfective participles"
+      - "Temporal relationship"
+      - "Before main action pattern"
+  - section: "Formation: -вши/-ши Suffixes"
+    words: 250
+    points:
+      - "From perfective past stem"
+      - "-вши after vowels"
+      - "-ши after consonants"
+  - section: "Expressing Sequence"
+    words: 250
+    points:
+      - "Прочитавши книгу, вона заснула"
+      - "Action completed before main verb"
+      - "Replacing після того як clauses"
+  - section: "Common Perfective Participles"
+    words: 250
+    points:
+      - "зробивши, прочитавши, написавши"
+      - "прийшовши, пішовши, взявши"
+      - "Irregular formations"
+  - section: "Imperfective vs Perfective Choice"
+    words: 200
+    points:
+      - "Simultaneous (-ючи) vs prior (-вши)"
+      - "Semantic distinctions"
+      - "Context-dependent selection"
+  - section: "Practice: Sequencing Actions"
+    words: 100
+    points:
+      - "Form perfective participles"
+      - "Build sequential narratives"
+vocabulary_hints:
+  required:
+    - доконаний вид (perfective aspect)
+    - попередність (priority/sequence)
+    - прочитавши (having read)
+    - написавши (having written)
+    - зробивши (having done)
+    - прийшовши (having arrived)
+    - побачивши (having seen)
+    - дізнавшись (having learned)
+  recommended:
+    - послідовність (sequence)
+    - минулий час (past tense)
+    - основа (stem)
+    - закінчення (ending)
+activity_hints:
+  - type: transformation
+    focus: "Perfective verb to participle"
+    items: 25
+  - type: fill-in
+    focus: "Complete with perfective participles"
+    items: 20
+  - type: matching
+    focus: "Match participle to meaning"
+    items: 15
+  - type: writing
+    focus: "Write sequential narratives"
+    items: 10
+prerequisites:
+  - b1-42 (Adverbial Participles Imperfective)
+connects_to:
+  - b1-44 (Active Participles Phrases)
 naturalness:
   score: 9
   status: PASS
+  justification: "Essential perfective participle formation"

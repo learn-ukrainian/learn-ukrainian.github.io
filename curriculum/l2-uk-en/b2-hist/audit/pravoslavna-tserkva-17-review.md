@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M34 | **Phase:** HIST.4 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:22:44
+**Generated:** 2026-01-25 22:22:44
 
 ## Configuration
 **Type:** B2-history
@@ -39,7 +39,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 5469/4000 (raw: 5647)
+- **Words:** ✅ 5023/4000 (raw: 5099)
 - **Activities:** ✅ 10/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 9/2 types
@@ -51,7 +51,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⚠️ Too many activities: 10 (target 3-9)
-- **Immersion:** 🇺🇦 98.5% (target 90-100% (history))
+- **Immersion:** 🇺🇦 98.9% (target 90-100% (history))
 - **Richness:** ✅ 99% (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -63,15 +63,15 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 37 | 15 | 100% | 25% | 25.0% |
+| examples | 36 | 15 | 100% | 25% | 25.0% |
 | engagement | 21 | 5 | 100% | 19% | 18.7% |
-| variety | 0.95 | - | 95% | 12% | 11.9% |
+| variety | 0.96 | - | 96% | 12% | 12.0% |
 | cultural | 6 | 4 | 100% | 12% | 12.5% |
 | realworld | 6 | 3 | 100% | 12% | 12.5% |
-| visual | 24 | 4 | 100% | 6% | 6.2% |
+| visual | 21 | 4 | 100% | 6% | 6.2% |
 | paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 8 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **99.4%** |
+| questions | 7 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **99.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -84,5 +84,4 @@
 | **Первинні джерела** | ✅ | 955 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 634 | Included in Core |
 | **Підсумок** | ✅ | 205 | Included in Core |
-| **Есе** | ⚪️ | 446 | Skipped |
 | **Потрібно більше практики?** | ⚪️ | 133 | Skipped |

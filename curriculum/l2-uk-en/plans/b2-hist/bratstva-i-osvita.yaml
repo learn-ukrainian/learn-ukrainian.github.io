@@ -1,0 +1,35 @@
+module: bratstva-i-osvita
+level: b2-hist
+sequence: 0
+version: '1.0'
+title: 'Братства та освіта: Острозька академія'
+focus: history
+pedagogy: CBI
+objectives:
+- Учень може пояснити роль братств у збереженні національної ідентичності
+- Учень аналізує значення Острозької академії як першого вищого навчального закладу
+- Учень володіє термінологією історії освіти та культури
+content_outline:
+- section: Вступ
+  words: 368
+- section: 'Європейський контекст: Реформація та Контрреформація'
+  words: 250
+  subsections:
+  - Impact of Reformation and Counter-Reformation
+  - Jesuit colleges vs Orthodox schools
+  - Cultural synthesis
+- section: Феномен братств
+  words: 745
+- section: Освітня діяльність братств
+  words: 635
+- section: Острозька академія
+  words: 574
+- section: Читання
+  words: 314
+- section: Первинні джерела
+  words: 415
+- section: Деколонізаційний погляд
+  words: 348
+- section: Потрібно більше практики?
+  words: 113
+word_target: 4000

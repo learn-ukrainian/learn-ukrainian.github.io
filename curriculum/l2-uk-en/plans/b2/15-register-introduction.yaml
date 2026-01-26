@@ -1,0 +1,107 @@
+module: 15-register-introduction
+level: b2
+sequence: 15
+version: '1.0'
+title: Функціональні стилі мови
+focus: style
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Ukrainian State Standard 2024 - Functional Styles
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official classification of Ukrainian functional styles
+- name: Функціональні стилі української мови
+  url: https://uk.wikipedia.org/wiki/Стиль_мовлення
+  type: secondary
+  notes: Overview of five functional styles
+- name: CEFR B2 Sociolinguistic Competence
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 register awareness requirements
+content_outline:
+- section: Вступ — Що таке функціональний стиль?
+  words: 400
+  points:
+  - Визначення функціонального стилю
+  - Зв'язок між ситуацією та мовою
+  - П'ять основних стилів української мови
+- section: Розмовний стиль
+  words: 600
+  points:
+  - Характерні риси (неповні речення, емоційність)
+  - Лексичні особливості
+  - Контексти використання
+  - Приклади текстів
+- section: Художній стиль
+  words: 600
+  points:
+  - Характерні риси (образність, виразність)
+  - Художні засоби (метафори, порівняння)
+  - Відмінність від інших стилів
+  - Приклади текстів
+- section: Науковий стиль
+  words: 600
+  points:
+  - Характерні риси (точність, логічність)
+  - Термінологія
+  - Безособові конструкції
+  - Приклади текстів
+- section: Офіційно-діловий стиль
+  words: 600
+  points:
+  - Характерні риси (стандартизованість, чіткість)
+  - Кліше та сталі вирази
+  - Типи документів
+  - Приклади текстів
+- section: Публіцистичний стиль
+  words: 600
+  points:
+  - Характерні риси (актуальність, емоційність)
+  - Поєднання елементів інших стилів
+  - ЗМІ та публіцистика
+  - Приклади текстів
+- section: Практика і підсумок
+  words: 400
+  points:
+  - Розпізнавання стилів у текстах
+  - Критерії визначення стилю
+  - Підготовка до детального вивчення кожного стилю
+word_target: 3800
+vocabulary:
+  required:
+  - функціональний стиль (functional style)
+  - розмовний стиль (colloquial style)
+  - художній стиль (artistic/literary style)
+  - науковий стиль (scientific style)
+  - офіційно-діловий стиль (official-business style)
+  - публіцистичний стиль (journalistic style)
+  - мовна ситуація (speech situation)
+  - стильові маркери (style markers)
+  - регістр (register)
+  - комунікативна мета (communicative purpose)
+  recommended:
+  - образність (imagery)
+  - точність (precision)
+  - стандартизованість (standardization)
+  - актуальність (relevance/topicality)
+  - емоційність (emotionality)
+  forbidden: []
+activities:
+  types_required:
+  - group-sort
+  - quiz
+  - reading
+  - fill-in
+  - essay-response
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- 'b2-16 (Register: Formal/Informal)'
+- 'b2-17 (Register: Business Ukrainian)'
+- 'b2-18 (Register: Academic Ukrainian)'
+- 'b2-19 (Register: Official-Legal)'
+- b2-25 (B2.1b Checkpoint)

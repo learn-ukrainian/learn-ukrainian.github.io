@@ -1,0 +1,105 @@
+module: kateryna-bilokur
+level: c1-bio
+sequence: 66
+version: '2.0'
+title: 'Катерина Білокур: Геній наївного мистецтва'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Білокур_Катерина_Василівна
+    title: Катерина Білокур (Wikipedia UA)
+    notes: Biography of the self-taught folk artist
+  secondary:
+  - url: https://mundm.kiev.ua/
+    title: Національний музей українського народного декоративного мистецтва
+    notes: Major collection of Bilokur's works
+content_outline:
+- section: Вступ — Квіти, народжені геєм
+  words: 400
+  subsections:
+  - Самоук з Полтавщини, що здивувала світ
+  - Майстриня квіткового живопису
+  - Життя між талантом і бідністю
+- section: Юність без можливостей (1900-1920-ті)
+  words: 600
+  subsections:
+  - Народження в селі Богданівка
+  - Важке дитинство та відсутність освіти
+  - Перші спроби малювати
+  - Опір родини мистецьким прагненням
+- section: Таємне мистецтво (1920-1940-ті)
+  words: 800
+  subsections:
+  - Малювання вночі та в таємниці
+  - Саморобні фарби та пензлі
+  - Квіти як головна тема
+  - Ізоляція від мистецького світу
+- section: Відкриття таланту (1940-ві)
+  words: 800
+  subsections:
+  - Лист до Олександра Довженка
+  - Визнання в радянському мистецтві
+  - Народна художниця України
+  - Виставки в СРСР та за кордоном
+- section: Пізній період (1950-1961)
+  words: 700
+  subsections:
+  - Продовження творчості
+  - Натюрморти світового рівня
+  - Зустріч з Пабло Пікассо (легенда)
+  - Смерть у бідності
+- section: Спадщина — Геній із села
+  words: 700
+  subsections:
+  - Визнання після смерті
+  - Музей у Богданівці
+  - Вплив на українське мистецтво
+  - Білокур як символ народного генія
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - наївне мистецтво
+  - самоук
+  - живопис
+  - натюрморт
+  - квіткова композиція
+  - фарба
+  - пензель
+  - полотно
+  - народний художник
+  - талант
+  recommended:
+  - декоративний
+  - колорит
+  - композиція
+  - примітивізм
+  - геній
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-65
+  related:
+  - c1-bio-69
+  - c1-bio-50
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

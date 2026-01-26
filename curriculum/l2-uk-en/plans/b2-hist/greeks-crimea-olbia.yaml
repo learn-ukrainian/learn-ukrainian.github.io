@@ -1,0 +1,120 @@
+module: greeks-crimea-olbia
+level: b2-hist
+sequence: 3
+version: '1.0'
+title: 'Грецькі міста-держави: Ольвія, Херсонес'
+focus: history
+pedagogy: seminar
+objectives:
+- Учень може пояснити причини грецької колонізації Північного Причорномор’я
+- Учень може описати політичний та соціальний устрій Ольвії та Херсонеса
+- Учень може проаналізувати взаємодію між еллінами та кочовими народами степу
+- Учень може аргументувати значення античної спадщини для історії України
+content_outline:
+- section: 'Вступ: Греки на Понті'
+  words: 300
+  subsections:
+  - Велика грецька колонізація
+  - Причини міграції (земля, торгівля)
+  - Ойкіст та священний вогонь
+- section: 'Читання: Ольвія — демократія в степу'
+  words: 600
+  subsections:
+  - Заснування та розташування
+  - Політичний устрій (народні збори)
+  - Торгівля зі скіфами
+  - Облога Зопіріона
+- section: 'Херсонес Таврійський: Держава присяги'
+  words: 400
+  subsections:
+  - Дорійський поліс
+  - Громадянська присяга
+  - Виноробство та хора
+- section: Боспорське царство та Тіра
+  words: 430
+  subsections:
+  - Монархія на сході (Пантікапей)
+  - Експорт зерна до Афін
+  - Війни Мітрідата
+- section: Економіка та Культура
+  words: 1500
+  subsections:
+  - Сільське господарство (виноград, оливки)
+  - Архітектура та побут (каналізація, театри)
+  - Релігія (Ахілл Понтарх)
+  - Медицина та освіта
+- section: Занепад античного світу
+  words: 160
+  subsections:
+  - Готська навала
+  - Гунська катастрофа
+  - Виживання Херсонеса
+- section: 'Первинні джерела: Голоси епохи'
+  words: 210
+  subsections:
+  - Присяга громадян Херсонеса
+  - Декрет на честь Протогена
+- section: Деколонізаційний погляд
+  words: 200
+  subsections:
+  - Крим — не 'російська колиска'
+  - Європейське коріння України
+  - Взаємовплив культур
+- section: Підсумок
+  words: 220
+  subsections:
+  - Значення античної спадщини
+  - Україна як частина середземноморського світу
+word_target: 4000
+vocabulary:
+- колонія
+- місто-держава
+- поліс
+- агора
+- демократія
+- торгівля
+- храм
+- гирло
+- Причорномор'я
+- античний
+- громадянин
+- республіка
+- милетяни
+- дорійці
+- виноробство
+- амфора
+- некрополь
+- акрополь
+activities:
+- type: reading
+  focus: Oath of Chersonesus citizens (translated excerpt)
+- type: quiz
+  focus: Geography of Greek Colonies
+  items: 8+ cities
+- type: critical-analysis
+  focus: Artifact Analysis (Greek artifacts from Ukrainian museums)
+  items: 5-6 images
+- type: fill-in
+  focus: Classical and political terminology
+  items: 15+
+- type: comparative-study
+  focus: Olbia vs Chersonesus — differences in founding and governance
+- type: quiz
+  focus: Greek city-states facts
+  items: 12+
+- type: match-up
+  focus: Chronology of Colonization
+  items: 10+
+sources:
+- name: Античні міста Північного Причорномор'я (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Античні_міста_Північного_Причорномор%27я
+  type: reference
+  notes: Overview of Greek colonies
+- name: Ольвія (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Ольвія_(місто)
+  type: reference
+  notes: History of Olbia
+- name: Херсонес Таврійський
+  url: https://uk.wikipedia.org/wiki/Херсонес_Таврійський
+  type: reference
+  notes: History of Chersonesus

@@ -1,0 +1,95 @@
+module: teaching-ukrainian-i
+level: c2
+sequence: 82
+version: '2.0'
+title: Викладання української мови I — Педагогічні основи
+focus: practice
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Методика викладання української мови як іноземної
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official methodology for teaching Ukrainian as a foreign language
+- name: Ukrainian State Standard 2024 — Педагогічна компетенція
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Teacher competency requirements and standards
+- name: CEFR Companion Volume — Teacher Training
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: secondary
+  notes: European framework for language teacher training
+content_outline:
+- section: Вступ — Педагогічна свідомість на рівні C2
+  words: 500
+  points:
+  - Перехід від учня до вчителя
+  - Метамовна усвідомленість
+  - Рефлексія власного досвіду вивчення мови
+- section: Основи лінгводидактики
+  words: 700
+  points:
+  - Принципи викладання мови
+  - Комунікативний підхід
+  - Теорія засвоєння другої мови
+  - Роль рідної мови учня
+- section: Аналіз помилок і корекція
+  words: 700
+  points:
+  - Типологія помилок українських мовців
+  - Інтерференція з англійської
+  - Стратегії корекції без демотивації
+  - Позитивний зворотний зв'язок
+- section: Планування уроку
+  words: 600
+  points:
+  - Структура ефективного уроку
+  - Визначення цілей і завдань
+  - Розподіл часу і темпу
+  - Адаптація до рівня учнів
+- section: Практика викладання — Симуляція
+  words: 800
+  points:
+  - Мікровикладання фрагмента уроку
+  - Самоаналіз і рефлексія
+  - Зворотний зв'язок від колег
+  - Вдосконалення техніки
+- section: Підсумок — Перші кроки у викладанні
+  words: 400
+  points:
+  - Індивідуальний стиль викладання
+  - План професійного розвитку
+  - Ресурси для вчителів
+word_target: 4000
+vocabulary:
+  required:
+  - лінгводидактика (language pedagogy)
+  - методика викладання (teaching methodology)
+  - засвоєння мови (language acquisition)
+  - інтерференція (interference)
+  - корекція помилок (error correction)
+  - зворотний зв'язок (feedback)
+  - мікровикладання (microteaching)
+  - план уроку (lesson plan)
+  - комунікативна компетенція (communicative competence)
+  - метамовна свідомість (metalinguistic awareness)
+  recommended:
+  - скафолдинг (scaffolding)
+  - диференціація (differentiation)
+  - формувальне оцінювання (formative assessment)
+  - автентичні матеріали (authentic materials)
+  - мотивація учнів (student motivation)
+  forbidden: []
+activities:
+  types_required:
+  - match-up
+  - essay-response
+  - quiz
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-83 (Teaching Ukrainian II — Lesson Planning)
+- c2-84 (Teaching Ukrainian III — Materials Development)

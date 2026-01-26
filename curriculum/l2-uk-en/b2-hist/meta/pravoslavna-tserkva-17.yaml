@@ -1,9 +1,8 @@
-# Meta for Православна церква XVII століття
 slug: pravoslavna-tserkva-17
-title: "Православна церква XVII століття"
+title: Православна церква XVII століття
 level: B2
 track: history
-phase: "HIST.4 [Lithuanian-Polish Era]"
+phase: HIST.4 [Lithuanian-Polish Era]
 status: draft
 transliteration: none
 focus: history
@@ -12,79 +11,76 @@ pedagogy: CBI
 naturalness:
   score: 9
   status: PASS
-  feedback: "Content is rich, linguistically accurate, and stylistically appropriate for B2 history."
+  feedback: Content is rich, linguistically accurate, and stylistically appropriate for B2 history.
 grammar:
-  - "Historical narrative tenses (Past/Present Historical)"
-  - "Passive voice in official documents"
-  - "Religious and ecclesiastical terminology"
+- Historical narrative tenses (Past/Present Historical)
+- Passive voice in official documents
+- Religious and ecclesiastical terminology
 learning_outcomes:
-  - "Understand the status of the Orthodox Church after the Union of Brest"
-  - "Analyze the restoration of the Kyiv Metropolitanate in 1620"
-  - "Evaluate the role of Petro Sahaidachny in protecting the Church"
-  - "Discuss the 'Articles for the Pacification of the Ruthenian People' (1632)"
+- Understand the status of the Orthodox Church after the Union of Brest
+- Analyze the restoration of the Kyiv Metropolitanate in 1620
+- Evaluate the role of Petro Sahaidachny in protecting the Church
+- Discuss the 'Articles for the Pacification of the Ruthenian People' (1632)
 content_outline:
-  - section: "Вступ"
-    words: 500
-    title: "Боротьба за віру та ідентичність"
-  - section: "Відновлення ієрархії"
-    words: 2000
-    subsections:
-      - title: "Історичне тло: У горнилі конфлікту"
-      - title: "Основні події: Велика гра Сагайдачного"
-      - title: "Процес легалізації: Пункти заспокоєння"
-  - section: "Читання: Голоси епохи"
-    words: 200
-    title: "Голоси епохи"
-  - section: "Первинні джерела"
-    words: 950
-    subsections:
-      - title: "Документ 1: Протестація Йова Борецького (1621)"
-      - title: "Документ 2: Пункти заспокоєння руського народу (1632)"
-  - section: "Деколонізаційний погляд"
-    words: 650
-    subsections:
-      - title: "Міфи 및 реальність: Спростування імперських наративів"
-      - title: "Сучасність: Гідність та незалежність у ХХІ столітті"
-  - section: "Есе"
-    words: 500
-    title: "Тема"
-  - section: "Потрібно більше практики?"
-    words: 150
-    title: "Практика"
+- section: Вступ
+  words: 500
+  title: Боротьба за віру та ідентичність
+- section: Відновлення ієрархії
+  words: 2000
+  subsections:
+  - title: 'Історичне тло: У горнилі конфлікту'
+  - title: 'Основні події: Велика гра Сагайдачного'
+  - title: 'Процес легалізації: Пункти заспокоєння'
+- section: 'Читання: Голоси епохи'
+  words: 200
+  title: Голоси епохи
+- section: Первинні джерела
+  words: 950
+  subsections:
+  - title: 'Документ 1: Протестація Йова Борецького (1621)'
+  - title: 'Документ 2: Пункти заспокоєння руського народу (1632)'
+- section: Деколонізаційний погляд
+  words: 650
+  subsections:
+  - title: 'Міфи 및 реальність: Спростування імперських наративів'
+  - title: 'Сучасність: Гідність та незалежність у ХХІ столітті'
+- section: Потрібно більше практики?
+  words: 150
+  title: Практика
 vocabulary_count: 24
 vocabulary_hints:
   required:
-    - ієрархія
-    - митрополит
-    - висвячення
-    - легітимність
-    - братство
-    - унія
-    - полеміка
-    - маєстат
-    - сповідувати
-    - патріарх
+  - ієрархія
+  - митрополит
+  - висвячення
+  - легітимність
+  - братство
+  - унія
+  - полеміка
+  - маєстат
+  - сповідувати
+  - патріарх
 activity_hints:
-  - type: reading
-    focus: primary source analysis
-  - type: critical-analysis
-    focus: linguistic analysis
-  - type: essay-response
-    focus: historical argumentation
-  - type: quiz
-    focus: comprehension
-  - type: true-false
-    focus: factual accuracy
-  - type: match-up
-    focus: terminology
-  - type: fill-in
-    focus: context
-  - type: comparative-study
-    focus: analytical comparison
+- type: reading
+  focus: primary source analysis
+- type: critical-analysis
+  focus: linguistic analysis
+- type: essay-response
+  focus: historical argumentation
+- type: quiz
+  focus: comprehension
+- type: true-false
+  focus: factual accuracy
+- type: match-up
+  focus: terminology
+- type: fill-in
+  focus: context
+- type: comparative-study
+  focus: analytical comparison
 sources:
-  - name: "Історія України-Руси (Грушевський)"
-    url: "http://litopys.org.ua/hrushrus/iur.htm"
-    type: secondary
-  - name: "Енциклопедія українознавства"
-    url: "http://www.encyclopediaofukraine.com/"
-    type: reference
+- name: Історія України-Руси (Грушевський)
+  url: http://litopys.org.ua/hrushrus/iur.htm
+  type: secondary
+- name: Енциклопедія українознавства
+  url: http://www.encyclopediaofukraine.com/
+  type: reference

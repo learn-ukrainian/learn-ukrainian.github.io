@@ -1,0 +1,93 @@
+module: reading-professional-texts-i
+level: c2
+sequence: 49
+version: '2.0'
+title: Читання фахових текстів I — Стратегії розуміння
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Наукова періодика України — база НБУВ
+  url: https://nbuv.gov.ua/
+  type: reference
+  notes: Database of Ukrainian scientific periodicals for text examples
+- name: Українські наукові журнали — платформа
+  url: https://usj.org.ua/
+  type: reference
+  notes: Open access Ukrainian academic journals across fields
+- name: ДСТУ 3017:2015 — Видання
+  url: https://dnaop.com/
+  type: reference
+  notes: Ukrainian standards for academic publication structure
+content_outline:
+- section: Вступ — Читання як активний процес
+  words: 500
+  points:
+  - Відмінність між читанням для задоволення та фаховим читанням
+  - Типи читання (skimming, scanning, intensive, extensive)
+  - Когнітивні стратегії читання
+- section: Структура фахових текстів
+  words: 700
+  points:
+  - Типові структури наукових статей (IMRAD)
+  - Структура технічних документів
+  - Навігація за допомогою заголовків та підзаголовків
+- section: Скімінг — Швидкий огляд
+  words: 600
+  points:
+  - Техніка швидкого огляду тексту
+  - Ідентифікація основної ідеї
+  - Оцінка релевантності тексту
+- section: Сканінг — Пошук інформації
+  words: 600
+  points:
+  - Техніка цілеспрямованого пошуку
+  - Робота з індексами та змістом
+  - Використання ключових слів
+- section: Робота з незнайомою лексикою
+  words: 700
+  points:
+  - Стратегії без звернення до словника
+  - Коли варто шукати значення
+  - Контекстуальна інференція (зв'язок з М47)
+- section: Практичні вправи
+  words: 600
+  points:
+  - Застосування стратегій на реальних текстах
+  - Різні галузі (технічні, гуманітарні, природничі)
+  - Самооцінка розуміння
+word_target: 4000
+vocabulary:
+  required:
+  - скімінг (skimming)
+  - сканінг (scanning)
+  - інтенсивне читання (intensive reading)
+  - екстенсивне читання (extensive reading)
+  - стратегія читання (reading strategy)
+  - структура тексту (text structure)
+  - заголовок (heading)
+  - підзаголовок (subheading)
+  - зміст (table of contents)
+  - ключове слово (keyword)
+  recommended:
+  - когнітивний (cognitive)
+  - релевантність (relevance)
+  - навігація (navigation)
+  - анотація (annotation)
+  - абстракт (abstract)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - fill-in
+  - match-up
+  - critical-analysis
+  - essay-response
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-50 (Reading Professional Texts II — Critical analysis)
+- c2-51 (Professional Document Types)
+- c2-59 (Professional Research Skills)

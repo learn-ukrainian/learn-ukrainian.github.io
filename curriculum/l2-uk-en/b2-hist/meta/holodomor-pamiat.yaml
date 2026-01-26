@@ -1,31 +1,105 @@
-title: 'Голодомор II: Пам''ять'
-subtitle: 'Holodomor II: Memory'
-slug: holodomor-ii-pamiat
-version: '1.0'
-phase: B2.3c [Trauma & Resistance]
+module: b2-hist-102
+id: b2-hist-102
+slug: holodomor-pamiat
+title: "Голодомор: Пам'ять та визнання"
+subtitle: "Holodomor: Memory and Recognition"
+version: '2.0'
+phase: "HIST.10 [Soviet Period & Tragedies]"
 focus: history
-word_target: 4000
 pedagogy: CBI
-duration: 90
-transliteration: none
-immersion: 100
 register: публіцистичний
-tags:
-- history
-- soviet
-- holodomor
-- memory
-- trauma
-grammar:
-- Historical narrative tenses
-- Passive voice in historical writing
+duration: 120
+transliteration: none
 objectives:
-- Учень розуміє роль пам'яті у відновленні національної ідентичності
-- Учень знає історію Гарета Джонса та механізми заперечення Голодомору
-- Учень може аналізувати первинні джерела та сучасні інтерпретації трагедії
-vocabulary_focus:
-- Historical terminology
-- Trauma and memory vocabulary
+  - "Учень може описати історію боротьби за визнання Голодомору"
+  - "Учень може пояснити роль Гарета Джонса та інших свідків"
+  - "Учень може проаналізувати механізми радянського заперечення"
+  - "Учень може оцінити значення міжнародного визнання геноциду"
+grammar:
+  - "Минулий та теперішній час у наративі пам'яті"
+  - "Пасивні конструкції для опису злочинів"
+  - "Юридична та мемориальна лексика"
+word_target: 4000
+content_outline:
+  - section: "Вступ: Злочин без кари"
+    words: 400
+    points:
+      - "Радянське замовчування Голодомору"
+      - "Чому світ не знав?"
+      - "Роль пам'яті у відновленні справедливості"
+  - section: "Свідки та журналісти"
+    words: 800
+    points:
+      - "Гарет Джонс: валлієць, який сказав правду"
+      - "Волтер Дюранті: пропаганда замість правди"
+      - "Маргарет Барбер, Малкольм Маггерідж"
+      - "Радянська дезінформація"
+  - section: "Боротьба за визнання"
+    words: 1000
+    points:
+      - "Діаспора та збереження пам'яті"
+      - "Комісія Конгресу США (1980-ті)"
+      - "Проголошення незалежності та відкриття архівів"
+      - "Закон України про Голодомор (2006)"
+      - "Міжнародне визнання"
+  - section: "Первинні джерела"
+    words: 800
+    points:
+      - "Статті Гарета Джонса"
+      - "Свідчення вцілілих"
+      - "Резолюції про визнання геноциду"
+  - section: "Деколонізаційний погляд"
+    words: 500
+    points:
+      - "Голодомор як геноцид: юридичні аргументи"
+      - "Російське заперечення сьогодні"
+      - "Пам'ять vs. пропаганда"
+  - section: "Підсумок: Чому це важливо"
+    words: 500
+    points:
+      - "День пам'яті жертв Голодомору"
+      - "Музеї та меморіали"
+      - "Уроки для майбутнього"
+vocabulary_hints:
+  required:
+    - Голодомор (Holodomor)
+    - геноцид (genocide)
+    - визнання (recognition)
+    - замовчування (silencing)
+    - свідок (witness)
+    - пам'ять (memory)
+    - меморіал (memorial)
+    - заперечення (denial)
+  recommended:
+    - комісія (commission)
+    - резолюція (resolution)
+    - архів (archive)
+    - дезінформація (disinformation)
+    - жертва (victim)
+    - справедливість (justice)
+activity_hints:
+  - type: reading
+    focus: "Статті Гарета Джонса"
+    source: "Архівні матеріали"
+    items: 4
+  - type: quiz
+    focus: "Історія боротьби за визнання Голодомору"
+    items: 15
+  - type: match-up
+    focus: "Свідок → внесок у збереження правди"
+    items: 10
+  - type: true-false
+    focus: "Факти та міфи про Голодомор"
+    items: 10
+  - type: essay-response
+    focus: "Чому міжнародне визнання Голодомору геноцидом важливе для України?"
+    word_target: 250
+prerequisites:
+  - b2-hist-101 (Голодомор: Механізм)
+connects_to:
+  - b2-hist-118 (Діаспора)
+  - b2-hist-108 (Синтез: Трагедії XX століття)
 naturalness:
-  score: 9
+  score: 10
   status: PASS
+  justification: "Академічний український для мемориального дискурсу"

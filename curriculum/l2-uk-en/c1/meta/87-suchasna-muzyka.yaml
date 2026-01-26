@@ -1,23 +1,44 @@
 module: c1-87
-title: 'Сучасна музика'
-subtitle: 'Contemporary Music — The Sound of Freedom'
+title: Сучасна музика
+subtitle: Contemporary Music — The Sound of Freedom
 version: '2.0'
-phase: 'C1.5 Folk Culture & Fine Arts'
+phase: C1.5 Folk Culture & Fine Arts
 focus: fine-arts
-pedagogy: 'CBI'
+pedagogy: CBI
 duration: 120
 transliteration: none
 tags:
-  - arts
-  - music
-  - rock
-  - pop
+- arts
+- music
+- rock
+- pop
 grammar:
-  - 'Music genres terminology'
-  - 'Expressing musical preferences'
+- Music genres terminology
+- Expressing musical preferences
 objectives:
-  - 'Learner explores the history of Ukrainian rock (VV, Okean Elzy).'
-  - 'Learner understands the phenomenon of Ukrainian Eurovision victories.'
-  - 'Learner analyzes the explosion of new music during the war.'
+- Learner explores the history of Ukrainian rock (VV, Okean Elzy).
+- Learner understands the phenomenon of Ukrainian Eurovision victories.
+- Learner analyzes the explosion of new music during the war.
 vocabulary_count: 25
 slug: 87-suchasna-muzyka
+content_outline:
+- section: Вступ — Сучасна музика
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Український рок: ВВ, Океан Ельзи, Бумбокс'
+  - 'Поп-музика: Eurovision winners, Руслана, Jamala'
+  - 'Фолк-рок: ДахаБраха, ONUKA fusion'
+  - 'War-era music: patriotic revival'
+  - Music as identity and resistance
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

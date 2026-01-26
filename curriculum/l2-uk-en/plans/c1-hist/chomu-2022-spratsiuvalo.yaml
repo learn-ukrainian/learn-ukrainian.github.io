@@ -1,0 +1,87 @@
+module: chomu-2022-spratsiuvalo
+level: c1-hist
+sequence: 131
+version: '1.0'
+title: Чому 2022 спрацювало? Анатомія мобілізації
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — «Три дні» не сталось
+  words: 451
+  subsections:
+  - Російський план — швидка перемога
+  - Український спротив — миттєвий
+  - Чому?
+  - Структура модуля
+- section: Готовність суспільства
+  words: 790
+  subsections:
+  - 2014-2022 — 8 років війни
+  - Суспільство вже мобілізоване
+  - Досвід волонтерства
+  - Психологічна готовність
+- section: Інституційна база
+  words: 677
+  subsections:
+  - Територіальна оборона
+  - Реформа армії
+  - Західна підготовка
+  - IT-волонтери
+- section: Лідерство
+  words: 677
+  subsections:
+  - Зеленський — «мені потрібна зброя»
+  - Команда — залишились
+  - Місцеві лідери
+  - Децентралізація рішень
+- section: Громадянське суспільство
+  words: 564
+  subsections:
+  - Миттєва мобілізація
+  - Гуманітарна система
+  - Інформаційний фронт
+  - Міжнародна солідарність
+- section: Підсумок
+  words: 341
+  subsections:
+  - 2022 — кульмінація всього
+  - Не випадковість — підготовка
+  - Перехід до м'якої сили
+word_target: 3500
+vocabulary:
+- мобілізація
+- територіальна оборона
+- спротив
+- готовність
+- волонтер
+- лідерство
+- децентралізація
+- громадянське суспільство
+- інституційна база
+- кульмінація
+- «мені потрібна зброя»
+- IT-армія
+- Bayraktar
+- HIMARS
+- стійкість
+activities:
+- type: preparedness-analysis
+  focus: 2014-2022 — what prepared Ukraine
+- type: institutional-study
+  focus: Territorial defense — how it worked
+- type: leadership-analysis
+  focus: Zelensky's crisis leadership
+- type: society-mobilization
+  focus: Civil society instant response
+- type: essay-response
+  focus: Що підготувало Україну до 24 лютого?
+sources:
+- name: Мобілізація в Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Мобілізація_в_Україні_(2022)
+  type: reference
+  notes: 2022 mobilization
+- name: Територіальна оборона (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Сили_територіальної_оборони_України
+  type: reference
+  notes: Territorial defense

@@ -1,0 +1,499 @@
+level: a2
+updated: '2026-01-26T12:55:25.330484+00:00'
+summary:
+  total: 70
+  planned: 0
+  content: 0
+  activities: 0
+  reviewed: 70
+modules:
+  01-the-dative-i-pronouns:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1354
+    word_target: 1000
+    activity_count: 10
+    naturalness: 8
+  02-the-dative-ii-nouns:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1418
+    word_target: 1000
+    activity_count: 10
+    naturalness: 9
+  03-dative-verbs:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1634
+    word_target: 1000
+    activity_count: 11
+    naturalness: 8
+  04-the-instrumental-i-accompaniment:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1391
+    word_target: 1000
+    activity_count: 11
+    naturalness: 8
+  05-the-instrumental-ii-means-and-tools:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1404
+    word_target: 1000
+    activity_count: 11
+    naturalness: 9
+  06-being-and-becoming:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1538
+    word_target: 1000
+    activity_count: 11
+    naturalness: 9
+  07-spatial-prepositions:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1476
+    word_target: 1000
+    activity_count: 11
+    naturalness: 9
+  08-logical-prepositions:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1439
+    word_target: 1000
+    activity_count: 12
+    naturalness: 10
+  09-all-cases-practice:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1538
+    word_target: 1000
+    activity_count: 10
+    naturalness: 8
+  10-at-the-post-office-and-bank:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1434
+    word_target: 1000
+    activity_count: 10
+    naturalness: 9
+  11-checkpoint-cases:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1547
+    word_target: 1000
+    activity_count: 12
+    naturalness: 9
+  12-aspect-introduction:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1498
+    word_target: 1000
+    activity_count: 11
+    naturalness: 9
+  13-the-completed-past:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1552
+    word_target: 1000
+    activity_count: 10
+    naturalness: 8
+  14-future-plans-and-promises:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1423
+    word_target: 1000
+    activity_count: 10
+    naturalness: 9
+  15-aspect-morphology:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1624
+    word_target: 1000
+    activity_count: 10
+    naturalness: 8
+  16-aspect-mastery-pairs:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1455
+    word_target: 1000
+    activity_count: 10
+    naturalness: 9
+  17-possessive-sviy:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1170
+    word_target: 1000
+    activity_count: 10
+    naturalness: 8
+  18-bigger-better-stronger:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1260
+    word_target: 1000
+    activity_count: 10
+    naturalness: 9
+  19-the-best-the-worst:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1539
+    word_target: 1000
+    activity_count: 10
+    naturalness: 8
+  20-preferences-and-choices:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1236
+    word_target: 1000
+    activity_count: 10
+    naturalness: 10
+  21-numerals-and-nouns:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1690
+    word_target: 1000
+    activity_count: 10
+    naturalness: 8
+  22-if-i-were:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1361
+    word_target: 1000
+    activity_count: 10
+    naturalness: 8
+  23-complete-imperative:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1194
+    word_target: 1000
+    activity_count: 10
+    naturalness: 8
+  24-smart-shopping:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1722
+    word_target: 1000
+    activity_count: 10
+    naturalness: 9
+  25-checkpoint-aspect-comparison:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1443
+    word_target: 800
+    activity_count: 10
+    naturalness: 10
+  26-telling-stories:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1260
+    word_target: 1000
+    activity_count: 10
+    naturalness: 9
+  27-because-and-although:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1252
+    word_target: 1000
+    activity_count: 10
+    naturalness: 9
+  28-she-said-that:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1216
+    word_target: 1000
+    activity_count: 10
+    naturalness: 9
+  29-i-think-that:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1474
+    word_target: 1000
+    activity_count: 10
+    naturalness: 9
+  30-i-feel-like:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1493
+    word_target: 1000
+    activity_count: 10
+    naturalness: 9
+  31-in-order-to:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1235
+    word_target: 1000
+    activity_count: 10
+    naturalness: 10
+  32-which-one:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1252
+    word_target: 1000
+    activity_count: 10
+    naturalness: 9
+  33-time-clauses:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1250
+    word_target: 1000
+    activity_count: 10
+    naturalness: 9
+  34-at-the-doctor:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1226
+    word_target: 1000
+    activity_count: 10
+    naturalness: 9
+  35-checkpoint:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1668
+    word_target: 1000
+    activity_count: 10
+    naturalness: 9
+  36-basic-motion-prefixes:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1321
+    word_target: 1000
+    activity_count: 10
+    naturalness: 9
+  37-advanced-motion-prefixes:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1415
+    word_target: 1000
+    activity_count: 10
+    naturalness: 9
+  38-action-verb-prefixes:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1413
+    word_target: 1000
+    activity_count: 10
+    naturalness: 9
+  39-adjective-suffixes-qualities:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1334
+    word_target: 1000
+    activity_count: 10
+    naturalness: 10
+  40-adj-suffixes:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1480
+    word_target: 1000
+    activity_count: 10
+    naturalness: 8
+  41-root-families-i:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1461
+    word_target: 1000
+    activity_count: 10
+    naturalness: 9
+  42-root-families-ii:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1436
+    word_target: 1000
+    activity_count: 10
+    naturalness: 10
+  43-wf-mastery:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1124
+    word_target: 900
+    activity_count: 10
+    naturalness: 10
+  44-checkpoint-word-formation:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1032
+    word_target: 500
+    activity_count: 10
+    naturalness: 10
+  45-food-and-cooking:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1738
+    word_target: 1000
+    activity_count: 10
+    naturalness: 10
+  46-home-and-furniture:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1831
+    word_target: 1000
+    activity_count: 10
+    naturalness: 10
+  47-nature-and-weather:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1929
+    word_target: 1000
+    activity_count: 10
+    naturalness: 10
+  48-emotions-personality:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2262
+    word_target: 1000
+    activity_count: 10
+    naturalness: 10
+  49-work-professions:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1945
+    word_target: 1000
+    activity_count: 10
+    naturalness: 10
+  50-technology-media:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1455
+    word_target: 1000
+    activity_count: 10
+    naturalness: 10
+  51-hobbies-leisure:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1508
+    word_target: 1000
+    activity_count: 10
+    naturalness: 10
+  52-education-learning:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1256
+    word_target: 1000
+    activity_count: 10
+    naturalness: 9
+  53-shopping-services:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1558
+    word_target: 1000
+    activity_count: 10
+    naturalness: 9
+  54-sports-fitness:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1553
+    word_target: 1000
+    activity_count: 10
+    naturalness: 10
+  55-health-body:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1181
+    word_target: 1500
+    activity_count: 10
+    naturalness: 9
+  56-checkpoint-full-grammar:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1012
+    word_target: 800
+    activity_count: 10
+    naturalness: 9
+  57-practical-intro:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1156
+    word_target: 800
+    activity_count: 10
+    naturalness: 9
+  58-practical-warm-up:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1337
+    word_target: 800
+    activity_count: 10
+    naturalness: 9
+  59-doctor-visit:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1086
+    word_target: 1000
+    activity_count: 10
+    naturalness: 10
+  60-at-the-pharmacy:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1100
+    word_target: 1000
+    activity_count: 10
+    naturalness: 10
+  61-hotel-accommodation:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1075
+    word_target: 1000
+    activity_count: 10
+    naturalness: 9
+  62-rental-accommodation:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1357
+    word_target: 1000
+    activity_count: 10
+    naturalness: 9
+  63-scheduling-appointments:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1707
+    word_target: 1000
+    activity_count: 10
+    naturalness: 9
+  64-scheduling-interviews:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1424
+    word_target: 1000
+    activity_count: 10
+    naturalness: 9
+  65-giving-directions:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1238
+    word_target: 1000
+    activity_count: 10
+    naturalness: 10
+  66-asking-for-directions:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1297
+    word_target: 1000
+    activity_count: 10
+    naturalness: 10
+  67-social-media-ukrainian:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1168
+    word_target: 1000
+    activity_count: 10
+    naturalness: 10
+  68-texting-messaging:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1099
+    word_target: 1000
+    activity_count: 10
+    naturalness: 10
+  69-online-services:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1217
+    word_target: 1000
+    activity_count: 10
+    naturalness: 10
+  70-a2-final-exam:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1215
+    word_target: 600
+    activity_count: 10
+    naturalness: 10

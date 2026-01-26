@@ -1,0 +1,129 @@
+module: krypatsvo-selo
+level: B2
+version: '2.0'
+items:
+  - lemma: кріпацтво
+    ipa: /krʲiˈpat͡stuo/
+    translation: serfdom
+    pos: noun
+    gender: n
+  - lemma: панщина
+    ipa: /ˈpanʲʃt͡ʃɪna/
+    translation: corvée labor
+    pos: noun
+    gender: f
+  - lemma: оброк
+    ipa: /oˈbrɔk/
+    translation: quit-rent
+    pos: noun
+    gender: m
+  - lemma: кріпак
+    ipa: /krʲiˈpak/
+    translation: serf
+    pos: noun
+    gender: m
+  - lemma: поміщик
+    ipa: /poˈmʲiʃt͡ʃɪk/
+    translation: landowner
+    pos: noun
+    gender: m
+  - lemma: громада
+    ipa: /ɦroˈmada/
+    translation: community
+    pos: noun
+    gender: f
+  - lemma: селянин
+    ipa: /selʲɐˈnɪn/
+    translation: peasant
+    pos: noun
+    gender: m
+  - lemma: втікачі
+    ipa: /u̯tʲikaˈt͡ʃi/
+    translation: fugitives
+    pos: noun
+    gender: pl
+  - lemma: опір
+    ipa: /ˈɔpʲir/
+    translation: resistance
+    pos: noun
+    gender: m
+  - lemma: експлуатація
+    ipa: /ɛksplʊaˈtat͡sʲija/
+    translation: exploitation
+    pos: noun
+    gender: f
+  - lemma: рекрутчина
+    ipa: /rɛˈkrʊt͡ʃt͡ʃɪna/
+    translation: recruitment duty
+    pos: noun
+    gender: f
+  - lemma: майно
+    ipa: /ˈmai̯nɔ/
+    translation: property
+    pos: noun
+    gender: n
+  - lemma: податок
+    ipa: /poˈdatɔk/
+    translation: tax
+    pos: noun
+    gender: m
+  - lemma: наділ
+    ipa: /naˈdʲil/
+    translation: land allotment
+    pos: noun
+    gender: m
+  - lemma: повинність
+    ipa: /poˈvɪnʲːisʲtʲ/
+    translation: duty / obligation
+    pos: noun
+    gender: f
+  - lemma: викуп
+    ipa: /ˈwɪkʊp/
+    translation: ransom / redemption
+    pos: noun
+    gender: m
+  - lemma: свавілля
+    ipa: /swaˈvʲilʲːɐ/
+    translation: arbitrariness / tyranny
+    pos: noun
+    gender: n
+  - lemma: побут
+    ipa: /ˈpɔbʊt/
+    translation: daily life
+    pos: noun
+    gender: m
+  - lemma: фольклор
+    ipa: /folʲˈkɫɔr/
+    translation: folklore
+    pos: noun
+    gender: m
+  - lemma: традиції
+    ipa: /traˈdɪt͡sʲiji/
+    translation: traditions
+    pos: noun
+    gender: pl
+  - lemma: село
+    ipa: /sɛˈɫɔ/
+    translation: village
+    pos: noun
+    gender: n
+  - lemma: хутір
+    ipa: /ˈxʊtʲir/
+    translation: homestead
+    pos: noun
+    gender: m
+  - lemma: плуг
+    ipa: /pɫuɦ/
+    translation: plow
+    pos: noun
+    gender: m
+  - lemma: жнива
+    ipa: /ʒnɪˈwa/
+    translation: harvest
+    pos: noun
+    gender: pl
+  - lemma: воля
+    ipa: /ˈwɔlʲɐ/
+    translation: freedom / will
+    pos: noun
+    gender: f

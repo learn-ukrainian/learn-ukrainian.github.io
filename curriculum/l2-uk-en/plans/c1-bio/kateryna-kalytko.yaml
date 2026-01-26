@@ -1,0 +1,105 @@
+module: kateryna-kalytko
+level: c1-bio
+sequence: 93
+version: '2.0'
+title: 'Катерина Калитко: Поезія війни'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Калитко_Катерина_Вікторівна
+    title: Катерина Калитко (Wikipedia UA)
+    notes: Biography of the contemporary poet and novelist
+  secondary:
+  - url: https://starylev.com.ua/
+    title: Видавництво «Видавництво Старого Лева»
+    notes: Publisher of Kalytko's major works
+content_outline:
+- section: Вступ — Голос тіла і війни
+  words: 400
+  subsections:
+  - Одна з найяскравіших сучасних українських письменниць
+  - Поезія тілесності та травми
+  - Відповідь на війну через літературу
+- section: Юність та формування (1982-2005)
+  words: 600
+  subsections:
+  - Народження в Тернополі
+  - Освіта та початок творчості
+  - Перші публікації
+  - Входження в літературний простір
+- section: Поетичний голос (2005-2013)
+  words: 800
+  subsections:
+  - Ранні збірки поезій
+  - Тілесність та чуттєвість
+  - Літературні премії
+  - Формування унікального стилю
+- section: Проза і війна (2014-2020)
+  words: 800
+  subsections:
+  - «Земля загублених» (2017)
+  - Тема окупації та внутрішньої еміграції
+  - Травма та зцілення через слово
+  - Визнання критиків
+- section: Сучасний період (2020-ні)
+  words: 700
+  subsections:
+  - Відповідь на повномасштабне вторгнення
+  - Нова поезія та проза
+  - Міжнародне визнання
+  - Переклади іноземними мовами
+- section: Спадщина — Голос покоління
+  words: 700
+  subsections:
+  - Місце в сучасній літературі
+  - Вплив на молодих авторів
+  - Калитко як голос України у світі
+  - Література як форма опору
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - тілесність
+  - травма
+  - війна
+  - окупація
+  - внутрішня еміграція
+  - зцілення
+  - поезія
+  - проза
+  - чуттєвість
+  - метафора
+  recommended:
+  - болісний
+  - ландшафт
+  - пам'ять
+  - втрата
+  - опір
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-92
+  related:
+  - c1-bio-90
+  - c1-bio-94
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

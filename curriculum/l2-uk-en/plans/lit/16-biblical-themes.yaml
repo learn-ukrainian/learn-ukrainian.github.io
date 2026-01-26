@@ -1,0 +1,105 @@
+module: 16-biblical-themes
+level: lit
+sequence: 16
+version: '1.0'
+title: 'Біблійні теми: Давидові псалми і "Марія"'
+subtitle: 'Biblical Themes: Psalms of David and "Maria"'
+focus: literature
+pedagogy: seminar
+objectives:
+- Understand the role of Biblical themes in Shevchenko's later poetry
+- Analyze the 'humanization' of divine figures in 'Maria'
+- Identify political subtext in 'Psalms of David'
+- Recognize and interpret Church Slavonicisms in modern Ukrainian text
+sources:
+  primary:
+  - url: https://www.ukrlib.com.ua/books/printit.php?tid=40
+    title: Давидові псалми — переспіви
+    notes: Біблійні переспіви Шевченка
+  - url: https://www.ukrlib.com.ua/books/printit.php?tid=42
+    title: Марія — поема
+    notes: Поема про Богородицю
+  secondary:
+  - url: https://uk.wikipedia.org/wiki/Церковнослов'янізми
+    title: Церковнослов'янізми в українській мові
+    notes: Мовний контекст
+content_outline:
+- section: Вступ — Шевченко і Біблія
+  words: 500
+  subsections:
+  - Релігійність vs антиклерикалізм
+  - Біблія як джерело поетичних образів
+  - Високий стиль у творчості поета
+- section: Давидові псалми — переосмислення
+  words: 800
+  subsections:
+  - Вибір псалмів (12 переспівів)
+  - Техніка переспіву vs переклад
+  - Політичне прочитання Давида
+- section: Церковнослов'янізми
+  words: 700
+  subsections:
+  - Роль церковнослов'янської лексики
+  - Стилістична функція архаїзмів
+  - Синтез народної та книжної мови
+- section: '"Марія" — гуманізація божественного'
+  words: 800
+  subsections:
+  - Сюжет поеми
+  - Марія як українська жінка
+  - Критика фарисейства
+- section: Концепція "Святої Правди"
+  words: 500
+  subsections:
+  - Етика Шевченка
+  - Правда vs закон
+  - Пророк як голос Бога
+- section: Підсумок — Від Біблії до народу
+  words: 400
+  subsections:
+  - Шевченко як "український пророк"
+  - Біблійна традиція в національній літературі
+  - Перехід до візуального мистецтва
+word_target: 4500
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - псалом
+  - переспів
+  - церковнослов'янізм
+  - архаїзм
+  - Богородиця
+  - пророк
+  - фарисейство
+  - антиклерикалізм
+  - етика
+  - правда
+  recommended:
+  - благодать
+  - гріх
+  - спокута
+  - апостол
+  - євангеліє
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - cloze
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: lit-15 (Zapovit — політичний контекст)
+  related:
+  - lit-17 (The Artist — візуальне мистецтво)
+  - lit-10 (Language of Kvitka — стилістичний контекст)
+constraints:
+  min_engagement_boxes: 3
+  min_examples: 15
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

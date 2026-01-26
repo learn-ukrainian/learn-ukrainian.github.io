@@ -1,0 +1,77 @@
+module: interviu-ta-podkasty
+level: b1
+sequence: 88
+version: '2.0'
+title: Інтерв'ю та подкасти
+subtitle: Listening to Ukrainian Interviews and Podcasts
+focus: skills
+pedagogy: CBI
+objectives:
+- Learner can apply listening strategies to authentic Ukrainian interviews and podcasts
+- Learner can identify main points and key information in spoken discourse
+- Learner can take effective notes while listening to Ukrainian audio content
+- Learner is prepared for autonomous listening practice at B2
+content_outline:
+- section: 'Introduction: Listening Skills'
+  words: 150
+  points:
+  - Listening strategies
+  - Ukrainian podcast landscape
+  - Interview formats
+- section: Listening Strategies
+  words: 250
+  points:
+  - Pre-listening preparation
+  - Active listening
+  - Post-listening review
+- section: Note-Taking
+  words: 250
+  points:
+  - Note-taking vocabulary
+  - Abbreviation systems
+  - Organizing information
+- section: Interview Features
+  words: 250
+  points:
+  - Question types
+  - Response patterns
+  - Turn-taking
+- section: Podcast Genres
+  words: 200
+  points:
+  - News podcasts
+  - Educational content
+  - Recommended shows
+- section: 'Practice: Listening Tasks'
+  words: 100
+  points:
+  - Listen and summarize
+  - Discuss content
+word_target: 1200
+vocabulary:
+  required:
+  - інтерв'ю (interview)
+  - подкаст (podcast)
+  - слухати (to listen)
+  - ведучий (host)
+  - гість (guest)
+  - питання (question)
+  - відповідь (answer)
+  - запис (recording)
+  recommended:
+  - нотатки (notes)
+  - тема (topic)
+  - обговорення (discussion)
+  - випуск (episode)
+  forbidden: []
+activities:
+  types_required:
+  - listening
+  - note-taking
+  - discussion
+  - matching
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-89 (Checkpoint Grammar Synthesis)

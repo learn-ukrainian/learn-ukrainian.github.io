@@ -30,3 +30,22 @@ slug: 42-aspect-nuances-imperative-infinitive
 naturalness:
   score: 9
   status: PASS
+content_outline:
+- section: Вступ — наказовий спосіб та інфінітив
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Infinitive Nuances
+  words: 500
+  points:
+  - Не можна + Imperfective (Forbidden by rule)
+  - Не можна + Perfective (Impossible to do)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

@@ -1,0 +1,57 @@
+module: pravoslavna-tserkva-17
+level: b2-hist
+sequence: 17
+version: '1.0'
+title: Православна церква XVII століття
+focus: history
+pedagogy: CBI
+objectives: []
+content_outline:
+- section: Вступ
+  words: 500
+- section: Відновлення ієрархії
+  words: 2000
+- section: 'Читання: Голоси епохи'
+  words: 200
+- section: Первинні джерела
+  words: 950
+- section: Деколонізаційний погляд
+  words: 650
+- section: Потрібно більше практики?
+  words: 150
+word_target: 4000
+vocabulary:
+- ієрархія
+- митрополит
+- висвячення
+- легітимність
+- братство
+- унія
+- полеміка
+- маєстат
+- сповідувати
+- патріарх
+activities:
+- type: reading
+  focus: primary source analysis
+- type: critical-analysis
+  focus: linguistic analysis
+- type: essay-response
+  focus: historical argumentation
+- type: quiz
+  focus: comprehension
+- type: true-false
+  focus: factual accuracy
+- type: match-up
+  focus: terminology
+- type: fill-in
+  focus: context
+- type: comparative-study
+  focus: analytical comparison
+sources:
+- name: Історія України-Руси (Грушевський)
+  url: http://litopys.org.ua/hrushrus/iur.htm
+  type: secondary
+- name: Енциклопедія українознавства
+  url: http://www.encyclopediaofukraine.com/
+  type: reference

@@ -1,0 +1,98 @@
+module: unr-vybory
+level: c1-hist
+sequence: 91
+version: '1.0'
+title: 'УНР 1917-1921: Стратегічні помилки'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Втрачена незалежність
+  words: 400
+  subsections:
+  - 1917-1921 — шанс і провал
+  - Чому важливо аналізувати
+  - Стратегічні рішення — ключові
+  - Структура модуля
+- section: Помилка 1 — Федералізм замість незалежності
+  words: 600
+  subsections:
+  - Центральна Рада — автономія
+  - Чому не одразу незалежність
+  - Втрачений час
+  - Коли змінили курс — пізно
+- section: Помилка 2 — Армія
+  words: 600
+  subsections:
+  - Небажання мілітаризму
+  - «Вільне козацтво» — не армія
+  - Без армії — без держави
+  - Що могли зробити
+- section: Помилка 3 — Брест-Литовськ
+  words: 600
+  subsections:
+  - Угода з Німеччиною
+  - Окупація — ціна допомоги
+  - Гетьманат Скоропадського
+  - Делегітимізація УНР
+- section: Помилка 4 — Союзники
+  words: 500
+  subsections:
+  - Польща — війна і союз
+  - Антанта — ігнорування
+  - Ставка на одного партнера
+  - Геополітична наївність
+- section: Що могли зробити інакше
+  words: 500
+  subsections:
+  - Раніша незалежність
+  - Створення армії
+  - Інша зовнішня політика
+  - Чи було шанс?
+- section: Підсумок
+  words: 300
+  subsections:
+  - УНР — трагедія помилок
+  - Уроки для майбутнього
+  - Перехід до 1991
+word_target: 3500
+vocabulary:
+- УНР
+- стратегічна помилка
+- федералізм
+- незалежність
+- армія
+- союзник
+- Брест-Литовськ
+- Антанта
+- Центральна Рада
+- мілітаризм
+- Гетьманат
+- «Вільне козацтво»
+- делегітимізація
+- геополітична наївність
+- реальполітик
+activities:
+- type: mistake-analysis
+  focus: Catalog UNR strategic errors
+- type: essay-response
+  focus: What if UNR declared independence immediately?
+- type: comparative-study
+  focus: UNR vs. successful independence movements
+- type: military-analysis
+  focus: Could UNR have built an effective army?
+- type: essay-response
+  focus: Яка помилка УНР була найфатальнішою?
+sources:
+- name: Українська Народна Республіка (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_Народна_Республіка
+  type: reference
+  notes: UNR history
+- name: Українсько-радянська війна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українсько-радянська_війна_(1917—1921)
+  type: reference
+  notes: War context
+- name: Центральна Рада (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_Центральна_Рада
+  type: reference
+  notes: Government

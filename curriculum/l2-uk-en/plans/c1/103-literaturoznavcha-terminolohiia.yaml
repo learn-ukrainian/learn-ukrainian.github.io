@@ -1,0 +1,22 @@
+module: 103-literaturoznavcha-terminolohiia
+level: c1
+sequence: 103
+version: '2.0'
+title: Літературознавча термінологія
+subtitle: Literary Analysis Terminology
+focus: analysis
+pedagogy: Academic
+objectives:
+- Learner can define and use key literary terms (сюжет, фабула, метафора, алегорія).
+- Learner can distinguish between narrative modes and focalization.
+- Learner can apply academic register in literary criticism.
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

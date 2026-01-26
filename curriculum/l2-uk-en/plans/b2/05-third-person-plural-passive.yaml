@@ -1,0 +1,102 @@
+module: 05-third-person-plural-passive
+level: b2
+sequence: 5
+version: '1.0'
+title: Пасив третьою особою множини
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Ukrainian State Standard 2024 - Impersonal Constructions
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Colloquial impersonal passive patterns
+- name: Розмовний стиль української мови
+  url: https://uk.wikipedia.org/wiki/Розмовний_стиль
+  type: secondary
+  notes: Colloquial speech characteristics
+- name: CEFR B2 Speaking Descriptors
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 speaking fluency expectations
+content_outline:
+- section: Вступ — Найрозмовніший пасив
+  words: 400
+  points:
+  - Третя особа множини як пасивна конструкція
+  - Імпліцитний агент — невизначені "вони"
+  - Місце в системі пасиву
+- section: Утворення конструкції
+  words: 600
+  points:
+  - Дієслово в 3-й особі множини без підмета
+  - Об'єкт часто в давальному відмінку (Мені сказали)
+  - Об'єкт у знахідному (Книгу взяли)
+  - Видові нюанси
+- section: Семантика невизначеного агента
+  words: 600
+  points:
+  - «Вони» як абстрактні люди
+  - Порівняння з англійським «One says» / «They say»
+  - Ефект анонімності
+- section: Контексти вживання
+  words: 700
+  points:
+  - Побутові ситуації (У магазині мене запитали)
+  - Телефонні розмови (По телефону нам повідомили)
+  - Чутки та плітки (Кажуть, що...)
+  - Неформальні оповіді
+- section: Порівняння з іншими формами пасиву
+  words: 700
+  points:
+  - 3-я особа множини vs -но/-то — регістр
+  - 3-я особа множини vs -ся — акцент
+  - Стилістичний вибір
+  - Коли не можна використовувати
+- section: Типові помилки
+  words: 500
+  points:
+  - Надмірна формальність у розмовному контексті
+  - Змішування відмінків
+  - Неправильний вибір регістру
+- section: Практика і підсумок
+  words: 300
+  points:
+  - Ключові правила
+  - Підготовка до модуля 06
+  - Інтеграція всіх форм пасиву
+word_target: 3800
+vocabulary:
+  required:
+  - сказали (they said/was told)
+  - запитали (they asked/was asked)
+  - повідомили (they informed/was informed)
+  - пообіцяли (they promised/was promised)
+  - дали (they gave/was given)
+  - показали (they showed/was shown)
+  - розмовний (colloquial)
+  - неформальний (informal)
+  - імпліцитний (implicit)
+  - анонімний (anonymous)
+  recommended:
+  - чутка (rumor)
+  - плітка (gossip)
+  - побутовий (everyday)
+  - оповідь (narrative)
+  - контекст (context)
+  forbidden: []
+activities:
+  types_required:
+  - error-correction
+  - quiz
+  - fill-in
+  - essay-response
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b2-06 (Passive in Context)
+- 'b2-24 (Register: Colloquial Style)'
+- b2-10 (B2.1a Checkpoint)

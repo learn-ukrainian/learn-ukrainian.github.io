@@ -1,0 +1,106 @@
+module: legal-ukrainian-v
+level: c2
+sequence: 65
+version: '2.0'
+title: Правнича українська V — Аналіз справ
+focus: domain
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Єдиний державний реєстр судових рішень
+  url: https://reyestr.court.gov.ua/
+  type: primary
+  notes: База судових рішень України
+- name: Верховний Суд України — Правові позиції
+  url: https://supreme.court.gov.ua/
+  type: primary
+  notes: Правові позиції Верховного Суду
+- name: Конституційний Суд України
+  url: https://ccu.gov.ua/
+  type: reference
+  notes: Рішення та висновки КСУ
+content_outline:
+- section: Вступ — Методологія аналізу судових справ
+  words: 500
+  points:
+  - Мета та завдання аналізу справ
+  - Джерела судової практики
+  - Єдиний реєстр судових рішень
+  - Систематизація правових позицій
+- section: Структура судового рішення
+  words: 600
+  points:
+  - Вступна частина (реквізити)
+  - Описова частина (обставини справи)
+  - Мотивувальна частина (правове обґрунтування)
+  - Резолютивна частина (власне рішення)
+- section: Аналіз цивільної справи
+  words: 700
+  points:
+  - Визначення правовідносин
+  - Встановлення юридичних фактів
+  - Застосування норм права
+  - Оцінка доказів судом
+- section: Аналіз кримінальної справи
+  words: 700
+  points:
+  - Кваліфікація злочину
+  - Доказова база
+  - Обставини, що пом'якшують/обтяжують
+  - Призначення покарання
+- section: Правові позиції Верховного Суду
+  words: 600
+  points:
+  - Поняття правової позиції
+  - Уніфікація судової практики
+  - Постанови Пленуму ВС
+  - Висновки в касаційних провадженнях
+- section: Складання аналітичної записки
+  words: 500
+  points:
+  - Структура аналітичної записки
+  - Виклад обставин справи
+  - Правова оцінка та висновки
+  - Практичні рекомендації
+- section: Практикум — Комплексний аналіз справи
+  words: 400
+  points:
+  - Робота з реальним судовим рішенням
+  - Написання аналітичної записки
+  - Формулювання правової позиції
+word_target: 4000
+vocabulary:
+  required:
+  - судова практика (judicial practice/case law)
+  - правова позиція (legal position)
+  - мотивувальна частина (reasoning/rationale)
+  - резолютивна частина (operative part)
+  - кваліфікація (qualification)
+  - обставини справи (circumstances of the case)
+  - доказова база (evidentiary base)
+  - касаційне провадження (cassation proceedings)
+  - уніфікація (unification)
+  - Пленум (Plenum)
+  recommended:
+  - аналітична записка (analytical note)
+  - пом'якшуючі обставини (mitigating circumstances)
+  - обтяжуючі обставини (aggravating circumstances)
+  - правовідносини (legal relations)
+  - юридичний факт (legal fact)
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - group-sort
+  - quiz
+  - critical-analysis
+  - essay-response
+  - comparative-study
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-71 (Professional Portfolio I)
+- c2-74 (C2.3 Review)
+- c2-75 (C2.3 Checkpoint)

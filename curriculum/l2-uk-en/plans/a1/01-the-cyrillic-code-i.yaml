@@ -1,0 +1,76 @@
+module: the-cyrillic-code-i
+level: a1
+sequence: 1
+version: '2.0'
+title: The Cyrillic Code I
+subtitle: Cracking the Ukrainian Alphabet
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can recognize True Friends (letters that look AND sound like English)
+- Learner can decode False Friends (letters that look familiar but sound different)
+- Learner can read 19 Cyrillic letters
+- Learner can pronounce basic international words in Ukrainian
+content_outline:
+- section: 'Introduction: The Cyrillic Mystery'
+  words: 100
+  points:
+  - Why Ukrainian uses Cyrillic
+  - 'Good news: Many letters are familiar'
+  - 'Strategy: True Friends vs False Friends'
+- section: True Friends (А, Е, І, О, К, М, Т)
+  words: 150
+  points:
+  - Letters that look AND sound like English
+  - 'Practice words: такт, кіт, мама'
+  - Reading drill
+- section: False Friends (В, Н, Р, С, У, Х)
+  words: 200
+  points:
+  - Letters that look familiar but sound different
+  - В = V, Н = N, Р = R, С = S, У = U, Х = Kh
+  - Common mistakes to avoid
+- section: New Friends (Б, Г, Д, Ж, З, Л, П, Ф)
+  words: 200
+  points:
+  - Letters unique to Cyrillic
+  - Sound introduction with examples
+  - Practice with simple words
+- section: 'Practice: International Words'
+  words: 100
+  points:
+  - 'Reading cognates: банк, метро, кафе'
+  - Building confidence with familiar vocabulary
+- section: 'Summary: Your First 19 Letters'
+  words: 50
+  points:
+  - Review of all letters learned
+  - Preparation for Part II
+word_target: 800
+vocabulary:
+  required:
+  - так (yes)
+  - банк (bank)
+  - метро (metro)
+  - кафе (café)
+  - такт (tact)
+  - кіт (cat)
+  - мама (mom)
+  - тато (dad)
+  recommended:
+  - парк (park)
+  - бар (bar)
+  - факт (fact)
+  - план (plan)
+  forbidden: []
+activities:
+  types_required:
+  - audio-match
+  - letter-recognition
+  - quiz
+  - reading-drill
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a1-02 (The Cyrillic Code II)

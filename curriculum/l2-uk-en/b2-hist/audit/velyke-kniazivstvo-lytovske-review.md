@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M29 | **Phase:** B2.3a | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:23:11
+**Generated:** 2026-01-25 22:22:40
 
 ## Configuration
 **Type:** B2-history
@@ -39,7 +39,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4699/4000 (raw: 4936)
+- **Words:** ✅ 4711/4000 (raw: 4961)
 - **Activities:** ✅ 10/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 10/2 types
@@ -63,13 +63,13 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 15 | 3 | 100% | 24% | 23.8% |
+| primary_sources | 14 | 3 | 100% | 24% | 23.8% |
 | engagement | 6 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 7 | 4 | 100% | 10% | 9.5% |
 | visual | 6 | 4 | 100% | 10% | 9.5% |
-| variety | 0.96 | - | 96% | 5% | 4.6% |
+| variety | 0.95 | - | 95% | 5% | 4.5% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 17 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.8%** |
@@ -84,10 +84,9 @@
 | **Вітовт Великий: Золота доба та європейський тріумф** | ⚪️ | 629 | Skipped |
 | **Релігійна толерантність і автономія** | ⚪️ | 614 | Skipped |
 | **Первинні джерела** | ✅ | 447 | Included in Core |
-| **Читання** | ✅ | 331 | Included in Core |
+| **Читання** | ✅ | 485 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 326 | Included in Core |
-| **Есе** | ⚪️ | 143 | Skipped |
 | **Критерії оцінювання** | ⚪️ | 0 | Skipped |
 | **Зразок відповіді** | ⚪️ | 406 | Skipped |
-| **Підсумок** | ✅ | 135 | Included in Core |
+| **Підсумок** | ✅ | 136 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 127 | Skipped |

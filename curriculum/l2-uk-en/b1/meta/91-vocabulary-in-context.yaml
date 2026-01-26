@@ -1,28 +1,95 @@
 module: b1-91
-title: Vocabulary in Context
-subtitle: Applying Vocabulary to Practical Communication
+id: b1-91
+slug: vocabulary-in-context
+title: "Лексика в контексті"
+subtitle: "Applying Vocabulary to Practical Communication"
 version: '2.0'
-phase: B1.9
+phase: "B1.9 [Communication Skills]"
 focus: communication
 pedagogy: TBL
+register: розмовний
 duration: 90
 transliteration: none
-tags:
-- communication
-- vocabulary
-- practical
-- applied
-grammar:
-- vocabulary collocations
-- register awareness
-- domain vocabulary
 objectives:
-- Learner applies vocabulary in practical scenarios
-- Learner uses collocations naturally
-- Learner demonstrates register-appropriate word choice
-vocabulary_count: 25
-vocab_count: 25
-slug: 91-vocabulary-in-context
+  - "Learner applies vocabulary in practical communication scenarios"
+  - "Learner uses collocations naturally in extended discourse"
+  - "Learner demonstrates register-appropriate word choice"
+  - "Learner integrates domain vocabulary fluently"
+grammar:
+  - "Vocabulary collocations in context"
+  - "Register awareness in communication"
+  - "Domain vocabulary application"
+  - "Lexical chains in discourse"
+word_target: 1000
+content_outline:
+  - section: "Introduction: Vocabulary for Communication"
+    words: 150
+    points:
+      - "Vocabulary as resource"
+      - "Context-based selection"
+      - "Register matching"
+  - section: "Professional Contexts"
+    words: 200
+    points:
+      - "Workplace vocabulary"
+      - "Formal register"
+      - "Business communication"
+  - section: "Social Contexts"
+    words: 200
+    points:
+      - "Informal register"
+      - "Social vocabulary"
+      - "Everyday communication"
+  - section: "Academic Contexts"
+    words: 200
+    points:
+      - "Academic vocabulary"
+      - "Formal discourse"
+      - "Argumentation"
+  - section: "Cultural Contexts"
+    words: 150
+    points:
+      - "Cultural vocabulary"
+      - "Idiomatic expressions"
+      - "Regional awareness"
+  - section: "Practice: Integrated Tasks"
+    words: 100
+    points:
+      - "Apply vocabulary"
+      - "Produce texts"
+vocabulary_hints:
+  required:
+    - лексика (vocabulary)
+    - контекст (context)
+    - регістр (register)
+    - колокація (collocation)
+    - вибір слів (word choice)
+    - доречність (appropriateness)
+    - стиль (style)
+    - дискурс (discourse)
+  recommended:
+    - формальний (formal)
+    - неформальний (informal)
+    - академічний (academic)
+    - побутовий (everyday)
+activity_hints:
+  - type: writing
+    focus: "Register-appropriate texts"
+    items: 10
+  - type: task
+    focus: "Communication tasks"
+    items: 15
+  - type: role-play
+    focus: "Context-based speaking"
+    items: 15
+  - type: analysis
+    focus: "Register identification"
+    items: 10
+prerequisites:
+  - b1-90 (Grammar in Context)
+connects_to:
+  - b1-92 (B1 Final Exam)
 naturalness:
   score: 9
   status: PASS
+  justification: "Essential integration for communicative competence"

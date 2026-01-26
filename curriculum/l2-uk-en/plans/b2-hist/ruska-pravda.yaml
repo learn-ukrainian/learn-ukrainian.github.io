@@ -1,0 +1,129 @@
+module: ruska-pravda
+level: b2-hist
+sequence: 13
+version: '1.0'
+title: 'Руська Правда: Перший законодавчий кодекс'
+focus: history
+pedagogy: CBI
+objectives:
+- Understand the structure of Ruska Pravda
+- Analyze the social hierarchy of Rus
+- Discuss the concept of justice in Kyivan Rus
+content_outline:
+- section: Вступ
+  words: 250
+  subsections:
+  - Історичне значення
+  - Контекст появи кодексу
+- section: Правда Ярослава (1016–1036)
+  words: 250
+  subsections:
+  - Історичне тло
+  - Основні положення (віра vs помста)
+  - Еволюція закону
+- section: Правда Ярославичів та соціальна структура
+  words: 450
+  subsections:
+  - Скасування кровної помсти
+  - Соціальна ієрархія (віра 80/40/5)
+  - Статус закупів і холопів
+  - Майнові права
+- section: Первинні джерела
+  words: 400
+  subsections:
+  - 'Документ 1: Уривок з Руської Правди'
+  - 'Документ 2: Стаття про побиття'
+  - Лінгвістичний аналіз
+- section: Деколонізаційний погляд
+  words: 300
+  subsections:
+  - Міф про "російське право"
+  - Мовні ознаки (протоукраїнські риси)
+  - Європейський контекст
+- section: 'Читання: Ярослав Мудрий — законодавець'
+  words: 300
+  subsections:
+  - Роль особистості
+  - Захист торгівлі
+  - Розбудова держави
+- section: Соціальні ліфти та Економіка
+  words: 500
+  subsections:
+  - Мобільність суспільства
+  - Економічне регулювання (борги, власність)
+  - Археологічні підтвердження (гривні, печатки)
+- section: Порівняльний аналіз правових систем
+  words: 300
+  subsections:
+  - Візантія та Германські правди
+  - Велика хартія вольностей
+  - Контраст із Московським правом (Домострой)
+- section: Жінки, Суд та Мова
+  words: 350
+  subsections:
+  - Правосуб'єктність жінки
+  - Судовий процес (свідки, ордалії)
+  - Мовні особливості тексту
+- section: Спадщина та Сучасність
+  words: 800
+  subsections:
+  - Литовський Статут і козацьке право
+  - Сучасна правова свідомість
+  - Уроки для сьогодення
+- section: 'Повсякденне правосуддя: Казуси'
+  words: 200
+  subsections:
+  - Справа про борт
+  - Справа про позику
+  - Роль громади
+word_target: 4000
+vocabulary:
+- право
+- закон
+- віра
+- кровна помста
+- смерд
+- холоп
+- закуп
+- боярин
+- дружина
+- судочинство
+- звід
+- спадкування
+- рядович
+- челядь
+- ордалія
+- гоніння сліду
+- присяга
+- Просторова редакція
+activities:
+- type: reading
+  focus: Excerpts from Ruska Pravda with translation
+- type: fill-in
+  focus: Legal and social terminology
+  items: 18+
+- type: comparative-study
+  focus: Punishments for crimes against different social classes
+- type: quiz
+  focus: Social structure and legal concepts
+  items: 15+
+- type: group-sort
+  focus: Categorize social classes by status (free, semi-free, unfree)
+  items: 10+
+- type: essay-response
+  focus: Що Руська Правда розповідає про суспільство Київської Русі?
+- type: essay-response
+  focus: Чи була Руська Правда справедливою для всіх верств населення?
+sources:
+- name: Руська Правда (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Руська_Правда
+  type: reference
+  notes: Overview of the legal code
+- name: Текст Руської Правди
+  url: https://litopys.org.ua/oldukr2/oldukr51.htm
+  type: primary
+  notes: Original text with translation
+- name: Правда Ярослава (Коротка редакція)
+  url: https://uk.wikipedia.org/wiki/Правда_Ярослава
+  type: reference
+  notes: First version of the code

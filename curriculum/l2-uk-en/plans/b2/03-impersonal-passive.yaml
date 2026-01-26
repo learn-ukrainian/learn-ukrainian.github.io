@@ -1,0 +1,104 @@
+module: 03-impersonal-passive
+level: b2
+sequence: 3
+version: '1.0'
+title: Безособові конструкції на -но/-то
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Ukrainian State Standard 2024 - Impersonal Constructions
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official requirements for -но/-то usage
+- name: Юридична мова України
+  url: https://uk.wikipedia.org/wiki/Юридична_мова
+  type: secondary
+  notes: Examples of -но/-то in legal documents
+- name: Офіційно-діловий стиль
+  url: https://uk.wikipedia.org/wiki/Офіційно-діловий_стиль
+  type: secondary
+  notes: Register characteristics and examples
+content_outline:
+- section: Вступ — Безособовість в українській мові
+  words: 400
+  points:
+  - Концепція безособових конструкцій
+  - Роль у офіційному мовленні
+  - Зв'язок із дієприкметниками на -ний/-тий
+- section: Утворення форм на -но/-то
+  words: 600
+  points:
+  - Від дієприкметника до -но/-то (написаний → написано)
+  - Правило вибору -но чи -то
+  - Наголос і фонетичні зміни
+- section: Синтаксичні особливості
+  words: 700
+  points:
+  - Об'єкт у знахідному відмінку (Книгу написано)
+  - Відсутність підмета
+  - Незмінність форми (завжди середній рід)
+  - Порівняння з іншими безособовими конструкціями
+- section: Контексти вживання
+  words: 700
+  points:
+  - Офіційні документи (Засідання оголошено закритим)
+  - Юридичні тексти (Рішення прийнято)
+  - Адміністративні оголошення (Роботу завершено)
+  - Журналістика (Новину підтверджено)
+- section: Регістрова специфіка
+  words: 600
+  points:
+  - Високий регістр — офіційно-діловий
+  - Уникання в розмовному мовленні
+  - Порівняння з альтернативними конструкціями
+  - Стилістичний ефект
+- section: Типові помилки
+  words: 500
+  points:
+  - Неправильний відмінок об'єкта
+  - Змішування з дієприкметниками
+  - Надмірне вживання
+  - Як виправити
+- section: Практика і підсумок
+  words: 300
+  points:
+  - Ключові правила
+  - Зразки документів
+  - Підготовка до модуля 06
+word_target: 3800
+vocabulary:
+  required:
+  - безособовий (impersonal)
+  - засідання (meeting/session)
+  - оголошено (announced/declared)
+  - рішення (decision)
+  - прийнято (accepted/adopted)
+  - закрито (closed)
+  - завершено (completed)
+  - документ (document)
+  - юридичний (legal)
+  - адміністративний (administrative)
+  recommended:
+  - наказ (order/decree)
+  - протокол (minutes/protocol)
+  - постанова (resolution)
+  - затверджено (approved)
+  - скасовано (cancelled)
+  forbidden: []
+activities:
+  types_required:
+  - error-correction
+  - quiz
+  - fill-in
+  - essay-response
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b2-04 (Reflexive Passive)
+- b2-06 (Passive in Context)
+- 'b2-19 (Register: Official/Legal)'
+- b2-10 (B2.1a Checkpoint)

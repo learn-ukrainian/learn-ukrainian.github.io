@@ -1,0 +1,78 @@
+module: at-the-cafe-practical
+level: a1
+sequence: 35
+version: '2.0'
+title: At the Café
+subtitle: Ordering Drinks and Snacks
+focus: practical
+pedagogy: PPP
+objectives:
+- Learner can order a drink and a snack
+- Learner can ask for the bill
+- Learner can handle basic payment queries
+- Learner can make polite requests
+content_outline:
+- section: 'Introduction: Café Scenario'
+  words: 100
+  points:
+  - Real-world café situation
+  - Integrated grammar practice
+  - Polite communication
+- section: Arriving and Ordering
+  words: 200
+  points:
+  - Меню, будь ласка
+  - Мені каву, будь ласка
+  - Що ви порекомендуєте?
+- section: Menu Items Review
+  words: 150
+  points:
+  - Hot and cold drinks
+  - Snacks and pastries
+  - Understanding menu descriptions
+- section: Special Requests
+  words: 150
+  points:
+  - з молоком/без цукру
+  - Гарячий чи холодний?
+  - На виніс (to go)
+- section: Paying
+  words: 100
+  points:
+  - Рахунок, будь ласка
+  - Карткою чи готівкою?
+  - Дякую, до побачення
+- section: 'Practice: Full Café Scenario'
+  words: 100
+  points:
+  - Complete ordering sequence
+  - Handle variations
+word_target: 800
+vocabulary:
+  required:
+  - кава (coffee)
+  - чай (tea)
+  - меню (menu)
+  - рахунок (bill)
+  - будь ласка (please)
+  - дякую (thank you)
+  - готівка (cash)
+  - картка (card)
+  recommended:
+  - круасан (croissant)
+  - тістечко (pastry)
+  - молоко (milk)
+  - цукор (sugar)
+  forbidden: []
+activities:
+  types_required:
+  - dialogue
+  - role-play
+  - fill-in
+  - listening
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a1-36 (At the Restaurant)
+- a1-37 (At the Market)

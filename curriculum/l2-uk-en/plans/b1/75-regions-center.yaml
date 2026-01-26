@@ -1,0 +1,77 @@
+module: regions-center
+level: b1
+sequence: 75
+version: '2.0'
+title: 'Українські регіони: Центр'
+subtitle: Central Ukraine - Kyiv, Poltava, and Cossack Heritage
+focus: culture
+pedagogy: CBI
+objectives:
+- Learner can discuss Central Ukraine's regions and historical significance
+- Learner can understand authentic texts about Kyiv, Poltava, and Cherkasy
+- Learner can use regional vocabulary to describe Central Ukrainian culture
+- Learner can explain the connection between Central Ukraine and Cossack heritage
+content_outline:
+- section: 'Introduction: Central Ukraine'
+  words: 150
+  points:
+  - Geographic overview
+  - Historical heartland
+  - Cultural significance
+- section: Kyiv and Kyiv Oblast
+  words: 250
+  points:
+  - Київ, київщина
+  - Capital city culture
+  - Historical monuments
+- section: Poltava Region
+  words: 250
+  points:
+  - Полтава, полтавщина
+  - Cossack heritage
+  - Literary traditions
+- section: Cherkasy and Dnieper Region
+  words: 250
+  points:
+  - Черкаси, Дніпро
+  - Cossack Sich heritage
+  - River culture
+- section: Central Ukrainian Identity
+  words: 200
+  points:
+  - Language traditions
+  - Agricultural heritage
+  - Contemporary life
+- section: 'Practice: Heritage Discussion'
+  words: 100
+  points:
+  - Discuss Central Ukraine
+  - Explore Cossack connections
+word_target: 1200
+vocabulary:
+  required:
+  - Київ (Kyiv)
+  - Полтава (Poltava)
+  - Черкаси (Cherkasy)
+  - козацтво (Cossacks)
+  - спадщина (heritage)
+  - столиця (capital)
+  - історичний (historical)
+  - традиція (tradition)
+  recommended:
+  - полтавщина (Poltava region)
+  - гетьман (hetman)
+  - Дніпро (Dnipro)
+  - літературний (literary)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - reading
+  - discussion
+  - matching
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-76 (Ukrainian Music Today)

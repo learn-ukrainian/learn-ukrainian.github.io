@@ -21,26 +21,30 @@ objectives:
 vocabulary_count: 37
 slug: rich-pospolyta
 content_outline:
-  - section: "Вступ"
-    words: 200
-  - section: "Формування Речі Посполитої та інкорпорація земель"
-    words: 200
-  - section: "Процеси асиміляції та культурного спротиву"
-    words: 200
-  - section: "Полонізація та ополячення"
-    words: 200
-  - section: "Читання"
-    words: 200
-  - section: "Первинні джерела"
-    words: 200
-  - section: "Деколонізаційний погляд"
-    words: 200
-  - section: "Наслідки для козацтва"
-    words: 200
-  - section: "Есе"
-    words: 400
-  - section: "Потрібно більше практики?"
-    words: 100
+- section: Вступ
+  words: 200
+- section: Формування Речі Посполитої та інкорпорація земель
+  words: 200
+- section: Процеси асиміляції та культурного спротиву
+  words: 200
+- section: Полонізація та ополячення
+  words: 200
+- section: "Шляхетська демократія: Свобода чи анархія?"
+  words: 250
+  points:
+    - "Golden Freedoms vs Absolute Monarchy"
+    - "The paralysis of Liberum Veto"
+    - "Lessons on responsible democracy"
+- section: Читання
+  words: 200
+- section: Первинні джерела
+  words: 200
+- section: Деколонізаційний погляд
+  words: 200
+- section: Наслідки для козацтва
+  words: 200
+- section: Потрібно більше практики?
+  words: 100
 naturalness:
   score: 9
   status: PASS

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M40 | **Phase:** HIST.4 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:23:02
+**Generated:** 2026-01-25 22:22:48
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4075/4000 (raw: 5158)
+- **Words:** ✅ 4013/4000 (raw: 5092)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -78,8 +78,7 @@
 | **Деколонізаційний погляд** | ✅ | 250 | Included in Core |
 | **Читання** | ✅ | 311 | Included in Core |
 | **Хронологія: Литовсько-польська доба** | ✅ | 265 | Included in Core |
-| **Огляд термінів: Литовсько-польська доба** | ⚪️ | 219 | Skipped |
-| **Есе-аналіз: Литовсько-польська спадщина** | ✅ | 561 | Included in Core |
+| **Огляд термінів: Литовсько-польська доба** | ⚪️ | 718 | Skipped |
 | **Зв'язок із сьогоденням** | ✅ | 414 | Included in Core |
 | **Підсумок** | ✅ | 98 | Included in Core |
 | **Модулі цієї епохи** | ⚪️ | 129 | Skipped |

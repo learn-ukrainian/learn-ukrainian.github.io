@@ -1,0 +1,97 @@
+module: radianska-industrializatsiia
+level: c1-hist
+sequence: 104
+version: '1.0'
+title: 'Радянська індустріалізація: Хто платив?'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Для кого будували
+  words: 400
+  subsections:
+  - 1930-ті — індустріалізація
+  - Донбас, Дніпро — центри
+  - Хто отримав користь
+  - Структура модуля
+- section: П'ятирічки в Україні
+  words: 600
+  subsections:
+  - Дніпрогес
+  - Металургійні гіганти
+  - Шахти Донбасу
+  - Масштаби будівництва
+- section: Ціна — Голодомор
+  words: 700
+  subsections:
+  - Зв'язок колективізації та індустріалізації
+  - Хліб на експорт → валюта → машини
+  - Селяни платять життям
+  - Економіка геноциду
+- section: Потоки ресурсів
+  words: 600
+  subsections:
+  - Що виробляли
+  - Куди йшло
+  - Центральне планування — Москва
+  - Україна — цех, не власник
+- section: Робоча сила
+  words: 500
+  subsections:
+  - Примусова міграція
+  - ГУЛАГ — безкоштовна праця
+  - Депортовані народи
+  - Імпортовані робітники
+- section: Після війни
+  words: 400
+  subsections:
+  - Відбудова — ким і для кого
+  - Ресурси знову з України
+  - Модель не змінилась
+- section: Підсумок
+  words: 300
+  subsections:
+  - Індустріалізація — за рахунок України
+  - Прибутки — до центру
+  - Перехід до Голодомору як зброї
+word_target: 3500
+vocabulary:
+- індустріалізація
+- п'ятирічка
+- колективізація
+- важка промисловість
+- центральне планування
+- експлуатація
+- ресурси
+- ГУЛАГ
+- примусова праця
+- відбудова
+- Дніпрогес
+- металургія
+- шахта
+- союзний бюджет
+- «п'ятирічку — за чотири роки»
+activities:
+- type: resource-flow
+  focus: Map where Ukrainian industrial output went
+- type: cost-benefit
+  focus: Who paid, who benefited from industrialization
+- type: holodomor-connection
+  focus: Economic link between Holodomor and industrialization
+- type: comparative-study
+  focus: Ukraine's industrialization vs. other Soviet republics
+- type: essay-response
+  focus: Чи радянська індустріалізація розвивала Україну?
+sources:
+- name: Індустріалізація УРСР (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Індустріалізація_УРСР
+  type: reference
+  notes: Soviet industrialization
+- name: Донбас (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Донбас
+  type: reference
+  notes: Industrial region
+- name: Колективізація (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Колективізація_в_УРСР
+  type: reference
+  notes: Collectivization context

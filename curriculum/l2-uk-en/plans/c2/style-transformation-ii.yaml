@@ -1,0 +1,105 @@
+module: style-transformation-ii
+level: c2
+sequence: 11
+version: '2.0'
+title: Трансформація стилю II — Офіційний → Публіцистичний
+focus: stylistics
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Українські ЗМІ — аналіз трансформації джерел
+  url: https://detector.media/
+  type: primary
+  notes: Media analysis of official sources transformation
+- name: Прес-служби та медіа
+  url: https://www.ukrinform.ua/
+  type: reference
+  notes: Examples of press release to news transformation
+- name: Ukrainian State Standard 2024 — Media production
+  url: https://mon.gov.ua/
+  type: reference
+  notes: C2 requirements for journalistic transformation
+content_outline:
+- section: Вступ — Від бюрократії до читабельності
+  words: 400
+  points:
+  - Чому офіційні тексти важко читати
+  - Завдання журналіста — переклад для публіки
+  - Етичні питання трансформації
+- section: Додавання людського інтересу
+  words: 700
+  points:
+  - Від абстрактного до конкретного
+  - Герої та персонажі
+  - Людські історії за статистикою
+  - Цитати живих людей
+- section: Емоційний апель
+  words: 600
+  points:
+  - Від нейтральності до впливу
+  - Емоційна лексика
+  - Риторичні прийоми
+  - Баланс факту та емоції
+- section: Наративні елементи
+  words: 600
+  points:
+  - Оповідна структура
+  - Хронологія vs тематичний порядок
+  - Інтрига та саспенс
+  - Початок і кінцівка
+- section: Візуальна мова
+  words: 600
+  points:
+  - Образність опису
+  - Метафори та порівняння
+  - Сенсорні деталі
+  - Від цифр до образів
+- section: Типи джерельних документів
+  words: 600
+  points:
+  - Прес-релізи
+  - Офіційні заяви
+  - Статистичні звіти
+  - Законодавчі акти
+- section: Практикум — Трансформація документів
+  words: 500
+  points:
+  - Прес-реліз → новина
+  - Статистичний звіт → feature-стаття
+  - Аналіз фреймінгу офіційних vs журналістських текстів
+  - Виявлення маніпуляцій
+word_target: 4000
+vocabulary:
+  required:
+  - фреймінг (framing)
+  - наратив (narrative)
+  - саспенс (suspense)
+  - апель (appeal)
+  - образність (imagery)
+  - персоналізація (personalization)
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - маніпуляція (manipulation)
+  - об'єктивність (objectivity)
+  recommended:
+  - сторітелінг (storytelling)
+  - інфографіка (infographic)
+  - дані (data)
+  - джерело (source)
+  - верифікація (verification)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - fill-in
+  - error-correction
+  - critical-analysis
+  - essay-response
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-18 (Practice II — complex transformations)
+- c2-24 (Style blending)
+- c2-57 (Professional discussions)

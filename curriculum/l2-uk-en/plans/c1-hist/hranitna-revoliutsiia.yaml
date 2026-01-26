@@ -1,0 +1,87 @@
+module: hranitna-revoliutsiia
+level: c1-hist
+sequence: 128
+version: '1.0'
+title: Гранітна революція 1990
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Забута революція
+  words: 451
+  subsections:
+  - Жовтень 1990 — студенти
+  - Перша українська революція
+  - Чому забули
+  - Структура модуля
+- section: Контекст — 1990 рік
+  words: 677
+  subsections:
+  - СРСР ще існує
+  - Декларація про суверенітет
+  - Що хотіли студенти
+  - Ризики — реальні
+- section: Голодування
+  words: 790
+  subsections:
+  - Хто голодував — імена
+  - Вимоги — п'ять пунктів
+  - Намет на площі
+  - Реакція влади
+- section: Перемога
+  words: 677
+  subsections:
+  - Відставка Масола
+  - Які вимоги виконали
+  - Що це означало
+  - Чому перемогли
+- section: Спадок
+  words: 564
+  subsections:
+  - Перша успішна революція
+  - Модель для Майданів
+  - Учасники — хто вони сьогодні
+  - Пам'ять і забуття
+- section: Підсумок
+  words: 341
+  subsections:
+  - Гранітна — початок
+  - Студенти — авангард
+  - Перехід до 2004 кримської кризи
+word_target: 3500
+vocabulary:
+- Гранітна революція
+- голодування
+- студентський протест
+- вимоги
+- намет
+- відставка
+- суверенітет
+- авангард
+- перемога
+- спадок
+- Масол
+- декларація про суверенітет
+- Верховна Рада
+- молодіжний рух
+- ненасильницький спротив
+activities:
+- type: event-reconstruction
+  focus: October 1990 — day-by-day reconstruction
+- type: demands-analysis
+  focus: Five demands — what they meant
+- type: participant-study
+  focus: Who were the students — where are they now
+- type: critical-analysis
+  focus: Granite → Orange → Dignity — continuity
+- type: essay-response
+  focus: Чому Гранітну революцію забули?
+sources:
+- name: Революція на граніті (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Революція_на_граніті
+  type: reference
+  notes: Granite Revolution
+- name: Студентське голодування 1990 (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Студентське_голодування_1990
+  type: reference
+  notes: Student hunger strike

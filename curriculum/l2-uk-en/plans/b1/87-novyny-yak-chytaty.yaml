@@ -1,0 +1,77 @@
+module: novyny-yak-chytaty
+level: b1
+sequence: 87
+version: '2.0'
+title: 'Новини: як читати'
+subtitle: News Reading Strategies for Ukrainian Media
+focus: skills
+pedagogy: CBI
+objectives:
+- Learner can apply news reading strategies to authentic Ukrainian texts
+- Learner can identify headlines, leads, and main points in news articles
+- Learner can distinguish fact from opinion in Ukrainian news
+- Learner is prepared for autonomous news reading at B2
+content_outline:
+- section: 'Introduction: News Literacy'
+  words: 150
+  points:
+  - News reading strategies
+  - Ukrainian media landscape
+  - Source evaluation
+- section: News Structure
+  words: 250
+  points:
+  - Headlines and leads
+  - Inverted pyramid
+  - Article organization
+- section: News Vocabulary
+  words: 250
+  points:
+  - Common news terms
+  - Formal register
+  - Abbreviations
+- section: Fact vs Opinion
+  words: 250
+  points:
+  - Identifying facts
+  - Recognizing opinion
+  - Bias awareness
+- section: Practice Strategies
+  words: 200
+  points:
+  - Skimming and scanning
+  - Key information extraction
+  - Summary skills
+- section: 'Practice: News Analysis'
+  words: 100
+  points:
+  - Analyze news articles
+  - Discuss current events
+word_target: 1200
+vocabulary:
+  required:
+  - новини (news)
+  - стаття (article)
+  - заголовок (headline)
+  - джерело (source)
+  - факт (fact)
+  - думка (opinion)
+  - журналіст (journalist)
+  - ЗМІ (mass media)
+  recommended:
+  - редакція (editorial office)
+  - кореспондент (correspondent)
+  - огляд (review)
+  - коментар (commentary)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - reading
+  - analysis
+  - matching
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-88 (Interviews and Podcasts)

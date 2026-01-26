@@ -1,0 +1,99 @@
+module: memorandum-uhh
+level: c1-hist
+sequence: 42
+version: '1.0'
+title: Меморандум Української Гельсінської групи
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Права людини як зброя
+  words: 400
+  subsections:
+  - 1976 рік — контекст
+  - Гельсінські угоди — можливість
+  - УГГ — перша правозахисна організація
+  - Значення меморандуму
+- section: Гельсінські угоди
+  words: 500
+  subsections:
+  - Що підписав СРСР
+  - «Третій кошик» — права людини
+  - Як дисиденти використали
+  - Міжнародний тиск
+- section: Створення УГГ
+  words: 600
+  subsections:
+  - Засновники — хто вони
+  - Руденко, Лук'яненко, Тихий
+  - Мотивація — чому ризикували
+  - Перші дії
+- section: Меморандум — аналіз тексту
+  words: 800
+  subsections:
+  - Текст (фрагменти з глосами)
+  - Правова аргументація
+  - Порушення прав в Україні
+  - Національні права
+  - Адресати — хто мав читати
+- section: Діяльність групи
+  words: 500
+  subsections:
+  - Документи — що публікували
+  - Міжнародні контакти
+  - Репресії — арешти членів
+  - Трагічні долі
+- section: Спадщина УГГ
+  words: 400
+  subsections:
+  - Від УГГ до Руху
+  - Правозахисна традиція
+  - Сучасні організації
+  - Уроки
+- section: Підсумок
+  words: 300
+  subsections:
+  - Меморандум як документ епохи
+  - Права людини і нація
+  - Зв'язок із незалежністю
+word_target: 3500
+vocabulary:
+- Гельсінська група
+- меморандум
+- права людини
+- правозахисник
+- Гельсінські угоди
+- «третій кошик»
+- порушення
+- національні права
+- міжнародний тиск
+- репресія
+- дисидент
+- моніторинг
+- декларація
+- конвенція
+- політв'язень
+activities:
+- type: reading
+  focus: Memorandum excerpts with glosses
+- type: critical-analysis
+  focus: How does UHH use international law as argument?
+- type: reading
+  focus: Research fates of founding members
+- type: critical-analysis
+  focus: Trace UHH influence to modern organizations
+- type: essay-response
+  focus: Як Гельсінські угоди стали зброєю дисидентів?
+sources:
+- name: Українська Гельсінська група (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_Гельсінська_група
+  type: reference
+  notes: Group overview
+- name: Установчий документ УГГ
+  url: https://khpg.org/
+  type: primary
+  notes: Founding documents
+- name: Гельсінські угоди
+  url: https://uk.wikipedia.org/wiki/Гельсінський_заключний_акт
+  type: reference
+  notes: Helsinki Accords context

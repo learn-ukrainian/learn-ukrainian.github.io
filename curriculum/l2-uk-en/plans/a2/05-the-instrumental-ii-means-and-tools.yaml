@@ -1,0 +1,80 @@
+module: 05-the-instrumental-ii-means-and-tools
+level: a2
+sequence: 5
+version: '2.0'
+title: The Instrumental II — Means and Tools
+subtitle: How? By What Means?
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can use instrumental case to describe means of transport
+- Learner can use instrumental case to describe tools and instruments
+- Learner can distinguish between instrumental with and without prepositions
+- Learner can describe how actions are performed
+sources:
+- name: Ukrainian State Standard 2024 - Instrumental Uses
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Instrumental without preposition for means and tools
+- name: Ukrainian Transport Vocabulary
+  url: https://uk.wikipedia.org/wiki/Транспорт
+  type: reference
+  notes: Transport modes vocabulary
+content_outline:
+- section: Introduction / Вступ
+  words: 250
+  points:
+  - Contrast with з + instrumental (accompaniment)
+  - Direct instrumental for means/manner
+- section: Presentation / Презентація
+  words: 550
+  points:
+  - Transport by Instrumental (їхати автобусом)
+  - Tools and Instruments (писати ручкою)
+  - Body Parts as Instruments
+- section: Practice / Практика
+  words: 150
+  points:
+  - '"How do you...?" question patterns'
+  - Common expressions review
+- section: Dialogues / Діалоги
+  words: 50
+  points:
+  - Commute and tool usage scenarios
+word_target: 1000
+vocabulary:
+  required:
+  - автобус
+  - трамвай
+  - тролейбус
+  - метро
+  - машина
+  - таксі
+  - поїзд
+  - літак
+  - ручка
+  - олівець
+  - ніж
+  - виделка
+  - ложка
+  - комп'ютер
+  - телефон
+  recommended:
+  - ножиці
+  - голка
+  - молоток
+  - пензель
+  - очі
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - match-up
+  - fill-in
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a2-06 (Being and Becoming)
+- a2-07 (Spatial Prepositions)
+- a2-09 (All Cases Practice)

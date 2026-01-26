@@ -97,3 +97,80 @@ items:
   ipa: /ʃɪplˈjat͡ʃɪj/
   translation: sibilant, hissing
   pos: adj
+- lemma: написати
+  ipa: /napɪsˈatɪ/
+  translation: to write (perfective)
+  pos: verb
+- lemma: принести
+  ipa: /prɪnɛstˈɪ/
+  translation: to bring (perfective)
+  pos: verb
+- lemma: задля
+  ipa: /zˈadlja/
+  translation: for the sake of
+  pos: prep
+- lemma: допомогти
+  ipa: /dɔpɔmɔɦtˈɪ/
+  translation: to help (perfective)
+  pos: verb
+- lemma: метою
+  ipa: /mˈɛtoju/
+  translation: with the purpose/goal (instrumental)
+  pos: noun
+  gender: f
+- lemma: мета
+  ipa: /mˈɛta/
+  translation: goal, purpose, aim
+  pos: noun
+  gender: f
+- lemma: намір
+  ipa: /namˈir/
+  translation: intention
+  pos: noun
+  gender: m
+- lemma: ціль
+  ipa: /t͡silʲ/
+  translation: goal, target, aim
+  pos: noun
+  gender: f
+- lemma: результат
+  ipa: /rɛzulʲtˈat/
+  translation: result
+  pos: noun
+  gender: m
+- lemma: мотивація
+  ipa: /mɔtɪʋˈat͡sija/
+  translation: motivation
+  pos: noun
+  gender: f
+- lemma: завдання
+  ipa: /zavdˈannja/
+  translation: task, assignment
+  pos: noun
+  gender: n
+- lemma: прохання
+  ipa: /prɔxˈannja/
+  translation: request, plea
+  pos: noun
+  gender: n
+- lemma: побажання
+  ipa: /pɔbaʒˈannja/
+  translation: wish, desire
+  pos: noun
+  gender: n
+- lemma: для того щоб
+  ipa: /dlja tɔɦˈɔ ʃt͡ʃɔb/
+  translation: in order to (formal)
+  pos: conj
+- lemma: щоб
+  ipa: /ʃt͡ʃɔb/
+  translation: in order to, so that
+  pos: conj
+- lemma: навіщо
+  ipa: /naʋˈiʃt͡ʃɔ/
+  translation: why, what for
+  pos: adv
+- lemma: чому
+  ipa: /t͡ʃɔˈmu/
+  translation: why
+  pos: adv

@@ -1,0 +1,97 @@
+module: zakhid-2014
+level: c1-hist
+sequence: 101
+version: '1.0'
+title: '2014: Анексія без відповіді'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Безкарність
+  words: 400
+  subsections:
+  - Лютий-березень 2014
+  - Росія захоплює Крим
+  - Захід — що зробив
+  - Структура модуля
+- section: Анексія — хроніка
+  words: 600
+  subsections:
+  - «Зелені чоловічки»
+  - «Референдум»
+  - Анексія — 18 березня
+  - Швидкість шокує
+- section: Західна реакція
+  words: 700
+  subsections:
+  - Заяви засудження
+  - Санкції — символічні
+  - «Летальна зброя» — відмова
+  - «Деескалація» — пріоритет
+- section: Мінськ — капітуляція під виглядом дипломатії
+  words: 600
+  subsections:
+  - Мінськ I, Мінськ II
+  - Що підписали
+  - Чому невигідно Україні
+  - Меркель і Олланд — посередники чи?
+- section: Чому слабка відповідь
+  words: 500
+  subsections:
+  - Економічні інтереси
+  - Nord Stream 2
+  - «Не провокувати»
+  - Нерозуміння загрози
+- section: Наслідки
+  words: 400
+  subsections:
+  - Путін бачить безкарність
+  - 2015-2021 — підготовка
+  - Україна — сама
+- section: Підсумок
+  words: 300
+  subsections:
+  - 2014 — повторення паттерну
+  - Але щось змінюється
+  - Перехід до 2022
+word_target: 3500
+vocabulary:
+- анексія
+- санкції
+- Мінські угоди
+- безкарність
+- «зелені чоловічки»
+- летальна зброя
+- деескалація
+- посередник
+- капітуляція
+- засудження
+- Nord Stream 2
+- «заморожений конфлікт»
+- реальполітик
+- символічний
+- двосторонні переговори
+activities:
+- type: response-analysis
+  focus: What did the West actually do in 2014?
+- type: minsk-analysis
+  focus: Minsk Agreements — who benefited?
+- type: motivation-study
+  focus: Why was Western response weak?
+- type: pattern-analysis
+  focus: 2014 as continuation of Western pattern
+- type: essay-response
+  focus: Чи слабка відповідь Заходу у 2014 спричинила 2022?
+sources:
+- name: Анексія Криму (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Анексія_Криму_(2014)
+  type: reference
+  notes: Annexation
+- name: Санкції проти Росії (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Санкції_проти_Росії
+  type: reference
+  notes: Western response
+- name: Мінські угоди (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Мінські_угоди
+  type: reference
+  notes: Minsk process

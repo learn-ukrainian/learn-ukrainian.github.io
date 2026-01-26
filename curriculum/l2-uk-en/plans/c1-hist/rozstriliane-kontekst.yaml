@@ -1,0 +1,98 @@
+module: rozstriliane-kontekst
+level: c1-hist
+sequence: 52
+version: '1.0'
+title: 'Розстріляне відродження: Контекст 1920-х'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Парадокс 1920-х
+  words: 400
+  subsections:
+  - Найбільший культурний вибух в УРСР
+  - І його знищення
+  - Термін «Розстріляне відродження»
+  - Чому важливо вивчати
+- section: Політика українізації
+  words: 700
+  subsections:
+  - Ленінська «коренізація» — що це
+  - Чому більшовики дозволили
+  - Скрипник і українізація — хто він
+  - Масштаби — освіта, преса, культура
+  - 1920-ті — золота доба?
+- section: Культурний вибух
+  words: 600
+  subsections:
+  - Література — нові таланти
+  - Театр — Курбас і Березіль
+  - Кіно — Довженко
+  - Образотворче мистецтво
+  - Наука — ВУАН
+- section: Хто вони були
+  words: 500
+  subsections:
+  - Молоде покоління — після 1917
+  - Селянське походження
+  - Віра в революцію
+  - Трагічна наївність
+- section: Чому Москва дозволила
+  words: 500
+  subsections:
+  - Тактичні міркування
+  - Нейтралізація націоналізму
+  - Ілюзія вибору
+  - Готування до повороту
+- section: Тіні над 1920-ми
+  words: 500
+  subsections:
+  - Уже в 1920-х — сигнали
+  - Процеси СВУ
+  - Критика «націоналізму»
+  - Самовбивство Хвильового — символ
+- section: Підсумок
+  words: 300
+  subsections:
+  - 1920-ті як парадокс
+  - Від розквіту до знищення
+  - Підготовка до літературної дискусії
+word_target: 3500
+vocabulary:
+- Розстріляне відродження
+- українізація
+- коренізація
+- культурний вибух
+- більшовики
+- ВУАН
+- парадокс
+- націоналізм
+- самовбивство
+- розквіт
+- НЕП
+- авангард
+- модернізм
+- пролетарський
+- попутник
+activities:
+- type: critical-analysis
+  focus: Map the Ukrainization policy — what was allowed, what not
+- type: reading
+  focus: Research 3 key figures of the era
+- type: critical-analysis
+  focus: Why did Moscow allow Ukrainization?
+- type: essay-response
+  focus: Чому 1920-ті були 'золотою добою' української культури?
+sources:
+- name: Розстріляне відродження (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
+  type: reference
+  notes: Overview
+- name: Українізація (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українізація
+  type: reference
+  notes: Ukrainization policy
+- name: Юрій Лавріненко — Розстріляне відродження
+  url: https://uk.wikipedia.org/wiki/Лавріненко_Юрій_Андрійович
+  type: reference
+  notes: Term originator

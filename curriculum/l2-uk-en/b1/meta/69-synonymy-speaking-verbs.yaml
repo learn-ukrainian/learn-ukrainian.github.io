@@ -1,26 +1,94 @@
 module: b1-69
-title: 'Синоніми II: дієслова мовлення'
-subtitle: 'Synonymy II: Speaking Verbs'
-version: '1.0'
-phase: B1.6 Vocabulary Expansion II
+id: b1-69
+slug: synonymy-speaking-verbs
+title: "Синоніми II: дієслова мовлення"
+subtitle: "Synonymy II: Speaking Verbs"
+version: '2.0'
+phase: "B1.6 [Vocabulary Expansion II]"
 focus: vocabulary
 pedagogy: PPP
+register: розмовний
 duration: 90
 transliteration: none
-grammar:
-- verb collocations with speaking vocabulary
-- register differentiation in reporting verbs
-tags:
-- vocabulary
-- synonymy
-- speaking-verbs
 objectives:
-- Learner can distinguish between казати/говорити/розповідати/повідомляти
-- Learner can use 20 speaking verbs with appropriate collocations
-- Learner can select verbs by register (formal vs informal)
-vocabulary_count: 35
-vocab_count: 18
-slug: 69-synonymy-speaking-verbs
+  - "Learner can distinguish between казати/говорити/розповідати/повідомляти"
+  - "Learner can use 20 speaking verbs with appropriate collocations"
+  - "Learner can select verbs by register (formal vs informal)"
+  - "Learner can report speech using varied verbs"
+grammar:
+  - "Verb collocations with speaking vocabulary"
+  - "Register differentiation in reporting verbs"
+  - "Direct and indirect speech verb patterns"
+word_target: 1200
+content_outline:
+  - section: "Introduction: Speaking Verbs"
+    words: 150
+    points:
+      - "Beyond казати and говорити"
+      - "Verb categories"
+      - "Register awareness"
+  - section: "Basic Speaking Verbs"
+    words: 250
+    points:
+      - "казати, говорити, сказати"
+      - "Semantic differences"
+      - "Usage contexts"
+  - section: "Reporting Verbs"
+    words: 250
+    points:
+      - "розповідати, повідомляти, заявляти"
+      - "Formal reporting vocabulary"
+      - "News and journalism verbs"
+  - section: "Conversation Verbs"
+    words: 250
+    points:
+      - "розмовляти, спілкуватися, обговорювати"
+      - "Interactive communication"
+      - "Dialogue vocabulary"
+  - section: "Specialized Speaking"
+    words: 200
+    points:
+      - "пояснювати, описувати, запитувати"
+      - "Purpose-specific verbs"
+      - "Collocations"
+  - section: "Practice: Varied Reporting"
+    words: 100
+    points:
+      - "Use varied speaking verbs"
+      - "Report conversations"
+vocabulary_hints:
+  required:
+    - казати (to say)
+    - говорити (to speak)
+    - розповідати (to tell)
+    - повідомляти (to inform)
+    - розмовляти (to converse)
+    - обговорювати (to discuss)
+    - пояснювати (to explain)
+    - запитувати (to ask)
+  recommended:
+    - заявляти (to declare)
+    - стверджувати (to claim)
+    - описувати (to describe)
+    - спілкуватися (to communicate)
+activity_hints:
+  - type: matching
+    focus: "Match verbs to contexts"
+    items: 25
+  - type: fill-in
+    focus: "Choose correct speaking verb"
+    items: 20
+  - type: transformation
+    focus: "Vary reporting verbs"
+    items: 15
+  - type: writing
+    focus: "Report dialogues"
+    items: 10
+prerequisites:
+  - b1-68 (Synonymy Thinking Verbs)
+connects_to:
+  - b1-70 (Collocations Expressions)
 naturalness:
   score: 9
   status: PASS
+  justification: "Essential for nuanced communication"

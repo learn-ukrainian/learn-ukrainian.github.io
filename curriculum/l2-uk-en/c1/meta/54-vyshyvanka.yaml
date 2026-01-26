@@ -2,21 +2,43 @@ module: c1-54
 title: 'Вишиванка: Зашифрована доля'
 subtitle: 'Vyshyvanka: Encoded Destiny'
 version: '2.0'
-phase: 'C1.5 Folk Culture & Fine Arts'
+phase: C1.5 Folk Culture & Fine Arts
 focus: history
-pedagogy: 'CBI'
+pedagogy: CBI
 duration: 120
 transliteration: none
 tags:
-  - folk culture
-  - textile
-  - identity
+- folk culture
+- textile
+- identity
 grammar:
-  - 'Symbolic narrative registers'
-  - 'Terminology of embroidery'
+- Symbolic narrative registers
+- Terminology of embroidery
 objectives:
-  - 'Analyze the spiritual and social functions of the Ukrainian embroidered shirt'
-  - 'Identify regional embroidery styles: Poltava, Hutsul, Borshchiv, and Podillia'
-  - 'Understand the technique and symbolism of various embroidery stitches'
+- Analyze the spiritual and social functions of the Ukrainian embroidered shirt
+- 'Identify regional embroidery styles: Poltava, Hutsul, Borshchiv, and Podillia'
+- Understand the technique and symbolism of various embroidery stitches
 vocabulary_count: 28
 slug: 54-vyshyvanka
+content_outline:
+- section: Вступ — Зашифрована доля
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Review Areas
+  words: 500
+  points:
+  - Rhetorical devices
+  - Tone and nuance
+  - Humor understanding
+  - Register range
+  - Archaic recognition
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

@@ -1,0 +1,94 @@
+module: holodomor-vyznannia
+level: c1-hist
+sequence: 50
+version: '1.0'
+title: 'Визнання геноцидом: Правовий аспект'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Від історії до права
+  words: 400
+  subsections:
+  - Чому визнання важливе
+  - Геноцид — правовий термін
+  - Політика визнання
+  - Структура модуля
+- section: Конвенція ООН про геноцид (1948)
+  words: 600
+  subsections:
+  - Визначення геноциду
+  - П'ять ознак
+  - Намір — ключовий елемент
+  - Як Конвенція застосовується
+- section: Чи Голодомор відповідає критеріям?
+  words: 700
+  subsections:
+  - Ознака за ознакою — аналіз
+  - Намір — що кажуть документи
+  - Контр-аргументи
+  - Юридичні думки експертів
+- section: Визнання Україною
+  words: 500
+  subsections:
+  - Закон 2006 року — текст
+  - Що означає визнання
+  - Кримінальна відповідальність за заперечення?
+  - Дебати в Україні
+- section: Міжнародне визнання
+  words: 600
+  subsections:
+  - Хто визнав — список країн
+  - Хто не визнав — чому
+  - ООН — чому не визнали
+  - Динаміка — що змінилося після 2022
+- section: Російське заперечення
+  words: 400
+  subsections:
+  - Офіційна позиція РФ
+  - «Спільна трагедія» — що це означає
+  - Як заперечення працює
+  - Відповіді на заперечення
+- section: Підсумок
+  words: 300
+  subsections:
+  - Визнання як процес
+  - Що дає визнання?
+  - Зв'язок із сьогоденням
+word_target: 3500
+vocabulary:
+- визнання
+- геноцид
+- конвенція
+- намір
+- ознака
+- заперечення
+- закон
+- кримінальна відповідальність
+- міжнародний
+- правовий
+- ратифікація
+- резолюція
+- трибунал
+- юрисдикція
+- прецедент
+activities:
+- type: critical-analysis
+  focus: Apply genocide convention to Holodomor evidence
+- type: reading
+  focus: Analyze Ukraine's 2006 Holodomor law
+- type: essay-response
+  focus: Чому міжнародне визнання Голодомору геноцидом залишається неповним?
+sources:
+- name: Визнання Голодомору геноцидом
+  url: https://uk.wikipedia.org/wiki/Визнання_Голодомору_геноцидом
+  type: reference
+  notes: Recognition overview
+- name: Конвенція ООН про геноцид
+  url: https://uk.wikipedia.org/wiki/Конвенція_про_запобігання_злочину_геноциду_та_покарання_за_нього
+  type: reference
+  notes: UN Convention
+- name: Закон України про Голодомор
+  url: https://zakon.rada.gov.ua/laws/show/376-16
+  type: primary
+  notes: 2006 law text

@@ -1,0 +1,100 @@
+module: teatr-kurbasa
+level: c1-hist
+sequence: 55
+version: '1.0'
+title: 'Театр Курбаса: Реформа і знищення'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Революціонер сцени
+  words: 400
+  subsections:
+  - Курбас — хто він
+  - Театральна революція
+  - Чому театр — політика
+  - Структура модуля
+- section: Шлях до "Березоля"
+  words: 500
+  subsections:
+  - Ранні роки і навчання
+  - «Молодий театр» — перші експерименти
+  - Перша світова і революція
+  - Створення «Березоля» (1922)
+- section: Театральна реформа Курбаса
+  words: 700
+  subsections:
+  - Проти традиційного театру
+  - Система Курбаса — що нового
+  - Експресіонізм і конструктивізм
+  - Синтетичний актор
+  - Вплив європейського авангарду
+- section: Найважливіші постановки
+  words: 600
+  subsections:
+  - «Газ» Кайзера
+  - Джіммі Гіггінз
+  - «Народний Малахій» Куліша
+  - Що показували — як реагували
+  - Критика і успіх
+- section: Конфлікт із владою
+  words: 500
+  subsections:
+  - Тиск зростає — 1930-ті
+  - «Формалізм» — звинувачення
+  - Звільнення з театру (1933)
+  - Заслання і арешт
+- section: Загибель і пам'ять
+  words: 500
+  subsections:
+  - Соловецький табір
+  - Розстріл (1937)
+  - Реабілітація — коли і як
+  - Спадщина — сучасний театр
+- section: Підсумок
+  words: 300
+  subsections:
+  - Курбас — символ знищеного
+  - Від експерименту до злочину
+  - Підготовка до механізму знищення
+word_target: 3500
+vocabulary:
+- театр
+- режисер
+- авангард
+- Березіль
+- експресіонізм
+- конструктивізм
+- формалізм
+- звинувачення
+- заслання
+- розстріл
+- постановка
+- синтетичний актор
+- умовний театр
+- реабілітація
+- мистецтво
+activities:
+- type: reading
+  focus: Trace Kurbas's career arc
+- type: artistic-analysis
+  focus: What was revolutionary about Kurbas's method?
+- type: comparative-study
+  focus: Compare Kurbas with European avant-garde (Meyerhold)
+- type: censorship-study
+  focus: How was "formalism" used to attack artists?
+- type: essay-response
+  focus: Чому радянська влада знищила авангардний театр?
+sources:
+- name: Лесь Курбас (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Курбас_Лесь
+  type: reference
+  notes: Biography
+- name: Березіль (театр)
+  url: https://uk.wikipedia.org/wiki/Березіль_(театр)
+  type: reference
+  notes: Theater history
+- name: Український театральний авангард
+  url: https://uk.wikipedia.org/wiki/Авангардизм
+  type: reference
+  notes: Avant-garde context

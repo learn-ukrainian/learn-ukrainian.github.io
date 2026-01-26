@@ -1,0 +1,87 @@
+module: syntez-ekonomichna-kolonizatsiia
+level: c1-hist
+sequence: 107
+version: '1.0'
+title: 'Синтез: Економічна деколонізація'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Від колонії до суб'єкта
+  words: 451
+  subsections:
+  - Огляд модулів 103-106
+  - Економічна колонізація — 300 років
+  - Деколонізація — що це означає
+  - Мета синтезу
+- section: Еволюція експлуатації
+  words: 677
+  subsections:
+  - Імперський період — зерно
+  - Радянський — промисловість
+  - Пострадянський — газ
+  - Спільне — ресурси йдуть з України
+- section: Механізми залежності
+  words: 677
+  subsections:
+  - Торговельні зв'язки
+  - Технологічна залежність
+  - Фінансова залежність
+  - Як кожен працював
+- section: Розрив зв'язків
+  words: 790
+  subsections:
+  - 2014 — початок
+  - Торговельна переорієнтація
+  - Енергетична незалежність
+  - 2022 — повний розрив
+- section: ЄС — нова залежність чи партнерство?
+  words: 564
+  subsections:
+  - Угода про асоціацію
+  - Відмінності від Росії
+  - Ризики і можливості
+  - Умови успіху
+- section: Підсумок
+  words: 341
+  subsections:
+  - Економічна деколонізація — процес
+  - Не завершено
+  - Перехід до інформаційної війни
+word_target: 3500
+vocabulary:
+- синтез
+- економічна деколонізація
+- залежність
+- експлуатація
+- переорієнтація
+- торговельні зв'язки
+- інтеграція
+- партнерство
+- суб'єкт
+- механізм
+- DCFTA
+- диверсифікація
+- структурна залежність
+- асиметрія
+- самодостатність
+activities:
+- type: essay-response
+  focus: Create economic colonization evolution diagram
+- type: mechanism-comparison
+  focus: How each form of exploitation worked
+- type: decolonization-assessment
+  focus: How far has economic decolonization gone?
+- type: future-analysis
+  focus: EU integration — risks and opportunities
+- type: essay-response
+  focus: Чи завершила Україна економічну деколонізацію?
+sources:
+- name: Економіка України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Економіка_України
+  type: reference
+  notes: Economic overview
+- name: Угода про асоціацію (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Угода_про_асоціацію_між_Україною_та_ЄС
+  type: reference
+  notes: EU integration

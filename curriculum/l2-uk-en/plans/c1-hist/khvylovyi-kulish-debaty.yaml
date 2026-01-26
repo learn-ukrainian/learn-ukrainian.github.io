@@ -1,0 +1,101 @@
+module: khvylovyi-kulish-debaty
+level: c1-hist
+sequence: 54
+version: '1.0'
+title: 'Хвильовий: «Геть від Москви!»'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Найсміливіший голос
+  words: 400
+  subsections:
+  - Хвильовий — хто він
+  - Памфлети як жанр
+  - Чому так важливі
+  - Структура модуля
+- section: Біографічний контекст
+  words: 500
+  subsections:
+  - Від комуніста до критика
+  - Участь у революції
+  - Літературна кар'єра
+  - Шлях до памфлетів
+- section: «Камо грядеши» (1925)
+  words: 700
+  subsections:
+  - Текст (фрагменти з глосами)
+  - «Куди йдеш?» — питання
+  - Критика «Просвіти» і «хуторянства»
+  - Орієнтація на Європу
+  - Що таке «психологічна Європа»
+- section: «Думки проти течії» (1926)
+  words: 600
+  subsections:
+  - Текст (фрагменти)
+  - Більш радикальна критика
+  - «Геть від Москви» — формулювання
+  - Азіатський ренесанс
+  - Реакція партії
+- section: Трагічний фінал
+  words: 500
+  subsections:
+  - Вимушена самокритика
+  - Продовження тиску
+  - Самогубство 1933
+  - Листок — «за комунізм, за Гетьмана»
+  - Символічне значення
+- section: Спадщина Хвильового
+  words: 500
+  subsections:
+  - Заборонений і повернений
+  - Актуальність сьогодні
+  - «Європейський вибір» — пророцтво?
+  - Хвильовий і 2022
+- section: Підсумок
+  words: 300
+  subsections:
+  - Від слова до долі
+  - Культурний герой
+  - Зв'язок із театром Курбаса
+word_target: 3500
+vocabulary:
+- памфлет
+- орієнтація
+- «Геть від Москви»
+- психологічна Європа
+- азіатський ренесанс
+- самокритика
+- самогубство
+- хуторянство
+- пророцтво
+- спадщина
+- Просвіта
+- епігонство
+- імперіалізм
+- буржуазний
+- інтернаціоналізм
+activities:
+- type: reading
+  focus: Key passages from "Kamo hriadeshi"
+- type: argument-analysis
+  focus: Reconstruct Khvylovyi's main argument
+- type: prophecy-test
+  focus: What did Khvylovyi predict? Was he right?
+- type: letter-analysis
+  focus: Analyze suicide note — what does it mean?
+- type: essay-response
+  focus: Чому ідеї Хвильового актуальні й сьогодні?
+sources:
+- name: Хвильовий Микола — памфлети
+  url: https://uk.wikisource.org/wiki/Категорія:Хвильовий_Микола
+  type: primary
+  notes: Pamphlet texts
+- name: Микола Хвильовий (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Хвильовий_Микола_Григорович
+  type: reference
+  notes: Biography
+- name: «Камо грядеши» та інші памфлети
+  url: https://uk.wikipedia.org/wiki/Камо_грядеши_(Хвильовий)
+  type: reference
+  notes: Key work

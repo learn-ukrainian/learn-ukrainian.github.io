@@ -1,0 +1,23 @@
+module: 67-ukrainian-cuisine-traditions
+level: c1
+sequence: 67
+version: '1.0'
+title: Українська кухня - традиції та символи
+subtitle: Ukrainian Cuisine - Traditions and Symbols
+focus: cultural
+pedagogy: CBI
+objectives:
+- Learner can explain the symbolic meaning of ritual foods (kutia, korovai)
+- Learner can describe traditional cooking methods (stove, clay pot)
+- Learner can distinguish regional cuisines (Poltava dumplings vs. Hutsul banosh)
+- Learner can discuss the role of bread in Ukrainian culture
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

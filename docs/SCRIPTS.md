@@ -78,6 +78,66 @@ npm run validate:html l2-uk-en a1 5
 
 ---
 
+## Plans & Status Management
+
+Scripts for managing the three-layer architecture (plans → content → status).
+
+### Extract Plans from Meta Files
+
+Extracts plan data from existing meta files to create standalone plan YAML files.
+
+```bash
+# Extract all plans for a level
+.venv/bin/python scripts/extract_plans.py b1
+
+# Extract single module
+.venv/bin/python scripts/extract_plans.py b1 5
+
+# Extract range of modules
+.venv/bin/python scripts/extract_plans.py b1 1-10
+
+# Extract all levels
+.venv/bin/python scripts/extract_plans.py all
+
+# Validate existing plans against schema
+.venv/bin/python scripts/extract_plans.py --validate b1
+```
+
+**Output:** Creates `curriculum/l2-uk-en/plans/{level}/{slug}.yaml` files.
+
+### Update Status Files
+
+Updates status YAML files with current module progress.
+
+```bash
+# Update status for a level
+.venv/bin/python scripts/update_status.py b1
+
+# Update single module
+.venv/bin/python scripts/update_status.py b1 5
+
+# Initialize status file from scratch
+.venv/bin/python scripts/update_status.py --init b1
+
+# Update all levels
+.venv/bin/python scripts/update_status.py all
+```
+
+**Output:** Updates `curriculum/l2-uk-en/status/{level}.yaml` files.
+
+### Status Stages
+
+Modules progress through these stages:
+
+| Stage | Description |
+|-------|-------------|
+| `planned` | Has plan file, no content |
+| `content` | Has content MD file (>100 words) |
+| `activities` | Has activities YAML file |
+| `reviewed` | Has naturalness score >= 7 |
+
+---
+
 ## Related Documentation
 
 | Document                                         | Purpose                                                                                                  |
@@ -85,6 +145,7 @@ npm run validate:html l2-uk-en a1 5
 | `claude_extensions/phases/module-*.md`           | **9-Phase workflow** - Current module creation process (RFC-001)                                         |
 | `claude_extensions/commands/module*.md`          | Module commands reference (`/module`, `/module-sync`, etc.)                                              |
 | `docs/ARCHITECTURE.md`                           | System architecture and quality validation overview                                                      |
+| `docs/ARCHITECTURE-PLANS.md`                     | **Three-layer architecture** - Plans, content, status separation                                         |
 | `docs/l2-uk-en/claude-review-prompt.md`          | Review prompts for Claude - Use these to fix audit issues                                                |
 | `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md` | Quality standards by level (consolidated)                                                                |
 | `docs/MARKDOWN-FORMAT.md`                        | Markdown syntax specification                                                                            |
@@ -1051,9 +1112,49 @@ Activity_quality 📋 Quality validation available (optional)
 
 ---
 
+## Level Status Generation
+
+### generate_level_status.py
+
+**Purpose:** Generate status index files showing module completion overview for a level.
+
+**Usage:**
+
+```bash
+# Full level (audits all modules)
+npm run status:a2              # Generate A2 status
+npm run status:b2-hist         # Generate B2-HIST status
+npm run status:all             # Generate all levels
+
+# Filtered modules (faster - only audits specified modules)
+.venv/bin/python scripts/generate_level_status.py a2 5        # Single module
+.venv/bin/python scripts/generate_level_status.py a2 1-4      # Range
+.venv/bin/python scripts/generate_level_status.py a2 1-4,6-10 # Multiple ranges
+```
+
+**Filter Syntax:**
+- `5` - Single module
+- `1-4` - Range (modules 1, 2, 3, 4)
+- `1-4,6-10` - Multiple ranges (modules 1-4 and 6-10)
+- `1,3,5,7-9` - Mixed (modules 1, 3, 5, 7, 8, 9)
+
+**Behavior with filter:**
+- Only audits specified modules (faster)
+- Preserves existing status for non-filtered modules
+- Updates totals based on combined data
+
+**Output:** `docs/{LEVEL}-STATUS.md`
+
+---
+
 ## NPM Scripts Summary
 
 ```bash
+# Level Status
+npm run status:a2             # Generate A2 status index
+npm run status:b2-hist        # Generate B2-HIST status index
+npm run status:all            # Generate all level status indices
+
 # Full Pipeline (Python)
 npm run pipeline              # Run full validation pipeline
 npm run pipeline l2-uk-en a1  # Pipeline for specific level

@@ -1,0 +1,77 @@
+module: synonymy-speaking-verbs
+level: b1
+sequence: 69
+version: '2.0'
+title: 'Синоніми II: дієслова мовлення'
+subtitle: 'Synonymy II: Speaking Verbs'
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can distinguish between казати/говорити/розповідати/повідомляти
+- Learner can use 20 speaking verbs with appropriate collocations
+- Learner can select verbs by register (formal vs informal)
+- Learner can report speech using varied verbs
+content_outline:
+- section: 'Introduction: Speaking Verbs'
+  words: 150
+  points:
+  - Beyond казати and говорити
+  - Verb categories
+  - Register awareness
+- section: Basic Speaking Verbs
+  words: 250
+  points:
+  - казати, говорити, сказати
+  - Semantic differences
+  - Usage contexts
+- section: Reporting Verbs
+  words: 250
+  points:
+  - розповідати, повідомляти, заявляти
+  - Formal reporting vocabulary
+  - News and journalism verbs
+- section: Conversation Verbs
+  words: 250
+  points:
+  - розмовляти, спілкуватися, обговорювати
+  - Interactive communication
+  - Dialogue vocabulary
+- section: Specialized Speaking
+  words: 200
+  points:
+  - пояснювати, описувати, запитувати
+  - Purpose-specific verbs
+  - Collocations
+- section: 'Practice: Varied Reporting'
+  words: 100
+  points:
+  - Use varied speaking verbs
+  - Report conversations
+word_target: 1200
+vocabulary:
+  required:
+  - казати (to say)
+  - говорити (to speak)
+  - розповідати (to tell)
+  - повідомляти (to inform)
+  - розмовляти (to converse)
+  - обговорювати (to discuss)
+  - пояснювати (to explain)
+  - запитувати (to ask)
+  recommended:
+  - заявляти (to declare)
+  - стверджувати (to claim)
+  - описувати (to describe)
+  - спілкуватися (to communicate)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - writing
+  - transformation
+  - matching
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-70 (Collocations Expressions)

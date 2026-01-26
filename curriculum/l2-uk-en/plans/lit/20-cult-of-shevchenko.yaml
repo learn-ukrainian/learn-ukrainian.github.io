@@ -1,0 +1,103 @@
+module: 20-cult-of-shevchenko
+level: lit
+sequence: 20
+version: '1.0'
+title: 'Культ Шевченка: Рецепція і Міфи'
+subtitle: 'The Cult of Shevchenko: Modern Reception'
+focus: literature
+pedagogy: seminar
+objectives:
+- Analyze the evolution of Shevchenko's image from poet to national myth.
+- Contrast Soviet, Diasporic, and Modern interpretations of Shevchenko.
+- Critically evaluate the risks and benefits of cultural canonization.
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Тарас_Шевченко
+    title: Шевченко — Вікіпедія
+    notes: Загальна інформація та рецепція
+  secondary:
+  - url: https://uk.wikipedia.org/wiki/Пам'ятники_Тарасові_Шевченку
+    title: Пам'ятники Шевченку
+    notes: Меморіальна культура
+  - url: https://uk.wikipedia.org/wiki/Тарас_Шевченко_в_культурі
+    title: Шевченко в поп-культурі
+    notes: Сучасні інтерпретації
+content_outline:
+- section: Вступ — Від Пророка до Ікони
+  words: 500
+  subsections:
+  - Еволюція образу Шевченка
+  - Поет → символ → міф
+  - Чому це важливо аналізувати
+- section: Радянський Шевченко
+  words: 700
+  subsections:
+  - Канонізація в СРСР
+  - Революційний демократ
+  - Що приховували і що підкреслювали
+- section: Діаспорний Шевченко
+  words: 700
+  subsections:
+  - Шевченко як "батько нації"
+  - Пам'ятники по світу
+  - Ритуали (марші, декламації)
+- section: Сучасні реінтерпретації
+  words: 800
+  subsections:
+  - Андрій Грехов і "Кобзар 2.0"
+  - Шевченко в мемах і поп-культурі
+  - Деканонізація vs нова канонізація
+- section: Концепція "Національного Батька"
+  words: 500
+  subsections:
+  - Ризики сакралізації
+  - Шевченко як "шкільний тягар"
+  - Як читати класика по-новому
+- section: Підсумок — Живий чи бронзовий?
+  words: 400
+  subsections:
+  - Шевченко для XXI століття
+  - Від культу до діалогу
+  - Перехід до наступного автора
+word_target: 4500
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - культ
+  - рецепція
+  - канонізація
+  - деканонізація
+  - міф
+  - ікона
+  - пам'ятник
+  - реінтерпретація
+  - сакралізація
+  - ідентичність
+  recommended:
+  - мем
+  - поп-культура
+  - діаспора
+  - ритуал
+  - класик
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: lit-11 to lit-19 (all Shevchenko modules)
+  related:
+  - lit-21 (Panteleimon Kulish — наступний автор)
+  - c1-hist (Historical modules — культурна пам'ять)
+constraints:
+  min_engagement_boxes: 3
+  min_examples: 15
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

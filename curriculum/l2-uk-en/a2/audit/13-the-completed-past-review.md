@@ -2,7 +2,7 @@
 **Level:** A2 | **Module:** M13 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 23:50:43
+**Generated:** 2026-01-26 08:59:15
 
 ## Configuration
 **Type:** A2-grammar
@@ -39,7 +39,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (11 words): прочитав, побачив, взяв, зробив, прийшов...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (11 words): запам'ятав, зробив, прийшов, дав, взяв...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

@@ -1,0 +1,77 @@
+module: conditionals-unreal-yakby
+level: b1
+sequence: 32
+version: '2.0'
+title: 'Умовні речення: нереальна умова (якби)'
+subtitle: Unreal Conditionals - Hypothetical Situations
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner understands unreal conditional constructions
+- Learner can form hypothetical sentences with якби
+- Learner can distinguish real and unreal conditionals
+- Learner can express wishes and hypotheticals
+content_outline:
+- section: 'Introduction: Unreal Conditionals'
+  words: 150
+  points:
+  - What are unreal conditionals
+  - якби as unreal marker
+  - Hypothetical situations
+- section: якби + Past Form
+  words: 250
+  points:
+  - 'Structure: якби + past, past + би'
+  - Both clauses use past forms
+  - Particle б/би placement
+- section: Conditional Mood Formation
+  words: 250
+  points:
+  - Past tense + би
+  - 'Contraction: якби'
+  - Would = past + би
+- section: Present vs Past Hypotheticals
+  words: 250
+  points:
+  - 'Present unreal: if I were...'
+  - 'Past unreal: if I had been...'
+  - Ukrainian uses same form
+- section: Real vs Unreal Comparison
+  words: 200
+  points:
+  - якщо vs якби
+  - Likelihood differences
+  - Choosing correctly
+- section: 'Practice: Unreal Conditionals'
+  words: 100
+  points:
+  - Form hypothetical sentences
+  - Express wishes and dreams
+word_target: 1200
+vocabulary:
+  required:
+  - якби (if - unreal)
+  - би (would - particle)
+  - нереальний (unreal)
+  - гіпотетичний (hypothetical)
+  - умовний спосіб (conditional mood)
+  - бажання (wish)
+  - мрія (dream)
+  - уявлення (imagination)
+  recommended:
+  - якби тільки (if only)
+  - хотілося б (would like)
+  - було б краще (it would be better)
+  - на жаль (unfortunately)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - speaking
+  - error-correction
+  - transformation
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-33 (Conditionals Mixed Complex)

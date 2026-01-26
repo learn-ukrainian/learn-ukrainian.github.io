@@ -1,0 +1,96 @@
+module: 16-advanced-punctuation
+level: c1
+sequence: 16
+version: '2.0'
+title: Поглиблена пунктуація
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Український правопис 2019
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official punctuation rules
+- name: Пунктуація сучасної української мови
+  url: https://r2u.org.ua/
+  type: secondary
+  notes: Comprehensive punctuation guide
+content_outline:
+- section: Вступ — Пунктуація як інструмент
+  words: 400
+  points:
+  - Роль пунктуації в науковому тексті
+  - Відмінності від розмовного стилю
+  - Типові помилки в академічному письмі
+- section: Кома в складних реченнях
+  words: 800
+  points:
+  - Кома перед сполучниками (і, а, але, що, який)
+  - Кома в підрядних реченнях
+  - Кома при відокремлених членах
+- section: Тире — функції та правила
+  words: 700
+  points:
+  - Тире між підметом і присудком
+  - Тире для підкреслення
+  - Тире у безсполучникових реченнях
+- section: Двокрапка і крапка з комою
+  words: 600
+  points:
+  - Двокрапка перед переліком
+  - Двокрапка в безсполучниковому реченні
+  - Крапка з комою в складних переліках
+- section: Лапки та цитування
+  words: 600
+  points:
+  - Типи лапок в українській мові
+  - Лапки в цитатах
+  - Лапки для іронії/умовності
+- section: Дужки та інші знаки
+  words: 500
+  points:
+  - Круглі дужки для пояснень
+  - Квадратні дужки в цитатах
+  - Три крапки (еліпсис)
+- section: Практика редагування
+  words: 400
+  points:
+  - Виправлення пунктуаційних помилок
+  - Стилістичне варіювання пунктуації
+  - Розстановка знаків у науковому тексті
+word_target: 4000
+vocabulary:
+  required:
+  - кома (comma)
+  - тире (dash)
+  - двокрапка (colon)
+  - крапка з комою (semicolon)
+  - лапки (quotation marks)
+  - дужки (brackets)
+  - відокремлення (separation)
+  - перелік (list)
+  - підрядне речення (subordinate clause)
+  - еліпсис (ellipsis)
+  recommended:
+  - пунктуаційний знак (punctuation mark)
+  - інтонаційний (intonational)
+  - граматичний (grammatical)
+  - факультативний (optional)
+  - обов'язковий (obligatory)
+  forbidden: []
+activities:
+  types_required:
+  - group-sort
+  - quiz
+  - cloze
+  - fill-in
+  - error-correction
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c1-17 (Irregular Verbs Complete)
+- c1-18 (Essay Writing Practice)
+- c1-48 (Literary Syntax)

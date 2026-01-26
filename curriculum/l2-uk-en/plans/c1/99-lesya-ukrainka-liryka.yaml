@@ -1,0 +1,22 @@
+module: 99-lesya-ukrainka-liryka
+level: c1
+sequence: 99
+version: '2.0'
+title: 'Леся Українка: Лірична поезія'
+subtitle: Lesya Ukrainka's Lyric Poetry
+focus: literature
+pedagogy: Literary Analysis
+objectives:
+- Learner can analyze the philosophy of stoicism in "Contra Spem Spero".
+- Learner can interpret the patriotic and feminist motifs in Lesya Ukrainka’s lyric cycles.
+- Learner can discuss the role of nature and the artist in Lesya Ukrainka’s poetry.
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

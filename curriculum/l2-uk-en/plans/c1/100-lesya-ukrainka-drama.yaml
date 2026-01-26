@@ -1,0 +1,22 @@
+module: 100-lesya-ukrainka-drama
+level: c1
+sequence: 100
+version: '2.0'
+title: 'Леся Українка: Драма'
+subtitle: Lesya Ukrainka's Drama
+focus: literature
+pedagogy: Literary Analysis
+objectives:
+- Learner can analyze the conflict between spiritual and material worlds in "The Forest Song".
+- Learner can interpret the symbolic meaning of characters like Mavka and Lukash.
+- Learner can discuss the features of neo-romantic drama.
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

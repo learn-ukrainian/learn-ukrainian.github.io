@@ -1,8 +1,8 @@
 # Audit Report: M43 — dmytro-vyshnevetskyi.md
 **Level:** B2 | **Module:** M43 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:22:01
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 22:22:50
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4000/4000 (raw: 4140)
+- **Words:** ❌ 3555/4000 (raw: 3693)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 98.7% (target 90-100% (history))
+- **Immersion:** 🇺🇦 98.5% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -58,15 +58,15 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 10 | 3 | 100% | 24% | 23.8% |
+| primary_sources | 9 | 3 | 100% | 24% | 23.8% |
 | engagement | 8 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 7 | 4 | 100% | 10% | 9.5% |
-| visual | 8 | 4 | 100% | 10% | 9.5% |
+| visual | 7 | 4 | 100% | 10% | 9.5% |
 | variety | 0.97 | - | 97% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 15 | 3 | 100% | 5% | 4.8% |
+| questions | 10 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
@@ -81,6 +81,5 @@
 | **Геополітика і Дипломатія** | ⚪️ | 521 | Skipped |
 | **Первинні джерела** | ✅ | 348 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 307 | Included in Core |
-| **Есе** | ⚪️ | 445 | Skipped |
 | **Підсумок** | ✅ | 128 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 107 | Skipped |

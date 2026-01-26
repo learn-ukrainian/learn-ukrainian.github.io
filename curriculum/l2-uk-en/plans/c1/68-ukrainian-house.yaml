@@ -1,0 +1,23 @@
+module: 68-ukrainian-house
+level: c1
+sequence: 68
+version: '1.0'
+title: Українська хата - архітектура та побут
+subtitle: Ukrainian House - Architecture and Daily Life
+focus: cultural
+pedagogy: CBI
+objectives:
+- Learner can describe the structure and layout of a traditional Ukrainian house
+- Learner can explain the symbolic meaning of the "red corner" (pokut') and the stove
+- Learner can distinguish regional architectural styles (clay-walled vs. wooden)
+- Learner can discuss the role of the house in family rituals
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

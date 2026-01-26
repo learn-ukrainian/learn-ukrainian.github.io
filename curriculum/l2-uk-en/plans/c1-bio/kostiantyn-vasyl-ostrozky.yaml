@@ -1,0 +1,81 @@
+module: kostiantyn-vasyl-ostrozky
+level: c1-bio
+sequence: 0
+version: '2.0'
+title: 'Костянтин-Василь Острозький: Князь-Просвітник'
+focus: biography
+pedagogy: seminar
+objectives:
+- Analyze the cultural impact of Ostroh Academy
+- Discuss the significance of the Ostroh Bible
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Костянтин-Василь_Острозький
+    title: Костянтин-Василь Острозький (Wikipedia UA)
+  - url: https://uk.wikipedia.org/wiki/Острозька_академія
+    title: Острозька академія
+  - url: https://uk.wikipedia.org/wiki/Острозька_Біблія
+    title: Острозька Біблія
+  secondary: []
+content_outline:
+- section: Вступ — Некоронований король Русі
+  words: 615
+  subsections:
+  - Найбагатший магнат Речі Посполитої
+  - Засновник першого вищого навчального закладу (Академії)
+  - Видавець першої повної друкованої Біблії слов'янською мовою
+- section: Життєпис
+  words: 1538
+  subsections:
+  - Син Костянтина Івановича (М11)
+  - Політичний вплив: воєвода київський, маршалок волинський
+  - Культурна революція в Острозі ("Волинські Афіни")
+  - Полеміка з унією (Берестейська унія 1596)
+  - Підтримка православ'я через освіту, а не лише зброю
+- section: Історичний контекст
+  words: 615
+  subsections:
+  - Реформація і Контрреформація в Україні
+  - Люблінська унія (1569) і перехід українських земель до Польщі
+  - Криза православної церкви і пошук відповідей
+- section: Внесок та Спадщина
+  words: 615
+  subsections:
+  - Острозька Біблія (1581) як канон
+  - Острозька академія — синтез грецької, латинської та слов'янської вченості
+  - Формування інтелектуальної еліти
+- section: Порівняльний аналіз
+  words: 617
+  subsections:
+  - Острозький vs. єзуїти (конкуренція освітніх моделей)
+  - Батько vs. Син (Меч vs. Книга)
+word_target: 3000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - академія
+  - біблія
+  - друкарня
+  - освіта
+  - полеміка
+  - унія
+  - воєвода
+  - меценат
+  - реформація
+  - контрреформація
+  recommended: []
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - essay-response
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

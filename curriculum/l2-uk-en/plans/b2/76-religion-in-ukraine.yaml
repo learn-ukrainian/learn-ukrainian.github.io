@@ -1,0 +1,22 @@
+module: 76-religion-in-ukraine
+level: b2
+sequence: 76
+version: '2.0'
+title: Релігія в Україні
+subtitle: Religion in Ukraine
+focus: culture
+pedagogy: CBI
+objectives:
+- Учень розуміє релігійне різноманіття сучасної України та концепцію «Київ — Другий Єрусалим»
+- Учень може обговорити значення основних релігійних свят та традицій
+- Учень ознайомлений з роллю Ради церков у забезпеченні міжконфесійного миру
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

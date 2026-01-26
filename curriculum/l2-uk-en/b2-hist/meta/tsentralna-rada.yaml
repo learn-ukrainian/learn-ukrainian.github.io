@@ -1,28 +1,105 @@
-title: "Центральна Рада: УНР"
-subtitle: "Від автономії до Незалежності"
-version: "2.0"
-phase: "HIST.9"
+module: b2-hist-91
+id: b2-hist-91
+slug: tsentralna-rada
+title: "Центральна Рада: Від автономії до незалежності"
+subtitle: "The Central Rada: From Autonomy to Independence"
+version: '2.0'
+phase: "HIST.9 [WWI & Revolution]"
 focus: history
-word_target: 4000
-pedagogy: "CBI"
+pedagogy: CBI
+register: публіцистичний
 duration: 120
 transliteration: none
-tags:
-  - history
-  - tsentralna-rada
-  - unr
-  - independence
-  - universal
-grammar:
-  - "Historical narrative register"
-  - "Passive voice (було проголошено)"
-  - "Complex sentences with relative clauses"
 objectives:
-  - "Learner understands the role of Central Rada in 1917-1918"
-  - "Learner can distinguish between the four Universals"
-  - "Learner masters political and state-building vocabulary"
-vocabulary_count: 30
-slug: tsentralna-rada
+  - "Учень може описати створення та діяльність Центральної Ради"
+  - "Учень може пояснити зміст чотирьох Універсалів"
+  - "Учень може проаналізувати політику Центральної Ради"
+  - "Учень може оцінити роль Грушевського та інших лідерів"
+grammar:
+  - "Минулий час в історичному наративі"
+  - "Політична та юридична лексика"
+  - "Пасивні конструкції"
+word_target: 4000
+content_outline:
+  - section: "Вступ: Революція 1917"
+    words: 400
+    points:
+      - "Лютнева революція та крах імперії"
+      - "Створення Центральної Ради"
+      - "Михайло Грушевський — голова"
+  - section: "Чотири Універсали"
+    words: 1000
+    points:
+      - "І Універсал (червень 1917): автономія"
+      - "ІІ Універсал (липень 1917): угода з Тимчасовим урядом"
+      - "ІІІ Універсал (листопад 1917): УНР"
+      - "IV Універсал (січень 1918): незалежність"
+      - "Еволюція від автономії до незалежності"
+  - section: "Політика та виклики"
+    words: 800
+    points:
+      - "Соціальні реформи"
+      - "Війна з більшовиками"
+      - "Брест-Литовський мир"
+      - "Падіння Центральної Ради (квітень 1918)"
+  - section: "Первинні джерела"
+    words: 800
+    points:
+      - "Тексти Універсалів"
+      - "Виступи Грушевського"
+      - "Документи Ради"
+  - section: "Деколонізаційний погляд"
+    words: 500
+    points:
+      - "Радянський наратив: «буржуазний націоналізм»"
+      - "Реальність: демократичний експеримент"
+      - "Уроки Центральної Ради"
+  - section: "Підсумок: Спадщина"
+    words: 500
+    points:
+      - "Перша спроба державності"
+      - "Символи та традиції"
+      - "Центральна Рада у пам'яті"
+vocabulary_hints:
+  required:
+    - Центральна Рада (Central Rada)
+    - Універсал (Universal)
+    - автономія (autonomy)
+    - незалежність (independence)
+    - УНР (UNR)
+    - республіка (republic)
+    - голова (chairman)
+    - революція (revolution)
+  recommended:
+    - Тимчасовий уряд (Provisional Government)
+    - більшовики (Bolsheviks)
+    - реформа (reform)
+    - проголошення (proclamation)
+    - демократія (democracy)
+    - парламент (parliament)
+activity_hints:
+  - type: reading
+    focus: "Тексти Універсалів"
+    source: "Архівні документи"
+    items: 4
+  - type: quiz
+    focus: "Центральна Рада та Універсали"
+    items: 15
+  - type: match-up
+    focus: "Універсал → зміст та дата"
+    items: 10
+  - type: fill-in
+    focus: "Політична лексика"
+    items: 10
+  - type: essay-response
+    focus: "Чому Центральна Рада еволюціонувала від автономії до незалежності?"
+    word_target: 250
+prerequisites:
+  - b2-hist-90 (Революція 1917)
+connects_to:
+  - b2-hist-92 (Гетьманат Скоропадського)
+  - b2-hist-93 (ЗУНР)
 naturalness:
-  score: 9
+  score: 10
   status: PASS
+  justification: "Академічний український для політичної історії"

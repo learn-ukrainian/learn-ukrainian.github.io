@@ -1,8 +1,8 @@
 # Audit Report: M39 — 39-adjective-suffixes-qualities.md
 **Level:** A2 | **Module:** M39 | **Phase:** A2.3 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 23:53:08
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-26 08:59:30
 
 ## Configuration
 **Type:** A2-grammar
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): ручечка, домик, сонечко, глядач, письменник...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): глядач, молодість, важливість, ручечка, питання...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -46,7 +46,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1286/1000 (raw: 1398)
+- **Words:** ✅ 1313/1000 (raw: 1425)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
@@ -58,7 +58,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 75.6% HIGH (target 65-75% (A2.2))
+- **Immersion:** 🇺🇦 73.9% (target 65-75% (A2.2))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
@@ -68,7 +68,7 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Introduction / Вступ** | ✅ | 310 | Included in Core |
 | **Presentation / Презентація** | ✅ | 543 | Included in Core |
-| **Practice / Практика** | ⚪️ | 185 | Skipped |
+| **Practice / Практика** | ⚪️ | 212 | Skipped |
 | **Dialogues / Діалоги** | ✅ | 112 | Included in Core |
 | **Summary / Підсумок** | ✅ | 96 | Included in Core |
 | **Need More Practice?** | ⚪️ | 40 | Skipped |

@@ -8,18 +8,39 @@ pedagogy: CBI
 duration: 120
 transliteration: none
 tags:
-  - culture
-  - ethnography
-  - clothing
-  - traditions
+- culture
+- ethnography
+- clothing
+- traditions
 grammar:
-  - ethnographic terminology
-  - descriptions of appearance
+- ethnographic terminology
+- descriptions of appearance
 objectives:
-  - Learner can describe the elements of traditional Ukrainian costume
-  - Learner can explain the symbolism of embroidery and accessories
-  - Learner can distinguish regional variations (Poltava vs. Hutsul vs. Podillia)
-  - Learner can discuss the modern interpretation of traditional clothing
+- Learner can describe the elements of traditional Ukrainian costume
+- Learner can explain the symbolism of embroidery and accessories
+- Learner can distinguish regional variations (Poltava vs. Hutsul vs. Podillia)
+- Learner can discuss the modern interpretation of traditional clothing
 vocabulary_count: 30
 vocab_count: 30
 slug: 66-traditional-clothing
+content_outline:
+- section: Вступ — Традиційний український одяг
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Legendary otamans: Сірко, Сагайдачний, Мазепа'
+  - 'Запорозька Січ: legends of the island fortress'
+  - 'Характерники: Cossack warrior-shamans'
+  - Historical ballads as sources
+  - Cossack mythology in national identity
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

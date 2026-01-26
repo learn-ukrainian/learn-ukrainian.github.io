@@ -1,0 +1,92 @@
+module: terminology-acquisition-ii
+level: c2
+sequence: 48
+version: '2.0'
+title: Опанування термінології II — Побудова глосаріїв
+focus: vocabulary
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: ISO 1087:2019 — Термінологія та терміни
+  url: https://www.iso.org/
+  type: reference
+  notes: International standards for terminology and glossary creation
+- name: Українське термінознавство — підручник
+  url: https://ium.org.ua/
+  type: reference
+  notes: Academic textbook on Ukrainian terminology methodology
+- name: СУМ-20 — Словник української мови
+  url: https://sum20ua.com/
+  type: reference
+  notes: Authoritative Ukrainian dictionary for term verification
+content_outline:
+- section: Вступ — Персональний глосарій як інструмент
+  words: 400
+  points:
+  - Переваги ведення власного глосарію
+  - Принципи організації термінологічної бази
+  - Цифрові vs. паперові інструменти
+- section: Структура термінологічної картки
+  words: 700
+  points:
+  - Обов'язкові елементи (термін, дефініція, контекст, джерело)
+  - Факультативні елементи (синоніми, антоніми, колокації)
+  - Приклади вживання та ілюстрації
+- section: Методи збору термінів
+  words: 700
+  points:
+  - Екстракція термінів з фахових текстів
+  - Робота з паралельними текстами
+  - Консультації з фахівцями
+- section: Верифікація та валідація
+  words: 600
+  points:
+  - Перевірка термінів за авторитетними джерелами
+  - Критична оцінка онлайн-ресурсів
+  - Розв'язання термінологічних конфліктів
+- section: Організація та підтримка глосарію
+  words: 600
+  points:
+  - Класифікація за тематичними полями
+  - Регулярний перегляд та оновлення
+  - Інтеграція з активним вживанням
+- section: Практичний проєкт
+  words: 700
+  points:
+  - Створення міні-глосарію (50 термінів)
+  - Обрання галузі за інтересами
+  - Презентація та самооцінка
+word_target: 4000
+vocabulary:
+  required:
+  - глосарій (glossary)
+  - термінологічна картка (terminology card)
+  - дефініція (definition)
+  - контекст (context)
+  - джерело (source)
+  - верифікація (verification)
+  - валідація (validation)
+  - колокація (collocation)
+  - семантичне поле (semantic field)
+  - екстракція (extraction)
+  recommended:
+  - лематизація (lemmatization)
+  - частотність (frequency)
+  - конкордансний (concordance)
+  - кодифікований (codified)
+  - нормативний (normative)
+  forbidden: []
+activities:
+  types_required:
+  - match-up
+  - essay-response
+  - quiz
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-49 (Reading Professional Texts I)
+- c2-60 (Building Domain Expertise)
+- c2-71 (Professional Portfolio I)

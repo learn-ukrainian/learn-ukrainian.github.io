@@ -1,0 +1,107 @@
+module: complete-grammar-review
+level: c2
+sequence: 76
+version: '2.0'
+title: Повний огляд граматики
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Ukrainian State Standard 2024 — Каталог В
+  url: https://mon.gov.ua/
+  type: primary
+  notes: Повний граматичний каталог C2 рівня
+- name: Український правопис 2019
+  url: https://mon.gov.ua/ua/osvita/zagalna-serednya-osvita/navchalni-programi/ukrayinskij-pravopis-2019
+  type: primary
+  notes: Офіційні правописні норми
+- name: Академічна граматика української мови
+  url: https://inmo.org.ua/
+  type: reference
+  notes: Фундаментальний граматичний опис
+content_outline:
+- section: Вступ — Граматика як система
+  words: 400
+  points:
+  - Рівні граматичного опису
+  - Морфологія vs синтаксис
+  - Граматичні категорії української мови
+  - Мета повторення на C2
+- section: Морфологія іменних частин мови
+  words: 700
+  points:
+  - Іменник — усі відміни та парадигми
+  - Прикметник — повні та короткі форми
+  - Числівник — складна морфологія
+  - Займенник — усі розряди
+- section: Морфологія дієслова
+  words: 700
+  points:
+  - Вид і час — повна система
+  - Спосіб — усі форми
+  - Дієприкметник та дієприслівник
+  - Рідкісні та книжні форми
+- section: Службові та незмінні слова
+  words: 500
+  points:
+  - Прийменники — усі випадки вживання
+  - Сполучники — складні конструкції
+  - Частки — стилістична функція
+  - Вигуки
+- section: Синтаксис простого речення
+  words: 600
+  points:
+  - Типи простих речень
+  - Ускладнені речення
+  - Односкладні речення
+  - Порядок слів
+- section: Синтаксис складного речення
+  words: 600
+  points:
+  - Складносурядні речення
+  - Складнопідрядні речення
+  - Безсполучникові речення
+  - Багатокомпонентні конструкції
+- section: Практикум — Комплексна перевірка
+  words: 500
+  points:
+  - Діагностичний тест
+  - Виявлення слабких місць
+  - Індивідуальний план роботи
+word_target: 4000
+vocabulary:
+  required:
+  - морфологія (morphology)
+  - синтаксис (syntax)
+  - парадигма (paradigm)
+  - відмінок (case)
+  - дієвідміна (conjugation)
+  - спосіб (mood)
+  - стан (voice)
+  - односкладне речення (one-member sentence)
+  - ускладнене речення (complex simple sentence)
+  - сполучник (conjunction)
+  recommended:
+  - дієприкметник (participle)
+  - дієприслівник (adverbial participle)
+  - прийменник (preposition)
+  - частка (particle)
+  - вигук (interjection)
+  forbidden: []
+activities:
+  types_required:
+  - group-sort
+  - quiz
+  - fill-in
+  - match-up
+  - error-correction
+  - critical-analysis
+  - essay-response
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-77 (Rare/Archaic Forms)
+- c2-80 (Error Analysis)
+- c2-81 (Native-Like Fluency)

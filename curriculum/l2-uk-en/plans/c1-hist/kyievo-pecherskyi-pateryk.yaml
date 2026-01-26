@@ -1,0 +1,99 @@
+module: kyievo-pecherskyi-pateryk
+level: c1-hist
+sequence: 13
+version: '1.0'
+title: Києво-Печерський патерик
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Агіографія як джерело
+  words: 400
+  subsections:
+  - Що таке патерик?
+  - Києво-Печерський патерик — унікальність
+  - Житія святих — історія чи пропаганда?
+  - Як читати агіографію критично
+- section: Історія тексту
+  words: 500
+  subsections:
+  - Коли написано? XIII ст.
+  - Автори — Симон і Полікарп
+  - Листування як форма
+  - Редакції — Касіянівські та інші
+- section: Структура патерика
+  words: 500
+  subsections:
+  - Житія засновників — Антоній, Феодосій
+  - Оповіді про ченців
+  - Чудеса та видіння
+  - Бесоборство та аскеза
+- section: Фрагмент — Житіє Феодосія Печерського
+  words: 700
+  subsections:
+  - Текст (з глосами)
+  - Біографічні факти vs. агіографічні топоси
+  - Відносини з князями
+  - Що нам каже про XI ст.?
+- section: Патерик як історичне джерело
+  words: 600
+  subsections:
+  - Побутові деталі — цінна інформація
+  - Соціальна історія — хто йшов у монастир?
+  - Політична історія — зв'язки з князями
+  - Економіка монастиря
+  - Що замовчано?
+- section: Критика джерела
+  words: 500
+  subsections:
+  - Чудеса — як інтерпретувати?
+  - Агіографічні топоси — що запозичено
+  - Мета тексту — виховання ченців
+  - Що достовірно, що сумнівно
+- section: Підсумок
+  words: 300
+  subsections:
+  - Патерик — вікно в Київську Русь
+  - Методи роботи з агіографією
+  - Зв'язок із релігійною ідентичністю
+word_target: 3500
+vocabulary:
+- патерик
+- агіографія
+- житіє
+- чернець
+- аскеза
+- топос
+- чудо
+- видіння
+- подвижник
+- преподобний
+- бесоборство
+- печера
+- лавра
+- ігумен
+- мощі
+activities:
+- type: reading
+  focus: Excerpt from Life of Theodosius — childhood narrative
+- type: critical-analysis
+  focus: Identify hagiographic topoi vs. historical facts
+- type: comparative-study
+  focus: Compare with Byzantine paterica — what's borrowed?
+- type: reading
+  focus: What does Patericon tell us about 11th century economics?
+- type: essay-response
+  focus: Чи можна використовувати агіографію як історичне джерело?
+sources:
+- name: Києво-Печерський патерик (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Києво-Печерський_патерик
+  type: reference
+  notes: Overview
+- name: Патерик (повний текст)
+  url: https://litopys.org.ua/paterikon/pat.htm
+  type: primary
+  notes: Full text
+- name: Києво-Печерська лавра
+  url: https://uk.wikipedia.org/wiki/Києво-Печерська_лавра
+  type: reference
+  notes: Monastery history

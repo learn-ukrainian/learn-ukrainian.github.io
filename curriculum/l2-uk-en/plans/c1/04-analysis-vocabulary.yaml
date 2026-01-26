@@ -1,0 +1,96 @@
+module: 04-analysis-vocabulary
+level: c1
+sequence: 4
+version: '2.0'
+title: Словник аналізу та критики
+focus: vocabulary
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Академічний тлумачний словник української мови
+  url: https://sum.in.ua/
+  type: reference
+  notes: Definitions of analytical terms
+- name: Ukrainian Academic Writing Corpus
+  url: https://mova.info/
+  type: secondary
+  notes: Usage patterns in academic texts
+content_outline:
+- section: Вступ — Мова критичного мислення
+  words: 400
+  points:
+  - Роль аналітичної лексики в науці
+  - Зв'язок з критичним мисленням
+  - Категорії аналітичних термінів
+- section: Іменники аналізу
+  words: 700
+  points:
+  - Аналіз, синтез, оцінка, інтерпретація
+  - Критика, порівняння, зіставлення
+  - Класифікація, систематизація, узагальнення
+- section: Прикметники для характеристики
+  words: 700
+  points:
+  - Детальний, ґрунтовний, всебічний
+  - Критичний, порівняльний, системний
+  - Об'єктивний, суб'єктивний, обґрунтований
+- section: Прикметники оцінки
+  words: 600
+  points:
+  - Переконливий, вагомий, достовірний
+  - Суперечливий, неоднозначний, спірний
+  - Актуальний, релевантний, доречний
+- section: Словосполучення та колокації
+  words: 600
+  points:
+  - Детальний аналіз, ґрунтовне дослідження
+  - Критична оцінка, всебічний огляд
+  - Системний підхід, комплексний аналіз
+- section: Контексти використання
+  words: 600
+  points:
+  - В рецензіях та оглядах
+  - В аналітичних статтях
+  - В наукових дискусіях
+- section: Практика в академічному письмі
+  words: 400
+  points:
+  - Побудова аналітичних речень
+  - Варіювання лексики
+  - Точність формулювань
+word_target: 4000
+vocabulary:
+  required:
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - інтерпретація (interpretation)
+  - класифікація (classification)
+  - систематизація (systematization)
+  - детальний (detailed)
+  - ґрунтовний (thorough)
+  - всебічний (comprehensive)
+  - критичний (critical)
+  - обґрунтований (substantiated)
+  recommended:
+  - зіставлення (comparison)
+  - узагальнення (generalization)
+  - комплексний (complex)
+  - системний (systematic)
+  - релевантний (relevant)
+  forbidden: []
+activities:
+  types_required:
+  - group-sort
+  - quiz
+  - essay-response
+  - cloze
+  - fill-in
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c1-05 (Logical Connectors)
+- c1-11 (Summary & Paraphrase)
+- c1-14 (Literature Review)

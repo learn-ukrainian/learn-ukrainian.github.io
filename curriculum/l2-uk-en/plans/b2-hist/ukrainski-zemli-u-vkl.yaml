@@ -1,0 +1,21 @@
+module: ukrainski-zemli-u-vkl
+level: b2-hist
+sequence: 26
+version: '1.0'
+title: Українські землі у ВКЛ
+focus: history
+pedagogy: CBI
+objectives:
+- Учень може пояснити специфіку автономії Волині та Київщини
+- Учень може аналізувати роль магнатів у збереженні державності
+- Учень може описувати соціальний устрій земель у ВКЛ
+content_outline:
+- section: Вступ
+  words: 727
+- section: Читання
+  words: 2500
+- section: Первинні джерела
+  words: 400
+- section: Деколонізаційний погляд
+  words: 438
+word_target: 4065

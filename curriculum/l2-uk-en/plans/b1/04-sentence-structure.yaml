@@ -1,0 +1,107 @@
+module: 04-sentence-structure
+level: b1
+sequence: 4
+version: '1.0'
+title: Структура речення
+subtitle: Sentence analysis terminology
+focus: integration
+pedagogy: PPP
+objectives:
+- Learner can identify sentence parts using Ukrainian terminology
+- Learner can distinguish main and subordinate clauses
+- Learner can name sentence types and punctuation marks
+sources:
+- name: Ukrainian Syntax (Wikipedia)
+  url: https://uk.wikipedia.org/wiki/Синтаксис_української_мови
+  type: reference
+  notes: Overview of Ukrainian sentence structure terminology
+- name: Ukrainian State Standard 2024 - Syntax
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official terminology for sentence analysis
+content_outline:
+- section: Introduction - Understanding Sentence Structure
+  words: 160
+  points:
+  - Why sentence analysis terminology matters
+  - How native speakers learn syntax
+  - Connection to complex sentences in B1.3
+- section: Sentence Parts (Члени речення)
+  words: 440
+  points:
+  - підмет (subject), присудок (predicate)
+  - додаток (object), означення (attribute)
+  - обставина (adverbial)
+  - Identifying parts in example sentences
+- section: Sentence Types
+  words: 80
+  points:
+  - просте речення (simple sentence)
+  - складне речення (complex sentence)
+- section: Clause Types
+  words: 90
+  points:
+  - головне речення (main clause)
+  - підрядне речення (subordinate clause)
+- section: Conjunctions
+  words: 60
+  points:
+  - connecting parts together
+  - і, а, але, що, бо
+- section: Punctuation Terms
+  words: 100
+  points:
+  - кома, крапка, знак питання
+  - двокрапка, крапка з комою
+- section: Additional Syntax Terms
+  words: 60
+  points:
+  - синтаксис, пунктуація, інверсія
+- section: Practice Analyzing Sentences
+  words: 200
+  points:
+  - Breaking down real Ukrainian sentences
+  - Identifying all components
+- section: Dialogues
+  words: 250
+  points:
+  - 6 mini-dialogues illustrating concepts
+- section: Summary
+  words: 150
+  points:
+  - Key terms review
+  - Self-assessment checklist
+word_target: 3000
+vocabulary:
+  required:
+  - підмет (subject)
+  - присудок (predicate)
+  - додаток (object)
+  - означення (attribute)
+  - обставина (adverbial)
+  - головне речення (main clause)
+  - підрядне речення (subordinate clause)
+  - просте речення (simple sentence)
+  - складне речення (complex sentence)
+  - складносурядне речення (compound sentence)
+  recommended:
+  - складнопідрядне речення (complex sentence with subordination)
+  - кома (comma)
+  - крапка (period)
+  - сполучник (conjunction)
+  - інтонація (intonation)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - quiz
+  - match-up
+  - mark-the-words
+  - group-sort
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-05 (Metalanguage checkpoint)
+- b1-26 (Relative clauses)
+- b1-35 (Concessive clauses)

@@ -2,178 +2,167 @@ module: 28-she-said-that
 level: A2
 version: '2.0'
 items:
-- lemma: баба
-  ipa: /bˈaba/
-  translation: grandmother, old woman
+- lemma: казати
+  ipa: /kaˈzatɪ/
+  translation: to say (imperfective)
+  pos: verb
+- lemma: сказати
+  ipa: /skaˈzatɪ/
+  translation: to say (perfective)
+  pos: verb
+- lemma: повідомити
+  ipa: /poʋiˈdomɪtɪ/
+  translation: to inform (perfective)
+  pos: verb
+- lemma: повідомляти
+  ipa: /poʋidomˈljatɪ/
+  translation: to inform (imperfective)
+  pos: verb
+- lemma: пояснити
+  ipa: /poˈjasnɪtɪ/
+  translation: to explain (perfective)
+  pos: verb
+- lemma: пояснювати
+  ipa: /pojasˈnjuvatɪ/
+  translation: to explain (imperfective)
+  pos: verb
+- lemma: обіцяти
+  ipa: /obiˈt͡sjatɪ/
+  translation: to promise
+  pos: verb
+- lemma: скаржитися
+  ipa: /skarˈʒɪtɪsja/
+  translation: to complain
+  pos: verb
+- lemma: стверджувати
+  ipa: /stʋɛrdʒuˈvatɪ/
+  translation: to claim, to assert
+  pos: verb
+- lemma: запитати
+  ipa: /zapɪˈtatɪ/
+  translation: to ask (perfective)
+  pos: verb
+- lemma: питати
+  ipa: /pɪˈtatɪ/
+  translation: to ask (imperfective)
+  pos: verb
+- lemma: відповісти
+  ipa: /vidpoˈʋistɪ/
+  translation: to answer (perfective)
+  pos: verb
+- lemma: відповідати
+  ipa: /vidpoʋiˈdatɪ/
+  translation: to answer (imperfective)
+  pos: verb
+- lemma: коментувати
+  ipa: /komɛntuˈvatɪ/
+  translation: to comment
+  pos: verb
+- lemma: переконувати
+  ipa: /pɛrɛkoˈnuvatɪ/
+  translation: to convince, to persuade
+  pos: verb
+- lemma: нагадати
+  ipa: /nahaˈdatɪ/
+  translation: to remind (perfective)
+  pos: verb
+- lemma: нагадувати
+  ipa: /nahaˈduvatɪ/
+  translation: to remind (imperfective)
+  pos: verb
+- lemma: розповісти
+  ipa: /rozpoˈʋistɪ/
+  translation: to tell, to narrate (perfective)
+  pos: verb
+- lemma: розповідати
+  ipa: /rozpoʋiˈdatɪ/
+  translation: to tell, to narrate (imperfective)
+  pos: verb
+- lemma: вимагати
+  ipa: /vɪmaˈhatɪ/
+  translation: to demand
+  pos: verb
+- lemma: просити
+  ipa: /ˈprosɪtɪ/
+  translation: to ask, to request
+  pos: verb
+- lemma: що
+  ipa: /ʃt͡ʃo/
+  translation: that (conjunction)
+  pos: conj
+- lemma: чи
+  ipa: /t͡ʃɪ/
+  translation: if, whether
+  pos: conj
+- lemma: щоб
+  ipa: /ʃt͡ʃob/
+  translation: that, in order to
+  pos: conj
+- lemma: непряма мова
+  ipa: /nɛˈprjama ˈmova/
+  translation: reported speech, indirect speech
   pos: noun
   gender: f
-- lemma: бос
-  ipa: /bɔs/
-  translation: boss
-  pos: noun
-  gender: m
-- lemma: брехати
-  ipa: /brɛxˈatɪ/
-  translation: to lie
-  pos: verb
-- lemma: бухгалтерія
-  ipa: /buxɦaltˈɛrija/
-  translation: accounting
-  pos: noun
-  gender: f
-- lemma: вагітний
-  ipa: /ʋaɦˈitnɪj/
-  translation: pregnant
-  pos: adj
-- lemma: вирішитися
-  ipa: /ʋˈɪriʃɪtɪsja/
-  translation: to be solved, to be decided
-  pos: verb
-- lemma: вкрасти
-  ipa: /ʋkrˈastɪ/
-  translation: to steal
-  pos: verb
-- lemma: відмінний
-  ipa: /ʋidmˈinnɪj/
-  translation: excellent, different
-  pos: adj
-- lemma: галя
-  ipa: /ɦˈalja/
-  translation: Halya (name)
-  pos: noun
-  gender: f
-- lemma: голодний
-  ipa: /ɦɔlˈɔdnɪj/
-  translation: hungry
-  pos: adj
-- lemma: добровільний
-  ipa: /dɔbrɔʋˈilʲnɪj/
-  translation: voluntary
-  pos: adj
-- lemma: доповісти
-  ipa: /dɔpɔʋˈistɪ/
-  translation: to report (perfective)
-  pos: verb
-- lemma: дурень
-  ipa: /dˈurɛnʲ/
-  translation: fool
-  pos: noun
-  gender: m
-- lemma: заперечити
-  ipa: /zapɛrˈɛt͡ʃɪtɪ/
-  translation: to deny, to object
-  pos: verb
-- lemma: заперечувати
-  ipa: /zapɛrˈɛt͡ʃuʋatɪ/
-  translation: to deny, to object (imperfective)
-  pos: verb
-- lemma: зарплата
-  ipa: /zarplˈata/
-  translation: salary, wage
-  pos: noun
-  gender: f
-- lemma: звільняти
-  ipa: /zʋilʲnˈjatɪ/
-  translation: to free, to dismiss (imperfective)
-  pos: verb
-- lemma: здивований
-  ipa: /zdɪʋˈɔʋanɪj/
-  translation: surprised
-  pos: adj
-- lemma: значити
-  ipa: /znat͡ʃɪtɪ/
-  translation: to mean, to signify
-  pos: verb
-- lemma: критикувати
-  ipa: /krɪtɪkuʋˈatɪ/
-  translation: to criticize
-  pos: verb
-- lemma: лавка
-  ipa: /lˈaʋka/
-  translation: bench, small shop
-  pos: noun
-  gender: f
-- lemma: мовчати
-  ipa: /mɔʋt͡ʃˈatɪ/
-  translation: to be silent
-  pos: verb
-- lemma: наплутати
-  ipa: /naplˈutatɪ/
-  translation: to mix up, to confuse
-  pos: verb
-- lemma: незадоволення
-  ipa: /nɛzadɔʋˈɔlɛnnja/
-  translation: dissatisfaction
-  pos: noun
-  gender: n
-- lemma: оголосити
-  ipa: /ɔɦɔlɔsˈɪtɪ/
-  translation: to announce
-  pos: verb
 - lemma: плітка
-  ipa: /plˈitka/
+  ipa: /ˈplitka/
   translation: gossip
   pos: noun
   gender: f
-- lemma: повідомляти
-  ipa: /pɔʋidɔmlˈjatɪ/
-  translation: to inform (imperfective)
-  pos: verb
-- lemma: пообіцяти
-  ipa: /pɔɔbit͡sˈjatɪ/
-  translation: to promise (perfective)
-  pos: verb
-- lemma: підозріло
-  ipa: /pidɔzrˈilɔ/
-  translation: suspiciously
-  pos: adv
-- lemma: підтвердити
-  ipa: /pidtʋˈɛrdɪtɪ/
-  translation: to confirm (perfective)
-  pos: verb
-- lemma: підходящий
-  ipa: /pidxɔdˈjaʃt͡ʃɪj/
-  translation: suitable, fitting
-  pos: adj
-- lemma: світлана
-  ipa: /sʋitlˈana/
-  translation: Svitlana (name)
+- lemma: чутка
+  ipa: /ˈt͡ʃutka/
+  translation: rumor
   pos: noun
   gender: f
-- lemma: спеціальний
-  ipa: /spɛt͡siˈalʲnɪj/
-  translation: special
-  pos: adj
-- lemma: спростування
-  ipa: /sprɔstuʋˈannja/
-  translation: refutation, denial
-  pos: noun
-  gender: n
-- lemma: уява
-  ipa: /uˈjaʋa/
-  translation: imagination
-  pos: noun
-  gender: f
-- lemma: ха-ха
-  ipa: /xa-xˈa/
-  translation: ha-ha
-  pos: noun
-  gender: f
-- lemma: цяцянка
-  ipa: /t͡sjat͡sˈjanka/
-  translation: toy, trifle (colloquial)
-  pos: noun
-  gender: f
-- lemma: чоловіків
-  ipa: /t͡ʃɔlɔʋikˈiʋ/
-  translation: men
-  pos: adj
-- lemma: шепотіти
-  ipa: /ʃɛpɔtˈitɪ/
-  translation: to whisper
-  pos: verb
-- lemma: шеф
-  ipa: /ʃɛf/
-  translation: chef, boss
+- lemma: свідок
+  ipa: /ˈsʋidok/
+  translation: witness
   pos: noun
   gender: m
+- lemma: заперечувати
+  ipa: /zapɛˈrɛt͡ʃuvatɪ/
+  translation: to deny, to object
+  pos: verb
+- lemma: підтверджувати
+  ipa: /pidtʋɛrdʒuˈvatɪ/
+  translation: to confirm
+  pos: verb
+- lemma: критикувати
+  ipa: /krɪtɪkuˈvatɪ/
+  translation: to criticize
+  pos: verb
+- lemma: хвалити
+  ipa: /xvaˈlɪtɪ/
+  translation: to praise
+  pos: verb
+- lemma: радити
+  ipa: /ˈradɪtɪ/
+  translation: to advise
+  pos: verb
+- lemma: попереджати
+  ipa: /popɛrɛˈdʒatɪ/
+  translation: to warn
+  pos: verb
+- lemma: визнавати
+  ipa: /vɪznaˈvatɪ/
+  translation: to admit, to recognize
+  pos: verb
+- lemma: заявляти
+  ipa: /zajavˈljatɪ/
+  translation: to declare, to state
+  pos: verb
+- lemma: оголошувати
+  ipa: /oholoˈʃuvatɪ/
+  translation: to announce
+  pos: verb
+- lemma: повторювати
+  ipa: /povtoˈrjuvatɪ/
+  translation: to repeat
+  pos: verb
+- lemma: стверджувати
+  ipa: /stʋɛrdʒuˈvatɪ/
+  translation: to affirm, to claim
+  pos: verb
+- lemma: брехати
+  ipa: /brɛˈxatɪ/
+  translation: to lie
+  pos: verb

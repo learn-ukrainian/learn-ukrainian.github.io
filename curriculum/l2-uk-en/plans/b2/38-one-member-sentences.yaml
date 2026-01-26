@@ -1,0 +1,23 @@
+module: 38-one-member-sentences
+level: b2
+sequence: 38
+version: '1.0'
+title: Односкладні речення
+subtitle: One-member Sentences
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can identify and classify four types of one-member sentences
+- Learner can use one-member sentences for stylistic effect
+- Learner can transform two-member sentences into one-member structures
+- Learner understands the expressive functions of one-member sentences
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

@@ -1,0 +1,81 @@
+module: food-and-shopping
+level: a1
+sequence: 18
+version: '2.0'
+title: Food, Drinks & Shopping
+subtitle: Practical Vocabulary for Market and Store
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can order food items using accusative case
+- Learner can request quantities using genitive case
+- Learner can ask prices and make purchases
+- Learner can distinguish between food and drink categories
+content_outline:
+- section: 'Introduction: Food Vocabulary'
+  words: 100
+  points:
+  - Essential food words
+  - Shopping situations
+  - Grammar in context
+- section: Food Categories
+  words: 250
+  points:
+  - 'Fruits: яблуко, банан, апельсин'
+  - 'Vegetables: картопля, морква, помідор'
+  - 'Bread/Grains: хліб, рис, макарони'
+  - 'Meat/Fish: м''ясо, курка, риба'
+- section: Drinks
+  words: 150
+  points:
+  - вода, сік, молоко
+  - кава, чай
+  - пиво, вино (adult beverages)
+- section: Quantities and Measures
+  words: 200
+  points:
+  - кілограм, грам, літр
+  - пляшка (bottle), пакет (package)
+  - Genitive after quantities
+- section: Shopping Phrases
+  words: 200
+  points:
+  - Дайте, будь ласка... (Please give me...)
+  - Мені потрібно... (I need...)
+  - Скільки коштує? Це все.
+- section: 'Practice: At the Market'
+  words: 100
+  points:
+  - Role-play shopping
+  - Make a shopping list
+word_target: 1000
+vocabulary:
+  required:
+  - хліб (bread)
+  - молоко (milk)
+  - яблуко (apple)
+  - м'ясо (meat)
+  - кава (coffee)
+  - вода (water)
+  - кілограм (kilogram)
+  - пляшка (bottle)
+  recommended:
+  - картопля (potato)
+  - помідор (tomato)
+  - курка (chicken)
+  - сир (cheese)
+  - яйце (egg)
+  - цукор (sugar)
+  forbidden: []
+activities:
+  types_required:
+  - dialogue
+  - categorization
+  - fill-in
+  - vocabulary-drill
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a1-19 (At the Café)
+- a1-37 (At the Market)

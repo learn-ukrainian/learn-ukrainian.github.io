@@ -1,0 +1,77 @@
+module: synonymy-thinking-verbs
+level: b1
+sequence: 68
+version: '2.0'
+title: 'Синонімія I: Дієслова мислення'
+subtitle: 'Synonymy I: Thinking Verbs'
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can distinguish between думати/гадати/вважати/міркувати
+- Learner can use 20 thinking verbs in appropriate contexts
+- Learner can form natural collocations with thinking verbs
+- Learner can express cognitive processes precisely
+content_outline:
+- section: 'Introduction: Cognitive Verbs'
+  words: 150
+  points:
+  - Why verb precision matters
+  - Thinking verb categories
+  - Synonymy overview
+- section: Basic Thinking Verbs
+  words: 250
+  points:
+  - думати, гадати, вважати
+  - Semantic differences
+  - Usage contexts
+- section: Deliberation Verbs
+  words: 250
+  points:
+  - міркувати, роздумувати, обмірковувати
+  - Deep thinking vocabulary
+  - Collocations
+- section: Understanding Verbs
+  words: 250
+  points:
+  - розуміти, усвідомлювати, осягати
+  - Comprehension vocabulary
+  - Register differences
+- section: Memory and Recognition
+  words: 200
+  points:
+  - пам'ятати, згадувати, впізнавати
+  - Memory verb distinctions
+  - Collocations
+- section: 'Practice: Precise Expression'
+  words: 100
+  points:
+  - Choose appropriate verbs
+  - Express thoughts precisely
+word_target: 1200
+vocabulary:
+  required:
+  - думати (to think)
+  - гадати (to suppose)
+  - вважати (to consider)
+  - міркувати (to ponder)
+  - розуміти (to understand)
+  - пам'ятати (to remember)
+  - згадувати (to recall)
+  - усвідомлювати (to realize)
+  recommended:
+  - роздумувати (to reflect)
+  - обмірковувати (to deliberate)
+  - осягати (to grasp)
+  - впізнавати (to recognize)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - writing
+  - transformation
+  - matching
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-69 (Synonymy Speaking Verbs)

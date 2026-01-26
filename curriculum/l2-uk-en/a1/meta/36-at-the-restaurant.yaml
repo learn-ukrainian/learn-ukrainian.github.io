@@ -1,26 +1,97 @@
-module: 36-at-the-restaurant
-title: At the Restaurant
-subtitle: Dining Out in Ukraine
-version: '1.0'
-phase: A1.4 Practical Scenarios
-pedagogy: PPP
-focus: practical
-duration: 60
-transliteration: first-occurrence
-tags:
-- practical
-- at the restaurant
-grammar:
-- Practical usage of A1 cases
-- Polite requests
-- Questions and answers
-objectives:
-- Learner can handle at the restaurant situations
-- Learner can use relevant vocabulary
-- Learner can communicate needs
-vocabulary_count: 15
-vocab_count: 15
+module: a1-36
+id: a1-36
 slug: at-the-restaurant
+title: "At the Restaurant"
+subtitle: "Dining Out in Ukraine"
+version: '2.0'
+phase: "A1.4 [Practical Scenarios]"
+focus: practical
+pedagogy: PPP
+register: розмовний
+duration: 60
+transliteration: none
+objectives:
+  - "Learner can make a reservation"
+  - "Learner can order a full meal"
+  - "Learner can handle restaurant situations"
+  - "Learner can communicate dietary needs"
+grammar:
+  - "Practical usage of A1 cases"
+  - "Polite requests and questions"
+  - "Future tense for ordering"
+word_target: 900
+content_outline:
+  - section: "Introduction: Restaurant Dining"
+    words: 100
+    points:
+      - "Restaurant etiquette"
+      - "Full dining experience"
+      - "From arrival to payment"
+  - section: "Making a Reservation"
+    words: 150
+    points:
+      - "Я хочу замовити столик"
+      - "На скільки осіб?"
+      - "На котру годину?"
+  - section: "Being Seated"
+    words: 150
+    points:
+      - "Столик біля вікна"
+      - "Меню, будь ласка"
+      - "Що ви рекомендуєте?"
+  - section: "Ordering Food"
+    words: 200
+    points:
+      - "На перше... (For first course...)"
+      - "На друге... (For main course...)"
+      - "На десерт..."
+  - section: "Special Needs"
+    words: 150
+    points:
+      - "Я вегетаріанець/вегетаріанка"
+      - "Без глютену/лактози"
+      - "Алергія на..."
+  - section: "Practice: Restaurant Role-Play"
+    words: 150
+    points:
+      - "Complete dining scenario"
+      - "Handle complications"
+vocabulary_hints:
+  required:
+    - столик (table)
+    - замовити (to order)
+    - офіціант (waiter)
+    - меню (menu)
+    - страва (dish)
+    - рахунок (bill)
+    - перше (first course)
+    - друге (main course)
+  recommended:
+    - десерт (dessert)
+    - напій (drink)
+    - гарнір (side dish)
+    - порція (portion)
+    - чайові (tip)
+    - резервація (reservation)
+activity_hints:
+  - type: dialogue
+    focus: "Full restaurant experience"
+    items: 12
+  - type: role-play
+    focus: "Waiter and customer"
+    items: 6
+  - type: vocabulary-drill
+    focus: "Menu item names"
+    items: 20
+  - type: listening
+    focus: "Restaurant conversations"
+    items: 10
+prerequisites:
+  - a1-35 (At the Café Practical)
+connects_to:
+  - a1-37 (At the Market)
+  - a1-38 (At the Store)
 naturalness:
   score: 10
   status: PASS
+  justification: "Comprehensive restaurant skills"

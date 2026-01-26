@@ -1,0 +1,22 @@
+module: 92-istoriia-ukrainskoi-literatury
+level: c1
+sequence: 92
+version: '2.0'
+title: Історія української літератури
+subtitle: History of Ukrainian Literature
+focus: literature
+pedagogy: Immersion & Analysis
+objectives:
+- Overview of major periods in Ukrainian literature
+- Identify key authors and movements
+- Understand the socio-political context of literary development
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

@@ -1,0 +1,104 @@
+module: literary-criticism-methods
+level: c2
+sequence: 31
+version: '2.0'
+title: Методи літературної критики
+focus: literature
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Літературна критика — Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Літературна_критика
+  type: reference
+  notes: Overview of critical approaches
+- name: Українська літературна критика
+  url: https://ukrlib.com.ua/
+  type: primary
+  notes: Examples of Ukrainian literary criticism
+- name: Сучасні критичні підходи
+  url: https://uk.wikipedia.org/wiki/Літературознавство
+  type: reference
+  notes: Contemporary critical methodologies
+content_outline:
+- section: Вступ — Критика як професія
+  words: 500
+  points:
+  - Роль критика в літературному процесі
+  - Критика vs. літературознавство
+  - Типи критичних текстів
+- section: Імпресіоністична критика
+  words: 600
+  points:
+  - Суб'єктивний відгук на твір
+  - Естетичне переживання
+  - Приклади з української традиції
+  - Обмеження підходу
+- section: Формалістична і структуралістська критика
+  words: 700
+  points:
+  - Аналіз форми і структури
+  - Прийом як об'єкт аналізу
+  - Наративні структури
+  - Close reading (пильне читання)
+- section: Контекстуальна критика
+  words: 700
+  points:
+  - Соціологічна критика
+  - Психоаналітична критика
+  - Феміністична критика
+  - Постколоніальна критика
+- section: Сучасні підходи
+  words: 600
+  points:
+  - Рецептивна естетика (читацький відгук)
+  - Деконструктивна критика
+  - Культурні студії
+  - Екокритика
+- section: Практикум — написання рецензії
+  words: 500
+  points:
+  - Структура рецензії
+  - Вибір критичного підходу
+  - Аргументація оцінки
+  - Етика критика
+- section: Підсумок
+  words: 400
+  points:
+  - Вибір методу для конкретного тексту
+  - Поєднання підходів
+  - Від критики до есею
+word_target: 4000
+vocabulary:
+  required:
+  - критика (criticism)
+  - рецензія (review)
+  - аналіз (analysis)
+  - інтерпретація (interpretation)
+  - оцінка (evaluation)
+  - формалізм (formalism)
+  - психоаналіз (psychoanalysis)
+  - деконструкція (deconstruction)
+  - рецепція (reception)
+  - методологія (methodology)
+  recommended:
+  - імпресіонізм (impressionism)
+  - герменевтика (hermeneutics)
+  - екокритика (ecocriticism)
+  - гендер (gender)
+  - канон (canon)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - critical-analysis
+  - comparative-study
+  - authorial-intent
+  - essay-response
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-32 (Writing Literary Essays)
+- c2-40 (Literary Prizes & Canon)
+- c2-41 (Literary Community)

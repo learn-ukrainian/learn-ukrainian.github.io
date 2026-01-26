@@ -1,9 +1,12 @@
-title: Велике князівство Литовське — Руська держава
-phase: B2.3a [Українська історія]
-pedagogy: CBI
+id: b2-hist-28
+title: 'Велике князівство Литовське — Руська держава'
+subtitle: 'Спадщина Gediminids та руська мова'
+slug: velyke-kniazivstvo-lytovske
+version: '2.0'
+phase: 'B2.3a [Українська історія]'
 focus: history
-word_target: 4000
-register: публіцистичний
+pedagogy: CBI
+word_target: 4021
 duration: 90
 transliteration: none
 tags:
@@ -12,34 +15,22 @@ tags:
 - lithuania
 - ruthenian
 grammar:
-- Історичний наратив
-- Пасивний стан у науковому тексті
-vocabulary_focus: null
+- Passive voice in historical texts
+- Analytical structures
 objectives:
-- Учень може описувати роль українських земель у Великому князівстві Литовському
+- Учень може описувати роль українських земель у ВКЛ
 - Учень може аналізувати значення руської мови як державної
-- Учень може пояснювати принципи релігійної толерантності в князівстві
+- Учень може пояснювати принципи релігійної толерантності
 vocabulary_count: 35
-slug: velyke-kniazivstvo-lytovske
 content_outline:
 - section: Вступ
-  words: 571
-- section: 'Династія Гедиміновичів: Від будівничих до захисників'
-  words: 571
-- section: 'Вітовт Великий: Золота доба та європейський тріумф'
-  words: 571
-- section: Релігійна толерантність і автономія
-  words: 571
-- section: Первинні джерела
-  words: 571
+  words: 610
 - section: Читання
-  words: 285
+  words: 2600
+- section: Первинні джерела
+  words: 400
 - section: Деколонізаційний погляд
-  words: 285
-- section: Есе
-  words: 285
-- section: Потрібно більше практики?
-  words: 290
+  words: 411
 naturalness:
   score: 9
   status: PASS

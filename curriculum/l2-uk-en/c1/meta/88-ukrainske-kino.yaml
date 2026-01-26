@@ -1,23 +1,44 @@
 module: c1-88
-title: 'Українське кіно'
-subtitle: 'Ukrainian Cinema — Shadows and Light'
+title: Українське кіно
+subtitle: Ukrainian Cinema — Shadows and Light
 version: '2.0'
-phase: 'C1.5 Folk Culture & Fine Arts'
+phase: C1.5 Folk Culture & Fine Arts
 focus: fine-arts
-pedagogy: 'CBI'
+pedagogy: CBI
 duration: 120
 transliteration: none
 tags:
-  - arts
-  - cinema
-  - dovzhenko
-  - sentsov
+- arts
+- cinema
+- dovzhenko
+- sentsov
 grammar:
-  - 'Cinematic terminology'
-  - 'Discussing plot and acting'
+- Cinematic terminology
+- Discussing plot and acting
 objectives:
-  - 'Learner explores the legacy of Oleksandr Dovzhenko and Poetic Cinema.'
-  - 'Learner understands the phenomenon of Parajanov and Shadows of Forgotten Ancestors.'
-  - 'Learner analyzes contemporary Ukrainian cinema (Sentsov, Lukich, Aliev).'
+- Learner explores the legacy of Oleksandr Dovzhenko and Poetic Cinema.
+- Learner understands the phenomenon of Parajanov and Shadows of Forgotten Ancestors.
+- Learner analyzes contemporary Ukrainian cinema (Sentsov, Lukich, Aliev).
 vocabulary_count: 25
 slug: 88-ukrainske-kino
+content_outline:
+- section: Вступ — Українське кіно
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Олександр Довженко: поетичне кіно, Земля'
+  - 'Радянський період: Київська кіностудія'
+  - 'Незалежність: новий український фільм'
+  - 'Сучасні режисери: Сенцов, Лозниця'
+  - War documentaries and international recognition
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

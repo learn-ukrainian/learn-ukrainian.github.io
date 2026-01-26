@@ -1,25 +1,94 @@
 module: b1-62
-title: Довкілля та екологія
-subtitle: Environment & Ecology
-version: '1.0'
-phase: B1.6 Vocabulary Expansion II
+id: b1-62
+slug: environment-ecology
+title: "Довкілля та екологія"
+subtitle: "Environment & Ecology"
+version: '2.0'
+phase: "B1.6 [Vocabulary Expansion II]"
 focus: vocabulary
 pedagogy: PPP
+register: розмовний
 duration: 90
 transliteration: none
-grammar:
-- environmental vocabulary collocations
-tags:
-- vocabulary
-- environment
-- ecology
 objectives:
-- Learner can use 35 environmental vocabulary words in context
-- Learner can discuss environmental issues using appropriate collocations
-- Learner can distinguish between related terms (довкілля/навколишнє середовище/природа)
-vocabulary_count: 35
-vocab_count: 62
-slug: 62-environment-ecology
+  - "Learner can use 35 environmental vocabulary words in context"
+  - "Learner can discuss environmental issues using appropriate collocations"
+  - "Learner can distinguish between довкілля/навколишнє середовище/природа"
+  - "Learner can express opinions on environmental topics"
+grammar:
+  - "Environmental vocabulary collocations"
+  - "Cause-effect constructions for ecology"
+  - "Problem-solution patterns"
+word_target: 1200
+content_outline:
+  - section: "Introduction: Environmental Vocabulary"
+    words: 150
+    points:
+      - "Why ecology matters in Ukraine"
+      - "Core environmental concepts"
+      - "Vocabulary overview"
+  - section: "Nature and Environment"
+    words: 250
+    points:
+      - "довкілля, природа, екосистема"
+      - "клімат, атмосфера, біосфера"
+      - "Basic environmental terms"
+  - section: "Environmental Problems"
+    words: 250
+    points:
+      - "забруднення, викиди, відходи"
+      - "глобальне потепління, зміна клімату"
+      - "Problem vocabulary"
+  - section: "Conservation and Solutions"
+    words: 250
+    points:
+      - "захист, збереження, переробка"
+      - "відновлювана енергія"
+      - "Solution vocabulary"
+  - section: "Environmental Actions"
+    words: 200
+    points:
+      - "забруднювати, захищати, переробляти"
+      - "зберігати, відновлювати"
+      - "Environmental verbs"
+  - section: "Practice: Environmental Discussion"
+    words: 100
+    points:
+      - "Discuss ecological issues"
+      - "Propose solutions"
+vocabulary_hints:
+  required:
+    - довкілля (environment)
+    - природа (nature)
+    - забруднення (pollution)
+    - клімат (climate)
+    - екологія (ecology)
+    - захист (protection)
+    - переробка (recycling)
+    - відходи (waste)
+  recommended:
+    - глобальне потепління (global warming)
+    - викиди (emissions)
+    - відновлювана енергія (renewable energy)
+    - екосистема (ecosystem)
+activity_hints:
+  - type: collocation
+    focus: "Environmental noun phrases"
+    items: 25
+  - type: fill-in
+    focus: "Describe environmental issues"
+    items: 20
+  - type: matching
+    focus: "Match problems and solutions"
+    items: 15
+  - type: discussion
+    focus: "Discuss ecological topics"
+    items: 10
+prerequisites:
+  - b1-61 (Professional Communication)
+connects_to:
+  - b1-63 (Health Wellness)
 naturalness:
   score: 9
   status: PASS
+  justification: "Essential for modern discourse"

@@ -1,0 +1,77 @@
+module: past-passive-participles-1
+level: b1
+sequence: 45
+version: '2.0'
+title: Пасивні дієприкметники минулого часу I
+subtitle: Past Passive Participles I (-ний/-тий)
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can form past passive participles using -ний/-тий suffixes
+- Learner can agree participles with nouns in gender, number, and case
+- Learner can use passive participles attributively and predicatively
+- Learner understands suffix selection rules
+content_outline:
+- section: 'Introduction: Passive Participles'
+  words: 150
+  points:
+  - What passive means
+  - Participle vs verb form
+  - Adjectival function
+- section: 'Formation: -ний Suffix'
+  words: 250
+  points:
+  - From transitive verb stems
+  - написаний, прочитаний, зроблений
+  - Consonant changes
+- section: 'Formation: -тий Suffix'
+  words: 250
+  points:
+  - After certain stem types
+  - вибитий, одягнутий, помитий
+  - When to use -тий
+- section: Agreement Patterns
+  words: 250
+  points:
+  - 'Gender: -ний/-на/-не/-ні'
+  - Case agreement
+  - Number agreement
+- section: Attributive vs Predicative Use
+  words: 200
+  points:
+  - Написана книга (attributive)
+  - Книга написана (predicative)
+  - Word order effects
+- section: 'Practice: Formation and Agreement'
+  words: 100
+  points:
+  - Form participles from verbs
+  - Agree with nouns
+word_target: 1200
+vocabulary:
+  required:
+  - пасивний (passive)
+  - дієприкметник (participle)
+  - написаний (written)
+  - прочитаний (read)
+  - зроблений (done/made)
+  - відкритий (opened)
+  - закритий (closed)
+  - узгодження (agreement)
+  recommended:
+  - перехідне дієслово (transitive verb)
+  - атрибутивний (attributive)
+  - предикативний (predicative)
+  - основа дієслова (verb stem)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - agreement
+  - transformation
+  - error-correction
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-46 (Past Passive Participles 2)

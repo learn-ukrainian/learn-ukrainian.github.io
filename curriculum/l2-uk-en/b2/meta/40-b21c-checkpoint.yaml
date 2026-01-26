@@ -34,3 +34,44 @@ slug: 40-b21c-checkpoint
 naturalness:
   score: 9
   status: PASS
+content_outline:
+- section: Вступ — Числівники, словотвір та синтаксис
+  words: 333
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Indefinite Pronouns (State Standard 4240-4244)
+  words: 333
+  points:
+  - 'хтось (someone): когось, комусь, кимось'
+  - 'щось (something): чогось, чомусь, чимось'
+  - 'хто-будь (anyone): кого-будь, кому-будь'
+  - 'що-небудь (anything): чого-небудь, чому-небудь'
+  - 'якийсь (some kind of): якогось, якомусь'
+- section: Negative Pronouns (State Standard 4245-4249)
+  words: 333
+  points:
+  - 'ніхто (nobody): нікого, нікому, ніким'
+  - 'ніщо (nothing): нічого, нічому, нічим'
+  - 'ніякий (no kind of): ніякого, ніякому'
+  - 'нічий (nobody''s): нічийого, нічиєму'
+- section: Defining Pronouns (State Standard 4250-4256)
+  words: 333
+  points:
+  - 'весь/вся/все/всі (all): всього, всьому, всім'
+  - 'кожний/кожен (each): кожного, кожному'
+  - 'сам (oneself): самого, самому, самим'
+  - 'інший (other): іншого, іншому'
+- section: Основні моделі вживання
+  words: 333
+  points:
+  - 'Double negation: Ніхто нічого не знає. (Nobody knows anything.)'
+  - 'With prepositions: ні з ким (with nobody), ні до кого (to nobody)'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

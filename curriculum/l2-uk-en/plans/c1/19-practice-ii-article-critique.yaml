@@ -1,0 +1,95 @@
+module: 19-practice-ii-article-critique
+level: c1
+sequence: 19
+version: '2.0'
+title: Практика II — Критика статті
+focus: practice
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Academic Review Writing
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standards for article reviews
+- name: Critical Analysis Methodology
+  url: https://mova.info/
+  type: secondary
+  notes: Techniques for evaluating research
+content_outline:
+- section: Вступ — Критичне читання
+  words: 400
+  points:
+  - Різниця між читанням і критичним аналізом
+  - Роль рецензії в науці
+  - Структура критичного відгуку
+- section: Оцінка методології
+  words: 700
+  points:
+  - Чи адекватні методи меті?
+  - Репрезентативність вибірки
+  - Обмеження дослідження
+- section: Оцінка аргументації
+  words: 700
+  points:
+  - Логічність і послідовність
+  - Достатність доказів
+  - Альтернативні інтерпретації
+- section: Мова критичного аналізу
+  words: 700
+  points:
+  - Автор переконливо доводить ...
+  - Слабким місцем роботи є ...
+  - Варто було б детальніше розглянути ...
+- section: Сильні та слабкі сторони
+  words: 600
+  points:
+  - Як формулювати позитивні коментарі
+  - Як конструктивно критикувати
+  - Баланс похвали і критики
+- section: Структура рецензії
+  words: 500
+  points:
+  - Загальна характеристика роботи
+  - Детальний аналіз
+  - Підсумкова оцінка
+- section: Практичне завдання
+  words: 400
+  points:
+  - Стаття для аналізу
+  - Написання рецензії
+  - Взаємне рецензування
+word_target: 4000
+vocabulary:
+  required:
+  - рецензія (review)
+  - критика (critique)
+  - методологія (methodology)
+  - вибірка (sample)
+  - обмеження (limitation)
+  - аргументація (argumentation)
+  - доказ (evidence)
+  - інтерпретація (interpretation)
+  - оцінка (evaluation)
+  - конструктивний (constructive)
+  recommended:
+  - переконливий (convincing)
+  - недолік (shortcoming)
+  - перевага (advantage)
+  - обґрунтованість (validity)
+  - релевантність (relevance)
+  forbidden: []
+activities:
+  types_required:
+  - group-sort
+  - quiz
+  - essay-response
+  - cloze
+  - fill-in
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c1-20 (C1.1 Checkpoint)
+- c1-33 (Case Studies)

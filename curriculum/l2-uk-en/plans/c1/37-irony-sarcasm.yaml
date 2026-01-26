@@ -1,0 +1,22 @@
+module: 37-irony-sarcasm
+level: c1
+sequence: 37
+version: '1.0'
+title: 'Іронія та сарказм: Тонкощі змісту'
+subtitle: 'Irony & Sarcasm: Nuances of Meaning'
+focus: style
+pedagogy: Immersion
+objectives:
+- Distinguish between verbal irony, situational irony, and sarcasm
+- Identify markers of irony in written and spoken texts
+- Use irony appropriately in different registers
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

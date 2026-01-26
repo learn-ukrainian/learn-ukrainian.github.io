@@ -1,0 +1,77 @@
+module: purpose-shchob-past-form
+level: b1
+sequence: 30
+version: '2.0'
+title: 'Підрядні речення мети: щоб + минула форма'
+subtitle: Purpose Clauses - Different Subjects
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner understands when to use щоб + past form
+- Learner can form different-subject purpose clauses
+- Learner can correctly agree verb forms with subjects
+- Learner can distinguish same-subject from different-subject patterns
+content_outline:
+- section: 'Introduction: Different-Subject Purpose'
+  words: 150
+  points:
+  - When subjects differ
+  - Past form as subjunctive
+  - Comparison with infinitive pattern
+- section: щоб + Past Form Structure
+  words: 250
+  points:
+  - Я хочу, щоб ти зробив...
+  - Gender agreement required
+  - Number agreement required
+- section: Subject in Subordinate Clause
+  words: 250
+  points:
+  - Explicit subject required
+  - Pronoun vs noun subjects
+  - Word order patterns
+- section: Verb Form Agreement
+  words: 250
+  points:
+  - 'Past masculine: -в'
+  - 'Past feminine: -ла'
+  - 'Plural: -ли'
+- section: Comparing Both Patterns
+  words: 200
+  points:
+  - Infinitive vs past form choice
+  - Common errors
+  - Decision flowchart
+- section: 'Practice: Different-Subject Clauses'
+  words: 100
+  points:
+  - Form purpose clauses
+  - Choose correct pattern
+word_target: 1200
+vocabulary:
+  required:
+  - щоб (in order to/so that)
+  - умовний спосіб (subjunctive mood)
+  - минула форма (past form)
+  - підмет (subject)
+  - узгодження (agreement)
+  - підрядне речення (subordinate clause)
+  - головне речення (main clause)
+  - різний (different)
+  recommended:
+  - бажання (wish)
+  - прохання (request)
+  - наказ (command)
+  - необхідність (necessity)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - translation
+  - sentence-combining
+  - error-correction
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-31 (Conditionals Real якщо)

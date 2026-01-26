@@ -1,0 +1,106 @@
+module: error-analysis
+level: c2
+sequence: 80
+version: '2.0'
+title: Аналіз помилок
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Український правопис 2019
+  url: https://mon.gov.ua/ua/osvita/zagalna-serednya-osvita/navchalni-programi/ukrayinskij-pravopis-2019
+  type: primary
+  notes: Офіційні правописні норми
+- name: Культура мови — НАНУ
+  url: https://inmo.org.ua/
+  type: reference
+  notes: Нормативні рекомендації
+- name: Типові помилки у мовленні
+  url: https://uk.wikipedia.org/
+  type: reference
+  notes: Каталоги типових помилок
+content_outline:
+- section: Вступ — Помилка як інструмент навчання
+  words: 400
+  points:
+  - Типологія мовних помилок
+  - Джерела помилок (інтерференція, гіперкорекція)
+  - Помилка vs варіант норми
+  - Самокорекція та редагування
+- section: Орфографічні помилки
+  words: 600
+  points:
+  - Правопис голосних (е/и, о/а)
+  - Правопис приголосних (подвоєння, подовження)
+  - Правопис м'якого знака та апострофа
+  - Правопис разом/окремо/через дефіс
+- section: Граматичні помилки
+  words: 700
+  points:
+  - Відмінкові помилки
+  - Помилки у дієслівних формах
+  - Узгодження в роді, числі, відмінку
+  - Помилки в синтаксичних конструкціях
+- section: Лексичні помилки
+  words: 600
+  points:
+  - Русизми та калькування
+  - Неправильне слововживання
+  - Тавтологія та плеоназм
+  - Порушення сполучуваності
+- section: Стилістичні помилки
+  words: 600
+  points:
+  - Змішування регістрів
+  - Канцеляризми в невідповідних контекстах
+  - Надмірна метафоризація
+  - Порушення логіки тексту
+- section: Стратегії самокорекції
+  words: 600
+  points:
+  - Перевірка власного тексту
+  - Використання словників та довідників
+  - Редагування та вичитка
+  - Робота з рецензентом
+- section: Практикум — Редагування та корекція
+  words: 500
+  points:
+  - Аналіз текстів з помилками
+  - Редагування власних текстів
+  - Створення особистого списку помилок
+word_target: 4000
+vocabulary:
+  required:
+  - помилка (error/mistake)
+  - інтерференція (interference)
+  - гіперкорекція (hypercorrection)
+  - самокорекція (self-correction)
+  - редагування (editing)
+  - норма (norm/standard)
+  - русизм (russicism)
+  - калька (calque)
+  - тавтологія (tautology)
+  - плеоназм (pleonasm)
+  recommended:
+  - вичитка (proofreading)
+  - коректор (proofreader)
+  - сполучуваність (collocability)
+  - канцеляризм (officialese)
+  - мовленнєвий (speech/spoken)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - fill-in
+  - match-up
+  - error-correction
+  - critical-analysis
+  - essay-response
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-81 (Native-Like Fluency)
+- c2-82 (Teaching Ukrainian I)
+- c2-95 (Final Review I)

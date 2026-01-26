@@ -1,0 +1,77 @@
+module: temporal-clauses
+level: b1
+sequence: 37
+version: '2.0'
+title: Часові підрядні речення
+subtitle: Temporal Clauses Deep Dive
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can express часові відношення using various temporal connectors
+- Learner can sequence events using appropriate temporal markers
+- Learner can distinguish simultaneous vs sequential actions
+- Learner can build complex temporal narratives
+content_outline:
+- section: 'Introduction: Time Relations'
+  words: 150
+  points:
+  - Expressing when
+  - Before, during, after
+  - Temporal connectors overview
+- section: коли - Basic Time Clause
+  words: 200
+  points:
+  - When something happens
+  - Tense in коли clauses
+  - Aspect with коли
+- section: Sequence Connectors
+  words: 250
+  points:
+  - перш ніж (before)
+  - після того як (after)
+  - як тільки (as soon as)
+- section: Duration Connectors
+  words: 250
+  points:
+  - поки (while/until)
+  - доки (while/as long as)
+  - під час того як (during)
+- section: Simultaneous Actions
+  words: 200
+  points:
+  - Actions happening together
+  - Background vs foreground
+  - Aspect interaction
+- section: 'Practice: Temporal Narratives'
+  words: 150
+  points:
+  - Sequence events
+  - Build temporal stories
+word_target: 1200
+vocabulary:
+  required:
+  - коли (when)
+  - поки (while/until)
+  - перш ніж (before)
+  - після того як (after)
+  - як тільки (as soon as)
+  - доки (while/as long as)
+  - під час (during)
+  - одночасно (simultaneously)
+  recommended:
+  - щойно (just as)
+  - відтоді як (since - temporal)
+  - до того як (before)
+  - тим часом (meanwhile)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - sentence-combining
+  - error-correction
+  - writing
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-38 (Complex Sentence Integration)

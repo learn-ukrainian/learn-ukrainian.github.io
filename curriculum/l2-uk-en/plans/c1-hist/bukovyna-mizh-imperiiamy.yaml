@@ -1,0 +1,99 @@
+module: bukovyna-mizh-imperiiamy
+level: c1-hist
+sequence: 72
+version: '1.0'
+title: Буковина між імперіями
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Багатонаціональний край
+  words: 400
+  subsections:
+  - Буковина — де це
+  - Населення — українці, румуни, євреї, німці
+  - Історична доля — зміна імперій
+  - Структура модуля
+- section: Під Австрією (1775-1918)
+  words: 700
+  subsections:
+  - Приєднання від Молдови
+  - Герцогство Буковина
+  - Автономія — особливий статус
+  - Чернівецький університет
+  - Українсько-румунське співіснування
+- section: Під Румунією (1918-1940)
+  words: 600
+  subsections:
+  - Румунська анексія
+  - Румунізація — політика
+  - Придушення українців
+  - Опір і адаптація
+- section: Радянський період
+  words: 500
+  subsections:
+  - 1940 — анексія СРСР
+  - Поділ — північ/південь
+  - Репресії
+  - Радянізація
+- section: Буковинська ідентичність
+  words: 500
+  subsections:
+  - Особлива культура
+  - Мова — діалектні особливості
+  - Мультикультурність як спадщина
+  - Чернівці — «маленький Відень»
+- section: Сучасність
+  words: 500
+  subsections:
+  - Чернівецька область
+  - Північна Буковина — Україна
+  - Південна — Румунія
+  - Поділений регіон
+- section: Підсумок
+  words: 300
+  subsections:
+  - Буковина — мозаїка народів
+  - Австрійська спадщина
+  - Перехід до Закарпаття
+word_target: 3500
+vocabulary:
+- Буковина
+- герцогство
+- румунізація
+- автономія
+- анексія
+- мультикультурний
+- діалект
+- поділ
+- кордон
+- спадщина
+- австрійський період
+- міжвоєнний
+- етнічний склад
+- регіональна ідентичність
+- транскордонний
+activities:
+- type: demographic-analysis
+  focus: Bukovyna's ethnic composition — changes over time
+- type: policy-comparison
+  focus: Austrian vs. Romanian treatment of Ukrainians
+- type: cultural-analysis
+  focus: Chernivtsi as multicultural city
+- type: contemporary-analysis
+  focus: Divided Bukovyna today — north vs. south
+- type: essay-response
+  focus: Як австрійський період вплинув на буковинську ідентичність?
+sources:
+- name: Буковина (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Буковина
+  type: reference
+  notes: Regional overview
+- name: Герцогство Буковина (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Герцогство_Буковина
+  type: reference
+  notes: Habsburg period
+- name: Румунізація Буковини (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Румунізація_Буковини
+  type: reference
+  notes: Romanian period

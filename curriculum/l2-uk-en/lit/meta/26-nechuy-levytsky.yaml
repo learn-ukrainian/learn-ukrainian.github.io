@@ -1,28 +1,124 @@
-module: 26-nechuy-levytsky
-title: 'Іван Нечуй-Левицький'
-subtitle: 'Ivan Nechuy-Levytsky'
+id: lit-26
+title: 'Іван Нечуй-Левицький: Літописець Українського Села'
+subtitle: 'Ivan Nechuy-Levytsky: Chronicler of the Ukrainian Village'
+slug: nechuy-levytsky
+module_type: literature
+word_target: 4000
+immersion: 100% Ukrainian
 version: '2.0'
-phase: 'LIT.5 Realism'
+phase: LIT.5 Realism
 focus: literature
-pedagogy: 'Seminar'
+pedagogy: Seminar
 duration: 120
 transliteration: none
 tags:
-  - literature
-  - realism
-  - author-intro
-  - 19th-century
-  - prose
+  - література
+  - реалізм
+  - біографія
+  - нечуй-левицький
+  - проза
+  - 19-століття
 grammar:
-  - 'Realism as a method'
-  - 'Descriptive prose style'
+  - Realism as a method
+  - Descriptive prose style
+  - Ethnographic detail
 objectives:
-  - 'Зрозуміти роль Нечуя-Левицького у становленні українського реалізму'
-  - 'Проаналізувати особливості його "візуального" стилю письма'
-  - 'Дізнатися про конфлікт письменника з мовними нормами того часу'
-vocabulary_count: 30
-slug: nechuy-levytsky
+  - Зрозуміти роль Нечуя-Левицького у становленні українського реалізму
+  - Проаналізувати біографічні фактори, що вплинули на творчість
+  - Дослідити особливості "візуального" стилю письма
+  - Оцінити внесок у зображення сільського життя
+sources:
+  - name: Біографія Івана Нечуя-Левицького
+    url: https://www.ukrlib.com.ua/bio/printit.php?tid=1646
+    type: primary
+    notes: Офіційна біографія на UkrLib
+  - name: Життя та творчість Івана Нечуя-Левицького
+    url: https://www.ukrlib.com.ua/bio/printit.php?tid=1647
+    type: primary
+    notes: Розширена біографічна стаття
+  - name: Нечуй-Левицький — Вікіпедія
+    url: https://uk.wikipedia.org/wiki/Нечуй-Левицький_Іван_Семенович
+    type: reference
+    notes: Загальний контекст
+content_outline:
+  - section: Вступ — Від Куліша до Нечуя
+    words: 500
+    points:
+      - Перехід від романтизму до реалізму
+      - Чому Нечуй-Левицький важливий
+      - Структура фінального етапу курсу
+  - section: Дитинство і середовище (1838-1859)
+    words: 700
+    points:
+      - Село Стеблів і родина священика
+      - Київська семінарія та духовна академія
+      - Перші враження від сільського життя
+  - section: Учительські роки і перші твори
+    words: 700
+    points:
+      - Робота вчителем (1865-1885)
+      - '"Дві московки" — дебют (1868)'
+      - Співпраця з Кулішем і львівською "Правдою"
+  - section: Золота доба творчості (1878-1884)
+    words: 800
+    points:
+      - '"Микола Джеря" (1878) — епос кріпацтва'
+      - '"Кайдашева сім''я" (1879) — сімейна сага'
+      - '"Старосвітські батюшки та матушки" (1884)'
+  - section: Візуальний стиль Нечуя
+    words: 600
+    points:
+      - Етнографічна точність
+      - Мова як інструмент реалізму
+      - Конфлікт з "галицькою" нормою
+  - section: Підсумок — Останні роки і спадщина
+    words: 400
+    points:
+      - Київський період (1885-1918)
+      - Злиденна смерть генія
+      - Чому його читають досі
+vocabulary_hints:
+  required:
+    - реалізм (realism)
+    - етнографія (ethnography)
+    - побут (everyday life)
+    - село (village)
+    - кріпацтво (serfdom)
+    - священик (priest)
+    - повість (novella)
+    - оповідання (short story)
+    - семінарія (seminary)
+    - академія (academy)
+  recommended:
+    - псевдонім (pseudonym)
+    - дебют (debut)
+    - хроніка (chronicle)
+    - злидні (poverty)
+    - спадщина (legacy)
+activity_hints:
+  - type: reading
+    focus: Біографічні матеріали про Нечуя-Левицького
+    source: UkrLib biography
+    items: 4+
+  - type: quiz
+    focus: Біографія та творчість
+    items: 15+
+  - type: match-up
+    focus: Твори та їхні теми
+    items: 10+
+  - type: essay-response
+    focus: Роль Нечуя у становленні реалізму
+    word_target: 300
+    output: Літературознавче есе
+  - type: cloze
+    focus: Ключові факти біографії
+    items: 12+
+prerequisites:
+  - lit-21 to lit-25 (Kulish phase)
+connects_to:
+  - lit-27 (Кайдашева сім'я — персонажі)
+  - lit-30 (Микола Джеря)
 naturalness:
   score: 10
   status: PASS
-  justification: 'Graduate level academic Ukrainian'
+  justification: Graduate level academic Ukrainian

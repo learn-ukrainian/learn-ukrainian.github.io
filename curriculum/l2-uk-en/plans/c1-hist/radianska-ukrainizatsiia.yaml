@@ -1,0 +1,98 @@
+module: radianska-ukrainizatsiia
+level: c1-hist
+sequence: 85
+version: '1.0'
+title: 'Радянська українізація: Пастка 1920-х'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Підступна обіцянка
+  words: 400
+  subsections:
+  - 1920-ті — «золота доба»?
+  - Чому Москва дозволила
+  - Пастка — як це працювало
+  - Структура модуля
+- section: Фаза 1 — Обіцянка (1923-1928)
+  words: 700
+  subsections:
+  - Коренізація — загальна політика
+  - Українізація — конкретика
+  - Мова в школах, пресі, адміністрації
+  - Культурний розквіт
+- section: Фаза 2 — Залежність (1928-1932)
+  words: 600
+  subsections:
+  - Інтелігенція — вийшла з підпілля
+  - Кадри — створені, відомі
+  - Інституції — під контролем партії
+  - Списки готові
+- section: Фаза 3 — Зрада (1932-1933)
+  words: 600
+  subsections:
+  - Постанова проти українізації
+  - «Націоналістичний ухил»
+  - Голодомор — одночасно
+  - Зв'язок культурного і фізичного терору
+- section: Фаза 4 — Знищення (1933-1937)
+  words: 500
+  subsections:
+  - Розстріляне відродження
+  - Масштаби репресій
+  - Хто загинув — списки
+  - Культурний геноцид
+- section: Чому пастка спрацювала
+  words: 400
+  subsections:
+  - Надія на «новий порядок»
+  - Віра в соціалізм
+  - Створення видимих цілей
+  - Урок для майбутнього
+- section: Підсумок
+  words: 300
+  subsections:
+  - Українізація — класична пастка
+  - Кооптація через надію
+  - Перехід до Хрущова-Шелеста
+word_target: 3500
+vocabulary:
+- українізація
+- коренізація
+- пастка
+- культурний розквіт
+- репресії
+- «націоналістичний ухил»
+- кооптація
+- терор
+- інтелігенція
+- знищення
+- НЕП
+- класовий ворог
+- показовий процес
+- самокритика
+- реабілітація
+activities:
+- type: critical-analysis
+  focus: Map Ukrainization through co-optation cycle
+- type: policy-analysis
+  focus: Why did Moscow allow Ukrainization?
+- type: trap-mechanics
+  focus: How the trap worked — step by step
+- type: comparative-study
+  focus: Ukrainization vs. Pereiaslav — same pattern?
+- type: essay-response
+  focus: Чи можна було скористатися українізацією без наслідків?
+sources:
+- name: Українізація (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українізація
+  type: reference
+  notes: Ukrainization policy
+- name: Коренізація (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Коренізація
+  type: reference
+  notes: Broader policy
+- name: Розстріляне відродження (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
+  type: reference
+  notes: Cultural outcome

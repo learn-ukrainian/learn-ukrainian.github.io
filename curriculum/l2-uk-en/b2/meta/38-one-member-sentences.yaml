@@ -28,3 +28,41 @@ slug: 38-one-member-sentences
 naturalness:
   score: 9
   status: PASS
+content_outline:
+- section: Вступ — Односкладні речення
+  words: 333
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Означено-особові (Definite-personal)
+  words: 333
+  points:
+  - На кручі посадимо молодий сад. (We will plant a young garden on the cliff.)
+  - І про мене не забудьте згадати. (Don't forget to mention me.)
+  - Дивлюся на тебе й не надивлюся. (I look at you and can't get enough.)
+- section: Неозначено-особові (Indefinite-personal)
+  words: 333
+  points:
+  - Нам подали чаю. (They served us tea.)
+  - Перед святом прикрашають будинки. (Before the holiday, they decorate houses.)
+  - У селі кажуть... (In the village, they say...)
+- section: Безособові (Impersonal)
+  words: 333
+  points:
+  - Там усе правильно записано. (Everything is correctly written there.)
+  - Надворі темніє. (It's getting dark outside.)
+  - Мені холодно. (I'm cold.)
+- section: Номінативні (Nominative)
+  words: 333
+  points:
+  - Дорога довга. Чагарі, долини. (A long road. Bushes, valleys.)
+  - Ніч. Тиша. Зорі. (Night. Silence. Stars.)
+  - Київ! Древня столиця! (Kyiv! Ancient capital!)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

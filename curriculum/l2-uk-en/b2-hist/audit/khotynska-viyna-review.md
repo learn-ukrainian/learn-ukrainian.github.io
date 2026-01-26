@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M46 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:22:15
+**Generated:** 2026-01-25 22:22:52
 
 ## Configuration
 **Type:** B2-history
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4498/4000 (raw: 4702)
+- **Words:** ✅ 4080/4000 (raw: 4282)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/2 types
@@ -47,7 +47,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
-- **Immersion:** 🇺🇦 98.6% (target 90-100% (history))
+- **Immersion:** 🇺🇦 98.5% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -59,15 +59,15 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 10 | 3 | 100% | 24% | 23.8% |
+| primary_sources | 9 | 3 | 100% | 24% | 23.8% |
 | engagement | 6 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 6 | 4 | 100% | 10% | 9.5% |
-| visual | 6 | 4 | 100% | 10% | 9.5% |
+| visual | 5 | 4 | 100% | 10% | 9.5% |
 | variety | 0.98 | - | 98% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 25 | 3 | 100% | 5% | 4.8% |
+| questions | 14 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
@@ -84,6 +84,5 @@
 | **Геополітичні наслідки та пам'ять** | ⚪️ | 389 | Skipped |
 | **Первинні джерела: Свідчення мужності та гордині** | ✅ | 406 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 457 | Included in Core |
-| **Есе** | ⚪️ | 418 | Skipped |
 | **Підсумок** | ✅ | 127 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 99 | Skipped |

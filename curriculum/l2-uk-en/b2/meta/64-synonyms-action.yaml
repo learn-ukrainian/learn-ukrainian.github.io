@@ -27,3 +27,32 @@ slug: 64-synonyms-action
 naturalness:
   score: 9
   status: PASS
+content_outline:
+- section: Вступ — Дія та Перетворення
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Do/Make
+  words: 500
+  points:
+  - робити (do/make - general)
+  - чинити (do - formal/legal)
+  - діяти (act - take action)
+  - виконувати (perform - fulfill)
+  - здійснювати (realize - implement)
+- section: Take
+  words: 500
+  points:
+  - брати (take - general)
+  - взяти (take - perfective)
+  - хапати (grab - quick)
+  - вихоплювати (snatch - sudden)
+  - отримувати (receive - get given)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

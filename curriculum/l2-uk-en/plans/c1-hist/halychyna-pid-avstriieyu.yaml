@@ -1,0 +1,98 @@
+module: halychyna-pid-avstriieyu
+level: c1-hist
+sequence: 70
+version: '1.0'
+title: 'Галичина під Австрією: Особлива доля'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Інший шлях
+  words: 400
+  subsections:
+  - Галичина — не під Росією
+  - 1772 — поділ Польщі
+  - Габсбурзька імперія — інша система
+  - Структура модуля
+- section: Правовий статус
+  words: 600
+  subsections:
+  - Королівство Галичини та Володимирії
+  - Конституційний період (після 1867)
+  - Права українців — порівняно з Росією
+  - Обмеження — польська домінація
+- section: Освіта і церква
+  words: 700
+  subsections:
+  - Греко-католицька церква — легальна
+  - Семінарії — українською
+  - Університет — доступ
+  - Порівняння з Наддніпрянщиною
+- section: «Весна народів» 1848
+  words: 600
+  subsections:
+  - Головна Руська Рада
+  - Перша легальна організація
+  - Скасування панщини
+  - Чому не вдалося більше
+- section: Польсько-український конфлікт
+  words: 500
+  subsections:
+  - Польська шляхта — домінація
+  - Сейм — нерівність
+  - Конкуренція за Галичину
+  - «Полякування» vs. українізація
+- section: Порівняння з Росією
+  words: 400
+  subsections:
+  - Що можна в Австрії
+  - Чого не можна в Росії
+  - Різні траєкторії
+  - Чому це важливо
+- section: Підсумок
+  words: 300
+  subsections:
+  - Австрія — не ідеал, але краще
+  - Галичина — «Український П'ємонт»
+  - Підготовка до національного руху
+word_target: 3500
+vocabulary:
+- Галичина
+- Габсбурги
+- конституційний
+- автономія
+- греко-католицький
+- сейм
+- панщина
+- «весна народів»
+- шляхта
+- право
+- Головна Руська Рада
+- намісник
+- крайовий
+- конституція
+- громадянські права
+activities:
+- type: legal-comparison
+  focus: Rights of Ukrainians in Austria vs. Russia
+- type: 1848-analysis
+  focus: What did 1848 achieve for Galicia?
+- type: church-analysis
+  focus: UGCC under Habsburg rule
+- type: essay-response
+  focus: What if Galicia was under Russia?
+- type: essay-response
+  focus: Чому Галичину називали 'українським П'ємонтом'?
+sources:
+- name: Галичина (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Галичина
+  type: reference
+  notes: Regional overview
+- name: Королівство Галичини та Володимирії (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Королівство_Галичини_та_Володимирії
+  type: reference
+  notes: Habsburg period
+- name: Українці в Австро-Угорщині (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українці_в_Австро-Угорщині
+  type: reference
+  notes: Ukrainian status

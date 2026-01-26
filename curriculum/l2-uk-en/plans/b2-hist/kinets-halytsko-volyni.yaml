@@ -1,0 +1,21 @@
+module: kinets-halytsko-volyni
+level: b2-hist
+sequence: 24
+version: '1.0'
+title: Занепад Галицько-Волинської держави
+focus: history
+pedagogy: CBI
+objectives:
+- Учень може пояснити причини занепаду держави Романовичів
+- Учень розуміє наслідки отруєння Юрія ІІ
+- Учень може аналізувати боротьбу сусідніх держав за руську спадщину
+content_outline:
+- section: Контекст
+  words: 484
+- section: Читання
+  words: 2800
+- section: Первинні джерела
+  words: 350
+- section: Деколонізаційний погляд
+  words: 509
+word_target: 4143

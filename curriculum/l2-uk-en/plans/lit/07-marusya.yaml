@@ -1,0 +1,104 @@
+module: 07-marusya
+level: lit
+sequence: 7
+version: '1.0'
+title: 'Маруся: Ідеал Української Душі'
+subtitle: 'LIT-007: Сентименталізм у дії'
+focus: literature
+pedagogy: seminar
+objectives:
+- Analyze the plot and characters of "Marusya"
+- Contrast "Marusya" with "Natalka Poltavka"
+- Identify features of Ukrainian Sentimentalism
+sources:
+  primary:
+  - url: https://www.ukrlib.com.ua/books/printit.php?tid=252
+    title: Маруся — повний текст
+    notes: Повість для детального аналізу
+  secondary:
+  - url: https://www.ukrlib.com.ua/analiz/printit.php?tid=252
+    title: Аналіз "Марусі"
+    notes: Літературознавчий аналіз
+  - url: https://www.ukrlib.com.ua/bio/printit.php?tid=1646
+    title: Біографія Квітки
+    notes: Авторський контекст
+content_outline:
+- section: Вступ — Твір, що змусив плакати Європу
+  words: 500
+  subsections:
+  - Історія публікації та рецепції
+  - Переклади на європейські мови
+  - '"Маруся" як "адвокат" української культури'
+- section: Сюжет і структура повісті
+  words: 700
+  subsections:
+  - Історія кохання Марусі та Василя
+  - Трагічний фінал
+  - Роль долі (фатуму) у сюжеті
+- section: Маруся vs Наталка — два полюси
+  words: 700
+  subsections:
+  - Активна Наталка vs пасивна Маруся
+  - Архетип "ідеальної українки"
+  - Покора і святість vs боротьба
+- section: Етнографія як мистецтво
+  words: 700
+  subsections:
+  - Весільний обряд у повісті
+  - Похоронний обряд як кульмінація
+  - '"Євангеліє від народу"'
+- section: Мовні засоби катарсису
+  words: 600
+  subsections:
+  - Сентиментальна лексика (емотиви)
+  - Пестливі форми (димінутиви)
+  - Риторичні оклики та звертання
+- section: Підсумок — Квітка vs Гоголь
+  words: 400
+  subsections:
+  - Шлях сльози vs шлях сміху
+  - Два погляди на українське село
+  - Спадщина сентименталізму
+word_target: 4500
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - сентименталізм
+  - фатум
+  - покора
+  - катарсис
+  - архетип
+  - етнографія
+  - емотив
+  - димінутив
+  - оклик
+  - звертання
+  recommended:
+  - ідеал
+  - святість
+  - трагедія
+  - мелодрама
+  - рецепція
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - cloze
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: lit-06 (Kvitka biography)
+  related:
+  - lit-09 (Ethnography — весільні та похоронні обряди)
+  - lit-18 (Women in Kobzar — жіночі архетипи)
+constraints:
+  min_engagement_boxes: 3
+  min_examples: 15
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

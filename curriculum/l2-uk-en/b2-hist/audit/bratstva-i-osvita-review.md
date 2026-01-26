@@ -1,8 +1,8 @@
 # Audit Report: M36 — bratstva-i-osvita.md
 **Level:** B2 | **Module:** M36 | **Phase:** B2.3a | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:21:55
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 22:22:45
 
 ## Configuration
 **Type:** B2-history
@@ -36,8 +36,17 @@
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
+## TEMPLATE COMPLIANCE
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Вступ, Європейський контекст: Реформація та Контрреформація
+  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
-- **Words:** ✅ 4064/4000 (raw: 4311)
+- **Words:** ❌ 3842/4000 (raw: 4024)
 - **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 8/2 types
@@ -49,7 +58,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (8 activities)
-- **Immersion:** 🇺🇦 98.4% (target 90-100% (history))
+- **Immersion:** 🇺🇦 98.3% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -66,7 +75,7 @@
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 4 | 4 | 100% | 10% | 9.5% |
-| visual | 8 | 4 | 100% | 10% | 9.5% |
+| visual | 6 | 4 | 100% | 10% | 9.5% |
 | variety | 0.98 | - | 98% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 20 | 3 | 100% | 5% | 4.8% |
@@ -82,8 +91,8 @@
 | **Освітня діяльність братств** | ⚪️ | 603 | Skipped |
 | **Острозька академія: «Волинські Афіни»** | ⚪️ | 536 | Skipped |
 | **Читання** | ✅ | 293 | Included in Core |
-| **Первинні джерела** | ✅ | 402 | Included in Core |
+| **Первинні джерела** | ✅ | 404 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 328 | Included in Core |
-| **Есе** | ⚪️ | 434 | Skipped |
-| **Підсумок** | ✅ | 218 | Included in Core |
+| **Європейський контекст: Реформація та Контрреформація** | ✅ | 209 | Included in Core |
+| **Підсумок** | ✅ | 219 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 101 | Skipped |

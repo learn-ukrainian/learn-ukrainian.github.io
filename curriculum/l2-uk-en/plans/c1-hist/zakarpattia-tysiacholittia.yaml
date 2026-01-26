@@ -1,0 +1,100 @@
+module: zakarpattia-tysiacholittia
+level: c1-hist
+sequence: 73
+version: '1.0'
+title: 'Закарпаття: Тисячоліття на перехресті'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Найзахідніший схід
+  words: 400
+  subsections:
+  - Закарпаття — географія
+  - Тисяча років під Угорщиною
+  - Ізоляція від решти України
+  - Структура модуля
+- section: Під Угорщиною (896-1918)
+  words: 700
+  subsections:
+  - Угорська корона — тисячоліття
+  - Статус — «руснаки»
+  - Церква — греко-католицька
+  - Мадяризація
+  - Еміграція до Америки
+- section: Чехословацький період (1919-1938)
+  words: 600
+  subsections:
+  - Підкарпатська Русь
+  - Автономія — обіцяна, не дана
+  - Культурний розквіт
+  - Ідентитети — русин, русский, український
+- section: Карпатська Україна 1939
+  words: 600
+  subsections:
+  - Автономія — нарешті
+  - Августин Волошин
+  - Проголошення незалежності
+  - Угорська окупація
+  - Героїчна оборона
+- section: Радянський період
+  words: 500
+  subsections:
+  - 1945 — «возз'єднання»
+  - Примусова українізація?
+  - Репресії
+  - Ліквідація УГКЦ
+- section: Русинське питання
+  words: 400
+  subsections:
+  - Русин vs. українець
+  - Політичне маніпулювання
+  - Сучасний статус
+  - Як розуміти ідентичність
+- section: Підсумок
+  words: 300
+  subsections:
+  - Закарпаття — унікальний шлях
+  - 1939 — перша незалежність
+  - Перехід до Волині
+word_target: 3500
+vocabulary:
+- Закарпаття
+- русин
+- Підкарпатська Русь
+- Карпатська Україна
+- мадяризація
+- автономія
+- ізоляція
+- ідентичність
+- окупація
+- «возз'єднання»
+- Августин Волошин
+- Січ Карпатська
+- етноніми
+- регіональний сепаратизм
+- інструменталізація
+activities:
+- type: identity-analysis
+  focus: Rusyn vs. Ukrainian identity — what's the question?
+- type: 1939-study
+  focus: Carpatho-Ukraine — shortest independence
+- type: comparative-study
+  focus: Transcarpathia vs. other western regions
+- type: policy-analysis
+  focus: How different rulers treated Transcarpathia
+- type: essay-response
+  focus: Чи русини — окремий народ чи частина українців?
+sources:
+- name: Закарпаття (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Закарпаття
+  type: reference
+  notes: Regional overview
+- name: Карпатська Україна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Карпатська_Україна
+  type: reference
+  notes: 1939 independence
+- name: Русини (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Русини
+  type: reference
+  notes: Rusyn identity question

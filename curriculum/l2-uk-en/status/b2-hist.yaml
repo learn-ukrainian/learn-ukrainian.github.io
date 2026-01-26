@@ -1,0 +1,1057 @@
+level: b2-hist
+updated: '2026-01-26T12:55:36.071093+00:00'
+summary:
+  total: 140
+  planned: 29
+  content: 1
+  activities: 3
+  reviewed: 107
+modules:
+  trypillian-civilization:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 6332
+    word_target: 6133
+    activity_count: 10
+    naturalness: 10
+  scythians-sarmatians:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 3963
+    word_target: 4000
+    activity_count: 9
+    naturalness: 10
+  greeks-crimea-olbia:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4469
+    word_target: 4000
+    activity_count: 8
+    naturalness: 10
+  sloviany-origins:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 5081
+    word_target: 4000
+    activity_count: 6
+    naturalness: 10
+  slavic-tribes:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4673
+    word_target: 4000
+    activity_count: 7
+    naturalness: 9
+  zasnuvannia-kyieva:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4201
+    word_target: 4000
+    activity_count: 6
+    naturalness: 9
+  khozary-i-sloviany:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4469
+    word_target: 4000
+    activity_count: 6
+    naturalness: 9
+  syntez-vytoky-1:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4931
+    word_target: 4000
+    activity_count: 11
+    naturalness: 9
+  oleh-ihor:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4238
+    word_target: 4000
+    activity_count: 11
+    naturalness: 10
+  olha-sviatoslav:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4307
+    word_target: 4000
+    activity_count: 9
+    naturalness: 10
+  volodymyr-khreshchennia:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4064
+    word_target: 4000
+    activity_count: 10
+    naturalness: 10
+  yaroslav-wise:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4170
+    word_target: 4000
+    activity_count: 10
+    naturalness: 10
+  ruska-pravda:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4287
+    word_target: 4000
+    activity_count: 8
+    naturalness: 10
+  sofiya-kyivska:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4071
+    word_target: 4000
+    activity_count: 8
+    naturalness: 9
+  volodymyr-monomakh:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4693
+    word_target: 4000
+    activity_count: 13
+    naturalness: 9
+  kultura-kyivskoi-rusi:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 6050
+    word_target: 4000
+    activity_count: 8
+    naturalness: 10
+  kniazivski-usobiytsi:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4028
+    word_target: 4000
+    activity_count: 10
+    naturalness: 10
+  ludy-rusi:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4186
+    word_target: 4000
+    activity_count: 8
+    naturalness: 9
+  rus-ta-susidy:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4607
+    word_target: 4000
+    activity_count: 12
+    naturalness: 9
+  syntez-kyivska-rus:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4773
+    word_target: 4000
+    activity_count: 8
+    naturalness: 9
+  mongolska-navala:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4398
+    word_target: 4024
+    activity_count: 8
+    naturalness: 9
+  mykhailo-chernigivskyi:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4730
+    word_target: 4000
+    activity_count: 10
+    naturalness: 9
+  danylo-halytskyi:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4451
+    word_target: 4019
+    activity_count: 5
+    naturalness: 9
+  galytsko-volynska-derzhava:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4651
+    word_target: 4116
+    activity_count: 5
+    naturalness: 9
+  boiare-i-shliakhta:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4533
+    word_target: 4052
+    activity_count: 5
+    naturalness: 9
+  kinets-halytsko-volyni:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4809
+    word_target: 4143
+    activity_count: 5
+    naturalness: 9
+  krymske-khanstvo:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4607
+    word_target: 4153
+    activity_count: 5
+    naturalness: 9
+  syntez-dvokniazivstvo:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 3795
+    word_target: 3000
+    activity_count: 10
+    naturalness: 9
+  velyke-kniazivstvo-lytovske:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4866
+    word_target: 4021
+    activity_count: 10
+    naturalness: 9
+  ukrainski-zemli-u-vkl:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4989
+    word_target: 4065
+    activity_count: 10
+    naturalness: 9
+  liublinska-uniia:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 3957
+    word_target: 4000
+    activity_count: 10
+    naturalness: 9
+  rich-pospolyta:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 3713
+    word_target: 3000
+    activity_count: 10
+    naturalness: 9
+  beresteyska-uniia:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4423
+    word_target: 4000
+    activity_count: 9
+    naturalness: 9
+  pravoslavna-tserkva-17:
+    status: content
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4966
+    word_target: 4000
+    naturalness: 9
+  petro-mohyla:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4392
+    word_target: 4000
+    activity_count: 10
+    naturalness: 9
+  bratstva-i-osvita:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 3919
+    word_target: 4000
+    activity_count: 8
+    naturalness: 9
+  bukovyna-zakarpattia:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 3841
+    word_target: 4000
+    activity_count: 8
+    naturalness: 9
+  slobozhanshchyna:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 3998
+    word_target: 4000
+    activity_count: 5
+    naturalness: 9
+  liudy-ricchi-pospolytoi:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4070
+    word_target: 4000
+    activity_count: 5
+    naturalness: 9
+  syntez-lytva-polska:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4605
+    word_target: 4500
+    activity_count: 5
+    naturalness: 9
+  kozatstvo-vytoky:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4323
+    word_target: 4000
+    activity_count: 9
+    naturalness: 9
+  zaporizka-sich:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 3703
+    word_target: 4000
+    activity_count: 8
+    naturalness: 9
+  dmytro-vyshnevetskyi:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 3589
+    word_target: 3684
+    activity_count: 5
+    naturalness: 9
+  kozatski-povstannia-16:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4891
+    word_target: 4800
+    activity_count: 5
+    naturalness: 9
+  petro-sahaidachnyi:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 5491
+    word_target: 5200
+    activity_count: 5
+    naturalness: 9
+  khotynska-viyna:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4177
+    word_target: 4000
+    activity_count: 6
+    naturalness: 9
+  kozatska-kultura:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4070
+    word_target: 4000
+    activity_count: 6
+    naturalness: 9
+  kozatske-viisko:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4014
+    word_target: 4000
+    activity_count: 6
+    naturalness: 9
+  morski-pokhody:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 3983
+    word_target: 4000
+    activity_count: 7
+    naturalness: 9
+  syntez-kozatstvo-vytoky:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 3096
+    word_target: 3000
+    activity_count: 10
+    naturalness: 9
+  khmelnychchyna-prychyny:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4101
+    word_target: 3000
+    activity_count: 7
+    naturalness: 9
+  bohdan-khmelnytskyi:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4262
+    word_target: 3000
+    activity_count: 10
+    naturalness: 9
+  bitva-pid-zhovtymy-vodamy:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4167
+    word_target: 4000
+    activity_count: 10
+    naturalness: 9
+  zborivska-bila-tserkva:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4495
+    word_target: 4000
+    activity_count: 7
+    naturalness: 9
+  kozatska-derzhava:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4039
+    word_target: 4000
+    activity_count: 11
+    naturalness: 9
+  pereyaslavska-uhoda:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 5078
+    word_target: 4000
+    activity_count: 9
+    naturalness: 9
+  yurii-nemyrych:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4678
+    word_target: 4000
+    activity_count: 9
+    naturalness: 9
+  ruina-i:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4760
+    word_target: 4000
+    activity_count: 16
+    naturalness: 9
+  ruina-ii:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 5581
+    word_target: 4000
+    activity_count: 16
+    naturalness: 9
+  andrusivske-peremyrya:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4960
+    word_target: 4000
+    activity_count: 8
+    naturalness: 9
+  ivan-sirko:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4697
+    word_target: 4000
+    activity_count: 6
+    naturalness: 9
+  syntez-khmelnychchyna:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4537
+    word_target: 4000
+    activity_count: 5
+    naturalness: 9
+  ivan-mazepa-derzhavnyk:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 4067
+    word_target: 4000
+    activity_count: 5
+    naturalness: 10
+  ivan-mazepa-kultura:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4710
+    word_target: 4000
+    activity_count: 5
+    naturalness: 9
+  kost-hordiyenko-sich:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4347
+    word_target: 4000
+    activity_count: 5
+    naturalness: 9
+  ivan-mazepa-poltava:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 4190
+    word_target: 4000
+    activity_count: 10
+    naturalness: 10
+  pylyp-orlyk-konstytutsiia:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4790
+    word_target: 4000
+    activity_count: 11
+    naturalness: 9
+  hryhorii-skovoroda:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4511
+    word_target: 4000
+    activity_count: 10
+    naturalness: 9
+  pavlo-polubotok:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4102
+    word_target: 4000
+    activity_count: 10
+    naturalness: 9
+  danylo-apostol:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4081
+    word_target: 4000
+    activity_count: 10
+    naturalness: 9
+  koliivshchyna:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 4389
+    word_target: 4000
+    activity_count: 7
+    naturalness: 10
+  opryshky:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 4225
+    word_target: 4000
+    activity_count: 7
+    naturalness: 10
+  petro-kalnyshevskyi:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 4166
+    word_target: 4000
+    activity_count: 6
+    naturalness: 10
+  kinets-hetmanshchyny:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 3959
+    word_target: 4000
+    activity_count: 16
+    naturalness: 10
+  rosiiska-imperiia-ukraina:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2131
+    word_target: 4000
+    activity_count: 6
+    naturalness: 10
+  habsburzka-halichyna:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 4042
+    word_target: 4000
+    activity_count: 16
+    naturalness: 10
+  pivden-novorosiia:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 5278
+    word_target: 4000
+    activity_count: 6
+    naturalness: 10
+  nova-serbiya:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 4295
+    word_target: 4000
+    activity_count: 6
+    naturalness: 10
+  krypatsvo-selo:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 4316
+    word_target: 4000
+    activity_count: 6
+    naturalness: 10
+  kyrylo-mefodiivtsi:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 4299
+    word_target: 4000
+    activity_count: 6
+    naturalness: 10
+  shevchenko-awakening:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2194
+    word_target: 4000
+    activity_count: 15
+    naturalness: 10
+  valuevskyi-emskyi:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2053
+    word_target: 4000
+    activity_count: 15
+    naturalness: 10
+  hromady:
+    status: planned
+    last_updated: '2026-01-26'
+    content_words: 27
+    word_target: 4000
+    activity_count: 1
+    naturalness: 10
+  drahomanov:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2150
+    word_target: 4000
+    activity_count: 12
+    naturalness: 10
+  franko-lesia-hrinchenko:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2071
+    word_target: 4000
+    activity_count: 13
+    naturalness: 10
+  syntez-imperska-doba:
+    status: planned
+    last_updated: '2026-01-26'
+    content_words: 28
+    word_target: 3000
+    activity_count: 1
+    naturalness: 10
+  hrushevskyi:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2205
+    word_target: 4000
+    activity_count: 12
+    naturalness: 10
+  persha-svitova:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2260
+    word_target: 4000
+    activity_count: 14
+    naturalness: 10
+  sichovi-striltsi:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1739
+    word_target: 4000
+    activity_count: 10
+    naturalness: 10
+  tsentralna-rada:
+    status: planned
+    last_updated: '2026-01-26'
+    content_words: 28
+    word_target: 4000
+    activity_count: 1
+    naturalness: 10
+  skoropadskyi:
+    status: planned
+    last_updated: '2026-01-26'
+    content_words: 28
+    word_target: 4000
+    activity_count: 1
+    naturalness: 10
+  zunr:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2124
+    word_target: 4000
+    activity_count: 14
+    naturalness: 10
+  dyrektoriia:
+    status: planned
+    last_updated: '2026-01-26'
+    content_words: 27
+    word_target: 4000
+    activity_count: 1
+    naturalness: 10
+  symon-petliura-revolution:
+    status: planned
+    last_updated: '2026-01-26'
+    content_words: 27
+    word_target: 4000
+    activity_count: 1
+    naturalness: 10
+  bilshovytsko-ukrainska-viyna:
+    status: planned
+    last_updated: '2026-01-26'
+    content_words: 28
+    word_target: 4000
+    activity_count: 1
+    naturalness: 10
+  kholodnyi-yar:
+    status: planned
+    last_updated: '2026-01-26'
+    content_words: 29
+    word_target: 4000
+    activity_count: 1
+    naturalness: 10
+  karpatska-ukraina:
+    status: planned
+    last_updated: '2026-01-26'
+    content_words: 29
+    word_target: 4000
+    activity_count: 1
+    naturalness: 10
+  syntez-revoliutsiia:
+    status: planned
+    last_updated: '2026-01-26'
+    content_words: 28
+    word_target: 3000
+    activity_count: 1
+    naturalness: 10
+  rozstriliane-vidrodzennia:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2116
+    word_target: 4000
+    activity_count: 14
+    naturalness: 10
+  mekhanizm-teroru:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2181
+    word_target: 4000
+    activity_count: 15
+    naturalness: 10
+  holodomor-mekhanizm:
+    status: activities
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4266
+    word_target: 4000
+    activity_count: 5
+  holodomor-pamiat:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1976
+    word_target: 4000
+    activity_count: 16
+    naturalness: 10
+  pacyfikatsiia:
+    status: planned
+    last_updated: '2026-01-26'
+    content_words: 29
+    word_target: 4000
+    activity_count: 1
+    naturalness: 10
+  oun:
+    status: planned
+    last_updated: '2026-01-26'
+    content_words: 27
+    word_target: 4000
+    activity_count: 1
+    naturalness: 10
+  druha-svitova-pochatok:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 4096
+    word_target: 4000
+    activity_count: 22
+    naturalness: 10
+  babyn-yar:
+    status: planned
+    last_updated: '2026-01-26'
+    content_words: 31
+    word_target: 4000
+    activity_count: 1
+    naturalness: 10
+  upa:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2086
+    word_target: 4000
+    activity_count: 15
+    naturalness: 10
+  syntez-trahedii:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2692
+    word_target: 3000
+    activity_count: 16
+    naturalness: 10
+  povoienne-vidbudova:
+    status: planned
+    last_updated: '2026-01-26'
+    content_words: 27
+    word_target: 4000
+    activity_count: 1
+    naturalness: 10
+  deportatsii-ukraintsiv:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1974
+    word_target: 4000
+    activity_count: 15
+    naturalness: 10
+  surgunlik:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2044
+    word_target: 4000
+    activity_count: 16
+    naturalness: 10
+  krym-1954:
+    status: planned
+    last_updated: '2026-01-26'
+    content_words: 29
+    word_target: 4000
+    activity_count: 1
+    naturalness: 10
+  destalinizatsiia:
+    status: planned
+    last_updated: '2026-01-26'
+    content_words: 28
+    word_target: 4000
+    activity_count: 1
+    naturalness: 10
+  shistdesiatnyky:
+    status: activities
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 2158
+    word_target: 4000
+    activity_count: 16
+  ukrainska-helsinska-hrupa:
+    status: planned
+    last_updated: '2026-01-26'
+    content_words: 28
+    word_target: 4000
+    activity_count: 1
+    naturalness: 10
+  afhanistan:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 28
+    word_target: 4000
+    activity_count: 1
+  chornobyl:
+    status: activities
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 2265
+    word_target: 4000
+    activity_count: 16
+  diaspora:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2098
+    word_target: 4000
+    activity_count: 16
+    naturalness: 10
+  shliakh-nezalezhnosti:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1743
+    word_target: 4000
+    activity_count: 13
+    naturalness: 10
+  rukh:
+    status: planned
+    last_updated: '2026-01-26'
+    content_words: 29
+    word_target: 4000
+    activity_count: 1
+    naturalness: 10
+  nezalezhnist-1991:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2070
+    word_target: 4000
+    activity_count: 16
+    naturalness: 10
+  ukraine-90s:
+    status: planned
+    last_updated: '2026-01-26'
+    content_words: 31
+    word_target: 4000
+    activity_count: 1
+    naturalness: 10
+  pomara-revoliutsiia:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2372
+    word_target: 4000
+    activity_count: 16
+    naturalness: 9
+  tomos:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1829
+    word_target: 4000
+    activity_count: 15
+    naturalness: 10
+  yanukovych:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1934
+    word_target: 4000
+    activity_count: 16
+    naturalness: 10
+  movna-polityka:
+    status: planned
+    last_updated: '2026-01-26'
+    content_words: 29
+    word_target: 4000
+    activity_count: 1
+    naturalness: 10
+  revoliutsiia-hidnosti:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2128
+    word_target: 4000
+    activity_count: 16
+    naturalness: 10
+  aneksiia-krymu:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 4183
+    word_target: 4202
+    activity_count: 8
+    naturalness: 9
+  krymski-tatary-pislia-2014:
+    status: planned
+    last_updated: '2026-01-26'
+    content_words: 29
+    word_target: 4000
+    activity_count: 1
+    naturalness: 10
+  syntez-nezalezhnist:
+    status: planned
+    last_updated: '2026-01-26'
+    content_words: 28
+    word_target: 3000
+    activity_count: 1
+    naturalness: 10
+  viyna-donbas:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2110
+    word_target: 4000
+    activity_count: 16
+    naturalness: 10
+  povnomasshtabne-vtorhnessnia:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2180
+    word_target: 4000
+    activity_count: 16
+    naturalness: 10
+  mariupol-azovstal:
+    status: planned
+    last_updated: '2026-01-26'
+    content_words: 28
+    word_target: 4000
+    activity_count: 1
+    naturalness: 10
+  bucha-irpin:
+    status: planned
+    last_updated: '2026-01-26'
+    content_words: 29
+    word_target: 4000
+    activity_count: 1
+    naturalness: 10
+  kakhovska-hes:
+    status: planned
+    last_updated: '2026-01-26'
+    content_words: 28
+    word_target: 4000
+    activity_count: 1
+    naturalness: 10
+  voienna-ekonomika:
+    status: planned
+    last_updated: '2026-01-26'
+    content_words: 28
+    word_target: 4000
+    activity_count: 1
+    naturalness: 10
+  hromadske-suspilstvo:
+    status: planned
+    last_updated: '2026-01-26'
+    content_words: 29
+    word_target: 4000
+    activity_count: 1
+    naturalness: 10
+  mizhnarodna-pidtrymka:
+    status: planned
+    last_updated: '2026-01-26'
+    content_words: 27
+    word_target: 4000
+    activity_count: 1
+    naturalness: 10
+  zlochyny-stiikist:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2071
+    word_target: 4000
+    activity_count: 16
+    naturalness: 10
+  syntez-viyna:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2099
+    word_target: 3000
+    activity_count: 16
+    naturalness: 10

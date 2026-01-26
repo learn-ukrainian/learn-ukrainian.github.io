@@ -1,0 +1,21 @@
+module: 54-idioms-nature
+level: b2
+sequence: 54
+version: '1.0'
+title: 'Фразеологізми: Природа (Вода, Вогонь, Земля, Вітер)'
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Вивчити 8 фундаментальних фразеологізмів про чотири стихії
+- Розуміти значення метафор випробування, ризику та правди
+- Вміти використовувати природні образи для опису складних життєвих ситуацій
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

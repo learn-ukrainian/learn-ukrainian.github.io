@@ -1,0 +1,105 @@
+module: professional-identity
+level: c2
+sequence: 73
+version: '2.0'
+title: Професійна ідентичність — Особистий бренд українською
+focus: domain
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Українські бізнес-медіа
+  url: https://mind.ua/
+  type: reference
+  notes: Кейси особистого брендингу
+- name: Forbes Україна
+  url: https://forbes.ua/
+  type: reference
+  notes: Профілі успішних професіоналів
+- name: Лідери думок у професійних спільнотах
+  url: https://dou.ua/
+  type: reference
+  notes: IT-спільнота як приклад
+content_outline:
+- section: Вступ — Професійна ідентичність як інструмент
+  words: 500
+  points:
+  - Що таке професійна ідентичність
+  - Особистий бренд vs корпоративний
+  - Автентичність та цінності
+  - Українська специфіка
+- section: Формулювання професійного позиціонування
+  words: 700
+  points:
+  - Унікальна ціннісна пропозиція
+  - Цільова авдиторія
+  - Ключові меседжі
+  - Elevator pitch українською
+- section: Голос та тон комунікації
+  words: 600
+  points:
+  - Визначення особистого стилю
+  - Консистентність голосу
+  - Адаптація тону для контексту
+  - Автентичність vs професіоналізм
+- section: Публічна присутність
+  words: 600
+  points:
+  - Експертні публікації
+  - Виступи та подкасти
+  - Соціальні мережі
+  - Networking українською
+- section: Репутаційний менеджмент
+  words: 600
+  points:
+  - Моніторинг репутації
+  - Робота з негативом
+  - Кризові комунікації
+  - Відновлення репутації
+- section: Розвиток та еволюція бренду
+  words: 500
+  points:
+  - Стратегія розвитку
+  - Pivoting професійної ідентичності
+  - Нові ринки та авдиторії
+  - Довгострокове планування
+- section: Практикум — Побудова особистого бренду
+  words: 500
+  points:
+  - Аудит поточної присутності
+  - Розробка позиціонування
+  - Створення контент-плану
+word_target: 4000
+vocabulary:
+  required:
+  - професійна ідентичність (professional identity)
+  - особистий бренд (personal brand)
+  - позиціонування (positioning)
+  - ціннісна пропозиція (value proposition)
+  - цільова авдиторія (target audience)
+  - голос бренду (brand voice)
+  - меседж (message)
+  - репутація (reputation)
+  - нетворкінг (networking)
+  - автентичність (authenticity)
+  recommended:
+  - elevator pitch (elevator pitch)
+  - контент-план (content plan)
+  - експертність (expertise)
+  - лідер думок (thought leader)
+  - pivoting (pivoting)
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - fill-in
+  - critical-analysis
+  - essay-response
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-74 (C2.3 Review)
+- c2-75 (C2.3 Checkpoint)
+- 'c2-89 (Capstone: Topic Selection)'

@@ -1,0 +1,104 @@
+module: 16-register-formal-informal
+level: b2
+sequence: 16
+version: '1.0'
+title: Формальне та неформальне спілкування
+focus: style
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Ukrainian State Standard 2024 - Address Forms
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Ти/Ви distinction and forms of address
+- name: Етикет українського спілкування
+  url: https://uk.wikipedia.org/wiki/Мовленнєвий_етикет
+  type: secondary
+  notes: Speech etiquette in Ukrainian culture
+- name: CEFR B2 Sociolinguistic Competence
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 politeness conventions
+content_outline:
+- section: Вступ — Формальність у спілкуванні
+  words: 400
+  points:
+  - Що визначає формальність
+  - Соціальні фактори (вік, статус, знайомство)
+  - Культурні норми в Україні
+- section: Ти/Ви-розрізнення
+  words: 700
+  points:
+  - Коли "ти" (друзі, родина, діти, однолітки)
+  - Коли "Ви" (незнайомі, старші, офіційні ситуації)
+  - Перехід від "Ви" до "ти"
+  - Типові помилки іноземців
+- section: Форми звертання
+  words: 700
+  points:
+  - Пан/Пані (Mr./Mrs.)
+  - Шановний/Шановна (Respected)
+  - Вельмишановний (Most respected - very formal)
+  - По батькові — коли і як використовувати
+  - Колегіальні звертання
+- section: Формальні/неформальні лексичні пари
+  words: 600
+  points:
+  - Нейтральні vs розмовні слова
+  - Книжні vs розмовні синоніми
+  - Вибір відповідного варіанту
+- section: Трансформація регістру
+  words: 600
+  points:
+  - З неформального у формальний
+  - З формального у неформальний
+  - Збереження значення при зміні тону
+- section: Соціальні ситуації
+  words: 500
+  points:
+  - Робоче середовище
+  - Університет
+  - Магазини та сервіс
+  - Офіційні заходи
+- section: Практика і підсумок
+  words: 300
+  points:
+  - Рольові ситуації
+  - Критерії вибору
+  - Підготовка до модуля 17
+word_target: 3800
+vocabulary:
+  required:
+  - формальний (formal)
+  - неформальний (informal)
+  - звертання (form of address)
+  - пан/пані (Mr./Mrs.)
+  - шановний (respected/dear - formal)
+  - по батькові (patronymic)
+  - етикет (etiquette)
+  - ввічливість (politeness)
+  - офіційний (official)
+  - розмовний (colloquial)
+  recommended:
+  - колегіальний (collegial)
+  - субординація (subordination)
+  - соціальна дистанція (social distance)
+  - тон (tone)
+  - доречність (appropriateness)
+  forbidden: []
+activities:
+  types_required:
+  - error-correction
+  - quiz
+  - fill-in
+  - essay-response
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- 'b2-17 (Register: Business Ukrainian)'
+- 'b2-18 (Register: Academic Ukrainian)'
+- 'b2-19 (Register: Official-Legal)'
+- b2-25 (B2.1b Checkpoint)

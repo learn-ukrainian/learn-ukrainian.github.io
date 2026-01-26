@@ -1,0 +1,77 @@
+module: reported-statements
+level: b1
+sequence: 39
+version: '2.0'
+title: 'Непряма мова: твердження'
+subtitle: Reported Statements
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can report what someone said using indirect speech
+- Learner can apply tense backshift in reported statements
+- Learner can use appropriate reporting verbs
+- Learner can transform direct speech to indirect
+content_outline:
+- section: 'Introduction: Reported Speech'
+  words: 150
+  points:
+  - Direct vs indirect speech
+  - When to use reported speech
+  - Basic structure
+- section: Basic Reported Statements
+  words: 250
+  points:
+  - Він сказав, що...
+  - Вона думає, що...
+  - що as speech introducer
+- section: Tense Changes
+  words: 250
+  points:
+  - Present → past in subordinate
+  - Future → conditional
+  - Exceptions and variations
+- section: Pronoun and Reference Changes
+  words: 250
+  points:
+  - я → він/вона
+  - тут → там
+  - сьогодні → того дня
+- section: Reporting Verbs
+  words: 200
+  points:
+  - сказати, розповісти
+  - стверджувати, пояснювати
+  - Nuances of meaning
+- section: 'Practice: Reporting Statements'
+  words: 100
+  points:
+  - Transform direct to indirect
+  - Use various reporting verbs
+word_target: 1200
+vocabulary:
+  required:
+  - непряма мова (indirect speech)
+  - пряма мова (direct speech)
+  - сказати (to say)
+  - розповісти (to tell)
+  - твердження (statement)
+  - що (that - conjunction)
+  - стверджувати (to claim)
+  - повідомити (to report)
+  recommended:
+  - заявити (to declare)
+  - пояснити (to explain)
+  - зазначити (to note)
+  - підтвердити (to confirm)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - error-correction
+  - writing
+  - transformation
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-40 (Reported Questions Commands)

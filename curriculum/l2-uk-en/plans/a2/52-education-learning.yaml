@@ -1,0 +1,79 @@
+module: education-learning
+level: a2
+sequence: 52
+version: '2.0'
+title: Education and Learning
+subtitle: School and University
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can describe their studies
+- Learner can use 'вчитися' and 'вивчати' correctly
+- Learner can talk about school/university subjects
+- Learner can discuss exams and grades
+content_outline:
+- section: 'Introduction: Ukrainian Education'
+  words: 100
+  points:
+  - Education system overview
+  - School vs university
+  - Academic vocabulary
+- section: School Subjects
+  words: 200
+  points:
+  - математика, історія, українська мова
+  - фізика, хімія, біологія
+  - Subject preferences
+- section: Learning Verbs
+  words: 200
+  points:
+  - вчитися (to study/be a student)
+  - вивчати (to learn/study something)
+  - навчатися, здавати іспит
+- section: Academic Life
+  words: 200
+  points:
+  - студент, учень, викладач
+  - лекція, семінар, практика
+  - University terminology
+- section: Grades and Exams
+  words: 150
+  points:
+  - оцінка, іспит, залік
+  - здати, провалити
+  - Academic performance
+- section: 'Practice: Talk About Studies'
+  words: 150
+  points:
+  - Describe your education
+  - Discuss subjects and exams
+word_target: 1000
+vocabulary:
+  required:
+  - школа (school)
+  - університет (university)
+  - вчитися (to study)
+  - вивчати (to learn)
+  - предмет (subject)
+  - іспит (exam)
+  - оцінка (grade)
+  - студент (student)
+  recommended:
+  - викладач (lecturer)
+  - лекція (lecture)
+  - залік (credit/test)
+  - диплом (diploma)
+  - стипендія (scholarship)
+  - курсова (course paper)
+  forbidden: []
+activities:
+  types_required:
+  - vocabulary-drill
+  - dialogue
+  - speaking
+  - fill-in
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a2-53 (Shopping and Services)

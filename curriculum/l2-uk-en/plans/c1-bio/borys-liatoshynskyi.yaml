@@ -1,0 +1,105 @@
+module: borys-liatoshynskyi
+level: c1-bio
+sequence: 64
+version: '2.0'
+title: 'Борис Лятошинський: Симфоніст'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Лятошинський_Борис_Миколайович
+    title: Борис Лятошинський (Wikipedia UA)
+    notes: Biography of the leading Ukrainian symphonic composer
+  secondary:
+  - url: https://knmau.com.ua/
+    title: Національна музична академія України
+    notes: Archives of the academy where Lyatoshynsky taught
+content_outline:
+- section: Вступ — Голос української симфонії
+  words: 400
+  subsections:
+  - Найвидатніший український симфоніст XX століття
+  - Засновник української композиторської школи
+  - Творчість між модернізмом і соцреалізмом
+- section: Юні роки та освіта (1895-1918)
+  words: 600
+  subsections:
+  - Народження в Житомирі
+  - Музична родина
+  - Навчання в Київській консерваторії
+  - Перші твори та визнання
+- section: Розквіт модернізму (1918-1930)
+  words: 800
+  subsections:
+  - Перша симфонія (1919)
+  - Експериментальний період
+  - Опера «Золотий обруч»
+  - Зв'язки з європейським авангардом
+- section: Під тиском системи (1930-1950)
+  words: 800
+  subsections:
+  - Критика «формалізму»
+  - Вимушена адаптація до соцреалізму
+  - Третя симфонія та її заборона
+  - Виживання як митця
+- section: Пізній період (1950-1968)
+  words: 700
+  subsections:
+  - Часткова реабілітація
+  - П'ята симфонія «Слов'янська»
+  - Педагогічна діяльність
+  - Учні та послідовники
+- section: Спадщина — Батько української симфонії
+  words: 700
+  subsections:
+  - Вплив на українську музику
+  - Визнання після незалежності
+  - Виконання творів у світі
+  - Лятошинський у сучасній культурі
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - симфонія
+  - композитор
+  - модернізм
+  - соцреалізм
+  - формалізм
+  - оркестр
+  - партитура
+  - консерваторія
+  - опера
+  - музична школа
+  recommended:
+  - авангард
+  - експресіонізм
+  - симфонічний
+  - педагог
+  - музична спадщина
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-63
+  related:
+  - c1-bio-23
+  - c1-bio-43
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

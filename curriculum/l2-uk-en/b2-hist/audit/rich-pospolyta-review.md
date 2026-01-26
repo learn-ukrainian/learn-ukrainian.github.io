@@ -1,8 +1,8 @@
 # Audit Report: M32 — rich-pospolyta.md
 **Level:** B2 | **Module:** M32 | **Phase:** B2.3a | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:22:46
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 22:22:42
 
 ## Configuration
 **Type:** B2-history
@@ -39,7 +39,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ⚠️ 3997/4000 (raw: 4248) (3 short)
+- **Words:** ❌ 3710/4000 (raw: 3884)
 - **Activities:** ✅ 10/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 10/2 types
@@ -51,7 +51,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⚠️ Too many activities: 10 (target 3-9); 1 fill-in with year answers
-- **Immersion:** 🇺🇦 98.0% (target 90-100% (history))
+- **Immersion:** 🇺🇦 97.8% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -68,7 +68,7 @@
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 7 | 4 | 100% | 10% | 9.5% |
-| visual | 8 | 4 | 100% | 10% | 9.5% |
+| visual | 6 | 4 | 100% | 10% | 9.5% |
 | variety | 0.98 | - | 98% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 22 | 3 | 100% | 5% | 4.8% |
@@ -86,7 +86,7 @@
 | **Читання** | ✅ | 260 | Included in Core |
 | **Первинні джерела** | ✅ | 342 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 342 | Included in Core |
-| **Наслідки для козацтва** | ⚪️ | 489 | Skipped |
-| **Есе** | ⚪️ | 392 | Skipped |
-| **Підсумок** | ✅ | 194 | Included in Core |
+| **Наслідки для козацтва** | ⚪️ | 491 | Skipped |
+| **Шляхетська демократія: Свобода чи анархія?** | ⚪️ | 102 | Skipped |
+| **Підсумок** | ✅ | 195 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

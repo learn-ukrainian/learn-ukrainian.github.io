@@ -1,0 +1,96 @@
+module: 02-academic-style-markers
+level: c1
+sequence: 2
+version: '2.0'
+title: Маркери академічного стилю
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Ukrainian Academic Writing Guidelines
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official standards for academic Ukrainian
+- name: Пономарів О. Стилістика сучасної української мови
+  url: https://library.ua/
+  type: secondary
+  notes: Comprehensive stylistics reference
+content_outline:
+- section: Вступ — Що таке академічний стиль?
+  words: 400
+  points:
+  - Визначення наукового стилю
+  - Відмінності від інших функціональних стилів
+  - Сфери використання академічного стилю
+- section: Безособові конструкції
+  words: 700
+  points:
+  - Вважається, що... / Зазначається, що...
+  - Було встановлено... / Доведено, що...
+  - Уникнення особового займенника "я"
+- section: Номіналізація
+  words: 600
+  points:
+  - Дослідження vs досліджувати
+  - Аналіз vs аналізувати
+  - Перетворення дієслів на іменники
+- section: Пасивні конструкції в академічному тексті
+  words: 600
+  points:
+  - Перевага пасиву в науковому стилі
+  - Було встановлено, доведено, з'ясовано
+  - Баланс активу і пасиву
+- section: Формальні сполучники та зв'язки
+  words: 700
+  points:
+  - Отже, таким чином, внаслідок
+  - По-перше, по-друге, нарешті
+  - Водночас, утім, проте
+- section: Хеджінг — пом'якшення категоричності
+  words: 600
+  points:
+  - Можливо, ймовірно, певною мірою
+  - Є підстави вважати, можна припустити
+  - Уникнення надмірної категоричності
+- section: Практика трансформації
+  words: 400
+  points:
+  - Від розмовного до академічного
+  - Редагування неформального тексту
+  - Стилістична адаптація
+word_target: 4000
+vocabulary:
+  required:
+  - безособова конструкція (impersonal construction)
+  - номіналізація (nominalization)
+  - хеджінг (hedging)
+  - категоричність (categoricalness)
+  - формальний сполучник (formal connector)
+  - встановлено (established)
+  - з'ясовано (clarified)
+  - доведено (proven)
+  - зазначено (noted)
+  - констатовано (stated)
+  recommended:
+  - об'єктивність (objectivity)
+  - неупередженість (impartiality)
+  - аргументованість (argumentativeness)
+  - логічність (logicality)
+  - послідовність (consistency)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - essay-response
+  - cloze
+  - fill-in
+  - error-correction
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c1-03 (Research Verbs)
+- c1-06 (Hedging & Modality)
+- c1-08 (Essay Structure)

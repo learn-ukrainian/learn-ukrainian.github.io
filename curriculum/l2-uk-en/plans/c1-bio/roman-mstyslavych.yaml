@@ -1,0 +1,115 @@
+module: roman-mstyslavych
+level: c1-bio
+sequence: 0
+version: '2.0'
+title: 'Роман Мстиславич: Засновник Галицько-Волинської держави'
+focus: biography
+pedagogy: seminar
+objectives:
+- Analyze the political strategy of uniting Galicia and Volhynia
+- Evaluate Roman's role in the decline of Kyivan Rus' fragmentation
+- Master vocabulary related to medieval state formation
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Роман_Мстиславич
+    title: Роман Мстиславич (Wikipedia UA)
+    notes: Biography, military campaigns, unification of principalities
+  - url: https://uk.wikipedia.org/wiki/Галицько-Волинське_князівство
+    title: Галицько-Волинське князівство
+    notes: Context for state formation
+  secondary:
+  - url: https://uk.wikipedia.org/wiki/Галицько-Волинський_літопис
+    title: Галицько-Волинський літопис
+    notes: Primary chronicle source
+content_outline:
+- section: Вступ — Самодержець усієї Русі
+  words: 421
+  subsections:
+  - Титул "великий князь, самодержець усієї Русі" у літописі
+  - Значення об'єднання Галичини та Волині
+  - Роман як попередник Данила Галицького
+- section: Походження та молодість
+  words: 526
+  subsections:
+  - Народження у родині Мстислава Ізяславича
+  - Княжіння в Новгороді (1168-1170)
+  - Успадкування Волині (1170)
+- section: Боротьба за Галич
+  words: 736
+  subsections:
+  - Політична ситуація в Галичині
+  - Конфлікт з боярством
+  - Перша спроба захопити Галич (1188)
+  - Остаточне об'єднання (1199)
+- section: Створення Галицько-Волинської держави
+  words: 842
+  subsections:
+  - Об'єднання двох князівств
+  - Політика централізації
+  - Боротьба з боярською опозицією
+  - Захоплення Києва (1202)
+- section: Зовнішня політика
+  words: 631
+  subsections:
+  - Відносини з Польщею та Угорщиною
+  - Походи на половців
+  - Контакти з папою Інокентієм III
+  - Пропозиція королівської корони
+- section: Загибель та спадщина
+  words: 526
+  subsections:
+  - Битва під Завихостом (1205)
+  - Польська засідка та смерть
+  - Криза після смерті Романа
+  - Значення для нащадків
+- section: Підсумок — Будівничий держави
+  words: 318
+  subsections:
+  - Роман як об'єднувач земель
+  - Порівняння з іншими європейськими монархами
+  - Спадщина для української державності
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - самодержець
+  - князівство
+  - боярство
+  - об'єднання
+  - літопис
+  - усобиця
+  - засідка
+  - спадкоємець
+  - данина
+  - похід
+  recommended:
+  - престол
+  - династія
+  - васал
+  - магнат
+  - грамота
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  - critical-analysis
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-05 (Anna Yaroslavna - earlier period)
+  related:
+  - c1-bio-danylo-halytskyi (Danylo - son)
+  - c1-bio-lev-danylovych (Lev - grandson)
+  - c1-bio-06 (Mykhailo Chernihivskyi - Mongol era)
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

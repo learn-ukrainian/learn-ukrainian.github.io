@@ -1,29 +1,97 @@
 module: a2-47
-title: Nature and Weather
-subtitle: The World Around Us
-version: '1.0'
-phase: A2.3
+id: a2-47
+slug: nature-and-weather
+title: "Nature and Weather"
+subtitle: "The World Around Us"
+version: '2.0'
+phase: "A2.5 [Vocabulary Expansion]"
+focus: vocabulary
 pedagogy: PPP
+register: розмовний
 duration: 60
 transliteration: none
-tags:
-- vocabulary
-- nature
-- weather
-- seasons
-grammar:
-- weather expressions (холодно, тепло)
-- nature vocabulary
-- seasons and months
-- describing landscapes
 objectives:
-- Learner can describe weather conditions
-- Learner can talk about seasons
-- Learner can describe landscapes (mountain, river, forest)
-- Learner can talk about climate
-vocabulary_count: 25
-slug: 47-nature-and-weather
-focus: vocabulary
+  - "Learner can describe weather conditions in detail"
+  - "Learner can talk about seasons and climate"
+  - "Learner can describe landscapes"
+  - "Learner can discuss nature and environment"
+grammar:
+  - "Weather expressions (холодно, тепло, вітряно)"
+  - "Nature vocabulary"
+  - "Seasons and describing landscapes"
+word_target: 1000
+content_outline:
+  - section: "Introduction: Ukrainian Nature"
+    words: 100
+    points:
+      - "Ukraine's diverse landscapes"
+      - "Climate zones"
+      - "Nature vocabulary expansion"
+  - section: "Weather in Detail"
+    words: 200
+    points:
+      - "Temperature: спекотно, морозно"
+      - "Precipitation: злива, град, туман"
+      - "Weather forecasts"
+  - section: "Landscapes"
+    words: 200
+    points:
+      - "гора, долина, рівнина"
+      - "річка, озеро, море"
+      - "ліс, степ, пустеля"
+  - section: "Flora and Fauna"
+    words: 200
+    points:
+      - "Trees: дуб, береза, сосна"
+      - "Animals: ведмідь, вовк, олень"
+      - "Birds and insects"
+  - section: "Environmental Topics"
+    words: 150
+    points:
+      - "довкілля (environment)"
+      - "забруднення, захист природи"
+      - "Climate change basics"
+  - section: "Practice: Describe Nature"
+    words: 150
+    points:
+      - "Describe a landscape"
+      - "Weather reports"
+vocabulary_hints:
+  required:
+    - погода (weather)
+    - клімат (climate)
+    - гора (mountain)
+    - ліс (forest)
+    - річка (river)
+    - дощ (rain)
+    - сніг (snow)
+    - природа (nature)
+  recommended:
+    - туман (fog)
+    - град (hail)
+    - озеро (lake)
+    - степ (steppe)
+    - довкілля (environment)
+    - тварина (animal)
+activity_hints:
+  - type: vocabulary-drill
+    focus: "Nature and weather words"
+    items: 35
+  - type: matching
+    focus: "Match weather to descriptions"
+    items: 20
+  - type: fill-in
+    focus: "Complete nature descriptions"
+    items: 15
+  - type: speaking
+    focus: "Describe weather and landscapes"
+    items: 8
+prerequisites:
+  - a1-29 (Weather and Nature)
+  - a2-46 (Home and Furniture)
+connects_to:
+  - a2-48 (Emotions and Personality)
 naturalness:
   score: 10
   status: PASS
+  justification: "Expanded nature vocabulary"

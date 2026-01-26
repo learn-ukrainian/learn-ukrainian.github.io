@@ -1,0 +1,77 @@
+module: emotions-deep-dive
+level: b1
+sequence: 64
+version: '2.0'
+title: 'Емоції: глибоке занурення'
+subtitle: 'Emotions: Deep Dive'
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can use 30 emotional vocabulary words in context
+- Learner can distinguish between synonymous emotion words
+- Learner can form natural collocations with emotional vocabulary
+- Learner can express nuanced emotional states
+content_outline:
+- section: 'Introduction: Emotional Language'
+  words: 150
+  points:
+  - Beyond basic emotions
+  - Nuance and intensity
+  - Cultural expression
+- section: Positive Emotions
+  words: 250
+  points:
+  - радість, щастя, захоплення
+  - задоволення, натхнення
+  - Positive emotion spectrum
+- section: Negative Emotions
+  words: 250
+  points:
+  - смуток, тривога, розчарування
+  - гнів, страх, відчай
+  - Negative emotion nuances
+- section: Complex Emotions
+  words: 250
+  points:
+  - ностальгія, меланхолія
+  - заздрість, сором, провина
+  - Mixed emotional states
+- section: Expressing Emotions
+  words: 200
+  points:
+  - відчувати, переживати
+  - Intensity markers
+  - Describing emotional states
+- section: 'Practice: Emotional Expression'
+  words: 100
+  points:
+  - Describe feelings precisely
+  - Express emotional nuance
+word_target: 1200
+vocabulary:
+  required:
+  - радість (joy)
+  - смуток (sadness)
+  - тривога (anxiety)
+  - захоплення (admiration/excitement)
+  - розчарування (disappointment)
+  - гнів (anger)
+  - страх (fear)
+  - відчувати (to feel)
+  recommended:
+  - ностальгія (nostalgia)
+  - натхнення (inspiration)
+  - відчай (despair)
+  - заздрість (envy)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - writing
+  - collocation
+  - matching
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-65 (Relationships)

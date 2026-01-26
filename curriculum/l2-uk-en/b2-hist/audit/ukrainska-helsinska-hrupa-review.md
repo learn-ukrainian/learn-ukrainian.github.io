@@ -1,7 +1,7 @@
 # Audit Report: M115 — ukrainska-helsinska-hrupa.md
 **Level:** B2 | **Module:** M115 | **Phase:** HIST.11 | **Pedagogy:** Not Specified | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 20:24:52
+**Generated:** 2026-01-25 22:23:36
 
 ## Configuration
 **Type:** B2-history

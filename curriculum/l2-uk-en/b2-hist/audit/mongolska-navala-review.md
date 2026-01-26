@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M21 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:22:31
+**Generated:** 2026-01-25 22:22:35
 
 ## Configuration
 **Type:** B2-history
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ⚠️ 3989/4000 (raw: 4200) (11 short)
+- **Words:** ✅ 4264/4000 (raw: 4502)
 - **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 8/2 types
@@ -49,7 +49,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (8 activities)
-- **Immersion:** 🇺🇦 98.7% (target 90-100% (history))
+- **Immersion:** 🇺🇦 98.8% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -65,11 +65,11 @@
 | engagement | 8 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 6 | 4 | 100% | 10% | 9.5% |
-| visual | 7 | 4 | 100% | 10% | 9.5% |
+| cultural | 5 | 4 | 100% | 10% | 9.5% |
+| visual | 6 | 4 | 100% | 10% | 9.5% |
 | variety | 0.99 | - | 99% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 10 | 3 | 100% | 5% | 4.8% |
+| questions | 3 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
@@ -78,9 +78,8 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Монгольська навала 1240** | ⚪️ | 87 | Skipped |
 | **Вступ** | ✅ | 399 | Included in Core |
-| **Читання: Трагедія та злам епох** | ✅ | 2084 | Included in Core |
+| **Читання: Трагедія та злам епох** | ✅ | 2805 | Included in Core |
 | **Первинні джерела** | ✅ | 420 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 438 | Included in Core |
-| **Есе** | ⚪️ | 446 | Skipped |
 | **Підсумок** | ✅ | 80 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 35 | Skipped |

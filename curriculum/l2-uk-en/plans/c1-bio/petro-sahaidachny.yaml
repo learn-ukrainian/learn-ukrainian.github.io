@@ -1,0 +1,82 @@
+module: petro-sahaidachny
+level: c1-bio
+sequence: 0
+version: '2.0'
+title: 'Петро Сагайдачний: Гетьман-Державник'
+focus: biography
+pedagogy: seminar
+objectives:
+- Analyze Sahaidachny's reforms of the Cossack army
+- Evaluate the restoration of the Orthodox hierarchy (1620)
+- Discuss the Battle of Khotyn (1621)
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Петро_Конашевич-Сагайдачний
+    title: Петро Конашевич-Сагайдачний (Wikipedia UA)
+  - url: https://uk.wikipedia.org/wiki/Хотинська_битва_(1621)
+    title: Хотинська битва 1621
+  secondary: []
+content_outline:
+- section: Вступ — Меч і Хрест
+  words: 615
+  subsections:
+  - Найвидатніший гетьман до Хмельницького
+  - Перетворення козацтва на регулярне військо
+  - Союз меча (козаків) і хреста (церкви)
+- section: Життєпис
+  words: 1538
+  subsections:
+  - Походження (шляхтич з Самбора)
+  - Освіта в Острозькій академії (М14)
+  - Морські походи на Кафу, Синоп, Варну (звільнення невільників)
+  - Похід на Москву (1618)
+  - Відновлення православної ієрархії (1620)
+  - Хотинська битва (1621) — порятунок Європи
+  - Смерть від рани у Києві
+- section: Історичний контекст
+  words: 615
+  subsections:
+  - Доба героїчних морських походів
+  - Тридцятилітня війна в Європі
+  - Занепад православ'я після унії
+- section: Внесок та Спадщина
+  words: 615
+  subsections:
+  - Реформа війська (дисципліна, мушкети)
+  - '"Військо Запорозьке" вступає до Київського братства'
+  - Київ знову стає культурним центром (Могилянка)
+- section: Порівняльний аналіз
+  words: 617
+  subsections:
+  - Сагайдачний vs. Наливайко (лояльність vs бунт)
+  - Сагайдачний vs. Дорошенко (стратегічне бачення)
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - чайка
+  - реєстр
+  - дисципліна
+  - ієрархія
+  - патріарх
+  - братство
+  - облога
+  - штурм
+  - невільник
+  - меценат
+  recommended: []
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - essay-response
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

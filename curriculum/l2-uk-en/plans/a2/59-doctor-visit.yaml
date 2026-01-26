@@ -1,0 +1,79 @@
+module: doctor-visit
+level: a2
+sequence: 59
+version: '2.0'
+title: At the Doctor
+subtitle: Medical Consultation
+focus: practical
+pedagogy: PPP
+objectives:
+- Learner can describe medical history
+- Learner can answer doctor's questions
+- Learner can understand diagnosis and advice
+- Learner can ask for sick leave
+content_outline:
+- section: 'Introduction: Healthcare in Ukraine'
+  words: 100
+  points:
+  - Healthcare system basics
+  - Visiting a doctor
+  - Medical vocabulary overview
+- section: Making an Appointment
+  words: 150
+  points:
+  - записатися до лікаря
+  - Clinic vs hospital
+  - Scheduling vocabulary
+- section: Describing Symptoms
+  words: 200
+  points:
+  - У мене болить...
+  - Pain intensity and duration
+  - Common symptoms
+- section: Doctor's Questions
+  words: 200
+  points:
+  - Medical history questions
+  - Allergies and medications
+  - Answering accurately
+- section: Diagnosis and Advice
+  words: 200
+  points:
+  - діагноз, рецепт, лікування
+  - Understanding instructions
+  - Sick leave (лікарняний)
+- section: 'Practice: Medical Dialogue'
+  words: 150
+  points:
+  - Complete consultation
+  - Ask and answer questions
+word_target: 1000
+vocabulary:
+  required:
+  - лікар (doctor)
+  - пацієнт (patient)
+  - болить (hurts)
+  - симптом (symptom)
+  - рецепт (prescription)
+  - ліки (medicine)
+  - лікарня (hospital)
+  - поліклініка (clinic)
+  recommended:
+  - діагноз (diagnosis)
+  - лікування (treatment)
+  - лікарняний (sick leave)
+  - алергія (allergy)
+  - температура (temperature)
+  - тиск (blood pressure)
+  forbidden: []
+activities:
+  types_required:
+  - vocabulary-drill
+  - dialogue
+  - role-play
+  - fill-in
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a2-60 (At the Pharmacy)

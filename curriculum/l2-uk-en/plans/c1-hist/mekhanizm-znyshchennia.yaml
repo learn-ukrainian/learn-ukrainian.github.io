@@ -1,0 +1,103 @@
+module: mekhanizm-znyshchennia
+level: c1-hist
+sequence: 56
+version: '1.0'
+title: 'Механізм знищення: 1930-1937'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Як знищували культуру
+  words: 400
+  subsections:
+  - Від дискусій до репресій
+  - Механізм — як працював
+  - Чому культура — ціль
+  - Структура модуля
+- section: Хронологія знищення
+  words: 600
+  subsections:
+  - 1930-1933 — перша хвиля
+  - Процес СВУ (1930)
+  - 1934-1936 — затишшя?
+  - 1937-1938 — Великий терор
+  - Масштаби — скільки загинуло
+- section: Етапи знищення особистості
+  words: 700
+  subsections:
+  - Критика в пресі
+  - Вимога самокритики
+  - Виключення з організацій
+  - Арешт
+  - Табір або розстріл
+  - Паттерн — як повторювався
+- section: Звинувачення — словник терору
+  words: 600
+  subsections:
+  - «Націоналізм» — що означало
+  - «Формалізм» — проти митців
+  - «Шпигунство» — абсурдні звинувачення
+  - Троцькізм
+  - Як звинувачення конструювалися
+- section: Долі — приклади
+  words: 500
+  subsections:
+  - Курбас — розстріл
+  - Хвильовий — самогубство
+  - Куліш — розстріл
+  - Зеров — розстріл
+  - Хто вижив і як
+- section: Чому знищили
+  words: 400
+  subsections:
+  - Національна культура = загроза
+  - «Українізація» — помилка для виправлення
+  - Паралель із Голодомором
+  - Культурний геноцид?
+- section: Підсумок
+  words: 300
+  subsections:
+  - Механізм як система
+  - Від індивідуальних трагедій до патерну
+  - Підготовка до синтезу
+word_target: 3500
+vocabulary:
+- механізм
+- знищення
+- репресія
+- терор
+- арешт
+- розстріл
+- табір
+- звинувачення
+- самокритика
+- Великий терор
+- виключення
+- справа
+- допит
+- вирок
+- реабілітація
+activities:
+- type: pattern-analysis
+  focus: Map the stages of persecution
+- type: vocabulary-study
+  focus: Analyze terror vocabulary — how accusations work
+- type: statistical-analysis
+  focus: Numbers of repressions by year/type
+- type: biography-comparison
+  focus: Compare fates of 5 cultural figures
+- type: essay-response
+  focus: Чи було знищення Розстріляного відродження культурним геноцидом?
+sources:
+- name: Великий терор в Україні
+  url: https://uk.wikipedia.org/wiki/Великий_терор
+  type: reference
+  notes: Great Terror overview
+- name: Сталінські репресії
+  url: https://uk.wikipedia.org/wiki/Сталінські_репресії_в_Україні
+  type: reference
+  notes: Ukrainian repressions
+- name: Список жертв Розстріляного відродження
+  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
+  type: reference
+  notes: Victims list

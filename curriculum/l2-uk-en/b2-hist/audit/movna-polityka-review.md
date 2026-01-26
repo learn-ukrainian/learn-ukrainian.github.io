@@ -1,7 +1,7 @@
 # Audit Report: M126 — movna-polityka.md
 **Level:** B2 | **Module:** M126 | **Phase:** HIST.12 | **Pedagogy:** Not Specified | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 20:22:32
+**Generated:** 2026-01-25 22:23:43
 
 ## Configuration
 **Type:** B2-history

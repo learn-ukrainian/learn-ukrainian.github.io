@@ -1,0 +1,91 @@
+module: radianski-antysemityzm
+level: c1-hist
+sequence: 120
+version: '1.0'
+title: Радянський антисемітизм
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Антисемітизм «без антисемітів»
+  words: 451
+  subsections:
+  - СРСР — «інтернаціоналізм»
+  - Але — антисемітизм
+  - Як поєднувалось
+  - Структура модуля
+- section: Бабин Яр без пам'яті
+  words: 790
+  subsections:
+  - Замовчування — 50 років
+  - Не «євреї» — «радянські громадяни»
+  - Спроби увічнення — провал
+  - Сміттєзвалище на могилах
+- section: «Безрідні космополіти»
+  words: 677
+  subsections:
+  - 1948-1953 — антисемітська кампанія
+  - Кодова мова
+  - Єврейський антифашистський комітет
+  - «Справа лікарів»
+- section: Пізній СРСР
+  words: 677
+  subsections:
+  - «П'ята графа»
+  - Обмеження у кар'єрі
+  - Еміграція — як «зрада»
+  - Відмовники
+- section: Спадок
+  words: 564
+  subsections:
+  - Що залишилось у свідомості
+  - Пострадянський антисемітизм
+  - Як Росія використовує сьогодні
+  - «Денацифікація»
+- section: Підсумок
+  words: 341
+  subsections:
+  - Радянський антисемітизм — реальний
+  - Спадок не зник
+  - Перехід до синтезу
+word_target: 3500
+vocabulary:
+- антисемітизм
+- «безрідний космополіт»
+- «п'ята графа»
+- «справа лікарів»
+- відмовник
+- замовчування
+- пам'ять
+- дискримінація
+- еміграція
+- спадок
+- ЄАК
+- сіонізм
+- квота
+- дисидент
+- алія
+activities:
+- type: memory-analysis
+  focus: How Babi Yar was erased from Soviet memory
+- type: campaign-analysis
+  focus: «Rootless cosmopolitans» — coded antisemitism
+- type: discrimination-study
+  focus: «Fifth paragraph» — practical discrimination
+- type: legacy-analysis
+  focus: Soviet antisemitism legacy today
+- type: essay-response
+  focus: Чому СРСР заперечував свій антисемітизм?
+sources:
+- name: Антисемітизм в СРСР (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Антисемітизм_в_СРСР
+  type: reference
+  notes: Soviet antisemitism
+- name: Бабин Яр (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Бабин_Яр
+  type: reference
+  notes: Babi Yar memory suppression
+- name: «Справа лікарів» (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Справа_лікарів
+  type: reference
+  notes: Doctors' plot

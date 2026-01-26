@@ -1,0 +1,99 @@
+module: pivden-kolonizatsiia-mify
+level: c1-hist
+sequence: 79
+version: '1.0'
+title: 'Південь: Колонізація та міфи «Новоросії»'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — «Новоросія» — що це?
+  words: 400
+  subsections:
+  - Імперська назва
+  - Сучасне відродження міфу
+  - Чому потрібна деконструкція
+  - Структура модуля
+- section: До «Новоросії»
+  words: 600
+  subsections:
+  - Дике поле — не пусте
+  - Козацька присутність
+  - Запорозька Січ
+  - Кримськотатарські землі
+- section: Російська колонізація
+  words: 700
+  subsections:
+  - Потьомкін і Катерина
+  - Заселення — хто приїхав
+  - Українці — більшість
+  - Греки, болгари, німці
+  - Росіяни — меншість
+- section: Одеса — імперське місто
+  words: 600
+  subsections:
+  - Заснування — 1794
+  - Мультикультурне місто
+  - Українці в Одесі
+  - Одеський міф — «не українське місто»?
+- section: Херсон, Миколаїв, Маріуполь
+  words: 500
+  subsections:
+  - Інші міста Півдня
+  - Українська присутність
+  - Русифікація XX ст.
+  - Збереження ідентичності
+- section: «Новоросія» 2014
+  words: 400
+  subsections:
+  - Російський проект — провал
+  - Чому не спрацювало
+  - 2022 — Херсон, Запоріжжя
+  - Спротив Півдня
+- section: Підсумок
+  words: 300
+  subsections:
+  - Південь — не російський
+  - «Новоросія» — імперський міф
+  - Перехід до синтезу
+word_target: 3500
+vocabulary:
+- Новоросія
+- колонізація
+- міф
+- імперський
+- Дике поле
+- деконструкція
+- заселення
+- мультикультурний
+- ідентичність
+- спротив
+- Потьомкін
+- порто-франко
+- космополітизм
+- етнічний склад
+- регіональний міф
+activities:
+- type: myth-deconstruction
+  focus: «Novorossiya» — imperial construct analysis
+- type: demographic-study
+  focus: Who settled Southern Ukraine — ethnic breakdown
+- type: city-analysis
+  focus: Odesa — Ukrainian or "other"?
+- type: contemporary-analysis
+  focus: 2014 vs. 2022 — why "Novorossiya" project failed
+- type: essay-response
+  focus: Чому російський проект 'Новоросії' провалився?
+sources:
+- name: Новоросія (історичний регіон) (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Новоросія_(історичний_регіон)
+  type: reference
+  notes: Historical region
+- name: Одеса (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Одеса
+  type: reference
+  notes: City history
+- name: Українці на Півдні України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українці
+  type: reference
+  notes: Ukrainian presence

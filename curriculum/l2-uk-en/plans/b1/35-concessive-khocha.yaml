@@ -1,0 +1,77 @@
+module: concessive-khocha
+level: b1
+sequence: 35
+version: '2.0'
+title: 'Допустові речення: хоча, незважаючи на'
+subtitle: Concessive Clauses - Although, Despite
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner understands concessive clause constructions
+- Learner can express contrast and unexpected outcomes
+- Learner can use various concessive connectors
+- Learner can distinguish concessive from adversative clauses
+content_outline:
+- section: 'Introduction: Concessive Meaning'
+  words: 150
+  points:
+  - What are concessive clauses
+  - Unexpected outcomes
+  - Contrast relationships
+- section: хоча - Although Clauses
+  words: 250
+  points:
+  - Хоча + clause structure
+  - Хоча він хворий, він прийшов
+  - Word order and punctuation
+- section: незважаючи на - Despite
+  words: 250
+  points:
+  - Prepositional phrase + accusative
+  - Незважаючи на дощ...
+  - Nominalization patterns
+- section: Other Concessive Connectors
+  words: 250
+  points:
+  - попри (despite)
+  - хоч би (even though)
+  - дарма що (in vain)
+- section: Concessive vs Adversative
+  words: 200
+  points:
+  - хоча vs але
+  - Subordination vs coordination
+  - Choosing correctly
+- section: 'Practice: Expressing Contrast'
+  words: 100
+  points:
+  - Form concessive clauses
+  - Express unexpected outcomes
+word_target: 1200
+vocabulary:
+  required:
+  - хоча (although)
+  - незважаючи на (despite)
+  - попри (despite - literary)
+  - контраст (contrast)
+  - неочікуваний (unexpected)
+  - результат (result)
+  - допустовий (concessive)
+  - проте (however)
+  recommended:
+  - хоч би (even though)
+  - дарма що (in vain)
+  - все одно (anyway)
+  - тим не менш (nevertheless)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - translation
+  - error-correction
+  - transformation
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-36 (Causal Result Clauses)

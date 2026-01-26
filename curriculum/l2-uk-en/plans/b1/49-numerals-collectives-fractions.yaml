@@ -1,0 +1,77 @@
+module: numerals-collectives-fractions
+level: b1
+sequence: 49
+version: '2.0'
+title: 'Числівники: збірні та дроби'
+subtitle: Numerals - Collectives and Fractions
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can use collective numerals correctly
+- Learner understands when to use collectives vs cardinals
+- Learner can express fractions and percentages
+- Learner can combine numerals with various noun types
+content_outline:
+- section: 'Introduction: Beyond Cardinal Numbers'
+  words: 150
+  points:
+  - Collective vs cardinal numerals
+  - When collectives are required
+  - Fractional expressions
+- section: Collective Numerals
+  words: 250
+  points:
+  - двоє, троє, четверо, п'ятеро...
+  - Declension patterns
+  - Case agreement rules
+- section: When to Use Collectives
+  words: 250
+  points:
+  - 'Pluralia tantum: двоє ножиць'
+  - 'Groups of people: троє друзів'
+  - Mixed gender groups
+- section: Fractions
+  words: 250
+  points:
+  - половина, третина, чверть
+  - одна друга, три четвертих
+  - Case of following noun
+- section: Percentages and Decimals
+  words: 200
+  points:
+  - відсоток, процент
+  - Decimal expressions
+  - Mathematical contexts
+- section: 'Practice: Complex Numerals'
+  words: 100
+  points:
+  - Choose cardinal vs collective
+  - Express fractions
+word_target: 1200
+vocabulary:
+  required:
+  - збірний числівник (collective numeral)
+  - дробовий числівник (fractional numeral)
+  - двоє (two - collective)
+  - троє (three - collective)
+  - половина (half)
+  - третина (third)
+  - чверть (quarter)
+  - відсоток (percent)
+  recommended:
+  - кількісний (cardinal)
+  - десятковий (decimal)
+  - множина (plural)
+  - ножиці (scissors)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - calculation
+  - transformation
+  - multiple-choice
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-50 (Checkpoint Participles Numerals)

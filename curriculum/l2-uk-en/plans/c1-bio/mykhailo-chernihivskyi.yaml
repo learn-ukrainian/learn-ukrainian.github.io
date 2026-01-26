@@ -1,0 +1,116 @@
+module: mykhailo-chernihivskyi
+level: c1-bio
+sequence: 6
+version: '2.0'
+title: 'Михайло Чернігівський: Князь-мученик'
+focus: biography
+pedagogy: seminar
+objectives:
+- Analyze the historical significance of Prince Mykhailo's martyrdom
+- Understand the concept of spiritual resistance in Ukrainian history
+- Compare political strategies of Mykhailo Chernihivskyi and Alexander Nevsky
+- Master vocabulary related to martyrdom, canonization, and medieval politics
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Михайло_Всеволодович
+    title: Михайло Всеволодович (Wikipedia UA)
+    notes: Biography, martyrdom, canonization
+  secondary:
+  - url: https://uk.wikipedia.org/wiki/Монгольська_навала_на_Русь
+    title: Монгольська навала на Русь
+    notes: Historical context of Mongol invasion
+  - url: https://uk.wikipedia.org/wiki/Батий
+    title: Батий (Wikipedia UA)
+    notes: Context for encounter with Khan
+content_outline:
+- section: Вступ — Вибір між життям і вірою
+  words: 400
+  subsections:
+  - Трагічна доля Михайла
+  - Його значення як символу опору
+  - Джерела про його мученицьку смерть
+- section: Князь Чернігівський і Київський
+  words: 600
+  subsections:
+  - Походження та молодість
+  - Князювання в Чернігові
+  - Участь у міжкнязівських конфліктах
+  - Короткочасне княжіння в Києві
+- section: Монгольська навала
+  words: 700
+  subsections:
+  - Прихід монголів на Русь
+  - Падіння Чернігова
+  - Спроби організувати опір
+  - Втеча та вигнання
+- section: Подорож до Орди
+  words: 800
+  subsections:
+  - Рішення поїхати до Батия
+  - Мета візиту — отримати ярлик
+  - Вимога пройти очисний ритуал
+  - Відмова зректися християнської віри
+- section: Мученицька смерть
+  words: 700
+  subsections:
+  - Опис страти за житієм
+  - Боярин Федір — спільник у мучеництві
+  - Символіка відмови від язичницького ритуалу
+  - Реакція сучасників
+- section: Канонізація та шанування
+  words: 500
+  subsections:
+  - Перенесення мощів
+  - Канонізація як святого мученика
+  - Храми на честь Михайла
+  - Михайлівський Золотоверхий монастир
+- section: Підсумок — Віра вища за життя
+  words: 300
+  subsections:
+  - Михайло як приклад християнської стійкості
+  - Його образ у літературі
+  - Сучасне значення його вибору
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - мученик
+  - ярлик
+  - Орда
+  - навала
+  - зречення
+  - очищення
+  - канонізація
+  - мощі
+  - житіє
+  - страта
+  recommended:
+  - ритуал
+  - язичницький
+  - боярин
+  - стійкість
+  - вогонь
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - fill-in
+  - critical-analysis
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-01 to c1-bio-05 (earlier Kyivan Rus period)
+  related:
+  - c1-bio-07 (Roksolana - later foreign captivity)
+  - c1-bio-08 (Iov Boretskyi - Orthodox faith defense)
+  - c1-bio-77 (Vasyl Stus - another martyr for beliefs)
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

@@ -1,0 +1,77 @@
+module: at-the-store
+level: a1
+sequence: 38
+version: '2.0'
+title: At the Store
+subtitle: Supermarket Shopping
+focus: practical
+pedagogy: PPP
+objectives:
+- Learner can navigate a supermarket
+- Learner can find items and ask for help
+- Learner can complete checkout process
+- Learner can read basic product labels
+content_outline:
+- section: 'Introduction: Supermarket Shopping'
+  words: 100
+  points:
+  - Ukrainian supermarket layout
+  - Self-service shopping
+  - Finding what you need
+- section: Finding Products
+  words: 150
+  points:
+  - Де знаходиться молоко?
+  - У якому відділі...?
+  - Store sections
+- section: Store Sections
+  words: 150
+  points:
+  - молочний відділ (dairy section)
+  - хлібний відділ (bakery)
+  - м'ясний відділ (meat section)
+- section: At the Checkout
+  words: 150
+  points:
+  - каса (checkout)
+  - Пакет потрібен?
+  - Карткою чи готівкою?
+- section: Problems and Questions
+  words: 150
+  points:
+  - Це не працює
+  - Де банкомат?
+  - Handling issues
+- section: 'Practice: Supermarket Trip'
+  words: 100
+  points:
+  - Complete shopping trip
+  - Handle checkout
+word_target: 800
+vocabulary:
+  required:
+  - магазин (store)
+  - супермаркет (supermarket)
+  - каса (checkout)
+  - відділ (section/department)
+  - пакет (bag)
+  - знижка (discount)
+  - ціна (price)
+  - чек (receipt)
+  recommended:
+  - кошик (basket)
+  - візок (cart)
+  - полиця (shelf)
+  - акція (sale/promotion)
+  forbidden: []
+activities:
+  types_required:
+  - dialogue
+  - role-play
+  - listening
+  - vocabulary-drill
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a1-39 (Buying Tickets)

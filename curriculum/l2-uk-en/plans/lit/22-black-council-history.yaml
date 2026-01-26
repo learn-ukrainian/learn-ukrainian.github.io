@@ -1,0 +1,105 @@
+module: 22-black-council-history
+level: lit
+sequence: 22
+version: '1.0'
+title: 'Чорна рада: Історичний контекст'
+subtitle: 'The Black Council: Historical Context'
+focus: literature
+pedagogy: seminar
+objectives:
+- Understand the historical context of "The Ruin" (1657-1687) and the Black Council of 1663.
+- Contrast the political models of Somko (elite/law) and Briukhovetsky (populism/mob rule).
+- Analyze the consequences of internal discord for Ukrainian statehood.
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Чорна_рада_(1663)
+    title: Чорна рада 1663 — історія
+    notes: Історичний контекст події
+  - url: https://uk.wikipedia.org/wiki/Руїна_(історія_України)
+    title: Руїна — історія
+    notes: Ширший історичний контекст
+  secondary:
+  - url: https://www.ukrlib.com.ua/books/printit.php?tid=263
+    title: Чорна рада — роман
+    notes: Для порівняння з історією
+content_outline:
+- section: Вступ — Що таке "Руїна"?
+  words: 600
+  subsections:
+  - Період 1657-1687 років
+  - Розкол України на Лівобережну і Правобережну
+  - Чому цей період називають "Руїною"
+- section: Чорна рада 1663 року
+  words: 800
+  subsections:
+  - Що таке "чорна рада" (загальна козацька рада)
+  - Конфлікт Сомка і Брюховецького
+  - Результат ради і наслідки
+- section: Політичні сили епохи
+  words: 700
+  subsections:
+  - Козацька старшина vs голота
+  - Московський вплив
+  - Польський фактор
+- section: Охлократія як проблема
+  words: 600
+  subsections:
+  - Що таке охлократія (влада натовпу)
+  - Чорна рада як приклад
+  - Куліш і його погляд на "народ"
+- section: Історичні постаті
+  words: 500
+  subsections:
+  - Яким Сомко — трагічний герой
+  - Іван Брюховецький — демагог
+  - Василь Золотаренко
+- section: Підсумок — Від історії до роману
+  words: 400
+  subsections:
+  - Як Куліш використав історію
+  - Художня правда vs документальна
+  - Перехід до аналізу роману
+word_target: 4500
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - руїна
+  - чорна рада
+  - гетьман
+  - охлократія
+  - старшина
+  - голота
+  - демагог
+  - лівобережжя
+  - правобережжя
+  - розкол
+  recommended:
+  - генеральний писар
+  - московський протекторат
+  - переяславська угода
+  - автономія
+  - васал
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - cloze
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: lit-21 (Panteleimon Kulish biography)
+  related:
+  - lit-23 (Black Council Plot — аналіз роману)
+  - lit-13 (Haidamaky — інший історичний період)
+  - c1-hist (Historical modules)
+constraints:
+  min_engagement_boxes: 3
+  min_examples: 15
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

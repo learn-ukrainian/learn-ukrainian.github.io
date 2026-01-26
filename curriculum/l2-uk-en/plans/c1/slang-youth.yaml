@@ -1,0 +1,22 @@
+module: 45-slang-youth
+level: c1
+sequence: 1
+version: '1.0'
+title: Сленг та молодіжна мова
+subtitle: Slang & Youth Language
+focus: style
+pedagogy: Sociolinguistics
+objectives:
+- Learner can understand and appropriate use common Ukrainian youth slang
+- Learner can distinguish between slang and standard language
+- Learner can analyze the influence of English on modern Ukrainian slang
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

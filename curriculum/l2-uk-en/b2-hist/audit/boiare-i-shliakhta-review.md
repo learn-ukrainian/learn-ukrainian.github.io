@@ -1,8 +1,8 @@
 # Audit Report: M25 — boiare-i-shliakhta.md
-**Level:** B2 | **Module:** M25 | **Phase:** HIST.3 | **Pedagogy:** Not Specified | **Target:** 4000
+**Level:** B2 | **Module:** M25 | **Phase:** B2.3a | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:21:54
+**Generated:** 2026-01-25 22:22:38
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4419/4000 (raw: 4659)
+- **Words:** ✅ 4454/4000 (raw: 4622)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 98.2% (target 90-100% (history))
+- **Immersion:** 🇺🇦 98.1% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -58,15 +58,15 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 15 | 3 | 100% | 24% | 23.8% |
+| primary_sources | 13 | 3 | 100% | 24% | 23.8% |
 | engagement | 8 | 6 | 100% | 14% | 14.3% |
-| timeline_markers | 21 | 10 | 100% | 14% | 14.3% |
+| timeline_markers | 22 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 5 | 4 | 100% | 10% | 9.5% |
-| visual | 6 | 4 | 100% | 10% | 9.5% |
+| cultural | 6 | 4 | 100% | 10% | 9.5% |
+| visual | 5 | 4 | 100% | 10% | 9.5% |
 | variety | 0.96 | - | 96% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 22 | 3 | 100% | 5% | 4.8% |
+| questions | 21 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
@@ -75,9 +75,8 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Бояри і шляхта: Соціальні верстви** | ⚪️ | 132 | Skipped |
 | **Контекст** | ✅ | 492 | Included in Core |
-| **Читання** | ✅ | 1497 | Included in Core |
+| **Читання** | ✅ | 2106 | Included in Core |
 | **Первинні джерела** | ✅ | 647 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 567 | Included in Core |
-| **Есе** | ⚪️ | 574 | Skipped |
 | **Підсумок** | ✅ | 263 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 247 | Skipped |

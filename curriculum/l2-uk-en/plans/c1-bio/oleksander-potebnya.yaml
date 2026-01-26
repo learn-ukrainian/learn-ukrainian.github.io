@@ -1,0 +1,112 @@
+module: oleksander-potebnya
+level: c1-bio
+sequence: 104
+version: '2.0'
+title: 'Олександр Потебня: Філософ мови'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Потебня_Олександр_Опанасович
+    title: Олександр Потебня (Wikipedia UA)
+    notes: Biography, linguistic theories, works
+  secondary:
+  - url: https://uk.wikipedia.org/wiki/Інститут_мовознавства_імені_О._О._Потебні_НАН_України
+    title: Інститут мовознавства ім. О. О. Потебні
+    notes: His legacy in modern linguistics
+  - url: https://uk.wikipedia.org/wiki/Харківська_філологічна_школа
+    title: Харківська філологічна школа
+    notes: The school he founded
+  - url: https://uk.wikipedia.org/wiki/Думка_і_мова
+    title: '"Думка і мова" (праця)'
+    notes: His seminal work
+content_outline:
+- section: Вступ — Український Гумбольдт
+  words: 444
+  subsections:
+  - Потебня як найвидатніший український мовознавець XIX ст.
+  - Його місце у світовій лінгвістиці
+  - Чому його називають "філософом мови"
+- section: Походження та освіта
+  words: 666
+  subsections:
+  - Народження на Полтавщині (1835)
+  - Козацьке походження родини
+  - Навчання в Харківському університеті
+  - Вплив німецької філософії
+- section: '"Думка і мова" (1862)'
+  words: 888
+  subsections:
+  - Зв'язок між мовою і мисленням
+  - Теорія внутрішньої форми слова
+  - Розвиток ідей Вільгельма фон Гумбольдта
+  - Вплив на семіотику та когнітивну лінгвістику
+- section: Харківська філологічна школа
+  words: 666
+  subsections:
+  - Заснування лінгвістичної школи
+  - Учні та послідовники
+  - Методологічні принципи
+  - Вплив на українську та російську лінгвістику
+- section: Дослідження української мови
+  words: 777
+  subsections:
+  - '"З нотаток про російську граматику" (порівняння укр. і рос.)'
+  - Фонетичні та граматичні дослідження
+  - Захист права української мови на існування
+  - Етнолінгвістичні праці
+- section: Спадщина та визнання
+  words: 559
+  subsections:
+  - Інститут мовознавства його імені
+  - Вплив на Шевельова та сучасну лінгвістику
+  - Актуальність його ідей сьогодні
+  - Потебня як символ української науки
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - мовознавець
+  - філологія
+  - внутрішня форма слова
+  - семіотика
+  - етимологія
+  - граматика
+  - фонетика
+  - мислення
+  - філософія мови
+  - наукова школа
+  recommended:
+  - когнітивний
+  - психолінгвістика
+  - морфологія
+  - синтаксис
+  - діалектологія
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-30 (Borys Hrinchenko - lexicographer)
+  related:
+  - c1-bio-105 (George Shevelov - his intellectual heir)
+  - c1-bio-100 (Ahatanhel Krymsky - contemporary linguist)
+  - c1-bio-98 (Ivan Ohienko - language defender)
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

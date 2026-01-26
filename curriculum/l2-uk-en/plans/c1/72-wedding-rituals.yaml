@@ -1,0 +1,23 @@
+module: 72-wedding-rituals
+level: c1
+sequence: 72
+version: '1.0'
+title: Родинні обряди - весілля
+subtitle: Family Rituals - Wedding
+focus: cultural
+pedagogy: CBI
+objectives:
+- Learner can describe the stages of a traditional Ukrainian wedding
+- Learner can explain the symbolism of the korovai and rushnyk
+- Learner can distinguish between matchmaking (svatannia) and engagement (zaruchyny)
+- Learner can recite a traditional wedding toast
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

@@ -1,36 +1,94 @@
 module: a1-20
-title: Checkpoint - Navigation
-subtitle: Can you do the A1.2 skills?
+id: a1-20
+slug: checkpoint-navigation
+title: "Checkpoint: Navigation"
+subtitle: "Can You Do the A1.2 Skills?"
 version: '2.0'
-phase: A1.2
+phase: "A1.2 [Navigation]"
 focus: checkpoint
-pedagogy: Review
-duration: 60 min
+pedagogy: TTT
+register: розмовний
+duration: 60
 transliteration: none
-phonetics: ipa
-tags:
-  - checkpoint
-  - review
-  - accusative
-  - locative
-  - genitive
-  - possessives
-  - navigation
-  - restaurant
-grammar:
-  - Accusative case (inanimate + animate)
-  - Locative case with у/в and на
-  - Genitive case (absence, quantities)
-  - Possessive pronouns (all forms)
 objectives:
-  - Demonstrate accusative case usage for direct objects
-  - Use locative case correctly for location expressions
-  - Apply genitive case for absence and quantities
-  - Match possessive pronouns to noun gender
-  - 'Navigate practical scenarios: directions, shopping, cafés'
-vocabulary_count: 20
-vocab_count: 9
-slug: 20-checkpoint-navigation
+  - "Demonstrate accusative case usage for direct objects"
+  - "Use locative case correctly for location expressions"
+  - "Apply genitive case for absence and quantities"
+  - "Navigate practical scenarios: directions, shopping, cafés"
+grammar:
+  - "Accusative case (inanimate + animate)"
+  - "Locative case with у/в and на"
+  - "Genitive case (absence, quantities)"
+  - "Possessive pronouns"
+word_target: 500
+content_outline:
+  - section: "Part 1: Case Review"
+    words: 100
+    points:
+      - "Accusative transformations"
+      - "Locative with prepositions"
+      - "Genitive for absence"
+  - section: "Part 2: Vocabulary Check"
+    words: 100
+    points:
+      - "Places and directions"
+      - "Food and drink"
+      - "Numbers and prices"
+  - section: "Part 3: Practical Tasks"
+    words: 100
+    points:
+      - "Give directions"
+      - "Order at café"
+      - "Go shopping"
+  - section: "Part 4: Integrated Scenarios"
+    words: 100
+    points:
+      - "Navigate a city"
+      - "Complete transactions"
+      - "Handle problems"
+  - section: "Part 5: Self-Assessment"
+    words: 50
+    points:
+      - "Strengths and weaknesses"
+      - "Areas to review"
+  - section: "Summary: Ready for A1.3"
+    words: 50
+    points:
+      - "Skills mastered"
+      - "Preview of Consolidation phase"
+vocabulary_hints:
+  required:
+    - де (where)
+    - скільки (how much)
+    - немає (there is no)
+    - мій (my)
+    - наліво (left)
+    - направо (right)
+    - кава (coffee)
+    - гривня (hryvnia)
+  recommended:
+    - рахунок (bill)
+    - зупинка (stop)
+    - магазин (store)
+    - кілограм (kilogram)
+activity_hints:
+  - type: quiz
+    focus: "A1.2 grammar and vocabulary"
+    items: 35
+  - type: practical-task
+    focus: "Navigation scenario"
+    items: 5
+  - type: role-play
+    focus: "Shopping and café"
+    items: 4
+  - type: self-assessment
+    focus: "Rate your skills"
+    items: 10
+prerequisites:
+  - a1-19 (At the Café)
+connects_to:
+  - a1-21 (Yesterday - Past Tense)
 naturalness:
   score: 10
   status: PASS
+  justification: "Clear checkpoint format"

@@ -1,0 +1,100 @@
+module: 24-language-question-linguistics
+level: lit
+sequence: 24
+version: '2.0'
+title: Мовне питання
+subtitle: The Language Question
+focus: literature
+pedagogy: seminar
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Кулішівка
+    title: Кулішівка — стаття
+    notes: Історія правопису
+  secondary:
+  - url: https://uk.wikipedia.org/wiki/Українська_мова#Правопис
+    title: Історія українського правопису
+    notes: Ширший контекст
+  - url: https://uk.wikipedia.org/wiki/Валуєвський_циркуляр
+    title: Валуєвський циркуляр
+    notes: Політичний контекст
+content_outline:
+- section: Вступ — Чому правопис — це політика?
+  words: 500
+  subsections:
+  - Мова як поле битви
+  - Зв'язок орфографії та ідентичності
+  - XIX століття — час "мовних війн"
+- section: Кулішівка — система Куліша
+  words: 800
+  subsections:
+  - Принципи фонетичного правопису
+  - Як Кулішівка відрізняється від етимологічного
+  - Практичне застосування
+- section: «Війни алфавітів» XIX століття
+  words: 700
+  subsections:
+  - Максимовичівка vs Кулішівка
+  - Ярижка (російська транслітерація)
+  - Позиція Австро-Угорщини
+- section: Імперські заборони
+  words: 700
+  subsections:
+  - Валуєвський циркуляр (1863)
+  - Емський указ (1876)
+  - Наслідки для української літератури
+- section: Фонетика vs етимологія
+  words: 500
+  subsections:
+  - 'Фонетичний принцип: «як чую, так пишу»'
+  - 'Етимологічний принцип: історичне написання'
+  - Сучасний український правопис
+- section: Підсумок — Мова як нація
+  words: 400
+  subsections:
+  - Внесок Куліша в мовознавство
+  - Від XIX до XXI століття
+  - Перехід до Кирило-Мефодіївського братства
+word_target: 4500
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - правопис
+  - кулішівка
+  - фонетичний
+  - етимологічний
+  - циркуляр
+  - указ
+  - заборона
+  - транслітерація
+  - орфографія
+  - літера
+  recommended:
+  - абетка
+  - графіка
+  - нормування
+  - кодифікація
+  - варіант
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - cloze
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: lit-21 (Panteleimon Kulish)
+  related:
+  - lit-25 (Cyrillo-Methodian Brotherhood — політичний контекст)
+  - lit-29 (Language of Realism)
+constraints:
+  min_engagement_boxes: 3
+  min_examples: 15
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

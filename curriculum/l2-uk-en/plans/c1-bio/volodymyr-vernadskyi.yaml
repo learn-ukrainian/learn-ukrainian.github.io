@@ -1,0 +1,109 @@
+module: volodymyr-vernadskyi
+level: c1-bio
+sequence: 99
+version: '2.0'
+title: 'Володимир Вернадський: Батько української науки'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Вернадський_Володимир_Іванович
+    title: Володимир Вернадський (Wikipedia UA)
+    notes: Основна біографічна інформація
+  secondary:
+  - url: https://nas.gov.ua/
+    title: Національна академія наук України
+    notes: Історія заснування та діяльність
+  - url: https://igc.org.ua/
+    title: Інститут геохімії НАН України
+    notes: Наукова спадщина
+content_outline:
+- section: Вступ — Вчений, який змінив науку
+  words: 400
+  subsections:
+  - Вернадський як один із найвидатніших науковців XX ст.
+  - Засновник української Академії наук
+  - Концепції біосфери та ноосфери
+- section: Аристократичне походження
+  words: 600
+  subsections:
+  - Народження в Санкт-Петербурзі (1863)
+  - Українське коріння родини
+  - Освіта та ранні наукові інтереси
+- section: Наукова кариєра в імперії
+  words: 700
+  subsections:
+  - Робота в Московському університеті
+  - Дослідження мінералогії та геохімії
+  - Формування наукової школи
+- section: Заснування Української академії наук
+  words: 800
+  subsections:
+  - Революція та можливості
+  - Створення Академії в 1918 році
+  - Перший президент УАН
+- section: Біосфера та ноосфера
+  words: 800
+  subsections:
+  - Концепція живої речовини
+  - Ідея ноосфери як еволюції
+  - Вплив на світову науку
+- section: Останні роки та спадщина
+  words: 500
+  subsections:
+  - Життя в СРСР
+  - Смерть у 1945 році
+  - Значення для української науки
+- section: Дискусія — Наука та нація
+  words: 200
+  subsections:
+  - Як вчений може служити нації
+  - Вернадський та українська ідентичність
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - біосфера
+  - ноосфера
+  - геохімія
+  - мінералогія
+  - Академія наук
+  - науковець
+  - дослідження
+  - концепція
+  - еволюція
+  - спадщина
+  recommended:
+  - жива речовина
+  - космізм
+  - біогеохімія
+  - інституціалізація
+  - науковий метод
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-98-ivan-ohienko
+  related:
+  - c1-bio-100-ahatanhel-krymskyi
+  - c1-bio-35-mykhailo-hrushevskyi
+  - c1-bio-99-volodymyr-vernadskyi
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

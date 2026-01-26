@@ -1,0 +1,79 @@
+module: asking-for-directions
+level: a2
+sequence: 66
+version: '2.0'
+title: Asking for Directions
+subtitle: Getting Around Town
+focus: practical
+pedagogy: PPP
+objectives:
+- Learner can ask for directions to landmarks
+- Learner can understand complex route descriptions
+- Learner can use public transport vocabulary
+- Learner can describe their location
+content_outline:
+- section: 'Introduction: Urban Navigation'
+  words: 100
+  points:
+  - Getting around cities
+  - Motion verbs review
+  - Transport options
+- section: Verbs of Motion
+  words: 200
+  points:
+  - йти vs їхати
+  - ходити vs їздити
+  - Motion on foot vs by transport
+- section: Public Transport
+  words: 200
+  points:
+  - метро, автобус, трамвай
+  - Which transport to take
+  - Stops and stations
+- section: Complex Directions
+  words: 200
+  points:
+  - Multiple steps
+  - Changing transport
+  - Time estimates
+- section: Describing Location
+  words: 150
+  points:
+  - Я знаходжуся...
+  - біля, поруч з, навпроти
+  - Using landmarks
+- section: 'Practice: Transport Routes'
+  words: 150
+  points:
+  - Plan a route
+  - Ask about transport
+word_target: 1000
+vocabulary:
+  required:
+  - йти (to go on foot)
+  - їхати (to go by transport)
+  - метро (metro)
+  - автобус (bus)
+  - трамвай (tram)
+  - зупинка (stop)
+  - станція (station)
+  - маршрут (route)
+  recommended:
+  - пересадка (transfer)
+  - вихід (exit)
+  - платформа (platform)
+  - квиток (ticket)
+  - проїзд (fare)
+  - розклад (schedule)
+  forbidden: []
+activities:
+  types_required:
+  - vocabulary-drill
+  - dialogue
+  - speaking
+  - fill-in
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a2-67 (Social Media Ukrainian)

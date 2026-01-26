@@ -1,0 +1,101 @@
+module: hreko-katolytska-tserkva
+level: c1-hist
+sequence: 61
+version: '1.0'
+title: 'Греко-католицька церква: Між Сходом і Заходом'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Унікальна церква
+  words: 400
+  subsections:
+  - УГКЦ — що це
+  - Між Римом і Константинополем
+  - Чому важлива для ідентичності
+  - Структура модуля
+- section: Від Берестя до Галичини
+  words: 600
+  subsections:
+  - Перші століття — боротьба за виживання
+  - Втрата території на сході
+  - Зосередження в Галичині
+  - Під Австрією — золота доба
+- section: Церква і національний рух
+  words: 700
+  subsections:
+  - Священики — національні лідери
+  - Селянство і церква
+  - Просвіта і церква
+  - Москвофіли vs. народовці
+  - Церква як нація-замінник
+- section: Андрей Шептицький
+  words: 600
+  subsections:
+  - Біографія — польський граф стає українським митрополитом
+  - 44 роки служіння
+  - Рятування євреїв
+  - Складні відносини з ОУН
+  - Спадщина
+- section: Знищення і підпілля
+  words: 600
+  subsections:
+  - 1946 — Львівський псевдособор
+  - Примусове «возз'єднання» з РПЦ
+  - Церква в катакомбах
+  - Переслідування священиків
+  - Діаспора — збереження
+- section: Відродження
+  words: 400
+  subsections:
+  - 1989 — легалізація
+  - Повернення храмів
+  - Сучасна УГКЦ
+  - Роль у війні 2022
+- section: Підсумок
+  words: 200
+  subsections:
+  - УГКЦ — маркер ідентичності
+  - Між Сходом і Заходом
+  - Підготовка до радянської антирелігійної політики
+word_target: 3500
+vocabulary:
+- УГКЦ
+- греко-католицький
+- митрополит
+- катакомби
+- підпілля
+- псевдособор
+- возз'єднання
+- легалізація
+- священик
+- обряд
+- василіани
+- єпарх
+- прелат
+- душпастирство
+- примас
+activities:
+- type: reading
+  focus: Sheptytsky — complex figure analysis
+- type: persecution-study
+  focus: Analyze 1946 pseudo-council — how liquidation worked
+- type: comparative-study
+  focus: UGCC vs. Orthodox in identity formation
+- type: contemporary-analysis
+  focus: UGCC role in 2022 — what changed?
+- type: essay-response
+  focus: Чому УГКЦ стала символом галицької української ідентичності?
+sources:
+- name: УГКЦ (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_греко-католицька_церква
+  type: reference
+  notes: Church history
+- name: Андрей Шептицький (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Шептицький_Андрей
+  type: reference
+  notes: Key 20th century figure
+- name: Львівський собор 1946
+  url: https://uk.wikipedia.org/wiki/Львівський_собор_(1946)
+  type: reference
+  notes: Soviet liquidation

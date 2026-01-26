@@ -1,0 +1,96 @@
+module: 25-political-system
+level: c1
+sequence: 25
+version: '2.0'
+title: Політична система України
+focus: domain
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Конституція України
+  url: https://zakon.rada.gov.ua/
+  type: primary
+  notes: Constitutional framework of Ukraine
+- name: Верховна Рада України
+  url: https://rada.gov.ua/
+  type: reference
+  notes: Official parliamentary information
+content_outline:
+- section: Вступ — Конституційний устрій
+  words: 500
+  points:
+  - Конституція України (1996)
+  - Форма правління
+  - Територіальний устрій
+- section: Президент України
+  words: 700
+  points:
+  - Повноваження президента
+  - Вибори президента
+  - Роль у системі влади
+- section: Верховна Рада
+  words: 800
+  points:
+  - Структура парламенту
+  - Законодавчий процес
+  - Партії та фракції
+- section: Кабінет Міністрів
+  words: 600
+  points:
+  - Виконавча влада
+  - Формування уряду
+  - Міністерства та відомства
+- section: Судова система
+  words: 600
+  points:
+  - Конституційний Суд
+  - Верховний Суд
+  - Судова реформа
+- section: Місцеве самоврядування
+  words: 500
+  points:
+  - Децентралізація
+  - Громади
+  - Місцеві вибори
+- section: Практичне завдання
+  words: 300
+  points:
+  - Аналіз політичних новин
+  - Дискусія про політичні процеси
+  - Порівняльний аналіз
+word_target: 4000
+vocabulary:
+  required:
+  - конституція (constitution)
+  - президент (president)
+  - парламент (parliament)
+  - уряд (government)
+  - міністр (minister)
+  - депутат (deputy)
+  - вибори (elections)
+  - законопроєкт (bill)
+  - голосування (voting)
+  - децентралізація (decentralization)
+  recommended:
+  - фракція (faction)
+  - коаліція (coalition)
+  - імпічмент (impeachment)
+  - вето (veto)
+  - референдум (referendum)
+  forbidden: []
+activities:
+  types_required:
+  - group-sort
+  - quiz
+  - cloze
+  - fill-in
+  - match-up
+  - true-false
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c1-26 (Media Landscape)
+- c1-27 (Global Context)
+- c1-35 (C1.2 Checkpoint)

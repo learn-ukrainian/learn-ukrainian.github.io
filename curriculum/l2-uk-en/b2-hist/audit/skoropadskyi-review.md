@@ -1,7 +1,7 @@
 # Audit Report: M91 — skoropadskyi.md
 **Level:** B2 | **Module:** M91 | **Phase:** HIST.9 | **Pedagogy:** Not Specified | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 20:22:54
+**Generated:** 2026-01-25 22:23:22
 
 ## Configuration
 **Type:** B2-history

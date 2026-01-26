@@ -1,11 +1,105 @@
-# Meta for Рух: Народний рух України
+module: b2-hist-118
+id: b2-hist-118
 slug: rukh
 title: "Рух: Народний рух України"
-level: B2
-track: history
+subtitle: "Rukh: The People's Movement of Ukraine"
+version: '2.0'
 phase: "HIST.12 [Independence & Modern Era]"
-status: skeleton
 focus: history
+pedagogy: CBI
+register: публіцистичний
+duration: 120
+transliteration: none
+objectives:
+  - "Учень може описати створення та діяльність Народного руху України"
+  - "Учень може пояснити роль Руху у здобутті незалежності"
+  - "Учень може проаналізувати програму та ідеологію руху"
+  - "Учень може оцінити внесок лідерів Руху: Чорновіл, Драч, Павличко"
+grammar:
+  - "Минулий час в історичному наративі"
+  - "Політична лексика"
+  - "Складнопідрядні речення"
 word_target: 4000
-prerequisites: []
-learning_outcomes: []
+content_outline:
+  - section: "Вступ: Перебудова в Україні"
+    words: 400
+    points:
+      - "1985-1989: гласність і перебудова"
+      - "Чому виник Рух"
+      - "Від культурного до політичного"
+  - section: "Створення Руху (1989)"
+    words: 800
+    points:
+      - "Установчий з'їзд у Києві"
+      - "Лідери: В'ячеслав Чорновіл"
+      - "Іван Драч та Дмитро Павличко"
+      - "Програма Руху"
+  - section: "Діяльність Руху (1989-1991)"
+    words: 1000
+    points:
+      - "Живий ланцюг: 21 січня 1990"
+      - "Вибори 1990 року"
+      - "Боротьба за незалежність"
+      - "Референдум 1 грудня 1991"
+      - "Рух після незалежності"
+  - section: "Первинні джерела"
+    words: 800
+    points:
+      - "Програмні документи Руху"
+      - "Виступи лідерів"
+      - "Фото- та відеоматеріали"
+  - section: "Деколонізаційний погляд"
+    words: 500
+    points:
+      - "Радянський наратив: «націоналісти»"
+      - "Реальність: демократичний рух"
+      - "Рух як антиколоніальна сила"
+  - section: "Підсумок: Спадщина Руху"
+    words: 500
+    points:
+      - "Внесок у незалежність"
+      - "Доля лідерів"
+      - "Рух у сучасній пам'яті"
+vocabulary_hints:
+  required:
+    - рух (movement)
+    - незалежність (independence)
+    - перебудова (perestroika)
+    - демократія (democracy)
+    - референдум (referendum)
+    - партія (party)
+    - з'їзд (congress)
+    - програма (program)
+  recommended:
+    - гласність (glasnost)
+    - опозиція (opposition)
+    - мітинг (rally)
+    - самовизначення (self-determination)
+    - суверенітет (sovereignty)
+    - декларація (declaration)
+activity_hints:
+  - type: reading
+    focus: "Програма Руху та виступи лідерів"
+    source: "Архівні документи"
+    items: 4
+  - type: quiz
+    focus: "Народний рух України"
+    items: 15
+  - type: match-up
+    focus: "Лідер → досягнення/роль"
+    items: 10
+  - type: true-false
+    focus: "Факти про Рух"
+    items: 10
+  - type: essay-response
+    focus: "Яку роль відіграв Рух у здобутті незалежності України?"
+    word_target: 250
+prerequisites:
+  - b2-hist-117 (Шістдесятники)
+connects_to:
+  - b2-hist-119 (Ланцюг єднання)
+  - b2-hist-120 (Незалежність 1991)
+naturalness:
+  score: 10
+  status: PASS
+  justification: "Академічний український для політичної історії"

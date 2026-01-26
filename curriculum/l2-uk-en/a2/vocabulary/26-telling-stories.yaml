@@ -2,116 +2,146 @@ module: 26-telling-stories
 level: A2
 version: '2.0'
 items:
-- lemma: анекдот
-  ipa: /anɛkdˈɔt/
-  translation: joke, anecdote
-  pos: noun
-- lemma: впіймати
-  ipa: /ʋpijmˈatɪ/
-  translation: to catch
-  pos: verb
-- lemma: відкласти
-  ipa: /ʋidklˈastɪ/
-  translation: to postpone, to set aside
-  pos: verb
-- lemma: відкритися
-  ipa: /ʋidkrˈɪtɪsja/
-  translation: to open (perfective)
-  pos: verb
-- lemma: дивний
-  ipa: /dˈɪʋnɪj/
-  translation: strange, weird
-  pos: adj
-- lemma: добрати
-  ipa: /dɔbrˈatɪ/
-  translation: to select, to pick up
-  pos: verb
-- lemma: дістати
-  ipa: /distˈatɪ/
-  translation: to get, to reach
-  pos: verb
-- lemma: завершувати
-  ipa: /zaʋˈɛrʃuʋatɪ/
-  translation: to complete (imperfective)
-  pos: verb
-- lemma: згаснути
-  ipa: /zɦˈasnutɪ/
-  translation: to go out, to fade
-  pos: verb
-- lemma: коротше
-  ipa: /kɔrˈɔtʃɛ/
-  translation: shorter, in short
+- lemma: спочатку
+  ipa: /spoˈt͡ʃɑtku/
+  translation: at first, first
   pos: adv
-- lemma: кум
-  ipa: /kum/
-  translation: kum (godfather)
-  pos: noun
-- lemma: мовчки
-  ipa: /mˈɔʋt͡ʃkɪ/
-  translation: silently
+- lemma: потім
+  ipa: /poˈtim/
+  translation: then, after
   pos: adv
-- lemma: мокрий
-  ipa: /mˈɔkrɪj/
-  translation: wet
-  pos: adj
-- lemma: молодість
-  ipa: /mˈɔlɔdistʲ/
-  translation: youth (age)
-  pos: noun
-  gender: f
-- lemma: настрій
-  ipa: /nˈastrij/
-  translation: mood
-  pos: noun
-  gender: m
-- lemma: незвичайний
-  ipa: /nɛzʋɪt͡ʃˈajnɪj/
-  translation: unusual
-  pos: adj
-- lemma: нещодавно
-  ipa: /nɛʃt͡ʃɔdˈaʋnɔ/
+- lemma: нарешті
+  ipa: /nɑˈrɛʃti/
+  translation: finally, at last
+  pos: adv
+- lemma: раптом
+  ipa: /ˈrɑptom/
+  translation: suddenly
+  pos: adv
+- lemma: врешті-решт
+  ipa: /ˈvrɛʃti ˈrɛʃt/
+  translation: in the end, eventually
+  pos: adv
+- lemma: одного разу
+  ipa: /odˈnoho ˈrɑzu/
+  translation: one day, once upon a time
+  pos: adv
+- lemma: колись
+  ipa: /ˈkolɪsʲ/
+  translation: once, long ago
+  pos: adv
+- lemma: якось
+  ipa: /ˈjɑkosʲ/
+  translation: somehow, once
+  pos: adv
+- lemma: після цього
+  ipa: /ˈpisʎɑ ˈt͡sʲoho/
+  translation: after this
+  pos: adv
+- lemma: тоді
+  ipa: /toˈdi/
+  translation: then, at that time
+  pos: adv
+- lemma: далі
+  ipa: /ˈdɑli/
+  translation: next, further
+  pos: adv
+- lemma: несподівано
+  ipa: /nɛspoˈdivɑno/
+  translation: unexpectedly
+  pos: adv
+- lemma: саме тоді
+  ipa: /ˈsɑmɛ toˈdi/
+  translation: just then, at that exact moment
+  pos: adv
+- lemma: ледве
+  ipa: /ˈlɛdvɛ/
+  translation: barely, hardly
+  pos: adv
+- lemma: згодом
+  ipa: /ˈzɦodom/
+  translation: later on
+  pos: adv
+- lemma: раніше
+  ipa: /ˈrɑniʃɛ/
+  translation: earlier, before
+  pos: adv
+- lemma: давно
+  ipa: /dɑvˈno/
+  translation: long ago
+  pos: adv
+- lemma: недавно
+  ipa: /nɛˈdɑvno/
   translation: recently
   pos: adv
-- lemma: онуків
-  ipa: /ɔnˈukiʋ/
-  translation: of grandsons
-  pos: adj
-- lemma: парасолька
-  ipa: /parasˈɔlʲka/
-  translation: umbrella
-  pos: noun
-  gender: f
-- lemma: повторитися
-  ipa: /pɔʋtɔrˈɪtɪsja/
-  translation: to recur, to repeat (perfective)
-  pos: verb
-- lemma: повірити
-  ipa: /pɔʋˈirɪtɪ/
-  translation: to believe (perfective)
-  pos: verb
-- lemma: пташка
-  ipa: /ptˈaʃka/
-  translation: small bird
-  pos: noun
-  gender: f
-- lemma: реакція
-  ipa: /rɛˈakt͡sija/
-  translation: reaction
-  pos: noun
-  gender: f
-- lemma: спасти
-  ipa: /spastɪ/
-  translation: to save (perfective), to fall (rare variant)
-  pos: verb
-- lemma: спитий
-  ipa: /spˈɪtɪj/
-  translation: drunk
-  pos: adj
+- lemma: нещодавно
+  ipa: /nɛʃt͡ʃoˈdɑvno/
+  translation: recently
+  pos: adv
+- lemma: вже
+  ipa: /vʒɛ/
+  translation: already
+  pos: adv
+- lemma: ще
+  ipa: /ʃt͡ʃɛ/
+  translation: still, yet
+  pos: adv
+- lemma: відразу
+  ipa: /ˈvidrɑzu/
+  translation: immediately
+  pos: adv
+- lemma: негайно
+  ipa: /nɛˈɦɑjno/
+  translation: immediately, urgently
+  pos: adv
+- lemma: щойно
+  ipa: /ˈʃt͡ʃojno/
+  translation: just now, just recently
+  pos: adv
 - lemma: тільки-но
-  ipa: /tˈilʲkɪ-nɔ/
+  ipa: /ˈtilʲkɪ no/
   translation: just now, only just
+  pos: adv
+- lemma: перед цим
+  ipa: /ˈpɛrɛd t͡sɪm/
+  translation: before this
+  pos: adv
+- lemma: анекдот
+  ipa: /ɑnɛkˈdot/
+  translation: joke, anecdote
+  pos: noun
+  gender: m
+- lemma: пізніше
+  ipa: /ˈpizniʃɛ/
+  translation: later
+  pos: adv
+- lemma: врешті
+  ipa: /ˈvrɛʃti/
+  translation: in the end (part of врешті-решт)
+  pos: adv
+- lemma: решт
+  ipa: /rɛʃt/
+  translation: end (part of врешті-решт)
+  pos: noun
+  gender: f
+- lemma: одного
+  ipa: /odˈnoho/
+  translation: one (genitive, part of одного разу)
+  pos: num
+- lemma: разу
+  ipa: /ˈrɑzu/
+  translation: time, instance (genitive, part of одного разу)
+  pos: noun
+  gender: m
+- lemma: цього
+  ipa: /ˈt͡sʲoho/
+  translation: this (genitive, part of після цього)
+  pos: pron
+- lemma: цим
+  ipa: /t͡sɪm/
+  translation: this (instrumental, part of перед цим)
+  pos: pron
+- lemma: но
+  ipa: /no/
+  translation: but, only (part of тільки-но)
   pos: conj
-- lemma: увімкнутися
-  ipa: /uʋimknˈutɪsja/
-  translation: to be turned on (perfective)
-  pos: verb

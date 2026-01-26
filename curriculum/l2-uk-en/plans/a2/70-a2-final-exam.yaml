@@ -1,0 +1,78 @@
+module: a2-final-exam
+level: a2
+sequence: 70
+version: '2.0'
+title: A2 Final Exam
+subtitle: Level Completion
+focus: checkpoint
+pedagogy: TTT
+objectives:
+- Learner can demonstrate A2 level proficiency
+- Learner can solve practical problems in Ukrainian
+- Learner can understand main points of complex texts
+- Learner is ready for B1 level
+content_outline:
+- section: 'Pre-Exam: Preparation'
+  words: 50
+  points:
+  - Exam format overview
+  - Skills to demonstrate
+  - Final preparation tips
+- section: Reading Comprehension
+  words: 100
+  points:
+  - Text understanding
+  - Main idea identification
+  - Detail extraction
+- section: Listening Comprehension
+  words: 100
+  points:
+  - Audio understanding
+  - Key information
+  - Following dialogues
+- section: Grammar and Vocabulary
+  words: 150
+  points:
+  - Case selection
+  - Verb aspect usage
+  - Vocabulary in context
+- section: Speaking Assessment
+  words: 100
+  points:
+  - Self-introduction
+  - Situation responses
+  - Conversation skills
+- section: Results and Next Steps
+  words: 100
+  points:
+  - Performance review
+  - Areas for improvement
+  - Transition to B1
+word_target: 600
+vocabulary:
+  required:
+  - іспит (exam)
+  - завдання (task)
+  - відповідь (answer)
+  - результат (result)
+  - рівень (level)
+  - оцінка (grade)
+  - готовий (ready)
+  - успішно (successfully)
+  recommended:
+  - розуміння (comprehension)
+  - навички (skills)
+  - досягнення (achievement)
+  - сертифікат (certificate)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - speaking
+  - reading-comprehension
+  - listening
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-01 (How to Talk About Grammar)

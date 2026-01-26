@@ -1,0 +1,98 @@
+module: 26-media-landscape
+level: c1
+sequence: 26
+version: '2.0'
+title: 'Медіаландшафт: Як не потонути в інформації'
+focus: domain
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Інститут масової інформації
+  url: https://imi.org.ua/
+  type: reference
+  notes: Media monitoring and analysis
+- name: StopFake
+  url: https://www.stopfake.org/
+  type: secondary
+  notes: Fact-checking resources
+content_outline:
+- section: Вступ — Медіа в Україні
+  words: 400
+  points:
+  - Огляд медіаландшафту
+  - Державні vs приватні ЗМІ
+  - Роль медіа в суспільстві
+- section: Типи медіа
+  words: 700
+  points:
+  - Телебачення (державні, приватні канали)
+  - Радіо
+  - Преса (газети, журнали)
+  - Інтернет-видання
+  - Соціальні мережі
+- section: Медіаграмотність
+  words: 800
+  points:
+  - Оцінка джерел
+  - Виявлення упередженості
+  - Розпізнавання маніпуляцій
+- section: Фейки та пропаганда
+  words: 700
+  points:
+  - Ознаки дезінформації
+  - Методи пропаганди
+  - Фактчекінг
+- section: Критичний аналіз
+  words: 600
+  points:
+  - Аналіз новинних статей
+  - Порівняння джерел
+  - Верифікація інформації
+- section: Свобода слова
+  words: 500
+  points:
+  - Права журналістів
+  - Виклики для медіа
+  - Медіа в умовах війни
+- section: Практичне завдання
+  words: 300
+  points:
+  - Аналіз новини
+  - Виявлення маніпуляцій
+  - Порівняльний огляд
+word_target: 4000
+vocabulary:
+  required:
+  - ЗМІ (mass media)
+  - джерело (source)
+  - упередженість (bias)
+  - дезінформація (disinformation)
+  - пропаганда (propaganda)
+  - фейк (fake)
+  - фактчекінг (fact-checking)
+  - маніпуляція (manipulation)
+  - достовірність (reliability)
+  - свобода слова (freedom of speech)
+  recommended:
+  - олігархічні медіа (oligarch-owned media)
+  - інформаційна гігієна (information hygiene)
+  - верифікація (verification)
+  - первинне джерело (primary source)
+  - медіаграмотність (media literacy)
+  forbidden: []
+activities:
+  types_required:
+  - group-sort
+  - quiz
+  - essay-response
+  - cloze
+  - match-up
+  - true-false
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c1-27 (Global Context)
+- c1-33 (Case Studies)
+- c1-35 (C1.2 Checkpoint)

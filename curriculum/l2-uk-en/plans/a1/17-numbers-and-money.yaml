@@ -1,0 +1,81 @@
+module: numbers-and-money
+level: a1
+sequence: 17
+version: '2.0'
+title: Numbers & Money
+subtitle: Counting and Shopping in Ukraine
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can count from 0-100 in Ukrainian
+- Learner can ask and answer 'How much does it cost?'
+- Learner can handle basic shopping transactions
+- Learner can use numbers with genitive plural forms
+content_outline:
+- section: 'Introduction: Numbers in Daily Life'
+  words: 100
+  points:
+  - Counting is essential
+  - Prices, quantities, time
+  - Number-noun agreement
+- section: Numbers 0-20
+  words: 200
+  points:
+  - 0 нуль, 1 один/одна/одне
+  - 2 два/дві, 3 три, 4 чотири
+  - '5-10: п''ять, шість, сім, вісім, дев''ять, десять'
+  - '11-20: одинадцять... двадцять'
+- section: Numbers 20-100
+  words: 200
+  points:
+  - 'Tens: двадцять, тридцять... сто'
+  - 'Compound numbers: двадцять один'
+  - Practice counting
+- section: Number Agreement Rules
+  words: 200
+  points:
+  - '1 + nominative singular: одна гривня'
+  - '2-4 + nominative plural: дві гривні'
+  - '5+ + genitive plural: п''ять гривень'
+- section: Money and Prices
+  words: 200
+  points:
+  - гривня, гривні, гривень
+  - Скільки коштує? (How much?)
+  - Це коштує... (It costs...)
+- section: 'Practice: Shopping Math'
+  words: 100
+  points:
+  - Calculate totals
+  - Ask about prices
+word_target: 1000
+vocabulary:
+  required:
+  - один (one)
+  - два (two)
+  - три (three)
+  - п'ять (five)
+  - десять (ten)
+  - гривня (hryvnia)
+  - скільки (how much)
+  - коштувати (to cost)
+  recommended:
+  - сто (hundred)
+  - копійка (kopeck)
+  - ціна (price)
+  - дорого (expensive)
+  - дешево (cheap)
+  - здача (change)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - role-play
+  - listening
+  - number-drill
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a1-18 (Food and Shopping)
+- a1-23 (What Time Is It)

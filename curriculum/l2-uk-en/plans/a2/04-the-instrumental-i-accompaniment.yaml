@@ -1,0 +1,81 @@
+module: 04-the-instrumental-i-accompaniment
+level: a2
+sequence: 4
+version: '2.0'
+title: The Instrumental I — Accompaniment
+subtitle: With Whom? Using 'З'
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can form instrumental case endings for nouns
+- Learner can use the preposition з (with) correctly
+- Learner can describe doing things together with others
+- Learner can use proper euphony rules for з/із/зі
+sources:
+- name: Ukrainian State Standard 2024 - Instrumental Case
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Instrumental endings and з/із/зі usage rules
+- name: Ukrainian Grammar Reference
+  url: https://uk.wikipedia.org/wiki/Орудний_відмінок
+  type: reference
+  notes: Complete instrumental paradigm
+content_outline:
+- section: Introduction / Вступ
+  words: 250
+  points:
+  - The seventh case in Ukrainian (орудний відмінок)
+  - Key question - ким? чим? (by whom? by what?)
+  - Primary use - accompaniment with з/із/зі
+- section: Presentation / Презентація
+  words: 550
+  points:
+  - Instrumental Endings by Gender
+  - з/із/зі Variants (euphony)
+  - Social Verbs with Accompaniment
+- section: Practice / Практика
+  words: 150
+  points:
+  - Common Expressions (разом з)
+  - Sentence formation: Together with others
+- section: Dialogues / Діалоги
+  words: 50
+  points:
+  - Social interaction scenarios
+word_target: 1000
+vocabulary:
+  required:
+  - з/із/зі (with)
+  - разом (together)
+  - разом з (together with)
+  - поруч з (next to)
+  - зустрічатися (to meet)
+  - гуляти (to walk)
+  - розмовляти (to talk)
+  - спілкуватися (to communicate)
+  - зустрітися (to meet - pf)
+  - познайомитися (to get acquainted)
+  - одружитися (to get married)
+  - подружитися (to become friends)
+  - жити (to live)
+  - працювати (to work)
+  - грати (to play)
+  recommended:
+  - помиритися (to make up)
+  - посваритися (to quarrel)
+  - товаришувати (to be friends)
+  - приятелювати (to be pals)
+  - сусідити (to be neighbors)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - match-up
+  - fill-in
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a2-05 (Instrumental II - Means & Tools)
+- a2-06 (Being and Becoming)
+- a2-07 (Spatial Prepositions)

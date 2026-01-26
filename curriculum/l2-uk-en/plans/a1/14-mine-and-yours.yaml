@@ -1,0 +1,79 @@
+module: mine-and-yours
+level: a1
+sequence: 14
+version: '2.0'
+title: Mine and Yours
+subtitle: Possessive Pronouns in Ukrainian
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can use possessive pronouns мій/твій/його/її/наш/ваш/їхній
+- Learner can match possessive pronouns to noun gender (m/f/n/pl)
+- Learner can ask and answer questions about possession
+- Learner can distinguish variable and invariable possessives
+content_outline:
+- section: 'Introduction: Whose Is It?'
+  words: 100
+  points:
+  - Possession in Ukrainian
+  - Two types of possessives
+  - Agreement with noun
+- section: Variable Possessives (мій, твій, наш, ваш)
+  words: 250
+  points:
+  - мій/моя/моє/мої (my)
+  - твій/твоя/твоє/твої (your informal)
+  - наш/наша/наше/наші (our)
+  - ваш/ваша/ваше/ваші (your formal/plural)
+- section: Invariable Possessives (його, її, їхній)
+  words: 200
+  points:
+  - його (his) - never changes
+  - її (her) - never changes
+  - їхній/їхня/їхнє/їхні (their) - changes
+- section: Agreement Practice
+  words: 150
+  points:
+  - мій брат, моя сестра, моє місто
+  - Match to noun gender
+  - Common mistakes
+- section: Asking About Possession
+  words: 100
+  points:
+  - Чий? Чия? Чиє? Чиї?
+  - Whose book is this?
+  - Answer patterns
+- section: 'Practice: What''s Yours?'
+  words: 100
+  points:
+  - Describe your possessions
+  - Ask about others' things
+word_target: 900
+vocabulary:
+  required:
+  - мій (my m.)
+  - моя (my f.)
+  - твій (your m.)
+  - його (his)
+  - її (her)
+  - наш (our)
+  - чий (whose m.)
+  - чия (whose f.)
+  recommended:
+  - ваш (your formal)
+  - їхній (their)
+  - свій (one's own)
+  - річ (thing)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - transformation
+  - matching
+  - dialogue
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a1-15 (Around the City)
+- a1-32 (My Family)

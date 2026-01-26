@@ -1,0 +1,50 @@
+module: kost-hordiyenko-sich
+level: b2-hist
+sequence: 0
+version: '1.0'
+title: Кость Гордієнко та Січ
+focus: history
+pedagogy: CBI
+objectives: []
+content_outline:
+- section: 'Вступ: Непримиренний кошовий'
+  words: 450
+  subsections:
+  - The unique personality of Kost Hordiyenko
+  - The role of the koshovyi otaman
+  - Geopolitical situation at the start of the 18th century
+- section: 'Запорозька Січ: Острів свободи в морі імперій'
+  words: 650
+  subsections:
+  - The internal structure of the Sich
+  - Democratic traditions and Cossack law
+  - Conflicts with Moscow's centralization policy
+- section: 'Великий союз: Гордієнко, Мазепа та Карл XII'
+  words: 1000
+  subsections:
+  - Motives for joining the anti-Moscow coalition
+  - Meeting between Hordiyenko and Mazepa
+  - The strategic importance of the Sich for the Swedish campaign
+- section: 'Трагедія 1709: Зруйнування Чортомлицької Січі'
+  words: 600
+  subsections:
+  - The campaign of Menshikov and Yakovlev
+  - The heroic defense and the betrayal
+  - Symbolism of the Sich's destruction
+- section: 'Читання: Козацький дух у документах'
+  words: 400
+  subsections:
+  - Analysis of Hordiyenko's letters
+  - Provisions of the Constitution of Pylyp Orlyk related to the Sich
+- section: 'Первинні джерела: Свідчення очевидців'
+  words: 400
+  subsections:
+  - Swedish descriptions of the Cossacks
+  - Folk songs about Hordiyenko
+- section: 'Деколонізаційний погляд: Січ як анти-імперський проект'
+  words: 500
+  subsections:
+  - Sich as a democratic alternative to Moscow's autocracy
+  - The myth of 'unlimited loyalty' vs contractual rights
+  - Legacy of Hordiyenko in the fight for independence
+word_target: 4000

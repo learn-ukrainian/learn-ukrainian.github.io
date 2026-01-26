@@ -2,7 +2,7 @@
 **Level:** A2 | **Module:** M69 | **Phase:** A2.4 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 23:54:13
+**Generated:** 2026-01-26 08:59:46
 
 ## Configuration
 **Type:** A2-vocab
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (7 words): замовлення, доставка, код, підтвердження, налаштування...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (7 words): пароль, налаштування, код, доставка, замовлення...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

@@ -1,0 +1,80 @@
+module: the-gender-code
+level: a1
+sequence: 3
+version: '2.0'
+title: The Gender Code
+subtitle: Unlocking Ukrainian Gender Patterns
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can identify noun gender by word ending
+- Learner can categorize nouns into 4 declension families
+- 'Learner recognizes patterns: consonant (m), -а/-я (f), -о/-е (n)'
+- Learner knows common exceptions
+content_outline:
+- section: 'Introduction: Why Gender Matters'
+  words: 100
+  points:
+  - Every noun has a gender
+  - Gender affects adjectives, verbs, pronouns
+  - 'Good news: Endings are predictable'
+- section: Masculine Nouns
+  words: 200
+  points:
+  - 'End in consonant: брат, стіл, дім'
+  - 'Professions: студент, лікар, вчитель'
+  - 'Family members: тато, дядько (exceptions)'
+- section: Feminine Nouns
+  words: 200
+  points:
+  - 'End in -а: мама, сестра, книга'
+  - 'End in -я: земля, сім''я, історія'
+  - 'Soft sign: ніч, річ, любов'
+- section: Neuter Nouns
+  words: 200
+  points:
+  - 'End in -о: вікно, молоко, місто'
+  - 'End in -е: море, серце, сонце'
+  - Abstract concepts common
+- section: Declension Families Preview
+  words: 100
+  points:
+  - Four families based on ending
+  - Why families matter for cases
+  - Quick reference chart
+- section: 'Practice: Gender Detective'
+  words: 100
+  points:
+  - Identify gender of new words
+  - Memory strategies
+word_target: 900
+vocabulary:
+  required:
+  - брат (brother)
+  - сестра (sister)
+  - мама (mother)
+  - тато (father)
+  - дім (house)
+  - вікно (window)
+  - книга (book)
+  - місто (city)
+  recommended:
+  - стіл (table)
+  - море (sea)
+  - ніч (night)
+  - день (day)
+  - земля (earth)
+  - серце (heart)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - fill-in
+  - match-up
+  - sorting
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a1-04 (This Is, I Am)
+- a1-26 (Adjectives)

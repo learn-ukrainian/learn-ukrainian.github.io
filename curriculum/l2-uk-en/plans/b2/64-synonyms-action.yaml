@@ -1,0 +1,22 @@
+module: 64-synonyms-action
+level: b2
+sequence: 64
+version: '1.0'
+title: 'Синоніми: Дія та Перетворення'
+subtitle: Synonyms - Action and Transformation
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Учень може розрізняти відтінки значень дієслів на позначення дії (робити, чинити, діяти)
+- Учень вміє обирати точне слово для опису професійних та творчих процесів
+- Учень розуміє концепцію вчинку та результату в українському культурному контексті
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

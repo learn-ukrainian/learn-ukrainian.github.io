@@ -1,0 +1,103 @@
+module: rhythm-prosody
+level: c2
+sequence: 22
+version: '2.0'
+title: Ритм і просодія прози
+focus: stylistics
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Поетика прози — Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Поетика
+  type: reference
+  notes: General poetics terminology and concepts
+- name: Український літературний модернізм
+  url: https://ukrlib.com.ua/
+  type: primary
+  notes: Examples of rhythmic prose from Ukrainian modernists (Stefanyk, Kotsyubynsky)
+- name: Стилістика української мови
+  url: https://uk.wikipedia.org/wiki/Стилістика
+  type: reference
+  notes: Sound devices and euphony in Ukrainian stylistics
+content_outline:
+- section: Вступ — Ритм у прозі vs. поезії
+  words: 500
+  points:
+  - Що таке ритм прози
+  - Відмінності від поетичного ритму
+  - Роль ритму в створенні настрою
+- section: Інтонаційні періоди
+  words: 700
+  points:
+  - Структура періоду (протасис, аподосис)
+  - Підвищення та зниження інтонації
+  - Ритмічні групи в реченні
+  - Приклади з української класики
+- section: Довжина речень як інструмент
+  words: 600
+  points:
+  - Короткі речення для напруги
+  - Довгі речення для опису
+  - Чергування для динаміки
+  - Аналіз текстів Стефаника
+- section: Звукопис у прозі
+  words: 700
+  points:
+  - Алітерація (повторення приголосних)
+  - Асонанс (повторення голосних)
+  - Ономатопея (звуконаслідування)
+  - Роль звукопису в створенні атмосфери
+- section: Евфонія та какофонія
+  words: 600
+  points:
+  - Милозвучні комбінації звуків
+  - Навмисна різкість для ефекту
+  - Практичні приклади з сучасної прози
+  - Редагування для покращення звучання
+- section: Практикум — редагування ритму
+  words: 500
+  points:
+  - Аналіз власних текстів
+  - Техніки покращення ритму
+  - Читання вголос як інструмент
+- section: Підсумок
+  words: 400
+  points:
+  - Ключові принципи ритмічної прози
+  - Зв'язок з індивідуальним стилем
+  - Перехід до інтертекстуальності
+word_target: 4000
+vocabulary:
+  required:
+  - ритм (rhythm)
+  - просодія (prosody)
+  - інтонація (intonation)
+  - період (period/sentence unit)
+  - алітерація (alliteration)
+  - асонанс (assonance)
+  - евфонія (euphony)
+  - какофонія (cacophony)
+  - звукопис (sound painting)
+  - ономатопея (onomatopoeia)
+  recommended:
+  - протасис (protasis)
+  - аподосис (apodosis)
+  - модуляція (modulation)
+  - темп (tempo)
+  - пауза (pause)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - match-up
+  - critical-analysis
+  - essay-response
+  - comparative-study
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-23 (Intertextuality)
+- 'c2-28 (Poetyka: Verse Analysis)'
+- 'c2-36 (Creative Writing: Poetry)'

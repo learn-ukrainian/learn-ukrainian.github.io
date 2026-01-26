@@ -1,29 +1,95 @@
 module: a2-44
-title: Checkpoint — Word Formation
-subtitle: Review and Mastery
-version: '1.0'
-phase: A2.3
+id: a2-44
+slug: checkpoint-word-formation
+title: "Checkpoint: Word Formation"
+subtitle: "Review and Mastery Assessment"
+version: '2.0'
+phase: "A2.4 [Word Formation]"
+focus: checkpoint
 pedagogy: TTT
+register: розмовний
 duration: 60
 transliteration: none
-tags:
-- checkpoint
-- review
-- word formation
-- roots
-grammar:
-- word formation review
-- root families review
-- prefix/suffix review
-- analysis skills
 objectives:
-- Learner can confidently identify root families
-- Learner can deduce meaning using morphological clues
-- Learner can form words using correct prefixes and suffixes
-- Learner can correct common word formation errors
-vocabulary_count: 25
-slug: 44-checkpoint-word-formation
-focus: checkpoint
+  - "Demonstrate confidence in identifying root families"
+  - "Deduce meaning using morphological clues"
+  - "Form words using correct prefixes and suffixes"
+  - "Correct common word formation errors"
+grammar:
+  - "Word formation comprehensive review"
+  - "Root families review"
+  - "Prefix/suffix application"
+word_target: 500
+content_outline:
+  - section: "Part 1: Root Recognition"
+    words: 80
+    points:
+      - "Identify root families"
+      - "Connect related words"
+      - "Trace etymologies"
+  - section: "Part 2: Prefix Mastery"
+    words: 80
+    points:
+      - "Prefix meanings"
+      - "Prefix combinations"
+      - "Negation and reversal"
+  - section: "Part 3: Suffix Application"
+    words: 80
+    points:
+      - "Noun suffixes"
+      - "Adjective suffixes"
+      - "Verb derivation"
+  - section: "Part 4: Word Analysis"
+    words: 100
+    points:
+      - "Break down unknown words"
+      - "Predict meanings"
+      - "Contextual understanding"
+  - section: "Part 5: Error Correction"
+    words: 80
+    points:
+      - "Common formation errors"
+      - "Fix incorrect derivations"
+      - "Choose correct forms"
+  - section: "Summary: Word Formation Skills"
+    words: 80
+    points:
+      - "Skills mastered"
+      - "Areas for review"
+      - "Preview vocabulary expansion"
+vocabulary_hints:
+  required:
+    - корінь (root)
+    - префікс (prefix)
+    - суфікс (suffix)
+    - слово (word)
+    - утворення (formation)
+    - значення (meaning)
+    - помилка (error)
+    - правильний (correct)
+  recommended:
+    - морфема (morpheme)
+    - аналіз (analysis)
+    - синтез (synthesis)
+    - похідний (derivative)
+activity_hints:
+  - type: quiz
+    focus: "Word formation comprehensive"
+    items: 35
+  - type: word-building
+    focus: "Create correct forms"
+    items: 20
+  - type: error-correction
+    focus: "Fix formation errors"
+    items: 15
+  - type: self-assessment
+    focus: "Rate word formation skills"
+    items: 10
+prerequisites:
+  - a2-43 (WF Mastery)
+connects_to:
+  - a2-45 (Food and Cooking)
 naturalness:
-  score: 8
+  score: 10
   status: PASS
+  justification: "Clear checkpoint format"

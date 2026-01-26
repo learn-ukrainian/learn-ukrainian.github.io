@@ -1,29 +1,94 @@
 module: a2-58
-title: Practical Warm-up
-subtitle: Getting Ready for Action
-version: '1.0'
-phase: A2.3
+id: a2-58
+slug: practical-warm-up
+title: "Practical Warm-up"
+subtitle: "Getting Ready for Action"
+version: '2.0'
+phase: "A2.6 [Practical]"
+focus: practical
 pedagogy: PPP
+register: розмовний
 duration: 60
 transliteration: none
-tags:
-- vocabulary
-- reading
-- listening
-- practice
-grammar:
-- reading comprehension strategies
-- listening for gist
-- vocabulary activation
-- question formation
 objectives:
-- Learner can understand main ideas in text
-- Learner can answer questions about a text
-- Learner can identify key vocabulary in context
-- Learner can synthesize information
-vocabulary_count: 25
-slug: 58-practical-warm-up
-focus: vocabulary
+  - "Learner can understand main ideas in text"
+  - "Learner can answer questions about a text"
+  - "Learner can identify key vocabulary in context"
+  - "Learner can synthesize information"
+grammar:
+  - "Reading comprehension strategies"
+  - "Listening for gist and detail"
+  - "Vocabulary activation in context"
+word_target: 800
+content_outline:
+  - section: "Introduction: Skills Activation"
+    words: 100
+    points:
+      - "Preparing for practical scenarios"
+      - "Warm-up strategies"
+      - "Building confidence"
+  - section: "Reading Skills"
+    words: 150
+    points:
+      - "Skimming for main ideas"
+      - "Scanning for details"
+      - "Understanding context clues"
+  - section: "Listening Skills"
+    words: 150
+    points:
+      - "Listening for gist"
+      - "Identifying key information"
+      - "Note-taking strategies"
+  - section: "Vocabulary Activation"
+    words: 150
+    points:
+      - "Recognizing learned words"
+      - "Context-based understanding"
+      - "Word families and patterns"
+  - section: "Question Strategies"
+    words: 150
+    points:
+      - "Understanding question types"
+      - "Formulating answers"
+      - "Asking for clarification"
+  - section: "Practice: Integrated Skills"
+    words: 100
+    points:
+      - "Read, listen, respond"
+      - "Apply all A2 skills"
+vocabulary_hints:
+  required:
+    - текст (text)
+    - питання (question)
+    - відповідь (answer)
+    - розуміти (to understand)
+    - читати (to read)
+    - слухати (to listen)
+    - головний (main)
+    - деталь (detail)
+  recommended:
+    - ідея (idea)
+    - інформація (information)
+    - ключовий (key)
+    - стратегія (strategy)
+activity_hints:
+  - type: reading-comprehension
+    focus: "Understand main ideas"
+    items: 15
+  - type: listening
+    focus: "Listen for key information"
+    items: 10
+  - type: fill-in
+    focus: "Vocabulary in context"
+    items: 15
+  - type: speaking
+    focus: "Answer questions orally"
+    items: 10
+prerequisites:
+  - a2-57 (Practical Intro)
+connects_to:
+  - a2-59 (Doctor Visit)
 naturalness:
   score: 9
   status: PASS
+  justification: "Skills activation module"

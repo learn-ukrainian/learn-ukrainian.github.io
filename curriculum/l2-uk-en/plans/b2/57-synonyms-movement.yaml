@@ -1,0 +1,21 @@
+module: 57-synonyms-movement
+level: b2
+sequence: 57
+version: '1.0'
+title: 'Синоніми: Рух і Пересування'
+subtitle: Synonyms - Movement
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Учень може розрізняти відтінки значень дієслів на позначення руху
+- Учень вміє вживати лексику пересування для створення динамічних описів у художньому та публіцистичному стилях
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

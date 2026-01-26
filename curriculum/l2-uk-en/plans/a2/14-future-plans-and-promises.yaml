@@ -1,0 +1,80 @@
+module: 14-future-plans-and-promises
+level: a2
+sequence: 14
+version: '2.0'
+title: Future Plans and Promises
+subtitle: Simple Future vs. Compound Future
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can form the compound future tense (imperfective)
+- Learner can form the simple future tense (perfective)
+- Learner can distinguish between future process and future result
+- Learner can make promises and describe plans
+sources:
+- name: Ukrainian State Standard 2024 - Future Tense
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Future tense formation and aspect usage
+- name: Ukrainian Verb Conjugation - Future
+  url: https://uk.wikipedia.org/wiki/Дієслово
+  type: reference
+  notes: Future tense paradigms
+content_outline:
+- section: Introduction / Вступ
+  words: 200
+  points:
+  - Future tense overview
+  - Importance of commitment signals (Plans vs Promises)
+- section: Presentation / Презентація
+  words: 600
+  points:
+  - Imperfective Future (Compound: буду + inf)
+  - Perfective Future (Simple: conjugated)
+  - Semantic differences and marker words
+  - The power of results in future commitments
+- section: Practice / Практика
+  words: 150
+  points:
+  - Plan vs Promise identification
+  - Future formation drills
+- section: Dialogues / Діалоги
+  words: 50
+  points:
+  - Weekend plans situational exchange
+word_target: 1000
+vocabulary:
+  required:
+  - зроблю (I will do/make)
+  - напишу (I will write)
+  - прочитаю (I will read)
+  - скажу (I will say)
+  - побачу (I will see)
+  - почую (I will hear)
+  - візьму (I will take)
+  - дам (I will give)
+  - піду (I will go)
+  - прийду (I will come)
+  - приїду (I will arrive)
+  - почну (I will begin)
+  - закінчу (I will finish)
+  - зрозумію (I will understand)
+  - буду (I will be/will + inf)
+  recommended:
+  - забуду (I will forget)
+  - запам'ятаю (I will remember)
+  - знайду (I will find)
+  - вийду (I will exit)
+  - увійду (I will enter)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - fill-in
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a2-15 (Aspect Morphology)
+- a2-16 (Aspect Mastery Pairs)
+- a2-22 (If I Were)

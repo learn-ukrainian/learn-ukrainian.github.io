@@ -30,3 +30,44 @@ slug: 70-b2-checkpoint
 naturalness:
   score: 9
   status: PASS
+content_outline:
+- section: Вступ — Контрольна точка B2.2
+  words: 200
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Pedagogical Structure
+  words: 200
+  points:
+  - Build advanced domain vocabulary (Medicine, Tech, Science, Arts)
+  - Develop academic writing and text analysis skills
+  - Understand Ukrainian cultural identity (Diaspora, Religion)
+  - Complete capstone research project
+  - Confirm mastery of all B2 registers before communication phase
+- section: Domain Vocabulary (M71-74)
+  words: 200
+  points:
+  - 'Medicine: діагноз, симптом, рецепт, обстеження, лікування, терапія'
+  - 'Technology: алгоритм, програма, дані, штучний інтелект, мережа'
+  - 'Science: гіпотеза, теорія, експеримент, дослідження, результати'
+  - 'Arts: жанр, метафора, стиль, образ, критика'
+- section: Pedagogical Structure
+  words: 200
+  points:
+  - Master professional email and report writing
+  - Develop news analysis and media literacy skills
+  - Build presentation and public speaking abilities
+  - Practice discussion and debate techniques
+  - Pass comprehensive B2 certification exam
+- section: Professional Communication (M85-88)
+  words: 200
+  points:
+  - 'Email: лист, адресат, тема, вкладення, відповідь, пересилання'
+  - 'Reports: звіт, структура, висновок, рекомендація, дані, графік'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

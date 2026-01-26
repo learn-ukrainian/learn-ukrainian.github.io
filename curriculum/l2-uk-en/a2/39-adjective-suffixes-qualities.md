@@ -43,7 +43,7 @@ How do you make your speech vivid and emotional? Welcome to the world of adjecti
 - **Великий** (big) -> **Великенний** (gigantic).
 - **Здоровий** (big/healthy) -> **Здоровенний** (massive/huge).
 - **Високий** (tall) -> **Високезний** (towering/extremely tall).
-  _Порада:_ Під час вимови суфікса **-енн-** трохи затримайтеся на подвійній «н», щоб підкреслити масштаб! Це додає вашому мовленню емоційної ваги. Коли ви кажете **страшенний**, люди розуміють, що це не просто «страшно», це справжній жах або, навпаки, захоплення (страшенно цікавий фільм).
+  _Порада:_ Під час вимови суфікса **-енн-** трохи затримайтеся на подвійній «н», щоб підкреслити масштаб! Це додає вашому мовленню емоційної ваги. Коли ви кажете **страшенний**, люди розуміють особливий сенс. Це не просто «страшно». Це справжній жах! Або навпаки — це захоплення (страшенно цікавий фільм).
 
 ### 4. The Material Link: -Ян- and -Ов- (Матеріали)
 
@@ -57,7 +57,7 @@ How do you make your speech vivid and emotional? Welcome to the world of adjecti
 - **Метал** (metal) -> **Металевий** (metallic).
 - **Золото** (gold) -> **Золотий** (golden) — виняток! Ми не кажемо «золотяний».
 
-Пам'ятайте про правило розрізнення: **-яний** зазвичай вказує на те, що предмет зроблений _повністю_ з цього матеріалу (дерев'яний стіл), тоді як **-овий** може описувати колір або причетність (малиновий джем, малиновий колір). Але у випадку **скляний** це завжди матеріал.
+Пам'ятайте про правило розрізнення. **-яний** зазвичай вказує на матеріал. Предмет складається _повністю_ з цього матеріалу (дерев'яний стіл). **-овий** може описувати колір або причетність. Приклади: малиновий джем, малиновий колір. Але у випадку **скляний** це завжди матеріал.
 
 ### 5. Professional and Geographic Identity: -Ськ- (Ідентичність)
 
@@ -95,9 +95,11 @@ How do you make your speech vivid and emotional? Welcome to the world of adjecti
 
 ## Practice / Практика
 
+Practice these suffix transformations to internalize the patterns. Remember: the suffix always comes before the grammatical ending.
+
 ### 1. Create the Quality (Створіть якість)
 
-Transform the noun into an adjective using the suggested suffix.
+Transform the noun into an adjective using the suggested suffix. Pay attention to how the ending changes based on gender.
 
 1. (Сонце) + -Н- -> **Сонячний** день.
 2. (Дерево) + -ЯН- -> **Дерев'яний** стіл.

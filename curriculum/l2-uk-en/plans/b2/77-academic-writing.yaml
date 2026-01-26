@@ -1,0 +1,22 @@
+module: 77-academic-writing
+level: b2
+sequence: 77
+version: '2.0'
+title: Академічне письмо
+subtitle: Academic Writing
+focus: skills
+pedagogy: TTT
+objectives:
+- Учень знає структуру академічного есе та правила цитування
+- Учень може будувати логічну аргументацію з використанням тез та доказів
+- Учень розуміє принципи академічної доброчесності
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

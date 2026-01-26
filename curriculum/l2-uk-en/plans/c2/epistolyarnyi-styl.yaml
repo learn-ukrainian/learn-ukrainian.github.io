@@ -1,0 +1,104 @@
+module: epistolyarnyi-styl
+level: c2
+sequence: 9
+version: '2.0'
+title: Епістолярний стиль — Повна кореспонденція
+focus: stylistics
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Листування українських письменників
+  url: https://litopys.org.ua/
+  type: primary
+  notes: Historical correspondence examples
+- name: Ділова кореспонденція — зразки
+  url: https://minjust.gov.ua/
+  type: reference
+  notes: Official letter templates and standards
+- name: Ukrainian State Standard 2024 — Epistolary style
+  url: https://mon.gov.ua/
+  type: reference
+  notes: C2 requirements for all correspondence types
+content_outline:
+- section: Вступ — Епістолярний жанр
+  words: 400
+  points:
+  - Історія листування в Україні
+  - Типологія листів
+  - Епістолярна спадщина письменників
+- section: Офіційні листи
+  words: 700
+  points:
+  - Структура офіційного листа
+  - Звертання та завершальні формули
+  - Запит, скарга, подяка
+  - Реквізити та оформлення
+- section: Ділові листи
+  words: 600
+  points:
+  - Бізнес-кореспонденція
+  - Комерційні пропозиції
+  - Рекламації та претензії
+  - Email-етикет у діловому спілкуванні
+- section: Приватні листи
+  words: 600
+  points:
+  - Особисте листування
+  - Тон і стиль приватного листа
+  - Емоційність та щирість
+  - Листи письменників як зразок
+- section: Електронна комунікація
+  words: 600
+  points:
+  - Email — формальний vs неформальний
+  - Месенджери та СМС
+  - Нетикет українською
+  - Скорочення та емодзі
+- section: Функціональні листи
+  words: 600
+  points:
+  - Супровідний лист (cover letter)
+  - Рекомендаційний лист
+  - Лист-привітання
+  - Лист-співчуття
+- section: Практикум — Написання листів
+  words: 500
+  points:
+  - Складання офіційного листа-скарги
+  - Написання ділового email
+  - Трансформація email → формальний лист
+  - Порівняння форматів одного повідомлення
+word_target: 4000
+vocabulary:
+  required:
+  - кореспонденція (correspondence)
+  - звертання (salutation)
+  - реквізит (requisite/element)
+  - підпис (signature)
+  - адресат (addressee)
+  - адресант (sender)
+  - супровідний (accompanying/cover)
+  - рекомендаційний (recommendation)
+  - скарга (complaint)
+  - подяка (gratitude/thanks)
+  recommended:
+  - рекламація (claim/complaint)
+  - претензія (claim)
+  - нетикет (netiquette)
+  - формула (formula)
+  - етикет (etiquette)
+  forbidden: []
+activities:
+  types_required:
+  - essay-response
+  - quiz
+  - fill-in
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-56 (Professional correspondence)
+- c2-24 (Style blending in hybrid letters)
+- c2-14 (Personal voice in correspondence)

@@ -28,3 +28,24 @@ slug: 29-b21-integration-practice
 naturalness:
   score: 9
   status: PASS
+content_outline:
+- section: Вступ — Інтеграційна практика B2.1
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Інтеграція навичок
+  words: 500
+  points:
+  - Passive voice in appropriate contexts
+  - Participle recognition in texts
+  - Register-appropriate vocabulary
+  - Complex sentence construction
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

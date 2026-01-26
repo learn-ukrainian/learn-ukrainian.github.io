@@ -2,7 +2,7 @@
 **Level:** A2 | **Module:** M46 | **Phase:** A2.3 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 23:54:00
+**Generated:** 2026-01-26 08:59:34
 
 ## Configuration
 **Type:** A2-vocab
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: місцевий, вид
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: вид, місцевий
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation

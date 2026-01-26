@@ -52,3 +52,24 @@ items:
   translation: shopping
   pos: noun
   gender: m
+- lemma: вид
+  ipa: /ʋid/
+  translation: aspect (grammar), view
+  pos: noun
+  gender: m
+- lemma: доконаний
+  ipa: /dɔkˈɔnanɪj/
+  translation: perfective (aspect)
+  pos: adj
+- lemma: недоконаний
+  ipa: /nɛdɔkˈɔnanɪj/
+  translation: imperfective (aspect)
+  pos: adj
+- lemma: називний
+  ipa: /nazɪʋnˈɪj/
+  translation: nominative (case)
+  pos: adj
+- lemma: родовий
+  ipa: /rɔdɔʋˈɪj/
+  translation: genitive (case)
+  pos: adj

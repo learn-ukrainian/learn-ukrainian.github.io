@@ -1,0 +1,22 @@
+module: 82-capstone-prezentatsiya
+level: b2
+sequence: 82
+version: '2.0'
+title: 'Capstone: Презентація'
+subtitle: 'Capstone: Presentation'
+focus: project
+pedagogy: CBI
+objectives:
+- Structure a compelling presentation
+- Master public speaking techniques (voice, body language)
+- Create effective visual aids
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

@@ -37,3 +37,38 @@ items:
   translation: lucky person
   pos: noun
   gender: m
+- lemma: перш ніж
+  ipa: /pɛrʃ nʲiʒ/
+  translation: before
+  pos: conj
+- lemma: раз
+  ipa: /raz/
+  translation: time, instance
+  pos: noun
+  gender: m
+- lemma: ледве
+  ipa: /lɛdʋˈɛ/
+  translation: barely, hardly
+  pos: adv
+- lemma: разу
+  ipa: /ˈrazu/
+  translation: time (genitive)
+  pos: noun
+  gender: m
+- lemma: тим
+  ipa: /tɪm/
+  translation: that (instrumental)
+  pos: pron
+- lemma: доконаний
+  ipa: /dɔkɔnˈanɪj/
+  translation: perfective (aspect)
+  pos: adj
+- lemma: недоконаний
+  ipa: /nɛdɔkɔnˈanɪj/
+  translation: imperfective (aspect)
+  pos: adj
+- lemma: вид
+  ipa: /ʋʲid/
+  translation: aspect (grammar), view
+  pos: noun
+  gender: m

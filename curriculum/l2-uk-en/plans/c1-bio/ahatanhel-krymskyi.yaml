@@ -1,0 +1,105 @@
+module: ahatanhel-krymskyi
+level: c1-bio
+sequence: 100
+version: '2.0'
+title: 'Агатангел Кримський: Поліглот і мученик науки'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Кримський_Агатангел_Юхимович
+    title: Агатангел Кримський (Wikipedia UA)
+    notes: Comprehensive biography covering life, scholarship, and tragic fate
+  secondary:
+  - url: https://www.nas.gov.ua/
+    title: Національна академія наук України
+    notes: Academy founding documents and Krymsky's role
+content_outline:
+- section: Вступ — Людина тридцяти мов
+  words: 400
+  subsections:
+  - Феноменальні мовні здібності (понад 30 мов)
+  - Один із засновників Української академії наук
+  - Трагічна доля під час сталінських репресій
+- section: Дитинство та освіта (1871-1892)
+  words: 600
+  subsections:
+  - Народження у Володимирі-Волинському
+  - Ранній талант до мов
+  - Навчання в Київському та Московському університетах
+  - Захоплення східними мовами
+- section: Сходознавець європейського масштабу (1892-1918)
+  words: 800
+  subsections:
+  - Дослідження арабської, перської, турецької літератур
+  - Наукові праці з ісламознавства
+  - Переклади східної поезії українською
+  - Визнання в європейських наукових колах
+- section: Засновник Академії наук (1918-1928)
+  words: 800
+  subsections:
+  - Участь у заснуванні Української академії наук (1918)
+  - Перший директор Інституту української наукової мови
+  - Праці з української лексикографії
+  - Організація наукової роботи в молодій державі
+- section: Переслідування та арешт (1928-1941)
+  words: 700
+  subsections:
+  - Кампанія проти «буржуазного націоналізму»
+  - Арешт у 1930-х роках
+  - Заслання до Казахстану
+  - Смерть у засланні (1942)
+- section: Спадщина — Повернення імені
+  words: 700
+  subsections:
+  - Реабілітація в період «відлиги»
+  - Вплив на українську орієнталістику
+  - Сучасне вшанування пам'яті
+  - Кримський як символ знищеної української науки
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - сходознавство
+  - поліглот
+  - орієнталістика
+  - лексикографія
+  - академік
+  - репресії
+  - заслання
+  - реабілітація
+  - ісламознавство
+  - перекладознавство
+  recommended:
+  - арабістика
+  - тюркологія
+  - іраністика
+  - мученик
+  - науковий доробок
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-99
+  related:
+  - c1-bio-35
+  - c1-bio-99
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

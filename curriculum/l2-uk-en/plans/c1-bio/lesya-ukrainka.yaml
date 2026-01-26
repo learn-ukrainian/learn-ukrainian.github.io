@@ -1,0 +1,105 @@
+module: lesya-ukrainka
+level: c1-bio
+sequence: 40
+version: '2.0'
+title: 'Леся Українка: Прометей української літератури'
+focus: biography
+pedagogy: seminar
+objectives:
+- Analyze the evolution of Lesya Ukrainka's work from lyricism to world-class drama
+- Evaluate the anti-colonial and feminist discourses in her major dramatic poems
+- Discuss the impact of her physical struggle on her creative indomitability
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Леся_Українка
+    title: Леся Українка (Wikipedia UA)
+    notes: Основна біографія, творчість, хвороба
+  secondary:
+  - url: https://uk.wikipedia.org/wiki/Драматургія_Лесі_Українки
+    title: Драматургія Лесі Українки
+    notes: Аналіз драматичних творів
+  - url: https://uk.wikipedia.org/wiki/Косачі
+    title: Родина Косачів
+    notes: Літературна родина та виховання
+content_outline:
+- section: Вступ — Прометей у жіночій подобі
+  words: 526
+  subsections:
+  - Леся Українка як символ незламності духу
+  - Від ліричної поетеси до драматурга світового рівня
+  - Боротьба з хворобою та імперією водночас
+- section: Дитинство та родина (1871-1884)
+  words: 631
+  subsections:
+  - Народження у Новограді-Волинському в родині Косачів
+  - Мати Олена Пчілка — письменниця та громадська діячка
+  - Дядько Михайло Драгоманов — ідейний наставник
+  - Домашня освіта та ранній літературний талант
+- section: Хвороба та творчий злет (1884-1900)
+  words: 736
+  subsections:
+  - Діагноз — кістковий туберкульоз у 13 років
+  - Поїздки на лікування — Крим, Єгипет, Грузія
+  - Перші поетичні збірки та переклади
+  - Знайомство з Сергієм Мержинським
+- section: Драматургія та ідеї (1900-1913)
+  words: 842
+  subsections:
+  - Створення драматичних поем — «Лісова пісня», «Оргія», «Кассандра»
+  - Антиколоніальний та феміністичний дискурс у творах
+  - Міфологічні сюжети як засіб говорити про сучасність
+  - Шлюб з Климентом Квіткою — етнографом та музикознавцем
+- section: Останні роки та спадщина (1909-1913)
+  words: 736
+  subsections:
+  - Погіршення здоров'я та переїзд до Грузії
+  - Інтенсивна творчість попри фізичні страждання
+  - Смерть у Сурамі 1 серпня 1913 року
+  - Похорон у Києві та національна жалоба
+- section: Вплив на сучасність
+  words: 529
+  subsections:
+  - Канонізація як національної святині
+  - Вплив на українську драматургію XX століття
+  - Леся Українка у сучасній культурі
+  - 200-гривнева банкнота та численні пам'ятники
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - драматургія
+  - драматична поема
+  - туберкульоз
+  - незламність
+  - антиколоніальний
+  - міфологія
+  - канонізація
+  - спадщина
+  - муза
+  - генійка
+  recommended:
+  - прометеїзм
+  - неоромантизм
+  - символізм
+  - маргіналізація
+  - еміграція
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - essay-response
+  - critical-analysis
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-22-mykhailo-drahomanov
+  related:
+  - c1-bio-28-ivan-franko
+  - c1-bio-31-olha-kobylianska
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

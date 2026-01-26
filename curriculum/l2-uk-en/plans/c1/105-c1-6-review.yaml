@@ -1,0 +1,22 @@
+module: 105-c1-6-review
+level: c1
+sequence: 105
+version: '2.0'
+title: 'C1.6 Література: Огляд та рефлексія'
+subtitle: 'C1.6 Literature: Review and Reflection'
+focus: review
+pedagogy: Integration
+objectives:
+- Learner can synthesize knowledge of the Ukrainian literary canon from classics to contemporary.
+- Learner can compare different literary eras and movements.
+- Learner can apply advanced literary terminology to various texts.
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

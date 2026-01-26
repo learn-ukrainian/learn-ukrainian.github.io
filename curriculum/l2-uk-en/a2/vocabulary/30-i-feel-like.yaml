@@ -116,3 +116,107 @@ items:
   translation: intonation
   pos: noun
   gender: f
+- lemma: давальний
+  ipa: /davˈalʲnɪj/
+  translation: dative (case)
+  pos: adj
+- lemma: прикро
+  ipa: /ˈprɪkrɔ/
+  translation: it's sad, it's unfortunate
+  pos: adv
+- lemma: приємно
+  ipa: /prɪjˈɛmnɔ/
+  translation: it's pleasant
+  pos: adv
+- lemma: задоволений
+  ipa: /zadɔʋˈɔlɛnɪj/
+  translation: satisfied
+  pos: adj
+- lemma: переляканий
+  ipa: /pɛrɛlˈjakanɪj/
+  translation: frightened, scared
+  pos: adj
+- lemma: рада
+  ipa: /ˈrada/
+  translation: glad (feminine)
+  pos: adj
+- lemma: радий
+  ipa: /ˈradɪj/
+  translation: glad (masculine)
+  pos: adj
+- lemma: сумно
+  ipa: /ˈsumnɔ/
+  translation: it's sad
+  pos: adv
+- lemma: весело
+  ipa: /ˈʋɛsɛlɔ/
+  translation: it's cheerful, fun
+  pos: adv
+- lemma: нудно
+  ipa: /ˈnudnɔ/
+  translation: it's boring
+  pos: adv
+- lemma: цікаво
+  ipa: /t͡sˈikaʋɔ/
+  translation: it's interesting
+  pos: adv
+- lemma: холодно
+  ipa: /xˈɔlɔdnɔ/
+  translation: it's cold
+  pos: adv
+- lemma: жарко
+  ipa: /ˈʒarkɔ/
+  translation: it's hot
+  pos: adv
+- lemma: погано
+  ipa: /ˈpɔɦanɔ/
+  translation: it's bad, poorly
+  pos: adv
+- lemma: добре
+  ipa: /ˈdɔbrɛ/
+  translation: it's good, well
+  pos: adv
+- lemma: боляче
+  ipa: /bɔlˈjat͡ʃɛ/
+  translation: it hurts, painful
+  pos: adv
+- lemma: душно
+  ipa: /ˈduʃnɔ/
+  translation: it's stuffy
+  pos: adv
+- lemma: затишно
+  ipa: /zˈatɪʃnɔ/
+  translation: it's cozy
+  pos: adv
+- lemma: страшно
+  ipa: /strˈaʃnɔ/
+  translation: it's scary
+  pos: adv
+- lemma: соромно
+  ipa: /sɔrˈɔmnɔ/
+  translation: it's shameful
+  pos: adv
+- lemma: шкода
+  ipa: /ˈʃkɔda/
+  translation: it's a pity, too bad
+  pos: adv
+- lemma: хвилюватися
+  ipa: /xʋɪlʲuʋˈatɪsja/
+  translation: to worry, to be nervous
+  pos: verb
+- lemma: тішитися
+  ipa: /tˈiʃɪtɪsja/
+  translation: to rejoice, to be glad
+  pos: verb
+- lemma: боятися
+  ipa: /bɔjˈatɪsja/
+  translation: to be afraid
+  pos: verb
+- lemma: злитися
+  ipa: /zlˈɪtɪsja/
+  translation: to get angry
+  pos: verb
+- lemma: дивуватися
+  ipa: /dɪʋuʋˈatɪsja/
+  translation: to be surprised
+  pos: verb

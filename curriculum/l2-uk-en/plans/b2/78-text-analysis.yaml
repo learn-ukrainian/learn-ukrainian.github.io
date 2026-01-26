@@ -1,0 +1,22 @@
+module: 78-text-analysis
+level: b2
+sequence: 78
+version: '2.0'
+title: Аналіз тексту
+subtitle: Text Analysis
+focus: skills
+pedagogy: TTT
+objectives:
+- Учень вміє розрізняти факти та судження у тексті
+- Учень може виявити маніпулятивні прийоми та прихований підтекст
+- Учень володіє інструментами аналізу риторичних пристроїв у промовах
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

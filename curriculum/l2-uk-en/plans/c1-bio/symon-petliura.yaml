@@ -1,0 +1,109 @@
+module: symon-petliura
+level: c1-bio
+sequence: 44
+version: '2.0'
+title: 'Симон Петлюра: Головний Отаман'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Петлюра_Симон_Васильович
+    title: Симон Петлюра (Wikipedia UA)
+    notes: Основна біографічна інформація, хронологія подій
+  secondary:
+  - url: http://www.history.org.ua/
+    title: Енциклопедія історії України
+    notes: Академічний контекст УНР та визвольних змагань
+  - url: https://archives.gov.ua/
+    title: Архів УНР
+    notes: Документи періоду Директорії
+content_outline:
+- section: Вступ — Людина, яка стала символом боротьби
+  words: 400
+  subsections:
+  - Паризьке вбивство 1926 року та його резонанс
+  - Петлюра як найбільш суперечлива постать революції
+  - Від журналіста до головнокомандувача армії
+- section: Полтавське дитинство та формування світогляду
+  words: 600
+  subsections:
+  - Народження в козацькій родині (1879)
+  - Семінарське виховання та відрахування
+  - Перші політичні переконання, вплив Драгоманова
+- section: Журналіст і громадський діяч
+  words: 700
+  subsections:
+  - Робота в українських виданнях (Рада, Слово)
+  - Діяльність у Москві та Петербурзі
+  - Культурно-просвітницька діяльність
+- section: Революція та державотворення
+  words: 800
+  subsections:
+  - Роль у Центральній Раді
+  - Головний Отаман військ УНР
+  - Війна на кілька фронтів (більшовики, денікінці, поляки)
+- section: Еміграція та боротьба за правду
+  words: 700
+  subsections:
+  - Життя в Польщі та Франції
+  - Видавнича діяльність (журнал Тризуб)
+  - Спроби консолідації еміграції
+- section: Загибель та спадщина
+  words: 600
+  subsections:
+  - Вбивство Шварцбардом і судовий процес
+  - Радянська пропаганда та демонізація
+  - Реабілітація в незалежній Україні
+- section: Дискусія — Петлюра в історичній памяті
+  words: 200
+  subsections:
+  - Суперечливі оцінки від різних сторін
+  - Роль у формуванні української державності
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - отаман
+  - визвольні змагання
+  - Директорія
+  - еміграція
+  - державотворення
+  - головнокомандувач
+  - денікінці
+  - більшовики
+  - замах
+  - реабілітація
+  recommended:
+  - соборність
+  - інтервенція
+  - сепаратизм
+  - легітимність
+  - меморіалізація
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: b2-hist-ukrainian-revolution
+  related:
+  - c1-bio-35-mykhailo-hrushevskyi
+  - c1-bio-51-viacheslav-lypynskyi
+  - c1-bio-49-oleksandr-hrekiv
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

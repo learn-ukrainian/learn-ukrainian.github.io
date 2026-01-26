@@ -1,0 +1,77 @@
+module: complex-sentence-integration
+level: b1
+sequence: 38
+version: '2.0'
+title: Інтеграція складних речень
+subtitle: Complex Sentence Integration
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can combine причинові, часові, умовні clauses
+- Learner can build multi-clause sentences
+- Learner can choose appropriate connectors for context
+- Learner can manage complex sentence structure
+content_outline:
+- section: 'Introduction: Sentence Integration'
+  words: 150
+  points:
+  - Beyond single subordination
+  - Multi-clause sentences
+  - Complexity management
+- section: Two-Clause Combinations
+  words: 250
+  points:
+  - Temporal + causal
+  - Conditional + concessive
+  - Purpose + temporal
+- section: Three+ Clause Sentences
+  words: 250
+  points:
+  - Main + multiple subordinates
+  - Nested clauses
+  - Parallel structures
+- section: Coordination + Subordination
+  words: 250
+  points:
+  - і, але, або with subordinate clauses
+  - Compound-complex sentences
+  - Balancing complexity
+- section: Punctuation and Style
+  words: 200
+  points:
+  - Comma placement
+  - Avoiding run-on sentences
+  - Readable complexity
+- section: 'Practice: Complex Writing'
+  words: 100
+  points:
+  - Build multi-clause sentences
+  - Edit for clarity
+word_target: 1200
+vocabulary:
+  required:
+  - інтеграція (integration)
+  - складний (complex)
+  - сурядний (coordinating)
+  - підрядний (subordinating)
+  - багатокомпонентний (multi-component)
+  - структура (structure)
+  - кома (comma)
+  - розділовий знак (punctuation mark)
+  recommended:
+  - вкладений (nested)
+  - паралельний (parallel)
+  - зрозумілість (clarity)
+  - стиль (style)
+  forbidden: []
+activities:
+  types_required:
+  - sentence-combining
+  - error-correction
+  - writing
+  - fill-in
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-39 (Reported Statements)

@@ -1,0 +1,80 @@
+module: at-the-restaurant
+level: a1
+sequence: 36
+version: '2.0'
+title: At the Restaurant
+subtitle: Dining Out in Ukraine
+focus: practical
+pedagogy: PPP
+objectives:
+- Learner can make a reservation
+- Learner can order a full meal
+- Learner can handle restaurant situations
+- Learner can communicate dietary needs
+content_outline:
+- section: 'Introduction: Restaurant Dining'
+  words: 100
+  points:
+  - Restaurant etiquette
+  - Full dining experience
+  - From arrival to payment
+- section: Making a Reservation
+  words: 150
+  points:
+  - Я хочу замовити столик
+  - На скільки осіб?
+  - На котру годину?
+- section: Being Seated
+  words: 150
+  points:
+  - Столик біля вікна
+  - Меню, будь ласка
+  - Що ви рекомендуєте?
+- section: Ordering Food
+  words: 200
+  points:
+  - На перше... (For first course...)
+  - На друге... (For main course...)
+  - На десерт...
+- section: Special Needs
+  words: 150
+  points:
+  - Я вегетаріанець/вегетаріанка
+  - Без глютену/лактози
+  - Алергія на...
+- section: 'Practice: Restaurant Role-Play'
+  words: 150
+  points:
+  - Complete dining scenario
+  - Handle complications
+word_target: 900
+vocabulary:
+  required:
+  - столик (table)
+  - замовити (to order)
+  - офіціант (waiter)
+  - меню (menu)
+  - страва (dish)
+  - рахунок (bill)
+  - перше (first course)
+  - друге (main course)
+  recommended:
+  - десерт (dessert)
+  - напій (drink)
+  - гарнір (side dish)
+  - порція (portion)
+  - чайові (tip)
+  - резервація (reservation)
+  forbidden: []
+activities:
+  types_required:
+  - dialogue
+  - role-play
+  - listening
+  - vocabulary-drill
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a1-37 (At the Market)
+- a1-38 (At the Store)

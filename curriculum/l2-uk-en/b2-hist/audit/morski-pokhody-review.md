@@ -1,8 +1,8 @@
 # Audit Report: M49 — morski-pokhody.md
 **Level:** B2 | **Module:** M49 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:22:31
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 22:22:54
 
 ## Configuration
 **Type:** B2-history
@@ -36,7 +36,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4349/4000 (raw: 4608)
+- **Words:** ❌ 3819/4000 (raw: 4076)
 - **Activities:** ✅ 7/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 7/2 types
@@ -48,7 +48,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (7 activities)
-- **Immersion:** 🇺🇦 98.7% (target 90-100% (history))
+- **Immersion:** 🇺🇦 98.6% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -60,15 +60,15 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 11 | 3 | 100% | 24% | 23.8% |
+| primary_sources | 10 | 3 | 100% | 24% | 23.8% |
 | engagement | 5 | 6 | 83% | 14% | 11.9% |
-| timeline_markers | 23 | 10 | 100% | 14% | 14.3% |
+| timeline_markers | 16 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 5 | 4 | 100% | 10% | 9.5% |
-| visual | 6 | 4 | 100% | 10% | 9.5% |
+| visual | 5 | 4 | 100% | 10% | 9.5% |
 | variety | 0.99 | - | 99% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 13 | 3 | 100% | 5% | 4.8% |
+| questions | 10 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **97.5%** |
 
 ## Section Audit
@@ -84,6 +84,5 @@
 | **Читання: Свідчення про козацький десант** | ✅ | 293 | Included in Core |
 | **Первинні джерела: Голоси морської епохи** | ✅ | 358 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 453 | Included in Core |
-| **Есе** | ⚪️ | 530 | Skipped |
 | **Підсумок** | ✅ | 124 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 151 | Skipped |

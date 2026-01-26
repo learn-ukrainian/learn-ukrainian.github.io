@@ -1,0 +1,87 @@
+module: finalnyi-syntez
+level: c1-hist
+sequence: 135
+version: '1.0'
+title: 'Фінальний синтез: Що ми дізналися'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Кінець курсу, початок розуміння
+  words: 451
+  subsections:
+  - 135 модулів — що ми пройшли
+  - Не факти — методи
+  - Як думати про історію
+  - Структура модуля
+- section: Методологічні уроки
+  words: 790
+  subsections:
+  - Джерелознавство — чому важливе
+  - Множинність інтерпретацій
+  - Критичне мислення
+  - Як оцінювати історичні твердження
+- section: Тематичні уроки
+  words: 677
+  subsections:
+  - Імперські механізми — як розпізнавати
+  - Культурна резистенція — як працює
+  - Агентність — чому ключова
+  - Пам'ять — як формується
+- section: Практичні уроки
+  words: 677
+  subsections:
+  - Як читати джерела
+  - Як оцінювати аргументи
+  - Як писати про історію
+  - Як розпізнавати пропаганду
+- section: Відкриті питання
+  words: 564
+  subsections:
+  - Що залишається невідомим
+  - Де потрібні дослідження
+  - Нові джерела — нові інтерпретації
+  - Історія — незавершений проект
+- section: Підсумок курсу
+  words: 341
+  subsections:
+  - Від фактів до розуміння
+  - Від споживача до критика
+  - Завершення C1-HIST
+word_target: 3500
+vocabulary:
+- фінальний синтез
+- методологія
+- джерелознавство
+- критичне мислення
+- інтерпретація
+- агентність
+- пам'ять
+- пропаганда
+- аргумент
+- дослідження
+- епістемологія
+- верифікація
+- контекстуалізація
+- деконструкція
+- рефлексія
+activities:
+- type: course-reflection
+  focus: What did you learn in 135 modules?
+- type: methodology-summary
+  focus: Key methodological takeaways
+- type: skill-assessment
+  focus: Historical thinking skills self-assessment
+- type: future-questions
+  focus: What questions remain open?
+- type: essay-response
+  focus: Як C1-HIST змінив ваше розуміння української історії?
+sources:
+- name: Історіографія України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Історіографія_України
+  type: reference
+  notes: Ukrainian historiography
+- name: Методологія історії (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Методологія_історії
+  type: reference
+  notes: Historical methodology

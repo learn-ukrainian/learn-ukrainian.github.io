@@ -1,12 +1,12 @@
+id: b2-hist-27
+title: 'Кримське ханство: Золотоординська спадщина'
+subtitle: 'Виникнення та державність Гіреїв'
 slug: krymske-khanstvo
-title: 'Кримське ханство: Виникнення та державність'
-level: B2
-track: history
-phase: HIST.3 [Mongol Era & Galicia-Volhynia]
-status: content
+version: '2.0'
+phase: 'B2.3c [Українська історія]'
 focus: history
-word_target: 4000
-register: публіцистичний
+pedagogy: CBI
+word_target: 4153
 duration: 90
 transliteration: none
 tags:
@@ -15,9 +15,8 @@ tags:
 - khanate
 - state-formation
 grammar:
-- Історичний наратив
-- Описові конструкції
-vocabulary_focus: null
+- Historical narrative style
+- Descriptive constructions
 objectives:
 - Учень може описати процес виникнення Кримського ханства
 - Учень розуміє державний устрій та роль роду Гіреїв
@@ -25,34 +24,13 @@ objectives:
 vocabulary_count: 35
 content_outline:
 - section: Контекст
-  words: 516
-  points:
-  - Крим як перехрестя цивілізацій
-  - Занепад Золотої Орди та відокремлення Криму
+  words: 550
 - section: Читання
-  words: 2064
-  points:
-  - 'Хаджи І Гірей: засновник династії та держави'
-  - 'Державний устрій: хан, диван, беї та мурзи'
-  - 'Столиці ханства: Солхат, Кирк-Єр, Бахчисарай'
-  - Культурна та релігійна ідентичність кримських татар
-  - Військова організація та стратегія
+  words: 2800
 - section: Первинні джерела
-  words: 258
-  points:
-  - Опис Бахчисарая мандрівниками
-  - Фрагменти ханських ярликів
+  words: 400
 - section: Деколонізаційний погляд
-  words: 516
-  points:
-  - Спростування міфу про 'дику орду'
-  - Кримське ханство як розвинена європейська держава
-- section: Есе
-  words: 516
-  points:
-  - Роль Кримського ханства у геополітиці Східної Європи
-- section: Потрібно більше практики?
-  words: 130
+  words: 403
 naturalness:
   score: 9
   status: PASS

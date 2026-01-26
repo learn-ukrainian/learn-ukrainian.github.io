@@ -1,0 +1,99 @@
+module: khreshchennia-spadshchyna
+level: c1-hist
+sequence: 58
+version: '1.0'
+title: 'Спадщина Хрещення: Візантійська традиція'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Релігія і нація
+  words: 400
+  subsections:
+  - Чому релігійна ідентичність важлива
+  - Хрещення 988 — початок
+  - Візантійський вибір — наслідки
+  - Структура фази
+- section: Хрещення Русі — факти і міфи
+  words: 600
+  subsections:
+  - Володимир і вибір віри — легенда
+  - Політичні мотиви
+  - Візантійський союз
+  - Що насправді сталося
+- section: Візантійська спадщина
+  words: 700
+  subsections:
+  - Літургія церковнослов'янською
+  - Архітектура — Софія Київська
+  - Право — Номоканон
+  - Література — перекладна
+  - Мистецтво — ікони
+- section: Церква і держава
+  words: 500
+  subsections:
+  - Візантійська модель — симфонія
+  - Митрополія Київська
+  - Залежність від Константинополя
+  - Князі і церква
+- section: Дебати про спадщину
+  words: 600
+  subsections:
+  - Чия спадщина — України, Росії, Білорусі?
+  - Московська претензія
+  - Українська позиція
+  - Сучасні церковні конфлікти
+- section: Спадщина для ідентичності
+  words: 400
+  subsections:
+  - Православ'я як ідентичність
+  - Але не тільки православ'я
+  - Різноманітність — УГКЦ, протестанти
+  - Секуляризація
+- section: Підсумок
+  words: 300
+  subsections:
+  - Хрещення — початок історії
+  - Від Візантії до сьогодення
+  - Підготовка до Берестейської унії
+word_target: 3500
+vocabulary:
+- Хрещення Русі
+- Візантія
+- православ'я
+- церковнослов'янський
+- митрополія
+- літургія
+- ікона
+- симфонія
+- спадщина
+- ідентичність
+- патріарх
+- єпархія
+- канонічний
+- автокефалія
+- обряд
+activities:
+- type: source-analysis
+  focus: PVL baptism narrative — separate fact from legend
+- type: heritage-debate
+  focus: Whose heritage is Kyivan Christianity?
+- type: visual-analysis
+  focus: Analyze Byzantine influences in Ukrainian church art
+- type: contemporary-connection
+  focus: How does 988 legacy affect 2022 church conflicts?
+- type: essay-response
+  focus: Як візантійська традиція сформувала українську ідентичність?
+sources:
+- name: Хрещення Русі (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Хрещення_Русі
+  type: reference
+  notes: Baptism of Rus
+- name: Візантійський обряд
+  url: https://uk.wikipedia.org/wiki/Візантійський_обряд
+  type: reference
+  notes: Byzantine rite
+- name: Православ'я в Україні
+  url: https://uk.wikipedia.org/wiki/Православ'я_в_Україні
+  type: reference
+  notes: Orthodoxy overview

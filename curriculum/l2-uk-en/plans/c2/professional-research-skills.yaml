@@ -1,0 +1,97 @@
+module: professional-research-skills
+level: c2
+sequence: 59
+version: '2.0'
+title: Професійні дослідницькі навички
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Національна бібліотека України імені В. І. Вернадського
+  url: https://nbuv.gov.ua/
+  type: reference
+  notes: Research resources and methodology guidelines
+- name: Scopus — база наукових публікацій
+  url: https://www.scopus.com/
+  type: reference
+  notes: International database for academic research
+- name: УРАН — українська дослідницька та академічна мережа
+  url: https://www.uran.ua/
+  type: reference
+  notes: Ukrainian academic network and research resources
+content_outline:
+- section: Вступ — Дослідницькі компетенції для професіонала
+  words: 500
+  points:
+  - Роль дослідження в професійній діяльності
+  - Типи професійних досліджень
+  - Етика дослідження та академічна доброчесність
+- section: Пошук та оцінка джерел
+  words: 800
+  points:
+  - Бази даних та пошукові системи
+  - Критерії оцінки якості джерел
+  - Первинні vs. вторинні джерела
+  - Робота з бібліографією
+- section: Методи збору інформації
+  words: 700
+  points:
+  - Огляд літератури (literature review)
+  - Аналіз документів
+  - Інтерв'ю та опитування
+  - Спостереження та кейс-стаді
+- section: Аналіз та синтез інформації
+  words: 600
+  points:
+  - Систематизація зібраних даних
+  - Виявлення закономірностей
+  - Критичний аналіз результатів
+  - Формулювання висновків
+- section: Презентація результатів дослідження
+  words: 600
+  points:
+  - Структура дослідницького звіту
+  - Візуалізація даних
+  - Цитування та посилання (ДСТУ)
+  - Етика представлення результатів
+- section: Практичні вправи
+  words: 500
+  points:
+  - Проведення міні-дослідження
+  - Написання огляду літератури
+  - Презентація результатів
+word_target: 4000
+vocabulary:
+  required:
+  - дослідження (research)
+  - джерело (source)
+  - методологія (methodology)
+  - гіпотеза (hypothesis)
+  - дані (data)
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - висновок (conclusion)
+  - бібліографія (bibliography)
+  - цитування (citation)
+  recommended:
+  - верифікація (verification)
+  - валідність (validity)
+  - надійність (reliability)
+  - вибірка (sample)
+  - кореляція (correlation)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - fill-in
+  - critical-analysis
+  - essay-response
+  - comparative-study
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-60 (Building Domain Expertise)
+- c2-71-72 (Professional Portfolio I-II)
+- c2-89-94 (Capstone Project)

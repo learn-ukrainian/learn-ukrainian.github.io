@@ -1,0 +1,22 @@
+module: 96-shevchenko-spadshchyna
+level: c1
+sequence: 96
+version: '2.0'
+title: 'Шевченко: Спадщина'
+subtitle: Shevchenko's Legacy
+focus: literature
+pedagogy: Literary Analysis
+objectives:
+- Learner can analyze Shevchenko’s influence on subsequent generations of writers.
+- Learner can distinguish between Soviet and national interpretations of Shevchenko’s work.
+- Learner can discuss the contemporary significance of Shevchenko in the context of resistance and identity.
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

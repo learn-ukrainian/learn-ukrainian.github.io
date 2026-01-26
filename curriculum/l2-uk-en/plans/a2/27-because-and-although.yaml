@@ -1,0 +1,50 @@
+module: 27-because-and-although
+level: a2
+sequence: 27
+version: '2.0'
+title: Because and Although
+subtitle: Linking Ideas Logically
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can connect ideas using causal conjunctions
+- Learner can express contrast using 'хоча' and 'але'
+- Learner can build complex sentences
+- Learner can explain reasons and consequences
+sources:
+- name: Ukrainian State Standard 2024 - Conjunctions
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Functional logic and conjunction requirements for A2
+- name: Syntax of Modern Ukrainian - Complex Sentences
+  url: https://uk.wikipedia.org/wiki/Складне_речення
+  type: reference
+  notes: Rules for causal and concessive clauses
+content_outline:
+- section: Introduction / Вступ
+  words: 200
+  points:
+  - Moving from simple to complex logic
+  - The 'Glue' of language
+- section: Presentation / Презентація
+  words: 600
+  points:
+  - 'Cause: neutral (тому що), informal (бо), formal (оскільки)'
+  - 'Concession: хоча, незважаючи на'
+  - 'Subtle Causes: завдяки (positive) vs через (negative)'
+  - Punctuation: The Mandatory Comma
+  - Logic of 'Why?' in different registers
+- section: Practice / Практика
+  words: 150
+  points:
+  - Causal chain exercises
+  - Argument building drills
+- section: Dialogues / Діалоги
+  words: 50
+  points:
+  - Explaining a missing meeting or surprising result
+word_target: 1000
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

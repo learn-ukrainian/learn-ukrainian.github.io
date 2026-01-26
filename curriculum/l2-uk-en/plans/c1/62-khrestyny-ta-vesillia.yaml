@@ -1,0 +1,22 @@
+module: 62-khrestyny-ta-vesillia
+level: c1
+sequence: 62
+version: '2.0'
+title: Хрестини та весілля
+subtitle: Birth and Marriage Rituals
+focus: culture
+pedagogy: Immersion & Analysis
+objectives:
+- Learner can describe the stages of traditional Ukrainian wedding and christening rituals
+- Learner understands the social and legal functions of folk rituals in the past
+- Learner can analyze the symbolism of ritual objects like the korovay and rushnyk
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

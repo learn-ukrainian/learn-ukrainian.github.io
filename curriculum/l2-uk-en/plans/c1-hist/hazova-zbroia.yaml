@@ -1,0 +1,97 @@
+module: hazova-zbroia
+level: c1-hist
+sequence: 106
+version: '1.0'
+title: 'Газова зброя: Економічна війна 1991-2022'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Газ як зброя
+  words: 400
+  subsections:
+  - Енергетична залежність
+  - Росія — постачальник
+  - Газ як інструмент тиску
+  - Структура модуля
+- section: 1990-ті — Борги і залежність
+  words: 600
+  subsections:
+  - Успадкована залежність
+  - Накопичення боргів
+  - Бартерні схеми
+  - Корупція — з обох сторін
+- section: 2006 і 2009 — Газові війни
+  words: 700
+  subsections:
+  - Відключення газу
+  - Вплив на Європу
+  - Україна — «ненадійний транзитер»
+  - Хто виграв
+- section: Nord Stream — обхід України
+  words: 600
+  subsections:
+  - Навіщо Росії
+  - Німеччина — партнер
+  - Втрата транзиту — втрата важеля
+  - Nord Stream 2 — до 24.02.2022
+- section: Ціна газу як тиск
+  words: 500
+  subsections:
+  - Знижки за лояльність
+  - Харківські угоди 2010
+  - Газ — валюта впливу
+  - Залежність — добровільна?
+- section: Після 2022
+  words: 400
+  subsections:
+  - Кінець залежності
+  - Диверсифікація
+  - Газ — більше не зброя
+- section: Підсумок
+  words: 300
+  subsections:
+  - 30 років газового шантажу
+  - Як звільнитися
+  - Перехід до синтезу
+word_target: 3500
+vocabulary:
+- газова зброя
+- енергетична залежність
+- транзит
+- газопровід
+- відключення
+- шантаж
+- диверсифікація
+- Nord Stream
+- борг
+- тиск
+- ГТС
+- «Газпром»
+- реверс
+- енергетична безпека
+- санкції
+activities:
+- type: conflict-analysis
+  focus: 2006 and 2009 gas wars — causes and outcomes
+- type: geopolitical-analysis
+  focus: Nord Stream as geopolitical weapon
+- type: dependence-analysis
+  focus: How gas dependence limited Ukraine's choices
+- type: contemporary-analysis
+  focus: Post-2022 — end of gas dependence?
+- type: essay-response
+  focus: Як Україна звільнилася від газової залежності?
+sources:
+- name: Газові конфлікти Росія-Україна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Газові_конфлікти_між_Росією_та_Україною
+  type: reference
+  notes: Gas conflicts
+- name: Газопроводи через Україну (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Газотранспортна_система_України
+  type: reference
+  notes: Transit system
+- name: Nord Stream (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Nord_Stream
+  type: reference
+  notes: Bypass pipelines

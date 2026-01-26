@@ -1,0 +1,105 @@
+module: kvitka-tsisyk
+level: c1-bio
+sequence: 83
+version: '2.0'
+title: 'Квітка Цісик: Голос української діаспори'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Цісик_Квітка
+    title: Квітка Цісик (Wikipedia UA)
+    notes: Biography of the Ukrainian-American singer
+  secondary:
+  - url: https://www.kvitka.com/
+    title: Kvitka Cisyk Official
+    notes: Official site with discography and biography
+content_outline:
+- section: Вступ — Голос, що повернув Україну американцям
+  words: 400
+  subsections:
+  - Американська співачка українського походження
+  - Популяризація української пісні у світі
+  - Альбоми, що стали культовими
+- section: Юність у Нью-Йорку (1953-1970-ті)
+  words: 600
+  subsections:
+  - Народження в родині українських емігрантів
+  - Зростання в українській громаді
+  - Музична освіта
+  - Перші виступи
+- section: Кар'єра в американській музиці (1970-1980-ті)
+  words: 800
+  subsections:
+  - Робота студійною співачкою
+  - Реклама та джингли
+  - Знаменитий голос «You Deserve a Break Today»
+  - Робота з відомими музикантами
+- section: Українські альбоми (1980-1989)
+  words: 900
+  subsections:
+  - «Kvitka: Songs of Ukraine» (1980)
+  - «Two Colors: Kvitka Sings Ukrainian Folk Songs» (1989)
+  - Унікальні аранжування
+  - Значення для діаспори
+- section: Хвороба та смерть (1989-1998)
+  words: 600
+  subsections:
+  - Боротьба з раком
+  - Продовження творчості
+  - Остання платівка
+  - Смерть у Нью-Йорку
+- section: Спадщина — Голос української душі
+  words: 700
+  subsections:
+  - Вплив на українську музику
+  - Популярність в незалежній Україні
+  - «Два кольори» та її версія
+  - Цісик як символ діаспори
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - діаспора
+  - співачка
+  - українська пісня
+  - народна пісня
+  - аранжування
+  - альбом
+  - запис
+  - голос
+  - спадщина
+  - еміграція
+  recommended:
+  - вокал
+  - студійний запис
+  - популяризація
+  - культурна ідентичність
+  - музична кар'єра
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-82
+  related:
+  - c1-bio-79
+  - c1-bio-73
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

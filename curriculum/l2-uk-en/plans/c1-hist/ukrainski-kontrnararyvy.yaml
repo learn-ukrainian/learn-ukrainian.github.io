@@ -1,0 +1,94 @@
+module: ukrainski-kontrnararyvy
+level: c1-hist
+sequence: 112
+version: '1.0'
+title: Українські контрнаративи
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Боротьба за наратив
+  words: 400
+  subsections:
+  - Україна не тільки захищається
+  - Контрнаратив — активна позиція
+  - Від реактивності до стратегії
+  - Структура модуля
+- section: Державні інструменти
+  words: 600
+  subsections:
+  - Центр протидії дезінформації
+  - Ukraine Crisis Media Center
+  - Дипломатичний корпус
+  - Зеленський як комунікатор
+- section: Громадянське суспільство
+  words: 700
+  subsections:
+  - StopFake — піонери
+  - Texty.org.ua — дата-журналістика
+  - VoxCheck — фактчекінг
+  - Волонтерська армія
+- section: NAFO і соцмережі
+  words: 600
+  subsections:
+  - Що таке NAFO
+  - Гумор як зброя
+  - Міжнародна спільнота
+  - Ефективність
+- section: Культурна дипломатія
+  words: 500
+  subsections:
+  - Eurovision — Kalush Orchestra
+  - Кінофестивалі
+  - Мистецтво як послання
+  - «Україна — це...»
+- section: Виклики і межі
+  words: 400
+  subsections:
+  - Ресурсна асиметрія
+  - Втомленість аудиторії
+  - Ризики — пропаганда vs правда
+  - Етичні питання
+- section: Підсумок
+  words: 300
+  subsections:
+  - Контрнаратив — необхідність
+  - Успіхи і обмеження
+  - Перехід до синтезу
+word_target: 3500
+vocabulary:
+- контрнаратив
+- фактчекінг
+- дезінформація
+- соцмережі
+- громадянське суспільство
+- волонтер
+- культурна дипломатія
+- комунікація
+- наратив
+- медіаграмотність
+- NAFO
+- мем
+- вірусний контент
+- інфлюенсер
+- «м'яка сила»
+activities:
+- type: institution-analysis
+  focus: Ukrainian counter-disinformation infrastructure
+- type: case-study
+  focus: NAFO — how humor fights disinformation
+- type: effectiveness-analysis
+  focus: What works and what doesn't
+- type: ethical-analysis
+  focus: Counter-narrative vs. propaganda — where's the line?
+- type: essay-response
+  focus: Чи може Україна виграти інформаційну війну?
+sources:
+- name: Інформаційна політика України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Інформаційна_політика_України
+  type: reference
+  notes: Ukraine's information policy
+- name: NAFO (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/NAFO
+  type: reference
+  notes: NAFO phenomenon

@@ -25,3 +25,24 @@ vocabulary_count: 20
 summary: This checkpoint assesses the mastery of C1.4 Stylistics phase. Learners demonstrate
   their ability to navigate high formal, intimate, and slang registers, apply politeness
   strategies, and switch codes appropriately.
+content_outline:
+- section: Вступ — Стилістика і регістри
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Archaic Forms
+  words: 500
+  points:
+  - 'Аорист: рече, рекла (said)'
+  - 'Імперфект: бяше, бяху (was/were)'
+  - 'Двоїна: берета, несета (you two take/carry)'
+  - 'Давноминулий: був зробив (had done)'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

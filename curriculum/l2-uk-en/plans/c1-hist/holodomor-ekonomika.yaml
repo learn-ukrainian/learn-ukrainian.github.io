@@ -1,0 +1,87 @@
+module: holodomor-ekonomika
+level: c1-hist
+sequence: 105
+version: '1.0'
+title: Голодомор як економічна зброя
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Голод як інструмент
+  words: 451
+  subsections:
+  - Голодомор — не природна катастрофа
+  - Економічний вимір геноциду
+  - Як це працювало
+  - Структура модуля
+- section: Експорт під час голоду
+  words: 790
+  subsections:
+  - Цифри — скільки вивезли
+  - Куди пішло зерно
+  - Валюта для індустріалізації
+  - Смерть як «побічний ефект»
+- section: Конфіскація як механізм
+  words: 677
+  subsections:
+  - «Чорні дошки»
+  - Забирали все — до насіння
+  - Хто виконував
+  - Неможливість виживання
+- section: Економічна логіка Сталіна
+  words: 677
+  subsections:
+  - Первісне накопичення
+  - Селяни — «внутрішня колонія»
+  - Україна — найбагатша жертва
+  - Раціональність злочину
+- section: Довгострокові наслідки
+  words: 564
+  subsections:
+  - Знищення селянства
+  - Демографічна катастрофа
+  - Економічні втрати
+  - Травма поколінь
+- section: Підсумок
+  words: 341
+  subsections:
+  - Голодомор — економічний терор
+  - Україна платила життям
+  - Перехід до газової зброї
+word_target: 3500
+vocabulary:
+- економічна зброя
+- експорт зерна
+- конфіскація
+- «чорні дошки»
+- первісне накопичення
+- «внутрішня колонія»
+- демографічна катастрофа
+- геноцид
+- механізм
+- наслідки
+- хлібозаготівлі
+- реквізиція
+- квоти
+- «куркуль»
+- деселянізація
+activities:
+- type: economic-analysis
+  focus: Grain export during famine — numbers and destinations
+- type: mechanism-study
+  focus: How confiscation system worked economically
+- type: logic-analysis
+  focus: Stalin's economic rationality behind genocide
+- type: critical-analysis
+  focus: Economic consequences of Holodomor
+- type: essay-response
+  focus: Чи Голодомор був 'раціональним' з точки зору Сталіна?
+sources:
+- name: Голодомор (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Голодомор
+  type: reference
+  notes: Holodomor overview
+- name: Експорт зерна під час голоду (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Експорт_зерна_під_час_Голодомору
+  type: reference
+  notes: Grain export during famine

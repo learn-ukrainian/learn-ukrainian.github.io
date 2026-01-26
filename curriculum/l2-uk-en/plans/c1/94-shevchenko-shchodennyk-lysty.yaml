@@ -1,0 +1,22 @@
+module: 94-shevchenko-shchodennyk-lysty
+level: c1
+sequence: 94
+version: '2.0'
+title: 'Шевченко: Щоденник та листи'
+subtitle: 'Shevchenko: Diary and Letters'
+focus: literature
+pedagogy: Immersion & Analysis
+objectives:
+- Analyze Shevchenko’s personal prose for deeper biographical insight
+- Understand the context of his exile through his own words
+- Explore the bilingual nature of his private correspondence
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

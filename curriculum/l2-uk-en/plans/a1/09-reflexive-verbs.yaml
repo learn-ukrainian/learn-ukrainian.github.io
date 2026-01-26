@@ -1,0 +1,77 @@
+module: reflexive-verbs
+level: a1
+sequence: 9
+version: '2.0'
+title: Reflexive Verbs (-ся)
+subtitle: Actions Directed at Oneself
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can identify reflexive verbs ending in -ся
+- Learner can conjugate reflexive verbs in present tense
+- Learner understands difference between transitive and reflexive verbs
+- Learner can use common reflexive verbs like дивитися, сміятися
+content_outline:
+- section: 'Introduction: What Are Reflexive Verbs?'
+  words: 100
+  points:
+  - Action directed back at subject
+  - Marked by -ся or -сь ending
+  - Common in daily routines
+- section: The Reflexive Particle
+  words: 200
+  points:
+  - '-ся after consonants: вмиватися'
+  - '-сь after vowels: вмиваюсь'
+  - Always at the very end
+- section: Conjugating Reflexive Verbs
+  words: 200
+  points:
+  - Same endings as regular verbs + -ся/-сь
+  - 'вмиватися: вмиваюся, вмиваєшся...'
+  - 'дивитися: дивлюся, дивишся...'
+- section: Common Reflexive Verbs
+  words: 200
+  points:
+  - 'Daily routines: вмиватися, одягатися, голитися'
+  - 'Emotions: сміятися, дивуватися'
+  - 'Movement: повертатися, зупинятися'
+- section: Transitive vs Reflexive Pairs
+  words: 100
+  points:
+  - мити (to wash sth) vs митися (to wash oneself)
+  - одягати vs одягатися
+- section: 'Practice: Daily Routine'
+  words: 100
+  points:
+  - Describe morning routine
+  - Ask about habits
+word_target: 900
+vocabulary:
+  required:
+  - вмиватися (to wash oneself)
+  - одягатися (to dress oneself)
+  - дивитися (to watch/look)
+  - сміятися (to laugh)
+  - називатися (to be called)
+  - вчитися (to study)
+  - займатися (to do/engage in)
+  - повертатися (to return)
+  recommended:
+  - голитися (to shave)
+  - зупинятися (to stop)
+  - знайомитися (to get acquainted)
+  - цікавитися (to be interested)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - conjugation-drill
+  - matching
+  - dialogue
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a1-10 (Checkpoint - First Contact)
+- a1-25 (My Daily Routine)

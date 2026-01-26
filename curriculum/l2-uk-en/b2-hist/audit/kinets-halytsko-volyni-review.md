@@ -1,8 +1,8 @@
 # Audit Report: M26 — kinets-halytsko-volyni.md
-**Level:** B2 | **Module:** M26 | **Phase:** HIST.3 | **Pedagogy:** Not Specified | **Target:** 4000
+**Level:** B2 | **Module:** M26 | **Phase:** B2.3a | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:22:16
+**Generated:** 2026-01-25 22:22:38
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4379/4000 (raw: 4617)
+- **Words:** ✅ 4684/4000 (raw: 4857)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 98.5% (target 90-100% (history))
+- **Immersion:** 🇺🇦 98.6% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -63,11 +63,11 @@
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 4 | 4 | 100% | 10% | 9.5% |
-| visual | 6 | 4 | 100% | 10% | 9.5% |
-| variety | 0.96 | - | 96% | 5% | 4.6% |
+| visual | 5 | 4 | 100% | 10% | 9.5% |
+| variety | 0.94 | - | 94% | 5% | 4.5% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 22 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.8%** |
+| questions | 20 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -75,9 +75,8 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Кінець Галицько-Волинської держави** | ⚪️ | 116 | Skipped |
 | **Контекст** | ✅ | 399 | Included in Core |
-| **Читання** | ✅ | 1803 | Included in Core |
-| **Первинні джерела** | ✅ | 527 | Included in Core |
+| **Читання** | ✅ | 1969 | Included in Core |
+| **Первинні джерела** | ✅ | 1195 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 515 | Included in Core |
-| **Есе** | ⚪️ | 529 | Skipped |
 | **Підсумок** | ✅ | 256 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 234 | Skipped |

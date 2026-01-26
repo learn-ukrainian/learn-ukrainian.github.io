@@ -1,0 +1,99 @@
+module: holodomor-heohrafiia
+level: c1-hist
+sequence: 48
+version: '1.0'
+title: 'Географія Голодомору: Регіональні відмінності'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Голодомор на карті
+  words: 400
+  subsections:
+  - Не всі регіони постраждали однаково
+  - Чому географія важлива
+  - Що нам говорять карти
+  - Структура модуля
+- section: Найбільш постраждалі регіони
+  words: 700
+  subsections:
+  - Київщина — епіцентр
+  - Харківщина — другий центр
+  - Полтавщина, Черкащина
+  - Степова Україна
+  - Карта з даними
+- section: Менш постраждалі регіони
+  words: 500
+  subsections:
+  - Західна Україна — під Польщею
+  - Донбас — промисловий регіон
+  - Міста vs. села
+  - Чому різниця?
+- section: Кубань і етнічні українці
+  words: 600
+  subsections:
+  - Українці за межами УРСР
+  - Кубань — особливий випадок
+  - Знищення українськості
+  - Паралелі з Україною
+- section: Чому саме ці регіони
+  words: 600
+  subsections:
+  - Зернові райони — більший тиск
+  - Опір колективізації
+  - Національний фактор
+  - «Покарання» vs. «політика»
+- section: Демографічні наслідки
+  words: 500
+  subsections:
+  - Скільки загинуло — дискусія
+  - 3.9 мільйона — консервативна оцінка
+  - Вплив на населення — до сьогодні
+  - Втрачені покоління
+- section: Підсумок
+  words: 200
+  subsections:
+  - Географія як доказ
+  - Від карт до свідчень
+  - Підготовка до усної історії
+word_target: 3500
+vocabulary:
+- географія
+- регіон
+- розподіл
+- епіцентр
+- втрати
+- демографія
+- карта
+- село
+- місто
+- Кубань
+- зерновий район
+- щільність населення
+- смертність
+- народжуваність
+- депопуляція
+activities:
+- type: map-analysis
+  focus: Analyze Holodomor mortality map — what patterns?
+- type: comparative-study
+  focus: Compare mortality rates in different oblasts
+- type: explanation-building
+  focus: Explain why specific regions suffered most
+- type: data-analysis
+  focus: Work with demographic data
+- type: essay-response
+  focus: Що географія Голодомору говорить нам про його характер?
+sources:
+- name: Втрати населення в Голодомор
+  url: https://uk.wikipedia.org/wiki/Втрати_України_в_Голодоморі
+  type: reference
+  notes: Casualty estimates
+- name: Регіональний розподіл Голодомору
+  url: https://uk.wikipedia.org/wiki/Голодомор#Географія
+  type: reference
+  notes: Regional breakdown
+- name: Карти Голодомору
+  url: https://ucrdc.org/
+  type: reference
+  notes: UCRDC mapping projects

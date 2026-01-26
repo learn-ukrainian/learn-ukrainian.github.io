@@ -1,7 +1,8 @@
 # Audit Report: M71 — koliivshchyna.md
-**Level:** B2 | **Module:** M71 | **Phase:** HIST.7 | **Pedagogy:** Not Specified | **Target:** 4000
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 20:23:48
+**Level:** B2 | **Module:** M71 | **Phase:** HIST.7 | **Pedagogy:** CBI | **Target:** 4000
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 22:55:21
 
 ## Configuration
 **Type:** B2-history
@@ -16,142 +17,81 @@
 **Vocab Target:** ≥20 words
 **Transliteration:** Not allowed
 
-## PEDAGOGICAL VIOLATIONS
-- **[HEADING_LEVEL]** Main section 'Підсумок' uses H2 (##) but spec requires H1 (#)
-  - FIX: Change '## Підсумок' to '# Підсумок' for top-level TOC compliance
-- **[YAML_SCHEMA_VIOLATION]** Schema error in koliivshchyna.yaml: Insufficient activities: 1 found, minimum 5 required for B2-HIST
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
-  - FIX: Add a essay-response activity to meet advanced richness standards.
-- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
-  - FIX: Add a comparative-study activity to meet advanced richness standards.
-- **[STATE_STANDARD_LOW_IMMERSION]** Module 71 has 20.2% immersion (target: 90.0%+)
-  - FIX: Add more Ukrainian content to reach 90.0%+ immersion
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Свідчення сучасника: Уманська облога | 3 | 1 | ✅ |
+| 2 | reading | Сучасний погляд на Коліївщину | 3 | 1 | ✅ |
+| 3 | quiz | Перевірка розуміння контексту | 8 | 8 | ✅ |
+| 4 | fill-in | Лексика гайдамацького руху | 10 | 8 | ✅ |
+| 5 | match-up | Зіставлення термінів та визначень | 14 | 8 | ✅ |
+| 6 | essay-response | Есе: Трагедія та велич Коліївщини | 1 | 1 | ✅ |
+| 7 | comparative-study | Порівняльний аналіз постатей | 1 | 1 | ✅ |
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Читання' per template 'b2-history-module-template.md'
-  - FIX: Add '## Читання' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Деколонізаційний погляд' per template 'b2-history-module-template.md'
-  - FIX: Add '## Деколонізаційний погляд' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md.md
-- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!myth-buster]' per template 'b2-history-module-template.md'
-  - FIX: Add a `> [!myth-buster]` box as specified in the template. This enhances module quality.
-- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!history-bite]' per template 'b2-history-module-template.md'
-  - FIX: Add a `> [!history-bite]` box as specified in the template. This enhances module quality.
-- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!quote]' per template 'b2-history-module-template.md'
-  - FIX: Add a `> [!quote]` box as specified in the template. This enhances module quality.
-
-## Recommendation
-**🔄 REWRITE** (severity 100/100)
-
-- 10 violations (significant)
-- Immersion 70% off target (major rebalancing needed)
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
-- Activity count below minimum
-- Activity density below minimum
+**Summary:**
+- Total activities: 7 (target: 3-9) ✅
+- Unique types: 6 (minimum: 2) ✅
+- Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 26/4000 (raw: 102)
-- **Activities:** ❌ 0/3
-- **Density:** ❌ 0 < 1
-- **Unique_types:** ❌ 0/2 types
-- **Priority:** ❌ No priority types
-- **Engagement:** ❌ 0/5
+- **Words:** ✅ 4137/4000 (raw: 4448)
+- **Activities:** ✅ 7/3
+- **Density:** ✅ All > 1
+- **Unique_types:** ✅ 6/2 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 20 (soft target)
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Vocab:** ✅ 25/20
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 4 violations
-- **Content_heavy:** ⚠️ Too few activities: 0 (target 3-9)
-- **Immersion:** ❌ 20.2% LOW (target 90-100% (history))
-- **Richness:** ❌ 7% < 95% min (grammar) - REWRITE needed
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (7 activities)
+- **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
+- **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 7% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 99% (minimum: 95%)
+**Module Type:** history
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 0 | 24 | 0% | 20% | 0.0% |
-| engagement | 0 | 5 | 0% | 15% | 0.0% |
-| dialogues | 0 | 4 | 0% | 15% | 0.0% |
-| variety | 0.50 | - | 50% | 10% | 5.0% |
-| cultural | 0 | 3 | 0% | 10% | 0.0% |
-| realworld | 0 | 3 | 0% | 10% | 0.0% |
-| visual | 0 | 3 | 0% | 5% | 0.0% |
-| paragraph_var | 0.50 | - | 50% | 5% | 2.5% |
-| questions | 0 | 5 | 0% | 5% | 0.0% |
-| proverbs | 0 | 1 | 0% | 5% | 0.0% |
-| **TOTAL** | | | | | **7.5%** |
-
-### Dryness Flags & Fixes
-- ❌ **NO_ENGAGEMENT**
-  - FIX:
-    Add 2+ engagement boxes. Use this exact format:
-    
-    > 💡 **Чи знали ви?**
-    >
-    > [Interesting fact about the grammar/vocabulary topic in Ukrainian]
-    
-    > 🇺🇦 **Культурний момент**
-    >
-    > [Cultural context connecting grammar to Ukrainian life/places]
-    
-    > 🌍 **У реальному житті**
-    >
-    > [Practical scenario where this grammar is used]
-- ❌ **NO_DIALOGUE**
-  - FIX:
-    Add 4+ mini-dialogues. Use this exact format:
-    
-    **Діалог: [Location in Ukraine]**
-    
-    > — [Speaker 1 line with **bolded** grammar examples]
-    > — [Speaker 2 response with **bolded** grammar examples]
-    > — [Speaker 1 continuation]
-    > — [Speaker 2 conclusion]
-    
-    Example locations: На Бесарабському ринку, У львівській кав'ярні, В одеському трамваї, На Подолі
-- ❌ **NO_EXAMPLES**
-  - FIX:
-    Add 24+ example sentences. Each grammar point needs 3-4 examples showing the pattern in context.
-- ❌ **ABSTRACT_ONLY**
-  - FIX:
-    Add 3+ real-world boxes. Use this exact format:
-    
-    > 🌍 **У реальному житті**
-    >
-    > [Specific scenario: "На співбесіді...", "У магазині...", "На вокзалі..."]
-    > [Example sentence showing grammar in that context]
-- ❌ **NO_PROVERBS**
-  - FIX:
-    Add 1+ Ukrainian proverb. Use this format:
-    
-    Українці кажу|ть: «[Proverb in Ukrainian]»
-    
-    Зверніть увагу: **[word]** — [aspect] вид, бо [explanation why this aspect is used].
-    
-    Example: «Не кажи гоп, поки не перескочиш» — **перескочиш** is perfective because it's about the result.
-- ❌ **NO_CULTURAL_ANCHOR**
-  - FIX:
-    Add 3+ cultural references. Use this exact format:
-    
-    > 🇺🇦 **Культурний момент**
-    >
-    > [Reference to Ukrainian place (Київ, Львів, Одеса, Карпати), tradition, or custom]
-    > [How it connects to the grammar/vocabulary being taught]
-    > [Example sentence using the grammar with cultural context]
+| primary_sources | 8 | 3 | 100% | 24% | 23.8% |
+| engagement | 7 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
+| decolonization | 15 | 2 | 100% | 14% | 14.3% |
+| cultural | 5 | 4 | 100% | 10% | 9.5% |
+| visual | 5 | 4 | 100% | 10% | 9.5% |
+| variety | 0.99 | - | 99% | 5% | 4.7% |
+| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
+| questions | 6 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 14 | Included in Core |
-| **Коліївщина та Гайдамаки** | ⚪️ | 0 | Skipped |
-| **Вступ** | ✅ | 2 | Included in Core |
-| **Основний зміст** | ⚪️ | 2 | Skipped |
-| **Історичне значення** | ⚪️ | 1 | Skipped |
-| **Ключові постаті** | ⚪️ | 2 | Skipped |
-| **Первинні джерела** | ✅ | 4 | Included in Core |
-| **Підсумок** | ✅ | 1 | Included in Core |
+| **Intro/Narrative** | ✅ | 156 | Included in Core |
+| **Вступ: Пролог у сакральному Холодному Яру** | ✅ | 485 | Included in Core |
+| **Соціально-економічне тло: Анатомія колоніального гніту на Правобережжі** | ⚪️ | 540 | Skipped |
+| **Духовний провід: Мелхіседек Значко-Яворський та роль Мотронинського монастиря** | ⚪️ | 225 | Skipped |
+| **Життя та побут гайдамаки: Лицарі вільного лісового братства** | ⚪️ | 433 | Skipped |
+| **Максим Залізняк: Запорозький гарт та народний провідник повстання** | ⚪️ | 186 | Skipped |
+| **Читання: Трагічні хроніки Уманської облоги та штурму** | ✅ | 309 | Included in Core |
+| **Кодня: Голгофа гайдамаччини та механізм державного терору** | ⚪️ | 155 | Skipped |
+| **Коліївщина у філософському вимірі: Свобода, Жертовність та Справедливість** | ⚪️ | 143 | Skipped |
+| **Повсякдення гайдамацького табору: Від світанку до сутінків у лісах** | ⚪️ | 132 | Skipped |
+| **Гайдамаччина в мистецтві: Живопис та Скульптура як пам'ять нації** | ⚪️ | 99 | Skipped |
+| **Народний епос про гайдамаків: Кобзарські думи та сила живого слова** | ⚪️ | 87 | Skipped |
+| **Деколонізаційний погляд: Міфи імперій та справжня українська реальність** | ✅ | 205 | Included in Core |
+| **Мова повстання: Лексика як дзеркало ідеології та світогляду месників** | ⚪️ | 70 | Skipped |
+| **Гайдамацькі пісні: Жива історія у звуках, словах та героїчних образах** | ⚪️ | 78 | Skipped |
+| **Балтський інцидент та його масштабне геополітичне відлуння у Європі** | ⚪️ | 74 | Skipped |
+| **Спадщина в кінематографі: Від німого кіно до сучасної драми** | ⚪️ | 124 | Skipped |
+| **Первинні джерела та їх критичний лінгвістичний аналіз для сучасних дослідників** | ✅ | 216 | Included in Core |
+| **Сучасні паралелі: Коліївщина та екзистенційні виклики XXI століття для України** | ⚪️ | 189 | Skipped |
+| **Підсумок** | ✅ | 118 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 113 | Skipped |

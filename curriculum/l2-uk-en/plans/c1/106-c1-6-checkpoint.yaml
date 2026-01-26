@@ -1,0 +1,22 @@
+module: 106-c1-6-checkpoint
+level: c1
+sequence: 106
+version: '2.0'
+title: 'C1.6 Контрольна точка: Літературний канон'
+subtitle: 'C1.6 Checkpoint: Literary Canon'
+focus: checkpoint
+pedagogy: Assessment
+objectives:
+- Learner can demonstrate mastery of the C1.6 literary phase content.
+- Learner can perform advanced literary analysis.
+- Learner can produce high-level academic writing on literary topics.
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

@@ -313,3 +313,78 @@ items:
   translation: singer, bard
   pos: noun
   gender: m
+- lemma: іменник
+  ipa: /imˈɛnnɪk/
+  translation: noun
+  pos: noun
+  gender: m
+- lemma: братик
+  ipa: /brˈatɪk/
+  translation: little brother
+  pos: noun
+  gender: m
+- lemma: навчання
+  ipa: /navˈt͡ʃannja/
+  translation: learning, training
+  pos: noun
+  gender: n
+- lemma: сестричка
+  ipa: /sɛstrˈɪt͡ʃka/
+  translation: little sister
+  pos: noun
+  gender: f
+- lemma: відповідальність
+  ipa: /vidpɔʋidˈalʲnistʲ/
+  translation: responsibility
+  pos: noun
+  gender: f
+- lemma: котик
+  ipa: /kˈɔtɪk/
+  translation: kitty, little cat
+  pos: noun
+  gender: m
+- lemma: повідомлення
+  ipa: /pɔʋidˈɔmlɛnnja/
+  translation: message, notification
+  pos: noun
+  gender: n
+- lemma: створення
+  ipa: /stʋɔrˈɛnnja/
+  translation: creation
+  pos: noun
+  gender: n
+- lemma: зустріч
+  ipa: /zustrˈit͡ʃ/
+  translation: meeting, encounter
+  pos: noun
+  gender: f
+- lemma: подорож
+  ipa: /pɔdˈɔrɔʒ/
+  translation: journey, trip
+  pos: noun
+  gender: f
+- lemma: щастя
+  ipa: /ʃt͡ʃˈastja/
+  translation: happiness
+  pos: noun
+  gender: n
+- lemma: любов
+  ipa: /lʲubˈɔʋ/
+  translation: love
+  pos: noun
+  gender: f
+- lemma: мрія
+  ipa: /mˈrija/
+  translation: dream
+  pos: noun
+  gender: f
+- lemma: надія
+  ipa: /nˈadija/
+  translation: hope
+  pos: noun
+  gender: f
+- lemma: пам'ять
+  ipa: /ˈpamjatʲ/
+  translation: memory
+  pos: noun
+  gender: f

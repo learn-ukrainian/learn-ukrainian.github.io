@@ -1,27 +1,94 @@
 module: b1-68
-title: 'Синонімія I: Дієслова мислення'
-subtitle: 'Synonymy I: Thinking Verbs'
-version: '1.0'
-phase: B1.6 Vocabulary Expansion II
+id: b1-68
+slug: synonymy-thinking-verbs
+title: "Синонімія I: Дієслова мислення"
+subtitle: "Synonymy I: Thinking Verbs"
+version: '2.0'
+phase: "B1.6 [Vocabulary Expansion II]"
 focus: vocabulary
 pedagogy: PPP
+register: розмовний
 duration: 90
 transliteration: none
-grammar:
-- verb synonymy and semantic distinctions
-- thinking verb collocations
-tags:
-- vocabulary
-- synonymy
-- verbs
-- cognition
 objectives:
-- Learner can distinguish between думати/гадати/вважати/міркувати
-- Learner can use 20 thinking verbs in appropriate contexts
-- Learner can form natural collocations with thinking verbs
-vocabulary_count: 20
-vocab_count: 17
-slug: 68-synonymy-thinking-verbs
+  - "Learner can distinguish between думати/гадати/вважати/міркувати"
+  - "Learner can use 20 thinking verbs in appropriate contexts"
+  - "Learner can form natural collocations with thinking verbs"
+  - "Learner can express cognitive processes precisely"
+grammar:
+  - "Verb synonymy and semantic distinctions"
+  - "Thinking verb collocations"
+  - "Cognitive verb patterns"
+word_target: 1200
+content_outline:
+  - section: "Introduction: Cognitive Verbs"
+    words: 150
+    points:
+      - "Why verb precision matters"
+      - "Thinking verb categories"
+      - "Synonymy overview"
+  - section: "Basic Thinking Verbs"
+    words: 250
+    points:
+      - "думати, гадати, вважати"
+      - "Semantic differences"
+      - "Usage contexts"
+  - section: "Deliberation Verbs"
+    words: 250
+    points:
+      - "міркувати, роздумувати, обмірковувати"
+      - "Deep thinking vocabulary"
+      - "Collocations"
+  - section: "Understanding Verbs"
+    words: 250
+    points:
+      - "розуміти, усвідомлювати, осягати"
+      - "Comprehension vocabulary"
+      - "Register differences"
+  - section: "Memory and Recognition"
+    words: 200
+    points:
+      - "пам'ятати, згадувати, впізнавати"
+      - "Memory verb distinctions"
+      - "Collocations"
+  - section: "Practice: Precise Expression"
+    words: 100
+    points:
+      - "Choose appropriate verbs"
+      - "Express thoughts precisely"
+vocabulary_hints:
+  required:
+    - думати (to think)
+    - гадати (to suppose)
+    - вважати (to consider)
+    - міркувати (to ponder)
+    - розуміти (to understand)
+    - пам'ятати (to remember)
+    - згадувати (to recall)
+    - усвідомлювати (to realize)
+  recommended:
+    - роздумувати (to reflect)
+    - обмірковувати (to deliberate)
+    - осягати (to grasp)
+    - впізнавати (to recognize)
+activity_hints:
+  - type: matching
+    focus: "Match verbs to meanings"
+    items: 25
+  - type: fill-in
+    focus: "Choose correct thinking verb"
+    items: 20
+  - type: transformation
+    focus: "Replace with synonyms"
+    items: 15
+  - type: writing
+    focus: "Express thoughts precisely"
+    items: 10
+prerequisites:
+  - b1-67 (Travel Geography)
+connects_to:
+  - b1-69 (Synonymy Speaking Verbs)
 naturalness:
   score: 9
   status: PASS
+  justification: "Essential for precise expression"

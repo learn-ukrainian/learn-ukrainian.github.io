@@ -1,0 +1,80 @@
+module: yesterday-past-tense
+level: a1
+sequence: 21
+version: '2.0'
+title: Yesterday - Past Tense
+subtitle: Talking About What Happened
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can form past tense using L-participle
+- Learner can use correct gender ending (-в/-ла/-ло/-ли)
+- Learner can describe past events using time expressions
+- Learner can talk about what they did yesterday
+content_outline:
+- section: 'Introduction: The Past Tense'
+  words: 150
+  points:
+  - Ukrainian past tense is simple
+  - One form for all persons
+  - Agreement with subject gender
+- section: Forming the L-Participle
+  words: 200
+  points:
+  - Remove -ти from infinitive
+  - Add -в (masculine), -ла (feminine), -ло (neuter)
+  - 'Plural for all genders: -ли'
+- section: Gender Agreement
+  words: 200
+  points:
+  - Я читав (male speaker)
+  - Я читала (female speaker)
+  - Воно було (neuter subject)
+- section: Common Past Tense Verbs
+  words: 200
+  points:
+  - був/була/було/були (was/were)
+  - робив/робила (did)
+  - їв/їла (ate), пив/пила (drank)
+- section: Time Expressions
+  words: 150
+  points:
+  - вчора (yesterday)
+  - минулого тижня (last week)
+  - раніше (earlier, before)
+- section: 'Practice: What Did You Do?'
+  words: 100
+  points:
+  - Describe yesterday
+  - Ask about past activities
+word_target: 1000
+vocabulary:
+  required:
+  - вчора (yesterday)
+  - робити (to do)
+  - їсти (to eat)
+  - пити (to drink)
+  - бути (to be)
+  - читати (to read)
+  - дивитися (to watch)
+  - ходити (to go)
+  recommended:
+  - минулий (last, past)
+  - раніше (earlier)
+  - тиждень (week)
+  - місяць (month)
+  - спати (to sleep)
+  - працювати (to work)
+  forbidden: []
+activities:
+  types_required:
+  - transformation
+  - translation
+  - fill-in
+  - dialogue
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a1-22 (Tomorrow - Future Tense)
+- a1-25 (My Daily Routine)

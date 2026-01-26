@@ -1,0 +1,97 @@
+module: 29-surzhyk
+level: c1
+sequence: 29
+version: '2.0'
+title: 'Суржик: Феномен змішування'
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Антоненко-Давидович - Як ми говоримо
+  url: https://r2u.org.ua/
+  type: primary
+  notes: Classic guide to Russianisms
+- name: Масенко - Суржик
+  url: https://mova.info/
+  type: reference
+  notes: Academic analysis of Surzhyk
+content_outline:
+- section: Вступ — Що таке суржик
+  words: 500
+  points:
+  - Визначення суржику
+  - Історичні причини виникнення
+  - Соціолінгвістичний контекст
+- section: Фонетична інтерференція
+  words: 700
+  points:
+  - Російська фонетика в українських словах
+  - Наголос та інтонація
+  - Вимова приголосних
+- section: Лексична інтерференція
+  words: 800
+  points:
+  - кажеться → здається
+  - понімаю → розумію
+  - єслі → якщо
+  - Типові русизми
+- section: Граматична інтерференція
+  words: 600
+  points:
+  - Конструкції з російського
+  - Помилки в керуванні
+  - Калькування
+- section: Код-свічинг
+  words: 500
+  points:
+  - Перемикання між мовами
+  - Ситуативне використання
+  - Соціальні функції
+- section: Соціальне сприйняття
+  words: 500
+  points:
+  - Ставлення до суржику
+  - Суржик і престиж
+  - Дестигматизація
+- section: Практичне завдання
+  words: 400
+  points:
+  - Трансформація суржику в стандартну мову
+  - Аналіз текстів
+  - Дискусія про ставлення
+word_target: 4000
+vocabulary:
+  required:
+  - суржик (surzhyk)
+  - інтерференція (interference)
+  - русизм (Russicism)
+  - код-свічинг (code-switching)
+  - змішування (mixing)
+  - фонетичний (phonetic)
+  - лексичний (lexical)
+  - граматичний (grammatical)
+  - калька (calque)
+  - стигматизація (stigmatization)
+  recommended:
+  - білінгвізм (bilingualism)
+  - контактна мова (contact language)
+  - норма (norm)
+  - девіація (deviation)
+  - соціолект (sociolect)
+  forbidden: []
+activities:
+  types_required:
+  - group-sort
+  - quiz
+  - cloze
+  - fill-in
+  - error-correction
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c1-30 (History of Language)
+- c1-31 (Diaspora Ukrainian)
+- c1-35 (C1.2 Checkpoint)

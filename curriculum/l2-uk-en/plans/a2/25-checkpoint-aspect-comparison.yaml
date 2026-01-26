@@ -1,0 +1,64 @@
+module: 25-checkpoint-aspect-comparison
+level: a2
+sequence: 25
+version: '2.0'
+title: 'Checkpoint: Aspect, Comparison & Modality'
+subtitle: Review of Modules 11-24
+focus: checkpoint
+pedagogy: TTT
+objectives:
+- Learner can integrate aspect, comparison, and mood in complex scenarios
+- Learner can count objects and money with correct agreement
+- Learner can make polite requests and hypothetical dreams
+- Learner can distinguish between process and result across tenses
+sources:
+- name: Ukrainian State Standard 2024 - A2 Review
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standards for integrating intermediate A2 skills
+content_outline:
+- section: Огляд / Overview
+  words: 250
+  points:
+  - Consolidating the 'Quality and Time' block
+  - The map of skills from M11 to M24
+- section: 'Skill 1: Verbal Aspect (Вид дієслова: Процес та результат)'
+  words: 70
+  points:
+  - Process vs Result distinction
+  - Aspect pair review
+- section: 'Skill 2: Degrees of Comparison (Ступені порівняння)'
+  words: 50
+  points:
+  - Comparative and superlative forms
+  - Irregular comparatives
+- section: 'Skill 3: Modality (Умовний та наказовий способи)'
+  words: 60
+  points:
+  - Conditional and imperative moods
+  - Real vs unreal conditions
+- section: 'Skill 4: Numeral Agreement (Узгодження числівників)'
+  words: 40
+  points:
+  - Zone 1-2-3 agreement rules
+  - Counting with nouns
+- section: Practice / Практика (The Mega-Review)
+  words: 150
+  points:
+  - Aspect transformation
+  - Comparison marathon
+  - Modality check
+  - Counting money
+- section: 'Dialogue / Діалог: Synthesis (Синтез навичок)'
+  words: 250
+  points:
+  - Synthesizing all four skills in dialogue with analysis
+- section: Integration Challenge / Інтеграційне завдання
+  words: 100
+  points:
+  - Combined task using all skills
+word_target: 800
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

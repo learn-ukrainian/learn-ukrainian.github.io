@@ -1,0 +1,77 @@
+module: mountains-trail
+level: b1
+sequence: 82
+version: '2.0'
+title: Гори та трейлраннінг
+subtitle: Hiking and Trail Running in the Carpathians
+focus: culture
+pedagogy: CBI
+objectives:
+- Learner can discuss hiking and mountain activities in Ukrainian
+- Learner can understand trail descriptions and mountain weather reports
+- Learner can use vocabulary for equipment and nature
+- Learner can plan a hiking trip to the Carpathians
+content_outline:
+- section: 'Introduction: Ukrainian Mountains'
+  words: 150
+  points:
+  - Carpathian overview
+  - Mountain tourism
+  - Trail culture
+- section: Popular Trails
+  words: 250
+  points:
+  - Говерла, Петрос
+  - Trail difficulty levels
+  - Best routes
+- section: Equipment and Preparation
+  words: 250
+  points:
+  - Hiking gear vocabulary
+  - Preparation checklist
+  - Safety essentials
+- section: Mountain Weather
+  words: 250
+  points:
+  - Weather vocabulary
+  - Reading forecasts
+  - Seasonal conditions
+- section: Trail Running Culture
+  words: 200
+  points:
+  - Trail running events
+  - Ultra-marathon culture
+  - Mountain races
+- section: 'Practice: Trip Planning'
+  words: 100
+  points:
+  - Plan a mountain trip
+  - Discuss trail experiences
+word_target: 1200
+vocabulary:
+  required:
+  - гора (mountain)
+  - стежка (trail)
+  - похід (hike)
+  - вершина (summit)
+  - Карпати (Carpathians)
+  - спорядження (equipment)
+  - рюкзак (backpack)
+  - взуття (footwear)
+  recommended:
+  - Говерла (Hoverla)
+  - трейлраннінг (trail running)
+  - маршрут (route)
+  - полонина (alpine meadow)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - reading
+  - discussion
+  - matching
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-83 (Cycling and Water Sports)

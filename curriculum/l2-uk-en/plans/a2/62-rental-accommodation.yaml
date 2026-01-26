@@ -1,0 +1,80 @@
+module: rental-accommodation
+level: a2
+sequence: 62
+version: '2.0'
+title: Rental Accommodation
+subtitle: Finding an Apartment
+focus: practical
+pedagogy: PPP
+objectives:
+- Learner can understand rental ads
+- Learner can ask about apartment details
+- Learner can discuss lease terms
+- Learner can talk about utilities and furniture
+content_outline:
+- section: 'Introduction: Renting in Ukraine'
+  words: 100
+  points:
+  - Rental market overview
+  - Finding apartments
+  - Rental vocabulary
+- section: Reading Rental Ads
+  words: 200
+  points:
+  - здається, оренда, депозит
+  - Room descriptions
+  - Price and conditions
+- section: Viewing an Apartment
+  words: 200
+  points:
+  - Asking about features
+  - меблі, ремонт, техніка
+  - Location questions
+- section: Utilities and Bills
+  words: 200
+  points:
+  - комунальні послуги
+  - газ, вода, електрика
+  - Who pays what
+- section: The Lease Agreement
+  words: 150
+  points:
+  - договір оренди
+  - Terms and conditions
+  - Signing and deposit
+- section: 'Practice: Rental Dialogue'
+  words: 150
+  points:
+  - Inquire about apartment
+  - Discuss terms
+word_target: 1000
+vocabulary:
+  required:
+  - оренда (rent)
+  - квартира (apartment)
+  - власник (owner)
+  - орендар (tenant)
+  - депозит (deposit)
+  - комунальні (utilities)
+  - договір (contract)
+  - меблі (furniture)
+  recommended:
+  - здається (for rent)
+  - кімната (room)
+  - ремонт (renovation)
+  - гарантія (guarantee)
+  - завдаток (advance payment)
+  - умови (conditions)
+  forbidden: []
+activities:
+  types_required:
+  - vocabulary-drill
+  - dialogue
+  - reading-comprehension
+  - role-play
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a2-63 (Scheduling Appointments)
+- a2-46 (Home and Furniture)

@@ -1,0 +1,53 @@
+module: syntez-khmelnychchyna
+level: b2-hist
+sequence: 0
+version: '1.0'
+title: 'Синтез: Козацька революція'
+focus: history
+pedagogy: CBI
+objectives: []
+content_outline:
+- section: 'Вступ: Вибух, що змінив усе'
+  words: 400
+  subsections:
+  - The definition of the Khmelnytsky Uprising as a revolution
+  - 'The scale of changes: social, political, geopolitical'
+- section: 'Причини революції: Чому вибухнуло?'
+  words: 500
+  subsections:
+  - Social oppression (serfdom)
+  - Religious discrimination (Uniate Church)
+  - Political lack of rights for Cossacks
+  - Personal tragedy of Khmelnytsky
+- section: 'Етапи боротьби: Від тріумфу до компромісу'
+  words: 1000
+  subsections:
+  - Initial victories (Yellow Waters, Korsun)
+  - The Treaty of Zboriv (1649) and statehood
+  - Defeats (Berestechko) and the Treaty of Bila Tserkva
+  - The Pereiaslav Council (1654) and the alliance with Moscow
+  - The death of Khmelnytsky and the start of the Ruin
+- section: 'Соціальні трансформації: Народження нації'
+  words: 600
+  subsections:
+  - Liquidation of serfdom
+  - Formation of the Cossack starshyna as a new elite
+  - The role of the Orthodox Church
+- section: 'Читання: Аналіз історичних документів'
+  words: 400
+  subsections:
+  - Analysis of the Zboriv Treaty
+  - Analysis of the March Articles
+- section: Первинні джерела
+  words: 400
+  subsections:
+  - Eyewitness accounts (Paul of Aleppo, etc.)
+  - Khmelnytsky's universals
+- section: Деколонізаційний погляд
+  words: 700
+  subsections:
+  - Debunking the myth of 'reunification'
+  - Ukraine as a subject of international law
+  - The European context of the revolution
+  - 'Legacy: The birth of the modern Ukrainian state tradition'
+word_target: 4000

@@ -1,0 +1,23 @@
+module: 66-traditional-clothing
+level: c1
+sequence: 66
+version: '1.0'
+title: Традиційний український одяг
+subtitle: Traditional Ukrainian Clothing
+focus: cultural
+pedagogy: CBI
+objectives:
+- Learner can describe the elements of traditional Ukrainian costume
+- Learner can explain the symbolism of embroidery and accessories
+- Learner can distinguish regional variations (Poltava vs. Hutsul vs. Podillia)
+- Learner can discuss the modern interpretation of traditional clothing
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

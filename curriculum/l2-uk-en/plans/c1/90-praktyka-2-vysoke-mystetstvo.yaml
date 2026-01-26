@@ -1,0 +1,22 @@
+module: 90-praktyka-2-vysoke-mystetstvo
+level: c1
+sequence: 90
+version: '2.0'
+title: Практика II — Високе мистецтво
+subtitle: Practice II — Fine Arts
+focus: practice
+pedagogy: Immersion & Analysis
+objectives:
+- Review and integrate knowledge of Ukrainian fine arts
+- Analyze the contribution of Ukrainian artists to world culture
+- Master high-register arts vocabulary
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

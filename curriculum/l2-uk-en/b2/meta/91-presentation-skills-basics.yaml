@@ -1,27 +1,55 @@
 id: 91
-slug: 'presentation-skills-basics'
+slug: presentation-skills-basics
 title: 'Презентації: Основи'
-subtitle: 'Структура та подання професійних презентацій'
+subtitle: Структура та подання професійних презентацій
 version: '2.0'
-phase: 'B2.4 [Communication Skills]'
-pedagogy: 'CBI'
-focus: 'skills'
+phase: B2.4 [Communication Skills]
+pedagogy: CBI
+focus: skills
 duration: 90
-transliteration: 'none'
+transliteration: none
 immersion: 100
 tags:
-  - communication
-  - presentation
-  - professional-skills
+- communication
+- presentation
+- professional-skills
 grammar:
-  - 'Imperative mood for instructions'
-  - 'Modal constructions for recommendations'
+- Imperative mood for instructions
+- Modal constructions for recommendations
 objectives:
-  - 'Learner can structure a professional presentation with clear opening, body, and conclusion'
-  - 'Learner can use signposting language to guide the audience through presentation sections'
-  - 'Learner can apply basic delivery techniques including eye contact, pacing, and volume control'
-  - 'Learner understands how to create effective visual aids for Ukrainian-language presentations'
-register: 'публіцистичний'
+- Learner can structure a professional presentation with clear opening, body, and
+  conclusion
+- Learner can use signposting language to guide the audience through presentation
+  sections
+- Learner can apply basic delivery techniques including eye contact, pacing, and volume
+  control
+- Learner understands how to create effective visual aids for Ukrainian-language presentations
+register: публіцистичний
 naturalness:
   score: 8
-  status: "PASS"
+  status: PASS
+content_outline:
+- section: Вступ — Основи
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Основний матеріал
+  words: 600
+  points:
+  - Теоретичні основи
+  - Приклади та ілюстрації
+  - Типові помилки та як їх уникати
+- section: Поглиблене вивчення
+  words: 600
+  points:
+  - Додаткові випадки
+  - Контекстуальне використання
+  - Стилістичні нюанси
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

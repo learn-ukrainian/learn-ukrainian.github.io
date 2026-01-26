@@ -1,0 +1,94 @@
+module: zakhid-1994
+level: c1-hist
+sequence: 98
+version: '1.0'
+title: 'Будапештський меморандум: Гарантії без гарантій'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Угода без зубів
+  words: 400
+  subsections:
+  - 1994 — Україна віддає ядерну зброю
+  - Що отримала натомість
+  - 2014 — цінність «гарантій»
+  - Структура модуля
+- section: Контекст — Третій ядерний арсенал
+  words: 600
+  subsections:
+  - Україна після СРСР — 1700+ боєголовок
+  - Тиск на роззброєння
+  - Західні страхи — проліферація
+  - Українські сумніви
+- section: Переговори
+  words: 600
+  subsections:
+  - Що хотіла Україна
+  - Що пропонували США, Британія, Росія
+  - Компроміс — меморандум
+  - Чому не договір
+- section: Текст меморандуму
+  words: 700
+  subsections:
+  - «Гарантії» безпеки — які саме
+  - Зобов'язання сторін
+  - Юридична сила — жодної
+  - Що насправді підписали
+- section: 2014 — Провал
+  words: 500
+  subsections:
+  - Росія порушує
+  - США і Британія — що зробили
+  - «Гарантії» = консультації
+  - Урок — папір без сили
+- section: Чи могла Україна інакше
+  words: 400
+  subsections:
+  - Залишити зброю — реалістично?
+  - Тиск — надто сильний
+  - Але могла вимагати більше
+  - Уроки для переговорів
+- section: Підсумок
+  words: 300
+  subsections:
+  - Меморандум — пастка
+  - Довіра — помилка
+  - Перехід до Чорноморського флоту
+word_target: 3500
+vocabulary:
+- Будапештський меморандум
+- гарантії безпеки
+- ядерне роззброєння
+- боєголовка
+- меморандум
+- договір
+- юридична сила
+- проліферація
+- консультації
+- порушення
+- ДНЯО
+- стратегічна зброя
+- асиметрія
+- переговорна позиція
+- зобов'язання
+activities:
+- type: critical-analysis
+  focus: Close reading of Budapest Memorandum
+- type: critical-analysis
+  focus: What could Ukraine have demanded?
+- type: quiz
+  focus: How memorandum failed in 2014
+- type: comparative-study
+  focus: «Guarantees» vs. actual obligations
+- type: essay-response
+  focus: Чи була Україна обдурена Будапештським меморандумом?
+sources:
+- name: Будапештський меморандум (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Будапештський_меморандум
+  type: reference
+  notes: Memorandum text and context
+- name: Ядерне роззброєння України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Ядерне_роззброєння_України
+  type: reference
+  notes: Nuclear disarmament

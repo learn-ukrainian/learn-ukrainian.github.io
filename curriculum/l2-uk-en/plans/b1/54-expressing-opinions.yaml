@@ -1,0 +1,77 @@
+module: expressing-opinions
+level: b1
+sequence: 54
+version: '2.0'
+title: Вираження думок та поглядів
+subtitle: Expressing Opinions
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can express personal opinions using various constructions
+- Learner can distinguish between strong and weak opinion expressions
+- Learner can use appropriate opinion phrases in formal and informal contexts
+- Learner can hedge and soften opinions appropriately
+content_outline:
+- section: 'Introduction: Expressing Views'
+  words: 150
+  points:
+  - Why opinion language matters
+  - Strength of opinion spectrum
+  - Register considerations
+- section: Basic Opinion Phrases
+  words: 250
+  points:
+  - Я думаю/вважаю/гадаю
+  - На мою думку
+  - Мені здається
+- section: Strong Opinion Expressions
+  words: 200
+  points:
+  - Я переконаний/впевнений
+  - Безсумнівно, очевидно
+  - When to use strong language
+- section: Hedging and Softening
+  words: 250
+  points:
+  - Можливо, мабуть, певно
+  - Не виключено, що...
+  - Polite disagreement
+- section: Formal vs Informal
+  words: 250
+  points:
+  - Academic opinion markers
+  - Casual conversation phrases
+  - Register switching
+- section: 'Practice: Expressing Views'
+  words: 100
+  points:
+  - Use varied opinion phrases
+  - Adjust for register
+word_target: 1200
+vocabulary:
+  required:
+  - думка (opinion/thought)
+  - погляд (view)
+  - вважати (to consider)
+  - гадати (to think/suppose)
+  - переконаний (convinced)
+  - впевнений (sure/certain)
+  - можливо (possibly)
+  - безсумнівно (undoubtedly)
+  recommended:
+  - мабуть (probably)
+  - очевидно (obviously)
+  - здаватися (to seem)
+  - стверджувати (to claim)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - writing
+  - transformation
+  - role-play
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-55 (Agreement Disagreement)

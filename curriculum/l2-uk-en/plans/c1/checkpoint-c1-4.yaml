@@ -1,0 +1,22 @@
+module: 47-checkpoint-c1-4
+level: c1
+sequence: 1
+version: '1.0'
+title: 'Контрольна точка: Стилістика і регістри'
+subtitle: 'Checkpoint: Stylistics and Registers'
+focus: checkpoint
+pedagogy: Assessment
+objectives:
+- Assessment of ability to identify and use different language registers
+- Assessment of politeness strategies application
+- Assessment of slang and idiom comprehension
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

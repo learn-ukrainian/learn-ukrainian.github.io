@@ -1,8 +1,8 @@
 # Audit Report: M42 — zaporizka-sich.md
 **Level:** B2 | **Module:** M42 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:23:17
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 22:22:49
 
 ## Configuration
 **Type:** B2-history
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4119/4000 (raw: 4377)
+- **Words:** ❌ 3631/4000 (raw: 3822)
 - **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 8/2 types
@@ -49,7 +49,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (8 activities)
-- **Immersion:** 🇺🇦 98.7% (target 90-100% (history))
+- **Immersion:** 🇺🇦 98.5% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -61,16 +61,16 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 12 | 3 | 100% | 24% | 23.8% |
+| primary_sources | 10 | 3 | 100% | 24% | 23.8% |
 | engagement | 7 | 6 | 100% | 14% | 14.3% |
-| timeline_markers | 27 | 10 | 100% | 14% | 14.3% |
+| timeline_markers | 26 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 8 | 4 | 100% | 10% | 9.5% |
-| visual | 8 | 4 | 100% | 10% | 9.5% |
-| variety | 0.99 | - | 99% | 5% | 4.7% |
+| cultural | 7 | 4 | 100% | 10% | 9.5% |
+| visual | 6 | 4 | 100% | 10% | 9.5% |
+| variety | 0.98 | - | 98% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 15 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **100.0%** |
+| **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -84,5 +84,4 @@
 | **Вплив на європейську політику** | ⚪️ | 152 | Skipped |
 | **Первинні джерела** | ✅ | 533 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 431 | Included in Core |
-| **Есе** | ⚪️ | 488 | Skipped |
 | **Підсумок** | ✅ | 132 | Included in Core |

@@ -1,0 +1,77 @@
+module: purpose-shchob-infinitive
+level: b1
+sequence: 29
+version: '2.0'
+title: 'Підрядні речення мети: щоб + інфінітив'
+subtitle: Purpose Clauses - Same Subject
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner understands when to use щоб + infinitive
+- Learner can form same-subject purpose clauses
+- Learner can use alternative purpose expressions
+- Learner can distinguish purpose from other clause types
+content_outline:
+- section: 'Introduction: Purpose Clauses'
+  words: 150
+  points:
+  - Expressing purpose in Ukrainian
+  - Same-subject condition
+  - щоб as purpose marker
+- section: щоб + Infinitive Structure
+  words: 250
+  points:
+  - 'Basic pattern: Я прийшов, щоб...'
+  - Aspect choice in infinitive
+  - Common verb combinations
+- section: Same-Subject Rule
+  words: 250
+  points:
+  - Why infinitive is used
+  - Subject must be same in both clauses
+  - Recognizing same-subject contexts
+- section: Alternative Expressions
+  words: 250
+  points:
+  - для того щоб (in order to)
+  - аби (dialectal/literary)
+  - Formal vs informal usage
+- section: Purpose vs Other Meanings
+  words: 200
+  points:
+  - Purpose vs result
+  - Purpose vs wish
+  - Distinguishing contexts
+- section: 'Practice: Purpose Clauses'
+  words: 100
+  points:
+  - Form same-subject purpose clauses
+  - Choose correct expression
+word_target: 1200
+vocabulary:
+  required:
+  - щоб (in order to)
+  - мета (purpose/goal)
+  - інфінітив (infinitive)
+  - для того щоб (in order to)
+  - аби (in order to - literary)
+  - ціль (aim)
+  - намір (intention)
+  - причина (reason)
+  recommended:
+  - задля (for the sake of)
+  - заради (for)
+  - цілеспрямований (purposeful)
+  - навмисно (intentionally)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - translation
+  - sentence-combining
+  - error-correction
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-30 (Purpose Clauses щоб + past form)

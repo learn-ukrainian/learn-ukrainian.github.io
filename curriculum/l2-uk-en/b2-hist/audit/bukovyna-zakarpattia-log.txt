@@ -1,0 +1,59 @@
+
+========================================
+  📋 Loaded Metadata from YAML sidecar
+
+📋 Auditing: B2 M37 — Буковина та Закарпаття під сусідами
+   File: curriculum/l2-uk-en/b2-hist/bukovyna-zakarpattia.md | Target: 4000 words
+  📋 Template: docs/l2-uk-en/templates/b2-history-module-template.md (pedagogy: CBI)
+
+  🔴 HYDRATION ERROR: Outline sums to 3522, but word_target is 4000
+     Missing 478 words in outline budget!
+     → Run /architect to fix content_outline
+
+  📊 Section Word Analysis:
+     Вступ                                        325 /  349  ✅ (-24)
+     Буковина                                     496 /  533  ✅ (-37)
+     Закарпаття                                   695 /  747  ✅ (-52)
+     Культурний опір та збереження ідентичності   634 /  681  ✅ (-47)
+     Читання                                      327 /  351  ✅ (-24)
+     Первинні джерела                             339 /  364  ✅ (-25)
+     Деколонізаційний погляд                      363 /  390  ✅ (-27)
+     Потрібно більше практики?                     95 /  107  ⚠️ (-12)
+     ───────────────────────────────────────────────────────────────────
+     TOTAL                                       3274 / 3522  ❌ (-248)
+
+📋 Auditing: B2 M37 — Буковина та Закарпаття під сусідами
+   File: curriculum/l2-uk-en/b2-hist/bukovyna-zakarpattia.md | Target: 4000 words
+
+  📋 Found YAML activities file (8 activities)
+  > Грамота Олександра Доброго (1408): 3 items (min 1)
+  > Аналіз економічних зв'язків: 1 items (min 1)
+  > Буковина vs Закарпаття (XIV-XVI ст.): 1 items (min 1)
+  > Збереження ідентичності на порубіжжі: 1 items (min 1)
+  > Регіональна історія: 8 items (min 8)
+  > Терміни та визначення: 12 items (min 8)
+  > Історичні події: 10 items (min 8)
+  > Виправлення історичних помилок: 8 items (min 6)
+
+--- STRICT GATES (Level B2) ---
+Words        ❌ 3576/4000 (raw: 3761)
+Activities   ✅ 8/3
+Density      ✅ All > 1
+Unique_types ✅ 8/2 types
+Priority     ✅ Priority types used
+Engagement   ✅ 7/5
+Audio        ℹ️ No audio
+Vocab        ⚠️ 0 < 20 (soft target)
+Structure    ✅ Valid Structure
+Lint         ✅ Clean Format
+Pedagogy     ✅ Level-appropriate
+Content_heavy ✅ Content-heavy OK (8 activities)
+Grammar      ℹ️ N/A (covered by naturalness)
+Naturalness  ✅ 9/10 (High)
+Activity_quality 📋 Quality validation available (optional)
+Immersion    🇺🇦 98.2% (target 90-100% (history))
+Richness     ✅ 99% (history)
+
+Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/audit/bukovyna-zakarpattia-review.md
+
+❌ AUDIT FAILED. Correct errors before proceeding.

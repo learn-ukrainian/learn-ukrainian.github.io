@@ -1,0 +1,97 @@
+module: poltava-naslidky
+level: c1-hist
+sequence: 90
+version: '1.0'
+title: 'Полтава 1709: Якби Мазепа переміг?'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Доля Європи на одному полі
+  words: 400
+  subsections:
+  - Полтава — вирішальна битва
+  - Що планував Мазепа
+  - Контрфактичний підхід
+  - Структура модуля
+- section: План Мазепи-Карла
+  words: 600
+  subsections:
+  - Союз зі Швецією — умови
+  - Конституція Орлика — підготовка
+  - Військовий план
+  - Що мало статися
+- section: Чому програли
+  words: 600
+  subsections:
+  - Батурин — втрата бази
+  - Зима 1708-1709
+  - Недостатня підтримка козаків
+  - Помилки Карла XII
+- section: Сценарій перемоги
+  words: 700
+  subsections:
+  - Якби Швеція перемогла
+  - Росія без виходу в Європу
+  - Українська автономія під Швецією
+  - Європейський баланс — інший
+- section: Наслідки для України
+  words: 500
+  subsections:
+  - Конституція Орлика — можлива реальність
+  - Залежність від Швеції — краща чи гірша?
+  - Шведська імперія — що з нею стало
+  - Довгострокові сценарії
+- section: Наслідки для Європи
+  words: 400
+  subsections:
+  - Росія як імперія — без Полтави?
+  - Балтика — шведське озеро
+  - XVIII століття — інший сценарій
+- section: Підсумок
+  words: 300
+  subsections:
+  - Полтава — поворотний момент
+  - Альтернативна історія — уроки
+  - Перехід до УНР
+word_target: 3500
+vocabulary:
+- Полтава
+- контрфактичний
+- перемога
+- поразка
+- союз
+- автономія
+- баланс сил
+- сценарій
+- наслідки
+- поворотний момент
+- Північна війна
+- Карл XII
+- європейський баланс
+- стратегічний
+- гегемонія
+activities:
+- type: essay-response
+  focus: Swedish victory at Poltava — full scenario
+- type: battle-analysis
+  focus: Why did Mazepa-Charles lose?
+- type: constitutional-analysis
+  focus: Orlik Constitution — would it have worked?
+- type: european-impact
+  focus: Russia without Poltava victory
+- type: essay-response
+  focus: Як змінилася б Європа, якби Мазепа переміг під Полтавою?
+sources:
+- name: Полтавська битва (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Полтавська_битва
+  type: reference
+  notes: Battle context
+- name: Північна війна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Північна_війна
+  type: reference
+  notes: War context
+- name: Іван Мазепа (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Іван_Мазепа
+  type: reference
+  notes: Mazepa's plan

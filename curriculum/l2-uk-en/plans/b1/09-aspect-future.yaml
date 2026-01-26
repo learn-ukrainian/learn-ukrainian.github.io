@@ -1,0 +1,82 @@
+module: 09-aspect-future
+level: b1
+sequence: 9
+version: '1.0'
+title: Вид у майбутньому часі
+subtitle: 'Aspect in Future: Three Ways to Express Future Actions'
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can form all three types of future constructions
+- Learner understands when to use compound vs synthetic imperfective future
+- Learner can select appropriate aspect for future actions
+- Learner recognizes stylistic differences between future forms
+sources:
+- name: Ukrainian State Standard 2024 - Future Tense
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official future tense forms and usage
+- name: Ukrainian Future Tense (Wikipedia)
+  url: https://uk.wikipedia.org/wiki/Майбутній_час
+  type: reference
+  notes: Three future forms with examples
+content_outline:
+- section: Тест
+  words: 200
+  points:
+  - Three ways to express future
+  - Intuition check
+- section: Пояснення
+  words: 800
+  points:
+  - Compound future (will be doing)
+  - Synthetic future (-tymu)
+  - Perfective future (simple)
+- section: Практика
+  words: 350
+  points:
+  - Selection rules
+  - Common mistakes
+  - Scenarios (plans, formal, academic)
+- section: Діалоги
+  words: 350
+  points:
+  - Plans (conversational)
+  - Formal discussion
+  - Resolutions
+- section: Підсумок
+  words: 100
+  points:
+  - Comparison table
+  - Self-check
+word_target: 1800
+vocabulary:
+  required:
+  - майбутній час (future tense)
+  - складна форма (compound form)
+  - синтетична форма (synthetic form)
+  - простий майбутній (simple future)
+  - буду (I will - auxiliary)
+  - завтра (tomorrow)
+  - через тиждень (in a week)
+  - потім (then/later)
+  - скоро (soon)
+  - планувати (to plan)
+  recommended:
+  - обіцяти (to promise)
+  - мати намір (to intend)
+  - збиратися (to be going to)
+  - сподіватися (to hope)
+  - гадати (to think/suppose)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - quiz
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-10 (Aspect in negation)
+- b1-11 (Aspect in imperatives)

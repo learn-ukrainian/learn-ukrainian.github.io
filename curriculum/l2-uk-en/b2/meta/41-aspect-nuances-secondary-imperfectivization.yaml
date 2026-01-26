@@ -28,3 +28,28 @@ slug: 41-aspect-nuances-secondary-imperfectivization
 naturalness:
   score: 9
   status: PASS
+content_outline:
+- section: Вступ — Вторинна імперфективація
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Key Mechanics
+  words: 500
+  points:
+  - 'Suffix shifting: перечитати (P) → перечитувати (I)'
+  - 'Root vowel change: допомогти (P) → допомагати (I)'
+  - 'Stress shift: розрі́зати (P) → розріза́ти (I)'
+- section: Usage Contexts
+  words: 500
+  points:
+  - '"I used to do this repeatedly" (Iterative)'
+  - '"I was in the middle of re-doing it" (Process)'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

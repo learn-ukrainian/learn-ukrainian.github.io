@@ -1,0 +1,78 @@
+module: a1-final-exam
+level: a1
+sequence: 44
+version: '2.0'
+title: A1 Final Exam
+subtitle: Comprehensive Assessment
+focus: checkpoint
+pedagogy: TTT
+objectives:
+- Demonstrate mastery of all A1 grammar
+- Show practical communication skills
+- Handle real-world scenarios
+- Qualify for A2 level progression
+content_outline:
+- section: 'Part 1: Listening Comprehension'
+  words: 50
+  points:
+  - Short dialogues
+  - Announcements
+  - Messages
+- section: 'Part 2: Reading Comprehension'
+  words: 80
+  points:
+  - Signs and notices
+  - Short texts
+  - Menus and schedules
+- section: 'Part 3: Grammar'
+  words: 100
+  points:
+  - Case selection
+  - Verb conjugation
+  - Agreement patterns
+- section: 'Part 4: Vocabulary'
+  words: 80
+  points:
+  - Word recognition
+  - Category matching
+  - Translation
+- section: 'Part 5: Speaking Tasks'
+  words: 100
+  points:
+  - Self-introduction
+  - Role-play scenarios
+  - Picture description
+- section: 'Part 6: Writing Tasks'
+  words: 90
+  points:
+  - Fill in forms
+  - Short messages
+  - Simple descriptions
+word_target: 500
+vocabulary:
+  required:
+  - говорити (to speak)
+  - читати (to read)
+  - писати (to write)
+  - слухати (to listen)
+  - розуміти (to understand)
+  - відповідати (to answer)
+  - питати (to ask)
+  - знати (to know)
+  recommended:
+  - правильно (correctly)
+  - помилка (mistake)
+  - завдання (task)
+  - оцінка (grade)
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - speaking
+  - quiz
+  - listening
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a2-01 (A2 Introduction)

@@ -1,0 +1,23 @@
+module: 41-aspect-nuances-secondary-imperfectivization
+level: b2
+sequence: 41
+version: '1.0'
+title: 'Видові нюанси I: Вторинна імперфективація'
+subtitle: Secondary Imperfectivization - Deriving Imperfective from Perfective
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can identify secondary imperfective forms derived from perfective verbs
+- Learner can apply correct suffixation patterns for imperfectivization
+- Learner can distinguish iterative and process meanings of secondary imperfectives
+- Learner can use secondary imperfectives appropriately in context
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

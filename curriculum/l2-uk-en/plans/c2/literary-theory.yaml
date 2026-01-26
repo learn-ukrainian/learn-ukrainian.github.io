@@ -1,0 +1,103 @@
+module: literary-theory
+level: c2
+sequence: 26
+version: '2.0'
+title: Теорія літератури
+focus: literature
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Теорія літератури — Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Теорія_літератури
+  type: reference
+  notes: Overview of literary theory approaches
+- name: Українське літературознавство
+  url: https://ukrlib.com.ua/
+  type: primary
+  notes: Ukrainian literary criticism tradition
+- name: Сучасні літературознавчі школи
+  url: https://uk.wikipedia.org/wiki/Літературознавство
+  type: reference
+  notes: Contemporary critical approaches
+content_outline:
+- section: Вступ — Що таке теорія літератури?
+  words: 500
+  points:
+  - Предмет і завдання літературознавства
+  - Теорія vs. історія vs. критика літератури
+  - Основні питання теорії
+- section: Класичні підходи
+  words: 700
+  points:
+  - Арістотелівська поетика
+  - Риторична традиція
+  - Романтична естетика
+  - Позитивізм у літературознавстві
+- section: Формалізм і структуралізм
+  words: 700
+  points:
+  - Російський формалізм (Шкловський, Якобсон)
+  - Празький лінгвістичний гурток
+  - Структуралізм (Соссюр, Барт)
+  - Наративні структури
+- section: Постструктуралізм і деконструкція
+  words: 600
+  points:
+  - Дерріда і деконструкція
+  - Фуко і дискурс
+  - Крістева й інтертекстуальність
+  - Критика бінарних опозицій
+- section: Контекстуальні підходи
+  words: 600
+  points:
+  - Марксистська критика
+  - Феміністична критика
+  - Постколоніальна теорія
+  - Новий історизм
+- section: Українське літературознавство
+  words: 500
+  points:
+  - Потебня і психолінгвістика
+  - Франко як теоретик
+  - Радянський період і його обмеження
+  - Сучасне українське літературознавство
+- section: Підсумок — застосування теорії
+  words: 400
+  points:
+  - Вибір підходу для аналізу
+  - Поєднання методів
+  - Практичне застосування
+word_target: 4000
+vocabulary:
+  required:
+  - літературознавство (literary studies)
+  - поетика (poetics)
+  - формалізм (formalism)
+  - структуралізм (structuralism)
+  - деконструкція (deconstruction)
+  - дискурс (discourse)
+  - наратив (narrative)
+  - інтерпретація (interpretation)
+  - методологія (methodology)
+  - парадигма (paradigm)
+  recommended:
+  - остранення (defamiliarization)
+  - знак (sign)
+  - означуване/означник (signified/signifier)
+  - бінарна опозиція (binary opposition)
+  - канон (canon)
+  forbidden: []
+activities:
+  types_required:
+  - essay-response
+  - quiz
+  - comparative-study
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-27 (Narratology)
+- c2-31 (Literary Criticism Methods)
+- c2-32 (Writing Literary Essays)

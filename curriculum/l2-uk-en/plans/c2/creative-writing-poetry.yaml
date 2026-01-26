@@ -1,0 +1,103 @@
+module: creative-writing-poetry
+level: c2
+sequence: 36
+version: '2.0'
+title: Творче письмо — поезія
+focus: literature
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Поетична творчість — Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Поезія
+  type: reference
+  notes: Poetry creation fundamentals
+- name: Сучасна українська поезія
+  url: https://ukrlib.com.ua/
+  type: primary
+  notes: Contemporary Ukrainian poetry examples
+- name: Майстерня поета
+  url: https://uk.wikipedia.org/wiki/Поетика
+  type: reference
+  notes: Craft of poetry writing
+content_outline:
+- section: Вступ — Від читача до творця
+  words: 500
+  points:
+  - Перехід від аналізу до творчості
+  - Поезія як ремесло і натхнення
+  - Процес написання вірша
+- section: Пошук теми і голосу
+  words: 600
+  points:
+  - Звідки беруться теми
+  - Спостереження і рефлексія
+  - Пошук власного голосу
+  - Автентичність vs. наслідування
+- section: Робота з формою
+  words: 700
+  points:
+  - Традиційні форми (сонет, катрен, терцина)
+  - Вільний вірш (верлібр)
+  - Білий вірш
+  - Вибір форми для змісту
+- section: Образність і мова поезії
+  words: 700
+  points:
+  - Створення образів
+  - Метафора і символ
+  - Конкретність vs. абстракція
+  - Мовна економія
+- section: Звукова організація
+  words: 600
+  points:
+  - Робота з ритмом
+  - 'Рима: використовувати чи ні'
+  - Звукопис як інструмент
+  - Читання вголос
+- section: Редагування віршів
+  words: 500
+  points:
+  - Від чернетки до фінальної версії
+  - Що прибрати, що залишити
+  - Критичний погляд на власний текст
+  - Зворотний зв'язок і його опрацювання
+- section: Підсумок
+  words: 400
+  points:
+  - Щоденна практика
+  - Публікація і спільнота
+  - Поезія як спосіб мислення
+word_target: 4000
+vocabulary:
+  required:
+  - творчість (creativity/creative writing)
+  - натхнення (inspiration)
+  - чернетка (draft)
+  - образ (image)
+  - голос (voice)
+  - форма (form)
+  - верлібр (free verse)
+  - редагування (editing)
+  - ремесло (craft)
+  - автентичність (authenticity)
+  recommended:
+  - муза (muse)
+  - імпульс (impulse)
+  - рефлексія (reflection)
+  - мініатюра (miniature)
+  - збірка (collection)
+  forbidden: []
+activities:
+  types_required:
+  - essay-response
+  - authorial-intent
+  - comparative-study
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- 'c2-37 (Creative Writing: Prose)'
+- c2-43 (C2.2 Practice II — Creative Portfolio)
+- c2-45 (C2.2 Checkpoint)

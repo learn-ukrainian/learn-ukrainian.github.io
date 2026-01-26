@@ -1,0 +1,98 @@
+module: 20-c1-1-checkpoint
+level: c1
+sequence: 20
+version: '2.0'
+title: Контрольна точка — Академічна база
+focus: checkpoint
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: CEFR C1 Assessment Criteria
+  url: https://www.coe.int/
+  type: reference
+  notes: C1 level assessment descriptors
+- name: Ukrainian State Standard C1 (2024)
+  url: https://mon.gov.ua/
+  type: reference
+  notes: National C1 competency requirements
+content_outline:
+- section: Огляд C1.1 — Академічні основи
+  words: 500
+  points:
+  - Підсумок модулів M01-M19
+  - Ключові компетенції C1.1
+  - Структура контрольної точки
+- section: Граматичний огляд
+  words: 700
+  points:
+  - Пасивний стан та регістри
+  - Дієприкметники та складні речення
+  - Неправильні дієслова
+  - Пунктуація
+- section: Академічний стиль
+  words: 700
+  points:
+  - Безособові конструкції
+  - Номіналізація та хеджінг
+  - Логічні сполучники
+  - Формальний регістр
+- section: Наукове письмо
+  words: 800
+  points:
+  - Структура есе та статті
+  - Цитування та парафразування
+  - Анотація та огляд літератури
+  - Тези та контраргументи
+- section: Усна презентація
+  words: 600
+  points:
+  - Структура доповіді
+  - Мовні маркери
+  - Робота з аудиторією
+- section: Критичний аналіз
+  words: 500
+  points:
+  - Оцінка методології
+  - Аналіз аргументації
+  - Написання рецензії
+- section: Практичні завдання
+  words: 200
+  points:
+  - Есе на вибір теми
+  - Рецензія статті
+  - Самооцінка C1.1
+word_target: 4000
+vocabulary:
+  required:
+  - консолідація (consolidation)
+  - оцінювання (assessment)
+  - компетенція (competency)
+  - інтеграція (integration)
+  - самооцінка (self-assessment)
+  - критерій (criterion)
+  - рівень (level)
+  - академічний (academic)
+  - науковий (scientific)
+  - професійний (professional)
+  recommended:
+  - підсумок (summary)
+  - огляд (review)
+  - контрольна точка (checkpoint)
+  - досягнення (achievement)
+  - прогрес (progress)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - essay-response
+  - cloze
+  - fill-in
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c1-21 (CV/Resume Writing - C1.2 start)
+- c1-35 (Speaking Practice)
+- c1-106 (Final C1 Checkpoint)

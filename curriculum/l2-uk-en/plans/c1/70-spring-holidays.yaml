@@ -1,0 +1,23 @@
+module: 70-spring-holidays
+level: c1
+sequence: 70
+version: '1.0'
+title: Українські свята - весняний цикл
+subtitle: Ukrainian Holidays - Spring Cycle
+focus: cultural
+pedagogy: CBI
+objectives:
+- Learner can describe the rituals of the spring cycle (Stritennia, Easter)
+- Learner can explain the symbolism of pysanka and paska
+- Learner can analyze the lyrics of vesnianky (spring songs)
+- Learner can discuss the concept of "summoning spring"
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

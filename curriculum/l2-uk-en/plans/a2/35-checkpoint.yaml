@@ -1,0 +1,66 @@
+module: 35-checkpoint
+level: a2
+sequence: 35
+version: '2.0'
+title: Checkpoint
+subtitle: Complex Sentences & Health
+focus: checkpoint
+pedagogy: TTT
+objectives:
+- Learner can build complex arguments using logical connectors
+- Learner can use relative clauses to define and describe
+- Learner can navigate medical situations confidently
+- Learner can correct common errors in complex sentences
+sources:
+- name: Ukrainian State Standard 2024 - A2.2 Assessment
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Proficiency benchmarks for complex sentences and health communication at A2.2
+- name: Review of Ukrainian Syntax for A2
+  url: https://uk.wikipedia.org/wiki/Синтаксис_української_мови
+  type: reference
+  notes: Synthesized logic for coordinating multiple subordinate clauses
+content_outline:
+- section: Overview / Огляд
+  words: 200
+  points:
+  - Transitioning from simple reports to complex ideas
+  - The map of Level A2.2 proficiency
+- section: Skill 1
+  words: 120
+  points:
+  - 'Conjunction Masterclass: Cause & Effect (Тому що, бо, через)'
+  - Model, Practice, and Self-Check structure
+- section: Skill 2
+  words: 120
+  points:
+  - 'Logic of Intent: Purpose & Desire (Щоб + Inf vs Щоб + Past)'
+  - Model, Practice, and Self-Check structure
+- section: Skill 3
+  words: 120
+  points:
+  - 'Relative Chameleon: Який in all cases'
+  - Model, Practice, and Self-Check structure
+- section: Skill 4
+  words: 100
+  points:
+  - 'Time Coordination: Коли, поки, після того як'
+  - Model, Practice, and Self-Check structure
+- section: Skill 5
+  words: 100
+  points:
+  - 'Health and Body: Integrating body parts and symptoms'
+  - Model, Practice, and Self-Check structure
+- section: Integration Challenge / Інтеграційне завдання
+  words: 100
+  points:
+  - Combined task using all skills
+- section: Dialogues / Діалоги
+  words: 50
+  points:
+  - A summary dialogue combining review items
+word_target: 1000
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

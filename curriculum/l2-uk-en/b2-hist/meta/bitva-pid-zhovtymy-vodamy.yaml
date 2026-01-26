@@ -1,10 +1,10 @@
 module: bitva-pid-zhovtymy-vodamy
 id: b2-hist-53
-title: "Битва під Жовтими Водами"
-subtitle: "The Battle of Zhovti Vody"
+title: Битва під Жовтими Водами
+subtitle: The Battle of Zhovti Vody
 slug: bitva-pid-zhovtymy-vodamy
 version: '2.0'
-phase: "HIST.6 [Khmelnytsky & Cossack State]"
+phase: HIST.6 [Khmelnytsky & Cossack State]
 focus: history
 pedagogy: CBI
 word_target: 4000
@@ -12,97 +12,99 @@ register: публіцистичний
 duration: 120
 transliteration: none
 tags:
-  - history
-  - battle
-  - khmelnytsky
-  - tactics
-  - victory
+- history
+- battle
+- khmelnytsky
+- tactics
+- victory
 grammar:
-  - "Military narrative: descriptions of maneuvers"
-  - "Cause and effect in historical context"
+- 'Military narrative: descriptions of maneuvers'
+- Cause and effect in historical context
 objectives:
-  - "Учень може описати стратегію Хмельницького у битві під Жовтими Водами"
-  - "Учень може пояснити роль реєстрових козаків у перемозі"
-  - "Учень може проаналізувати значення цієї битви для подальшого ходу повстання"
+- Учень може описати стратегію Хмельницького у битві під Жовтими Водами
+- Учень може пояснити роль реєстрових козаків у перемозі
+- Учень може проаналізувати значення цієї битви для подальшого ходу повстання
 vocabulary_hints:
   required:
-    - авангард
-    - облога
-    - переправа
-    - клейноди
-    - реєстровці
-    - зрада
-    - капітуляція
-    - тріумф
-    - байрак
-    - шанець
+  - авангард
+  - облога
+  - переправа
+  - клейноди
+  - реєстровці
+  - зрада
+  - капітуляція
+  - тріумф
+  - байрак
+  - шанець
 naturalness:
   score: 9
   status: PASS
 content_outline:
-  - section: "Вступ: Перший грім"
-    words: 450
-    points:
-      - "The strategic situation in spring 1648"
-      - "Potocki's plan to split forces"
-  - section: "Сили сторін: Давид проти Голіафа?"
-    words: 500
-    points:
-      - "Structure of the Polish vanguard (Stefan Potocki)"
-      - "Cossack-Tatar coalition forces"
-      - "Armament and morale comparison"
-  - section: "Початок битви: Блокада табору"
-    words: 500
-    points:
-      - "Establishing the camp at Zhovti Vody"
-      - "First skirmishes and tactical stalemate"
-      - "The role of Tugay Bey's cavalry"
-  - section: "Переломний момент: Бунт на Дніпрі"
-    words: 550
-    points:
-      - "The register Cossacks' journey down the Dnieper"
-      - "The uprising at Kamianyi Zaton"
-      - "Killing of Barabash and joining Khmelnytsky"
-  - section: "Розгром: Княжі Байраки"
-    words: 550
-    points:
-      - "The failed attempt to break out"
-      - "Total destruction of the Polish vanguard"
-      - "Death of Stefan Potocki"
-  - section: "Читання: Опис битви в літописі"
-    words: 400
-    points:
-      - "Excerpt from the Eyewitness Chronicle"
-  - section: "Первинні джерела: Листи про поразку"
-    words: 350
-    points:
-      - "Potocki's last letter to his father"
-  - section: "Деколонізаційний погляд"
-    words: 400
-    points:
-      - "Debunking the myth of 'accidental victory'"
-      - "Cossack military art vs. feudal arrogance"
-  - section: "Есе"
-    words: 300
-    points:
-      - "The psychological impact of Zhovti Vody"
+- section: 'Вступ: Перший грім'
+  words: 450
+  points:
+  - The strategic situation in spring 1648
+  - Potocki's plan to split forces
+- section: 'Сили сторін: Давид проти Голіафа?'
+  words: 500
+  points:
+  - Structure of the Polish vanguard (Stefan Potocki)
+  - Cossack-Tatar coalition forces
+  - Armament and morale comparison
+- section: 'Початок битви: Блокада табору'
+  words: 500
+  points:
+  - Establishing the camp at Zhovti Vody
+  - First skirmishes and tactical stalemate
+  - The role of Tugay Bey's cavalry
+- section: 'Переломний момент: Бунт на Дніпрі'
+  words: 550
+  points:
+  - The register Cossacks' journey down the Dnieper
+  - The uprising at Kamianyi Zaton
+  - Killing of Barabash and joining Khmelnytsky
+- section: 'Розгром: Княжі Байраки'
+  words: 550
+  points:
+  - The failed attempt to break out
+  - Total destruction of the Polish vanguard
+  - Death of Stefan Potocki
+- section: 'Читання: Опис битви в літописі'
+  words: 400
+  points:
+  - Excerpt from the Eyewitness Chronicle
+- section: 'Первинні джерела: Листи про поразку'
+  words: 350
+  points:
+  - Potocki's last letter to his father
+- section: Деколонізаційний погляд
+  words: 400
+  points:
+  - Debunking the myth of 'accidental victory'
+  - Cossack military art vs. feudal arrogance
+- section: "Європа у 1648 році"
+  words: 300
+  points:
+  - "Treaty of Westphalia and the end of the 30 Years' War"
+  - "The Crisis of the 17th Century (Fronde, English Revolution)"
+  - "Ukraine entering the European stage"
 activity_hints:
-  - type: reading
-    focus: "Analysis of historical texts"
-  - type: quiz
-    focus: "Timeline and tactics of the battle"
-  - type: essay-response
-    focus: "The role of intelligence and diplomacy in victory"
-  - type: comparative-study
-    focus: "Polish vs. Cossack camp fortifications"
-  - type: true-false
-    focus: "Myths about the battle"
+- type: reading
+  focus: Analysis of historical texts
+- type: quiz
+  focus: Timeline and tactics of the battle
+- type: essay-response
+  focus: The role of intelligence and diplomacy in victory
+- type: comparative-study
+  focus: Polish vs. Cossack camp fortifications
+- type: true-false
+  focus: Myths about the battle
 sources:
-  - name: "History of Ukraine-Rus"
-    url: "http://litopys.org.ua/hrushrus/iur.htm"
-    type: reference
-    notes: "Detailed reconstruction of the battle"
-  - name: "Military Art of Ukraine"
-    url: "https://history.org.ua"
-    type: secondary
-    notes: "Tactical analysis"
+- name: History of Ukraine-Rus
+  url: http://litopys.org.ua/hrushrus/iur.htm
+  type: reference
+  notes: Detailed reconstruction of the battle
+- name: Military Art of Ukraine
+  url: https://history.org.ua
+  type: secondary
+  notes: Tactical analysis

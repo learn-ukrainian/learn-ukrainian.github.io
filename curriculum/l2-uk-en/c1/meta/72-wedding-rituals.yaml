@@ -8,18 +8,39 @@ pedagogy: CBI
 duration: 120
 transliteration: none
 tags:
-  - culture
-  - rituals
-  - wedding
-  - family
+- culture
+- rituals
+- wedding
+- family
 grammar:
-  - ritual actions description
-  - conditional mood in toasts
+- ritual actions description
+- conditional mood in toasts
 objectives:
-  - Learner can describe the stages of a traditional Ukrainian wedding
-  - Learner can explain the symbolism of the korovai and rushnyk
-  - Learner can distinguish between matchmaking (svatannia) and engagement (zaruchyny)
-  - Learner can recite a traditional wedding toast
+- Learner can describe the stages of a traditional Ukrainian wedding
+- Learner can explain the symbolism of the korovai and rushnyk
+- Learner can distinguish between matchmaking (svatannia) and engagement (zaruchyny)
+- Learner can recite a traditional wedding toast
 vocabulary_count: 30
 vocab_count: 30
 slug: 72-wedding-rituals
+content_outline:
+- section: Вступ — весілля
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Historical context: Austrian influence, Greek Catholic'
+  - Distinct vocabulary and phonetics
+  - 'Clothing traditions: кептар, сердак'
+  - 'Folk architecture: wooden churches'
+  - 'Musical traditions: trembita, фіяка'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

@@ -1,0 +1,80 @@
+module: technology-media
+level: a2
+sequence: 50
+version: '2.0'
+title: Technology and Media
+subtitle: Digital World
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can talk about computers and phones
+- Learner can describe internet activities
+- Learner can use social media vocabulary
+- Learner can discuss technology in daily life
+content_outline:
+- section: 'Introduction: Digital Ukraine'
+  words: 100
+  points:
+  - Technology in daily life
+  - Digital vocabulary
+  - Internet culture
+- section: Devices
+  words: 200
+  points:
+  - комп'ютер, ноутбук, планшет
+  - смартфон, телефон
+  - Device vocabulary
+- section: Internet Activities
+  words: 200
+  points:
+  - шукати, завантажувати
+  - відправляти, отримувати
+  - Online actions
+- section: Social Media
+  words: 200
+  points:
+  - соціальні мережі
+  - пост, лайк, коментар
+  - Social media vocabulary
+- section: Apps and Software
+  words: 150
+  points:
+  - додаток, програма
+  - встановити, оновити
+  - App vocabulary
+- section: 'Practice: Digital Life'
+  words: 150
+  points:
+  - Describe your tech use
+  - Online activities
+word_target: 1000
+vocabulary:
+  required:
+  - комп'ютер (computer)
+  - телефон (phone)
+  - інтернет (internet)
+  - сайт (website)
+  - пошта (email)
+  - завантажити (to download)
+  - відправити (to send)
+  - шукати (to search)
+  recommended:
+  - додаток (app)
+  - пароль (password)
+  - акаунт (account)
+  - оновлення (update)
+  - підписка (subscription)
+  - мережа (network)
+  forbidden: []
+activities:
+  types_required:
+  - vocabulary-drill
+  - matching
+  - dialogue
+  - fill-in
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a2-51 (Hobbies and Leisure)
+- a2-67 (Social Media Ukrainian)

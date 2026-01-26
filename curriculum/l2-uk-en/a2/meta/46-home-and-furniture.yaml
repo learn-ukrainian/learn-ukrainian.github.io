@@ -1,29 +1,97 @@
 module: a2-46
-title: Home and Furniture
-subtitle: Where I Live
-version: '1.0'
-phase: A2.3
+id: a2-46
+slug: home-and-furniture
+title: "Home and Furniture"
+subtitle: "Where I Live"
+version: '2.0'
+phase: "A2.5 [Vocabulary Expansion]"
+focus: vocabulary
 pedagogy: PPP
+register: розмовний
 duration: 60
 transliteration: none
-tags:
-- vocabulary
-- home
-- furniture
-- housing
-grammar:
-- locative case for location (у вітальні)
-- prepositions of place review
-- adjectives for description
-- describing rooms
 objectives:
-- Learner can name rooms in a house
-- Learner can describe furniture and appliances
-- Learner can say where things are located
-- Learner can describe their own home
-vocabulary_count: 25
-slug: 46-home-and-furniture
-focus: vocabulary
+  - "Learner can name rooms in a house"
+  - "Learner can describe furniture and appliances"
+  - "Learner can say where things are located"
+  - "Learner can describe their own home"
+grammar:
+  - "Locative case for location (у вітальні)"
+  - "Prepositions of place review"
+  - "Adjectives for home description"
+word_target: 1000
+content_outline:
+  - section: "Introduction: Ukrainian Homes"
+    words: 100
+    points:
+      - "Types of housing"
+      - "Urban vs rural"
+      - "Home vocabulary"
+  - section: "Rooms of the House"
+    words: 200
+    points:
+      - "кухня, вітальня, спальня"
+      - "ванна, туалет, коридор"
+      - "балкон, підвал, горище"
+  - section: "Furniture"
+    words: 200
+    points:
+      - "стіл, стілець, диван, ліжко"
+      - "шафа, комод, полиця"
+      - "Using locative for placement"
+  - section: "Appliances"
+    words: 150
+    points:
+      - "холодильник, пральна машина"
+      - "телевізор, комп'ютер"
+      - "побутова техніка"
+  - section: "Describing Your Home"
+    words: 200
+    points:
+      - "Я живу в... (I live in...)"
+      - "У мене є... (I have...)"
+      - "Room sizes and features"
+  - section: "Practice: Home Tour"
+    words: 150
+    points:
+      - "Give a home tour"
+      - "Describe room layouts"
+vocabulary_hints:
+  required:
+    - кімната (room)
+    - кухня (kitchen)
+    - спальня (bedroom)
+    - вітальня (living room)
+    - ванна (bathroom)
+    - меблі (furniture)
+    - стіл (table)
+    - ліжко (bed)
+  recommended:
+    - шафа (wardrobe)
+    - диван (sofa)
+    - холодильник (refrigerator)
+    - пральна машина (washing machine)
+    - квартира (apartment)
+    - будинок (house)
+activity_hints:
+  - type: vocabulary-drill
+    focus: "Rooms and furniture"
+    items: 30
+  - type: matching
+    focus: "Match furniture to rooms"
+    items: 20
+  - type: fill-in
+    focus: "Complete home descriptions"
+    items: 15
+  - type: speaking
+    focus: "Describe your home"
+    items: 8
+prerequisites:
+  - a2-45 (Food and Cooking)
+connects_to:
+  - a2-47 (Nature and Weather)
+  - a2-61 (Hotel Accommodation)
 naturalness:
-  score: 9
+  score: 10
   status: PASS
+  justification: "Essential home vocabulary"

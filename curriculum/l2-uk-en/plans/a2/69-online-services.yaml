@@ -1,0 +1,80 @@
+module: online-services
+level: a2
+sequence: 69
+version: '2.0'
+title: Online Services
+subtitle: Apps and Delivery
+focus: practical
+pedagogy: PPP
+objectives:
+- Learner can use Ukrainian delivery apps
+- Learner can handle online banking basics
+- Learner can communicate with support
+- Learner can understand app notifications
+content_outline:
+- section: 'Introduction: Digital Services'
+  words: 100
+  points:
+  - Online services in Ukraine
+  - Popular apps
+  - Service vocabulary
+- section: Food Delivery Apps
+  words: 200
+  points:
+  - замовлення, кошик, доставка
+  - Placing orders
+  - Tracking delivery
+- section: Online Banking
+  words: 200
+  points:
+  - переказ, баланс, виписка
+  - Basic transactions
+  - Security vocabulary
+- section: Ride-sharing Apps
+  words: 200
+  points:
+  - таксі, водій, маршрут
+  - Ordering a ride
+  - Payment options
+- section: Customer Support
+  words: 150
+  points:
+  - звернення, скарга, допомога
+  - Writing support requests
+  - Understanding responses
+- section: 'Practice: Using Apps'
+  words: 150
+  points:
+  - Order food delivery
+  - Use banking app
+word_target: 1000
+vocabulary:
+  required:
+  - замовлення (order)
+  - кошик (cart)
+  - доставка (delivery)
+  - оплата (payment)
+  - переказ (transfer)
+  - баланс (balance)
+  - додаток (app)
+  - сповіщення (notification)
+  recommended:
+  - підтвердження (confirmation)
+  - відстеження (tracking)
+  - підтримка (support)
+  - скарга (complaint)
+  - повернення (refund)
+  - промокод (promo code)
+  forbidden: []
+activities:
+  types_required:
+  - vocabulary-drill
+  - dialogue
+  - reading-comprehension
+  - fill-in
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a2-70 (A2 Final Exam)
+- a2-53 (Shopping and Services)

@@ -1,30 +1,94 @@
-module: '83'
-title: Велосипед та водні види
-subtitle: Cycling & Water Sports
-version: '1.0'
-phase: B1.7
-level: B1
+module: b1-83
+id: b1-83
+slug: cycling-water
+title: "Велосипед та водні види"
+subtitle: "Cycling and Water Sports"
+version: '2.0'
+phase: "B1.7 [Contemporary Ukraine]"
 focus: culture
 pedagogy: CBI
-duration: 75
+register: розмовний
+duration: 90
 transliteration: none
-tags:
-- cultural
-- cycling
-- swimming
-- triathlon
-- kayaking
-grammar: []
 objectives:
-- Learner can discuss cycling and water sports in Ukrainian
-- Learner can understand rules and rental information
-- Learner can use vocabulary for bikes, boats, and swimming
-- Learner can describe a summer active holiday
-word_target: 1500
-vocab_target: 25
-immersion_target: 95
-vocab_count: 25
-slug: 83-cycling-water
+  - "Learner can discuss cycling and water sports in Ukrainian"
+  - "Learner can understand rules and rental information"
+  - "Learner can use vocabulary for bikes, boats, and swimming"
+  - "Learner can describe a summer active holiday"
+grammar:
+  - "Cycling and water sports vocabulary"
+  - "Rental and safety language"
+  - "Describing activities"
+word_target: 1200
+content_outline:
+  - section: "Introduction: Summer Sports"
+    words: 150
+    points:
+      - "Summer activity culture"
+      - "Popular water sports"
+      - "Cycling traditions"
+  - section: "Cycling Culture"
+    words: 250
+    points:
+      - "Bike types and parts"
+      - "Cycling routes"
+      - "Urban cycling"
+  - section: "Swimming and Beaches"
+    words: 250
+    points:
+      - "Swimming vocabulary"
+      - "Ukrainian beaches"
+      - "Pool culture"
+  - section: "Kayaking and Paddling"
+    words: 250
+    points:
+      - "Kayak, SUP vocabulary"
+      - "River tourism"
+      - "Safety rules"
+  - section: "Triathlon and Combined Sports"
+    words: 200
+    points:
+      - "Triathlon vocabulary"
+      - "Combined training"
+      - "Ukrainian events"
+  - section: "Practice: Activity Planning"
+    words: 100
+    points:
+      - "Plan summer activities"
+      - "Discuss preferences"
+vocabulary_hints:
+  required:
+    - велосипед (bicycle)
+    - плавання (swimming)
+    - каяк (kayak)
+    - річка (river)
+    - пляж (beach)
+    - оренда (rental)
+    - шлем (helmet)
+    - рятівний жилет (life jacket)
+  recommended:
+    - триатлон (triathlon)
+    - велодоріжка (bike path)
+    - SUP (stand-up paddleboard)
+    - басейн (pool)
+activity_hints:
+  - type: reading
+    focus: "Rental information and safety guides"
+    items: 15
+  - type: matching
+    focus: "Match sports to equipment"
+    items: 20
+  - type: fill-in
+    focus: "Complete activity descriptions"
+    items: 15
+  - type: discussion
+    focus: "Plan summer activities"
+    items: 10
+prerequisites:
+  - b1-82 (Mountains and Trail)
+connects_to:
+  - b1-84 (Winter Sports)
 naturalness:
   score: 9
   status: PASS
+  justification: "Practical vocabulary for summer activities"

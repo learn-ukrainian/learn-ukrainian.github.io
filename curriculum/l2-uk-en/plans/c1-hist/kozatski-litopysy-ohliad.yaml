@@ -1,0 +1,102 @@
+module: kozatski-litopysy-ohliad
+level: c1-hist
+sequence: 19
+version: '1.0'
+title: 'Козацькі літописи: Огляд традиції'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Козацька історіографія
+  words: 400
+  subsections:
+  - Новий тип літописання
+  - Від монастиря до канцелярії
+  - Три головні літописи
+  - Чому важливо вивчати разом
+- section: Історичний контекст
+  words: 500
+  subsections:
+  - Козацька держава — Гетьманщина
+  - Освічена еліта — хто писав історію?
+  - Кінець XVII — поч. XVIII ст.
+  - Криза автономії — мотив писати
+- section: Три літописи — порівняння
+  words: 700
+  subsections:
+  - Самовидець — очевидець, стислий
+  - Грабянка — патріотичний, барочний
+  - Величко — найповніший, документальний
+  - Хронологія і охоплення
+  - Таблиця порівняння
+- section: Спільні риси
+  words: 600
+  subsections:
+  - Козацький патріотизм
+  - Легітимація автономії
+  - Критика Переяслава (непрямо)
+  - Образ Хмельницького
+  - Елітарна перспектива — старшина
+- section: Відмінності
+  words: 600
+  subsections:
+  - Стиль — простий vs. барочний
+  - Джерела — спогади vs. документи
+  - Політична позиція — різні фракції
+  - Відношення до Москви
+- section: Як читати козацькі літописи
+  words: 400
+  subsections:
+  - Упередження авторів
+  - Що вони хотіли довести?
+  - Критичний підхід
+  - Порівняння з іншими джерелами
+- section: Підсумок
+  words: 300
+  subsections:
+  - Три перспективи однієї доби
+  - Підготовка до детального вивчення
+  - План наступних модулів
+word_target: 3500
+vocabulary:
+- козацький літопис
+- Гетьманщина
+- старшина
+- автономія
+- легітимація
+- барокова історіографія
+- канцелярія
+- самовидець
+- документальний
+- патріотизм
+- компіляція
+- апологетика
+- провіденціалізм
+- риторика
+- хроніка
+activities:
+- type: comparative-study
+  focus: Create comparison table of three chronicles
+- type: reading
+  focus: Opening passages of each chronicle — first impressions
+- type: critical-analysis
+  focus: What is the purpose of each chronicle? Who benefits?
+- type: essay-response
+  focus: Чому козацька старшина відчувала потребу писати історію?
+sources:
+- name: Козацькі літописи (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Козацькі_літописи
+  type: reference
+  notes: Overview of Cossack chronicles
+- name: Літопис Самовидця
+  url: https://uk.wikipedia.org/wiki/Літопис_Самовидця
+  type: reference
+  notes: Eyewitness chronicle
+- name: Літопис Григорія Граб'янки
+  url: https://uk.wikipedia.org/wiki/Літопис_Григорія_Граб'янки
+  type: reference
+  notes: Hrabianka chronicle
+- name: Літопис Самійла Величка
+  url: https://uk.wikipedia.org/wiki/Літопис_Самійла_Величка
+  type: reference
+  notes: Velychko chronicle

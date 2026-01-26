@@ -1,0 +1,113 @@
+module: lev-danylovych
+level: c1-bio
+sequence: 0
+version: '2.0'
+title: 'Лев Данилович: Будівничий Львова'
+focus: biography
+pedagogy: seminar
+objectives:
+- Analyze Lev's role in transforming Lviv into a major European city
+- Evaluate the continuation of Galicia-Volhynia under Mongol suzerainty
+- Master vocabulary related to urban development and territorial expansion
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Лев_Данилович
+    title: Лев Данилович (Wikipedia UA)
+    notes: Biography, reign, capital transfer to Lviv
+  - url: https://uk.wikipedia.org/wiki/Історія_Львова
+    title: Львів
+    notes: History of the city
+  secondary:
+  - url: https://uk.wikipedia.org/wiki/Галицько-Волинське_князівство
+    title: Галицько-Волинське князівство
+    notes: Political context
+content_outline:
+- section: Вступ — Князь, що дав місту своє ім'я
+  words: 432
+  subsections:
+  - Львів як спадщина Лева Даниловича
+  - Значення перенесення столиці
+  - Продовження династії Романовичів
+- section: Молодість та прихід до влади
+  words: 540
+  subsections:
+  - Народження як син Данила Галицького
+  - Князювання в Белзі (1245-1264)
+  - Успадкування Галича після смерті батька
+- section: Львів — нова столиця
+  words: 756
+  subsections:
+  - Перенесення столиці з Галича (1272)
+  - Розбудова міста
+  - Стратегічне розташування
+  - Торговельне значення
+- section: Територіальна експансія
+  words: 756
+  subsections:
+  - Приєднання частини Закарпаття (1280)
+  - Захоплення Люблінської землі (1292)
+  - Відносини з Польщею та Угорщиною
+  - Союз із Тевтонським орденом
+- section: Відносини з Ордою
+  words: 648
+  subsections:
+  - Визнання монгольської зверхності
+  - Участь у монгольських походах
+  - Баланс між підкоренням та автономією
+  - Захист православної церкви
+- section: Внутрішня політика
+  words: 540
+  subsections:
+  - Відносини з боярством
+  - Німецькі колоністи та Магдебурзьке право
+  - Культурне життя при дворі
+- section: Підсумок — Князь-будівничий
+  words: 328
+  subsections:
+  - Оцінка правління Лева
+  - Львів як його головна спадщина
+  - Роль у збереженні державності
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - столиця
+  - перенесення
+  - розбудова
+  - експансія
+  - зверхність
+  - автономія
+  - колоніст
+  - торгівля
+  - фортифікація
+  - спадкоємець
+  recommended:
+  - магдебурзьке право
+  - ринок
+  - цех
+  - стратегічний
+  - васальний
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-danylo-halytskyi (Danylo - father)
+  related:
+  - c1-bio-danylo-halytskyi (Danylo - father)
+  - c1-bio-yuriy-lvovych (Yuriy - son)
+  - c1-bio-06 (Mykhailo Chernihivskyi - earlier Mongol era)
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

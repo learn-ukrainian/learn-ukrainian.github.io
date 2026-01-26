@@ -1,0 +1,24 @@
+module: b2-final-exam
+level: b2
+sequence: 94
+version: '2.0'
+title: B2 Підсумковий іспит
+subtitle: B2 Final Exam
+focus: checkpoint
+pedagogy: TTT
+objectives:
+- Learner can write professional emails and reports
+- Learner can analyze news and media critically
+- Learner can deliver effective presentations
+- Learner can participate in professional discussions
+- Learner can self-assess readiness for C1 level
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

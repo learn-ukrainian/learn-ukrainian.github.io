@@ -1,0 +1,97 @@
+module: khrushchov-shelest-tsykl
+level: c1-hist
+sequence: 86
+version: '1.0'
+title: Хрущов — Шелест — Щербицький
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Ще один цикл
+  words: 400
+  subsections:
+  - Після Сталіна — надія
+  - Хрущовська відлига
+  - Шелест — «свій» у владі
+  - Структура модуля
+- section: Фаза 1 — Відлига (1953-1964)
+  words: 700
+  subsections:
+  - Десталінізація
+  - Реабілітації — частково
+  - Шістдесятники
+  - Культурне пожвавлення
+- section: Фаза 2 — Шелест при владі (1963-1972)
+  words: 600
+  subsections:
+  - Перший секретар України
+  - Захист української мови
+  - «Україна наша радянська»
+  - Конфлікт з Москвою
+- section: Фаза 3 — Знищення відлиги
+  words: 600
+  subsections:
+  - 1972 — арешти шістдесятників
+  - Шелеста знято
+  - «Націоналізм» — звинувачення
+  - Щербицький — русифікатор
+- section: Фаза 4 — 17 років русифікації
+  words: 500
+  subsections:
+  - Щербицький — 1972-1989
+  - Русифікація освіти
+  - Придушення дисидентів
+  - «Зразкова республіка»
+- section: Порівняння з 1920-ми
+  words: 400
+  subsections:
+  - Схожість — надія, розквіт, знищення
+  - Відмінності — масштаб, методи
+  - Чому цикл повторився
+- section: Підсумок
+  words: 300
+  subsections:
+  - Шелест — кооптований, але «надто український»
+  - Цикл у партійній еліті
+  - Перехід до Януковича
+word_target: 3500
+vocabulary:
+- відлига
+- Шелест
+- Щербицький
+- шістдесятники
+- русифікація
+- десталінізація
+- перший секретар
+- «націоналізм»
+- кооптація
+- цикл
+- реабілітація
+- самвидав
+- ідеологічний контроль
+- партійна еліта
+- лояльність
+activities:
+- type: critical-analysis
+  focus: Map Shelest's career through co-optation cycle
+- type: comparative-study
+  focus: 1920s vs. 1960s — same trap different packaging
+- type: policy-analysis
+  focus: Shcherbytsky's Russification — methods and results
+- type: essay-response
+  focus: What if Shelest stayed in power?
+- type: essay-response
+  focus: Чому Шелеста усунули, а Щербицького ні?
+sources:
+- name: Петро Шелест (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Петро_Шелест
+  type: reference
+  notes: Ukrainian leader
+- name: Володимир Щербицький (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Володимир_Щербицький
+  type: reference
+  notes: Successor
+- name: Десталінізація (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Десталінізація
+  type: reference
+  notes: Thaw period

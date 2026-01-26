@@ -1,28 +1,94 @@
 module: b1-86
-title: Українські свята та фестивалі
-subtitle: Ukrainian Holidays and Festivals
-version: '1.0'
-phase: B1.7
-pedagogy: cultural
+id: b1-86
+slug: ukrainski-sviata-ta-festyvali
+title: "Українські свята та фестивалі"
+subtitle: "Ukrainian Holidays and Festivals"
+version: '2.0'
+phase: "B1.7 [Contemporary Ukraine]"
 focus: culture
-duration: 75
+pedagogy: CBI
+register: розмовний
+duration: 90
 transliteration: none
-tags:
-- culture
-- holidays
-- festivals
-- traditions
-grammar: []
 objectives:
-- Learner can discuss Ukrainian holidays and festivals in context
-- Learner can understand authentic texts about Ukrainian celebrations
-- Learner can use celebration-related vocabulary in communicative contexts
-- Learner can compare Ukrainian festivals with their own cultural traditions
-vocabulary_count: 30
-word_target: 1500
-immersion_target: 100
-vocab_count: 49
-slug: 86-ukrainski-sviata-ta-festyvali
+  - "Learner can discuss Ukrainian holidays and festivals in context"
+  - "Learner can understand authentic texts about Ukrainian celebrations"
+  - "Learner can use celebration-related vocabulary in communicative contexts"
+  - "Learner can compare Ukrainian festivals with their own cultural traditions"
+grammar:
+  - "Holiday and celebration vocabulary"
+  - "Traditions and customs language"
+  - "Calendar and date expressions"
+word_target: 1200
+content_outline:
+  - section: "Introduction: Ukrainian Calendar"
+    words: 150
+    points:
+      - "Holiday overview"
+      - "Religious and secular"
+      - "Calendar differences"
+  - section: "Christmas and New Year"
+    words: 250
+    points:
+      - "Різдво, Новий рік"
+      - "Christmas traditions"
+      - "Caroling customs"
+  - section: "Easter Traditions"
+    words: 250
+    points:
+      - "Великдень, писанки"
+      - "Easter preparations"
+      - "Celebration customs"
+  - section: "National Holidays"
+    words: 250
+    points:
+      - "День Незалежності"
+      - "Historical commemorations"
+      - "Contemporary significance"
+  - section: "Festivals and Events"
+    words: 200
+    points:
+      - "Music festivals"
+      - "Cultural events"
+      - "Regional celebrations"
+  - section: "Practice: Holiday Discussion"
+    words: 100
+    points:
+      - "Describe celebrations"
+      - "Compare traditions"
+vocabulary_hints:
+  required:
+    - свято (holiday)
+    - фестиваль (festival)
+    - Різдво (Christmas)
+    - Великдень (Easter)
+    - традиція (tradition)
+    - святкувати (to celebrate)
+    - колядки (carols)
+    - писанки (pysanky)
+  recommended:
+    - День Незалежності (Independence Day)
+    - вертеп (nativity play)
+    - кошик (Easter basket)
+    - обряд (ritual)
+activity_hints:
+  - type: reading
+    focus: "Holiday descriptions and traditions"
+    items: 15
+  - type: matching
+    focus: "Match holidays to traditions"
+    items: 20
+  - type: fill-in
+    focus: "Complete celebration descriptions"
+    items: 15
+  - type: discussion
+    focus: "Compare cultural traditions"
+    items: 10
+prerequisites:
+  - b1-85 (Ukrainian Cuisine)
+connects_to:
+  - b1-87 (News Reading)
 naturalness:
   score: 9
   status: PASS
+  justification: "Essential cultural knowledge for participation"

@@ -1,30 +1,98 @@
 module: a1-25
-title: My Daily Routine
-subtitle: Reflexive Verbs and Daily Activities
-version: '1.0'
-phase: A1.3 - Consolidation
+id: a1-25
+slug: my-daily-routine
+title: "My Daily Routine"
+subtitle: "Reflexive Verbs and Daily Activities"
+version: '2.0'
+phase: "A1.3 [Consolidation]"
+focus: practical
 pedagogy: PPP
-focus: grammar
-duration: 60 min
+register: розмовний
+duration: 60
 transliteration: none
-phonetics: ipa
-tags:
-  - reflexive-verbs
-  - daily-routine
-  - time-sequence
-  - habits
-grammar:
-  - Reflexive verbs (-ся/-сь)
-  - Reflexive verb conjugation
-  - Sequence adverbs (спочатку, потім, нарешті)
 objectives:
-  - Learner can conjugate common reflexive verbs
-  - Learner can describe daily routine activities
-  - Learner can use sequence words to order events
-  - Learner can talk about habits and regular activities
-vocabulary_count: 30
-vocab_count: 27
-slug: 25-my-daily-routine
+  - "Learner can conjugate common reflexive verbs"
+  - "Learner can describe daily routine activities"
+  - "Learner can use sequence words to order events"
+  - "Learner can talk about habits and regular activities"
+grammar:
+  - "Reflexive verbs (-ся/-сь) in context"
+  - "Sequence adverbs (спочатку, потім, нарешті)"
+  - "Daily routine expressions"
+word_target: 1000
+content_outline:
+  - section: "Introduction: A Typical Day"
+    words: 150
+    points:
+      - "Describing daily routine"
+      - "Reflexive verbs for self-care"
+      - "Time + activity structure"
+  - section: "Morning Routine"
+    words: 200
+    points:
+      - "прокидатися (to wake up)"
+      - "вмиватися, одягатися"
+      - "снідати (to have breakfast)"
+  - section: "Daytime Activities"
+    words: 200
+    points:
+      - "працювати, вчитися"
+      - "обідати (to have lunch)"
+      - "відпочивати (to rest)"
+  - section: "Evening Routine"
+    words: 200
+    points:
+      - "вечеряти (to have dinner)"
+      - "дивитися телевізор"
+      - "лягати спати (to go to bed)"
+  - section: "Sequence Words"
+    words: 150
+    points:
+      - "спочатку (first)"
+      - "потім (then)"
+      - "нарешті (finally)"
+  - section: "Practice: Describe Your Day"
+    words: 100
+    points:
+      - "Full day description"
+      - "Compare routines"
+vocabulary_hints:
+  required:
+    - прокидатися (to wake up)
+    - вмиватися (to wash oneself)
+    - одягатися (to dress oneself)
+    - снідати (to have breakfast)
+    - обідати (to have lunch)
+    - вечеряти (to have dinner)
+    - лягати (to lie down)
+    - спати (to sleep)
+  recommended:
+    - спочатку (first)
+    - потім (then)
+    - нарешті (finally)
+    - зазвичай (usually)
+    - щодня (every day)
+    - відпочивати (to rest)
+activity_hints:
+  - type: ordering
+    focus: "Order daily activities"
+    items: 20
+  - type: fill-in
+    focus: "Complete routine descriptions"
+    items: 20
+  - type: matching
+    focus: "Match activities to times"
+    items: 15
+  - type: speaking
+    focus: "Describe your typical day"
+    items: 6
+prerequisites:
+  - a1-09 (Reflexive Verbs)
+  - a1-23 (What Time Is It)
+connects_to:
+  - a1-26 (Describing Things - Adjectives)
+  - a1-30 (Checkpoint Consolidation)
 naturalness:
   score: 10
   status: PASS
+  justification: "Practical daily routine skills"

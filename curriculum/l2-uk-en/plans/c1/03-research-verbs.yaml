@@ -1,0 +1,96 @@
+module: 03-research-verbs
+level: c1
+sequence: 3
+version: '2.0'
+title: Дієслова наукового дослідження
+focus: vocabulary
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Ukrainian Academic Corpus
+  url: https://mova.info/
+  type: reference
+  notes: Frequency data for academic verbs
+- name: Наукова комунікація українською
+  url: https://mon.gov.ua/
+  type: secondary
+  notes: Official academic communication guidelines
+content_outline:
+- section: Вступ — Дієслова як інструмент науковця
+  words: 400
+  points:
+  - Роль дієслів у науковому дискурсі
+  - Категоризація за функцією
+  - Точність вибору дієслова
+- section: Дієслова дослідження
+  words: 700
+  points:
+  - Досліджувати, вивчати, аналізувати
+  - З'ясовувати, перевіряти, випробовувати
+  - Розглядати, обстежувати, спостерігати
+- section: Дієслова аргументації
+  words: 700
+  points:
+  - Стверджувати, доводити, обґрунтовувати
+  - Аргументувати, спростовувати, заперечувати
+  - Підтверджувати, підкріплювати, ілюструвати
+- section: Дієслова презентації
+  words: 600
+  points:
+  - Представляти, викладати, описувати
+  - Характеризувати, демонструвати, ілюструвати
+  - Порівнювати, зіставляти, протиставляти
+- section: Дієслова висновку
+  words: 600
+  points:
+  - Підсумовувати, узагальнювати, резюмувати
+  - Робити висновок, констатувати, визначати
+  - Виводити, формулювати, встановлювати
+- section: Нюанси та контексти
+  words: 600
+  points:
+  - Синоніми з різними відтінками значення
+  - Колокації з дієсловами дослідження
+  - Правильне керування (з чим поєднуються)
+- section: Практичне застосування
+  words: 400
+  points:
+  - Вибір дієслова за контекстом
+  - Варіювання дієслів у тексті
+  - Уникнення повторів
+word_target: 4000
+vocabulary:
+  required:
+  - досліджувати (to research)
+  - аналізувати (to analyze)
+  - стверджувати (to assert)
+  - доводити (to prove)
+  - обґрунтовувати (to substantiate)
+  - спростовувати (to refute)
+  - підсумовувати (to summarize)
+  - узагальнювати (to generalize)
+  - констатувати (to state)
+  - формулювати (to formulate)
+  recommended:
+  - з'ясовувати (to clarify)
+  - випробовувати (to test)
+  - зіставляти (to compare)
+  - виводити (to derive)
+  - резюмувати (to summarize)
+  forbidden: []
+activities:
+  types_required:
+  - group-sort
+  - quiz
+  - essay-response
+  - cloze
+  - fill-in
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c1-04 (Analysis Vocabulary)
+- c1-07 (Citation & Reference)
+- c1-09 (Thesis Development)

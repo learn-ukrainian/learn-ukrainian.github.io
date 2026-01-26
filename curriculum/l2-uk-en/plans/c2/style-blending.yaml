@@ -1,0 +1,104 @@
+module: style-blending
+level: c2
+sequence: 24
+version: '2.0'
+title: Змішування стилів і гібридні регістри
+focus: stylistics
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Функціональні стилі української мови
+  url: https://uk.wikipedia.org/wiki/Функціональний_стиль
+  type: reference
+  notes: Foundation of 7 Ukrainian styles
+- name: Науково-популярний стиль
+  url: https://uk.wikipedia.org/wiki/Науково-популярний_стиль
+  type: reference
+  notes: Example of hybrid style analysis
+- name: Сучасна українська публіцистика
+  url: https://ukrlib.com.ua/
+  type: primary
+  notes: Examples of style blending in contemporary journalism
+content_outline:
+- section: Вступ — коли стилі змішуються
+  words: 500
+  points:
+  - Чисті стилі vs. гібриди
+  - Функції змішування стилів
+  - Комунікативна доцільність
+- section: Науково-популярний стиль
+  words: 700
+  points:
+  - Елементи наукового стилю (термінологія, логіка)
+  - Елементи розмовного (доступність, приклади)
+  - Баланс точності та зрозумілості
+  - Приклади з українських медіа
+- section: Художньо-публіцистичний стиль
+  words: 600
+  points:
+  - Літературна журналістика
+  - Есей як гібридний жанр
+  - Репортаж з елементами белетристики
+  - Колонки Курков, Андрухович
+- section: Офіційно-публіцистичний стиль
+  words: 600
+  points:
+  - Державна комунікація з громадянами
+  - Пом'якшення бюрократичної мови
+  - Прес-релізи та офіційні заяви
+  - Соціальні мережі державних органів
+- section: Розмовно-художній стиль
+  words: 600
+  points:
+  - Сказ як літературний прийом
+  - Діалектизми в літературі
+  - Стилізація усного мовлення
+  - Приклади з української прози
+- section: Епістолярно-есеїстичний стиль
+  words: 500
+  points:
+  - Лист як літературна форма
+  - Відкритий лист як публіцистика
+  - Есеїстичні елементи в листуванні
+  - Письменницькі листи як жанр
+- section: Підсумок та практика
+  words: 500
+  points:
+  - Оцінка доцільності змішування
+  - Ризики невдалого змішування
+  - Створення власного гібридного тексту
+word_target: 4000
+vocabulary:
+  required:
+  - гібридний (hybrid)
+  - змішування (blending)
+  - науково-популярний (popular science)
+  - художньо-публіцистичний (literary journalism)
+  - регістр (register)
+  - сказ (skaz/oral narrative style)
+  - есей (essay)
+  - доцільність (appropriateness)
+  - адаптація (adaptation)
+  - синтез (synthesis)
+  recommended:
+  - белетристика (belles-lettres)
+  - репортаж (reportage)
+  - колонка (column)
+  - фейлетон (feuilleton)
+  - нарис (sketch/essay)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - match-up
+  - critical-analysis
+  - essay-response
+  - comparative-study
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-25 (C2.1 Final Checkpoint)
+- c2-32 (Writing Literary Essays)
+- 'c2-37 (Creative Writing: Prose)'

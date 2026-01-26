@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M55 | **Phase:** HIST.6 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:22:20
+**Generated:** 2026-01-25 22:22:58
 
 ## Configuration
 **Type:** B2-history
@@ -40,7 +40,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4343/4000 (raw: 4399)
+- **Words:** ✅ 4028/4000 (raw: 4077)
 - **Activities:** ✅ 11/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 10/2 types
@@ -53,12 +53,12 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⚠️ Too many activities: 11 (target 3-9)
 - **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
-- **Richness:** ✅ 99% (history)
+- **Richness:** ✅ 98% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
+**Score:** 98% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
@@ -66,14 +66,14 @@
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 12 | 3 | 100% | 24% | 23.8% |
 | engagement | 6 | 6 | 100% | 14% | 14.3% |
-| timeline_markers | 29 | 10 | 100% | 14% | 14.3% |
+| timeline_markers | 25 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 8 | 4 | 100% | 10% | 9.5% |
 | visual | 6 | 4 | 100% | 10% | 9.5% |
 | variety | 0.97 | - | 97% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 12 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.9%** |
+| questions | 2 | 3 | 67% | 5% | 3.2% |
+| **TOTAL** | | | | | **98.3%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -87,5 +87,4 @@
 | **Читання** | ✅ | 420 | Included in Core |
 | **Первинні джерела** | ✅ | 382 | Included in Core |
 | **Деколонізаційний погляд: Державність проти імперських міфів** | ✅ | 471 | Included in Core |
-| **Есе: Рефлексія, Аналіз та Сучасна Державність** | ✅ | 315 | Included in Core |
 | **Підсумок** | ✅ | 299 | Included in Core |

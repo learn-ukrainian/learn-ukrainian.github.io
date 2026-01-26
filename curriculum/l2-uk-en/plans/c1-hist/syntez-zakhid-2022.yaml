@@ -1,0 +1,97 @@
+module: syntez-zakhid-2022
+level: c1-hist
+sequence: 102
+version: '1.0'
+title: 'Синтез: 2022 — Зміна парадигми?'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Щось змінилося?
+  words: 400
+  subsections:
+  - Огляд модулів 95-101
+  - 2022 — інша реакція
+  - Чи це зміна парадигми
+  - Мета синтезу
+- section: Порівняння з минулим
+  words: 600
+  subsections:
+  - 1918 — нічого
+  - 1945 — зрада
+  - 1991 — протидія
+  - 1994 — порожні гарантії
+  - 2008, 2014 — слабкість
+  - 2022 — ?
+- section: Що змінилося у 2022
+  words: 700
+  subsections:
+  - Масштаб допомоги
+  - Санкції — серйозні
+  - Військова допомога — летальна
+  - Політична підтримка
+  - Але...
+- section: Що не змінилося
+  words: 600
+  subsections:
+  - «Не провокувати»
+  - Поступові рішення
+  - Страх ескалації
+  - «Переможець не потрібен»?
+  - Паттерн — досі присутній
+- section: Чому 2022 інший
+  words: 500
+  subsections:
+  - Український спротив — ключ
+  - Неможливо ігнорувати
+  - Громадська думка на Заході
+  - Путін перейшов межу
+- section: Чи тривкі зміни
+  words: 400
+  subsections:
+  - Втома від війни — ризик
+  - Вибори — зміни політики
+  - Як закріпити підтримку
+- section: Підсумок
+  words: 300
+  subsections:
+  - 2022 — можливий поворот
+  - Але не гарантований
+  - Перехід до економічної експлуатації
+word_target: 3500
+vocabulary:
+- синтез
+- парадигма
+- зміна
+- допомога
+- санкції
+- ескалація
+- спротив
+- втома від війни
+- паттерн
+- підтримка
+- «ленд-ліз»
+- летальна зброя
+- громадська думка
+- геополітичний
+- стратегічний перелом
+activities:
+- type: essay-response
+  focus: Create Western policy evolution timeline
+- type: change-analysis
+  focus: What specifically changed in 2022?
+- type: continuity-analysis
+  focus: What patterns continue despite 2022?
+- type: future-scenarios
+  focus: Will 2022 changes last?
+- type: essay-response
+  focus: Чи 2022 рік став справжнім переломом у західній політиці щодо України?
+sources:
+- name: Вторгнення Росії в Україну (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Російське_вторгнення_в_Україну_(з_2022)
+  type: reference
+  notes: War context
+- name: Допомога Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Допомога_Україні
+  type: reference
+  notes: Western aid

@@ -25,3 +25,32 @@ slug: 58-synonyms-quality
 naturalness:
   score: 9
   status: PASS
+content_outline:
+- section: Вступ — Якість та Оцінка
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Good
+  words: 500
+  points:
+  - добрий (good - moral)
+  - хороший (good - general quality)
+  - гарний (nice/beautiful - appearance)
+  - чудовий (wonderful - excellent)
+  - прекрасний (splendid - elevated)
+- section: Bad
+  words: 500
+  points:
+  - поганий (bad - general)
+  - злий (evil/angry - moral)
+  - кепський (lousy - colloquial)
+  - огидний (disgusting - strong)
+  - жахливий (terrible - intense)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

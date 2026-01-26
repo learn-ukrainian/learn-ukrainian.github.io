@@ -1,0 +1,98 @@
+module: akt-zluki
+level: c1-hist
+sequence: 35
+version: '1.0'
+title: 'Акт Злуки 1919: Символ єдності'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Найважливіший день
+  words: 400
+  subsections:
+  - 22 січня 1919 — що відбулося
+  - УНР + ЗУНР = соборна Україна
+  - Символічне значення
+  - Чому святкуємо досі
+- section: Історичний контекст
+  words: 600
+  subsections:
+  - УНР — Наддніпрянщина
+  - ЗУНР — Галичина і Волинь
+  - Війна з Польщею
+  - Потреба об'єднання
+- section: Текст Акту Злуки
+  words: 600
+  subsections:
+  - Повний текст (з глосами)
+  - Однині воєдино зливаються
+  - Юридична формула
+  - Що проголошено
+- section: Церемонія на Софійській площі
+  words: 500
+  subsections:
+  - Як відбувалося
+  - Учасники — хто був присутній
+  - Символіка — місце, дата
+  - Емоційний вимір
+- section: Реальність vs. символ
+  words: 600
+  subsections:
+  - Чи відбулося реальне об'єднання?
+  - Конфлікти УНР-ЗУНР
+  - Війна і поразка
+  - Чому символ важливіший за реальність
+- section: Акт Злуки в історичній пам'яті
+  words: 500
+  subsections:
+  - Діаспорна пам'ять
+  - Радянське замовчування
+  - Після 1991 — державне свято
+  - День Соборності сьогодні
+- section: Підсумок
+  words: 300
+  subsections:
+  - Злука як ідеал
+  - Від 1919 до 2014
+  - Соборність як цінність
+word_target: 3500
+vocabulary:
+- Злука
+- соборність
+- УНР
+- ЗУНР
+- проголошення
+- об'єднання
+- символ
+- церемонія
+- пам'ять
+- свято
+- воєдино
+- соборна
+- урочистість
+- делегація
+- ратифікація
+activities:
+- type: reading
+  focus: Full Act text with glosses
+- type: ceremony-analysis
+  focus: What symbols were used and why?
+- type: reality-check
+  focus: What was the actual relationship UNR-ZUNR?
+- type: critical-analysis
+  focus: How is Zluka commemorated differently in different eras?
+- type: essay-response
+  focus: Чому Акт Злуки став найважливішим символом української єдності?
+sources:
+- name: Акт Злуки (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Акт_Злуки
+  type: reference
+  notes: Overview
+- name: Текст Акту Злуки
+  url: https://uk.wikisource.org/wiki/Акт_Злуки_УНР_та_ЗУНР
+  type: primary
+  notes: Full text
+- name: День Соборності
+  url: https://uk.wikipedia.org/wiki/День_Соборності_України
+  type: reference
+  notes: Modern commemoration

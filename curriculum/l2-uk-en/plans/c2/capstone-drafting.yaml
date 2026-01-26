@@ -1,0 +1,97 @@
+module: capstone-drafting
+level: c2
+sequence: 91
+version: '2.0'
+title: Дипломний проєкт — Написання чернетки
+focus: practice
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Структура наукової роботи — Вимоги МОН
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official structure requirements for academic papers
+- name: Академічне письмо — Практичний посібник
+  url: https://naqa.gov.ua/
+  type: reference
+  notes: Academic writing guidelines for Ukrainian institutions
+- name: Науковий стиль — Норми і практика
+  url: https://lcorp.ulif.org.ua/
+  type: secondary
+  notes: Scientific style norms and conventions
+content_outline:
+- section: Вступ — Від матеріалу до тексту
+  words: 400
+  points:
+  - Перехід від дослідження до написання
+  - Подолання страху чистого аркуша
+  - Стратегії продуктивного письма
+- section: Структура академічної роботи
+  words: 700
+  points:
+  - Вступ (актуальність, мета, завдання)
+  - Огляд літератури
+  - Методологія
+  - Результати та обговорення
+  - Висновки
+- section: Написання вступу
+  words: 600
+  points:
+  - Формулювання актуальності
+  - Визначення мети і завдань
+  - Об'єкт і предмет дослідження
+  - Наукова новизна
+- section: Написання основної частини
+  words: 700
+  points:
+  - Логіка аргументації
+  - Інтеграція джерел у текст
+  - Баланс опису, аналізу, інтерпретації
+  - Когерентність і когезія
+- section: Написання висновків
+  words: 500
+  points:
+  - Узагальнення результатів
+  - Відповідь на дослідницьке питання
+  - Обмеження дослідження
+  - Перспективи подальших досліджень
+- section: Практика — Написання чернетки
+  words: 800
+  points:
+  - Написання вступу (1000+ слів)
+  - Написання одного розділу (2000+ слів)
+  - Самоперевірка за чеклістом
+  - Зворотний зв'язок від наставника
+word_target: 4000
+vocabulary:
+  required:
+  - чернетка (draft)
+  - актуальність (relevance)
+  - мета дослідження (research aim)
+  - завдання дослідження (research objectives)
+  - об'єкт дослідження (research object)
+  - предмет дослідження (research subject)
+  - наукова новизна (scientific novelty)
+  - аргументація (argumentation)
+  - когерентність (coherence)
+  - висновки (conclusions)
+  recommended:
+  - логічний перехід (logical transition)
+  - абзацна структура (paragraph structure)
+  - теза (thesis statement)
+  - антитеза (antithesis)
+  - синтез (synthesis)
+  forbidden: []
+activities:
+  types_required:
+  - match-up
+  - essay-response
+  - quiz
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-92 (Capstone Revision)
+- c2-93 (Capstone Polish)

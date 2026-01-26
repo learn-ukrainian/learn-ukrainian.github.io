@@ -1,8 +1,8 @@
 # Audit Report: M23 — danylo-halytskyi.md
-**Level:** B2 | **Module:** M23 | **Phase:** HIST.3 | **Pedagogy:** Not Specified | **Target:** 4000
+**Level:** B2 | **Module:** M23 | **Phase:** B2.3a | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:21:58
+**Generated:** 2026-01-25 22:22:36
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4909/4000 (raw: 5170)
+- **Words:** ✅ 4397/4000 (raw: 4556)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 98.6% (target 90-100% (history))
+- **Immersion:** 🇺🇦 98.4% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -58,15 +58,15 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 11 | 3 | 100% | 24% | 23.8% |
+| primary_sources | 10 | 3 | 100% | 24% | 23.8% |
 | engagement | 8 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 4 | 4 | 100% | 10% | 9.5% |
-| visual | 6 | 4 | 100% | 10% | 9.5% |
+| visual | 5 | 4 | 100% | 10% | 9.5% |
 | variety | 0.99 | - | 99% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 18 | 3 | 100% | 5% | 4.8% |
+| questions | 17 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
@@ -78,6 +78,5 @@
 | **Читання** | ✅ | 2060 | Included in Core |
 | **Первинні джерела** | ✅ | 678 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 589 | Included in Core |
-| **Есе** | ⚪️ | 512 | Skipped |
 | **Підсумок** | ✅ | 222 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 229 | Skipped |

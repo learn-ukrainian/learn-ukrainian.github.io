@@ -27,3 +27,25 @@ summary: This module explores the unique Ukrainian tradition of kobzari — blin
   bards who preserved the nation's history through song. Students learn about the
   bandura, the epic genre of 'duma', and the tragic fate of kobzari in the Soviet
   era.
+content_outline:
+- section: Вступ — Душа України
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Literary Devices
+  words: 500
+  points:
+  - 'Інверсія: Красива вона була (She beautiful was)'
+  - 'Паралелізм: Repeated structures'
+  - 'Анафора: Repeated beginnings'
+  - 'Епіфора: Repeated endings'
+  - 'Період (Syntactic Period): Complex circular sentence structure'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

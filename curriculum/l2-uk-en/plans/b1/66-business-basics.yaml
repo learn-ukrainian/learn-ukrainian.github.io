@@ -1,0 +1,77 @@
+module: business-basics
+level: b1
+sequence: 66
+version: '2.0'
+title: Основи бізнесу
+subtitle: Business Basics
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can use 30 business vocabulary words in context
+- Learner can distinguish between similar business terms (компанія/фірма/підприємство)
+- Learner can form natural collocations with business nouns
+- Learner can discuss basic business topics fluently
+content_outline:
+- section: 'Introduction: Business Vocabulary'
+  words: 150
+  points:
+  - Why business vocabulary matters
+  - Ukrainian business context
+  - Core concepts overview
+- section: Companies and Organizations
+  words: 250
+  points:
+  - компанія, фірма, підприємство
+  - корпорація, організація
+  - Business entity types
+- section: Business Activities
+  words: 250
+  points:
+  - виробництво, продаж, маркетинг
+  - інвестиції, прибуток, збитки
+  - Core business functions
+- section: Business People and Roles
+  words: 250
+  points:
+  - підприємець, бізнесмен, партнер
+  - інвестор, клієнт, постачальник
+  - Business relationships
+- section: Business Actions
+  words: 200
+  points:
+  - заснувати, керувати, розвивати
+  - інвестувати, продавати
+  - Business verbs
+- section: 'Practice: Business Discussions'
+  words: 100
+  points:
+  - Discuss business topics
+  - Use professional vocabulary
+word_target: 1200
+vocabulary:
+  required:
+  - компанія (company)
+  - підприємство (enterprise)
+  - бізнес (business)
+  - прибуток (profit)
+  - інвестиція (investment)
+  - клієнт (client)
+  - продаж (sale)
+  - керувати (to manage)
+  recommended:
+  - підприємець (entrepreneur)
+  - маркетинг (marketing)
+  - постачальник (supplier)
+  - збитки (losses)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - collocation
+  - role-play
+  - matching
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-67 (Travel Geography)

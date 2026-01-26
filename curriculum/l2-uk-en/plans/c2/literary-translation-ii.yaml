@@ -1,0 +1,102 @@
+module: literary-translation-ii
+level: c2
+sequence: 35
+version: '2.0'
+title: Літературний переклад II — проза
+focus: literature
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Художній переклад прози
+  url: https://uk.wikipedia.org/wiki/Художній_переклад
+  type: reference
+  notes: Prose translation principles
+- name: Переклади світової літератури
+  url: https://ukrlib.com.ua/
+  type: primary
+  notes: Examples of translated prose
+- name: Микола Лукаш — перекладач
+  url: https://uk.wikipedia.org/wiki/Микола_Лукаш
+  type: reference
+  notes: Legendary prose translator
+content_outline:
+- section: Вступ — Специфіка перекладу прози
+  words: 500
+  points:
+  - Відмінності від перекладу поезії
+  - Свобода і обмеження
+  - Роль стилю в прозовому перекладі
+- section: Переклад авторського голосу
+  words: 700
+  points:
+  - Ідентифікація авторського стилю
+  - Збереження тону і регістру
+  - Ритм прози в перекладі
+  - Синтаксичні особливості
+- section: Переклад діалогів і мовлення персонажів
+  words: 600
+  points:
+  - Соціолект і ідіолект
+  - Розмовні елементи
+  - Сленг і жаргон
+  - Діалекти в перекладі
+- section: Переклад реалій і культурних посилань
+  words: 700
+  points:
+  - Типи реалій
+  - Стратегії перекладу реалій
+  - Примітки перекладача
+  - Баланс зрозумілості і автентичності
+- section: Практикум — переклад прози з англійської
+  words: 600
+  points:
+  - Вибір уривка для перекладу
+  - Аналіз стилістичних особливостей
+  - Процес перекладу
+  - Редагування і вдосконалення
+- section: Практикум — переклад української прози на англійську
+  words: 500
+  points:
+  - Представлення українського автора
+  - Збереження національної специфіки
+  - Для якого читача перекладаємо
+- section: Підсумок
+  words: 400
+  points:
+  - Переклад як інтерпретація
+  - Етика прозового перекладу
+  - Від навчального до професійного перекладу
+word_target: 4000
+vocabulary:
+  required:
+  - прозовий переклад (prose translation)
+  - авторський голос (authorial voice)
+  - реалія (realia/culture-specific term)
+  - соціолект (sociolect)
+  - ідіолект (idiolect)
+  - примітка (footnote/annotation)
+  - адаптація (adaptation)
+  - локалізація (localization)
+  - контекст (context)
+  - інтерпретація (interpretation)
+  recommended:
+  - калька (calque)
+  - транскрипція (transcription)
+  - експлікація (explicitation)
+  - генералізація (generalization)
+  - конкретизація (particularization)
+  forbidden: []
+activities:
+  types_required:
+  - essay-response
+  - quiz
+  - comparative-study
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-36-37 (Creative Writing)
+- c2-87 (C2.4 Translation Practice II)
+- c2-45 (C2.2 Checkpoint)

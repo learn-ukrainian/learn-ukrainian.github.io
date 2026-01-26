@@ -1,0 +1,23 @@
+module: presentation-skills-basics
+level: b2
+sequence: 91
+version: '2.0'
+title: 'Презентації: Основи'
+subtitle: Структура та подання професійних презентацій
+focus: skills
+pedagogy: CBI
+objectives:
+- Learner can structure a professional presentation with clear opening, body, and conclusion
+- Learner can use signposting language to guide the audience through presentation sections
+- Learner can apply basic delivery techniques including eye contact, pacing, and volume control
+- Learner understands how to create effective visual aids for Ukrainian-language presentations
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

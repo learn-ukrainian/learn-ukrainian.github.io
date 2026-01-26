@@ -1,0 +1,44 @@
+# A1 Level Plan - Ukrainian for English Speakers
+# Source of truth: docs/l2-uk-en/A1-CURRICULUM-PLAN.md
+
+level: a1
+track: core
+version: "1.0"
+status: complete
+vocabulary_target: 500
+cumulative_vocabulary: 500
+immersion: "0-30%"
+
+phases:
+  - id: A1.1
+    name: "First Contact"
+    modules: [1, 10]
+    focus: "Alphabet, greetings, basic phrases"
+
+  - id: A1.2
+    name: "Navigation"
+    modules: [11, 20]
+    focus: "Places, directions, basic shopping"
+
+  - id: A1.3
+    name: "Time & Self"
+    modules: [21, 34]
+    focus: "Time expressions, family, daily routines"
+
+  - id: A1.4
+    name: "Practical Scenarios"
+    modules: [35, 44]
+    focus: "Real-world situations, consolidation"
+
+grammar_scope:
+  - Nominative, Accusative, Genitive cases (basic)
+  - Present tense conjugation
+  - Gender and number agreement
+  - Basic pronouns
+  - Cardinal numbers 1-1000
+  - Time expressions
+
+notes: |
+  A1 is the foundation level. All module specifications are in the
+  CURRICULUM-PLAN file. Module plans are not extracted to separate
+  YAML files because the markdown plan is the authoritative source.

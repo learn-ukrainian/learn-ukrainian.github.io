@@ -1,0 +1,665 @@
+level: b2
+updated: '2026-01-26T12:55:30.939595+00:00'
+summary:
+  total: 94
+  planned: 0
+  content: 0
+  activities: 22
+  reviewed: 72
+modules:
+  01-passive-voice-system:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2007
+    word_target: 3800
+    activity_count: 14
+    naturalness: 1
+  02-past-passive-participles:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2414
+    word_target: 3800
+    activity_count: 18
+    naturalness: 1
+  03-impersonal-passive:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2240
+    word_target: 3800
+    activity_count: 15
+    naturalness: 1
+  04-reflexive-passive:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2108
+    word_target: 3800
+    activity_count: 14
+    naturalness: 1
+  05-third-person-plural-passive:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 1911
+    word_target: 3800
+    activity_count: 16
+    naturalness: 1
+  06-passive-in-context:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2248
+    word_target: 3800
+    activity_count: 15
+    naturalness: 1
+  07-active-participles-present:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2603
+    word_target: 3800
+    activity_count: 14
+    naturalness: 1
+  08-active-participles-past:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2354
+    word_target: 3800
+    activity_count: 14
+    naturalness: 1
+  09-participles-vs-relative-clauses:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2662
+    word_target: 3800
+    activity_count: 14
+    naturalness: 1
+  10-checkpoint-passive-voice:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 1617
+    word_target: 3500
+    activity_count: 18
+    naturalness: 1
+  11-multi-clause-sentences:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2182
+    word_target: 3800
+    activity_count: 14
+    naturalness: 1
+  12-parenthetical-expressions:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2452
+    word_target: 3800
+    activity_count: 14
+    naturalness: 1
+  13-emphasis-and-inversion:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2767
+    word_target: 3800
+    activity_count: 14
+    naturalness: 1
+  14-stylistic-connectors:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2902
+    word_target: 3800
+    activity_count: 14
+    naturalness: 1
+  15-register-introduction:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 3359
+    word_target: 3800
+    activity_count: 14
+    naturalness: 1
+  16-register-formal-informal:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2559
+    word_target: 3800
+    activity_count: 14
+    naturalness: 1
+  17-register-business-ukrainian:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2424
+    word_target: 3800
+    activity_count: 14
+    naturalness: 1
+  18-register-academic-ukrainian:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2430
+    word_target: 3800
+    activity_count: 14
+    naturalness: 1
+  19-register-official-legal:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2241
+    word_target: 3800
+    activity_count: 14
+    naturalness: 1
+  20-register-medical-ukrainian:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2948
+    word_target: 3800
+    activity_count: 14
+    naturalness: 1
+  21-register-technical-scientific:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1960
+    word_target: 1500
+    activity_count: 14
+    naturalness: 9
+  22-register-literary-ukrainian:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2292
+    word_target: 1500
+    activity_count: 14
+    naturalness: 9
+  23-register-media-journalistic:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2137
+    word_target: 1500
+    activity_count: 15
+    naturalness: 9
+  24-register-colloquial-style:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2173
+    word_target: 1500
+    activity_count: 14
+    naturalness: 9
+  25-register-practice-cross-register-rewriting:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2766
+    word_target: 1500
+    activity_count: 15
+    naturalness: 9
+  26-politics-government-vocabulary:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1950
+    word_target: 1500
+    activity_count: 14
+    naturalness: 9
+  27-law-justice-vocabulary:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2495
+    word_target: 1500
+    activity_count: 15
+    naturalness: 9
+  28-economics-business-vocabulary:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1787
+    word_target: 1500
+    activity_count: 14
+    naturalness: 9
+  29-b21-integration-practice:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1849
+    word_target: 1500
+    activity_count: 14
+    naturalness: 9
+  30-b21-checkpoint:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1949
+    word_target: 1500
+    activity_count: 19
+    naturalness: 9
+  31-numeral-declension-time-dates:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1902
+    word_target: 1500
+    activity_count: 13
+    naturalness: 9
+  32-numeral-declension-compound-numbers:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 3012
+    word_target: 1500
+    activity_count: 14
+    naturalness: 9
+  33-word-formation-person-suffixes:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2097
+    word_target: 1500
+    activity_count: 14
+    naturalness: 9
+  34-word-formation-abstract-nouns:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2252
+    word_target: 1500
+    activity_count: 13
+    naturalness: 9
+  35-word-formation-place-object-names:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2310
+    word_target: 1500
+    activity_count: 13
+    naturalness: 9
+  36-word-formation-adjective-formation:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2435
+    word_target: 1500
+    activity_count: 14
+    naturalness: 9
+  37-word-formation-adverbs-integration:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2255
+    word_target: 1500
+    activity_count: 13
+    naturalness: 9
+  38-one-member-sentences:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2069
+    word_target: 1500
+    activity_count: 11
+    naturalness: 9
+  39-register-religious-epistolary:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2175
+    word_target: 1500
+    activity_count: 13
+    naturalness: 9
+  40-b21c-checkpoint:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2190
+    word_target: 1500
+    activity_count: 16
+    naturalness: 9
+  41-aspect-nuances-secondary-imperfectivization:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2216
+    word_target: 1500
+    activity_count: 16
+    naturalness: 9
+  42-aspect-nuances-imperative-infinitive:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2253
+    word_target: 1500
+    activity_count: 19
+    naturalness: 9
+  43-correlative-constructions:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2165
+    word_target: 1500
+    activity_count: 10
+    naturalness: 9
+  44-complex-syntax-ellipsis-parcelling:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2059
+    word_target: 1500
+    activity_count: 15
+    naturalness: 9
+  45-proverbs-work-wisdom-character:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2206
+    word_target: 1500
+    activity_count: 15
+    naturalness: 9
+  46-proverbs-nature-time-caution:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 3031
+    word_target: 1500
+    activity_count: 14
+    naturalness: 9
+  47-set-expressions-i-body-animals:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2217
+    word_target: 1500
+    activity_count: 13
+    naturalness: 9
+  48-set-expressions-ii-objects-abstract:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2080
+    word_target: 1500
+    activity_count: 13
+    naturalness: 9
+  49-idioms-body-head-face:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2236
+    word_target: 1500
+    activity_count: 12
+    naturalness: 9
+  50-idioms-body-hands-legs:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2030
+    word_target: 1500
+    activity_count: 15
+    naturalness: 9
+  51-idioms-body:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1994
+    word_target: 1500
+    activity_count: 14
+    naturalness: 9
+  52-idioms-animals-i:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2016
+    word_target: 1500
+    activity_count: 15
+    naturalness: 9
+  53-idioms-animals-ii:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2073
+    word_target: 1500
+    activity_count: 14
+    naturalness: 9
+  54-idioms-nature:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2006
+    word_target: 1500
+    activity_count: 14
+    naturalness: 9
+  55-synonyms-emotion:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1892
+    word_target: 1500
+    activity_count: 14
+    naturalness: 9
+  56-synonyms-size:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1905
+    word_target: 1500
+    activity_count: 15
+    naturalness: 9
+  57-synonyms-movement:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1905
+    word_target: 1500
+    activity_count: 15
+    naturalness: 9
+  58-synonyms-quality:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1857
+    word_target: 1500
+    activity_count: 15
+    naturalness: 9
+  59-synonyms-communication:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1826
+    word_target: 1500
+    activity_count: 15
+    naturalness: 9
+  60-synonyms-character:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2720
+    word_target: 1500
+    activity_count: 15
+    naturalness: 9
+  61-synonyms-time:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2262
+    word_target: 1500
+    activity_count: 15
+    naturalness: 9
+  62-synonyms-place:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2204
+    word_target: 1500
+    activity_count: 15
+    naturalness: 9
+  63-synonyms-quantity:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1841
+    word_target: 1500
+    activity_count: 15
+    naturalness: 9
+  64-synonyms-action:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2262
+    word_target: 1500
+    activity_count: 15
+    naturalness: 9
+  65-synonyms-state:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2122
+    word_target: 1500
+    activity_count: 15
+    naturalness: 9
+  66-synonyms-abstract:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 3029
+    word_target: 1500
+    activity_count: 15
+    naturalness: 9
+  67-advanced-conjunctions-i:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2361
+    word_target: 1500
+    activity_count: 15
+    naturalness: 9
+  68-advanced-conjunctions-ii:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2249
+    word_target: 1500
+    activity_count: 15
+    naturalness: 9
+  69-integration-practice:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2119
+    word_target: 1500
+    activity_count: 15
+    naturalness: 9
+  70-b2-checkpoint:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1863
+    word_target: 1500
+    activity_count: 15
+    naturalness: 9
+  71-medytsyna-pohlybleno:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2353
+    word_target: 1500
+    activity_count: 15
+    naturalness: 9
+  72-tekhnolohii-ta-shi:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2002
+    word_target: 1500
+    activity_count: 14
+    naturalness: 9
+  73-nauka-i-doslidzhennia:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1946
+    word_target: 1500
+    activity_count: 14
+    naturalness: 9
+  74-mystetstvo-i-literatura:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1965
+    word_target: 1500
+    activity_count: 11
+    naturalness: 9
+  75-modern-diaspora:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2907
+    word_target: 1500
+    activity_count: 15
+    naturalness: 9
+  76-religion-in-ukraine:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 3066
+    word_target: 1500
+    activity_count: 15
+    naturalness: 9
+  77-academic-writing:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2845
+    word_target: 1500
+    activity_count: 15
+    naturalness: 9
+  78-text-analysis:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2447
+    word_target: 1500
+    activity_count: 15
+    naturalness: 9
+  79-capstone-research:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1841
+    word_target: 1500
+    activity_count: 15
+    naturalness: 9
+  80-analiz-tekstu:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2184
+    word_target: 1500
+    activity_count: 15
+    naturalness: 9
+  81-capstone-doslidzhennya:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2215
+    word_target: 1500
+    activity_count: 12
+    naturalness: 9
+  82-capstone-prezentatsiya:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1884
+    word_target: 1500
+    activity_count: 15
+    naturalness: 9
+  83-b2-pidsumkovyy-ohlyad:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1803
+    word_target: 1500
+    activity_count: 21
+    naturalness: 9
+  84-checkpoint-register-synthesis:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 1814
+    word_target: 1500
+    activity_count: 21
+    naturalness: 9
+  professional-email-basics:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 1607
+    word_target: 1500
+    activity_count: 15
+  professional-email-advanced:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 4014
+    word_target: 1500
+    activity_count: 13
+  87-professional-reports-basics:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 4698
+    word_target: 1500
+    activity_count: 14
+    naturalness: 8
+  88-professional-reports-advanced:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 3794
+    word_target: 1500
+    activity_count: 14
+    naturalness: 8
+  89-news-analysis-basics:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 4306
+    word_target: 1500
+    activity_count: 14
+    naturalness: 8
+  90-news-analysis-advanced:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 3901
+    word_target: 1500
+    activity_count: 14
+    naturalness: 8
+  91-presentation-skills-basics:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2232
+    word_target: 1500
+    activity_count: 14
+    naturalness: 8
+  92-presentation-skills-advanced:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 3919
+    word_target: 1500
+    activity_count: 14
+    naturalness: 8
+  93-discussion-debate:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 3910
+    word_target: 1500
+    activity_count: 14
+    naturalness: 8
+  94-b2-final-exam:
+    status: reviewed
+    last_updated: '2026-01-26'
+    content_words: 2381
+    word_target: 1500
+    activity_count: 18
+    naturalness: 8

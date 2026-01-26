@@ -1,0 +1,22 @@
+module: 60-zymovi-obriady
+level: c1
+sequence: 60
+version: '2.0'
+title: Зимові обряди
+subtitle: Winter Calendar Rituals
+focus: culture
+pedagogy: Immersion & Analysis
+objectives:
+- Learner can describe the cycle of winter holidays in Ukraine
+- Learner understands the symbolism of ritual foods and actions
+- Learner can analyze the blend of pagan and Christian elements in winter rituals
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

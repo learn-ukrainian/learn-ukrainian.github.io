@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M30 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:23:09
+**Generated:** 2026-01-25 22:22:41
 
 ## Configuration
 **Type:** B2-history
@@ -39,7 +39,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4451/4000 (raw: 4683)
+- **Words:** ✅ 4844/4000 (raw: 5101)
 - **Activities:** ✅ 10/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 10/2 types
@@ -51,7 +51,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⚠️ Too many activities: 10 (target 3-9)
-- **Immersion:** 🇺🇦 98.8% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.0% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -67,7 +67,7 @@
 | engagement | 6 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 8 | 4 | 100% | 10% | 9.5% |
+| cultural | 10 | 4 | 100% | 10% | 9.5% |
 | visual | 7 | 4 | 100% | 10% | 9.5% |
 | variety | 0.96 | - | 96% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
@@ -83,10 +83,9 @@
 | **Регіональна автономія: Київ, Волинь, Поділля** | ⚪️ | 1084 | Skipped |
 | **Соціальний устрій: Анатомія вільного суспільства** | ⚪️ | 616 | Skipped |
 | **Читання** | ✅ | 274 | Included in Core |
-| **Первинні джерела** | ✅ | 420 | Included in Core |
+| **Первинні джерела** | ✅ | 935 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 453 | Included in Core |
-| **Есе** | ⚪️ | 123 | Skipped |
 | **Критерії оцінювання** | ⚪️ | 0 | Skipped |
 | **Зразок відповіді** | ⚪️ | 422 | Skipped |
-| **Підсумок** | ✅ | 169 | Included in Core |
+| **Підсумок** | ✅ | 170 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 172 | Skipped |

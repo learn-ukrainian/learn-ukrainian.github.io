@@ -26,6 +26,12 @@ vocabulary_count: 30
 content_outline:
 - section: Вступ
   words: 368
+- section: "Європейський контекст: Реформація та Контрреформація"
+  words: 250
+  points:
+    - "Impact of Reformation and Counter-Reformation"
+    - "Jesuit colleges vs Orthodox schools"
+    - "Cultural synthesis"
 - section: Феномен братств
   words: 745
 - section: Освітня діяльність братств
@@ -38,8 +44,6 @@ content_outline:
   words: 415
 - section: Деколонізаційний погляд
   words: 348
-- section: Есе
-  words: 488
 - section: Потрібно більше практики?
   words: 113
 naturalness:

@@ -1,28 +1,94 @@
 module: b1-33
-title: 'Умовні речення: змішані та складні умови'
-subtitle: Mixed and Complex Conditionals
-version: '1.0'
-phase: B1.3a Complex Sentences
-pedagogy: TTT
+id: b1-33
+slug: conditionals-mixed-complex
+title: "Умовні речення: змішані та складні умови"
+subtitle: "Mixed and Complex Conditionals"
+version: '2.0'
+phase: "B1.3a [Complex Sentences]"
 focus: grammar
+pedagogy: TTT
+register: розмовний
 duration: 90
 transliteration: none
-tags:
-- grammar
-- conditionals
-- complex-sentences
-- mixed-conditionals
-grammar:
-- Mixed conditional constructions
-- Chained conditionals
-- Complex condition-consequence relationships
 objectives:
-- Learner understands mixed conditional types
-- Learner can combine real and unreal conditions
-- Learner can form chained conditional sentences
-vocabulary_count: 25
-vocab_count: 17
-slug: 33-conditionals-mixed-complex
+  - "Learner understands mixed conditional types"
+  - "Learner can combine real and unreal conditions"
+  - "Learner can form chained conditional sentences"
+  - "Learner can express complex condition-consequence relationships"
+grammar:
+  - "Mixed conditional constructions"
+  - "Chained conditionals"
+  - "Complex condition-consequence patterns"
+word_target: 1200
+content_outline:
+  - section: "Introduction: Mixed Conditionals"
+    words: 150
+    points:
+      - "Beyond simple conditionals"
+      - "Mixing time frames"
+      - "Complex scenarios"
+  - section: "Past Condition, Present Result"
+    words: 250
+    points:
+      - "If I had done..., I would be..."
+      - "Past hypothetical → present consequence"
+      - "Common patterns"
+  - section: "Present Condition, Past Result"
+    words: 250
+    points:
+      - "If I were..., I would have..."
+      - "Present state → past consequence"
+      - "Expressing regrets"
+  - section: "Chained Conditionals"
+    words: 250
+    points:
+      - "If A, then B; if B, then C"
+      - "Multiple conditions"
+      - "Logical sequences"
+  - section: "Complex Condition Patterns"
+    words: 200
+    points:
+      - "Unless (якщо не)"
+      - "Even if (навіть якщо/якби)"
+      - "As long as (доки)"
+  - section: "Practice: Complex Conditionals"
+    words: 100
+    points:
+      - "Form mixed conditionals"
+      - "Create conditional chains"
+vocabulary_hints:
+  required:
+    - змішаний (mixed)
+    - складний (complex)
+    - ланцюговий (chained)
+    - якщо не (unless)
+    - навіть якщо (even if)
+    - навіть якби (even if - unreal)
+    - доки (as long as)
+    - за умови (provided that)
+  recommended:
+    - в іншому випадку (otherwise)
+    - крім того (besides)
+    - тим часом (meanwhile)
+    - проте (however)
+activity_hints:
+  - type: fill-in
+    focus: "Complete mixed conditionals"
+    items: 25
+  - type: sentence-combining
+    focus: "Create conditional chains"
+    items: 20
+  - type: error-correction
+    focus: "Fix complex conditional errors"
+    items: 15
+  - type: speaking
+    focus: "Discuss hypothetical scenarios"
+    items: 10
+prerequisites:
+  - b1-32 (Conditionals Unreal якби)
+connects_to:
+  - b1-34 (Checkpoint Complex Sentences 1)
 naturalness:
   score: 9
   status: PASS
+  justification: "Advanced conditional mastery"

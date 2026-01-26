@@ -1,0 +1,80 @@
+module: home-and-furniture
+level: a2
+sequence: 46
+version: '2.0'
+title: Home and Furniture
+subtitle: Where I Live
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can name rooms in a house
+- Learner can describe furniture and appliances
+- Learner can say where things are located
+- Learner can describe their own home
+content_outline:
+- section: 'Introduction: Ukrainian Homes'
+  words: 100
+  points:
+  - Types of housing
+  - Urban vs rural
+  - Home vocabulary
+- section: Rooms of the House
+  words: 200
+  points:
+  - кухня, вітальня, спальня
+  - ванна, туалет, коридор
+  - балкон, підвал, горище
+- section: Furniture
+  words: 200
+  points:
+  - стіл, стілець, диван, ліжко
+  - шафа, комод, полиця
+  - Using locative for placement
+- section: Appliances
+  words: 150
+  points:
+  - холодильник, пральна машина
+  - телевізор, комп'ютер
+  - побутова техніка
+- section: Describing Your Home
+  words: 200
+  points:
+  - Я живу в... (I live in...)
+  - У мене є... (I have...)
+  - Room sizes and features
+- section: 'Practice: Home Tour'
+  words: 150
+  points:
+  - Give a home tour
+  - Describe room layouts
+word_target: 1000
+vocabulary:
+  required:
+  - кімната (room)
+  - кухня (kitchen)
+  - спальня (bedroom)
+  - вітальня (living room)
+  - ванна (bathroom)
+  - меблі (furniture)
+  - стіл (table)
+  - ліжко (bed)
+  recommended:
+  - шафа (wardrobe)
+  - диван (sofa)
+  - холодильник (refrigerator)
+  - пральна машина (washing machine)
+  - квартира (apartment)
+  - будинок (house)
+  forbidden: []
+activities:
+  types_required:
+  - vocabulary-drill
+  - matching
+  - speaking
+  - fill-in
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a2-47 (Nature and Weather)
+- a2-61 (Hotel Accommodation)

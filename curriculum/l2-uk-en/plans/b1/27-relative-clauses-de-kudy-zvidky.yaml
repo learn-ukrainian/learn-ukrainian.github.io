@@ -1,0 +1,77 @@
+module: relative-clauses-de-kudy-zvidky
+level: b1
+sequence: 27
+version: '2.0'
+title: 'Підрядні означальні: де, куди, звідки'
+subtitle: Place Relative Clauses
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner understands difference between де, куди, звідки
+- Learner can form relative clauses describing places
+- Learner can choose correct place relative for context
+- Learner can combine location and direction in clauses
+content_outline:
+- section: 'Introduction: Place Relatives'
+  words: 150
+  points:
+  - Three types of place questions
+  - Static vs directional meaning
+  - When to use each form
+- section: де - Static Location
+  words: 250
+  points:
+  - Describing where something is
+  - Місце, де... (the place where...)
+  - Common patterns
+- section: куди - Direction To
+  words: 250
+  points:
+  - Describing destination
+  - Місце, куди... (the place to which...)
+  - Motion verb requirements
+- section: звідки - Direction From
+  words: 250
+  points:
+  - Describing origin
+  - Місце, звідки... (the place from which...)
+  - Source and origin expressions
+- section: Combining Place Relatives
+  words: 200
+  points:
+  - Complex place descriptions
+  - Multiple relative clauses
+  - Word order in place clauses
+- section: 'Practice: Place Descriptions'
+  words: 100
+  points:
+  - Describe locations with relatives
+  - Choose correct place word
+word_target: 1200
+vocabulary:
+  required:
+  - де (where - location)
+  - куди (where - to)
+  - звідки (where - from)
+  - місце (place)
+  - напрямок (direction)
+  - розташування (location)
+  - походження (origin)
+  - рух (movement)
+  recommended:
+  - статичний (static)
+  - динамічний (dynamic)
+  - призначення (destination)
+  - джерело (source)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - sentence-combining
+  - translation
+  - matching
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-28 (Relative Clauses коли/що)

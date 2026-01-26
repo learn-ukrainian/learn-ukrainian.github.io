@@ -1,0 +1,105 @@
+module: kyrylo-trylovskyi
+level: c1-bio
+sequence: 32
+version: '2.0'
+title: 'Кирило Трильовський: Засновник Січі'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Трильовський_Кирило_Йосипович
+    title: Кирило Трильовський (Wikipedia UA)
+    notes: Biography of the founder of the Sich movement
+  secondary:
+  - url: https://uk.wikipedia.org/wiki/Українські_січові_стрільці
+    title: Українські Січові Стрільці
+    notes: History of the movement Trylovsky founded
+content_outline:
+- section: Вступ — Батько «Січі»
+  words: 400
+  subsections:
+  - Засновник гімнастичного руху «Січ»
+  - Адвокат і громадський діяч
+  - Творець українського спортивно-патріотичного руху
+- section: Юність та освіта (1864-1890)
+  words: 600
+  subsections:
+  - Народження на Покутті
+  - Освіта у Відні
+  - Юридична кар'єра
+  - Формування патріотичних поглядів
+- section: Заснування «Січі» (1900-1914)
+  words: 900
+  subsections:
+  - Ідея гімнастичних товариств
+  - Перша «Січ» у Заваллі (1900)
+  - Поширення руху Галичиною та Буковиною
+  - Вплив сокольського руху
+- section: Адвокатська та громадська діяльність (1890-1914)
+  words: 700
+  subsections:
+  - Правовий захист селян
+  - Політична діяльність
+  - Депутат Галицького сейму
+  - Боротьба за права українців
+- section: Воєнні роки та еміграція (1914-1941)
+  words: 700
+  subsections:
+  - Перша світова війна
+  - Українські Січові Стрільці
+  - Еміграція до Чехословаччини
+  - Смерть у Празі
+- section: Спадщина — Батько українського спорту
+  words: 700
+  subsections:
+  - Вплив на український національний рух
+  - «Січ» і сучасні спортивні організації
+  - Трильовський у памяті нації
+  - Значення для формування нації
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - Січ
+  - гімнастичне товариство
+  - адвокат
+  - громадський діяч
+  - патріотичний рух
+  - Галичина
+  - сейм
+  - січовик
+  - фізичне виховання
+  - національна свідомість
+  recommended:
+  - сокольський рух
+  - Покуття
+  - селянство
+  - правовий захист
+  - стрільці
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-31
+  related:
+  - c1-bio-28
+  - c1-bio-42
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

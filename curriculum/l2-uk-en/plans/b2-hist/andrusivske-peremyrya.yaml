@@ -1,0 +1,87 @@
+module: andrusivske-peremyrya
+level: b2-hist
+sequence: 60
+version: '1.0'
+title: 'Андрусівське перемир''я: Поділ України'
+focus: history
+pedagogy: CBI
+objectives:
+- Учень може пояснити умови Андрусівського перемир'я 1667 року
+- Учень може проаналізувати наслідки поділу України по Дніпру
+- Учень може оцінити роль Ордіна-Нащокіна в дипломатичній грі
+content_outline:
+- section: 'Вступ: Ніч дипломатії в Андрусові'
+  words: 400
+  subsections:
+  - The exhaustion of Poland and Muscovy by 1667
+  - The secret negotiations without Ukrainian representatives
+- section: 'Архітектор поділу: Афанасій Ордин-Нащокін'
+  words: 500
+  subsections:
+  - The figure of the Muscovite diplomat
+  - 'Strategy: divide and rule'
+  - Use of gifts and bribes
+- section: 'Умови договору: Геополітична ампутація'
+  words: 700
+  subsections:
+  - The border along the Dnipro river
+  - The fate of Kyiv ('rule of two years')
+  - The status of Zaporizhzhia (condominium)
+- section: 'Реакція України: Шок і гнів'
+  words: 600
+  subsections:
+  - Reaction of Doroshenko and Briukhovetsky
+  - The murder of Briukhovetsky by the mob
+  - The feeling of betrayal by both 'protectors'
+- section: 'Соціальні наслідки: Життя на розломі'
+  words: 600
+  subsections:
+  - Economic collapse and disruption of trade
+  - Forced migrations ('The Great Drive')
+  - Religious intolerance on both banks
+- section: Чому світ промовчав?
+  words: 400
+  subsections:
+  - The international context (wars in Europe)
+  - Why a weak Ukraine was beneficial to neighbors
+- section: 'Первинні джерела: Текст договору'
+  words: 300
+  subsections:
+  - Analysis of the articles of the truce
+- section: Деколонізаційний погляд
+  words: 500
+  subsections:
+  - Debunking the myth of 'stabilization'
+  - Andrusovo as a crime against statehood
+word_target: 4000
+vocabulary:
+- перемир'я
+- демаркація
+- кондомініум
+- розкол
+- сепаратний
+- статус-кво
+- депортація
+- біженці
+- змова
+- руйнація
+activities:
+- type: reading
+  focus: Analysis of the Andrusovo treaty text
+- type: quiz
+  focus: Terms and consequences of the truce
+- type: essay-response
+  focus: The tragedy of the partition of Ukraine
+- type: comparative-study
+  focus: Zboriv vs. Andrusovo
+- type: true-false
+  focus: Myths about the truce
+sources:
+- name: Andrusovo Treaty - Encyclopedia of Ukraine
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CA%5CN%5CAndrusovoTreatyof1667.htm
+  type: reference
+  notes: Academic summary
+- name: Text of the Treaty
+  url: http://litopys.org.ua/
+  type: primary
+  notes: Original articles

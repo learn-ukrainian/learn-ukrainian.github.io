@@ -1,0 +1,77 @@
+module: 11-checkpoint-cases
+level: a2
+sequence: 11
+version: '2.0'
+title: Checkpoint — Cases
+subtitle: Review and Mastery
+focus: checkpoint
+pedagogy: TTT
+objectives:
+- Learner can correctly identify and use all 7 cases
+- Learner can choose appropriate prepositions for each case
+- Learner can correct common case errors
+- Learner can apply case knowledge in mixed contexts
+sources:
+- name: Ukrainian State Standard 2024 - A2 Assessment
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Assessment criteria for case system mastery
+- name: CEFR A2 Can-Do Statements
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: A2 grammar proficiency requirements
+content_outline:
+- section: Overview
+  words: 200
+  points:
+  - Checkpoint overview and goals
+  - Self-assessment checklist
+- section: Skills Review / Повторення навичок
+  words: 600
+  points:
+  - Dative (Skill 1) - Recipients & Experiencers
+  - Instrumental (Skill 2) - Tools & Companions
+  - Prepositions (Skill 3) - Motion vs Location
+  - Services (Skill 4) - Post & Bank integration
+- section: Integration Challenge
+  words: 200
+  points:
+  - Mixed case narrative analysis
+  - Final summary and next steps
+word_target: 1000
+vocabulary:
+  required:
+  - відмінок (case)
+  - давальний (dative)
+  - орудний (instrumental)
+  - прийменник (preposition)
+  - допомагати (to help)
+  - подобатися (to like)
+  - з (with)
+  - для (for)
+  - без (without)
+  - через (because of)
+  - після (after)
+  - пошта (post office)
+  - банк (bank)
+  - відправляти (to send)
+  - обмінювати (to exchange)
+  recommended:
+  - правильно (correctly)
+  - помилка (mistake)
+  - виправити (to correct)
+  - перевірити (to check)
+  - оцінка (assessment)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - match-up
+  - fill-in
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a2-12 (Aspect Introduction)
+- a2-25 (Checkpoint - Aspect & Comparison)
+- a2-35 (Checkpoint - Complex Ideas)

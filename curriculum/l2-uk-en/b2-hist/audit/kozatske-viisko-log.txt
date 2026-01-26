@@ -1,0 +1,58 @@
+
+========================================
+  📋 Loaded Metadata from YAML sidecar
+
+📋 Auditing: B2 M48 — Козацьке військо та озброєння
+   File: curriculum/l2-uk-en/b2-hist/kozatske-viisko.md | Target: 4000 words
+  📋 Required activity types from meta: comparative-study, essay-response, quiz, reading, true-false
+  📋 Template: docs/l2-uk-en/templates/b2-history-module-template.md (pedagogy: CBI)
+
+  🔴 HYDRATION ERROR: Outline sums to 3550, but word_target is 4000
+     Missing 450 words in outline budget!
+     → Run /architect to fix content_outline
+
+  📊 Section Word Analysis:
+     Вступ: Феномен козацького війська          379 /  400  ✅ (-21)
+     Структура та Ієрархія: Від коша до полку   630 /  600  ✅ (+30)
+     Озброєння: Шабля, самопал та гармата       655 /  600  ✅ (+55)
+     Тактика бою: Козацький табір та розвідка   521 /  600  ⚠️ (-79)
+     Символіка та Клейноди: Знаки влади         389 /  400  ✅ (-11)
+     Читання: Опис козацького вишколу           232 /  250  ✅ (-18)
+     Первинні джерела: Голоси епохи             294 /  300  ✅ (-6)
+     Деколонізаційний погляд                    433 /  400  ✅ (+33)
+     ─────────────────────────────────────────────────────────────────
+     TOTAL                                     3533 / 3550  ❌ (-17)
+
+📋 Auditing: B2 M48 — Козацьке військо та озброєння
+   File: curriculum/l2-uk-en/b2-hist/kozatske-viisko.md | Target: 4000 words
+
+  📋 Found YAML activities file (6 activities)
+  > Опис козацького вишколу та побуту: 3 items (min 1)
+  > Психологія козацького воїна: 1 items (min 1)
+  > Структура та озброєння козацького війська: 8 items (min 8)
+  > Козацьке військо vs Регулярні армії Європи: 1 items (min 1)
+  > Військові факти: Шабля, гармата, дисципліна: 10 items (min 8)
+  > Спадкоємність мілітарних традицій: 1 items (min 1)
+
+--- STRICT GATES (Level B2) ---
+Words        ⚠️ 3904/4000 (raw: 4129) (96 short)
+Activities   ✅ 6/3
+Density      ✅ All > 1
+Unique_types ✅ 6/2 types
+Priority     ✅ Priority types used
+Engagement   ✅ 5/5
+Audio        ℹ️ No audio
+Vocab        ✅ 25/20
+Structure    ✅ Valid Structure
+Lint         ✅ Clean Format
+Pedagogy     ✅ Level-appropriate
+Content_heavy ✅ Content-heavy OK (6 activities)
+Grammar      ℹ️ N/A (covered by naturalness)
+Naturalness  ✅ 9/10 (High)
+Activity_quality 📋 Quality validation available (optional)
+Immersion    🇺🇦 98.8% (target 90-100% (history))
+Richness     ✅ 97% (history)
+
+Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/audit/kozatske-viisko-review.md
+
+✅ AUDIT PASSED.

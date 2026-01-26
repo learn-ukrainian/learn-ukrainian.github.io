@@ -1,0 +1,80 @@
+module: 03-dative-verbs
+level: a2
+sequence: 3
+version: '2.0'
+title: Dative Verbs
+subtitle: Verbs That Demand the Dative Case
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can use common verbs that require the dative case
+- Learner can distinguish between verbs taking dative vs accusative
+- Learner can construct sentences with indirect objects
+- Learner can use verbs of communication and interaction correctly
+sources:
+- name: Ukrainian State Standard 2024 - Verb Government
+  url: https://mon.gov.ua/
+  type: reference
+  notes: List of verbs requiring dative case per A2 level
+- name: Ukrainian Verb Government Reference
+  url: https://uk.wiktionary.org/
+  type: reference
+  notes: Case requirements for common verbs
+content_outline:
+- section: Introduction / Вступ
+  words: 250
+  points:
+  - Concept of verb government (керування)
+  - Comparison with English prepositions
+- section: Presentation / Презентація
+  words: 550
+  points:
+  - Dative-only verbs (допомагати, дякувати, вірити)
+  - Dative + Accusative verbs (давати, показувати)
+  - Impersonal usage (здається)
+- section: Practice / Практика
+  words: 150
+  points:
+  - Sentence formation with recipients
+  - Error correction: dative vs accusative
+- section: Dialogues / Діалоги
+  words: 50
+  points:
+  - Contextual use of dative-hungry verbs
+word_target: 1000
+vocabulary:
+  required:
+  - допомагати (to help)
+  - заважати (to bother)
+  - подобатися (to please/like)
+  - вірити (to believe)
+  - довіряти (to trust)
+  - дякувати (to thank)
+  - вибачати (to forgive)
+  - пробачати (to excuse)
+  - заздрити (to envy)
+  - симпатизувати (to sympathize)
+  - співчувати (to empathize)
+  - личити (to suit)
+  - підходити (to suit/fit)
+  - вистачати (to be enough)
+  - бракувати (to lack)
+  recommended:
+  - шкодити (to harm)
+  - служити (to serve)
+  - належати (to belong)
+  - сподобатися (to come to like - pf)
+  - захотітися (to feel like - pf)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - match-up
+  - fill-in
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a2-04 (Instrumental I)
+- a2-09 (All Cases Practice)
+- a2-11 (Checkpoint - Cases)

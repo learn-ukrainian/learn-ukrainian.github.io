@@ -1,0 +1,22 @@
+module: 55-honcharstvo-ta-rizbyarstvo
+level: c1
+sequence: 55
+version: '2.0'
+title: Гончарство та різьбярство
+subtitle: Pottery and Woodcarving Traditions
+focus: vocabulary
+pedagogy: Immersion & Analysis
+objectives:
+- Learner can analyze the stylistic differences between Opishne and Kosiv pottery
+- Learner can describe woodcarving techniques using specialized vocabulary
+- Learner can write a critical essay on folk art heritage
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

@@ -1,0 +1,109 @@
+module: yulian-bachynskyi
+level: c1-bio
+sequence: 39
+version: '2.0'
+title: 'Юліан Бачинський: Теоретик незалежності'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Бачинський_Юліан_Олександрович
+    title: Юліан Бачинський (Wikipedia UA)
+    notes: Основна біографічна інформація
+  secondary:
+  - url: https://diasporiana.org.ua/
+    title: Україна irredenta
+    notes: Головна праця
+  - url: https://litopys.org.ua/
+    title: Історія української політичної думки
+    notes: Контекст політичної думки
+content_outline:
+- section: Вступ — Пророк незалежності
+  words: 400
+  subsections:
+  - Бачинський як перший, хто чітко сформулював ідею незалежності
+  - Україна irredenta 1895 року
+  - Чому його забули та чому варто пам'ятати
+- section: Галицьке походження
+  words: 600
+  subsections:
+  - Народження в Галичині (1870)
+  - Освіта та формування поглядів
+  - Вплив соціалістичних ідей
+- section: Україна irredenta
+  words: 800
+  subsections:
+  - Головна праця життя
+  - Аргументи на користь незалежності
+  - Рецепція та критика
+- section: Соціалізм і національне питання
+  words: 700
+  subsections:
+  - Синтез соціалістичних та національних ідей
+  - Полеміка з марксистами
+  - Унікальність його позиції
+- section: Політична діяльність
+  words: 700
+  subsections:
+  - Участь в українських організаціях
+  - Журналістська робота
+  - Роль у формуванні політичної свідомості
+- section: Еміграція та останні роки
+  words: 600
+  subsections:
+  - Життя за кордоном
+  - Продовження публіцистичної діяльності
+  - Смерть та забуття
+- section: Дискусія — Ідеї, що випереджають час
+  words: 200
+  subsections:
+  - Чому деякі ідеї реалізуються через століття
+  - Бачинський та незалежність 1991 року
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - irredenta
+  - незалежність
+  - соціалізм
+  - теоретик
+  - політична думка
+  - самостійність
+  - публіцистика
+  - пророцтво
+  - еміграція
+  - ідеологія
+  recommended:
+  - національне питання
+  - марксизм
+  - соціал-демократія
+  - антиімперіалізм
+  - політична програма
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-22-mykhailo-drahomanov
+  related:
+  - c1-bio-42-mykola-mikhnovskyi
+  - c1-bio-51-viacheslav-lypynskyi
+  - c1-bio-52-dmytro-dontsov
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

@@ -1,0 +1,22 @@
+module: 61-synonyms-time
+level: b2
+sequence: 61
+version: '1.0'
+title: 'Синоніми: Час та Періоди'
+subtitle: Synonyms - Time and Periods
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Учень може розрізняти відтінки значень синонімів на позначення поточного моменту (зараз, тепер, наразі)
+- Учень вміє використовувати лексику часових періодів для опису історичних та особистих подій
+- Учень розуміє концепцію вічності та миті в українській мові
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

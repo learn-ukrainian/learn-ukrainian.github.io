@@ -1,0 +1,51 @@
+
+========================================
+  📋 Loaded Metadata from YAML sidecar
+
+📋 Auditing: B2 M18 — Люди Русі: Суспільство та побут
+   File: curriculum/l2-uk-en/b2-hist/ludy-rusi.md | Target: 4000 words
+  📋 Template: docs/l2-uk-en/templates/b2-history-module-template.md (pedagogy: CBI)
+
+  📊 Section Word Analysis:
+     Розминка                                               162 /  160  ✅ (+2)
+     Читання: Суспільство та повсякдення Київської Русі    2917 / 3200  ✅ (-283)
+     Первинні джерела: Голоси епохи                         384 /  400  ✅ (-16)
+     Деколонізаційний погляд: Руйнування імперських міфів   240 /  240  ✅ 
+     ─────────────────────────────────────────────────────────────────────────────
+     TOTAL                                                 3703 / 4000  ❌ (-297)
+
+📋 Auditing: B2 M18 — Люди Русі: Суспільство та побут
+   File: curriculum/l2-uk-en/b2-hist/ludy-rusi.md | Target: 4000 words
+
+  📋 Found YAML activities file (8 activities)
+  > Джерело: Руська Правда про соціальну ієрархію: 3 items (min 1)
+  > Суспільство Київської Русі: 10 items (min 8)
+  > Соціальні стани та їхні характеристики: 12 items (min 8)
+  > Аналіз: Система штрафів Руської Правди: 1 items (min 1)
+  > Феодалізм чи рабство в Київській Русі: 1 items (min 1)
+  > Рабство в Русі vs Кріпацтво в Російській імперії: 1 items (min 1)
+  > Термінологія соціальної системи Русі: 10 items (min 8)
+  > Факти про суспільство Київської Русі: 10 items (min 8)
+
+--- STRICT GATES (Level B2) ---
+Words        ✅ 4224/4000 (raw: 4319)
+Activities   ✅ 8/3
+Density      ✅ All > 1
+Unique_types ✅ 8/2 types
+Priority     ✅ Priority types used
+Engagement   ✅ 7/5
+Audio        ℹ️ No audio
+Vocab        ✅ 20/20
+Structure    ✅ Valid Structure
+Lint         ✅ Clean Format
+Pedagogy     ✅ Level-appropriate
+Content_heavy ✅ Content-heavy OK (8 activities)
+Grammar      ℹ️ N/A (covered by naturalness)
+Naturalness  ✅ 9/10 (High)
+Activity_quality 📋 Quality validation available (optional)
+Immersion    🇺🇦 99.5% (target 90-100% (history))
+Richness     ✅ 99% (history)
+
+Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/audit/ludy-rusi-review.md
+
+✅ AUDIT PASSED.

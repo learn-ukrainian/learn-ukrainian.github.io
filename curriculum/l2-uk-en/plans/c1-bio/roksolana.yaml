@@ -1,0 +1,116 @@
+module: roksolana
+level: c1-bio
+sequence: 7
+version: '2.0'
+title: 'Роксолана: Від рабині до султанші'
+focus: biography
+pedagogy: seminar
+objectives:
+- Проаналізувати біографію Роксолани як приклад соціальної мобільності
+- Дослідити феномен 'Жіночого султанату' та роль жінок в османській політиці
+- Вивчити дипломатичну лексику та епістолярний стиль XVI століття
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Роксолана
+    title: Роксолана (Wikipedia UA)
+    notes: Biography, rise to power, influence
+  secondary:
+  - url: https://uk.wikipedia.org/wiki/Сулейман_I
+    title: Сулейман I (Wikipedia UA)
+    notes: Context of Ottoman court
+  - url: https://uk.wikipedia.org/wiki/Гарем
+    title: Гарем (Wikipedia UA)
+    notes: Structure of Ottoman harem system
+content_outline:
+- section: Вступ — Найвпливовіша жінка Османської імперії
+  words: 400
+  subsections:
+  - Унікальність долі Роксолани
+  - Її місце в історії України та Туреччини
+  - Проблема джерел та легенд
+- section: Викрадення та рабство
+  words: 600
+  subsections:
+  - Походження з Рогатина (версії)
+  - Татарський набіг та полон
+  - Продаж на ринку рабів
+  - Потрапляння до гарему
+- section: Сходження до влади
+  words: 700
+  subsections:
+  - Прихильність Сулеймана
+  - Від рабині до хасекі
+  - Офіційний шлюб — безпрецедентний крок
+  - Народження дітей
+- section: Політичний вплив
+  words: 800
+  subsections:
+  - Участь у державних справах
+  - Листування з європейськими монархами
+  - Інтриги щодо спадкоємця
+  - Доля Мустафи та Ібрагіма-паші
+- section: Благодійність та будівництво
+  words: 600
+  subsections:
+  - Комплекс Хасекі
+  - Лазні, мечеті, школи
+  - Підтримка благодійних справ
+  - Архітектурна спадщина в Стамбулі
+- section: Спадщина та образ у культурі
+  words: 600
+  subsections:
+  - Смерть та поховання
+  - Образ у літературі та мистецтві
+  - Українська та турецька пам'ять
+  - Сучасні серіали та суперечки
+- section: Підсумок — Жінка, що змінила імперію
+  words: 300
+  subsections:
+  - Роксолана як символ сили волі
+  - Її вплив на османську традицію
+  - Значення для України
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - султанша
+  - хасекі
+  - гарем
+  - рабиня
+  - полон
+  - набіг
+  - спадкоємець
+  - інтрига
+  - благодійність
+  - меценатство
+  recommended:
+  - візир
+  - євнух
+  - фаворитка
+  - мечеть
+  - вакф
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  - critical-analysis
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-05 (Anna Yaroslavna - earlier Ukrainian woman abroad)
+  related:
+  - c1-bio-10 (Bohdan Khmelnytskyi - later Cossack period)
+  - c1-bio-12 (Ivan Mazepa - patronage theme)
+  - c1-bio-41 (Solomiya Krushelnytska - later fame abroad)
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

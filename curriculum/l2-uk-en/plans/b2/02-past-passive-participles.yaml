@@ -1,0 +1,103 @@
+module: 02-past-passive-participles
+level: b2
+sequence: 2
+version: '1.0'
+title: Дієприкметники минулого часу на -ний/-тий
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Ukrainian State Standard 2024 - Participles
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official participle formation and usage rules
+- name: Граматика сучасної української мови
+  url: https://uk.wikipedia.org/wiki/Граматика_української_мови
+  type: secondary
+  notes: Academic reference for participle morphology
+- name: CEFR B2 Grammar Descriptors
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 grammar complexity expectations
+content_outline:
+- section: Вступ — Що таке дієприкметник?
+  words: 400
+  points:
+  - Дієприкметник як прикметникова форма дієслова
+  - Місце в системі пасивного стану
+  - Зв'язок із попереднім модулем
+- section: Утворення дієприкметників на -ний
+  words: 700
+  points:
+  - Від основи інфінітива + -ний
+  - Приклади (написати → написаний, зробити → зроблений)
+  - Чергування приголосних (д → дж, т → ч)
+  - Типові помилки в утворенні
+- section: Утворення дієприкметників на -тий
+  words: 600
+  points:
+  - Від односкладових основ + -тий
+  - Приклади (закрити → закритий, забути → забутий)
+  - Правила вибору між -ний і -тий
+- section: Узгодження дієприкметників
+  words: 700
+  points:
+  - Узгодження в роді (написана книга, написаний лист, написане слово)
+  - Узгодження в числі (написані листи)
+  - Узгодження у відмінку (написаної книги, написаному листу)
+  - Повна парадигма відмінювання
+- section: Пасив із допоміжним дієсловом бути
+  words: 600
+  points:
+  - Конструкція бути + дієприкметник
+  - Теперішній час (Книга написана)
+  - Минулий час (Книга була написана)
+  - Майбутній час (Книга буде написана)
+- section: Регістрова специфіка
+  words: 500
+  points:
+  - Дієприкметники в літературному стилі
+  - Дієприкметники в академічному письмі
+  - Уникання надмірного вживання в розмовному стилі
+- section: Практика і підсумок
+  words: 300
+  points:
+  - Ключові правила утворення
+  - Типові помилки
+  - Підготовка до наступних модулів
+word_target: 3800
+vocabulary:
+  required:
+  - дієприкметник (participle)
+  - утворення (formation)
+  - основа (stem)
+  - суфікс (suffix)
+  - узгодження (agreement)
+  - відмінювання (declension)
+  - допоміжне дієслово (auxiliary verb)
+  - чергування (alternation)
+  - парадигма (paradigm)
+  - морфологія (morphology)
+  recommended:
+  - односкладовий (monosyllabic)
+  - складний (complex)
+  - правило (rule)
+  - виняток (exception)
+  - приклад (example)
+  forbidden: []
+activities:
+  types_required:
+  - error-correction
+  - quiz
+  - fill-in
+  - essay-response
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b2-03 (Impersonal -но/-то)
+- b2-07 (Active Participles Present)
+- b2-09 (Participles vs Relative Clauses)
+- b2-10 (B2.1a Checkpoint)

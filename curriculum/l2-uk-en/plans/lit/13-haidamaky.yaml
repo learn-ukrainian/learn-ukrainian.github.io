@@ -1,0 +1,104 @@
+module: 13-haidamaky
+level: lit
+sequence: 13
+version: '1.0'
+title: 'Гайдамаки: Кривава Свобода'
+subtitle: 'LIT-013: Епос Гніву і Спокути'
+focus: literature
+pedagogy: seminar
+objectives:
+- Analyze the historical context of Koliivshchyna
+- evaluate the ethical conflict of Gonta
+- Discuss the concept of "Holy Knife"
+sources:
+  primary:
+  - url: https://www.ukrlib.com.ua/books/printit.php?tid=10
+    title: Гайдамаки — повний текст
+    notes: Поема для детального аналізу
+  secondary:
+  - url: https://www.ukrlib.com.ua/analiz/printit.php?tid=10
+    title: Аналіз "Гайдамаків"
+    notes: Літературознавчий аналіз
+  - url: https://uk.wikipedia.org/wiki/Коліївщина
+    title: Коліївщина — історія
+    notes: Історичний контекст
+content_outline:
+- section: Вступ — Коліївщина 1768 року
+  words: 600
+  subsections:
+  - Історичне підґрунтя повстання
+  - Гайдамаки, конфедерати, уніати
+  - Чому Шевченко звернувся до цієї теми
+- section: Структура поеми
+  words: 600
+  subsections:
+  - Жанрова специфіка (епос + лірика)
+  - Три сюжетні лінії
+  - Авторські відступи
+- section: Ярема і Оксана — любовний роман
+  words: 700
+  subsections:
+  - Образ Яреми як "нового козака"
+  - Кохання посеред хаосу
+  - Художня вигадка vs історія
+- section: Гонта і сини — античний фатум
+  words: 800
+  subsections:
+  - Іван Гонта як трагічний герой
+  - Синовбивство — кульмінація поеми
+  - Конфлікт обов'язку і почуття
+- section: Етика бунту
+  words: 600
+  subsections:
+  - Чи виправдовує мета засоби?
+  - Насильство і спокута
+  - Шевченко як суддя історії
+- section: Підсумок — Пам'ять і травма
+  words: 400
+  subsections:
+  - Як пам'ятати страшне минуле
+  - Українсько-польські відносини
+  - Сучасне прочитання поеми
+word_target: 4500
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - гайдамаки
+  - коліївщина
+  - конфедерати
+  - уніати
+  - синовбивство
+  - фатум
+  - епос
+  - бунт
+  - спокута
+  - травма
+  recommended:
+  - ксьондз
+  - повстання
+  - помста
+  - катарсис
+  - пам'ять
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - cloze
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: lit-11 (Young Shevchenko)
+  related:
+  - lit-14 (Son — політична сатира)
+  - lit-04 (Eneida War — порівняння воєнної тематики)
+  - c1-hist (Historical modules — Руїна)
+constraints:
+  min_engagement_boxes: 3
+  min_examples: 15
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

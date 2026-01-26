@@ -1,0 +1,99 @@
+module: lysty-stusa
+level: c1-hist
+sequence: 40
+version: '1.0'
+title: Листи Василя Стуса з таборів
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Голос із ГУЛАГу
+  words: 400
+  subsections:
+  - Стус — поет і дисидент
+  - Листи — унікальне джерело
+  - Умови написання
+  - Чому важливі
+- section: Біографічний контекст
+  words: 500
+  subsections:
+  - Життя до арешту
+  - Перший арешт — 1972
+  - Другий арешт — 1980
+  - Смерть у таборі — 1985
+- section: Табір як контекст
+  words: 600
+  subsections:
+  - Де утримувався — Мордовія, Пермь
+  - Умови — режим, праця, харчування
+  - Цензура листів
+  - Що можна було писати
+- section: Листи до родини
+  words: 700
+  subsections:
+  - Фрагменти (з глосами)
+  - До дружини
+  - До сина
+  - Особисте і політичне
+  - Як зберігав людяність
+- section: Філософські роздуми
+  words: 600
+  subsections:
+  - Стус як мислитель
+  - Українська ідентичність
+  - Сенс опору
+  - Готовність до смерті
+- section: Критика джерела
+  words: 400
+  subsections:
+  - Цензура — що вирізано
+  - Самоцензура — чого не писав
+  - Як читати між рядками
+  - Порівняння з поезією
+- section: Підсумок
+  words: 300
+  subsections:
+  - Листи як духовний заповіт
+  - Стус — символ опору
+  - Зв'язок із сьогоденням
+word_target: 3500
+vocabulary:
+- табір
+- ГУЛАГ
+- політв'язень
+- дисидент
+- цензура
+- самоцензура
+- режим
+- опір
+- заповіт
+- мученик
+- етап
+- побачення
+- передача
+- карцер
+- голодування
+activities:
+- type: reading
+  focus: Letter to son with glosses
+- type: between-the-lines
+  focus: Read a censored letter — what might have been cut?
+- type: comparative-study
+  focus: Compare letter tone to poetry on same themes
+- type: character-study
+  focus: What do letters reveal about Stus's worldview?
+- type: essay-response
+  focus: Як Стус зберігав людяність у нелюдських умовах?
+sources:
+- name: Василь Стус (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Василь_Стус
+  type: reference
+  notes: Biography
+- name: Листи Стуса
+  url: https://uk.wikisource.org/wiki/Категорія:Листи_Василя_Стуса
+  type: primary
+  notes: Letters collection
+- name: Табори для політв'язнів
+  url: https://uk.wikipedia.org/wiki/Концентраційні_табори_СРСР
+  type: reference
+  notes: Gulag context

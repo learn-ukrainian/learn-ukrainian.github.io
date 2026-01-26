@@ -1,0 +1,97 @@
+module: pereiaslav-tsykl
+level: c1-hist
+sequence: 82
+version: '1.0'
+title: 'Переяславський цикл: Хмельницький → Руїна'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Класичний цикл
+  words: 400
+  subsections:
+  - 1654 — початок
+  - Чому це приклад циклу
+  - Від обіцянок до знищення
+  - Структура модуля
+- section: Фаза 1 — Підкуп (1654)
+  words: 700
+  subsections:
+  - Що обіцяли — Березневі статті
+  - Автономія — реальна
+  - 60,000 реєстр
+  - Захист від Польщі
+- section: Фаза 2 — Залежність (1654-1667)
+  words: 600
+  subsections:
+  - Московські воєводи
+  - Обмеження контактів
+  - Війна за Україну
+  - Андрусівський мир — перший розподіл
+- section: Фаза 3 — Зрада (1667-1686)
+  words: 600
+  subsections:
+  - Розподіл України — без питання
+  - Передача Києва — за 200,000
+  - 1686 — церква під Москвою
+  - Статті — систематичне порушення
+- section: Фаза 4 — Знищення (поступове)
+  words: 500
+  subsections:
+  - Скасування козацьких прав
+  - Руїна — внутрішня війна
+  - Московська маніпуляція
+  - До Мазепи — що залишилось
+- section: Аналіз циклу
+  words: 400
+  subsections:
+  - Що можна було зробити інакше
+  - Альтернативи Переяславу
+  - Уроки для майбутнього
+- section: Підсумок
+  words: 300
+  subsections:
+  - Перший повний цикл
+  - Паттерн встановлено
+  - Перехід до Мазепи
+word_target: 3500
+vocabulary:
+- Переяславська рада
+- статті
+- автономія
+- воєвода
+- Руїна
+- розподіл
+- цикл
+- зрада
+- маніпуляція
+- обіцянка
+- Березневі статті
+- Андрусівське перемир'я
+- реєстр
+- протекторат
+- васальна залежність
+activities:
+- type: critical-analysis
+  focus: Map Pereiaslav cycle through four phases
+- type: critical-analysis
+  focus: Compare 1654 promises vs. reality by 1686
+- type: essay-response
+  focus: What if Khmelnytsky chose differently?
+- type: critical-analysis
+  focus: Apply co-optation framework to Pereiaslav
+- type: essay-response
+  focus: На якому етапі Переяславська угода була приречена на провал?
+sources:
+- name: Переяславська рада (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Переяславська_рада
+  type: reference
+  notes: 1654 agreement
+- name: Руїна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Руїна_(історія_України)
+  type: reference
+  notes: Ruin period
+- name: Статті Богдана Хмельницького (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Статті_Богдана_Хмельницького
+  type: reference
+  notes: Agreement articles

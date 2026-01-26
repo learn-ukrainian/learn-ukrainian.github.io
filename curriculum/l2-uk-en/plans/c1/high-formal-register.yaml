@@ -1,0 +1,22 @@
+module: 43-high-formal-register
+level: c1
+sequence: 1
+version: '1.0'
+title: 'Офіційно-діловий стиль: Мова документів'
+subtitle: 'High Formal Register: Language of Documents'
+focus: style
+pedagogy: Academic
+objectives:
+- Learner can analyze the structure and language of official documents (laws, decrees, contracts)
+- Learner can identify and use standard bureaucratic clichés
+- Learner can transform neutral text into official-business style
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

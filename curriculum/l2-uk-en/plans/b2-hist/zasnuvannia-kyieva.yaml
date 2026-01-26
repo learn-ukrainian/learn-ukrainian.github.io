@@ -1,0 +1,83 @@
+module: zasnuvannia-kyieva
+level: b2-hist
+sequence: 6
+version: '1.0'
+title: Заснування Києва
+focus: history
+pedagogy: seminar
+objectives:
+- Учень може розповісти легенду про заснування Києва братами Києм, Щеком, Хоривом
+  та сестрою Либідь
+- Учень може пояснити геополітичне значення Києва в контексті шляху «з варягів у греки»
+- Учень може порівняти легендарні та археологічні свідчення про виникнення міста
+- Учень може спростувати імперські міфи про походження Києва
+content_outline:
+- section: Вступ
+  words: 196
+  subsections:
+  - Значення Києва як сакрального серця держави
+- section: Читання
+  words: 1233
+  subsections:
+  - Аналіз «Повісті минулих літ» як джерела
+- section: Варяги та хозари
+  words: 972
+  subsections:
+  - Шлях «з варягів у греки» та Кенугард
+- section: Первинні джерела
+  words: 242
+  subsections:
+  - Літописні свідчення та візантійські описи
+- section: Деколонізаційний погляд
+  words: 359
+  subsections:
+  - Спростування міфу про «спільну колиску»
+- section: Археологічні свідчення
+  words: 334
+  subsections:
+  - Язичницьке капище на Старокиївській горі
+- section: 'Хронологія: Легенди та археологія'
+  words: 250
+  subsections:
+  - Legend of Kyi, Shchek, Khoryv
+  - Archaeological evidence (Starokyivska Hora)
+  - Strategic location
+- section: Підсумок
+  words: 227
+  subsections:
+  - Узагальнення значення заснування Києва
+- section: Потрібно більше практики?
+  words: 243
+  subsections:
+  - Ресурси для самостійного поглиблення знань
+word_target: 4000
+vocabulary:
+- засновник
+- легенда
+- літопис
+- пагорб
+- данина
+- каганат
+- варяги
+- торговельний шлях
+- капіще
+- дитинець
+- переправа
+- транзитна торгівля
+- деколонізація
+- ідентичність
+- артефакт
+activities:
+- type: reading
+  focus: Аналіз літописної легенди
+- type: critical-analysis
+  focus: Зіставлення легенди та археології
+- type: essay-response
+  focus: Геополітичне значення Києва
+sources:
+- name: Повість минулих літ (Нестор)
+  url: https://litopys.org.ua/pvl/pvl01.htm
+  type: primary
+- name: Про управління імперією (Костянтин Багрянородний)
+  url: http://litopys.org.ua/izborn79/izb79_03.htm
+  type: primary

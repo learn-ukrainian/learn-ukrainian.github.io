@@ -1,0 +1,96 @@
+module: interpretation-basics
+level: c2
+sequence: 88
+version: '2.0'
+title: Основи усного перекладу
+focus: practice
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: AIIC — Training for Conference Interpreters
+  url: https://aiic.org/
+  type: reference
+  notes: International standards for interpreter training
+- name: Чернов — Теорія і практика синхронного перекладу
+  url: https://uk.wikipedia.org/wiki/Синхронний_переклад
+  type: primary
+  notes: Classic Soviet/Ukrainian interpretation methodology
+- name: Gile — Basic Concepts and Models for Interpreter Training
+  url: https://benjamins.com/
+  type: secondary
+  notes: Cognitive load model for interpretation
+content_outline:
+- section: Вступ — Усний переклад як професія
+  words: 500
+  points:
+  - Різниця між письмовим і усним перекладом
+  - Типи усного перекладу (послідовний, синхронний, шептання)
+  - Ринок усного перекладу в Україні
+- section: Послідовний переклад
+  words: 700
+  points:
+  - Техніка ведення нотаток (нотація)
+  - Символи та скорочення
+  - Тренування пам'яті
+  - Відтворення змісту українською
+- section: Синхронний переклад — Знайомство
+  words: 700
+  points:
+  - Когнітивні вимоги синхронного перекладу
+  - Модель зусиль Gile
+  - Техніка відставання (décalage)
+  - Обладнання та робоче місце
+- section: Розвиток ключових навичок
+  words: 600
+  points:
+  - Активне слухання
+  - Shadowing (тіньове повторення)
+  - Parafrasing (перефразування)
+  - Розширення робочої пам'яті
+- section: Етика та професійні стандарти
+  words: 500
+  points:
+  - Конфіденційність
+  - Нейтральність перекладача
+  - Робота в стресових ситуаціях
+  - Професійні асоціації
+- section: Практична майстерня
+  words: 700
+  points:
+  - Вправи на розвиток пам'яті
+  - Практика нотації
+  - Послідовний переклад короткого виступу
+  - Shadowing та парафразування
+word_target: 4000
+vocabulary:
+  required:
+  - усний переклад (interpretation)
+  - послідовний переклад (consecutive interpretation)
+  - синхронний переклад (simultaneous interpretation)
+  - нотація (note-taking)
+  - відставання (décalage/time lag)
+  - робоча пам'ять (working memory)
+  - когнітивне навантаження (cognitive load)
+  - shadowing (shadow interpreting)
+  - парафразування (paraphrasing)
+  - конфіденційність (confidentiality)
+  recommended:
+  - кабіна перекладача (interpreter booth)
+  - переклад шепотінням (whispered interpretation)
+  - релейний переклад (relay interpretation)
+  - ретур (retour/B language)
+  - модель зусиль (effort model)
+  forbidden: []
+activities:
+  types_required:
+  - match-up
+  - essay-response
+  - quiz
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-89 (Capstone Topic Selection)
+- c2-94 (Capstone Defense — oral skills)

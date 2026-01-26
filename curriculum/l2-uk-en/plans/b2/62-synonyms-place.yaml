@@ -1,0 +1,22 @@
+module: 62-synonyms-place
+level: b2
+sequence: 62
+version: '1.0'
+title: 'Синоніми: Місце та Простір'
+subtitle: Synonyms - Place and Space
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Учень може розрізняти відтінки значень синонімів на позначення місця (тут, тутечки, на цьому місці)
+- Учень вміє використовувати лексику простору для опису географічних та міських локацій
+- Учень розуміє різницю між статичним положенням та напрямком руху
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

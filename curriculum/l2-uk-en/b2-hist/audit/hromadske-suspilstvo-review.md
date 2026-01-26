@@ -1,7 +1,7 @@
 # Audit Report: M137 — hromadske-suspilstvo.md
 **Level:** B2 | **Module:** M137 | **Phase:** HIST.13 | **Pedagogy:** Not Specified | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 20:22:07
+**Generated:** 2026-01-25 22:23:50
 
 ## Configuration
 **Type:** B2-history

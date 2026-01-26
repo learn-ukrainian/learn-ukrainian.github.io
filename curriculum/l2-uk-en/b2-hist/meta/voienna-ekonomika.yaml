@@ -1,11 +1,105 @@
-# Meta for Воєнна економіка України
+module: b2-hist-136
+id: b2-hist-136
 slug: voienna-ekonomika
 title: "Воєнна економіка України"
-level: B2
-track: history
+subtitle: "Ukraine's War Economy"
+version: '2.0'
 phase: "HIST.13 [Russian Aggression]"
-status: skeleton
 focus: history
+pedagogy: CBI
+register: публіцистичний
+duration: 120
+transliteration: none
+objectives:
+  - "Учень може описати трансформацію української економіки під час війни"
+  - "Учень може пояснити роль волонтерського руху"
+  - "Учень може проаналізувати економічні виклики та досягнення"
+  - "Учень може оцінити стійкість української економіки"
+grammar:
+  - "Теперішній та минулий час"
+  - "Економічна лексика"
+  - "Складнопідрядні речення"
 word_target: 4000
-prerequisites: []
-learning_outcomes: []
+content_outline:
+  - section: "Вступ: Економіка на війні"
+    words: 400
+    points:
+      - "Економічний шок 2022 року"
+      - "Як Україна вистояла"
+      - "Воєнна економіка: що це означає"
+  - section: "Виклики та руйнування"
+    words: 800
+    points:
+      - "Втрата території та підприємств"
+      - "Руйнування інфраструктури"
+      - "Енергетичний терор"
+      - "Блокада портів"
+  - section: "Адаптація та мобілізація"
+    words: 1000
+    points:
+      - "Перенесення виробництв"
+      - "Оборонна промисловість"
+      - "Волонтерський рух"
+      - "Зернова угода"
+      - "Міжнародна допомога"
+  - section: "Первинні джерела"
+    words: 800
+    points:
+      - "Економічна статистика"
+      - "Свідчення підприємців"
+      - "Волонтерські звіти"
+  - section: "Деколонізаційний погляд"
+    words: 500
+    points:
+      - "Російська стратегія: знищити економіку"
+      - "Реальність: стійкість нації"
+      - "Економіка як фронт"
+  - section: "Підсумок: Відбудова майбутнього"
+    words: 500
+    points:
+      - "План відбудови"
+      - "Інтеграція з ЄС"
+      - "Економічне майбутнє України"
+vocabulary_hints:
+  required:
+    - економіка (economy)
+    - війна (war)
+    - волонтер (volunteer)
+    - інфраструктура (infrastructure)
+    - виробництво (production)
+    - допомога (aid)
+    - відбудова (reconstruction)
+    - стійкість (resilience)
+  recommended:
+    - енергетика (energy)
+    - експорт (export)
+    - санкції (sanctions)
+    - інвестиції (investments)
+    - підприємство (enterprise)
+    - ВВП (GDP)
+activity_hints:
+  - type: reading
+    focus: "Історії українських підприємців на війні"
+    source: "Медіа-матеріали"
+    items: 4
+  - type: quiz
+    focus: "Воєнна економіка України"
+    items: 15
+  - type: match-up
+    focus: "Виклик → рішення"
+    items: 10
+  - type: fill-in
+    focus: "Економічна лексика"
+    items: 10
+  - type: essay-response
+    focus: "Як волонтерський рух допоміг українській економіці вистояти?"
+    word_target: 250
+prerequisites:
+  - b2-hist-135 (Каховська ГЕС)
+connects_to:
+  - b2-hist-137 (Злочини і стійкість)
+  - b2-hist-138 (Міжнародна підтримка)
+naturalness:
+  score: 10
+  status: PASS
+  justification: "Сучасний український для економічного наративу"

@@ -1,0 +1,103 @@
+module: translation-theory
+level: c2
+sequence: 33
+version: '2.0'
+title: Теорія перекладу
+focus: literature
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Перекладознавство — Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Перекладознавство
+  type: reference
+  notes: Translation studies overview
+- name: Українська школа перекладу
+  url: https://uk.wikipedia.org/wiki/Український_художній_переклад
+  type: reference
+  notes: Ukrainian translation tradition
+- name: Григорій Кочур — перекладач
+  url: https://ukrlib.com.ua/
+  type: primary
+  notes: Master of Ukrainian literary translation
+content_outline:
+- section: Вступ — Що таке переклад?
+  words: 500
+  points:
+  - Визначення перекладу
+  - Типи перекладу (літературний, технічний, усний)
+  - Роль перекладача
+- section: Історія перекладознавства
+  words: 600
+  points:
+  - Від Цицерона до сучасності
+  - Вільний vs. буквальний переклад
+  - Поняття еквівалентності
+  - Українська перекладознавча традиція
+- section: Основні концепції
+  words: 700
+  points:
+  - Еквівалентність (формальна, динамічна)
+  - Адекватність перекладу
+  - Втрати і компенсації
+  - Неперекладність
+- section: Стратегії перекладу
+  words: 700
+  points:
+  - Одомашнення (domestication)
+  - Очуження (foreignization)
+  - Культурна адаптація
+  - Вибір стратегії
+- section: Проблеми художнього перекладу
+  words: 600
+  points:
+  - Переклад метафор і ідіом
+  - Переклад гумору і каламбурів
+  - Переклад реалій
+  - Переклад власних назв
+- section: Українська школа художнього перекладу
+  words: 500
+  points:
+  - Кочур і його спадщина
+  - Перекладацькі здобутки (Шекспір, Гете)
+  - Сучасні перекладачі
+  - Переклад на українську vs. з української
+- section: Підсумок
+  words: 400
+  points:
+  - Переклад як творчість
+  - Від теорії до практики
+  - Підготовка до перекладацької роботи
+word_target: 4000
+vocabulary:
+  required:
+  - переклад (translation)
+  - перекладознавство (translation studies)
+  - еквівалентність (equivalence)
+  - адекватність (adequacy)
+  - одомашнення (domestication)
+  - очуження (foreignization)
+  - оригінал (original/source text)
+  - цільова мова (target language)
+  - реалія (culture-specific term)
+  - компенсація (compensation)
+  recommended:
+  - калька (calque)
+  - транслітерація (transliteration)
+  - локалізація (localization)
+  - втрата (loss)
+  - інтерпретація (interpretation)
+  forbidden: []
+activities:
+  types_required:
+  - essay-response
+  - quiz
+  - comparative-study
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-34 (Literary Translation I — Poetry)
+- c2-35 (Literary Translation II — Prose)
+- c2-85-88 (C2.4 Translation Practice)

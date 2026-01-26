@@ -1,0 +1,98 @@
+module: donbas-industrializatsiia
+level: c1-hist
+sequence: 77
+version: '1.0'
+title: 'Донбас: Індустріалізація та ідентичність'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Регіон, якого не було
+  words: 400
+  subsections:
+  - Донбас — штучне створення
+  - До індустріалізації — степ
+  - Промисловий регіон — з нуля
+  - Структура модуля
+- section: Створення промислового центру
+  words: 700
+  subsections:
+  - Джон Юз — засновник Донецька
+  - Вугілля і метал
+  - Імпортована робоча сила
+  - Росіяни, українці, греки, євреї
+- section: «Робітнича» ідентичність
+  words: 600
+  subsections:
+  - Клас, не нація
+  - Радянська пропаганда
+  - «Донбас — серце Росії»
+  - Мовний зсув
+- section: Українці Донбасу
+  words: 600
+  subsections:
+  - Частка населення
+  - Село vs. місто
+  - Збереження ідентичності
+  - Дисиденти з Донбасу — Стус
+- section: Після 1991
+  words: 500
+  subsections:
+  - Економічний колапс
+  - Олігархи
+  - Проросійські настрої — чому
+  - Але й українські — теж
+- section: 2014-2022
+  words: 400
+  subsections:
+  - «Русская весна»
+  - Війна на Донбасі
+  - Окупація
+  - Донбас — не тільки сепаратизм
+- section: Підсумок
+  words: 300
+  subsections:
+  - Донбас — створений регіон
+  - Ідентичність — конкуренція наративів
+  - Перехід до Криму
+word_target: 3500
+vocabulary:
+- Донбас
+- індустріалізація
+- робітничий клас
+- русифікація
+- шахтар
+- олігарх
+- сепаратизм
+- ідентичність
+- колапс
+- окупація
+- Юзівка
+- важка промисловість
+- пролетаріат
+- регіоналізм
+- деіндустріалізація
+activities:
+- type: historical-analysis
+  focus: How Donbas was created — not ancient
+- type: identity-analysis
+  focus: Class vs. national identity in Donbas
+- type: demographic-study
+  focus: Who lives in Donbas — ethnic composition over time
+- type: contemporary-analysis
+  focus: 2014-2022 — why separatism, but also resistance
+- type: essay-response
+  focus: Чи Донбас 'російський'? Деконструкція міфу
+sources:
+- name: Донбас (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Донбас
+  type: reference
+  notes: Regional overview
+- name: Індустріалізація Донбасу (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Індустріалізація_Донбасу
+  type: reference
+  notes: Industrial history
+- name: Джон Юз (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Джон_Юз
+  type: reference
+  notes: John Hughes founder

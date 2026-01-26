@@ -1,0 +1,22 @@
+module: 44-intimate-register
+level: c1
+sequence: 1
+version: '1.0'
+title: 'Інтимно-ласкавий стиль: Мова близьких стосунків'
+subtitle: 'Intimate Register: Language of Close Relationships'
+focus: style
+pedagogy: Sociolinguistics
+objectives:
+- Learner can identify and use diminutive forms to express affection
+- Learner can distinguish between neutral and intimate registers
+- Learner can express deep emotions (love, care, longing) in Ukrainian
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

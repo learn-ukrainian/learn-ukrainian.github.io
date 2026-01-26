@@ -1,0 +1,104 @@
+module: 13-emphasis-and-inversion
+level: b2
+sequence: 13
+version: '1.0'
+title: Емфаза та інверсія
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Ukrainian State Standard 2024 - Word Order
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Stylistic word order variations at B2
+- name: Сучасна українська літературна мова - Стилістика
+  url: https://uk.wikipedia.org/wiki/Стилістика
+  type: secondary
+  notes: Emphatic constructions in Ukrainian
+- name: CEFR B2 Stylistic Competence
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 style and register awareness
+content_outline:
+- section: Вступ — Порядок слів в українській мові
+  words: 400
+  points:
+  - Вільний порядок слів — міф чи реальність
+  - Прагматичний вплив порядку слів
+  - Різниця між нейтральним та емфатичним порядком
+- section: Тема-рема структура
+  words: 700
+  points:
+  - Що таке тема (відома інформація)
+  - Що таке рема (нова інформація)
+  - Нейтральний порядок (тема → рема)
+  - Контекстуальний вплив на структуру
+- section: Емфатичний порядок слів
+  words: 700
+  points:
+  - Виділення підмета на початку
+  - Виділення додатка на початку
+  - Виділення обставини
+  - Емфатичний наголос у мовленні
+- section: Інверсія для стилістичного ефекту
+  words: 600
+  points:
+  - Типи інверсії
+  - Інверсія в художньому стилі
+  - Інверсія в публіцистиці
+  - Інверсія в розмовному мовленні
+- section: Виділення елементів речення
+  words: 600
+  points:
+  - Конструкція "саме" / "якраз"
+  - Конструкція "це... що/який"
+  - Повтор для емфази
+  - Парцеляція (розчленування речення)
+- section: Контекстуальний вибір
+  words: 500
+  points:
+  - Коли використовувати інверсію
+  - Стилістичний ефект різних порядків
+  - Уникання штучності
+- section: Практика і підсумок
+  words: 300
+  points:
+  - Аналіз текстів
+  - Створення емфатичних конструкцій
+  - Підготовка до модуля 14
+word_target: 3800
+vocabulary:
+  required:
+  - емфаза (emphasis)
+  - інверсія (inversion)
+  - порядок слів (word order)
+  - тема (theme - given information)
+  - рема (rheme - new information)
+  - виділення (highlighting)
+  - саме (exactly/precisely)
+  - якраз (just/exactly)
+  - нейтральний (neutral)
+  - стилістичний ефект (stylistic effect)
+  recommended:
+  - парцеляція (parcellation)
+  - прагматика (pragmatics)
+  - контекст (context)
+  - наголос (stress/emphasis)
+  - художній стиль (artistic style)
+  forbidden: []
+activities:
+  types_required:
+  - group-sort
+  - quiz
+  - reading
+  - fill-in
+  - essay-response
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b2-14 (Stylistic Connectors)
+- 'b2-22 (Register: Literary Ukrainian)'
+- b2-25 (B2.1b Checkpoint)

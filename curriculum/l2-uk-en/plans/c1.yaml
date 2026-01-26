@@ -1,0 +1,49 @@
+# C1 Level Plan - Ukrainian for English Speakers
+# Source of truth: docs/l2-uk-en/C1-CURRICULUM-PLAN.md
+
+level: c1
+track: core
+version: "1.0"
+status: in_progress
+vocabulary_target: 3000
+cumulative_vocabulary: 9000
+immersion: "100%"
+
+phases:
+  - id: C1.1
+    name: "Academic Foundation"
+    modules: [1, 20]
+    focus: "Academic discourse, research terminology"
+
+  - id: C1.2
+    name: "Professional & Social Context"
+    modules: [21, 35]
+    focus: "Professional communication, social issues"
+
+  - id: C1.3
+    name: "Advanced Stylistics & Rhetoric"
+    modules: [36, 55]
+    focus: "Rhetorical devices, persuasion, argumentation"
+
+  - id: C1.4
+    name: "Folk Culture & Fine Arts"
+    modules: [56, 91]
+    focus: "Traditional culture, music, visual arts"
+
+  - id: C1.5
+    name: "Literature"
+    modules: [92, 106]
+    focus: "Literary analysis, critical thinking"
+
+grammar_scope:
+  - Academic writing conventions
+  - Advanced rhetorical structures
+  - Stylistic nuance
+  - Cultural references
+  - Literary devices
+  - Meta-linguistic awareness
+
+notes: |
+  C1 achieves proficient-level Ukrainian suitable for academic
+  and professional contexts. Heavy emphasis on cultural literacy
+  and stylistic mastery.

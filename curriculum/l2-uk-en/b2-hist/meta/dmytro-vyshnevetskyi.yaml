@@ -1,10 +1,10 @@
 module: dmytro-vyshnevetskyi
 id: b2-hist-43
-title: "Дмитро Вишневецький: Перший кошовий"
-subtitle: "The Legendary Founder of the First Sich"
+title: 'Дмитро Вишневецький: Перший кошовий'
+subtitle: The Legendary Founder of the First Sich
 slug: dmytro-vyshnevetskyi
 version: '2.0'
-phase: "HIST.5 [Rise of Cossacks]"
+phase: HIST.5 [Rise of Cossacks]
 focus: history
 pedagogy: CBI
 word_target: 3684
@@ -12,70 +12,66 @@ register: публіцистичний
 duration: 120
 transliteration: none
 tags:
-  - history
-  - cossack
-  - biography
-  - fortress
+- history
+- cossack
+- biography
+- fortress
 grammar:
-  - "Historical narrative: past perfective"
-  - "Passive voice in historical descriptions"
+- 'Historical narrative: past perfective'
+- Passive voice in historical descriptions
 objectives:
-  - "Learner can describe the role of Dmytro Vyshnevetskyi in the founding of the first Sich"
-  - "Learner can analyze the geopolitical significance of the Khortytsia fortress"
-  - "Learner can understand the legendary status of Baida in Ukrainian folklore"
+- Learner can describe the role of Dmytro Vyshnevetskyi in the founding of the first Sich
+- Learner can analyze the geopolitical significance of the Khortytsia fortress
+- Learner can understand the legendary status of Baida in Ukrainian folklore
 vocabulary_count: 25
 naturalness:
   score: 9
   status: PASS
 content_outline:
-  - section: "Вступ"
-    words: 302
-    points:
-      - "The transition from princes to cossack leaders"
-      - "Dmytro Vyshnevetskyi as a figure of the frontier"
-  - section: "Шлях князя: Від Волині до Степу"
-    words: 758
-    points:
-      - "Origins and noble status"
-      - "Early military experience"
-      - "Diplomatic maneuvers"
-  - section: "Заснування Малої Хортиці"
-    words: 648
-    points:
-      - "Strategic necessity of the 1550s"
-      - "Life in the first fortress"
-      - "Historical legacy"
-  - section: "Читання"
-    words: 353
-    points:
-      - "Analysis of folk ballads and primary accounts"
-  - section: "Геополітика і Дипломатія"
-    words: 521
-    points:
-      - "Relations with Poland, Lithuania, and Moscow"
-      - "The anti-Tatar coalition strategy"
-  - section: "Первинні джерела"
-    words: 349
-    points:
-      - "Chronicle accounts of Vyshnevetskyi's death"
-      - "Ballad of Baida"
-  - section: "Деколонізаційний погляд"
-    words: 308
-    points:
-      - "Vyshnevetskyi as an independent actor"
-      - "The myth of Moscow's protectorate"
-  - section: "Есе"
-    words: 445
-    points:
-      - "Analysis of the transition from princely to cossack statehood"
+- section: Вступ
+  words: 302
+  points:
+  - The transition from princes to cossack leaders
+  - Dmytro Vyshnevetskyi as a figure of the frontier
+- section: 'Шлях князя: Від Волині до Степу'
+  words: 758
+  points:
+  - Origins and noble status
+  - Early military experience
+  - Diplomatic maneuvers
+- section: Заснування Малої Хортиці
+  words: 648
+  points:
+  - Strategic necessity of the 1550s
+  - Life in the first fortress
+  - Historical legacy
+- section: Читання
+  words: 353
+  points:
+  - Analysis of folk ballads and primary accounts
+- section: Геополітика і Дипломатія
+  words: 521
+  points:
+  - Relations with Poland, Lithuania, and Moscow
+  - The anti-Tatar coalition strategy
+- section: Первинні джерела
+  words: 349
+  points:
+  - Chronicle accounts of Vyshnevetskyi's death
+  - Ballad of Baida
+- section: Деколонізаційний погляд
+  words: 308
+  points:
+  - Vyshnevetskyi as an independent actor
+  - The myth of Moscow's protectorate
 activity_hints:
-  - type: reading
-    focus: "Ballad of Baida: Analysis of folk imagery"
-  - type: quiz
-    focus: "Biography and military achievements of Vyshnevetskyi"
-  - type: essay-response
-    focus: "Vyshnevetskyi as the bridge between Rus princes and Cossack hetmans"
-  - type: comparative-study
-    focus: "Vyshnevetskyi vs later Cossack leaders"
-  - type: critical-analysis
-    focus: "Analyzing primary source accounts of his martyrdom"
+- type: reading
+  focus: 'Ballad of Baida: Analysis of folk imagery'
+- type: quiz
+  focus: Biography and military achievements of Vyshnevetskyi
+- type: essay-response
+  focus: Vyshnevetskyi as the bridge between Rus princes and Cossack hetmans
+- type: comparative-study
+  focus: Vyshnevetskyi vs later Cossack leaders
+- type: critical-analysis
+  focus: Analyzing primary source accounts of his martyrdom

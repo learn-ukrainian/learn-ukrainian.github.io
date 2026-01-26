@@ -1,32 +1,94 @@
-module: '79'
-title: Спорт в Україні
-subtitle: Spectator Sports in Ukraine
-version: '1.1'
-phase: B1.7
-level: B1
+module: b1-79
+id: b1-79
+slug: sports-in-ukraine
+title: "Спорт в Україні"
+subtitle: "Spectator Sports and Ukrainian Athletes"
+version: '2.0'
+phase: "B1.7 [Contemporary Ukraine]"
 focus: culture
 pedagogy: CBI
-duration: 75
+register: розмовний
+duration: 90
 transliteration: none
-tags:
-- cultural
-- spectator-sports
-- sports
-- football
-- boxing
-- Olympics
-- contemporary
-grammar: []
 objectives:
-- Learner can discuss Ukrainian sports culture in Ukrainian
-- Learner can understand authentic texts about Ukrainian athletes and teams
-- Learner can use sports-related vocabulary in context
-- Learner can compare Ukrainian sports achievements with global trends
-word_target: 1500
-vocab_target: 25
-immersion_target: 95
-vocab_count: 69
-slug: 79-sports-in-ukraine
+  - "Learner can discuss Ukrainian sports culture in Ukrainian"
+  - "Learner can understand authentic texts about Ukrainian athletes and teams"
+  - "Learner can use sports-related vocabulary in context"
+  - "Learner can compare Ukrainian sports achievements with global trends"
+grammar:
+  - "Sports vocabulary"
+  - "Discussing achievements and competitions"
+  - "Expressing support and opinions"
+word_target: 1200
+content_outline:
+  - section: "Introduction: Sports in Ukraine"
+    words: 150
+    points:
+      - "Sports culture overview"
+      - "Popular sports"
+      - "National pride"
+  - section: "Football"
+    words: 250
+    points:
+      - "Football traditions"
+      - "Famous clubs"
+      - "National team"
+  - section: "Boxing and Combat Sports"
+    words: 250
+    points:
+      - "Boxing champions"
+      - "Klitschko brothers"
+      - "Usyk and others"
+  - section: "Olympic Sports"
+    words: 250
+    points:
+      - "Olympic achievements"
+      - "Gymnastics, swimming"
+      - "Winter sports"
+  - section: "Sports and Society"
+    words: 200
+    points:
+      - "Sports during wartime"
+      - "Athletes as ambassadors"
+      - "Sports diplomacy"
+  - section: "Practice: Sports Discussion"
+    words: 100
+    points:
+      - "Discuss favorite sports"
+      - "Talk about athletes"
+vocabulary_hints:
+  required:
+    - спорт (sport)
+    - футбол (football)
+    - бокс (boxing)
+    - команда (team)
+    - чемпіон (champion)
+    - перемога (victory)
+    - спортсмен (athlete)
+    - змагання (competition)
+  recommended:
+    - Олімпійські ігри (Olympic Games)
+    - тренер (coach)
+    - стадіон (stadium)
+    - вболівальник (fan)
+activity_hints:
+  - type: reading
+    focus: "Athlete profiles and sports news"
+    items: 15
+  - type: matching
+    focus: "Match athletes to sports"
+    items: 20
+  - type: fill-in
+    focus: "Complete sports reports"
+    items: 15
+  - type: discussion
+    focus: "Discuss sports preferences"
+    items: 10
+prerequisites:
+  - b1-78 (Technology and Startups)
+connects_to:
+  - b1-80 (Active Lifestyle)
 naturalness:
   score: 9
   status: PASS
+  justification: "Essential cultural knowledge for sports discussions"

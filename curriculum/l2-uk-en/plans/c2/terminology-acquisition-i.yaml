@@ -1,0 +1,94 @@
+module: terminology-acquisition-i
+level: c2
+sequence: 47
+version: '2.0'
+title: Опанування термінології I — Системний підхід
+focus: vocabulary
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Інститут української мови НАН України
+  url: https://ium.org.ua/
+  type: reference
+  notes: Standards for Ukrainian terminology development and systematization
+- name: ДСТУ ISO 704:2018 — Термінологічна робота
+  url: https://dnaop.com/
+  type: reference
+  notes: Ukrainian standard for terminology work methodology
+- name: Термінологічний вісник — наукове видання
+  url: https://ium.org.ua/terminolohichnyy-visnyk/
+  type: reference
+  notes: Academic journal on Ukrainian terminology
+content_outline:
+- section: Вступ — Принципи опанування термінології
+  words: 500
+  points:
+  - Чому системний підхід ефективніший за механічне заучування
+  - Когнітивні стратегії запам'ятовування термінів
+  - Активний vs. пасивний словниковий запас
+- section: Словотворчі моделі в термінології
+  words: 800
+  points:
+  - Префікси (анти-, гіпер-, гіпо-, мікро-, макро-)
+  - Суфікси (-ація, -ізм, -ист, -логія, -графія)
+  - Кореневі морфеми та їх комбінації
+  - Абревіатури та скорочення
+- section: Міжнародна термінологія
+  words: 700
+  points:
+  - Греко-латинські елементи в українській термінології
+  - Інтернаціоналізми та їх українські відповідники
+  - Стратегії розпізнавання cognates
+- section: Контекстуальне виведення значення
+  words: 600
+  points:
+  - Використання контексту для інференції
+  - Типові контекстні підказки
+  - Перевірка гіпотез через подальший контекст
+- section: Робота зі словниками та ресурсами
+  words: 600
+  points:
+  - Типи термінологічних словників
+  - Онлайн-ресурси для фахової лексики
+  - Критичне оцінювання джерел
+- section: Практичні вправи
+  words: 500
+  points:
+  - Застосування стратегій на реальних текстах
+  - Науково-технічна термінологія як тренувальний матеріал
+  - Самооцінка прогресу
+word_target: 4000
+vocabulary:
+  required:
+  - термін (term)
+  - дефініція (definition)
+  - префікс (prefix)
+  - суфікс (suffix)
+  - корінь (root)
+  - когнат (cognate)
+  - інтернаціоналізм (internationalism)
+  - контекст (context)
+  - інференція (inference)
+  - словотворення (word formation)
+  recommended:
+  - морфема (morpheme)
+  - етимологія (etymology)
+  - семантичне поле (semantic field)
+  - абревіатура (abbreviation)
+  - акронім (acronym)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - fill-in
+  - match-up
+  - critical-analysis
+  - essay-response
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-48 (Terminology Acquisition II — Building glossaries)
+- c2-49 (Reading Professional Texts I)
+- c2-60 (Building Domain Expertise)

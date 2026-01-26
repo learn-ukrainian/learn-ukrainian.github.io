@@ -1,0 +1,53 @@
+module: 37-advanced-motion-prefixes
+level: a2
+sequence: 37
+version: '2.0'
+title: Advanced Motion Prefixes
+subtitle: Crossing, Passing, and Approaching
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can describe crossing streets and spaces
+- Learner can describe passing by or through places
+- Learner can describe approaching an object
+- Learner can describe reaching a destination
+- Learner can describe "popping in" or stopping by
+- Learner can describe moving around an obstacle
+sources:
+- name: Ukrainian State Standard 2024 - Advanced Verbs of Motion
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standards for complex spatial trajectories and prefixed verbs at A2
+- name: Grammar of Ukrainian Language - Verb Prefixes
+  url: https://uk.wikipedia.org/wiki/Префікси_дієслів_руху
+  type: reference
+  notes: Detailed semantics of spatial prefixes with motion stems
+content_outline:
+- section: Introduction / Вступ
+  words: 200
+  points:
+  - 'Beyond In and Out: The geometry of complex paths'
+  - Navigating the city like a local
+- section: Presentation / Презентація
+  words: 600
+  points:
+  - 'The Bridge: Пере- (Across) vs Про- (Through)'
+  - 'The Visit: За- (Stopping by) vs При- (Arriving)'
+  - 'The Reach: До- (Getting there) vs Під- (Approaching)'
+  - 'The Circle: Об- (Around)'
+  - 'Prepositional Harmony: Matching prefixes to cases'
+  - 'The Logic of Distance: How prefixes signal proximity'
+- section: Practice / Практика
+  words: 150
+  points:
+  - Path visualization drills
+  - Giving complex directions in Lviv/Kyiv
+- section: Dialogues / Діалоги
+  words: 50
+  points:
+  - 'Travel stories: A journey through the mountains or a complex commute'
+word_target: 1000
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

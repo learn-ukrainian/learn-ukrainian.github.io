@@ -1,0 +1,23 @@
+module: 33-word-formation-person-suffixes
+level: b2
+sequence: 33
+version: '1.0'
+title: 'Словотворення: суфікси на позначення осіб'
+subtitle: Word Formation - Person Suffixes
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can form person nouns from other words using -ар/-яр suffix
+- Learner can form agent nouns from verbs using -ач suffix
+- Learner can form person nouns using -ник suffix for roles and occupations
+- Learner can identify word formation patterns for person nouns in authentic texts
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

@@ -1,0 +1,104 @@
+module: 02-eneida-part-1
+level: lit
+sequence: 2
+version: '2.0'
+title: 'Енеїда: Сміх над Безоднею (Частина I)'
+subtitle: Eneida Part I
+focus: literature
+pedagogy: seminar
+objectives:
+- Analyze the structure of Eneida Part 1
+- Understand the transformation of Roman heroes into Cossacks
+- Identify satirical elements of the Olympian bureaucracy
+sources:
+  primary:
+  - url: https://www.ukrlib.com.ua/books/printit.php?tid=51
+    title: Енеїда — повний текст
+    notes: Частина I для детального аналізу
+  secondary:
+  - url: https://www.ukrlib.com.ua/analiz/printit.php?tid=51
+    title: Аналіз "Енеїди"
+    notes: Літературознавчий аналіз твору
+  - url: https://uk.wikipedia.org/wiki/Енеїда_(Вергілій)
+    title: Вергілій — Енеїда (оригінал)
+    notes: Для порівняння з оригіналом
+content_outline:
+- section: Вступ — Чому перша частина є фундаментом?
+  words: 500
+  subsections:
+  - Структура поеми (6 частин)
+  - Перша частина як "камертон" усього твору
+  - Знайомство з героями та стилем
+- section: Еней — козак-мандрівник
+  words: 700
+  subsections:
+  - Трансформація римського героя в козака
+  - '"Еней був парубок моторний" — перший рядок'
+  - Архетип "шукача долі" в українській культурі
+- section: Олімп як петербурзька канцелярія
+  words: 800
+  subsections:
+  - Боги як чиновники (Юнона, Венера, Зевс)
+  - Сатира на імперську бюрократію
+  - Гумор як засіб десакралізації влади
+- section: Синонімічні ряди та "макаронічна мова"
+  words: 700
+  subsections:
+  - Лексичне багатство Котляревського
+  - Списки синонімів (їжа, напої, лайка)
+  - Змішування регістрів мови
+- section: Структура першої частини
+  words: 500
+  subsections:
+  - Сюжетна канва (від Трої до Карфагену)
+  - 'Епізоди: буря, Дідона, банкет'
+  - Авторські відступи та коментарі
+- section: Підсумок — Гумор як захисний механізм
+  words: 400
+  subsections:
+  - Природа українського сміху
+  - Чому "низька" лексика стає мистецтвом
+  - Перехід до наступних частин
+word_target: 4500
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - бурлеск
+  - травестія
+  - синонімічний ряд
+  - макаронічна мова
+  - сатира
+  - десакралізація
+  - архетип
+  - канцелярія
+  - пародія
+  - регістр
+  recommended:
+  - камертон
+  - мандрівник
+  - банкет
+  - відступ
+  - лайка
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - group-sort
+  - essay-response
+  - cloze
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: lit-01 (Introduction to Kotliarevsky)
+  related:
+  - lit-03 (Eneida Feast — гастрономічна лексика)
+  - lit-04 (Eneida War — військова лексика)
+constraints:
+  min_engagement_boxes: 3
+  min_examples: 15
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

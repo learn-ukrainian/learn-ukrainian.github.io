@@ -2,81 +2,88 @@ module: 27-because-and-although
 level: A2
 version: '2.0'
 items:
-- lemma: виступ
-  ipa: /ʋˈɪstup/
-  translation: performance, speech, ledge
-  pos: noun
-  gender: m
+- lemma: тому що
+  ipa: /toˈmu ʃt͡ʃo/
+  translation: because
+  pos: conj
+- lemma: бо
+  ipa: /bo/
+  translation: because (informal)
+  pos: conj
+- lemma: оскільки
+  ipa: /osˈkilʲkɪ/
+  translation: since, as (formal)
+  pos: conj
+- lemma: хоча
+  ipa: /xoˈt͡ʃa/
+  translation: although
+  pos: conj
+- lemma: хоч
+  ipa: /xot͡ʃ/
+  translation: although (short form)
+  pos: conj
+- lemma: проте
+  ipa: /ˈprotɛ/
+  translation: however, yet
+  pos: conj
+- lemma: однак
+  ipa: /odˈnak/
+  translation: however
+  pos: conj
+- lemma: незважаючи на те що
+  ipa: /nɛzʋaʒˈajut͡ʃɪ na tɛ ʃt͡ʃo/
+  translation: despite the fact that
+  pos: conj
+- lemma: завдяки
+  ipa: /zavˈdjakɪ/
+  translation: thanks to
+  pos: prep
+- lemma: через
+  ipa: /ˈt͡ʃɛrɛz/
+  translation: because of, due to
+  pos: prep
+- lemma: адже
+  ipa: /adˈʒɛ/
+  translation: after all, because
+  pos: conj
 - lemma: всупереч
-  ipa: /ʋsˈupɛrɛt͡ʃ/
-  translation: despite, contrary to
+  ipa: /vsuˈpɛrɛt͡ʃ/
+  translation: contrary to, despite
   pos: prep
-- lemma: вітряно
-  ipa: /ʋˈitrjanɔ/
-  translation: windy
-  pos: adv
-- lemma: грамотність
-  ipa: /ɦrˈamɔtnistʲ/
-  translation: literacy
-  pos: noun
-  gender: f
-- lemma: доповідь
-  ipa: /dˈɔpɔʋidʲ/
-  translation: report, speech
-  pos: noun
-  gender: f
-- lemma: захворіти
-  ipa: /zaxʋɔrˈitɪ/
-  translation: to fall ill
-  pos: verb
-- lemma: зламатися
-  ipa: /zlamˈatɪsja/
-  translation: to break down
-  pos: verb
-- lemma: купівля
-  ipa: /kupˈiʋlja/
-  translation: purchase
-  pos: noun
-  gender: f
-- lemma: найбільш
-  ipa: /najbˈilʲʃ/
-  translation: most
-  pos: adv
-- lemma: незважаючи
-  ipa: /nɛzʋaʒˈajut͡ʃɪ/
-  translation: despite, notwithstanding
+- lemma: попри
+  ipa: /ˈpoprɪ/
+  translation: despite
   pos: prep
-- lemma: пауза
-  ipa: /pˈauza/
-  translation: pause
-  pos: noun
-  gender: f
-- lemma: поганіти
-  ipa: /pɔɦanˈitɪ/
-  translation: to get worse
-  pos: verb
-- lemma: підсилювальний
-  ipa: /pidsˈɪljuʋalʲnɪj/
-  translation: amplifying, reinforcing
-  pos: adj
-- lemma: світити
-  ipa: /sʋitˈɪtɪ/
-  translation: to shine
-  pos: verb
-- lemma: скріншот
-  ipa: /skrinʃɔt/
-  translation: screenshot
-  pos: noun
-- lemma: слухачів
-  ipa: /sluxat͡ʃˈiʋ/
-  translation: of listeners
-  pos: adj
-- lemma: таки
-  ipa: /takˈɪ/
-  translation: still, nevertheless (particle)
+- lemma: якби
+  ipa: /jakˈbɪ/
+  translation: if (conditional)
+  pos: conj
+- lemma: нехай
+  ipa: /nɛˈxaj/
+  translation: let, may
   pos: part
-- lemma: технік
-  ipa: /tˈɛxnik/
-  translation: technician
+- lemma: хай
+  ipa: /xaj/
+  translation: let, may
+  pos: part
+- lemma: таки
+  ipa: /ˈtakɪ/
+  translation: still, nevertheless
+  pos: part
+- lemma: причина
+  ipa: /prɪˈt͡ʃɪna/
+  translation: reason, cause
   pos: noun
-  gender: m
+  gender: f
+- lemma: би
+  ipa: /bɪ/
+  translation: would (conditional particle)
+  pos: part
+- lemma: зате
+  ipa: /zaˈtɛ/
+  translation: but, on the other hand
+  pos: conj
+- lemma: дарма
+  ipa: /darˈma/
+  translation: in vain, for nothing
+  pos: adv

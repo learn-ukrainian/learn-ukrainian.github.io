@@ -1,0 +1,22 @@
+module: 56-narodna-mifolohiia
+level: c1
+sequence: 56
+version: '2.0'
+title: Народна міфологія
+subtitle: Ukrainian Folk Mythology
+focus: vocabulary
+pedagogy: Immersion & Analysis
+objectives:
+- Learner understands the hierarchy and functions of supernatural beings in Ukrainian folklore
+- Learner can analyze mythological motifs in classical literature
+- Learner can discuss the role of mythology in forming national identity
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

@@ -1,0 +1,109 @@
+module: yaroslav-hrytsak
+level: c1-bio
+sequence: 87
+version: '2.0'
+title: 'Ярослав Грицак: Публічний історик'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Грицак_Ярослав_Йосипович
+    title: Ярослав Грицак (Wikipedia UA)
+    notes: Основна біографічна інформація
+  secondary:
+  - url: https://ucu.edu.ua/
+    title: Український католицький університет
+    notes: Академічна діяльність
+  - url: https://krytyka.com/
+    title: Книги та публікації
+    notes: Наукові праці
+content_outline:
+- section: Вступ — Історик, який говорить з людьми
+  words: 400
+  subsections:
+  - Грицак як найвпливовіший публічний історик України
+  - Від академічної науки до широкої аудиторії
+  - Роль у формуванні історичної свідомості
+- section: Львівське дитинство та освіта
+  words: 600
+  subsections:
+  - Народження у Львові (1960)
+  - Навчання та академічне становлення
+  - Вплив львівської інтелектуальної традиції
+- section: Академічна кариєра
+  words: 700
+  subsections:
+  - Дослідження української історії
+  - Біографія Франка як ключова праця
+  - Міжнародне визнання
+- section: Подолання минулого
+  words: 800
+  subsections:
+  - Концепція подолання минулого
+  - Критика націоналістичних міфів
+  - Європейський контекст української історії
+- section: Публічна історія
+  words: 700
+  subsections:
+  - Лекції та публічні виступи
+  - Роль в УКУ
+  - Історія для широкої аудиторії
+- section: Війна та сучасність
+  words: 600
+  subsections:
+  - Реакція на російську агресію
+  - Переосмислення деяких позицій
+  - Роль інтелектуала під час війни
+- section: Дискусія — Обов'язок історика
+  words: 200
+  subsections:
+  - Об'єктивність vs громадянська позиція
+  - Як говорити неприємну правду
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - публічна історія
+  - модернізація
+  - подолання минулого
+  - європеїзація
+  - національний міф
+  - історична память
+  - деконструкція
+  - критичний аналіз
+  - інтелектуал
+  - дискурс
+  recommended:
+  - ревізіонізм
+  - історіографія
+  - наратив
+  - ідентичність
+  - травма
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: b2-hist-independence
+  related:
+  - c1-bio-35-mykhailo-hrushevskyi
+  - c1-bio-88-vitaly-portnikov
+  - c1-bio-86-oksana-zabuzhko
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

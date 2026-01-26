@@ -1,0 +1,94 @@
+module: zakhidni-media
+level: c1-hist
+sequence: 111
+version: '1.0'
+title: 'Західні медіа: Сліпі плями'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Ненавмисна допомога
+  words: 400
+  subsections:
+  - Західні медіа — не вороги
+  - Але — сліпі плями
+  - Як Кремль використовує
+  - Структура модуля
+- section: «Обидві сторони»
+  words: 700
+  subsections:
+  - Журналістський «баланс»
+  - Коли баланс = спотворення
+  - Прирівнювання агресора і жертви
+  - Приклади
+- section: Кремлівські тези в мейнстримі
+  words: 600
+  subsections:
+  - «Розширення НАТО»
+  - «Українські націоналісти»
+  - «Громадянська війна на Донбасі»
+  - Як тези проникають
+- section: Незнання контексту
+  words: 600
+  subsections:
+  - Україна = terra incognita
+  - Бюро в Москві, не в Києві
+  - Російськомовні «експерти»
+  - Інформаційна асиметрія
+- section: «Реалізм» і «втомленість»
+  words: 500
+  subsections:
+  - «Україна має домовлятися»
+  - «Війна затягується»
+  - Хто просуває ці тези
+  - Наслідки для України
+- section: Зміни після 2022
+  words: 400
+  subsections:
+  - Покращення чи тимчасовість
+  - Нове покоління журналістів
+  - Українські голоси
+  - Виклики попереду
+- section: Підсумок
+  words: 300
+  subsections:
+  - Медіаграмотність — необхідність
+  - Як читати західні медіа
+  - Перехід до контрнаративів
+word_target: 3500
+vocabulary:
+- сліпа пляма
+- «обидві сторони»
+- баланс
+- мейнстрим
+- наратив
+- контекст
+- експерт
+- джерело
+- спотворення
+- медіаграмотність
+- «реалізм»
+- «втомленість від війни»
+- інформаційна асиметрія
+- «whataboutism»
+- московський кореспондент
+activities:
+- type: media-analysis
+  focus: «Both sides» coverage — examples and analysis
+- type: narrative-tracking
+  focus: How Kremlin talking points appear in Western media
+- type: source-analysis
+  focus: Who are "Ukraine experts" in Western media?
+- type: comparative-coverage
+  focus: How same event covered in different outlets
+- type: essay-response
+  focus: Чи західні медіа об'єктивні щодо України?
+sources:
+- name: Висвітлення України в західних ЗМІ (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Висвітлення_України_в_західних_ЗМІ
+  type: reference
+  notes: Western media coverage
+- name: Російська дезінформація (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Російська_дезінформація
+  type: reference
+  notes: How disinformation spreads

@@ -1,8 +1,8 @@
 # Audit Report: M34 — 34-at-the-doctor.md
 **Level:** A2 | **Module:** M34 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 23:52:40
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-26 08:59:27
 
 ## Configuration
 **Type:** A2-vocab
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): рецепт, біль, приймати, око, пацієнт...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): око, рецепт, нога, приймати, відчувати...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -46,7 +46,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1146/1000 (raw: 1291)
+- **Words:** ✅ 1146/1000 (raw: 1289)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
@@ -58,7 +58,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 51.5% (target 50-65% (A2.2))
+- **Immersion:** 🇺🇦 51.8% (target 50-65% (A2.2))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 

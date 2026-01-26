@@ -1,0 +1,117 @@
+module: dmytro-bortnyanskyy
+level: c1-bio
+sequence: 18
+version: '2.0'
+title: 'Дмитро Бортнянський: Придворний маестро'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Дмитро_Бортнянський
+    title: Дмитро Бортнянський (Wikipedia UA)
+    notes: Biography, court career, choral works
+  secondary:
+  - url: https://uk.wikipedia.org/wiki/Придворна_співацька_капела
+    title: Придворна співацька капела
+    notes: Institutional context
+  - url: https://uk.wikipedia.org/wiki/Глухівська_співацька_школа
+    title: Глухівська співацька школа
+    notes: Early education
+content_outline:
+- section: Вступ — Між Україною та імперією
+  words: 400
+  subsections:
+  - Бортнянський як найвідоміший український композитор XVIII століття
+  - Питання ідентичності та привласнення
+  - Його вплив на церковну музику
+- section: Глухівське походження
+  words: 600
+  subsections:
+  - Народження в Глухові
+  - Глухівська музична школа
+  - Виявлення таланту
+  - Переїзд до Петербурга
+- section: Італійські роки
+  words: 600
+  subsections:
+  - Навчання в Італії
+  - Опери для італійських театрів
+  - Вплив італійської школи
+  - Повернення до Росії
+- section: Придворна кар'єра
+  words: 800
+  subsections:
+  - Директор Придворної капели
+  - Реформа церковного співу
+  - Відносини з двором
+  - Адміністративна діяльність
+- section: Музична спадщина
+  words: 800
+  subsections:
+  - Хорові концерти
+  - Духовні твори
+  - Світська музика
+  - Стильові особливості
+  - '"Чертог Твой" та інші шедеври'
+- section: Спірне питання ідентичності
+  words: 500
+  subsections:
+  - Бортнянський як "російський" композитор
+  - Українське коріння та традиція
+  - Сучасні дискусії про привласнення
+  - Його місце в українській культурі
+- section: Підсумок — Між світами
+  words: 300
+  subsections:
+  - Успіх ціною ідентичності
+  - Спадщина для церковної музики
+  - Пам'ять про Бортнянського сьогодні
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - композитор
+  - капела
+  - директор
+  - хоровий
+  - концерт
+  - духовна музика
+  - придворний
+  - реформа
+  - спадщина
+  - привласнення
+  recommended:
+  - регент
+  - акапела
+  - партитура
+  - гармонія
+  - маестро
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  - critical-analysis
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-17 (Maksym Berezovskyy - contemporary)
+  related:
+  - c1-bio-19 (Semen Hulak-Artemovskyy - later music)
+  - c1-bio-23 (Mykola Lysenko - national music)
+  - c1-bio-43 (Mykola Leontovych - choral tradition)
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

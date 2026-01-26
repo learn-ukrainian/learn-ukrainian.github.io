@@ -1,0 +1,85 @@
+module: holodomor-mekhanizm
+level: b2-hist
+sequence: 0
+version: '1.0'
+title: 'Голодомор I: Механізм'
+focus: history
+pedagogy: seminar
+objectives:
+- Learner understands the legal and economic mechanisms of Holodomor
+- Learner can analyze official vs. survivor discourse
+- Learner can apply decolonial lens to Soviet history
+content_outline:
+- section: Вступ
+  words: 462
+  subsections:
+  - Context of 1930s
+  - Social engineering
+- section: Читання
+  words: 580
+  subsections:
+  - CBI approach
+  - Language of violence
+- section: Колективізація та опір селянства
+  words: 1045
+  subsections:
+  - Traditional village storm
+  - Peasant resistance
+  - Dekulakization
+- section: Закон про п'ять колосків та Чорні дошки
+  words: 1055
+  subsections:
+  - Law of Five Ears
+  - Black Boards mechanism
+- section: Терор голодом як інструмент упокорення
+  words: 896
+  subsections:
+  - Red broom
+  - Blockade of borders
+- section: Первинні джерела
+  words: 535
+  subsections:
+  - Survivor testimonies
+  - Secret circulars
+- section: Деколонізаційний погляд
+  words: 299
+  subsections:
+  - Imperial crime
+  - Russification
+- section: Спадщина
+  words: 479
+  subsections:
+  - Transgenerational trauma
+  - Memory as force
+word_target: 4000
+vocabulary:
+- окупація
+- геноцид
+- розкуркулення
+- колективізація
+- чорна дошка
+- саботаж
+- тоталітаризм
+activities:
+- type: reading
+  focus: Historical documents
+- type: critical-analysis
+  focus: Propaganda vs Evidence
+- type: essay-response
+  focus: Genocide mechanism
+sources:
+- name: Національний музей Голодомору-геноциду
+  url: https://holodomormuseum.org.ua/
+  type: reference
+- name: 'Енциклопедія історії України: Голодомор'
+  url: http://resource.history.org.ua/cgi-bin/eiu/history.exe
+  type: secondary
+- name: Джеймс Мейс. Повість про двох журналістів
+  url: https://day.kyiv.ua/
+  type: secondary
+- name: 'Енн Епплбом. Червоний голод: Війна Сталіна проти України'
+  url: https://www.anneapplebaum.com/
+  type: secondary
+- name: 'Тімоті Снайдер. Криваві землі: Європа між Гітлером і Сталіним'
+  url: https://timothysnyder.org/
+  type: secondary

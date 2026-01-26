@@ -1,0 +1,106 @@
+module: olha-sviatoslav
+level: b2-hist
+sequence: 10
+version: '1.0'
+title: Ольга та Святослав
+focus: history
+pedagogy: CBI
+objectives:
+- Analyze Olha reforms
+- Evaluate Sviatoslav military strategy
+- Contrast diplomactic vs military approach
+content_outline:
+- section: Вступ
+  words: 100
+  subsections: []
+- section: Читання
+  words: 900
+  subsections:
+  - 'Ольга: Помста як Політика'
+  - 'Реформи: Від хаосу до порядку'
+  - Інфраструктура реформ
+  - 'Дипломатія: Візит до Царгорода (957)'
+  - 'Святослав: Лицар Степу (964–972)'
+  - Геополітична катастрофа чи перемога?
+  - 'Загибель: Чаша з черепа'
+- section: Первинні джерела
+  words: 500
+  subsections:
+  - Повість минулих літ про реформи Ольги
+  - Лев Диякон про Святослава (Опис зовнішності)
+- section: Деколонізаційний погляд
+  words: 1100
+  subsections:
+  - 'Святослав: Вікінг чи Козак?'
+  - 'Ольга: "Мудра", а не "Хитра"'
+  - Глибший аналіз реформ Ольги
+  - 'Святослав: Портрет лицаря Степу'
+  - 'Хозарія: Знищення буфера'
+  - 'Балканська епопея: Амбіція і катастрофа'
+  - 'Загибель: Уроки для нащадків'
+  - 'Жінки у політиці Русі: Феномен Ольги'
+  - 'Ольга і Святослав: Два шляхи розвитку України'
+  - Спадщина для нащадків
+  - Уроки для сучасної України
+- section: Потрібно більше практики?
+  words: 1400
+  subsections:
+  - Економіка епохи Ольги та Святослава
+  - Християнство і язичництво
+  - Життя звичайних людей
+  - Жінки в суспільстві
+  - Військова культура
+  - Спадщина для нащадків
+  - Завершення епохи
+  - Археологічні свідчення епохи
+word_target: 4000
+vocabulary:
+- княгиня
+- помста
+- реформа
+- хрещення
+- погост
+- урок
+- данина
+- каганат
+- завоювання
+- воїн
+- похід
+- печеніги
+- рівноапостольна
+- Доростол
+- Балкани
+- чаша
+- дипломатія
+activities:
+- type: reading
+  focus: Chronicle accounts of Olha's revenge
+- type: quiz
+  focus: Geography of Sviatoslav's campaigns
+  items: 8+
+- type: fill-in
+  focus: Political and military terminology
+  items: 15+
+- type: match-up
+  focus: Key events 945-972 (Chronology)
+  items: 12+ events
+- type: comparative-study
+  focus: Olha vs Sviatoslav — governance approaches
+- type: quiz
+  focus: Facts about Olha and Sviatoslav
+  items: 12+
+- type: essay-response
+  focus: Хто більше вплинув на розвиток Русі — Ольга чи Святослав?
+sources:
+- name: Ольга (княгиня київська) (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Ольга_(княгиня_київська)
+  type: reference
+  notes: Overview of Princess Olha
+- name: Святослав Ігорович (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Святослав_Ігорович
+  type: reference
+  notes: Overview of Sviatoslav
+- name: Повість минулих літ
+  url: https://litopys.org.ua/pvl/pvl.htm
+  type: primary
+  notes: Chronicle accounts

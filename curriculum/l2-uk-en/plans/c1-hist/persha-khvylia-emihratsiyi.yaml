@@ -1,0 +1,103 @@
+module: persha-khvylia-emihratsiyi
+level: c1-hist
+sequence: 64
+version: '1.0'
+title: 'Перша хвиля еміграції: Трудова (1880-1914)'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Чому виїжджали?
+  words: 400
+  subsections:
+  - Економічні причини — земельний голод
+  - Перенаселення Галичини
+  - Тиск імперій
+  - Структура модуля
+- section: Галицькі селяни в дорозі
+  words: 600
+  subsections:
+  - Хто виїжджав — соціальний портрет
+  - Маршрути — порти, кораблі
+  - Агенти еміграції — реклама «нового світу»
+  - Ілюзії і реальність
+- section: Канада — «безкрайні прерії»
+  words: 700
+  subsections:
+  - Сіфтон і «чоловіки в кожухах»
+  - Заселення прерій
+  - Блокові поселення
+  - Важке життя — землянки, холод
+  - Перші церкви і школи
+- section: США — вугільні копальні
+  words: 600
+  subsections:
+  - Пенсільванія — шахтарські містечка
+  - Важка праця — умови
+  - Робітничий рух
+  - Міські громади — Нью-Йорк, Чикаго
+- section: Південна Америка
+  words: 400
+  subsections:
+  - Бразилія — кавові плантації
+  - Аргентина — пампаси
+  - Менші хвилі — Парагвай, Уругвай
+  - Збереження vs. асиміляція
+- section: Формування громад
+  words: 500
+  subsections:
+  - Церква як центр
+  - Читальні та «Просвіти»
+  - Преса — перші газети
+  - Мова — збереження чи втрата?
+- section: Підсумок
+  words: 300
+  subsections:
+  - Масштаби — скільки виїхало
+  - Закладення фундаменту
+  - Підготовка до політичної хвилі
+word_target: 3500
+vocabulary:
+- еміграція
+- діаспора
+- трудова міграція
+- поселення
+- громада
+- асиміляція
+- прерії
+- землянка
+- шахтар
+- читальня
+- агент еміграції
+- блокове поселення
+- етнічна ідентичність
+- репатріація
+- тимчасова міграція
+activities:
+- type: demographic-analysis
+  focus: Map emigration from specific Galician regions
+- type: settlement-study
+  focus: Compare Canadian vs. American settlement patterns
+- type: testimony-analysis
+  focus: Analyze emigrant letters home
+- type: community-formation
+  focus: How Ukrainian institutions formed in diaspora
+- type: essay-response
+  focus: Чому саме галичани становили більшість першої хвилі?
+sources:
+- name: Українська діаспора (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_діаспора
+  type: reference
+  notes: General overview
+- name: Українці в Канаді (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українці_в_Канаді
+  type: reference
+  notes: Canadian settlement
+- name: Українці в США (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українці_в_США
+  type: reference
+  notes: American settlement
+- name: Еміграція з України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Еміграція_з_України
+  type: reference
+  notes: Emigration waves

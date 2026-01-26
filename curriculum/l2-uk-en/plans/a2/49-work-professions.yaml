@@ -1,0 +1,80 @@
+module: work-professions
+level: a2
+sequence: 49
+version: '2.0'
+title: Work and Professions
+subtitle: Jobs and Careers
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can name common professions
+- Learner can describe their job
+- Learner can talk about workplace activities
+- Learner can use instrumental case for jobs
+content_outline:
+- section: 'Introduction: Work in Ukraine'
+  words: 100
+  points:
+  - Job market overview
+  - Common professions
+  - Work vocabulary
+- section: Professions
+  words: 250
+  points:
+  - лікар, вчитель, інженер
+  - програміст, бухгалтер, менеджер
+  - 'Instrumental: працюю лікарем'
+- section: Workplace
+  words: 200
+  points:
+  - офіс, завод, школа, лікарня
+  - Workplace locations
+  - Work environments
+- section: Job Activities
+  words: 200
+  points:
+  - Describing duties
+  - Daily work routine
+  - Responsibilities
+- section: Job Searching
+  words: 150
+  points:
+  - резюме, співбесіда
+  - Applying for jobs
+  - Interview basics
+- section: 'Practice: Talk About Work'
+  words: 100
+  points:
+  - Describe your job
+  - Job interview practice
+word_target: 1000
+vocabulary:
+  required:
+  - робота (work/job)
+  - професія (profession)
+  - лікар (doctor)
+  - вчитель (teacher)
+  - інженер (engineer)
+  - офіс (office)
+  - зарплата (salary)
+  - колега (colleague)
+  recommended:
+  - програміст (programmer)
+  - бухгалтер (accountant)
+  - резюме (resume)
+  - співбесіда (interview)
+  - керівник (manager)
+  - підлеглий (subordinate)
+  forbidden: []
+activities:
+  types_required:
+  - vocabulary-drill
+  - dialogue
+  - speaking
+  - fill-in
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a2-50 (Technology and Media)
+- a2-64 (Scheduling Interviews)

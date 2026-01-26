@@ -1,0 +1,77 @@
+module: describing-changes
+level: b1
+sequence: 58
+version: '2.0'
+title: Опис змін
+subtitle: Describing Changes
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can use 25 verbs and expressions for describing changes
+- Learner can distinguish between gradual and sudden change vocabulary
+- Learner can form natural collocations with change-related adverbs
+- Learner can narrate transformations over time
+content_outline:
+- section: 'Introduction: Language of Change'
+  words: 150
+  points:
+  - Why change vocabulary matters
+  - Dynamic vs static descriptions
+  - Temporal perspective
+- section: Verbs of Increase
+  words: 250
+  points:
+  - зростати, збільшуватися, підвищуватися
+  - Gradual vs sudden increase
+  - Collocations with adverbs
+- section: Verbs of Decrease
+  words: 250
+  points:
+  - зменшуватися, знижуватися, падати
+  - Decline vocabulary
+  - Negative change patterns
+- section: Verbs of Transformation
+  words: 250
+  points:
+  - змінюватися, перетворюватися, ставати
+  - Complete transformation
+  - Before-after descriptions
+- section: Adverbs and Qualifiers
+  words: 200
+  points:
+  - поступово, різко, стрімко
+  - Degree and manner
+  - Combining with verbs
+- section: 'Practice: Narrating Change'
+  words: 100
+  points:
+  - Describe trends
+  - Narrate transformations
+word_target: 1200
+vocabulary:
+  required:
+  - зростати (to grow/increase)
+  - зменшуватися (to decrease)
+  - змінюватися (to change)
+  - перетворюватися (to transform)
+  - підвищуватися (to rise)
+  - знижуватися (to lower/decline)
+  - поступово (gradually)
+  - різко (sharply)
+  recommended:
+  - стрімко (rapidly)
+  - значно (significantly)
+  - падати (to fall)
+  - ставати (to become)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - transformation
+  - writing
+  - collocation
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-59 (Media News)

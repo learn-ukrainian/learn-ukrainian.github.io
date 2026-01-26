@@ -1,0 +1,22 @@
+module: 83-balet-i-tanets
+level: c1
+sequence: 83
+version: '2.0'
+title: Балет і танець
+subtitle: Ballet and Dance
+focus: fine-arts
+pedagogy: CBI
+objectives:
+- Learner explores the legacy of Serge Lifar and his impact on world ballet.
+- Learner understands the distinction between folk dance (Hopak) and academic ballet.
+- Learner can describe contemporary dance trends in Ukraine.
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

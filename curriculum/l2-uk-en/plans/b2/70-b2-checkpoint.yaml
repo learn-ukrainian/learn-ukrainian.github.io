@@ -1,0 +1,23 @@
+module: 70-b2-checkpoint
+level: b2
+sequence: 70
+version: '1.0'
+title: Контрольна точка B2.2
+subtitle: B2.2 Checkpoint
+focus: checkpoint
+pedagogy: Assessment
+objectives:
+- Учень успішно демонструє знання відмінювання складних числівників
+- Учень вільно оперує системою синонімів на позначення дій, станів та абстрактних понять
+- Учень правильно вживає ідіоми та прислів'я у відповідному контексті
+- Учень будує складні синтаксичні конструкції з використанням вдосконалених сполучників
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

@@ -1,29 +1,92 @@
 module: a1-01
-title: The Cyrillic Code I
-subtitle: Cracking the Ukrainian Alphabet
-version: '1.0'
-phase: A1.1
-pedagogy: PPP
+id: a1-01
+slug: the-cyrillic-code-i
+title: "The Cyrillic Code I"
+subtitle: "Cracking the Ukrainian Alphabet"
+version: '2.0'
+phase: "A1.1 [First Contact]"
 focus: grammar
-duration: 60 min
+pedagogy: PPP
+register: розмовний
+duration: 60
 transliteration: full
-tags:
-  - alphabet
-  - cyrillic
-  - phonetics
-  - true-friends
-  - false-friends
-grammar:
-  - letter recognition
-  - pronunciation
 objectives:
-  - Learner can recognize True Friends (letters that look AND sound like English)
-  - Learner can decode False Friends (letters that look familiar but sound different)
-  - Learner can read 19 new Cyrillic letters
-  - Learner can pronounce basic international words in Ukrainian
-vocabulary_count: 35
-vocab_count: 40
-slug: 01-the-cyrillic-code-i
+  - "Learner can recognize True Friends (letters that look AND sound like English)"
+  - "Learner can decode False Friends (letters that look familiar but sound different)"
+  - "Learner can read 19 Cyrillic letters"
+  - "Learner can pronounce basic international words in Ukrainian"
+grammar:
+  - "Letter recognition"
+  - "Sound-letter correspondence"
+  - "Basic pronunciation rules"
+word_target: 800
+content_outline:
+  - section: "Introduction: The Cyrillic Mystery"
+    words: 100
+    points:
+      - "Why Ukrainian uses Cyrillic"
+      - "Good news: Many letters are familiar"
+      - "Strategy: True Friends vs False Friends"
+  - section: "True Friends (А, Е, І, О, К, М, Т)"
+    words: 150
+    points:
+      - "Letters that look AND sound like English"
+      - "Practice words: такт, кіт, мама"
+      - "Reading drill"
+  - section: "False Friends (В, Н, Р, С, У, Х)"
+    words: 200
+    points:
+      - "Letters that look familiar but sound different"
+      - "В = V, Н = N, Р = R, С = S, У = U, Х = Kh"
+      - "Common mistakes to avoid"
+  - section: "New Friends (Б, Г, Д, Ж, З, Л, П, Ф)"
+    words: 200
+    points:
+      - "Letters unique to Cyrillic"
+      - "Sound introduction with examples"
+      - "Practice with simple words"
+  - section: "Practice: International Words"
+    words: 100
+    points:
+      - "Reading cognates: банк, метро, кафе"
+      - "Building confidence with familiar vocabulary"
+  - section: "Summary: Your First 19 Letters"
+    words: 50
+    points:
+      - "Review of all letters learned"
+      - "Preparation for Part II"
+vocabulary_hints:
+  required:
+    - так (yes)
+    - банк (bank)
+    - метро (metro)
+    - кафе (café)
+    - такт (tact)
+    - кіт (cat)
+    - мама (mom)
+    - тато (dad)
+  recommended:
+    - парк (park)
+    - бар (bar)
+    - факт (fact)
+    - план (plan)
+activity_hints:
+  - type: letter-recognition
+    focus: "Identify True Friends"
+    items: 15
+  - type: audio-match
+    focus: "Match sound to letter"
+    items: 20
+  - type: reading-drill
+    focus: "Read simple words aloud"
+    items: 15
+  - type: quiz
+    focus: "Letter identification"
+    items: 20
+prerequisites: []
+connects_to:
+  - a1-02 (The Cyrillic Code II)
 naturalness:
   score: 10
   status: PASS
+  justification: "Beginner-friendly introduction with cognates"

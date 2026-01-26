@@ -1,0 +1,23 @@
+module: 24-register-colloquial-style
+level: b2
+sequence: 24
+version: '1.0'
+title: Розмовний стиль
+subtitle: Ну, типу, як говорити по-справжньому
+focus: grammar
+pedagogy: TTT
+objectives:
+- Учень може розпізнавати маркери розмовного стилю в українській мові
+- Учень може трансформувати формальний текст у неформальний і навпаки
+- Учень може правильно використовувати частки ж/же, бо, таки для емфази
+- Учень може вживати скорочені форми слів та сленг доречно
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

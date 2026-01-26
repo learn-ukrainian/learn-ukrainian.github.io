@@ -2,125 +2,153 @@ module: 29-i-think-that
 level: A2
 version: '2.0'
 items:
-- lemma: баланс
-  ipa: /balˈans/
-  translation: balance
-  pos: noun
-  gender: m
-- lemma: безумовно
-  ipa: /bɛzumˈɔʋnɔ/
-  translation: certainly, absolutely
-  pos: adv
-- lemma: ввічливіший
-  ipa: /ʋʋˈit͡ʃlɪʋiʃɪj/
-  translation: more polite
-  pos: adj
-- lemma: вигідний
-  ipa: /ʋɪɦidnɪj/
-  translation: profitable, advantageous
-  pos: adj
-- lemma: виділяти
-  ipa: /ʋɪdilˈjatɪ/
-  translation: to highlight, to allocate (imperfective)
+- lemma: думати
+  ipa: /ˈdumatɪ/
+  translation: to think
   pos: verb
-- lemma: влучно
-  ipa: /ʋlˈut͡ʃnɔ/
-  translation: aptly, accurately
-  pos: adv
-- lemma: вставний
-  ipa: /ʋstaʋnˈɪj/
-  translation: parenthetical, inset
-  pos: adj
-- lemma: ділитися
-  ipa: /dilˈɪtɪsja/
-  translation: to be divided, to share (oneself)
+- lemma: вважати
+  ipa: /vvaˈʒatɪ/
+  translation: to believe, to consider
   pos: verb
-- lemma: дієприкметник
-  ipa: /dijɛprɪkmˈɛtnɪk/
-  translation: participle
-  pos: noun
-- lemma: забуватися
-  ipa: /zabuʋˈatɪsja/
-  translation: to be forgotten
+- lemma: здаватися
+  ipa: /zdaˈvatɪsja/
+  translation: to seem
   pos: verb
-- lemma: згода
-  ipa: /zɦˈɔda/
-  translation: consent, agreement
+- lemma: здається
+  ipa: /ˈzdajetsʲa/
+  translation: it seems, apparently
+  pos: verb
+- lemma: думка
+  ipa: /ˈdumka/
+  translation: thought, opinion
   pos: noun
   gender: f
-- lemma: зір
-  ipa: /zir/
-  translation: sight, vision
+- lemma: моєї
+  ipa: /moˈjeji/
+  translation: my (genitive feminine)
+  pos: pron
+- lemma: точки
+  ipa: /ˈtot͡ʃkɪ/
+  translation: point (genitive)
+  pos: noun
+  gender: f
+- lemma: погляд
+  ipa: /ˈpohljad/
+  translation: view, point of view
   pos: noun
   gender: m
-- lemma: констатувати
-  ipa: /kɔnstatuʋˈatɪ/
-  translation: to state, to establish
-  pos: verb
-- lemma: найкрасивіше
-  ipa: /najkrasˈɪʋiʃɛ/
-  translation: the most beautifully
+- lemma: що
+  ipa: /ʃt͡ʃo/
+  translation: that (conjunction)
+  pos: conj
+- lemma: безумовно
+  ipa: /bɛzuˈmovnoʹ/
+  translation: certainly, definitely
   pos: adv
+- lemma: напевно
+  ipa: /naˈpɛvno/
+  translation: probably, surely
+  pos: adv
+- lemma: можливо
+  ipa: /ˈmoʒlɪvo/
+  translation: maybe, perhaps, possibly
+  pos: adv
+- lemma: очевидно
+  ipa: /ot͡ʃɛˈvɪdno/
+  translation: obviously, apparently
+  pos: adv
+- lemma: погоджуватися
+  ipa: /pohoˈdʒuvatɪsja/
+  translation: to agree
+  pos: verb
+- lemma: заперечувати
+  ipa: /zapɛˈrɛt͡ʃuvatɪ/
+  translation: to deny, to disagree, to object
+  pos: verb
+- lemma: згода
+  ipa: /ˈzhoda/
+  translation: agreement, consent
+  pos: noun
+  gender: f
 - lemma: незгода
-  ipa: /nɛzɦˈɔda/
+  ipa: /nɛˈzhoda/
   translation: disagreement
   pos: noun
   gender: f
-- lemma: очевидно
-  ipa: /ɔt͡ʃɛʋˈɪdnɔ/
-  translation: obviously, apparently
-  pos: adv
-- lemma: переконання
-  ipa: /pɛrɛkɔnˈannja/
-  translation: conviction, belief
-  pos: noun
-- lemma: переконливий
-  ipa: /pɛrɛkˈɔnlɪʋɪj/
-  translation: convincing
-  pos: adj
-- lemma: погляд
-  ipa: /pˈɔɦljad/
-  translation: view, glance, look
-  pos: noun
-  gender: m
-- lemma: погоджуватися
-  ipa: /pɔɦˈɔdʒuʋatɪsja/
-  translation: to agree (imperfective)
-  pos: verb
-- lemma: пом'якшувати
-  ipa: /pɔmˈjakʃuʋatɪ/
-  translation: to soften, to mitigate
-  pos: verb
 - lemma: правий
-  ipa: /praʋɪj/
-  translation: right (direction), correct
+  ipa: /ˈpravɪj/
+  translation: right, correct
   pos: adj
-- lemma: пропускати
-  ipa: /prɔpuskˈatɪ/
-  translation: to skip, to let through
-  pos: verb
-- lemma: реагувати
-  ipa: /rɛaɦuʋˈatɪ/
-  translation: to react
-  pos: verb
-- lemma: стосунок
-  ipa: /stɔsˈunɔk/
-  translation: relationship, connection
-  pos: noun
-- lemma: структурний
-  ipa: /struktˈurnɪj/
-  translation: structural
-  pos: adj
-- lemma: тиша
-  ipa: /tˈɪʃa/
-  translation: silence, quiet
+- lemma: неправда
+  ipa: /nɛˈpravda/
+  translation: untruth, falsehood
   pos: noun
   gender: f
-- lemma: формулювати
-  ipa: /fɔrmuljuʋˈatɪ/
-  translation: to formulate, to state
+- lemma: переконання
+  ipa: /pɛrɛkoˈnannja/
+  translation: conviction, belief
+  pos: noun
+  gender: n
+- lemma: переконливий
+  ipa: /pɛrɛˈkonlɪvɪj/
+  translation: convincing
+  pos: adj
+- lemma: особисто
+  ipa: /oˈsobɪsto/
+  translation: personally
+  pos: adv
+- lemma: сумнів
+  ipa: /ˈsumniv/
+  translation: doubt
+  pos: noun
+  gender: m
+- lemma: сумніватися
+  ipa: /sumˈnivatɪsja/
+  translation: to doubt
   pos: verb
-- lemma: цінуватися
-  ipa: /t͡sinuʋˈatɪsja/
-  translation: to be valued
+- lemma: впевнений
+  ipa: /vpɛvˈnɛnɪj/
+  translation: sure, certain, confident
+  pos: adj
+- lemma: впевненість
+  ipa: /vpɛvˈnɛnistʲ/
+  translation: confidence, certainty
+  pos: noun
+  gender: f
+- lemma: відчуття
+  ipa: /vidˈt͡ʃuttja/
+  translation: feeling, sensation
+  pos: noun
+  gender: n
+- lemma: позиція
+  ipa: /poˈzɪt͡sija/
+  translation: position, stance
+  pos: noun
+  gender: f
+- lemma: аргумент
+  ipa: /arhuˈmɛnt/
+  translation: argument, point
+  pos: noun
+  gender: m
+- lemma: обговорювати
+  ipa: /obhovoˈrjuvatɪ/
+  translation: to discuss
   pos: verb
+- lemma: дискусія
+  ipa: /dɪsˈkusija/
+  translation: discussion, debate
+  pos: noun
+  gender: f
+- lemma: гадати
+  ipa: /haˈdatɪ/
+  translation: to think, to suppose
+  pos: verb
+- lemma: мою
+  ipa: /moˈju/
+  translation: my (accusative feminine)
+  pos: pron
+- lemma: зору
+  ipa: /ˈzoru/
+  translation: view (genitive of погляд)
+  pos: noun
+  gender: m

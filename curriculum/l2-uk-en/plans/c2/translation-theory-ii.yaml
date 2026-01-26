@@ -1,0 +1,97 @@
+module: translation-theory-ii
+level: c2
+sequence: 85
+version: '2.0'
+title: Теорія перекладу II — Поглиблений курс
+focus: stylistics
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Коптілов — Теорія і практика перекладу
+  url: https://uk.wikipedia.org/wiki/Коптілов_Віктор_Вікторович
+  type: primary
+  notes: Classic Ukrainian translation studies textbook
+- name: Venuti — The Translator's Invisibility
+  url: https://www.routledge.com/
+  type: secondary
+  notes: Key concepts of domestication and foreignization
+- name: Nida — Toward a Science of Translating
+  url: https://www.brill.com/
+  type: reference
+  notes: Dynamic vs. formal equivalence theory
+content_outline:
+- section: Вступ — Перекладознавство як наука
+  words: 500
+  points:
+  - Місце перекладознавства серед гуманітарних наук
+  - Зв'язок із лінгвістикою, літературознавством, культурологією
+  - Українська школа перекладознавства
+- section: Ключові концепції перекладу
+  words: 700
+  points:
+  - Еквівалентність vs. адекватність
+  - Формальна vs. динамічна еквівалентність (Nida)
+  - Одомашнення vs. очуження (Venuti)
+  - Перекладацькі трансформації
+- section: Перекладацькі стратегії
+  words: 700
+  points:
+  - Лексичні трансформації (конкретизація, генералізація, модуляція)
+  - Граматичні трансформації (заміна, перестановка)
+  - Стилістичні трансформації
+  - Компенсація втрат
+- section: Проблеми неперекладності
+  words: 600
+  points:
+  - Реалії та культурно-специфічні поняття
+  - Гра слів і каламбури
+  - Ритм і рима в поезії
+  - Стратегії подолання неперекладності
+- section: Етика перекладу
+  words: 500
+  points:
+  - Відповідальність перекладача
+  - Перекладач як посередник культур
+  - Невидимість vs. видимість перекладача
+  - Деколоніальний підхід у перекладі
+- section: Практика — Аналіз перекладів
+  words: 700
+  points:
+  - Порівняльний аналіз двох перекладів одного тексту
+  - Ідентифікація стратегій і трансформацій
+  - Оцінка якості перекладу
+  - Обґрунтування перекладацьких рішень
+word_target: 4000
+vocabulary:
+  required:
+  - перекладознавство (translation studies)
+  - еквівалентність (equivalence)
+  - адекватність (adequacy)
+  - одомашнення (domestication)
+  - очуження (foreignization)
+  - трансформація (transformation)
+  - конкретизація (specification)
+  - генералізація (generalization)
+  - модуляція (modulation)
+  - компенсація (compensation)
+  recommended:
+  - неперекладність (untranslatability)
+  - реалія (culture-specific item)
+  - калька (calque)
+  - транслітерація (transliteration)
+  - інтерпретант (interpretant)
+  forbidden: []
+activities:
+  types_required:
+  - match-up
+  - essay-response
+  - quiz
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-86 (Translation Practice I — Literary)
+- c2-87 (Translation Practice II — Technical)
+- c2-88 (Interpretation Basics)

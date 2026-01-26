@@ -1,0 +1,58 @@
+
+========================================
+  📋 Loaded Metadata from YAML sidecar
+
+📋 Auditing: B2 M47 — Козацька культура — кобзарі, думи та бароко
+   File: curriculum/l2-uk-en/b2-hist/kozatska-kultura.md | Target: 4000 words
+  📋 Required activity types from meta: comparative-study, essay-response, quiz, reading, true-false
+  📋 Template: docs/l2-uk-en/templates/b2-history-module-template.md (pedagogy: CBI)
+
+  🔴 HYDRATION ERROR: Outline sums to 3500, but word_target is 4000
+     Missing 500 words in outline budget!
+     → Run /architect to fix content_outline
+
+  📊 Section Word Analysis:
+     Вступ та Контекст                                   419 /  400  ✅ (+19)
+     Кобзарі та лірники: голос народу                    523 /  500  ✅ (+23)
+     Українські Думи: Духовний хребет нації              573 /  500  ✅ (+73)
+     Козацьке бароко: Тріумф національного стилю         536 /  500  ✅ (+36)
+     Меценатство як державна стратегія                   308 /  400  ❌ (-92)
+     Інтелектуальний центр: Києво-Могилянська академія   455 /  500  ✅ (-45)
+     Первинні джерела та Читання                         337 /  300  ✅ (+37)
+     Деколонізаційний погляд                             322 /  400  ⚠️ (-78)
+     ──────────────────────────────────────────────────────────────────────────
+     TOTAL                                              3473 / 3500  ❌ (-27)
+
+📋 Auditing: B2 M47 — Козацька культура — кобзарі, думи та бароко
+   File: curriculum/l2-uk-en/b2-hist/kozatska-kultura.md | Target: 4000 words
+
+  📋 Found YAML activities file (6 activities)
+  > Аналіз Думи про Марусю Богуславку: 3 items (min 1)
+  > Психологічний портрет Марусі Богуславки: 1 items (min 1)
+  > Козацька культура: Поняття та факти: 8 items (min 8)
+  > Бароко: Захід vs Україна: 1 items (min 1)
+  > Освіта та кобзарство: Правда чи міф?: 10 items (min 8)
+  > Культура як зброя: 1 items (min 1)
+
+--- STRICT GATES (Level B2) ---
+Words        ❌ 3803/4000 (raw: 4017)
+Activities   ✅ 6/3
+Density      ✅ All > 1
+Unique_types ✅ 6/2 types
+Priority     ✅ Priority types used
+Engagement   ✅ 6/5
+Audio        ℹ️ No audio
+Vocab        ✅ 25/20
+Structure    ✅ Valid Structure
+Lint         ✅ Clean Format
+Pedagogy     ✅ Level-appropriate
+Content_heavy ✅ Content-heavy OK (6 activities)
+Grammar      ℹ️ N/A (covered by naturalness)
+Naturalness  ✅ 9/10 (High)
+Activity_quality 📋 Quality validation available (optional)
+Immersion    🇺🇦 98.7% (target 90-100% (history))
+Richness     ✅ 99% (history)
+
+Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/audit/kozatska-kultura-review.md
+
+❌ AUDIT FAILED. Correct errors before proceeding.

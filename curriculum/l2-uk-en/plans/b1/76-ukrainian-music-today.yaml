@@ -1,0 +1,77 @@
+module: ukrainian-music-today
+level: b1
+sequence: 76
+version: '2.0'
+title: Українська музика сьогодні
+subtitle: Contemporary Ukrainian Music Scene
+focus: culture
+pedagogy: CBI
+objectives:
+- Learner can discuss Ukrainian music genres and artists in context
+- Learner can understand authentic texts about Ukrainian music scene
+- Learner can use music-related vocabulary to express preferences
+- Learner can compare Ukrainian music with their own musical culture
+content_outline:
+- section: 'Introduction: Ukrainian Music'
+  words: 150
+  points:
+  - Music scene overview
+  - Traditional to contemporary
+  - Cultural significance
+- section: Pop and Rock
+  words: 250
+  points:
+  - Popular artists
+  - Ukrainian-language pop
+  - Rock traditions
+- section: Hip-Hop and Electronic
+  words: 250
+  points:
+  - Ukrainian hip-hop
+  - Electronic music
+  - Festival culture
+- section: Folk and Ethno
+  words: 250
+  points:
+  - Folk revival
+  - Ethno-fusion
+  - Traditional instruments
+- section: War and Music
+  words: 200
+  points:
+  - Music during wartime
+  - Patriotic songs
+  - Cultural resistance
+- section: 'Practice: Music Discussion'
+  words: 100
+  points:
+  - Discuss favorite artists
+  - Compare music cultures
+word_target: 1200
+vocabulary:
+  required:
+  - музика (music)
+  - співак/співачка (singer m/f)
+  - гурт (band)
+  - пісня (song)
+  - альбом (album)
+  - концерт (concert)
+  - жанр (genre)
+  - виконавець (performer)
+  recommended:
+  - реп (rap)
+  - рок (rock)
+  - поп (pop)
+  - електронна музика (electronic music)
+  forbidden: []
+activities:
+  types_required:
+  - listening
+  - reading
+  - discussion
+  - matching
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-77 (Ukrainian Cinema and TV)

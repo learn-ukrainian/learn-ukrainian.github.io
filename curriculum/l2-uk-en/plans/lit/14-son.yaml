@@ -1,0 +1,103 @@
+module: 14-son
+level: lit
+sequence: 14
+version: '1.0'
+title: 'Політична Сатира: Сон'
+subtitle: 'LIT-014: Сміхове руйнування влади'
+focus: literature
+pedagogy: seminar
+objectives:
+- Analyze the political satire in "The Dream"
+- Deconstruct the myth of the "Good Tsar"
+- Compare Shevchenko's view with Pushkin's
+sources:
+  primary:
+  - url: https://www.ukrlib.com.ua/books/printit.php?tid=18
+    title: Сон — повний текст
+    notes: Поема для детального аналізу
+  secondary:
+  - url: https://www.ukrlib.com.ua/analiz/printit.php?tid=18
+    title: Аналіз "Сну"
+    notes: Літературознавчий аналіз
+  - url: https://uk.wikipedia.org/wiki/Російська_імперія
+    title: Російська імперія — контекст
+    notes: Політичний контекст 1844 року
+content_outline:
+- section: Вступ — Найсміливіший маніфест XIX століття
+  words: 500
+  subsections:
+  - Історія написання (1844)
+  - Чому "Сон" — це революція
+  - Доля твору і автора
+- section: Структура подорожі
+  words: 700
+  subsections:
+  - Україна — пейзаж поневолення
+  - Сибір — пекло на землі
+  - Петербург — театр абсурду
+- section: Сатира на царя
+  words: 800
+  subsections:
+  - Образ «ведмедя» (Миколи I)
+  - 'Сцена балу: гротеск і карикатура'
+  - «Сміхове руйнування» авторитету
+- section: Техніка гротеску
+  words: 700
+  subsections:
+  - Що таке гротеск і іронія
+  - Контраст і парадокс
+  - Сон як форма критики
+- section: Наслідки для Шевченка
+  words: 500
+  subsections:
+  - Арешт і заслання
+  - '"Сон" у справі Кирило-Мефодіївського братства'
+  - Ціна правди
+- section: Підсумок — Сатира як зброя
+  words: 400
+  subsections:
+  - Роль сатири в десакралізації влади
+  - Шевченко vs імперія
+  - Актуальність твору сьогодні
+word_target: 4500
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - сатира
+  - гротеск
+  - іронія
+  - десакралізація
+  - карикатура
+  - імперія
+  - цар
+  - заслання
+  - пейзаж
+  - контраст
+  recommended:
+  - парадокс
+  - абсурд
+  - бал
+  - маніфест
+  - критика
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: lit-11 to lit-13 (Shevchenko biography and early works)
+  related:
+  - lit-15 (Zapovit — політичний заповіт)
+  - lit-25 (Cyrillo-Methodian Brotherhood — контекст арешту)
+constraints:
+  min_engagement_boxes: 3
+  min_examples: 15
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

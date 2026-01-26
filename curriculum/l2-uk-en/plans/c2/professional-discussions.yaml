@@ -1,0 +1,97 @@
+module: professional-discussions
+level: c2
+sequence: 57
+version: '2.0'
+title: Професійні дискусії
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Українська асоціація медіаторів
+  url: https://ukrmediation.org.ua/
+  type: reference
+  notes: Standards for professional negotiations and mediation
+- name: Національний інститут стратегічних досліджень
+  url: https://niss.gov.ua/
+  type: reference
+  notes: Examples of policy discussions and expert debates
+- name: Громадське телебачення — дебати
+  url: https://hromadske.ua/
+  type: reference
+  notes: Examples of professional discussions and debates
+content_outline:
+- section: Вступ — Культура професійної дискусії
+  words: 500
+  points:
+  - Відмінність дискусії від суперечки
+  - Принципи конструктивного діалогу
+  - Етика професійних обговорень
+- section: Ведення дебатів
+  words: 800
+  points:
+  - Структура формальних дебатів
+  - Аргументація та контраргументація
+  - Риторичні техніки переконання
+  - Логічні помилки та їх розпізнавання
+- section: Переговори
+  words: 700
+  points:
+  - Типи переговорів (розподільчі, інтегративні)
+  - Стратегії та тактики переговорів
+  - Досягнення компромісу
+  - BATNA та ZOPA
+- section: Консультації та експертні обговорення
+  words: 600
+  points:
+  - Роль експерта в обговоренні
+  - Представлення фахової думки
+  - Робота в експертних групах
+  - Досягнення консенсусу
+- section: Модерація дискусій
+  words: 600
+  points:
+  - Роль модератора
+  - Техніки управління дискусією
+  - Вирішення конфліктів
+  - Підсумовування результатів
+- section: Практичні вправи
+  words: 500
+  points:
+  - Симуляція дебатів
+  - 'Рольова гра: переговори'
+  - Модерація групової дискусії
+word_target: 4000
+vocabulary:
+  required:
+  - дискусія (discussion)
+  - дебати (debate)
+  - переговори (negotiations)
+  - аргумент (argument)
+  - контраргумент (counterargument)
+  - компроміс (compromise)
+  - консенсус (consensus)
+  - модератор (moderator)
+  - експерт (expert)
+  - позиція (position)
+  recommended:
+  - BATNA (BATNA - best alternative)
+  - фасилітатор (facilitator)
+  - опонент (opponent)
+  - пропонент (proponent)
+  - резюмування (summarizing)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - fill-in
+  - match-up
+  - critical-analysis
+  - essay-response
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-58 (Cross-Domain Communication)
+- c2-61-65 (Legal Ukrainian — negotiations in legal context)
+- c2-73 (Professional Identity)

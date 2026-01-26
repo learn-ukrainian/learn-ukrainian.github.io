@@ -27,3 +27,24 @@ summary: This module masters the High Formal Register of Ukrainian, focusing on 
   language of laws, decrees, and official contracts. Students analyze the rigid structure,
   impersonal tone, and specific grammatical features like nominalization and passive
   voice that define bureaucratic communication.
+content_outline:
+- section: Вступ — Мова документів
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Indirect Speech Acts
+  words: 500
+  points:
+  - 'Запрошення: Якщо будете вільні... (= Come!)'
+  - 'Відмова: Я подумаю... (= No)'
+  - 'Критика: Можна було б і краще... (= Bad)'
+  - 'Прохання: Тут якось холодно... (= Close the window)'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

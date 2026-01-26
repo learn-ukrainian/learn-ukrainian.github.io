@@ -1,29 +1,97 @@
 module: a2-54
-title: Sports and Fitness
-subtitle: Active Lifestyle
-version: '1.0'
-phase: A2.3
+id: a2-54
+slug: sports-fitness
+title: "Sports and Fitness"
+subtitle: "Active Lifestyle"
+version: '2.0'
+phase: "A2.5 [Vocabulary Expansion]"
+focus: vocabulary
 pedagogy: PPP
+register: розмовний
 duration: 60
 transliteration: none
-tags:
-- vocabulary
-- sports
-- fitness
-- health
-grammar:
-- sports verbs (грати в, займатися)
-- accusative vs instrumental in sports
-- describing events (match, game)
-- healthy lifestyle terms
 objectives:
-- Learner can talk about sports and fitness
-- Learner can use 'грати в' and 'займатися' correctly
-- Learner can describe a sports event
-- Learner can discuss healthy habits
-vocabulary_count: 25
-slug: 54-sports-fitness
-focus: vocabulary
+  - "Learner can talk about sports and fitness"
+  - "Learner can use 'грати в' and 'займатися' correctly"
+  - "Learner can describe a sports event"
+  - "Learner can discuss healthy habits"
+grammar:
+  - "Sports verbs (грати в, займатися)"
+  - "Accusative vs instrumental in sports contexts"
+  - "Describing events (match, game, competition)"
+word_target: 1000
+content_outline:
+  - section: "Introduction: Sports in Ukraine"
+    words: 100
+    points:
+      - "Popular sports"
+      - "Ukrainian athletes"
+      - "Sports culture"
+  - section: "Team Sports"
+    words: 200
+    points:
+      - "футбол, баскетбол, волейбол"
+      - "грати у футбол"
+      - "Team vocabulary"
+  - section: "Individual Sports"
+    words: 200
+    points:
+      - "плавання, біг, теніс"
+      - "займатися плаванням"
+      - "Accusative vs instrumental"
+  - section: "Fitness and Gym"
+    words: 200
+    points:
+      - "спортзал, тренування"
+      - "тренер, вправа"
+      - "Workout vocabulary"
+  - section: "Sports Events"
+    words: 150
+    points:
+      - "матч, змагання, чемпіонат"
+      - "вигравати, програвати"
+      - "Event descriptions"
+  - section: "Practice: Sports Talk"
+    words: 150
+    points:
+      - "Describe your fitness routine"
+      - "Talk about sports events"
+vocabulary_hints:
+  required:
+    - спорт (sport)
+    - грати (to play)
+    - займатися (to practice)
+    - футбол (football)
+    - тренування (training)
+    - спортзал (gym)
+    - команда (team)
+    - матч (match)
+  recommended:
+    - плавання (swimming)
+    - біг (running)
+    - тренер (coach)
+    - змагання (competition)
+    - вигравати (to win)
+    - програвати (to lose)
+activity_hints:
+  - type: vocabulary-drill
+    focus: "Sports vocabulary"
+    items: 30
+  - type: matching
+    focus: "Match verbs to sports"
+    items: 20
+  - type: fill-in
+    focus: "Complete sports sentences"
+    items: 15
+  - type: speaking
+    focus: "Describe your fitness routine"
+    items: 8
+prerequisites:
+  - a2-53 (Shopping and Services)
+connects_to:
+  - a2-56 (Checkpoint Full Grammar)
+  - a2-51 (Hobbies and Leisure)
 naturalness:
   score: 10
   status: PASS
+  justification: "Essential sports vocabulary"

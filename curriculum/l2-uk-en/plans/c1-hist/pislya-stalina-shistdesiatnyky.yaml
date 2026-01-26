@@ -1,0 +1,87 @@
+module: pislya-stalina-shistdesiatnyky
+level: c1-hist
+sequence: 124
+version: '1.0'
+title: 'Після Сталіна: Шістдесятники'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Відлига
+  words: 451
+  subsections:
+  - 1953 — смерть Сталіна
+  - Хрущовська відлига
+  - Нове покоління
+  - Структура модуля
+- section: Хто такі шістдесятники
+  words: 790
+  subsections:
+  - Покоління — хто вони
+  - Стус, Симоненко, Костенко
+  - Не політики — митці
+  - «Клуб творчої молоді»
+- section: Культурний вибух
+  words: 677
+  subsections:
+  - Нова поезія
+  - Кіно — Параджанов
+  - Мистецтво — нові форми
+  - Повернення до заборонених тем
+- section: Репресії
+  words: 677
+  subsections:
+  - 1965-1972 — арешти
+  - Шелест падає
+  - Щербицький — нова хвиля
+  - Табори
+- section: Від культури до політики
+  words: 564
+  subsections:
+  - Українська Гельсінська група
+  - Правозахисний рух
+  - Зв'язок з культурою
+  - Спадок для 1991
+- section: Підсумок
+  words: 341
+  subsections:
+  - Шістдесятники — міст
+  - Від культури до незалежності
+  - Перехід до пост-2014
+word_target: 3500
+vocabulary:
+- шістдесятники
+- відлига
+- дисидент
+- самвидав
+- репресії
+- табір
+- правозахисний рух
+- Українська Гельсінська група
+- культурний вибух
+- спадок
+- Стус
+- Симоненко
+- Костенко
+- Параджанов
+- «Клуб творчої молоді»
+activities:
+- type: generation-study
+  focus: Who were the Sixtiers — profiles
+- type: cultural-analysis
+  focus: Sixtiers cultural output — poetry, cinema, art
+- type: repression-documentation
+  focus: 1965-1972 repressions — timeline
+- type: critical-analysis
+  focus: Sixtiers → Ukrainian Helsinki Group → 1991
+- type: essay-response
+  focus: Як шістдесятники підготували незалежність?
+sources:
+- name: Шістдесятники (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Шістдесятники
+  type: reference
+  notes: Sixtiers overview
+- name: Українське дисидентське рух (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Дисидентський_рух_в_Україні
+  type: reference
+  notes: Dissident movement

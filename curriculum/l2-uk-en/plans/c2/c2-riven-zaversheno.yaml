@@ -1,0 +1,97 @@
+module: c2-riven-zaversheno
+level: c2
+sequence: 100
+version: '2.0'
+title: C2 РІВЕНЬ ЗАВЕРШЕНО — Сертифікація та перспективи
+focus: checkpoint
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Ukrainian State Standard 2024 — C2 Proficiency Descriptors
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official C2 mastery level descriptors
+- name: CEFR C2 — Can-Do Statements
+  url: https://www.coe.int/
+  type: reference
+  notes: C2 competence descriptors
+- name: Українська мова у світі — Перспективи
+  url: https://uk.wikipedia.org/
+  type: secondary
+  notes: Ukrainian language in global context
+content_outline:
+- section: Вступ — Досягнення найвищого рівня
+  words: 500
+  points:
+  - Що означає C2 — рівень освіченого носія
+  - Шлях від A1 до C2
+  - Особистісна трансформація через мову
+  - Святкування досягнення
+- section: Підсумок компетенцій C2
+  words: 700
+  points:
+  - Граматична досконалість
+  - Лексичне багатство (~12,000 слів)
+  - Стилістична майстерність (7 стилів)
+  - Літературна та професійна компетенція
+  - Культурна інтеграція
+- section: Фінальна сертифікація
+  words: 600
+  points:
+  - Підсумкове оцінювання всіх навичок
+  - Презентація капстоун-проєкту
+  - Вручення сертифіката C2
+  - Рефлексія на досягнення
+- section: Куди далі? Перспективи після C2
+  words: 700
+  points:
+  - Професійне застосування (переклад, викладання)
+  - Академічне застосування (дослідження, публікації)
+  - Творче застосування (література, журналістика)
+  - Підтримка та розвиток рівня
+- section: Українська мова у світі
+  words: 500
+  points:
+  - Роль української у глобальному контексті
+  - Діаспора та міжнародне визнання
+  - Майбутнє української мови
+  - Ваша роль у збереженні та поширенні мови
+- section: Завершення та нові горизонти
+  words: 600
+  points:
+  - Особисте зобов'язання — план на майбутнє
+  - Ресурси для продовження розвитку
+  - Спільнота носіїв C2
+  - Прощальне слово та подяка
+word_target: 4000
+vocabulary:
+  required:
+  - досягнення (achievement)
+  - сертифікація (certification)
+  - досконалість (mastery/perfection)
+  - компетенція (competence)
+  - перспектива (perspective)
+  - застосування (application)
+  - підтримка рівня (level maintenance)
+  - спільнота (community)
+  - зобов'язання (commitment)
+  - горизонт (horizon)
+  recommended:
+  - трансформація (transformation)
+  - інтеграція (integration)
+  - самореалізація (self-fulfillment)
+  - культурний посередник (cultural mediator)
+  - мовний активізм (language activism)
+  forbidden: []
+activities:
+  types_required:
+  - essay-response
+  - quiz
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- Post-C2 specialization tracks (optional)
+- Ukrainian language community

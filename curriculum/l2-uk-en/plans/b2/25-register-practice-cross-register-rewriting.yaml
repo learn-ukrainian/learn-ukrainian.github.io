@@ -1,0 +1,22 @@
+module: 25-register-practice-cross-register-rewriting
+level: b2
+sequence: 25
+version: '1.0'
+title: 'Регістрова практика: Перенесення тексту між стилями'
+subtitle: Один зміст — п'ять голосів
+focus: checkpoint
+pedagogy: TTT
+objectives:
+- Учень може переписати текст з одного функціонального стилю в інший
+- Учень може обирати мовні засоби відповідно до регістру
+- Учень може визначати, які елементи тексту потребують адаптації при зміні стилю
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

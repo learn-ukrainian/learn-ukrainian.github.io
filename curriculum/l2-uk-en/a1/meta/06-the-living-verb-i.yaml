@@ -1,31 +1,98 @@
 module: a1-06
-title: "The Living Verb I - First Conjugation: -ати Verbs"
-subtitle: First Conjugation (-ати/-яти)
+id: a1-06
+slug: the-living-verb-i
+title: "The Living Verb I"
+subtitle: "First Conjugation (-ати/-яти)"
 version: '2.0'
-phase: A1.1
-pedagogy: PPP
+phase: "A1.1 [First Contact]"
 focus: grammar
+pedagogy: PPP
+register: розмовний
 duration: 60
 transliteration: full
-tags:
-  - verbs
-  - conjugation
-  - first-conjugation
-  - present-tense
-  - actions
-grammar:
-  - first-conjugation-verbs
-  - imperfective-aspect-intro
-  - verb-conjugation
-  - personal-endings
 objectives:
-  - Learner can conjugate First Conjugation verbs in present tense
-  - Learner can form basic action statements
-  - Learner can describe daily activities using -ати verbs
-  - Learner understands basic concept of imperfective aspect
-vocabulary_count: 25
-vocab_count: 63
-slug: 06-the-living-verb-i
+  - "Learner can conjugate First Conjugation verbs in present tense"
+  - "Learner can form basic action statements"
+  - "Learner can describe daily activities using -ати verbs"
+  - "Learner understands basic concept of imperfective aspect"
+grammar:
+  - "First Conjugation pattern (-ати → -аю, -аєш...)"
+  - "Personal verb endings"
+  - "Imperfective aspect introduction"
+word_target: 1000
+content_outline:
+  - section: "Introduction: Verbs Bring Language to Life"
+    words: 100
+    points:
+      - "Why verbs are essential"
+      - "Two conjugation patterns in Ukrainian"
+      - "Starting with First Conjugation"
+  - section: "First Conjugation Pattern"
+    words: 250
+    points:
+      - "Infinitive ends in -ати or -яти"
+      - "Remove -ти, add personal endings"
+      - "Full paradigm: читати → читаю, читаєш, читає..."
+  - section: "Personal Endings"
+    words: 200
+    points:
+      - "я → -ю (читаю)"
+      - "ти → -єш (читаєш)"
+      - "він/вона → -є (читає)"
+      - "ми → -ємо (читаємо)"
+      - "ви → -єте (читаєте)"
+      - "вони → -ють (читають)"
+  - section: "Common First Conjugation Verbs"
+    words: 200
+    points:
+      - "читати (to read), писати (to write)"
+      - "знати (to know), працювати (to work)"
+      - "слухати (to listen), питати (to ask)"
+  - section: "Building Sentences"
+    words: 150
+    points:
+      - "Subject + Verb: Я читаю"
+      - "Subject + Verb + Object: Я читаю книгу"
+      - "Word order flexibility"
+  - section: "Practice: Daily Actions"
+    words: 100
+    points:
+      - "Describe what you do"
+      - "Ask what others do"
+vocabulary_hints:
+  required:
+    - читати (to read)
+    - писати (to write)
+    - знати (to know)
+    - працювати (to work)
+    - слухати (to listen)
+    - питати (to ask)
+    - грати (to play)
+    - чекати (to wait)
+  recommended:
+    - думати (to think)
+    - розуміти (to understand)
+    - вивчати (to study)
+    - відпочивати (to rest)
+activity_hints:
+  - type: conjugation-drill
+    focus: "Conjugate First Conjugation verbs"
+    items: 30
+  - type: fill-in
+    focus: "Complete with correct verb form"
+    items: 20
+  - type: translation
+    focus: "Translate action sentences"
+    items: 15
+  - type: matching
+    focus: "Match pronoun to verb form"
+    items: 18
+prerequisites:
+  - a1-05 (My World - Objects)
+connects_to:
+  - a1-07 (Questions and Negation)
+  - a1-08 (The Living Verb II)
 naturalness:
   score: 10
   status: PASS
+  justification: "Clear introduction to verb system"

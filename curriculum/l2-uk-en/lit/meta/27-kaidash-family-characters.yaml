@@ -1,27 +1,123 @@
-module: lit-027
-title: 'Кайдашева сім''я: Характери'
-subtitle: 'Kaidash''s Family: Characters'
+id: lit-27
+title: 'Кайдашева сім''я: Галерея Характерів'
+subtitle: 'Kaidash Family: A Gallery of Characters'
+slug: kaidash-family-characters
+module_type: literature
+word_target: 4000
+immersion: 100% Ukrainian
 version: '2.0'
-phase: 'LIT.5 Realism (Nechuy-Levytsky)'
+phase: LIT.5 Realism
 focus: literature
-pedagogy: 'Seminar'
+pedagogy: Seminar
 duration: 120
 transliteration: none
 tags:
-  - lit
-  - realism
-  - nechuy-levytsky
-  - kaidash
-  - characters
+  - література
+  - реалізм
+  - нечуй-левицький
+  - кайдашева-сімя
+  - персонажі
 grammar:
-  - 'Realism concepts'
+  - Character analysis vocabulary
+  - Family relationship terms
+  - Psychological motivation
 objectives:
-  - 'Understand the character archetypes in Kaidasheva Simia'
-  - 'Analyze the conflict between generations'
-  - 'Evaluate the role of women in the novel'
-vocabulary_count: 30
-slug: 27-kaidash-family-characters
+  - Проаналізувати систему персонажів повісті
+  - Зрозуміти архетипи української сільської родини
+  - Дослідити психологічну мотивацію героїв
+  - Порівняти персонажів з попередніми творами курсу
+sources:
+  - name: Кайдашева сім'я — повний текст
+    url: https://www.ukrlib.com.ua/books/printit.php?tid=907
+    type: primary
+    notes: Для цитат і аналізу
+  - name: Аналіз "Кайдашевої сім'ї"
+    url: https://www.ukrlib.com.ua/review/printit.php?tid=18137
+    type: primary
+    notes: Літературознавчий аналіз
+  - name: Кайдашева сім'я — скорочено
+    url: https://www.ukrlib.com.ua/styslo/printit.php?tid=3505
+    type: reference
+    notes: Для швидкого повторення сюжету
+content_outline:
+  - section: Вступ — Сім'я як мікрокосм
+    words: 500
+    points:
+      - Родина в українській літературі
+      - Чому "Кайдашева сім'я" стала класикою
+      - Історичний контекст (після 1861 року)
+  - section: Омелько Кайдаш — патріарх
+    words: 700
+    points:
+      - Характеристика голови родини
+      - Слабкості та чесноти
+      - Конфлікт традиції та змін
+  - section: Маруся Кайдашиха — справжня влада
+    words: 700
+    points:
+      - Образ свекрухи в українській культурі
+      - Мотиви поведінки Кайдашихи
+      - Сатира vs співчуття
+  - section: Сини і невістки
+    words: 800
+    points:
+      - Карпо та Лаврін — два типи синів
+      - Мотря і Мелашка — два типи невісток
+      - Конфлікти поколінь
+  - section: Другорядні персонажі
+    words: 500
+    points:
+      - Село як колективний персонаж
+      - Сусіди та їхня роль
+      - Функція гумору
+  - section: Підсумок — Від типу до індивідуальності
+    words: 400
+    points:
+      - Як Нечуй створює живих людей
+      - Порівняння з персонажами Квітки та Шевченка
+      - Перехід до конфліктів повісті
+vocabulary_hints:
+  required:
+    - патріарх (patriarch)
+    - свекруха (mother-in-law)
+    - невістка (daughter-in-law)
+    - архетип (archetype)
+    - характер (character)
+    - мотивація (motivation)
+    - сатира (satire)
+    - психологізм (psychological depth)
+    - традиція (tradition)
+    - конфлікт (conflict)
+  recommended:
+    - індивідуальність (individuality)
+    - типаж (type/character type)
+    - колективний (collective)
+    - гумор (humor)
+    - співчуття (sympathy)
+activity_hints:
+  - type: reading
+    focus: Ключові сцени з персонажами
+    source: UkrLib tid=907
+    items: 5+
+  - type: quiz
+    focus: Характеристики персонажів
+    items: 15+
+  - type: match-up
+    focus: Персонаж → характеристика
+    items: 12+
+  - type: essay-response
+    focus: Архетип свекрухи в українській культурі
+    word_target: 300
+    output: Літературознавче есе
+  - type: cloze
+    focus: Цитати персонажів
+    items: 12+
+prerequisites:
+  - lit-26 (Нечуй-Левицький біографія)
+connects_to:
+  - lit-28 (Кайдашева сім'я — конфлікти)
+  - lit-05 (Наталка Полтавка — порівняння персонажів)
 naturalness:
   score: 10
   status: PASS
-  justification: 'High quality literary analysis with natural Ukrainian'
+  justification: Graduate level academic Ukrainian

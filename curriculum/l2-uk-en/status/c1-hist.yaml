@@ -1,0 +1,549 @@
+level: c1-hist
+updated: '2026-01-26T12:55:39.586535+00:00'
+summary:
+  total: 135
+  planned: 135
+  content: 0
+  activities: 0
+  reviewed: 0
+modules:
+  shcho-take-istoriohrafiia:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  ukrainska-istoriohrafichna-tradytsiia:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  rosiiska-imperialna-istoriohrafiia:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  radyanska-istoriohrafiia:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  polskyi-pohliad:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  diaspora-ta-zakhidni-istoriky:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  nova-ukrainska-istoriohrafiia:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  metodolohiia-dekolonizatsii:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  krytyka-dzherel:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  istorychna-pamiat-i-polityka:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  povist-mynulykh-lit-i:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  povist-mynulykh-lit-ii:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  kyievo-pecherskyi-pateryk:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  slovo-o-polku-ihorevim:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  halytsko-volynskyi-litopys-i:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  halytsko-volynskyi-litopys-ii:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  hramoty-ta-akty:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  syntez-serednovichni-dzherela:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  kozatski-litopysy-ohliad:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  litopys-samovidtsia:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  litopys-hrabianky:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  litopys-velychka:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  universaly-khmelnytkoho:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  pereyaslavski-statti:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  konstytutsiia-orlyka:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  lysty-mazepy:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  sich-dokumenty:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  syntez-kozatski-dzherela:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  knyhy-butiia-shevchenko:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  zapovit-ta-lysty-shevchenka:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  valuevskyi-tsyrkuliar-tekst:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  emskyi-ukaz-tekst:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  franko-politychni-ese:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  universaly-unr:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  akt-zluki:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  svidchennia-holodomoru-i:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  svidchennia-holodomoru-ii:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  syntez-moderni-dzherela:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  samvydav-shcho-tse:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  lysty-stusa:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  ukrayinskyi-visnyk:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  memorandum-uhh:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  akt-nezalezhnosti-1991:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  syntez-dysydentski-dzherela:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  holodomor-istoriohrafiia:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  holodomor-mekhanizmy-i:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  holodomor-mekhanizmy-ii:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  holodomor-heohrafiia:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  holodomor-svidky:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  holodomor-vyznannia:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  syntez-holodomor-studiyi:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  rozstriliane-kontekst:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  literaturna-dyskusiia:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  khvylovyi-kulish-debaty:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  teatr-kurbasa:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  mekhanizm-znyshchennia:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  syntez-rozstriliane:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  khreshchennia-spadshchyna:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  beresteyska-uniia-analiz:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  pravoslavna-identychnist:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  hreko-katolytska-tserkva:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  radianska-antyrelihiyna-polityka:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  syntez-relihiina-identychnist:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  persha-khvylia-emihratsiyi:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  druha-khvylia-politychna:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  tretia-khvylia-dipivtsi:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  diaspora-orhanizatsiyi:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  diaspora-naukovtsi:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  syntez-diaspora:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  halychyna-pid-avstriieyu:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  halychyna-natsionalnyi-rukh:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  bukovyna-mizh-imperiiamy:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  zakarpattia-tysiacholittia:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  volyn-pamiat-i-travma:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  syntez-zakhidni-rehiony:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  slobozhanshchyna-identychnist:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  donbas-industrializatsiia:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  krym-bahatosharovyi:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  pivden-kolonizatsiia-mify:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  syntez-rehionalna-riznomanitnist:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  mekhanizm-kooptatsii:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  pereiaslav-tsykl:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  mazepa-tsykl:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  rozumovskyi-tsykl:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  radianska-ukrainizatsiia:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  khrushchov-shelest-tsykl:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  yanukovych-tsykl:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  syntez-tsykl-zrady:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  pereiaslav-alternatyvy:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  poltava-naslidky:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  unr-vybory:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  1991-referendum:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  2004-vs-2014:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  syntez-rozdorizhzhia:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  zakhid-1918:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  zakhid-1945:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  chicken-kyiv:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  zakhid-1994:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  chornomorskyi-flot:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  zakhid-2008:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  zakhid-2014:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  syntez-zakhid-2022:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  ekonomika-imperii:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  radianska-industrializatsiia:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  holodomor-ekonomika:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  hazova-zbroia:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  syntez-ekonomichna-kolonizatsiia:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  malorosiia-konstrukt:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  radianska-propaganda:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  suchasna-dezinformatsiia:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  zakhidni-media:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  ukrainski-kontrnararyvy:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  syntez-informatsiina-viina:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  polska-i-ukraina-symbioz:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  1918-1920-viina-i-soiuz:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  volyn-i-pamiat:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  syntez-polska-ukraina-2022:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  yevrei-v-ukraini-do-1917:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  holokost-v-ukraini:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  radianski-antysemityzm:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  syntez-yevrei-ukraina:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  tsykl-kulturnykh-vidrodzhen:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  pislya-emsa-halychyna:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  pislya-stalina-shistdesiatnyky:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  syntez-pislya-2014:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  kulturna-rezystentsiia:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  hromadianske-suspilstvo:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  hranitna-revoliutsiia:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  2004-krymska-kryza:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  zhinky-v-revoiuutsiiakh:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  chomu-2022-spratsiuvalo:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  ukrainska-m-iaka-syla:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  syntez-ahentsnist:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  ukrainske-pytannia-xxi:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+  finalnyi-syntez:
+    status: planned
+    last_updated: '2026-01-26'
+    plan_version: '1.0'

@@ -1,0 +1,23 @@
+module: 69-winter-holidays
+level: c1
+sequence: 69
+version: '1.0'
+title: Українські свята - зимовий цикл
+subtitle: Ukrainian Holidays - Winter Cycle
+focus: cultural
+pedagogy: CBI
+objectives:
+- Learner can describe the main holidays of the winter cycle (St. Nicholas, Christmas, Malanka, Epiphany)
+- Learner can explain the difference between koliadky and shchedrivky
+- Learner can discuss the symbolism of vertep and Malanka characters
+- Learner can recite a traditional holiday greeting
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

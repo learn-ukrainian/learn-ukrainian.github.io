@@ -1,0 +1,97 @@
+module: 06-hedging-modality
+level: c1
+sequence: 6
+version: '2.0'
+title: Хеджінг та модальність
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Academic Hedging in Ukrainian
+  url: https://mova.info/
+  type: reference
+  notes: Research on hedging devices in Ukrainian academic writing
+- name: Модальність у сучасній українській мові
+  url: https://r2u.org.ua/
+  type: secondary
+  notes: Comprehensive modality analysis
+content_outline:
+- section: Вступ — Навіщо пом'якшувати?
+  words: 400
+  points:
+  - Роль хеджінгу в академічному дискурсі
+  - Баланс між упевненістю та обережністю
+  - Наукова етика та невизначеність
+- section: Модальні дієслова
+  words: 700
+  points:
+  - Може, міг би, повинен, мусить
+  - Здається, видається, виявляється
+  - Ступені модальності
+- section: Прислівники невизначеності
+  words: 700
+  points:
+  - Можливо, ймовірно, очевидно
+  - Напевно, безперечно, певною мірою
+  - Частково, почасти, певним чином
+- section: Фразові конструкції хеджінгу
+  words: 600
+  points:
+  - Є підстави вважати, можна припустити
+  - Не виключено що, цілком імовірно що
+  - На думку дослідників, за нашими спостереженнями
+- section: Шкала впевненості
+  words: 600
+  points:
+  - 100% — безперечно, безсумнівно
+  - 75% — ймовірно, скоріш за все
+  - 50% — можливо, мабуть
+  - 25% — навряд чи, сумнівно
+- section: Контексти використання
+  words: 600
+  points:
+  - В гіпотезах та припущеннях
+  - При інтерпретації даних
+  - У висновках і рекомендаціях
+- section: Практика модуляції тону
+  words: 400
+  points:
+  - Додавання хеджінгу до категоричних тверджень
+  - Варіювання ступеня впевненості
+  - Контекстна доречність
+word_target: 4000
+vocabulary:
+  required:
+  - модальність (modality)
+  - хеджінг (hedging)
+  - ймовірно (probably)
+  - можливо (possibly)
+  - безперечно (undoubtedly)
+  - сумнівно (doubtfully)
+  - припускати (to assume)
+  - вважати (to consider)
+  - виключено (excluded)
+  - очевидно (obviously)
+  recommended:
+  - позаяк (since)
+  - навряд чи (hardly)
+  - певною мірою (to some extent)
+  - почасти (partly)
+  - скоріш за все (most likely)
+  forbidden: []
+activities:
+  types_required:
+  - group-sort
+  - quiz
+  - essay-response
+  - cloze
+  - fill-in
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c1-07 (Citation & Reference)
+- c1-09 (Thesis Development)
+- c1-41 (Degrees of Certainty)

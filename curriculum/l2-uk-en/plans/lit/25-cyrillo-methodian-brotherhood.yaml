@@ -1,0 +1,100 @@
+module: 25-cyrillo-methodian-brotherhood
+level: lit
+sequence: 25
+version: '2.0'
+title: Кирило-Мефодіївське братство
+subtitle: The Cyrillo-Methodian Brotherhood
+focus: literature
+pedagogy: seminar
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Кирило-Мефодіївське_братство
+    title: Кирило-Мефодіївське братство — стаття
+    notes: Історія організації
+  - url: https://uk.wikipedia.org/wiki/Книги_буття_українського_народу
+    title: Книги буття українського народу
+    notes: Програмний документ
+  secondary:
+  - url: https://uk.wikipedia.org/wiki/Микола_Костомаров
+    title: Микола Костомаров — біографія
+    notes: Біографія одного з лідерів
+content_outline:
+- section: Вступ — Перша політична організація
+  words: 500
+  subsections:
+  - Київ, 1845-1847 роки
+  - Чому це було революційно
+  - Таємне товариство в імперіях
+- section: Засновники і члени
+  words: 700
+  subsections:
+  - Микола Костомаров — ідеолог
+  - Пантелеймон Куліш — організатор
+  - Тарас Шевченко — найрадикальніший
+- section: Книги буття українського народу
+  words: 800
+  subsections:
+  - Жанр і структура документу
+  - Ідея слов'янської федерації
+  - Україна як "месія народів"
+- section: Політична програма
+  words: 700
+  subsections:
+  - Скасування кріпацтва
+  - Демократія і рівність
+  - Християнський соціалізм
+- section: Розгром і наслідки
+  words: 500
+  subsections:
+  - Донос і арешти (1847)
+  - Покарання членів
+  - Шевченко — найсуворіший вирок
+- section: Підсумок — Ідея, що пережила репресії
+  words: 400
+  subsections:
+  - Вплив братства на українську думку
+  - Від 1847 до 1991 року
+  - Завершення фази "Інтелектуалів"
+word_target: 4500
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - братство
+  - таємне товариство
+  - федерація
+  - месіанізм
+  - ідеолог
+  - програма
+  - донос
+  - арешт
+  - кріпацтво
+  - рівність
+  recommended:
+  - маніфест
+  - утопія
+  - панславізм
+  - репресії
+  - заслання
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - cloze
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: lit-21 (Panteleimon Kulish)
+  related:
+  - lit-26 (Nechuy-Levytsky — наступна фаза)
+  - lit-20 (Cult of Shevchenko — Шевченко-революціонер)
+  - c1-hist (Historical modules)
+constraints:
+  min_engagement_boxes: 3
+  min_examples: 15
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

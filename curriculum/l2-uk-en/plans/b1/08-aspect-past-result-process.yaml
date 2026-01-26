@@ -1,0 +1,87 @@
+module: 08-aspect-past-result-process
+level: b1
+sequence: 8
+version: '1.0'
+title: 'Вид у минулому: результат і процес'
+subtitle: 'Aspect in Past: Result vs Process'
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can distinguish result from process in past tense
+- Learner understands duration markers with imperfective
+- Learner can select aspect based on speaker's focus (result vs activity)
+- Learner recognizes completion markers with perfective
+sources:
+- name: Ukrainian State Standard 2024 - Aspect and Result
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official guidance on result-oriented aspect usage
+- name: Ukrainian Grammar - Aspect
+  url: https://uk.wikipedia.org/wiki/Вид_дієслова
+  type: reference
+  notes: Process vs result distinction in Ukrainian
+content_outline:
+- section: Тест
+  words: 200
+  points:
+  - Narrative comparison
+  - Result vs Process focus
+- section: Пояснення
+  words: 500
+  points:
+  - Perfective (Result)
+  - Imperfective (Process)
+  - Markers
+- section: Контраст
+  words: 450
+  points:
+  - Same fact, different focus
+  - Communication intent
+- section: Практика
+  words: 300
+  points:
+  - Algorithm
+  - Common mistakes
+  - Daily life scenarios
+- section: Діалоги
+  words: 350
+  points:
+  - Work report
+  - Study experience
+  - Moving houses
+- section: Підсумок
+  words: 150
+  points:
+  - Key rules
+  - Self-check
+word_target: 1800
+vocabulary:
+  required:
+  - результат (result)
+  - процес (process)
+  - завершення (completion)
+  - тривалість (duration)
+  - весь день (all day)
+  - годину (for an hour)
+  - вже (already)
+  - нарешті (finally)
+  - до кінця (to the end)
+  - довго (for a long time)
+  recommended:
+  - ще (still/yet)
+  - зараз (now)
+  - поступово (gradually)
+  - раптом (suddenly)
+  - миттєво (instantly)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - quiz
+  - cloze
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-09 (Aspect in future)
+- b1-14 (Aspect integration practice)

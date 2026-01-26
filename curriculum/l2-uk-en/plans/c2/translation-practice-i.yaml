@@ -1,0 +1,95 @@
+module: translation-practice-i
+level: c2
+sequence: 86
+version: '2.0'
+title: Практика перекладу I — Літературний переклад
+focus: practice
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Зеров — Переклади з поезії
+  url: https://uk.wikipedia.org/wiki/Зеров_Микола_Костьович
+  type: primary
+  notes: Classic examples of Ukrainian poetic translation
+- name: Кундзіч — Теорія та практика художнього перекладу
+  url: https://uk.wikipedia.org/wiki/Кундзіч_Олексій_Леонідович
+  type: reference
+  notes: Ukrainian literary translation methodology
+- name: Сучасні українські переклади світової класики
+  url: https://chytomo.com/
+  type: secondary
+  notes: Contemporary translation examples and reviews
+content_outline:
+- section: Вступ — Художній переклад як мистецтво
+  words: 500
+  points:
+  - Відмінність художнього перекладу від інших видів
+  - Творча свобода vs. вірність оригіналу
+  - Український контекст літературного перекладу
+- section: Переклад прози
+  words: 700
+  points:
+  - Збереження стилю автора
+  - Передача діалогів і мовлення персонажів
+  - Культурна адаптація vs. збереження колориту
+  - Робота з реаліями та культурними референціями
+- section: Переклад поезії
+  words: 700
+  points:
+  - Проблема форми і змісту
+  - Збереження ритму, рими, звукопису
+  - Верлібр як альтернатива
+  - Традиції українського поетичного перекладу
+- section: Переклад драми
+  words: 600
+  points:
+  - Сценічність перекладу
+  - Природність діалогів
+  - Збереження підтексту
+  - Адаптація для українського глядача
+- section: Практична майстерня — Переклад прози
+  words: 700
+  points:
+  - Переклад уривка англійської прози
+  - Обґрунтування перекладацьких рішень
+  - Порівняння з існуючим перекладом (якщо є)
+  - Рецензування перекладу колеги
+- section: Практична майстерня — Переклад поезії
+  words: 600
+  points:
+  - Переклад англійського вірша
+  - 'Два варіанти: збереження форми vs. верлібр'
+  - Коментар до перекладацьких рішень
+word_target: 4000
+vocabulary:
+  required:
+  - художній переклад (literary translation)
+  - вірність оригіналу (fidelity to original)
+  - творча свобода (creative freedom)
+  - колорит (local color)
+  - реалія (culture-specific item)
+  - сценічність (stageability)
+  - підтекст (subtext)
+  - верлібр (free verse)
+  - звукопис (sound painting)
+  - перекладацьке рішення (translation decision)
+  recommended:
+  - інтонація оригіналу (tone of original)
+  - голос автора (author's voice)
+  - перекладацький коментар (translator's note)
+  - редакторська правка (editorial revision)
+  - перевидання перекладу (retranslation)
+  forbidden: []
+activities:
+  types_required:
+  - match-up
+  - essay-response
+  - quiz
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-87 (Translation Practice II — Technical)
+- c2-88 (Interpretation Basics)

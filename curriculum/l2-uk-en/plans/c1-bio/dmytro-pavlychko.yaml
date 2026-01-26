@@ -1,0 +1,105 @@
+module: dmytro-pavlychko
+level: c1-bio
+sequence: 73
+version: '2.0'
+title: 'Дмитро Павличко: Поет і дипломат'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Павличко_Дмитро_Васильович
+    title: Дмитро Павличко (Wikipedia UA)
+    notes: Biography of the poet, translator, and diplomat
+  secondary:
+  - url: https://nspu.org.ua/
+    title: Національна спілка письменників України
+    notes: Literary biography and works
+content_outline:
+- section: Вступ — Два кольори однієї душі
+  words: 400
+  subsections:
+  - Поет, перекладач, політик, дипломат
+  - Автор легендарної пісні «Два кольори»
+  - Життя між поезією та політикою
+- section: Юність і формування (1929-1953)
+  words: 600
+  subsections:
+  - Народження на Івано-Франківщині
+  - Важке повоєнне дитинство
+  - Навчання у Львівському університеті
+  - Перші вірші та публікації
+- section: Поетичний шлях (1953-1970)
+  words: 800
+  subsections:
+  - Входження в літературу
+  - Збірки «Любов і ненависть», «Правда кличе»
+  - Пісня «Два кольори» (1965)
+  - Шістдесятництво та його межі
+- section: Перекладацька діяльність (1960-ті–1990-ті)
+  words: 700
+  subsections:
+  - Переклади Шекспіра
+  - Переклади світової поезії
+  - Роль перекладу у збереженні мови
+  - Визнання як перекладача
+- section: Політик і дипломат (1988-2000-ні)
+  words: 800
+  subsections:
+  - Участь у Народному Русі
+  - Співавтор Акту незалежності
+  - Посол України в Польщі та Словаччині
+  - Політичні позиції та суперечки
+- section: Спадщина — Голос України
+  words: 700
+  subsections:
+  - Вплив на українську поезію
+  - «Два кольори» як другий гімн
+  - Пізня творчість
+  - Місце в історії літератури
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - поет
+  - перекладач
+  - дипломат
+  - пісня
+  - символіка
+  - шістдесятництво
+  - Народний Рух
+  - посол
+  - літературна спадщина
+  - ліричний
+  recommended:
+  - патріотизм
+  - поетика
+  - романтизм
+  - політична поезія
+  - національна свідомість
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-72
+  related:
+  - c1-bio-74
+  - c1-bio-79
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

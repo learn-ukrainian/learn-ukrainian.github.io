@@ -41,3 +41,62 @@ items:
   translation: hat
   pos: noun
   gender: f
+- lemma: який
+  ipa: /jakˈɪj/
+  translation: which, who, that (relative pronoun)
+  pos: pron
+- lemma: яка
+  ipa: /jaˈka/
+  translation: which, who, that (feminine)
+  pos: pron
+- lemma: яке
+  ipa: /jaˈkɛ/
+  translation: which, that (neuter)
+  pos: pron
+- lemma: які
+  ipa: /jaˈki/
+  translation: which, who, that (plural)
+  pos: pron
+- lemma: якого
+  ipa: /jakɔˈɦɔ/
+  translation: whom, which (accusative)
+  pos: pron
+- lemma: займенник
+  ipa: /zajmˈɛnnɪk/
+  translation: pronoun
+  pos: noun
+  gender: m
+- lemma: прикметник
+  ipa: /prɪkmˈɛtnɪk/
+  translation: adjective
+  pos: noun
+  gender: m
+- lemma: називний
+  ipa: /nazɪʋnˈɪj/
+  translation: nominative (case)
+  pos: adj
+- lemma: знахідний
+  ipa: /znaxˈidnɪj/
+  translation: accusative (case)
+  pos: adj
+- lemma: місцевий
+  ipa: /mist͡sˈɛʋɪj/
+  translation: locative (case), local
+  pos: adj
+- lemma: родовий
+  ipa: /rɔdɔʋˈɪj/
+  translation: genitive (case)
+  pos: adj
+- lemma: відносний
+  ipa: /ʋidnˈɔsnɪj/
+  translation: relative
+  pos: adj
+- lemma: підрядний
+  ipa: /pidrˈadnɪj/
+  translation: subordinate
+  pos: adj
+- lemma: антецедент
+  ipa: /antɛt͡sɛdˈɛnt/
+  translation: antecedent
+  pos: noun
+  gender: m

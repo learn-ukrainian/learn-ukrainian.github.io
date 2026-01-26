@@ -1,0 +1,22 @@
+module: 83-b2-pidsumkovyy-ohlyad
+level: b2
+sequence: 83
+version: '2.0'
+title: B2 Підсумковий огляд
+subtitle: B2 Final Review
+focus: checkpoint
+pedagogy: TTT
+objectives:
+- Review key grammar points of B2 level
+- Consolidate vocabulary from all phases
+- Practice register switching
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

@@ -1,0 +1,96 @@
+module: 18-essay-writing-practice
+level: c1
+sequence: 18
+version: '2.0'
+title: Практикум — Написання есе
+focus: practice
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: C1 Writing Assessment Criteria
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Essay evaluation rubrics
+- name: Academic Essay Models
+  url: https://mova.info/
+  type: secondary
+  notes: Sample essays with analysis
+content_outline:
+- section: Вступ — Інтеграція навичок
+  words: 300
+  points:
+  - Огляд академічного письма M01-M17
+  - Чек-лист есеїста
+  - Критерії оцінювання
+- section: Планування есе
+  words: 600
+  points:
+  - Аналіз теми (що вимагається)
+  - Мозковий штурм ідей
+  - Структурування плану
+- section: Написання чернетки
+  words: 800
+  points:
+  - Від тези до абзаців
+  - Інтеграція цитат і доказів
+  - Логічні переходи
+- section: Редагування
+  words: 700
+  points:
+  - Перевірка структури
+  - Стилістичне редагування
+  - Пунктуація і граматика
+- section: Взірцеве есе з аналізом
+  words: 1000
+  points:
+  - Повний зразок академічного есе
+  - Коментарі до кожної частини
+  - Альтернативні підходи
+- section: Типові помилки
+  words: 600
+  points:
+  - Структурні проблеми
+  - Стилістичні невідповідності
+  - Логічні прогалини
+- section: Практичне завдання
+  words: 500
+  points:
+  - Тема для есе
+  - Поетапні інструкції
+  - Рубрика самооцінки
+word_target: 4000
+vocabulary:
+  required:
+  - чернетка (draft)
+  - редагування (editing)
+  - планування (planning)
+  - структурування (structuring)
+  - логічний перехід (logical transition)
+  - доказ (evidence)
+  - теза (thesis)
+  - аргументація (argumentation)
+  - рубрика (rubric)
+  - самооцінка (self-assessment)
+  recommended:
+  - мозковий штурм (brainstorming)
+  - чек-лист (checklist)
+  - критерій (criterion)
+  - відповідність (compliance)
+  - когерентність (coherence)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - essay-response
+  - cloze
+  - fill-in
+  - error-correction
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c1-19 (Article Critique)
+- c1-20 (C1.1 Checkpoint)
+- c1-32 (Professional Scenarios)

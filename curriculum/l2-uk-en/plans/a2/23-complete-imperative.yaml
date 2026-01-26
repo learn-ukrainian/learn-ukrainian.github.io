@@ -1,0 +1,50 @@
+module: 23-complete-imperative
+level: a2
+sequence: 23
+version: '2.0'
+title: Complete Imperative
+subtitle: Let It Be! (3rd Person)
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can form 3rd person commands using хай/нехай
+- Learner can make toasts and wishes
+- Learner can relay indirect commands
+- Learner can use the full range of imperative forms
+sources:
+- name: Ukrainian State Standard 2024 - Imperative
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Complete imperative mood requirements for A2
+- name: Grammar of Ukrainian Language - Verb Moods
+  url: https://uk.wikipedia.org/wiki/Наказовий_спосіб
+  type: reference
+  notes: Detailed rules for all persons in imperative
+content_outline:
+- section: Introduction / Вступ
+  words: 200
+  points:
+  - Concept of willpower in language
+  - Why imperative is not always 'impolite'
+- section: Presentation / Презентація
+  words: 600
+  points:
+  - Review of 2nd person (ти/ви)
+  - The 'Let's' form (-мо suffix)
+  - 3rd Person: хай / нехай (The indirect wish)
+  - Formation nuances (soft vs hard stems)
+  - Negative Imperatives (не)
+- section: Practice / Практика
+  words: 150
+  points:
+  - Instructions for a recipe (Борщ)
+  - Toast making ceremony
+- section: Dialogues / Діалоги
+  words: 50
+  points:
+  - Kitchen dialogue or team coordination
+word_target: 1000
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

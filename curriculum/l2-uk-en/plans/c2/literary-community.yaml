@@ -1,0 +1,104 @@
+module: literary-community
+level: c2
+sequence: 41
+version: '2.0'
+title: Літературна спільнота
+focus: literature
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Літературне життя України
+  url: https://uk.wikipedia.org/wiki/Українська_література
+  type: reference
+  notes: Overview of Ukrainian literary life
+- name: Спілка письменників України
+  url: https://uk.wikipedia.org/wiki/Спілка_письменників_України
+  type: reference
+  notes: Writers' union and professional organizations
+- name: Книжковий Арсенал
+  url: https://artarsenal.in.ua/
+  type: primary
+  notes: Major literary festival
+content_outline:
+- section: Вступ — Літературне поле
+  words: 500
+  points:
+  - Бурдьє і поняття поля
+  - Актори літературного поля
+  - Капітал символічний і економічний
+- section: Письменницькі організації
+  words: 700
+  points:
+  - Спілка письменників — історія і сьогодення
+  - PEN Україна
+  - Незалежні об'єднання
+  - Переваги і недоліки членства
+- section: Літературні заходи
+  words: 600
+  points:
+  - Книжковий Арсенал
+  - Форум видавців у Львові
+  - Авторські читання
+  - Літературні резиденції
+- section: Видавнича індустрія
+  words: 700
+  points:
+  - Великі і малі видавництва
+  - Роль редактора
+  - Агенти і агенції
+  - Шлях до публікації
+- section: Критика і медіа
+  words: 600
+  points:
+  - Літературні журнали
+  - Критики та оглядачі
+  - Літературні програми на радіо/ТБ
+  - Онлайн-спільноти
+- section: Практичний вхід у спільноту
+  words: 500
+  points:
+  - З чого почати
+  - Нетворкінг для інтровертів
+  - Подання рукопису
+  - Побудова репутації
+- section: Підсумок
+  words: 400
+  points:
+  - Література як спільна справа
+  - Баланс творчості і спільноти
+  - Довгострокова стратегія
+word_target: 4000
+vocabulary:
+  required:
+  - спільнота (community)
+  - поле (field)
+  - видавництво (publishing house)
+  - редактор (editor)
+  - агент (agent)
+  - рукопис (manuscript)
+  - публікація (publication)
+  - фестиваль (festival)
+  - резиденція (residency)
+  - нетворкінг (networking)
+  recommended:
+  - символічний капітал (symbolic capital)
+  - тираж (print run)
+  - роялті (royalty)
+  - контракт (contract)
+  - дебют (debut)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - critical-analysis
+  - comparative-study
+  - authorial-intent
+  - essay-response
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-42-43 (C2.2 Practice modules)
+- c2-44 (C2.2 Review)
+- c2-45 (C2.2 Checkpoint)

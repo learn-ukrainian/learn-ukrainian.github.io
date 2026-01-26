@@ -1,0 +1,129 @@
+module: kyrylo-mefodiivtsi
+level: B2
+version: '2.0'
+items:
+  - lemma: братство
+    ipa: /ˈbrat͡stuo/
+    translation: brotherhood
+    pos: noun
+    gender: n
+  - lemma: пробудження
+    ipa: /proˈbudʒenʲːɐ/
+    translation: awakening
+    pos: noun
+    gender: n
+  - lemma: інтелігенція
+    ipa: /intenʲlʲiˈɦɛnt͡sʲija/
+    translation: intelligentsia
+    pos: noun
+    gender: f
+  - lemma: програма
+    ipa: /proˈɦrama/
+    translation: program
+    pos: noun
+    gender: f
+  - lemma: маніфест
+    ipa: /manʲiˈfɛst/
+    translation: manifesto
+    pos: noun
+    gender: m
+  - lemma: слов'янство
+    ipa: /sɫou̯ˈjanʲstuo/
+    translation: Slavdom
+    pos: noun
+    gender: n
+  - lemma: федерація
+    ipa: /fedeˈrat͡sʲija/
+    translation: federation
+    pos: noun
+    gender: f
+  - lemma: республіка
+    ipa: /resˈpublʲika/
+    translation: republic
+    pos: noun
+    gender: f
+  - lemma: рівність
+    ipa: /ˈrʲiu̯nʲisʲtʲ/
+    translation: equality
+    pos: noun
+    gender: f
+  - lemma: свобода
+    ipa: /su̯oˈbɔda/
+    translation: freedom
+    pos: noun
+    gender: f
+  - lemma: кріпацтво
+    ipa: /krʲiˈpat͡stuo/
+    translation: serfdom
+    pos: noun
+    gender: n
+  - lemma: освіта
+    ipa: /oˈsʲuʲita/
+    translation: education
+    pos: noun
+    gender: f
+  - lemma: просвіта
+    ipa: /proˈsʲuʲita/
+    translation: enlightenment / education
+    pos: noun
+    gender: f
+  - lemma: месія
+    ipa: /meˈsʲija/
+    translation: messiah
+    pos: noun
+    gender: m
+  - lemma: романтизм
+    ipa: /romanˈtɪzm/
+    translation: romanticism
+    pos: noun
+    gender: m
+  - lemma: ідентичність
+    ipa: /idenʲˈtɪt͡ʃnʲisʲtʲ/
+    translation: identity
+    pos: noun
+    gender: f
+  - lemma: заслання
+    ipa: /zaˈsɫanʲːɐ/
+    translation: exile
+    pos: noun
+    gender: n
+  - lemma: арешт
+    ipa: /aˈrɛʃt/
+    translation: arrest
+    pos: noun
+    gender: m
+  - lemma: допит
+    ipa: /ˈdɔpɪt/
+    translation: interrogation
+    pos: noun
+    gender: m
+  - lemma: пророк
+    ipa: /proˈrɔk/
+    translation: prophet
+    pos: noun
+    gender: m
+  - lemma: мученик
+    ipa: /ˈmut͡ʃenɪk/
+    translation: martyr
+    pos: noun
+    gender: m
+  - lemma: громада
+    ipa: /ɦroˈmada/
+    translation: community
+    pos: noun
+    gender: f
+  - lemma: демократія
+    ipa: /demoˈkrat͡sʲija/
+    translation: democracy
+    pos: noun
+    gender: f
+  - lemma: солідарність
+    ipa: /solʲiˈdarnʲisʲtʲ/
+    translation: solidarity
+    pos: noun
+    gender: f
+  - lemma: нація
+    ipa: /ˈnat͡sʲija/
+    translation: nation
+    pos: noun
+    gender: f

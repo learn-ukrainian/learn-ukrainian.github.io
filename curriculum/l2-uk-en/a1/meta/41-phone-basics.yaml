@@ -1,26 +1,96 @@
-module: 41-phone-basics
-title: Phone Basics
-subtitle: Making Calls and Texting
-version: '1.0'
-phase: A1.4 Practical Scenarios
-pedagogy: PPP
-focus: practical
-duration: 60
-transliteration: first-occurrence
-tags:
-- practical
-- phone basics
-grammar:
-- Practical usage of A1 cases
-- Polite requests
-- Questions and answers
-objectives:
-- Learner can handle phone basics situations
-- Learner can use relevant vocabulary
-- Learner can communicate needs
-vocabulary_count: 10
-vocab_count: 10
+module: a1-41
+id: a1-41
 slug: phone-basics
+title: "Phone Basics"
+subtitle: "Making Calls and Texting"
+version: '2.0'
+phase: "A1.4 [Practical Scenarios]"
+focus: practical
+pedagogy: PPP
+register: розмовний
+duration: 60
+transliteration: none
+objectives:
+  - "Learner can make and receive phone calls"
+  - "Learner can leave a message"
+  - "Learner can handle wrong numbers"
+  - "Learner can use basic text messaging phrases"
+grammar:
+  - "Phone conversation formulas"
+  - "Imperative for requests"
+  - "Could you... (Чи могли б ви...)"
+word_target: 800
+content_outline:
+  - section: "Introduction: Phone Communication"
+    words: 100
+    points:
+      - "Phone call etiquette"
+      - "Formal vs informal calls"
+      - "Texting basics"
+  - section: "Making a Call"
+    words: 200
+    points:
+      - "Алло! Добрий день!"
+      - "Чи можу я поговорити з...?"
+      - "Це [name] говорить"
+  - section: "Receiving a Call"
+    words: 150
+    points:
+      - "Так, слухаю"
+      - "Хвилинку, будь ласка"
+      - "Він/вона зараз зайнятий/зайнята"
+  - section: "Problems and Messages"
+    words: 150
+    points:
+      - "Ви помилилися номером"
+      - "Можете передати...?"
+      - "Я передзвоню пізніше"
+  - section: "Text Messaging"
+    words: 100
+    points:
+      - "Common abbreviations"
+      - "Дзвони мені"
+      - "Чекаю на відповідь"
+  - section: "Practice: Phone Conversations"
+    words: 100
+    points:
+      - "Make a call"
+      - "Leave a message"
+vocabulary_hints:
+  required:
+    - телефон (phone)
+    - дзвонити (to call)
+    - відповідати (to answer)
+    - номер (number)
+    - повідомлення (message)
+    - зайнятий (busy)
+    - передзвонити (to call back)
+    - алло (hello - phone)
+  recommended:
+    - слухаю (I'm listening)
+    - хвилинка (a moment)
+    - помилитися (to make a mistake)
+    - передати (to pass on)
+activity_hints:
+  - type: dialogue
+    focus: "Phone conversations"
+    items: 10
+  - type: listening
+    focus: "Phone call comprehension"
+    items: 10
+  - type: role-play
+    focus: "Making and receiving calls"
+    items: 6
+  - type: fill-in
+    focus: "Complete phone phrases"
+    items: 12
+prerequisites:
+  - a1-07 (Questions and Negation)
+  - a1-40 (Taking Transport)
+connects_to:
+  - a1-42 (Emergencies)
+  - a1-43 (Combined Practice)
 naturalness:
   score: 10
   status: PASS
+  justification: "Essential communication skills"

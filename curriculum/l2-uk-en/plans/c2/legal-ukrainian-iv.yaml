@@ -1,0 +1,106 @@
+module: legal-ukrainian-iv
+level: c2
+sequence: 64
+version: '2.0'
+title: Правнича українська IV — Юридичне письмо
+focus: domain
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Законодавство України — Нормотворча техніка
+  url: https://zakon.rada.gov.ua/
+  type: primary
+  notes: Вимоги до юридичних текстів
+- name: Методичні рекомендації МЮУ
+  url: https://minjust.gov.ua/
+  type: reference
+  notes: Методичні матеріали Міністерства юстиції
+- name: Академія адвокатури України
+  url: https://aau.edu.ua/
+  type: reference
+  notes: Методика юридичного письма
+content_outline:
+- section: Вступ — Особливості юридичного письма
+  words: 500
+  points:
+  - Точність і однозначність
+  - Структурованість і логічність
+  - Офіційно-діловий стиль у праві
+  - Вимоги до юридичних документів
+- section: Мова законодавчих актів
+  words: 600
+  points:
+  - Структура нормативного акта
+  - Юридична термінологія
+  - Імперативні та диспозитивні норми
+  - Посилання та перехресні посилання
+- section: Юридичні висновки та правові позиції
+  words: 700
+  points:
+  - Структура юридичного висновку
+  - Аналіз фактичних обставин
+  - Правова кваліфікація
+  - Рекомендації та застереження
+- section: Процесуальні документи
+  words: 600
+  points:
+  - Клопотання та заяви
+  - Скарги різних видів
+  - Письмові пояснення
+  - Заперечення
+- section: Ділова юридична кореспонденція
+  words: 600
+  points:
+  - Правничі листи
+  - Претензії та відповіді на них
+  - Повідомлення та повістки
+  - Адвокатські запити
+- section: Редагування юридичних текстів
+  words: 500
+  points:
+  - Типові помилки в юридичних документах
+  - Перевірка логічності та послідовності
+  - Усунення двозначностей
+  - Форматування та оформлення
+- section: Практикум — Юридичне письмо
+  words: 500
+  points:
+  - Складання юридичного висновку
+  - Написання правничого листа
+  - Редагування проблемного документа
+word_target: 4000
+vocabulary:
+  required:
+  - юридичний висновок (legal opinion)
+  - правова позиція (legal position)
+  - кваліфікація (qualification)
+  - клопотання (motion/petition)
+  - претензія (claim/demand)
+  - адвокатський запит (attorney's request)
+  - норма права (legal norm)
+  - диспозитивний (dispositive)
+  - імперативний (imperative/mandatory)
+  - застереження (caveat/reservation)
+  recommended:
+  - нормотворення (norm-making)
+  - перехресне посилання (cross-reference)
+  - заперечення (objection)
+  - повістка (summons)
+  - правонаступник (legal successor)
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - fill-in
+  - error-correction
+  - essay-response
+  - comparative-study
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-65 (Legal Ukrainian V — case analysis)
+- c2-71 (Professional Portfolio I)
+- c2-75 (C2.3 Checkpoint)

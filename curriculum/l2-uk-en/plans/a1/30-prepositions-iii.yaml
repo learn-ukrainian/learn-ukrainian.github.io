@@ -1,0 +1,78 @@
+module: prepositions-iii
+level: a1
+sequence: 30
+version: '2.0'
+title: Prepositions III
+subtitle: Direction, Location & Origin
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can distinguish location from direction questions
+- Learner can use в/на for location (Locative)
+- Learner can use в/на/до for direction (Accusative/Genitive)
+- Learner can use з/від for origin
+content_outline:
+- section: 'Introduction: Three Questions'
+  words: 150
+  points:
+  - Де? = Where (location)
+  - Куди? = Where to (direction)
+  - Звідки? = Where from (origin)
+- section: 'Location: Де? + Locative'
+  words: 200
+  points:
+  - в/у + locative (inside)
+  - на + locative (on, at)
+  - Я в школі, на роботі
+- section: 'Direction: Куди? + Accusative/Genitive'
+  words: 200
+  points:
+  - в/у + accusative (going into)
+  - на + accusative (going onto)
+  - до + genitive (toward)
+- section: 'Origin: Звідки? + Genitive'
+  words: 200
+  points:
+  - з + genitive (from inside)
+  - від + genitive (from someone)
+  - Я з України, від друга
+- section: Common Patterns
+  words: 150
+  points:
+  - йти в/на... (go to)
+  - приїхати з... (arrive from)
+  - Movement verb patterns
+- section: 'Practice: Where, Where to, Where from?'
+  words: 100
+  points:
+  - Answer all three questions
+  - Describe journeys
+word_target: 1000
+vocabulary:
+  required:
+  - де (where)
+  - куди (where to)
+  - звідки (where from)
+  - в/у (in, into)
+  - на (on, onto)
+  - до (to, toward)
+  - з (from)
+  - від (from)
+  recommended:
+  - йти (to go)
+  - їхати (to go by transport)
+  - приходити (to arrive)
+  - повертатися (to return)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - dialogue
+  - transformation
+  - quiz
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a1-31 (Body and Health)
+- a1-34 (Checkpoint Core Grammar)

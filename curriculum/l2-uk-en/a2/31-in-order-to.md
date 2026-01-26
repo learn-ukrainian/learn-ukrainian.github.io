@@ -2,7 +2,7 @@
 
 ## Introduction / Вступ
 
-**Навіщо ми це робимо?** Ласкаво просимо до модуля, який навчить вас говорити про свої **цілі**, **наміри** та **плани**. До цього моменту ми переважно описували факти: що ми робимо зараз або що ми вже зробили. Тепер настав час зазирнути в логіку наших вчинків. Чому ви вчите українську мову? Навіщо ви йдете на роботу? Чому ви просите когось допомогти? Відповіді на ці питання потребують особливого граматичного містка. Сьогодні ми опануємо сполучник **щоб**. Цей невеликий, але могутній інструмент дозволить вам пояснювати мотивацію ваших дій, ставити завдання іншим людям та навіть висловлювати свої найзаповітніші мрії. Кожне «щоб» — це крок від простої дії до свідомого результату.
+**Навіщо ми це робимо?** Ласкаво просимо до модуля, який навчить вас говорити про свої **цілі**, **наміри** та **плани**. До цього моменту ми переважно описували факти: що ми робимо зараз або що ми вже зробили. Тепер настав час зазирнути в логіку наших вчинків. Чому ви вчите українську мову? Навіщо ви йдете на роботу? Чому ви просите когось допомогти? Відповіді на ці питання потребують особливого граматичного містка. Сьогодні ми опануємо сполучник **щоб**. Цей невеликий, але могутній інструмент відкриє нові можливості. Ви зможете пояснювати мотивацію ваших дій. Ви навчитеся ставити завдання іншим людям. Ви зможете висловлювати свої найзаповітніші мрії. Кожне «щоб» — це крок від простої дії до свідомого результату.
 
 Why do we do what we do? Welcome to the module dedicated to goals, intentions, and plans. Up until now, you've mostly described the "What" and the "When." Now, it's time to explore the "Why." Why are you learning Ukrainian? Why are you going to the bank? Why are you asking a friend for a favor? Each of these questions requires a logical bridge to connect an action with its purpose. In this module, you will master the word **щоб** (in order to / so that). This essential connector allows you to explain your motivations and direct the actions of others. We will explore how the structure of a sentence changes depending on whether you're performing the action yourself or asking someone else to do it. By the end of this lesson, your Ukrainian will move from simple reports to meaningful intentions.
 
@@ -36,8 +36,7 @@ If the person performing the main action is the same person who wants to reach t
 
 This is a unique and vital rule in Ukrainian. If the person performing the first action wants _someone else_ to do the second action, we do not use an infinitive. Instead, we use the **Past Tense**.
 
-**Граматична формула:**
-[Дія 1] + **, щоб** + [Суб'єкт 2] + [Минулий час]
+**Pattern:** Action + comma + щоб + new subject + past tense verb.
 
 | Українська                                | Англійська                                     |
 | :---------------------------------------- | :--------------------------------------------- |
@@ -46,7 +45,7 @@ This is a unique and vital rule in Ukrainian. If the person performing the first
 | Учитель хоче, **щоб вони вивчили** слова. | The teacher wants **them to learn** the words. |
 
 > [!important] **No Future Tense Here!**
-> Навіть якщо ми бажаємо чогось у майбутньому («I want you to come tomorrow»), після **щоб** ми використовуємо **минулий час**. Це залізне граматичне правило. Сприймайте це як «бажаний стан», який ви вже уявили у своїй голові.
+> Навіть якщо ми бажаємо чогось у майбутньому («I want you to come tomorrow»), після **щоб** ми використовуємо **минулий час**. Це залізне граматичне правило. Сприймайте це як «стан, якого ви бажаєте». Ви вже уявили його у своїй голові.
 
 ### 3. Formal Emphasis (Для того щоб)
 
@@ -65,7 +64,7 @@ This is a unique and vital rule in Ukrainian. If the person performing the first
 
 ## Practice / Практика
 
-### 1. Shift the Focus (Змініть суб'єкта)
+### 1. Вправа: інфінітив чи минулий час?
 
 Decide if you need an infinitive or past tense.
 

@@ -28,3 +28,32 @@ slug: 61-synonyms-time
 naturalness:
   score: 9
   status: PASS
+content_outline:
+- section: Вступ — Час та Періоди
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Now
+  words: 500
+  points:
+  - зараз (now - current moment)
+  - тепер (now - current period)
+  - нині (nowadays - formal)
+  - сьогодні (today - this day)
+  - наразі (at present - official)
+- section: Before
+  words: 500
+  points:
+  - раніше (earlier - general)
+  - колись (once/sometime - past)
+  - давно (long ago)
+  - недавно (recently)
+  - щойно (just now)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

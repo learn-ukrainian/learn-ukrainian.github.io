@@ -1,0 +1,22 @@
+module: 93-kotliarevskyi-eneida
+level: c1
+sequence: 93
+version: '2.0'
+title: 'Котляревський: Енеїда'
+subtitle: 'Kotlyarevsky: Eneida'
+focus: literature
+pedagogy: Immersion & Analysis
+objectives:
+- Analyze the historical and literary significance of Eneida
+- Understand the burlesque-travesty genre
+- Explore the birth of the modern Ukrainian literary language
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

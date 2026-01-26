@@ -1,0 +1,99 @@
+module: 1991-referendum
+level: c1-hist
+sequence: 92
+version: '1.0'
+title: '1991: Чому 90% сказали «так»?'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Неймовірний результат
+  words: 400
+  subsections:
+  - 90.32% за незалежність
+  - Навіть Крим — 54%
+  - Чому такий результат
+  - Структура модуля
+- section: Що означала незалежність
+  words: 600
+  subsections:
+  - Для національно свідомих
+  - Для партійної еліти
+  - Для російськомовних
+  - Для селян
+  - Різні мотивації — один результат
+- section: Економічний аргумент
+  words: 600
+  subsections:
+  - «Годі годувати Москву»
+  - Багата Україна — бідний СРСР
+  - Сподівання на процвітання
+  - Що реально було
+- section: Демократичний аргумент
+  words: 500
+  subsections:
+  - СРСР — не демократія
+  - Незалежність = свобода
+  - Європейський вибір — навіть тоді
+  - Рух і перебудова
+- section: Регіональний аналіз
+  words: 600
+  subsections:
+  - Захід — 95%+
+  - Центр — 90%+
+  - Схід — 80%+
+  - Крим — 54%
+  - Чому різниця, але скрізь «так»
+- section: Що пішло не так після
+  words: 500
+  subsections:
+  - Економічна криза 1990-х
+  - Невиправдані очікування
+  - Але незалежність — зберегли
+- section: Підсумок
+  words: 300
+  subsections:
+  - 1991 — поворотний момент
+  - Легітимність незалежності
+  - Перехід до порівняння революцій
+word_target: 3500
+vocabulary:
+- референдум
+- незалежність
+- результат
+- мотивація
+- економічний аргумент
+- регіональний
+- легітимність
+- перебудова
+- Рух
+- процвітання
+- всеукраїнський
+- партійна еліта
+- суверенітет
+- декларація
+- консенсус
+activities:
+- type: motivation-analysis
+  focus: Different groups, different reasons for "yes"
+- type: regional-analysis
+  focus: Map and analyze regional voting patterns
+- type: expectation-analysis
+  focus: What did people expect from independence?
+- type: comparative-study
+  focus: Ukraine vs. other post-Soviet referendums
+- type: essay-response
+  focus: Чому навіть Крим проголосував за незалежність у 1991?
+sources:
+- name: Всеукраїнський референдум 1991 (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Всеукраїнський_референдум_(1991)
+  type: reference
+  notes: Referendum data
+- name: Акт проголошення незалежності (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Акт_проголошення_незалежності_України
+  type: reference
+  notes: Declaration context
+- name: Розпад СРСР (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Розпад_СРСР
+  type: reference
+  notes: USSR collapse

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M60 | **Phase:** HIST.6 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:21:50
+**Generated:** 2026-01-25 22:23:02
 
 ## Configuration
 **Type:** B2-history

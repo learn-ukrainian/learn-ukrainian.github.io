@@ -1,0 +1,91 @@
+module: pislya-emsa-halychyna
+level: c1-hist
+sequence: 123
+version: '1.0'
+title: 'Після Емса: Галицький розквіт'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Культура переїжджає
+  words: 451
+  subsections:
+  - 1876 — Емський указ
+  - Заборона української мови
+  - Галичина — рятівний острів
+  - Структура модуля
+- section: Емський указ — що заборонили
+  words: 677
+  subsections:
+  - Текст указу
+  - Що неможливо було друкувати
+  - Освіта — закрита
+  - Наслідки для Наддніпрянщини
+- section: Галичина — інший світ
+  words: 790
+  subsections:
+  - Австрія — відносна свобода
+  - Українські школи
+  - Преса і видавництва
+  - «Просвіта»
+- section: Інституційне будівництво
+  words: 677
+  subsections:
+  - НТШ — українська академія
+  - Франко, Грушевський — львівський період
+  - Кооперативний рух
+  - Політичні партії
+- section: Вплив на всю Україну
+  words: 564
+  subsections:
+  - Львів — столиця культури
+  - Книги контрабандою
+  - «Галицький П'ємонт»
+  - Ідеї перетинають кордон
+- section: Підсумок
+  words: 341
+  subsections:
+  - Емс — не смерть, а переїзд
+  - Галичина — носій до 1939
+  - Перехід до шістдесятників
+word_target: 3500
+vocabulary:
+- Емський указ
+- заборона
+- Галичина
+- «Просвіта»
+- НТШ
+- «галицький П'ємонт»
+- кооперативний рух
+- культурне переміщення
+- контрабанда
+- інституційне будівництво
+- Франко
+- Грушевський
+- «Літературно-науковий вісник»
+- греко-католицька церква
+- українофіли
+activities:
+- type: decree-analysis
+  focus: What Ems Decree prohibited — text analysis
+- type: institutional-study
+  focus: Galician institution building 1876-1914
+- type: impact-analysis
+  focus: How Galicia influenced all of Ukraine
+- type: comparative-study
+  focus: Galicia vs. Russian Empire — cultural freedom
+- type: essay-response
+  focus: Чому Галичина стала 'українським П'ємонтом'?
+sources:
+- name: Емський указ (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Емський_указ
+  type: reference
+  notes: Ems Decree
+- name: Галицьке українство (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Галичина
+  type: reference
+  notes: Galician Ukrainians
+- name: НТШ (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Наукове_товариство_імені_Шевченка
+  type: reference
+  notes: Shevchenko Scientific Society

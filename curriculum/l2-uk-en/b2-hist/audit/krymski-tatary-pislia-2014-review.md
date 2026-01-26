@@ -1,7 +1,7 @@
 # Audit Report: M129 — krymski-tatary-pislia-2014.md
 **Level:** B2 | **Module:** M129 | **Phase:** HIST.12 | **Pedagogy:** Not Specified | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 20:22:24
+**Generated:** 2026-01-25 22:23:45
 
 ## Configuration
 **Type:** B2-history

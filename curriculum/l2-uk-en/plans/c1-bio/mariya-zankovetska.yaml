@@ -1,0 +1,108 @@
+module: mariya-zankovetska
+level: c1-bio
+sequence: 26
+version: '2.0'
+title: 'Марія Заньковецька: Перша леді сцени'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Марія_Заньковецька
+    title: Марія Заньковецька (Wikipedia UA)
+    notes: Біографія, театральна кар'єра, вплив на культуру
+  secondary:
+  - url: https://uk.wikipedia.org/wiki/Театр_корифеїв
+    title: Театр корифеїв
+    notes: Український театр XIX століття
+  - url: https://uk.wikipedia.org/wiki/Микола_Садовський
+    title: Микола Садовський
+    notes: Партнер по сцені та засновник театру
+content_outline:
+- section: Вступ — Королева українського театру
+  words: 400
+  subsections:
+  - Марія Заньковецька — найвидатніша українська актриса XIX століття
+  - Від провінційної сцени до всеросійської слави
+  - Символ українського театрального відродження
+- section: Дитинство та юність (1854-1875)
+  words: 600
+  subsections:
+  - Народження в селі Заньки на Чернігівщині
+  - Справжнє ім'я — Марія Адасовська
+  - Музична освіта та перші аматорські вистави
+  - Вплив народної культури на формування таланту
+- section: Початок кар'єри (1875-1885)
+  words: 700
+  subsections:
+  - Дебют у трупі Михайла Старицького
+  - Роботи з Марком Кропивницьким
+  - Перші великі ролі — Наталка Полтавка, Катерина
+  - Формування неповторного стилю гри
+- section: Зоряні роки (1885-1900)
+  words: 800
+  subsections:
+  - Гастролі імперією та європейські турне
+  - Запрошення до імператорських театрів
+  - Відмова залишити український театр
+  - Ролі Марусі Богуславки, Олесі, Галі
+- section: Пізній період та УНР (1900-1920)
+  words: 700
+  subsections:
+  - Робота в театрі Миколи Садовського
+  - Участь у культурному житті УНР
+  - Присвоєння звання народної артистки
+  - Останні вистави та відхід від сцени
+- section: Спадщина та пам'ять
+  words: 800
+  subsections:
+  - Смерть у 1934 році
+  - Вплив на українську акторську школу
+  - Театр імені Заньковецької у Львові
+  - Заньковецька як символ українського мистецтва
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - актриса
+  - сцена
+  - вистава
+  - роль
+  - трупа
+  - гастролі
+  - корифей
+  - драма
+  - репертуар
+  - талант
+  recommended:
+  - амплуа
+  - бенефіс
+  - антреприза
+  - прем'єра
+  - оплески
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-48-marko-kropyvnytskyi
+  related:
+  - c1-bio-41-solomiya-krushelnytska
+  - c1-bio-62-vira-kholodna
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

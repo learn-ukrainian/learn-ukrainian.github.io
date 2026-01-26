@@ -1,8 +1,8 @@
 # Audit Report: M37 — 37-advanced-motion-prefixes.md
 **Level:** A2 | **Module:** M37 | **Phase:** A2.3 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 23:52:42
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-26 08:59:29
 
 ## Configuration
 **Type:** A2-grammar
@@ -36,20 +36,29 @@
 - Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: знахідний, родовий
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
-- **Words:** ✅ 1102/1000 (raw: 1204)
+- **Words:** ✅ 1390/1000 (raw: 1492)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/4
+- **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 28/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 66.5% (target 65-75% (A2.2))
+- **Immersion:** 🇺🇦 68.4% (target 65-75% (A2.2))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
@@ -58,7 +67,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Introduction / Вступ** | ✅ | 211 | Included in Core |
-| **Presentation / Презентація** | ✅ | 320 | Included in Core |
+| **Presentation / Презентація** | ✅ | 608 | Included in Core |
 | **Practice / Практика** | ⚪️ | 232 | Skipped |
 | **Dialogues / Діалоги** | ✅ | 188 | Included in Core |
 | **Summary / Підсумок** | ✅ | 96 | Included in Core |

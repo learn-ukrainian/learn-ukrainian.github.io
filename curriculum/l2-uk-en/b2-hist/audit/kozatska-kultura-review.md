@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M47 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:22:21
+**Generated:** 2026-01-25 22:22:53
 
 ## Configuration
 **Type:** B2-history
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4163/4000 (raw: 4379)
+- **Words:** ⚠️ 3949/4000 (raw: 4168) (51 short)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/2 types
@@ -47,7 +47,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
-- **Immersion:** 🇺🇦 98.8% (target 90-100% (history))
+- **Immersion:** 🇺🇦 98.7% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -59,15 +59,15 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 9 | 3 | 100% | 24% | 23.8% |
+| primary_sources | 8 | 3 | 100% | 24% | 23.8% |
 | engagement | 6 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 8 | 4 | 100% | 10% | 9.5% |
-| visual | 6 | 4 | 100% | 10% | 9.5% |
-| variety | 0.98 | - | 98% | 5% | 4.7% |
+| cultural | 9 | 4 | 100% | 10% | 9.5% |
+| visual | 5 | 4 | 100% | 10% | 9.5% |
+| variety | 0.97 | - | 97% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 14 | 3 | 100% | 5% | 4.8% |
+| questions | 10 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
@@ -83,6 +83,6 @@
 | **Інтелектуальний центр: Києво-Могилянська академія** | ⚪️ | 451 | Skipped |
 | **Первинні джерела та Читання** | ✅ | 348 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 317 | Included in Core |
-| **Есе** | ⚪️ | 360 | Skipped |
+| **Мистецтво: Феномен козацького бароко** | ⚪️ | 145 | Skipped |
 | **Підсумок** | ✅ | 95 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 111 | Skipped |

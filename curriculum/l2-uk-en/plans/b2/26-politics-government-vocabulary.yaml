@@ -1,0 +1,22 @@
+module: 26-politics-government-vocabulary
+level: b2
+sequence: 26
+version: '1.0'
+title: Політика та державне управління
+subtitle: Мова влади і громадянства
+focus: grammar
+pedagogy: CLIL
+objectives:
+- Учень може розуміти новини про політичні події в Україні
+- Учень може обговорювати політичні теми з використанням відповідної термінології
+- Учень може розрізняти офіційний та публіцистичний стилі в політичному дискурсі
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

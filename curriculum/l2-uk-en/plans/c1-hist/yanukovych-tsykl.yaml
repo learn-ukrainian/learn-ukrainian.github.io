@@ -1,0 +1,98 @@
+module: yanukovych-tsykl
+level: c1-hist
+sequence: 87
+version: '1.0'
+title: 'Янукович: Сучасна версія циклу'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Цикл у XXI столітті
+  words: 400
+  subsections:
+  - Янукович — не перший і не останній
+  - Чому це кооптація
+  - Сучасна версія старого паттерну
+  - Структура модуля
+- section: Фаза 1 — Підкуп (2010-2013)
+  words: 700
+  subsections:
+  - 15 мільярдів від Путіна
+  - Харківські угоди — флот
+  - Знижка на газ
+  - Що обіцяли натомість
+- section: Фаза 2 — Залежність
+  words: 600
+  subsections:
+  - Газова залежність
+  - Кредитна залежність
+  - Політичний тиск
+  - Шлях до ЄС — закритий
+- section: Фаза 3 — Вілнюс 2013
+  words: 600
+  subsections:
+  - Угода про асоціацію — готова
+  - Відмова — чому
+  - Тиск Росії
+  - Точка неповернення
+- section: Фаза 4 — Крах
+  words: 500
+  subsections:
+  - Майдан
+  - Втеча
+  - Анексія Криму
+  - Війна на Донбасі
+- section: Чому цикл зламався
+  words: 400
+  subsections:
+  - Громадянське суспільство
+  - Досвід 2004
+  - Європейський вибір
+  - Народ — не еліта
+- section: Підсумок
+  words: 300
+  subsections:
+  - Янукович — останній «гетьман»?
+  - Цикл vs. революція
+  - Перехід до синтезу
+word_target: 3500
+vocabulary:
+- Янукович
+- кооптація
+- Харківські угоди
+- угода про асоціацію
+- Майдан
+- анексія
+- залежність
+- підкуп
+- громадянське суспільство
+- цикл
+- Євромайдан
+- олігархічний
+- газовий шантаж
+- Вільнюський саміт
+- революція
+activities:
+- type: critical-analysis
+  focus: Map Yanukovych through co-optation cycle
+- type: contemporary-analysis
+  focus: 2010-2014 — how Russia's cycle worked
+- type: breaking-point
+  focus: Why did the cycle break in 2014?
+- type: comparative-study
+  focus: Yanukovych vs. historical figures — same pattern
+- type: essay-response
+  focus: Чим Янукович схожий на Хмельницького, Мазепу, Розумовського?
+sources:
+- name: Віктор Янукович (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Віктор_Янукович
+  type: reference
+  notes: Biography
+- name: Революція гідності (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Революція_гідності
+  type: reference
+  notes: 2014 revolution
+- name: Харківські угоди (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Харківські_угоди
+  type: reference
+  notes: 2010 agreements

@@ -1,0 +1,78 @@
+module: checkpoint-word-formation
+level: a2
+sequence: 44
+version: '2.0'
+title: 'Checkpoint: Word Formation'
+subtitle: Review and Mastery Assessment
+focus: checkpoint
+pedagogy: TTT
+objectives:
+- Demonstrate confidence in identifying root families
+- Deduce meaning using morphological clues
+- Form words using correct prefixes and suffixes
+- Correct common word formation errors
+content_outline:
+- section: 'Part 1: Root Recognition'
+  words: 80
+  points:
+  - Identify root families
+  - Connect related words
+  - Trace etymologies
+- section: 'Part 2: Prefix Mastery'
+  words: 80
+  points:
+  - Prefix meanings
+  - Prefix combinations
+  - Negation and reversal
+- section: 'Part 3: Suffix Application'
+  words: 80
+  points:
+  - Noun suffixes
+  - Adjective suffixes
+  - Verb derivation
+- section: 'Part 4: Word Analysis'
+  words: 100
+  points:
+  - Break down unknown words
+  - Predict meanings
+  - Contextual understanding
+- section: 'Part 5: Error Correction'
+  words: 80
+  points:
+  - Common formation errors
+  - Fix incorrect derivations
+  - Choose correct forms
+- section: 'Summary: Word Formation Skills'
+  words: 80
+  points:
+  - Skills mastered
+  - Areas for review
+  - Preview vocabulary expansion
+word_target: 500
+vocabulary:
+  required:
+  - корінь (root)
+  - префікс (prefix)
+  - суфікс (suffix)
+  - слово (word)
+  - утворення (formation)
+  - значення (meaning)
+  - помилка (error)
+  - правильний (correct)
+  recommended:
+  - морфема (morpheme)
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - похідний (derivative)
+  forbidden: []
+activities:
+  types_required:
+  - word-building
+  - quiz
+  - error-correction
+  - self-assessment
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a2-45 (Food and Cooking)

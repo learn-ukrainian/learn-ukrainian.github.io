@@ -1,0 +1,124 @@
+# C1-HIST Level Plan - Advanced Historiography Track
+# Source of truth: docs/l2-uk-en/C1-HIST-CURRICULUM-PLAN.md
+
+level: c1-hist
+track: historiography
+version: "1.0"
+status: in_progress
+prerequisite: "B2-HIST completion, C1 Core (M01-35)"
+vocabulary_target: 3000
+immersion: "100%"
+
+phases:
+  - id: C1H.1
+    name: "Historiography & Methodology"
+    modules: [1, 10]
+    focus: "Schools of thought, decolonization, source criticism"
+
+  - id: C1H.2
+    name: "Primary Sources — Medieval"
+    modules: [11, 18]
+    focus: "Chronicles, legal texts, Slovo o polku Ihorevim"
+
+  - id: C1H.3
+    name: "Primary Sources — Cossack Era"
+    modules: [19, 28]
+    focus: "Cossack chronicles, universals, Constitution of Orlyk"
+
+  - id: C1H.4
+    name: "Modern Primary Sources — 19th-20th Century"
+    modules: [29, 38]
+    focus: "Shevchenko, Franko, UNR documents, Holodomor testimonies"
+
+  - id: C1H.5
+    name: "Primary Sources — Dissidents & Independence"
+    modules: [39, 44]
+    focus: "UHH, Helsinki Group, Chornovil, Independence documents"
+
+  - id: C1H.6
+    name: "Thematic Deep Dive — Holodomor Studies"
+    modules: [45, 51]
+    focus: "Historiography, mechanisms, recognition, memory"
+
+  - id: C1H.7
+    name: "Thematic Deep Dive — Executed Renaissance"
+    modules: [52, 57]
+    focus: "1920s cultural revival, repressions, legacy"
+
+  - id: C1H.8
+    name: "Thematic Deep Dive — Religious Identity"
+    modules: [58, 63]
+    focus: "Orthodox identity, Greek Catholic church, religious politics"
+
+  - id: C1H.9
+    name: "Thematic Deep Dive — Diaspora Studies"
+    modules: [64, 69]
+    focus: "Three waves, cultural preservation, scholarship"
+
+  - id: C1H.10
+    name: "Regional Perspectives I — Western Lands"
+    modules: [70, 75]
+    focus: "Galicia, Volhynia under different empires, UPA"
+
+  - id: C1H.11
+    name: "Regional Perspectives II — East & South"
+    modules: [76, 80]
+    focus: "Donbas, Crimea, Slobozhanshchyna, regional identity"
+
+  - id: C1H.12
+    name: "Imperial Mechanisms — The Co-optation Cycle"
+    modules: [81, 88]
+    focus: "Pereyaslav, Mazepa, Rozumovsky, Soviet patterns"
+
+  - id: C1H.13
+    name: "Crossroads — Pivotal Turning Points"
+    modules: [89, 94]
+    focus: "Alternative histories, what-if scenarios"
+
+  - id: C1H.14
+    name: "The West and Ukraine — Pattern of Abandonment"
+    modules: [95, 102]
+    focus: "1994 Budapest Memorandum, EU/NATO relations"
+
+  - id: C1H.15
+    name: "Economic Exploitation — Material Basis of Colonialism"
+    modules: [103, 107]
+    focus: "Holodomor economics, resource extraction"
+
+  - id: C1H.16
+    name: "Information Warfare — Narrative as Weapon"
+    modules: [108, 113]
+    focus: "Russian propaganda, mythmaking, counter-narratives"
+
+  - id: C1H.17
+    name: "Polish-Ukrainian Relations — 600 Years of Complexity"
+    modules: [114, 117]
+    focus: "Historical friendship and conflict, modern cooperation"
+
+  - id: C1H.18
+    name: "Jewish-Ukrainian Relations — Shared Land, Contested Memory"
+    modules: [118, 121]
+    focus: "Historical coexistence, Holocaust, modern relations"
+
+  - id: C1H.19
+    name: "Cultural Revival Cycles — Persecution and Renaissance"
+    modules: [122, 125]
+    focus: "Recurring pattern of suppression and revival"
+
+  - id: C1H.20
+    name: "Ukrainian Agency — Not Just Victims"
+    modules: [126, 133]
+    focus: "Active resistance, nation-building, 2014-present"
+
+  - id: C1H.21
+    name: "Final Synthesis — The Ukrainian Question"
+    modules: [134, 135]
+    focus: "Integrating all perspectives, future trajectory"
+
+notes: |
+  C1-HIST is an advanced historiography track for students who have
+  completed B2-HIST. Focuses on primary source analysis, critical
+  historiography, and thematic deep dives.
+
+  This track develops university-level historical literacy and
+  critical thinking about Ukrainian history from multiple perspectives.

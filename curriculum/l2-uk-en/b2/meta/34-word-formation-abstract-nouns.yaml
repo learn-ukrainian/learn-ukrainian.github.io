@@ -28,3 +28,38 @@ slug: 34-word-formation-abstract-nouns
 naturalness:
   score: 9
   status: PASS
+content_outline:
+- section: Вступ — абстрактні іменники
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Suffix -ння/-ення (action/process)
+  words: 400
+  points:
+  - публікувати → публікування (publishing)
+  - забарвлювати → забарвлення (coloring)
+  - готувати → готування (preparation)
+  - ходити → ходіння (walking)
+- section: Suffix -ість (quality/property)
+  words: 400
+  points:
+  - гордий → гордість (pride)
+  - освічений → освіченість (education)
+  - гостинний → гостинність (hospitality)
+  - можливий → можливість (possibility)
+- section: Suffix -ок (result)
+  words: 400
+  points:
+  - додати → додаток (supplement)
+  - здобути → здобуток (achievement)
+  - внести → внесок (contribution)
+  - показати → показ (show)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

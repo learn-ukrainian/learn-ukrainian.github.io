@@ -1,0 +1,77 @@
+module: agreement-disagreement
+level: b1
+sequence: 55
+version: '2.0'
+title: Згода і незгода
+subtitle: Agreement & Disagreement
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can express agreement at different levels of intensity
+- Learner can express polite disagreement in formal and informal contexts
+- Learner can participate in debates using appropriate vocabulary
+- Learner can manage conversational flow with agreement markers
+content_outline:
+- section: 'Introduction: Agreeing and Disagreeing'
+  words: 150
+  points:
+  - Importance in conversation
+  - Cultural considerations
+  - Politeness strategies
+- section: Expressing Agreement
+  words: 250
+  points:
+  - Так, згоден/згодна
+  - Абсолютно, безумовно
+  - Levels of agreement
+- section: Partial Agreement
+  words: 200
+  points:
+  - Частково згоден
+  - Так, але...
+  - Acknowledging valid points
+- section: Polite Disagreement
+  words: 250
+  points:
+  - Не зовсім згоден
+  - Дозвольте не погодитися
+  - Hedged disagreement
+- section: Strong Disagreement
+  words: 200
+  points:
+  - Категорично не згоден
+  - Це неприпустимо
+  - When and how to disagree strongly
+- section: 'Practice: Debate Skills'
+  words: 150
+  points:
+  - Practice agreeing and disagreeing
+  - Manage conversation flow
+word_target: 1200
+vocabulary:
+  required:
+  - згода (agreement)
+  - незгода (disagreement)
+  - згоден/згодна (agree - adj)
+  - погоджуватися (to agree)
+  - заперечувати (to object)
+  - частково (partially)
+  - абсолютно (absolutely)
+  - категорично (categorically)
+  recommended:
+  - безумовно (unconditionally)
+  - визнавати (to acknowledge)
+  - спростовувати (to refute)
+  - підтримувати (to support)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - transformation
+  - listening
+  - role-play
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-56 (Discourse Markers Basic)

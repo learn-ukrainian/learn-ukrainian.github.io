@@ -1,0 +1,110 @@
+module: viacheslav-chornovil
+level: c1-bio
+sequence: 76
+version: '2.0'
+title: 'В''ячеслав Чорновіл: Незламний правозахисник'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Чорновіл_В%27ячеслав_Максимович
+    title: В'ячеслав Чорновіл (Wikipedia UA)
+    notes: Основна біографічна інформація
+  secondary:
+  - url: https://helsinki.org.ua/
+    title: Український Гельсінський союз
+    notes: Історія правозахисного руху
+  - url: https://nru.org.ua/
+    title: Народний Рух України
+    notes: Політична діяльність
+content_outline:
+- section: Вступ — Людина, яка не схилялася
+  words: 400
+  subsections:
+  - Чорновіл як символ української незламності
+  - Від журналіста до кандидата в президенти
+  - Трагічна загибель та незавершена місія
+- section: Черкащина та формування характеру
+  words: 600
+  subsections:
+  - Народження в селі Єрки (1937)
+  - Повоєнне дитинство
+  - Освіта та журналістські початки
+- section: Журналіст-бунтар
+  words: 700
+  subsections:
+  - Робота на телебаченні
+  - Перші конфлікти з владою
+  - Документування репресій
+- section: Лихо з розуму та перший арешт
+  words: 800
+  subsections:
+  - Збірка документів про репресії 1965-1966
+  - Арешт та ув'язнення (1967)
+  - Роки в таборах
+- section: Гельсінська група та другий арешт
+  words: 700
+  subsections:
+  - Участь в Українській Гельсінській групі
+  - Правозахисна діяльність
+  - Повторне ув'язнення
+- section: Незалежність та політика
+  words: 600
+  subsections:
+  - Народний Рух України
+  - Президентська кампанія 1991
+  - Роль в розбудові держави
+- section: Загибель та спадщина
+  words: 200
+  subsections:
+  - Загадкова автокатастрофа (1999)
+  - Питання про причини смерті
+  - Значення для української демократії
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - правозахисник
+  - дисидент
+  - Гельсінська група
+  - Рух
+  - незламність
+  - репресії
+  - політв'язень
+  - журналіст
+  - президентські вибори
+  - автокатастрофа
+  recommended:
+  - самвидав
+  - правозахисний рух
+  - опозиція
+  - демократизація
+  - незалежність
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-75-vasyl-symonenko
+  related:
+  - c1-bio-77-vasyl-stus
+  - c1-bio-71-levko-lukyanenko
+  - c1-bio-78-myroslav-marynovych
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

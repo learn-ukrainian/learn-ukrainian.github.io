@@ -1,0 +1,109 @@
+module: george-shevelov
+level: c1-bio
+sequence: 105
+version: '2.0'
+title: 'Юрій Шевельов: Архітектор української лінгвістики'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Шевельов_Юрій_Володимирович
+    title: Юрій Шевельов (Wikipedia UA)
+    notes: Biography, academic career, works
+  secondary:
+  - url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CH%5CShevelovGeorgeYurii.htm
+    title: Encyclopedia of Ukraine - Shevelov
+    notes: Detailed academic biography
+  - url: https://uk.wikipedia.org/wiki/Історична_фонологія_української_мови_(Шевельов)
+    title: Історична фонологія української мови
+    notes: His magnum opus
+content_outline:
+- section: Вступ — Голос української мови у світі
+  words: 457
+  subsections:
+  - Шевельов як найвидатніший українознавець діаспори
+  - Його роль у міжнародному визнанні української мови
+  - Псевдонім Юрій Шерех
+- section: Молодість у Харкові
+  words: 685
+  subsections:
+  - Народження 1908 року
+  - Навчання в Харківському університеті
+  - Початок наукової кар'єри
+  - Війна та еміграція
+- section: Діаспорне життя
+  words: 685
+  subsections:
+  - Німеччина (табори переміщених осіб)
+  - Викладання в Гарварді
+  - Професура в Колумбійському університеті
+  - Інтеграція в західну славістику
+- section: '"Історична фонологія української мови" (1979)'
+  words: 914
+  subsections:
+  - Головна праця життя
+  - Доведення безперервності української мови
+  - Спростування російських міфів
+  - Міжнародне визнання
+- section: Інші наукові праці
+  words: 685
+  subsections:
+  - Понад 500 статей і книг
+  - Дослідження старослов'янської мови
+  - Літературна критика (як Юрій Шерех)
+  - Порівняльне слов'янознавство
+- section: Спадщина та повернення в Україну
+  words: 574
+  subsections:
+  - Визнання в незалежній Україні
+  - Шевченківська премія (посмертно)
+  - Вплив на сучасну українську лінгвістику
+  - Шевельов як символ наукового спротиву
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - фонологія
+  - славістика
+  - діаспора
+  - мовознавство
+  - історична граматика
+  - безперервність
+  - еміграція
+  - псевдонім
+  - літературна критика
+  - наукова школа
+  recommended:
+  - етимологія
+  - діалектологія
+  - ономастика
+  - морфологія
+  - палеографія
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-104 (Oleksander Potebnya - predecessor)
+  related:
+  - c1-bio-104 (Potebnya - intellectual predecessor)
+  - c1-bio-115 (Serhii Plokhy - contemporary diaspora scholar)
+  - c1-bio-100 (Ahatanhel Krymsky - pre-war linguist)
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

@@ -1,0 +1,22 @@
+module: 87-suchasna-muzyka
+level: c1
+sequence: 87
+version: '2.0'
+title: Сучасна музика
+subtitle: Contemporary Music — The Sound of Freedom
+focus: fine-arts
+pedagogy: CBI
+objectives:
+- Learner explores the history of Ukrainian rock (VV, Okean Elzy).
+- Learner understands the phenomenon of Ukrainian Eurovision victories.
+- Learner analyzes the explosion of new music during the war.
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

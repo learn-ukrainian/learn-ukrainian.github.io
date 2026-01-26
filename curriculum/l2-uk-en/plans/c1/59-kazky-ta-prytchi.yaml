@@ -1,0 +1,22 @@
+module: 59-kazky-ta-prytchi
+level: c1
+sequence: 59
+version: '2.0'
+title: Казки та притчі
+subtitle: Ukrainian Folk Tales and Parables
+focus: vocabulary
+pedagogy: Immersion & Analysis
+objectives:
+- Learner can categorize Ukrainian folk tales into magic, animal, and social types
+- Learner can analyze the moral and philosophical layers of Ukrainian parables
+- Learner can use traditional storytelling formulas in their own narratives
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

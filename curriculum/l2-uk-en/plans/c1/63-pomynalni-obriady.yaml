@@ -1,0 +1,22 @@
+module: 63-pomynalni-obriady
+level: c1
+sequence: 63
+version: '2.0'
+title: Поминальні обряди
+subtitle: Memorial Traditions
+focus: culture
+pedagogy: Immersion & Analysis
+objectives:
+- Learner can describe the cycle of memorial rituals in Ukraine
+- Learner understands the concept of ancestral spirits in folk belief
+- Learner can analyze the blend of grief and hope in traditional laments and memorial meals
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

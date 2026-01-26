@@ -1,0 +1,22 @@
+module: 31-numeral-declension-time-dates
+level: b2
+sequence: 31
+version: '1.0'
+title: 'Відмінювання числівників І: Час і дати'
+subtitle: 'Numeral Declension I: Time & Dates'
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can tell the time using formal and informal expressions
+- Learner can state and understand dates in all required cases
+- Learner can use months in genitive and prepositional cases correctly
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

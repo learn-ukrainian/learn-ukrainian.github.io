@@ -1,0 +1,109 @@
+module: viacheslav-lypynskyi
+level: c1-bio
+sequence: 51
+version: '2.0'
+title: 'В''ячеслав Липинський: Консерватор-державник'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Липинський_В%27ячеслав_Казимирович
+    title: В'ячеслав Липинський (Wikipedia UA)
+    notes: Основна біографічна інформація
+  secondary:
+  - url: https://lipynsky.org/
+    title: Інститут В'ячеслава Липинського
+    notes: Наукова спадщина та дослідження
+  - url: https://diasporiana.org.ua/
+    title: Твори Липинського
+    notes: Повні тексти праць
+content_outline:
+- section: Вступ — Український консерватизм як ідея
+  words: 400
+  subsections:
+  - Липинський як найоригінальніший український мислитель XX ст.
+  - Від польського шляхтича до українського ідеолога
+  - Чому його ідеї актуальні сьогодні
+- section: Шляхетське коріння
+  words: 600
+  subsections:
+  - Народження в польській родині (1882)
+  - Освіта в Києві та за кордоном
+  - Шлях до української ідентичності
+- section: Історик як державотворець
+  words: 700
+  subsections:
+  - Дослідження козаччини
+  - Переосмислення української історії
+  - Роль шляхти в українському русі
+- section: Гетьманат та політична діяльність
+  words: 800
+  subsections:
+  - Посол Української Держави у Відні
+  - Підтримка Скоропадського
+  - Концепція класократії
+- section: Листи до братів-хліборобів
+  words: 800
+  subsections:
+  - Головний теоретичний твір
+  - Ідея територіального патріотизму
+  - Критика народництва та інтелігенції
+- section: Еміграція та останні роки
+  words: 500
+  subsections:
+  - Життя в Австрії та Чехословаччині
+  - Важка хвороба (туберкульоз)
+  - Смерть та інтелектуальна спадщина
+- section: Дискусія — Консерватизм vs народництво
+  words: 200
+  subsections:
+  - Два шляхи українського державотворення
+  - Релевантність Липинського для XXI століття
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - консерватизм
+  - державник
+  - територіальний патріотизм
+  - класократія
+  - шляхта
+  - гетьманат
+  - народництво
+  - еліта
+  - ідеолог
+  - традиція
+  recommended:
+  - монархізм
+  - аристократія
+  - легітимізм
+  - органічна держава
+  - хлібороби
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: b2-hist-ukrainian-revolution
+  related:
+  - c1-bio-44-symon-petliura
+  - c1-bio-52-dmytro-dontsov
+  - c1-bio-35-mykhailo-hrushevskyi
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

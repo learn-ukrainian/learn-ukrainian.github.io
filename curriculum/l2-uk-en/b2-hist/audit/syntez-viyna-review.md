@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M140 | **Phase:** B2.3e | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 20:23:05
+**Generated:** 2026-01-25 22:23:52
 
 ## Configuration
 **Type:** B2-history
@@ -48,14 +48,18 @@
 - **[YAML_SCHEMA_VIOLATION]** Schema error in syntez-viyna.yaml: Schema validation error at key 'words': ['Підписання', 'других', 'Мінських', 'домовленостей', 'про', 'припинення', 'вогню'] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
+## TEMPLATE COMPLIANCE
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Європейський контекст: Еволюція війни, Вступ: Поворотний момент історії
+  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+
 ## Recommendation
 **📝 UPDATE** (severity 25/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ❌ 2043/4000 (raw: 2574)
+- **Words:** ❌ 1872/4000 (raw: 2338)
 - **Activities:** ✅ 16/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 12/2 types
@@ -67,13 +71,13 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ⚠️ Too many activities: 16 (target 3-9)
-- **Immersion:** 🇺🇦 96.7% (target 90-100% (history))
-- **Richness:** ✅ 97% (history)
+- **Immersion:** 🇺🇦 96.3% (target 90-100% (history))
+- **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 97% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
@@ -83,12 +87,12 @@
 | engagement | 9 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 3 | 4 | 75% | 10% | 7.1% |
-| visual | 12 | 4 | 100% | 10% | 9.5% |
+| cultural | 4 | 4 | 100% | 10% | 9.5% |
+| visual | 10 | 4 | 100% | 10% | 9.5% |
 | variety | 0.97 | - | 97% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 18 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **97.5%** |
+| questions | 15 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -97,8 +101,8 @@
 | **Синтез: Війна за існування** | ⚪️ | 80 | Skipped |
 | **Читання: Узагальнення епохи 2014–2024** | ✅ | 891 | Included in Core |
 | **Первинні джерела: Хронологія війни** | ✅ | 101 | Included in Core |
-| **Есе-аналіз: Що таке Перемога?** | ✅ | 286 | Included in Core |
 | **Деколонізаційний погляд: Україна як Щит Європи** | ✅ | 378 | Included in Core |
+| **Європейський контекст: Еволюція війни** | ✅ | 115 | Included in Core |
 | **Підсумок** | ✅ | 0 | Included in Core |
 | **Ключові висновки епохи 2014-2024** | ✅ | 0 | Included in Core |
 | **Модулі цієї епохи (M126-130)** | ⚪️ | 197 | Skipped |

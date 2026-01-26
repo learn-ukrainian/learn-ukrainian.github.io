@@ -1,0 +1,97 @@
+module: 33-case-studies
+level: c1
+sequence: 33
+version: '2.0'
+title: Практичні кейси
+focus: practice
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Case Study Methodology
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Academic case study standards
+- name: Ukrainian Sociolinguistic Studies
+  url: https://mova.info/
+  type: secondary
+  notes: Real-world language situations
+content_outline:
+- section: Вступ — Метод кейсів
+  words: 300
+  points:
+  - Що таке кейс-метод
+  - Як аналізувати кейси
+  - Критерії оцінювання
+- section: Кейс 1 — Мовна політика
+  words: 800
+  points:
+  - Опис ситуації
+  - Чинники та контекст
+  - Аналіз і дискусія
+  - Пропозиції рішень
+- section: Кейс 2 — Медіааналіз
+  words: 700
+  points:
+  - Новинний матеріал
+  - Виявлення маніпуляцій
+  - Порівняння джерел
+- section: Кейс 3 — Діалект чи суржик?
+  words: 700
+  points:
+  - Зразок мовлення
+  - Лінгвістичний аналіз
+  - Соціальний контекст
+- section: Кейс 4 — Політичний дискурс
+  words: 700
+  points:
+  - Аналіз промови
+  - Риторичні прийоми
+  - Критична оцінка
+- section: Груповий проєкт
+  words: 500
+  points:
+  - Командна робота
+  - Підготовка презентації
+  - Обговорення результатів
+- section: Підсумок
+  words: 300
+  points:
+  - Аналітичні навички
+  - Зворотний зв'язок
+  - Подальший розвиток
+word_target: 4000
+vocabulary:
+  required:
+  - аналіз (analysis)
+  - дослідження (research)
+  - випадок (case)
+  - ситуація (situation)
+  - контекст (context)
+  - чинник (factor)
+  - причина (cause)
+  - наслідок (consequence)
+  - рішення (solution)
+  - висновок (conclusion)
+  recommended:
+  - рекомендація (recommendation)
+  - оцінка (evaluation)
+  - критика (critique)
+  - порівняння (comparison)
+  - узагальнення (generalization)
+  forbidden: []
+activities:
+  types_required:
+  - group-sort
+  - quiz
+  - essay-response
+  - cloze
+  - fill-in
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c1-34 (C1.2 Review)
+- c1-35 (C1.2 Checkpoint)
+- c1-19 (Article Critique skills)

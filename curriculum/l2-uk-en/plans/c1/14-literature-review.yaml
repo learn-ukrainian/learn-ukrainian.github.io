@@ -1,0 +1,96 @@
+module: 14-literature-review
+level: c1
+sequence: 14
+version: '2.0'
+title: Жанр — Огляд літератури
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Методологія наукового дослідження
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Literature review methodology
+- name: Academic Synthesis Writing
+  url: https://mova.info/
+  type: secondary
+  notes: Source synthesis techniques
+content_outline:
+- section: Вступ — Що таке огляд літератури?
+  words: 400
+  points:
+  - Визначення та функції огляду
+  - Місце в структурі дисертації/статті
+  - Відмінність від анотованої бібліографії
+- section: Пошук і відбір джерел
+  words: 600
+  points:
+  - Стратегії пошуку літератури
+  - Критерії відбору джерел
+  - Оцінка якості джерел
+- section: Синтез джерел
+  words: 800
+  points:
+  - Тематичний vs хронологічний підхід
+  - Виявлення спільного і відмінного
+  - Побудова наукової бесіди
+- section: Мова синтезу
+  words: 700
+  points:
+  - Дослідники сходяться на думці, що ...
+  - На відміну від X, Y стверджує ...
+  - Існують різні погляди на ...
+- section: Виявлення прогалин
+  words: 600
+  points:
+  - Що не досліджено
+  - Суперечності в літературі
+  - Обґрунтування власного дослідження
+- section: Критична оцінка джерел
+  words: 600
+  points:
+  - Сильні та слабкі сторони досліджень
+  - Методологічні обмеження
+  - Актуальність джерел
+- section: Практика огляду
+  words: 300
+  points:
+  - Написання міні-огляду
+  - Синтез 3-5 джерел
+  - Взаємне рецензування
+word_target: 4000
+vocabulary:
+  required:
+  - огляд літератури (literature review)
+  - синтез (synthesis)
+  - джерело (source)
+  - прогалина (gap)
+  - суперечність (contradiction)
+  - тематичний (thematic)
+  - хронологічний (chronological)
+  - актуальність (relevance)
+  - методологія (methodology)
+  - критичний аналіз (critical analysis)
+  recommended:
+  - первинні джерела (primary sources)
+  - вторинні джерела (secondary sources)
+  - систематичний огляд (systematic review)
+  - наукова дискусія (scholarly discourse)
+  - консенсус (consensus)
+  forbidden: []
+activities:
+  types_required:
+  - group-sort
+  - quiz
+  - essay-response
+  - cloze
+  - fill-in
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c1-18 (Essay Writing Practice)
+- c1-19 (Article Critique)
+- c1-20 (C1.1 Checkpoint)

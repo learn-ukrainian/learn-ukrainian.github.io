@@ -1,0 +1,77 @@
+module: discourse-markers-basic
+level: b1
+sequence: 56
+version: '2.0'
+title: 'Дискурсивні маркери: базові конектори'
+subtitle: 'Discourse Markers: Basic Connectors'
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can use 25 basic discourse markers in context
+- Learner can distinguish between contrasting, causal, and exemplifying connectors
+- Learner can produce cohesive text using appropriate connectors
+- Learner can improve text flow with discourse markers
+content_outline:
+- section: 'Introduction: Text Cohesion'
+  words: 150
+  points:
+  - What discourse markers do
+  - Categories of connectors
+  - Written vs spoken markers
+- section: Addition and Sequence
+  words: 250
+  points:
+  - також, крім того, до того ж
+  - спочатку, потім, нарешті
+  - Building logical flow
+- section: Contrast and Concession
+  words: 250
+  points:
+  - але, однак, проте
+  - хоча, незважаючи на
+  - Showing opposing ideas
+- section: Cause and Result
+  words: 250
+  points:
+  - тому що, через те що
+  - отже, тому, внаслідок
+  - Logical reasoning
+- section: Examples and Clarification
+  words: 200
+  points:
+  - наприклад, зокрема
+  - тобто, іншими словами
+  - Supporting statements
+- section: 'Practice: Building Cohesion'
+  words: 100
+  points:
+  - Connect ideas with markers
+  - Improve text flow
+word_target: 1200
+vocabulary:
+  required:
+  - також (also)
+  - крім того (besides)
+  - але (but)
+  - однак (however)
+  - тому що (because)
+  - отже (therefore)
+  - наприклад (for example)
+  - тобто (that is)
+  recommended:
+  - проте (nevertheless)
+  - внаслідок (as a result)
+  - зокрема (in particular)
+  - іншими словами (in other words)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - error-correction
+  - writing
+  - transformation
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-57 (Discourse Markers Advanced)

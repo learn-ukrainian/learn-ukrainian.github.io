@@ -1,0 +1,77 @@
+module: vocabulary-in-context
+level: b1
+sequence: 91
+version: '2.0'
+title: Лексика в контексті
+subtitle: Applying Vocabulary to Practical Communication
+focus: communication
+pedagogy: TBL
+objectives:
+- Learner applies vocabulary in practical communication scenarios
+- Learner uses collocations naturally in extended discourse
+- Learner demonstrates register-appropriate word choice
+- Learner integrates domain vocabulary fluently
+content_outline:
+- section: 'Introduction: Vocabulary for Communication'
+  words: 150
+  points:
+  - Vocabulary as resource
+  - Context-based selection
+  - Register matching
+- section: Professional Contexts
+  words: 200
+  points:
+  - Workplace vocabulary
+  - Formal register
+  - Business communication
+- section: Social Contexts
+  words: 200
+  points:
+  - Informal register
+  - Social vocabulary
+  - Everyday communication
+- section: Academic Contexts
+  words: 200
+  points:
+  - Academic vocabulary
+  - Formal discourse
+  - Argumentation
+- section: Cultural Contexts
+  words: 150
+  points:
+  - Cultural vocabulary
+  - Idiomatic expressions
+  - Regional awareness
+- section: 'Practice: Integrated Tasks'
+  words: 100
+  points:
+  - Apply vocabulary
+  - Produce texts
+word_target: 1000
+vocabulary:
+  required:
+  - лексика (vocabulary)
+  - контекст (context)
+  - регістр (register)
+  - колокація (collocation)
+  - вибір слів (word choice)
+  - доречність (appropriateness)
+  - стиль (style)
+  - дискурс (discourse)
+  recommended:
+  - формальний (formal)
+  - неформальний (informal)
+  - академічний (academic)
+  - побутовий (everyday)
+  forbidden: []
+activities:
+  types_required:
+  - writing
+  - task
+  - analysis
+  - role-play
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-92 (B1 Final Exam)

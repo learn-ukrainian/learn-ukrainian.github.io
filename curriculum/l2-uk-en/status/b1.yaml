@@ -1,0 +1,745 @@
+level: b1
+updated: '2026-01-26T12:55:27.864195+00:00'
+summary:
+  total: 92
+  planned: 0
+  content: 0
+  activities: 0
+  reviewed: 92
+modules:
+  01-how-to-talk-about-grammar:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 2241
+    word_target: 3000
+    activity_count: 16
+    naturalness: 9
+  02-language-about-verbs:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 2271
+    word_target: 3000
+    activity_count: 12
+    naturalness: 9
+  03-reading-grammar-rules:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 2633
+    word_target: 3000
+    activity_count: 12
+    naturalness: 9
+  04-sentence-structure:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 1855
+    word_target: 3000
+    activity_count: 14
+    naturalness: 9
+  05-ready-for-immersion:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 1584
+    word_target: 1700
+    activity_count: 25
+    naturalness: 9
+  06-aspect-complete-system:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 1484
+    word_target: 1500
+    activity_count: 12
+    naturalness: 9
+  07-aspect-past-single-repeated:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 1898
+    word_target: 1700
+    activity_count: 12
+    naturalness: 9
+  08-aspect-past-result-process:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 2197
+    word_target: 1800
+    activity_count: 13
+    naturalness: 9
+  09-aspect-future:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 2072
+    word_target: 1800
+    activity_count: 13
+    naturalness: 9
+  10-aspect-negation:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 2123
+    word_target: 1800
+    activity_count: 14
+    naturalness: 9
+  11-aspect-in-imperatives:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 1884
+    word_target: 1500
+    activity_count: 12
+    naturalness: 9
+  12-aspect-pairs-essential-40:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 1866
+    word_target: 1500
+    activity_count: 12
+    naturalness: 9
+  13-work-week-aspect-in-action:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 2194
+    word_target: 1500
+    activity_count: 12
+    naturalness: 9
+  14-aspect-integration-practice:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1907
+    word_target: 1500
+    activity_count: 12
+    naturalness: 9
+  15-checkpoint-aspect-mastery:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.1'
+    content_words: 1742
+    word_target: 1200
+    activity_count: 16
+    naturalness: 9
+  16-motion-verbs-full-system:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 2026
+    word_target: 1500
+    activity_count: 12
+    naturalness: 9
+  17-motion-coming-going:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1814
+    word_target: 1500
+    activity_count: 12
+    naturalness: 9
+  18-motion-passing-crossing:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 1998
+    word_target: 1500
+    activity_count: 12
+    naturalness: 9
+  19-motion-starting-returning:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 1798
+    word_target: 1500
+    activity_count: 12
+    naturalness: 9
+  20-motion-approaching-departing:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.0'
+    content_words: 2271
+    word_target: 1500
+    activity_count: 12
+    naturalness: 9
+  21-motion-figurative-uses:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.2'
+    content_words: 2311
+    word_target: 1500
+    activity_count: 12
+    naturalness: 9
+  22-motion-full-prefix-integration:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '1.7'
+    content_words: 1721
+    word_target: 1500
+    activity_count: 12
+    naturalness: 9
+  23-motion-patterns-other-verbs:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '3.0'
+    content_words: 2068
+    word_target: 1500
+    activity_count: 12
+    naturalness: 9
+  24-motion-practice-integration:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 2297
+    word_target: 1500
+    activity_count: 12
+    naturalness: 9
+  25-checkpoint-motion-verbs:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 2660
+    word_target: 1200
+    activity_count: 14
+    naturalness: 9
+  26-relative-clauses-yakyi:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1675
+    word_target: 1200
+    activity_count: 12
+    naturalness: 9
+  27-relative-clauses-de-kudy-zvidky:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1779
+    word_target: 1200
+    activity_count: 12
+    naturalness: 9
+  28-relative-clauses-koly-shcho:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 2261
+    word_target: 1200
+    activity_count: 12
+    naturalness: 9
+  29-purpose-shchob-infinitive:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1721
+    word_target: 1200
+    activity_count: 12
+    naturalness: 9
+  30-purpose-shchob-past-form:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 2021
+    word_target: 1200
+    activity_count: 12
+    naturalness: 9
+  31-conditionals-real-yakshcho:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1717
+    word_target: 1200
+    activity_count: 12
+    naturalness: 9
+  32-conditionals-unreal-yakby:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1824
+    word_target: 1200
+    activity_count: 12
+    naturalness: 9
+  33-conditionals-mixed-complex:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1961
+    word_target: 1200
+    activity_count: 12
+    naturalness: 9
+  34-checkpoint-complex-sentences-1:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1184
+    word_target: 1000
+    activity_count: 12
+    naturalness: 9
+  35-concessive-khocha:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1820
+    word_target: 1200
+    activity_count: 12
+    naturalness: 9
+  36-causal-result-clauses:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1871
+    word_target: 1200
+    activity_count: 11
+    naturalness: 9
+  37-temporal-clauses:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1784
+    word_target: 1200
+    activity_count: 11
+    naturalness: 9
+  38-complex-sentence-integration:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1665
+    word_target: 1200
+    activity_count: 11
+    naturalness: 9
+  39-reported-statements:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1854
+    word_target: 1200
+    activity_count: 12
+    naturalness: 9
+  40-reported-questions-commands:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1855
+    word_target: 1200
+    activity_count: 11
+    naturalness: 9
+  41-checkpoint-complex-sentences-2:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 2027
+    word_target: 1000
+    activity_count: 14
+    naturalness: 9
+  42-adverbial-participles-imperfective:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1808
+    word_target: 1200
+    activity_count: 11
+    naturalness: 9
+  43-adverbial-participles-perfective:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1709
+    word_target: 1200
+    activity_count: 11
+    naturalness: 9
+  44-active-participles-phrases:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1768
+    word_target: 1200
+    activity_count: 11
+    naturalness: 9
+  45-past-passive-participles-1:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1899
+    word_target: 1200
+    activity_count: 11
+    naturalness: 9
+  46-past-passive-participles-2:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1793
+    word_target: 1200
+    activity_count: 11
+    naturalness: 9
+  47-passive-constructions:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1846
+    word_target: 1200
+    activity_count: 11
+    naturalness: 9
+  48-diminutives-master-class:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1774
+    word_target: 1200
+    activity_count: 11
+    naturalness: 9
+  49-numerals-collectives-fractions:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 2001
+    word_target: 1200
+    activity_count: 11
+    naturalness: 9
+  50-integrated-grammar-lab:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1854
+    word_target: 1200
+    activity_count: 11
+    naturalness: 9
+  51-checkpoint-advanced-grammar:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1885
+    word_target: 1000
+    activity_count: 19
+    naturalness: 9
+  52-abstract-concepts-ideas:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 2031
+    word_target: 1200
+    activity_count: 12
+    naturalness: 9
+  53-abstract-concepts-processes:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 2001
+    word_target: 1200
+    activity_count: 12
+    naturalness: 9
+  54-expressing-opinions:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1917
+    word_target: 1200
+    activity_count: 16
+    naturalness: 9
+  55-agreement-disagreement:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1947
+    word_target: 1200
+    activity_count: 13
+    naturalness: 9
+  56-discourse-markers-basic:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 2023
+    word_target: 1200
+    activity_count: 14
+    naturalness: 9
+  57-discourse-markers-advanced:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 2156
+    word_target: 1200
+    activity_count: 12
+    naturalness: 9
+  58-describing-changes:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1860
+    word_target: 1200
+    activity_count: 12
+    naturalness: 9
+  59-media-news:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 2062
+    word_target: 1200
+    activity_count: 12
+    naturalness: 9
+  60-society-politics:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 2019
+    word_target: 1200
+    activity_count: 12
+    naturalness: 9
+  61-professional-communication:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 2168
+    word_target: 1200
+    activity_count: 12
+    naturalness: 9
+  62-environment-ecology:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1991
+    word_target: 1200
+    activity_count: 12
+    naturalness: 9
+  63-health-wellness:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1975
+    word_target: 1200
+    activity_count: 12
+    naturalness: 9
+  64-emotions-deep-dive:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1946
+    word_target: 1200
+    activity_count: 13
+    naturalness: 9
+  65-relationships:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 2006
+    word_target: 1200
+    activity_count: 12
+    naturalness: 9
+  66-business-basics:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1976
+    word_target: 1200
+    activity_count: 12
+    naturalness: 9
+  67-travel-geography:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1950
+    word_target: 1200
+    activity_count: 12
+    naturalness: 9
+  68-synonymy-thinking-verbs:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1867
+    word_target: 1200
+    activity_count: 12
+    naturalness: 9
+  69-synonymy-speaking-verbs:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1899
+    word_target: 1200
+    activity_count: 12
+    naturalness: 9
+  70-collocations-expressions:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1970
+    word_target: 1200
+    activity_count: 12
+    naturalness: 9
+  71-emotional-intelligence:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 2021
+    word_target: 1200
+    activity_count: 12
+    naturalness: 9
+  72-regions-west:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1673
+    word_target: 1200
+    activity_count: 12
+    naturalness: 9
+  73-regions-east:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1719
+    word_target: 1200
+    activity_count: 12
+    naturalness: 9
+  74-regions-south:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1689
+    word_target: 1200
+    activity_count: 12
+    naturalness: 9
+  75-regions-center:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1638
+    word_target: 1200
+    activity_count: 12
+    naturalness: 9
+  76-ukrainian-music-today:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1811
+    word_target: 1200
+    activity_count: 12
+    naturalness: 9
+  77-ukrainian-cinema-and-tv:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1801
+    word_target: 1200
+    activity_count: 11
+    naturalness: 9
+  78-technology-and-startups:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1783
+    word_target: 1200
+    activity_count: 11
+    naturalness: 9
+  79-sports-in-ukraine:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1958
+    word_target: 1200
+    activity_count: 11
+    naturalness: 9
+  80-active-lifestyle:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 2110
+    word_target: 1200
+    activity_count: 11
+    naturalness: 9
+  81-running-in-ukraine:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1644
+    word_target: 1200
+    activity_count: 11
+    naturalness: 9
+  82-mountains-trail:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1811
+    word_target: 1200
+    activity_count: 11
+    naturalness: 9
+  83-cycling-water:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1805
+    word_target: 1200
+    activity_count: 11
+    naturalness: 9
+  84-winter-sports:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1726
+    word_target: 1200
+    activity_count: 11
+    naturalness: 9
+  85-ukrainian-cuisine:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1888
+    word_target: 1200
+    activity_count: 12
+    naturalness: 9
+  86-ukrainski-sviata-ta-festyvali:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1959
+    word_target: 1200
+    activity_count: 11
+    naturalness: 9
+  87-novyny-yak-chytaty:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 2574
+    word_target: 1200
+    activity_count: 11
+    naturalness: 9
+  88-interviu-ta-podkasty:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 2099
+    word_target: 1200
+    activity_count: 11
+    naturalness: 9
+  89-checkpoint-grammar-synthesis:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1662
+    word_target: 1000
+    activity_count: 14
+    naturalness: 9
+  90-grammar-in-context:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 2263
+    word_target: 1000
+    activity_count: 13
+    naturalness: 9
+  91-vocabulary-in-context:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 1837
+    word_target: 1000
+    activity_count: 12
+    naturalness: 9
+  92-b1-final-exam:
+    status: reviewed
+    last_updated: '2026-01-26'
+    plan_version: '2.0'
+    content_words: 3594
+    word_target: 500
+    activity_count: 11
+    naturalness: 9

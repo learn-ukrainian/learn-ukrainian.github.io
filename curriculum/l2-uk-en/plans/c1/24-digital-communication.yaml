@@ -1,0 +1,99 @@
+module: 24-digital-communication
+level: c1
+sequence: 24
+version: '2.0'
+title: Цифрова комунікація
+focus: communication
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Ukrainian Digital Etiquette
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Guidelines for professional digital communication
+- name: Business Email Standards
+  url: https://chamber.ua/
+  type: secondary
+  notes: Ukrainian business correspondence norms
+content_outline:
+- section: Вступ — Регістри цифрової комунікації
+  words: 400
+  points:
+  - Формальний vs неформальний регістр
+  - Вибір каналу комунікації
+  - Особливості онлайн-спілкування
+- section: Структура ділового листа
+  words: 800
+  points:
+  - Тема (Subject line)
+  - Звертання (Salutation)
+  - Основний текст (Body)
+  - Прощання (Closing)
+  - Підпис (Signature)
+- section: Типи ділових листів
+  words: 700
+  points:
+  - Запит інформації
+  - Лист-подяка
+  - Лист-вибачення
+  - Лист-нагадування
+- section: Месенджери в бізнесі
+  words: 600
+  points:
+  - Етикет робочих чатів
+  - Використання емодзі
+  - Час відповіді
+- section: Відеоконференції
+  words: 600
+  points:
+  - Підготовка до онлайн-зустрічі
+  - Технічний етикет
+  - Модерація обговорення
+- section: Типові помилки
+  words: 500
+  points:
+  - Надмірна неформальність
+  - Ігнорування повідомлень
+  - Помилки з копіями листів
+- section: Практичне завдання
+  words: 400
+  points:
+  - Написання офіційного листа
+  - Трансформація стилів
+  - Аналіз листування
+word_target: 4000
+vocabulary:
+  required:
+  - електронний лист (email)
+  - тема листа (subject line)
+  - звертання (salutation)
+  - підпис (signature)
+  - вкладення (attachment)
+  - копія (CC)
+  - прихована копія (BCC)
+  - месенджер (messenger)
+  - відеоконференція (video conference)
+  - чат (chat)
+  recommended:
+  - пересилання (forwarding)
+  - автовідповідь (auto-reply)
+  - розсилка (mailing list)
+  - модерація (moderation)
+  - онлайн-етикет (online etiquette)
+  forbidden: []
+activities:
+  types_required:
+  - group-sort
+  - quiz
+  - essay-response
+  - cloze
+  - error-correction
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c1-25 (Political System)
+- c1-32 (Professional Scenarios)
+- c1-35 (C1.2 Checkpoint)

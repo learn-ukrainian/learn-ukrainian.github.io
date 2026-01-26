@@ -1,0 +1,105 @@
+module: ivan-lypa
+level: c1-bio
+sequence: 34
+version: '2.0'
+title: 'Іван Липа: Лікар і письменник'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Липа_Іван_Львович
+    title: Іван Липа (Wikipedia UA)
+    notes: Biography of the doctor, writer, and patriot
+  secondary:
+  - url: https://uk.wikipedia.org/wiki/Братство_тарасівців
+    title: Братство тарасівців
+    notes: Information about the organization Lypa co-founded
+content_outline:
+- section: Вступ — Лікар душ українських
+  words: 400
+  subsections:
+  - Лікар, письменник, громадський діяч
+  - Засновник Братства тарасівців
+  - Ідеолог української незалежності
+- section: Юність та освіта (1865-1891)
+  words: 600
+  subsections:
+  - Народження на Полтавщині
+  - Медична освіта в Харкові
+  - Перші літературні спроби
+  - Формування національної свідомості
+- section: Братство тарасівців (1891-1898)
+  words: 800
+  subsections:
+  - Заснування таємної організації
+  - Ідеологія українського націоналізму
+  - Члени та діяльність
+  - Розгром братства царською владою
+- section: Лікарська практика та література (1890-ті–1920)
+  words: 800
+  subsections:
+  - Робота лікарем в Одесі
+  - Повісті та оповідання
+  - Публіцистика
+  - Поєднання медицини та літератури
+- section: Революційні роки (1917-1923)
+  words: 700
+  subsections:
+  - Участь у боротьбі за незалежність
+  - Робота в УНР
+  - Еміграція
+  - Загибель у 1923 році
+- section: Спадщина — Пророк незалежності
+  words: 700
+  subsections:
+  - Вплив на український націоналізм
+  - Син Юрій Липа — продовжувач справи
+  - Сучасне вшанування
+  - Липа як символ інтелігенції
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - лікар
+  - письменник
+  - громадський діяч
+  - братство
+  - націоналізм
+  - ідеолог
+  - підпільна організація
+  - медицина
+  - публіцистика
+  - незалежність
+  recommended:
+  - тарасівці
+  - патріотизм
+  - інтелігенція
+  - еміграція
+  - самостійність
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-33
+  related:
+  - c1-bio-42
+  - c1-bio-44
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

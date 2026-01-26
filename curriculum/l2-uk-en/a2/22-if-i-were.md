@@ -2,7 +2,7 @@
 
 ## Introduction / Вступ
 
-**Ласкаво просимо до світу можливостей!** Іноді нам недостатньо просто описувати та дійсність, яка є навколо нас. Ми хочемо мріяти, уявляти альтернативні реальності або делікатно просити про щось. В українській мові для цього існує **умовний спосіб**. Це спосіб говорити про те, чого наразі немає, але що могло б статися за певних умов. Чи замислювалися ви, що ви зробили б, якби виграли в лотерею? Або як би ви провели день, якби мали безмежно багато вільного часу? Сьогодні ми опануємо просте, але надзвичайно потужне правило, яке дозволить вам будувати такі речення і ділитися своїми мріями з усім світом.
+**Ласкаво просимо до світу можливостей!** Іноді нам недостатньо просто описувати та дійсність, яка є навколо нас. Ми хочемо мріяти, уявляти альтернативні реальності або делікатно просити про щось. В українській мові для цього існує **умовний спосіб**. Це спосіб говорити про те, чого наразі немає, але що могло б статися за певних умов. Чи замислювалися ви, що ви зробили б, якби виграли в лотерею? Або як би ви провели день, якби мали безмежно багато вільного часу? Сьогодні ми опануємо просте, але надзвичайно потужне правило. Воно дозволить вам будувати такі речення. Ви зможете ділитися своїми мріями з усім світом!
 
 Welcome to the lesson that lets us explore alternative realities. Today we will learn the **умовний спосіб** (conditional mood). This is the way we talk about things that don't exist yet, but could be possible under certain circumstances. Whether you are expressing a deep desire, a hypothetical theory, or just a very polite request, the conditional mood is your primary tool. The best part of Ukrainian conditional grammar is its simplicity—you don't need to learn a whole new set of verb endings. You just need to know one small particle: **б** or **би**. By the end of this module, you'll be able to navigate the "If I were..." patterns with ease and grace.
 
@@ -23,7 +23,7 @@ Welcome to the lesson that lets us explore alternative realities. Today we will 
 - Використовуйте **би** після слів, що закінчуються на приголосний: _Він знав **би**._
 - Використовуйте **б** після слів, що закінчуються на голосний: _Вона знала **б**._
 
-**Приклади (Examples):**
+**Приклади:**
 
 - Я **хотів би** кави. (I would like some coffee.)
 - Вона **поїхала б** до Львова. (She would go to Lviv.)

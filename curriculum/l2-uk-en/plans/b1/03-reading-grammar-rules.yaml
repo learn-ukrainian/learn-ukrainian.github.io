@@ -1,0 +1,119 @@
+module: 03-reading-grammar-rules
+level: b1
+sequence: 3
+version: '1.0'
+title: Читаємо граматичні правила
+subtitle: Understanding grammar explanations in Ukrainian
+focus: integration
+pedagogy: PPP
+objectives:
+- Learner can understand standard grammar explanation patterns
+- Learner can follow Ukrainian grammar instructions
+- Learner can identify word formation components
+- Learner can recognize activity instruction verbs
+- Learner can understand analytical terminology
+- Learner can distinguish language styles and registers
+sources:
+- name: Ukrainian Grammar Textbooks
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standard patterns used in Ukrainian grammar instruction
+- name: Ukrainian Language Teaching Resources
+  url: https://osvita.ua/
+  type: reference
+  notes: Common instructional language in educational materials
+content_outline:
+- section: Introduction - Reading Grammar in Ukrainian
+  words: 150
+  points:
+  - Why understanding instruction patterns matters
+  - Common grammar textbook structure
+  - Preparation for full immersion
+- section: Grammar Explanation Patterns
+  words: 200
+  points:
+  - '"X використовується, коли..." (X is used when...)'
+  - '"X показує..." (X shows...)'
+  - '"X означає..." (X means...)'
+- section: Instruction Words
+  words: 160
+  points:
+  - порівняйте, зверніть увагу
+  - наприклад, тобто, отже
+- section: Comparison Patterns
+  words: 70
+  points:
+  - на відміну від
+  - подібно до
+- section: Activity Instruction Verbs
+  words: 200
+  points:
+  - виберіть, знайдіть, з'єднайте
+  - розташуйте, доповніть, натисніть
+  - перекладіть, складіть
+  - Understanding what activities ask you to do
+- section: Analytical Terms
+  words: 200
+  points:
+  - контекст, маркер, частота
+  - аспектуальна пара
+  - Using these terms in grammar discussion
+- section: Style and Register Terminology
+  words: 200
+  points:
+  - стиль, регістр
+  - розмовна мова, літературна мова, формальна мова
+  - Recognizing style markers in texts
+- section: Word Formation Terms
+  words: 160
+  points:
+  - корінь, префікс, суфікс
+  - основа, закінчення
+  - Analyzing word structure
+- section: Practice
+  words: 250
+  points:
+  - Reading authentic grammar explanations
+  - Pattern recognition
+- section: Dialogues
+  words: 300
+  points:
+  - 6 mini-dialogues illustrating concepts
+- section: Summary
+  words: 150
+  points:
+  - Readiness check for M04
+word_target: 3000
+vocabulary:
+  required:
+  - використовується (is used)
+  - показує (shows)
+  - означає (means)
+  - порівняйте (compare)
+  - зверніть увагу (note, pay attention)
+  - виберіть (choose)
+  - знайдіть (find)
+  - доповніть (complete)
+  - контекст (context)
+  - маркер (marker)
+  recommended:
+  - частота (frequency)
+  - аспектуальна пара (aspectual pair)
+  - розмовна мова (colloquial language)
+  - літературна мова (literary language)
+  - формальна мова (formal language)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - match-up
+  - mark-the-words
+  - cloze
+  - true-false
+  - group-sort
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-04 (Sentence structure)
+- b1-05 (Metalanguage checkpoint)

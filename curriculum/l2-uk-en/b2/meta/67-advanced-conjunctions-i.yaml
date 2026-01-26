@@ -29,3 +29,32 @@ slug: 67-advanced-conjunctions-i
 naturalness:
   score: 9
   status: PASS
+content_outline:
+- section: Вступ — Причина та Допуск
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Causal Conjunctions
+  words: 500
+  points:
+  - тому що (because - neutral)
+  - оскільки (since - formal)
+  - бо (because - colloquial)
+  - через те що (due to the fact that)
+  - у зв'язку з тим що (in connection with)
+- section: Concessive Conjunctions
+  words: 500
+  points:
+  - хоча (although - neutral)
+  - незважаючи на те що (despite the fact that)
+  - попри те що (in spite of)
+  - дарма що (even though)
+  - хай (let/even if)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

@@ -1,0 +1,94 @@
+module: 01-b2-review-bridge
+level: c1
+sequence: 1
+version: '2.0'
+title: Огляд B2 та міст до C1
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Ukrainian State Standard C1 (2024)
+  url: https://mon.gov.ua/
+  type: reference
+  notes: C1 proficiency descriptors and grammar requirements
+- name: CEFR C1 Descriptors
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: General C1 level descriptors for comparison
+content_outline:
+- section: Вступ — Від B2 до C1
+  words: 500
+  points:
+  - Ключові відмінності між рівнями B2 і C1
+  - Очікувані компетенції на рівні C1
+  - Структура академічного модуля
+- section: Пасивний стан — повна система
+  words: 800
+  points:
+  - Усі 4 форми пасиву з вибором регістру
+  - Було зроблено vs. робилося vs. зроблено vs. є зробленим
+  - Регістрова відповідність (науковий, офіційний, публіцистичний)
+- section: Дієприкметники — активні та пасивні
+  words: 700
+  points:
+  - Активні дієприкметники теперішнього і минулого часу
+  - Пасивні дієприкметники з -ний/-тий
+  - Дієприкметниковий зворот у науковому стилі
+- section: Складнопідрядні речення
+  words: 600
+  points:
+  - Багатокомпонентні речення
+  - Підрядні означальні, з'ясувальні, обставинні
+  - Пунктуація в складних реченнях
+- section: П'ять функціональних стилів
+  words: 700
+  points:
+  - Науковий, офіційно-діловий, публіцистичний
+  - Художній, розмовний
+  - Маркери кожного стилю
+- section: Фразеологія в контексті
+  words: 500
+  points:
+  - Прислів'я та приказки
+  - Ідіоми та сталі вирази
+  - Стилістичне використання фразеологізмів
+- section: Підсумок і шлях уперед
+  words: 200
+  points:
+  - Самооцінка готовності до C1
+  - Структура рівня C1 (106 модулів)
+word_target: 4000
+vocabulary:
+  required:
+  - регістр (register)
+  - пасивний стан (passive voice)
+  - дієприкметник (participle)
+  - складнопідрядне речення (complex sentence)
+  - функціональний стиль (functional style)
+  - науковий стиль (academic style)
+  - офіційно-діловий стиль (official style)
+  - публіцистичний стиль (journalistic style)
+  - фразеологізм (phraseological unit)
+  - сталий вираз (set expression)
+  recommended:
+  - консолідація (consolidation)
+  - компетенція (competency)
+  - самооцінка (self-assessment)
+  - перехідний (transitional)
+  - інтеграція (integration)
+  forbidden: []
+activities:
+  types_required:
+  - group-sort
+  - quiz
+  - cloze
+  - fill-in
+  - error-correction
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c1-02 (Academic Style Markers)
+- c1-05 (Logical Connectors)

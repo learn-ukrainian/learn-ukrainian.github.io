@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M35 | **Phase:** HIST.4 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:22:40
+**Generated:** 2026-01-25 22:22:45
 
 ## Configuration
 **Type:** B2-history
@@ -39,7 +39,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4462/4000 (raw: 4561)
+- **Words:** ✅ 4347/4000 (raw: 4444)
 - **Activities:** ✅ 10/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 9/2 types
@@ -68,7 +68,7 @@
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 8 | 4 | 100% | 10% | 9.5% |
-| visual | 8 | 4 | 100% | 10% | 9.5% |
+| visual | 7 | 4 | 100% | 10% | 9.5% |
 | variety | 0.97 | - | 97% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 4 | 3 | 100% | 5% | 4.8% |
@@ -88,4 +88,3 @@
 | **Деколонізаційний погляд** | ✅ | 191 | Included in Core |
 | **Підсумок** | ✅ | 90 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 18 | Skipped |
-| **Есе** | ⚪️ | 115 | Skipped |

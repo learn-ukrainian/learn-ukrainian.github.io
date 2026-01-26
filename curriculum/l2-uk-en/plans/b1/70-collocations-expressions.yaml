@@ -1,0 +1,77 @@
+module: collocations-expressions
+level: b1
+sequence: 70
+version: '2.0'
+title: Колокації та вирази
+subtitle: Collocations and Expressions
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can use 25 common verb-noun collocations naturally
+- Learner can distinguish between similar verbs in collocations
+- Learner can form natural word combinations in professional and everyday contexts
+- Learner can recognize and avoid unnatural collocations
+content_outline:
+- section: 'Introduction: Why Collocations Matter'
+  words: 150
+  points:
+  - What are collocations
+  - Natural vs unnatural combinations
+  - Learning strategies
+- section: Verb-Noun Collocations
+  words: 250
+  points:
+  - приймати рішення, робити вибір
+  - мати право, брати участь
+  - Common verb-noun pairs
+- section: Adjective-Noun Collocations
+  words: 250
+  points:
+  - важливе питання, гарний настрій
+  - Fixed adjective-noun pairs
+  - Color and intensity
+- section: Delexical Verbs
+  words: 250
+  points:
+  - робити, мати, брати, давати
+  - Light verb constructions
+  - Common patterns
+- section: Fixed Expressions
+  words: 200
+  points:
+  - Semi-fixed phrases
+  - Idiomatic expressions
+  - Discourse markers
+- section: 'Practice: Natural Combinations'
+  words: 100
+  points:
+  - Build natural collocations
+  - Avoid calques
+word_target: 1200
+vocabulary:
+  required:
+  - колокація (collocation)
+  - вираз (expression)
+  - приймати рішення (to make a decision)
+  - брати участь (to participate)
+  - мати право (to have the right)
+  - робити вибір (to make a choice)
+  - звертати увагу (to pay attention)
+  - досягати успіху (to achieve success)
+  recommended:
+  - встановлювати контакт (to establish contact)
+  - виконувати обов'язки (to fulfill duties)
+  - набувати досвіду (to gain experience)
+  - зберігати спокій (to keep calm)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - error-correction
+  - writing
+  - matching
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-71 (Emotional Intelligence)

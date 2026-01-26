@@ -1,0 +1,22 @@
+module: 86-ukrainska-arkhitektura
+level: c1
+sequence: 86
+version: '2.0'
+title: Українська архітектура
+subtitle: Ukrainian Architecture — Stone Chronicles
+focus: fine-arts
+pedagogy: CBI
+objectives:
+- Learner explores the legacy of Kyivan Rus architecture (Sophia).
+- Learner understands the uniqueness of Ukrainian Baroque (Mazepa style).
+- Learner analyzes the wooden churches of the Carpathians.
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

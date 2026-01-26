@@ -1,0 +1,78 @@
+module: checkpoint-complex-sentences-2
+level: b1
+sequence: 41
+version: '2.0'
+title: 'Контрольна точка: складні речення (частина 2)'
+subtitle: Checkpoint - Complex Sentences Part 2
+focus: checkpoint
+pedagogy: TTT
+objectives:
+- Learner can demonstrate mastery of concessive, causal, temporal clauses
+- Learner can use reported speech for statements, questions, and commands
+- Learner can self-assess readiness for B1.4 phase
+- Learner can integrate all B1.3 complex sentence patterns
+content_outline:
+- section: 'Pre-Test: Self-Assessment'
+  words: 100
+  points:
+  - Review B1.3b objectives
+  - Identify strengths and gaps
+  - Set checkpoint goals
+- section: Clause Types Review
+  words: 200
+  points:
+  - Concessive (хоча, незважаючи на)
+  - Causal (тому що, бо)
+  - Temporal (коли, поки, після того як)
+- section: Reported Speech Review
+  words: 200
+  points:
+  - Reported statements
+  - Reported questions
+  - Reported commands
+- section: Integration Test
+  words: 200
+  points:
+  - Multi-clause sentences
+  - Mixed transformations
+  - Complex writing
+- section: Comprehensive Assessment
+  words: 200
+  points:
+  - All B1.3 structures
+  - Error analysis
+  - Proficiency check
+- section: Feedback and Planning
+  words: 100
+  points:
+  - Review results
+  - Plan for B1.4
+  - Identify review needs
+word_target: 1000
+vocabulary:
+  required:
+  - контрольна точка (checkpoint)
+  - повторення (review)
+  - оцінювання (assessment)
+  - інтеграція (integration)
+  - непряма мова (indirect speech)
+  - допустовий (concessive)
+  - причиновий (causal)
+  - часовий (temporal)
+  recommended:
+  - трансформація (transformation)
+  - прогрес (progress)
+  - рівень (level)
+  - готовність (readiness)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - quiz
+  - writing
+  - transformation
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-42 (Adverbial Participles Imperfective)

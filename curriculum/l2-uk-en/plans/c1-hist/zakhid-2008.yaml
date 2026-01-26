@@ -1,0 +1,97 @@
+module: zakhid-2008
+level: c1-hist
+sequence: 100
+version: '1.0'
+title: 'Бухарест 2008: NATO каже «ні»'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Вето на безпеку
+  words: 400
+  subsections:
+  - Квітень 2008 — Бухарест
+  - Україна і Грузія — просять MAP
+  - Меркель і Саркозі — «ні»
+  - Структура модуля
+- section: Контекст — Що таке MAP
+  words: 500
+  subsections:
+  - План дій щодо членства
+  - Не членство — шлях до нього
+  - Чому важливо
+  - Хто вже отримав
+- section: Хто за, хто проти
+  words: 600
+  subsections:
+  - США — за
+  - Німеччина, Франція — проти
+  - Аргументи проти
+  - «Провокація Росії»
+- section: Компроміс — гірший за відмову
+  words: 700
+  subsections:
+  - «Колись стануть членами»
+  - Але без MAP зараз
+  - Найгірший варіант
+  - Сигнал для Росії
+- section: Серпень 2008 — Грузія
+  words: 500
+  subsections:
+  - Війна через 4 місяці
+  - Зв'язок з Бухарестом
+  - «Бачите — НАТО провокує»
+  - Урок — не засвоєний
+- section: Наслідки для України
+  words: 500
+  subsections:
+  - 2014 — без захисту
+  - «Двері відчинені» — порожня фраза
+  - Меркель визнала помилку (2022)
+- section: Підсумок
+  words: 300
+  subsections:
+  - Бухарест — ключова помилка
+  - Зелене світло для Путіна
+  - Перехід до 2014
+word_target: 3500
+vocabulary:
+- Бухарест
+- саміт
+- MAP
+- вето
+- розширення
+- «провокація»
+- компроміс
+- сигнал
+- безпека
+- членство
+- Меркель
+- Саркозі
+- колективна безпека
+- стаття 5
+- умиротворення
+activities:
+- type: decision-analysis
+  focus: Why did Germany and France block MAP?
+- type: signal-analysis
+  focus: What signal did Bucharest send to Putin?
+- type: essay-response
+  focus: What if Ukraine got MAP in 2008?
+- type: Georgia-connection
+  focus: Bucharest → Georgia 2008 → Ukraine 2014
+- type: essay-response
+  focus: Чи Бухарест 2008 спровокував агресію Росії?
+sources:
+- name: Бухарестський саміт (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Бухарестський_саміт_НАТО
+  type: reference
+  notes: Summit decisions
+- name: План дій щодо членства (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/План_дій_щодо_членства_в_НАТО
+  type: reference
+  notes: MAP explanation
+- name: Розширення НАТО (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Розширення_НАТО
+  type: reference
+  notes: Enlargement context

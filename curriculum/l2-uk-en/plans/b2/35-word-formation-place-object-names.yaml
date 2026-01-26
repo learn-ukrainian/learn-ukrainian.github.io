@@ -1,0 +1,23 @@
+module: 35-word-formation-place-object-names
+level: b2
+sequence: 35
+version: '1.0'
+title: 'Словотворення: назви місць та об''єктів'
+subtitle: 'Word Formation: Place and Object Names'
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can identify suffixes that form place and object names in Ukrainian
+- Learner can derive place names from verbs and nouns using appropriate suffixes
+- Learner can distinguish between -ня, -ище, and -арня formations
+- Learner can use place vocabulary appropriately in context
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

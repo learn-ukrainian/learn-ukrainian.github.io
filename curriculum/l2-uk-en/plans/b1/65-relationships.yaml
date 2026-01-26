@@ -1,0 +1,77 @@
+module: relationships
+level: b1
+sequence: 65
+version: '2.0'
+title: Стосунки та зв'язки
+subtitle: Relationships and Connections
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can use 25 relationship vocabulary words in context
+- Learner can distinguish between стосунки/відносини/зв'язок
+- Learner can form natural collocations with relationship nouns
+- Learner can discuss Ukrainian cultural traditions related to relationships
+content_outline:
+- section: 'Introduction: Relationship Vocabulary'
+  words: 150
+  points:
+  - Types of relationships
+  - Cultural context
+  - Vocabulary overview
+- section: Family Relationships
+  words: 250
+  points:
+  - родина, сім'я, рід
+  - Extended family terms
+  - Family dynamics vocabulary
+- section: Romantic Relationships
+  words: 250
+  points:
+  - кохання, закоханість, стосунки
+  - партнер, пара, шлюб
+  - Romance vocabulary
+- section: Friendships and Social
+  words: 250
+  points:
+  - дружба, приятелювання
+  - знайомство, зв'язок
+  - Social connection vocabulary
+- section: Relationship Actions
+  words: 200
+  points:
+  - кохати, дружити, спілкуватися
+  - підтримувати, зберігати
+  - Relationship verbs
+- section: 'Practice: Relationship Discussions'
+  words: 100
+  points:
+  - Discuss relationships
+  - Use cultural vocabulary
+word_target: 1200
+vocabulary:
+  required:
+  - стосунки (relationships)
+  - дружба (friendship)
+  - кохання (love)
+  - родина (family)
+  - партнер (partner)
+  - знайомство (acquaintance)
+  - спілкуватися (to communicate)
+  - підтримувати (to support)
+  recommended:
+  - закоханість (being in love)
+  - шлюб (marriage)
+  - зв'язок (connection)
+  - приятелювати (to be friends)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - discussion
+  - collocation
+  - matching
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-66 (Business Basics)

@@ -1,0 +1,77 @@
+module: causal-result-clauses
+level: b1
+sequence: 36
+version: '2.0'
+title: Причинові та наслідкові речення
+subtitle: Causal and Result Clauses
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can express причина using various causal connectors
+- Learner can express наслідок using result connectors
+- Learner can transform causal statements into result statements
+- Learner can build cause-effect relationships
+content_outline:
+- section: 'Introduction: Cause and Effect'
+  words: 150
+  points:
+  - Expressing reasons
+  - Expressing consequences
+  - Logic in Ukrainian
+- section: Causal Connectors
+  words: 250
+  points:
+  - тому що (because)
+  - бо (because - colloquial)
+  - через те що (due to the fact)
+- section: Result Connectors
+  words: 250
+  points:
+  - тому (therefore)
+  - отже (thus/hence)
+  - внаслідок (as a result)
+- section: Cause → Result Transformation
+  words: 250
+  points:
+  - Reversing cause and effect
+  - Word order changes
+  - Connector selection
+- section: Advanced Patterns
+  words: 200
+  points:
+  - завдяки тому що (thanks to)
+  - оскільки (since)
+  - Complex cause-effect chains
+- section: 'Practice: Logical Relations'
+  words: 100
+  points:
+  - Express cause and effect
+  - Transform statements
+word_target: 1200
+vocabulary:
+  required:
+  - причина (cause/reason)
+  - наслідок (consequence)
+  - тому що (because)
+  - бо (because)
+  - тому (therefore)
+  - отже (thus)
+  - через те що (due to)
+  - внаслідок (as a result)
+  recommended:
+  - оскільки (since)
+  - завдяки (thanks to)
+  - у зв'язку з (in connection with)
+  - відтак (hence)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - sentence-combining
+  - translation
+  - transformation
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-37 (Temporal Clauses)

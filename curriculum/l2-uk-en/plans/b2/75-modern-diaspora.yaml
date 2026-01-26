@@ -1,0 +1,22 @@
+module: 75-modern-diaspora
+level: b2
+sequence: 75
+version: '2.0'
+title: Сучасна діаспора
+subtitle: Modern Diaspora
+focus: culture
+pedagogy: CBI
+objectives:
+- Учень розуміє роль та структуру сучасного глобального українства
+- Учень може пояснити поняття м’якої сили та культурної дипломатії
+- 'Учень ознайомлений з основними напрямками діяльності діаспори: лобізмом та гуманітарною допомогою'
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

@@ -1,0 +1,22 @@
+module: 54-vyshyvanka
+level: c1
+sequence: 54
+version: '2.0'
+title: 'Вишиванка: Зашифрована доля'
+subtitle: 'Vyshyvanka: Encoded Destiny'
+focus: history
+pedagogy: CBI
+objectives:
+- Analyze the spiritual and social functions of the Ukrainian embroidered shirt
+- 'Identify regional embroidery styles: Poltava, Hutsul, Borshchiv, and Podillia'
+- Understand the technique and symbolism of various embroidery stitches
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

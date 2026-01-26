@@ -1,0 +1,81 @@
+module: 15-aspect-morphology
+level: a2
+sequence: 15
+version: '2.0'
+title: Aspect Morphology
+subtitle: Prefixes and Suffixes
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can identify aspect based on morphology
+- Learner can form perfective verbs using common prefixes
+- Learner can form imperfective verbs using suffixes
+- Learner can recognize irregular aspect pairs
+sources:
+- name: Ukrainian State Standard 2024 - Word Formation
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Verbal prefix and suffix patterns
+- name: Ukrainian Verb Morphology
+  url: https://uk.wikipedia.org/wiki/Словотвір
+  type: reference
+  notes: Aspect formation patterns
+content_outline:
+- section: Introduction / Вступ
+  words: 200
+  points:
+  - Concept of aspectual pairs as a family
+  - Morphological predictability
+- section: Presentation / Презентація
+  words: 600
+  points:
+  - Prefixation (the primary method: про-, на-, з-, по-)
+  - Suffixation (secondary imperfectives: -ва-, -ува-)
+  - Suppletive pairs (irregular roots)
+  - Spelling rules for prefixes (з- vs с-)
+- section: Practice / Практика
+  words: 150
+  points:
+  - Pattern recognition drills
+  - Matching and transformation
+- section: Dialogues / Діалоги
+  words: 50
+  points:
+  - Dialogue on learning patterns
+word_target: 1000
+vocabulary:
+  required:
+  - відпочивати/відпочити (to rest)
+  - вставати/встати (to get up)
+  - одягатися/одягнутися (to dress)
+  - сідати/сісти (to sit down)
+  - лягати/лягти (to lie down)
+  - відкривати/відкрити (to open)
+  - закривати/закрити (to close)
+  - вмикати/увімкнути (to turn on)
+  - вимикати/вимкнути (to turn off)
+  - починати/почати (to begin)
+  - закінчувати/закінчити (to finish)
+  - отримувати/отримати (to receive)
+  - посилати/послати (to send)
+  - вибирати/вибрати (to choose)
+  - вирішувати/вирішити (to decide)
+  recommended:
+  - префікс (prefix)
+  - суфікс (suffix)
+  - корінь (root)
+  - основа (stem)
+  - утворення (formation)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - match-up
+  - fill-in
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a2-16 (Aspect Mastery Pairs)
+- a2-36 (Basic Motion Prefixes)
+- a2-38 (Action Verb Prefixes)

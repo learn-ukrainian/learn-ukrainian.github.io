@@ -1,0 +1,50 @@
+module: 30-i-feel-like
+level: a2
+sequence: 30
+version: '2.0'
+title: I Feel Like...
+subtitle: Physical and Emotional States
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can describe physical states (hot, cold, painful)
+- Learner can describe emotional states (sad, happy, bored)
+- Learner can ask others about their feelings
+- Learner can distinguish between personal traits and temporary states
+sources:
+- name: Ukrainian State Standard 2024 - States and Emotions
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standards for expressing subjective physical and mental states at A2
+- name: Psychology of Language - Slavic Subjective Dative
+  url: https://uk.wikipedia.org/wiki/Безособові_речення
+  type: reference
+  notes: Syntax of impersonal sentences for expressing feelings
+content_outline:
+- section: Introduction / Вступ
+  words: 200
+  points:
+  - The difference between 'Who I am' and 'How I feel'
+  - The Dative logic: It is cold to me
+- section: Presentation / Презентація
+  words: 600
+  points:
+  - 'Physical States: Мені жарко, мені холодно, мені боляче'
+  - 'Emotional States: Мені сумно, мені весело, мені нудно'
+  - 'Psychological Reflexives: Я хвилююся, я боюся, я тішуся'
+  - 'Distinction: Радий (Glad) vs Щасливий (Happy)'
+  - Describing Health and Comfort
+- section: Practice / Практика
+  words: 150
+  points:
+  - Dative conversion drills
+  - Emotional reaction role-play
+- section: Dialogues / Діалоги
+  words: 50
+  points:
+  - Comforting a friend or complaining about the weather/health
+word_target: 1000
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

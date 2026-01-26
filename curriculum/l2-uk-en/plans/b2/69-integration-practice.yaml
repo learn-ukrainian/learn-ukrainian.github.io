@@ -1,0 +1,22 @@
+module: 69-integration-practice
+level: b2
+sequence: 69
+version: '1.0'
+title: Практика інтеграції B2.2
+subtitle: B2.2 Integration Practice
+focus: integration
+pedagogy: Practice
+objectives:
+- Учень може вільно інтеграції прислів'я та приказки у власну аргументацію
+- Учень вміє створювати зв'язні тексти, використовуючи ідіоми та складні сполучники
+- Учень демонструє майстерність у виборі синонімів залежно від контексту
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

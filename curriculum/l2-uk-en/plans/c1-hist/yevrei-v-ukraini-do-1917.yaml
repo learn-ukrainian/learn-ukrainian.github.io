@@ -1,0 +1,91 @@
+module: yevrei-v-ukraini-do-1917
+level: c1-hist
+sequence: 118
+version: '1.0'
+title: Євреї в Україні до 1917
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Спільна земля
+  words: 451
+  subsections:
+  - Євреї в Україні — 1000 років
+  - Найбільша єврейська громада світу
+  - Співіснування і конфлікт
+  - Структура модуля
+- section: Середньовіччя і Козацька доба
+  words: 677
+  subsections:
+  - Євреї в Речі Посполитій
+  - Орендарі і посередники
+  - Хмельниччина 1648
+  - Гайдамаччина
+- section: Штетл — життя
+  words: 790
+  subsections:
+  - «Смуга осілості»
+  - Культура ідиш
+  - Професії — обмеження
+  - Взаємодія з українцями
+- section: Погроми XIX-початок XX ст.
+  words: 677
+  subsections:
+  - 1881-1884
+  - 1903-1906
+  - Роль держави
+  - Роль місцевого населення
+- section: Громадянська війна 1917-1921
+  words: 564
+  subsections:
+  - Масштаб погромів
+  - Хто чинив — всі сторони
+  - Петлюра — суперечлива фігура
+  - Наслідки
+- section: Підсумок
+  words: 341
+  subsections:
+  - Складна історія
+  - Не тільки погроми
+  - Перехід до Голокосту
+word_target: 3500
+vocabulary:
+- єврей
+- штетл
+- погром
+- «смуга осілості»
+- ідиш
+- орендар
+- Хмельниччина
+- гайдамаки
+- громадянська війна
+- співіснування
+- хасид
+- кагал
+- Гаскала
+- сіоністський рух
+- «Чорна сотня»
+activities:
+- type: historical-analysis
+  focus: 1000 years of Jewish presence in Ukraine
+- type: context-study
+  focus: Why Jews became middlemen — structural analysis
+- type: violence-analysis
+  focus: Who was responsible for pogroms?
+- type: cultural-study
+  focus: Shtetl life and Ukrainian-Jewish interaction
+- type: essay-response
+  focus: Чи український антисемітизм — 'особливий'?
+sources:
+- name: Історія євреїв в Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Історія_євреїв_в_Україні
+  type: reference
+  notes: Jewish history overview
+- name: Погроми в Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Погроми_в_Україні
+  type: reference
+  notes: Pogroms
+- name: Штетл (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Штетл
+  type: reference
+  notes: Shtetl life

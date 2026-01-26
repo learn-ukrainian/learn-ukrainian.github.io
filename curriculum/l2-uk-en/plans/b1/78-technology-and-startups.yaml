@@ -1,0 +1,77 @@
+module: technology-and-startups
+level: b1
+sequence: 78
+version: '2.0'
+title: Технології та стартапи
+subtitle: Ukraine's Tech Industry and Startup Ecosystem
+focus: culture
+pedagogy: CBI
+objectives:
+- Learner can discuss Ukraine's IT sector in Ukrainian
+- Learner can understand authentic texts about Ukrainian tech companies
+- Learner can use technology-related vocabulary in context
+- Learner can compare Ukrainian tech industry with global trends
+content_outline:
+- section: 'Introduction: Tech Ukraine'
+  words: 150
+  points:
+  - IT industry overview
+  - Global reputation
+  - Key statistics
+- section: Major Tech Companies
+  words: 250
+  points:
+  - Ukrainian tech giants
+  - Global success stories
+  - Outsourcing industry
+- section: Startup Ecosystem
+  words: 250
+  points:
+  - Startup culture
+  - Investment landscape
+  - Success stories
+- section: Tech Education
+  words: 250
+  points:
+  - IT education
+  - Coding bootcamps
+  - University programs
+- section: Tech During Wartime
+  words: 200
+  points:
+  - Resilience and adaptation
+  - Remote work culture
+  - Tech for defense
+- section: 'Practice: Tech Discussion'
+  words: 100
+  points:
+  - Discuss tech trends
+  - Compare industries
+word_target: 1200
+vocabulary:
+  required:
+  - технологія (technology)
+  - стартап (startup)
+  - програміст (programmer)
+  - розробник (developer)
+  - інновація (innovation)
+  - інвестиція (investment)
+  - IT-індустрія (IT industry)
+  - аутсорсинг (outsourcing)
+  recommended:
+  - штучний інтелект (artificial intelligence)
+  - програмування (programming)
+  - венчурний капітал (venture capital)
+  - кіберзахист (cybersecurity)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - reading
+  - discussion
+  - matching
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-79 (Sports in Ukraine)

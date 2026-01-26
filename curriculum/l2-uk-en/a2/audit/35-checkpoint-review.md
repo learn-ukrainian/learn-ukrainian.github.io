@@ -1,8 +1,8 @@
 # Audit Report: M35 — 35-checkpoint.md
 **Level:** A2 | **Module:** M35 | **Phase:** A2.2 | **Pedagogy:** TTT | **Target:** 800
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 23:52:41
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-26 09:20:44
 
 ## Configuration
 **Type:** A2-checkpoint
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1181/800 (raw: 1277)
+- **Words:** ✅ 1576/800 (raw: 1923)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 10
 - **Unique_types:** ✅ 9/4 types
@@ -49,7 +49,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 61.2% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 52.5% (checkpoint - no gate)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
@@ -57,9 +57,12 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Overview / Огляд** | ⚪️ | 264 | Skipped |
-| **Presentation / Презентація** | ✅ | 319 | Included in Core |
-| **Practice / Практика** | ⚪️ | 209 | Skipped |
+| **Overview / Огляд** | ⚪️ | 302 | Skipped |
+| **Skill 1: The Conjunction Masterclass (Логічні містки)** | ⚪️ | 168 | Skipped |
+| **Skill 2: The Logic of Intent (Агентивність)** | ⚪️ | 160 | Skipped |
+| **Skill 3: The Relative Chameleon (Який)** | ⚪️ | 173 | Skipped |
+| **Skill 4: Time Coordination (Часова координація)** | ⚪️ | 161 | Skipped |
+| **Skill 5: Health and Body (Здоров'я)** | ⚪️ | 223 | Skipped |
 | **Integration Challenge / Інтеграційне завдання** | ⚪️ | 102 | Skipped |
 | **Dialogues / Діалоги** | ✅ | 137 | Included in Core |
 | **Summary / Підсумок** | ✅ | 95 | Included in Core |

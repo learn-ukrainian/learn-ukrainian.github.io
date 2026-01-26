@@ -1,0 +1,97 @@
+module: akt-nezalezhnosti-1991
+level: c1-hist
+sequence: 43
+version: '1.0'
+title: 'Акт проголошення незалежності: Текст і контекст'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Найважливіший документ
+  words: 400
+  subsections:
+  - 24 серпня 1991
+  - Контекст — путч у Москві
+  - Значення документа
+  - Чому такий короткий текст
+- section: Контекст серпня 1991
+  words: 600
+  subsections:
+  - Путч 19-21 серпня
+  - Верховна Рада УРСР
+  - Хто голосував — комуністи!
+  - Чому раптом підтримали
+- section: Текст Акту — детальний аналіз
+  words: 700
+  subsections:
+  - Повний текст (з коментарями)
+  - Тисячолітня традиція державотворення
+  - Посилання на Декларацію суверенітету
+  - Юридична формула незалежності
+- section: Хто голосував і чому
+  words: 500
+  subsections:
+  - Голосування — 321 за
+  - Комуністи vs. націоналісти
+  - Мотивації різних груп
+  - Кравчук — перевертень?
+- section: Референдум 1 грудня
+  words: 600
+  subsections:
+  - Чому потрібен був референдум
+  - 90.32% — що означає
+  - Регіональний розподіл
+  - Крим і Донбас теж голосували «так»
+- section: Міжнародне визнання
+  words: 400
+  subsections:
+  - Перші країни
+  - США і Росія — коли визнали
+  - Розпад СРСР — наслідок
+- section: Підсумок
+  words: 300
+  subsections:
+  - Акт як фундамент
+  - Від документа до реальності
+  - Зв'язок із 2022
+word_target: 3500
+vocabulary:
+- акт
+- незалежність
+- проголошення
+- путч
+- референдум
+- суверенітет
+- Верховна Рада
+- визнання
+- державотворення
+- голосування
+- правонаступництво
+- легітимність
+- ратифікація
+- денонсація
+- розпад
+activities:
+- type: reading
+  focus: Full text with commentary
+- type: voting-analysis
+  focus: Who voted yes and why? Analyze motivations
+- type: referendum-mapping
+  focus: Map regional referendum results — what patterns?
+- type: comparative-study
+  focus: Compare with Baltic independence declarations
+- type: essay-response
+  focus: Чому 90% українців проголосували за незалежність?
+sources:
+- name: Акт проголошення незалежності України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Акт_проголошення_незалежності_України
+  type: reference
+  notes: Overview
+- name: Текст Акту
+  url: https://zakon.rada.gov.ua/laws/show/1427-12
+  type: primary
+  notes: Official text
+- name: Референдум 1991
+  url: https://uk.wikipedia.org/wiki/Всеукраїнський_референдум_1991
+  type: reference
+  notes: Confirmation referendum

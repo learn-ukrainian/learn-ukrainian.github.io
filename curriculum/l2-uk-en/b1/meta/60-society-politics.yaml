@@ -1,26 +1,94 @@
 module: b1-60
-title: Суспільство та політика
-subtitle: Society & Politics
-version: '1.0'
-phase: B1.5 Vocabulary Expansion I
+id: b1-60
+slug: society-politics
+title: "Суспільство та політика"
+subtitle: "Society & Politics"
+version: '2.0'
+phase: "B1.5 [Vocabulary Expansion I]"
 focus: vocabulary
 pedagogy: PPP
+register: розмовний
 duration: 90
 transliteration: none
-grammar:
-- noun collocations with civic vocabulary
-- political discourse patterns
-tags:
-- vocabulary
-- society
-- politics
 objectives:
-- Learner can use 30 civic and political vocabulary words in context
-- Learner can discuss democratic processes and institutions
-- Learner can form natural collocations with political vocabulary
-vocabulary_count: 35
-vocab_count: 14
-slug: 60-society-politics
+  - "Learner can use 30 civic and political vocabulary words in context"
+  - "Learner can discuss democratic processes and institutions"
+  - "Learner can form natural collocations with political vocabulary"
+  - "Learner can understand Ukrainian political discourse"
+grammar:
+  - "Noun collocations with civic vocabulary"
+  - "Political discourse patterns"
+  - "Formal register expressions"
+word_target: 1200
+content_outline:
+  - section: "Introduction: Civic Vocabulary"
+    words: 150
+    points:
+      - "Why political vocabulary matters"
+      - "Ukrainian democratic context"
+      - "Key concepts overview"
+  - section: "Government and State"
+    words: 250
+    points:
+      - "уряд, держава, влада"
+      - "парламент, президент, міністр"
+      - "State institution vocabulary"
+  - section: "Democratic Processes"
+    words: 250
+    points:
+      - "вибори, голосування, референдум"
+      - "кандидат, партія, коаліція"
+      - "Election vocabulary"
+  - section: "Rights and Society"
+    words: 250
+    points:
+      - "права, свободи, громадянин"
+      - "закон, конституція"
+      - "Civic rights vocabulary"
+  - section: "Political Actions"
+    words: 200
+    points:
+      - "обирати, голосувати, протестувати"
+      - "ухвалювати, підтримувати"
+      - "Political verbs"
+  - section: "Practice: Political Discussion"
+    words: 100
+    points:
+      - "Discuss civic topics"
+      - "Use formal vocabulary"
+vocabulary_hints:
+  required:
+    - уряд (government)
+    - держава (state)
+    - влада (power/authority)
+    - вибори (elections)
+    - голосування (voting)
+    - закон (law)
+    - громадянин (citizen)
+    - права (rights)
+  recommended:
+    - парламент (parliament)
+    - конституція (constitution)
+    - демократія (democracy)
+    - свобода (freedom)
+activity_hints:
+  - type: collocation
+    focus: "Political noun phrases"
+    items: 25
+  - type: fill-in
+    focus: "Complete civic sentences"
+    items: 20
+  - type: matching
+    focus: "Match institutions and functions"
+    items: 15
+  - type: discussion
+    focus: "Discuss civic topics"
+    items: 10
+prerequisites:
+  - b1-59 (Media News)
+connects_to:
+  - b1-61 (Professional Communication)
 naturalness:
   score: 9
   status: PASS
+  justification: "Essential for civic engagement"

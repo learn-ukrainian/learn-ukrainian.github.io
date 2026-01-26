@@ -1,0 +1,101 @@
+module: pravoslavna-identychnist
+level: c1-hist
+sequence: 60
+version: '1.0'
+title: Православна ідентичність XVII-XVIII ст.
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Відповідь на унію
+  words: 400
+  subsections:
+  - Православ'я після Берестя
+  - Криза як стимул
+  - Відродження XVII ст.
+  - Структура модуля
+- section: Петро Могила — реформатор
+  words: 700
+  subsections:
+  - Біографія — молдавський князь
+  - Митрополит Київський
+  - Реформа церкви
+  - Могилянська академія
+  - «Православна відповідь» католицизму
+- section: Києво-Могилянська академія
+  words: 600
+  subsections:
+  - Заснування (1632)
+  - Програма — латина, філософія
+  - Запозичення від єзуїтів
+  - Випускники — еліта
+  - Вплив на всю православну Східну Європу
+- section: Українське православне бароко
+  words: 500
+  subsections:
+  - Архітектура — новий стиль
+  - Література — полемічна і проповідницька
+  - Мистецтво — ікони і гравюри
+  - Синтез західного і східного
+- section: Проблема Москви
+  words: 600
+  subsections:
+  - 1686 — перехід митрополії
+  - Втрата автономії
+  - Московська vs. Київська традиція
+  - Як Київ «цивілізував» Москву
+  - Але втратив незалежність
+- section: Православ'я і козацтво
+  words: 400
+  subsections:
+  - Козаки — захисники віри
+  - Хмельницький — релігійний вимір
+  - Гетьманщина і церква
+  - Складні відносини
+- section: Підсумок
+  words: 300
+  subsections:
+  - Православне відродження
+  - Але під тиском
+  - Підготовка до УГКЦ
+word_target: 3500
+vocabulary:
+- православ'я
+- митрополит
+- академія
+- бароко
+- реформа
+- полеміка
+- автономія
+- традиція
+- єзуїти
+- синтез
+- катехизис
+- проповідь
+- схоластика
+- латина
+- колегіум
+activities:
+- type: reading
+  focus: Petro Mohyla's reforms — what changed?
+- type: critical-analysis
+  focus: Kyiv-Mohyla Academy curriculum and influence
+- type: cultural-analysis
+  focus: Ukrainian Baroque — Western and Eastern elements
+- type: geopolitical-analysis
+  focus: 1686 transfer — why and what consequences?
+- type: essay-response
+  focus: Як Київська церква XVII ст. відповіла на виклик унії?
+sources:
+- name: Петро Могила (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Петро_Могила
+  type: reference
+  notes: Key reformer
+- name: Києво-Могилянська академія (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Києво-Могилянська_академія
+  type: reference
+  notes: Orthodox education center
+- name: Українське бароко
+  url: https://uk.wikipedia.org/wiki/Українське_бароко
+  type: reference
+  notes: Cultural context

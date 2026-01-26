@@ -1,0 +1,122 @@
+module: 25-checkpoint-motion-verbs
+level: b1
+sequence: 25
+version: '2.0'
+title: 'Контрольна точка: Дієслова руху'
+subtitle: 'Checkpoint: Motion Verbs'
+focus: checkpoint
+pedagogy: Checkpoint
+objectives:
+- Learner can demonstrate mastery of motion verb pairs
+- Learner can use all directional prefixes correctly
+- Learner can apply figurative motion expressions
+- Learner can integrate motion verbs in complex narratives
+sources:
+- name: Ukrainian State Standard 2024 - Assessment
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official assessment criteria for B1 motion verbs
+- name: CEFR B1 Descriptors
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: Can-do statements for B1 movement description
+content_outline:
+- section: Огляд
+  words: 100
+  points:
+  - Content for Огляд
+  - Examples and explanation
+  - Practice or application
+- section: 'Skill 1: Пари дієслів руху (M16)'
+  words: 250
+  points:
+  - 'Content for Skill 1: Пари дієслів руху (M16)'
+  - Examples and explanation
+  - Practice or application
+- section: 'Skill 2: Прихід і вихід (M17)'
+  words: 250
+  points:
+  - 'Content for Skill 2: Прихід і вихід (M17)'
+  - Examples and explanation
+  - Practice or application
+- section: 'Skill 3: Перехід і обхід (M18)'
+  words: 150
+  points:
+  - 'Content for Skill 3: Перехід і обхід (M18)'
+  - Examples and explanation
+  - Practice or application
+- section: 'Skill 4: Початок і повернення (M19)'
+  words: 200
+  points:
+  - 'Content for Skill 4: Початок і повернення (M19)'
+  - Examples and explanation
+  - Practice or application
+- section: 'Skill 5: Наближення і віддалення (M20)'
+  words: 100
+  points:
+  - 'Content for Skill 5: Наближення і віддалення (M20)'
+  - Examples and explanation
+  - Practice or application
+- section: 'Skill 6: Переносні значення (M21)'
+  words: 250
+  points:
+  - 'Content for Skill 6: Переносні значення (M21)'
+  - Examples and explanation
+  - Practice or application
+- section: 'Skill 7: Інтеграція префіксів (M22)'
+  words: 150
+  points:
+  - 'Content for Skill 7: Інтеграція префіксів (M22)'
+  - Examples and explanation
+  - Practice or application
+- section: 'Skill 8: Дієслова руху з об''єктами (M23)'
+  words: 250
+  points:
+  - 'Content for Skill 8: Дієслова руху з об''єктами (M23)'
+  - Examples and explanation
+  - Practice or application
+- section: 'Skill 9: Інтеграція у наративі (M24)'
+  words: 200
+  points:
+  - 'Content for Skill 9: Інтеграція у наративі (M24)'
+  - Examples and explanation
+  - Practice or application
+- section: Інтеграційне завдання
+  words: 400
+  points:
+  - Content for Інтеграційне завдання
+  - Examples and explanation
+  - Practice or application
+word_target: 1200
+vocabulary:
+  required:
+  - односпрямований (unidirectional)
+  - різноспрямований (multidirectional)
+  - префікс (prefix)
+  - напрямок (direction)
+  - буквальний (literal)
+  - переносний (figurative)
+  - подорож (journey)
+  - маршрут (route)
+  - траєкторія (trajectory)
+  - контрольна точка (checkpoint)
+  recommended:
+  - діагностичний (diagnostic)
+  - оцінювання (assessment)
+  - критерій (criterion)
+  - ремедіація (remediation)
+  - інтеграція (integration)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - quiz
+  - match-up
+  - error-correction
+  - cloze
+  - group-sort
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-26 (Relative clauses - який review)

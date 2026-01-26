@@ -1,0 +1,96 @@
+module: 27-global-context
+level: c1
+sequence: 27
+version: '2.0'
+title: 'Глобальний контекст: Україна, ЄС та НАТО'
+focus: communication
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Європейська правда
+  url: https://www.eurointegration.com.ua/
+  type: reference
+  notes: EU integration news and analysis
+- name: МЗС України
+  url: https://mfa.gov.ua/
+  type: primary
+  notes: Official foreign policy information
+content_outline:
+- section: Вступ — Україна у світовому контексті
+  words: 400
+  points:
+  - Геополітичне положення
+  - Зовнішня політика
+  - Міжнародні відносини
+- section: Європейський Союз
+  words: 800
+  points:
+  - Структура ЄС
+  - Кандидатство України
+  - Угода про асоціацію
+- section: НАТО
+  words: 700
+  points:
+  - Структура НАТО
+  - Шлях України до членства
+  - Співпраця з альянсом
+- section: Інші міжнародні організації
+  words: 600
+  points:
+  - ООН
+  - МВФ та Світовий банк
+  - Рада Європи
+- section: Дипломатичний регістр
+  words: 600
+  points:
+  - Пасивний стан в документах
+  - Офіційно-ділова лексика
+  - Кліше дипломатичного мовлення
+- section: Виклики та перспективи
+  words: 600
+  points:
+  - Умови членства
+  - Реформи для інтеграції
+  - Геополітичні виклики
+- section: Практичне завдання
+  words: 300
+  points:
+  - Аналіз офіційних документів
+  - Дискусія про євроінтеграцію
+  - Написання аналітичної записки
+word_target: 4000
+vocabulary:
+  required:
+  - Європейський Союз (European Union)
+  - НАТО (NATO)
+  - інтеграція (integration)
+  - кандидат (candidate)
+  - членство (membership)
+  - переговори (negotiations)
+  - угода (agreement)
+  - реформа (reform)
+  - дипломатія (diplomacy)
+  - зовнішня політика (foreign policy)
+  recommended:
+  - євроатлантичний (Euro-Atlantic)
+  - імплементація (implementation)
+  - гармонізація (harmonization)
+  - ратифікація (ratification)
+  - безвіз (visa-free regime)
+  forbidden: []
+activities:
+  types_required:
+  - group-sort
+  - quiz
+  - essay-response
+  - cloze
+  - fill-in
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c1-28 (Dialects)
+- c1-33 (Case Studies)
+- c1-35 (C1.2 Checkpoint)

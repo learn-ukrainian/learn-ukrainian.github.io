@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M45 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:22:41
+**Generated:** 2026-01-25 22:22:52
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 5832/4000 (raw: 5993)
+- **Words:** ✅ 5422/4000 (raw: 5574)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -58,15 +58,15 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 12 | 3 | 100% | 24% | 23.8% |
+| primary_sources | 10 | 3 | 100% | 24% | 23.8% |
 | engagement | 7 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 6 | 4 | 100% | 10% | 9.5% |
-| visual | 8 | 4 | 100% | 10% | 9.5% |
+| visual | 7 | 4 | 100% | 10% | 9.5% |
 | variety | 0.96 | - | 96% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 19 | 3 | 100% | 5% | 4.8% |
+| questions | 13 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
@@ -82,6 +82,5 @@
 | **Хотинська епопея (1621): Битва за майбутнє Європи** | ⚪️ | 722 | Skipped |
 | **Первинні джерела: Свідчення очевидців та славослів'я** | ✅ | 437 | Included in Core |
 | **Деколонізаційний погляд: Повернення справжнього гетьмана** | ✅ | 500 | Included in Core |
-| **Есе: Завдання для творчого та аналітичного опрацювання** | ⚪️ | 410 | Skipped |
 | **Підсумок** | ✅ | 197 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 200 | Skipped |

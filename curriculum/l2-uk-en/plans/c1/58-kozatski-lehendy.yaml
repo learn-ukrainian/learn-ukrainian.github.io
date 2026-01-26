@@ -1,0 +1,22 @@
+module: 58-kozatski-lehendy
+level: c1
+sequence: 58
+version: '2.0'
+title: Козацькі легенди
+subtitle: Cossack Legends and Myths
+focus: vocabulary
+pedagogy: Immersion & Analysis
+objectives:
+- Learner can analyze Cossack mythological archetypes (e.g., kharakternyky)
+- Learner understands the role of Cossack myths in national identity construction
+- Learner can use epic and heroic vocabulary in analytical contexts
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

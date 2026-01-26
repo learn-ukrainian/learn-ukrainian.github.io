@@ -1,0 +1,96 @@
+module: professional-correspondence
+level: c2
+sequence: 56
+version: '2.0'
+title: Професійна кореспонденція
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: ДСТУ 4163:2020 — Вимоги до оформлювання документів
+  url: https://dnaop.com/
+  type: reference
+  notes: Ukrainian state standard for document formatting including letters
+- name: Кабінет Міністрів України — зразки листів
+  url: https://www.kmu.gov.ua/
+  type: reference
+  notes: Examples of official government correspondence
+- name: Ділова кореспонденція — навчальний посібник
+  url: https://nbuv.gov.ua/
+  type: reference
+  notes: Academic textbook on Ukrainian business correspondence
+content_outline:
+- section: Вступ — Культура ділової кореспонденції
+  words: 500
+  points:
+  - Роль листування в професійному житті
+  - Еволюція ділової кореспонденції (паперові vs. електронні)
+  - Універсальні принципи ефективного листування
+- section: Офіційні листи
+  words: 800
+  points:
+  - Типи офіційних листів (запит, пропозиція, скарга, подяка)
+  - Структура офіційного листа
+  - Реквізити та оформлення
+  - Формули ввічливості (звертання, завершення)
+- section: Ділові електронні листи
+  words: 700
+  points:
+  - Специфіка email-комунікації
+  - Структура ділового email
+  - Тема листа та її значення
+  - Вкладення та посилання
+- section: Запити та відповіді
+  words: 600
+  points:
+  - Формулювання запитів
+  - Структура відповіді на запит
+  - Негативні відповіді та ввічлива відмова
+  - Follow-up листи
+- section: Скарги та претензії
+  words: 600
+  points:
+  - Структура скарги
+  - Аргументація та докази
+  - Вимоги та очікування
+  - Реагування на скарги
+- section: Практичні вправи
+  words: 500
+  points:
+  - Написання офіційного запиту
+  - Складання ділового email
+  - Формулювання відповіді на скаргу
+word_target: 4000
+vocabulary:
+  required:
+  - кореспонденція (correspondence)
+  - офіційний лист (official letter)
+  - запит (request/inquiry)
+  - відповідь (response)
+  - скарга (complaint)
+  - претензія (claim)
+  - звертання (salutation)
+  - реквізит (requisite)
+  - вкладення (attachment)
+  - підпис (signature)
+  recommended:
+  - follow-up (follow-up)
+  - шаблон (template)
+  - адресат (addressee)
+  - відправник (sender)
+  - вихідний номер (outgoing number)
+  forbidden: []
+activities:
+  types_required:
+  - essay-response
+  - quiz
+  - fill-in
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-57 (Professional Discussions)
+- c2-58 (Cross-Domain Communication)
+- c2-71 (Professional Portfolio I)

@@ -1,0 +1,50 @@
+module: pylyp-orlyk-konstytutsiia
+level: b2-hist
+sequence: 0
+version: '1.0'
+title: Пилип Орлик і перша Конституція
+focus: history
+pedagogy: CBI
+objectives: []
+content_outline:
+- section: 'Вступ: Гетьман у вигнанні'
+  words: 450
+  subsections:
+  - Orlyk's background and education
+  - Election as Hetman in Bendery
+  - The tragic context of exile
+- section: Бендерська Конституція 1710 року
+  words: 800
+  subsections:
+  - Structure of the document (Pacts and Constitutions)
+  - Separation of powers (Hetman, Council, Court)
+  - Protection of social groups
+- section: 'Демократичні ідеї: Україна vs Європа'
+  words: 600
+  subsections:
+  - Comparison with European legal thought (Locke, Montesquieu)
+  - The uniqueness of the contract between the Hetman and the Army
+  - Anti-tyranny safeguards
+- section: Дипломатична боротьба Орлика
+  words: 650
+  subsections:
+  - Anti-Moscow coalition (Sweden, Turkey, Crimea)
+  - Campaign of 1711 onto the Right Bank
+  - Years of wandering in Europe (Thessaloniki, Paris, London)
+- section: 'Читання: Текст Конституції'
+  words: 500
+  subsections:
+  - Analysis of specific articles (religion, borders, corruption)
+  - Language and style of the document (Latin/Old Ukrainian)
+- section: 'Первинні джерела: Листи та діаріуш'
+  words: 500
+  subsections:
+  - Excerpts from Orlyk's Diary ('Diariusz')
+  - Letters to European monarchs
+- section: 'Деколонізаційний погляд: Правова культура'
+  words: 500
+  subsections:
+  - Ukrainian constitutionalism vs Russian autocracy
+  - Myth of 'anarchy' debunked
+  - Orlyk as a symbol of European Ukraine
+word_target: 4000

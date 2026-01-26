@@ -1,0 +1,117 @@
+module: semen-hulak-artemovskyy
+level: c1-bio
+sequence: 19
+version: '2.0'
+title: 'Семен Гулак-Артемовський: Оперний співак'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Семен_Гулак-Артемовський
+    title: Семен Гулак-Артемовський (Wikipedia UA)
+    notes: Biography, opera career, composition
+  - url: https://uk.wikipedia.org/wiki/Запорожець_за_Дунаєм
+    title: Запорожець за Дунаєм (Wikipedia UA)
+    notes: First Ukrainian opera details
+  secondary:
+  - url: https://uk.wikipedia.org/wiki/Михайло_Глінка
+    title: Михайло Глінка
+    notes: Mentorship context
+content_outline:
+- section: Вступ — Творець першої української опери
+  words: 400
+  subsections:
+  - Значення "Запорожця за Дунаєм"
+  - Гулак-Артемовський як співак і композитор
+  - Його місце в історії українського театру
+- section: Молодість та музична освіта
+  words: 600
+  subsections:
+  - Походження з Городища
+  - Ранні музичні здібності
+  - Навчання у Києві
+  - Дружба з Глінкою
+- section: Оперна кар'єра в Петербурзі
+  words: 700
+  subsections:
+  - Дебют на оперній сцені
+  - Головні партії
+  - Визнання як баритона
+  - Гастролі Європою
+- section: Створення "Запорожця за Дунаєм"
+  words: 900
+  subsections:
+  - Ідея національної опери
+  - Сюжет та персонажі
+  - Музична мова
+  - Прем'єра 1863 року
+  - Успіх та значення
+- section: Останні роки
+  words: 600
+  subsections:
+  - Пізня творчість
+  - Викладацька діяльність
+  - Смерть у Москві
+  - Поховання в Україні
+- section: Спадщина
+  words: 500
+  subsections:
+  - '"Запорожець" як національний символ'
+  - Вплив на українську оперу
+  - Постановки твору
+  - Сучасне значення
+- section: Підсумок — Голос нації
+  words: 300
+  subsections:
+  - Гулак-Артемовський як піонер
+  - Українська опера після нього
+  - Його місце в культурній пам'яті
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - опера
+  - баритон
+  - лібрето
+  - прем'єра
+  - композитор
+  - постановка
+  - арія
+  - театр
+  - сцена
+  - партія
+  recommended:
+  - антракт
+  - увертюра
+  - хор
+  - диригент
+  - декорації
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  - critical-analysis
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-17 (Maksym Berezovskyy - earlier opera)
+  related:
+  - c1-bio-23 (Mykola Lysenko - later national music)
+  - c1-bio-26 (Mariya Zankovetska - theater)
+  - c1-bio-41 (Solomiya Krushelnytska - opera star)
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

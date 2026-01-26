@@ -1,0 +1,22 @@
+module: 57-narodna-medytsyna
+level: c1
+sequence: 57
+version: '2.0'
+title: Народна медицина
+subtitle: Ukrainian Traditional Healing
+focus: vocabulary
+pedagogy: Immersion & Analysis
+objectives:
+- Learner understands the social role of healers (знахарі) in traditional Ukrainian society
+- Learner can identify common medicinal plants and their symbolic meanings
+- Learner can analyze the structure of healing incantations (замовляння)
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

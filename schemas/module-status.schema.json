@@ -1,0 +1,170 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/module-status.schema.json",
+  "title": "Module Status Cache",
+  "description": "Schema for cached module status ({level}/status/{slug}.json)",
+  "type": "object",
+  "required": ["module", "level", "last_audit", "source_mtimes", "gates", "overall"],
+  "properties": {
+    "module": {
+      "type": "string",
+      "description": "Module slug"
+    },
+    "level": {
+      "type": "string",
+      "description": "Level identifier"
+    },
+    "plan_version": {
+      "type": "string",
+      "description": "Version of the plan used for this audit"
+    },
+    "last_audit": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of last audit"
+    },
+    "audit_duration_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "How long the audit took in milliseconds"
+    },
+    "source_mtimes": {
+      "type": "object",
+      "properties": {
+        "plan": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "md": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "meta": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "activities": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "vocabulary": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "description": "Modification times of source files (for cache invalidation)"
+    },
+    "gates": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/$defs/gateResult"
+        },
+        "lesson": {
+          "allOf": [
+            { "$ref": "#/$defs/gateResult" },
+            {
+              "type": "object",
+              "properties": {
+                "word_count": { "type": "integer" },
+                "word_target": { "type": "integer" },
+                "word_percentage": { "type": "number" }
+              }
+            }
+          ]
+        },
+        "activities": {
+          "$ref": "#/$defs/gateResult"
+        },
+        "vocabulary": {
+          "allOf": [
+            { "$ref": "#/$defs/gateResult" },
+            {
+              "type": "object",
+              "properties": {
+                "item_count": { "type": "integer" }
+              }
+            }
+          ]
+        },
+        "naturalness": {
+          "allOf": [
+            { "$ref": "#/$defs/gateResult" },
+            {
+              "type": "object",
+              "properties": {
+                "score": { "type": "integer", "minimum": 1, "maximum": 10 },
+                "threshold": { "type": "integer" }
+              }
+            }
+          ]
+        }
+      },
+      "required": ["meta", "lesson", "activities", "vocabulary", "naturalness"]
+    },
+    "overall": {
+      "type": "object",
+      "required": ["status", "pass_count", "fail_count"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["pass", "fail", "pending"]
+        },
+        "pass_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "fail_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "blocking_issues": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "gateResult": {
+      "type": "object",
+      "required": ["status", "violations"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["pass", "fail", "pending", "skipped"]
+        },
+        "violations": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of checks performed"
+        },
+        "failed_checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["check", "message"],
+            "properties": {
+              "check": { "type": "string" },
+              "message": { "type": "string" },
+              "line": { "type": "integer" },
+              "severity": {
+                "type": "string",
+                "enum": ["error", "warning", "info"]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,87 @@
+module: c1-bridge-assessment
+level: c2
+sequence: 1
+version: '2.0'
+title: Перехідний модуль C1→C2 та діагностика
+focus: checkpoint
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Ukrainian State Standard C2 (2024)
+  url: https://mon.gov.ua/
+  type: reference
+  notes: C2 proficiency descriptors and requirements
+- name: CEFR C2 Descriptors
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: General C2 level descriptors for comparison
+content_outline:
+- section: Вступ — Що означає рівень C2?
+  words: 500
+  points:
+  - Різниця між C1 і C2
+  - Ключові компетенції рівня C2
+  - Самооцінка готовності до C2
+- section: Діагностика граматичних компетенцій
+  words: 800
+  points:
+  - Усі 7 відмінків з повною парадигмою
+  - Складні синтаксичні конструкції
+  - Дієприкметники та дієприслівники
+  - Рідкісні форми та винятки
+- section: Діагностика стилістичних компетенцій
+  words: 700
+  points:
+  - Розпізнавання всіх функціональних стилів
+  - Регістрові переключення
+  - Стилістичні засоби та їх ефект
+- section: Діагностика літературних компетенцій
+  words: 600
+  points:
+  - Глибокий аналіз тексту
+  - Інтертекстуальні зв'язки
+  - Авторський стиль та голос
+- section: Виявлення прогалин
+  words: 600
+  points:
+  - Індивідуальний профіль сильних сторін
+  - Зони для вдосконалення
+  - Персональний план навчання на C2
+- section: Підсумок та шлях уперед
+  words: 300
+  points:
+  - Структура рівня C2 (100 модулів)
+  - Очікування та методи роботи
+  - Перші кроки
+word_target: 4000
+vocabulary:
+  required:
+  - діагностика (diagnostics)
+  - компетенція (competency)
+  - прогалина (gap)
+  - самооцінка (self-assessment)
+  - профіль (profile)
+  - досконалість (perfection/mastery)
+  - стилістика (stylistics)
+  - регістр (register)
+  - синтаксис (syntax)
+  - парадигма (paradigm)
+  recommended:
+  - критерій (criterion)
+  - показник (indicator)
+  - еталон (standard/benchmark)
+  - рефлексія (reflection)
+  - траєкторія (trajectory)
+  forbidden: []
+activities:
+  types_required:
+  - essay-response
+  - quiz
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-02 (Euphonic system mastery)
+- c2-19 (C2.1 Review)

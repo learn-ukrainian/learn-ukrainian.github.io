@@ -1,0 +1,22 @@
+module: 49-idioms-body-head-face
+level: b2
+sequence: 49
+version: '1.0'
+title: 'Соматичні фразеологізми: Голова та обличчя'
+subtitle: Idioms about Head and Face
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Learner can recognize and interpret 8 core Ukrainian somatic idioms about head and face
+- Learner can distinguish literal vs figurative meanings of body-related idioms
+- Learner can use head/face idioms appropriately in context with correct register
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

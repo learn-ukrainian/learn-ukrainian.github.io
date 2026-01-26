@@ -1,0 +1,98 @@
+module: mazepa-tsykl
+level: c1-hist
+sequence: 83
+version: '1.0'
+title: 'Мазепинський цикл: 20 років вірності → анафема'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Вірний слуга стає «зрадником»
+  words: 400
+  subsections:
+  - Мазепа — 20 років гетьманства
+  - Вірність царю — і результат
+  - Чому це цикл кооптації
+  - Структура модуля
+- section: Фаза 1 — Кооптація (1687-1700)
+  words: 700
+  subsections:
+  - Отримання гетьманства — як
+  - Вірність Петру I
+  - Участь у війнах царя
+  - Нагороди і титули
+- section: Фаза 2 — Залежність (1700-1708)
+  words: 600
+  subsections:
+  - Північна війна — тягар
+  - Козацькі втрати
+  - Петро ігнорує попередження
+  - Наростання конфлікту
+- section: Фаза 3 — Точка невповернення (1708)
+  words: 600
+  subsections:
+  - Батурин — загроза
+  - Рішення про союз зі Швецією
+  - Логіка Мазепи
+  - Що він сподівався отримати
+- section: Фаза 4 — Знищення (1708-...)
+  words: 500
+  subsections:
+  - Батуринська різанина
+  - Полтава
+  - Анафема — досі не знята
+  - «Мазепинець» як ярлик на 300 років
+- section: Наратив зради
+  words: 400
+  subsections:
+  - Як Росія створила міф
+  - Чому «зрадник» — хто кого зрадив
+  - Реабілітація в Україні
+  - Досі в анафемі — чому важливо
+- section: Підсумок
+  words: 300
+  subsections:
+  - Мазепа — приклад невдалого виходу
+  - Цикл продовжується
+  - Перехід до Розумовського
+word_target: 3500
+vocabulary:
+- Мазепа
+- анафема
+- вірність
+- зрада
+- гетьман
+- цикл
+- кооптація
+- наратив
+- реабілітація
+- ярлик
+- мазепинець
+- Батуринська різанина
+- Північна війна
+- імперська пропаганда
+- церковне прокляття
+activities:
+- type: critical-analysis
+  focus: Map Mazepa's path through co-optation cycle
+- type: narrative-analysis
+  focus: «Traitor» narrative — construction and persistence
+- type: decision-analysis
+  focus: 1708 decision — what were Mazepa's options?
+- type: comparative-study
+  focus: Mazepa vs. Khmelnytsky — different choices, same cycle
+- type: essay-response
+  focus: Хто кого зрадив — Мазепа Петра чи Петро Україну?
+sources:
+- name: Іван Мазепа (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Іван_Мазепа
+  type: reference
+  notes: Biography
+- name: Анафема Мазепі (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Анафема_гетьману_Івану_Мазепі
+  type: reference
+  notes: Church anathema
+- name: Полтавська битва (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Полтавська_битва
+  type: reference
+  notes: Battle of Poltava

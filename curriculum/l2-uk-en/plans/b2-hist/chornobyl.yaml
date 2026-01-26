@@ -1,0 +1,38 @@
+module: chornobyl
+level: b2-hist
+sequence: 0
+version: '1.0'
+title: 'Чорнобиль: Трагедія і Попередження'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Мирний атом?
+  words: 533
+  subsections:
+  - Pripyat as a Soviet model city of the future
+  - The narrative of the 'safe' peaceful atom
+  - Ukraine's role as the energy hub of the USSR
+- section: Аварія 1986 року
+  words: 1333
+  subsections:
+  - 'The night of April 26: The explosion and the first firefighters'
+  - The 36-hour delay in evacuation and the radioactive cloud
+  - 'The ''Liquidators'': heroism and sacrifice of mobilized reservists'
+  - The construction of the Sarcophagus
+- section: Первинні джерела
+  words: 800
+  subsections:
+  - Transcripts of emergency calls to the fire station
+  - The official announcement of evacuation (short, dry)
+  - Excerpts from diaries of Pripyat residents
+- section: Деколонізаційний погляд
+  words: 800
+  subsections:
+  - 'Moscow''s criminal silence: The May 1st Parade in Kyiv under radiation'
+  - Colonial exploitation of Ukrainian territory for dangerous industries
+  - Chornobyl as the catalyst for the Ukrainian independence movement (eco-nationalism)
+  - The Exclusion Zone as a nature reserve and tourist site
+  - The spiritual trauma of the nation
+  - Chornobyl in modern pop culture (HBO series, STALKER game)
+word_target: 4000

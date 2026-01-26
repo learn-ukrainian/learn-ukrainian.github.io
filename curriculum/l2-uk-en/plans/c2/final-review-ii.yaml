@@ -1,0 +1,96 @@
+module: final-review-ii
+level: c2
+sequence: 96
+version: '2.0'
+title: Фінальне повторення II — Лексична консолідація
+focus: integration
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Ukrainian State Standard 2024 — Лексична компетенція C2
+  url: https://mon.gov.ua/
+  type: reference
+  notes: C2 vocabulary competence requirements
+- name: Словник української мови в 11 томах (СУМ)
+  url: https://sum.in.ua/
+  type: primary
+  notes: Comprehensive Ukrainian dictionary
+- name: CEFR C2 Lexical Range
+  url: https://www.coe.int/
+  type: secondary
+  notes: C2 lexical competence descriptors
+content_outline:
+- section: Вступ — Лексична майстерність C2
+  words: 400
+  points:
+  - Обсяг активного словника C2 (~12,000 слів)
+  - Глибина vs. широта знання слів
+  - Стратегії лексичного розвитку
+- section: Стилістична диференціація лексики
+  words: 700
+  points:
+  - Нейтральна vs. стилістично маркована лексика
+  - Архаїзми, історизми, неологізми
+  - Діалектизми та регіоналізми
+  - Жаргонізми, арготизми, сленг
+- section: Синонімія та точність слововживання
+  words: 700
+  points:
+  - Синонімічні ряди та вибір
+  - Паронімія та уникнення помилок
+  - Колокації та усталені сполуки
+  - Ідіоматика на рівні носія
+- section: Фразеологія та крилаті вирази
+  words: 600
+  points:
+  - Фразеологічні одиниці (ідіоми, прислів'я)
+  - Крилаті вирази з літератури
+  - Біблійні та міфологічні референції
+  - Сучасні мемні вирази
+- section: Активізація пасивного словника
+  words: 500
+  points:
+  - Техніки переведення слів в активний запас
+  - Контекстуалізація рідковживаних слів
+  - Спейсед репетішн (інтервальне повторення)
+  - Словник як інструмент творення
+- section: Діагностика та закріплення
+  words: 700
+  points:
+  - Лексичний діагностичний тест
+  - Робота з особистим словником
+  - Стратегії довготривалого запам'ятовування
+  - План лексичного розвитку після C2
+word_target: 4000
+vocabulary:
+  required:
+  - лексика (vocabulary/lexis)
+  - синонімія (synonymy)
+  - паронімія (paronymy)
+  - колокація (collocation)
+  - ідіома (idiom)
+  - фразеологізм (phraseological unit)
+  - архаїзм (archaism)
+  - неологізм (neologism)
+  - активний словник (active vocabulary)
+  - пасивний словник (passive vocabulary)
+  recommended:
+  - конотація (connotation)
+  - денотація (denotation)
+  - семантичне поле (semantic field)
+  - словотворення (word formation)
+  - етимологія (etymology)
+  forbidden: []
+activities:
+  types_required:
+  - critical-analysis
+  - essay-response
+  - quiz
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-97 (Final Review III — Skills)
+- c2-98 (Final Exam)

@@ -1,0 +1,49 @@
+module: 22-if-i-were
+level: a2
+sequence: 22
+version: '2.0'
+title: If I Were
+subtitle: The Conditional Mood
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can form the conditional mood using the particle б/би
+- Learner can distinguish between real (якщо) and unreal (якби) conditions
+- Learner can express wishes and dreams
+- Learner can make polite requests using the conditional
+sources:
+- name: Ukrainian State Standard 2024 - Conditional
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Conditional mood requirements for A2
+- name: Functional Grammar of Ukrainian - Modality
+  url: https://uk.wikipedia.org/wiki/Умовний_спосіб
+  type: reference
+  notes: Deep dive into hypothetical vs real conditions
+content_outline:
+- section: Introduction / Вступ
+  words: 200
+  points:
+  - Concept of the 'World of Dreams'
+  - Difference between realization and imagination
+- section: Presentation / Презентація
+  words: 600
+  points:
+  - Formation: Past Tense + б/би
+  - Comparison: Якщо (Real) vs Якби (Unreal)
+  - Polite requests (Мене б хотілося)
+  - Proverbial usage of conditions
+- section: Practice / Практика
+  words: 150
+  points:
+  - Dreaming about the lottery/future
+  - Transformation drills (Real to Unreal)
+- section: Dialogues / Діалоги
+  words: 50
+  points:
+  - Planning a dream vacation or career
+word_target: 1000
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

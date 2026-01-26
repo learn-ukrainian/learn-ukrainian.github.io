@@ -1,0 +1,22 @@
+module: 38-hyperbole-litotes
+level: c1
+sequence: 38
+version: '1.0'
+title: 'Гіпербола та літота: Гра масштабів'
+subtitle: 'Hyperbole & Litotes: Playing with Scale'
+focus: style
+pedagogy: Immersion
+objectives:
+- Identify and use hyperbole for emotional impact
+- Master litotes for polite understatement and irony
+- Analyze the use of scale in literary and daily communication
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

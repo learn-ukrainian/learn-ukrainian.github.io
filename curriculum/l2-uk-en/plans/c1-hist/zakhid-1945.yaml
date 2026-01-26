@@ -1,0 +1,97 @@
+module: zakhid-1945
+level: c1-hist
+sequence: 96
+version: '1.0'
+title: '1945: Ялта і зрада'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Друга зрада
+  words: 400
+  subsections:
+  - 1945 — новий світовий порядок
+  - Україна — знову забута
+  - Примусова репатріація — злочин
+  - Структура модуля
+- section: Ялтинська конференція
+  words: 600
+  subsections:
+  - Велика трійка
+  - Поділ Європи
+  - Україна — в радянській сфері
+  - Жодних питань
+- section: Західна Україна
+  words: 600
+  subsections:
+  - Галичина, Волинь — у СРСР
+  - Закарпаття — «добровільно»
+  - Польща отримує компенсацію
+  - Примусове переселення
+- section: Примусова репатріація
+  words: 700
+  subsections:
+  - ДіПі — хто хотів повернутися
+  - Операція Keelhaul
+  - Самогубства, опір
+  - Західні союзники — співучасники
+- section: Чому погодились
+  words: 500
+  subsections:
+  - Сталін — союзник
+  - Реальполітик — цинічний
+  - Незнання чи байдужість
+  - Масштаб злочину
+- section: Наслідки для України
+  words: 400
+  subsections:
+  - Західна Україна — радянізація
+  - ДіПі — врятувалися хто зміг
+  - Травма і пам'ять
+- section: Підсумок
+  words: 300
+  subsections:
+  - Ялта — зрада заради миру
+  - Паттерн продовжується
+  - Перехід до «Курча по-київськи»
+word_target: 3500
+vocabulary:
+- Ялта
+- конференція
+- примусова репатріація
+- ДіПі
+- зрада
+- сфера впливу
+- «Велика трійка»
+- реальполітик
+- співучасник
+- радянізація
+- операція Keelhaul
+- лінія Керзона
+- примусове переселення
+- табір ДіПі
+- цинізм
+activities:
+- type: conference-analysis
+  focus: What was decided at Yalta about Ukraine?
+- type: moral-analysis
+  focus: Forced repatriation — Western responsibility
+- type: testimony-study
+  focus: DP experiences with repatriation threat
+- type: comparative-study
+  focus: 1918 vs. 1945 — patterns of Western betrayal
+- type: essay-response
+  focus: Чи мав Захід моральне право видавати біженців СРСР?
+sources:
+- name: Ялтинська конференція (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Ялтинська_конференція
+  type: reference
+  notes: Yalta conference
+- name: Примусова репатріація (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Примусова_репатріація_радянських_громадян
+  type: reference
+  notes: Forced repatriation
+- name: Операція «Кіл Хаул» (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Операція_«Кілгаул»
+  type: reference
+  notes: Operation Keelhaul

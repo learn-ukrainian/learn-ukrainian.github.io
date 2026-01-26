@@ -1,0 +1,77 @@
+module: integrated-grammar-lab
+level: b1
+sequence: 50
+version: '2.0'
+title: Інтегрована граматична лабораторія
+subtitle: Integrated Grammar Lab - B1.4 Synthesis
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can combine B1.4 grammar constructions in coherent texts
+- Learner can distinguish between styles and registers
+- Learner can edit texts for appropriate style
+- Learner can flexibly switch between constructions
+content_outline:
+- section: 'Introduction: Synthesis Goals'
+  words: 150
+  points:
+  - Why integration matters
+  - Beyond isolated grammar
+  - Real-world text production
+- section: Combining Participles and Passive
+  words: 250
+  points:
+  - Adverbial + passive in same sentence
+  - Stylistic effects
+  - Avoiding overuse
+- section: Diminutives in Context
+  words: 200
+  points:
+  - Integration with other forms
+  - Register awareness
+  - Emotional tone management
+- section: Numerals in Complex Sentences
+  words: 200
+  points:
+  - Fractions with passive constructions
+  - Collectives in formal vs informal
+  - Statistics and reports
+- section: Text Editing Workshop
+  words: 250
+  points:
+  - Identify style inconsistencies
+  - Revise for target audience
+  - Apply grammar strategically
+- section: 'Practice: Multi-Feature Texts'
+  words: 150
+  points:
+  - Write integrated paragraphs
+  - Edit for style
+word_target: 1200
+vocabulary:
+  required:
+  - інтеграція (integration)
+  - синтез (synthesis)
+  - стиль (style)
+  - регістр (register)
+  - редагування (editing)
+  - гнучкість (flexibility)
+  - перемикання (switching)
+  - зв'язність (coherence)
+  recommended:
+  - послідовність (consistency)
+  - доречність (appropriateness)
+  - текстотворення (text production)
+  - аудиторія (audience)
+  forbidden: []
+activities:
+  types_required:
+  - writing
+  - text-editing
+  - error-correction
+  - multiple-choice
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-51 (Checkpoint Advanced Grammar)

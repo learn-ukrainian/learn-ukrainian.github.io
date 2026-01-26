@@ -26,3 +26,25 @@ slug: 25-register-practice-cross-register-rewriting
 naturalness:
   score: 9
   status: PASS
+content_outline:
+- section: Вступ — Перенесення тексту між стилями
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Практичні завдання
+  words: 500
+  points:
+  - Academic abstract
+  - Official document
+  - Personal letter
+  - Literary narrative
+  - News report
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

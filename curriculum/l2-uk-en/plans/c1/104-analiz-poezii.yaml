@@ -1,0 +1,22 @@
+module: 104-analiz-poezii
+level: c1
+sequence: 104
+version: '2.0'
+title: Аналіз поезії
+subtitle: Analysis of Poetry
+focus: literature
+pedagogy: Literary Analysis
+objectives:
+- Learner can identify poetic meters (ямб, хорей, дактиль).
+- Learner can analyze rhyme schemes and strophic structures.
+- Learner can conduct a comprehensive philological analysis of a poem.
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

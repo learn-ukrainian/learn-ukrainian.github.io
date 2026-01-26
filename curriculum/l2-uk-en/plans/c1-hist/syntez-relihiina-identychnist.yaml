@@ -1,0 +1,98 @@
+module: syntez-relihiina-identychnist
+level: c1-hist
+sequence: 63
+version: '1.0'
+title: 'Синтез: Релігія і національна ідентичність'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Релігія і нація
+  words: 400
+  subsections:
+  - Огляд модулів 58-62
+  - Як релігія формує ідентичність
+  - Українська специфіка
+  - Мета синтезу
+- section: Релігійний ландшафт України
+  words: 600
+  subsections:
+  - ПЦУ — автокефальна
+  - УПЦ МП — московська юрисдикція
+  - УГКЦ — греко-католики
+  - Протестанти
+  - Інші — мусульмани, юдеї
+  - Карта розподілу
+- section: Церковні розколи і нація
+  words: 700
+  subsections:
+  - 1596 — перший розкол
+  - 1686 — втрата Київської митрополії
+  - 1946 — ліквідація УГКЦ
+  - 1991-2019 — боротьба за автокефалію
+  - Томос 2019 — що змінилося
+- section: 2022 — Релігія на війні
+  words: 600
+  subsections:
+  - УПЦ МП — криза лояльності
+  - ПЦУ — церква опору
+  - УГКЦ — капелани і допомога
+  - Релігійний вимір деколонізації
+  - Заборона УПЦ МП?
+- section: Секуляризація vs. відродження
+  words: 500
+  subsections:
+  - Радянська спадщина — атеїзм
+  - Релігійне відродження 1990-х
+  - Молодь і релігія
+  - Майбутнє — прогнози
+- section: Уроки для розуміння України
+  words: 400
+  subsections:
+  - Релігія — не тільки віра
+  - Церква як політичний актор
+  - Ідентичність — складна
+  - Регіональні відмінності
+- section: Підсумок
+  words: 300
+  subsections:
+  - Релігія і нація — переплетені
+  - Від минулого до сьогодення
+  - Перехід до діаспорних студій
+word_target: 3500
+vocabulary:
+- синтез
+- автокефалія
+- томос
+- ПЦУ
+- УПЦ МП
+- секуляризація
+- відродження
+- лояльність
+- юрисдикція
+- ландшафт
+- екуменізм
+- конфесія
+- капелан
+- деномінація
+- плюралізм
+activities:
+- type: essay-response
+  focus: Create religious identity evolution diagram
+- type: contemporary-analysis
+  focus: Analyze 2022 religious dimension of war
+- type: regional-mapping
+  focus: Map religious distribution in Ukraine
+- type: prediction
+  focus: Future of religion in Ukraine — scenarios
+- type: essay-response
+  focus: Як релігія впливає на українську національну ідентичність сьогодні?
+sources:
+- name: Релігія в Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Релігія_в_Україні
+  type: reference
+  notes: Overview
+- name: Православна церква України
+  url: https://uk.wikipedia.org/wiki/Православна_церква_України
+  type: reference
+  notes: 2018-19 autocephaly

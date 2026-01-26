@@ -1,0 +1,51 @@
+module: 39-adjective-suffixes-qualities
+level: a2
+sequence: 39
+version: '2.0'
+title: Adjective Suffixes — Qualities
+subtitle: Making Descriptions Richer
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can use suffixes to express affection or smallness
+- Learner can use suffixes to express largeness or intensity
+- Learner can form adjectives from nouns using common suffixes
+- Learner can describe objects with emotional nuance
+sources:
+- name: Ukrainian State Standard 2024 - Adjective Morphology
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standards for suffixal adjective formation and emotional-expressive nuances at A2
+- name: Word Formation in Ukrainian Language - Suffixes
+  url: https://uk.wikipedia.org/wiki/Словотворення_в_українській_мові
+  type: reference
+  notes: Rules for diminutive and intensive adjective suffixes
+content_outline:
+- section: Introduction / Вступ
+  words: 200
+  points:
+  - The power of the suffix: descriptiveness without 'very'
+  - Why Ukrainian adjectives are emotionally charged
+- section: Presentation / Презентація
+  words: 600
+  points:
+  - 'Diminutive Magic: -Еньк- and -Есеньк- (Sweetness and Precision)'
+  - 'The Scale of Giants: -Енн- and -Езн- (Enormous and Intense)'
+  - 'The Material Link: -Ян- and -Ов- (What it is made of)'
+  - 'Professional Identity: -Ськ- (Places and Groups)'
+  - 'General Relationships: The universal -Н- suffix'
+  - 'Suffix Grammar: Does a suffix affect the case ending?'
+- section: Practice / Практика
+  words: 150
+  points:
+  - Suffix transformation drills
+  - Emotional re-writing: Neutral to Diminutive to Intensive
+- section: Dialogues / Діалоги
+  words: 50
+  points:
+  - On the market: Choosing between 'big' and 'gigantic' watermelons
+word_target: 1000
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

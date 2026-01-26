@@ -1,0 +1,96 @@
+module: 09-thesis-development
+level: c1
+sequence: 9
+version: '2.0'
+title: Розвиток наукової тези
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Academic Argumentation in Ukrainian
+  url: https://mova.info/
+  type: reference
+  notes: Thesis formulation standards
+- name: Логіка наукового дослідження
+  url: https://mon.gov.ua/
+  type: secondary
+  notes: Research logic and hypothesis development
+content_outline:
+- section: Вступ — Що таке теза?
+  words: 400
+  points:
+  - Визначення наукової тези
+  - Різниця між фактом і тезою
+  - Роль тези в академічному тексті
+- section: Типи тез
+  words: 700
+  points:
+  - Констатувальна теза (X є Y)
+  - Аргументативна теза (X є Y, оскільки Z)
+  - Аналітична теза (X складається з A, B, C)
+- section: Критерії сильної тези
+  words: 600
+  points:
+  - Конкретність і чіткість
+  - Дискусійність (не самоочевидність)
+  - Доказовість
+- section: Тест «І що з того?»
+  words: 600
+  points:
+  - Перевірка значущості тези
+  - Уникнення банальностей
+  - Актуальність і новизна
+- section: Стратегії підтримки тези
+  words: 700
+  points:
+  - Доводити, підкріплювати, ілюструвати
+  - Демонструвати, підтверджувати
+  - Логічна послідовність доказів
+- section: Від слабкої до сильної тези
+  words: 600
+  points:
+  - Аналіз слабких тез
+  - Трансформація та покращення
+  - Практичні вправи
+- section: Практика формулювання
+  words: 400
+  points:
+  - Генерування тез на задану тему
+  - Взаємна оцінка тез
+  - Редагування власних тез
+word_target: 4000
+vocabulary:
+  required:
+  - теза (thesis)
+  - гіпотеза (hypothesis)
+  - твердження (statement)
+  - аргумент (argument)
+  - доказ (proof)
+  - обґрунтування (substantiation)
+  - дискусійний (debatable)
+  - конкретний (specific)
+  - доказовий (provable)
+  - значущий (significant)
+  recommended:
+  - постулат (postulate)
+  - припущення (assumption)
+  - верифікація (verification)
+  - фальсифікація (falsification)
+  - валідність (validity)
+  forbidden: []
+activities:
+  types_required:
+  - group-sort
+  - quiz
+  - essay-response
+  - fill-in
+  - error-correction
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c1-10 (Counterarguments)
+- c1-12 (Research Article)
+- c1-18 (Essay Writing Practice)

@@ -1,0 +1,87 @@
+module: 2004-krymska-kryza
+level: c1-hist
+sequence: 129
+version: '1.0'
+title: '2004: Кримська криза під час Помаранчевої'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Забута загроза
+  words: 451
+  subsections:
+  - Листопад 2004
+  - Сепаратистський з'їзд у Сєвєродонецьку
+  - Чому не спрацювало
+  - Структура модуля
+- section: Помаранчева революція — контекст
+  words: 677
+  subsections:
+  - Фальсифікація виборів
+  - Київський Майдан
+  - Позиція Сходу
+  - Ризик розколу
+- section: Сєвєродонецький з'їзд
+  words: 790
+  subsections:
+  - Хто скликав
+  - Що пропонували
+  - Лужков — присутність Росії
+  - «Південно-східна автономія»
+- section: Чому провалилось
+  words: 677
+  subsections:
+  - Місцеві еліти — не готові
+  - Відсутність народної підтримки
+  - Кучма — не пішов на розкол
+  - Помаранчева перемога
+- section: Уроки для 2014
+  words: 564
+  subsections:
+  - Що змінилось за 10 років
+  - Чому 2014 — інакше
+  - Підготовка до анексії
+  - Порівняння сценаріїв
+- section: Підсумок
+  words: 341
+  subsections:
+  - 2004 — репетиція
+  - Україна не розкололась
+  - Перехід до жінок у революціях
+word_target: 3500
+vocabulary:
+- Помаранчева революція
+- сепаратизм
+- Сєвєродонецький з'їзд
+- автономія
+- розкол
+- фальсифікація виборів
+- місцеві еліти
+- народна підтримка
+- сценарій
+- урок
+- Лужков
+- «федералізація»
+- «південний схід»
+- Кучма
+- Янукович
+activities:
+- type: event-analysis
+  focus: Severodonetsk congress — what happened
+- type: failure-analysis
+  focus: Why 2004 separatism failed
+- type: comparison
+  focus: 2004 vs 2014 — why different outcomes
+- type: elite-study
+  focus: Regional elites — loyalty and calculation
+- type: essay-response
+  focus: Чому Україна не розкололась у 2004?
+sources:
+- name: Помаранчева революція (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Помаранчева_революція
+  type: reference
+  notes: Orange Revolution
+- name: Сепаратизм в Криму (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Сепаратизм_в_Криму
+  type: reference
+  notes: Crimean separatism

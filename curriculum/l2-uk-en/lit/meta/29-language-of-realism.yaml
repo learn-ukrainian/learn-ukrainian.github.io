@@ -1,28 +1,125 @@
-module: lit-029
-title: 'Мова реалізму: Діалект і Лайка'
-subtitle: 'Language of Realism'
+id: lit-29
+title: 'Мова Реалізму: Стиль Нечуя-Левицького'
+subtitle: 'The Language of Realism: Nechuy-Levytsky''s Style'
+slug: language-of-realism
+module_type: literature
+word_target: 3800
+immersion: 100% Ukrainian
 version: '2.0'
-phase: 'LIT.5 Realism'
-focus: style
-pedagogy: 'Analysis'
+phase: LIT.5 Realism
+focus: literature
+pedagogy: Seminar
 duration: 120
 transliteration: none
 tags:
-  - language
-  - realism
-  - dialect
-  - style
-  - nechuy-levytsky
+  - література
+  - реалізм
+  - нечуй-левицький
+  - мова
+  - стиль
+  - діалекти
 grammar:
-  - 'Syntactic structure of curses'
-  - 'Dialectisms of Kyiv region'
-  - 'Direct speech stylization'
+  - Dialectal features
+  - Linguistic terminology
+  - Stylistic analysis
 objectives:
-  - 'Analyze the transition from Romantic to Realistic language'
-  - 'Identify dialectisms and colloquialisms in the text'
-  - 'Understand the function of curse words as a literary device'
-vocabulary_count: 10
-slug: 29-language-of-realism
+  - Проаналізувати мовні особливості реалістичної прози
+  - Порівняти мову Нечуя з попередніми авторами курсу
+  - Зрозуміти дискусію про "галицьку" vs "наддніпрянську" норму
+  - Оцінити внесок Нечуя в розвиток літературної мови
+sources:
+  - name: Кайдашева сім'я — повний текст
+    url: https://www.ukrlib.com.ua/books/printit.php?tid=907
+    type: primary
+    notes: Зразки діалектної та розмовної мови
+  - name: Микола Джеря — повний текст
+    url: https://www.ukrlib.com.ua/books/printit.php?tid=908
+    type: primary
+    notes: Порівняння стилю
+  - name: Мовознавчі погляди Нечуя
+    url: https://uk.wikipedia.org/wiki/Нечуй-Левицький_Іван_Семенович
+    type: reference
+    notes: Контекст дискусії
+content_outline:
+  - section: Вступ — Від поезії до прози
+    words: 500
+    points:
+      - Еволюція літературної мови (Котляревський → Нечуй)
+      - Специфіка реалістичної прози
+      - Мова як інструмент достовірності
+  - section: Етнографічна точність
+    words: 700
+    points:
+      - Діалектизми і регіоналізми
+      - Побутова лексика
+      - Точність описів
+  - section: Мова персонажів
+    words: 700
+    points:
+      - Індивідуалізація мовлення
+      - Соціолект села
+      - Гумор через мову
+  - section: Дискусія про норму
+    words: 600
+    points:
+      - '"Галицька" vs "наддніпрянська" мова'
+      - Позиція Нечуя
+      - Кривава пляма на сонці (полеміка)
+  - section: Порівняльний аналіз
+    words: 600
+    points:
+      - Нечуй vs Котляревський (бурлеск)
+      - Нечуй vs Квітка (сентименталізм)
+      - Нечуй vs Шевченко (поезія)
+  - section: Підсумок — Спадщина для ХХ століття
+    words: 400
+    points:
+      - Вплив на пізніших прозаїків
+      - Актуальність дискусії про мову
+      - Перехід до "Миколи Джері"
+vocabulary_hints:
+  required:
+    - діалектизм (dialectism)
+    - регіоналізм (regionalism)
+    - соціолект (sociolect)
+    - індивідуалізація (individualization)
+    - етнографія (ethnography)
+    - побутова лексика (everyday vocabulary)
+    - полеміка (polemics)
+    - норма (norm/standard)
+    - достовірність (authenticity)
+    - стиль (style)
+  recommended:
+    - архаїзм (archaism)
+    - неологізм (neologism)
+    - синтаксис (syntax)
+    - наратив (narrative)
+    - оповідач (narrator)
+activity_hints:
+  - type: reading
+    focus: Порівняння уривків різних авторів
+    source: UkrLib texts
+    items: 5+
+  - type: quiz
+    focus: Мовні особливості реалізму
+    items: 15+
+  - type: match-up
+    focus: Автор → стильова ознака
+    items: 12+
+  - type: essay-response
+    focus: Мова як засіб характеризації
+    word_target: 300
+    output: Лінгвостилістичне есе
+  - type: cloze
+    focus: Діалектизми в контексті
+    items: 12+
+prerequisites:
+  - lit-28 (Кайдашева сім'я — конфлікти)
+connects_to:
+  - lit-30 (Микола Джеря)
+  - lit-10 (Мова Квітки)
+  - lit-24 (Мовне питання)
 naturalness:
   score: 10
   status: PASS
+  justification: Graduate level academic Ukrainian

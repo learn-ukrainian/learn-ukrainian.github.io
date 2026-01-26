@@ -1,0 +1,79 @@
+module: 13-the-completed-past
+level: a2
+sequence: 13
+version: '2.0'
+title: The Completed Past
+subtitle: Using Perfective Aspect
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can form the past tense of perfective verbs
+- Learner can use perfective past to describe completed actions
+- Learner can narrate a sequence of events
+- Learner can distinguish between 'did' and 'done' contexts
+sources:
+- name: Ukrainian State Standard 2024 - Past Tense
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Perfective past tense requirements
+- name: Ukrainian Verb Conjugation
+  url: https://uk.wikipedia.org/wiki/Дієслово
+  type: reference
+  notes: Past tense formation patterns
+content_outline:
+- section: Introduction / Вступ
+  words: 200
+  points:
+  - Perfective past overview
+  - Result-focused mindset
+- section: Presentation / Презентація
+  words: 600
+  points:
+  - Formation of perfective past (-в, -ла, -ло, -ли)
+  - Usage scenarios (Single event, Result, Markers)
+  - Narrative sequencing (Building stories)
+- section: Practice / Практика
+  words: 150
+  points:
+  - Situation-based aspect choice
+  - Narrative transformations
+- section: Dialogues / Діалоги
+  words: 50
+  points:
+  - Yesterday evening dialogue
+word_target: 1000
+vocabulary:
+  required:
+  - зробив (did/made - m)
+  - написав (wrote - m)
+  - прочитав (read - m)
+  - сказав (said - m)
+  - побачив (saw - m)
+  - почув (heard - m)
+  - взяв (took - m)
+  - дав (gave - m)
+  - пішов (went - m)
+  - прийшов (came - m)
+  - приїхав (arrived - m)
+  - почав (began - m)
+  - закінчив (finished - m)
+  - зрозумів (understood - m)
+  - забув (forgot - m)
+  recommended:
+  - запам'ятав (remembered - m)
+  - знайшов (found - m)
+  - загубив (lost - m)
+  - вийшов (exited - m)
+  - увійшов (entered - m)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - fill-in
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a2-14 (Future Plans and Promises)
+- a2-15 (Aspect Morphology)
+- a2-26 (Telling Stories)

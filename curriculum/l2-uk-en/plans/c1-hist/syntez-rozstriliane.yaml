@@ -1,0 +1,97 @@
+module: syntez-rozstriliane
+level: c1-hist
+sequence: 57
+version: '1.0'
+title: 'Синтез: Культурний геноцид'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Що ми дізналися
+  words: 400
+  subsections:
+  - Огляд модулів 52-56
+  - Від контексту до механізмів
+  - Мета синтезу — інтеграція
+  - Культурний геноцид як рамка
+- section: Паттерн знищення
+  words: 600
+  subsections:
+  - Дозвіл → Контроль → Знищення
+  - Чому цей паттерн?
+  - Порівняння з Голодомором
+  - Синхронність подій
+- section: Що втрачено
+  words: 600
+  subsections:
+  - Літературна спадщина
+  - Театральна школа
+  - Наукова традиція
+  - Альтернативний шлях розвитку
+  - Що могло б бути
+- section: Культурний геноцид — поняття
+  words: 600
+  subsections:
+  - Визначення
+  - Чи застосовне до України?
+  - Конвенція ООН — що включає
+  - Дебати про термін
+  - Правові імплікації
+- section: Пам'ять і відновлення
+  words: 500
+  subsections:
+  - Як повертали забуте
+  - Діаспора — збереження
+  - Після 1991 — перевидання
+  - Сучасна рецепція
+  - Чи можна відновити втрачене?
+- section: Уроки для сьогодні
+  words: 500
+  subsections:
+  - Культура як мішень — 2022
+  - Паралелі з минулим
+  - Захист культури
+  - Документування злочинів
+- section: Підсумок
+  words: 300
+  subsections:
+  - Розстріляне відродження — парадигма
+  - Від знищення до відродження
+  - Перехід до релігійної ідентичності
+word_target: 3500
+vocabulary:
+- синтез
+- культурний геноцид
+- паттерн
+- спадщина
+- втрата
+- відновлення
+- пам'ять
+- документування
+- конвенція
+- рецепція
+- альтернативний
+- траєкторія
+- деколонізація
+- канон
+- реабілітація
+activities:
+- type: essay-response
+  focus: Integrate all Executed Renaissance modules into concept map
+- type: critical-analysis
+  focus: Apply cultural genocide framework to 1930s events
+- type: critical-analysis
+  focus: How has memory of Executed Renaissance evolved?
+- type: comparative-study
+  focus: Parallels between 1930s and 2022 cultural destruction
+- type: essay-response
+  focus: Чи можна назвати знищення Розстріляного відродження культурним геноцидом?
+sources:
+- name: Розстріляне відродження (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
+  type: reference
+  notes: Overview
+- name: Культурний геноцид
+  url: https://uk.wikipedia.org/wiki/Культурний_геноцид
+  type: reference
+  notes: Concept

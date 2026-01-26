@@ -1,0 +1,22 @@
+module: 75-podillia-ta-volyn
+level: c1
+sequence: 75
+version: '2.0'
+title: Поділля та Волинь
+subtitle: Podillia and Volyn
+focus: culture
+pedagogy: CBI
+objectives:
+- Learner understands the unique cultural identities of Podillia and Volyn
+- Learner can describe regional embroidery and architecture
+- Learner can compare wedding traditions of Central-Western Ukraine
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

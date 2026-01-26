@@ -1,0 +1,80 @@
+module: around-the-city
+level: a1
+sequence: 15
+version: '2.0'
+title: Around the City
+subtitle: Navigating Urban Spaces with Confidence
+focus: practical
+pedagogy: PPP
+objectives:
+- Navigate using directional vocabulary (прямо, наліво, направо)
+- Use locative case for city locations in context
+- Ask and answer 'Де...?' and 'Як дістатися до...?'
+- Name common urban infrastructure and transport
+content_outline:
+- section: 'Introduction: Getting Around'
+  words: 100
+  points:
+  - City navigation essentials
+  - Asking for directions
+  - Understanding responses
+- section: Directional Words
+  words: 200
+  points:
+  - прямо (straight), наліво (left), направо (right)
+  - тут (here), там (there)
+  - близько (near), далеко (far)
+- section: Location Prepositions
+  words: 200
+  points:
+  - біля (near/by), навпроти (across from)
+  - за (behind), перед (in front of)
+  - між (between)
+- section: City Places
+  words: 200
+  points:
+  - вулиця (street), площа (square)
+  - зупинка (stop), станція (station)
+  - аптека, пошта, банк, магазин
+- section: Asking Directions
+  words: 200
+  points:
+  - Де знаходиться...?
+  - Як дістатися до...?
+  - Understanding responses
+- section: 'Practice: Find the Way'
+  words: 100
+  points:
+  - Give and follow directions
+  - City map activities
+word_target: 1000
+vocabulary:
+  required:
+  - прямо (straight)
+  - наліво (left)
+  - направо (right)
+  - вулиця (street)
+  - зупинка (stop)
+  - аптека (pharmacy)
+  - пошта (post office)
+  - площа (square)
+  recommended:
+  - біля (near)
+  - навпроти (opposite)
+  - станція (station)
+  - перехрестя (intersection)
+  - світлофор (traffic light)
+  - тротуар (sidewalk)
+  forbidden: []
+activities:
+  types_required:
+  - dialogue
+  - map-activity
+  - fill-in
+  - matching
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a1-16 (The Genitive I)
+- a1-40 (Taking Transport)

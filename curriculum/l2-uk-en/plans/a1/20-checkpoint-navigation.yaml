@@ -1,0 +1,76 @@
+module: checkpoint-navigation
+level: a1
+sequence: 20
+version: '2.0'
+title: 'Checkpoint: Navigation'
+subtitle: Can You Do the A1.2 Skills?
+focus: checkpoint
+pedagogy: TTT
+objectives:
+- Demonstrate accusative case usage for direct objects
+- Use locative case correctly for location expressions
+- Apply genitive case for absence and quantities
+- 'Navigate practical scenarios: directions, shopping, cafés'
+content_outline:
+- section: 'Part 1: Case Review'
+  words: 100
+  points:
+  - Accusative transformations
+  - Locative with prepositions
+  - Genitive for absence
+- section: 'Part 2: Vocabulary Check'
+  words: 100
+  points:
+  - Places and directions
+  - Food and drink
+  - Numbers and prices
+- section: 'Part 3: Practical Tasks'
+  words: 100
+  points:
+  - Give directions
+  - Order at café
+  - Go shopping
+- section: 'Part 4: Integrated Scenarios'
+  words: 100
+  points:
+  - Navigate a city
+  - Complete transactions
+  - Handle problems
+- section: 'Part 5: Self-Assessment'
+  words: 50
+  points:
+  - Strengths and weaknesses
+  - Areas to review
+- section: 'Summary: Ready for A1.3'
+  words: 50
+  points:
+  - Skills mastered
+  - Preview of Consolidation phase
+word_target: 500
+vocabulary:
+  required:
+  - де (where)
+  - скільки (how much)
+  - немає (there is no)
+  - мій (my)
+  - наліво (left)
+  - направо (right)
+  - кава (coffee)
+  - гривня (hryvnia)
+  recommended:
+  - рахунок (bill)
+  - зупинка (stop)
+  - магазин (store)
+  - кілограм (kilogram)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - role-play
+  - practical-task
+  - self-assessment
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a1-21 (Yesterday - Past Tense)

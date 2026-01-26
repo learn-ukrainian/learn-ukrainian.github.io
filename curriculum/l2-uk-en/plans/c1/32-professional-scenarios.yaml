@@ -1,0 +1,95 @@
+module: 32-professional-scenarios
+level: c1
+sequence: 32
+version: '2.0'
+title: Професійні сценарії
+focus: practice
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Ukrainian Professional Standards
+  url: https://mon.gov.ua/
+  type: reference
+  notes: C1 professional communication requirements
+- name: Business Ukrainian Guide
+  url: https://chamber.ua/
+  type: secondary
+  notes: Practical business scenarios
+content_outline:
+- section: Вступ — Інтеграція навичок
+  words: 300
+  points:
+  - Огляд M21-M31
+  - Цілі практикуму
+  - Формат завдань
+- section: Сценарій 1 — Влаштування на роботу
+  words: 700
+  points:
+  - Написання CV і супровідного листа
+  - Симуляція співбесіди
+  - Переговори про умови
+- section: Сценарій 2 — Ділова зустріч
+  words: 700
+  points:
+  - Підготовка до наради
+  - Участь в обговоренні
+  - Протокол зустрічі
+- section: Сценарій 3 — Ділове листування
+  words: 700
+  points:
+  - Ланцюжок електронних листів
+  - Запит і відповідь
+  - Вирішення конфлікту
+- section: Сценарій 4 — Презентація
+  words: 600
+  points:
+  - Підготовка доповіді
+  - Виступ перед аудиторією
+  - Відповіді на запитання
+- section: Самооцінка
+  words: 500
+  points:
+  - Критерії оцінювання
+  - Рубрика самооцінки
+  - Зворотний зв'язок
+- section: Підсумок
+  words: 500
+  points:
+  - Сильні сторони
+  - Зони для покращення
+  - Рекомендації
+word_target: 4000
+vocabulary:
+  required:
+  - професійний (professional)
+  - діловий (business)
+  - офіційний (official)
+  - формальний (formal)
+  - етикет (etiquette)
+  - комунікація (communication)
+  - співбесіда (interview)
+  - переговори (negotiations)
+  - зустріч (meeting)
+  - презентація (presentation)
+  recommended:
+  - звіт (report)
+  - лист (letter)
+  - повідомлення (message)
+  - запит (request)
+  - відповідь (response)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - essay-response
+  - cloze
+  - fill-in
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c1-33 (Case Studies)
+- c1-34 (C1.2 Review)
+- c1-35 (C1.2 Checkpoint)

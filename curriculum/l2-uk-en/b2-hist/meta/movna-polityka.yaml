@@ -1,11 +1,105 @@
-# Meta for Мовна політика незалежної України
+module: b2-hist-125
+id: b2-hist-125
 slug: movna-polityka
 title: "Мовна політика незалежної України"
-level: B2
-track: history
+subtitle: "Language Policy in Independent Ukraine"
+version: '2.0'
 phase: "HIST.12 [Independence & Modern Era]"
-status: skeleton
 focus: history
+pedagogy: CBI
+register: публіцистичний
+duration: 120
+transliteration: none
+objectives:
+  - "Учень може описати еволюцію мовної політики України"
+  - "Учень може пояснити роль мови в національній ідентичності"
+  - "Учень може проаналізувати мовні закони та їх вплив"
+  - "Учень може оцінити сучасну мовну ситуацію"
+grammar:
+  - "Теперішній та минулий час"
+  - "Юридична та соціолінгвістична лексика"
+  - "Складнопідрядні речення"
 word_target: 4000
-prerequisites: []
-learning_outcomes: []
+content_outline:
+  - section: "Вступ: Мова як поле битви"
+    words: 400
+    points:
+      - "Чому мовне питання таке болісне"
+      - "Спадщина русифікації"
+      - "Мова та ідентичність"
+  - section: "Мовна політика 1991-2012"
+    words: 800
+    points:
+      - "Конституція: українська як державна"
+      - "Реальність: двомовність у повсякденні"
+      - "Освіта та медіа"
+      - "Регіональні відмінності"
+  - section: "Закон Колесніченка-Ківалова та його наслідки"
+    words: 1000
+    points:
+      - "2012: крок назад"
+      - "Регіональні мови: лазівка для російської"
+      - "Критика та протести"
+      - "Скасування та новий закон 2019 року"
+      - "Мовний закон та його вплив"
+  - section: "Первинні джерела"
+    words: 800
+    points:
+      - "Тексти мовних законів"
+      - "Соціологічні дослідження"
+      - "Публічні дискусії"
+  - section: "Деколонізаційний погляд"
+    words: 500
+    points:
+      - "Російська пропаганда: «утиски російськомовних»"
+      - "Реальність: деколонізація vs. дискримінація"
+      - "Мова як інструмент імперії"
+  - section: "Підсумок: Після 2022 року"
+    words: 500
+    points:
+      - "Війна та мовна консолідація"
+      - "Добровільний перехід на українську"
+      - "Майбутнє мовної політики"
+vocabulary_hints:
+  required:
+    - мовна політика (language policy)
+    - державна мова (state language)
+    - русифікація (Russification)
+    - двомовність (bilingualism)
+    - закон (law)
+    - ідентичність (identity)
+    - деколонізація (decolonization)
+    - дискримінація (discrimination)
+  recommended:
+    - регіональна мова (regional language)
+    - соціолінгвістика (sociolinguistics)
+    - мовний простір (linguistic space)
+    - переклад (translation)
+    - дублювання (dubbing)
+    - субтитри (subtitles)
+activity_hints:
+  - type: reading
+    focus: "Фрагменти мовних законів"
+    source: "Законодавство України"
+    items: 4
+  - type: quiz
+    focus: "Мовна політика України"
+    items: 15
+  - type: match-up
+    focus: "Рік → мовний закон"
+    items: 10
+  - type: true-false
+    focus: "Міфи про «утиски російської мови»"
+    items: 10
+  - type: essay-response
+    focus: "Чому захист української мови — це деколонізація, а не дискримінація?"
+    word_target: 250
+prerequisites:
+  - b2-hist-124 (Революція Гідності)
+connects_to:
+  - b2-hist-126 (Томос)
+  - b2-hist-133 (Війна 2022)
+naturalness:
+  score: 10
+  status: PASS
+  justification: "Сучасний український для соціолінгвістичної тематики"

@@ -1,27 +1,94 @@
 module: b1-36
-title: Причинові та наслідкові речення
-subtitle: Causal and Result Clauses
-version: '1.0'
-phase: B1.3b Complex Sentences
-pedagogy: TTT
+id: b1-36
+slug: causal-result-clauses
+title: "Причинові та наслідкові речення"
+subtitle: "Causal and Result Clauses"
+version: '2.0'
+phase: "B1.3b [Complex Sentences]"
 focus: grammar
+pedagogy: TTT
+register: розмовний
 duration: 90
 transliteration: none
-tags:
-- grammar
-- complex-sentences
-- causal-clauses
-- result-clauses
-grammar:
-- Causal clause constructions with тому що, бо, через те що
-- Result clause constructions with тому, отже, внаслідок
 objectives:
-- Learner can express причина using various causal connectors
-- Learner can express наслідок using result connectors
-- Learner can transform causal statements into result statements
-vocabulary_count: 25
-vocab_count: 15
-slug: 36-causal-result-clauses
+  - "Learner can express причина using various causal connectors"
+  - "Learner can express наслідок using result connectors"
+  - "Learner can transform causal statements into result statements"
+  - "Learner can build cause-effect relationships"
+grammar:
+  - "Causal clauses with тому що, бо, через те що"
+  - "Result clauses with тому, отже, внаслідок"
+  - "Cause-effect transformation"
+word_target: 1200
+content_outline:
+  - section: "Introduction: Cause and Effect"
+    words: 150
+    points:
+      - "Expressing reasons"
+      - "Expressing consequences"
+      - "Logic in Ukrainian"
+  - section: "Causal Connectors"
+    words: 250
+    points:
+      - "тому що (because)"
+      - "бо (because - colloquial)"
+      - "через те що (due to the fact)"
+  - section: "Result Connectors"
+    words: 250
+    points:
+      - "тому (therefore)"
+      - "отже (thus/hence)"
+      - "внаслідок (as a result)"
+  - section: "Cause → Result Transformation"
+    words: 250
+    points:
+      - "Reversing cause and effect"
+      - "Word order changes"
+      - "Connector selection"
+  - section: "Advanced Patterns"
+    words: 200
+    points:
+      - "завдяки тому що (thanks to)"
+      - "оскільки (since)"
+      - "Complex cause-effect chains"
+  - section: "Practice: Logical Relations"
+    words: 100
+    points:
+      - "Express cause and effect"
+      - "Transform statements"
+vocabulary_hints:
+  required:
+    - причина (cause/reason)
+    - наслідок (consequence)
+    - тому що (because)
+    - бо (because)
+    - тому (therefore)
+    - отже (thus)
+    - через те що (due to)
+    - внаслідок (as a result)
+  recommended:
+    - оскільки (since)
+    - завдяки (thanks to)
+    - у зв'язку з (in connection with)
+    - відтак (hence)
+activity_hints:
+  - type: fill-in
+    focus: "Complete causal/result sentences"
+    items: 25
+  - type: transformation
+    focus: "Cause to result conversion"
+    items: 20
+  - type: sentence-combining
+    focus: "Link cause and effect"
+    items: 15
+  - type: translation
+    focus: "English to Ukrainian"
+    items: 15
+prerequisites:
+  - b1-35 (Concessive Clauses)
+connects_to:
+  - b1-37 (Temporal Clauses)
 naturalness:
   score: 9
   status: PASS
+  justification: "Essential logical structure"

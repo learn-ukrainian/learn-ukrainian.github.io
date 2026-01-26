@@ -1,29 +1,97 @@
 module: a2-63
-title: Scheduling Appointments
-subtitle: Making and Changing Plans
-version: '1.0'
-phase: A2.4
+id: a2-63
+slug: scheduling-appointments
+title: "Scheduling Appointments"
+subtitle: "Making and Changing Plans"
+version: '2.0'
+phase: "A2.6 [Practical]"
+focus: practical
 pedagogy: PPP
+register: розмовний
 duration: 60
 transliteration: none
-tags:
-- vocabulary
-- scheduling
-- appointments
-- time
-grammar:
-- making appointments (записатися на)
-- rescheduling and canceling
-- time expressions for meetings
-- polite phone etiquette
 objectives:
-- Learner can make an appointment by phone
-- Learner can reschedule or cancel a meeting
-- Learner can understand appointment details
-- Learner can use polite phrases for scheduling
-vocabulary_count: 25
-slug: 63-scheduling-appointments
-focus: vocabulary
+  - "Learner can make an appointment by phone"
+  - "Learner can reschedule or cancel a meeting"
+  - "Learner can understand appointment details"
+  - "Learner can use polite phrases for scheduling"
+grammar:
+  - "Making appointments (записатися на)"
+  - "Rescheduling and canceling"
+  - "Polite phone etiquette"
+word_target: 1000
+content_outline:
+  - section: "Introduction: Appointments in Ukraine"
+    words: 100
+    points:
+      - "Appointment culture"
+      - "Phone vs online booking"
+      - "Scheduling vocabulary"
+  - section: "Making an Appointment"
+    words: 200
+    points:
+      - "Я хочу записатися на..."
+      - "Choosing date and time"
+      - "Confirming details"
+  - section: "Phone Etiquette"
+    words: 200
+    points:
+      - "Answering and greeting"
+      - "Polite phrases"
+      - "Leaving messages"
+  - section: "Changing Appointments"
+    words: 200
+    points:
+      - "перенести, скасувати"
+      - "Explaining reasons"
+      - "Finding new time"
+  - section: "Confirmation and Reminders"
+    words: 150
+    points:
+      - "підтвердження"
+      - "нагадування"
+      - "Being prepared"
+  - section: "Practice: Phone Calls"
+    words: 150
+    points:
+      - "Make appointment calls"
+      - "Reschedule meetings"
+vocabulary_hints:
+  required:
+    - записатися (to make an appointment)
+    - зустріч (meeting)
+    - час (time)
+    - дата (date)
+    - перенести (to reschedule)
+    - скасувати (to cancel)
+    - підтвердити (to confirm)
+    - вільний (available)
+  recommended:
+    - нагадування (reminder)
+    - прийом (appointment)
+    - секретар (secretary)
+    - зайнятий (busy)
+    - раніше (earlier)
+    - пізніше (later)
+activity_hints:
+  - type: vocabulary-drill
+    focus: "Scheduling vocabulary"
+    items: 25
+  - type: dialogue
+    focus: "Phone appointment calls"
+    items: 12
+  - type: listening
+    focus: "Understand phone conversations"
+    items: 10
+  - type: role-play
+    focus: "Schedule and reschedule"
+    items: 8
+prerequisites:
+  - a2-62 (Rental Accommodation)
+connects_to:
+  - a2-64 (Scheduling Interviews)
+  - a2-59 (Doctor Visit)
 naturalness:
   score: 9
   status: PASS
+  justification: "Essential scheduling scenario"

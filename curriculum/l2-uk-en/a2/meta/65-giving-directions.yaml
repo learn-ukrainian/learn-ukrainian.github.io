@@ -1,29 +1,96 @@
 module: a2-65
-title: Giving Directions
-subtitle: Navigating the City
-version: '1.0'
-phase: A2.4
+id: a2-65
+slug: giving-directions
+title: "Giving Directions"
+subtitle: "Navigating the City"
+version: '2.0'
+phase: "A2.6 [Practical]"
+focus: practical
 pedagogy: PPP
+register: розмовний
 duration: 60
 transliteration: none
-tags:
-- vocabulary
-- directions
-- city
-- navigation
-grammar:
-- asking for directions (як пройти?)
-- giving instructions (йдіть прямо, поверніть)
-- prepositions of place and movement
-- landmarks vocabulary
 objectives:
-- Learner can ask for directions in a city
-- Learner can give simple directions to others
-- Learner can understand location descriptions
-- Learner can use landmarks for navigation
-vocabulary_count: 25
-slug: 65-giving-directions
-focus: vocabulary
+  - "Learner can ask for directions in a city"
+  - "Learner can give simple directions to others"
+  - "Learner can understand location descriptions"
+  - "Learner can use landmarks for navigation"
+grammar:
+  - "Asking for directions (як пройти?)"
+  - "Giving instructions (йдіть прямо, поверніть)"
+  - "Prepositions of place and movement"
+word_target: 1000
+content_outline:
+  - section: "Introduction: Ukrainian Cities"
+    words: 100
+    points:
+      - "City layout basics"
+      - "Navigation culture"
+      - "Directions vocabulary"
+  - section: "Asking for Directions"
+    words: 200
+    points:
+      - "Вибачте, як пройти до...?"
+      - "Де знаходиться...?"
+      - "Polite phrases"
+  - section: "Understanding Directions"
+    words: 200
+    points:
+      - "прямо, направо, наліво"
+      - "повернути, пройти"
+      - "Distance expressions"
+  - section: "Giving Directions"
+    words: 200
+    points:
+      - "Imperative forms"
+      - "Step-by-step instructions"
+      - "Using landmarks"
+  - section: "Landmarks and Places"
+    words: 150
+    points:
+      - "площа, вулиця, перехрестя"
+      - "Building types"
+      - "Public places"
+  - section: "Practice: City Navigation"
+    words: 150
+    points:
+      - "Ask and give directions"
+      - "Describe routes"
+vocabulary_hints:
+  required:
+    - напрямок (direction)
+    - прямо (straight)
+    - направо (to the right)
+    - наліво (to the left)
+    - повернути (to turn)
+    - вулиця (street)
+    - площа (square)
+    - перехрестя (intersection)
+  recommended:
+    - міст (bridge)
+    - світлофор (traffic light)
+    - зупинка (stop)
+    - орієнтир (landmark)
+    - поруч (nearby)
+    - навпроти (opposite)
+activity_hints:
+  - type: vocabulary-drill
+    focus: "Directions vocabulary"
+    items: 25
+  - type: matching
+    focus: "Match directions to routes"
+    items: 15
+  - type: dialogue
+    focus: "Ask for directions"
+    items: 12
+  - type: speaking
+    focus: "Give directions to places"
+    items: 10
+prerequisites:
+  - a2-64 (Scheduling Interviews)
+connects_to:
+  - a2-66 (Asking for Directions)
 naturalness:
   score: 10
   status: PASS
+  justification: "Essential navigation scenario"

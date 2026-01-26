@@ -1,11 +1,105 @@
-# Meta for Симон Петлюра
+module: b2-hist-95
+id: b2-hist-95
 slug: symon-petliura-revolution
-title: "Симон Петлюра"
-level: B2
-track: history
+title: "Симон Петлюра: Головний отаман"
+subtitle: "Symon Petliura: The Supreme Commander"
+version: '2.0'
 phase: "HIST.9 [WWI & Revolution]"
-status: skeleton
 focus: history
+pedagogy: CBI
+register: публіцистичний
+duration: 120
+transliteration: none
+objectives:
+  - "Учень може описати життя та діяльність Симона Петлюри"
+  - "Учень може пояснити роль Петлюри в Українській революції"
+  - "Учень може проаналізувати контроверсійні питання навколо Петлюри"
+  - "Учень може оцінити значення Петлюри для української державності"
+grammar:
+  - "Минулий час у біографічному наративі"
+  - "Військова та політична лексика"
+  - "Складнопідрядні речення"
 word_target: 4000
-prerequisites: []
-learning_outcomes: []
+content_outline:
+  - section: "Вступ: Символ боротьби"
+    words: 400
+    points:
+      - "Хто такий Симон Петлюра"
+      - "Головний отаман армії УНР"
+      - "Чому його пам'ятають"
+  - section: "Шлях до влади"
+    words: 800
+    points:
+      - "Молодість та журналістика"
+      - "Участь у Центральній Раді"
+      - "Військовий міністр"
+      - "Голова Директорії"
+  - section: "Війна за незалежність"
+    words: 1000
+    points:
+      - "Боротьба на кількох фронтах"
+      - "Союз з Польщею (1920)"
+      - "Київська операція"
+      - "Поразка та еміграція"
+      - "Зимовий похід армії УНР"
+  - section: "Первинні джерела"
+    words: 800
+    points:
+      - "Накази та звернення Петлюри"
+      - "Листування"
+      - "Спогади соратників"
+  - section: "Деколонізаційний погляд"
+    words: 500
+    points:
+      - "Радянський наратив: «петлюрівщина»"
+      - "Контроверсії: єврейські погроми"
+      - "Реальність: складна постать складної епохи"
+  - section: "Підсумок: Париж, 1926"
+    words: 500
+    points:
+      - "Вбивство в Парижі"
+      - "Суд над Шварцбардом"
+      - "Петлюра в українській пам'яті"
+vocabulary_hints:
+  required:
+    - отаман (ataman)
+    - Директорія (Directory)
+    - армія (army)
+    - незалежність (independence)
+    - боротьба (struggle)
+    - еміграція (emigration)
+    - союз (alliance)
+    - вбивство (assassination)
+  recommended:
+    - журналіст (journalist)
+    - військовий міністр (war minister)
+    - операція (operation)
+    - поразка (defeat)
+    - погром (pogrom)
+    - суд (trial)
+activity_hints:
+  - type: reading
+    focus: "Звернення Петлюри до армії"
+    source: "Архівні документи"
+    items: 4
+  - type: quiz
+    focus: "Симон Петлюра: життя та діяльність"
+    items: 15
+  - type: match-up
+    focus: "Подія → дата та наслідки"
+    items: 10
+  - type: fill-in
+    focus: "Військово-політична лексика"
+    items: 10
+  - type: essay-response
+    focus: "Чому постать Петлюри залишається контроверсійною?"
+    word_target: 250
+prerequisites:
+  - b2-hist-94 (Директорія)
+connects_to:
+  - b2-hist-96 (Польсько-українська війна)
+  - b2-hist-97 (Кінець визвольних змагань)
+naturalness:
+  score: 10
+  status: PASS
+  justification: "Академічний український для біографічної історії"

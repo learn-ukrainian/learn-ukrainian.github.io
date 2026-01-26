@@ -1,0 +1,81 @@
+module: the-living-verb-i
+level: a1
+sequence: 6
+version: '2.0'
+title: The Living Verb I
+subtitle: First Conjugation (-ати/-яти)
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can conjugate First Conjugation verbs in present tense
+- Learner can form basic action statements
+- Learner can describe daily activities using -ати verbs
+- Learner understands basic concept of imperfective aspect
+content_outline:
+- section: 'Introduction: Verbs Bring Language to Life'
+  words: 100
+  points:
+  - Why verbs are essential
+  - Two conjugation patterns in Ukrainian
+  - Starting with First Conjugation
+- section: First Conjugation Pattern
+  words: 250
+  points:
+  - Infinitive ends in -ати or -яти
+  - Remove -ти, add personal endings
+  - 'Full paradigm: читати → читаю, читаєш, читає...'
+- section: Personal Endings
+  words: 200
+  points:
+  - я → -ю (читаю)
+  - ти → -єш (читаєш)
+  - він/вона → -є (читає)
+  - ми → -ємо (читаємо)
+  - ви → -єте (читаєте)
+  - вони → -ють (читають)
+- section: Common First Conjugation Verbs
+  words: 200
+  points:
+  - читати (to read), писати (to write)
+  - знати (to know), працювати (to work)
+  - слухати (to listen), питати (to ask)
+- section: Building Sentences
+  words: 150
+  points:
+  - 'Subject + Verb: Я читаю'
+  - 'Subject + Verb + Object: Я читаю книгу'
+  - Word order flexibility
+- section: 'Practice: Daily Actions'
+  words: 100
+  points:
+  - Describe what you do
+  - Ask what others do
+word_target: 1000
+vocabulary:
+  required:
+  - читати (to read)
+  - писати (to write)
+  - знати (to know)
+  - працювати (to work)
+  - слухати (to listen)
+  - питати (to ask)
+  - грати (to play)
+  - чекати (to wait)
+  recommended:
+  - думати (to think)
+  - розуміти (to understand)
+  - вивчати (to study)
+  - відпочивати (to rest)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - conjugation-drill
+  - translation
+  - matching
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a1-07 (Questions and Negation)
+- a1-08 (The Living Verb II)

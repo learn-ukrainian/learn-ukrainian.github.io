@@ -21,3 +21,24 @@ objectives:
 - Learner can identify poetic meters (ямб, хорей, дактиль).
 - Learner can analyze rhyme schemes and strophic structures.
 - Learner can conduct a comprehensive philological analysis of a poem.
+content_outline:
+- section: Вступ — Аналіз поезії
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Версифікація: розмір, ритм, стопа'
+  - 'Рими: парна, перехресна, кільцева'
+  - 'Строфіка: катрен, терцина, сонет'
+  - 'Звукопис: алітерація, асонанс'
+  - 'Практичний аналіз: step-by-step method'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

@@ -1,0 +1,117 @@
+module: bohdan-khmelnytskyy
+level: c1-bio
+sequence: 10
+version: '2.0'
+title: 'Богдан Хмельницький: Гетьман-державотворець'
+focus: biography
+pedagogy: seminar
+objectives:
+- Learner can analyze the role of Bohdan Khmelnytskyy in Ukrainian state-building
+- Learner can evaluate the geopolitical context of the mid-17th century in Eastern Europe
+- Learner can distinguish between different historiographical interpretations of the Pereyaslav Agreement
+- Learner can use advanced biographical and historical vocabulary in a comparative essay
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Богдан_Хмельницький
+    title: Богдан Хмельницький (Wikipedia UA)
+    notes: Biography, military campaigns, statebuilding
+  - url: https://uk.wikipedia.org/wiki/Повстання_Хмельницького
+    title: Повстання Хмельницького (Wikipedia UA)
+    notes: Military and political details
+  secondary:
+  - url: https://uk.wikipedia.org/wiki/Переяславська_рада
+    title: Переяславська рада
+    notes: 1654 agreement context
+content_outline:
+- section: Вступ — Творець козацької держави
+  words: 400
+  subsections:
+  - Хмельницький як ключова постать української історії
+  - Дискусії про його спадщину
+  - Контекст XVII століття
+- section: Молодість та формування
+  words: 600
+  subsections:
+  - Походження та освіта
+  - Служба в реєстровому козацтві
+  - Турецький полон
+  - Конфлікт із Чаплинським
+- section: Початок повстання
+  words: 700
+  subsections:
+  - Втеча на Січ
+  - Союз із Кримом
+  - Битви під Жовтими Водами та Корсунем
+  - Тріумфальний в'їзд до Києва
+- section: Розбудова держави
+  words: 800
+  subsections:
+  - Козацька адміністрація
+  - Військова організація
+  - Дипломатичні контакти з Європою
+  - Економічна політика
+- section: Переяславська рада та її наслідки
+  words: 800
+  subsections:
+  - Причини звернення до Москви
+  - Умови договору
+  - Різні інтерпретації Переяслава
+  - Подальші відносини з царем
+- section: Останні роки та смерть
+  words: 400
+  subsections:
+  - Війна після Переяслава
+  - Смерть 1657 року
+  - Поховання в Суботові
+  - Початок Руїни
+- section: Підсумок — Геній і трагедія
+  words: 300
+  subsections:
+  - Оцінки Хмельницького в історіографії
+  - Його місце в національній пам'яті
+  - Уроки для сучасності
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - гетьман
+  - повстання
+  - козацтво
+  - реєстр
+  - Січ
+  - рада
+  - договір
+  - полковник
+  - універсал
+  - Руїна
+  recommended:
+  - булава
+  - бунчук
+  - осавул
+  - магнат
+  - шляхта
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  - critical-analysis
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-08 (Iov Boretskyi - religious context)
+  related:
+  - c1-bio-11 (Yuriy Nemyrych - alternative path)
+  - c1-bio-12 (Ivan Mazepa - later hetman)
+  - c1-bio-44 (Symon Petliura - later national leader)
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

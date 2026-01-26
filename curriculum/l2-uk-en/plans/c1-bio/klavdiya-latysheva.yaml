@@ -1,0 +1,105 @@
+module: klavdiya-latysheva
+level: c1-bio
+sequence: 65
+version: '2.0'
+title: 'Клавдія Латишева: Піонерка авіації'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Латишева_Клавдія_Яківна
+    title: Клавдія Латишева (Wikipedia UA)
+    notes: Biography of the mathematician and aviation pioneer
+  secondary:
+  - url: https://www.univ.kiev.ua/
+    title: Київський національний університет
+    notes: University where Latysheva studied and worked
+content_outline:
+- section: Вступ — Математик, що підкорила небо і рівняння
+  words: 400
+  subsections:
+  - Видатний математик та перша жінка-пілот в Україні
+  - Піонерка в чоловічих професіях
+  - Життя між наукою та небом
+- section: Юність та освіта (1897-1920)
+  words: 600
+  subsections:
+  - Народження в Кременчуці
+  - Навчання математики
+  - Перші успіхи в науці
+  - Формування наукових інтересів
+- section: Математична кар'єра (1920-1940)
+  words: 800
+  subsections:
+  - Дослідження диференціальних рівнянь
+  - Робота в Київському університеті
+  - Наукові праці та визнання
+  - Докторська дисертація
+- section: Авіаційна пристрасть (1920-1930-ті)
+  words: 700
+  subsections:
+  - Захоплення авіацією
+  - Навчання в льотній школі
+  - Перша жінка-пілот в Україні
+  - Польоти та рекорди
+- section: Війна та повоєнний період (1941-1956)
+  words: 800
+  subsections:
+  - Евакуація під час війни
+  - Продовження наукової роботи
+  - Повернення до Києва
+  - Останні роки та смерть
+- section: Спадщина — Жінка без обмежень
+  words: 700
+  subsections:
+  - Внесок у математику
+  - Приклад для жінок у STEM
+  - Сучасне вшанування
+  - Латишева як символ подолання бар'єрів
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - математик
+  - диференціальне рівняння
+  - авіація
+  - пілот
+  - льотна школа
+  - наукова кар'єра
+  - дослідження
+  - доктор наук
+  - професор
+  - піонерка
+  recommended:
+  - аеродинаміка
+  - політ
+  - математичний аналіз
+  - формула
+  - теорема
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-64
+  related:
+  - c1-bio-70
+  - c1-bio-27
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

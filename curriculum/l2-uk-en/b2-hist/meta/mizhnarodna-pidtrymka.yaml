@@ -1,11 +1,105 @@
-# Meta for Міжнародна підтримка
+module: b2-hist-138
+id: b2-hist-138
 slug: mizhnarodna-pidtrymka
 title: "Міжнародна підтримка"
-level: B2
-track: history
+subtitle: "International Support for Ukraine"
+version: '2.0'
 phase: "HIST.13 [Russian Aggression]"
-status: skeleton
 focus: history
+pedagogy: CBI
+register: публіцистичний
+duration: 120
+transliteration: none
+objectives:
+  - "Учень може описати форми міжнародної підтримки України"
+  - "Учень може пояснити роль різних країн та організацій"
+  - "Учень може проаналізувати санкції проти Росії"
+  - "Учень може оцінити значення міжнародної солідарності"
+grammar:
+  - "Теперішній та минулий час"
+  - "Дипломатична та економічна лексика"
+  - "Складнопідрядні речення"
 word_target: 4000
-prerequisites: []
-learning_outcomes: []
+content_outline:
+  - section: "Вступ: Україна не сама"
+    words: 400
+    points:
+      - "24 лютого 2022: світ реагує"
+      - "Від слів до дій"
+      - "Чому підтримка України важлива для світу"
+  - section: "Військова допомога"
+    words: 800
+    points:
+      - "США: найбільший донор"
+      - "Великобританія: перші поставки"
+      - "Європейський Союз та його країни"
+      - "Еволюція: від касок до танків"
+  - section: "Санкції та економічний тиск"
+    words: 1000
+    points:
+      - "Заморожування активів"
+      - "Відключення від SWIFT"
+      - "Енергетичні санкції"
+      - "Персональні санкції"
+      - "Ефективність санкцій"
+  - section: "Первинні джерела"
+    words: 800
+    points:
+      - "Промови світових лідерів"
+      - "Резолюції ООН"
+      - "Статистика допомоги"
+  - section: "Деколонізаційний погляд"
+    words: 500
+    points:
+      - "Чому Захід так довго ігнорував Росію"
+      - "Уроки для світової безпеки"
+      - "Україна як форпост демократії"
+  - section: "Підсумок: Довга перспектива"
+    words: 500
+    points:
+      - "Перспектива членства в ЄС та НАТО"
+      - "План відбудови України"
+      - "Глобальний південь: неоднозначна позиція"
+vocabulary_hints:
+  required:
+    - підтримка (support)
+    - допомога (aid)
+    - санкції (sanctions)
+    - союзник (ally)
+    - донор (donor)
+    - резолюція (resolution)
+    - солідарність (solidarity)
+    - відбудова (reconstruction)
+  recommended:
+    - заморожування (freezing)
+    - активи (assets)
+    - членство (membership)
+    - форпост (outpost)
+    - дипломатія (diplomacy)
+    - коаліція (coalition)
+activity_hints:
+  - type: reading
+    focus: "Промови світових лідерів про Україну"
+    source: "Офіційні джерела"
+    items: 4
+  - type: quiz
+    focus: "Міжнародна підтримка України"
+    items: 15
+  - type: match-up
+    focus: "Країна → тип допомоги"
+    items: 10
+  - type: fill-in
+    focus: "Дипломатична лексика"
+    items: 10
+  - type: essay-response
+    focus: "Чому підтримка України — це захист демократії у світі?"
+    word_target: 250
+prerequisites:
+  - b2-hist-137 (Громадянське суспільство)
+connects_to:
+  - b2-hist-139 (Злочини і стійкість)
+  - b2-hist-140 (Синтез: Війна)
+naturalness:
+  score: 10
+  status: PASS
+  justification: "Сучасний український для міжнародної тематики"

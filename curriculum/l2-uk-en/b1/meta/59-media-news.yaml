@@ -1,26 +1,94 @@
 module: b1-59
-title: Медіа та новини
-subtitle: Media and News
-version: '1.0'
-phase: B1.5 Vocabulary Expansion I
+id: b1-59
+slug: media-news
+title: "Медіа та новини"
+subtitle: "Media and News"
+version: '2.0'
+phase: "B1.5 [Vocabulary Expansion I]"
 focus: vocabulary
 pedagogy: PPP
+register: розмовний
 duration: 90
 transliteration: none
-grammar:
-- media vocabulary collocations
-- journalistic expressions
-tags:
-- vocabulary
-- media
-- journalism
 objectives:
-- Learner can use 30 media and journalism vocabulary words in context
-- Learner can distinguish between types of media content
-- Learner can form natural collocations with media vocabulary
-vocabulary_count: 35
-vocab_count: 19
-slug: 59-media-news
+  - "Learner can use 30 media and journalism vocabulary words in context"
+  - "Learner can distinguish between types of media content"
+  - "Learner can form natural collocations with media vocabulary"
+  - "Learner can discuss news and current events fluently"
+grammar:
+  - "Media vocabulary collocations"
+  - "Journalistic expressions"
+  - "Reporting verb patterns"
+word_target: 1200
+content_outline:
+  - section: "Introduction: Media Landscape"
+    words: 150
+    points:
+      - "Ukrainian media overview"
+      - "Types of media"
+      - "News vocabulary basics"
+  - section: "News and Journalism"
+    words: 250
+    points:
+      - "новини, стаття, репортаж"
+      - "журналіст, кореспондент"
+      - "News production vocabulary"
+  - section: "Broadcast Media"
+    words: 250
+    points:
+      - "телебачення, радіо, подкаст"
+      - "ефір, трансляція, випуск"
+      - "Broadcasting terminology"
+  - section: "Print and Digital"
+    words: 250
+    points:
+      - "газета, журнал, онлайн-видання"
+      - "публікація, редакція"
+      - "Publishing vocabulary"
+  - section: "Media Actions"
+    words: 200
+    points:
+      - "повідомляти, висвітлювати, оприлюднювати"
+      - "Reporting and publishing verbs"
+      - "Media consumption verbs"
+  - section: "Practice: Discussing News"
+    words: 100
+    points:
+      - "Talk about current events"
+      - "Use media vocabulary"
+vocabulary_hints:
+  required:
+    - новини (news)
+    - стаття (article)
+    - журналіст (journalist)
+    - телебачення (television)
+    - газета (newspaper)
+    - репортаж (report)
+    - повідомляти (to report)
+    - висвітлювати (to cover/highlight)
+  recommended:
+    - редакція (editorial office)
+    - трансляція (broadcast)
+    - подкаст (podcast)
+    - оприлюднювати (to publish/release)
+activity_hints:
+  - type: collocation
+    focus: "Media noun phrases"
+    items: 25
+  - type: fill-in
+    focus: "Complete media sentences"
+    items: 20
+  - type: matching
+    focus: "Match media terms"
+    items: 15
+  - type: discussion
+    focus: "Discuss current events"
+    items: 10
+prerequisites:
+  - b1-58 (Describing Changes)
+connects_to:
+  - b1-60 (Society Politics)
 naturalness:
   score: 9
   status: PASS
+  justification: "Essential for engaging with Ukrainian media"

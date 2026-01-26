@@ -1,0 +1,77 @@
+module: regions-south
+level: b1
+sequence: 74
+version: '2.0'
+title: 'Українські регіони: Південь'
+subtitle: Southern Ukraine - Black Sea Coast and Steppe Heritage
+focus: culture
+pedagogy: CBI
+objectives:
+- Learner can discuss Southern Ukraine's geography and coastal culture
+- Learner can understand authentic texts about Odesa, Mykolaiv, and Kherson
+- Learner can use regional vocabulary to describe Southern Ukrainian traditions
+- Learner can compare Southern Ukraine with other regions
+content_outline:
+- section: 'Introduction: Southern Ukraine'
+  words: 150
+  points:
+  - Geographic overview
+  - Black Sea coast
+  - Cultural characteristics
+- section: Odesa
+  words: 250
+  points:
+  - Одеса, одесит
+  - Port city culture
+  - Humor and traditions
+- section: Mykolaiv and Kherson
+  words: 250
+  points:
+  - Миколаїв, Херсон
+  - Shipbuilding heritage
+  - Agricultural traditions
+- section: Crimea in History
+  words: 250
+  points:
+  - Historical Crimea
+  - Crimean Tatars
+  - Cultural heritage
+- section: Southern Identity
+  words: 200
+  points:
+  - Multicultural heritage
+  - Trade and port culture
+  - Contemporary challenges
+- section: 'Practice: Regional Discussion'
+  words: 100
+  points:
+  - Discuss Southern Ukraine
+  - Compare with other regions
+word_target: 1200
+vocabulary:
+  required:
+  - Одеса (Odesa)
+  - Миколаїв (Mykolaiv)
+  - Херсон (Kherson)
+  - узбережжя (coast)
+  - порт (port)
+  - степ (steppe)
+  - торгівля (trade)
+  - курорт (resort)
+  recommended:
+  - суднобудування (shipbuilding)
+  - кримські татари (Crimean Tatars)
+  - багатокультурний (multicultural)
+  - рибальство (fishing)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - reading
+  - discussion
+  - matching
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-75 (Regions Center)

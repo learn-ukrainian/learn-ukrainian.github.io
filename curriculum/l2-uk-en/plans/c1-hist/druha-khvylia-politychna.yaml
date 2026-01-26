@@ -1,0 +1,98 @@
+module: druha-khvylia-politychna
+level: c1-hist
+sequence: 65
+version: '1.0'
+title: 'Друга хвиля: Політична (1920-1923)'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Поразка і відступ
+  words: 400
+  subsections:
+  - 1920-1921 — кінець визвольних змагань
+  - Хто опинився за кордоном
+  - Від армії до еміграції
+  - Структура модуля
+- section: Табори інтернованих
+  words: 600
+  subsections:
+  - Польща — Каліш, Вадовиці
+  - Умови життя
+  - Культурне життя в таборах
+  - Шлях до цивільного життя
+- section: Прага — столиця еміграції
+  words: 700
+  subsections:
+  - Чому Чехословаччина?
+  - Масарик і «Руська акція»
+  - Українські інституції
+  - Академічна еміграція
+- section: Уряд в екзилі
+  words: 600
+  subsections:
+  - УНР — безперервна державність
+  - Президенти в екзилі
+  - Дипломатична діяльність
+  - Символічне значення
+- section: Інші центри
+  words: 400
+  subsections:
+  - Відень — ранній центр
+  - Берлін — до 1933
+  - Париж — Петлюра
+  - Варшава — складні відносини
+- section: Політичні течії
+  words: 500
+  subsections:
+  - Петлюрівці vs. гетьманці
+  - ОУН — нове покоління
+  - Демократи vs. націоналісти
+  - Конфлікти і розколи
+- section: Підсумок
+  words: 300
+  subsections:
+  - Політична еміграція — хто вижив
+  - Збереження ідеї
+  - Підготовка до третьої хвилі
+word_target: 3500
+vocabulary:
+- політична еміграція
+- уряд в екзилі
+- інтернований
+- табір
+- Руська акція
+- дипломатія
+- екзил
+- легітимність
+- безперервність
+- течія
+- реваншизм
+- інтелігенція в еміграції
+- культурна місія
+- політичний розкол
+- державницька ідея
+activities:
+- type: critical-analysis
+  focus: Ukrainian institutions in Prague — inventory
+- type: reading
+  focus: Paths of UNR leaders after 1921
+- type: policy-analysis
+  focus: Czech "Russian Action" — why support Ukrainians?
+- type: political-mapping
+  focus: Map emigre political factions and conflicts
+- type: essay-response
+  focus: Чому Прага стала 'столицею' української еміграції?
+sources:
+- name: Еміграція УНР (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_еміграція
+  type: reference
+  notes: Political emigration
+- name: Уряд УНР в екзилі (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Уряд_Української_Народної_Республіки_в_екзилі
+  type: reference
+  notes: Government in exile
+- name: Табори інтернованих (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Табори_інтернованих_вояків_Армії_УНР
+  type: reference
+  notes: Internment camps

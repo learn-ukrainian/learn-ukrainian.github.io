@@ -8,18 +8,39 @@ pedagogy: CBI
 duration: 120
 transliteration: none
 tags:
-  - culture
-  - holidays
-  - kupala
-  - traditions
+- culture
+- holidays
+- kupala
+- traditions
 grammar:
-  - nature vocabulary
-  - mythical descriptions
+- nature vocabulary
+- mythical descriptions
 objectives:
-  - Learner can describe the rituals of Ivan Kupala (fire, water, fern flower)
-  - Learner can explain the symbolism of Green Week (Troitsia)
-  - Learner can distinguish between the three Spas holidays (Honey, Apple, Nut)
-  - Learner can discuss the pre-Christian roots of summer traditions
+- Learner can describe the rituals of Ivan Kupala (fire, water, fern flower)
+- Learner can explain the symbolism of Green Week (Troitsia)
+- Learner can distinguish between the three Spas holidays (Honey, Apple, Nut)
+- Learner can discuss the pre-Christian roots of summer traditions
 vocabulary_count: 30
 vocab_count: 30
 slug: 71-summer-holidays
+content_outline:
+- section: Вступ — літній цикл
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Похорон: funeral customs, preparation, burial'
+  - 'Поминки: memorial meals, 9 and 40 days'
+  - 'Провід (Гробки): cemetery visit traditions'
+  - 'Ancestral spirits: вшанування предків'
+  - Modern adaptations of memorial traditions
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

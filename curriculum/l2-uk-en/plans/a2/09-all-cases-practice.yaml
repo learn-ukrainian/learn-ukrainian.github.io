@@ -1,0 +1,80 @@
+module: 09-all-cases-practice
+level: a2
+sequence: 9
+version: '2.0'
+title: All Cases Practice
+subtitle: Consolidating the Case System
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can identify which case is required in a given context
+- Learner can form correct endings for all 7 cases
+- Learner can switch between cases fluently in conversation
+- Learner can correct common case errors
+sources:
+- name: Ukrainian State Standard 2024 - Case System
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Complete 7-case paradigm requirements for A2
+- name: Ukrainian Case System Reference
+  url: https://uk.wikipedia.org/wiki/Відмінок
+  type: reference
+  notes: Complete declension tables
+content_outline:
+- section: Introduction / Вступ
+  words: 200
+  points:
+  - Importance of the 7-case system
+  - Quick reference table
+- section: Presentation / Презентація
+  words: 600
+  points:
+  - Case-by-case review (Nom to Voc)
+  - Gender forms summary
+  - Strategic question-based approach
+- section: Practice / Практика
+  words: 150
+  points:
+  - Mixed case identification
+  - Paradigms for key nouns (друг, книга)
+- section: Dialogues / Діалоги
+  words: 50
+  points:
+  - Real-world application of mixed cases
+word_target: 1000
+vocabulary:
+  required:
+  - хто (who)
+  - що (what)
+  - кого (whom - acc/gen)
+  - чого (of what)
+  - кому (to whom)
+  - чому (to what / why)
+  - ким (by whom)
+  - чим (by what)
+  - відмінок (case)
+  - називний (nominative)
+  - родовий (genitive)
+  - давальний (dative)
+  - знахідний (accusative)
+  - орудний (instrumental)
+  - місцевий (locative)
+  recommended:
+  - кличний (vocative)
+  - однина (singular)
+  - множина (plural)
+  - закінчення (ending)
+  - відмінювати (to decline)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - match-up
+  - fill-in
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a2-10 (Post Office & Bank - application)
+- a2-11 (Checkpoint - Cases)
+- All subsequent A2 modules

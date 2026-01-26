@@ -1,0 +1,108 @@
+module: sylvestr-kosiv
+level: c1-bio
+sequence: 9
+version: '2.0'
+title: 'Сильвестр Косів: Освітянин і будівничий'
+focus: biography
+pedagogy: seminar
+objectives:
+- Проаналізувати дипломатичну стратегію Сильвестра Косіва
+- Зрозуміти роль православної церкви в подіях Хмельниччини
+- Вивчити лексику, пов'язану з церковною автономією та правом
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Сильвестр_Косів
+    title: Сильвестр Косів (Wikipedia UA)
+    notes: Biography, metropolitanate, relations with Khmelnytskyi
+  secondary:
+  - url: https://uk.wikipedia.org/wiki/Києво-Могилянська_академія
+    title: Києво-Могилянська академія
+    notes: Educational institution context
+  - url: https://uk.wikipedia.org/wiki/Повстання_Хмельницького
+    title: Повстання Хмельницького
+    notes: Historical context
+content_outline:
+- section: Вступ — Митрополит бурхливої епохи
+  words: 457
+  subsections:
+  - Косів між церквою та державою
+  - Його роль у період Хмельниччини
+  - Значення для церковної історії
+- section: Освіта та кар'єра до митрополитства
+  words: 685
+  subsections:
+  - Походження та молодість
+  - Навчання в європейських університетах
+  - Викладацька діяльність
+  - Зв'язок із Петром Могилою
+- section: Митрополит Київський
+  words: 800
+  subsections:
+  - Обрання на кафедру 1647 року
+  - Церковна реформа та управління
+  - Розвиток освіти та друкарства
+  - Будівельні проекти
+- section: Церква і Хмельницький
+  words: 914
+  subsections:
+  - Позиція церкви щодо повстання
+  - Відносини з гетьманом
+  - Переяславська рада 1654 року
+  - Церковний статус після Переяслава
+- section: Останні роки та суперечки
+  words: 800
+  subsections:
+  - Конфлікт із московським патріархатом
+  - Захист автономії Київської митрополії
+  - Смерть та обставини
+  - Спадщина в церковній традиції
+- section: Підсумок — Дипломат духу
+  words: 344
+  subsections:
+  - Косів як будівничий церкви
+  - Його роль у збереженні автономії
+  - Актуальність його боротьби сьогодні
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - митрополит
+  - кафедра
+  - автономія
+  - патріархат
+  - друкарня
+  - академія
+  - єпископат
+  - ставропігія
+  - собор
+  - автокефалія
+  recommended:
+  - архімандрит
+  - лавра
+  - грамота
+  - синод
+  - церковнослов'янська
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-08 (Iov Boretskyi - predecessor)
+  related:
+  - c1-bio-10 (Bohdan Khmelnytskyi - secular counterpart)
+  - c1-bio-11 (Yuriy Nemyrych - Treaty of Hadiach context)
+  - c1-bio-98 (Ivan Ohienko - later autocephaly struggle)
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

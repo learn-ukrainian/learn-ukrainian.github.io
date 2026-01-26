@@ -1,0 +1,83 @@
+module: kultura-kyivskoi-rusi
+level: b2-hist
+sequence: 16
+version: '1.0'
+title: Культура Київської Русі
+focus: history
+pedagogy: CBI
+objectives:
+- Understand the development of writing and education in Rus
+- Analyze the literary masterpieces like "Slovo o polku Ihorevim"
+- Discuss the synthesis of Byzantine and local artistic traditions
+content_outline:
+- section: Читання
+  words: 50
+- section: Вступ — Культурний світ Русі
+  words: 550
+- section: Писемність та освіта
+  words: 780
+- section: Література
+  words: 800
+- section: Архітектура
+  words: 700
+- section: Образотворче мистецтво
+  words: 800
+- section: Музика та усна творчість
+  words: 650
+- section: Деколонізаційний погляд
+  words: 500
+- section: Первинні джерела
+  words: 250
+- section: Потрібно більше практики?
+  words: 100
+word_target: 4000
+vocabulary:
+- писемність
+- кирилиця
+- літопис
+- житіє
+- мозаїка
+- фреска
+- іконопис
+- скань
+- емаль
+- монастир
+- скрипторій
+- билина
+- берестяна грамота
+- мініатюра
+- глаголиця
+- Боян
+- церковний спів
+activities:
+- type: reading
+  focus: Culture as a manifesto
+  items: 1
+- type: match-up
+  focus: Cultural vocabulary
+  items: 12
+- type: quiz
+  focus: Cultural code
+  items: 5
+- type: critical-analysis
+  focus: Art and decolonization
+  items: 3
+- type: essay-response
+  focus: Heritage and security
+  items: 1
+- type: select
+  focus: Music
+  items: 2
+sources:
+- name: Культура Київської Русі (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Культура_Київської_Русі
+  type: reference
+  notes: Comprehensive overview
+- name: Літописання Київської Русі
+  url: https://uk.wikipedia.org/wiki/Літописання_Київської_Русі
+  type: reference
+  notes: Chronicle tradition
+- name: Слово о полку Ігоревім
+  url: https://litopys.org.ua/slovo/slovo.htm
+  type: primary
+  notes: Epic poem text

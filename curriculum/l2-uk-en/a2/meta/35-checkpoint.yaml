@@ -37,31 +37,44 @@ sources:
   type: reference
   notes: Synthesized logic for coordinating multiple subordinate clauses
 content_outline:
-- section: Introduction / Вступ
+- section: Overview / Огляд
   words: 200
   points:
   - Transitioning from simple reports to complex ideas
   - The map of Level A2.2 proficiency
-- section: Presentation / Презентація
-  words: 600
+- section: Skill 1
+  words: 120
   points:
-  - 'Synthesis 1: Cause & Effect (Тому що, бо, через)'
-  - 'Synthesis 2: Purpose & Desire (Щоб + Inf vs Щоб + Past)'
-  - 'Synthesis 3: Relative Precision (Який in all cases)'
-  - 'Synthesis 4: Contextual Logic (Хоча, але, проте)'
-  - 'Synthesis 5: Time Coordination (Коли, поки, після того як)'
-  - 'The Medical Masterclass: Integrating body parts and symptoms'
-  - 'The Comma Masterlist: When to pause'
-- section: Practice / Практика
-  words: 150
+  - 'Conjunction Masterclass: Cause & Effect (Тому що, бо, через)'
+  - Model, Practice, and Self-Check structure
+- section: Skill 2
+  words: 120
   points:
-  - Complex sentence construction drills
-  - '''Fix the Logic'' diagnostic exercises'
+  - 'Logic of Intent: Purpose & Desire (Щоб + Inf vs Щоб + Past)'
+  - Model, Practice, and Self-Check structure
+- section: Skill 3
+  words: 120
+  points:
+  - 'Relative Chameleon: Який in all cases'
+  - Model, Practice, and Self-Check structure
+- section: Skill 4
+  words: 100
+  points:
+  - 'Time Coordination: Коли, поки, після того як'
+  - Model, Practice, and Self-Check structure
+- section: Skill 5
+  words: 100
+  points:
+  - 'Health and Body: Integrating body parts and symptoms'
+  - Model, Practice, and Self-Check structure
+- section: Integration Challenge / Інтеграційне завдання
+  words: 100
+  points:
+  - Combined task using all skills
 - section: Dialogues / Діалоги
   words: 50
   points:
-  - 'A summary dialogue combining review items: A doctor''s visit with elaborate explanations
-    and plans'
+  - 'A summary dialogue combining review items'
 naturalness:
   score: 9
   status: PASS

@@ -1,0 +1,77 @@
+module: practical-warm-up
+level: a2
+sequence: 58
+version: '2.0'
+title: Practical Warm-up
+subtitle: Getting Ready for Action
+focus: practical
+pedagogy: PPP
+objectives:
+- Learner can understand main ideas in text
+- Learner can answer questions about a text
+- Learner can identify key vocabulary in context
+- Learner can synthesize information
+content_outline:
+- section: 'Introduction: Skills Activation'
+  words: 100
+  points:
+  - Preparing for practical scenarios
+  - Warm-up strategies
+  - Building confidence
+- section: Reading Skills
+  words: 150
+  points:
+  - Skimming for main ideas
+  - Scanning for details
+  - Understanding context clues
+- section: Listening Skills
+  words: 150
+  points:
+  - Listening for gist
+  - Identifying key information
+  - Note-taking strategies
+- section: Vocabulary Activation
+  words: 150
+  points:
+  - Recognizing learned words
+  - Context-based understanding
+  - Word families and patterns
+- section: Question Strategies
+  words: 150
+  points:
+  - Understanding question types
+  - Formulating answers
+  - Asking for clarification
+- section: 'Practice: Integrated Skills'
+  words: 100
+  points:
+  - Read, listen, respond
+  - Apply all A2 skills
+word_target: 800
+vocabulary:
+  required:
+  - текст (text)
+  - питання (question)
+  - відповідь (answer)
+  - розуміти (to understand)
+  - читати (to read)
+  - слухати (to listen)
+  - головний (main)
+  - деталь (detail)
+  recommended:
+  - ідея (idea)
+  - інформація (information)
+  - ключовий (key)
+  - стратегія (strategy)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - speaking
+  - reading-comprehension
+  - listening
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a2-59 (Doctor Visit)

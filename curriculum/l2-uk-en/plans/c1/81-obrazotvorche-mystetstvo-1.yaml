@@ -1,0 +1,22 @@
+module: 81-obrazotvorche-mystetstvo-1
+level: c1
+sequence: 81
+version: '2.0'
+title: Образотворче мистецтво I
+subtitle: Visual Arts I — From Icon to Avant-garde
+focus: fine-arts
+pedagogy: CBI
+objectives:
+- Learner explores the evolution of Ukrainian art from sacred icons to global avant-garde.
+- Learner understands the significance of Shevchenko as an artist.
+- Learner analyzes the contribution of Malevich and Archipenko to world art.
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

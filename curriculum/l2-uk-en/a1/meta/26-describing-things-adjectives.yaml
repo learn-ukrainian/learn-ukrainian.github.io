@@ -1,30 +1,98 @@
 module: a1-26
-title: Describing Things - Adjectives
-subtitle: Adjective Agreement in Gender and Number
-version: '1.0'
-phase: A1.3 - Consolidation
-pedagogy: PPP
+id: a1-26
+slug: describing-things-adjectives
+title: "Describing Things - Adjectives"
+subtitle: "Adjective Agreement in Gender and Number"
+version: '2.0'
+phase: "A1.3 [Consolidation]"
 focus: grammar
-duration: 60 min
+pedagogy: PPP
+register: розмовний
+duration: 60
 transliteration: none
-phonetics: ipa
-tags:
-  - adjectives
-  - agreement
-  - gender
-  - description
-grammar:
-  - Adjective endings for gender (m/f/n) and number (pl)
-  - Hard stem adjectives (-ий/-а/-е/-і)
-  - Soft stem adjectives (-ій/-я/-є/-і)
 objectives:
-  - Learner can use correct adjective endings for masculine nouns
-  - Learner can use correct adjective endings for feminine nouns
-  - Learner can use correct adjective endings for neuter nouns
-  - Learner can form plural adjective forms
-vocabulary_count: 36
-vocab_count: 44
-slug: 26-describing-things-adjectives
+  - "Learner can use correct adjective endings for masculine nouns"
+  - "Learner can use correct adjective endings for feminine nouns"
+  - "Learner can use correct adjective endings for neuter nouns"
+  - "Learner can form plural adjective forms"
+grammar:
+  - "Adjective endings for gender (m/f/n)"
+  - "Hard stem adjectives (-ий/-а/-е/-і)"
+  - "Soft stem adjectives (-ій/-я/-є/-і)"
+word_target: 1000
+content_outline:
+  - section: "Introduction: Adjective Agreement"
+    words: 150
+    points:
+      - "Adjectives agree with nouns"
+      - "Gender and number agreement"
+      - "Nominative case forms"
+  - section: "Masculine Adjectives"
+    words: 200
+    points:
+      - "Hard stem: новий, гарний"
+      - "Soft stem: синій, останній"
+      - "новий дім, синій колір"
+  - section: "Feminine Adjectives"
+    words: 200
+    points:
+      - "Hard stem: нова, гарна"
+      - "Soft stem: синя, остання"
+      - "нова книга, синя сукня"
+  - section: "Neuter Adjectives"
+    words: 200
+    points:
+      - "Hard stem: нове, гарне"
+      - "Soft stem: синє, останнє"
+      - "нове місто, синє небо"
+  - section: "Plural Adjectives"
+    words: 150
+    points:
+      - "All genders: -і (нові, гарні, сині)"
+      - "нові книги, гарні діти"
+      - "Same ending for all genders"
+  - section: "Practice: Describe Objects"
+    words: 100
+    points:
+      - "Describe things around you"
+      - "Match adjectives to nouns"
+vocabulary_hints:
+  required:
+    - новий (new)
+    - старий (old)
+    - гарний (beautiful, nice)
+    - великий (big)
+    - малий (small)
+    - добрий (good, kind)
+    - поганий (bad)
+    - цікавий (interesting)
+  recommended:
+    - синій (blue)
+    - червоний (red)
+    - молодий (young)
+    - дорогий (expensive)
+    - дешевий (cheap)
+    - смачний (tasty)
+activity_hints:
+  - type: transformation
+    focus: "Change adjective gender"
+    items: 25
+  - type: fill-in
+    focus: "Complete with correct adjective form"
+    items: 20
+  - type: matching
+    focus: "Match adjectives to nouns"
+    items: 15
+  - type: description
+    focus: "Describe pictures using adjectives"
+    items: 8
+prerequisites:
+  - a1-03 (The Gender Code)
+  - a1-25 (My Daily Routine)
+connects_to:
+  - a1-27 (Colors and Clothing)
+  - a1-28 (Description - Adverbs)
 naturalness:
   score: 10
   status: PASS
+  justification: "Clear adjective agreement patterns"

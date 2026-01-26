@@ -1,0 +1,107 @@
+module: 27-kaidash-family-characters
+level: lit
+sequence: 27
+version: '1.0'
+title: 'Кайдашева сім''я: Галерея Характерів'
+subtitle: 'Kaidash Family: A Gallery of Characters'
+focus: literature
+pedagogy: seminar
+objectives:
+- Проаналізувати систему персонажів повісті
+- Зрозуміти архетипи української сільської родини
+- Дослідити психологічну мотивацію героїв
+- Порівняти персонажів з попередніми творами курсу
+sources:
+  primary:
+  - url: https://www.ukrlib.com.ua/books/printit.php?tid=907
+    title: Кайдашева сім'я — повний текст
+    notes: Для цитат і аналізу
+  - url: https://www.ukrlib.com.ua/review/printit.php?tid=18137
+    title: Аналіз "Кайдашевої сім'ї"
+    notes: Літературознавчий аналіз
+  secondary:
+  - url: https://www.ukrlib.com.ua/styslo/printit.php?tid=3505
+    title: Кайдашева сім'я — скорочено
+    notes: Для швидкого повторення сюжету
+content_outline:
+- section: Вступ — Сім'я як мікрокосм
+  words: 500
+  subsections:
+  - Родина в українській літературі
+  - Чому "Кайдашева сім'я" стала класикою
+  - Історичний контекст (після 1861 року)
+- section: Омелько Кайдаш — патріарх
+  words: 700
+  subsections:
+  - Характеристика голови родини
+  - Слабкості та чесноти
+  - Конфлікт традиції та змін
+- section: Маруся Кайдашиха — справжня влада
+  words: 700
+  subsections:
+  - Образ свекрухи в українській культурі
+  - Мотиви поведінки Кайдашихи
+  - Сатира vs співчуття
+- section: Сини і невістки
+  words: 800
+  subsections:
+  - Карпо та Лаврін — два типи синів
+  - Мотря і Мелашка — два типи невісток
+  - Конфлікти поколінь
+- section: Другорядні персонажі
+  words: 500
+  subsections:
+  - Село як колективний персонаж
+  - Сусіди та їхня роль
+  - Функція гумору
+- section: Підсумок — Від типу до індивідуальності
+  words: 400
+  subsections:
+  - Як Нечуй створює живих людей
+  - Порівняння з персонажами Квітки та Шевченка
+  - Перехід до конфліктів повісті
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - патріарх
+  - свекруха
+  - невістка
+  - архетип
+  - характер
+  - мотивація
+  - сатира
+  - психологізм
+  - традиція
+  - конфлікт
+  recommended:
+  - індивідуальність
+  - типаж
+  - колективний
+  - гумор
+  - співчуття
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - cloze
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+  special_requirements:
+  - 'match-up: Персонаж → характеристика'
+  - 'reading: Уривки з діалогами персонажів'
+connects_to:
+  previous: 26-nechuy-levytsky
+  related:
+  - lit-28 (Кайдашева сім'я — конфлікти)
+  - lit-05 (Наталка Полтавка — порівняння персонажів)
+constraints:
+  min_engagement_boxes: 3
+  min_examples: 15
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

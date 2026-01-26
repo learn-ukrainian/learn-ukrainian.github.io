@@ -1,0 +1,21 @@
+module: 58-synonyms-quality
+level: b2
+sequence: 58
+version: '1.0'
+title: 'Синоніми: Якість та Оцінка'
+subtitle: Synonyms - Quality and Evaluation
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Учень може розрізняти відтінки значень синонімів на позначення якості
+- Учень вміє вживати оцінну лексику відповідно до контексту та регістру
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

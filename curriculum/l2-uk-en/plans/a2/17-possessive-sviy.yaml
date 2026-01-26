@@ -1,0 +1,82 @@
+module: 17-possessive-sviy
+level: a2
+sequence: 17
+version: '2.0'
+title: Possessive Sviy
+subtitle: The Reflexive Possessive Pronoun
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can use 'свій' to refer back to the subject
+- Learner can distinguish between 'own' and 'someone else's' possession
+- Learner can decline 'свій' in all cases
+- Learner can identify when 'свій' is mandatory vs optional
+sources:
+- name: Ukrainian State Standard 2024 - Pronouns
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Reflexive possessive requirements
+- name: Ukrainian Grammar - Possessives
+  url: https://uk.wikipedia.org/wiki/Займенник
+  type: reference
+  notes: Declension patterns for possessive pronouns
+content_outline:
+- section: Introduction / Вступ
+  words: 200
+  points:
+  - Concept of reflexive possessive (one's own)
+  - The problem of ambiguity in English
+- section: Presentation / Презентація
+  words: 600
+  points:
+  - The Basic Rule: Subject = Possessor
+  - Contrastive examples: Він любить свою vs його маму
+  - Declension table across genders and cases
+  - 1st/2nd person usage (optionality)
+- section: Practice / Практика
+  words: 150
+  points:
+  - Choosing 'свій' vs 'його/її' in context
+  - Translation drills
+- section: Dialogues / Діалоги
+  words: 50
+  points:
+  - Whose car is it?
+  - Family relationships
+  - Error correction drills
+word_target: 1000
+vocabulary:
+  required:
+  - свій (one's own - m)
+  - своя (one's own - f)
+  - своє (one's own - n)
+  - свої (one's own - pl)
+  - власний (own)
+  - особистий (personal)
+  - чужий (someone else's)
+  - його (his)
+  - її (her)
+  - їхній (their)
+  - мій (my)
+  - твій (your)
+  - наш (our)
+  - ваш (your pl./formal)
+  - ділитися (to share)
+  recommended:
+  - власне (precisely)
+  - самостійно (independently)
+  - спільний (shared/common)
+  - належати (to belong)
+  - володіти (to own)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - fill-in
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a2-18 (Bigger Better Stronger)
+- a2-20 (Preferences and Choices)
+- a2-25 (Checkpoint)

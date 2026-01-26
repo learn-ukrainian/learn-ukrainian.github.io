@@ -1,0 +1,21 @@
+module: 52-idioms-animals-i
+level: b2
+sequence: 52
+version: '1.0'
+title: 'Фразеологізми: Тварини I (Вовк, Собака, Кінь)'
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Вивчити 8 ключових фразеологізмів про вовків, собак та коней
+- Розуміти культурний контекст тваринних образів в українській мові
+- Вміти вживати ці вирази у відповідних регістрах (від розмовного до книжного)
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

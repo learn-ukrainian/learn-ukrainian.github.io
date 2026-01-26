@@ -1,0 +1,97 @@
+module: c2-2-checkpoint
+level: c2
+sequence: 45
+version: '2.0'
+title: Контрольна точка C2.2 — Літературна майстерність
+focus: checkpoint
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: CEFR C2 Literary Competence Descriptors
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: C2 literature-related can-do statements
+- name: Ukrainian State Standard 2024 — C2 Level
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official C2 proficiency requirements for literary competence
+- name: Національна академія наук України — літературознавство
+  url: https://www.nas.gov.ua/
+  type: reference
+  notes: Academic standards for literary scholarship assessment
+content_outline:
+- section: Вступ — Структура контрольної оцінки
+  words: 300
+  points:
+  - Огляд компетенцій, що оцінюються
+  - Формат та критерії оцінювання
+  - Очікування від кожного розділу
+- section: Частина I — Літературна теорія (М26-27)
+  words: 700
+  points:
+  - Теоретичні концепції та їх застосування
+  - Наратологічний аналіз
+  - Ідентифікація літературознавчих підходів
+- section: Частина II — Поетика та стилістика (М28-29)
+  words: 700
+  points:
+  - Версифікаційний аналіз
+  - Прозова поетика
+  - Стилістичні прийоми та їх ефект
+- section: Частина III — Інтертекстуальність та критика (М30-32)
+  words: 700
+  points:
+  - Розпізнавання інтертекстуальних зв'язків
+  - Критичний аналіз літературного твору
+  - Написання літературознавчого есе
+- section: Частина IV — Переклад та творче письмо (М33-37)
+  words: 700
+  points:
+  - Перекладацький аналіз та практика
+  - Оригінальне творче письмо
+  - Демонстрація індивідуального голосу
+- section: Частина V — Сучасна література (М38-41)
+  words: 600
+  points:
+  - Орієнтація в сучасному літературному процесі
+  - Знання літературних премій та канону
+  - Участь у літературній дискусії
+- section: Підсумок та зворотний зв'язок
+  words: 300
+  points:
+  - Загальна оцінка та інтерпретація результатів
+  - Рекомендації для подальшого розвитку
+  - Перехід до Phase C2.3
+word_target: 4000
+vocabulary:
+  required:
+  - контрольна точка (checkpoint)
+  - оцінювання (assessment)
+  - критерій (criterion)
+  - компетенція (competency)
+  - рубрика (rubric)
+  - стандарт (standard)
+  - рівень володіння (proficiency level)
+  - зворотний зв'язок (feedback)
+  - результат (result)
+  - інтерпретація (interpretation)
+  recommended:
+  - діагностика (diagnostics)
+  - валідація (validation)
+  - еталонний (benchmark)
+  - підсумковий (summative)
+  - формативний (formative)
+  forbidden: []
+activities:
+  types_required:
+  - essay-response
+  - quiz
+  - comparative-study
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-46 (Professional Language Overview — C2.3 begins)
+- c2-25 (C2.1 Final Checkpoint — for cross-reference)

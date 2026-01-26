@@ -1,0 +1,109 @@
+module: valentyna-radzymovska
+level: c1-bio
+sequence: 55
+version: '2.0'
+title: 'Валентина Радзимовська: Жертва терору'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Радзимовська_Валентина_Павлівна
+    title: Валентина Радзимовська (Wikipedia UA)
+    notes: Основна біографічна інформація
+  secondary:
+  - url: https://www.reabit.org.ua/
+    title: Меморіал жертв репресій
+    notes: База даних репресованих
+  - url: https://biochemistry.org.ua/
+    title: Історія української біохімії
+    notes: Науковий контекст
+content_outline:
+- section: Вступ — Наука як жертва режиму
+  words: 400
+  subsections:
+  - Доля української науки в 1930-х роках
+  - Радзимовська як символ знищеного покоління
+  - Чому її історія важлива сьогодні
+- section: Ранні роки та освіта
+  words: 600
+  subsections:
+  - Народження та походження
+  - Шлях до наукової кариєри
+  - Формування як вченої
+- section: Наукова діяльність
+  words: 800
+  subsections:
+  - Робота в галузі біохімії
+  - Наукові досягнення та публікації
+  - Місце в українській науці 1920-30-х
+- section: Українізація та наукове середовище
+  words: 700
+  subsections:
+  - Розвиток української науки в 1920-х
+  - Роль жінок в академічному світі
+  - Надії та сподівання покоління
+- section: Сталінські репресії
+  words: 800
+  subsections:
+  - Хвиля терору проти інтелігенції
+  - Арешт та звинувачення
+  - Доля в системі ГУЛАГу
+- section: Памятка та відновлення імені
+  words: 500
+  subsections:
+  - Реабілітація в незалежній Україні
+  - Значення для історії української науки
+  - Уроки для сучасності
+- section: Дискусія — Ціна репресій для нації
+  words: 200
+  subsections:
+  - Втрачені покоління науковців
+  - Як репресії вплинули на розвиток України
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - репресії
+  - біохімія
+  - інтелігенція
+  - терор
+  - арешт
+  - реабілітація
+  - ГУЛАГ
+  - українізація
+  - розстріл
+  - памятка
+  recommended:
+  - справа-фабрикація
+  - конвеєр смерті
+  - Великий терор
+  - посмертно
+  - меморіалізація
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: b2-hist-holodomor
+  related:
+  - c1-bio-63-mykola-khvylovyi
+  - c1-bio-57-les-kurbas
+  - c1-bio-54-nataliia-polonska-vasylenko
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

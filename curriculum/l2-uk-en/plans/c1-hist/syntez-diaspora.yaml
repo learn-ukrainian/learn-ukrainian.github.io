@@ -1,0 +1,96 @@
+module: syntez-diaspora
+level: c1-hist
+sequence: 69
+version: '1.0'
+title: 'Синтез: Ковчег нації'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Три хвилі, одна місія
+  words: 400
+  subsections:
+  - Огляд модулів 64-68
+  - Діаспора як феномен
+  - «Паралельна держава»
+  - Мета синтезу
+- section: Порівняння трьох хвиль
+  words: 600
+  subsections:
+  - Соціальний склад
+  - Географія
+  - Мотивація
+  - Збереження ідентичності
+  - Що кожна хвиля принесла
+- section: Функції діаспори
+  words: 700
+  subsections:
+  - Збереження культури
+  - Політичне представництво
+  - Наукова діяльність
+  - Лобіювання
+  - «Голос нації» у світі
+- section: Діаспора і незалежність
+  words: 600
+  subsections:
+  - Підтримка дисидентів
+  - Тиск на Захід
+  - 1991 — перші контакти
+  - Після незалежності — нова роль
+- section: 2022 — Четверта хвиля?
+  words: 500
+  subsections:
+  - Біженці 2022 — мільйони
+  - Відмінності від попередніх хвиль
+  - Нова діаспора — тимчасова чи постійна?
+  - Зв'язок з Україною — технології
+- section: Виклики і майбутнє
+  words: 400
+  subsections:
+  - Асиміляція — загроза
+  - Молоде покоління
+  - Роль після перемоги
+  - Діаспора чи «транснаціональна нація»?
+- section: Підсумок
+  words: 300
+  subsections:
+  - Діаспора — ковчег нації
+  - Збереження, коли вдома не можна
+  - Перехід до регіональних студій
+word_target: 3500
+vocabulary:
+- синтез
+- ковчег
+- паралельна держава
+- транснаціональний
+- ідентичність
+- асиміляція
+- репатріація
+- біженець
+- лобіювання
+- глобальний
+- етнічна громада
+- культурна місія
+- політичний тиск
+- мережа
+- інтеграція
+activities:
+- type: essay-response
+  focus: Create diaspora evolution diagram
+- type: wave-comparison
+  focus: Three waves — what united, what divided
+- type: function-analysis
+  focus: What did diaspora do for Ukraine?
+- type: contemporary-analysis
+  focus: 2022 refugees — new diaspora or different?
+- type: essay-response
+  focus: Як діаспора вплинула на здобуття незалежності 1991 року?
+sources:
+- name: Українська діаспора (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_діаспора
+  type: reference
+  notes: Overview
+- name: Світовий конгрес українців
+  url: https://uk.wikipedia.org/wiki/Світовий_конгрес_українців
+  type: reference
+  notes: Global coordination

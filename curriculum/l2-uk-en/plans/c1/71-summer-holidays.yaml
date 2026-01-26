@@ -1,0 +1,23 @@
+module: 71-summer-holidays
+level: c1
+sequence: 71
+version: '1.0'
+title: Українські свята - літній цикл
+subtitle: Ukrainian Holidays - Summer Cycle
+focus: cultural
+pedagogy: CBI
+objectives:
+- Learner can describe the rituals of Ivan Kupala (fire, water, fern flower)
+- Learner can explain the symbolism of Green Week (Troitsia)
+- Learner can distinguish between the three Spas holidays (Honey, Apple, Nut)
+- Learner can discuss the pre-Christian roots of summer traditions
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

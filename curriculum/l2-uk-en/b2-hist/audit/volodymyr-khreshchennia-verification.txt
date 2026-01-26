@@ -1,0 +1,68 @@
+
+========================================
+  📋 Loaded Metadata from YAML sidecar
+
+📋 Auditing: B2 M11 — Володимир і Хрещення Русі
+   File: curriculum/l2-uk-en/b2-hist/volodymyr-khreshchennia.md | Target: 4000 words
+  📋 Required activity types from meta: comparative-study, essay-response, fill-in, match-up, quiz, reading
+  📋 Template: docs/l2-uk-en/templates/b2-history-module-template.md (pedagogy: CBI)
+  ⚠️  Outline compliance: 0 errors, 1 warnings
+     ⚠️ [SECTION_LENGTH_MISMATCH] Section 'Значення хрещення для культури' is under target word count.
+
+  ⚠️ HYDRATION NOTE: Outline sums to 6814, exceeding word_target 4000
+     Additional 2814 words (allowed for content depth)
+
+  📊 Section Word Analysis:
+     Розминка                                            142 /  142  ✅ 
+     Читання: Князь Володимир: від язичника до святого   536 /  536  ✅ 
+     Корсунський похід і шлюб із Анною                   431 /  431  ✅ 
+     Первинні джерела                                    227 /  227  ✅ 
+     Деколонізаційний погляд                             323 /  323  ✅ 
+     Значення хрещення для культури                     1953 / 1953  ✅ 
+     Потрібно більше практики?                           109 /  109  ✅ 
+     Читання: Князь Володимир: від язичника до святого   536 /  333  ✅ (+203)
+     Корсунський похід і шлюб із Анною                   431 /  151  ✅ (+280)
+     Первинні джерела                                    227 /   76  ✅ (+151)
+     Деколонізаційний погляд                             323 /  220  ✅ (+103)
+     Значення хрещення для культури                     1953 / 2217  ⚠️ (-264)
+     Потрібно більше практики?                           109 /   96  ✅ (+13)
+     ──────────────────────────────────────────────────────────────────────────
+     TOTAL                                              7300 / 6814  ✅ (+486)
+
+📋 Auditing: B2 M11 — Володимир і Хрещення Русі
+   File: curriculum/l2-uk-en/b2-hist/volodymyr-khreshchennia.md | Target: 4000 words
+
+  📋 Found YAML activities file (10 activities)
+  > Вибір віри: Легенда і реальність: 3 items (min 1)
+  > Хрещення киян: 3 items (min 1)
+  > Значення цивілізаційного вибору Володимира: 1 items (min 1)
+  > Порівняння історичних епох: 1 items (min 1)
+  > Християнство як державотворчий акт: 1 items (min 1)
+  > Релігійна та історична термінологія: 12 items (min 8)
+  > Факти про хрещення Русі: 8 items (min 8)
+  > Релігійна та політична лексика: 15 items (min 8)
+  > Поширення християнства: 8 items (min 8)
+  > Хронологія подій: 12 items (min 8)
+
+--- STRICT GATES (Level B2) ---
+Words        ⚠️ 3965/4000 (raw: 4256) (35 short)
+Activities   ✅ 10/3
+Density      ✅ All > 1
+Unique_types ✅ 7/2 types
+Priority     ✅ Priority types used
+Engagement   ✅ 12/5
+Audio        ℹ️ No audio
+Vocab        ⚠️ 17 < 20 (soft target)
+Structure    ✅ Valid Structure
+Lint         ✅ Clean Format
+Pedagogy     ✅ Level-appropriate
+Content_heavy ⚠️ Too many activities: 10 (target 3-9)
+Grammar      ℹ️ N/A (covered by naturalness)
+Naturalness  ✅ 10/10 (High)
+Activity_quality 📋 Quality validation available (optional)
+Immersion    🇺🇦 98.3% (target 90-100% (history))
+Richness     ✅ 98% (history)
+
+Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/audit/volodymyr-khreshchennia-review.md
+
+✅ AUDIT PASSED.

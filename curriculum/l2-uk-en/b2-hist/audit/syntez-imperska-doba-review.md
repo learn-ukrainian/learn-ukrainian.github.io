@@ -1,7 +1,7 @@
 # Audit Report: M86 — syntez-imperska-doba.md
 **Level:** B2 | **Module:** M86 | **Phase:** HIST.8 | **Pedagogy:** Not Specified | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 20:23:57
+**Generated:** 2026-01-25 22:23:19
 
 ## Configuration
 **Type:** B2-history

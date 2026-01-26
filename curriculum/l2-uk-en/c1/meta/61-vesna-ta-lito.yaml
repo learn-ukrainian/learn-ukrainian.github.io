@@ -1,23 +1,44 @@
 module: c1-61
-title: 'Весна та літо'
-subtitle: 'Spring and Summer Calendar Rituals'
+title: Весна та літо
+subtitle: Spring and Summer Calendar Rituals
 version: '2.0'
-phase: 'C1.5 Folk Culture & Fine Arts'
-focus: 'culture'
-pedagogy: 'Immersion & Analysis'
+phase: C1.5 Folk Culture & Fine Arts
+focus: culture
+pedagogy: Immersion & Analysis
 duration: 120
 transliteration: none
 tags:
-  - culture
-  - folk-traditions
-  - spring
-  - summer
+- culture
+- folk-traditions
+- spring
+- summer
 grammar:
-  - 'Ethnographic terminology'
-  - 'Narrative and ritual registers'
+- Ethnographic terminology
+- Narrative and ritual registers
 objectives:
-  - 'Learner can describe the cycle of spring and summer holidays in Ukraine'
-  - 'Learner understands the symbolism of fire, water, and vegetation in rituals'
-  - 'Learner can analyze the agrarian and solar motifs in Ukrainian folklore'
+- Learner can describe the cycle of spring and summer holidays in Ukraine
+- Learner understands the symbolism of fire, water, and vegetation in rituals
+- Learner can analyze the agrarian and solar motifs in Ukrainian folklore
 vocabulary_count: 32
 slug: 61-vesna-ta-lito
+content_outline:
+- section: Вступ — Весна та літо
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - History of pysanky from pre-Christian times
+  - 'Technique: wax-resist dyeing method'
+  - 'Symbolism: colors, geometric patterns, nature motifs'
+  - 'Regional styles: Hutsul, Lemko, Poltava'
+  - Contemporary pysanka artists and UNESCO recognition
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

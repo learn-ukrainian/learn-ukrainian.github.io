@@ -1,11 +1,7 @@
-# Module Metadata: Заснування Києва
-# Phase: B2-HIST.1 [Origins]
-# Module 06 of B2-HIST track
-
 module: zasnuvannia-kyieva
 id: b2-hist-06
-title: "Заснування Києва"
-subtitle: "Legend and Archaeology of the Capital"
+title: Заснування Києва
+subtitle: Legend and Archaeology of the Capital
 slug: zasnuvannia-kyieva
 version: '2.0'
 phase: B2-HIST.1 [Origins]
@@ -14,113 +10,90 @@ pedagogy: seminar
 register: публіцистичний
 duration: 150
 transliteration: none
-
-# Learning Objectives
 objectives:
-  - "Учень може розповісти легенду про заснування Києва братами Києм, Щеком, Хоривом та сестрою Либідь"
-  - "Учень може пояснити геополітичне значення Києва в контексті шляху «з варягів у греки»"
-  - "Учень може порівняти легендарні та археологічні свідчення про виникнення міста"
-  - "Учень може спростувати імперські міфи про походження Києва"
-
-# Grammar Focus
+- Учень може розповісти легенду про заснування Києва братами Києм, Щеком, Хоривом та сестрою Либідь
+- Учень може пояснити геополітичне значення Києва в контексті шляху «з варягів у греки»
+- Учень може порівняти легендарні та археологічні свідчення про виникнення міста
+- Учень може спростувати імперські міфи про походження Києва
 grammar:
-  - "Безособові речення на -но, -то (було засновано, названо)"
-  - "Складнопідрядні речення з підрядними з'ясувальними"
-  - "Вживання дієприкметників у пасивному стані"
-
-# Word Target and Content Structure
+- Безособові речення на -но, -то (було засновано, названо)
+- Складнопідрядні речення з підрядними з'ясувальними
+- Вживання дієприкметників у пасивному стані
 word_target: 4000
-
 content_outline:
-  - section: "Вступ"
-    words: 196
-    points:
-      - "Значення Києва як сакрального серця держави"
-
-  - section: "Читання"
-    words: 1233
-    points:
-      - "Аналіз «Повісті минулих літ» як джерела"
-
-  - section: "Варяги та хозари"
-    words: 972
-    points:
-      - "Шлях «з варягів у греки» та Кенугард"
-
-  - section: "Первинні джерела"
-    words: 242
-    points:
-      - "Літописні свідчення та візантійські описи"
-
-  - section: "Деколонізаційний погляд"
-    words: 359
-    points:
-      - "Спростування міфу про «спільну колиску»"
-
-  - section: "Археологічні свідчення"
-    words: 334
-    points:
-      - "Язичницьке капище на Старокиївській горі"
-
-  - section: "Есе"
-    words: 384
-    points:
-      - "Аналітичне завдання про геополітичну роль Києва"
-
-  - section: "Підсумок"
-    words: 227
-    points:
-      - "Узагальнення значення заснування Києва"
-
-  - section: "Потрібно більше практики?"
-    words: 243
-    points:
-      - "Ресурси для самостійного поглиблення знань"
-
-# Naturalness Score
+- section: Вступ
+  words: 196
+  points:
+  - Значення Києва як сакрального серця держави
+- section: Читання
+  words: 1233
+  points:
+  - Аналіз «Повісті минулих літ» як джерела
+- section: Варяги та хозари
+  words: 972
+  points:
+  - Шлях «з варягів у греки» та Кенугард
+- section: Первинні джерела
+  words: 242
+  points:
+  - Літописні свідчення та візантійські описи
+- section: Деколонізаційний погляд
+  words: 359
+  points:
+  - Спростування міфу про «спільну колиску»
+- section: Археологічні свідчення
+  words: 334
+  points:
+  - Язичницьке капище на Старокиївській горі
+- section: "Хронологія: Легенди та археологія"
+  words: 250
+  points:
+  - Legend of Kyi, Shchek, Khoryv
+  - Archaeological evidence (Starokyivska Hora)
+  - Strategic location
+- section: Підсумок
+  words: 227
+  points:
+  - Узагальнення значення заснування Києва
+- section: Потрібно більше практики?
+  words: 243
+  points:
+  - Ресурси для самостійного поглиблення знань
 naturalness:
   score: 9
-  status: "PASS"
-
-# Vocabulary Guidance
+  status: PASS
 vocabulary_hints:
   required:
-    - засновник (founder)
-    - легенда (legend)
-    - літопис (chronicle)
-    - пагорб (hill)
-    - данина (tribute)
-    - каганат (khaganate)
-    - варяги (Varangians)
-    - торговельний шлях (trade route)
-    - капіще (pagan sanctuary)
-    - дитинець (citadel)
-    - переправа (ferry/crossing)
-    - транзитна торгівля (transit trade)
-    - деколонізація (decolonization)
-    - ідентичність (identity)
-    - артефакт (artifact)
-
-# Activity Planning
+  - засновник (founder)
+  - легенда (legend)
+  - літопис (chronicle)
+  - пагорб (hill)
+  - данина (tribute)
+  - каганат (khaganate)
+  - варяги (Varangians)
+  - торговельний шлях (trade route)
+  - капіще (pagan sanctuary)
+  - дитинець (citadel)
+  - переправа (ferry/crossing)
+  - транзитна торгівля (transit trade)
+  - деколонізація (decolonization)
+  - ідентичність (identity)
+  - артефакт (artifact)
 activity_hints:
-  - type: reading
-    focus: "Аналіз літописної легенди"
-  - type: critical-analysis
-    focus: "Зіставлення легенди та археології"
-  - type: essay-response
-    focus: "Геополітичне значення Києва"
-
-# Sources
+- type: reading
+  focus: Аналіз літописної легенди
+- type: critical-analysis
+  focus: Зіставлення легенди та археології
+- type: essay-response
+  focus: Геополітичне значення Києва
 sources:
-  - name: "Повість минулих літ (Нестор)"
-    url: "https://litopys.org.ua/pvl/pvl01.htm"
-    type: primary
-  - name: "Про управління імперією (Костянтин Багрянородний)"
-    url: "http://litopys.org.ua/izborn79/izb79_03.htm"
-    type: primary
-
-# Module Connections
+- name: Повість минулих літ (Нестор)
+  url: https://litopys.org.ua/pvl/pvl01.htm
+  type: primary
+- name: Про управління імперією (Костянтин Багрянородний)
+  url: http://litopys.org.ua/izborn79/izb79_03.htm
+  type: primary
 prerequisites:
-  - "b2-hist-04: Слов'яни: Походження"
+- 'b2-hist-04: Слов''яни: Походження'
 connects_to:
-  - "b2-hist-07: Хозарський каганат і слов'яни"
+- 'b2-hist-07: Хозарський каганат і слов''яни'

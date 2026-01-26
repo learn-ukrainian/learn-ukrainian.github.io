@@ -1,31 +1,97 @@
 module: a1-29
-title: Weather & Nature
-subtitle: Seasons, Weather & The Natural World
-version: '1.0'
-phase: A1.3 - Consolidation
+id: a1-29
+slug: weather-and-nature
+title: "Weather & Nature"
+subtitle: "Seasons, Weather & The Natural World"
+version: '2.0'
+phase: "A1.3 [Consolidation]"
+focus: vocabulary
 pedagogy: PPP
-focus: grammar
-duration: 60 min
+register: розмовний
+duration: 60
 transliteration: none
-phonetics: ipa
-tags:
-  - weather
-  - nature
-  - seasons
-  - pets
-  - impersonal
-grammar:
-  - Impersonal weather expressions
-  - Nature vocabulary
-  - Pet vocabulary
 objectives:
-  - Learner can describe the weather
-  - Learner can ask about weather conditions
-  - Learner can name common plants and animals
-  - Learner can use impersonal expressions (cold, warm, hot)
-vocabulary_count: 35
-vocab_count: 39
-slug: 29-weather-and-nature
+  - "Learner can describe the weather"
+  - "Learner can ask about weather conditions"
+  - "Learner can name the four seasons"
+  - "Learner can use impersonal weather expressions"
+grammar:
+  - "Impersonal weather expressions"
+  - "Seasons with prepositions"
+  - "Temperature and weather adjectives"
+word_target: 1000
+content_outline:
+  - section: "Introduction: Talking About Weather"
+    words: 150
+    points:
+      - "Weather is everyday conversation"
+      - "Impersonal constructions"
+      - "Яка сьогодні погода?"
+  - section: "Weather Expressions"
+    words: 200
+    points:
+      - "Сьогодні тепло/холодно/жарко"
+      - "Йде дощ/сніг (It's raining/snowing)"
+      - "Світить сонце (The sun is shining)"
+  - section: "The Four Seasons"
+    words: 200
+    points:
+      - "весна, літо, осінь, зима"
+      - "навесні, влітку, восени, взимку"
+      - "What happens in each season"
+  - section: "Nature Vocabulary"
+    words: 200
+    points:
+      - "дерево, квітка, трава"
+      - "небо, хмара, сонце"
+      - "гора, річка, ліс"
+  - section: "Describing Weather Conditions"
+    words: 150
+    points:
+      - "сонячно, хмарно, вітряно"
+      - "Temperature: градусів"
+      - "Weather forecasts"
+  - section: "Practice: Weather Reports"
+    words: 100
+    points:
+      - "Describe today's weather"
+      - "Ask about weather in different cities"
+vocabulary_hints:
+  required:
+    - погода (weather)
+    - дощ (rain)
+    - сніг (snow)
+    - сонце (sun)
+    - тепло (warm)
+    - холодно (cold)
+    - весна (spring)
+    - зима (winter)
+  recommended:
+    - літо (summer)
+    - осінь (autumn)
+    - хмара (cloud)
+    - вітер (wind)
+    - спекотно (hot)
+    - прохолодно (cool)
+activity_hints:
+  - type: vocabulary-drill
+    focus: "Weather and nature words"
+    items: 30
+  - type: matching
+    focus: "Match weather to seasons"
+    items: 20
+  - type: fill-in
+    focus: "Complete weather descriptions"
+    items: 15
+  - type: dialogue
+    focus: "Weather conversations"
+    items: 6
+prerequisites:
+  - a1-28 (Description - Adverbs)
+connects_to:
+  - a1-30 (Prepositions III)
+  - a1-33 (Holidays and Traditions)
 naturalness:
   score: 10
   status: PASS
+  justification: "Essential weather vocabulary"

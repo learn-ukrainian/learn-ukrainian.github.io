@@ -1,11 +1,105 @@
-# Meta for ОУН: Формування
+module: b2-hist-103
+id: b2-hist-103
 slug: oun
 title: "ОУН: Формування"
-level: B2
-track: history
-phase: "HIST.10 [Soviet Period & Tragedies]"
-status: skeleton
+subtitle: "OUN: The Formation of Ukrainian Nationalism"
+version: '2.0'
+phase: "HIST.10 [Soviet Terror]"
 focus: history
+pedagogy: CBI
+register: публіцистичний
+duration: 120
+transliteration: none
+objectives:
+  - "Учень може описати створення та ідеологію ОУН"
+  - "Учень може пояснити історичний контекст українського націоналізму"
+  - "Учень може проаналізувати діяльність ОУН у міжвоєнний період"
+  - "Учень може оцінити суперечливу спадщину організації"
+grammar:
+  - "Минулий час в історичному наративі"
+  - "Політична та ідеологічна лексика"
+  - "Складнопідрядні речення"
 word_target: 4000
-prerequisites: []
-learning_outcomes: []
+content_outline:
+  - section: "Вступ: Народження націоналізму"
+    words: 400
+    points:
+      - "1929: створення ОУН у Відні"
+      - "Контекст: поразка визвольних змагань"
+      - "Чому радикальний націоналізм?"
+  - section: "Витоки та ідеологія"
+    words: 800
+    points:
+      - "УВО: попередник ОУН"
+      - "Євген Коновалець: засновник"
+      - "Ідеологія інтегрального націоналізму"
+      - "Дмитро Донцов та його вплив"
+  - section: "Діяльність у 1930-х"
+    words: 1000
+    points:
+      - "Підпільна боротьба в Галичині"
+      - "Терористичні акції: полеміка"
+      - "Вбивство Коновальця 1938"
+      - "Розкол: ОУН-М та ОУН-Б"
+      - "Степан Бандера та Андрій Мельник"
+  - section: "Первинні джерела"
+    words: 800
+    points:
+      - "Програмові документи ОУН"
+      - "Листи та спогади учасників"
+      - "Польські та радянські звіти"
+  - section: "Деколонізаційний погляд"
+    words: 500
+    points:
+      - "Радянський та польський наративи: «фашисти»"
+      - "Контекст: боротьба проти двох імперій"
+      - "Сучасні дискусії та переосмислення"
+  - section: "Підсумок: До Другої світової"
+    words: 500
+    points:
+      - "ОУН напередодні війни"
+      - "Надії на німецьку підтримку"
+      - "Трагічні наслідки"
+vocabulary_hints:
+  required:
+    - націоналізм (nationalism)
+    - підпілля (underground)
+    - ідеологія (ideology)
+    - організація (organization)
+    - визвольний рух (liberation movement)
+    - терор (terror)
+    - розкол (split)
+    - провідник (leader)
+  recommended:
+    - радикальний (radical)
+    - інтегральний (integral)
+    - атентат (assassination)
+    - конспірація (conspiracy)
+    - еміграція (emigration)
+    - маніфест (manifesto)
+activity_hints:
+  - type: reading
+    focus: "Програмові документи ОУН"
+    source: "Архівні матеріали"
+    items: 4
+  - type: quiz
+    focus: "ОУН: створення та діяльність"
+    items: 15
+  - type: match-up
+    focus: "Постать → роль в ОУН"
+    items: 10
+  - type: true-false
+    focus: "Міфи про ОУН"
+    items: 10
+  - type: essay-response
+    focus: "Як історичний контекст вплинув на радикалізацію українського націоналізму?"
+    word_target: 250
+prerequisites:
+  - b2-hist-102 (Голодомор: пам'ять)
+connects_to:
+  - b2-hist-104 (Карпатська Україна)
+  - b2-hist-107 (УПА)
+naturalness:
+  score: 10
+  status: PASS
+  justification: "Академічний український для політичної історії"

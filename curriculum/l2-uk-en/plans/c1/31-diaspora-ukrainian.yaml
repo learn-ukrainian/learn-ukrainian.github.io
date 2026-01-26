@@ -1,0 +1,98 @@
+module: 31-diaspora-ukrainian
+level: c1
+sequence: 31
+version: '2.0'
+title: Українська діаспора
+focus: linguistics
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Українська діаспора
+  url: https://diasporaua.org/
+  type: reference
+  notes: Diaspora community information
+- name: Heritage Language Studies
+  url: https://mova.info/
+  type: secondary
+  notes: Research on diaspora language
+content_outline:
+- section: Вступ — Історія еміграції
+  words: 500
+  points:
+  - Хвилі еміграції
+  - Причини переселення
+  - Географія діаспори
+- section: Основні громади
+  words: 700
+  points:
+  - Канада (найбільша діаспора)
+  - США (великі громади)
+  - Бразилія (історичні спільноти)
+  - Австралія (повоєнна еміграція)
+  - Європа (нова хвиля)
+- section: Мовні особливості
+  words: 800
+  points:
+  - Збереження архаїзмів
+  - Вплив місцевих мов
+  - Особливості heritage speakers
+- section: Культурне життя
+  words: 600
+  points:
+  - Українські школи
+  - Церква і громада
+  - Культурні організації
+- section: Мовна ідентичність
+  words: 500
+  points:
+  - Збереження мови за кордоном
+  - Виклики для нових поколінь
+  - Зв'язок з Україною
+- section: Сучасна діаспора
+  words: 500
+  points:
+  - Нова еміграція (після 2022)
+  - Діджитал-зв'язок
+  - Підтримка України
+- section: Практичне завдання
+  words: 400
+  points:
+  - Аналіз діаспорного тексту
+  - Порівняння з сучасною мовою
+  - Дискусія про збереження
+word_target: 4000
+vocabulary:
+  required:
+  - діаспора (diaspora)
+  - еміграція (emigration)
+  - іміграція (immigration)
+  - громада (community)
+  - heritage speaker (носій спадкової мови)
+  - архаїзм (archaism)
+  - збереження мови (language maintenance)
+  - асиміляція (assimilation)
+  - ідентичність (identity)
+  - хвиля еміграції (wave of emigration)
+  recommended:
+  - переселенець (settler)
+  - репатріація (repatriation)
+  - двомовність (bilingualism)
+  - мовний зсув (language shift)
+  - інтерференція (interference)
+  forbidden: []
+activities:
+  types_required:
+  - group-sort
+  - quiz
+  - essay-response
+  - cloze
+  - fill-in
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c1-32 (Professional Scenarios)
+- c1-35 (C1.2 Checkpoint)
+- c1-49 (Church Slavonicisms)

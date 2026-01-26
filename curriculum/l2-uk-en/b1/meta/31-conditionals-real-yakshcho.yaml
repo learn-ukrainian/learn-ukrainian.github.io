@@ -1,27 +1,94 @@
 module: b1-31
-title: 'Умовні речення: реальна умова (якщо)'
-subtitle: Real Conditionals - If Clauses
-version: '1.0'
-phase: B1.3a Complex Sentences
-pedagogy: TTT
+id: b1-31
+slug: conditionals-real-yakshcho
+title: "Умовні речення: реальна умова (якщо)"
+subtitle: "Real Conditionals - If Clauses"
+version: '2.0'
+phase: "B1.3a [Complex Sentences]"
 focus: grammar
+pedagogy: TTT
+register: розмовний
 duration: 90
 transliteration: none
-tags:
-- grammar
-- conditionals
-- complex-sentences
-- yakshcho
-grammar:
-- Real conditional constructions with якщо
-- Tense sequences in conditional sentences
 objectives:
-- Learner understands real conditional constructions
-- Learner can form conditional sentences with якщо
-- Learner can use correct tense sequences in conditionals
-vocabulary_count: 25
-vocab_count: 11
-slug: 31-conditionals-real-yakshcho
+  - "Learner understands real conditional constructions"
+  - "Learner can form conditional sentences with якщо"
+  - "Learner can use correct tense sequences in conditionals"
+  - "Learner can express future conditions accurately"
+grammar:
+  - "Real conditionals with якщо"
+  - "Tense sequence in conditional sentences"
+  - "Present and future in conditional clauses"
+word_target: 1200
+content_outline:
+  - section: "Introduction: Real Conditionals"
+    words: 150
+    points:
+      - "What are real conditionals"
+      - "якщо as conditional marker"
+      - "Comparison with English 'if'"
+  - section: "Basic Real Conditional"
+    words: 250
+    points:
+      - "Якщо + present, future"
+      - "Якщо + future, future"
+      - "Word order flexibility"
+  - section: "Tense Sequences"
+    words: 250
+    points:
+      - "Present in if-clause"
+      - "Future in result clause"
+      - "Both clauses in future"
+  - section: "Common Patterns"
+    words: 250
+    points:
+      - "General truths (present + present)"
+      - "Future predictions (present + future)"
+      - "Plans and intentions"
+  - section: "якщо vs коли"
+    words: 200
+    points:
+      - "Conditional vs temporal"
+      - "Uncertainty vs certainty"
+      - "Choosing correctly"
+  - section: "Practice: Real Conditionals"
+    words: 100
+    points:
+      - "Form conditional sentences"
+      - "Use correct tenses"
+vocabulary_hints:
+  required:
+    - якщо (if)
+    - умова (condition)
+    - умовний (conditional)
+    - результат (result)
+    - наслідок (consequence)
+    - реальний (real)
+    - можливий (possible)
+    - ймовірний (probable)
+  recommended:
+    - за умови що (on condition that)
+    - у разі якщо (in case)
+    - припускаючи (assuming)
+    - за умови (provided that)
+activity_hints:
+  - type: fill-in
+    focus: "Complete conditionals"
+    items: 25
+  - type: sentence-combining
+    focus: "Combine with якщо"
+    items: 20
+  - type: error-correction
+    focus: "Fix tense sequence errors"
+    items: 15
+  - type: translation
+    focus: "English to Ukrainian"
+    items: 15
+prerequisites:
+  - b1-30 (Purpose Clauses щоб + past form)
+connects_to:
+  - b1-32 (Conditionals Unreal якби)
 naturalness:
   score: 9
   status: PASS
+  justification: "Essential conditional structure"

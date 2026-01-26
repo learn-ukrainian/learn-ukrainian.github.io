@@ -1,0 +1,109 @@
+module: serhiy-zhadan
+level: c1-bio
+sequence: 90
+version: '2.0'
+title: 'Сергій Жадан: Голос Донбасу'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Жадан_Сергій_Вікторович
+    title: Сергій Жадан (Wikipedia UA)
+    notes: Біографія, творчість, громадська діяльність
+  secondary:
+  - url: https://meridiancz.com
+    title: Meridian Czernowitz
+    notes: Літературні фестивалі та інтерв'ю
+  - url: https://sobakyvkosmosi.com.ua
+    title: Гурт «Собаки в космосі»
+    notes: Музична діяльність
+content_outline:
+- section: Вступ — Поет війни та миру
+  words: 400
+  subsections:
+  - Жадан як найпопулярніший український письменник сучасності
+  - Від андеграунду до голосу нації
+  - Поєднання літератури, музики та волонтерства
+- section: Луганська молодість (1974-1996)
+  words: 600
+  subsections:
+  - Народження в Старобільську
+  - Зростання в радянському Донбасі
+  - Навчання в Харкові
+  - Формування як поета
+- section: Харківський андеграунд (1990-2000-ні)
+  words: 700
+  subsections:
+  - Літературна група «Червона Фіра»
+  - Перші поетичні збірки
+  - Романи «Депеш Мод» та «Anarchy in the UKR»
+  - Становлення голосу покоління
+- section: «Ворошиловград» та визнання (2010-2014)
+  words: 700
+  subsections:
+  - Роман «Ворошиловград» (2010)
+  - Тема Донбасу та ідентичності
+  - Міжнародні переклади та премії
+  - Євромайдан та зміна епохи
+- section: Війна та «Інтернат» (2014-2022)
+  words: 800
+  subsections:
+  - Волонтерство на Донбасі з перших днів війни
+  - Роман «Інтернат» (2017) про війну
+  - Гурт «Собаки в космосі»
+  - Харків під обстрілами
+- section: Повномасштабна війна та сьогодення (2022-)
+  words: 800
+  subsections:
+  - Рішення залишитися в Харкові
+  - Гуманітарна діяльність
+  - Поезія та есеїстика воєнного часу
+  - Голос української культури у світі
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - поет
+  - прозаїк
+  - Донбас
+  - андеграунд
+  - волонтер
+  - гуманітарна допомога
+  - війна
+  - ідентичність
+  - покоління
+  - рок-музика
+  recommended:
+  - «Ворошиловград»
+  - «Інтернат»
+  - есеїстика
+  - літературна премія
+  - фронт
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-74 (Ліна Костенко)
+  related:
+  - c1-bio-86 (Оксана Забужко)
+  - c1-bio-91 (Олег Сенцов)
+  - c1-bio-93 (Катерина Калитко)
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

@@ -1,0 +1,107 @@
+module: legal-ukrainian-iii
+level: c2
+sequence: 63
+version: '2.0'
+title: Правнича українська III — Судові процедури
+focus: domain
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Цивільний процесуальний кодекс України
+  url: https://zakon.rada.gov.ua/laws/show/1618-15
+  type: primary
+  notes: Процесуальні норми цивільного судочинства
+- name: Кримінальний процесуальний кодекс України
+  url: https://zakon.rada.gov.ua/laws/show/4651-17
+  type: primary
+  notes: Процесуальні норми кримінального судочинства
+- name: Судова влада України
+  url: https://court.gov.ua/
+  type: reference
+  notes: Офіційний портал судової влади
+content_outline:
+- section: Вступ — Судова система України
+  words: 500
+  points:
+  - Структура судової системи
+  - Рівні судів (місцеві, апеляційні, касаційні)
+  - Верховний Суд та Конституційний Суд
+  - Спеціалізовані суди
+- section: Позовна заява та її структура
+  words: 700
+  points:
+  - Реквізити позовної заяви
+  - Предмет і підстави позову
+  - Позовні вимоги
+  - Докази та їх опис
+  - Судовий збір
+- section: Учасники судового процесу
+  words: 600
+  points:
+  - Позивач та відповідач
+  - Треті особи
+  - Представництво в суді
+  - Права та обов'язки учасників
+- section: Стадії судового розгляду
+  words: 700
+  points:
+  - Відкриття провадження
+  - Підготовче провадження
+  - Судовий розгляд
+  - Ухвалення рішення
+- section: Судові рішення та їх оскарження
+  words: 600
+  points:
+  - Види судових рішень (рішення, ухвала, постанова)
+  - Набрання законної сили
+  - Апеляційне оскарження
+  - Касаційне оскарження
+- section: Виконавче провадження
+  words: 500
+  points:
+  - Виконавчий лист
+  - Державна виконавча служба
+  - Примусове виконання рішень
+- section: Практикум — Складання процесуальних документів
+  words: 400
+  points:
+  - Аналіз позовної заяви
+  - Складання відзиву на позов
+  - Апеляційна скарга
+word_target: 4000
+vocabulary:
+  required:
+  - позов (lawsuit/claim)
+  - позивач (plaintiff)
+  - відповідач (defendant)
+  - провадження (proceedings)
+  - ухвала (ruling/order)
+  - рішення (decision/judgment)
+  - апеляція (appeal)
+  - касація (cassation)
+  - докази (evidence)
+  - судовий збір (court fee)
+  recommended:
+  - виконавче провадження (enforcement proceedings)
+  - відзив (response/objection)
+  - клопотання (motion/petition)
+  - свідок (witness)
+  - присяжні (jury)
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - group-sort
+  - quiz
+  - fill-in
+  - match-up
+  - critical-analysis
+  - essay-response
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-64 (Legal Ukrainian IV — legal writing)
+- c2-65 (Legal Ukrainian V — case analysis)
+- c2-75 (C2.3 Checkpoint)

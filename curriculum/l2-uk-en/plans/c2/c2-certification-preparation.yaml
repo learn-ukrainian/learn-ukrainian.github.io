@@ -1,0 +1,94 @@
+module: c2-certification-preparation
+level: c2
+sequence: 99
+version: '2.0'
+title: Підготовка до сертифікації C2
+focus: practice
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Державний іспит з української мови — Вимоги
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official certification requirements
+- name: Українська мова як іноземна — Сертифікаційні програми
+  url: https://naqa.gov.ua/
+  type: reference
+  notes: Available certification paths
+- name: Підготовка до мовних іспитів — Методичні рекомендації
+  url: https://www.coe.int/
+  type: secondary
+  notes: Test preparation strategies
+content_outline:
+- section: Вступ — Сертифікація як підтвердження рівня
+  words: 400
+  points:
+  - Значення сертифікації C2
+  - Доступні сертифікаційні програми
+  - Визнання сертифікатів
+- section: Огляд сертифікаційних іспитів
+  words: 700
+  points:
+  - Державний іспит з української як іноземної
+  - Міжнародні сертифікаційні програми
+  - Формати та вимоги
+  - Порівняння програм
+- section: Стратегії підготовки до іспиту
+  words: 700
+  points:
+  - Часовий план підготовки
+  - Робота з типовими завданнями
+  - Управління часом на іспиті
+  - Техніки зниження стресу
+- section: Типові помилки та як їх уникнути
+  words: 600
+  points:
+  - Помилки на письмі
+  - Помилки в усному мовленні
+  - Помилки в розумінні завдань
+  - Стратегії самоконтролю
+- section: Документи та процедури
+  words: 500
+  points:
+  - Реєстрація на іспит
+  - Необхідні документи
+  - День іспиту — що очікувати
+  - Отримання результатів і сертифіката
+- section: Практика — Фінальна підготовка
+  words: 800
+  points:
+  - Повний пробний іспит в умовах, наближених до реальних
+  - Аналіз типових помилок
+  - Індивідуальний план на останній тиждень
+  - Психологічна підготовка
+word_target: 4000
+vocabulary:
+  required:
+  - сертифікація (certification)
+  - сертифікат (certificate)
+  - іспит (exam)
+  - реєстрація (registration)
+  - результати (results)
+  - поріг проходження (passing score)
+  - підготовка (preparation)
+  - стратегія (strategy)
+  - типові помилки (common errors)
+  - самоконтроль (self-monitoring)
+  recommended:
+  - акредитація (accreditation)
+  - визнання (recognition)
+  - апеляція (appeal)
+  - перездача (retake)
+  - термін дії (validity period)
+  forbidden: []
+activities:
+  types_required:
+  - essay-response
+  - quiz
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-100 (C2 РІВЕНЬ ЗАВЕРШЕНО)

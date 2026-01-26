@@ -1,0 +1,23 @@
+module: 21-register-technical-scientific
+level: b2
+sequence: 21
+version: '1.0'
+title: 'Регістр: науково-технічний стиль'
+subtitle: Технічна документація та наукові тексти
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can recognize and produce technical/scientific register
+- Learner can read and understand technical documentation
+- Learner can write step-by-step instructions
+- Learner can transform casual descriptions into technical style
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

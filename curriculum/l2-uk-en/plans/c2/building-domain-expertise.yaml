@@ -1,0 +1,96 @@
+module: building-domain-expertise
+level: c2
+sequence: 60
+version: '2.0'
+title: Побудова галузевої експертизи
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Національна рамка кваліфікацій України
+  url: https://zakon.rada.gov.ua/
+  type: reference
+  notes: Framework for professional qualifications and expertise development
+- name: Українська асоціація неперервної освіти
+  url: https://uace.org.ua/
+  type: reference
+  notes: Standards for continuous professional development
+- name: Prometheus — українська платформа онлайн-освіти
+  url: https://prometheus.org.ua/
+  type: reference
+  notes: Examples of professional development courses in Ukrainian
+content_outline:
+- section: Вступ — Шлях до галузевої експертизи
+  words: 500
+  points:
+  - Що означає бути експертом
+  - Етапи розвитку професійної компетентності
+  - Самостійне навчання vs. формальна освіта
+- section: Стратегії опанування нової галузі
+  words: 800
+  points:
+  - Початковий огляд галузі (landscape mapping)
+  - Ідентифікація ключових джерел та авторитетів
+  - Побудова систематичного плану навчання
+  - Інтеграція з попереднім досвідом
+- section: Ресурси для самостійного навчання
+  words: 700
+  points:
+  - Онлайн-курси та платформи
+  - Професійні спільноти та асоціації
+  - Конференції, семінари, вебінари
+  - Наставництво та коучинг
+- section: Практика та застосування знань
+  words: 600
+  points:
+  - Навчання через практику
+  - Проєкти та кейси
+  - Рефлексивна практика
+  - Портфоліо компетенцій
+- section: Підтримка та розвиток експертизи
+  words: 600
+  points:
+  - Неперервне професійне навчання
+  - Слідкування за трендами галузі
+  - Публікації та виступи
+  - Побудова професійної репутації
+- section: Практичні вправи
+  words: 500
+  points:
+  - Розробка плану опанування обраної галузі
+  - Аналіз ресурсів для самостійного навчання
+  - Створення початкового портфоліо компетенцій
+word_target: 4000
+vocabulary:
+  required:
+  - експертиза (expertise)
+  - галузь (field/domain)
+  - компетентність (competency)
+  - самостійне навчання (self-directed learning)
+  - неперервна освіта (continuous education)
+  - наставництво (mentorship)
+  - рефлексія (reflection)
+  - портфоліо (portfolio)
+  - репутація (reputation)
+  - кваліфікація (qualification)
+  recommended:
+  - коучинг (coaching)
+  - нетворкінг (networking)
+  - тренд (trend)
+  - візія (vision)
+  - траєкторія (trajectory)
+  forbidden: []
+activities:
+  types_required:
+  - match-up
+  - essay-response
+  - quiz
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-61-65 (Legal Ukrainian I-V — domain specialization)
+- c2-66-70 (Medical Ukrainian I-V — domain specialization)
+- c2-71-72 (Professional Portfolio I-II)

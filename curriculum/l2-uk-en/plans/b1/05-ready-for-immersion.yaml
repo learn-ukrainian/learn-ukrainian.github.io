@@ -1,0 +1,103 @@
+module: 05-ready-for-immersion
+level: b1
+sequence: 5
+version: '1.0'
+title: Готові до занурення
+subtitle: Metalanguage mastery checkpoint
+focus: integration
+pedagogy: TTT
+objectives:
+- Learner can read and understand grammar explanations in Ukrainian
+- Learner can answer questions about grammar rules in Ukrainian
+- Learner can demonstrate metalanguage mastery for full immersion
+- Learner can use negation and verb form terminology
+- Learner can understand activity instruction verbs
+- Learner can apply analytical terms and style/register concepts
+sources:
+- name: Ukrainian Grammar Textbook Samples
+  url: https://mon.gov.ua/
+  type: primary
+  notes: Authentic grammar explanations for comprehension testing
+- name: CEFR B1 Descriptors
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: Proficiency standards for checkpoint assessment
+content_outline:
+- section: Presentation
+  words: 80
+  points:
+  - Why This Module Matters
+  - Proverb and cultural context
+- section: Diagnostic Assessment
+  words: 150
+  points:
+  - Initial test of M01-04 metalanguage
+  - Identify areas needing review
+- section: Parts of Speech Review
+  words: 50
+  points:
+  - All 10 parts of speech in Ukrainian
+  - Quick identification exercises
+- section: Verb Terminology Review
+  words: 50
+  points:
+  - Aspect and tense terms
+- section: Grammar Explanation Patterns
+  words: 50
+  points:
+  - Reading authentic grammar texts
+- section: Sentence Structure Review
+  words: 150
+  points:
+  - Sentence parts identification
+- section: Full Grammar Explanation Comprehension
+  words: 200
+  points:
+  - Extended grammar text in Ukrainian
+  - Comprehension questions
+- section: Practice
+  words: 250
+  points:
+  - The Real Test
+  - Pop Culture Moment
+- section: Mini-Dialogues
+  words: 250
+  points:
+  - Practical application
+  - Key term usage in context
+- section: Summary
+  words: 150
+  points:
+  - Final self-assessment
+  - Readiness confirmation
+word_target: 1700
+vocabulary:
+  required:
+  - граматичне поняття (grammatical concept)
+  - мовознавство (linguistics)
+  - морфологія (morphology)
+  - синтаксис (syntax)
+  - правопис (orthography)
+  - наголос (stress/accent)
+  - вимова (pronunciation)
+  - правило (rule)
+  - закономірність (pattern/regularity)
+  - система (system)
+  recommended:
+  - категорія (category)
+  - ознака (feature/characteristic)
+  - властивість (property)
+  - значення (meaning)
+  - функція (function)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - match-up
+  - cloze
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-06 (Aspect complete system - first full immersion module)
+- b1-15 (Aspect mastery checkpoint)

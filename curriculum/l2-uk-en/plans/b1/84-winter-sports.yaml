@@ -1,0 +1,77 @@
+module: winter-sports
+level: b1
+sequence: 84
+version: '2.0'
+title: Зимові види спорту
+subtitle: Skiing and Snowboarding in Ukraine
+focus: culture
+pedagogy: CBI
+objectives:
+- Learner can discuss winter sports and ski resorts in Ukrainian
+- Learner can understand slope maps and weather conditions
+- Learner can use vocabulary for skiing equipment
+- Learner can plan a winter vacation to Bukovel or Drahobrat
+content_outline:
+- section: 'Introduction: Winter Sports'
+  words: 150
+  points:
+  - Winter sports culture
+  - Ukrainian ski resorts
+  - Season overview
+- section: Skiing Fundamentals
+  words: 250
+  points:
+  - Skiing vocabulary
+  - Equipment rental
+  - Skill levels
+- section: Snowboarding
+  words: 250
+  points:
+  - Snowboard vocabulary
+  - Freestyle culture
+  - Equipment differences
+- section: Ukrainian Ski Resorts
+  words: 250
+  points:
+  - Bukovel, Drahobrat
+  - Resort facilities
+  - Booking and passes
+- section: Conditions and Safety
+  words: 200
+  points:
+  - Snow conditions
+  - Avalanche awareness
+  - Safety equipment
+- section: 'Practice: Winter Trip Planning'
+  words: 100
+  points:
+  - Plan a ski trip
+  - Compare resorts
+word_target: 1200
+vocabulary:
+  required:
+  - лижі (skis)
+  - сноуборд (snowboard)
+  - схил (slope)
+  - підйомник (ski lift)
+  - сніг (snow)
+  - курорт (resort)
+  - траса (trail/run)
+  - інструктор (instructor)
+  recommended:
+  - Буковель (Bukovel)
+  - Драгобрат (Drahobrat)
+  - ски-пас (ski pass)
+  - лавина (avalanche)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - reading
+  - discussion
+  - matching
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-85 (Ukrainian Cuisine)

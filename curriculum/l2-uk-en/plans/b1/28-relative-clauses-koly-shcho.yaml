@@ -1,0 +1,77 @@
+module: relative-clauses-koly-shcho
+level: b1
+sequence: 28
+version: '2.0'
+title: 'Підрядні означальні: коли, що'
+subtitle: Time and Fact Relative Clauses
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can form time relative clauses with коли
+- Learner can use що as a relative pronoun for facts
+- Learner can distinguish relative що from conjunction що
+- Learner can combine time expressions with relative clauses
+content_outline:
+- section: 'Introduction: Time and Fact Relatives'
+  words: 150
+  points:
+  - коли for time expressions
+  - що as relative pronoun
+  - Distinguishing functions
+- section: коли - Time Relatives
+  words: 250
+  points:
+  - Час, коли... (the time when...)
+  - День, коли... (the day when...)
+  - Tense in time clauses
+- section: що - Fact Relatives
+  words: 250
+  points:
+  - Те, що... (that which...)
+  - Все, що... (everything that...)
+  - Referring to statements
+- section: 'що: Relative vs Conjunction'
+  words: 250
+  points:
+  - 'Relative: replaces noun'
+  - 'Conjunction: introduces fact'
+  - Distinguishing tests
+- section: Complex Time Expressions
+  words: 200
+  points:
+  - Before, after, while clauses
+  - Temporal sequence
+  - Combined time patterns
+- section: 'Practice: Time and Fact Clauses'
+  words: 100
+  points:
+  - Create time relatives
+  - Use що correctly
+word_target: 1200
+vocabulary:
+  required:
+  - коли (when)
+  - що (that/what/which)
+  - час (time)
+  - момент (moment)
+  - день (day)
+  - факт (fact)
+  - те (that - neuter)
+  - все (everything)
+  recommended:
+  - до того як (before)
+  - після того як (after)
+  - поки (while)
+  - одночасно (simultaneously)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - translation
+  - sentence-combining
+  - error-correction
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-29 (Purpose Clauses щоб + infinitive)

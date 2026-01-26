@@ -1,0 +1,77 @@
+module: media-news
+level: b1
+sequence: 59
+version: '2.0'
+title: Медіа та новини
+subtitle: Media and News
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can use 30 media and journalism vocabulary words in context
+- Learner can distinguish between types of media content
+- Learner can form natural collocations with media vocabulary
+- Learner can discuss news and current events fluently
+content_outline:
+- section: 'Introduction: Media Landscape'
+  words: 150
+  points:
+  - Ukrainian media overview
+  - Types of media
+  - News vocabulary basics
+- section: News and Journalism
+  words: 250
+  points:
+  - новини, стаття, репортаж
+  - журналіст, кореспондент
+  - News production vocabulary
+- section: Broadcast Media
+  words: 250
+  points:
+  - телебачення, радіо, подкаст
+  - ефір, трансляція, випуск
+  - Broadcasting terminology
+- section: Print and Digital
+  words: 250
+  points:
+  - газета, журнал, онлайн-видання
+  - публікація, редакція
+  - Publishing vocabulary
+- section: Media Actions
+  words: 200
+  points:
+  - повідомляти, висвітлювати, оприлюднювати
+  - Reporting and publishing verbs
+  - Media consumption verbs
+- section: 'Practice: Discussing News'
+  words: 100
+  points:
+  - Talk about current events
+  - Use media vocabulary
+word_target: 1200
+vocabulary:
+  required:
+  - новини (news)
+  - стаття (article)
+  - журналіст (journalist)
+  - телебачення (television)
+  - газета (newspaper)
+  - репортаж (report)
+  - повідомляти (to report)
+  - висвітлювати (to cover/highlight)
+  recommended:
+  - редакція (editorial office)
+  - трансляція (broadcast)
+  - подкаст (podcast)
+  - оприлюднювати (to publish/release)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - discussion
+  - collocation
+  - matching
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-60 (Society Politics)

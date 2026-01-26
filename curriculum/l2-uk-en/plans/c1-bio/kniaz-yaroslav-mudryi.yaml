@@ -1,0 +1,116 @@
+module: kniaz-yaroslav-mudryi
+level: c1-bio
+sequence: 4
+version: '2.0'
+title: 'Князь Ярослав Мудрий: Законодавець'
+focus: biography
+pedagogy: seminar
+objectives:
+- Analyze the impact of Ruska Pravda on medieval society.
+- Discuss the strategic importance of dynastic marriages.
+- Evaluate the cultural achievements of the "Golden Age".
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Ярослав_Мудрий
+    title: Ярослав Мудрий (Wikipedia UA)
+    notes: Biography, Ruska Pravda, cultural achievements
+  - url: https://uk.wikipedia.org/wiki/Руська_правда
+    title: Руська правда (Wikipedia UA)
+    notes: Legal code details and significance
+  secondary:
+  - url: https://uk.wikipedia.org/wiki/Софійський_собор_(Київ)
+    title: Софійський собор (Wikipedia UA)
+    notes: Architectural legacy
+content_outline:
+- section: Вступ — Будівничий держави
+  words: 400
+  subsections:
+  - Ярослав як законодавець і культуртрегер
+  - Порівняння з європейськими монархами
+  - Значення його правління для Русі
+- section: Шлях до влади
+  words: 600
+  subsections:
+  - Молодість у Ростові та Новгороді
+  - Конфлікт із батьком Володимиром
+  - Усобиця після смерті батька
+  - Боротьба зі Святополком Окаянним
+- section: Руська правда
+  words: 800
+  subsections:
+  - Перший писаний збірник законів
+  - Структура та основні норми
+  - Віра (штраф за вбивство)
+  - Порівняння з європейським правом
+- section: Культурний розквіт
+  words: 700
+  subsections:
+  - Будівництво Софійського собору
+  - Золоті ворота
+  - Заснування бібліотеки та скрипторію
+  - Переклади та освіта
+- section: Династична дипломатія
+  words: 700
+  subsections:
+  - Шлюби дітей з європейськими монархами
+  - Анна — королева Франції
+  - Міжнародний престиж Києва
+  - Русь як частина європейської спільноти
+- section: Останні роки та спадщина
+  words: 500
+  subsections:
+  - Завіт синам
+  - Смерть та поховання
+  - Проблема "кісток Ярослава"
+  - Образ у пізнішій культурі
+- section: Підсумок — Мудрий правитель
+  words: 300
+  subsections:
+  - Чому "Мудрий"?
+  - Порівняння з Карлом Великим
+  - Спадщина для України
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - законодавець
+  - правда
+  - віра
+  - скрипторій
+  - митрополія
+  - усобиця
+  - собор
+  - грамота
+  - династія
+  - завіт
+  recommended:
+  - мозаїка
+  - фреска
+  - посадник
+  - віче
+  - престол
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  - critical-analysis
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-03 (Volodymyr Velykyi - father)
+  related:
+  - c1-bio-05 (Anna Yaroslavna - daughter)
+  - c1-bio-06 (Mykhailo Chernihivskyi - later period)
+  - c1-bio-14 (Pylyp Orlyk - later constitutional tradition)
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

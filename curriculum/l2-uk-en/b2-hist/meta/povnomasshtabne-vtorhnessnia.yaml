@@ -1,28 +1,105 @@
-title: Повномасштабне вторгнення
-subtitle: The Full-Scale Invasion
+module: b2-hist-133
+id: b2-hist-133
+slug: povnomasshtabne-vtorhnessnia
+title: "Повномасштабне вторгнення"
+subtitle: "The Full-Scale Invasion"
 version: '2.0'
-phase: B2.3e War for Existence
+phase: "HIST.13 [Russian Aggression]"
 focus: history
-word_target: 4000
 pedagogy: CBI
+register: публіцистичний
 duration: 120
 transliteration: none
-tags:
-- history
-- war
-- invasion
-- resistance
-- kyiv
-grammar:
-- Historical narrative register
-- Military and emergency terminology
 objectives:
-- Understand the timeline and impact of February 24, 2022
-- Identify key moments of the Battle for Kyiv
-- Analyze the factors behind the failure of the Russian 'Blitzkrieg'
-- Discuss the role of leadership and national unity in the first days of the invasion
-vocabulary_count: 25
-slug: pownomasshtabne-wtorhnessnia
+  - "Учень може описати події 24 лютого 2022 року"
+  - "Учень може пояснити перебіг битви за Київ"
+  - "Учень може проаналізувати причини провалу російського блискавичного наступу"
+  - "Учень може оцінити роль лідерства та національної єдності"
+grammar:
+  - "Минулий та теперішній час"
+  - "Військова та надзвичайна лексика"
+  - "Пасивні конструкції"
+word_target: 4000
+content_outline:
+  - section: "Вступ: День, що змінив світ"
+    words: 400
+    points:
+      - "24 лютого 2022: о 5 ранку"
+      - "Масштаб вторгнення"
+      - "«Три дні до Києва» — російський план"
+  - section: "Перші дні"
+    words: 800
+    points:
+      - "Удари по всій Україні"
+      - "Напрямки наступу"
+      - "Гостомель: десант на аеропорт"
+      - "Звернення Зеленського: «Я тут»"
+  - section: "Битва за Київ"
+    words: 1000
+    points:
+      - "Оборона столиці"
+      - "Бучанська трагедія"
+      - "Ірпінь, Буча, Гостомель"
+      - "Відступ російських військ"
+      - "Чому «блискавична війна» провалилась"
+  - section: "Первинні джерела"
+    words: 800
+    points:
+      - "Звернення президента Зеленського"
+      - "Свідчення очевидців"
+      - "Супутникові знімки"
+  - section: "Деколонізаційний погляд"
+    words: 500
+    points:
+      - "Російська пропаганда: «спецоперація»"
+      - "Реальність: неоімперська агресія"
+      - "Україна як суб'єкт, не об'єкт історії"
+  - section: "Підсумок: Перші перемоги"
+    words: 500
+    points:
+      - "Оборона Києва як символ"
+      - "Світова підтримка"
+      - "Від оборони до контрнаступу"
+vocabulary_hints:
+  required:
+    - вторгнення (invasion)
+    - агресія (aggression)
+    - оборона (defense)
+    - наступ (offensive)
+    - десант (landing force)
+    - блискавична війна (blitzkrieg)
+    - окупація (occupation)
+    - звільнення (liberation)
+  recommended:
+    - аеропорт (airport)
+    - колона (convoy)
+    - спротив (resistance)
+    - цивільні (civilians)
+    - евакуація (evacuation)
+    - санкції (sanctions)
+activity_hints:
+  - type: reading
+    focus: "Звернення президента Зеленського"
+    source: "Офіційні джерела"
+    items: 4
+  - type: quiz
+    focus: "Перші дні повномасштабного вторгнення"
+    items: 15
+  - type: match-up
+    focus: "Дата → подія лютого-березня 2022"
+    items: 10
+  - type: fill-in
+    focus: "Військова лексика"
+    items: 10
+  - type: essay-response
+    focus: "Чому російський план «три дні до Києва» провалився?"
+    word_target: 250
+prerequisites:
+  - b2-hist-130 (Війна на Донбасі)
+connects_to:
+  - b2-hist-134 (Маріуполь та Азовсталь)
+  - b2-hist-136 (Воєнна економіка)
 naturalness:
-  score: 9
+  score: 10
   status: PASS
+  justification: "Сучасний український для воєнного наративу"

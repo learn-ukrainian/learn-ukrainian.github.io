@@ -1,0 +1,78 @@
+module: relative-clauses-yakyi
+level: b1
+sequence: 26
+version: '2.0'
+title: 'Підрядні означальні: який'
+subtitle: Relative Clauses with який
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner understands який agreement patterns
+- Learner can use який in all seven cases
+- Learner can combine sentences using який
+- Learner can identify antecedent and relative clause role
+content_outline:
+- section: 'Introduction: Relative Clauses Overview'
+  words: 150
+  points:
+  - What are relative clauses
+  - який as relative pronoun
+  - Comparison with English 'which/that/who'
+- section: Agreement Patterns
+  words: 250
+  points:
+  - Gender agreement with antecedent
+  - Number agreement (singular/plural)
+  - Memorizing forms
+- section: Case in Subordinate Clause
+  words: 250
+  points:
+  - який as subject (nominative)
+  - який as object (accusative/genitive)
+  - який with prepositions
+- section: Complex Case Patterns
+  words: 250
+  points:
+  - Dative, instrumental, locative uses
+  - Prepositional phrases with який
+  - Common patterns
+- section: Sentence Combining
+  words: 200
+  points:
+  - Combining simple sentences
+  - Punctuation rules
+  - Word order considerations
+- section: 'Practice: Relative Clauses'
+  words: 100
+  points:
+  - Create complex sentences
+  - Case selection drills
+word_target: 1200
+vocabulary:
+  required:
+  - який (which/that/who)
+  - яка (which - feminine)
+  - яке (which - neuter)
+  - які (which - plural)
+  - підрядний (subordinate)
+  - означальний (attributive)
+  - речення (sentence)
+  - антецедент (antecedent)
+  recommended:
+  - узгодження (agreement)
+  - відмінок (case)
+  - сполучник (conjunction)
+  - головне речення (main clause)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - translation
+  - sentence-combining
+  - error-correction
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-27 (Relative Clauses де/куди/звідки)
+- b1-28 (Relative Clauses коли/що)

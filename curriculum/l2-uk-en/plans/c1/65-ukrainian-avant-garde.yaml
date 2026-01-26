@@ -1,0 +1,23 @@
+module: 65-ukrainian-avant-garde
+level: c1
+sequence: 65
+version: '1.0'
+title: Український авангард
+subtitle: Ukrainian Avant-Garde
+focus: cultural
+pedagogy: CBI
+objectives:
+- Learner can discuss the Ukrainian Avant-Garde movement and its key figures
+- Learner can analyze avant-garde artworks using appropriate terminology
+- Learner can explain the impact of Ukrainian artists on world modernism
+- Learner can describe the connection between folk art and avant-garde
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

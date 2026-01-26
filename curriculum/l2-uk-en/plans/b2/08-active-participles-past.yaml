@@ -1,0 +1,102 @@
+module: 08-active-participles-past
+level: b2
+sequence: 8
+version: '1.0'
+title: Активні дієприкметники минулого часу (-лий)
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Ukrainian State Standard 2024 - Participles
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Recognition of -лий forms, russism awareness
+- name: Антисуржик
+  url: https://uk.wikipedia.org/wiki/Антисуржик
+  type: secondary
+  notes: Distinguishing Ukrainian from Russian-influenced forms
+- name: Правопис української мови 2019
+  url: https://uk.wikipedia.org/wiki/Український_правопис
+  type: reference
+  notes: Official position on -лий participles
+content_outline:
+- section: Вступ — Минулі активні дієприкметники
+  words: 400
+  points:
+  - Теоретична можливість утворення
+  - Історичний контекст
+  - Чому більшість форм вважаються русизмами
+- section: Утворення форм на -лий
+  words: 600
+  points:
+  - Від основи минулого часу + -лий
+  - Теоретичні приклади (читав → *читавший)
+  - Чому такі форми не є нормативними
+- section: Легітимні лексикалізовані форми
+  words: 700
+  points:
+  - бувший (former) — колишній переважно
+  - минулий (past) — повноцінне слово
+  - майбутній (future) — повноцінне слово
+  - Інші прийнятні форми
+- section: Русизми та їх уникання
+  words: 700
+  points:
+  - Форми типу прочитавший, зробивший — русизми
+  - Українські альтернативи (людина, яка прочитала)
+  - Важливість для чистоти мови
+  - Історичний контекст мовної політики
+- section: Синтетичний майбутній час
+  words: 600
+  points:
+  - Альтернатива до буду + інфінітив
+  - Утворення (інфінітив + -иму/-тиму)
+  - Приклади (боротимуся, питимеш, кричатиме)
+  - Літературний/формальний характер
+- section: Розпізнавання в старих текстах
+  words: 500
+  points:
+  - Тексти XIX-початку XX століття
+  - Радянська література (російський вплив)
+  - Як розпізнавати й трансформувати
+- section: Практика і підсумок
+  words: 300
+  points:
+  - Ключові легітимні форми
+  - Уникання русизмів
+  - Підготовка до модуля 09
+word_target: 3800
+vocabulary:
+  required:
+  - минулий (past)
+  - майбутній (future)
+  - колишній (former)
+  - русизм (russism)
+  - нормативний (normative)
+  - лексикалізований (lexicalized)
+  - синтетичний (synthetic)
+  - аналітичний (analytic)
+  - літературний (literary)
+  - формальний (formal)
+  recommended:
+  - мовна норма (language norm)
+  - історичний контекст (historical context)
+  - деколонізація (decolonization)
+  - чистота мови (language purity)
+  - альтернатива (alternative)
+  forbidden: []
+activities:
+  types_required:
+  - mark-the-words
+  - error-correction
+  - quiz
+  - fill-in
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b2-09 (Participles vs Relative Clauses)
+- b2-10 (B2.1a Checkpoint)
+- 'b2-22 (Register: Literary Ukrainian)'

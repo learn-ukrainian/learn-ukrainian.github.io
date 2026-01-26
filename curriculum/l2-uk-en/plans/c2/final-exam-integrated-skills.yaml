@@ -1,0 +1,96 @@
+module: final-exam-integrated-skills
+level: c2
+sequence: 98
+version: '2.0'
+title: Фінальний екзамен — Інтегровані навички
+focus: checkpoint
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Ukrainian State Standard 2024 — C2 Assessment Criteria
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official C2 assessment standards and rubrics
+- name: CEFR C2 Assessment Guidelines
+  url: https://www.coe.int/
+  type: reference
+  notes: European framework for C2 assessment
+- name: Іспит з української мови як іноземної — Зразки
+  url: https://naqa.gov.ua/
+  type: secondary
+  notes: Sample exam formats and tasks
+content_outline:
+- section: Вступ — Структура фінального екзамену
+  words: 400
+  points:
+  - Огляд компонентів екзамену
+  - Критерії оцінювання
+  - Часові рамки та організація
+  - Стратегії підготовки
+- section: Компонент I — Аудіювання
+  words: 600
+  points:
+  - Формат завдань (вибір, заповнення, відкриті відповіді)
+  - Типи аудіо (лекції, інтерв'ю, дискусії, новини)
+  - Критерії оцінювання
+  - Зразки завдань
+- section: Компонент II — Читання
+  words: 600
+  points:
+  - Формат завдань (розуміння, аналіз, критика)
+  - Типи текстів (наукові, публіцистичні, літературні)
+  - Критерії оцінювання
+  - Зразки завдань
+- section: Компонент III — Письмо
+  words: 700
+  points:
+  - Формат завдань (есе, трансформація, аналіз)
+  - Вимоги до обсягу та змісту
+  - Критерії оцінювання (зміст, мова, стиль)
+  - Зразки завдань із рубриками
+- section: Компонент IV — Говоріння
+  words: 600
+  points:
+  - Формат завдань (монолог, дискусія, рольова гра)
+  - Критерії оцінювання (флуентність, точність, взаємодія)
+  - Процедура усної частини
+  - Зразки тем і завдань
+- section: Пробний екзамен — Повна симуляція
+  words: 700
+  points:
+  - Проходження повного екзамену (3-4 години)
+  - Самооцінювання за рубриками
+  - Аналіз результатів
+  - Рекомендації до доопрацювання
+word_target: 4000
+vocabulary:
+  required:
+  - екзамен (exam)
+  - оцінювання (assessment)
+  - критерії (criteria)
+  - рубрика (rubric)
+  - бал (score/grade)
+  - поріг проходження (passing threshold)
+  - аудіювання (listening)
+  - читання (reading)
+  - письмо (writing)
+  - говоріння (speaking)
+  recommended:
+  - формувальне оцінювання (formative assessment)
+  - підсумкове оцінювання (summative assessment)
+  - валідність (validity)
+  - надійність (reliability)
+  - зворотний вплив (washback effect)
+  forbidden: []
+activities:
+  types_required:
+  - essay-response
+  - quiz
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-99 (C2 Certification Preparation)
+- c2-100 (C2 РІВЕНЬ ЗАВЕРШЕНО)

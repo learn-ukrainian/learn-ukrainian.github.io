@@ -1,0 +1,409 @@
+level: c2
+updated: '2026-01-26T12:55:33.654331+00:00'
+summary:
+  total: 100
+  planned: 100
+  content: 0
+  activities: 0
+  reviewed: 0
+modules:
+  c1-bridge-assessment:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  milozvuchnist-complete:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  naukovyi-styl-mastery:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  ofitsiynyi-styl-mastery:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  publitsystychnyi-styl:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  khudozhniy-styl:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  rozmovnyi-styl:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  relihiynyi-styl:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  epistolyarnyi-styl:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  style-transformation-i:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  style-transformation-ii:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  lexical-stylistics:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  syntactic-stylistics:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  individual-voice-i:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  individual-voice-ii:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  text-coherence:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  c2-1-practice-i:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  c2-1-practice-ii:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  c2-1-review:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  c2-1-checkpoint:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  stylistic-devices-mastery:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  rhythm-prosody:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  intertextuality:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  style-blending:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  c2-1-final-checkpoint:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  literary-theory:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  narratology:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  poetyka-verse-analysis:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  poetyka-prose-analysis:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  intertextuality-ii:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  literary-criticism-methods:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  writing-literary-essays:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  translation-theory:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  literary-translation-i:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  literary-translation-ii:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  creative-writing-poetry:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  creative-writing-prose:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  contemporary-literature:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  digital-literature:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  literary-prizes-canon:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  literary-community:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  c2-2-practice-i:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  c2-2-practice-ii:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  c2-2-review:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  c2-2-checkpoint:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  professional-language-overview:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  terminology-acquisition-i:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  terminology-acquisition-ii:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  reading-professional-texts-i:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  reading-professional-texts-ii:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  professional-document-types:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  writing-professional-documents-i:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  writing-professional-documents-ii:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  professional-oral-communication:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  c2-3-midpoint-checkpoint:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  professional-correspondence:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  professional-discussions:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  cross-domain-communication:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  professional-research-skills:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  building-domain-expertise:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  legal-ukrainian-i:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  legal-ukrainian-ii:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  legal-ukrainian-iii:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  legal-ukrainian-iv:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  legal-ukrainian-v:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  medical-ukrainian-i:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  medical-ukrainian-ii:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  medical-ukrainian-iii:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  medical-ukrainian-iv:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  medical-ukrainian-v:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  professional-portfolio-i:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  professional-portfolio-ii:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  professional-identity:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  c2-3-review:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  c2-3-checkpoint:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  complete-grammar-review:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  rare-archaic-forms:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  regional-varieties:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  sociolinguistic-mastery:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  error-analysis:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  native-like-fluency:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  teaching-ukrainian-i:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  teaching-ukrainian-ii:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  teaching-ukrainian-iii:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  translation-theory-ii:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  translation-practice-i:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  translation-practice-ii:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  interpretation-basics:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  capstone-topic-selection:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  capstone-research:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  capstone-drafting:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  capstone-revision:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  capstone-polish:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  capstone-defense:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  final-review-i:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  final-review-ii:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  final-review-iii:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  final-exam-integrated-skills:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  c2-certification-preparation:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1
+  c2-riven-zaversheno:
+    status: planned
+    last_updated: '2026-01-26'
+    naturalness: 1

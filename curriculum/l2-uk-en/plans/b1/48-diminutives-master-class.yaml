@@ -1,0 +1,77 @@
+module: diminutives-master-class
+level: b1
+sequence: 48
+version: '2.0'
+title: 'Демінутиви: майстер-клас'
+subtitle: Diminutives - Forms, Usage, and Nuance
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can form diminutives from nouns and adjectives
+- Learner understands different pragmatic functions of diminutives
+- 'Learner can distinguish nuances: tenderness, irony, politeness'
+- Learner can use diminutives appropriately in context
+content_outline:
+- section: 'Introduction: Diminutives in Ukrainian'
+  words: 150
+  points:
+  - Why diminutives matter
+  - More than just 'small'
+  - Cultural significance
+- section: Noun Diminutive Suffixes
+  words: 250
+  points:
+  - '-ик, -ок: хлопчик, синок'
+  - '-очок, -ечко: батечко, серденько'
+  - '-еньк-, -оньк-: донечка, матуся'
+- section: Adjective Diminutives
+  words: 200
+  points:
+  - '-еньк-, -есеньк-: гарненький, малесенький'
+  - Intensification patterns
+  - Emotional coloring
+- section: Pragmatic Functions
+  words: 250
+  points:
+  - Tenderness and affection
+  - Politeness and softening
+  - Irony and mockery
+- section: Context-Dependent Meaning
+  words: 250
+  points:
+  - Same form, different meanings
+  - Register shifts
+  - When to avoid diminutives
+- section: 'Practice: Creating and Using'
+  words: 100
+  points:
+  - Form diminutives
+  - Choose for context
+word_target: 1200
+vocabulary:
+  required:
+  - демінутив (diminutive)
+  - зменшувальний (diminutive - adj)
+  - ніжність (tenderness)
+  - ввічливість (politeness)
+  - іронія (irony)
+  - суфікс (suffix)
+  - відтінок (nuance/shade)
+  - прагматика (pragmatics)
+  recommended:
+  - пестливий (affectionate)
+  - емоційний (emotional)
+  - зневажливий (dismissive)
+  - інтенсифікація (intensification)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - context-matching
+  - formation
+  - multiple-choice
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-49 (Numerals Collectives Fractions)

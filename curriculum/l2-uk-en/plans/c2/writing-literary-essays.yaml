@@ -1,0 +1,104 @@
+module: writing-literary-essays
+level: c2
+sequence: 32
+version: '2.0'
+title: Написання літературознавчих есеїв
+focus: literature
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Есей — Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Есей
+  type: reference
+  notes: Essay genre characteristics
+- name: Академічне письмо
+  url: https://uk.wikipedia.org/wiki/Академічне_письмо
+  type: reference
+  notes: Scholarly writing conventions
+- name: Літературознавчі журнали
+  url: https://ukrlib.com.ua/
+  type: primary
+  notes: Examples of published literary essays
+content_outline:
+- section: Вступ — Літературознавчий есей як жанр
+  words: 500
+  points:
+  - Есей vs. стаття vs. рецензія
+  - Академічний vs. есеїстичний стиль
+  - Вимоги до публікації
+- section: Пошук теми та тези
+  words: 600
+  points:
+  - Від спостереження до питання
+  - Формулювання тези (thesis statement)
+  - Оригінальність і релевантність
+  - Масштаб дослідження
+- section: Структура літературознавчого есею
+  words: 700
+  points:
+  - Вступ з контекстом і тезою
+  - Основна частина з аргументами
+  - Висновки з узагальненням
+  - Логічні переходи
+- section: Робота з текстовими доказами
+  words: 700
+  points:
+  - 'Цитування: коли і як'
+  - Парафраз vs. пряма цитата
+  - Аналіз цитати
+  - Інтеграція доказів в аргумент
+- section: Стилістика академічного письма
+  words: 600
+  points:
+  - Тон і регістр
+  - Уникнення кліше
+  - Точність термінології
+  - Авторський голос в академічному тексті
+- section: Редагування та вдосконалення
+  words: 500
+  points:
+  - Самоперевірка структури
+  - Перевірка аргументації
+  - Мовне редагування
+  - Форматування за стандартами
+- section: Підсумок
+  words: 400
+  points:
+  - Від чернетки до публікації
+  - Рецензування та відгуки
+  - Портфоліо літературознавця
+word_target: 4000
+vocabulary:
+  required:
+  - есей (essay)
+  - теза (thesis)
+  - аргумент (argument)
+  - доказ (evidence)
+  - цитата (quotation)
+  - парафраз (paraphrase)
+  - структура (structure)
+  - редагування (editing)
+  - висновок (conclusion)
+  - публікація (publication)
+  recommended:
+  - чернетка (draft)
+  - рецензування (peer review)
+  - методологія (methodology)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - critical-analysis
+  - comparative-study
+  - authorial-intent
+  - essay-response
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-33 (Translation Theory)
+- c2-40 (Literary Prizes & Canon)
+- c2-45 (C2.2 Checkpoint)

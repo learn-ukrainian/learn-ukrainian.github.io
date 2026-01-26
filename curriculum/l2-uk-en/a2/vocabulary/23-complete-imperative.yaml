@@ -45,3 +45,123 @@ items:
   ipa: /ʃt͡ʃastˈɪtɪ/
   translation: to be lucky
   pos: verb
+- lemma: робити
+  ipa: /roˈbɪtɪ/
+  translation: to do, to make
+  pos: verb
+- lemma: писати
+  ipa: /pɪˈsatɪ/
+  translation: to write
+  pos: verb
+- lemma: давайте
+  ipa: /daˈvajtɛ/
+  translation: let's, come on (imperative plural)
+  pos: verb
+- lemma: показати
+  ipa: /pokaˈzatɪ/
+  translation: to show (perfective)
+  pos: verb
+- lemma: взяти
+  ipa: /ˈvzʲatɪ/
+  translation: to take (perfective)
+  pos: verb
+- lemma: читати
+  ipa: /t͡ʃɪˈtatɪ/
+  translation: to read
+  pos: verb
+- lemma: говорити
+  ipa: /ɦovoˈrɪtɪ/
+  translation: to speak, to talk
+  pos: verb
+- lemma: ставити
+  ipa: /ˈstavɪtɪ/
+  translation: to put, to place
+  pos: verb
+- lemma: сідати
+  ipa: /siˈdatɪ/
+  translation: to sit down
+  pos: verb
+- lemma: іти
+  ipa: /iˈtɪ/
+  translation: to go (on foot)
+  pos: verb
+- lemma: ходити
+  ipa: /xoˈdɪtɪ/
+  translation: to walk, to go (multidirectional)
+  pos: verb
+- lemma: починати
+  ipa: /pot͡ʃɪˈnatɪ/
+  translation: to begin, to start
+  pos: verb
+- lemma: вирішувати
+  ipa: /vɪriˈʃuvatɪ/
+  translation: to decide, to solve
+  pos: verb
+- lemma: їсти
+  ipa: /ˈjistɪ/
+  translation: to eat
+  pos: verb
+- lemma: пити
+  ipa: /ˈpɪtɪ/
+  translation: to drink
+  pos: verb
+- lemma: дати
+  ipa: /ˈdatɪ/
+  translation: to give (perfective)
+  pos: verb
+- lemma: бути
+  ipa: /ˈbutɪ/
+  translation: to be
+  pos: verb
+- lemma: хай
+  ipa: /xaj/
+  translation: let, may (particle)
+  pos: particle
+- lemma: взяти
+  ipa: /ˈvzʲatɪ/
+  translation: to take (perfective)
+  pos: verb
+- lemma: просити
+  ipa: /prˈɔsɪtɪ/
+  translation: to ask, to request
+  pos: verb
+- lemma: послухати
+  ipa: /pɔslˈuxatɪ/
+  translation: to listen (perfective)
+  pos: verb
+- lemma: зачекати
+  ipa: /zat͡ʃɛkˈatɪ/
+  translation: to wait (perfective)
+  pos: verb
+- lemma: сказати
+  ipa: /skˈazatɪ/
+  translation: to say, to tell (perfective)
+  pos: verb
+- lemma: пояснити
+  ipa: /pojasnˈɪtɪ/
+  translation: to explain (perfective)
+  pos: verb
+- lemma: повторити
+  ipa: /pɔʋtɔrˈɪtɪ/
+  translation: to repeat (perfective)
+  pos: verb
+- lemma: спробувати
+  ipa: /sprɔbуʋatɪ/
+  translation: to try
+  pos: verb
+- lemma: приносити
+  ipa: /prɪnˈɔsɪtɪ/
+  translation: to bring (imperfective)
+  pos: verb
+- lemma: принести
+  ipa: /prɪnɛstˈɪ/
+  translation: to bring (perfective)
+  pos: verb
+- lemma: залишити
+  ipa: /zalɪʃˈɪtɪ/
+  translation: to leave (perfective)
+  pos: verb
+- lemma: передати
+  ipa: /pɛrɛdˈatɪ/
+  translation: to pass, to give (perfective)
+  pos: verb

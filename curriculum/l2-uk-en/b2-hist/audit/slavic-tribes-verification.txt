@@ -1,0 +1,56 @@
+
+========================================
+  📋 Loaded Metadata from YAML sidecar
+
+📋 Auditing: B2 M05 — Слов
+   File: curriculum/l2-uk-en/b2-hist/slavic-tribes.md | Target: 4000 words
+  📋 Required activity types from meta: comparative-study, critical-analysis, essay-response, quiz, reading
+  📋 Template: docs/l2-uk-en/templates/b2-history-module-template.md (pedagogy: CBI)
+
+  🔴 HYDRATION ERROR: Outline sums to 3544, but word_target is 4000
+     Missing 456 words in outline budget!
+     → Run /architect to fix content_outline
+
+  📊 Section Word Analysis:
+     Вступ                       431 /  431  ✅ 
+     Читання                    2408 / 2549  ✅ (-141)
+     Деколонізаційний погляд     183 /  183  ✅ 
+     Первинні джерела           1020 /  239  ✅ (+781)
+     Потрібно більше практики?   142 /  142  ✅ 
+     ──────────────────────────────────────────────────
+     TOTAL                      4184 / 3544  ✅ (+640)
+
+📋 Auditing: B2 M05 — Слов
+   File: curriculum/l2-uk-en/b2-hist/slavic-tribes.md | Target: 4000 words
+
+  📋 Found YAML activities file (7 activities)
+  > Історія та розселення племен: 8 items (min 8)
+  > Древлянський Коростень: 3 items (min 1)
+  > Аналіз древлянського центру: 1 items (min 1)
+  > Білі Хорвати: Загадка Карпат: 3 items (min 1)
+  > Аналіз карпатського племені: 1 items (min 1)
+  > Племінна спадщина: 1 items (min 1)
+  > Порівняння полян і древлян: 1 items (min 1)
+
+--- STRICT GATES (Level B2) ---
+Words        ✅ 4583/4000 (raw: 4892)
+Activities   ✅ 7/3
+Density      ✅ All > 1
+Unique_types ✅ 5/2 types
+Priority     ✅ Priority types used
+Engagement   ✅ 7/5
+Audio        ℹ️ No audio
+Vocab        ⚠️ 12 < 20 (soft target)
+Structure    ✅ Valid Structure
+Lint         ✅ Clean Format
+Pedagogy     ✅ Level-appropriate
+Content_heavy ✅ Content-heavy OK (7 activities)
+Grammar      ℹ️ N/A (covered by naturalness)
+Naturalness  ✅ 9/10 (High)
+Activity_quality 📋 Quality validation available (optional)
+Immersion    🇺🇦 96.9% (target 90-100% (history))
+Richness     ✅ 100% (history)
+
+Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/audit/slavic-tribes-review.md
+
+✅ AUDIT PASSED.

@@ -1,29 +1,95 @@
 module: a1-11
-title: The Accusative I - Things
-subtitle: Making Direct Objects Work
-version: '1.0'
-phase: A1.2 Navigation
-pedagogy: PPP
+id: a1-11
+slug: the-accusative-i-things
+title: "The Accusative I: Things"
+subtitle: "Making Direct Objects Work"
+version: '2.0'
+phase: "A1.2 [Navigation]"
 focus: grammar
+pedagogy: PPP
+register: розмовний
 duration: 60
 transliteration: none
-phonetics: ipa
-tags:
-  - grammar
-  - accusative
-  - cases
-  - direct-objects
-grammar:
-  - Accusative case (inanimate nouns)
-  - Feminine -а → -у
-  - Masculine/Neuter no change
 objectives:
-  - Learner can form accusative case for inanimate nouns
-  - Learner can use accusative after verbs like бачити, брати, мати
-  - Learner can distinguish between nominative and accusative forms
-vocabulary_count: 25
-vocab_count: 33
-slug: 11-the-accusative-i-things
+  - "Learner can form accusative case for inanimate nouns"
+  - "Learner can use accusative after verbs like бачити, брати, мати"
+  - "Learner can distinguish between nominative and accusative forms"
+  - "Learner understands when accusative is required"
+grammar:
+  - "Accusative case (inanimate)"
+  - "Feminine: -а → -у, -я → -ю"
+  - "Masculine/Neuter: no change"
+word_target: 1000
+content_outline:
+  - section: "Introduction: What is the Accusative?"
+    words: 150
+    points:
+      - "Direct object case"
+      - "Answers 'what?' after verb"
+      - "Я бачу... + accusative"
+  - section: "Feminine Nouns: The Change"
+    words: 250
+    points:
+      - "-а → -у: книга → книгу"
+      - "-я → -ю: земля → землю"
+      - "Soft sign: no change (ніч → ніч)"
+  - section: "Masculine and Neuter: No Change"
+    words: 200
+    points:
+      - "Inanimate masculine stays same"
+      - "стіл → стіл, дім → дім"
+      - "Neuter always same: вікно → вікно"
+  - section: "Verbs That Take Accusative"
+    words: 200
+    points:
+      - "бачити (to see), чути (to hear)"
+      - "брати (to take), мати (to have)"
+      - "любити (to love), хотіти (to want)"
+  - section: "Building Sentences"
+    words: 100
+    points:
+      - "Я читаю книгу"
+      - "Він бачить стіл"
+      - "Word order flexibility"
+  - section: "Practice: What Do You See?"
+    words: 100
+    points:
+      - "Describe what you see"
+      - "Talk about possessions"
+vocabulary_hints:
+  required:
+    - бачити (to see)
+    - чути (to hear)
+    - брати (to take)
+    - мати (to have)
+    - хотіти (to want)
+    - купувати (to buy)
+    - книга (book)
+    - каву (coffee acc.)
+  recommended:
+    - любити (to love)
+    - шукати (to look for)
+    - знаходити (to find)
+    - відкривати (to open)
+activity_hints:
+  - type: transformation
+    focus: "Change nominative to accusative"
+    items: 25
+  - type: fill-in
+    focus: "Complete sentences with accusative"
+    items: 20
+  - type: sentence-building
+    focus: "Build sentences with direct objects"
+    items: 15
+  - type: quiz
+    focus: "Identify correct case"
+    items: 15
+prerequisites:
+  - a1-10 (Checkpoint - First Contact)
+connects_to:
+  - a1-12 (The Accusative II - People)
+  - a1-18 (Food and Shopping)
 naturalness:
-  score: 9
+  score: 10
   status: PASS
+  justification: "Clear case introduction"

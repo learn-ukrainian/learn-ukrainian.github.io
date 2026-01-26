@@ -1,0 +1,77 @@
+module: conditionals-real-yakshcho
+level: b1
+sequence: 31
+version: '2.0'
+title: 'Умовні речення: реальна умова (якщо)'
+subtitle: Real Conditionals - If Clauses
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner understands real conditional constructions
+- Learner can form conditional sentences with якщо
+- Learner can use correct tense sequences in conditionals
+- Learner can express future conditions accurately
+content_outline:
+- section: 'Introduction: Real Conditionals'
+  words: 150
+  points:
+  - What are real conditionals
+  - якщо as conditional marker
+  - Comparison with English 'if'
+- section: Basic Real Conditional
+  words: 250
+  points:
+  - Якщо + present, future
+  - Якщо + future, future
+  - Word order flexibility
+- section: Tense Sequences
+  words: 250
+  points:
+  - Present in if-clause
+  - Future in result clause
+  - Both clauses in future
+- section: Common Patterns
+  words: 250
+  points:
+  - General truths (present + present)
+  - Future predictions (present + future)
+  - Plans and intentions
+- section: якщо vs коли
+  words: 200
+  points:
+  - Conditional vs temporal
+  - Uncertainty vs certainty
+  - Choosing correctly
+- section: 'Practice: Real Conditionals'
+  words: 100
+  points:
+  - Form conditional sentences
+  - Use correct tenses
+word_target: 1200
+vocabulary:
+  required:
+  - якщо (if)
+  - умова (condition)
+  - умовний (conditional)
+  - результат (result)
+  - наслідок (consequence)
+  - реальний (real)
+  - можливий (possible)
+  - ймовірний (probable)
+  recommended:
+  - за умови що (on condition that)
+  - у разі якщо (in case)
+  - припускаючи (assuming)
+  - за умови (provided that)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - translation
+  - sentence-combining
+  - error-correction
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-32 (Conditionals Unreal якби)

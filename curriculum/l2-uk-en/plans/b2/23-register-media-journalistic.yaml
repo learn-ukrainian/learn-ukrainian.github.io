@@ -1,0 +1,23 @@
+module: 23-register-media-journalistic
+level: b2
+sequence: 23
+version: '1.0'
+title: Медійний та журналістський регістр
+subtitle: Мова новин і преси
+focus: grammar
+pedagogy: TTT
+objectives:
+- Учень може розпізнавати та аналізувати стиль новинних заголовків
+- Учень може структурувати лід-абзац за принципом 5W
+- Учень може правильно вживати конструкції цитування та атрибуції
+- Учень може виявляти маркери упередженості в медійних текстах
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

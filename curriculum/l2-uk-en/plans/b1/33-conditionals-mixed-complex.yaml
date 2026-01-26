@@ -1,0 +1,77 @@
+module: conditionals-mixed-complex
+level: b1
+sequence: 33
+version: '2.0'
+title: 'Умовні речення: змішані та складні умови'
+subtitle: Mixed and Complex Conditionals
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner understands mixed conditional types
+- Learner can combine real and unreal conditions
+- Learner can form chained conditional sentences
+- Learner can express complex condition-consequence relationships
+content_outline:
+- section: 'Introduction: Mixed Conditionals'
+  words: 150
+  points:
+  - Beyond simple conditionals
+  - Mixing time frames
+  - Complex scenarios
+- section: Past Condition, Present Result
+  words: 250
+  points:
+  - If I had done..., I would be...
+  - Past hypothetical → present consequence
+  - Common patterns
+- section: Present Condition, Past Result
+  words: 250
+  points:
+  - If I were..., I would have...
+  - Present state → past consequence
+  - Expressing regrets
+- section: Chained Conditionals
+  words: 250
+  points:
+  - If A, then B; if B, then C
+  - Multiple conditions
+  - Logical sequences
+- section: Complex Condition Patterns
+  words: 200
+  points:
+  - Unless (якщо не)
+  - Even if (навіть якщо/якби)
+  - As long as (доки)
+- section: 'Practice: Complex Conditionals'
+  words: 100
+  points:
+  - Form mixed conditionals
+  - Create conditional chains
+word_target: 1200
+vocabulary:
+  required:
+  - змішаний (mixed)
+  - складний (complex)
+  - ланцюговий (chained)
+  - якщо не (unless)
+  - навіть якщо (even if)
+  - навіть якби (even if - unreal)
+  - доки (as long as)
+  - за умови (provided that)
+  recommended:
+  - в іншому випадку (otherwise)
+  - крім того (besides)
+  - тим часом (meanwhile)
+  - проте (however)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - sentence-combining
+  - error-correction
+  - speaking
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-34 (Checkpoint Complex Sentences 1)

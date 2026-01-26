@@ -1,7 +1,7 @@
 # Audit Report: M94 — symon-petliura-revolution.md
 **Level:** B2 | **Module:** M94 | **Phase:** HIST.9 | **Pedagogy:** Not Specified | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 20:22:58
+**Generated:** 2026-01-25 22:23:23
 
 ## Configuration
 **Type:** B2-history

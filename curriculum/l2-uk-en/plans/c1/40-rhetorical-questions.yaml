@@ -1,0 +1,22 @@
+module: 40-rhetorical-questions
+level: c1
+sequence: 40
+version: '1.0'
+title: 'Риторичні питання: Мистецтво переконання'
+subtitle: 'Rhetorical Questions: The Art of Persuasion'
+focus: style
+pedagogy: Immersion
+objectives:
+- Identify rhetorical questions in various registers
+- Use rhetorical questions for emphasis and persuasion
+- Distinguish between genuine and rhetorical questions
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

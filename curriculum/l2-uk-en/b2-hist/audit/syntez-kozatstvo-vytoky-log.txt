@@ -1,0 +1,72 @@
+
+========================================
+  📋 Loaded Metadata from YAML sidecar
+
+📋 Auditing: B2 M50 — Синтез: Становлення козацтва
+   File: curriculum/l2-uk-en/b2-hist/syntez-kozatstvo-vytoky.md | Target: 3000 words
+  📋 Required activity types from meta: comparative-study, essay-response, group-sort, quiz, reading
+  📋 Template: docs/l2-uk-en/templates/b2-history-synthesis-module-template.md (pedagogy: CBI)
+  ⚠️  Template violations: 0 critical, 0 warnings, 1 info
+     ℹ️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'b2-history-synthesis-module-template.md'
+
+  🔴 HYDRATION ERROR: Outline sums to 2750, but word_target is 3000
+     Missing 250 words in outline budget!
+     → Run /architect to fix content_outline
+
+  📊 Section Word Analysis:
+     Вступ: Козацтво як точка збірки нації      300 /  350  ⚠️ (-50)
+     Огляд періоду: Хронологія та генеза        409 /  400  ✅ (+9)
+     Ключові теми: Війна, Віра та Воля          486 /  600  ⚠️ (-114)
+     Аналіз: Культурна матриця та геополітика   543 /  600  ✅ (-57)
+     Читання: Узагальнюючий огляд доби          242 /  250  ✅ (-8)
+     Первинні джерела: Голоси фундаторів        306 /  250  ✅ (+56)
+     Деколонізаційний погляд: Козацька правда   402 /  300  ✅ (+102)
+     ─────────────────────────────────────────────────────────────────
+     TOTAL                                     2688 / 2750  ❌ (-62)
+
+📋 Auditing: B2 M50 — Синтез: Становлення козацтва
+   File: curriculum/l2-uk-en/b2-hist/syntez-kozatstvo-vytoky.md | Target: 3000 words
+
+  📋 Found YAML activities file (10 activities)
+  > Козацтво як цивілізаційний проект: 3 items (min 3)
+  > Феномен козацького синтезу: 1 items (min 1)
+  > Підсумковий тест: Доба становлення козацтва: 8 items (min 8)
+  > Еволюція козацької суб'єктності: 1 items (min 1)
+  > Класифікація здобутків козацької доби: 15 items (min 14)
+  > Спадщина козацького синтезу: Міфи та факти: 10 items (min 8)
+  > Словник синтезу: Поняття та значення: 12 items (min 8)
+  > Трансформація українського світу: 10 items (min 8)
+  > Аналіз авторської позиції: 1 items (min 1)
+  > Козацький міф як джерело сили: 1 items (min 1)
+
+--- STRICT GATES (Level B2) ---
+Words        ✅ 3028/3000 (raw: 3187)
+Activities   ✅ 10/10
+Density      ✅ All > 14
+Unique_types ✅ 10/4 types
+Priority     ✅ Priority types used
+Engagement   ✅ 5/4
+Audio        ℹ️ No audio
+Vocab        ✅ 20/20
+Structure    ✅ Valid Structure
+Lint         ✅ Clean Format
+Pedagogy     ✅ Level-appropriate
+Content_heavy ℹ️ N/A (standard module)
+Grammar      ℹ️ N/A (covered by naturalness)
+Naturalness  ✅ 9/10 (High)
+Activity_quality 📋 Quality validation available (optional)
+Immersion    🇺🇦 98.1% (target 90-100% (synthesis))
+Richness     ✅ 95% (history)
+
+📋 TEMPLATE COMPLIANCE VIOLATIONS FOUND:
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'b2-history-synthesis-module-template.md'
+     → FIX: Add a `> [!history-bite]` box as specified in the template. This enhances module quality.
+
+
+📝 RECOMMENDATION: UPDATE (patch fixes) (severity 5/100)
+   → 1 violations (minor)
+
+
+Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/audit/syntez-kozatstvo-vytoky-review.md
+
+✅ AUDIT PASSED.

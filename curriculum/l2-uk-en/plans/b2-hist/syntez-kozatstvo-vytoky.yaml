@@ -1,0 +1,76 @@
+module: syntez-kozatstvo-vytoky
+level: b2-hist
+sequence: 50
+version: '1.0'
+title: 'Синтез: Становлення козацтва'
+focus: synthesis
+pedagogy: CBI
+objectives:
+- Учень може узагальнити етапи становлення козацтва від витоків до середини XVII ст.
+- Учень може проаналізувати козацтво як комплексний військовий, соціальний та культурний
+  феномен
+- Учень може оцінити вплив козацького чинника на європейську геополітику
+content_outline:
+- section: 'Вступ: Козацтво як точка збірки нації'
+  words: 350
+  subsections:
+  - Synthesis of previous modules (41-49)
+- section: 'Огляд періоду: Хронологія та генеза'
+  words: 400
+  subsections:
+  - From ukhodnyky to political knights
+  - Key stages of social evolution
+- section: 'Ключові теми: Війна, Віра та Воля'
+  words: 600
+  subsections:
+  - Military revolution and technological synthesis
+  - Religious identity as a consolidating factor
+- section: 'Аналіз: Культурна матриця та геополітика'
+  words: 600
+  subsections:
+  - Baroque and Academy as identity anchors
+  - Zaporozhian Host as a factor in European balance of power
+- section: 'Читання: Узагальнюючий огляд доби'
+  words: 250
+  subsections:
+  - Analytical text on the significance of the era
+- section: 'Первинні джерела: Голоси фундаторів'
+  words: 250
+  subsections:
+  - Synthesis of key documents
+- section: 'Деколонізаційний погляд: Козацька правда'
+  words: 300
+  subsections:
+  - Debunking the 'peasant culture' myth
+word_target: 3000
+vocabulary:
+- становлення
+- передумова
+- чинник
+- ідентичність
+- суб'єктність
+- феномен
+- консолідація
+- спадкоємність
+- державність
+- вектор
+activities:
+- type: reading
+  focus: Analytical synthesis of historical processes
+- type: quiz
+  focus: Comprehensive test of modules 41-49
+- type: essay-response
+  focus: The role of the Cossack myth in modern national building
+- type: comparative-study
+  focus: Evolution of Cossack identity over 100 years
+- type: group-sort
+  focus: 'Categorizing achievements: military, cultural, political'
+sources:
+- name: History of Ukrainian Statehood
+  url: https://history.org.ua/uk/lib/54321
+  type: reference
+  notes: General synthesis of the era
+- name: Zaporozhian Cossackdom in the Context of European History
+  url: https://litopys.org.ua/cossack/coss.htm
+  type: academic
+  notes: Comparative analysis

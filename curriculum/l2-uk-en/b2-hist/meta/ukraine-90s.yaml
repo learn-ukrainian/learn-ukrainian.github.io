@@ -1,11 +1,105 @@
-# Meta for Україна 1990-х: Кучма та олігархи
+module: b2-hist-121
+id: b2-hist-121
 slug: ukraine-90s
 title: "Україна 1990-х: Кучма та олігархи"
-level: B2
-track: history
+subtitle: "Ukraine in the 1990s: Kuchma and the Oligarchs"
+version: '2.0'
 phase: "HIST.12 [Independence & Modern Era]"
-status: skeleton
 focus: history
+pedagogy: CBI
+register: публіцистичний
+duration: 120
+transliteration: none
+objectives:
+  - "Учень може описати економічну та політичну ситуацію 1990-х років"
+  - "Учень може пояснити формування олігархічної системи"
+  - "Учень може проаналізувати президентство Кучми"
+  - "Учень може оцінити виклики молодої держави"
+grammar:
+  - "Минулий час в історичному наративі"
+  - "Економічна та політична лексика"
+  - "Складнопідрядні речення"
 word_target: 4000
-prerequisites: []
-learning_outcomes: []
+content_outline:
+  - section: "Вступ: Народження держави"
+    words: 400
+    points:
+      - "1991: Україна незалежна"
+      - "Виклики нової держави"
+      - "Від Кравчука до Кучми"
+  - section: "Економічна криза"
+    words: 800
+    points:
+      - "Гіперінфляція"
+      - "Приватизація та «прихватизація»"
+      - "Народження олігархів"
+      - "Донецький та дніпропетровський клани"
+  - section: "Президентство Кучми"
+    words: 1000
+    points:
+      - "Вибори 1994 та 1999 років"
+      - "Авторитарні тенденції"
+      - "Касетний скандал"
+      - "Справа Гонгадзе"
+      - "«Україна без Кучми»"
+  - section: "Первинні джерела"
+    words: 800
+    points:
+      - "Касети Мельниченка"
+      - "Журналістські розслідування"
+      - "Свідчення політиків"
+  - section: "Деколонізаційний погляд"
+    words: 500
+    points:
+      - "Олігархія vs. демократія"
+      - "Роль Росії в 1990-х"
+      - "Втрачені можливості"
+  - section: "Підсумок: До Помаранчевої революції"
+    words: 500
+    points:
+      - "Підсумки 1990-х"
+      - "Формування опозиції"
+      - "Шлях до 2004 року"
+vocabulary_hints:
+  required:
+    - олігарх (oligarch)
+    - приватизація (privatization)
+    - інфляція (inflation)
+    - корупція (corruption)
+    - демократія (democracy)
+    - клан (clan)
+    - скандал (scandal)
+    - журналіст (journalist)
+  recommended:
+    - авторитаризм (authoritarianism)
+    - бізнес (business)
+    - опозиція (opposition)
+    - вибори (elections)
+    - референдум (referendum)
+    - медіа (media)
+activity_hints:
+  - type: reading
+    focus: "Журналістські розслідування 1990-х"
+    source: "Медіа-архіви"
+    items: 4
+  - type: quiz
+    focus: "Україна в 1990-х роках"
+    items: 15
+  - type: match-up
+    focus: "Олігарх → сфера впливу"
+    items: 10
+  - type: true-false
+    focus: "Факти про 1990-ті"
+    items: 10
+  - type: essay-response
+    focus: "Як формування олігархії вплинуло на розвиток України?"
+    word_target: 250
+prerequisites:
+  - b2-hist-120 (Незалежність 1991)
+connects_to:
+  - b2-hist-122 (Помаранчева революція)
+  - b2-hist-126 (Епоха Януковича)
+naturalness:
+  score: 10
+  status: PASS
+  justification: "Академічний український для політичної історії"

@@ -1,26 +1,94 @@
 module: b1-87
-title: Новини - як читати
-subtitle: News Reading Strategies
+id: b1-87
+slug: novyny-yak-chytaty
+title: "Новини: як читати"
+subtitle: "News Reading Strategies for Ukrainian Media"
 version: '2.0'
-phase: B1.8 Skills & Integration
+phase: "B1.8 [Skills & Integration]"
 focus: skills
 pedagogy: CBI
-duration: 75
+register: розмовний
+duration: 90
 transliteration: none
-tags:
-- skills
-- reading
-- news
-- media-literacy
-grammar: []
 objectives:
-- Learner can apply news reading strategies to authentic Ukrainian texts
-- Learner can identify headlines, leads, and main points in news articles
-- Learner can distinguish fact from opinion in Ukrainian news
-- Learner is prepared for autonomous news reading at B2
-vocabulary_count: 36
-vocab_count: 36
-slug: 87-novyny-yak-chytaty
+  - "Learner can apply news reading strategies to authentic Ukrainian texts"
+  - "Learner can identify headlines, leads, and main points in news articles"
+  - "Learner can distinguish fact from opinion in Ukrainian news"
+  - "Learner is prepared for autonomous news reading at B2"
+grammar:
+  - "News vocabulary and register"
+  - "Headline patterns"
+  - "Reporting structures"
+word_target: 1200
+content_outline:
+  - section: "Introduction: News Literacy"
+    words: 150
+    points:
+      - "News reading strategies"
+      - "Ukrainian media landscape"
+      - "Source evaluation"
+  - section: "News Structure"
+    words: 250
+    points:
+      - "Headlines and leads"
+      - "Inverted pyramid"
+      - "Article organization"
+  - section: "News Vocabulary"
+    words: 250
+    points:
+      - "Common news terms"
+      - "Formal register"
+      - "Abbreviations"
+  - section: "Fact vs Opinion"
+    words: 250
+    points:
+      - "Identifying facts"
+      - "Recognizing opinion"
+      - "Bias awareness"
+  - section: "Practice Strategies"
+    words: 200
+    points:
+      - "Skimming and scanning"
+      - "Key information extraction"
+      - "Summary skills"
+  - section: "Practice: News Analysis"
+    words: 100
+    points:
+      - "Analyze news articles"
+      - "Discuss current events"
+vocabulary_hints:
+  required:
+    - новини (news)
+    - стаття (article)
+    - заголовок (headline)
+    - джерело (source)
+    - факт (fact)
+    - думка (opinion)
+    - журналіст (journalist)
+    - ЗМІ (mass media)
+  recommended:
+    - редакція (editorial office)
+    - кореспондент (correspondent)
+    - огляд (review)
+    - коментар (commentary)
+activity_hints:
+  - type: reading
+    focus: "Authentic news articles"
+    items: 15
+  - type: matching
+    focus: "Match headlines to content"
+    items: 20
+  - type: fill-in
+    focus: "Complete news summaries"
+    items: 15
+  - type: analysis
+    focus: "Analyze news for bias"
+    items: 10
+prerequisites:
+  - b1-86 (Ukrainian Holidays and Festivals)
+connects_to:
+  - b1-88 (Interviews and Podcasts)
 naturalness:
   score: 9
   status: PASS
+  justification: "Essential media literacy for B2 preparation"

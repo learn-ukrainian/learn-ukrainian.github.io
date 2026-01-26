@@ -1,0 +1,98 @@
+module: pereiaslav-alternatyvy
+level: c1-hist
+sequence: 89
+version: '1.0'
+title: 'Переяслав 1654: Які були альтернативи?'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — «Що якби...»
+  words: 400
+  subsections:
+  - Переяслав — не єдиний варіант
+  - Контрфактична історія — навіщо
+  - Альтернативи, що існували
+  - Структура модуля
+- section: Швецька альтернатива
+  words: 600
+  subsections:
+  - Карл X Густав — контакти
+  - Що пропонували
+  - Чому не вибрали
+  - Якби вибрали — сценарій
+- section: Османська альтернатива
+  words: 600
+  subsections:
+  - Туреччина — протектор Криму
+  - Хмельницький і султан
+  - Ризики і можливості
+  - Кримськотатарський союз
+- section: Польська альтернатива
+  words: 600
+  subsections:
+  - Переговори з Річчю Посполитою
+  - Гадяцька унія (1658) — що могло бути
+  - Чому переговори провалились
+  - Структурні перешкоди
+- section: Незалежність
+  words: 500
+  subsections:
+  - Чи була можливою?
+  - Козацька держава — ресурси
+  - Геополітичний контекст
+  - Чому Хмельницький не вірив
+- section: Чому Москва?
+  words: 500
+  subsections:
+  - Релігійний аргумент
+  - Військова допомога — негайна
+  - Ілюзія «братства»
+  - Короткостроковий погляд
+- section: Підсумок
+  words: 300
+  subsections:
+  - Альтернативи існували
+  - Вибір Москви — не неминучий
+  - Уроки для рішень
+word_target: 3500
+vocabulary:
+- альтернатива
+- контрфактичний
+- протектор
+- геополітичний
+- союз
+- переговори
+- незалежність
+- вибір
+- наслідки
+- контекст
+- Гадяцька унія
+- васальна залежність
+- буферна держава
+- дипломатія
+- стратегічний
+activities:
+- type: essay-response
+  focus: Swedish alternative — what if scenario
+- type: decision-tree
+  focus: Map Khmelnytsky's options in 1654
+- type: comparative-study
+  focus: Compare four alternatives — pros and cons
+- type: structural-analysis
+  focus: Why was independence difficult?
+- type: essay-response
+  focus: Чи був Переяслав найкращим вибором з наявних?
+sources:
+- name: Переяславська рада (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Переяславська_рада
+  type: reference
+  notes: 1654 context
+- name: Хмельниччина (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Хмельниччина
+  type: reference
+  notes: War context
+- name: Богдан Хмельницький (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Богдан_Хмельницький
+  type: reference
+  notes: Decision-maker

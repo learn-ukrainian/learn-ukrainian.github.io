@@ -28,3 +28,30 @@ slug: 31-numeral-declension-time-dates
 naturalness:
   score: 9
   status: PASS
+content_outline:
+- section: Вступ — Час і дати
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Вирази часу
+  words: 500
+  points:
+  - о другій годині (at 2 o'clock)
+  - пів на першу (half past twelve)
+  - двадцять по шостій (twenty past six)
+  - за п'ятнадцять третя (quarter to three)
+- section: Вирази дати
+  words: 500
+  points:
+  - перше січня (January 1st - nominative)
+  - першого січня (of January 1st - genitive)
+  - до двадцять восьмого лютого (until February 28th)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

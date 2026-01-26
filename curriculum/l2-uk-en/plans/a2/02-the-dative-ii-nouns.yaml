@@ -1,0 +1,81 @@
+module: 02-the-dative-ii-nouns
+level: a2
+sequence: 2
+version: '1.0'
+title: The Dative II — Nouns
+subtitle: Giving, Sending, and Showing
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can form dative case endings for masculine nouns
+- Learner can form dative case endings for feminine and neuter nouns
+- Learner can form dative plural endings
+- Learner can use dative nouns with common verbs
+sources:
+- name: Ukrainian State Standard 2024 - Noun Declension
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Complete dative endings for all noun genders
+- name: Ukrainian Grammar Tables
+  url: https://uk.wikipedia.org/wiki/Відмінювання_іменників
+  type: reference
+  notes: Declension patterns and exceptions
+content_outline:
+- section: Introduction / Вступ
+  words: 300
+  points:
+  - Building on dative pronouns from M01
+  - Indirect object concept (recipient of action)
+  - Ukrainian overview of recipients
+- section: Presentation
+  words: 500
+  points:
+  - Masculine endings (-ові/-у)
+  - Feminine endings (-і) with consonant changes
+  - Neuter and Plural endings
+  - Dative-hungry verbs
+- section: Practice
+  words: 150
+  points:
+  - Reading and sentence transformation
+- section: Dialogues
+  words: 50
+  points:
+  - Mini-dialogues in context
+word_target: 1000
+vocabulary:
+  required:
+  - давати (to give)
+  - дарувати (to gift)
+  - посилати (to send)
+  - надсилати (to send)
+  - показувати (to show)
+  - пояснювати (to explain)
+  - розповідати (to tell)
+  - допомагати (to help)
+  - заважати (to bother)
+  - личити (to suit)
+  - підходити (to suit)
+  - вистачати (to be enough)
+  - бракувати (to lack)
+  - відповідати (to answer)
+  - телефонувати (to call)
+  recommended:
+  - шкодити (to harm)
+  - вірити (to believe)
+  - довіряти (to trust)
+  - радити (to advise)
+  - дозволяти (to allow)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - match-up
+  - fill-in
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a2-03 (Dative Verbs)
+- a2-04 (Instrumental I)
+- a2-09 (All Cases Practice)

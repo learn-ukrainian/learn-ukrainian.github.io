@@ -1,0 +1,79 @@
+module: the-cyrillic-code-ii
+level: a1
+sequence: 2
+version: '2.0'
+title: The Cyrillic Code II
+subtitle: The Final 14 Letters
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can recognize unique Ukrainian letters (Г, Ґ, Ж, Ш, Щ, Ч, Ц)
+- Learner can identify iotated vowels (Є, Ї, Ю, Я)
+- Learner can understand the soft sign (Ь)
+- Learner can distinguish И (hard i) from І (soft i)
+content_outline:
+- section: 'Review: Your First 19 Letters'
+  words: 100
+  points:
+  - Quick review of Part I
+  - Reading diagnostic
+- section: Unique Ukrainian Sounds (Ц, Ч, Ш, Щ)
+  words: 150
+  points:
+  - Ц = ts, Ч = ch, Ш = sh, Щ = shch
+  - 'Practice words: центр, чай, школа, ще'
+  - Tongue positioning
+- section: Special Consonants (Г, Ґ, Ж)
+  words: 150
+  points:
+  - Г = voiced h, Ґ = hard g, Ж = zh
+  - Г vs Ґ distinction
+  - 'Practice: гарний, ґанок, жити'
+- section: The Soft Sign (Ь) and И vs І
+  words: 150
+  points:
+  - Ь softens preceding consonant
+  - И = hard i (between i and y)
+  - І = soft i (like English ee)
+- section: Iotated Vowels (Є, Ї, Ю, Я)
+  words: 150
+  points:
+  - Є = ye, Ї = yi, Ю = yu, Я = ya
+  - Used after vowels and at word start
+  - 'Practice: Європа, їжа, юнак, яблуко'
+- section: 'Summary: Complete Alphabet Mastery'
+  words: 100
+  points:
+  - All 33 letters reviewed
+  - Italic variants overview
+  - Ready for reading practice
+word_target: 800
+vocabulary:
+  required:
+  - центр (center)
+  - чай (tea)
+  - школа (school)
+  - гарний (beautiful)
+  - жити (to live)
+  - день (day)
+  - Європа (Europe)
+  - яблуко (apple)
+  recommended:
+  - ще (still/more)
+  - ґанок (porch)
+  - їжа (food)
+  - юнак (young man)
+  - ніч (night)
+  - сім'я (family)
+  forbidden: []
+activities:
+  types_required:
+  - audio-match
+  - letter-recognition
+  - minimal-pairs
+  - reading-drill
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a1-03 (The Gender Code)

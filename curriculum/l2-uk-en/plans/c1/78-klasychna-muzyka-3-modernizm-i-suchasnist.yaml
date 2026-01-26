@@ -1,0 +1,22 @@
+module: 78-klasychna-muzyka-3-modernizm-i-suchasnist
+level: c1
+sequence: 78
+version: '2.0'
+title: Класична музика III — Модернізм і сучасність
+subtitle: Classical Music III — Modernism & Contemporary
+focus: fine-arts
+pedagogy: CBI
+objectives:
+- Learner identifies key figures of 20th-century Ukrainian modernism.
+- Learner understands the impact of Soviet repression on musical development.
+- Learner can discuss contemporary Ukrainian classical music in a global context.
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

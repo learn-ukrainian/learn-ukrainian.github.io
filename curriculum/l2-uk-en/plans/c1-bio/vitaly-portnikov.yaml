@@ -1,0 +1,109 @@
+module: vitaly-portnikov
+level: c1-bio
+sequence: 88
+version: '2.0'
+title: 'Віталій Портников: Журналіст і аналітик'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Портников_Віталій_Янович
+    title: Віталій Портников (Wikipedia UA)
+    notes: Основна біографічна інформація
+  secondary:
+  - url: https://espreso.tv/
+    title: Espreso.TV
+    notes: Публікації та виступи
+  - url: https://www.radiosvoboda.org/
+    title: Радіо Свобода
+    notes: Архів публікацій
+content_outline:
+- section: Вступ — Голос української журналістики
+  words: 400
+  subsections:
+  - Портников як один із найвпливовіших аналітиків
+  - Роль у формуванні суспільної думки
+  - Постійність позиції протягом десятиліть
+- section: Ранні роки та освіта
+  words: 600
+  subsections:
+  - Народження в Києві (1967)
+  - Освіта та формування поглядів
+  - Початок журналістської кар'єри
+- section: Журналістська діяльність
+  words: 700
+  subsections:
+  - Робота в різних виданнях
+  - Телевізійна публіцистика
+  - Міжнародні проекти
+- section: Аналітик пострадянського простору
+  words: 800
+  subsections:
+  - Експертиза з питань Росії та СНД
+  - Прогнози щодо російської агресії
+  - Роль під час Майдану та війни
+- section: Стиль та методологія
+  words: 700
+  subsections:
+  - Особливості аналітичного підходу
+  - Риторичні прийоми
+  - Вплив на медіапростір
+- section: Сучасна діяльність
+  words: 600
+  subsections:
+  - Робота під час повномасштабної війни
+  - Пояснення України світові
+  - Роль публічного інтелектуала
+- section: Дискусія — Журналістика як місія
+  words: 200
+  subsections:
+  - Обов'язок журналіста в час війни
+  - Баланс між аналітикою та активізмом
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - аналітик
+  - публіцистика
+  - експертиза
+  - геополітика
+  - медіапростір
+  - прогноз
+  - коментар
+  - дискурс
+  - громадська думка
+  - незалежні ЗМІ
+  recommended:
+  - інформаційна війна
+  - пропаганда
+  - критичне мислення
+  - об'єктивність
+  - заангажованість
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: b2-hist-euromaidan
+  related:
+  - c1-bio-87-yaroslav-hrytsak
+  - c1-bio-91-oleg-sentsov
+  - c1-bio-90-serhiy-zhadan
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

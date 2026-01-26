@@ -1,28 +1,95 @@
 module: b1-90
-title: Grammar in Context
-subtitle: Applying Grammar to Practical Communication
+id: b1-90
+slug: grammar-in-context
+title: "Граматика в контексті"
+subtitle: "Applying Grammar to Practical Communication"
 version: '2.0'
-phase: B1.9
+phase: "B1.9 [Communication Skills]"
 focus: communication
 pedagogy: TBL
+register: розмовний
 duration: 90
 transliteration: none
-tags:
-- communication
-- grammar
-- practical
-- applied
-grammar:
-- applied aspect
-- motion verbs in narratives
-- complex sentences in context
 objectives:
-- Learner applies grammar knowledge in practical scenarios
-- Learner produces extended written discourse
-- Learner builds communication skills
-vocabulary_count: 25
-vocab_count: 25
-slug: 90-grammar-in-context
+  - "Learner applies grammar knowledge in practical communication scenarios"
+  - "Learner produces extended written discourse with appropriate grammar"
+  - "Learner self-corrects grammar in authentic contexts"
+  - "Learner integrates multiple grammar structures naturally"
+grammar:
+  - "Applied aspect in narratives"
+  - "Motion verbs in real contexts"
+  - "Complex sentences in communication"
+  - "Participles in authentic texts"
+word_target: 1000
+content_outline:
+  - section: "Introduction: Grammar for Communication"
+    words: 150
+    points:
+      - "Grammar as tool"
+      - "Context-based approach"
+      - "Self-correction strategies"
+  - section: "Narrating Events"
+    words: 200
+    points:
+      - "Aspect in storytelling"
+      - "Sequence markers"
+      - "Natural narrative flow"
+  - section: "Describing Experiences"
+    words: 200
+    points:
+      - "Past tense integration"
+      - "Motion in context"
+      - "Emotional vocabulary"
+  - section: "Explaining and Arguing"
+    words: 200
+    points:
+      - "Complex sentences"
+      - "Logical connectors"
+      - "Opinion structures"
+  - section: "Writing Tasks"
+    words: 150
+    points:
+      - "Extended writing"
+      - "Grammar accuracy"
+      - "Self-editing"
+  - section: "Practice: Integrated Tasks"
+    words: 100
+    points:
+      - "Apply grammar"
+      - "Produce texts"
+vocabulary_hints:
+  required:
+    - граматика (grammar)
+    - контекст (context)
+    - розповідь (narrative)
+    - опис (description)
+    - пояснення (explanation)
+    - помилка (error)
+    - виправлення (correction)
+    - структура (structure)
+  recommended:
+    - точність (accuracy)
+    - плавність (fluency)
+    - зв'язність (coherence)
+    - редагування (editing)
+activity_hints:
+  - type: writing
+    focus: "Extended narratives"
+    items: 10
+  - type: task
+    focus: "Communication tasks"
+    items: 15
+  - type: error-correction
+    focus: "Self-editing practice"
+    items: 20
+  - type: speaking
+    focus: "Oral presentations"
+    items: 10
+prerequisites:
+  - b1-89 (Checkpoint Grammar Synthesis)
+connects_to:
+  - b1-91 (Vocabulary in Context)
 naturalness:
   score: 9
   status: PASS
+  justification: "Essential integration for communicative competence"

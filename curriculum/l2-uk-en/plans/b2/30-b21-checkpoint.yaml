@@ -1,0 +1,23 @@
+module: 30-b21-checkpoint
+level: b2
+sequence: 30
+version: '1.0'
+title: 'Контрольна точка: B2.1 Завершення'
+subtitle: Комплексна перевірка фаз B2.1a, B2.1b та B2.1c
+focus: checkpoint
+pedagogy: checkpoint
+objectives:
+- Демонструвати майстерність усіх пасивних форм та дієприкметників
+- Застосовувати складний синтаксис для академічного та офіційного письма
+- Обирати відповідний регістр для різних комунікативних ситуацій
+- Використовувати доменну лексику (політика, право, економіка)
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

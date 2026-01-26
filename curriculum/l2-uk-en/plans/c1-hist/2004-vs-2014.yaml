@@ -1,0 +1,97 @@
+module: 2004-vs-2014
+level: c1-hist
+sequence: 93
+version: '1.0'
+title: 'Помаранчева vs Гідності: Чому різні результати?'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Дві революції, різні наслідки
+  words: 400
+  subsections:
+  - 2004 — перемога, потім розчарування
+  - 2014 — трагедія, потім трансформація
+  - Чому так по-різному
+  - Структура модуля
+- section: Помаранчева 2004
+  words: 700
+  subsections:
+  - Причини — фальсифікація виборів
+  - Методи — мирний протест
+  - Результат — перевибори, Ющенко
+  - Чому не втримали
+- section: Гідності 2014
+  words: 700
+  subsections:
+  - Причини — Вільнюс, побиття студентів
+  - Ескалація — насильство, жертви
+  - Результат — втеча Януковича, війна
+  - Чому тривалі зміни
+- section: Ключові відмінності
+  words: 600
+  subsections:
+  - Мета — вибори vs. система
+  - Ціна — мирна vs. кров
+  - Зовнішній фактор — Росія 2004 vs. 2014
+  - Громадянське суспільство — слабке vs. сильне
+- section: Уроки 2004 для 2014
+  words: 500
+  subsections:
+  - Що засвоїли
+  - Не вірити обіцянкам
+  - Системні зміни важливіші
+  - Ціна свободи
+- section: Чому 2014 тривалий
+  words: 300
+  subsections:
+  - Війна — консолідація
+  - Неможливість повернення
+  - Європейський вибір — незворотний
+- section: Підсумок
+  words: 300
+  subsections:
+  - Дві революції — різні траєкторії
+  - 2014 — справжній перелом
+  - Перехід до синтезу
+word_target: 3500
+vocabulary:
+- Помаранчева революція
+- Революція гідності
+- результат
+- фальсифікація
+- ескалація
+- трансформація
+- громадянське суспільство
+- системні зміни
+- консолідація
+- незворотний
+- перевибори
+- розчарування
+- Євромайдан
+- Небесна сотня
+- люстрація
+activities:
+- type: comparative-study
+  focus: 2004 vs. 2014 — systematic comparison
+- type: outcome-analysis
+  focus: Why did 2004 fail and 2014 succeed?
+- type: factor-analysis
+  focus: What factors made 2014 transformative?
+- type: lesson-analysis
+  focus: How 2004 lessons informed 2014
+- type: essay-response
+  focus: Чому Помаранчева революція не принесла тривалих змін?
+sources:
+- name: Помаранчева революція (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Помаранчева_революція
+  type: reference
+  notes: 2004 events
+- name: Революція гідності (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Революція_гідності
+  type: reference
+  notes: 2014 events
+- name: Віктор Ющенко (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Віктор_Ющенко
+  type: reference
+  notes: 2004 leader

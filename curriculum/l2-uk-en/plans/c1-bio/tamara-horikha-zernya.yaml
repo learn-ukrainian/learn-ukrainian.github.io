@@ -1,0 +1,109 @@
+module: tamara-horikha-zernya
+level: c1-bio
+sequence: 92
+version: '2.0'
+title: 'Тамара Горіха Зерня: Голос опору'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Горіха_Зерня_Тамара
+    title: Тамара Горіха Зерня (Wikipedia UA)
+    notes: Основна біографічна інформація
+  secondary:
+  - url: https://chytomo.com/
+    title: Інтервью та публікації
+    notes: Інтервю про волонтерство та творчість
+  - url: https://www.bookclub.ua/
+    title: Видавництво Клуб сімейного дозвілля
+    notes: Інформація про публікації
+content_outline:
+- section: Вступ — Коли війна стає літературою
+  words: 400
+  subsections:
+  - Феномен роману Доця як літературного документа
+  - Від волонтерки до письменниці
+  - Жіноче обличчя українського опору
+- section: Довоєнне життя та формування
+  words: 500
+  subsections:
+  - Біографічні відомості до 2014 року
+  - Професійна діяльність
+  - Шлях до літератури
+- section: Волонтерство як покликання
+  words: 800
+  subsections:
+  - Початок російської агресії 2014 року
+  - Логістика гуманітарної допомоги
+  - Досвід роботи на передовій
+- section: Народження Доці
+  words: 800
+  subsections:
+  - Як особистий досвід став романом
+  - Структура та стиль твору
+  - Рецепція та нагороди (премія BBC)
+- section: Голос війни та опору
+  words: 700
+  subsections:
+  - Теми травми та зцілення в творчості
+  - Роль жінок у війні
+  - Література як свідчення
+- section: Продовження творчого шляху
+  words: 600
+  subsections:
+  - Нові проекти після Доці
+  - Громадська позиція
+  - Вплив на українську літературу війни
+- section: Дискусія — Література як документ епохи
+  words: 200
+  subsections:
+  - Як волонтерський досвід формує нову літературу
+  - Етика писання про війну
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - волонтерство
+  - гуманітарна допомога
+  - передова
+  - окупація
+  - травма
+  - опір
+  - свідчення
+  - логістика
+  - евакуація
+  - зцілення
+  recommended:
+  - бойові дії
+  - тилові служби
+  - документалістика
+  - автофікція
+  - посттравматичний
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: b2-hist-euromaidan
+  related:
+  - c1-bio-93-kateryna-kalytko
+  - c1-bio-91-oleg-sentsov
+  - c1-bio-95-oleksandra-matviichuk
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

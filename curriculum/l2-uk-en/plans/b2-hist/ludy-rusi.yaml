@@ -1,0 +1,79 @@
+module: ludy-rusi
+level: b2-hist
+sequence: 18
+version: '1.0'
+title: 'Люди Русі: Суспільство та побут'
+focus: history
+pedagogy: CBI
+objectives:
+- Identify the main social classes of Kyivan Rus
+- Understand the legal status of smerds, zakups, and kholops
+- Describe the everyday life in cities and villages
+content_outline:
+- section: Розминка
+  words: 160
+  subsections:
+  - Demographics of Kyiv vs London
+  - The concept of Estate (Stan)
+  - 'Vocabulary: Vira, Izgoy, Votchyna'
+- section: 'Читання: Суспільство та повсякдення Київської Русі'
+  words: 3200
+  subsections:
+  - 'The Prince and Druzhina: The top of the pyramid'
+  - Boyars as landed aristocracy (Votchyna system)
+  - 'Clergy: Black (Monks) vs White (Priests)'
+  - 'Burghers: Merchants, Craftsmen, and Guilds'
+  - 'Economy: Trade Routes (Greeks, Salt, Zalozny) and Currency'
+  - 'Peasantry: Smerds (free), Zakups (debtors), Ryadovychi'
+  - 'Kholops: Slavery in Rus context'
+  - 'Women in Rus: Property rights and education'
+  - 'Daily Life: Housing, Clothing, and Diet'
+  - 'Entertainment: Skomorokhy, Chess, and Festivals'
+  - 'Literacy and Education: Birch Bark Letters and Graffiti'
+- section: 'Первинні джерела: Голоси епохи'
+  words: 400
+  subsections:
+  - 'Ruska Pravda: The price of life and honor'
+  - Collective responsibility (Verv)
+  - 'Birch Bark Letters: Ordinary voices'
+- section: 'Деколонізаційний погляд: Руйнування імперських міфів'
+  words: 240
+  subsections:
+  - Regional differences in housing (Mazanka vs Izba)
+  - Differences in clothing and traditions
+  - 'Political culture: Contractual vs Despotic'
+word_target: 4000
+vocabulary:
+- суспільство
+- побут
+- смерд
+- закуп
+- холоп
+- боярин
+- дружина
+- купець
+- ремісник
+- віче
+- громада
+- рало
+- рядович
+- челядь
+- терем
+- городище
+- соха
+- ізгой
+- верв
+- тіун
+sources:
+- name: Суспільство Київської Русі (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Суспільство_Київської_Русі
+  type: reference
+  notes: Social structure overview
+- name: Побут населення Київської Русі
+  url: https://uk.wikipedia.org/wiki/Побут_населення_Київської_Русі
+  type: reference
+  notes: Everyday life
+- name: Руська Правда — соціальні норми
+  url: https://litopys.org.ua/oldukr2/oldukr51.htm
+  type: primary
+  notes: Legal text on social classes

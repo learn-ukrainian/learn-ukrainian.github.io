@@ -1,0 +1,83 @@
+module: 19-motion-starting-returning
+level: b1
+sequence: 19
+version: '1.0'
+title: 'Рух: початок і повернення'
+subtitle: Motion - Starting & Returning
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can use по- for starting movement
+- Learner can use за- for stopping by
+- Learner can use роз- for dispersing
+sources:
+- name: Ukrainian State Standard 2024 - Motion Prefixes
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official prefix meanings for starting/returning
+- name: Ukrainian Verbal Prefixes
+  url: https://uk.wikipedia.org/wiki/Дієслівні_префікси
+  type: reference
+  notes: по-, за-, роз- semantics
+content_outline:
+- section: Діагностика
+  words: 100
+  points:
+  - Content for Діагностика
+  - Examples and explanation
+  - Practice or application
+- section: Пояснення
+  words: 600
+  points:
+  - Content for Пояснення
+  - Examples and explanation
+  - Practice or application
+- section: Поглиблення
+  words: 400
+  points:
+  - Content for Поглиблення
+  - Examples and explanation
+  - Practice or application
+- section: Практика
+  words: 100
+  points:
+  - Content for Практика
+  - Examples and explanation
+  - Practice or application
+- section: Діалоги
+  words: 350
+  points:
+  - Content for Діалоги
+  - Examples and explanation
+  - Practice or application
+word_target: 1500
+vocabulary:
+  required:
+  - піти/виходити (to leave on foot)
+  - поїхати/виїжджати (to leave by vehicle)
+  - зайти/заходити (to stop by on foot)
+  - заїхати/заїжджати (to stop by in vehicle)
+  - розійтися/розходитися (to disperse on foot)
+  - роз'їхатися/роз'їжджатися (to disperse by vehicle)
+  - початок (beginning)
+  - зупинка (stop)
+  - розходження (dispersal)
+  - напрямок (direction)
+  recommended:
+  - побігти (to start running)
+  - забігти (to run in briefly)
+  - розбігтися (to scatter running)
+  - заскочити (to pop in quickly)
+  - затриматися (to linger)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - quiz
+  - cloze
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-20 (Motion - approaching & departing)
+- b1-22 (Motion full prefix integration)

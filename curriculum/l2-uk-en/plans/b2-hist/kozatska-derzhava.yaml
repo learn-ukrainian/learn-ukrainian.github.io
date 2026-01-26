@@ -1,0 +1,84 @@
+module: kozatska-derzhava
+level: b2-hist
+sequence: 55
+version: '1.0'
+title: 'Хмельниччина: Козацька держава'
+focus: history
+pedagogy: CBI
+objectives:
+- Учень може описати полково-сотенний устрій Гетьманщини
+- Учень може пояснити функції Генеральної старшини
+- Учень може проаналізувати значення Чигирина як політичного центру
+content_outline:
+- section: 'Вступ: Народилася Гетьманщина'
+  words: 400
+  subsections:
+  - The challenge of state-building after victories
+  - Cossack democracy vs. European legal standards
+- section: 'Структура влади: Гетьман та Генеральна старшина'
+  words: 700
+  subsections:
+  - The role of the Hetman as head of state
+  - Functions of the General Staff (Scribe, Quartermaster, Judge, Treasurer)
+- section: 'Адміністративний устрій: Полково-сотенна система'
+  words: 700
+  subsections:
+  - Merging military and territorial structures
+  - Role of colonels and centurions in local governance
+- section: 'Чигирин: Серце козацької держави'
+  words: 450
+  subsections:
+  - Chyhyryn as a European capital
+  - Diplomatic etiquette and foreign embassies
+- section: 'Економіка та право: Скарбниця та суди'
+  words: 500
+  subsections:
+  - Creation of a national financial system
+  - Cossack justice and the Lithuanian Statute
+- section: Читання
+  words: 350
+  subsections:
+  - Analysis of state documents
+- section: Первинні джерела
+  words: 300
+  subsections:
+  - Alberto Vimina's notes on Chyhyryn
+- section: 'Деколонізаційний погляд: Державність проти анархії'
+  words: 300
+  subsections:
+  - Debunking imperial myths of 'Cossack chaos'
+  - The Hetmanate as a mature political project
+word_target: 4000
+vocabulary:
+- гетьманат
+- булава
+- канцелярія
+- полковник
+- сотник
+- скарбниця
+- універсал
+- клейноди
+- підскарбій
+- обозний
+activities:
+- type: reading
+  focus: Administrative documents and chronicles
+- type: quiz
+  focus: State structure and officials
+- type: essay-response
+  focus: Continuity of state-building traditions
+- type: match-up
+  focus: Administrative and military ranks
+- type: true-false
+  focus: Myths about the Hetmanate governance
+- type: comparative-study
+  focus: Cossack vs. Polish administrative models
+sources:
+- name: History of Ukraine-Rus
+  url: http://litopys.org.ua/hrushrus/iur.htm
+  type: reference
+  notes: Analysis of the Hetmanate structure
+- name: The Cossack Myth
+  url: https://history.org.ua
+  type: reference
+  notes: State-building and identity

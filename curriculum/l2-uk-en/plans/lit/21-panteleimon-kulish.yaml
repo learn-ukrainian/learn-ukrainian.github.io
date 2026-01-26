@@ -1,0 +1,104 @@
+module: 21-panteleimon-kulish
+level: lit
+sequence: 21
+version: '1.0'
+title: 'Пантелеймон Куліш: Європеєць на Хуторі'
+subtitle: 'Panteleimon Kulish: The European on the Farmstead'
+focus: literature
+pedagogy: seminar
+objectives:
+- Evaluate Kulish's role as the "architect" of modern Ukrainian culture alongside Shevchenko.
+- Understand the "Khutor" philosophy as a path to Europeanization.
+- Analyze the impact of "Kulishivka" and his translations on Ukrainian identity.
+sources:
+  primary:
+  - url: https://www.ukrlib.com.ua/bio/printit.php?tid=1701
+    title: Пантелеймон Куліш — біографія
+    notes: Офіційна біографія на UkrLib
+  secondary:
+  - url: https://www.ukrlib.com.ua/books/printit.php?tid=263
+    title: Чорна рада — текст
+    notes: Головний роман для контексту
+  - url: https://uk.wikipedia.org/wiki/Кулішівка
+    title: Куліш і українська орфографія
+    notes: Мовознавчий контекст
+content_outline:
+- section: Вступ — Інтелектуал епохи романтизму
+  words: 500
+  subsections:
+  - Куліш у трійці Шевченко-Куліш-Костомаров
+  - Гарячий характер і суперечливість
+  - Чому його менше знають
+- section: Біографія — від села до Європи
+  words: 700
+  subsections:
+  - Дитинство на Чернігівщині
+  - Освіта і перші твори
+  - Подорожі Європою
+- section: Куліш і Шевченко
+  words: 700
+  subsections:
+  - Дружба і конфлікти
+  - Різні погляди на Україну
+  - Куліш як видавець "Кобзаря"
+- section: Перекладач і мовознавець
+  words: 700
+  subsections:
+  - Переклади Шекспіра
+  - Переклад Біблії
+  - Кулішівка — система правопису
+- section: Хуторянство як філософія
+  words: 600
+  subsections:
+  - Ідеалізація сільського життя
+  - Критика міста і модернізації
+  - Європеїзм vs консерватизм
+- section: Підсумок — Найсуперечливіша постать
+  words: 400
+  subsections:
+  - Внесок Куліша в українську культуру
+  - Чому його переоцінюють і недооцінюють
+  - Перехід до "Чорної ради"
+word_target: 4500
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - інтелектуал
+  - романтизм
+  - хуторянство
+  - перекладач
+  - правопис
+  - суперечливий
+  - європеїзм
+  - консерватизм
+  - видавець
+  - епістолярний
+  recommended:
+  - полеміка
+  - ідеалізація
+  - модернізація
+  - конфлікт
+  - спадщина
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - cloze
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: lit-11 to lit-20 (Shevchenko phase)
+  related:
+  - lit-22 (Black Council History — історичний контекст)
+  - lit-24 (Language Question — Кулішівка)
+  - lit-25 (Cyrillo-Methodian Brotherhood)
+constraints:
+  min_engagement_boxes: 3
+  min_examples: 15
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

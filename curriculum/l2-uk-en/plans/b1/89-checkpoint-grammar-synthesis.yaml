@@ -1,0 +1,77 @@
+module: checkpoint-grammar-synthesis
+level: b1
+sequence: 89
+version: '2.0'
+title: 'Checkpoint: Синтез граматики'
+subtitle: Grammar Synthesis Assessment
+focus: checkpoint
+pedagogy: TTT
+objectives:
+- Learner demonstrates mastery of all B1 grammar (M01-88)
+- Learner applies grammar in integrated contexts
+- Learner identifies and corrects grammar errors
+- Learner is ready for Phase B1.9 communication skills
+content_outline:
+- section: Diagnostic Test
+  words: 150
+  points:
+  - Identify grammar gaps
+  - Self-assessment
+  - Focus areas
+- section: Aspect Synthesis
+  words: 200
+  points:
+  - All aspect contexts
+  - Aspect in discourse
+  - Complex cases
+- section: Motion Verb Review
+  words: 200
+  points:
+  - Prefix system
+  - Aspect with motion
+  - Idiomatic uses
+- section: Complex Sentences
+  words: 200
+  points:
+  - Subordinate clauses
+  - Relative clauses
+  - Conditional structures
+- section: Participles and Passive
+  words: 150
+  points:
+  - Adverbial participles
+  - Passive constructions
+  - Stylistic awareness
+- section: Final Assessment
+  words: 100
+  points:
+  - Integrated grammar test
+  - Error correction
+word_target: 1000
+vocabulary:
+  required:
+  - граматика (grammar)
+  - аспект (aspect)
+  - дієприслівник (adverbial participle)
+  - пасив (passive)
+  - підрядне речення (subordinate clause)
+  - доконаний вид (perfective aspect)
+  - недоконаний вид (imperfective aspect)
+  - синтез (synthesis)
+  recommended:
+  - узгодження (agreement)
+  - відмінювання (conjugation)
+  - граматична помилка (grammar error)
+  - правильно (correctly)
+  forbidden: []
+activities:
+  types_required:
+  - transformation
+  - error-correction
+  - production
+  - diagnostic
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-90 (Grammar in Context)

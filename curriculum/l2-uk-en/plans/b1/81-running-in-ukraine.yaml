@@ -1,0 +1,77 @@
+module: running-in-ukraine
+level: b1
+sequence: 81
+version: '2.0'
+title: Біг в Україні
+subtitle: Running Culture and Marathon Events
+focus: culture
+pedagogy: CBI
+objectives:
+- Learner can discuss running events and training in Ukrainian
+- Learner can understand registration information for races
+- Learner can use running-specific vocabulary
+- Learner can describe their running experience
+content_outline:
+- section: 'Introduction: Running Culture'
+  words: 150
+  points:
+  - Running popularity
+  - Ukrainian running community
+  - Benefits of running
+- section: Major Running Events
+  words: 250
+  points:
+  - Kyiv Marathon
+  - Half-marathons
+  - Regional races
+- section: Training and Preparation
+  words: 250
+  points:
+  - Training vocabulary
+  - Preparation tips
+  - Equipment
+- section: Race Day
+  words: 250
+  points:
+  - Registration process
+  - Race categories
+  - Finish and results
+- section: Running Community
+  words: 200
+  points:
+  - Running clubs
+  - Parkrun culture
+  - Social running
+- section: 'Practice: Running Discussion'
+  words: 100
+  points:
+  - Share running experiences
+  - Plan for races
+word_target: 1200
+vocabulary:
+  required:
+  - біг (running)
+  - марафон (marathon)
+  - дистанція (distance)
+  - темп (pace)
+  - реєстрація (registration)
+  - фініш (finish)
+  - бігун (runner)
+  - кросівки (running shoes)
+  recommended:
+  - напівмарафон (half-marathon)
+  - розминка (warm-up)
+  - особистий рекорд (personal best)
+  - біговий клуб (running club)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - reading
+  - discussion
+  - matching
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-82 (Mountains and Trail)

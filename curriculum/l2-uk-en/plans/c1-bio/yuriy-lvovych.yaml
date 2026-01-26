@@ -1,0 +1,115 @@
+module: yuriy-lvovych
+level: c1-bio
+sequence: 0
+version: '2.0'
+title: 'Юрій I Львович: Останній Король Русі'
+focus: biography
+pedagogy: seminar
+objectives:
+- Analyze the significance of the royal title 'Rex Russiae'
+- Evaluate the establishment of the Galician Metropolitanate
+- Master vocabulary related to medieval kingship and church organization
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Юрій_I_Львович
+    title: Юрій I Львович (Wikipedia UA)
+    notes: Biography, royal title, Galician Metropolitanate
+  - url: https://uk.wikipedia.org/wiki/Галицька_митрополія
+    title: Галицька митрополія
+    notes: Ecclesiastical organization
+  secondary:
+  - url: https://uk.wikipedia.org/wiki/Королівство_Русі
+    title: Королівство Русі
+    notes: Royal tradition context
+content_outline:
+- section: Вступ — Король Русі
+  words: 421
+  subsections:
+  - Титул "Rex Russiae" на печатці
+  - Претензії на спадщину Київської Русі
+  - Останній з коронованих Романовичів
+- section: Походження та молодість
+  words: 526
+  subsections:
+  - Народження як син Лева Даниловича
+  - Угорські родинні зв'язки через матір
+  - Князювання в Белзі (1264-1301)
+- section: Об'єднання королівства
+  words: 631
+  subsections:
+  - Успадкування після смерті батька (1301)
+  - Возз'єднання Галичини та Волині
+  - Укріплення Львова як столиці
+  - Запрошення німецьких поселенців
+- section: Королівський титул
+  words: 736
+  subsections:
+  - Прийняття титулу "Король Русі" (бл. 1303)
+  - Печатка "Georgius Dei gratia Rex Russiae"
+  - Протиставлення північно-східним князівствам
+  - Легітимація державності
+- section: Галицька митрополія
+  words: 736
+  subsections:
+  - Переїзд Київського митрополита до Володимира-на-Клязьмі (1299)
+  - Переговори з Константинополем
+  - Заснування Галицької митрополії (1303)
+  - Церковна незалежність від півночі
+- section: Зовнішня політика та кінець правління
+  words: 631
+  subsections:
+  - Відносини з Золотою Ордою
+  - Данницька залежність при Тохті
+  - Три шлюби та династичні зв'язки
+  - Смерть та криза престолонаслідування
+- section: Підсумок — Завершення королівської епохи
+  words: 319
+  subsections:
+  - Сини Андрій та Лев II — останні Романовичі
+  - Загибель династії (1323)
+  - Спадщина королівської традиції
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - король
+  - королівство
+  - печатка
+  - митрополія
+  - митрополит
+  - престол
+  - легітимація
+  - данник
+  - династія
+  - престолонаслідування
+  recommended:
+  - церковний
+  - православний
+  - патріарх
+  - єпархія
+  - грамота
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  - critical-analysis
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-lev-danylovych (Lev - father)
+  related:
+  - c1-bio-lev-danylovych (Lev Danylovych - father)
+  - c1-bio-danylo-halytskyi (Danylo - coronation precedent)
+  - c1-bio-kostiantyn-ostrozky-elder (Later Orthodox defense)
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

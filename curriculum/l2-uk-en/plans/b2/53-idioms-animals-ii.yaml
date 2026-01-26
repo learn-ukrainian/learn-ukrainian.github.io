@@ -1,0 +1,21 @@
+module: 53-idioms-animals-ii
+level: b2
+sequence: 53
+version: '1.0'
+title: 'Фразеологізми: Тварини II (Птахи, Риби, Комахи)'
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Вивчити 8 ключових фразеологізмів про птахів, риб та комах
+- Розуміти значення метафор перебільшення та неуважності
+- Вміти вживати ідіоми про стихії (вода, повітря) у переносному значенні
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

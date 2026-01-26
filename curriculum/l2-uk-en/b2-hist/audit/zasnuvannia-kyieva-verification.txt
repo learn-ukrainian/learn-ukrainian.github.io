@@ -1,0 +1,60 @@
+
+========================================
+  📋 Loaded Metadata from YAML sidecar
+
+📋 Auditing: B2 M06 — Заснування Києва
+   File: curriculum/l2-uk-en/b2-hist/zasnuvannia-kyieva.md | Target: 4000 words
+  📋 Required activity types from meta: critical-analysis, essay-response, reading
+  📋 Template: docs/l2-uk-en/templates/b2-history-module-template.md (pedagogy: CBI)
+  ⚠️  Outline compliance: 0 errors, 1 warnings
+     ⚠️ [SECTION_LENGTH_MISMATCH] Section 'Хронологія: Легенди та археологія' is under target word count.
+
+  ⚠️ HYDRATION NOTE: Outline sums to 4056, exceeding word_target 4000
+     Additional 56 words (allowed for content depth)
+
+  📊 Section Word Analysis:
+     Вступ                               182 /  196  ✅ (-14)
+     Читання                            1249 / 1233  ✅ (+16)
+     Варяги та хозари                    968 /  972  ✅ (-4)
+     Первинні джерела                    221 /  242  ✅ (-21)
+     Деколонізаційний погляд             339 /  359  ✅ (-20)
+     Археологічні свідчення              330 /  334  ✅ (-4)
+     Хронологія: Легенди та археологія   222 /  250  ⚠️ (-28)
+     Підсумок                            227 /  227  ✅ 
+     Потрібно більше практики?           240 /  243  ✅ (-3)
+     ──────────────────────────────────────────────────────────
+     TOTAL                              3978 / 4056  ❌ (-78)
+
+📋 Auditing: B2 M06 — Заснування Києва
+   File: curriculum/l2-uk-en/b2-hist/zasnuvannia-kyieva.md | Target: 4000 words
+
+  📋 Found YAML activities file (6 activities)
+  > Легенда про заснування Києва: 3 items (min 1)
+  > Аналіз літописної легенди: 1 items (min 1)
+  > Археологія Старокиївської гори: 3 items (min 1)
+  > Історичні докази: 1 items (min 1)
+  > Значення легенди: 1 items (min 1)
+  > Легенда проти Історії: 1 items (min 1)
+
+--- STRICT GATES (Level B2) ---
+Words        ✅ 4084/4000 (raw: 4369)
+Activities   ✅ 6/3
+Density      ✅ All > 1
+Unique_types ✅ 4/2 types
+Priority     ✅ Priority types used
+Engagement   ✅ 12/5
+Audio        ℹ️ No audio
+Vocab        ⚠️ 18 < 20 (soft target)
+Structure    ✅ Valid Structure
+Lint         ✅ Clean Format
+Pedagogy     ✅ Level-appropriate
+Content_heavy ✅ Content-heavy OK (6 activities)
+Grammar      ℹ️ N/A (covered by naturalness)
+Naturalness  ✅ 9/10 (High)
+Activity_quality 📋 Quality validation available (optional)
+Immersion    🇺🇦 97.8% (target 90-100% (history))
+Richness     ✅ 99% (history)
+
+Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/audit/zasnuvannia-kyieva-review.md
+
+✅ AUDIT PASSED.

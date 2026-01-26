@@ -1,0 +1,98 @@
+module: halytsko-volynskyi-litopys-i
+level: c1-hist
+sequence: 15
+version: '1.0'
+title: 'Галицько-Волинський літопис I: Про Данила'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Літопис королівства
+  words: 400
+  subsections:
+  - Що таке Галицько-Волинський літопис?
+  - Чому це інший літопис ніж ПМЛ?
+  - Західна Русь — окрема традиція
+  - Хронологія — XIII ст.
+- section: Контекст — Галицько-Волинське князівство
+  words: 500
+  subsections:
+  - Географія — західні землі
+  - Відносини з Європою
+  - Монгольська навала 1240
+  - Чому важлива ця держава
+- section: Авторство та датування
+  words: 500
+  subsections:
+  - Хто написав? Кілька авторів
+  - Галицький і Волинський компоненти
+  - Придворні літописці
+  - Коли завершено — поч. XIV ст.
+- section: Данило Галицький у літописі
+  words: 700
+  subsections:
+  - Героїчна постать
+  - Боротьба за владу — молоді роки
+  - Монгольське підкорення
+  - Королівська коронація 1253
+  - Дипломатія — Папа, Угорщина, Польща
+- section: Фрагмент — Коронація Данила
+  words: 600
+  subsections:
+  - Текст (з глосами)
+  - Перший і останній король Русі
+  - Символіка — корона від Папи
+  - Чому це важливо для ідентичності?
+  - Пропаганда vs. історія
+- section: Критика джерела
+  words: 500
+  subsections:
+  - Придворний характер — апологія Романовичів
+  - Що замовчано
+  - Порівняння з іншими джерелами
+  - Цінність незважаючи на упередженість
+- section: Підсумок
+  words: 300
+  subsections:
+  - Західна альтернатива — не тільки Київ
+  - Європейська орієнтація
+  - Зв'язок із Галичиною пізніше
+word_target: 3500
+vocabulary:
+- князівство
+- коронація
+- король
+- папа
+- монгольська навала
+- дипломатія
+- придворний літописець
+- апологія
+- західна орієнтація
+- династія
+- васал
+- данина
+- унія
+- хрестовий похід
+- легат
+activities:
+- type: reading
+  focus: Coronation passage with glosses
+- type: critical-analysis
+  focus: How does the chronicle present Danylo's submission to Mongols?
+- type: comparative-study
+  focus: Compare coronation account with papal sources
+- type: essay-response
+  focus: Чому Данило Галицький важливий для української історії?
+sources:
+- name: Галицько-Волинський літопис (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Галицько-Волинський_літопис
+  type: reference
+  notes: Overview
+- name: Галицько-Волинський літопис (текст)
+  url: https://litopys.org.ua/hvlitop/hvl.htm
+  type: primary
+  notes: Full text
+- name: Данило Галицький
+  url: https://uk.wikipedia.org/wiki/Данило_Романович
+  type: reference
+  notes: King Danylo biography

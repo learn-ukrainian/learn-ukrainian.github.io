@@ -1,0 +1,102 @@
+module: beresteyska-uniia-analiz
+level: c1-hist
+sequence: 59
+version: '1.0'
+title: 'Берестейська унія: Глибокий аналіз'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Розкол, що визначив історію
+  words: 400
+  subsections:
+  - 1596 рік — що відбулося
+  - Чому це важливо
+  - Наслідки на століття
+  - Структура модуля
+- section: Контекст — чому унія стала можливою
+  words: 600
+  subsections:
+  - Криза православної церкви
+  - Занепад освіти
+  - Тиск католицизму
+  - Флорентійська унія — прецедент
+  - Політичні мотиви єпископів
+- section: Що підписали в Бересті
+  words: 600
+  subsections:
+  - Умови унії
+  - Збереження обряду
+  - Підпорядкування Папі
+  - Хто підписав, хто відмовився
+  - Два собори — унійний і православний
+- section: Хто підтримав, хто відкинув
+  words: 700
+  subsections:
+  - Єпископи — за
+  - Козаки — проти
+  - Братства — проти
+  - Шляхта — розділена
+  - Магнати — переважно за
+  - Класовий і регіональний розподіл
+- section: Наслідки розколу
+  words: 600
+  subsections:
+  - Конфлікт на століття
+  - Козацькі війни — релігійний вимір
+  - Православне відродження (Могила)
+  - Два українські народи?
+- section: Унія в історичній пам'яті
+  words: 400
+  subsections:
+  - Православна інтерпретація — зрада
+  - Греко-католицька інтерпретація — порятунок
+  - Сучасний погляд — складність
+  - Екуменічні спроби
+- section: Підсумок
+  words: 200
+  subsections:
+  - Унія як розлом
+  - Два шляхи — захід і схід
+  - Підготовка до православної ідентичності
+word_target: 3500
+vocabulary:
+- унія
+- Берестейська унія
+- греко-католицький
+- православний
+- обряд
+- собор
+- єпископ
+- братство
+- розкол
+- екуменізм
+- Флорентійська унія
+- унійний
+- примас
+- архієпископ
+- апостольський
+activities:
+- type: critical-analysis
+  focus: Map who supported/opposed union and why
+- type: critical-analysis
+  focus: Analyze Union agreement terms
+- type: comparative-study
+  focus: Orthodox vs. Greek Catholic interpretation
+- type: critical-analysis
+  focus: Trace consequences to present day
+- type: essay-response
+  focus: Чи була Берестейська унія 'зрадою' чи 'порятунком'?
+sources:
+- name: Берестейська унія (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Берестейська_унія
+  type: reference
+  notes: Overview
+- name: Греко-католицька церква (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_греко-католицька_церква
+  type: reference
+  notes: UGCC history
+- name: Православна опозиція унії
+  url: https://uk.wikipedia.org/wiki/Берестейська_унія#Опозиція_унії
+  type: reference
+  notes: Opposition

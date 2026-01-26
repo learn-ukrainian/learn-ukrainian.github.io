@@ -1,0 +1,77 @@
+module: environment-ecology
+level: b1
+sequence: 62
+version: '2.0'
+title: Довкілля та екологія
+subtitle: Environment & Ecology
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can use 35 environmental vocabulary words in context
+- Learner can discuss environmental issues using appropriate collocations
+- Learner can distinguish between довкілля/навколишнє середовище/природа
+- Learner can express opinions on environmental topics
+content_outline:
+- section: 'Introduction: Environmental Vocabulary'
+  words: 150
+  points:
+  - Why ecology matters in Ukraine
+  - Core environmental concepts
+  - Vocabulary overview
+- section: Nature and Environment
+  words: 250
+  points:
+  - довкілля, природа, екосистема
+  - клімат, атмосфера, біосфера
+  - Basic environmental terms
+- section: Environmental Problems
+  words: 250
+  points:
+  - забруднення, викиди, відходи
+  - глобальне потепління, зміна клімату
+  - Problem vocabulary
+- section: Conservation and Solutions
+  words: 250
+  points:
+  - захист, збереження, переробка
+  - відновлювана енергія
+  - Solution vocabulary
+- section: Environmental Actions
+  words: 200
+  points:
+  - забруднювати, захищати, переробляти
+  - зберігати, відновлювати
+  - Environmental verbs
+- section: 'Practice: Environmental Discussion'
+  words: 100
+  points:
+  - Discuss ecological issues
+  - Propose solutions
+word_target: 1200
+vocabulary:
+  required:
+  - довкілля (environment)
+  - природа (nature)
+  - забруднення (pollution)
+  - клімат (climate)
+  - екологія (ecology)
+  - захист (protection)
+  - переробка (recycling)
+  - відходи (waste)
+  recommended:
+  - глобальне потепління (global warming)
+  - викиди (emissions)
+  - відновлювана енергія (renewable energy)
+  - екосистема (ecosystem)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - discussion
+  - collocation
+  - matching
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-63 (Health Wellness)

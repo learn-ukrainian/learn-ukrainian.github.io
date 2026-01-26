@@ -1,0 +1,23 @@
+module: 34-word-formation-abstract-nouns
+level: b2
+sequence: 34
+version: '1.0'
+title: 'Словотворення: абстрактні іменники'
+subtitle: Word Formation - Abstract Nouns
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can form abstract nouns from verbs using -ння/-ення suffix
+- Learner can form abstract nouns from adjectives using -ість suffix
+- Learner can identify word formation patterns in authentic texts
+- Learner can use abstract nouns appropriately in academic and formal registers
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

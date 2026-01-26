@@ -1,0 +1,21 @@
+module: 55-synonyms-emotion
+level: b2
+sequence: 55
+version: '1.0'
+title: 'Синоніми: Емоції та почуття'
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Розрізняти відтінки значень між синонімами на позначення радості, суму, гніву та страху
+- Вживати емоційну лексику відповідно до ситуації та регістру
+- Описувати складні психологічні стани, використовуючи багатий словниковий запас
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

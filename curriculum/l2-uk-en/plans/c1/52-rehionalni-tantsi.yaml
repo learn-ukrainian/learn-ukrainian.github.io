@@ -1,0 +1,22 @@
+module: 52-rehionalni-tantsi
+level: c1
+sequence: 52
+version: '2.0'
+title: 'Регіональні танці: Від Аркана до Коломийки'
+subtitle: 'Regional Dances: From Arkan to Kolomyika'
+focus: history
+pedagogy: CBI
+objectives:
+- Analyze the ritual significance of the Arkan for the Hutsul community
+- Identify the musical and choreographic features of the Kolomyika
+- Distinguish regional dance styles from Central, Western, and Southern Ukraine
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

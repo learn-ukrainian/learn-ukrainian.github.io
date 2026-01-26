@@ -1,0 +1,77 @@
+module: active-participles-phrases
+level: b1
+sequence: 44
+version: '2.0'
+title: Активні дієприкметники та їхній стиль
+subtitle: Active Participles & Phrases
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can recognize active present participles (-учий/-ючий)
+- Learner can recognize active past participles (-лий)
+- Learner understands stylistic markedness of participles
+- Learner can avoid bureaucratic forms and russicisms
+content_outline:
+- section: 'Introduction: Дієприкметники vs Дієприслівники'
+  words: 150
+  points:
+  - Participles as verbal adjectives
+  - Agreement with nouns
+  - Function in sentences
+- section: Active Present Participles (-учий/-ючий)
+  words: 250
+  points:
+  - Formation from imperfective verbs
+  - читаючий, працюючий
+  - Limited modern usage
+- section: Active Past Participles (-лий)
+  words: 250
+  points:
+  - Formation from intransitive verbs
+  - минулий, зблідлий, постарілий
+  - Adjective-like usage
+- section: Stylistic Considerations
+  words: 250
+  points:
+  - Канцелярит (bureaucratese)
+  - Russian influence on participle overuse
+  - Modern Ukrainian preferences
+- section: When to Use Relative Clauses Instead
+  words: 200
+  points:
+  - який clauses as alternatives
+  - Natural vs artificial constructions
+  - Style guide recommendations
+- section: 'Practice: Recognition and Alternatives'
+  words: 100
+  points:
+  - Identify participle types
+  - Replace with relative clauses
+word_target: 1200
+vocabulary:
+  required:
+  - дієприкметник (participle - adjective)
+  - активний (active)
+  - теперішній час (present tense)
+  - минулий час (past tense)
+  - канцелярит (bureaucratese)
+  - узгодження (agreement)
+  - працюючий (working - participle)
+  - минулий (past/passed)
+  recommended:
+  - стилістика (stylistics)
+  - русизм (russicism)
+  - відносне речення (relative clause)
+  - природність (naturalness)
+  forbidden: []
+activities:
+  types_required:
+  - recognition
+  - error-correction
+  - transformation
+  - fill-in
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-45 (Past Passive Participles 1)

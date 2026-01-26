@@ -1,0 +1,22 @@
+module: 61-vesna-ta-lito
+level: c1
+sequence: 61
+version: '2.0'
+title: Весна та літо
+subtitle: Spring and Summer Calendar Rituals
+focus: culture
+pedagogy: Immersion & Analysis
+objectives:
+- Learner can describe the cycle of spring and summer holidays in Ukraine
+- Learner understands the symbolism of fire, water, and vegetation in rituals
+- Learner can analyze the agrarian and solar motifs in Ukrainian folklore
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

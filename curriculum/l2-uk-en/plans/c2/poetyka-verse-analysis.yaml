@@ -1,0 +1,104 @@
+module: poetyka-verse-analysis
+level: c2
+sequence: 28
+version: '2.0'
+title: Поетика — аналіз віршів
+focus: literature
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Віршування — Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Віршування
+  type: reference
+  notes: Ukrainian versification systems
+- name: Українська поезія — укрліб
+  url: https://ukrlib.com.ua/
+  type: primary
+  notes: Classic and contemporary Ukrainian poetry examples
+- name: Тарас Шевченко — Кобзар
+  url: https://uk.wikisource.org/wiki/Кобзар_(Шевченко)
+  type: primary
+  notes: Foundation of modern Ukrainian poetics
+content_outline:
+- section: Вступ — Системи віршування
+  words: 500
+  points:
+  - Силабічне віршування
+  - Силабо-тонічне віршування
+  - Тонічне віршування
+  - Верлібр
+- section: Метрика та ритміка
+  words: 700
+  points:
+  - Стопа і розмір (ямб, хорей, дактиль, амфібрахій, анапест)
+  - Піррихій і спондей
+  - Цезура і анжамбеман
+  - Ритмічні варіації
+- section: Строфіка
+  words: 600
+  points:
+  - Катрен, терцет, дистих
+  - Сонет (італійський, шекспірівський)
+  - Октава, секстина
+  - Вільна строфіка
+- section: Рима і звукова організація
+  words: 700
+  points:
+  - Типи рим (чоловіча, жіноча, дактилічна)
+  - Схеми римування (суміжна, перехресна, кільцева)
+  - Алітерація й асонанс
+  - Звуковий символізм
+- section: Тропи та фігури в поезії
+  words: 600
+  points:
+  - Метафора і символ у поезії
+  - Порівняння і персоніфікація
+  - Оксиморон і антитеза
+  - Епітети та їх функції
+- section: Аналіз українських віршів
+  words: 500
+  points:
+  - Аналіз вірша Шевченка
+  - Модерністська поезія (Тичина, Рильський)
+  - Сучасна поезія (Жадан, Герасим'юк)
+- section: Підсумок
+  words: 400
+  points:
+  - Інтегрований аналіз вірша
+  - Зв'язок форми і змісту
+  - Підготовка до власної творчості
+word_target: 4000
+vocabulary:
+  required:
+  - віршування (versification)
+  - метр (meter)
+  - стопа (foot)
+  - ямб (iamb)
+  - хорей (trochee)
+  - катрен (quatrain)
+  - рима (rhyme)
+  - строфа (stanza)
+  - верлібр (free verse)
+  - анжамбеман (enjambment)
+  recommended:
+  - дактиль (dactyl)
+  - амфібрахій (amphibrach)
+  - анапест (anapest)
+  - цезура (caesura)
+  - сонет (sonnet)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - match-up
+  - critical-analysis
+  - essay-response
+  - comparative-study
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- 'c2-29 (Poetyka: Prose Analysis)'
+- c2-34 (Literary Translation I — Poetry)
+- 'c2-36 (Creative Writing: Poetry)'

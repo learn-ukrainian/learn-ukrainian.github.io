@@ -1,0 +1,62 @@
+
+========================================
+  📋 Loaded Metadata from YAML sidecar
+
+📋 Auditing: B2 M32 — Річ Посполита — полонізація та кріпацтво
+   File: curriculum/l2-uk-en/b2-hist/rich-pospolyta.md | Target: 4000 words
+  📋 Template: docs/l2-uk-en/templates/b2-history-module-template.md (pedagogy: CBI)
+
+  🔴 HYDRATION ERROR: Outline sums to 1700, but word_target is 4000
+     Missing 2300 words in outline budget!
+     → Run /architect to fix content_outline
+
+  📊 Section Word Analysis:
+     Вступ                                               349 /  200  ✅ (+149)
+     Формування Речі Посполитої та інкорпорація земель   420 /  200  ✅ (+220)
+     Процеси асиміляції та культурного спротиву          482 /  200  ✅ (+282)
+     Полонізація та ополячення                           480 /  200  ✅ (+280)
+     Читання                                             266 /  200  ✅ (+66)
+     Первинні джерела                                    325 /  200  ✅ (+125)
+     Деколонізаційний погляд                             330 /  200  ✅ (+130)
+     Наслідки для козацтва                               465 /  200  ✅ (+265)
+     Потрібно більше практики?                           109 /  100  ✅ (+9)
+     ──────────────────────────────────────────────────────────────────────────
+     TOTAL                                              3226 / 1700  ✅ (+1526)
+
+📋 Auditing: B2 M32 — Річ Посполита — полонізація та кріпацтво
+   File: curriculum/l2-uk-en/b2-hist/rich-pospolyta.md | Target: 4000 words
+
+  📋 Found YAML activities file (10 activities)
+  > Скарга селян на утиски: 3 items (min 1)
+  > Аналіз соціального конфлікту: 1 items (min 1)
+  > Братська школа vs Єзуїтський колегіум: 1 items (min 1)
+  > Аналітичне есе: Феномен козацтва: 1 items (min 1)
+  > Соціально-політичний устрій: 8 items (min 8)
+  > Терміни та визначення: 12 items (min 8)
+  > Причини козацьких повстань: 8 items (min 6)
+  > Історичний контекст: 10 items (min 8)
+  > Виправлення історичних помилок: 8 items (min 6)
+  > Соціальні групи: 6 items (min 6)
+
+--- STRICT GATES (Level B2) ---
+Words        ❌ 3605/4000 (raw: 3773)
+Activities   ✅ 10/3
+Density      ✅ All > 1
+Unique_types ✅ 10/2 types
+Priority     ✅ Priority types used
+Engagement   ✅ 14/5
+Audio        ℹ️ No audio
+Vocab        ⚠️ 0 < 20 (soft target)
+Structure    ✅ Valid Structure
+Lint         ✅ Clean Format
+Pedagogy     ✅ Level-appropriate
+Content_heavy ⚠️ Too many activities: 10 (target 3-9); 1 fill-in with year answers
+Grammar      ℹ️ N/A (covered by naturalness)
+Naturalness  ✅ 9/10 (High)
+Activity_quality 📋 Quality validation available (optional)
+Immersion    🇺🇦 97.8% (target 90-100% (history))
+Richness     ✅ 99% (history)
+
+Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/audit/rich-pospolyta-review.md
+
+❌ AUDIT FAILED. Correct errors before proceeding.

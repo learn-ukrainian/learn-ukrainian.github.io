@@ -1,0 +1,22 @@
+module: 66-synonyms-abstract
+level: b2
+sequence: 66
+version: '1.0'
+title: 'Синоніми: Абстрактні Поняття та Ідеї'
+subtitle: Synonyms - Abstract Concepts and Ideas
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Учень може розрізняти відтінки значень між синонімами на позначення інтелектуальної діяльності (думка, ідея, погляд)
+- Учень вміє використовувати академічну лексику для опису наукових концепцій та теорій
+- Учень розуміє різницю між гіпотезою, припущенням та переконанням
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

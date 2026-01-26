@@ -1,0 +1,101 @@
+module: literaturna-dyskusiia
+level: c1-hist
+sequence: 53
+version: '1.0'
+title: Літературна дискусія 1925-1928
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Битва за культуру
+  words: 400
+  subsections:
+  - Що таке «літературна дискусія»?
+  - Чому це не тільки про літературу
+  - Політичний вимір
+  - Структура модуля
+- section: Учасники і позиції
+  words: 600
+  subsections:
+  - ВАПЛІТЕ — модерністи
+  - Хвильовий — лідер
+  - Пролетарські письменники
+  - Партійне втручання
+  - Хто з ким сперечався
+- section: Головні питання дискусії
+  words: 700
+  subsections:
+  - Якою має бути українська література?
+  - Орієнтація — Москва чи Європа?
+  - Мова — якою писати?
+  - Традиція чи модернізм?
+  - «Азіатський ренесанс» — що це
+- section: «Геть від Москви!» — Хвильовий
+  words: 600
+  subsections:
+  - Тези Хвильового
+  - Психологічна Європа
+  - Чому це небезпечно
+  - Реакція партії
+  - Самокритика — вимушена
+- section: Як дискусія закінчилась
+  words: 500
+  subsections:
+  - Партійне рішення 1928
+  - Ліквідація ВАПЛІТЕ
+  - Доля учасників
+  - Що залишилось від дискусії
+- section: Значення дискусії
+  words: 400
+  subsections:
+  - Остання вільна дискусія
+  - Питання актуальні досі
+  - Хвильовий і 2022
+  - Культура vs. політика
+- section: Підсумок
+  words: 300
+  subsections:
+  - Від дискусії до терору
+  - Хвильовий — символ
+  - Підготовка до наступного модуля
+word_target: 3500
+vocabulary:
+- літературна дискусія
+- ВАПЛІТЕ
+- орієнтація
+- модернізм
+- пролетарський
+- самокритика
+- «Геть від Москви»
+- авангард
+- Європа
+- ліквідація
+- попутник
+- памфлет
+- полеміка
+- соцреалізм
+- формалізм
+activities:
+- type: reading
+  focus: Excerpts from Khvylovyi's pamphlets
+- type: position-mapping
+  focus: Map different positions in the debate
+- type: contemporary-connection
+  focus: How do Khvylovyi's arguments apply today?
+- type: reading
+  focus: Khvylovyi's tragic arc
+- type: essay-response
+  focus: Чому гасло 'Геть від Москви!' було таким небезпечним?
+sources:
+- name: Літературна дискусія 1925-1928 (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Літературна_дискусія_1925—1928
+  type: reference
+  notes: Overview
+- name: ВАПЛІТЕ (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/ВАПЛІТЕ
+  type: reference
+  notes: Literary organization
+- name: Микола Хвильовий (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Хвильовий_Микола_Григорович
+  type: reference
+  notes: Key figure

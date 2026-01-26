@@ -2,7 +2,7 @@
 **Level:** A2 | **Module:** M10 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 23:50:41
+**Generated:** 2026-01-26 08:59:13
 
 ## Configuration
 **Type:** A2-vocab
@@ -39,9 +39,9 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: місцевий, знахідний, орудний, родовий
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: знахідний, родовий, місцевий, орудний
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (6 words): надсилати, чек, кредит, знімати, позика...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (6 words): кредит, надсилати, знімати, чек, черга...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

@@ -1,0 +1,22 @@
+module: 74-mystetstvo-i-literatura
+level: b2
+sequence: 74
+version: '2.0'
+title: Мистецтво і література
+subtitle: Art & Literature
+focus: domain
+pedagogy: CBI
+objectives:
+- Використовувати термінологію мистецтва та літератури
+- Обговорювати літературні жанри та художні стилі
+- Орієнтуватися в українському культурному просторі
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

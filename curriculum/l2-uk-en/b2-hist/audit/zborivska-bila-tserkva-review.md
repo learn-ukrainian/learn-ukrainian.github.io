@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M54 | **Phase:** HIST.6 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:23:18
+**Generated:** 2026-01-25 22:22:58
 
 ## Configuration
 **Type:** B2-history
@@ -36,7 +36,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4788/4000 (raw: 4857)
+- **Words:** ✅ 4465/4000 (raw: 4527)
 - **Activities:** ✅ 7/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 7/2 types
@@ -68,7 +68,7 @@
 | visual | 7 | 4 | 100% | 10% | 9.5% |
 | variety | 0.98 | - | 98% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 8 | 3 | 100% | 5% | 4.8% |
+| questions | 3 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
@@ -84,5 +84,4 @@
 | **Аналіз: Дипломатія як складне мистецтво можливого** | ✅ | 355 | Included in Core |
 | **Деколонізаційний погляд: Вихід з-під польського права** | ✅ | 414 | Included in Core |
 | **Спадщина угод та історична пам'ять** | ⚪️ | 374 | Skipped |
-| **Есе: Рефлексія, Аналіз та Сучасні Паралелі** | ✅ | 323 | Included in Core |
 | **Підсумок** | ✅ | 337 | Included in Core |

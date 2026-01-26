@@ -1,26 +1,95 @@
-module: 44-a1-final-exam
-title: A1 Final Exam
-subtitle: Comprehensive Assessment
-version: '1.0'
-phase: A1.4 Practical Scenarios
-pedagogy: PPP
-focus: practical
-duration: 60
-transliteration: first-occurrence
-tags:
-- practical
-- a1 final exam
-grammar:
-- Practical usage of A1 cases
-- Polite requests
-- Questions and answers
-objectives:
-- Learner can handle a1 final exam situations
-- Learner can use relevant vocabulary
-- Learner can communicate needs
-vocabulary_count: 10
-vocab_count: 10
+module: a1-44
+id: a1-44
 slug: a1-final-exam
+title: "A1 Final Exam"
+subtitle: "Comprehensive Assessment"
+version: '2.0'
+phase: "A1.4 [Practical Scenarios]"
+focus: checkpoint
+pedagogy: TTT
+register: розмовний
+duration: 90
+transliteration: none
+objectives:
+  - "Demonstrate mastery of all A1 grammar"
+  - "Show practical communication skills"
+  - "Handle real-world scenarios"
+  - "Qualify for A2 level progression"
+grammar:
+  - "All A1 grammar comprehensive review"
+  - "All four cases"
+  - "All verb tenses"
+word_target: 500
+content_outline:
+  - section: "Part 1: Listening Comprehension"
+    words: 50
+    points:
+      - "Short dialogues"
+      - "Announcements"
+      - "Messages"
+  - section: "Part 2: Reading Comprehension"
+    words: 80
+    points:
+      - "Signs and notices"
+      - "Short texts"
+      - "Menus and schedules"
+  - section: "Part 3: Grammar"
+    words: 100
+    points:
+      - "Case selection"
+      - "Verb conjugation"
+      - "Agreement patterns"
+  - section: "Part 4: Vocabulary"
+    words: 80
+    points:
+      - "Word recognition"
+      - "Category matching"
+      - "Translation"
+  - section: "Part 5: Speaking Tasks"
+    words: 100
+    points:
+      - "Self-introduction"
+      - "Role-play scenarios"
+      - "Picture description"
+  - section: "Part 6: Writing Tasks"
+    words: 90
+    points:
+      - "Fill in forms"
+      - "Short messages"
+      - "Simple descriptions"
+vocabulary_hints:
+  required:
+    - говорити (to speak)
+    - читати (to read)
+    - писати (to write)
+    - слухати (to listen)
+    - розуміти (to understand)
+    - відповідати (to answer)
+    - питати (to ask)
+    - знати (to know)
+  recommended:
+    - правильно (correctly)
+    - помилка (mistake)
+    - завдання (task)
+    - оцінка (grade)
+activity_hints:
+  - type: listening
+    focus: "A1 listening comprehension"
+    items: 15
+  - type: reading
+    focus: "A1 reading comprehension"
+    items: 15
+  - type: quiz
+    focus: "Grammar and vocabulary"
+    items: 30
+  - type: speaking
+    focus: "Oral assessment tasks"
+    items: 10
+prerequisites:
+  - a1-43 (Combined Practice)
+connects_to:
+  - a2-01 (A2 Introduction)
 naturalness:
   score: 10
   status: PASS
+  justification: "Comprehensive final assessment"

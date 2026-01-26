@@ -1,0 +1,96 @@
+module: 10-counterarguments
+level: c1
+sequence: 10
+version: '2.0'
+title: Контраргументи та спростування
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Логіка та критичне мислення
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Argumentation and refutation techniques
+- name: Academic Debate in Ukrainian
+  url: https://mova.info/
+  type: secondary
+  notes: Debate language and structures
+content_outline:
+- section: Вступ — Сила контраргументу
+  words: 400
+  points:
+  - Чому важливо враховувати протилежні погляди
+  - Контраргумент як інструмент переконання
+  - Етика наукової дискусії
+- section: Мова визнання (Acknowledging)
+  words: 700
+  points:
+  - Справді, ... / Безперечно, ...
+  - Не можна заперечувати, що ...
+  - Дехто стверджує, що ...
+- section: Мова спростування (Refuting)
+  words: 700
+  points:
+  - Проте ... / Однак ...
+  - Водночас ... / Попри це, ...
+  - Тим не менш ... / Втім ...
+- section: Структура «визнання + спростування»
+  words: 600
+  points:
+  - Хоча X, проте Y
+  - Незважаючи на X, Y
+  - Попри те що X, Y
+- section: Типи спростувань
+  words: 600
+  points:
+  - Заперечення факту
+  - Заперечення релевантності
+  - Заперечення достатності
+- section: Логічні помилки
+  words: 600
+  points:
+  - Солом'яна людина (Straw man)
+  - Ad hominem
+  - Помилкова дихотомія
+- section: Практика дебатів
+  words: 400
+  points:
+  - Побудова аргументу з контраргументом
+  - Академічна дискусія
+  - Етичне спростування
+word_target: 4000
+vocabulary:
+  required:
+  - контраргумент (counterargument)
+  - спростування (refutation)
+  - визнання (acknowledgment)
+  - заперечення (objection)
+  - релевантність (relevance)
+  - достатність (sufficiency)
+  - логічна помилка (logical fallacy)
+  - опонент (opponent)
+  - позиція (position)
+  - переконливість (persuasiveness)
+  recommended:
+  - дискусія (discussion)
+  - полеміка (polemics)
+  - аргументація (argumentation)
+  - софізм (sophism)
+  - демагогія (demagoguery)
+  forbidden: []
+activities:
+  types_required:
+  - group-sort
+  - quiz
+  - essay-response
+  - cloze
+  - fill-in
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c1-11 (Summary & Paraphrase)
+- c1-18 (Essay Writing Practice)
+- c1-19 (Article Critique)

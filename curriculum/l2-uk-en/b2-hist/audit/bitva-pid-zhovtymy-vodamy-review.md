@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M53 | **Phase:** HIST.6 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:21:53
+**Generated:** 2026-01-25 22:22:57
 
 ## Configuration
 **Type:** B2-history
@@ -39,7 +39,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4165/4000 (raw: 4229)
+- **Words:** ✅ 4146/4000 (raw: 4208)
 - **Activities:** ✅ 10/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 9/2 types
@@ -65,13 +65,13 @@
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 11 | 3 | 100% | 24% | 23.8% |
 | engagement | 6 | 6 | 100% | 14% | 14.3% |
-| timeline_markers | 25 | 10 | 100% | 14% | 14.3% |
+| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 6 | 4 | 100% | 10% | 9.5% |
 | visual | 6 | 4 | 100% | 10% | 9.5% |
 | variety | 0.97 | - | 97% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 11 | 3 | 100% | 5% | 4.8% |
+| questions | 4 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
@@ -86,5 +86,5 @@
 | **Читання: Опис битви в літописі та аналіз джерел** | ✅ | 458 | Included in Core |
 | **Первинні джерела: Листи про поразку та голос трагедії** | ✅ | 431 | Included in Core |
 | **Деколонізаційний погляд: Від повстання до державності** | ✅ | 410 | Included in Core |
-| **Есе: Рефлексія, Аналіз та Історична пам'ять** | ✅ | 281 | Included in Core |
-| **Підсумок** | ✅ | 213 | Included in Core |
+| **Європа у 1648 році** | ⚪️ | 261 | Skipped |
+| **Підсумок** | ✅ | 214 | Included in Core |

@@ -1,0 +1,101 @@
+module: narratology
+level: c2
+sequence: 27
+version: '2.0'
+title: Наратологія
+focus: literature
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Наратологія — Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Наратологія
+  type: reference
+  notes: Core narratological concepts
+- name: Жерар Женетт — теорія нарації
+  url: https://uk.wikipedia.org/wiki/Жерар_Женетт
+  type: reference
+  notes: Foundational narratological framework
+- name: Українська проза XX століття
+  url: https://ukrlib.com.ua/
+  type: primary
+  notes: Examples for narrative analysis
+content_outline:
+- section: Вступ — Що таке наратологія?
+  words: 500
+  points:
+  - Наука про оповідь
+  - Історія vs. дискурс
+  - Фабула vs. сюжет
+- section: Наративні інстанції
+  words: 700
+  points:
+  - Автор реальний vs. імпліцитний
+  - Наратор (оповідач)
+  - Нарататор (слухач/читач у тексті)
+  - Рівні нарації (екстрадієгетичний, інтрадієгетичний)
+- section: Фокалізація
+  words: 700
+  points:
+  - Хто бачить vs. хто говорить
+  - Нульова фокалізація (всезнаючий)
+  - Внутрішня фокалізація (персонажна)
+  - Зовнішня фокалізація (об'єктивна)
+- section: Темпоральність
+  words: 600
+  points:
+  - Порядок (хронологія, аналепсис, пролепсис)
+  - Тривалість (підсумок, сцена, пауза, еліпсис)
+  - Частотність (сингулятив, ітератив)
+- section: Голос і модус
+  words: 600
+  points:
+  - Дистанція (показ vs. розповідь)
+  - Пряма, непряма, невласне-пряма мова
+  - Потік свідомості
+  - Поліфонія
+- section: Наративний аналіз українських текстів
+  words: 500
+  points:
+  - Аналіз оповідання Стефаника
+  - Фокалізація у Коцюбинського
+  - Поліфонія в сучасній прозі
+- section: Підсумок
+  words: 400
+  points:
+  - Інструменти наратолога
+  - Застосування для власного письма
+  - Зв'язок з поетикою прози
+word_target: 4000
+vocabulary:
+  required:
+  - наратологія (narratology)
+  - наратор (narrator)
+  - фокалізація (focalization)
+  - фабула (fabula/story)
+  - сюжет (sjuzhet/plot)
+  - дієгезис (diegesis)
+  - аналепсис (analepsis/flashback)
+  - пролепсис (prolepsis/flash-forward)
+  - всезнаючий (omniscient)
+  - поліфонія (polyphony)
+  recommended:
+  - нарататор (narratee)
+  - екстрадієгетичний (extradiegetic)
+  - інтрадієгетичний (intradiegetic)
+  - ітератив (iterative)
+  - невласне-пряма мова (free indirect speech)
+  forbidden: []
+activities:
+  types_required:
+  - essay-response
+  - quiz
+  - comparative-study
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- 'c2-28 (Poetyka: Verse Analysis)'
+- 'c2-29 (Poetyka: Prose Analysis)'
+- 'c2-37 (Creative Writing: Prose)'

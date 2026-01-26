@@ -1,0 +1,117 @@
+module: petro-kalnyshevskyy
+level: c1-bio
+sequence: 15
+version: '2.0'
+title: 'Петро Калнишевський: Останній кошовий'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Петро_Калнишевський
+    title: Петро Калнишевський (Wikipedia UA)
+    notes: Biography, last koshovyi, imprisonment
+  - url: https://uk.wikipedia.org/wiki/Знищення_Запорозької_Січі
+    title: Знищення Запорозької Січі
+    notes: Events of 1775
+  secondary:
+  - url: https://uk.wikipedia.org/wiki/Соловецький_монастир
+    title: Соловецький монастир
+    notes: Place of imprisonment
+content_outline:
+- section: Вступ — Останній лицар степу
+  words: 400
+  subsections:
+  - Калнишевський як символ кінця козацької епохи
+  - Трагедія ліквідації Січі
+  - Його мученицька доля
+- section: Шлях до кошового отаманства
+  words: 600
+  subsections:
+  - Походження та молодість
+  - Козацька кар'єра
+  - Обрання кошовим 1762 року
+  - Характер та лідерські якості
+- section: Розквіт Нової Січі
+  words: 700
+  subsections:
+  - Економічний розвиток
+  - Адміністративні реформи
+  - Церковне будівництво
+  - Відносини з Російською імперією
+- section: Наростання загрози
+  words: 700
+  subsections:
+  - Імперська політика Катерини II
+  - Обмеження козацьких свобод
+  - Спроби дипломатичного опору
+  - Потьомкін і плани щодо Січі
+- section: Ліквідація Січі 1775 року
+  words: 800
+  subsections:
+  - Військова операція
+  - Зречення Калнишевського клейнодів
+  - Арешт старшини
+  - Кінець козацької автономії
+- section: Ув'язнення та смерть
+  words: 500
+  subsections:
+  - Соловецький монастир
+  - 25 років в одиночній камері
+  - Умови ув'язнення
+  - Смерть у 112 років (?)
+  - Канонізація
+- section: Підсумок — Мученик за волю
+  words: 300
+  subsections:
+  - Калнишевський як символ опору імперії
+  - Кінець козацької України
+  - Пам'ять про останнього кошового
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - кошовий
+  - ліквідація
+  - ув'язнення
+  - мученик
+  - клейноди
+  - зречення
+  - монастир
+  - каземат
+  - канонізація
+  - автономія
+  recommended:
+  - одиночна камера
+  - амністія
+  - преподобний
+  - старшина
+  - архів
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  - critical-analysis
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-13 (Kost Hordiyenko - earlier Sich leader)
+  related:
+  - c1-bio-16 (Hryhoriy Skovoroda - same era, different path)
+  - c1-bio-71 (Levko Lukyanenko - later political prisoner)
+  - c1-bio-77 (Vasyl Stus - prison martyrdom)
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

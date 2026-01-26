@@ -3,8 +3,10 @@
 Generate level status index files showing module completion overview.
 
 Usage:
-    python scripts/generate_level_status.py b2-hist
-    python scripts/generate_level_status.py all
+    python scripts/generate_level_status.py b2-hist          # Full level
+    python scripts/generate_level_status.py a2 5             # Single module
+    python scripts/generate_level_status.py a2 1-4,6-10      # Module ranges
+    python scripts/generate_level_status.py all              # All levels
 """
 
 import subprocess
@@ -13,6 +15,30 @@ import re
 import yaml
 from pathlib import Path
 from datetime import datetime
+
+
+def parse_module_filter(filter_str: str) -> set[int]:
+    """
+    Parse module filter string into set of module numbers.
+
+    Examples:
+        "5" -> {5}
+        "1-4" -> {1, 2, 3, 4}
+        "1-4,6-10" -> {1, 2, 3, 4, 6, 7, 8, 9, 10}
+        "1,3,5,7-9" -> {1, 3, 5, 7, 8, 9}
+    """
+    result = set()
+    parts = filter_str.split(',')
+
+    for part in parts:
+        part = part.strip()
+        if '-' in part:
+            start, end = part.split('-', 1)
+            result.update(range(int(start), int(end) + 1))
+        else:
+            result.add(int(part))
+
+    return result
 
 # Project root
 ROOT = Path(__file__).parent.parent
@@ -99,9 +125,38 @@ def audit_module(md_file: Path) -> dict:
             "issues": [str(e)[:20]]
         }
 
-def generate_status_for_level(level: str):
-    """Generate status file for a single level."""
-    print(f"Generating status for {level}...")
+def _parse_existing_status(status_file: Path) -> dict[int, dict]:
+    """Parse existing status file to extract module rows."""
+    rows = {}
+    try:
+        content = status_file.read_text()
+        # Find table rows (skip header)
+        for line in content.split('\n'):
+            if line.startswith('|') and not line.startswith('| #') and not line.startswith('|---'):
+                parts = [p.strip() for p in line.split('|')[1:-1]]
+                if len(parts) >= 5:
+                    try:
+                        num = int(parts[0])
+                        words_parts = parts[3].split('/')
+                        rows[num] = {
+                            "num": num,
+                            "slug": parts[1],
+                            "status": parts[2],
+                            "actual_words": int(words_parts[0]) if words_parts[0].isdigit() else 0,
+                            "target_words": int(words_parts[1]) if len(words_parts) > 1 and words_parts[1].isdigit() else 0,
+                            "issues": [parts[4]] if parts[4] != "-" else ["-"]
+                        }
+                    except (ValueError, IndexError):
+                        continue
+    except Exception:
+        pass
+    return rows
+
+
+def generate_status_for_level(level: str, module_filter: set[int] | None = None):
+    """Generate status file for a single level, optionally filtering to specific modules."""
+    filter_desc = f" (modules: {sorted(module_filter)})" if module_filter else ""
+    print(f"Generating status for {level}{filter_desc}...")
 
     curriculum = load_curriculum_yaml()
     if level not in curriculum.get('levels', {}):
@@ -115,11 +170,39 @@ def generate_status_for_level(level: str):
         print(f"  ⚠️ No modules found for {level}")
         return
 
+    # If filtering, only audit specified modules but keep full list for status file
+    modules_to_audit = module_filter if module_filter else set(range(1, len(modules) + 1))
+
+    # Load existing status file if filtering (to preserve other module statuses)
+    existing_rows = {}
+    level_upper = level.upper()
+    output_file = ROOT / "docs" / f"{level_upper}-STATUS.md"
+
+    if module_filter and output_file.exists():
+        # Parse existing status file to preserve non-filtered module rows
+        existing_rows = _parse_existing_status(output_file)
+
     # Collect module data
     module_rows = []
     stats = {"pass": 0, "fail": 0, "stub": 0, "error": 0}
 
     for i, slug in enumerate(modules, 1):
+        # If filtering and this module is not in filter, use existing data
+        if module_filter and i not in modules_to_audit:
+            if i in existing_rows:
+                row = existing_rows[i]
+                module_rows.append(row)
+                # Update stats from existing
+                if row["status"] == "✅ PASS":
+                    stats["pass"] += 1
+                elif row["status"] == "📝 STUB":
+                    stats["stub"] += 1
+                elif row["status"] == "❌ FAIL":
+                    stats["fail"] += 1
+                else:
+                    stats["error"] += 1
+            continue
+
         md_file = find_md_file(level, slug)
 
         if not md_file:
@@ -203,18 +286,35 @@ def generate_status_for_level(level: str):
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: python scripts/generate_level_status.py {level|all}")
+        print("Usage: python scripts/generate_level_status.py {level|all} [module_filter]")
         print(f"Levels: {', '.join(LEVELS)}")
+        print("\nModule filter examples:")
+        print("  a2 5         # Single module")
+        print("  a2 1-4       # Range of modules")
+        print("  a2 1-4,6-10  # Multiple ranges")
         sys.exit(1)
 
     level_arg = sys.argv[1].lower()
+    module_filter = None
+
+    # Parse optional module filter
+    if len(sys.argv) >= 3:
+        try:
+            module_filter = parse_module_filter(sys.argv[2])
+        except ValueError as e:
+            print(f"❌ Invalid module filter: {sys.argv[2]}")
+            print("Examples: 5, 1-4, 1-4,6-10")
+            sys.exit(1)
 
     if level_arg == "all":
+        if module_filter:
+            print("❌ Module filter not supported with 'all'")
+            sys.exit(1)
         for level in LEVELS:
             generate_status_for_level(level)
             print()
     elif level_arg in LEVELS:
-        generate_status_for_level(level_arg)
+        generate_status_for_level(level_arg, module_filter)
     else:
         print(f"❌ Unknown level: {level_arg}")
         print(f"Available levels: {', '.join(LEVELS)}")

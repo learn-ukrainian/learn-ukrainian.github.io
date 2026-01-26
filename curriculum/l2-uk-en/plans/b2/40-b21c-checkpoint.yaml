@@ -1,0 +1,24 @@
+module: 40-b21c-checkpoint
+level: b2
+sequence: 40
+version: '1.0'
+title: 'Контрольна точка B2.1c: Числівники, словотвір та синтаксис'
+subtitle: 'B2.1c Checkpoint: Numerals, Word Formation & Syntax'
+focus: checkpoint
+pedagogy: TTT
+objectives:
+- Learner can demonstrate mastery of numeral declension for time and dates
+- Learner can form nouns using person, abstract, and place suffixes
+- Learner can identify and use one-member sentences for stylistic effect
+- Learner can recognize and produce texts in religious and epistolary registers
+- Learner can self-assess readiness for B2.2 (Phraseology)
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

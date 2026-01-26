@@ -1,0 +1,79 @@
+module: 06-aspect-complete-system
+level: b1
+sequence: 6
+version: '1.0'
+title: 'Вид дієслова: повна система'
+subtitle: Perfective vs Imperfective - The complete picture
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner understands the complete aspectual system
+- Learner can identify aspect from context clues
+- Learner can choose appropriate aspect for different situations
+sources:
+- name: Ukrainian State Standard 2024 - Verbal Aspect
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official aspect selection rules and contexts
+- name: Ukrainian Verb Aspect (Wikipedia)
+  url: https://uk.wikipedia.org/wiki/Вид_дієслова
+  type: reference
+  notes: Overview of aspectual system with examples
+content_outline:
+- section: Розминка
+  words: 100
+  points:
+  - Content for Розминка
+  - Examples and explanation
+  - Practice or application
+- section: Граматика
+  words: 250
+  points:
+  - Content for Граматика
+  - Examples and explanation
+  - Practice or application
+- section: Практика
+  words: 700
+  points:
+  - Content for Практика
+  - Examples and explanation
+  - Practice or application
+- section: Діалоги
+  words: 300
+  points:
+  - Content for Діалоги
+  - Examples and explanation
+  - Practice or application
+word_target: 1500
+vocabulary:
+  required:
+  - доконаний вид (perfective aspect)
+  - недоконаний вид (imperfective aspect)
+  - процес (process)
+  - результат (result)
+  - тривалість (duration)
+  - повторення (repetition)
+  - контекст (context)
+  - маркер (marker)
+  - завершення (completion)
+  - одноразова дія (single action)
+  recommended:
+  - фокус (focus)
+  - намір (intention)
+  - послідовність (sequence)
+  - обмежений час (bounded time)
+  - загальне твердження (general statement)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - group-sort
+  - quiz
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-07 (Aspect in past - single vs repeated)
+- b1-08 (Aspect in past - result vs process)
+- b1-15 (Aspect mastery checkpoint)

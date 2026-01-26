@@ -1,0 +1,59 @@
+
+========================================
+  📋 Loaded Metadata from YAML sidecar
+
+📋 Auditing: B2 M34 — Православна церква XVII століття
+   File: curriculum/l2-uk-en/b2-hist/pravoslavna-tserkva-17.md | Target: 4000 words
+  📋 Required activity types from meta: comparative-study, critical-analysis, essay-response, fill-in, match-up, quiz, reading, true-false
+  📋 Template: docs/l2-uk-en/templates/b2-history-module-template.md (pedagogy: CBI)
+
+  ⚠️ HYDRATION NOTE: Outline sums to 4450, exceeding word_target 4000
+     Additional 450 words (allowed for content depth)
+
+  📊 Section Word Analysis:
+     Вступ                       503 /  500  ✅ (+3)
+     Відновлення ієрархії       2194 / 2000  ✅ (+194)
+     Читання: Голоси епохи       199 /  200  ✅ (-1)
+     Первинні джерела            933 /  950  ✅ (-17)
+     Деколонізаційний погляд     603 /  650  ✅ (-47)
+     Потрібно більше практики?   130 /  150  ⚠️ (-20)
+     ──────────────────────────────────────────────────
+     TOTAL                      4562 / 4450  ✅ (+112)
+
+📋 Auditing: B2 M34 — Православна церква XVII століття
+   File: curriculum/l2-uk-en/b2-hist/pravoslavna-tserkva-17.md | Target: 4000 words
+
+  📋 Found YAML activities file (10 activities)
+  > Аналіз 'Протестації' Йова Борецького: 3 items (min 1)
+  > Лінгвістичний аналіз джерела: 1 items (min 1)
+  > Есе: Козацтво і Церква: 1 items (min 1)
+  > Перевірка розуміння: 10 items (min 8)
+  > Правда чи міф?: 10 items (min 8)
+  > Історична термінологія: 12 items (min 8)
+  > Лексика в контексті: 10 items (min 8)
+  > Стилістичні відповідності: 12 items (min 8)
+  > Пасивний стан: 10 items (min 6)
+  > Православ'я vs Унія: 1 items (min 1)
+
+--- STRICT GATES (Level B2) ---
+Words        ✅ 5023/4000 (raw: 5099)
+Activities   ✅ 10/3
+Density      ✅ All > 1
+Unique_types ✅ 9/2 types
+Priority     ✅ Priority types used
+Engagement   ✅ 21/5
+Audio        ℹ️ No audio
+Vocab        ⚠️ 0 < 20 (soft target)
+Structure    ✅ Valid Structure
+Lint         ✅ Clean Format
+Pedagogy     ✅ Level-appropriate
+Content_heavy ⚠️ Too many activities: 10 (target 3-9)
+Grammar      ℹ️ N/A (covered by naturalness)
+Naturalness  ✅ 9/10 (High)
+Activity_quality 📋 Quality validation available (optional)
+Immersion    🇺🇦 98.9% (target 90-100% (history))
+Richness     ✅ 99% (content)
+
+Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/audit/pravoslavna-tserkva-17-review.md
+
+✅ AUDIT PASSED.

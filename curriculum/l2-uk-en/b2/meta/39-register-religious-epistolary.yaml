@@ -28,3 +28,30 @@ slug: 39-register-religious-epistolary
 naturalness:
   score: 9
   status: PASS
+content_outline:
+- section: Вступ — Релігійний та епістолярний стилі
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Religious Style (Релігійний стиль)
+  words: 500
+  points:
+  - 'Liturgical: Господь, благословіння, молитва'
+  - 'Biblical: Слава Богу! Христос воскрес! – Воістину воскрес!'
+  - 'Elevated: воістину, благословенний, всемогутній'
+  - 'Church vocabulary: храм, церква, парафія, священник'
+- section: Сучасні правила листування
+  words: 500
+  points:
+  - Доброго дня! (Good day! - modern greeting)
+  - У вкладенні надсилаю... (I'm attaching...)
+  - Заздалегідь вдячний/вдячна. (Thank you in advance.)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

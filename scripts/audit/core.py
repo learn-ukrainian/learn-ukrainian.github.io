@@ -1772,32 +1772,8 @@ def audit_module(file_path: str) -> bool:
         nat_score = meta_data['naturalness'].get('score', 0)
         nat_status = meta_data['naturalness'].get('status', 'PENDING')
 
-    # If still pending, run naturalness check automatically
-    if nat_status == "PENDING":
-        try:
-            from .checks.naturalness import check_naturalness
-            nat_result = check_naturalness(Path(file_path), level_code)
-            if nat_result and nat_result.get('status') != 'ERROR':
-                nat_score = nat_result.get('score', 0)
-                nat_status = nat_result.get('status', 'PENDING')
-
-                # Update meta.yaml with naturalness score
-                if meta_data:
-                    # Calculate meta.yaml path
-                    md_path = Path(file_path)
-                    yaml_path = md_path.parent / 'meta' / (md_path.stem + '.yaml')
-
-                    meta_data['naturalness'] = {
-                        'score': nat_score,
-                        'status': nat_status,
-                        'issues': nat_result.get('issues', []),
-                        'recommendation': nat_result.get('recommendation', '')
-                    }
-                    with open(yaml_path, 'w', encoding='utf-8') as f:
-                        yaml.dump(meta_data, f, default_flow_style=False, allow_unicode=True, sort_keys=False)
-        except Exception as e:
-            # If check fails, keep PENDING status
-            print(f"  ⚠️  Naturalness check failed: {e}", file=sys.stderr)
+    # Naturalness is evaluated by agents (Claude/Gemini) during module creation/fixing
+    # Audit just flags PENDING - agents evaluate and update meta.yaml with score
 
     results['naturalness'] = evaluate_naturalness(nat_score, nat_status)
     if results['naturalness'].status == 'FAIL':

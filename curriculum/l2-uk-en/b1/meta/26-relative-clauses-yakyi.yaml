@@ -1,26 +1,95 @@
 module: b1-26
-title: 'Підрядні означальні: який'
-subtitle: Relative Clauses with який
-version: '1.0'
-phase: B1.3a Complex Sentences
-pedagogy: TTT
+id: b1-26
+slug: relative-clauses-yakyi
+title: "Підрядні означальні: який"
+subtitle: "Relative Clauses with який"
+version: '2.0'
+phase: "B1.3a [Complex Sentences]"
 focus: grammar
+pedagogy: TTT
+register: розмовний
 duration: 90
 transliteration: none
-tags:
-- grammar
-- relative-clauses
-- complex-sentences
-grammar:
-- який/яка/яке/які in all cases
-- Agreement with antecedent and role in clause
 objectives:
-- Learner understands який agreement patterns
-- Learner can use який in all seven cases
-- Learner can combine sentences using який
-vocabulary_count: 25
-vocab_count: 10
-slug: 26-relative-clauses-yakyi
+  - "Learner understands який agreement patterns"
+  - "Learner can use який in all seven cases"
+  - "Learner can combine sentences using який"
+  - "Learner can identify antecedent and relative clause role"
+grammar:
+  - "який/яка/яке/які forms and agreement"
+  - "Case selection based on role in subordinate clause"
+  - "Agreement with antecedent in gender and number"
+word_target: 1200
+content_outline:
+  - section: "Introduction: Relative Clauses Overview"
+    words: 150
+    points:
+      - "What are relative clauses"
+      - "який as relative pronoun"
+      - "Comparison with English 'which/that/who'"
+  - section: "Agreement Patterns"
+    words: 250
+    points:
+      - "Gender agreement with antecedent"
+      - "Number agreement (singular/plural)"
+      - "Memorizing forms"
+  - section: "Case in Subordinate Clause"
+    words: 250
+    points:
+      - "який as subject (nominative)"
+      - "який as object (accusative/genitive)"
+      - "який with prepositions"
+  - section: "Complex Case Patterns"
+    words: 250
+    points:
+      - "Dative, instrumental, locative uses"
+      - "Prepositional phrases with який"
+      - "Common patterns"
+  - section: "Sentence Combining"
+    words: 200
+    points:
+      - "Combining simple sentences"
+      - "Punctuation rules"
+      - "Word order considerations"
+  - section: "Practice: Relative Clauses"
+    words: 100
+    points:
+      - "Create complex sentences"
+      - "Case selection drills"
+vocabulary_hints:
+  required:
+    - який (which/that/who)
+    - яка (which - feminine)
+    - яке (which - neuter)
+    - які (which - plural)
+    - підрядний (subordinate)
+    - означальний (attributive)
+    - речення (sentence)
+    - антецедент (antecedent)
+  recommended:
+    - узгодження (agreement)
+    - відмінок (case)
+    - сполучник (conjunction)
+    - головне речення (main clause)
+activity_hints:
+  - type: fill-in
+    focus: "який case selection"
+    items: 25
+  - type: sentence-combining
+    focus: "Combine sentences with який"
+    items: 20
+  - type: error-correction
+    focus: "Fix agreement errors"
+    items: 15
+  - type: translation
+    focus: "English to Ukrainian"
+    items: 15
+prerequisites:
+  - b1-25 (Checkpoint Aspect Integration)
+connects_to:
+  - b1-27 (Relative Clauses де/куди/звідки)
+  - b1-28 (Relative Clauses коли/що)
 naturalness:
   score: 9
   status: PASS
+  justification: "Essential complex sentence structure"

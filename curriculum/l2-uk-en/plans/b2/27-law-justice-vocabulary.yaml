@@ -1,0 +1,22 @@
+module: 27-law-justice-vocabulary
+level: b2
+sequence: 27
+version: '1.0'
+title: Право та юстиція
+subtitle: Мова закону і справедливості
+focus: grammar
+pedagogy: CLIL
+objectives:
+- Учень може розуміти юридичні тексти та новини про судові справи
+- Учень може використовувати базову юридичну термінологію в обговореннях
+- Учень може розрізняти типи судів та судових процесів в Україні
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

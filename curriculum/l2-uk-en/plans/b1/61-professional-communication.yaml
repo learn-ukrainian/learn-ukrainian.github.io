@@ -1,0 +1,77 @@
+module: professional-communication
+level: b1
+sequence: 61
+version: '2.0'
+title: Професійна комунікація
+subtitle: Professional Communication
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can use 30 professional communication words in context
+- Learner can distinguish between formal and informal workplace vocabulary
+- Learner can form natural collocations with professional nouns and verbs
+- Learner can communicate effectively in workplace settings
+content_outline:
+- section: 'Introduction: Professional Language'
+  words: 150
+  points:
+  - Workplace communication needs
+  - Formal vs informal register
+  - Professional context
+- section: Workplace Basics
+  words: 250
+  points:
+  - колега, керівник, підлеглий
+  - відділ, компанія, організація
+  - Workplace roles and structures
+- section: Meetings and Communication
+  words: 250
+  points:
+  - нарада, зустріч, презентація
+  - обговорювати, доповідати
+  - Meeting vocabulary
+- section: Documents and Reports
+  words: 250
+  points:
+  - звіт, протокол, договір
+  - складати, підписувати
+  - Business documents
+- section: Professional Actions
+  words: 200
+  points:
+  - співпрацювати, координувати
+  - делегувати, контролювати
+  - Management verbs
+- section: 'Practice: Workplace Scenarios'
+  words: 100
+  points:
+  - Professional dialogues
+  - Formal correspondence
+word_target: 1200
+vocabulary:
+  required:
+  - колега (colleague)
+  - керівник (manager/supervisor)
+  - нарада (meeting)
+  - звіт (report)
+  - договір (contract)
+  - співпрацювати (to collaborate)
+  - обговорювати (to discuss)
+  - відділ (department)
+  recommended:
+  - презентація (presentation)
+  - протокол (minutes/protocol)
+  - делегувати (to delegate)
+  - координувати (to coordinate)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - writing
+  - collocation
+  - role-play
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-62 (Environment Ecology)

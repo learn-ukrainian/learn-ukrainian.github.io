@@ -1,0 +1,22 @@
+module: 29-b21-integration-practice
+level: b2
+sequence: 29
+version: '1.0'
+title: Інтеграційна практика B2.1
+subtitle: B2.1 Integration Practice
+focus: grammar
+pedagogy: TTT
+objectives:
+- Учень може застосовувати всі граматичні структури B2.1 в інтегрованих контекстах
+- Учень може трансформувати тексти між різними регістрами
+- Учень може аналізувати складні тексти на граматичні особливості
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

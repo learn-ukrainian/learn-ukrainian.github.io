@@ -1,0 +1,22 @@
+module: 65-synonyms-state
+level: b2
+sequence: 65
+version: '1.0'
+title: 'Синоніми: Стан та Буття'
+subtitle: Synonyms - State and Existence
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Учень може розрізняти відтінки значень дієслів на позначення буття (бути, існувати, перебувати)
+- Учень вміє обирати точне слово для опису умов, обставин та зовнішнього вигляду
+- Учень розуміє філософську концепцію буття в українській мовній картині світу
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

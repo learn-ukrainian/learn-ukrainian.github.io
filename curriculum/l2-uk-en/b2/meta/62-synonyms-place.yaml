@@ -27,3 +27,30 @@ slug: 62-synonyms-place
 naturalness:
   score: 9
   status: PASS
+content_outline:
+- section: Вступ — Місце та Простір
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Here
+  words: 500
+  points:
+  - тут (here - neutral)
+  - тутечки (here - diminutive/colloquial)
+  - ось тут (right here - emphatic)
+  - на цьому місці (at this place - formal)
+- section: There
+  words: 500
+  points:
+  - там (there - neutral)
+  - он там (over there - pointing)
+  - туди (to there - direction)
+  - звідти (from there - origin)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

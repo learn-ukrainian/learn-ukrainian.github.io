@@ -1,0 +1,22 @@
+module: 84-teatralne-mystetstvo-1
+level: c1
+sequence: 84
+version: '2.0'
+title: Театральне мистецтво I
+subtitle: Theater Arts I — From Origins to Kurbas
+focus: fine-arts
+pedagogy: CBI
+objectives:
+- Learner explores the origins of Ukrainian theater (Vertep, School Drama).
+- Learner understands the role of the Coryphaei Theater.
+- Learner analyzes the revolutionary impact of Les Kurbas and Berezil.
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

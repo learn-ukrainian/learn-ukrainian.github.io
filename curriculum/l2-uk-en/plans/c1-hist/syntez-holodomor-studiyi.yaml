@@ -1,0 +1,94 @@
+module: syntez-holodomor-studiyi
+level: c1-hist
+sequence: 51
+version: '1.0'
+title: 'Синтез: Голодомор як об''єкт дослідження'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Що ми дізналися
+  words: 400
+  subsections:
+  - Огляд модулів 45-50
+  - Голодомор як комплексний об'єкт
+  - Мета синтезу
+  - Від знання до розуміння
+- section: Інтеграція — історіографія + джерела + механізми
+  words: 600
+  subsections:
+  - Як різні підходи доповнюють
+  - Документи + свідчення = повніша картина
+  - Механізми як каркас
+  - Географія як доказ
+- section: Ключові дебати
+  words: 600
+  subsections:
+  - Геноцид чи «просто» голод?
+  - Скільки загинуло — чому це важливо
+  - Намір — як довести?
+  - Відкриті питання
+- section: Стан поля дослідження
+  words: 500
+  subsections:
+  - Що вже зроблено
+  - Що залишається — лакуни
+  - Нові методи — digital humanities
+  - Молоде покоління дослідників
+- section: Голодомор і сучасність
+  words: 600
+  subsections:
+  - Пам'ять як політика
+  - Голодомор і 2022 — паралелі
+  - «Голодна зброя» — чи може повторитися?
+  - Українська ідентичність і травма
+- section: Методологічні уроки
+  words: 500
+  subsections:
+  - Як вивчати геноцид
+  - Етика дослідження
+  - Від академії до суспільства
+  - Історик як свідок
+- section: Підсумок
+  words: 300
+  subsections:
+  - Голодомор — ключова тема
+  - Що означає «знати» Голодомор
+  - Від Голодомору до Розстріляного відродження
+word_target: 3500
+vocabulary:
+- синтез
+- об'єкт дослідження
+- дебати
+- лакуна
+- digital humanities
+- пам'ять
+- ідентичність
+- травма
+- етика
+- методологія
+- інтеграція
+- каркас
+- паралель
+- академія
+- свідок
+activities:
+- type: essay-response
+  focus: Create integrated Holodomor knowledge map
+- type: debate-evaluation
+  focus: Evaluate main scholarly debates — where do you stand?
+- type: gap-analysis
+  focus: What questions remain unanswered?
+- type: connection-building
+  focus: How does Holodomor connect to 2022 events?
+- type: essay-response
+  focus: Що означає 'знати' Голодомор для сучасного українця?
+sources:
+- name: Голодомор (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Голодомор
+  type: reference
+  notes: Comprehensive overview
+- name: Harvard Ukrainian Research Institute — Holodomor
+  url: https://huri.harvard.edu/
+  type: reference
+  notes: Research center

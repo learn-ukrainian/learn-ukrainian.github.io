@@ -1,0 +1,22 @@
+module: 28-economics-business-vocabulary
+level: b2
+sequence: 28
+version: '1.0'
+title: 'Економічна лексика: говоримо про бізнес'
+subtitle: Economics & Business Vocabulary
+focus: grammar
+pedagogy: CLIL
+objectives:
+- Учень може читати та розуміти економічні новини українською мовою
+- Учень може аналізувати економічні показники та їх значення
+- Учень може обговорювати економічну ситуацію в Україні, використовуючи спеціалізовану лексику
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

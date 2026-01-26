@@ -1,0 +1,80 @@
+module: sports-fitness
+level: a2
+sequence: 54
+version: '2.0'
+title: Sports and Fitness
+subtitle: Active Lifestyle
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can talk about sports and fitness
+- Learner can use 'грати в' and 'займатися' correctly
+- Learner can describe a sports event
+- Learner can discuss healthy habits
+content_outline:
+- section: 'Introduction: Sports in Ukraine'
+  words: 100
+  points:
+  - Popular sports
+  - Ukrainian athletes
+  - Sports culture
+- section: Team Sports
+  words: 200
+  points:
+  - футбол, баскетбол, волейбол
+  - грати у футбол
+  - Team vocabulary
+- section: Individual Sports
+  words: 200
+  points:
+  - плавання, біг, теніс
+  - займатися плаванням
+  - Accusative vs instrumental
+- section: Fitness and Gym
+  words: 200
+  points:
+  - спортзал, тренування
+  - тренер, вправа
+  - Workout vocabulary
+- section: Sports Events
+  words: 150
+  points:
+  - матч, змагання, чемпіонат
+  - вигравати, програвати
+  - Event descriptions
+- section: 'Practice: Sports Talk'
+  words: 150
+  points:
+  - Describe your fitness routine
+  - Talk about sports events
+word_target: 1000
+vocabulary:
+  required:
+  - спорт (sport)
+  - грати (to play)
+  - займатися (to practice)
+  - футбол (football)
+  - тренування (training)
+  - спортзал (gym)
+  - команда (team)
+  - матч (match)
+  recommended:
+  - плавання (swimming)
+  - біг (running)
+  - тренер (coach)
+  - змагання (competition)
+  - вигравати (to win)
+  - програвати (to lose)
+  forbidden: []
+activities:
+  types_required:
+  - vocabulary-drill
+  - matching
+  - speaking
+  - fill-in
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a2-56 (Checkpoint Full Grammar)
+- a2-51 (Hobbies and Leisure)

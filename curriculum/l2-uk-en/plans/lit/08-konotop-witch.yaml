@@ -1,0 +1,103 @@
+module: 08-konotop-witch
+level: lit
+sequence: 8
+version: '1.0'
+title: 'Конотопська Відьма: Сатира на Руїну'
+subtitle: 'LIT-008: Гумор як Дзеркало Деградації'
+focus: literature
+pedagogy: seminar
+objectives:
+- Analyze the satire in "Konotop Witch"
+- Contrast satire with sentimentalism
+- Evaluate the historical context of the Hetmanate's decline
+sources:
+  primary:
+  - url: https://www.ukrlib.com.ua/books/printit.php?tid=254
+    title: Конотопська відьма — повний текст
+    notes: Повість для детального аналізу
+  secondary:
+  - url: https://www.ukrlib.com.ua/analiz/printit.php?tid=254
+    title: Аналіз "Конотопської відьми"
+    notes: Літературознавчий аналіз
+  - url: https://uk.wikipedia.org/wiki/Козацька_старшина
+    title: Козацька старшина XVIII ст.
+    notes: Історичний контекст
+content_outline:
+- section: Вступ — Найтемніша і найсмішніша повість
+  words: 500
+  subsections:
+  - Контраст з "Марусею"
+  - Бурлескний реалізм
+  - Сатира на адміністративний ідіотизм
+- section: Сюжет — полювання на відьму
+  words: 700
+  subsections:
+  - Сотник Забрьоха і його «похід»
+  - Писар Пістряк — справжній керманич
+  - 'Кульмінація: топлення жінок'
+- section: Антигерої — галерея типів
+  words: 800
+  subsections:
+  - Забрьоха — тупість і лінь
+  - Пістряк — хитрість і корупція
+  - '"Еліта" як антипод народу'
+- section: Готика та народна демонологія
+  words: 600
+  subsections:
+  - Елементи готичного роману
+  - Відьма як літературний образ
+  - Функція фантастичного (не налякати — висміяти)
+- section: Мовна стилізація
+  words: 600
+  subsections:
+  - Канцеляризми XVIII століття
+  - '"Макаронічна" мова Пістряка'
+  - Вульгаризми та лайка
+- section: Підсумок — Енциклопедія шахрайства
+  words: 400
+  subsections:
+  - Вплив на "Майстра і Маргариту"
+  - Актуальність сатири сьогодні
+  - Квітка між сміхом і сльозами
+word_target: 4500
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - сатира
+  - бурлеск
+  - антигерой
+  - демонологія
+  - готика
+  - канцеляризм
+  - вульгаризм
+  - сотник
+  - писар
+  - забобон
+  recommended:
+  - корупція
+  - деградація
+  - ідіотизм
+  - шахрайство
+  - неуцтво
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: lit-06 (Kvitka biography)
+  related:
+  - lit-10 (Language of Kvitka — стилістичний аналіз)
+  - lit-14 (Son — політична сатира Шевченка)
+constraints:
+  min_engagement_boxes: 3
+  min_examples: 15
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

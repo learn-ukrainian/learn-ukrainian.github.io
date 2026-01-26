@@ -1,0 +1,112 @@
+module: kniazivski-usobiytsi
+level: b2-hist
+sequence: 17
+version: '1.0'
+title: Княжі усобиці та роздроблення
+focus: history
+pedagogy: CBI
+objectives:
+- Understand the causes of Kyivan Rus fragmentation
+- Analyze the decisions of the Liubech Congress
+- Discuss the impact of Polovtsian threat on unity
+content_outline:
+- section: Розминка
+  words: 200
+  subsections:
+  - Defining sovereignty vs suzerainty
+  - The map of 1054 vs 1132
+- section: 'Читання: Тріумвірат Ярославичів'
+  words: 700
+  subsections:
+  - The will of Yaroslav the Wise
+  - Battle of Alta (1068)
+  - Kyiv Uprising
+- section: Любецький з'їзд (1097)
+  words: 450
+  subsections:
+  - Every man holds his own fatherland
+  - The blinding of Vasylko
+  - Consequences of the Congress
+- section: Володимир Мономах
+  words: 700
+  subsections:
+  - Crusades against Polovtsians
+  - Monomakh's Reforms (Statute)
+  - Instruction (Povchannia)
+- section: Соціальна структура та Економіка
+  words: 700
+  subsections:
+  - Economic causes of fragmentation
+  - Boyars, Druzhina, Smerds
+  - Urban growth
+- section: Культура та Церква
+  words: 250
+  subsections:
+  - Architecture (St. Michael's)
+  - Chronicle writing (Nestor)
+  - Church as unifying force
+- section: Первинні джерела
+  words: 400
+  subsections:
+  - Extract from the Primary Chronicle on Liubech
+  - Extract from Monomakh's Instruction
+- section: Деколонізаційний погляд
+  words: 350
+  subsections:
+  - Reframing Fragmentation as Decentralization
+  - European parallels
+  - Myth of 'Feudal Disunity'
+- section: Підсумок
+  words: 150
+  subsections:
+  - Legacy of the era
+word_target: 4000
+vocabulary:
+- усобиця
+- роздроблення
+- лествичне право
+- престолонаслідування
+- отчина
+- з'їзд
+- боярин
+- князівство
+- половці
+- єдність
+- центральна влада
+- місцева еліта
+- засліплення
+- номінальний
+- союз
+- культурний розквіт
+activities:
+- type: reading
+  focus: Chronicle account of Liubech Congress
+- type: quiz
+  focus: Major principalities after fragmentation (Geography)
+  items: 8+ principalities
+- type: fill-in
+  focus: Political and military terminology
+  items: 15+
+- type: match-up
+  focus: Key events of fragmentation 1054-1240 (Chronology)
+  items: 12+ events
+- type: quiz
+  focus: Causes and consequences of fragmentation
+  items: 12+
+- type: comparative-study
+  focus: Unified Rus vs fragmented Rus
+- type: essay-response
+  focus: Чи було роздроблення неминучим?
+sources:
+- name: Роздроблення Київської Русі (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Роздроблення_Київської_Русі
+  type: reference
+  notes: Overview of fragmentation
+- name: Любецький з'їзд (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Любецький_з%27їзд
+  type: reference
+  notes: Congress that formalized division
+- name: Повість минулих літ
+  url: https://litopys.org.ua/pvl/pvl.htm
+  type: primary
+  notes: Chronicle accounts

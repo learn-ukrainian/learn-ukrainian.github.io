@@ -1,29 +1,96 @@
 module: a2-66
-title: Asking for Directions
-subtitle: Getting Around Town
-version: '1.0'
-phase: A2.4
+id: a2-66
+slug: asking-for-directions
+title: "Asking for Directions"
+subtitle: "Getting Around Town"
+version: '2.0'
+phase: "A2.6 [Practical]"
+focus: practical
 pedagogy: PPP
+register: розмовний
 duration: 60
 transliteration: none
-tags:
-- vocabulary
-- directions
-- city
-- transport
-grammar:
-- verbs of motion (йти, їхати)
-- prepositions of movement (до, повз, через)
-- imperative for directions (йдіть, поверніть)
-- transport vocabulary
 objectives:
-- Learner can ask for directions to landmarks
-- Learner can understand complex route descriptions
-- Learner can use public transport vocabulary
-- Learner can describe their location
-vocabulary_count: 25
-slug: 66-asking-for-directions
-focus: vocabulary
+  - "Learner can ask for directions to landmarks"
+  - "Learner can understand complex route descriptions"
+  - "Learner can use public transport vocabulary"
+  - "Learner can describe their location"
+grammar:
+  - "Verbs of motion (йти, їхати, ходити, їздити)"
+  - "Prepositions of movement (до, повз, через)"
+  - "Imperative for directions"
+word_target: 1000
+content_outline:
+  - section: "Introduction: Urban Navigation"
+    words: 100
+    points:
+      - "Getting around cities"
+      - "Motion verbs review"
+      - "Transport options"
+  - section: "Verbs of Motion"
+    words: 200
+    points:
+      - "йти vs їхати"
+      - "ходити vs їздити"
+      - "Motion on foot vs by transport"
+  - section: "Public Transport"
+    words: 200
+    points:
+      - "метро, автобус, трамвай"
+      - "Which transport to take"
+      - "Stops and stations"
+  - section: "Complex Directions"
+    words: 200
+    points:
+      - "Multiple steps"
+      - "Changing transport"
+      - "Time estimates"
+  - section: "Describing Location"
+    words: 150
+    points:
+      - "Я знаходжуся..."
+      - "біля, поруч з, навпроти"
+      - "Using landmarks"
+  - section: "Practice: Transport Routes"
+    words: 150
+    points:
+      - "Plan a route"
+      - "Ask about transport"
+vocabulary_hints:
+  required:
+    - йти (to go on foot)
+    - їхати (to go by transport)
+    - метро (metro)
+    - автобус (bus)
+    - трамвай (tram)
+    - зупинка (stop)
+    - станція (station)
+    - маршрут (route)
+  recommended:
+    - пересадка (transfer)
+    - вихід (exit)
+    - платформа (platform)
+    - квиток (ticket)
+    - проїзд (fare)
+    - розклад (schedule)
+activity_hints:
+  - type: vocabulary-drill
+    focus: "Transport vocabulary"
+    items: 25
+  - type: fill-in
+    focus: "Motion verbs in context"
+    items: 20
+  - type: dialogue
+    focus: "Ask about transport"
+    items: 12
+  - type: speaking
+    focus: "Describe your location"
+    items: 10
+prerequisites:
+  - a2-65 (Giving Directions)
+connects_to:
+  - a2-67 (Social Media Ukrainian)
 naturalness:
   score: 10
   status: PASS
+  justification: "Essential transport scenario"

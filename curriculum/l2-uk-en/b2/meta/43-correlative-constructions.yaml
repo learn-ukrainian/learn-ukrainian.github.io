@@ -30,3 +30,31 @@ slug: 43-correlative-constructions
 naturalness:
   score: 9
   status: PASS
+content_outline:
+- section: Вступ — Співвідносні конструкції
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Common Pairs
+  words: 500
+  points:
+  - той... хто (he... who / the one... who)
+  - те... що (that... which)
+  - такий... який (such... as)
+  - там... де (there... where)
+  - тоді... коли (then... when)
+- section: Examples
+  words: 500
+  points:
+  - '*Той*, *хто* рано встає, тому Бог дає.'
+  - Роби *так*, *як* знаєш.
+  - Я куплю *те*, *що* мені подобається.
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

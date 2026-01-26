@@ -1,0 +1,105 @@
+module: style-transformation-i
+level: c2
+sequence: 10
+version: '2.0'
+title: Трансформація стилю I — Науковий → Популярний
+focus: stylistics
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Науково-популярні видання України
+  url: https://www.nbuv.gov.ua/
+  type: reference
+  notes: Examples of academic-to-popular transformation
+- name: Science popularization methodology
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Strategies for accessible science writing
+- name: Ukrainian State Standard 2024 — Style transformation
+  url: https://mon.gov.ua/
+  type: reference
+  notes: C2 requirements for register shifting
+content_outline:
+- section: Вступ — Навіщо популяризувати науку?
+  words: 400
+  points:
+  - Роль науково-популярного стилю
+  - Аудиторії популяризації
+  - Баланс точності та доступності
+- section: Стратегії спрощення термінології
+  words: 700
+  points:
+  - Заміна термінів загальновживаними словами
+  - Пояснення через аналогії
+  - Визначення в контексті
+  - Коли зберігати терміни
+- section: Додавання прикладів та ілюстрацій
+  words: 600
+  points:
+  - Конкретні приклади з життя
+  - Візуальні аналогії
+  - Історичні анекдоти
+  - Порівняння з відомим
+- section: Зміна синтаксису
+  words: 600
+  points:
+  - Від складних речень до простих
+  - Активний стан замість пасивного
+  - Риторичні запитання
+  - Діалогічність тексту
+- section: Адаптація для різних аудиторій
+  words: 600
+  points:
+  - Широка публіка
+  - Студенти
+  - Фахівці інших галузей
+  - Діти та підлітки
+- section: Жанри науково-популярного письма
+  words: 600
+  points:
+  - Стаття для журналу
+  - Блог-пост
+  - Публічна лекція
+  - Соціальні мережі
+- section: Практикум — Трансформація текстів
+  words: 500
+  points:
+  - Перетворення анотації на блог-пост
+  - Порівняння наукової та популярної версії
+  - Пояснення складної концепції просто
+  - Оцінка збереження точності
+word_target: 4000
+vocabulary:
+  required:
+  - популяризація (popularization)
+  - спрощення (simplification)
+  - аналогія (analogy)
+  - доступність (accessibility)
+  - аудиторія (audience)
+  - адаптація (adaptation)
+  - ілюстрація (illustration)
+  - приклад (example)
+  - концепція (concept)
+  - точність (accuracy)
+  recommended:
+  - метафора (metaphor)
+  - візуалізація (visualization)
+  - діалогічність (dialogicity)
+  - вульгаризація (vulgarization — negative)
+  - просвітництво (enlightenment)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - fill-in
+  - critical-analysis
+  - essay-response
+  - comparative-study
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-11 (Official to journalistic transformation)
+- c2-58 (Cross-domain communication)
+- c2-12 (Lexical stylistics for word choice)

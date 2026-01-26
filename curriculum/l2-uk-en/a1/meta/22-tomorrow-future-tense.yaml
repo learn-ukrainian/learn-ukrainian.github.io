@@ -1,32 +1,97 @@
 module: a1-22
-title: Tomorrow - Future Tense
-subtitle: Talking About What Will Happen
+id: a1-22
+slug: tomorrow-future-tense
+title: "Tomorrow - Future Tense"
+subtitle: "Talking About What Will Happen"
 version: '2.0'
-phase: A1.3 - Consolidation
-pedagogy: PPP
+phase: "A1.3 [Consolidation]"
 focus: grammar
-duration: 60 min
+pedagogy: PPP
+register: розмовний
+duration: 60
 transliteration: none
-phonetics: ipa
-tags:
-  - future-tense
-  - compound-future
-  - time-expressions
-  - planning
-  - aspect
-grammar:
-  - compound-future-of-imperfective-verbs
-  - буду conjugation (буду, будеш, буде, будемо, будете, будуть)
-  - Planning and intention expressions
 objectives:
-  - Learner can form compound future using буду + infinitive
-  - Learner understands that compound future is for ongoing actions
-  - Learner can conjugate буду for all persons
-  - Learner can express plans, intentions, and hopes
-  - Learner can use future time expressions correctly
-vocabulary_count: 25
-vocab_count: 48
-slug: 22-tomorrow-future-tense
+  - "Learner can form compound future using буду + infinitive"
+  - "Learner can conjugate буду for all persons"
+  - "Learner can express plans and intentions"
+  - "Learner can use future time expressions correctly"
+grammar:
+  - "Compound future (буду + infinitive)"
+  - "Буду conjugation for all persons"
+  - "Future time expressions"
+word_target: 1000
+content_outline:
+  - section: "Introduction: The Future Tense"
+    words: 150
+    points:
+      - "Compound future for imperfective verbs"
+      - "буду + infinitive structure"
+      - "Plans and ongoing future actions"
+  - section: "Conjugating Буду"
+    words: 200
+    points:
+      - "я буду, ти будеш, він/вона буде"
+      - "ми будемо, ви будете, вони будуть"
+      - "Practice all forms"
+  - section: "Forming Compound Future"
+    words: 200
+    points:
+      - "буду читати (I will read)"
+      - "буде працювати (will work)"
+      - "будемо їсти (we will eat)"
+  - section: "Future Time Expressions"
+    words: 200
+    points:
+      - "завтра (tomorrow)"
+      - "наступного тижня (next week)"
+      - "незабаром (soon)"
+  - section: "Expressing Plans"
+    words: 150
+    points:
+      - "Я буду... (I will...)"
+      - "Ми будемо... (We will...)"
+      - "Making plans with friends"
+  - section: "Practice: What Will You Do?"
+    words: 100
+    points:
+      - "Describe tomorrow's plans"
+      - "Ask about future activities"
+vocabulary_hints:
+  required:
+    - завтра (tomorrow)
+    - буду (I will)
+    - наступний (next)
+    - план (plan)
+    - хотіти (to want)
+    - збиратися (to be going to)
+    - незабаром (soon)
+    - потім (then, later)
+  recommended:
+    - тиждень (week)
+    - рік (year)
+    - сподіватися (to hope)
+    - мріяти (to dream)
+    - планувати (to plan)
+    - обіцяти (to promise)
+activity_hints:
+  - type: conjugation
+    focus: "Conjugate буду with different subjects"
+    items: 20
+  - type: fill-in
+    focus: "Complete future tense sentences"
+    items: 20
+  - type: translation
+    focus: "Translate future plans"
+    items: 15
+  - type: dialogue
+    focus: "What will you do tomorrow?"
+    items: 6
+prerequisites:
+  - a1-21 (Yesterday - Past Tense)
+connects_to:
+  - a1-23 (What Time Is It)
+  - a1-25 (My Daily Routine)
 naturalness:
   score: 10
   status: PASS
+  justification: "Clear future tense introduction"

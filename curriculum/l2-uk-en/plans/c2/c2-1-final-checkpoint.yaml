@@ -1,0 +1,102 @@
+module: c2-1-final-checkpoint
+level: c2
+sequence: 25
+version: '2.0'
+title: Фінальна перевірка C2.1 — Стилістична досконалість
+focus: checkpoint
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Ukrainian State Standard C2 (2024)
+  url: https://mon.gov.ua/
+  type: reference
+  notes: C2 proficiency descriptors for stylistic competence
+- name: CEFR C2 Writing Descriptors
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: Writing proficiency expectations at C2 level
+content_outline:
+- section: Вступ — Що перевіряємо
+  words: 400
+  points:
+  - Огляд компетенцій C2.1
+  - Структура перевірки
+  - Критерії оцінювання
+- section: Портфоліо семи стилів
+  words: 800
+  points:
+  - Вимоги до кожного зразка
+  - Науковий стиль — уривок статті
+  - Офіційний стиль — договір/лист
+  - Публіцистичний стиль — колонка
+  - Художній стиль — мініатюра
+  - Розмовний стиль — діалог
+  - Релігійний стиль — аналіз тексту
+  - Епістолярний стиль — офіційний лист
+- section: Трансформаційні завдання
+  words: 700
+  points:
+  - Науковий → науково-популярний
+  - Офіційний → публіцистичний
+  - Три рівні трансформації одного тексту
+  - Збереження інформації при зміні стилю
+- section: Аналіз стилістичних засобів
+  words: 600
+  points:
+  - Лексична стилістика (синоніми, архаїзми)
+  - Синтаксична стилістика (інверсія, паралелізм)
+  - Фігури мови (метафора, метонімія)
+  - Ритм і звукопис
+- section: Творче письмо з індивідуальним голосом
+  words: 600
+  points:
+  - Демонстрація особистого стилю
+  - Свідомі стилістичні вибори
+  - Обґрунтування рішень
+  - Когерентність тексту
+- section: Усна перевірка — переключення регістрів
+  words: 500
+  points:
+  - Імпровізована трансформація
+  - Швидке переключення стилів
+  - Природність і плавність
+- section: Підсумок і перехід до C2.2
+  words: 400
+  points:
+  - Самооцінка результатів
+  - Визначення зон для покращення
+  - Огляд фази літературної майстерності
+word_target: 4000
+vocabulary:
+  required:
+  - перевірка (checkpoint/assessment)
+  - портфоліо (portfolio)
+  - майстерність (mastery)
+  - досконалість (perfection)
+  - трансформація (transformation)
+  - критерій (criterion)
+  - компетенція (competence)
+  - оцінювання (evaluation)
+  - демонстрація (demonstration)
+  - обґрунтування (justification)
+  recommended:
+  - еталон (standard/benchmark)
+  - показник (indicator)
+  - рубрика (rubric)
+  - самооцінка (self-assessment)
+  - консолідація (consolidation)
+  forbidden: []
+activities:
+  types_required:
+  - authorial-intent
+  - essay-response
+  - quiz
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-26 (Literary Theory — start of C2.2)
+- c2-45 (C2.2 Checkpoint)
+- c2-75 (C2.3 Checkpoint)

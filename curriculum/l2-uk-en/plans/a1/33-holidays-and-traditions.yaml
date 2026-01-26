@@ -1,0 +1,79 @@
+module: holidays-and-traditions
+level: a1
+sequence: 33
+version: '2.0'
+title: Holidays & Traditions
+subtitle: Свята і традиції
+focus: cultural
+pedagogy: PPP
+objectives:
+- Learner can name major Ukrainian holidays
+- Learner can give holiday greetings
+- Learner can talk about birthday celebrations
+- Learner can express wishes
+content_outline:
+- section: 'Introduction: Ukrainian Holidays'
+  words: 100
+  points:
+  - Ukraine's holiday calendar
+  - Traditions and celebrations
+  - Greetings and wishes
+- section: Major Holidays
+  words: 250
+  points:
+  - Новий рік, Різдво
+  - Великдень, День незалежності
+  - День народження
+- section: Holiday Greetings
+  words: 200
+  points:
+  - З Новим роком! (Happy New Year!)
+  - З днем народження! (Happy Birthday!)
+  - З Різдвом Христовим!
+- section: Wishes and Toasts
+  words: 200
+  points:
+  - Бажаю щастя, здоров'я
+  - Многая літа! (Many years!)
+  - За + accusative (toasting)
+- section: Dates and Celebrations
+  words: 150
+  points:
+  - 'Date format: day + genitive month'
+  - When is your birthday?
+  - Planning celebrations
+- section: 'Practice: Holiday Wishes'
+  words: 100
+  points:
+  - Write holiday greetings
+  - Celebrate a birthday
+word_target: 1000
+vocabulary:
+  required:
+  - свято (holiday)
+  - Новий рік (New Year)
+  - Різдво (Christmas)
+  - день народження (birthday)
+  - вітати (to congratulate)
+  - бажати (to wish)
+  - подарунок (gift)
+  - святкувати (to celebrate)
+  recommended:
+  - Великдень (Easter)
+  - щастя (happiness)
+  - здоров'я (health)
+  - успіх (success)
+  - торт (cake)
+  - свічка (candle)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - matching
+  - vocabulary-drill
+  - dialogue
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a1-34 (Checkpoint Core Grammar)

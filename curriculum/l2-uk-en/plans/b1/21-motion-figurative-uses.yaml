@@ -1,0 +1,89 @@
+module: 21-motion-figurative-uses
+level: b1
+sequence: 21
+version: '1.2'
+title: Переносні значення дієслів руху
+subtitle: Figurative uses of motion verbs
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can recognize figurative uses of motion verbs
+- Learner can use common idiomatic expressions with motion verbs
+- Learner understands the metaphorical extensions of motion prefixes
+sources:
+- name: Ukrainian State Standard 2024 - Figurative Language
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official guidance on idiomatic expressions
+- name: Ukrainian Idioms with Motion Verbs
+  url: https://uk.wikipedia.org/wiki/Фразеологізми
+  type: reference
+  notes: Common figurative expressions with motion verbs
+- name: Slovnyk.UA - Motion Verb Idioms
+  url: https://slovnyk.ua/
+  type: reference
+  notes: Dictionary entries with figurative meanings
+content_outline:
+- section: Тест
+  words: 200
+  points:
+  - Content for Тест
+  - Examples and explanation
+  - Practice or application
+- section: 'vocab_count: 25'
+  words: 100
+  points:
+  - 'Content for vocab_count: 25'
+  - Examples and explanation
+  - Practice or application
+- section: Пояснення
+  words: 900
+  points:
+  - Content for Пояснення
+  - Examples and explanation
+  - Practice or application
+- section: Практика
+  words: 350
+  points:
+  - Content for Практика
+  - Examples and explanation
+  - Practice or application
+- section: 'Читання: Метафори в нашому житті'
+  words: 500
+  points:
+  - 'Content for Читання: Метафори в нашому житті'
+  - Examples and explanation
+  - Practice or application
+word_target: 1500
+vocabulary:
+  required:
+  - виходить, що (it turns out that)
+  - дійти до висновку (reach a conclusion)
+  - зайти занадто далеко (go too far)
+  - відійти від теми (digress)
+  - підійти до питання (approach a question)
+  - обійтися без (do without)
+  - перейти до справи (get down to business)
+  - пройти через (go through - experience)
+  - вийти з ситуації (get out of a situation)
+  - зайти в глухий кут (reach a dead end)
+  recommended:
+  - до мене дійшло (it dawned on me)
+  - вийти на новий рівень (reach a new level)
+  - переносне значення (figurative meaning)
+  - буквальний зміст (literal meaning)
+  - фразеологізм (phraseological unit)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - quiz
+  - match-up
+  - cloze
+  - group-sort
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-22 (Motion full prefix integration)
+- b1-25 (Checkpoint - motion verbs)

@@ -1,11 +1,101 @@
-# Meta for Синтез: Імперська доба
+module: b2-hist-86
+id: b2-hist-86
 slug: syntez-imperska-doba
 title: "Синтез: Імперська доба"
-level: B2
-track: history
+subtitle: "Synthesis: The Imperial Era"
+version: '2.0'
 phase: "HIST.8 [Imperial Era]"
-status: skeleton
 focus: history
+pedagogy: CBI
+register: публіцистичний
+duration: 150
+transliteration: none
+objectives:
+  - "Учень може синтезувати знання про Україну в імперську добу"
+  - "Учень може пояснити механізми колоніального панування"
+  - "Учень може проаналізувати форми спротиву імперії"
+  - "Учень може оцінити наслідки імперської доби для сучасності"
+grammar:
+  - "Аналітичний стиль"
+  - "Причинно-наслідкові конструкції"
+  - "Складнопідрядні речення"
 word_target: 3000
-prerequisites: []
-learning_outcomes: []
+content_outline:
+  - section: "Вступ: Два імперії"
+    words: 300
+    points:
+      - "Російська та Австро-Угорська імперії"
+      - "Поділ українських земель"
+      - "Чому імперська доба важлива"
+  - section: "Механізми панування"
+    words: 600
+    points:
+      - "Мовні заборони"
+      - "Економічна експлуатація"
+      - "Кріпацтво та його наслідки"
+      - "«Малоросійська» ідентичність"
+  - section: "Форми спротиву"
+    words: 700
+    points:
+      - "Шевченко та пробудження"
+      - "Громади та Драгоманов"
+      - "Галичина як П'ємонт"
+      - "Від культурного до політичного"
+  - section: "Первинні джерела в синтезі"
+    words: 600
+    points:
+      - "Порівняння імперських політик"
+      - "Голоси опору"
+      - "Документи епохи"
+  - section: "Деколонізаційний погляд"
+    words: 400
+    points:
+      - "Імперський наратив: «один народ»"
+      - "Реальність: колоніалізм"
+      - "Імперська спадщина сьогодні"
+  - section: "Підсумок: До революції"
+    words: 400
+    points:
+      - "Підготовка до 1917"
+      - "Роль Першої світової"
+      - "Від імперії до нації"
+vocabulary_hints:
+  required:
+    - синтез (synthesis)
+    - імперія (empire)
+    - колоніалізм (colonialism)
+    - спротив (resistance)
+    - пробудження (awakening)
+    - заборона (ban)
+    - експлуатація (exploitation)
+    - ідентичність (identity)
+  recommended:
+    - кріпацтво (serfdom)
+    - русифікація (Russification)
+    - автономія (autonomy)
+    - інтелігенція (intelligentsia)
+    - нація (nation)
+    - революція (revolution)
+activity_hints:
+  - type: reading
+    focus: "Порівняльний аналіз імперських політик"
+    source: "Історичні документи"
+    items: 4
+  - type: quiz
+    focus: "Імперська доба: синтез"
+    items: 15
+  - type: match-up
+    focus: "Імперська політика → наслідки"
+    items: 10
+  - type: essay-response
+    focus: "Як імперська доба вплинула на формування української нації?"
+    word_target: 300
+prerequisites:
+  - b2-hist-85 (Франко, Леся, Грінченко)
+connects_to:
+  - b2-hist-87 (Грушевський)
+  - b2-hist-88 (Перша світова)
+naturalness:
+  score: 10
+  status: PASS
+  justification: "Академічний український для синтетичного аналізу"

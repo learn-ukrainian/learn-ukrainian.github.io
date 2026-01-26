@@ -1,0 +1,80 @@
+module: the-locative-where-things-are
+level: a1
+sequence: 13
+version: '2.0'
+title: 'The Locative: Where Things Are'
+subtitle: Finding Your Way Around Ukrainian Spaces
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can ask and answer 'Where is X?' using locative case
+- Learner can distinguish between в/у and на prepositions
+- Learner can describe locations of people and objects
+- Learner can name common places in Ukrainian
+content_outline:
+- section: 'Introduction: The Locative Case'
+  words: 150
+  points:
+  - Answers 'where?' questions
+  - Always with prepositions
+  - в/у or на + locative
+- section: Locative Endings
+  words: 250
+  points:
+  - 'Masculine/Neuter: -і/-у (столі, місті)'
+  - 'Feminine: -і (книзі, кімнаті)'
+  - 'Consonant changes: к→ц, г→з, х→с'
+- section: В/У vs На
+  words: 200
+  points:
+  - 'в/у: inside, in (в кімнаті)'
+  - 'на: on, at (на столі, на роботі)'
+  - 'Fixed expressions: в Україні, на Україні'
+- section: Common Places
+  words: 200
+  points:
+  - 'In buildings: в магазині, в школі, в банку'
+  - 'On surfaces: на столі, на підлозі'
+  - 'At locations: на роботі, на вокзалі'
+- section: Asking 'Where?'
+  words: 100
+  points:
+  - Де...? Where is...?
+  - Де ти? Де книга?
+  - Answer patterns
+- section: 'Practice: Find It!'
+  words: 100
+  points:
+  - Location guessing games
+  - Describe your room
+word_target: 1000
+vocabulary:
+  required:
+  - де (where)
+  - в/у (in)
+  - на (on/at)
+  - кімната (room)
+  - стіл (table)
+  - магазин (store)
+  - школа (school)
+  - робота (work)
+  recommended:
+  - банк (bank)
+  - вокзал (station)
+  - підлога (floor)
+  - стіна (wall)
+  - вулиця (street)
+  - парк (park)
+  forbidden: []
+activities:
+  types_required:
+  - transformation
+  - labeling
+  - fill-in
+  - dialogue
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a1-14 (Mine and Yours)
+- a1-15 (Around the City)

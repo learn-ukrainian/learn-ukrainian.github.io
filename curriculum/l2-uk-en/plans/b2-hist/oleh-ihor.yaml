@@ -1,0 +1,120 @@
+module: oleh-ihor
+level: b2-hist
+sequence: 9
+version: '1.0'
+title: 'Олег та Ігор: Перші правителі'
+focus: history
+pedagogy: CBI
+objectives:
+- Analyze the role of Varangians in state formation
+- Compare the policies of Oleh and Ihor
+- Evaluate the significance of Rus-Byzantine treaties
+content_outline:
+- section: 'Вступ: Варяги та Київ'
+  words: 750
+  subsections:
+  - Варязьке питання
+  - Інфраструктура ранньої держави
+  - Загадка походження Олега
+- section: 'Читання: Князь Олег: Об''єднання земель'
+  words: 350
+  subsections:
+  - Захоплення Києва (882)
+  - Матір міст руських
+  - Підкорення племен
+- section: Походи на Царгород і Договори
+  words: 400
+  subsections:
+  - Похід 907 року (легенда і реальність)
+  - 'Договір 911 року: Умови'
+  - Міжнародне визнання Русі
+- section: 'Князь Ігор: Криза експансії'
+  words: 500
+  subsections:
+  - Похід 941 (Грецький вогонь)
+  - Похід 944 (Компроміс)
+  - Повстання древлян (945)
+- section: Геоекономіка та Торгівля
+  words: 200
+  subsections:
+  - Шлях із варягів у греки
+  - Експорт (хутро, віск, раби)
+  - Імпорт (шовк, вино, золото)
+- section: Суспільство та Культура
+  words: 550
+  subsections:
+  - Повсякденне життя киян
+  - Релігійний світ (Перун vs Християнство)
+  - Статус жінки в ранній Русі
+- section: 'Первинні джерела: Голоси епохи'
+  words: 500
+  subsections:
+  - Уривки з договорів
+  - Літописна легенда про смерть Олега
+  - Лінгвістичний аналіз
+- section: Деколонізаційний погляд
+  words: 350
+  subsections:
+  - 'Норманська теорія: Український погляд'
+  - Руський vs Російський
+  - Тяглість державності
+- section: Спадщина
+  words: 100
+  subsections:
+  - Від військової демократії до держави
+  - Значення перших князів
+- section: Підсумок
+  words: 200
+  subsections:
+  - Заключне слово
+word_target: 4000
+vocabulary:
+- князь
+- варяги
+- дружина
+- данина
+- похід
+- договір
+- Візантія
+- літопис
+- об'єднання
+- підкорення
+- правитель
+- династія
+- регент
+- волхв
+- торговельні привілеї
+- легітимність
+- Щекавиця
+activities:
+- type: reading
+  focus: Excerpt from Primary Chronicle about Oleh's campaigns
+- type: match-up
+  focus: Chronology of Oleh's and Ihor's reigns
+  items: 10+ events
+- type: fill-in
+  focus: Political and military terminology
+  items: 15+
+- type: quiz
+  focus: Geography of Campaigns and Expansion
+  items: 6+
+- type: quiz
+  focus: Facts about early Rus rulers
+  items: 12+
+- type: comparative-study
+  focus: Oleh vs Ihor — leadership styles and achievements
+- type: essay-response
+  focus: Чи можна вважати Олега засновником Київської Русі?
+sources:
+- name: Олег (князь київський) (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Олег_(князь_київський)
+  type: reference
+  notes: Overview of Prince Oleh
+- name: Ігор Рюрикович (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Ігор_Рюрикович
+  type: reference
+  notes: Overview of Prince Ihor
+- name: Повість минулих літ
+  url: https://litopys.org.ua/pvl/pvl.htm
+  type: primary
+  notes: Chronicle accounts of early rulers

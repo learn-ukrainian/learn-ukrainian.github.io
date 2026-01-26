@@ -1,0 +1,107 @@
+module: 12-the-ballads
+level: lit
+sequence: 12
+version: '1.0'
+title: 'Балади: Між Світами'
+subtitle: 'LIT-012: Містика і Метаморфози у Раннього Шевченка'
+focus: literature
+pedagogy: seminar
+objectives:
+- Analyze the genre of Romantic Ballad
+- Explore the "Metamorphosis" motif
+- Compare "Priichynna" and "Topolya"
+sources:
+  primary:
+  - url: https://www.ukrlib.com.ua/books/printit.php?tid=3
+    title: Причинна
+    notes: Балада для аналізу
+  - url: https://www.ukrlib.com.ua/books/printit.php?tid=4
+    title: Тополя
+    notes: Балада для аналізу
+  - url: https://www.ukrlib.com.ua/books/printit.php?tid=5
+    title: Утоплена
+    notes: Балада для аналізу
+  secondary:
+  - url: https://www.ukrlib.com.ua/books/printit.php?tid=1
+    title: Кобзар — повний текст
+    notes: Контекст ранньої поезії
+content_outline:
+- section: Вступ — Жанр романтичної балади
+  words: 500
+  subsections:
+  - Що таке балада (європейський контекст)
+  - Романтизм і фольклор
+  - Шевченко і народна традиція
+- section: '"Причинна" — божевілля і русалки'
+  words: 700
+  subsections:
+  - Сюжет і символіка
+  - Образ "причинної" (божевільної)
+  - Зустріч із потойбічним світом
+- section: '"Тополя" — метаморфоза'
+  words: 700
+  subsections:
+  - Міф про перетворення
+  - Дівчина-дерево як архетип
+  - Тема самотності та очікування
+- section: '"Утоплена" — темна казка'
+  words: 700
+  subsections:
+  - Матір-відьма і помста води
+  - Готичні елементи
+  - Жіноча доля у баладах
+- section: Народна демонологія
+  words: 600
+  subsections:
+  - Русалки, відьми, мавки
+  - Функція фантастичного
+  - Зв'язок з європейським романтизмом
+- section: Підсумок — Фатум і доля
+  words: 400
+  subsections:
+  - Концепція долі у раннього Шевченка
+  - Від балад до епосу
+  - Містика як шлях до реальності
+word_target: 4500
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - балада
+  - романтизм
+  - метаморфоза
+  - русалка
+  - фатум
+  - причинна
+  - потойбіччя
+  - демонологія
+  - архетип
+  - символіка
+  recommended:
+  - мавка
+  - відьма
+  - перетворення
+  - самотність
+  - готика
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - cloze
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: lit-11 (Young Shevchenko)
+  related:
+  - lit-13 (Haidamaky — від балади до епосу)
+  - lit-18 (Women in Kobzar — жіночі образи)
+constraints:
+  min_engagement_boxes: 3
+  min_examples: 15
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

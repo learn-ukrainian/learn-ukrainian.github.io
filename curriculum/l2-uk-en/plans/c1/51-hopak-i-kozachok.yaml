@@ -1,0 +1,22 @@
+module: 51-hopak-i-kozachok
+level: c1
+sequence: 51
+version: '2.0'
+title: 'Гопак і козачок: Танці волі та сили'
+subtitle: 'Hopak and Kozachok: Dances of Freedom and Power'
+focus: history
+pedagogy: CBI
+objectives:
+- Analyze the historical origins of Hopak as a martial art and a dance
+- Distinguish between the ritual, social, and stage versions of Ukrainian dances
+- Understand the cultural significance of the Kozachok and its regional variations
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

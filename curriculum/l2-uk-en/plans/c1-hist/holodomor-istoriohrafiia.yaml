@@ -1,0 +1,98 @@
+module: holodomor-istoriohrafiia
+level: c1-hist
+sequence: 45
+version: '1.0'
+title: 'Голодомор: Історіографія теми'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Як вивчають Голодомор
+  words: 400
+  subsections:
+  - Від замовчування до визнання
+  - Історіографія як предмет
+  - Чому важливо знати, хто писав
+  - Структура модуля
+- section: Радянське замовчування (1933-1991)
+  words: 600
+  subsections:
+  - Офіційна версія — «неврожай»
+  - Заборона згадувати
+  - Що знали на Заході
+  - Джонс vs. Дюранті — два журналісти
+- section: Діаспорні дослідження (1950-1980-ті)
+  words: 600
+  subsections:
+  - Збір свідчень — перші спроби
+  - Проблеми — відсутність архівів
+  - Політичний контекст Холодної війни
+  - Критика — упередженість?
+- section: Конквест і Мейс (1980-ті)
+  words: 700
+  subsections:
+  - «Harvest of Sorrow» (1986) — перший синтез
+  - Комісія Конгресу США (1988)
+  - Мейс — від дослідника до активіста
+  - Визнання геноцидом — початок
+- section: Пострадянські дослідження
+  words: 600
+  subsections:
+  - Відкриття архівів — нові документи
+  - Кульчицький — еволюція поглядів
+  - Українські інституції
+  - Дебати — геноцид vs. голод
+- section: Денаєрство та контр-наративи
+  words: 400
+  subsections:
+  - Російський офіційний наратив
+  - «Спільна трагедія» — що це означає
+  - Академічний скептицизм
+  - Як відповідати
+- section: Підсумок
+  words: 200
+  subsections:
+  - Стан поля сьогодні
+  - Відкриті питання
+  - Підготовка до наступних модулів
+word_target: 3500
+vocabulary:
+- Голодомор
+- історіографія
+- замовчування
+- визнання
+- геноцид
+- денаєрство
+- діаспора
+- архів
+- свідчення
+- дебати
+- неврожай
+- штучний голод
+- Холодна війна
+- ревізіонізм
+- апологетика
+activities:
+- type: comparative-study
+  focus: Compare Conquest, Mace, Kulchytsky interpretations
+- type: critical-analysis
+  focus: Evaluate one denial argument — how to counter?
+- type: essay-response
+  focus: Чому Голодомор так довго замовчувався?
+sources:
+- name: Голодомор (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Голодомор
+  type: reference
+  notes: Overview
+- name: Роберт Конквест
+  url: https://uk.wikipedia.org/wiki/Роберт_Конквест
+  type: reference
+  notes: «Harvest of Sorrow» author
+- name: Джеймс Мейс
+  url: https://uk.wikipedia.org/wiki/Мейс_Джеймс
+  type: reference
+  notes: US Commission researcher
+- name: Станіслав Кульчицький
+  url: https://uk.wikipedia.org/wiki/Кульчицький_Станіслав_Владиславович
+  type: reference
+  notes: Ukrainian scholar

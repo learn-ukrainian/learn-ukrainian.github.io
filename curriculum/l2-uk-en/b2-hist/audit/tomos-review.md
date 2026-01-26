@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M124 | **Phase:** B2.3d | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 20:23:06
+**Generated:** 2026-01-25 22:23:42
 
 ## Configuration
 **Type:** B2-history
@@ -54,7 +54,7 @@
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ❌ 1964/4000 (raw: 2187)
+- **Words:** ❌ 1737/4000 (raw: 1915)
 - **Activities:** ✅ 15/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 12/2 types
@@ -66,7 +66,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ⚠️ Too many activities: 15 (target 3-9)
-- **Immersion:** 🇺🇦 97.2% (target 90-100% (history))
+- **Immersion:** 🇺🇦 96.8% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -78,13 +78,13 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 13 | 3 | 100% | 24% | 23.8% |
+| primary_sources | 11 | 3 | 100% | 24% | 23.8% |
 | engagement | 6 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 3 | 4 | 75% | 10% | 7.1% |
-| visual | 7 | 4 | 100% | 10% | 9.5% |
-| variety | 0.97 | - | 97% | 5% | 4.6% |
+| visual | 5 | 4 | 100% | 10% | 9.5% |
+| variety | 0.98 | - | 98% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 10 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **97.5%** |
@@ -99,7 +99,6 @@
 | **Історичний наратив: Від анексії до свободи** | ⚪️ | 705 | Skipped |
 | **Первинні джерела** | ✅ | 132 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 110 | Included in Core |
-| **Есе** | ⚪️ | 227 | Skipped |
 | **Порівняльний аналіз** | ✅ | 109 | Included in Core |
 | **Підсумок** | ✅ | 59 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 64 | Skipped |

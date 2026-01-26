@@ -25,3 +25,32 @@ slug: 55-synonyms-emotion
 naturalness:
   score: 9
   status: PASS
+content_outline:
+- section: Вступ — Емоції та почуття
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Joy
+  words: 500
+  points:
+  - радість (joy - general)
+  - щастя (happiness - deeper)
+  - задоволення (satisfaction - from achievement)
+  - втіха (delight - often from children)
+  - насолода (pleasure - sensory)
+- section: Sadness
+  words: 500
+  points:
+  - сум (sadness - general)
+  - журба (melancholy - poetic)
+  - смуток (sorrow - deeper)
+  - горе (grief - intense)
+  - туга (longing - nostalgic)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

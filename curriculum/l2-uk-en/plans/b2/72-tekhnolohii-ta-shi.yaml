@@ -1,0 +1,22 @@
+module: 72-tekhnolohii-ta-shi
+level: b2
+sequence: 72
+version: '2.0'
+title: Технології та ШІ
+subtitle: Technology & AI
+focus: domain
+pedagogy: CBI
+objectives:
+- Використовувати IT-термінологію українською мовою
+- Обговорювати штучний інтелект та кіберзахист
+- Орієнтуватися в українській IT-галузі
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

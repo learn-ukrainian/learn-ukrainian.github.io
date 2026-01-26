@@ -1,0 +1,105 @@
+module: 20-register-medical-ukrainian
+level: b2
+sequence: 20
+version: '1.0'
+title: 'Медична українська: спілкування у сфері охорони здоров''я'
+focus: style
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Ukrainian State Standard 2024 - Medical Communication
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Healthcare communication standards
+- name: Медична термінологія
+  url: https://uk.wikipedia.org/wiki/Медична_термінологія
+  type: secondary
+  notes: Medical terminology in Ukrainian
+- name: CEFR B2 Domain-Specific Language
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 specialized vocabulary requirements
+content_outline:
+- section: Вступ — Медичний регістр
+  words: 400
+  points:
+  - Особливості медичної комунікації
+  - Різні ситуації (пацієнт, лікар, документи)
+  - Формальність у медичному контексті
+- section: Опис симптомів
+  words: 700
+  points:
+  - Частини тіла
+  - Типи болю та відчуттів
+  - Тривалість та інтенсивність
+  - Фрази для опису скарг
+- section: Діалог лікар-пацієнт
+  words: 700
+  points:
+  - Запитання лікаря
+  - Відповіді пацієнта
+  - Пояснення діагнозу
+  - Рекомендації та призначення
+- section: Медичні інструкції
+  words: 600
+  points:
+  - Прийом ліків
+  - Режим харчування
+  - Фізична активність
+  - Повторний візит
+- section: Медична документація
+  words: 600
+  points:
+  - Рецепт
+  - Довідка
+  - Направлення
+  - Виписка
+- section: Типові помилки та русизми
+  words: 500
+  points:
+  - Калькування медичних термінів
+  - Правильні українські еквіваленти
+  - Розмовні vs офіційні терміни
+  - Сучасна медична мова
+- section: Практика і підсумок
+  words: 300
+  points:
+  - Рольові діалоги
+  - Написання медичних документів
+  - Підготовка до модуля 21
+word_target: 3800
+vocabulary:
+  required:
+  - симптом (symptom)
+  - діагноз (diagnosis)
+  - рецепт (prescription)
+  - ліки (medicine)
+  - біль (pain)
+  - температура (temperature)
+  - тиск (pressure - blood pressure)
+  - огляд (examination)
+  - аналіз (test/analysis)
+  - лікування (treatment)
+  recommended:
+  - скарга (complaint)
+  - призначення (prescription/appointment)
+  - госпіталізація (hospitalization)
+  - одужання (recovery)
+  - профілактика (prevention)
+  forbidden: []
+activities:
+  types_required:
+  - error-correction
+  - reading
+  - quiz
+  - fill-in
+  - essay-response
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- 'b2-21 (Register: IT/Tech)'
+- b2-25 (B2.1b Checkpoint)
+- b2-82 (Professional Communication III)

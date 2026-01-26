@@ -1,0 +1,94 @@
+module: professional-document-types
+level: c2
+sequence: 51
+version: '2.0'
+title: Типи професійних документів
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: ДСТУ 4163:2020 — Оформлення документів
+  url: https://dnaop.com/
+  type: reference
+  notes: Ukrainian state standard for document formatting
+- name: Діловодство — практичний посібник
+  url: https://zakon.rada.gov.ua/
+  type: reference
+  notes: Guidelines for official document management
+- name: Зразки документів — урядовий портал
+  url: https://www.kmu.gov.ua/
+  type: reference
+  notes: Examples of official Ukrainian government documents
+content_outline:
+- section: Вступ — Класифікація професійних документів
+  words: 500
+  points:
+  - Основні категорії документів
+  - Функціональне призначення документів
+  - Універсальні vs. галузеві документи
+- section: Організаційно-розпорядчі документи
+  words: 700
+  points:
+  - Накази, розпорядження, постанови
+  - Положення, інструкції, правила
+  - Структура та обов'язкові реквізити
+- section: Інформаційно-довідкові документи
+  words: 700
+  points:
+  - Службові записки, доповідні записки
+  - Довідки, акти, протоколи
+  - Звіти та огляди
+- section: Особисті документи
+  words: 600
+  points:
+  - Заяви, клопотання, скарги
+  - Автобіографія, резюме, CV
+  - Характеристика, рекомендаційний лист
+- section: Договірні документи
+  words: 600
+  points:
+  - Договори, угоди, контракти
+  - Акти приймання-передачі
+  - Доручення та довіреності
+- section: Практичний аналіз зразків
+  words: 600
+  points:
+  - Аналіз реальних документів з різних категорій
+  - Ідентифікація структурних елементів
+  - Типові помилки та як їх уникати
+word_target: 4000
+vocabulary:
+  required:
+  - документ (document)
+  - реквізит (requisite/element)
+  - наказ (order)
+  - розпорядження (directive)
+  - протокол (minutes/protocol)
+  - довідка (certificate/reference)
+  - акт (act/certificate)
+  - договір (contract)
+  - доручення (power of attorney)
+  - заява (application/statement)
+  recommended:
+  - бланк (letterhead/form)
+  - гриф (stamp/classification)
+  - підпис (signature)
+  - печатка (seal)
+  - реєстрація (registration)
+  forbidden: []
+activities:
+  types_required:
+  - group-sort
+  - quiz
+  - fill-in
+  - match-up
+  - critical-analysis
+  - essay-response
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-52 (Writing Professional Documents I)
+- c2-53 (Writing Professional Documents II)
+- c2-56 (Professional Correspondence)

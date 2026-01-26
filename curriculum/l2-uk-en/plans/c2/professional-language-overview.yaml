@@ -1,0 +1,93 @@
+module: professional-language-overview
+level: c2
+sequence: 46
+version: '2.0'
+title: Огляд професійної мови
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Ukrainian State Standard 2024 — Professional Communication
+  url: https://mon.gov.ua/
+  type: reference
+  notes: C2 requirements for professional language competence across domains
+- name: Національна бібліотека України — фахова література
+  url: https://nbuv.gov.ua/
+  type: reference
+  notes: Examples of professional texts across multiple domains
+- name: Українська термінологія — термінологічний портал
+  url: https://term.namu.wiki/
+  type: reference
+  notes: Overview of Ukrainian terminology systems across fields
+content_outline:
+- section: Вступ — Що таке професійна мова?
+  words: 500
+  points:
+  - Визначення професійної комунікації
+  - Відмінність між загальною та фаховою мовою
+  - Універсальні принципи професійного спілкування
+- section: Структура професійних терміносистем
+  words: 700
+  points:
+  - Поняття терміна та термінології
+  - Способи творення термінів в українській мові
+  - Запозичення, калькування, власне українські терміни
+- section: Регістри професійної комунікації
+  words: 700
+  points:
+  - Усна vs. письмова професійна комунікація
+  - Формальні та напівформальні регістри
+  - Адаптація до авдиторії
+- section: Жанри професійних текстів
+  words: 700
+  points:
+  - Класифікація професійних документів
+  - Універсальні структурні елементи
+  - Жанрові очікування та конвенції
+- section: Стратегії опанування нової галузі
+  words: 600
+  points:
+  - Метанавички для будь-якої спеціалізації
+  - Самостійне навчання професійної лексики
+  - Ресурси та інструменти
+- section: Підготовка до Phase C2.3
+  words: 500
+  points:
+  - Огляд модулів 47-75
+  - Очікувані результати навчання
+  - План індивідуальної спеціалізації
+word_target: 4000
+vocabulary:
+  required:
+  - професійна мова (professional language)
+  - терміносистема (terminology system)
+  - фахова комунікація (professional communication)
+  - галузь (field/domain)
+  - спеціалізація (specialization)
+  - регістр (register)
+  - жанр (genre)
+  - конвенція (convention)
+  - метанавичка (meta-skill)
+  - самостійне навчання (self-directed learning)
+  recommended:
+  - кодифікація (codification)
+  - стандартизація (standardization)
+  - міжгалузевий (cross-domain)
+  - універсальний (universal)
+  - трансферний (transferable)
+  forbidden: []
+activities:
+  types_required:
+  - group-sort
+  - quiz
+  - match-up
+  - critical-analysis
+  - essay-response
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-47 (Terminology Acquisition I)
+- c2-51 (Professional Document Types)
+- c2-60 (Building Domain Expertise)

@@ -1,0 +1,105 @@
+module: 06-kvitka-bio
+level: lit
+sequence: 6
+version: '1.0'
+title: 'Батько Прози: Квітка-Основ''яненко'
+subtitle: 'LIT-006: Слобожанський контекст'
+focus: literature
+pedagogy: seminar
+objectives:
+- Outline Kvitka's biography
+- Compare his two literary styles
+- Analyze his role in Kharkiv culture
+sources:
+  primary:
+  - url: https://www.ukrlib.com.ua/bio/printit.php?tid=1646
+    title: Григорій Квітка-Основ'яненко — біографія
+    notes: Офіційна біографія на UkrLib
+  secondary:
+  - url: https://www.ukrlib.com.ua/books/printit.php?tid=252
+    title: Маруся — повний текст
+    notes: Для контексту творчості
+  - url: https://uk.wikipedia.org/wiki/Слобожанщина
+    title: Слобожанщина — історія
+    notes: Регіональний контекст
+content_outline:
+- section: Вступ — Хто такий "батько української прози"?
+  words: 500
+  subsections:
+  - Роль Квітки у становленні прозової традиції
+  - Перехід від бурлеску до сентименталізму
+  - Зв'язок з Котляревським і Шевченком
+- section: Біографія — від сліпоти до театру
+  words: 800
+  subsections:
+  - Дитинство та сліпота (1778-1793)
+  - Монастирський період
+  - Заснування театру в Харкові
+  - Інститут шляхетних дівчат
+- section: Слобожанщина як культурний простір
+  words: 700
+  subsections:
+  - Географія та історія регіону
+  - Харків як культурна столиця
+  - Місцева еліта і просвітництво
+- section: Псевдонім "Грицько Основ'яненко"
+  words: 600
+  subsections:
+  - Чому дворянин писав під псевдонімом
+  - '"Грицько" — маска селянина-оповідача'
+  - Літературна гра з читачем
+- section: Два стилі — бурлеск і сентименталізм
+  words: 600
+  subsections:
+  - '"Конотопська відьма" vs "Маруся"'
+  - Сміх vs сльози
+  - Єдність авторського світогляду
+- section: Підсумок — Вплив на наступні покоління
+  words: 400
+  subsections:
+  - Квітка і Шевченко
+  - Квітка і Гоголь
+  - Значення для літературної мови
+word_target: 4500
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - проза
+  - сентименталізм
+  - псевдонім
+  - оповідач
+  - дворянин
+  - слобожанщина
+  - просвітництво
+  - театр
+  - сліпота
+  - монастир
+  recommended:
+  - маска
+  - літературна гра
+  - еліта
+  - губернія
+  - меценатство
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - cloze
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: lit-05 (Natalka Poltavka)
+  related:
+  - lit-07 (Marusya — головний твір)
+  - lit-08 (Konotop Witch — сатира)
+  - lit-10 (Language of Kvitka)
+constraints:
+  min_engagement_boxes: 3
+  min_examples: 15
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

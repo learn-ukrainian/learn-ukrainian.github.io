@@ -1,0 +1,80 @@
+module: what-time-is-it
+level: a1
+sequence: 23
+version: '2.0'
+title: What Time Is It?
+subtitle: Telling Time, Days, and Months
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can ask and tell the time
+- Learner can name all days of the week
+- Learner can name all months of the year
+- Learner can use time prepositions correctly
+content_outline:
+- section: 'Introduction: Time in Ukrainian'
+  words: 100
+  points:
+  - Asking and telling time
+  - Time is essential for daily life
+  - Scheduling and planning
+- section: Telling Time
+  words: 250
+  points:
+  - Котра година? (What time is it?)
+  - Перша/друга/третя година
+  - Half past, quarter to/past
+- section: Days of the Week
+  words: 200
+  points:
+  - понеділок, вівторок, середа
+  - четвер, п'ятниця, субота, неділя
+  - У понеділок (On Monday)
+- section: Months of the Year
+  words: 200
+  points:
+  - січень - грудень (January - December)
+  - У січні (In January)
+  - Seasons connection
+- section: Time Prepositions
+  words: 150
+  points:
+  - о + locative (at a time)
+  - до + genitive (until)
+  - після + genitive (after)
+- section: 'Practice: Scheduling'
+  words: 100
+  points:
+  - Make appointments
+  - Discuss schedules
+word_target: 1000
+vocabulary:
+  required:
+  - година (hour)
+  - хвилина (minute)
+  - день (day)
+  - тиждень (week)
+  - місяць (month)
+  - рік (year)
+  - ранок (morning)
+  - вечір (evening)
+  recommended:
+  - понеділок (Monday)
+  - січень (January)
+  - зараз (now)
+  - пізно (late)
+  - рано (early)
+  - о котрій (at what time)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - ordering
+  - matching
+  - dialogue
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a1-24 (Can, Must, Want - Modals)
+- a1-25 (My Daily Routine)

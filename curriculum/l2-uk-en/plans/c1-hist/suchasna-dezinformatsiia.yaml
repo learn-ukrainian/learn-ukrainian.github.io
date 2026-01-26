@@ -1,0 +1,98 @@
+module: suchasna-dezinformatsiia
+level: c1-hist
+sequence: 110
+version: '1.0'
+title: Сучасна російська дезінформація
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Війна без зброї
+  words: 400
+  subsections:
+  - Інформаційна війна — реальна війна
+  - Від пропаганди до дезінформації
+  - Цифрові інструменти
+  - Структура модуля
+- section: Інфраструктура
+  words: 700
+  subsections:
+  - RT і Sputnik — глобальна мережа
+  - Тролеферми — як працюють
+  - Боти — масштаб операцій
+  - Фінансування і координація
+- section: Методологія
+  words: 600
+  subsections:
+  - «Пожежний шланг брехні»
+  - Багато версій — жодної правди
+  - Емоції > факти
+  - Теорії змови
+- section: Наративи про Україну
+  words: 600
+  subsections:
+  - «Нацисти при владі»
+  - «Громадянська війна»
+  - «Захист російськомовних»
+  - MH17 — кейс-стаді
+- section: Цільові аудиторії
+  words: 500
+  subsections:
+  - Внутрішня — росіяни
+  - Зовнішня — Захід
+  - Українська — розкол
+  - Різні наративи для різних аудиторій
+- section: Після 24.02.2022
+  words: 400
+  subsections:
+  - Посилення чи ослаблення?
+  - Заборони RT у Європі
+  - Адаптація методів
+  - Нові платформи
+- section: Підсумок
+  words: 300
+  subsections:
+  - Дезінформація — зброя
+  - Як розпізнавати
+  - Перехід до західних медіа
+word_target: 3500
+vocabulary:
+- дезінформація
+- тролеферма
+- бот
+- фейк
+- наратив
+- теорія змови
+- інформаційна війна
+- пропаганда
+- маніпуляція
+- цільова аудиторія
+- «пожежний шланг брехні»
+- фактчекінг
+- верифікація
+- алгоритм
+- ехо-камера
+activities:
+- type: infrastructure-analysis
+  focus: Map Russian disinformation infrastructure
+- type: methodology-study
+  focus: «Firehose of falsehood» — how it works
+- type: case-study
+  focus: MH17 disinformation campaign analysis
+- type: detection-practice
+  focus: Identifying disinformation markers
+- type: essay-response
+  focus: Чому 'пожежний шланг брехні' ефективний?
+sources:
+- name: Російська дезінформація (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Російська_дезінформація
+  type: reference
+  notes: Disinformation overview
+- name: Russia Today (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Russia_Today
+  type: reference
+  notes: RT network
+- name: Тролі з Ольгіна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Агентство_інтернет-досліджень
+  type: reference
+  notes: Troll farms

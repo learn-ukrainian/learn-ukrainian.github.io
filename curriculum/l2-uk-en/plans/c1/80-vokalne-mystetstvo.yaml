@@ -1,0 +1,22 @@
+module: 80-vokalne-mystetstvo
+level: c1
+sequence: 80
+version: '2.0'
+title: Вокальне мистецтво
+subtitle: Vocal Art
+focus: fine-arts
+pedagogy: CBI
+objectives:
+- Learner explores the rich tradition of Ukrainian choral music.
+- Learner understands the genre of art song (romance) in Ukraine.
+- Learner can discuss contemporary vocal fusion projects.
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

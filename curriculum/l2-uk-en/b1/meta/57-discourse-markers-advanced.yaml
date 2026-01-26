@@ -1,25 +1,94 @@
 module: b1-57
-title: 'Дискурсивні маркери II: складна організація'
-subtitle: 'Discourse Markers II: Advanced Text Organization'
-version: '1.0'
-phase: B1.5 Vocabulary Expansion I
+id: b1-57
+slug: discourse-markers-advanced
+title: "Дискурсивні маркери II: складна організація"
+subtitle: "Discourse Markers II: Advanced Text Organization"
+version: '2.0'
+phase: "B1.5 [Vocabulary Expansion I]"
 focus: vocabulary
 pedagogy: PPP
+register: розмовний
 duration: 90
 transliteration: none
-grammar:
-- advanced discourse markers for text organization
-tags:
-- vocabulary
-- discourse-markers
-- text-organization
 objectives:
-- Learner can use 25 advanced discourse markers to organize complex arguments
-- Learner can sequence ideas using ordinal markers (по-перше, по-друге, нарешті)
-- Learner can express addition, contrast, and conclusion in academic writing
-vocabulary_count: 35
-vocab_count: 15
-slug: 57-discourse-markers-advanced
+  - "Learner can use 25 advanced discourse markers to organize complex arguments"
+  - "Learner can sequence ideas using ordinal markers"
+  - "Learner can express addition, contrast, and conclusion in academic writing"
+  - "Learner can structure extended discourse effectively"
+grammar:
+  - "Advanced discourse markers for text organization"
+  - "Academic and formal connectors"
+  - "Structuring arguments and conclusions"
+word_target: 1200
+content_outline:
+  - section: "Introduction: Advanced Organization"
+    words: 150
+    points:
+      - "Beyond basic connectors"
+      - "Academic writing needs"
+      - "Complex argument structure"
+  - section: "Ordinal and Sequence Markers"
+    words: 250
+    points:
+      - "по-перше, по-друге, нарешті"
+      - "спершу, далі, насамкінець"
+      - "Structuring lists and arguments"
+  - section: "Emphasis and Focus"
+    words: 200
+    points:
+      - "особливо, головне, передусім"
+      - "варто зазначити"
+      - "Highlighting key points"
+  - section: "Summarizing and Concluding"
+    words: 250
+    points:
+      - "отже, таким чином, підсумовуючи"
+      - "на завершення, загалом"
+      - "Wrapping up arguments"
+  - section: "Academic Connectors"
+    words: 250
+    points:
+      - "з одного боку... з іншого боку"
+      - "у зв'язку з цим"
+      - "Formal writing conventions"
+  - section: "Practice: Extended Discourse"
+    words: 100
+    points:
+      - "Structure complex texts"
+      - "Use advanced markers"
+vocabulary_hints:
+  required:
+    - по-перше (firstly)
+    - по-друге (secondly)
+    - нарешті (finally)
+    - підсумовуючи (summarizing)
+    - таким чином (thus)
+    - особливо (especially)
+    - передусім (above all)
+    - загалом (in general)
+  recommended:
+    - насамкінець (in conclusion)
+    - головне (the main thing)
+    - з одного боку (on one hand)
+    - з іншого боку (on the other hand)
+activity_hints:
+  - type: organization
+    focus: "Structure arguments with markers"
+    items: 20
+  - type: fill-in
+    focus: "Complete academic texts"
+    items: 20
+  - type: writing
+    focus: "Write structured essays"
+    items: 15
+  - type: transformation
+    focus: "Improve text organization"
+    items: 15
+prerequisites:
+  - b1-56 (Discourse Markers Basic)
+connects_to:
+  - b1-58 (Describing Changes)
 naturalness:
   score: 9
   status: PASS
+  justification: "Advanced text organization skills"

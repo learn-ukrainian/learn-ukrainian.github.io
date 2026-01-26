@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M50 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 3000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:23:01
+**Generated:** 2026-01-25 22:22:55
 
 ## Configuration
 **Type:** B2-synthesis
@@ -48,7 +48,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 3559/3000 (raw: 3720)
+- **Words:** ✅ 3028/3000 (raw: 3187)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 10/4 types
@@ -60,7 +60,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.3% (target 90-100% (synthesis))
+- **Immersion:** 🇺🇦 98.1% (target 90-100% (synthesis))
 - **Richness:** ✅ 95% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -72,15 +72,15 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 9 | 3 | 100% | 24% | 23.8% |
+| primary_sources | 8 | 3 | 100% | 24% | 23.8% |
 | engagement | 5 | 6 | 83% | 14% | 11.9% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 3 | 4 | 75% | 10% | 7.1% |
-| visual | 6 | 4 | 100% | 10% | 9.5% |
-| variety | 0.97 | - | 97% | 5% | 4.6% |
+| visual | 5 | 4 | 100% | 10% | 9.5% |
+| variety | 0.96 | - | 96% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 19 | 3 | 100% | 5% | 4.8% |
+| questions | 16 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **95.0%** |
 
 ## Section Audit
@@ -95,6 +95,5 @@
 | **Читання: Узагальнюючий огляд доби** | ✅ | 242 | Included in Core |
 | **Первинні джерела: Голоси фундаторів** | ✅ | 308 | Included in Core |
 | **Деколонізаційний погляд: Козацька правда** | ✅ | 409 | Included in Core |
-| **Есе** | ⚪️ | 531 | Skipped |
 | **Підсумок** | ✅ | 103 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 130 | Skipped |

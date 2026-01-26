@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M48 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:22:21
+**Generated:** 2026-01-25 22:22:54
 
 ## Configuration
 **Type:** B2-history
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4438/4000 (raw: 4665)
+- **Words:** ⚠️ 3904/4000 (raw: 4129) (96 short)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/2 types
@@ -47,7 +47,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
-- **Immersion:** 🇺🇦 98.9% (target 90-100% (history))
+- **Immersion:** 🇺🇦 98.8% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -59,15 +59,15 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 9 | 3 | 100% | 24% | 23.8% |
+| primary_sources | 8 | 3 | 100% | 24% | 23.8% |
 | engagement | 5 | 6 | 83% | 14% | 11.9% |
-| timeline_markers | 13 | 10 | 100% | 14% | 14.3% |
+| timeline_markers | 12 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 4 | 4 | 100% | 10% | 9.5% |
-| visual | 6 | 4 | 100% | 10% | 9.5% |
+| visual | 5 | 4 | 100% | 10% | 9.5% |
 | variety | 0.99 | - | 99% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 13 | 3 | 100% | 5% | 4.8% |
+| questions | 10 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **97.5%** |
 
 ## Section Audit
@@ -83,6 +83,5 @@
 | **Читання: Опис козацького вишколу** | ✅ | 242 | Included in Core |
 | **Первинні джерела: Голоси епохи** | ✅ | 295 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 434 | Included in Core |
-| **Есе** | ⚪️ | 534 | Skipped |
 | **Підсумок** | ✅ | 115 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 121 | Skipped |

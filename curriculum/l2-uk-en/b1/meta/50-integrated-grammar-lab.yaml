@@ -1,28 +1,94 @@
 module: b1-50
-title: Інтегрована граматична лабораторія
-subtitle: Integrated Grammar Lab - B1.4 Synthesis
-version: '1.0'
-phase: B1.4 Advanced Grammar
-pedagogy: TTT
+id: b1-50
+slug: integrated-grammar-lab
+title: "Інтегрована граматична лабораторія"
+subtitle: "Integrated Grammar Lab - B1.4 Synthesis"
+version: '2.0'
+phase: "B1.4b [Advanced Grammar Synthesis]"
 focus: grammar
+pedagogy: TTT
+register: розмовний
 duration: 90
 transliteration: none
-tags:
-- grammar
-- integration
-- synthesis
-- practice
-grammar:
-- 'Синтез: дієприкметники + пасив + демінутиви + числівники'
-- Стилістична гнучкість
-- Перемикання регістрів
 objectives:
-- Учень може комбінувати граматичні конструкції B1.4 у зв'язних текстах
-- Учень розрізняє стилі та регістри мовлення
-- Учень може редагувати тексти для відповідного стилю
-vocabulary_count: 35
-vocab_count: 43
-slug: 50-integrated-grammar-lab
+  - "Learner can combine B1.4 grammar constructions in coherent texts"
+  - "Learner can distinguish between styles and registers"
+  - "Learner can edit texts for appropriate style"
+  - "Learner can flexibly switch between constructions"
+grammar:
+  - "Синтез: дієприкметники + пасив + демінутиви + числівники"
+  - "Стилістична гнучкість (stylistic flexibility)"
+  - "Перемикання регістрів (register switching)"
+word_target: 1200
+content_outline:
+  - section: "Introduction: Synthesis Goals"
+    words: 150
+    points:
+      - "Why integration matters"
+      - "Beyond isolated grammar"
+      - "Real-world text production"
+  - section: "Combining Participles and Passive"
+    words: 250
+    points:
+      - "Adverbial + passive in same sentence"
+      - "Stylistic effects"
+      - "Avoiding overuse"
+  - section: "Diminutives in Context"
+    words: 200
+    points:
+      - "Integration with other forms"
+      - "Register awareness"
+      - "Emotional tone management"
+  - section: "Numerals in Complex Sentences"
+    words: 200
+    points:
+      - "Fractions with passive constructions"
+      - "Collectives in formal vs informal"
+      - "Statistics and reports"
+  - section: "Text Editing Workshop"
+    words: 250
+    points:
+      - "Identify style inconsistencies"
+      - "Revise for target audience"
+      - "Apply grammar strategically"
+  - section: "Practice: Multi-Feature Texts"
+    words: 150
+    points:
+      - "Write integrated paragraphs"
+      - "Edit for style"
+vocabulary_hints:
+  required:
+    - інтеграція (integration)
+    - синтез (synthesis)
+    - стиль (style)
+    - регістр (register)
+    - редагування (editing)
+    - гнучкість (flexibility)
+    - перемикання (switching)
+    - зв'язність (coherence)
+  recommended:
+    - послідовність (consistency)
+    - доречність (appropriateness)
+    - текстотворення (text production)
+    - аудиторія (audience)
+activity_hints:
+  - type: text-editing
+    focus: "Revise texts for style"
+    items: 20
+  - type: writing
+    focus: "Create multi-feature paragraphs"
+    items: 15
+  - type: error-correction
+    focus: "Fix style inconsistencies"
+    items: 15
+  - type: multiple-choice
+    focus: "Choose appropriate form"
+    items: 20
+prerequisites:
+  - b1-49 (Numerals Collectives Fractions)
+connects_to:
+  - b1-51 (Checkpoint Advanced Grammar)
 naturalness:
   score: 9
   status: PASS
+  justification: "B1.4 grammar synthesis"

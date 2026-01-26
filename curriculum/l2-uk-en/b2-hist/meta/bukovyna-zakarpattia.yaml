@@ -28,6 +28,12 @@ content_outline:
   words: 349
 - section: Буковина
   words: 533
+- section: "Повсякденне життя: Мульткультурний Вавилон"
+  words: 250
+  points:
+    - "Chernivtsi as a multicultural hub"
+    - "Rural life in Zakarpattia"
+    - "Ethnic diversity and tolerance"
 - section: Закарпаття
   words: 747
 - section: Культурний опір та збереження ідентичності
@@ -38,8 +44,6 @@ content_outline:
   words: 364
 - section: Деколонізаційний погляд
   words: 390
-- section: Есе
-  words: 478
 - section: Потрібно більше практики?
   words: 107
 naturalness:

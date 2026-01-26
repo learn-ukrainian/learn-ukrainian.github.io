@@ -1,29 +1,97 @@
 module: a1-12
-title: 'The Accusative II: People'
-subtitle: Animate Nouns and the Genitive Connection
-version: '1.0'
-phase: A1.2
-pedagogy: PPP
+id: a1-12
+slug: the-accusative-ii-people
+title: "The Accusative II: People"
+subtitle: "Animate Nouns and the Genitive Connection"
+version: '2.0'
+phase: "A1.2 [Navigation]"
 focus: grammar
-duration: 60 min
+pedagogy: PPP
+register: розмовний
+duration: 60
 transliteration: none
-phonetics: ipa
-tags:
-  - accusative
-  - cases
-  - animate
-  - people
-  - grammar
-grammar:
-  - accusative-animate
-  - genitive-accusative-connection
 objectives:
-  - Learner can use accusative case for animate nouns (people/animals)
-  - Learner can distinguish between animate and inanimate accusative
-  - Learner can identify when accusative = genitive
-vocabulary_count: 20
-vocab_count: 45
-slug: 12-the-accusative-ii-people
+  - "Learner can use accusative case for animate nouns (people/animals)"
+  - "Learner can distinguish between animate and inanimate accusative"
+  - "Learner understands when accusative = genitive"
+  - "Learner can talk about people as direct objects"
+grammar:
+  - "Accusative for animate nouns"
+  - "Masculine animate: accusative = genitive"
+  - "Feminine animate: same as inanimate"
+word_target: 1000
+content_outline:
+  - section: "Introduction: People Are Different"
+    words: 150
+    points:
+      - "Animate vs inanimate distinction"
+      - "Masculine animate nouns change"
+      - "Why this matters"
+  - section: "Masculine Animate Accusative"
+    words: 250
+    points:
+      - "Accusative = Genitive form"
+      - "брат → брата, студент → студента"
+      - "Я бачу брата (not брат)"
+  - section: "Feminine Animate: No Change"
+    words: 150
+    points:
+      - "Same as inanimate feminine"
+      - "сестра → сестру"
+      - "Я бачу сестру"
+  - section: "Animals Count as Animate"
+    words: 150
+    points:
+      - "кіт → кота, пес → пса"
+      - "собака → собаку (feminine)"
+      - "Treating animals grammatically"
+  - section: "Verbs with People"
+    words: 200
+    points:
+      - "бачити, знати, любити + people"
+      - "питати, просити + people"
+      - "Sentence patterns"
+  - section: "Practice: Who Do You See?"
+    words: 100
+    points:
+      - "Describe family members"
+      - "Talk about friends and colleagues"
+vocabulary_hints:
+  required:
+    - брат (brother)
+    - сестра (sister)
+    - друг (friend m.)
+    - подруга (friend f.)
+    - мама (mother)
+    - тато (father)
+    - лікар (doctor)
+    - вчитель (teacher)
+  recommended:
+    - кіт (cat)
+    - пес (dog)
+    - студент (student)
+    - колега (colleague)
+    - сусід (neighbor)
+    - дитина (child)
+activity_hints:
+  - type: transformation
+    focus: "Change animate nouns to accusative"
+    items: 25
+  - type: sorting
+    focus: "Animate vs inanimate"
+    items: 20
+  - type: fill-in
+    focus: "Complete with correct accusative"
+    items: 20
+  - type: sentence-building
+    focus: "Sentences about people"
+    items: 12
+prerequisites:
+  - a1-11 (The Accusative I - Things)
+connects_to:
+  - a1-13 (The Locative)
+  - a1-32 (My Family)
 naturalness:
   score: 10
   status: PASS
+  justification: "Clear animate/inanimate distinction"

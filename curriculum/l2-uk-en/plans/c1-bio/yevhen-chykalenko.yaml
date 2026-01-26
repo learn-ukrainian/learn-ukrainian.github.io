@@ -1,0 +1,109 @@
+module: yevhen-chykalenko
+level: c1-bio
+sequence: 29
+version: '2.0'
+title: 'Євген Чикаленко: Меценат і видавець'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Чикаленко_Євген_Харлампійович
+    title: Євген Чикаленко (Wikipedia UA)
+    notes: Основна біографічна інформація
+  secondary:
+  - url: https://diasporiana.org.ua/
+    title: Щоденники Чикаленка
+    notes: Первинні джерела
+  - url: https://archives.gov.ua/
+    title: Газета Рада
+    notes: Видавнича діяльність
+content_outline:
+- section: Вступ — Людина, яка платила за Україну
+  words: 400
+  subsections:
+  - Чикаленко як найбільший меценат українського руху
+  - Від заможного землевласника до патріота-видавця
+  - Чому його роль недооцінена
+- section: Полтавщина та формування світогляду
+  words: 600
+  subsections:
+  - Народження в заможній родині (1861)
+  - Освіта та перші політичні погляди
+  - Вплив народницьких ідей
+- section: Господарська діяльність
+  words: 700
+  subsections:
+  - Успішне землеробство
+  - Економічна незалежність як основа діяльності
+  - Модернізація сільського господарства
+- section: Меценат і видавець
+  words: 800
+  subsections:
+  - Фінансування газети Рада
+  - Підтримка письменників та культурних ініціатив
+  - Видавничі проекти
+- section: Громадська діяльність
+  words: 700
+  subsections:
+  - Участь в українському русі
+  - Співпраця з Грушевським та іншими діячами
+  - Роль у Центральній Раді
+- section: Еміграція та щоденники
+  words: 600
+  subsections:
+  - Виїзд з України після революції
+  - Життя в еміграції
+  - Щоденники як історичне джерело
+- section: Дискусія — Роль меценатства в національному русі
+  words: 200
+  subsections:
+  - Гроші vs ідеї у визвольній боротьбі
+  - Чикаленко як модель для сучасності
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - меценат
+  - видавець
+  - землевласник
+  - газета
+  - філантропія
+  - фінансування
+  - національний рух
+  - щоденник
+  - еміграція
+  - спонсорство
+  recommended:
+  - просвітництво
+  - громадська діяльність
+  - культурне будівництво
+  - народництво
+  - благодійність
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-28-ivan-franko
+  related:
+  - c1-bio-35-mykhailo-hrushevskyi
+  - c1-bio-22-mykhailo-drahomanov
+  - c1-bio-30-borys-hrinchenko
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

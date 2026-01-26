@@ -1,27 +1,94 @@
 module: b1-27
-title: 'Підрядні означальні: де, куди, звідки'
-subtitle: Place Relative Clauses
-version: '1.0'
-phase: B1.3a Complex Sentences
-pedagogy: TTT
+id: b1-27
+slug: relative-clauses-de-kudy-zvidky
+title: "Підрядні означальні: де, куди, звідки"
+subtitle: "Place Relative Clauses"
+version: '2.0'
+phase: "B1.3a [Complex Sentences]"
 focus: grammar
+pedagogy: TTT
+register: розмовний
 duration: 90
 transliteration: none
-tags:
-- grammar
-- relative-clauses
-- complex-sentences
-- place-adverbs
-grammar:
-- Place relatives with де, куди, звідки
-- Distinction between static location and directional movement
 objectives:
-- Learner understands difference between де, куди, звідки
-- Learner can form relative clauses describing places
-- Learner can choose correct place relative for context
-vocabulary_count: 25
-vocab_count: 13
-slug: 27-relative-clauses-de-kudy-zvidky
+  - "Learner understands difference between де, куди, звідки"
+  - "Learner can form relative clauses describing places"
+  - "Learner can choose correct place relative for context"
+  - "Learner can combine location and direction in clauses"
+grammar:
+  - "Place relatives with де (where - location)"
+  - "Place relatives with куди (where - direction to)"
+  - "Place relatives with звідки (where - direction from)"
+word_target: 1200
+content_outline:
+  - section: "Introduction: Place Relatives"
+    words: 150
+    points:
+      - "Three types of place questions"
+      - "Static vs directional meaning"
+      - "When to use each form"
+  - section: "де - Static Location"
+    words: 250
+    points:
+      - "Describing where something is"
+      - "Місце, де... (the place where...)"
+      - "Common patterns"
+  - section: "куди - Direction To"
+    words: 250
+    points:
+      - "Describing destination"
+      - "Місце, куди... (the place to which...)"
+      - "Motion verb requirements"
+  - section: "звідки - Direction From"
+    words: 250
+    points:
+      - "Describing origin"
+      - "Місце, звідки... (the place from which...)"
+      - "Source and origin expressions"
+  - section: "Combining Place Relatives"
+    words: 200
+    points:
+      - "Complex place descriptions"
+      - "Multiple relative clauses"
+      - "Word order in place clauses"
+  - section: "Practice: Place Descriptions"
+    words: 100
+    points:
+      - "Describe locations with relatives"
+      - "Choose correct place word"
+vocabulary_hints:
+  required:
+    - де (where - location)
+    - куди (where - to)
+    - звідки (where - from)
+    - місце (place)
+    - напрямок (direction)
+    - розташування (location)
+    - походження (origin)
+    - рух (movement)
+  recommended:
+    - статичний (static)
+    - динамічний (dynamic)
+    - призначення (destination)
+    - джерело (source)
+activity_hints:
+  - type: fill-in
+    focus: "де/куди/звідки selection"
+    items: 25
+  - type: sentence-combining
+    focus: "Combine with place relatives"
+    items: 20
+  - type: matching
+    focus: "Match sentences to meanings"
+    items: 15
+  - type: translation
+    focus: "English to Ukrainian"
+    items: 15
+prerequisites:
+  - b1-26 (Relative Clauses який)
+connects_to:
+  - b1-28 (Relative Clauses коли/що)
 naturalness:
   score: 9
   status: PASS
+  justification: "Essential place clause structure"

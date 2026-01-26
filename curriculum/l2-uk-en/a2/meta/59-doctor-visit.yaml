@@ -1,29 +1,96 @@
 module: a2-59
-title: At the Doctor
-subtitle: Medical Consultation
-version: '1.0'
-phase: A2.3
+id: a2-59
+slug: doctor-visit
+title: "At the Doctor"
+subtitle: "Medical Consultation"
+version: '2.0'
+phase: "A2.6 [Practical]"
+focus: practical
 pedagogy: PPP
+register: розмовний
 duration: 60
 transliteration: none
-tags:
-- vocabulary
-- health
-- doctor
-- dialogue
-grammar:
-- medical history questions
-- describing pain intensity
-- understanding diagnosis
-- sick leave terminology
 objectives:
-- Learner can describe medical history
-- Learner can answer doctor's questions
-- Learner can understand diagnosis and advice
-- Learner can ask for sick leave
-vocabulary_count: 25
-slug: 59-doctor-visit
-focus: vocabulary
+  - "Learner can describe medical history"
+  - "Learner can answer doctor's questions"
+  - "Learner can understand diagnosis and advice"
+  - "Learner can ask for sick leave"
+grammar:
+  - "Medical history questions and answers"
+  - "Describing pain (intensity, location)"
+  - "Understanding medical advice"
+word_target: 1000
+content_outline:
+  - section: "Introduction: Healthcare in Ukraine"
+    words: 100
+    points:
+      - "Healthcare system basics"
+      - "Visiting a doctor"
+      - "Medical vocabulary overview"
+  - section: "Making an Appointment"
+    words: 150
+    points:
+      - "записатися до лікаря"
+      - "Clinic vs hospital"
+      - "Scheduling vocabulary"
+  - section: "Describing Symptoms"
+    words: 200
+    points:
+      - "У мене болить..."
+      - "Pain intensity and duration"
+      - "Common symptoms"
+  - section: "Doctor's Questions"
+    words: 200
+    points:
+      - "Medical history questions"
+      - "Allergies and medications"
+      - "Answering accurately"
+  - section: "Diagnosis and Advice"
+    words: 200
+    points:
+      - "діагноз, рецепт, лікування"
+      - "Understanding instructions"
+      - "Sick leave (лікарняний)"
+  - section: "Practice: Medical Dialogue"
+    words: 150
+    points:
+      - "Complete consultation"
+      - "Ask and answer questions"
+vocabulary_hints:
+  required:
+    - лікар (doctor)
+    - пацієнт (patient)
+    - болить (hurts)
+    - симптом (symptom)
+    - рецепт (prescription)
+    - ліки (medicine)
+    - лікарня (hospital)
+    - поліклініка (clinic)
+  recommended:
+    - діагноз (diagnosis)
+    - лікування (treatment)
+    - лікарняний (sick leave)
+    - алергія (allergy)
+    - температура (temperature)
+    - тиск (blood pressure)
+activity_hints:
+  - type: vocabulary-drill
+    focus: "Medical vocabulary"
+    items: 25
+  - type: dialogue
+    focus: "Doctor-patient conversation"
+    items: 12
+  - type: fill-in
+    focus: "Complete medical sentences"
+    items: 15
+  - type: role-play
+    focus: "Medical consultation"
+    items: 8
+prerequisites:
+  - a2-58 (Practical Warm-up)
+connects_to:
+  - a2-60 (At the Pharmacy)
 naturalness:
   score: 10
   status: PASS
+  justification: "Essential medical scenario"

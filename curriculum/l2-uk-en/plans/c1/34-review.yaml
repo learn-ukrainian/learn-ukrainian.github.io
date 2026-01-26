@@ -1,0 +1,98 @@
+module: 34-review
+level: c1
+sequence: 34
+version: '2.0'
+title: 'Огляд і повторення: Професійна комунікація'
+focus: review
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: CEFR C1 Assessment Criteria
+  url: https://www.coe.int/
+  type: reference
+  notes: C1 level review standards
+- name: Ukrainian State Standard C1 (2024)
+  url: https://mon.gov.ua/
+  type: reference
+  notes: National C1 competency requirements
+content_outline:
+- section: Огляд C1.2 — Підсумок
+  words: 500
+  points:
+  - Основні теми M21-M33
+  - Ключові компетенції
+  - Структура повторення
+- section: Професійна комунікація
+  words: 700
+  points:
+  - CV та супровідний лист
+  - Співбесіда та переговори
+  - Діловий етикет
+  - Цифрова комунікація
+- section: Політика та суспільство
+  words: 700
+  points:
+  - Політична система
+  - Медіаландшафт
+  - Міжнародні відносини
+- section: Соціолінгвістика
+  words: 700
+  points:
+  - Діалекти української
+  - Суржик
+  - Історія мови
+  - Діаспорна українська
+- section: Практичні навички
+  words: 600
+  points:
+  - Професійні сценарії
+  - Кейс-аналіз
+  - Критичне мислення
+- section: Вправи на повторення
+  words: 500
+  points:
+  - Комплексний тест
+  - Лексичний огляд
+  - Усна практика
+- section: Самооцінка
+  words: 300
+  points:
+  - Критерії C1.2
+  - Рубрика оцінювання
+  - Підготовка до контрольної
+word_target: 4000
+vocabulary:
+  required:
+  - повторення (review)
+  - узагальнення (generalization)
+  - консолідація (consolidation)
+  - закріплення (reinforcement)
+  - систематизація (systematization)
+  - огляд (overview)
+  - підсумок (summary)
+  - результат (result)
+  - прогрес (progress)
+  - досягнення (achievement)
+  recommended:
+  - компетенція (competency)
+  - критерій (criterion)
+  - рубрика (rubric)
+  - оцінювання (assessment)
+  - самооцінка (self-assessment)
+  forbidden: []
+activities:
+  types_required:
+  - group-sort
+  - quiz
+  - cloze
+  - fill-in
+  - error-correction
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c1-35 (C1.2 Checkpoint)
+- c1-36 (Metaphor & Simile - C1.3 start)
+- c1-55 (C1.3 Checkpoint)

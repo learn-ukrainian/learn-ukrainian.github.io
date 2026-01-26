@@ -1,23 +1,43 @@
 module: c1-82
-title: 'Образотворче мистецтво II'
-subtitle: 'Visual Arts II — From Socialist Realism to Present'
+title: Образотворче мистецтво II
+subtitle: Visual Arts II — From Socialist Realism to Present
 version: '2.0'
-phase: 'C1.5 Folk Culture & Fine Arts'
+phase: C1.5 Folk Culture & Fine Arts
 focus: fine-arts
-pedagogy: 'CBI'
+pedagogy: CBI
 duration: 120
 transliteration: none
 tags:
-  - arts
-  - visual-arts
-  - contemporary
-  - folk-art
+- arts
+- visual-arts
+- contemporary
+- folk-art
 grammar:
-  - 'Describing artistic style'
-  - 'Narrative of resistance'
+- Describing artistic style
+- Narrative of resistance
 objectives:
-  - 'Learner understands the impact of Soviet repression on Ukrainian art.'
-  - 'Learner can analyze the works of folk masters like Prymachenko and Bilokur.'
-  - 'Learner explores the contemporary art scene in Ukraine.'
+- Learner understands the impact of Soviet repression on Ukrainian art.
+- Learner can analyze the works of folk masters like Prymachenko and Bilokur.
+- Learner explores the contemporary art scene in Ukraine.
 vocabulary_count: 25
 slug: 82-obrazotvorche-mystetstvo-2
+content_outline:
+- section: Вступ — Образотворче мистецтво II
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Soviet repression: Бойчук (murdered), Соцреалізм — art under tyranny'
+  - 'Dissidents: **Алла Горська**, Стус (visual works) — art as resistance'
+  - 'Folk masters: **Марія Примаченко**, **Катерина Білокур** — naive art tradition'
+  - 'Contemporary: Пінзель revival, сучасне мистецтво — today''s vibrant scene'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

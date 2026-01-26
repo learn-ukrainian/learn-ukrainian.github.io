@@ -1,0 +1,107 @@
+module: rare-archaic-forms
+level: c2
+sequence: 77
+version: '2.0'
+title: Рідкісні та архаїчні форми
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Історична граматика української мови
+  url: https://inmo.org.ua/
+  type: primary
+  notes: Історичний розвиток граматичних форм
+- name: Словник української мови XVI—XVII ст.
+  url: https://lcorp.ulif.org.ua/
+  type: reference
+  notes: Історична лексика та форми
+- name: Церковнослов'янсько-український словник
+  url: https://uk.wikipedia.org/
+  type: reference
+  notes: Церковнослов'янізми в українській мові
+content_outline:
+- section: Вступ — Мовна археологія
+  words: 400
+  points:
+  - Що таке архаїзми та історизми
+  - Джерела архаїчних форм
+  - Функції архаїзмів у сучасній мові
+  - Контексти вживання
+- section: Архаїчні іменникові форми
+  words: 600
+  points:
+  - Давні відмінкові закінчення
+  - Двоїна та її залишки
+  - Кличний відмінок — повна система
+  - Варіантні закінчення
+- section: Архаїчні дієслівні форми
+  words: 700
+  points:
+  - Аорист та імперфект (у текстах)
+  - Давноминулий час
+  - Архаїчні форми наказового способу
+  - Церковнослов'янські дієслівні форми
+- section: Архаїчні займенники та прикметники
+  words: 600
+  points:
+  - Сей, той, оний — повні парадигми
+  - Стягнені форми прикметників
+  - Короткі прикметники
+  - Давні займенникові форми
+- section: Книжна та урочиста лексика
+  words: 600
+  points:
+  - Церковнослов'янізми в українській
+  - Книжні слова та вирази
+  - Урочиста лексика
+  - Поетизми
+- section: Архаїзми в сучасних контекстах
+  words: 600
+  points:
+  - Художня література
+  - Релігійні тексти
+  - Офіційно-урочистий стиль
+  - Стилізація та пародія
+- section: Практикум — Робота з архаїчними текстами
+  words: 500
+  points:
+  - Читання давніх текстів
+  - Ідентифікація архаїзмів
+  - Переклад на сучасну мову
+word_target: 4000
+vocabulary:
+  required:
+  - архаїзм (archaism)
+  - історизм (historicism)
+  - церковнослов'янізм (Church Slavonicism)
+  - двоїна (dual number)
+  - давноминулий час (pluperfect)
+  - поетизм (poeticism)
+  - книжний (bookish)
+  - урочистий (solemn)
+  - стилізація (stylization)
+  - рідкісний (rare)
+  recommended:
+  - аорист (aorist)
+  - імперфект (imperfect)
+  - стягнена форма (contracted form)
+  - лексичний (lexical)
+  - морфологічний (morphological)
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - group-sort
+  - quiz
+  - fill-in
+  - match-up
+  - critical-analysis
+  - essay-response
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-78 (Regional Varieties)
+- c2-79 (Sociolinguistic Mastery)
+- c2-81 (Native-Like Fluency)

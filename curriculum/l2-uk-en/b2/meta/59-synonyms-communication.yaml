@@ -27,3 +27,32 @@ slug: 59-synonyms-communication
 naturalness:
   score: 9
   status: PASS
+content_outline:
+- section: Вступ — Комунікація та Мовлення
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Say
+  words: 500
+  points:
+  - казати (say - neutral)
+  - говорити (speak/talk - general)
+  - розповідати (tell/narrate - story)
+  - повідомляти (inform - official)
+  - заявляти (declare - formal)
+- section: Ask
+  words: 500
+  points:
+  - питати (ask - general)
+  - запитувати (ask - formal)
+  - цікавитися (be interested/inquire)
+  - розпитувати (question - detailed)
+  - допитувати (interrogate - intense)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

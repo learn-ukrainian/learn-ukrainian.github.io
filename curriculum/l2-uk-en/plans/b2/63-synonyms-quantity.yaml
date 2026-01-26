@@ -1,0 +1,22 @@
+module: 63-synonyms-quantity
+level: b2
+sequence: 63
+version: '1.0'
+title: 'Синоніми: Кількість та Міра'
+subtitle: Synonyms - Quantity and Measure
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Учень може розрізняти відтінки значень синонімів на позначення великої та малої кількості
+- Учень вміє використовувати професійну лексику для опису обсягів та масштабів у звітах та статтях
+- Учень розуміє стилістичну різницю між розмовними та офіційними словами на позначення міри
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

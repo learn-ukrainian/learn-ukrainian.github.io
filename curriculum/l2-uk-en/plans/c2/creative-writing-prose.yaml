@@ -1,0 +1,103 @@
+module: creative-writing-prose
+level: c2
+sequence: 37
+version: '2.0'
+title: Творче письмо — проза
+focus: literature
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Майстерність прозаїка
+  url: https://uk.wikipedia.org/wiki/Проза
+  type: reference
+  notes: Prose writing craft
+- name: Сучасна українська проза
+  url: https://ukrlib.com.ua/
+  type: primary
+  notes: Contemporary Ukrainian prose examples
+- name: Творчі майстерні
+  url: https://uk.wikipedia.org/wiki/Творче_письмо
+  type: reference
+  notes: Creative writing workshop tradition
+content_outline:
+- section: Вступ — Проза як мистецтво
+  words: 500
+  points:
+  - Від споживача до творця прози
+  - Жанри малої прози
+  - Процес написання оповідання
+- section: Елементи оповідання
+  words: 700
+  points:
+  - Ідея і тема
+  - Персонажі та їх створення
+  - Сюжет і структура
+  - Конфлікт і напруга
+- section: Побудова світу і атмосфери
+  words: 600
+  points:
+  - Хронотоп у власній прозі
+  - Опис місця і часу
+  - Сенсорні деталі
+  - Атмосфера і настрій
+- section: Голос і точка зору
+  words: 700
+  points:
+  - Вибір наратора
+  - Перша vs. третя особа
+  - Фокалізація на практиці
+  - Консистентність голосу
+- section: Діалог і мовлення
+  words: 600
+  points:
+  - Написання природних діалогів
+  - Підтекст у діалозі
+  - Характеризація через мовлення
+  - Баланс діалогу і наративу
+- section: Редагування прози
+  words: 500
+  points:
+  - Структурне редагування
+  - Мовне шліфування
+  - Kill your darlings
+  - Підготовка до публікації
+- section: Підсумок
+  words: 400
+  points:
+  - Регулярна практика
+  - Від короткої форми до більшої
+  - Письменницька спільнота
+word_target: 4000
+vocabulary:
+  required:
+  - оповідання (short story)
+  - новела (novella)
+  - персонаж (character)
+  - сюжет (plot)
+  - конфлікт (conflict)
+  - діалог (dialogue)
+  - наратив (narrative)
+  - атмосфера (atmosphere)
+  - голос (voice)
+  - редагування (editing)
+  recommended:
+  - антагоніст (antagonist)
+  - протагоніст (protagonist)
+  - кульмінація (climax)
+  - зав'язка (exposition)
+  - флешбек (flashback)
+  forbidden: []
+activities:
+  types_required:
+  - essay-response
+  - authorial-intent
+  - comparative-study
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-38 (Contemporary Literature)
+- c2-43 (C2.2 Practice II — Creative Portfolio)
+- c2-45 (C2.2 Checkpoint)

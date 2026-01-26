@@ -1,0 +1,22 @@
+module: 60-synonyms-character
+level: b2
+sequence: 60
+version: '1.0'
+title: 'Синоніми: Характер та Особистість'
+subtitle: Synonyms - Character and Personality
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Учень може розрізняти відтінки значень між синонімами на позначення інтелекту та доброти
+- Учень вміє створювати детальні психологічні портрети, використовуючи лексику рівня B2
+- Учень розуміє концепцію 'вдачі' та 'натури' в українському культурному контексті
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

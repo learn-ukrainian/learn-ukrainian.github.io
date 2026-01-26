@@ -1,0 +1,22 @@
+module: 77-klasychna-muzyka-2-natsionalna-shkola
+level: c1
+sequence: 77
+version: '2.0'
+title: Класична музика II — Національна школа
+subtitle: Classical Music II — National School
+focus: fine-arts
+pedagogy: CBI
+objectives:
+- Learner understands the role of Mykola Lysenko in founding the national music school.
+- Learner can analyze the structure and global impact of "Shchedryk" by Leontovych.
+- Learner masters professional terminology related to composition and vocal art.
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

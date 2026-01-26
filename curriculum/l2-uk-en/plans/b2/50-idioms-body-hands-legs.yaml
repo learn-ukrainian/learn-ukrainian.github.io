@@ -1,0 +1,22 @@
+module: 50-idioms-body-hands-legs
+level: b2
+sequence: 50
+version: '1.0'
+title: 'Соматичні фразеологізми: Руки та ноги'
+subtitle: 'Somatic Idioms: Hands and Legs'
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Learner can recognize and interpret 8 core Ukrainian somatic idioms about hands and legs
+- Learner can use idioms appropriately in context to express actions, abilities, and obstacles
+- Learner understands the distinction between literal and figurative meanings
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

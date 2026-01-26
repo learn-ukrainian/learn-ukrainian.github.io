@@ -1,25 +1,99 @@
-title: 'Контрольна точка: Біографії'
-subtitle: 'Checkpoint: Biographies'
-version: '1.0'
-phase: 'C1-BIO Checkpoint'
+module: c1-bio-checkpoint
+id: c1-bio-checkpoint
+slug: c1-bio-checkpoint
+title: "Контрольна точка: Біографії"
+subtitle: "Checkpoint: Biographies"
+version: '2.0'
+phase: "C1-BIO Checkpoint"
 focus: checkpoint
-pedagogy: 'TTT'
+pedagogy: TTT
+register: академічний
 duration: 180
 transliteration: none
-tags:
-  - checkpoint
-  - integration
-  - biography
-grammar:
-  - "Integration of M01-M100"
-  - "Comprehensive C1-BIO review"
 objectives:
-  - "Продемонструвати володіння біографічною та історичною термінологією"
-  - "Інтегрувати знання про видатних постатей України від княжих часів до сьогодення"
-  - "Застосувати навички порівняльного аналізу історичних та сучасних контекстів"
-vocabulary_count: 55
-slug: c1-bio-checkpoint
+  - "Учень може продемонструвати володіння біографічною термінологією"
+  - "Учень може інтегрувати знання про видатних постатей України"
+  - "Учень може порівнювати внесок різних діячів у різні епохи"
+  - "Учень може аналізувати біографії в історичному контексті"
+grammar:
+  - "Інтеграція модулів M01-M100"
+  - "Біографічний наратив"
+  - "Порівняльні конструкції"
+word_target: 2000
+content_outline:
+  - section: "Частина 1: Середньовічні та ранньомодерні діячі"
+    words: 400
+    points:
+      - "Княжа доба: Володимир, Ярослав, Анна"
+      - "Козацька доба: Хмельницький, Мазепа, Орлик"
+      - "Порівняння політичних стратегій"
+  - section: "Частина 2: Будителі нації (XIX ст.)"
+    words: 400
+    points:
+      - "Шевченко, Франко, Леся Українка"
+      - "Драгоманов, Грушевський"
+      - "Роль інтелігенції у національному відродженні"
+  - section: "Частина 3: XX століття"
+    words: 400
+    points:
+      - "Революційні діячі: Петлюра, Винниченко"
+      - "Розстріляне відродження: Курбас, Хвильовий"
+      - "Дисиденти: Стус, Чорновіл"
+  - section: "Частина 4: Сучасні діячі"
+    words: 400
+    points:
+      - "Науковці та митці"
+      - "Громадські активісти"
+      - "Постаті незалежної України"
+  - section: "Частина 5: Інтеграційні завдання"
+    words: 200
+    points:
+      - "Порівняльний аналіз епох"
+      - "Есе: Наступність української ідентичності"
+  - section: "Частина 6: Підсумкова оцінка"
+    words: 200
+    points:
+      - "Комплексний тест"
+      - "Усна презентація"
+vocabulary_hints:
+  required:
+    - біографія (biography)
+    - діяч (figure/activist)
+    - внесок (contribution)
+    - спадщина (legacy)
+    - епоха (era)
+    - відродження (revival)
+    - інтелігенція (intelligentsia)
+    - наступність (continuity)
+  recommended:
+    - будитель (awakener)
+    - дисидент (dissident)
+    - мученик (martyr)
+    - візіонер (visionary)
+    - реформатор (reformer)
+    - патріот (patriot)
+activity_hints:
+  - type: quiz
+    focus: "Комплексний тест: 100 біографій"
+    items: 50
+  - type: match-up
+    focus: "Діяч → епоха → внесок"
+    items: 25
+  - type: timeline
+    focus: "Хронологія видатних постатей"
+    items: 20
+  - type: essay-response
+    focus: "Як різні покоління українських діячів формували національну ідентичність?"
+    word_target: 400
+  - type: oral-presentation
+    focus: "Порівняння двох діячів різних епох"
+    duration: 10
+prerequisites:
+  - c1-bio-100 (Останній біографічний модуль)
+connects_to:
+  - c1-hist (Історіографічний трек)
+  - c2 (Рівень C2)
 naturalness:
   score: 10
   status: PASS
-  checked: 2026-01-16
+  justification: "Академічний український для підсумкової оцінки"

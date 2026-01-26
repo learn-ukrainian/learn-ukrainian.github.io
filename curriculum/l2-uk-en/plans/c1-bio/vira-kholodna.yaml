@@ -1,0 +1,109 @@
+module: vira-kholodna
+level: c1-bio
+sequence: 62
+version: '2.0'
+title: 'Віра Холодна: Королева німого кіно'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Холодна_Віра_Василівна
+    title: Віра Холодна (Wikipedia UA)
+    notes: Основна біографічна інформація
+  secondary:
+  - url: https://kinokolo.ua/
+    title: Історія українського кіно
+    notes: Контекст раннього кінематографу
+  - url: https://www.imdb.com/
+    title: Фільмографія
+    notes: Список фільмів
+content_outline:
+- section: Вступ — Зірка, яка згасла зарано
+  words: 400
+  subsections:
+  - Холодна як перша справжня кінозірка
+  - Феномен популярності в епоху німого кіно
+  - Загадкова смерть у 25 років
+- section: Дитинство та юність
+  words: 600
+  subsections:
+  - Народження в Полтаві (1893)
+  - Переїзд до Москви
+  - Ранній інтерес до театру та балету
+- section: Шлях до екрану
+  words: 700
+  subsections:
+  - Перші ролі в кіно
+  - Співпраця з режисерами
+  - Формування екранного образу
+- section: Королева екрану
+  words: 800
+  subsections:
+  - Найпопулярніші фільми
+  - Феномен Віри Холодної
+  - Масова любов публіки
+- section: Мистецтво німого кіно
+  words: 700
+  subsections:
+  - Особливості акторської гри
+  - Вираження емоцій без слів
+  - Вплив на розвиток кінематографу
+- section: Трагічний фінал
+  words: 600
+  subsections:
+  - Революція та громадянська війна
+  - Перебування в Одесі
+  - Загадкова смерть (1919)
+- section: Дискусія — Легенда та реальність
+  words: 200
+  subsections:
+  - Версії про причини смерті
+  - Холодна в українській культурній памяті
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - німе кіно
+  - кінозірка
+  - екран
+  - роль
+  - режисер
+  - акторська гра
+  - популярність
+  - феномен
+  - легенда
+  - трагедія
+  recommended:
+  - мелодрама
+  - кінематограф
+  - кадр
+  - титри
+  - прем'єра
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: b2-hist-early-20th-century
+  related:
+  - c1-bio-57-les-kurbas
+  - c1-bio-67-serge-lifar
+  - c1-bio-26-mariya-zankovetska
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

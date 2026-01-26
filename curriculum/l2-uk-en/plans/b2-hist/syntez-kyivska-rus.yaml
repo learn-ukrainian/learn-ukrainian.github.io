@@ -1,0 +1,111 @@
+module: syntez-kyivska-rus
+level: b2-hist
+sequence: 20
+version: '1.0'
+title: 'Синтез: Київська Русь — спадщина'
+focus: history
+pedagogy: CBI
+objectives:
+- Summarize the political and cultural development of Kyivan Rus
+- Evaluate the legacy of Rus in modern Ukrainian identity
+- Critically analyze conflicting historical claims to the Rus heritage
+content_outline:
+- section: Вступ — Три століття Русі
+  words: 444
+  subsections:
+  - Огляд періоду 882-1240
+  - Від племен до держави, від єдності до роздроблення
+  - Головні теми модулів 09-19
+  - Мета синтезу — узагальнення та оцінка
+- section: Політичний розвиток
+  words: 666
+  subsections:
+  - Етапи державотворення
+  - Від Олега до Мономаха — піднесення
+  - Роздроблення — криза чи розвиток?
+  - Система влади — князь, віче, бояри
+- section: Культурні досягнення
+  words: 722
+  subsections:
+  - Софія Київська та архітектура
+  - Літописання та література
+  - Руська Правда та правова традиція
+  - Мистецтво та ремесла
+- section: Суспільство та економіка
+  words: 611
+  subsections:
+  - Соціальна структура
+  - Місто і село
+  - Торгівля — шлях «із варяг у греки«
+  - Рівень життя порівняно з Європою
+- section: Русь у Європі
+  words: 555
+  subsections:
+  - Міжнародні зв'язки
+  - Династичні шлюби
+  - Культурний обмін
+  - Русь очима сучасників
+- section: Спадщина Русі — хто спадкоємець?
+  words: 666
+  subsections:
+  - Український погляд — пряма спадкоємність
+  - Російські претензії — критичний аналіз
+  - Схема Грушевського vs імперська схема
+  - Русь як спільна спадщина?
+- section: Ключові терміни та дати
+  words: 336
+  subsections:
+  - Огляд термінології
+  - Найважливіші дати
+  - Ключові постаті
+  - Головні джерела
+  - Значення Київської Русі для України
+  - Що залишилося після монголів
+  - Перехід до монгольської навали
+word_target: 4000
+vocabulary:
+- спадщина
+- спадкоємець
+- державотворення
+- узагальнення
+- піднесення
+- занепад
+- культурний обмін
+- претензії
+- схема
+- джерело
+- імперська схема
+- пряма спадкоємність
+- Грушевський
+- деколонізація
+activities:
+- type: match-up
+  focus: Comprehensive Kyivan Rus timeline (Chronology)
+  items: 20+ key events
+- type: fill-in
+  focus: Review all Phase 2 terminology
+  items: 30+
+- type: comparative-study
+  focus: Ukrainian vs Russian views on Rus legacy
+- type: essay-response
+  focus: Чому Київська Русь важлива для української ідентичності?
+- type: quiz
+  focus: Comprehensive Phase 2 review
+  items: 25+
+- type: quiz
+  focus: Geography Review (Kyivan Rus at its peak vs fragmented)
+  items: 8+
+- type: group-sort
+  focus: Match achievements to rulers
+  items: 15+
+- type: essay-response
+  focus: Хто є справжнім спадкоємцем Київської Русі?
+sources:
+- name: Київська Русь (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Київська_Русь
+  type: reference
+  notes: Comprehensive overview for synthesis
+- name: Спадщина Київської Русі
+  url: https://uk.wikipedia.org/wiki/Спадщина_Київської_Русі
+  type: reference
+  notes: Legacy and claims

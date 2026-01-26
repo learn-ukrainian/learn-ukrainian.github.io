@@ -1,0 +1,79 @@
+module: emotions-personality
+level: a2
+sequence: 48
+version: '2.0'
+title: Emotions and Personality
+subtitle: Describing People
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can describe personality traits
+- Learner can describe emotional states
+- Learner can characterize people
+- Learner can express feelings
+content_outline:
+- section: 'Introduction: Describing People'
+  words: 100
+  points:
+  - Personality vocabulary
+  - Emotional intelligence
+  - Cultural expressions
+- section: Personality Traits
+  words: 200
+  points:
+  - 'Positive: добрий, щедрий, чесний'
+  - 'Negative: злий, скупий, брехливий'
+  - 'Neutral: спокійний, активний'
+- section: Emotional States
+  words: 200
+  points:
+  - радість, сум, злість, страх
+  - Мені сумно/весело/страшно
+  - Expressing how you feel
+- section: Characterizing People
+  words: 200
+  points:
+  - Він/вона... (He/she is...)
+  - Character descriptions
+  - First impressions
+- section: Reactions and Responses
+  words: 150
+  points:
+  - дивуватися, радіти, сумувати
+  - Emotional reactions
+  - Expressing sympathy
+- section: 'Practice: Describe Characters'
+  words: 150
+  points:
+  - Describe personality
+  - Express emotions
+word_target: 1000
+vocabulary:
+  required:
+  - добрий (kind)
+  - злий (angry/evil)
+  - щасливий (happy)
+  - сумний (sad)
+  - розумний (smart)
+  - веселий (cheerful)
+  - спокійний (calm)
+  - нервовий (nervous)
+  recommended:
+  - щедрий (generous)
+  - скупий (stingy)
+  - чесний (honest)
+  - лінивий (lazy)
+  - працьовитий (hardworking)
+  - терплячий (patient)
+  forbidden: []
+activities:
+  types_required:
+  - vocabulary-drill
+  - matching
+  - speaking
+  - fill-in
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a2-49 (Work and Professions)

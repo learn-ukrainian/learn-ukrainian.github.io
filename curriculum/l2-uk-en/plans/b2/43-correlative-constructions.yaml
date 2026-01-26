@@ -1,0 +1,23 @@
+module: 43-correlative-constructions
+level: b2
+sequence: 43
+version: '1.0'
+title: Співвідносні конструкції
+subtitle: Paired Demonstrative and Relative Words
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can construct complex sentences using correlative pairs
+- Learner can distinguish between different types of correlative constructions
+- Learner can correctly punctuate sentences with correlative words
+- Learner can combine simple sentences using appropriate correlative pairs
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

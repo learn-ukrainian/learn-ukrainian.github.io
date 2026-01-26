@@ -1,0 +1,90 @@
+# Level Plan: C1-BIO (Ukrainian Biographies Track)
+# Post-C1 specialization track
+
+level: c1-bio
+track: biography
+version: "1.0"
+
+overview:
+  total_modules: 130
+  description: "Comprehensive biographies of significant Ukrainians across all fields and eras"
+  prerequisites: [c1]
+  target_audience: "Advanced learners seeking deep knowledge of Ukrainian historical figures"
+
+# Primary source of truth
+sources:
+  primary: "Ukrainian Wikipedia, verified Ukrainian internet sources"
+  supplementary:
+    - "Academic biographical databases"
+    - "Museum and archive resources"
+    - "Contemporary interviews (for living figures)"
+  note: "All biographies from Ukrainian perspective, avoiding Russian imperial/Soviet distortions"
+
+# Vocabulary scope
+vocabulary:
+  cumulative_from: [a1, a2, b1, b2, c1]
+  new_words: 2000
+  focus_areas:
+    - "Biographical terminology (народження, смерть, освіта, кар'єра)"
+    - "Historical period vocabulary"
+    - "Domain-specific terms by field (politics, art, science, military)"
+    - "Honorifics and titles"
+
+# Thematic coverage
+thematic_areas:
+  - name: "Політики та державні діячі"
+    focus: "Leaders who shaped Ukrainian statehood"
+    examples: ["Bohdan Khmelnytsky", "Symon Petliura", "Viacheslav Chornovil"]
+
+  - name: "Письменники та поети"
+    focus: "Literary figures beyond LIT track"
+    examples: ["Lina Kostenko", "Serhiy Zhadan", "Oksana Zabuzhko"]
+
+  - name: "Вчені та винахідники"
+    focus: "Scientific achievements of Ukrainians"
+    examples: ["Serhiy Korolyov", "Volodymyr Vernadsky", "Ivan Puliui"]
+
+  - name: "Митці та музиканти"
+    focus: "Cultural contributions"
+    examples: ["Kazimir Malevich", "Solomiya Krushelnytska", "Maria Prymachenko"]
+
+  - name: "Військові діячі"
+    focus: "Defenders of Ukraine across eras"
+    examples: ["Ivan Sirko", "Roman Shukhevych", "Oleksandra Matviichuk"]
+
+  - name: "Релігійні діячі"
+    focus: "Spiritual leaders and their impact"
+    examples: ["Andrey Sheptytsky", "Josyf Slipyj", "Iov Boretskyi"]
+
+  - name: "Дисиденти та правозахисники"
+    focus: "Resistance to Soviet oppression"
+    examples: ["Vasyl Stus", "Levko Lukyanenko", "Alla Horska"]
+
+  - name: "Сучасні герої"
+    focus: "Contemporary figures and war heroes"
+    examples: ["Oleg Sentsov", "Oleksandra Matviichuk"]
+
+# Constraints for all modules
+constraints:
+  min_word_target: 3500
+  max_word_target: 4500
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0  # 100% Ukrainian
+  naturalness_threshold: 8
+  min_primary_sources: 2  # At least 2 verified Ukrainian sources
+
+# Pedagogical approach
+pedagogy_notes:
+  approach: "seminar"
+  structure:
+    - "Historical context of the era"
+    - "Early life and formation"
+    - "Key achievements and contributions"
+    - "Legacy and contemporary relevance"
+    - "Discussion questions (decolonization focus where applicable)"
+  decolonization:
+    - "Present Ukrainian figures in their own context, not as 'Russian' or 'Soviet'"
+    - "Highlight resistance to imperial oppression"
+    - "Correct Soviet-era distortions of biography"
+    - "Emphasize Ukrainian agency and contribution"

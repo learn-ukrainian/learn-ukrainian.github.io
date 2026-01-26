@@ -38,3 +38,18 @@ activity_types:
 naturalness:
   score: 9
   status: PASS
+content_outline:
+  - section: "Вступ: Між молотом і ковадлом"
+    words: 300
+  - section: "Читання: Епоха Данила Апостола"
+    words: 600
+  - section: "Економіка та суспільство: Стабільність і криза"
+    words: 600
+  - section: "Епоха Розумовського: Європейська мрія"
+    words: 800
+  - section: "Первинні джерела: Голоси епохи"
+    words: 500
+  - section: "Деколонізаційний погляд: Дві стратегії виживання"
+    words: 600
+  - section: "Підсумок: Захід сонця"
+    words: 200

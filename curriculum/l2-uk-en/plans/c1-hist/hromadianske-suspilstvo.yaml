@@ -1,0 +1,87 @@
+module: hromadianske-suspilstvo
+level: c1-hist
+sequence: 127
+version: '1.0'
+title: 'Громадянське суспільство: Держава без держави'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Самоорганізація
+  words: 451
+  subsections:
+  - Громадянське суспільство — що це
+  - Коли держава не працює
+  - Україна — особливий випадок
+  - Структура модуля
+- section: Історичні корені
+  words: 677
+  subsections:
+  - Козацьке самоврядування
+  - «Просвіта» і кооперативи
+  - Радянський період — знищення
+  - Відродження після 1991
+- section: Майдан як лабораторія
+  words: 790
+  subsections:
+  - 2004 — Помаранчева революція
+  - 2013-2014 — Євромайдан
+  - Самоорганізація — як працювала
+  - «Республіка Майдан»
+- section: Волонтерський рух
+  words: 677
+  subsections:
+  - 2014 — армія без держави
+  - Волонтери — хто вони
+  - Масштаб — мільйони
+  - Паралельні структури
+- section: Після 2022
+  words: 564
+  subsections:
+  - Миттєва мобілізація
+  - Територіальна оборона
+  - Гуманітарна допомога
+  - Держава + суспільство
+- section: Підсумок
+  words: 341
+  subsections:
+  - Громадянське суспільство — сила
+  - Коли держава слабка — суспільство сильне
+  - Перехід до Гранітної революції
+word_target: 3500
+vocabulary:
+- громадянське суспільство
+- самоорганізація
+- волонтер
+- самоврядування
+- Майдан
+- територіальна оборона
+- паралельні структури
+- мобілізація
+- солідарність
+- держава
+- краудфандинг
+- НГО
+- горизонтальні зв'язки
+- низова ініціатива
+- «Республіка Майдан»
+activities:
+- type: historical-roots
+  focus: Trace civil society from Cossacks to Maidan
+- type: self-organization
+  focus: How Euromaidan self-organized — case study
+- type: volunteer-movement
+  focus: 2014 volunteer army — how it worked
+- type: 2022-analysis
+  focus: Instant mobilization — why it worked
+- type: essay-response
+  focus: Чому українське громадянське суспільство сильніше за державу?
+sources:
+- name: Громадянське суспільство в Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Громадянське_суспільство_в_Україні
+  type: reference
+  notes: Civil society overview
+- name: Євромайдан (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Євромайдан
+  type: reference
+  notes: Euromaidan self-organization

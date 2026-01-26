@@ -1,11 +1,105 @@
-# Meta for Українська Гельсінська група
+module: b2-hist-116
+id: b2-hist-116
 slug: ukrainska-helsinska-hrupa
 title: "Українська Гельсінська група"
-level: B2
-track: history
+subtitle: "The Ukrainian Helsinki Group"
+version: '2.0'
 phase: "HIST.11 [Post-War Soviet Ukraine]"
-status: skeleton
 focus: history
+pedagogy: CBI
+register: публіцистичний
+duration: 120
+transliteration: none
+objectives:
+  - "Учень може описати створення та діяльність Української Гельсінської групи"
+  - "Учень може пояснити значення правозахисного руху"
+  - "Учень може проаналізувати долю членів групи"
+  - "Учень може оцінити вплив УГГ на здобуття незалежності"
+grammar:
+  - "Минулий час в історичному наративі"
+  - "Правозахисна лексика"
+  - "Складнопідрядні речення"
 word_target: 4000
-prerequisites: []
-learning_outcomes: []
+content_outline:
+  - section: "Вступ: Гельсінські угоди"
+    words: 400
+    points:
+      - "1975: Гельсінський акт"
+      - "Права людини як зброя"
+      - "Чому виникли Гельсінські групи"
+  - section: "Створення УГГ (1976)"
+    words: 800
+    points:
+      - "Засновники: Руденко, Тихий, Лук'яненко"
+      - "Меморандум групи"
+      - "Цілі та методи"
+      - "Зв'язок із шістдесятниками"
+  - section: "Діяльність та репресії"
+    words: 1000
+    points:
+      - "Документування порушень"
+      - "Арешти членів групи"
+      - "Табори та в'язниці"
+      - "Загибель Олекси Тихого та Василя Стуса"
+      - "Група в еміграції"
+  - section: "Первинні джерела"
+    words: 800
+    points:
+      - "Меморандум УГГ"
+      - "Документи групи"
+      - "Листи з таборів"
+  - section: "Деколонізаційний погляд"
+    words: 500
+    points:
+      - "Радянський наратив: «антирадянська діяльність»"
+      - "Реальність: мирна боротьба за права"
+      - "УГГ як передвісник незалежності"
+  - section: "Підсумок: Від УГГ до Руху"
+    words: 500
+    points:
+      - "Спадщина групи"
+      - "Члени УГГ в незалежній Україні"
+      - "Левко Лук'яненко та День Незалежності"
+vocabulary_hints:
+  required:
+    - правозахисний (human rights)
+    - група (group)
+    - дисидент (dissident)
+    - репресії (repressions)
+    - табір (camp)
+    - арешт (arrest)
+    - меморандум (memorandum)
+    - права людини (human rights)
+  recommended:
+    - політв'язень (political prisoner)
+    - Гельсінкі (Helsinki)
+    - документування (documentation)
+    - еміграція (emigration)
+    - реабілітація (rehabilitation)
+    - спадщина (legacy)
+activity_hints:
+  - type: reading
+    focus: "Меморандум УГГ"
+    source: "Архівні документи"
+    items: 4
+  - type: quiz
+    focus: "Українська Гельсінська група"
+    items: 15
+  - type: match-up
+    focus: "Член групи → доля"
+    items: 10
+  - type: fill-in
+    focus: "Правозахисна лексика"
+    items: 10
+  - type: essay-response
+    focus: "Яку роль відіграла УГГ у боротьбі за незалежність?"
+    word_target: 250
+prerequisites:
+  - b2-hist-115 (Шістдесятники)
+connects_to:
+  - b2-hist-117 (Чорнобиль)
+  - b2-hist-118 (Рух)
+naturalness:
+  score: 10
+  status: PASS
+  justification: "Академічний український для історії дисидентського руху"

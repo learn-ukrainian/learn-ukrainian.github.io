@@ -1,0 +1,99 @@
+module: svidchennia-holodomoru-ii
+level: c1-hist
+sequence: 37
+version: '1.0'
+title: 'Свідчення Голодомору II: Документи'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Документальні докази
+  words: 400
+  subsections:
+  - Від свідчень до документів
+  - Що збереглося в архівах
+  - Радянські документи — особливість
+  - Як читати бюрократичну мову
+- section: Типи документів
+  words: 500
+  subsections:
+  - Партійні постанови
+  - Чорні дошки — списки
+  - Телеграми
+  - Звіти ОГПУ
+  - Статистика смертей
+- section: Закон про п'ять колосків (7.08.1932)
+  words: 700
+  subsections:
+  - Повний текст (з глосами)
+  - Розстріл за крадіжку зерна
+  - Як застосовувався
+  - Мета — терор
+- section: Чорні дошки
+  words: 600
+  subsections:
+  - Що таке «чорна дошка»
+  - Документальні свідчення
+  - Приклад — постанова про село
+  - Наслідки для населення
+- section: Фрагмент — Телеграма про хлібозаготівлі
+  words: 500
+  subsections:
+  - Текст (з глосами)
+  - Бюрократична мова
+  - Цифри і реальність
+  - Що стоїть за документом
+- section: Критика джерела
+  words: 500
+  subsections:
+  - Радянські документи — що вони приховують
+  - Евфемізми
+  - Що не фіксувалося
+  - Порівняння з усними свідченнями
+- section: Підсумок
+  words: 300
+  subsections:
+  - Документ і свідчення — разом
+  - Доказова база геноциду
+  - Зв'язок із визнанням
+word_target: 3500
+vocabulary:
+- документ
+- постанова
+- чорна дошка
+- хлібозаготівлі
+- ОГПУ
+- телеграма
+- статистика
+- евфемізм
+- бюрократичний
+- доказ
+- квота
+- конфіскація
+- репресія
+- кордон
+- саботаж
+activities:
+- type: reading
+  focus: «Law of Five Ears» with glosses
+- type: critical-analysis
+  focus: Decode bureaucratic language in a telegram
+- type: comparative-study
+  focus: Document vs. oral testimony on same event
+- type: critical-analysis
+  focus: Build genocide evidence case from documents
+- type: essay-response
+  focus: Як радянські документи доводять намір знищити?
+sources:
+- name: Архівні документи Голодомору
+  url: https://cdiak.archives.gov.ua/
+  type: primary
+  notes: Central State Archive
+- name: Чорні дошки
+  url: https://uk.wikipedia.org/wiki/Чорні_дошки
+  type: reference
+  notes: Blacklists
+- name: Закон про п'ять колосків
+  url: https://uk.wikipedia.org/wiki/Закон_про_п'ять_колосків
+  type: reference
+  notes: August 7, 1932 law

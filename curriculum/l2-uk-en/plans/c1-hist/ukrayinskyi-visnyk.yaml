@@ -1,0 +1,99 @@
+module: ukrayinskyi-visnyk
+level: c1-hist
+sequence: 41
+version: '1.0'
+title: «Український вісник» Чорновола
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Хроніка опору
+  words: 400
+  subsections:
+  - Що таке «Український вісник»?
+  - Чорновіл — редактор
+  - Мета видання
+  - Значення для руху
+- section: В'ячеслав Чорновіл
+  words: 500
+  subsections:
+  - Біографія
+  - Журналіст стає дисидентом
+  - «Лихо з розуму» — перша праця
+  - Арешти і заслання
+- section: Історія видання
+  words: 600
+  subsections:
+  - Перший номер — 1970
+  - Шість номерів до арешту
+  - Відновлення — 1987
+  - Легалізація — Рух
+- section: Структура і зміст
+  words: 600
+  subsections:
+  - Хроніка репресій
+  - Документи
+  - Протести
+  - Літературні твори
+  - Статті про культуру
+- section: Фрагмент — Хроніка репресій
+  words: 700
+  subsections:
+  - Текст (з глосами)
+  - Стиль — документальний
+  - Факти без коментарів
+  - Сила простого свідчення
+- section: Значення для руху
+  words: 400
+  subsections:
+  - Інформування — хто знає, може діяти
+  - Зв'язок із Заходом
+  - Моральна підтримка
+  - Зразок для інших
+- section: Підсумок
+  words: 300
+  subsections:
+  - «Вісник» як модель
+  - Чорновіл — символ
+  - Зв'язок із незалежністю
+word_target: 3500
+vocabulary:
+- вісник
+- хроніка
+- редактор
+- репресія
+- документ
+- протест
+- дисидент
+- арешт
+- заслання
+- рух
+- публіцистика
+- свідчення
+- петиція
+- правозахисний
+- легалізація
+activities:
+- type: reading
+  focus: Repression chronicle excerpt
+- type: journalism-analysis
+  focus: How does Chornovil document without editorializing?
+- type: comparative-study
+  focus: Compare "Visnyk" with Russian "Хроника текущих событий"
+- type: impact-assessment
+  focus: How did the publication affect the movement?
+- type: essay-response
+  focus: Яку роль відіграв 'Український вісник' у дисидентському русі?
+sources:
+- name: Український вісник (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Український_вісник_(самвидав)
+  type: reference
+  notes: Publication overview
+- name: В'ячеслав Чорновіл
+  url: https://uk.wikipedia.org/wiki/Чорновіл_В'ячеслав_Максимович
+  type: reference
+  notes: Editor biography
+- name: Архів Чорновола
+  url: https://khpg.org/
+  type: primary
+  notes: Kharkiv Human Rights Group archive

@@ -1,0 +1,90 @@
+module: c2-3-midpoint-checkpoint
+level: c2
+sequence: 55
+version: '2.0'
+title: Контрольна точка C2.3 — Середина фази
+focus: checkpoint
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Ukrainian State Standard 2024 — Professional C2
+  url: https://mon.gov.ua/
+  type: reference
+  notes: C2 professional communication requirements
+- name: CEFR C2 Professional Competence
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: C2 can-do statements for professional contexts
+- name: Національна рамка кваліфікацій України
+  url: https://zakon.rada.gov.ua/
+  type: reference
+  notes: Ukrainian qualifications framework for professional skills
+content_outline:
+- section: Вступ — Структура контрольної оцінки
+  words: 300
+  points:
+  - Огляд компетенцій М46-54
+  - Формат та критерії оцінювання
+  - Зв'язок з подальшими модулями
+- section: Частина I — Термінологічні компетенції (М47-48)
+  words: 700
+  points:
+  - Словотворчі моделі в термінології
+  - Побудова та використання глосаріїв
+  - Контекстуальна інференція
+- section: Частина II — Читання фахових текстів (М49-50)
+  words: 700
+  points:
+  - Стратегії читання (skimming, scanning)
+  - Критичний аналіз джерел
+  - Синтез інформації
+- section: Частина III — Типи документів та письмо (М51-53)
+  words: 700
+  points:
+  - Класифікація професійних документів
+  - Написання звітів та рефератів
+  - Пропозиції та презентації
+- section: Частина IV — Усна комунікація (М54)
+  words: 600
+  points:
+  - Професійна презентація
+  - Участь у нарадах
+  - Конференційна комунікація
+- section: Підсумок та рекомендації
+  words: 400
+  points:
+  - Загальна оцінка професійних компетенцій
+  - Виявлення прогалин
+  - Підготовка до М56-75
+word_target: 4000
+vocabulary:
+  required:
+  - контрольна точка (checkpoint)
+  - оцінювання (assessment)
+  - компетенція (competency)
+  - критерій (criterion)
+  - прогалина (gap)
+  - рубрика (rubric)
+  - стандарт (standard)
+  - рівень володіння (proficiency level)
+  - діагностика (diagnostics)
+  - рекомендація (recommendation)
+  recommended:
+  - проміжний (intermediate/midpoint)
+  - формативний (formative)
+  - валідація (validation)
+  - індикатор (indicator)
+  - траєкторія (trajectory)
+  forbidden: []
+activities:
+  types_required:
+  - essay-response
+  - quiz
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-56 (Professional Correspondence — continues C2.3)
+- c2-75 (C2.3 Complete Checkpoint — end of phase)

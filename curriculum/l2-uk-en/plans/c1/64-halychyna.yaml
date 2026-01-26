@@ -1,0 +1,22 @@
+module: 64-halychyna
+level: c1
+sequence: 64
+version: '2.0'
+title: Галичина
+subtitle: Galician Folk Traditions
+focus: culture
+pedagogy: Immersion & Analysis
+objectives:
+- Learner can identify the unique cultural markers of the Halychyna region
+- Learner understands the historical and religious factors shaping Galician identity
+- Learner can use specific Galician vocabulary in appropriate contexts
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

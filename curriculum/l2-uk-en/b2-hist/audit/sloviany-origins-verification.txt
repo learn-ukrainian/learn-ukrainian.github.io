@@ -1,0 +1,54 @@
+
+========================================
+  📋 Loaded Metadata from YAML sidecar
+
+📋 Auditing: B2 M04 — Слов
+   File: curriculum/l2-uk-en/b2-hist/sloviany-origins.md | Target: 4000 words
+  📋 Required activity types from meta: comparative-study, critical-analysis, essay-response, reading
+  📋 Template: docs/l2-uk-en/templates/b2-history-module-template.md (pedagogy: CBI)
+
+  ⚠️ HYDRATION NOTE: Outline sums to 4500, exceeding word_target 4000
+     Additional 500 words (allowed for content depth)
+
+  📊 Section Word Analysis:
+     Вступ                     553 /  500  ✅ (+53)
+     Читання                  2865 / 2800  ✅ (+65)
+     Первинні джерела          443 /  400  ✅ (+43)
+     Деколонізаційний погляд   523 /  500  ✅ (+23)
+     Підсумок                  298 /  300  ✅ (-2)
+     ────────────────────────────────────────────────
+     TOTAL                    4682 / 4500  ✅ (+182)
+
+📋 Auditing: B2 M04 — Слов
+   File: curriculum/l2-uk-en/b2-hist/sloviany-origins.md | Target: 4000 words
+
+  📋 Found YAML activities file (6 activities)
+  > Анти: Перші українці?: 3 items (min 1)
+  > Аналіз антського суспільства: 1 items (min 1)
+  > Слов'янські боги: 3 items (min 1)
+  > Аналіз язичницького світогляду: 1 items (min 1)
+  > Демократична традиція: 1 items (min 1)
+  > Влада народу і Влада царя: 1 items (min 1)
+
+--- STRICT GATES (Level B2) ---
+Words        ✅ 4962/4000 (raw: 5056)
+Activities   ✅ 6/3
+Density      ✅ All > 1
+Unique_types ✅ 4/2 types
+Priority     ✅ Priority types used
+Engagement   ✅ 6/5
+Audio        ℹ️ No audio
+Vocab        ✅ 35/20
+Structure    ✅ Valid Structure
+Lint         ✅ Clean Format
+Pedagogy     ✅ Level-appropriate
+Content_heavy ✅ Content-heavy OK (6 activities)
+Grammar      ℹ️ N/A (covered by naturalness)
+Naturalness  ✅ 10/10 (High)
+Activity_quality 📋 Quality validation available (optional)
+Immersion    🇺🇦 99.8% (target 90-100% (history))
+Richness     ✅ 99% (history)
+
+Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/audit/sloviany-origins-review.md
+
+✅ AUDIT PASSED.

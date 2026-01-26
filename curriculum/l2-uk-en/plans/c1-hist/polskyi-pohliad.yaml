@@ -1,0 +1,103 @@
+module: polskyi-pohliad
+level: c1-hist
+sequence: 5
+version: '1.0'
+title: Польський погляд на українську історію
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Два сусіди, дві пам'яті
+  words: 400
+  subsections:
+  - 600 років спільної історії
+  - Від Речі Посполитої до 2022
+  - Чому польський погляд важливий для нас
+  - Від конфлікту до союзу — еволюція
+- section: Традиційний польський наратив — "Креси"
+  words: 600
+  subsections:
+  - Що таке «Креси»? (Kresy Wschodnie)
+  - Львів, Вільнюс як «польські міста»
+  - Романтизація — шляхетська культура
+  - Образ українця — «хлоп» чи «гайдамака»
+  - Хмельниччина в польській пам'яті
+- section: Міжвоєнна польська історіографія
+  words: 500
+  subsections:
+  - II Річ Посполита і «східні землі»
+  - Пілсудський vs. Дмовський — два підходи
+  - Полонізація vs. автономія
+  - Пацифікація Галичини 1930
+- section: Волинь 1943 у польській пам'яті
+  words: 600
+  subsections:
+  - Що сталося — факти
+  - Польський травматичний наратив
+  - «Геноцид» vs. «етнічний конфлікт» — термінологія
+  - Замовчування контексту — АК, німецька окупація
+  - Сучасні «війни пам'яті»
+- section: Революція Ґедройця
+  words: 600
+  subsections:
+  - Єжи Ґедройць і журнал «Культура»
+  - Доктрина Ґедройця — визнати кордони, підтримати незалежність
+  - «ULB» — Україна, Литва, Білорусь
+  - Вплив на польську зовнішню політику після 1989
+  - Від ревізіонізму до примирення
+- section: Сучасна польська історіографія
+  words: 500
+  subsections:
+  - Нове покоління істориків
+  - Спільні дослідницькі проєкти
+  - IPN (Інститут національної пам'яті) — контроверсії
+  - Що залишається спірним
+- section: 2022 — Історичний перелом
+  words: 300
+  subsections:
+  - Безпрецедентна підтримка
+  - Від пам'яті до солідарності
+  - Чи змінився наратив назавжди?
+word_target: 3500
+vocabulary:
+- Креси
+- Річ Посполита
+- шляхта
+- примирення
+- травма
+- війни пам'яті
+- ревізіонізм
+- доктрина
+- етнічний конфлікт
+- солідарність
+- пацифікація
+- полонізація
+- кордон
+- діалог
+- спадщина
+activities:
+- type: reading
+  focus: Excerpt from Giedroyc's writings on Ukraine
+- type: comparative-study
+  focus: Compare Polish and Ukrainian textbook treatment of Volhynia 1943
+- type: critical-analysis
+  focus: Analyze "Kresy" concept — nostalgia vs. imperialism
+- type: essay-response
+  focus: Як доктрина Ґедройця змінила польсько-українські відносини?
+sources:
+- name: Креси (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Креси
+  type: reference
+  notes: «Kresy» concept - Polish eastern borderlands
+- name: Єжи Ґедройць
+  url: https://uk.wikipedia.org/wiki/Ґедройць_Єжи
+  type: reference
+  notes: Key figure in Polish-Ukrainian reconciliation
+- name: Доктрина Ґедройця
+  url: https://uk.wikipedia.org/wiki/Доктрина_Ґедройця
+  type: reference
+  notes: Giedroyc doctrine on Eastern policy
+- name: Культура (часопис)
+  url: https://uk.wikipedia.org/wiki/Культура_(паризький_часопис)
+  type: reference
+  notes: Kultura journal - key platform

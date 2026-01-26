@@ -1,0 +1,211 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/level-plan.schema.json",
+  "title": "Level Plan",
+  "description": "Schema for level-wide curriculum plans (plans/{level}.yaml)",
+  "type": "object",
+  "required": ["level", "track", "version", "phases"],
+  "properties": {
+    "level": {
+      "type": "string",
+      "pattern": "^(a1|a2|b1|b2|c1|c2|b2-hist|b2-pro|c1-bio|c1-hist|c1-pro|c2-pro|lit)$",
+      "description": "Level identifier"
+    },
+    "track": {
+      "type": "string",
+      "enum": ["core", "history", "historiography", "biography", "literature", "professional"],
+      "description": "Track type"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+$",
+      "description": "Plan version (semver-ish)"
+    },
+    "overview": {
+      "type": "object",
+      "required": ["total_modules", "description"],
+      "properties": {
+        "total_modules": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "prerequisites": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "vocabulary": {
+      "type": "object",
+      "required": ["new_words"],
+      "properties": {
+        "cumulative_from": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Levels whose vocabulary is assumed known"
+        },
+        "new_words": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Target new vocabulary count"
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Source documents for vocabulary lists"
+        }
+      }
+    },
+    "grammar": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Grammar topics covered in this level"
+    },
+    "phases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "modules"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Phase identifier (e.g., B1.0, HIST.5)"
+          },
+          "name": {
+            "type": "string"
+          },
+          "modules": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "minItems": 1,
+            "maxItems": 2,
+            "description": "[start, end] module numbers (inclusive)"
+          },
+          "focus": {
+            "type": "string"
+          },
+          "era": {
+            "type": "string",
+            "description": "Historical era (for history tracks)"
+          },
+          "immersion": {
+            "type": "string",
+            "description": "Override immersion for this phase"
+          },
+          "checkpoint": {
+            "type": "integer",
+            "description": "Module number of phase checkpoint"
+          },
+          "final_exam": {
+            "type": "integer",
+            "description": "Module number of final exam"
+          }
+        }
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "properties": {
+        "min_word_target": {
+          "type": "integer",
+          "minimum": 500
+        },
+        "max_word_target": {
+          "type": "integer",
+          "minimum": 1000
+        },
+        "min_engagement_boxes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "min_examples": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "immersion_target": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "naturalness_threshold": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        }
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": ["complete", "in_progress", "planned"],
+      "description": "Build status of this level"
+    },
+    "vocabulary_target": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Target new vocabulary for this level"
+    },
+    "cumulative_vocabulary": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total vocabulary including previous levels"
+    },
+    "immersion": {
+      "type": "string",
+      "description": "Target Ukrainian immersion percentage range"
+    },
+    "prerequisite": {
+      "type": "string",
+      "description": "Required prerequisite for this level"
+    },
+    "grammar_scope": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Grammar topics covered in this level"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes about the level plan"
+    },
+    "changelog": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["version", "date", "changes"],
+        "properties": {
+          "version": {
+            "type": "string",
+            "pattern": "^[0-9]+\\.[0-9]+$"
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "changes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          }
+        }
+      },
+      "description": "Version history for plan changes"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,129 @@
+module: pivden-novorosiia
+level: B2
+version: '2.0'
+items:
+  - lemma: колонізація
+    ipa: /kolonʲiˈzat͡sʲija/
+    translation: colonization
+    pos: noun
+    gender: f
+  - lemma: степ
+    ipa: /step/
+    translation: steppe
+    pos: noun
+    gender: m
+  - lemma: дике поле
+    ipa: /ˈdɪke ˈpɔle/
+    translation: Wild Fields
+    pos: noun
+    gender: n
+  - lemma: заселення
+    ipa: /zaˈsɛlenʲːɐ/
+    translation: settlement / populating
+    pos: noun
+    gender: n
+  - lemma: фортеця
+    ipa: /forˈtɛt͡sʲɐ/
+    translation: fortress
+    pos: noun
+    gender: f
+  - lemma: порт
+    ipa: /port/
+    translation: port
+    pos: noun
+    gender: m
+  - lemma: торгівля
+    ipa: /torˈɦiu̯lʲɐ/
+    translation: trade
+    pos: noun
+    gender: f
+  - lemma: зерно
+    ipa: /zɛrˈnɔ/
+    translation: grain
+    pos: noun
+    gender: n
+  - lemma: міф
+    ipa: /mʲif/
+    translation: myth
+    pos: noun
+    gender: m
+  - lemma: імперія
+    ipa: /imˈpɛrʲija/
+    translation: empire
+    pos: noun
+    gender: f
+  - lemma: татари
+    ipa: /taˈtarɪ/
+    translation: Tatars
+    pos: noun
+    gender: pl
+  - lemma: козаки
+    ipa: /kozaˈkɪ/
+    translation: Cossacks
+    pos: noun
+    gender: pl
+  - lemma: поселенці
+    ipa: /poˈsɛlenʲt͡sʲi/
+    translation: settlers
+    pos: noun
+    gender: pl
+  - lemma: слобода
+    ipa: /sɫoboˈda/
+    translation: sloboda (settlement with tax exemptions)
+    pos: noun
+    gender: f
+  - lemma: чумаки
+    ipa: /t͡ʃʊmaˈkɪ/
+    translation: chumaks (salt traders)
+    pos: noun
+    gender: pl
+  - lemma: експансія
+    ipa: /ɛkspanʲˈsʲija/
+    translation: expansion
+    pos: noun
+    gender: f
+  - lemma: асиміляція
+    ipa: /asɪmʲiˈlʲat͡sʲija/
+    translation: assimilation
+    pos: noun
+    gender: f
+  - lemma: різноманіття
+    ipa: /rʲiznomanʲiˈtʲːɐ/
+    translation: diversity
+    pos: noun
+    gender: n
+  - lemma: урбанізація
+    ipa: /urbanʲiˈzat͡sʲija/
+    translation: urbanization
+    pos: noun
+    gender: f
+  - lemma: заснування
+    ipa: /zasnuˈwanʲːɐ/
+    translation: founding / establishment
+    pos: noun
+    gender: n
+  - lemma: зимівник
+    ipa: /zɪˈmiu̯nɪk/
+    translation: zymivnyk (Cossack winter homestead)
+    pos: noun
+    gender: m
+  - lemma: паланка
+    ipa: /paˈɫanka/
+    translation: palanka (administrative unit of Sich)
+    pos: noun
+    gender: f
+  - lemma: причорномор'я
+    ipa: /prɪt͡ʃornomɔˈrʲːɐ/
+    translation: Black Sea region
+    pos: noun
+    gender: n
+  - lemma: пропаганда
+    ipa: /propaˈɦanda/
+    translation: propaganda
+    pos: noun
+    gender: f
+  - lemma: ідентичність
+    ipa: /idenʲˈtɪt͡ʃnʲisʲtʲ/
+    translation: identity
+    pos: noun
+    gender: f

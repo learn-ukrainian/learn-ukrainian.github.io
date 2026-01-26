@@ -1,0 +1,97 @@
+module: 15-checkpoint-aspect-mastery
+level: b1
+sequence: 15
+version: '2.1'
+title: 'Контрольна точка: Опанування виду'
+subtitle: Aspect Mastery Phase Checkpoint
+focus: checkpoint
+pedagogy: TTT
+objectives:
+- Learner can demonstrate mastery of verbal aspect
+- Learner can integrate knowledge from M06-14
+- Learner can select correct aspect in all contexts
+- Learner can self-assess readiness for Motion Verbs phase
+sources:
+- name: CEFR B1 Descriptors - Grammar
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: Assessment standards for B1 grammar competence
+- name: Ukrainian State Standard 2024 - Aspect Assessment
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official criteria for aspect mastery
+content_outline:
+- section: Огляд
+  words: 100
+  points:
+  - Content for Огляд
+  - Examples and explanation
+  - Practice or application
+- section: 'Skill 1: Вид у минулому часі'
+  words: 250
+  points:
+  - 'Content for Skill 1: Вид у минулому часі'
+  - Examples and explanation
+  - Practice or application
+- section: 'Skill 2: Вид у майбутньому часі'
+  words: 150
+  points:
+  - 'Content for Skill 2: Вид у майбутньому часі'
+  - Examples and explanation
+  - Practice or application
+- section: 'Skill 3: Вид у запереченні'
+  words: 250
+  points:
+  - 'Content for Skill 3: Вид у запереченні'
+  - Examples and explanation
+  - Practice or application
+- section: 'Skill 4: Вид у наказовому способі'
+  words: 200
+  points:
+  - 'Content for Skill 4: Вид у наказовому способі'
+  - Examples and explanation
+  - Practice or application
+- section: 'Skill 5: Видові пари'
+  words: 150
+  points:
+  - 'Content for Skill 5: Видові пари'
+  - Examples and explanation
+  - Practice or application
+- section: Інтеграційне завдання
+  words: 300
+  points:
+  - Content for Інтеграційне завдання
+  - Examples and explanation
+  - Practice or application
+word_target: 1200
+vocabulary:
+  required:
+  - опанування (mastery)
+  - контрольна точка (checkpoint)
+  - самооцінка (self-assessment)
+  - готовність (readiness)
+  - повторення (review)
+  - закріплення (consolidation)
+  - перевірка (verification)
+  - прогрес (progress)
+  - слабка сторона (weakness)
+  - сильна сторона (strength)
+  recommended:
+  - досягнення (achievement)
+  - рівень (level)
+  - компетенція (competence)
+  - навичка (skill)
+  - знання (knowledge)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - error-correction
+  - match-up
+  - cloze
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-16 (Motion verbs - full system)
+- b1-25 (Motion verbs checkpoint)

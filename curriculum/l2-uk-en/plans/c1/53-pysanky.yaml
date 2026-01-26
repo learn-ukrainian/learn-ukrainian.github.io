@@ -1,0 +1,22 @@
+module: 53-pysanky
+level: c1
+sequence: 53
+version: '2.0'
+title: 'Писанки: Космос на долоні'
+subtitle: 'Pysankas: Cosmos in the Palm of Your Hand'
+focus: history
+pedagogy: CBI
+objectives:
+- Analyze the archaic symbology of Ukrainian Pysanka patterns
+- Identify regional differences in pysanka design and color palettes
+- Understand the ritual technology of wax-resist egg decorating
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

@@ -1,0 +1,94 @@
+module: radianska-propaganda
+level: c1-hist
+sequence: 109
+version: '1.0'
+title: 'Радянська пропаганда: Механізми'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Машина переписування
+  words: 400
+  subsections:
+  - Радянська пропаганда — система
+  - Не брехня, а реальність
+  - Механізми впливу
+  - Структура модуля
+- section: «Дружба народів»
+  words: 700
+  subsections:
+  - Ідеологема — як працювала
+  - Приховування конфліктів
+  - «Старший брат»
+  - Ієрархія всередині «рівності»
+- section: Заборонені теми
+  words: 600
+  subsections:
+  - Голодомор — табу
+  - Депортації — мовчання
+  - УПА — тільки «бандерівці»
+  - Що не можна було говорити
+- section: Переписування історії
+  words: 600
+  subsections:
+  - Підручники — як змінювались
+  - «Воссоєдиненіє» 1654
+  - Київська Русь — «спільна колиска»
+  - Фальсифікація як система
+- section: Контроль над мовою
+  words: 500
+  subsections:
+  - Двомовність — формальна рівність
+  - Престиж мов
+  - «Мова міжнаціонального спілкування»
+  - Мовна русифікація
+- section: Спадок
+  words: 400
+  subsections:
+  - Що залишилось у свідомості
+  - Ностальгія за СРСР
+  - Як це використовує Росія
+  - Деконструкція спадку
+- section: Підсумок
+  words: 300
+  subsections:
+  - Пропаганда — не минуле
+  - Інструменти живуть далі
+  - Перехід до сучасної дезінформації
+word_target: 3500
+vocabulary:
+- пропаганда
+- «дружба народів»
+- ідеологема
+- заборонена тема
+- табу
+- фальсифікація
+- переписування історії
+- «старший брат»
+- «воссоєдиненіє»
+- двомовність
+- агітпроп
+- ідеологічний контроль
+- цензура
+- «буржуазний націоналізм»
+- спадок
+activities:
+- type: mechanism-analysis
+  focus: How "friendship of peoples" ideology worked
+- type: text-comparison
+  focus: Soviet textbooks — how history was rewritten
+- type: forbidden-topics
+  focus: What couldn't be discussed — mapping silences
+- type: legacy-analysis
+  focus: Soviet propaganda tropes that survive today
+- type: essay-response
+  focus: Чи 'дружба народів' була рівною?
+sources:
+- name: Пропаганда в СРСР (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Пропаганда_в_СРСР
+  type: reference
+  notes: Soviet propaganda
+- name: «Дружба народів» (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Дружба_народів_(ідеологема)
+  type: reference
+  notes: Friendship of peoples ideology

@@ -1,27 +1,94 @@
 module: b1-40
-title: Непрямі питання та накази
-subtitle: Reported Questions & Commands
-version: '1.0'
-phase: B1.3b Complex Sentences
-pedagogy: TTT
+id: b1-40
+slug: reported-questions-commands
+title: "Непрямі питання та накази"
+subtitle: "Reported Questions & Commands"
+version: '2.0'
+phase: "B1.3b [Complex Sentences]"
 focus: grammar
+pedagogy: TTT
+register: розмовний
 duration: 90
 transliteration: none
-tags:
-- grammar
-- reported-speech
-- indirect-questions
-- commands
-grammar:
-- Reported questions with чи, що, хто, де, коли
-- Reported commands with щоб
 objectives:
-- Learner can report questions using indirect speech
-- Learner can report commands and requests using щоб
-- Learner can choose appropriate structures for different speech acts
-vocabulary_count: 30
-vocab_count: 13
-slug: 40-reported-questions-commands
+  - "Learner can report questions using indirect speech"
+  - "Learner can report commands and requests using щоб"
+  - "Learner can choose appropriate structures for different speech acts"
+  - "Learner can transform all speech types"
+grammar:
+  - "Reported questions with чи, що, хто, де, коли"
+  - "Reported commands with щоб + past form"
+  - "Reported requests with просити, щоб"
+word_target: 1200
+content_outline:
+  - section: "Introduction: Beyond Statements"
+    words: 150
+    points:
+      - "Reporting questions"
+      - "Reporting commands"
+      - "Structural differences"
+  - section: "Yes/No Questions"
+    words: 250
+    points:
+      - "Він запитав, чи..."
+      - "чи as question introducer"
+      - "Word order in indirect questions"
+  - section: "Wh-Questions"
+    words: 250
+    points:
+      - "Вона запитала, що/де/коли..."
+      - "Question word retention"
+      - "Tense changes in questions"
+  - section: "Reported Commands"
+    words: 250
+    points:
+      - "Він сказав, щоб я..."
+      - "щоб + past form structure"
+      - "Positive and negative commands"
+  - section: "Reported Requests"
+    words: 200
+    points:
+      - "просити/попросити, щоб"
+      - "благати, наполягати"
+      - "Request vs command nuances"
+  - section: "Practice: All Speech Types"
+    words: 100
+    points:
+      - "Report questions and commands"
+      - "Mixed transformation"
+vocabulary_hints:
+  required:
+    - питання (question)
+    - наказ (command)
+    - прохання (request)
+    - чи (whether)
+    - запитати (to ask)
+    - наказати (to order)
+    - просити (to request)
+    - щоб (that - subjunctive)
+  recommended:
+    - поцікавитися (to wonder)
+    - вимагати (to demand)
+    - умовляти (to persuade)
+    - заборонити (to forbid)
+activity_hints:
+  - type: transformation
+    focus: "Questions and commands to indirect"
+    items: 25
+  - type: fill-in
+    focus: "Complete reported questions/commands"
+    items: 20
+  - type: error-correction
+    focus: "Fix indirect speech errors"
+    items: 15
+  - type: writing
+    focus: "Report conversations"
+    items: 10
+prerequisites:
+  - b1-39 (Reported Statements)
+connects_to:
+  - b1-41 (Checkpoint Complex Sentences 2)
 naturalness:
   score: 9
   status: PASS
+  justification: "Complete reported speech coverage"

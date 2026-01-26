@@ -1,31 +1,98 @@
 module: a1-17
-title: Numbers & Money
-subtitle: Counting and Shopping in Ukraine
-version: '1.0'
-phase: A1.2
-pedagogy: PPP
+id: a1-17
+slug: numbers-and-money
+title: "Numbers & Money"
+subtitle: "Counting and Shopping in Ukraine"
+version: '2.0'
+phase: "A1.2 [Navigation]"
 focus: grammar
-duration: 60 min
+pedagogy: PPP
+register: розмовний
+duration: 60
 transliteration: none
-phonetics: ipa
-tags:
-  - numbers
-  - money
-  - shopping
-  - genitive-plural
-  - currency
-grammar:
-  - Cardinals 0-100
-  - Number agreement with nouns (1=nom.sg, 2-4=nom.pl, 5+=gen.pl)
-  - Genitive plural with numbers
 objectives:
-  - Learner can count from 0-100 in Ukrainian
-  - Learner can ask and answer 'How much does it cost?'
-  - Learner can handle basic shopping transactions
-  - Learner can use numbers with genitive plural forms
-vocabulary_count: 35
-vocab_count: 61
-slug: 17-numbers-and-money
+  - "Learner can count from 0-100 in Ukrainian"
+  - "Learner can ask and answer 'How much does it cost?'"
+  - "Learner can handle basic shopping transactions"
+  - "Learner can use numbers with genitive plural forms"
+grammar:
+  - "Cardinals 0-100"
+  - "Number agreement (1=nom, 2-4=nom.pl, 5+=gen.pl)"
+  - "Genitive plural with numbers"
+word_target: 1000
+content_outline:
+  - section: "Introduction: Numbers in Daily Life"
+    words: 100
+    points:
+      - "Counting is essential"
+      - "Prices, quantities, time"
+      - "Number-noun agreement"
+  - section: "Numbers 0-20"
+    words: 200
+    points:
+      - "0 нуль, 1 один/одна/одне"
+      - "2 два/дві, 3 три, 4 чотири"
+      - "5-10: п'ять, шість, сім, вісім, дев'ять, десять"
+      - "11-20: одинадцять... двадцять"
+  - section: "Numbers 20-100"
+    words: 200
+    points:
+      - "Tens: двадцять, тридцять... сто"
+      - "Compound numbers: двадцять один"
+      - "Practice counting"
+  - section: "Number Agreement Rules"
+    words: 200
+    points:
+      - "1 + nominative singular: одна гривня"
+      - "2-4 + nominative plural: дві гривні"
+      - "5+ + genitive plural: п'ять гривень"
+  - section: "Money and Prices"
+    words: 200
+    points:
+      - "гривня, гривні, гривень"
+      - "Скільки коштує? (How much?)"
+      - "Це коштує... (It costs...)"
+  - section: "Practice: Shopping Math"
+    words: 100
+    points:
+      - "Calculate totals"
+      - "Ask about prices"
+vocabulary_hints:
+  required:
+    - один (one)
+    - два (two)
+    - три (three)
+    - п'ять (five)
+    - десять (ten)
+    - гривня (hryvnia)
+    - скільки (how much)
+    - коштувати (to cost)
+  recommended:
+    - сто (hundred)
+    - копійка (kopeck)
+    - ціна (price)
+    - дорого (expensive)
+    - дешево (cheap)
+    - здача (change)
+activity_hints:
+  - type: number-drill
+    focus: "Counting practice"
+    items: 30
+  - type: fill-in
+    focus: "Complete with correct number form"
+    items: 20
+  - type: listening
+    focus: "Identify numbers heard"
+    items: 15
+  - type: role-play
+    focus: "Shopping transactions"
+    items: 6
+prerequisites:
+  - a1-16 (The Genitive I)
+connects_to:
+  - a1-18 (Food and Shopping)
+  - a1-23 (What Time Is It)
 naturalness:
-  score: 9
+  score: 10
   status: PASS
+  justification: "Practical number skills"

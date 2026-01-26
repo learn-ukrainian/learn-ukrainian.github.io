@@ -1,34 +1,96 @@
 module: a1-02
-title: The Cyrillic Code II
-subtitle: The Final 14 Letters
-version: '1.0'
-phase: A1.1
-pedagogy: PPP
+id: a1-02
+slug: the-cyrillic-code-ii
+title: "The Cyrillic Code II"
+subtitle: "The Final 14 Letters"
+version: '2.0'
+phase: "A1.1 [First Contact]"
 focus: grammar
-duration: 60 min
+pedagogy: PPP
+register: розмовний
+duration: 60
 transliteration: full
-tags:
-  - alphabet
-  - cyrillic
-  - phonetics
-  - unique-letters
-  - iotated-vowels
-  - soft-sign
-  - italic
-grammar:
-  - letter recognition
-  - pronunciation
-  - italic forms
 objectives:
-  - Learner can recognize and pronounce unique Ukrainian letters (Г, Ґ, Ж, Ш, Щ, Ч,
-    Ц)
-  - Learner can identify iotated vowels (Є, Ї, Ю, Я)
-  - Learner can understand the soft sign (Ь)
-  - Learner can distinguish И (hard i) from І (soft i)
-  - Learner can recognize common italic letter variants
-vocabulary_count: 35
-vocab_count: 77
-slug: 02-the-cyrillic-code-ii
+  - "Learner can recognize unique Ukrainian letters (Г, Ґ, Ж, Ш, Щ, Ч, Ц)"
+  - "Learner can identify iotated vowels (Є, Ї, Ю, Я)"
+  - "Learner can understand the soft sign (Ь)"
+  - "Learner can distinguish И (hard i) from І (soft i)"
+grammar:
+  - "Unique Ukrainian consonants"
+  - "Iotated vowels"
+  - "Soft sign function"
+word_target: 800
+content_outline:
+  - section: "Review: Your First 19 Letters"
+    words: 100
+    points:
+      - "Quick review of Part I"
+      - "Reading diagnostic"
+  - section: "Unique Ukrainian Sounds (Ц, Ч, Ш, Щ)"
+    words: 150
+    points:
+      - "Ц = ts, Ч = ch, Ш = sh, Щ = shch"
+      - "Practice words: центр, чай, школа, ще"
+      - "Tongue positioning"
+  - section: "Special Consonants (Г, Ґ, Ж)"
+    words: 150
+    points:
+      - "Г = voiced h, Ґ = hard g, Ж = zh"
+      - "Г vs Ґ distinction"
+      - "Practice: гарний, ґанок, жити"
+  - section: "The Soft Sign (Ь) and И vs І"
+    words: 150
+    points:
+      - "Ь softens preceding consonant"
+      - "И = hard i (between i and y)"
+      - "І = soft i (like English ee)"
+  - section: "Iotated Vowels (Є, Ї, Ю, Я)"
+    words: 150
+    points:
+      - "Є = ye, Ї = yi, Ю = yu, Я = ya"
+      - "Used after vowels and at word start"
+      - "Practice: Європа, їжа, юнак, яблуко"
+  - section: "Summary: Complete Alphabet Mastery"
+    words: 100
+    points:
+      - "All 33 letters reviewed"
+      - "Italic variants overview"
+      - "Ready for reading practice"
+vocabulary_hints:
+  required:
+    - центр (center)
+    - чай (tea)
+    - школа (school)
+    - гарний (beautiful)
+    - жити (to live)
+    - день (day)
+    - Європа (Europe)
+    - яблуко (apple)
+  recommended:
+    - ще (still/more)
+    - ґанок (porch)
+    - їжа (food)
+    - юнак (young man)
+    - ніч (night)
+    - сім'я (family)
+activity_hints:
+  - type: letter-recognition
+    focus: "Identify final 14 letters"
+    items: 20
+  - type: audio-match
+    focus: "Match unique sounds to letters"
+    items: 20
+  - type: minimal-pairs
+    focus: "Distinguish И/І, Г/Ґ"
+    items: 15
+  - type: reading-drill
+    focus: "Read words with new letters"
+    items: 20
+prerequisites:
+  - a1-01 (The Cyrillic Code I)
+connects_to:
+  - a1-03 (The Gender Code)
 naturalness:
-  score: 9
+  score: 10
   status: PASS
+  justification: "Clear progression completing alphabet"

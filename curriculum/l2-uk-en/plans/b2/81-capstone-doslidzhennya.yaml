@@ -1,0 +1,22 @@
+module: 81-capstone-doslidzhennya
+level: b2
+sequence: 81
+version: '2.0'
+title: 'Capstone: Дослідження'
+subtitle: 'Capstone: Research'
+focus: project
+pedagogy: CBI
+objectives:
+- Select a research topic for Capstone Project
+- Gather and evaluate sources
+- Create a detailed research outline
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

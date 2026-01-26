@@ -27,3 +27,30 @@ vocabulary_count: 35
 summary: This module immerses students in the magical world of Ukrainian ritual songs.
   From the world-famous Shchedryk to mysterious Kupala chants, learners explore how
   ancient Ukrainians communicated with nature and the divine through music.
+content_outline:
+- section: Вступ — Коло життя
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Church Slavonic Features
+  words: 500
+  points:
+  - 'Phonetics: глас (voice) vs. голос'
+  - 'Vocabulary: єсмь, благо, воістину'
+  - 'Phrases: Во ім''я Отця... (In the name of the Father...)'
+- section: Usage Contexts
+  words: 500
+  points:
+  - Religious texts
+  - Very formal style
+  - Literary effect
+  - Historical texts
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

@@ -1,0 +1,84 @@
+module: 18-motion-passing-crossing
+level: b1
+sequence: 18
+version: '1.0'
+title: 'Рух: перехід і обхід'
+subtitle: Motion - Passing & Crossing
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can use пере- for crossing
+- Learner can use про- for passing through/by
+- Learner can use об- for going around
+sources:
+- name: Ukrainian State Standard 2024 - Motion Prefixes
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official prefix meanings for crossing/passing
+- name: Ukrainian Verbal Prefixes
+  url: https://uk.wikipedia.org/wiki/Дієслівні_префікси
+  type: reference
+  notes: пере-, про-, об- semantics
+content_outline:
+- section: Тест
+  words: 100
+  points:
+  - Content for Тест
+  - Examples and explanation
+  - Practice or application
+- section: Пояснення
+  words: 600
+  points:
+  - Content for Пояснення
+  - Examples and explanation
+  - Practice or application
+- section: Поглиблення
+  words: 400
+  points:
+  - Content for Поглиблення
+  - Examples and explanation
+  - Practice or application
+- section: Практика
+  words: 100
+  points:
+  - Content for Практика
+  - Examples and explanation
+  - Practice or application
+- section: Діалоги
+  words: 600
+  points:
+  - Content for Діалоги
+  - Examples and explanation
+  - Practice or application
+word_target: 1500
+vocabulary:
+  required:
+  - перейти/переходити (to cross on foot)
+  - переїхати/переїжджати (to cross by vehicle)
+  - пройти/проходити (to pass on foot)
+  - проїхати/проїжджати (to pass by vehicle)
+  - обійти/обходити (to go around on foot)
+  - об'їхати/об'їжджати (to drive around)
+  - перехід (crossing)
+  - маршрут (route)
+  - вулиця (street)
+  - міст (bridge)
+  recommended:
+  - перебігти/перебігати (to run across)
+  - пробігти/пробігати (to run past)
+  - оббігти/оббігати (to run around)
+  - яма (hole/pit)
+  - перешкода (obstacle)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - quiz
+  - match-up
+  - cloze
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-19 (Motion - starting & returning)
+- b1-22 (Motion full prefix integration)

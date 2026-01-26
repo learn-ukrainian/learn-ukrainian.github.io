@@ -1,0 +1,49 @@
+module: 19-the-best-the-worst
+level: a2
+sequence: 19
+version: '2.0'
+title: The Best, The Worst
+subtitle: The Superlative Degree
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can form superlative adjectives
+- Learner can describe the highest degree of a quality
+- Learner can use superlatives to talk about records and favorites
+- Learner can distinguish between comparative and superlative forms
+sources:
+- name: Ukrainian State Standard 2024 - Superlatives
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Superlative requirements for A2
+- name: Ukrainian Adjective Masterclass
+  url: https://uk.wikipedia.org/wiki/Прикметник
+  type: reference
+  notes: Superlative formation and usage
+content_outline:
+- section: Introduction / Вступ
+  words: 200
+  points:
+  - Concept of superlative as the extreme
+  - Simplicity of Ukrainian 'най-' rule
+- section: Presentation / Презентація
+  words: 600
+  points:
+  - Regular formation (най- + comparative)
+  - Irregular superlatives (Top 10)
+  - Emphatic prefixes (якнай-, щонай-)
+  - Intensifiers vs Superlatives (дуже vs найкращий)
+- section: Practice / Практика
+  words: 150
+  points:
+  - World records quiz
+  - Sentence transformation drills
+- section: Dialogues / Діалоги
+  words: 50
+  points:
+  - Award ceremony dialogue using superlatives
+word_target: 1000
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

@@ -1,0 +1,22 @@
+module: 79-operne-mystetstvo
+level: c1
+sequence: 79
+version: '2.0'
+title: Оперне мистецтво
+subtitle: Opera Art
+focus: fine-arts
+pedagogy: CBI
+objectives:
+- Learner knows the history of major Ukrainian opera houses.
+- Learner can identify world-renowned Ukrainian opera singers.
+- Learner uses professional terminology to evaluate operatic performances.
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

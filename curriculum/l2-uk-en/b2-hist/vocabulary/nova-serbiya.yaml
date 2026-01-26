@@ -1,0 +1,129 @@
+module: nova-serbiya
+level: B2
+version: '2.0'
+items:
+  - lemma: переселенці
+    ipa: /pereseˈlɛnt͡sʲi/
+    translation: settlers
+    pos: noun
+    gender: pl
+  - lemma: шляхта
+    ipa: /ˈʃlʲaxta/
+    translation: nobility
+    pos: noun
+    gender: f
+  - lemma: привілеї
+    ipa: /prɪvʲiˈlɛji/
+    translation: privileges
+    pos: noun
+    gender: pl
+  - lemma: кордон
+    ipa: /korˈdɔn/
+    translation: border
+    pos: noun
+    gender: m
+  - lemma: полк
+    ipa: /pɔlk/
+    translation: regiment
+    pos: noun
+    gender: m
+  - lemma: рота
+    ipa: /ˈrɔta/
+    translation: company (military)
+    pos: noun
+    gender: f
+  - lemma: укріплення
+    ipa: /ukrʲiˈplɛnʲːɐ/
+    translation: fortification
+    pos: noun
+    gender: n
+  - lemma: автономія
+    ipa: /au̯toˈnɔmʲija/
+    translation: autonomy
+    pos: noun
+    gender: f
+  - lemma: асиміляція
+    ipa: /asɪmʲiˈlʲat͡sʲija/
+    translation: assimilation
+    pos: noun
+    gender: f
+  - lemma: балканці
+    ipa: /balˈkant͡sʲi/
+    translation: Balkan people
+    pos: noun
+    gender: pl
+  - lemma: серби
+    ipa: /ˈsɛrbɪ/
+    translation: Serbs
+    pos: noun
+    gender: pl
+  - lemma: чорногорці
+    ipa: /t͡ʃornɔˈɦɔrt͡sʲi/
+    translation: Montenegrins
+    pos: noun
+    gender: pl
+  - lemma: валахи
+    ipa: /waˈɫaxɪ/
+    translation: Vlachs
+    pos: noun
+    gender: pl
+  - lemma: православ'я
+    ipa: /prau̯oˈsɫau̯ʲɐ/
+    translation: Orthodoxy
+    pos: noun
+    gender: n
+  - lemma: рекрути
+    ipa: /ˈrɛkrʊtɪ/
+    translation: recruits
+    pos: noun
+    gender: pl
+  - lemma: фортеця
+    ipa: /forˈtɛt͡sʲɐ/
+    translation: fortress
+    pos: noun
+    gender: f
+  - lemma: степ
+    ipa: /step/
+    translation: steppe
+    pos: noun
+    gender: m
+  - lemma: колонізація
+    ipa: /kolonʲiˈzat͡sʲija/
+    translation: colonization
+    pos: noun
+    gender: f
+  - lemma: паланка
+    ipa: /paˈɫanka/
+    translation: palanka (administrative unit)
+    pos: noun
+    gender: f
+  - lemma: зимівник
+    ipa: /zɪˈmʲiu̯nɪk/
+    translation: zymivnyk (Cossack winter homestead)
+    pos: noun
+    gender: m
+  - lemma: наказ
+    ipa: /naˈkaz/
+    translation: order / decree
+    pos: noun
+    gender: m
+  - lemma: комендант
+    ipa: /komenˈdant/
+    translation: commandant
+    pos: noun
+    gender: m
+  - lemma: гарнізон
+    ipa: /ɦarnʲiˈzɔn/
+    translation: garrison
+    pos: noun
+    gender: m
+  - lemma: податки
+    ipa: /poˈdatkɪ/
+    translation: taxes
+    pos: noun
+    gender: pl
+  - lemma: лояльність
+    ipa: /loˈjalʲnʲisʲtʲ/
+    translation: loyalty
+    pos: noun
+    gender: f

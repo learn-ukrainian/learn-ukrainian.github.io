@@ -1,0 +1,117 @@
+module: pylyp-orlyk
+level: c1-bio
+sequence: 14
+version: '2.0'
+title: 'Пилип Орлик: Автор першої конституції'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Пилип_Орлик
+    title: Пилип Орлик (Wikipedia UA)
+    notes: Biography, Constitution of 1710, exile
+  - url: https://uk.wikipedia.org/wiki/Конституція_Пилипа_Орлика
+    title: Конституція Пилипа Орлика
+    notes: Text and analysis of Constitution
+  secondary:
+  - url: https://uk.wikipedia.org/wiki/Українська_еміграція
+    title: Перша українська еміграція
+    notes: Context of political exile
+content_outline:
+- section: Вступ — Батько українського конституціоналізму
+  words: 400
+  subsections:
+  - Значення Конституції 1710 року
+  - Орлик як політичний мислитель
+  - Перша українська політична еміграція
+- section: Молодість та служба при Мазепі
+  words: 600
+  subsections:
+  - Походження та освіта
+  - Кар'єра в гетьманській канцелярії
+  - Генеральний писар
+  - Вірність Мазепі
+- section: Обрання гетьманом в еміграції
+  words: 600
+  subsections:
+  - Смерть Мазепи в Бендерах
+  - Обрання гетьманом 1710 року
+  - Присяга та Конституція
+  - Легітимність еміграційного гетьманства
+- section: Конституція Пилипа Орлика
+  words: 900
+  subsections:
+  - Структура документа
+  - Обмеження влади гетьмана
+  - Права козацтва та населення
+  - Порівняння з європейськими конституціями
+  - Демократичні елементи
+- section: Дипломатична діяльність
+  words: 700
+  subsections:
+  - Боротьба за міжнародну підтримку
+  - Прутський похід 1711 року
+  - Листування з європейськими дворами
+  - Мандри Європою
+- section: Останні роки та спадщина
+  words: 500
+  subsections:
+  - Життя в еміграції
+  - Смерть у Молдові
+  - Доля нащадків
+  - Конституція як символ
+- section: Підсумок — Візія, що випередила час
+  words: 300
+  subsections:
+  - Орлик як провісник демократії
+  - Актуальність Конституції 1710 року
+  - Місце в українській політичній думці
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - конституція
+  - гетьман
+  - еміграція
+  - писар
+  - рада
+  - обмеження влади
+  - присяга
+  - пакти
+  - привілеї
+  - канцелярія
+  recommended:
+  - генеральний
+  - статті
+  - ратифікація
+  - клейноди
+  - протекторат
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  - critical-analysis
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-12 (Ivan Mazepa - predecessor)
+  related:
+  - c1-bio-15 (Petro Kalnyshevskyy - end of Sich)
+  - c1-bio-35 (Mykhailo Hrushevskyi - later constitutionalism)
+  - c1-bio-71 (Levko Lukyanenko - independence document)
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

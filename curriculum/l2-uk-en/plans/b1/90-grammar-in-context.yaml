@@ -1,0 +1,77 @@
+module: grammar-in-context
+level: b1
+sequence: 90
+version: '2.0'
+title: Граматика в контексті
+subtitle: Applying Grammar to Practical Communication
+focus: communication
+pedagogy: TBL
+objectives:
+- Learner applies grammar knowledge in practical communication scenarios
+- Learner produces extended written discourse with appropriate grammar
+- Learner self-corrects grammar in authentic contexts
+- Learner integrates multiple grammar structures naturally
+content_outline:
+- section: 'Introduction: Grammar for Communication'
+  words: 150
+  points:
+  - Grammar as tool
+  - Context-based approach
+  - Self-correction strategies
+- section: Narrating Events
+  words: 200
+  points:
+  - Aspect in storytelling
+  - Sequence markers
+  - Natural narrative flow
+- section: Describing Experiences
+  words: 200
+  points:
+  - Past tense integration
+  - Motion in context
+  - Emotional vocabulary
+- section: Explaining and Arguing
+  words: 200
+  points:
+  - Complex sentences
+  - Logical connectors
+  - Opinion structures
+- section: Writing Tasks
+  words: 150
+  points:
+  - Extended writing
+  - Grammar accuracy
+  - Self-editing
+- section: 'Practice: Integrated Tasks'
+  words: 100
+  points:
+  - Apply grammar
+  - Produce texts
+word_target: 1000
+vocabulary:
+  required:
+  - граматика (grammar)
+  - контекст (context)
+  - розповідь (narrative)
+  - опис (description)
+  - пояснення (explanation)
+  - помилка (error)
+  - виправлення (correction)
+  - структура (structure)
+  recommended:
+  - точність (accuracy)
+  - плавність (fluency)
+  - зв'язність (coherence)
+  - редагування (editing)
+  forbidden: []
+activities:
+  types_required:
+  - writing
+  - task
+  - error-correction
+  - speaking
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-91 (Vocabulary in Context)

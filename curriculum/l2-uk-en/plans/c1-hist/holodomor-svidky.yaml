@@ -1,0 +1,99 @@
+module: holodomor-svidky
+level: c1-hist
+sequence: 49
+version: '1.0'
+title: 'Свідки і свідчення: Усна історія'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Голоси тих, хто пережив
+  words: 400
+  subsections:
+  - Повернення до усної історії
+  - Тепер з контекстом механізмів
+  - Як читати свідчення глибше
+  - Структура модуля
+- section: Теми свідчень
+  words: 600
+  subsections:
+  - Конфіскація — як описують
+  - Голод — що їли (і не їли)
+  - Смерть — як помирали
+  - Виживання — стратегії
+  - Канібалізм — табуйована тема
+- section: Фрагменти свідчень
+  words: 800
+  subsections:
+  - Свідчення 1 — конфіскація
+  - Свідчення 2 — голодна смерть близької людини
+  - Свідчення 3 — виживання
+  - Аналіз кожного
+- section: Дитячі спогади
+  words: 500
+  subsections:
+  - Діти як свідки
+  - Особливості дитячої пам'яті
+  - Травма і мовчання
+  - Що діти розуміли?
+- section: Травма і пам'ять
+  words: 600
+  subsections:
+  - Посттравматичні ефекти
+  - Чому так довго мовчали
+  - Як передавалася травма
+  - Сучасні нащадки
+- section: Методологічні питання
+  words: 400
+  subsections:
+  - Як оцінювати свідчення
+  - Що достовірно, що ні
+  - Емоційна правда vs. фактична
+  - Етика роботи з травмою
+- section: Підсумок
+  words: 200
+  subsections:
+  - Свідчення як незамінне джерело
+  - Від голосів до визнання
+  - Підготовка до правового аспекту
+word_target: 3500
+vocabulary:
+- свідок
+- свідчення
+- усна історія
+- травма
+- пам'ять
+- конфіскація
+- виживання
+- канібалізм
+- табу
+- мовчання
+- посттравматичний
+- нащадок
+- інтерв'ю
+- спогади
+- достовірність
+activities:
+- type: reading
+  focus: Three testimonies with analysis questions
+- type: thematic-analysis
+  focus: Identify recurring themes across testimonies
+- type: methodology-reflection
+  focus: How should we work with trauma testimonies?
+- type: comparative-study
+  focus: Compare adult vs. child testimonies
+- type: essay-response
+  focus: Яке місце мають свідчення вижилих у дослідженні Голодомору?
+sources:
+- name: Усна історія Голодомору
+  url: https://ucrdc.org/
+  type: primary
+  notes: UCRDC testimony archive
+- name: Проєкт "Голодомор у людських долях"
+  url: https://archive.khpg.org/
+  type: primary
+  notes: Memorial project
+- name: Усна історія (методологія)
+  url: https://uk.wikipedia.org/wiki/Усна_історія
+  type: reference
+  notes: Methodology

@@ -1,0 +1,96 @@
+module: halychyna-natsionalnyi-rukh
+level: c1-hist
+sequence: 71
+version: '1.0'
+title: Галицький національний рух
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Боротьба за душу Галичини
+  words: 400
+  subsections:
+  - Три варіанти ідентичності
+  - Народовці vs. москвофіли
+  - Ставки — яким буде народ
+  - Структура модуля
+- section: Москвофіли — хибний шлях
+  words: 600
+  subsections:
+  - Хто вони — соціальний склад
+  - Ідеологія — «єдиний руський народ»
+  - Русификація як модернізація?
+  - Чому програли
+- section: Народовці — український вибір
+  words: 700
+  subsections:
+  - Молоде покоління
+  - Ідеологія — окремий народ
+  - Зв'язки з Наддніпрянщиною
+  - Перемога до 1914
+- section: «Просвіта» — культурний рух
+  words: 600
+  subsections:
+  - Заснування — 1868
+  - Читальні — мережа
+  - Освітня діяльність
+  - Вплив на селянство
+- section: Січовий рух
+  words: 500
+  subsections:
+  - Гімнастичні товариства
+  - Військове виховання
+  - Січові стрільці
+  - Підготовка до 1914
+- section: Політичні партії
+  words: 400
+  subsections:
+  - Радикальна партія — Франко
+  - Національно-демократична
+  - Соціал-демократи
+  - Галицька багатопартійність
+- section: Підсумок
+  words: 300
+  subsections:
+  - Перемога українофілів
+  - Галичина — центр руху
+  - Підготовка до Буковини
+word_target: 3500
+vocabulary:
+- народовці
+- москвофіли
+- національний рух
+- «Просвіта»
+- читальня
+- Січ
+- радикальний
+- партія
+- ідентичність
+- селянство
+- русофільство
+- українофільство
+- національне відродження
+- політична мобілізація
+- масовий рух
+activities:
+- type: comparative-study
+  focus: Narodovtsi vs. Russophiles — key differences
+- type: critical-analysis
+  focus: Prosvita network — how it worked
+- type: critical-analysis
+  focus: Who supported each movement — social map
+- type: essay-response
+  focus: Чому москвофіли програли в Галичині?
+sources:
+- name: Українофіли (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українофіли
+  type: reference
+  notes: Ukrainophile movement
+- name: Москвофіли (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Москвофіли
+  type: reference
+  notes: Russophile movement
+- name: Товариство «Просвіта» (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Просвіта_(товариство)
+  type: reference
+  notes: Prosvita society

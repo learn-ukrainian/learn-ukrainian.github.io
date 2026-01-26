@@ -1,0 +1,64 @@
+
+========================================
+  📋 Loaded Metadata from YAML sidecar
+
+📋 Auditing: B2 M29 — Велике князівство Литовське — Руська держава
+   File: curriculum/l2-uk-en/b2-hist/velyke-kniazivstvo-lytovske.md | Target: 4000 words
+  📋 Template: docs/l2-uk-en/templates/b2-history-module-template.md (pedagogy: CBI)
+  ⚠️  Outline compliance: 0 errors, 2 warnings
+     ⚠️ [EXTRA_SECTION_IN_MARKDOWN] Section 'Критерії оцінювання' found in markdown but not in outline.
+     ⚠️ [EXTRA_SECTION_IN_MARKDOWN] Section 'Зразок відповіді' found in markdown but not in outline.
+
+  🔴 HYDRATION ERROR: Outline sums to 3715, but word_target is 4000
+     Missing 285 words in outline budget!
+     → Run /architect to fix content_outline
+
+  📊 Section Word Analysis:
+     Вступ                                                  610 /  571  ✅ (+39)
+     Династія Гедиміновичів: Від будівничих до захисників   776 /  571  ✅ (+205)
+     Вітовт Великий: Золота доба та європейський тріумф     644 /  571  ✅ (+73)
+     Релігійна толерантність і автономія                    621 /  571  ✅ (+50)
+     Первинні джерела                                       431 /  571  ❌ (-140)
+     Читання                                                333 /  285  ✅ (+48)
+     Деколонізаційний погляд                                327 /  285  ✅ (+42)
+     Потрібно більше практики?                              122 /  290  ❌ (-168)
+     ─────────────────────────────────────────────────────────────────────────────
+     TOTAL                                                 3864 / 3715  ✅ (+149)
+
+📋 Auditing: B2 M29 — Велике князівство Литовське — Руська держава
+   File: curriculum/l2-uk-en/b2-hist/velyke-kniazivstvo-lytovske.md | Target: 4000 words
+
+  📋 Found YAML activities file (10 activities)
+  > Аналіз Литовського Статуту: 3 items (min 1)
+  > Лінгвістичний аналіз правової свідомості: 1 items (min 1)
+  > Литовсько-Руська модель vs Московська деспотія: 1 items (min 1)
+  > Аналітичне есе: Спадщина волі: 1 items (min 1)
+  > Ключові факти та поняття: 8 items (min 8)
+  > Термінологія Литовсько-Руської доби: 14 items (min 8)
+  > Аргументи на користь партнерства: 8 items (min 6)
+  > Історичний контекст у реченнях: 10 items (min 8)
+  > Регістр та граматика в документах: 8 items (min 6)
+  > Правова лексика Статуту: 14 items (min 6)
+
+--- STRICT GATES (Level B2) ---
+Words        ✅ 4556/4000 (raw: 4789)
+Activities   ✅ 10/3
+Density      ✅ All > 1
+Unique_types ✅ 10/2 types
+Priority     ✅ Priority types used
+Engagement   ✅ 6/5
+Audio        ℹ️ No audio
+Vocab        ⚠️ 0 < 20 (soft target)
+Structure    ✅ Valid Structure
+Lint         ✅ Clean Format
+Pedagogy     ✅ Level-appropriate
+Content_heavy ⚠️ Too many activities: 10 (target 3-9)
+Grammar      ℹ️ N/A (covered by naturalness)
+Naturalness  ✅ 9/10 (High)
+Activity_quality 📋 Quality validation available (optional)
+Immersion    🇺🇦 98.8% (target 90-100% (history))
+Richness     ✅ 99% (history)
+
+Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/audit/velyke-kniazivstvo-lytovske-review.md
+
+✅ AUDIT PASSED.

@@ -1,0 +1,103 @@
+module: poetyka-prose-analysis
+level: c2
+sequence: 29
+version: '2.0'
+title: Поетика — аналіз прози
+focus: literature
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Теорія прози — Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Проза
+  type: reference
+  notes: Prose theory and genres
+- name: Українська проза — укрліб
+  url: https://ukrlib.com.ua/
+  type: primary
+  notes: Classic and contemporary Ukrainian prose
+- name: Поетика прози — Михайло Бахтін
+  url: https://uk.wikipedia.org/wiki/Михайло_Бахтін
+  type: reference
+  notes: Bakhtinian concepts for prose analysis
+content_outline:
+- section: Вступ — Поетика прози
+  words: 500
+  points:
+  - Специфіка прозового слова
+  - Жанри прози (роман, повість, оповідання, новела)
+  - Мала проза vs. велика форма
+- section: Композиція прози
+  words: 700
+  points:
+  - Архітектоніка тексту
+  - Експозиція, зав'язка, кульмінація, розв'язка
+  - Обрамлення і вставні конструкції
+  - Монтаж і фрагментація
+- section: Хронотоп
+  words: 600
+  points:
+  - Бахтінське поняття хронотопу
+  - Типи хронотопів (дороги, замку, порогу)
+  - Час і простір в українській прозі
+  - Хронотоп у Коцюбинського
+- section: Персонаж і характеротворення
+  words: 700
+  points:
+  - Типи персонажів (протагоніст, антагоніст)
+  - Пряма і непряма характеристика
+  - Психологізм
+  - Герой у літературі розстріляного відродження
+- section: Мова прози
+  words: 600
+  points:
+  - Авторське мовлення vs. мова персонажів
+  - Сказ і стилізація
+  - Діалог і монолог
+  - Описи і їх функції
+- section: Аналіз українських прозових текстів
+  words: 500
+  points:
+  - Новела Стефаника — мікроаналіз
+  - Психологізм Коцюбинського
+  - Сучасна проза (Прохасько, Курков)
+- section: Підсумок
+  words: 400
+  points:
+  - Комплексний аналіз прози
+  - Від аналізу до власного письма
+  - Підготовка до літературного перекладу
+word_target: 4000
+vocabulary:
+  required:
+  - поетика (poetics)
+  - хронотоп (chronotope)
+  - композиція (composition)
+  - архітектоніка (architectonics)
+  - характеротворення (characterization)
+  - психологізм (psychologism)
+  - кульмінація (climax)
+  - розв'язка (denouement)
+  - новела (novella/short story)
+  - сказ (skaz)
+  recommended:
+  - протагоніст (protagonist)
+  - антагоніст (antagonist)
+  - експозиція (exposition)
+  - зав'язка (rising action)
+  - монтаж (montage)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - critical-analysis
+  - comparative-study
+  - authorial-intent
+  - essay-response
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-30 (Intertextuality II)
+- c2-35 (Literary Translation II — Prose)
+- 'c2-37 (Creative Writing: Prose)'

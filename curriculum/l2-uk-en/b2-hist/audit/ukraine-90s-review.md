@@ -1,7 +1,7 @@
 # Audit Report: M122 — ukraine-90s.md
 **Level:** B2 | **Module:** M122 | **Phase:** HIST.12 | **Pedagogy:** Not Specified | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 20:23:08
+**Generated:** 2026-01-25 22:23:41
 
 ## Configuration
 **Type:** B2-history

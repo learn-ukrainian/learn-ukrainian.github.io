@@ -1,0 +1,78 @@
+module: 12-aspect-pairs-essential-40
+level: b1
+sequence: 12
+version: '1.0'
+title: 'Видові пари: 40 найважливіших'
+subtitle: Essential Aspect Pairs - The 40 most common verb pairs
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner knows the 40 most essential aspect pairs
+- Learner can recognize and use both forms correctly
+- Learner understands common aspect formation patterns
+sources:
+- name: Ukrainian Frequency Dictionaries
+  url: https://uk.wikipedia.org/wiki/Частотний_словник
+  type: reference
+  notes: Most frequent verbs in Ukrainian corpus
+- name: Ukrainian Aspectual Pairs
+  url: https://uk.wikipedia.org/wiki/Видові_пари_дієслів
+  type: reference
+  notes: Formation patterns for aspectual pairs
+content_outline:
+- section: Тест
+  words: 100
+  points:
+  - Content for Тест
+  - Examples and explanation
+  - Practice or application
+- section: Пояснення
+  words: 750
+  points:
+  - Content for Пояснення
+  - Examples and explanation
+  - Practice or application
+- section: Практика
+  words: 300
+  points:
+  - Content for Практика
+  - Examples and explanation
+  - Practice or application
+- section: Діалоги
+  words: 450
+  points:
+  - Content for Діалоги
+  - Examples and explanation
+  - Practice or application
+word_target: 1500
+vocabulary:
+  required:
+  - робити/зробити (to do/make)
+  - писати/написати (to write)
+  - читати/прочитати (to read)
+  - говорити/сказати (to speak/say)
+  - брати/взяти (to take)
+  - давати/дати (to give)
+  - їсти/з'їсти (to eat)
+  - пити/випити (to drink)
+  - класти/покласти (to put)
+  - ставити/поставити (to put standing)
+  recommended:
+  - відкривати/відкрити (to open)
+  - закривати/закрити (to close)
+  - починати/почати (to begin)
+  - закінчувати/закінчити (to finish)
+  - вчити/вивчити (to study/learn)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - group-sort
+  - match-up
+  - quiz
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-13 (Work week - aspect in action)
+- b1-14 (Aspect integration practice)

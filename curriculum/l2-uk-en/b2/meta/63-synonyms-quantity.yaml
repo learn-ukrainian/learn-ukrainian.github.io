@@ -29,3 +29,32 @@ slug: 63-synonyms-quantity
 naturalness:
   score: 9
   status: PASS
+content_outline:
+- section: Вступ — Кількість та Міра
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Much/Many
+  words: 500
+  points:
+  - багато (much/many - neutral)
+  - чимало (quite a lot - moderate)
+  - безліч (countless - emphatic)
+  - купа (pile - colloquial)
+  - маса (mass - colloquial)
+- section: Few/Little
+  words: 500
+  points:
+  - мало (few/little - neutral)
+  - небагато (not much)
+  - трохи (a little - positive)
+  - кілька (several - countable)
+  - декілька (a few - formal)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

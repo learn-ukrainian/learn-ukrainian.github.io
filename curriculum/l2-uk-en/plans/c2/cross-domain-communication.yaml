@@ -1,0 +1,94 @@
+module: cross-domain-communication
+level: c2
+sequence: 58
+version: '2.0'
+title: Міжгалузева комунікація
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Науково-популярний журнал "Світогляд"
+  url: https://svitohlyad.org.ua/
+  type: reference
+  notes: Examples of cross-domain scientific communication
+- name: Українське науково-популярне видання
+  url: https://kunsht.com.ua/
+  type: reference
+  notes: Examples of explaining complex topics to general audience
+- name: TED-Ed українською
+  url: https://ed.ted.com/
+  type: reference
+  notes: Educational content explaining specialized topics accessibly
+content_outline:
+- section: Вступ — Чому міжгалузева комунікація важлива
+  words: 500
+  points:
+  - Виклики спілкування між різними галузями
+  - Роль "перекладача" між спеціалістами
+  - Науково-популярна комунікація як модель
+- section: Пояснення складного простими словами
+  words: 800
+  points:
+  - Техніки спрощення без втрати точності
+  - Аналогії та метафори
+  - Візуалізація складних концепцій
+  - Уникнення жаргону та технічних термінів
+- section: Адаптація до авдиторії
+  words: 700
+  points:
+  - Аналіз потреб та рівня знань авдиторії
+  - Градація складності пояснення
+  - Зворотний зв'язок та корекція
+- section: Міждисциплінарні проєкти
+  words: 600
+  points:
+  - Комунікація в міждисциплінарних командах
+  - Спільна мова та термінологічні конвенції
+  - Вирішення комунікаційних непорозумінь
+- section: Науковий журналізм
+  words: 600
+  points:
+  - Принципи науково-популярного письма
+  - Баланс між доступністю та точністю
+  - Етика популяризації науки
+- section: Практичні вправи
+  words: 500
+  points:
+  - Переклад фахового тексту для широкої авдиторії
+  - Пояснення концепції з власної галузі
+  - Критичний аналіз науково-популярних текстів
+word_target: 4000
+vocabulary:
+  required:
+  - міжгалузевий (cross-domain)
+  - популяризація (popularization)
+  - спрощення (simplification)
+  - аналогія (analogy)
+  - метафора (metaphor)
+  - авдиторія (audience)
+  - адаптація (adaptation)
+  - доступність (accessibility)
+  - точність (accuracy)
+  - жаргон (jargon)
+  recommended:
+  - міждисциплінарний (interdisciplinary)
+  - візуалізація (visualization)
+  - градація (gradation)
+  - когнітивне навантаження (cognitive load)
+  - інфографіка (infographic)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - fill-in
+  - critical-analysis
+  - essay-response
+  - comparative-study
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-59 (Professional Research Skills)
+- c2-60 (Building Domain Expertise)
+- c2-05 (Публіцистичний стиль — Journalism)

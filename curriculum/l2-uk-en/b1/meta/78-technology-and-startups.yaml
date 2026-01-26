@@ -1,30 +1,94 @@
-module: '78'
-title: Технології та стартапи
-subtitle: Technology and Startups
-version: '1.0'
-phase: B1.7
-level: B1
+module: b1-78
+id: b1-78
+slug: technology-and-startups
+title: "Технології та стартапи"
+subtitle: "Ukraine's Tech Industry and Startup Ecosystem"
+version: '2.0'
+phase: "B1.7 [Contemporary Ukraine]"
 focus: culture
 pedagogy: CBI
-duration: 75
+register: розмовний
+duration: 90
 transliteration: none
-tags:
-- cultural
-- technology
-- IT
-- startups
-- contemporary
-grammar: []
 objectives:
-- Learner can discuss Ukraine's IT sector in Ukrainian
-- Learner can understand authentic texts about Ukrainian tech companies
-- Learner can use technology-related vocabulary in context
-- Learner can compare Ukrainian tech industry with global trends
-word_target: 1500
-vocab_target: 35
-immersion_target: 95
-vocab_count: 23
-slug: 78-technology-and-startups
+  - "Learner can discuss Ukraine's IT sector in Ukrainian"
+  - "Learner can understand authentic texts about Ukrainian tech companies"
+  - "Learner can use technology-related vocabulary in context"
+  - "Learner can compare Ukrainian tech industry with global trends"
+grammar:
+  - "Technology vocabulary"
+  - "Business and startup terminology"
+  - "Discussing trends and innovations"
+word_target: 1200
+content_outline:
+  - section: "Introduction: Tech Ukraine"
+    words: 150
+    points:
+      - "IT industry overview"
+      - "Global reputation"
+      - "Key statistics"
+  - section: "Major Tech Companies"
+    words: 250
+    points:
+      - "Ukrainian tech giants"
+      - "Global success stories"
+      - "Outsourcing industry"
+  - section: "Startup Ecosystem"
+    words: 250
+    points:
+      - "Startup culture"
+      - "Investment landscape"
+      - "Success stories"
+  - section: "Tech Education"
+    words: 250
+    points:
+      - "IT education"
+      - "Coding bootcamps"
+      - "University programs"
+  - section: "Tech During Wartime"
+    words: 200
+    points:
+      - "Resilience and adaptation"
+      - "Remote work culture"
+      - "Tech for defense"
+  - section: "Practice: Tech Discussion"
+    words: 100
+    points:
+      - "Discuss tech trends"
+      - "Compare industries"
+vocabulary_hints:
+  required:
+    - технологія (technology)
+    - стартап (startup)
+    - програміст (programmer)
+    - розробник (developer)
+    - інновація (innovation)
+    - інвестиція (investment)
+    - IT-індустрія (IT industry)
+    - аутсорсинг (outsourcing)
+  recommended:
+    - штучний інтелект (artificial intelligence)
+    - програмування (programming)
+    - венчурний капітал (venture capital)
+    - кіберзахист (cybersecurity)
+activity_hints:
+  - type: reading
+    focus: "Tech company profiles"
+    items: 15
+  - type: matching
+    focus: "Match terms to definitions"
+    items: 20
+  - type: fill-in
+    focus: "Complete tech descriptions"
+    items: 15
+  - type: discussion
+    focus: "Discuss tech trends"
+    items: 10
+prerequisites:
+  - b1-77 (Ukrainian Cinema and TV)
+connects_to:
+  - b1-79 (Sports in Ukraine)
 naturalness:
   score: 9
   status: PASS
+  justification: "Essential for understanding modern Ukraine"

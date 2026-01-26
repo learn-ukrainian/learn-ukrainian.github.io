@@ -1,0 +1,99 @@
+module: volyn-pamiat-i-travma
+level: c1-hist
+sequence: 74
+version: '1.0'
+title: 'Волинь: Пам''ять і травма'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Більше ніж 1943
+  words: 400
+  subsections:
+  - Волинь — не тільки трагедія
+  - Століття співіснування
+  - Чому потрібен контекст
+  - Структура модуля
+- section: Історична Волинь
+  words: 600
+  subsections:
+  - Волинське князівство
+  - Під Литвою і Польщею
+  - Православна Волинь
+  - Етнічний склад
+- section: Міжвоєнний період (1921-1939)
+  words: 700
+  subsections:
+  - Польська влада
+  - Пацифікація
+  - Колонізація — осадники
+  - Українська відповідь
+  - Наростання напруги
+- section: Війна і трагедія (1939-1944)
+  words: 700
+  subsections:
+  - Радянська окупація (1939-1941)
+  - Німецька окупація
+  - УПА і польське підпілля
+  - 1943 — етнічні чистки
+  - Жертви обох сторін
+- section: Контекст і причини
+  words: 500
+  subsections:
+  - Не виправдання — пояснення
+  - Нацистська окупація
+  - Польські репресії — реакція
+  - Радикалізація
+- section: Пам'ять і примирення
+  words: 300
+  subsections:
+  - Різні наративи
+  - Діалог після 1991
+  - 2022 — несподіване примирення
+- section: Підсумок
+  words: 300
+  subsections:
+  - Волинь — складна історія
+  - Пам'ять без спрощення
+  - Перехід до синтезу
+word_target: 3500
+vocabulary:
+- Волинь
+- трагедія
+- етнічна чистка
+- пацифікація
+- осадник
+- співіснування
+- примирення
+- пам'ять
+- жертва
+- контекст
+- міжвоєнний
+- радикалізація
+- окупація
+- підпілля
+- двосторонній
+activities:
+- type: historical-context
+  focus: Pre-1943 Polish-Ukrainian relations in Volhynia
+- type: cause-analysis
+  focus: Factors leading to 1943 violence
+- type: critical-analysis
+  focus: Polish vs. Ukrainian narratives
+- type: reconciliation-analysis
+  focus: Post-1991 dialogue — what worked
+- type: essay-response
+  focus: Чому контекст важливий для розуміння волинських подій?
+sources:
+- name: Волинь (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Волинь
+  type: reference
+  notes: Regional overview
+- name: Волинська трагедія (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Волинська_трагедія
+  type: reference
+  notes: 1943 events
+- name: Польсько-українські відносини (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Польсько-українські_відносини
+  type: reference
+  notes: Bilateral context

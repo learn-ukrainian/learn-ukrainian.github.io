@@ -2,7 +2,7 @@
 
 ## Introduction / Вступ
 
-**Ласкаво просимо до світу розумного шопінгу!** Тепер, коли ви вже маєте солідний багаж граматики — вмієте порівнювати речі, ставити їх у найвищий ступінь та використовувати числівники — настав час застосувати ці знання на практиці. Шопінг в Україні — це не просто обмін грошей на товари; це ціла культура взаємодії. Чи вибираєте ви новий смартфон у сучасному магазині електроніки, чи торгуєтеся за свіжі помідори на гамірному базарі, вам знадобляться спеціальні фрази та стратегії. Сьогодні ми навчимося бути не просто покупцями, а "розумними" покупцями, які знають, як спитати поради, порівняти варіанти та отримати найкращую ціну. Кожна покупка — це нова можливість для мовної практики на шляху до впевненого рівня A2.
+**Ласкаво просимо до світу розумного шопінгу!** Тепер, коли ви вже маєте солідний багаж граматики — вмієте порівнювати речі, ставити їх у найвищий ступінь та використовувати числівники — настав час застосувати ці знання на практиці. Шопінг в Україні — це не просто обмін грошей на товари. Це ціла культура взаємодії. Можливо, ви вибираєте новий смартфон у сучасному магазині електроніки. А може, торгуєтеся за свіжі помідори на гамірному базарі. У будь-якому випадку вам знадобляться спеціальні фрази та стратегії. Сьогодні ми навчимося бути "розумними" покупцями. Ви дізнаєтеся, як спитати поради, порівняти варіанти та отримати найкращу ціну. Кожна покупка — це нова можливість для мовної практики на шляху до впевненого рівня A2.
 
 Time to put your comparison skills into practical, everyday use! This module takes you shopping in the Ukrainian context. From high-tech malls to traditional open-air markets, you'll learn to navigate different retail environments. You'll master the vocabulary for comparing products on the fly, asking for expert recommendations, and even the subtle art of negotiation. In many ways, shopping is the ultimate test of your A2 communicative skills—it involves numbers, adjectives, social politeness, and decision-making under pressure. Let's make sure you're ready for your next trip to the store or the «bazar»! Кожен ваш вибір — це крок до мовної свободи.
 
@@ -20,17 +20,19 @@ Time to put your comparison skills into practical, everyday use! This module tak
 
 Перш ніж порівнювати, нам потрібні базові слова. Вони — ваш фундамент у будь-якій крамниці. В Україні система оплати дуже сучасна, але на ринках все ще цінують готівку. Важливо знати, як запитати про решту чи чек, щоб уникнути непорозумінь.
 
-| Українська  | Транслітерація | Переклад            |
-| :---------- | :------------- | :------------------ |
-| **Ціна**    | Tsina          | Price               |
-| **Знижка**  | Znyzhka        | Discount            |
-| **Чек**     | Chek           | Receipt / Bill      |
-| **Решта**   | Reshta         | Change (money back) |
-| **Готівка** | Hotivka        | Cash                |
-| **Карта**   | Karta          | Card                |
-| **Цінник**  | Tsynnyk        | Price tag           |
+| Українська  | Переклад            |
+| :---------- | :------------------ |
+| **Ціна**    | Price               |
+| **Знижка**  | Discount            |
+| **Чек**     | Receipt / Bill      |
+| **Решта**   | Change (money back) |
+| **Готівка** | Cash                |
+| **Карта**   | Card                |
+| **Цінник**  | Price tag           |
 
 ### 2. Comparing in Action: Quality, Price and Value (Порівняння в дії)
+
+Коли ви бачите два товари, потрібно використовувати порівняльні форми для вибору. Пам'ятайте про узгодження прикметника з родом іменника! Зверніть увагу на етикетки — виробники часто використовують найвищий ступінь, щоб привабити покупців. Ось ваші найкращі інструменти для будь-якої крамниці:
 
 When you see two items, you need to use your comparative skills to decide. Remember that the adjective must agree with the item's gender! Pay attention to the labels on products, which often use superlatives to attract buyers. The words below are your best tools in any shop:
 
@@ -40,9 +42,13 @@ When you see two items, you need to use your comparative skills to decide. Remem
 - **Є щось дешевше?** (Is there something cheaper?)
 - **Який найдешевший варіант?** (Which is the cheapest option?)
 
+На продуктових ринках ви часто почуєте: «Це **солодше**» (This is sweeter) або «Цей сир **свіжіший**» (This cheese is fresher). Ці порівняльні прикметники допомагають пояснити, чому ви купуєте саме цей товар, а не інший.
+
 In food markets, you'll often hear: «Це **солодше**» (This is sweeter) or «Цей сир **свіжіший**» (This cheese is fresher). These comparative adjectives help you justify why you are buying one specific product over another.
 
 ### 3. The Art of the Recommendation (Запит поради)
+
+Не бійтеся просити допомоги! Українці цінують експертні поради, особливо на ринках або у спеціалізованих магазинах. Запит рекомендації — чудовий спосіб розпочати розмову та налагодити контакт із продавцем.
 
 Don't be afraid to ask for help! Ukrainians value expert advice, especially in markets or specialty shops. Asking for a recommendation is a great way to start a conversation and build rapport with the seller.
 
@@ -54,7 +60,9 @@ Don't be afraid to ask for help! Ukrainians value expert advice, especially in m
 
 ### 4. Negotiation & Bartering: The Bazar Spirit (Переговори про ціну)
 
-In a **супермаркет** (supermarket), prices are fixed. But in a **ринок** (market / bazar), bargaining is expected and even enjoyed! It’s a social interaction that shows you value the seller’s time and goods. This is where your A2 numerals and comparative skills really shine.
+У **супермаркеті** ціни фіксовані. Але на **ринку** (базарі) торг очікується і навіть приносить задоволення! Це соціальна взаємодія, яка показує, що ви цінуєте час та товари продавця. Саме тут ваші навички числівників та порівнянь по-справжньому сяють.
+
+In a **супермаркет** (supermarket), prices are fixed. But in a **ринок** (market / bazar), bargaining is expected and even enjoyed! It's a social interaction that shows you value the seller's time and goods. This is where your A2 numerals and comparative skills really shine.
 
 - **Чи можна дешевше?** (Can it be cheaper?)
 - **Зробите знижку?** (Will you give a discount?)
@@ -62,6 +70,8 @@ In a **супермаркет** (supermarket), prices are fixed. But in a **ри
 - **Це занадто дорого для мене.** (This is too expensive for me.)
 
 ### 5. Digital Shopping and Cart Logic (Онлайн-покупки)
+
+Цифрове середовище в Україні неймовірно розвинене. Популярні додатки — "Сільпо", "Розетка", "Глово" — мають специфічні терміни. Їх варто знати для комфортної навігації:
 
 The digital landscape in Ukraine is incredibly advanced. Apps like "Silpo," "Rozetka," and "Glovo" use specific terms you should know to navigate your smartphone interface comfortably:
 
@@ -73,11 +83,13 @@ The digital landscape in Ukraine is incredibly advanced. Apps like "Silpo," "Roz
 
 ### 6. The Register of Refusal (Мистецтво ввічливої відмови)
 
+У різних місцях ви відмовляєтеся по-різному. На ринку можна бути більш описовим, а в торговому центрі — лаконічнішим. Ввічливість — головне правило.
+
 In different environments, you refuse differently. At a market, you might be more descriptive, while in a mall, you might be more concise.
 
-- **Мал (Mall):** «Дякую, мені не підходить». (Thank you, it doesn't suit me.)
-- **Базар (Market):** «Дякую, я ще подумаю і, можливо, повернуся». (Thank you, I'll think about it and maybe come back.)
-- **Technical Shop:** «Я хочу порівняти характеристики». (I want to compare the specifications.)
+- **У торговому центрі:** «Дякую, мені не підходить». (Thank you, it doesn't suit me.)
+- **На базарі:** «Дякую, я ще подумаю і, можливо, повернуся». (Thank you, I'll think about it and maybe come back.)
+- **У магазині техніки:** «Я хочу порівняти характеристики». (I want to compare the specifications.)
 
 > [!tip] **The "I'll Think About It" Strategy**
 > If you want to refuse politely, use the phrase: «**Я подумаю**» (I'll think about it) or «**Я ще пройдуся**» (I'll walk around some more). It’s a universal code for "I’m not buying this right now," and it’s very polite. It allows the seller to "save face" and you to leave gracefully.
@@ -91,10 +103,10 @@ In different environments, you refuse differently. At a market, you might be mor
 
 Match the situation to the correct phrase.
 
-1. You want a discount. -> **Чи можна дешевше?**
-2. You want to know the price. -> **Скільки це коштує?**
-3. You want a recommendation. -> **Що ви порадите?**
-4. You want to pay with a card. -> **Ви приймаєте карти?**
+1. Asking for a lower price. -> **Чи можна дешевше?**
+2. Finding out the cost. -> **Скільки це коштує?**
+3. Seeking expert advice. -> **Що ви порадите?**
+4. Checking payment options. -> **Ви приймаєте карти?**
 
 ### 2. Decision Making (Прийняття рішення)
 

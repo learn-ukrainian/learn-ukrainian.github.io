@@ -1,0 +1,77 @@
+module: ukrainski-sviata-ta-festyvali
+level: b1
+sequence: 86
+version: '2.0'
+title: Українські свята та фестивалі
+subtitle: Ukrainian Holidays and Festivals
+focus: culture
+pedagogy: CBI
+objectives:
+- Learner can discuss Ukrainian holidays and festivals in context
+- Learner can understand authentic texts about Ukrainian celebrations
+- Learner can use celebration-related vocabulary in communicative contexts
+- Learner can compare Ukrainian festivals with their own cultural traditions
+content_outline:
+- section: 'Introduction: Ukrainian Calendar'
+  words: 150
+  points:
+  - Holiday overview
+  - Religious and secular
+  - Calendar differences
+- section: Christmas and New Year
+  words: 250
+  points:
+  - Різдво, Новий рік
+  - Christmas traditions
+  - Caroling customs
+- section: Easter Traditions
+  words: 250
+  points:
+  - Великдень, писанки
+  - Easter preparations
+  - Celebration customs
+- section: National Holidays
+  words: 250
+  points:
+  - День Незалежності
+  - Historical commemorations
+  - Contemporary significance
+- section: Festivals and Events
+  words: 200
+  points:
+  - Music festivals
+  - Cultural events
+  - Regional celebrations
+- section: 'Practice: Holiday Discussion'
+  words: 100
+  points:
+  - Describe celebrations
+  - Compare traditions
+word_target: 1200
+vocabulary:
+  required:
+  - свято (holiday)
+  - фестиваль (festival)
+  - Різдво (Christmas)
+  - Великдень (Easter)
+  - традиція (tradition)
+  - святкувати (to celebrate)
+  - колядки (carols)
+  - писанки (pysanky)
+  recommended:
+  - День Незалежності (Independence Day)
+  - вертеп (nativity play)
+  - кошик (Easter basket)
+  - обряд (ritual)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - reading
+  - discussion
+  - matching
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b1-87 (News Reading)

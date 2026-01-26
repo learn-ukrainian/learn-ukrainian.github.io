@@ -1,0 +1,101 @@
+module: 06-passive-in-context
+level: b2
+sequence: 6
+version: '1.0'
+title: Пасив у контексті — вибір за регістром
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Ukrainian State Standard 2024 - Register System
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Functional styles and passive voice distribution
+- name: Функціональні стилі української мови
+  url: https://uk.wikipedia.org/wiki/Стиль_мовлення
+  type: secondary
+  notes: Overview of Ukrainian functional styles
+- name: CEFR B2 Sociolinguistic Competence
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 register awareness requirements
+content_outline:
+- section: Вступ — Регістр і пасив
+  words: 400
+  points:
+  - Що таке регістр
+  - Чому вибір пасиву залежить від контексту
+  - Підсумок чотирьох форм пасиву
+- section: Таблиця регістрів і форм пасиву
+  words: 600
+  points:
+  - Юридичний документ → -но/-то
+  - Наукова стаття → -ся
+  - Літературний текст → -ний/-тий
+  - Розмовна оповідь → 3-я особа множини
+- section: Практичні сценарії — Юридичний контекст
+  words: 600
+  points:
+  - Оголошення, накази, постанови
+  - Чому -но/-то є обов'язковим
+  - Зразки документів
+- section: Практичні сценарії — Науковий контекст
+  words: 600
+  points:
+  - Опис експерименту, методології
+  - Чому -ся підходить найкраще
+  - Зразки наукових текстів
+- section: Практичні сценарії — Літературний та журналістичний контекст
+  words: 600
+  points:
+  - Художній опис, новини
+  - Дієприкметники в літературі
+  - Комбінування форм у журналістиці
+- section: Практичні сценарії — Розмовний контекст
+  words: 500
+  points:
+  - Побутові оповіді, чутки
+  - Чому 3-я особа множини є природною
+  - Уникання формальності
+- section: Інтегрована практика
+  words: 500
+  points:
+  - Один зміст у чотирьох формах
+  - Критерії вибору
+  - Типові помилки
+word_target: 3800
+vocabulary:
+  required:
+  - регістр (register)
+  - контекст (context)
+  - вибір (choice/selection)
+  - юридичний (legal)
+  - науковий (scientific)
+  - літературний (literary)
+  - журналістичний (journalistic)
+  - розмовний (colloquial)
+  - доречний (appropriate)
+  - недоречний (inappropriate)
+  recommended:
+  - стилістика (stylistics)
+  - комунікативна ситуація (communicative situation)
+  - мовленнєва компетенція (speech competence)
+  - прагматика (pragmatics)
+  - соціолінгвістика (sociolinguistics)
+  forbidden: []
+activities:
+  types_required:
+  - group-sort
+  - error-correction
+  - quiz
+  - fill-in
+  - essay-response
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b2-07 (Active Participles Present)
+- b2-15 (Register Introduction)
+- b2-10 (B2.1a Checkpoint)

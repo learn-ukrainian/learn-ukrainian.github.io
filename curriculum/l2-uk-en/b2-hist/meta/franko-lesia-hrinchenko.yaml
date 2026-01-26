@@ -1,30 +1,104 @@
-title: Франко, Леся, Грінченко
-subtitle: Три титани модерної української культури
-version: '1.0'
-focus: history
-word_target: 4000
-phase: B2.3b
-pedagogy: CBI
-duration: 90
-transliteration: none
-register: публіцистичний
-tags:
-- history
-- biography
-- topic:franko
-- topic:lesya-ukrainka
-- topic:hrinchenko
-- topic:modernism
-grammar:
-- Пасивні конструкції в біографічному контексті
-- Цитати та пряма мова в історичному наративі
-objectives:
-- Проаналізувати внесок Франка, Лесі Українки та Грінченка в українську культуру
-- Зрозуміти концепцію модернізму в українській літературі
-- Вивчити ключові твори кожного з титанів
-vocabulary_count: 35
-vocab_count: 74
+module: b2-hist-85
+id: b2-hist-85
 slug: franko-lesia-hrinchenko
+title: "Франко, Леся, Грінченко"
+subtitle: "Franko, Lesia Ukrainka, Hrinchenko: Titans of Ukrainian Modernism"
+version: '2.0'
+phase: "HIST.8 [Imperial Era]"
+focus: history
+pedagogy: CBI
+register: публіцистичний
+duration: 120
+transliteration: none
+objectives:
+  - "Учень може описати внесок Франка, Лесі Українки та Грінченка в українську культуру"
+  - "Учень може пояснити концепцію модернізму в українській літературі"
+  - "Учень може проаналізувати взаємозв'язок літератури та національного руху"
+  - "Учень може порівняти підходи трьох титанів до питання українства"
+grammar:
+  - "Минулий час в біографічному наративі"
+  - "Цитати та пряма мова"
+  - "Літературознавча термінологія"
+word_target: 4000
+content_outline:
+  - section: "Вступ: Три титани"
+    words: 400
+    points:
+      - "Кінець XIX — початок XX століття: розквіт"
+      - "Література як інструмент національного пробудження"
+      - "Чому ці троє?"
+  - section: "Іван Франко (1856-1916)"
+    words: 800
+    points:
+      - "Універсальний геній: поет, прозаїк, науковець"
+      - "«Каменярі» та інші твори"
+      - "Політична діяльність у Галичині"
+      - "Конфлікт із Драгомановим"
+  - section: "Леся Українка (1871-1913)"
+    words: 800
+    points:
+      - "Від Лариси Косач до Лесі Українки"
+      - "Драматургія світового рівня"
+      - "«Лісова пісня» та філософські драми"
+      - "Хвороба та творчість"
+  - section: "Борис Грінченко (1863-1910)"
+    words: 600
+    points:
+      - "Педагог та лексикограф"
+      - "«Словник української мови»"
+      - "Просвітницька діяльність"
+  - section: "Первинні джерела"
+    words: 800
+    points:
+      - "Фрагменти творів Франка"
+      - "Поезії Лесі Українки"
+      - "Статті Грінченка"
+  - section: "Підсумок: Спадщина титанів"
+    words: 600
+    points:
+      - "Вплив на XX століття"
+      - "Канонізація та деканонізація"
+      - "Сучасне прочитання"
+vocabulary_hints:
+  required:
+    - модернізм (modernism)
+    - драматургія (dramaturgy)
+    - лексикограф (lexicographer)
+    - просвітництво (enlightenment)
+    - поет (poet)
+    - прозаїк (prose writer)
+    - канон (canon)
+    - шедевр (masterpiece)
+  recommended:
+    - символізм (symbolism)
+    - неоромантизм (neo-romanticism)
+    - антологія (anthology)
+    - словник (dictionary)
+    - класик (classic author)
+    - спадщина (legacy)
+activity_hints:
+  - type: reading
+    focus: "Фрагменти творів Франка, Лесі, Грінченка"
+    source: "Літературні твори"
+    items: 4
+  - type: quiz
+    focus: "Біографії та творчість титанів"
+    items: 15
+  - type: match-up
+    focus: "Автор → твір"
+    items: 10
+  - type: fill-in
+    focus: "Літературознавча лексика"
+    items: 10
+  - type: essay-response
+    focus: "Як література кінця XIX століття сприяла національному пробудженню?"
+    word_target: 250
+prerequisites:
+  - b2-hist-84 (Драгоманов)
+connects_to:
+  - b2-hist-86 (Синтез: Імперська доба)
+  - b2-hist-87 (Грушевський)
 naturalness:
-  score: 9
+  score: 10
   status: PASS
+  justification: "Академічний український для літературознавчого аналізу"

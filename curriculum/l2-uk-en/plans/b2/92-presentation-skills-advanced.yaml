@@ -1,0 +1,24 @@
+module: presentation-skills-advanced
+level: b2
+sequence: 92
+version: '2.0'
+title: 'Презентації: Поглиблено'
+subtitle: Advanced Presentation Skills
+focus: skills
+pedagogy: CBI
+objectives:
+- Learner can handle Q&A sessions and difficult questions confidently
+- Learner can adapt presentation style to different audiences
+- Learner can use storytelling and persuasive techniques in presentations
+- Learner can apply advanced visual design principles
+- Learner can deliver effective virtual presentations
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

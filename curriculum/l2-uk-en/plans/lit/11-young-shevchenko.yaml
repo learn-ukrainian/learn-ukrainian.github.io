@@ -1,0 +1,103 @@
+module: 11-young-shevchenko
+level: lit
+sequence: 11
+version: '1.0'
+title: 'Тарас Шевченко: Від Кріпака до Пророка'
+subtitle: 'LIT-011: Анатомія Генія'
+focus: literature
+pedagogy: seminar
+objectives:
+- Outline Shevchenko's path to freedom
+- Analyze the role of the 1838 lottery
+- Explore the "Romantic Hero" image
+sources:
+  primary:
+  - url: https://www.ukrlib.com.ua/bio/printit.php?tid=1749
+    title: Тарас Шевченко — біографія
+    notes: Офіційна біографія на UkrLib
+  secondary:
+  - url: https://www.ukrlib.com.ua/books/printit.php?tid=1
+    title: Кобзар — повний текст
+    notes: Для контексту ранньої творчості
+  - url: https://uk.wikipedia.org/wiki/Тарас_Шевченко
+    title: Шевченко і Академія мистецтв
+    notes: Петербурзький період
+content_outline:
+- section: Вступ — Світ кріпацтва
+  words: 600
+  subsections:
+  - Історичний контекст (1814-1840)
+  - Що таке кріпацтво і як воно працювало
+  - Шанси кріпака стати вільним
+- section: Дитинство і юність (1814-1831)
+  words: 700
+  subsections:
+  - Село Моринці та родина
+  - Дякова школа і перші малюнки
+  - '"Козачок" пана Енгельгардта'
+- section: Петербург — місто контрастів
+  words: 700
+  subsections:
+  - Переїзд до столиці імперії
+  - Зустріч з Іваном Сошенком
+  - Літній сад — доленосна зустріч
+- section: Викуп — детективна історія
+  words: 800
+  subsections:
+  - Брюллов, Жуковський, Венеціанов
+  - Лотерея з портретом Жуковського
+  - 2500 рублів — ціна свободи
+- section: Академія і "Кобзар"
+  words: 600
+  subsections:
+  - Навчання у Брюллова
+  - 1840 рік — вихід "Кобзаря"
+  - Психологія "вільної людини"
+- section: Підсумок — Шанс, Талант, Солідарність
+  words: 400
+  subsections:
+  - Формула успіху Шевченка
+  - Роль випадку в історії
+  - Перехід до аналізу творчості
+word_target: 4500
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - кріпацтво
+  - кріпак
+  - поміщик
+  - панщина
+  - викуп
+  - дяк
+  - академія
+  - лотерея
+  - пророк
+  - геній
+  recommended:
+  - козачок
+  - меценат
+  - портрет
+  - живопис
+  - свобода
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - cloze
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: lit-01 to lit-10 (Kotliarevsky and Kvitka phases)
+  related:
+  - lit-12 (The Ballads — рання творчість)
+  - lit-17 (The Artist — Шевченко-маляр)
+constraints:
+  min_engagement_boxes: 3
+  min_examples: 15
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

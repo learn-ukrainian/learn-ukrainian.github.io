@@ -1,0 +1,87 @@
+module: syntez-informatsiina-viina
+level: c1-hist
+sequence: 113
+version: '1.0'
+title: 'Синтез: Хто виграє війну наративів?'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Війна за правду
+  words: 451
+  subsections:
+  - Огляд модулів 108-112
+  - Інформаційна війна — частина війни
+  - 300 років vs 30 років
+  - Мета синтезу
+- section: Еволюція російської пропаганди
+  words: 677
+  subsections:
+  - «Малоросія» — імперський період
+  - Радянська — «дружба народів»
+  - Путінська — «фашисти»
+  - Спільне — заперечення України
+- section: Поле бою
+  words: 677
+  subsections:
+  - Росія — де виграє
+  - Україна — де виграє
+  - Захід — поле конкуренції
+  - Глобальний Південь
+- section: Уроки 2022
+  words: 790
+  subsections:
+  - Чому «3 дні» провалились
+  - Зеленський — ефект
+  - Західна консолідація
+  - Але — не перемога
+- section: Майбутнє інформаційної війни
+  words: 564
+  subsections:
+  - AI — нові загрози
+  - Deepfakes
+  - Як готуватися
+  - Роль освіти
+- section: Підсумок
+  words: 341
+  subsections:
+  - Війна наративів — довга
+  - Правда — не автоматично перемагає
+  - Перехід до польсько-українських відносин
+word_target: 3500
+vocabulary:
+- синтез
+- інформаційна війна
+- наратив
+- пропаганда
+- дезінформація
+- контрнаратив
+- «м'яка сила»
+- правда
+- маніпуляція
+- медіаграмотність
+- deepfake
+- штучний інтелект
+- ехо-камера
+- поляризація
+- когнітивна війна
+activities:
+- type: essay-response
+  focus: Create information warfare evolution timeline
+- type: battlefield-analysis
+  focus: Where each side wins/loses information war
+- type: future-analysis
+  focus: AI and deepfakes — future information war
+- type: lessons-learned
+  focus: What 2022 taught about information warfare
+- type: essay-response
+  focus: Чи може правда перемогти пропаганду?
+sources:
+- name: Інформаційна війна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Інформаційна_війна
+  type: reference
+  notes: Information warfare overview
+- name: Російсько-українська війна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Російське_вторгнення_в_Україну_(з_2022)
+  type: reference
+  notes: Current war context

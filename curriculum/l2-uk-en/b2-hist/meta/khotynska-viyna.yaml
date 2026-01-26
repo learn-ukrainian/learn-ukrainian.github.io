@@ -1,10 +1,10 @@
 module: khotynska-viyna
 id: b2-hist-46
-title: "Хотинська війна 1621: Козацький щит Європи"
-subtitle: "The Battle That Saved Christian Civilization"
+title: 'Хотинська війна 1621: Козацький щит Європи'
+subtitle: The Battle That Saved Christian Civilization
 slug: khotynska-viyna
 version: '2.0'
-phase: "HIST.5 [Rise of Cossacks]"
+phase: HIST.5 [Rise of Cossacks]
 focus: history
 pedagogy: CBI
 word_target: 4000
@@ -12,84 +12,75 @@ register: публіцистичний
 duration: 120
 transliteration: none
 tags:
-  - history
-  - cossack
-  - khotyn
-  - ottoman
-  - battle
+- history
+- cossack
+- khotyn
+- ottoman
+- battle
 grammar:
-  - "Historical narrative: detailed battle descriptions"
-  - "Military terminology and formations"
+- 'Historical narrative: detailed battle descriptions'
+- Military terminology and formations
 objectives:
-  - "Learner can describe the causes and scale of the Khotyn War of 1621"
-  - "Learner can analyze the tactical role of cossack infantry in the victory"
-  - "Learner can understand the geopolitical consequences of the battle for Europe"
+- Learner can describe the causes and scale of the Khotyn War of 1621
+- Learner can analyze the tactical role of cossack infantry in the victory
+- Learner can understand the geopolitical consequences of the battle for Europe
 vocabulary_count: 25
 naturalness:
   score: 9
   status: PASS
 content_outline:
-  - section: "Вступ"
-    words: 383
-    points:
-      - "The geopolitical context: Ottoman expansion"
-      - "The disaster at Cecora (1620) as a prelude"
-  - section: "Мобілізація сил: Підготовка до апокаліпсису"
-    words: 536
-    points:
-      - "Sultan Osman II's grand army"
-      - "The desperate situation of Poland-Lithuania"
-      - "The cossack council and Sahaidachnyi's decision"
-  - section: "Хід битви: Вересень 1621 — Місяць вогню"
-    words: 500
-    points:
-      - "Key assaults and counter-attacks"
-      - "The death of Chodkiewicz"
-  - section: "Тактика і Стратегія: Секрети перемоги"
-    words: 500
-    points:
-      - "The layout of the camp and fortifications"
-      - "The decisive role of the cossack 'tabor' and artillery"
-      - "Logistics and survival in the camp"
-  - section: "Читання: Свідчення очевидця"
-    words: 196
-    points:
-      - "Analysis of Jakub Sobieski's diary"
-  - section: "Герої та Жертви: Ціна перемоги"
-    words: 246
-    points:
-      - "The leadership of Petro Sahaidachnyi"
-      - "The psychological breaking point of the Ottoman army"
-  - section: "Геополітичні наслідки та пам'ять"
-    words: 400
-    points:
-      - "The decline of the Ottoman Empire"
-      - "The rise of the Cossack myth in Europe"
-      - "Khotyn in Ukrainian literature and art"
-  - section: "Первинні джерела"
-    words: 400
-    points:
-      - "Excerpts from the Khotyn Chronicle"
-      - "Letters of the Sultan"
-      - "Cossack chronicles on Khotyn"
-  - section: "Деколонізаційний погляд"
-    words: 500
-    points:
-      - "Ukraine as a subject of international politics"
-      - "Debunking the myth of 'Polish victory'"
-      - "European context: The Thirty Years' War"
-  - section: "Есе"
-    words: 338
-    points:
-      - "Evaluating the Battle of Khotyn as a turning point in history"
+- section: Вступ
+  words: 383
+  points:
+  - 'The geopolitical context: Ottoman expansion'
+  - The disaster at Cecora (1620) as a prelude
+- section: 'Мобілізація сил: Підготовка до апокаліпсису'
+  words: 536
+  points:
+  - Sultan Osman II's grand army
+  - The desperate situation of Poland-Lithuania
+  - The cossack council and Sahaidachnyi's decision
+- section: 'Тактика і Стратегія: Секрети перемоги'
+  words: 500
+  points:
+  - The layout of the camp and fortifications
+  - The decisive role of the cossack 'tabor' and artillery
+  - Logistics and survival in the camp
+- section: 'Читання: Свідчення очевидця'
+  words: 196
+  points:
+  - Analysis of Jakub Sobieski's diary
+- section: 'Герої та Жертви: Ціна перемоги'
+  words: 246
+  points:
+  - The leadership of Petro Sahaidachnyi
+  - The psychological breaking point of the Ottoman army
+- section: Геополітичні наслідки та пам'ять
+  words: 400
+  points:
+  - The decline of the Ottoman Empire
+  - The rise of the Cossack myth in Europe
+  - Khotyn in Ukrainian literature and art
+- section: Первинні джерела
+  words: 400
+  points:
+  - Excerpts from the Khotyn Chronicle
+  - Letters of the Sultan
+  - Cossack chronicles on Khotyn
+- section: Деколонізаційний погляд
+  words: 500
+  points:
+  - Ukraine as a subject of international politics
+  - Debunking the myth of 'Polish victory'
+  - 'European context: The Thirty Years'' War'
 activity_hints:
-  - type: reading
-    focus: "Eye-witness accounts of the battle intensity"
-  - type: quiz
-    focus: "Timeline and key figures of the Khotyn War"
-  - type: essay-response
-    focus: "The strategic importance of the cossack factor in the victory"
-  - type: comparative-study
-    focus: "Ottoman vs. Cossack military tactics"
-  - type: critical-analysis
-    focus: "The political aftermath: Peace treaty and broken promises"
+- type: reading
+  focus: Eye-witness accounts of the battle intensity
+- type: quiz
+  focus: Timeline and key figures of the Khotyn War
+- type: essay-response
+  focus: The strategic importance of the cossack factor in the victory
+- type: comparative-study
+  focus: Ottoman vs. Cossack military tactics
+- type: critical-analysis
+  focus: 'The political aftermath: Peace treaty and broken promises'

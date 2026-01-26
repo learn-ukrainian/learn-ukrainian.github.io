@@ -1,8 +1,8 @@
 # Audit Report: M12 — yaroslav-wise.md
 **Level:** B2 | **Module:** M12 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 20:23:15
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 22:22:28
 
 ## Configuration
 **Type:** B2-history
@@ -39,7 +39,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4001/4000 (raw: 4429)
+- **Words:** ✅ 4055/4000 (raw: 4481)
 - **Activities:** ✅ 10/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 8/2 types
@@ -70,9 +70,9 @@
 | cultural | 7 | 4 | 100% | 10% | 9.5% |
 | visual | 15 | 4 | 100% | 10% | 9.5% |
 | variety | 0.99 | - | 99% | 5% | 4.7% |
-| paragraph_var | 0.76 | - | 76% | 5% | 3.6% |
+| paragraph_var | 0.78 | - | 78% | 5% | 3.7% |
 | questions | 12 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **98.8%** |
+| **TOTAL** | | | | | **98.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -81,9 +81,9 @@
 | **Ярослав Мудрий — Золота доба Київської Русі** | ⚪️ | 52 | Skipped |
 | **Розминка** | ⚪️ | 128 | Skipped |
 | **Читання: Руська Правда — Перший правовий кодекс** | ✅ | 433 | Included in Core |
-| **Софія Київська — Символ могутності** | ⚪️ | 350 | Skipped |
+| **Софія Київська — Символ могутності** | ⚪️ | 267 | Skipped |
 | **"Тесть Європи" — Династична дипломатія** | ⚪️ | 270 | Skipped |
-| **Культурна революція** | ✅ | 341 | Included in Core |
+| **Культурна революція** | ✅ | 478 | Included in Core |
 | **Первинні джерела** | ✅ | 213 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 2030 | Included in Core |
 | **Підсумок** | ✅ | 74 | Included in Core |

@@ -1,0 +1,631 @@
+level: c1
+updated: '2026-01-26T12:55:33.290077+00:00'
+summary:
+  total: 106
+  planned: 0
+  content: 14
+  activities: 92
+  reviewed: 0
+modules:
+  01-b2-review-bridge:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2589
+    word_target: 4000
+    activity_count: 17
+  02-academic-style-markers:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2580
+    word_target: 4000
+    activity_count: 18
+  03-research-verbs:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 1949
+    word_target: 4000
+    activity_count: 17
+  04-analysis-vocabulary:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2644
+    word_target: 4000
+    activity_count: 18
+  05-logical-connectors:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2320
+    word_target: 4000
+    activity_count: 17
+  06-hedging-modality:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2429
+    word_target: 4000
+    activity_count: 18
+  07-citation-reference:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2413
+    word_target: 4000
+    activity_count: 16
+  08-essay-structure:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2032
+    word_target: 4000
+    activity_count: 17
+  09-thesis-development:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2022
+    word_target: 4000
+    activity_count: 16
+  10-counterarguments:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2260
+    word_target: 4000
+    activity_count: 16
+  11-summary-paraphrase:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 1991
+    word_target: 4000
+    activity_count: 16
+  12-research-article:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2053
+    word_target: 4000
+    activity_count: 18
+  13-abstract-writing:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2341
+    word_target: 4000
+    activity_count: 16
+  14-literature-review:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 1936
+    word_target: 4000
+    activity_count: 16
+  15-oral-presentations:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2165
+    word_target: 4000
+    activity_count: 16
+  16-advanced-punctuation:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2085
+    word_target: 4000
+    activity_count: 16
+  17-irregular-verbs-complete:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2222
+    word_target: 4000
+    activity_count: 12
+  18-essay-writing-practice:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 1958
+    word_target: 4000
+    activity_count: 12
+  19-practice-ii-article-critique:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2152
+    word_target: 4000
+    activity_count: 12
+  c1-1-checkpoint:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 1993
+    word_target: 4000
+    activity_count: 25
+  21-cv-resume-writing:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2609
+    word_target: 4000
+    activity_count: 16
+  22-job-interview:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2091
+    word_target: 4000
+    activity_count: 16
+  23-business-etiquette:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2109
+    word_target: 4000
+    activity_count: 12
+  24-digital-communication:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 1907
+    word_target: 4000
+    activity_count: 12
+  25-political-system:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2026
+    word_target: 4000
+    activity_count: 13
+  26-media-landscape:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2022
+    word_target: 4000
+    activity_count: 12
+  27-global-context:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 1868
+    word_target: 4000
+    activity_count: 12
+  28-dialects-of-ukrainian:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2116
+    word_target: 4000
+    activity_count: 12
+  29-surzhyk:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2318
+    word_target: 4000
+    activity_count: 12
+  30-history-of-language:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2028
+    word_target: 4000
+    activity_count: 12
+  31-diaspora-ukrainian:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2304
+    word_target: 4000
+    activity_count: 12
+  32-professional-scenarios:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2848
+    word_target: 4000
+    activity_count: 13
+  33-case-studies:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2256
+    word_target: 4000
+    activity_count: 12
+  34-review:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2180
+    word_target: 4000
+    activity_count: 12
+  35-speaking-practice:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2365
+    word_target: 4000
+    activity_count: 14
+  36-metaphor-simile:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2064
+    word_target: 1500
+    activity_count: 12
+  37-irony-sarcasm:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2021
+    word_target: 1500
+    activity_count: 12
+  38-hyperbole-litotes:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2287
+    word_target: 1500
+    activity_count: 12
+  39-euphemism-taboo:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2222
+    word_target: 1500
+    activity_count: 12
+  40-rhetorical-questions:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2118
+    word_target: 1500
+    activity_count: 12
+  41-degrees-of-certainty:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2127
+    word_target: 1500
+    activity_count: 16
+  42-politeness-strategies:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2508
+    word_target: 1500
+    activity_count: 14
+  high-formal-register:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2056
+    word_target: 1500
+    activity_count: 12
+  intimate-register:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2134
+    word_target: 1500
+    activity_count: 12
+  slang-youth:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2121
+    word_target: 1500
+    activity_count: 12
+  review-c1-4:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2071
+    word_target: 1500
+    activity_count: 12
+  checkpoint-c1-4:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 1740
+    word_target: 1500
+    activity_count: 14
+  kobzari-bandura:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2009
+    word_target: 1500
+    activity_count: 16
+  ritual-songs:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2054
+    word_target: 1500
+    activity_count: 15
+  50-kolyskovi-ta-dumy:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2175
+    word_target: 1500
+    activity_count: 12
+  51-hopak-i-kozachok:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2077
+    word_target: 1500
+    activity_count: 12
+  52-rehionalni-tantsi:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 1996
+    word_target: 1500
+    activity_count: 12
+  53-pysanky:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 1982
+    word_target: 1500
+    activity_count: 12
+  54-vyshyvanka:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 1984
+    word_target: 1500
+    activity_count: 12
+  55-honcharstvo-ta-rizbyarstvo:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2673
+    word_target: 1500
+    activity_count: 16
+  56-narodna-mifolohiia:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2246
+    word_target: 1500
+    activity_count: 16
+  57-narodna-medytsyna:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2539
+    word_target: 1500
+    activity_count: 12
+  58-kozatski-lehendy:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2206
+    word_target: 1500
+    activity_count: 12
+  59-kazky-ta-prytchi:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2378
+    word_target: 1500
+    activity_count: 12
+  60-zymovi-obriady:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2245
+    word_target: 1500
+    activity_count: 12
+  61-vesna-ta-lito:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2087
+    word_target: 1500
+    activity_count: 12
+  62-khrestyny-ta-vesillia:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2226
+    word_target: 1500
+    activity_count: 12
+  63-pomynalni-obriady:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2700
+    word_target: 1500
+    activity_count: 12
+  64-halychyna:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2240
+    word_target: 1500
+    activity_count: 13
+  65-ukrainian-avant-garde:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 3756
+    word_target: 1500
+    activity_count: 12
+  66-traditional-clothing:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2411
+    word_target: 1500
+    activity_count: 12
+  67-ukrainian-cuisine-traditions:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2245
+    word_target: 1500
+    activity_count: 12
+  68-ukrainian-house:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2618
+    word_target: 1500
+    activity_count: 12
+  69-winter-holidays:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2040
+    word_target: 1500
+    activity_count: 12
+  70-spring-holidays:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2069
+    word_target: 1500
+    activity_count: 12
+  71-summer-holidays:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2228
+    word_target: 1500
+    activity_count: 13
+  72-wedding-rituals:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2093
+    word_target: 1500
+    activity_count: 12
+  73-birth-rituals:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2080
+    word_target: 1500
+    activity_count: 12
+  74-funeral-rituals:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2101
+    word_target: 1500
+    activity_count: 12
+  75-podillia-ta-volyn:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 3352
+    word_target: 1500
+    activity_count: 14
+  76-klasychna-muzyka-1-vytoky:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2831
+    word_target: 1500
+    activity_count: 14
+  77-klasychna-muzyka-2-natsionalna-shkola:
+    status: content
+    last_updated: '2026-01-26'
+    content_words: 2763
+    word_target: 1500
+  78-klasychna-muzyka-3-modernizm-i-suchasnist:
+    status: content
+    last_updated: '2026-01-26'
+    content_words: 2826
+    word_target: 1500
+  79-operne-mystetstvo:
+    status: content
+    last_updated: '2026-01-26'
+    content_words: 2671
+    word_target: 1500
+  80-vokalne-mystetstvo:
+    status: content
+    last_updated: '2026-01-26'
+    content_words: 2173
+    word_target: 1500
+  81-obrazotvorche-mystetstvo-1:
+    status: content
+    last_updated: '2026-01-26'
+    content_words: 2030
+    word_target: 1500
+  82-obrazotvorche-mystetstvo-2:
+    status: content
+    last_updated: '2026-01-26'
+    content_words: 2040
+    word_target: 1500
+  83-balet-i-tanets:
+    status: content
+    last_updated: '2026-01-26'
+    content_words: 1980
+    word_target: 1500
+  84-teatralne-mystetstvo-1:
+    status: content
+    last_updated: '2026-01-26'
+    content_words: 1995
+    word_target: 1500
+  85-teatralne-mystetstvo-2:
+    status: content
+    last_updated: '2026-01-26'
+    content_words: 1536
+    word_target: 1500
+  86-ukrainska-arkhitektura:
+    status: content
+    last_updated: '2026-01-26'
+    content_words: 1422
+    word_target: 1500
+  87-suchasna-muzyka:
+    status: content
+    last_updated: '2026-01-26'
+    content_words: 1176
+    word_target: 1500
+  88-ukrainske-kino:
+    status: content
+    last_updated: '2026-01-26'
+    content_words: 1192
+    word_target: 1500
+  89-praktyka-1-narodna-kultura:
+    status: content
+    last_updated: '2026-01-26'
+    content_words: 2203
+    word_target: 1500
+  90-praktyka-2-vysoke-mystetstvo:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2095
+    word_target: 1500
+    activity_count: 17
+  91-c1-5-checkpoint:
+    status: content
+    last_updated: '2026-01-26'
+    content_words: 1981
+    word_target: 1500
+  92-istoriia-ukrainskoi-literatury:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2184
+    word_target: 1500
+    activity_count: 15
+  93-kotliarevskyi-eneida:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2249
+    word_target: 1500
+    activity_count: 15
+  94-shevchenko-shchodennyk-lysty:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2181
+    word_target: 1500
+    activity_count: 16
+  95-shevchenko-poeziia:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2234
+    word_target: 1500
+    activity_count: 14
+  96-shevchenko-spadshchyna:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2801
+    word_target: 1500
+    activity_count: 13
+  97-franko-liryka:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2224
+    word_target: 1500
+    activity_count: 13
+  98-franko-proza:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2181
+    word_target: 1500
+    activity_count: 13
+  99-lesya-ukrainka-liryka:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2488
+    word_target: 1500
+    activity_count: 13
+  100-lesya-ukrainka-drama:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2123
+    word_target: 1500
+    activity_count: 13
+  101-vovchok-myrnyi:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2077
+    word_target: 1500
+    activity_count: 13
+  102-kotsiubynskyi:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 1971
+    word_target: 1500
+    activity_count: 13
+  103-literaturoznavcha-terminolohiia:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2495
+    word_target: 1500
+    activity_count: 13
+  104-analiz-poezii:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2069
+    word_target: 1500
+    activity_count: 13
+  105-c1-6-review:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2044
+    word_target: 1500
+    activity_count: 13
+  106-c1-6-checkpoint:
+    status: activities
+    last_updated: '2026-01-26'
+    content_words: 2495
+    word_target: 1500
+    activity_count: 23

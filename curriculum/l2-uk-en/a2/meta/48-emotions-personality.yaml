@@ -1,29 +1,97 @@
 module: a2-48
-title: Emotions and Personality
-subtitle: Describing People
-version: '1.0'
-phase: A2.3
+id: a2-48
+slug: emotions-personality
+title: "Emotions and Personality"
+subtitle: "Describing People"
+version: '2.0'
+phase: "A2.5 [Vocabulary Expansion]"
+focus: vocabulary
 pedagogy: PPP
+register: розмовний
 duration: 60
 transliteration: none
-tags:
-- vocabulary
-- emotions
-- personality
-- description
-grammar:
-- adjectives of personality (добрий, злий)
-- describing feelings (мені сумно)
-- characterizing people
-- emotions vocabulary
 objectives:
-- Learner can describe personality traits
-- Learner can describe emotional states
-- Learner can characterize people
-- Learner can express feelings
-vocabulary_count: 25
-slug: 48-emotions-personality
-focus: vocabulary
+  - "Learner can describe personality traits"
+  - "Learner can describe emotional states"
+  - "Learner can characterize people"
+  - "Learner can express feelings"
+grammar:
+  - "Adjectives of personality (добрий, злий)"
+  - "Describing feelings (мені сумно)"
+  - "Dative for emotional states"
+word_target: 1000
+content_outline:
+  - section: "Introduction: Describing People"
+    words: 100
+    points:
+      - "Personality vocabulary"
+      - "Emotional intelligence"
+      - "Cultural expressions"
+  - section: "Personality Traits"
+    words: 200
+    points:
+      - "Positive: добрий, щедрий, чесний"
+      - "Negative: злий, скупий, брехливий"
+      - "Neutral: спокійний, активний"
+  - section: "Emotional States"
+    words: 200
+    points:
+      - "радість, сум, злість, страх"
+      - "Мені сумно/весело/страшно"
+      - "Expressing how you feel"
+  - section: "Characterizing People"
+    words: 200
+    points:
+      - "Він/вона... (He/she is...)"
+      - "Character descriptions"
+      - "First impressions"
+  - section: "Reactions and Responses"
+    words: 150
+    points:
+      - "дивуватися, радіти, сумувати"
+      - "Emotional reactions"
+      - "Expressing sympathy"
+  - section: "Practice: Describe Characters"
+    words: 150
+    points:
+      - "Describe personality"
+      - "Express emotions"
+vocabulary_hints:
+  required:
+    - добрий (kind)
+    - злий (angry/evil)
+    - щасливий (happy)
+    - сумний (sad)
+    - розумний (smart)
+    - веселий (cheerful)
+    - спокійний (calm)
+    - нервовий (nervous)
+  recommended:
+    - щедрий (generous)
+    - скупий (stingy)
+    - чесний (honest)
+    - лінивий (lazy)
+    - працьовитий (hardworking)
+    - терплячий (patient)
+activity_hints:
+  - type: vocabulary-drill
+    focus: "Emotions and personality"
+    items: 30
+  - type: matching
+    focus: "Match traits to descriptions"
+    items: 20
+  - type: fill-in
+    focus: "Complete character descriptions"
+    items: 15
+  - type: speaking
+    focus: "Describe people you know"
+    items: 8
+prerequisites:
+  - a1-26 (Describing Things - Adjectives)
+  - a2-47 (Nature and Weather)
+connects_to:
+  - a2-49 (Work and Professions)
 naturalness:
-  score: 9
+  score: 10
   status: PASS
+  justification: "Essential personality vocabulary"

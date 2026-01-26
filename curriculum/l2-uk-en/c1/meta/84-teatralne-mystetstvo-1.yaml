@@ -1,23 +1,44 @@
 module: c1-84
-title: 'Театральне мистецтво I'
-subtitle: 'Theater Arts I — From Origins to Kurbas'
+title: Театральне мистецтво I
+subtitle: Theater Arts I — From Origins to Kurbas
 version: '2.0'
-phase: 'C1.5 Folk Culture & Fine Arts'
+phase: C1.5 Folk Culture & Fine Arts
 focus: fine-arts
-pedagogy: 'CBI'
+pedagogy: CBI
 duration: 120
 transliteration: none
 tags:
-  - arts
-  - theater
-  - kurbas
-  - drama
+- arts
+- theater
+- kurbas
+- drama
 grammar:
-  - 'Dramatic terminology'
-  - 'Analysis of staging'
+- Dramatic terminology
+- Analysis of staging
 objectives:
-  - 'Learner explores the origins of Ukrainian theater (Vertep, School Drama).'
-  - 'Learner understands the role of the Coryphaei Theater.'
-  - 'Learner analyzes the revolutionary impact of Les Kurbas and Berezil.'
+- Learner explores the origins of Ukrainian theater (Vertep, School Drama).
+- Learner understands the role of the Coryphaei Theater.
+- Learner analyzes the revolutionary impact of Les Kurbas and Berezil.
 vocabulary_count: 25
 slug: 84-teatralne-mystetstvo-1
+content_outline:
+- section: Вступ — Театральне мистецтво I
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Origins: Вертеп, шкільна драма — folk and religious roots'
+  - '19th century: Котляревський, Кропивницький, **Марія Заньковецька** — national
+    theater birth'
+  - 'Revolutionary: **Лесь Курбас**, Театр "Березіль" — world-class experimental theater,
+    Executed Renaissance martyr'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

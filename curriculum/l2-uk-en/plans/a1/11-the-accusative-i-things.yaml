@@ -1,0 +1,78 @@
+module: the-accusative-i-things
+level: a1
+sequence: 11
+version: '2.0'
+title: 'The Accusative I: Things'
+subtitle: Making Direct Objects Work
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can form accusative case for inanimate nouns
+- Learner can use accusative after verbs like бачити, брати, мати
+- Learner can distinguish between nominative and accusative forms
+- Learner understands when accusative is required
+content_outline:
+- section: 'Introduction: What is the Accusative?'
+  words: 150
+  points:
+  - Direct object case
+  - Answers 'what?' after verb
+  - Я бачу... + accusative
+- section: 'Feminine Nouns: The Change'
+  words: 250
+  points:
+  - '-а → -у: книга → книгу'
+  - '-я → -ю: земля → землю'
+  - 'Soft sign: no change (ніч → ніч)'
+- section: 'Masculine and Neuter: No Change'
+  words: 200
+  points:
+  - Inanimate masculine stays same
+  - стіл → стіл, дім → дім
+  - 'Neuter always same: вікно → вікно'
+- section: Verbs That Take Accusative
+  words: 200
+  points:
+  - бачити (to see), чути (to hear)
+  - брати (to take), мати (to have)
+  - любити (to love), хотіти (to want)
+- section: Building Sentences
+  words: 100
+  points:
+  - Я читаю книгу
+  - Він бачить стіл
+  - Word order flexibility
+- section: 'Practice: What Do You See?'
+  words: 100
+  points:
+  - Describe what you see
+  - Talk about possessions
+word_target: 1000
+vocabulary:
+  required:
+  - бачити (to see)
+  - чути (to hear)
+  - брати (to take)
+  - мати (to have)
+  - хотіти (to want)
+  - купувати (to buy)
+  - книга (book)
+  - каву (coffee acc.)
+  recommended:
+  - любити (to love)
+  - шукати (to look for)
+  - знаходити (to find)
+  - відкривати (to open)
+  forbidden: []
+activities:
+  types_required:
+  - transformation
+  - fill-in
+  - sentence-building
+  - quiz
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a1-12 (The Accusative II - People)
+- a1-18 (Food and Shopping)

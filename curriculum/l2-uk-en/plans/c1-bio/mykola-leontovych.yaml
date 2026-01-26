@@ -1,0 +1,108 @@
+module: mykola-leontovych
+level: c1-bio
+sequence: 43
+version: '2.0'
+title: 'Микола Леонтович: Автор «Щедрика»'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Микола_Леонтович
+    title: Микола Леонтович (Wikipedia UA)
+    notes: Біографія, музична діяльність, загибель
+  secondary:
+  - url: https://uk.wikipedia.org/wiki/Щедрик_(пісня)
+    title: Щедрик
+    notes: Найвідоміший твір та його всесвітнє поширення
+  - url: https://uk.wikipedia.org/wiki/Українська_хорова_музика
+    title: Українська хорова музика
+    notes: Контекст розвитку хорового мистецтва
+content_outline:
+- section: Вступ — Пісня, що підкорила світ
+  words: 400
+  subsections:
+  - Микола Леонтович — автор «Щедрика», відомого як Carol of the Bells
+  - Від сільського вчителя до класика хорової музики
+  - Трагічна загибель від рук більшовицького агента
+- section: Ранні роки та освіта (1877-1903)
+  words: 600
+  subsections:
+  - Народження в селі Монастирок на Поділлі
+  - Навчання в Київській консерваторії
+  - Музична родина та раннє захоплення фольклором
+  - Перші композиторські спроби
+- section: Педагогічна діяльність (1903-1917)
+  words: 700
+  subsections:
+  - Робота вчителем співів у Вінниці та інших містах
+  - Організація хорів та музичних гуртків
+  - Збирання та обробка народних пісень
+  - Створення «Щедрика» та інших хорових шедеврів
+- section: Революційні роки (1917-1921)
+  words: 700
+  subsections:
+  - Активна культурна діяльність в добу УНР
+  - Робота в Київській консерваторії
+  - Співпраця з хором Кирила Стеценка
+  - Турне «Щедрика» Європою з хором Олександра Кошиця
+- section: Загибель та пам'ять (1921)
+  words: 800
+  subsections:
+  - Арешт та вбивство 23 січня 1921 року
+  - Агент ЧК Грищенко як виконавець
+  - Обставини трагедії та її приховування
+  - Похорон у рідному селі
+- section: Світове визнання «Щедрика»
+  words: 800
+  subsections:
+  - Адаптація Пітера Вільгоуського — Carol of the Bells
+  - Поширення у США та Європі
+  - «Щедрик» у сучасній культурі
+  - Повернення української ідентичності пісні
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - композитор
+  - хор
+  - обробка
+  - фольклор
+  - консерваторія
+  - мелодія
+  - колядка
+  - диригент
+  - партитура
+  - спадщина
+  recommended:
+  - поліфонія
+  - акапела
+  - гармонія
+  - етнографія
+  - репертуар
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-23-mykola-lysenko
+  related:
+  - c1-bio-64-borys-liatoshynskyi
+  - c1-bio-79-volodymyr-ivasyuk
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

@@ -1,0 +1,106 @@
+module: 09-ethnography
+level: lit
+sequence: 9
+version: '1.0'
+title: 'Етнографія як Література: Український Світ Квітки'
+subtitle: 'LIT-009: Обряд як Сюжетний Каркас'
+focus: literature
+pedagogy: seminar
+objectives:
+- Analyze the role of rituals in Kvitka's prose
+- Compare wedding and funeral rites in "Marusya"
+- Evaluate the ethnographic accuracy of Kvitka's works
+sources:
+  primary:
+  - url: https://www.ukrlib.com.ua/books/printit.php?tid=252
+    title: Маруся — весілля та похорон
+    notes: Етнографічні описи в повісті
+  - url: https://www.ukrlib.com.ua/books/printit.php?tid=253
+    title: Сватання на Гончарівці
+    notes: Весільний обряд у п'єсі
+  secondary:
+  - url: https://uk.wikipedia.org/wiki/Українські_народні_обряди
+    title: Українські народні обряди
+    notes: Етнографічний контекст
+content_outline:
+- section: Вступ — Обряд як структура оповіді
+  words: 500
+  subsections:
+  - Роль обряду в класичній українській прозі
+  - Весілля і похорон як "каркас" сюжету
+  - Квітка як етнограф-письменник
+- section: Весільний обряд — структура і символіка
+  words: 800
+  subsections:
+  - Сватання (формули ввічливості)
+  - Заручини та дівич-вечір
+  - Вінчання та весільний бенкет
+  - '"Сватання на Гончарівці" як джерело'
+- section: Похоронний обряд — кульмінація сентименталізму
+  words: 700
+  subsections:
+  - Голосіння та плач
+  - Похоронна процесія
+  - Поминки
+  - Функція смерті в сентиментальній естетиці
+- section: Економічна етнографія — феномен чумацтва
+  words: 600
+  subsections:
+  - Хто такі чумаки
+  - Чумацький шлях (Україна — Крим — Одеса)
+  - Роль чумацтва в "Марусі"
+- section: Соціальна топографія села
+  words: 600
+  subsections:
+  - Церква як духовний центр
+  - Шинок як соціальний простір
+  - Хата — мікрокосм родини
+- section: Підсумок — Код нації
+  words: 400
+  subsections:
+  - Цінності та страхи українського селянства
+  - Квітка як "архіваріус" культури
+  - Зв'язок з "Тінями забутих предків"
+word_target: 4500
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - етнографія
+  - обряд
+  - весілля
+  - похорон
+  - сватання
+  - чумацтво
+  - голосіння
+  - поминки
+  - топографія
+  - символіка
+  recommended:
+  - заручини
+  - вінчання
+  - дівич-вечір
+  - хата
+  - шинок
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - cloze
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: lit-07 (Marusya — етнографічні описи)
+  related:
+  - lit-10 (Language of Kvitka — обрядова лексика)
+  - c1-hist (Historical modules — культурна пам'ять)
+constraints:
+  min_engagement_boxes: 3
+  min_examples: 15
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

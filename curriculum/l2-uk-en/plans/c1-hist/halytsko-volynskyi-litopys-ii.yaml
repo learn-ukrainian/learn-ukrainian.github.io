@@ -1,0 +1,98 @@
+module: halytsko-volynskyi-litopys-ii
+level: c1-hist
+sequence: 16
+version: '1.0'
+title: 'Галицько-Волинський літопис II: Стиль і світогляд'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Література як історія
+  words: 400
+  subsections:
+  - Від змісту до форми
+  - Галицько-Волинський літопис як літературний твір
+  - Чому стиль важливий для історика?
+- section: Літературні особливості
+  words: 600
+  subsections:
+  - Поетичний стиль — «військова повість»
+  - Риторичні прийоми
+  - Епічні порівняння
+  - Діалоги — чи реальні?
+  - Відмінність від ПМЛ
+- section: Західні впливи
+  words: 600
+  subsections:
+  - Рицарська культура
+  - Образ ідеального князя
+  - Порівняння з європейськими хроніками
+  - Латинські джерела — чи знав автор?
+- section: Світогляд літописця
+  words: 600
+  subsections:
+  - Християнська провіденційність
+  - Політичні ідеали — єдність, сила
+  - Відношення до «поганих» — татар, литовців
+  - Руська ідентичність — що це означало?
+- section: Фрагмент — Опис битви
+  words: 500
+  subsections:
+  - Текст (з глосами)
+  - Епічний стиль
+  - Героїзація князів
+  - Військова лексика
+- section: Волинська частина
+  words: 500
+  subsections:
+  - Зміна стилю і перспективи
+  - Правління Василька та Льва
+  - Занепад князівства
+  - Останні записи — що сталося далі?
+- section: Підсумок
+  words: 300
+  subsections:
+  - Літопис як культурний документ
+  - Західна Русь — європейська перспектива
+  - Значення для пізнішої історії Галичини
+word_target: 3500
+vocabulary:
+- стиль
+- військова повість
+- риторика
+- рицарська культура
+- провіденційність
+- ідентичність
+- епічний
+- світогляд
+- героїзація
+- занепад
+- гіпербола
+- порівняння
+- формула
+- топос
+- латинізм
+activities:
+- type: reading
+  focus: Analyze stylistic features of a battle description
+- type: comparative-study
+  focus: Compare GVL style with PVL style — what's different?
+- type: reading
+  focus: Find parallels with Western European chronicles
+- type: essay-response
+  focus: Translate passage into modern journalistic style
+- type: essay-response
+  focus: Чим Галицько-Волинський літопис відрізняється від Повісті минулих літ?
+sources:
+- name: Галицько-Волинський літопис (текст)
+  url: https://litopys.org.ua/hvlitop/hvl.htm
+  type: primary
+  notes: Full text
+- name: Лев Данилович
+  url: https://uk.wikipedia.org/wiki/Лев_I_Данилович
+  type: reference
+  notes: Danylo's successor
+- name: Середньовічна українська література
+  url: https://uk.wikipedia.org/wiki/Українська_середньовічна_література
+  type: reference
+  notes: Literary context

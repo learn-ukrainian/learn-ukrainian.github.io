@@ -27,3 +27,32 @@ slug: 66-synonyms-abstract
 naturalness:
   score: 9
   status: PASS
+content_outline:
+- section: Вступ — Абстрактні Поняття та Ідеї
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Thought/Idea
+  words: 500
+  points:
+  - думка (thought - general)
+  - ідея (idea - concept)
+  - погляд (view - perspective)
+  - точка зору (point of view)
+  - переконання (belief - conviction)
+- section: Concept/Notion
+  words: 500
+  points:
+  - поняття (concept - understanding)
+  - уявлення (notion - mental picture)
+  - концепція (conception - framework)
+  - теорія (theory - systematic)
+  - гіпотеза (hypothesis - tentative)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

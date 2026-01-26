@@ -1,26 +1,105 @@
-title: Шлях до незалежності
-subtitle: The Path to Independence
+module: b2-hist-119
+id: b2-hist-119
+slug: shliakh-nezalezhnosti
+title: "Шлях до незалежності"
+subtitle: "The Path to Independence"
 version: '2.0'
-phase: B2.3d Independence & War
+phase: "HIST.12 [Independence & Modern Era]"
 focus: history
-word_target: 4000
 pedagogy: CBI
+register: публіцистичний
 duration: 120
 transliteration: none
-tags:
-- history
-- independence
-- rukh
-- revolution
-grammar:
-- Historical narrative register
-- Formal political terminology
 objectives:
-- Understand the timeline of events leading to Ukrainian independence (1989-1991)
-- Identify key figures and movements (Rukh, Chornovil, Granite Revolution)
-- Explain the significance of the 1991 referendum
-vocabulary_count: 25
-slug: shliakh-do-nezalezhnosti
+  - "Учень може описати хронологію подій 1989-1991 років"
+  - "Учень може пояснити значення Акту про незалежність та референдуму"
+  - "Учень може проаналізувати роль Гранітної революції"
+  - "Учень може оцінити внесок різних сил у здобуття незалежності"
+grammar:
+  - "Минулий час у хронологічному наративі"
+  - "Політична та юридична лексика"
+  - "Складнопідрядні речення"
+word_target: 4000
+content_outline:
+  - section: "Вступ: Крах імперії"
+    words: 400
+    points:
+      - "1989-1991: розпад СРСР"
+      - "Україна на шляху до свободи"
+      - "Ключові дати та події"
+  - section: "1989-1990: Пробудження"
+    words: 800
+    points:
+      - "Рух та демократичні сили"
+      - "Живий ланцюг 21 січня 1990"
+      - "Декларація про суверенітет (липень 1990)"
+      - "Гранітна революція (жовтень 1990)"
+  - section: "1991: Рік незалежності"
+    words: 1000
+    points:
+      - "Путч у Москві (серпень 1991)"
+      - "Акт проголошення незалежності (24 серпня)"
+      - "Референдум 1 грудня 1991"
+      - "Вибори президента: Кравчук"
+      - "Кінець СРСР: Біловезька угода"
+  - section: "Первинні джерела"
+    words: 800
+    points:
+      - "Текст Акту про незалежність"
+      - "Результати референдуму"
+      - "Виступи політиків"
+  - section: "Деколонізаційний погляд"
+    words: 500
+    points:
+      - "Російський наратив: «розвал СРСР»"
+      - "Реальність: воля українського народу"
+      - "Незалежність як деколонізація"
+  - section: "Підсумок: Нова держава"
+    words: 500
+    points:
+      - "Визнання незалежності світом"
+      - "Виклики нової держави"
+      - "24 серпня — День Незалежності"
+vocabulary_hints:
+  required:
+    - незалежність (independence)
+    - референдум (referendum)
+    - суверенітет (sovereignty)
+    - декларація (declaration)
+    - акт (act)
+    - проголошення (proclamation)
+    - голосування (voting)
+    - держава (state)
+  recommended:
+    - путч (coup)
+    - розпад (dissolution)
+    - конституція (constitution)
+    - президент (president)
+    - парламент (parliament)
+    - визнання (recognition)
+activity_hints:
+  - type: reading
+    focus: "Текст Акту про незалежність"
+    source: "Офіційні документи"
+    items: 4
+  - type: quiz
+    focus: "Шлях України до незалежності"
+    items: 15
+  - type: match-up
+    focus: "Дата → подія 1989-1991"
+    items: 10
+  - type: true-false
+    focus: "Факти про незалежність"
+    items: 10
+  - type: essay-response
+    focus: "Чому референдум 1 грудня 1991 року став вирішальним для незалежності?"
+    word_target: 250
+prerequisites:
+  - b2-hist-118 (Рух)
+connects_to:
+  - b2-hist-120 (Україна 1991-2004)
+  - b2-hist-121 (Помаранчева революція)
 naturalness:
-  score: 9
+  score: 10
   status: PASS
+  justification: "Академічний український для політичної історії"

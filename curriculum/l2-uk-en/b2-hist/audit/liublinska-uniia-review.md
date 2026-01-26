@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M31 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 20:22:27
+**Generated:** 2026-01-25 22:22:42
 
 ## Configuration
 **Type:** B2-history
@@ -39,7 +39,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4001/4000 (raw: 4199)
+- **Words:** ⚠️ 3911/4000 (raw: 4105) (89 short)
 - **Activities:** ✅ 10/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 10/2 types
@@ -51,7 +51,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⚠️ Too many activities: 10 (target 3-9)
-- **Immersion:** 🇺🇦 98.5% (target 90-100% (history))
+- **Immersion:** 🇺🇦 98.4% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -63,7 +63,7 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 15 | 3 | 100% | 24% | 23.8% |
+| primary_sources | 14 | 3 | 100% | 24% | 23.8% |
 | engagement | 8 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
@@ -71,7 +71,7 @@
 | visual | 9 | 4 | 100% | 10% | 9.5% |
 | variety | 0.98 | - | 98% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 19 | 3 | 100% | 5% | 4.8% |
+| questions | 18 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
@@ -86,7 +86,6 @@
 | **Читання: Культурний шок та адаптація** | ✅ | 326 | Included in Core |
 | **Первинні джерела** | ✅ | 298 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 261 | Included in Core |
-| **Есе** | ⚪️ | 90 | Skipped |
 | **Критерії оцінювання** | ⚪️ | 0 | Skipped |
 | **Зразок відповіді** | ⚪️ | 316 | Skipped |
 | **Підсумок** | ✅ | 134 | Included in Core |

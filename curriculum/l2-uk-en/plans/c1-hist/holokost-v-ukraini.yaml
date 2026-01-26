@@ -1,0 +1,91 @@
+module: holokost-v-ukraini
+level: c1-hist
+sequence: 119
+version: '1.0'
+title: 'Голокост в Україні: Співучасть і рятування'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Найтемніша сторінка
+  words: 451
+  subsections:
+  - Голокост в Україні — масштаб
+  - 1,5 мільйона жертв
+  - Співучасть І рятування
+  - Структура модуля
+- section: «Голокост від куль»
+  words: 790
+  subsections:
+  - Айнзацгрупи
+  - Бабин Яр — символ
+  - Методи знищення
+  - Чому в Україні — особливо
+- section: Українська поліція
+  words: 677
+  subsections:
+  - Допоміжна поліція — хто йшов
+  - Роль у Голокості
+  - Не виправдання — пояснення
+  - Масштаб участі
+- section: ОУН і євреї
+  words: 677
+  subsections:
+  - Антисемітизм в ОУН
+  - Погроми 1941
+  - Еволюція позиції
+  - Суперечливість
+- section: Праведники
+  words: 564
+  subsections:
+  - 2700+ українських праведників
+  - Митрополит Шептицький
+  - Ризик — смерть
+  - Індивідуальний вибір
+- section: Підсумок
+  words: 341
+  subsections:
+  - І злочинці, і рятівники
+  - Не «українці» — окремі люди
+  - Перехід до радянського антисемітизму
+word_target: 3500
+vocabulary:
+- Голокост
+- «Голокост від куль»
+- Бабин Яр
+- айнзацгрупи
+- допоміжна поліція
+- співучасть
+- праведник
+- рятування
+- жертва
+- злочин
+- гетто
+- «юденрат»
+- «Яд Вашем»
+- Шептицький
+- колабораціонізм
+activities:
+- type: scale-analysis
+  focus: Holocaust in Ukraine — numbers and geography
+- type: collaboration-analysis
+  focus: Who collaborated and why
+- type: rescue-stories
+  focus: Ukrainian Righteous — stories and patterns
+- type: oun-analysis
+  focus: OUN and Jews — complex relationship
+- type: essay-response
+  focus: Як оцінювати українську роль у Голокості?
+sources:
+- name: Голокост в Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Голокост_в_Україні
+  type: reference
+  notes: Holocaust overview
+- name: Бабин Яр (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Бабин_Яр
+  type: reference
+  notes: Babi Yar
+- name: Праведники народів світу (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Праведники_народів_світу
+  type: reference
+  notes: Righteous Among Nations

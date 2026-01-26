@@ -1,0 +1,22 @@
+module: 80-analiz-tekstu
+level: b2
+sequence: 80
+version: '2.0'
+title: Аналіз тексту
+subtitle: Text Analysis
+focus: skills
+pedagogy: CBI
+objectives:
+- Analyze texts for subtext and author intent
+- Identify bias and manipulation in media
+- Understand rhetorical structure of arguments
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

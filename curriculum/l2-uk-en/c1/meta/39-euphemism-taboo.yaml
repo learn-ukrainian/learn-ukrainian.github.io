@@ -2,24 +2,51 @@ module: c1-39
 title: 'Евфемізми та табу: Мова делікатності'
 subtitle: 'Euphemisms & Taboo: The Language of Delicacy'
 version: '1.0'
-phase: 'C1.4 Advanced Stylistics & Rhetoric'
+phase: C1.4 Advanced Stylistics & Rhetoric
 focus: style
-pedagogy: 'Immersion'
+pedagogy: Immersion
 duration: 90
 transliteration: none
 tags:
-  - stylistics
-  - rhetoric
-  - euphemism
-  - taboo
-  - etiquette
+- stylistics
+- rhetoric
+- euphemism
+- taboo
+- etiquette
 grammar:
-  - "Euphemisms for death, illness, and bodily functions"
-  - "Social and political euphemisms"
-  - "Taboo topics in Ukrainian culture"
+- Euphemisms for death, illness, and bodily functions
+- Social and political euphemisms
+- Taboo topics in Ukrainian culture
 objectives:
-  - "Identify and understand common Ukrainian euphemisms"
-  - "Navigate sensitive topics with appropriate delicacy"
-  - "Recognize taboo language and avoid its inappropriate use"
+- Identify and understand common Ukrainian euphemisms
+- Navigate sensitive topics with appropriate delicacy
+- Recognize taboo language and avoid its inappropriate use
 vocabulary_count: 25
 slug: 39-euphemism-taboo
+content_outline:
+- section: Вступ — Мова делікатності
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Euphemism Areas
+  words: 500
+  points:
+  - 'Смерть (Death): відійти, спочити, піти з життя'
+  - 'Тіло (Body): природні потреби, інтимне'
+  - 'Хвороба (Illness): недуга, нездужання'
+  - 'Соціальні теми (Social): звільнення → оптимізація'
+- section: Taboo Language
+  words: 500
+  points:
+  - Recognition for comprehension
+  - Avoidance in production
+  - Register appropriateness
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

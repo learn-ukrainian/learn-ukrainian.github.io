@@ -1,0 +1,23 @@
+module: 74-funeral-rituals
+level: c1
+sequence: 74
+version: '1.0'
+title: Родинні обряди - похорон
+subtitle: Family Rituals - Funeral and Memorial
+focus: cultural
+pedagogy: CBI
+objectives:
+- Learner can describe the traditional funeral rites (vigil, burial, meal)
+- Learner can explain the concept of "holosinnya" (ritual lamentation)
+- Learner can use respectful vocabulary to talk about death and memory
+- Learner can discuss the significance of memorial days (Provody)
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

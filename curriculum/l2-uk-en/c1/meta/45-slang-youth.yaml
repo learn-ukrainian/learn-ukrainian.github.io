@@ -27,3 +27,24 @@ summary: This module dives into the dynamic world of Ukrainian youth slang and i
   culture. Students explore how young Ukrainians speak today, borrowing from English,
   memes, and gaming culture, and learn to navigate the fine line between 'cool' and
   'cringe'.
+content_outline:
+- section: Вступ — Сленг та молодіжна мова
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Wordplay Types
+  words: 500
+  points:
+  - 'Омоніми: ключ (key/spring)'
+  - 'Пароніми: similar-sounding words'
+  - 'Каламбур: Deliberate puns'
+  - 'Народна етимологія: Folk etymology jokes'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

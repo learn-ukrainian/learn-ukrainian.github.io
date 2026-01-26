@@ -1,0 +1,55 @@
+
+========================================
+  📋 Loaded Metadata from YAML sidecar
+
+📋 Auditing: B2 M44 — Козацькі повстання XVI століття
+   File: curriculum/l2-uk-en/b2-hist/kozatski-povstannia-16.md | Target: 4000 words
+  📋 Required activity types from meta: comparative-study, critical-analysis, essay-response, quiz, reading
+  📋 Template: docs/l2-uk-en/templates/b2-history-module-template.md (pedagogy: CBI)
+
+  ⚠️ HYDRATION NOTE: Outline sums to 4171, exceeding word_target 4000
+     Additional 171 words (allowed for content depth)
+
+  📊 Section Word Analysis:
+     Вступ                                         438 /  442  ✅ (-4)
+     Повстання Криштофа Косинського (1591–1593)    944 /  942  ✅ (+2)
+     Повстання Северина Наливайка (1594–1596)      925 /  930  ✅ (-5)
+     Читання                                       434 /  437  ✅ (-3)
+     Соціальний та Релігійний Вимір боротьби       546 /  548  ✅ (-2)
+     Первинні джерела та свідчення очевидців       428 /  436  ✅ (-8)
+     Деколонізаційний погляд на історію повстань   437 /  436  ✅ (+1)
+     ────────────────────────────────────────────────────────────────────
+     TOTAL                                        4152 / 4171  ❌ (-19)
+
+📋 Auditing: B2 M44 — Козацькі повстання XVI століття
+   File: curriculum/l2-uk-en/b2-hist/kozatski-povstannia-16.md | Target: 4000 words
+
+  📋 Found YAML activities file (5 activities)
+  > Трагедія Солониці: Свідчення очевидців: 3 items (min 1)
+  > Аналіз причин поразки ранніх повстань: 1 items (min 1)
+  > Хронологія та постаті повстань XVI століття: 8 items (min 8)
+  > Косинський vs Наливайко: Портрети лідерів: 1 items (min 1)
+  > Еволюція козацького спротиву: 1 items (min 1)
+
+--- STRICT GATES (Level B2) ---
+Words        ✅ 4802/4000 (raw: 4975)
+Activities   ✅ 5/3
+Density      ✅ All > 1
+Unique_types ✅ 5/2 types
+Priority     ✅ Priority types used
+Engagement   ✅ 7/5
+Audio        ℹ️ No audio
+Vocab        ✅ 25/20
+Structure    ✅ Valid Structure
+Lint         ✅ Clean Format
+Pedagogy     ✅ Level-appropriate
+Content_heavy ✅ Content-heavy OK (5 activities)
+Grammar      ℹ️ N/A (covered by naturalness)
+Naturalness  ✅ 9/10 (High)
+Activity_quality 📋 Quality validation available (optional)
+Immersion    🇺🇦 98.7% (target 90-100% (history))
+Richness     ✅ 99% (history)
+
+Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/audit/kozatski-povstannia-16-review.md
+
+✅ AUDIT PASSED.

@@ -1,0 +1,104 @@
+module: scythians-sarmatians
+level: b2-hist
+sequence: 2
+version: '1.0'
+title: Скіфи та сармати — Володарі степу
+focus: history
+pedagogy: seminar
+objectives:
+- Учень може описувати скіфську та сарматську культури як важливі етапи історії українського
+  степу
+- Учень може аналізувати первинні джерела про кочові народи
+- Учень може аргументувати значення скіфської спадщини для української культури
+content_outline:
+- section: Розминка
+  words: 200
+  subsections:
+  - Географія Степу
+  - Хто такі кочівники?
+- section: 'Читання: Скіфи: Імперія золота'
+  words: 750
+  subsections:
+  - Історичне тло
+  - Війна з Дарієм
+  - Повсякденне життя
+- section: 'Сармати: Жінки-воїни та Катафракти'
+  words: 1000
+  subsections:
+  - Важка кіннота
+  - Матріархат і амазонки
+  - Сарматський побут
+- section: Культура та Мистецтво
+  words: 750
+  subsections:
+  - Звіриний стиль
+  - Металургія та ремесла
+  - Ритуал поховання (Товста Могила)
+- section: Первинні джерела
+  words: 550
+  subsections:
+  - Геродот про скіфів
+  - Страбон про сарматів
+- section: Деколонізаційний погляд
+  words: 250
+  subsections:
+  - Міф про 'диких кочівників'
+  - Скіфська спадщина України
+- section: Підсумок
+  words: 500
+  subsections:
+  - Вплив на українську культуру
+  - Генетичний та культурний код
+word_target: 4000
+vocabulary:
+- скіфи
+- сармати
+- кочівники
+- степ
+- курган
+- пектораль
+- кіннота
+- лучник
+- звіриний стиль
+- плем'я
+- цар
+- золото
+- царство
+- завоювання
+- торгівля
+- амазонка
+- топонім
+- сарматизм
+- алани
+activities:
+- type: reading
+  focus: Excerpt from Herodotus about Scythians (Ukrainian translation)
+- type: critical-analysis
+  focus: Analyze Scythian gold artifacts including the pectoral
+  items: 5-6 images
+- type: quiz
+  focus: Geography of Steppe (Scythian and Sarmatian territories)
+  items: 2 maps
+- type: fill-in
+  focus: Archaeological and nomadic terminology
+  items: 15+
+- type: comparative-study
+  focus: Scythians vs Sarmatians — similarities and differences
+- type: quiz
+  focus: Key facts about steppe civilizations
+  items: 12+
+- type: essay-response
+  focus: Як кочівники вплинули на розвиток українських земель?
+sources:
+- name: Скіфи (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Скіфи
+  type: reference
+  notes: Overview of Scythian civilization
+- name: Сармати (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Сармати
+  type: reference
+  notes: Overview of Sarmatian peoples
+- name: Геродот про скіфів
+  url: https://litopys.org.ua/
+  type: primary
+  notes: Ancient Greek descriptions of Scythians

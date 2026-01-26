@@ -1,0 +1,80 @@
+module: hotel-accommodation
+level: a2
+sequence: 61
+version: '2.0'
+title: Hotel Accommodation
+subtitle: Checking In and Out
+focus: practical
+pedagogy: PPP
+objectives:
+- Learner can book a hotel room
+- Learner can check in and check out
+- Learner can ask for amenities
+- Learner can resolve common hotel issues
+content_outline:
+- section: 'Introduction: Hotels in Ukraine'
+  words: 100
+  points:
+  - Types of accommodation
+  - Booking options
+  - Hotel vocabulary overview
+- section: Making a Reservation
+  words: 200
+  points:
+  - забронювати номер
+  - Room types (одномісний, двомісний)
+  - Dates and duration
+- section: Checking In
+  words: 200
+  points:
+  - реєстрація, паспорт
+  - заселення, ключ
+  - Room information
+- section: Hotel Amenities
+  words: 200
+  points:
+  - сніданок, Wi-Fi, парковка
+  - рушник, мило, шампунь
+  - Requesting items
+- section: Problems and Solutions
+  words: 150
+  points:
+  - Common complaints
+  - Asking for help
+  - Resolving issues
+- section: 'Practice: Hotel Stay'
+  words: 150
+  points:
+  - Check in dialogue
+  - Request amenities
+word_target: 1000
+vocabulary:
+  required:
+  - готель (hotel)
+  - номер (room)
+  - забронювати (to book)
+  - заселення (check-in)
+  - виселення (check-out)
+  - ключ (key)
+  - сніданок (breakfast)
+  - рахунок (bill)
+  recommended:
+  - одномісний (single)
+  - двомісний (double)
+  - рушник (towel)
+  - кондиціонер (air conditioning)
+  - прибирання (cleaning)
+  - адміністратор (receptionist)
+  forbidden: []
+activities:
+  types_required:
+  - vocabulary-drill
+  - dialogue
+  - role-play
+  - fill-in
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a2-62 (Rental Accommodation)
+- a2-46 (Home and Furniture)

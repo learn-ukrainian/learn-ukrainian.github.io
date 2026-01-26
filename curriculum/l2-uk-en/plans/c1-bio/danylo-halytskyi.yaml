@@ -1,0 +1,117 @@
+module: danylo-halytskyi
+level: c1-bio
+sequence: 0
+version: '2.0'
+title: 'Данило Галицький: Король Русі'
+focus: biography
+pedagogy: seminar
+objectives:
+- Analyze the significance of Danylo's royal coronation for Ukrainian statehood
+- Evaluate strategies of resistance and accommodation with the Mongol Horde
+- Master vocabulary related to medieval kingship and diplomacy
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Данило_Романович
+    title: Данило Романович (Wikipedia UA)
+    notes: Biography, coronation, Mongol relations
+  - url: https://uk.wikipedia.org/wiki/Галицько-Волинський_літопис
+    title: Галицько-Волинський літопис
+    notes: Primary chronicle source
+  secondary:
+  - url: https://uk.wikipedia.org/wiki/Львів
+    title: Львів
+    notes: Founding of Lviv
+content_outline:
+- section: Вступ — Єдиний коронований король Русі
+  words: 477
+  subsections:
+  - Унікальність королівської корони в історії Русі
+  - Данило як символ української державності
+  - Джерела про його життя
+- section: Дитинство та боротьба за спадщину
+  words: 572
+  subsections:
+  - Народження та рання втрата батька (1205)
+  - Втеча з матір'ю до Угорщини
+  - Боярські інтриги та іноземна інтервенція
+  - Повернення до влади
+- section: Об'єднання батьківської спадщини
+  words: 667
+  subsections:
+  - Відвоювання Волині
+  - Боротьба за Галич
+  - Остаточне об'єднання (1238)
+  - Заснування Львова
+- section: Монгольська навала та її наслідки
+  words: 762
+  subsections:
+  - Падіння Києва (1240)
+  - Візит до Батия в Орду
+  - Принизливий прийом та данницька залежність
+  - Стратегія виживання
+- section: Королівська корона
+  words: 667
+  subsections:
+  - Переговори з папою Інокентієм IV
+  - Коронація в Дорогочині (1253)
+  - Титул "Rex Russiae"
+  - Нездійснені надії на хрестовий похід
+- section: Державне будівництво
+  words: 477
+  subsections:
+  - Розбудова міст і фортець
+  - Запрошення німецьких колоністів
+  - Економічний розвиток
+  - Культурне життя
+- section: Підсумок — Король без королівства?
+  words: 378
+  subsections:
+  - Оцінка правління Данила
+  - Спадщина для нащадків
+  - Місце в українській пам'яті
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - король
+  - корона
+  - коронація
+  - данник
+  - Орда
+  - навала
+  - папа
+  - хрестовий похід
+  - фортеця
+  - спадщина
+  recommended:
+  - інтервенція
+  - боярин
+  - літопис
+  - дипломатія
+  - колоніст
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  - critical-analysis
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-roman-mstyslavych (Roman - father)
+  related:
+  - c1-bio-roman-mstyslavych (Roman Mstyslavych - father)
+  - c1-bio-lev-danylovych (Lev - son)
+  - c1-bio-yuriy-lvovych (Yuriy - grandson)
+  - c1-bio-06 (Mykhailo Chernihivskyi - different response to Mongols)
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

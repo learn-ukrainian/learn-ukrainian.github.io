@@ -1,0 +1,101 @@
+module: povist-mynulykh-lit-i
+level: c1-hist
+sequence: 11
+version: '1.0'
+title: 'Повість минулих літ I: Структура та автори'
+focus: history
+pedagogy: seminar
+objectives: []
+content_outline:
+- section: Вступ — Найстаріший літопис Русі
+  words: 400
+  subsections:
+  - Що таке Повість минулих літ (ПМЛ)?
+  - Чому це найважливіше джерело для ранньої історії?
+  - Редакції — Лаврентіївська, Іпатіївська
+  - Що ми розглянемо в цьому модулі
+- section: Структура літопису
+  words: 600
+  subsections:
+  - Вступна частина — «звідки пішла Руська земля»
+  - Недатована частина — легенди, походження
+  - Датована частина — від 852 року
+  - Принцип погодного запису
+  - Що включено і що пропущено
+- section: Питання авторства
+  words: 700
+  subsections:
+  - Нестор — традиційна атрибуція
+  - Хто насправді писав? Кілька авторів
+  - Шахматов — реконструкція шарів
+  - Як визначити різних авторів?
+  - Політичні замовники — князі та церква
+- section: Редакції та рукописи
+  words: 600
+  subsections:
+  - Лаврентіївський список (1377)
+  - Іпатіївський список (XV ст.)
+  - Радзивіллівський список (з мініатюрами)
+  - Чим відрізняються редакції?
+  - Що додано, що прибрано
+- section: Мова літопису
+  words: 500
+  subsections:
+  - Давньоруська як основа
+  - Церковнослов'янські елементи
+  - Як читати сьогодні — глосарій
+  - Приклади з текстами
+- section: Чому важлива критика джерела
+  words: 400
+  subsections:
+  - ПМЛ — не об'єктивна історія
+  - Легенди vs. історичні факти
+  - Політична заангажованість
+  - Як використовувати критично
+- section: Підсумок
+  words: 300
+  subsections:
+  - ПМЛ як фундамент історичної пам'яті
+  - Підготовка до читання фрагментів
+  - Зв'язок із наступним модулем
+word_target: 3500
+vocabulary:
+- літопис
+- редакція
+- рукопис
+- атрибуція
+- погодний запис
+- компіляція
+- давньоруський
+- церковнослов'янський
+- реконструкція
+- шар / пласт
+- палеографія
+- кодекс
+- автограф
+- копіїст
+- інтерполяція
+activities:
+- type: reading
+  focus: Opening passage "Откуда есть пошла Руская земля" — modern translation
+- type: critical-analysis
+  focus: Who benefits from specific passages? Identify political purpose
+- type: comparative-study
+  focus: Compare Laurentian vs. Hypatian redaction on one event
+- type: match-up
+  focus: Old East Slavic terms still used in modern Ukrainian
+- type: essay-response
+  focus: Чи можна довіряти Повісті минулих літ як історичному джерелу?
+sources:
+- name: Повість минулих літ (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Повість_минулих_літ
+  type: reference
+  notes: Overview of the chronicle
+- name: Повість минулих літ (повний текст)
+  url: https://litopys.org.ua/pvlyar/yar.htm
+  type: primary
+  notes: Full text of Laurentian redaction
+- name: Нестор Літописець
+  url: https://uk.wikipedia.org/wiki/Нестор_Літописець
+  type: reference
+  notes: Traditional attribution

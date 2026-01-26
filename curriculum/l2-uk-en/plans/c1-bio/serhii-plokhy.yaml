@@ -1,0 +1,109 @@
+module: serhii-plokhy
+level: c1-bio
+sequence: 115
+version: '2.0'
+title: 'Сергій Плохій: Історик, який пояснив Україну світові'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Плохій_Сергій_Миколайович
+    title: Сергій Плохій (Wikipedia UA)
+    notes: Biography, academic career, books
+  secondary:
+  - url: https://huri.harvard.edu/
+    title: Harvard Ukrainian Research Institute
+    notes: Institute he directs
+  - url: https://uk.wikipedia.org/wiki/Брама_Європи
+    title: Брама Європи
+    notes: His major work on Ukrainian history
+content_outline:
+- section: Вступ — Голос України в Гарварді
+  words: 470
+  subsections:
+  - Плохій як найвпливовіший історик України у світі
+  - Директор Гарвардського українського інституту
+  - Бестселери, що змінюють світове розуміння України
+- section: Молодість і радянська освіта
+  words: 588
+  subsections:
+  - Народження в Горлівці (1957)
+  - Навчання в Дніпропетровську
+  - Дисертація з історії козацтва
+  - Викладання в Київському університеті
+- section: Еміграція та Гарвард
+  words: 705
+  subsections:
+  - Переїзд до Канади (1996)
+  - Альбертський університет
+  - Запрошення до Гарварду (2007)
+  - Директорство в HURI (2013)
+- section: Наукові праці
+  words: 941
+  subsections:
+  - '"Брама Європи" — історія України'
+  - '"Остання імперія" — розпад СРСР'
+  - '"Чорнобиль" — історія катастрофи'
+  - '"Війна Путіна" — сучасність'
+- section: Популяризатор історії
+  words: 705
+  subsections:
+  - Книги для широкої аудиторії
+  - Численні інтерв'ю та лекції
+  - Переклади на десятки мов
+  - Формування світової думки про Україну
+- section: Значення для України
+  words: 591
+  subsections:
+  - Деколонізація української історії
+  - Спростування російських наративів
+  - Підтримка України під час війни
+  - Плохій як інтелектуальний амбасадор
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - історик
+  - дослідження
+  - бестселер
+  - деколонізація
+  - наратив
+  - інститут
+  - професор
+  - козацтво
+  - еміграція
+  - популяризація
+  recommended:
+  - архів
+  - монографія
+  - первинні джерела
+  - рецензія
+  - переклад
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: c1-bio-105 (Shevelov - earlier diaspora scholar)
+  related:
+  - c1-bio-105 (Shevelov - intellectual predecessor)
+  - c1-bio-100 (Krymsky - earlier historian)
+  - Contemporary Ukrainian historians
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

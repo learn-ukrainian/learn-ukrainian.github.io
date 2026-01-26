@@ -1,29 +1,97 @@
 module: a2-69
-title: Online Services
-subtitle: Apps and Delivery
-version: '1.0'
-phase: A2.4
+id: a2-69
+slug: online-services
+title: "Online Services"
+subtitle: "Apps and Delivery"
+version: '2.0'
+phase: "A2.6 [Practical]"
+focus: practical
 pedagogy: PPP
+register: розмовний
 duration: 60
 transliteration: none
-tags:
-- vocabulary
-- services
-- apps
-- shopping
-grammar:
-- app interface vocabulary (кошик, замовити)
-- banking terms (картка, переказ)
-- delivery instructions
-- customer support phrases
 objectives:
-- Learner can use Ukrainian delivery apps
-- Learner can handle online banking basics
-- Learner can communicate with support
-- Learner can understand app notifications
-vocabulary_count: 25
-slug: 69-online-services
-focus: vocabulary
+  - "Learner can use Ukrainian delivery apps"
+  - "Learner can handle online banking basics"
+  - "Learner can communicate with support"
+  - "Learner can understand app notifications"
+grammar:
+  - "App interface vocabulary (кошик, замовити)"
+  - "Banking terms (картка, переказ, баланс)"
+  - "Customer support phrases"
+word_target: 1000
+content_outline:
+  - section: "Introduction: Digital Services"
+    words: 100
+    points:
+      - "Online services in Ukraine"
+      - "Popular apps"
+      - "Service vocabulary"
+  - section: "Food Delivery Apps"
+    words: 200
+    points:
+      - "замовлення, кошик, доставка"
+      - "Placing orders"
+      - "Tracking delivery"
+  - section: "Online Banking"
+    words: 200
+    points:
+      - "переказ, баланс, виписка"
+      - "Basic transactions"
+      - "Security vocabulary"
+  - section: "Ride-sharing Apps"
+    words: 200
+    points:
+      - "таксі, водій, маршрут"
+      - "Ordering a ride"
+      - "Payment options"
+  - section: "Customer Support"
+    words: 150
+    points:
+      - "звернення, скарга, допомога"
+      - "Writing support requests"
+      - "Understanding responses"
+  - section: "Practice: Using Apps"
+    words: 150
+    points:
+      - "Order food delivery"
+      - "Use banking app"
+vocabulary_hints:
+  required:
+    - замовлення (order)
+    - кошик (cart)
+    - доставка (delivery)
+    - оплата (payment)
+    - переказ (transfer)
+    - баланс (balance)
+    - додаток (app)
+    - сповіщення (notification)
+  recommended:
+    - підтвердження (confirmation)
+    - відстеження (tracking)
+    - підтримка (support)
+    - скарга (complaint)
+    - повернення (refund)
+    - промокод (promo code)
+activity_hints:
+  - type: vocabulary-drill
+    focus: "Online services vocabulary"
+    items: 25
+  - type: reading-comprehension
+    focus: "Understand app interfaces"
+    items: 15
+  - type: fill-in
+    focus: "Complete service requests"
+    items: 15
+  - type: dialogue
+    focus: "Customer support conversation"
+    items: 10
+prerequisites:
+  - a2-68 (Texting and Messaging)
+connects_to:
+  - a2-70 (A2 Final Exam)
+  - a2-53 (Shopping and Services)
 naturalness:
   score: 10
   status: PASS
+  justification: "Essential digital services"

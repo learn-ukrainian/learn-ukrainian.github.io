@@ -1,0 +1,80 @@
+module: this-is-i-am
+level: a1
+sequence: 4
+version: '2.0'
+title: This Is / I Am
+subtitle: Zero Copula and Personal Pronouns
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can use personal pronouns (я, ти, він, вона, etc.)
+- Learner can form identity statements without 'to be' (zero copula)
+- Learner can use це to point out people and objects
+- Learner can distinguish masculine/feminine nationality forms
+content_outline:
+- section: 'Introduction: No ''Is'' Needed'
+  words: 100
+  points:
+  - Ukrainian drops 'to be' in present tense
+  - Це книга = This (is) a book
+  - Я студент = I (am) a student
+- section: Personal Pronouns
+  words: 200
+  points:
+  - я (I), ти (you informal)
+  - він (he), вона (she), воно (it)
+  - ми (we), ви (you formal/plural), вони (they)
+- section: Це... (This Is...)
+  words: 200
+  points:
+  - 'Pointing out objects: Це стіл, це вікно'
+  - 'Introducing people: Це мій брат'
+  - 'Question: Що це? Хто це?'
+- section: Я... (I Am...)
+  words: 150
+  points:
+  - 'Self-introduction: Я Марія, Я студент'
+  - 'Nationality: Я українець/українка'
+  - 'Profession: Я вчитель/вчителька'
+- section: Gendered Forms
+  words: 150
+  points:
+  - 'Masculine: американець, українець'
+  - 'Feminine: американка, українка'
+  - Pattern recognition
+- section: 'Practice: Introductions'
+  words: 100
+  points:
+  - Complete self-introduction
+  - Role-play meeting someone
+word_target: 900
+vocabulary:
+  required:
+  - це (this is)
+  - я (I)
+  - ти (you)
+  - він (he)
+  - вона (she)
+  - хто (who)
+  - що (what)
+  - студент (student)
+  recommended:
+  - українець (Ukrainian m.)
+  - українка (Ukrainian f.)
+  - вчитель (teacher m.)
+  - вчителька (teacher f.)
+  - ми (we)
+  - вони (they)
+  forbidden: []
+activities:
+  types_required:
+  - dialogue
+  - translation
+  - fill-in
+  - role-play
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a1-05 (My World - Objects)
+- a1-14 (Mine and Yours)

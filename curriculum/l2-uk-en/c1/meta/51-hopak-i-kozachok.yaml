@@ -2,21 +2,49 @@ module: c1-51
 title: 'Гопак і козачок: Танці волі та сили'
 subtitle: 'Hopak and Kozachok: Dances of Freedom and Power'
 version: '2.0'
-phase: 'C1.5 Folk Culture & Fine Arts'
+phase: C1.5 Folk Culture & Fine Arts
 focus: history
-pedagogy: 'CBI'
+pedagogy: CBI
 duration: 120
 transliteration: none
 tags:
-  - folk culture
-  - dance
-  - history
+- folk culture
+- dance
+- history
 grammar:
-  - 'Dynamic narrative registers'
-  - 'Terminology of movement'
+- Dynamic narrative registers
+- Terminology of movement
 objectives:
-  - 'Analyze the historical origins of Hopak as a martial art and a dance'
-  - 'Distinguish between the ritual, social, and stage versions of Ukrainian dances'
-  - 'Understand the cultural significance of the Kozachok and its regional variations'
+- Analyze the historical origins of Hopak as a martial art and a dance
+- Distinguish between the ritual, social, and stage versions of Ukrainian dances
+- Understand the cultural significance of the Kozachok and its regional variations
 vocabulary_count: 28
 slug: 51-hopak-i-kozachok
+content_outline:
+- section: Вступ — Танці волі та сили
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Official Document Types
+  words: 500
+  points:
+  - Закон (Law)
+  - Указ (Decree)
+  - Постанова (Resolution)
+  - Наказ (Order)
+  - Угода (Agreement)
+- section: Formal Features
+  words: 500
+  points:
+  - 'Fixed phrases: Цим засвідчується... (This certifies...)'
+  - 'Passive/impersonal: Зобов''язано... (It is obligated...)'
+  - 'Nominalization: Здійснення (implementation) vs. здійснити'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

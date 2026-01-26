@@ -1,31 +1,96 @@
 module: a1-08
-title: "The Living Verb II - Second Conjugation: -ити Verbs"
-subtitle: Second Conjugation (-ити verbs)
+id: a1-08
+slug: the-living-verb-ii
+title: "The Living Verb II"
+subtitle: "Second Conjugation (-ити verbs)"
 version: '2.0'
-phase: A1.1
-pedagogy: PPP
+phase: "A1.1 [First Contact]"
 focus: grammar
-duration: 60 min
+pedagogy: PPP
+register: розмовний
+duration: 60
 transliteration: none
-phonetics: ipa
-tags:
-  - verbs
-  - conjugation
-  - second-conjugation
-  - irregular-verbs
-grammar:
-  - second-conjugation-verb-conjugation
-  - 'Irregular verbs: їсти, пити, хотіти'
-  - consonant-mutation-patterns
-  - imperfective-aspect-reinforcement
 objectives:
-  - Learner can conjugate Second Conjugation verbs (-ити) in present tense
-  - Learner can distinguish between First Conjugation (-ати) and Second Conjugation (-ити) verbs
-  - Learner can use common irregular verbs (їсти, пити)
-  - Learner can form basic sentences with action verbs
-vocabulary_count: 25
-vocab_count: 36
-slug: 08-the-living-verb-ii
+  - "Learner can conjugate Second Conjugation verbs (-ити) in present tense"
+  - "Learner can distinguish between First and Second Conjugation"
+  - "Learner can use common irregular verbs (їсти, пити)"
+  - "Learner can form basic sentences with action verbs"
+grammar:
+  - "Second Conjugation pattern (-ити → -у, -иш...)"
+  - "Consonant mutation patterns"
+  - "Irregular verbs"
+word_target: 1000
+content_outline:
+  - section: "Review: First Conjugation"
+    words: 100
+    points:
+      - "Quick review of -ати pattern"
+      - "How to identify conjugation type"
+  - section: "Second Conjugation Pattern"
+    words: 250
+    points:
+      - "Infinitive ends in -ити"
+      - "Endings: -у/-ю, -иш, -ить, -имо, -ите, -ять"
+      - "Full paradigm: говорити → говорю, говориш..."
+  - section: "Consonant Mutations"
+    words: 200
+    points:
+      - "First person singular changes"
+      - "д → дж: ходити → ходжу"
+      - "т → ч: платити → плачу"
+      - "с → ш: просити → прошу"
+  - section: "Common Second Conjugation Verbs"
+    words: 200
+    points:
+      - "говорити (to speak), робити (to do)"
+      - "любити (to love), бачити (to see)"
+      - "ходити (to walk), просити (to ask/request)"
+  - section: "Irregular Verbs: їсти, пити"
+    words: 150
+    points:
+      - "їсти: їм, їси, їсть, їмо, їсте, їдять"
+      - "пити: п'ю, п'єш, п'є..."
+      - "Essential daily vocabulary"
+  - section: "Practice: Comparing Conjugations"
+    words: 100
+    points:
+      - "First vs Second Conjugation drills"
+      - "Mixed verb sentences"
+vocabulary_hints:
+  required:
+    - говорити (to speak)
+    - робити (to do)
+    - любити (to love)
+    - бачити (to see)
+    - їсти (to eat)
+    - пити (to drink)
+    - ходити (to walk)
+    - просити (to ask)
+  recommended:
+    - сидіти (to sit)
+    - стояти (to stand)
+    - платити (to pay)
+    - вчити (to teach/learn)
+activity_hints:
+  - type: conjugation-drill
+    focus: "Conjugate Second Conjugation verbs"
+    items: 30
+  - type: sorting
+    focus: "Sort verbs by conjugation type"
+    items: 20
+  - type: fill-in
+    focus: "Complete with mutated forms"
+    items: 15
+  - type: translation
+    focus: "Translate sentences with both conjugations"
+    items: 12
+prerequisites:
+  - a1-06 (The Living Verb I)
+  - a1-07 (Questions and Negation)
+connects_to:
+  - a1-09 (Reflexive Verbs)
+  - a1-21 (Past Tense)
 naturalness:
   score: 10
   status: PASS
+  justification: "Complete verb system introduction"

@@ -1,26 +1,94 @@
 module: b1-76
-title: Українська музика сьогодні
-subtitle: Contemporary Ukrainian Music
+id: b1-76
+slug: ukrainian-music-today
+title: "Українська музика сьогодні"
+subtitle: "Contemporary Ukrainian Music Scene"
 version: '2.0'
-phase: B1.7 Contemporary Ukraine
+phase: "B1.7 [Contemporary Ukraine]"
 focus: culture
 pedagogy: CBI
+register: розмовний
 duration: 90
 transliteration: none
-tags:
-- cultural
-- music
-- contemporary
-grammar:
-- cultural vocabulary in context
 objectives:
-- Learner can discuss Ukrainian music genres and artists in context
-- Learner can understand authentic texts about Ukrainian music scene
-- Learner can use music-related vocabulary to express preferences
-- Learner can compare Ukrainian music with their own musical culture
-vocabulary_count: 52
-vocab_count: 52
-slug: 76-ukrainian-music-today
+  - "Learner can discuss Ukrainian music genres and artists in context"
+  - "Learner can understand authentic texts about Ukrainian music scene"
+  - "Learner can use music-related vocabulary to express preferences"
+  - "Learner can compare Ukrainian music with their own musical culture"
+grammar:
+  - "Music and arts vocabulary"
+  - "Cultural commentary patterns"
+  - "Expressing preferences"
+word_target: 1200
+content_outline:
+  - section: "Introduction: Ukrainian Music"
+    words: 150
+    points:
+      - "Music scene overview"
+      - "Traditional to contemporary"
+      - "Cultural significance"
+  - section: "Pop and Rock"
+    words: 250
+    points:
+      - "Popular artists"
+      - "Ukrainian-language pop"
+      - "Rock traditions"
+  - section: "Hip-Hop and Electronic"
+    words: 250
+    points:
+      - "Ukrainian hip-hop"
+      - "Electronic music"
+      - "Festival culture"
+  - section: "Folk and Ethno"
+    words: 250
+    points:
+      - "Folk revival"
+      - "Ethno-fusion"
+      - "Traditional instruments"
+  - section: "War and Music"
+    words: 200
+    points:
+      - "Music during wartime"
+      - "Patriotic songs"
+      - "Cultural resistance"
+  - section: "Practice: Music Discussion"
+    words: 100
+    points:
+      - "Discuss favorite artists"
+      - "Compare music cultures"
+vocabulary_hints:
+  required:
+    - музика (music)
+    - співак/співачка (singer m/f)
+    - гурт (band)
+    - пісня (song)
+    - альбом (album)
+    - концерт (concert)
+    - жанр (genre)
+    - виконавець (performer)
+  recommended:
+    - реп (rap)
+    - рок (rock)
+    - поп (pop)
+    - електронна музика (electronic music)
+activity_hints:
+  - type: reading
+    focus: "Texts about Ukrainian artists"
+    items: 15
+  - type: listening
+    focus: "Understand song themes"
+    items: 15
+  - type: matching
+    focus: "Match artists to genres"
+    items: 20
+  - type: discussion
+    focus: "Share music preferences"
+    items: 10
+prerequisites:
+  - b1-75 (Regions Center)
+connects_to:
+  - b1-77 (Ukrainian Cinema and TV)
 naturalness:
   score: 9
   status: PASS
+  justification: "Essential contemporary cultural knowledge"

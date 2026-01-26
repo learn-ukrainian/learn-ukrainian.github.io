@@ -1,0 +1,103 @@
+module: 19-shevchenkos-diary
+level: lit
+sequence: 19
+version: '1.0'
+title: Щоденник ("Журнал") Шевченка
+subtitle: 'Shevchenko''s Diary: The Inner World'
+focus: literature
+pedagogy: seminar
+objectives:
+- Understand the psychological shift in Shevchenko's diary from exile to freedom.
+- Analyze the contrast between his public image ("prophet") and private self ("human").
+- Examine his intellectual breadth (arts, technology, literature) and emotional depth.
+sources:
+  primary:
+  - url: https://www.ukrlib.com.ua/books/printit.php?tid=44
+    title: Щоденник Шевченка — повний текст
+    notes: Щоденник 1857-1858 років
+  secondary:
+  - url: https://www.ukrlib.com.ua/analiz/printit.php?tid=44
+    title: Аналіз "Журналу"
+    notes: Літературознавчий аналіз
+  - url: https://uk.wikipedia.org/wiki/Заслання_Тараса_Шевченка
+    title: Заслання Шевченка
+    notes: Історичний контекст
+content_outline:
+- section: Вступ — Публічний vs приватний Шевченко
+  words: 500
+  subsections:
+  - Кобзар vs Журнал
+  - Чому щоденник написаний російською
+  - Жанр щоденника в літературі
+- section: Контекст написання (1857-1858)
+  words: 700
+  subsections:
+  - Кінець заслання
+  - Шлях з Казахстану до Петербурга
+  - Нове життя після неволі
+- section: Внутрішній світ поета
+  words: 800
+  subsections:
+  - Рефлексії про мистецтво
+  - Погляди на театр і літературу
+  - Технічні інтереси (фотографія)
+- section: Мовний аналіз
+  words: 600
+  subsections:
+  - Розмовна російська XIX століття
+  - Інтроспективна лексика
+  - Порівняння з поетичною мовою
+- section: Психологічний портрет
+  words: 600
+  subsections:
+  - Самотність і пошук кохання
+  - Стосунки з друзями
+  - Здоров'я і передчуття смерті
+- section: Підсумок — Людина за маскою пророка
+  words: 400
+  subsections:
+  - Щоденник як документ епохи
+  - Демістифікація генія
+  - Перехід до рецепції
+word_target: 4500
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - щоденник
+  - журнал
+  - рефлексія
+  - інтроспекція
+  - заслання
+  - неволя
+  - демістифікація
+  - психологічний портрет
+  - приватний
+  - публічний
+  recommended:
+  - фотографія
+  - самотність
+  - передчуття
+  - стосунки
+  - епоха
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - cloze
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: lit-11 to lit-18 (all Shevchenko modules)
+  related:
+  - lit-20 (Cult of Shevchenko — рецепція)
+  - lit-17 (The Artist — автобіографія)
+constraints:
+  min_engagement_boxes: 3
+  min_examples: 15
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

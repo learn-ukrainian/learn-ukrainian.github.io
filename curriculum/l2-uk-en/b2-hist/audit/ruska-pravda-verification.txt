@@ -1,0 +1,62 @@
+
+========================================
+  📋 Loaded Metadata from YAML sidecar
+
+📋 Auditing: B2 M13 — Руська Правда: Перший законодавчий кодекс
+   File: curriculum/l2-uk-en/b2-hist/ruska-pravda.md | Target: 4000 words
+  📋 Required activity types from meta: comparative-study, essay-response, fill-in, group-sort, quiz, reading
+  📋 Template: docs/l2-uk-en/templates/b2-history-module-template.md (pedagogy: CBI)
+
+  ⚠️ HYDRATION NOTE: Outline sums to 4100, exceeding word_target 4000
+     Additional 100 words (allowed for content depth)
+
+  📊 Section Word Analysis:
+     Вступ                                       221 /  250  ⚠️ (-29)
+     Правда Ярослава (1016–1036)                 334 /  250  ✅ (+84)
+     Правда Ярославичів та соціальна структура   418 /  450  ✅ (-32)
+     Первинні джерела                            316 /  400  ❌ (-84)
+     Деколонізаційний погляд                     185 /  300  ❌ (-115)
+     Читання: Ярослав Мудрий — законодавець      283 /  300  ✅ (-17)
+     Соціальні ліфти та Економіка                464 /  500  ✅ (-36)
+     Порівняльний аналіз правових систем         156 /  300  ❌ (-144)
+     Жінки, Суд та Мова                          215 /  350  ❌ (-135)
+     Спадщина та Сучасність                     1005 /  800  ✅ (+205)
+     Повсякденне правосуддя: Казуси              250 /  200  ✅ (+50)
+     ──────────────────────────────────────────────────────────────────
+     TOTAL                                      3847 / 4100  ❌ (-253)
+
+📋 Auditing: B2 M13 — Руська Правда: Перший законодавчий кодекс
+   File: curriculum/l2-uk-en/b2-hist/ruska-pravda.md | Target: 4000 words
+
+  📋 Found YAML activities file (8 activities)
+  > Уривок з Руської Правди: 3 items (min 1)
+  > Аналіз статті про побиття: 1 items (min 1)
+  > Соціальна структура та право: 8 items (min 8)
+  > Правда чи хибність: 10 items (min 8)
+  > Соціальні групи Київської Русі: 15 items (min 1)
+  > Правда Ярослава vs Правда Ярославичів: 1 items (min 1)
+  > Еволюція справедливості: 1 items (min 1)
+  > Юридична термінологія: 18 items (min 8)
+
+--- STRICT GATES (Level B2) ---
+Words        ✅ 4274/4000 (raw: 4438)
+Activities   ✅ 8/3
+Density      ✅ All > 1
+Unique_types ✅ 8/2 types
+Priority     ✅ Priority types used
+Engagement   ✅ 9/5
+Audio        ℹ️ No audio
+Vocab        ✅ 20/20
+Structure    ✅ Valid Structure
+Lint         ✅ Clean Format
+Pedagogy     ✅ Level-appropriate
+Content_heavy ✅ Content-heavy OK (8 activities)
+Grammar      ℹ️ N/A (covered by naturalness)
+Naturalness  ✅ 10/10 (High)
+Activity_quality 📋 Quality validation available (optional)
+Immersion    🇺🇦 99.6% (target 90-100% (history))
+Richness     ✅ 99% (history)
+
+Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/audit/ruska-pravda-review.md
+
+✅ AUDIT PASSED.

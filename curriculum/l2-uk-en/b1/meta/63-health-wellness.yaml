@@ -1,26 +1,94 @@
 module: b1-63
-title: Здоров'я та самопочуття
-subtitle: Health and Wellness
-version: '1.0'
-phase: B1.6 Vocabulary Expansion II
+id: b1-63
+slug: health-wellness
+title: "Здоров'я та самопочуття"
+subtitle: "Health and Wellness"
+version: '2.0'
+phase: "B1.6 [Vocabulary Expansion II]"
 focus: vocabulary
 pedagogy: PPP
+register: розмовний
 duration: 90
 transliteration: none
-grammar:
-- noun collocations with health vocabulary
-- adjective-noun agreement in health contexts
-tags:
-- vocabulary
-- health
-- wellness
 objectives:
-- Learner can use 30 health and wellness words in context
-- Learner can distinguish between здоров'я/самопочуття/стан
-- Learner can form natural collocations with health-related nouns
-vocabulary_count: 35
-vocab_count: 29
-slug: 63-health-wellness
+  - "Learner can use 30 health and wellness words in context"
+  - "Learner can distinguish between здоров'я/самопочуття/стан"
+  - "Learner can form natural collocations with health-related nouns"
+  - "Learner can discuss health topics fluently"
+grammar:
+  - "Noun collocations with health vocabulary"
+  - "Adjective-noun agreement in health contexts"
+  - "Expressing physical states"
+word_target: 1200
+content_outline:
+  - section: "Introduction: Health Vocabulary"
+    words: 150
+    points:
+      - "Beyond basic illness words"
+      - "Wellness concept"
+      - "Ukrainian health context"
+  - section: "Physical Health"
+    words: 250
+    points:
+      - "здоров'я, самопочуття, стан"
+      - "симптом, діагноз, лікування"
+      - "Medical vocabulary"
+  - section: "Mental Wellness"
+    words: 250
+    points:
+      - "психічне здоров'я, стрес"
+      - "релаксація, медитація"
+      - "Mental health vocabulary"
+  - section: "Healthy Lifestyle"
+    words: 250
+    points:
+      - "харчування, фітнес, сон"
+      - "здоровий спосіб життя"
+      - "Lifestyle vocabulary"
+  - section: "Health Actions"
+    words: 200
+    points:
+      - "лікувати, одужувати, підтримувати"
+      - "стежити за здоров'ям"
+      - "Health verbs and expressions"
+  - section: "Practice: Health Discussions"
+    words: 100
+    points:
+      - "Discuss wellness topics"
+      - "Give health advice"
+vocabulary_hints:
+  required:
+    - здоров'я (health)
+    - самопочуття (well-being)
+    - симптом (symptom)
+    - лікування (treatment)
+    - харчування (nutrition)
+    - стрес (stress)
+    - фітнес (fitness)
+    - одужувати (to recover)
+  recommended:
+    - діагноз (diagnosis)
+    - профілактика (prevention)
+    - імунітет (immunity)
+    - релаксація (relaxation)
+activity_hints:
+  - type: collocation
+    focus: "Health noun phrases"
+    items: 25
+  - type: fill-in
+    focus: "Complete health sentences"
+    items: 20
+  - type: role-play
+    focus: "Health consultation scenarios"
+    items: 15
+  - type: discussion
+    focus: "Discuss wellness topics"
+    items: 10
+prerequisites:
+  - b1-62 (Environment Ecology)
+connects_to:
+  - b1-64 (Emotions Deep Dive)
 naturalness:
   score: 9
   status: PASS
+  justification: "Essential for personal well-being discussions"

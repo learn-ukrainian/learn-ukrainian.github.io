@@ -1,0 +1,95 @@
+module: 15-oral-presentations
+level: c1
+sequence: 15
+version: '2.0'
+title: Доповідь та презентація
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Академічна риторика
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Academic public speaking guidelines
+- name: Presentation Skills in Ukrainian
+  url: https://mova.info/
+  type: secondary
+  notes: Oral presentation language and techniques
+content_outline:
+- section: Вступ — Мистецтво усної презентації
+  words: 400
+  points:
+  - Типи академічних доповідей
+  - Відмінності від письмового тексту
+  - Підготовка до презентації
+- section: Структура доповіді
+  words: 700
+  points:
+  - Привітання і представлення теми
+  - Основна частина з чіткими розділами
+  - Підсумок і запрошення до питань
+- section: Мовні маркери (Signposting)
+  words: 800
+  points:
+  - Сьогодні я хотів би поговорити про ...
+  - Перейдімо до наступного пункту ...
+  - На завершення хочу підкреслити ...
+- section: Візуальні матеріали
+  words: 500
+  points:
+  - Мова для пояснення графіків
+  - Посилання на слайди
+  - Баланс тексту і візуалізації
+- section: Робота з аудиторією
+  words: 600
+  points:
+  - Контакт з аудиторією
+  - Риторичні запитання
+  - Реагування на невербальні сигнали
+- section: Відповіді на запитання
+  words: 600
+  points:
+  - Дякую за запитання ...
+  - Дозвольте уточнити ...
+  - Якщо я правильно зрозумів ваше питання ...
+- section: Практика презентації
+  words: 400
+  points:
+  - Підготовка міні-доповіді
+  - Симуляція Q&A
+  - Взаємне оцінювання
+word_target: 4000
+vocabulary:
+  required:
+  - доповідь (report/presentation)
+  - презентація (presentation)
+  - аудиторія (audience)
+  - слайд (slide)
+  - графік (chart)
+  - діаграма (diagram)
+  - перехід (transition)
+  - підсумок (summary)
+  - маркер (marker/signpost)
+  - візуалізація (visualization)
+  recommended:
+  - риторика (rhetoric)
+  - невербальний (nonverbal)
+  - інтерактивний (interactive)
+  - імпровізація (improvisation)
+  - тайм-менеджмент (time management)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - essay-response
+  - cloze
+  - fill-in
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c1-16 (Advanced Punctuation)
+- c1-18 (Essay Writing Practice)
+- c1-35 (Speaking Practice)

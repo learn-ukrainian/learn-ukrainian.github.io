@@ -1,0 +1,80 @@
+module: weather-and-nature
+level: a1
+sequence: 29
+version: '2.0'
+title: Weather & Nature
+subtitle: Seasons, Weather & The Natural World
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can describe the weather
+- Learner can ask about weather conditions
+- Learner can name the four seasons
+- Learner can use impersonal weather expressions
+content_outline:
+- section: 'Introduction: Talking About Weather'
+  words: 150
+  points:
+  - Weather is everyday conversation
+  - Impersonal constructions
+  - Яка сьогодні погода?
+- section: Weather Expressions
+  words: 200
+  points:
+  - Сьогодні тепло/холодно/жарко
+  - Йде дощ/сніг (It's raining/snowing)
+  - Світить сонце (The sun is shining)
+- section: The Four Seasons
+  words: 200
+  points:
+  - весна, літо, осінь, зима
+  - навесні, влітку, восени, взимку
+  - What happens in each season
+- section: Nature Vocabulary
+  words: 200
+  points:
+  - дерево, квітка, трава
+  - небо, хмара, сонце
+  - гора, річка, ліс
+- section: Describing Weather Conditions
+  words: 150
+  points:
+  - сонячно, хмарно, вітряно
+  - 'Temperature: градусів'
+  - Weather forecasts
+- section: 'Practice: Weather Reports'
+  words: 100
+  points:
+  - Describe today's weather
+  - Ask about weather in different cities
+word_target: 1000
+vocabulary:
+  required:
+  - погода (weather)
+  - дощ (rain)
+  - сніг (snow)
+  - сонце (sun)
+  - тепло (warm)
+  - холодно (cold)
+  - весна (spring)
+  - зима (winter)
+  recommended:
+  - літо (summer)
+  - осінь (autumn)
+  - хмара (cloud)
+  - вітер (wind)
+  - спекотно (hot)
+  - прохолодно (cool)
+  forbidden: []
+activities:
+  types_required:
+  - fill-in
+  - matching
+  - vocabulary-drill
+  - dialogue
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a1-30 (Prepositions III)
+- a1-33 (Holidays and Traditions)

@@ -1,0 +1,100 @@
+module: 23-black-council-plot
+level: lit
+sequence: 23
+version: '2.0'
+title: 'Чорна рада: Роман'
+subtitle: 'The Black Council: The Novel'
+focus: literature
+pedagogy: seminar
+sources:
+  primary:
+  - url: https://www.ukrlib.com.ua/books/printit.php?tid=263
+    title: Чорна рада — повний текст
+    notes: Роман для детального аналізу
+  secondary:
+  - url: https://www.ukrlib.com.ua/analiz/printit.php?tid=263
+    title: Аналіз "Чорної ради"
+    notes: Літературознавчий аналіз
+  - url: https://uk.wikipedia.org/wiki/Вальтер_Скотт
+    title: Вальтер Скотт — вплив
+    notes: Літературний контекст
+content_outline:
+- section: Вступ — Перший український історичний роман
+  words: 500
+  subsections:
+  - Значення "Чорної ради" для літератури
+  - Вплив Вальтера Скотта
+  - Рік видання (1857)
+- section: Сюжет і структура
+  words: 700
+  subsections:
+  - Основні сюжетні лінії
+  - Хронологія подій
+  - Фінал і його значення
+- section: Система персонажів
+  words: 800
+  subsections:
+  - Шрам — ідеал козацької честі
+  - Череваний — прагматик
+  - Сомко — трагічний герой
+  - Брюховецький — антигерой
+- section: Літературні архетипи
+  words: 700
+  subsections:
+  - Вальтерскоттівська модель
+  - «Середній герой» як спостерігач
+  - Історія як фон для особистої драми
+- section: Художні особливості
+  words: 500
+  subsections:
+  - Мова роману (архаїзація)
+  - Пейзаж і його функція
+  - Діалоги vs авторські описи
+- section: Підсумок — Роман як історична філософія
+  words: 400
+  subsections:
+  - Погляд Куліша на "народ"
+  - Критика охлократії
+  - Перехід до мовного питання
+word_target: 4500
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - історичний роман
+  - архетип
+  - антигерой
+  - архаїзація
+  - сюжетна лінія
+  - пейзаж
+  - хронологія
+  - прагматик
+  - ідеаліст
+  - трагічний герой
+  recommended:
+  - фабула
+  - композиція
+  - наратор
+  - ретроспекція
+  - експозиція
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - cloze
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: lit-22 (Black Council History)
+  related:
+  - lit-24 (Language Question — мова роману)
+  - lit-13 (Haidamaky — порівняння історичних наративів)
+constraints:
+  min_engagement_boxes: 3
+  min_examples: 15
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

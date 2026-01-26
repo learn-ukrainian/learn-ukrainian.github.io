@@ -1,29 +1,105 @@
-title: 'Духовний Фронт: Томос'
-subtitle: 'The Spiritual Front: Tomos'
+module: b2-hist-124
+id: b2-hist-124
+slug: tomos
+title: "Томос: Духовна незалежність"
+subtitle: "Tomos: Spiritual Independence"
 version: '2.0'
-phase: B2.3d Independence & War
+phase: "HIST.12 [Independence & Modern Era]"
 focus: history
-word_target: 4000
 pedagogy: CBI
+register: публіцистичний
 duration: 120
 transliteration: none
-tags:
-- history
-- church
-- independence
-- tomos
-- decolonization
-grammar:
-- Historical narrative register
-- Ecclesiastical and political terminology
 objectives:
-- Understand the historical context of the Ukrainian church's subordination to Moscow
-  in 1686
-- Identify the steps leading to the 2018 Unification Council
-- Explain the significance of the 2019 Tomos of Autocephaly
-- Discuss the role of spiritual independence in national identity
-vocabulary_count: 25
-slug: dukhovnyi-front-tomos
+  - "Учень може описати історію боротьби за церковну незалежність"
+  - "Учень може пояснити значення Томосу про автокефалію"
+  - "Учень може проаналізувати роль церкви в українській ідентичності"
+  - "Учень може оцінити геополітичне значення Томосу"
+grammar:
+  - "Минулий час в історичному наративі"
+  - "Церковна та релігійна лексика"
+  - "Складнопідрядні речення"
+word_target: 4000
+content_outline:
+  - section: "Вступ: Церква та держава"
+    words: 400
+    points:
+      - "Чому церковна незалежність важлива"
+      - "1686: підпорядкування Москві"
+      - "Шлях до Томосу"
+  - section: "Історія українського православ'я"
+    words: 800
+    points:
+      - "Київська митрополія"
+      - "Підпорядкування Московському патріархату"
+      - "Розкол після 1991"
+      - "УПЦ КП, УАПЦ, УПЦ МП"
+  - section: "Здобуття Томосу (2018-2019)"
+    words: 1000
+    points:
+      - "Звернення Порошенка до Варфоломія"
+      - "Об'єднавчий собор 15 грудня 2018"
+      - "Митрополит Епіфаній"
+      - "Вручення Томосу 6 січня 2019"
+      - "Реакція Москви"
+  - section: "Первинні джерела"
+    words: 800
+    points:
+      - "Текст Томосу"
+      - "Виступи патріарха Варфоломія"
+      - "Документи Собору"
+  - section: "Деколонізаційний погляд"
+    words: 500
+    points:
+      - "Російський наратив: «розкол»"
+      - "Реальність: духовна деколонізація"
+      - "Церква як інструмент імперії"
+  - section: "Підсумок: Після Томосу"
+    words: 500
+    points:
+      - "Перехід парафій"
+      - "Війна та церква"
+      - "Значення для ідентичності"
+vocabulary_hints:
+  required:
+    - Томос (Tomos)
+    - автокефалія (autocephaly)
+    - церква (church)
+    - патріарх (patriarch)
+    - митрополит (metropolitan)
+    - собор (council)
+    - православ'я (Orthodoxy)
+    - незалежність (independence)
+  recommended:
+    - парафія (parish)
+    - єпископ (bishop)
+    - канонічний (canonical)
+    - духовенство (clergy)
+    - розкол (schism)
+    - деколонізація (decolonization)
+activity_hints:
+  - type: reading
+    focus: "Текст Томосу"
+    source: "Церковні документи"
+    items: 4
+  - type: quiz
+    focus: "Шлях до Томосу"
+    items: 15
+  - type: match-up
+    focus: "Дата → подія церковної історії"
+    items: 10
+  - type: true-false
+    focus: "Факти про автокефалію"
+    items: 10
+  - type: essay-response
+    focus: "Чому отримання Томосу називають духовною незалежністю?"
+    word_target: 250
+prerequisites:
+  - b2-hist-123 (Україна 2014-2019)
+connects_to:
+  - b2-hist-125 (Мовна політика)
+  - b2-hist-127 (Революція Гідності) [контекст]
 naturalness:
-  score: 9
+  score: 10
   status: PASS
+  justification: "Академічний український для церковної історії"

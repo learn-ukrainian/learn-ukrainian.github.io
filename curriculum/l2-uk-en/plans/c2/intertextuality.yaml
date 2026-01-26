@@ -1,0 +1,104 @@
+module: intertextuality
+level: c2
+sequence: 23
+version: '2.0'
+title: Інтертекстуальність
+focus: literature
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Інтертекстуальність — Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Інтертекстуальність
+  type: reference
+  notes: Theoretical foundation and terminology
+- name: Українська постмодерна література
+  url: https://ukrlib.com.ua/
+  type: primary
+  notes: Examples of intertextuality in Zhadan, Andrukhovych
+- name: Теорія літератури — Ю. Крістева
+  url: https://uk.wikipedia.org/wiki/Юлія_Крістева
+  type: reference
+  notes: Origin of intertextuality concept
+content_outline:
+- section: Вступ — Що таке інтертекстуальність?
+  words: 500
+  points:
+  - Визначення Ю. Крістевої
+  - Кожен текст як мозаїка цитат
+  - Типи інтертекстуальних зв'язків
+- section: Алюзія — непряме посилання
+  words: 700
+  points:
+  - Літературні алюзії
+  - Біблійні та міфологічні алюзії
+  - Історичні алюзії
+  - Розпізнавання алюзій у текстах
+- section: Цитата та ремінісценція
+  words: 600
+  points:
+  - Пряме цитування з атрибуцією
+  - Приховане цитування
+  - Ремінісценція як відлуння
+  - Функції цитування в тексті
+- section: Пародія та стилізація
+  words: 700
+  points:
+  - Пародія як критичне наслідування
+  - Стилізація як шанобливе наслідування
+  - Травестія та бурлеск
+  - Сучасні приклади в українській літературі
+- section: Палімпсест і гіпертекст
+  words: 600
+  points:
+  - Текст як нашарування попередніх текстів
+  - Гіпертекст за Жераром Женеттом
+  - Архітекстуальність (жанрові зв'язки)
+  - Паратекстуальність (заголовки, епіграфи)
+- section: Практикум — створення інтертекстуального тексту
+  words: 500
+  points:
+  - Свідоме використання алюзій
+  - Інтеграція цитат
+  - Стилізація під класика
+  - Самоаналіз інтертекстуальних шарів
+- section: Підсумок
+  words: 400
+  points:
+  - Інтертекстуальність як творчий інструмент
+  - Читацька компетенція
+  - Зв'язок із жанровим змішуванням
+word_target: 4000
+vocabulary:
+  required:
+  - інтертекстуальність (intertextuality)
+  - алюзія (allusion)
+  - цитата (quotation)
+  - ремінісценція (reminiscence)
+  - пародія (parody)
+  - стилізація (stylization)
+  - палімпсест (palimpsest)
+  - гіпертекст (hypertext)
+  - архітекстуальність (architextuality)
+  - паратекст (paratext)
+  recommended:
+  - травестія (travesty)
+  - бурлеск (burlesque)
+  - претекст (pretext/source text)
+  - метатекст (metatext)
+  - інтерпретація (interpretation)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - match-up
+  - critical-analysis
+  - essay-response
+  - comparative-study
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-24 (Style Blending)
+- c2-30 (Intertextuality II - advanced)
+- c2-26 (Literary Theory)

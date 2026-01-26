@@ -1,26 +1,94 @@
 module: b1-77
-title: Українське кіно та серіали
-subtitle: Ukrainian Cinema and Television
+id: b1-77
+slug: ukrainian-cinema-and-tv
+title: "Українське кіно та серіали"
+subtitle: "Ukrainian Cinema and Television"
 version: '2.0'
-phase: B1.7 Contemporary Ukraine
+phase: "B1.7 [Contemporary Ukraine]"
 focus: culture
 pedagogy: CBI
-duration: 75
+register: розмовний
+duration: 90
 transliteration: none
-tags:
-- culture
-- cinema
-- television
-- media
-grammar: []
 objectives:
-- Learner can discuss Ukrainian films and television series
-- Learner can understand authentic texts about Ukrainian cinema
-- Learner can use film industry vocabulary in context
-- Learner can compare Ukrainian cinema with their own cultural experience
-vocabulary_count: 50
-vocab_count: 50
-slug: 77-ukrainian-cinema-and-tv
+  - "Learner can discuss Ukrainian films and television series"
+  - "Learner can understand authentic texts about Ukrainian cinema"
+  - "Learner can use film industry vocabulary in context"
+  - "Learner can compare Ukrainian cinema with their own cultural experience"
+grammar:
+  - "Film and media vocabulary"
+  - "Review and critique patterns"
+  - "Expressing opinions about media"
+word_target: 1200
+content_outline:
+  - section: "Introduction: Ukrainian Cinema"
+    words: 150
+    points:
+      - "Cinema history overview"
+      - "Soviet and post-Soviet era"
+      - "Contemporary renaissance"
+  - section: "Classic Ukrainian Films"
+    words: 250
+    points:
+      - "Dovzhenko legacy"
+      - "Classic directors"
+      - "Cultural milestones"
+  - section: "Contemporary Cinema"
+    words: 250
+    points:
+      - "Modern directors"
+      - "War documentaries"
+      - "International recognition"
+  - section: "Ukrainian Television"
+    words: 250
+    points:
+      - "Popular series"
+      - "Comedy and drama"
+      - "Streaming platforms"
+  - section: "Film Industry Today"
+    words: 200
+    points:
+      - "Production companies"
+      - "Film festivals"
+      - "Future trends"
+  - section: "Practice: Film Discussion"
+    words: 100
+    points:
+      - "Recommend films"
+      - "Discuss preferences"
+vocabulary_hints:
+  required:
+    - фільм (film)
+    - кіно (cinema)
+    - серіал (TV series)
+    - режисер (director)
+    - актор/акторка (actor/actress)
+    - документальний (documentary)
+    - жанр (genre)
+    - прем'єра (premiere)
+  recommended:
+    - комедія (comedy)
+    - драма (drama)
+    - історичний фільм (historical film)
+    - кінофестиваль (film festival)
+activity_hints:
+  - type: reading
+    focus: "Film reviews and descriptions"
+    items: 15
+  - type: matching
+    focus: "Match films to genres"
+    items: 20
+  - type: fill-in
+    focus: "Complete film reviews"
+    items: 15
+  - type: discussion
+    focus: "Recommend Ukrainian films"
+    items: 10
+prerequisites:
+  - b1-76 (Ukrainian Music Today)
+connects_to:
+  - b1-78 (Technology and Startups)
 naturalness:
   score: 9
   status: PASS
+  justification: "Essential media literacy for cultural immersion"

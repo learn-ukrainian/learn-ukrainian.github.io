@@ -27,3 +27,32 @@ slug: 65-synonyms-state
 naturalness:
   score: 9
   status: PASS
+content_outline:
+- section: Вступ — Стан та Буття
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Be/Exist
+  words: 500
+  points:
+  - бути (be - general)
+  - існувати (exist - philosophical)
+  - перебувати (be located/situated)
+  - знаходитися (be found/located)
+  - становити (constitute - formal)
+- section: Seem/Appear
+  words: 500
+  points:
+  - здаватися (seem - subjective)
+  - виглядати (look/appear - visual)
+  - видаватися (appear - impression)
+  - виявлятися (turn out to be)
+  - справляти враження (make impression)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

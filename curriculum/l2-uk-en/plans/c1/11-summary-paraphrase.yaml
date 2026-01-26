@@ -1,0 +1,95 @@
+module: 11-summary-paraphrase
+level: c1
+sequence: 11
+version: '2.0'
+title: Резюме та парафраз
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Academic Writing Skills in Ukrainian
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Paraphrasing and summarizing guidelines
+- name: Academic Integrity Resources
+  url: https://mova.info/
+  type: secondary
+  notes: Avoiding plagiarism through proper paraphrasing
+content_outline:
+- section: Вступ — Мистецтво переказу
+  words: 400
+  points:
+  - Різниця між резюме і парафразом
+  - Роль у академічному письмі
+  - Етика використання джерел
+- section: Техніки резюмування
+  words: 700
+  points:
+  - Виділення головних ідей
+  - Опущення деталей і прикладів
+  - Збереження оригінального змісту
+- section: Техніки парафразування
+  words: 700
+  points:
+  - Використання синонімів
+  - Зміна структури речення
+  - Зміна граматичних конструкцій
+- section: Маркери парафразу
+  words: 600
+  points:
+  - Іншими словами, ...
+  - Тобто, ...
+  - Інакше кажучи, ...
+- section: Резюме vs цитата vs парафраз
+  words: 600
+  points:
+  - Коли використовувати кожну форму
+  - Переваги та недоліки
+  - Баланс у тексті
+- section: Плагіат та його уникнення
+  words: 600
+  points:
+  - Що вважається плагіатом
+  - Критерії правильного парафразу
+  - Інструменти перевірки
+- section: Практика переказу
+  words: 400
+  points:
+  - Резюмування абзацу
+  - Парафразування речень
+  - Інтеграція в академічний текст
+word_target: 4000
+vocabulary:
+  required:
+  - резюме (summary)
+  - парафраз (paraphrase)
+  - переказ (retelling)
+  - оригінал (original)
+  - синонім (synonym)
+  - структура (structure)
+  - плагіат (plagiarism)
+  - скорочення (abbreviation)
+  - суть (essence)
+  - передача (conveyance)
+  recommended:
+  - конспектування (note-taking)
+  - реферування (abstracting)
+  - адаптація (adaptation)
+  - трансформація (transformation)
+  - інтерпретація (interpretation)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - essay-response
+  - cloze
+  - fill-in
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c1-12 (Research Article)
+- c1-14 (Literature Review)
+- c1-19 (Article Critique)

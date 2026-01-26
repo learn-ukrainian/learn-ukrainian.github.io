@@ -1,0 +1,93 @@
+module: c2-2-practice-i
+level: c2
+sequence: 42
+version: '2.0'
+title: Практика C2.2 I — Літературне портфоліо
+focus: practice
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Літературна Україна — творчі конкурси
+  url: https://litukraina.org.ua/
+  type: reference
+  notes: Guidelines for literary portfolio compilation and evaluation criteria
+- name: Київський національний університет — творче письмо
+  url: https://www.univ.kiev.ua/
+  type: reference
+  notes: Academic standards for literary portfolio assessment
+- name: Часопис "Кур'єр Кривбасу"
+  url: https://kr-elib.com.ua/
+  type: reference
+  notes: Examples of contemporary Ukrainian literary works for portfolio models
+content_outline:
+- section: Вступ — Мета літературного портфоліо
+  words: 400
+  points:
+  - Визначення літературного портфоліо як інструменту самооцінки
+  - Критерії відбору текстів для портфоліо
+  - Баланс між жанрами та стилями
+- section: Аналітичне есе — Літературознавчий аналіз
+  words: 700
+  points:
+  - Структура літературознавчого есе
+  - Інтеграція теоретичних концепцій (М26-31)
+  - Цитування та посилання в академічному стилі
+- section: Поетичний розділ
+  words: 600
+  points:
+  - Оригінальні вірші з різними формами (верлібр, сонет, рима)
+  - Коментар автора до власних творів
+  - Демонстрація володіння просодією (М22, М28)
+- section: Прозовий розділ
+  words: 800
+  points:
+  - Оповідання або уривок з більшого твору
+  - Нарратологічний самоаналіз (М27, М29)
+  - Робота з індивідуальним голосом (М14-15)
+- section: Перекладацький розділ
+  words: 700
+  points:
+  - Зразок літературного перекладу (поезія або проза)
+  - Коментар до перекладацьких рішень
+  - Порівняльний аналіз оригіналу та перекладу
+- section: Рефлексія та висновки
+  words: 500
+  points:
+  - Самооцінка розвитку літературних навичок
+  - Ідентифікація сильних сторін та зон росту
+  - План подальшого вдосконалення
+word_target: 4000
+vocabulary:
+  required:
+  - портфоліо (portfolio)
+  - збірка (collection)
+  - самооцінка (self-assessment)
+  - рефлексія (reflection)
+  - демонстрація (demonstration)
+  - компетентність (competency)
+  - жанрова різноманітність (genre diversity)
+  - авторський коментар (author's commentary)
+  - майстерність (mastery/craftsmanship)
+  - критерій оцінювання (evaluation criterion)
+  recommended:
+  - еклектика (eclecticism)
+  - когерентність (coherence)
+  - репрезентативність (representativeness)
+  - стилістична цілісність (stylistic integrity)
+  - творча еволюція (creative evolution)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - critical-analysis
+  - comparative-study
+  - authorial-intent
+  - essay-response
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-43 (C2.2 Practice II — Creative portfolio)
+- c2-44 (C2.2 Review)
+- c2-45 (C2.2 Checkpoint)

@@ -1,0 +1,23 @@
+module: 36-word-formation-adjective-formation
+level: b2
+sequence: 36
+version: '1.0'
+title: 'Словотворення: прикметники'
+subtitle: Творення прикметників від іменників та складні прикметники
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can form adjectives from nouns using Ukrainian suffixes
+- Learner can distinguish between -ський/-цький and -ний/-альний patterns
+- Learner can form and use compound adjectives correctly
+- Learner can recognize word formation patterns in authentic texts
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

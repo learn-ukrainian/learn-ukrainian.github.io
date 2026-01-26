@@ -1,26 +1,94 @@
 module: b1-66
-title: Основи бізнесу
-subtitle: Business Basics
-version: '1.0'
-phase: B1.6 Vocabulary Expansion II
+id: b1-66
+slug: business-basics
+title: "Основи бізнесу"
+subtitle: "Business Basics"
+version: '2.0'
+phase: "B1.6 [Vocabulary Expansion II]"
 focus: vocabulary
 pedagogy: PPP
+register: розмовний
 duration: 90
 transliteration: none
-grammar:
-- business vocabulary collocations
-- professional register
-tags:
-- vocabulary
-- business
-- professional
 objectives:
-- Learner can use 30 business vocabulary words in context
-- Learner can distinguish between similar business terms (компанія/фірма/підприємство)
-- Learner can form natural collocations with business nouns
-vocabulary_count: 35
-vocab_count: 24
-slug: 66-business-basics
+  - "Learner can use 30 business vocabulary words in context"
+  - "Learner can distinguish between similar business terms (компанія/фірма/підприємство)"
+  - "Learner can form natural collocations with business nouns"
+  - "Learner can discuss basic business topics fluently"
+grammar:
+  - "Business vocabulary collocations"
+  - "Professional register expressions"
+  - "Formal business communication patterns"
+word_target: 1200
+content_outline:
+  - section: "Introduction: Business Vocabulary"
+    words: 150
+    points:
+      - "Why business vocabulary matters"
+      - "Ukrainian business context"
+      - "Core concepts overview"
+  - section: "Companies and Organizations"
+    words: 250
+    points:
+      - "компанія, фірма, підприємство"
+      - "корпорація, організація"
+      - "Business entity types"
+  - section: "Business Activities"
+    words: 250
+    points:
+      - "виробництво, продаж, маркетинг"
+      - "інвестиції, прибуток, збитки"
+      - "Core business functions"
+  - section: "Business People and Roles"
+    words: 250
+    points:
+      - "підприємець, бізнесмен, партнер"
+      - "інвестор, клієнт, постачальник"
+      - "Business relationships"
+  - section: "Business Actions"
+    words: 200
+    points:
+      - "заснувати, керувати, розвивати"
+      - "інвестувати, продавати"
+      - "Business verbs"
+  - section: "Practice: Business Discussions"
+    words: 100
+    points:
+      - "Discuss business topics"
+      - "Use professional vocabulary"
+vocabulary_hints:
+  required:
+    - компанія (company)
+    - підприємство (enterprise)
+    - бізнес (business)
+    - прибуток (profit)
+    - інвестиція (investment)
+    - клієнт (client)
+    - продаж (sale)
+    - керувати (to manage)
+  recommended:
+    - підприємець (entrepreneur)
+    - маркетинг (marketing)
+    - постачальник (supplier)
+    - збитки (losses)
+activity_hints:
+  - type: collocation
+    focus: "Business noun phrases"
+    items: 25
+  - type: fill-in
+    focus: "Complete business sentences"
+    items: 20
+  - type: matching
+    focus: "Match terms to definitions"
+    items: 15
+  - type: role-play
+    focus: "Business scenarios"
+    items: 10
+prerequisites:
+  - b1-65 (Relationships)
+connects_to:
+  - b1-67 (Travel Geography)
 naturalness:
   score: 9
   status: PASS
+  justification: "Essential for professional contexts"

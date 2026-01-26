@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M44 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:22:22
+**Generated:** 2026-01-25 22:22:51
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 5455/4000 (raw: 5636)
+- **Words:** ✅ 4802/4000 (raw: 4975)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 98.9% (target 90-100% (history))
+- **Immersion:** 🇺🇦 98.7% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -58,15 +58,15 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 15 | 3 | 100% | 24% | 23.8% |
+| primary_sources | 14 | 3 | 100% | 24% | 23.8% |
 | engagement | 7 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 11 | 4 | 100% | 10% | 9.5% |
-| visual | 7 | 4 | 100% | 10% | 9.5% |
-| variety | 0.98 | - | 98% | 5% | 4.7% |
+| visual | 6 | 4 | 100% | 10% | 9.5% |
+| variety | 0.97 | - | 97% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 19 | 3 | 100% | 5% | 4.8% |
+| questions | 13 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
@@ -81,6 +81,5 @@
 | **Соціальний та Релігійний Вимір боротьби** | ⚪️ | 548 | Skipped |
 | **Первинні джерела та свідчення очевидців** | ✅ | 435 | Included in Core |
 | **Деколонізаційний погляд на історію повстань** | ✅ | 435 | Included in Core |
-| **Есе: Теми для роздумів та аналізу** | ✅ | 653 | Included in Core |
 | **Підсумок** | ✅ | 278 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 251 | Skipped |

@@ -1,0 +1,102 @@
+module: 04-reflexive-passive
+level: b2
+sequence: 4
+version: '1.0'
+title: Зворотний пасив із -ся
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Ukrainian State Standard 2024 - Reflexive Verbs
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official requirements for -ся passive usage
+- name: Науковий стиль української мови
+  url: https://uk.wikipedia.org/wiki/Науковий_стиль
+  type: secondary
+  notes: Scientific writing conventions
+- name: Технічна документація українською
+  url: https://uk.wikipedia.org/wiki/Технічна_документація
+  type: secondary
+  notes: Technical writing patterns
+content_outline:
+- section: Вступ — Зворотний пасив
+  words: 400
+  points:
+  - Концепція зворотності в українських дієсловах
+  - -ся як маркер пасиву
+  - Відмінність від інших зворотних значень
+- section: Утворення зворотного пасиву
+  words: 600
+  points:
+  - Дієслово третьої особи + -ся/-сь
+  - Правила чергування -ся і -сь
+  - Видові пари (будується — побудується)
+- section: Акцент на процесі
+  words: 700
+  points:
+  - Зворотний пасив наголошує на процесі, не на результаті
+  - Порівняння з -но/-то (результат)
+  - Приклади в контексті (Будинок будується)
+- section: Вираження агента
+  words: 600
+  points:
+  - Агент в орудному відмінку (Проблема вивчається науковцями)
+  - Коли агент необхідний
+  - Коли агент опускається
+- section: Контексти вживання
+  words: 700
+  points:
+  - Науковий стиль (Експеримент проводиться)
+  - Технічна документація (Програма встановлюється)
+  - Юридичні тексти (Закон застосовується)
+  - Журналістика (Ситуація аналізується)
+- section: Порівняння форм пасиву
+  words: 500
+  points:
+  - -ся vs -но/-то — коли що використовувати
+  - Стилістичні відмінності
+  - Типові помилки
+- section: Практика і підсумок
+  words: 300
+  points:
+  - Ключові правила
+  - Перехід до модуля 05
+  - Підготовка до модуля 06
+word_target: 3800
+vocabulary:
+  required:
+  - зворотний (reflexive)
+  - процес (process)
+  - проводиться (is being conducted)
+  - вивчається (is being studied)
+  - застосовується (is applied)
+  - будується (is being built)
+  - аналізується (is being analyzed)
+  - досліджується (is being researched)
+  - науковець (scientist)
+  - експеримент (experiment)
+  recommended:
+  - лабораторія (laboratory)
+  - методика (methodology)
+  - результат (result)
+  - дослідження (research)
+  - технологія (technology)
+  forbidden: []
+activities:
+  types_required:
+  - group-sort
+  - error-correction
+  - quiz
+  - fill-in
+  - essay-response
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- b2-05 (3rd Person Plural Passive)
+- b2-06 (Passive in Context)
+- 'b2-21 (Register: Technical/Scientific)'
+- b2-10 (B2.1a Checkpoint)

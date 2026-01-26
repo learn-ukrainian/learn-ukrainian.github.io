@@ -1,0 +1,22 @@
+module: 39-euphemism-taboo
+level: c1
+sequence: 39
+version: '1.0'
+title: 'Евфемізми та табу: Мова делікатності'
+subtitle: 'Euphemisms & Taboo: The Language of Delicacy'
+focus: style
+pedagogy: Immersion
+objectives:
+- Identify and understand common Ukrainian euphemisms
+- Navigate sensitive topics with appropriate delicacy
+- Recognize taboo language and avoid its inappropriate use
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

@@ -1,0 +1,95 @@
+module: teaching-ukrainian-iii
+level: c2
+sequence: 84
+version: '2.0'
+title: Викладання української мови III — Розробка матеріалів
+focus: practice
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Принципи створення навчальних матеріалів з мови
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Guidelines for language teaching materials development
+- name: Authentic Materials in Language Teaching
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: secondary
+  notes: Use of authentic texts and media
+- name: Tomlinson — Materials Development in Language Teaching
+  url: https://www.cambridge.org/
+  type: reference
+  notes: Academic framework for materials development
+content_outline:
+- section: Вступ — Роль матеріалів у навчанні мови
+  words: 500
+  points:
+  - Підручник як основа і як доповнення
+  - Автентичні vs. адаптовані матеріали
+  - Критерії якісних навчальних матеріалів
+- section: Адаптація автентичних текстів
+  words: 700
+  points:
+  - Відбір текстів для різних рівнів
+  - Техніки спрощення без втрати автентичності
+  - Градуювання завдань до одного тексту
+  - Збереження культурного контексту
+- section: Створення вправ і завдань
+  words: 700
+  points:
+  - Типологія вправ (механічні, напівкомунікативні, комунікативні)
+  - Інструкції до завдань
+  - Критерії ефективних вправ
+  - Послідовність і логіка завдань
+- section: Візуальні та мультимедійні матеріали
+  words: 600
+  points:
+  - Роль зображень у навчанні мови
+  - Аудіо- та відеоматеріали
+  - Інтерактивні цифрові ресурси
+  - Авторське право і ліцензування
+- section: Оцінювання та вдосконалення матеріалів
+  words: 600
+  points:
+  - Пілотування матеріалів
+  - Збір зворотного зв'язку від учнів
+  - Критерії оцінки ефективності
+  - Ітеративне вдосконалення
+- section: Практика — Розробка навчального модуля
+  words: 600
+  points:
+  - Створення комплекту матеріалів для уроку
+  - Текст, вправи, візуали, інструкції
+  - Рецензування і доопрацювання
+word_target: 4000
+vocabulary:
+  required:
+  - навчальні матеріали (teaching materials)
+  - автентичний текст (authentic text)
+  - адаптація тексту (text adaptation)
+  - градуювання (grading/scaffolding)
+  - інструкція до завдання (task instructions)
+  - пілотування (piloting)
+  - ітеративний процес (iterative process)
+  - мультимедіа (multimedia)
+  - візуальна підтримка (visual support)
+  - авторське право (copyright)
+  recommended:
+  - рубрика оцінювання (assessment rubric)
+  - банк завдань (task bank)
+  - диференціація завдань (task differentiation)
+  - культурна релевантність (cultural relevance)
+  - залучення учнів (student engagement)
+  forbidden: []
+activities:
+  types_required:
+  - match-up
+  - essay-response
+  - quiz
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-85 (Translation Theory II)
+- c2-89 (Capstone Topic Selection)

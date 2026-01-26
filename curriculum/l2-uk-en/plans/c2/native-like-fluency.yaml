@@ -1,0 +1,106 @@
+module: native-like-fluency
+level: c2
+sequence: 81
+version: '2.0'
+title: Володіння на рівні носія
+focus: practice
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Ukrainian State Standard 2024 — C2 Descriptors
+  url: https://mon.gov.ua/
+  type: primary
+  notes: Дескриптори вільного володіння
+- name: CEFR Companion Volume 2020
+  url: https://www.coe.int/
+  type: reference
+  notes: C2 production and interaction scales
+- name: Native speaker corpora
+  url: https://mova.info/
+  type: reference
+  notes: Приклади природного мовлення
+content_outline:
+- section: Вступ — Що означає "як носій мови"
+  words: 500
+  points:
+  - Визначення native-like fluency
+  - Різниця між C1 і C2
+  - Реалістичні очікування
+  - Безперервний розвиток
+- section: Фонетична природність
+  words: 600
+  points:
+  - Інтонація та ритм української мови
+  - Наголос і редукція
+  - Милозвучність у спонтанному мовленні
+  - Регіональна нейтральність або автентичність
+- section: Лексична природність
+  words: 700
+  points:
+  - Ідіоматичність
+  - Колокації та сталі вирази
+  - Прагматичні частки та вигуки
+  - Ситуативна лексика
+- section: Граматична гнучкість
+  words: 600
+  points:
+  - Природний порядок слів
+  - Еліпсис та скорочення
+  - Спонтанні конструкції
+  - Стилістичні варіанти
+- section: Комунікативна спонтанність
+  words: 700
+  points:
+  - Швидкість реакції
+  - Плавність без пауз-заповнювачів
+  - Адаптація до співрозмовника
+  - Ремонт мовлення (self-repair)
+- section: Культурна компетенція в мовленні
+  words: 500
+  points:
+  - Культурні референції та алюзії
+  - Гумор та іронія
+  - Соціальні норми комунікації
+  - Implicit meaning
+- section: Практикум — Демонстрація fluency
+  words: 400
+  points:
+  - Спонтанні діалоги
+  - Імпровізований монолог
+  - Реакція на несподівані ситуації
+word_target: 4000
+vocabulary:
+  required:
+  - плавність (fluency)
+  - спонтанність (spontaneity)
+  - ідіоматичність (idiomaticity)
+  - колокація (collocation)
+  - прагматика (pragmatics)
+  - інтонація (intonation)
+  - ремонт мовлення (speech repair)
+  - адаптація (adaptation)
+  - implicit meaning (implied meaning)
+  - природність (naturalness)
+  recommended:
+  - паузи-заповнювачі (fillers)
+  - редукція (reduction)
+  - референція (reference)
+  - алюзія (allusion)
+  - нейтральність (neutrality)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - fill-in
+  - match-up
+  - error-correction
+  - critical-analysis
+  - essay-response
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-82 (Teaching Ukrainian I)
+- 'c2-89 (Capstone: Topic Selection)'
+- c2-100 (C2 Certification)

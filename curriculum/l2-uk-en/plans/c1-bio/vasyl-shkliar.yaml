@@ -1,0 +1,109 @@
+module: vasyl-shkliar
+level: c1-bio
+sequence: 81
+version: '2.0'
+title: 'Василь Шкляр: Майстер історичного роману'
+focus: biography
+pedagogy: seminar
+objectives:
+- Зрозуміти життєвий шлях та досягнення особи
+- Проаналізувати історичний контекст епохи
+- Оцінити внесок у українську культуру та історію
+sources:
+  primary:
+  - url: https://uk.wikipedia.org/wiki/Шкляр_Василь_Миколайович
+    title: Василь Шкляр (Wikipedia UA)
+    notes: Основна біографічна інформація
+  secondary:
+  - url: https://www.bookclub.ua/
+    title: Видавництво Клуб сімейного дозвілля
+    notes: Бібліографія та видання
+  - url: https://litakcent.com/
+    title: Літературна критика
+    notes: Рецензії та аналіз творчості
+content_outline:
+- section: Вступ — Бестселер як національний феномен
+  words: 400
+  subsections:
+  - Чорний Ворон як культурне явище
+  - Від журналіста до найпопулярнішого письменника
+  - Історична проза як інструмент національної памяті
+- section: Журналістські роки та формування
+  words: 600
+  subsections:
+  - Народження в Черкаській області (1951)
+  - Освіта та ранні кариєрні кроки
+  - Робота в журналістиці
+- section: Шлях до літератури
+  words: 700
+  subsections:
+  - Перші прозові твори
+  - Жанрові експерименти
+  - Формування авторського стилю
+- section: Чорний Ворон та історична память
+  words: 800
+  subsections:
+  - Створення роману про повстанців
+  - Тема боротьби з більшовиками
+  - Рецепція та комерційний успіх
+- section: Залишенець та продовження циклу
+  words: 700
+  subsections:
+  - Розвиток теми антирадянського спротиву
+  - Художні особливості прози
+  - Роль у популяризації історії
+- section: Вплив на українську культуру
+  words: 600
+  subsections:
+  - Екранізації та адаптації
+  - Громадська позиція автора
+  - Місце в сучасній літературі
+- section: Дискусія — Історична правда vs художня вигадка
+  words: 200
+  subsections:
+  - Баланс між документальністю та белетристикою
+  - Роль письменника у формуванні історичної памяті
+word_target: 4000
+word_tolerance: 0.05
+vocabulary:
+  required:
+  - бестселер
+  - історичний роман
+  - повстанці
+  - партизанський рух
+  - спротив
+  - екранізація
+  - белетристика
+  - пам'ять
+  - документальність
+  - популяризація
+  recommended:
+  - холоднояровці
+  - антирадянський
+  - національно-визвольний
+  - літературна премія
+  - масова культура
+  forbidden: []
+activities:
+  types_required:
+  - reading
+  - quiz
+  - match-up
+  - essay-response
+  - group-sort
+  - fill-in
+  min_items_per_type: 8
+  total_min_items: 40
+  no_mirroring: true
+connects_to:
+  previous: b2-hist-civil-war
+  related:
+  - c1-bio-82-yuriy-vynnychuk
+  - c1-bio-85-mariya-matios
+  - c1-bio-90-serhiy-zhadan
+constraints:
+  min_engagement_boxes: 2
+  min_examples: 10
+  immersion_target: 1.0
+  naturalness_threshold: 8
+  min_primary_sources: 2

@@ -8,18 +8,39 @@ pedagogy: CBI
 duration: 120
 transliteration: none
 tags:
-  - culture
-  - rituals
-  - birth
-  - family
+- culture
+- rituals
+- birth
+- family
 grammar:
-  - naming conventions
-  - wishes and blessings
+- naming conventions
+- wishes and blessings
 objectives:
-  - Learner can describe the rituals surrounding birth and christening (khrestyny)
-  - Learner can explain the role of godparents (kumy) in Ukrainian culture
-  - Learner can discuss the symbolism of the cradle and protective amulets
-  - Learner can use vocabulary related to infancy and parenting
+- Learner can describe the rituals surrounding birth and christening (khrestyny)
+- Learner can explain the role of godparents (kumy) in Ukrainian culture
+- Learner can discuss the symbolism of the cradle and protective amulets
+- Learner can use vocabulary related to infancy and parenting
 vocabulary_count: 30
 vocab_count: 30
 slug: 73-birth-rituals
+content_outline:
+- section: Вступ — народження
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Historical context: Cossack resettlement, Russian influence'
+  - Харків as cultural center
+  - 'Clothing traditions: свита, кобеняк'
+  - 'Musical traditions: bandura school'
+  - Blend of Ukrainian and steppe influences
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000

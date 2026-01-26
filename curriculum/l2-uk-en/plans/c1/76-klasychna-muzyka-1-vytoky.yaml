@@ -1,0 +1,22 @@
+module: 76-klasychna-muzyka-1-vytoky
+level: c1
+sequence: 76
+version: '2.0'
+title: Класична музика I — Витоки
+subtitle: Classical Music I — Origins (1745-1863)
+focus: fine-arts
+pedagogy: CBI
+objectives:
+- Learner understands the role of Ukrainian composers in European Baroque and Classical eras
+- Learner can describe the significance of Berezovsky, Bortnyansky, and Vedel
+- Learner analyzes the birth of national opera with Gulak-Artemovsky
+content_outline:
+- section: Introduction
+  words: 200
+  subsections:
+  - TBD
+word_target: 1500
+vocabulary:
+  required: []
+  recommended: []
+  forbidden: []

@@ -1,0 +1,61 @@
+
+========================================
+  📋 Loaded Metadata from YAML sidecar
+
+📋 Auditing: B2 M16 — Культура Київської Русі
+   File: curriculum/l2-uk-en/b2-hist/kultura-kyivskoi-rusi.md | Target: 4000 words
+  📋 Required activity types from meta: critical-analysis, essay-response, match-up, quiz, reading, select
+  📋 Template: docs/l2-uk-en/templates/b2-history-module-template.md (pedagogy: CBI)
+
+  ⚠️ HYDRATION NOTE: Outline sums to 5180, exceeding word_target 4000
+     Additional 1180 words (allowed for content depth)
+
+  📊 Section Word Analysis:
+     Читання                        231 /   50  ✅ (+181)
+     Вступ — Культурний світ Русі   544 /  550  ✅ (-6)
+     Писемність та освіта           518 /  780  ❌ (-262)
+     Література                     854 /  800  ✅ (+54)
+     Архітектура                    664 /  700  ✅ (-36)
+     Образотворче мистецтво         840 /  800  ✅ (+40)
+     Музика та усна творчість       686 /  650  ✅ (+36)
+     Деколонізаційний погляд        694 /  500  ✅ (+194)
+     Первинні джерела               375 /  250  ✅ (+125)
+     Потрібно більше практики?      174 /  100  ✅ (+74)
+     ─────────────────────────────────────────────────────
+     TOTAL                         5580 / 5180  ✅ (+400)
+
+📋 Auditing: B2 M16 — Культура Київської Русі
+   File: curriculum/l2-uk-en/b2-hist/kultura-kyivskoi-rusi.md | Target: 4000 words
+
+  📋 Found YAML activities file (8 activities)
+  > Джерело: Іларіон про вибір віри: 3 items (min 1)
+  > Освіта та писемність Русі: 8 items (min 8)
+  > Творці та шедеври: 12 items (min 8)
+  > Аналіз: Мова київських стін: 1 items (min 1)
+  > Культурна тяглість: 1 items (min 1)
+  > Софія Київська vs Софія Константинопольська: 1 items (min 1)
+  > Факти про мистецтво Русі: 10 items (min 8)
+  > Вибір правильних тверджень про освіту: 8 items (min 6)
+
+--- STRICT GATES (Level B2) ---
+Words        ✅ 5992/4000 (raw: 6078)
+Activities   ✅ 8/3
+Density      ✅ All > 1
+Unique_types ✅ 8/2 types
+Priority     ✅ Priority types used
+Engagement   ✅ 6/5
+Audio        ℹ️ No audio
+Vocab        ⚠️ 17 < 20 (soft target)
+Structure    ✅ Valid Structure
+Lint         ✅ Clean Format
+Pedagogy     ✅ Level-appropriate
+Content_heavy ✅ Content-heavy OK (8 activities)
+Grammar      ℹ️ N/A (covered by naturalness)
+Naturalness  ✅ 10/10 (High)
+Activity_quality 📋 Quality validation available (optional)
+Immersion    🇺🇦 99.8% (target 90-100% (history))
+Richness     ✅ 99% (history)
+
+Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/audit/kultura-kyivskoi-rusi-review.md
+
+✅ AUDIT PASSED.

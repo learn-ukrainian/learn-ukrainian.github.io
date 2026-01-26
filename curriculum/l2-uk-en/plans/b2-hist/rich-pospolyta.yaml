@@ -1,0 +1,37 @@
+module: rich-pospolyta
+level: b2-hist
+sequence: 0
+version: '1.0'
+title: Річ Посполита — полонізація та кріпацтво
+focus: history
+pedagogy: CBI
+objectives:
+- Учень може пояснити наслідки Люблінської унії для українських земель
+- Учень може аналізувати процеси полонізації та релігійного тиску
+- Учень може характеризувати соціальне становище українського селянства
+content_outline:
+- section: Вступ
+  words: 200
+- section: Формування Речі Посполитої та інкорпорація земель
+  words: 200
+- section: Процеси асиміляції та культурного спротиву
+  words: 200
+- section: Полонізація та ополячення
+  words: 200
+- section: 'Шляхетська демократія: Свобода чи анархія?'
+  words: 250
+  subsections:
+  - Golden Freedoms vs Absolute Monarchy
+  - The paralysis of Liberum Veto
+  - Lessons on responsible democracy
+- section: Читання
+  words: 200
+- section: Первинні джерела
+  words: 200
+- section: Деколонізаційний погляд
+  words: 200
+- section: Наслідки для козацтва
+  words: 200
+- section: Потрібно більше практики?
+  words: 100
+word_target: 3000

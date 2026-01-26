@@ -1,0 +1,81 @@
+module: 10-at-the-post-office-and-bank
+level: a2
+sequence: 10
+version: '2.0'
+title: At the Post Office and Bank
+subtitle: Services and Money
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can send a letter or package
+- Learner can buy stamps and envelopes
+- Learner can exchange currency
+- Learner can withdraw money from an ATM
+sources:
+- name: Ukrainian State Standard 2024 - Services Theme
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Required service vocabulary for A2
+- name: Ukrposhta Official
+  url: https://www.ukrposhta.ua/
+  type: reference
+  notes: Authentic postal service terminology
+content_outline:
+- section: Introduction / Вступ
+  words: 200
+  points:
+  - Practical services context
+  - Importance of politeness
+- section: Presentation / Презентація
+  words: 600
+  points:
+  - Post Office terminology (лист, посилка, марка)
+  - Bank terminology (рахунок, картка, обмін)
+  - Polite service formulas (я хочу, мені потрібно)
+- section: Practice / Практика
+  words: 150
+  points:
+  - Case analysis in service sentences
+  - Service vocabulary matching
+- section: Dialogues / Діалоги
+  words: 50
+  points:
+  - At the Post Office
+  - At the Bank
+word_target: 1000
+vocabulary:
+  required:
+  - пошта (post office)
+  - банк (bank)
+  - лист (letter)
+  - посилка (package)
+  - бандероль (parcel)
+  - марка (stamp)
+  - конверт (envelope)
+  - адреса (address)
+  - індекс (postal code)
+  - відправляти (to send)
+  - отримувати (to receive)
+  - гроші (money)
+  - рахунок (account)
+  - картка (card)
+  - готівка (cash)
+  recommended:
+  - валюта (currency)
+  - переказ (transfer)
+  - знімати (to withdraw)
+  - вкладати (to deposit)
+  - обмінювати (to exchange)
+  forbidden: []
+activities:
+  types_required:
+  - quiz
+  - match-up
+  - fill-in
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- a2-11 (Checkpoint - Cases)
+- a2-53 (Shopping & Services)
+- a2-69 (Online Services)
