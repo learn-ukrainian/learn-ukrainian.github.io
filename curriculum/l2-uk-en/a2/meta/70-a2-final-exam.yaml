@@ -1,96 +1,13 @@
 module: a2-70
-id: a2-70
+level: A2
 slug: a2-final-exam
-title: "A2 Final Exam"
-subtitle: "Level Completion"
 version: '2.0'
-phase: "A2.6 [Practical]"
-focus: checkpoint
-pedagogy: TTT
-register: розмовний
-duration: 90
-transliteration: none
-objectives:
-  - "Learner can demonstrate A2 level proficiency"
-  - "Learner can solve practical problems in Ukrainian"
-  - "Learner can understand main points of complex texts"
-  - "Learner is ready for B1 level"
-grammar:
-  - "Comprehensive A2 grammar review (all cases)"
-  - "Verb aspect mastery"
-  - "Complex sentence structures"
-word_target: 600
-content_outline:
-  - section: "Pre-Exam: Preparation"
-    words: 50
-    points:
-      - "Exam format overview"
-      - "Skills to demonstrate"
-      - "Final preparation tips"
-  - section: "Reading Comprehension"
-    words: 100
-    points:
-      - "Text understanding"
-      - "Main idea identification"
-      - "Detail extraction"
-  - section: "Listening Comprehension"
-    words: 100
-    points:
-      - "Audio understanding"
-      - "Key information"
-      - "Following dialogues"
-  - section: "Grammar and Vocabulary"
-    words: 150
-    points:
-      - "Case selection"
-      - "Verb aspect usage"
-      - "Vocabulary in context"
-  - section: "Speaking Assessment"
-    words: 100
-    points:
-      - "Self-introduction"
-      - "Situation responses"
-      - "Conversation skills"
-  - section: "Results and Next Steps"
-    words: 100
-    points:
-      - "Performance review"
-      - "Areas for improvement"
-      - "Transition to B1"
-vocabulary_hints:
-  required:
-    - іспит (exam)
-    - завдання (task)
-    - відповідь (answer)
-    - результат (result)
-    - рівень (level)
-    - оцінка (grade)
-    - готовий (ready)
-    - успішно (successfully)
-  recommended:
-    - розуміння (comprehension)
-    - навички (skills)
-    - досягнення (achievement)
-    - сертифікат (certificate)
-activity_hints:
-  - type: reading-comprehension
-    focus: "A2 level texts"
-    items: 15
-  - type: listening
-    focus: "A2 level audio"
-    items: 15
-  - type: quiz
-    focus: "Comprehensive grammar test"
-    items: 30
-  - type: speaking
-    focus: "Oral assessment"
-    items: 10
-prerequisites:
-  - a2-69 (Online Services)
-  - a2-56 (Checkpoint Full Grammar)
-connects_to:
-  - b1-01 (How to Talk About Grammar)
+id: a2-70
 naturalness:
   score: 10
   status: PASS
-  justification: "A2 level certification exam"
+  justification: A2 level certification exam
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-26'

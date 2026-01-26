@@ -1,96 +1,13 @@
 module: a2-60
-id: a2-60
+level: A2
 slug: at-the-pharmacy
-title: "At the Pharmacy"
-subtitle: "Buying Medicine"
 version: '2.0'
-phase: "A2.6 [Practical]"
-focus: practical
-pedagogy: PPP
-register: розмовний
-duration: 60
-transliteration: none
-objectives:
-  - "Learner can ask for medicine by symptoms"
-  - "Learner can understand dosage instructions"
-  - "Learner can read medicine labels"
-  - "Learner can discuss side effects"
-grammar:
-  - "Asking for specific medicine by symptoms"
-  - "Understanding dosage instructions"
-  - "Side effects and warnings vocabulary"
-word_target: 1000
-content_outline:
-  - section: "Introduction: Ukrainian Pharmacies"
-    words: 100
-    points:
-      - "Pharmacy types (аптека)"
-      - "Over-the-counter vs prescription"
-      - "Pharmacy vocabulary overview"
-  - section: "Asking for Medicine"
-    words: 200
-    points:
-      - "Мені потрібно щось від..."
-      - "Describing symptoms"
-      - "Common ailments"
-  - section: "Understanding Labels"
-    words: 200
-    points:
-      - "дозування, застосування"
-      - "протипоказання"
-      - "Reading instructions"
-  - section: "Dosage Instructions"
-    words: 200
-    points:
-      - "таблетка, капсула, сироп"
-      - "раз на день, двічі на день"
-      - "Before/after meals"
-  - section: "Side Effects and Warnings"
-    words: 150
-    points:
-      - "побічні ефекти"
-      - "Allergies and interactions"
-      - "When to see a doctor"
-  - section: "Practice: Pharmacy Dialogue"
-    words: 150
-    points:
-      - "Buy medicine for common ailments"
-      - "Ask about dosage"
-vocabulary_hints:
-  required:
-    - аптека (pharmacy)
-    - ліки (medicine)
-    - таблетка (pill)
-    - рецепт (prescription)
-    - дозування (dosage)
-    - біль (pain)
-    - кашель (cough)
-    - температура (fever)
-  recommended:
-    - сироп (syrup)
-    - мазь (ointment)
-    - побічний ефект (side effect)
-    - протипоказання (contraindication)
-    - алергія (allergy)
-    - фармацевт (pharmacist)
-activity_hints:
-  - type: vocabulary-drill
-    focus: "Pharmacy vocabulary"
-    items: 25
-  - type: dialogue
-    focus: "Pharmacy conversation"
-    items: 12
-  - type: fill-in
-    focus: "Complete medicine instructions"
-    items: 15
-  - type: role-play
-    focus: "Buy medicine at pharmacy"
-    items: 8
-prerequisites:
-  - a2-59 (Doctor Visit)
-connects_to:
-  - a2-61 (Hotel Accommodation)
+id: a2-60
 naturalness:
   score: 10
   status: PASS
-  justification: "Essential pharmacy scenario"
+  justification: Essential pharmacy scenario
+duration: 60
+transliteration: none
+build:
+  last_modified: '2026-01-26'

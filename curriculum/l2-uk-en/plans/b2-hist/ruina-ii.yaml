@@ -1,74 +1,70 @@
 module: ruina-ii
-level: b2-hist
-sequence: 59
-version: '1.0'
+level: B2-HIST
+slug: ruina-ii
+version: '2.0'
 title: 'Руїна II: Дорошенко і надія'
-focus: history
-pedagogy: CBI
-objectives:
-- Учень може пояснити політичну програму Петра Дорошенка
-- Учень може проаналізувати причини та наслідки союзу з Туреччиною
-- Учень може оцінити роль Івана Сірка як опозиції державницькому курсу
+subtitle: 'The Ruin II: Doroshenko and Hope'
 content_outline:
 - section: 'Вступ: Людина, яка хотіла неможливого'
   words: 400
-  subsections:
+  points:
   - Doroshenko as 'The Sun of the Ruin'
   - The geopolitical situation in 1665
 - section: 'Петро Дорошенко: Шлях до булави'
   words: 500
-  subsections:
+  points:
   - Biography and origins (grandson of a hetman)
   - Creation of a regular army (serdyuks)
   - 'Goal: Unification of both banks of the Dnipro'
 - section: 'Турецький вектор: Союз чи зрада?'
   words: 700
-  subsections:
+  points:
   - The logic of the alliance with the Ottoman Empire
   - 'Comparison of conditions: Moscow vs. Poland vs. Turkey'
   - The Korsun Council of 1669
 - section: Похід султана і Бучацький мир 1672
   words: 600
-  subsections:
+  points:
   - The fall of Kamianets-Podilskyi
   - Terms of the Treaty of Buchach
   - Reaction of the population and Europe
 - section: 'Внутрішній фронт: Дорошенко проти Сірка'
   words: 500
-  subsections:
+  points:
   - Ivan Sirko as the personification of the Zaporozhian opposition
   - 'Conflict of ideologies: Statehood vs. ''Pure Orthodoxy'''
   - Sirko's raids against Crimea
 - section: 'Чигиринські походи: Оборона столиці'
   words: 700
-  subsections:
+  points:
   - First Siege (1677) and Second Siege (1678)
   - Heroism of the defenders and destruction of Chyhyryn
   - The symbolic end of the Cossack capital
 - section: Капітуляція і доля гетьмана
   words: 300
-  subsections:
+  points:
   - Abdication in 1676
   - Exile to Muscovy
   - 'Legacy: The last attempt at independence'
 - section: 'Первинні джерела: Свідчення іноземців'
   words: 300
-  subsections:
+  points:
   - French diplomat's report
   - Cossack chronicles
 word_target: 4000
-vocabulary:
-- протекторат
-- сюзеренітет
-- капітуляція
-- облога
-- данина
-- васал
-- руйнація
-- чвари
-- серрдюки
-- соборність
-activities:
+vocabulary_hints:
+  required:
+  - протекторат
+  - сюзеренітет
+  - капітуляція
+  - облога
+  - данина
+  - васал
+  - руйнація
+  - чвари
+  - серрдюки
+  - соборність
+activity_hints:
 - type: reading
   focus: Analysis of diplomatic correspondence
 - type: quiz
@@ -79,6 +75,15 @@ activities:
   focus: Doroshenko vs. Sirko
 - type: true-false
   focus: Myths about the 'traitor' Doroshenko
+focus: history
+pedagogy: CBI
+objectives:
+- Учень може пояснити політичну програму Петра Дорошенка
+- Учень може проаналізувати причини та наслідки союзу з Туреччиною
+- Учень може оцінити роль Івана Сірка як опозиції державницькому курсу
+grammar:
+- 'Historical narrative: description of battles'
+- 'Political terminology: protectorate vs. alliance'
 sources:
 - name: Petro Doroshenko - Encyclopedia of Ukraine
   url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CD%5CO%5CDoroshenkoPetro.htm
@@ -88,3 +93,5 @@ sources:
   url: http://litopys.org.ua/
   type: primary
   notes: Chronicles about the siege
+register: публіцистичний
+phase: HIST.6 [Khmelnytsky & Cossack State]

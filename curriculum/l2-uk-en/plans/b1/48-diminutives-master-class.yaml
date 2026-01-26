@@ -1,16 +1,9 @@
-module: diminutives-master-class
-level: b1
-sequence: 48
+module: b1-48
+level: B1
+slug: diminutives-master-class
 version: '2.0'
 title: 'Демінутиви: майстер-клас'
 subtitle: Diminutives - Forms, Usage, and Nuance
-focus: grammar
-pedagogy: TTT
-objectives:
-- Learner can form diminutives from nouns and adjectives
-- Learner understands different pragmatic functions of diminutives
-- 'Learner can distinguish nuances: tenderness, irony, politeness'
-- Learner can use diminutives appropriately in context
 content_outline:
 - section: 'Introduction: Diminutives in Ukrainian'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Form diminutives
   - Choose for context
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - демінутив (diminutive)
   - зменшувальний (diminutive - adj)
@@ -63,15 +56,33 @@ vocabulary:
   - емоційний (emotional)
   - зневажливий (dismissive)
   - інтенсифікація (intensification)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - context-matching
-  - formation
-  - multiple-choice
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: formation
+  focus: Create diminutives from base forms
+  items: 25
+- type: multiple-choice
+  focus: Identify pragmatic function
+  items: 20
+- type: fill-in
+  focus: Complete with appropriate diminutive
+  items: 15
+- type: context-matching
+  focus: Match diminutive to situation
+  items: 10
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-47 (Passive Constructions)
 connects_to:
 - b1-49 (Numerals Collectives Fractions)
+objectives:
+- Learner can form diminutives from nouns and adjectives
+- Learner understands different pragmatic functions of diminutives
+- 'Learner can distinguish nuances: tenderness, irony, politeness'
+- Learner can use diminutives appropriately in context
+grammar:
+- 'Суфікси демінутивів: -ик, -ок, -очок, -еньк-, -оньк-, -ечк-'
+- Прагматичні функції демінутивів
+- Регістрові та стилістичні відтінки
+register: розмовний
+phase: B1.4b [Word Formation]

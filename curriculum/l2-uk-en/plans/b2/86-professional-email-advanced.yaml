@@ -1,0 +1,60 @@
+module: professional-email-advanced
+level: B2
+slug: professional-email-advanced
+version: '2.0'
+title: 'Ділова пошта: Поглиблено'
+subtitle: Complex correspondence and email threads
+content_outline:
+- section: Вступ
+  words: 300
+  points:
+  - 'Контекст професійної кореспонденції вищого рівня: координація проєктів, багатостороннє
+    листування'
+  - Виклики складного ділового спілкування електронною поштою в українських компаніях
+  - Перехід від базових навичок (М85) до майстерності управління складними ситуаціями
+- section: Імерсивна розповідь
+  words: 1150
+  subsections:
+  - name: Управління ланцюжками листування
+    words: 250
+  - name: Копія, прихована копія та етикет багатосторонньої кореспонденції
+    words: 250
+  - name: Ескалація та чутливі питання
+    words: 250
+  - name: Нагадування та подальші дії
+    words: 200
+  - name: Делегування завдань електронною поштою
+    words: 200
+- section: Аналіз
+  words: 600
+  subsections:
+  - name: Стратегії управління складною кореспонденцією
+    words: 200
+  - name: Лексика та фразеологія для координації
+    words: 150
+  - name: Контекст та цитування в ланцюжках
+    words: 150
+  - name: Культурні особливості української професійної комунікації
+    words: 100
+- section: Граматика в контексті
+  words: 300
+  subsections:
+  - name: Дієприкметники для професійної мови
+    words: 150
+  - name: Складнопідрядні речення в діловому стилі
+    words: 150
+- section: Підсумок
+  words: 100
+  points:
+  - 'Синтез навичок: від структури простого листа (М85) до оркестрації складної кореспонденції'
+  - 'Ключові принципи: ясність, професіоналізм, культурна обізнаність'
+  - 'Перехід до звітів (М87-88): застосування навичок письмової комунікації у нових
+    форматах'
+pedagogy: CBI
+objectives:
+- Learner can manage complex multi-party email threads effectively
+- Learner can handle escalations and sensitive correspondence
+- Learner understands CC/BCC etiquette and confidentiality protocols
+- Learner can write follow-up messages and acknowledgments appropriately
+- Learner can delegate tasks and coordinate complex projects via email
+phase: B2.4 Communication Skills

@@ -1,95 +1,13 @@
 module: b1-34
-id: b1-34
+level: B1
 slug: checkpoint-complex-sentences-1
-title: "Контрольна точка: складні речення (частина 1)"
-subtitle: "Checkpoint - Complex Sentences Part 1"
 version: '2.0'
-phase: "B1.3a [Complex Sentences Checkpoint]"
-focus: checkpoint
-pedagogy: TTT
-register: розмовний
-duration: 90
-transliteration: none
-objectives:
-  - "Learner can demonstrate mastery of complex sentence structures"
-  - "Learner can integrate knowledge from M26-M33"
-  - "Learner can self-assess readiness for B1.3b phase"
-  - "Learner can use relative clauses, purpose clauses, and conditionals"
-grammar:
-  - "Integration of M26-M33 grammar"
-  - "Relative clauses (який, де/куди/звідки, коли/що)"
-  - "Purpose clauses and conditionals"
-word_target: 1000
-content_outline:
-  - section: "Pre-Test: Self-Assessment"
-    words: 100
-    points:
-      - "Review learning objectives"
-      - "Identify strengths and gaps"
-      - "Set checkpoint goals"
-  - section: "Relative Clauses Review"
-    words: 200
-    points:
-      - "який in all cases"
-      - "Place relatives (де, куди, звідки)"
-      - "Time/fact relatives (коли, що)"
-  - section: "Purpose Clauses Review"
-    words: 200
-    points:
-      - "щоб + infinitive (same subject)"
-      - "щоб + past form (different subjects)"
-      - "Alternative purpose expressions"
-  - section: "Conditionals Review"
-    words: 200
-    points:
-      - "Real conditionals (якщо)"
-      - "Unreal conditionals (якби)"
-      - "Mixed conditionals"
-  - section: "Integrated Assessment"
-    words: 200
-    points:
-      - "Comprehensive test"
-      - "Mixed sentence types"
-      - "Error analysis"
-  - section: "Feedback and Planning"
-    words: 100
-    points:
-      - "Review results"
-      - "Identify areas for review"
-      - "Prepare for B1.3b"
-vocabulary_hints:
-  required:
-    - контрольна точка (checkpoint)
-    - повторення (review)
-    - оцінювання (assessment)
-    - інтеграція (integration)
-    - речення (sentence)
-    - правильний (correct)
-    - помилка (error)
-    - результат (result)
-  recommended:
-    - самооцінка (self-assessment)
-    - прогрес (progress)
-    - рівень (level)
-    - готовність (readiness)
-activity_hints:
-  - type: quiz
-    focus: "Complex sentence structures"
-    items: 30
-  - type: fill-in
-    focus: "Complete complex sentences"
-    items: 25
-  - type: error-correction
-    focus: "Fix sentence errors"
-    items: 20
-  - type: sentence-combining
-    focus: "Create complex sentences"
-    items: 15
-prerequisites:
-  - b1-33 (Conditionals Mixed Complex)
-connects_to:
-  - b1-35 (Concessive Clauses)
+id: b1-34
 naturalness:
   score: 9
   status: PASS
-  justification: "Complex sentences checkpoint"
+  justification: Complex sentences checkpoint
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-26'

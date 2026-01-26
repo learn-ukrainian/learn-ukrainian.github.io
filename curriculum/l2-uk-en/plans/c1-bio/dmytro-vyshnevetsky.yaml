@@ -1,30 +1,19 @@
-module: dmytro-vyshnevetsky
-level: c1-bio
-sequence: 0
+module: c1-bio-13
+level: C1-BIO
+slug: dmytro-vyshnevetsky
 version: '2.0'
 title: 'Дмитро Вишневецький: Байда — Перший Гетьман'
-focus: biography
-pedagogy: seminar
-objectives:
-- Explore the origins of the Zaporozhian Sich
-- Understand the legend of Baida and its cultural impact
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Дмитро_Вишневецький
-    title: Дмитро Вишневецький (Wikipedia UA)
-  - url: https://uk.wikipedia.org/wiki/Пісня_про_Байду
-    title: Пісня про Байду
-  secondary: []
+subtitle: 'Dmytro Vyshnevetsky: Baida — The First Hetman'
 content_outline:
 - section: Вступ — Князь і Козак
   words: 615
-  subsections:
+  points:
   - Аристократ, що став козаком
   - Засновник першої Січі на Хортиці
   - Легендарний Байда народних дум
 - section: Життєпис
   words: 1538
-  subsections:
+  points:
   - Походження з роду Вишневецьких
   - Будівництво фортеці на Хортиці (1550-ті)
   - Походи проти татар і турків
@@ -33,46 +22,53 @@ content_outline:
   - Страта в Стамбулі (гак)
 - section: Історичний контекст
   words: 615
-  subsections:
+  points:
   - Дике Поле як фронтир
   - Зародження козацтва як соціального стану
   - Геополітика: Литва, Туреччина, Крим
 - section: Внесок та Спадщина
   words: 615
-  subsections:
+  points:
   - Прототип козацького устрою
   - Міф про Байду як символ незламності
   - Пісня про Байду як культурний код
 - section: Порівняльний аналіз
   words: 617
-  subsections:
+  points:
   - Вишневецький vs. Сагайдачний (авантюризм vs державництво)
 word_target: 3000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - січ
-  - байда
-  - гак
-  - фронтир
-  - фортеця
-  - ватажок
-  - дума
-  - зрада
-  - страта
-  recommended: []
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - essay-response
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+  - січ (Sich)
+  - байда (carefree person/hero)
+  - гак (hook)
+  - фронтир (frontier)
+  - фортеця (fortress)
+  - ватажок (leader)
+  - дума (duma/epic song)
+  - зрада (betrayal)
+  - страта (execution)
+activity_hints:
+- type: reading
+  focus: '"Song of Baida" analysis'
+- type: quiz
+  focus: Biography facts
+- type: essay-response
+  focus: '"Myth vs. Reality of Baida"'
+focus: biography
+pedagogy: CBI
+objectives:
+- Explore the origins of the Zaporozhian Sich
+- Understand the legend of Baida and its cultural impact
+grammar:
+- Epic narrative style
+- Historical present tense
+sources:
+- name: Дмитро Вишневецький (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Дмитро_Вишневецький
+  type: primary
+- name: Пісня про Байду
+  url: https://uk.wikipedia.org/wiki/Пісня_про_Байду
+  type: primary
+immersion: 100% Ukrainian
+phase: C1-BIO

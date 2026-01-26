@@ -1,25 +1,8 @@
 module: 10-checkpoint-passive-voice
-level: b2
-sequence: 10
-version: '1.0'
+level: B2
+slug: 10-checkpoint-passive-voice
+version: '2.0'
 title: Контрольний модуль B2.1a — Система пасивного стану
-focus: checkpoint
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Ukrainian State Standard 2024 - B2 Assessment
-  url: https://mon.gov.ua/
-  type: reference
-  notes: B2 assessment criteria for passive voice
-- name: CEFR B2 Can-Do Statements
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
-  type: reference
-  notes: B2 grammar proficiency descriptors
-- name: B2 Checkpoint Module Template
-  url: docs/l2-uk-en/templates/b2-checkpoint-module-template.md
-  type: reference
-  notes: Checkpoint structure and requirements
 content_outline:
 - section: Вступ — Що ми вивчили
   words: 300
@@ -68,7 +51,7 @@ content_outline:
   - Виявлення прогалин
   - Підготовка до фази B2.1b
 word_target: 3500
-vocabulary:
+vocabulary_hints:
   required:
   - контрольний модуль (checkpoint module)
   - оцінювання (assessment)
@@ -86,17 +69,52 @@ vocabulary:
   - рефлексія (reflection)
   - компетенція (competence)
   - рівень володіння (proficiency level)
-  forbidden: []
-activities:
-  types_required:
-  - error-correction
-  - fill-in
-  - quiz
-  - essay-response
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: Identify all 4 passive voice types
+  items: 20+
+- type: quiz
+  focus: Form past passive participles with correct agreement
+  items: 15+
+- type: fill-in
+  focus: Active → appropriate passive form by register
+  items: 12+
+- type: fill-in
+  focus: Complete official documents with -но/-то
+  items: 10+
+- type: quiz
+  focus: Select appropriate passive form by register
+  items: 15+
+- type: fill-in
+  focus: Active participles → relative clauses
+  items: 10+
+- type: error-correction
+  focus: Fix register-inappropriate passive usage
+  items: 12+
+- type: essay-response
+  focus: Diagnostic writing — use all 4 passive forms
+  word_target: 200
+  output: Self-evaluate against rubric
+focus: checkpoint
+prerequisites:
+- b2-01 through b2-09 (all passive voice modules)
 connects_to:
 - b2-11 (Multi-clause Sentences)
 - b2-15 (Register Introduction)
 - b2-25 (B2.1b Checkpoint)
+module_type: checkpoint
+sources:
+- name: Ukrainian State Standard 2024 - B2 Assessment
+  url: https://mon.gov.ua/
+  type: reference
+  notes: B2 assessment criteria for passive voice
+- name: CEFR B2 Can-Do Statements
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 grammar proficiency descriptors
+- name: B2 Checkpoint Module Template
+  url: docs/l2-uk-en/templates/b2-checkpoint-module-template.md
+  type: reference
+  notes: Checkpoint structure and requirements
+immersion: 100% Ukrainian
+phase: B2.1a [Passive Voice]

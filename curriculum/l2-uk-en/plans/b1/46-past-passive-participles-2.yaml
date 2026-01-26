@@ -1,16 +1,9 @@
-module: past-passive-participles-2
-level: b1
-sequence: 46
+module: b1-46
+level: B1
+slug: past-passive-participles-2
 version: '2.0'
 title: 'Пасивні дієприкметники: коротка форма'
 subtitle: Past Passive Participles II - Short Forms (-но/-то)
-focus: grammar
-pedagogy: TTT
-objectives:
-- Learner can form short passive participles using -но/-то
-- Learner can use impersonal passive constructions
-- Learner understands difference between full and short forms
-- Learner can choose appropriate form for context
 content_outline:
 - section: 'Introduction: Short Passive Forms'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Transform full to short
   - Create impersonal sentences
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - коротка форма (short form)
   - безособовий (impersonal)
@@ -63,15 +56,33 @@ vocabulary:
   - орудний відмінок (instrumental case)
   - агент (agent)
   - оголошення (announcement)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - translation
-  - transformation
-  - multiple-choice
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: transformation
+  focus: Full to short form
+  items: 25
+- type: fill-in
+  focus: Complete impersonal sentences
+  items: 20
+- type: multiple-choice
+  focus: Choose full or short form
+  items: 15
+- type: translation
+  focus: English to Ukrainian passive
+  items: 10
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-45 (Past Passive Participles 1)
 connects_to:
 - b1-47 (Passive Constructions)
+objectives:
+- Learner can form short passive participles using -но/-то
+- Learner can use impersonal passive constructions
+- Learner understands difference between full and short forms
+- Learner can choose appropriate form for context
+grammar:
+- Коротка форма пасивних дієприкметників (-но/-то)
+- Безособові пасивні конструкції
+- Повна vs коротка форма usage
+register: розмовний
+phase: B1.4a [Participles]

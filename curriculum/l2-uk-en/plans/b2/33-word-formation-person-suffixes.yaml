@@ -1,9 +1,44 @@
-module: 33-word-formation-person-suffixes
-level: b2
-sequence: 33
-version: '1.0'
+module: b2-33
+level: B2
+slug: 33-word-formation-person-suffixes
+version: '2.0'
 title: 'Словотворення: суфікси на позначення осіб'
 subtitle: Word Formation - Person Suffixes
+content_outline:
+- section: Вступ — суфікси на позначення осіб
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Suffix -ар/-яр (profession/activity)
+  words: 400
+  points:
+  - бібліотека → бібліотекар (librarian)
+  - ворота → воротар (goalkeeper)
+  - вівці → вівчар (shepherd)
+  - камінь → каменяр (stonemason)
+- section: Suffix -ач (agent of action)
+  words: 400
+  points:
+  - викладати → викладач (lecturer)
+  - читати → читач (reader)
+  - глядіти → глядач (viewer)
+  - слухати → слухач (listener)
+- section: Suffix -ник (activity/role)
+  words: 400
+  points:
+  - робота → робітник (worker)
+  - письмо → письменник (writer)
+  - праця → працівник (employee)
+  - учень → учeник → ученик (student)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: grammar
 pedagogy: TTT
 objectives:
@@ -11,13 +46,9 @@ objectives:
 - Learner can form agent nouns from verbs using -ач suffix
 - Learner can form person nouns using -ник suffix for roles and occupations
 - Learner can identify word formation patterns for person nouns in authentic texts
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Суфікс -ар/-яр для позначення професії чи діяльності
+- Суфікс -ач для позначення виконавця дії
+- Суфікс -ник для позначення роду занять
+register: науковий
+phase: B2.1c [Register & Word Formation]

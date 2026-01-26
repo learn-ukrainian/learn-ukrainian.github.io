@@ -1,21 +1,8 @@
 module: 29-surzhyk
-level: c1
-sequence: 29
+level: C1
+slug: 29-surzhyk
 version: '2.0'
 title: 'Суржик: Феномен змішування'
-focus: grammar
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Антоненко-Давидович - Як ми говоримо
-  url: https://r2u.org.ua/
-  type: primary
-  notes: Classic guide to Russianisms
-- name: Масенко - Суржик
-  url: https://mova.info/
-  type: reference
-  notes: Academic analysis of Surzhyk
 content_outline:
 - section: Вступ — Що таке суржик
   words: 500
@@ -61,7 +48,7 @@ content_outline:
   - Аналіз текстів
   - Дискусія про ставлення
 word_target: 4000
-vocabulary:
+vocabulary_hints:
   required:
   - суржик (surzhyk)
   - інтерференція (interference)
@@ -79,19 +66,42 @@ vocabulary:
   - норма (norm)
   - девіація (deviation)
   - соціолект (sociolect)
-  forbidden: []
-activities:
-  types_required:
-  - group-sort
-  - quiz
-  - cloze
-  - fill-in
-  - error-correction
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: Identify surzhyk vs standard
+  items: 15+
+- type: match-up
+  focus: Surzhyk → standard Ukrainian
+  items: 15+
+- type: error-correction
+  focus: Transform surzhyk to standard
+  items: 15+
+- type: fill-in
+  focus: Replace surzhyk forms
+  items: 12+
+- type: cloze
+  focus: Sociolinguistic vocabulary
+  items: 10+
+- type: group-sort
+  focus: Classify interference types
+  items: 12+
+focus: grammar
+prerequisites:
+- c1-28 (Dialects)
+- Understanding of linguistic variation
 connects_to:
 - c1-30 (History of Language)
 - c1-31 (Diaspora Ukrainian)
 - c1-35 (C1.2 Checkpoint)
+module_type: grammar
+sources:
+- name: Антоненко-Давидович - Як ми говоримо
+  url: https://r2u.org.ua/
+  type: primary
+  notes: Classic guide to Russianisms
+- name: Масенко - Суржик
+  url: https://mova.info/
+  type: reference
+  notes: Academic analysis of Surzhyk
+immersion: 100% Ukrainian
+phase: C1.2 Professional Communication

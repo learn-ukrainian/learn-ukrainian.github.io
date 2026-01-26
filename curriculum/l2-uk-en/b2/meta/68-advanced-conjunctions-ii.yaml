@@ -1,60 +1,18 @@
 module: b2-68
-title: 'Складні Сполучники II: Час та Умова'
-subtitle: Advanced Conjunctions II - Temporal and Conditional
+level: B2
+slug: 68-advanced-conjunctions-ii
 version: '1.0'
-phase: B2.2 [Phraseology & Synonymy]
-pedagogy: Grammar
-focus: grammar
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
-immersion: 100
 tags:
 - grammar
 - conjunctions
 - temporal
 - conditional
-grammar:
-- Temporal conjunctions (щойно, поки, доки)
-- Conditional conjunctions (якщо vs якби)
-objectives:
-- Учень може будувати складні часові ланцюжки для опису послідовних та паралельних
-  подій
-- Учень вміє розрізняти реальні та гіпотетичні умови, використовуючи відповідні сполучники
-- Учень розуміє використання сполучників щойно та відколи в історичних та особистих
-  розповідях
 vocabulary_count: 36
-register: публіцистичний
 vocab_count: 51
-slug: 68-advanced-conjunctions-ii
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-- section: Вступ — Час та Умова
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-- section: Temporal Conjunctions
-  words: 500
-  points:
-  - коли (when - general)
-  - щойно (as soon as)
-  - після того як (after)
-  - перед тим як (before)
-  - поки (while)
-- section: Conditional Conjunctions
-  words: 500
-  points:
-  - якщо (if - neutral)
-  - якби (if - counterfactual)
-  - коли б (if/when - conditional)
-  - у випадку якщо (in case)
-  - за умови що (on condition that)
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

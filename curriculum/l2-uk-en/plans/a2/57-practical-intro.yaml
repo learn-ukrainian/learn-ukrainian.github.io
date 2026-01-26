@@ -1,16 +1,9 @@
-module: practical-intro
-level: a2
-sequence: 57
+module: a2-57
+level: A2
+slug: practical-intro
 version: '2.0'
 title: Practical Intro
 subtitle: Real World Ukrainian
-focus: practical
-pedagogy: PPP
-objectives:
-- Learner can identify all 7 cases in context
-- Learner can choose correct verb aspect
-- Learner can fix common grammar mistakes
-- Learner can build complex sentences
 content_outline:
 - section: 'Introduction: Practical Ukrainian'
   words: 100
@@ -48,7 +41,7 @@ content_outline:
   - Identify and fix errors
   - Apply rules in context
 word_target: 800
-vocabulary:
+vocabulary_hints:
   required:
   - речення (sentence)
   - слово (word)
@@ -63,15 +56,33 @@ vocabulary:
   - вид (aspect)
   - сполучник (conjunction)
   - порядок (order)
-  forbidden: []
-activities:
-  types_required:
-  - error-correction
-  - sentence-building
-  - fill-in
-  - quiz
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: Case selection in context
+  items: 20
+- type: error-correction
+  focus: Fix grammar mistakes
+  items: 20
+- type: sentence-building
+  focus: Build complex sentences
+  items: 15
+- type: quiz
+  focus: Grammar rules review
+  items: 15
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a2-56 (Checkpoint Full Grammar)
 connects_to:
 - a2-58 (Practical Warm-up)
+objectives:
+- Learner can identify all 7 cases in context
+- Learner can choose correct verb aspect
+- Learner can fix common grammar mistakes
+- Learner can build complex sentences
+grammar:
+- Case system review in practical contexts
+- Verb aspect review for real situations
+- Sentence structure and common errors
+register: розмовний
+phase: A2.6 [Practical]

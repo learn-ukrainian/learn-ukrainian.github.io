@@ -1,14 +1,9 @@
 module: kinets-halytsko-volyni
-level: b2-hist
-sequence: 24
-version: '1.0'
+level: B2-HIST
+slug: kinets-halytsko-volyni
+version: '2.0'
 title: Занепад Галицько-Волинської держави
-focus: history
-pedagogy: CBI
-objectives:
-- Учень може пояснити причини занепаду держави Романовичів
-- Учень розуміє наслідки отруєння Юрія ІІ
-- Учень може аналізувати боротьбу сусідніх держав за руську спадщину
+subtitle: Трагедія 1340 року та боротьба за спадщину
 content_outline:
 - section: Контекст
   words: 484
@@ -19,3 +14,13 @@ content_outline:
 - section: Деколонізаційний погляд
   words: 509
 word_target: 4143
+focus: history
+pedagogy: CBI
+objectives:
+- Учень може пояснити причини занепаду держави Романовичів
+- Учень розуміє наслідки отруєння Юрія ІІ
+- Учень може аналізувати боротьбу сусідніх держав за руську спадщину
+grammar:
+- Expressing cause and effect
+- Tragic narrative style
+phase: B2.3a [Українська історія]

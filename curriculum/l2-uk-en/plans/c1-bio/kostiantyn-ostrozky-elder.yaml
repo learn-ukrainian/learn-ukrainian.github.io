@@ -1,30 +1,19 @@
-module: kostiantyn-ostrozky-elder
-level: c1-bio
-sequence: 0
+module: c1-bio-11
+level: C1-BIO
+slug: kostiantyn-ostrozky-elder
 version: '2.0'
 title: 'Костянтин Іванович Острозький: Гетьман двох народів'
-focus: biography
-pedagogy: seminar
-objectives:
-- Analyze the significance of the Battle of Orsha
-- Evaluate Ostrozky's role as a patron of the Orthodox Church
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Костянтин_Іванович_Острозький
-    title: Костянтин Іванович Острозький (Wikipedia UA)
-  - url: https://uk.wikipedia.org/wiki/Битва_під_Оршею
-    title: Битва під Оршею
-  secondary: []
+subtitle: 'Kostiantyn Ostrozky: Hetman of Two Nations'
 content_outline:
 - section: Вступ — Гетьман двох народів
   words: 615
-  subsections:
+  points:
   - Великий гетьман Литовський
   - Православний магнат у католицькій державі
   - Переможець у 33 битвах
 - section: Життєпис
   words: 1538
-  subsections:
+  points:
   - Ранні роки та походження
   - Військова кар'єра: боротьба з татарами
   - Московсько-литовські війни
@@ -33,48 +22,56 @@ content_outline:
   - Останні роки та поховання в Лаврі
 - section: Історичний контекст
   words: 615
-  subsections:
+  points:
   - Велике князівство Литовське як мультикультурна держава
   - Становище православних русинів
   - Експансія Москви
 - section: Внесок та Спадщина
   words: 615
-  subsections:
+  points:
   - Захисник православ'я (фундатор церков)
   - Династичний підйом Острозьких
   - Пам'ять про Оршу як символ європейської єдності проти сходу
 - section: Порівняльний аналіз
   words: 617
-  subsections:
+  points:
   - Острозький vs. Вишневецький (регулярна армія vs козацтво)
   - Роль у формуванні шляхетської ідентичності
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - гетьман
-  - битва
-  - перемога
-  - магнат
-  - православ'я
-  - патрон
-  - меценат
-  - військо
-  - тактика
-  - оборона
-  recommended: []
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - essay-response
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+  - гетьман (hetman)
+  - битва (battle)
+  - перемога (victory)
+  - магнат (magnate)
+  - православ'я (orthodoxy)
+  - патрон (patron)
+  - меценат (philanthropist)
+  - військо (army)
+  - тактика (tactics)
+  - оборона (defense)
+activity_hints:
+- type: reading
+  focus: Chronicle accounts of Orsha
+- type: quiz
+  focus: Comprehension of military career
+- type: essay-response
+  focus: Ostrozky's role in preserving Orthodox identity
+  word_target: 300
+focus: biography
+pedagogy: CBI
+objectives:
+- Analyze the significance of the Battle of Orsha
+- Evaluate Ostrozky's role as a patron of the Orthodox Church
+grammar:
+- Historical narrative register
+- Military terminology
+sources:
+- name: Костянтин Іванович Острозький (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Костянтин_Іванович_Острозький
+  type: primary
+- name: Битва під Оршею
+  url: https://uk.wikipedia.org/wiki/Битва_під_Оршею
+  type: primary
+immersion: 100% Ukrainian
+phase: C1-BIO

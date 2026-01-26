@@ -1,16 +1,9 @@
-module: regions-east
-level: b1
-sequence: 73
+module: b1-73
+level: B1
+slug: regions-east
 version: '2.0'
 title: 'Українські регіони: Схід'
 subtitle: Eastern Ukraine - Industrial Heritage and Academic Excellence
-focus: culture
-pedagogy: CBI
-objectives:
-- Learner can discuss Eastern Ukraine's industrial heritage and academic centers
-- Learner can understand authentic texts about Kharkiv, Slobozhanshchyna, and Donbas
-- Learner can use regional vocabulary to describe Eastern Ukrainian culture and identity
-- Learner can compare Eastern Ukrainian traditions with other regions
 content_outline:
 - section: 'Introduction: Eastern Ukraine'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Discuss Eastern Ukraine
   - Compare with other regions
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - Харків (Kharkiv)
   - Слобожанщина (Slobozhanshchyna)
@@ -63,15 +56,33 @@ vocabulary:
   - робітничий (working-class)
   - переселенці (displaced persons)
   - стійкість (resilience)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - reading
-  - discussion
-  - matching
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: reading
+  focus: Authentic texts about Eastern Ukraine
+  items: 15
+- type: matching
+  focus: Match regions to characteristics
+  items: 20
+- type: fill-in
+  focus: Complete regional descriptions
+  items: 15
+- type: discussion
+  focus: Discuss Eastern Ukrainian identity
+  items: 10
+focus: culture
+pedagogy: CBI
+prerequisites:
+- b1-72 (Regions West)
 connects_to:
 - b1-74 (Regions South)
+objectives:
+- Learner can discuss Eastern Ukraine's industrial heritage and academic centers
+- Learner can understand authentic texts about Kharkiv, Slobozhanshchyna, and Donbas
+- Learner can use regional vocabulary to describe Eastern Ukrainian culture and identity
+- Learner can compare Eastern Ukrainian traditions with other regions
+grammar:
+- Reading comprehension strategies
+- Cultural vocabulary in context
+- Industrial and academic vocabulary
+register: розмовний
+phase: B1.7 [Contemporary Ukraine]

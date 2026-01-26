@@ -1,9 +1,35 @@
-module: 44-complex-syntax-ellipsis-parcelling
-level: b2
-sequence: 44
-version: '1.0'
+module: b2-44
+level: B2
+slug: 44-complex-syntax-ellipsis-parcelling
+version: '2.0'
 title: 'Складний синтаксис: еліпсис і парцеляція'
 subtitle: Omitted words and stylistic fragmentation
+content_outline:
+- section: Вступ — еліпсис і парцеляція
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Основний матеріал
+  words: 600
+  points:
+  - Теоретичні основи
+  - Приклади та ілюстрації
+  - Типові помилки та як їх уникати
+- section: Поглиблене вивчення
+  words: 600
+  points:
+  - Додаткові випадки
+  - Контекстуальне використання
+  - Стилістичні нюанси
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: grammar
 pedagogy: TTT
 objectives:
@@ -11,13 +37,9 @@ objectives:
 - Learner can produce parcelled sentences for stylistic effect
 - Learner can recover omitted elements in elliptical speech
 - Learner can transform standard sentences using parcelling
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Ellipsis (еліпсис/пропуск) - omission of understood words
+- Parcelling (парцеляція) - stylistic fragmentation with periods
+- Expressive syntax in literature and speech
+register: художній
+phase: B2.2 [Phraseology & Synonymy]

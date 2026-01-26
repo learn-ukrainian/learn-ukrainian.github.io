@@ -1,12 +1,11 @@
-id: b2-hist-27
-title: 'Кримське ханство: Золотоординська спадщина'
-subtitle: 'Виникнення та державність Гіреїв'
+module: krymske-khanstvo
+level: B2-HIST
 slug: krymske-khanstvo
 version: '2.0'
-phase: 'B2.3c [Українська історія]'
-focus: history
-pedagogy: CBI
-word_target: 4153
+id: b2-hist-27
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
 tags:
@@ -14,23 +13,6 @@ tags:
 - crimea
 - khanate
 - state-formation
-grammar:
-- Historical narrative style
-- Descriptive constructions
-objectives:
-- Учень може описати процес виникнення Кримського ханства
-- Учень розуміє державний устрій та роль роду Гіреїв
-- Учень може аналізувати відносини між ханством та українськими землями
 vocabulary_count: 35
-content_outline:
-- section: Контекст
-  words: 550
-- section: Читання
-  words: 2800
-- section: Первинні джерела
-  words: 400
-- section: Деколонізаційний погляд
-  words: 403
-naturalness:
-  score: 9
-  status: PASS
+build:
+  last_modified: '2026-01-26'

@@ -1,0 +1,40 @@
+module: c1-43
+level: C1
+slug: 43-high-formal-register
+version: '2.0'
+title: 'Офіційно-діловий стиль: Мова документів'
+subtitle: 'High Formal Register: Language of Documents'
+content_outline:
+- section: Вступ — Мова документів
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Indirect Speech Acts
+  words: 500
+  points:
+  - 'Запрошення: Якщо будете вільні... (= Come!)'
+  - 'Відмова: Я подумаю... (= No)'
+  - 'Критика: Можна було б і краще... (= Bad)'
+  - 'Прохання: Тут якось холодно... (= Close the window)'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
+focus: style
+pedagogy: Academic
+objectives:
+- Learner can analyze the structure and language of official documents (laws, decrees,
+  contracts)
+- Learner can identify and use standard bureaucratic clichés
+- Learner can transform neutral text into official-business style
+grammar:
+- Fixed phrases (кліше)
+- Passive constructions (пасивні стани)
+- Nominalization (віддієслівні іменники)
+immersion: 100
+phase: C1.5 Folk Culture & Arts

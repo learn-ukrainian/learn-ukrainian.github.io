@@ -1,116 +1,128 @@
 module: kniaz-yaroslav-mudryi
-level: c1-bio
-sequence: 4
+level: C1-BIO
+slug: kniaz-yaroslav-mudryi
 version: '2.0'
 title: 'Князь Ярослав Мудрий: Законодавець'
-focus: biography
-pedagogy: seminar
-objectives:
-- Analyze the impact of Ruska Pravda on medieval society.
-- Discuss the strategic importance of dynastic marriages.
-- Evaluate the cultural achievements of the "Golden Age".
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Ярослав_Мудрий
-    title: Ярослав Мудрий (Wikipedia UA)
-    notes: Biography, Ruska Pravda, cultural achievements
-  - url: https://uk.wikipedia.org/wiki/Руська_правда
-    title: Руська правда (Wikipedia UA)
-    notes: Legal code details and significance
-  secondary:
-  - url: https://uk.wikipedia.org/wiki/Софійський_собор_(Київ)
-    title: Софійський собор (Wikipedia UA)
-    notes: Architectural legacy
 content_outline:
 - section: Вступ — Будівничий держави
   words: 400
-  subsections:
+  points:
   - Ярослав як законодавець і культуртрегер
   - Порівняння з європейськими монархами
   - Значення його правління для Русі
 - section: Шлях до влади
   words: 600
-  subsections:
+  points:
   - Молодість у Ростові та Новгороді
   - Конфлікт із батьком Володимиром
   - Усобиця після смерті батька
   - Боротьба зі Святополком Окаянним
 - section: Руська правда
   words: 800
-  subsections:
+  points:
   - Перший писаний збірник законів
   - Структура та основні норми
   - Віра (штраф за вбивство)
   - Порівняння з європейським правом
 - section: Культурний розквіт
   words: 700
-  subsections:
+  points:
   - Будівництво Софійського собору
   - Золоті ворота
   - Заснування бібліотеки та скрипторію
   - Переклади та освіта
 - section: Династична дипломатія
   words: 700
-  subsections:
+  points:
   - Шлюби дітей з європейськими монархами
   - Анна — королева Франції
   - Міжнародний престиж Києва
   - Русь як частина європейської спільноти
 - section: Останні роки та спадщина
   words: 500
-  subsections:
+  points:
   - Завіт синам
   - Смерть та поховання
   - Проблема "кісток Ярослава"
   - Образ у пізнішій культурі
 - section: Підсумок — Мудрий правитель
   words: 300
-  subsections:
+  points:
   - Чому "Мудрий"?
   - Порівняння з Карлом Великим
   - Спадщина для України
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - законодавець
-  - правда
-  - віра
-  - скрипторій
-  - митрополія
-  - усобиця
-  - собор
-  - грамота
-  - династія
-  - завіт
+  - законодавець (lawgiver)
+  - правда (law code/justice)
+  - віра (wergeld/fine for murder)
+  - скрипторій (scriptorium)
+  - митрополія (metropolitanate)
+  - усобиця (internecine strife)
+  - собор (cathedral)
+  - грамота (literacy/charter)
+  - династія (dynasty)
+  - завіт (testament)
   recommended:
-  - мозаїка
-  - фреска
-  - посадник
-  - віче
-  - престол
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  - critical-analysis
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - мозаїка (mosaic)
+  - фреска (fresco)
+  - посадник (governor)
+  - віче (assembly)
+  - престол (throne)
+activity_hints:
+- type: reading
+  focus: Excerpts from Ruska Pravda
+  source: Original text (adapted)
+  items: 3 passages
+- type: quiz
+  focus: Facts about Yaroslav's reign and achievements
+  items: 15+
+- type: match-up
+  focus: Yaroslav's children and their royal marriages
+  items: 10+
+- type: essay-response
+  focus: Compare Yaroslav's lawgiving with Justinian or Charlemagne
+  word_target: 300
+  output: Comparative analysis
+- type: group-sort
+  focus: Military vs. Cultural vs. Legal achievements
+  items: 15+
+- type: fill-in
+  focus: Terms from Ruska Pravda
+  items: 10+
+- type: critical-analysis
+  focus: Evaluate the title "Mudryi" (The Wise)
+  output: Argument with evidence
+focus: biography
+pedagogy: seminar
+prerequisites:
+- c1-bio-03 (Volodymyr Velykyi - father)
+- Understanding of medieval European context
 connects_to:
-  previous: c1-bio-03 (Volodymyr Velykyi - father)
-  related:
-  - c1-bio-05 (Anna Yaroslavna - daughter)
-  - c1-bio-06 (Mykhailo Chernihivskyi - later period)
-  - c1-bio-14 (Pylyp Orlyk - later constitutional tradition)
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-05 (Anna Yaroslavna - daughter)
+- c1-bio-06 (Mykhailo Chernihivskyi - later period)
+- c1-bio-14 (Pylyp Orlyk - later constitutional tradition)
+objectives:
+- Analyze the impact of Ruska Pravda on medieval society.
+- Discuss the strategic importance of dynastic marriages.
+- Evaluate the cultural achievements of the "Golden Age".
+grammar:
+- Legal terminology (Ruska Pravda)
+- Diplomatic register
+module_type: biography
+sources:
+- name: Ярослав Мудрий (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Ярослав_Мудрий
+  type: primary
+  notes: Biography, Ruska Pravda, cultural achievements
+- name: Руська правда (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Руська_правда
+  type: primary
+  notes: Legal code details and significance
+- name: Софійський собор (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Софійський_собор_(Київ)
+  type: reference
+  notes: Architectural legacy
+immersion: 100% Ukrainian
+phase: C1-BIO

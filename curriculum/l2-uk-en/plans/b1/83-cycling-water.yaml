@@ -1,16 +1,9 @@
-module: cycling-water
-level: b1
-sequence: 83
+module: b1-83
+level: B1
+slug: cycling-water
 version: '2.0'
 title: Велосипед та водні види
 subtitle: Cycling and Water Sports
-focus: culture
-pedagogy: CBI
-objectives:
-- Learner can discuss cycling and water sports in Ukrainian
-- Learner can understand rules and rental information
-- Learner can use vocabulary for bikes, boats, and swimming
-- Learner can describe a summer active holiday
 content_outline:
 - section: 'Introduction: Summer Sports'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Plan summer activities
   - Discuss preferences
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - велосипед (bicycle)
   - плавання (swimming)
@@ -63,15 +56,33 @@ vocabulary:
   - велодоріжка (bike path)
   - SUP (stand-up paddleboard)
   - басейн (pool)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - reading
-  - discussion
-  - matching
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: reading
+  focus: Rental information and safety guides
+  items: 15
+- type: matching
+  focus: Match sports to equipment
+  items: 20
+- type: fill-in
+  focus: Complete activity descriptions
+  items: 15
+- type: discussion
+  focus: Plan summer activities
+  items: 10
+focus: culture
+pedagogy: CBI
+prerequisites:
+- b1-82 (Mountains and Trail)
 connects_to:
 - b1-84 (Winter Sports)
+objectives:
+- Learner can discuss cycling and water sports in Ukrainian
+- Learner can understand rules and rental information
+- Learner can use vocabulary for bikes, boats, and swimming
+- Learner can describe a summer active holiday
+grammar:
+- Cycling and water sports vocabulary
+- Rental and safety language
+- Describing activities
+register: розмовний
+phase: B1.7 [Contemporary Ukraine]

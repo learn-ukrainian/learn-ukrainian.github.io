@@ -1,22 +1,48 @@
-module: 59-synonyms-communication
-level: b2
-sequence: 59
-version: '1.0'
+module: b2-59
+level: B2
+slug: 59-synonyms-communication
+version: '2.0'
 title: 'Синоніми: Комунікація та Мовлення'
 subtitle: Synonyms - Communication and Speech
+content_outline:
+- section: Вступ — Комунікація та Мовлення
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Say
+  words: 500
+  points:
+  - казати (say - neutral)
+  - говорити (speak/talk - general)
+  - розповідати (tell/narrate - story)
+  - повідомляти (inform - official)
+  - заявляти (declare - formal)
+- section: Ask
+  words: 500
+  points:
+  - питати (ask - general)
+  - запитувати (ask - formal)
+  - цікавитися (be interested/inquire)
+  - розпитувати (question - detailed)
+  - допитувати (interrogate - intense)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: phraseology
 pedagogy: CBI
 objectives:
 - Учень може розрізняти відтінки значень дієслів мовлення (казати, повідомляти, заявляти)
-- Учень вміє обирати точне дієслово для запиту інформації залежно від контексту (питати, цікавитися, допитувати)
+- Учень вміє обирати точне дієслово для запиту інформації залежно від контексту (питати,
+  цікавитися, допитувати)
 - Учень розуміє стилістичні відмінності між офіційним та розмовним мовленням
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Nuances in verbs of speech
+- Reporting and dialogue structure
+immersion: 100
+register: публіцистичний
+phase: B2.2 [Phraseology & Synonymy]

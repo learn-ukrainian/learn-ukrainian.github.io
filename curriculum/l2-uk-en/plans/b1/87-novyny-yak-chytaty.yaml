@@ -1,16 +1,9 @@
-module: novyny-yak-chytaty
-level: b1
-sequence: 87
+module: b1-87
+level: B1
+slug: novyny-yak-chytaty
 version: '2.0'
 title: 'Новини: як читати'
 subtitle: News Reading Strategies for Ukrainian Media
-focus: skills
-pedagogy: CBI
-objectives:
-- Learner can apply news reading strategies to authentic Ukrainian texts
-- Learner can identify headlines, leads, and main points in news articles
-- Learner can distinguish fact from opinion in Ukrainian news
-- Learner is prepared for autonomous news reading at B2
 content_outline:
 - section: 'Introduction: News Literacy'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Analyze news articles
   - Discuss current events
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - новини (news)
   - стаття (article)
@@ -63,15 +56,33 @@ vocabulary:
   - кореспондент (correspondent)
   - огляд (review)
   - коментар (commentary)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - reading
-  - analysis
-  - matching
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: reading
+  focus: Authentic news articles
+  items: 15
+- type: matching
+  focus: Match headlines to content
+  items: 20
+- type: fill-in
+  focus: Complete news summaries
+  items: 15
+- type: analysis
+  focus: Analyze news for bias
+  items: 10
+focus: skills
+pedagogy: CBI
+prerequisites:
+- b1-86 (Ukrainian Holidays and Festivals)
 connects_to:
 - b1-88 (Interviews and Podcasts)
+objectives:
+- Learner can apply news reading strategies to authentic Ukrainian texts
+- Learner can identify headlines, leads, and main points in news articles
+- Learner can distinguish fact from opinion in Ukrainian news
+- Learner is prepared for autonomous news reading at B2
+grammar:
+- News vocabulary and register
+- Headline patterns
+- Reporting structures
+register: розмовний
+phase: B1.8 [Skills & Integration]

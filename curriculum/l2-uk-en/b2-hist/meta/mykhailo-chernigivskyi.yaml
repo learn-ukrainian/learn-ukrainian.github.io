@@ -1,40 +1,13 @@
-slug: mykhailo-chernigivskyi
-title: 'Михайло Чернігівський: Опір Орді'
+module: mykhailo-chernigivskyi
 level: B2
-track: history
-phase: HIST.3 [Mongol Era & Galicia-Volhynia]
-status: skeleton
-focus: history
-word_target: 4000
-duration: 90
-transliteration: none
-prerequisites: []
-learning_outcomes: []
-content_outline:
-- section: Вступ
-  words: 400
-  points:
-  - Постать Михайла Всеволодовича у контексті ХІІІ століття
-  - Символізм мученицької смерті для української ідентичності
-- section: 'Читання: Життя та опір Михайла Чернігівського'
-  words: 2400
-  points:
-  - Княжіння в Чернігові та боротьба за Київ
-  - Подорож до Орди та відмова від язичницьких обрядів
-  - Смерть Михайла та боярина Федора як акт політичного протесту
-  - Канонізація та вшанування пам'яті в Україні
-- section: Первинні джерела
-  words: 400
-  points:
-  - Аналіз літописних розповідей про загибель князя
-  - Житійні тексти як історичне джерело
-- section: Деколонізаційний погляд
-  words: 400
-  points:
-  - Міф про 'покірну Русь' та реальність князівського спротиву
-  - Порівняння стратегій Михайла Чернігівського та московських князів
-- section: Потрібно більше практики?
-  words: 100
+slug: mykhailo-chernigivskyi
+version: '2.0'
 naturalness:
   score: 9
   status: PASS
+status: skeleton
+track: history
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-26'

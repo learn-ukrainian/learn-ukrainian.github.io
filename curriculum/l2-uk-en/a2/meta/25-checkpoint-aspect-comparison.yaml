@@ -1,14 +1,15 @@
-id: a2-25
-title: 'Checkpoint: Aspect, Comparison & Modality'
-subtitle: Review of Modules 11-24
+module: 25-checkpoint-aspect-comparison
+level: A2
 slug: 25-checkpoint-aspect-comparison
-module_type: checkpoint
-word_target: 800
-immersion: 40-50% Ukrainian
 version: '2.0'
-phase: A2.2
-focus: checkpoint
-pedagogy: TTT
+id: a2-25
+naturalness:
+  score: 10
+  status: PASS
+  issues: []
+  recommendation: The use of 'Поквапся' in the dialogue is slightly literary; 'Поспіши'
+    might be more common in casual speech, but 'Поквапся' is perfectly valid. No changes
+    needed.
 duration: 60
 transliteration: none
 tags:
@@ -18,67 +19,5 @@ tags:
 - comparison
 - imperative
 - conditional
-grammar:
-- Aspect pairs review (process vs result)
-- Degrees of comparison (Regular/Irregular)
-- Conditional mood (Real vs Unreal)
-- Imperative system (Direct/Indirect)
-- Numeral-noun agreement (1-2-5 rule)
-objectives:
-- Learner can integrate aspect, comparison, and mood in complex scenarios
-- Learner can count objects and money with correct agreement
-- Learner can make polite requests and hypothetical dreams
-- Learner can distinguish between process and result across tenses
-sources:
-- name: Ukrainian State Standard 2024 - A2 Review
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Standards for integrating intermediate A2 skills
-content_outline:
-- section: Огляд / Overview
-  words: 250
-  points:
-  - Consolidating the 'Quality and Time' block
-  - The map of skills from M11 to M24
-- section: 'Skill 1: Verbal Aspect (Вид дієслова: Процес та результат)'
-  words: 70
-  points:
-  - Process vs Result distinction
-  - Aspect pair review
-- section: 'Skill 2: Degrees of Comparison (Ступені порівняння)'
-  words: 50
-  points:
-  - Comparative and superlative forms
-  - Irregular comparatives
-- section: 'Skill 3: Modality (Умовний та наказовий способи)'
-  words: 60
-  points:
-  - Conditional and imperative moods
-  - Real vs unreal conditions
-- section: 'Skill 4: Numeral Agreement (Узгодження числівників)'
-  words: 40
-  points:
-  - Zone 1-2-3 agreement rules
-  - Counting with nouns
-- section: Practice / Практика (The Mega-Review)
-  words: 150
-  points:
-  - Aspect transformation
-  - Comparison marathon
-  - Modality check
-  - Counting money
-- section: 'Dialogue / Діалог: Synthesis (Синтез навичок)'
-  words: 250
-  points:
-  - Synthesizing all four skills in dialogue with analysis
-- section: Integration Challenge / Інтеграційне завдання
-  words: 100
-  points:
-  - Combined task using all skills
-naturalness:
-  score: 10
-  status: PASS
-  issues: []
-  recommendation: The use of 'Поквапся' in the dialogue is slightly literary; 'Поспіши'
-    might be more common in casual speech, but 'Поквапся' is perfectly valid. No changes
-    needed.
+build:
+  last_modified: '2026-01-26'

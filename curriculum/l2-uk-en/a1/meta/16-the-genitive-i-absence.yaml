@@ -1,95 +1,13 @@
 module: a1-16
-id: a1-16
+level: A1
 slug: the-genitive-i-absence
-title: "The Genitive I: Absence"
-subtitle: "Talking About What You Don't Have"
 version: '2.0'
-phase: "A1.2 [Navigation]"
-focus: grammar
-pedagogy: PPP
-register: розмовний
-duration: 60
-transliteration: none
-objectives:
-  - "Learner can express absence using немає + genitive"
-  - "Learner can use genitive case for negation"
-  - "Learner can say what they don't have (немає часу)"
-  - "Learner can use без + genitive (without)"
-grammar:
-  - "Genitive case for absence"
-  - "Genitive endings"
-  - "Немає + genitive"
-word_target: 1000
-content_outline:
-  - section: "Introduction: Expressing Absence"
-    words: 150
-    points:
-      - "Немає = there is no"
-      - "Genitive after negation"
-      - "Common in daily speech"
-  - section: "Genitive Endings"
-    words: 250
-    points:
-      - "Masculine: -у/-а (часу, брата)"
-      - "Feminine: -и/-і (книги, ночі)"
-      - "Neuter: -а (вікна, моря)"
-  - section: "Немає + Genitive"
-    words: 200
-    points:
-      - "Немає часу = There is no time"
-      - "У мене немає... = I don't have..."
-      - "Negation patterns"
-  - section: "Без + Genitive"
-    words: 150
-    points:
-      - "без цукру = without sugar"
-      - "без молока = without milk"
-      - "Common expressions"
-  - section: "When to Use Genitive"
-    words: 150
-    points:
-      - "After немає"
-      - "After без"
-      - "After negated verbs (preview)"
-  - section: "Practice: What's Missing?"
-    words: 100
-    points:
-      - "Describe what's not there"
-      - "Order without ingredients"
-vocabulary_hints:
-  required:
-    - немає (there is no)
-    - без (without)
-    - час (time)
-    - гроші (money)
-    - молоко (milk)
-    - цукор (sugar)
-    - вода (water)
-    - хліб (bread)
-  recommended:
-    - проблема (problem)
-    - квиток (ticket)
-    - ключ (key)
-    - телефон (phone)
-activity_hints:
-  - type: transformation
-    focus: "Change nouns to genitive"
-    items: 25
-  - type: fill-in
-    focus: "Complete немає sentences"
-    items: 20
-  - type: translation
-    focus: "Translate absence expressions"
-    items: 15
-  - type: dialogue
-    focus: "I don't have... conversations"
-    items: 6
-prerequisites:
-  - a1-15 (Around the City)
-connects_to:
-  - a1-17 (Numbers and Money)
-  - a1-18 (Food and Shopping)
+id: a1-16
 naturalness:
   score: 10
   status: PASS
-  justification: "Essential negation patterns"
+  justification: Essential negation patterns
+duration: 60
+transliteration: none
+build:
+  last_modified: '2026-01-26'

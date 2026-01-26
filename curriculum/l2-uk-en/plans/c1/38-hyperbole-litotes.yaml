@@ -1,22 +1,41 @@
-module: 38-hyperbole-litotes
-level: c1
-sequence: 38
-version: '1.0'
+module: c1-38
+level: C1
+slug: 38-hyperbole-litotes
+version: '2.0'
 title: 'Гіпербола та літота: Гра масштабів'
 subtitle: 'Hyperbole & Litotes: Playing with Scale'
+content_outline:
+- section: Вступ — Гра масштабів
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Hyperbole (Гіпербола)
+  words: 500
+  points:
+  - 'Перебільшення: Я чекав цілу вічність'
+  - 'Function: Emphasis, humor, emotion'
+- section: Litotes (Літота)
+  words: 500
+  points:
+  - 'Применшення: Непоганий (= дуже добрий)'
+  - 'Function: Modesty, understatement, irony'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: style
 pedagogy: Immersion
 objectives:
 - Identify and use hyperbole for emotional impact
 - Master litotes for polite understatement and irony
 - Analyze the use of scale in literary and daily communication
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Hyperbole (exaggeration)
+- Litotes (understatement via double negation)
+- Emphasis and modesty strategies
+phase: C1.4 Advanced Stylistics & Rhetoric

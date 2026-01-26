@@ -1,106 +1,16 @@
-id: b1-20
-title: 'Рух: наближення і віддалення'
-subtitle: Motion - Approaching & Departing
+module: 20-motion-approaching-departing
+level: B1
 slug: 20-motion-approaching-departing
-module_type: grammar
-word_target: 1500
-immersion: 100% Ukrainian
 version: '1.0'
-phase: B1.2 Motion
-pedagogy: TTT
-focus: grammar
+id: b1-20
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
 tags:
 - grammar
 - motion-verbs
 - prefixes
-grammar:
-- Prefixes під-, від-, до-
-- Approaching, departing, reaching patterns
-objectives:
-- Learner can use під- for approaching
-- Learner can use від- for departing
-- Learner can use до- for reaching destination
-sources:
-- name: Ukrainian State Standard 2024 - Motion Prefixes
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official prefix meanings for approach/depart
-- name: Ukrainian Verbal Prefixes
-  url: https://uk.wikipedia.org/wiki/Дієслівні_префікси
-  type: reference
-  notes: під-, від-, до- semantics
-content_outline:
-- section: Тест
-  words: 100
-  points:
-  - Content for Тест
-  - Examples and explanation
-  - Practice or application
-- section: Пояснення
-  words: 700
-  points:
-  - Content for Пояснення
-  - Examples and explanation
-  - Practice or application
-- section: Поглиблення
-  words: 400
-  points:
-  - Content for Поглиблення
-  - Examples and explanation
-  - Practice or application
-- section: Практика
-  words: 200
-  points:
-  - Content for Практика
-  - Examples and explanation
-  - Practice or application
-- section: Діалоги
-  words: 650
-  points:
-  - Content for Діалоги
-  - Examples and explanation
-  - Practice or application
-vocabulary_hints:
-  required:
-  - підійти/підходити (to approach on foot)
-  - під'їхати/під'їжджати (to approach by vehicle)
-  - відійти/відходити (to move away on foot)
-  - від'їхати/від'їжджати (to drive away)
-  - дійти/доходити (to reach on foot)
-  - доїхати/доїжджати (to reach by vehicle)
-  - наближення (approach)
-  - віддалення (moving away)
-  - досягнення (reaching)
-  - відстань (distance)
-  recommended:
-  - підбігти/підбігати (to run up to)
-  - відбігти/відбігати (to run away)
-  - добігти/добігати (to reach running)
-  - наблизитися (to approach - reflexive)
-  - віддалитися (to move away - reflexive)
-activity_hints:
-- type: quiz
-  focus: під- vs від- vs до- selection
-  items: 15+
-- type: fill-in
-  focus: Route descriptions with direction
-  items: 12+
-- type: fill-in
-  focus: Approach → depart → reach sequence
-  items: 10+
-- type: cloze
-  focus: Narrative about a journey
-  items: 12+
-- type: match-up
-  focus: Situation → prefixed verb
-  items: 12+
-prerequisites:
-- b1-19 (Motion - starting & returning)
-connects_to:
-- b1-21 (Motion - figurative uses)
-- b1-22 (Motion full prefix integration)
-naturalness:
-  score: 9
-  status: PASS
+build:
+  last_modified: '2026-01-26'

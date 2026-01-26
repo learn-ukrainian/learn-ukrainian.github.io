@@ -1,24 +1,9 @@
 module: 12-aspect-pairs-essential-40
-level: b1
-sequence: 12
-version: '1.0'
+level: B1
+slug: 12-aspect-pairs-essential-40
+version: '2.0'
 title: 'Видові пари: 40 найважливіших'
 subtitle: Essential Aspect Pairs - The 40 most common verb pairs
-focus: grammar
-pedagogy: TTT
-objectives:
-- Learner knows the 40 most essential aspect pairs
-- Learner can recognize and use both forms correctly
-- Learner understands common aspect formation patterns
-sources:
-- name: Ukrainian Frequency Dictionaries
-  url: https://uk.wikipedia.org/wiki/Частотний_словник
-  type: reference
-  notes: Most frequent verbs in Ukrainian corpus
-- name: Ukrainian Aspectual Pairs
-  url: https://uk.wikipedia.org/wiki/Видові_пари_дієслів
-  type: reference
-  notes: Formation patterns for aspectual pairs
 content_outline:
 - section: Тест
   words: 100
@@ -45,7 +30,7 @@ content_outline:
   - Examples and explanation
   - Practice or application
 word_target: 1500
-vocabulary:
+vocabulary_hints:
   required:
   - робити/зробити (to do/make)
   - писати/написати (to write)
@@ -63,16 +48,43 @@ vocabulary:
   - починати/почати (to begin)
   - закінчувати/закінчити (to finish)
   - вчити/вивчити (to study/learn)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - group-sort
-  - match-up
-  - quiz
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: match-up
+  focus: Imperfective → Perfective pairs
+  items: 40+
+- type: fill-in
+  focus: Choose correct form in context
+  items: 20+
+- type: group-sort
+  focus: By formation type (prefix, suffix, suppletive)
+  items: 40+
+- type: quiz
+  focus: Identify pair type and use correctly
+  items: 15+
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-11 (Aspect in imperatives)
+- All aspect theory modules M06-11
 connects_to:
 - b1-13 (Work week - aspect in action)
 - b1-14 (Aspect integration practice)
+objectives:
+- Learner knows the 40 most essential aspect pairs
+- Learner can recognize and use both forms correctly
+- Learner understands common aspect formation patterns
+grammar:
+- 40 essential aspect pairs
+- Imperfective-perfective correspondence
+module_type: grammar
+sources:
+- name: Ukrainian Frequency Dictionaries
+  url: https://uk.wikipedia.org/wiki/Частотний_словник
+  type: reference
+  notes: Most frequent verbs in Ukrainian corpus
+- name: Ukrainian Aspectual Pairs
+  url: https://uk.wikipedia.org/wiki/Видові_пари_дієслів
+  type: reference
+  notes: Formation patterns for aspectual pairs
+immersion: 100% Ukrainian
+phase: B1.1 Aspect

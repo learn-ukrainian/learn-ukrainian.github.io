@@ -1,25 +1,8 @@
 module: 12-parenthetical-expressions
-level: b2
-sequence: 12
-version: '1.0'
+level: B2
+slug: 12-parenthetical-expressions
+version: '2.0'
 title: Вставні слова та вирази
-focus: grammar
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Ukrainian State Standard 2024 - Discourse Markers
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Requirements for discourse organization at B2
-- name: Сучасна українська літературна мова - Синтаксис
-  url: https://uk.wikipedia.org/wiki/Синтаксис
-  type: secondary
-  notes: Parenthetical expressions classification
-- name: CEFR B2 Discourse Competence
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
-  type: reference
-  notes: B2 discourse organization requirements
 content_outline:
 - section: Вступ — Вставні слова та вирази
   words: 400
@@ -66,7 +49,7 @@ content_outline:
   - Стилістичні ефекти
   - Підготовка до модуля 13
 word_target: 3800
-vocabulary:
+vocabulary_hints:
   required:
   - вставне слово (parenthetical word)
   - модальність (modality)
@@ -84,19 +67,51 @@ vocabulary:
   - висловлювання (utterance)
   - уточнення (specification)
   - узагальнення (generalization)
-  forbidden: []
-activities:
-  types_required:
-  - group-sort
-  - error-correction
-  - quiz
-  - fill-in
-  - essay-response
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: Identify function of parenthetical expression
+  items: 15+
+- type: fill-in
+  focus: Insert appropriate parenthetical expressions
+  items: 15+
+- type: group-sort
+  focus: Sort by function (certainty, attitude, source, sequence)
+  items: 20+
+- type: fill-in
+  focus: Add parenthetical expressions to neutral sentences
+  items: 12+
+- type: error-correction
+  focus: Fix punctuation with parenthetical expressions
+  items: 10+
+- type: match-up
+  focus: Parenthetical expression → function
+  items: 16+
+- type: essay-response
+  focus: Write opinion text using varied parenthetical expressions
+  word_target: 150
+  output: Model answer provided
+focus: grammar
+prerequisites:
+- b2-11 (Multi-clause Sentences)
+- Comma usage basics
+- Sentence structure
 connects_to:
 - b2-13 (Emphasis and Inversion)
 - b2-14 (Stylistic Connectors)
 - b2-25 (B2.1b Checkpoint)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Discourse Markers
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Requirements for discourse organization at B2
+- name: Сучасна українська літературна мова - Синтаксис
+  url: https://uk.wikipedia.org/wiki/Синтаксис
+  type: secondary
+  notes: Parenthetical expressions classification
+- name: CEFR B2 Discourse Competence
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 discourse organization requirements
+immersion: 100% Ukrainian
+phase: B2.1b [Participles & Register Intro]

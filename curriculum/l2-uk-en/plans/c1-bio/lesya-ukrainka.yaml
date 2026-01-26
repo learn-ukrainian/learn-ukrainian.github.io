@@ -1,105 +1,110 @@
-module: lesya-ukrainka
-level: c1-bio
-sequence: 40
+module: c1-bio-40
+level: C1-BIO
+slug: lesya-ukrainka
 version: '2.0'
 title: 'Леся Українка: Прометей української літератури'
-focus: biography
-pedagogy: seminar
-objectives:
-- Analyze the evolution of Lesya Ukrainka's work from lyricism to world-class drama
-- Evaluate the anti-colonial and feminist discourses in her major dramatic poems
-- Discuss the impact of her physical struggle on her creative indomitability
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Леся_Українка
-    title: Леся Українка (Wikipedia UA)
-    notes: Основна біографія, творчість, хвороба
-  secondary:
-  - url: https://uk.wikipedia.org/wiki/Драматургія_Лесі_Українки
-    title: Драматургія Лесі Українки
-    notes: Аналіз драматичних творів
-  - url: https://uk.wikipedia.org/wiki/Косачі
-    title: Родина Косачів
-    notes: Літературна родина та виховання
+subtitle: 'Lesya Ukrainka: Prometheus of Ukrainian Literature'
 content_outline:
 - section: Вступ — Прометей у жіночій подобі
   words: 526
-  subsections:
+  points:
   - Леся Українка як символ незламності духу
   - Від ліричної поетеси до драматурга світового рівня
   - Боротьба з хворобою та імперією водночас
 - section: Дитинство та родина (1871-1884)
   words: 631
-  subsections:
+  points:
   - Народження у Новограді-Волинському в родині Косачів
   - Мати Олена Пчілка — письменниця та громадська діячка
   - Дядько Михайло Драгоманов — ідейний наставник
   - Домашня освіта та ранній літературний талант
 - section: Хвороба та творчий злет (1884-1900)
   words: 736
-  subsections:
+  points:
   - Діагноз — кістковий туберкульоз у 13 років
   - Поїздки на лікування — Крим, Єгипет, Грузія
   - Перші поетичні збірки та переклади
   - Знайомство з Сергієм Мержинським
 - section: Драматургія та ідеї (1900-1913)
   words: 842
-  subsections:
+  points:
   - Створення драматичних поем — «Лісова пісня», «Оргія», «Кассандра»
   - Антиколоніальний та феміністичний дискурс у творах
   - Міфологічні сюжети як засіб говорити про сучасність
   - Шлюб з Климентом Квіткою — етнографом та музикознавцем
 - section: Останні роки та спадщина (1909-1913)
   words: 736
-  subsections:
+  points:
   - Погіршення здоров'я та переїзд до Грузії
   - Інтенсивна творчість попри фізичні страждання
   - Смерть у Сурамі 1 серпня 1913 року
   - Похорон у Києві та національна жалоба
 - section: Вплив на сучасність
   words: 529
-  subsections:
+  points:
   - Канонізація як національної святині
   - Вплив на українську драматургію XX століття
   - Леся Українка у сучасній культурі
   - 200-гривнева банкнота та численні пам'ятники
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - драматургія
-  - драматична поема
-  - туберкульоз
-  - незламність
-  - антиколоніальний
-  - міфологія
-  - канонізація
-  - спадщина
-  - муза
-  - генійка
+  - драматургія (dramaturgy)
+  - драматична поема (dramatic poem)
+  - туберкульоз (tuberculosis)
+  - незламність (indomitability)
+  - антиколоніальний (anti-colonial)
+  - міфологія (mythology)
+  - канонізація (canonization)
+  - спадщина (legacy)
+  - муза (muse)
+  - генійка (female genius)
   recommended:
-  - прометеїзм
-  - неоромантизм
-  - символізм
-  - маргіналізація
-  - еміграція
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - essay-response
-  - critical-analysis
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - прометеїзм (Prometheanism)
+  - неоромантизм (neo-romanticism)
+  - символізм (symbolism)
+  - маргіналізація (marginalization)
+  - еміграція (emigration)
+activity_hints:
+- type: reading
+  focus: Уривки з «Лісової пісні» та «Contra spem spero»
+  source: Оригінальні твори
+  items: 3 passages
+- type: essay-response
+  focus: Як хвороба вплинула на творчість Лесі Українки?
+  word_target: 300
+  output: Reflective essay
+- type: critical-analysis
+  focus: Discuss the anti-colonial motifs in "Cassandra"
+  output: Literary analysis
+focus: biography
+pedagogy: seminar
+prerequisites:
+- c1-bio-22-mykhailo-drahomanov
+- c1-bio-24-olena-pchilka
 connects_to:
-  previous: c1-bio-22-mykhailo-drahomanov
-  related:
-  - c1-bio-28-ivan-franko
-  - c1-bio-31-olha-kobylianska
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-28-ivan-franko
+- c1-bio-31-olha-kobylianska
+objectives:
+- Analyze the evolution of Lesya Ukrainka's work from lyricism to world-class drama
+- Evaluate the anti-colonial and feminist discourses in her major dramatic poems
+- Discuss the impact of her physical struggle on her creative indomitability
+grammar:
+- Academic literary analysis
+- Sophisticated modal structures
+module_type: biography
+sources:
+- name: Леся Українка (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Леся_Українка
+  type: primary
+  notes: Основна біографія, творчість, хвороба
+- name: Драматургія Лесі Українки
+  url: https://uk.wikipedia.org/wiki/Драматургія_Лесі_Українки
+  type: reference
+  notes: Аналіз драматичних творів
+- name: Родина Косачів
+  url: https://uk.wikipedia.org/wiki/Косачі
+  type: reference
+  notes: Літературна родина та виховання
+immersion: 100% Ukrainian
+phase: C1-BIO

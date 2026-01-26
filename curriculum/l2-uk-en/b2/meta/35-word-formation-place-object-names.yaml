@@ -1,67 +1,18 @@
 module: b2-35
-title: 'Словотворення: назви місць та об''єктів'
-subtitle: 'Word Formation: Place and Object Names'
+level: B2
+slug: 35-word-formation-place-object-names
 version: '1.0'
-phase: B2.1c [Grammar Completion]
-pedagogy: TTT
-focus: grammar
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
-immersion: 100
 tags:
 - grammar
 - word-formation
 - suffixes
 - vocabulary
-grammar:
-- Suffix -ня (place of activity)
-- Suffix -ище (place/area)
-- Suffix -арня (workshop/establishment)
-- Derivational morphology for place names
-objectives:
-- Learner can identify suffixes that form place and object names in Ukrainian
-- Learner can derive place names from verbs and nouns using appropriate suffixes
-- Learner can distinguish between -ня, -ище, and -арня formations
-- Learner can use place vocabulary appropriately in context
 vocabulary_count: 25
-register: науковий
 vocab_count: 145
-slug: 35-word-formation-place-object-names
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-- section: Вступ — назви місць та об'єктів
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-  - Роль у системі української мови
-- section: Suffix -ня (place of activity)
-  words: 400
-  points:
-  - читати → читальня (reading room)
-  - спати → спальня (bedroom)
-  - їсти → їдальня (canteen)
-  - варити → варильня (brewery)
-- section: Suffix -ище (place/area)
-  words: 400
-  points:
-  - клад → кладовище (cemetery)
-  - ховати → сховище (storage)
-  - пасти → пасовище (pasture)
-  - жити → житло + -ище → жи́тлище (dwelling)
-- section: Suffix -арня (workshop/establishment)
-  words: 400
-  points:
-  - лікар → лікарня (hospital)
-  - друкар → друкарня (printing house)
-  - пекар → пекарня (bakery)
-  - перукар → перукарня (hair salon)
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

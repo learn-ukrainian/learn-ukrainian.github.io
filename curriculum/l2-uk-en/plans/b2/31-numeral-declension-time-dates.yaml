@@ -1,22 +1,46 @@
-module: 31-numeral-declension-time-dates
-level: b2
-sequence: 31
-version: '1.0'
+module: b2-31
+level: B2
+slug: 31-numeral-declension-time-dates
+version: '2.0'
 title: 'Відмінювання числівників І: Час і дати'
 subtitle: 'Numeral Declension I: Time & Dates'
+content_outline:
+- section: Вступ — Час і дати
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Вирази часу
+  words: 500
+  points:
+  - о другій годині (at 2 o'clock)
+  - пів на першу (half past twelve)
+  - двадцять по шостій (twenty past six)
+  - за п'ятнадцять третя (quarter to three)
+- section: Вирази дати
+  words: 500
+  points:
+  - перше січня (January 1st - nominative)
+  - першого січня (of January 1st - genitive)
+  - до двадцять восьмого лютого (until February 28th)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: grammar
 pedagogy: TTT
 objectives:
 - Learner can tell the time using formal and informal expressions
 - Learner can state and understand dates in all required cases
 - Learner can use months in genitive and prepositional cases correctly
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Порядкові числівники в часових виразах
+- Відмінювання числівників при датах
+- Родовий відмінок місяців
+immersion: 100
+register: нейтральний
+phase: B2.1c

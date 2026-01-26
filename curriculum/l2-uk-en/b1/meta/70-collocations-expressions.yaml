@@ -1,94 +1,13 @@
 module: b1-70
-id: b1-70
+level: B1
 slug: collocations-expressions
-title: "Колокації та вирази"
-subtitle: "Collocations and Expressions"
 version: '2.0'
-phase: "B1.6 [Vocabulary Expansion II]"
-focus: vocabulary
-pedagogy: PPP
-register: розмовний
-duration: 90
-transliteration: none
-objectives:
-  - "Learner can use 25 common verb-noun collocations naturally"
-  - "Learner can distinguish between similar verbs in collocations"
-  - "Learner can form natural word combinations in professional and everyday contexts"
-  - "Learner can recognize and avoid unnatural collocations"
-grammar:
-  - "Verb-noun collocations"
-  - "Adjective-noun collocations"
-  - "Fixed and semi-fixed expressions"
-word_target: 1200
-content_outline:
-  - section: "Introduction: Why Collocations Matter"
-    words: 150
-    points:
-      - "What are collocations"
-      - "Natural vs unnatural combinations"
-      - "Learning strategies"
-  - section: "Verb-Noun Collocations"
-    words: 250
-    points:
-      - "приймати рішення, робити вибір"
-      - "мати право, брати участь"
-      - "Common verb-noun pairs"
-  - section: "Adjective-Noun Collocations"
-    words: 250
-    points:
-      - "важливе питання, гарний настрій"
-      - "Fixed adjective-noun pairs"
-      - "Color and intensity"
-  - section: "Delexical Verbs"
-    words: 250
-    points:
-      - "робити, мати, брати, давати"
-      - "Light verb constructions"
-      - "Common patterns"
-  - section: "Fixed Expressions"
-    words: 200
-    points:
-      - "Semi-fixed phrases"
-      - "Idiomatic expressions"
-      - "Discourse markers"
-  - section: "Practice: Natural Combinations"
-    words: 100
-    points:
-      - "Build natural collocations"
-      - "Avoid calques"
-vocabulary_hints:
-  required:
-    - колокація (collocation)
-    - вираз (expression)
-    - приймати рішення (to make a decision)
-    - брати участь (to participate)
-    - мати право (to have the right)
-    - робити вибір (to make a choice)
-    - звертати увагу (to pay attention)
-    - досягати успіху (to achieve success)
-  recommended:
-    - встановлювати контакт (to establish contact)
-    - виконувати обов'язки (to fulfill duties)
-    - набувати досвіду (to gain experience)
-    - зберігати спокій (to keep calm)
-activity_hints:
-  - type: matching
-    focus: "Match verb to noun"
-    items: 25
-  - type: fill-in
-    focus: "Complete collocations"
-    items: 20
-  - type: error-correction
-    focus: "Fix unnatural collocations"
-    items: 15
-  - type: writing
-    focus: "Use collocations in context"
-    items: 10
-prerequisites:
-  - b1-69 (Synonymy Speaking Verbs)
-connects_to:
-  - b1-71 (Emotional Intelligence)
+id: b1-70
 naturalness:
   score: 9
   status: PASS
-  justification: "Essential for natural language production"
+  justification: Essential for natural language production
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-26'

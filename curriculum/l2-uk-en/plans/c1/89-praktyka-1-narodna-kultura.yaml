@@ -1,22 +1,37 @@
-module: 89-praktyka-1-narodna-kultura
-level: c1
-sequence: 89
+module: c1-89
+level: C1
+slug: 89-praktyka-1-narodna-kultura
 version: '2.0'
 title: C1.5 Практика I — Народна культура
 subtitle: Practice I — Folk Culture Review
+content_outline:
+- section: Вступ — Народна культура
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - Review of folk music traditions (M42-134)
+  - Review of folk dance (M45-136)
+  - Review of folk crafts (M47-139)
+  - Review of folk beliefs and tales (M50-143)
+  - Review of calendar and life rituals (M54-147)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: fine-arts
 pedagogy: CBI
 objectives:
 - Learner reviews key concepts of Ukrainian folk culture (music, dance, crafts).
 - Learner practices describing regional traditions.
 - Learner consolidates vocabulary related to rituals and beliefs.
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Review of folk terminology
+- Describing rituals
+phase: C1.5 Folk Culture & Fine Arts

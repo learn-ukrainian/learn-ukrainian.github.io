@@ -1,104 +1,115 @@
-module: 03-eneida-feast
-level: lit
-sequence: 3
+module: eneida-feast
+level: LIT
+slug: eneida-feast
 version: '2.0'
 title: 'Енеїда: Філософія Бенкету (Частина II)'
 subtitle: 'Eneida Part II: The Feast'
-focus: literature
-pedagogy: seminar
-objectives:
-- Analyze the cultural significance of the feast
-- Categorize gastronomical vocabulary
-- Interpret the satire of hell
-sources:
-  primary:
-  - url: https://www.ukrlib.com.ua/books/printit.php?tid=51
-    title: Енеїда — повний текст
-    notes: Частини II-III для аналізу бенкету та пекла
-  secondary:
-  - url: https://www.ukrlib.com.ua/analiz/printit.php?tid=51
-    title: Аналіз "Енеїди"
-    notes: Тематичний аналіз
-  - url: https://uk.wikipedia.org/wiki/Українська_кухня
-    title: Народна кухня XVIII ст.
-    notes: Етнографічний контекст страв
 content_outline:
 - section: Вступ — "Енеїда" як енциклопедія тілесного
   words: 500
-  subsections:
+  points:
   - Тіло у бурлескній традиції
   - Їжа, напої, секс, смерть
   - Карнавальна культура (за Бахтіним)
 - section: Словник Шлунку — гастрономічна лексика
   words: 800
-  subsections:
+  points:
   - Назви страв (борщ, галушки, ковбаса)
   - Синоніми на позначення їжі та напоїв
   - Дієслова споживання (їсти, пити, жерти)
 - section: Бенкет у Дідони — аналіз сцени
   words: 700
-  subsections:
+  points:
   - Опис банкету в Карфагені
   - Гіперболізація та деталізація
   - Їжа як показник достатку і культури
 - section: Пекло і Поминки
   words: 700
-  subsections:
+  points:
   - Спуск до пекла (частина III)
   - Поминальний обряд і сміх
   - Грішники та їхні покарання
 - section: Словник Гріха та Покарання
   words: 500
-  subsections:
+  points:
   - Категорії грішників у "Енеїді"
   - Лексика пекла та страждання
   - Сатира на соціальні вади
 - section: Підсумок — Смак життя у прямому сенсі
   words: 400
-  subsections:
+  points:
   - Тілесний низ як філософія
   - Зв'язок їжі та ідентичності
   - Перехід до військової тематики
 word_target: 4500
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - бенкет
-  - поминки
-  - гіперболізація
-  - тілесний низ
-  - карнавал
-  - деталізація
-  - гастрономія
-  - грішник
-  - покарання
-  - пекло
+  - бенкет (feast/banquet)
+  - поминки (funeral feast)
+  - гіперболізація (hyperbolization)
+  - тілесний низ (bodily lower stratum)
+  - карнавал (carnival)
+  - деталізація (detailing)
+  - гастрономія (gastronomy)
+  - грішник (sinner)
+  - покарання (punishment)
+  - пекло (hell)
   recommended:
-  - насолода
-  - достаток
-  - обжерливість
-  - пияцтво
-  - ненаситність
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - group-sort
-  - match-up
-  - quiz
-  - essay-response
-  - cloze
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - насолода (pleasure)
+  - достаток (abundance)
+  - обжерливість (gluttony)
+  - пияцтво (drunkenness)
+  - ненаситність (insatiability)
+activity_hints:
+- type: reading
+  focus: Сцени бенкету та пекла з "Енеїди"
+  source: UkrLib tid=51
+  items: 4+
+- type: group-sort
+  focus: Категоризація лексики (їжа / напої / дієслова)
+  items: 25+
+- type: match-up
+  focus: Гріх → покарання у пеклі
+  items: 12+
+- type: quiz
+  focus: Гастрономічна лексика XVIII ст.
+  items: 15+
+- type: essay-response
+  focus: Роль тілесного низу в бурлеску
+  word_target: 300
+  output: Філософське есе
+- type: cloze
+  focus: Цитати про їжу та напої
+  items: 12+
+focus: literature
+pedagogy: literature
+prerequisites:
+- lit-02 (Eneida Part I)
+- Understanding of burlesque carnivalesque culture
 connects_to:
-  previous: lit-02 (Eneida Part I)
-  related:
-  - lit-04 (Eneida War — військова лексика)
-  - lit-09 (Ethnography — обрядова культура)
-constraints:
-  min_engagement_boxes: 3
-  min_examples: 15
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- lit-04 (Eneida War — військова лексика)
+- lit-09 (Ethnography — обрядова культура)
+objectives:
+- Analyze the cultural significance of the feast
+- Categorize gastronomical vocabulary
+- Interpret the satire of hell
+grammar:
+- Culinary vocabulary
+- Hyperbole usage
+- Synonymic series
+module_type: literature
+sources:
+- name: Енеїда — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=51
+  type: primary
+  notes: Частини II-III для аналізу бенкету та пекла
+- name: Аналіз "Енеїди"
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=51
+  type: secondary
+  notes: Тематичний аналіз
+- name: Народна кухня XVIII ст.
+  url: https://uk.wikipedia.org/wiki/Українська_кухня
+  type: reference
+  notes: Етнографічний контекст страв
+immersion: 100% Ukrainian
+phase: LIT.1 Burlesque & Folk Origins

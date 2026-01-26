@@ -1,21 +1,8 @@
 module: 22-job-interview
-level: c1
-sequence: 22
+level: C1
+slug: 22-job-interview
 version: '2.0'
 title: 'Співбесіда: стратегії успіху'
-focus: communication
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Ukrainian HR Standards
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Professional interview practices in Ukraine
-- name: STAR Method Guidelines
-  url: https://careers.gov.ua/
-  type: secondary
-  notes: Behavioral interview techniques
 content_outline:
 - section: Вступ — Підготовка до співбесіди
   words: 400
@@ -62,7 +49,7 @@ content_outline:
   - Відповіді методом STAR
   - Аналіз помилок
 word_target: 4000
-vocabulary:
+vocabulary_hints:
   required:
   - співбесіда (job interview)
   - роботодавець (employer)
@@ -80,19 +67,42 @@ vocabulary:
   - лідерські якості (leadership qualities)
   - стресостійкість (stress resistance)
   - самовдосконалення (self-improvement)
-  forbidden: []
-activities:
-  types_required:
-  - quiz
-  - essay-response
-  - cloze
-  - fill-in
-  - error-correction
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: Interview questions and appropriate answers
+  items: 15+
+- type: match-up
+  focus: Question → appropriate response strategy
+  items: 12+
+- type: fill-in
+  focus: STAR method responses
+  items: 12+
+- type: cloze
+  focus: Interview dialogue completion
+  items: 10+
+- type: error-correction
+  focus: Fix inappropriate interview responses
+  items: 10+
+- type: essay-response
+  focus: Self-presentation paragraph
+  word_target: 150
+focus: communication
+prerequisites:
+- c1-21 (CV & Resume Writing)
+- Formal dialogue skills
 connects_to:
 - c1-23 (Business Etiquette)
 - c1-24 (Digital Communication)
 - c1-32 (Professional Scenarios)
+module_type: skills
+sources:
+- name: Ukrainian HR Standards
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Professional interview practices in Ukraine
+- name: STAR Method Guidelines
+  url: https://careers.gov.ua/
+  type: secondary
+  notes: Behavioral interview techniques
+immersion: 100% Ukrainian
+phase: C1.2 Professional Communication

@@ -1,21 +1,8 @@
 module: 17-irregular-verbs-complete
-level: c1
-sequence: 17
+level: C1
+slug: 17-irregular-verbs-complete
 version: '2.0'
 title: Неправильні дієслова — повний огляд
-focus: grammar
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Морфологія української мови
-  url: https://r2u.org.ua/
-  type: reference
-  notes: Complete verb morphology reference
-- name: Ukrainian Verb Conjugation Patterns
-  url: https://mova.info/
-  type: secondary
-  notes: Irregular verb patterns and alternations
 content_outline:
 - section: Вступ — Чому дієслова «неправильні»?
   words: 400
@@ -60,7 +47,7 @@ content_outline:
   - Контекстне використання
   - Типові помилки
 word_target: 4000
-vocabulary:
+vocabulary_hints:
   required:
   - чергування (alternation)
   - приголосний (consonant)
@@ -78,19 +65,42 @@ vocabulary:
   - аналогія (analogy)
   - продуктивний (productive)
   - непродуктивний (unproductive)
-  forbidden: []
-activities:
-  types_required:
-  - group-sort
-  - quiz
-  - cloze
-  - fill-in
-  - error-correction
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: Conjugate irregular verbs
+  items: 20+
+- type: match-up
+  focus: Infinitive to conjugated form
+  items: 15+
+- type: quiz
+  focus: Identify correct form in context
+  items: 15+
+- type: group-sort
+  focus: Classify verbs by alternation type
+  items: 15+
+- type: cloze
+  focus: Complete text with verb forms
+  items: 12+
+- type: error-correction
+  focus: Fix incorrect verb forms
+  items: 10+
+focus: grammar
+prerequisites:
+- B2 verb conjugation basics
+- Aspect pairs understanding
 connects_to:
 - c1-18 (Essay Writing Practice)
 - c1-47 (Archaic Verb Forms)
 - c1-20 (C1.1 Checkpoint)
+module_type: grammar
+sources:
+- name: Морфологія української мови
+  url: https://r2u.org.ua/
+  type: reference
+  notes: Complete verb morphology reference
+- name: Ukrainian Verb Conjugation Patterns
+  url: https://mova.info/
+  type: secondary
+  notes: Irregular verb patterns and alternations
+immersion: 100% Ukrainian
+phase: C1.1 Academic Ukrainian

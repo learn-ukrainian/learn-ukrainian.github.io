@@ -1,0 +1,122 @@
+module: digital-literature
+level: C2
+slug: digital-literature
+version: '2.0'
+title: Цифрова література
+content_outline:
+- section: Вступ — Література в цифрову епоху
+  words: 500
+  points:
+  - Що таке цифрова література
+  - Гіпертекст і нелінійна нарація
+  - Література народжена цифровою vs. дигіталізована
+- section: Форми цифрової літератури
+  words: 700
+  points:
+  - Гіпертекстова проза
+  - Інтерактивна фікшн
+  - Візуальна поезія онлайн
+  - Твіттер-література і мікроформи
+- section: Онлайн-платформи і публікація
+  words: 600
+  points:
+  - Літературні портали (ЛітАкцент, Україна молода)
+  - Самвидав онлайн
+  - Електронні книги
+  - Аудіокниги і подкасти
+- section: Соціальні мережі і література
+  words: 700
+  points:
+  - Інстаграм-поезія
+  - Літературний TikTok (BookTok)
+  - Фейсбук-проза
+  - Авторський брендинг
+- section: Критика і рецепція онлайн
+  words: 600
+  points:
+  - Блоги і влоги про книги
+  - Goodreads і подібні платформи
+  - Онлайн-рецензії
+  - Краудсорсингова критика
+- section: Виклики і можливості
+  words: 500
+  points:
+  - Авторське право в цифрову епоху
+  - Демократизація публікації
+  - Увага і конкуренція
+  - Майбутнє цифрової літератури
+- section: Підсумок
+  words: 400
+  points:
+  - Інтеграція цифрового і традиційного
+  - Практичні кроки для автора
+  - Критичне ставлення до платформ
+word_target: 4000
+vocabulary_hints:
+  required:
+  - цифровий (digital)
+  - гіпертекст (hypertext)
+  - інтерактивний (interactive)
+  - платформа (platform)
+  - самвидав (self-publishing)
+  - аудіокнига (audiobook)
+  - подкаст (podcast)
+  - блог (blog)
+  - мікроформа (microform)
+  - брендинг (branding)
+  recommended:
+  - влог (vlog)
+  - краудсорсинг (crowdsourcing)
+  - дигіталізація (digitization)
+  - інтерфейс (interface)
+  - мультимедіа (multimedia)
+activity_hints:
+- type: critical-analysis
+  focus: Analyze Ukrainian hypertext or interactive fiction work
+  output: Review addressing digital-specific features
+- type: essay-response
+  focus: Create Twitter/micro-fiction story (280 characters)
+  word_target: 50
+  output: Series of connected micro-texts
+- type: comparative-study
+  focus: Compare same author's print vs. online presence
+  output: Analysis of platform adaptation
+- type: quiz
+  focus: Match digital literature forms to characteristics
+  items: 15+
+- type: essay-response
+  focus: Write critical review for literary blog
+  word_target: 500
+  output: Web-appropriate review format
+- type: critical-analysis
+  focus: Evaluate Ukrainian literary platform/portal
+  output: Assessment of content, community, discoverability
+- type: essay-response
+  focus: Plan digital literary project proposal
+  word_target: 400
+  output: Concept for original digital literary work
+focus: literature
+prerequisites:
+- c2-38 (Contemporary Literature)
+- c2-05 (Публіцистичний стиль)
+- Digital literacy skills
+connects_to:
+- c2-40 (Literary Prizes & Canon)
+- c2-41 (Literary Community)
+- c2-45 (C2.2 Checkpoint)
+module_type: literature
+sources:
+- name: Електронна література — Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Електронна_література
+  type: reference
+  notes: Digital/electronic literature concepts
+- name: Українські літературні платформи
+  url: https://litcentr.in.ua/
+  type: primary
+  notes: Online literary communities and publications
+- name: Медіалітература
+  url: https://uk.wikipedia.org/wiki/Медіалітература
+  type: reference
+  notes: Media and literature intersection
+immersion: 100% Ukrainian
+phase: C2.2 Literary Analysis

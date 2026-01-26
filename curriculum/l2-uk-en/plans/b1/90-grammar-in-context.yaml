@@ -1,16 +1,9 @@
-module: grammar-in-context
-level: b1
-sequence: 90
+module: b1-90
+level: B1
+slug: grammar-in-context
 version: '2.0'
 title: Граматика в контексті
 subtitle: Applying Grammar to Practical Communication
-focus: communication
-pedagogy: TBL
-objectives:
-- Learner applies grammar knowledge in practical communication scenarios
-- Learner produces extended written discourse with appropriate grammar
-- Learner self-corrects grammar in authentic contexts
-- Learner integrates multiple grammar structures naturally
 content_outline:
 - section: 'Introduction: Grammar for Communication'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Apply grammar
   - Produce texts
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - граматика (grammar)
   - контекст (context)
@@ -63,15 +56,34 @@ vocabulary:
   - плавність (fluency)
   - зв'язність (coherence)
   - редагування (editing)
-  forbidden: []
-activities:
-  types_required:
-  - writing
-  - task
-  - error-correction
-  - speaking
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: writing
+  focus: Extended narratives
+  items: 10
+- type: task
+  focus: Communication tasks
+  items: 15
+- type: error-correction
+  focus: Self-editing practice
+  items: 20
+- type: speaking
+  focus: Oral presentations
+  items: 10
+focus: communication
+pedagogy: TBL
+prerequisites:
+- b1-89 (Checkpoint Grammar Synthesis)
 connects_to:
 - b1-91 (Vocabulary in Context)
+objectives:
+- Learner applies grammar knowledge in practical communication scenarios
+- Learner produces extended written discourse with appropriate grammar
+- Learner self-corrects grammar in authentic contexts
+- Learner integrates multiple grammar structures naturally
+grammar:
+- Applied aspect in narratives
+- Motion verbs in real contexts
+- Complex sentences in communication
+- Participles in authentic texts
+register: розмовний
+phase: B1.9 [Communication Skills]

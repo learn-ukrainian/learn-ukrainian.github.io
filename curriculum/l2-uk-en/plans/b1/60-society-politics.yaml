@@ -1,16 +1,9 @@
-module: society-politics
-level: b1
-sequence: 60
+module: b1-60
+level: B1
+slug: society-politics
 version: '2.0'
 title: Суспільство та політика
 subtitle: Society & Politics
-focus: vocabulary
-pedagogy: PPP
-objectives:
-- Learner can use 30 civic and political vocabulary words in context
-- Learner can discuss democratic processes and institutions
-- Learner can form natural collocations with political vocabulary
-- Learner can understand Ukrainian political discourse
 content_outline:
 - section: 'Introduction: Civic Vocabulary'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Discuss civic topics
   - Use formal vocabulary
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - уряд (government)
   - держава (state)
@@ -63,15 +56,33 @@ vocabulary:
   - конституція (constitution)
   - демократія (democracy)
   - свобода (freedom)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - discussion
-  - collocation
-  - matching
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: collocation
+  focus: Political noun phrases
+  items: 25
+- type: fill-in
+  focus: Complete civic sentences
+  items: 20
+- type: matching
+  focus: Match institutions and functions
+  items: 15
+- type: discussion
+  focus: Discuss civic topics
+  items: 10
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-59 (Media News)
 connects_to:
 - b1-61 (Professional Communication)
+objectives:
+- Learner can use 30 civic and political vocabulary words in context
+- Learner can discuss democratic processes and institutions
+- Learner can form natural collocations with political vocabulary
+- Learner can understand Ukrainian political discourse
+grammar:
+- Noun collocations with civic vocabulary
+- Political discourse patterns
+- Formal register expressions
+register: розмовний
+phase: B1.5 [Vocabulary Expansion I]

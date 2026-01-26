@@ -1,43 +1,19 @@
-title: 'Берестейська унія: Церковний розкол'
-slug: beresteyska-uniia
+module: beresteyska-uniia
 level: B2
-track: history
-phase: B2.3a [Українська історія]
+slug: beresteyska-uniia
+version: '2.0'
+naturalness:
+  score: 9
+  status: PASS
 status: content-ready
-focus: history
-pedagogy: CBI
-word_target: 4000
+track: history
 duration: 120
-register: публіцистичний
 transliteration: none
 tags:
 - history
 - religion
 - brest-union
 - early-modern
-grammar:
-- Історичний наратив
-- Складні синтаксичні конструкції
-objectives:
-- Учень може пояснити причини та передумови Берестейської унії 1596 року
-- Учень аналізує наслідки створення греко-католицької церкви для українського суспільства
-- Учень володіє термінологією релігійної полеміки та церковного устрою
 vocabulary_count: 30
-content_outline:
-- section: Вступ
-  words: 300
-- section: Передумови унії та криза православ’я
-  words: 700
-- section: Берестейський собор 1596 року та створення УГКЦ
-  words: 700
-- section: Соціально-політичні наслідки та релігійна боротьба
-  words: 600
-- section: Читання
-  words: 400
-- section: Первинні джерела
-  words: 400
-- section: Деколонізаційний погляд
-  words: 500
-naturalness:
-  score: 9
-  status: PASS
+build:
+  last_modified: '2026-01-26'

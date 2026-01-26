@@ -1,21 +1,8 @@
 module: 05-logical-connectors
-level: c1
-sequence: 5
+level: C1
+slug: 05-logical-connectors
 version: '2.0'
 title: Логічні сполучники та зв'язки
-focus: grammar
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Граматика сучасної української мови
-  url: https://r2u.org.ua/
-  type: reference
-  notes: Comprehensive grammar of connectors
-- name: Ukrainian Academic Discourse Analysis
-  url: https://mova.info/
-  type: secondary
-  notes: Connector usage in academic texts
 content_outline:
 - section: Вступ — Роль сполучників у тексті
   words: 400
@@ -60,7 +47,7 @@ content_outline:
   - Вибір сполучника за контекстом
   - Уникнення надмірного використання
 word_target: 4000
-vocabulary:
+vocabulary_hints:
   required:
   - оскільки (since, because)
   - позаяк (since, as)
@@ -78,19 +65,42 @@ vocabulary:
   - дарма що (even though)
   - передусім (first of all)
   - власне (actually)
-  forbidden: []
-activities:
-  types_required:
-  - group-sort
-  - quiz
-  - essay-response
-  - cloze
-  - fill-in
-  - error-correction
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: group-sort
+  focus: Connectors by function (causal/consequential/concessive/contrastive)
+  items: 20+
+- type: fill-in
+  focus: Choose appropriate connector for context
+  items: 15+
+- type: cloze
+  focus: Academic argument passage with connectors
+  items: 12+
+- type: quiz
+  focus: Identify connector function in sentences
+  items: 12+
+- type: essay-response
+  focus: Rewrite text using different connectors
+  word_target: 200
+- type: error-correction
+  focus: Fix inappropriate connector usage
+  items: 10+
+focus: grammar
+prerequisites:
+- c1-04 (Analysis Vocabulary)
+- Complex sentence structures
 connects_to:
 - c1-06 (Hedging & Modality)
 - c1-08 (Essay Structure)
 - c1-10 (Counterarguments)
+module_type: grammar
+sources:
+- name: Граматика сучасної української мови
+  url: https://r2u.org.ua/
+  type: reference
+  notes: Comprehensive grammar of connectors
+- name: Ukrainian Academic Discourse Analysis
+  url: https://mova.info/
+  type: secondary
+  notes: Connector usage in academic texts
+immersion: 100% Ukrainian
+phase: C1.1 Academic Ukrainian

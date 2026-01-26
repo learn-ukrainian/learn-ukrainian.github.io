@@ -1,97 +1,13 @@
 module: a2-51
-id: a2-51
+level: A2
 slug: hobbies-leisure
-title: "Hobbies and Leisure"
-subtitle: "What We Do for Fun"
 version: '2.0'
-phase: "A2.5 [Vocabulary Expansion]"
-focus: vocabulary
-pedagogy: PPP
-register: розмовний
-duration: 60
-transliteration: none
-objectives:
-  - "Learner can talk about hobbies and interests"
-  - "Learner can use 'грати' and 'займатися' correctly"
-  - "Learner can describe weekend plans"
-  - "Learner can ask others about their free time"
-grammar:
-  - "Verbs for hobbies (грати на, займатися)"
-  - "Accusative vs instrumental (футбол vs тенісом)"
-  - "Expressing frequency and interests"
-word_target: 1000
-content_outline:
-  - section: "Introduction: Free Time in Ukraine"
-    words: 100
-    points:
-      - "How Ukrainians spend free time"
-      - "Hobbies vocabulary overview"
-      - "Cultural aspects of leisure"
-  - section: "Indoor Hobbies"
-    words: 200
-    points:
-      - "читати, малювати, грати на гітарі"
-      - "дивитися фільми, слухати музику"
-      - "Creative hobbies"
-  - section: "Outdoor Activities"
-    words: 200
-    points:
-      - "грати у футбол, теніс"
-      - "займатися спортом, бігати"
-      - "Accusative vs instrumental cases"
-  - section: "Social Activities"
-    words: 200
-    points:
-      - "зустрічатися з друзями"
-      - "ходити в кіно, на концерт"
-      - "Weekend plans"
-  - section: "Frequency and Preferences"
-    words: 150
-    points:
-      - "часто, рідко, іноді"
-      - "Я люблю / мені подобається"
-      - "Expressing preferences"
-  - section: "Practice: Weekend Plans"
-    words: 150
-    points:
-      - "Describe your hobbies"
-      - "Ask about others' interests"
-vocabulary_hints:
-  required:
-    - хобі (hobby)
-    - вільний час (free time)
-    - грати (to play)
-    - займатися (to do/practice)
-    - музика (music)
-    - спорт (sport)
-    - читати (to read)
-    - малювати (to draw)
-  recommended:
-    - гітара (guitar)
-    - шахи (chess)
-    - фотографія (photography)
-    - подорож (travel)
-    - концерт (concert)
-    - виставка (exhibition)
-activity_hints:
-  - type: vocabulary-drill
-    focus: "Hobbies and activities"
-    items: 30
-  - type: matching
-    focus: "Match verbs to activities"
-    items: 20
-  - type: dialogue
-    focus: "Weekend plans conversation"
-    items: 10
-  - type: speaking
-    focus: "Describe your hobbies"
-    items: 8
-prerequisites:
-  - a2-50 (Technology and Media)
-connects_to:
-  - a2-52 (Education and Learning)
-  - a2-54 (Sports and Fitness)
+id: a2-51
 naturalness:
   score: 10
   status: PASS
-  justification: "Essential leisure vocabulary"
+  justification: Essential leisure vocabulary
+duration: 60
+transliteration: none
+build:
+  last_modified: '2026-01-26'

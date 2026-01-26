@@ -1,16 +1,9 @@
-module: abstract-concepts-processes
-level: b1
-sequence: 53
+module: b1-53
+level: B1
+slug: abstract-concepts-processes
 version: '2.0'
 title: 'Абстрактні концепції: процеси та зміни'
 subtitle: 'Abstract Concepts: Processes and Changes'
-focus: vocabulary
-pedagogy: PPP
-objectives:
-- Learner can use 35 process and change vocabulary words in context
-- Learner can distinguish between similar process words
-- Learner can describe trends and changes using appropriate collocations
-- Learner can narrate developments over time
 content_outline:
 - section: 'Introduction: Process Vocabulary'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Narrate developments
   - Use process vocabulary
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - розвиток (development)
   - прогрес (progress)
@@ -63,15 +56,33 @@ vocabulary:
   - спад (decline/recession)
   - закономірність (pattern/regularity)
   - темп (rate/pace)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - writing
-  - collocation
-  - matching
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: collocation
+  focus: Process noun phrases
+  items: 25
+- type: fill-in
+  focus: Describe trends and changes
+  items: 20
+- type: matching
+  focus: Match process word to context
+  items: 15
+- type: writing
+  focus: Write about changes
+  items: 10
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-52 (Abstract Concepts Ideas)
 connects_to:
 - b1-54 (Expressing Opinions)
+objectives:
+- Learner can use 35 process and change vocabulary words in context
+- Learner can distinguish between similar process words
+- Learner can describe trends and changes using appropriate collocations
+- Learner can narrate developments over time
+grammar:
+- Noun collocations with process vocabulary
+- Verb-noun pairs for change descriptions
+- Temporal markers with process words
+register: розмовний
+phase: B1.5 [Vocabulary Expansion I]

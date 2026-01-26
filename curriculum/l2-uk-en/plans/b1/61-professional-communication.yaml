@@ -1,16 +1,9 @@
-module: professional-communication
-level: b1
-sequence: 61
+module: b1-61
+level: B1
+slug: professional-communication
 version: '2.0'
 title: Професійна комунікація
 subtitle: Professional Communication
-focus: vocabulary
-pedagogy: PPP
-objectives:
-- Learner can use 30 professional communication words in context
-- Learner can distinguish between formal and informal workplace vocabulary
-- Learner can form natural collocations with professional nouns and verbs
-- Learner can communicate effectively in workplace settings
 content_outline:
 - section: 'Introduction: Professional Language'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Professional dialogues
   - Formal correspondence
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - колега (colleague)
   - керівник (manager/supervisor)
@@ -63,15 +56,33 @@ vocabulary:
   - протокол (minutes/protocol)
   - делегувати (to delegate)
   - координувати (to coordinate)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - writing
-  - collocation
-  - role-play
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: collocation
+  focus: Professional noun phrases
+  items: 25
+- type: role-play
+  focus: Workplace scenarios
+  items: 20
+- type: fill-in
+  focus: Complete professional texts
+  items: 15
+- type: writing
+  focus: Write professional messages
+  items: 10
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-60 (Society Politics)
 connects_to:
 - b1-62 (Environment Ecology)
+objectives:
+- Learner can use 30 professional communication words in context
+- Learner can distinguish between formal and informal workplace vocabulary
+- Learner can form natural collocations with professional nouns and verbs
+- Learner can communicate effectively in workplace settings
+grammar:
+- Professional vocabulary collocations
+- Formal register expressions
+- Business communication patterns
+register: розмовний
+phase: B1.5 [Vocabulary Expansion I]

@@ -1,0 +1,47 @@
+{
+  "module": "02-language-about-verbs",
+  "level": "B1",
+  "plan_version": "1.0",
+  "last_audit": "2026-01-26T17:33:45.234389Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-24T20:53:08.435008Z",
+    "meta": "2026-01-26T15:44:41.435032Z",
+    "activities": "2026-01-11T10:24:11.596551Z",
+    "vocabulary": "2026-01-25T18:00:39.954173Z",
+    "plan": "2026-01-26T15:44:41.434767Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "2074/1200 (raw: 2639)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "12/12"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "97/20"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

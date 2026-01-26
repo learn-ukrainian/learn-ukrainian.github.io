@@ -1,0 +1,115 @@
+module: lysty-stusa
+level: C1-HIST
+slug: lysty-stusa
+version: '2.0'
+title: Листи Василя Стуса з таборів
+content_outline:
+- section: Вступ — Голос із ГУЛАГу
+  words: 400
+  points:
+  - Стус — поет і дисидент
+  - Листи — унікальне джерело
+  - Умови написання
+  - Чому важливі
+- section: Біографічний контекст
+  words: 500
+  points:
+  - Життя до арешту
+  - Перший арешт — 1972
+  - Другий арешт — 1980
+  - Смерть у таборі — 1985
+- section: Табір як контекст
+  words: 600
+  points:
+  - Де утримувався — Мордовія, Пермь
+  - Умови — режим, праця, харчування
+  - Цензура листів
+  - Що можна було писати
+- section: Листи до родини
+  words: 700
+  points:
+  - Фрагменти (з глосами)
+  - До дружини
+  - До сина
+  - Особисте і політичне
+  - Як зберігав людяність
+- section: Філософські роздуми
+  words: 600
+  points:
+  - Стус як мислитель
+  - Українська ідентичність
+  - Сенс опору
+  - Готовність до смерті
+- section: Критика джерела
+  words: 400
+  points:
+  - Цензура — що вирізано
+  - Самоцензура — чого не писав
+  - Як читати між рядками
+  - Порівняння з поезією
+- section: Підсумок
+  words: 300
+  points:
+  - Листи як духовний заповіт
+  - Стус — символ опору
+  - Зв'язок із сьогоденням
+word_target: 3500
+vocabulary_hints:
+  required:
+  - табір (camp)
+  - ГУЛАГ (Gulag)
+  - політв'язень (political prisoner)
+  - дисидент (dissident)
+  - цензура (censorship)
+  - самоцензура (self-censorship)
+  - режим (regime)
+  - опір (resistance)
+  - заповіт (testament)
+  - мученик (martyr)
+  recommended:
+  - етап (stage/transport)
+  - побачення (visit)
+  - передача (package)
+  - карцер (solitary confinement)
+  - голодування (hunger strike)
+activity_hints:
+- type: reading
+  focus: Letter to son with glosses
+  source: wikisource
+- type: between-the-lines
+  focus: Read a censored letter — what might have been cut?
+  output: Reconstruction attempt
+- type: comparative-study
+  focus: Compare letter tone to poetry on same themes
+  output: Genre comparison
+- type: character-study
+  focus: What do letters reveal about Stus's worldview?
+  output: Character profile
+- type: essay-response
+  focus: Як Стус зберігав людяність у нелюдських умовах?
+  word_target: 400
+  model_answer: Required
+focus: history
+prerequisites:
+- c1-hist-39 (Samvydav)
+- c1-hist-09 (Source criticism)
+connects_to:
+- c1-hist-41 (Ukrainskyi visnyk)
+- c1-hist-126 (Cultural resistance)
+- c1-hist-124 (Shestydesiatnyky)
+module_type: primary-source
+sources:
+- name: Василь Стус (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Василь_Стус
+  type: reference
+  notes: Biography
+- name: Листи Стуса
+  url: https://uk.wikisource.org/wiki/Категорія:Листи_Василя_Стуса
+  type: primary
+  notes: Letters collection
+- name: Табори для політв'язнів
+  url: https://uk.wikipedia.org/wiki/Концентраційні_табори_СРСР
+  type: reference
+  notes: Gulag context
+immersion: 100% Ukrainian
+phase: C1-HIST.1 [Historiography]

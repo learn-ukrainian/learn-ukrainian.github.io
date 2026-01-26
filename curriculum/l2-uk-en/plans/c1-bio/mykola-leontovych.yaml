@@ -1,108 +1,109 @@
 module: mykola-leontovych
-level: c1-bio
-sequence: 43
+level: C1-BIO
+slug: mykola-leontovych
 version: '2.0'
 title: 'Микола Леонтович: Автор «Щедрика»'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Микола_Леонтович
-    title: Микола Леонтович (Wikipedia UA)
-    notes: Біографія, музична діяльність, загибель
-  secondary:
-  - url: https://uk.wikipedia.org/wiki/Щедрик_(пісня)
-    title: Щедрик
-    notes: Найвідоміший твір та його всесвітнє поширення
-  - url: https://uk.wikipedia.org/wiki/Українська_хорова_музика
-    title: Українська хорова музика
-    notes: Контекст розвитку хорового мистецтва
 content_outline:
 - section: Вступ — Пісня, що підкорила світ
   words: 400
-  subsections:
+  points:
   - Микола Леонтович — автор «Щедрика», відомого як Carol of the Bells
   - Від сільського вчителя до класика хорової музики
   - Трагічна загибель від рук більшовицького агента
 - section: Ранні роки та освіта (1877-1903)
   words: 600
-  subsections:
+  points:
   - Народження в селі Монастирок на Поділлі
   - Навчання в Київській консерваторії
   - Музична родина та раннє захоплення фольклором
   - Перші композиторські спроби
 - section: Педагогічна діяльність (1903-1917)
   words: 700
-  subsections:
+  points:
   - Робота вчителем співів у Вінниці та інших містах
   - Організація хорів та музичних гуртків
   - Збирання та обробка народних пісень
   - Створення «Щедрика» та інших хорових шедеврів
 - section: Революційні роки (1917-1921)
   words: 700
-  subsections:
+  points:
   - Активна культурна діяльність в добу УНР
   - Робота в Київській консерваторії
   - Співпраця з хором Кирила Стеценка
   - Турне «Щедрика» Європою з хором Олександра Кошиця
 - section: Загибель та пам'ять (1921)
   words: 800
-  subsections:
+  points:
   - Арешт та вбивство 23 січня 1921 року
   - Агент ЧК Грищенко як виконавець
   - Обставини трагедії та її приховування
   - Похорон у рідному селі
 - section: Світове визнання «Щедрика»
   words: 800
-  subsections:
+  points:
   - Адаптація Пітера Вільгоуського — Carol of the Bells
   - Поширення у США та Європі
   - «Щедрик» у сучасній культурі
   - Повернення української ідентичності пісні
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - композитор
-  - хор
-  - обробка
-  - фольклор
-  - консерваторія
-  - мелодія
-  - колядка
-  - диригент
-  - партитура
-  - спадщина
+  - композитор (composer)
+  - хор (choir)
+  - обробка (arrangement)
+  - фольклор (folklore)
+  - консерваторія (conservatory)
+  - мелодія (melody)
+  - колядка (Christmas carol)
+  - диригент (conductor)
+  - партитура (score)
+  - спадщина (legacy)
   recommended:
-  - поліфонія
-  - акапела
-  - гармонія
-  - етнографія
-  - репертуар
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - поліфонія (polyphony)
+  - акапела (a cappella)
+  - гармонія (harmony)
+  - етнографія (ethnography)
+  - репертуар (repertoire)
+activity_hints:
+- type: reading
+  focus: Біографічні нариси та аналіз «Щедрика»
+  source: Музикознавчі статті
+  items: 3 passages
+- type: quiz
+  focus: Біографія та музична спадщина
+  items: 12+
+- type: match-up
+  focus: Твори та їхні характеристики
+  items: 10+
+- type: essay-response
+  focus: Чому «Щедрик» став світовим хітом?
+  word_target: 300
+  output: Cultural analysis
+- type: group-sort
+  focus: Етапи творчості та досягнення
+  items: 12+
+- type: fill-in
+  focus: Музична термінологія
+  items: 10+
+focus: biography
+prerequisites:
+- c1-bio-23-mykola-lysenko
 connects_to:
-  previous: c1-bio-23-mykola-lysenko
-  related:
-  - c1-bio-64-borys-liatoshynskyi
-  - c1-bio-79-volodymyr-ivasyuk
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-64-borys-liatoshynskyi
+- c1-bio-79-volodymyr-ivasyuk
+module_type: biography
+sources:
+- name: Микола Леонтович (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Микола_Леонтович
+  type: primary
+  notes: Біографія, музична діяльність, загибель
+- name: Щедрик
+  url: https://uk.wikipedia.org/wiki/Щедрик_(пісня)
+  type: reference
+  notes: Найвідоміший твір та його всесвітнє поширення
+- name: Українська хорова музика
+  url: https://uk.wikipedia.org/wiki/Українська_хорова_музика
+  type: reference
+  notes: Контекст розвитку хорового мистецтва
+immersion: 100% Ukrainian
+phase: C1-BIO

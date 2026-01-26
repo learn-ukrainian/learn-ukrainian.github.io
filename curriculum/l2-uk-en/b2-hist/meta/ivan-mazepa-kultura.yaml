@@ -1,9 +1,10 @@
-title: 'Іван Мазепа II: освіта і культура'
-phase: B2.3b [Українська історія]
-focus: history
-word_target: 4000
-pedagogy: CBI
-register: публіцистичний
+module: ivan-mazepa-kultura
+level: B2-HIST
+slug: ivan-mazepa-kultura
+version: '2.0'
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
 tags:
@@ -13,40 +14,7 @@ tags:
 - baroque
 - culture
 - education
-grammar:
-- Історичний наратив
-- Культурна термінологія
 vocabulary_focus: null
-objectives:
-- Учень може описати культурну спадщину Івана Мазепи
-- Учень може пояснити особливості мазепинського бароко
-- Учень може охарактеризувати роль Києво-Могилянської академії в культурному відродженні
-- Учень може аналізувати Мазепу як мецената та покровителя мистецтв
 vocabulary_count: 35
-slug: ivan-mazepa-kultura
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-  - section: "Вступ: Золота доба українського духу"
-    words: 300
-  - section: "Києво-Могилянська академія: Афіни на Дніпрі"
-    words: 600
-  - section: "Мазепинське бароко: Архітектура національної величі"
-    words: 600
-  - section: "Література і друк: Мазепинське слово як національна зброя"
-    words: 500
-  - section: "Мистецтво гравюри та символіка влади"
-    words: 400
-  - section: "Українська барокова музика та хоровий спів"
-    words: 300
-  - section: "Театральне мистецтво та шкільна драма"
-    words: 300
-  - section: "Первинні джерела: Свідчення величі та щедрості"
-    words: 400
-  - section: "Деколонізаційний погляд: Відновлення правди про мецената"
-    words: 400
-  - section: "Підсумок"
-    words: 200
-  - section: "Читання"
-    words: 100
+build:
+  last_modified: '2026-01-26'

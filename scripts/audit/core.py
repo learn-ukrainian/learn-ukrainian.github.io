@@ -122,6 +122,7 @@ from calculate_richness import calculate_richness_score, detect_dryness_flags
 from .report import (
     generate_report,
     save_report,
+    save_status_cache,
     print_gates,
     print_lint_errors,
     print_pedagogical_violations,
@@ -561,6 +562,48 @@ def load_yaml_meta(md_file_path: str) -> dict | None:
     except Exception:
         return None
 
+def load_yaml_plan(md_file_path: str) -> dict | None:
+    """Load plan data from plans directory if exists (Split Architecture)."""
+    from pathlib import Path
+    md_path = Path(md_file_path)
+    
+    # Determine level from path
+    # e.g. curriculum/l2-uk-en/b1/01.md -> level=b1
+    try:
+        level_part = md_path.parent.name # e.g. 'b1' or 'c1' or 'lit'
+        if level_part in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit', 'b2-hist', 'c1-bio', 'c1-hist']:
+             level = level_part
+        else:
+             # Fallback: try to find level in path
+             parts = md_path.parts
+             if 'l2-uk-en' in parts:
+                 idx = parts.index('l2-uk-en')
+                 if idx + 1 < len(parts):
+                     level = parts[idx+1]
+                 else:
+                     return None
+             else:
+                 return None
+    except:
+        return None
+
+    # Construct plan path: curriculum/l2-uk-en/plans/{level}/{slug}.yaml
+    # We assume 'plans' is a sibling of 'a1', 'b1', etc. if structure is standard
+    # OR 'plans' is at curriculum/l2-uk-en/plans
+    
+    # Base is curriculum/l2-uk-en
+    base_dir = md_path.parent.parent 
+    plan_path = base_dir / 'plans' / level / (md_path.stem + '.yaml')
+    
+    if not plan_path.exists():
+        return None
+        
+    try:
+        with open(plan_path, 'r', encoding='utf-8') as f:
+            return yaml.safe_load(f)
+    except Exception:
+        return None
+
 def load_yaml_vocab(md_file_path: str) -> list[dict] | None:
     """Load vocabulary from YAML sidecar if exists."""
     from pathlib import Path
@@ -662,6 +705,24 @@ def audit_module(file_path: str) -> bool:
 
     # Try loading YAML sidecars
     meta_data = load_yaml_meta(file_path)
+    plan_data = load_yaml_plan(file_path)
+    
+    # Merge Plan data into Meta data (Split Architecture Support)
+    # This allows existing checks to work seamlessly whether data is in meta.yaml or plans/*.yaml
+    if meta_data and plan_data:
+        print(f"  📋 Loaded Plan from: plans/{plan_data.get('level', '').lower()}/{os.path.basename(file_path).replace('.md', '.yaml')}")
+        # Copy plan fields to meta_data if not present (or overwrite if plan is authority)
+        # Plan is AUTHORITY for these fields
+        PLAN_FIELDS_TO_MERGE = [
+            'title', 'subtitle', 'content_outline', 'word_target', 
+            'vocabulary_hints', 'activity_hints', 'focus', 'pedagogy', 
+            'prerequisites', 'connects_to', 'objectives', 'learning_outcomes',
+            'grammar', 'module_type', 'sources', 'immersion', 'register'
+        ]
+        for field in PLAN_FIELDS_TO_MERGE:
+            if field in plan_data:
+                meta_data[field] = plan_data[field]
+
     vocab_data = load_yaml_vocab(file_path)
     
     # Parse frontmatter
@@ -1910,6 +1971,23 @@ def audit_module(file_path: str) -> bool:
     )
     report_path = save_report(file_path, report_content)
     print(f"\nReport: {report_path}")
+
+    # Save Status Cache (V2 Architecture)
+    try:
+        module_slug = Path(file_path).stem
+        plan_ver = meta_data.get('version', '2.0') if meta_data else '2.0'
+        cache_path = save_status_cache(
+            file_path, 
+            level_code, 
+            module_slug, 
+            results, 
+            has_critical_failure, 
+            critical_failure_reasons,
+            plan_version=plan_ver
+        )
+        print(f"Status: {cache_path}")
+    except Exception as e:
+        print(f"⚠️ Failed to save status cache: {e}")
 
     if has_critical_failure:
         print("\n❌ AUDIT FAILED. Correct errors before proceeding.")

@@ -1,16 +1,9 @@
-module: passive-constructions
-level: b1
-sequence: 47
+module: b1-47
+level: B1
+slug: passive-constructions
 version: '2.0'
 title: 'Пасивні конструкції: повна система'
 subtitle: Passive Constructions - Complete System
-focus: grammar
-pedagogy: TTT
-objectives:
-- Learner can distinguish three types of passive constructions
-- Learner can transform active sentences to passive
-- Learner understands stylistic nuances of each passive type
-- Learner can choose appropriate passive for context
 content_outline:
 - section: 'Introduction: Ukrainian Passive System'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Transform with all three types
   - Compare meanings
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - пасивний стан (passive voice)
   - активний стан (active voice)
@@ -63,15 +56,34 @@ vocabulary:
   - агент дії (agent of action)
   - регістр (register)
   - уникати (to avoid)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - writing
-  - transformation
-  - multiple-choice
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: transformation
+  focus: Active to three passive types
+  items: 25
+- type: multiple-choice
+  focus: Choose best passive type
+  items: 20
+- type: fill-in
+  focus: Complete passive sentences
+  items: 15
+- type: writing
+  focus: Write using varied passives
+  items: 10
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-46 (Past Passive Participles 2)
 connects_to:
 - b1-48 (Diminutives Master Class)
+objectives:
+- Learner can distinguish three types of passive constructions
+- Learner can transform active sentences to passive
+- Learner understands stylistic nuances of each passive type
+- Learner can choose appropriate passive for context
+grammar:
+- Три типи пасивних конструкцій
+- Пасив з дієприкметником (participle passive)
+- Пасив з короткою формою (short form passive)
+- Зворотний пасив (-ся reflexive passive)
+register: розмовний
+phase: B1.4a [Participles]

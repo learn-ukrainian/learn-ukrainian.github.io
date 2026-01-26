@@ -1,16 +1,9 @@
-module: 55-health-body
-level: a2
-sequence: 55
-version: '1.0'
+module: a2-55
+level: A2
+slug: 55-health-body
+version: '2.0'
 title: Health and Body
 subtitle: Feeling Good
-focus: vocabulary
-pedagogy: PPP
-objectives:
-- Learner can name body parts
-- Learner can describe symptoms and illness
-- Learner can understand medical instructions
-- Learner can give simple health advice
 content_outline:
 - section: Introduction / Вступ
   words: 150
@@ -35,8 +28,16 @@ content_outline:
   words: 100
   points:
   - Recap of body parts and symptoms
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can name body parts
+- Learner can describe symptoms and illness
+- Learner can understand medical instructions
+- Learner can give simple health advice
+grammar:
+- describing symptoms (болить, температура)
+- medical advice (треба, можна)
+- body parts vocabulary
+- doctor's appointment
+phase: A2.3

@@ -1,9 +1,10 @@
 module: b2-55
-title: 'Синоніми: Емоції та почуття'
-phase: B2.2 [Phraseology & Synonymy]
-pedagogy: CBI
-focus: phraseology
-register: varies
+level: B2
+slug: 55-synonyms-emotion
+version: '2.0'
+naturalness:
+  score: 9
+  status: PASS
 duration: 60
 transliteration: none
 tags:
@@ -11,46 +12,7 @@ tags:
 - synonyms
 - emotions
 - feelings
-grammar:
-- Nuance in synonymy
-- Register and intensity
 vocabulary_focus: null
-objectives:
-- Розрізняти відтінки значень між синонімами на позначення радості, суму, гніву та
-  страху
-- Вживати емоційну лексику відповідно до ситуації та регістру
-- Описувати складні психологічні стани, використовуючи багатий словниковий запас
 vocabulary_count: 38
-slug: 55-synonyms-emotion
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-- section: Вступ — Емоції та почуття
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-- section: Joy
-  words: 500
-  points:
-  - радість (joy - general)
-  - щастя (happiness - deeper)
-  - задоволення (satisfaction - from achievement)
-  - втіха (delight - often from children)
-  - насолода (pleasure - sensory)
-- section: Sadness
-  words: 500
-  points:
-  - сум (sadness - general)
-  - журба (melancholy - poetic)
-  - смуток (sorrow - deeper)
-  - горе (grief - intense)
-  - туга (longing - nostalgic)
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

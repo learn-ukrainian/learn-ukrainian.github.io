@@ -1,96 +1,13 @@
 module: a2-52
-id: a2-52
+level: A2
 slug: education-learning
-title: "Education and Learning"
-subtitle: "School and University"
 version: '2.0'
-phase: "A2.5 [Vocabulary Expansion]"
-focus: vocabulary
-pedagogy: PPP
-register: розмовний
-duration: 60
-transliteration: none
-objectives:
-  - "Learner can describe their studies"
-  - "Learner can use 'вчитися' and 'вивчати' correctly"
-  - "Learner can talk about school/university subjects"
-  - "Learner can discuss exams and grades"
-grammar:
-  - "Education verbs (вчитися, вивчати, навчати)"
-  - "School subjects vocabulary"
-  - "Grades, exams, and academic terms"
-word_target: 1000
-content_outline:
-  - section: "Introduction: Ukrainian Education"
-    words: 100
-    points:
-      - "Education system overview"
-      - "School vs university"
-      - "Academic vocabulary"
-  - section: "School Subjects"
-    words: 200
-    points:
-      - "математика, історія, українська мова"
-      - "фізика, хімія, біологія"
-      - "Subject preferences"
-  - section: "Learning Verbs"
-    words: 200
-    points:
-      - "вчитися (to study/be a student)"
-      - "вивчати (to learn/study something)"
-      - "навчатися, здавати іспит"
-  - section: "Academic Life"
-    words: 200
-    points:
-      - "студент, учень, викладач"
-      - "лекція, семінар, практика"
-      - "University terminology"
-  - section: "Grades and Exams"
-    words: 150
-    points:
-      - "оцінка, іспит, залік"
-      - "здати, провалити"
-      - "Academic performance"
-  - section: "Practice: Talk About Studies"
-    words: 150
-    points:
-      - "Describe your education"
-      - "Discuss subjects and exams"
-vocabulary_hints:
-  required:
-    - школа (school)
-    - університет (university)
-    - вчитися (to study)
-    - вивчати (to learn)
-    - предмет (subject)
-    - іспит (exam)
-    - оцінка (grade)
-    - студент (student)
-  recommended:
-    - викладач (lecturer)
-    - лекція (lecture)
-    - залік (credit/test)
-    - диплом (diploma)
-    - стипендія (scholarship)
-    - курсова (course paper)
-activity_hints:
-  - type: vocabulary-drill
-    focus: "Education vocabulary"
-    items: 30
-  - type: fill-in
-    focus: "Complete academic sentences"
-    items: 20
-  - type: dialogue
-    focus: "University conversation"
-    items: 10
-  - type: speaking
-    focus: "Describe your studies"
-    items: 8
-prerequisites:
-  - a2-51 (Hobbies and Leisure)
-connects_to:
-  - a2-53 (Shopping and Services)
+id: a2-52
 naturalness:
   score: 9
   status: PASS
-  justification: "Essential education vocabulary"
+  justification: Essential education vocabulary
+duration: 60
+transliteration: none
+build:
+  last_modified: '2026-01-26'

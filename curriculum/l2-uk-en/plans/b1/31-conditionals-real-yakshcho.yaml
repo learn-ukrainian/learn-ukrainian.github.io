@@ -1,16 +1,9 @@
-module: conditionals-real-yakshcho
-level: b1
-sequence: 31
+module: b1-31
+level: B1
+slug: conditionals-real-yakshcho
 version: '2.0'
 title: 'Умовні речення: реальна умова (якщо)'
 subtitle: Real Conditionals - If Clauses
-focus: grammar
-pedagogy: TTT
-objectives:
-- Learner understands real conditional constructions
-- Learner can form conditional sentences with якщо
-- Learner can use correct tense sequences in conditionals
-- Learner can express future conditions accurately
 content_outline:
 - section: 'Introduction: Real Conditionals'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Form conditional sentences
   - Use correct tenses
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - якщо (if)
   - умова (condition)
@@ -63,15 +56,33 @@ vocabulary:
   - у разі якщо (in case)
   - припускаючи (assuming)
   - за умови (provided that)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - translation
-  - sentence-combining
-  - error-correction
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: Complete conditionals
+  items: 25
+- type: sentence-combining
+  focus: Combine with якщо
+  items: 20
+- type: error-correction
+  focus: Fix tense sequence errors
+  items: 15
+- type: translation
+  focus: English to Ukrainian
+  items: 15
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-30 (Purpose Clauses щоб + past form)
 connects_to:
 - b1-32 (Conditionals Unreal якби)
+objectives:
+- Learner understands real conditional constructions
+- Learner can form conditional sentences with якщо
+- Learner can use correct tense sequences in conditionals
+- Learner can express future conditions accurately
+grammar:
+- Real conditionals with якщо
+- Tense sequence in conditional sentences
+- Present and future in conditional clauses
+register: розмовний
+phase: B1.3a [Complex Sentences]

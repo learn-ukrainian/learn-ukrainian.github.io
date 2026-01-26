@@ -1,16 +1,9 @@
-module: complex-sentence-integration
-level: b1
-sequence: 38
+module: b1-38
+level: B1
+slug: complex-sentence-integration
 version: '2.0'
 title: Інтеграція складних речень
 subtitle: Complex Sentence Integration
-focus: grammar
-pedagogy: TTT
-objectives:
-- Learner can combine причинові, часові, умовні clauses
-- Learner can build multi-clause sentences
-- Learner can choose appropriate connectors for context
-- Learner can manage complex sentence structure
 content_outline:
 - section: 'Introduction: Sentence Integration'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Build multi-clause sentences
   - Edit for clarity
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - інтеграція (integration)
   - складний (complex)
@@ -63,15 +56,33 @@ vocabulary:
   - паралельний (parallel)
   - зрозумілість (clarity)
   - стиль (style)
-  forbidden: []
-activities:
-  types_required:
-  - sentence-combining
-  - error-correction
-  - writing
-  - fill-in
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: sentence-combining
+  focus: Build multi-clause sentences
+  items: 25
+- type: error-correction
+  focus: Fix complex sentence errors
+  items: 20
+- type: fill-in
+  focus: Complete integrated sentences
+  items: 15
+- type: writing
+  focus: Write complex paragraphs
+  items: 10
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-37 (Temporal Clauses)
 connects_to:
 - b1-39 (Reported Statements)
+objectives:
+- Learner can combine причинові, часові, умовні clauses
+- Learner can build multi-clause sentences
+- Learner can choose appropriate connectors for context
+- Learner can manage complex sentence structure
+grammar:
+- Combining multiple clause types
+- Coordination and subordination together
+- Multi-clause sentence management
+register: розмовний
+phase: B1.3b [Complex Sentences]

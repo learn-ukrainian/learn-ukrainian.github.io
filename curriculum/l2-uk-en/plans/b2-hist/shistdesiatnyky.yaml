@@ -1,34 +1,31 @@
 module: shistdesiatnyky
-level: b2-hist
-sequence: 0
-version: '1.0'
+level: B2-HIST
+slug: shistdesiatnyky
+version: '2.0'
 title: 'Шістдесятники: Бунт проти сірості'
-focus: history
-pedagogy: seminar
-objectives: []
 content_outline:
 - section: Вступ — Хрущовська відлига
   words: 533
-  subsections:
+  points:
   - The death of Stalin and the partial liberalization of the regime
   - The emergence of a new generation of intellectuals who demanded truth
   - The Club of Creative Youth 'Suchasnyk' in Kyiv
 - section: Культурний вибух
   words: 1333
-  subsections:
+  points:
   - 'Literature: Vasyl Symonenko, Lina Kostenko, Ivan Drach'
   - 'Cinema: Serhiy Parajanov and ''Shadows of Forgotten Ancestors'''
   - 'Art: Alla Horska and the destroyed stained glass window at Kyiv University'
   - The premiere of 'Shadows' (1965) as the first public political protest
 - section: Первинні джерела
   words: 800
-  subsections:
+  points:
   - Excerpts from Vasyl Symonenko's diary ('Bereh chekan')
   - Fragments from Ivan Dzyuba's treatise 'Internationalism or Russification?'
   - KGB memos reporting on 'bourgeois nationalism' among youth
 - section: Деколонізаційний погляд
   words: 800
-  subsections:
+  points:
   - The fight for the Ukrainian language as a political act
   - Debunking the myth of 'Soviet People' (homo sovieticus)
   - 'The regime''s response: The arrests of 1965 and the ''Great Pogrom'' of 1972'
@@ -36,3 +33,7 @@ content_outline:
   - 'The continuity of resistance: From UPA to Sixtiers to the Helsinki Group'
   - The lasting impact on modern Ukrainian culture
 word_target: 4000
+focus: history
+prerequisites: []
+learning_outcomes: []
+phase: HIST.11 [Post-War Soviet Ukraine]

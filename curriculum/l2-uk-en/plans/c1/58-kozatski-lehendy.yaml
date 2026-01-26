@@ -1,22 +1,37 @@
-module: 58-kozatski-lehendy
-level: c1
-sequence: 58
+module: c1-58
+level: C1
+slug: 58-kozatski-lehendy
 version: '2.0'
 title: Козацькі легенди
 subtitle: Cossack Legends and Myths
+content_outline:
+- section: Вступ — Козацькі легенди
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Колискові пісні: structure, imagery, maternal voice'
+  - 'Думи: historical epics about Cossack heroes'
+  - Narrative techniques in Ukrainian epic poetry
+  - 'Famous dumy: Козак Голота, Маруся Богуславка'
+  - 'Performance traditions: recitative style'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: vocabulary
 pedagogy: Immersion & Analysis
 objectives:
 - Learner can analyze Cossack mythological archetypes (e.g., kharakternyky)
 - Learner understands the role of Cossack myths in national identity construction
 - Learner can use epic and heroic vocabulary in analytical contexts
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Heroic narrative register
+- Epic stylistics
+phase: C1.5 Folk Culture & Fine Arts

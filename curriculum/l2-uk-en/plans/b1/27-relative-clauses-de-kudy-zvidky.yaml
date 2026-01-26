@@ -1,16 +1,9 @@
-module: relative-clauses-de-kudy-zvidky
-level: b1
-sequence: 27
+module: b1-27
+level: B1
+slug: relative-clauses-de-kudy-zvidky
 version: '2.0'
 title: 'Підрядні означальні: де, куди, звідки'
 subtitle: Place Relative Clauses
-focus: grammar
-pedagogy: TTT
-objectives:
-- Learner understands difference between де, куди, звідки
-- Learner can form relative clauses describing places
-- Learner can choose correct place relative for context
-- Learner can combine location and direction in clauses
 content_outline:
 - section: 'Introduction: Place Relatives'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Describe locations with relatives
   - Choose correct place word
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - де (where - location)
   - куди (where - to)
@@ -63,15 +56,33 @@ vocabulary:
   - динамічний (dynamic)
   - призначення (destination)
   - джерело (source)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - sentence-combining
-  - translation
-  - matching
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: де/куди/звідки selection
+  items: 25
+- type: sentence-combining
+  focus: Combine with place relatives
+  items: 20
+- type: matching
+  focus: Match sentences to meanings
+  items: 15
+- type: translation
+  focus: English to Ukrainian
+  items: 15
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-26 (Relative Clauses який)
 connects_to:
 - b1-28 (Relative Clauses коли/що)
+objectives:
+- Learner understands difference between де, куди, звідки
+- Learner can form relative clauses describing places
+- Learner can choose correct place relative for context
+- Learner can combine location and direction in clauses
+grammar:
+- Place relatives with де (where - location)
+- Place relatives with куди (where - direction to)
+- Place relatives with звідки (where - direction from)
+register: розмовний
+phase: B1.3a [Complex Sentences]

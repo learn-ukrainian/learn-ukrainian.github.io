@@ -1,16 +1,9 @@
-module: yesterday-past-tense
-level: a1
-sequence: 21
+module: a1-21
+level: A1
+slug: yesterday-past-tense
 version: '2.0'
 title: Yesterday - Past Tense
 subtitle: Talking About What Happened
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can form past tense using L-participle
-- Learner can use correct gender ending (-в/-ла/-ло/-ли)
-- Learner can describe past events using time expressions
-- Learner can talk about what they did yesterday
 content_outline:
 - section: 'Introduction: The Past Tense'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Describe yesterday
   - Ask about past activities
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - вчора (yesterday)
   - робити (to do)
@@ -65,16 +58,34 @@ vocabulary:
   - місяць (month)
   - спати (to sleep)
   - працювати (to work)
-  forbidden: []
-activities:
-  types_required:
-  - transformation
-  - translation
-  - fill-in
-  - dialogue
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: transformation
+  focus: Change verbs to past tense
+  items: 25
+- type: fill-in
+  focus: Complete with correct gender ending
+  items: 20
+- type: translation
+  focus: Translate past tense sentences
+  items: 15
+- type: dialogue
+  focus: What did you do yesterday?
+  items: 6
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-20 (Checkpoint Navigation)
 connects_to:
 - a1-22 (Tomorrow - Future Tense)
 - a1-25 (My Daily Routine)
+objectives:
+- Learner can form past tense using L-participle
+- Learner can use correct gender ending (-в/-ла/-ло/-ли)
+- Learner can describe past events using time expressions
+- Learner can talk about what they did yesterday
+grammar:
+- Past tense formation with L-participle
+- Gender agreement in past tense
+- Time expressions for past events
+register: розмовний
+phase: A1.3 [Consolidation]

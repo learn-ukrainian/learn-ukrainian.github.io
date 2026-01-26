@@ -1,27 +1,9 @@
 module: 05-ready-for-immersion
-level: b1
-sequence: 5
-version: '1.0'
+level: B1
+slug: 05-ready-for-immersion
+version: '2.0'
 title: Готові до занурення
 subtitle: Metalanguage mastery checkpoint
-focus: integration
-pedagogy: TTT
-objectives:
-- Learner can read and understand grammar explanations in Ukrainian
-- Learner can answer questions about grammar rules in Ukrainian
-- Learner can demonstrate metalanguage mastery for full immersion
-- Learner can use negation and verb form terminology
-- Learner can understand activity instruction verbs
-- Learner can apply analytical terms and style/register concepts
-sources:
-- name: Ukrainian Grammar Textbook Samples
-  url: https://mon.gov.ua/
-  type: primary
-  notes: Authentic grammar explanations for comprehension testing
-- name: CEFR B1 Descriptors
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
-  type: reference
-  notes: Proficiency standards for checkpoint assessment
 content_outline:
 - section: Presentation
   words: 80
@@ -71,7 +53,7 @@ content_outline:
   - Final self-assessment
   - Readiness confirmation
 word_target: 1700
-vocabulary:
+vocabulary_hints:
   required:
   - граматичне поняття (grammatical concept)
   - мовознавство (linguistics)
@@ -89,15 +71,46 @@ vocabulary:
   - властивість (property)
   - значення (meaning)
   - функція (function)
-  forbidden: []
-activities:
-  types_required:
-  - quiz
-  - match-up
-  - cloze
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: cloze
+  focus: Complete a full grammar explanation passage
+  items: 15+
+- type: quiz
+  focus: Comprehensive metalanguage review
+  items: 20+
+- type: match-up
+  focus: Term → definition (all in Ukrainian)
+  items: 15+
+focus: integration
+pedagogy: TTT
+prerequisites:
+- b1-01 (Grammar terminology)
+- b1-02 (Verb terminology)
+- b1-03 (Reading grammar rules)
+- b1-04 (Sentence structure)
 connects_to:
 - b1-06 (Aspect complete system - first full immersion module)
 - b1-15 (Aspect mastery checkpoint)
+objectives:
+- Learner can read and understand grammar explanations in Ukrainian
+- Learner can answer questions about grammar rules in Ukrainian
+- Learner can demonstrate metalanguage mastery for full immersion
+- Learner can use negation and verb form terminology
+- Learner can understand activity instruction verbs
+- Learner can apply analytical terms and style/register concepts
+grammar:
+- Integration of all metalanguage from M01-04
+- Reading grammar in Ukrainian
+- Comprehension test
+module_type: checkpoint
+sources:
+- name: Ukrainian Grammar Textbook Samples
+  url: https://mon.gov.ua/
+  type: primary
+  notes: Authentic grammar explanations for comprehension testing
+- name: CEFR B1 Descriptors
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: Proficiency standards for checkpoint assessment
+immersion: 75% Ukrainian
+phase: B1.0 Bridge

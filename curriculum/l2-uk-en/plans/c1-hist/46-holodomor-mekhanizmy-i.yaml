@@ -1,0 +1,115 @@
+module: holodomor-mekhanizmy-i
+level: C1-HIST
+slug: holodomor-mekhanizmy-i
+version: '2.0'
+title: 'Механізми Голодомору I: Колективізація'
+content_outline:
+- section: Вступ — Як створили голод
+  words: 400
+  points:
+  - Голодомор — не випадковість
+  - Колективізація — передумова
+  - Як економічна політика стала зброєю
+  - Структура модуля
+- section: Сталінська колективізація
+  words: 600
+  points:
+  - Мета — індустріалізація за рахунок села
+  - П'ятирічка в чотири роки
+  - Знищення приватного господарства
+  - Чому саме Україна — житниця
+- section: Розкуркулення
+  words: 700
+  points:
+  - Хто такий «куркуль»?
+  - Три категорії — розстріл, заслання, виселення
+  - Масштаби — скільки постраждало
+  - Знищення найкращих господарів
+  - Як це вплинуло на врожай
+- section: Колгоспна система
+  words: 600
+  points:
+  - Як працював колгосп
+  - Вилучення зерна — механізм
+  - Трудодні — нова форма кріпацтва
+  - Чому селяни чинили опір
+  - Форми опору
+- section: Україна vs. інші регіони
+  words: 500
+  points:
+  - Чому Україна особливий випадок
+  - Більший тиск — чому
+  - Порівняння з Росією, Казахстаном
+  - Націоналістичний компонент
+- section: Від колективізації до голоду
+  words: 400
+  points:
+  - 1930-1931 — вже голод
+  - Ігнорування сигналів
+  - Ескалація 1932 року
+  - Підготовка до наступного модуля
+- section: Підсумок
+  words: 300
+  points:
+  - Колективізація як фундамент
+  - Без неї — немає Голодомору
+  - Зв'язок механізмів
+word_target: 3500
+vocabulary_hints:
+  required:
+  - колективізація (collectivization)
+  - колгосп (collective farm)
+  - куркуль (kulak)
+  - розкуркулення (dekulakization)
+  - вилучення (confiscation)
+  - трудодень (workday unit)
+  - індустріалізація (industrialization)
+  - п'ятирічка (five-year plan)
+  - кріпацтво (serfdom)
+  - опір (resistance)
+  recommended:
+  - радгосп (state farm)
+  - МТС (Machine-Tractor Station)
+  - хлібозаготівлі (grain procurement)
+  - норма (quota)
+  - саботаж (sabotage)
+activity_hints:
+- type: mechanism-analysis
+  focus: 'Map the chain: collectivization → famine'
+  output: Causal diagram
+- type: category-analysis
+  focus: Analyze "kulak" categorization — who decided, how?
+  output: Classification critique
+- type: comparative-study
+  focus: Compare Ukrainian and Russian collectivization quotas
+  output: Regional comparison
+- type: primary-source
+  focus: Analyze a dekulakization order
+  output: Document analysis
+- type: essay-response
+  focus: Як колективізація створила передумови для Голодомору?
+  word_target: 400
+  model_answer: Required
+focus: history
+prerequisites:
+- c1-hist-45 (Holodomor historiography)
+- c1-hist-04 (Soviet historiography)
+connects_to:
+- c1-hist-47 (Holodomor mechanisms II — blacklists)
+- c1-hist-103 (Economic exploitation)
+module_type: thematic
+sources:
+- name: Колективізація в УРСР (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Колективізація_в_УРСР
+  type: reference
+  notes: Ukrainian collectivization
+- name: Розкуркулення (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Розкуркулення
+  type: reference
+  notes: Dekulakization
+- name: Колгосп (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Колгосп
+  type: reference
+  notes: Collective farm system
+immersion: 100% Ukrainian
+phase: C1-HIST.1 [Historiography]

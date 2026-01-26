@@ -1,95 +1,13 @@
 module: a1-24
-id: a1-24
+level: A1
 slug: can-must-want-modals
-title: "Can, Must, Want - Modals"
-subtitle: "Expressing Ability, Obligation, and Desire"
 version: '2.0'
-phase: "A1.3 [Consolidation]"
-focus: grammar
-pedagogy: PPP
-register: розмовний
-duration: 60
-transliteration: none
-objectives:
-  - "Learner can express ability with могти and вміти"
-  - "Learner can express obligation with треба and потрібно"
-  - "Learner can ask and give permission with можна"
-  - "Learner can distinguish between different modal meanings"
-grammar:
-  - "Modal verbs (могти, вміти)"
-  - "Impersonal modals (треба, можна, потрібно)"
-  - "Modal + infinitive structure"
-word_target: 1000
-content_outline:
-  - section: "Introduction: Modal Verbs"
-    words: 150
-    points:
-      - "Modals express ability, necessity, permission"
-      - "Modal + infinitive structure"
-      - "Essential for daily communication"
-  - section: "Can/Able: Могти and Вміти"
-    words: 200
-    points:
-      - "Могти = physical ability, possibility"
-      - "Вміти = learned skill"
-      - "Я можу/вмію плавати"
-  - section: "Must/Need: Треба and Потрібно"
-    words: 200
-    points:
-      - "Треба/потрібно = impersonal necessity"
-      - "Мені треба йти (I need to go)"
-      - "Потрібно + infinitive"
-  - section: "Permission: Можна/Не можна"
-    words: 200
-    points:
-      - "Можна? (May I?)"
-      - "Тут можна курити? (Can one smoke here?)"
-      - "Не можна (forbidden)"
-  - section: "Want: Хотіти"
-    words: 150
-    points:
-      - "Я хочу, ти хочеш..."
-      - "Хочу + infinitive"
-      - "Expressing desires politely"
-  - section: "Practice: What Can/Must You Do?"
-    words: 100
-    points:
-      - "Describe abilities"
-      - "Ask permission"
-vocabulary_hints:
-  required:
-    - могти (can, to be able)
-    - вміти (to know how)
-    - треба (need to, must)
-    - можна (may, it is allowed)
-    - хотіти (to want)
-    - потрібно (it is necessary)
-    - повинен (must, should)
-    - не можна (forbidden)
-  recommended:
-    - дозволити (to allow)
-    - заборонено (forbidden)
-    - обов'язково (obligatory)
-    - необхідно (necessary)
-activity_hints:
-  - type: fill-in
-    focus: "Choose correct modal"
-    items: 25
-  - type: transformation
-    focus: "Change to modal constructions"
-    items: 20
-  - type: translation
-    focus: "Translate modal sentences"
-    items: 15
-  - type: dialogue
-    focus: "Ask permission, express needs"
-    items: 6
-prerequisites:
-  - a1-23 (What Time Is It)
-connects_to:
-  - a1-25 (My Daily Routine)
-  - a1-30 (Checkpoint Consolidation)
+id: a1-24
 naturalness:
   score: 10
   status: PASS
-  justification: "Essential modal expressions"
+  justification: Essential modal expressions
+duration: 60
+transliteration: none
+build:
+  last_modified: '2026-01-26'

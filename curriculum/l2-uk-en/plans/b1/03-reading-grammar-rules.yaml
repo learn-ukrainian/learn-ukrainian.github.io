@@ -1,27 +1,9 @@
 module: 03-reading-grammar-rules
-level: b1
-sequence: 3
-version: '1.0'
+level: B1
+slug: 03-reading-grammar-rules
+version: '2.0'
 title: Читаємо граматичні правила
 subtitle: Understanding grammar explanations in Ukrainian
-focus: integration
-pedagogy: PPP
-objectives:
-- Learner can understand standard grammar explanation patterns
-- Learner can follow Ukrainian grammar instructions
-- Learner can identify word formation components
-- Learner can recognize activity instruction verbs
-- Learner can understand analytical terminology
-- Learner can distinguish language styles and registers
-sources:
-- name: Ukrainian Grammar Textbooks
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Standard patterns used in Ukrainian grammar instruction
-- name: Ukrainian Language Teaching Resources
-  url: https://osvita.ua/
-  type: reference
-  notes: Common instructional language in educational materials
 content_outline:
 - section: Introduction - Reading Grammar in Ukrainian
   words: 150
@@ -84,7 +66,7 @@ content_outline:
   points:
   - Readiness check for M04
 word_target: 3000
-vocabulary:
+vocabulary_hints:
   required:
   - використовується (is used)
   - показує (shows)
@@ -102,18 +84,53 @@ vocabulary:
   - розмовна мова (colloquial language)
   - літературна мова (literary language)
   - формальна мова (formal language)
-  forbidden: []
-activities:
-  types_required:
-  - quiz
-  - match-up
-  - mark-the-words
-  - cloze
-  - true-false
-  - group-sort
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: mark-the-words
+  focus: Find instruction patterns in grammar text
+  items: 10+
+- type: true-false
+  focus: Statements about grammar patterns
+  items: 10+
+- type: cloze
+  focus: Complete grammar explanation passages
+  items: 8+
+- type: match-up
+  focus: Activity instruction verb → example activity (виберіть → quiz question)
+  items: 10+
+- type: quiz
+  focus: Identify analytical terms in grammar explanations (контекст, маркер, частота)
+  items: 8+
+- type: group-sort
+  focus: Style types (розмовна vs літературна vs формальна)
+  items: 12+
+focus: integration
+pedagogy: PPP
+prerequisites:
+- b1-01 (Basic grammar terminology)
+- b1-02 (Verb terminology)
 connects_to:
 - b1-04 (Sentence structure)
 - b1-05 (Metalanguage checkpoint)
+objectives:
+- Learner can understand standard grammar explanation patterns
+- Learner can follow Ukrainian grammar instructions
+- Learner can identify word formation components
+- Learner can recognize activity instruction verbs
+- Learner can understand analytical terminology
+- Learner can distinguish language styles and registers
+grammar:
+- Grammar explanation patterns
+- Instruction vocabulary
+- Word formation terms
+module_type: bridge
+sources:
+- name: Ukrainian Grammar Textbooks
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standard patterns used in Ukrainian grammar instruction
+- name: Ukrainian Language Teaching Resources
+  url: https://osvita.ua/
+  type: reference
+  notes: Common instructional language in educational materials
+immersion: 75% Ukrainian
+phase: B1.0 Bridge

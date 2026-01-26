@@ -1,14 +1,11 @@
-id: b1-23
-title: Префікси руху в інших дієсловах
-subtitle: Motion prefixes in non-motion verbs
+module: 23-motion-patterns-other-verbs
+level: B1
 slug: 23-motion-patterns-other-verbs
-module_type: grammar
-word_target: 1500
-immersion: 100% Ukrainian
 version: '3.0'
-phase: B1.2 Motion
-pedagogy: TTT
-focus: grammar
+id: b1-23
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
 tags:
@@ -16,91 +13,5 @@ tags:
 - prefixes
 - word-formation
 - verbs
-grammar:
-- Prefix meanings transferred to non-motion verbs
-- Word formation with motion prefixes
-- Semantic patterns across verb categories
-objectives:
-- Master the abstract logic of Ukrainian prefixes
-- Predict meanings of new verbs based on their prefixes
-- Use complex prefixed verbs in professional and daily contexts
-sources:
-- name: Ukrainian State Standard 2024 - Word Formation
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official guidance on prefix patterns in word formation
-- name: Ukrainian Verbal Prefixes
-  url: https://uk.wikipedia.org/wiki/Дієслівні_префікси
-  type: reference
-  notes: Prefix meanings across verb categories
-- name: Ukrainian Word Formation (Academic)
-  url: https://uk.wikipedia.org/wiki/Словотвір
-  type: reference
-  notes: Systematic treatment of derivation
-content_outline:
-- section: Тест
-  words: 100
-  points:
-  - Content for Тест
-  - Examples and explanation
-  - Practice or application
-- section: Пояснення
-  words: 900
-  points:
-  - Content for Пояснення
-  - Examples and explanation
-  - Practice or application
-- section: Практика
-  words: 200
-  points:
-  - Content for Практика
-  - Examples and explanation
-  - Practice or application
-- section: Діалоги
-  words: 400
-  points:
-  - Content for Діалоги
-  - Examples and explanation
-  - Practice or application
-vocabulary_hints:
-  required:
-  - приготувати (to prepare)
-  - виробляти (to produce)
-  - переробляти (to redo, process)
-  - заговорити (to start speaking)
-  - відмовитися (to refuse)
-  - приєднатися (to join)
-  - вивчити (to learn)
-  - переписати (to rewrite)
-  - записати (to write down)
-  - відповісти (to answer)
-  recommended:
-  - прив'язати (to tie to)
-  - виконати (to fulfill)
-  - переглянути (to review)
-  - запам'ятати (to remember)
-  - відкрити (to open)
-activity_hints:
-- type: match-up
-  focus: Prefix meaning in motion vs non-motion verbs
-  items: 15+
-- type: fill-in
-  focus: Use prefixed non-motion verbs
-  items: 12+
-- type: fill-in
-  focus: Add prefix to change meaning
-  items: 12+
-- type: quiz
-  focus: Predict verb meaning from prefix
-  items: 15+
-- type: group-sort
-  focus: Group verbs by prefix meaning
-  items: 15+
-prerequisites:
-- b1-22 (Motion full prefix integration)
-connects_to:
-- b1-24 (Motion practice & integration)
-- b1-25 (Checkpoint - motion verbs)
-naturalness:
-  score: 9
-  status: PASS
+build:
+  last_modified: '2026-01-26'

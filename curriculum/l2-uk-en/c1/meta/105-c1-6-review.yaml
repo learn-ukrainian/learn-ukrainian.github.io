@@ -1,12 +1,8 @@
-version: '2.0'
 module: c1-105
-id: c1-105
-title: 'C1.6 Література: Огляд та рефлексія'
-subtitle: 'C1.6 Literature: Review and Reflection'
+level: C1
 slug: 105-c1-6-review
-phase: C1.6 Literature
-focus: review
-pedagogy: Integration
+version: '2.0'
+id: c1-105
 duration: 120
 transliteration: none
 tags:
@@ -14,32 +10,5 @@ tags:
 - review
 - synthesis
 - analysis
-grammar:
-- Synthesis of stylistic devices
-- Comparative literary analysis
-objectives:
-- Learner can synthesize knowledge of the Ukrainian literary canon from classics to
-  contemporary.
-- Learner can compare different literary eras and movements.
-- Learner can apply advanced literary terminology to various texts.
-content_outline:
-- section: Вступ — Огляд та рефлексія
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-- section: Review Areas
-  words: 500
-  points:
-  - 'Major authors: Kotlyarevsky, Shevchenko, Franko, Lesya Ukrainka'
-  - 'Literary movements: Romanticism, Realism'
-  - Key works and their themes
-  - Literary analysis skills application
-  - Cross-author comparisons
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

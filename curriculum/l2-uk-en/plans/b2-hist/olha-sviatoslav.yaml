@@ -1,21 +1,15 @@
-module: olha-sviatoslav
-level: b2-hist
-sequence: 10
-version: '1.0'
+module: b2-hist-10
+level: B2-HIST
+slug: olha-sviatoslav
+version: '2.0'
 title: Ольга та Святослав
-focus: history
-pedagogy: CBI
-objectives:
-- Analyze Olha reforms
-- Evaluate Sviatoslav military strategy
-- Contrast diplomactic vs military approach
 content_outline:
 - section: Вступ
   words: 100
-  subsections: []
+  points: []
 - section: Читання
   words: 900
-  subsections:
+  points:
   - 'Ольга: Помста як Політика'
   - 'Реформи: Від хаосу до порядку'
   - Інфраструктура реформ
@@ -25,12 +19,12 @@ content_outline:
   - 'Загибель: Чаша з черепа'
 - section: Первинні джерела
   words: 500
-  subsections:
+  points:
   - Повість минулих літ про реформи Ольги
   - Лев Диякон про Святослава (Опис зовнішності)
 - section: Деколонізаційний погляд
   words: 1100
-  subsections:
+  points:
   - 'Святослав: Вікінг чи Козак?'
   - 'Ольга: "Мудра", а не "Хитра"'
   - Глибший аналіз реформ Ольги
@@ -44,7 +38,7 @@ content_outline:
   - Уроки для сучасної України
 - section: Потрібно більше практики?
   words: 1400
-  subsections:
+  points:
   - Економіка епохи Ольги та Святослава
   - Християнство і язичництво
   - Життя звичайних людей
@@ -54,27 +48,30 @@ content_outline:
   - Завершення епохи
   - Археологічні свідчення епохи
 word_target: 4000
-vocabulary:
-- княгиня
-- помста
-- реформа
-- хрещення
-- погост
-- урок
-- данина
-- каганат
-- завоювання
-- воїн
-- похід
-- печеніги
-- рівноапостольна
-- Доростол
-- Балкани
-- чаша
-- дипломатія
-activities:
+vocabulary_hints:
+  required:
+  - княгиня (princess)
+  - помста (revenge)
+  - реформа (reform)
+  - хрещення (baptism)
+  - погост (pogost - tax station)
+  - урок (urok - fixed tribute)
+  - данина (tribute)
+  - каганат (khaganate)
+  - завоювання (conquest)
+  - воїн (warrior)
+  - похід (campaign)
+  - печеніги (Pechenegs)
+  recommended:
+  - рівноапостольна (equal-to-apostles)
+  - Доростол (Dorostolon)
+  - Балкани (Balkans)
+  - чаша (cup/chalice)
+  - дипломатія (diplomacy)
+activity_hints:
 - type: reading
   focus: Chronicle accounts of Olha's revenge
+  source: Provide in module
 - type: quiz
   focus: Geography of Sviatoslav's campaigns
   items: 8+
@@ -86,11 +83,27 @@ activities:
   items: 12+ events
 - type: comparative-study
   focus: Olha vs Sviatoslav — governance approaches
+  output: Two-column comparison
 - type: quiz
   focus: Facts about Olha and Sviatoslav
   items: 12+
 - type: essay-response
   focus: Хто більше вплинув на розвиток Русі — Ольга чи Святослав?
+focus: history
+pedagogy: CBI
+prerequisites:
+- b2-hist-09 (Oleh and Ihor)
+connects_to:
+- b2-hist-11 (Volodymyr and Baptism)
+- b2-hist-07 (Khazar Khaganate — defeat)
+- 'b2-hist-20 (Synthesis: Kyivan Rus)'
+objectives:
+- Analyze Olha reforms
+- Evaluate Sviatoslav military strategy
+- Contrast diplomactic vs military approach
+grammar:
+- Narrative tenses
+- Action verbs
 sources:
 - name: Ольга (княгиня київська) (Вікіпедія)
   url: https://uk.wikipedia.org/wiki/Ольга_(княгиня_київська)
@@ -104,3 +117,5 @@ sources:
   url: https://litopys.org.ua/pvl/pvl.htm
   type: primary
   notes: Chronicle accounts
+register: публіцистичний
+phase: B2-HIST.1 [Kyivan Rus]

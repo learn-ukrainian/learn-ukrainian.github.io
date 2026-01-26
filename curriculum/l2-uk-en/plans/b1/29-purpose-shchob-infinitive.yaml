@@ -1,16 +1,9 @@
-module: purpose-shchob-infinitive
-level: b1
-sequence: 29
+module: b1-29
+level: B1
+slug: purpose-shchob-infinitive
 version: '2.0'
 title: 'Підрядні речення мети: щоб + інфінітив'
 subtitle: Purpose Clauses - Same Subject
-focus: grammar
-pedagogy: TTT
-objectives:
-- Learner understands when to use щоб + infinitive
-- Learner can form same-subject purpose clauses
-- Learner can use alternative purpose expressions
-- Learner can distinguish purpose from other clause types
 content_outline:
 - section: 'Introduction: Purpose Clauses'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Form same-subject purpose clauses
   - Choose correct expression
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - щоб (in order to)
   - мета (purpose/goal)
@@ -63,15 +56,33 @@ vocabulary:
   - заради (for)
   - цілеспрямований (purposeful)
   - навмисно (intentionally)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - translation
-  - sentence-combining
-  - error-correction
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: Purpose clause completion
+  items: 25
+- type: sentence-combining
+  focus: Combine with purpose clauses
+  items: 20
+- type: error-correction
+  focus: Fix purpose clause errors
+  items: 15
+- type: translation
+  focus: English to Ukrainian
+  items: 15
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-28 (Relative Clauses коли/що)
 connects_to:
 - b1-30 (Purpose Clauses щоб + past form)
+objectives:
+- Learner understands when to use щоб + infinitive
+- Learner can form same-subject purpose clauses
+- Learner can use alternative purpose expressions
+- Learner can distinguish purpose from other clause types
+grammar:
+- щоб + infinitive for same-subject purpose
+- Alternative expressions (для того щоб, аби)
+- When щоб + infinitive is required
+register: розмовний
+phase: B1.3a [Complex Sentences]

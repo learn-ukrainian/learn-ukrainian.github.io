@@ -1,142 +1,21 @@
-id: c1-bio-07
 module: c1-bio-07
-title: 'Роксолана: Від рабині до султанші'
+level: C1-BIO
 slug: roksolana
-module_type: biography
-description: Biography of Roksolana (Hürrem Sultan), the Ukrainian slave girl who became the legal wife of Suleiman the Magnificent.
-  Explores her political influence, patronage, and the 'Sultanate of Women' phenomenon.
-word_target: 4000
-immersion: 100% Ukrainian
 version: '2.0'
-phase: C1-BIO
-focus: biography
+id: c1-bio-07
+naturalness:
+  score: 10
+  status: PASS
+description: Biography of Roksolana (Hürrem Sultan), the Ukrainian slave girl who
+  became the legal wife of Suleiman the Magnificent. Explores her political influence,
+  patronage, and the 'Sultanate of Women' phenomenon.
 duration: 120
 transliteration: none
-pedagogy: CBI
 tags:
 - history
 - biography
 - ottoman-empire
 - women-in-history
 - diplomacy
-objectives:
-- Проаналізувати біографію Роксолани як приклад соціальної мобільності
-- Дослідити феномен 'Жіночого султанату' та роль жінок в османській політиці
-- Вивчити дипломатичну лексику та епістолярний стиль XVI століття
-grammar:
-- Historical narrative tenses
-- Quoted speech conventions
-- Epistolary formulas
-sources:
-- name: Роксолана (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Роксолана
-  type: primary
-  notes: Biography, rise to power, influence
-- name: Сулейман I (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Сулейман_I
-  type: reference
-  notes: Context of Ottoman court
-- name: Гарем (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Гарем
-  type: reference
-  notes: Structure of Ottoman harem system
-content_outline:
-- section: Вступ — Найвпливовіша жінка Османської імперії
-  words: 400
-  points:
-  - Унікальність долі Роксолани
-  - Її місце в історії України та Туреччини
-  - Проблема джерел та легенд
-- section: Викрадення та рабство
-  words: 600
-  points:
-  - Походження з Рогатина (версії)
-  - Татарський набіг та полон
-  - Продаж на ринку рабів
-  - Потрапляння до гарему
-- section: Сходження до влади
-  words: 700
-  points:
-  - Прихильність Сулеймана
-  - Від рабині до хасекі
-  - Офіційний шлюб — безпрецедентний крок
-  - Народження дітей
-- section: Політичний вплив
-  words: 800
-  points:
-  - Участь у державних справах
-  - Листування з європейськими монархами
-  - Інтриги щодо спадкоємця
-  - Доля Мустафи та Ібрагіма-паші
-- section: Благодійність та будівництво
-  words: 600
-  points:
-  - Комплекс Хасекі
-  - Лазні, мечеті, школи
-  - Підтримка благодійних справ
-  - Архітектурна спадщина в Стамбулі
-- section: Спадщина та образ у культурі
-  words: 600
-  points:
-  - Смерть та поховання
-  - Образ у літературі та мистецтві
-  - Українська та турецька пам'ять
-  - Сучасні серіали та суперечки
-- section: Підсумок — Жінка, що змінила імперію
-  words: 300
-  points:
-  - Роксолана як символ сили волі
-  - Її вплив на османську традицію
-  - Значення для України
-vocabulary_hints:
-  required:
-  - султанша (sultana)
-  - хасекі (haseki - favorite consort)
-  - гарем (harem)
-  - рабиня (slave woman)
-  - полон (captivity)
-  - набіг (raid)
-  - спадкоємець (heir)
-  - інтрига (intrigue)
-  - благодійність (charity)
-  - меценатство (patronage)
-  recommended:
-  - візир (vizier)
-  - євнух (eunuch)
-  - фаворитка (favorite)
-  - мечеть (mosque)
-  - вакф (waqf - charitable endowment)
-activity_hints:
-- type: reading
-  focus: European diplomatic reports about Roksolana
-  source: Adapted historical sources
-  items: 3 passages
-- type: quiz
-  focus: Facts about Roksolana's life and influence
-  items: 12+
-- type: match-up
-  focus: Key figures at Ottoman court and their fates
-  items: 10+
-- type: essay-response
-  focus: Was Roksolana a victim or a manipulator?
-  word_target: 300
-  output: Balanced analysis with evidence
-- type: group-sort
-  focus: Facts vs. legends about Roksolana
-  items: 12+
-- type: fill-in
-  focus: Ottoman court terminology
-  items: 10+
-- type: critical-analysis
-  focus: Evaluate different interpretations of Roksolana
-  output: Ukrainian vs. Turkish perspectives
-prerequisites:
-- c1-bio-05 (Anna Yaroslavna - earlier Ukrainian woman abroad)
-- c1-bio-06 (Mykhailo Chernihivskyi - captivity theme)
-connects_to:
-- c1-bio-10 (Bohdan Khmelnytskyi - later Cossack period)
-- c1-bio-12 (Ivan Mazepa - patronage theme)
-- c1-bio-41 (Solomiya Krushelnytska - later fame abroad)
-naturalness:
-  score: 10
-  status: PASS
+build:
+  last_modified: '2026-01-26'

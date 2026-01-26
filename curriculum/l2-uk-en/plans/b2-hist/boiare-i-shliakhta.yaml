@@ -1,14 +1,9 @@
 module: boiare-i-shliakhta
-level: b2-hist
-sequence: 25
-version: '1.0'
+level: B2-HIST
+slug: boiare-i-shliakhta
+version: '2.0'
 title: 'Бояри та шляхта: Соціальна еліта'
-focus: history
-pedagogy: CBI
-objectives:
-- Учень може пояснити різницю між боярством та шляхтою
-- Учень розуміє процеси формування привілейованих верств
-- Учень може аналізувати вплив права на українську аристократію
+subtitle: Лицарська честь та політична суб'єктність
 content_outline:
 - section: Контекст
   words: 600
@@ -19,3 +14,13 @@ content_outline:
 - section: Деколонізаційний погляд
   words: 502
 word_target: 4052
+focus: history
+pedagogy: CBI
+objectives:
+- Учень може пояснити різницю між боярством та шляхтою
+- Учень розуміє процеси формування привілейованих верств
+- Учень може аналізувати вплив права на українську аристократію
+grammar:
+- Social terminology
+- Formal address forms
+phase: B2.3a [Українська історія]

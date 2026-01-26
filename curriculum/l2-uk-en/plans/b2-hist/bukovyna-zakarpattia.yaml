@@ -1,14 +1,8 @@
 module: bukovyna-zakarpattia
-level: b2-hist
-sequence: 0
-version: '1.0'
+level: B2-HIST
+slug: bukovyna-zakarpattia
+version: '2.0'
 title: Буковина та Закарпаття під сусідами
-focus: history
-pedagogy: CBI
-objectives:
-- Учень може пояснити історичну долю Буковини та Закарпаття в XIV-XVII ст.
-- Учень аналізує вплив іноземного панування на культуру регіонів
-- Учень володіє термінологією регіональної історії
 content_outline:
 - section: Вступ
   words: 349
@@ -16,7 +10,7 @@ content_outline:
   words: 533
 - section: 'Повсякденне життя: Мульткультурний Вавилон'
   words: 250
-  subsections:
+  points:
   - Chernivtsi as a multicultural hub
   - Rural life in Zakarpattia
   - Ethnic diversity and tolerance
@@ -33,3 +27,14 @@ content_outline:
 - section: Потрібно більше практики?
   words: 107
 word_target: 4000
+focus: history
+pedagogy: CBI
+objectives:
+- Учень може пояснити історичну долю Буковини та Закарпаття в XIV-XVII ст.
+- Учень аналізує вплив іноземного панування на культуру регіонів
+- Учень володіє термінологією регіональної історії
+grammar:
+- Історичний наратив
+- Порівняння історичних процесів
+register: публіцистичний
+phase: B2.3a [Українська історія]

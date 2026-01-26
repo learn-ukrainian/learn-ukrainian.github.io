@@ -1,21 +1,8 @@
 module: 26-media-landscape
-level: c1
-sequence: 26
+level: C1
+slug: 26-media-landscape
 version: '2.0'
 title: 'Медіаландшафт: Як не потонути в інформації'
-focus: domain
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Інститут масової інформації
-  url: https://imi.org.ua/
-  type: reference
-  notes: Media monitoring and analysis
-- name: StopFake
-  url: https://www.stopfake.org/
-  type: secondary
-  notes: Fact-checking resources
 content_outline:
 - section: Вступ — Медіа в Україні
   words: 400
@@ -62,7 +49,7 @@ content_outline:
   - Виявлення маніпуляцій
   - Порівняльний огляд
 word_target: 4000
-vocabulary:
+vocabulary_hints:
   required:
   - ЗМІ (mass media)
   - джерело (source)
@@ -80,19 +67,42 @@ vocabulary:
   - верифікація (verification)
   - первинне джерело (primary source)
   - медіаграмотність (media literacy)
-  forbidden: []
-activities:
-  types_required:
-  - group-sort
-  - quiz
-  - essay-response
-  - cloze
-  - match-up
-  - true-false
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: Media literacy concepts
+  items: 15+
+- type: group-sort
+  focus: Media types by reliability
+  items: 12+
+- type: match-up
+  focus: Propaganda technique → example
+  items: 12+
+- type: cloze
+  focus: Media analysis vocabulary
+  items: 10+
+- type: true-false
+  focus: Identify bias indicators
+  items: 12+
+- type: essay-response
+  focus: Analyze news article for bias
+  word_target: 200
+focus: domain
+prerequisites:
+- c1-25 (Political System)
+- Critical thinking skills
 connects_to:
 - c1-27 (Global Context)
 - c1-33 (Case Studies)
 - c1-35 (C1.2 Checkpoint)
+module_type: cultural
+sources:
+- name: Інститут масової інформації
+  url: https://imi.org.ua/
+  type: reference
+  notes: Media monitoring and analysis
+- name: StopFake
+  url: https://www.stopfake.org/
+  type: secondary
+  notes: Fact-checking resources
+immersion: 100% Ukrainian
+phase: C1.2 Professional Communication

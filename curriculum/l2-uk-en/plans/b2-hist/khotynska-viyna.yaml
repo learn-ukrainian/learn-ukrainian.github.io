@@ -1,61 +1,56 @@
 module: khotynska-viyna
-level: b2-hist
-sequence: 46
-version: '1.0'
+level: B2-HIST
+slug: khotynska-viyna
+version: '2.0'
 title: 'Хотинська війна 1621: Козацький щит Європи'
-focus: history
-pedagogy: CBI
-objectives:
-- Learner can describe the causes and scale of the Khotyn War of 1621
-- Learner can analyze the tactical role of cossack infantry in the victory
-- Learner can understand the geopolitical consequences of the battle for Europe
+subtitle: The Battle That Saved Christian Civilization
 content_outline:
 - section: Вступ
   words: 383
-  subsections:
+  points:
   - 'The geopolitical context: Ottoman expansion'
   - The disaster at Cecora (1620) as a prelude
 - section: 'Мобілізація сил: Підготовка до апокаліпсису'
   words: 536
-  subsections:
+  points:
   - Sultan Osman II's grand army
   - The desperate situation of Poland-Lithuania
   - The cossack council and Sahaidachnyi's decision
 - section: 'Тактика і Стратегія: Секрети перемоги'
   words: 500
-  subsections:
+  points:
   - The layout of the camp and fortifications
   - The decisive role of the cossack 'tabor' and artillery
   - Logistics and survival in the camp
 - section: 'Читання: Свідчення очевидця'
   words: 196
-  subsections:
+  points:
   - Analysis of Jakub Sobieski's diary
 - section: 'Герої та Жертви: Ціна перемоги'
   words: 246
-  subsections:
+  points:
   - The leadership of Petro Sahaidachnyi
   - The psychological breaking point of the Ottoman army
 - section: Геополітичні наслідки та пам'ять
   words: 400
-  subsections:
+  points:
   - The decline of the Ottoman Empire
   - The rise of the Cossack myth in Europe
   - Khotyn in Ukrainian literature and art
 - section: Первинні джерела
   words: 400
-  subsections:
+  points:
   - Excerpts from the Khotyn Chronicle
   - Letters of the Sultan
   - Cossack chronicles on Khotyn
 - section: Деколонізаційний погляд
   words: 500
-  subsections:
+  points:
   - Ukraine as a subject of international politics
   - Debunking the myth of 'Polish victory'
   - 'European context: The Thirty Years'' War'
 word_target: 4000
-activities:
+activity_hints:
 - type: reading
   focus: Eye-witness accounts of the battle intensity
 - type: quiz
@@ -66,3 +61,14 @@ activities:
   focus: Ottoman vs. Cossack military tactics
 - type: critical-analysis
   focus: 'The political aftermath: Peace treaty and broken promises'
+focus: history
+pedagogy: CBI
+objectives:
+- Learner can describe the causes and scale of the Khotyn War of 1621
+- Learner can analyze the tactical role of cossack infantry in the victory
+- Learner can understand the geopolitical consequences of the battle for Europe
+grammar:
+- 'Historical narrative: detailed battle descriptions'
+- Military terminology and formations
+register: публіцистичний
+phase: HIST.5 [Rise of Cossacks]

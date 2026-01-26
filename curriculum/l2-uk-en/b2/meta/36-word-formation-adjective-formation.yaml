@@ -1,10 +1,10 @@
 module: b2-36
-title: 'Словотворення: прикметники'
-subtitle: Творення прикметників від іменників та складні прикметники
+level: B2
+slug: 36-word-formation-adjective-formation
 version: '1.0'
-phase: B2.1b [Grammar Completion]
-pedagogy: TTT
-focus: grammar
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
 tags:
@@ -12,54 +12,7 @@ tags:
 - word-formation
 - adjectives
 - derivation
-grammar:
-- Суфікс -ський/-цький (належність, походження)
-- Суфікс -ний/-альний (якість, відношення)
-- Складні прикметники (колір, зовнішність, сфера)
-objectives:
-- Learner can form adjectives from nouns using Ukrainian suffixes
-- Learner can distinguish between -ський/-цький and -ний/-альний patterns
-- Learner can form and use compound adjectives correctly
-- Learner can recognize word formation patterns in authentic texts
 vocabulary_count: 25
-register: науковий
 vocab_count: 112
-slug: 36-word-formation-adjective-formation
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-- section: Вступ — прикметники
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-  - Роль у системі української мови
-- section: Suffix -ський/-цький (belonging/origin)
-  words: 400
-  points:
-  - Україна → український (Ukrainian)
-  - Німеччина → німецький (German)
-  - місто → міський (urban)
-  - село → сільський (rural)
-- section: Suffix -ний/-альний (quality/relation)
-  words: 400
-  points:
-  - нація → національний (national)
-  - музика → музикальний / музичний (musical)
-  - центр → центральний (central)
-  - професія → професійний (professional)
-- section: Compound Adjectives
-  words: 400
-  points:
-  - синьо-жовтий (blue-yellow)
-  - білолиций (white-faced)
-  - науково-публіцистичний (scientific-journalistic)
-  - головнокомандувач → who is head commander
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

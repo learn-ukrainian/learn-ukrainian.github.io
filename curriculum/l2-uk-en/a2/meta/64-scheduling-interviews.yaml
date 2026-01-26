@@ -1,97 +1,13 @@
 module: a2-64
-id: a2-64
+level: A2
 slug: scheduling-interviews
-title: "Scheduling Interviews"
-subtitle: "Job Search and Interviews"
 version: '2.0'
-phase: "A2.6 [Practical]"
-focus: practical
-pedagogy: PPP
-register: розмовний
-duration: 60
-transliteration: none
-objectives:
-  - "Learner can arrange a job interview"
-  - "Learner can describe their professional background"
-  - "Learner can ask about salary and duties"
-  - "Learner can use formal language for business"
-grammar:
-  - "Interview vocabulary (співбесіда, резюме)"
-  - "Describing experience and skills"
-  - "Formal business language"
-word_target: 1000
-content_outline:
-  - section: "Introduction: Job Search in Ukraine"
-    words: 100
-    points:
-      - "Job market basics"
-      - "Finding job openings"
-      - "Interview vocabulary"
-  - section: "Arranging an Interview"
-    words: 200
-    points:
-      - "призначити співбесіду"
-      - "Confirming time and place"
-      - "Preparing documents"
-  - section: "Your Background"
-    words: 200
-    points:
-      - "досвід роботи"
-      - "освіта, навички"
-      - "Describing qualifications"
-  - section: "Interview Questions"
-    words: 200
-    points:
-      - "Common questions"
-      - "Answering about yourself"
-      - "Questions to ask"
-  - section: "Salary and Conditions"
-    words: 150
-    points:
-      - "зарплата, графік"
-      - "Benefits and vacation"
-      - "Negotiating terms"
-  - section: "Practice: Job Interview"
-    words: 150
-    points:
-      - "Schedule interview"
-      - "Answer interview questions"
-vocabulary_hints:
-  required:
-    - співбесіда (interview)
-    - резюме (resume)
-    - вакансія (vacancy)
-    - досвід (experience)
-    - зарплата (salary)
-    - обов'язки (duties)
-    - навички (skills)
-    - кандидат (candidate)
-  recommended:
-    - HR-менеджер (HR manager)
-    - графік (schedule)
-    - випробувальний (probation)
-    - соціальний пакет (benefits)
-    - відпустка (vacation)
-    - підвищення (promotion)
-activity_hints:
-  - type: vocabulary-drill
-    focus: "Job interview vocabulary"
-    items: 25
-  - type: dialogue
-    focus: "Interview conversation"
-    items: 12
-  - type: speaking
-    focus: "Describe your background"
-    items: 10
-  - type: role-play
-    focus: "Job interview simulation"
-    items: 8
-prerequisites:
-  - a2-63 (Scheduling Appointments)
-  - a2-49 (Work and Professions)
-connects_to:
-  - a2-65 (Giving Directions)
+id: a2-64
 naturalness:
   score: 9
   status: PASS
-  justification: "Essential career scenario"
+  justification: Essential career scenario
+duration: 60
+transliteration: none
+build:
+  last_modified: '2026-01-26'

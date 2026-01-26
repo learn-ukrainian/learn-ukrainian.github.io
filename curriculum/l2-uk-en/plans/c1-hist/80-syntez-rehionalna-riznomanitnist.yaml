@@ -1,0 +1,109 @@
+module: syntez-rehionalna-riznomanitnist
+level: C1-HIST
+slug: syntez-rehionalna-riznomanitnist
+version: '2.0'
+title: 'Синтез: Регіональна різноманітність'
+content_outline:
+- section: Вступ — Єдність у різноманітності
+  words: 400
+  points:
+  - Огляд модулів 70-79
+  - Регіони — не перешкода
+  - Єдина нація — різні шляхи
+  - Мета синтезу
+- section: Порівняльна таблиця регіонів
+  words: 600
+  points:
+  - Захід vs. Схід vs. Південь vs. Центр
+  - Імперський досвід
+  - Церква
+  - Мова
+  - Національна свідомість
+- section: Чому різні траєкторії?
+  words: 700
+  points:
+  - Імперії — ключ до розуміння
+  - Австрія дала шанс
+  - Росія — русифікація
+  - Різний час «пробудження»
+- section: Чи є «справжні українці»?
+  words: 600
+  points:
+  - Міф «західників»
+  - Міф «русифікованого сходу»
+  - Реальність — спектр
+  - Ідентичність — процес
+- section: 2014 і 2022 — перевірка
+  words: 500
+  points:
+  - Майдан — не тільки Київ
+  - 2014 — Схід і Південь
+  - 2022 — загальна мобілізація
+  - Регіоналізм vs. патріотизм
+- section: Майбутнє регіонів
+  words: 400
+  points:
+  - Децентралізація
+  - Регіональна ідентичність в єдиній державі
+  - Європейський досвід
+  - Україна після війни
+- section: Підсумок
+  words: 300
+  points:
+  - Різноманітність — сила
+  - Єдність — вибір
+  - Перехід до імперських механізмів
+word_target: 3500
+vocabulary_hints:
+  required:
+  - синтез (synthesis)
+  - регіональна різноманітність (regional diversity)
+  - єдність (unity)
+  - траєкторія (trajectory)
+  - ідентичність (identity)
+  - децентралізація (decentralization)
+  - національна свідомість (national consciousness)
+  - спектр (spectrum)
+  - порівняння (comparison)
+  - інтеграція (integration)
+  recommended:
+  - регіоналізм (regionalism)
+  - федералізм (federalism)
+  - унітарна держава (unitary state)
+  - субнаціональний (subnational)
+  - територіальна цілісність (territorial integrity)
+activity_hints:
+- type: essay-response
+  focus: Create regional diversity map of Ukraine
+  output: Comparative regional map
+- type: comparative-table
+  focus: All regions — key characteristics
+  output: Master comparison table
+- type: 2014-2022-analysis
+  focus: How regions responded to crises
+  output: Crisis response analysis
+- type: future-scenarios
+  focus: Regional Ukraine after victory — what model?
+  output: Scenario analysis
+- type: essay-response
+  focus: Чи регіональні відмінності загрожують єдності України?
+  word_target: 500
+  model_answer: Required
+focus: history
+prerequisites:
+- c1-hist-70-79 (All regional modules)
+connects_to:
+- c1-hist-81 (Co-optation mechanism)
+- c1-hist-133 (Agency synthesis)
+module_type: synthesis
+sources:
+- name: Регіони України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Регіони_України
+  type: reference
+  notes: Regional overview
+- name: Українська ідентичність (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_ідентичність
+  type: reference
+  notes: Identity studies
+immersion: 100% Ukrainian
+phase: C1-HIST.1 [Historiography]

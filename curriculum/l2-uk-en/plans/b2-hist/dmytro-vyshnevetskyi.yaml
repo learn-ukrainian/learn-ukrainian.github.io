@@ -1,54 +1,48 @@
 module: dmytro-vyshnevetskyi
-level: b2-hist
-sequence: 43
-version: '1.0'
+level: B2-HIST
+slug: dmytro-vyshnevetskyi
+version: '2.0'
 title: 'Дмитро Вишневецький: Перший кошовий'
-focus: history
-pedagogy: CBI
-objectives:
-- Learner can describe the role of Dmytro Vyshnevetskyi in the founding of the first
-  Sich
-- Learner can analyze the geopolitical significance of the Khortytsia fortress
-- Learner can understand the legendary status of Baida in Ukrainian folklore
+subtitle: The Legendary Founder of the First Sich
 content_outline:
 - section: Вступ
   words: 302
-  subsections:
+  points:
   - The transition from princes to cossack leaders
   - Dmytro Vyshnevetskyi as a figure of the frontier
 - section: 'Шлях князя: Від Волині до Степу'
   words: 758
-  subsections:
+  points:
   - Origins and noble status
   - Early military experience
   - Diplomatic maneuvers
 - section: Заснування Малої Хортиці
   words: 648
-  subsections:
+  points:
   - Strategic necessity of the 1550s
   - Life in the first fortress
   - Historical legacy
 - section: Читання
   words: 353
-  subsections:
+  points:
   - Analysis of folk ballads and primary accounts
 - section: Геополітика і Дипломатія
   words: 521
-  subsections:
+  points:
   - Relations with Poland, Lithuania, and Moscow
   - The anti-Tatar coalition strategy
 - section: Первинні джерела
   words: 349
-  subsections:
+  points:
   - Chronicle accounts of Vyshnevetskyi's death
   - Ballad of Baida
 - section: Деколонізаційний погляд
   words: 308
-  subsections:
+  points:
   - Vyshnevetskyi as an independent actor
   - The myth of Moscow's protectorate
 word_target: 3684
-activities:
+activity_hints:
 - type: reading
   focus: 'Ballad of Baida: Analysis of folk imagery'
 - type: quiz
@@ -59,3 +53,15 @@ activities:
   focus: Vyshnevetskyi vs later Cossack leaders
 - type: critical-analysis
   focus: Analyzing primary source accounts of his martyrdom
+focus: history
+pedagogy: CBI
+objectives:
+- Learner can describe the role of Dmytro Vyshnevetskyi in the founding of the first
+  Sich
+- Learner can analyze the geopolitical significance of the Khortytsia fortress
+- Learner can understand the legendary status of Baida in Ukrainian folklore
+grammar:
+- 'Historical narrative: past perfective'
+- Passive voice in historical descriptions
+register: публіцистичний
+phase: HIST.5 [Rise of Cossacks]

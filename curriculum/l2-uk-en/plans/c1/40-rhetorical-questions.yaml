@@ -1,22 +1,42 @@
-module: 40-rhetorical-questions
-level: c1
-sequence: 40
-version: '1.0'
+module: c1-40
+level: C1
+slug: 40-rhetorical-questions
+version: '2.0'
 title: 'Риторичні питання: Мистецтво переконання'
 subtitle: 'Rhetorical Questions: The Art of Persuasion'
+content_outline:
+- section: Вступ — Мистецтво переконання
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Functions
+  words: 500
+  points:
+  - 'Наголошення: Хто цього не знає? (Everyone knows)'
+  - 'Переконання: Чи можемо ми це допустити? (We cannot)'
+  - 'Емоція: Коли це закінчиться?! (Frustration)'
+- section: Structures
+  words: 500
+  points:
+  - Хіба...? Невже...? Чи ж...?
+  - Як можна...? Чому б не...?
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: style
 pedagogy: Immersion
 objectives:
 - Identify rhetorical questions in various registers
 - Use rhetorical questions for emphasis and persuasion
 - Distinguish between genuine and rhetorical questions
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Rhetorical question markers (хіба, невже, чи ж)
+- Questions as statements
+- Intonation in rhetorical questions
+phase: C1.4 Advanced Stylistics & Rhetoric

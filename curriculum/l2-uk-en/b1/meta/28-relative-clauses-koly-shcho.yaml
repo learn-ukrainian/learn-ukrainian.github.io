@@ -1,94 +1,13 @@
 module: b1-28
-id: b1-28
+level: B1
 slug: relative-clauses-koly-shcho
-title: "Підрядні означальні: коли, що"
-subtitle: "Time and Fact Relative Clauses"
 version: '2.0'
-phase: "B1.3a [Complex Sentences]"
-focus: grammar
-pedagogy: TTT
-register: розмовний
-duration: 90
-transliteration: none
-objectives:
-  - "Learner can form time relative clauses with коли"
-  - "Learner can use що as a relative pronoun for facts"
-  - "Learner can distinguish relative що from conjunction що"
-  - "Learner can combine time expressions with relative clauses"
-grammar:
-  - "Time relatives with коли (when)"
-  - "Fact relatives with що as relative pronoun"
-  - "Distinction: relative що vs conjunction що"
-word_target: 1200
-content_outline:
-  - section: "Introduction: Time and Fact Relatives"
-    words: 150
-    points:
-      - "коли for time expressions"
-      - "що as relative pronoun"
-      - "Distinguishing functions"
-  - section: "коли - Time Relatives"
-    words: 250
-    points:
-      - "Час, коли... (the time when...)"
-      - "День, коли... (the day when...)"
-      - "Tense in time clauses"
-  - section: "що - Fact Relatives"
-    words: 250
-    points:
-      - "Те, що... (that which...)"
-      - "Все, що... (everything that...)"
-      - "Referring to statements"
-  - section: "що: Relative vs Conjunction"
-    words: 250
-    points:
-      - "Relative: replaces noun"
-      - "Conjunction: introduces fact"
-      - "Distinguishing tests"
-  - section: "Complex Time Expressions"
-    words: 200
-    points:
-      - "Before, after, while clauses"
-      - "Temporal sequence"
-      - "Combined time patterns"
-  - section: "Practice: Time and Fact Clauses"
-    words: 100
-    points:
-      - "Create time relatives"
-      - "Use що correctly"
-vocabulary_hints:
-  required:
-    - коли (when)
-    - що (that/what/which)
-    - час (time)
-    - момент (moment)
-    - день (day)
-    - факт (fact)
-    - те (that - neuter)
-    - все (everything)
-  recommended:
-    - до того як (before)
-    - після того як (after)
-    - поки (while)
-    - одночасно (simultaneously)
-activity_hints:
-  - type: fill-in
-    focus: "коли/що selection"
-    items: 25
-  - type: sentence-combining
-    focus: "Combine with time relatives"
-    items: 20
-  - type: error-correction
-    focus: "Fix що usage errors"
-    items: 15
-  - type: translation
-    focus: "English to Ukrainian"
-    items: 15
-prerequisites:
-  - b1-27 (Relative Clauses де/куди/звідки)
-connects_to:
-  - b1-29 (Purpose Clauses щоб + infinitive)
+id: b1-28
 naturalness:
   score: 9
   status: PASS
-  justification: "Essential time/fact clause structure"
+  justification: Essential time/fact clause structure
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-26'

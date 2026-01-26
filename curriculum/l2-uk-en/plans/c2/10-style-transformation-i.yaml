@@ -1,0 +1,119 @@
+module: style-transformation-i
+level: C2
+slug: style-transformation-i
+version: '2.0'
+title: Трансформація стилю I — Науковий → Популярний
+content_outline:
+- section: Вступ — Навіщо популяризувати науку?
+  words: 400
+  points:
+  - Роль науково-популярного стилю
+  - Аудиторії популяризації
+  - Баланс точності та доступності
+- section: Стратегії спрощення термінології
+  words: 700
+  points:
+  - Заміна термінів загальновживаними словами
+  - Пояснення через аналогії
+  - Визначення в контексті
+  - Коли зберігати терміни
+- section: Додавання прикладів та ілюстрацій
+  words: 600
+  points:
+  - Конкретні приклади з життя
+  - Візуальні аналогії
+  - Історичні анекдоти
+  - Порівняння з відомим
+- section: Зміна синтаксису
+  words: 600
+  points:
+  - Від складних речень до простих
+  - Активний стан замість пасивного
+  - Риторичні запитання
+  - Діалогічність тексту
+- section: Адаптація для різних аудиторій
+  words: 600
+  points:
+  - Широка публіка
+  - Студенти
+  - Фахівці інших галузей
+  - Діти та підлітки
+- section: Жанри науково-популярного письма
+  words: 600
+  points:
+  - Стаття для журналу
+  - Блог-пост
+  - Публічна лекція
+  - Соціальні мережі
+- section: Практикум — Трансформація текстів
+  words: 500
+  points:
+  - Перетворення анотації на блог-пост
+  - Порівняння наукової та популярної версії
+  - Пояснення складної концепції просто
+  - Оцінка збереження точності
+word_target: 4000
+vocabulary_hints:
+  required:
+  - популяризація (popularization)
+  - спрощення (simplification)
+  - аналогія (analogy)
+  - доступність (accessibility)
+  - аудиторія (audience)
+  - адаптація (adaptation)
+  - ілюстрація (illustration)
+  - приклад (example)
+  - концепція (concept)
+  - точність (accuracy)
+  recommended:
+  - метафора (metaphor)
+  - візуалізація (visualization)
+  - діалогічність (dialogicity)
+  - вульгаризація (vulgarization — negative)
+  - просвітництво (enlightenment)
+activity_hints:
+- type: essay-response
+  focus: Transform research abstract into blog post
+  word_target: 400
+  output: Accessible text with comparison to original
+- type: critical-analysis
+  focus: Compare scientific and popular versions of same content
+  output: Analysis of transformation strategies used
+- type: essay-response
+  focus: Explain complex concept to general audience
+  word_target: 300
+  output: Popular explanation with accuracy check
+- type: quiz
+  focus: Identify appropriate simplification strategies
+  items: 12+
+- type: fill-in
+  focus: Replace technical terms with accessible equivalents
+  items: 15+
+- type: comparative-study
+  focus: Evaluate quality of science popularization
+  output: Assessment of accuracy vs accessibility balance
+focus: stylistics
+prerequisites:
+- c2-03 (Mastery of academic style)
+- c2-05 (Journalistic techniques)
+- Understanding of target audiences
+connects_to:
+- c2-11 (Official to journalistic transformation)
+- c2-58 (Cross-domain communication)
+- c2-12 (Lexical stylistics for word choice)
+module_type: style
+sources:
+- name: Науково-популярні видання України
+  url: https://www.nbuv.gov.ua/
+  type: reference
+  notes: Examples of academic-to-popular transformation
+- name: Science popularization methodology
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Strategies for accessible science writing
+- name: Ukrainian State Standard 2024 — Style transformation
+  url: https://mon.gov.ua/
+  type: reference
+  notes: C2 requirements for register shifting
+immersion: 100% Ukrainian
+phase: C2.1 Stylistics Mastery

@@ -1,0 +1,125 @@
+module: medical-ukrainian-iii
+level: C2
+slug: medical-ukrainian-iii
+version: '2.0'
+title: Медична українська III — Медична документація
+content_outline:
+- section: Вступ — Система медичної документації в Україні
+  words: 500
+  points:
+  - Правові основи ведення документації
+  - Перехід до електронної системи
+  - eHealth та його компоненти
+  - Відповідальність за ведення документації
+- section: Первинна медична документація
+  words: 700
+  points:
+  - Медична карта амбулаторного хворого (форма 025/о)
+  - Карта стаціонарного хворого (форма 003/о)
+  - Записи в електронній медичній карті
+  - Стандарти оформлення
+- section: Виписки та довідки
+  words: 600
+  points:
+  - Виписка з амбулаторної карти
+  - Епікриз (виписний, етапний, посмертний)
+  - Медичні довідки різних форм
+  - Лікарняні листки
+- section: Направлення та рецепти
+  words: 600
+  points:
+  - Направлення на консультацію
+  - Направлення на госпіталізацію
+  - Направлення на обстеження
+  - Рецепти (електронні та паперові)
+- section: Протоколи та висновки
+  words: 600
+  points:
+  - Протоколи діагностичних обстежень
+  - Висновки консиліумів
+  - Заключення МСЕК
+  - Судово-медичні висновки
+- section: Статистична звітність
+  words: 500
+  points:
+  - Форми статистичної звітності
+  - Кодування діагнозів за МКХ-10
+  - Звіти про надані послуги
+  - Контроль якості даних
+- section: Практикум — Заповнення медичної документації
+  words: 500
+  points:
+  - Ведення записів у медичній карті
+  - Складання виписного епікризу
+  - Оформлення електронного рецепта
+word_target: 4000
+vocabulary_hints:
+  required:
+  - медична карта (medical record)
+  - епікриз (discharge summary/epicrisis)
+  - виписка (extract/discharge summary)
+  - направлення (referral)
+  - рецепт (prescription)
+  - лікарняний лист (sick leave certificate)
+  - протокол (protocol/report)
+  - висновок (conclusion/opinion)
+  - МСЕК (medical-social expert commission)
+  - МКХ-10 (ICD-10)
+  recommended:
+  - eHealth (eHealth system)
+  - електронна карта (electronic record)
+  - кодування (coding)
+  - статистична звітність (statistical reporting)
+  - форма (form)
+activity_hints:
+- type: reading
+  focus: Аналіз виписного епікризу
+  source: Типовий зразок МОЗ
+  items: 1 повний документ
+- type: fill-in
+  focus: Заповнення форми медичної карти
+  items: 15+
+- type: essay-response
+  focus: Написання виписного епікризу за заданим випадком
+  word_target: 500
+  output: Повний структурований епікриз
+- type: quiz
+  focus: Ідентифікація форм медичної документації
+  items: 15+
+- type: match-up
+  focus: Клінічна ситуація → відповідна форма документа
+  items: 12+
+- type: error-correction
+  focus: Виправлення помилок у медичній документації
+  items: 12+
+- type: fill-in
+  focus: Заповнення електронного рецепта
+  items: 10+
+- type: comparative-study
+  focus: Паперова vs електронна документація — переваги та недоліки
+  output: Аналітичне порівняння
+focus: domain
+prerequisites:
+- c2-67 (Medical Ukrainian II — patient communication)
+- c2-66 (Medical Ukrainian I — terminology)
+- Official style mastery (C2.1 M04)
+connects_to:
+- c2-69 (Medical Ukrainian IV — clinical scenarios)
+- c2-70 (Medical Ukrainian V — medical research)
+- c2-71 (Professional Portfolio I)
+module_type: professional
+sources:
+- name: Накази МОЗ щодо медичної документації
+  url: https://moz.gov.ua/dokumenti
+  type: primary
+  notes: Форми медичної документації
+- name: Електронна система охорони здоров'я
+  url: https://ehealth.gov.ua/
+  type: primary
+  notes: Електронна медична документація
+- name: Національний класифікатор захворювань
+  url: https://moz.gov.ua/
+  type: reference
+  notes: МКХ-10 українською
+immersion: 100% Ukrainian
+phase: C2.3 Translation & Creative Writing

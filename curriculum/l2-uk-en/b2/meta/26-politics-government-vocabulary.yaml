@@ -1,10 +1,10 @@
 module: b2-26
-title: Політика та державне управління
-subtitle: Мова влади і громадянства
+level: B2
+slug: 26-politics-government-vocabulary
 version: '1.0'
-phase: B2
-pedagogy: CLIL
-focus: grammar
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
 tags:
@@ -13,44 +13,7 @@ tags:
 - politics
 - government
 - register
-grammar:
-- political-terminology
-- official-register
-- journalistic-register
-objectives:
-- Учень може розуміти новини про політичні події в Україні
-- Учень може обговорювати політичні теми з використанням відповідної термінології
-- Учень може розрізняти офіційний та публіцистичний стилі в політичному дискурсі
 vocabulary_count: 35
 vocab_count: 101
-slug: 26-politics-government-vocabulary
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-- section: Вступ — Політика та державне управління
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-  - Роль у системі української мови
-- section: Політична лексика
-  words: 500
-  points:
-  - держава, уряд, парламент
-  - президент, прем'єр-міністр, депутат
-  - вибори, голосування, референдум
-  - закон, конституція, реформа
-- section: Політичні процеси
-  words: 500
-  points:
-  - демократія, диктатура, авторитаризм
-  - коаліція, опозиція, фракція
-  - законопроект, ухвалення, вето
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

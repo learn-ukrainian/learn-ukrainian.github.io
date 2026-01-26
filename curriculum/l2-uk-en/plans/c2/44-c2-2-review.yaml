@@ -1,0 +1,114 @@
+module: c2-2-review
+level: C2
+slug: c2-2-review
+version: '2.0'
+title: Повторення C2.2 — Літературна майстерність
+content_outline:
+- section: Вступ — Консолідація літературних компетенцій
+  words: 400
+  points:
+  - Огляд пройденого матеріалу М26-43
+  - Взаємозв'язки між теорією та практикою
+  - Підготовка до контрольної оцінки
+- section: Літературна теорія та наратологія (М26-27)
+  words: 600
+  points:
+  - Ключові теоретичні концепції
+  - Наративні категорії та їх застосування
+  - Практичні завдання на закріплення
+- section: Поетика вірша та прози (М28-29)
+  words: 600
+  points:
+  - Версифікація та просодія
+  - Прозові техніки та стилістика
+  - Інтеграція формального аналізу
+- section: Інтертекстуальність та критика (М30-32)
+  words: 600
+  points:
+  - Інтертекстуальні зв'язки
+  - Методи літературної критики
+  - Написання літературознавчих есеїв
+- section: Переклад та творче письмо (М33-37)
+  words: 600
+  points:
+  - Перекладознавча теорія та практика
+  - 'Творче письмо: поезія та проза'
+  - Індивідуальний голос у перекладі та оригіналі
+- section: Сучасна література та спільнота (М38-41)
+  words: 500
+  points:
+  - Орієнтація в сучасному літературному процесі
+  - Літературні премії та канон
+  - Участь у літературній спільноті
+- section: Підсумок та підготовка до Checkpoint
+  words: 400
+  points:
+  - Самодіагностика прогалин
+  - Рекомендації для індивідуального повторення
+  - Очікування від контрольної оцінки
+word_target: 4000
+vocabulary_hints:
+  required:
+  - консолідація (consolidation)
+  - повторення (review)
+  - закріплення (reinforcement)
+  - систематизація (systematization)
+  - інтеграція (integration)
+  - самодіагностика (self-diagnosis)
+  - прогалина (gap)
+  - взаємозв'язок (interconnection)
+  - компетенція (competency)
+  - оцінювання (assessment)
+  recommended:
+  - траєкторія навчання (learning trajectory)
+  - рефлексивна практика (reflective practice)
+  - метакогнітивний (metacognitive)
+  - пріоритезація (prioritization)
+  - індивідуальний план (individual plan)
+activity_hints:
+- type: quiz
+  focus: Літературна теорія — ключові концепції М26-32
+  items: 20+
+- type: quiz
+  focus: Версифікація та поетика — М28-29
+  items: 15+
+- type: critical-analysis
+  focus: Аналіз тексту з застосуванням усіх методів
+  output: Комплексний аналіз із моделлю відповіді
+- type: essay-response
+  focus: Міні-есе на літературознавчу тему
+  word_target: 500
+  output: Швидке есе з рубрикою оцінювання
+- type: comparative-study
+  focus: Порівняння перекладів одного тексту
+  output: Аналіз перекладацьких стратегій
+- type: quiz
+  focus: Сучасна українська література — М38-41
+  items: 12+
+- type: essay-response
+  focus: Рефлексія про власний літературний розвиток
+  word_target: 400
+  output: Самооцінка та план вдосконалення
+focus: integration
+prerequisites:
+- M26-43 (All C2.2 Literary Mastery modules)
+- M42-43 (Practice modules with portfolios)
+connects_to:
+- c2-45 (C2.2 Checkpoint — assessment)
+- c2-46 (Professional Language Overview — C2.3 start)
+module_type: integration
+sources:
+- name: Інститут літератури НАН України
+  url: https://ilnan.gov.ua/
+  type: reference
+  notes: Academic standards for literary analysis and research
+- name: Українська Вільна Академія Наук
+  url: https://uvan.us/
+  type: reference
+  notes: International standards for Ukrainian literary scholarship
+- name: Слово і Час — науковий журнал
+  url: http://dspace.nbuv.gov.ua/handle/123456789/8800
+  type: reference
+  notes: Peer-reviewed literary criticism examples
+immersion: 100% Ukrainian
+phase: C2.2 Literary Analysis

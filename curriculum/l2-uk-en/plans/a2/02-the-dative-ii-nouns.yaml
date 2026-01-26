@@ -1,25 +1,9 @@
 module: 02-the-dative-ii-nouns
-level: a2
-sequence: 2
-version: '1.0'
+level: A2
+slug: 02-the-dative-ii-nouns
+version: '2.0'
 title: The Dative II — Nouns
 subtitle: Giving, Sending, and Showing
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can form dative case endings for masculine nouns
-- Learner can form dative case endings for feminine and neuter nouns
-- Learner can form dative plural endings
-- Learner can use dative nouns with common verbs
-sources:
-- name: Ukrainian State Standard 2024 - Noun Declension
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Complete dative endings for all noun genders
-- name: Ukrainian Grammar Tables
-  url: https://uk.wikipedia.org/wiki/Відмінювання_іменників
-  type: reference
-  notes: Declension patterns and exceptions
 content_outline:
 - section: Introduction / Вступ
   words: 300
@@ -43,7 +27,7 @@ content_outline:
   points:
   - Mini-dialogues in context
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - давати (to give)
   - дарувати (to gift)
@@ -66,16 +50,52 @@ vocabulary:
   - довіряти (to trust)
   - радити (to advise)
   - дозволяти (to allow)
-  forbidden: []
-activities:
-  types_required:
-  - quiz
-  - match-up
-  - fill-in
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: Add dative endings to nouns
+  items: 15+
+- type: quiz
+  focus: Form dative from nominative
+  items: 12+
+- type: match-up
+  focus: Verb + typical dative object pairs
+  items: 10+
+- type: fill-in
+  focus: Complete sentences with correct dative noun
+  items: 10+
+- type: quiz
+  focus: Choose correct dative ending by gender
+  items: 10+
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a2-01 (Dative pronouns)
+- A1 noun gender recognition
+- A1 accusative case
 connects_to:
 - a2-03 (Dative Verbs)
 - a2-04 (Instrumental I)
 - a2-09 (All Cases Practice)
+objectives:
+- Learner can form dative case endings for masculine nouns
+- Learner can form dative case endings for feminine and neuter nouns
+- Learner can form dative plural endings
+- Learner can use dative nouns with common verbs
+grammar:
+- dative noun endings
+- masculine dative (-ові/-у)
+- feminine dative (-і)
+- neuter dative (-у/-ові)
+- plural dative (-ам)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Noun Declension
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Complete dative endings for all noun genders
+- name: Ukrainian Grammar Tables
+  url: https://uk.wikipedia.org/wiki/Відмінювання_іменників
+  type: reference
+  notes: Declension patterns and exceptions
+immersion: 50-60% Ukrainian
+phase: A2.1

@@ -1,25 +1,8 @@
 module: 17-register-business-ukrainian
-level: b2
-sequence: 17
-version: '1.0'
+level: B2
+slug: 17-register-business-ukrainian
+version: '2.0'
 title: Ділова українська мова
-focus: style
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Ukrainian State Standard 2024 - Business Communication
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Business correspondence and communication standards
-- name: Ділова українська мова
-  url: https://uk.wikipedia.org/wiki/Ділова_мова
-  type: secondary
-  notes: Business writing conventions
-- name: CEFR B2 Professional Communication
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
-  type: reference
-  notes: B2 workplace language requirements
 content_outline:
 - section: Вступ — Ділове спілкування
   words: 400
@@ -69,7 +52,7 @@ content_outline:
   - Рольові ділові ситуації
   - Підготовка до модуля 18
 word_target: 3800
-vocabulary:
+vocabulary_hints:
   required:
   - ділове листування (business correspondence)
   - переговори (negotiations)
@@ -87,19 +70,52 @@ vocabulary:
   - дедлайн (deadline)
   - бюджет (budget)
   - результат (result)
-  forbidden: []
-activities:
-  types_required:
-  - error-correction
-  - reading
-  - fill-in
-  - essay-response
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: Convert casual message to business format
+  items: 10+
+- type: fill-in
+  focus: Complete business letter with appropriate formulas
+  items: 15+
+- type: match-up
+  focus: Situation → appropriate business phrase
+  items: 16+
+- type: error-correction
+  focus: Fix russisms in business texts
+  items: 12+
+- type: reading
+  focus: Analyze authentic business correspondence
+  items: 4 texts
+- type: essay-response
+  focus: Write business email responding to scenario
+  items: 5+
+- type: essay-response
+  focus: Draft business proposal letter
+  word_target: 200
+  output: Model answer with annotations
+focus: style
+prerequisites:
+- b2-15 (Register Introduction)
+- 'b2-16 (Register: Formal/Informal)'
+- Basic letter writing
 connects_to:
 - 'b2-18 (Register: Academic Ukrainian)'
 - 'b2-19 (Register: Official-Legal)'
 - b2-25 (B2.1b Checkpoint)
 - b2-80 (Professional Communication I)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Business Communication
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Business correspondence and communication standards
+- name: Ділова українська мова
+  url: https://uk.wikipedia.org/wiki/Ділова_мова
+  type: secondary
+  notes: Business writing conventions
+- name: CEFR B2 Professional Communication
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 workplace language requirements
+immersion: 100% Ukrainian
+phase: B2.1b [Participles & Register Intro]

@@ -1,14 +1,9 @@
 module: danylo-halytskyi
-level: b2-hist
-sequence: 23
-version: '1.0'
+level: B2-HIST
+slug: danylo-halytskyi
+version: '2.0'
 title: Королювання Данила Романовича
-focus: history
-pedagogy: CBI
-objectives:
-- Учень розуміє значення коронації Данила Галицького
-- Учень може аналізувати дипломатичну гру між Сходом та Заходом
-- Учень може пояснити цивілізаційний вибір Данила
+subtitle: Король України та європейський вибір
 content_outline:
 - section: Контекст
   words: 555
@@ -19,3 +14,13 @@ content_outline:
 - section: Деколонізаційний погляд
   words: 464
 word_target: 4019
+focus: history
+pedagogy: CBI
+objectives:
+- Учень розуміє значення коронації Данила Галицького
+- Учень може аналізувати дипломатичну гру між Сходом та Заходом
+- Учень може пояснити цивілізаційний вибір Данила
+grammar:
+- Titles and honorifics
+- Diplomatic register
+phase: B2.3a [Українська історія]

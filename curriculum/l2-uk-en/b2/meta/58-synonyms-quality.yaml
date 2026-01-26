@@ -1,56 +1,17 @@
 module: b2-58
-title: 'Синоніми: Якість та Оцінка'
-subtitle: Synonyms - Quality and Evaluation
+level: B2
+slug: 58-synonyms-quality
 version: '1.0'
-phase: B2.2 [Phraseology & Synonymy]
-pedagogy: CBI
-focus: phraseology
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
-immersion: 100
 tags:
 - vocabulary
 - synonyms
 - quality
-grammar:
-- Nuances in evaluative adjectives
-- Register and subjective judgment
-objectives:
-- Учень може розрізняти відтінки значень синонімів на позначення якості
-- Учень вміє вживати оцінну лексику відповідно до контексту та регістру
 vocabulary_count: 35
-register: публіцистичний
 vocab_count: 65
-slug: 58-synonyms-quality
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-- section: Вступ — Якість та Оцінка
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-- section: Good
-  words: 500
-  points:
-  - добрий (good - moral)
-  - хороший (good - general quality)
-  - гарний (nice/beautiful - appearance)
-  - чудовий (wonderful - excellent)
-  - прекрасний (splendid - elevated)
-- section: Bad
-  words: 500
-  points:
-  - поганий (bad - general)
-  - злий (evil/angry - moral)
-  - кепський (lousy - colloquial)
-  - огидний (disgusting - strong)
-  - жахливий (terrible - intense)
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

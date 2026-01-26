@@ -1,109 +1,110 @@
 module: yuriy-vynnychuk
-level: c1-bio
-sequence: 82
+level: C1-BIO
+slug: yuriy-vynnychuk
 version: '2.0'
 title: 'Юрій Винничук: Львівський казкар'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Винничук_Юрій_Павлович
-    title: Юрій Винничук (Wikipedia UA)
-    notes: Основна біографічна інформація
-  secondary:
-  - url: https://folio.com.ua/
-    title: Видавництво Фоліо
-    notes: Бібліографія
-  - url: https://litakcent.com/
-    title: Літературна критика
-    notes: Аналіз творчості
 content_outline:
 - section: Вступ — Майстер львівської містики
   words: 400
-  subsections:
+  points:
   - Винничук як унікальний голос української літератури
   - Львів як головний герой його творчості
   - Від андеграунду до визнання
 - section: Львівське дитинство
   words: 600
-  subsections:
+  points:
   - Народження у Львові (1952)
   - Формування в атмосфері старого Львова
   - Ранні літературні спроби
 - section: Андеграунд та перші публікації
   words: 700
-  subsections:
+  points:
   - Творчість у радянський період
   - Цензура та обмеження
   - Самвидав та неофіційна культура
 - section: Містифікації та гра з читачем
   words: 800
-  subsections:
+  points:
   - Легенди Львова як літературний проект
   - Створення псевдоісторичних текстів
   - Гра між фактом і вигадкою
 - section: Танґо смерті та великі романи
   words: 700
-  subsections:
+  points:
   - Аналіз головного роману
   - Тема Голокосту та міжнаціональних стосунків
   - Нагороди та визнання
 - section: Сучасна творчість
   words: 600
-  subsections:
+  points:
   - Нові проекти та теми
   - Громадська позиція
   - Вплив на молоде покоління
 - section: Дискусія — Літературна містифікація як жанр
   words: 200
-  subsections:
+  points:
   - Етика вигадування історії
   - Роль уяви у збереженні памяті
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - містифікація
-  - постмодернізм
-  - легенда
-  - андеграунд
-  - ретро
-  - іронія
-  - псевдоісторичний
-  - багатокультурність
-  - гра
-  - фантасмагорія
+  - містифікація (mystification)
+  - постмодернізм (postmodernism)
+  - легенда (legend)
+  - андеграунд (underground)
+  - ретро (retro)
+  - іронія (irony)
+  - псевдоісторичний (pseudo-historical)
+  - багатокультурність (multiculturalism)
+  - гра (game/play)
+  - фантасмагорія (phantasmagoria)
   recommended:
-  - пастиш
-  - інтертекстуальність
-  - міська культура
-  - ностальгія
-  - деконструкція
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - пастиш (pastiche)
+  - інтертекстуальність (intertextuality)
+  - міська культура (urban culture)
+  - ностальгія (nostalgia)
+  - деконструкція (deconstruction)
+activity_hints:
+- type: reading
+  focus: Фрагменти Танґо смерті
+  source: Художній текст
+  items: 3 passages
+- type: quiz
+  focus: Факти про творчість Винничука
+  items: 12+
+- type: match-up
+  focus: Твори та їхні теми
+  items: 10+
+- type: essay-response
+  focus: Чи етично вигадувати історію?
+  word_target: 300
+  output: Критичний есей
+- type: group-sort
+  focus: Реальні vs вигадані елементи
+  items: 12+
+- type: fill-in
+  focus: Літературознавча термінологія
+  items: 10+
+focus: biography
+prerequisites:
+- c1-bio-81-vasyl-shkliar
 connects_to:
-  previous: c1-bio-81-vasyl-shkliar
-  related:
-  - c1-bio-89-taras-prokhasko
-  - c1-bio-86-oksana-zabuzhko
-  - c1-bio-84-halyna-pahutyak
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-89-taras-prokhasko
+- c1-bio-86-oksana-zabuzhko
+- c1-bio-84-halyna-pahutyak
+module_type: biography
+sources:
+- name: Юрій Винничук (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Винничук_Юрій_Павлович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Видавництво Фоліо
+  url: https://folio.com.ua/
+  type: reference
+  notes: Бібліографія
+- name: Літературна критика
+  url: https://litakcent.com/
+  type: reference
+  notes: Аналіз творчості
+immersion: 100% Ukrainian
+phase: C1-BIO

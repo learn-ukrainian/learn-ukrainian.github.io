@@ -1,25 +1,9 @@
 module: 41-root-families-i
-level: a2
-sequence: 41
+level: A2
+slug: 41-root-families-i
 version: '2.0'
 title: Root Families I
 subtitle: The DNA of Vocabulary
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can identify root families in complex words
-- Learner can guess meanings of derivatives using prefix-root logic
-- Learner can build new words from basic roots
-- Learner can recognize the 4 core professional roots
-sources:
-- name: Ukrainian Word Formation - Root Families
-  url: https://uk.wikipedia.org/wiki/Словотворення_в_українській_мові
-  type: reference
-  notes: Standards for root-based vocabulary expansion at A2
-- name: Etymological Dictionary of the Ukrainian Language
-  url: https://goroh.pp.ua/
-  type: reference
-  notes: Historical context for hod-, pys-, chyt-, bach- roots
 content_outline:
 - section: Introduction / Вступ
   words: 200
@@ -45,7 +29,26 @@ content_outline:
   points:
   - At the library: Discussing writers, readers, and descriptions
 word_target: 1000
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can identify root families in complex words
+- Learner can guess meanings of derivatives using prefix-root logic
+- Learner can build new words from basic roots
+- Learner can recognize the 4 core professional roots
+grammar:
+- common roots (ход-, пис-, чит-, бач-)
+- prefix + root combinations
+- derivative formation
+module_type: word-formation
+sources:
+- name: Ukrainian Word Formation - Root Families
+  url: https://uk.wikipedia.org/wiki/Словотворення_в_українській_мові
+  type: reference
+  notes: Standards for root-based vocabulary expansion at A2
+- name: Etymological Dictionary of the Ukrainian Language
+  url: https://goroh.pp.ua/
+  type: reference
+  notes: Historical context for hod-, pys-, chyt-, bach- roots
+immersion: 65-75% Ukrainian
+phase: A2.4

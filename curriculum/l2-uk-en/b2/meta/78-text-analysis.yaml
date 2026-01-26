@@ -1,49 +1,16 @@
-id: b2-78
+module: 78-text-analysis
+level: B2
 slug: 78-text-analysis
-title: Аналіз тексту
-subtitle: Text Analysis
 version: '2.0'
-phase: B2.4 Skills & Capstone
-focus: skills
-pedagogy: TTT
+id: b2-78
+naturalness:
+  score: 9
+  status: PASS
 duration: 120
 transliteration: none
 tags:
 - skills
 - analysis
 - reading
-grammar:
-- Аналіз підтексту та авторської позиції
-- Риторичні фігури та засоби виразності
-objectives:
-- Учень вміє розрізняти факти та судження у тексті
-- Учень може виявити маніпулятивні прийоми та прихований підтекст
-- Учень володіє інструментами аналізу риторичних пристроїв у промовах
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-- section: Вступ — Аналіз тексту
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-- section: Основний матеріал
-  words: 600
-  points:
-  - Теоретичні основи
-  - Приклади та ілюстрації
-  - Типові помилки та як їх уникати
-- section: Поглиблене вивчення
-  words: 600
-  points:
-  - Додаткові випадки
-  - Контекстуальне використання
-  - Стилістичні нюанси
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

@@ -1,99 +1,105 @@
-module: 01-introduction-to-kotliarevsky
-level: lit
-sequence: 1
+module: introduction-to-kotliarevsky
+level: LIT
+slug: introduction-to-kotliarevsky
 version: '2.0'
 title: Феномен Івана Котляревського
 subtitle: Ivan Kotliarevsky
-focus: literature
-pedagogy: seminar
-sources:
-  primary:
-  - url: https://www.ukrlib.com.ua/bio/printit.php?tid=1697
-    title: Іван Котляревський — біографія
-    notes: Офіційна біографія автора на UkrLib
-  - url: https://www.ukrlib.com.ua/books/printit.php?tid=51
-    title: Енеїда — повний текст
-    notes: Для контексту появи твору
-  secondary:
-  - url: https://www.ukrlib.com.ua/analiz/printit.php?tid=51
-    title: Аналіз творчості Котляревського
-    notes: Літературознавчий аналіз
 content_outline:
 - section: Вступ — Чому 1798 рік?
   words: 600
-  subsections:
+  points:
   - Історичний контекст появи "Енеїди"
   - Стан української культури наприкінці XVIII століття
   - Чому цей "жарт" став початком нової літератури
 - section: Біографія як драма вибору
   words: 800
-  subsections:
+  points:
   - Дитинство та освіта в Полтаві
   - Військова кар'єра та масонство
   - Театральна діяльність і просвітництво
 - section: Феномен "Котляревщини"
   words: 700
-  subsections:
+  points:
   - Що таке бурлеск і травестія
   - Жива народна мова vs книжна мова
   - Роль сміху як культурної зброї
 - section: '"Енеїда" в європейському контексті'
   words: 600
-  subsections:
+  points:
   - Традиція травестії Вергілія в Європі
   - Унікальність українського варіанту
   - Козак замість римлянина
 - section: Роль особистості в культурі
   words: 500
-  subsections:
+  points:
   - Асиміляція vs опір
   - '"Людина вчинку" — Котляревський як архетип'
   - Вплив на наступні покоління
 - section: Підсумок — Від жарту до нації
   words: 400
-  subsections:
+  points:
   - Значення Котляревського для українського відродження
   - Його місце в літературному каноні
   - Перехід до аналізу "Енеїди"
 word_target: 4500
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - бурлеск
-  - травестія
-  - національне відродження
-  - асиміляція
-  - просвітництво
-  - масонство
-  - кріпацтво
-  - класицизм
-  - сатира
-  - архаїзм
+  - бурлеск (burlesque)
+  - травестія (travesty)
+  - національне відродження (national revival)
+  - асиміляція (assimilation)
+  - просвітництво (enlightenment)
+  - масонство (freemasonry)
+  - кріпацтво (serfdom)
+  - класицизм (classicism)
+  - сатира (satire)
+  - архаїзм (archaism)
   recommended:
-  - меценат
-  - канон
-  - пародія
-  - імперія
-  - губернія
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - cloze
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - меценат (patron)
+  - канон (canon)
+  - пародія (parody)
+  - імперія (empire)
+  - губернія (province)
+activity_hints:
+- type: reading
+  focus: Уривки з біографії Котляревського
+  source: UkrLib biography
+  items: 3+
+- type: quiz
+  focus: Історичний контекст XVIII століття
+  items: 12+
+- type: match-up
+  focus: Літературні терміни (бурлеск, травестія, пародія)
+  items: 10+
+- type: essay-response
+  focus: Роль особистості в історії культури
+  word_target: 300
+  output: Аргументативне есе
+- type: cloze
+  focus: Ключові факти біографії
+  items: 15+
+focus: literature
+pedagogy: literature
+prerequisites:
+- C1 Core completion required
+- Academic writing proficiency
+- Vocabulary ~8,500+ words
 connects_to:
-  previous: null
-  related:
-  - lit-02 (Eneida Part I — сюжет і структура)
-  - lit-05 (Natalka Poltavka — перехід до сентименталізму)
-constraints:
-  min_engagement_boxes: 3
-  min_examples: 15
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- lit-02 (Eneida Part I — сюжет і структура)
+- lit-05 (Natalka Poltavka — перехід до сентименталізму)
+module_type: biography
+sources:
+- name: Іван Котляревський — біографія
+  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1697
+  type: primary
+  notes: Офіційна біографія автора на UkrLib
+- name: Енеїда — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=51
+  type: primary
+  notes: Для контексту появи твору
+- name: Аналіз творчості Котляревського
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=51
+  type: secondary
+  notes: Літературознавчий аналіз
+immersion: 100% Ukrainian
+phase: LIT.1 Burlesque & Folk Origins

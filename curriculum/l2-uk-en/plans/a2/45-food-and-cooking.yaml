@@ -1,16 +1,9 @@
-module: food-and-cooking
-level: a2
-sequence: 45
+module: a2-45
+level: A2
+slug: food-and-cooking
 version: '2.0'
 title: Food and Cooking
 subtitle: In the Kitchen
-focus: vocabulary
-pedagogy: PPP
-objectives:
-- Learner can follow a simple recipe in Ukrainian
-- Learner can describe cooking methods
-- Learner can use kitchen vocabulary
-- Learner can give instructions using the imperative
 content_outline:
 - section: 'Introduction: Ukrainian Kitchen'
   words: 100
@@ -48,7 +41,7 @@ content_outline:
   - Read and follow a recipe
   - Describe cooking process
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - варити (to boil/cook)
   - смажити (to fry)
@@ -65,15 +58,34 @@ vocabulary:
   - солоний (salty)
   - інгредієнт (ingredient)
   - страва (dish)
-  forbidden: []
-activities:
-  types_required:
-  - vocabulary-drill
-  - dialogue
-  - fill-in
-  - sequencing
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: vocabulary-drill
+  focus: Kitchen and cooking words
+  items: 30
+- type: sequencing
+  focus: Order recipe steps
+  items: 15
+- type: fill-in
+  focus: Complete cooking instructions
+  items: 20
+- type: dialogue
+  focus: Cooking conversation
+  items: 8
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- a2-44 (Checkpoint Word Formation)
+- a1-18 (Food and Shopping)
 connects_to:
 - a2-46 (Home and Furniture)
+objectives:
+- Learner can follow a simple recipe in Ukrainian
+- Learner can describe cooking methods
+- Learner can use kitchen vocabulary
+- Learner can give instructions using the imperative
+grammar:
+- Imperative in recipes (наріж, звари)
+- Instrumental for tools (ножем, ложкою)
+- Cooking verbs and sequences
+register: розмовний
+phase: A2.5 [Vocabulary Expansion]

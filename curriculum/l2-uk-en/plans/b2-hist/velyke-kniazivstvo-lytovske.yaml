@@ -1,14 +1,9 @@
 module: velyke-kniazivstvo-lytovske
-level: b2-hist
-sequence: 28
-version: '1.0'
+level: B2-HIST
+slug: velyke-kniazivstvo-lytovske
+version: '2.0'
 title: Велике князівство Литовське — Руська держава
-focus: history
-pedagogy: CBI
-objectives:
-- Учень може описувати роль українських земель у ВКЛ
-- Учень може аналізувати значення руської мови як державної
-- Учень може пояснювати принципи релігійної толерантності
+subtitle: Спадщина Gediminids та руська мова
 content_outline:
 - section: Вступ
   words: 610
@@ -19,3 +14,13 @@ content_outline:
 - section: Деколонізаційний погляд
   words: 411
 word_target: 4021
+focus: history
+pedagogy: CBI
+objectives:
+- Учень може описувати роль українських земель у ВКЛ
+- Учень може аналізувати значення руської мови як державної
+- Учень може пояснювати принципи релігійної толерантності
+grammar:
+- Passive voice in historical texts
+- Analytical structures
+phase: B2.3a [Українська історія]

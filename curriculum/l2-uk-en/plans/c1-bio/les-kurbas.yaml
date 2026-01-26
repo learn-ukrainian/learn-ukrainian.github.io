@@ -1,108 +1,109 @@
 module: les-kurbas
-level: c1-bio
-sequence: 57
+level: C1-BIO
+slug: les-kurbas
 version: '2.0'
 title: 'Лесь Курбас: Реформатор театру'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Лесь_Курбас
-    title: Лесь Курбас (Wikipedia UA)
-    notes: Основна біографія, театральна діяльність, репресії
-  secondary:
-  - url: https://uk.wikipedia.org/wiki/Березіль_(театр)
-    title: Театр «Березіль»
-    notes: Історія театру та його інноваційні постановки
-  - url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
-    title: Розстріляне відродження
-    notes: Контекст репресій проти української інтелігенції
 content_outline:
 - section: Вступ — Людина, що перевернула театр
   words: 400
-  subsections:
+  points:
   - Лесь Курбас як найвпливовіший український режисер XX століття
   - Революція у сценічному мистецтві — від етнографізму до авангарду
   - Трагічна доля генія у жорнах тоталітаризму
 - section: Ранні роки та становлення (1887-1916)
   words: 600
-  subsections:
+  points:
   - Народження у Самборі в родині акторів
   - Навчання у Віденському та Львівському університетах
   - Перші театральні експерименти у Львові
   - Вплив європейського модернізму на формування світогляду
 - section: Молодий театр та «Березіль» (1916-1933)
   words: 800
-  subsections:
+  points:
   - Заснування «Молодого театру» в Києві (1916)
   - Переїзд до Харкова та створення театру «Березіль»
   - Революційні постановки — «Газ», «Джіммі Гіггінз», «Народний Малахій»
   - Система «перетворення» та психологічний театр
 - section: Театральна революція та естетика
   words: 700
-  subsections:
+  points:
   - Відмова від етнографічного театру корифеїв
   - Синтез експресіонізму, конструктивізму та психологізму
   - Робота з акторами — виховання «актора-філософа»
   - Міжнародне визнання та контакти з Мейєрхольдом
 - section: Репресії та знищення (1933-1937)
   words: 800
-  subsections:
+  points:
   - Початок кампанії проти «українського буржуазного націоналізму»
   - Арешт у 1933 році та звинувачення у шпигунстві
   - Соловецький табір та останні роки життя
   - Розстріл у 1937 році під час Великого терору
 - section: Спадщина та реабілітація
   words: 700
-  subsections:
+  points:
   - Реабілітація у 1957 році та повернення імені
   - Вплив на сучасний український театр
   - Курбасівські традиції у творчості Параджанова, Жолдака
   - «Березіль» сьогодні — спадкоємці революціонера
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - авангард
-  - режисер
-  - постановка
-  - експресіонізм
-  - конструктивізм
-  - репресії
-  - реабілітація
-  - інсценізація
-  - сценографія
-  - трупа
+  - авангард (avant-garde)
+  - режисер (director)
+  - постановка (production/staging)
+  - експресіонізм (expressionism)
+  - конструктивізм (constructivism)
+  - репресії (repressions)
+  - реабілітація (rehabilitation)
+  - інсценізація (dramatization)
+  - сценографія (stage design)
+  - трупа (theater company)
   recommended:
-  - етнографізм
-  - перевтілення
-  - мізансцена
-  - соцреалізм
-  - табір
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - етнографізм (ethnographism)
+  - перевтілення (transformation)
+  - мізансцена (mise-en-scene)
+  - соцреалізм (socialist realism)
+  - табір (camp)
+activity_hints:
+- type: reading
+  focus: Театральний маніфест Курбаса
+  source: Архівні документи
+  items: 3 passages
+- type: quiz
+  focus: Біографічні факти та театральні інновації
+  items: 12+
+- type: match-up
+  focus: Постановки та їхні характеристики
+  items: 10+
+- type: essay-response
+  focus: Чому Курбаса називають реформатором українського театру?
+  word_target: 300
+  output: Analytical essay
+- type: group-sort
+  focus: Етапи життя та творчості
+  items: 12+
+- type: fill-in
+  focus: Театральна термінологія
+  items: 10+
+focus: biography
+prerequisites:
+- c1-bio-48-marko-kropyvnytskyi
 connects_to:
-  previous: c1-bio-48-marko-kropyvnytskyi
-  related:
-  - c1-bio-63-mykola-khvylovyi
-  - c1-bio-68-olena-teliha
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-63-mykola-khvylovyi
+- c1-bio-68-olena-teliha
+module_type: biography
+sources:
+- name: Лесь Курбас (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Лесь_Курбас
+  type: primary
+  notes: Основна біографія, театральна діяльність, репресії
+- name: Театр «Березіль»
+  url: https://uk.wikipedia.org/wiki/Березіль_(театр)
+  type: reference
+  notes: Історія театру та його інноваційні постановки
+- name: Розстріляне відродження
+  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
+  type: reference
+  notes: Контекст репресій проти української інтелігенції
+immersion: 100% Ukrainian
+phase: C1-BIO

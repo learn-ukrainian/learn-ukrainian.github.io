@@ -1,56 +1,18 @@
-version: '1.0'
 module: c1-49
-title: 'Обрядові пісні: Коло життя'
-subtitle: 'Ritual Songs: The Circle of Life'
+level: C1
 slug: 49-ritual-songs
-phase: C1.5 Folk Culture & Fine Arts
-focus: cultural
-pedagogy: Cultural Immersion
+version: '1.0'
 duration: 120
 transliteration: none
-immersion: 100
 tags:
 - music
 - folklore
 - rituals
 - traditions
 - holidays
-grammar:
-- Archaic forms in songs (архаїзми)
-- Imperative in rituals (заклинання)
-- Symbolic imagery (символіка)
-objectives:
-- Learner can distinguish between kolyadky, shchedrivky, and vesnyanky
-- Learner understands the pre-Christian roots of Ukrainian holidays
-- Learner can analyze the symbolism of ritual songs
 vocabulary_count: 35
 summary: This module immerses students in the magical world of Ukrainian ritual songs.
   From the world-famous Shchedryk to mysterious Kupala chants, learners explore how
   ancient Ukrainians communicated with nature and the divine through music.
-content_outline:
-- section: Вступ — Коло життя
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-  - Роль у системі української мови
-- section: Church Slavonic Features
-  words: 500
-  points:
-  - 'Phonetics: глас (voice) vs. голос'
-  - 'Vocabulary: єсмь, благо, воістину'
-  - 'Phrases: Во ім''я Отця... (In the name of the Father...)'
-- section: Usage Contexts
-  words: 500
-  points:
-  - Religious texts
-  - Very formal style
-  - Literary effect
-  - Historical texts
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

@@ -1,25 +1,9 @@
 module: 15-aspect-morphology
-level: a2
-sequence: 15
+level: A2
+slug: 15-aspect-morphology
 version: '2.0'
 title: Aspect Morphology
 subtitle: Prefixes and Suffixes
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can identify aspect based on morphology
-- Learner can form perfective verbs using common prefixes
-- Learner can form imperfective verbs using suffixes
-- Learner can recognize irregular aspect pairs
-sources:
-- name: Ukrainian State Standard 2024 - Word Formation
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Verbal prefix and suffix patterns
-- name: Ukrainian Verb Morphology
-  url: https://uk.wikipedia.org/wiki/Словотвір
-  type: reference
-  notes: Aspect formation patterns
 content_outline:
 - section: Introduction / Вступ
   words: 200
@@ -43,7 +27,7 @@ content_outline:
   points:
   - Dialogue on learning patterns
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - відпочивати/відпочити (to rest)
   - вставати/встати (to get up)
@@ -66,16 +50,54 @@ vocabulary:
   - корінь (root)
   - основа (stem)
   - утворення (formation)
-  forbidden: []
-activities:
-  types_required:
-  - quiz
-  - match-up
-  - fill-in
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: match-up
+  focus: Extended aspect pairs
+  items: 15+
+- type: quiz
+  focus: Pattern recognition - identify prefix/suffix
+  items: 12+
+- type: fill-in
+  focus: Use correct pair member in context
+  items: 12+
+- type: quiz
+  focus: Predict aspect from verb form
+  items: 10+
+- type: fill-in
+  focus: Build perfective from imperfective
+  items: 10+
+- type: match-up
+  focus: Suppletive pairs matching
+  items: 8+
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a2-12 (Aspect introduction)
+- a2-13 (Perfective past)
+- a2-14 (Perfective future)
 connects_to:
 - a2-16 (Aspect Mastery Pairs)
 - a2-36 (Basic Motion Prefixes)
 - a2-38 (Action Verb Prefixes)
+objectives:
+- Learner can identify aspect based on morphology
+- Learner can form perfective verbs using common prefixes
+- Learner can form imperfective verbs using suffixes
+- Learner can recognize irregular aspect pairs
+grammar:
+- prefixes (про-, на-, з-, по-)
+- suffixes (-ва-, -ува-)
+- stem changes
+- suppletive pairs
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Word Formation
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Verbal prefix and suffix patterns
+- name: Ukrainian Verb Morphology
+  url: https://uk.wikipedia.org/wiki/Словотвір
+  type: reference
+  notes: Aspect formation patterns
+immersion: 40-50% Ukrainian
+phase: A2.2

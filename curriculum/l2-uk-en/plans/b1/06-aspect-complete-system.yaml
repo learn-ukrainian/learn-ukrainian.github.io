@@ -1,24 +1,9 @@
 module: 06-aspect-complete-system
-level: b1
-sequence: 6
-version: '1.0'
+level: B1
+slug: 06-aspect-complete-system
+version: '2.0'
 title: 'Вид дієслова: повна система'
 subtitle: Perfective vs Imperfective - The complete picture
-focus: grammar
-pedagogy: TTT
-objectives:
-- Learner understands the complete aspectual system
-- Learner can identify aspect from context clues
-- Learner can choose appropriate aspect for different situations
-sources:
-- name: Ukrainian State Standard 2024 - Verbal Aspect
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official aspect selection rules and contexts
-- name: Ukrainian Verb Aspect (Wikipedia)
-  url: https://uk.wikipedia.org/wiki/Вид_дієслова
-  type: reference
-  notes: Overview of aspectual system with examples
 content_outline:
 - section: Розминка
   words: 100
@@ -45,7 +30,7 @@ content_outline:
   - Examples and explanation
   - Practice or application
 word_target: 1500
-vocabulary:
+vocabulary_hints:
   required:
   - доконаний вид (perfective aspect)
   - недоконаний вид (imperfective aspect)
@@ -63,17 +48,48 @@ vocabulary:
   - послідовність (sequence)
   - обмежений час (bounded time)
   - загальне твердження (general statement)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - group-sort
-  - quiz
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: Identify aspect pairs
+  items: 12+
+- type: match-up
+  focus: Context → aspect choice
+  items: 15+
+- type: fill-in
+  focus: Choose correct aspect
+  items: 12+
+- type: group-sort
+  focus: Sort contexts by aspect (process vs result vs repetition)
+  items: 15+
+- type: fill-in
+  focus: Change aspect and explain meaning difference
+  items: 8+
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-05 (Metalanguage checkpoint)
+- A2 aspect basics (impf/pf recognition)
 connects_to:
 - b1-07 (Aspect in past - single vs repeated)
 - b1-08 (Aspect in past - result vs process)
 - b1-15 (Aspect mastery checkpoint)
+objectives:
+- Learner understands the complete aspectual system
+- Learner can identify aspect from context clues
+- Learner can choose appropriate aspect for different situations
+grammar:
+- Perfective vs Imperfective aspect - complete overview
+- Aspect selection based on context
+- Process vs result vs repetition
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Verbal Aspect
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official aspect selection rules and contexts
+- name: Ukrainian Verb Aspect (Wikipedia)
+  url: https://uk.wikipedia.org/wiki/Вид_дієслова
+  type: reference
+  notes: Overview of aspectual system with examples
+immersion: 100% Ukrainian
+phase: B1.1 Aspect

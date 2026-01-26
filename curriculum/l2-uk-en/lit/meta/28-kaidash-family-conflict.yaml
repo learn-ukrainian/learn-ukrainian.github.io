@@ -1,123 +1,19 @@
-id: lit-28
-title: 'Кайдашева сім''я: Анатомія Конфлікту'
-subtitle: 'Kaidash Family: Anatomy of Conflict'
+module: kaidash-family-conflict
+level: LIT
 slug: kaidash-family-conflict
-module_type: literature
-word_target: 3800
-immersion: 100% Ukrainian
 version: '2.0'
-phase: LIT.5 Realism
-focus: literature
-pedagogy: Seminar
-duration: 120
-transliteration: none
-tags:
-  - література
-  - реалізм
-  - нечуй-левицький
-  - кайдашева-сімя
-  - конфлікт
-grammar:
-  - Conflict vocabulary
-  - Cause and effect expressions
-  - Emotional register
-objectives:
-  - Проаналізувати центральні конфлікти повісті
-  - Зрозуміти соціальні причини сімейних сварок
-  - Дослідити роль побутових деталей у розвитку сюжету
-  - Оцінити актуальність твору для сучасності
-sources:
-  - name: Кайдашева сім'я — повний текст
-    url: https://www.ukrlib.com.ua/books/printit.php?tid=907
-    type: primary
-    notes: Ключові сцени конфліктів
-  - name: Аналіз "Кайдашевої сім'ї"
-    url: https://www.ukrlib.com.ua/review/printit.php?tid=18137
-    type: primary
-    notes: Проблематика твору
-  - name: Роздуми над повістю
-    url: https://www.ukrlib.com.ua/tvory/printit.php?tid=8391
-    type: reference
-    notes: Інтерпретації читачів
-content_outline:
-  - section: Вступ — Чому вони сваряться?
-    words: 500
-    points:
-      - Сімейні конфлікти в літературі
-      - Структура конфліктів у повісті
-      - Від комічного до трагічного
-  - section: Конфлікт поколінь
-    words: 700
-    points:
-      - Батьки vs діти
-      - Боротьба за владу в родині
-      - Економічні причини напруги
-  - section: Конфлікт невісток
-    words: 700
-    points:
-      - Мотря vs Мелашка
-      - Груша як символ абсурду
-      - Побутова дрібниця як каталізатор
-  - section: Розподіл спадщини
-    words: 600
-    points:
-      - Земля і власність
-      - Справедливість vs традиція
-      - Роздвоєння родини
-  - section: Гумор і трагедія
-    words: 600
-    points:
-      - Сміх крізь сльози
-      - Де закінчується сатира
-      - Читацьке співчуття
-  - section: Підсумок — Сучасність класики
-    words: 400
-    points:
-      - Чи змінилися сімейні конфлікти?
-      - Універсальність Нечуя
-      - Перехід до мови реалізму
-vocabulary_hints:
-  required:
-    - конфлікт (conflict)
-    - сварка (quarrel)
-    - спадщина (inheritance)
-    - власність (property)
-    - побут (everyday life)
-    - каталізатор (catalyst)
-    - абсурд (absurd)
-    - трагікомедія (tragicomedy)
-    - поділ (division)
-    - примирення (reconciliation)
-  recommended:
-    - дрібниця (trifle)
-    - напруга (tension)
-    - ескалація (escalation)
-    - кульмінація (climax)
-    - розв'язка (resolution)
-activity_hints:
-  - type: reading
-    focus: Сцена сварки через грушу
-    source: UkrLib tid=907
-    items: 4+
-  - type: quiz
-    focus: Причини та наслідки конфліктів
-    items: 15+
-  - type: match-up
-    focus: Конфлікт → його причина
-    items: 10+
-  - type: essay-response
-    focus: Актуальність для сучасної родини
-    word_target: 300
-    output: Аналітичне есе
-  - type: cloze
-    focus: Ключові сцени конфліктів
-    items: 12+
-prerequisites:
-  - lit-27 (Кайдашева сім'я — персонажі)
-connects_to:
-  - lit-29 (Мова реалізму)
-  - lit-08 (Конотопська відьма — порівняння гумору)
+id: lit-28
 naturalness:
   score: 10
   status: PASS
   justification: Graduate level academic Ukrainian
+duration: 120
+transliteration: none
+tags:
+- література
+- реалізм
+- нечуй-левицький
+- кайдашева-сімя
+- конфлікт
+build:
+  last_modified: '2026-01-26'

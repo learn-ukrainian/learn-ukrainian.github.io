@@ -1,16 +1,9 @@
-module: my-family
-level: a1
-sequence: 32
+module: a1-32
+level: A1
+slug: my-family
 version: '2.0'
 title: My Family
 subtitle: Родина
-focus: vocabulary
-pedagogy: PPP
-objectives:
-- Learner can name family members
-- Learner can describe family relationships
-- Learner can talk about their own family
-- Learner can use possessives with family terms
 content_outline:
 - section: 'Introduction: Family in Ukrainian Culture'
   words: 100
@@ -48,7 +41,7 @@ content_outline:
   - Describe your family
   - Ask about others' families
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - мама (mom)
   - тато (dad)
@@ -65,16 +58,35 @@ vocabulary:
   - дружина (wife)
   - чоловік (husband)
   - родина (family)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - matching
-  - speaking
-  - vocabulary-drill
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: vocabulary-drill
+  focus: Family member names
+  items: 25
+- type: matching
+  focus: Match relationships
+  items: 20
+- type: fill-in
+  focus: Complete family descriptions
+  items: 15
+- type: speaking
+  focus: Describe your family
+  items: 6
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- a1-14 (Mine and Yours)
+- a1-31 (Body and Health)
 connects_to:
 - a1-33 (Holidays and Traditions)
 - a1-34 (Checkpoint Core Grammar)
+objectives:
+- Learner can name family members
+- Learner can describe family relationships
+- Learner can talk about their own family
+- Learner can use possessives with family terms
+grammar:
+- Family vocabulary
+- Possessives with family members
+- Genitive for relationships (батько + name)
+register: розмовний
+phase: A1.3 [Consolidation]

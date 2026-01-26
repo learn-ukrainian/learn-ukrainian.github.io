@@ -1,16 +1,9 @@
-module: active-lifestyle
-level: b1
-sequence: 80
+module: b1-80
+level: B1
+slug: active-lifestyle
 version: '2.0'
 title: Активний відпочинок
 subtitle: Active Lifestyle and Outdoor Recreation
-focus: culture
-pedagogy: CBI
-objectives:
-- Learner can discuss active lifestyle habits in Ukrainian
-- Learner can understand texts about fitness and outdoor activities
-- Learner can use vocabulary for diverse physical activities
-- Learner can compare active leisure traditions in Ukraine and abroad
 content_outline:
 - section: 'Introduction: Active Living'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Share activities
   - Plan outdoor events
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - активний (active)
   - відпочинок (recreation)
@@ -63,15 +56,33 @@ vocabulary:
   - фітнес (fitness)
   - здоровий спосіб життя (healthy lifestyle)
   - на свіжому повітрі (outdoors)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - reading
-  - discussion
-  - matching
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: reading
+  focus: Fitness and outdoor activity texts
+  items: 15
+- type: matching
+  focus: Match activities to equipment
+  items: 20
+- type: fill-in
+  focus: Complete activity descriptions
+  items: 15
+- type: discussion
+  focus: Share fitness routines
+  items: 10
+focus: culture
+pedagogy: CBI
+prerequisites:
+- b1-79 (Sports in Ukraine)
 connects_to:
 - b1-81 (Running in Ukraine)
+objectives:
+- Learner can discuss active lifestyle habits in Ukrainian
+- Learner can understand texts about fitness and outdoor activities
+- Learner can use vocabulary for diverse physical activities
+- Learner can compare active leisure traditions in Ukraine and abroad
+grammar:
+- Activity and fitness vocabulary
+- Describing habits and routines
+- Discussing preferences
+register: розмовний
+phase: B1.7 [Contemporary Ukraine]

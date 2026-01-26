@@ -1,9 +1,50 @@
-module: 40-b21c-checkpoint
-level: b2
-sequence: 40
-version: '1.0'
+module: b2-40
+level: B2
+slug: 40-b21c-checkpoint
+version: '2.0'
 title: 'Контрольна точка B2.1c: Числівники, словотвір та синтаксис'
 subtitle: 'B2.1c Checkpoint: Numerals, Word Formation & Syntax'
+content_outline:
+- section: Вступ — Числівники, словотвір та синтаксис
+  words: 333
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Indefinite Pronouns (State Standard 4240-4244)
+  words: 333
+  points:
+  - 'хтось (someone): когось, комусь, кимось'
+  - 'щось (something): чогось, чомусь, чимось'
+  - 'хто-будь (anyone): кого-будь, кому-будь'
+  - 'що-небудь (anything): чого-небудь, чому-небудь'
+  - 'якийсь (some kind of): якогось, якомусь'
+- section: Negative Pronouns (State Standard 4245-4249)
+  words: 333
+  points:
+  - 'ніхто (nobody): нікого, нікому, ніким'
+  - 'ніщо (nothing): нічого, нічому, нічим'
+  - 'ніякий (no kind of): ніякого, ніякому'
+  - 'нічий (nobody''s): нічийого, нічиєму'
+- section: Defining Pronouns (State Standard 4250-4256)
+  words: 333
+  points:
+  - 'весь/вся/все/всі (all): всього, всьому, всім'
+  - 'кожний/кожен (each): кожного, кожному'
+  - 'сам (oneself): самого, самому, самим'
+  - 'інший (other): іншого, іншому'
+- section: Основні моделі вживання
+  words: 333
+  points:
+  - 'Double negation: Ніхто нічого не знає. (Nobody knows anything.)'
+  - 'With prepositions: ні з ким (with nobody), ні до кого (to nobody)'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: checkpoint
 pedagogy: TTT
 objectives:
@@ -12,13 +53,12 @@ objectives:
 - Learner can identify and use one-member sentences for stylistic effect
 - Learner can recognize and produce texts in religious and epistolary registers
 - Learner can self-assess readiness for B2.2 (Phraseology)
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Integration of M31-M39
+- Numeral declension review
+- Word formation patterns review
+- One-member sentences review
+- Religious and epistolary register review
+immersion: 100
+register: varies
+phase: B2.1c [Checkpoint]

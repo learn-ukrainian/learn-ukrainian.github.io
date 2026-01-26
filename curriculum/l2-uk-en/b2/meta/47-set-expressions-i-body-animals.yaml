@@ -1,13 +1,12 @@
 module: b2-47
-title: 'Сталі вирази I: Частини тіла та тварини'
-subtitle: 'Set Expressions I: Body & Animals'
+level: B2
+slug: 47-set-expressions-i-body-animals
 version: '1.0'
-phase: B2.2 [Phraseology & Synonymy]
-pedagogy: CBI
-focus: phraseology
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
-immersion: 100
 tags:
 - phraseology
 - idioms
@@ -15,44 +14,7 @@ tags:
 - zoomorphic
 - body-parts
 - animals
-grammar:
-- Fixed expressions (фразеологічні одиниці)
-- Somatic and zoomorphic idioms
-objectives:
-- Learner can recognize and interpret 16 core Ukrainian idioms with body parts and
-  animals
-- Learner can use somatic and zoomorphic idioms appropriately in context
-- Learner understands the cultural symbolism of body parts and animals in Ukrainian
-  phraseology
 vocabulary_count: 35
-register: varies
 vocab_count: 111
-slug: 47-set-expressions-i-body-animals
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-- section: Вступ — Частини тіла та тварини
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-- section: Основний матеріал
-  words: 600
-  points:
-  - Теоретичні основи
-  - Приклади та ілюстрації
-  - Типові помилки та як їх уникати
-- section: Поглиблене вивчення
-  words: 600
-  points:
-  - Додаткові випадки
-  - Контекстуальне використання
-  - Стилістичні нюанси
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

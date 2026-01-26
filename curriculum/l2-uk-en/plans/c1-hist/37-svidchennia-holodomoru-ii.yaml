@@ -1,0 +1,115 @@
+module: svidchennia-holodomoru-ii
+level: C1-HIST
+slug: svidchennia-holodomoru-ii
+version: '2.0'
+title: 'Свідчення Голодомору II: Документи'
+content_outline:
+- section: Вступ — Документальні докази
+  words: 400
+  points:
+  - Від свідчень до документів
+  - Що збереглося в архівах
+  - Радянські документи — особливість
+  - Як читати бюрократичну мову
+- section: Типи документів
+  words: 500
+  points:
+  - Партійні постанови
+  - Чорні дошки — списки
+  - Телеграми
+  - Звіти ОГПУ
+  - Статистика смертей
+- section: Закон про п'ять колосків (7.08.1932)
+  words: 700
+  points:
+  - Повний текст (з глосами)
+  - Розстріл за крадіжку зерна
+  - Як застосовувався
+  - Мета — терор
+- section: Чорні дошки
+  words: 600
+  points:
+  - Що таке «чорна дошка»
+  - Документальні свідчення
+  - Приклад — постанова про село
+  - Наслідки для населення
+- section: Фрагмент — Телеграма про хлібозаготівлі
+  words: 500
+  points:
+  - Текст (з глосами)
+  - Бюрократична мова
+  - Цифри і реальність
+  - Що стоїть за документом
+- section: Критика джерела
+  words: 500
+  points:
+  - Радянські документи — що вони приховують
+  - Евфемізми
+  - Що не фіксувалося
+  - Порівняння з усними свідченнями
+- section: Підсумок
+  words: 300
+  points:
+  - Документ і свідчення — разом
+  - Доказова база геноциду
+  - Зв'язок із визнанням
+word_target: 3500
+vocabulary_hints:
+  required:
+  - документ (document)
+  - постанова (resolution)
+  - чорна дошка (blacklist)
+  - хлібозаготівлі (grain procurement)
+  - ОГПУ (OGPU/secret police)
+  - телеграма (telegram)
+  - статистика (statistics)
+  - евфемізм (euphemism)
+  - бюрократичний (bureaucratic)
+  - доказ (evidence/proof)
+  recommended:
+  - квота (quota)
+  - конфіскація (confiscation)
+  - репресія (repression)
+  - кордон (cordon)
+  - саботаж (sabotage)
+activity_hints:
+- type: reading
+  focus: «Law of Five Ears» with glosses
+  source: wikisource or archive
+- type: critical-analysis
+  focus: Decode bureaucratic language in a telegram
+  output: Translation to plain language
+- type: comparative-study
+  focus: Document vs. oral testimony on same event
+  output: Source comparison
+- type: critical-analysis
+  focus: Build genocide evidence case from documents
+  output: Evidence dossier
+- type: essay-response
+  focus: Як радянські документи доводять намір знищити?
+  word_target: 400
+  model_answer: Required
+focus: history
+prerequisites:
+- c1-hist-36 (Holodomor oral history)
+- c1-hist-09 (Source criticism)
+connects_to:
+- c1-hist-47 (Holodomor mechanisms — blacklists)
+- c1-hist-50 (Genocide recognition)
+- c1-hist-51 (Holodomor synthesis)
+module_type: primary-source
+sources:
+- name: Архівні документи Голодомору
+  url: https://cdiak.archives.gov.ua/
+  type: primary
+  notes: Central State Archive
+- name: Чорні дошки
+  url: https://uk.wikipedia.org/wiki/Чорні_дошки
+  type: reference
+  notes: Blacklists
+- name: Закон про п'ять колосків
+  url: https://uk.wikipedia.org/wiki/Закон_про_п'ять_колосків
+  type: reference
+  notes: August 7, 1932 law
+immersion: 100% Ukrainian
+phase: C1-HIST.1 [Historiography]

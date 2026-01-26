@@ -1,0 +1,89 @@
+module: a1-43
+level: A1
+slug: combined-practice
+version: '2.0'
+title: Combined Practice
+subtitle: Review of Practical Skills
+content_outline:
+- section: 'Introduction: Real-Life Complexity'
+  words: 100
+  points:
+  - Real situations are complex
+  - Combining skills
+  - Adapting to changes
+- section: 'Scenario 1: A Day Out'
+  words: 150
+  points:
+  - Transport + restaurant + shopping
+  - Plan and execute
+  - Handle small problems
+- section: 'Scenario 2: Travel Day'
+  words: 150
+  points:
+  - Buy tickets + navigate + find hotel
+  - Multi-step planning
+  - Time management
+- section: 'Scenario 3: Problem Solving'
+  words: 150
+  points:
+  - Lost item + asking for help
+  - Changing plans
+  - Unexpected situations
+- section: 'Scenario 4: Social Event'
+  words: 150
+  points:
+  - Making plans + meeting people
+  - Small talk
+  - Polite communication
+- section: 'Practice: Integrated Challenges'
+  words: 100
+  points:
+  - Extended role-plays
+  - Multi-scenario challenges
+word_target: 800
+vocabulary_hints:
+  required:
+  - спочатку (first)
+  - потім (then)
+  - нарешті (finally)
+  - тому що (because)
+  - якщо (if)
+  - але (but)
+  - також (also)
+  - разом (together)
+  recommended:
+  - план (plan)
+  - проблема (problem)
+  - вирішити (to solve)
+  - змінити (to change)
+activity_hints:
+- type: role-play
+  focus: Extended scenarios
+  items: 8
+- type: dialogue
+  focus: Multi-part conversations
+  items: 10
+- type: problem-solving
+  focus: Handle unexpected situations
+  items: 6
+- type: listening
+  focus: Complex interactions
+  items: 10
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a1-35 (At the Café Practical)
+- a1-42 (Emergencies)
+connects_to:
+- a1-44 (A1 Final Exam)
+objectives:
+- Learner can combine multiple practical skills
+- Learner can handle multi-step scenarios
+- Learner can switch between different situations
+- Learner can solve unexpected problems
+grammar:
+- All A1 grammar in context
+- Connecting different scenarios
+- Problem-solving language
+register: розмовний
+phase: A1.4 [Practical Scenarios]

@@ -1,86 +1,19 @@
 module: c1-bio-15
-id: c1-bio-severyn-nalyvaiko
-title: 'Северин Наливайко: Лідер козацького повстання'
-subtitle: 'Severyn Nalyvaiko: The Cossack Rebel Leader'
+level: C1-BIO
 slug: severyn-nalyvaiko
 version: '2.0'
-phase: C1-BIO
-pedagogy: CBI
-focus: biography
+id: c1-bio-severyn-nalyvaiko
+naturalness:
+  score: 10
+  status: PASS
 duration: 120
 transliteration: none
-word_target: 3000
-immersion: 100% Ukrainian
 tags:
 - history
 - biography
 - cossacks
 - rebellion
 - war
-grammar:
-- Military terminology
-- Action narrative
-objectives:
-- Understand the causes of the first Cossack rebellions
-- Analyze Nalyvaiko's tactics and goals
 vocabulary_count: 25
-naturalness:
-  score: 10
-  status: PASS
-sources:
-- name: Северин Наливайко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Северин_Наливайко
-  type: primary
-- name: Повстання Наливайка
-  url: https://uk.wikipedia.org/wiki/Повстання_Наливайка
-  type: primary
-content_outline:
-- section: Вступ — Перший бунтар
-  words: 450
-  points:
-  - Лідер першого масштабного козацького повстання (1594-1596)
-  - Перехід від найманства до соціальної боротьби
-  - Трагічна смерть у Варшаві
-- section: Життєпис
-  words: 1200
-  points:
-  - Походження з роду Наливайків
-  - Служба у князя Острозького
-  - Походи на Молдову
-  - Повстання та Солоницька трагедія
-- section: Історичний контекст
-  words: 450
-  points:
-  - Криза Речі Посполитої
-  - Релігійний фактор (Берестейська унія)
-- section: Внесок та Спадщина
-  words: 450
-  points:
-  - Ідея Козацької держави
-  - Військове мистецтво
-  - Образ у літературі
-- section: Порівняльний аналіз
-  words: 450
-  points:
-  - Наливайко vs. Хмельницький
-vocabulary_hints:
-  required:
-  - повстання (uprising)
-  - бунт (rebellion)
-  - ватажок (leader)
-  - табір (camp)
-  - облога (siege)
-  - страта (execution)
-  - зрада (betrayal)
-  - найманець (mercenary)
-  - поразка (defeat)
-activity_hints:
-- type: reading
-  focus: Chronicle description of Solonytsia
-- type: quiz
-  focus: Timeline of the uprising
-- type: essay-response
-  focus: Hero or Bandit? Perspectives on Nalyvaiko
-naturalness:
-  score: 10
-  status: PASS
+build:
+  last_modified: '2026-01-26'

@@ -1,0 +1,113 @@
+module: radianska-ukrainizatsiia
+level: C1-HIST
+slug: radianska-ukrainizatsiia
+version: '2.0'
+title: 'Радянська українізація: Пастка 1920-х'
+content_outline:
+- section: Вступ — Підступна обіцянка
+  words: 400
+  points:
+  - 1920-ті — «золота доба»?
+  - Чому Москва дозволила
+  - Пастка — як це працювало
+  - Структура модуля
+- section: Фаза 1 — Обіцянка (1923-1928)
+  words: 700
+  points:
+  - Коренізація — загальна політика
+  - Українізація — конкретика
+  - Мова в школах, пресі, адміністрації
+  - Культурний розквіт
+- section: Фаза 2 — Залежність (1928-1932)
+  words: 600
+  points:
+  - Інтелігенція — вийшла з підпілля
+  - Кадри — створені, відомі
+  - Інституції — під контролем партії
+  - Списки готові
+- section: Фаза 3 — Зрада (1932-1933)
+  words: 600
+  points:
+  - Постанова проти українізації
+  - «Націоналістичний ухил»
+  - Голодомор — одночасно
+  - Зв'язок культурного і фізичного терору
+- section: Фаза 4 — Знищення (1933-1937)
+  words: 500
+  points:
+  - Розстріляне відродження
+  - Масштаби репресій
+  - Хто загинув — списки
+  - Культурний геноцид
+- section: Чому пастка спрацювала
+  words: 400
+  points:
+  - Надія на «новий порядок»
+  - Віра в соціалізм
+  - Створення видимих цілей
+  - Урок для майбутнього
+- section: Підсумок
+  words: 300
+  points:
+  - Українізація — класична пастка
+  - Кооптація через надію
+  - Перехід до Хрущова-Шелеста
+word_target: 3500
+vocabulary_hints:
+  required:
+  - українізація (Ukrainization)
+  - коренізація (korenizatsiya)
+  - пастка (trap)
+  - культурний розквіт (cultural flourishing)
+  - репресії (repressions)
+  - «націоналістичний ухил» (nationalist deviation)
+  - кооптація (co-optation)
+  - терор (terror)
+  - інтелігенція (intelligentsia)
+  - знищення (destruction)
+  recommended:
+  - НЕП (NEP)
+  - класовий ворог (class enemy)
+  - показовий процес (show trial)
+  - самокритика (self-criticism)
+  - реабілітація (rehabilitation)
+activity_hints:
+- type: critical-analysis
+  focus: Map Ukrainization through co-optation cycle
+  output: Cycle diagram
+- type: policy-analysis
+  focus: Why did Moscow allow Ukrainization?
+  output: Policy motivation analysis
+- type: trap-mechanics
+  focus: How the trap worked — step by step
+  output: Mechanism analysis
+- type: comparative-study
+  focus: Ukrainization vs. Pereiaslav — same pattern?
+  output: Historical comparison
+- type: essay-response
+  focus: Чи можна було скористатися українізацією без наслідків?
+  word_target: 400
+  model_answer: Required
+focus: history
+prerequisites:
+- c1-hist-84 (Rozumovsky cycle)
+- c1-hist-52-57 (Executed Renaissance)
+connects_to:
+- c1-hist-86 (Khrushchev-Shelest cycle)
+- c1-hist-88 (Why cycle repeats)
+module_type: thematic
+sources:
+- name: Українізація (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українізація
+  type: reference
+  notes: Ukrainization policy
+- name: Коренізація (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Коренізація
+  type: reference
+  notes: Broader policy
+- name: Розстріляне відродження (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
+  type: reference
+  notes: Cultural outcome
+immersion: 100% Ukrainian
+phase: C1-HIST.1 [Historiography]

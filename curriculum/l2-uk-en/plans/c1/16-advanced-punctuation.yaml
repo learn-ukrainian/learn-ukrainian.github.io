@@ -1,21 +1,8 @@
 module: 16-advanced-punctuation
-level: c1
-sequence: 16
+level: C1
+slug: 16-advanced-punctuation
 version: '2.0'
 title: Поглиблена пунктуація
-focus: grammar
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Український правопис 2019
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official punctuation rules
-- name: Пунктуація сучасної української мови
-  url: https://r2u.org.ua/
-  type: secondary
-  notes: Comprehensive punctuation guide
 content_outline:
 - section: Вступ — Пунктуація як інструмент
   words: 400
@@ -60,7 +47,7 @@ content_outline:
   - Стилістичне варіювання пунктуації
   - Розстановка знаків у науковому тексті
 word_target: 4000
-vocabulary:
+vocabulary_hints:
   required:
   - кома (comma)
   - тире (dash)
@@ -78,19 +65,42 @@ vocabulary:
   - граматичний (grammatical)
   - факультативний (optional)
   - обов'язковий (obligatory)
-  forbidden: []
-activities:
-  types_required:
-  - group-sort
-  - quiz
-  - cloze
-  - fill-in
-  - error-correction
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: error-correction
+  focus: Fix punctuation errors in academic text
+  items: 15+
+- type: fill-in
+  focus: Insert appropriate punctuation
+  items: 15+
+- type: quiz
+  focus: Choose correct punctuation option
+  items: 15+
+- type: match-up
+  focus: Punctuation mark to rule
+  items: 12+
+- type: cloze
+  focus: Punctuate academic passages
+  items: 10+
+- type: group-sort
+  focus: Classify punctuation functions
+  items: 12+
+focus: grammar
+prerequisites:
+- c1-05 (Logical Connectors)
+- Complex sentence structures
 connects_to:
 - c1-17 (Irregular Verbs Complete)
 - c1-18 (Essay Writing Practice)
 - c1-48 (Literary Syntax)
+module_type: grammar
+sources:
+- name: Український правопис 2019
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official punctuation rules
+- name: Пунктуація сучасної української мови
+  url: https://r2u.org.ua/
+  type: secondary
+  notes: Comprehensive punctuation guide
+immersion: 100% Ukrainian
+phase: C1.1 Academic Ukrainian

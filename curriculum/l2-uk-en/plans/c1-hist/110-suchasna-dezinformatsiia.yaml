@@ -1,0 +1,112 @@
+module: suchasna-dezinformatsiia
+level: C1-HIST
+slug: suchasna-dezinformatsiia
+version: '2.0'
+title: Сучасна російська дезінформація
+content_outline:
+- section: Вступ — Війна без зброї
+  words: 400
+  points:
+  - Інформаційна війна — реальна війна
+  - Від пропаганди до дезінформації
+  - Цифрові інструменти
+  - Структура модуля
+- section: Інфраструктура
+  words: 700
+  points:
+  - RT і Sputnik — глобальна мережа
+  - Тролеферми — як працюють
+  - Боти — масштаб операцій
+  - Фінансування і координація
+- section: Методологія
+  words: 600
+  points:
+  - «Пожежний шланг брехні»
+  - Багато версій — жодної правди
+  - Емоції > факти
+  - Теорії змови
+- section: Наративи про Україну
+  words: 600
+  points:
+  - «Нацисти при владі»
+  - «Громадянська війна»
+  - «Захист російськомовних»
+  - MH17 — кейс-стаді
+- section: Цільові аудиторії
+  words: 500
+  points:
+  - Внутрішня — росіяни
+  - Зовнішня — Захід
+  - Українська — розкол
+  - Різні наративи для різних аудиторій
+- section: Після 24.02.2022
+  words: 400
+  points:
+  - Посилення чи ослаблення?
+  - Заборони RT у Європі
+  - Адаптація методів
+  - Нові платформи
+- section: Підсумок
+  words: 300
+  points:
+  - Дезінформація — зброя
+  - Як розпізнавати
+  - Перехід до західних медіа
+word_target: 3500
+vocabulary_hints:
+  required:
+  - дезінформація (disinformation)
+  - тролеферма (troll farm)
+  - бот (bot)
+  - фейк (fake)
+  - наратив (narrative)
+  - теорія змови (conspiracy theory)
+  - інформаційна війна (information war)
+  - пропаганда (propaganda)
+  - маніпуляція (manipulation)
+  - цільова аудиторія (target audience)
+  recommended:
+  - «пожежний шланг брехні» (firehose of falsehood)
+  - фактчекінг (fact-checking)
+  - верифікація (verification)
+  - алгоритм (algorithm)
+  - ехо-камера (echo chamber)
+activity_hints:
+- type: infrastructure-analysis
+  focus: Map Russian disinformation infrastructure
+  output: Infrastructure diagram
+- type: methodology-study
+  focus: «Firehose of falsehood» — how it works
+  output: Methodology analysis
+- type: case-study
+  focus: MH17 disinformation campaign analysis
+  output: Case analysis
+- type: detection-practice
+  focus: Identifying disinformation markers
+  output: Detection checklist
+- type: essay-response
+  focus: Чому 'пожежний шланг брехні' ефективний?
+  word_target: 400
+  model_answer: Required
+focus: history
+prerequisites:
+- c1-hist-109 (Soviet propaganda)
+connects_to:
+- c1-hist-111 (Western media blind spots)
+- c1-hist-113 (Information war synthesis)
+module_type: thematic
+sources:
+- name: Російська дезінформація (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Російська_дезінформація
+  type: reference
+  notes: Disinformation overview
+- name: Russia Today (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Russia_Today
+  type: reference
+  notes: RT network
+- name: Тролі з Ольгіна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Агентство_інтернет-досліджень
+  type: reference
+  notes: Troll farms
+immersion: 100% Ukrainian
+phase: C1-HIST.1 [Historiography]

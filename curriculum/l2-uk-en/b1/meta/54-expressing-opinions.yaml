@@ -1,94 +1,13 @@
 module: b1-54
-id: b1-54
+level: B1
 slug: expressing-opinions
-title: "Вираження думок та поглядів"
-subtitle: "Expressing Opinions"
 version: '2.0'
-phase: "B1.5 [Vocabulary Expansion I]"
-focus: vocabulary
-pedagogy: PPP
-register: розмовний
-duration: 90
-transliteration: none
-objectives:
-  - "Learner can express personal opinions using various constructions"
-  - "Learner can distinguish between strong and weak opinion expressions"
-  - "Learner can use appropriate opinion phrases in formal and informal contexts"
-  - "Learner can hedge and soften opinions appropriately"
-grammar:
-  - "Opinion verb constructions"
-  - "Opinion phrase patterns"
-  - "Hedging and intensifying expressions"
-word_target: 1200
-content_outline:
-  - section: "Introduction: Expressing Views"
-    words: 150
-    points:
-      - "Why opinion language matters"
-      - "Strength of opinion spectrum"
-      - "Register considerations"
-  - section: "Basic Opinion Phrases"
-    words: 250
-    points:
-      - "Я думаю/вважаю/гадаю"
-      - "На мою думку"
-      - "Мені здається"
-  - section: "Strong Opinion Expressions"
-    words: 200
-    points:
-      - "Я переконаний/впевнений"
-      - "Безсумнівно, очевидно"
-      - "When to use strong language"
-  - section: "Hedging and Softening"
-    words: 250
-    points:
-      - "Можливо, мабуть, певно"
-      - "Не виключено, що..."
-      - "Polite disagreement"
-  - section: "Formal vs Informal"
-    words: 250
-    points:
-      - "Academic opinion markers"
-      - "Casual conversation phrases"
-      - "Register switching"
-  - section: "Practice: Expressing Views"
-    words: 100
-    points:
-      - "Use varied opinion phrases"
-      - "Adjust for register"
-vocabulary_hints:
-  required:
-    - думка (opinion/thought)
-    - погляд (view)
-    - вважати (to consider)
-    - гадати (to think/suppose)
-    - переконаний (convinced)
-    - впевнений (sure/certain)
-    - можливо (possibly)
-    - безсумнівно (undoubtedly)
-  recommended:
-    - мабуть (probably)
-    - очевидно (obviously)
-    - здаватися (to seem)
-    - стверджувати (to claim)
-activity_hints:
-  - type: transformation
-    focus: "Adjust opinion strength"
-    items: 25
-  - type: fill-in
-    focus: "Complete opinion sentences"
-    items: 20
-  - type: role-play
-    focus: "Express opinions in scenarios"
-    items: 15
-  - type: writing
-    focus: "Write opinion paragraphs"
-    items: 10
-prerequisites:
-  - b1-53 (Abstract Concepts Processes)
-connects_to:
-  - b1-55 (Agreement Disagreement)
+id: b1-54
 naturalness:
   score: 9
   status: PASS
-  justification: "Essential for discussion and debate"
+  justification: Essential for discussion and debate
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-26'

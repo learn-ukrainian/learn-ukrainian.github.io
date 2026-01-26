@@ -1,16 +1,9 @@
-module: reported-statements
-level: b1
-sequence: 39
+module: b1-39
+level: B1
+slug: reported-statements
 version: '2.0'
 title: 'Непряма мова: твердження'
 subtitle: Reported Statements
-focus: grammar
-pedagogy: TTT
-objectives:
-- Learner can report what someone said using indirect speech
-- Learner can apply tense backshift in reported statements
-- Learner can use appropriate reporting verbs
-- Learner can transform direct speech to indirect
 content_outline:
 - section: 'Introduction: Reported Speech'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Transform direct to indirect
   - Use various reporting verbs
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - непряма мова (indirect speech)
   - пряма мова (direct speech)
@@ -63,15 +56,33 @@ vocabulary:
   - пояснити (to explain)
   - зазначити (to note)
   - підтвердити (to confirm)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - error-correction
-  - writing
-  - transformation
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: transformation
+  focus: Direct to indirect conversion
+  items: 25
+- type: fill-in
+  focus: Complete reported statements
+  items: 20
+- type: error-correction
+  focus: Fix reported speech errors
+  items: 15
+- type: writing
+  focus: Write reported paragraphs
+  items: 10
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-38 (Complex Sentence Integration)
 connects_to:
 - b1-40 (Reported Questions Commands)
+objectives:
+- Learner can report what someone said using indirect speech
+- Learner can apply tense backshift in reported statements
+- Learner can use appropriate reporting verbs
+- Learner can transform direct speech to indirect
+grammar:
+- Converting direct speech to indirect speech
+- Він сказав, що... constructions
+- Tense and pronoun changes
+register: розмовний
+phase: B1.3b [Complex Sentences]

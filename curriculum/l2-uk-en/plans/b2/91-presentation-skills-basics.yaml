@@ -1,23 +1,47 @@
 module: presentation-skills-basics
-level: b2
-sequence: 91
+level: B2
+slug: presentation-skills-basics
 version: '2.0'
 title: 'Презентації: Основи'
 subtitle: Структура та подання професійних презентацій
+content_outline:
+- section: Вступ — Основи
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Основний матеріал
+  words: 600
+  points:
+  - Теоретичні основи
+  - Приклади та ілюстрації
+  - Типові помилки та як їх уникати
+- section: Поглиблене вивчення
+  words: 600
+  points:
+  - Додаткові випадки
+  - Контекстуальне використання
+  - Стилістичні нюанси
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: skills
 pedagogy: CBI
 objectives:
-- Learner can structure a professional presentation with clear opening, body, and conclusion
-- Learner can use signposting language to guide the audience through presentation sections
-- Learner can apply basic delivery techniques including eye contact, pacing, and volume control
+- Learner can structure a professional presentation with clear opening, body, and
+  conclusion
+- Learner can use signposting language to guide the audience through presentation
+  sections
+- Learner can apply basic delivery techniques including eye contact, pacing, and volume
+  control
 - Learner understands how to create effective visual aids for Ukrainian-language presentations
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Imperative mood for instructions
+- Modal constructions for recommendations
+immersion: 100
+register: публіцистичний
+phase: B2.4 [Communication Skills]

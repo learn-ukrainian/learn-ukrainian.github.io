@@ -1,0 +1,45 @@
+module: c1-46
+level: C1
+slug: 46-review-c1-4
+version: '2.0'
+title: 'Огляд етапу C1.4: Стилістика та регістри'
+subtitle: 'Stage C1.4 Review: Stylistics and Registers'
+content_outline:
+- section: Вступ — Стилістика та регістри
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Joke Structure
+  words: 500
+  points:
+  - 'Зав''язка: Setup'
+  - 'Кульмінація: Build-up'
+  - 'Пуант: Punchline'
+- section: Common Themes
+  words: 500
+  points:
+  - Національний характер
+  - Побутові ситуації
+  - Політика
+  - Чоловік і дружина
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
+focus: style
+pedagogy: Review
+objectives:
+- Learner can flexibly switch between formal, intimate, and slang registers
+- Learner can express degrees of certainty and politeness appropriate to the context
+- Learner can identify and correct stylistic errors
+grammar:
+- Register shifting (перемикання регістрів)
+- Modality and certainty (модальність)
+- Politeness strategies (ввічливість)
+immersion: 100
+phase: C1.4 Advanced Stylistics & Rhetoric

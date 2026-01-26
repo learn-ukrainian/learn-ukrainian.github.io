@@ -1,21 +1,8 @@
 module: 35-speaking-practice
-level: c1
-sequence: 35
+level: C1
+slug: 35-speaking-practice
 version: '2.0'
 title: Мовний практикум
-focus: checkpoint
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: CEFR C1 Assessment Criteria
-  url: https://www.coe.int/
-  type: reference
-  notes: C1 speaking assessment descriptors
-- name: Ukrainian State Standard C1 (2024)
-  url: https://mon.gov.ua/
-  type: reference
-  notes: National C1 oral competency requirements
 content_outline:
 - section: Огляд C1.2 — Контрольна точка
   words: 500
@@ -62,7 +49,7 @@ content_outline:
   - Усна дискусія
   - Аудіювання діалектів
 word_target: 4000
-vocabulary:
+vocabulary_hints:
   required:
   - оцінювання (assessment)
   - тестування (testing)
@@ -80,19 +67,42 @@ vocabulary:
   - спонтанність (spontaneity)
   - плавність (fluency)
   - точність (accuracy)
-  forbidden: []
-activities:
-  types_required:
-  - group-sort
-  - quiz
-  - essay-response
-  - cloze
-  - fill-in
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: Comprehensive C1.2 assessment
+  items: 40+
+- type: essay-response
+  focus: Write professional document
+  word_target: 400
+- type: match-up
+  focus: Review all key concepts M21-M34
+  items: 20+
+- type: fill-in
+  focus: Sociolinguistic knowledge
+  items: 15+
+- type: cloze
+  focus: Dialect recognition passages
+  items: 12+
+- type: group-sort
+  focus: Classify professional situations
+  items: 15+
+focus: checkpoint
+prerequisites:
+- c1-21 to c1-34 (Complete Phase C1.2)
+- All professional and sociolinguistic skills
 connects_to:
 - c1-36 (Metaphor & Simile - C1.3 start)
 - c1-55 (C1.3 Checkpoint)
 - c1-106 (Final C1 Checkpoint)
+module_type: checkpoint
+sources:
+- name: CEFR C1 Assessment Criteria
+  url: https://www.coe.int/
+  type: reference
+  notes: C1 speaking assessment descriptors
+- name: Ukrainian State Standard C1 (2024)
+  url: https://mon.gov.ua/
+  type: reference
+  notes: National C1 oral competency requirements
+immersion: 100% Ukrainian
+phase: C1.2 Professional Communication

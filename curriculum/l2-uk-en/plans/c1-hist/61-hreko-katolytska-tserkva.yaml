@@ -1,0 +1,117 @@
+module: hreko-katolytska-tserkva
+level: C1-HIST
+slug: hreko-katolytska-tserkva
+version: '2.0'
+title: 'Греко-католицька церква: Між Сходом і Заходом'
+content_outline:
+- section: Вступ — Унікальна церква
+  words: 400
+  points:
+  - УГКЦ — що це
+  - Між Римом і Константинополем
+  - Чому важлива для ідентичності
+  - Структура модуля
+- section: Від Берестя до Галичини
+  words: 600
+  points:
+  - Перші століття — боротьба за виживання
+  - Втрата території на сході
+  - Зосередження в Галичині
+  - Під Австрією — золота доба
+- section: Церква і національний рух
+  words: 700
+  points:
+  - Священики — національні лідери
+  - Селянство і церква
+  - Просвіта і церква
+  - Москвофіли vs. народовці
+  - Церква як нація-замінник
+- section: Андрей Шептицький
+  words: 600
+  points:
+  - Біографія — польський граф стає українським митрополитом
+  - 44 роки служіння
+  - Рятування євреїв
+  - Складні відносини з ОУН
+  - Спадщина
+- section: Знищення і підпілля
+  words: 600
+  points:
+  - 1946 — Львівський псевдособор
+  - Примусове «возз'єднання» з РПЦ
+  - Церква в катакомбах
+  - Переслідування священиків
+  - Діаспора — збереження
+- section: Відродження
+  words: 400
+  points:
+  - 1989 — легалізація
+  - Повернення храмів
+  - Сучасна УГКЦ
+  - Роль у війні 2022
+- section: Підсумок
+  words: 200
+  points:
+  - УГКЦ — маркер ідентичності
+  - Між Сходом і Заходом
+  - Підготовка до радянської антирелігійної політики
+word_target: 3500
+vocabulary_hints:
+  required:
+  - УГКЦ (Ukrainian Greek Catholic Church)
+  - греко-католицький (Greek Catholic)
+  - митрополит (metropolitan)
+  - катакомби (catacombs)
+  - підпілля (underground)
+  - псевдособор (pseudo-council)
+  - возз'єднання (reunification)
+  - легалізація (legalization)
+  - священик (priest)
+  - обряд (rite)
+  recommended:
+  - василіани (Basilians)
+  - єпарх (eparch)
+  - прелат (prelate)
+  - душпастирство (pastoral care)
+  - примас (primate)
+activity_hints:
+- type: reading
+  focus: Sheptytsky — complex figure analysis
+  output: Biographical profile
+- type: persecution-study
+  focus: Analyze 1946 pseudo-council — how liquidation worked
+  output: Mechanism analysis
+- type: comparative-study
+  focus: UGCC vs. Orthodox in identity formation
+  output: Church comparison
+- type: contemporary-analysis
+  focus: UGCC role in 2022 — what changed?
+  output: Contemporary relevance
+- type: essay-response
+  focus: Чому УГКЦ стала символом галицької української ідентичності?
+  word_target: 400
+  model_answer: Required
+focus: history
+prerequisites:
+- c1-hist-59 (Union of Brest)
+- c1-hist-60 (Orthodox identity)
+connects_to:
+- c1-hist-62 (Soviet anti-religious policy)
+- c1-hist-70-71 (Galicia modules)
+- c1-hist-63 (Religious identity synthesis)
+module_type: thematic
+sources:
+- name: УГКЦ (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_греко-католицька_церква
+  type: reference
+  notes: Church history
+- name: Андрей Шептицький (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Шептицький_Андрей
+  type: reference
+  notes: Key 20th century figure
+- name: Львівський собор 1946
+  url: https://uk.wikipedia.org/wiki/Львівський_собор_(1946)
+  type: reference
+  notes: Soviet liquidation
+immersion: 100% Ukrainian
+phase: C1-HIST.1 [Historiography]

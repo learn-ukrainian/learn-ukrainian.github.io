@@ -1,11 +1,8 @@
+module: 102-kotsiubynskyi
+level: C1
+slug: 102-kotsiubynskyi
 version: '2.0'
 id: c1-102
-title: 'Імпресіонізм: Коцюбинський'
-subtitle: 'Impressionism: Kotsiubynsky'
-slug: 102-kotsiubynskyi
-phase: C1.6 Literature
-focus: literature
-pedagogy: Literary Analysis
 duration: 120
 transliteration: none
 tags:
@@ -13,31 +10,5 @@ tags:
 - impressionism
 - kotsiubynsky
 - psychology
-grammar:
-- Sensory imagery
-- Stream of consciousness
-objectives:
-- Learner can analyze the features of impressionism in "Shadows of Forgotten Ancestors".
-- Learner can interpret the psychological depth of "Intermezzo".
-- Learner can discuss the role of nature and color in Kotsiubynsky’s prose.
-content_outline:
-- section: Вступ — Коцюбинський
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-- section: Content Areas
-  words: 500
-  points:
-  - 'Біографія: Вінниця, travel, European influences'
-  - 'Тіні забутих предків: Hutsul life, love, death'
-  - 'Fata Morgana: peasant revolution'
-  - 'Impressionist techniques: sensory detail, mood'
-  - Influence on Ukrainian cinema (Параджанов)
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

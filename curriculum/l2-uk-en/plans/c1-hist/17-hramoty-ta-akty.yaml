@@ -1,0 +1,115 @@
+module: hramoty-ta-akty
+level: C1-HIST
+slug: hramoty-ta-akty
+version: '2.0'
+title: 'Грамоти та акти: Княжі документи'
+content_outline:
+- section: Вступ — Документи vs. літописи
+  words: 400
+  points:
+  - Що таке грамота?
+  - Чим документи відрізняються від літописів?
+  - Типи княжих документів
+  - Чому важливі для історика
+- section: Типологія документів
+  words: 600
+  points:
+  - Жалувані грамоти — пожалування земель
+  - Договірні грамоти — між князями
+  - Уставні грамоти — закони
+  - Духовні грамоти — заповіти
+  - Церковні акти
+- section: Дипломатика — наука про документи
+  words: 600
+  points:
+  - Що таке дипломатика?
+  - Формуляр документа — структура
+  - Печатки і підписи
+  - Як визначити автентичність
+  - Підробки — навіщо і як
+- section: Ключові документи
+  words: 700
+  points:
+  - Грамота Мстислава Володимировича (1130)
+  - Руська Правда — збірник законів
+  - Церковний устав Володимира
+  - Договори з Візантією
+- section: Фрагмент — Грамота Мстислава
+  words: 500
+  points:
+  - Текст (з глосами)
+  - Формуляр — як побудовано
+  - Що дізнаємося про суспільство?
+  - Мова документа
+- section: Берестяні грамоти — особливий випадок
+  words: 400
+  points:
+  - Новгородські знахідки
+  - Побутове листування
+  - Унікальне вікно в повсякдення
+  - Українські приклади
+- section: Підсумок
+  words: 300
+  points:
+  - Документи як доповнення до літописів
+  - Критичний підхід — ті ж правила
+  - Підготовка до козацьких документів
+word_target: 3500
+vocabulary_hints:
+  required:
+  - грамота (charter/document)
+  - акт (act/document)
+  - дипломатика (diplomatics)
+  - формуляр (formulary)
+  - печатка (seal)
+  - жалувана грамота (grant charter)
+  - договір (treaty)
+  - устав (statute)
+  - заповіт (testament)
+  - автентичність (authenticity)
+  recommended:
+  - протограф (protograph)
+  - список (copy)
+  - канцелярія (chancery)
+  - скрипторій (scriptorium)
+  - підробка (forgery)
+activity_hints:
+- type: reading
+  focus: Mstislav's Charter with glosses
+  source: Provide excerpt
+- type: critical-analysis
+  focus: Apply diplomatic method — analyze formulary
+  output: Document analysis form
+- type: comparative-study
+  focus: Compare Kyivan charter with Western European charter
+  output: Formulary comparison
+- type: reading
+  focus: Identify potential forgery signs in a document
+  output: Authenticity checklist
+- type: essay-response
+  focus: Чому документи важливіші за літописи для соціальної історії?
+  word_target: 350
+  model_answer: Required
+focus: history
+prerequisites:
+- c1-hist-09 (Source criticism)
+- c1-hist-11 (PVL I)
+connects_to:
+- c1-hist-18 (Synthesis — medieval sources)
+- c1-hist-23 (Khmelnytsky's Universals)
+module_type: primary-source
+sources:
+- name: Грамота (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Грамота
+  type: reference
+  notes: Document types
+- name: Давньоруські грамоти
+  url: https://uk.wikipedia.org/wiki/Давньоруські_грамоти
+  type: reference
+  notes: Overview of princely documents
+- name: Берестяні грамоти
+  url: https://uk.wikipedia.org/wiki/Берестяні_грамоти
+  type: reference
+  notes: Birch bark letters
+immersion: 100% Ukrainian
+phase: C1-HIST.1 [Historiography]

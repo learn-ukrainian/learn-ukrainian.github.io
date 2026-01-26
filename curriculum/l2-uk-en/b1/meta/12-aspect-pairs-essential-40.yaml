@@ -1,14 +1,11 @@
-id: b1-12
-title: 'Видові пари: 40 найважливіших'
-subtitle: Essential Aspect Pairs - The 40 most common verb pairs
+module: 12-aspect-pairs-essential-40
+level: B1
 slug: 12-aspect-pairs-essential-40
-module_type: grammar
-word_target: 1500
-immersion: 100% Ukrainian
 version: '1.0'
-phase: B1.1 Aspect
-pedagogy: TTT
-focus: grammar
+id: b1-12
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
 tags:
@@ -16,84 +13,5 @@ tags:
 - aspect
 - verbs
 - vocabulary
-grammar:
-- 40 essential aspect pairs
-- Imperfective-perfective correspondence
-objectives:
-- Learner knows the 40 most essential aspect pairs
-- Learner can recognize and use both forms correctly
-- Learner understands common aspect formation patterns
-sources:
-- name: Ukrainian Frequency Dictionaries
-  url: https://uk.wikipedia.org/wiki/Частотний_словник
-  type: reference
-  notes: Most frequent verbs in Ukrainian corpus
-- name: Ukrainian Aspectual Pairs
-  url: https://uk.wikipedia.org/wiki/Видові_пари_дієслів
-  type: reference
-  notes: Formation patterns for aspectual pairs
-content_outline:
-- section: Тест
-  words: 100
-  points:
-  - Content for Тест
-  - Examples and explanation
-  - Practice or application
-- section: Пояснення
-  words: 750
-  points:
-  - Content for Пояснення
-  - Examples and explanation
-  - Practice or application
-- section: Практика
-  words: 300
-  points:
-  - Content for Практика
-  - Examples and explanation
-  - Practice or application
-- section: Діалоги
-  words: 450
-  points:
-  - Content for Діалоги
-  - Examples and explanation
-  - Practice or application
-vocabulary_hints:
-  required:
-  - робити/зробити (to do/make)
-  - писати/написати (to write)
-  - читати/прочитати (to read)
-  - говорити/сказати (to speak/say)
-  - брати/взяти (to take)
-  - давати/дати (to give)
-  - їсти/з'їсти (to eat)
-  - пити/випити (to drink)
-  - класти/покласти (to put)
-  - ставити/поставити (to put standing)
-  recommended:
-  - відкривати/відкрити (to open)
-  - закривати/закрити (to close)
-  - починати/почати (to begin)
-  - закінчувати/закінчити (to finish)
-  - вчити/вивчити (to study/learn)
-activity_hints:
-- type: match-up
-  focus: Imperfective → Perfective pairs
-  items: 40+
-- type: fill-in
-  focus: Choose correct form in context
-  items: 20+
-- type: group-sort
-  focus: By formation type (prefix, suffix, suppletive)
-  items: 40+
-- type: quiz
-  focus: Identify pair type and use correctly
-  items: 15+
-prerequisites:
-- b1-11 (Aspect in imperatives)
-- All aspect theory modules M06-11
-connects_to:
-- b1-13 (Work week - aspect in action)
-- b1-14 (Aspect integration practice)
-naturalness:
-  score: 9
-  status: PASS
+build:
+  last_modified: '2026-01-26'

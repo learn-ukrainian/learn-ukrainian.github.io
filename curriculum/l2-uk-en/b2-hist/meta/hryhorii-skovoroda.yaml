@@ -1,65 +1,12 @@
-# Meta for Григорій Сковорода
-slug: hryhorii-skovoroda
-title: "Григорій Сковорода: Мандрівний філософ"
-subtitle: "Hryhorii Skovoroda: The Wandering Philosopher"
+module: hryhorii-skovoroda
 level: B2
-track: history
-phase: "HIST.7 [Mazepa & End of Hetmanate]"
-status: content_complete
-focus: history
-pedagogy: CBI
-transliteration: none
-word_target: 4000
-prerequisites:
-  - "b2-hist-64: Іван Мазепа II"
-learning_outcomes:
-  - "Учень розуміє концепцію 'сродної праці' та її значення"
-  - "Учень може описати життєвий шлях Сковороди та його вибір свободи"
-  - "Учень знає основні байки та філософські твори Сковороди"
-content_outline:
-  - section: "Вступ: Український Сократ"
-    words: 450
-    points:
-      - "Skovoroda as a symbol of intellectual freedom"
-      - "His refusal of worldly goods and titles"
-      - "The legend of his life"
-  - section: "Життєвий шлях: Від академії до дороги"
-    words: 650
-    points:
-      - "Studies at Kyiv-Mohyla Academy"
-      - "Travels in Europe (Vienna, Bratislava, Tokaj)"
-      - "The 'Tokaj Commission' and wine"
-      - "Teaching at Kharkiv Collegium and conflict with the system"
-  - section: "Філософія серця: Сродна праця"
-    words: 800
-    points:
-      - "Concept of 'affinity labor' (srodna pratsia)"
-      - "The theory of two natures (visible and invisible)"
-      - "The three worlds (macrocosm, microcosm, symbolic)"
-      - "Happiness through self-knowledge"
-  - section: "Літературна спадщина: Сад божественних пісень"
-    words: 600
-    points:
-      - "Basni Kharkovskie (Kharkiv Fables)"
-      - "Garden of Divine Songs"
-      - "Style and language (Baroque influence)"
-  - section: "Читання: Байки та афоризми"
-    words: 500
-    points:
-      - "Analysis of 'The Bee and the Hornet'"
-      - "Interpretation of key aphorisms"
-  - section: "Первинні джерела: Листи до Михайла Ковалинського"
-    words: 500
-    points:
-      - "Friendship as a philosophical category"
-      - "Pedagogical views of Skovoroda"
-  - section: "Деколонізаційний погляд: Не «русский философ»"
-    words: 500
-    points:
-      - "Skovoroda's Ukrainian roots and identity"
-      - "Distinction from Russian philosophical tradition"
-      - "Impact on Ukrainian national revival"
-
+slug: hryhorii-skovoroda
+version: '2.0'
 naturalness:
   score: 9
   status: PASS
+status: content_complete
+track: history
+transliteration: none
+build:
+  last_modified: '2026-01-26'

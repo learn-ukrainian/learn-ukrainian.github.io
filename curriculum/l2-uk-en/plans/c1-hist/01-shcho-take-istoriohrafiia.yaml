@@ -1,0 +1,119 @@
+module: c1-hist-01
+level: C1-HIST
+slug: shcho-take-istoriohrafiia
+version: '2.0'
+title: Що таке історіографія?
+subtitle: What is Historiography?
+content_outline:
+- section: Вступ — Історія vs. Історіографія
+  words: 424
+  points:
+  - Що таке історія? Що таке історіографія?
+  - Різниця між подіями та інтерпретацією подій
+  - Чому один і той самий факт описують по-різному?
+  - Приклад — Переяславська рада 1654 (3 версії)
+- section: Ключові поняття історіографії
+  words: 636
+  points:
+  - Наратив (narrative) — як розповідь формує розуміння
+  - Первинні джерела vs. вторинні джерела
+  - Інтерпретація vs. факт
+  - Упередження (bias) та перспектива автора
+  - Контекст створення тексту
+- section: Хто пише історію?
+  words: 530
+  points:
+  - Літописці (Chronicle writers) — середньовічна традиція
+  - Академічні історики — університетська традиція
+  - Держава як автор історії — офіційні наративи
+  - Еміграція та діаспора — альтернативні голоси
+  - Сучасність — public history, Wikipedia, соцмережі
+- section: Українська історіографічна традиція — огляд
+  words: 636
+  points:
+  - Від літописів до Грушевського
+  - Чому українська історія довго писалася як «частина російської»
+  - Революція Грушевського — окрема нація, окрема історія
+  - Радянські деформації
+  - Відродження після 1991
+- section: Чому це важливо для вас?
+  words: 424
+  points:
+  - Критичне читання — не вірити одному джерелу
+  - Розпізнавання пропаганди
+  - Формування власної позиції на основі доказів
+  - Україна як об'єкт інформаційної війни
+- section: Практичне застосування
+  words: 530
+  points:
+  - Як читати історичний текст критично?
+  - 5 питань до кожного джерела (хто? коли? для кого? чому? що опущено?)
+  - Приклад аналізу — радянський підручник vs. сучасний
+- section: Підсумок та перехід
+  words: 320
+  points:
+  - Ключові терміни модуля
+  - Що далі — українська історіографічна традиція детально
+word_target: 3500
+vocabulary_hints:
+  required:
+  - історіографія (historiography)
+  - наратив (narrative)
+  - інтерпретація (interpretation)
+  - первинне джерело (primary source)
+  - вторинне джерело (secondary source)
+  - упередження (bias)
+  - контекст (context)
+  - перспектива (perspective)
+  - критичний аналіз (critical analysis)
+  - методологія (methodology)
+  recommended:
+  - літопис (chronicle)
+  - деконструкція (deconstruction)
+  - переосмислення (reinterpretation)
+  - офіційний наратив (official narrative)
+  - альтернативна історія (alternative history)
+activity_hints:
+- type: reading
+  focus: Read two descriptions of Pereiaslav 1654 (Ukrainian vs Russian textbook)
+  source: Provide excerpts in module
+- type: critical-analysis
+  focus: Apply 5 questions to a Soviet-era text about Ukrainian history
+  output: Identify bias markers
+- type: match-up
+  focus: Match historiographical terms to definitions
+  items: 12+
+- type: essay-response
+  focus: Чому важливо знати, хто написав історію?
+  word_target: 300
+  model_answer: Required
+focus: history
+pedagogy: seminar
+prerequisites:
+- B2-HIST completion recommended
+- C1 Core grammar
+connects_to:
+- c1-hist-02 (Ukrainian historiographical tradition - detailed)
+- c1-hist-09 (Source criticism - practical methods)
+objectives:
+- Analyze the difference between history and historiography
+- Evaluate the impact of bias and narrative on historical writing
+grammar:
+- C1 academic syntax
+- Abstract nouns
+module_type: historiography
+sources:
+- name: Історіографія України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Історіографія_України
+  type: reference
+  notes: Overview of Ukrainian historiographical tradition
+- name: Грушевський — Історія України-Руси (вступ)
+  url: https://litopys.org.ua/hrushukr/ihu.htm
+  type: primary
+  notes: Hrushevsky's methodological introduction
+- name: What is Historiography? (academic intro)
+  url: https://www.historians.org/teaching-and-learning/teaching-resources-for-historians/teaching-and-learning-in-the-digital-age/the-history-of-the-americas/what-is-historiography
+  type: reference
+  notes: English reference for conceptual framework
+immersion: 100% Ukrainian
+phase: C1H.1 Historiography & Methodology

@@ -1,25 +1,9 @@
 module: 26-telling-stories
-level: a2
-sequence: 26
+level: A2
+slug: 26-telling-stories
 version: '2.0'
 title: Telling Stories
 subtitle: Sequencing Events in Narrative
-focus: vocabulary
-pedagogy: PPP
-objectives:
-- Learner can sequence events using connectors
-- Learner can tell a simple story with a beginning, middle, and end
-- Learner can describe unexpected events
-- Learner can use time markers to structure narrative
-sources:
-- name: Ukrainian State Standard 2024 - Narration
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Narrative and sequence requirements for A2
-- name: Stylistics of Ukrainian Language - Narrative Flow
-  url: https://uk.wikipedia.org/wiki/Оповідь
-  type: reference
-  notes: Logical connectors in Ukrainian prose
 content_outline:
 - section: Introduction / Вступ
   words: 200
@@ -44,7 +28,27 @@ content_outline:
   points:
   - Telling a fishing story or travel adventure
 word_target: 1000
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can sequence events using connectors
+- Learner can tell a simple story with a beginning, middle, and end
+- Learner can describe unexpected events
+- Learner can use time markers to structure narrative
+grammar:
+- sequencing words (спочатку, потім, нарешті)
+- time markers (раптом, одного разу)
+- narrative tenses
+- structuring a story
+module_type: vocabulary
+sources:
+- name: Ukrainian State Standard 2024 - Narration
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Narrative and sequence requirements for A2
+- name: Stylistics of Ukrainian Language - Narrative Flow
+  url: https://uk.wikipedia.org/wiki/Оповідь
+  type: reference
+  notes: Logical connectors in Ukrainian prose
+immersion: 40-50% Ukrainian
+phase: A2.2

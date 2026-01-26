@@ -1,9 +1,10 @@
-title: 'Данило Апостол та Кирило Розумовський'
-phase: B2.3b [Українська історія]
-focus: history
-word_target: 4000
-pedagogy: CBI
-register: публіцистичний
+module: danylo-apostol
+level: B2-HIST
+slug: danylo-apostol
+version: '2.0'
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
 tags:
@@ -13,17 +14,8 @@ tags:
 - razumovsky
 - reforms
 - culture
-grammar:
-- Історичний наратив
-- Пасивний стан в історичному тексті
 vocabulary_focus: null
-objectives:
-- Учень може порівняти правління Данила Апостола та Кирила Розумовського
-- Учень може пояснити причини ліквідації гетьманства
-- Учень може охарактеризувати культурний розвиток Глухова
-- Учень може проаналізувати "Рішительні пункти"
 vocabulary_count: 35
-slug: danylo-apostol
 activity_types:
 - reading
 - quiz
@@ -35,21 +27,5 @@ activity_types:
 - fill-in
 - error-correction
 - select
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-  - section: "Вступ: Між молотом і ковадлом"
-    words: 300
-  - section: "Читання: Епоха Данила Апостола"
-    words: 600
-  - section: "Економіка та суспільство: Стабільність і криза"
-    words: 600
-  - section: "Епоха Розумовського: Європейська мрія"
-    words: 800
-  - section: "Первинні джерела: Голоси епохи"
-    words: 500
-  - section: "Деколонізаційний погляд: Дві стратегії виживання"
-    words: 600
-  - section: "Підсумок: Захід сонця"
-    words: 200
+build:
+  last_modified: '2026-01-26'

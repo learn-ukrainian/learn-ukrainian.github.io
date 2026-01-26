@@ -1,105 +1,105 @@
 module: halyna-pahutyak
-level: c1-bio
-sequence: 84
+level: C1-BIO
+slug: halyna-pahutyak
 version: '2.0'
 title: 'Галина Пагутяк: Містична письменниця'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Пагутяк_Галина_Василівна
-    title: Галина Пагутяк (Wikipedia UA)
-    notes: Biography of the mystical prose writer
-  secondary:
-  - url: https://www.pyramida.kiev.ua/
-    title: Видавництво «Піраміда»
-    notes: Publisher of Pahutyak's major works
 content_outline:
 - section: Вступ — Голос з іншого світу
   words: 400
-  subsections:
+  points:
   - Майстриня химерного реалізму
   - Унікальний голос сучасної української прози
   - Філософський та містичний світогляд
 - section: Юність та формування (1958-1980)
   words: 600
-  subsections:
+  points:
   - Народження на Львівщині
   - Дитинство в Карпатах
   - Навчання у Львівському університеті
   - Перші літературні спроби
 - section: Ранній період творчості (1980-1990-ті)
   words: 800
-  subsections:
+  points:
   - Перша книжка «Діти» (1982)
   - Формування унікального стилю
   - Теми дитинства та пам'яті
   - Візнання критиків
 - section: Химерний реалізм (2000-ні)
   words: 800
-  subsections:
+  points:
   - «Слуга з Добромиля» (2006)
   - «Урізька готика» (2009)
   - Магічні елементи та історична проза
   - Карпати як простір таємниць
 - section: Філософська проза (2010-ні)
   words: 700
-  subsections:
+  points:
   - Роздуми про природу та людину
   - Екологічна тематика
   - Есеїстика та публіцистика
   - Вплив на молодих письменників
 - section: Спадщина — Архітекторка світів
   words: 700
-  subsections:
+  points:
   - Місце в сучасній літературі
   - Переклади іноземними мовами
   - Літературні премії
   - Пагутяк і майбутнє української прози
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - химерний реалізм
-  - містика
-  - проза
-  - філософія
-  - готика
-  - магічний реалізм
-  - наратор
-  - світогляд
-  - метафора
-  - символізм
+  - химерний реалізм (chimerical realism)
+  - містика (mysticism)
+  - проза (prose)
+  - філософія (philosophy)
+  - готика (Gothic)
+  - магічний реалізм (magical realism)
+  - наратор (narrator)
+  - світогляд (worldview)
+  - метафора (metaphor)
+  - символізм (symbolism)
   recommended:
-  - есеїстика
-  - екологія
-  - фольклор
-  - архетип
-  - підтекст
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - есеїстика (essay writing)
+  - екологія (ecology)
+  - фольклор (folklore)
+  - архетип (archetype)
+  - підтекст (subtext)
+activity_hints:
+- type: reading
+  focus: Сучасна українська проза
+  source: Literary criticism
+  items: 3 passages
+- type: quiz
+  focus: Життя та творчість Пагутяк
+  items: 12+
+- type: match-up
+  focus: Твори та їхні теми
+  items: 10+
+- type: essay-response
+  focus: Що таке «химерний реалізм» і як він проявляється у творах Пагутяк?
+  word_target: 300
+  output: Analytical essay
+- type: group-sort
+  focus: Романи за періодами творчості
+  items: 12+
+- type: fill-in
+  focus: Літературна термінологія
+  items: 10+
+focus: biography
+prerequisites:
+- c1-bio-83
 connects_to:
-  previous: c1-bio-83
-  related:
-  - c1-bio-85
-  - c1-bio-89
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-85
+- c1-bio-89
+module_type: biography
+sources:
+- name: Галина Пагутяк (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Пагутяк_Галина_Василівна
+  type: primary
+  notes: Biography of the mystical prose writer
+- name: Видавництво «Піраміда»
+  url: https://www.pyramida.kiev.ua/
+  type: reference
+  notes: Publisher of Pahutyak's major works
+immersion: 100% Ukrainian
+phase: C1-BIO

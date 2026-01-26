@@ -1,109 +1,112 @@
 module: mykola-amosov
-level: c1-bio
-sequence: 114
+level: C1-BIO
+slug: mykola-amosov
 version: '2.0'
 title: 'Микола Амосов: Хірург і філософ здоров''я'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Амосов_Микола_Михайлович
-    title: Микола Амосов (Wikipedia UA)
-    notes: Biography, medical achievements, philosophy
-  secondary:
-  - url: https://uk.wikipedia.org/wiki/Національний_інститут_серцево-судинної_хірургії_імені_М._М._Амосова
-    title: Інститут серцево-судинної хірургії
-    notes: Institute he led
-  - url: https://uk.wikipedia.org/wiki/Роздуми_про_здоров%27я
-    title: Роздуми про здоров'я
-    notes: His famous book
 content_outline:
 - section: Вступ — Лікар, який лікував Україну
   words: 457
-  subsections:
+  points:
   - Амосов як піонер кардіохірургії
   - Філософ здорового способу життя
   - Автор, якого читали мільйони
 - section: Молодість і війна
   words: 685
-  subsections:
+  points:
   - Народження в Росії (1913)
   - Медична освіта
   - Польовий хірург на фронті
   - Тисячі операцій у польових умовах
 - section: Становлення кардіохірурга
   words: 800
-  subsections:
+  points:
   - Переїзд до Києва
   - Перші операції на серці
   - Створення штучних клапанів серця
   - Заснування Інституту (1983)
 - section: Наукові досягнення
   words: 800
-  subsections:
+  points:
   - Штучне кровообігове обладнання
   - Тисячі операцій на серці
   - Дослідження штучного інтелекту в медицині
   - Кібернетичний підхід до організму
 - section: Філософ здоров'я
   words: 685
-  subsections:
+  points:
   - '"Роздуми про здоров&apos;я" — бестселер'
   - Система фізичних вправ
   - Критика гіподинамії
   - Обмеження в їжі та рух як ліки
 - section: Спадщина лікаря-мислителя
   words: 573
-  subsections:
+  points:
   - Смерть 2002 року
   - Інститут його імені
   - Вплив на профілактичну медицину
   - Амосов як символ активного довголіття
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - кардіохірургія
-  - хірург
-  - операція на серці
-  - штучний клапан
-  - здоровий спосіб життя
-  - профілактика
-  - гіподинамія
-  - кібернетика
-  - довголіття
-  - фізичні вправи
+  - кардіохірургія (cardiac surgery)
+  - хірург (surgeon)
+  - операція на серці (heart surgery)
+  - штучний клапан (artificial valve)
+  - здоровий спосіб життя (healthy lifestyle)
+  - профілактика (prevention)
+  - гіподинамія (sedentary lifestyle)
+  - кібернетика (cybernetics)
+  - довголіття (longevity)
+  - фізичні вправи (physical exercises)
   recommended:
-  - кровообіг
-  - трансплантація
-  - реабілітація
-  - діагностика
-  - пацієнт
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - кровообіг (blood circulation)
+  - трансплантація (transplantation)
+  - реабілітація (rehabilitation)
+  - діагностика (diagnostics)
+  - пацієнт (patient)
+activity_hints:
+- type: reading
+  focus: Excerpts from "Роздуми про здоров'я"
+  source: Medical and philosophical texts
+  items: 3 passages
+- type: quiz
+  focus: Amosov's biography and medical achievements
+  items: 12+
+- type: match-up
+  focus: Medical innovations and their significance
+  items: 10+
+- type: essay-response
+  focus: How did Amosov combine medicine with philosophy?
+  word_target: 300
+  output: Analysis of holistic approach to health
+- type: group-sort
+  focus: Medical achievements vs. philosophical contributions
+  items: 12+
+- type: fill-in
+  focus: Key medical terms and dates
+  items: 10+
+focus: biography
+prerequisites:
+- Basic medical vocabulary
+- Understanding of Soviet-era medicine
+- Health and wellness concepts
 connects_to:
-  previous: Basic medical vocabulary
-  related:
-  - c1-bio-113 (Boris Paton - contemporary scientist)
-  - c1-bio-111 (Sukhomlynskyi - humanist of same era)
-  - c1-bio-112 (Yevhen Paton - contemporary)
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-113 (Boris Paton - contemporary scientist)
+- c1-bio-111 (Sukhomlynskyi - humanist of same era)
+- c1-bio-112 (Yevhen Paton - contemporary)
+module_type: biography
+sources:
+- name: Микола Амосов (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Амосов_Микола_Михайлович
+  type: primary
+  notes: Biography, medical achievements, philosophy
+- name: Інститут серцево-судинної хірургії
+  url: https://uk.wikipedia.org/wiki/Національний_інститут_серцево-судинної_хірургії_імені_М._М._Амосова
+  type: reference
+  notes: Institute he led
+- name: Роздуми про здоров'я
+  url: https://uk.wikipedia.org/wiki/Роздуми_про_здоров%27я
+  type: reference
+  notes: His famous book
+immersion: 100% Ukrainian
+phase: C1-BIO

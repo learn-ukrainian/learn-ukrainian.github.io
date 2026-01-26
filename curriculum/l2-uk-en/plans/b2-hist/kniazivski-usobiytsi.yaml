@@ -1,86 +1,82 @@
-module: kniazivski-usobiytsi
-level: b2-hist
-sequence: 17
-version: '1.0'
+module: b2-hist-17
+level: B2-HIST
+slug: kniazivski-usobiytsi
+version: '2.0'
 title: Княжі усобиці та роздроблення
-focus: history
-pedagogy: CBI
-objectives:
-- Understand the causes of Kyivan Rus fragmentation
-- Analyze the decisions of the Liubech Congress
-- Discuss the impact of Polovtsian threat on unity
 content_outline:
 - section: Розминка
   words: 200
-  subsections:
+  points:
   - Defining sovereignty vs suzerainty
   - The map of 1054 vs 1132
 - section: 'Читання: Тріумвірат Ярославичів'
   words: 700
-  subsections:
+  points:
   - The will of Yaroslav the Wise
   - Battle of Alta (1068)
   - Kyiv Uprising
 - section: Любецький з'їзд (1097)
   words: 450
-  subsections:
+  points:
   - Every man holds his own fatherland
   - The blinding of Vasylko
   - Consequences of the Congress
 - section: Володимир Мономах
   words: 700
-  subsections:
+  points:
   - Crusades against Polovtsians
   - Monomakh's Reforms (Statute)
   - Instruction (Povchannia)
 - section: Соціальна структура та Економіка
   words: 700
-  subsections:
+  points:
   - Economic causes of fragmentation
   - Boyars, Druzhina, Smerds
   - Urban growth
 - section: Культура та Церква
   words: 250
-  subsections:
+  points:
   - Architecture (St. Michael's)
   - Chronicle writing (Nestor)
   - Church as unifying force
 - section: Первинні джерела
   words: 400
-  subsections:
+  points:
   - Extract from the Primary Chronicle on Liubech
   - Extract from Monomakh's Instruction
 - section: Деколонізаційний погляд
   words: 350
-  subsections:
+  points:
   - Reframing Fragmentation as Decentralization
   - European parallels
   - Myth of 'Feudal Disunity'
 - section: Підсумок
   words: 150
-  subsections:
+  points:
   - Legacy of the era
-word_target: 4000
-vocabulary:
-- усобиця
-- роздроблення
-- лествичне право
-- престолонаслідування
-- отчина
-- з'їзд
-- боярин
-- князівство
-- половці
-- єдність
-- центральна влада
-- місцева еліта
-- засліплення
-- номінальний
-- союз
-- культурний розквіт
-activities:
+vocabulary_hints:
+  required:
+  - усобиця (internecine war)
+  - роздроблення (fragmentation)
+  - лествичне право (rota system)
+  - престолонаслідування (succession)
+  - отчина (patrimony)
+  - з'їзд (congress)
+  - боярин (boyar)
+  - князівство (principality)
+  - половці (Polovtsians)
+  - єдність (unity)
+  - центральна влада (central authority)
+  - місцева еліта (local elite)
+  recommended:
+  - засліплення (blinding)
+  - номінальний (nominal)
+  - союз (alliance)
+  - культурний розквіт (cultural flourishing)
+activity_hints:
 - type: reading
   focus: Chronicle account of Liubech Congress
+  source: Provide in module
 - type: quiz
   focus: Major principalities after fragmentation (Geography)
   items: 8+ principalities
@@ -95,8 +91,25 @@ activities:
   items: 12+
 - type: comparative-study
   focus: Unified Rus vs fragmented Rus
+  output: Two-column analysis
 - type: essay-response
   focus: Чи було роздроблення неминучим?
+focus: history
+pedagogy: CBI
+prerequisites:
+- b2-hist-12 (Yaroslav the Wise)
+- b2-hist-15 (Volodymyr Monomakh)
+connects_to:
+- b2-hist-21 (Mongol invasion)
+- b2-hist-23 (Danylo of Halych)
+- 'b2-hist-20 (Synthesis: Kyivan Rus)'
+objectives:
+- Understand the causes of Kyivan Rus fragmentation
+- Analyze the decisions of the Liubech Congress
+- Discuss the impact of Polovtsian threat on unity
+grammar:
+- Past tense narrative
+- Political and military terminology
 sources:
 - name: Роздроблення Київської Русі (Вікіпедія)
   url: https://uk.wikipedia.org/wiki/Роздроблення_Київської_Русі
@@ -110,3 +123,5 @@ sources:
   url: https://litopys.org.ua/pvl/pvl.htm
   type: primary
   notes: Chronicle accounts
+immersion: 100% Ukrainian
+phase: B2-HIST.1 [Kyivan Rus]

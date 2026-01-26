@@ -1,98 +1,13 @@
 module: a1-32
-id: a1-32
+level: A1
 slug: my-family
-title: "My Family"
-subtitle: "Родина"
 version: '2.0'
-phase: "A1.3 [Consolidation]"
-focus: vocabulary
-pedagogy: PPP
-register: розмовний
-duration: 60
-transliteration: none
-objectives:
-  - "Learner can name family members"
-  - "Learner can describe family relationships"
-  - "Learner can talk about their own family"
-  - "Learner can use possessives with family terms"
-grammar:
-  - "Family vocabulary"
-  - "Possessives with family members"
-  - "Genitive for relationships (батько + name)"
-word_target: 1000
-content_outline:
-  - section: "Introduction: Family in Ukrainian Culture"
-    words: 100
-    points:
-      - "Family is central to Ukrainian life"
-      - "Talking about relatives"
-      - "Family structures"
-  - section: "Immediate Family"
-    words: 250
-    points:
-      - "мама/мати, тато/батько"
-      - "брат, сестра"
-      - "дідусь, бабуся"
-  - section: "Extended Family"
-    words: 200
-    points:
-      - "дядько, тітка"
-      - "двоюрідний брат/сестра"
-      - "онук, онука, племінник"
-  - section: "Family Relationships"
-    words: 200
-    points:
-      - "чоловік, дружина"
-      - "син, донька, діти"
-      - "свекруха, теща, зять, невістка"
-  - section: "Talking About Your Family"
-    words: 150
-    points:
-      - "У мене є... (I have...)"
-      - "Мого брата звати... (My brother's name is...)"
-      - "Describing family members"
-  - section: "Practice: Family Tree"
-    words: 100
-    points:
-      - "Describe your family"
-      - "Ask about others' families"
-vocabulary_hints:
-  required:
-    - мама (mom)
-    - тато (dad)
-    - брат (brother)
-    - сестра (sister)
-    - дідусь (grandfather)
-    - бабуся (grandmother)
-    - син (son)
-    - донька (daughter)
-  recommended:
-    - дядько (uncle)
-    - тітка (aunt)
-    - онук (grandson)
-    - дружина (wife)
-    - чоловік (husband)
-    - родина (family)
-activity_hints:
-  - type: vocabulary-drill
-    focus: "Family member names"
-    items: 25
-  - type: matching
-    focus: "Match relationships"
-    items: 20
-  - type: fill-in
-    focus: "Complete family descriptions"
-    items: 15
-  - type: speaking
-    focus: "Describe your family"
-    items: 6
-prerequisites:
-  - a1-14 (Mine and Yours)
-  - a1-31 (Body and Health)
-connects_to:
-  - a1-33 (Holidays and Traditions)
-  - a1-34 (Checkpoint Core Grammar)
+id: a1-32
 naturalness:
   score: 10
   status: PASS
-  justification: "Essential family vocabulary"
+  justification: Essential family vocabulary
+duration: 60
+transliteration: none
+build:
+  last_modified: '2026-01-26'

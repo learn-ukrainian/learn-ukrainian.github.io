@@ -1,0 +1,113 @@
+module: sich-dokumenty
+level: C1-HIST
+slug: sich-dokumenty
+version: '2.0'
+title: 'Документи Січі: Козацьке самоврядування'
+content_outline:
+- section: Вступ — Січ як держава
+  words: 400
+  points:
+  - Запорозька Січ — що це було?
+  - Самоврядування — унікальний феномен
+  - Документи Січі — що збереглося
+  - Чому важливо вивчати
+- section: Устрій Січі
+  words: 600
+  points:
+  - Козацька рада — верховна влада
+  - Кошовий отаман — виконавча
+  - Курені і паланки
+  - Вибори — як працювали
+  - Демократія чи олігархія?
+- section: Типи документів
+  words: 500
+  points:
+  - Протоколи рад
+  - Судові справи
+  - Господарські документи
+  - Дипломатичне листування
+  - Що втрачено
+- section: Козацьке право
+  words: 700
+  points:
+  - Звичаєве право — не писане
+  - Судочинство — як працювало
+  - Покарання — жорстокі
+  - Захист власності
+  - Рівність? — для кого
+- section: Фрагмент — Судова справа
+  words: 600
+  points:
+  - Текст (з глосами)
+  - Процедура суду
+  - Аргументи сторін
+  - Вирок і виконання
+- section: Січ і зовнішній світ
+  words: 400
+  points:
+  - Відносини з Гетьманщиною
+  - Відносини з Москвою
+  - Дипломатія з Кримом і Туреччиною
+  - Документальні свідчення
+- section: Підсумок
+  words: 300
+  points:
+  - Січ — протодержава?
+  - Унікальність документів
+  - Романтизація vs. реальність
+word_target: 3500
+vocabulary_hints:
+  required:
+  - Січ (Sich)
+  - самоврядування (self-governance)
+  - козацька рада (Cossack council)
+  - кошовий отаман (kish otaman)
+  - курінь (kurin/unit)
+  - звичаєве право (customary law)
+  - судочинство (judiciary)
+  - вибори (elections)
+  - демократія (democracy)
+  - протокол (protocol/minutes)
+  recommended:
+  - паланка (palanka/district)
+  - осавул (osavul)
+  - писар (clerk)
+  - регалія (regalia)
+  - клейноди (kleinody/symbols)
+activity_hints:
+- type: reading
+  focus: Sich rada protocol excerpt
+  source: Provide excerpt
+- type: critical-analysis
+  focus: Analyze a court case — procedure and verdict
+  output: Case analysis
+- type: comparative-study
+  focus: Compare Sich governance with Polish Sejm
+  output: Institution comparison
+- type: essay-response
+  focus: Чи можна назвати Січ демократичною державою?
+  word_target: 400
+  model_answer: Required (showing nuance)
+focus: history
+prerequisites:
+- c1-hist-19 (Cossack chronicles overview)
+- c1-hist-17 (Charters and documents)
+connects_to:
+- c1-hist-25 (Orlik Constitution — continuation)
+- c1-hist-127 (Civil society — Cossack legacy)
+module_type: primary-source
+sources:
+- name: Запорозька Січ (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Запорозька_Січ
+  type: reference
+  notes: Overview
+- name: Козацьке право
+  url: https://uk.wikipedia.org/wiki/Козацьке_право
+  type: reference
+  notes: Cossack law
+- name: Козацька рада
+  url: https://uk.wikipedia.org/wiki/Козацька_рада
+  type: reference
+  notes: Cossack council
+immersion: 100% Ukrainian
+phase: C1-HIST.1 [Historiography]

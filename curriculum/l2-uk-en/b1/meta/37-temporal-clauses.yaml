@@ -1,94 +1,13 @@
 module: b1-37
-id: b1-37
+level: B1
 slug: temporal-clauses
-title: "Часові підрядні речення"
-subtitle: "Temporal Clauses Deep Dive"
 version: '2.0'
-phase: "B1.3b [Complex Sentences]"
-focus: grammar
-pedagogy: TTT
-register: розмовний
-duration: 90
-transliteration: none
-objectives:
-  - "Learner can express часові відношення using various temporal connectors"
-  - "Learner can sequence events using appropriate temporal markers"
-  - "Learner can distinguish simultaneous vs sequential actions"
-  - "Learner can build complex temporal narratives"
-grammar:
-  - "Temporal clauses with коли, після того як, поки"
-  - "Sequence markers: перш ніж, як тільки"
-  - "Simultaneous vs sequential action"
-word_target: 1200
-content_outline:
-  - section: "Introduction: Time Relations"
-    words: 150
-    points:
-      - "Expressing when"
-      - "Before, during, after"
-      - "Temporal connectors overview"
-  - section: "коли - Basic Time Clause"
-    words: 200
-    points:
-      - "When something happens"
-      - "Tense in коли clauses"
-      - "Aspect with коли"
-  - section: "Sequence Connectors"
-    words: 250
-    points:
-      - "перш ніж (before)"
-      - "після того як (after)"
-      - "як тільки (as soon as)"
-  - section: "Duration Connectors"
-    words: 250
-    points:
-      - "поки (while/until)"
-      - "доки (while/as long as)"
-      - "під час того як (during)"
-  - section: "Simultaneous Actions"
-    words: 200
-    points:
-      - "Actions happening together"
-      - "Background vs foreground"
-      - "Aspect interaction"
-  - section: "Practice: Temporal Narratives"
-    words: 150
-    points:
-      - "Sequence events"
-      - "Build temporal stories"
-vocabulary_hints:
-  required:
-    - коли (when)
-    - поки (while/until)
-    - перш ніж (before)
-    - після того як (after)
-    - як тільки (as soon as)
-    - доки (while/as long as)
-    - під час (during)
-    - одночасно (simultaneously)
-  recommended:
-    - щойно (just as)
-    - відтоді як (since - temporal)
-    - до того як (before)
-    - тим часом (meanwhile)
-activity_hints:
-  - type: fill-in
-    focus: "Complete temporal sentences"
-    items: 25
-  - type: sentence-combining
-    focus: "Sequence events"
-    items: 20
-  - type: error-correction
-    focus: "Fix temporal clause errors"
-    items: 15
-  - type: writing
-    focus: "Write temporal narratives"
-    items: 10
-prerequisites:
-  - b1-36 (Causal Result Clauses)
-connects_to:
-  - b1-38 (Complex Sentence Integration)
+id: b1-37
 naturalness:
   score: 9
   status: PASS
-  justification: "Essential temporal structure"
+  justification: Essential temporal structure
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-26'

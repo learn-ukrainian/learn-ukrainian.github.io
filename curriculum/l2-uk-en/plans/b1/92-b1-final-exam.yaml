@@ -1,16 +1,9 @@
-module: b1-final-exam
-level: b1
-sequence: 92
+module: b1-92
+level: B1
+slug: b1-final-exam
 version: '2.0'
 title: Фінальний іспит B1
 subtitle: Comprehensive B1 Level Assessment
-focus: assessment
-pedagogy: TTT
-objectives:
-- Learner demonstrates comprehensive B1 level proficiency
-- Learner passes final reading, listening, writing, and speaking assessments
-- Learner shows integration of grammar and vocabulary
-- Learner is certified ready for B2 level
 content_outline:
 - section: Reading Comprehension
   words: 100
@@ -43,7 +36,7 @@ content_outline:
   - Strengths and weaknesses
   - B2 preparation guidance
 word_target: 500
-vocabulary:
+vocabulary_hints:
   required:
   - іспит (exam)
   - оцінка (grade)
@@ -58,15 +51,35 @@ vocabulary:
   - сертифікат (certificate)
   - готовність (readiness)
   - прогрес (progress)
-  forbidden: []
-activities:
-  types_required:
-  - listening-test
-  - writing-test
-  - reading-test
-  - speaking-test
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: reading-test
+  focus: Authentic text comprehension
+  items: 25
+- type: listening-test
+  focus: Audio comprehension
+  items: 25
+- type: writing-test
+  focus: Extended writing
+  items: 2
+- type: speaking-test
+  focus: Oral assessment
+  items: 3
+focus: assessment
+pedagogy: TTT
+prerequisites:
+- b1-91 (Vocabulary in Context)
 connects_to:
 - b2-01 (First B2 Module)
+objectives:
+- Learner demonstrates comprehensive B1 level proficiency
+- Learner passes final reading, listening, writing, and speaking assessments
+- Learner shows integration of grammar and vocabulary
+- Learner is certified ready for B2 level
+grammar:
+- Comprehensive B1 grammar review
+- All aspect contexts
+- Motion verbs and prefixes
+- Complex sentences
+- Participles and passive
+register: розмовний
+phase: B1.9 [Communication Skills]

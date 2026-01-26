@@ -1,17 +1,9 @@
 module: professional-reports-advanced
-level: b2
-sequence: 88
+level: B2
+slug: professional-reports-advanced
 version: '2.0'
 title: 'Професійні звіти: Поглиблення'
 subtitle: Advanced analytical reports and presentation
-focus: skills
-pedagogy: CBI
-objectives:
-- Learner can write complex analytical reports with multiple data sources
-- Learner can create advanced data visualizations and interpret trends
-- Learner can use hedging and tentative language appropriately
-- Learner can present report findings to stakeholders orally
-- Learner can critically evaluate existing reports for quality
 content_outline:
 - section: Вступ
   words: 400
@@ -105,8 +97,12 @@ content_outline:
   - 'Синтез: від базової звітності (М87) до аналітичної майстерності (М88)'
   - 'Ключові навички: багатоджерельний аналіз, складна візуалізація, хеджування, презентація'
   - 'Підготовка до новинного аналізу (М89-90): застосування критичного мислення'
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+focus: skills
+pedagogy: CBI
+objectives:
+- Learner can write complex analytical reports with multiple data sources
+- Learner can create advanced data visualizations and interpret trends
+- Learner can use hedging and tentative language appropriately
+- Learner can present report findings to stakeholders orally
+- Learner can critically evaluate existing reports for quality
+phase: B2.4 Communication Skills

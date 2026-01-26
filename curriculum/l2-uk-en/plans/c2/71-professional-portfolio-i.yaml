@@ -1,0 +1,126 @@
+module: professional-portfolio-i
+level: C2
+slug: professional-portfolio-i
+version: '2.0'
+title: Професійне портфоліо I — Демонстрація компетентності
+content_outline:
+- section: Вступ — Професійне портфоліо в українському контексті
+  words: 500
+  points:
+  - Що таке професійне портфоліо
+  - Культурні особливості українського ринку праці
+  - Типи портфоліо (академічне, професійне, творче)
+  - Цифрове vs традиційне
+- section: Структура та зміст портфоліо
+  words: 700
+  points:
+  - Обов'язкові елементи
+  - Професійний профіль / summary
+  - Документація досягнень
+  - Рекомендаційні листи
+- section: Резюме та супровідний лист
+  words: 700
+  points:
+  - Структура українського резюме
+  - Ключові слова та компетенції
+  - Супровідний лист — формат і тон
+  - Адаптація до вакансії
+- section: Документація професійних досягнень
+  words: 600
+  points:
+  - Сертифікати та дипломи
+  - Публікації та виступи
+  - Проєкти та їх опис
+  - Кількісні показники досягнень
+- section: Рекомендації та відгуки
+  words: 500
+  points:
+  - Рекомендаційний лист — структура
+  - Запит на рекомендацію
+  - LinkedIn та онлайн-рекомендації
+  - Портфоліо відгуків клієнтів
+- section: Презентація портфоліо
+  words: 500
+  points:
+  - Онлайн-платформи
+  - PDF-версія
+  - Усна презентація
+  - Адаптація для різних авдиторій
+- section: Практикум — Створення власного портфоліо
+  words: 500
+  points:
+  - Аудит власних досягнень
+  - Написання резюме
+  - Складання супровідного листа
+word_target: 4000
+vocabulary_hints:
+  required:
+  - портфоліо (portfolio)
+  - резюме (CV/resume)
+  - супровідний лист (cover letter)
+  - компетенція (competency)
+  - досягнення (achievement)
+  - рекомендаційний лист (letter of recommendation)
+  - професійний досвід (professional experience)
+  - навички (skills)
+  - кваліфікація (qualification)
+  - сертифікат (certificate)
+  recommended:
+  - профіль (profile)
+  - ключові слова (keywords)
+  - вакансія (job opening)
+  - кар'єра (career)
+  - потенційний роботодавець (potential employer)
+activity_hints:
+- type: reading
+  focus: Аналіз зразкового резюме
+  source: Адаптований приклад
+  items: 1 повне резюме
+- type: essay-response
+  focus: Написання власного резюме українською
+  word_target: 400
+  output: Повне структуроване резюме
+- type: essay-response
+  focus: Написання супровідного листа до конкретної вакансії
+  word_target: 300
+  output: Переконливий супровідний лист
+- type: quiz
+  focus: Вибір правильного формулювання досягнень
+  items: 12+
+- type: fill-in
+  focus: Заповнення шаблону рекомендаційного листа
+  items: 10+
+- type: error-correction
+  focus: Виправлення типових помилок у резюме
+  items: 12+
+- type: critical-analysis
+  focus: Аналіз сильних та слабких сторін портфоліо
+  output: Рекомендації щодо покращення
+- type: match-up
+  focus: Досягнення → правильне формулювання з метриками
+  items: 12+
+focus: domain
+prerequisites:
+- c2-65 (Legal Ukrainian V) or c2-70 (Medical Ukrainian V)
+- Professional document writing (C2.3 M52-53)
+- All C2.3 professional foundations
+connects_to:
+- c2-72 (Professional Portfolio II — multi-format)
+- c2-73 (Professional Identity)
+- c2-75 (C2.3 Checkpoint)
+module_type: professional
+sources:
+- name: Державна служба зайнятості
+  url: https://www.dcz.gov.ua/
+  type: reference
+  notes: Вимоги ринку праці
+- name: Профстандарти України
+  url: https://www.me.gov.ua/
+  type: reference
+  notes: Професійні стандарти
+- name: Резюме та портфоліо — best practices
+  url: https://work.ua/
+  type: reference
+  notes: Українські стандарти оформлення
+immersion: 100% Ukrainian
+phase: C2.3 Translation & Creative Writing

@@ -1,98 +1,16 @@
-id: b1-14
-title: 'Інтеграція виду: практика'
-subtitle: Aspect Integration Practice
+module: 14-aspect-integration-practice
+level: B1
 slug: 14-aspect-integration-practice
-module_type: grammar
-word_target: 1500
-immersion: 100% Ukrainian
 version: '2.0'
-phase: B1.1 Aspect
-pedagogy: TTT
-focus: grammar
+id: b1-14
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
 tags:
 - grammar
 - aspect
 - integration
-grammar:
-- All aspect contexts combined
-- Temporal connectors with aspect
-objectives:
-- Learner can integrate all aspect knowledge in narratives
-- Learner can use temporal connectors with correct aspect
-- Learner can mix aspects naturally in complex texts
-sources:
-- name: Ukrainian State Standard 2024 - Aspect Integration
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Comprehensive aspect usage in connected discourse
-- name: Ukrainian Narrative Patterns
-  url: https://uk.wikipedia.org/wiki/Нарація
-  type: reference
-  notes: Aspect in storytelling and narratives
-content_outline:
-- section: Тест
-  words: 100
-  points:
-  - Content for Тест
-  - Examples and explanation
-  - Practice or application
-- section: Пояснення
-  words: 900
-  points:
-  - Content for Пояснення
-  - Examples and explanation
-  - Practice or application
-- section: Застосування на практиці
-  words: 150
-  points:
-  - Content for Застосування на практиці
-  - Examples and explanation
-  - Practice or application
-- section: Діалоги
-  words: 500
-  points:
-  - Content for Діалоги
-  - Examples and explanation
-  - Practice or application
-vocabulary_hints:
-  required:
-  - коли (when)
-  - після того як (after)
-  - перед тим як (before)
-  - доки (while/until)
-  - поки (while)
-  - як тільки (as soon as)
-  - одночасно (simultaneously)
-  - послідовно (sequentially)
-  - спочатку (first)
-  - потім (then)
-  recommended:
-  - тим часом (meanwhile)
-  - нарешті (finally)
-  - раптом (suddenly)
-  - врешті-решт (eventually)
-  - зрештою (after all)
-activity_hints:
-- type: cloze
-  focus: Extended narrative with aspect choices
-  items: 15+
-- type: fill-in
-  focus: Change temporal perspective (simultaneous → sequential)
-  items: 10+
-- type: error-correction
-  focus: Find and fix aspect mistakes in text
-  items: 12+
-- type: quiz
-  focus: Complex aspect scenarios
-  items: 15+
-prerequisites:
-- b1-13 (Work week - aspect in action)
-- All aspect modules M06-13
-connects_to:
-- b1-15 (Checkpoint - aspect mastery)
-- b1-37 (Temporal clauses)
-naturalness:
-  score: 9
-  status: PASS
+build:
+  last_modified: '2026-01-26'

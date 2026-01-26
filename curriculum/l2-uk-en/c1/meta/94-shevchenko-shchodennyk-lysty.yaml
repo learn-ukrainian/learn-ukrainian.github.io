@@ -1,43 +1,13 @@
 module: c1-94
-title: 'Шевченко: Щоденник та листи'
-subtitle: 'Shevchenko: Diary and Letters'
+level: C1
+slug: 94-shevchenko-shchodennyk-lysty
 version: '2.0'
-phase: C1.6 Literature
-focus: literature
-pedagogy: Immersion & Analysis
 duration: 120
 transliteration: none
 tags:
 - literature
 - prose
 - biography
-grammar:
-- Epistolary and diary register
-- Code-switching in personal writing
-objectives:
-- Analyze Shevchenko’s personal prose for deeper biographical insight
-- Understand the context of his exile through his own words
-- Explore the bilingual nature of his private correspondence
 vocabulary_count: 24
-slug: 94-shevchenko-shchodennyk-lysty
-content_outline:
-- section: Вступ — Щоденник та листи
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-- section: Content Areas
-  words: 500
-  points:
-  - 'Щоденник (Journal): intimate thoughts during exile'
-  - 'Letters to fraternity members: Костомаров, Куліш'
-  - Vernacular vs. Imperial Russian in correspondence
-  - The "Artist" (Художник) novella excerpts
-  - Social commentary in private writings
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

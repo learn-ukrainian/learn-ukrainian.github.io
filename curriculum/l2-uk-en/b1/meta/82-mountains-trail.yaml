@@ -1,94 +1,13 @@
 module: b1-82
-id: b1-82
+level: B1
 slug: mountains-trail
-title: "Гори та трейлраннінг"
-subtitle: "Hiking and Trail Running in the Carpathians"
 version: '2.0'
-phase: "B1.7 [Contemporary Ukraine]"
-focus: culture
-pedagogy: CBI
-register: розмовний
-duration: 90
-transliteration: none
-objectives:
-  - "Learner can discuss hiking and mountain activities in Ukrainian"
-  - "Learner can understand trail descriptions and mountain weather reports"
-  - "Learner can use vocabulary for equipment and nature"
-  - "Learner can plan a hiking trip to the Carpathians"
-grammar:
-  - "Mountain and trail vocabulary"
-  - "Weather and nature descriptions"
-  - "Planning and directions"
-word_target: 1200
-content_outline:
-  - section: "Introduction: Ukrainian Mountains"
-    words: 150
-    points:
-      - "Carpathian overview"
-      - "Mountain tourism"
-      - "Trail culture"
-  - section: "Popular Trails"
-    words: 250
-    points:
-      - "Говерла, Петрос"
-      - "Trail difficulty levels"
-      - "Best routes"
-  - section: "Equipment and Preparation"
-    words: 250
-    points:
-      - "Hiking gear vocabulary"
-      - "Preparation checklist"
-      - "Safety essentials"
-  - section: "Mountain Weather"
-    words: 250
-    points:
-      - "Weather vocabulary"
-      - "Reading forecasts"
-      - "Seasonal conditions"
-  - section: "Trail Running Culture"
-    words: 200
-    points:
-      - "Trail running events"
-      - "Ultra-marathon culture"
-      - "Mountain races"
-  - section: "Practice: Trip Planning"
-    words: 100
-    points:
-      - "Plan a mountain trip"
-      - "Discuss trail experiences"
-vocabulary_hints:
-  required:
-    - гора (mountain)
-    - стежка (trail)
-    - похід (hike)
-    - вершина (summit)
-    - Карпати (Carpathians)
-    - спорядження (equipment)
-    - рюкзак (backpack)
-    - взуття (footwear)
-  recommended:
-    - Говерла (Hoverla)
-    - трейлраннінг (trail running)
-    - маршрут (route)
-    - полонина (alpine meadow)
-activity_hints:
-  - type: reading
-    focus: "Trail descriptions and guides"
-    items: 15
-  - type: matching
-    focus: "Match equipment to activities"
-    items: 20
-  - type: fill-in
-    focus: "Complete hiking plans"
-    items: 15
-  - type: discussion
-    focus: "Plan mountain trips"
-    items: 10
-prerequisites:
-  - b1-81 (Running in Ukraine)
-connects_to:
-  - b1-83 (Cycling and Water Sports)
+id: b1-82
 naturalness:
   score: 9
   status: PASS
-  justification: "Practical vocabulary for outdoor enthusiasts"
+  justification: Practical vocabulary for outdoor enthusiasts
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-26'

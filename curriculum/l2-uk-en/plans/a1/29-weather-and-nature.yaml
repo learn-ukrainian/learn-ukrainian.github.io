@@ -1,16 +1,9 @@
-module: weather-and-nature
-level: a1
-sequence: 29
+module: a1-29
+level: A1
+slug: weather-and-nature
 version: '2.0'
 title: Weather & Nature
 subtitle: Seasons, Weather & The Natural World
-focus: vocabulary
-pedagogy: PPP
-objectives:
-- Learner can describe the weather
-- Learner can ask about weather conditions
-- Learner can name the four seasons
-- Learner can use impersonal weather expressions
 content_outline:
 - section: 'Introduction: Talking About Weather'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Describe today's weather
   - Ask about weather in different cities
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - погода (weather)
   - дощ (rain)
@@ -65,16 +58,34 @@ vocabulary:
   - вітер (wind)
   - спекотно (hot)
   - прохолодно (cool)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - matching
-  - vocabulary-drill
-  - dialogue
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: vocabulary-drill
+  focus: Weather and nature words
+  items: 30
+- type: matching
+  focus: Match weather to seasons
+  items: 20
+- type: fill-in
+  focus: Complete weather descriptions
+  items: 15
+- type: dialogue
+  focus: Weather conversations
+  items: 6
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- a1-28 (Description - Adverbs)
 connects_to:
 - a1-30 (Prepositions III)
 - a1-33 (Holidays and Traditions)
+objectives:
+- Learner can describe the weather
+- Learner can ask about weather conditions
+- Learner can name the four seasons
+- Learner can use impersonal weather expressions
+grammar:
+- Impersonal weather expressions
+- Seasons with prepositions
+- Temperature and weather adjectives
+register: розмовний
+phase: A1.3 [Consolidation]

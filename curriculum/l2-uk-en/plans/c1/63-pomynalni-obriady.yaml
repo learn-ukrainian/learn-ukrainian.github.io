@@ -1,22 +1,38 @@
-module: 63-pomynalni-obriady
-level: c1
-sequence: 63
+module: c1-63
+level: C1
+slug: 63-pomynalni-obriady
 version: '2.0'
 title: Поминальні обряди
 subtitle: Memorial Traditions
+content_outline:
+- section: Вступ — Поминальні обряди
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Опішнянська кераміка: history, techniques, colors'
+  - 'Косівська кераміка: Hutsul decorative style'
+  - 'Гуцульське різьбярство: інкрустація, трійця technique'
+  - Regional woodcarving schools
+  - UNESCO Intangible Heritage recognition
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: culture
 pedagogy: Immersion & Analysis
 objectives:
 - Learner can describe the cycle of memorial rituals in Ukraine
 - Learner understands the concept of ancestral spirits in folk belief
-- Learner can analyze the blend of grief and hope in traditional laments and memorial meals
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+- Learner can analyze the blend of grief and hope in traditional laments and memorial
+  meals
+grammar:
+- Eschatological terminology
+- Sacred and commemorative registers
+phase: C1.5 Folk Culture & Fine Arts

@@ -1,60 +1,54 @@
-module: syntez-kyivska-rus
-level: b2-hist
-sequence: 20
-version: '1.0'
+module: b2-hist-20
+level: B2-HIST
+slug: syntez-kyivska-rus
+version: '2.0'
 title: 'Синтез: Київська Русь — спадщина'
-focus: history
-pedagogy: CBI
-objectives:
-- Summarize the political and cultural development of Kyivan Rus
-- Evaluate the legacy of Rus in modern Ukrainian identity
-- Critically analyze conflicting historical claims to the Rus heritage
 content_outline:
 - section: Вступ — Три століття Русі
   words: 444
-  subsections:
+  points:
   - Огляд періоду 882-1240
   - Від племен до держави, від єдності до роздроблення
   - Головні теми модулів 09-19
   - Мета синтезу — узагальнення та оцінка
 - section: Політичний розвиток
   words: 666
-  subsections:
+  points:
   - Етапи державотворення
   - Від Олега до Мономаха — піднесення
   - Роздроблення — криза чи розвиток?
   - Система влади — князь, віче, бояри
 - section: Культурні досягнення
   words: 722
-  subsections:
+  points:
   - Софія Київська та архітектура
   - Літописання та література
   - Руська Правда та правова традиція
   - Мистецтво та ремесла
 - section: Суспільство та економіка
   words: 611
-  subsections:
+  points:
   - Соціальна структура
   - Місто і село
   - Торгівля — шлях «із варяг у греки«
   - Рівень життя порівняно з Європою
 - section: Русь у Європі
   words: 555
-  subsections:
+  points:
   - Міжнародні зв'язки
   - Династичні шлюби
   - Культурний обмін
   - Русь очима сучасників
 - section: Спадщина Русі — хто спадкоємець?
   words: 666
-  subsections:
+  points:
   - Український погляд — пряма спадкоємність
   - Російські претензії — критичний аналіз
   - Схема Грушевського vs імперська схема
   - Русь як спільна спадщина?
 - section: Ключові терміни та дати
   words: 336
-  subsections:
+  points:
   - Огляд термінології
   - Найважливіші дати
   - Ключові постаті
@@ -63,22 +57,24 @@ content_outline:
   - Що залишилося після монголів
   - Перехід до монгольської навали
 word_target: 4000
-vocabulary:
-- спадщина
-- спадкоємець
-- державотворення
-- узагальнення
-- піднесення
-- занепад
-- культурний обмін
-- претензії
-- схема
-- джерело
-- імперська схема
-- пряма спадкоємність
-- Грушевський
-- деколонізація
-activities:
+vocabulary_hints:
+  required:
+  - спадщина (legacy/heritage)
+  - спадкоємець (heir)
+  - державотворення (state formation)
+  - узагальнення (generalization)
+  - піднесення (rise)
+  - занепад (decline)
+  - культурний обмін (cultural exchange)
+  - претензії (claims)
+  - схема (scheme/framework)
+  - джерело (source)
+  recommended:
+  - імперська схема (imperial scheme)
+  - пряма спадкоємність (direct succession)
+  - Грушевський (Hrushevsky)
+  - деколонізація (decolonization)
+activity_hints:
 - type: match-up
   focus: Comprehensive Kyivan Rus timeline (Chronology)
   items: 20+ key events
@@ -87,6 +83,7 @@ activities:
   items: 30+
 - type: comparative-study
   focus: Ukrainian vs Russian views on Rus legacy
+  output: Critical analysis table
 - type: essay-response
   focus: Чому Київська Русь важлива для української ідентичності?
 - type: quiz
@@ -100,6 +97,20 @@ activities:
   items: 15+
 - type: essay-response
   focus: Хто є справжнім спадкоємцем Київської Русі?
+focus: history
+pedagogy: CBI
+prerequisites:
+- All Phase 2 modules (b2-hist-09 through b2-hist-19)
+connects_to:
+- b2-hist-21 (Mongol invasion — Phase 3)
+- 'b2-hist-28 (Synthesis: Mongol era and Galicia)'
+objectives:
+- Summarize the political and cultural development of Kyivan Rus
+- Evaluate the legacy of Rus in modern Ukrainian identity
+- Critically analyze conflicting historical claims to the Rus heritage
+grammar:
+- Synthesis and review register
+- Academic historical terminology
 sources:
 - name: Київська Русь (Вікіпедія)
   url: https://uk.wikipedia.org/wiki/Київська_Русь
@@ -109,3 +120,5 @@ sources:
   url: https://uk.wikipedia.org/wiki/Спадщина_Київської_Русі
   type: reference
   notes: Legacy and claims
+immersion: 100% Ukrainian
+phase: B2-HIST.1 [Kyivan Rus]

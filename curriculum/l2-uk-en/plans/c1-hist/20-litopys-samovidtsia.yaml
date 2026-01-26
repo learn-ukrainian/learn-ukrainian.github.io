@@ -1,0 +1,113 @@
+module: litopys-samovidtsia
+level: C1-HIST
+slug: litopys-samovidtsia
+version: '2.0'
+title: 'Літопис Самовидця: Голос очевидця'
+content_outline:
+- section: Вступ — Найстаріший козацький літопис
+  words: 400
+  points:
+  - Чому «Самовидець» — очевидець
+  - Найменш стилізований з трьох
+  - Цінність безпосередності
+  - Хронологія — 1648-1702
+- section: Питання авторства
+  words: 500
+  points:
+  - Анонімність — хто написав?
+  - Гіпотези — Роман Ракушка-Романовський?
+  - Внутрішні свідчення тексту
+  - Чому важко встановити
+- section: Зміст і структура
+  words: 600
+  points:
+  - Від 1648 до 1702 року
+  - Хмельницький — детально
+  - Руїна — хаос і громадянська війна
+  - Останні гетьмани
+  - Що охоплено, що пропущено
+- section: Особливості стилю
+  words: 500
+  points:
+  - Простий, діловий стиль
+  - Мінімум риторики
+  - Фактографічність
+  - Мова — українська канцелярська
+- section: Фрагмент — Початок повстання 1648
+  words: 700
+  points:
+  - Текст (з глосами)
+  - Як описано Хмельницького
+  - Перші перемоги
+  - Позиція автора — за чи проти?
+- section: Критика джерела
+  words: 500
+  points:
+  - Очевидець — але з якої позиції?
+  - Що автор міг знати, чого не міг
+  - Пізніші редакції — що додано?
+  - Порівняння з іншими джерелами
+- section: Підсумок
+  words: 300
+  points:
+  - Найближче до «первинного» джерела
+  - Цінність для історика
+  - Зв'язок із наступними літописами
+word_target: 3500
+vocabulary_hints:
+  required:
+  - самовидець (eyewitness)
+  - анонімний (anonymous)
+  - фактографічний (factographic)
+  - канцелярський стиль (chancery style)
+  - Руїна (Ruin period)
+  - громадянська війна (civil war)
+  - повстання (uprising)
+  - гетьман (hetman)
+  - козацтво (Cossackdom)
+  - очевидець (eyewitness)
+  recommended:
+  - датування (dating)
+  - хронологія (chronology)
+  - атрибуція (attribution)
+  - лаконічний (laconic)
+  - неупереджений (unbiased)
+activity_hints:
+- type: reading
+  focus: 1648 uprising beginning passage
+  source: litopys.org.ua
+- type: critical-analysis
+  focus: What can an eyewitness know vs. what they can't?
+  output: Limitations analysis
+- type: comparative-study
+  focus: Compare Samovydets on 1648 with Polish sources
+  output: Perspective comparison
+- type: reading
+  focus: Analyze author's attitude to Khmelnytsky
+  output: Textual evidence table
+- type: essay-response
+  focus: Чи означає 'очевидець' об'єктивність?
+  word_target: 350
+  model_answer: Required
+focus: history
+prerequisites:
+- c1-hist-19 (Cossack chronicles overview)
+connects_to:
+- c1-hist-21 (Hrabianka chronicle)
+- c1-hist-23 (Khmelnytsky's Universals)
+module_type: primary-source
+sources:
+- name: Літопис Самовидця (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Літопис_Самовидця
+  type: reference
+  notes: Overview
+- name: Літопис Самовидця (текст)
+  url: https://litopys.org.ua/samovyd/sam.htm
+  type: primary
+  notes: Full text
+- name: Хмельниччина
+  url: https://uk.wikipedia.org/wiki/Хмельниччина
+  type: reference
+  notes: Historical context
+immersion: 100% Ukrainian
+phase: C1-HIST.1 [Historiography]

@@ -1,25 +1,8 @@
 module: 14-stylistic-connectors
-level: b2
-sequence: 14
-version: '1.0'
+level: B2
+slug: 14-stylistic-connectors
+version: '2.0'
 title: Стилістичні сполучники
-focus: grammar
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Ukrainian State Standard 2024 - Connectors
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Connector inventory for B2 level
-- name: Сучасна українська літературна мова - Сполучники
-  url: https://uk.wikipedia.org/wiki/Сполучник
-  type: secondary
-  notes: Classification of Ukrainian connectors
-- name: CEFR B2 Cohesion
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
-  type: reference
-  notes: B2 text cohesion requirements
 content_outline:
 - section: Вступ — Сполучники як засіб зв'язку
   words: 400
@@ -73,7 +56,7 @@ content_outline:
   - Елегантність вираження думок
   - Підготовка до модуля 15
 word_target: 3800
-vocabulary:
+vocabulary_hints:
   required:
   - сполучник (connector/conjunction)
   - протиставлення (contrast)
@@ -91,19 +74,51 @@ vocabulary:
   - логічні відношення (logical relations)
   - елегантність (elegance)
   - стилістичний відтінок (stylistic nuance)
-  forbidden: []
-activities:
-  types_required:
-  - group-sort
-  - error-correction
-  - quiz
-  - fill-in
-  - essay-response
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: Identify connector function (contrast, addition, consequence, concession)
+  items: 16+
+- type: fill-in
+  focus: Complete text with appropriate connectors
+  items: 15+
+- type: group-sort
+  focus: Sort connectors by function and register
+  items: 20+
+- type: fill-in
+  focus: Replace simple connectors with stylistic alternatives
+  items: 12+
+- type: match-up
+  focus: Connector → register level (formal/neutral/informal)
+  items: 16+
+- type: error-correction
+  focus: Fix register-inappropriate connector usage
+  items: 10+
+- type: essay-response
+  focus: Write argumentative paragraph using varied connectors
+  word_target: 150
+  output: Model answer provided
+focus: grammar
+prerequisites:
+- b2-11 (Multi-clause Sentences)
+- b2-12 (Parenthetical Expressions)
+- Basic conjunctions (і, але, або)
 connects_to:
 - b2-15 (Register Introduction)
 - 'b2-22 (Register: Literary Ukrainian)'
 - b2-25 (B2.1b Checkpoint)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Connectors
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Connector inventory for B2 level
+- name: Сучасна українська літературна мова - Сполучники
+  url: https://uk.wikipedia.org/wiki/Сполучник
+  type: secondary
+  notes: Classification of Ukrainian connectors
+- name: CEFR B2 Cohesion
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 text cohesion requirements
+immersion: 100% Ukrainian
+phase: B2.1b [Participles & Register Intro]

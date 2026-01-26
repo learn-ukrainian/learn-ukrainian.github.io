@@ -1,16 +1,9 @@
-module: technology-and-startups
-level: b1
-sequence: 78
+module: b1-78
+level: B1
+slug: technology-and-startups
 version: '2.0'
 title: Технології та стартапи
 subtitle: Ukraine's Tech Industry and Startup Ecosystem
-focus: culture
-pedagogy: CBI
-objectives:
-- Learner can discuss Ukraine's IT sector in Ukrainian
-- Learner can understand authentic texts about Ukrainian tech companies
-- Learner can use technology-related vocabulary in context
-- Learner can compare Ukrainian tech industry with global trends
 content_outline:
 - section: 'Introduction: Tech Ukraine'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Discuss tech trends
   - Compare industries
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - технологія (technology)
   - стартап (startup)
@@ -63,15 +56,33 @@ vocabulary:
   - програмування (programming)
   - венчурний капітал (venture capital)
   - кіберзахист (cybersecurity)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - reading
-  - discussion
-  - matching
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: reading
+  focus: Tech company profiles
+  items: 15
+- type: matching
+  focus: Match terms to definitions
+  items: 20
+- type: fill-in
+  focus: Complete tech descriptions
+  items: 15
+- type: discussion
+  focus: Discuss tech trends
+  items: 10
+focus: culture
+pedagogy: CBI
+prerequisites:
+- b1-77 (Ukrainian Cinema and TV)
 connects_to:
 - b1-79 (Sports in Ukraine)
+objectives:
+- Learner can discuss Ukraine's IT sector in Ukrainian
+- Learner can understand authentic texts about Ukrainian tech companies
+- Learner can use technology-related vocabulary in context
+- Learner can compare Ukrainian tech industry with global trends
+grammar:
+- Technology vocabulary
+- Business and startup terminology
+- Discussing trends and innovations
+register: розмовний
+phase: B1.7 [Contemporary Ukraine]

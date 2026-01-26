@@ -1,94 +1,13 @@
 module: b1-67
-id: b1-67
+level: B1
 slug: travel-geography
-title: "Подорожі та географія"
-subtitle: "Travel & Geography"
 version: '2.0'
-phase: "B1.6 [Vocabulary Expansion II]"
-focus: vocabulary
-pedagogy: PPP
-register: розмовний
-duration: 90
-transliteration: none
-objectives:
-  - "Learner can use 30 travel and geography words in context"
-  - "Learner can distinguish between подорож/мандрівка/поїздка"
-  - "Learner can form natural collocations with travel vocabulary"
-  - "Learner can discuss travel plans and experiences"
-grammar:
-  - "Travel vocabulary collocations"
-  - "Geographical terminology"
-  - "Direction and location expressions"
-word_target: 1200
-content_outline:
-  - section: "Introduction: Travel Vocabulary"
-    words: 150
-    points:
-      - "Types of travel"
-      - "Ukrainian geography basics"
-      - "Vocabulary overview"
-  - section: "Travel Types"
-    words: 250
-    points:
-      - "подорож, мандрівка, поїздка"
-      - "екскурсія, тур, відпустка"
-      - "Distinguishing travel concepts"
-  - section: "Geography Terms"
-    words: 250
-    points:
-      - "гори, ріки, озера, море"
-      - "регіон, область, район"
-      - "Ukrainian geography vocabulary"
-  - section: "Travel Infrastructure"
-    words: 250
-    points:
-      - "аеропорт, вокзал, порт"
-      - "готель, хостел, курорт"
-      - "Tourism facilities"
-  - section: "Travel Actions"
-    words: 200
-    points:
-      - "подорожувати, мандрувати"
-      - "бронювати, замовляти"
-      - "Travel verbs"
-  - section: "Practice: Travel Planning"
-    words: 100
-    points:
-      - "Discuss travel experiences"
-      - "Plan trips"
-vocabulary_hints:
-  required:
-    - подорож (journey)
-    - мандрівка (travel/trip)
-    - географія (geography)
-    - регіон (region)
-    - гори (mountains)
-    - море (sea)
-    - аеропорт (airport)
-    - бронювати (to book)
-  recommended:
-    - курорт (resort)
-    - туризм (tourism)
-    - відпустка (vacation)
-    - екскурсія (excursion)
-activity_hints:
-  - type: collocation
-    focus: "Travel noun phrases"
-    items: 25
-  - type: fill-in
-    focus: "Describe travel and geography"
-    items: 20
-  - type: matching
-    focus: "Match geography terms"
-    items: 15
-  - type: discussion
-    focus: "Discuss travel experiences"
-    items: 10
-prerequisites:
-  - b1-66 (Business Basics)
-connects_to:
-  - b1-68 (Synonymy Thinking Verbs)
+id: b1-67
 naturalness:
   score: 9
   status: PASS
-  justification: "Essential for travel and cultural discourse"
+  justification: Essential for travel and cultural discourse
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-26'

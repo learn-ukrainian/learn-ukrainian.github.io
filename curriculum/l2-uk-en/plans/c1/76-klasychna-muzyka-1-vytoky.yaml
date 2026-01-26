@@ -1,22 +1,39 @@
-module: 76-klasychna-muzyka-1-vytoky
-level: c1
-sequence: 76
+module: c1-76
+level: C1
+slug: 76-klasychna-muzyka-1-vytoky
 version: '2.0'
 title: Класична музика I — Витоки
 subtitle: Classical Music I — Origins (1745-1863)
+content_outline:
+- section: Вступ — Витоки
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Максим Березовський (1745-1777): "Демофонт" — first Ukrainian opera composer,
+    tragic genius'
+  - 'Дмитро Бортнянський (1751-1825): Sacred choral works, Imperial court composer,
+    European influence'
+  - 'Семен Гулак-Артемовський (1813-1873): **"Запорожець за Дунаєм"** (1863) — first
+    NATIONAL Ukrainian opera'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: fine-arts
 pedagogy: CBI
 objectives:
-- Learner understands the role of Ukrainian composers in European Baroque and Classical eras
+- Learner understands the role of Ukrainian composers in European Baroque and Classical
+  eras
 - Learner can describe the significance of Berezovsky, Bortnyansky, and Vedel
 - Learner analyzes the birth of national opera with Gulak-Artemovsky
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Musicology register
+- Complex participial constructions
+phase: C1.5 Folk Culture & Arts

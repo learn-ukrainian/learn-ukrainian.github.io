@@ -1,77 +1,73 @@
 module: kozatska-kultura
-level: b2-hist
-sequence: 47
-version: '1.0'
+level: B2-HIST
+slug: kozatska-kultura
+version: '2.0'
 title: Козацька культура — кобзарі, думи та бароко
-focus: history
-pedagogy: CBI
-objectives:
-- Learner can explain the role of kobzars in preserving national memory
-- Learner can analyze the genre of dumas as a unique Ukrainian epic
-- Learner can characterize Cossack Baroque and its geopolitical significance
+subtitle: 'Cossack Culture: Kobzars, Dumas, and Baroque'
 content_outline:
 - section: Вступ та Контекст
   words: 400
-  subsections:
+  points:
   - 'Cultural intersection: East and West'
   - The Golden Age of Hetmanate culture
 - section: 'Кобзарі та лірники: голос народу'
   words: 500
-  subsections:
+  points:
   - The guild system (cekhy) and hierarchy
   - 'Lebiiska language: the secret code'
   - Social and political functions of kobzars
 - section: 'Українські Думи: Духовний хребет нації'
   words: 500
-  subsections:
+  points:
   - The uniqueness of the genre (recitative)
   - Improvisation and emotional depth
   - The role of dumas in shaping language
 - section: 'Козацьке бароко: Тріумф національного стилю'
   words: 500
-  subsections:
+  points:
   - Differences from Western Baroque
   - Symbolism and decorative richness
   - Major architectural monuments
 - section: 'Мистецтво: Феномен козацького бароко'
   words: 250
-  subsections:
+  points:
   - Synthesis of Western and Byzantine traditions
   - Architecture (Mazepa baroque)
   - Portraiture (Parsuna)
 - section: Меценатство як державна стратегія
   words: 400
-  subsections:
+  points:
   - The role of Ivan Mazepa and other hetmans
   - Legitimizing the state through art
 - section: 'Інтелектуальний центр: Києво-Могилянська академія'
   words: 500
-  subsections:
+  points:
   - Petro Mohyla's reforms
   - The seven liberal arts and Latin education
   - Impact on the entire Eastern European region
 - section: Первинні джерела та Читання
   words: 300
-  subsections:
+  points:
   - Analysis of Dumas and Academy statutes
 - section: Деколонізаційний погляд
   words: 400
-  subsections:
+  points:
   - Debunking the 'peasant culture' myth
   - Imperial appropriation of Ukrainian achievements
 word_target: 4000
-vocabulary:
-- кобзар
-- бандура
-- дума
-- козацьке бароко
-- меценатство
-- речитатив
-- лебійська мова
-- спудей
-- епос
-- фасад
-activities:
+vocabulary_hints:
+  required:
+  - кобзар
+  - бандура
+  - дума
+  - козацьке бароко
+  - меценатство
+  - речитатив
+  - лебійська мова
+  - спудей
+  - епос
+  - фасад
+activity_hints:
 - type: reading
   focus: Linguistic analysis of Duma texts and Academy rules
 - type: quiz
@@ -82,6 +78,15 @@ activities:
   focus: Cossack Baroque vs. Western Baroque styles
 - type: true-false
   focus: Facts about education and guilds
+focus: history
+pedagogy: CBI
+objectives:
+- Learner can explain the role of kobzars in preserving national memory
+- Learner can analyze the genre of dumas as a unique Ukrainian epic
+- Learner can characterize Cossack Baroque and its geopolitical significance
+grammar:
+- 'Historical narrative: cultural synthesis'
+- Artistic and academic terminology
 sources:
 - name: History of Ukrainian Culture
   url: https://litopys.org.ua/istkult/istkult.htm
@@ -91,3 +96,5 @@ sources:
   url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CB%5CA%5CBaroque.htm
   type: reference
   notes: Detailed description of the style
+register: публіцистичний
+phase: HIST.5 [Rise of Cossacks]

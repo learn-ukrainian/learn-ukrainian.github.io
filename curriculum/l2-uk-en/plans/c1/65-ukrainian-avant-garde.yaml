@@ -1,9 +1,30 @@
-module: 65-ukrainian-avant-garde
-level: c1
-sequence: 65
-version: '1.0'
+module: c1-65
+level: C1
+slug: 65-ukrainian-avant-garde
+version: '2.0'
 title: Український авангард
 subtitle: Ukrainian Avant-Garde
+content_outline:
+- section: Вступ — Український авангард
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Знахарство: healers and their social role'
+  - 'Лікарські рослини: herbs and their uses'
+  - 'Замовляння: healing incantations'
+  - 'Народні засоби: remedies for common ailments'
+  - Integration with modern medicine
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: cultural
 pedagogy: CBI
 objectives:
@@ -11,13 +32,7 @@ objectives:
 - Learner can analyze avant-garde artworks using appropriate terminology
 - Learner can explain the impact of Ukrainian artists on world modernism
 - Learner can describe the connection between folk art and avant-garde
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- art analysis vocabulary
+- stylistic descriptions
+phase: C1.5 Folk Culture & Arts

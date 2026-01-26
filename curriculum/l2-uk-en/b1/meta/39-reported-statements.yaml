@@ -1,94 +1,13 @@
 module: b1-39
-id: b1-39
+level: B1
 slug: reported-statements
-title: "Непряма мова: твердження"
-subtitle: "Reported Statements"
 version: '2.0'
-phase: "B1.3b [Complex Sentences]"
-focus: grammar
-pedagogy: TTT
-register: розмовний
-duration: 90
-transliteration: none
-objectives:
-  - "Learner can report what someone said using indirect speech"
-  - "Learner can apply tense backshift in reported statements"
-  - "Learner can use appropriate reporting verbs"
-  - "Learner can transform direct speech to indirect"
-grammar:
-  - "Converting direct speech to indirect speech"
-  - "Він сказав, що... constructions"
-  - "Tense and pronoun changes"
-word_target: 1200
-content_outline:
-  - section: "Introduction: Reported Speech"
-    words: 150
-    points:
-      - "Direct vs indirect speech"
-      - "When to use reported speech"
-      - "Basic structure"
-  - section: "Basic Reported Statements"
-    words: 250
-    points:
-      - "Він сказав, що..."
-      - "Вона думає, що..."
-      - "що as speech introducer"
-  - section: "Tense Changes"
-    words: 250
-    points:
-      - "Present → past in subordinate"
-      - "Future → conditional"
-      - "Exceptions and variations"
-  - section: "Pronoun and Reference Changes"
-    words: 250
-    points:
-      - "я → він/вона"
-      - "тут → там"
-      - "сьогодні → того дня"
-  - section: "Reporting Verbs"
-    words: 200
-    points:
-      - "сказати, розповісти"
-      - "стверджувати, пояснювати"
-      - "Nuances of meaning"
-  - section: "Practice: Reporting Statements"
-    words: 100
-    points:
-      - "Transform direct to indirect"
-      - "Use various reporting verbs"
-vocabulary_hints:
-  required:
-    - непряма мова (indirect speech)
-    - пряма мова (direct speech)
-    - сказати (to say)
-    - розповісти (to tell)
-    - твердження (statement)
-    - що (that - conjunction)
-    - стверджувати (to claim)
-    - повідомити (to report)
-  recommended:
-    - заявити (to declare)
-    - пояснити (to explain)
-    - зазначити (to note)
-    - підтвердити (to confirm)
-activity_hints:
-  - type: transformation
-    focus: "Direct to indirect conversion"
-    items: 25
-  - type: fill-in
-    focus: "Complete reported statements"
-    items: 20
-  - type: error-correction
-    focus: "Fix reported speech errors"
-    items: 15
-  - type: writing
-    focus: "Write reported paragraphs"
-    items: 10
-prerequisites:
-  - b1-38 (Complex Sentence Integration)
-connects_to:
-  - b1-40 (Reported Questions Commands)
+id: b1-39
 naturalness:
   score: 9
   status: PASS
-  justification: "Essential reported speech structure"
+  justification: Essential reported speech structure
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-26'

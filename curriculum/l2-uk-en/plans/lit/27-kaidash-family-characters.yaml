@@ -1,107 +1,112 @@
-module: 27-kaidash-family-characters
-level: lit
-sequence: 27
-version: '1.0'
+module: kaidash-family-characters
+level: LIT
+slug: kaidash-family-characters
+version: '2.0'
 title: 'Кайдашева сім''я: Галерея Характерів'
 subtitle: 'Kaidash Family: A Gallery of Characters'
-focus: literature
-pedagogy: seminar
-objectives:
-- Проаналізувати систему персонажів повісті
-- Зрозуміти архетипи української сільської родини
-- Дослідити психологічну мотивацію героїв
-- Порівняти персонажів з попередніми творами курсу
-sources:
-  primary:
-  - url: https://www.ukrlib.com.ua/books/printit.php?tid=907
-    title: Кайдашева сім'я — повний текст
-    notes: Для цитат і аналізу
-  - url: https://www.ukrlib.com.ua/review/printit.php?tid=18137
-    title: Аналіз "Кайдашевої сім'ї"
-    notes: Літературознавчий аналіз
-  secondary:
-  - url: https://www.ukrlib.com.ua/styslo/printit.php?tid=3505
-    title: Кайдашева сім'я — скорочено
-    notes: Для швидкого повторення сюжету
 content_outline:
 - section: Вступ — Сім'я як мікрокосм
   words: 500
-  subsections:
+  points:
   - Родина в українській літературі
   - Чому "Кайдашева сім'я" стала класикою
   - Історичний контекст (після 1861 року)
 - section: Омелько Кайдаш — патріарх
   words: 700
-  subsections:
+  points:
   - Характеристика голови родини
   - Слабкості та чесноти
   - Конфлікт традиції та змін
 - section: Маруся Кайдашиха — справжня влада
   words: 700
-  subsections:
+  points:
   - Образ свекрухи в українській культурі
   - Мотиви поведінки Кайдашихи
   - Сатира vs співчуття
 - section: Сини і невістки
   words: 800
-  subsections:
+  points:
   - Карпо та Лаврін — два типи синів
   - Мотря і Мелашка — два типи невісток
   - Конфлікти поколінь
 - section: Другорядні персонажі
   words: 500
-  subsections:
+  points:
   - Село як колективний персонаж
   - Сусіди та їхня роль
   - Функція гумору
 - section: Підсумок — Від типу до індивідуальності
   words: 400
-  subsections:
+  points:
   - Як Нечуй створює живих людей
   - Порівняння з персонажами Квітки та Шевченка
   - Перехід до конфліктів повісті
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - патріарх
-  - свекруха
-  - невістка
-  - архетип
-  - характер
-  - мотивація
-  - сатира
-  - психологізм
-  - традиція
-  - конфлікт
+  - патріарх (patriarch)
+  - свекруха (mother-in-law)
+  - невістка (daughter-in-law)
+  - архетип (archetype)
+  - характер (character)
+  - мотивація (motivation)
+  - сатира (satire)
+  - психологізм (psychological depth)
+  - традиція (tradition)
+  - конфлікт (conflict)
   recommended:
-  - індивідуальність
-  - типаж
-  - колективний
-  - гумор
-  - співчуття
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - cloze
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
-  special_requirements:
-  - 'match-up: Персонаж → характеристика'
-  - 'reading: Уривки з діалогами персонажів'
+  - індивідуальність (individuality)
+  - типаж (type/character type)
+  - колективний (collective)
+  - гумор (humor)
+  - співчуття (sympathy)
+activity_hints:
+- type: reading
+  focus: Ключові сцени з персонажами
+  source: UkrLib tid=907
+  items: 5+
+- type: quiz
+  focus: Характеристики персонажів
+  items: 15+
+- type: match-up
+  focus: Персонаж → характеристика
+  items: 12+
+- type: essay-response
+  focus: Архетип свекрухи в українській культурі
+  word_target: 300
+  output: Літературознавче есе
+- type: cloze
+  focus: Цитати персонажів
+  items: 12+
+focus: literature
+pedagogy: Seminar
+prerequisites:
+- lit-26 (Нечуй-Левицький біографія)
 connects_to:
-  previous: 26-nechuy-levytsky
-  related:
-  - lit-28 (Кайдашева сім'я — конфлікти)
-  - lit-05 (Наталка Полтавка — порівняння персонажів)
-constraints:
-  min_engagement_boxes: 3
-  min_examples: 15
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- lit-28 (Кайдашева сім'я — конфлікти)
+- lit-05 (Наталка Полтавка — порівняння персонажів)
+objectives:
+- Проаналізувати систему персонажів повісті
+- Зрозуміти архетипи української сільської родини
+- Дослідити психологічну мотивацію героїв
+- Порівняти персонажів з попередніми творами курсу
+grammar:
+- Character analysis vocabulary
+- Family relationship terms
+- Psychological motivation
+module_type: literature
+sources:
+- name: Кайдашева сім'я — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=907
+  type: primary
+  notes: Для цитат і аналізу
+- name: Аналіз "Кайдашевої сім'ї"
+  url: https://www.ukrlib.com.ua/review/printit.php?tid=18137
+  type: primary
+  notes: Літературознавчий аналіз
+- name: Кайдашева сім'я — скорочено
+  url: https://www.ukrlib.com.ua/styslo/printit.php?tid=3505
+  type: reference
+  notes: Для швидкого повторення сюжету
+immersion: 100% Ukrainian
+phase: LIT.5 Realism

@@ -1,105 +1,105 @@
 module: kazimir-malevich
-level: c1-bio
-sequence: 45
+level: C1-BIO
+slug: kazimir-malevich
 version: '2.0'
 title: 'Казимир Малевич: Революція в мистецтві'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Малевич_Казимир_Северинович
-    title: Казимир Малевич (Wikipedia UA)
-    notes: Biography covering Ukrainian roots and artistic revolution
-  secondary:
-  - url: https://www.moma.org/artists/3710
-    title: MoMA - Kazimir Malevich
-    notes: International context of Malevich's work
 content_outline:
 - section: Вступ — Чорний квадрат і нуль форми
   words: 400
-  subsections:
+  points:
   - Творець супрематизму
   - Українське коріння світового генія
   - Революція в образотворчому мистецтві
 - section: Юність в Україні (1879-1904)
   words: 600
-  subsections:
+  points:
   - Народження в Києві в польській родині
   - Дитинство на Україні
   - Перші мистецькі враження
   - Переїзд до Курська та Москви
 - section: Пошуки стилю (1904-1913)
   words: 800
-  subsections:
+  points:
   - Імпресіонізм та постімпресіонізм
   - Вплив народного мистецтва
   - Кубофутуризм
   - Робота з українськими художниками
 - section: Супрематизм (1913-1920)
   words: 900
-  subsections:
+  points:
   - «Чорний квадрат» (1915)
   - Теорія супрематизму
   - «Білий квадрат на білому тлі»
   - Революційне мистецтво
 - section: Радянський період (1920-1935)
   words: 600
-  subsections:
+  points:
   - Викладання в Вітебську
   - Повернення до фігуративності
   - Тиск соцреалізму
   - Смерть у Ленінграді
 - section: Спадщина — Українець у світовому мистецтві
   words: 700
-  subsections:
+  points:
   - Вплив на XX століття
   - Малевич і Україна
   - Боротьба за спадщину
   - Сучасне визнання
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - супрематизм
-  - авангард
-  - абстракціонізм
-  - кубофутуризм
-  - композиція
-  - форма
-  - геометрія
-  - революція в мистецтві
-  - маніфест
-  - безпредметне мистецтво
+  - супрематизм (Suprematism)
+  - авангард (avant-garde)
+  - абстракціонізм (abstract art)
+  - кубофутуризм (Cubo-Futurism)
+  - композиція (composition)
+  - форма (form)
+  - геометрія (geometry)
+  - революція в мистецтві (artistic revolution)
+  - маніфест (manifesto)
+  - безпредметне мистецтво (non-objective art)
   recommended:
-  - квадрат
-  - площина
-  - кольорова гама
-  - концепція
-  - філософія мистецтва
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - квадрат (square)
+  - площина (plane)
+  - кольорова гама (color palette)
+  - концепція (concept)
+  - філософія мистецтва (philosophy of art)
+activity_hints:
+- type: reading
+  focus: Український авангард XX ст.
+  source: Art history sources
+  items: 3 passages
+- type: quiz
+  focus: Життя та творчість Малевича
+  items: 12+
+- type: match-up
+  focus: Мистецькі терміни та напрямки
+  items: 10+
+- type: essay-response
+  focus: Чому «Чорний квадрат» став революцією в мистецтві?
+  word_target: 300
+  output: Analytical essay
+- type: group-sort
+  focus: Твори за періодами творчості
+  items: 12+
+- type: fill-in
+  focus: Мистецтвознавча термінологія
+  items: 10+
+focus: biography
+prerequisites:
+- c1-bio-44
 connects_to:
-  previous: c1-bio-44
-  related:
-  - c1-bio-50
-  - c1-bio-56
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-50
+- c1-bio-56
+module_type: biography
+sources:
+- name: Казимир Малевич (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Малевич_Казимир_Северинович
+  type: primary
+  notes: Biography covering Ukrainian roots and artistic revolution
+- name: MoMA - Kazimir Malevich
+  url: https://www.moma.org/artists/3710
+  type: reference
+  notes: International context of Malevich's work
+immersion: 100% Ukrainian
+phase: C1-BIO

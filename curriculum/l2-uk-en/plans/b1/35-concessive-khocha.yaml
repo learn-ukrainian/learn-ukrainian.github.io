@@ -1,16 +1,9 @@
-module: concessive-khocha
-level: b1
-sequence: 35
+module: b1-35
+level: B1
+slug: concessive-khocha
 version: '2.0'
 title: 'Допустові речення: хоча, незважаючи на'
 subtitle: Concessive Clauses - Although, Despite
-focus: grammar
-pedagogy: TTT
-objectives:
-- Learner understands concessive clause constructions
-- Learner can express contrast and unexpected outcomes
-- Learner can use various concessive connectors
-- Learner can distinguish concessive from adversative clauses
 content_outline:
 - section: 'Introduction: Concessive Meaning'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Form concessive clauses
   - Express unexpected outcomes
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - хоча (although)
   - незважаючи на (despite)
@@ -63,15 +56,33 @@ vocabulary:
   - дарма що (in vain)
   - все одно (anyway)
   - тим не менш (nevertheless)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - translation
-  - error-correction
-  - transformation
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: Complete concessive sentences
+  items: 25
+- type: transformation
+  focus: Convert sentences to concessive
+  items: 20
+- type: error-correction
+  focus: Fix concessive clause errors
+  items: 15
+- type: translation
+  focus: English to Ukrainian
+  items: 15
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-34 (Checkpoint Complex Sentences 1)
 connects_to:
 - b1-36 (Causal Result Clauses)
+objectives:
+- Learner understands concessive clause constructions
+- Learner can express contrast and unexpected outcomes
+- Learner can use various concessive connectors
+- Learner can distinguish concessive from adversative clauses
+grammar:
+- Concessive clauses with хоча (although)
+- Concessive phrases with незважаючи на (despite)
+- Contrast and unexpected outcome expressions
+register: розмовний
+phase: B1.3b [Complex Sentences]

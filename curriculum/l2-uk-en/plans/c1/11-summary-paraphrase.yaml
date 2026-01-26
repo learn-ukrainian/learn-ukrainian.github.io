@@ -1,21 +1,8 @@
 module: 11-summary-paraphrase
-level: c1
-sequence: 11
+level: C1
+slug: 11-summary-paraphrase
 version: '2.0'
 title: Резюме та парафраз
-focus: grammar
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Academic Writing Skills in Ukrainian
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Paraphrasing and summarizing guidelines
-- name: Academic Integrity Resources
-  url: https://mova.info/
-  type: secondary
-  notes: Avoiding plagiarism through proper paraphrasing
 content_outline:
 - section: Вступ — Мистецтво переказу
   words: 400
@@ -60,7 +47,7 @@ content_outline:
   - Парафразування речень
   - Інтеграція в академічний текст
 word_target: 4000
-vocabulary:
+vocabulary_hints:
   required:
   - резюме (summary)
   - парафраз (paraphrase)
@@ -78,18 +65,42 @@ vocabulary:
   - адаптація (adaptation)
   - трансформація (transformation)
   - інтерпретація (interpretation)
-  forbidden: []
-activities:
-  types_required:
-  - quiz
-  - essay-response
-  - cloze
-  - fill-in
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: Summarize a paragraph in 2-3 sentences
+  items: 10+
+- type: fill-in
+  focus: Paraphrase sentences without changing meaning
+  items: 12+
+- type: quiz
+  focus: Identify plagiarism vs proper paraphrase
+  items: 15+
+- type: match-up
+  focus: Original to acceptable paraphrase
+  items: 12+
+- type: cloze
+  focus: Paraphrase markers in context
+  items: 10+
+- type: essay-response
+  focus: Summarize article in 100 words
+  word_target: 100
+focus: grammar
+prerequisites:
+- c1-07 (Citation & Reference)
+- c1-10 (Counterarguments)
 connects_to:
 - c1-12 (Research Article)
 - c1-14 (Literature Review)
 - c1-19 (Article Critique)
+module_type: grammar
+sources:
+- name: Academic Writing Skills in Ukrainian
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Paraphrasing and summarizing guidelines
+- name: Academic Integrity Resources
+  url: https://mova.info/
+  type: secondary
+  notes: Avoiding plagiarism through proper paraphrasing
+immersion: 100% Ukrainian
+phase: C1.1 Academic Ukrainian

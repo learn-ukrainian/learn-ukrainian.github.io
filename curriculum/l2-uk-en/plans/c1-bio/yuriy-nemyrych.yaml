@@ -1,116 +1,120 @@
 module: yuriy-nemyrych
-level: c1-bio
-sequence: 11
+level: C1-BIO
+slug: yuriy-nemyrych
 version: '2.0'
 title: 'Юрій Немирич: Дипломат і мислитель'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Юрій_Немирич
-    title: Юрій Немирич (Wikipedia UA)
-    notes: Biography, Hadiach Treaty, political thought
-  - url: https://uk.wikipedia.org/wiki/Гадяцький_договір
-    title: Гадяцький договір (Wikipedia UA)
-    notes: Treaty details and significance
-  secondary:
-  - url: https://uk.wikipedia.org/wiki/Велике_князівство_Руське
-    title: Велике князівство Руське
-    notes: Proposed state structure
 content_outline:
 - section: Вступ — Архітектор нездійсненної держави
   words: 400
-  subsections:
+  points:
   - Немирич як візіонер української державності
   - Значення Гадяцького договору
   - Трагедія "альтернативної історії"
 - section: Походження та освіта
   words: 600
-  subsections:
+  points:
   - Знатний рід Немиричів
   - Освіта в Європі
   - Соціанство та релігійні погляди
   - Інтелектуальне формування
 - section: Участь у політичному житті Речі Посполитої
   words: 700
-  subsections:
+  points:
   - Діяльність у Сеймі
   - Ставлення до козацтва
   - Позиція під час повстання
   - Перехід на бік Хмельницького
 - section: Гадяцький договір 1658 року
   words: 900
-  subsections:
+  points:
   - Ідея Великого князівства Руського
   - Структура запропонованої держави
   - Переговори з Польщею
   - Ратифікація та обмеження
 - section: Загибель та провал угоди
   words: 600
-  subsections:
+  points:
   - Московський тиск
   - Загибель Немирича 1659 року
   - Причини невдачі Гадяцької угоди
   - Що могло бути інакше?
 - section: Спадщина та оцінки
   words: 500
-  subsections:
+  points:
   - Немирич у історіографії
   - Гадяч як "європейський вибір"
   - Актуальність його ідей
   - Пам'ять про Немирича
 - section: Підсумок — Візія без реалізації
   words: 300
-  subsections:
+  points:
   - Немирич як символ втрачених можливостей
   - Порівняння з пізнішими спробами
   - Уроки Гадяцької угоди
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - договір
-  - князівство
-  - федерація
-  - автономія
-  - сейм
-  - ратифікація
-  - соціанство
-  - шляхта
-  - універсал
-  - конфедерація
+  - договір (treaty)
+  - князівство (principality/duchy)
+  - федерація (federation)
+  - автономія (autonomy)
+  - сейм (sejm/parliament)
+  - ратифікація (ratification)
+  - соціанство (Socinianism)
+  - шляхта (nobility)
+  - універсал (universal/decree)
+  - конфедерація (confederation)
   recommended:
-  - канцлер
-  - трибунал
-  - привілей
-  - воєводство
-  - маршалок
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  - critical-analysis
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - канцлер (chancellor)
+  - трибунал (tribunal)
+  - привілей (privilege)
+  - воєводство (voivodeship)
+  - маршалок (marshal)
+activity_hints:
+- type: reading
+  focus: Excerpts from the Treaty of Hadiach
+  source: Original text (adapted)
+  items: 3 passages
+- type: quiz
+  focus: Details of the proposed Grand Duchy
+  items: 12+
+- type: match-up
+  focus: Treaty provisions and their significance
+  items: 10+
+- type: essay-response
+  focus: Why did the Treaty of Hadiach fail?
+  word_target: 300
+  output: Multi-causal analysis
+- type: group-sort
+  focus: Hadiach provisions vs. Pereiaslav provisions
+  items: 12+
+- type: fill-in
+  focus: Political and legal terminology
+  items: 8+
+- type: critical-analysis
+  focus: Compare Nemyrych's vision with modern European integration
+  output: Historical parallels
+focus: biography
+prerequisites:
+- c1-bio-10 (Bohdan Khmelnytskyi - context of uprising)
+- Understanding of Polish-Lithuanian Commonwealth structure
 connects_to:
-  previous: c1-bio-10 (Bohdan Khmelnytskyi - context of uprising)
-  related:
-  - c1-bio-12 (Ivan Mazepa - later European orientation)
-  - c1-bio-14 (Pylyp Orlyk - constitutional thought)
-  - c1-bio-51 (Viacheslav Lypynskyi - later federalist ideas)
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-12 (Ivan Mazepa - later European orientation)
+- c1-bio-14 (Pylyp Orlyk - constitutional thought)
+- c1-bio-51 (Viacheslav Lypynskyi - later federalist ideas)
+module_type: biography
+sources:
+- name: Юрій Немирич (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Юрій_Немирич
+  type: primary
+  notes: Biography, Hadiach Treaty, political thought
+- name: Гадяцький договір (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Гадяцький_договір
+  type: primary
+  notes: Treaty details and significance
+- name: Велике князівство Руське
+  url: https://uk.wikipedia.org/wiki/Велике_князівство_Руське
+  type: reference
+  notes: Proposed state structure
+immersion: 100% Ukrainian
+phase: C1-BIO

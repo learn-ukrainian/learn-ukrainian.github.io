@@ -1,29 +1,23 @@
 module: syntez-dvokniazivstvo
-level: b2-hist
-sequence: 0
-version: '1.0'
+level: B2-HIST
+slug: syntez-dvokniazivstvo
+version: '2.0'
 title: 'Синтез: Від монгольської навали до кримської державності'
-focus: synthesis
-pedagogy: seminar
-objectives:
-- Синтезувати знання про виживання української державності після 1240 року
-- Аналізувати трансформацію Русі у Королівство та Кримське ханство
-- Формулювати аргументовані висновки про західний вектор розвитку
 content_outline:
 - section: Огляд періоду
   words: 666
-  subsections:
+  points:
   - Монгольська навала як цивілізаційний злам
   - 'Трансформація центрів: від Києва до Галича та Бахчисарая'
 - section: Ключові теми
   words: 933
-  subsections:
+  points:
   - Легітимність як зброя (Данило, Хаджи Гірей)
   - Магдебурзьке право та інституційна тяглість
   - Соціальна еволюція та лицарський стан
 - section: Аналіз
   words: 933
-  subsections:
+  points:
   - Деколонізація та спростування міфу про 'одну колиску'
   - 'Сучасні паралелі: від 1240 до 2022'
   - Порівняння первинних джерел
@@ -34,3 +28,13 @@ content_outline:
 - section: Потрібно більше практики?
   words: 136
 word_target: 3000
+focus: synthesis
+objectives:
+- Синтезувати знання про виживання української державності після 1240 року
+- Аналізувати трансформацію Русі у Королівство та Кримське ханство
+- Формулювати аргументовані висновки про західний вектор розвитку
+grammar:
+- Historical narrative synthesis
+- Argumentative writing structures
+register: публіцистичний
+phase: B2.3 [Ukrainian History] Synthesis

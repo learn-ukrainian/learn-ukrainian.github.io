@@ -1,94 +1,13 @@
 module: b1-48
-id: b1-48
+level: B1
 slug: diminutives-master-class
-title: "Демінутиви: майстер-клас"
-subtitle: "Diminutives - Forms, Usage, and Nuance"
 version: '2.0'
-phase: "B1.4b [Word Formation]"
-focus: grammar
-pedagogy: TTT
-register: розмовний
-duration: 90
-transliteration: none
-objectives:
-  - "Learner can form diminutives from nouns and adjectives"
-  - "Learner understands different pragmatic functions of diminutives"
-  - "Learner can distinguish nuances: tenderness, irony, politeness"
-  - "Learner can use diminutives appropriately in context"
-grammar:
-  - "Суфікси демінутивів: -ик, -ок, -очок, -еньк-, -оньк-, -ечк-"
-  - "Прагматичні функції демінутивів"
-  - "Регістрові та стилістичні відтінки"
-word_target: 1200
-content_outline:
-  - section: "Introduction: Diminutives in Ukrainian"
-    words: 150
-    points:
-      - "Why diminutives matter"
-      - "More than just 'small'"
-      - "Cultural significance"
-  - section: "Noun Diminutive Suffixes"
-    words: 250
-    points:
-      - "-ик, -ок: хлопчик, синок"
-      - "-очок, -ечко: батечко, серденько"
-      - "-еньк-, -оньк-: донечка, матуся"
-  - section: "Adjective Diminutives"
-    words: 200
-    points:
-      - "-еньк-, -есеньк-: гарненький, малесенький"
-      - "Intensification patterns"
-      - "Emotional coloring"
-  - section: "Pragmatic Functions"
-    words: 250
-    points:
-      - "Tenderness and affection"
-      - "Politeness and softening"
-      - "Irony and mockery"
-  - section: "Context-Dependent Meaning"
-    words: 250
-    points:
-      - "Same form, different meanings"
-      - "Register shifts"
-      - "When to avoid diminutives"
-  - section: "Practice: Creating and Using"
-    words: 100
-    points:
-      - "Form diminutives"
-      - "Choose for context"
-vocabulary_hints:
-  required:
-    - демінутив (diminutive)
-    - зменшувальний (diminutive - adj)
-    - ніжність (tenderness)
-    - ввічливість (politeness)
-    - іронія (irony)
-    - суфікс (suffix)
-    - відтінок (nuance/shade)
-    - прагматика (pragmatics)
-  recommended:
-    - пестливий (affectionate)
-    - емоційний (emotional)
-    - зневажливий (dismissive)
-    - інтенсифікація (intensification)
-activity_hints:
-  - type: formation
-    focus: "Create diminutives from base forms"
-    items: 25
-  - type: multiple-choice
-    focus: "Identify pragmatic function"
-    items: 20
-  - type: fill-in
-    focus: "Complete with appropriate diminutive"
-    items: 15
-  - type: context-matching
-    focus: "Match diminutive to situation"
-    items: 10
-prerequisites:
-  - b1-47 (Passive Constructions)
-connects_to:
-  - b1-49 (Numerals Collectives Fractions)
+id: b1-48
 naturalness:
   score: 9
   status: PASS
-  justification: "Essential cultural-linguistic skill"
+  justification: Essential cultural-linguistic skill
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-26'

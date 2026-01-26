@@ -1,22 +1,37 @@
-module: 92-istoriia-ukrainskoi-literatury
-level: c1
-sequence: 92
+module: c1-92
+level: C1
+slug: 92-istoriia-ukrainskoi-literatury
 version: '2.0'
 title: Історія української літератури
 subtitle: History of Ukrainian Literature
+content_outline:
+- section: Вступ — Історія української літератури
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Давня література: chronicles, religious texts, polemics'
+  - 'Бароко: Сковорода, Кониський'
+  - 'Романтизм: national awakening'
+  - 'Реалізм: social consciousness'
+  - 'Модернізм: early 20th century experimentation'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: literature
 pedagogy: Immersion & Analysis
 objectives:
 - Overview of major periods in Ukrainian literature
 - Identify key authors and movements
 - Understand the socio-political context of literary development
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Literary analysis register
+- Historical present in narrative
+phase: C1.6 Literature

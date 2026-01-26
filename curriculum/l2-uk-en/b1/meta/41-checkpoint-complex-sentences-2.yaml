@@ -1,95 +1,13 @@
 module: b1-41
-id: b1-41
+level: B1
 slug: checkpoint-complex-sentences-2
-title: "Контрольна точка: складні речення (частина 2)"
-subtitle: "Checkpoint - Complex Sentences Part 2"
 version: '2.0'
-phase: "B1.3b [Complex Sentences Checkpoint]"
-focus: checkpoint
-pedagogy: TTT
-register: розмовний
-duration: 90
-transliteration: none
-objectives:
-  - "Learner can demonstrate mastery of concessive, causal, temporal clauses"
-  - "Learner can use reported speech for statements, questions, and commands"
-  - "Learner can self-assess readiness for B1.4 phase"
-  - "Learner can integrate all B1.3 complex sentence patterns"
-grammar:
-  - "Integration of M35-M40 grammar"
-  - "Concessive, causal, temporal, reported speech"
-  - "Comprehensive complex sentence mastery"
-word_target: 1000
-content_outline:
-  - section: "Pre-Test: Self-Assessment"
-    words: 100
-    points:
-      - "Review B1.3b objectives"
-      - "Identify strengths and gaps"
-      - "Set checkpoint goals"
-  - section: "Clause Types Review"
-    words: 200
-    points:
-      - "Concessive (хоча, незважаючи на)"
-      - "Causal (тому що, бо)"
-      - "Temporal (коли, поки, після того як)"
-  - section: "Reported Speech Review"
-    words: 200
-    points:
-      - "Reported statements"
-      - "Reported questions"
-      - "Reported commands"
-  - section: "Integration Test"
-    words: 200
-    points:
-      - "Multi-clause sentences"
-      - "Mixed transformations"
-      - "Complex writing"
-  - section: "Comprehensive Assessment"
-    words: 200
-    points:
-      - "All B1.3 structures"
-      - "Error analysis"
-      - "Proficiency check"
-  - section: "Feedback and Planning"
-    words: 100
-    points:
-      - "Review results"
-      - "Plan for B1.4"
-      - "Identify review needs"
-vocabulary_hints:
-  required:
-    - контрольна точка (checkpoint)
-    - повторення (review)
-    - оцінювання (assessment)
-    - інтеграція (integration)
-    - непряма мова (indirect speech)
-    - допустовий (concessive)
-    - причиновий (causal)
-    - часовий (temporal)
-  recommended:
-    - трансформація (transformation)
-    - прогрес (progress)
-    - рівень (level)
-    - готовність (readiness)
-activity_hints:
-  - type: quiz
-    focus: "B1.3b comprehensive test"
-    items: 30
-  - type: transformation
-    focus: "All speech type conversions"
-    items: 25
-  - type: fill-in
-    focus: "Complete complex sentences"
-    items: 20
-  - type: writing
-    focus: "Write complex paragraphs"
-    items: 10
-prerequisites:
-  - b1-40 (Reported Questions Commands)
-connects_to:
-  - b1-42 (Adverbial Participles Imperfective)
+id: b1-41
 naturalness:
   score: 9
   status: PASS
-  justification: "B1.3b complex sentences checkpoint"
+  justification: B1.3b complex sentences checkpoint
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-26'

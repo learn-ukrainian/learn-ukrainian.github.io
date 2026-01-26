@@ -1,111 +1,16 @@
-module: "b1-10"
-title: "Вид у запереченні"
-subtitle: "Aspect in Negation: How 'не' Changes Aspect Selection"
-slug: "10-aspect-negation"
-module_type: "grammar"
-word_target: 1800
-immersion: "100% Ukrainian"
-version: "1.0"
-phase: "B1.1 Aspect"
-pedagogy: "TTT"
-focus: "grammar"
-duration: 90
-transliteration: "none"
-tags:
-  - "grammar"
-  - "aspect"
-  - "negation"
-  - "imperatives"
-grammar:
-  - "Imperfective preference with не"
-  - "ще не + perfective - expected completion"
-  - "не + imperfective - general negation"
-  - "Negative imperatives - наказові форми"
-objectives:
-  - "Learner understands why negation favors imperfective aspect"
-  - "Learner can distinguish 'ще не' + perfective vs 'не' + imperfective"
-  - "Learner can form negative imperatives with correct aspect"
-  - "Learner recognizes exceptions to imperfective preference"
-sources:
-  - name: "Ukrainian State Standard 2024 - Negation and Aspect"
-    url: "https://mon.gov.ua/"
-    type: "reference"
-    notes: "Official rules for aspect in negative contexts"
-  - name: "Ukrainian Negation Patterns"
-    url: "https://uk.wikipedia.org/wiki/Заперечення_(мовознавство)"
-    type: "reference"
-    notes: "Negation with aspect selection"
-content_outline:
-  - section: "Тест"
-    words: 150
-    points:
-      - "Three types of negation"
-      - "Intuition check"
-  - section: "Пояснення"
-    words: 500
-    points:
-      - "General negation (imperfective)"
-      - "'Not yet' exception (perfective)"
-      - "'Don''t do it' warnings (perfective)"
-      - "Negative imperatives"
-  - section: "Практика"
-    words: 350
-    points:
-      - "Decision algorithm"
-      - "Common mistakes"
-      - "Scenarios"
-  - section: "Діалоги"
-    words: 650
-    points:
-      - "Bookstore"
-      - "Movie discussion"
-      - "Academic work"
-  - section: "Підсумок"
-    words: 250
-    points:
-      - "Summary table"
-      - "Self-check"
-vocabulary_hints:
-  required:
-    - "заперечення"
-    - "не"
-    - "Я не читав цієї книги"
-    - "Він не дзвонив"
-    - "ще не"
-    - "ніколи"
-    - "взагалі"
-    - "заборона"
-    - "попередження"
-    - "очікувана дія"
-    - "загальне заперечення"
-    - "відмова"
-  recommended:
-    - "нікуди"
-    - "ніяк"
-    - "ніщо"
-    - "випадково"
-    - "навмисне"
-activity_hints:
-  - type: "quiz"
-    focus: "Which aspect in negation?"
-    items: 15
-  - type: "fill-in"
-    focus: "ще не + perfective patterns"
-    items: 12
-  - type: "fill-in"
-    focus: "Affirmative → negative with correct aspect"
-    items: 10
-  - type: "match-up"
-    focus: "Negation type → aspect"
-    items: 12
-prerequisites:
-  - "b1-06 (Aspect complete system)"
-  - "b1-07 (Aspect past)"
-  - "b1-08 (Aspect past)"
-  - "b1-09 (Aspect future)"
-connects_to:
-  - "b1-11 (Aspect in imperatives)"
-  - "b1-14 (Aspect integration practice)"
+module: b1-10
+level: B1
+slug: 10-aspect-negation
+version: '1.0'
 naturalness:
   score: 9
-  status: "PASS"
+  status: PASS
+duration: 90
+transliteration: none
+tags:
+- grammar
+- aspect
+- negation
+- imperatives
+build:
+  last_modified: '2026-01-26'

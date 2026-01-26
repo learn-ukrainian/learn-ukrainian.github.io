@@ -1,16 +1,9 @@
-module: abstract-concepts-ideas
-level: b1
-sequence: 52
+module: b1-52
+level: B1
+slug: abstract-concepts-ideas
 version: '2.0'
 title: 'Абстрактні концепції: ідеї та думки'
 subtitle: 'Abstract Concepts: Ideas and Thoughts'
-focus: vocabulary
-pedagogy: PPP
-objectives:
-- Learner can use 35 abstract concept words in context
-- Learner can distinguish between ідея/думка/концепція/теорія
-- Learner can form natural collocations with abstract nouns
-- Learner can discuss abstract topics fluently
 content_outline:
 - section: 'Introduction: Abstract Vocabulary'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Build collocations
   - Discuss abstract topics
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - ідея (idea)
   - думка (thought/opinion)
@@ -63,15 +56,33 @@ vocabulary:
   - істина (truth)
   - справедливість (justice)
   - ідеал (ideal)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - discussion
-  - collocation
-  - matching
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: collocation
+  focus: Build abstract noun phrases
+  items: 25
+- type: fill-in
+  focus: Complete sentences with abstracts
+  items: 20
+- type: matching
+  focus: Match similar/different meanings
+  items: 15
+- type: discussion
+  focus: Discuss abstract topics
+  items: 10
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-51 (Checkpoint Advanced Grammar)
 connects_to:
 - b1-53 (Abstract Concepts Processes)
+objectives:
+- Learner can use 35 abstract concept words in context
+- Learner can distinguish between ідея/думка/концепція/теорія
+- Learner can form natural collocations with abstract nouns
+- Learner can discuss abstract topics fluently
+grammar:
+- Noun collocations with abstract vocabulary
+- Verb + abstract noun patterns
+- Preposition usage with abstracts
+register: розмовний
+phase: B1.5 [Vocabulary Expansion I]

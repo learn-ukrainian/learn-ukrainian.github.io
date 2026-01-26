@@ -1,109 +1,110 @@
 module: serge-lifar
-level: c1-bio
-sequence: 67
+level: C1-BIO
+slug: serge-lifar
 version: '2.0'
 title: 'Серж Лифар: Зірка балету'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Лифар_Сергій_Михайлович
-    title: Серж Лифар (Wikipedia UA)
-    notes: Біографія, балетна кар'єра, хореографія
-  secondary:
-  - url: https://www.operadeparis.fr
-    title: Opéra national de Paris
-    notes: Паризька опера та балет
-  - url: https://ina.fr
-    title: Archives du XXe siècle
-    notes: Документальні матеріали
 content_outline:
 - section: Вступ — Бог танцю з Києва
   words: 400
-  subsections:
+  points:
   - Лифар як один із найвидатніших танцівників та хореографів XX століття
   - Українське походження та французька слава
   - Революція в класичному балеті
 - section: Київська молодість (1905-1921)
   words: 600
-  subsections:
+  points:
   - Народження в Києві
   - Перші кроки в балеті
   - Вплив революційних подій на родину
   - Рішення емігрувати
 - section: «Російські сезони» та Дягілєв (1921-1929)
   words: 800
-  subsections:
+  points:
   - Приєднання до трупи Дягілєва
   - Стрімкий злет до статусу прем'єра
   - Співпраця з Стравінським та Кокто
   - Смерть Дягілєва та кінець епохи
 - section: Паризька опера (1929-1958)
   words: 800
-  subsections:
+  points:
   - Призначення директором балету
   - Реформа французького балету
   - Створення неокласичного стилю
   - Понад 200 хореографічних постановок
 - section: Суперечлива спадщина
   words: 700
-  subsections:
+  points:
   - Діяльність під час німецької окупації
   - Звинувачення у колабораціонізмі
   - Виправдання та повернення
   - Оцінка його ролі істориками
 - section: Останні роки та пам'ять (1958-1986)
   words: 700
-  subsections:
+  points:
   - Робота поза Паризькою оперою
   - Викладання та теоретичні праці
   - Українська ідентичність до кінця життя
   - Смерть у Лозанні та поховання в Києві
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - балет
-  - танцівник
-  - хореограф
-  - прем'єр
-  - Паризька опера
-  - неокласицизм
-  - постановка
-  - трупа
-  - еміграція
-  - колабораціонізм
+  - балет (ballet)
+  - танцівник (dancer)
+  - хореограф (choreographer)
+  - прем'єр (premier danseur)
+  - Паризька опера (Paris Opera)
+  - неокласицизм (neoclassicism)
+  - постановка (production)
+  - трупа (troupe)
+  - еміграція (emigration)
+  - колабораціонізм (collaborationism)
   recommended:
-  - «Російські сезони»
-  - Дягілєв
-  - pas de deux
-  - хореографія
-  - сценографія
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - «Російські сезони» (Ballets Russes)
+  - Дягілєв (Diaghilev)
+  - pas de deux (pas de deux)
+  - хореографія (choreography)
+  - сценографія (scenography)
+activity_hints:
+- type: reading
+  focus: Мистецька біографія
+  source: Уривки з мемуарів та критичних статей
+  items: 3 passages
+- type: quiz
+  focus: Біографія та балетна кар'єра
+  items: 12+
+- type: match-up
+  focus: Балети та їхні характеристики
+  items: 10+
+- type: essay-response
+  focus: Чи виправдовує геніальність суперечливі рішення?
+  word_target: 300
+  output: Етичне есе
+- type: group-sort
+  focus: Танцівник vs хореограф
+  items: 12+
+- type: fill-in
+  focus: Балетна термінологія
+  items: 10+
+focus: biography
+prerequisites:
+- c1-bio-41 (Соломія Крушельницька)
 connects_to:
-  previous: c1-bio-41 (Соломія Крушельницька)
-  related:
-  - c1-bio-56 (Олександр Архипенко)
-  - c1-bio-62 (Віра Холодна)
-  - c1-bio-64 (Борис Лятошинський)
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-56 (Олександр Архипенко)
+- c1-bio-62 (Віра Холодна)
+- c1-bio-64 (Борис Лятошинський)
+module_type: biography
+sources:
+- name: Серж Лифар (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Лифар_Сергій_Михайлович
+  type: primary
+  notes: Біографія, балетна кар'єра, хореографія
+- name: Opéra national de Paris
+  url: https://www.operadeparis.fr
+  type: reference
+  notes: Паризька опера та балет
+- name: Archives du XXe siècle
+  url: https://ina.fr
+  type: reference
+  notes: Документальні матеріали
+immersion: 100% Ukrainian
+phase: C1-BIO

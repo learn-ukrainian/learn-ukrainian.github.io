@@ -1,22 +1,46 @@
-module: 62-synonyms-place
-level: b2
-sequence: 62
-version: '1.0'
+module: b2-62
+level: B2
+slug: 62-synonyms-place
+version: '2.0'
 title: 'Синоніми: Місце та Простір'
 subtitle: Synonyms - Place and Space
+content_outline:
+- section: Вступ — Місце та Простір
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Here
+  words: 500
+  points:
+  - тут (here - neutral)
+  - тутечки (here - diminutive/colloquial)
+  - ось тут (right here - emphatic)
+  - на цьому місці (at this place - formal)
+- section: There
+  words: 500
+  points:
+  - там (there - neutral)
+  - он там (over there - pointing)
+  - туди (to there - direction)
+  - звідти (from there - origin)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: phraseology
 pedagogy: CBI
 objectives:
-- Учень може розрізняти відтінки значень синонімів на позначення місця (тут, тутечки, на цьому місці)
+- Учень може розрізняти відтінки значень синонімів на позначення місця (тут, тутечки,
+  на цьому місці)
 - Учень вміє використовувати лексику простору для опису географічних та міських локацій
 - Учень розуміє різницю між статичним положенням та напрямком руху
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Adverbs of place
+- Locative prepositions and distance
+immersion: 100
+register: публіцистичний
+phase: B2.2 [Phraseology & Synonymy]

@@ -1,25 +1,9 @@
 module: 28-she-said-that
-level: a2
-sequence: 28
+level: A2
+slug: 28-she-said-that
 version: '2.0'
 title: She Said That...
 subtitle: Reported Speech Basics
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can convert direct speech to indirect speech
-- Learner can report statements using 'що'
-- Learner can report questions using 'чи'
-- Learner can report commands using 'щоб'
-sources:
-- name: Ukrainian State Standard 2024 - Indirect Speech
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Standards for speech reporting and indirect questions for A2
-- name: Grammar of Ukrainian Language - Reported Statements
-  url: https://uk.wikipedia.org/wiki/Непряма_мова
-  type: reference
-  notes: Rules for tense retention and pronoun shifts
 content_outline:
 - section: Introduction / Вступ
   words: 200
@@ -44,7 +28,27 @@ content_outline:
   points:
   - Gossip at the 'lavka' or office news
 word_target: 1000
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can convert direct speech to indirect speech
+- Learner can report statements using 'що'
+- Learner can report questions using 'чи'
+- Learner can report commands using 'щоб'
+grammar:
+- indirect speech construction (що, щоб, чи)
+- pronoun changes
+- tense retention rule
+- reporting verbs (казати, говорити, питати)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Indirect Speech
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standards for speech reporting and indirect questions for A2
+- name: Grammar of Ukrainian Language - Reported Statements
+  url: https://uk.wikipedia.org/wiki/Непряма_мова
+  type: reference
+  notes: Rules for tense retention and pronoun shifts
+immersion: 40-50% Ukrainian
+phase: A2.2

@@ -1,23 +1,39 @@
-module: 69-winter-holidays
-level: c1
-sequence: 69
-version: '1.0'
+module: c1-69
+level: C1
+slug: 69-winter-holidays
+version: '2.0'
 title: Українські свята - зимовий цикл
 subtitle: Ukrainian Holidays - Winter Cycle
+content_outline:
+- section: Вступ — зимовий цикл
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Великдень: Easter traditions, games, foods'
+  - 'Зелені свята (Трійця): green branches, ancestral spirits'
+  - 'Івана Купала: midsummer night, fire and water'
+  - 'Обжинки: harvest celebration'
+  - Seasonal nature symbolism
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: cultural
 pedagogy: CBI
 objectives:
-- Learner can describe the main holidays of the winter cycle (St. Nicholas, Christmas, Malanka, Epiphany)
+- Learner can describe the main holidays of the winter cycle (St. Nicholas, Christmas,
+  Malanka, Epiphany)
 - Learner can explain the difference between koliadky and shchedrivky
 - Learner can discuss the symbolism of vertep and Malanka characters
 - Learner can recite a traditional holiday greeting
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- holiday greetings
+- ritual descriptions
+phase: C1.5 Folk Culture & Arts

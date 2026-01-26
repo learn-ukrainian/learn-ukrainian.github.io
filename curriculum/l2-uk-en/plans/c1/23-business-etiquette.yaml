@@ -1,21 +1,8 @@
 module: 23-business-etiquette
-level: c1
-sequence: 23
+level: C1
+slug: 23-business-etiquette
 version: '2.0'
 title: Діловий етикет в Україні
-focus: communication
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Ukrainian Business Culture
-  url: https://chamber.ua/
-  type: reference
-  notes: Chamber of Commerce business guidelines
-- name: Ukrainian State Standard C1 (2024)
-  url: https://mon.gov.ua/
-  type: reference
-  notes: C1 cultural competency requirements
 content_outline:
 - section: Вступ — Ділова культура України
   words: 400
@@ -60,7 +47,7 @@ content_outline:
   - Аналіз ситуацій
   - Культурні помилки
 word_target: 4000
-vocabulary:
+vocabulary_hints:
   required:
   - етикет (etiquette)
   - звертання (form of address)
@@ -78,19 +65,42 @@ vocabulary:
   - професіоналізм (professionalism)
   - тактовність (tact)
   - дипломатичність (diplomacy)
-  forbidden: []
-activities:
-  types_required:
-  - group-sort
-  - quiz
-  - cloze
-  - error-correction
-  - match-up
-  - true-false
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: Etiquette dos and don'ts
+  items: 15+
+- type: match-up
+  focus: Situation → appropriate behavior
+  items: 12+
+- type: group-sort
+  focus: Acceptable vs unacceptable business gifts
+  items: 12+
+- type: cloze
+  focus: Business meeting dialogues
+  items: 10+
+- type: true-false
+  focus: Ukrainian business customs
+  items: 12+
+- type: error-correction
+  focus: Fix etiquette mistakes
+  items: 10+
+focus: communication
+prerequisites:
+- c1-21 (CV & Resume Writing)
+- c1-22 (Job Interview)
 connects_to:
 - c1-24 (Digital Communication)
 - c1-32 (Professional Scenarios)
 - c1-35 (C1.2 Checkpoint)
+module_type: cultural
+sources:
+- name: Ukrainian Business Culture
+  url: https://chamber.ua/
+  type: reference
+  notes: Chamber of Commerce business guidelines
+- name: Ukrainian State Standard C1 (2024)
+  url: https://mon.gov.ua/
+  type: reference
+  notes: C1 cultural competency requirements
+immersion: 100% Ukrainian
+phase: C1.2 Professional Communication

@@ -1,22 +1,43 @@
-module: 69-integration-practice
-level: b2
-sequence: 69
-version: '1.0'
+module: b2-69
+level: B2
+slug: 69-integration-practice
+version: '2.0'
 title: Практика інтеграції B2.2
 subtitle: B2.2 Integration Practice
+content_outline:
+- section: Вступ — Практика інтеграції B2.2
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Основний матеріал
+  words: 600
+  points:
+  - Теоретичні основи
+  - Приклади та ілюстрації
+  - Типові помилки та як їх уникати
+- section: Поглиблене вивчення
+  words: 600
+  points:
+  - Додаткові випадки
+  - Контекстуальне використання
+  - Стилістичні нюанси
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: integration
 pedagogy: Practice
 objectives:
 - Учень може вільно інтеграції прислів'я та приказки у власну аргументацію
 - Учень вміє створювати зв'язні тексти, використовуючи ідіоми та складні сполучники
 - Учень демонструє майстерність у виборі синонімів залежно від контексту
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Review of complex syntax
+- Phraseological integration
+immersion: 100
+register: змішаний
+phase: B2.2 [Phraseology & Synonymy]

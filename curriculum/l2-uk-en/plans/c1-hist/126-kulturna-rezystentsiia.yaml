@@ -1,0 +1,102 @@
+module: kulturna-rezystentsiia
+level: C1-HIST
+slug: kulturna-rezystentsiia
+version: '2.0'
+title: 'Культурна резистенція: Стратегії виживання'
+content_outline:
+- section: Вступ — Як виживає культура
+  words: 451
+  points:
+  - Культурна резистенція — що це
+  - Не пасивність — активна стратегія
+  - Від козаків до сьогодні
+  - Структура модуля
+- section: Закодовані послання
+  words: 790
+  points:
+  - Езопова мова в літературі
+  - Символіка в мистецтві
+  - «Дозволене» про «заборонене»
+  - Як читати між рядків
+- section: Підпілля
+  words: 677
+  points:
+  - Самвидав — механізм
+  - Таємні бібліотеки
+  - Домашні концерти
+  - Мережі довіри
+- section: Подвійне життя
+  words: 677
+  points:
+  - Публічна лояльність
+  - Приватна резистенція
+  - Ціна компромісу
+  - Хто витримав
+- section: Церква як схованка
+  words: 564
+  points:
+  - УГКЦ — підпільна церква
+  - Мова богослужіння
+  - Обряд як ідентичність
+  - Священники-резистенти
+- section: Підсумок
+  words: 341
+  points:
+  - Резистенція — не героїзм, а стратегія
+  - Культура — не слабкість, а сила
+  - Перехід до громадянського суспільства
+word_target: 3500
+vocabulary_hints:
+  required:
+  - культурна резистенція (cultural resistance)
+  - стратегія виживання (survival strategy)
+  - самвидав (samvydav)
+  - езопова мова (Aesopian language)
+  - підпілля (underground)
+  - подвійне життя (double life)
+  - закодоване послання (coded message)
+  - мережа довіри (trust network)
+  - церква-схованка (church as refuge)
+  - компроміс (compromise)
+  recommended:
+  - УГКЦ (UGCC)
+  - криптографія (cryptography)
+  - цензура (censorship)
+  - самоцензура (self-censorship)
+  - культурна травма (cultural trauma)
+activity_hints:
+- type: strategy-analysis
+  focus: Map cultural survival strategies
+  output: Strategy taxonomy
+- type: text-analysis
+  focus: Aesopian language — examples and decoding
+  output: Coded message analysis
+- type: network-study
+  focus: How samvydav networks functioned
+  output: Network analysis
+- type: church-role
+  focus: UGCC underground church as cultural refuge
+  output: Institutional resistance study
+- type: essay-response
+  focus: Яка стратегія культурного виживання була найефективнішою?
+  word_target: 400
+  model_answer: Required
+focus: history
+prerequisites:
+- c1-hist-125 (Post-2014 synthesis)
+- c1-hist-59-63 (Dissident movement)
+connects_to:
+- c1-hist-127 (Civil society)
+- c1-hist-133 (Agency synthesis)
+module_type: thematic
+sources:
+- name: Самвидав (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Самвидав
+  type: reference
+  notes: Samvydav
+- name: Культурний спротив (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Культурний_спротив
+  type: reference
+  notes: Cultural resistance
+immersion: 100% Ukrainian
+phase: C1-HIST.1 [Historiography]

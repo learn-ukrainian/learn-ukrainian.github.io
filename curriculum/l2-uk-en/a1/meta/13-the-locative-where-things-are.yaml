@@ -1,97 +1,13 @@
 module: a1-13
-id: a1-13
+level: A1
 slug: the-locative-where-things-are
-title: "The Locative: Where Things Are"
-subtitle: "Finding Your Way Around Ukrainian Spaces"
 version: '2.0'
-phase: "A1.2 [Navigation]"
-focus: grammar
-pedagogy: PPP
-register: розмовний
-duration: 60
-transliteration: none
-objectives:
-  - "Learner can ask and answer 'Where is X?' using locative case"
-  - "Learner can distinguish between в/у and на prepositions"
-  - "Learner can describe locations of people and objects"
-  - "Learner can name common places in Ukrainian"
-grammar:
-  - "Locative case endings"
-  - "Prepositions в/у and на"
-  - "Location expressions"
-word_target: 1000
-content_outline:
-  - section: "Introduction: The Locative Case"
-    words: 150
-    points:
-      - "Answers 'where?' questions"
-      - "Always with prepositions"
-      - "в/у or на + locative"
-  - section: "Locative Endings"
-    words: 250
-    points:
-      - "Masculine/Neuter: -і/-у (столі, місті)"
-      - "Feminine: -і (книзі, кімнаті)"
-      - "Consonant changes: к→ц, г→з, х→с"
-  - section: "В/У vs На"
-    words: 200
-    points:
-      - "в/у: inside, in (в кімнаті)"
-      - "на: on, at (на столі, на роботі)"
-      - "Fixed expressions: в Україні, на Україні"
-  - section: "Common Places"
-    words: 200
-    points:
-      - "In buildings: в магазині, в школі, в банку"
-      - "On surfaces: на столі, на підлозі"
-      - "At locations: на роботі, на вокзалі"
-  - section: "Asking 'Where?'"
-    words: 100
-    points:
-      - "Де...? Where is...?"
-      - "Де ти? Де книга?"
-      - "Answer patterns"
-  - section: "Practice: Find It!"
-    words: 100
-    points:
-      - "Location guessing games"
-      - "Describe your room"
-vocabulary_hints:
-  required:
-    - де (where)
-    - в/у (in)
-    - на (on/at)
-    - кімната (room)
-    - стіл (table)
-    - магазин (store)
-    - школа (school)
-    - робота (work)
-  recommended:
-    - банк (bank)
-    - вокзал (station)
-    - підлога (floor)
-    - стіна (wall)
-    - вулиця (street)
-    - парк (park)
-activity_hints:
-  - type: transformation
-    focus: "Change nouns to locative"
-    items: 25
-  - type: fill-in
-    focus: "Choose в/у or на"
-    items: 20
-  - type: dialogue
-    focus: "Where is...? conversations"
-    items: 8
-  - type: labeling
-    focus: "Label locations in pictures"
-    items: 15
-prerequisites:
-  - a1-12 (The Accusative II)
-connects_to:
-  - a1-14 (Mine and Yours)
-  - a1-15 (Around the City)
+id: a1-13
 naturalness:
   score: 10
   status: PASS
-  justification: "Clear location expressions"
+  justification: Clear location expressions
+duration: 60
+transliteration: none
+build:
+  last_modified: '2026-01-26'

@@ -1,22 +1,45 @@
-module: 42-politeness-strategies
-level: c1
-sequence: 42
-version: '1.0'
+module: c1-42
+level: C1
+slug: 42-politeness-strategies
+version: '2.0'
 title: 'Стратегії ввічливості: Прагматика спілкування'
 subtitle: 'Politeness Strategies: Communication Pragmatics'
+content_outline:
+- section: Вступ — Прагматика спілкування
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Positive Politeness
+  words: 500
+  points:
+  - 'Компліменти: Як гарно ви це зробили!'
+  - 'Інклюзивність: Ми з вами розуміємо...'
+  - 'Спільна позиція: Погодьтеся, що...'
+- section: Negative Politeness
+  words: 500
+  points:
+  - 'Вибачення: Перепрошую, чи не могли б ви...'
+  - 'Непрямість: Можливо, варто було б...'
+  - 'Мінімізація: Це лише невелике прохання...'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: style
 pedagogy: Sociolinguistics
 objectives:
 - Learner can apply complex politeness strategies in varied social contexts
 - Learner can analyze cultural nuances of Ukrainian etiquette
 - Learner can mitigate face-threatening acts using linguistic markers
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Indirect speech acts
+- Honorifics and address forms
+- Modality of requests
+- Euphemisms in social contexts
+immersion: 100
+phase: C1.4 Advanced Stylistics & Rhetoric

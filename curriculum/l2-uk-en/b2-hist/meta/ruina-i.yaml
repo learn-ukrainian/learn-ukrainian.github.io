@@ -1,106 +1,18 @@
 module: ruina-i
-id: b2-hist-58
-title: "Руїна I: Виговщина і розкол"
-subtitle: "The Ruin I: Vyhovsky and the Split"
+level: B2-HIST
 slug: ruina-i
 version: '2.0'
-phase: "HIST.6 [Khmelnytsky & Cossack State]"
-focus: history
-pedagogy: CBI
-word_target: 4000
-register: публіцистичний
-duration: 120
-transliteration: none
-tags:
-  - history
-  - ruin
-  - vyhovsky
-  - konotop
-  - split
-grammar:
-  - "Historical narrative: description of chaos"
-  - "Political terminology: factions and parties"
-objectives:
-  - "Учень може пояснити причини громадянської війни (Руїни)"
-  - "Учень може проаналізувати наслідки Конотопської битви"
-  - "Учень може оцінити роль Чорної ради 1663 року в розколі України"
-vocabulary_hints:
-  required:
-    - руїна
-    - розкол
-    - чорна рада
-    - охлократія
-    - міжусобиця
-    - булава
-    - промосковський
-    - пропольський
-    - лівобережжя
-    - правобережжя
+id: b2-hist-58
 naturalness:
   score: 9
   status: PASS
-content_outline:
-  - section: "Вступ: Епоха великих надій і розчарувань"
-    words: 400
-    points:
-      - "Definition of 'The Ruin' (1657-1687)"
-      - "The vacuum of power after Khmelnytsky"
-  - section: "Гетьман Іван Виговський: Курс на Європу"
-    words: 600
-    points:
-      - "Vyhovsky's biography and political program"
-      - "The suppression of the Pushkar uprising"
-      - "Foreign policy: balancing between Moscow and Warsaw"
-  - section: "Гадяцька унія і війна з Москвою"
-    words: 500
-    points:
-      - "The failure of the alliance with Moscow"
-      - "The signing of the Treaty of Hadiach (brief recap)"
-      - "The start of the Muscovite-Ukrainian war"
-  - section: "Конотопська битва 1659: Втрачена перемога"
-    words: 800
-    points:
-      - "The siege of Konotop by Trubetskoy"
-      - "Tactics of the battle: deceptive retreat"
-      - "The defeat of the Muscovite cavalry and its consequences"
-  - section: "Падіння Виговського і початок хаосу"
-    words: 500
-    points:
-      - "The uprising of Ivan Sirko in Zaporizhzhia"
-      - "The election of Yurii Khmelnytsky"
-      - "The Chudniv campaign and the split of the state"
-  - section: "Чорна рада 1663: Тріумф охлократії"
-    words: 600
-    points:
-      - "The struggle for power on the Left Bank"
-      - "Somko vs. Briukhovetsky"
-      - "The 'Black Council' in Nizhyn and its tragic outcome"
-  - section: "Первинні джерела: Літопис Самовидця"
-    words: 300
-    points:
-      - "Reading excerpts about the Black Council"
-  - section: "Деколонізаційний погляд"
-    words: 300
-    points:
-      - "The myth of 'civil war' vs. foreign intervention"
-      - "Moscow's role in deepening the split"
-activity_hints:
-  - type: reading
-    focus: "Analysis of the Black Council description"
-  - type: quiz
-    focus: "Chronology of the Ruin and key figures"
-  - type: essay-response
-    focus: "Causes of the Ruin: internal or external?"
-  - type: comparative-study
-    focus: "Vyhovsky vs. Briukhovetsky policies"
-  - type: true-false
-    focus: "Facts about Konotop and Nizhyn"
-sources:
-  - name: "The Ruin - Encyclopedia of Ukraine"
-    url: "https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CR%5CU%5CRuin.htm"
-    type: reference
-    notes: "Overview of the period"
-  - name: "Chronicle of Eyewitness"
-    url: "http://litopys.org.ua/samovyd/sam.htm"
-    type: primary
-    notes: "Primary source for the period"
+duration: 120
+transliteration: none
+tags:
+- history
+- ruin
+- vyhovsky
+- konotop
+- split
+build:
+  last_modified: '2026-01-26'

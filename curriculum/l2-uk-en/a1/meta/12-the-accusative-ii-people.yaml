@@ -1,97 +1,13 @@
 module: a1-12
-id: a1-12
+level: A1
 slug: the-accusative-ii-people
-title: "The Accusative II: People"
-subtitle: "Animate Nouns and the Genitive Connection"
 version: '2.0'
-phase: "A1.2 [Navigation]"
-focus: grammar
-pedagogy: PPP
-register: розмовний
-duration: 60
-transliteration: none
-objectives:
-  - "Learner can use accusative case for animate nouns (people/animals)"
-  - "Learner can distinguish between animate and inanimate accusative"
-  - "Learner understands when accusative = genitive"
-  - "Learner can talk about people as direct objects"
-grammar:
-  - "Accusative for animate nouns"
-  - "Masculine animate: accusative = genitive"
-  - "Feminine animate: same as inanimate"
-word_target: 1000
-content_outline:
-  - section: "Introduction: People Are Different"
-    words: 150
-    points:
-      - "Animate vs inanimate distinction"
-      - "Masculine animate nouns change"
-      - "Why this matters"
-  - section: "Masculine Animate Accusative"
-    words: 250
-    points:
-      - "Accusative = Genitive form"
-      - "брат → брата, студент → студента"
-      - "Я бачу брата (not брат)"
-  - section: "Feminine Animate: No Change"
-    words: 150
-    points:
-      - "Same as inanimate feminine"
-      - "сестра → сестру"
-      - "Я бачу сестру"
-  - section: "Animals Count as Animate"
-    words: 150
-    points:
-      - "кіт → кота, пес → пса"
-      - "собака → собаку (feminine)"
-      - "Treating animals grammatically"
-  - section: "Verbs with People"
-    words: 200
-    points:
-      - "бачити, знати, любити + people"
-      - "питати, просити + people"
-      - "Sentence patterns"
-  - section: "Practice: Who Do You See?"
-    words: 100
-    points:
-      - "Describe family members"
-      - "Talk about friends and colleagues"
-vocabulary_hints:
-  required:
-    - брат (brother)
-    - сестра (sister)
-    - друг (friend m.)
-    - подруга (friend f.)
-    - мама (mother)
-    - тато (father)
-    - лікар (doctor)
-    - вчитель (teacher)
-  recommended:
-    - кіт (cat)
-    - пес (dog)
-    - студент (student)
-    - колега (colleague)
-    - сусід (neighbor)
-    - дитина (child)
-activity_hints:
-  - type: transformation
-    focus: "Change animate nouns to accusative"
-    items: 25
-  - type: sorting
-    focus: "Animate vs inanimate"
-    items: 20
-  - type: fill-in
-    focus: "Complete with correct accusative"
-    items: 20
-  - type: sentence-building
-    focus: "Sentences about people"
-    items: 12
-prerequisites:
-  - a1-11 (The Accusative I - Things)
-connects_to:
-  - a1-13 (The Locative)
-  - a1-32 (My Family)
+id: a1-12
 naturalness:
   score: 10
   status: PASS
-  justification: "Clear animate/inanimate distinction"
+  justification: Clear animate/inanimate distinction
+duration: 60
+transliteration: none
+build:
+  last_modified: '2026-01-26'

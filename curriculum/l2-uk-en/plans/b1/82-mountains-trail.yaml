@@ -1,16 +1,9 @@
-module: mountains-trail
-level: b1
-sequence: 82
+module: b1-82
+level: B1
+slug: mountains-trail
 version: '2.0'
 title: Гори та трейлраннінг
 subtitle: Hiking and Trail Running in the Carpathians
-focus: culture
-pedagogy: CBI
-objectives:
-- Learner can discuss hiking and mountain activities in Ukrainian
-- Learner can understand trail descriptions and mountain weather reports
-- Learner can use vocabulary for equipment and nature
-- Learner can plan a hiking trip to the Carpathians
 content_outline:
 - section: 'Introduction: Ukrainian Mountains'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Plan a mountain trip
   - Discuss trail experiences
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - гора (mountain)
   - стежка (trail)
@@ -63,15 +56,33 @@ vocabulary:
   - трейлраннінг (trail running)
   - маршрут (route)
   - полонина (alpine meadow)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - reading
-  - discussion
-  - matching
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: reading
+  focus: Trail descriptions and guides
+  items: 15
+- type: matching
+  focus: Match equipment to activities
+  items: 20
+- type: fill-in
+  focus: Complete hiking plans
+  items: 15
+- type: discussion
+  focus: Plan mountain trips
+  items: 10
+focus: culture
+pedagogy: CBI
+prerequisites:
+- b1-81 (Running in Ukraine)
 connects_to:
 - b1-83 (Cycling and Water Sports)
+objectives:
+- Learner can discuss hiking and mountain activities in Ukrainian
+- Learner can understand trail descriptions and mountain weather reports
+- Learner can use vocabulary for equipment and nature
+- Learner can plan a hiking trip to the Carpathians
+grammar:
+- Mountain and trail vocabulary
+- Weather and nature descriptions
+- Planning and directions
+register: розмовний
+phase: B1.7 [Contemporary Ukraine]

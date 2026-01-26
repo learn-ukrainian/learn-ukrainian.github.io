@@ -1,50 +1,32 @@
 module: oleg-sentsov
-level: c1-bio
-sequence: 91
+level: C1-BIO
+slug: oleg-sentsov
 version: '2.0'
 title: 'Олег Сенцов: Режисер-в''язень'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Сенцов_Олег_Геннадійович
-    title: Олег Сенцов (Wikipedia UA)
-    notes: Біографія, ув'язнення, творчість
-  secondary:
-  - url: https://www.freesentsov.org
-    title: Free Oleg Sentsov Campaign
-    notes: Матеріали кампанії за звільнення
-  - url: https://www.europeanfilmacademy.org
-    title: European Film Academy
-    notes: Нагороди та міжнародне визнання
 content_outline:
 - section: Вступ — Символ опору
   words: 400
-  subsections:
+  points:
   - Сенцов як символ української боротьби проти російської агресії
   - Від кінорежисера до політв'язня і воїна
   - Міжнародний резонанс справи
 - section: Молодість у Криму (1976-2014)
   words: 600
-  subsections:
+  points:
   - Народження та виховання в Сімферополі
   - Робота підприємцем та громадським активістом
   - Перші кроки в кінематографі
   - Фільм «Геймер» (2011)
 - section: Анексія Криму та арешт (2014)
   words: 800
-  subsections:
+  points:
   - Проукраїнський активізм під час окупації
   - Допомога українським військовим
   - Арешт ФСБ та сфабриковані звинувачення
   - Тортури та вибивання «зізнання»
 - section: Суд та ув'язнення (2015-2019)
   words: 800
-  subsections:
+  points:
   - Судовий фарс у Ростові-на-Дону
   - 20-річний вирок за «тероризм»
   - Умови утримання в російських колоніях
@@ -52,59 +34,78 @@ content_outline:
   - Міжнародна кампанія за звільнення
 - section: Звільнення та повернення (2019-2022)
   words: 700
-  subsections:
+  points:
   - Обмін полоненими у вересні 2019
   - Повернення до кінематографу
   - Фільм «Носоріг» (2021)
   - Громадська та культурна діяльність
 - section: Війна та військова служба (2022-сьогодні)
   words: 700
-  subsections:
+  points:
   - Вступ до ЗСУ після повномасштабного вторгнення
   - Служба на передовій
   - Продовження творчої діяльності на війні
   - Символ української незламності
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - політв'язень
-  - кінорежисер
-  - анексія
-  - голодування
-  - обмін полоненими
-  - сфабрикована справа
-  - тортури
-  - колонія
-  - активіст
-  - опір
+  - політв'язень (political prisoner)
+  - кінорежисер (film director)
+  - анексія (annexation)
+  - голодування (hunger strike)
+  - обмін полоненими (prisoner exchange)
+  - сфабрикована справа (fabricated case)
+  - тортури (torture)
+  - колонія (penal colony)
+  - активіст (activist)
+  - опір (resistance)
   recommended:
-  - ФСБ
-  - Крим
-  - документальний фільм
-  - міжнародна солідарність
-  - ЗСУ
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - ФСБ (FSB)
+  - Крим (Crimea)
+  - документальний фільм (documentary)
+  - міжнародна солідарність (international solidarity)
+  - ЗСУ (Armed Forces of Ukraine)
+activity_hints:
+- type: reading
+  focus: Історія ув'язнення та боротьби
+  source: Інтерв'ю та документальні матеріали
+  items: 3 passages
+- type: quiz
+  focus: Біографія та хронологія подій
+  items: 12+
+- type: match-up
+  focus: Фільми та їхні теми
+  items: 10+
+- type: essay-response
+  focus: Як мистецтво стає формою опору?
+  word_target: 300
+  output: Аналітичне есе
+- type: group-sort
+  focus: Творча діяльність vs громадянський активізм
+  items: 12+
+- type: fill-in
+  focus: Термінологія політичних репресій
+  items: 10+
+focus: biography
+prerequisites:
+- c1-bio-77 (Василь Стус)
 connects_to:
-  previous: c1-bio-77 (Василь Стус)
-  related:
-  - c1-bio-78 (Мирослав Маринович)
-  - c1-bio-95 (Олександра Матвійчук)
-  - c1-bio-90 (Сергій Жадан)
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-78 (Мирослав Маринович)
+- c1-bio-95 (Олександра Матвійчук)
+- c1-bio-90 (Сергій Жадан)
+module_type: biography
+sources:
+- name: Олег Сенцов (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Сенцов_Олег_Геннадійович
+  type: primary
+  notes: Біографія, ув'язнення, творчість
+- name: Free Oleg Sentsov Campaign
+  url: https://www.freesentsov.org
+  type: reference
+  notes: Матеріали кампанії за звільнення
+- name: European Film Academy
+  url: https://www.europeanfilmacademy.org
+  type: reference
+  notes: Нагороди та міжнародне визнання
+immersion: 100% Ukrainian
+phase: C1-BIO

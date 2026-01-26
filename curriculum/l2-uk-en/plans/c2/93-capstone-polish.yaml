@@ -1,0 +1,112 @@
+module: capstone-polish
+level: C2
+slug: capstone-polish
+version: '2.0'
+title: Дипломний проєкт — Фінальне шліфування
+content_outline:
+- section: Вступ — Від робочої версії до фінальної
+  words: 400
+  points:
+  - Різниця між редагуванням і шліфуванням
+  - Чеклист фінальної перевірки
+  - Психологія завершення проєкту
+- section: Коректура тексту
+  words: 600
+  points:
+  - Орфографія та пунктуація
+  - Типові помилки (апостроф, м'який знак)
+  - Узгодження відмінювання
+  - Автоматичні та ручні перевірки
+- section: Оформлення роботи
+  words: 700
+  points:
+  - Вимоги до форматування (ДСТУ)
+  - Титульна сторінка, зміст, додатки
+  - Оформлення таблиць і рисунків
+  - Бібліографічний список за стандартом
+- section: Підготовка анотації та ключових слів
+  words: 500
+  points:
+  - Структура анотації
+  - Анотація українською та англійською
+  - Добір ключових слів
+  - Абстракт для конференції (опційно)
+- section: Перевірка на плагіат
+  words: 500
+  points:
+  - Системи перевірки (Unicheck, StrikePlagiarism)
+  - Інтерпретація результатів
+  - Виправлення проблемних місць
+  - Самоцитування та його межі
+- section: Практика — Фінальне оформлення
+  words: 800
+  points:
+  - Повна коректура роботи
+  - Оформлення за ДСТУ
+  - Написання анотації (українською та англійською)
+  - Перевірка на плагіат та виправлення
+word_target: 4000
+vocabulary_hints:
+  required:
+  - шліфування (polishing)
+  - коректура (proofreading)
+  - оформлення (formatting)
+  - анотація (abstract/annotation)
+  - ключові слова (keywords)
+  - бібліографічний список (bibliography)
+  - додатки (appendices)
+  - перевірка на плагіат (plagiarism check)
+  - самоцитування (self-citation)
+  - фінальна версія (final version)
+  recommended:
+  - верстка (layout)
+  - типографіка (typography)
+  - колонтитул (header/footer)
+  - нумерація сторінок (page numbering)
+  - інтерліньяж (line spacing)
+activity_hints:
+- type: quiz
+  focus: Вимоги до оформлення за ДСТУ
+  items: 15+
+- type: critical-analysis
+  focus: Коректура 2-3 сторінок тексту
+  output: Виправлена версія з переліком помилок
+- type: essay-response
+  focus: Написання анотації українською
+  word_target: 200
+  output: Структурована анотація
+- type: essay-response
+  focus: Написання анотації англійською
+  word_target: 200
+  output: English abstract
+- type: match-up
+  focus: Елементи оформлення та вимоги
+  items: 12+
+- type: essay-response
+  focus: Добір та обґрунтування ключових слів
+  word_target: 150
+  output: 5-8 ключових слів із поясненням вибору
+focus: practice
+prerequisites:
+- M92 (Capstone Revision)
+- Revised draft
+- Feedback integrated
+connects_to:
+- c2-94 (Capstone Defense)
+- c2-95 (Final Review I)
+module_type: practice
+sources:
+- name: Вимоги до оформлення наукових робіт (ДСТУ)
+  url: https://dstu-online.com/
+  type: reference
+  notes: Formatting standards for academic papers
+- name: Коректура та верстка наукового тексту
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Proofreading and layout guidelines
+- name: Типографіка українського тексту
+  url: https://uk.wikipedia.org/wiki/Типографіка
+  type: secondary
+  notes: Typography conventions for Ukrainian
+immersion: 100% Ukrainian
+phase: C2.4 Academic Culmination

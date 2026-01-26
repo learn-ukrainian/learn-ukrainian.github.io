@@ -1,170 +1,18 @@
-# B1 Module 02: Мова про дієслова
-# Status: SPEC (ready for content development)
-
-id: b1-02
-title: Мова про дієслова
-subtitle: Verb-specific terminology for aspect and tense
+module: 02-language-about-verbs
+level: B1
 slug: 02-language-about-verbs
-module_type: bridge
-word_target: 3000
-immersion: "75% Ukrainian"
-
-# === EXISTING FIELDS ===
 version: '1.0'
-phase: B1.0 Bridge
-pedagogy: PPP
-focus: integration
-duration: 75
-transliteration: none
-tags:
-  - grammar
-  - metalanguage
-  - aspect
-  - tense
-  - bridge
-grammar:
-  - Aspect terms in Ukrainian
-  - Tense terminology in Ukrainian
-  - Action concepts for grammar discussion
-objectives:
-  - Learner can name perfective and imperfective aspect in Ukrainian
-  - Learner can identify tense names in grammar explanations
-  - Learner can describe verb properties using Ukrainian terminology
-  - Learner can use negation terminology correctly
-  - Learner can identify different verb forms (compound, synthetic, imperative)
-
-# === AGENT BUILD SPEC ===
-
-sources:
-  - name: Ukrainian State Standard 2024 - Verb System
-    url: https://mon.gov.ua/
-    type: reference
-    notes: Official terminology for Ukrainian verb categories
-  - name: Ukrainian Verb Aspect (Wikipedia)
-    url: https://uk.wikipedia.org/wiki/Вид_дієслова
-    type: reference
-    notes: Overview of aspectual system terminology
-
-content_outline:
-  - section: Introduction - The Verb System
-    words: 200
-    points:
-      - Why verb terminology matters for B1
-      - Overview of what we'll learn
-      - Connection to aspect mastery in B1.1
-
-  - section: Aspect Terms (Вид дієслова)
-    words: 150
-    points:
-      - вид, доконаний вид, недоконаний вид
-      - How aspect terms are used in grammar explanations
-      - Practice identifying aspect in examples
-
-  - section: Action Concepts
-    words: 200
-    points:
-      - дія, процес, результат
-      - тривалість, повторення
-      - Using these terms to explain aspect choice
-
-  - section: Tense Terms (Час дієслова)
-    words: 300
-    points:
-      - час, теперішній час, минулий час, майбутній час
-      - Compound vs simple tense descriptions
-      - Reading tense explanations
-
-  - section: Negation Terminology
-    words: 150
-    points:
-      - заперечення, загальне заперечення
-      - очікувана дія, попередження, заборона
-      - How negation affects aspect choice
-
-  - section: Additional Verb Terms
-    words: 150
-    points:
-      - Moods (imperative, conditional)
-      - Voice (active, passive)
-      - Infinitive and conjugation basics
-
-  - section: Verb Form Terminology
-    words: 250
-    points:
-      - складна форма, синтетична форма
-      - наказова форма, дієвідмінювання, парадигма
-      - Recognizing these terms in grammar texts
-
-  - section: Practice Reading Grammar Explanations
-    words: 200
-    points:
-      - Reading real grammar texts
-      - Pattern recognition in instructions
-
-  - section: Mini-Dialogues
-    words: 250
-    points:
-      - Terminology in conversation
-      - Teacher-student interactions
-      - Student-student study talk
-
-  - section: Summary and Practice
-    words: 100
-    points:
-      - Integration of all verb terminology
-      - Readiness for M03
-
-vocabulary_hints:
-  required:
-    - вид (aspect)
-    - доконаний вид (perfective aspect)
-    - недоконаний вид (imperfective aspect)
-    - час (tense)
-    - теперішній час (present tense)
-    - минулий час (past tense)
-    - майбутній час (future tense)
-    - дія (action)
-    - процес (process)
-    - результат (result)
-    - заперечення (negation)
-    - наказова форма (imperative form)
-  recommended:
-    - тривалість (duration)
-    - повторення (repetition)
-    - загальне заперечення (general negation)
-    - складна форма (compound form)
-    - синтетична форма (synthetic form)
-
-activity_hints:
-  - type: group-sort
-    focus: Sort terms by category (aspect vs tense vs action vs negation vs forms)
-    items: "15+"
-
-  - type: match-up
-    focus: Ukrainian term → definition in Ukrainian
-    items: "12+"
-
-  - type: fill-in
-    focus: Describe verb properties using Ukrainian terms
-    items: "10+"
-
-  - type: quiz
-    focus: Negation types and contexts (загальне заперечення vs очікувана дія)
-    items: "8+"
-
-  - type: match-up
-    focus: 'Verb forms (складна форма: буду читати vs синтетична форма: читатиму)'
-    items: "8+"
-
-prerequisites:
-  - b1-01 (Basic grammar terminology)
-  - A2 aspect basics (conceptual understanding)
-
-connects_to:
-  - b1-03 (Reading grammar rules)
-  - b1-06 (Aspect complete system)
-  - b1-09 (Aspect in future)
-
+id: b1-02
 naturalness:
   score: 9
   status: PASS
+duration: 75
+transliteration: none
+tags:
+- grammar
+- metalanguage
+- aspect
+- tense
+- bridge
+build:
+  last_modified: '2026-01-26'

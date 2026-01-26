@@ -1,16 +1,9 @@
-module: regions-west
-level: b1
-sequence: 72
+module: b1-72
+level: B1
+slug: regions-west
 version: '2.0'
 title: 'Українські регіони: Захід'
 subtitle: Western Ukraine - Regions and Heritage
-focus: culture
-pedagogy: CBI
-objectives:
-- Learner can discuss Western Ukraine's regions and cultural heritage
-- Learner can understand authentic texts about Lviv, Galicia, and Zakarpattia
-- Learner can use regional vocabulary to describe Western Ukrainian culture
-- Learner can compare Western Ukrainian traditions with other regions
 content_outline:
 - section: 'Introduction: Western Ukraine'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Compare regions
   - Discuss heritage
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - регіон (region)
   - спадщина (heritage)
@@ -63,15 +56,33 @@ vocabulary:
   - гори (mountains)
   - етнічний (ethnic)
   - ідентичність (identity)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - reading
-  - discussion
-  - matching
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: reading
+  focus: Authentic texts about Western Ukraine
+  items: 15
+- type: matching
+  focus: Match regions to features
+  items: 20
+- type: fill-in
+  focus: Complete cultural descriptions
+  items: 15
+- type: discussion
+  focus: Compare regional cultures
+  items: 10
+focus: culture
+pedagogy: CBI
+prerequisites:
+- b1-71 (Emotional Intelligence)
 connects_to:
 - b1-73 (Regions East)
+objectives:
+- Learner can discuss Western Ukraine's regions and cultural heritage
+- Learner can understand authentic texts about Lviv, Galicia, and Zakarpattia
+- Learner can use regional vocabulary to describe Western Ukrainian culture
+- Learner can compare Western Ukrainian traditions with other regions
+grammar:
+- Reading comprehension strategies
+- Cultural vocabulary in context
+- Descriptive language patterns
+register: розмовний
+phase: B1.7 [Contemporary Ukraine]

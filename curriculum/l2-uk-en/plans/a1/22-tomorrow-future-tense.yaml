@@ -1,16 +1,9 @@
-module: tomorrow-future-tense
-level: a1
-sequence: 22
+module: a1-22
+level: A1
+slug: tomorrow-future-tense
 version: '2.0'
 title: Tomorrow - Future Tense
 subtitle: Talking About What Will Happen
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can form compound future using буду + infinitive
-- Learner can conjugate буду for all persons
-- Learner can express plans and intentions
-- Learner can use future time expressions correctly
 content_outline:
 - section: 'Introduction: The Future Tense'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Describe tomorrow's plans
   - Ask about future activities
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - завтра (tomorrow)
   - буду (I will)
@@ -65,16 +58,34 @@ vocabulary:
   - мріяти (to dream)
   - планувати (to plan)
   - обіцяти (to promise)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - conjugation
-  - translation
-  - dialogue
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: conjugation
+  focus: Conjugate буду with different subjects
+  items: 20
+- type: fill-in
+  focus: Complete future tense sentences
+  items: 20
+- type: translation
+  focus: Translate future plans
+  items: 15
+- type: dialogue
+  focus: What will you do tomorrow?
+  items: 6
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-21 (Yesterday - Past Tense)
 connects_to:
 - a1-23 (What Time Is It)
 - a1-25 (My Daily Routine)
+objectives:
+- Learner can form compound future using буду + infinitive
+- Learner can conjugate буду for all persons
+- Learner can express plans and intentions
+- Learner can use future time expressions correctly
+grammar:
+- Compound future (буду + infinitive)
+- Буду conjugation for all persons
+- Future time expressions
+register: розмовний
+phase: A1.3 [Consolidation]

@@ -1,80 +1,76 @@
 module: yurii-nemyrych
-level: b2-hist
-sequence: 57
-version: '1.0'
+level: B2-HIST
+slug: yurii-nemyrych
+version: '2.0'
 title: 'Юрій Немирич: Гадяцька угода'
-focus: history
-pedagogy: CBI
-objectives:
-- Учень може пояснити суть проекту 'Великого Князівства Руського'
-- Учень може проаналізувати причини провалу Гадяцької угоди
-- Учень може оцінити роль Юрія Немирича як інтелектуала в політиці
+subtitle: 'Yurii Nemyrych: The Treaty of Hadiach'
 content_outline:
 - section: Вступ
   words: 400
-  subsections:
+  points:
   - 'Nemyrych as a unique figure: intellectual and politician'
   - The crisis after Khmelnytsky's death
 - section: 'Юрій Немирич: Портрет інтелектуала'
   words: 600
-  subsections:
+  points:
   - Education in Europe (Leiden, Oxford, Paris)
   - Protestant faith (Arianism) and tolerance
   - Political career in the Commonwealth
 - section: 'Гадяцька угода 1658: Проект трьох народів'
   words: 800
-  subsections:
+  points:
   - The concept of the Grand Duchy of Rus'
   - 'Equality of rights: religion, language, administration'
   - The vision of a federal state
 - section: Освіта і культура в проекті Немирича
   words: 500
-  subsections:
+  points:
   - Plans for two academies (universities)
   - Freedom of the press and schools
   - Intellectual foundation for the state
 - section: 'Конотопська битва: Тріумф зброї'
   words: 600
-  subsections:
+  points:
   - The war with Muscovy (1658-1659)
   - Victory at Konotop as a defense of the Treaty
   - Vyhovsky's military leadership
 - section: 'Крах великої ідеї: Чому не вийшло?'
   words: 500
-  subsections:
+  points:
   - Internal opposition (Pushkar, Barabash)
   - Muscovite propaganda and incitement of the masses
   - The tragic death of Nemyrych
 - section: Читання
   words: 250
-  subsections:
+  points:
   - Analysis of the Hadiach Treaty text
 - section: Первинні джерела
   words: 300
-  subsections:
+  points:
   - Analysis of Nemyrych's speech to the Sejm
 - section: Деколонізаційний погляд
   words: 300
-  subsections:
+  points:
   - Hadiach as an alternative to Pereiaslav
   - The myth of 'inevitable unity' with Russia
 - section: Підсумок
   words: 150
-  subsections:
+  points:
   - Final evaluation of the project
 word_target: 4000
-vocabulary:
-- федерація
-- канцлер
-- шляхта
-- сенат
-- академія
-- триєдина держава
-- аріанин
-- унія
-- розкол
-- Руїна
-activities:
+vocabulary_hints:
+  required:
+  - федерація
+  - канцлер
+  - шляхта
+  - сенат
+  - академія
+  - триєдина держава
+  - аріанин
+  - унія
+  - розкол
+  - Руїна
+activity_hints:
 - type: reading
   focus: Analysis of the Hadiach Treaty text
 - type: quiz
@@ -85,6 +81,15 @@ activities:
   focus: Pereiaslav vs. Hadiach models
 - type: true-false
   focus: Facts about the Grand Duchy of Rus'
+focus: history
+pedagogy: CBI
+objectives:
+- Учень може пояснити суть проекту 'Великого Князівства Руського'
+- Учень може проаналізувати причини провалу Гадяцької угоди
+- Учень може оцінити роль Юрія Немирича як інтелектуала в політиці
+grammar:
+- 'Political terminology: federation vs. protectorate'
+- 'Historical conditionals: ''what if'' scenarios'
 sources:
 - name: The Treaty of Hadiach - Encyclopedia of Ukraine
   url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CH%5CA%5CHadiachTreatyof.htm
@@ -94,3 +99,5 @@ sources:
   url: http://litopys.org.ua/
   type: primary
   notes: Original text of the speech
+register: публіцистичний
+phase: HIST.6 [Khmelnytsky & Cossack State]

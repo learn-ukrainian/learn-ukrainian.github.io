@@ -1,9 +1,30 @@
-module: 68-ukrainian-house
-level: c1
-sequence: 68
-version: '1.0'
+module: c1-68
+level: C1
+slug: 68-ukrainian-house
+version: '2.0'
 title: Українська хата - архітектура та побут
 subtitle: Ukrainian House - Architecture and Daily Life
+content_outline:
+- section: Вступ — архітектура та побут
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Святвечір: Christmas Eve traditions, 12 dishes'
+  - 'Коляда: caroling groups, star, costumes'
+  - 'Маланка: New Year''s Eve, masquerades'
+  - 'Водохреща: Epiphany, water blessing, ice swimming'
+  - Modern adaptations of winter traditions
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: cultural
 pedagogy: CBI
 objectives:
@@ -11,13 +32,7 @@ objectives:
 - Learner can explain the symbolic meaning of the "red corner" (pokut') and the stove
 - Learner can distinguish regional architectural styles (clay-walled vs. wooden)
 - Learner can discuss the role of the house in family rituals
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- architectural terminology
+- spatial descriptions
+phase: C1.5 Folk Culture & Arts

@@ -1,106 +1,18 @@
-id: b2-hist-16
-title: Культура Київської Русі
+module: kultura-kyivskoi-rusi
+level: B2-HIST
 slug: kultura-kyivskoi-rusi
 version: '1.0'
-phase: B2-HIST.1 [Kyivan Rus]
-focus: history
-pedagogy: CBI
-duration: 120
-transliteration: none
-tags:
-  - history
-  - kyivan-rus
-  - culture
-grammar:
-  - Past tense narrative
-  - Art and culture vocabulary
-objectives:
-  - Understand the development of writing and education in Rus
-  - Analyze the literary masterpieces like "Slovo o polku Ihorevim"
-  - Discuss the synthesis of Byzantine and local artistic traditions
-immersion: 100% Ukrainian
-sources:
-- name: Культура Київської Русі (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Культура_Київської_Русі
-  type: reference
-  notes: Comprehensive overview
-- name: Літописання Київської Русі
-  url: https://uk.wikipedia.org/wiki/Літописання_Київської_Русі
-  type: reference
-  notes: Chronicle tradition
-- name: Слово о полку Ігоревім
-  url: https://litopys.org.ua/slovo/slovo.htm
-  type: primary
-  notes: Epic poem text
-content_outline:
-- section: Читання
-  words: 50
-- section: Вступ — Культурний світ Русі
-  words: 550
-- section: Писемність та освіта
-  words: 780
-- section: Література
-  words: 800
-- section: Архітектура
-  words: 700
-- section: Образотворче мистецтво
-  words: 800
-- section: Музика та усна творчість
-  words: 650
-- section: Деколонізаційний погляд
-  words: 500
-- section: Первинні джерела
-  words: 250
-- section: Потрібно більше практики?
-  words: 100
-vocabulary_hints:
-  required:
-  - писемність (literacy)
-  - кирилиця (Cyrillic)
-  - літопис (chronicle)
-  - житіє (hagiography)
-  - мозаїка (mosaic)
-  - фреска (fresco)
-  - іконопис (icon painting)
-  - скань (filigree)
-  - емаль (enamel)
-  - монастир (monastery)
-  - скрипторій (scriptorium)
-  - билина (bylina - epic poem)
-  recommended:
-  - берестяна грамота (birch bark letter)
-  - мініатюра (miniature)
-  - глаголиця (Glagolitic)
-  - Боян (Boyan)
-  - церковний спів (church chant)
-activity_hints:
-- type: reading
-  focus: Culture as a manifesto
-  items: 1
-- type: match-up
-  focus: Cultural vocabulary
-  items: 12
-- type: quiz
-  focus: Cultural code
-  items: 5
-- type: critical-analysis
-  focus: Art and decolonization
-  items: 3
-- type: essay-response
-  focus: Heritage and security
-  items: 1
-- type: select
-  focus: Music
-  items: 2
-prerequisites:
-- b2-hist-14 (St. Sophia Cathedral)
-- b2-hist-12 (Yaroslav the Wise)
-connects_to:
-- b2-hist-18 (People of Rus — everyday life)
-- 'b2-hist-20 (Synthesis: Kyivan Rus)'
-
+id: b2-hist-16
 naturalness:
   score: 10
   status: PASS
   reviewed_by: Gemini
   date: '2026-01-20'
+duration: 120
+transliteration: none
+tags:
+- history
+- kyivan-rus
+- culture
+build:
+  last_modified: '2026-01-26'

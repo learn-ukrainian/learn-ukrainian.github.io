@@ -1,109 +1,110 @@
 module: oleksandr-arkhypenko
-level: c1-bio
-sequence: 56
+level: C1-BIO
+slug: oleksandr-arkhypenko
 version: '2.0'
 title: 'Олександр Архипенко: Скульптор авангарду'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Архипенко_Олександр_Порфирович
-    title: Олександр Архипенко (Wikipedia UA)
-    notes: Біографія, творчий шлях, інновації
-  secondary:
-  - url: https://www.archipenko.org
-    title: Archipenko Foundation
-    notes: Каталог творів та біографічні матеріали
-  - url: https://www.moma.org/artists/229
-    title: MoMA Collection
-    notes: Роботи в колекції Музею сучасного мистецтва
 content_outline:
 - section: Вступ — Революціонер у скульптурі
   words: 400
-  subsections:
+  points:
   - Архипенко як один із найвидатніших скульпторів XX століття
   - Новаторство у тривимірному мистецтві
   - Українське коріння та світова слава
 - section: Київські роки (1887-1908)
   words: 600
-  subsections:
+  points:
   - Народження в родині інженера
   - Навчання в Київській художній школі
   - Вплив української народної творчості
   - Рішення продовжити освіту в Європі
 - section: Паризький період (1908-1921)
   words: 800
-  subsections:
+  points:
   - Прибуття до Парижа та інтеграція в авангард
   - Знайомство з Пікассо, Браком, Модільяні
   - Розвиток кубістичної скульптури
   - Винахід «скульптоживопису» та порожнечі як форми
 - section: Берлінський період (1921-1923)
   words: 600
-  subsections:
+  points:
   - Переїзд до Берліна
   - Викладання та відкриття власної школи
   - Виставки та визнання в Німеччині
   - Вплив німецького експресіонізму
 - section: Американський період (1923-1964)
   words: 800
-  subsections:
+  points:
   - Еміграція до США
   - Викладання в провідних університетах
   - Експерименти з новими матеріалами
   - Створення «Архипеньо» — світлових скульптур
 - section: Спадщина та вплив
   words: 800
-  subsections:
+  points:
   - Роль у розвитку абстрактної скульптури
   - Теоретичні праці про мистецтво
   - Вплив на подальші покоління скульпторів
   - Повернення імені в Україну
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - скульптура
-  - авангард
-  - кубізм
-  - порожнеча
-  - тривимірний
-  - форма
-  - простір
-  - абстракція
-  - новаторство
-  - скульптоживопис
+  - скульптура (sculpture)
+  - авангард (avant-garde)
+  - кубізм (cubism)
+  - порожнеча (void/negative space)
+  - тривимірний (three-dimensional)
+  - форма (form)
+  - простір (space)
+  - абстракція (abstraction)
+  - новаторство (innovation)
+  - скульптоживопис (sculpto-painting)
   recommended:
-  - експресіонізм
-  - пластика
-  - матеріал
-  - композиція
-  - виставка
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - експресіонізм (expressionism)
+  - пластика (plastic arts)
+  - матеріал (material)
+  - композиція (composition)
+  - виставка (exhibition)
+activity_hints:
+- type: reading
+  focus: Мистецька біографія
+  source: Уривки з теоретичних праць та каталогів
+  items: 3 passages
+- type: quiz
+  focus: Етапи творчості та інновації
+  items: 12+
+- type: match-up
+  focus: Роботи та періоди творчості
+  items: 10+
+- type: essay-response
+  focus: Як порожнеча може бути елементом скульптури?
+  word_target: 300
+  output: Мистецтвознавче есе
+- type: group-sort
+  focus: Європейський період vs американський період
+  items: 12+
+- type: fill-in
+  focus: Термінологія скульптури та авангарду
+  items: 10+
+focus: biography
+prerequisites:
+- c1-bio-45 (Казимир Малевич)
 connects_to:
-  previous: c1-bio-45 (Казимир Малевич)
-  related:
-  - c1-bio-50 (Олександр Богомазов)
-  - c1-bio-57 (Лесь Курбас)
-  - c1-bio-66 (Катерина Білокур)
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-50 (Олександр Богомазов)
+- c1-bio-57 (Лесь Курбас)
+- c1-bio-66 (Катерина Білокур)
+module_type: biography
+sources:
+- name: Олександр Архипенко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Архипенко_Олександр_Порфирович
+  type: primary
+  notes: Біографія, творчий шлях, інновації
+- name: Archipenko Foundation
+  url: https://www.archipenko.org
+  type: reference
+  notes: Каталог творів та біографічні матеріали
+- name: MoMA Collection
+  url: https://www.moma.org/artists/229
+  type: reference
+  notes: Роботи в колекції Музею сучасного мистецтва
+immersion: 100% Ukrainian
+phase: C1-BIO

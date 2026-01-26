@@ -1,0 +1,113 @@
+module: final-review-ii
+level: C2
+slug: final-review-ii
+version: '2.0'
+title: Фінальне повторення II — Лексична консолідація
+content_outline:
+- section: Вступ — Лексична майстерність C2
+  words: 400
+  points:
+  - Обсяг активного словника C2 (~12,000 слів)
+  - Глибина vs. широта знання слів
+  - Стратегії лексичного розвитку
+- section: Стилістична диференціація лексики
+  words: 700
+  points:
+  - Нейтральна vs. стилістично маркована лексика
+  - Архаїзми, історизми, неологізми
+  - Діалектизми та регіоналізми
+  - Жаргонізми, арготизми, сленг
+- section: Синонімія та точність слововживання
+  words: 700
+  points:
+  - Синонімічні ряди та вибір
+  - Паронімія та уникнення помилок
+  - Колокації та усталені сполуки
+  - Ідіоматика на рівні носія
+- section: Фразеологія та крилаті вирази
+  words: 600
+  points:
+  - Фразеологічні одиниці (ідіоми, прислів'я)
+  - Крилаті вирази з літератури
+  - Біблійні та міфологічні референції
+  - Сучасні мемні вирази
+- section: Активізація пасивного словника
+  words: 500
+  points:
+  - Техніки переведення слів в активний запас
+  - Контекстуалізація рідковживаних слів
+  - Спейсед репетішн (інтервальне повторення)
+  - Словник як інструмент творення
+- section: Діагностика та закріплення
+  words: 700
+  points:
+  - Лексичний діагностичний тест
+  - Робота з особистим словником
+  - Стратегії довготривалого запам'ятовування
+  - План лексичного розвитку після C2
+word_target: 4000
+vocabulary_hints:
+  required:
+  - лексика (vocabulary/lexis)
+  - синонімія (synonymy)
+  - паронімія (paronymy)
+  - колокація (collocation)
+  - ідіома (idiom)
+  - фразеологізм (phraseological unit)
+  - архаїзм (archaism)
+  - неологізм (neologism)
+  - активний словник (active vocabulary)
+  - пасивний словник (passive vocabulary)
+  recommended:
+  - конотація (connotation)
+  - денотація (denotation)
+  - семантичне поле (semantic field)
+  - словотворення (word formation)
+  - етимологія (etymology)
+activity_hints:
+- type: quiz
+  focus: Стилістична диференціація лексики
+  items: 25+
+- type: match-up
+  focus: Синоніми та їхні стилістичні відтінки
+  items: 20+
+- type: quiz
+  focus: Паронімія — вибір правильного слова
+  items: 15+
+- type: match-up
+  focus: Колокації — поєднання слів
+  items: 20+
+- type: quiz
+  focus: Фразеологізми та їхні значення
+  items: 20+
+- type: essay-response
+  focus: Текст із використанням рідковживаної лексики
+  word_target: 400
+  output: Стилістично багатий текст
+- type: critical-analysis
+  focus: Аналіз лексичного багатства літературного тексту
+  output: Виявлення стилістичних засобів
+focus: integration
+prerequisites:
+- M95 (Final Review I — Grammar)
+- C2 vocabulary exposure
+- Reading practice at C2 level
+connects_to:
+- c2-97 (Final Review III — Skills)
+- c2-98 (Final Exam)
+module_type: integration
+sources:
+- name: Ukrainian State Standard 2024 — Лексична компетенція C2
+  url: https://mon.gov.ua/
+  type: reference
+  notes: C2 vocabulary competence requirements
+- name: Словник української мови в 11 томах (СУМ)
+  url: https://sum.in.ua/
+  type: primary
+  notes: Comprehensive Ukrainian dictionary
+- name: CEFR C2 Lexical Range
+  url: https://www.coe.int/
+  type: secondary
+  notes: C2 lexical competence descriptors
+immersion: 100% Ukrainian
+phase: C2.4 Academic Culmination

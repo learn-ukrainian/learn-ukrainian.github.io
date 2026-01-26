@@ -1,14 +1,8 @@
 module: kultura-kyivskoi-rusi
-level: b2-hist
-sequence: 16
-version: '1.0'
+level: B2-HIST
+slug: kultura-kyivskoi-rusi
+version: '2.0'
 title: Культура Київської Русі
-focus: history
-pedagogy: CBI
-objectives:
-- Understand the development of writing and education in Rus
-- Analyze the literary masterpieces like "Slovo o polku Ihorevim"
-- Discuss the synthesis of Byzantine and local artistic traditions
 content_outline:
 - section: Читання
   words: 50
@@ -30,26 +24,27 @@ content_outline:
   words: 250
 - section: Потрібно більше практики?
   words: 100
-word_target: 4000
-vocabulary:
-- писемність
-- кирилиця
-- літопис
-- житіє
-- мозаїка
-- фреска
-- іконопис
-- скань
-- емаль
-- монастир
-- скрипторій
-- билина
-- берестяна грамота
-- мініатюра
-- глаголиця
-- Боян
-- церковний спів
-activities:
+vocabulary_hints:
+  required:
+  - писемність (literacy)
+  - кирилиця (Cyrillic)
+  - літопис (chronicle)
+  - житіє (hagiography)
+  - мозаїка (mosaic)
+  - фреска (fresco)
+  - іконопис (icon painting)
+  - скань (filigree)
+  - емаль (enamel)
+  - монастир (monastery)
+  - скрипторій (scriptorium)
+  - билина (bylina - epic poem)
+  recommended:
+  - берестяна грамота (birch bark letter)
+  - мініатюра (miniature)
+  - глаголиця (Glagolitic)
+  - Боян (Boyan)
+  - церковний спів (church chant)
+activity_hints:
 - type: reading
   focus: Culture as a manifesto
   items: 1
@@ -68,6 +63,21 @@ activities:
 - type: select
   focus: Music
   items: 2
+focus: history
+pedagogy: CBI
+prerequisites:
+- b2-hist-14 (St. Sophia Cathedral)
+- b2-hist-12 (Yaroslav the Wise)
+connects_to:
+- b2-hist-18 (People of Rus — everyday life)
+- 'b2-hist-20 (Synthesis: Kyivan Rus)'
+objectives:
+- Understand the development of writing and education in Rus
+- Analyze the literary masterpieces like "Slovo o polku Ihorevim"
+- Discuss the synthesis of Byzantine and local artistic traditions
+grammar:
+- Past tense narrative
+- Art and culture vocabulary
 sources:
 - name: Культура Київської Русі (Вікіпедія)
   url: https://uk.wikipedia.org/wiki/Культура_Київської_Русі
@@ -81,3 +91,5 @@ sources:
   url: https://litopys.org.ua/slovo/slovo.htm
   type: primary
   notes: Epic poem text
+immersion: 100% Ukrainian
+phase: B2-HIST.1 [Kyivan Rus]

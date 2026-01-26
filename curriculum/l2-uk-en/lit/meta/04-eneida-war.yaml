@@ -1,149 +1,19 @@
-# LIT Module 04: Eneida - The War
-# Status: SPEC (ready for content development)
-
-id: lit-04
-title: 'Енеїда: Словник Війни'
-subtitle: 'LIT-004: Анатомія Козацького Бою'
+module: eneida-war
+level: LIT
 slug: eneida-war
-module_type: literature
-word_target: 4500
-immersion: "100% Ukrainian"
-grammar:
-  - Military terminology
-  - Euphemism construction
-  - Burlesque metaphors
-
-objectives:
-  - Analyze the depiction of war in Eneida
-  - Identify military vocabulary and weaponry
-  - Interpret the humor in battle scenes
-# === AGENT BUILD SPEC ===
-
-sources:
-  - name: Енеїда — повний текст
-    url: https://www.ukrlib.com.ua/books/printit.php?tid=51
-    type: primary
-    notes: Частини IV-VI для аналізу батальних сцен
-  - name: Аналіз "Енеїди"
-    url: https://www.ukrlib.com.ua/analiz/printit.php?tid=51
-    type: secondary
-    notes: Військова тематика
-  - name: Козацьке військо
-    url: https://uk.wikipedia.org/wiki/Запорозьке_військо
-    type: reference
-    notes: Історичний контекст озброєння
-
-content_outline:
-  - section: Вступ — Війна як ремесло
-    words: 500
-    points:
-      - '"Енеїда" як поема про війну'
-      - Третина тексту — описи битв
-      - Феномен "смішної смерті"
-
-  - section: Арсенал Енея — зброя та спорядження
-    words: 700
-    points:
-      - Холодна зброя (шабля, спис, сокира)
-      - Вогнепальна зброя (гармата, мортира, рушниця)
-      - Козацьке vs римське озброєння
-
-  - section: Анатомія бою — тактика і стратегія
-    words: 700
-    points:
-      - Описи битв (з рутульцями, турнами)
-      - Поєдинки та масові сутички
-      - Військова ієрархія троянської ватаги
-
-  - section: Естетика смішної смерті
-    words: 800
-    points:
-      - Гумористичні описи насильства
-      - '"На локшину кришив" — їжа як метафора'
-      - Евфемізми та гіперболи смерті
-
-  - section: Психотерапія сміхом
-    words: 500
-    points:
-      - Війна як повсякденне ремесло нації
-      - Жарт як спосіб впоратися з травмою
-      - Порівняння з сучасною воєнною сатирою
-
-  - section: Підсумок — Від бою до сентименту
-    words: 400
-    points:
-      - Вичерпання бурлескного жанру
-      - Перехід до "Наталки Полтавки"
-      - Котляревський між сміхом і сльозами
-
-vocabulary_hints:
-  required:
-    - шабля (sabre)
-    - гармата (cannon)
-    - мортира (mortar)
-    - ватага (band/troop)
-    - поєдинок (duel)
-    - евфемізм (euphemism)
-    - гіпербола (hyperbole)
-    - батальна сцена (battle scene)
-    - тактика (tactics)
-    - стратегія (strategy)
-  recommended:
-    - рушниця (musket)
-    - спис (spear)
-    - сокира (axe)
-    - обладунок (armor)
-    - ворог (enemy)
-
-activity_hints:
-  - type: reading
-    focus: Батальні сцени з частин IV-VI
-    source: UkrLib tid=51
-    items: "4+"
-
-  - type: group-sort
-    focus: Зброя (холодна / вогнепальна / захисна)
-    items: "20+"
-
-  - type: quiz
-    focus: Військова термінологія XVIII ст.
-    items: "15+"
-
-  - type: match-up
-    focus: Евфемізми смерті → буквальне значення
-    items: "12+"
-
-  - type: essay-response
-    focus: Естетика смішної смерті — етика чи мистецтво?
-    word_target: 300
-    output: Критичне есе
-
-  - type: cloze
-    focus: Описи битв з "Енеїди"
-    items: "12+"
-
-prerequisites:
-  - lit-02 (Eneida Part I)
-  - lit-03 (Eneida Feast)
-
-connects_to:
-  - lit-05 (Natalka Poltavka — перехід до сентименталізму)
-  - lit-13 (Haidamaky — епос війни у Шевченка)
-
-version: "1.0"
-phase: LIT.1 Burlesque & Folk Origins
-focus: literature
-pedagogy: literature
-duration: 120
-transliteration: none
-tags:
-  - література
-  - класика
-  - котляревський
-  - енеїда
-  - війна
-  - зброя
-
+version: '1.0'
+id: lit-04
 naturalness:
   score: 10
   status: PASS
+duration: 120
+transliteration: none
+tags:
+- література
+- класика
+- котляревський
+- енеїда
+- війна
+- зброя
+build:
+  last_modified: '2026-01-26'

@@ -1,16 +1,9 @@
-module: can-must-want-modals
-level: a1
-sequence: 24
+module: a1-24
+level: A1
+slug: can-must-want-modals
 version: '2.0'
 title: Can, Must, Want - Modals
 subtitle: Expressing Ability, Obligation, and Desire
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can express ability with могти and вміти
-- Learner can express obligation with треба and потрібно
-- Learner can ask and give permission with можна
-- Learner can distinguish between different modal meanings
 content_outline:
 - section: 'Introduction: Modal Verbs'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Describe abilities
   - Ask permission
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - могти (can, to be able)
   - вміти (to know how)
@@ -63,16 +56,34 @@ vocabulary:
   - заборонено (forbidden)
   - обов'язково (obligatory)
   - необхідно (necessary)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - translation
-  - transformation
-  - dialogue
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: Choose correct modal
+  items: 25
+- type: transformation
+  focus: Change to modal constructions
+  items: 20
+- type: translation
+  focus: Translate modal sentences
+  items: 15
+- type: dialogue
+  focus: Ask permission, express needs
+  items: 6
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-23 (What Time Is It)
 connects_to:
 - a1-25 (My Daily Routine)
 - a1-30 (Checkpoint Consolidation)
+objectives:
+- Learner can express ability with могти and вміти
+- Learner can express obligation with треба and потрібно
+- Learner can ask and give permission with можна
+- Learner can distinguish between different modal meanings
+grammar:
+- Modal verbs (могти, вміти)
+- Impersonal modals (треба, можна, потрібно)
+- Modal + infinitive structure
+register: розмовний
+phase: A1.3 [Consolidation]

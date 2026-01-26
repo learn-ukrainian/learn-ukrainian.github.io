@@ -1,97 +1,13 @@
 module: a1-27
-id: a1-27
+level: A1
 slug: colors-and-clothing
-title: "Colors & Clothing"
-subtitle: "Describing What You Wear"
 version: '2.0'
-phase: "A1.3 [Consolidation]"
-focus: vocabulary
-pedagogy: PPP
-register: розмовний
-duration: 60
-transliteration: none
-objectives:
-  - "Learner can name basic colors in Ukrainian"
-  - "Learner can use color adjectives with correct gender agreement"
-  - "Learner can describe clothing items"
-  - "Learner can describe what someone is wearing"
-grammar:
-  - "Color adjectives with agreement"
-  - "Clothing vocabulary"
-  - "Носити (to wear) + accusative"
-word_target: 1000
-content_outline:
-  - section: "Introduction: Colors and Fashion"
-    words: 100
-    points:
-      - "Colors as adjectives"
-      - "Describing appearance"
-      - "Fashion vocabulary"
-  - section: "Basic Colors"
-    words: 250
-    points:
-      - "білий, чорний, сірий"
-      - "червоний, синій, зелений"
-      - "жовтий, помаранчевий, рожевий"
-  - section: "Color Agreement"
-    words: 200
-    points:
-      - "біла сорочка, білий светр"
-      - "чорне плаття, чорні штани"
-      - "Colors follow adjective rules"
-  - section: "Clothing Items"
-    words: 200
-    points:
-      - "сорочка, светр, куртка"
-      - "штани, джинси, спідниця"
-      - "плаття, пальто, взуття"
-  - section: "Describing Outfits"
-    words: 150
-    points:
-      - "Він носить синю сорочку"
-      - "Вона в червоній сукні"
-      - "What are you wearing?"
-  - section: "Practice: Fashion Show"
-    words: 100
-    points:
-      - "Describe what people wear"
-      - "Shopping for clothes"
-vocabulary_hints:
-  required:
-    - білий (white)
-    - чорний (black)
-    - червоний (red)
-    - синій (blue)
-    - зелений (green)
-    - сорочка (shirt)
-    - штани (pants)
-    - плаття (dress)
-  recommended:
-    - жовтий (yellow)
-    - коричневий (brown)
-    - куртка (jacket)
-    - светр (sweater)
-    - взуття (footwear)
-    - носити (to wear)
-activity_hints:
-  - type: vocabulary-drill
-    focus: "Color and clothing names"
-    items: 30
-  - type: matching
-    focus: "Match colors to items"
-    items: 20
-  - type: description
-    focus: "Describe outfits in pictures"
-    items: 10
-  - type: dialogue
-    focus: "Shopping for clothes"
-    items: 6
-prerequisites:
-  - a1-26 (Describing Things - Adjectives)
-connects_to:
-  - a1-28 (Description - Adverbs)
-  - a1-30 (Checkpoint Consolidation)
+id: a1-27
 naturalness:
   score: 10
   status: PASS
-  justification: "Practical clothing vocabulary"
+  justification: Practical clothing vocabulary
+duration: 60
+transliteration: none
+build:
+  last_modified: '2026-01-26'

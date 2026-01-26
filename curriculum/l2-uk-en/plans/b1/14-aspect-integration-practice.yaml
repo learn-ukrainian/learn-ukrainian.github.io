@@ -1,24 +1,9 @@
 module: 14-aspect-integration-practice
-level: b1
-sequence: 14
+level: B1
+slug: 14-aspect-integration-practice
 version: '2.0'
 title: 'Інтеграція виду: практика'
 subtitle: Aspect Integration Practice
-focus: grammar
-pedagogy: TTT
-objectives:
-- Learner can integrate all aspect knowledge in narratives
-- Learner can use temporal connectors with correct aspect
-- Learner can mix aspects naturally in complex texts
-sources:
-- name: Ukrainian State Standard 2024 - Aspect Integration
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Comprehensive aspect usage in connected discourse
-- name: Ukrainian Narrative Patterns
-  url: https://uk.wikipedia.org/wiki/Нарація
-  type: reference
-  notes: Aspect in storytelling and narratives
 content_outline:
 - section: Тест
   words: 100
@@ -45,7 +30,7 @@ content_outline:
   - Examples and explanation
   - Practice or application
 word_target: 1500
-vocabulary:
+vocabulary_hints:
   required:
   - коли (when)
   - після того як (after)
@@ -63,16 +48,43 @@ vocabulary:
   - раптом (suddenly)
   - врешті-решт (eventually)
   - зрештою (after all)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - quiz
-  - error-correction
-  - cloze
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: cloze
+  focus: Extended narrative with aspect choices
+  items: 15+
+- type: fill-in
+  focus: Change temporal perspective (simultaneous → sequential)
+  items: 10+
+- type: error-correction
+  focus: Find and fix aspect mistakes in text
+  items: 12+
+- type: quiz
+  focus: Complex aspect scenarios
+  items: 15+
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-13 (Work week - aspect in action)
+- All aspect modules M06-13
 connects_to:
 - b1-15 (Checkpoint - aspect mastery)
 - b1-37 (Temporal clauses)
+objectives:
+- Learner can integrate all aspect knowledge in narratives
+- Learner can use temporal connectors with correct aspect
+- Learner can mix aspects naturally in complex texts
+grammar:
+- All aspect contexts combined
+- Temporal connectors with aspect
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Aspect Integration
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Comprehensive aspect usage in connected discourse
+- name: Ukrainian Narrative Patterns
+  url: https://uk.wikipedia.org/wiki/Нарація
+  type: reference
+  notes: Aspect in storytelling and narratives
+immersion: 100% Ukrainian
+phase: B1.1 Aspect

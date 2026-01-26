@@ -1,16 +1,9 @@
-module: work-professions
-level: a2
-sequence: 49
+module: a2-49
+level: A2
+slug: work-professions
 version: '2.0'
 title: Work and Professions
 subtitle: Jobs and Careers
-focus: vocabulary
-pedagogy: PPP
-objectives:
-- Learner can name common professions
-- Learner can describe their job
-- Learner can talk about workplace activities
-- Learner can use instrumental case for jobs
 content_outline:
 - section: 'Introduction: Work in Ukraine'
   words: 100
@@ -48,7 +41,7 @@ content_outline:
   - Describe your job
   - Job interview practice
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - робота (work/job)
   - професія (profession)
@@ -65,16 +58,34 @@ vocabulary:
   - співбесіда (interview)
   - керівник (manager)
   - підлеглий (subordinate)
-  forbidden: []
-activities:
-  types_required:
-  - vocabulary-drill
-  - dialogue
-  - speaking
-  - fill-in
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: vocabulary-drill
+  focus: Professions and workplace
+  items: 30
+- type: fill-in
+  focus: Complete work descriptions
+  items: 20
+- type: dialogue
+  focus: Job interview
+  items: 10
+- type: speaking
+  focus: Describe your work
+  items: 8
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- a2-48 (Emotions and Personality)
 connects_to:
 - a2-50 (Technology and Media)
 - a2-64 (Scheduling Interviews)
+objectives:
+- Learner can name common professions
+- Learner can describe their job
+- Learner can talk about workplace activities
+- Learner can use instrumental case for jobs
+grammar:
+- Instrumental with professions (працювати лікарем)
+- Workplace vocabulary
+- Describing duties and responsibilities
+register: розмовний
+phase: A2.5 [Vocabulary Expansion]

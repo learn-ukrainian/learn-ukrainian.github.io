@@ -1,22 +1,37 @@
-module: 95-shevchenko-poeziia
-level: c1
-sequence: 95
+module: c1-95
+level: C1
+slug: 95-shevchenko-poeziia
 version: '2.0'
 title: 'Шевченко: Поезія'
 subtitle: 'Shevchenko: Poetry'
+content_outline:
+- section: Вступ — Поезія
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Кобзар: structure and themes'
+  - 'Катерина: social criticism, women''s fate'
+  - 'Гайдамаки: historical epic'
+  - 'Заповіт: national testament'
+  - 'Poetic techniques: imagery, rhythm, folk elements'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: literature
 pedagogy: Literary Analysis
 objectives:
 - Analyze major poetic works of Taras Shevchenko
 - Understand the structure and themes of Kobzar
 - Identify key poetic techniques and folk elements
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Poetic syntax
+- Rhetorical questions
+phase: C1.6 Literature

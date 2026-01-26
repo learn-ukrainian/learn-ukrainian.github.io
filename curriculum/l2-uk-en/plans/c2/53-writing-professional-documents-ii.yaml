@@ -1,0 +1,107 @@
+module: writing-professional-documents-ii
+level: C2
+slug: writing-professional-documents-ii
+version: '2.0'
+title: Написання професійних документів II — Пропозиції та презентації
+content_outline:
+- section: Вступ — Переконливе професійне письмо
+  words: 400
+  points:
+  - Від інформування до переконання
+  - Аналіз авдиторії та мети
+  - Етика переконання в професійному контексті
+- section: Пропозиція — Структура та зміст
+  words: 800
+  points:
+  - Типи пропозицій (проєктні, комерційні, наукові)
+  - Стандартна структура пропозиції
+  - Обґрунтування та аргументація
+- section: Бізнес-план та обґрунтування проєкту
+  words: 700
+  points:
+  - Ключові елементи бізнес-плану
+  - Фінансове обґрунтування
+  - Оцінка ризиків та SWOT-аналіз
+- section: Письмова презентація
+  words: 600
+  points:
+  - Структура письмової презентації
+  - Візуальні елементи (таблиці, графіки)
+  - Адаптація до формату (слайди, документ)
+- section: Тендерна документація
+  words: 600
+  points:
+  - Специфіка тендерних пропозицій
+  - Вимоги та критерії оцінки
+  - Типові помилки
+- section: Практичні вправи
+  words: 600
+  points:
+  - Написання короткої пропозиції
+  - Підготовка письмової презентації
+  - Критичний аналіз зразків
+word_target: 4000
+vocabulary_hints:
+  required:
+  - пропозиція (proposal)
+  - обґрунтування (justification)
+  - бізнес-план (business plan)
+  - проєкт (project)
+  - презентація (presentation)
+  - тендер (tender)
+  - критерій (criterion)
+  - бюджет (budget)
+  - ризик (risk)
+  - оцінка (assessment/evaluation)
+  recommended:
+  - SWOT-аналіз (SWOT analysis)
+  - рентабельність (profitability)
+  - конкурентоспроможність (competitiveness)
+  - етапність (phasing)
+  - індикатор успіху (success indicator)
+activity_hints:
+- type: essay-response
+  focus: Написання короткої проєктної пропозиції
+  word_target: 600
+  output: Пропозиція з моделлю відповіді
+- type: essay-response
+  focus: Підготовка письмової презентації проєкту
+  word_target: 400
+  output: Структурована презентація
+- type: critical-analysis
+  focus: Аналіз реальної пропозиції — сильні та слабкі сторони
+  output: Критичний огляд з рекомендаціями
+- type: quiz
+  focus: Елементи ефективної пропозиції
+  items: 12+
+- type: fill-in
+  focus: Заповнення структури бізнес-плану
+  items: 15+
+- type: comparative-study
+  focus: Порівняння двох пропозицій на один проєкт
+  output: Аналіз ефективності
+focus: grammar
+prerequisites:
+- M52 (Writing Professional Documents I — Reports)
+- M51 (Professional Document Types)
+- M11 (Style Transformation II)
+connects_to:
+- c2-54 (Professional Oral Communication)
+- c2-56 (Professional Correspondence)
+- c2-71 (Professional Portfolio I)
+module_type: grammar
+sources:
+- name: Фонд державного майна України — тендерна документація
+  url: https://www.spfu.gov.ua/
+  type: reference
+  notes: Examples of professional proposals and tender documentation
+- name: Національне агентство з питань державної служби
+  url: https://nads.gov.ua/
+  type: reference
+  notes: Standards for official presentations and proposals
+- name: Prozorro — публічні закупівлі
+  url: https://prozorro.gov.ua/
+  type: reference
+  notes: Real examples of professional proposals in procurement
+immersion: 100% Ukrainian
+phase: C2.3 Translation & Creative Writing

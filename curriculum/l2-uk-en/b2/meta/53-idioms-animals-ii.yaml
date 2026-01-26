@@ -1,9 +1,10 @@
 module: b2-53
-title: 'Фразеологізми: Тварини II (Птахи, Риби, Комахи)'
-phase: B2.2 [Phraseology & Synonymy]
-pedagogy: CBI
-focus: phraseology
-register: varies
+level: B2
+slug: 53-idioms-animals-ii
+version: '2.0'
+naturalness:
+  score: 9
+  status: PASS
 duration: 60
 transliteration: none
 tags:
@@ -13,41 +14,7 @@ tags:
 - birds
 - fish
 - insects
-grammar:
-- Fixed expressions
-- Idiom structure and variation
 vocabulary_focus: null
-objectives:
-- Вивчити 8 ключових фразеологізмів про птахів, риб та комах
-- Розуміти значення метафор перебільшення та неуважності
-- Вміти вживати ідіоми про стихії (вода, повітря) у переносному значенні
 vocabulary_count: 36
-slug: 53-idioms-animals-ii
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-- section: Вступ — Тварини II (Птахи, Риби, Комахи)
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-- section: Основний матеріал
-  words: 600
-  points:
-  - Теоретичні основи
-  - Приклади та ілюстрації
-  - Типові помилки та як їх уникати
-- section: Поглиблене вивчення
-  words: 600
-  points:
-  - Додаткові випадки
-  - Контекстуальне використання
-  - Стилістичні нюанси
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

@@ -1,108 +1,109 @@
 module: mykola-mikhnovskyi
-level: c1-bio
-sequence: 42
+level: C1-BIO
+slug: mykola-mikhnovskyi
 version: '2.0'
 title: 'Микола Міхновський: Ідеолог самостійництва'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Микола_Міхновський
-    title: Микола Міхновський (Wikipedia UA)
-    notes: Біографія, політична діяльність, ідеологія
-  secondary:
-  - url: https://uk.wikipedia.org/wiki/Самостійна_Україна_(брошура)
-    title: Самостійна Україна (брошура)
-    notes: Програмний документ українського самостійництва
-  - url: https://uk.wikipedia.org/wiki/Братство_тарасівців
-    title: Братство тарасівців
-    notes: Перша політична організація Міхновського
 content_outline:
 - section: Вступ — Голос української незалежності
   words: 400
-  subsections:
+  points:
   - Микола Міхновський — перший ідеолог повної незалежності України
   - Від студентського братства до «Самостійної України»
   - Трагічна смерть і посмертне визнання
 - section: Ранні роки та освіта (1873-1895)
   words: 600
-  subsections:
+  points:
   - Народження в селі Турівка на Київщині
   - Навчання на юридичному факультеті Київського університету
   - Формування національних переконань
   - Заснування Братства тарасівців (1891)
 - section: «Самостійна Україна» (1900-1905)
   words: 800
-  subsections:
+  points:
   - Публікація брошури «Самостійна Україна» (1900)
   - Гасло «Україна для українців»
   - Критика автономізму та федералізму
   - Вплив на радикалізацію національного руху
 - section: Політична діяльність (1905-1917)
   words: 700
-  subsections:
+  points:
   - Заснування Української народної партії
   - Юридична практика та захист політв'язнів
   - Конфлікти з іншими напрямами національного руху
   - Організація «Вільного козацтва»
 - section: Революційні роки (1917-1918)
   words: 700
-  subsections:
+  points:
   - Критика поміркованої політики Центральної Ради
   - Спроба військового перевороту
   - Конфлікт з Грушевським та соціалістами
   - Маргіналізація в політичному житті
 - section: Останні роки та загибель (1918-1924)
   words: 800
-  subsections:
+  points:
   - Самотність у добу Гетьманату та Директорії
   - Самогубство в 1924 році в Києві
   - Суперечки щодо обставин смерті
   - Посмертне визнання як пророка незалежності
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - самостійність
-  - ідеолог
-  - націоналізм
-  - автономія
-  - федералізм
-  - братство
-  - маніфест
-  - радикал
-  - державність
-  - незалежність
+  - самостійність (independence)
+  - ідеолог (ideologue)
+  - націоналізм (nationalism)
+  - автономія (autonomy)
+  - федералізм (federalism)
+  - братство (brotherhood)
+  - маніфест (manifesto)
+  - радикал (radical)
+  - державність (statehood)
+  - незалежність (independence)
   recommended:
-  - сепаратизм
-  - інтеґральний
-  - республіка
-  - суверенітет
-  - патріотизм
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - сепаратизм (separatism)
+  - інтеґральний (integral)
+  - республіка (republic)
+  - суверенітет (sovereignty)
+  - патріотизм (patriotism)
+activity_hints:
+- type: reading
+  focus: Уривки з «Самостійної України» та промов
+  source: Публіцистичні твори
+  items: 3 passages
+- type: quiz
+  focus: Біографія та ідеологія
+  items: 12+
+- type: match-up
+  focus: Ідеї та їхній вплив
+  items: 10+
+- type: essay-response
+  focus: Чому Міхновський випередив свій час?
+  word_target: 300
+  output: Historical analysis
+- type: group-sort
+  focus: Етапи політичної діяльності
+  items: 12+
+- type: fill-in
+  focus: Політологічна термінологія
+  items: 10+
+focus: biography
+prerequisites:
+- c1-bio-22-mykhailo-drahomanov
 connects_to:
-  previous: c1-bio-22-mykhailo-drahomanov
-  related:
-  - c1-bio-52-dmytro-dontsov
-  - c1-bio-44-symon-petliura
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-52-dmytro-dontsov
+- c1-bio-44-symon-petliura
+module_type: biography
+sources:
+- name: Микола Міхновський (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Микола_Міхновський
+  type: primary
+  notes: Біографія, політична діяльність, ідеологія
+- name: Самостійна Україна (брошура)
+  url: https://uk.wikipedia.org/wiki/Самостійна_Україна_(брошура)
+  type: reference
+  notes: Програмний документ українського самостійництва
+- name: Братство тарасівців
+  url: https://uk.wikipedia.org/wiki/Братство_тарасівців
+  type: reference
+  notes: Перша політична організація Міхновського
+immersion: 100% Ukrainian
+phase: C1-BIO

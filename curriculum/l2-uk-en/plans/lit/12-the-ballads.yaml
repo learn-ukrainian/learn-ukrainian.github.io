@@ -1,107 +1,119 @@
-module: 12-the-ballads
-level: lit
-sequence: 12
-version: '1.0'
+module: the-ballads
+level: LIT
+slug: the-ballads
+version: '2.0'
 title: 'Балади: Між Світами'
 subtitle: 'LIT-012: Містика і Метаморфози у Раннього Шевченка'
-focus: literature
-pedagogy: seminar
-objectives:
-- Analyze the genre of Romantic Ballad
-- Explore the "Metamorphosis" motif
-- Compare "Priichynna" and "Topolya"
-sources:
-  primary:
-  - url: https://www.ukrlib.com.ua/books/printit.php?tid=3
-    title: Причинна
-    notes: Балада для аналізу
-  - url: https://www.ukrlib.com.ua/books/printit.php?tid=4
-    title: Тополя
-    notes: Балада для аналізу
-  - url: https://www.ukrlib.com.ua/books/printit.php?tid=5
-    title: Утоплена
-    notes: Балада для аналізу
-  secondary:
-  - url: https://www.ukrlib.com.ua/books/printit.php?tid=1
-    title: Кобзар — повний текст
-    notes: Контекст ранньої поезії
 content_outline:
 - section: Вступ — Жанр романтичної балади
   words: 500
-  subsections:
+  points:
   - Що таке балада (європейський контекст)
   - Романтизм і фольклор
   - Шевченко і народна традиція
 - section: '"Причинна" — божевілля і русалки'
   words: 700
-  subsections:
+  points:
   - Сюжет і символіка
   - Образ "причинної" (божевільної)
   - Зустріч із потойбічним світом
 - section: '"Тополя" — метаморфоза'
   words: 700
-  subsections:
+  points:
   - Міф про перетворення
   - Дівчина-дерево як архетип
   - Тема самотності та очікування
 - section: '"Утоплена" — темна казка'
   words: 700
-  subsections:
+  points:
   - Матір-відьма і помста води
   - Готичні елементи
   - Жіноча доля у баладах
 - section: Народна демонологія
   words: 600
-  subsections:
+  points:
   - Русалки, відьми, мавки
   - Функція фантастичного
   - Зв'язок з європейським романтизмом
 - section: Підсумок — Фатум і доля
   words: 400
-  subsections:
+  points:
   - Концепція долі у раннього Шевченка
   - Від балад до епосу
   - Містика як шлях до реальності
 word_target: 4500
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - балада
-  - романтизм
-  - метаморфоза
-  - русалка
-  - фатум
-  - причинна
-  - потойбіччя
-  - демонологія
-  - архетип
-  - символіка
+  - балада (ballad)
+  - романтизм (romanticism)
+  - метаморфоза (metamorphosis)
+  - русалка (water nymph)
+  - фатум (fate)
+  - причинна (bewitched/mad woman)
+  - потойбіччя (afterworld)
+  - демонологія (demonology)
+  - архетип (archetype)
+  - символіка (symbolism)
   recommended:
-  - мавка
-  - відьма
-  - перетворення
-  - самотність
-  - готика
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - cloze
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - мавка (forest nymph)
+  - відьма (witch)
+  - перетворення (transformation)
+  - самотність (loneliness)
+  - готика (gothic)
+activity_hints:
+- type: reading
+  focus: Повні тексти балад
+  source: UkrLib
+  items: 5+
+- type: quiz
+  focus: Сюжети та символіка балад
+  items: 15+
+- type: match-up
+  focus: Балада → її центральний мотив
+  items: 10+
+- type: essay-response
+  focus: Концепція фатуму у раннього Шевченка
+  word_target: 300
+  output: Літературознавче есе
+- type: group-sort
+  focus: Демонологічні образи (русалки / відьми / мавки)
+  items: 15+
+- type: cloze
+  focus: Ключові цитати з балад
+  items: 12+
+focus: literature
+pedagogy: literature
+prerequisites:
+- lit-11 (Young Shevchenko)
+- Understanding of Romanticism
 connects_to:
-  previous: lit-11 (Young Shevchenko)
-  related:
-  - lit-13 (Haidamaky — від балади до епосу)
-  - lit-18 (Women in Kobzar — жіночі образи)
-constraints:
-  min_engagement_boxes: 3
-  min_examples: 15
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- lit-13 (Haidamaky — від балади до епосу)
+- lit-18 (Women in Kobzar — жіночі образи)
+objectives:
+- Analyze the genre of Romantic Ballad
+- Explore the "Metamorphosis" motif
+- Compare "Priichynna" and "Topolya"
+grammar:
+- Romantic ballad style
+- Folk mythology lexicon
+- Gothic atmosphere vocabulary
+module_type: literature
+sources:
+- name: Причинна
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=3
+  type: primary
+  notes: Балада для аналізу
+- name: Тополя
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=4
+  type: primary
+  notes: Балада для аналізу
+- name: Утоплена
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=5
+  type: primary
+  notes: Балада для аналізу
+- name: Кобзар — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=1
+  type: secondary
+  notes: Контекст ранньої поезії
+immersion: 100% Ukrainian
+phase: LIT.3 The Prophet (Taras Shevchenko)

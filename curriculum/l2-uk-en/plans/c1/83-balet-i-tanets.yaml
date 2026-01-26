@@ -1,22 +1,37 @@
-module: 83-balet-i-tanets
-level: c1
-sequence: 83
+module: c1-83
+level: C1
+slug: 83-balet-i-tanets
 version: '2.0'
 title: Балет і танець
 subtitle: Ballet and Dance
+content_outline:
+- section: Вступ — Балет і танець
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - '**Серж Лифар** (1904-1986): Kyiv-born, Paris Opera director (1929-1958), transformed
+    20th century ballet'
+  - 'Classical ballet: Київський балет, Львівська балетна школа'
+  - 'Folk dance: Гопак, Аркан, ансамблі (Вірський)'
+  - 'Contemporary: Kyiv Modern Ballet, сучасний танець'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: fine-arts
 pedagogy: CBI
 objectives:
 - Learner explores the legacy of Serge Lifar and his impact on world ballet.
 - Learner understands the distinction between folk dance (Hopak) and academic ballet.
 - Learner can describe contemporary dance trends in Ukraine.
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Movement vocabulary
+- Choreographic description
+phase: C1.5 Folk Culture & Fine Arts

@@ -1,105 +1,105 @@
 module: borys-hrinchenko
-level: c1-bio
-sequence: 30
+level: C1-BIO
+slug: borys-hrinchenko
 version: '2.0'
 title: 'Борис Грінченко: Лексикограф і просвітник'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Грінченко_Борис_Дмитрович
-    title: Борис Грінченко (Wikipedia UA)
-    notes: Comprehensive biography of lexicographer and educator
-  secondary:
-  - url: https://hrinchenko.com/
-    title: Словник Грінченка онлайн
-    notes: Digital version of the famous dictionary
 content_outline:
 - section: Вступ — Вартовий українського слова
   words: 400
-  subsections:
+  points:
   - Автор першого повного словника української мови
   - Письменник, педагог, просвітитель
   - Життя на службі українському народові
 - section: Дитинство та юність (1863-1881)
   words: 600
-  subsections:
+  points:
   - Народження на Харківщині
   - Родина та виховання
   - Раннє захоплення українською мовою
   - Початок літературної діяльності
 - section: Педагогічна робота (1881-1893)
   words: 800
-  subsections:
+  points:
   - Вчителювання в сільських школах
   - Методика навчання українською мовою
   - Написання підручників для народу
   - Конфлікти з царською владою
 - section: Літературна діяльність (1880-ті–1900-ті)
   words: 700
-  subsections:
+  points:
   - Оповідання та повісті
   - Тема простого народу
   - Драматургія
   - Публіцистика та критика
 - section: Словник української мови (1907-1909)
   words: 800
-  subsections:
+  points:
   - Історія створення словника
   - Методологія збору матеріалу
   - Чотири томи та їхній зміст
   - Значення для стандартизації мови
 - section: Спадщина — Каменяр словникарства
   words: 700
-  subsections:
+  points:
   - Останні роки та смерть (1910)
   - Вплив на українську лексикографію
   - Словник Грінченка в сучасній Україні
   - Вшанування памяті
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - лексикограф
-  - словник
-  - просвітитель
-  - педагог
-  - стандартизація мови
-  - лексикографія
-  - реєстрове слово
-  - гасло
-  - народна мова
-  - діалект
+  - лексикограф (lexicographer)
+  - словник (dictionary)
+  - просвітитель (enlightener)
+  - педагог (pedagogue)
+  - стандартизація мови (language standardization)
+  - лексикографія (lexicography)
+  - реєстрове слово (headword)
+  - гасло (entry)
+  - народна мова (folk language)
+  - діалект (dialect)
   recommended:
-  - етимологія
-  - тлумачення
-  - мовознавство
-  - кодифікація
-  - літературна норма
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - етимологія (etymology)
+  - тлумачення (definition)
+  - мовознавство (linguistics)
+  - кодифікація (codification)
+  - літературна норма (literary norm)
+activity_hints:
+- type: reading
+  focus: Українська лексикографія XIX ст.
+  source: Linguistic history sources
+  items: 3 passages
+- type: quiz
+  focus: Життя та творчість Грінченка
+  items: 12+
+- type: match-up
+  focus: Лексикографічні терміни
+  items: 10+
+- type: essay-response
+  focus: Яке значення мав Словник Грінченка для української мови?
+  word_target: 300
+  output: Analytical essay
+- type: group-sort
+  focus: Діяльність Грінченка за сферами
+  items: 12+
+- type: fill-in
+  focus: Термінологія словникарства
+  items: 10+
+focus: biography
+prerequisites:
+- c1-bio-29
 connects_to:
-  previous: c1-bio-29
-  related:
-  - c1-bio-28
-  - c1-bio-97
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-28
+- c1-bio-97
+module_type: biography
+sources:
+- name: Борис Грінченко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Грінченко_Борис_Дмитрович
+  type: primary
+  notes: Comprehensive biography of lexicographer and educator
+- name: Словник Грінченка онлайн
+  url: https://hrinchenko.com/
+  type: reference
+  notes: Digital version of the famous dictionary
+immersion: 100% Ukrainian
+phase: C1-BIO

@@ -1,0 +1,106 @@
+module: polska-i-ukraina-symbioz
+level: C1-HIST
+slug: polska-i-ukraina-symbioz
+version: '2.0'
+title: 'Польща і Україна: Симбіоз і конфлікт'
+content_outline:
+- section: Вступ — 600 років разом
+  words: 451
+  points:
+  - Найскладніші відносини в Європі
+  - Спільна держава — 400 років
+  - Конфлікт і співпраця
+  - Структура модуля
+- section: Люблінська унія 1569
+  words: 677
+  points:
+  - Об'єднання в одну державу
+  - Що отримала Україна
+  - Шляхта — українська еліта
+  - Полонізація
+- section: Козацькі повстання
+  words: 790
+  points:
+  - Наливайко, Жмайло
+  - Хмельницький 1648
+  - Ріки крові
+  - Але не етнічна війна
+- section: Під розділами
+  words: 677
+  points:
+  - 1795 — кінець Речі Посполитої
+  - Спільна неволя
+  - Польське повстання 1863
+  - Українці — союзники чи конкуренти
+- section: Спільна культура
+  words: 564
+  points:
+  - Мова — взаємовпливи
+  - Костюшко, Міцкевич — походження
+  - Архітектура Львова
+  - Що залишилось
+- section: Підсумок
+  words: 341
+  points:
+  - Симбіоз і конфлікт — одночасно
+  - Неможливо спростити
+  - Перехід до 1918-1920
+word_target: 3500
+vocabulary_hints:
+  required:
+  - симбіоз (symbiosis)
+  - конфлікт (conflict)
+  - Річ Посполита (Polish-Lithuanian Commonwealth)
+  - унія (union)
+  - шляхта (nobility)
+  - полонізація (Polonization)
+  - козацьке повстання (Cossack uprising)
+  - поділи (partitions)
+  - спільна неволя (shared captivity)
+  - взаємовплив (mutual influence)
+  recommended:
+  - магнат (magnate)
+  - кресови (Kresy)
+  - руська мова (Ruthenian)
+  - сарматизм (Sarmatism)
+  - гайдамаки (Haidamaks)
+activity_hints:
+- type: historical-analysis
+  focus: 400 years of Polish-Ukrainian shared state
+  output: Coexistence analysis
+- type: complexity-analysis
+  focus: Why 1648 was not ethnic cleansing
+  output: Nuance identification
+- type: cultural-study
+  focus: Polish-Ukrainian cultural symbiosis
+  output: Cultural exchange mapping
+- type: comparative-perspective
+  focus: Polish and Ukrainian views on shared history
+  output: Perspective comparison
+- type: essay-response
+  focus: Чи Польща була колонізатором України?
+  word_target: 400
+  model_answer: Required (nuanced)
+focus: history
+prerequisites:
+- c1-hist-113 (Information war synthesis)
+- c1-hist-11-20 (Cossack primary sources)
+connects_to:
+- c1-hist-115 (1918-1920 war and alliance)
+- c1-hist-117 (2022 breakthrough)
+module_type: thematic
+sources:
+- name: Польсько-українські відносини (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Польсько-українські_відносини
+  type: reference
+  notes: Relations overview
+- name: Річ Посполита (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Річ_Посполита
+  type: reference
+  notes: Commonwealth period
+- name: Козацько-польські війни (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Козацько-польські_війни
+  type: reference
+  notes: Cossack-Polish wars
+immersion: 100% Ukrainian
+phase: C1-HIST.1 [Historiography]

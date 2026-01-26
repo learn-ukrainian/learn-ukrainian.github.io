@@ -1,97 +1,13 @@
 module: a1-21
-id: a1-21
+level: A1
 slug: yesterday-past-tense
-title: "Yesterday - Past Tense"
-subtitle: "Talking About What Happened"
 version: '2.0'
-phase: "A1.3 [Consolidation]"
-focus: grammar
-pedagogy: PPP
-register: розмовний
-duration: 60
-transliteration: none
-objectives:
-  - "Learner can form past tense using L-participle"
-  - "Learner can use correct gender ending (-в/-ла/-ло/-ли)"
-  - "Learner can describe past events using time expressions"
-  - "Learner can talk about what they did yesterday"
-grammar:
-  - "Past tense formation with L-participle"
-  - "Gender agreement in past tense"
-  - "Time expressions for past events"
-word_target: 1000
-content_outline:
-  - section: "Introduction: The Past Tense"
-    words: 150
-    points:
-      - "Ukrainian past tense is simple"
-      - "One form for all persons"
-      - "Agreement with subject gender"
-  - section: "Forming the L-Participle"
-    words: 200
-    points:
-      - "Remove -ти from infinitive"
-      - "Add -в (masculine), -ла (feminine), -ло (neuter)"
-      - "Plural for all genders: -ли"
-  - section: "Gender Agreement"
-    words: 200
-    points:
-      - "Я читав (male speaker)"
-      - "Я читала (female speaker)"
-      - "Воно було (neuter subject)"
-  - section: "Common Past Tense Verbs"
-    words: 200
-    points:
-      - "був/була/було/були (was/were)"
-      - "робив/робила (did)"
-      - "їв/їла (ate), пив/пила (drank)"
-  - section: "Time Expressions"
-    words: 150
-    points:
-      - "вчора (yesterday)"
-      - "минулого тижня (last week)"
-      - "раніше (earlier, before)"
-  - section: "Practice: What Did You Do?"
-    words: 100
-    points:
-      - "Describe yesterday"
-      - "Ask about past activities"
-vocabulary_hints:
-  required:
-    - вчора (yesterday)
-    - робити (to do)
-    - їсти (to eat)
-    - пити (to drink)
-    - бути (to be)
-    - читати (to read)
-    - дивитися (to watch)
-    - ходити (to go)
-  recommended:
-    - минулий (last, past)
-    - раніше (earlier)
-    - тиждень (week)
-    - місяць (month)
-    - спати (to sleep)
-    - працювати (to work)
-activity_hints:
-  - type: transformation
-    focus: "Change verbs to past tense"
-    items: 25
-  - type: fill-in
-    focus: "Complete with correct gender ending"
-    items: 20
-  - type: translation
-    focus: "Translate past tense sentences"
-    items: 15
-  - type: dialogue
-    focus: "What did you do yesterday?"
-    items: 6
-prerequisites:
-  - a1-20 (Checkpoint Navigation)
-connects_to:
-  - a1-22 (Tomorrow - Future Tense)
-  - a1-25 (My Daily Routine)
+id: a1-21
 naturalness:
   score: 10
   status: PASS
-  justification: "Clear past tense introduction"
+  justification: Clear past tense introduction
+duration: 60
+transliteration: none
+build:
+  last_modified: '2026-01-26'

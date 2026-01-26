@@ -1,70 +1,66 @@
 module: kozatske-viisko
-level: b2-hist
-sequence: 48
-version: '1.0'
+level: B2-HIST
+slug: kozatske-viisko
+version: '2.0'
 title: Козацьке військо та озброєння
-focus: history
-pedagogy: CBI
-objectives:
-- Учень може описати структуру та ієрархію козацького війська
-- Учень може аналізувати типи озброєння та їхнє походження
-- Учень може пояснити тактичні переваги козацької піхоти та кавалерії
+subtitle: Cossack Army and Weaponry
 content_outline:
 - section: 'Вступ: Феномен козацького війська'
   words: 400
-  subsections:
+  points:
   - Universal military service and democracy
   - International reputation of Cossack mercenaries
 - section: 'Структура та Ієрархія: Від коша до полку'
   words: 600
-  subsections:
+  points:
   - The role of the Hetman and General Staff
   - Territorial and functional divisions
   - Discipline and military code
 - section: 'Озброєння: Шабля, самопал та гармата'
   words: 600
-  subsections:
+  points:
   - 'Individual weaponry: fire and steel'
   - The cult of the sabre (shablya)
   - 'Artillery: mobility and psychological impact'
 - section: 'Тактика бою: Козацький табір та розвідка'
   words: 600
-  subsections:
+  points:
   - The 'tabor' as a defensive fort
   - Cossack 'plastuny' (scouts)
   - Siege warfare and river raids
 - section: 'Символіка та Клейноди: Знаки влади'
   words: 400
-  subsections:
+  points:
   - Bulava, bunchuk, and seals
   - The sacred meaning of the banner (khoruhva)
 - section: 'Читання: Опис козацького вишколу'
   words: 250
-  subsections:
+  points:
   - Account of a foreign observer on Cossack training
 - section: 'Первинні джерела: Голоси епохи'
   words: 300
-  subsections:
+  points:
   - Analysis of official documents and letters
 - section: Деколонізаційний погляд
   words: 400
-  subsections:
+  points:
   - Cossacks as a modern professional army, not a 'rabble'
   - Influence on European military science
   - Ukraine's military subjectivity
 word_target: 4000
-vocabulary:
-- булава
-- пернач
-- самопал
-- шабля
-- гармата
-- полк
-- сотня
-- кіш
-- обоз
-- хоругва
-activities:
+vocabulary_hints:
+  required:
+  - булава
+  - пернач
+  - самопал
+  - шабля
+  - гармата
+  - полк
+  - сотня
+  - кіш
+  - обоз
+  - хоругва
+activity_hints:
 - type: reading
   focus: Primary sources on military structure
 - type: quiz
@@ -75,6 +71,15 @@ activities:
   focus: Cossack vs Western European military organization
 - type: true-false
   focus: Facts about weaponry and ranks
+focus: history
+pedagogy: CBI
+objectives:
+- Учень може описати структуру та ієрархію козацького війська
+- Учень може аналізувати типи озброєння та їхнє походження
+- Учень може пояснити тактичні переваги козацької піхоти та кавалерії
+grammar:
+- Military terminology and formations
+- Historical narrative register
 sources:
 - name: Military Art of Ukrainian Cossacks
   url: https://resource.history.org.ua/item/0002345
@@ -84,3 +89,5 @@ sources:
   url: https://warmuseum.kyiv.ua
   type: reference
   notes: Visual and technical details
+register: публіцистичний
+phase: HIST.5 [Rise of Cossacks]

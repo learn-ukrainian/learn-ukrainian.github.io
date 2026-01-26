@@ -1,16 +1,9 @@
-module: my-world-objects
-level: a1
-sequence: 5
+module: a1-05
+level: A1
+slug: my-world-objects
 version: '2.0'
 title: 'My World: Objects'
 subtitle: Pointing to Things with Demonstratives
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can use цей/ця/це/ці to point to objects near them
-- Learner can use той/та/те/ті to point to objects far from them
-- Learner can match demonstrative gender with noun gender
-- Learner can name 40 common household and everyday objects
 content_outline:
 - section: 'Introduction: Pointing to Things'
   words: 100
@@ -49,7 +42,7 @@ content_outline:
   - Що це? conversations
   - Describing your space
 word_target: 900
-vocabulary:
+vocabulary_hints:
   required:
   - цей (this m.)
   - ця (this f.)
@@ -66,16 +59,34 @@ vocabulary:
   - вікно (window)
   - шафа (wardrobe)
   - двері (door)
-  forbidden: []
-activities:
-  types_required:
-  - quiz
-  - fill-in
-  - labeling
-  - dialogue
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: labeling
+  focus: Label room objects
+  items: 20
+- type: quiz
+  focus: Match demonstrative to gender
+  items: 20
+- type: fill-in
+  focus: Complete with цей/ця/це
+  items: 15
+- type: dialogue
+  focus: Що це? conversations
+  items: 6
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-04 (This Is, I Am)
 connects_to:
 - a1-06 (The Living Verb I)
 - a1-15 (Around the City)
+objectives:
+- Learner can use цей/ця/це/ці to point to objects near them
+- Learner can use той/та/те/ті to point to objects far from them
+- Learner can match demonstrative gender with noun gender
+- Learner can name 40 common household and everyday objects
+grammar:
+- Demonstratives цей/ця/це/ці (this)
+- Demonstratives той/та/те/ті (that)
+- Gender agreement with demonstratives
+register: розмовний
+phase: A1.1 [First Contact]

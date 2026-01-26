@@ -1,57 +1,17 @@
 module: b2-57
-title: 'Синоніми: Рух і Пересування'
-subtitle: Synonyms - Movement
+level: B2
+slug: 57-synonyms-movement
 version: '1.0'
-phase: B2.2 [Phraseology & Synonymy]
-pedagogy: CBI
-focus: phraseology
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
-immersion: 100
 tags:
 - vocabulary
 - synonyms
 - movement
-grammar:
-- Nuances in verbs of motion
-- Manner of movement and adverbs
-objectives:
-- Учень може розрізняти відтінки значень дієслів на позначення руху
-- Учень вміє вживати лексику пересування для створення динамічних описів у художньому
-  та публіцистичному стилях
 vocabulary_count: 35
-register: художній
 vocab_count: 136
-slug: 57-synonyms-movement
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-- section: Вступ — Рух і Пересування
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-- section: Walk
-  words: 500
-  points:
-  - йти (go - general, one direction)
-  - ходити (walk - repeated, habitual)
-  - крокувати (stride - deliberate steps)
-  - брести (trudge - tired walking)
-  - тупати (stomp - heavy steps)
-- section: Run
-  words: 500
-  points:
-  - бігти (run - one direction)
-  - бігати (run - repeated)
-  - мчати (race - very fast)
-  - нестися (dash - uncontrolled)
-  - чимчикувати (scurry - quick small steps)
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

@@ -1,40 +1,8 @@
-slug: afhanistan
-title: Українці в Афганістані
+module: afhanistan
 level: B2
-track: history
-phase: HIST.11 [Post-War Soviet Ukraine]
+slug: afhanistan
+version: '2.0'
 status: skeleton
-focus: history
-word_target: 4000
-prerequisites: []
-learning_outcomes: []
-content_outline:
-- section: Вступ — Чужа війна
-  words: 533
-  points:
-  - Context of the Cold War and the Brezhnev era stagnation
-  - The concept of 'international duty' (інтернаціональний обов'язок)
-  - Disproportionate conscription of Ukrainians into the Soviet Army
-- section: Війна в Афганістані (1979-1989)
-  words: 1333
-  points:
-  - The invasion of December 1979 and the storming of Amin's palace
-  - 'Combat conditions: guerilla warfare in the mountains vs. Soviet mechanized doctrine'
-  - 'Daily life of a soldier: disease, isolation, and ''didschyna'' (hazing)'
-  - The 'Black Tulip' flights and 'Cargo 200' returning to Ukrainian cities
-- section: Первинні джерела
-  words: 800
-  points:
-  - Letters from Ukrainian soldiers to their families (censorship vs. reality)
-  - Memoirs of veterans describing the disconnect between propaganda and the front
-  - Official Soviet reports masking casualties
-- section: Деколонізаційний погляд
-  words: 800
-  points:
-  - 'Myth: Defending the southern borders of the Motherland'
-  - 'Reality: Imperial aggression using colonized people as cannon fodder'
-  - The trauma of the 'Afgantsi' generation in independent Ukraine
-  - 'Parallel: How Russia uses non-Russians in modern wars (e.g., against Ukraine)'
-  - The role of the Afghan war in delegitimizing the Soviet system
-  - The social and psychological legacy of the war in 1990s Ukraine
-  - Commemoration vs. glorification
+track: history
+build:
+  last_modified: '2026-01-26'

@@ -1,25 +1,8 @@
 module: 11-multi-clause-sentences
-level: b2
-sequence: 11
-version: '1.0'
+level: B2
+slug: 11-multi-clause-sentences
+version: '2.0'
 title: Багатоскладні речення
-focus: grammar
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Ukrainian State Standard 2024 - Syntax
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Complex sentence structure requirements for B2
-- name: Сучасна українська літературна мова - Синтаксис
-  url: https://uk.wikipedia.org/wiki/Синтаксис
-  type: secondary
-  notes: Academic reference for sentence structure
-- name: CEFR B2 Grammar Complexity
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
-  type: reference
-  notes: B2 complex sentence requirements
 content_outline:
 - section: Вступ — Багатоскладні речення
   words: 400
@@ -67,7 +50,7 @@ content_outline:
   - Аналіз структури речень
   - Підготовка до модуля 12
 word_target: 3800
-vocabulary:
+vocabulary_hints:
   required:
   - складносурядне речення (compound sentence)
   - складнопідрядне речення (complex sentence)
@@ -85,18 +68,48 @@ vocabulary:
   - зв'язок (connection)
   - структура (structure)
   - ясність (clarity)
-  forbidden: []
-activities:
-  types_required:
-  - error-correction
-  - quiz
-  - fill-in
-  - essay-response
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: Identify sentence type (compound vs complex)
+  items: 15+
+- type: fill-in
+  focus: Combine simple sentences into complex structures
+  items: 12+
+- type: fill-in
+  focus: Insert appropriate conjunctions
+  items: 15+
+- type: match-up
+  focus: Clause type → example sentence
+  items: 12+
+- type: error-correction
+  focus: Fix punctuation in complex sentences
+  items: 12+
+- type: essay-response
+  focus: Write paragraph using all sentence types
+  word_target: 150
+  output: Model answer with structure analysis
+focus: grammar
+prerequisites:
+- b2-01 through b2-10 (Passive Voice phase)
+- Simple sentence structure
+- Basic conjunctions
 connects_to:
 - b2-12 (Parenthetical Expressions)
 - b2-14 (Stylistic Connectors)
 - b2-25 (B2.1b Checkpoint)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Syntax
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Complex sentence structure requirements for B2
+- name: Сучасна українська літературна мова - Синтаксис
+  url: https://uk.wikipedia.org/wiki/Синтаксис
+  type: secondary
+  notes: Academic reference for sentence structure
+- name: CEFR B2 Grammar Complexity
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 complex sentence requirements
+immersion: 100% Ukrainian
+phase: B2.1b [Participles & Register Intro]

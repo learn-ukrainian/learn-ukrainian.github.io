@@ -1,115 +1,130 @@
-module: roman-mstyslavych
-level: c1-bio
-sequence: 0
+module: c1-bio-roman-mstyslavych
+level: C1-BIO
+slug: roman-mstyslavych
 version: '2.0'
 title: 'Роман Мстиславич: Засновник Галицько-Волинської держави'
-focus: biography
-pedagogy: seminar
-objectives:
-- Analyze the political strategy of uniting Galicia and Volhynia
-- Evaluate Roman's role in the decline of Kyivan Rus' fragmentation
-- Master vocabulary related to medieval state formation
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Роман_Мстиславич
-    title: Роман Мстиславич (Wikipedia UA)
-    notes: Biography, military campaigns, unification of principalities
-  - url: https://uk.wikipedia.org/wiki/Галицько-Волинське_князівство
-    title: Галицько-Волинське князівство
-    notes: Context for state formation
-  secondary:
-  - url: https://uk.wikipedia.org/wiki/Галицько-Волинський_літопис
-    title: Галицько-Волинський літопис
-    notes: Primary chronicle source
+subtitle: 'Roman the Great: Founder of the Galicia-Volhynia State'
 content_outline:
 - section: Вступ — Самодержець усієї Русі
   words: 421
-  subsections:
+  points:
   - Титул "великий князь, самодержець усієї Русі" у літописі
   - Значення об'єднання Галичини та Волині
   - Роман як попередник Данила Галицького
 - section: Походження та молодість
   words: 526
-  subsections:
+  points:
   - Народження у родині Мстислава Ізяславича
   - Княжіння в Новгороді (1168-1170)
   - Успадкування Волині (1170)
 - section: Боротьба за Галич
   words: 736
-  subsections:
+  points:
   - Політична ситуація в Галичині
   - Конфлікт з боярством
   - Перша спроба захопити Галич (1188)
   - Остаточне об'єднання (1199)
 - section: Створення Галицько-Волинської держави
   words: 842
-  subsections:
+  points:
   - Об'єднання двох князівств
   - Політика централізації
   - Боротьба з боярською опозицією
   - Захоплення Києва (1202)
 - section: Зовнішня політика
   words: 631
-  subsections:
+  points:
   - Відносини з Польщею та Угорщиною
   - Походи на половців
   - Контакти з папою Інокентієм III
   - Пропозиція королівської корони
 - section: Загибель та спадщина
   words: 526
-  subsections:
+  points:
   - Битва під Завихостом (1205)
   - Польська засідка та смерть
   - Криза після смерті Романа
   - Значення для нащадків
 - section: Підсумок — Будівничий держави
   words: 318
-  subsections:
+  points:
   - Роман як об'єднувач земель
   - Порівняння з іншими європейськими монархами
   - Спадщина для української державності
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - самодержець
-  - князівство
-  - боярство
-  - об'єднання
-  - літопис
-  - усобиця
-  - засідка
-  - спадкоємець
-  - данина
-  - похід
+  - самодержець (autocrat)
+  - князівство (principality)
+  - боярство (boyar class)
+  - об'єднання (unification)
+  - літопис (chronicle)
+  - усобиця (internecine strife)
+  - засідка (ambush)
+  - спадкоємець (heir)
+  - данина (tribute)
+  - похід (campaign)
   recommended:
-  - престол
-  - династія
-  - васал
-  - магнат
-  - грамота
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  - critical-analysis
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - престол (throne)
+  - династія (dynasty)
+  - васал (vassal)
+  - магнат (magnate)
+  - грамота (charter)
+activity_hints:
+- type: reading
+  focus: Chronicle descriptions of Roman's reign
+  source: Галицько-Волинський літопис (adapted)
+  items: 3 passages
+- type: quiz
+  focus: Key events in Roman's life and reign
+  items: 12+
+- type: match-up
+  focus: Territories and their political status
+  items: 10+
+- type: essay-response
+  focus: Evaluate Roman's strategy for unifying Galicia and Volhynia
+  word_target: 250
+  output: Analytical argument with evidence
+- type: group-sort
+  focus: Domestic vs. foreign policy actions
+  items: 12+
+- type: fill-in
+  focus: Key dates and places in Roman's campaigns
+  items: 8+
+- type: critical-analysis
+  focus: Why did Roman succeed where others failed?
+  output: Comparative analysis
+focus: biography
+pedagogy: seminar
+prerequisites:
+- c1-bio-05 (Anna Yaroslavna - earlier period)
+- c1-bio-06 (Mykhailo Chernihivskyi - later consequence)
+- Understanding of Kyivan Rus fragmentation
 connects_to:
-  previous: c1-bio-05 (Anna Yaroslavna - earlier period)
-  related:
-  - c1-bio-danylo-halytskyi (Danylo - son)
-  - c1-bio-lev-danylovych (Lev - grandson)
-  - c1-bio-06 (Mykhailo Chernihivskyi - Mongol era)
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-danylo-halytskyi (Danylo - son)
+- c1-bio-lev-danylovych (Lev - grandson)
+- c1-bio-06 (Mykhailo Chernihivskyi - Mongol era)
+objectives:
+- Analyze the political strategy of uniting Galicia and Volhynia
+- Evaluate Roman's role in the decline of Kyivan Rus' fragmentation
+- Master vocabulary related to medieval state formation
+grammar:
+- Historical narrative register
+- Chronicle quotations
+- Participial constructions
+module_type: biography
+sources:
+- name: Роман Мстиславич (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Роман_Мстиславич
+  type: primary
+  notes: Biography, military campaigns, unification of principalities
+- name: Галицько-Волинське князівство
+  url: https://uk.wikipedia.org/wiki/Галицько-Волинське_князівство
+  type: primary
+  notes: Context for state formation
+- name: Галицько-Волинський літопис
+  url: https://uk.wikipedia.org/wiki/Галицько-Волинський_літопис
+  type: reference
+  notes: Primary chronicle source
+immersion: 100% Ukrainian
+phase: C1-BIO

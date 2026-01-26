@@ -1,113 +1,11 @@
-id: c1-bio-98
-title: 'Іван Огієнко: Митрополит і Захисник Мови'
+module: ivan-ohienko
+level: C1-BIO
 slug: ivan-ohienko
-module_type: biography
-word_target: 4000
-immersion: 100% Ukrainian
 version: '2.0'
-phase: C1-BIO
-focus: biography
-sources:
-- name: Іван Огієнко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Огієнко_Іван_Іванович
-  type: primary
-  notes: Основна біографічна інформація
-- name: Переклад Біблії
-  url: https://bible.ua/
-  type: reference
-  notes: Біблійний переклад
-- name: Митрополія УАПЦ
-  url: https://uaoc.org.ua/
-  type: reference
-  notes: Церковна діяльність
-content_outline:
-- section: Вступ — Людина багатьох покликань
-  words: 400
-  points:
-  - Огієнко як мовознавець, богослов і державник
-  - Перший переклад Біблії сучасною українською
-  - Чому його спадщина актуальна сьогодні
-- section: Житомирщина та формування
-  words: 600
-  points:
-  - Народження в селі Брусилів (1882)
-  - Сирітське дитинство та шлях до освіти
-  - Вплив на формування національної свідомості
-- section: Мовознавець і освітянин
-  words: 700
-  points:
-  - Дослідження історії української мови
-  - Праця Історія української літературної мови
-  - Боротьба за мовну норму
-- section: Державна діяльність
-  words: 700
-  points:
-  - Міністр освіти УНР
-  - Міністр віросповідань
-  - Роль у церковній політиці
-- section: Еміграція та церковна служба
-  words: 800
-  points:
-  - Життя за кордоном
-  - Архієпископ і митрополит УАПЦ
-  - Духовне окормлення діаспори
-- section: Переклад Біблії
-  words: 600
-  points:
-  - Справа всього життя
-  - Особливості перекладу
-  - Значення для української культури
-- section: Дискусія — Мова і віра як основи нації
-  words: 200
-  points:
-  - Звязок між мовою та духовністю
-  - Огієнко як символ українського відродження
-vocabulary_hints:
-  required:
-  - митрополит (metropolitan bishop)
-  - мовознавець (linguist)
-  - богослов (theologian)
-  - переклад (translation)
-  - Біблія (Bible)
-  - автокефалія (autocephaly)
-  - літургія (liturgy)
-  - мовна норма (language norm)
-  - правопис (orthography)
-  - діаспора (diaspora)
-  recommended:
-  - соборність (conciliarity)
-  - канон (canon)
-  - євангеліє (gospel)
-  - церковнословянська (Church Slavonic)
-  - кодифікація (codification)
-activity_hints:
-- type: reading
-  focus: Фрагменти перекладу Біблії та праць про мову
-  source: Первинні джерела
-  items: 3 passages
-- type: quiz
-  focus: Факти про життя та діяльність Огієнка
-  items: 12+
-- type: match-up
-  focus: Праці та їхній зміст
-  items: 10+
-- type: essay-response
-  focus: Чому важливо мати Біблію рідною мовою?
-  word_target: 300
-  output: Культурологічний есей
-- type: group-sort
-  focus: Церковна vs світська діяльність
-  items: 12+
-- type: fill-in
-  focus: Релігійна та мовознавча термінологія
-  items: 10+
-prerequisites:
-- c1-bio-97-panteleimon-kulish
-connects_to:
-- c1-bio-99-volodymyr-vernadskyi
-- c1-bio-30-borys-hrinchenko
-- c1-bio-20-taras-shevchenko
-vital_status: deceased
+id: c1-bio-98
 naturalness:
   score: 1
   status: PENDING
+vital_status: deceased
+build:
+  last_modified: '2026-01-26'

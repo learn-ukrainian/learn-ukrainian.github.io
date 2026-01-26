@@ -1,28 +1,9 @@
 module: 24-motion-practice-integration
-level: b1
-sequence: 24
+level: B1
+slug: 24-motion-practice-integration
 version: '2.0'
 title: 'Дієслова руху: практика та інтеграція'
 subtitle: 'Motion verbs: practice and integration'
-focus: grammar
-pedagogy: TTT
-objectives:
-- Master complex travel narratives
-- Correctly use prepositions with specific motion prefixes
-- Understand and use high-frequency motion idioms
-sources:
-- name: Ukrainian State Standard 2024 - Motion and Prepositions
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official guidance on preposition-verb combinations
-- name: Ukrainian Motion Verbs
-  url: https://uk.wikipedia.org/wiki/Дієслова_руху
-  type: reference
-  notes: Comprehensive motion verb reference
-- name: Ukrainian Prepositions
-  url: https://uk.wikipedia.org/wiki/Прийменник
-  type: reference
-  notes: Preposition usage with motion verbs
 content_outline:
 - section: Тест
   words: 100
@@ -49,7 +30,7 @@ content_outline:
   - Examples and explanation
   - Practice or application
 word_target: 1500
-vocabulary:
+vocabulary_hints:
   required:
   - спочатку (at first)
   - потім (then)
@@ -67,14 +48,53 @@ vocabulary:
   - світлофор (traffic light)
   - пішохідний перехід (pedestrian crossing)
   - кілька кварталів (a few blocks)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - quiz
-  - cloze
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: cloze
+  focus: Extended writing - "A journey I took"
+  items: 15+
+- type: fill-in
+  focus: Map-based - Give complex directions
+  items: 12+
+- type: fill-in
+  focus: Change direction/destination
+  items: 12+
+- type: quiz
+  focus: Preposition + motion verb combinations
+  items: 15+
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-16 (Motion verbs full system)
+- b1-17 (Motion - coming & going)
+- b1-18 (Motion - passing & crossing)
+- b1-19 (Motion - starting & returning)
+- b1-20 (Motion - approaching & departing)
+- b1-21 (Motion - figurative uses)
+- b1-22 (Motion full prefix integration)
+- b1-23 (Motion patterns in other verbs)
 connects_to:
 - b1-25 (Checkpoint - motion verbs)
+objectives:
+- Master complex travel narratives
+- Correctly use prepositions with specific motion prefixes
+- Understand and use high-frequency motion idioms
+grammar:
+- Integration of pure and prefixed motion verbs
+- Prepositions governing motion (в, на, до, через, повз)
+- Figurative idioms with motion verbs
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Motion and Prepositions
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official guidance on preposition-verb combinations
+- name: Ukrainian Motion Verbs
+  url: https://uk.wikipedia.org/wiki/Дієслова_руху
+  type: reference
+  notes: Comprehensive motion verb reference
+- name: Ukrainian Prepositions
+  url: https://uk.wikipedia.org/wiki/Прийменник
+  type: reference
+  notes: Preposition usage with motion verbs
+immersion: 100% Ukrainian
+phase: B1.2 Motion

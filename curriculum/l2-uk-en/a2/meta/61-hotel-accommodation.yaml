@@ -1,97 +1,13 @@
 module: a2-61
-id: a2-61
+level: A2
 slug: hotel-accommodation
-title: "Hotel Accommodation"
-subtitle: "Checking In and Out"
 version: '2.0'
-phase: "A2.6 [Practical]"
-focus: practical
-pedagogy: PPP
-register: розмовний
-duration: 60
-transliteration: none
-objectives:
-  - "Learner can book a hotel room"
-  - "Learner can check in and check out"
-  - "Learner can ask for amenities"
-  - "Learner can resolve common hotel issues"
-grammar:
-  - "Booking vocabulary (забронювати, номер)"
-  - "Check-in phrases (заселення, виселення)"
-  - "Requests and complaints"
-word_target: 1000
-content_outline:
-  - section: "Introduction: Hotels in Ukraine"
-    words: 100
-    points:
-      - "Types of accommodation"
-      - "Booking options"
-      - "Hotel vocabulary overview"
-  - section: "Making a Reservation"
-    words: 200
-    points:
-      - "забронювати номер"
-      - "Room types (одномісний, двомісний)"
-      - "Dates and duration"
-  - section: "Checking In"
-    words: 200
-    points:
-      - "реєстрація, паспорт"
-      - "заселення, ключ"
-      - "Room information"
-  - section: "Hotel Amenities"
-    words: 200
-    points:
-      - "сніданок, Wi-Fi, парковка"
-      - "рушник, мило, шампунь"
-      - "Requesting items"
-  - section: "Problems and Solutions"
-    words: 150
-    points:
-      - "Common complaints"
-      - "Asking for help"
-      - "Resolving issues"
-  - section: "Practice: Hotel Stay"
-    words: 150
-    points:
-      - "Check in dialogue"
-      - "Request amenities"
-vocabulary_hints:
-  required:
-    - готель (hotel)
-    - номер (room)
-    - забронювати (to book)
-    - заселення (check-in)
-    - виселення (check-out)
-    - ключ (key)
-    - сніданок (breakfast)
-    - рахунок (bill)
-  recommended:
-    - одномісний (single)
-    - двомісний (double)
-    - рушник (towel)
-    - кондиціонер (air conditioning)
-    - прибирання (cleaning)
-    - адміністратор (receptionist)
-activity_hints:
-  - type: vocabulary-drill
-    focus: "Hotel vocabulary"
-    items: 25
-  - type: dialogue
-    focus: "Check-in conversation"
-    items: 12
-  - type: fill-in
-    focus: "Complete hotel sentences"
-    items: 15
-  - type: role-play
-    focus: "Hotel scenarios"
-    items: 8
-prerequisites:
-  - a2-60 (At the Pharmacy)
-connects_to:
-  - a2-62 (Rental Accommodation)
-  - a2-46 (Home and Furniture)
+id: a2-61
 naturalness:
   score: 9
   status: PASS
-  justification: "Essential travel scenario"
+  justification: Essential travel scenario
+duration: 60
+transliteration: none
+build:
+  last_modified: '2026-01-26'

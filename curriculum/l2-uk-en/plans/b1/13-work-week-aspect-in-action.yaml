@@ -1,24 +1,9 @@
 module: 13-work-week-aspect-in-action
-level: b1
-sequence: 13
-version: '1.0'
+level: B1
+slug: 13-work-week-aspect-in-action
+version: '2.0'
 title: 'Робочий тиждень: вид у дії'
 subtitle: Work Week - Aspect in Real-Life Context
-focus: grammar
-pedagogy: TTT
-objectives:
-- Learner can describe work routines using correct aspect
-- Learner can report completed and ongoing tasks
-- Learner can use aspect naturally in professional contexts
-sources:
-- name: Ukrainian Business Communication
-  url: https://uk.wikipedia.org/wiki/Ділове_мовлення
-  type: reference
-  notes: Work-related vocabulary and contexts
-- name: Ukrainian State Standard 2024 - Professional Communication
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Aspect in workplace scenarios
 content_outline:
 - section: Тест
   words: 150
@@ -46,7 +31,7 @@ content_outline:
   - Grammar in natural context
   - Various situations
 word_target: 1500
-vocabulary:
+vocabulary_hints:
   required:
   - завдання (task)
   - звіт (report)
@@ -64,14 +49,40 @@ vocabulary:
   - план (plan)
   - графік (schedule)
   - відпустка (vacation/leave)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - cloze
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: Work reports with correct aspect
+  items: 12+
+- type: cloze
+  focus: Weekly report narrative
+  items: 10+
+- type: fill-in
+  focus: Plan → report (future → past aspect)
+  items: 8+
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-12 (Aspect pairs - essential 40)
+- All aspect modules M06-12
 connects_to:
 - b1-14 (Aspect integration practice)
 - b1-61 (Professional communication)
+objectives:
+- Learner can describe work routines using correct aspect
+- Learner can report completed and ongoing tasks
+- Learner can use aspect naturally in professional contexts
+grammar:
+- All aspect contexts in work scenarios
+- Aspect integration in daily routine
+module_type: grammar
+sources:
+- name: Ukrainian Business Communication
+  url: https://uk.wikipedia.org/wiki/Ділове_мовлення
+  type: reference
+  notes: Work-related vocabulary and contexts
+- name: Ukrainian State Standard 2024 - Professional Communication
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Aspect in workplace scenarios
+immersion: 100% Ukrainian
+phase: B1.1 Aspect

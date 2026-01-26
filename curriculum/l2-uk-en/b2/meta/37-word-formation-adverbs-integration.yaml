@@ -1,10 +1,10 @@
 module: b2-37
-title: 'Словотворення: прислівники та інтеграція'
-subtitle: Творення прислівників від прикметників і повторення словотвірних моделей
+level: B2
+slug: 37-word-formation-adverbs-integration
 version: '1.0'
-phase: B2.1b [Grammar Completion]
-pedagogy: TTT
-focus: grammar
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
 tags:
@@ -14,48 +14,7 @@ tags:
 - diminutives
 - augmentatives
 - integration
-grammar:
-- Творення прислівників від прикметників (-о, -е, по-...-ськи, по-...-ому)
-- Зменшувально-пестливі та збільшувальні суфікси
-- Інтеграція всіх словотвірних моделей
-objectives:
-- Learner can form adverbs from adjectives using Ukrainian patterns
-- Learner can distinguish between adverb formation patterns (-о, -е, по-...-ськи)
-- Learner can recognize and use diminutives and augmentatives
-- Learner can integrate word formation knowledge across noun, adjective, and adverb
-  categories
 vocabulary_count: 25
-register: науковий
 vocab_count: 77
-slug: 37-word-formation-adverbs-integration
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-- section: Вступ — прислівники та інтеграція
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-  - Роль у системі української мови
-- section: Adverbs from Adjectives
-  words: 500
-  points:
-  - швидкий → швидко (quickly)
-  - гарний → гарно (well, nicely)
-  - добрий → добре (well)
-  - український → по-українськи (in Ukrainian)
-- section: Diminutives and Augmentatives
-  words: 500
-  points:
-  - хлопець → хлопчик (little boy)
-  - донька → донечка (dear daughter)
-  - вітер → вітрище (strong wind)
-  - великий → величезний (huge)
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

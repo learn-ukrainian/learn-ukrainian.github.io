@@ -1,136 +1,16 @@
-id: b2-hist-17
 module: b2-hist-17
-title: Княжі усобиці та роздроблення
+level: B2-HIST
 slug: kniazivski-usobiytsi
 version: '1.0'
-phase: B2-HIST.1 [Kyivan Rus]
-focus: history
-pedagogy: CBI
-duration: 120
-transliteration: none
-tags:
-  - history
-  - kyivan-rus
-  - fragmentation
-grammar:
-  - Past tense narrative
-  - Political and military terminology
-objectives:
-  - Understand the causes of Kyivan Rus fragmentation
-  - Analyze the decisions of the Liubech Congress
-  - Discuss the impact of Polovtsian threat on unity
-immersion: 100% Ukrainian
-sources:
-- name: Роздроблення Київської Русі (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Роздроблення_Київської_Русі
-  type: reference
-  notes: Overview of fragmentation
-- name: Любецький з'їзд (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Любецький_з%27їзд
-  type: reference
-  notes: Congress that formalized division
-- name: Повість минулих літ
-  url: https://litopys.org.ua/pvl/pvl.htm
-  type: primary
-  notes: Chronicle accounts
-content_outline:
-- section: "Розминка"
-  words: 200
-  points:
-  - "Defining sovereignty vs suzerainty"
-  - "The map of 1054 vs 1132"
-- section: "Читання: Тріумвірат Ярославичів"
-  words: 700
-  points:
-  - "The will of Yaroslav the Wise"
-  - "Battle of Alta (1068)"
-  - "Kyiv Uprising"
-- section: "Любецький з'їзд (1097)"
-  words: 450
-  points:
-  - "Every man holds his own fatherland"
-  - "The blinding of Vasylko"
-  - "Consequences of the Congress"
-- section: "Володимир Мономах"
-  words: 700
-  points:
-  - "Crusades against Polovtsians"
-  - "Monomakh's Reforms (Statute)"
-  - "Instruction (Povchannia)"
-- section: "Соціальна структура та Економіка"
-  words: 700
-  points:
-  - "Economic causes of fragmentation"
-  - "Boyars, Druzhina, Smerds"
-  - "Urban growth"
-- section: "Культура та Церква"
-  words: 250
-  points:
-  - "Architecture (St. Michael's)"
-  - "Chronicle writing (Nestor)"
-  - "Church as unifying force"
-- section: "Первинні джерела"
-  words: 400
-  points:
-  - "Extract from the Primary Chronicle on Liubech"
-  - "Extract from Monomakh's Instruction"
-- section: "Деколонізаційний погляд"
-  words: 350
-  points:
-  - "Reframing Fragmentation as Decentralization"
-  - "European parallels"
-  - "Myth of 'Feudal Disunity'"
-- section: "Підсумок"
-  words: 150
-  points:
-  - "Legacy of the era"
-vocabulary_hints:
-  required:
-  - усобиця (internecine war)
-  - роздроблення (fragmentation)
-  - лествичне право (rota system)
-  - престолонаслідування (succession)
-  - отчина (patrimony)
-  - з'їзд (congress)
-  - боярин (boyar)
-  - князівство (principality)
-  - половці (Polovtsians)
-  - єдність (unity)
-  - центральна влада (central authority)
-  - місцева еліта (local elite)
-  recommended:
-  - засліплення (blinding)
-  - номінальний (nominal)
-  - союз (alliance)
-  - культурний розквіт (cultural flourishing)
-activity_hints:
-- type: reading
-  focus: Chronicle account of Liubech Congress
-  source: Provide in module
-- type: quiz
-  focus: Major principalities after fragmentation (Geography)
-  items: 8+ principalities
-- type: fill-in
-  focus: Political and military terminology
-  items: 15+
-- type: match-up
-  focus: Key events of fragmentation 1054-1240 (Chronology)
-  items: 12+ events
-- type: quiz
-  focus: Causes and consequences of fragmentation
-  items: 12+
-- type: comparative-study
-  focus: Unified Rus vs fragmented Rus
-  output: Two-column analysis
-- type: essay-response
-  focus: Чи було роздроблення неминучим?
-prerequisites:
-- b2-hist-12 (Yaroslav the Wise)
-- b2-hist-15 (Volodymyr Monomakh)
-connects_to:
-- b2-hist-21 (Mongol invasion)
-- b2-hist-23 (Danylo of Halych)
-- 'b2-hist-20 (Synthesis: Kyivan Rus)'
+id: b2-hist-17
 naturalness:
   score: 10
   status: PASS
+duration: 120
+transliteration: none
+tags:
+- history
+- kyivan-rus
+- fragmentation
+build:
+  last_modified: '2026-01-26'

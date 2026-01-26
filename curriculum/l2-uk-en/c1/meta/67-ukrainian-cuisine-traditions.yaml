@@ -1,10 +1,7 @@
 module: c1-67
-title: Українська кухня - традиції та символи
-subtitle: Ukrainian Cuisine - Traditions and Symbols
+level: C1
+slug: 67-ukrainian-cuisine-traditions
 version: '1.0'
-phase: C1.5 Folk Culture & Arts
-focus: cultural
-pedagogy: CBI
 duration: 120
 transliteration: none
 tags:
@@ -12,35 +9,7 @@ tags:
 - cuisine
 - food
 - traditions
-grammar:
-- culinary terminology
-- process descriptions
-objectives:
-- Learner can explain the symbolic meaning of ritual foods (kutia, korovai)
-- Learner can describe traditional cooking methods (stove, clay pot)
-- Learner can distinguish regional cuisines (Poltava dumplings vs. Hutsul banosh)
-- Learner can discuss the role of bread in Ukrainian culture
 vocabulary_count: 30
 vocab_count: 30
-slug: 67-ukrainian-cuisine-traditions
-content_outline:
-- section: Вступ — традиції та символи
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-- section: Content Areas
-  words: 500
-  points:
-  - 'Чарівні казки: magic helpers, transformations'
-  - 'Тваринні казки: animal characters, moral lessons'
-  - 'Побутові казки: everyday life, social satire'
-  - 'Famous collectors: Драгоманов, Грінченко'
-  - Tale structures and formulas
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

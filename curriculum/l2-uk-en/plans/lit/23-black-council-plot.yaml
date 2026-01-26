@@ -1,100 +1,107 @@
-module: 23-black-council-plot
-level: lit
-sequence: 23
+module: black-council-plot
+level: LIT
+slug: black-council-plot
 version: '2.0'
 title: 'Чорна рада: Роман'
 subtitle: 'The Black Council: The Novel'
-focus: literature
-pedagogy: seminar
-sources:
-  primary:
-  - url: https://www.ukrlib.com.ua/books/printit.php?tid=263
-    title: Чорна рада — повний текст
-    notes: Роман для детального аналізу
-  secondary:
-  - url: https://www.ukrlib.com.ua/analiz/printit.php?tid=263
-    title: Аналіз "Чорної ради"
-    notes: Літературознавчий аналіз
-  - url: https://uk.wikipedia.org/wiki/Вальтер_Скотт
-    title: Вальтер Скотт — вплив
-    notes: Літературний контекст
 content_outline:
 - section: Вступ — Перший український історичний роман
   words: 500
-  subsections:
+  points:
   - Значення "Чорної ради" для літератури
   - Вплив Вальтера Скотта
   - Рік видання (1857)
 - section: Сюжет і структура
   words: 700
-  subsections:
+  points:
   - Основні сюжетні лінії
   - Хронологія подій
   - Фінал і його значення
 - section: Система персонажів
   words: 800
-  subsections:
+  points:
   - Шрам — ідеал козацької честі
   - Череваний — прагматик
   - Сомко — трагічний герой
   - Брюховецький — антигерой
 - section: Літературні архетипи
   words: 700
-  subsections:
+  points:
   - Вальтерскоттівська модель
   - «Середній герой» як спостерігач
   - Історія як фон для особистої драми
 - section: Художні особливості
   words: 500
-  subsections:
+  points:
   - Мова роману (архаїзація)
   - Пейзаж і його функція
   - Діалоги vs авторські описи
 - section: Підсумок — Роман як історична філософія
   words: 400
-  subsections:
+  points:
   - Погляд Куліша на "народ"
   - Критика охлократії
   - Перехід до мовного питання
 word_target: 4500
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - історичний роман
-  - архетип
-  - антигерой
-  - архаїзація
-  - сюжетна лінія
-  - пейзаж
-  - хронологія
-  - прагматик
-  - ідеаліст
-  - трагічний герой
+  - історичний роман (historical novel)
+  - архетип (archetype)
+  - антигерой (antihero)
+  - архаїзація (archaization)
+  - сюжетна лінія (plot line)
+  - пейзаж (landscape)
+  - хронологія (chronology)
+  - прагматик (pragmatist)
+  - ідеаліст (idealist)
+  - трагічний герой (tragic hero)
   recommended:
-  - фабула
-  - композиція
-  - наратор
-  - ретроспекція
-  - експозиція
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - cloze
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - фабула (plot)
+  - композиція (composition)
+  - наратор (narrator)
+  - ретроспекція (retrospection)
+  - експозиція (exposition)
+activity_hints:
+- type: reading
+  focus: Ключові епізоди "Чорної ради"
+  source: UkrLib tid=263
+  items: 5+
+- type: quiz
+  focus: Сюжет та персонажі роману
+  items: 15+
+- type: match-up
+  focus: Персонаж → його характеристика / архетип
+  items: 12+
+- type: essay-response
+  focus: Шрам vs Череваний — два погляди на Україну
+  word_target: 300
+  output: Компаративне есе
+- type: cloze
+  focus: Цитати з роману
+  items: 12+
+focus: literature
+pedagogy: Analysis
+prerequisites:
+- lit-22 (Black Council History)
+- Understanding of historical novel genre
 connects_to:
-  previous: lit-22 (Black Council History)
-  related:
-  - lit-24 (Language Question — мова роману)
-  - lit-13 (Haidamaky — порівняння історичних наративів)
-constraints:
-  min_engagement_boxes: 3
-  min_examples: 15
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- lit-24 (Language Question — мова роману)
+- lit-13 (Haidamaky — порівняння історичних наративів)
+grammar:
+- Literary Archetypes
+module_type: literature
+sources:
+- name: Чорна рада — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=263
+  type: primary
+  notes: Роман для детального аналізу
+- name: Аналіз "Чорної ради"
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=263
+  type: secondary
+  notes: Літературознавчий аналіз
+- name: Вальтер Скотт — вплив
+  url: https://uk.wikipedia.org/wiki/Вальтер_Скотт
+  type: reference
+  notes: Літературний контекст
+immersion: 100% Ukrainian
+phase: LIT.4 The Intellectuals (Kulish & Kostomarov)

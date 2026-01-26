@@ -1,22 +1,53 @@
-module: 22-register-literary-ukrainian
-level: b2
-sequence: 22
-version: '1.0'
+module: b2-22
+level: B2
+slug: 22-register-literary-ukrainian
+version: '2.0'
 title: Регістр — Літературна українська
 subtitle: Мова художньої літератури
+content_outline:
+- section: Вступ — Літературна українська
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Особливості літературного стилю
+  words: 400
+  points:
+  - Образна мова (метафора, порівняння)
+  - Архаїчна та піднесена лексика
+  - Інверсія
+  - Правила діалогу
+- section: Літературна лексика
+  words: 400
+  points:
+  - 'Archaic: отож, воістину, мовив'
+  - 'Elevated: краса, велич, доля'
+  - 'Poetic: зоря, гай, криниця'
+- section: Stylistic Devices (State Standard 4569-4596)
+  words: 400
+  points:
+  - 'Антоніми: той – цей, давно – щойно, будувати – руйнувати'
+  - 'Синоніми: старий, старовинний, давній, древній, архаїчний'
+  - 'Омоніми: коло (circle) – коло (near), замóк – зáмок'
+  - 'Зменшувально-пестливі: хлопчик, донечка, дощик'
+  - 'Згрубілі форми: вітрище, величезний'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: grammar
 pedagogy: TTT
 objectives:
 - Учень може розпізнавати характерні ознаки літературного стилю
 - Учень може аналізувати стилістичні засоби в художніх текстах
 - Учень може трансформувати нейтральний текст у літературний стиль
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- literary-register
+- figurative-language
+- archaic-vocabulary
+- inverted-word-order
+phase: B2

@@ -1,24 +1,9 @@
 module: 04-sentence-structure
-level: b1
-sequence: 4
-version: '1.0'
+level: B1
+slug: 04-sentence-structure
+version: '2.0'
 title: Структура речення
 subtitle: Sentence analysis terminology
-focus: integration
-pedagogy: PPP
-objectives:
-- Learner can identify sentence parts using Ukrainian terminology
-- Learner can distinguish main and subordinate clauses
-- Learner can name sentence types and punctuation marks
-sources:
-- name: Ukrainian Syntax (Wikipedia)
-  url: https://uk.wikipedia.org/wiki/Синтаксис_української_мови
-  type: reference
-  notes: Overview of Ukrainian sentence structure terminology
-- name: Ukrainian State Standard 2024 - Syntax
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official terminology for sentence analysis
 content_outline:
 - section: Introduction - Understanding Sentence Structure
   words: 160
@@ -72,7 +57,7 @@ content_outline:
   - Key terms review
   - Self-assessment checklist
 word_target: 3000
-vocabulary:
+vocabulary_hints:
   required:
   - підмет (subject)
   - присудок (predicate)
@@ -90,18 +75,49 @@ vocabulary:
   - крапка (period)
   - сполучник (conjunction)
   - інтонація (intonation)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - quiz
-  - match-up
-  - mark-the-words
-  - group-sort
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: mark-the-words
+  focus: Identify sentence parts in Ukrainian sentences
+  items: 10+
+- type: match-up
+  focus: Term → example sentence part
+  items: 12+
+- type: quiz
+  focus: Sentence type identification
+  items: 10+
+- type: fill-in
+  focus: Label sentence components
+  items: 8+
+- type: group-sort
+  focus: Simple vs complex sentence examples
+  items: 12+
+focus: integration
+pedagogy: PPP
+prerequisites:
+- b1-01 (Basic grammar terminology)
+- b1-02 (Verb terminology)
+- b1-03 (Reading grammar rules)
 connects_to:
 - b1-05 (Metalanguage checkpoint)
 - b1-26 (Relative clauses)
 - b1-35 (Concessive clauses)
+objectives:
+- Learner can identify sentence parts using Ukrainian terminology
+- Learner can distinguish main and subordinate clauses
+- Learner can name sentence types and punctuation marks
+grammar:
+- Sentence parts in Ukrainian
+- Clause types
+- Sentence types and punctuation
+module_type: bridge
+sources:
+- name: Ukrainian Syntax (Wikipedia)
+  url: https://uk.wikipedia.org/wiki/Синтаксис_української_мови
+  type: reference
+  notes: Overview of Ukrainian sentence structure terminology
+- name: Ukrainian State Standard 2024 - Syntax
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official terminology for sentence analysis
+immersion: 75% Ukrainian
+phase: B1.0 Bridge

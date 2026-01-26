@@ -1,25 +1,9 @@
 module: 08-logical-prepositions
-level: a2
-sequence: 8
+level: A2
+slug: 08-logical-prepositions
 version: '2.0'
 title: Logical Prepositions
 subtitle: Reasons, Time, and Relationships
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can use prepositions to express cause and purpose
-- Learner can use prepositions to express time relationships
-- Learner can use logical prepositions correctly with cases
-- Learner can connect ideas using appropriate prepositions
-sources:
-- name: Ukrainian State Standard 2024 - Prepositions
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Abstract and temporal preposition requirements
-- name: Ukrainian Grammar - Prepositions
-  url: https://uk.wikipedia.org/wiki/Прийменник
-  type: reference
-  notes: Full preposition inventory with case government
 content_outline:
 - section: Introduction / Вступ
   words: 200
@@ -44,7 +28,7 @@ content_outline:
   - At the Pharmacy
   - Planning a Trip
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - для (for)
   - без (without)
@@ -67,16 +51,51 @@ vocabulary:
   - внаслідок (as a result of)
   - по (after/along)
   - при (at/during)
-  forbidden: []
-activities:
-  types_required:
-  - quiz
-  - match-up
-  - fill-in
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: match-up
+  focus: Preposition to logical function
+  items: 12+
+- type: fill-in
+  focus: Abstract context sentences
+  items: 12+
+- type: fill-in
+  focus: Translation - "because of", "instead of", "about"
+  items: 10+
+- type: quiz
+  focus: Time preposition selection
+  items: 10+
+- type: quiz
+  focus: Case selection with prepositions
+  items: 12+
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a2-07 (Spatial prepositions)
+- A1 time expressions
+- All cases basic knowledge
 connects_to:
 - a2-09 (All Cases Practice)
 - a2-10 (Post Office & Bank)
 - a2-11 (Checkpoint - Cases)
+objectives:
+- Learner can use prepositions to express cause and purpose
+- Learner can use prepositions to express time relationships
+- Learner can use logical prepositions correctly with cases
+- Learner can connect ideas using appropriate prepositions
+grammar:
+- prepositions of cause (через)
+- prepositions of purpose (для)
+- prepositions of time (після, до, о)
+- other logical prepositions (про, без, крім)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Prepositions
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Abstract and temporal preposition requirements
+- name: Ukrainian Grammar - Prepositions
+  url: https://uk.wikipedia.org/wiki/Прийменник
+  type: reference
+  notes: Full preposition inventory with case government
+immersion: 40-50% Ukrainian
+phase: A2.1

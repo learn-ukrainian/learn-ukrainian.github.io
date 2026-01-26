@@ -1,25 +1,9 @@
 module: 33-time-clauses
-level: a2
-sequence: 33
+level: A2
+slug: 33-time-clauses
 version: '2.0'
 title: Time Clauses
 subtitle: When, While, and After
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can sequence events using time conjunctions
-- Learner can describe simultaneous actions using 'поки' and 'коли'
-- Learner can distinguish between 'перед тим як' and 'після того як'
-- Learner can tell stories with clear chronological structure
-sources:
-- name: Ukrainian State Standard 2024 - Temporal Clauses
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Communicative requirements for sequencing events and temporal coordination at A2
-- name: Grammar of Ukrainian Language - Time Conjunctions
-  url: https://uk.wikipedia.org/wiki/Складнопідрядне_речення_часу
-  type: reference
-  notes: Detailed rules for 'коли', 'поки', and 'як тільки'
 content_outline:
 - section: Introduction / Вступ
   words: 200
@@ -45,7 +29,28 @@ content_outline:
   points:
   - Reporting a busy morning or planning a trip's schedule
 word_target: 1000
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can sequence events using time conjunctions
+- Learner can describe simultaneous actions using 'поки' and 'коли'
+- Learner can distinguish between 'перед тим як' and 'після того як'
+- Learner can tell stories with clear chronological structure
+grammar:
+- time connectors (коли, поки, після того як)
+- sequence of tenses
+- aspect in time clauses
+- simultaneous vs sequential actions
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Temporal Clauses
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Communicative requirements for sequencing events and temporal coordination
+    at A2
+- name: Grammar of Ukrainian Language - Time Conjunctions
+  url: https://uk.wikipedia.org/wiki/Складнопідрядне_речення_часу
+  type: reference
+  notes: Detailed rules for 'коли', 'поки', and 'як тільки'
+immersion: 40-50% Ukrainian
+phase: A2.2

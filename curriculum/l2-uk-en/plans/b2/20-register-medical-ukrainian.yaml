@@ -1,25 +1,8 @@
 module: 20-register-medical-ukrainian
-level: b2
-sequence: 20
-version: '1.0'
+level: B2
+slug: 20-register-medical-ukrainian
+version: '2.0'
 title: 'Медична українська: спілкування у сфері охорони здоров''я'
-focus: style
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Ukrainian State Standard 2024 - Medical Communication
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Healthcare communication standards
-- name: Медична термінологія
-  url: https://uk.wikipedia.org/wiki/Медична_термінологія
-  type: secondary
-  notes: Medical terminology in Ukrainian
-- name: CEFR B2 Domain-Specific Language
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
-  type: reference
-  notes: B2 specialized vocabulary requirements
 content_outline:
 - section: Вступ — Медичний регістр
   words: 400
@@ -69,7 +52,7 @@ content_outline:
   - Написання медичних документів
   - Підготовка до модуля 21
 word_target: 3800
-vocabulary:
+vocabulary_hints:
   required:
   - симптом (symptom)
   - діагноз (diagnosis)
@@ -87,19 +70,48 @@ vocabulary:
   - госпіталізація (hospitalization)
   - одужання (recovery)
   - профілактика (prevention)
-  forbidden: []
-activities:
-  types_required:
-  - error-correction
-  - reading
-  - quiz
-  - fill-in
-  - essay-response
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: Identify appropriate medical vocabulary
+  items: 15+
+- type: fill-in
+  focus: Complete doctor-patient dialogues
+  items: 12+
+- type: match-up
+  focus: Symptom description → body part
+  items: 16+
+- type: reading
+  focus: Understand medical instructions and documents
+  items: 4 texts
+- type: error-correction
+  focus: Fix russisms in medical context
+  items: 12+
+- type: essay-response
+  focus: Write description of symptoms for doctor visit
+  word_target: 150
+  output: Model answer provided
+focus: style
+prerequisites:
+- b2-15 (Register Introduction)
+- 'b2-16 (Register: Formal/Informal)'
+- Body parts vocabulary from B1
 connects_to:
 - 'b2-21 (Register: IT/Tech)'
 - b2-25 (B2.1b Checkpoint)
 - b2-82 (Professional Communication III)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Medical Communication
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Healthcare communication standards
+- name: Медична термінологія
+  url: https://uk.wikipedia.org/wiki/Медична_термінологія
+  type: secondary
+  notes: Medical terminology in Ukrainian
+- name: CEFR B2 Domain-Specific Language
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 specialized vocabulary requirements
+immersion: 100% Ukrainian
+phase: B2.1b [Participles & Register Intro]

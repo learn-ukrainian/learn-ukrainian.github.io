@@ -1,21 +1,8 @@
 module: 34-review
-level: c1
-sequence: 34
+level: C1
+slug: 34-review
 version: '2.0'
 title: 'Огляд і повторення: Професійна комунікація'
-focus: review
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: CEFR C1 Assessment Criteria
-  url: https://www.coe.int/
-  type: reference
-  notes: C1 level review standards
-- name: Ukrainian State Standard C1 (2024)
-  url: https://mon.gov.ua/
-  type: reference
-  notes: National C1 competency requirements
 content_outline:
 - section: Огляд C1.2 — Підсумок
   words: 500
@@ -62,7 +49,7 @@ content_outline:
   - Рубрика оцінювання
   - Підготовка до контрольної
 word_target: 4000
-vocabulary:
+vocabulary_hints:
   required:
   - повторення (review)
   - узагальнення (generalization)
@@ -80,19 +67,42 @@ vocabulary:
   - рубрика (rubric)
   - оцінювання (assessment)
   - самооцінка (self-assessment)
-  forbidden: []
-activities:
-  types_required:
-  - group-sort
-  - quiz
-  - cloze
-  - fill-in
-  - error-correction
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: Comprehensive C1.2 review
+  items: 30+
+- type: match-up
+  focus: Review key concepts M21-M33
+  items: 20+
+- type: fill-in
+  focus: Professional vocabulary review
+  items: 15+
+- type: cloze
+  focus: Sociolinguistic terminology
+  items: 12+
+- type: group-sort
+  focus: Classify concepts by module
+  items: 15+
+- type: error-correction
+  focus: Fix professional communication errors
+  items: 12+
+focus: review
+prerequisites:
+- c1-21 to c1-33 (Complete C1.2 content)
+- All professional and sociolinguistic skills
 connects_to:
 - c1-35 (C1.2 Checkpoint)
 - c1-36 (Metaphor & Simile - C1.3 start)
 - c1-55 (C1.3 Checkpoint)
+module_type: review
+sources:
+- name: CEFR C1 Assessment Criteria
+  url: https://www.coe.int/
+  type: reference
+  notes: C1 level review standards
+- name: Ukrainian State Standard C1 (2024)
+  url: https://mon.gov.ua/
+  type: reference
+  notes: National C1 competency requirements
+immersion: 100% Ukrainian
+phase: C1.2 Professional Communication

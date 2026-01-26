@@ -1,0 +1,44 @@
+module: professional-email-basics
+level: B2
+slug: professional-email-basics
+version: '2.0'
+title: 'Ділова пошта: Основи'
+subtitle: Business Email Structure and Tone
+content_outline:
+- section: Вступ — Основи
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Основний матеріал
+  words: 600
+  points:
+  - Теоретичні основи
+  - Приклади та ілюстрації
+  - Типові помилки та як їх уникати
+- section: Поглиблене вивчення
+  words: 600
+  points:
+  - Додаткові випадки
+  - Контекстуальне використання
+  - Стилістичні нюанси
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
+focus: skills
+pedagogy: CBI
+objectives:
+- Learner can write professional emails with appropriate structure and tone
+- Learner can use formal register vocabulary in business correspondence
+- Learner can recognize and apply email conventions (subject lines, greetings, closings)
+- Learner understands cultural norms in Ukrainian business communication
+grammar:
+- Professional email structure
+- Formal register in written communication
+immersion: 100
+register: офіційно-діловий
+phase: B2.4

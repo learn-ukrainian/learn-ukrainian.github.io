@@ -1,16 +1,9 @@
-module: holidays-and-traditions
-level: a1
-sequence: 33
+module: a1-33
+level: A1
+slug: holidays-and-traditions
 version: '2.0'
 title: Holidays & Traditions
 subtitle: Свята і традиції
-focus: cultural
-pedagogy: PPP
-objectives:
-- Learner can name major Ukrainian holidays
-- Learner can give holiday greetings
-- Learner can talk about birthday celebrations
-- Learner can express wishes
 content_outline:
 - section: 'Introduction: Ukrainian Holidays'
   words: 100
@@ -48,7 +41,7 @@ content_outline:
   - Write holiday greetings
   - Celebrate a birthday
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - свято (holiday)
   - Новий рік (New Year)
@@ -65,15 +58,34 @@ vocabulary:
   - успіх (success)
   - торт (cake)
   - свічка (candle)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - matching
-  - vocabulary-drill
-  - dialogue
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: vocabulary-drill
+  focus: Holiday names and greetings
+  items: 25
+- type: matching
+  focus: Match holidays to dates
+  items: 15
+- type: fill-in
+  focus: Complete holiday wishes
+  items: 20
+- type: dialogue
+  focus: Birthday party conversation
+  items: 6
+focus: cultural
+pedagogy: PPP
+prerequisites:
+- a1-23 (What Time Is It)
+- a1-32 (My Family)
 connects_to:
 - a1-34 (Checkpoint Core Grammar)
+objectives:
+- Learner can name major Ukrainian holidays
+- Learner can give holiday greetings
+- Learner can talk about birthday celebrations
+- Learner can express wishes
+grammar:
+- Holiday greetings (З + Instrumental)
+- Date expressions with Genitive
+- Wish expressions (Бажаю + Genitive)
+register: розмовний
+phase: A1.3 [Consolidation]

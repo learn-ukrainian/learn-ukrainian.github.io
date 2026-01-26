@@ -1,16 +1,9 @@
-module: at-the-cafe-practical
-level: a1
-sequence: 35
+module: a1-35
+level: A1
+slug: at-the-cafe-practical
 version: '2.0'
 title: At the Café
 subtitle: Ordering Drinks and Snacks
-focus: practical
-pedagogy: PPP
-objectives:
-- Learner can order a drink and a snack
-- Learner can ask for the bill
-- Learner can handle basic payment queries
-- Learner can make polite requests
 content_outline:
 - section: 'Introduction: Café Scenario'
   words: 100
@@ -48,7 +41,7 @@ content_outline:
   - Complete ordering sequence
   - Handle variations
 word_target: 800
-vocabulary:
+vocabulary_hints:
   required:
   - кава (coffee)
   - чай (tea)
@@ -63,16 +56,35 @@ vocabulary:
   - тістечко (pastry)
   - молоко (milk)
   - цукор (sugar)
-  forbidden: []
-activities:
-  types_required:
-  - dialogue
-  - role-play
-  - fill-in
-  - listening
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: dialogue
+  focus: Complete café ordering
+  items: 10
+- type: role-play
+  focus: Customer and waiter
+  items: 6
+- type: listening
+  focus: Understand café phrases
+  items: 10
+- type: fill-in
+  focus: Complete ordering sentences
+  items: 12
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a1-19 (At the Café)
+- a1-34 (Checkpoint Core Grammar)
 connects_to:
 - a1-36 (At the Restaurant)
 - a1-37 (At the Market)
+objectives:
+- Learner can order a drink and a snack
+- Learner can ask for the bill
+- Learner can handle basic payment queries
+- Learner can make polite requests
+grammar:
+- Polite requests (Мені..., будь ласка)
+- Accusative for ordering
+- Questions (Можна...?, Скільки?)
+register: розмовний
+phase: A1.4 [Practical Scenarios]

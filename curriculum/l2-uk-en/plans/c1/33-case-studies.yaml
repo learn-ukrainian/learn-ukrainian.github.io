@@ -1,21 +1,8 @@
 module: 33-case-studies
-level: c1
-sequence: 33
+level: C1
+slug: 33-case-studies
 version: '2.0'
 title: Практичні кейси
-focus: practice
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Case Study Methodology
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Academic case study standards
-- name: Ukrainian Sociolinguistic Studies
-  url: https://mova.info/
-  type: secondary
-  notes: Real-world language situations
 content_outline:
 - section: Вступ — Метод кейсів
   words: 300
@@ -61,7 +48,7 @@ content_outline:
   - Зворотний зв'язок
   - Подальший розвиток
 word_target: 4000
-vocabulary:
+vocabulary_hints:
   required:
   - аналіз (analysis)
   - дослідження (research)
@@ -79,19 +66,42 @@ vocabulary:
   - критика (critique)
   - порівняння (comparison)
   - узагальнення (generalization)
-  forbidden: []
-activities:
-  types_required:
-  - group-sort
-  - quiz
-  - essay-response
-  - cloze
-  - fill-in
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: essay-response
+  focus: Case study analysis report
+  word_target: 400
+- type: quiz
+  focus: Case analysis methodology
+  items: 15+
+- type: match-up
+  focus: Problem → solution strategy
+  items: 12+
+- type: fill-in
+  focus: Analytical vocabulary
+  items: 12+
+- type: cloze
+  focus: Case study discourse
+  items: 10+
+- type: group-sort
+  focus: Classify factors and causes
+  items: 12+
+focus: practice
+prerequisites:
+- c1-25 to c1-31 (Sociolinguistic knowledge)
+- c1-32 (Professional Scenarios)
 connects_to:
 - c1-34 (C1.2 Review)
 - c1-35 (C1.2 Checkpoint)
 - c1-19 (Article Critique skills)
+module_type: practice
+sources:
+- name: Case Study Methodology
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Academic case study standards
+- name: Ukrainian Sociolinguistic Studies
+  url: https://mova.info/
+  type: secondary
+  notes: Real-world language situations
+immersion: 100% Ukrainian
+phase: C1.2 Professional Communication

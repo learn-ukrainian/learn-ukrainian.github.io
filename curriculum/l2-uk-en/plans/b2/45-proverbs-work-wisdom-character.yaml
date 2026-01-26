@@ -1,22 +1,45 @@
-module: 45-proverbs-work-wisdom-character
-level: b2
-sequence: 45
-version: '1.0'
+module: b2-45
+level: B2
+slug: 45-proverbs-work-wisdom-character
+version: '2.0'
 title: 'Прислів''я I: Праця, мудрість і характер'
 subtitle: 'Proverbs I: Work, Wisdom & Character'
+content_outline:
+- section: Вступ — Праця, мудрість і характер
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Основний матеріал
+  words: 600
+  points:
+  - Теоретичні основи
+  - Приклади та ілюстрації
+  - Типові помилки та як їх уникати
+- section: Поглиблене вивчення
+  words: 600
+  points:
+  - Додаткові випадки
+  - Контекстуальне використання
+  - Стилістичні нюанси
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: phraseology
 pedagogy: CBI
 objectives:
-- Learner can recognize and interpret 16 core Ukrainian proverbs about work, wisdom, and character
-- Learner can use proverbs appropriately in context to express advice, commentary, or wisdom
+- Learner can recognize and interpret 16 core Ukrainian proverbs about work, wisdom,
+  and character
+- Learner can use proverbs appropriately in context to express advice, commentary,
+  or wisdom
 - Learner understands the cultural values embedded in Ukrainian folk wisdom
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Fixed expressions (фразеологічні одиниці)
+- Proverb structure and variation
+immersion: 100
+register: varies
+phase: B2.2 [Phraseology & Synonymy]

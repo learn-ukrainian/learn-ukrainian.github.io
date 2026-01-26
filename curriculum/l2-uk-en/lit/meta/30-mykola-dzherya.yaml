@@ -1,124 +1,20 @@
-id: lit-30
-title: 'Микола Джеря: Епос Кріпацької Долі'
-subtitle: 'Mykola Dzherya: Epic of Serf Fate'
+module: mykola-dzherya
+level: LIT
 slug: mykola-dzherya
-module_type: literature
-word_target: 4000
-immersion: 100% Ukrainian
 version: '2.0'
-phase: LIT.5 Realism
-focus: literature
-pedagogy: Seminar
-duration: 120
-transliteration: none
-tags:
-  - література
-  - реалізм
-  - нечуй-левицький
-  - микола-джеря
-  - кріпацтво
-  - бунтар
-grammar:
-  - Serfdom vocabulary
-  - Historical narrative
-  - Social protest language
-objectives:
-  - Проаналізувати образ Миколи як кріпака-бунтаря
-  - Зрозуміти історичний контекст кріпацтва та реформи 1861 року
-  - Дослідити жанрові особливості соціальної повісті
-  - Підсумувати курс української літератури від Котляревського до Нечуя
-sources:
-  - name: Микола Джеря — повний текст
-    url: https://www.ukrlib.com.ua/books/printit.php?tid=908
-    type: primary
-    notes: Для детального аналізу
-  - name: Микола Джеря — скорочено
-    url: https://www.ukrlib.com.ua/styslo/printit.php?tid=3507
-    type: secondary
-    notes: Для повторення сюжету
-  - name: Микола Джеря — бунтар
-    url: https://www.ukrlib.com.ua/tvory/printit.php?tid=8464
-    type: reference
-    notes: Аналіз образу
-content_outline:
-  - section: Вступ — Тема кріпацтва в літературі
-    words: 500
-    points:
-      - Шевченко і Нечуй — різні підходи
-      - Чому "Микола Джеря" особливий
-      - Історичний контекст (1840-1861)
-  - section: Образ Миколи
-    words: 800
-    points:
-      - Зовнішність і характер
-      - Бунтар vs жертва
-      - Серп як символ спротиву
-  - section: Сюжет як одіссея
-    words: 700
-    points:
-      - Втеча з Вербівки
-      - Бурлакування на цукроварні
-      - Повернення до хрестів
-  - section: Жіночі образи
-    words: 600
-    points:
-      - Нимидора — кохана
-      - Мати — жертва системи
-      - Трагедія очікування
-  - section: Реформа 1861 року
-    words: 600
-    points:
-      - Як Нечуй показує визволення
-      - Ціна свободи
-      - Іронія фіналу
-  - section: Підсумок — Від Енея до Джері
-    words: 400
-    points:
-      - Еволюція українського героя (курсовий підсумок)
-      - Від сміху до правди
-      - Що далі (література ХХ століття)
-vocabulary_hints:
-  required:
-    - кріпацтво (serfdom)
-    - бунтар (rebel)
-    - визволення (liberation)
-    - бурлак (wandering laborer)
-    - цукроварня (sugar factory)
-    - реформа (reform)
-    - одіссея (odyssey)
-    - жертва (victim)
-    - спротив (resistance)
-    - іронія (irony)
-  recommended:
-    - каторга (hard labor)
-    - панщина (corvée)
-    - втеча (escape)
-    - повернення (return)
-    - символ (symbol)
-activity_hints:
-  - type: reading
-    focus: Сцена з серпом, фінал повісті
-    source: UkrLib tid=908
-    items: 5+
-  - type: quiz
-    focus: Сюжет та образи повісті
-    items: 15+
-  - type: match-up
-    focus: Персонаж → його роль
-    items: 10+
-  - type: essay-response
-    focus: Еволюція українського героя (курсовий підсумок)
-    word_target: 400
-    output: Підсумкове есе
-  - type: cloze
-    focus: Ключові сцени та цитати
-    items: 15+
-prerequisites:
-  - lit-29 (Мова реалізму)
-connects_to:
-  - lit-11 (Молодий Шевченко — кріпацтво)
-  - lit-01 (Котляревський — початок курсу)
+id: lit-30
 naturalness:
   score: 10
   status: PASS
   justification: Graduate level academic Ukrainian
+duration: 120
+transliteration: none
+tags:
+- література
+- реалізм
+- нечуй-левицький
+- микола-джеря
+- кріпацтво
+- бунтар
+build:
+  last_modified: '2026-01-26'

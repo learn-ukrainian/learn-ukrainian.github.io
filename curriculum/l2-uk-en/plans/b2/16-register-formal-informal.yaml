@@ -1,25 +1,8 @@
 module: 16-register-formal-informal
-level: b2
-sequence: 16
-version: '1.0'
+level: B2
+slug: 16-register-formal-informal
+version: '2.0'
 title: Формальне та неформальне спілкування
-focus: style
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Ukrainian State Standard 2024 - Address Forms
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Ти/Ви distinction and forms of address
-- name: Етикет українського спілкування
-  url: https://uk.wikipedia.org/wiki/Мовленнєвий_етикет
-  type: secondary
-  notes: Speech etiquette in Ukrainian culture
-- name: CEFR B2 Sociolinguistic Competence
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
-  type: reference
-  notes: B2 politeness conventions
 content_outline:
 - section: Вступ — Формальність у спілкуванні
   words: 400
@@ -68,7 +51,7 @@ content_outline:
   - Критерії вибору
   - Підготовка до модуля 17
 word_target: 3800
-vocabulary:
+vocabulary_hints:
   required:
   - формальний (formal)
   - неформальний (informal)
@@ -86,19 +69,49 @@ vocabulary:
   - соціальна дистанція (social distance)
   - тон (tone)
   - доречність (appropriateness)
-  forbidden: []
-activities:
-  types_required:
-  - error-correction
-  - quiz
-  - fill-in
-  - essay-response
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: Choose appropriate address form for situation
+  items: 15+
+- type: fill-in
+  focus: Convert informal text to formal (and vice versa)
+  items: 12+
+- type: match-up
+  focus: Situation → appropriate register
+  items: 15+
+- type: fill-in
+  focus: Complete sentences with appropriate address forms
+  items: 12+
+- type: error-correction
+  focus: Fix register-inappropriate language
+  items: 12+
+- type: essay-response
+  focus: Write same request formally and informally
+  word_target: 150
+  output: Model answers for both registers
+focus: style
+prerequisites:
+- b2-15 (Register Introduction)
+- Basic pronoun usage
+- Social context awareness
 connects_to:
 - 'b2-17 (Register: Business Ukrainian)'
 - 'b2-18 (Register: Academic Ukrainian)'
 - 'b2-19 (Register: Official-Legal)'
 - b2-25 (B2.1b Checkpoint)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Address Forms
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Ти/Ви distinction and forms of address
+- name: Етикет українського спілкування
+  url: https://uk.wikipedia.org/wiki/Мовленнєвий_етикет
+  type: secondary
+  notes: Speech etiquette in Ukrainian culture
+- name: CEFR B2 Sociolinguistic Competence
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 politeness conventions
+immersion: 100% Ukrainian
+phase: B2.1b [Participles & Register Intro]

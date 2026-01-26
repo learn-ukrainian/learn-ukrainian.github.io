@@ -1,25 +1,9 @@
 module: 36-basic-motion-prefixes
-level: a2
-sequence: 36
+level: A2
+slug: 36-basic-motion-prefixes
 version: '2.0'
 title: Basic Motion Prefixes
 subtitle: In and Out
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can describe entering and exiting places
-- Learner can use prefixes в-/у- and ви- correctly
-- Learner can choose the correct preposition for motion verbs
-- Learner can describe daily commute actions
-sources:
-- name: Ukrainian State Standard 2024 - Verbs of Motion
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Standards for prefixed verbs of motion and spatial orientation at A2
-- name: Morphology of Ukrainian Verb - Prefixes
-  url: https://uk.wikipedia.org/wiki/Префікси_в_українській_мові
-  type: reference
-  notes: Structural rules for V- and VY- prefixes with motion stems
 content_outline:
 - section: Introduction / Вступ
   words: 200
@@ -45,7 +29,27 @@ content_outline:
   points:
   - 'A morning in Kyiv: Navigating from house to metro to office'
 word_target: 1000
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can describe entering and exiting places
+- Learner can use prefixes в-/у- and ви- correctly
+- Learner can choose the correct preposition for motion verbs
+- Learner can describe daily commute actions
+grammar:
+- prefix в-/у- (entering)
+- prefix ви- (exiting)
+- prepositions with motion verbs
+- motion verb pairs
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Verbs of Motion
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standards for prefixed verbs of motion and spatial orientation at A2
+- name: Morphology of Ukrainian Verb - Prefixes
+  url: https://uk.wikipedia.org/wiki/Префікси_в_українській_мові
+  type: reference
+  notes: Structural rules for V- and VY- prefixes with motion stems
+immersion: 40-50% Ukrainian
+phase: A2.3

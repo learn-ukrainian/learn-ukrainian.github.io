@@ -1,94 +1,13 @@
 module: b1-71
-id: b1-71
+level: B1
 slug: emotional-intelligence
-title: "Емоційний інтелект та міжособистісні навички"
-subtitle: "Emotional Intelligence & Interpersonal Skills"
 version: '2.0'
-phase: "B1.6 [Vocabulary Expansion II]"
-focus: vocabulary
-pedagogy: TTT
-register: розмовний
-duration: 90
-transliteration: none
-objectives:
-  - "Learner can use 30+ emotional and interpersonal vocabulary words in context"
-  - "Learner can distinguish between similar concepts like співчуття/емпатія"
-  - "Learner can form natural collocations with interpersonal nouns and verbs"
-  - "Learner can discuss emotional intelligence concepts"
-grammar:
-  - "Interpersonal vocabulary collocations"
-  - "Emotional state expressions"
-  - "Advice and support patterns"
-word_target: 1200
-content_outline:
-  - section: "Introduction: Emotional Intelligence"
-    words: 150
-    points:
-      - "What is EQ"
-      - "Interpersonal skills"
-      - "Ukrainian cultural context"
-  - section: "Self-Awareness Vocabulary"
-    words: 250
-    points:
-      - "самоусвідомлення, саморефлексія"
-      - "емоційний стан, настрій"
-      - "Internal vocabulary"
-  - section: "Empathy and Understanding"
-    words: 250
-    points:
-      - "емпатія, співчуття, розуміння"
-      - "підтримка, турбота"
-      - "Connecting with others"
-  - section: "Communication Skills"
-    words: 250
-    points:
-      - "активне слухання, зворотний зв'язок"
-      - "конструктивна критика"
-      - "Communication vocabulary"
-  - section: "Conflict and Resolution"
-    words: 200
-    points:
-      - "конфлікт, примирення"
-      - "вибачення, пробачення"
-      - "Resolution vocabulary"
-  - section: "Practice: EQ in Action"
-    words: 100
-    points:
-      - "Apply EQ vocabulary"
-      - "Role-play scenarios"
-vocabulary_hints:
-  required:
-    - емоційний інтелект (emotional intelligence)
-    - емпатія (empathy)
-    - співчуття (sympathy)
-    - підтримка (support)
-    - розуміння (understanding)
-    - вибачення (apology)
-    - пробачення (forgiveness)
-    - конфлікт (conflict)
-  recommended:
-    - саморефлексія (self-reflection)
-    - зворотний зв'язок (feedback)
-    - примирення (reconciliation)
-    - активне слухання (active listening)
-activity_hints:
-  - type: matching
-    focus: "Match EQ concepts"
-    items: 25
-  - type: fill-in
-    focus: "Use interpersonal vocabulary"
-    items: 20
-  - type: role-play
-    focus: "EQ scenarios"
-    items: 15
-  - type: discussion
-    focus: "Discuss EQ topics"
-    items: 10
-prerequisites:
-  - b1-70 (Collocations Expressions)
-connects_to:
-  - b1-72 (Regions West)
+id: b1-71
 naturalness:
   score: 9
   status: PASS
-  justification: "Essential for interpersonal competence"
+  justification: Essential for interpersonal competence
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-26'

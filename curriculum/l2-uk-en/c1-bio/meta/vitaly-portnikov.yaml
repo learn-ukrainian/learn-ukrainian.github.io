@@ -1,113 +1,11 @@
-id: c1-bio-88
-title: 'Віталій Портников: Журналіст і аналітик'
+module: vitaly-portnikov
+level: C1-BIO
 slug: vitaly-portnikov
-module_type: biography
-word_target: 4000
-immersion: 100% Ukrainian
 version: '2.0'
-phase: C1-BIO
-focus: biography
-sources:
-- name: Віталій Портников (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Портников_Віталій_Янович
-  type: primary
-  notes: Основна біографічна інформація
-- name: Espreso.TV
-  url: https://espreso.tv/
-  type: reference
-  notes: Публікації та виступи
-- name: Радіо Свобода
-  url: https://www.radiosvoboda.org/
-  type: reference
-  notes: Архів публікацій
-content_outline:
-- section: Вступ — Голос української журналістики
-  words: 400
-  points:
-  - Портников як один із найвпливовіших аналітиків
-  - Роль у формуванні суспільної думки
-  - Постійність позиції протягом десятиліть
-- section: Ранні роки та освіта
-  words: 600
-  points:
-  - Народження в Києві (1967)
-  - Освіта та формування поглядів
-  - Початок журналістської кар'єри
-- section: Журналістська діяльність
-  words: 700
-  points:
-  - Робота в різних виданнях
-  - Телевізійна публіцистика
-  - Міжнародні проекти
-- section: Аналітик пострадянського простору
-  words: 800
-  points:
-  - Експертиза з питань Росії та СНД
-  - Прогнози щодо російської агресії
-  - Роль під час Майдану та війни
-- section: Стиль та методологія
-  words: 700
-  points:
-  - Особливості аналітичного підходу
-  - Риторичні прийоми
-  - Вплив на медіапростір
-- section: Сучасна діяльність
-  words: 600
-  points:
-  - Робота під час повномасштабної війни
-  - Пояснення України світові
-  - Роль публічного інтелектуала
-- section: Дискусія — Журналістика як місія
-  words: 200
-  points:
-  - Обов'язок журналіста в час війни
-  - Баланс між аналітикою та активізмом
-vocabulary_hints:
-  required:
-  - аналітик (analyst)
-  - публіцистика (publicistic writing)
-  - експертиза (expertise)
-  - геополітика (geopolitics)
-  - медіапростір (media space)
-  - прогноз (forecast)
-  - коментар (commentary)
-  - дискурс (discourse)
-  - громадська думка (public opinion)
-  - незалежні ЗМІ (independent media)
-  recommended:
-  - інформаційна війна (information war)
-  - пропаганда (propaganda)
-  - критичне мислення (critical thinking)
-  - об'єктивність (objectivity)
-  - заангажованість (bias/engagement)
-activity_hints:
-- type: reading
-  focus: Аналітичні статті Портникова
-  source: Медіаматеріали
-  items: 3 passages
-- type: quiz
-  focus: Факти про українську журналістику
-  items: 12+
-- type: match-up
-  focus: Журналістські терміни та визначення
-  items: 10+
-- type: essay-response
-  focus: Яка роль аналітика в суспільстві?
-  word_target: 300
-  output: Рефлексивний есей
-- type: group-sort
-  focus: Журналістика vs пропаганда
-  items: 12+
-- type: fill-in
-  focus: Медійна термінологія
-  items: 10+
-prerequisites:
-- b2-hist-euromaidan
-connects_to:
-- c1-bio-87-yaroslav-hrytsak
-- c1-bio-91-oleg-sentsov
-- c1-bio-90-serhiy-zhadan
-vital_status: living
+id: c1-bio-88
 naturalness:
   score: 1
   status: PENDING
+vital_status: living
+build:
+  last_modified: '2026-01-26'

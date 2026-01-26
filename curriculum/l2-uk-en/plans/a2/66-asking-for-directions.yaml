@@ -1,16 +1,9 @@
-module: asking-for-directions
-level: a2
-sequence: 66
+module: a2-66
+level: A2
+slug: asking-for-directions
 version: '2.0'
 title: Asking for Directions
 subtitle: Getting Around Town
-focus: practical
-pedagogy: PPP
-objectives:
-- Learner can ask for directions to landmarks
-- Learner can understand complex route descriptions
-- Learner can use public transport vocabulary
-- Learner can describe their location
 content_outline:
 - section: 'Introduction: Urban Navigation'
   words: 100
@@ -48,7 +41,7 @@ content_outline:
   - Plan a route
   - Ask about transport
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - йти (to go on foot)
   - їхати (to go by transport)
@@ -65,15 +58,33 @@ vocabulary:
   - квиток (ticket)
   - проїзд (fare)
   - розклад (schedule)
-  forbidden: []
-activities:
-  types_required:
-  - vocabulary-drill
-  - dialogue
-  - speaking
-  - fill-in
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: vocabulary-drill
+  focus: Transport vocabulary
+  items: 25
+- type: fill-in
+  focus: Motion verbs in context
+  items: 20
+- type: dialogue
+  focus: Ask about transport
+  items: 12
+- type: speaking
+  focus: Describe your location
+  items: 10
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a2-65 (Giving Directions)
 connects_to:
 - a2-67 (Social Media Ukrainian)
+objectives:
+- Learner can ask for directions to landmarks
+- Learner can understand complex route descriptions
+- Learner can use public transport vocabulary
+- Learner can describe their location
+grammar:
+- Verbs of motion (йти, їхати, ходити, їздити)
+- Prepositions of movement (до, повз, через)
+- Imperative for directions
+register: розмовний
+phase: A2.6 [Practical]

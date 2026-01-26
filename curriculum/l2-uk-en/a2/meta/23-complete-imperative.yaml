@@ -1,58 +1,8 @@
-id: a2-23
-title: Complete Imperative
-subtitle: Let It Be! (3rd Person)
+module: 23-complete-imperative
+level: A2
 slug: 23-complete-imperative
-module_type: grammar
-word_target: 1000
-immersion: 40-50% Ukrainian
 version: '2.0'
-phase: A2.2
-focus: grammar
-pedagogy: PPP
-duration: 60
-transliteration: none
-tags:
-- grammar
-- verbs
-- imperative
-- commands
-objectives:
-- Learner can form 3rd person commands using хай/нехай
-- Learner can make toasts and wishes
-- Learner can relay indirect commands
-- Learner can use the full range of imperative forms
-sources:
-- name: Ukrainian State Standard 2024 - Imperative
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Complete imperative mood requirements for A2
-- name: Grammar of Ukrainian Language - Verb Moods
-  url: https://uk.wikipedia.org/wiki/Наказовий_спосіб
-  type: reference
-  notes: Detailed rules for all persons in imperative
-content_outline:
-- section: Introduction / Вступ
-  words: 200
-  points:
-  - Concept of willpower in language
-  - Why imperative is not always 'impolite'
-- section: Presentation / Презентація
-  words: 600
-  points:
-  - Review of 2nd person (ти/ви)
-  - The 'Let's' form (-мо suffix)
-  - 3rd Person: хай / нехай (The indirect wish)
-  - Formation nuances (soft vs hard stems)
-  - Negative Imperatives (не)
-- section: Practice / Практика
-  words: 150
-  points:
-  - Instructions for a recipe (Борщ)
-  - Toast making ceremony
-- section: Dialogues / Діалоги
-  words: 50
-  points:
-  - Kitchen dialogue or team coordination
+id: a2-23
 naturalness:
   score: 8
   status: PASS
@@ -64,3 +14,12 @@ naturalness:
     content.'
   recommendation: Fix the spelling of 'ставте' and remove the internal editing commentary
     in the Practice section.
+duration: 60
+transliteration: none
+tags:
+- grammar
+- verbs
+- imperative
+- commands
+build:
+  last_modified: '2026-01-26'

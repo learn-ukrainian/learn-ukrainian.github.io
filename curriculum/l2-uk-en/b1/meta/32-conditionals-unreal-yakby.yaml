@@ -1,94 +1,13 @@
 module: b1-32
-id: b1-32
+level: B1
 slug: conditionals-unreal-yakby
-title: "Умовні речення: нереальна умова (якби)"
-subtitle: "Unreal Conditionals - Hypothetical Situations"
 version: '2.0'
-phase: "B1.3a [Complex Sentences]"
-focus: grammar
-pedagogy: TTT
-register: розмовний
-duration: 90
-transliteration: none
-objectives:
-  - "Learner understands unreal conditional constructions"
-  - "Learner can form hypothetical sentences with якби"
-  - "Learner can distinguish real and unreal conditionals"
-  - "Learner can express wishes and hypotheticals"
-grammar:
-  - "Unreal conditionals with якби"
-  - "Conditional mood (умовний спосіб)"
-  - "Past form + би construction"
-word_target: 1200
-content_outline:
-  - section: "Introduction: Unreal Conditionals"
-    words: 150
-    points:
-      - "What are unreal conditionals"
-      - "якби as unreal marker"
-      - "Hypothetical situations"
-  - section: "якби + Past Form"
-    words: 250
-    points:
-      - "Structure: якби + past, past + би"
-      - "Both clauses use past forms"
-      - "Particle б/би placement"
-  - section: "Conditional Mood Formation"
-    words: 250
-    points:
-      - "Past tense + би"
-      - "Contraction: якби"
-      - "Would = past + би"
-  - section: "Present vs Past Hypotheticals"
-    words: 250
-    points:
-      - "Present unreal: if I were..."
-      - "Past unreal: if I had been..."
-      - "Ukrainian uses same form"
-  - section: "Real vs Unreal Comparison"
-    words: 200
-    points:
-      - "якщо vs якби"
-      - "Likelihood differences"
-      - "Choosing correctly"
-  - section: "Practice: Unreal Conditionals"
-    words: 100
-    points:
-      - "Form hypothetical sentences"
-      - "Express wishes and dreams"
-vocabulary_hints:
-  required:
-    - якби (if - unreal)
-    - би (would - particle)
-    - нереальний (unreal)
-    - гіпотетичний (hypothetical)
-    - умовний спосіб (conditional mood)
-    - бажання (wish)
-    - мрія (dream)
-    - уявлення (imagination)
-  recommended:
-    - якби тільки (if only)
-    - хотілося б (would like)
-    - було б краще (it would be better)
-    - на жаль (unfortunately)
-activity_hints:
-  - type: fill-in
-    focus: "Complete unreal conditionals"
-    items: 25
-  - type: transformation
-    focus: "Real to unreal conversion"
-    items: 20
-  - type: error-correction
-    focus: "Fix conditional errors"
-    items: 15
-  - type: speaking
-    focus: "Express hypotheticals"
-    items: 10
-prerequisites:
-  - b1-31 (Conditionals Real якщо)
-connects_to:
-  - b1-33 (Conditionals Mixed Complex)
+id: b1-32
 naturalness:
   score: 9
   status: PASS
-  justification: "Essential subjunctive structure"
+  justification: Essential subjunctive structure
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-26'

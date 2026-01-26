@@ -1,21 +1,8 @@
 module: 21-cv-resume-writing
-level: c1
-sequence: 21
+level: C1
+slug: 21-cv-resume-writing
 version: '2.0'
 title: Написання резюме та CV
-focus: style
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Ukrainian CV Standards
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official guidelines for Ukrainian CV format
-- name: Ukrainian State Standard C1 (2024)
-  url: https://mon.gov.ua/
-  type: reference
-  notes: C1 professional writing requirements
 content_outline:
 - section: Вступ — Резюме vs CV
   words: 400
@@ -63,7 +50,7 @@ content_outline:
   - Редагування чужого CV
   - Трансформація стилю
 word_target: 4000
-vocabulary:
+vocabulary_hints:
   required:
   - резюме (resume)
   - CV (curriculum vitae)
@@ -81,19 +68,42 @@ vocabulary:
   - кваліфікація (qualification)
   - сертифікат (certificate)
   - стажування (internship)
-  forbidden: []
-activities:
-  types_required:
-  - quiz
-  - essay-response
-  - cloze
-  - fill-in
-  - error-correction
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: CV section phrases
+  items: 15+
+- type: quiz
+  focus: CV structure and format
+  items: 15+
+- type: match-up
+  focus: Informal → formal descriptions
+  items: 12+
+- type: cloze
+  focus: Action verbs in work experience
+  items: 12+
+- type: error-correction
+  focus: Fix CV mistakes
+  items: 10+
+- type: essay-response
+  focus: Write cover letter
+  word_target: 200
+focus: style
+prerequisites:
+- c1-01 to c1-20 (Complete C1.1)
+- Academic writing foundation
 connects_to:
 - c1-22 (Job Interview)
 - c1-23 (Business Etiquette)
 - c1-32 (Professional Scenarios)
+module_type: skills
+sources:
+- name: Ukrainian CV Standards
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official guidelines for Ukrainian CV format
+- name: Ukrainian State Standard C1 (2024)
+  url: https://mon.gov.ua/
+  type: reference
+  notes: C1 professional writing requirements
+immersion: 100% Ukrainian
+phase: C1.2 Professional Communication

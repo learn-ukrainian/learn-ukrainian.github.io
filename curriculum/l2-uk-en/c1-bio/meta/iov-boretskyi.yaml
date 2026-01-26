@@ -1,130 +1,18 @@
 module: c1-bio-16
-id: c1-bio-iov-boretskyi
-title: 'Йов Борецький: Захисник православ''я'
+level: C1-BIO
 slug: iov-boretskyi
-module_type: biography
-word_target: 4000
-immersion: 100% Ukrainian
 version: '2.0'
-phase: C1-BIO
-focus: biography
+id: c1-bio-iov-boretskyi
+naturalness:
+  score: 10
+  status: PASS
 duration: 120
 transliteration: none
-pedagogy: CBI
 tags:
 - history
 - biography
 - religion
 - education
 - cossacks
-objectives:
-- Проаналізувати роль Іова Борецького у відновленні православної ієрархії 1620 року
-- Зрозуміти значення братського руху як прообразу громадянського суспільства
-- Вивчити особливості полемічного стилю українського бароко
-grammar:
-- Historical narrative register
-- Rhetorical antithesis and periods
-- Ecclesiastical and legal terminology
-sources:
-- name: Йов Борецький (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Йов_Борецький
-  type: primary
-  notes: Biography, revival of Orthodox hierarchy
-- name: Берестейська унія (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Берестейська_унія
-  type: reference
-  notes: Context of religious conflict
-- name: Київська братська школа
-  url: https://uk.wikipedia.org/wiki/Київська_братська_школа
-  type: reference
-  notes: Educational activities
-content_outline:
-- section: Вступ — Відновлення православної ієрархії
-  words: 450
-  points:
-  - Значення 1620 року для православ'я
-  - Роль Йова Борецького в церковному відродженні
-  - Контекст релігійної боротьби
-- section: Життєпис
-  words: 1500
-  points:
-  - Молодість та освіта
-  - Освітня діяльність та ректорство
-  - Львівський та Київський періоди
-- section: Берестейська унія та її наслідки
-  words: 700
-  points:
-  - Суть унії 1596 року
-  - Ліквідація православної ієрархії
-  - Правовий статус православних
-  - Братства як осередки опору
-- section: Відновлення ієрархії 1620 року
-  words: 800
-  points:
-  - Прибуття патріарха Феофана
-  - Висвячення єпископів та митрополита
-  - Йов як Митрополит Київський
-  - Реакція польської влади
-- section: Митрополитство та спадщина
-  words: 600
-  points:
-  - Керівництво церквою в умовах переслідувань
-  - Полемічна література
-  - Смерть та канонізація
-  - Вплив на подальший церковний розвиток
-- section: Підсумок — Віра як опір
-  words: 300
-  points:
-  - Йов як символ духовного спротиву
-  - Зв'язок освіти та релігії
-  - Значення для сучасного православ'я
-vocabulary_hints:
-  required:
-  - митрополит (metropolitan)
-  - єпископ (bishop)
-  - ієрархія (hierarchy)
-  - унія (union)
-  - православ'я (Orthodoxy)
-  - братство (brotherhood/confraternity)
-  - висвячення (ordination)
-  - полеміка (polemics)
-  - чернецтво (monasticism)
-  - патріарх (patriarch)
-  recommended:
-  - ректор (rector)
-  - собор (council/cathedral)
-  - єпархія (eparchy/diocese)
-  - канон (canon)
-  - схима (schema - monastic vow)
-activity_hints:
-- type: reading
-  focus: Excerpts from Orthodox polemical literature
-  source: 17th century texts (adapted)
-  items: 3 passages
-- type: quiz
-  focus: Facts about the religious struggle of the 17th century
-  items: 12+
-- type: match-up
-  focus: Key figures in Orthodox revival and their roles
-  items: 10+
-- type: essay-response
-  focus: Why was restoring the hierarchy so important?
-  word_target: 250
-  output: Historical and spiritual analysis
-- type: group-sort
-  focus: Uniate vs. Orthodox positions
-  items: 12+
-- type: fill-in
-  focus: Ecclesiastical terminology
-  items: 10+
-prerequisites:
-- c1-bio-03 (Volodymyr Velykyi - original Christianization)
-- c1-bio-06 (Mykhailo Chernihivskyi - faith defense)
-- Understanding of Reformation/Counter-Reformation context
-connects_to:
-- c1-bio-09 (Sylvestr Kosiv - successor)
-- c1-bio-10 (Bohdan Khmelnytskyi - religious dimension of uprising)
-- c1-bio-98 (Ivan Ohienko - later Orthodox defender)
-naturalness:
-  score: 10
-  status: PASS
+build:
+  last_modified: '2026-01-26'

@@ -1,0 +1,122 @@
+module: c2-1-final-checkpoint
+level: C2
+slug: c2-1-final-checkpoint
+version: '2.0'
+title: Фінальна перевірка C2.1 — Стилістична досконалість
+content_outline:
+- section: Вступ — Що перевіряємо
+  words: 400
+  points:
+  - Огляд компетенцій C2.1
+  - Структура перевірки
+  - Критерії оцінювання
+- section: Портфоліо семи стилів
+  words: 800
+  points:
+  - Вимоги до кожного зразка
+  - Науковий стиль — уривок статті
+  - Офіційний стиль — договір/лист
+  - Публіцистичний стиль — колонка
+  - Художній стиль — мініатюра
+  - Розмовний стиль — діалог
+  - Релігійний стиль — аналіз тексту
+  - Епістолярний стиль — офіційний лист
+- section: Трансформаційні завдання
+  words: 700
+  points:
+  - Науковий → науково-популярний
+  - Офіційний → публіцистичний
+  - Три рівні трансформації одного тексту
+  - Збереження інформації при зміні стилю
+- section: Аналіз стилістичних засобів
+  words: 600
+  points:
+  - Лексична стилістика (синоніми, архаїзми)
+  - Синтаксична стилістика (інверсія, паралелізм)
+  - Фігури мови (метафора, метонімія)
+  - Ритм і звукопис
+- section: Творче письмо з індивідуальним голосом
+  words: 600
+  points:
+  - Демонстрація особистого стилю
+  - Свідомі стилістичні вибори
+  - Обґрунтування рішень
+  - Когерентність тексту
+- section: Усна перевірка — переключення регістрів
+  words: 500
+  points:
+  - Імпровізована трансформація
+  - Швидке переключення стилів
+  - Природність і плавність
+- section: Підсумок і перехід до C2.2
+  words: 400
+  points:
+  - Самооцінка результатів
+  - Визначення зон для покращення
+  - Огляд фази літературної майстерності
+word_target: 4000
+vocabulary_hints:
+  required:
+  - перевірка (checkpoint/assessment)
+  - портфоліо (portfolio)
+  - майстерність (mastery)
+  - досконалість (perfection)
+  - трансформація (transformation)
+  - критерій (criterion)
+  - компетенція (competence)
+  - оцінювання (evaluation)
+  - демонстрація (demonstration)
+  - обґрунтування (justification)
+  recommended:
+  - еталон (standard/benchmark)
+  - показник (indicator)
+  - рубрика (rubric)
+  - самооцінка (self-assessment)
+  - консолідація (consolidation)
+activity_hints:
+- type: essay-response
+  focus: Complete style portfolio — 7 texts in 7 styles
+  word_target: 2100
+  output: 300 words per style with rubric self-assessment
+- type: essay-response
+  focus: Transform single text through 3 registers
+  word_target: 900
+  output: Original + 3 transformed versions
+- type: quiz
+  focus: Comprehensive stylistic device identification
+  items: 25+
+- type: critical-analysis
+  focus: Analyze stylistic choices in professional text
+  output: Detailed breakdown with terminology
+- type: essay-response
+  focus: Creative writing demonstrating individual voice
+  word_target: 500
+  output: Original text with stylistic decisions explained
+- type: authorial-intent
+  focus: Justify stylistic choices in own writing
+  output: Analysis of deliberate decisions in portfolio
+- type: essay-response
+  focus: Self-assessment against C2.1 competency checklist
+  word_target: 400
+  output: Honest evaluation with improvement plan
+focus: checkpoint
+prerequisites:
+- c2-01-24 (All C2.1 modules)
+- Demonstrated mastery of 7 functional styles
+- Individual voice development
+connects_to:
+- c2-26 (Literary Theory — start of C2.2)
+- c2-45 (C2.2 Checkpoint)
+- c2-75 (C2.3 Checkpoint)
+module_type: checkpoint
+sources:
+- name: Ukrainian State Standard C2 (2024)
+  url: https://mon.gov.ua/
+  type: reference
+  notes: C2 proficiency descriptors for stylistic competence
+- name: CEFR C2 Writing Descriptors
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: Writing proficiency expectations at C2 level
+immersion: 100% Ukrainian
+phase: C2.1 Stylistics Mastery

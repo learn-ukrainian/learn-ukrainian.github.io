@@ -1,94 +1,13 @@
 module: b1-44
-id: b1-44
+level: B1
 slug: active-participles-phrases
-title: "Активні дієприкметники та їхній стиль"
-subtitle: "Active Participles & Phrases"
 version: '2.0'
-phase: "B1.4a [Participles]"
-focus: grammar
-pedagogy: TTT
-register: розмовний
-duration: 90
-transliteration: none
-objectives:
-  - "Learner can recognize active present participles (-учий/-ючий)"
-  - "Learner can recognize active past participles (-лий)"
-  - "Learner understands stylistic markedness of participles"
-  - "Learner can avoid bureaucratic forms and russicisms"
-grammar:
-  - "Активні дієприкметники теперішнього часу (-учий/-ючий)"
-  - "Активні дієприкметники минулого часу (-лий)"
-  - "Стилістична маркованість та канцелярит"
-word_target: 1200
-content_outline:
-  - section: "Introduction: Дієприкметники vs Дієприслівники"
-    words: 150
-    points:
-      - "Participles as verbal adjectives"
-      - "Agreement with nouns"
-      - "Function in sentences"
-  - section: "Active Present Participles (-учий/-ючий)"
-    words: 250
-    points:
-      - "Formation from imperfective verbs"
-      - "читаючий, працюючий"
-      - "Limited modern usage"
-  - section: "Active Past Participles (-лий)"
-    words: 250
-    points:
-      - "Formation from intransitive verbs"
-      - "минулий, зблідлий, постарілий"
-      - "Adjective-like usage"
-  - section: "Stylistic Considerations"
-    words: 250
-    points:
-      - "Канцелярит (bureaucratese)"
-      - "Russian influence on participle overuse"
-      - "Modern Ukrainian preferences"
-  - section: "When to Use Relative Clauses Instead"
-    words: 200
-    points:
-      - "який clauses as alternatives"
-      - "Natural vs artificial constructions"
-      - "Style guide recommendations"
-  - section: "Practice: Recognition and Alternatives"
-    words: 100
-    points:
-      - "Identify participle types"
-      - "Replace with relative clauses"
-vocabulary_hints:
-  required:
-    - дієприкметник (participle - adjective)
-    - активний (active)
-    - теперішній час (present tense)
-    - минулий час (past tense)
-    - канцелярит (bureaucratese)
-    - узгодження (agreement)
-    - працюючий (working - participle)
-    - минулий (past/passed)
-  recommended:
-    - стилістика (stylistics)
-    - русизм (russicism)
-    - відносне речення (relative clause)
-    - природність (naturalness)
-activity_hints:
-  - type: recognition
-    focus: "Identify participle types"
-    items: 25
-  - type: transformation
-    focus: "Participle to relative clause"
-    items: 20
-  - type: error-correction
-    focus: "Fix stylistic errors"
-    items: 15
-  - type: fill-in
-    focus: "Choose participle or clause"
-    items: 10
-prerequisites:
-  - b1-43 (Adverbial Participles Perfective)
-connects_to:
-  - b1-45 (Past Passive Participles 1)
+id: b1-44
 naturalness:
   score: 9
   status: PASS
-  justification: "Important stylistic awareness"
+  justification: Important stylistic awareness
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-26'

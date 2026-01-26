@@ -1,66 +1,78 @@
 module: syntez-vytoky-1
-level: b2-hist
-sequence: 8
-version: '1.0'
+level: B2-HIST
+slug: syntez-vytoky-1
+version: '2.0'
 title: 'Синтез: Від Трипілля до Києва'
-focus: synthesis
-pedagogy: seminar
-objectives:
-- Учень може проаналізувати тяглість цивілізаційного розвитку на українських землях
-- Учень може пояснити концепцію України як 'плавильного котла' культур
-- Учень може спростувати імперські міфи про 'молоду націю' та 'спільну колиску'
-- Учень може оцінити значення демократичних традицій від античності до слов'ян
+subtitle: 'Synthesis: From Trypillia to Kyiv'
 content_outline:
 - section: Огляд періоду
   words: 1553
-  subsections:
+  points:
   - Глобальне перехрестя та економічний двигун
 - section: Ключові теми
   words: 1118
-  subsections:
+  points:
   - Мовна археологія та концепція плавильного котла
 - section: Первинні джерела
   words: 567
-  subsections:
+  points:
   - Зіставлення свідчень Геродота та Прокопія
 - section: 'Текст: Тяглість у сьогодення'
   words: 385
-  subsections:
+  points:
   - Як давня історія впливає на сучасну ідентичність
 - section: Підсумкове есе
   words: 546
-  subsections:
+  points:
   - Аналіз демократичних традицій
 - section: 'Словник епохи: Витоки'
   words: 84
-  subsections:
+  points:
   - Цивілізаційна та політична лексика
 - section: Підсумок
   words: 150
-  subsections:
+  points:
   - Загальні висновки етапу 'Витоки'
 - section: Потрібно більше практики?
   words: 93
-  subsections:
+  points:
   - Ресурси для самостійного поглиблення знань
 word_target: 4000
-vocabulary:
-- автохтонність
-- тяглість
-- суб'єктність
-- синтез
-- народоправство
-- цивілізація
-- деколонізація
-- ідентичність
-activities:
+vocabulary_hints:
+  required:
+  - автохтонність (autochthony)
+  - тяглість (continuity)
+  - суб'єктність (subjectivity/agency)
+  - синтез (synthesis)
+  - народоправство (democracy/folk-rule)
+  - цивілізація (civilization)
+  - деколонізація (decolonization)
+  - ідентичність (identity)
+activity_hints:
 - type: reading
   focus: Синтез первинних джерел
 - type: critical-analysis
   focus: Спростування історичних міфів
 - type: essay-response
   focus: Демократичні традиції України
+focus: synthesis
+pedagogy: seminar
+prerequisites:
+- 'b2-hist-01: Трипільська цивілізація'
+- 'b2-hist-07: Хозарський каганат'
+connects_to:
+- 'b2-hist-09: Олег та Ігор'
+objectives:
+- Учень може проаналізувати тяглість цивілізаційного розвитку на українських землях
+- Учень може пояснити концепцію України як 'плавильного котла' культур
+- Учень може спростувати імперські міфи про 'молоду націю' та 'спільну колиску'
+- Учень може оцінити значення демократичних традицій від античності до слов'ян
+grammar:
+- 'Синтез граматичних конструкцій: пасивні стани, складні речення'
+- 'Публіцистичний стиль: аналітична лексика'
 sources:
 - name: Історія України від найдавніших часів до сьогодення
   url: http://history.org.ua
   type: reference
+register: публіцистичний
+phase: B2-HIST.1 [Origins]

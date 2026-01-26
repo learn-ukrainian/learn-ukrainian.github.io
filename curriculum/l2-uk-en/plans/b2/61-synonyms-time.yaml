@@ -1,22 +1,49 @@
-module: 61-synonyms-time
-level: b2
-sequence: 61
-version: '1.0'
+module: b2-61
+level: B2
+slug: 61-synonyms-time
+version: '2.0'
 title: 'Синоніми: Час та Періоди'
 subtitle: Synonyms - Time and Periods
+content_outline:
+- section: Вступ — Час та Періоди
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Now
+  words: 500
+  points:
+  - зараз (now - current moment)
+  - тепер (now - current period)
+  - нині (nowadays - formal)
+  - сьогодні (today - this day)
+  - наразі (at present - official)
+- section: Before
+  words: 500
+  points:
+  - раніше (earlier - general)
+  - колись (once/sometime - past)
+  - давно (long ago)
+  - недавно (recently)
+  - щойно (just now)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: phraseology
 pedagogy: CBI
 objectives:
-- Учень може розрізняти відтінки значень синонімів на позначення поточного моменту (зараз, тепер, наразі)
-- Учень вміє використовувати лексику часових періодів для опису історичних та особистих подій
+- Учень може розрізняти відтінки значень синонімів на позначення поточного моменту
+  (зараз, тепер, наразі)
+- Учень вміє використовувати лексику часових періодів для опису історичних та особистих
+  подій
 - Учень розуміє концепцію вічності та миті в українській мові
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Adverbs of time
+- Temporal nouns and intensity
+immersion: 100
+register: публіцистичний
+phase: B2.2 [Phraseology & Synonymy]

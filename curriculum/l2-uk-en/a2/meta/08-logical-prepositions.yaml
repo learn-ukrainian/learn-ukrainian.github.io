@@ -1,14 +1,11 @@
-id: a2-08
-title: Logical Prepositions
-subtitle: Reasons, Time, and Relationships
+module: 08-logical-prepositions
+level: A2
 slug: 08-logical-prepositions
-module_type: grammar
-word_target: 1000
-immersion: 40-50% Ukrainian
 version: '2.0'
-phase: A2.1
-focus: grammar
-pedagogy: PPP
+id: a2-08
+naturalness:
+  score: 10
+  status: PASS
 duration: 60
 transliteration: none
 tags:
@@ -18,95 +15,5 @@ tags:
 - logic
 - abstract
 - temporal
-grammar:
-- prepositions of cause (через)
-- prepositions of purpose (для)
-- prepositions of time (після, до, о)
-- other logical prepositions (про, без, крім)
-objectives:
-- Learner can use prepositions to express cause and purpose
-- Learner can use prepositions to express time relationships
-- Learner can use logical prepositions correctly with cases
-- Learner can connect ideas using appropriate prepositions
-sources:
-- name: Ukrainian State Standard 2024 - Prepositions
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Abstract and temporal preposition requirements
-- name: Ukrainian Grammar - Prepositions
-  url: https://uk.wikipedia.org/wiki/Прийменник
-  type: reference
-  notes: Full preposition inventory with case government
-content_outline:
-- section: Introduction / Вступ
-  words: 200
-  points:
-  - Purpose and benefit concept
-  - Abstract vs spatial prepositions
-- section: Presentation / Презентація
-  words: 600
-  points:
-  - для vs без (Genitive)
-  - через vs про (Accusative)
-  - від vs з (Source/Accompaniment)
-  - Time prepositions (о, після)
-- section: Practice / Практика
-  words: 150
-  points:
-  - Contextual sentences
-  - Story analysis (The Letter)
-- section: Dialogues / Діалоги
-  words: 50
-  points:
-  - At the Pharmacy
-  - Planning a Trip
-vocabulary_hints:
-  required:
-  - для (for)
-  - без (without)
-  - через (because of/through)
-  - про (about)
-  - від (from person)
-  - з (from place)
-  - о (at time)
-  - після (after)
-  - крім (except)
-  - замість (instead of)
-  - завдяки (thanks to)
-  - всупереч (despite)
-  - протягом (during)
-  - щодо (regarding)
-  - стосовно (concerning)
-  recommended:
-  - заради (for the sake of)
-  - незважаючи на (despite)
-  - внаслідок (as a result of)
-  - по (after/along)
-  - при (at/during)
-activity_hints:
-- type: match-up
-  focus: Preposition to logical function
-  items: 12+
-- type: fill-in
-  focus: Abstract context sentences
-  items: 12+
-- type: fill-in
-  focus: Translation - "because of", "instead of", "about"
-  items: 10+
-- type: quiz
-  focus: Time preposition selection
-  items: 10+
-- type: quiz
-  focus: Case selection with prepositions
-  items: 12+
-prerequisites:
-- a2-07 (Spatial prepositions)
-- A1 time expressions
-- All cases basic knowledge
-connects_to:
-- a2-09 (All Cases Practice)
-- a2-10 (Post Office & Bank)
-- a2-11 (Checkpoint - Cases)
-naturalness:
-  score: 10
-  status: PASS
+build:
+  last_modified: '2026-01-26'

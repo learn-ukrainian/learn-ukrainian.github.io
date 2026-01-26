@@ -1,16 +1,9 @@
-module: past-passive-participles-1
-level: b1
-sequence: 45
+module: b1-45
+level: B1
+slug: past-passive-participles-1
 version: '2.0'
 title: Пасивні дієприкметники минулого часу I
 subtitle: Past Passive Participles I (-ний/-тий)
-focus: grammar
-pedagogy: TTT
-objectives:
-- Learner can form past passive participles using -ний/-тий suffixes
-- Learner can agree participles with nouns in gender, number, and case
-- Learner can use passive participles attributively and predicatively
-- Learner understands suffix selection rules
 content_outline:
 - section: 'Introduction: Passive Participles'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Form participles from verbs
   - Agree with nouns
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - пасивний (passive)
   - дієприкметник (participle)
@@ -63,15 +56,33 @@ vocabulary:
   - атрибутивний (attributive)
   - предикативний (predicative)
   - основа дієслова (verb stem)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - agreement
-  - transformation
-  - error-correction
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: transformation
+  focus: Verb to passive participle
+  items: 25
+- type: fill-in
+  focus: Complete with correct form
+  items: 20
+- type: agreement
+  focus: Match participle to noun
+  items: 15
+- type: error-correction
+  focus: Fix agreement errors
+  items: 10
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-44 (Active Participles Phrases)
 connects_to:
 - b1-46 (Past Passive Participles 2)
+objectives:
+- Learner can form past passive participles using -ний/-тий suffixes
+- Learner can agree participles with nouns in gender, number, and case
+- Learner can use passive participles attributively and predicatively
+- Learner understands suffix selection rules
+grammar:
+- Пасивні дієприкметники минулого часу
+- Суфікси -ний/-тий selection
+- Узгодження з іменником
+register: розмовний
+phase: B1.4a [Participles]

@@ -1,16 +1,9 @@
-module: discourse-markers-advanced
-level: b1
-sequence: 57
+module: b1-57
+level: B1
+slug: discourse-markers-advanced
 version: '2.0'
 title: 'Дискурсивні маркери II: складна організація'
 subtitle: 'Discourse Markers II: Advanced Text Organization'
-focus: vocabulary
-pedagogy: PPP
-objectives:
-- Learner can use 25 advanced discourse markers to organize complex arguments
-- Learner can sequence ideas using ordinal markers
-- Learner can express addition, contrast, and conclusion in academic writing
-- Learner can structure extended discourse effectively
 content_outline:
 - section: 'Introduction: Advanced Organization'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Structure complex texts
   - Use advanced markers
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - по-перше (firstly)
   - по-друге (secondly)
@@ -63,15 +56,33 @@ vocabulary:
   - головне (the main thing)
   - з одного боку (on one hand)
   - з іншого боку (on the other hand)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - writing
-  - organization
-  - transformation
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: organization
+  focus: Structure arguments with markers
+  items: 20
+- type: fill-in
+  focus: Complete academic texts
+  items: 20
+- type: writing
+  focus: Write structured essays
+  items: 15
+- type: transformation
+  focus: Improve text organization
+  items: 15
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-56 (Discourse Markers Basic)
 connects_to:
 - b1-58 (Describing Changes)
+objectives:
+- Learner can use 25 advanced discourse markers to organize complex arguments
+- Learner can sequence ideas using ordinal markers
+- Learner can express addition, contrast, and conclusion in academic writing
+- Learner can structure extended discourse effectively
+grammar:
+- Advanced discourse markers for text organization
+- Academic and formal connectors
+- Structuring arguments and conclusions
+register: розмовний
+phase: B1.5 [Vocabulary Expansion I]

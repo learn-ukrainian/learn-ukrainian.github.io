@@ -1,16 +1,9 @@
-module: causal-result-clauses
-level: b1
-sequence: 36
+module: b1-36
+level: B1
+slug: causal-result-clauses
 version: '2.0'
 title: Причинові та наслідкові речення
 subtitle: Causal and Result Clauses
-focus: grammar
-pedagogy: TTT
-objectives:
-- Learner can express причина using various causal connectors
-- Learner can express наслідок using result connectors
-- Learner can transform causal statements into result statements
-- Learner can build cause-effect relationships
 content_outline:
 - section: 'Introduction: Cause and Effect'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Express cause and effect
   - Transform statements
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - причина (cause/reason)
   - наслідок (consequence)
@@ -63,15 +56,33 @@ vocabulary:
   - завдяки (thanks to)
   - у зв'язку з (in connection with)
   - відтак (hence)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - sentence-combining
-  - translation
-  - transformation
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: Complete causal/result sentences
+  items: 25
+- type: transformation
+  focus: Cause to result conversion
+  items: 20
+- type: sentence-combining
+  focus: Link cause and effect
+  items: 15
+- type: translation
+  focus: English to Ukrainian
+  items: 15
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-35 (Concessive Clauses)
 connects_to:
 - b1-37 (Temporal Clauses)
+objectives:
+- Learner can express причина using various causal connectors
+- Learner can express наслідок using result connectors
+- Learner can transform causal statements into result statements
+- Learner can build cause-effect relationships
+grammar:
+- Causal clauses with тому що, бо, через те що
+- Result clauses with тому, отже, внаслідок
+- Cause-effect transformation
+register: розмовний
+phase: B1.3b [Complex Sentences]

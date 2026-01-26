@@ -1,14 +1,11 @@
 module: syntez-kozatstvo-vytoky
-id: b2-hist-50
-title: 'Синтез: Становлення козацтва'
-subtitle: 'Synthesis: The Formation of the Cossacks'
+level: B2-HIST
 slug: syntez-kozatstvo-vytoky
 version: '2.0'
-phase: HIST.5 [Rise of Cossacks]
-focus: synthesis
-pedagogy: CBI
-word_target: 3000
-register: публіцистичний
+id: b2-hist-50
+naturalness:
+  score: 9
+  status: PASS
 duration: 120
 transliteration: none
 tags:
@@ -17,77 +14,5 @@ tags:
 - cossack
 - identity
 - statehood
-grammar:
-- 'Historical synthesis: cause and effect'
-- Advanced analytical structures
-objectives:
-- Учень може узагальнити етапи становлення козацтва від витоків до середини XVII ст.
-- Учень може проаналізувати козацтво як комплексний військовий, соціальний та культурний феномен
-- Учень може оцінити вплив козацького чинника на європейську геополітику
-vocabulary_hints:
-  required:
-  - становлення
-  - передумова
-  - чинник
-  - ідентичність
-  - суб'єктність
-  - феномен
-  - консолідація
-  - спадкоємність
-  - державність
-  - вектор
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-- section: 'Вступ: Козацтво як точка збірки нації'
-  words: 350
-  points:
-  - Synthesis of previous modules (41-49)
-- section: 'Огляд періоду: Хронологія та генеза'
-  words: 400
-  points:
-  - From ukhodnyky to political knights
-  - Key stages of social evolution
-- section: 'Ключові теми: Війна, Віра та Воля'
-  words: 600
-  points:
-  - Military revolution and technological synthesis
-  - Religious identity as a consolidating factor
-- section: 'Аналіз: Культурна матриця та геополітика'
-  words: 600
-  points:
-  - Baroque and Academy as identity anchors
-  - Zaporozhian Host as a factor in European balance of power
-- section: 'Читання: Узагальнюючий огляд доби'
-  words: 250
-  points:
-  - Analytical text on the significance of the era
-- section: 'Первинні джерела: Голоси фундаторів'
-  words: 250
-  points:
-  - Synthesis of key documents
-- section: 'Деколонізаційний погляд: Козацька правда'
-  words: 300
-  points:
-  - Debunking the 'peasant culture' myth
-activity_hints:
-- type: reading
-  focus: Analytical synthesis of historical processes
-- type: quiz
-  focus: Comprehensive test of modules 41-49
-- type: essay-response
-  focus: The role of the Cossack myth in modern national building
-- type: comparative-study
-  focus: Evolution of Cossack identity over 100 years
-- type: group-sort
-  focus: 'Categorizing achievements: military, cultural, political'
-sources:
-- name: History of Ukrainian Statehood
-  url: https://history.org.ua/uk/lib/54321
-  type: reference
-  notes: General synthesis of the era
-- name: Zaporozhian Cossackdom in the Context of European History
-  url: https://litopys.org.ua/cossack/coss.htm
-  type: academic
-  notes: Comparative analysis
+build:
+  last_modified: '2026-01-26'

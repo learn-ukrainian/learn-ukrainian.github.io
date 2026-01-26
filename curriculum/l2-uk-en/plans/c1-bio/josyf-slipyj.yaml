@@ -1,109 +1,112 @@
 module: josyf-slipyj
-level: c1-bio
-sequence: 107
+level: C1-BIO
+slug: josyf-slipyj
 version: '2.0'
 title: 'Патріарх Йосиф Сліпий: Незламний сповідник віри'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Йосиф_Сліпий
-    title: Йосиф Сліпий (Wikipedia UA)
-    notes: Biography, imprisonment, diaspora leadership
-  secondary:
-  - url: https://ugcc.ua/en/church/history/patriarch-yosyf-slipy/
-    title: УГКЦ - Патріарх Йосиф Сліпий
-    notes: Official church biography
-  - url: https://ucu.edu.ua/
-    title: Український Католицький Університет
-    notes: Institution he founded
 content_outline:
 - section: Вступ — 18 років у ГУЛАЗі
   words: 457
-  subsections:
+  points:
   - Сліпий як символ незламності
   - Найтриваліше ув'язнення церковного ієрарха XX ст.
   - Від в'язня до патріарха
 - section: Молодість і духовне покликання
   words: 571
-  subsections:
+  points:
   - Народження в Галичині (1892)
   - Богословська освіта в Римі
   - Повернення до Львова
   - Ректор Львівської богословської академії
 - section: Арешт і табори
   words: 914
-  subsections:
+  points:
   - Арешт 1945 року
   - Відмова зректися Риму
   - Сибірські табори та заслання
   - 18 років страждань і стійкості
 - section: Звільнення та місія в діаспорі
   words: 800
-  subsections:
+  points:
   - Заступництво Папи Івана XXIII і Кеннеді
   - Прибуття до Риму (1963)
   - Об'єднання української діаспори
   - Заснування УКУ в Римі
 - section: Боротьба за патріархат
   words: 685
-  subsections:
+  points:
   - Мрія про визнання УГКЦ патріархатом
   - Конфлікт із Ватиканом
   - Самопроголошення патріархом (1975)
   - Символічне значення титулу
 - section: Спадщина сповідника
   words: 573
-  subsections:
+  points:
   - Смерть у Римі (1984)
   - '"Заповіт" — духовний документ'
   - Процес беатифікації
   - Сліпий як взірець для всіх поколінь
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - патріарх
-  - сповідник
-  - ГУЛАГ
-  - заслання
-  - ієрарх
-  - беатифікація
-  - незламність
-  - зректися
-  - діаспора
-  - заповіт
+  - патріарх (patriarch)
+  - сповідник (confessor of faith)
+  - ГУЛАГ (Gulag)
+  - заслання (exile)
+  - ієрарх (hierarch)
+  - беатифікація (beatification)
+  - незламність (unbreakability)
+  - зректися (to renounce)
+  - діаспора (diaspora)
+  - заповіт (testament)
   recommended:
-  - ув'язнення
-  - репресії
-  - катакомбна церква
-  - екуменізм
-  - канонізація
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - ув'язнення (imprisonment)
+  - репресії (repressions)
+  - катакомбна церква (catacomb church)
+  - екуменізм (ecumenism)
+  - канонізація (canonization)
+activity_hints:
+- type: reading
+  focus: Excerpts from Slipyj's "Заповіт"
+  source: Historical documents
+  items: 3 passages
+- type: quiz
+  focus: Slipyj's biography and persecution
+  items: 12+
+- type: match-up
+  focus: Stages of his life and key events
+  items: 10+
+- type: essay-response
+  focus: What gave Slipyj strength to survive 18 years?
+  word_target: 300
+  output: Analysis of faith and resistance
+- type: group-sort
+  focus: Soviet persecution vs. diaspora achievements
+  items: 12+
+- type: fill-in
+  focus: Key dates and places in his journey
+  items: 10+
+focus: biography
+prerequisites:
+- c1-bio-106 (Andrey Sheptytsky - his predecessor)
+- Understanding of Soviet religious persecution
+- Cold War historical context
 connects_to:
-  previous: c1-bio-106 (Andrey Sheptytsky - his predecessor)
-  related:
-  - c1-bio-106 (Sheptytsky - predecessor)
-  - c1-bio-77 (Vasyl Stus - fellow Soviet prisoner)
-  - c1-bio-71 (Levko Lukyanenko - fellow dissident)
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-106 (Sheptytsky - predecessor)
+- c1-bio-77 (Vasyl Stus - fellow Soviet prisoner)
+- c1-bio-71 (Levko Lukyanenko - fellow dissident)
+module_type: biography
+sources:
+- name: Йосиф Сліпий (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Йосиф_Сліпий
+  type: primary
+  notes: Biography, imprisonment, diaspora leadership
+- name: УГКЦ - Патріарх Йосиф Сліпий
+  url: https://ugcc.ua/en/church/history/patriarch-yosyf-slipy/
+  type: reference
+  notes: Official church biography
+- name: Український Католицький Університет
+  url: https://ucu.edu.ua/
+  type: reference
+  notes: Institution he founded
+immersion: 100% Ukrainian
+phase: C1-BIO

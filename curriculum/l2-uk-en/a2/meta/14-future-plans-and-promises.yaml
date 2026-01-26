@@ -1,14 +1,11 @@
-id: a2-14
-title: Future Plans and Promises
-subtitle: Simple Future vs. Compound Future
+module: 14-future-plans-and-promises
+level: A2
 slug: 14-future-plans-and-promises
-module_type: grammar
-word_target: 1000
-immersion: 40-50% Ukrainian
 version: '2.0'
-phase: A2.2
-focus: grammar
-pedagogy: PPP
+id: a2-14
+naturalness:
+  score: 9
+  status: PASS
 duration: 60
 transliteration: none
 tags:
@@ -16,94 +13,5 @@ tags:
 - verbs
 - aspect
 - future tense
-grammar:
-- imperfective future (буду + infinitive)
-- perfective future (conjugated)
-- promises vs plans
-- duration in future
-objectives:
-- Learner can form the compound future tense (imperfective)
-- Learner can form the simple future tense (perfective)
-- Learner can distinguish between future process and future result
-- Learner can make promises and describe plans
-sources:
-- name: Ukrainian State Standard 2024 - Future Tense
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Future tense formation and aspect usage
-- name: Ukrainian Verb Conjugation - Future
-  url: https://uk.wikipedia.org/wiki/Дієслово
-  type: reference
-  notes: Future tense paradigms
-content_outline:
-- section: Introduction / Вступ
-  words: 200
-  points:
-  - Future tense overview
-  - Importance of commitment signals (Plans vs Promises)
-- section: Presentation / Презентація
-  words: 600
-  points:
-  - Imperfective Future (Compound: буду + inf)
-  - Perfective Future (Simple: conjugated)
-  - Semantic differences and marker words
-  - The power of results in future commitments
-- section: Practice / Практика
-  words: 150
-  points:
-  - Plan vs Promise identification
-  - Future formation drills
-- section: Dialogues / Діалоги
-  words: 50
-  points:
-  - Weekend plans situational exchange
-vocabulary_hints:
-  required:
-  - зроблю (I will do/make)
-  - напишу (I will write)
-  - прочитаю (I will read)
-  - скажу (I will say)
-  - побачу (I will see)
-  - почую (I will hear)
-  - візьму (I will take)
-  - дам (I will give)
-  - піду (I will go)
-  - прийду (I will come)
-  - приїду (I will arrive)
-  - почну (I will begin)
-  - закінчу (I will finish)
-  - зрозумію (I will understand)
-  - буду (I will be/will + inf)
-  recommended:
-  - забуду (I will forget)
-  - запам'ятаю (I will remember)
-  - знайду (I will find)
-  - вийду (I will exit)
-  - увійду (I will enter)
-activity_hints:
-- type: fill-in
-  focus: Transform imperfective to perfective future
-  items: 12+
-- type: fill-in
-  focus: Plans vs promises aspect selection
-  items: 12+
-- type: quiz
-  focus: '"I will do it" vs "I will be doing it"'
-  items: 12+
-- type: fill-in
-  focus: Conjugate perfective verbs in future
-  items: 10+
-- type: quiz
-  focus: Future tense formation quiz
-  items: 10+
-prerequisites:
-- a2-12 (Aspect introduction)
-- a2-13 (Perfective past)
-- A1 future tense basics
-connects_to:
-- a2-15 (Aspect Morphology)
-- a2-16 (Aspect Mastery Pairs)
-- a2-22 (If I Were)
-naturalness:
-  score: 9
-  status: PASS
+build:
+  last_modified: '2026-01-26'

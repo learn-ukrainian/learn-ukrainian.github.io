@@ -1,109 +1,110 @@
 module: panteleimon-kulish
-level: c1-bio
-sequence: 97
+level: C1-BIO
+slug: panteleimon-kulish
 version: '2.0'
 title: 'Пантелеймон Куліш: Будівничий української мови'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Куліш_Пантелеймон_Олександрович
-    title: Пантелеймон Куліш (Wikipedia UA)
-    notes: Біографія, творчість, мовознавча діяльність
-  secondary:
-  - url: https://iulm.org.ua
-    title: Інститут української мови НАНУ
-    notes: Кулішівка та правопис
-  - url: https://www.history.org.ua
-    title: Кирило-Мефодіївське братство
-    notes: Політична діяльність
 content_outline:
 - section: Вступ — Архітектор української писемності
   words: 400
-  subsections:
+  points:
   - Куліш як ключова постать у формуванні української літературної мови
   - Створення «кулішівки» — основи сучасного правопису
   - Багатогранність його діяльності
 - section: Ранні роки та освіта (1819-1840)
   words: 600
-  subsections:
+  points:
   - Народження на Чернігівщині
   - Навчання в Київському університеті
   - Перші літературні спроби
   - Знайомство з українською інтелігенцією
 - section: Кирило-Мефодіївське братство (1845-1847)
   words: 700
-  subsections:
+  points:
   - Заснування братства разом із Шевченком та Костомаровим
   - Ідеї слов'янської федерації
   - Арешт та заслання
   - Формування національної програми
 - section: Дружба та полеміка з Шевченком
   words: 700
-  subsections:
+  points:
   - Перша зустріч та взаємне захоплення
   - Спільна робота над українською справою
   - Ідейні розходження та критика
   - Значення цієї дружби для української культури
 - section: Мовотворча діяльність
   words: 800
-  subsections:
+  points:
   - Створення фонетичного правопису («кулішівка»)
   - Переклад Біблії українською мовою
   - Літературна нормалізація української мови
   - Боротьба з «язичієм»
 - section: Літературна спадщина та пізні роки (1860-1897)
   words: 800
-  subsections:
+  points:
   - Історичний роман «Чорна рада»
   - Переклади Шекспіра та Байрона
   - Еволюція поглядів у пізній період
   - Смерть та оцінка спадщини
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - правопис
-  - кулішівка
-  - фонетичний принцип
-  - мовотворення
-  - братство
-  - заслання
-  - переклад
-  - Біблія
-  - літературна мова
-  - полеміка
+  - правопис (orthography)
+  - кулішівка (Kulish orthography)
+  - фонетичний принцип (phonetic principle)
+  - мовотворення (language creation)
+  - братство (brotherhood)
+  - заслання (exile)
+  - переклад (translation)
+  - Біблія (Bible)
+  - літературна мова (literary language)
+  - полеміка (polemic)
   recommended:
-  - Кирило-Мефодіївське братство
-  - «язичіє»
-  - слов'янська федерація
-  - «Чорна рада»
-  - нормалізація
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - Кирило-Мефодіївське братство (Cyril and Methodius Brotherhood)
+  - «язичіє» (macaronic language)
+  - слов'янська федерація (Slavic federation)
+  - «Чорна рада» (The Black Council)
+  - нормалізація (standardization)
+activity_hints:
+- type: reading
+  focus: Мовознавча та літературна спадщина
+  source: Уривки з перекладу Біблії та «Чорної ради»
+  items: 3 passages
+- type: quiz
+  focus: Біографія та внесок у мову
+  items: 12+
+- type: match-up
+  focus: Твори та їхні жанри
+  items: 10+
+- type: essay-response
+  focus: Чому правопис важливий для національної ідентичності?
+  word_target: 300
+  output: Аналітичне есе
+- type: group-sort
+  focus: Літературна діяльність vs мовознавча діяльність
+  items: 12+
+- type: fill-in
+  focus: Термінологія правопису та мовознавства
+  items: 10+
+focus: biography
+prerequisites:
+- c1-bio-20 (Тарас Шевченко)
 connects_to:
-  previous: c1-bio-20 (Тарас Шевченко)
-  related:
-  - c1-bio-98 (Іван Огієнко)
-  - c1-bio-96 (Микола Погрібний)
-  - c1-bio-30 (Борис Грінченко)
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-98 (Іван Огієнко)
+- c1-bio-96 (Микола Погрібний)
+- c1-bio-30 (Борис Грінченко)
+module_type: biography
+sources:
+- name: Пантелеймон Куліш (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Куліш_Пантелеймон_Олександрович
+  type: primary
+  notes: Біографія, творчість, мовознавча діяльність
+- name: Інститут української мови НАНУ
+  url: https://iulm.org.ua
+  type: reference
+  notes: Кулішівка та правопис
+- name: Кирило-Мефодіївське братство
+  url: https://www.history.org.ua
+  type: reference
+  notes: Політична діяльність
+immersion: 100% Ukrainian
+phase: C1-BIO

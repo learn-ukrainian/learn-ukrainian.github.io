@@ -1,0 +1,105 @@
+module: reading-professional-texts-ii
+level: C2
+slug: reading-professional-texts-ii
+version: '2.0'
+title: Читання фахових текстів II — Критичний аналіз
+content_outline:
+- section: Вступ — Від розуміння до критичного аналізу
+  words: 500
+  points:
+  - Різниця між розумінням та оцінюванням
+  - Роль критичного мислення у фаховому читанні
+  - Питання, які варто ставити до тексту
+- section: Оцінка джерел та авторитетності
+  words: 700
+  points:
+  - Критерії оцінки наукових публікацій
+  - Рецензовані vs. нерецензовані джерела
+  - Виявлення упередженості та конфлікту інтересів
+- section: Аналіз аргументації
+  words: 700
+  points:
+  - Структура наукового аргументу
+  - Типи доказів та їх вагомість
+  - Логічні помилки (fallacies)
+- section: Порівняльний аналіз
+  words: 600
+  points:
+  - Зіставлення різних джерел на одну тему
+  - Синтез інформації з кількох текстів
+  - Виявлення консенсусу та розбіжностей
+- section: Критичне анотування
+  words: 600
+  points:
+  - Техніка критичного анотування
+  - Нотатки для подальшого використання
+  - Організація інформації
+- section: Практичні вправи
+  words: 600
+  points:
+  - Критичний аналіз реальних фахових текстів
+  - Порівняльний аналіз двох джерел
+  - Написання критичної анотації
+word_target: 4000
+vocabulary_hints:
+  required:
+  - критичний аналіз (critical analysis)
+  - авторитетність (authority/credibility)
+  - рецензування (peer review)
+  - упередженість (bias)
+  - аргументація (argumentation)
+  - докази (evidence)
+  - логічна помилка (logical fallacy)
+  - синтез (synthesis)
+  - анотація (annotation)
+  - консенсус (consensus)
+  recommended:
+  - верифікація (verification)
+  - валідність (validity)
+  - надійність (reliability)
+  - первинне джерело (primary source)
+  - вторинне джерело (secondary source)
+activity_hints:
+- type: quiz
+  focus: Ідентифікація критеріїв оцінки джерел
+  items: 15+
+- type: critical-analysis
+  focus: Оцінка авторитетності наукової статті
+  output: Аналіз з критеріями та обґрунтуванням
+- type: quiz
+  focus: Виявлення логічних помилок в аргументації
+  items: 12+
+- type: comparative-study
+  focus: Порівняння двох джерел на одну тему
+  output: Порівняльний аналіз з моделлю відповіді
+- type: essay-response
+  focus: Написання критичної анотації статті
+  word_target: 400
+  output: Анотація з рубрикою оцінювання
+- type: critical-analysis
+  focus: Синтез інформації з трьох джерел
+  output: Узагальнювальний огляд
+focus: grammar
+prerequisites:
+- M49 (Reading Professional Texts I — comprehension strategies)
+- C1 Critical thinking skills
+connects_to:
+- c2-51 (Professional Document Types)
+- c2-59 (Professional Research Skills)
+- c2-32 (Writing Literary Essays — critical writing skills)
+module_type: grammar
+sources:
+- name: Вища освіта України — науковий журнал
+  url: https://vnz.org.ua/
+  type: reference
+  notes: Examples of academic discourse for critical analysis
+- name: Бібліометрика української науки
+  url: https://nbuviap.gov.ua/bpnu/
+  type: reference
+  notes: Metrics and standards for evaluating Ukrainian scholarship
+- name: Наукова думка — видавництво НАН України
+  url: https://naukova-dumka.com.ua/
+  type: reference
+  notes: High-quality academic publications across disciplines
+immersion: 100% Ukrainian
+phase: C2.2 Literary Analysis

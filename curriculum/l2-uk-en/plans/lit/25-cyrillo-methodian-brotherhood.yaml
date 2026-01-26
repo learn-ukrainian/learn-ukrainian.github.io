@@ -1,100 +1,109 @@
-module: 25-cyrillo-methodian-brotherhood
-level: lit
-sequence: 25
+module: cyrillo-methodian-brotherhood
+level: LIT
+slug: cyrillo-methodian-brotherhood
 version: '2.0'
 title: Кирило-Мефодіївське братство
 subtitle: The Cyrillo-Methodian Brotherhood
-focus: literature
-pedagogy: seminar
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Кирило-Мефодіївське_братство
-    title: Кирило-Мефодіївське братство — стаття
-    notes: Історія організації
-  - url: https://uk.wikipedia.org/wiki/Книги_буття_українського_народу
-    title: Книги буття українського народу
-    notes: Програмний документ
-  secondary:
-  - url: https://uk.wikipedia.org/wiki/Микола_Костомаров
-    title: Микола Костомаров — біографія
-    notes: Біографія одного з лідерів
 content_outline:
 - section: Вступ — Перша політична організація
   words: 500
-  subsections:
+  points:
   - Київ, 1845-1847 роки
   - Чому це було революційно
   - Таємне товариство в імперіях
 - section: Засновники і члени
   words: 700
-  subsections:
+  points:
   - Микола Костомаров — ідеолог
   - Пантелеймон Куліш — організатор
   - Тарас Шевченко — найрадикальніший
 - section: Книги буття українського народу
   words: 800
-  subsections:
+  points:
   - Жанр і структура документу
   - Ідея слов'янської федерації
   - Україна як "месія народів"
 - section: Політична програма
   words: 700
-  subsections:
+  points:
   - Скасування кріпацтва
   - Демократія і рівність
   - Християнський соціалізм
 - section: Розгром і наслідки
   words: 500
-  subsections:
+  points:
   - Донос і арешти (1847)
   - Покарання членів
   - Шевченко — найсуворіший вирок
 - section: Підсумок — Ідея, що пережила репресії
   words: 400
-  subsections:
+  points:
   - Вплив братства на українську думку
   - Від 1847 до 1991 року
   - Завершення фази "Інтелектуалів"
 word_target: 4500
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - братство
-  - таємне товариство
-  - федерація
-  - месіанізм
-  - ідеолог
-  - програма
-  - донос
-  - арешт
-  - кріпацтво
-  - рівність
+  - братство (brotherhood)
+  - таємне товариство (secret society)
+  - федерація (federation)
+  - месіанізм (messianism)
+  - ідеолог (ideologist)
+  - програма (program)
+  - донос (denunciation)
+  - арешт (arrest)
+  - кріпацтво (serfdom)
+  - рівність (equality)
   recommended:
-  - маніфест
-  - утопія
-  - панславізм
-  - репресії
-  - заслання
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - cloze
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - маніфест (manifesto)
+  - утопія (utopia)
+  - панславізм (pan-Slavism)
+  - репресії (repressions)
+  - заслання (exile)
+activity_hints:
+- type: reading
+  focus: Уривки з "Книг буття українського народу"
+  source: Wikipedia and historical sources
+  items: 4+
+- type: quiz
+  focus: Факти про братство
+  items: 15+
+- type: match-up
+  focus: Член братства → його роль / покарання
+  items: 12+
+- type: essay-response
+  focus: Україна як "месія народів" — утопія чи візія?
+  word_target: 300
+  output: Політико-філософське есе
+- type: cloze
+  focus: Ключові дати і факти
+  items: 12+
+focus: history
+pedagogy: Analysis
+prerequisites:
+- lit-21 (Panteleimon Kulish)
+- lit-14 (Son — контекст арешту Шевченка)
 connects_to:
-  previous: lit-21 (Panteleimon Kulish)
-  related:
-  - lit-26 (Nechuy-Levytsky — наступна фаза)
-  - lit-20 (Cult of Shevchenko — Шевченко-революціонер)
-  - c1-hist (Historical modules)
-constraints:
-  min_engagement_boxes: 3
-  min_examples: 15
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- lit-26 (Nechuy-Levytsky — наступна фаза)
+- lit-20 (Cult of Shevchenko — Шевченко-революціонер)
+- c1-hist (Historical modules)
+grammar:
+- Political Terminology
+- Religious Rhetoric
+- Historical Narrative
+module_type: history
+sources:
+- name: Кирило-Мефодіївське братство — стаття
+  url: https://uk.wikipedia.org/wiki/Кирило-Мефодіївське_братство
+  type: primary
+  notes: Історія організації
+- name: Книги буття українського народу
+  url: https://uk.wikipedia.org/wiki/Книги_буття_українського_народу
+  type: primary
+  notes: Програмний документ
+- name: Микола Костомаров — біографія
+  url: https://uk.wikipedia.org/wiki/Микола_Костомаров
+  type: secondary
+  notes: Біографія одного з лідерів
+immersion: 100% Ukrainian
+phase: LIT.4 The Intellectuals (Kulish & Kostomarov)

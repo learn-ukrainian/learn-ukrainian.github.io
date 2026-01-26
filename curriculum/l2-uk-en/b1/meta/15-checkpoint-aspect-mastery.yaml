@@ -1,14 +1,11 @@
-id: b1-15
-title: 'Контрольна точка: Опанування виду'
-subtitle: Aspect Mastery Phase Checkpoint
+module: 15-checkpoint-aspect-mastery
+level: B1
 slug: 15-checkpoint-aspect-mastery
-module_type: checkpoint
-word_target: 1200
-immersion: 100% Ukrainian
 version: '2.1'
-phase: B1.1 Aspect Mastery Checkpoint
-focus: checkpoint
-pedagogy: TTT
+id: b1-15
+naturalness:
+  score: 9
+  status: PASS
 template: b1-checkpoint-module-template.md
 duration: 75
 transliteration: none
@@ -16,102 +13,5 @@ tags:
 - checkpoint
 - integration
 - aspect
-grammar:
-- Integration of M06-14
-- Comprehensive review and testing
-objectives:
-- Learner can demonstrate mastery of verbal aspect
-- Learner can integrate knowledge from M06-14
-- Learner can select correct aspect in all contexts
-- Learner can self-assess readiness for Motion Verbs phase
-sources:
-- name: CEFR B1 Descriptors - Grammar
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
-  type: reference
-  notes: Assessment standards for B1 grammar competence
-- name: Ukrainian State Standard 2024 - Aspect Assessment
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official criteria for aspect mastery
-content_outline:
-- section: Огляд
-  words: 100
-  points:
-  - Content for Огляд
-  - Examples and explanation
-  - Practice or application
-- section: 'Skill 1: Вид у минулому часі'
-  words: 250
-  points:
-  - 'Content for Skill 1: Вид у минулому часі'
-  - Examples and explanation
-  - Practice or application
-- section: 'Skill 2: Вид у майбутньому часі'
-  words: 150
-  points:
-  - 'Content for Skill 2: Вид у майбутньому часі'
-  - Examples and explanation
-  - Practice or application
-- section: 'Skill 3: Вид у запереченні'
-  words: 250
-  points:
-  - 'Content for Skill 3: Вид у запереченні'
-  - Examples and explanation
-  - Practice or application
-- section: 'Skill 4: Вид у наказовому способі'
-  words: 200
-  points:
-  - 'Content for Skill 4: Вид у наказовому способі'
-  - Examples and explanation
-  - Practice or application
-- section: 'Skill 5: Видові пари'
-  words: 150
-  points:
-  - 'Content for Skill 5: Видові пари'
-  - Examples and explanation
-  - Practice or application
-- section: Інтеграційне завдання
-  words: 300
-  points:
-  - Content for Інтеграційне завдання
-  - Examples and explanation
-  - Practice or application
-vocabulary_hints:
-  required:
-  - опанування (mastery)
-  - контрольна точка (checkpoint)
-  - самооцінка (self-assessment)
-  - готовність (readiness)
-  - повторення (review)
-  - закріплення (consolidation)
-  - перевірка (verification)
-  - прогрес (progress)
-  - слабка сторона (weakness)
-  - сильна сторона (strength)
-  recommended:
-  - досягнення (achievement)
-  - рівень (level)
-  - компетенція (competence)
-  - навичка (skill)
-  - знання (knowledge)
-activity_hints:
-- type: quiz
-  focus: Comprehensive aspect test (all contexts)
-  items: 25+
-- type: cloze
-  focus: Extended text with aspect selection
-  items: 15+
-- type: error-correction
-  focus: Find and fix aspect errors
-  items: 10+
-- type: match-up
-  focus: Context → aspect selection rule
-  items: 12+
-prerequisites:
-- All B1.1 modules (M06-14)
-connects_to:
-- b1-16 (Motion verbs - full system)
-- b1-25 (Motion verbs checkpoint)
-naturalness:
-  score: 9
-  status: PASS
+build:
+  last_modified: '2026-01-26'

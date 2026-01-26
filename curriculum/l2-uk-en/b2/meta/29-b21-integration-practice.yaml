@@ -1,10 +1,10 @@
 module: b2-29
-title: Інтеграційна практика B2.1
-subtitle: B2.1 Integration Practice
+level: B2
+slug: 29-b21-integration-practice
 version: '1.0'
-phase: B2.1c [Register & Domain Vocab]
-pedagogy: TTT
-focus: grammar
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
 tags:
@@ -14,38 +14,7 @@ tags:
 - participles
 - register
 - multi-clause
-grammar:
-- 'All B2.1 grammar: passive voice, participles, register, complex sentences'
-- Cross-skill application in authentic contexts
-objectives:
-- Учень може застосовувати всі граматичні структури B2.1 в інтегрованих контекстах
-- Учень може трансформувати тексти між різними регістрами
-- Учень може аналізувати складні тексти на граматичні особливості
 vocabulary_count: 28
-register: varies
 vocab_count: 92
-slug: 29-b21-integration-practice
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-- section: Вступ — Інтеграційна практика B2.1
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-  - Роль у системі української мови
-- section: Інтеграція навичок
-  words: 500
-  points:
-  - Passive voice in appropriate contexts
-  - Participle recognition in texts
-  - Register-appropriate vocabulary
-  - Complex sentence construction
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

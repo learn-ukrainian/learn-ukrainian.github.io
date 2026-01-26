@@ -1,25 +1,9 @@
 module: 21-numerals-and-nouns
-level: a2
-sequence: 21
+level: A2
+slug: 21-numerals-and-nouns
 version: '2.0'
 title: Numerals and Nouns
 subtitle: Counting Things Correctly
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can use correct noun forms with numerals 1, 2-4, and 5+
-- Learner can identify agreement zones for compound numbers
-- Learner can use numerals in shopping contexts
-- Learner can count years and age
-sources:
-- name: Ukrainian State Standard 2024 - Numerals
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Numeral-noun agreement requirements for A2
-- name: Historical Ukrainian Grammar - Dual Number
-  url: https://uk.wikipedia.org/wiki/Двоїна
-  type: reference
-  notes: Context for the 2-4 agreement pattern
 content_outline:
 - section: Introduction / Вступ
   words: 200
@@ -44,7 +28,22 @@ content_outline:
   points:
   - Buying products in specific quantities at a market
 word_target: 1000
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can use correct noun forms with numerals 1, 2-4, and 5+
+- Learner can identify agreement zones for compound numbers
+- Learner can use numerals in shopping contexts
+- Learner can count years and age
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Numerals
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Numeral-noun agreement requirements for A2
+- name: Historical Ukrainian Grammar - Dual Number
+  url: https://uk.wikipedia.org/wiki/Двоїна
+  type: reference
+  notes: Context for the 2-4 agreement pattern
+immersion: 40-50% Ukrainian
+phase: A2.2

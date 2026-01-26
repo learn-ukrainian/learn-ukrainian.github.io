@@ -1,21 +1,8 @@
 module: 31-diaspora-ukrainian
-level: c1
-sequence: 31
+level: C1
+slug: 31-diaspora-ukrainian
 version: '2.0'
 title: Українська діаспора
-focus: linguistics
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Українська діаспора
-  url: https://diasporaua.org/
-  type: reference
-  notes: Diaspora community information
-- name: Heritage Language Studies
-  url: https://mova.info/
-  type: secondary
-  notes: Research on diaspora language
 content_outline:
 - section: Вступ — Історія еміграції
   words: 500
@@ -62,7 +49,7 @@ content_outline:
   - Порівняння з сучасною мовою
   - Дискусія про збереження
 word_target: 4000
-vocabulary:
+vocabulary_hints:
   required:
   - діаспора (diaspora)
   - еміграція (emigration)
@@ -80,19 +67,43 @@ vocabulary:
   - двомовність (bilingualism)
   - мовний зсув (language shift)
   - інтерференція (interference)
-  forbidden: []
-activities:
-  types_required:
-  - group-sort
-  - quiz
-  - essay-response
-  - cloze
-  - fill-in
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: Diaspora communities and history
+  items: 15+
+- type: match-up
+  focus: Region → language features
+  items: 12+
+- type: fill-in
+  focus: Diaspora vocabulary
+  items: 12+
+- type: cloze
+  focus: Heritage language characteristics
+  items: 10+
+- type: group-sort
+  focus: Waves of emigration
+  items: 12+
+- type: essay-response
+  focus: Heritage language maintenance
+  word_target: 200
+focus: linguistics
+prerequisites:
+- c1-28 (Dialects)
+- c1-29 (Surzhyk)
+- c1-30 (History of Language)
 connects_to:
 - c1-32 (Professional Scenarios)
 - c1-35 (C1.2 Checkpoint)
 - c1-49 (Church Slavonicisms)
+module_type: cultural
+sources:
+- name: Українська діаспора
+  url: https://diasporaua.org/
+  type: reference
+  notes: Diaspora community information
+- name: Heritage Language Studies
+  url: https://mova.info/
+  type: secondary
+  notes: Research on diaspora language
+immersion: 100% Ukrainian
+phase: C1.2 Professional Communication

@@ -1,100 +1,16 @@
-id: b1-17
-title: 'Рух: Прибуття та вихід'
-subtitle: Motion - Coming & Going
+module: 17-motion-coming-going
+level: B1
 slug: 17-motion-coming-going
-module_type: grammar
-word_target: 1500
-immersion: 100% Ukrainian
 version: '2.0'
-phase: B1.2 Motion
-pedagogy: TTT
-focus: grammar
+id: b1-17
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
 tags:
 - grammar
 - motion
 - prefixes
-grammar:
-- Prefixes при-, ви-, в-/у- with motion verbs
-- Arrival, exit, and entry semantics
-objectives:
-- Learner can form motion verbs with при-, ви-, в-/у- prefixes
-- Learner can choose correct prefix for arrival, exit, or entry
-- Learner can use prefixed motion verbs in sentences
-sources:
-- name: Ukrainian State Standard 2024 - Motion Prefixes
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official prefix meanings with motion verbs
-- name: Ukrainian Verbal Prefixes
-  url: https://uk.wikipedia.org/wiki/Дієслівні_префікси
-  type: reference
-  notes: Comprehensive prefix system
-content_outline:
-- section: Тест
-  words: 100
-  points:
-  - Content for Тест
-  - Examples and explanation
-  - Practice or application
-- section: Пояснення
-  words: 500
-  points:
-  - Content for Пояснення
-  - Examples and explanation
-  - Practice or application
-- section: Практика
-  words: 500
-  points:
-  - Content for Практика
-  - Examples and explanation
-  - Practice or application
-- section: Діалоги
-  words: 450
-  points:
-  - Content for Діалоги
-  - Examples and explanation
-  - Practice or application
-vocabulary_hints:
-  required:
-  - прийти/приходити (to arrive on foot)
-  - приїхати/приїжджати (to arrive by vehicle)
-  - вийти/виходити (to exit on foot)
-  - виїхати/виїжджати (to exit by vehicle)
-  - увійти/входити (to enter on foot)
-  - в'їхати/в'їжджати (to enter by vehicle)
-  - прибуття (arrival)
-  - вихід (exit)
-  - вхід (entrance)
-  - напрямок (direction)
-  recommended:
-  - прибігти/прибігати (to arrive running)
-  - вибігти/вибігати (to run out)
-  - убігти/убігати (to run in)
-  - прилетіти/прилітати (to arrive flying)
-  - вилетіти/вилітати (to fly out)
-activity_hints:
-- type: quiz
-  focus: Which prefix for which direction?
-  items: 15+
-- type: fill-in
-  focus: Complete sentences with correct prefixed verb
-  items: 15+
-- type: fill-in
-  focus: Change direction (вхід → вихід)
-  items: 10+
-- type: cloze
-  focus: Narrative with movement
-  items: 12+
-- type: match-up
-  focus: Prefix → meaning
-  items: 12+
-prerequisites:
-- b1-16 (Motion verbs full system)
-connects_to:
-- b1-18 (Motion - passing & crossing)
-- b1-22 (Motion full prefix integration)
-naturalness:
-  score: 9
-  status: PASS
+build:
+  last_modified: '2026-01-26'

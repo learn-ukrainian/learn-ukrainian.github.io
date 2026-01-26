@@ -1,16 +1,9 @@
-module: the-living-verb-i
-level: a1
-sequence: 6
+module: a1-06
+level: A1
+slug: the-living-verb-i
 version: '2.0'
 title: The Living Verb I
 subtitle: First Conjugation (-ати/-яти)
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can conjugate First Conjugation verbs in present tense
-- Learner can form basic action statements
-- Learner can describe daily activities using -ати verbs
-- Learner understands basic concept of imperfective aspect
 content_outline:
 - section: 'Introduction: Verbs Bring Language to Life'
   words: 100
@@ -51,7 +44,7 @@ content_outline:
   - Describe what you do
   - Ask what others do
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - читати (to read)
   - писати (to write)
@@ -66,16 +59,34 @@ vocabulary:
   - розуміти (to understand)
   - вивчати (to study)
   - відпочивати (to rest)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - conjugation-drill
-  - translation
-  - matching
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: conjugation-drill
+  focus: Conjugate First Conjugation verbs
+  items: 30
+- type: fill-in
+  focus: Complete with correct verb form
+  items: 20
+- type: translation
+  focus: Translate action sentences
+  items: 15
+- type: matching
+  focus: Match pronoun to verb form
+  items: 18
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-05 (My World - Objects)
 connects_to:
 - a1-07 (Questions and Negation)
 - a1-08 (The Living Verb II)
+objectives:
+- Learner can conjugate First Conjugation verbs in present tense
+- Learner can form basic action statements
+- Learner can describe daily activities using -ати verbs
+- Learner understands basic concept of imperfective aspect
+grammar:
+- First Conjugation pattern (-ати → -аю, -аєш...)
+- Personal verb endings
+- Imperfective aspect introduction
+register: розмовний
+phase: A1.1 [First Contact]

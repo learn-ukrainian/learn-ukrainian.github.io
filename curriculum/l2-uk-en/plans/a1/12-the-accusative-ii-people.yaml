@@ -1,16 +1,9 @@
-module: the-accusative-ii-people
-level: a1
-sequence: 12
+module: a1-12
+level: A1
+slug: the-accusative-ii-people
 version: '2.0'
 title: 'The Accusative II: People'
 subtitle: Animate Nouns and the Genitive Connection
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can use accusative case for animate nouns (people/animals)
-- Learner can distinguish between animate and inanimate accusative
-- Learner understands when accusative = genitive
-- Learner can talk about people as direct objects
 content_outline:
 - section: 'Introduction: People Are Different'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Describe family members
   - Talk about friends and colleagues
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - брат (brother)
   - сестра (sister)
@@ -65,16 +58,34 @@ vocabulary:
   - колега (colleague)
   - сусід (neighbor)
   - дитина (child)
-  forbidden: []
-activities:
-  types_required:
-  - transformation
-  - fill-in
-  - sentence-building
-  - sorting
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: transformation
+  focus: Change animate nouns to accusative
+  items: 25
+- type: sorting
+  focus: Animate vs inanimate
+  items: 20
+- type: fill-in
+  focus: Complete with correct accusative
+  items: 20
+- type: sentence-building
+  focus: Sentences about people
+  items: 12
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-11 (The Accusative I - Things)
 connects_to:
 - a1-13 (The Locative)
 - a1-32 (My Family)
+objectives:
+- Learner can use accusative case for animate nouns (people/animals)
+- Learner can distinguish between animate and inanimate accusative
+- Learner understands when accusative = genitive
+- Learner can talk about people as direct objects
+grammar:
+- Accusative for animate nouns
+- 'Masculine animate: accusative = genitive'
+- 'Feminine animate: same as inanimate'
+register: розмовний
+phase: A1.2 [Navigation]

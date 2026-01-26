@@ -1,99 +1,16 @@
-id: b1-11
-title: Вид у наказовому способі
-subtitle: Aspect in Imperatives
+module: 11-aspect-in-imperatives
+level: B1
 slug: 11-aspect-in-imperatives
-module_type: grammar
-word_target: 1500
-immersion: 100% Ukrainian
 version: '1.0'
-phase: B1.1 Aspect
-pedagogy: TTT
-focus: grammar
+id: b1-11
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
 tags:
 - grammar
 - aspect
 - imperatives
-grammar:
-- Aspect selection in imperatives
-- Perfective vs Imperfective commands
-objectives:
-- Learner can choose correct aspect for different command types
-- Learner understands when to use НДВ vs ДВ in imperatives
-- Learner can form polite requests and direct commands
-sources:
-- name: Ukrainian State Standard 2024 - Imperative Mood
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official rules for aspect in imperative constructions
-- name: Ukrainian Imperative (Wikipedia)
-  url: https://uk.wikipedia.org/wiki/Наказовий_спосіб
-  type: reference
-  notes: Imperative formation with aspect
-content_outline:
-- section: Тест
-  words: 150
-  points:
-  - Diagnostic contrast for вид у наказовому способі
-  - No explanation, just observation
-  - Engage critical thinking
-- section: Пояснення
-  words: 800
-  points:
-  - НДВ commands (process, permission)
-  - ДВ commands (result, instruction)
-  - Polite requests
-  - Negative commands
-- section: Практика
-  words: 400
-  points:
-  - Decision-making framework
-  - Comparative examples
-  - Common mistakes section
-- section: Діалоги
-  words: 150
-  points:
-  - 5-6 authentic dialogues
-  - Grammar in natural context
-  - Various situations
-vocabulary_hints:
-  required:
-  - наказовий спосіб (imperative mood)
-  - команда (command)
-  - прохання (request)
-  - порада (advice)
-  - будь ласка (please)
-  - негайно (immediately)
-  - обов'язково (definitely/must)
-  - пам'ятай (remember - impf)
-  - запам'ятай (memorize - pf)
-  - перестань (stop - pf)
-  recommended:
-  - припини (stop/cease - pf)
-  - продовжуй (continue - impf)
-  - зачекай (wait - pf)
-  - чекай (wait - impf)
-  - давай (let's - impf)
-activity_hints:
-- type: quiz
-  focus: Which aspect for which command type?
-  items: 15+
-- type: fill-in
-  focus: Imperative aspect selection
-  items: 12+
-- type: fill-in
-  focus: General advice → specific command (НДВ → ДВ)
-  items: 10+
-- type: match-up
-  focus: Situation → appropriate imperative
-  items: 12+
-prerequisites:
-- b1-10 (Aspect in negation)
-- All aspect modules M06-10
-connects_to:
-- b1-12 (Aspect pairs - essential 40)
-- b1-15 (Aspect mastery checkpoint)
-naturalness:
-  score: 9
-  status: PASS
+build:
+  last_modified: '2026-01-26'

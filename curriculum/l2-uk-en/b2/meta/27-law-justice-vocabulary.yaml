@@ -1,10 +1,10 @@
 module: b2-27
-title: Право та юстиція
-subtitle: Мова закону і справедливості
+level: B2
+slug: 27-law-justice-vocabulary
 version: '1.0'
-phase: B2
-pedagogy: CLIL
-focus: grammar
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
 tags:
@@ -13,43 +13,7 @@ tags:
 - law
 - justice
 - register
-grammar:
-- legal-terminology
-- official-register
-- passive-constructions
-objectives:
-- Учень може розуміти юридичні тексти та новини про судові справи
-- Учень може використовувати базову юридичну термінологію в обговореннях
-- Учень може розрізняти типи судів та судових процесів в Україні
 vocabulary_count: 35
 vocab_count: 137
-slug: 27-law-justice-vocabulary
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-- section: Вступ — Право та юстиція
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-  - Роль у системі української мови
-- section: Юридична лексика
-  words: 500
-  points:
-  - суд, суддя, адвокат, прокурор
-  - закон, право, обов'язок
-  - злочин, покарання, вирок
-- section: Юридичні процеси
-  words: 500
-  points:
-  - позов, скарга, апеляція
-  - слухання, засідання, вердикт
-  - свідок, доказ, алібі
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

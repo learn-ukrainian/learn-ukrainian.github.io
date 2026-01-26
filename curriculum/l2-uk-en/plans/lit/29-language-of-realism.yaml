@@ -1,108 +1,113 @@
-module: 29-language-of-realism
-level: lit
-sequence: 29
-version: '1.0'
+module: language-of-realism
+level: LIT
+slug: language-of-realism
+version: '2.0'
 title: 'Мова Реалізму: Стиль Нечуя-Левицького'
 subtitle: 'The Language of Realism: Nechuy-Levytsky''s Style'
-focus: literature
-pedagogy: seminar
-objectives:
-- Проаналізувати мовні особливості реалістичної прози
-- Порівняти мову Нечуя з попередніми авторами курсу
-- Зрозуміти дискусію про "галицьку" vs "наддніпрянську" норму
-- Оцінити внесок Нечуя в розвиток літературної мови
-sources:
-  primary:
-  - url: https://www.ukrlib.com.ua/books/printit.php?tid=907
-    title: Кайдашева сім'я — повний текст
-    notes: Зразки діалектної та розмовної мови
-  - url: https://www.ukrlib.com.ua/books/printit.php?tid=908
-    title: Микола Джеря — повний текст
-    notes: Порівняння стилю
-  secondary:
-  - url: https://uk.wikipedia.org/wiki/Нечуй-Левицький_Іван_Семенович
-    title: Мовознавчі погляди Нечуя
-    notes: Контекст дискусії
 content_outline:
 - section: Вступ — Від поезії до прози
   words: 500
-  subsections:
+  points:
   - Еволюція літературної мови (Котляревський → Нечуй)
   - Специфіка реалістичної прози
   - Мова як інструмент достовірності
 - section: Етнографічна точність
   words: 700
-  subsections:
+  points:
   - Діалектизми і регіоналізми
   - Побутова лексика
   - Точність описів
 - section: Мова персонажів
   words: 700
-  subsections:
+  points:
   - Індивідуалізація мовлення
   - Соціолект села
   - Гумор через мову
 - section: Дискусія про норму
   words: 600
-  subsections:
+  points:
   - '"Галицька" vs "наддніпрянська" мова'
   - Позиція Нечуя
   - Кривава пляма на сонці (полеміка)
 - section: Порівняльний аналіз
   words: 600
-  subsections:
+  points:
   - Нечуй vs Котляревський (бурлеск)
   - Нечуй vs Квітка (сентименталізм)
   - Нечуй vs Шевченко (поезія)
 - section: Підсумок — Спадщина для ХХ століття
   words: 400
-  subsections:
+  points:
   - Вплив на пізніших прозаїків
   - Актуальність дискусії про мову
   - Перехід до "Миколи Джері"
 word_target: 3800
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - діалектизм
-  - регіоналізм
-  - соціолект
-  - індивідуалізація
-  - етнографія
-  - побутова лексика
-  - полеміка
-  - норма
-  - достовірність
-  - стиль
+  - діалектизм (dialectism)
+  - регіоналізм (regionalism)
+  - соціолект (sociolect)
+  - індивідуалізація (individualization)
+  - етнографія (ethnography)
+  - побутова лексика (everyday vocabulary)
+  - полеміка (polemics)
+  - норма (norm/standard)
+  - достовірність (authenticity)
+  - стиль (style)
   recommended:
-  - архаїзм
-  - неологізм
-  - синтаксис
-  - наратив
-  - оповідач
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - cloze
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
-  special_requirements:
-  - 'reading: Порівняння уривків різних авторів'
-  - 'cloze: Діалектизми в контексті'
+  - архаїзм (archaism)
+  - неологізм (neologism)
+  - синтаксис (syntax)
+  - наратив (narrative)
+  - оповідач (narrator)
+activity_hints:
+- type: reading
+  focus: Порівняння уривків різних авторів
+  source: UkrLib texts
+  items: 5+
+- type: quiz
+  focus: Мовні особливості реалізму
+  items: 15+
+- type: match-up
+  focus: Автор → стильова ознака
+  items: 12+
+- type: essay-response
+  focus: Мова як засіб характеризації
+  word_target: 300
+  output: Лінгвостилістичне есе
+- type: cloze
+  focus: Діалектизми в контексті
+  items: 12+
+focus: literature
+pedagogy: Seminar
+prerequisites:
+- lit-28 (Кайдашева сім'я — конфлікти)
 connects_to:
-  previous: 28-kaidash-family-conflict
-  related:
-  - lit-30 (Микола Джеря)
-  - lit-10 (Мова Квітки)
-  - lit-24 (Мовне питання)
-constraints:
-  min_engagement_boxes: 3
-  min_examples: 15
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- lit-30 (Микола Джеря)
+- lit-10 (Мова Квітки)
+- lit-24 (Мовне питання)
+objectives:
+- Проаналізувати мовні особливості реалістичної прози
+- Порівняти мову Нечуя з попередніми авторами курсу
+- Зрозуміти дискусію про "галицьку" vs "наддніпрянську" норму
+- Оцінити внесок Нечуя в розвиток літературної мови
+grammar:
+- Dialectal features
+- Linguistic terminology
+- Stylistic analysis
+module_type: literature
+sources:
+- name: Кайдашева сім'я — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=907
+  type: primary
+  notes: Зразки діалектної та розмовної мови
+- name: Микола Джеря — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=908
+  type: primary
+  notes: Порівняння стилю
+- name: Мовознавчі погляди Нечуя
+  url: https://uk.wikipedia.org/wiki/Нечуй-Левицький_Іван_Семенович
+  type: reference
+  notes: Контекст дискусії
+immersion: 100% Ukrainian
+phase: LIT.5 Realism

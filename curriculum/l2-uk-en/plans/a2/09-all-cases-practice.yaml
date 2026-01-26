@@ -1,25 +1,9 @@
 module: 09-all-cases-practice
-level: a2
-sequence: 9
+level: A2
+slug: 09-all-cases-practice
 version: '2.0'
 title: All Cases Practice
 subtitle: Consolidating the Case System
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can identify which case is required in a given context
-- Learner can form correct endings for all 7 cases
-- Learner can switch between cases fluently in conversation
-- Learner can correct common case errors
-sources:
-- name: Ukrainian State Standard 2024 - Case System
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Complete 7-case paradigm requirements for A2
-- name: Ukrainian Case System Reference
-  url: https://uk.wikipedia.org/wiki/Відмінок
-  type: reference
-  notes: Complete declension tables
 content_outline:
 - section: Introduction / Вступ
   words: 200
@@ -42,7 +26,7 @@ content_outline:
   points:
   - Real-world application of mixed cases
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - хто (who)
   - що (what)
@@ -65,16 +49,53 @@ vocabulary:
   - множина (plural)
   - закінчення (ending)
   - відмінювати (to decline)
-  forbidden: []
-activities:
-  types_required:
-  - quiz
-  - match-up
-  - fill-in
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: Choose correct case for context
+  items: 15+
+- type: fill-in
+  focus: Decline nouns through all 7 cases
+  items: 8+
+- type: quiz
+  focus: Identify case by ending
+  items: 15+
+- type: match-up
+  focus: Case + question word + function
+  items: 10+
+- type: fill-in
+  focus: Error correction - fix wrong cases
+  items: 10+
+- type: quiz
+  focus: Mixed case selection in paragraphs
+  items: 10+
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a2-01 through a2-08 (all case modules)
+- A1 case basics (Nom, Acc, Gen, Loc)
 connects_to:
 - a2-10 (Post Office & Bank - application)
 - a2-11 (Checkpoint - Cases)
 - All subsequent A2 modules
+objectives:
+- Learner can identify which case is required in a given context
+- Learner can form correct endings for all 7 cases
+- Learner can switch between cases fluently in conversation
+- Learner can correct common case errors
+grammar:
+- all 7 cases review
+- case selection logic
+- common prepositions
+- case endings
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Case System
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Complete 7-case paradigm requirements for A2
+- name: Ukrainian Case System Reference
+  url: https://uk.wikipedia.org/wiki/Відмінок
+  type: reference
+  notes: Complete declension tables
+immersion: 40-50% Ukrainian
+phase: A2.1

@@ -1,64 +1,8 @@
-id: a2-32
-title: Which One?
-subtitle: Relative Clauses with Який
+module: 32-which-one
+level: A2
 slug: 32-which-one
-module_type: grammar
-word_target: 1000
-immersion: 40-50% Ukrainian
 version: '2.0'
-phase: A2.2
-focus: grammar
-pedagogy: PPP
-duration: 60
-transliteration: none
-tags:
-- grammar
-- pronouns
-- relative clauses
-- description
-grammar:
-- relative pronoun який (declension)
-- defining relative clauses
-- punctuation in complex sentences
-- adjective agreement rules
-objectives:
-- Learner can use 'який' to connect sentences
-- Learner can decline 'який' to match the gender and case of the noun
-- Learner can describe people and objects using relative clauses
-- Learner can punctuate complex sentences correctly
-sources:
-- name: Ukrainian State Standard 2024 - Relative Clauses
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Standards for complex sentence structures and relative pronouns at A2
-- name: Grammar of Ukrainian Language - Relative Pronouns
-  url: https://uk.wikipedia.org/wiki/Відносні_займенники
-  type: reference
-  notes: Declension rules for 'який' and its role in subordinate clauses
-content_outline:
-- section: Introduction / Вступ
-  words: 200
-  points:
-  - The power of description beyond adjectives
-  - 'The Chameleon: Why ''Який'' is the ultimate linker'
-- section: Presentation / Презентація
-  words: 600
-  points:
-  - 'Basic Agreement: Який, Яка, Яке, Які'
-  - 'The Case Detective: Why ''Який'' changes inside the clause'
-  - 'Who vs. Which: The universal nature of ''Який'''
-  - 'Abstract Links: Те, що...'
-  - 'Precision: Defining your subject with relative clauses'
-  - The Mandatory Comma
-- section: Practice / Практика
-  words: 150
-  points:
-  - Sentence merging drills
-  - '''Wanted'' poster description exercises'
-- section: Dialogues / Діалоги
-  words: 50
-  points:
-  - Police witness interview or searching for a specific item in a shop
+id: a2-32
 naturalness:
   score: 9
   status: PASS
@@ -67,3 +11,12 @@ naturalness:
     instead of 'де'), but this is pedagogically justified for the target grammar point.
   recommendation: No changes needed; the module effectively teaches the target concept
     with appropriate A2 complexity.
+duration: 60
+transliteration: none
+tags:
+- grammar
+- pronouns
+- relative clauses
+- description
+build:
+  last_modified: '2026-01-26'

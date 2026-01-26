@@ -1,25 +1,8 @@
 module: 18-register-academic-ukrainian
-level: b2
-sequence: 18
-version: '1.0'
+level: B2
+slug: 18-register-academic-ukrainian
+version: '2.0'
 title: Науковий стиль української мови
-focus: style
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Ukrainian State Standard 2024 - Academic Writing
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Academic writing standards for B2
-- name: Науковий стиль української мови
-  url: https://uk.wikipedia.org/wiki/Науковий_стиль
-  type: secondary
-  notes: Scientific writing conventions
-- name: CEFR B2 Academic Skills
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
-  type: reference
-  notes: B2 academic reading and writing
 content_outline:
 - section: Вступ — Науковий стиль
   words: 400
@@ -69,7 +52,7 @@ content_outline:
   - Написання академічних текстів
   - Підготовка до модуля 19
 word_target: 3800
-vocabulary:
+vocabulary_hints:
   required:
   - науковий стиль (scientific style)
   - термін (term)
@@ -87,19 +70,51 @@ vocabulary:
   - аргументація (argumentation)
   - інтерпретація (interpretation)
   - синтез (synthesis)
-  forbidden: []
-activities:
-  types_required:
-  - error-correction
-  - reading
-  - quiz
-  - fill-in
-  - essay-response
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: Convert colloquial text to academic style
+  items: 10+
+- type: quiz
+  focus: Identify academic style markers
+  items: 15+
+- type: fill-in
+  focus: Complete academic text with hedging expressions
+  items: 12+
+- type: match-up
+  focus: Colloquial expression → academic equivalent
+  items: 16+
+- type: reading
+  focus: Analyze structure of academic texts
+  items: 3 texts
+- type: error-correction
+  focus: Fix inappropriate register in academic context
+  items: 12+
+- type: essay-response
+  focus: Write academic paragraph with proper hedging
+  word_target: 150
+  output: Model answer with style analysis
+focus: style
+prerequisites:
+- b2-15 (Register Introduction)
+- b2-03 (Impersonal -но/-то)
+- Complex sentence formation
 connects_to:
 - 'b2-19 (Register: Official-Legal)'
 - 'b2-22 (Register: Literary Ukrainian)'
 - b2-25 (B2.1b Checkpoint)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Academic Writing
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Academic writing standards for B2
+- name: Науковий стиль української мови
+  url: https://uk.wikipedia.org/wiki/Науковий_стиль
+  type: secondary
+  notes: Scientific writing conventions
+- name: CEFR B2 Academic Skills
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 academic reading and writing
+immersion: 100% Ukrainian
+phase: B2.1b [Participles & Register Intro]

@@ -1,12 +1,11 @@
-slug: liublinska-uniia
-title: 'Люблінська унія 1569: Народження Речі Посполитої'
+module: liublinska-uniia
 level: B2
+slug: liublinska-uniia
+version: '2.0'
+naturalness:
+  score: 9
+  status: PASS
 track: history
-phase: B2.3b [Українська історія]
-pedagogy: CBI
-focus: history
-word_target: 4000
-register: публіцистичний
 duration: 90
 transliteration: none
 tags:
@@ -15,36 +14,9 @@ tags:
 - poland
 - lithuania
 - commonwealth
-grammar:
-- Політична термінологія
-- Складні речення причини та наслідку
 vocabulary_focus:
 - Державний устрій
 - Парламентаризм
-objectives:
-- Учень може пояснити причини та наслідки Люблінської унії для українських земель
-- Учень може порівняти статус українських земель у складі Литви та Польщі
-- Учень може аналізувати політичний устрій Речі Посполитої
 vocabulary_count: 35
-content_outline:
-- section: Вступ
-  words: 611
-- section: 'Шлях до унії: Криза та необхідність'
-  words: 777
-- section: 'Люблінський сейм 1569 року: Драма та компроміс'
-  words: 666
-- section: 'Нова карта Європи: Українські землі у складі Польщі'
-  words: 555
-- section: 'Читання: Культурний шок та адаптація'
-  words: 388
-- section: Первинні джерела
-  words: 333
-- section: Деколонізаційний погляд
-  words: 311
-- section: Підсумок
-  words: 133
-- section: Потрібно більше практики?
-  words: 115
-naturalness:
-  score: 9
-  status: PASS
+build:
+  last_modified: '2026-01-26'

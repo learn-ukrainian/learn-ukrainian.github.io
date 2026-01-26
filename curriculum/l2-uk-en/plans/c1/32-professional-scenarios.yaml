@@ -1,21 +1,8 @@
 module: 32-professional-scenarios
-level: c1
-sequence: 32
+level: C1
+slug: 32-professional-scenarios
 version: '2.0'
 title: Професійні сценарії
-focus: practice
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Ukrainian Professional Standards
-  url: https://mon.gov.ua/
-  type: reference
-  notes: C1 professional communication requirements
-- name: Business Ukrainian Guide
-  url: https://chamber.ua/
-  type: secondary
-  notes: Practical business scenarios
 content_outline:
 - section: Вступ — Інтеграція навичок
   words: 300
@@ -60,7 +47,7 @@ content_outline:
   - Зони для покращення
   - Рекомендації
 word_target: 4000
-vocabulary:
+vocabulary_hints:
   required:
   - професійний (professional)
   - діловий (business)
@@ -78,18 +65,42 @@ vocabulary:
   - повідомлення (message)
   - запит (request)
   - відповідь (response)
-  forbidden: []
-activities:
-  types_required:
-  - quiz
-  - essay-response
-  - cloze
-  - fill-in
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: essay-response
+  focus: Write CV and cover letter
+  word_target: 300
+- type: essay-response
+  focus: Business email chain
+  word_target: 200
+- type: quiz
+  focus: Professional scenario decisions
+  items: 15+
+- type: fill-in
+  focus: Meeting protocol phrases
+  items: 12+
+- type: cloze
+  focus: Professional dialogue completion
+  items: 12+
+- type: match-up
+  focus: Situation → appropriate response
+  items: 12+
+focus: practice
+prerequisites:
+- c1-21 to c1-31 (Complete C1.2 content)
+- All professional skills
 connects_to:
 - c1-33 (Case Studies)
 - c1-34 (C1.2 Review)
 - c1-35 (C1.2 Checkpoint)
+module_type: practice
+sources:
+- name: Ukrainian Professional Standards
+  url: https://mon.gov.ua/
+  type: reference
+  notes: C1 professional communication requirements
+- name: Business Ukrainian Guide
+  url: https://chamber.ua/
+  type: secondary
+  notes: Practical business scenarios
+immersion: 100% Ukrainian
+phase: C1.2 Professional Communication

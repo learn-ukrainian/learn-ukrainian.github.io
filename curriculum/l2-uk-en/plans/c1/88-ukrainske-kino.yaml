@@ -1,22 +1,37 @@
-module: 88-ukrainske-kino
-level: c1
-sequence: 88
+module: c1-88
+level: C1
+slug: 88-ukrainske-kino
 version: '2.0'
 title: Українське кіно
 subtitle: Ukrainian Cinema — Shadows and Light
+content_outline:
+- section: Вступ — Українське кіно
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Олександр Довженко: поетичне кіно, Земля'
+  - 'Радянський період: Київська кіностудія'
+  - 'Незалежність: новий український фільм'
+  - 'Сучасні режисери: Сенцов, Лозниця'
+  - War documentaries and international recognition
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: fine-arts
 pedagogy: CBI
 objectives:
 - Learner explores the legacy of Oleksandr Dovzhenko and Poetic Cinema.
 - Learner understands the phenomenon of Parajanov and Shadows of Forgotten Ancestors.
 - Learner analyzes contemporary Ukrainian cinema (Sentsov, Lukich, Aliev).
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Cinematic terminology
+- Discussing plot and acting
+phase: C1.5 Folk Culture & Fine Arts

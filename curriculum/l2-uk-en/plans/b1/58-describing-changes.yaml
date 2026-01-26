@@ -1,16 +1,9 @@
-module: describing-changes
-level: b1
-sequence: 58
+module: b1-58
+level: B1
+slug: describing-changes
 version: '2.0'
 title: Опис змін
 subtitle: Describing Changes
-focus: vocabulary
-pedagogy: PPP
-objectives:
-- Learner can use 25 verbs and expressions for describing changes
-- Learner can distinguish between gradual and sudden change vocabulary
-- Learner can form natural collocations with change-related adverbs
-- Learner can narrate transformations over time
 content_outline:
 - section: 'Introduction: Language of Change'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Describe trends
   - Narrate transformations
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - зростати (to grow/increase)
   - зменшуватися (to decrease)
@@ -63,15 +56,33 @@ vocabulary:
   - значно (significantly)
   - падати (to fall)
   - ставати (to become)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - transformation
-  - writing
-  - collocation
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: collocation
+  focus: Verb + adverb combinations
+  items: 25
+- type: fill-in
+  focus: Describe changes in context
+  items: 20
+- type: transformation
+  focus: Rephrase change descriptions
+  items: 15
+- type: writing
+  focus: Narrate trends
+  items: 10
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-57 (Discourse Markers Advanced)
 connects_to:
 - b1-59 (Media News)
+objectives:
+- Learner can use 25 verbs and expressions for describing changes
+- Learner can distinguish between gradual and sudden change vocabulary
+- Learner can form natural collocations with change-related adverbs
+- Learner can narrate transformations over time
+grammar:
+- Verb collocations for describing change
+- Adverbs of manner with change verbs
+- Temporal expressions for change processes
+register: розмовний
+phase: B1.5 [Vocabulary Expansion I]

@@ -1,0 +1,116 @@
+module: holodomor-mekhanizmy-ii
+level: C1-HIST
+slug: holodomor-mekhanizmy-ii
+version: '2.0'
+title: 'Механізми Голодомору II: Чорні дошки'
+content_outline:
+- section: Вступ — Механізм знищення
+  words: 400
+  points:
+  - Від колективізації до активного терору
+  - «Чорні дошки» — що це
+  - Чому це доказ наміру
+  - Структура модуля
+- section: Система чорних дошок
+  words: 700
+  points:
+  - Як село потрапляло на дошку
+  - Наслідки — припинення торгівлі
+  - Конфіскація всього продовольства
+  - Оточення села
+  - Скільки сіл — статистика
+- section: Натуральні штрафи
+  words: 600
+  points:
+  - Постанова 1932 року
+  - Вилучення м'яса, картоплі
+  - Як шукали заховане
+  - Буксирні бригади
+  - Голод як покарання
+- section: Блокада сіл і паспортизація
+  words: 700
+  points:
+  - Заборона виїзду — 1932
+  - Паспортна система — село без паспортів
+  - Як це працювало — кордони, патрулі
+  - Порівняння з концтаборами
+  - Унікальність української ситуації
+- section: Документальні свідчення
+  words: 500
+  points:
+  - Накази і постанови
+  - Телеграми Сталіна і Молотова
+  - Що показують документи
+  - Доказ навмисності
+- section: Чому це геноцид
+  words: 400
+  points:
+  - Конвенція ООН про геноцид
+  - Як механізми відповідають критеріям
+  - Контр-аргументи і відповіді
+  - Правова кваліфікація
+- section: Підсумок
+  words: 200
+  points:
+  - Механізми як докази
+  - Від як до де
+  - Підготовка до географії
+word_target: 3500
+vocabulary_hints:
+  required:
+  - чорна дошка (blacklist)
+  - натуральні штрафи (natural penalties)
+  - конфіскація (confiscation)
+  - блокада (blockade)
+  - паспортизація (passport system)
+  - буксирна бригада (tow brigade)
+  - кордон (cordon)
+  - намір (intent)
+  - геноцид (genocide)
+  - доказ (proof/evidence)
+  recommended:
+  - продовольство (food supplies)
+  - торгівля (trade)
+  - патруль (patrol)
+  - конвенція (convention)
+  - кваліфікація (qualification)
+activity_hints:
+- type: critical-analysis
+  focus: Create detailed diagram of blacklist system
+  output: Process flowchart
+- type: critical-analysis
+  focus: Analyze a "black board" decree
+  output: Document critique
+- type: critical-analysis
+  focus: Match mechanisms to genocide convention criteria
+  output: Legal criteria table
+- type: comparative-study
+  focus: Compare with other genocides — mechanism parallels
+  output: Genocide comparison
+- type: essay-response
+  focus: Чому система чорних дошок є доказом навмисності?
+  word_target: 400
+  model_answer: Required
+focus: history
+prerequisites:
+- c1-hist-46 (Holodomor mechanisms I)
+- c1-hist-37 (Holodomor documents)
+connects_to:
+- c1-hist-48 (Holodomor geography)
+- c1-hist-50 (Genocide recognition)
+module_type: thematic
+sources:
+- name: Чорні дошки (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Чорні_дошки
+  type: reference
+  notes: Blacklist system
+- name: Постанова про натуральні штрафи
+  url: https://uk.wikipedia.org/wiki/Постанова_ЦК_КП(б)У_про_натуральні_штрафи
+  type: reference
+  notes: Natural penalties decree
+- name: Блокада сіл (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Блокада_українських_сіл_1932—1933
+  type: reference
+  notes: Village blockades
+immersion: 100% Ukrainian
+phase: C1-HIST.1 [Historiography]

@@ -1,0 +1,114 @@
+module: mekhanizm-kooptatsii
+level: C1-HIST
+slug: mekhanizm-kooptatsii
+version: '2.0'
+title: 'Механізм кооптації: Теоретична рамка'
+content_outline:
+- section: Вступ — Цикл, що повторюється
+  words: 400
+  points:
+  - Що таке кооптація
+  - Чому цикл
+  - Російська специфіка
+  - Структура модуля
+- section: Теоретична модель
+  words: 700
+  points:
+  - Підкуп — пропозиція привілеїв
+  - Залежність — поступове обмеження
+  - Зрада — порушення домовленостей
+  - Знищення — ліквідація автономії
+  - BBBB — Bribe, Bind, Betray, Burn
+- section: Порівняння з іншими імперіями
+  words: 600
+  points:
+  - Британська модель — непряме управління
+  - Французька — асиміляція
+  - Російська — кооптація + знищення
+  - Чому різні підходи
+- section: Механізми кооптації
+  words: 600
+  points:
+  - Еліти — титули, землі, гроші
+  - Обіцянки — автономія, права
+  - Залежність — економічна, військова
+  - Точка неповернення
+- section: Механізми знищення
+  words: 500
+  points:
+  - Скасування — юридичне
+  - Репресії — фізичне
+  - Перейменування — символічне
+  - Забуття — історичне
+- section: Чому цикл повторюється
+  words: 400
+  points:
+  - Надія на «цього разу інакше»
+  - Відсутність альтернатив
+  - Коротка пам'ять
+  - Як розірвати цикл
+- section: Підсумок
+  words: 300
+  points:
+  - Кооптація — імперський інструмент
+  - Український досвід
+  - Застосування до конкретних випадків
+word_target: 3500
+vocabulary_hints:
+  required:
+  - кооптація (co-optation)
+  - цикл (cycle)
+  - механізм (mechanism)
+  - підкуп (bribe)
+  - залежність (dependence)
+  - зрада (betrayal)
+  - знищення (destruction)
+  - автономія (autonomy)
+  - привілей (privilege)
+  - еліта (elite)
+  recommended:
+  - імперська модель (imperial model)
+  - непряме управління (indirect rule)
+  - асиміляція (assimilation)
+  - точка неповернення (point of no return)
+  - інструменталізація (instrumentalization)
+activity_hints:
+- type: theoretical-framework
+  focus: Build co-optation cycle model
+  output: Theoretical diagram
+- type: comparative-study
+  focus: Russian vs. other empires — co-optation methods
+  output: Imperial comparison
+- type: mechanism-analysis
+  focus: How each stage of the cycle works
+  output: Stage-by-stage analysis
+- type: pattern-recognition
+  focus: Identify co-optation in historical cases
+  output: Pattern application
+- type: essay-response
+  focus: Чому російська імперія використовувала кооптацію, а не асиміляцію?
+  word_target: 400
+  model_answer: Required
+focus: history
+prerequisites:
+- c1-hist-80 (Regional diversity synthesis)
+- c1-hist-01 (Historiography)
+connects_to:
+- c1-hist-82-87 (Specific co-optation cycles)
+- c1-hist-88 (Why cycle repeats — synthesis)
+module_type: thematic
+sources:
+- name: Кооптація (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Кооптація
+  type: reference
+  notes: General concept
+- name: Російський імперіалізм (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Російський_імперіалізм
+  type: reference
+  notes: Imperial patterns
+- name: Колоніальна політика (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Колоніальна_політика
+  type: reference
+  notes: Colonial patterns
+immersion: 100% Ukrainian
+phase: C1-HIST.1 [Historiography]

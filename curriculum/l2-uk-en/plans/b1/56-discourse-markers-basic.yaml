@@ -1,16 +1,9 @@
-module: discourse-markers-basic
-level: b1
-sequence: 56
+module: b1-56
+level: B1
+slug: discourse-markers-basic
 version: '2.0'
 title: 'Дискурсивні маркери: базові конектори'
 subtitle: 'Discourse Markers: Basic Connectors'
-focus: vocabulary
-pedagogy: PPP
-objectives:
-- Learner can use 25 basic discourse markers in context
-- Learner can distinguish between contrasting, causal, and exemplifying connectors
-- Learner can produce cohesive text using appropriate connectors
-- Learner can improve text flow with discourse markers
 content_outline:
 - section: 'Introduction: Text Cohesion'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Connect ideas with markers
   - Improve text flow
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - також (also)
   - крім того (besides)
@@ -63,15 +56,33 @@ vocabulary:
   - внаслідок (as a result)
   - зокрема (in particular)
   - іншими словами (in other words)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - error-correction
-  - writing
-  - transformation
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: Insert appropriate markers
+  items: 25
+- type: transformation
+  focus: Connect sentences with markers
+  items: 20
+- type: error-correction
+  focus: Fix marker usage
+  items: 15
+- type: writing
+  focus: Write cohesive paragraphs
+  items: 10
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-55 (Agreement Disagreement)
 connects_to:
 - b1-57 (Discourse Markers Advanced)
+objectives:
+- Learner can use 25 basic discourse markers in context
+- Learner can distinguish between contrasting, causal, and exemplifying connectors
+- Learner can produce cohesive text using appropriate connectors
+- Learner can improve text flow with discourse markers
+grammar:
+- Text cohesion with discourse markers
+- Connector categories and functions
+- Punctuation with discourse markers
+register: розмовний
+phase: B1.5 [Vocabulary Expansion I]

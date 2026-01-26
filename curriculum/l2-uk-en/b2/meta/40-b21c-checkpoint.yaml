@@ -1,13 +1,12 @@
 module: b2-40
-title: 'Контрольна точка B2.1c: Числівники, словотвір та синтаксис'
-subtitle: 'B2.1c Checkpoint: Numerals, Word Formation & Syntax'
+level: B2
+slug: 40-b21c-checkpoint
 version: '1.0'
-phase: B2.1c [Checkpoint]
-focus: checkpoint
-pedagogy: TTT
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
-immersion: 100
 tags:
 - checkpoint
 - integration
@@ -15,63 +14,7 @@ tags:
 - word-formation
 - syntax
 - register
-grammar:
-- Integration of M31-M39
-- Numeral declension review
-- Word formation patterns review
-- One-member sentences review
-- Religious and epistolary register review
-objectives:
-- Learner can demonstrate mastery of numeral declension for time and dates
-- Learner can form nouns using person, abstract, and place suffixes
-- Learner can identify and use one-member sentences for stylistic effect
-- Learner can recognize and produce texts in religious and epistolary registers
-- Learner can self-assess readiness for B2.2 (Phraseology)
 vocabulary_count: 50
-register: varies
 vocab_count: 39
-slug: 40-b21c-checkpoint
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-- section: Вступ — Числівники, словотвір та синтаксис
-  words: 333
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-  - Роль у системі української мови
-- section: Indefinite Pronouns (State Standard 4240-4244)
-  words: 333
-  points:
-  - 'хтось (someone): когось, комусь, кимось'
-  - 'щось (something): чогось, чомусь, чимось'
-  - 'хто-будь (anyone): кого-будь, кому-будь'
-  - 'що-небудь (anything): чого-небудь, чому-небудь'
-  - 'якийсь (some kind of): якогось, якомусь'
-- section: Negative Pronouns (State Standard 4245-4249)
-  words: 333
-  points:
-  - 'ніхто (nobody): нікого, нікому, ніким'
-  - 'ніщо (nothing): нічого, нічому, нічим'
-  - 'ніякий (no kind of): ніякого, ніякому'
-  - 'нічий (nobody''s): нічийого, нічиєму'
-- section: Defining Pronouns (State Standard 4250-4256)
-  words: 333
-  points:
-  - 'весь/вся/все/всі (all): всього, всьому, всім'
-  - 'кожний/кожен (each): кожного, кожному'
-  - 'сам (oneself): самого, самому, самим'
-  - 'інший (other): іншого, іншому'
-- section: Основні моделі вживання
-  words: 333
-  points:
-  - 'Double negation: Ніхто нічого не знає. (Nobody knows anything.)'
-  - 'With prepositions: ні з ким (with nobody), ні до кого (to nobody)'
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

@@ -1,16 +1,9 @@
-module: sports-in-ukraine
-level: b1
-sequence: 79
+module: b1-79
+level: B1
+slug: sports-in-ukraine
 version: '2.0'
 title: Спорт в Україні
 subtitle: Spectator Sports and Ukrainian Athletes
-focus: culture
-pedagogy: CBI
-objectives:
-- Learner can discuss Ukrainian sports culture in Ukrainian
-- Learner can understand authentic texts about Ukrainian athletes and teams
-- Learner can use sports-related vocabulary in context
-- Learner can compare Ukrainian sports achievements with global trends
 content_outline:
 - section: 'Introduction: Sports in Ukraine'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Discuss favorite sports
   - Talk about athletes
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - спорт (sport)
   - футбол (football)
@@ -63,15 +56,33 @@ vocabulary:
   - тренер (coach)
   - стадіон (stadium)
   - вболівальник (fan)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - reading
-  - discussion
-  - matching
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: reading
+  focus: Athlete profiles and sports news
+  items: 15
+- type: matching
+  focus: Match athletes to sports
+  items: 20
+- type: fill-in
+  focus: Complete sports reports
+  items: 15
+- type: discussion
+  focus: Discuss sports preferences
+  items: 10
+focus: culture
+pedagogy: CBI
+prerequisites:
+- b1-78 (Technology and Startups)
 connects_to:
 - b1-80 (Active Lifestyle)
+objectives:
+- Learner can discuss Ukrainian sports culture in Ukrainian
+- Learner can understand authentic texts about Ukrainian athletes and teams
+- Learner can use sports-related vocabulary in context
+- Learner can compare Ukrainian sports achievements with global trends
+grammar:
+- Sports vocabulary
+- Discussing achievements and competitions
+- Expressing support and opinions
+register: розмовний
+phase: B1.7 [Contemporary Ukraine]

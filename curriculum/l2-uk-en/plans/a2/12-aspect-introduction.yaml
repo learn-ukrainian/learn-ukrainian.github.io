@@ -1,25 +1,9 @@
 module: 12-aspect-introduction
-level: a2
-sequence: 12
+level: A2
+slug: 12-aspect-introduction
 version: '2.0'
 title: Aspect Introduction
 subtitle: Process vs. Result
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can distinguish between process and result
-- Learner can identify perfective and imperfective verbs
-- Learner can match common aspect pairs
-- Learner can choose the correct aspect in simple sentences
-sources:
-- name: Ukrainian State Standard 2024 - Verbal Aspect
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Aspect pair requirements for A2 level
-- name: Ukrainian Verb Aspect Reference
-  url: https://uk.wikipedia.org/wiki/Вид_дієслова
-  type: reference
-  notes: Complete aspect system overview
 content_outline:
 - section: Introduction / Вступ
   words: 200
@@ -42,7 +26,7 @@ content_outline:
   points:
   - '"Did you finish?" situational exchange'
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - читати/прочитати (to read)
   - писати/написати (to write)
@@ -65,16 +49,51 @@ vocabulary:
   - тривалість (duration)
   - завершення (completion)
   - повторення (repetition)
-  forbidden: []
-activities:
-  types_required:
-  - quiz
-  - match-up
-  - fill-in
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: match-up
+  focus: Imperfective to perfective pairs
+  items: 15+
+- type: fill-in
+  focus: Choose correct aspect for context
+  items: 12+
+- type: quiz
+  focus: Process or result?
+  items: 12+
+- type: quiz
+  focus: Identify aspect of underlined verb
+  items: 10+
+- type: fill-in
+  focus: Complete sentences with correct aspect
+  items: 10+
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a2-11 (Checkpoint - Cases)
+- A1 verb conjugation
+- A1 past/future tense basics
 connects_to:
 - a2-13 (The Completed Past)
 - a2-14 (Future Plans and Promises)
 - a2-15 (Aspect Morphology)
+objectives:
+- Learner can distinguish between process and result
+- Learner can identify perfective and imperfective verbs
+- Learner can match common aspect pairs
+- Learner can choose the correct aspect in simple sentences
+grammar:
+- imperfective aspect (process)
+- perfective aspect (result)
+- aspect pairs
+- aspect usage rules
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Verbal Aspect
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Aspect pair requirements for A2 level
+- name: Ukrainian Verb Aspect Reference
+  url: https://uk.wikipedia.org/wiki/Вид_дієслова
+  type: reference
+  notes: Complete aspect system overview
+immersion: 40-50% Ukrainian
+phase: A2.2

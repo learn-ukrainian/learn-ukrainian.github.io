@@ -1,16 +1,9 @@
-module: online-services
-level: a2
-sequence: 69
+module: a2-69
+level: A2
+slug: online-services
 version: '2.0'
 title: Online Services
 subtitle: Apps and Delivery
-focus: practical
-pedagogy: PPP
-objectives:
-- Learner can use Ukrainian delivery apps
-- Learner can handle online banking basics
-- Learner can communicate with support
-- Learner can understand app notifications
 content_outline:
 - section: 'Introduction: Digital Services'
   words: 100
@@ -48,7 +41,7 @@ content_outline:
   - Order food delivery
   - Use banking app
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - замовлення (order)
   - кошик (cart)
@@ -65,16 +58,34 @@ vocabulary:
   - скарга (complaint)
   - повернення (refund)
   - промокод (promo code)
-  forbidden: []
-activities:
-  types_required:
-  - vocabulary-drill
-  - dialogue
-  - reading-comprehension
-  - fill-in
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: vocabulary-drill
+  focus: Online services vocabulary
+  items: 25
+- type: reading-comprehension
+  focus: Understand app interfaces
+  items: 15
+- type: fill-in
+  focus: Complete service requests
+  items: 15
+- type: dialogue
+  focus: Customer support conversation
+  items: 10
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a2-68 (Texting and Messaging)
 connects_to:
 - a2-70 (A2 Final Exam)
 - a2-53 (Shopping and Services)
+objectives:
+- Learner can use Ukrainian delivery apps
+- Learner can handle online banking basics
+- Learner can communicate with support
+- Learner can understand app notifications
+grammar:
+- App interface vocabulary (кошик, замовити)
+- Banking terms (картка, переказ, баланс)
+- Customer support phrases
+register: розмовний
+phase: A2.6 [Practical]

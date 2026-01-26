@@ -1,49 +1,43 @@
-module: yaroslav-wise
-level: b2-hist
-sequence: 12
-version: '1.0'
+module: b2-hist-12
+level: B2-HIST
+slug: yaroslav-wise
+version: '2.0'
 title: 'Ярослав Мудрий: Золота доба'
-focus: history
-pedagogy: CBI
-objectives:
-- Understand the Golden Age of Kyivan Rus
-- Analyze Yaroslav's diplomatic strategy
-- Discuss the significance of Ruska Pravda
 content_outline:
 - section: Розминка
   words: 115
-  subsections: []
+  points: []
 - section: 'Читання: Руська Правда — Перший правовий кодекс'
   words: 443
-  subsections:
+  points:
   - Історичне тло
   - Основні положення
   - Наслідки
 - section: Софія Київська — Символ могутності
   words: 258
-  subsections:
+  points:
   - Будівництво собору
   - Мистецька спадщина
 - section: '"Тесть Європи" — Династична дипломатія'
   words: 279
-  subsections:
+  points:
   - Стратегія шлюбів
   - Анна Ярославна — королева Франції
   - Інші династичні зв'язки
 - section: Культурна революція
   words: 450
-  subsections:
+  points:
   - Бібліотека Софійського собору
   - Школи та освіта
   - '"Руська Правда" та правові реформи'
 - section: Первинні джерела
   words: 115
-  subsections:
+  points:
   - 'Документ 1: Руська Правда (XI ст.)'
   - 'Документ 2: Похвала книгам («Повість минулих літ», 1037 р.)'
 - section: Деколонізаційний погляд
   words: 2227
-  subsections:
+  points:
   - Міфи та реальність
   - Українська тяглість
   - Сучасна Україна
@@ -65,32 +59,35 @@ content_outline:
   - Заключне слово
 - section: Потрібно більше практики?
   words: 146
-  subsections:
+  points:
   - 🔄 Інтеграція знань
   - Реальне застосування
   - 🌐 Онлайн-ресурси
 word_target: 4000
-vocabulary:
-- мудрий
-- золота доба
-- законодавство
-- Руська Правда
-- віра
-- Софія Київська
-- Золоті ворота
-- дипломатія
-- династичний шлюб
-- митрополит
-- книжність
-- спадщина
-- міжусобиця
-- продаж
-- тесть
-- фортифікація
-- заповіт
-activities:
+vocabulary_hints:
+  required:
+  - мудрий (wise)
+  - золота доба (golden age)
+  - законодавство (legislation)
+  - Руська Правда (Rus' Justice)
+  - віра (wergild/fine)
+  - Софія Київська (St. Sophia Cathedral)
+  - Золоті ворота (Golden Gate)
+  - дипломатія (diplomacy)
+  - династичний шлюб (dynastic marriage)
+  - митрополит (metropolitan)
+  - книжність (book learning)
+  - спадщина (legacy)
+  recommended:
+  - міжусобиця (internecine war)
+  - продаж (sale-fine)
+  - тесть (father-in-law)
+  - фортифікація (fortification)
+  - заповіт (testament)
+activity_hints:
 - type: reading
   focus: Excerpt from Ruska Pravda (translated)
+  source: Provide in module
 - type: critical-analysis
   focus: St. Sophia Cathedral mosaics and architecture
   items: 5-6 images
@@ -108,6 +105,23 @@ activities:
   items: 12+
 - type: essay-response
   focus: Чому Ярослава називають 'тестем Європи'?
+focus: history
+pedagogy: CBI
+prerequisites:
+- b2-hist-11 (Volodymyr and Baptism)
+connects_to:
+- b2-hist-13 (Ruska Pravda in detail)
+- b2-hist-14 (St. Sophia and cultural flowering)
+- b2-hist-17 (Princely feuds)
+- 'b2-hist-20 (Synthesis: Kyivan Rus)'
+objectives:
+- Understand the Golden Age of Kyivan Rus
+- Analyze Yaroslav's diplomatic strategy
+- Discuss the significance of Ruska Pravda
+grammar:
+- Legal terminology
+- Diplomatic language
+module_type: history
 sources:
 - name: Ярослав Мудрий (Вікіпедія)
   url: https://uk.wikipedia.org/wiki/Ярослав_Мудрий
@@ -121,3 +135,5 @@ sources:
   url: https://litopys.org.ua/oldukr2/oldukr51.htm
   type: primary
   notes: Legal code text
+immersion: 100% Ukrainian
+phase: B2-HIST.1 [Kyivan Rus]

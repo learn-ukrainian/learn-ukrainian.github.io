@@ -1,16 +1,9 @@
-module: ukrainian-cuisine
-level: b1
-sequence: 85
+module: b1-85
+level: B1
+slug: ukrainian-cuisine
 version: '2.0'
 title: Українська кухня
 subtitle: Ukrainian Cuisine and Food Culture
-focus: culture
-pedagogy: CBI
-objectives:
-- Learner can discuss Ukrainian regional cuisines in context
-- Learner can understand authentic texts about Ukrainian food traditions
-- Learner can use food-related vocabulary to describe dishes and cooking methods
-- Learner can compare Ukrainian cuisine with their own food culture
 content_outline:
 - section: 'Introduction: Ukrainian Food'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Describe favorite dishes
   - Compare cuisines
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - борщ (borscht)
   - вареники (varenyky)
@@ -63,15 +56,33 @@ vocabulary:
   - паска (paska)
   - галушки (halushky)
   - узвар (uzvar)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - reading
-  - discussion
-  - matching
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: reading
+  focus: Recipes and food articles
+  items: 15
+- type: matching
+  focus: Match dishes to regions
+  items: 20
+- type: fill-in
+  focus: Complete recipe instructions
+  items: 15
+- type: discussion
+  focus: Share food preferences
+  items: 10
+focus: culture
+pedagogy: CBI
+prerequisites:
+- b1-84 (Winter Sports)
 connects_to:
 - b1-86 (Ukrainian Holidays and Festivals)
+objectives:
+- Learner can discuss Ukrainian regional cuisines in context
+- Learner can understand authentic texts about Ukrainian food traditions
+- Learner can use food-related vocabulary to describe dishes and cooking methods
+- Learner can compare Ukrainian cuisine with their own food culture
+grammar:
+- Food and cooking vocabulary
+- Recipe instructions
+- Describing flavors and textures
+register: розмовний
+phase: B1.7 [Contemporary Ukraine]

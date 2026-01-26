@@ -1,21 +1,8 @@
 module: 03-research-verbs
-level: c1
-sequence: 3
+level: C1
+slug: 03-research-verbs
 version: '2.0'
 title: Дієслова наукового дослідження
-focus: vocabulary
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Ukrainian Academic Corpus
-  url: https://mova.info/
-  type: reference
-  notes: Frequency data for academic verbs
-- name: Наукова комунікація українською
-  url: https://mon.gov.ua/
-  type: secondary
-  notes: Official academic communication guidelines
 content_outline:
 - section: Вступ — Дієслова як інструмент науковця
   words: 400
@@ -60,7 +47,7 @@ content_outline:
   - Варіювання дієслів у тексті
   - Уникнення повторів
 word_target: 4000
-vocabulary:
+vocabulary_hints:
   required:
   - досліджувати (to research)
   - аналізувати (to analyze)
@@ -78,19 +65,42 @@ vocabulary:
   - зіставляти (to compare)
   - виводити (to derive)
   - резюмувати (to summarize)
-  forbidden: []
-activities:
-  types_required:
-  - group-sort
-  - quiz
-  - essay-response
-  - cloze
-  - fill-in
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: group-sort
+  focus: Verbs by function (investigate/argue/present/conclude)
+  items: 20+
+- type: fill-in
+  focus: Select appropriate research verb for context
+  items: 15+
+- type: match-up
+  focus: Research verb to definition/synonym
+  items: 15+
+- type: cloze
+  focus: Complete academic paragraphs with verbs
+  items: 12+
+- type: quiz
+  focus: Identify verb function in sentences
+  items: 12+
+- type: essay-response
+  focus: Write paragraph using 5+ research verbs
+  word_target: 150
+focus: vocabulary
+prerequisites:
+- c1-02 (Academic Style Markers)
+- Basic academic register awareness
 connects_to:
 - c1-04 (Analysis Vocabulary)
 - c1-07 (Citation & Reference)
 - c1-09 (Thesis Development)
+module_type: vocabulary
+sources:
+- name: Ukrainian Academic Corpus
+  url: https://mova.info/
+  type: reference
+  notes: Frequency data for academic verbs
+- name: Наукова комунікація українською
+  url: https://mon.gov.ua/
+  type: secondary
+  notes: Official academic communication guidelines
+immersion: 100% Ukrainian
+phase: C1.1 Academic Ukrainian

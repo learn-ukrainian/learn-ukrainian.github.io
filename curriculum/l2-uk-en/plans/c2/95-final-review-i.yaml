@@ -1,0 +1,117 @@
+module: final-review-i
+level: C2
+slug: final-review-i
+version: '2.0'
+title: Фінальне повторення I — Граматична консолідація
+content_outline:
+- section: Вступ — Граматична досконалість C2
+  words: 400
+  points:
+  - Огляд граматичних компетенцій C2
+  - Самооцінка сильних і слабких сторін
+  - Стратегія повторення
+- section: Морфологічна система — Повторення
+  words: 700
+  points:
+  - Іменник (усі типи відмінювання)
+  - Прикметник (усі форми, включаючи нульові)
+  - Дієслово (вид, час, спосіб, стан)
+  - Числівник (кількісні, порядкові, збірні)
+  - Займенник (усі розряди)
+- section: Синтаксична система — Повторення
+  words: 700
+  points:
+  - Просте речення (усі типи)
+  - Ускладнене речення
+  - Складносурядне речення
+  - Складнопідрядне речення
+  - Безсполучникове речення
+- section: Складні випадки та винятки
+  words: 600
+  points:
+  - Рідкісні відмінкові форми
+  - Архаїчні та діалектні конструкції
+  - Варіативність норми
+  - Стилістично маркована граматика
+- section: Практичне застосування
+  words: 700
+  points:
+  - Граматика в різних стилях
+  - Свідомий вибір граматичних форм
+  - Граматика як стилістичний засіб
+  - Граматична редакторська правка
+- section: Діагностика та план дій
+  words: 500
+  points:
+  - Комплексний граматичний тест
+  - Аналіз результатів
+  - Індивідуальний план закріплення
+  - Ресурси для самостійної роботи
+word_target: 4000
+vocabulary_hints:
+  required:
+  - морфологія (morphology)
+  - синтаксис (syntax)
+  - відмінювання (declension)
+  - дієвідмінювання (conjugation)
+  - парадигма (paradigm)
+  - винятки (exceptions)
+  - варіативність (variation)
+  - стилістична маркованість (stylistic marking)
+  - граматична норма (grammatical norm)
+  - діагностика (diagnostics)
+  recommended:
+  - граматична компетенція (grammatical competence)
+  - імпліцитне знання (implicit knowledge)
+  - експліцитне знання (explicit knowledge)
+  - металінгвістична свідомість (metalinguistic awareness)
+  - граматикалізація (grammaticalization)
+activity_hints:
+- type: quiz
+  focus: Комплексний тест з морфології
+  items: 30+
+- type: quiz
+  focus: Комплексний тест із синтаксису
+  items: 25+
+- type: critical-analysis
+  focus: Ідентифікація та виправлення граматичних помилок у тексті
+  output: Виправлений текст із поясненнями
+- type: essay-response
+  focus: Написання тексту з використанням складних граматичних конструкцій
+  word_target: 500
+  output: Текст, що демонструє граматичне різноманіття
+- type: match-up
+  focus: Рідкісні форми та їхні стандартні еквіваленти
+  items: 15+
+- type: quiz
+  focus: Граматика в різних функціональних стилях
+  items: 15+
+- type: essay-response
+  focus: Самоаналіз граматичних компетенцій
+  word_target: 300
+  output: Оцінка сильних сторін і плану вдосконалення
+focus: integration
+prerequisites:
+- M94 (Capstone Defense)
+- All C2 modules completed
+- Ready for final consolidation
+connects_to:
+- c2-96 (Final Review II — Vocabulary)
+- c2-97 (Final Review III — Skills)
+- c2-98 (Final Exam)
+module_type: integration
+sources:
+- name: Ukrainian State Standard 2024 — Повна граматика C2
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Complete C2 grammar requirements
+- name: Сучасна українська літературна мова — Повний курс
+  url: https://lcorp.ulif.org.ua/
+  type: primary
+  notes: Comprehensive Ukrainian grammar reference
+- name: CEFR C2 Grammar Inventory
+  url: https://www.coe.int/
+  type: secondary
+  notes: C2 grammatical competence requirements
+immersion: 100% Ukrainian
+phase: C2.4 Academic Culmination

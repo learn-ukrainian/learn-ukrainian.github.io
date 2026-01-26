@@ -1,51 +1,19 @@
-title: 'Братства та освіта: Острозька академія'
-slug: bratstva-i-osvita
+module: bratstva-i-osvita
 level: B2
-track: history
-phase: B2.3a [Українська історія]
+slug: bratstva-i-osvita
+version: '2.0'
+naturalness:
+  score: 9
+  status: PASS
 status: content-ready
-focus: history
-pedagogy: CBI
-word_target: 4000
+track: history
 duration: 120
-register: публіцистичний
 transliteration: none
 tags:
 - history
 - education
 - brotherhoods
 - ostroh-academy
-grammar:
-- Історичний наратив
-- Складні синтаксичні конструкції
-objectives:
-- Учень може пояснити роль братств у збереженні національної ідентичності
-- Учень аналізує значення Острозької академії як першого вищого навчального закладу
-- Учень володіє термінологією історії освіти та культури
 vocabulary_count: 30
-content_outline:
-- section: Вступ
-  words: 368
-- section: "Європейський контекст: Реформація та Контрреформація"
-  words: 250
-  points:
-    - "Impact of Reformation and Counter-Reformation"
-    - "Jesuit colleges vs Orthodox schools"
-    - "Cultural synthesis"
-- section: Феномен братств
-  words: 745
-- section: Освітня діяльність братств
-  words: 635
-- section: Острозька академія
-  words: 574
-- section: Читання
-  words: 314
-- section: Первинні джерела
-  words: 415
-- section: Деколонізаційний погляд
-  words: 348
-- section: Потрібно більше практики?
-  words: 113
-naturalness:
-  score: 9
-  status: PASS
+build:
+  last_modified: '2026-01-26'

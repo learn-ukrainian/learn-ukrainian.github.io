@@ -1,53 +1,47 @@
-module: rus-ta-susidy
-level: b2-hist
-sequence: 19
-version: '1.0'
+module: b2-hist-19
+level: B2-HIST
+slug: rus-ta-susidy
+version: '2.0'
 title: 'Русь та сусіди: Візантія, Польща, Угорщина'
-focus: history
-pedagogy: CBI
-objectives:
-- Trace the history of Russo-Byzantine relations
-- Understand the role of dynastic marriages in Rus foreign policy
-- Analyze the relations with western and steppe neighbors
 content_outline:
 - section: Вступ — Русь у міжнародному контексті
   words: 529
-  subsections:
+  points:
   - Геополітичне положення Русі
   - Торгівля, війна, дипломатія
   - Династичні зв'язки як інструмент політики
   - Русь очима сусідів
 - section: Русь і Візантія
   words: 823
-  subsections:
+  points:
   - Від ворожнечі до союзу
   - Договори 907, 911, 944, 971 років
   - Хрещення та церковні зв'язки
   - Культурний вплив — мистецтво, право, освіта
 - section: Русь і Польща
   words: 706
-  subsections:
+  points:
   - Сусіди та суперники
   - Конфлікт за Червенські гради
   - Болеслав Хоробрий у Києві (1018)
   - Від ворожнечі до династичних шлюбів
 - section: Русь і Угорщина
   words: 646
-  subsections:
+  points:
   - Сусідство в Карпатах
   - Династичні зв'язки — Анастасія, дружина Андраша I
   - Боротьба за Галичину
   - Спільний ворог — кочівники
 - section: Степові сусіди
   words: 706
-  subsections:
+  points:
   - Печеніги — постійна загроза
   - Торки та берендеї — «чорні клобуки«
   - Половці — вороги та союзники
   - Степовий кордон як виклик
 - section: Скандинавія та Захід
   words: 590
-  subsections:
+  points:
   - Варязькі зв'язки
   - Гаральд Суворий та Єлисавета
   - Анна Ярославна — королева Франції
@@ -56,26 +50,29 @@ content_outline:
   - Мережа дипломатичних зв'язків
   - Перехід до синтезу Київської Русі
 word_target: 4000
-vocabulary:
-- дипломатія
-- договір
-- династичний шлюб
-- сусід
-- союз
-- Візантія
-- Польща
-- Угорщина
-- печеніги
-- половці
-- торгівля
-- посольство
-- Червенські гради
-- чорні клобуки
-- варяги
-- степовий кордон
-activities:
+vocabulary_hints:
+  required:
+  - дипломатія (diplomacy)
+  - договір (treaty)
+  - династичний шлюб (dynastic marriage)
+  - сусід (neighbor)
+  - союз (alliance)
+  - Візантія (Byzantium)
+  - Польща (Poland)
+  - Угорщина (Hungary)
+  - печеніги (Pechenegs)
+  - половці (Polovtsians)
+  - торгівля (trade)
+  - посольство (embassy)
+  recommended:
+  - Червенські гради (Cherven towns)
+  - чорні клобуки (black hoods)
+  - варяги (Varangians)
+  - степовий кордон (steppe frontier)
+activity_hints:
 - type: reading
   focus: Excerpt from Russo-Byzantine treaty
+  source: Provide in module
 - type: quiz
   focus: Rus neighbors and trade routes (Geography)
   items: 8+
@@ -93,6 +90,21 @@ activities:
   items: 10+
 - type: essay-response
   focus: Чи була Русь частиною Європи?
+focus: history
+pedagogy: CBI
+prerequisites:
+- b2-hist-17 (Princely feuds)
+- b2-hist-11 (Volodymyr and Baptism — Byzantine connection)
+connects_to:
+- 'b2-hist-20 (Synthesis: Kyivan Rus)'
+- b2-hist-24 (Galicia-Volhynia — Hungarian influence)
+objectives:
+- Trace the history of Russo-Byzantine relations
+- Understand the role of dynastic marriages in Rus foreign policy
+- Analyze the relations with western and steppe neighbors
+grammar:
+- Past tense narrative
+- Diplomatic and international relations terminology
 sources:
 - name: Зовнішня політика Київської Русі (Вікіпедія)
   url: https://uk.wikipedia.org/wiki/Зовнішня_політика_Київської_Русі
@@ -106,3 +118,5 @@ sources:
   url: https://litopys.org.ua/pvl/pvl.htm
   type: primary
   notes: Chronicle accounts
+immersion: 100% Ukrainian
+phase: B2-HIST.1 [Kyivan Rus]

@@ -1,22 +1,41 @@
 module: 77-academic-writing
-level: b2
-sequence: 77
+level: B2
+slug: 77-academic-writing
 version: '2.0'
 title: Академічне письмо
 subtitle: Academic Writing
+content_outline:
+- section: Вступ — Академічне письмо
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Основний матеріал
+  words: 600
+  points:
+  - Теоретичні основи
+  - Приклади та ілюстрації
+  - Типові помилки та як їх уникати
+- section: Поглиблене вивчення
+  words: 600
+  points:
+  - Додаткові випадки
+  - Контекстуальне використання
+  - Стилістичні нюанси
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: skills
 pedagogy: TTT
 objectives:
 - Учень знає структуру академічного есе та правила цитування
 - Учень може будувати логічну аргументацію з використанням тез та доказів
 - Учень розуміє принципи академічної доброчесності
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Структура аргументативного есе
+- Використання вставних слів для зв’язку думок (отже, по-перше, з іншого боку)
+phase: B2.4 Skills & Capstone

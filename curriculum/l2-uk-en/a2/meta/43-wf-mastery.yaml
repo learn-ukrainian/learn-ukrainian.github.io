@@ -1,94 +1,13 @@
 module: a2-43
-id: a2-43
+level: A2
 slug: wf-mastery
-title: "Майстерня слів: Велика гра"
-subtitle: "Word Formation Mastery"
 version: '2.0'
-phase: "A2.4 [Word Formation]"
-focus: grammar
-pedagogy: PPP
-register: розмовний
-duration: 60
-transliteration: none
-objectives:
-  - "Learner can synthesize words from parts"
-  - "Learner can predict meaning relative to root"
-  - "Learner can analyze complex words"
-  - "Learner can create new words using patterns"
-grammar:
-  - "Word formation synthesis"
-  - "Prefix-root-suffix analysis"
-  - "Productive patterns"
-word_target: 900
-content_outline:
-  - section: "Introduction: Word Building Mastery"
-    words: 100
-    points:
-      - "From analysis to synthesis"
-      - "Creating new words"
-      - "Pattern recognition"
-  - section: "Analyzing Complex Words"
-    words: 200
-    points:
-      - "Breaking down words"
-      - "Identifying root + affixes"
-      - "Meaning from parts"
-  - section: "Predicting Meaning"
-    words: 200
-    points:
-      - "Unknown words, known parts"
-      - "Root family connections"
-      - "Contextual clues"
-  - section: "Creating Words"
-    words: 200
-    points:
-      - "Productive suffixes"
-      - "Combining elements"
-      - "Testing formations"
-  - section: "Word Families in Action"
-    words: 100
-    points:
-      - "Extended root families"
-      - "Semantic networks"
-      - "Vocabulary expansion"
-  - section: "Practice: Word Formation Games"
-    words: 100
-    points:
-      - "Word building challenges"
-      - "Analysis competitions"
-vocabulary_hints:
-  required:
-    - корінь (root)
-    - префікс (prefix)
-    - суфікс (suffix)
-    - творити (to create)
-    - будувати (to build)
-    - аналізувати (to analyze)
-    - синтезувати (to synthesize)
-    - значення (meaning)
-  recommended:
-    - похідний (derivative)
-    - первісний (original)
-    - продуктивний (productive)
-    - закінчення (ending)
-activity_hints:
-  - type: word-building
-    focus: "Create words from parts"
-    items: 25
-  - type: analysis
-    focus: "Break down complex words"
-    items: 20
-  - type: matching
-    focus: "Match roots to meanings"
-    items: 15
-  - type: quiz
-    focus: "Word formation patterns"
-    items: 20
-prerequisites:
-  - a2-42 (Word Formation V)
-connects_to:
-  - a2-44 (Checkpoint Word Formation)
+id: a2-43
 naturalness:
   score: 10
   status: PASS
-  justification: "Synthesis of word formation skills"
+  justification: Synthesis of word formation skills
+duration: 60
+transliteration: none
+build:
+  last_modified: '2026-01-26'

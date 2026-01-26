@@ -1,101 +1,16 @@
-id: b1-16
-title: 'Дієслова руху: повна система'
-subtitle: Motion Verbs - The Full System
+module: 16-motion-verbs-full-system
+level: B1
 slug: 16-motion-verbs-full-system
-module_type: grammar
-word_target: 1500
-immersion: 100% Ukrainian
 version: '1.0'
-phase: B1.2 Motion
-pedagogy: TTT
-focus: grammar
+id: b1-16
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
 tags:
 - grammar
 - motion-verbs
 - verbs
-grammar:
-- 14 motion verb pairs
-- Unidirectional vs multidirectional distinction
-objectives:
-- Learner knows all 14 motion verb pairs
-- Learner understands unidirectional vs multidirectional
-- Learner can choose correct motion verb for context
-sources:
-- name: Ukrainian State Standard 2024 - Motion Verbs
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official system of motion verb pairs
-- name: Ukrainian Motion Verbs (Wikipedia)
-  url: https://uk.wikipedia.org/wiki/Дієслова_руху
-  type: reference
-  notes: Complete list of motion verb pairs
-content_outline:
-- section: Вступ
-  words: 200
-  points:
-  - Content for Вступ
-  - Examples and explanation
-  - Practice or application
-- section: Пояснення
-  words: 350
-  points:
-  - Content for Пояснення
-  - Examples and explanation
-  - Practice or application
-- section: Практика
-  words: 900
-  points:
-  - Content for Практика
-  - Examples and explanation
-  - Practice or application
-- section: Діалоги
-  words: 400
-  points:
-  - Content for Діалоги
-  - Examples and explanation
-  - Practice or application
-vocabulary_hints:
-  required:
-  - односпрямований (unidirectional)
-  - різноспрямований (multidirectional)
-  - йти/ходити (to go on foot)
-  - їхати/їздити (to go by vehicle)
-  - бігти/бігати (to run)
-  - летіти/літати (to fly)
-  - пливти/плавати (to swim/sail)
-  - нести/носити (to carry)
-  - вести/водити (to lead)
-  - везти/возити (to transport)
-  recommended:
-  - лізти/лазити (to climb)
-  - повзти/повзати (to crawl)
-  - тягти/тягати (to pull)
-  - котити/качати (to roll)
-  - брести/бродити (to wade)
-activity_hints:
-- type: match-up
-  focus: Unidirectional → Multidirectional pairs
-  items: 14+
-- type: quiz
-  focus: Which motion verb for which context?
-  items: 15+
-- type: fill-in
-  focus: Choose correct motion verb
-  items: 15+
-- type: group-sort
-  focus: Single trip vs regular/general movement
-  items: 14+
-- type: fill-in
-  focus: Single event → habitual movement
-  items: 10+
-prerequisites:
-- b1-15 (Aspect mastery checkpoint)
-- A2 motion verbs basics
-connects_to:
-- b1-17 (Motion - coming & going)
-- b1-25 (Motion verbs checkpoint)
-naturalness:
-  score: 9
-  status: PASS
+build:
+  last_modified: '2026-01-26'

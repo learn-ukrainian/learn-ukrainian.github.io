@@ -1,9 +1,42 @@
-module: 23-register-media-journalistic
-level: b2
-sequence: 23
-version: '1.0'
+module: b2-23
+level: B2
+slug: 23-register-media-journalistic
+version: '2.0'
 title: Медійний та журналістський регістр
 subtitle: Мова новин і преси
+content_outline:
+- section: Вступ — Медійний та журналістський регістр
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Контексти медійного стилю
+  words: 400
+  points:
+  - Заголовки новин
+  - Новинні репортажі
+  - Редакційні статті
+  - Інтерв'ю
+- section: Ключові особливості стилю
+  words: 400
+  points:
+  - 'Headlines: telegram style, no articles'
+  - 'Lead paragraph: who, what, when, where, why'
+  - Quotes and attribution
+  - Bias markers
+- section: Стиль заголовків
+  words: 400
+  points:
+  - Президент підписав закон (President signs law)
+  - Ціни зростають (Prices rising)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: grammar
 pedagogy: TTT
 objectives:
@@ -11,13 +44,9 @@ objectives:
 - Учень може структурувати лід-абзац за принципом 5W
 - Учень може правильно вживати конструкції цитування та атрибуції
 - Учень може виявляти маркери упередженості в медійних текстах
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- News headline syntax (telegram style)
+- Lead paragraph structure (5W)
+- Attribution and quoting conventions
+- Bias markers and objectivity
+phase: B2.1c [Register System]

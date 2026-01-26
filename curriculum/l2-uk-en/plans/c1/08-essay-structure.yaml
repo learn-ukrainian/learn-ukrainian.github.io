@@ -1,21 +1,8 @@
 module: 08-essay-structure
-level: c1
-sequence: 8
+level: C1
+slug: 08-essay-structure
 version: '2.0'
 title: Структура академічного есе
-focus: grammar
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Ukrainian Academic Essay Writing Guide
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official essay structure guidelines
-- name: Науковий стиль сучасної української мови
-  url: https://mova.info/
-  type: secondary
-  notes: Academic text organization
 content_outline:
 - section: Вступ — Архітектура тексту
   words: 400
@@ -61,7 +48,7 @@ content_outline:
   - Аналіз структури зразків
   - Редагування власного тексту
 word_target: 4000
-vocabulary:
+vocabulary_hints:
   required:
   - вступ (introduction)
   - основна частина (body)
@@ -79,18 +66,42 @@ vocabulary:
   - структурування (structuring)
   - когерентність (coherence)
   - зв'язність (cohesion)
-  forbidden: []
-activities:
-  types_required:
-  - group-sort
-  - quiz
-  - essay-response
-  - cloze
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: match-up
+  focus: Essay part to function
+  items: 12+
+- type: group-sort
+  focus: Arrange essay sections in order
+  items: 15+
+- type: cloze
+  focus: Structural phrases in context
+  items: 12+
+- type: quiz
+  focus: Identify TEEL elements in paragraphs
+  items: 12+
+- type: essay-response
+  focus: Write introduction with thesis
+  word_target: 200
+- type: essay-response
+  focus: Write body paragraph using TEEL
+  word_target: 200
+focus: grammar
+prerequisites:
+- c1-01 to c1-07 (Academic Foundation)
+- Logical connectors mastery
 connects_to:
 - c1-09 (Thesis Development)
 - c1-10 (Counterarguments)
 - c1-18 (Essay Writing Practice)
+module_type: grammar
+sources:
+- name: Ukrainian Academic Essay Writing Guide
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official essay structure guidelines
+- name: Науковий стиль сучасної української мови
+  url: https://mova.info/
+  type: secondary
+  notes: Academic text organization
+immersion: 100% Ukrainian
+phase: C1.1 Academic Ukrainian

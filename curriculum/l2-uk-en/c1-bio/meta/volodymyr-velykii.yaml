@@ -1,13 +1,12 @@
-id: c1-bio-03
-title: 'Володимир Великий: Хреститель Русі'
+module: volodymyr-velykii
+level: C1-BIO
 slug: volodymyr-velykii
-module_type: biography
-word_count: 4000
-immersion: 100% Ukrainian
 version: '2.0'
-phase: C1-BIO
-focus: biography
-pedagogy: CBI
+id: c1-bio-03
+naturalness:
+  score: 10
+  status: PASS
+word_count: 4000
 duration: 120
 transliteration: none
 tags:
@@ -15,123 +14,5 @@ tags:
 - biography
 - kyivan-rus
 - christianization
-grammar:
-- Historical narrative register
-objectives:
-- Analyze the geopolitical significance of the Christianization of Rus
-- Evaluate the state-building reforms of Volodymyr the Great (administrative, financial, symbolic)
-- Discuss the legacy of the Trident and the first currency in modern Ukrainian identity
-sources:
-- name: Володимир Святославич (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Володимир_Святославич
-  type: primary
-  notes: Biography, Christianization, reign
-- name: Хрещення Русі (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Хрещення_Русі
-  type: primary
-  notes: Process and significance of Christianization
-- name: Вибір віри
-  url: https://uk.wikipedia.org/wiki/Вибір_віри
-  type: reference
-  notes: Legend of choosing religion
-content_outline:
-- section: Вступ — Від язичника до святого
-  words: 400
-  points:
-  - Трансформація Володимира
-  - Його місце в українській та світовій історії
-  - Проблема джерел та інтерпретацій
-- section: Боротьба за владу
-  words: 600
-  points:
-  - Син Святослава від ключниці Малуші
-  - Княжіння в Новгороді
-  - Усобиця з братами
-  - Вбивство Ярополка та захоплення Києва
-- section: Язичницьке правління
-  words: 600
-  points:
-  - Реформа язичництва
-  - Пантеон богів на київському пагорбі
-  - Військові походи
-  - Гарем та діти
-- section: Вибір віри
-  words: 700
-  points:
-  - Легенда про випробування вір
-  - Посольства від різних релігій
-  - Прагматичні та духовні мотиви вибору
-  - Історична достовірність легенди
-- section: Хрещення Русі
-  words: 800
-  points:
-  - Похід на Корсунь
-  - Шлюб з Анною Порфірородною
-  - Хрещення киян у Дніпрі 988 року
-  - Руйнування язичницьких святинь
-  - Опір та примусова християнізація
-- section: Християнський правитель
-  words: 600
-  points:
-  - Будівництво церков та монастирів
-  - Десятинна церква
-  - Освітня діяльність
-  - Зміна особистості — від жорстокості до милосердя
-- section: Спадщина та канонізація
-  words: 300
-  points:
-  - Смерть та поділ спадщини
-  - Канонізація як рівноапостольного
-  - Сучасне значення Володимира
-vocabulary_hints:
-  required:
-  - хрещення (baptism/Christianization)
-  - язичництво (paganism)
-  - хреститель (baptizer)
-  - рівноапостольний (equal-to-the-apostles)
-  - пантеон (pantheon)
-  - ідол (idol)
-  - десятина (tithe)
-  - усобиця (internecine war)
-  - порфірородна (born in the purple)
-  - Корсунь (Chersonesus)
-  recommended:
-  - клятва (oath)
-  - святиня (shrine)
-  - монастир (monastery)
-  - єпископ (bishop)
-  - грамота (charter/literacy)
-activity_hints:
-- type: reading
-  focus: Chronicle account of the choice of faith
-  source: Повість минулих літ (adapted)
-  items: 3 passages
-- type: quiz
-  focus: Facts about Volodymyr's life and reign
-  items: 15+
-- type: match-up
-  focus: Religions and their representatives in the legend
-  items: 8+
-- type: essay-response
-  focus: Why did Volodymyr choose Byzantine Christianity?
-  word_target: 300
-  output: Analysis with historical and pragmatic factors
-- type: group-sort
-  focus: Before Christianization vs. After Christianization
-  items: 12+
-- type: fill-in
-  focus: Key dates and places in Volodymyr's biography
-  items: 10+
-- type: critical-analysis
-  focus: Evaluate the methods of Christianization
-  output: Balanced assessment with sources
-prerequisites:
-- c1-bio-01 (Knyahynia Olha - grandmother, first Christian)
-- c1-bio-02 (Kniaz Sviatoslav - father)
-connects_to:
-- c1-bio-04 (Yaroslav Mudryi - son, continued church building)
-- c1-bio-05 (Anna Yaroslavna - granddaughter)
-- c1-bio-08 (Iov Boretskyi - Orthodox church defense)
-naturalness:
-  score: 10
-  status: PASS
+build:
+  last_modified: '2026-01-26'

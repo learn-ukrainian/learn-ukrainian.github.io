@@ -1,0 +1,120 @@
+module: poetyka-prose-analysis
+level: C2
+slug: poetyka-prose-analysis
+version: '2.0'
+title: Поетика — аналіз прози
+content_outline:
+- section: Вступ — Поетика прози
+  words: 500
+  points:
+  - Специфіка прозового слова
+  - Жанри прози (роман, повість, оповідання, новела)
+  - Мала проза vs. велика форма
+- section: Композиція прози
+  words: 700
+  points:
+  - Архітектоніка тексту
+  - Експозиція, зав'язка, кульмінація, розв'язка
+  - Обрамлення і вставні конструкції
+  - Монтаж і фрагментація
+- section: Хронотоп
+  words: 600
+  points:
+  - Бахтінське поняття хронотопу
+  - Типи хронотопів (дороги, замку, порогу)
+  - Час і простір в українській прозі
+  - Хронотоп у Коцюбинського
+- section: Персонаж і характеротворення
+  words: 700
+  points:
+  - Типи персонажів (протагоніст, антагоніст)
+  - Пряма і непряма характеристика
+  - Психологізм
+  - Герой у літературі розстріляного відродження
+- section: Мова прози
+  words: 600
+  points:
+  - Авторське мовлення vs. мова персонажів
+  - Сказ і стилізація
+  - Діалог і монолог
+  - Описи і їх функції
+- section: Аналіз українських прозових текстів
+  words: 500
+  points:
+  - Новела Стефаника — мікроаналіз
+  - Психологізм Коцюбинського
+  - Сучасна проза (Прохасько, Курков)
+- section: Підсумок
+  words: 400
+  points:
+  - Комплексний аналіз прози
+  - Від аналізу до власного письма
+  - Підготовка до літературного перекладу
+word_target: 4000
+vocabulary_hints:
+  required:
+  - поетика (poetics)
+  - хронотоп (chronotope)
+  - композиція (composition)
+  - архітектоніка (architectonics)
+  - характеротворення (characterization)
+  - психологізм (psychologism)
+  - кульмінація (climax)
+  - розв'язка (denouement)
+  - новела (novella/short story)
+  - сказ (skaz)
+  recommended:
+  - протагоніст (protagonist)
+  - антагоніст (antagonist)
+  - експозиція (exposition)
+  - зав'язка (rising action)
+  - монтаж (montage)
+activity_hints:
+- type: critical-analysis
+  focus: Full analysis of Stefanyk novella
+  output: Composition, chronotope, characterization analyzed
+- type: quiz
+  focus: Identify prose elements in excerpts
+  items: 20+
+- type: essay-response
+  focus: Analyze chronotope in Kotsyubynsky excerpt
+  word_target: 500
+  output: Bakhtinian analysis of time-space
+- type: comparative-study
+  focus: Compare characterization techniques in classic vs. contemporary
+  output: Analysis of evolving prose techniques
+- type: essay-response
+  focus: Write opening scene with specific chronotope
+  word_target: 400
+  output: Original prose with technique explanation
+- type: critical-analysis
+  focus: Analyze dialogue functions in prose excerpt
+  output: How dialogue advances plot/reveals character
+- type: authorial-intent
+  focus: Reverse-engineer author's compositional choices
+  output: Analysis of why author structured text as they did
+focus: literature
+prerequisites:
+- c2-27 (Narratology)
+- 'c2-28 (Poetyka: Verse Analysis)'
+- c2-22 (Rhythm & Prosody)
+connects_to:
+- c2-30 (Intertextuality II)
+- c2-35 (Literary Translation II — Prose)
+- 'c2-37 (Creative Writing: Prose)'
+module_type: literature
+sources:
+- name: Теорія прози — Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Проза
+  type: reference
+  notes: Prose theory and genres
+- name: Українська проза — укрліб
+  url: https://ukrlib.com.ua/
+  type: primary
+  notes: Classic and contemporary Ukrainian prose
+- name: Поетика прози — Михайло Бахтін
+  url: https://uk.wikipedia.org/wiki/Михайло_Бахтін
+  type: reference
+  notes: Bakhtinian concepts for prose analysis
+immersion: 100% Ukrainian
+phase: C2.2 Literary Analysis

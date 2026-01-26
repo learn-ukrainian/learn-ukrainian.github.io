@@ -1,109 +1,110 @@
 module: vitaly-portnikov
-level: c1-bio
-sequence: 88
+level: C1-BIO
+slug: vitaly-portnikov
 version: '2.0'
 title: 'Віталій Портников: Журналіст і аналітик'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Портников_Віталій_Янович
-    title: Віталій Портников (Wikipedia UA)
-    notes: Основна біографічна інформація
-  secondary:
-  - url: https://espreso.tv/
-    title: Espreso.TV
-    notes: Публікації та виступи
-  - url: https://www.radiosvoboda.org/
-    title: Радіо Свобода
-    notes: Архів публікацій
 content_outline:
 - section: Вступ — Голос української журналістики
   words: 400
-  subsections:
+  points:
   - Портников як один із найвпливовіших аналітиків
   - Роль у формуванні суспільної думки
   - Постійність позиції протягом десятиліть
 - section: Ранні роки та освіта
   words: 600
-  subsections:
+  points:
   - Народження в Києві (1967)
   - Освіта та формування поглядів
   - Початок журналістської кар'єри
 - section: Журналістська діяльність
   words: 700
-  subsections:
+  points:
   - Робота в різних виданнях
   - Телевізійна публіцистика
   - Міжнародні проекти
 - section: Аналітик пострадянського простору
   words: 800
-  subsections:
+  points:
   - Експертиза з питань Росії та СНД
   - Прогнози щодо російської агресії
   - Роль під час Майдану та війни
 - section: Стиль та методологія
   words: 700
-  subsections:
+  points:
   - Особливості аналітичного підходу
   - Риторичні прийоми
   - Вплив на медіапростір
 - section: Сучасна діяльність
   words: 600
-  subsections:
+  points:
   - Робота під час повномасштабної війни
   - Пояснення України світові
   - Роль публічного інтелектуала
 - section: Дискусія — Журналістика як місія
   words: 200
-  subsections:
+  points:
   - Обов'язок журналіста в час війни
   - Баланс між аналітикою та активізмом
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - аналітик
-  - публіцистика
-  - експертиза
-  - геополітика
-  - медіапростір
-  - прогноз
-  - коментар
-  - дискурс
-  - громадська думка
-  - незалежні ЗМІ
+  - аналітик (analyst)
+  - публіцистика (publicistic writing)
+  - експертиза (expertise)
+  - геополітика (geopolitics)
+  - медіапростір (media space)
+  - прогноз (forecast)
+  - коментар (commentary)
+  - дискурс (discourse)
+  - громадська думка (public opinion)
+  - незалежні ЗМІ (independent media)
   recommended:
-  - інформаційна війна
-  - пропаганда
-  - критичне мислення
-  - об'єктивність
-  - заангажованість
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - інформаційна війна (information war)
+  - пропаганда (propaganda)
+  - критичне мислення (critical thinking)
+  - об'єктивність (objectivity)
+  - заангажованість (bias/engagement)
+activity_hints:
+- type: reading
+  focus: Аналітичні статті Портникова
+  source: Медіаматеріали
+  items: 3 passages
+- type: quiz
+  focus: Факти про українську журналістику
+  items: 12+
+- type: match-up
+  focus: Журналістські терміни та визначення
+  items: 10+
+- type: essay-response
+  focus: Яка роль аналітика в суспільстві?
+  word_target: 300
+  output: Рефлексивний есей
+- type: group-sort
+  focus: Журналістика vs пропаганда
+  items: 12+
+- type: fill-in
+  focus: Медійна термінологія
+  items: 10+
+focus: biography
+prerequisites:
+- b2-hist-euromaidan
 connects_to:
-  previous: b2-hist-euromaidan
-  related:
-  - c1-bio-87-yaroslav-hrytsak
-  - c1-bio-91-oleg-sentsov
-  - c1-bio-90-serhiy-zhadan
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-87-yaroslav-hrytsak
+- c1-bio-91-oleg-sentsov
+- c1-bio-90-serhiy-zhadan
+module_type: biography
+sources:
+- name: Віталій Портников (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Портников_Віталій_Янович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Espreso.TV
+  url: https://espreso.tv/
+  type: reference
+  notes: Публікації та виступи
+- name: Радіо Свобода
+  url: https://www.radiosvoboda.org/
+  type: reference
+  notes: Архів публікацій
+immersion: 100% Ukrainian
+phase: C1-BIO

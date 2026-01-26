@@ -1,105 +1,13 @@
 module: b2-hist-137
-id: b2-hist-137
+level: B2-HIST
 slug: zlochyny-stiikist
-title: "Злочини і стійкість"
-subtitle: "Crimes and Resilience"
 version: '2.0'
-phase: "HIST.13 [Russian Aggression]"
-focus: history
-pedagogy: CBI
-register: публіцистичний
-duration: 120
-transliteration: none
-objectives:
-  - "Учень може описати воєнні злочини Росії в Україні"
-  - "Учень може пояснити концепцію стійкості українського суспільства"
-  - "Учень може проаналізувати хронологію звільнень українських територій"
-  - "Учень може оцінити міжнародну правову відповідь на злочини"
-grammar:
-  - "Минулий та теперішній час"
-  - "Юридична та емоційна лексика"
-  - "Пасивні конструкції"
-word_target: 4000
-content_outline:
-  - section: "Вступ: Злочин та відплата"
-    words: 400
-    points:
-      - "Воєнні злочини як стратегія"
-      - "Буча, Маріуполь, Ірпінь"
-      - "Україна вистояла"
-  - section: "Воєнні злочини"
-    words: 1000
-    points:
-      - "Буча: розстріли цивільних"
-      - "Маріуполь: облога та руйнування"
-      - "Удари по інфраструктурі"
-      - "Депортація дітей"
-      - "Ордер на арешт Путіна"
-  - section: "Стійкість (Stiikist)"
-    words: 800
-    points:
-      - "Що таке стійкість"
-      - "Блекаути та виживання"
-      - "Волонтерський рух"
-      - "Культура опору"
-  - section: "Первинні джерела"
-    words: 800
-    points:
-      - "Свідчення з Бучі"
-      - "Фото- та відеодокази"
-      - "Документи МКС"
-  - section: "Деколонізаційний погляд"
-    words: 500
-    points:
-      - "Російський наратив: «фейки»"
-      - "Реальність: задокументовані злочини"
-      - "Правосуддя як деколонізація"
-  - section: "Підсумок: Звільнення"
-    words: 500
-    points:
-      - "Харківщина: вересень 2022"
-      - "Херсон: листопад 2022"
-      - "Шлях до перемоги"
-vocabulary_hints:
-  required:
-    - злочин (crime)
-    - стійкість (resilience)
-    - звільнення (liberation)
-    - жертви (victims)
-    - докази (evidence)
-    - правосуддя (justice)
-    - депортація (deportation)
-    - окупація (occupation)
-  recommended:
-    - МКС (ICC)
-    - трибунал (tribunal)
-    - блекаут (blackout)
-    - волонтер (volunteer)
-    - свідчення (testimony)
-    - відновлення (recovery)
-activity_hints:
-  - type: reading
-    focus: "Свідчення вижилих з Бучі"
-    source: "Усна історія"
-    items: 4
-  - type: quiz
-    focus: "Злочини і стійкість"
-    items: 15
-  - type: match-up
-    focus: "Місто → дата звільнення"
-    items: 10
-  - type: fill-in
-    focus: "Юридична лексика"
-    items: 10
-  - type: essay-response
-    focus: "Як Україна демонструє стійкість під час війни?"
-    word_target: 250
-prerequisites:
-  - b2-hist-136 (Воєнна економіка)
-connects_to:
-  - b2-hist-138 (Міжнародна підтримка)
-  - b2-hist-139 (Синтез: Війна за існування)
+id: b2-hist-137
 naturalness:
   score: 10
   status: PASS
-  justification: "Сучасний український для воєнного наративу"
+  justification: Сучасний український для воєнного наративу
+duration: 120
+transliteration: none
+build:
+  last_modified: '2026-01-26'

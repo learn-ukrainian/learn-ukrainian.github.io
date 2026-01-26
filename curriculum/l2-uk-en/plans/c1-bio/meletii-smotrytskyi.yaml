@@ -1,77 +1,74 @@
-module: meletii-smotrytskyi
-level: c1-bio
-sequence: 0
+module: c1-bio-17
+level: C1-BIO
+slug: meletii-smotrytskyi
 version: '2.0'
 title: 'Мелетій Смотрицький: Архітектор слов''янської граматики'
-focus: biography
-pedagogy: seminar
-objectives:
-- Evaluate the impact of Smotrytskyi's Grammar (1619)
-- Understand the tragedy of the 'Threnos' and his conversion to Uniatism
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Мелетій_Смотрицький
-    title: Мелетій Смотрицький (Wikipedia UA)
-  - url: https://uk.wikipedia.org/wiki/Тренос
-    title: Тренос
-  - url: https://uk.wikipedia.org/wiki/Граматика_слов%27янська_(1619)
-    title: Граматика Смотрицького
-  secondary: []
+subtitle: 'Meletii Smotrytskyi: Architect of Slavic Grammar'
 content_outline:
 - section: Вступ — Голос плачучої церкви
   words: 450
-  subsections:
+  points:
   - Автор "Треносу" (Плачу)
   - Творець першої повної граматики церковнослов'янської мови
   - Інтелектуал, що розірвався між Сходом і Заходом
 - section: Життєпис
   words: 1200
-  subsections:
+  points:
   - Походження та освіта в Європі
   - Видання "Треносу" та "Граматики"
   - Архієпископство та криза сумління
   - Перехід в унію та смерть
 - section: Історичний контекст
   words: 450
-  subsections:
+  points:
   - Релігійна полеміка XVII ст.
   - Розкол суспільства
 - section: Внесок та Спадщина
   words: 450
-  subsections:
+  points:
   - Кодифікація мови
   - Вершина бароко
 - section: Порівняльний аналіз
   words: 450
-  subsections:
+  points:
   - Смотрицький vs. Вишенський
 word_target: 3000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - граматика
-  - полеміка
-  - плач
-  - єресь
-  - догмат
-  - відступництво
-  - кодифікація
-  - синтаксис
-  - православ'я
-  - унія
-  recommended: []
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - essay-response
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+  - граматика (grammar)
+  - полеміка (polemics)
+  - плач (lament/threnos)
+  - єресь (heresy)
+  - догмат (dogma)
+  - відступництво (apostasy)
+  - кодифікація (codification)
+  - синтаксис (syntax)
+  - православ'я (orthodoxy)
+  - унія (union)
+activity_hints:
+- type: reading
+  focus: Excerpts from "Threnos"
+- type: quiz
+  focus: Biography and works
+- type: essay-response
+  focus: 'The tragedy of choice: Faith vs. Unity'
+focus: biography
+pedagogy: CBI
+objectives:
+- Evaluate the impact of Smotrytskyi's Grammar (1619)
+- Understand the tragedy of the 'Threnos' and his conversion to Uniatism
+grammar:
+- Linguistic terminology
+- Theological vocabulary
+sources:
+- name: Мелетій Смотрицький (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Мелетій_Смотрицький
+  type: primary
+- name: Тренос
+  url: https://uk.wikipedia.org/wiki/Тренос
+  type: primary
+- name: Граматика Смотрицького
+  url: https://uk.wikipedia.org/wiki/Граматика_слов%27янська_(1619)
+  type: primary
+immersion: 100% Ukrainian
+phase: C1-BIO

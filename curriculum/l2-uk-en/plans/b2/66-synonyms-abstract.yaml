@@ -1,22 +1,48 @@
-module: 66-synonyms-abstract
-level: b2
-sequence: 66
-version: '1.0'
+module: b2-66
+level: B2
+slug: 66-synonyms-abstract
+version: '2.0'
 title: 'Синоніми: Абстрактні Поняття та Ідеї'
 subtitle: Synonyms - Abstract Concepts and Ideas
+content_outline:
+- section: Вступ — Абстрактні Поняття та Ідеї
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Thought/Idea
+  words: 500
+  points:
+  - думка (thought - general)
+  - ідея (idea - concept)
+  - погляд (view - perspective)
+  - точка зору (point of view)
+  - переконання (belief - conviction)
+- section: Concept/Notion
+  words: 500
+  points:
+  - поняття (concept - understanding)
+  - уявлення (notion - mental picture)
+  - концепція (conception - framework)
+  - теорія (theory - systematic)
+  - гіпотеза (hypothesis - tentative)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: phraseology
 pedagogy: CBI
 objectives:
-- Учень може розрізняти відтінки значень між синонімами на позначення інтелектуальної діяльності (думка, ідея, погляд)
+- Учень може розрізняти відтінки значень між синонімами на позначення інтелектуальної
+  діяльності (думка, ідея, погляд)
 - Учень вміє використовувати академічну лексику для опису наукових концепцій та теорій
 - Учень розуміє різницю між гіпотезою, припущенням та переконанням
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Nuances in abstract nouns
+- Collocations with idea/thought
+immersion: 100
+register: науковий
+phase: B2.2 [Phraseology & Synonymy]

@@ -1,94 +1,13 @@
 module: b1-65
-id: b1-65
+level: B1
 slug: relationships
-title: "Стосунки та зв'язки"
-subtitle: "Relationships and Connections"
 version: '2.0'
-phase: "B1.6 [Vocabulary Expansion II]"
-focus: vocabulary
-pedagogy: PPP
-register: розмовний
-duration: 90
-transliteration: none
-objectives:
-  - "Learner can use 25 relationship vocabulary words in context"
-  - "Learner can distinguish between стосунки/відносини/зв'язок"
-  - "Learner can form natural collocations with relationship nouns"
-  - "Learner can discuss Ukrainian cultural traditions related to relationships"
-grammar:
-  - "Noun collocations with relationship vocabulary"
-  - "Verb patterns with emotional states"
-  - "Preposition usage in relationship contexts"
-word_target: 1200
-content_outline:
-  - section: "Introduction: Relationship Vocabulary"
-    words: 150
-    points:
-      - "Types of relationships"
-      - "Cultural context"
-      - "Vocabulary overview"
-  - section: "Family Relationships"
-    words: 250
-    points:
-      - "родина, сім'я, рід"
-      - "Extended family terms"
-      - "Family dynamics vocabulary"
-  - section: "Romantic Relationships"
-    words: 250
-    points:
-      - "кохання, закоханість, стосунки"
-      - "партнер, пара, шлюб"
-      - "Romance vocabulary"
-  - section: "Friendships and Social"
-    words: 250
-    points:
-      - "дружба, приятелювання"
-      - "знайомство, зв'язок"
-      - "Social connection vocabulary"
-  - section: "Relationship Actions"
-    words: 200
-    points:
-      - "кохати, дружити, спілкуватися"
-      - "підтримувати, зберігати"
-      - "Relationship verbs"
-  - section: "Practice: Relationship Discussions"
-    words: 100
-    points:
-      - "Discuss relationships"
-      - "Use cultural vocabulary"
-vocabulary_hints:
-  required:
-    - стосунки (relationships)
-    - дружба (friendship)
-    - кохання (love)
-    - родина (family)
-    - партнер (partner)
-    - знайомство (acquaintance)
-    - спілкуватися (to communicate)
-    - підтримувати (to support)
-  recommended:
-    - закоханість (being in love)
-    - шлюб (marriage)
-    - зв'язок (connection)
-    - приятелювати (to be friends)
-activity_hints:
-  - type: collocation
-    focus: "Relationship noun phrases"
-    items: 25
-  - type: fill-in
-    focus: "Describe relationships"
-    items: 20
-  - type: matching
-    focus: "Match relationship types"
-    items: 15
-  - type: discussion
-    focus: "Discuss relationship topics"
-    items: 10
-prerequisites:
-  - b1-64 (Emotions Deep Dive)
-connects_to:
-  - b1-66 (Business Basics)
+id: b1-65
 naturalness:
   score: 9
   status: PASS
-  justification: "Essential for social and personal discourse"
+  justification: Essential for social and personal discourse
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-26'

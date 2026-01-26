@@ -1,105 +1,105 @@
 module: dmytro-dontsov
-level: c1-bio
-sequence: 52
+level: C1-BIO
+slug: dmytro-dontsov
 version: '2.0'
 title: 'Дмитро Донцов: Ідеолог націоналізму'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Донцов_Дмитро_Іванович
-    title: Дмитро Донцов (Wikipedia UA)
-    notes: Biography of the controversial nationalist ideologue
-  secondary:
-  - url: http://esu.com.ua/
-    title: Енциклопедія українознавства
-    notes: Academic analysis of Dontsov's ideology
 content_outline:
 - section: Вступ — Апостол волюнтаризму
   words: 400
-  subsections:
+  points:
   - Найвпливовіший ідеолог українського націоналізму
   - Творець концепції «вольового націоналізму»
   - Суперечлива постать української історії
 - section: Юність та ідейне формування (1883-1913)
   words: 600
-  subsections:
+  points:
   - Народження в Мелітополі
   - Юнацький соціалізм
   - Навчання у Відні та Львові
   - Еволюція до націоналізму
 - section: Від соціаліста до націоналіста (1913-1926)
   words: 800
-  subsections:
+  points:
   - «Модерне москвофільство» (1913)
   - Діяльність під час Першої світової війни
   - Еміграція та редакторська робота
   - «Націоналізм» (1926) — головна праця
 - section: Літературний Критик (1926-1939)
   words: 700
-  subsections:
+  points:
   - Редактор «Літературно-наукового вісника»
   - Формування «празької школи» поезії
   - Вплив на молоде покоління
   - Полеміка з опонентами
 - section: Друга світова та еміграція (1939-1973)
   words: 800
-  subsections:
+  points:
   - Ставлення до подій Другої світової війни
   - Еміграція до Канади
   - Подальша публіцистика
   - Смерть у Монреалі
 - section: Спадщина — Між генієм і демоном
   words: 700
-  subsections:
+  points:
   - Вплив на українську політичну думку
   - Критика ідеології Донцова
   - Сучасні дискусії
   - Донцов у контексті європейського націоналізму
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - націоналізм
-  - ідеолог
-  - волюнтаризм
-  - інтегральний націоналізм
-  - публіцист
-  - редактор
-  - еміграція
-  - ідеологія
-  - полеміка
-  - доктрина
+  - націоналізм (nationalism)
+  - ідеолог (ideologue)
+  - волюнтаризм (voluntarism)
+  - інтегральний націоналізм (integral nationalism)
+  - публіцист (publicist)
+  - редактор (editor)
+  - еміграція (emigration)
+  - ідеологія (ideology)
+  - полеміка (polemics)
+  - доктрина (doctrine)
   recommended:
-  - москвофільство
-  - радикалізм
-  - політична філософія
-  - пропаганда
-  - модерний
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - москвофільство (Muscophilia)
+  - радикалізм (radicalism)
+  - політична філософія (political philosophy)
+  - пропаганда (propaganda)
+  - модерний (modern)
+activity_hints:
+- type: reading
+  focus: Українська політична думка XX ст.
+  source: Political philosophy sources
+  items: 3 passages
+- type: quiz
+  focus: Життя та ідеї Донцова
+  items: 12+
+- type: match-up
+  focus: Терміни політичної філософії
+  items: 10+
+- type: essay-response
+  focus: Як оцінювати суперечливих історичних постатей?
+  word_target: 300
+  output: Analytical essay
+- type: group-sort
+  focus: Праці Донцова за періодами
+  items: 12+
+- type: fill-in
+  focus: Ідеологічна термінологія
+  items: 10+
+focus: biography
+prerequisites:
+- c1-bio-51
 connects_to:
-  previous: c1-bio-51
-  related:
-  - c1-bio-42
-  - c1-bio-44
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-42
+- c1-bio-44
+module_type: biography
+sources:
+- name: Дмитро Донцов (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Донцов_Дмитро_Іванович
+  type: primary
+  notes: Biography of the controversial nationalist ideologue
+- name: Енциклопедія українознавства
+  url: http://esu.com.ua/
+  type: reference
+  notes: Academic analysis of Dontsov's ideology
+immersion: 100% Ukrainian
+phase: C1-BIO

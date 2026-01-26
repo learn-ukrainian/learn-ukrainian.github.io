@@ -1,22 +1,35 @@
-module: 80-vokalne-mystetstvo
-level: c1
-sequence: 80
+module: c1-80
+level: C1
+slug: 80-vokalne-mystetstvo
 version: '2.0'
 title: Вокальне мистецтво
 subtitle: Vocal Art
+content_outline:
+- section: Вступ — Вокальне мистецтво
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Choral tradition: Church choirs, Капела Думка, Капела Ревуцького'
+  - 'Art song (романс): Лисенко, Степовий, contemporary composers'
+  - 'Folk crossover: ДахаБраха, ONUKA — art music meets folk'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: fine-arts
 pedagogy: CBI
 objectives:
 - Learner explores the rich tradition of Ukrainian choral music.
 - Learner understands the genre of art song (romance) in Ukraine.
 - Learner can discuss contemporary vocal fusion projects.
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Professional music terminology
+- Descriptive aesthetics
+phase: C1.5 Folk Culture & Fine Arts

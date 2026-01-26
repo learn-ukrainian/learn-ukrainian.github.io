@@ -1,108 +1,119 @@
-module: sylvestr-kosiv
-level: c1-bio
-sequence: 9
+module: c1-bio-09
+level: C1-BIO
+slug: sylvestr-kosiv
 version: '2.0'
 title: 'Сильвестр Косів: Освітянин і будівничий'
-focus: biography
-pedagogy: seminar
-objectives:
-- Проаналізувати дипломатичну стратегію Сильвестра Косіва
-- Зрозуміти роль православної церкви в подіях Хмельниччини
-- Вивчити лексику, пов'язану з церковною автономією та правом
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Сильвестр_Косів
-    title: Сильвестр Косів (Wikipedia UA)
-    notes: Biography, metropolitanate, relations with Khmelnytskyi
-  secondary:
-  - url: https://uk.wikipedia.org/wiki/Києво-Могилянська_академія
-    title: Києво-Могилянська академія
-    notes: Educational institution context
-  - url: https://uk.wikipedia.org/wiki/Повстання_Хмельницького
-    title: Повстання Хмельницького
-    notes: Historical context
 content_outline:
 - section: Вступ — Митрополит бурхливої епохи
   words: 457
-  subsections:
+  points:
   - Косів між церквою та державою
   - Його роль у період Хмельниччини
   - Значення для церковної історії
 - section: Освіта та кар'єра до митрополитства
   words: 685
-  subsections:
+  points:
   - Походження та молодість
   - Навчання в європейських університетах
   - Викладацька діяльність
   - Зв'язок із Петром Могилою
 - section: Митрополит Київський
   words: 800
-  subsections:
+  points:
   - Обрання на кафедру 1647 року
   - Церковна реформа та управління
   - Розвиток освіти та друкарства
   - Будівельні проекти
 - section: Церква і Хмельницький
   words: 914
-  subsections:
+  points:
   - Позиція церкви щодо повстання
   - Відносини з гетьманом
   - Переяславська рада 1654 року
   - Церковний статус після Переяслава
 - section: Останні роки та суперечки
   words: 800
-  subsections:
+  points:
   - Конфлікт із московським патріархатом
   - Захист автономії Київської митрополії
   - Смерть та обставини
   - Спадщина в церковній традиції
 - section: Підсумок — Дипломат духу
   words: 344
-  subsections:
+  points:
   - Косів як будівничий церкви
   - Його роль у збереженні автономії
   - Актуальність його боротьби сьогодні
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - митрополит
-  - кафедра
-  - автономія
-  - патріархат
-  - друкарня
-  - академія
-  - єпископат
-  - ставропігія
-  - собор
-  - автокефалія
+  - митрополит (metropolitan)
+  - кафедра (see/cathedra)
+  - автономія (autonomy)
+  - патріархат (patriarchate)
+  - друкарня (printing house)
+  - академія (academy)
+  - єпископат (episcopate)
+  - ставропігія (stauropegia)
+  - собор (council)
+  - автокефалія (autocephaly)
   recommended:
-  - архімандрит
-  - лавра
-  - грамота
-  - синод
-  - церковнослов'янська
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - архімандрит (archimandrite)
+  - лавра (lavra)
+  - грамота (charter)
+  - синод (synod)
+  - церковнослов'янська (Church Slavonic)
+activity_hints:
+- type: reading
+  focus: Church documents from Kosiv's era
+  source: Adapted historical sources
+  items: 3 passages
+- type: quiz
+  focus: Facts about church-state relations in 17th century
+  items: 12+
+- type: match-up
+  focus: Key figures and their positions
+  items: 10+
+- type: essay-response
+  focus: How did Kosiv balance church autonomy and political realities?
+  word_target: 250
+  output: Analysis with specific examples
+- type: group-sort
+  focus: Polish period vs. Muscovite period church status
+  items: 12+
+- type: fill-in
+  focus: Church administrative terminology
+  items: 8+
+focus: biography
+pedagogy: CBI
+prerequisites:
+- c1-bio-08 (Iov Boretskyi - predecessor)
+- Understanding of 17th century geopolitics
 connects_to:
-  previous: c1-bio-08 (Iov Boretskyi - predecessor)
-  related:
-  - c1-bio-10 (Bohdan Khmelnytskyi - secular counterpart)
-  - c1-bio-11 (Yuriy Nemyrych - Treaty of Hadiach context)
-  - c1-bio-98 (Ivan Ohienko - later autocephaly struggle)
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-10 (Bohdan Khmelnytskyi - secular counterpart)
+- c1-bio-11 (Yuriy Nemyrych - Treaty of Hadiach context)
+- c1-bio-98 (Ivan Ohienko - later autocephaly struggle)
+objectives:
+- Проаналізувати дипломатичну стратегію Сильвестра Косіва
+- Зрозуміти роль православної церкви в подіях Хмельниччини
+- Вивчити лексику, пов'язану з церковною автономією та правом
+grammar:
+- Historical narrative register
+- Legal and ecclesiastical terminology
+- Rhetorical argumentation
+module_type: biography
+sources:
+- name: Сильвестр Косів (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Сильвестр_Косів
+  type: primary
+  notes: Biography, metropolitanate, relations with Khmelnytskyi
+- name: Києво-Могилянська академія
+  url: https://uk.wikipedia.org/wiki/Києво-Могилянська_академія
+  type: reference
+  notes: Educational institution context
+- name: Повстання Хмельницького
+  url: https://uk.wikipedia.org/wiki/Повстання_Хмельницького
+  type: reference
+  notes: Historical context
+immersion: 100% Ukrainian
+phase: C1-BIO

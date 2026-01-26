@@ -1,16 +1,9 @@
-module: wf-mastery
-level: a2
-sequence: 43
+module: a2-43
+level: A2
+slug: wf-mastery
 version: '2.0'
 title: 'Майстерня слів: Велика гра'
 subtitle: Word Formation Mastery
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can synthesize words from parts
-- Learner can predict meaning relative to root
-- Learner can analyze complex words
-- Learner can create new words using patterns
 content_outline:
 - section: 'Introduction: Word Building Mastery'
   words: 100
@@ -48,7 +41,7 @@ content_outline:
   - Word building challenges
   - Analysis competitions
 word_target: 900
-vocabulary:
+vocabulary_hints:
   required:
   - корінь (root)
   - префікс (prefix)
@@ -63,15 +56,33 @@ vocabulary:
   - первісний (original)
   - продуктивний (productive)
   - закінчення (ending)
-  forbidden: []
-activities:
-  types_required:
-  - word-building
-  - matching
-  - quiz
-  - analysis
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: word-building
+  focus: Create words from parts
+  items: 25
+- type: analysis
+  focus: Break down complex words
+  items: 20
+- type: matching
+  focus: Match roots to meanings
+  items: 15
+- type: quiz
+  focus: Word formation patterns
+  items: 20
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a2-42 (Word Formation V)
 connects_to:
 - a2-44 (Checkpoint Word Formation)
+objectives:
+- Learner can synthesize words from parts
+- Learner can predict meaning relative to root
+- Learner can analyze complex words
+- Learner can create new words using patterns
+grammar:
+- Word formation synthesis
+- Prefix-root-suffix analysis
+- Productive patterns
+register: розмовний
+phase: A2.4 [Word Formation]

@@ -1,22 +1,40 @@
-module: 91-c1-5-checkpoint
-level: c1
-sequence: 91
+module: c1-91
+level: C1
+slug: 91-c1-5-checkpoint
 version: '2.0'
 title: C1.5 Контрольна точка
 subtitle: C1.5 Checkpoint
+content_outline:
+- section: Вступ — C1.5 Контрольна точка
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Основний матеріал
+  words: 600
+  points:
+  - Теоретичні основи
+  - Приклади та ілюстрації
+  - Типові помилки та як їх уникати
+- section: Поглиблене вивчення
+  words: 600
+  points:
+  - Додаткові випадки
+  - Контекстуальне використання
+  - Стилістичні нюанси
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: checkpoint
 pedagogy: Assessment
 objectives:
 - Assess knowledge of Ukrainian folk culture and fine arts
 - Evaluate ability to analyze cultural phenomena at C1 level
 - Verify mastery of cultural and artistic terminology
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Comprehensive Review
+phase: C1.5 Folk Culture & Fine Arts

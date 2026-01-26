@@ -1,12 +1,8 @@
-version: '2.0'
 module: c1-104
-id: c1-104
-title: Аналіз поезії
-subtitle: Analysis of Poetry
+level: C1
 slug: 104-analiz-poezii
-phase: C1.6 Literature
-focus: literature
-pedagogy: Literary Analysis
+version: '2.0'
+id: c1-104
 duration: 120
 transliteration: none
 tags:
@@ -14,31 +10,5 @@ tags:
 - poetry
 - analysis
 - versification
-grammar:
-- Poetic syntax and rhythm
-- Stylistic devices in verse
-objectives:
-- Learner can identify poetic meters (ямб, хорей, дактиль).
-- Learner can analyze rhyme schemes and strophic structures.
-- Learner can conduct a comprehensive philological analysis of a poem.
-content_outline:
-- section: Вступ — Аналіз поезії
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-- section: Content Areas
-  words: 500
-  points:
-  - 'Версифікація: розмір, ритм, стопа'
-  - 'Рими: парна, перехресна, кільцева'
-  - 'Строфіка: катрен, терцина, сонет'
-  - 'Звукопис: алітерація, асонанс'
-  - 'Практичний аналіз: step-by-step method'
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

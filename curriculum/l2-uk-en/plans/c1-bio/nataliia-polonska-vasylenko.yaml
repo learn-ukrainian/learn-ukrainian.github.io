@@ -1,108 +1,109 @@
 module: nataliia-polonska-vasylenko
-level: c1-bio
-sequence: 54
+level: C1-BIO
+slug: nataliia-polonska-vasylenko
 version: '2.0'
 title: 'Наталія Полонська-Василенко: Історикиня'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Полонська-Василенко_Наталія_Дмитрівна
-    title: Наталія Полонська-Василенко (Wikipedia UA)
-    notes: Біографія, наукова діяльність, еміграція
-  secondary:
-  - url: https://www.history.org.ua
-    title: Інститут історії України НАНУ
-    notes: Наукова спадщина та оцінка
-  - url: https://uvan.org
-    title: Українська Вільна Академія Наук
-    notes: Діяльність в еміграції
 content_outline:
 - section: Вступ — Жінка, яка написала історію України
   words: 400
-  subsections:
+  points:
   - Полонська-Василенко як видатна історикиня XX століття
   - Значення її двотомної «Історії України»
   - Доля вченої в умовах двох тоталітаризмів
 - section: Ранні роки та освіта (1884-1917)
   words: 600
-  subsections:
+  points:
   - Народження в Харкові в інтелігентній родині
   - Навчання в Петербурзі та Києві
   - Формування як історика-медієвіста
   - Вплив київської історичної школи
 - section: Наукова кар'єра в Україні (1917-1943)
   words: 800
-  subsections:
+  points:
   - Робота в Українській Академії Наук
   - Дослідження Запорозької Січі та Південної України
   - Репресії проти українських істориків у 1930-х
   - Виживання в часи терору
 - section: Друга світова війна та еміграція (1943-1947)
   words: 700
-  subsections:
+  points:
   - Виїзд з України під час німецької окупації
   - Табори для переміщених осіб у Німеччині
   - Продовження наукової роботи в екстремальних умовах
   - Заснування історичних установ в еміграції
 - section: Життя на Заході (1947-1973)
   words: 800
-  subsections:
+  points:
   - Переїзд до Мюнхена
   - Робота в Українському Вільному Університеті
   - Створення «Історії України» в двох томах
   - Співпраця з діаспорними науковими інституціями
 - section: Наукова спадщина та значення
   words: 700
-  subsections:
+  points:
   - Методологічний внесок у українську історіографію
   - Роль у збереженні національної пам'яті
   - Визнання після незалежності України
   - Вплив на сучасних українських істориків
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - історіографія
-  - медієвістика
-  - архівознавство
-  - джерелознавство
-  - еміграція
-  - переміщена особа
-  - академія наук
-  - історична школа
-  - тоталітаризм
-  - наукова спадщина
+  - історіографія (historiography)
+  - медієвістика (medieval studies)
+  - архівознавство (archival science)
+  - джерелознавство (source studies)
+  - еміграція (emigration)
+  - переміщена особа (displaced person)
+  - академія наук (academy of sciences)
+  - історична школа (historical school)
+  - тоталітаризм (totalitarianism)
+  - наукова спадщина (scholarly legacy)
   recommended:
-  - двотомник
-  - Запорозька Січ
-  - репресії
-  - діаспора
-  - методологія
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - двотомник (two-volume work)
+  - Запорозька Січ (Zaporozhian Sich)
+  - репресії (repressions)
+  - діаспора (diaspora)
+  - методологія (methodology)
+activity_hints:
+- type: reading
+  focus: Наукова біографія
+  source: Уривки з «Історії України»
+  items: 3 passages
+- type: quiz
+  focus: Етапи життя та наукові праці
+  items: 12+
+- type: match-up
+  focus: Праці та їхні теми
+  items: 10+
+- type: essay-response
+  focus: Як еміграція впливає на наукову творчість?
+  word_target: 300
+  output: Аналітичне есе
+- type: group-sort
+  focus: Київський період vs еміграційний період
+  items: 12+
+- type: fill-in
+  focus: Термінологія історичної науки
+  items: 10+
+focus: biography
+prerequisites:
+- c1-bio-35 (Михайло Грушевський)
 connects_to:
-  previous: c1-bio-35 (Михайло Грушевський)
-  related:
-  - c1-bio-87 (Ярослав Грицак)
-  - c1-bio-22 (Михайло Драгоманов)
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-87 (Ярослав Грицак)
+- c1-bio-22 (Михайло Драгоманов)
+module_type: biography
+sources:
+- name: Наталія Полонська-Василенко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Полонська-Василенко_Наталія_Дмитрівна
+  type: primary
+  notes: Біографія, наукова діяльність, еміграція
+- name: Інститут історії України НАНУ
+  url: https://www.history.org.ua
+  type: reference
+  notes: Наукова спадщина та оцінка
+- name: Українська Вільна Академія Наук
+  url: https://uvan.org
+  type: reference
+  notes: Діяльність в еміграції
+immersion: 100% Ukrainian
+phase: C1-BIO

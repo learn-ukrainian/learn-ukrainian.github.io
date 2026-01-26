@@ -1,16 +1,9 @@
-module: reported-questions-commands
-level: b1
-sequence: 40
+module: b1-40
+level: B1
+slug: reported-questions-commands
 version: '2.0'
 title: Непрямі питання та накази
 subtitle: Reported Questions & Commands
-focus: grammar
-pedagogy: TTT
-objectives:
-- Learner can report questions using indirect speech
-- Learner can report commands and requests using щоб
-- Learner can choose appropriate structures for different speech acts
-- Learner can transform all speech types
 content_outline:
 - section: 'Introduction: Beyond Statements'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Report questions and commands
   - Mixed transformation
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - питання (question)
   - наказ (command)
@@ -63,15 +56,33 @@ vocabulary:
   - вимагати (to demand)
   - умовляти (to persuade)
   - заборонити (to forbid)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - error-correction
-  - writing
-  - transformation
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: transformation
+  focus: Questions and commands to indirect
+  items: 25
+- type: fill-in
+  focus: Complete reported questions/commands
+  items: 20
+- type: error-correction
+  focus: Fix indirect speech errors
+  items: 15
+- type: writing
+  focus: Report conversations
+  items: 10
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-39 (Reported Statements)
 connects_to:
 - b1-41 (Checkpoint Complex Sentences 2)
+objectives:
+- Learner can report questions using indirect speech
+- Learner can report commands and requests using щоб
+- Learner can choose appropriate structures for different speech acts
+- Learner can transform all speech types
+grammar:
+- Reported questions with чи, що, хто, де, коли
+- Reported commands with щоб + past form
+- Reported requests with просити, щоб
+register: розмовний
+phase: B1.3b [Complex Sentences]

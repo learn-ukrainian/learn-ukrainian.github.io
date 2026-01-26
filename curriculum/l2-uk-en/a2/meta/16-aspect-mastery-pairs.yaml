@@ -1,14 +1,11 @@
-id: a2-16
-title: Aspect Mastery — Pairs
-subtitle: Automating Perfective and Imperfective
+module: 16-aspect-mastery-pairs
+level: A2
 slug: 16-aspect-mastery-pairs
-module_type: grammar
-word_target: 1000
-immersion: 40-50% Ukrainian
 version: '2.0'
-phase: A2.2
-focus: grammar
-pedagogy: PPP
+id: a2-16
+naturalness:
+  score: 9
+  status: PASS
 duration: 60
 transliteration: none
 tags:
@@ -17,91 +14,5 @@ tags:
 - aspect
 - practice
 - drill
-grammar:
-- identifying aspect pairs
-- choosing aspect in context
-- common aspect patterns
-- aspect in tenses review
-objectives:
-- Learner can correctly pair imperfective and perfective verbs
-- Learner can choose the correct aspect based on context clues
-- Learner can automate the use of common aspect pairs
-- Learner can identify aspect patterns (prefixes, suffixes)
-sources:
-- name: Ukrainian State Standard 2024 - Aspect Pairs
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Required aspect pairs for A2 mastery
-- name: Ukrainian Verb Reference
-  url: https://uk.wiktionary.org/
-  type: reference
-  notes: Complete aspect pair listings
-content_outline:
-- section: Introduction / Вступ
-  words: 200
-  points:
-  - Theoretical review vs Practical drilling
-  - Decision tree for aspect choice
-- section: Presentation / Презентація
-  words: 600
-  points:
-  - The Core 30 Pairs (Tiers 1, 2, 3)
-  - Drill patterns (Past/Future context)
-  - Common pitfalls and how to avoid them
-- section: Practice / Практика
-  words: 150
-  points:
-  - Rapid fire drills
-  - Narrative sequencing practice
-- section: Dialogues / Діалоги
-  words: 50
-  points:
-  - Peer review dialogue on aspect choices
-vocabulary_hints:
-  required:
-  - готувати/приготувати (to cook)
-  - мити/помити (to wash)
-  - прибирати/прибрати (to clean up)
-  - дзвонити/подзвонити (to call)
-  - питати/запитати (to ask)
-  - відповідати/відповісти (to answer)
-  - платити/заплатити (to pay)
-  - купувати/купити (to buy)
-  - продавати/продати (to sell)
-  - знаходити/знайти (to find)
-  - губити/загубити (to lose)
-  - пам'ятати/запам'ятати (to remember)
-  - забувати/забути (to forget)
-  - малювати/намалювати (to draw)
-  - будувати/побудувати (to build)
-  recommended:
-  - ремонтувати/відремонтувати (to repair)
-  - чекати/зачекати (to wait)
-  - пробувати/спробувати (to try)
-  - показувати/показати (to show)
-  - допомагати/допомогти (to help)
-activity_hints:
-- type: match-up
-  focus: Speed match - rapid pair matching
-  items: 20+
-- type: fill-in
-  focus: Transform present to future perfective
-  items: 15+
-- type: quiz
-  focus: Aspect selection speed quiz
-  items: 15+
-- type: fill-in
-  focus: Complete dialogues with correct aspect
-  items: 12+
-- type: quiz
-  focus: Identify aspect pair relationship
-  items: 10+
-prerequisites:
-- a2-12 through a2-15 (all aspect modules)
-connects_to:
-- a2-17 (Possessive Sviy)
-- a2-22 (If I Were)
-- a2-25 (Checkpoint - Aspect & Comparison)
-naturalness:
-  score: 9
-  status: PASS
+build:
+  last_modified: '2026-01-26'

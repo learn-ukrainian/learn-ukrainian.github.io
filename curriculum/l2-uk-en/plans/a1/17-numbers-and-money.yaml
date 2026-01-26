@@ -1,16 +1,9 @@
-module: numbers-and-money
-level: a1
-sequence: 17
+module: a1-17
+level: A1
+slug: numbers-and-money
 version: '2.0'
 title: Numbers & Money
 subtitle: Counting and Shopping in Ukraine
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can count from 0-100 in Ukrainian
-- Learner can ask and answer 'How much does it cost?'
-- Learner can handle basic shopping transactions
-- Learner can use numbers with genitive plural forms
 content_outline:
 - section: 'Introduction: Numbers in Daily Life'
   words: 100
@@ -49,7 +42,7 @@ content_outline:
   - Calculate totals
   - Ask about prices
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - один (one)
   - два (two)
@@ -66,16 +59,34 @@ vocabulary:
   - дорого (expensive)
   - дешево (cheap)
   - здача (change)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - role-play
-  - listening
-  - number-drill
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: number-drill
+  focus: Counting practice
+  items: 30
+- type: fill-in
+  focus: Complete with correct number form
+  items: 20
+- type: listening
+  focus: Identify numbers heard
+  items: 15
+- type: role-play
+  focus: Shopping transactions
+  items: 6
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-16 (The Genitive I)
 connects_to:
 - a1-18 (Food and Shopping)
 - a1-23 (What Time Is It)
+objectives:
+- Learner can count from 0-100 in Ukrainian
+- Learner can ask and answer 'How much does it cost?'
+- Learner can handle basic shopping transactions
+- Learner can use numbers with genitive plural forms
+grammar:
+- Cardinals 0-100
+- Number agreement (1=nom, 2-4=nom.pl, 5+=gen.pl)
+- Genitive plural with numbers
+register: розмовний
+phase: A1.2 [Navigation]

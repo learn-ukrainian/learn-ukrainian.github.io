@@ -1,10 +1,7 @@
 module: c1-37
-title: 'Іронія та сарказм: Тонкощі змісту'
-subtitle: 'Irony & Sarcasm: Nuances of Meaning'
+level: C1
+slug: 37-irony-sarcasm
 version: '1.0'
-phase: C1.4 Advanced Stylistics & Rhetoric
-focus: style
-pedagogy: Immersion
 duration: 90
 transliteration: none
 tags:
@@ -13,40 +10,6 @@ tags:
 - irony
 - sarcasm
 - humor
-grammar:
-- Verbal vs. situational irony
-- Markers of sarcasm (intonation, context)
-- Punctuation in ironic statements
-objectives:
-- Distinguish between verbal irony, situational irony, and sarcasm
-- Identify markers of irony in written and spoken texts
-- Use irony appropriately in different registers
 vocabulary_count: 25
-slug: 37-irony-sarcasm
-content_outline:
-- section: Вступ — Тонкощі змісту
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-  - Роль у системі української мови
-- section: Irony Markers
-  words: 500
-  points:
-  - Intonation (in speech)
-  - Context contradiction
-  - Exaggeration signals
-  - Quotation marks for "scare quotes"
-- section: Types
-  words: 500
-  points:
-  - 'Вербальна іронія: Saying opposite of meaning'
-  - 'Ситуативна іронія: Unexpected outcomes'
-  - 'Сарказм: Bitter, cutting irony'
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

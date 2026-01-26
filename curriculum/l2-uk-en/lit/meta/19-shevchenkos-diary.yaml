@@ -1,106 +1,11 @@
-id: lit-19
-title: Щоденник ("Журнал") Шевченка
-subtitle: 'Shevchenko''s Diary: The Inner World'
+module: shevchenkos-diary
+level: LIT
 slug: shevchenkos-diary
-module_type: literature
-word_target: 4500
-immersion: 100% Ukrainian
-sources:
-- name: Щоденник Шевченка — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=44
-  type: primary
-  notes: Щоденник 1857-1858 років
-- name: Аналіз "Журналу"
-  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=44
-  type: secondary
-  notes: Літературознавчий аналіз
-- name: Заслання Шевченка
-  url: https://uk.wikipedia.org/wiki/Заслання_Тараса_Шевченка
-  type: reference
-  notes: Історичний контекст
-content_outline:
-- section: Вступ — Публічний vs приватний Шевченко
-  words: 500
-  points:
-  - Кобзар vs Журнал
-  - Чому щоденник написаний російською
-  - Жанр щоденника в літературі
-- section: Контекст написання (1857-1858)
-  words: 700
-  points:
-  - Кінець заслання
-  - Шлях з Казахстану до Петербурга
-  - Нове життя після неволі
-- section: Внутрішній світ поета
-  words: 800
-  points:
-  - Рефлексії про мистецтво
-  - Погляди на театр і літературу
-  - Технічні інтереси (фотографія)
-- section: Мовний аналіз
-  words: 600
-  points:
-  - Розмовна російська XIX століття
-  - Інтроспективна лексика
-  - Порівняння з поетичною мовою
-- section: Психологічний портрет
-  words: 600
-  points:
-  - Самотність і пошук кохання
-  - Стосунки з друзями
-  - Здоров'я і передчуття смерті
-- section: Підсумок — Людина за маскою пророка
-  words: 400
-  points:
-  - Щоденник як документ епохи
-  - Демістифікація генія
-  - Перехід до рецепції
-vocabulary_hints:
-  required:
-  - щоденник (diary)
-  - журнал (journal)
-  - рефлексія (reflection)
-  - інтроспекція (introspection)
-  - заслання (exile)
-  - неволя (captivity)
-  - демістифікація (demystification)
-  - психологічний портрет (psychological portrait)
-  - приватний (private)
-  - публічний (public)
-  recommended:
-  - фотографія (photography)
-  - самотність (loneliness)
-  - передчуття (premonition)
-  - стосунки (relationships)
-  - епоха (era)
-activity_hints:
-- type: reading
-  focus: Уривки з "Журналу" Шевченка
-  source: UkrLib tid=44
-  items: 5+
-- type: quiz
-  focus: Факти з щоденника
-  items: 15+
-- type: match-up
-  focus: Дата → подія з щоденника
-  items: 12+
-- type: essay-response
-  focus: Контраст між "Кобзарем" і "Журналом"
-  word_target: 300
-  output: Компаративне есе
-- type: cloze
-  focus: Цитати з щоденника
-  items: 12+
-prerequisites:
-- lit-11 to lit-18 (all Shevchenko modules)
-- Understanding of diary genre
-connects_to:
-- lit-20 (Cult of Shevchenko — рецепція)
-- lit-17 (The Artist — автобіографія)
 version: '1.0'
-phase: LIT.3 The Prophet (Taras Shevchenko)
-focus: literature
-pedagogy: Seminar
+id: lit-19
+naturalness:
+  score: 10
+  status: PASS
 duration: 120
 transliteration: none
 tags:
@@ -108,13 +13,5 @@ tags:
 - shevchenko
 - diary
 - psychology
-objectives:
-- Understand the psychological shift in Shevchenko's diary from exile to freedom.
-- Analyze the contrast between his public image ("prophet") and private self ("human").
-- Examine his intellectual breadth (arts, technology, literature) and emotional depth.
-grammar:
-- Introspective language
-- Conversational Russian of 19th c.
-naturalness:
-  score: 10
-  status: PASS
+build:
+  last_modified: '2026-01-26'

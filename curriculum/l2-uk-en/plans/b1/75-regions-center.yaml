@@ -1,16 +1,9 @@
-module: regions-center
-level: b1
-sequence: 75
+module: b1-75
+level: B1
+slug: regions-center
 version: '2.0'
 title: 'Українські регіони: Центр'
 subtitle: Central Ukraine - Kyiv, Poltava, and Cossack Heritage
-focus: culture
-pedagogy: CBI
-objectives:
-- Learner can discuss Central Ukraine's regions and historical significance
-- Learner can understand authentic texts about Kyiv, Poltava, and Cherkasy
-- Learner can use regional vocabulary to describe Central Ukrainian culture
-- Learner can explain the connection between Central Ukraine and Cossack heritage
 content_outline:
 - section: 'Introduction: Central Ukraine'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Discuss Central Ukraine
   - Explore Cossack connections
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - Київ (Kyiv)
   - Полтава (Poltava)
@@ -63,15 +56,33 @@ vocabulary:
   - гетьман (hetman)
   - Дніпро (Dnipro)
   - літературний (literary)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - reading
-  - discussion
-  - matching
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: reading
+  focus: Authentic texts about Central Ukraine
+  items: 15
+- type: matching
+  focus: Match regions to heritage
+  items: 20
+- type: fill-in
+  focus: Complete historical descriptions
+  items: 15
+- type: discussion
+  focus: Discuss Cossack heritage
+  items: 10
+focus: culture
+pedagogy: CBI
+prerequisites:
+- b1-74 (Regions South)
 connects_to:
 - b1-76 (Ukrainian Music Today)
+objectives:
+- Learner can discuss Central Ukraine's regions and historical significance
+- Learner can understand authentic texts about Kyiv, Poltava, and Cherkasy
+- Learner can use regional vocabulary to describe Central Ukrainian culture
+- Learner can explain the connection between Central Ukraine and Cossack heritage
+grammar:
+- Reading comprehension strategies
+- Cultural vocabulary in context
+- Historical vocabulary patterns
+register: розмовний
+phase: B1.7 [Contemporary Ukraine]

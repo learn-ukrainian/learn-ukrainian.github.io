@@ -1,21 +1,8 @@
 module: 04-analysis-vocabulary
-level: c1
-sequence: 4
+level: C1
+slug: 04-analysis-vocabulary
 version: '2.0'
 title: Словник аналізу та критики
-focus: vocabulary
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Академічний тлумачний словник української мови
-  url: https://sum.in.ua/
-  type: reference
-  notes: Definitions of analytical terms
-- name: Ukrainian Academic Writing Corpus
-  url: https://mova.info/
-  type: secondary
-  notes: Usage patterns in academic texts
 content_outline:
 - section: Вступ — Мова критичного мислення
   words: 400
@@ -60,7 +47,7 @@ content_outline:
   - Варіювання лексики
   - Точність формулювань
 word_target: 4000
-vocabulary:
+vocabulary_hints:
   required:
   - аналіз (analysis)
   - синтез (synthesis)
@@ -78,19 +65,42 @@ vocabulary:
   - комплексний (complex)
   - системний (systematic)
   - релевантний (relevant)
-  forbidden: []
-activities:
-  types_required:
-  - group-sort
-  - quiz
-  - essay-response
-  - cloze
-  - fill-in
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: match-up
+  focus: Analysis noun to definition
+  items: 15+
+- type: quiz
+  focus: Choose appropriate adjective for context
+  items: 15+
+- type: fill-in
+  focus: Complete analysis sentences with vocabulary
+  items: 12+
+- type: group-sort
+  focus: Adjectives by positive/neutral/negative connotation
+  items: 15+
+- type: cloze
+  focus: Academic review passage completion
+  items: 12+
+- type: essay-response
+  focus: Write critical paragraph using analysis vocabulary
+  word_target: 150
+focus: vocabulary
+prerequisites:
+- c1-02 (Academic Style Markers)
+- c1-03 (Research Verbs)
 connects_to:
 - c1-05 (Logical Connectors)
 - c1-11 (Summary & Paraphrase)
 - c1-14 (Literature Review)
+module_type: vocabulary
+sources:
+- name: Академічний тлумачний словник української мови
+  url: https://sum.in.ua/
+  type: reference
+  notes: Definitions of analytical terms
+- name: Ukrainian Academic Writing Corpus
+  url: https://mova.info/
+  type: secondary
+  notes: Usage patterns in academic texts
+immersion: 100% Ukrainian
+phase: C1.1 Academic Ukrainian

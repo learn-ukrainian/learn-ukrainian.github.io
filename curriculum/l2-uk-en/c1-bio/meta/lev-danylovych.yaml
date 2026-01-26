@@ -1,15 +1,11 @@
 module: c1-bio-lev-danylovych
-id: c1-bio-lev-danylovych
-title: 'Лев Данилович: Будівничий Львова'
-subtitle: 'Lev Danylovych: Builder of Lviv'
+level: C1-BIO
 slug: lev-danylovych
-module_type: biography
-word_target: 4000
-immersion: 100% Ukrainian
 version: '2.0'
-phase: C1-BIO
-focus: biography
-pedagogy: seminar
+id: c1-bio-lev-danylovych
+naturalness:
+  score: 10
+  status: PASS
 duration: 120
 transliteration: none
 tags:
@@ -18,120 +14,6 @@ tags:
 - medieval
 - galicia-volhynia
 - city-building
-grammar:
-- Historical narrative register
-- Urban and administrative vocabulary
-- Comparative constructions
-objectives:
-- Analyze Lev's role in transforming Lviv into a major European city
-- Evaluate the continuation of Galicia-Volhynia under Mongol suzerainty
-- Master vocabulary related to urban development and territorial expansion
 vocabulary_count: 24
-sources:
-- name: Лев Данилович (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Лев_Данилович
-  type: primary
-  notes: Biography, reign, capital transfer to Lviv
-- name: Львів
-  url: https://uk.wikipedia.org/wiki/Історія_Львова
-  type: primary
-  notes: History of the city
-- name: Галицько-Волинське князівство
-  url: https://uk.wikipedia.org/wiki/Галицько-Волинське_князівство
-  type: reference
-  notes: Political context
-content_outline:
-- section: Вступ — Князь, що дав місту своє ім'я
-  words: 432
-  points:
-  - Львів як спадщина Лева Даниловича
-  - Значення перенесення столиці
-  - Продовження династії Романовичів
-- section: Молодість та прихід до влади
-  words: 540
-  points:
-  - Народження як син Данила Галицького
-  - Князювання в Белзі (1245-1264)
-  - Успадкування Галича після смерті батька
-- section: Львів — нова столиця
-  words: 756
-  points:
-  - Перенесення столиці з Галича (1272)
-  - Розбудова міста
-  - Стратегічне розташування
-  - Торговельне значення
-- section: Територіальна експансія
-  words: 756
-  points:
-  - Приєднання частини Закарпаття (1280)
-  - Захоплення Люблінської землі (1292)
-  - Відносини з Польщею та Угорщиною
-  - Союз із Тевтонським орденом
-- section: Відносини з Ордою
-  words: 648
-  points:
-  - Визнання монгольської зверхності
-  - Участь у монгольських походах
-  - Баланс між підкоренням та автономією
-  - Захист православної церкви
-- section: Внутрішня політика
-  words: 540
-  points:
-  - Відносини з боярством
-  - Німецькі колоністи та Магдебурзьке право
-  - Культурне життя при дворі
-- section: Підсумок — Князь-будівничий
-  words: 328
-  points:
-  - Оцінка правління Лева
-  - Львів як його головна спадщина
-  - Роль у збереженні державності
-vocabulary_hints:
-  required:
-  - столиця (capital)
-  - перенесення (transfer/relocation)
-  - розбудова (development/construction)
-  - експансія (expansion)
-  - зверхність (suzerainty)
-  - автономія (autonomy)
-  - колоніст (colonist)
-  - торгівля (trade)
-  - фортифікація (fortification)
-  - спадкоємець (heir)
-  recommended:
-  - магдебурзьке право (Magdeburg rights)
-  - ринок (market square)
-  - цех (guild)
-  - стратегічний (strategic)
-  - васальний (vassal)
-activity_hints:
-- type: reading
-  focus: Chronicle descriptions of Lviv's founding and growth
-  source: Галицько-Волинський літопис (adapted)
-  items: 3 passages
-- type: quiz
-  focus: Key events in Lev's reign
-  items: 12+
-- type: match-up
-  focus: Cities and their significance in Galicia-Volhynia
-  items: 10+
-- type: essay-response
-  focus: Why did Lev move the capital to Lviv?
-  word_target: 250
-  output: Strategic analysis
-- type: group-sort
-  focus: Military vs. economic vs. cultural achievements
-  items: 12+
-- type: fill-in
-  focus: Key dates and territorial acquisitions
-  items: 8+
-prerequisites:
-- c1-bio-danylo-halytskyi (Danylo - father)
-- Understanding of post-Mongol political situation
-connects_to:
-- c1-bio-danylo-halytskyi (Danylo - father)
-- c1-bio-yuriy-lvovych (Yuriy - son)
-- c1-bio-06 (Mykhailo Chernihivskyi - earlier Mongol era)
-naturalness:
-  score: 10
-  status: PASS
+build:
+  last_modified: '2026-01-26'

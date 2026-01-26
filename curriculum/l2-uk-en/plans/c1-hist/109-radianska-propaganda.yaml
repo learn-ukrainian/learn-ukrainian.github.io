@@ -1,0 +1,109 @@
+module: radianska-propaganda
+level: C1-HIST
+slug: radianska-propaganda
+version: '2.0'
+title: 'Радянська пропаганда: Механізми'
+content_outline:
+- section: Вступ — Машина переписування
+  words: 400
+  points:
+  - Радянська пропаганда — система
+  - Не брехня, а реальність
+  - Механізми впливу
+  - Структура модуля
+- section: «Дружба народів»
+  words: 700
+  points:
+  - Ідеологема — як працювала
+  - Приховування конфліктів
+  - «Старший брат»
+  - Ієрархія всередині «рівності»
+- section: Заборонені теми
+  words: 600
+  points:
+  - Голодомор — табу
+  - Депортації — мовчання
+  - УПА — тільки «бандерівці»
+  - Що не можна було говорити
+- section: Переписування історії
+  words: 600
+  points:
+  - Підручники — як змінювались
+  - «Воссоєдиненіє» 1654
+  - Київська Русь — «спільна колиска»
+  - Фальсифікація як система
+- section: Контроль над мовою
+  words: 500
+  points:
+  - Двомовність — формальна рівність
+  - Престиж мов
+  - «Мова міжнаціонального спілкування»
+  - Мовна русифікація
+- section: Спадок
+  words: 400
+  points:
+  - Що залишилось у свідомості
+  - Ностальгія за СРСР
+  - Як це використовує Росія
+  - Деконструкція спадку
+- section: Підсумок
+  words: 300
+  points:
+  - Пропаганда — не минуле
+  - Інструменти живуть далі
+  - Перехід до сучасної дезінформації
+word_target: 3500
+vocabulary_hints:
+  required:
+  - пропаганда (propaganda)
+  - «дружба народів» (friendship of peoples)
+  - ідеологема (ideologeme)
+  - заборонена тема (forbidden topic)
+  - табу (taboo)
+  - фальсифікація (falsification)
+  - переписування історії (rewriting history)
+  - «старший брат» (elder brother)
+  - «воссоєдиненіє» (reunification)
+  - двомовність (bilingualism)
+  recommended:
+  - агітпроп (agitprop)
+  - ідеологічний контроль (ideological control)
+  - цензура (censorship)
+  - «буржуазний націоналізм» (bourgeois nationalism)
+  - спадок (legacy)
+activity_hints:
+- type: mechanism-analysis
+  focus: How "friendship of peoples" ideology worked
+  output: Mechanism breakdown
+- type: text-comparison
+  focus: Soviet textbooks — how history was rewritten
+  output: Textbook analysis
+- type: forbidden-topics
+  focus: What couldn't be discussed — mapping silences
+  output: Taboo mapping
+- type: legacy-analysis
+  focus: Soviet propaganda tropes that survive today
+  output: Legacy identification
+- type: essay-response
+  focus: Чи 'дружба народів' була рівною?
+  word_target: 400
+  model_answer: Required
+focus: history
+prerequisites:
+- c1-hist-108 (Little Russia myth)
+- c1-hist-45-51 (Holodomor studies)
+connects_to:
+- c1-hist-110 (Modern disinformation)
+- c1-hist-113 (Information war synthesis)
+module_type: thematic
+sources:
+- name: Пропаганда в СРСР (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Пропаганда_в_СРСР
+  type: reference
+  notes: Soviet propaganda
+- name: «Дружба народів» (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Дружба_народів_(ідеологема)
+  type: reference
+  notes: Friendship of peoples ideology
+immersion: 100% Ukrainian
+phase: C1-HIST.1 [Historiography]

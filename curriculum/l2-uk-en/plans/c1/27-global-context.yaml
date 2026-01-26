@@ -1,21 +1,8 @@
 module: 27-global-context
-level: c1
-sequence: 27
+level: C1
+slug: 27-global-context
 version: '2.0'
 title: 'Глобальний контекст: Україна, ЄС та НАТО'
-focus: communication
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Європейська правда
-  url: https://www.eurointegration.com.ua/
-  type: reference
-  notes: EU integration news and analysis
-- name: МЗС України
-  url: https://mfa.gov.ua/
-  type: primary
-  notes: Official foreign policy information
 content_outline:
 - section: Вступ — Україна у світовому контексті
   words: 400
@@ -60,7 +47,7 @@ content_outline:
   - Дискусія про євроінтеграцію
   - Написання аналітичної записки
 word_target: 4000
-vocabulary:
+vocabulary_hints:
   required:
   - Європейський Союз (European Union)
   - НАТО (NATO)
@@ -78,19 +65,42 @@ vocabulary:
   - гармонізація (harmonization)
   - ратифікація (ratification)
   - безвіз (visa-free regime)
-  forbidden: []
-activities:
-  types_required:
-  - group-sort
-  - quiz
-  - essay-response
-  - cloze
-  - fill-in
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: EU/NATO integration process
+  items: 15+
+- type: match-up
+  focus: Organization → function
+  items: 15+
+- type: fill-in
+  focus: Diplomatic document phrases
+  items: 12+
+- type: cloze
+  focus: International relations vocabulary
+  items: 10+
+- type: group-sort
+  focus: Organizations by type
+  items: 12+
+- type: essay-response
+  focus: Ukraine's European path
+  word_target: 200
+focus: communication
+prerequisites:
+- c1-25 (Political System)
+- c1-26 (Media Landscape)
 connects_to:
 - c1-28 (Dialects)
 - c1-33 (Case Studies)
 - c1-35 (C1.2 Checkpoint)
+module_type: cultural
+sources:
+- name: Європейська правда
+  url: https://www.eurointegration.com.ua/
+  type: reference
+  notes: EU integration news and analysis
+- name: МЗС України
+  url: https://mfa.gov.ua/
+  type: primary
+  notes: Official foreign policy information
+immersion: 100% Ukrainian
+phase: C1.2 Professional Communication

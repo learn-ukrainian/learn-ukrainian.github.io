@@ -1,94 +1,13 @@
 module: b1-84
-id: b1-84
+level: B1
 slug: winter-sports
-title: "Зимові види спорту"
-subtitle: "Skiing and Snowboarding in Ukraine"
 version: '2.0'
-phase: "B1.7 [Contemporary Ukraine]"
-focus: culture
-pedagogy: CBI
-register: розмовний
-duration: 90
-transliteration: none
-objectives:
-  - "Learner can discuss winter sports and ski resorts in Ukrainian"
-  - "Learner can understand slope maps and weather conditions"
-  - "Learner can use vocabulary for skiing equipment"
-  - "Learner can plan a winter vacation to Bukovel or Drahobrat"
-grammar:
-  - "Winter sports vocabulary"
-  - "Weather and conditions"
-  - "Resort and booking language"
-word_target: 1200
-content_outline:
-  - section: "Introduction: Winter Sports"
-    words: 150
-    points:
-      - "Winter sports culture"
-      - "Ukrainian ski resorts"
-      - "Season overview"
-  - section: "Skiing Fundamentals"
-    words: 250
-    points:
-      - "Skiing vocabulary"
-      - "Equipment rental"
-      - "Skill levels"
-  - section: "Snowboarding"
-    words: 250
-    points:
-      - "Snowboard vocabulary"
-      - "Freestyle culture"
-      - "Equipment differences"
-  - section: "Ukrainian Ski Resorts"
-    words: 250
-    points:
-      - "Bukovel, Drahobrat"
-      - "Resort facilities"
-      - "Booking and passes"
-  - section: "Conditions and Safety"
-    words: 200
-    points:
-      - "Snow conditions"
-      - "Avalanche awareness"
-      - "Safety equipment"
-  - section: "Practice: Winter Trip Planning"
-    words: 100
-    points:
-      - "Plan a ski trip"
-      - "Compare resorts"
-vocabulary_hints:
-  required:
-    - лижі (skis)
-    - сноуборд (snowboard)
-    - схил (slope)
-    - підйомник (ski lift)
-    - сніг (snow)
-    - курорт (resort)
-    - траса (trail/run)
-    - інструктор (instructor)
-  recommended:
-    - Буковель (Bukovel)
-    - Драгобрат (Drahobrat)
-    - ски-пас (ski pass)
-    - лавина (avalanche)
-activity_hints:
-  - type: reading
-    focus: "Resort descriptions and snow reports"
-    items: 15
-  - type: matching
-    focus: "Match equipment to sports"
-    items: 20
-  - type: fill-in
-    focus: "Complete booking dialogues"
-    items: 15
-  - type: discussion
-    focus: "Plan winter vacations"
-    items: 10
-prerequisites:
-  - b1-83 (Cycling and Water Sports)
-connects_to:
-  - b1-85 (Ukrainian Cuisine)
+id: b1-84
 naturalness:
   score: 9
   status: PASS
-  justification: "Practical vocabulary for winter sports enthusiasts"
+  justification: Practical vocabulary for winter sports enthusiasts
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-26'

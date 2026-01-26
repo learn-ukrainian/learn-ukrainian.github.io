@@ -1,71 +1,52 @@
 module: yuriy-kondratiuk
-level: c1-bio
-sequence: 118
+level: C1-BIO
+slug: yuriy-kondratiuk
 version: '2.0'
 title: 'Юрій Кондратюк: Геній, що розрахував шлях до Місяця'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Кондратюк_Юрій_Васильович
-    title: Юрій Кондратюк (Wikipedia UA)
-    notes: Biography, space calculations, lunar orbit rendezvous
-  secondary:
-  - url: https://uk.wikipedia.org/wiki/Траса_Кондратюка
-    title: Траса Кондратюка
-    notes: His lunar trajectory
-  - url: https://www.nasa.gov/
-    title: NASA Apollo acknowledgment
-    notes: American recognition of his work
 content_outline:
 - section: Вступ — Український геній за чужим ім'ям
   words: 457
-  subsections:
+  points:
   - Кондратюк як теоретик місячного польоту
   - Подвійна ідентичність заради виживання
   - '"Траса Кондратюка" у програмі Аполлон'
 - section: Справжнє ім'я — Олександр Шаргей
   words: 685
-  subsections:
+  points:
   - Народження в Полтаві (1897)
   - Навчання в Київському політехнічному
   - Перша світова війна та революція
   - Прийняття чужої ідентичності
 - section: Теоретик космосу
   words: 800
-  subsections:
+  points:
   - '"Завоювання міжпланетних просторів" (1929)'
   - Розрахунки місячної траєкторії
   - Ідея гравітаційного маневру
   - Робота без фінансування та підтримки
 - section: Інженер-практик
   words: 685
-  subsections:
+  points:
   - Будівництво елеваторів у Сибіру
   - Арешт за "шкідництво"
   - Робота на вітроелектростанціях
   - Пропозиція Корольову працювати разом
 - section: Загибель і забуття
   words: 571
-  subsections:
+  points:
   - Друга світова війна
   - Загибель у 1942 році
   - Десятиліття забуття
   - Відкриття його праць
 - section: Визнання після смерті
   words: 802
-  subsections:
+  points:
   - NASA використовує його траєкторію (1960-ті)
   - Нагорода ім. Кондратюка від NASA
   - Визнання в незалежній Україні
   - Кондратюк як символ українського генія
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
   - траєкторія
   - орбіта
@@ -83,27 +64,49 @@ vocabulary:
   - паливо
   - орбітальний
   - траса
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+activity_hints:
+- type: reading
+  focus: Excerpts from "Завоювання міжпланетних просторів"
+  source: Scientific texts
+  items: 3 passages
+- type: quiz
+  focus: Kondratiuk's biography and contributions
+  items: 12+
+- type: match-up
+  focus: Scientific concepts and their applications
+  items: 10+
+- type: essay-response
+  focus: How did Kondratiuk's ideas reach NASA?
+  word_target: 300
+  output: Analysis of knowledge transfer
+- type: group-sort
+  focus: His life as Sharhei vs. as Kondratiuk
+  items: 12+
+- type: fill-in
+  focus: Key scientific terms and dates
+  items: 10+
+focus: biography
+prerequisites:
+- Space exploration basics
+- Soviet era history
+- Apollo program context
 connects_to:
-  previous: Space exploration basics
-  related:
-  - c1-bio-117
-  - c1-bio-119
-  - c1-bio-112
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-117
+- c1-bio-119
+- c1-bio-112
+module_type: biography
+sources:
+- name: Юрій Кондратюк (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Кондратюк_Юрій_Васильович
+  type: primary
+  notes: Biography, space calculations, lunar orbit rendezvous
+- name: Траса Кондратюка
+  url: https://uk.wikipedia.org/wiki/Траса_Кондратюка
+  type: reference
+  notes: His lunar trajectory
+- name: NASA Apollo acknowledgment
+  url: https://www.nasa.gov/
+  type: reference
+  notes: American recognition of his work
+immersion: 100% Ukrainian
+phase: C1-BIO

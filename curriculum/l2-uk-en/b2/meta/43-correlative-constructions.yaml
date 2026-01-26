@@ -1,10 +1,10 @@
 module: b2-43
-title: Співвідносні конструкції
-subtitle: Paired Demonstrative and Relative Words
+level: B2
+slug: 43-correlative-constructions
 version: '1.0'
-phase: B2.2 [Phraseology & Synonymy]
-pedagogy: TTT
-focus: grammar
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
 tags:
@@ -12,49 +12,7 @@ tags:
 - syntax
 - correlatives
 - complex-sentences
-grammar:
-- Співвідносні (корелятивні) конструкції з вказівними та відносними словами
-- 'Парні конструкції: той...хто, те...що, такий...який'
-- 'Просторові корелятиви: там...де, туди...куди, звідти...звідки'
-- 'Часові корелятиви: тоді...коли, доти...поки'
-- 'Кількісні корелятиви: стільки...скільки, настільки...наскільки'
-objectives:
-- Learner can construct complex sentences using correlative pairs
-- Learner can distinguish between different types of correlative constructions
-- Learner can correctly punctuate sentences with correlative words
-- Learner can combine simple sentences using appropriate correlative pairs
 vocabulary_count: 36
-register: науковий
 vocab_count: 53
-slug: 43-correlative-constructions
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-- section: Вступ — Співвідносні конструкції
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-  - Роль у системі української мови
-- section: Common Pairs
-  words: 500
-  points:
-  - той... хто (he... who / the one... who)
-  - те... що (that... which)
-  - такий... який (such... as)
-  - там... де (there... where)
-  - тоді... коли (then... when)
-- section: Examples
-  words: 500
-  points:
-  - '*Той*, *хто* рано встає, тому Бог дає.'
-  - Роби *так*, *як* знаєш.
-  - Я куплю *те*, *що* мені подобається.
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

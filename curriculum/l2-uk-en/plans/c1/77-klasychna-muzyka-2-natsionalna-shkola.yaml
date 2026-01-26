@@ -1,22 +1,38 @@
-module: 77-klasychna-muzyka-2-natsionalna-shkola
-level: c1
-sequence: 77
+module: c1-77
+level: C1
+slug: 77-klasychna-muzyka-2-natsionalna-shkola
 version: '2.0'
 title: Класична музика II — Національна школа
 subtitle: Classical Music II — National School
+content_outline:
+- section: Вступ — Національна школа
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - '**Микола Лисенко** (1842-1912): "Тарас Бульба", "Наталка Полтавка", "Різдвяна
+    ніч" — founded Ukrainian national school'
+  - '**Микола Леонтович** (1877-1921): **"Щедрик"** (1916) — world''s most famous
+    Ukrainian music (Carol of the Bells)'
+  - 'Кирило Стеценко: "Іфігенія в Тавриді", choral works — choral tradition master'
+  - 'Яків Степовий: Романси — Ukrainian art song pioneer'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: fine-arts
 pedagogy: CBI
 objectives:
 - Learner understands the role of Mykola Lysenko in founding the national music school.
 - Learner can analyze the structure and global impact of "Shchedryk" by Leontovych.
 - Learner masters professional terminology related to composition and vocal art.
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Musicological academic register
+- Analysis of cultural impact
+phase: C1.5 Folk Culture & Fine Arts

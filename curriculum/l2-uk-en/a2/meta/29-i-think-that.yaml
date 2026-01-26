@@ -1,63 +1,8 @@
-id: a2-29
-title: I Think That...
-subtitle: Expressing Opinions
+module: 29-i-think-that
+level: A2
 slug: 29-i-think-that
-module_type: vocabulary
-word_target: 1000
-immersion: 40-50% Ukrainian
 version: '2.0'
-phase: A2.2
-focus: vocabulary
-pedagogy: PPP
-duration: 60
-transliteration: none
-tags:
-- vocabulary
-- opinions
-- debate
-- agreement
-grammar:
-- opinion phrases (я думаю, на мою думку)
-- agreement/disagreement phrases
-- filler words (можливо, напевно)
-- justifying opinions
-objectives:
-- Learner can express personal opinions clearly
-- Learner can agree or disagree politely
-- Learner can use introductory phrases to structure arguments
-- Learner can discuss topics using 'я вважаю' and 'мені здається'
-sources:
-- name: Ukrainian State Standard 2024 - Opinions
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Communicative requirements for expressing stance and debate at A2
-- name: Rhetoric and Debate in Ukrainian Culture
-  url: https://uk.wikipedia.org/wiki/Дискусія
-  type: reference
-  notes: Social norms for agreement and disagreement
-content_outline:
-- section: Introduction / Вступ
-  words: 200
-  points:
-  - Moving from facts to perspectives
-  - The social importance of having an 'opinion'
-- section: Presentation / Презентація
-  words: 600
-  points:
-  - 'Thinking Verbs: Думати vs Вважати vs Здаватися'
-  - 'Degrees of Certainty: Безумовно, Напевно, Можливо'
-  - 'Introductory Phrases: На мою думку, З мого погляду'
-  - 'Agreement/Disagreement: Я згоден/згодна (Gender sensitive)'
-  - The mandatory comma before 'що'
-- section: Practice / Практика
-  words: 150
-  points:
-  - Converting facts to opinions
-  - Certainty ladder exercises
-- section: Dialogues / Діалоги
-  words: 50
-  points:
-  - Discussing a movie, travel plan, or work proposal
+id: a2-29
 naturalness:
   score: 9
   status: PASS
@@ -67,3 +12,12 @@ naturalness:
     fully acceptable for A2 learners.'
   recommendation: No major changes needed. The module effectively teaches the concept
     with authentic examples.
+duration: 60
+transliteration: none
+tags:
+- vocabulary
+- opinions
+- debate
+- agreement
+build:
+  last_modified: '2026-01-26'

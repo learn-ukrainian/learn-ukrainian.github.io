@@ -1,116 +1,128 @@
-module: knyazhna-anna-yaroslavna
-level: c1-bio
-sequence: 5
+module: c1-bio-05
+level: C1-BIO
+slug: knyazhna-anna-yaroslavna
 version: '2.0'
 title: 'Княжна Анна Ярославна: Королева Франції'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти роль Анни Ярославни в історії Європи
-- Проаналізувати вплив Київської Русі на міжнародну політику XI століття
-- Вивчити біографічну лексику та історичну термінологію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Анна_Ярославна
-    title: Анна Ярославна (Wikipedia UA)
-    notes: Biography, French queenship, regency
-  secondary:
-  - url: https://uk.wikipedia.org/wiki/Реймське_Євангеліє
-    title: Реймське Євангеліє
-    notes: Her legacy in France
-  - url: https://uk.wikipedia.org/wiki/Генріх_I_(король_Франції)
-    title: Генріх I (король Франції)
-    notes: Context of her marriage
 content_outline:
 - section: Вступ — Руська принцеса на французькому троні
   words: 400
-  subsections:
+  points:
   - Унікальність Анни в європейській історії
   - Значення для української та французької пам'яті
   - Джерела про її життя
 - section: Дитинство в Києві
   words: 600
-  subsections:
+  points:
   - Народження та походження по материнській лінії
   - Освіта при дворі Ярослава
   - Грамотність та культура
   - Порівняння Києва та Парижа XI століття
 - section: Шлюб із Генріхом I
   words: 700
-  subsections:
+  points:
   - Посольство до Києва
   - Чому Генріх обрав руську принцесу
   - Подорож до Франції
   - Весілля в Реймсі 1051 року
 - section: Королева Франції
   words: 700
-  subsections:
+  points:
   - Народження синів (Філіп, Роберт, Гуго)
   - Політичний вплив
   - Підписи на документах кирилицею
   - Реймське Євангеліє
 - section: Вдівство та регентство
   words: 700
-  subsections:
+  points:
   - Смерть Генріха 1060 року
   - Регентство при малолітньому Філіпі
   - Шлюб із Раулем де Крепі
   - Скандал та церковне засудження
 - section: Останні роки та спадщина
   words: 600
-  subsections:
+  points:
   - Монастир у Санлісі
   - Смерть та поховання
   - Пам'ять про Анну у Франції
   - Сучасні вшанування
 - section: Підсумок — Міст між світами
   words: 300
-  subsections:
+  points:
   - Анна як символ зв'язків Русі з Європою
   - Її роль у жіночій історії
   - Спадщина для України
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - княжна
-  - королева
-  - регент
-  - посольство
-  - грамотність
-  - вінчання
-  - вдова
-  - спадкоємець
-  - монастир
-  - євангеліє
+  - княжна (princess)
+  - королева (queen)
+  - регент (regent)
+  - посольство (embassy)
+  - грамотність (literacy)
+  - вінчання (coronation/wedding)
+  - вдова (widow)
+  - спадкоємець (heir)
+  - монастир (monastery)
+  - євангеліє (gospel)
   recommended:
-  - придане
-  - династичний
-  - коронація
-  - печатка
-  - абатство
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  - critical-analysis
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - придане (dowry)
+  - династичний (dynastic)
+  - коронація (coronation)
+  - печатка (seal)
+  - абатство (abbey)
+activity_hints:
+- type: reading
+  focus: French chronicle descriptions of Anna
+  source: Adapted medieval sources
+  items: 3 passages
+- type: quiz
+  focus: Facts about Anna's life in France
+  items: 12+
+- type: match-up
+  focus: Anna's family members and their fates
+  items: 10+
+- type: essay-response
+  focus: Compare Anna's life in Kyiv vs. Paris
+  word_target: 250
+  output: Comparative analysis
+- type: group-sort
+  focus: Ukrainian heritage vs. French queenship
+  items: 12+
+- type: fill-in
+  focus: Key dates and names in Anna's biography
+  items: 8+
+- type: critical-analysis
+  focus: Evaluate competing Ukrainian and French claims to Anna
+  output: Balanced assessment
+focus: biography
+pedagogy: CBI
+prerequisites:
+- c1-bio-04 (Yaroslav Mudryi - father)
+- Understanding of medieval European dynasties
 connects_to:
-  previous: c1-bio-04 (Yaroslav Mudryi - father)
-  related:
-  - c1-bio-04 (Yaroslav Mudryi - father and his dynasty)
-  - c1-bio-06 (Mykhailo Chernihivskyi - later period)
-  - c1-bio-07 (Roksolana - another Ukrainian woman abroad)
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-04 (Yaroslav Mudryi - father and his dynasty)
+- c1-bio-06 (Mykhailo Chernihivskyi - later period)
+- c1-bio-07 (Roksolana - another Ukrainian woman abroad)
+objectives:
+- Зрозуміти роль Анни Ярославни в історії Європи
+- Проаналізувати вплив Київської Русі на міжнародну політику XI століття
+- Вивчити біографічну лексику та історичну термінологію
+grammar:
+- Narrative structures for biography
+- Historical past tense usage
+module_type: biography
+sources:
+- name: Анна Ярославна (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Анна_Ярославна
+  type: primary
+  notes: Biography, French queenship, regency
+- name: Реймське Євангеліє
+  url: https://uk.wikipedia.org/wiki/Реймське_Євангеліє
+  type: reference
+  notes: Her legacy in France
+- name: Генріх I (король Франції)
+  url: https://uk.wikipedia.org/wiki/Генріх_I_(король_Франції)
+  type: reference
+  notes: Context of her marriage
+immersion: 100% Ukrainian
+phase: C1-BIO

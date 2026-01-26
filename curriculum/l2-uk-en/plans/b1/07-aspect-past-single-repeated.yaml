@@ -1,25 +1,9 @@
 module: 07-aspect-past-single-repeated
-level: b1
-sequence: 7
-version: '1.0'
+level: B1
+slug: 07-aspect-past-single-repeated
+version: '2.0'
 title: 'Вид у минулому: одного разу vs щодня'
 subtitle: 'Aspect in Past: Single vs Repeated Actions'
-focus: grammar
-pedagogy: TTT
-objectives:
-- Learner can distinguish single from repeated past actions
-- Learner can select correct aspect based on time markers
-- Learner understands how frequency affects aspect choice
-- Learner can transform between single and habitual narratives
-sources:
-- name: Ukrainian State Standard 2024 - Past Tense Aspect
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official rules for aspect in past tense contexts
-- name: Ukrainian Aspectual Pairs
-  url: https://uk.wikipedia.org/wiki/Видові_пари_дієслів
-  type: reference
-  notes: Comprehensive list of aspectual pairs
 content_outline:
 - section: Тест
   words: 120
@@ -51,7 +35,7 @@ content_outline:
   - Summary of markers
   - Self-check
 word_target: 1700
-vocabulary:
+vocabulary_hints:
   required:
   - одного разу (once)
   - щодня (every day)
@@ -69,16 +53,47 @@ vocabulary:
   - вперше (for the first time)
   - востаннє (for the last time)
   - неодноразово (repeatedly)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - quiz
-  - match-up
-  - cloze
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: Time marker → aspect selection
+  items: 15+
+- type: fill-in
+  focus: Single event → habitual (and vice versa)
+  items: 10+
+- type: quiz
+  focus: Which aspect for which context?
+  items: 12+
+- type: cloze
+  focus: Narrative with aspect choices
+  items: 10+
+- type: match-up
+  focus: Time marker → aspect
+  items: 12+
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-06 (Aspect complete system)
 connects_to:
 - b1-08 (Aspect in past - result vs process)
 - b1-14 (Aspect integration practice)
+objectives:
+- Learner can distinguish single from repeated past actions
+- Learner can select correct aspect based on time markers
+- Learner understands how frequency affects aspect choice
+- Learner can transform between single and habitual narratives
+grammar:
+- Aspect selection with time markers
+- Single events vs habitual actions
+- Frequency adverbs and aspect
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Past Tense Aspect
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official rules for aspect in past tense contexts
+- name: Ukrainian Aspectual Pairs
+  url: https://uk.wikipedia.org/wiki/Видові_пари_дієслів
+  type: reference
+  notes: Comprehensive list of aspectual pairs
+immersion: 100% Ukrainian
+phase: B1.1 Aspect

@@ -1,16 +1,9 @@
-module: prepositions-iii
-level: a1
-sequence: 30
+module: a1-30
+level: A1
+slug: prepositions-iii
 version: '2.0'
 title: Prepositions III
 subtitle: Direction, Location & Origin
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can distinguish location from direction questions
-- Learner can use в/на for location (Locative)
-- Learner can use в/на/до for direction (Accusative/Genitive)
-- Learner can use з/від for origin
 content_outline:
 - section: 'Introduction: Three Questions'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Answer all three questions
   - Describe journeys
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - де (where)
   - куди (where to)
@@ -63,16 +56,35 @@ vocabulary:
   - їхати (to go by transport)
   - приходити (to arrive)
   - повертатися (to return)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - dialogue
-  - transformation
-  - quiz
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: Choose correct preposition
+  items: 25
+- type: transformation
+  focus: Change location to direction
+  items: 20
+- type: quiz
+  focus: Which question? Де/Куди/Звідки
+  items: 15
+- type: dialogue
+  focus: Asking directions
+  items: 6
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-13 (The Locative)
+- a1-29 (Weather and Nature)
 connects_to:
 - a1-31 (Body and Health)
 - a1-34 (Checkpoint Core Grammar)
+objectives:
+- Learner can distinguish location from direction questions
+- Learner can use в/на for location (Locative)
+- Learner can use в/на/до for direction (Accusative/Genitive)
+- Learner can use з/від for origin
+grammar:
+- Location (Де?) vs Direction (Куди?) vs Origin (Звідки?)
+- Prepositions with correct cases
+- Movement verbs with prepositions
+register: розмовний
+phase: A1.3 [Consolidation]

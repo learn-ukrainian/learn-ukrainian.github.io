@@ -1,11 +1,11 @@
-id: 92
+module: presentation-skills-advanced
+level: B2
 slug: presentation-skills-advanced
-title: 'Презентації: Поглиблено'
-subtitle: Advanced Presentation Skills
 version: '2.0'
-phase: B2.4
-pedagogy: CBI
-focus: skills
+id: 92
+naturalness:
+  score: 8
+  status: PASS
 duration: 90
 transliteration: none
 tags:
@@ -13,41 +13,5 @@ tags:
 - presentation
 - public-speaking
 - persuasion
-grammar:
-- Rhetorical devices
-- Persuasive language
-objectives:
-- Learner can handle Q&A sessions and difficult questions confidently
-- Learner can adapt presentation style to different audiences
-- Learner can use storytelling and persuasive techniques in presentations
-- Learner can apply advanced visual design principles
-- Learner can deliver effective virtual presentations
-register: публіцистичний
-naturalness:
-  score: 8
-  status: PASS
-content_outline:
-- section: Вступ — Поглиблено
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-- section: Основний матеріал
-  words: 600
-  points:
-  - Теоретичні основи
-  - Приклади та ілюстрації
-  - Типові помилки та як їх уникати
-- section: Поглиблене вивчення
-  words: 600
-  points:
-  - Додаткові випадки
-  - Контекстуальне використання
-  - Стилістичні нюанси
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

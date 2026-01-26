@@ -1,25 +1,9 @@
 module: 09-aspect-future
-level: b1
-sequence: 9
-version: '1.0'
+level: B1
+slug: 09-aspect-future
+version: '2.0'
 title: Вид у майбутньому часі
 subtitle: 'Aspect in Future: Three Ways to Express Future Actions'
-focus: grammar
-pedagogy: TTT
-objectives:
-- Learner can form all three types of future constructions
-- Learner understands when to use compound vs synthetic imperfective future
-- Learner can select appropriate aspect for future actions
-- Learner recognizes stylistic differences between future forms
-sources:
-- name: Ukrainian State Standard 2024 - Future Tense
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official future tense forms and usage
-- name: Ukrainian Future Tense (Wikipedia)
-  url: https://uk.wikipedia.org/wiki/Майбутній_час
-  type: reference
-  notes: Three future forms with examples
 content_outline:
 - section: Тест
   words: 200
@@ -50,7 +34,7 @@ content_outline:
   - Comparison table
   - Self-check
 word_target: 1800
-vocabulary:
+vocabulary_hints:
   required:
   - майбутній час (future tense)
   - складна форма (compound form)
@@ -68,15 +52,50 @@ vocabulary:
   - збиратися (to be going to)
   - сподіватися (to hope)
   - гадати (to think/suppose)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - quiz
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: Compound → synthetic future
+  items: 12+
+- type: quiz
+  focus: Which future form for planned vs completed action?
+  items: 15+
+- type: fill-in
+  focus: Future aspect selection
+  items: 12+
+- type: fill-in
+  focus: Synthetic future paradigm practice
+  items: 10+
+- type: match-up
+  focus: Context → future form
+  items: 12+
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-06 (Aspect complete system)
+- b1-07 (Aspect past - single vs repeated)
+- b1-08 (Aspect past - result vs process)
 connects_to:
 - b1-10 (Aspect in negation)
 - b1-11 (Aspect in imperatives)
+objectives:
+- Learner can form all three types of future constructions
+- Learner understands when to use compound vs synthetic imperfective future
+- Learner can select appropriate aspect for future actions
+- Learner recognizes stylistic differences between future forms
+grammar:
+- 'Compound future: буду + infinitive'
+- Synthetic future forms (-тиму/-тимеш/-тиме)
+- Perfective future (simple future)
+- Future aspect selection patterns
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Future Tense
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official future tense forms and usage
+- name: Ukrainian Future Tense (Wikipedia)
+  url: https://uk.wikipedia.org/wiki/Майбутній_час
+  type: reference
+  notes: Three future forms with examples
+immersion: 100% Ukrainian
+phase: B1.1 Aspect

@@ -1,22 +1,38 @@
-module: 57-narodna-medytsyna
-level: c1
-sequence: 57
+module: c1-57
+level: C1
+slug: 57-narodna-medytsyna
 version: '2.0'
 title: Народна медицина
 subtitle: Ukrainian Traditional Healing
+content_outline:
+- section: Вступ — Народна медицина
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Колядки (Christmas carols): structure, themes, performers'
+  - 'Щедрівки (New Year songs): wishes, symbolic meanings'
+  - 'Веснянки (spring songs): calling spring, circle dances'
+  - 'Купальські пісні: midsummer night traditions'
+  - Regional variations in ritual song traditions
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: vocabulary
 pedagogy: Immersion & Analysis
 objectives:
-- Learner understands the social role of healers (знахарі) in traditional Ukrainian society
+- Learner understands the social role of healers (знахарі) in traditional Ukrainian
+  society
 - Learner can identify common medicinal plants and their symbolic meanings
 - Learner can analyze the structure of healing incantations (замовляння)
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Medical and herbal terminology
+- Descriptive and instructive registers
+phase: C1.5 Folk Culture & Fine Arts

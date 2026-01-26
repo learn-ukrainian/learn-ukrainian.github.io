@@ -1,25 +1,9 @@
 module: 16-aspect-mastery-pairs
-level: a2
-sequence: 16
+level: A2
+slug: 16-aspect-mastery-pairs
 version: '2.0'
 title: Aspect Mastery — Pairs
 subtitle: Automating Perfective and Imperfective
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can correctly pair imperfective and perfective verbs
-- Learner can choose the correct aspect based on context clues
-- Learner can automate the use of common aspect pairs
-- Learner can identify aspect patterns (prefixes, suffixes)
-sources:
-- name: Ukrainian State Standard 2024 - Aspect Pairs
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Required aspect pairs for A2 mastery
-- name: Ukrainian Verb Reference
-  url: https://uk.wiktionary.org/
-  type: reference
-  notes: Complete aspect pair listings
 content_outline:
 - section: Introduction / Вступ
   words: 200
@@ -42,7 +26,7 @@ content_outline:
   points:
   - Peer review dialogue on aspect choices
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - готувати/приготувати (to cook)
   - мити/помити (to wash)
@@ -65,16 +49,49 @@ vocabulary:
   - пробувати/спробувати (to try)
   - показувати/показати (to show)
   - допомагати/допомогти (to help)
-  forbidden: []
-activities:
-  types_required:
-  - quiz
-  - match-up
-  - fill-in
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: match-up
+  focus: Speed match - rapid pair matching
+  items: 20+
+- type: fill-in
+  focus: Transform present to future perfective
+  items: 15+
+- type: quiz
+  focus: Aspect selection speed quiz
+  items: 15+
+- type: fill-in
+  focus: Complete dialogues with correct aspect
+  items: 12+
+- type: quiz
+  focus: Identify aspect pair relationship
+  items: 10+
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a2-12 through a2-15 (all aspect modules)
 connects_to:
 - a2-17 (Possessive Sviy)
 - a2-22 (If I Were)
 - a2-25 (Checkpoint - Aspect & Comparison)
+objectives:
+- Learner can correctly pair imperfective and perfective verbs
+- Learner can choose the correct aspect based on context clues
+- Learner can automate the use of common aspect pairs
+- Learner can identify aspect patterns (prefixes, suffixes)
+grammar:
+- identifying aspect pairs
+- choosing aspect in context
+- common aspect patterns
+- aspect in tenses review
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Aspect Pairs
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Required aspect pairs for A2 mastery
+- name: Ukrainian Verb Reference
+  url: https://uk.wiktionary.org/
+  type: reference
+  notes: Complete aspect pair listings
+immersion: 40-50% Ukrainian
+phase: A2.2

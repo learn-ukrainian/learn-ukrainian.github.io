@@ -1,16 +1,9 @@
-module: doctor-visit
-level: a2
-sequence: 59
+module: a2-59
+level: A2
+slug: doctor-visit
 version: '2.0'
 title: At the Doctor
 subtitle: Medical Consultation
-focus: practical
-pedagogy: PPP
-objectives:
-- Learner can describe medical history
-- Learner can answer doctor's questions
-- Learner can understand diagnosis and advice
-- Learner can ask for sick leave
 content_outline:
 - section: 'Introduction: Healthcare in Ukraine'
   words: 100
@@ -48,7 +41,7 @@ content_outline:
   - Complete consultation
   - Ask and answer questions
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - лікар (doctor)
   - пацієнт (patient)
@@ -65,15 +58,33 @@ vocabulary:
   - алергія (allergy)
   - температура (temperature)
   - тиск (blood pressure)
-  forbidden: []
-activities:
-  types_required:
-  - vocabulary-drill
-  - dialogue
-  - role-play
-  - fill-in
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: vocabulary-drill
+  focus: Medical vocabulary
+  items: 25
+- type: dialogue
+  focus: Doctor-patient conversation
+  items: 12
+- type: fill-in
+  focus: Complete medical sentences
+  items: 15
+- type: role-play
+  focus: Medical consultation
+  items: 8
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a2-58 (Practical Warm-up)
 connects_to:
 - a2-60 (At the Pharmacy)
+objectives:
+- Learner can describe medical history
+- Learner can answer doctor's questions
+- Learner can understand diagnosis and advice
+- Learner can ask for sick leave
+grammar:
+- Medical history questions and answers
+- Describing pain (intensity, location)
+- Understanding medical advice
+register: розмовний
+phase: A2.6 [Practical]

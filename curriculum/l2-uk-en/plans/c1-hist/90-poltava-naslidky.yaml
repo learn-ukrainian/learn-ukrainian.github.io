@@ -1,0 +1,112 @@
+module: poltava-naslidky
+level: C1-HIST
+slug: poltava-naslidky
+version: '2.0'
+title: 'Полтава 1709: Якби Мазепа переміг?'
+content_outline:
+- section: Вступ — Доля Європи на одному полі
+  words: 400
+  points:
+  - Полтава — вирішальна битва
+  - Що планував Мазепа
+  - Контрфактичний підхід
+  - Структура модуля
+- section: План Мазепи-Карла
+  words: 600
+  points:
+  - Союз зі Швецією — умови
+  - Конституція Орлика — підготовка
+  - Військовий план
+  - Що мало статися
+- section: Чому програли
+  words: 600
+  points:
+  - Батурин — втрата бази
+  - Зима 1708-1709
+  - Недостатня підтримка козаків
+  - Помилки Карла XII
+- section: Сценарій перемоги
+  words: 700
+  points:
+  - Якби Швеція перемогла
+  - Росія без виходу в Європу
+  - Українська автономія під Швецією
+  - Європейський баланс — інший
+- section: Наслідки для України
+  words: 500
+  points:
+  - Конституція Орлика — можлива реальність
+  - Залежність від Швеції — краща чи гірша?
+  - Шведська імперія — що з нею стало
+  - Довгострокові сценарії
+- section: Наслідки для Європи
+  words: 400
+  points:
+  - Росія як імперія — без Полтави?
+  - Балтика — шведське озеро
+  - XVIII століття — інший сценарій
+- section: Підсумок
+  words: 300
+  points:
+  - Полтава — поворотний момент
+  - Альтернативна історія — уроки
+  - Перехід до УНР
+word_target: 3500
+vocabulary_hints:
+  required:
+  - Полтава (Poltava)
+  - контрфактичний (counterfactual)
+  - перемога (victory)
+  - поразка (defeat)
+  - союз (alliance)
+  - автономія (autonomy)
+  - баланс сил (balance of power)
+  - сценарій (scenario)
+  - наслідки (consequences)
+  - поворотний момент (turning point)
+  recommended:
+  - Північна війна (Great Northern War)
+  - Карл XII (Charles XII)
+  - європейський баланс (European balance)
+  - стратегічний (strategic)
+  - гегемонія (hegemony)
+activity_hints:
+- type: essay-response
+  focus: Swedish victory at Poltava — full scenario
+  output: Alternative history
+- type: battle-analysis
+  focus: Why did Mazepa-Charles lose?
+  output: Military analysis
+- type: constitutional-analysis
+  focus: Orlik Constitution — would it have worked?
+  output: Constitutional analysis
+- type: european-impact
+  focus: Russia without Poltava victory
+  output: European history counterfactual
+- type: essay-response
+  focus: Як змінилася б Європа, якби Мазепа переміг під Полтавою?
+  word_target: 400
+  model_answer: Required
+focus: history
+prerequisites:
+- c1-hist-83 (Mazepa cycle)
+- c1-hist-25 (Orlik Constitution — source)
+connects_to:
+- c1-hist-91 (UNR mistakes)
+- c1-hist-94 (Crossroads synthesis)
+module_type: thematic
+sources:
+- name: Полтавська битва (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Полтавська_битва
+  type: reference
+  notes: Battle context
+- name: Північна війна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Північна_війна
+  type: reference
+  notes: War context
+- name: Іван Мазепа (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Іван_Мазепа
+  type: reference
+  notes: Mazepa's plan
+immersion: 100% Ukrainian
+phase: C1-HIST.1 [Historiography]

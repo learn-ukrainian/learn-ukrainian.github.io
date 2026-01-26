@@ -1,11 +1,8 @@
+module: 100-lesya-ukrainka-drama
+level: C1
+slug: 100-lesya-ukrainka-drama
 version: '2.0'
 id: c1-100
-title: 'Леся Українка: Драма'
-subtitle: Lesya Ukrainka's Drama
-slug: 100-lesya-ukrainka-drama
-phase: C1.6 Literature
-focus: literature
-pedagogy: Literary Analysis
 duration: 120
 transliteration: none
 tags:
@@ -14,32 +11,5 @@ tags:
 - symbolism
 - neo-romanticism
 - mythology
-grammar:
-- Dramatic syntax
-- Symbolic imagery
-objectives:
-- Learner can analyze the conflict between spiritual and material worlds in "The Forest
-  Song".
-- Learner can interpret the symbolic meaning of characters like Mavka and Lukash.
-- Learner can discuss the features of neo-romantic drama.
-content_outline:
-- section: Вступ — Драма
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-- section: Content Areas
-  words: 500
-  points:
-  - 'Лісова пісня: forest spirits, love, sacrifice'
-  - 'Кассандра: Greek mythology, prophecy'
-  - 'Камінний господар: Don Juan retelling'
-  - 'Dramatic techniques: verse drama, symbolism'
-  - Mythological and historical settings
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

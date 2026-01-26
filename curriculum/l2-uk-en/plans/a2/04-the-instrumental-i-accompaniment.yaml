@@ -1,25 +1,9 @@
 module: 04-the-instrumental-i-accompaniment
-level: a2
-sequence: 4
+level: A2
+slug: 04-the-instrumental-i-accompaniment
 version: '2.0'
 title: The Instrumental I — Accompaniment
 subtitle: With Whom? Using 'З'
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can form instrumental case endings for nouns
-- Learner can use the preposition з (with) correctly
-- Learner can describe doing things together with others
-- Learner can use proper euphony rules for з/із/зі
-sources:
-- name: Ukrainian State Standard 2024 - Instrumental Case
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Instrumental endings and з/із/зі usage rules
-- name: Ukrainian Grammar Reference
-  url: https://uk.wikipedia.org/wiki/Орудний_відмінок
-  type: reference
-  notes: Complete instrumental paradigm
 content_outline:
 - section: Introduction / Вступ
   words: 250
@@ -43,7 +27,7 @@ content_outline:
   points:
   - Social interaction scenarios
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - з/із/зі (with)
   - разом (together)
@@ -66,16 +50,51 @@ vocabulary:
   - товаришувати (to be friends)
   - приятелювати (to be pals)
   - сусідити (to be neighbors)
-  forbidden: []
-activities:
-  types_required:
-  - quiz
-  - match-up
-  - fill-in
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: Add instrumental endings to nouns
+  items: 15+
+- type: match-up
+  focus: Person + з + instrumental form
+  items: 12+
+- type: fill-in
+  focus: Combine two people doing something together
+  items: 10+
+- type: quiz
+  focus: Choose correct instrumental ending
+  items: 12+
+- type: fill-in
+  focus: Complete social verb sentences
+  items: 10+
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a2-02 (Dative noun endings)
+- A1 noun gender
+- A1 prepositions basics
 connects_to:
 - a2-05 (Instrumental II - Means & Tools)
 - a2-06 (Being and Becoming)
 - a2-07 (Spatial Prepositions)
+objectives:
+- Learner can form instrumental case endings for nouns
+- Learner can use the preposition з (with) correctly
+- Learner can describe doing things together with others
+- Learner can use proper euphony rules for з/із/зі
+grammar:
+- instrumental endings
+- preposition з/із/зі
+- accompaniment
+- social interaction
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Instrumental Case
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Instrumental endings and з/із/зі usage rules
+- name: Ukrainian Grammar Reference
+  url: https://uk.wikipedia.org/wiki/Орудний_відмінок
+  type: reference
+  notes: Complete instrumental paradigm
+immersion: 40-50% Ukrainian
+phase: A2.1

@@ -1,103 +1,112 @@
-module: 05-natalka-poltavka
-level: lit
-sequence: 5
-version: '1.0'
+module: natalka-poltavka
+level: LIT
+slug: natalka-poltavka
+version: '2.0'
 title: 'Наталка Полтавка: Анатомія Почуттів'
 subtitle: 'LIT-005: Від Сміху до Сліз'
-focus: literature
-pedagogy: seminar
-objectives:
-- Analyze the transition from burlesque to sentimentalism
-- Characterize Natalka as a moral ideal
-- Interpret social conflict in the play
-sources:
-  primary:
-  - url: https://www.ukrlib.com.ua/books/printit.php?tid=50
-    title: Наталка Полтавка — повний текст
-    notes: П'єса для детального аналізу
-  secondary:
-  - url: https://www.ukrlib.com.ua/analiz/printit.php?tid=50
-    title: Аналіз "Наталки Полтавки"
-    notes: Літературознавчий аналіз
-  - url: https://uk.wikipedia.org/wiki/Віють_вітри
-    title: Віють вітри — пісня
-    notes: Контекст народної пісні
 content_outline:
 - section: Вступ — Від реготу до сльози
   words: 500
-  subsections:
+  points:
   - Котляревський після "Енеїди"
   - 1819 рік — поява "Наталки Полтавки"
   - Чому автор змінив регістр
 - section: Сентименталізм як літературний напрям
   words: 600
-  subsections:
+  points:
   - Що таке сентименталізм
   - Європейський контекст (Руссо, Річардсон)
   - Українська специфіка жанру
 - section: Наталка — архетип української нареченої
   words: 700
-  subsections:
+  points:
   - Характеристика героїні
   - Конфлікт "багатство vs гідність"
   - Порівняння з Марусею Квітки
 - section: Музика важливіша за слово
   words: 700
-  subsections:
+  points:
   - '"Віють вітри" — роль пісні у драмі'
   - Інші пісні п'єси
   - Опера vs драма
 - section: Другорядні персонажі
   words: 600
-  subsections:
+  points:
   - Возний Тетерваковський — комічний антагоніст
   - Петро — ідеальний наречений
   - Терпилиха — образ матері
 - section: Підсумок — Український театр народжується
   words: 500
-  subsections:
+  points:
   - Значення п'єси для українського театру
   - Перехід від бурлеску до серйозності
   - Зв'язок з творчістю Квітки
 word_target: 4500
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - сентименталізм
-  - архетип
-  - наречена
-  - гідність
-  - жертовність
-  - опера
-  - драма
-  - возний
-  - катарсис
-  - театр
+  - сентименталізм (sentimentalism)
+  - архетип (archetype)
+  - наречена (bride)
+  - гідність (dignity)
+  - жертовність (sacrifice)
+  - опера (opera)
+  - драма (drama)
+  - возний (official/bailiff)
+  - катарсис (catharsis)
+  - театр (theatre)
   recommended:
-  - мелодрама
-  - антагоніст
-  - ремарка
-  - монолог
-  - репліка
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - cloze
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - мелодрама (melodrama)
+  - антагоніст (antagonist)
+  - ремарка (stage direction)
+  - монолог (monologue)
+  - репліка (line/cue)
+activity_hints:
+- type: reading
+  focus: Ключові сцени "Наталки Полтавки"
+  source: UkrLib tid=50
+  items: 5+
+- type: quiz
+  focus: Сюжет та персонажі п'єси
+  items: 15+
+- type: match-up
+  focus: Персонаж → його функція
+  items: 10+
+- type: essay-response
+  focus: Конфлікт "багатство vs гідність"
+  word_target: 300
+  output: Аргументативне есе
+- type: cloze
+  focus: Цитати з пісень п'єси
+  items: 12+
+focus: literature
+pedagogy: literature
+prerequisites:
+- lit-01 to lit-04 (Kotliarevsky & Eneida modules)
+- Understanding of burlesque to sentimentalism transition
 connects_to:
-  previous: lit-01 to lit-04 (Kotliarevsky & Eneida modules)
-  related:
-  - lit-06 (Kvitka biography — продовження сентименталізму)
-  - lit-07 (Marusya — розвиток жіночого архетипу)
-constraints:
-  min_engagement_boxes: 3
-  min_examples: 15
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- lit-06 (Kvitka biography — продовження сентименталізму)
+- lit-07 (Marusya — розвиток жіночого архетипу)
+objectives:
+- Analyze the transition from burlesque to sentimentalism
+- Characterize Natalka as a moral ideal
+- Interpret social conflict in the play
+grammar:
+- Sentimentalism markers
+- Dramatic dialogue structure
+- Folk song integration
+module_type: literature
+sources:
+- name: Наталка Полтавка — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=50
+  type: primary
+  notes: П'єса для детального аналізу
+- name: Аналіз "Наталки Полтавки"
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=50
+  type: secondary
+  notes: Літературознавчий аналіз
+- name: Віють вітри — пісня
+  url: https://uk.wikipedia.org/wiki/Віють_вітри
+  type: reference
+  notes: Контекст народної пісні
+immersion: 100% Ukrainian
+phase: LIT.1 Burlesque & Folk Origins

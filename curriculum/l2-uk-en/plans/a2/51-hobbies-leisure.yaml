@@ -1,16 +1,9 @@
-module: hobbies-leisure
-level: a2
-sequence: 51
+module: a2-51
+level: A2
+slug: hobbies-leisure
 version: '2.0'
 title: Hobbies and Leisure
 subtitle: What We Do for Fun
-focus: vocabulary
-pedagogy: PPP
-objectives:
-- Learner can talk about hobbies and interests
-- Learner can use 'грати' and 'займатися' correctly
-- Learner can describe weekend plans
-- Learner can ask others about their free time
 content_outline:
 - section: 'Introduction: Free Time in Ukraine'
   words: 100
@@ -48,7 +41,7 @@ content_outline:
   - Describe your hobbies
   - Ask about others' interests
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - хобі (hobby)
   - вільний час (free time)
@@ -65,16 +58,34 @@ vocabulary:
   - подорож (travel)
   - концерт (concert)
   - виставка (exhibition)
-  forbidden: []
-activities:
-  types_required:
-  - vocabulary-drill
-  - matching
-  - speaking
-  - dialogue
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: vocabulary-drill
+  focus: Hobbies and activities
+  items: 30
+- type: matching
+  focus: Match verbs to activities
+  items: 20
+- type: dialogue
+  focus: Weekend plans conversation
+  items: 10
+- type: speaking
+  focus: Describe your hobbies
+  items: 8
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- a2-50 (Technology and Media)
 connects_to:
 - a2-52 (Education and Learning)
 - a2-54 (Sports and Fitness)
+objectives:
+- Learner can talk about hobbies and interests
+- Learner can use 'грати' and 'займатися' correctly
+- Learner can describe weekend plans
+- Learner can ask others about their free time
+grammar:
+- Verbs for hobbies (грати на, займатися)
+- Accusative vs instrumental (футбол vs тенісом)
+- Expressing frequency and interests
+register: розмовний
+phase: A2.5 [Vocabulary Expansion]

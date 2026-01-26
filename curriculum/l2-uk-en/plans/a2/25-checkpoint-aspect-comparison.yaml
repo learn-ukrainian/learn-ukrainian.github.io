@@ -1,21 +1,9 @@
 module: 25-checkpoint-aspect-comparison
-level: a2
-sequence: 25
+level: A2
+slug: 25-checkpoint-aspect-comparison
 version: '2.0'
 title: 'Checkpoint: Aspect, Comparison & Modality'
 subtitle: Review of Modules 11-24
-focus: checkpoint
-pedagogy: TTT
-objectives:
-- Learner can integrate aspect, comparison, and mood in complex scenarios
-- Learner can count objects and money with correct agreement
-- Learner can make polite requests and hypothetical dreams
-- Learner can distinguish between process and result across tenses
-sources:
-- name: Ukrainian State Standard 2024 - A2 Review
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Standards for integrating intermediate A2 skills
 content_outline:
 - section: Огляд / Overview
   words: 250
@@ -58,7 +46,24 @@ content_outline:
   points:
   - Combined task using all skills
 word_target: 800
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+focus: checkpoint
+pedagogy: TTT
+objectives:
+- Learner can integrate aspect, comparison, and mood in complex scenarios
+- Learner can count objects and money with correct agreement
+- Learner can make polite requests and hypothetical dreams
+- Learner can distinguish between process and result across tenses
+grammar:
+- Aspect pairs review (process vs result)
+- Degrees of comparison (Regular/Irregular)
+- Conditional mood (Real vs Unreal)
+- Imperative system (Direct/Indirect)
+- Numeral-noun agreement (1-2-5 rule)
+module_type: checkpoint
+sources:
+- name: Ukrainian State Standard 2024 - A2 Review
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standards for integrating intermediate A2 skills
+immersion: 40-50% Ukrainian
+phase: A2.2

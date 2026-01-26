@@ -1,116 +1,12 @@
-# Module Metadata: Хозарський каганат і слов'яни
-# Phase: B2-HIST.1 [Origins]
-# Module 07 of B2-HIST track
-
 module: khozary-i-sloviany
-id: b2-hist-07
-title: "Хозарський каганат і слов'яни"
-subtitle: "The Khazar Khaganate and the Slavs"
+level: B2-HIST
 slug: khozary-i-sloviany
 version: '2.0'
-phase: B2-HIST.1 [Origins]
-focus: history
-pedagogy: seminar
-register: публіцистичний
-duration: 150
-transliteration: none
-
-# Learning Objectives
-objectives:
-  - "Учень може пояснити систему двовладдя в Хозарському каганаті (каган і бек)"
-  - "Учень може проаналізувати причини прийняття іудаїзму хозарською елітою"
-  - "Учень може оцінити вплив Pax Khazarica на економічний розвиток слов'янських племен"
-  - "Учень може спростувати міф про «хозарське ярмо» як виключно негативне явище"
-
-# Grammar Focus
-grammar:
-  - "Складні речення з підрядними допустовими (хоч, незважаючи на)"
-  - "Безособові дієслівні форми на -но, -то у пасивному контексті"
-  - "Вживання термінології на позначення ієрархії та залежності"
-
-# Word Target and Content Structure
-word_target: 4000
-
-content_outline:
-  - section: "Вступ: Велетень на Сході"
-    words: 252
-    points:
-      - "Роль Хозарії як щита Європи"
-
-  - section: "Читання: Оповідь про каганат"
-    words: 1617
-    points:
-      - "Двовладдя, іудаїзм та Салтівська культура"
-
-  - section: "Первинні джерела"
-    words: 1186
-    points:
-      - "Аналіз Кембриджського документа, листа царя Йосипа та Ібн Фадлана"
-
-  - section: "Деколонізаційний погляд"
-    words: 327
-    points:
-      - "Спростування міфів про паразитарний характер каганату"
-
-  - section: "Підсумкове есе"
-    words: 424
-    points:
-      - "Аналітичне завдання про роль Хозарії в державотворенні Русі"
-
-  - section: "Підсумок"
-    words: 235
-    points:
-      - "Узагальнення історичного значення Хозарського каганату"
-
-  - section: "Потрібно більше практики?"
-    words: 229
-    points:
-      - "Ресурси для самостійного поглиблення знань"
-
-# Naturalness Score
+id: b2-hist-07
 naturalness:
   score: 9
-  status: "PASS"
-
-# Vocabulary Guidance
-vocabulary_hints:
-  required:
-    - каганат (khaganate)
-    - двовладдя (diarchy)
-    - сюзерен (suzerain)
-    - васал (vassal)
-    - данина (tribute)
-    - протекторат (protectorate)
-    - толерантність (tolerance)
-    - іудаїзм (Judaism)
-    - кочівники (nomads)
-    - осілість (sedentarism)
-    - дирхем (dirham)
-    - транзитна торгівля (transit trade)
-    - форпост (outpost)
-    - асиміляція (assimilation)
-    - державотворення (state-building)
-
-# Activity Planning
-activity_hints:
-  - type: reading
-    focus: "Аналіз хозарської переписки"
-  - type: critical-analysis
-    focus: "Сакральна влада кагана"
-  - type: essay-response
-    focus: "Хозарія як каталізатор Русі"
-
-# Sources
-sources:
-  - name: "Повість минулих літ"
-    url: "https://litopys.org.ua/pvl/pvl01.htm"
-    type: primary
-  - name: "Лист царя Йосипа"
-    url: "http://litopys.org.ua/khazar/kh02.htm"
-    type: primary
-
-# Module Connections
-prerequisites:
-  - "b2-hist-06: Заснування Києва"
-connects_to:
-  - "b2-hist-08: Синтез: Від Трипілля до Києва"
+  status: PASS
+duration: 150
+transliteration: none
+build:
+  last_modified: '2026-01-26'

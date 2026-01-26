@@ -1,97 +1,13 @@
 module: a1-37
-id: a1-37
+level: A1
 slug: at-the-market
-title: "At the Market"
-subtitle: "Buying Fresh Produce"
 version: '2.0'
-phase: "A1.4 [Practical Scenarios]"
-focus: practical
-pedagogy: PPP
-register: розмовний
-duration: 60
-transliteration: none
-objectives:
-  - "Learner can buy fresh produce at a market"
-  - "Learner can ask about prices and quantities"
-  - "Learner can negotiate politely"
-  - "Learner can describe what they want"
-grammar:
-  - "Genitive for quantities (кілограм + genitive)"
-  - "Accusative for requests"
-  - "Numbers with nouns"
-word_target: 800
-content_outline:
-  - section: "Introduction: Ukrainian Markets"
-    words: 100
-    points:
-      - "Market culture in Ukraine"
-      - "Fresh produce shopping"
-      - "Interaction with vendors"
-  - section: "Approaching a Vendor"
-    words: 150
-    points:
-      - "Добрий день!"
-      - "Скільки коштує...?"
-      - "Можна подивитися?"
-  - section: "Asking for Products"
-    words: 200
-    points:
-      - "Дайте, будь ласка, кілограм..."
-      - "Мені потрібно два кілограми..."
-      - "Ще щось? - Ні, це все."
-  - section: "Quantities and Prices"
-    words: 150
-    points:
-      - "За кілограм, за штуку"
-      - "Скільки з мене? (How much do I owe?)"
-      - "Тримайте здачу"
-  - section: "Quality and Selection"
-    words: 100
-    points:
-      - "Свіжий/свіжа (fresh)"
-      - "Стиглий (ripe)"
-      - "Choosing produce"
-  - section: "Practice: Market Shopping"
-    words: 100
-    points:
-      - "Complete market transaction"
-      - "Buy multiple items"
-vocabulary_hints:
-  required:
-    - ринок (market)
-    - кілограм (kilogram)
-    - штука (piece)
-    - свіжий (fresh)
-    - овочі (vegetables)
-    - фрукти (fruits)
-    - скільки (how much)
-    - дайте (give me)
-  recommended:
-    - здача (change)
-    - продавець (vendor)
-    - яблука (apples)
-    - картопля (potatoes)
-    - помідори (tomatoes)
-    - огірки (cucumbers)
-activity_hints:
-  - type: dialogue
-    focus: "Market shopping conversation"
-    items: 10
-  - type: role-play
-    focus: "Buyer and vendor"
-    items: 6
-  - type: fill-in
-    focus: "Complete market phrases"
-    items: 15
-  - type: listening
-    focus: "Market transactions"
-    items: 10
-prerequisites:
-  - a1-18 (Food and Shopping)
-  - a1-36 (At the Restaurant)
-connects_to:
-  - a1-38 (At the Store)
+id: a1-37
 naturalness:
   score: 10
   status: PASS
-  justification: "Practical market skills"
+  justification: Practical market skills
+duration: 60
+transliteration: none
+build:
+  last_modified: '2026-01-26'

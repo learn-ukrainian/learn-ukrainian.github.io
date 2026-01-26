@@ -1,21 +1,8 @@
 module: 06-hedging-modality
-level: c1
-sequence: 6
+level: C1
+slug: 06-hedging-modality
 version: '2.0'
 title: Хеджінг та модальність
-focus: grammar
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Academic Hedging in Ukrainian
-  url: https://mova.info/
-  type: reference
-  notes: Research on hedging devices in Ukrainian academic writing
-- name: Модальність у сучасній українській мові
-  url: https://r2u.org.ua/
-  type: secondary
-  notes: Comprehensive modality analysis
 content_outline:
 - section: Вступ — Навіщо пом'якшувати?
   words: 400
@@ -61,7 +48,7 @@ content_outline:
   - Варіювання ступеня впевненості
   - Контекстна доречність
 word_target: 4000
-vocabulary:
+vocabulary_hints:
   required:
   - модальність (modality)
   - хеджінг (hedging)
@@ -79,19 +66,42 @@ vocabulary:
   - певною мірою (to some extent)
   - почасти (partly)
   - скоріш за все (most likely)
-  forbidden: []
-activities:
-  types_required:
-  - group-sort
-  - quiz
-  - essay-response
-  - cloze
-  - fill-in
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: Certainty scale (0-100%) ranking
+  items: 15+
+- type: fill-in
+  focus: Add hedging to categorical statements
+  items: 12+
+- type: match-up
+  focus: Hedging device to certainty level
+  items: 15+
+- type: cloze
+  focus: Academic text with hedging gaps
+  items: 12+
+- type: essay-response
+  focus: Rewrite confident claims with appropriate hedging
+  word_target: 200
+- type: group-sort
+  focus: Hedging expressions by strength
+  items: 15+
+focus: grammar
+prerequisites:
+- c1-05 (Logical Connectors)
+- Academic style awareness
 connects_to:
 - c1-07 (Citation & Reference)
 - c1-09 (Thesis Development)
 - c1-41 (Degrees of Certainty)
+module_type: grammar
+sources:
+- name: Academic Hedging in Ukrainian
+  url: https://mova.info/
+  type: reference
+  notes: Research on hedging devices in Ukrainian academic writing
+- name: Модальність у сучасній українській мові
+  url: https://r2u.org.ua/
+  type: secondary
+  notes: Comprehensive modality analysis
+immersion: 100% Ukrainian
+phase: C1.1 Academic Ukrainian

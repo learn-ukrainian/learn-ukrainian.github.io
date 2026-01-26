@@ -1,94 +1,13 @@
 module: b1-61
-id: b1-61
+level: B1
 slug: professional-communication
-title: "Професійна комунікація"
-subtitle: "Professional Communication"
 version: '2.0'
-phase: "B1.5 [Vocabulary Expansion I]"
-focus: vocabulary
-pedagogy: PPP
-register: розмовний
-duration: 90
-transliteration: none
-objectives:
-  - "Learner can use 30 professional communication words in context"
-  - "Learner can distinguish between formal and informal workplace vocabulary"
-  - "Learner can form natural collocations with professional nouns and verbs"
-  - "Learner can communicate effectively in workplace settings"
-grammar:
-  - "Professional vocabulary collocations"
-  - "Formal register expressions"
-  - "Business communication patterns"
-word_target: 1200
-content_outline:
-  - section: "Introduction: Professional Language"
-    words: 150
-    points:
-      - "Workplace communication needs"
-      - "Formal vs informal register"
-      - "Professional context"
-  - section: "Workplace Basics"
-    words: 250
-    points:
-      - "колега, керівник, підлеглий"
-      - "відділ, компанія, організація"
-      - "Workplace roles and structures"
-  - section: "Meetings and Communication"
-    words: 250
-    points:
-      - "нарада, зустріч, презентація"
-      - "обговорювати, доповідати"
-      - "Meeting vocabulary"
-  - section: "Documents and Reports"
-    words: 250
-    points:
-      - "звіт, протокол, договір"
-      - "складати, підписувати"
-      - "Business documents"
-  - section: "Professional Actions"
-    words: 200
-    points:
-      - "співпрацювати, координувати"
-      - "делегувати, контролювати"
-      - "Management verbs"
-  - section: "Practice: Workplace Scenarios"
-    words: 100
-    points:
-      - "Professional dialogues"
-      - "Formal correspondence"
-vocabulary_hints:
-  required:
-    - колега (colleague)
-    - керівник (manager/supervisor)
-    - нарада (meeting)
-    - звіт (report)
-    - договір (contract)
-    - співпрацювати (to collaborate)
-    - обговорювати (to discuss)
-    - відділ (department)
-  recommended:
-    - презентація (presentation)
-    - протокол (minutes/protocol)
-    - делегувати (to delegate)
-    - координувати (to coordinate)
-activity_hints:
-  - type: collocation
-    focus: "Professional noun phrases"
-    items: 25
-  - type: role-play
-    focus: "Workplace scenarios"
-    items: 20
-  - type: fill-in
-    focus: "Complete professional texts"
-    items: 15
-  - type: writing
-    focus: "Write professional messages"
-    items: 10
-prerequisites:
-  - b1-60 (Society Politics)
-connects_to:
-  - b1-62 (Environment Ecology)
+id: b1-61
 naturalness:
   score: 9
   status: PASS
-  justification: "Essential for workplace success"
+  justification: Essential for workplace success
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-26'

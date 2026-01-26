@@ -1,16 +1,9 @@
-module: travel-geography
-level: b1
-sequence: 67
+module: b1-67
+level: B1
+slug: travel-geography
 version: '2.0'
 title: Подорожі та географія
 subtitle: Travel & Geography
-focus: vocabulary
-pedagogy: PPP
-objectives:
-- Learner can use 30 travel and geography words in context
-- Learner can distinguish between подорож/мандрівка/поїздка
-- Learner can form natural collocations with travel vocabulary
-- Learner can discuss travel plans and experiences
 content_outline:
 - section: 'Introduction: Travel Vocabulary'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Discuss travel experiences
   - Plan trips
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - подорож (journey)
   - мандрівка (travel/trip)
@@ -63,15 +56,33 @@ vocabulary:
   - туризм (tourism)
   - відпустка (vacation)
   - екскурсія (excursion)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - discussion
-  - collocation
-  - matching
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: collocation
+  focus: Travel noun phrases
+  items: 25
+- type: fill-in
+  focus: Describe travel and geography
+  items: 20
+- type: matching
+  focus: Match geography terms
+  items: 15
+- type: discussion
+  focus: Discuss travel experiences
+  items: 10
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-66 (Business Basics)
 connects_to:
 - b1-68 (Synonymy Thinking Verbs)
+objectives:
+- Learner can use 30 travel and geography words in context
+- Learner can distinguish between подорож/мандрівка/поїздка
+- Learner can form natural collocations with travel vocabulary
+- Learner can discuss travel plans and experiences
+grammar:
+- Travel vocabulary collocations
+- Geographical terminology
+- Direction and location expressions
+register: розмовний
+phase: B1.6 [Vocabulary Expansion II]

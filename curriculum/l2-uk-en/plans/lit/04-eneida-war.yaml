@@ -1,104 +1,115 @@
-module: 04-eneida-war
-level: lit
-sequence: 4
-version: '1.0'
+module: eneida-war
+level: LIT
+slug: eneida-war
+version: '2.0'
 title: 'Енеїда: Словник Війни'
 subtitle: 'LIT-004: Анатомія Козацького Бою'
-focus: literature
-pedagogy: seminar
-objectives:
-- Analyze the depiction of war in Eneida
-- Identify military vocabulary and weaponry
-- Interpret the humor in battle scenes
-sources:
-  primary:
-  - url: https://www.ukrlib.com.ua/books/printit.php?tid=51
-    title: Енеїда — повний текст
-    notes: Частини IV-VI для аналізу батальних сцен
-  secondary:
-  - url: https://www.ukrlib.com.ua/analiz/printit.php?tid=51
-    title: Аналіз "Енеїди"
-    notes: Військова тематика
-  - url: https://uk.wikipedia.org/wiki/Запорозьке_військо
-    title: Козацьке військо
-    notes: Історичний контекст озброєння
 content_outline:
 - section: Вступ — Війна як ремесло
   words: 500
-  subsections:
+  points:
   - '"Енеїда" як поема про війну'
   - Третина тексту — описи битв
   - Феномен "смішної смерті"
 - section: Арсенал Енея — зброя та спорядження
   words: 700
-  subsections:
+  points:
   - Холодна зброя (шабля, спис, сокира)
   - Вогнепальна зброя (гармата, мортира, рушниця)
   - Козацьке vs римське озброєння
 - section: Анатомія бою — тактика і стратегія
   words: 700
-  subsections:
+  points:
   - Описи битв (з рутульцями, турнами)
   - Поєдинки та масові сутички
   - Військова ієрархія троянської ватаги
 - section: Естетика смішної смерті
   words: 800
-  subsections:
+  points:
   - Гумористичні описи насильства
   - '"На локшину кришив" — їжа як метафора'
   - Евфемізми та гіперболи смерті
 - section: Психотерапія сміхом
   words: 500
-  subsections:
+  points:
   - Війна як повсякденне ремесло нації
   - Жарт як спосіб впоратися з травмою
   - Порівняння з сучасною воєнною сатирою
 - section: Підсумок — Від бою до сентименту
   words: 400
-  subsections:
+  points:
   - Вичерпання бурлескного жанру
   - Перехід до "Наталки Полтавки"
   - Котляревський між сміхом і сльозами
 word_target: 4500
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - шабля
-  - гармата
-  - мортира
-  - ватага
-  - поєдинок
-  - евфемізм
-  - гіпербола
-  - батальна сцена
-  - тактика
-  - стратегія
+  - шабля (sabre)
+  - гармата (cannon)
+  - мортира (mortar)
+  - ватага (band/troop)
+  - поєдинок (duel)
+  - евфемізм (euphemism)
+  - гіпербола (hyperbole)
+  - батальна сцена (battle scene)
+  - тактика (tactics)
+  - стратегія (strategy)
   recommended:
-  - рушниця
-  - спис
-  - сокира
-  - обладунок
-  - ворог
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - group-sort
-  - quiz
-  - match-up
-  - essay-response
-  - cloze
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - рушниця (musket)
+  - спис (spear)
+  - сокира (axe)
+  - обладунок (armor)
+  - ворог (enemy)
+activity_hints:
+- type: reading
+  focus: Батальні сцени з частин IV-VI
+  source: UkrLib tid=51
+  items: 4+
+- type: group-sort
+  focus: Зброя (холодна / вогнепальна / захисна)
+  items: 20+
+- type: quiz
+  focus: Військова термінологія XVIII ст.
+  items: 15+
+- type: match-up
+  focus: Евфемізми смерті → буквальне значення
+  items: 12+
+- type: essay-response
+  focus: Естетика смішної смерті — етика чи мистецтво?
+  word_target: 300
+  output: Критичне есе
+- type: cloze
+  focus: Описи битв з "Енеїди"
+  items: 12+
+focus: literature
+pedagogy: literature
+prerequisites:
+- lit-02 (Eneida Part I)
+- lit-03 (Eneida Feast)
 connects_to:
-  previous: lit-02 (Eneida Part I)
-  related:
-  - lit-05 (Natalka Poltavka — перехід до сентименталізму)
-  - lit-13 (Haidamaky — епос війни у Шевченка)
-constraints:
-  min_engagement_boxes: 3
-  min_examples: 15
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- lit-05 (Natalka Poltavka — перехід до сентименталізму)
+- lit-13 (Haidamaky — епос війни у Шевченка)
+objectives:
+- Analyze the depiction of war in Eneida
+- Identify military vocabulary and weaponry
+- Interpret the humor in battle scenes
+grammar:
+- Military terminology
+- Euphemism construction
+- Burlesque metaphors
+module_type: literature
+sources:
+- name: Енеїда — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=51
+  type: primary
+  notes: Частини IV-VI для аналізу батальних сцен
+- name: Аналіз "Енеїди"
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=51
+  type: secondary
+  notes: Військова тематика
+- name: Козацьке військо
+  url: https://uk.wikipedia.org/wiki/Запорозьке_військо
+  type: reference
+  notes: Історичний контекст озброєння
+immersion: 100% Ukrainian
+phase: LIT.1 Burlesque & Folk Origins

@@ -1,9 +1,10 @@
 module: b2-54
-title: 'Фразеологізми: Природа (Вода, Вогонь, Земля, Вітер)'
-phase: B2.2 [Phraseology & Synonymy]
-pedagogy: CBI
-focus: phraseology
-register: varies
+level: B2
+slug: 54-idioms-nature
+version: '2.0'
+naturalness:
+  score: 9
+  status: PASS
 duration: 60
 transliteration: none
 tags:
@@ -14,41 +15,7 @@ tags:
 - fire
 - earth
 - wind
-grammar:
-- Fixed expressions
-- Idiom structure and variation
 vocabulary_focus: null
-objectives:
-- Вивчити 8 фундаментальних фразеологізмів про чотири стихії
-- Розуміти значення метафор випробування, ризику та правди
-- Вміти використовувати природні образи для опису складних життєвих ситуацій
 vocabulary_count: 38
-slug: 54-idioms-nature
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-- section: Вступ — Природа (Вода, Вогонь, Земля, Вітер)
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-- section: Основний матеріал
-  words: 600
-  points:
-  - Теоретичні основи
-  - Приклади та ілюстрації
-  - Типові помилки та як їх уникати
-- section: Поглиблене вивчення
-  words: 600
-  points:
-  - Додаткові випадки
-  - Контекстуальне використання
-  - Стилістичні нюанси
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

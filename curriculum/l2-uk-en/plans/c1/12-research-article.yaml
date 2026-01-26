@@ -1,21 +1,8 @@
 module: 12-research-article
-level: c1
-sequence: 12
+level: C1
+slug: 12-research-article
 version: '2.0'
 title: Жанр — Наукова стаття
-focus: grammar
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Вимоги до наукових публікацій
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official requirements for Ukrainian academic articles
-- name: IMRaD Structure Guidelines
-  url: https://mova.info/
-  type: secondary
-  notes: International research article structure
 content_outline:
 - section: Вступ — Що таке наукова стаття?
   words: 400
@@ -61,7 +48,7 @@ content_outline:
   - Ідентифікація структурних елементів
   - Критичне оцінювання
 word_target: 4000
-vocabulary:
+vocabulary_hints:
   required:
   - стаття (article)
   - анотація (abstract)
@@ -79,19 +66,42 @@ vocabulary:
   - редакція (editorial board)
   - фахове видання (professional journal)
   - імпакт-фактор (impact factor)
-  forbidden: []
-activities:
-  types_required:
-  - group-sort
-  - quiz
-  - essay-response
-  - cloze
-  - fill-in
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: group-sort
+  focus: Arrange article sections in order
+  items: 12+
+- type: match-up
+  focus: Section to content type
+  items: 15+
+- type: cloze
+  focus: Article section phrases
+  items: 12+
+- type: quiz
+  focus: Identify IMRaD elements in excerpts
+  items: 12+
+- type: essay-response
+  focus: Write abstract for given research
+  word_target: 200
+- type: fill-in
+  focus: Match typical phrases to sections
+  items: 12+
+focus: grammar
+prerequisites:
+- c1-08 to c1-11 (Essay and Citation skills)
+- Academic style markers
 connects_to:
 - c1-13 (Abstract Writing)
 - c1-14 (Literature Review)
 - c1-19 (Article Critique)
+module_type: grammar
+sources:
+- name: Вимоги до наукових публікацій
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official requirements for Ukrainian academic articles
+- name: IMRaD Structure Guidelines
+  url: https://mova.info/
+  type: secondary
+  notes: International research article structure
+immersion: 100% Ukrainian
+phase: C1.1 Academic Ukrainian

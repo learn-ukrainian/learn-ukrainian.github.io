@@ -1,13 +1,11 @@
-id: c1-bio-02
 module: c1-bio-02
-title: 'Князь Святослав: Воїн-завойовник'
-subtitle: 'Prince Sviatoslav: The Warrior Conqueror'
+level: C1-BIO
 slug: kniaz-sviatoslav
-module_type: biography
 version: '2.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: CBI
+id: c1-bio-02
+naturalness:
+  score: 9
+  status: PASS
 duration: 120
 transliteration: none
 tags:
@@ -15,125 +13,6 @@ tags:
 - pre-modern
 - military
 - kyivan-rus
-grammar:
-- Historical narrative register
-- Quoted speech conventions in chronicles
-- Participial constructions in formal descriptions
-objectives:
-- Learner understands the geopolitical strategy of Sviatoslav Ihorovych
-- Learner can analyze the impact of the destruction of the Khazar Khaganate
-- Learner masters biographical and military terminology at C1 level
-- Learner can compare the leadership styles of Olga and Sviatoslav
 vocabulary_count: 25
-immersion: 100% Ukrainian
-sources:
-- name: Святослав Ігорович (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Святослав_Ігорович
-  type: primary
-  notes: Military campaigns, death, historical significance
-- name: Повість минулих літ
-  url: https://uk.wikipedia.org/wiki/Повість_минулих_літ
-  type: primary
-  notes: Chronicle accounts of campaigns
-- name: Хозарський каганат
-  url: https://uk.wikipedia.org/wiki/Хозарський_каганат
-  type: reference
-  notes: Context for Khazar campaign
-content_outline:
-- section: Вступ — Воїн на троні
-  words: 400
-  points:
-  - Контраст між 'м'якою силою' Ольги та 'твердою силою' Святослава
-  - 'Значення постаті: Святослав як ''український Александр Македонський'''
-  - Чому він важливий для сучасної мілітарної ідентичності (гасло ССО)
-- section: 'Життєпис: Ранні роки'
-  words: 400
-  points:
-  - Дитинство в Києві та вплив трагічної загибелі Ігоря
-  - Виховання варязькими воєводами Асмудом та Свенельдом
-  - 'Похід на древлян 946 року: перший кинутий спис у 4 роки'
-- section: 'Життєпис: Східний похід та Крах Хазарії'
-  words: 800
-  points:
-  - Економічна логіка знищення хазарської монополії на Волзі
-  - Стратегія обходу степу через ліси в'ятичів та басейн Оки
-  - Падіння Ітіля у 965 році та зникнення Каганату з мапи історії
-- section: 'Життєпис: Балканська мрія та Облога Доростола'
-  words: 800
-  points:
-  - Проект перенесення столиці до Переяславця на Дунаї
-  - 'Конфлікт із Візантією: Битва під Аркадіополем'
-  - 'Облога Доростола 971 року: героїчний опір та договір з Цимісхієм'
-- section: 'Життєпис: Загибель на порогах'
-  words: 400
-  points:
-  - 'Повернення до Києва: зимівля в Білобережжі та голод'
-  - Пастка печенігів біля порогів та роль візантійської дипломатії
-  - 'Легенда про чашу з черепа: визнання доблесті ворогом'
-- section: 'Історичний контекст: Русь у X столітті'
-  words: 400
-  points:
-  - 'Геополітичний ландшафт: Між Другим Римом та Шовковим шляхом'
-  - 'Військова організація: ''Ефект пардуса'' (швидкість та мобільність)'
-  - 'Мова та культура: Зіткнення язичницького етосу та християнської дипломатії'
-- section: 'Порівняльний аналіз: Творець (Ольга) vs Завойовник (Святослав)'
-  words: 400
-  points:
-  - Порівняння внутрішньої розбудови інституцій та зовнішньої експансії
-  - 'Симбіоз: Чому Русі потрібен був і Скелет (Ольга), і М''язи (Святослав)'
-  - 'Спадщина: Як перемоги Святослава уможливили реформи Володимира'
-- section: 'Спадщина: Від Князя до ЗСУ'
-  words: 400
-  points:
-  - 'Деколонізація: Повернення ''оселедця'' та ''сережки'' як українських символів'
-  - 'Сучасна військова символіка: Святослав як патрон Сил спеціальних операцій'
-  - Кодекс честі 'Іду на ви!'
-vocabulary_hints:
-  required:
-  - воїн (warrior)
-  - завойовник (conqueror)
-  - каганат (khaganate)
-  - похід (campaign/march)
-  - дружина (retinue/warband)
-  - печеніги (Pechenegs)
-  - пороги (rapids)
-  - засідка (ambush)
-  - данник (tributary)
-  - договір (treaty)
-  recommended:
-  - чаша (cup/goblet)
-  - череп (skull)
-  - здобич (spoils/booty)
-  - облога (siege)
-  - перемога (victory)
-activity_hints:
-- type: reading
-  focus: Chronicle description of Sviatoslav's campaigns
-  source: Повість минулих літ (adapted)
-  items: 3 passages
-- type: quiz
-  focus: Military campaigns chronology and geography
-  items: 12+
-- type: match-up
-  focus: Enemies of Sviatoslav and outcomes
-  items: 10+
-- type: essay-response
-  focus: Evaluate Sviatoslav's legacy - conqueror or destroyer?
-  word_target: 250
-  output: Balanced argument with evidence
-- type: group-sort
-  focus: Categorize actions as diplomatic vs. military
-  items: 12+
-- type: fill-in
-  focus: Famous quotes and their contexts
-  items: 8+
-prerequisites:
-- c1-bio-01 (Knyahynia Olha - mother)
-- Understanding of Kyivan Rus geography
-connects_to:
-- c1-bio-03 (Volodymyr Velykyi - son)
-- c1-bio-04 (Yaroslav Mudryi - grandson's era)
-- c1-bio-06 (Mykhailo Chernihivskyi - later Mongol threat parallel)
-naturalness:
-  score: 9
-  status: PASS
+build:
+  last_modified: '2026-01-26'

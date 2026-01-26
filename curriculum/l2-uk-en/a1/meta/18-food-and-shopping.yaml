@@ -1,98 +1,13 @@
 module: a1-18
-id: a1-18
+level: A1
 slug: food-and-shopping
-title: "Food, Drinks & Shopping"
-subtitle: "Practical Vocabulary for Market and Store"
 version: '2.0'
-phase: "A1.2 [Navigation]"
-focus: vocabulary
-pedagogy: PPP
-register: розмовний
-duration: 60
-transliteration: none
-objectives:
-  - "Learner can order food items using accusative case"
-  - "Learner can request quantities using genitive case"
-  - "Learner can ask prices and make purchases"
-  - "Learner can distinguish between food and drink categories"
-grammar:
-  - "Accusative for direct objects (review)"
-  - "Genitive for quantities"
-  - "Price expressions"
-word_target: 1000
-content_outline:
-  - section: "Introduction: Food Vocabulary"
-    words: 100
-    points:
-      - "Essential food words"
-      - "Shopping situations"
-      - "Grammar in context"
-  - section: "Food Categories"
-    words: 250
-    points:
-      - "Fruits: яблуко, банан, апельсин"
-      - "Vegetables: картопля, морква, помідор"
-      - "Bread/Grains: хліб, рис, макарони"
-      - "Meat/Fish: м'ясо, курка, риба"
-  - section: "Drinks"
-    words: 150
-    points:
-      - "вода, сік, молоко"
-      - "кава, чай"
-      - "пиво, вино (adult beverages)"
-  - section: "Quantities and Measures"
-    words: 200
-    points:
-      - "кілограм, грам, літр"
-      - "пляшка (bottle), пакет (package)"
-      - "Genitive after quantities"
-  - section: "Shopping Phrases"
-    words: 200
-    points:
-      - "Дайте, будь ласка... (Please give me...)"
-      - "Мені потрібно... (I need...)"
-      - "Скільки коштує? Це все."
-  - section: "Practice: At the Market"
-    words: 100
-    points:
-      - "Role-play shopping"
-      - "Make a shopping list"
-vocabulary_hints:
-  required:
-    - хліб (bread)
-    - молоко (milk)
-    - яблуко (apple)
-    - м'ясо (meat)
-    - кава (coffee)
-    - вода (water)
-    - кілограм (kilogram)
-    - пляшка (bottle)
-  recommended:
-    - картопля (potato)
-    - помідор (tomato)
-    - курка (chicken)
-    - сир (cheese)
-    - яйце (egg)
-    - цукор (sugar)
-activity_hints:
-  - type: vocabulary-drill
-    focus: "Food and drink names"
-    items: 30
-  - type: categorization
-    focus: "Sort food by type"
-    items: 20
-  - type: dialogue
-    focus: "Shopping conversations"
-    items: 8
-  - type: fill-in
-    focus: "Complete with quantities"
-    items: 15
-prerequisites:
-  - a1-17 (Numbers and Money)
-connects_to:
-  - a1-19 (At the Café)
-  - a1-37 (At the Market)
+id: a1-18
 naturalness:
   score: 10
   status: PASS
-  justification: "Essential shopping vocabulary"
+  justification: Essential shopping vocabulary
+duration: 60
+transliteration: none
+build:
+  last_modified: '2026-01-26'

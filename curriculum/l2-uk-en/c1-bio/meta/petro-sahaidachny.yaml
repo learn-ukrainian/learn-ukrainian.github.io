@@ -1,16 +1,13 @@
 module: c1-bio-18
-id: c1-bio-petro-sahaidachny
-title: 'Петро Сагайдачний: Гетьман-Державник'
-subtitle: 'Petro Sahaidachny: The Statesman Hetman'
+level: C1-BIO
 slug: petro-sahaidachny
 version: '2.0'
-phase: C1-BIO
-pedagogy: CBI
-focus: biography
+id: c1-bio-petro-sahaidachny
+naturalness:
+  score: 10
+  status: PASS
 duration: 120
 transliteration: none
-word_target: 4000
-immersion: 100% Ukrainian
 tags:
 - history
 - biography
@@ -18,74 +15,6 @@ tags:
 - military
 - kyiv
 - church
-grammar:
-- Political vocabulary
-- Military strategy terms
-objectives:
-- Analyze Sahaidachny's reforms of the Cossack army
-- Evaluate the restoration of the Orthodox hierarchy (1620)
-- Discuss the Battle of Khotyn (1621)
 vocabulary_count: 25
-sources:
-- name: Петро Конашевич-Сагайдачний (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Петро_Конашевич-Сагайдачний
-  type: primary
-- name: Хотинська битва 1621
-  url: https://uk.wikipedia.org/wiki/Хотинська_битва_(1621)
-  type: primary
-content_outline:
-- section: Вступ — Меч і Хрест
-  words: 615
-  points:
-  - Найвидатніший гетьман до Хмельницького
-  - Перетворення козацтва на регулярне військо
-  - Союз меча (козаків) і хреста (церкви)
-- section: Життєпис
-  words: 1538
-  points:
-  - Походження (шляхтич з Самбора)
-  - Освіта в Острозькій академії (М14)
-  - Морські походи на Кафу, Синоп, Варну (звільнення невільників)
-  - Похід на Москву (1618)
-  - Відновлення православної ієрархії (1620)
-  - Хотинська битва (1621) — порятунок Європи
-  - Смерть від рани у Києві
-- section: Історичний контекст
-  words: 615
-  points:
-  - Доба героїчних морських походів
-  - Тридцятилітня війна в Європі
-  - Занепад православ'я після унії
-- section: Внесок та Спадщина
-  words: 615
-  points:
-  - Реформа війська (дисципліна, мушкети)
-  - '"Військо Запорозьке" вступає до Київського братства'
-  - Київ знову стає культурним центром (Могилянка)
-- section: Порівняльний аналіз
-  words: 617
-  points:
-  - Сагайдачний vs. Наливайко (лояльність vs бунт)
-  - Сагайдачний vs. Дорошенко (стратегічне бачення)
-vocabulary_hints:
-  required:
-  - чайка (chaika/boat)
-  - реєстр (register)
-  - дисципліна (discipline)
-  - ієрархія (hierarchy)
-  - патріарх (patriarch)
-  - братство (brotherhood)
-  - облога (siege)
-  - штурм (assault)
-  - невільник (captive/slave)
-  - меценат (philanthropist)
-activity_hints:
-- type: reading
-  focus: '"Verses on the Funeral of Sahaidachny" (1622)'
-- type: quiz
-  focus: Military campaigns map
-- type: essay-response
-  focus: Why Sahaidachny supported the Church?
-naturalness:
-  score: 10
-  status: PASS
+build:
+  last_modified: '2026-01-26'

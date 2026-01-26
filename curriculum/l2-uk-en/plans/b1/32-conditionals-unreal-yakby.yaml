@@ -1,16 +1,9 @@
-module: conditionals-unreal-yakby
-level: b1
-sequence: 32
+module: b1-32
+level: B1
+slug: conditionals-unreal-yakby
 version: '2.0'
 title: 'Умовні речення: нереальна умова (якби)'
 subtitle: Unreal Conditionals - Hypothetical Situations
-focus: grammar
-pedagogy: TTT
-objectives:
-- Learner understands unreal conditional constructions
-- Learner can form hypothetical sentences with якби
-- Learner can distinguish real and unreal conditionals
-- Learner can express wishes and hypotheticals
 content_outline:
 - section: 'Introduction: Unreal Conditionals'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Form hypothetical sentences
   - Express wishes and dreams
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - якби (if - unreal)
   - би (would - particle)
@@ -63,15 +56,33 @@ vocabulary:
   - хотілося б (would like)
   - було б краще (it would be better)
   - на жаль (unfortunately)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - speaking
-  - error-correction
-  - transformation
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: Complete unreal conditionals
+  items: 25
+- type: transformation
+  focus: Real to unreal conversion
+  items: 20
+- type: error-correction
+  focus: Fix conditional errors
+  items: 15
+- type: speaking
+  focus: Express hypotheticals
+  items: 10
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-31 (Conditionals Real якщо)
 connects_to:
 - b1-33 (Conditionals Mixed Complex)
+objectives:
+- Learner understands unreal conditional constructions
+- Learner can form hypothetical sentences with якби
+- Learner can distinguish real and unreal conditionals
+- Learner can express wishes and hypotheticals
+grammar:
+- Unreal conditionals with якби
+- Conditional mood (умовний спосіб)
+- Past form + би construction
+register: розмовний
+phase: B1.3a [Complex Sentences]

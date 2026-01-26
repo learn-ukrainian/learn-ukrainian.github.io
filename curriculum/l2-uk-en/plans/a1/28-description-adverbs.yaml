@@ -1,16 +1,9 @@
-module: description-adverbs
-level: a1
-sequence: 28
+module: a1-28
+level: A1
+slug: description-adverbs
 version: '2.0'
 title: 'Description: Adverbs'
 subtitle: How We Do Things
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can form adverbs from adjectives
-- Learner can use adverbs to describe how actions are done
-- Learner can use frequency adverbs correctly
-- Learner can distinguish adverbs from adjectives
 content_outline:
 - section: 'Introduction: What Are Adverbs?'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - How do you do things?
   - How often do you...?
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - добре (well)
   - погано (badly)
@@ -65,16 +58,35 @@ vocabulary:
   - зазвичай (usually)
   - легко (easily)
   - важко (with difficulty)
-  forbidden: []
-activities:
-  types_required:
-  - transformation
-  - fill-in
-  - ordering
-  - speaking
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: transformation
+  focus: Form adverbs from adjectives
+  items: 25
+- type: fill-in
+  focus: Complete with correct adverb
+  items: 20
+- type: ordering
+  focus: Order frequency adverbs
+  items: 10
+- type: speaking
+  focus: Describe how you do activities
+  items: 8
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-26 (Describing Things - Adjectives)
+- a1-27 (Colors and Clothing)
 connects_to:
 - a1-29 (Weather and Seasons)
 - a1-30 (Checkpoint Consolidation)
+objectives:
+- Learner can form adverbs from adjectives
+- Learner can use adverbs to describe how actions are done
+- Learner can use frequency adverbs correctly
+- Learner can distinguish adverbs from adjectives
+grammar:
+- Adverbs of manner (adjective stem + -о)
+- Adverbs of frequency
+- Adverb placement in sentences
+register: розмовний
+phase: A1.3 [Consolidation]

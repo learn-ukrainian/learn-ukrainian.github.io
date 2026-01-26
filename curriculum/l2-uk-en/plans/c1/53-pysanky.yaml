@@ -1,22 +1,37 @@
-module: 53-pysanky
-level: c1
-sequence: 53
+module: c1-53
+level: C1
+slug: 53-pysanky
 version: '2.0'
 title: 'Писанки: Космос на долоні'
 subtitle: 'Pysankas: Cosmos in the Palm of Your Hand'
+content_outline:
+- section: Вступ — Космос на долоні
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Категорії сленгу
+  words: 500
+  points:
+  - 'Інтернет-сленг: лол, рофл, кринж'
+  - 'Молодіжний сленг: круто, прикольно, тупо'
+  - 'Сленг субкультур: Various groups'
+  - 'Запозичення: From English mainly'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: history
 pedagogy: CBI
 objectives:
 - Analyze the archaic symbology of Ukrainian Pysanka patterns
 - Identify regional differences in pysanka design and color palettes
 - Understand the ritual technology of wax-resist egg decorating
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Symbolic narrative registers
+- Terminology of craftsmanship
+phase: C1.5 Folk Culture & Fine Arts

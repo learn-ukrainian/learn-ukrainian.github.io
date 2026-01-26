@@ -1,97 +1,13 @@
 module: a2-53
-id: a2-53
+level: A2
 slug: shopping-services
-title: "Shopping and Services"
-subtitle: "Buying and Paying"
 version: '2.0'
-phase: "A2.5 [Vocabulary Expansion]"
-focus: vocabulary
-pedagogy: PPP
-register: розмовний
-duration: 60
-transliteration: none
-objectives:
-  - "Learner can buy items in a shop"
-  - "Learner can ask for price and pay"
-  - "Learner can use service vocabulary (checkout, receipt)"
-  - "Learner can describe payment methods"
-grammar:
-  - "Payment verbs (платити, купувати, продавати)"
-  - "Accusative for prices and objects"
-  - "Instrumental for means (карткою, готівкою)"
-word_target: 1000
-content_outline:
-  - section: "Introduction: Shopping in Ukraine"
-    words: 100
-    points:
-      - "Types of stores"
-      - "Shopping culture"
-      - "Payment methods"
-  - section: "In the Store"
-    words: 200
-    points:
-      - "магазин, супермаркет, ринок"
-      - "продавець, покупець"
-      - "Finding products"
-  - section: "Prices and Paying"
-    words: 200
-    points:
-      - "Скільки коштує?"
-      - "платити карткою/готівкою"
-      - "Accusative for prices"
-  - section: "At the Checkout"
-    words: 200
-    points:
-      - "каса, чек, здача"
-      - "знижка, акція"
-      - "Checkout dialogue"
-  - section: "Services"
-    words: 150
-    points:
-      - "хімчистка, перукарня"
-      - "ремонт, доставка"
-      - "Service vocabulary"
-  - section: "Practice: Shopping Dialogue"
-    words: 150
-    points:
-      - "Buy items in a store"
-      - "Ask about services"
-vocabulary_hints:
-  required:
-    - магазин (store)
-    - ціна (price)
-    - купувати (to buy)
-    - платити (to pay)
-    - гроші (money)
-    - картка (card)
-    - готівка (cash)
-    - чек (receipt)
-  recommended:
-    - знижка (discount)
-    - каса (checkout)
-    - здача (change)
-    - пакет (bag)
-    - примірка (fitting room)
-    - розмір (size)
-activity_hints:
-  - type: vocabulary-drill
-    focus: "Shopping vocabulary"
-    items: 30
-  - type: dialogue
-    focus: "Store conversation"
-    items: 12
-  - type: fill-in
-    focus: "Complete shopping sentences"
-    items: 15
-  - type: role-play
-    focus: "Buy items at a store"
-    items: 8
-prerequisites:
-  - a2-52 (Education and Learning)
-connects_to:
-  - a2-54 (Sports and Fitness)
-  - a2-63 (At the Bank)
+id: a2-53
 naturalness:
   score: 9
   status: PASS
-  justification: "Essential shopping vocabulary"
+  justification: Essential shopping vocabulary
+duration: 60
+transliteration: none
+build:
+  last_modified: '2026-01-26'

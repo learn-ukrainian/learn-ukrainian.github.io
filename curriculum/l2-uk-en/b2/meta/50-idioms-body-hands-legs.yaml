@@ -1,56 +1,18 @@
 module: b2-50
-title: 'Соматичні фразеологізми: Руки та ноги'
-subtitle: 'Somatic Idioms: Hands and Legs'
+level: B2
+slug: 50-idioms-body-hands-legs
 version: '1.0'
-phase: B2.2 [Phraseology & Synonymy]
-pedagogy: CBI
-focus: phraseology
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
-immersion: 100
 tags:
 - phraseology
 - somatic
 - idioms
 - body-parts
-grammar:
-- Fixed expressions (фразеологічні одиниці)
-- Idiom structure and variation
-objectives:
-- Learner can recognize and interpret 8 core Ukrainian somatic idioms about hands
-  and legs
-- Learner can use idioms appropriately in context to express actions, abilities, and
-  obstacles
-- Learner understands the distinction between literal and figurative meanings
 vocabulary_count: 35
-register: varies
 vocab_count: 64
-slug: 50-idioms-body-hands-legs
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-- section: Вступ — Руки та ноги
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-- section: Основний матеріал
-  words: 600
-  points:
-  - Теоретичні основи
-  - Приклади та ілюстрації
-  - Типові помилки та як їх уникати
-- section: Поглиблене вивчення
-  words: 600
-  points:
-  - Додаткові випадки
-  - Контекстуальне використання
-  - Стилістичні нюанси
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

@@ -1,25 +1,9 @@
 module: 39-adjective-suffixes-qualities
-level: a2
-sequence: 39
+level: A2
+slug: 39-adjective-suffixes-qualities
 version: '2.0'
 title: Adjective Suffixes — Qualities
 subtitle: Making Descriptions Richer
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can use suffixes to express affection or smallness
-- Learner can use suffixes to express largeness or intensity
-- Learner can form adjectives from nouns using common suffixes
-- Learner can describe objects with emotional nuance
-sources:
-- name: Ukrainian State Standard 2024 - Adjective Morphology
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Standards for suffixal adjective formation and emotional-expressive nuances at A2
-- name: Word Formation in Ukrainian Language - Suffixes
-  url: https://uk.wikipedia.org/wiki/Словотворення_в_українській_мові
-  type: reference
-  notes: Rules for diminutive and intensive adjective suffixes
 content_outline:
 - section: Introduction / Вступ
   words: 200
@@ -45,7 +29,23 @@ content_outline:
   points:
   - On the market: Choosing between 'big' and 'gigantic' watermelons
 word_target: 1000
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can use suffixes to express affection or smallness
+- Learner can use suffixes to express largeness or intensity
+- Learner can form adjectives from nouns using common suffixes
+- Learner can describe objects with emotional nuance
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Adjective Morphology
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standards for suffixal adjective formation and emotional-expressive nuances
+    at A2
+- name: Word Formation in Ukrainian Language - Suffixes
+  url: https://uk.wikipedia.org/wiki/Словотворення_в_українській_мові
+  type: reference
+  notes: Rules for diminutive and intensive adjective suffixes
+immersion: 65-75% Ukrainian
+phase: A2.3

@@ -1,11 +1,8 @@
+module: 101-vovchok-myrnyi
+level: C1
+slug: 101-vovchok-myrnyi
 version: '2.0'
 id: c1-101
-title: Вовчок та Мирний
-subtitle: 'Vovchok and Myrny: Social Realism'
-slug: 101-vovchok-myrnyi
-phase: C1.6 Literature
-focus: literature
-pedagogy: Literary Analysis
 duration: 120
 transliteration: none
 tags:
@@ -13,32 +10,5 @@ tags:
 - realism
 - social-critique
 - village-life
-grammar:
-- Narrative voice
-- Dialectal speech
-objectives:
-- Learner can analyze the social critique in Marko Vovchok’s "Instytutka".
-- Learner can interpret the psychological motivation of characters in Panas Myrny’s
-  work.
-- Learner can discuss the features of Ukrainian social realism.
-content_outline:
-- section: Вступ — Вовчок та Мирний
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-- section: Content Areas
-  words: 500
-  points:
-  - 'Марко Вовчок: women''s perspective, serfdom critique'
-  - 'Інститутка, Народні оповідання: short prose'
-  - 'Панас Мирний: Хіба ревуть воли, як ясла повні?'
-  - 'Social realism techniques: типовість, народність'
-  - Village life and social injustice
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

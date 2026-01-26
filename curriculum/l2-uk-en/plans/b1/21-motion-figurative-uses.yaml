@@ -1,28 +1,9 @@
 module: 21-motion-figurative-uses
-level: b1
-sequence: 21
-version: '1.2'
+level: B1
+slug: 21-motion-figurative-uses
+version: '2.0'
 title: Переносні значення дієслів руху
 subtitle: Figurative uses of motion verbs
-focus: grammar
-pedagogy: TTT
-objectives:
-- Learner can recognize figurative uses of motion verbs
-- Learner can use common idiomatic expressions with motion verbs
-- Learner understands the metaphorical extensions of motion prefixes
-sources:
-- name: Ukrainian State Standard 2024 - Figurative Language
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official guidance on idiomatic expressions
-- name: Ukrainian Idioms with Motion Verbs
-  url: https://uk.wikipedia.org/wiki/Фразеологізми
-  type: reference
-  notes: Common figurative expressions with motion verbs
-- name: Slovnyk.UA - Motion Verb Idioms
-  url: https://slovnyk.ua/
-  type: reference
-  notes: Dictionary entries with figurative meanings
 content_outline:
 - section: Тест
   words: 200
@@ -55,7 +36,7 @@ content_outline:
   - Examples and explanation
   - Practice or application
 word_target: 1500
-vocabulary:
+vocabulary_hints:
   required:
   - виходить, що (it turns out that)
   - дійти до висновку (reach a conclusion)
@@ -73,17 +54,54 @@ vocabulary:
   - переносне значення (figurative meaning)
   - буквальний зміст (literal meaning)
   - фразеологізм (phraseological unit)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - quiz
-  - match-up
-  - cloze
-  - group-sort
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: match-up
+  focus: Expression -> meaning
+  items: 15+
+- type: fill-in
+  focus: Use figurative expressions in context
+  items: 12+
+- type: quiz
+  focus: Literal vs figurative motion
+  items: 15+
+- type: cloze
+  focus: Dialogue with figurative expressions
+  items: 12+
+- type: group-sort
+  focus: Literal motion vs figurative expression
+  items: 14+
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-16 (Motion verbs full system)
+- b1-17 (Motion - coming & going)
+- b1-18 (Motion - passing & crossing)
+- b1-19 (Motion - starting & returning)
+- b1-20 (Motion - approaching & departing)
 connects_to:
 - b1-22 (Motion full prefix integration)
 - b1-25 (Checkpoint - motion verbs)
+objectives:
+- Learner can recognize figurative uses of motion verbs
+- Learner can use common idiomatic expressions with motion verbs
+- Learner understands the metaphorical extensions of motion prefixes
+grammar:
+- Idiomatic expressions with motion verbs
+- Figurative vs literal motion
+- Abstract movement vocabulary
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Figurative Language
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official guidance on idiomatic expressions
+- name: Ukrainian Idioms with Motion Verbs
+  url: https://uk.wikipedia.org/wiki/Фразеологізми
+  type: reference
+  notes: Common figurative expressions with motion verbs
+- name: Slovnyk.UA - Motion Verb Idioms
+  url: https://slovnyk.ua/
+  type: reference
+  notes: Dictionary entries with figurative meanings
+immersion: 100% Ukrainian
+phase: B1.2 Motion

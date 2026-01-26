@@ -1,108 +1,109 @@
 module: liudmyla-starytska
-level: c1-bio
-sequence: 38
+level: C1-BIO
+slug: liudmyla-starytska
 version: '2.0'
 title: 'Людмила Старицька-Черняхівська: Драматургиня'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Людмила_Старицька-Черняхівська
-    title: Людмила Старицька-Черняхівська (Wikipedia UA)
-    notes: Біографія, літературна та громадська діяльність
-  secondary:
-  - url: https://uk.wikipedia.org/wiki/Справа_Спілки_визволення_України
-    title: Справа СВУ
-    notes: Сфабрикований процес та репресії
-  - url: https://uk.wikipedia.org/wiki/Михайло_Старицький
-    title: Михайло Старицький
-    notes: Батько — класик української літератури
 content_outline:
 - section: Вступ — Дочка корифея, жертва імперії
   words: 400
-  subsections:
+  points:
   - Людмила Старицька-Черняхівська — драматургиня, поетеса, перекладачка
   - Дочка Михайла Старицького — класика українського театру
   - Трагічна загибель у сталінських таборах
 - section: Дитинство в літературній родині (1868-1890)
   words: 600
-  subsections:
+  points:
   - Народження в Києві в родині Старицьких
   - Виховання серед письменників та театралів
   - Домашня освіта та ранній літературний талант
   - Перші поетичні спроби та переклади
 - section: Літературна діяльність (1890-1917)
   words: 700
-  subsections:
+  points:
   - Історичні драми «Гетьман Дорошенко», «Оборона Буші»
   - Поетичні збірки та оповідання для дітей
   - Переклади Шекспіра, Гюго, Ібсена українською
   - Участь у «Київській старовині» та інших виданнях
 - section: Революційні роки та УНР (1917-1920)
   words: 700
-  subsections:
+  points:
   - Підтримка Української революції
   - Культурна діяльність в добу УНР
   - Співпраця з театрами та видавництвами
   - Чоловік Олександр Черняхівський — видатний лікар
 - section: Справа СВУ та знищення (1929-1941)
   words: 800
-  subsections:
+  points:
   - Арешт у 1929 році по справі СВУ
   - Сфабриковані звинувачення у «буржуазному націоналізмі»
   - Заслання до Казахстану
   - Смерть у таборі в 1941 році
 - section: Реабілітація та пам'ять
   words: 800
-  subsections:
+  points:
   - Посмертна реабілітація у 1960-х роках
   - Повернення творів до читачів
   - Династія Старицьких в українській культурі
   - Пам'ять про жертв СВУ
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - драматургиня
-  - корифей
-  - репресії
-  - заслання
-  - сфабрикований
-  - реабілітація
-  - перекладач
-  - історична драма
-  - процес
-  - інтелігенція
+  - драматургиня (playwright, female)
+  - корифей (coryphaeus, leading figure)
+  - репресії (repressions)
+  - заслання (exile)
+  - сфабрикований (fabricated)
+  - реабілітація (rehabilitation)
+  - перекладач (translator)
+  - історична драма (historical drama)
+  - процес (trial/process)
+  - інтелігенція (intelligentsia)
   recommended:
-  - націоналізм
-  - контрреволюція
-  - табір
-  - мученик
-  - спадщина
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - націоналізм (nationalism)
+  - контрреволюція (counter-revolution)
+  - табір (camp)
+  - мученик (martyr)
+  - спадщина (legacy)
+activity_hints:
+- type: reading
+  focus: Уривки з драм та поезій Старицької-Черняхівської
+  source: Оригінальні твори
+  items: 3 passages
+- type: quiz
+  focus: Біографія та літературна спадщина
+  items: 12+
+- type: match-up
+  focus: Твори та їхні теми
+  items: 10+
+- type: essay-response
+  focus: Як радянська влада знищувала українську інтелігенцію?
+  word_target: 300
+  output: Historical analysis
+- type: group-sort
+  focus: Етапи життя та творчості
+  items: 12+
+- type: fill-in
+  focus: Літературна та історична термінологія
+  items: 10+
+focus: biography
+prerequisites:
+- c1-bio-48-marko-kropyvnytskyi
 connects_to:
-  previous: c1-bio-48-marko-kropyvnytskyi
-  related:
-  - c1-bio-57-les-kurbas
-  - c1-bio-63-mykola-khvylovyi
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-57-les-kurbas
+- c1-bio-63-mykola-khvylovyi
+module_type: biography
+sources:
+- name: Людмила Старицька-Черняхівська (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Людмила_Старицька-Черняхівська
+  type: primary
+  notes: Біографія, літературна та громадська діяльність
+- name: Справа СВУ
+  url: https://uk.wikipedia.org/wiki/Справа_Спілки_визволення_України
+  type: reference
+  notes: Сфабрикований процес та репресії
+- name: Михайло Старицький
+  url: https://uk.wikipedia.org/wiki/Михайло_Старицький
+  type: reference
+  notes: Батько — класик української літератури
+immersion: 100% Ukrainian
+phase: C1-BIO

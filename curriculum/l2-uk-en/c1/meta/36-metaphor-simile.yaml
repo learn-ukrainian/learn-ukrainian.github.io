@@ -1,10 +1,7 @@
 module: c1-36
-title: 'Метафора та порівняння: Образна мова'
-subtitle: 'Metaphor & Simile: Figurative Language'
+level: C1
+slug: 36-metaphor-simile
 version: '1.0'
-phase: C1.4 Advanced Stylistics & Rhetoric
-focus: style
-pedagogy: Immersion
 duration: 90
 transliteration: none
 tags:
@@ -13,33 +10,6 @@ tags:
 - figurative-language
 - metaphor
 - simile
-grammar:
-- Direct and extended metaphors
-- Simile markers (як, мов, наче, ніби)
-- Personification
-objectives:
-- Distinguish between direct and extended metaphors
-- Use simile markers correctly in context
-- Identify and analyze personification in literary texts
 vocabulary_count: 25
-slug: 36-metaphor-simile
-content_outline:
-- section: Вступ — Образна мова
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-  - Роль у системі української мови
-- section: Типи метафор
-  words: 500
-  points:
-  - 'Пряма метафора: Життя — це дорога'
-  - 'Розгорнута метафора: Extended metaphorical narrative'
-  - 'Персоніфікація: Сонце сміється'
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

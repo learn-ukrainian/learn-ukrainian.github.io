@@ -1,95 +1,13 @@
 module: b1-51
-id: b1-51
+level: B1
 slug: checkpoint-advanced-grammar
-title: "Контрольна точка: Просунута граматика"
-subtitle: "Advanced Grammar Phase Checkpoint"
 version: '2.0'
-phase: "B1.4b [Advanced Grammar Checkpoint]"
-focus: checkpoint
-pedagogy: TTT
-register: розмовний
-duration: 90
-transliteration: none
-objectives:
-  - "Learner can demonstrate mastery of advanced grammar forms"
-  - "Learner can integrate knowledge from M42-M50"
-  - "Learner can form and use adverbial and passive participles"
-  - "Learner can self-assess readiness for Vocabulary Expansion phase"
-grammar:
-  - "Integration of M42-M50"
-  - "Participles, passive voice, diminutives, numerals"
-  - "Comprehensive review and testing"
-word_target: 1000
-content_outline:
-  - section: "Pre-Test: Self-Assessment"
-    words: 100
-    points:
-      - "Review B1.4 objectives"
-      - "Identify strengths and gaps"
-      - "Set checkpoint goals"
-  - section: "Participles Review"
-    words: 200
-    points:
-      - "Adverbial participles (-ючи, -вши)"
-      - "Active and passive participles"
-      - "Stylistic choices"
-  - section: "Passive Voice Review"
-    words: 200
-    points:
-      - "Three passive construction types"
-      - "Short vs full forms"
-      - "Context-appropriate selection"
-  - section: "Diminutives and Numerals Review"
-    words: 200
-    points:
-      - "Diminutive pragmatics"
-      - "Collective vs cardinal numerals"
-      - "Fractions and percentages"
-  - section: "Comprehensive Assessment"
-    words: 200
-    points:
-      - "All B1.4 structures"
-      - "Error analysis"
-      - "Proficiency check"
-  - section: "Feedback and Planning"
-    words: 100
-    points:
-      - "Review results"
-      - "Plan for B1.5"
-      - "Identify review needs"
-vocabulary_hints:
-  required:
-    - контрольна точка (checkpoint)
-    - оцінювання (assessment)
-    - дієприкметник (participle)
-    - дієприслівник (adverbial participle)
-    - пасивний стан (passive voice)
-    - демінутив (diminutive)
-    - збірний числівник (collective numeral)
-    - інтеграція (integration)
-  recommended:
-    - готовність (readiness)
-    - прогрес (progress)
-    - майстерність (mastery)
-    - самооцінка (self-assessment)
-activity_hints:
-  - type: quiz
-    focus: "B1.4 comprehensive test"
-    items: 30
-  - type: transformation
-    focus: "All participle and passive conversions"
-    items: 25
-  - type: fill-in
-    focus: "Complete with appropriate forms"
-    items: 20
-  - type: writing
-    focus: "Write integrated paragraphs"
-    items: 10
-prerequisites:
-  - b1-50 (Integrated Grammar Lab)
-connects_to:
-  - b1-52 (Abstract Concepts Ideas)
+id: b1-51
 naturalness:
   score: 9
   status: PASS
-  justification: "B1.4 advanced grammar checkpoint"
+  justification: B1.4 advanced grammar checkpoint
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-26'

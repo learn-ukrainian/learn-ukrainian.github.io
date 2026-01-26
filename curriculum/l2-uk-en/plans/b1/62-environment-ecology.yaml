@@ -1,16 +1,9 @@
-module: environment-ecology
-level: b1
-sequence: 62
+module: b1-62
+level: B1
+slug: environment-ecology
 version: '2.0'
 title: Довкілля та екологія
 subtitle: Environment & Ecology
-focus: vocabulary
-pedagogy: PPP
-objectives:
-- Learner can use 35 environmental vocabulary words in context
-- Learner can discuss environmental issues using appropriate collocations
-- Learner can distinguish between довкілля/навколишнє середовище/природа
-- Learner can express opinions on environmental topics
 content_outline:
 - section: 'Introduction: Environmental Vocabulary'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Discuss ecological issues
   - Propose solutions
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - довкілля (environment)
   - природа (nature)
@@ -63,15 +56,33 @@ vocabulary:
   - викиди (emissions)
   - відновлювана енергія (renewable energy)
   - екосистема (ecosystem)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - discussion
-  - collocation
-  - matching
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: collocation
+  focus: Environmental noun phrases
+  items: 25
+- type: fill-in
+  focus: Describe environmental issues
+  items: 20
+- type: matching
+  focus: Match problems and solutions
+  items: 15
+- type: discussion
+  focus: Discuss ecological topics
+  items: 10
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-61 (Professional Communication)
 connects_to:
 - b1-63 (Health Wellness)
+objectives:
+- Learner can use 35 environmental vocabulary words in context
+- Learner can discuss environmental issues using appropriate collocations
+- Learner can distinguish between довкілля/навколишнє середовище/природа
+- Learner can express opinions on environmental topics
+grammar:
+- Environmental vocabulary collocations
+- Cause-effect constructions for ecology
+- Problem-solution patterns
+register: розмовний
+phase: B1.6 [Vocabulary Expansion II]

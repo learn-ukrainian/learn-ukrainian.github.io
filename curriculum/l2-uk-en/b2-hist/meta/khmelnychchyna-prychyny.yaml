@@ -1,14 +1,11 @@
 module: khmelnychchyna-prychyny
-id: b2-hist-51
-title: 'Хмельниччина I: причини та початок'
-subtitle: 'The Khmelnytsky Uprising: Causes and Outbreak'
+level: B2-HIST
 slug: khmelnychchyna-prychyny
 version: '2.0'
-phase: HIST.5 [Rise of Cossacks]
-focus: history
-pedagogy: CBI
-word_target: 3000
-register: публіцистичний
+id: b2-hist-51
+naturalness:
+  score: 9
+  status: PASS
 duration: 120
 transliteration: none
 tags:
@@ -17,83 +14,5 @@ tags:
 - khmelnytsky
 - cossack
 - liberation
-grammar:
-- 'Historical narrative: cause and effect'
-- Military and political terminology
-objectives:
-- Учень може пояснити соціальні та релігійні причини повстання
-- Учень може аналізувати особисту трагедію Хмельницького як каталізатор подій
-- Учень може описати перші перемоги 1648 року (Жовті Води, Корсунь)
-vocabulary_hints:
-  required:
-  - повстання
-  - гніт
-  - унія
-  - шляхта
-  - реєстр
-  - універсал
-  - союз
-  - засідка
-  - перемога
-  - воля
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-- section: 'Вступ: На порозі великих змін'
-  words: 324
-  points:
-  - The atmosphere in Ukraine in the mid-17th century
-  - Accumulated tensions and grievances
-- section: 'Соціально-економічні причини: Земля і воля'
-  words: 648
-  points:
-  - Enserfment of peasants (pansshchyna)
-  - Restrictions on Cossack rights and registry
-  - Economic exploitation by magnates
-- section: Релігійні та національне гноблення
-  words: 648
-  points:
-  - The Union of Brest and religious conflict
-  - Discrimination against the Orthodox Church
-  - Polonization of the Ukrainian elite
-- section: Політична криза Речі Посполитої
-  words: 486
-  points:
-  - Weakness of royal power vs. magnate anarchy
-  - Failed attempts at reform by Wladyslaw IV
-  - The 'Golden Peace' period (1638-1648)
-- section: 'Первинні джерела: Скарги та універсали'
-  words: 405
-  points:
-  - Excerpts from contemporary chronicles describing oppression
-  - Early letters of Khmelnytsky stating grievances
-- section: 'Деколонізаційний погляд: Не бунт, а революція'
-  words: 405
-  points:
-  - 'Reframing the conflict: National Liberation War vs. Civil War'
-  - Debunking myths about 'reunification' desires
-- section: Читання
-  words: 84
-  points:
-  - Intro to reading tasks
-activity_hints:
-- type: reading
-  focus: Linguistic analysis of 17th-century documents
-- type: quiz
-  focus: Chronology and key figures
-- type: essay-response
-  focus: Causes of the uprising
-- type: comparative-study
-  focus: Polish vs. Cossack perspective
-- type: true-false
-  focus: Facts about the battles
-sources:
-- name: History of Ukraine-Rus
-  url: http://litopys.org.ua/hrushrus/iur.htm
-  type: reference
-  notes: Classic historical account
-- name: The Khmelnytsky Uprising
-  url: https://encyclopediaofukraine.com
-  type: academic
-  notes: Modern analysis
+build:
+  last_modified: '2026-01-26'

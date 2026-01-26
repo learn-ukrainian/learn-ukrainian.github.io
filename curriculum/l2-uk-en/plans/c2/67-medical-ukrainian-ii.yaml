@@ -1,0 +1,122 @@
+module: medical-ukrainian-ii
+level: C2
+slug: medical-ukrainian-ii
+version: '2.0'
+title: Медична українська II — Спілкування з пацієнтами
+content_outline:
+- section: Вступ — Комунікація в медицині
+  words: 500
+  points:
+  - Роль комунікації в медичній практиці
+  - Права пацієнта на інформацію
+  - Інформована згода
+  - Конфіденційність
+- section: Збір анамнезу
+  words: 700
+  points:
+  - Структура медичного інтерв'ю
+  - Відкриті та закриті питання
+  - Скарги та їх характеристика
+  - Анамнез захворювання та життя
+- section: Фізикальний огляд — комунікація
+  words: 600
+  points:
+  - Пояснення процедури пацієнту
+  - Інструкції під час огляду
+  - Реагування на дискомфорт
+  - Підсумок огляду
+- section: Пояснення діагнозу та плану лікування
+  words: 700
+  points:
+  - Доступна мова для пацієнтів
+  - Перевірка розуміння
+  - Відповіді на запитання
+  - Обговорення альтернатив
+- section: Складні розмови
+  words: 600
+  points:
+  - Повідомлення поганих новин
+  - Розмови про прогноз
+  - Спілкування з родичами
+  - Емоційна підтримка
+- section: Особливі категорії пацієнтів
+  words: 500
+  points:
+  - Діти та підлітки
+  - Люди похилого віку
+  - Пацієнти з порушеннями слуху/зору
+  - Пацієнти з іншою рідною мовою
+- section: Практикум — Симуляційні діалоги
+  words: 400
+  points:
+  - 'Рольові ігри: збір анамнезу'
+  - 'Рольові ігри: пояснення діагнозу'
+  - Складна розмова з родичами
+word_target: 4000
+vocabulary_hints:
+  required:
+  - анамнез (medical history)
+  - скарги (complaints)
+  - огляд (examination)
+  - діагноз (diagnosis)
+  - лікування (treatment)
+  - інформована згода (informed consent)
+  - прогноз (prognosis)
+  - рекомендації (recommendations)
+  - побічні ефекти (side effects)
+  - протипоказання (contraindications)
+  recommended:
+  - консультація (consultation)
+  - направлення (referral)
+  - повторний огляд (follow-up)
+  - госпіталізація (hospitalization)
+  - амбулаторне лікування (outpatient treatment)
+activity_hints:
+- type: reading
+  focus: Аналіз транскрипту медичної консультації
+  source: Навчальний матеріал
+  items: 1 повна консультація
+- type: quiz
+  focus: Вибір доречних формулювань у складних ситуаціях
+  items: 15+
+- type: fill-in
+  focus: Завершення діалогів з пацієнтами
+  items: 12+
+- type: essay-response
+  focus: Написання скрипту повідомлення поганих новин
+  word_target: 400
+  output: Структурований діалог з елементами емпатії
+- type: error-correction
+  focus: Виправлення некоректних формулювань у медичній комунікації
+  items: 10+
+- type: match-up
+  focus: Ситуація → доречна комунікативна стратегія
+  items: 12+
+- type: critical-analysis
+  focus: Аналіз етичних аспектів медичної комунікації
+  output: Виявлення порушень та рекомендації
+focus: domain
+prerequisites:
+- c2-66 (Medical Ukrainian I — terminology)
+- Professional oral communication (C2.3 M54)
+- Colloquial style awareness (C2.1 M07)
+connects_to:
+- c2-68 (Medical Ukrainian III — documentation)
+- c2-69 (Medical Ukrainian IV — clinical scenarios)
+- c2-71 (Professional Portfolio I)
+module_type: professional
+sources:
+- name: Протоколи надання медичної допомоги МОЗ
+  url: https://moz.gov.ua/protokoli
+  type: primary
+  notes: Стандарти комунікації з пацієнтами
+- name: Національна служба здоров'я — Пакети послуг
+  url: https://nszu.gov.ua/
+  type: reference
+  notes: Медичні послуги та права пацієнтів
+- name: Етичний кодекс лікаря України
+  url: https://moz.gov.ua/
+  type: reference
+  notes: Етика медичної комунікації
+immersion: 100% Ukrainian
+phase: C2.3 Translation & Creative Writing

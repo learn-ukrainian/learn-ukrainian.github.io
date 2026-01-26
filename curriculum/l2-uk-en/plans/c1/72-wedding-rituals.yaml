@@ -1,9 +1,30 @@
-module: 72-wedding-rituals
-level: c1
-sequence: 72
-version: '1.0'
+module: c1-72
+level: C1
+slug: 72-wedding-rituals
+version: '2.0'
 title: Родинні обряди - весілля
 subtitle: Family Rituals - Wedding
+content_outline:
+- section: Вступ — весілля
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Historical context: Austrian influence, Greek Catholic'
+  - Distinct vocabulary and phonetics
+  - 'Clothing traditions: кептар, сердак'
+  - 'Folk architecture: wooden churches'
+  - 'Musical traditions: trembita, фіяка'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: cultural
 pedagogy: CBI
 objectives:
@@ -11,13 +32,7 @@ objectives:
 - Learner can explain the symbolism of the korovai and rushnyk
 - Learner can distinguish between matchmaking (svatannia) and engagement (zaruchyny)
 - Learner can recite a traditional wedding toast
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- ritual actions description
+- conditional mood in toasts
+phase: C1.5 Folk Culture & Arts

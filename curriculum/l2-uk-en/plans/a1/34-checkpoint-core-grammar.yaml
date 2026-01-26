@@ -1,16 +1,9 @@
-module: checkpoint-core-grammar
-level: a1
-sequence: 34
+module: a1-34
+level: A1
+slug: checkpoint-core-grammar
 version: '2.0'
 title: 'Checkpoint: Core Grammar'
 subtitle: Confirm Grammar Readiness Before Practical Scenarios
-focus: checkpoint
-pedagogy: TTT
-objectives:
-- Demonstrate Cyrillic reading fluency
-- Identify noun gender and use agreement correctly
-- Conjugate verbs in present, past, and future tense
-- Apply four cases (Nominative, Accusative, Genitive, Locative)
 content_outline:
 - section: 'Part 1: Reading and Writing'
   words: 80
@@ -49,7 +42,7 @@ content_outline:
   - Areas for review
   - Preview A1.4 phase
 word_target: 500
-vocabulary:
+vocabulary_hints:
   required:
   - бути (to be)
   - мати (to have)
@@ -64,15 +57,33 @@ vocabulary:
   - писати (to write)
   - їсти (to eat)
   - пити (to drink)
-  forbidden: []
-activities:
-  types_required:
-  - quiz
-  - transformation
-  - self-assessment
-  - error-correction
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: A1.3 grammar comprehensive
+  items: 40
+- type: transformation
+  focus: Case and tense changes
+  items: 25
+- type: error-correction
+  focus: Find and fix errors
+  items: 15
+- type: self-assessment
+  focus: Rate grammar confidence
+  items: 10
+focus: checkpoint
+pedagogy: TTT
+prerequisites:
+- a1-33 (Holidays and Traditions)
 connects_to:
 - a1-35 (At the Café Practical)
+objectives:
+- Demonstrate Cyrillic reading fluency
+- Identify noun gender and use agreement correctly
+- Conjugate verbs in present, past, and future tense
+- Apply four cases (Nominative, Accusative, Genitive, Locative)
+grammar:
+- All A1 cases review
+- Verb tenses review
+- Agreement patterns
+register: розмовний
+phase: A1.3 [Consolidation]

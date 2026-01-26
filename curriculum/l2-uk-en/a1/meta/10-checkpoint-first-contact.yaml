@@ -1,94 +1,13 @@
 module: a1-10
-id: a1-10
+level: A1
 slug: checkpoint-first-contact
-title: "Checkpoint: First Contact"
-subtitle: "Can You Do the A1.1 Skills?"
 version: '2.0'
-phase: "A1.1 [First Contact]"
-focus: checkpoint
-pedagogy: TTT
-register: розмовний
-duration: 45
-transliteration: none
-objectives:
-  - "Demonstrate Cyrillic reading fluency"
-  - "Identify noun gender by word ending"
-  - "Conjugate First and Second Conjugation verbs correctly"
-  - "Form questions and negative statements"
-grammar:
-  - "Cyrillic alphabet (all 33 letters)"
-  - "Noun gender (m/f/n)"
-  - "Present tense conjugation"
-  - "Questions and negation"
-word_target: 500
-content_outline:
-  - section: "Part 1: Reading Assessment"
-    words: 100
-    points:
-      - "Read words and sentences aloud"
-      - "Demonstrate letter recognition"
-      - "Show pronunciation accuracy"
-  - section: "Part 2: Grammar Check"
-    words: 100
-    points:
-      - "Identify noun gender"
-      - "Conjugate verbs correctly"
-      - "Form questions and negatives"
-  - section: "Part 3: Vocabulary Review"
-    words: 100
-    points:
-      - "Common objects and actions"
-      - "Question words"
-      - "Basic phrases"
-  - section: "Part 4: Communication Tasks"
-    words: 100
-    points:
-      - "Self-introduction"
-      - "Ask and answer basic questions"
-      - "Describe daily actions"
-  - section: "Part 5: Self-Assessment"
-    words: 50
-    points:
-      - "What went well?"
-      - "Areas to review"
-  - section: "Summary: Ready for A1.2"
-    words: 50
-    points:
-      - "Skills mastered"
-      - "Preview of Navigation phase"
-vocabulary_hints:
-  required:
-    - читати (to read)
-    - писати (to write)
-    - говорити (to speak)
-    - знати (to know)
-    - хто (who)
-    - що (what)
-    - де (where)
-    - так/ні (yes/no)
-  recommended:
-    - розуміти (to understand)
-    - питати (to ask)
-    - відповідати (to answer)
-    - перевіряти (to check)
-activity_hints:
-  - type: reading-assessment
-    focus: "Read aloud and comprehend"
-    items: 10
-  - type: quiz
-    focus: "A1.1 grammar and vocabulary"
-    items: 30
-  - type: oral-task
-    focus: "Self-introduction and Q&A"
-    items: 5
-  - type: self-assessment
-    focus: "Rate your skills"
-    items: 10
-prerequisites:
-  - a1-09 (Reflexive Verbs)
-connects_to:
-  - a1-11 (The Accusative I)
+id: a1-10
 naturalness:
   score: 10
   status: PASS
-  justification: "Clear checkpoint format"
+  justification: Clear checkpoint format
+duration: 45
+transliteration: none
+build:
+  last_modified: '2026-01-26'

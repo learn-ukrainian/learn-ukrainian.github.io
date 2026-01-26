@@ -1,16 +1,9 @@
-module: the-cyrillic-code-ii
-level: a1
-sequence: 2
+module: a1-02
+level: A1
+slug: the-cyrillic-code-ii
 version: '2.0'
 title: The Cyrillic Code II
 subtitle: The Final 14 Letters
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can recognize unique Ukrainian letters (Г, Ґ, Ж, Ш, Щ, Ч, Ц)
-- Learner can identify iotated vowels (Є, Ї, Ю, Я)
-- Learner can understand the soft sign (Ь)
-- Learner can distinguish И (hard i) from І (soft i)
 content_outline:
 - section: 'Review: Your First 19 Letters'
   words: 100
@@ -48,7 +41,7 @@ content_outline:
   - Italic variants overview
   - Ready for reading practice
 word_target: 800
-vocabulary:
+vocabulary_hints:
   required:
   - центр (center)
   - чай (tea)
@@ -65,15 +58,33 @@ vocabulary:
   - юнак (young man)
   - ніч (night)
   - сім'я (family)
-  forbidden: []
-activities:
-  types_required:
-  - audio-match
-  - letter-recognition
-  - minimal-pairs
-  - reading-drill
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: letter-recognition
+  focus: Identify final 14 letters
+  items: 20
+- type: audio-match
+  focus: Match unique sounds to letters
+  items: 20
+- type: minimal-pairs
+  focus: Distinguish И/І, Г/Ґ
+  items: 15
+- type: reading-drill
+  focus: Read words with new letters
+  items: 20
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-01 (The Cyrillic Code I)
 connects_to:
 - a1-03 (The Gender Code)
+objectives:
+- Learner can recognize unique Ukrainian letters (Г, Ґ, Ж, Ш, Щ, Ч, Ц)
+- Learner can identify iotated vowels (Є, Ї, Ю, Я)
+- Learner can understand the soft sign (Ь)
+- Learner can distinguish И (hard i) from І (soft i)
+grammar:
+- Unique Ukrainian consonants
+- Iotated vowels
+- Soft sign function
+register: розмовний
+phase: A1.1 [First Contact]

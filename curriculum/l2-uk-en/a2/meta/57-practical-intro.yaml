@@ -1,94 +1,13 @@
 module: a2-57
-id: a2-57
+level: A2
 slug: practical-intro
-title: "Practical Intro"
-subtitle: "Real World Ukrainian"
 version: '2.0'
-phase: "A2.6 [Practical]"
-focus: practical
-pedagogy: PPP
-register: розмовний
-duration: 60
-transliteration: none
-objectives:
-  - "Learner can identify all 7 cases in context"
-  - "Learner can choose correct verb aspect"
-  - "Learner can fix common grammar mistakes"
-  - "Learner can build complex sentences"
-grammar:
-  - "Case system review in practical contexts"
-  - "Verb aspect review for real situations"
-  - "Sentence structure and common errors"
-word_target: 800
-content_outline:
-  - section: "Introduction: Practical Ukrainian"
-    words: 100
-    points:
-      - "From theory to practice"
-      - "Real-world communication"
-      - "Practical scenarios overview"
-  - section: "Case Review in Context"
-    words: 150
-    points:
-      - "Nominative, accusative, genitive"
-      - "Dative, instrumental, locative"
-      - "Vocative for addressing"
-  - section: "Aspect in Daily Life"
-    words: 150
-    points:
-      - "When to use perfective"
-      - "When to use imperfective"
-      - "Common aspect pairs"
-  - section: "Common Mistakes"
-    words: 150
-    points:
-      - "Case confusion"
-      - "Aspect errors"
-      - "Word order issues"
-  - section: "Building Sentences"
-    words: 150
-    points:
-      - "Simple to complex"
-      - "Conjunctions and connectors"
-      - "Natural word order"
-  - section: "Practice: Error Correction"
-    words: 100
-    points:
-      - "Identify and fix errors"
-      - "Apply rules in context"
-vocabulary_hints:
-  required:
-    - речення (sentence)
-    - слово (word)
-    - граматика (grammar)
-    - правило (rule)
-    - помилка (mistake)
-    - правильно (correctly)
-    - неправильно (incorrectly)
-    - контекст (context)
-  recommended:
-    - відмінок (case)
-    - вид (aspect)
-    - сполучник (conjunction)
-    - порядок (order)
-activity_hints:
-  - type: fill-in
-    focus: "Case selection in context"
-    items: 20
-  - type: error-correction
-    focus: "Fix grammar mistakes"
-    items: 20
-  - type: sentence-building
-    focus: "Build complex sentences"
-    items: 15
-  - type: quiz
-    focus: "Grammar rules review"
-    items: 15
-prerequisites:
-  - a2-56 (Checkpoint Full Grammar)
-connects_to:
-  - a2-58 (Practical Warm-up)
+id: a2-57
 naturalness:
   score: 9
   status: PASS
-  justification: "Bridge to practical application"
+  justification: Bridge to practical application
+duration: 60
+transliteration: none
+build:
+  last_modified: '2026-01-26'

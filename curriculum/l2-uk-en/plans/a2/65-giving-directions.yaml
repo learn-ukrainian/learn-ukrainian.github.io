@@ -1,16 +1,9 @@
-module: giving-directions
-level: a2
-sequence: 65
+module: a2-65
+level: A2
+slug: giving-directions
 version: '2.0'
 title: Giving Directions
 subtitle: Navigating the City
-focus: practical
-pedagogy: PPP
-objectives:
-- Learner can ask for directions in a city
-- Learner can give simple directions to others
-- Learner can understand location descriptions
-- Learner can use landmarks for navigation
 content_outline:
 - section: 'Introduction: Ukrainian Cities'
   words: 100
@@ -48,7 +41,7 @@ content_outline:
   - Ask and give directions
   - Describe routes
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - напрямок (direction)
   - прямо (straight)
@@ -65,15 +58,33 @@ vocabulary:
   - орієнтир (landmark)
   - поруч (nearby)
   - навпроти (opposite)
-  forbidden: []
-activities:
-  types_required:
-  - vocabulary-drill
-  - matching
-  - speaking
-  - dialogue
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: vocabulary-drill
+  focus: Directions vocabulary
+  items: 25
+- type: matching
+  focus: Match directions to routes
+  items: 15
+- type: dialogue
+  focus: Ask for directions
+  items: 12
+- type: speaking
+  focus: Give directions to places
+  items: 10
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a2-64 (Scheduling Interviews)
 connects_to:
 - a2-66 (Asking for Directions)
+objectives:
+- Learner can ask for directions in a city
+- Learner can give simple directions to others
+- Learner can understand location descriptions
+- Learner can use landmarks for navigation
+grammar:
+- Asking for directions (як пройти?)
+- Giving instructions (йдіть прямо, поверніть)
+- Prepositions of place and movement
+register: розмовний
+phase: A2.6 [Practical]

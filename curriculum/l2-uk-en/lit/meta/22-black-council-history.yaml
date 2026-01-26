@@ -1,148 +1,17 @@
-# LIT Module 22: Black Council - Historical Context
-# Status: SPEC (ready for content development)
-
-id: lit-22
-title: 'Чорна рада: Історичний контекст'
-subtitle: 'The Black Council: Historical Context'
+module: black-council-history
+level: LIT
 slug: black-council-history
-module_type: history
-word_target: 4500
-immersion: "100% Ukrainian"
-
-# === AGENT BUILD SPEC ===
-
-sources:
-  - name: Чорна рада 1663 — історія
-    url: https://uk.wikipedia.org/wiki/Чорна_рада_(1663)
-    type: primary
-    notes: Історичний контекст події
-  - name: Руїна — історія
-    url: https://uk.wikipedia.org/wiki/Руїна_(історія_України)
-    type: primary
-    notes: Ширший історичний контекст
-  - name: Чорна рада — роман
-    url: https://www.ukrlib.com.ua/books/printit.php?tid=263
-    type: secondary
-    notes: Для порівняння з історією
-
-content_outline:
-  - section: Вступ — Що таке "Руїна"?
-    words: 600
-    points:
-      - Період 1657-1687 років
-      - Розкол України на Лівобережну і Правобережну
-      - Чому цей період називають "Руїною"
-
-  - section: Чорна рада 1663 року
-    words: 800
-    points:
-      - Що таке "чорна рада" (загальна козацька рада)
-      - Конфлікт Сомка і Брюховецького
-      - Результат ради і наслідки
-
-  - section: Політичні сили епохи
-    words: 700
-    points:
-      - Козацька старшина vs голота
-      - Московський вплив
-      - Польський фактор
-
-  - section: Охлократія як проблема
-    words: 600
-    points:
-      - Що таке охлократія (влада натовпу)
-      - Чорна рада як приклад
-      - Куліш і його погляд на "народ"
-
-  - section: Історичні постаті
-    words: 500
-    points:
-      - Яким Сомко — трагічний герой
-      - Іван Брюховецький — демагог
-      - Василь Золотаренко
-
-  - section: Підсумок — Від історії до роману
-    words: 400
-    points:
-      - Як Куліш використав історію
-      - Художня правда vs документальна
-      - Перехід до аналізу роману
-
-vocabulary_hints:
-  required:
-    - руїна (ruin/the Ruin period)
-    - чорна рада (black council)
-    - гетьман (hetman)
-    - охлократія (ochlocracy/mob rule)
-    - старшина (officer class)
-    - голота (poor Cossacks)
-    - демагог (demagogue)
-    - лівобережжя (Left Bank)
-    - правобережжя (Right Bank)
-    - розкол (split/schism)
-  recommended:
-    - генеральний писар (general scribe)
-    - московський протекторат (Muscovite protectorate)
-    - переяславська угода (Pereiaslav Agreement)
-    - автономія (autonomy)
-    - васал (vassal)
-
-activity_hints:
-  - type: reading
-    focus: Історичні джерела про Чорну раду
-    source: Wikipedia and historical sources
-    items: "4+"
-
-  - type: quiz
-    focus: Історичні факти періоду Руїни
-    items: "15+"
-
-  - type: match-up
-    focus: Історична постать → її роль
-    items: "12+"
-
-  - type: essay-response
-    focus: Чи була Чорна рада "демократією" чи "охлократією"?
-    word_target: 300
-    output: Історичне есе
-
-  - type: group-sort
-    focus: Політичні сили (старшина / голота / Москва / Польща)
-    items: "15+"
-
-  - type: cloze
-    focus: Ключові дати і події
-    items: "12+"
-
-prerequisites:
-  - lit-21 (Panteleimon Kulish biography)
-  - Basic knowledge of Ukrainian history
-
-connects_to:
-  - lit-23 (Black Council Plot — аналіз роману)
-  - lit-13 (Haidamaky — інший історичний період)
-  - c1-hist (Historical modules)
-
-version: "1.0"
-phase: LIT.4 The Intellectuals (Kulish & Kostomarov)
-focus: history
-pedagogy: Immersion
-duration: 120
-transliteration: none
-tags:
-  - history
-  - ruin
-  - hetmanate
-  - kulish
-
-objectives:
-  - Understand the historical context of "The Ruin" (1657-1687) and the Black Council of 1663.
-  - Contrast the political models of Somko (elite/law) and Briukhovetsky (populism/mob rule).
-  - Analyze the consequences of internal discord for Ukrainian statehood.
-
-grammar:
-  - Historical terminology
-
+version: '1.0'
+id: lit-22
 naturalness:
   score: 9
   status: PASS
+duration: 120
+transliteration: none
+tags:
+- history
+- ruin
+- hetmanate
+- kulish
+build:
+  last_modified: '2026-01-26'

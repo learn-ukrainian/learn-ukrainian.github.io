@@ -1,14 +1,13 @@
-id: a2-33
-title: Time Clauses
-subtitle: When, While, and After
+module: 33-time-clauses
+level: A2
 slug: 33-time-clauses
-module_type: grammar
-word_target: 1000
-immersion: 40-50% Ukrainian
 version: '2.0'
-phase: A2.2
-focus: grammar
-pedagogy: PPP
+id: a2-33
+naturalness:
+  score: 9
+  status: PASS
+  issues: []
+  recommendation: None, the module is well-written and appropriate for A2 level.
 duration: 60
 transliteration: none
 tags:
@@ -16,52 +15,5 @@ tags:
 - conjunctions
 - time
 - sequence
-grammar:
-- time connectors (коли, поки, після того як)
-- sequence of tenses
-- aspect in time clauses
-- simultaneous vs sequential actions
-objectives:
-- Learner can sequence events using time conjunctions
-- Learner can describe simultaneous actions using 'поки' and 'коли'
-- Learner can distinguish between 'перед тим як' and 'після того як'
-- Learner can tell stories with clear chronological structure
-sources:
-- name: Ukrainian State Standard 2024 - Temporal Clauses
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Communicative requirements for sequencing events and temporal coordination
-    at A2
-- name: Grammar of Ukrainian Language - Time Conjunctions
-  url: https://uk.wikipedia.org/wiki/Складнопідрядне_речення_часу
-  type: reference
-  notes: Detailed rules for 'коли', 'поки', and 'як тільки'
-content_outline:
-- section: Introduction / Вступ
-  words: 200
-  points:
-  - Life as a sequence of events
-  - Why chronological 'logic' matters for storytelling
-- section: Presentation / Презентиція
-  words: 600
-  points:
-  - 'Simultaneity: Поки (Process) vs Коли (Point)'
-  - 'Sequencing: Перед тим як (Before) vs Після того як (After)'
-  - 'Immediacy: Як тільки, Щойно'
-  - 'Frequency: Кожного разу, коли...'
-  - 'The Until Trap: Поки не'
-  - 'Aspect Selection: Ongoing processes vs Finished triggers'
-- section: Practice / Практика
-  words: 150
-  points:
-  - Narrative sequencing drills
-  - '''Wait until'' logic exercises'
-- section: Dialogues / Діалоги
-  words: 50
-  points:
-  - Reporting a busy morning or planning a trip's schedule
-naturalness:
-  score: 9
-  status: PASS
-  issues: []
-  recommendation: None, the module is well-written and appropriate for A2 level.
+build:
+  last_modified: '2026-01-26'

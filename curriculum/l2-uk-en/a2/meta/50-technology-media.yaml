@@ -1,97 +1,13 @@
 module: a2-50
-id: a2-50
+level: A2
 slug: technology-media
-title: "Technology and Media"
-subtitle: "Digital World"
 version: '2.0'
-phase: "A2.5 [Vocabulary Expansion]"
-focus: vocabulary
-pedagogy: PPP
-register: розмовний
-duration: 60
-transliteration: none
-objectives:
-  - "Learner can talk about computers and phones"
-  - "Learner can describe internet activities"
-  - "Learner can use social media vocabulary"
-  - "Learner can discuss technology in daily life"
-grammar:
-  - "Technology verbs (завантажити, відправити)"
-  - "Internet vocabulary"
-  - "Social media and digital terms"
-word_target: 1000
-content_outline:
-  - section: "Introduction: Digital Ukraine"
-    words: 100
-    points:
-      - "Technology in daily life"
-      - "Digital vocabulary"
-      - "Internet culture"
-  - section: "Devices"
-    words: 200
-    points:
-      - "комп'ютер, ноутбук, планшет"
-      - "смартфон, телефон"
-      - "Device vocabulary"
-  - section: "Internet Activities"
-    words: 200
-    points:
-      - "шукати, завантажувати"
-      - "відправляти, отримувати"
-      - "Online actions"
-  - section: "Social Media"
-    words: 200
-    points:
-      - "соціальні мережі"
-      - "пост, лайк, коментар"
-      - "Social media vocabulary"
-  - section: "Apps and Software"
-    words: 150
-    points:
-      - "додаток, програма"
-      - "встановити, оновити"
-      - "App vocabulary"
-  - section: "Practice: Digital Life"
-    words: 150
-    points:
-      - "Describe your tech use"
-      - "Online activities"
-vocabulary_hints:
-  required:
-    - комп'ютер (computer)
-    - телефон (phone)
-    - інтернет (internet)
-    - сайт (website)
-    - пошта (email)
-    - завантажити (to download)
-    - відправити (to send)
-    - шукати (to search)
-  recommended:
-    - додаток (app)
-    - пароль (password)
-    - акаунт (account)
-    - оновлення (update)
-    - підписка (subscription)
-    - мережа (network)
-activity_hints:
-  - type: vocabulary-drill
-    focus: "Technology terms"
-    items: 30
-  - type: matching
-    focus: "Match actions to devices"
-    items: 20
-  - type: fill-in
-    focus: "Complete tech descriptions"
-    items: 15
-  - type: dialogue
-    focus: "Tech support conversation"
-    items: 8
-prerequisites:
-  - a2-49 (Work and Professions)
-connects_to:
-  - a2-51 (Hobbies and Leisure)
-  - a2-67 (Social Media Ukrainian)
+id: a2-50
 naturalness:
   score: 10
   status: PASS
-  justification: "Essential technology vocabulary"
+  justification: Essential technology vocabulary
+duration: 60
+transliteration: none
+build:
+  last_modified: '2026-01-26'

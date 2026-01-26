@@ -1,115 +1,117 @@
 module: kost-hordiyenko
-level: c1-bio
-sequence: 13
+level: C1-BIO
+slug: kost-hordiyenko
 version: '2.0'
 title: 'Кость Гордієнко: Запорозький кошовий'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Кость_Гордієнко
-    title: Кость Гордієнко (Wikipedia UA)
-    notes: Biography, alliance with Mazepa, resistance
-  secondary:
-  - url: https://uk.wikipedia.org/wiki/Запорозька_Січ
-    title: Запорозька Січ (Wikipedia UA)
-    notes: Context of Sich governance
-  - url: https://uk.wikipedia.org/wiki/Олешківська_Січ
-    title: Олешківська Січ
-    notes: Exile period
 content_outline:
 - section: Вступ — Голос запорозької волі
   words: 400
-  subsections:
+  points:
   - Гордієнко як символ козацького республіканізму
   - Його роль у подіях 1708-1709 років
   - Значення Січі в козацькій системі
 - section: 'Запорозька Січ: устрій і традиції'
   words: 600
-  subsections:
+  points:
   - Козацька демократія
   - Роль кошового отамана
   - Відносини з Гетьманщиною
   - Традиції самоврядування
 - section: Шлях до кошового отаманства
   words: 500
-  subsections:
+  points:
   - Походження та молодість
   - Козацька кар'єра
   - Обрання кошовим
   - Політичні погляди
 - section: Союз із Мазепою
   words: 800
-  subsections:
+  points:
   - Переговори з гетьманом
   - Рішення Січі підтримати Мазепу
   - Маніфест до козаків
   - Спільні дії проти Москви
 - section: Руйнування Січі та вигнання
   words: 800
-  subsections:
+  points:
   - Полтавська поразка
   - Руйнування Чортомлицької Січі
   - Втеча на Кримське ханство
   - Олешківська Січ
 - section: Продовження боротьби
   words: 600
-  subsections:
+  points:
   - Дипломатичні зусилля
   - Союз з Орликом
   - Прутський похід
   - Смерть та спадщина
 - section: Підсумок — Воля до останнього
   words: 300
-  subsections:
+  points:
   - Гордієнко як втілення козацького духу
   - Січ як острів свободи
   - Пам'ять про кошового
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - кошовий
-  - Січ
-  - отаман
-  - рада
-  - козацька демократія
-  - курінь
-  - клейноди
-  - паланка
-  - вигнання
-  - маніфест
+  - кошовий (koshovyi - Sich leader)
+  - Січ (Sich)
+  - отаман (otaman/ataman)
+  - рада (council)
+  - козацька демократія (Cossack democracy)
+  - курінь (kurin - Cossack unit)
+  - клейноди (regalia)
+  - паланка (palanka - district)
+  - вигнання (exile)
+  - маніфест (manifesto)
   recommended:
-  - довбиш
-  - осавул
-  - писар
-  - суддя
-  - булава
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - довбиш (drummer)
+  - осавул (osavul)
+  - писар (scribe)
+  - суддя (judge)
+  - булава (mace)
+activity_hints:
+- type: reading
+  focus: Hordiyenko's manifestos and appeals
+  source: Primary sources (adapted)
+  items: 3 passages
+- type: quiz
+  focus: Sich governance and Hordiyenko's actions
+  items: 12+
+- type: match-up
+  focus: Sich offices and their functions
+  items: 10+
+- type: essay-response
+  focus: Why did the Sich support Mazepa?
+  word_target: 250
+  output: Analysis of Sich interests
+- type: group-sort
+  focus: Sich traditions vs. Hetmanate traditions
+  items: 12+
+- type: fill-in
+  focus: Cossack self-governance terminology
+  items: 8+
+focus: biography
+prerequisites:
+- c1-bio-12 (Ivan Mazepa - alliance context)
+- Understanding of Cossack political structures
 connects_to:
-  previous: c1-bio-12 (Ivan Mazepa - alliance context)
-  related:
-  - c1-bio-14 (Pylyp Orlyk - fellow exile)
-  - c1-bio-15 (Petro Kalnyshevskyy - last koshovyi)
-  - c1-bio-53 (Petro Bolbochan - later military leader)
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-14 (Pylyp Orlyk - fellow exile)
+- c1-bio-15 (Petro Kalnyshevskyy - last koshovyi)
+- c1-bio-53 (Petro Bolbochan - later military leader)
+module_type: biography
+sources:
+- name: Кость Гордієнко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Кость_Гордієнко
+  type: primary
+  notes: Biography, alliance with Mazepa, resistance
+- name: Запорозька Січ (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Запорозька_Січ
+  type: reference
+  notes: Context of Sich governance
+- name: Олешківська Січ
+  url: https://uk.wikipedia.org/wiki/Олешківська_Січ
+  type: reference
+  notes: Exile period
+immersion: 100% Ukrainian
+phase: C1-BIO

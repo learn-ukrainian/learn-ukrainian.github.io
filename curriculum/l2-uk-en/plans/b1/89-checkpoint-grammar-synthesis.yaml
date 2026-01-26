@@ -1,16 +1,9 @@
-module: checkpoint-grammar-synthesis
-level: b1
-sequence: 89
+module: b1-89
+level: B1
+slug: checkpoint-grammar-synthesis
 version: '2.0'
 title: 'Checkpoint: Синтез граматики'
 subtitle: Grammar Synthesis Assessment
-focus: checkpoint
-pedagogy: TTT
-objectives:
-- Learner demonstrates mastery of all B1 grammar (M01-88)
-- Learner applies grammar in integrated contexts
-- Learner identifies and corrects grammar errors
-- Learner is ready for Phase B1.9 communication skills
 content_outline:
 - section: Diagnostic Test
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Integrated grammar test
   - Error correction
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - граматика (grammar)
   - аспект (aspect)
@@ -63,15 +56,35 @@ vocabulary:
   - відмінювання (conjugation)
   - граматична помилка (grammar error)
   - правильно (correctly)
-  forbidden: []
-activities:
-  types_required:
-  - transformation
-  - error-correction
-  - production
-  - diagnostic
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: diagnostic
+  focus: Identify grammar gaps
+  items: 30
+- type: error-correction
+  focus: Fix grammar errors
+  items: 25
+- type: transformation
+  focus: Transform sentence structures
+  items: 20
+- type: production
+  focus: Produce correct grammar
+  items: 15
+focus: checkpoint
+pedagogy: TTT
+prerequisites:
+- b1-88 (Interviews and Podcasts)
 connects_to:
 - b1-90 (Grammar in Context)
+objectives:
+- Learner demonstrates mastery of all B1 grammar (M01-88)
+- Learner applies grammar in integrated contexts
+- Learner identifies and corrects grammar errors
+- Learner is ready for Phase B1.9 communication skills
+grammar:
+- Aspect (all contexts)
+- Motion verbs with prefixes
+- Complex sentences (all types)
+- Participles (adverbial and passive)
+- Advanced word formation
+register: розмовний
+phase: B1.8 [Skills & Integration]

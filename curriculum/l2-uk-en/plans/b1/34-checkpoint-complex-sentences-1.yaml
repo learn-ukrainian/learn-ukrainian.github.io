@@ -1,16 +1,9 @@
-module: checkpoint-complex-sentences-1
-level: b1
-sequence: 34
+module: b1-34
+level: B1
+slug: checkpoint-complex-sentences-1
 version: '2.0'
 title: 'Контрольна точка: складні речення (частина 1)'
 subtitle: Checkpoint - Complex Sentences Part 1
-focus: checkpoint
-pedagogy: TTT
-objectives:
-- Learner can demonstrate mastery of complex sentence structures
-- Learner can integrate knowledge from M26-M33
-- Learner can self-assess readiness for B1.3b phase
-- Learner can use relative clauses, purpose clauses, and conditionals
 content_outline:
 - section: 'Pre-Test: Self-Assessment'
   words: 100
@@ -49,7 +42,7 @@ content_outline:
   - Identify areas for review
   - Prepare for B1.3b
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - контрольна точка (checkpoint)
   - повторення (review)
@@ -64,15 +57,33 @@ vocabulary:
   - прогрес (progress)
   - рівень (level)
   - готовність (readiness)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - quiz
-  - error-correction
-  - sentence-combining
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: Complex sentence structures
+  items: 30
+- type: fill-in
+  focus: Complete complex sentences
+  items: 25
+- type: error-correction
+  focus: Fix sentence errors
+  items: 20
+- type: sentence-combining
+  focus: Create complex sentences
+  items: 15
+focus: checkpoint
+pedagogy: TTT
+prerequisites:
+- b1-33 (Conditionals Mixed Complex)
 connects_to:
 - b1-35 (Concessive Clauses)
+objectives:
+- Learner can demonstrate mastery of complex sentence structures
+- Learner can integrate knowledge from M26-M33
+- Learner can self-assess readiness for B1.3b phase
+- Learner can use relative clauses, purpose clauses, and conditionals
+grammar:
+- Integration of M26-M33 grammar
+- Relative clauses (який, де/куди/звідки, коли/що)
+- Purpose clauses and conditionals
+register: розмовний
+phase: B1.3a [Complex Sentences Checkpoint]

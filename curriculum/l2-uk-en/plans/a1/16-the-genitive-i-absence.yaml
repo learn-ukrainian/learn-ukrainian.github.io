@@ -1,16 +1,9 @@
-module: the-genitive-i-absence
-level: a1
-sequence: 16
+module: a1-16
+level: A1
+slug: the-genitive-i-absence
 version: '2.0'
 title: 'The Genitive I: Absence'
 subtitle: Talking About What You Don't Have
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can express absence using немає + genitive
-- Learner can use genitive case for negation
-- Learner can say what they don't have (немає часу)
-- Learner can use без + genitive (without)
 content_outline:
 - section: 'Introduction: Expressing Absence'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Describe what's not there
   - Order without ingredients
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - немає (there is no)
   - без (without)
@@ -63,16 +56,34 @@ vocabulary:
   - квиток (ticket)
   - ключ (key)
   - телефон (phone)
-  forbidden: []
-activities:
-  types_required:
-  - transformation
-  - translation
-  - fill-in
-  - dialogue
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: transformation
+  focus: Change nouns to genitive
+  items: 25
+- type: fill-in
+  focus: Complete немає sentences
+  items: 20
+- type: translation
+  focus: Translate absence expressions
+  items: 15
+- type: dialogue
+  focus: I don't have... conversations
+  items: 6
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-15 (Around the City)
 connects_to:
 - a1-17 (Numbers and Money)
 - a1-18 (Food and Shopping)
+objectives:
+- Learner can express absence using немає + genitive
+- Learner can use genitive case for negation
+- Learner can say what they don't have (немає часу)
+- Learner can use без + genitive (without)
+grammar:
+- Genitive case for absence
+- Genitive endings
+- Немає + genitive
+register: розмовний
+phase: A1.2 [Navigation]

@@ -1,9 +1,30 @@
-module: 73-birth-rituals
-level: c1
-sequence: 73
-version: '1.0'
+module: c1-73
+level: C1
+slug: 73-birth-rituals
+version: '2.0'
 title: Родинні обряди - народження
 subtitle: Family Rituals - Birth and Christening
+content_outline:
+- section: Вступ — народження
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Historical context: Cossack resettlement, Russian influence'
+  - Харків as cultural center
+  - 'Clothing traditions: свита, кобеняк'
+  - 'Musical traditions: bandura school'
+  - Blend of Ukrainian and steppe influences
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: cultural
 pedagogy: CBI
 objectives:
@@ -11,13 +32,7 @@ objectives:
 - Learner can explain the role of godparents (kumy) in Ukrainian culture
 - Learner can discuss the symbolism of the cradle and protective amulets
 - Learner can use vocabulary related to infancy and parenting
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- naming conventions
+- wishes and blessings
+phase: C1.5 Folk Culture & Arts

@@ -1,0 +1,112 @@
+module: malorosiia-konstrukt
+level: C1-HIST
+slug: malorosiia-konstrukt
+version: '2.0'
+title: '«Малоросія»: Як створювався міф'
+content_outline:
+- section: Вступ — Назви мають силу
+  words: 400
+  points:
+  - «Малоросія» — не географія
+  - Назва як інструмент підкорення
+  - 300 років побудови наративу
+  - Структура модуля
+- section: Витоки терміна
+  words: 600
+  points:
+  - Візантійське походження
+  - Церковне значення
+  - Імперське переосмислення
+  - «Мала» = «менша»
+- section: XVIII століття — Закріплення
+  words: 700
+  points:
+  - Скасування гетьманщини
+  - «Малоросійська колегія»
+  - Офіційний статус терміна
+  - Інтеграція еліти
+- section: XIX століття — Теоретизація
+  words: 600
+  points:
+  - «Велика, Мала, Біла Русь»
+  - Погодін, Уваров — теоретики
+  - «Триєдиний народ»
+  - Наукове обґрунтування міфу
+- section: Протидія — Українофільство
+  words: 500
+  points:
+  - Шевченко — «Україна»
+  - Костомаров — альтернатива
+  - Емський указ — заборона
+  - Боротьба за назву
+- section: XX-XXI століття
+  words: 400
+  points:
+  - Радянський період
+  - Сучасна пропаганда
+  - «Новоросія» — та сама логіка
+  - Живучість міфу
+- section: Підсумок
+  words: 300
+  points:
+  - «Малоросія» — політичний проект
+  - Не описує — створює реальність
+  - Перехід до радянської пропаганди
+word_target: 3500
+vocabulary_hints:
+  required:
+  - «Малоросія» (Little Russia)
+  - міф (myth)
+  - наратив (narrative)
+  - конструкт (construct)
+  - триєдиний народ (triune nation)
+  - русифікація (Russification)
+  - підкорення (subjugation)
+  - імперська ідеологія (imperial ideology)
+  - самоназва (self-designation)
+  - ідентичність (identity)
+  recommended:
+  - «Новоросія» (Novorossiya)
+  - асиміляція (assimilation)
+  - денаціоналізація (denationalization)
+  - офіційний дискурс (official discourse)
+  - контрнаратив (counter-narrative)
+activity_hints:
+- type: term-analysis
+  focus: How "Little Russia" term evolved over 300 years
+  output: Semantic evolution chart
+- type: text-analysis
+  focus: Imperial texts that constructed "Little Russia"
+  output: Source analysis
+- type: comparative-study
+  focus: «Little Russia» vs. other colonial naming
+  output: Colonial comparison
+- type: contemporary-analysis
+  focus: How the same logic appears today
+  output: Modern parallels
+- type: essay-response
+  focus: Чому 'Малоросія' — не географічний, а політичний термін?
+  word_target: 400
+  model_answer: Required
+focus: history
+prerequisites:
+- c1-hist-107 (Economic decolonization synthesis)
+connects_to:
+- c1-hist-109 (Soviet propaganda)
+- c1-hist-113 (Information war synthesis)
+module_type: thematic
+sources:
+- name: Малоросія (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Малоросія
+  type: reference
+  notes: Term history
+- name: Малоросійська ідентичність (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Малоросійська_ідентичність
+  type: reference
+  notes: Identity construction
+- name: Русифікація України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Русифікація_України
+  type: reference
+  notes: Russification policies
+immersion: 100% Ukrainian
+phase: C1-HIST.1 [Historiography]

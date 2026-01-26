@@ -1,9 +1,28 @@
-module: 42-aspect-nuances-imperative-infinitive
-level: b2
-sequence: 42
-version: '1.0'
+module: b2-42
+level: B2
+slug: 42-aspect-nuances-imperative-infinitive
+version: '2.0'
 title: 'Відтінки виду II: наказовий спосіб та інфінітив'
 subtitle: Вид дієслова в командах та інфінітивних конструкціях
+content_outline:
+- section: Вступ — наказовий спосіб та інфінітив
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Infinitive Nuances
+  words: 500
+  points:
+  - Не можна + Imperfective (Forbidden by rule)
+  - Не можна + Perfective (Impossible to do)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: grammar
 pedagogy: TTT
 objectives:
@@ -11,13 +30,10 @@ objectives:
 - Learner can form prohibitions using the correct aspect
 - Learner can interpret не можна + infinitive based on aspect
 - Learner can choose appropriate aspect in imperative for different situations
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Aspect in imperative mood
+- Imperfective vs perfective commands
+- Prohibition with imperfective
+- Aspect in infinitive constructions
+- не можна + aspect distinction
+phase: B2.2 [Grammar Completion]

@@ -1,48 +1,16 @@
 module: b2-84
-title: 'Checkpoint: Register Synthesis (Синтез регістрів)'
-subtitle: Confirm register readiness before communication skills
+level: B2
+slug: 84-checkpoint-register-synthesis
 version: '2.0'
-phase: B2.4 Skills & Capstone
-focus: checkpoint
-pedagogy: Test
+naturalness:
+  score: 9
+  status: PASS
 duration: 180
 transliteration: none
 tags:
 - exam
 - assessment
 - certification
-grammar:
-- Comprehensive B2 Grammar
-objectives:
-- Demonstrate B2 level proficiency
-- Pass final comprehensive assessment
 vocabulary_count: 25
-slug: 84-checkpoint-register-synthesis
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-- section: Вступ — Register Synthesis (Синтез регістрів)
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-- section: Основний матеріал
-  words: 600
-  points:
-  - Теоретичні основи
-  - Приклади та ілюстрації
-  - Типові помилки та як їх уникати
-- section: Поглиблене вивчення
-  words: 600
-  points:
-  - Додаткові випадки
-  - Контекстуальне використання
-  - Стилістичні нюанси
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

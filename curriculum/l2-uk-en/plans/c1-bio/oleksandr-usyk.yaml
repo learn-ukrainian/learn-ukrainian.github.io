@@ -1,109 +1,112 @@
 module: oleksandr-usyk
-level: c1-bio
-sequence: 116
+level: C1-BIO
+slug: oleksandr-usyk
 version: '2.0'
 title: 'Олександр Усик: Чемпіон із серцем воїна'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Усик_Олександр_Олександрович
-    title: Олександр Усик (Wikipedia UA)
-    notes: Biography, boxing career, patriotism
-  secondary:
-  - url: https://uk.wikipedia.org/wiki/Україна_на_літніх_Олімпійських_іграх_2012
-    title: Олімпійські ігри 2012
-    notes: Olympic gold medal
-  - url: https://uk.wikipedia.org/wiki/Undisputed_champion
-    title: Undisputed champion
-    notes: His championship status
 content_outline:
 - section: Вступ — Абсолютний чемпіон світу
   words: 457
-  subsections:
+  points:
   - Усик як перший в історії undisputed у двох вагах
   - Кримчанин, який став символом України
   - Боксер-патріот під час війни
 - section: Молодість у Криму
   words: 571
-  subsections:
+  points:
   - Народження в Сімферополі (1987)
   - Початок занять боксом
   - Тренування та перші перемоги
   - Переїзд до Києва
 - section: Аматорська кар'єра
   words: 685
-  subsections:
+  points:
   - Чемпіонати світу та Європи
   - Олімпійське золото в Лондоні (2012)
   - Стиль "українського танцю"
   - Перехід у професіонали
 - section: Шлях до undisputed
   words: 914
-  subsections:
+  points:
   - Перемоги у першій важкій вазі
   - Undisputed у крузервейті (2018)
   - Перехід у важку вагу
   - Перемоги над Джошуа та Ф'юрі
 - section: Патріот під час війни
   words: 800
-  subsections:
+  points:
   - Повернення в Україну 2022
   - Служба в тероборороні
   - Присвята перемог Україні
   - Голос України у світі
 - section: Значення для нації
   words: 573
-  subsections:
+  points:
   - Скромність і віра
   - Приклад для молоді
   - Усик як символ незламності
   - Спортсмен із місією
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - боксер
-  - чемпіон світу
-  - важка вага
-  - олімпійська медаль
-  - патріот
-  - територіальна оборона
-  - перемога
-  - скромність
-  - незламність
-  - віра
+  - боксер (boxer)
+  - чемпіон світу (world champion)
+  - важка вага (heavyweight)
+  - олімпійська медаль (Olympic medal)
+  - патріот (patriot)
+  - територіальна оборона (territorial defense)
+  - перемога (victory)
+  - скромність (modesty)
+  - незламність (unbreakability)
+  - віра (faith)
   recommended:
-  - ринг
-  - раунд
-  - нокаут
-  - титул
-  - суперник
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - ринг (ring)
+  - раунд (round)
+  - нокаут (knockout)
+  - титул (title)
+  - суперник (opponent)
+activity_hints:
+- type: reading
+  focus: Usyk's interviews and statements
+  source: Sports media
+  items: 3 passages
+- type: quiz
+  focus: Usyk's biography and achievements
+  items: 12+
+- type: match-up
+  focus: Fights and their significance
+  items: 10+
+- type: essay-response
+  focus: How does Usyk represent Ukraine to the world?
+  word_target: 300
+  output: Sports diplomacy analysis
+- type: group-sort
+  focus: Sports achievements vs. patriotic actions
+  items: 12+
+- type: fill-in
+  focus: Key dates and boxing terms
+  items: 10+
+focus: biography
+prerequisites:
+- Understanding of boxing
+- 2022 Russian invasion context
+- Contemporary Ukraine
 connects_to:
-  previous: Understanding of boxing
-  related:
-  - Contemporary Ukrainian athletes
-  - c1-bio-77 (Stus - another symbol of resistance)
-  - c1-bio-71 (Lukyanenko - contemporary patriot)
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- Contemporary Ukrainian athletes
+- c1-bio-77 (Stus - another symbol of resistance)
+- c1-bio-71 (Lukyanenko - contemporary patriot)
+module_type: biography
+sources:
+- name: Олександр Усик (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Усик_Олександр_Олександрович
+  type: primary
+  notes: Biography, boxing career, patriotism
+- name: Олімпійські ігри 2012
+  url: https://uk.wikipedia.org/wiki/Україна_на_літніх_Олімпійських_іграх_2012
+  type: reference
+  notes: Olympic gold medal
+- name: Undisputed champion
+  url: https://uk.wikipedia.org/wiki/Undisputed_champion
+  type: reference
+  notes: His championship status
+immersion: 100% Ukrainian
+phase: C1-BIO

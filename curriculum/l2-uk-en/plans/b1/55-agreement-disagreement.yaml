@@ -1,16 +1,9 @@
-module: agreement-disagreement
-level: b1
-sequence: 55
+module: b1-55
+level: B1
+slug: agreement-disagreement
 version: '2.0'
 title: Згода і незгода
 subtitle: Agreement & Disagreement
-focus: vocabulary
-pedagogy: PPP
-objectives:
-- Learner can express agreement at different levels of intensity
-- Learner can express polite disagreement in formal and informal contexts
-- Learner can participate in debates using appropriate vocabulary
-- Learner can manage conversational flow with agreement markers
 content_outline:
 - section: 'Introduction: Agreeing and Disagreeing'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Practice agreeing and disagreeing
   - Manage conversation flow
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - згода (agreement)
   - незгода (disagreement)
@@ -63,15 +56,33 @@ vocabulary:
   - визнавати (to acknowledge)
   - спростовувати (to refute)
   - підтримувати (to support)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - transformation
-  - listening
-  - role-play
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: role-play
+  focus: Debate scenarios
+  items: 20
+- type: transformation
+  focus: Adjust agreement intensity
+  items: 20
+- type: fill-in
+  focus: Complete debate exchanges
+  items: 15
+- type: listening
+  focus: Identify agreement/disagreement
+  items: 15
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-54 (Expressing Opinions)
 connects_to:
 - b1-56 (Discourse Markers Basic)
+objectives:
+- Learner can express agreement at different levels of intensity
+- Learner can express polite disagreement in formal and informal contexts
+- Learner can participate in debates using appropriate vocabulary
+- Learner can manage conversational flow with agreement markers
+grammar:
+- Expression patterns for agreement and disagreement
+- Concessive structures (хоча, але)
+- Partial agreement constructions
+register: розмовний
+phase: B1.5 [Vocabulary Expansion I]

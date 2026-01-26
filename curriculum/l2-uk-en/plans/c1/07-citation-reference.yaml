@@ -1,21 +1,8 @@
 module: 07-citation-reference
-level: c1
-sequence: 7
+level: C1
+slug: 07-citation-reference
 version: '2.0'
 title: Цитація та посилання
-focus: grammar
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: ДСТУ 8302:2015 Бібліографічне посилання
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Ukrainian citation standards
-- name: Academic Integrity Guidelines
-  url: https://mova.info/
-  type: secondary
-  notes: Plagiarism prevention and proper citation
 content_outline:
 - section: Вступ — Наукова чесність
   words: 400
@@ -60,7 +47,7 @@ content_outline:
   - Редагування тексту з посиланнями
   - Перевірка правильності цитування
 word_target: 4000
-vocabulary:
+vocabulary_hints:
   required:
   - цитата (quotation)
   - посилання (reference)
@@ -78,19 +65,42 @@ vocabulary:
   - цитатний індекс (citation index)
   - посилатися (to refer)
   - покликатися (to cite)
-  forbidden: []
-activities:
-  types_required:
-  - quiz
-  - essay-response
-  - cloze
-  - fill-in
-  - error-correction
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: Transform direct to indirect citation
+  items: 12+
+- type: cloze
+  focus: Citation structures in academic context
+  items: 12+
+- type: match-up
+  focus: Citation verb to appropriate context
+  items: 15+
+- type: quiz
+  focus: Identify plagiarism vs proper paraphrase
+  items: 15+
+- type: error-correction
+  focus: Fix citation formatting errors
+  items: 10+
+- type: essay-response
+  focus: Integrate 3 citations into paragraph
+  word_target: 200
+focus: grammar
+prerequisites:
+- c1-06 (Hedging & Modality)
+- Academic register awareness
 connects_to:
 - c1-11 (Summary & Paraphrase)
 - c1-12 (Research Article)
 - c1-14 (Literature Review)
+module_type: grammar
+sources:
+- name: ДСТУ 8302:2015 Бібліографічне посилання
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Ukrainian citation standards
+- name: Academic Integrity Guidelines
+  url: https://mova.info/
+  type: secondary
+  notes: Plagiarism prevention and proper citation
+immersion: 100% Ukrainian
+phase: C1.1 Academic Ukrainian

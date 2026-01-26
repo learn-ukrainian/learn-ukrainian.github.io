@@ -1,22 +1,45 @@
-module: 28-economics-business-vocabulary
-level: b2
-sequence: 28
-version: '1.0'
+module: b2-28
+level: B2
+slug: 28-economics-business-vocabulary
+version: '2.0'
 title: 'Економічна лексика: говоримо про бізнес'
 subtitle: Economics & Business Vocabulary
+content_outline:
+- section: Вступ — говоримо про бізнес
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Економічна лексика
+  words: 500
+  points:
+  - економіка, ринок, капітал
+  - ВВП, інфляція, безробіття
+  - інвестиція, кредит, процент
+- section: Бізнес-лексика
+  words: 500
+  points:
+  - бізнес, підприємство, корпорація
+  - дохід, витрати, прибуток
+  - контракт, угода, партнерство
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: grammar
 pedagogy: CLIL
 objectives:
 - Учень може читати та розуміти економічні новини українською мовою
 - Учень може аналізувати економічні показники та їх значення
-- Учень може обговорювати економічну ситуацію в Україні, використовуючи спеціалізовану лексику
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+- Учень може обговорювати економічну ситуацію в Україні, використовуючи спеціалізовану
+  лексику
+grammar:
+- Economic terminology and register
+- Business communication conventions
+- Financial news reading strategies
+register: науковий
+phase: B2.1c [Register & Domain Vocab]

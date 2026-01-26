@@ -1,108 +1,109 @@
 module: mykola-pohribnyi
-level: c1-bio
-sequence: 96
+level: C1-BIO
+slug: mykola-pohribnyi
 version: '2.0'
 title: 'Микола Погрібний: Українська редакторська школа'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Погрібний_Микола_Іванович
-    title: Микола Погрібний (Wikipedia UA)
-    notes: Біографія, професійна діяльність, внесок у мовну культуру
-  secondary:
-  - url: https://uk.wikipedia.org/wiki/Українське_радіо
-    title: Українське радіомовлення
-    notes: Контекст роботи на радіо
-  - url: https://uk.wikipedia.org/wiki/Культура_мови
-    title: Культура української мови
-    notes: Норми літературної мови та орфоепія
 content_outline:
 - section: Вступ — Голос української вимови
   words: 400
-  subsections:
+  points:
   - Микола Погрібний — легендарний диктор і редактор
   - Еталон української літературної вимови
   - Вплив на формування мовних стандартів
 - section: Ранні роки та освіта (1931-1955)
   words: 600
-  subsections:
+  points:
   - Народження на Полтавщині
   - Навчання та формування як мовця
   - Перші кроки в журналістиці
   - Прихід на Українське радіо
 - section: Кар'єра на радіо (1955-1990)
   words: 800
-  subsections:
+  points:
   - Робота диктором Українського радіо
   - Формування еталону радіомовлення
   - Ведення культурних та новинних програм
   - Визнання як голосу епохи
 - section: Редакторська діяльність
   words: 700
-  subsections:
+  points:
   - Робота редактором мовного відділу
   - Боротьба за чистоту української мови
   - Виправлення русизмів та суржику
   - Навчання молодих дикторів
 - section: Орфоепічна школа
   words: 700
-  subsections:
+  points:
   - Принципи правильної вимови
   - Робота над наголосом та інтонацією
   - Зв'язок з мовознавцями та консультації
   - Практичні посібники для дикторів
 - section: Останні роки та спадщина (1990-2003)
   words: 800
-  subsections:
+  points:
   - Продовження діяльності в незалежній Україні
   - Передача досвіду новому поколінню
   - Смерть у 2003 році
   - Погрібний як символ мовної культури
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - диктор
-  - орфоепія
-  - редактор
-  - вимова
-  - наголос
-  - літературна мова
-  - норма
-  - інтонація
-  - дикція
-  - еталон
+  - диктор (announcer/broadcaster)
+  - орфоепія (orthoepy/pronunciation)
+  - редактор (editor)
+  - вимова (pronunciation)
+  - наголос (stress/accent)
+  - літературна мова (literary language)
+  - норма (norm/standard)
+  - інтонація (intonation)
+  - дикція (diction)
+  - еталон (standard/model)
   recommended:
-  - суржик
-  - русизм
-  - мовлення
-  - артикуляція
-  - фонетика
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - суржик (surzhyk)
+  - русизм (Russianism)
+  - мовлення (speech)
+  - артикуляція (articulation)
+  - фонетика (phonetics)
+activity_hints:
+- type: reading
+  focus: Статті про культуру мови та спогади колег
+  source: Публіцистика та мемуари
+  items: 3 passages
+- type: quiz
+  focus: Біографія та внесок у мовну культуру
+  items: 12+
+- type: match-up
+  focus: Орфоепічні правила та приклади
+  items: 10+
+- type: essay-response
+  focus: Яка роль радіо у збереженні мови?
+  word_target: 300
+  output: Media analysis
+- type: group-sort
+  focus: Етапи кар'єри та досягнення
+  items: 12+
+- type: fill-in
+  focus: Лінгвістична термінологія
+  items: 10+
+focus: biography
+prerequisites:
+- c1-bio-97-panteleimon-kulish
 connects_to:
-  previous: c1-bio-97-panteleimon-kulish
-  related:
-  - c1-bio-98-ivan-ohienko
-  - c1-bio-30-borys-hrinchenko
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-98-ivan-ohienko
+- c1-bio-30-borys-hrinchenko
+module_type: biography
+sources:
+- name: Микола Погрібний (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Погрібний_Микола_Іванович
+  type: primary
+  notes: Біографія, професійна діяльність, внесок у мовну культуру
+- name: Українське радіомовлення
+  url: https://uk.wikipedia.org/wiki/Українське_радіо
+  type: reference
+  notes: Контекст роботи на радіо
+- name: Культура української мови
+  url: https://uk.wikipedia.org/wiki/Культура_мови
+  type: reference
+  notes: Норми літературної мови та орфоепія
+immersion: 100% Ukrainian
+phase: C1-BIO

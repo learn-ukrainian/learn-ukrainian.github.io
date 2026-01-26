@@ -1,110 +1,104 @@
 module: volodymyr-monomakh
-level: b2-hist
-sequence: 15
-version: '1.0'
+level: B2-HIST
+slug: volodymyr-monomakh
+version: '2.0'
 title: Володимир Мономах
-focus: history
-pedagogy: seminar
-objectives:
-- Учень може проаналізувати правління Володимира Мономаха та його вплив на єдність
-  Русі
-- Учень може пояснити значення «Повчання дітям» як унікального літературного та філософського
-  твору
-- Учень може оцінити роль Любецького з'їзду в історії Русі
-- Учень може порівняти внутрішню і зовнішню політику Мономаха з іншими князями доби
+subtitle: The Last Great Prince of United Rus
 content_outline:
 - section: Вступ
   words: 78
-  subsections:
+  points:
   - Значення постаті Володимира Мономаха
 - section: 'Читання: Момент істини в Києві'
   words: 319
-  subsections:
+  points:
   - Повстання 1113 року
 - section: 'Хронологія: Шлях до великого княжіння'
   words: 683
-  subsections:
+  points:
   - Військова кампанія 1111 року
 - section: 'Глибоке занурення: Династична криза 1093-1113 років: Шлях крізь темряву'
   words: 200
-  subsections:
+  points:
   - Трагедія на Стугні
 - section: 'Аналіз: Любецький з''їзд 1097 року: Мистецтво компромісу'
   words: 145
-  subsections:
+  points:
   - Принцип вотчини
 - section: 'Внутрішня політика: Великий реформатор та Законодавець'
   words: 967
-  subsections:
+  points:
   - Устав 1113 року
 - section: 'Культура: Культурний ренесанс епохи Мономаха'
   words: 219
-  subsections:
+  points:
   - Архітектура та літописання
 - section: 'Глибоке занурення: «Повчання дітям»: Літературний шедевр епохи'
   words: 238
-  subsections:
+  points:
   - Моральні настанови
 - section: 'Розмова: Родина Мономаха: Династія великих справ та європейські зв''язки'
   words: 284
-  subsections:
+  points:
   - Гіта Вессекська
 - section: 'Сьогодення: Економічне життя та Побут Русі'
   words: 108
-  subsections:
+  points:
   - Життя міст
 - section: 'Погляд: Військове мистецтво та Озброєння'
   words: 44
-  subsections:
+  points:
   - Озброєння дружини
 - section: 'Первинні джерела: Голоси вічності'
   words: 439
-  subsections:
+  points:
   - Аналіз уривків
 - section: 'Деколонізаційний погляд: Мономах — наш, а не їхній'
   words: 145
-  subsections:
+  points:
   - Спростування міфу про Шапку Мономаха
 - section: Підсумкове есе
   words: 56
-  subsections:
+  points:
   - Завдання для есе
 - section: Оцінювання есе
   words: 498
-  subsections:
+  points:
   - Модельна відповідь та рубрика
 - section: 'Погляд: Потрібно більше практики?'
   words: 54
-  subsections:
+  points:
   - Додаткові ресурси
 word_target: 4000
-vocabulary:
-- великий князь
-- отчина
-- половці
-- з'їзд
-- усобиця
-- устав
-- лихварство
-- боржник
-- повчання
-- настанова
-- працелюбність
-- шапка Мономаха
-- єдність
-- роздроблення
-- степ
-- полководець
-- засліплення
-- Любеч
-- Теrebovlia
-- Візантія
-- автобіографія
-- гуманізм
-- етика
-- династичний шлюб
-- літопис
-activities:
+vocabulary_hints:
+  required:
+  - великий князь (grand prince)
+  - отчина (patrimony, hereditary domain)
+  - половці (Polovtsians, Cumans)
+  - з'їзд (congress, assembly)
+  - усобиця (internecine strife)
+  - устав (statute, charter)
+  - лихварство (usury)
+  - боржник (debtor)
+  - повчання (instruction, teaching)
+  - настанова (admonition, precept)
+  - працелюбність (diligence, industriousness)
+  - шапка Мономаха (Monomakh's Cap)
+  - єдність (unity)
+  - роздроблення (fragmentation)
+  - степ (steppe)
+  - полководець (military commander)
+  - засліплення (blinding)
+  - Любеч (Liubech)
+  - Теrebovlia (Terebovlia)
+  - Візантія (Byzantium)
+  recommended:
+  - автобіографія (autobiography)
+  - гуманізм (humanism)
+  - етика (ethics)
+  - династичний шлюб (dynastic marriage)
+  - літопис (chronicle)
+activity_hints:
 - type: reading
   focus: Уривок з «Повчання дітям» про працелюбність
 - type: fill-in
@@ -120,8 +114,29 @@ activities:
   items: 10+
 - type: comparative-study
   focus: Любецький з'їзд vs Віче
+  output: Comparison table
 - type: critical-analysis
   focus: Аналіз 'Повчання дітям' як історичного джерела
+  questions: 3+
+focus: history
+pedagogy: seminar
+prerequisites:
+- 'b2-hist-12: Ярослав Мудрий'
+- 'b2-hist-13: Руська Правда'
+connects_to:
+- 'b2-hist-16: Культура Київської Русі'
+- 'b2-hist-17: Княжі усобиці'
+objectives:
+- Учень може проаналізувати правління Володимира Мономаха та його вплив на єдність
+  Русі
+- Учень може пояснити значення «Повчання дітям» як унікального літературного та філософського
+  твору
+- Учень може оцінити роль Любецького з'їзду в історії Русі
+- Учень може порівняти внутрішню і зовнішню політику Мономаха з іншими князями доби
+grammar:
+- 'Історичний наратив: минулий час доконаного виду'
+- Складні речення з підрядними причини та наслідку
+- Вживання дієприкметників у публіцистичному стилі
 sources:
 - name: Володимир Мономах (Вікіпедія)
   url: https://uk.wikipedia.org/wiki/Володимир_Мономах
@@ -129,3 +144,5 @@ sources:
 - name: Повчання Володимира Мономаха (Електронні Літописи)
   url: https://litopys.org.ua/pvl/pvl21.htm
   type: primary
+register: публіцистичний
+phase: B2-HIST.2 [Kyivan Rus]

@@ -1,26 +1,9 @@
 module: 02-language-about-verbs
-level: b1
-sequence: 2
-version: '1.0'
+level: B1
+slug: 02-language-about-verbs
+version: '2.0'
 title: Мова про дієслова
 subtitle: Verb-specific terminology for aspect and tense
-focus: integration
-pedagogy: PPP
-objectives:
-- Learner can name perfective and imperfective aspect in Ukrainian
-- Learner can identify tense names in grammar explanations
-- Learner can describe verb properties using Ukrainian terminology
-- Learner can use negation terminology correctly
-- Learner can identify different verb forms (compound, synthetic, imperative)
-sources:
-- name: Ukrainian State Standard 2024 - Verb System
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official terminology for Ukrainian verb categories
-- name: Ukrainian Verb Aspect (Wikipedia)
-  url: https://uk.wikipedia.org/wiki/Вид_дієслова
-  type: reference
-  notes: Overview of aspectual system terminology
 content_outline:
 - section: Introduction - The Verb System
   words: 200
@@ -81,7 +64,7 @@ content_outline:
   - Integration of all verb terminology
   - Readiness for M03
 word_target: 3000
-vocabulary:
+vocabulary_hints:
   required:
   - вид (aspect)
   - доконаний вид (perfective aspect)
@@ -101,17 +84,50 @@ vocabulary:
   - загальне заперечення (general negation)
   - складна форма (compound form)
   - синтетична форма (synthetic form)
-  forbidden: []
-activities:
-  types_required:
-  - group-sort
-  - match-up
-  - fill-in
-  - quiz
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: group-sort
+  focus: Sort terms by category (aspect vs tense vs action vs negation vs forms)
+  items: 15+
+- type: match-up
+  focus: Ukrainian term → definition in Ukrainian
+  items: 12+
+- type: fill-in
+  focus: Describe verb properties using Ukrainian terms
+  items: 10+
+- type: quiz
+  focus: Negation types and contexts (загальне заперечення vs очікувана дія)
+  items: 8+
+- type: match-up
+  focus: 'Verb forms (складна форма: буду читати vs синтетична форма: читатиму)'
+  items: 8+
+focus: integration
+pedagogy: PPP
+prerequisites:
+- b1-01 (Basic grammar terminology)
+- A2 aspect basics (conceptual understanding)
 connects_to:
 - b1-03 (Reading grammar rules)
 - b1-06 (Aspect complete system)
 - b1-09 (Aspect in future)
+objectives:
+- Learner can name perfective and imperfective aspect in Ukrainian
+- Learner can identify tense names in grammar explanations
+- Learner can describe verb properties using Ukrainian terminology
+- Learner can use negation terminology correctly
+- Learner can identify different verb forms (compound, synthetic, imperative)
+grammar:
+- Aspect terms in Ukrainian
+- Tense terminology in Ukrainian
+- Action concepts for grammar discussion
+module_type: bridge
+sources:
+- name: Ukrainian State Standard 2024 - Verb System
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official terminology for Ukrainian verb categories
+- name: Ukrainian Verb Aspect (Wikipedia)
+  url: https://uk.wikipedia.org/wiki/Вид_дієслова
+  type: reference
+  notes: Overview of aspectual system terminology
+immersion: 75% Ukrainian
+phase: B1.0 Bridge

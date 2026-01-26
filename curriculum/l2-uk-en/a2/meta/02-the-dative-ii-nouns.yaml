@@ -1,14 +1,11 @@
-id: a2-02
-title: The Dative II — Nouns
-subtitle: Giving, Sending, and Showing
+module: 02-the-dative-ii-nouns
+level: A2
 slug: 02-the-dative-ii-nouns
-module_type: grammar
-word_target: 1000
-immersion: 50-60% Ukrainian
 version: '1.0'
-phase: A2.1
-focus: grammar
-pedagogy: PPP
+id: a2-02
+naturalness:
+  score: 9
+  status: PASS
 duration: 60
 transliteration: none
 tags:
@@ -17,95 +14,5 @@ tags:
 - dative
 - nouns
 - declension
-grammar:
-- dative noun endings
-- masculine dative (-ові/-у)
-- feminine dative (-і)
-- neuter dative (-у/-ові)
-- plural dative (-ам)
-objectives:
-- Learner can form dative case endings for masculine nouns
-- Learner can form dative case endings for feminine and neuter nouns
-- Learner can form dative plural endings
-- Learner can use dative nouns with common verbs
-sources:
-- name: Ukrainian State Standard 2024 - Noun Declension
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Complete dative endings for all noun genders
-- name: Ukrainian Grammar Tables
-  url: https://uk.wikipedia.org/wiki/Відмінювання_іменників
-  type: reference
-  notes: Declension patterns and exceptions
-content_outline:
-- section: Introduction / Вступ
-  words: 300
-  points:
-  - Building on dative pronouns from M01
-  - Indirect object concept (recipient of action)
-  - Ukrainian overview of recipients
-- section: Presentation
-  words: 500
-  points:
-  - Masculine endings (-ові/-у)
-  - Feminine endings (-і) with consonant changes
-  - Neuter and Plural endings
-  - Dative-hungry verbs
-- section: Practice
-  words: 150
-  points:
-  - Reading and sentence transformation
-- section: Dialogues
-  words: 50
-  points:
-  - Mini-dialogues in context
-vocabulary_hints:
-  required:
-  - давати (to give)
-  - дарувати (to gift)
-  - посилати (to send)
-  - надсилати (to send)
-  - показувати (to show)
-  - пояснювати (to explain)
-  - розповідати (to tell)
-  - допомагати (to help)
-  - заважати (to bother)
-  - личити (to suit)
-  - підходити (to suit)
-  - вистачати (to be enough)
-  - бракувати (to lack)
-  - відповідати (to answer)
-  - телефонувати (to call)
-  recommended:
-  - шкодити (to harm)
-  - вірити (to believe)
-  - довіряти (to trust)
-  - радити (to advise)
-  - дозволяти (to allow)
-activity_hints:
-- type: fill-in
-  focus: Add dative endings to nouns
-  items: 15+
-- type: quiz
-  focus: Form dative from nominative
-  items: 12+
-- type: match-up
-  focus: Verb + typical dative object pairs
-  items: 10+
-- type: fill-in
-  focus: Complete sentences with correct dative noun
-  items: 10+
-- type: quiz
-  focus: Choose correct dative ending by gender
-  items: 10+
-prerequisites:
-- a2-01 (Dative pronouns)
-- A1 noun gender recognition
-- A1 accusative case
-connects_to:
-- a2-03 (Dative Verbs)
-- a2-04 (Instrumental I)
-- a2-09 (All Cases Practice)
-naturalness:
-  score: 9
-  status: PASS
+build:
+  last_modified: '2026-01-26'

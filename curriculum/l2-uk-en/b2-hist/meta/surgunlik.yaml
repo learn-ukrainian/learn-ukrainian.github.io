@@ -1,105 +1,13 @@
 module: b2-hist-108
-id: b2-hist-108
+level: B2-HIST
 slug: surgunlik
-title: "Sürgünlik: Депортація кримських татар"
-subtitle: "Sürgünlik: The Crimean Tatar Deportation"
 version: '2.0'
-phase: "HIST.10 [WWII & Soviet Terror]"
-focus: history
-pedagogy: CBI
-register: публіцистичний
-duration: 120
-transliteration: none
-objectives:
-  - "Учень може описати депортацію кримських татар 1944 року"
-  - "Учень може пояснити механізм та наслідки депортації"
-  - "Учень може проаналізувати боротьбу за повернення"
-  - "Учень може оцінити Sürgünlik як геноцид"
-grammar:
-  - "Минулий час в історичному наративі"
-  - "Лексика репресій та депортацій"
-  - "Пасивні конструкції"
-word_target: 4000
-content_outline:
-  - section: "Вступ: 18 травня 1944"
-    words: 400
-    points:
-      - "День пам'яті жертв депортації"
-      - "Sürgünlik: що означає це слово"
-      - "Чому депортували цілий народ"
-  - section: "Механізм депортації"
-    words: 800
-    points:
-      - "Сталінський наказ"
-      - "Як відбувалась депортація"
-      - "Вагони для худоби"
-      - "Смерть у дорозі"
-  - section: "Життя в засланні"
-    words: 1000
-    points:
-      - "Узбекистан та інші місця заслання"
-      - "Голод і хвороби"
-      - "Смертність: 46% загиблих"
-      - "Заборона повертатись"
-      - "Втрата землі та культури"
-  - section: "Первинні джерела"
-    words: 800
-    points:
-      - "Свідчення вижилих"
-      - "Документи НКВД"
-      - "Фотографії та спогади"
-  - section: "Деколонізаційний погляд"
-    words: 500
-    points:
-      - "Радянський наратив: «зрадники»"
-      - "Реальність: етнічна чистка"
-      - "Визнання геноциду"
-  - section: "Підсумок: Боротьба за повернення"
-    words: 500
-    points:
-      - "Рух за повернення"
-      - "Повернення після 1989"
-      - "Окупація 2014 та нові репресії"
-vocabulary_hints:
-  required:
-    - депортація (deportation)
-    - геноцид (genocide)
-    - заслання (exile)
-    - кримські татари (Crimean Tatars)
-    - репресії (repressions)
-    - повернення (return)
-    - етнічна чистка (ethnic cleansing)
-    - пам'ять (memory)
-  recommended:
-    - вагон (wagon)
-    - смертність (mortality)
-    - реабілітація (rehabilitation)
-    - батьківщина (homeland)
-    - вижилі (survivors)
-    - меджліс (Mejlis)
-activity_hints:
-  - type: reading
-    focus: "Свідчення вижилих"
-    source: "Усна історія"
-    items: 4
-  - type: quiz
-    focus: "Депортація кримських татар"
-    items: 15
-  - type: match-up
-    focus: "Дата → етап депортації/повернення"
-    items: 10
-  - type: fill-in
-    focus: "Лексика депортації"
-    items: 10
-  - type: essay-response
-    focus: "Чому депортація кримських татар є геноцидом?"
-    word_target: 250
-prerequisites:
-  - b2-hist-107 (Друга світова: кінець)
-connects_to:
-  - b2-hist-131 (Крим 2014)
-  - b2-hist-132 (Кримські татари після 2014)
+id: b2-hist-108
 naturalness:
   score: 10
   status: PASS
-  justification: "Академічний український для історії репресій"
+  justification: Академічний український для історії репресій
+duration: 120
+transliteration: none
+build:
+  last_modified: '2026-01-26'

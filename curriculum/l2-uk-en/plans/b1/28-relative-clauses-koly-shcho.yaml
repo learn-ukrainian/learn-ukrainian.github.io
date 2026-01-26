@@ -1,16 +1,9 @@
-module: relative-clauses-koly-shcho
-level: b1
-sequence: 28
+module: b1-28
+level: B1
+slug: relative-clauses-koly-shcho
 version: '2.0'
 title: 'Підрядні означальні: коли, що'
 subtitle: Time and Fact Relative Clauses
-focus: grammar
-pedagogy: TTT
-objectives:
-- Learner can form time relative clauses with коли
-- Learner can use що as a relative pronoun for facts
-- Learner can distinguish relative що from conjunction що
-- Learner can combine time expressions with relative clauses
 content_outline:
 - section: 'Introduction: Time and Fact Relatives'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Create time relatives
   - Use що correctly
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - коли (when)
   - що (that/what/which)
@@ -63,15 +56,33 @@ vocabulary:
   - після того як (after)
   - поки (while)
   - одночасно (simultaneously)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - translation
-  - sentence-combining
-  - error-correction
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: коли/що selection
+  items: 25
+- type: sentence-combining
+  focus: Combine with time relatives
+  items: 20
+- type: error-correction
+  focus: Fix що usage errors
+  items: 15
+- type: translation
+  focus: English to Ukrainian
+  items: 15
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-27 (Relative Clauses де/куди/звідки)
 connects_to:
 - b1-29 (Purpose Clauses щоб + infinitive)
+objectives:
+- Learner can form time relative clauses with коли
+- Learner can use що as a relative pronoun for facts
+- Learner can distinguish relative що from conjunction що
+- Learner can combine time expressions with relative clauses
+grammar:
+- Time relatives with коли (when)
+- Fact relatives with що as relative pronoun
+- 'Distinction: relative що vs conjunction що'
+register: розмовний
+phase: B1.3a [Complex Sentences]

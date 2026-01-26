@@ -1,108 +1,109 @@
 module: mariya-matios
-level: c1-bio
-sequence: 85
+level: C1-BIO
+slug: mariya-matios
 version: '2.0'
 title: 'Марія Матіос: Буковинський голос'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Марія_Матіос
-    title: Марія Матіос (Wikipedia UA)
-    notes: Біографія, творчість, громадська позиція
-  secondary:
-  - url: https://uk.wikipedia.org/wiki/Солодка_Даруся
-    title: Солодка Даруся
-    notes: Найвідоміший роман письменниці
-  - url: https://uk.wikipedia.org/wiki/Буковина
-    title: Буковина
-    notes: Регіональний контекст творчості
 content_outline:
 - section: Вступ — Голос гірського краю
   words: 400
-  subsections:
+  points:
   - Марія Матіос — найвідоміша буковинська письменниця сучасності
   - Від журналістки до лауреатки Шевченківської премії
   - Історична травма та сімейна пам'ять як теми творчості
 - section: Дитинство на Буковині (1959-1980)
   words: 600
-  subsections:
+  points:
   - Народження в селі Ростоки Вижницького району
   - Виховання в гуцульській родині
   - Навчання на філологічному факультеті Чернівецького університету
   - Перші журналістські та поетичні спроби
 - section: Журналістська кар'єра (1980-2000)
   words: 600
-  subsections:
+  points:
   - Робота в чернівецьких виданнях
   - Переїзд до Києва та робота на телебаченні
   - Перші поетичні збірки
   - Входження в літературне життя столиці
 - section: «Солодка Даруся» та слава (2004-2010)
   words: 800
-  subsections:
+  points:
   - Публікація роману «Солодка Даруся» (2004)
   - Шевченківська премія (2005)
   - Історія травми — радянська депортація на Буковині
   - Роман «Майже ніколи не навпаки» та інші твори
 - section: Письменниця та громадянка (2010-сьогодні)
   words: 800
-  subsections:
+  points:
   - Політична активність та критика влади
   - Підтримка Революції гідності
   - Волонтерська діяльність під час війни
   - Нові романи та есеїстика
 - section: Поетика та мова
   words: 800
-  subsections:
+  points:
   - Буковинський діалект як літературна мова
   - Жіночі голоси та родинні історії
   - Тема історичної справедливості
   - Місце Матіос у сучасній українській прозі
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - буковинський
-  - діалект
-  - травма
-  - депортація
-  - родинна сага
-  - регіоналізм
-  - письменниця
-  - премія
-  - пам'ять
-  - справедливість
+  - буковинський (Bukovinian)
+  - діалект (dialect)
+  - травма (trauma)
+  - депортація (deportation)
+  - родинна сага (family saga)
+  - регіоналізм (regionalism)
+  - письменниця (writer, female)
+  - премія (prize/award)
+  - пам'ять (memory)
+  - справедливість (justice)
   recommended:
-  - гуцульський
-  - фольклор
-  - репресії
-  - волонтер
-  - есеїстика
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - гуцульський (Hutsul)
+  - фольклор (folklore)
+  - репресії (repressions)
+  - волонтер (volunteer)
+  - есеїстика (essay writing)
+activity_hints:
+- type: reading
+  focus: Уривки з «Солодкої Дарусі» та інтерв'ю
+  source: Оригінальні твори та публіцистика
+  items: 3 passages
+- type: quiz
+  focus: Біографія та творчість
+  items: 12+
+- type: match-up
+  focus: Твори та їхні теми
+  items: 10+
+- type: essay-response
+  focus: Як регіональна ідентичність впливає на літературу?
+  word_target: 300
+  output: Literary analysis
+- type: group-sort
+  focus: Етапи творчості та жанри
+  items: 12+
+- type: fill-in
+  focus: Літературознавча та регіональна лексика
+  items: 10+
+focus: biography
+prerequisites:
+- c1-bio-84-halyna-pahutyak
 connects_to:
-  previous: c1-bio-84-halyna-pahutyak
-  related:
-  - c1-bio-86-oksana-zabuzhko
-  - c1-bio-90-serhiy-zhadan
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-86-oksana-zabuzhko
+- c1-bio-90-serhiy-zhadan
+module_type: biography
+sources:
+- name: Марія Матіос (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Марія_Матіос
+  type: primary
+  notes: Біографія, творчість, громадська позиція
+- name: Солодка Даруся
+  url: https://uk.wikipedia.org/wiki/Солодка_Даруся
+  type: reference
+  notes: Найвідоміший роман письменниці
+- name: Буковина
+  url: https://uk.wikipedia.org/wiki/Буковина
+  type: reference
+  notes: Регіональний контекст творчості
+immersion: 100% Ukrainian
+phase: C1-BIO

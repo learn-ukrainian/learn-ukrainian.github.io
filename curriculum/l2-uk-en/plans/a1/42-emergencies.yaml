@@ -1,0 +1,91 @@
+module: a1-42
+level: A1
+slug: emergencies
+version: '2.0'
+title: Emergencies
+subtitle: Help and Safety
+content_outline:
+- section: 'Introduction: Emergency Situations'
+  words: 100
+  points:
+  - Emergency numbers (103, 101, 102)
+  - When to call for help
+  - Staying calm
+- section: Calling for Help
+  words: 200
+  points:
+  - Допоможіть! (Help!)
+  - Викличте швидку/поліцію!
+  - Emergency phrases
+- section: Describing Problems
+  words: 150
+  points:
+  - Мені погано (I feel bad)
+  - Сталася аварія (There was an accident)
+  - Я загубив/загубила...
+- section: Giving Location
+  words: 150
+  points:
+  - Я на вулиці...
+  - Біля станції метро...
+  - Address format
+- section: At the Hospital/Police
+  words: 100
+  points:
+  - Basic hospital vocabulary
+  - Police report basics
+  - Showing documents
+- section: 'Practice: Emergency Scenarios'
+  words: 100
+  points:
+  - Call emergency services
+  - Report a problem
+word_target: 800
+vocabulary_hints:
+  required:
+  - допомога (help)
+  - швидка (ambulance)
+  - поліція (police)
+  - пожежна (fire service)
+  - небезпека (danger)
+  - аварія (accident)
+  - лікарня (hospital)
+  - документи (documents)
+  recommended:
+  - загубити (to lose)
+  - вкрасти (to steal)
+  - травма (injury)
+  - адреса (address)
+  - свідок (witness)
+  - заява (statement)
+activity_hints:
+- type: vocabulary-drill
+  focus: Emergency vocabulary
+  items: 20
+- type: dialogue
+  focus: Emergency calls
+  items: 8
+- type: listening
+  focus: Emergency instructions
+  items: 10
+- type: role-play
+  focus: Reporting an emergency
+  items: 5
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a1-31 (Body and Health)
+- a1-41 (Phone Basics)
+connects_to:
+- a1-43 (Combined Practice)
+objectives:
+- Learner can call for help in emergencies
+- Learner can describe basic problems
+- Learner can give location information
+- Learner can understand emergency instructions
+grammar:
+- Urgent requests (Допоможіть!)
+- Location expressions
+- Simple problem descriptions
+register: розмовний
+phase: A1.4 [Practical Scenarios]

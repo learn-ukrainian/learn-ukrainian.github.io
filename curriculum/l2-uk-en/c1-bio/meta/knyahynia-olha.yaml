@@ -1,157 +1,19 @@
-# C1-BIO Module 01: Княгиня Ольга: Регент і Реформатор
-# Status: ACTIVE (Biographical Seminar Standard)
-
 module: c1-bio-01
-id: c1-bio-01
-title: "Княгиня Ольга: Регент і Реформатор"
-subtitle: "Olha of Kyiv: Regent and Reformer"
+level: C1-BIO
 slug: knyahynia-olha
-module_type: biography
-word_target: 4000
-immersion: "100% Ukrainian"
 version: '2.0'
-phase: 'C1-BIO'
-focus: biography
-pedagogy: seminar
-duration: 150
-transliteration: none
-tags:
-  - history
-  - biography
-  - medieval
-  - kyivan-rus
-  - women-leaders
-grammar:
-  - "Academic biographical narrative"
-  - "Complex causal structures"
-objectives:
-  - "Analyze the administrative reforms of Princess Olha and their impact on state building"
-  - "Evaluate the synthesis of pagan tradition and Christian mission in early Rus"
-  - "Construct historical arguments based on chronicle excerpts"
-vocabulary_count: 24
-
-# === AGENT BUILD SPEC ===
-
-sources:
-  - name: Княгиня Ольга (Wikipedia UA)
-    url: https://uk.wikipedia.org/wiki/Ольга_(княгиня_київська)
-    type: primary
-    notes: Biography, reign details, Byzantine relations
-  - name: Повість минулих літ
-    url: https://uk.wikipedia.org/wiki/Повість_минулих_літ
-    type: primary
-    notes: Primary chronicle source for Olha narratives
-  - name: Women in Kyivan Rus
-    url: https://uk.wikipedia.org/wiki/Жінки_Київської_Русі
-    type: reference
-    notes: Context for women's roles in medieval governance
-
-content_outline:
-  - section: "Вступ — Легендарна постать у світлі історії та міфу"
-    words: 500
-    points:
-      - Унікальність Ольги як жінки-правительки
-      - Проблема розмежування легенди та історії
-      - Значення для української державності
-
-  - section: "Життєпис: Від таємниці народження до вершини влади"
-    words: 600
-    points:
-      - Версії про походження
-      - Соціальний ландшафт Русі
-      - Шлюб та початок правління
-
-  - section: "Внесок у розбудову держави: Від сили до закону"
-    words: 800
-    points:
-      - Помста як інструмент влади
-      - Адміністративні реформи (уроки та погости)
-      - Централізація влади
-
-  - section: "Останні роки: Оборона Києва та духовний вибір"
-    words: 700
-    points:
-      - Дипломатія з Візантією
-      - Особисте хрещення
-      - Відносини зі Святославом
-
-  - section: "Історіографічний та культурний аналіз постаті Ольги"
-    words: 500
-    points:
-      - Образ у літописах vs реальність
-      - Роль у творенні національного міфу
-      - Деколонізація образу
-
-  - section: "Спадщина та канонізація: Вічна присутність у національному коді"
-    words: 500
-    points:
-      - Канонізація
-      - Історична пам'ять
-      - Сучасне значення
-
-  - section: "Підсумок"
-    words: 200
-    points:
-      - Ольга як символ державності
-      - Цивілізаційний вибір
-      - Відповідальність за історію
-
-vocabulary_hints:
-  required:
-    - регент (regent)
-    - данина (tribute)
-    - погост (administrative district)
-    - урок (fixed tribute)
-    - помста (revenge)
-    - древляни (Drevlians)
-    - хрещення (baptism)
-    - канонізація (canonization)
-    - рівноапостольна (equal-to-the-apostles)
-    - візантійський (Byzantine)
-  recommended:
-    - княгиня (princess/duchess)
-    - вдова (widow)
-    - посольство (embassy)
-    - літопис (chronicle)
-    - язичництво (paganism)
-
-activity_hints:
-  - type: reading
-    focus: Close reading of chronicle excerpts about Olha's revenge
-    source: Повість минулих літ (adapted)
-    items: "3 passages"
-
-  - type: critical-analysis
-    focus: Compare chronicle narrative with modern historical interpretations
-    output: Identify 3+ differences
-
-  - type: essay-response
-    focus: Analyze the significance of Olha's reforms
-    word_target: 300
-    output: Structured analysis with examples
-
-  - type: comparative-study
-    focus: Olha vs. Elizabeth I of England - female rulers in patriarchal societies
-    output: Comparative table
-
-  - type: authorial-intent
-    focus: 'Analyze the chroniclers intent: Why emphasize revenge?'
-    output: Analytical response
-
-  - type: quiz
-    focus: 'Conceptual check: Cause-and-effect of reforms'
-    items: "8 questions"
-
-prerequisites:
-  - B2-HIST completion recommended
-  - Vocabulary ~5,500 words
-  - Familiarity with Kyivan Rus period
-
-connects_to:
-  - c1-bio-02 (Kniaz Sviatoslav - son of Olha)
-  - c1-bio-03 (Volodymyr Velykyi - grandson, completed Christianization)
-  - c1-bio-04 (Yaroslav Mudryi - continuation of reforms)
-
+id: c1-bio-01
 naturalness:
   score: 9
   status: PASS
+duration: 150
+transliteration: none
+tags:
+- history
+- biography
+- medieval
+- kyivan-rus
+- women-leaders
+vocabulary_count: 24
+build:
+  last_modified: '2026-01-26'

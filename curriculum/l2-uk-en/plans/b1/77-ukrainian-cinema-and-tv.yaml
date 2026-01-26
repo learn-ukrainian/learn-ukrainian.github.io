@@ -1,16 +1,9 @@
-module: ukrainian-cinema-and-tv
-level: b1
-sequence: 77
+module: b1-77
+level: B1
+slug: ukrainian-cinema-and-tv
 version: '2.0'
 title: Українське кіно та серіали
 subtitle: Ukrainian Cinema and Television
-focus: culture
-pedagogy: CBI
-objectives:
-- Learner can discuss Ukrainian films and television series
-- Learner can understand authentic texts about Ukrainian cinema
-- Learner can use film industry vocabulary in context
-- Learner can compare Ukrainian cinema with their own cultural experience
 content_outline:
 - section: 'Introduction: Ukrainian Cinema'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Recommend films
   - Discuss preferences
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - фільм (film)
   - кіно (cinema)
@@ -63,15 +56,33 @@ vocabulary:
   - драма (drama)
   - історичний фільм (historical film)
   - кінофестиваль (film festival)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - reading
-  - discussion
-  - matching
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: reading
+  focus: Film reviews and descriptions
+  items: 15
+- type: matching
+  focus: Match films to genres
+  items: 20
+- type: fill-in
+  focus: Complete film reviews
+  items: 15
+- type: discussion
+  focus: Recommend Ukrainian films
+  items: 10
+focus: culture
+pedagogy: CBI
+prerequisites:
+- b1-76 (Ukrainian Music Today)
 connects_to:
 - b1-78 (Technology and Startups)
+objectives:
+- Learner can discuss Ukrainian films and television series
+- Learner can understand authentic texts about Ukrainian cinema
+- Learner can use film industry vocabulary in context
+- Learner can compare Ukrainian cinema with their own cultural experience
+grammar:
+- Film and media vocabulary
+- Review and critique patterns
+- Expressing opinions about media
+register: розмовний
+phase: B1.7 [Contemporary Ukraine]

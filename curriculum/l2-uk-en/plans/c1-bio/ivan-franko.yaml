@@ -1,105 +1,105 @@
 module: ivan-franko
-level: c1-bio
-sequence: 28
+level: C1-BIO
+slug: ivan-franko
 version: '2.0'
 title: 'Іван Франко: Каменяр'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Франко_Іван_Якович
-    title: Іван Франко (Wikipedia UA)
-    notes: Comprehensive biography of the titan of Ukrainian culture
-  secondary:
-  - url: https://ifnan.gov.ua/
-    title: Інститут Івана Франка НАН України
-    notes: Academic institution dedicated to Franko studies
 content_outline:
 - section: Вступ — Титан праці
   words: 400
-  subsections:
+  points:
   - Письменник, поет, вчений, громадський діяч
   - Символ Галичини і всієї України
   - Автор понад 6000 творів
 - section: Юність у Нагуєвичах (1856-1874)
   words: 600
-  subsections:
+  points:
   - Народження в родині сільського коваля
   - Рання освіта та таланти
   - Смерть батька та вплив мачухи
   - Дрогобицька гімназія
 - section: Студентські роки (1874-1880)
   words: 800
-  subsections:
+  points:
   - Львівський університет
   - Участь у соціалістичному русі
   - Перші арешти
   - Початок літературної діяльності
 - section: Каменяр української культури (1880-1905)
   words: 800
-  subsections:
+  points:
   - «Мойсей», «Захар Беркут», «Перехресні стежки»
   - Наукова діяльність та докторат
   - Журналістика та редакторська робота
   - Номінація на Нобелівську премію (1916)
 - section: Хвороба та останні роки (1905-1916)
   words: 700
-  subsections:
+  points:
   - Прогресуюча хвороба
   - Продовження творчої роботи
   - Перша світова війна
   - Смерть у Львові
 - section: Спадщина — Вічний каменяр
   words: 700
-  subsections:
+  points:
   - Вплив на українську літературу
   - Франко як національний символ
   - Університет та інститути його імені
   - Актуальність ідей Франка сьогодні
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - каменяр
-  - титан
-  - письменник
-  - громадський діяч
-  - соціалізм
-  - наукова діяльність
-  - журналіст
-  - редактор
-  - поема
-  - повість
+  - каменяр (stonemason/pioneer)
+  - титан (titan)
+  - письменник (writer)
+  - громадський діяч (public figure)
+  - соціалізм (socialism)
+  - наукова діяльність (scholarly activity)
+  - журналіст (journalist)
+  - редактор (editor)
+  - поема (long poem)
+  - повість (novella)
   recommended:
-  - позитивізм
-  - народництво
-  - просвіта
-  - Галичина
-  - національне відродження
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - позитивізм (positivism)
+  - народництво (populism)
+  - просвіта (enlightenment)
+  - Галичина (Galicia)
+  - національне відродження (national revival)
+activity_hints:
+- type: reading
+  focus: Українська література XIX ст.
+  source: Literary history sources
+  items: 3 passages
+- type: quiz
+  focus: Життя та творчість Франка
+  items: 12+
+- type: match-up
+  focus: Твори та їхні жанри
+  items: 10+
+- type: essay-response
+  focus: Чому Франка називають «титаном праці»?
+  word_target: 300
+  output: Analytical essay
+- type: group-sort
+  focus: Діяльність Франка за сферами
+  items: 12+
+- type: fill-in
+  focus: Літературна та суспільно-політична термінологія
+  items: 10+
+focus: biography
+prerequisites:
+- c1-bio-27
 connects_to:
-  previous: c1-bio-27
-  related:
-  - c1-bio-20
-  - c1-bio-40
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-20
+- c1-bio-40
+module_type: biography
+sources:
+- name: Іван Франко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Франко_Іван_Якович
+  type: primary
+  notes: Comprehensive biography of the titan of Ukrainian culture
+- name: Інститут Івана Франка НАН України
+  url: https://ifnan.gov.ua/
+  type: reference
+  notes: Academic institution dedicated to Franko studies
+immersion: 100% Ukrainian
+phase: C1-BIO

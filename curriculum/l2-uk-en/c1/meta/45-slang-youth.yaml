@@ -1,50 +1,18 @@
-version: '1.0'
 module: c1-45
-title: Сленг та молодіжна мова
-subtitle: Slang & Youth Language
+level: C1
 slug: 45-slang-youth
-phase: C1.4 Advanced Stylistics & Rhetoric
-focus: style
-pedagogy: Sociolinguistics
+version: '1.0'
 duration: 120
 transliteration: none
-immersion: 100
 tags:
 - slang
 - youth-culture
 - internet-culture
 - informal
-grammar:
-- Internet slang (інтернет-сленг)
-- Anglicisms in youth speech (англіцизми)
-- School/University slang (шкільний/студентський жаргон)
-objectives:
-- Learner can understand and appropriate use common Ukrainian youth slang
-- Learner can distinguish between slang and standard language
-- Learner can analyze the influence of English on modern Ukrainian slang
 vocabulary_count: 35
 summary: This module dives into the dynamic world of Ukrainian youth slang and internet
   culture. Students explore how young Ukrainians speak today, borrowing from English,
   memes, and gaming culture, and learn to navigate the fine line between 'cool' and
   'cringe'.
-content_outline:
-- section: Вступ — Сленг та молодіжна мова
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-  - Роль у системі української мови
-- section: Wordplay Types
-  words: 500
-  points:
-  - 'Омоніми: ключ (key/spring)'
-  - 'Пароніми: similar-sounding words'
-  - 'Каламбур: Deliberate puns'
-  - 'Народна етимологія: Folk etymology jokes'
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

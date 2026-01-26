@@ -1,25 +1,9 @@
 module: 01-the-dative-i-pronouns
-level: a2
-sequence: 1
+level: A2
+slug: 01-the-dative-i-pronouns
 version: '2.0'
 title: The Dative I — Pronouns
 subtitle: I Like, I Need, and How I Feel
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can use dative pronouns correctly
-- Learner can express likes using подобатися
-- Learner can express needs using потрібно
-- Learner can describe physical and emotional states
-sources:
-- name: Ukrainian State Standard 2024 - Dative Case
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official dative pronoun paradigm and usage requirements for A2
-- name: CEFR A2 Grammar Descriptors
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
-  type: reference
-  notes: A2 level grammar complexity expectations
 content_outline:
 - section: Introduction / Вступ
   words: 300
@@ -45,7 +29,7 @@ content_outline:
   points:
   - Mini-dialogues for practice
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - мені (to me)
   - тобі (to you)
@@ -68,16 +52,52 @@ vocabulary:
   - весело (fun)
   - гарно (nice/well)
   - погано (bad)
-  forbidden: []
-activities:
-  types_required:
-  - quiz
-  - match-up
-  - fill-in
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: Choose correct dative pronoun for context
+  items: 12+
+- type: fill-in
+  focus: Transform nominative pronouns to dative
+  items: 10+
+- type: match-up
+  focus: Match nominative pronoun to dative form
+  items: 8+
+- type: fill-in
+  focus: Complete sentences with подобатися structure
+  items: 10+
+- type: quiz
+  focus: Physical/emotional states with dative
+  items: 10+
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- A1 completion (personal pronouns in nominative)
+- Basic sentence structure
+- Present tense conjugation
 connects_to:
 - a2-02 (Dative II - Nouns)
 - a2-03 (Dative Verbs)
 - a2-07 (Spatial Prepositions)
+objectives:
+- Learner can use dative pronouns correctly
+- Learner can express likes using подобатися
+- Learner can express needs using потрібно
+- Learner can describe physical and emotional states
+grammar:
+- dative pronouns
+- impersonal constructions
+- подобатися
+- потрібно
+- states
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Dative Case
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official dative pronoun paradigm and usage requirements for A2
+- name: CEFR A2 Grammar Descriptors
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: A2 level grammar complexity expectations
+immersion: 40-50% Ukrainian
+phase: A2.1

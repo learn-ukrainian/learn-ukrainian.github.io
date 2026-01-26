@@ -1,9 +1,30 @@
-module: 66-traditional-clothing
-level: c1
-sequence: 66
-version: '1.0'
+module: c1-66
+level: C1
+slug: 66-traditional-clothing
+version: '2.0'
 title: Традиційний український одяг
 subtitle: Traditional Ukrainian Clothing
+content_outline:
+- section: Вступ — Традиційний український одяг
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Legendary otamans: Сірко, Сагайдачний, Мазепа'
+  - 'Запорозька Січ: legends of the island fortress'
+  - 'Характерники: Cossack warrior-shamans'
+  - Historical ballads as sources
+  - Cossack mythology in national identity
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: cultural
 pedagogy: CBI
 objectives:
@@ -11,13 +32,7 @@ objectives:
 - Learner can explain the symbolism of embroidery and accessories
 - Learner can distinguish regional variations (Poltava vs. Hutsul vs. Podillia)
 - Learner can discuss the modern interpretation of traditional clothing
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- ethnographic terminology
+- descriptions of appearance
+phase: C1.5 Folk Culture & Arts

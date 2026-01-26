@@ -1,50 +1,57 @@
 module: pylyp-orlyk-konstytutsiia
-level: b2-hist
-sequence: 0
-version: '1.0'
+level: B2-HIST
+slug: pylyp-orlyk-konstytutsiia
+version: '2.0'
 title: Пилип Орлик і перша Конституція
-focus: history
-pedagogy: CBI
-objectives: []
+subtitle: Pylyp Orlyk and the First Constitution
 content_outline:
 - section: 'Вступ: Гетьман у вигнанні'
   words: 450
-  subsections:
+  points:
   - Orlyk's background and education
   - Election as Hetman in Bendery
   - The tragic context of exile
 - section: Бендерська Конституція 1710 року
   words: 800
-  subsections:
+  points:
   - Structure of the document (Pacts and Constitutions)
   - Separation of powers (Hetman, Council, Court)
   - Protection of social groups
 - section: 'Демократичні ідеї: Україна vs Європа'
   words: 600
-  subsections:
+  points:
   - Comparison with European legal thought (Locke, Montesquieu)
   - The uniqueness of the contract between the Hetman and the Army
   - Anti-tyranny safeguards
 - section: Дипломатична боротьба Орлика
   words: 650
-  subsections:
+  points:
   - Anti-Moscow coalition (Sweden, Turkey, Crimea)
   - Campaign of 1711 onto the Right Bank
   - Years of wandering in Europe (Thessaloniki, Paris, London)
 - section: 'Читання: Текст Конституції'
   words: 500
-  subsections:
+  points:
   - Analysis of specific articles (religion, borders, corruption)
   - Language and style of the document (Latin/Old Ukrainian)
 - section: 'Первинні джерела: Листи та діаріуш'
   words: 500
-  subsections:
+  points:
   - Excerpts from Orlyk's Diary ('Diariusz')
   - Letters to European monarchs
 - section: 'Деколонізаційний погляд: Правова культура'
   words: 500
-  subsections:
+  points:
   - Ukrainian constitutionalism vs Russian autocracy
   - Myth of 'anarchy' debunked
   - Orlyk as a symbol of European Ukraine
 word_target: 4000
+focus: history
+pedagogy: CBI
+prerequisites:
+- 'b2-hist-66: Іван Мазепа III'
+learning_outcomes:
+- Учень розуміє значення Конституції Пилипа Орлика 1710 року
+- Учень може описати структуру та основні ідеї документа
+- Учень знає біографію Пилипа Орлика як наступника Мазепи
+phase: HIST.7 [Mazepa & End of Hetmanate]

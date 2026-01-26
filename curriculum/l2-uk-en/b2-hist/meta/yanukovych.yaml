@@ -1,105 +1,13 @@
 module: b2-hist-126
-id: b2-hist-126
+level: B2-HIST
 slug: yanukovych
-title: "Епоха Януковича: Реванш"
-subtitle: "The Yanukovych Era: The Revanche"
 version: '2.0'
-phase: "HIST.12 [Independence & Modern Era]"
-focus: history
-pedagogy: CBI
-register: публіцистичний
-duration: 120
-transliteration: none
-objectives:
-  - "Учень може описати політичний курс Януковича"
-  - "Учень може пояснити причини відмови від євроінтеграції"
-  - "Учень може проаналізувати авторитарні тенденції режиму"
-  - "Учень може оцінити роль корупції та «Сім'ї»"
-grammar:
-  - "Минулий час в історичному наративі"
-  - "Політична лексика"
-  - "Складнопідрядні речення"
-word_target: 4000
-content_outline:
-  - section: "Вступ: Повернення"
-    words: 400
-    points:
-      - "2010: обрання Януковича"
-      - "Реванш після Помаранчевої революції"
-      - "Хто такий Янукович"
-  - section: "Політика режиму"
-    words: 1000
-    points:
-      - "Харківські угоди: флот за газ"
-      - "Закон про мови Ківалова-Колесніченка"
-      - "Ув'язнення Тимошенко"
-      - "Авторитарні тенденції"
-      - "Контроль над медіа та судами"
-  - section: "«Сім'я» та корупція"
-    words: 800
-    points:
-      - "Олександр Янукович — «Сім'я»"
-      - "Межигір'я як символ"
-      - "Масштаби корупції"
-      - "Олігархи при владі"
-  - section: "Первинні джерела"
-    words: 800
-    points:
-      - "Журналістські розслідування"
-      - "Документи з Межигір'я"
-      - "Записи переговорів"
-  - section: "Деколонізаційний погляд"
-    words: 500
-    points:
-      - "Російський вплив на Україну"
-      - "Янукович як проросійська сила"
-      - "Шлях до Євромайдану"
-  - section: "Підсумок: Листопад 2013"
-    words: 500
-    points:
-      - "Відмова від Угоди про асоціацію"
-      - "Початок Євромайдану"
-      - "Кінець режиму"
-vocabulary_hints:
-  required:
-    - президент (president)
-    - авторитаризм (authoritarianism)
-    - корупція (corruption)
-    - режим (regime)
-    - «Сім'я» (The Family)
-    - євроінтеграція (European integration)
-    - ув'язнення (imprisonment)
-    - угода (agreement)
-  recommended:
-    - олігарх (oligarch)
-    - Межигір'я (Mezhyhirya)
-    - медіа (media)
-    - суд (court)
-    - опозиція (opposition)
-    - протест (protest)
-activity_hints:
-  - type: reading
-    focus: "Документи та розслідування про корупцію"
-    source: "Журналістські матеріали"
-    items: 4
-  - type: quiz
-    focus: "Епоха Януковича"
-    items: 15
-  - type: match-up
-    focus: "Подія → наслідки"
-    items: 10
-  - type: true-false
-    focus: "Факти про режим Януковича"
-    items: 10
-  - type: essay-response
-    focus: "Як політика Януковича призвела до Революції Гідності?"
-    word_target: 250
-prerequisites:
-  - b2-hist-122 (Помаранчева революція)
-connects_to:
-  - b2-hist-127 (Революція Гідності)
-  - b2-hist-128 (Анексія Криму)
+id: b2-hist-126
 naturalness:
   score: 10
   status: PASS
-  justification: "Академічний український для політичної історії"
+  justification: Академічний український для політичної історії
+duration: 120
+transliteration: none
+build:
+  last_modified: '2026-01-26'

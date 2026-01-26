@@ -1,107 +1,11 @@
-id: lit-23
-title: 'Чорна рада: Роман'
-subtitle: 'The Black Council: The Novel'
+module: black-council-plot
+level: LIT
 slug: black-council-plot
-module_type: literature
-word_target: 4500
-immersion: 100% Ukrainian
-sources:
-- name: Чорна рада — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=263
-  type: primary
-  notes: Роман для детального аналізу
-- name: Аналіз "Чорної ради"
-  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=263
-  type: secondary
-  notes: Літературознавчий аналіз
-- name: Вальтер Скотт — вплив
-  url: https://uk.wikipedia.org/wiki/Вальтер_Скотт
-  type: reference
-  notes: Літературний контекст
-content_outline:
-- section: Вступ — Перший український історичний роман
-  words: 500
-  points:
-  - Значення "Чорної ради" для літератури
-  - Вплив Вальтера Скотта
-  - Рік видання (1857)
-- section: Сюжет і структура
-  words: 700
-  points:
-  - Основні сюжетні лінії
-  - Хронологія подій
-  - Фінал і його значення
-- section: Система персонажів
-  words: 800
-  points:
-  - Шрам — ідеал козацької честі
-  - Череваний — прагматик
-  - Сомко — трагічний герой
-  - Брюховецький — антигерой
-- section: Літературні архетипи
-  words: 700
-  points:
-  - Вальтерскоттівська модель
-  - «Середній герой» як спостерігач
-  - Історія як фон для особистої драми
-- section: Художні особливості
-  words: 500
-  points:
-  - Мова роману (архаїзація)
-  - Пейзаж і його функція
-  - Діалоги vs авторські описи
-- section: Підсумок — Роман як історична філософія
-  words: 400
-  points:
-  - Погляд Куліша на "народ"
-  - Критика охлократії
-  - Перехід до мовного питання
-vocabulary_hints:
-  required:
-  - історичний роман (historical novel)
-  - архетип (archetype)
-  - антигерой (antihero)
-  - архаїзація (archaization)
-  - сюжетна лінія (plot line)
-  - пейзаж (landscape)
-  - хронологія (chronology)
-  - прагматик (pragmatist)
-  - ідеаліст (idealist)
-  - трагічний герой (tragic hero)
-  recommended:
-  - фабула (plot)
-  - композиція (composition)
-  - наратор (narrator)
-  - ретроспекція (retrospection)
-  - експозиція (exposition)
-activity_hints:
-- type: reading
-  focus: Ключові епізоди "Чорної ради"
-  source: UkrLib tid=263
-  items: 5+
-- type: quiz
-  focus: Сюжет та персонажі роману
-  items: 15+
-- type: match-up
-  focus: Персонаж → його характеристика / архетип
-  items: 12+
-- type: essay-response
-  focus: Шрам vs Череваний — два погляди на Україну
-  word_target: 300
-  output: Компаративне есе
-- type: cloze
-  focus: Цитати з роману
-  items: 12+
-prerequisites:
-- lit-22 (Black Council History)
-- Understanding of historical novel genre
-connects_to:
-- lit-24 (Language Question — мова роману)
-- lit-13 (Haidamaky — порівняння історичних наративів)
 version: '2.0'
-phase: LIT.4 The Intellectuals (Kulish & Kostomarov)
-focus: literature
-pedagogy: Analysis
+id: lit-23
+naturalness:
+  score: 9
+  status: PASS
 duration: 120
 transliteration: none
 tags:
@@ -109,8 +13,5 @@ tags:
 - kulish
 - romanticism
 - novel
-grammar:
-- Literary Archetypes
-naturalness:
-  score: 9
-  status: PASS
+build:
+  last_modified: '2026-01-26'

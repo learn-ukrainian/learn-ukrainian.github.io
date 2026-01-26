@@ -1,21 +1,8 @@
 module: 09-thesis-development
-level: c1
-sequence: 9
+level: C1
+slug: 09-thesis-development
 version: '2.0'
 title: Розвиток наукової тези
-focus: grammar
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Academic Argumentation in Ukrainian
-  url: https://mova.info/
-  type: reference
-  notes: Thesis formulation standards
-- name: Логіка наукового дослідження
-  url: https://mon.gov.ua/
-  type: secondary
-  notes: Research logic and hypothesis development
 content_outline:
 - section: Вступ — Що таке теза?
   words: 400
@@ -60,7 +47,7 @@ content_outline:
   - Взаємна оцінка тез
   - Редагування власних тез
 word_target: 4000
-vocabulary:
+vocabulary_hints:
   required:
   - теза (thesis)
   - гіпотеза (hypothesis)
@@ -78,19 +65,42 @@ vocabulary:
   - верифікація (verification)
   - фальсифікація (falsification)
   - валідність (validity)
-  forbidden: []
-activities:
-  types_required:
-  - group-sort
-  - quiz
-  - essay-response
-  - fill-in
-  - error-correction
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: Identify thesis type (констатувальна/аргументативна/аналітична)
+  items: 15+
+- type: fill-in
+  focus: Transform weak thesis to strong thesis
+  items: 12+
+- type: match-up
+  focus: Thesis to supporting evidence
+  items: 12+
+- type: error-correction
+  focus: Improve problematic theses
+  items: 10+
+- type: essay-response
+  focus: Formulate thesis on given topic
+  word_target: 100
+- type: group-sort
+  focus: Strong vs weak theses
+  items: 15+
+focus: grammar
+prerequisites:
+- c1-08 (Essay Structure)
+- Logical argumentation basics
 connects_to:
 - c1-10 (Counterarguments)
 - c1-12 (Research Article)
 - c1-18 (Essay Writing Practice)
+module_type: grammar
+sources:
+- name: Academic Argumentation in Ukrainian
+  url: https://mova.info/
+  type: reference
+  notes: Thesis formulation standards
+- name: Логіка наукового дослідження
+  url: https://mon.gov.ua/
+  type: secondary
+  notes: Research logic and hypothesis development
+immersion: 100% Ukrainian
+phase: C1.1 Academic Ukrainian

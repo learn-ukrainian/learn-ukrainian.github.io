@@ -1,94 +1,13 @@
 module: b1-73
-id: b1-73
+level: B1
 slug: regions-east
-title: "Українські регіони: Схід"
-subtitle: "Eastern Ukraine - Industrial Heritage and Academic Excellence"
 version: '2.0'
-phase: "B1.7 [Contemporary Ukraine]"
-focus: culture
-pedagogy: CBI
-register: розмовний
-duration: 90
-transliteration: none
-objectives:
-  - "Learner can discuss Eastern Ukraine's industrial heritage and academic centers"
-  - "Learner can understand authentic texts about Kharkiv, Slobozhanshchyna, and Donbas"
-  - "Learner can use regional vocabulary to describe Eastern Ukrainian culture and identity"
-  - "Learner can compare Eastern Ukrainian traditions with other regions"
-grammar:
-  - "Reading comprehension strategies"
-  - "Cultural vocabulary in context"
-  - "Industrial and academic vocabulary"
-word_target: 1200
-content_outline:
-  - section: "Introduction: Eastern Ukraine"
-    words: 150
-    points:
-      - "Geographic overview"
-      - "Historical development"
-      - "Cultural characteristics"
-  - section: "Kharkiv and Slobozhanshchyna"
-    words: 250
-    points:
-      - "Харків, Слобожанщина"
-      - "Academic traditions"
-      - "Cultural institutions"
-  - section: "Donbas Region"
-    words: 250
-    points:
-      - "Донбас, Донецьк, Луганськ"
-      - "Industrial heritage"
-      - "Working-class culture"
-  - section: "Eastern Ukrainian Identity"
-    words: 250
-    points:
-      - "Language situation"
-      - "Soviet-era influences"
-      - "Contemporary transformations"
-  - section: "War and Resilience"
-    words: 200
-    points:
-      - "2014 and beyond"
-      - "Displacement and adaptation"
-      - "Cultural preservation"
-  - section: "Practice: Regional Discussion"
-    words: 100
-    points:
-      - "Discuss Eastern Ukraine"
-      - "Compare with other regions"
-vocabulary_hints:
-  required:
-    - Харків (Kharkiv)
-    - Слобожанщина (Slobozhanshchyna)
-    - Донбас (Donbas)
-    - промисловість (industry)
-    - спадщина (heritage)
-    - університет (university)
-    - ідентичність (identity)
-    - регіон (region)
-  recommended:
-    - академічний (academic)
-    - робітничий (working-class)
-    - переселенці (displaced persons)
-    - стійкість (resilience)
-activity_hints:
-  - type: reading
-    focus: "Authentic texts about Eastern Ukraine"
-    items: 15
-  - type: matching
-    focus: "Match regions to characteristics"
-    items: 20
-  - type: fill-in
-    focus: "Complete regional descriptions"
-    items: 15
-  - type: discussion
-    focus: "Discuss Eastern Ukrainian identity"
-    items: 10
-prerequisites:
-  - b1-72 (Regions West)
-connects_to:
-  - b1-74 (Regions South)
+id: b1-73
 naturalness:
   score: 9
   status: PASS
-  justification: "Essential regional cultural knowledge"
+  justification: Essential regional cultural knowledge
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-26'

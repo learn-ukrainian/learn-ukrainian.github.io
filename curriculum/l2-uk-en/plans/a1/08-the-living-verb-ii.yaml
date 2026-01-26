@@ -1,16 +1,9 @@
-module: the-living-verb-ii
-level: a1
-sequence: 8
+module: a1-08
+level: A1
+slug: the-living-verb-ii
 version: '2.0'
 title: The Living Verb II
 subtitle: Second Conjugation (-ити verbs)
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can conjugate Second Conjugation verbs (-ити) in present tense
-- Learner can distinguish between First and Second Conjugation
-- Learner can use common irregular verbs (їсти, пити)
-- Learner can form basic sentences with action verbs
 content_outline:
 - section: 'Review: First Conjugation'
   words: 100
@@ -48,7 +41,7 @@ content_outline:
   - First vs Second Conjugation drills
   - Mixed verb sentences
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - говорити (to speak)
   - робити (to do)
@@ -63,16 +56,35 @@ vocabulary:
   - стояти (to stand)
   - платити (to pay)
   - вчити (to teach/learn)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - conjugation-drill
-  - translation
-  - sorting
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: conjugation-drill
+  focus: Conjugate Second Conjugation verbs
+  items: 30
+- type: sorting
+  focus: Sort verbs by conjugation type
+  items: 20
+- type: fill-in
+  focus: Complete with mutated forms
+  items: 15
+- type: translation
+  focus: Translate sentences with both conjugations
+  items: 12
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-06 (The Living Verb I)
+- a1-07 (Questions and Negation)
 connects_to:
 - a1-09 (Reflexive Verbs)
 - a1-21 (Past Tense)
+objectives:
+- Learner can conjugate Second Conjugation verbs (-ити) in present tense
+- Learner can distinguish between First and Second Conjugation
+- Learner can use common irregular verbs (їсти, пити)
+- Learner can form basic sentences with action verbs
+grammar:
+- Second Conjugation pattern (-ити → -у, -иш...)
+- Consonant mutation patterns
+- Irregular verbs
+register: розмовний
+phase: A1.1 [First Contact]

@@ -1,107 +1,112 @@
-module: 28-kaidash-family-conflict
-level: lit
-sequence: 28
-version: '1.0'
+module: kaidash-family-conflict
+level: LIT
+slug: kaidash-family-conflict
+version: '2.0'
 title: 'Кайдашева сім''я: Анатомія Конфлікту'
 subtitle: 'Kaidash Family: Anatomy of Conflict'
-focus: literature
-pedagogy: seminar
-objectives:
-- Проаналізувати центральні конфлікти повісті
-- Зрозуміти соціальні причини сімейних сварок
-- Дослідити роль побутових деталей у розвитку сюжету
-- Оцінити актуальність твору для сучасності
-sources:
-  primary:
-  - url: https://www.ukrlib.com.ua/books/printit.php?tid=907
-    title: Кайдашева сім'я — повний текст
-    notes: Ключові сцени конфліктів
-  - url: https://www.ukrlib.com.ua/review/printit.php?tid=18137
-    title: Аналіз "Кайдашевої сім'ї"
-    notes: Проблематика твору
-  secondary:
-  - url: https://www.ukrlib.com.ua/tvory/printit.php?tid=8391
-    title: Роздуми над повістю
-    notes: Інтерпретації читачів
 content_outline:
 - section: Вступ — Чому вони сваряться?
   words: 500
-  subsections:
+  points:
   - Сімейні конфлікти в літературі
   - Структура конфліктів у повісті
   - Від комічного до трагічного
 - section: Конфлікт поколінь
   words: 700
-  subsections:
+  points:
   - Батьки vs діти
   - Боротьба за владу в родині
   - Економічні причини напруги
 - section: Конфлікт невісток
   words: 700
-  subsections:
+  points:
   - Мотря vs Мелашка
   - Груша як символ абсурду
   - Побутова дрібниця як каталізатор
 - section: Розподіл спадщини
   words: 600
-  subsections:
+  points:
   - Земля і власність
   - Справедливість vs традиція
   - Роздвоєння родини
 - section: Гумор і трагедія
   words: 600
-  subsections:
+  points:
   - Сміх крізь сльози
   - Де закінчується сатира
   - Читацьке співчуття
 - section: Підсумок — Сучасність класики
   words: 400
-  subsections:
+  points:
   - Чи змінилися сімейні конфлікти?
   - Універсальність Нечуя
   - Перехід до мови реалізму
 word_target: 3800
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - конфлікт
-  - сварка
-  - спадщина
-  - власність
-  - побут
-  - каталізатор
-  - абсурд
-  - трагікомедія
-  - поділ
-  - примирення
+  - конфлікт (conflict)
+  - сварка (quarrel)
+  - спадщина (inheritance)
+  - власність (property)
+  - побут (everyday life)
+  - каталізатор (catalyst)
+  - абсурд (absurd)
+  - трагікомедія (tragicomedy)
+  - поділ (division)
+  - примирення (reconciliation)
   recommended:
-  - дрібниця
-  - напруга
-  - ескалація
-  - кульмінація
-  - розв'язка
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - cloze
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
-  special_requirements:
-  - 'reading: Сцена сварки через грушу'
-  - 'essay-response: Аналіз актуальності для сучасної родини'
+  - дрібниця (trifle)
+  - напруга (tension)
+  - ескалація (escalation)
+  - кульмінація (climax)
+  - розв'язка (resolution)
+activity_hints:
+- type: reading
+  focus: Сцена сварки через грушу
+  source: UkrLib tid=907
+  items: 4+
+- type: quiz
+  focus: Причини та наслідки конфліктів
+  items: 15+
+- type: match-up
+  focus: Конфлікт → його причина
+  items: 10+
+- type: essay-response
+  focus: Актуальність для сучасної родини
+  word_target: 300
+  output: Аналітичне есе
+- type: cloze
+  focus: Ключові сцени конфліктів
+  items: 12+
+focus: literature
+pedagogy: Seminar
+prerequisites:
+- lit-27 (Кайдашева сім'я — персонажі)
 connects_to:
-  previous: 27-kaidash-family-characters
-  related:
-  - lit-29 (Мова реалізму)
-  - lit-08 (Конотопська відьма — порівняння гумору)
-constraints:
-  min_engagement_boxes: 3
-  min_examples: 15
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- lit-29 (Мова реалізму)
+- lit-08 (Конотопська відьма — порівняння гумору)
+objectives:
+- Проаналізувати центральні конфлікти повісті
+- Зрозуміти соціальні причини сімейних сварок
+- Дослідити роль побутових деталей у розвитку сюжету
+- Оцінити актуальність твору для сучасності
+grammar:
+- Conflict vocabulary
+- Cause and effect expressions
+- Emotional register
+module_type: literature
+sources:
+- name: Кайдашева сім'я — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=907
+  type: primary
+  notes: Ключові сцени конфліктів
+- name: Аналіз "Кайдашевої сім'ї"
+  url: https://www.ukrlib.com.ua/review/printit.php?tid=18137
+  type: primary
+  notes: Проблематика твору
+- name: Роздуми над повістю
+  url: https://www.ukrlib.com.ua/tvory/printit.php?tid=8391
+  type: reference
+  notes: Інтерпретації читачів
+immersion: 100% Ukrainian
+phase: LIT.5 Realism

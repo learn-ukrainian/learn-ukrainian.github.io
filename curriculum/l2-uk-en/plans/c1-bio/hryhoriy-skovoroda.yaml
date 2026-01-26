@@ -1,50 +1,32 @@
 module: hryhoriy-skovoroda
-level: c1-bio
-sequence: 16
+level: C1-BIO
+slug: hryhoriy-skovoroda
 version: '2.0'
 title: 'Григорій Сковорода: Мандрівний філософ'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Григорій_Сковорода
-    title: Григорій Сковорода (Wikipedia UA)
-    notes: Biography, philosophy, works
-  secondary:
-  - url: https://uk.wikipedia.org/wiki/Українське_Просвітництво
-    title: Українське Просвітництво
-    notes: Intellectual context
-  - url: https://uk.wikipedia.org/wiki/Києво-Могилянська_академія
-    title: Києво-Могилянська академія
-    notes: Educational background
 content_outline:
 - section: Вступ — Український Сократ
   words: 400
-  subsections:
+  points:
   - Сковорода як унікальна постать
   - Його місце у світовій філософії
   - Значення його життєвого вибору
 - section: Молодість та освіта
   words: 600
-  subsections:
+  points:
   - Походження з козацької родини
   - Навчання в Києво-Могилянській академії
   - Придворний співак
   - Подорожі до Європи
 - section: Відмова від кар'єри
   words: 600
-  subsections:
+  points:
   - Повернення до України
   - Викладацька діяльність
   - Конфлікти з церковною владою
   - Вибір мандрівного життя
 - section: Філософія Сковороди
   words: 900
-  subsections:
+  points:
   - Концепція "сродної праці"
   - 'Три світи: макрокосмос, мікрокосмос, символічний'
   - Ідея самопізнання
@@ -52,66 +34,88 @@ content_outline:
   - Світ ловив мене, та не впіймав
 - section: Літературна спадщина
   words: 600
-  subsections:
+  points:
   - Філософські діалоги та трактати
   - Байки та притчі
   - Поезія ("Сад божественних пісень")
   - Мовні особливості
 - section: Останні роки та смерть
   words: 500
-  subsections:
+  points:
   - Мандри Слобожанщиною
   - Коло учнів та друзів
   - Смерть та епітафія
   - Поховання в Сковородинівці
 - section: Підсумок — Філософ свободи
   words: 400
-  subsections:
+  points:
   - Сковорода як символ внутрішньої свободи
   - Його вплив на українську культуру
   - Актуальність його ідей сьогодні
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - філософ
-  - мандрівник
-  - самопізнання
-  - сродна праця
-  - макрокосмос
-  - мікрокосмос
-  - притча
-  - байка
-  - просвітництво
-  - епітафія
+  - філософ (philosopher)
+  - мандрівник (wanderer)
+  - самопізнання (self-knowledge)
+  - сродна праця (congenial work)
+  - макрокосмос (macrocosm)
+  - мікрокосмос (microcosm)
+  - притча (parable)
+  - байка (fable)
+  - просвітництво (Enlightenment)
+  - епітафія (epitaph)
   recommended:
-  - аскетизм
-  - символ
-  - трактат
-  - діалог
-  - мудрець
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  - critical-analysis
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - аскетизм (asceticism)
+  - символ (symbol)
+  - трактат (treatise)
+  - діалог (dialogue)
+  - мудрець (sage)
+activity_hints:
+- type: reading
+  focus: Excerpts from Skovoroda's dialogues
+  source: Original texts (adapted)
+  items: 4 passages
+- type: quiz
+  focus: Skovoroda's biography and key concepts
+  items: 12+
+- type: match-up
+  focus: Philosophical concepts and their meanings
+  items: 10+
+- type: essay-response
+  focus: How is "сродна праця" relevant today?
+  word_target: 300
+  output: Personal reflection with philosophical analysis
+- type: group-sort
+  focus: Skovoroda's ideas vs. Western Enlightenment
+  items: 12+
+- type: fill-in
+  focus: Famous aphorisms and their context
+  items: 10+
+- type: critical-analysis
+  focus: Compare Skovoroda with Socrates or Diogenes
+  output: Comparative philosophy
+focus: biography
+prerequisites:
+- c1-bio-15 (Petro Kalnyshevskyy - same era)
+- Understanding of Enlightenment philosophy
 connects_to:
-  previous: c1-bio-15 (Petro Kalnyshevskyy - same era)
-  related:
-  - c1-bio-17 (Maksym Berezovskyy - contemporary artist)
-  - c1-bio-20 (Taras Shevchenko - spiritual heir)
-  - c1-bio-77 (Vasyl Stus - later philosopher-poet)
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-17 (Maksym Berezovskyy - contemporary artist)
+- c1-bio-20 (Taras Shevchenko - spiritual heir)
+- c1-bio-77 (Vasyl Stus - later philosopher-poet)
+module_type: biography
+sources:
+- name: Григорій Сковорода (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Григорій_Сковорода
+  type: primary
+  notes: Biography, philosophy, works
+- name: Українське Просвітництво
+  url: https://uk.wikipedia.org/wiki/Українське_Просвітництво
+  type: reference
+  notes: Intellectual context
+- name: Києво-Могилянська академія
+  url: https://uk.wikipedia.org/wiki/Києво-Могилянська_академія
+  type: reference
+  notes: Educational background
+immersion: 100% Ukrainian
+phase: C1-BIO

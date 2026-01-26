@@ -1,0 +1,118 @@
+module: milozvuchnist-complete
+level: C2
+slug: milozvuchnist-complete
+version: '2.0'
+title: Милозвучність — Повна система евфонії
+content_outline:
+- section: Вступ — Що таке милозвучність?
+  words: 400
+  points:
+  - Визначення та історія поняття
+  - Милозвучність як ознака культури мовлення
+  - Обов'язкові vs стилістичні чергування
+- section: Система у/в
+  words: 700
+  points:
+  - Правило у після приголосного, в після голосного
+  - Позиція на початку речення
+  - Винятки та регіональні відмінності
+  - Практичні вправи на чергування
+- section: Система і/й
+  words: 600
+  points:
+  - Правило чергування і/й
+  - Позиція сполучника у реченні
+  - Поєднання з іншими чергуваннями
+  - Типові помилки та їх виправлення
+- section: Система з/зі/із
+  words: 600
+  points:
+  - Три варіанти прийменника
+  - Фонетичне оточення як критерій вибору
+  - Складні випадки (збіг приголосних)
+  - Діалектні особливості
+- section: Початкові у-/в- та -ся/-сь
+  words: 500
+  points:
+  - Варіювання у-/в- на початку слова
+  - Чергування -ся/-сь у дієсловах
+  - Стилістичні конотації вибору
+  - Авторські переваги в літературі
+- section: Комплексна евфонія
+  words: 700
+  points:
+  - Кілька чергувань в одному реченні
+  - Ритм і мелодика української прози
+  - Аналіз літературних текстів
+  - Авторське редагування для милозвучності
+- section: Практикум — Редагування текстів
+  words: 500
+  points:
+  - Виявлення порушень милозвучності
+  - Редагування офіційних документів
+  - Редагування художніх текстів
+  - Створення власних евфонічних текстів
+word_target: 4000
+vocabulary_hints:
+  required:
+  - милозвучність (euphony)
+  - чергування (alternation)
+  - евфонія (euphony)
+  - благозвучність (sonority)
+  - фонетичний (phonetic)
+  - збіг (cluster/confluence)
+  - приголосний (consonant)
+  - голосний (vowel)
+  - сполучник (conjunction)
+  - прийменник (preposition)
+  recommended:
+  - какофонія (cacophony)
+  - мелодика (melody)
+  - ритміка (rhythmics)
+  - гармонія (harmony)
+  - редагування (editing)
+activity_hints:
+- type: quiz
+  focus: Identify correct euphonic variant in context
+  items: 20+
+- type: fill-in
+  focus: Complete sentences with correct у/в, і/й, з/зі/із
+  items: 15+
+- type: error-correction
+  focus: Fix euphonic violations in provided texts
+  items: 12+
+- type: essay-response
+  focus: Rewrite a paragraph applying all euphonic rules
+  word_target: 300
+  output: Fully euphonic text with annotations
+- type: critical-analysis
+  focus: Analyze euphony in a literary excerpt (Franko, Kotsyubynskyi)
+  output: Identify all euphonic patterns and stylistic choices
+- type: quiz
+  focus: Match euphonic variants to phonetic contexts
+  items: 15+
+focus: phonology
+prerequisites:
+- C1 complete — basic euphonic awareness
+- Phonetic system understanding
+- Reading fluency in literary Ukrainian
+connects_to:
+- c2-03 (Academic style relies on perfect euphony)
+- c2-22 (Rhythm & Prosody builds on euphonic foundations)
+- c2-12 (Lexical stylistics includes euphonic word choice)
+module_type: phonology
+sources:
+- name: Пономарів О. Культура слова
+  url: https://r2u.org.ua/
+  type: primary
+  notes: Canonical reference for Ukrainian euphony and phonetic harmony
+- name: Ukrainian State Standard 2024 — Phonetic section
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official C2 phonetic requirements
+- name: Караванський С. Практичний словник синонімів української мови
+  url: https://r2u.org.ua/
+  type: reference
+  notes: Euphonic variants and stylistic choices
+immersion: 100% Ukrainian
+phase: C2.1 Stylistics Mastery

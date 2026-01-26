@@ -1,0 +1,91 @@
+module: a1-39
+level: A1
+slug: buying-tickets
+version: '2.0'
+title: Buying Tickets
+subtitle: Travel Arrangements
+content_outline:
+- section: 'Introduction: Ticket Buying'
+  words: 100
+  points:
+  - Train and bus stations
+  - Ticket offices and machines
+  - Online vs in-person
+- section: At the Ticket Office
+  words: 200
+  points:
+  - Один квиток до Львова
+  - В один кінець чи туди й назад?
+  - На яку дату?
+- section: Train Specifics
+  words: 150
+  points:
+  - Плацкарт, купе, СВ
+  - Верхня/нижня полиця
+  - Вагон і місце
+- section: Schedule Questions
+  words: 150
+  points:
+  - О котрій відправлення?
+  - Скільки їхати?
+  - З якої платформи?
+- section: Understanding Your Ticket
+  words: 100
+  points:
+  - Reading ticket information
+  - вагон, місце, час
+  - Platform number
+- section: 'Practice: Buy a Ticket'
+  words: 100
+  points:
+  - Complete ticket purchase
+  - Ask follow-up questions
+word_target: 800
+vocabulary_hints:
+  required:
+  - квиток (ticket)
+  - поїзд (train)
+  - автобус (bus)
+  - вокзал (station)
+  - платформа (platform)
+  - місце (seat)
+  - відправлення (departure)
+  - прибуття (arrival)
+  recommended:
+  - каса (ticket office)
+  - розклад (schedule)
+  - вагон (carriage)
+  - пересадка (transfer)
+  - туди й назад (round trip)
+  - купе (compartment)
+activity_hints:
+- type: dialogue
+  focus: Ticket purchase conversation
+  items: 10
+- type: reading
+  focus: Understand ticket information
+  items: 10
+- type: fill-in
+  focus: Complete booking phrases
+  items: 15
+- type: role-play
+  focus: At the ticket office
+  items: 5
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a1-17 (Numbers and Money)
+- a1-38 (At the Store)
+connects_to:
+- a1-40 (Taking Transport)
+objectives:
+- Learner can buy train and bus tickets
+- Learner can specify destination and class
+- Learner can understand ticket information
+- Learner can ask about schedules
+grammar:
+- Direction with до + genitive
+- Time expressions for schedules
+- Numbers for platforms and seats
+register: розмовний
+phase: A1.4 [Practical Scenarios]

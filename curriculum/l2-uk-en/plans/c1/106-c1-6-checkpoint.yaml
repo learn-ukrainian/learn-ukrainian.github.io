@@ -1,22 +1,40 @@
-module: 106-c1-6-checkpoint
-level: c1
-sequence: 106
+module: c1-106
+level: C1
+slug: 106-c1-6-checkpoint
 version: '2.0'
 title: 'C1.6 Контрольна точка: Літературний канон'
 subtitle: 'C1.6 Checkpoint: Literary Canon'
+content_outline:
+- section: Вступ — Літературний канон
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Основний матеріал
+  words: 600
+  points:
+  - Теоретичні основи
+  - Приклади та ілюстрації
+  - Типові помилки та як їх уникати
+- section: Поглиблене вивчення
+  words: 600
+  points:
+  - Додаткові випадки
+  - Контекстуальне використання
+  - Стилістичні нюанси
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: checkpoint
 pedagogy: Assessment
 objectives:
 - Learner can demonstrate mastery of the C1.6 literary phase content.
 - Learner can perform advanced literary analysis.
 - Learner can produce high-level academic writing on literary topics.
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Synthesis of C1 grammar
+phase: C1.6 Literature

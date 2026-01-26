@@ -1,0 +1,102 @@
+module: 2004-krymska-kryza
+level: C1-HIST
+slug: 2004-krymska-kryza
+version: '2.0'
+title: '2004: Кримська криза під час Помаранчевої'
+content_outline:
+- section: Вступ — Забута загроза
+  words: 451
+  points:
+  - Листопад 2004
+  - Сепаратистський з'їзд у Сєвєродонецьку
+  - Чому не спрацювало
+  - Структура модуля
+- section: Помаранчева революція — контекст
+  words: 677
+  points:
+  - Фальсифікація виборів
+  - Київський Майдан
+  - Позиція Сходу
+  - Ризик розколу
+- section: Сєвєродонецький з'їзд
+  words: 790
+  points:
+  - Хто скликав
+  - Що пропонували
+  - Лужков — присутність Росії
+  - «Південно-східна автономія»
+- section: Чому провалилось
+  words: 677
+  points:
+  - Місцеві еліти — не готові
+  - Відсутність народної підтримки
+  - Кучма — не пішов на розкол
+  - Помаранчева перемога
+- section: Уроки для 2014
+  words: 564
+  points:
+  - Що змінилось за 10 років
+  - Чому 2014 — інакше
+  - Підготовка до анексії
+  - Порівняння сценаріїв
+- section: Підсумок
+  words: 341
+  points:
+  - 2004 — репетиція
+  - Україна не розкололась
+  - Перехід до жінок у революціях
+word_target: 3500
+vocabulary_hints:
+  required:
+  - Помаранчева революція (Orange Revolution)
+  - сепаратизм (separatism)
+  - Сєвєродонецький з'їзд (Severodonetsk congress)
+  - автономія (autonomy)
+  - розкол (split)
+  - фальсифікація виборів (election fraud)
+  - місцеві еліти (local elites)
+  - народна підтримка (popular support)
+  - сценарій (scenario)
+  - урок (lesson)
+  recommended:
+  - Лужков (Luzhkov)
+  - «федералізація» (federalization)
+  - «південний схід» (southeast)
+  - Кучма (Kuchma)
+  - Янукович (Yanukovych)
+activity_hints:
+- type: event-analysis
+  focus: Severodonetsk congress — what happened
+  output: Congress analysis
+- type: failure-analysis
+  focus: Why 2004 separatism failed
+  output: Failure factors
+- type: comparison
+  focus: 2004 vs 2014 — why different outcomes
+  output: Scenario comparison
+- type: elite-study
+  focus: Regional elites — loyalty and calculation
+  output: Elite behavior analysis
+- type: essay-response
+  focus: Чому Україна не розкололась у 2004?
+  word_target: 400
+  model_answer: Required
+focus: history
+prerequisites:
+- c1-hist-128 (Granite Revolution)
+- c1-hist-93 (2004 vs 2014)
+connects_to:
+- c1-hist-130 (Women in revolutions)
+- c1-hist-78 (Crimea perspective)
+module_type: thematic
+sources:
+- name: Помаранчева революція (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Помаранчева_революція
+  type: reference
+  notes: Orange Revolution
+- name: Сепаратизм в Криму (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Сепаратизм_в_Криму
+  type: reference
+  notes: Crimean separatism
+immersion: 100% Ukrainian
+phase: C1-HIST.1 [Historiography]

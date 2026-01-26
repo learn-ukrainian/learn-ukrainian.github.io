@@ -1,78 +1,75 @@
-module: scythians-sarmatians
-level: b2-hist
-sequence: 2
-version: '1.0'
+module: b2-hist-02
+level: B2-HIST
+slug: scythians-sarmatians
+version: '2.0'
 title: Скіфи та сармати — Володарі степу
-focus: history
-pedagogy: seminar
-objectives:
-- Учень може описувати скіфську та сарматську культури як важливі етапи історії українського
-  степу
-- Учень може аналізувати первинні джерела про кочові народи
-- Учень може аргументувати значення скіфської спадщини для української культури
+subtitle: Scythians and Sarmatians
 content_outline:
 - section: Розминка
   words: 200
-  subsections:
+  points:
   - Географія Степу
   - Хто такі кочівники?
 - section: 'Читання: Скіфи: Імперія золота'
   words: 750
-  subsections:
+  points:
   - Історичне тло
   - Війна з Дарієм
   - Повсякденне життя
 - section: 'Сармати: Жінки-воїни та Катафракти'
   words: 1000
-  subsections:
+  points:
   - Важка кіннота
   - Матріархат і амазонки
   - Сарматський побут
 - section: Культура та Мистецтво
   words: 750
-  subsections:
+  points:
   - Звіриний стиль
   - Металургія та ремесла
   - Ритуал поховання (Товста Могила)
 - section: Первинні джерела
   words: 550
-  subsections:
+  points:
   - Геродот про скіфів
   - Страбон про сарматів
 - section: Деколонізаційний погляд
   words: 250
-  subsections:
+  points:
   - Міф про 'диких кочівників'
   - Скіфська спадщина України
 - section: Підсумок
   words: 500
-  subsections:
+  points:
   - Вплив на українську культуру
   - Генетичний та культурний код
 word_target: 4000
-vocabulary:
-- скіфи
-- сармати
-- кочівники
-- степ
-- курган
-- пектораль
-- кіннота
-- лучник
-- звіриний стиль
-- плем'я
-- цар
-- золото
-- царство
-- завоювання
-- торгівля
-- амазонка
-- топонім
-- сарматизм
-- алани
-activities:
+vocabulary_hints:
+  required:
+  - скіфи (Scythians)
+  - сармати (Sarmatians)
+  - кочівники (nomads)
+  - степ (steppe)
+  - курган (burial mound)
+  - пектораль (pectoral)
+  - кіннота (cavalry)
+  - лучник (archer)
+  - звіриний стиль (animal style)
+  - плем'я (tribe)
+  - цар (king/tsar)
+  - золото (gold)
+  recommended:
+  - царство (kingdom)
+  - завоювання (conquest)
+  - торгівля (trade)
+  - амазонка (Amazon warrior)
+  - топонім (toponym)
+  - сарматизм (Sarmatism)
+  - алани (Alans)
+activity_hints:
 - type: reading
   focus: Excerpt from Herodotus about Scythians (Ukrainian translation)
+  source: Provide in module
 - type: critical-analysis
   focus: Analyze Scythian gold artifacts including the pectoral
   items: 5-6 images
@@ -84,11 +81,30 @@ activities:
   items: 15+
 - type: comparative-study
   focus: Scythians vs Sarmatians — similarities and differences
+  output: Table or diagram
 - type: quiz
   focus: Key facts about steppe civilizations
   items: 12+
 - type: essay-response
   focus: Як кочівники вплинули на розвиток українських земель?
+focus: history
+pedagogy: seminar
+prerequisites:
+- b2-hist-01 (Trypillia civilization)
+- Basic historical vocabulary
+connects_to:
+- b2-hist-03 (Greek city-states in Crimea)
+- b2-hist-04 (Slavic origins)
+- 'b2-hist-08 (Synthesis: Origins to Kyiv)'
+objectives:
+- Учень може описувати скіфську та сарматську культури як важливі етапи історії українського
+  степу
+- Учень може аналізувати первинні джерела про кочові народи
+- Учень може аргументувати значення скіфської спадщини для української культури
+grammar:
+- Історичний наратив
+- Минулий час у науковому тексті
+module_type: history
 sources:
 - name: Скіфи (Вікіпедія)
   url: https://uk.wikipedia.org/wiki/Скіфи
@@ -102,3 +118,6 @@ sources:
   url: https://litopys.org.ua/
   type: primary
   notes: Ancient Greek descriptions of Scythians
+immersion: 100% Ukrainian
+register: публіцистичний
+phase: B2-HIST.1 [Витоки]

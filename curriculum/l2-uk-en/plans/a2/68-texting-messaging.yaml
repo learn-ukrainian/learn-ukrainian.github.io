@@ -1,16 +1,9 @@
-module: texting-messaging
-level: a2
-sequence: 68
+module: a2-68
+level: A2
+slug: texting-messaging
 version: '2.0'
 title: Texting and Messaging
 subtitle: Chatting with Friends
-focus: practical
-pedagogy: PPP
-objectives:
-- Learner can send and receive text messages
-- Learner can use common abbreviations
-- Learner can understand informal chat language
-- Learner can arrange meetings via text
 content_outline:
 - section: 'Introduction: Ukrainian Texting'
   words: 100
@@ -48,7 +41,7 @@ content_outline:
   - Chat with friends
   - Arrange a meeting
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - повідомлення (message)
   - надіслати (to send)
@@ -65,15 +58,33 @@ vocabulary:
   - стікер (sticker)
   - пересилати (to forward)
   - видалити (to delete)
-  forbidden: []
-activities:
-  types_required:
-  - vocabulary-drill
-  - matching
-  - writing
-  - fill-in
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: vocabulary-drill
+  focus: Texting vocabulary
+  items: 25
+- type: fill-in
+  focus: Complete text messages
+  items: 15
+- type: writing
+  focus: Write text conversations
+  items: 10
+- type: matching
+  focus: Match abbreviations to meanings
+  items: 15
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a2-67 (Social Media Ukrainian)
 connects_to:
 - a2-69 (Online Services)
+objectives:
+- Learner can send and receive text messages
+- Learner can use common abbreviations
+- Learner can understand informal chat language
+- Learner can arrange meetings via text
+grammar:
+- Text abbreviations (прив, дяк, норм)
+- Informal syntax in chats
+- Polite vs informal messaging
+register: розмовний
+phase: A2.6 [Practical]

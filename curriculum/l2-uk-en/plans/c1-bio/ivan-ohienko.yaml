@@ -1,109 +1,110 @@
 module: ivan-ohienko
-level: c1-bio
-sequence: 98
+level: C1-BIO
+slug: ivan-ohienko
 version: '2.0'
 title: 'Іван Огієнко: Митрополит і Захисник Мови'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Огієнко_Іван_Іванович
-    title: Іван Огієнко (Wikipedia UA)
-    notes: Основна біографічна інформація
-  secondary:
-  - url: https://bible.ua/
-    title: Переклад Біблії
-    notes: Біблійний переклад
-  - url: https://uaoc.org.ua/
-    title: Митрополія УАПЦ
-    notes: Церковна діяльність
 content_outline:
 - section: Вступ — Людина багатьох покликань
   words: 400
-  subsections:
+  points:
   - Огієнко як мовознавець, богослов і державник
   - Перший переклад Біблії сучасною українською
   - Чому його спадщина актуальна сьогодні
 - section: Житомирщина та формування
   words: 600
-  subsections:
+  points:
   - Народження в селі Брусилів (1882)
   - Сирітське дитинство та шлях до освіти
   - Вплив на формування національної свідомості
 - section: Мовознавець і освітянин
   words: 700
-  subsections:
+  points:
   - Дослідження історії української мови
   - Праця Історія української літературної мови
   - Боротьба за мовну норму
 - section: Державна діяльність
   words: 700
-  subsections:
+  points:
   - Міністр освіти УНР
   - Міністр віросповідань
   - Роль у церковній політиці
 - section: Еміграція та церковна служба
   words: 800
-  subsections:
+  points:
   - Життя за кордоном
   - Архієпископ і митрополит УАПЦ
   - Духовне окормлення діаспори
 - section: Переклад Біблії
   words: 600
-  subsections:
+  points:
   - Справа всього життя
   - Особливості перекладу
   - Значення для української культури
 - section: Дискусія — Мова і віра як основи нації
   words: 200
-  subsections:
+  points:
   - Звязок між мовою та духовністю
   - Огієнко як символ українського відродження
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - митрополит
-  - мовознавець
-  - богослов
-  - переклад
-  - Біблія
-  - автокефалія
-  - літургія
-  - мовна норма
-  - правопис
-  - діаспора
+  - митрополит (metropolitan bishop)
+  - мовознавець (linguist)
+  - богослов (theologian)
+  - переклад (translation)
+  - Біблія (Bible)
+  - автокефалія (autocephaly)
+  - літургія (liturgy)
+  - мовна норма (language norm)
+  - правопис (orthography)
+  - діаспора (diaspora)
   recommended:
-  - соборність
-  - канон
-  - євангеліє
-  - церковнословянська
-  - кодифікація
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - соборність (conciliarity)
+  - канон (canon)
+  - євангеліє (gospel)
+  - церковнословянська (Church Slavonic)
+  - кодифікація (codification)
+activity_hints:
+- type: reading
+  focus: Фрагменти перекладу Біблії та праць про мову
+  source: Первинні джерела
+  items: 3 passages
+- type: quiz
+  focus: Факти про життя та діяльність Огієнка
+  items: 12+
+- type: match-up
+  focus: Праці та їхній зміст
+  items: 10+
+- type: essay-response
+  focus: Чому важливо мати Біблію рідною мовою?
+  word_target: 300
+  output: Культурологічний есей
+- type: group-sort
+  focus: Церковна vs світська діяльність
+  items: 12+
+- type: fill-in
+  focus: Релігійна та мовознавча термінологія
+  items: 10+
+focus: biography
+prerequisites:
+- c1-bio-97-panteleimon-kulish
 connects_to:
-  previous: c1-bio-97-panteleimon-kulish
-  related:
-  - c1-bio-99-volodymyr-vernadskyi
-  - c1-bio-30-borys-hrinchenko
-  - c1-bio-20-taras-shevchenko
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-99-volodymyr-vernadskyi
+- c1-bio-30-borys-hrinchenko
+- c1-bio-20-taras-shevchenko
+module_type: biography
+sources:
+- name: Іван Огієнко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Огієнко_Іван_Іванович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Переклад Біблії
+  url: https://bible.ua/
+  type: reference
+  notes: Біблійний переклад
+- name: Митрополія УАПЦ
+  url: https://uaoc.org.ua/
+  type: reference
+  notes: Церковна діяльність
+immersion: 100% Ukrainian
+phase: C1-BIO

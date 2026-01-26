@@ -1,72 +1,68 @@
 module: zborivska-bila-tserkva
-level: b2-hist
-sequence: 54
-version: '1.0'
+level: B2-HIST
+slug: zborivska-bila-tserkva
+version: '2.0'
 title: Зборівська та Білоцерківська угоди
-focus: history
-pedagogy: CBI
-objectives:
-- Учень може пояснити умови Зборівського та Білоцерківського договорів
-- Учень може проаналізувати причини дипломатичних поступок Хмельницького
-- Учень може порівняти територіальні межі автономії за різними угодами
+subtitle: The Treaties of Zboriv and Bila Tserkva
 content_outline:
 - section: 'Вступ: Між перемогами та миром'
   words: 450
-  subsections:
+  points:
   - Diplomatic situation after Zboriv (1649)
   - The goals of the Hetmanate vs. the Crown
 - section: 'Зборівський договір (1649): Перше визнання'
   words: 600
-  subsections:
+  points:
   - 'Key conditions: 40,000 register, three voivodeships'
   - Legal status of the Hetmanate
   - The role of the Orthodox Church
 - section: Берестечко та поворот подій
   words: 450
-  subsections:
+  points:
   - The impact of the 1651 defeat
   - Shift in the balance of power
 - section: 'Білоцерківський договір (1651): Гіркий компроміс'
   words: 500
-  subsections:
+  points:
   - Reduction of the register (20,000)
   - Territorial losses (only Kyiv voivodeship)
   - Social tension and dissatisfaction among Cossacks
 - section: 'Читання: Тексти угод'
   words: 400
-  subsections:
+  points:
   - Analysis of the Zboriv articles
 - section: Первинні джерела
   words: 400
-  subsections:
+  points:
   - Ossonlinski and Khmelnytsky quotes
 - section: 'Аналіз: Дипломатія як мистецтво можливого'
   words: 400
-  subsections:
+  points:
   - Khmelnytsky's tactical retreat
   - Preserving the core of the state
 - section: 'Деколонізаційний погляд: Вихід з-під польського права'
   words: 350
-  subsections:
+  points:
   - Treaties as steps towards total sovereignty
   - Debunking the 'betrayal' narrative
 - section: Спадщина угод та історична пам'ять
   words: 250
-  subsections:
+  points:
   - Impact on future legal acts
 word_target: 4000
-vocabulary:
-- угода
-- компроміс
-- автономія
-- ратифікація
-- воєводство
-- амністія
-- шляхта
-- реєстр
-- легітимність
-- поступка
-activities:
+vocabulary_hints:
+  required:
+  - угода
+  - компроміс
+  - автономія
+  - ратифікація
+  - воєводство
+  - амністія
+  - шляхта
+  - реєстр
+  - легітимність
+  - поступка
+activity_hints:
 - type: reading
   focus: Analysis of diplomatic documents
 - type: quiz
@@ -79,6 +75,15 @@ activities:
   focus: Common myths about the compromises
 - type: comparative-study
   focus: Zboriv vs. Bila Tserkva territorial changes
+focus: history
+pedagogy: CBI
+objectives:
+- Учень може пояснити умови Зборівського та Білоцерківського договорів
+- Учень може проаналізувати причини дипломатичних поступок Хмельницького
+- Учень може порівняти територіальні межі автономії за різними угодами
+grammar:
+- 'Diplomatic register: official terminology'
+- Conditional sentences in negotiations
 sources:
 - name: History of Ukraine-Rus
   url: http://litopys.org.ua/hrushrus/iur.htm
@@ -88,3 +93,5 @@ sources:
   url: https://history.org.ua
   type: reference
   notes: International context
+register: публіцистичний
+phase: HIST.6 [Khmelnytsky & Cossack State]

@@ -1,22 +1,41 @@
-module: 81-capstone-doslidzhennya
-level: b2
-sequence: 81
+module: b2-81
+level: B2
+slug: 81-capstone-doslidzhennya
 version: '2.0'
 title: 'Capstone: Дослідження'
 subtitle: 'Capstone: Research'
+content_outline:
+- section: Вступ — Дослідження
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Основний матеріал
+  words: 600
+  points:
+  - Теоретичні основи
+  - Приклади та ілюстрації
+  - Типові помилки та як їх уникати
+- section: Поглиблене вивчення
+  words: 600
+  points:
+  - Додаткові випадки
+  - Контекстуальне використання
+  - Стилістичні нюанси
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: project
 pedagogy: CBI
 objectives:
 - Select a research topic for Capstone Project
 - Gather and evaluate sources
 - Create a detailed research outline
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Research methodology
+- Formulating hypotheses
+phase: B2.4 Skills & Capstone

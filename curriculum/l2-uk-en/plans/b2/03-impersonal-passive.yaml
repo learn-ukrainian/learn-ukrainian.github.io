@@ -1,25 +1,8 @@
 module: 03-impersonal-passive
-level: b2
-sequence: 3
-version: '1.0'
+level: B2
+slug: 03-impersonal-passive
+version: '2.0'
 title: Безособові конструкції на -но/-то
-focus: grammar
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Ukrainian State Standard 2024 - Impersonal Constructions
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official requirements for -но/-то usage
-- name: Юридична мова України
-  url: https://uk.wikipedia.org/wiki/Юридична_мова
-  type: secondary
-  notes: Examples of -но/-то in legal documents
-- name: Офіційно-діловий стиль
-  url: https://uk.wikipedia.org/wiki/Офіційно-діловий_стиль
-  type: secondary
-  notes: Register characteristics and examples
 content_outline:
 - section: Вступ — Безособовість в українській мові
   words: 400
@@ -68,7 +51,7 @@ content_outline:
   - Зразки документів
   - Підготовка до модуля 06
 word_target: 3800
-vocabulary:
+vocabulary_hints:
   required:
   - безособовий (impersonal)
   - засідання (meeting/session)
@@ -86,19 +69,52 @@ vocabulary:
   - постанова (resolution)
   - затверджено (approved)
   - скасовано (cancelled)
-  forbidden: []
-activities:
-  types_required:
-  - error-correction
-  - quiz
-  - fill-in
-  - essay-response
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: Participle → -но/-то form
+  items: 12+
+- type: fill-in
+  focus: Complete official document sentences
+  items: 14+
+- type: quiz
+  focus: Identify -но/-то in documents
+  items: 12+
+- type: error-correction
+  focus: Active sentences → official passive (-но/-то)
+  items: 10+
+- type: error-correction
+  focus: Fix case errors in -но/-то sentences
+  items: 10+
+- type: match-up
+  focus: Document type → appropriate -но/-то phrase
+  items: 10+
+- type: essay-response
+  focus: Write official announcement using -но/-то
+  word_target: 120
+  output: Model answer provided
+focus: grammar
+prerequisites:
+- b2-01 (Passive Voice System)
+- b2-02 (Past Passive Participles)
+- Accusative case mastery
 connects_to:
 - b2-04 (Reflexive Passive)
 - b2-06 (Passive in Context)
 - 'b2-19 (Register: Official/Legal)'
 - b2-10 (B2.1a Checkpoint)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Impersonal Constructions
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official requirements for -но/-то usage
+- name: Юридична мова України
+  url: https://uk.wikipedia.org/wiki/Юридична_мова
+  type: secondary
+  notes: Examples of -но/-то in legal documents
+- name: Офіційно-діловий стиль
+  url: https://uk.wikipedia.org/wiki/Офіційно-діловий_стиль
+  type: secondary
+  notes: Register characteristics and examples
+immersion: 100% Ukrainian
+phase: B2.1a [Passive Voice]

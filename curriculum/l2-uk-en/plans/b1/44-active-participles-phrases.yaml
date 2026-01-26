@@ -1,16 +1,9 @@
-module: active-participles-phrases
-level: b1
-sequence: 44
+module: b1-44
+level: B1
+slug: active-participles-phrases
 version: '2.0'
 title: Активні дієприкметники та їхній стиль
 subtitle: Active Participles & Phrases
-focus: grammar
-pedagogy: TTT
-objectives:
-- Learner can recognize active present participles (-учий/-ючий)
-- Learner can recognize active past participles (-лий)
-- Learner understands stylistic markedness of participles
-- Learner can avoid bureaucratic forms and russicisms
 content_outline:
 - section: 'Introduction: Дієприкметники vs Дієприслівники'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Identify participle types
   - Replace with relative clauses
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - дієприкметник (participle - adjective)
   - активний (active)
@@ -63,15 +56,33 @@ vocabulary:
   - русизм (russicism)
   - відносне речення (relative clause)
   - природність (naturalness)
-  forbidden: []
-activities:
-  types_required:
-  - recognition
-  - error-correction
-  - transformation
-  - fill-in
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: recognition
+  focus: Identify participle types
+  items: 25
+- type: transformation
+  focus: Participle to relative clause
+  items: 20
+- type: error-correction
+  focus: Fix stylistic errors
+  items: 15
+- type: fill-in
+  focus: Choose participle or clause
+  items: 10
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-43 (Adverbial Participles Perfective)
 connects_to:
 - b1-45 (Past Passive Participles 1)
+objectives:
+- Learner can recognize active present participles (-учий/-ючий)
+- Learner can recognize active past participles (-лий)
+- Learner understands stylistic markedness of participles
+- Learner can avoid bureaucratic forms and russicisms
+grammar:
+- Активні дієприкметники теперішнього часу (-учий/-ючий)
+- Активні дієприкметники минулого часу (-лий)
+- Стилістична маркованість та канцелярит
+register: розмовний
+phase: B1.4a [Participles]

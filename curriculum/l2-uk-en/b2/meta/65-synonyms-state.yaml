@@ -1,58 +1,17 @@
 module: b2-65
-title: 'Синоніми: Стан та Буття'
-subtitle: Synonyms - State and Existence
+level: B2
+slug: 65-synonyms-state
 version: '1.0'
-phase: B2.2 [Phraseology & Synonymy]
-pedagogy: CBI
-focus: phraseology
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
-immersion: 100
 tags:
 - vocabulary
 - synonyms
 - state
-grammar:
-- Nuances in verbs of state
-- Static vs Appearative verbs
-objectives:
-- Учень може розрізняти відтінки значень дієслів на позначення буття (бути, існувати,
-  перебувати)
-- Учень вміє обирати точне слово для опису умов, обставин та зовнішнього вигляду
-- Учень розуміє філософську концепцію буття в українській мовній картині світу
 vocabulary_count: 35
-register: науковий
 vocab_count: 33
-slug: 65-synonyms-state
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-- section: Вступ — Стан та Буття
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-- section: Be/Exist
-  words: 500
-  points:
-  - бути (be - general)
-  - існувати (exist - philosophical)
-  - перебувати (be located/situated)
-  - знаходитися (be found/located)
-  - становити (constitute - formal)
-- section: Seem/Appear
-  words: 500
-  points:
-  - здаватися (seem - subjective)
-  - виглядати (look/appear - visual)
-  - видаватися (appear - impression)
-  - виявлятися (turn out to be)
-  - справляти враження (make impression)
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

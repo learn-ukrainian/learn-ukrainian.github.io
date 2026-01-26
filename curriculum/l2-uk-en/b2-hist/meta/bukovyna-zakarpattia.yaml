@@ -1,51 +1,19 @@
-title: Буковина та Закарпаття під сусідами
-slug: bukovyna-zakarpattia
+module: bukovyna-zakarpattia
 level: B2
-track: history
-phase: B2.3a [Українська історія]
+slug: bukovyna-zakarpattia
+version: '2.0'
+naturalness:
+  score: 9
+  status: PASS
 status: content-ready
-focus: history
-pedagogy: CBI
-word_target: 4000
+track: history
 duration: 120
-register: публіцистичний
 transliteration: none
 tags:
 - history
 - bukovyna
 - zakarpattia
 - regional-history
-grammar:
-- Історичний наратив
-- Порівняння історичних процесів
-objectives:
-- Учень може пояснити історичну долю Буковини та Закарпаття в XIV-XVII ст.
-- Учень аналізує вплив іноземного панування на культуру регіонів
-- Учень володіє термінологією регіональної історії
 vocabulary_count: 30
-content_outline:
-- section: Вступ
-  words: 349
-- section: Буковина
-  words: 533
-- section: "Повсякденне життя: Мульткультурний Вавилон"
-  words: 250
-  points:
-    - "Chernivtsi as a multicultural hub"
-    - "Rural life in Zakarpattia"
-    - "Ethnic diversity and tolerance"
-- section: Закарпаття
-  words: 747
-- section: Культурний опір та збереження ідентичності
-  words: 681
-- section: Читання
-  words: 351
-- section: Первинні джерела
-  words: 364
-- section: Деколонізаційний погляд
-  words: 390
-- section: Потрібно більше практики?
-  words: 107
-naturalness:
-  score: 9
-  status: PASS
+build:
+  last_modified: '2026-01-26'

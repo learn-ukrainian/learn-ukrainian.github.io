@@ -1,16 +1,9 @@
-module: adverbial-participles-perfective
-level: b1
-sequence: 43
+module: b1-43
+level: B1
+slug: adverbial-participles-perfective
 version: '2.0'
 title: Дієприслівники доконаного виду
 subtitle: Adverbial Participles - Perfective (-вши/-ши)
-focus: grammar
-pedagogy: TTT
-objectives:
-- Learner can form perfective adverbial participles using -вши/-ши suffixes
-- Learner can use participles to express prior completed actions
-- Learner can distinguish imperfective vs perfective adverbial participles
-- Learner can sequence actions using perfective participles
 content_outline:
 - section: 'Introduction: Completed Prior Actions'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Form perfective participles
   - Build sequential narratives
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - доконаний вид (perfective aspect)
   - попередність (priority/sequence)
@@ -63,15 +56,33 @@ vocabulary:
   - минулий час (past tense)
   - основа (stem)
   - закінчення (ending)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - writing
-  - transformation
-  - matching
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: transformation
+  focus: Perfective verb to participle
+  items: 25
+- type: fill-in
+  focus: Complete with perfective participles
+  items: 20
+- type: matching
+  focus: Match participle to meaning
+  items: 15
+- type: writing
+  focus: Write sequential narratives
+  items: 10
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-42 (Adverbial Participles Imperfective)
 connects_to:
 - b1-44 (Active Participles Phrases)
+objectives:
+- Learner can form perfective adverbial participles using -вши/-ши suffixes
+- Learner can use participles to express prior completed actions
+- Learner can distinguish imperfective vs perfective adverbial participles
+- Learner can sequence actions using perfective participles
+grammar:
+- Дієприслівники доконаного виду
+- Суфікси -вши/-ши formation rules
+- Попередність дій (prior actions)
+register: розмовний
+phase: B1.4a [Participles]

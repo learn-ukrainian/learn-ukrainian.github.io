@@ -1,101 +1,13 @@
 module: b2-hist-125
-id: b2-hist-125
+level: B2-HIST
 slug: syntez-nezalezhnist
-title: "Синтез: Незалежна Україна"
-subtitle: "Synthesis: Independent Ukraine"
 version: '2.0'
-phase: "HIST.12 [Independence & Modern Era]"
-focus: history
-pedagogy: CBI
-register: публіцистичний
-duration: 150
-transliteration: none
-objectives:
-  - "Учень може синтезувати знання про незалежну Україну (1991-2014)"
-  - "Учень може пояснити виклики молодої держави"
-  - "Учень може проаналізувати революції як етапи розвитку"
-  - "Учень може оцінити шлях України до Європи"
-grammar:
-  - "Аналітичний стиль"
-  - "Причинно-наслідкові конструкції"
-  - "Складнопідрядні речення"
-word_target: 3000
-content_outline:
-  - section: "Вступ: Від імперії до нації"
-    words: 300
-    points:
-      - "1991: народження держави"
-      - "Виклики незалежності"
-      - "Три десятиліття розвитку"
-  - section: "Періодизація"
-    words: 600
-    points:
-      - "1991-2004: формування держави"
-      - "2004-2010: Помаранчева революція"
-      - "2010-2014: реванш та криза"
-      - "Революція Гідності"
-  - section: "Ключові теми"
-    words: 700
-    points:
-      - "Олігархія та демократія"
-      - "Європейський вибір"
-      - "Російський вплив"
-      - "Громадянське суспільство"
-  - section: "Первинні джерела в синтезі"
-    words: 600
-    points:
-      - "Документи незалежності"
-      - "Голоси революцій"
-      - "Журналістські розслідування"
-  - section: "Деколонізаційний погляд"
-    words: 400
-    points:
-      - "Постколоніальні виклики"
-      - "Незавершена деколонізація"
-      - "2014 як точка повороту"
-  - section: "Підсумок: До війни"
-    words: 400
-    points:
-      - "Уроки 1991-2014"
-      - "Чому Росія напала"
-      - "Від незалежності до спротиву"
-vocabulary_hints:
-  required:
-    - синтез (synthesis)
-    - незалежність (independence)
-    - демократія (democracy)
-    - олігархія (oligarchy)
-    - революція (revolution)
-    - євроінтеграція (European integration)
-    - громадянське суспільство (civil society)
-    - деколонізація (decolonization)
-  recommended:
-    - референдум (referendum)
-    - конституція (constitution)
-    - корупція (corruption)
-    - реформи (reforms)
-    - вибори (elections)
-    - криза (crisis)
-activity_hints:
-  - type: reading
-    focus: "Порівняльний аналіз революцій"
-    source: "Історичні документи"
-    items: 4
-  - type: quiz
-    focus: "Незалежна Україна: синтез"
-    items: 15
-  - type: match-up
-    focus: "Період → характеристика"
-    items: 10
-  - type: essay-response
-    focus: "Чому Україна пережила дві революції за 10 років?"
-    word_target: 300
-prerequisites:
-  - b2-hist-124 (Томос)
-connects_to:
-  - b2-hist-127 (Революція Гідності)
-  - b2-hist-128 (Анексія Криму)
+id: b2-hist-125
 naturalness:
   score: 10
   status: PASS
-  justification: "Академічний український для синтетичного аналізу"
+  justification: Академічний український для синтетичного аналізу
+duration: 150
+transliteration: none
+build:
+  last_modified: '2026-01-26'

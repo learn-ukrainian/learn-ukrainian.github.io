@@ -1,16 +1,9 @@
-module: sports-fitness
-level: a2
-sequence: 54
+module: a2-54
+level: A2
+slug: sports-fitness
 version: '2.0'
 title: Sports and Fitness
 subtitle: Active Lifestyle
-focus: vocabulary
-pedagogy: PPP
-objectives:
-- Learner can talk about sports and fitness
-- Learner can use 'грати в' and 'займатися' correctly
-- Learner can describe a sports event
-- Learner can discuss healthy habits
 content_outline:
 - section: 'Introduction: Sports in Ukraine'
   words: 100
@@ -48,7 +41,7 @@ content_outline:
   - Describe your fitness routine
   - Talk about sports events
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - спорт (sport)
   - грати (to play)
@@ -65,16 +58,34 @@ vocabulary:
   - змагання (competition)
   - вигравати (to win)
   - програвати (to lose)
-  forbidden: []
-activities:
-  types_required:
-  - vocabulary-drill
-  - matching
-  - speaking
-  - fill-in
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: vocabulary-drill
+  focus: Sports vocabulary
+  items: 30
+- type: matching
+  focus: Match verbs to sports
+  items: 20
+- type: fill-in
+  focus: Complete sports sentences
+  items: 15
+- type: speaking
+  focus: Describe your fitness routine
+  items: 8
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- a2-53 (Shopping and Services)
 connects_to:
 - a2-56 (Checkpoint Full Grammar)
 - a2-51 (Hobbies and Leisure)
+objectives:
+- Learner can talk about sports and fitness
+- Learner can use 'грати в' and 'займатися' correctly
+- Learner can describe a sports event
+- Learner can discuss healthy habits
+grammar:
+- Sports verbs (грати в, займатися)
+- Accusative vs instrumental in sports contexts
+- Describing events (match, game, competition)
+register: розмовний
+phase: A2.5 [Vocabulary Expansion]

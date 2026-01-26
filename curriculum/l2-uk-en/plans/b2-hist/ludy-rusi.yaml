@@ -1,24 +1,18 @@
 module: ludy-rusi
-level: b2-hist
-sequence: 18
-version: '1.0'
+level: B2-HIST
+slug: ludy-rusi
+version: '2.0'
 title: 'Люди Русі: Суспільство та побут'
-focus: history
-pedagogy: CBI
-objectives:
-- Identify the main social classes of Kyivan Rus
-- Understand the legal status of smerds, zakups, and kholops
-- Describe the everyday life in cities and villages
 content_outline:
 - section: Розминка
   words: 160
-  subsections:
+  points:
   - Demographics of Kyiv vs London
   - The concept of Estate (Stan)
   - 'Vocabulary: Vira, Izgoy, Votchyna'
 - section: 'Читання: Суспільство та повсякдення Київської Русі'
   words: 3200
-  subsections:
+  points:
   - 'The Prince and Druzhina: The top of the pyramid'
   - Boyars as landed aristocracy (Votchyna system)
   - 'Clergy: Black (Monks) vs White (Priests)'
@@ -32,38 +26,48 @@ content_outline:
   - 'Literacy and Education: Birch Bark Letters and Graffiti'
 - section: 'Первинні джерела: Голоси епохи'
   words: 400
-  subsections:
+  points:
   - 'Ruska Pravda: The price of life and honor'
   - Collective responsibility (Verv)
   - 'Birch Bark Letters: Ordinary voices'
 - section: 'Деколонізаційний погляд: Руйнування імперських міфів'
   words: 240
-  subsections:
+  points:
   - Regional differences in housing (Mazanka vs Izba)
   - Differences in clothing and traditions
   - 'Political culture: Contractual vs Despotic'
-word_target: 4000
-vocabulary:
-- суспільство
-- побут
-- смерд
-- закуп
-- холоп
-- боярин
-- дружина
-- купець
-- ремісник
-- віче
-- громада
-- рало
-- рядович
-- челядь
-- терем
-- городище
-- соха
-- ізгой
-- верв
-- тіун
+vocabulary_hints:
+  required:
+  - суспільство
+  - побут
+  - смерд
+  - закуп
+  - холоп
+  - боярин
+  - дружина
+  - купець
+  - ремісник
+  - віче
+  - громада
+  - рало
+  recommended:
+  - рядович
+  - челядь
+  - терем
+  - городище
+  - соха
+  - ізгой
+  - верв
+  - тіун
+focus: history
+pedagogy: CBI
+objectives:
+- Identify the main social classes of Kyivan Rus
+- Understand the legal status of smerds, zakups, and kholops
+- Describe the everyday life in cities and villages
+grammar:
+- Past tense narrative
+- Social and economic vocabulary
 sources:
 - name: Суспільство Київської Русі (Вікіпедія)
   url: https://uk.wikipedia.org/wiki/Суспільство_Київської_Русі
@@ -77,3 +81,5 @@ sources:
   url: https://litopys.org.ua/oldukr2/oldukr51.htm
   type: primary
   notes: Legal text on social classes
+immersion: 100% Ukrainian
+phase: B2-HIST.1 [Kyivan Rus]

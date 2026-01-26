@@ -1,16 +1,9 @@
-module: practical-warm-up
-level: a2
-sequence: 58
+module: a2-58
+level: A2
+slug: practical-warm-up
 version: '2.0'
 title: Practical Warm-up
 subtitle: Getting Ready for Action
-focus: practical
-pedagogy: PPP
-objectives:
-- Learner can understand main ideas in text
-- Learner can answer questions about a text
-- Learner can identify key vocabulary in context
-- Learner can synthesize information
 content_outline:
 - section: 'Introduction: Skills Activation'
   words: 100
@@ -48,7 +41,7 @@ content_outline:
   - Read, listen, respond
   - Apply all A2 skills
 word_target: 800
-vocabulary:
+vocabulary_hints:
   required:
   - текст (text)
   - питання (question)
@@ -63,15 +56,33 @@ vocabulary:
   - інформація (information)
   - ключовий (key)
   - стратегія (strategy)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - speaking
-  - reading-comprehension
-  - listening
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: reading-comprehension
+  focus: Understand main ideas
+  items: 15
+- type: listening
+  focus: Listen for key information
+  items: 10
+- type: fill-in
+  focus: Vocabulary in context
+  items: 15
+- type: speaking
+  focus: Answer questions orally
+  items: 10
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a2-57 (Practical Intro)
 connects_to:
 - a2-59 (Doctor Visit)
+objectives:
+- Learner can understand main ideas in text
+- Learner can answer questions about a text
+- Learner can identify key vocabulary in context
+- Learner can synthesize information
+grammar:
+- Reading comprehension strategies
+- Listening for gist and detail
+- Vocabulary activation in context
+register: розмовний
+phase: A2.6 [Practical]

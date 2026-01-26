@@ -1,14 +1,11 @@
 module: morski-pokhody
-id: b2-hist-49
-title: Морські походи козаків
-subtitle: Cossack Naval Expeditions
+level: B2-HIST
 slug: morski-pokhody
 version: '2.0'
-phase: HIST.5 [Rise of Cossacks]
-focus: history
-pedagogy: CBI
-word_target: 4000
-register: публіцистичний
+id: b2-hist-49
+naturalness:
+  score: 9
+  status: PASS
 duration: 120
 transliteration: none
 tags:
@@ -17,87 +14,5 @@ tags:
 - cossack
 - black-sea
 - ottoman
-grammar:
-- 'Historical narrative: naval terminology'
-- Geographical descriptions and directions
-objectives:
-- Учень може описати будову та переваги козацької чайки
-- Учень може аналізувати стратегічне значення морських походів Сагайдачного
-- Учень може пояснити вплив козацького флоту на Османську імперію
-vocabulary_hints:
-  required:
-  - чайка
-  - галера
-  - весло
-  - щогла
-  - якір
-  - десант
-  - абордаж
-  - Чорне море
-  - Кафа
-  - Стамбул
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-- section: 'Вступ: Чорне море як арена боротьби'
-  words: 400
-  points:
-  - Ottoman dominance in the 16th-17th centuries
-  - The Black Sea as a 'Turkish Lake'
-- section: 'Козацька Чайка: Шедевр суднобудування'
-  words: 600
-  points:
-  - Construction from a single trunk and reed belts
-  - Mobility, speed, and stealth
-  - Weaponry on board (falconets)
-- section: 'Стратегія та Тактика: Раптовість та зухвалість'
-  words: 600
-  points:
-  - Night attacks and navigating the Dnieper rapids
-  - Open sea battles against heavy galleys
-  - Infiltration of the Bosphorus
-- section: 'Героїчна доба: Походи Петра Сагайдачного'
-  words: 700
-  points:
-  - The taking of Caffa (1616) and freeing of captives
-  - Raids on Trebizond and Sinop
-  - Psychological shock for the Sultan
-- section: 'Життя на морі: Побут та випробування'
-  words: 400
-  points:
-  - Discipline on the boat
-  - Navigation by the stars and coastlines
-- section: 'Читання: Свідчення про козацький десант'
-  words: 300
-  points:
-  - Account of the storming of an Ottoman coastal fortress
-- section: 'Первинні джерела: Листи та хроніки'
-  words: 300
-  points:
-  - Excerpts from Beauplan and Ottoman chronicles
-- section: Деколонізаційний погляд
-  words: 400
-  points:
-  - Ukraine as a naval power, not just a land-based one
-  - Freedom of the seas against imperial blockade
-activity_hints:
-- type: reading
-  focus: Linguistic analysis of naval descriptions
-- type: quiz
-  focus: Geography of expeditions and boat structure
-- type: essay-response
-  focus: The Black Sea strategy of the Zaporozhian Host
-- type: comparative-study
-  focus: Cossack Chayka vs. Ottoman Galley
-- type: true-false
-  focus: Technical facts about seafaring
-sources:
-- name: Naval Expeditions of Zaporozhian Cossacks
-  url: https://history.org.ua/uk/lib/12345
-  type: academic
-  notes: Detailed historical reconstruction
-- name: Guillaume de Beauplan - Description of Ukraine
-  url: http://litopys.org.ua/boplan/bop.htm
-  type: primary
-  notes: Classic source on boat construction
+build:
+  last_modified: '2026-01-26'

@@ -1,112 +1,11 @@
-id: c1-bio-74
-title: 'Ліна Костенко: Королева поезії'
+module: lina-kostenko
+level: C1-BIO
 slug: lina-kostenko
-module_type: biography
-word_target: 4000
-immersion: 100% Ukrainian
 version: '2.0'
-phase: C1-BIO
-focus: biography
-vital_status: living
-sources:
-- name: Ліна Костенко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Ліна_Костенко
-  type: primary
-  notes: Біографія, творчість, громадська позиція
-- name: Маруся Чурай
-  url: https://uk.wikipedia.org/wiki/Маруся_Чурай_(роман)
-  type: reference
-  notes: Історичний роман у віршах
-- name: Шістдесятництво
-  url: https://uk.wikipedia.org/wiki/Шістдесятники
-  type: reference
-  notes: Літературний рух та роль Костенко
-content_outline:
-- section: Вступ — Голос, що не змовкає
-  words: 400
-  points:
-  - Ліна Костенко — найвідоміша жива українська поетеса
-  - Двадцять років мовчання як форма опору
-  - Моральний авторитет нації та «совість народу»
-- section: Ранні роки та шістдесятництво (1930-1965)
-  words: 700
-  points:
-  - Народження в Ржищеві на Київщині
-  - Навчання в Київському педінституті та Літературному інституті в Москві
-  - Перші збірки «Проміння землі» та «Вітрила»
-  - Вхід у коло шістдесятників — Стус, Симоненко, Драч
-- section: Роки замовчування (1965-1977)
-  words: 700
-  points:
-  - Заборона публікацій після критики влади
-  - Відмова від компромісів та підписання лояльних листів
-  - Творчість «у шухляду» — написання без надії на видання
-  - Підтримка репресованих друзів
-- section: «Маруся Чурай» та повернення (1979-1989)
-  words: 800
-  points:
-  - Публікація історичного роману у віршах «Маруся Чурай»
-  - Феномен черг за книгою та всенародна слава
-  - Збірки «Над берегами вічної ріки», «Сад нетанучих скульптур»
-  - Шевченківська премія (1987)
-- section: Голос незалежної України (1990-сьогодні)
-  words: 700
-  points:
-  - Роль у духовному пробудженні нації
-  - Есеїстика та публіцистика — «Записки українського самашедшого»
-  - Реакція на Революцію гідності та війну
-  - Затворництво та рідкісні публічні виступи
-- section: Поетика та філософія
-  words: 700
-  points:
-  - Класична форма та сучасний зміст
-  - Тема історичної пам'яті та національної гідності
-  - Афоризми Костенко як частина народної мови
-  - Вплив на молоде покоління поетів
-vocabulary_hints:
-  required:
-  - шістдесятник (member of the 1960s generation)
-  - замовчування (silencing)
-  - роман у віршах (novel in verse)
-  - совість нації (conscience of the nation)
-  - афоризм (aphorism)
-  - спротив (resistance)
-  - затворниця (recluse)
-  - поетеса (poetess)
-  - класицизм (classicism)
-  - громадянська позиція (civic stance)
-  recommended:
-  - неопублікований (unpublished)
-  - цензура (censorship)
-  - самвидав (samizdat)
-  - метафора (metaphor)
-  - верлібр (free verse)
-activity_hints:
-- type: reading
-  focus: Вірші Ліни Костенко та уривки з «Марусі Чурай»
-  source: Оригінальні твори
-  items: 3 passages
-- type: quiz
-  focus: Біографія та творчість
-  items: 12+
-- type: match-up
-  focus: Збірки та періоди творчості
-  items: 10+
-- type: essay-response
-  focus: Чому мовчання може бути формою спротиву?
-  word_target: 300
-  output: Philosophical essay
-- type: group-sort
-  focus: Теми та мотиви поезії
-  items: 12+
-- type: fill-in
-  focus: Літературознавча термінологія
-  items: 10+
-prerequisites:
-- c1-bio-75-vasyl-symonenko
-connects_to:
-- c1-bio-77-vasyl-stus
-- c1-bio-73-dmytro-pavlychko
+id: c1-bio-74
 naturalness:
   score: 9
   status: PASS
+vital_status: living
+build:
+  last_modified: '2026-01-26'

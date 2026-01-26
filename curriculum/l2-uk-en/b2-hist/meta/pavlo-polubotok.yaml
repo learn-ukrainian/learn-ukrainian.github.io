@@ -1,9 +1,10 @@
-title: 'Павло Полуботок: Останній наказний'
-phase: B2.3b [Українська історія]
-focus: history
-word_target: 4000
-pedagogy: CBI
-register: публіцистичний
+module: pavlo-polubotok
+level: B2-HIST
+slug: pavlo-polubotok
+version: '2.0'
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
 tags:
@@ -13,17 +14,8 @@ tags:
 - russian-empire
 - repression
 - legend
-grammar:
-- Історичний наратив
-- Пасивний стан в історичному тексті
 vocabulary_focus: null
-objectives:
-- Учень може описати конфлікт між Полуботком і Малоросійською колегією
-- Учень може пояснити суть легенди про золото Полуботка
-- Учень може проаналізувати промову Полуботка перед Петром I
-- Учень може охарактеризувати економічну діяльність гетьмана
 vocabulary_count: 35
-slug: pavlo-polubotok
 activity_types:
 - reading
 - quiz
@@ -35,23 +27,5 @@ activity_types:
 - fill-in
 - error-correction
 - select
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-  - section: "Вступ: Тінь великого Петра"
-    words: 300
-  - section: "Читання: Конфлікт із Вельяміновим"
-    words: 600
-  - section: "Первинні джерела: Промова перед Петром"
-    words: 400
-  - section: "В’язниця і смерть: Мучеництво за право"
-    words: 600
-  - section: "Господарник-олігарх: Економічна база незалежності"
-    words: 500
-  - section: "Легенда про скарби: Міф і реальність"
-    words: 600
-  - section: "Деколонізаційний погляд: Руйнування імперських міфів"
-    words: 600
-  - section: "Підсумок"
-    words: 200
+build:
+  last_modified: '2026-01-26'

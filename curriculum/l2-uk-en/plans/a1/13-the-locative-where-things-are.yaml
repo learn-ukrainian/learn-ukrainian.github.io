@@ -1,16 +1,9 @@
-module: the-locative-where-things-are
-level: a1
-sequence: 13
+module: a1-13
+level: A1
+slug: the-locative-where-things-are
 version: '2.0'
 title: 'The Locative: Where Things Are'
 subtitle: Finding Your Way Around Ukrainian Spaces
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can ask and answer 'Where is X?' using locative case
-- Learner can distinguish between в/у and на prepositions
-- Learner can describe locations of people and objects
-- Learner can name common places in Ukrainian
 content_outline:
 - section: 'Introduction: The Locative Case'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Location guessing games
   - Describe your room
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - де (where)
   - в/у (in)
@@ -65,16 +58,34 @@ vocabulary:
   - стіна (wall)
   - вулиця (street)
   - парк (park)
-  forbidden: []
-activities:
-  types_required:
-  - transformation
-  - labeling
-  - fill-in
-  - dialogue
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: transformation
+  focus: Change nouns to locative
+  items: 25
+- type: fill-in
+  focus: Choose в/у or на
+  items: 20
+- type: dialogue
+  focus: Where is...? conversations
+  items: 8
+- type: labeling
+  focus: Label locations in pictures
+  items: 15
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-12 (The Accusative II)
 connects_to:
 - a1-14 (Mine and Yours)
 - a1-15 (Around the City)
+objectives:
+- Learner can ask and answer 'Where is X?' using locative case
+- Learner can distinguish between в/у and на prepositions
+- Learner can describe locations of people and objects
+- Learner can name common places in Ukrainian
+grammar:
+- Locative case endings
+- Prepositions в/у and на
+- Location expressions
+register: розмовний
+phase: A1.2 [Navigation]

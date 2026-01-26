@@ -1,94 +1,13 @@
 module: b1-29
-id: b1-29
+level: B1
 slug: purpose-shchob-infinitive
-title: "Підрядні речення мети: щоб + інфінітив"
-subtitle: "Purpose Clauses - Same Subject"
 version: '2.0'
-phase: "B1.3a [Complex Sentences]"
-focus: grammar
-pedagogy: TTT
-register: розмовний
-duration: 90
-transliteration: none
-objectives:
-  - "Learner understands when to use щоб + infinitive"
-  - "Learner can form same-subject purpose clauses"
-  - "Learner can use alternative purpose expressions"
-  - "Learner can distinguish purpose from other clause types"
-grammar:
-  - "щоб + infinitive for same-subject purpose"
-  - "Alternative expressions (для того щоб, аби)"
-  - "When щоб + infinitive is required"
-word_target: 1200
-content_outline:
-  - section: "Introduction: Purpose Clauses"
-    words: 150
-    points:
-      - "Expressing purpose in Ukrainian"
-      - "Same-subject condition"
-      - "щоб as purpose marker"
-  - section: "щоб + Infinitive Structure"
-    words: 250
-    points:
-      - "Basic pattern: Я прийшов, щоб..."
-      - "Aspect choice in infinitive"
-      - "Common verb combinations"
-  - section: "Same-Subject Rule"
-    words: 250
-    points:
-      - "Why infinitive is used"
-      - "Subject must be same in both clauses"
-      - "Recognizing same-subject contexts"
-  - section: "Alternative Expressions"
-    words: 250
-    points:
-      - "для того щоб (in order to)"
-      - "аби (dialectal/literary)"
-      - "Formal vs informal usage"
-  - section: "Purpose vs Other Meanings"
-    words: 200
-    points:
-      - "Purpose vs result"
-      - "Purpose vs wish"
-      - "Distinguishing contexts"
-  - section: "Practice: Purpose Clauses"
-    words: 100
-    points:
-      - "Form same-subject purpose clauses"
-      - "Choose correct expression"
-vocabulary_hints:
-  required:
-    - щоб (in order to)
-    - мета (purpose/goal)
-    - інфінітив (infinitive)
-    - для того щоб (in order to)
-    - аби (in order to - literary)
-    - ціль (aim)
-    - намір (intention)
-    - причина (reason)
-  recommended:
-    - задля (for the sake of)
-    - заради (for)
-    - цілеспрямований (purposeful)
-    - навмисно (intentionally)
-activity_hints:
-  - type: fill-in
-    focus: "Purpose clause completion"
-    items: 25
-  - type: sentence-combining
-    focus: "Combine with purpose clauses"
-    items: 20
-  - type: error-correction
-    focus: "Fix purpose clause errors"
-    items: 15
-  - type: translation
-    focus: "English to Ukrainian"
-    items: 15
-prerequisites:
-  - b1-28 (Relative Clauses коли/що)
-connects_to:
-  - b1-30 (Purpose Clauses щоб + past form)
+id: b1-29
 naturalness:
   score: 9
   status: PASS
-  justification: "Essential purpose clause structure"
+  justification: Essential purpose clause structure
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-26'

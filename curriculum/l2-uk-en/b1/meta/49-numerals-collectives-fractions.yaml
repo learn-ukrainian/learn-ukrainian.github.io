@@ -1,94 +1,13 @@
 module: b1-49
-id: b1-49
+level: B1
 slug: numerals-collectives-fractions
-title: "Числівники: збірні та дроби"
-subtitle: "Numerals - Collectives and Fractions"
 version: '2.0'
-phase: "B1.4b [Word Formation]"
-focus: grammar
-pedagogy: TTT
-register: розмовний
-duration: 90
-transliteration: none
-objectives:
-  - "Learner can use collective numerals correctly"
-  - "Learner understands when to use collectives vs cardinals"
-  - "Learner can express fractions and percentages"
-  - "Learner can combine numerals with various noun types"
-grammar:
-  - "Збірні числівники (двоє, троє, четверо)"
-  - "Дробові числівники (половина, третина, чверть)"
-  - "Вживання збірних з різними типами іменників"
-word_target: 1200
-content_outline:
-  - section: "Introduction: Beyond Cardinal Numbers"
-    words: 150
-    points:
-      - "Collective vs cardinal numerals"
-      - "When collectives are required"
-      - "Fractional expressions"
-  - section: "Collective Numerals"
-    words: 250
-    points:
-      - "двоє, троє, четверо, п'ятеро..."
-      - "Declension patterns"
-      - "Case agreement rules"
-  - section: "When to Use Collectives"
-    words: 250
-    points:
-      - "Pluralia tantum: двоє ножиць"
-      - "Groups of people: троє друзів"
-      - "Mixed gender groups"
-  - section: "Fractions"
-    words: 250
-    points:
-      - "половина, третина, чверть"
-      - "одна друга, три четвертих"
-      - "Case of following noun"
-  - section: "Percentages and Decimals"
-    words: 200
-    points:
-      - "відсоток, процент"
-      - "Decimal expressions"
-      - "Mathematical contexts"
-  - section: "Practice: Complex Numerals"
-    words: 100
-    points:
-      - "Choose cardinal vs collective"
-      - "Express fractions"
-vocabulary_hints:
-  required:
-    - збірний числівник (collective numeral)
-    - дробовий числівник (fractional numeral)
-    - двоє (two - collective)
-    - троє (three - collective)
-    - половина (half)
-    - третина (third)
-    - чверть (quarter)
-    - відсоток (percent)
-  recommended:
-    - кількісний (cardinal)
-    - десятковий (decimal)
-    - множина (plural)
-    - ножиці (scissors)
-activity_hints:
-  - type: fill-in
-    focus: "Choose cardinal or collective"
-    items: 25
-  - type: transformation
-    focus: "Express as fractions"
-    items: 20
-  - type: multiple-choice
-    focus: "Select correct numeral form"
-    items: 15
-  - type: calculation
-    focus: "Express math in Ukrainian"
-    items: 10
-prerequisites:
-  - b1-48 (Diminutives Master Class)
-connects_to:
-  - b1-50 (Checkpoint Participles Numerals)
+id: b1-49
 naturalness:
   score: 9
   status: PASS
-  justification: "Essential numeral system expansion"
+  justification: Essential numeral system expansion
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-26'

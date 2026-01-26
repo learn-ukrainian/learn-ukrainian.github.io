@@ -9,6 +9,172 @@ from datetime import datetime
 from typing import Optional
 
 
+import json
+import os
+from datetime import datetime
+from typing import Optional
+from pathlib import Path
+
+
+def save_status_cache(
+    file_path: str,
+    level_code: str,
+    module_slug: str,
+    results: dict,
+    has_critical_failure: bool,
+    critical_failure_reasons: list[str],
+    plan_version: str = "2.0"
+) -> str:
+    """
+    Save status cache to {level}/status/{slug}.json.
+    
+    Args:
+        file_path: Path to the markdown source file
+        level_code: Level identifier (b1, b2, etc.)
+        module_slug: Module slug
+        results: Dictionary of gate results
+        has_critical_failure: Overall pass/fail status
+        critical_failure_reasons: List of blocking issues
+        plan_version: Version of the plan
+    """
+    
+    # 1. Gather Source Mtimes
+    md_path = Path(file_path)
+    base_path = md_path.parent # curriculum/l2-uk-en/{level}
+    
+    meta_path = base_path / 'meta' / f"{module_slug}.yaml"
+    activities_path = base_path / 'activities' / f"{module_slug}.yaml"
+    vocab_path = base_path / 'vocabulary' / f"{module_slug}.yaml"
+    
+    # Try to find plan path
+    # Check if level_code is a track (b2-hist) or simple (b1)
+    # curriculum/l2-uk-en/plans/{level}/{slug}.yaml
+    plan_path = base_path.parent / 'plans' / level_code / f"{module_slug}.yaml"
+    if not plan_path.exists():
+        # Try numeric prefix check if slug doesn't have it but filename does
+        # or vice versa. But for now, simple check.
+        pass
+
+    source_mtimes = {}
+    
+    def get_mtime(p: Path) -> str:
+        if p.exists():
+            return datetime.fromtimestamp(p.stat().st_mtime).isoformat() + "Z"
+        return None
+
+    source_mtimes['md'] = get_mtime(md_path)
+    source_mtimes['meta'] = get_mtime(meta_path)
+    source_mtimes['activities'] = get_mtime(activities_path)
+    source_mtimes['vocabulary'] = get_mtime(vocab_path)
+    source_mtimes['plan'] = get_mtime(plan_path)
+
+    # 2. Serialize Gates
+    gates = {}
+    
+    # Map internal gate keys to schema keys
+    # Internal: words, activities, density, unique_types, priority, engagement, audio, vocab, structure, lint, pedagogy, content_heavy, immersion, richness, grammar, naturalness
+    # Schema: meta, lesson, activities, vocabulary, naturalness (aggregated)
+    
+    # We will dump ALL internal gates into the JSON for detail, grouped if possible, or just flat if schema allows "additionalProperties" 
+    # (Schema is strict, so we must map to 'meta', 'lesson', 'activities', 'vocabulary', 'naturalness')
+    
+    # MAPPING STRATEGY:
+    # meta -> structure, lint
+    # lesson -> words, engagement, audio, pedagogy, content_heavy, immersion, richness
+    # activities -> activities, density, unique_types, priority, activity_quality
+    # vocabulary -> vocab
+    # naturalness -> naturalness
+    
+    # Helper to serialize a result
+    def serialize_gate(res):
+        if not res: return {"status": "skipped", "violations": 0}
+        
+        status = "pass"
+        if hasattr(res, 'status'):
+            status = res.status.lower()
+        elif isinstance(res, dict):
+            status = res.get('status', 'pass').lower()
+            
+        msg = ""
+        if hasattr(res, 'msg'):
+            msg = res.msg
+        elif isinstance(res, dict):
+            msg = res.get('msg', '')
+            
+        # Parse violations/issues from msg or other fields if available
+        # Simple heuristic: if fail, assume 1 violation unless parsed
+        violations = 1 if status == 'fail' else 0
+        
+        return {
+            "status": status,
+            "violations": violations,
+            "message": msg
+        }
+
+    gates['meta'] = serialize_gate(results.get('structure')) # also lint
+    # Merge lint into meta status
+    lint_res = results.get('lint')
+    if lint_res and lint_res.status == 'FAIL':
+        gates['meta']['status'] = 'fail'
+        gates['meta']['violations'] += 1 # Rough count
+        gates['meta']['message'] += f" | Lint: {lint_res.msg}"
+
+    gates['lesson'] = serialize_gate(results.get('words'))
+    # Merge other lesson gates
+    for k in ['engagement', 'audio', 'pedagogy', 'content_heavy', 'immersion', 'richness']:
+        res = results.get(k)
+        if res and hasattr(res, 'status') and res.status == 'FAIL':
+            gates['lesson']['status'] = 'fail'
+            gates['lesson']['violations'] += 1
+            gates['lesson']['message'] += f" | {k}: {res.msg}"
+
+    gates['activities'] = serialize_gate(results.get('activities'))
+    for k in ['density', 'unique_types', 'priority', 'activity_quality']:
+        res = results.get(k)
+        if res and hasattr(res, 'status') and res.status == 'FAIL':
+            gates['activities']['status'] = 'fail'
+            gates['activities']['violations'] += 1
+            gates['activities']['message'] += f" | {k}: {res.msg}"
+
+    gates['vocabulary'] = serialize_gate(results.get('vocab'))
+    
+    gates['naturalness'] = serialize_gate(results.get('naturalness'))
+
+    # 3. Overall Status
+    overall = {
+        "status": "fail" if has_critical_failure else "pass",
+        "blocking_issues": critical_failure_reasons
+    }
+    
+    # Counts
+    pass_count = sum(1 for g in gates.values() if g['status'] == 'pass')
+    fail_count = sum(1 for g in gates.values() if g['status'] == 'fail')
+    overall['pass_count'] = pass_count
+    overall['fail_count'] = fail_count
+
+    # 4. Construct Cache Object
+    cache_data = {
+        "module": module_slug,
+        "level": level_code,
+        "plan_version": plan_version,
+        "last_audit": datetime.now().isoformat() + "Z",
+        "audit_duration_ms": 0, # TODO: Track duration
+        "source_mtimes": source_mtimes,
+        "gates": gates,
+        "overall": overall
+    }
+    
+    # 5. Save File
+    status_dir = base_path / 'status'
+    status_dir.mkdir(parents=True, exist_ok=True)
+    status_file = status_dir / f"{module_slug}.json"
+    
+    with open(status_file, 'w', encoding='utf-8') as f:
+        json.dump(cache_data, f, indent=2)
+        
+    return str(status_file)
+
+
 def generate_report(
     file_path: str,
     phase: str,

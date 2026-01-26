@@ -1,103 +1,112 @@
-module: 14-son
-level: lit
-sequence: 14
-version: '1.0'
+module: son
+level: LIT
+slug: son
+version: '2.0'
 title: 'Політична Сатира: Сон'
 subtitle: 'LIT-014: Сміхове руйнування влади'
-focus: literature
-pedagogy: seminar
-objectives:
-- Analyze the political satire in "The Dream"
-- Deconstruct the myth of the "Good Tsar"
-- Compare Shevchenko's view with Pushkin's
-sources:
-  primary:
-  - url: https://www.ukrlib.com.ua/books/printit.php?tid=18
-    title: Сон — повний текст
-    notes: Поема для детального аналізу
-  secondary:
-  - url: https://www.ukrlib.com.ua/analiz/printit.php?tid=18
-    title: Аналіз "Сну"
-    notes: Літературознавчий аналіз
-  - url: https://uk.wikipedia.org/wiki/Російська_імперія
-    title: Російська імперія — контекст
-    notes: Політичний контекст 1844 року
 content_outline:
 - section: Вступ — Найсміливіший маніфест XIX століття
   words: 500
-  subsections:
+  points:
   - Історія написання (1844)
   - Чому "Сон" — це революція
   - Доля твору і автора
 - section: Структура подорожі
   words: 700
-  subsections:
+  points:
   - Україна — пейзаж поневолення
   - Сибір — пекло на землі
   - Петербург — театр абсурду
 - section: Сатира на царя
   words: 800
-  subsections:
+  points:
   - Образ «ведмедя» (Миколи I)
   - 'Сцена балу: гротеск і карикатура'
   - «Сміхове руйнування» авторитету
 - section: Техніка гротеску
   words: 700
-  subsections:
+  points:
   - Що таке гротеск і іронія
   - Контраст і парадокс
   - Сон як форма критики
 - section: Наслідки для Шевченка
   words: 500
-  subsections:
+  points:
   - Арешт і заслання
   - '"Сон" у справі Кирило-Мефодіївського братства'
   - Ціна правди
 - section: Підсумок — Сатира як зброя
   words: 400
-  subsections:
+  points:
   - Роль сатири в десакралізації влади
   - Шевченко vs імперія
   - Актуальність твору сьогодні
 word_target: 4500
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - сатира
-  - гротеск
-  - іронія
-  - десакралізація
-  - карикатура
-  - імперія
-  - цар
-  - заслання
-  - пейзаж
-  - контраст
+  - сатира (satire)
+  - гротеск (grotesque)
+  - іронія (irony)
+  - десакралізація (desacralization)
+  - карикатура (caricature)
+  - імперія (empire)
+  - цар (tsar)
+  - заслання (exile)
+  - пейзаж (landscape)
+  - контраст (contrast)
   recommended:
-  - парадокс
-  - абсурд
-  - бал
-  - маніфест
-  - критика
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - парадокс (paradox)
+  - абсурд (absurd)
+  - бал (ball)
+  - маніфест (manifesto)
+  - критика (criticism)
+activity_hints:
+- type: reading
+  focus: Повний текст поеми "Сон"
+  source: UkrLib tid=18
+  items: '1'
+- type: quiz
+  focus: Структура і сюжет поеми
+  items: 15+
+- type: match-up
+  focus: Образ → його сатиричне значення
+  items: 12+
+- type: essay-response
+  focus: Роль сатири в десакралізації влади
+  word_target: 300
+  output: Політологічне есе
+- type: group-sort
+  focus: Пейзажі (Україна / Сибір / Петербург)
+  items: 15+
+focus: literature
+pedagogy: literature
+prerequisites:
+- lit-11 to lit-13 (Shevchenko biography and early works)
+- lit-08 (Konotop Witch — для порівняння сатири)
 connects_to:
-  previous: lit-11 to lit-13 (Shevchenko biography and early works)
-  related:
-  - lit-15 (Zapovit — політичний заповіт)
-  - lit-25 (Cyrillo-Methodian Brotherhood — контекст арешту)
-constraints:
-  min_engagement_boxes: 3
-  min_examples: 15
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- lit-15 (Zapovit — політичний заповіт)
+- lit-25 (Cyrillo-Methodian Brotherhood — контекст арешту)
+objectives:
+- Analyze the political satire in "The Dream"
+- Deconstruct the myth of the "Good Tsar"
+- Compare Shevchenko's view with Pushkin's
+grammar:
+- Satirical stylistic devices
+- Grotesque and caricature
+- Political rhetoric
+module_type: literature
+sources:
+- name: Сон — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=18
+  type: primary
+  notes: Поема для детального аналізу
+- name: Аналіз "Сну"
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=18
+  type: secondary
+  notes: Літературознавчий аналіз
+- name: Російська імперія — контекст
+  url: https://uk.wikipedia.org/wiki/Російська_імперія
+  type: reference
+  notes: Політичний контекст 1844 року
+immersion: 100% Ukrainian
+phase: LIT.3 The Prophet (Taras Shevchenko)

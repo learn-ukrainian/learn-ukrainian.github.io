@@ -1,0 +1,119 @@
+module: narratology
+level: C2
+slug: narratology
+version: '2.0'
+title: Наратологія
+content_outline:
+- section: Вступ — Що таке наратологія?
+  words: 500
+  points:
+  - Наука про оповідь
+  - Історія vs. дискурс
+  - Фабула vs. сюжет
+- section: Наративні інстанції
+  words: 700
+  points:
+  - Автор реальний vs. імпліцитний
+  - Наратор (оповідач)
+  - Нарататор (слухач/читач у тексті)
+  - Рівні нарації (екстрадієгетичний, інтрадієгетичний)
+- section: Фокалізація
+  words: 700
+  points:
+  - Хто бачить vs. хто говорить
+  - Нульова фокалізація (всезнаючий)
+  - Внутрішня фокалізація (персонажна)
+  - Зовнішня фокалізація (об'єктивна)
+- section: Темпоральність
+  words: 600
+  points:
+  - Порядок (хронологія, аналепсис, пролепсис)
+  - Тривалість (підсумок, сцена, пауза, еліпсис)
+  - Частотність (сингулятив, ітератив)
+- section: Голос і модус
+  words: 600
+  points:
+  - Дистанція (показ vs. розповідь)
+  - Пряма, непряма, невласне-пряма мова
+  - Потік свідомості
+  - Поліфонія
+- section: Наративний аналіз українських текстів
+  words: 500
+  points:
+  - Аналіз оповідання Стефаника
+  - Фокалізація у Коцюбинського
+  - Поліфонія в сучасній прозі
+- section: Підсумок
+  words: 400
+  points:
+  - Інструменти наратолога
+  - Застосування для власного письма
+  - Зв'язок з поетикою прози
+word_target: 4000
+vocabulary_hints:
+  required:
+  - наратологія (narratology)
+  - наратор (narrator)
+  - фокалізація (focalization)
+  - фабула (fabula/story)
+  - сюжет (sjuzhet/plot)
+  - дієгезис (diegesis)
+  - аналепсис (analepsis/flashback)
+  - пролепсис (prolepsis/flash-forward)
+  - всезнаючий (omniscient)
+  - поліфонія (polyphony)
+  recommended:
+  - нарататор (narratee)
+  - екстрадієгетичний (extradiegetic)
+  - інтрадієгетичний (intradiegetic)
+  - ітератив (iterative)
+  - невласне-пряма мова (free indirect speech)
+activity_hints:
+- type: critical-analysis
+  focus: Identify narrator type and focalization in Kotsyubynsky excerpt
+  output: Detailed narratological analysis
+- type: quiz
+  focus: Match narratological terms to examples
+  items: 20+
+- type: essay-response
+  focus: Rewrite passage changing focalization
+  word_target: 400
+  output: Two versions with analysis of effect
+- type: comparative-study
+  focus: Compare narrative strategies in Stefanyk vs. Zhadan
+  output: Analysis of different temporal and focal approaches
+- type: essay-response
+  focus: Create passage using free indirect speech
+  word_target: 300
+  output: Original text with technique explanation
+- type: critical-analysis
+  focus: Map narrative levels in complex text
+  output: Diagram of diegetic levels with examples
+- type: quiz
+  focus: Identify temporal manipulations in excerpts
+  items: 15+
+focus: literature
+prerequisites:
+- c2-26 (Literary Theory)
+- c2-21 (Stylistic Devices Mastery)
+- C1 literature analysis
+connects_to:
+- 'c2-28 (Poetyka: Verse Analysis)'
+- 'c2-29 (Poetyka: Prose Analysis)'
+- 'c2-37 (Creative Writing: Prose)'
+module_type: literature
+sources:
+- name: Наратологія — Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Наратологія
+  type: reference
+  notes: Core narratological concepts
+- name: Жерар Женетт — теорія нарації
+  url: https://uk.wikipedia.org/wiki/Жерар_Женетт
+  type: reference
+  notes: Foundational narratological framework
+- name: Українська проза XX століття
+  url: https://ukrlib.com.ua/
+  type: primary
+  notes: Examples for narrative analysis
+immersion: 100% Ukrainian
+phase: C2.2 Literary Analysis

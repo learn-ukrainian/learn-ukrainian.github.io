@@ -1,16 +1,9 @@
-module: emotions-personality
-level: a2
-sequence: 48
+module: a2-48
+level: A2
+slug: emotions-personality
 version: '2.0'
 title: Emotions and Personality
 subtitle: Describing People
-focus: vocabulary
-pedagogy: PPP
-objectives:
-- Learner can describe personality traits
-- Learner can describe emotional states
-- Learner can characterize people
-- Learner can express feelings
 content_outline:
 - section: 'Introduction: Describing People'
   words: 100
@@ -48,7 +41,7 @@ content_outline:
   - Describe personality
   - Express emotions
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - добрий (kind)
   - злий (angry/evil)
@@ -65,15 +58,34 @@ vocabulary:
   - лінивий (lazy)
   - працьовитий (hardworking)
   - терплячий (patient)
-  forbidden: []
-activities:
-  types_required:
-  - vocabulary-drill
-  - matching
-  - speaking
-  - fill-in
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: vocabulary-drill
+  focus: Emotions and personality
+  items: 30
+- type: matching
+  focus: Match traits to descriptions
+  items: 20
+- type: fill-in
+  focus: Complete character descriptions
+  items: 15
+- type: speaking
+  focus: Describe people you know
+  items: 8
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- a1-26 (Describing Things - Adjectives)
+- a2-47 (Nature and Weather)
 connects_to:
 - a2-49 (Work and Professions)
+objectives:
+- Learner can describe personality traits
+- Learner can describe emotional states
+- Learner can characterize people
+- Learner can express feelings
+grammar:
+- Adjectives of personality (добрий, злий)
+- Describing feelings (мені сумно)
+- Dative for emotional states
+register: розмовний
+phase: A2.5 [Vocabulary Expansion]

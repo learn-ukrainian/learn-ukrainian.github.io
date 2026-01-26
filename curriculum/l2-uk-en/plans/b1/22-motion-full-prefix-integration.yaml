@@ -1,28 +1,9 @@
 module: 22-motion-full-prefix-integration
-level: b1
-sequence: 22
-version: '1.7'
+level: B1
+slug: 22-motion-full-prefix-integration
+version: '2.0'
 title: 'Рух: інтеграція префіксів'
 subtitle: 'Motion: Full Prefix Integration'
-focus: grammar
-pedagogy: TTT
-objectives:
-- Master the logic of motion prefixes
-- Distinguish between spatial and resultative meanings
-- Use prefixed verbs in narratives and dialogues
-sources:
-- name: Ukrainian State Standard 2024 - Motion Prefixes
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official prefix system for motion verbs
-- name: Ukrainian Verbal Prefixes
-  url: https://uk.wikipedia.org/wiki/Дієслівні_префікси
-  type: reference
-  notes: Complete prefix reference with all meanings
-- name: Ukrainian Motion Verbs (Academic)
-  url: https://uk.wikipedia.org/wiki/Дієслова_руху
-  type: reference
-  notes: Academic treatment of motion verb system
 content_outline:
 - section: Тест
   words: 150
@@ -50,7 +31,7 @@ content_outline:
   - Grammar in natural context
   - Various situations
 word_target: 1500
-vocabulary:
+vocabulary_hints:
   required:
   - при- (arrival)
   - ви- (exit)
@@ -68,16 +49,55 @@ vocabulary:
   - з-/с- (down/together)
   - над- (over - rare)
   - комбінація (combination)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - quiz
-  - match-up
-  - cloze
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: Prefix meaning identification
+  items: 20+
+- type: fill-in
+  focus: Combine prefixes with motion verbs
+  items: 15+
+- type: fill-in
+  focus: Add prefix to change meaning
+  items: 12+
+- type: cloze
+  focus: Story using 10+ prefixed motion verbs
+  items: 15+
+- type: match-up
+  focus: Prefix + verb -> meaning
+  items: 15+
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-16 (Motion verbs full system)
+- b1-17 (Motion - coming & going)
+- b1-18 (Motion - passing & crossing)
+- b1-19 (Motion - starting & returning)
+- b1-20 (Motion - approaching & departing)
+- b1-21 (Motion - figurative uses)
 connects_to:
 - b1-23 (Motion patterns in other verbs)
 - b1-25 (Checkpoint - motion verbs)
+objectives:
+- Master the logic of motion prefixes
+- Distinguish between spatial and resultative meanings
+- Use prefixed verbs in narratives and dialogues
+grammar:
+- Prefixes of motion (по-, при-, пі-, за-, ви-, в-, до-, від-, пере-, про-)
+- Aspect pairs in motion (ідти/піти, ходити/сходити)
+- Figurative meanings of prefixed motion verbs
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Motion Prefixes
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official prefix system for motion verbs
+- name: Ukrainian Verbal Prefixes
+  url: https://uk.wikipedia.org/wiki/Дієслівні_префікси
+  type: reference
+  notes: Complete prefix reference with all meanings
+- name: Ukrainian Motion Verbs (Academic)
+  url: https://uk.wikipedia.org/wiki/Дієслова_руху
+  type: reference
+  notes: Academic treatment of motion verb system
+immersion: 100% Ukrainian
+phase: B1.3 Motion Verbs

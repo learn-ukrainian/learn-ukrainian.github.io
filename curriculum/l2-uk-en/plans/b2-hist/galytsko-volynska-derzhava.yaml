@@ -1,14 +1,9 @@
 module: galytsko-volynska-derzhava
-level: b2-hist
-sequence: 22
-version: '1.0'
+level: B2-HIST
+slug: galytsko-volynska-derzhava
+version: '2.0'
 title: 'Галицько-Волинська держава: Розквіт'
-focus: history
-pedagogy: CBI
-objectives:
-- Учень може проаналізувати період розквіту Галицько-Волинської держави
-- Учень може оцінити роль князів Романовичів у стабілізації регіону
-- Учень може описати економічний та культурний розвиток краю
+subtitle: Західний оплот Русі
 content_outline:
 - section: Вступ
   words: 484
@@ -19,8 +14,19 @@ content_outline:
 - section: Деколонізаційний погляд
   words: 482
 word_target: 4116
-vocabulary:
-- розквіт
-- оплот
-- єдність
-- коаліція
+vocabulary_hints:
+  required:
+  - розквіт (flourish)
+  - оплот (stronghold)
+  - єдність (unity)
+  - коаліція (coalition)
+focus: history
+pedagogy: CBI
+objectives:
+- Учень може проаналізувати період розквіту Галицько-Волинської держави
+- Учень може оцінити роль князів Романовичів у стабілізації регіону
+- Учень може описати економічний та культурний розвиток краю
+grammar:
+- Historical narrative tenses
+- Descriptive adjectives
+phase: B2.3a [Українська історія]

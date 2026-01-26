@@ -1,17 +1,9 @@
 module: professional-reports-basics
-level: b2
-sequence: 87
+level: B2
+slug: professional-reports-basics
 version: '2.0'
 title: 'Професійні звіти: Основи'
 subtitle: Basic report structure and writing
-focus: skills
-pedagogy: CBI
-objectives:
-- Learner can structure a basic professional report with clear sections
-- Learner can write executive summaries and introductions
-- Learner can present data and findings objectively
-- Learner can use appropriate formal register for report writing
-- Learner can organize information logically in report format
 content_outline:
 - section: Вступ
   words: 450
@@ -106,8 +98,12 @@ content_outline:
   - 'Синтез навичок: від листування (М85-86) до структурованої звітності'
   - 'Ключові принципи звіту: структура, об''єктивність, формальність, візуалізація'
   - 'Перехід до поглибленої звітності (М88): складні звіти, аналітика, презентації'
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+focus: skills
+pedagogy: CBI
+objectives:
+- Learner can structure a basic professional report with clear sections
+- Learner can write executive summaries and introductions
+- Learner can present data and findings objectively
+- Learner can use appropriate formal register for report writing
+- Learner can organize information logically in report format
+phase: B2.4 Communication Skills

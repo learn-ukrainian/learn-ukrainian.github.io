@@ -1,25 +1,8 @@
 module: 09-participles-vs-relative-clauses
-level: b2
-sequence: 9
-version: '1.0'
+level: B2
+slug: 09-participles-vs-relative-clauses
+version: '2.0'
 title: Дієприкметники проти підрядних речень
-focus: grammar
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Ukrainian State Standard 2024 - Syntax
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Relative clause formation and usage
-- name: Сучасна українська літературна мова - Синтаксис
-  url: https://uk.wikipedia.org/wiki/Синтаксис
-  type: secondary
-  notes: Syntactic structures and stylistic choices
-- name: CEFR B2 Grammar Complexity
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
-  type: reference
-  notes: B2 complex sentence requirements
 content_outline:
 - section: Вступ — Два способи вираження ознаки за дією
   words: 400
@@ -68,7 +51,7 @@ content_outline:
   - Типові помилки
   - Підготовка до контрольного модуля
 word_target: 3800
-vocabulary:
+vocabulary_hints:
   required:
   - підрядне речення (subordinate clause)
   - який/яка/яке (which/that - relative pronoun)
@@ -86,19 +69,52 @@ vocabulary:
   - переважний (preferable)
   - еквівалентний (equivalent)
   - стилістична норма (stylistic norm)
-  forbidden: []
-activities:
-  types_required:
-  - group-sort
-  - error-correction
-  - quiz
-  - fill-in
-  - essay-response
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: error-correction
+  focus: Participles → relative clauses (and vice versa)
+  items: 14+
+- type: quiz
+  focus: Which style is more appropriate for context?
+  items: 15+
+- type: error-correction
+  focus: Remove unnecessary participles from text
+  items: 3 texts
+- type: match-up
+  focus: Participle form → equivalent clause
+  items: 12+
+- type: group-sort
+  focus: Same sentence in both forms — analyze style
+  items: 10+
+- type: fill-in
+  focus: Complete with appropriate form (participle or clause)
+  items: 12+
+- type: essay-response
+  focus: Rewrite academic text for general audience
+  word_target: 150
+  output: Model answer provided
+focus: grammar
+prerequisites:
+- b2-07 (Active Participles Present)
+- b2-08 (Active Participles Past)
+- b2-02 (Past Passive Participles)
+- Relative clause formation
 connects_to:
 - b2-10 (B2.1a Checkpoint)
 - b2-11 (Multi-clause Sentences)
 - 'b2-22 (Register: Literary Ukrainian)'
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Syntax
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Relative clause formation and usage
+- name: Сучасна українська літературна мова - Синтаксис
+  url: https://uk.wikipedia.org/wiki/Синтаксис
+  type: secondary
+  notes: Syntactic structures and stylistic choices
+- name: CEFR B2 Grammar Complexity
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 complex sentence requirements
+immersion: 100% Ukrainian
+phase: B2.1a [Passive Voice]

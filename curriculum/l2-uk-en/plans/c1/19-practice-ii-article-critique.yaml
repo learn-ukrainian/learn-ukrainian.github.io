@@ -1,21 +1,8 @@
 module: 19-practice-ii-article-critique
-level: c1
-sequence: 19
+level: C1
+slug: 19-practice-ii-article-critique
 version: '2.0'
 title: Практика II — Критика статті
-focus: practice
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Academic Review Writing
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Standards for article reviews
-- name: Critical Analysis Methodology
-  url: https://mova.info/
-  type: secondary
-  notes: Techniques for evaluating research
 content_outline:
 - section: Вступ — Критичне читання
   words: 400
@@ -60,7 +47,7 @@ content_outline:
   - Написання рецензії
   - Взаємне рецензування
 word_target: 4000
-vocabulary:
+vocabulary_hints:
   required:
   - рецензія (review)
   - критика (critique)
@@ -78,18 +65,41 @@ vocabulary:
   - перевага (advantage)
   - обґрунтованість (validity)
   - релевантність (relevance)
-  forbidden: []
-activities:
-  types_required:
-  - group-sort
-  - quiz
-  - essay-response
-  - cloze
-  - fill-in
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: essay-response
+  focus: Write article review
+  word_target: 400
+- type: quiz
+  focus: Identify strengths/weaknesses in research
+  items: 15+
+- type: cloze
+  focus: Critical analysis phrases
+  items: 12+
+- type: match-up
+  focus: Critique type to appropriate language
+  items: 12+
+- type: fill-in
+  focus: Complete critique sentences
+  items: 10+
+- type: group-sort
+  focus: Classify comments as positive/negative/neutral
+  items: 12+
+focus: practice
+prerequisites:
+- c1-14 (Literature Review)
+- c1-18 (Essay Writing Practice)
 connects_to:
 - c1-20 (C1.1 Checkpoint)
 - c1-33 (Case Studies)
+module_type: practice
+sources:
+- name: Academic Review Writing
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standards for article reviews
+- name: Critical Analysis Methodology
+  url: https://mova.info/
+  type: secondary
+  notes: Techniques for evaluating research
+immersion: 100% Ukrainian
+phase: C1.1 Academic Ukrainian

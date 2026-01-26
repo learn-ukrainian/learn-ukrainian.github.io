@@ -1,25 +1,8 @@
 module: 02-past-passive-participles
-level: b2
-sequence: 2
-version: '1.0'
+level: B2
+slug: 02-past-passive-participles
+version: '2.0'
 title: Дієприкметники минулого часу на -ний/-тий
-focus: grammar
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Ukrainian State Standard 2024 - Participles
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official participle formation and usage rules
-- name: Граматика сучасної української мови
-  url: https://uk.wikipedia.org/wiki/Граматика_української_мови
-  type: secondary
-  notes: Academic reference for participle morphology
-- name: CEFR B2 Grammar Descriptors
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
-  type: reference
-  notes: B2 grammar complexity expectations
 content_outline:
 - section: Вступ — Що таке дієприкметник?
   words: 400
@@ -67,7 +50,7 @@ content_outline:
   - Типові помилки
   - Підготовка до наступних модулів
 word_target: 3800
-vocabulary:
+vocabulary_hints:
   required:
   - дієприкметник (participle)
   - утворення (formation)
@@ -85,19 +68,52 @@ vocabulary:
   - правило (rule)
   - виняток (exception)
   - приклад (example)
-  forbidden: []
-activities:
-  types_required:
-  - error-correction
-  - quiz
-  - fill-in
-  - essay-response
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: Form participles from verbs (choose -ний or -тий)
+  items: 15+
+- type: fill-in
+  focus: Agree participle with noun (gender/number/case)
+  items: 14+
+- type: fill-in
+  focus: Active → Past passive participle sentences
+  items: 12+
+- type: match-up
+  focus: Verb infinitive → correct participle form
+  items: 12+
+- type: error-correction
+  focus: Fix agreement errors in sentences
+  items: 10+
+- type: quiz
+  focus: Choose correct tense with бути + participle
+  items: 12+
+- type: essay-response
+  focus: Rewrite narrative using participles
+  word_target: 150
+  output: Model answer provided
+focus: grammar
+prerequisites:
+- b2-01 (Passive Voice System overview)
+- Adjective declension (all cases)
+- Verb conjugation (all tenses)
 connects_to:
 - b2-03 (Impersonal -но/-то)
 - b2-07 (Active Participles Present)
 - b2-09 (Participles vs Relative Clauses)
 - b2-10 (B2.1a Checkpoint)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Participles
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official participle formation and usage rules
+- name: Граматика сучасної української мови
+  url: https://uk.wikipedia.org/wiki/Граматика_української_мови
+  type: secondary
+  notes: Academic reference for participle morphology
+- name: CEFR B2 Grammar Descriptors
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 grammar complexity expectations
+immersion: 100% Ukrainian
+phase: B2.1a [Passive Voice]

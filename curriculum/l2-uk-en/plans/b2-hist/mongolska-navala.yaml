@@ -1,23 +1,18 @@
 module: mongolska-navala
-level: b2-hist
-sequence: 21
-version: '1.0'
+level: B2-HIST
+slug: mongolska-navala
+version: '2.0'
 title: Монгольська навала 1240
-focus: history
-pedagogy: CBI
-objectives:
-- Учень може проаналізувати причини та наслідки монгольської навали
-- Учень може оцінити героїзм оборони Києва та роль Десятинної церкви
-- Учень може порівняти спадщину Русі та Золотої Орди в контексті деколонізації
+subtitle: Падіння Києва та кінець Київської Русі
 content_outline:
 - section: Вступ
   words: 399
-  subsections:
+  points:
   - 1240 рік як геополітична катастрофа
   - Київ як сакральний центр
 - section: 'Читання: Трагедія та злам епох'
   words: 2750
-  subsections:
+  points:
   - Політична роздробленість та Битва на Калці
   - Наступ Батия та облога Києва
   - 'Доля інших міст: Чернігів та Переяслав'
@@ -33,36 +28,38 @@ content_outline:
   - Археологія навали
 - section: Первинні джерела
   words: 420
-  subsections:
+  points:
   - Свідчення Плано Карпіні (1246)
   - Опис облоги в Іпатіївському літописі
   - Галицько-Волинський літопис про візит Данила до Батия
   - Проблема достовірності джерел
 - section: Деколонізаційний погляд
   words: 438
-  subsections:
+  points:
   - 'Вплив на мову: Мовна стійкість'
   - Міф про 'спільну колиску'
   - Монгольський спадок Московії vs Європейськість України
   - Спадщина Русі у Великому князівстві Литовському
 word_target: 4024
-vocabulary:
-- навала
-- облога
-- ярмо
-- орда
-- хан
-- баскак
-- ярлик
-- спустошення
-- оборона
-- воєвода
-- катапульта
-- таран
-- данина
-- васал
-- улус
-activities:
+vocabulary_hints:
+  required:
+  - навала (invasion)
+  - облога (siege)
+  - ярмо (yoke)
+  - орда (horde)
+  - хан (khan)
+  - баскак (tax collector)
+  - ярлик (yarlyk/decree)
+  - спустошення (devastation)
+  - оборона (defense)
+  - воєвода (voivode)
+  recommended:
+  - катапульта (catapult)
+  - таран (battering ram)
+  - данина (tribute)
+  - васал (vassal)
+  - улус (ulus)
+activity_hints:
 - type: reading
   focus: Свідчення Плано Карпіні
 - type: critical-analysis
@@ -71,6 +68,15 @@ activities:
   focus: Цивілізаційний вибір після 1240 року
 - type: comparative-study
   focus: Україна vs Московія під Ордою
+focus: history
+pedagogy: CBI
+objectives:
+- Учень може проаналізувати причини та наслідки монгольської навали
+- Учень може оцінити героїзм оборони Києва та роль Десятинної церкви
+- Учень може порівняти спадщину Русі та Золотої Орди в контексті деколонізації
+grammar:
+- Historical narrative tenses
+- Passive voice in historical writing
 sources:
 - name: Іпатіївський літопис
   url: http://litopys.org.ua/ipatlet/ipat.htm
@@ -80,3 +86,4 @@ sources:
   url: http://litopys.org.ua/travelj/travelj.htm
   type: primary
   notes: Свідчення європейського мандрівника
+phase: B2-HIST.2 [Fragmentation]

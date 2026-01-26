@@ -1,16 +1,9 @@
-module: around-the-city
-level: a1
-sequence: 15
+module: a1-15
+level: A1
+slug: around-the-city
 version: '2.0'
 title: Around the City
 subtitle: Navigating Urban Spaces with Confidence
-focus: practical
-pedagogy: PPP
-objectives:
-- Navigate using directional vocabulary (прямо, наліво, направо)
-- Use locative case for city locations in context
-- Ask and answer 'Де...?' and 'Як дістатися до...?'
-- Name common urban infrastructure and transport
 content_outline:
 - section: 'Introduction: Getting Around'
   words: 100
@@ -48,7 +41,7 @@ content_outline:
   - Give and follow directions
   - City map activities
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - прямо (straight)
   - наліво (left)
@@ -65,16 +58,35 @@ vocabulary:
   - перехрестя (intersection)
   - світлофор (traffic light)
   - тротуар (sidewalk)
-  forbidden: []
-activities:
-  types_required:
-  - dialogue
-  - map-activity
-  - fill-in
-  - matching
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: map-activity
+  focus: Follow directions on a map
+  items: 10
+- type: dialogue
+  focus: Ask for and give directions
+  items: 8
+- type: fill-in
+  focus: Complete with prepositions
+  items: 15
+- type: matching
+  focus: Place → description
+  items: 15
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a1-13 (The Locative)
+- a1-14 (Mine and Yours)
 connects_to:
 - a1-16 (The Genitive I)
 - a1-40 (Taking Transport)
+objectives:
+- Navigate using directional vocabulary (прямо, наліво, направо)
+- Use locative case for city locations in context
+- Ask and answer 'Де...?' and 'Як дістатися до...?'
+- Name common urban infrastructure and transport
+grammar:
+- Locative case in context
+- Directional expressions
+- Prepositions of location
+register: розмовний
+phase: A1.2 [Navigation]

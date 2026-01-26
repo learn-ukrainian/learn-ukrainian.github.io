@@ -1,25 +1,8 @@
 module: 04-reflexive-passive
-level: b2
-sequence: 4
-version: '1.0'
+level: B2
+slug: 04-reflexive-passive
+version: '2.0'
 title: Зворотний пасив із -ся
-focus: grammar
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Ukrainian State Standard 2024 - Reflexive Verbs
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official requirements for -ся passive usage
-- name: Науковий стиль української мови
-  url: https://uk.wikipedia.org/wiki/Науковий_стиль
-  type: secondary
-  notes: Scientific writing conventions
-- name: Технічна документація українською
-  url: https://uk.wikipedia.org/wiki/Технічна_документація
-  type: secondary
-  notes: Technical writing patterns
 content_outline:
 - section: Вступ — Зворотний пасив
   words: 400
@@ -65,7 +48,7 @@ content_outline:
   - Перехід до модуля 05
   - Підготовка до модуля 06
 word_target: 3800
-vocabulary:
+vocabulary_hints:
   required:
   - зворотний (reflexive)
   - процес (process)
@@ -83,20 +66,53 @@ vocabulary:
   - результат (result)
   - дослідження (research)
   - технологія (technology)
-  forbidden: []
-activities:
-  types_required:
-  - group-sort
-  - error-correction
-  - quiz
-  - fill-in
-  - essay-response
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: Active → -ся passive
+  items: 12+
+- type: fill-in
+  focus: Complete scientific sentences with -ся verbs
+  items: 14+
+- type: quiz
+  focus: Process description identification
+  items: 12+
+- type: group-sort
+  focus: -ся vs -но/-то — choose appropriate form
+  items: 10+
+- type: match-up
+  focus: Context → appropriate -ся verb
+  items: 12+
+- type: error-correction
+  focus: Fix agent expression errors
+  items: 8+
+- type: essay-response
+  focus: Write scientific process description
+  word_target: 150
+  output: Model answer provided
+focus: grammar
+prerequisites:
+- b2-01 (Passive Voice System)
+- b2-02 (Past Passive Participles)
+- b2-03 (Impersonal -но/-то)
+- Instrumental case mastery
 connects_to:
 - b2-05 (3rd Person Plural Passive)
 - b2-06 (Passive in Context)
 - 'b2-21 (Register: Technical/Scientific)'
 - b2-10 (B2.1a Checkpoint)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Reflexive Verbs
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official requirements for -ся passive usage
+- name: Науковий стиль української мови
+  url: https://uk.wikipedia.org/wiki/Науковий_стиль
+  type: secondary
+  notes: Scientific writing conventions
+- name: Технічна документація українською
+  url: https://uk.wikipedia.org/wiki/Технічна_документація
+  type: secondary
+  notes: Technical writing patterns
+immersion: 100% Ukrainian
+phase: B2.1a [Passive Voice]

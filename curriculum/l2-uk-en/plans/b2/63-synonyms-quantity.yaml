@@ -1,22 +1,50 @@
-module: 63-synonyms-quantity
-level: b2
-sequence: 63
-version: '1.0'
+module: b2-63
+level: B2
+slug: 63-synonyms-quantity
+version: '2.0'
 title: 'Синоніми: Кількість та Міра'
 subtitle: Synonyms - Quantity and Measure
+content_outline:
+- section: Вступ — Кількість та Міра
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Much/Many
+  words: 500
+  points:
+  - багато (much/many - neutral)
+  - чимало (quite a lot - moderate)
+  - безліч (countless - emphatic)
+  - купа (pile - colloquial)
+  - маса (mass - colloquial)
+- section: Few/Little
+  words: 500
+  points:
+  - мало (few/little - neutral)
+  - небагато (not much)
+  - трохи (a little - positive)
+  - кілька (several - countable)
+  - декілька (a few - formal)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: phraseology
 pedagogy: CBI
 objectives:
-- Учень може розрізняти відтінки значень синонімів на позначення великої та малої кількості
-- Учень вміє використовувати професійну лексику для опису обсягів та масштабів у звітах та статтях
-- Учень розуміє стилістичну різницю між розмовними та офіційними словами на позначення міри
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+- Учень може розрізняти відтінки значень синонімів на позначення великої та малої
+  кількості
+- Учень вміє використовувати професійну лексику для опису обсягів та масштабів у звітах
+  та статтях
+- Учень розуміє стилістичну різницю між розмовними та офіційними словами на позначення
+  міри
+grammar:
+- Adverbs of quantity
+- Nouns for collective amounts
+immersion: 100
+register: публіцистичний
+phase: B2.2 [Phraseology & Synonymy]

@@ -1,14 +1,12 @@
-id: b2-hist-10
 module: b2-hist-10
-title: Ольга та Святослав
+level: B2-HIST
 slug: olha-sviatoslav
 version: '1.0'
-phase: B2-HIST.1 [Kyivan Rus]
-focus: history
-pedagogy: CBI
-register: публіцистичний
+id: b2-hist-10
+naturalness:
+  score: 10
+  status: PASS
 duration: 150
-word_target: 4000
 transliteration: none
 tags:
 - history
@@ -17,118 +15,6 @@ tags:
 - sviatoslav
 - khazars
 - byzantium
-grammar:
-- Narrative tenses
-- Action verbs
-objectives:
-- Analyze Olha reforms
-- Evaluate Sviatoslav military strategy
-- Contrast diplomactic vs military approach
 vocabulary_count: 25
-naturalness:
-  score: 10
-  status: PASS
-sources:
-- name: Ольга (княгиня київська) (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Ольга_(княгиня_київська)
-  type: reference
-  notes: Overview of Princess Olha
-- name: Святослав Ігорович (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Святослав_Ігорович
-  type: reference
-  notes: Overview of Sviatoslav
-- name: Повість минулих літ
-  url: https://litopys.org.ua/pvl/pvl.htm
-  type: primary
-  notes: Chronicle accounts
-content_outline:
-- section: Вступ
-  words: 100
-  points: []
-- section: Читання
-  words: 900
-  points:
-  - 'Ольга: Помста як Політика'
-  - 'Реформи: Від хаосу до порядку'
-  - Інфраструктура реформ
-  - 'Дипломатія: Візит до Царгорода (957)'
-  - 'Святослав: Лицар Степу (964–972)'
-  - Геополітична катастрофа чи перемога?
-  - 'Загибель: Чаша з черепа'
-- section: Первинні джерела
-  words: 500
-  points:
-  - Повість минулих літ про реформи Ольги
-  - Лев Диякон про Святослава (Опис зовнішності)
-- section: Деколонізаційний погляд
-  words: 1100
-  points:
-  - 'Святослав: Вікінг чи Козак?'
-  - 'Ольга: "Мудра", а не "Хитра"'
-  - Глибший аналіз реформ Ольги
-  - 'Святослав: Портрет лицаря Степу'
-  - 'Хозарія: Знищення буфера'
-  - 'Балканська епопея: Амбіція і катастрофа'
-  - 'Загибель: Уроки для нащадків'
-  - 'Жінки у політиці Русі: Феномен Ольги'
-  - 'Ольга і Святослав: Два шляхи розвитку України'
-  - Спадщина для нащадків
-  - Уроки для сучасної України
-- section: Потрібно більше практики?
-  words: 1400
-  points:
-  - Економіка епохи Ольги та Святослава
-  - Християнство і язичництво
-  - Життя звичайних людей
-  - Жінки в суспільстві
-  - Військова культура
-  - Спадщина для нащадків
-  - Завершення епохи
-  - Археологічні свідчення епохи
-vocabulary_hints:
-  required:
-  - княгиня (princess)
-  - помста (revenge)
-  - реформа (reform)
-  - хрещення (baptism)
-  - погост (pogost - tax station)
-  - урок (urok - fixed tribute)
-  - данина (tribute)
-  - каганат (khaganate)
-  - завоювання (conquest)
-  - воїн (warrior)
-  - похід (campaign)
-  - печеніги (Pechenegs)
-  recommended:
-  - рівноапостольна (equal-to-apostles)
-  - Доростол (Dorostolon)
-  - Балкани (Balkans)
-  - чаша (cup/chalice)
-  - дипломатія (diplomacy)
-activity_hints:
-- type: reading
-  focus: Chronicle accounts of Olha's revenge
-  source: Provide in module
-- type: quiz
-  focus: Geography of Sviatoslav's campaigns
-  items: 8+
-- type: fill-in
-  focus: Political and military terminology
-  items: 15+
-- type: match-up
-  focus: Key events 945-972 (Chronology)
-  items: 12+ events
-- type: comparative-study
-  focus: Olha vs Sviatoslav — governance approaches
-  output: Two-column comparison
-- type: quiz
-  focus: Facts about Olha and Sviatoslav
-  items: 12+
-- type: essay-response
-  focus: Хто більше вплинув на розвиток Русі — Ольга чи Святослав?
-prerequisites:
-- b2-hist-09 (Oleh and Ihor)
-connects_to:
-- b2-hist-11 (Volodymyr and Baptism)
-- b2-hist-07 (Khazar Khaganate — defeat)
-- 'b2-hist-20 (Synthesis: Kyivan Rus)'
+build:
+  last_modified: '2026-01-26'

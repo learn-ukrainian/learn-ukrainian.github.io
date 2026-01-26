@@ -1,25 +1,9 @@
 module: 06-being-and-becoming
-level: a2
-sequence: 6
+level: A2
+slug: 06-being-and-becoming
 version: '2.0'
 title: Being and Becoming
 subtitle: Professions and Instrumental Case
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can describe professions using instrumental case
-- Learner can use verbs бути and стати with correct case government
-- Learner can describe past roles and future aspirations
-- Learner can distinguish between nominative (identity) and instrumental (role/function)
-sources:
-- name: Ukrainian State Standard 2024 - Professions
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Profession vocabulary and instrumental usage
-- name: Ukrainian Grammar - Predicate Instrumental
-  url: https://uk.wikipedia.org/wiki/Орудний_відмінок
-  type: reference
-  notes: Predicate instrumental with бути/стати
 content_outline:
 - section: Introduction / Вступ
   words: 250
@@ -44,7 +28,7 @@ content_outline:
   - '"What do you do?" conversations'
   - Career history scenarios
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - бути (to be)
   - стати (to become)
@@ -67,16 +51,51 @@ vocabulary:
   - письменник (writer)
   - актор (actor)
   - директор (director)
-  forbidden: []
-activities:
-  types_required:
-  - quiz
-  - match-up
-  - fill-in
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: Transform present to past with instrumental
+  items: 12+
+- type: fill-in
+  focus: Profession sentences with бути/стати
+  items: 12+
+- type: quiz
+  focus: What does he/she work as?
+  items: 10+
+- type: match-up
+  focus: Person + profession
+  items: 10+
+- type: fill-in
+  focus: Career aspiration sentences
+  items: 8+
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a2-04 (Instrumental endings)
+- a2-05 (Instrumental means)
+- A1 present tense
 connects_to:
 - a2-07 (Spatial Prepositions)
 - a2-09 (All Cases Practice)
 - a2-49 (Work & Professions - vocab expansion)
+objectives:
+- Learner can describe professions using instrumental case
+- Learner can use verbs бути and стати with correct case government
+- Learner can describe past roles and future aspirations
+- Learner can distinguish between nominative (identity) and instrumental (role/function)
+grammar:
+- бути + instrumental
+- стати + instrumental
+- працювати + instrumental
+- past tense of бути
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Professions
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Profession vocabulary and instrumental usage
+- name: Ukrainian Grammar - Predicate Instrumental
+  url: https://uk.wikipedia.org/wiki/Орудний_відмінок
+  type: reference
+  notes: Predicate instrumental with бути/стати
+immersion: 40-50% Ukrainian
+phase: A2.1

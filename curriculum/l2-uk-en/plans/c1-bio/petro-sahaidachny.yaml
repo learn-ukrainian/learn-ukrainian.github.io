@@ -1,31 +1,19 @@
-module: petro-sahaidachny
-level: c1-bio
-sequence: 0
+module: c1-bio-18
+level: C1-BIO
+slug: petro-sahaidachny
 version: '2.0'
 title: 'Петро Сагайдачний: Гетьман-Державник'
-focus: biography
-pedagogy: seminar
-objectives:
-- Analyze Sahaidachny's reforms of the Cossack army
-- Evaluate the restoration of the Orthodox hierarchy (1620)
-- Discuss the Battle of Khotyn (1621)
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Петро_Конашевич-Сагайдачний
-    title: Петро Конашевич-Сагайдачний (Wikipedia UA)
-  - url: https://uk.wikipedia.org/wiki/Хотинська_битва_(1621)
-    title: Хотинська битва 1621
-  secondary: []
+subtitle: 'Petro Sahaidachny: The Statesman Hetman'
 content_outline:
 - section: Вступ — Меч і Хрест
   words: 615
-  subsections:
+  points:
   - Найвидатніший гетьман до Хмельницького
   - Перетворення козацтва на регулярне військо
   - Союз меча (козаків) і хреста (церкви)
 - section: Життєпис
   words: 1538
-  subsections:
+  points:
   - Походження (шляхтич з Самбора)
   - Освіта в Острозькій академії (М14)
   - Морські походи на Кафу, Синоп, Варну (звільнення невільників)
@@ -35,48 +23,56 @@ content_outline:
   - Смерть від рани у Києві
 - section: Історичний контекст
   words: 615
-  subsections:
+  points:
   - Доба героїчних морських походів
   - Тридцятилітня війна в Європі
   - Занепад православ'я після унії
 - section: Внесок та Спадщина
   words: 615
-  subsections:
+  points:
   - Реформа війська (дисципліна, мушкети)
   - '"Військо Запорозьке" вступає до Київського братства'
   - Київ знову стає культурним центром (Могилянка)
 - section: Порівняльний аналіз
   words: 617
-  subsections:
+  points:
   - Сагайдачний vs. Наливайко (лояльність vs бунт)
   - Сагайдачний vs. Дорошенко (стратегічне бачення)
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - чайка
-  - реєстр
-  - дисципліна
-  - ієрархія
-  - патріарх
-  - братство
-  - облога
-  - штурм
-  - невільник
-  - меценат
-  recommended: []
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - essay-response
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+  - чайка (chaika/boat)
+  - реєстр (register)
+  - дисципліна (discipline)
+  - ієрархія (hierarchy)
+  - патріарх (patriarch)
+  - братство (brotherhood)
+  - облога (siege)
+  - штурм (assault)
+  - невільник (captive/slave)
+  - меценат (philanthropist)
+activity_hints:
+- type: reading
+  focus: '"Verses on the Funeral of Sahaidachny" (1622)'
+- type: quiz
+  focus: Military campaigns map
+- type: essay-response
+  focus: Why Sahaidachny supported the Church?
+focus: biography
+pedagogy: CBI
+objectives:
+- Analyze Sahaidachny's reforms of the Cossack army
+- Evaluate the restoration of the Orthodox hierarchy (1620)
+- Discuss the Battle of Khotyn (1621)
+grammar:
+- Political vocabulary
+- Military strategy terms
+sources:
+- name: Петро Конашевич-Сагайдачний (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Петро_Конашевич-Сагайдачний
+  type: primary
+- name: Хотинська битва 1621
+  url: https://uk.wikipedia.org/wiki/Хотинська_битва_(1621)
+  type: primary
+immersion: 100% Ukrainian
+phase: C1-BIO

@@ -1,17 +1,9 @@
 module: news-analysis-basics
-level: b2
-sequence: 89
+level: B2
+slug: news-analysis-basics
 version: '2.0'
 title: 'Аналіз новин: Основи'
 subtitle: Reading news critically
-focus: skills
-pedagogy: CBI
-objectives:
-- Learner can identify main ideas and supporting details in news articles
-- Learner can distinguish between facts and opinions in news reporting
-- Learner can recognize basic news article structure (headline, lead, body)
-- Learner can identify potential bias and loaded language in news texts
-- Learner can apply basic media literacy principles to Ukrainian news sources
 content_outline:
 - section: Вступ
   words: 450
@@ -104,8 +96,12 @@ content_outline:
   - 'Синтез навичок: від структурованих звітів до критичного читання новин'
   - 'Ключові принципи медіаграмотності: перевірка джерел, факт vs думка, баланс'
   - 'Перехід до поглибленого аналізу (М90): риторика, маніпуляції, дезінформація'
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+focus: skills
+pedagogy: CBI
+objectives:
+- Learner can identify main ideas and supporting details in news articles
+- Learner can distinguish between facts and opinions in news reporting
+- Learner can recognize basic news article structure (headline, lead, body)
+- Learner can identify potential bias and loaded language in news texts
+- Learner can apply basic media literacy principles to Ukrainian news sources
+phase: B2.4 Communication Skills

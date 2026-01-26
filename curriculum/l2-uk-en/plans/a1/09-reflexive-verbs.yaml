@@ -1,16 +1,9 @@
-module: reflexive-verbs
-level: a1
-sequence: 9
+module: a1-09
+level: A1
+slug: reflexive-verbs
 version: '2.0'
 title: Reflexive Verbs (-ся)
 subtitle: Actions Directed at Oneself
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can identify reflexive verbs ending in -ся
-- Learner can conjugate reflexive verbs in present tense
-- Learner understands difference between transitive and reflexive verbs
-- Learner can use common reflexive verbs like дивитися, сміятися
 content_outline:
 - section: 'Introduction: What Are Reflexive Verbs?'
   words: 100
@@ -47,7 +40,7 @@ content_outline:
   - Describe morning routine
   - Ask about habits
 word_target: 900
-vocabulary:
+vocabulary_hints:
   required:
   - вмиватися (to wash oneself)
   - одягатися (to dress oneself)
@@ -62,16 +55,34 @@ vocabulary:
   - зупинятися (to stop)
   - знайомитися (to get acquainted)
   - цікавитися (to be interested)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - conjugation-drill
-  - matching
-  - dialogue
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: conjugation-drill
+  focus: Conjugate reflexive verbs
+  items: 25
+- type: fill-in
+  focus: Choose -ся or -сь
+  items: 15
+- type: matching
+  focus: Transitive ↔ reflexive pairs
+  items: 12
+- type: dialogue
+  focus: Daily routine conversations
+  items: 6
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-08 (The Living Verb II)
 connects_to:
 - a1-10 (Checkpoint - First Contact)
 - a1-25 (My Daily Routine)
+objectives:
+- Learner can identify reflexive verbs ending in -ся
+- Learner can conjugate reflexive verbs in present tense
+- Learner understands difference between transitive and reflexive verbs
+- Learner can use common reflexive verbs like дивитися, сміятися
+grammar:
+- Reflexive particle -ся/-сь
+- Conjugation of reflexive verbs
+- Transitive vs reflexive pairs
+register: розмовний
+phase: A1.1 [First Contact]

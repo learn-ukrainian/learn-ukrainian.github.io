@@ -1,106 +1,11 @@
-id: lit-18
-title: Жіноча доля в "Кобзарі"
-subtitle: 'Women in Kobzar: The Tragic Archetype'
+module: women-in-kobzar
+level: LIT
 slug: women-in-kobzar
-module_type: literature
-word_target: 4500
-immersion: 100% Ukrainian
-sources:
-- name: Катерина — поема
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=6
-  type: primary
-  notes: Рання поема про покритку
-- name: Наймичка — поема
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=30
-  type: primary
-  notes: Зріла поема про матір
-- name: Жіночі образи у Шевченка
-  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=6
-  type: secondary
-  notes: Літературознавчий аналіз
-content_outline:
-- section: Вступ
-  words: 500
-  points:
-  - Чому жінки — центральні персонажі
-  - Біографічний контекст (сирітство)
-  - Емпатія як творчий метод
-- section: Катерина
-  words: 800
-  points:
-  - Сюжет поеми
-  - Образ покритки в суспільстві
-  - Критика подвійних стандартів
-- section: Наймичка
-  words: 800
-  points:
-  - Сюжет поеми
-  - Образ матері-страдниці
-  - Порівняння з "Катериною"
-- section: Архетип Трагічної Матері
-  words: 700
-  points:
-  - Покритка, наймичка, удова
-  - Самотність і жертовність
-  - Україна як мати
-- section: Димінутиви та емоційний пафос
-  words: 500
-  points:
-  - Пестлива лексика у жіночих образах
-  - Функція димінутивів
-  - Катарсис через мову
-- section: Підсумок
-  words: 400
-  points:
-  - Унікальність Шевченкової емпатії
-  - Порівняння з іншими авторами
-  - Сучасне прочитання
-vocabulary_hints:
-  required:
-  - покритка (unwed mother)
-  - наймичка (hired servant woman)
-  - архетип (archetype)
-  - жертовність (self-sacrifice)
-  - емпатія (empathy)
-  - пафос (pathos)
-  - димінутив (diminutive)
-  - катарсис (catharsis)
-  - удова (widow)
-  - сирота (orphan)
-  recommended:
-  - подвійні стандарти (double standards)
-  - страдниця (sufferer)
-  - ганьба (shame)
-  - матір (mother)
-  - доля (fate)
-activity_hints:
-- type: reading
-  focus: Катерина і Наймичка (уривки)
-  source: UkrLib
-  items: 6+
-- type: quiz
-  focus: Сюжети та образи поем
-  items: 15+
-- type: match-up
-  focus: Жіночий образ → його характеристика
-  items: 12+
-- type: essay-response
-  focus: Архетип Трагічної Матері у Шевченка
-  word_target: 300
-  output: Літературознавче есе
-- type: group-sort
-  focus: Димінутиви у жіночих образах
-  items: 20+
-prerequisites:
-- lit-12 (The Ballads — жіночі образи)
-- lit-07 (Marusya — порівняння)
-connects_to:
-- lit-19 (Diary — внутрішній світ)
-- lit-20 (Cult of Shevchenko — рецепція)
 version: '1.0'
-phase: LIT.3 The Prophet (Taras Shevchenko)
-focus: literature
-pedagogy: Seminar
+id: lit-18
+naturalness:
+  score: 10
+  status: PASS
 duration: 120
 transliteration: none
 tags:
@@ -108,14 +13,5 @@ tags:
 - shevchenko
 - women
 - motherhood
-grammar:
-- Emotional pathos
-- Diminutives usage
-objectives:
-- Analyze the archetype of the Tragic Mother (Pokrytka) in Shevchenko's works
-- Compare the characters of Kateryna and Hanna (Naimychka)
-- Discuss Shevchenko's ethical evolution from romanticism to realism
-- Identify the function of diminutives in creating emotional pathos
-naturalness:
-  score: 10
-  status: PASS
+build:
+  last_modified: '2026-01-26'

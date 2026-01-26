@@ -1,16 +1,9 @@
-module: vocabulary-in-context
-level: b1
-sequence: 91
+module: b1-91
+level: B1
+slug: vocabulary-in-context
 version: '2.0'
 title: Лексика в контексті
 subtitle: Applying Vocabulary to Practical Communication
-focus: communication
-pedagogy: TBL
-objectives:
-- Learner applies vocabulary in practical communication scenarios
-- Learner uses collocations naturally in extended discourse
-- Learner demonstrates register-appropriate word choice
-- Learner integrates domain vocabulary fluently
 content_outline:
 - section: 'Introduction: Vocabulary for Communication'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Apply vocabulary
   - Produce texts
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - лексика (vocabulary)
   - контекст (context)
@@ -63,15 +56,34 @@ vocabulary:
   - неформальний (informal)
   - академічний (academic)
   - побутовий (everyday)
-  forbidden: []
-activities:
-  types_required:
-  - writing
-  - task
-  - analysis
-  - role-play
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: writing
+  focus: Register-appropriate texts
+  items: 10
+- type: task
+  focus: Communication tasks
+  items: 15
+- type: role-play
+  focus: Context-based speaking
+  items: 15
+- type: analysis
+  focus: Register identification
+  items: 10
+focus: communication
+pedagogy: TBL
+prerequisites:
+- b1-90 (Grammar in Context)
 connects_to:
 - b1-92 (B1 Final Exam)
+objectives:
+- Learner applies vocabulary in practical communication scenarios
+- Learner uses collocations naturally in extended discourse
+- Learner demonstrates register-appropriate word choice
+- Learner integrates domain vocabulary fluently
+grammar:
+- Vocabulary collocations in context
+- Register awareness in communication
+- Domain vocabulary application
+- Lexical chains in discourse
+register: розмовний
+phase: B1.9 [Communication Skills]

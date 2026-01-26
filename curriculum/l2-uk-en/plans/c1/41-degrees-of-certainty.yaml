@@ -1,22 +1,41 @@
-module: 41-degrees-of-certainty
-level: c1
-sequence: 41
-version: '1.0'
+module: c1-41
+level: C1
+slug: 41-degrees-of-certainty
+version: '2.0'
 title: 'Ступені впевненості: Модальність та хеджування'
 subtitle: 'Degrees of Certainty: Modality & Hedging'
+content_outline:
+- section: Вступ — Модальність та хеджування
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Certainty Scale
+  words: 500
+  points:
+  - '100%: безперечно, безсумнівно, напевно'
+  - '75%: ймовірно, скоріш за все, очевидно'
+  - '50%: можливо, може бути, мабуть'
+  - '25%: навряд чи, сумнівно, малоймовірно'
+  - '0%: неможливо, виключено, ні в якому разі'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: style
 pedagogy: Academic
 objectives:
 - Learner can express precise degrees of certainty using academic markers
 - Learner can analyze authorial stance and hedging in authentic texts
 - Learner can adjust the force of claims in academic production
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Epistemic modality markers
+- Hedging strategies in academic discourse
+- Scale of certainty (probability)
+- Subjective vs. objective modality
+immersion: 100
+phase: C1.4 Advanced Stylistics & Rhetoric

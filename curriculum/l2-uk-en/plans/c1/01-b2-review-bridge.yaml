@@ -1,21 +1,8 @@
 module: 01-b2-review-bridge
-level: c1
-sequence: 1
+level: C1
+slug: 01-b2-review-bridge
 version: '2.0'
 title: Огляд B2 та міст до C1
-focus: grammar
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Ukrainian State Standard C1 (2024)
-  url: https://mon.gov.ua/
-  type: reference
-  notes: C1 proficiency descriptors and grammar requirements
-- name: CEFR C1 Descriptors
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
-  type: reference
-  notes: General C1 level descriptors for comparison
 content_outline:
 - section: Вступ — Від B2 до C1
   words: 500
@@ -59,7 +46,7 @@ content_outline:
   - Самооцінка готовності до C1
   - Структура рівня C1 (106 модулів)
 word_target: 4000
-vocabulary:
+vocabulary_hints:
   required:
   - регістр (register)
   - пасивний стан (passive voice)
@@ -77,18 +64,44 @@ vocabulary:
   - самооцінка (self-assessment)
   - перехідний (transitional)
   - інтеграція (integration)
-  forbidden: []
-activities:
-  types_required:
-  - group-sort
-  - quiz
-  - cloze
-  - fill-in
-  - error-correction
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: Register selection for 4 passive types
+  items: 15+
+- type: fill-in
+  focus: Transform between passive forms in context
+  items: 12+
+- type: error-correction
+  focus: Fix register mismatches in academic texts
+  items: 10+
+- type: group-sort
+  focus: Classify sentences by functional style
+  items: 15+
+- type: match-up
+  focus: Phraseological units to meanings
+  items: 12+
+- type: cloze
+  focus: Complete complex sentences with participles
+  items: 10+
+focus: grammar
+prerequisites:
+- B2 completion required
+- All 4 passive voice forms
+- Active and passive participles
+- 5 functional styles
+- ~6,050 cumulative vocabulary
 connects_to:
 - c1-02 (Academic Style Markers)
 - c1-05 (Logical Connectors)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard C1 (2024)
+  url: https://mon.gov.ua/
+  type: reference
+  notes: C1 proficiency descriptors and grammar requirements
+- name: CEFR C1 Descriptors
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: General C1 level descriptors for comparison
+immersion: 100% Ukrainian
+phase: C1.1 Academic Ukrainian

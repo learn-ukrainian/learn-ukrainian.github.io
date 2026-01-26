@@ -1,25 +1,9 @@
 module: 15-checkpoint-aspect-mastery
-level: b1
-sequence: 15
-version: '2.1'
+level: B1
+slug: 15-checkpoint-aspect-mastery
+version: '2.0'
 title: 'Контрольна точка: Опанування виду'
 subtitle: Aspect Mastery Phase Checkpoint
-focus: checkpoint
-pedagogy: TTT
-objectives:
-- Learner can demonstrate mastery of verbal aspect
-- Learner can integrate knowledge from M06-14
-- Learner can select correct aspect in all contexts
-- Learner can self-assess readiness for Motion Verbs phase
-sources:
-- name: CEFR B1 Descriptors - Grammar
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
-  type: reference
-  notes: Assessment standards for B1 grammar competence
-- name: Ukrainian State Standard 2024 - Aspect Assessment
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official criteria for aspect mastery
 content_outline:
 - section: Огляд
   words: 100
@@ -64,7 +48,7 @@ content_outline:
   - Examples and explanation
   - Practice or application
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - опанування (mastery)
   - контрольна точка (checkpoint)
@@ -82,16 +66,43 @@ vocabulary:
   - компетенція (competence)
   - навичка (skill)
   - знання (knowledge)
-  forbidden: []
-activities:
-  types_required:
-  - quiz
-  - error-correction
-  - match-up
-  - cloze
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: Comprehensive aspect test (all contexts)
+  items: 25+
+- type: cloze
+  focus: Extended text with aspect selection
+  items: 15+
+- type: error-correction
+  focus: Find and fix aspect errors
+  items: 10+
+- type: match-up
+  focus: Context → aspect selection rule
+  items: 12+
+focus: checkpoint
+pedagogy: TTT
+prerequisites:
+- All B1.1 modules (M06-14)
 connects_to:
 - b1-16 (Motion verbs - full system)
 - b1-25 (Motion verbs checkpoint)
+objectives:
+- Learner can demonstrate mastery of verbal aspect
+- Learner can integrate knowledge from M06-14
+- Learner can select correct aspect in all contexts
+- Learner can self-assess readiness for Motion Verbs phase
+grammar:
+- Integration of M06-14
+- Comprehensive review and testing
+module_type: checkpoint
+sources:
+- name: CEFR B1 Descriptors - Grammar
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: Assessment standards for B1 grammar competence
+- name: Ukrainian State Standard 2024 - Aspect Assessment
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official criteria for aspect mastery
+immersion: 100% Ukrainian
+phase: B1.1 Aspect Mastery Checkpoint

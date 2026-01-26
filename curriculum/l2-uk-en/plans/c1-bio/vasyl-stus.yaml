@@ -1,109 +1,110 @@
 module: vasyl-stus
-level: c1-bio
-sequence: 77
+level: C1-BIO
+slug: vasyl-stus
 version: '2.0'
 title: 'Василь Стус: Вертикальне стояння духу'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Стус_Василь_Семенович
-    title: Василь Стус (Wikipedia UA)
-    notes: Основна біографічна інформація
-  secondary:
-  - url: https://archive.khpg.org/
-    title: Архів Українського правозахисного руху
-    notes: Документи дисидентського руху
-  - url: https://stus.museum/
-    title: Музей Василя Стуса
-    notes: Матеріали про життя та творчість
 content_outline:
 - section: Вступ — Поезія як форма спротиву
   words: 400
-  subsections:
+  points:
   - Стус як символ незламності українського духу
   - Від поета до політв'язня
   - Загибель у таборі як вершина трагедії
 - section: Донбаське дитинство
   words: 600
-  subsections:
+  points:
   - Народження в селі Рахнівка (1938)
   - Повоєнне дитинство на Донбасі
   - Шлях до освіти та літератури
 - section: Літературне становлення
   words: 700
-  subsections:
+  points:
   - Навчання в Донецькому університеті
   - Перші поетичні спроби
   - Переїзд до Києва та аспірантура
 - section: Шістдесятництво та перший арешт
   words: 800
-  subsections:
+  points:
   - Участь у русі шістдесятників
   - Протести проти арештів 1965 року
   - Ув'язнення та заборона публікуватися
 - section: Другий арешт та табори
   words: 800
-  subsections:
+  points:
   - Арешт 1972 року
   - Роки в мордовських таборах
   - Творчість за ґратами
 - section: Загибель та безсмертя
   words: 500
-  subsections:
+  points:
   - Третій арешт та Перм-36
   - Обставини смерті (1985)
   - Перепоховання та канонізація
 - section: Дискусія — Ціна свободи
   words: 200
-  subsections:
+  points:
   - Моральний вибір дисидента
   - Стус як приклад для сучасників
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - дисидент
-  - політвязень
-  - табір
-  - спротив
-  - шістдесятник
-  - незламність
-  - заслання
-  - самвидав
-  - правозахисник
-  - реабілітація
+  - дисидент (dissident)
+  - політвязень (political prisoner)
+  - табір (camp/gulag)
+  - спротив (resistance)
+  - шістдесятник (Sixtier)
+  - незламність (unbreakability)
+  - заслання (exile)
+  - самвидав (samvydav/samizdat)
+  - правозахисник (human rights defender)
+  - реабілітація (rehabilitation)
   recommended:
-  - екзистенціалізм
-  - метафізичний
-  - страждання
-  - моральний вибір
-  - духовна вертикаль
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - екзистенціалізм (existentialism)
+  - метафізичний (metaphysical)
+  - страждання (suffering)
+  - моральний вибір (moral choice)
+  - духовна вертикаль (spiritual vertical)
+activity_hints:
+- type: reading
+  focus: Поезії Стуса з таборів
+  source: Первинні джерела
+  items: 3 passages
+- type: quiz
+  focus: Хронологія репресій проти Стуса
+  items: 12+
+- type: match-up
+  focus: Збірки поезій та їхні теми
+  items: 10+
+- type: essay-response
+  focus: Що означає вертикальне стояння духу?
+  word_target: 300
+  output: Філософський есей
+- type: group-sort
+  focus: Етапи життя Стуса
+  items: 12+
+- type: fill-in
+  focus: Ключові дати та події
+  items: 10+
+focus: biography
+prerequisites:
+- c1-bio-75-vasyl-symonenko
 connects_to:
-  previous: c1-bio-75-vasyl-symonenko
-  related:
-  - c1-bio-76-viacheslav-chornovil
-  - c1-bio-72-alla-horska
-  - c1-bio-71-levko-lukyanenko
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-76-viacheslav-chornovil
+- c1-bio-72-alla-horska
+- c1-bio-71-levko-lukyanenko
+module_type: biography
+sources:
+- name: Василь Стус (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Стус_Василь_Семенович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Архів Українського правозахисного руху
+  url: https://archive.khpg.org/
+  type: reference
+  notes: Документи дисидентського руху
+- name: Музей Василя Стуса
+  url: https://stus.museum/
+  type: reference
+  notes: Матеріали про життя та творчість
+immersion: 100% Ukrainian
+phase: C1-BIO

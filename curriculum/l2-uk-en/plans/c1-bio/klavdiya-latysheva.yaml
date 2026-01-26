@@ -1,105 +1,105 @@
 module: klavdiya-latysheva
-level: c1-bio
-sequence: 65
+level: C1-BIO
+slug: klavdiya-latysheva
 version: '2.0'
 title: 'Клавдія Латишева: Піонерка авіації'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Латишева_Клавдія_Яківна
-    title: Клавдія Латишева (Wikipedia UA)
-    notes: Biography of the mathematician and aviation pioneer
-  secondary:
-  - url: https://www.univ.kiev.ua/
-    title: Київський національний університет
-    notes: University where Latysheva studied and worked
 content_outline:
 - section: Вступ — Математик, що підкорила небо і рівняння
   words: 400
-  subsections:
+  points:
   - Видатний математик та перша жінка-пілот в Україні
   - Піонерка в чоловічих професіях
   - Життя між наукою та небом
 - section: Юність та освіта (1897-1920)
   words: 600
-  subsections:
+  points:
   - Народження в Кременчуці
   - Навчання математики
   - Перші успіхи в науці
   - Формування наукових інтересів
 - section: Математична кар'єра (1920-1940)
   words: 800
-  subsections:
+  points:
   - Дослідження диференціальних рівнянь
   - Робота в Київському університеті
   - Наукові праці та визнання
   - Докторська дисертація
 - section: Авіаційна пристрасть (1920-1930-ті)
   words: 700
-  subsections:
+  points:
   - Захоплення авіацією
   - Навчання в льотній школі
   - Перша жінка-пілот в Україні
   - Польоти та рекорди
 - section: Війна та повоєнний період (1941-1956)
   words: 800
-  subsections:
+  points:
   - Евакуація під час війни
   - Продовження наукової роботи
   - Повернення до Києва
   - Останні роки та смерть
 - section: Спадщина — Жінка без обмежень
   words: 700
-  subsections:
+  points:
   - Внесок у математику
   - Приклад для жінок у STEM
   - Сучасне вшанування
   - Латишева як символ подолання бар'єрів
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - математик
-  - диференціальне рівняння
-  - авіація
-  - пілот
-  - льотна школа
-  - наукова кар'єра
-  - дослідження
-  - доктор наук
-  - професор
-  - піонерка
+  - математик (mathematician)
+  - диференціальне рівняння (differential equation)
+  - авіація (aviation)
+  - пілот (pilot)
+  - льотна школа (flight school)
+  - наукова кар'єра (scientific career)
+  - дослідження (research)
+  - доктор наук (Doctor of Science)
+  - професор (professor)
+  - піонерка (pioneer, female)
   recommended:
-  - аеродинаміка
-  - політ
-  - математичний аналіз
-  - формула
-  - теорема
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - аеродинаміка (aerodynamics)
+  - політ (flight)
+  - математичний аналіз (mathematical analysis)
+  - формула (formula)
+  - теорема (theorem)
+activity_hints:
+- type: reading
+  focus: Жінки в науці та авіації XX ст.
+  source: Scientific history sources
+  items: 3 passages
+- type: quiz
+  focus: Життя та досягнення Латишевої
+  items: 12+
+- type: match-up
+  focus: Математичні та авіаційні терміни
+  items: 10+
+- type: essay-response
+  focus: Як Латишева долала бар'єри в чоловічих професіях?
+  word_target: 300
+  output: Analytical essay
+- type: group-sort
+  focus: Досягнення за сферами (математика, авіація)
+  items: 12+
+- type: fill-in
+  focus: Наукова та технічна термінологія
+  items: 10+
+focus: biography
+prerequisites:
+- c1-bio-64
 connects_to:
-  previous: c1-bio-64
-  related:
-  - c1-bio-70
-  - c1-bio-27
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-70
+- c1-bio-27
+module_type: biography
+sources:
+- name: Клавдія Латишева (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Латишева_Клавдія_Яківна
+  type: primary
+  notes: Biography of the mathematician and aviation pioneer
+- name: Київський національний університет
+  url: https://www.univ.kiev.ua/
+  type: reference
+  notes: University where Latysheva studied and worked
+immersion: 100% Ukrainian
+phase: C1-BIO

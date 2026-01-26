@@ -1,94 +1,13 @@
 module: b1-52
-id: b1-52
+level: B1
 slug: abstract-concepts-ideas
-title: "Абстрактні концепції: ідеї та думки"
-subtitle: "Abstract Concepts: Ideas and Thoughts"
 version: '2.0'
-phase: "B1.5 [Vocabulary Expansion I]"
-focus: vocabulary
-pedagogy: PPP
-register: розмовний
-duration: 90
-transliteration: none
-objectives:
-  - "Learner can use 35 abstract concept words in context"
-  - "Learner can distinguish between ідея/думка/концепція/теорія"
-  - "Learner can form natural collocations with abstract nouns"
-  - "Learner can discuss abstract topics fluently"
-grammar:
-  - "Noun collocations with abstract vocabulary"
-  - "Verb + abstract noun patterns"
-  - "Preposition usage with abstracts"
-word_target: 1200
-content_outline:
-  - section: "Introduction: Abstract Vocabulary"
-    words: 150
-    points:
-      - "Why abstract words matter"
-      - "Beyond concrete nouns"
-      - "Intellectual discourse"
-  - section: "Ideas and Thoughts"
-    words: 250
-    points:
-      - "ідея, думка, погляд, переконання"
-      - "мати/висловлювати ідею"
-      - "Collocations and usage"
-  - section: "Concepts and Theories"
-    words: 250
-    points:
-      - "концепція, теорія, гіпотеза"
-      - "розробляти теорію"
-      - "Academic context"
-  - section: "Values and Beliefs"
-    words: 250
-    points:
-      - "цінність, принцип, ідеал"
-      - "дотримуватися принципу"
-      - "Ethical vocabulary"
-  - section: "Abstract Qualities"
-    words: 200
-    points:
-      - "істина, правда, справедливість"
-      - "свобода, рівність"
-      - "Philosophical terms"
-  - section: "Practice: Using Abstracts"
-    words: 100
-    points:
-      - "Build collocations"
-      - "Discuss abstract topics"
-vocabulary_hints:
-  required:
-    - ідея (idea)
-    - думка (thought/opinion)
-    - концепція (concept)
-    - теорія (theory)
-    - погляд (view)
-    - переконання (belief/conviction)
-    - цінність (value)
-    - принцип (principle)
-  recommended:
-    - гіпотеза (hypothesis)
-    - істина (truth)
-    - справедливість (justice)
-    - ідеал (ideal)
-activity_hints:
-  - type: collocation
-    focus: "Build abstract noun phrases"
-    items: 25
-  - type: fill-in
-    focus: "Complete sentences with abstracts"
-    items: 20
-  - type: matching
-    focus: "Match similar/different meanings"
-    items: 15
-  - type: discussion
-    focus: "Discuss abstract topics"
-    items: 10
-prerequisites:
-  - b1-51 (Checkpoint Advanced Grammar)
-connects_to:
-  - b1-53 (Abstract Concepts Processes)
+id: b1-52
 naturalness:
   score: 9
   status: PASS
-  justification: "Foundation for intellectual discourse"
+  justification: Foundation for intellectual discourse
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-26'

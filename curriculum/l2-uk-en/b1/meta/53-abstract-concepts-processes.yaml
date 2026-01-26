@@ -1,94 +1,13 @@
 module: b1-53
-id: b1-53
+level: B1
 slug: abstract-concepts-processes
-title: "Абстрактні концепції: процеси та зміни"
-subtitle: "Abstract Concepts: Processes and Changes"
 version: '2.0'
-phase: "B1.5 [Vocabulary Expansion I]"
-focus: vocabulary
-pedagogy: PPP
-register: розмовний
-duration: 90
-transliteration: none
-objectives:
-  - "Learner can use 35 process and change vocabulary words in context"
-  - "Learner can distinguish between similar process words"
-  - "Learner can describe trends and changes using appropriate collocations"
-  - "Learner can narrate developments over time"
-grammar:
-  - "Noun collocations with process vocabulary"
-  - "Verb-noun pairs for change descriptions"
-  - "Temporal markers with process words"
-word_target: 1200
-content_outline:
-  - section: "Introduction: Process Vocabulary"
-    words: 150
-    points:
-      - "Describing how things change"
-      - "Temporal dimension"
-      - "Causation and result"
-  - section: "Development and Progress"
-    words: 250
-    points:
-      - "розвиток, прогрес, еволюція"
-      - "досягати прогресу"
-      - "Stages of development"
-  - section: "Change and Transformation"
-    words: 250
-    points:
-      - "зміна, перетворення, трансформація"
-      - "зазнавати змін"
-      - "Positive and negative changes"
-  - section: "Growth and Decline"
-    words: 250
-    points:
-      - "зростання, занепад, спад"
-      - "темпи зростання"
-      - "Economic and social contexts"
-  - section: "Trends and Patterns"
-    words: 200
-    points:
-      - "тенденція, тренд, закономірність"
-      - "простежувати тенденцію"
-      - "Statistical language"
-  - section: "Practice: Describing Changes"
-    words: 100
-    points:
-      - "Narrate developments"
-      - "Use process vocabulary"
-vocabulary_hints:
-  required:
-    - розвиток (development)
-    - прогрес (progress)
-    - зміна (change)
-    - перетворення (transformation)
-    - зростання (growth)
-    - занепад (decline)
-    - тенденція (tendency/trend)
-    - еволюція (evolution)
-  recommended:
-    - трансформація (transformation)
-    - спад (decline/recession)
-    - закономірність (pattern/regularity)
-    - темп (rate/pace)
-activity_hints:
-  - type: collocation
-    focus: "Process noun phrases"
-    items: 25
-  - type: fill-in
-    focus: "Describe trends and changes"
-    items: 20
-  - type: matching
-    focus: "Match process word to context"
-    items: 15
-  - type: writing
-    focus: "Write about changes"
-    items: 10
-prerequisites:
-  - b1-52 (Abstract Concepts Ideas)
-connects_to:
-  - b1-54 (Expressing Opinions)
+id: b1-53
 naturalness:
   score: 9
   status: PASS
-  justification: "Essential for analytical discourse"
+  justification: Essential for analytical discourse
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-26'

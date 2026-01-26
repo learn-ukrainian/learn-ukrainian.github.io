@@ -1,25 +1,8 @@
 module: 05-third-person-plural-passive
-level: b2
-sequence: 5
-version: '1.0'
+level: B2
+slug: 05-third-person-plural-passive
+version: '2.0'
 title: Пасив третьою особою множини
-focus: grammar
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Ukrainian State Standard 2024 - Impersonal Constructions
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Colloquial impersonal passive patterns
-- name: Розмовний стиль української мови
-  url: https://uk.wikipedia.org/wiki/Розмовний_стиль
-  type: secondary
-  notes: Colloquial speech characteristics
-- name: CEFR B2 Speaking Descriptors
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
-  type: reference
-  notes: B2 speaking fluency expectations
 content_outline:
 - section: Вступ — Найрозмовніший пасив
   words: 400
@@ -67,7 +50,7 @@ content_outline:
   - Підготовка до модуля 06
   - Інтеграція всіх форм пасиву
 word_target: 3800
-vocabulary:
+vocabulary_hints:
   required:
   - сказали (they said/was told)
   - запитали (they asked/was asked)
@@ -85,18 +68,50 @@ vocabulary:
   - побутовий (everyday)
   - оповідь (narrative)
   - контекст (context)
-  forbidden: []
-activities:
-  types_required:
-  - error-correction
-  - quiz
-  - fill-in
-  - essay-response
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: Formal passive → colloquial (3rd person plural)
+  items: 12+
+- type: fill-in
+  focus: Complete everyday sentences with 3rd pl passive
+  items: 14+
+- type: quiz
+  focus: Register identification (formal vs colloquial)
+  items: 12+
+- type: match-up
+  focus: Situation → appropriate passive form
+  items: 12+
+- type: error-correction
+  focus: Official announcement → casual retelling
+  items: 8+
+- type: essay-response
+  focus: Write informal story using 3rd pl passive
+  word_target: 150
+  output: Model answer provided
+focus: grammar
+prerequisites:
+- b2-01 (Passive Voice System)
+- b2-02 (Past Passive Participles)
+- b2-03 (Impersonal -но/-то)
+- b2-04 (Reflexive Passive)
+- Dative case mastery
 connects_to:
 - b2-06 (Passive in Context)
 - 'b2-24 (Register: Colloquial Style)'
 - b2-10 (B2.1a Checkpoint)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Impersonal Constructions
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Colloquial impersonal passive patterns
+- name: Розмовний стиль української мови
+  url: https://uk.wikipedia.org/wiki/Розмовний_стиль
+  type: secondary
+  notes: Colloquial speech characteristics
+- name: CEFR B2 Speaking Descriptors
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 speaking fluency expectations
+immersion: 100% Ukrainian
+phase: B2.1a [Passive Voice]

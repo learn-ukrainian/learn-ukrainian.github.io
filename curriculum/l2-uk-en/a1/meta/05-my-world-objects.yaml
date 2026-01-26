@@ -1,98 +1,13 @@
 module: a1-05
-id: a1-05
+level: A1
 slug: my-world-objects
-title: "My World: Objects"
-subtitle: "Pointing to Things with Demonstratives"
 version: '2.0'
-phase: "A1.1 [First Contact]"
-focus: grammar
-pedagogy: PPP
-register: розмовний
-duration: 60
-transliteration: full
-objectives:
-  - "Learner can use цей/ця/це/ці to point to objects near them"
-  - "Learner can use той/та/те/ті to point to objects far from them"
-  - "Learner can match demonstrative gender with noun gender"
-  - "Learner can name 40 common household and everyday objects"
-grammar:
-  - "Demonstratives цей/ця/це/ці (this)"
-  - "Demonstratives той/та/те/ті (that)"
-  - "Gender agreement with demonstratives"
-word_target: 900
-content_outline:
-  - section: "Introduction: Pointing to Things"
-    words: 100
-    points:
-      - "This vs That in Ukrainian"
-      - "Demonstratives agree with noun gender"
-      - "Essential for everyday communication"
-  - section: "This (цей/ця/це/ці)"
-    words: 200
-    points:
-      - "цей (m): цей стіл, цей дім"
-      - "ця (f): ця книга, ця лампа"
-      - "це (n): це вікно, це молоко"
-      - "ці (pl): ці речі"
-  - section: "That (той/та/те/ті)"
-    words: 200
-    points:
-      - "той (m): той чоловік"
-      - "та (f): та жінка"
-      - "те (n): те місто"
-      - "ті (pl): ті люди"
-  - section: "Household Objects"
-    words: 200
-    points:
-      - "Furniture: стіл, стілець, ліжко, шафа"
-      - "Items: лампа, книга, ручка, телефон"
-      - "Rooms: кімната, кухня, ванна"
-  - section: "Everyday Objects"
-    words: 100
-    points:
-      - "Technology: комп'ютер, телевізор"
-      - "Personal items: сумка, ключі"
-  - section: "Practice: What's This?"
-    words: 100
-    points:
-      - "Що це? conversations"
-      - "Describing your space"
-vocabulary_hints:
-  required:
-    - цей (this m.)
-    - ця (this f.)
-    - той (that m.)
-    - та (that f.)
-    - стіл (table)
-    - книга (book)
-    - телефон (phone)
-    - кімната (room)
-  recommended:
-    - стілець (chair)
-    - ліжко (bed)
-    - лампа (lamp)
-    - вікно (window)
-    - шафа (wardrobe)
-    - двері (door)
-activity_hints:
-  - type: labeling
-    focus: "Label room objects"
-    items: 20
-  - type: quiz
-    focus: "Match demonstrative to gender"
-    items: 20
-  - type: fill-in
-    focus: "Complete with цей/ця/це"
-    items: 15
-  - type: dialogue
-    focus: "Що це? conversations"
-    items: 6
-prerequisites:
-  - a1-04 (This Is, I Am)
-connects_to:
-  - a1-06 (The Living Verb I)
-  - a1-15 (Around the City)
+id: a1-05
 naturalness:
   score: 10
   status: PASS
-  justification: "Practical everyday vocabulary"
+  justification: Practical everyday vocabulary
+duration: 60
+transliteration: full
+build:
+  last_modified: '2026-01-26'

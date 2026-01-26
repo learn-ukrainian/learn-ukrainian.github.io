@@ -1,63 +1,8 @@
-id: a2-41
-title: Root Families I
-subtitle: The DNA of Vocabulary
+module: 41-root-families-i
+level: A2
 slug: 41-root-families-i
-module_type: word-formation
-word_target: 1000
-immersion: 65-75% Ukrainian
 version: '2.0'
-phase: A2.4
-focus: grammar
-pedagogy: PPP
-duration: 60
-transliteration: none
-tags:
-- word-formation
-- roots
-- vocabulary
-- logic
-grammar:
-- common roots (ход-, пис-, чит-, бач-)
-- prefix + root combinations
-- derivative formation
-objectives:
-- Learner can identify root families in complex words
-- Learner can guess meanings of derivatives using prefix-root logic
-- Learner can build new words from basic roots
-- Learner can recognize the 4 core professional roots
-sources:
-- name: Ukrainian Word Formation - Root Families
-  url: https://uk.wikipedia.org/wiki/Словотворення_в_українській_мові
-  type: reference
-  notes: Standards for root-based vocabulary expansion at A2
-- name: Etymological Dictionary of the Ukrainian Language
-  url: https://goroh.pp.ua/
-  type: reference
-  notes: Historical context for hod-, pys-, chyt-, bach- roots
-content_outline:
-- section: Introduction / Вступ
-  words: 200
-  points:
-  - The 'Lego' Language: Why Ukrainian is built, not just memorized
-  - The 4 Super-Roots: ход-, пис-, чит-, бач-
-- section: Presentation / Презенітація
-  words: 600
-  points:
-  - 'The ход- Family: Motion, paths, and destinations'
-  - 'The пис- Family: Writing, signing, and describing'
-  - 'The чит- Family: Consumption of information'
-  - 'The бач-/гляд- Family: Perception and vision'
-  - 'The Guessing Machine: Logic of prefix + root'
-  - 'Etymology Corner: Why -хід- and -ход- are siblings'
-- section: Practice / Практика
-  words: 150
-  points:
-  - Root identification drills
-  - '''Translate by Logic'' challenge'
-- section: Dialogues / Діалоги
-  words: 50
-  points:
-  - At the library: Discussing writers, readers, and descriptions
+id: a2-41
 naturalness:
   score: 9
   status: PASS
@@ -67,3 +12,12 @@ naturalness:
     for A2 pedagogical purposes.'
   recommendation: The module is high quality and ready for use. The 'Lego' analogy
     is particularly effective for this grammar point.
+duration: 60
+transliteration: none
+tags:
+- word-formation
+- roots
+- vocabulary
+- logic
+build:
+  last_modified: '2026-01-26'

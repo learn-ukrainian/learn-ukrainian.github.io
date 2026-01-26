@@ -1,25 +1,8 @@
 module: 07-active-participles-present
-level: b2
-sequence: 7
-version: '1.0'
+level: B2
+slug: 07-active-participles-present
+version: '2.0'
 title: Активні дієприкметники теперішнього часу (-учий/-ючий)
-focus: grammar
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Ukrainian State Standard 2024 - Active Participles
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Recognition requirements for active participles
-- name: Літературна мова та її стилі
-  url: https://uk.wikipedia.org/wiki/Літературна_мова
-  type: secondary
-  notes: Literary usage of participles
-- name: Правопис української мови 2019
-  url: https://uk.wikipedia.org/wiki/Український_правопис
-  type: reference
-  notes: Official orthography rules for participles
 content_outline:
 - section: Вступ — Активні дієприкметники
   words: 400
@@ -68,7 +51,7 @@ content_outline:
   - Трансформація в підрядні речення
   - Підготовка до модуля 08
 word_target: 3800
-vocabulary:
+vocabulary_hints:
   required:
   - активний (active)
   - дієприкметник (participle)
@@ -86,20 +69,51 @@ vocabulary:
   - трансформація (transformation)
   - еквівалент (equivalent)
   - стилістичний ефект (stylistic effect)
-  forbidden: []
-activities:
-  types_required:
-  - group-sort
-  - error-correction
-  - reading
-  - quiz
-  - fill-in
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: Participle → relative clause
+  items: 14+
+- type: quiz
+  focus: Identify participles in literary text
+  items: 12+
+- type: match-up
+  focus: Participle → equivalent clause
+  items: 12+
+- type: fill-in
+  focus: Complete sentences with lexicalized participles
+  items: 10+
+- type: reading
+  focus: Identify all participles in literary excerpt
+  items: 3 texts
+- type: group-sort
+  focus: Lexicalized vs productive participles
+  items: 16+
+- type: error-correction
+  focus: Replace inappropriate participles with clauses
+  items: 10+
+focus: grammar
+prerequisites:
+- b2-02 (Past Passive Participles)
+- Relative clause formation (який/яка/яке)
+- Present tense conjugation
 connects_to:
 - b2-08 (Active Participles Past)
 - b2-09 (Participles vs Relative Clauses)
 - 'b2-22 (Register: Literary Ukrainian)'
 - b2-10 (B2.1a Checkpoint)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Active Participles
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Recognition requirements for active participles
+- name: Літературна мова та її стилі
+  url: https://uk.wikipedia.org/wiki/Літературна_мова
+  type: secondary
+  notes: Literary usage of participles
+- name: Правопис української мови 2019
+  url: https://uk.wikipedia.org/wiki/Український_правопис
+  type: reference
+  notes: Official orthography rules for participles
+immersion: 100% Ukrainian
+phase: B2.1a [Passive Voice]

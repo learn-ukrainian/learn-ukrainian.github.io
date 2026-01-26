@@ -1,25 +1,9 @@
 module: 18-bigger-better-stronger
-level: a2
-sequence: 18
+level: A2
+slug: 18-bigger-better-stronger
 version: '2.0'
 title: Bigger, Better, Stronger
 subtitle: The Comparative Degree
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can form comparative adjectives
-- Learner can compare two objects using 'ніж' and 'за'
-- Learner can identify and use irregular comparative forms
-- Learner can describe differences in quality and quantity
-sources:
-- name: Ukrainian State Standard 2024 - Comparison
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Comparative adjective requirements for A2
-- name: Ukrainian Adjective Reference
-  url: https://uk.wikipedia.org/wiki/Прикметник
-  type: reference
-  notes: Complete comparison paradigms
 content_outline:
 - section: Introduction / Вступ
   words: 200
@@ -43,7 +27,7 @@ content_outline:
   points:
   - Market dialogue comparing prices and quality
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - більший (bigger)
   - менший (smaller)
@@ -66,16 +50,51 @@ vocabulary:
   - трохи (a little)
   - значно (significantly)
   - швидший (faster)
-  forbidden: []
-activities:
-  types_required:
-  - quiz
-  - match-up
-  - fill-in
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: Transform positive to comparative
+  items: 15+
+- type: fill-in
+  focus: Comparison sentences with ніж/за
+  items: 12+
+- type: quiz
+  focus: Which is bigger/better/etc.?
+  items: 12+
+- type: match-up
+  focus: Adjective + comparative form
+  items: 12+
+- type: fill-in
+  focus: Irregular comparative forms
+  items: 10+
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- A1 adjective agreement
+- a2-17 (Possessive sviy)
+- Basic sentence structure
 connects_to:
 - a2-19 (The Best, The Worst)
 - a2-20 (Preferences and Choices)
 - a2-24 (Smart Shopping)
+objectives:
+- Learner can form comparative adjectives
+- Learner can compare two objects using 'ніж' and 'за'
+- Learner can identify and use irregular comparative forms
+- Learner can describe differences in quality and quantity
+grammar:
+- comparative adjectives formation
+- regular comparatives (-іший)
+- irregular comparatives (кращий, більший)
+- comparison structures (ніж, за)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Comparison
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Comparative adjective requirements for A2
+- name: Ukrainian Adjective Reference
+  url: https://uk.wikipedia.org/wiki/Прикметник
+  type: reference
+  notes: Complete comparison paradigms
+immersion: 40-50% Ukrainian
+phase: A2.2

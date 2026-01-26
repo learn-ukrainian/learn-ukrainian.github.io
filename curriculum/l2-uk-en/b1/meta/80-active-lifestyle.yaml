@@ -1,94 +1,13 @@
 module: b1-80
-id: b1-80
+level: B1
 slug: active-lifestyle
-title: "Активний відпочинок"
-subtitle: "Active Lifestyle and Outdoor Recreation"
 version: '2.0'
-phase: "B1.7 [Contemporary Ukraine]"
-focus: culture
-pedagogy: CBI
-register: розмовний
-duration: 90
-transliteration: none
-objectives:
-  - "Learner can discuss active lifestyle habits in Ukrainian"
-  - "Learner can understand texts about fitness and outdoor activities"
-  - "Learner can use vocabulary for diverse physical activities"
-  - "Learner can compare active leisure traditions in Ukraine and abroad"
-grammar:
-  - "Activity and fitness vocabulary"
-  - "Describing habits and routines"
-  - "Discussing preferences"
-word_target: 1200
-content_outline:
-  - section: "Introduction: Active Living"
-    words: 150
-    points:
-      - "Active lifestyle overview"
-      - "Ukrainian fitness culture"
-      - "Outdoor traditions"
-  - section: "Fitness and Gym Culture"
-    words: 250
-    points:
-      - "Gym vocabulary"
-      - "Fitness trends"
-      - "Health awareness"
-  - section: "Outdoor Activities"
-    words: 250
-    points:
-      - "Hiking and camping"
-      - "Parks and nature"
-      - "Seasonal activities"
-  - section: "Group Sports"
-    words: 250
-    points:
-      - "Team sports"
-      - "Community activities"
-      - "Sports clubs"
-  - section: "Active Tourism"
-    words: 200
-    points:
-      - "Adventure tourism"
-      - "Eco-tourism"
-      - "Active vacations"
-  - section: "Practice: Lifestyle Discussion"
-    words: 100
-    points:
-      - "Share activities"
-      - "Plan outdoor events"
-vocabulary_hints:
-  required:
-    - активний (active)
-    - відпочинок (recreation)
-    - тренування (training)
-    - спортзал (gym)
-    - біг (running)
-    - плавання (swimming)
-    - велосипед (bicycle)
-    - похід (hike)
-  recommended:
-    - йога (yoga)
-    - фітнес (fitness)
-    - здоровий спосіб життя (healthy lifestyle)
-    - на свіжому повітрі (outdoors)
-activity_hints:
-  - type: reading
-    focus: "Fitness and outdoor activity texts"
-    items: 15
-  - type: matching
-    focus: "Match activities to equipment"
-    items: 20
-  - type: fill-in
-    focus: "Complete activity descriptions"
-    items: 15
-  - type: discussion
-    focus: "Share fitness routines"
-    items: 10
-prerequisites:
-  - b1-79 (Sports in Ukraine)
-connects_to:
-  - b1-81 (Running in Ukraine)
+id: b1-80
 naturalness:
   score: 9
   status: PASS
-  justification: "Practical lifestyle vocabulary for active learners"
+  justification: Practical lifestyle vocabulary for active learners
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-26'

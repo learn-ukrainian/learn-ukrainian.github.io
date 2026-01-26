@@ -1,104 +1,115 @@
-module: 07-marusya
-level: lit
-sequence: 7
-version: '1.0'
+module: marusya
+level: LIT
+slug: marusya
+version: '2.0'
 title: 'Маруся: Ідеал Української Душі'
 subtitle: 'LIT-007: Сентименталізм у дії'
-focus: literature
-pedagogy: seminar
-objectives:
-- Analyze the plot and characters of "Marusya"
-- Contrast "Marusya" with "Natalka Poltavka"
-- Identify features of Ukrainian Sentimentalism
-sources:
-  primary:
-  - url: https://www.ukrlib.com.ua/books/printit.php?tid=252
-    title: Маруся — повний текст
-    notes: Повість для детального аналізу
-  secondary:
-  - url: https://www.ukrlib.com.ua/analiz/printit.php?tid=252
-    title: Аналіз "Марусі"
-    notes: Літературознавчий аналіз
-  - url: https://www.ukrlib.com.ua/bio/printit.php?tid=1646
-    title: Біографія Квітки
-    notes: Авторський контекст
 content_outline:
 - section: Вступ — Твір, що змусив плакати Європу
   words: 500
-  subsections:
+  points:
   - Історія публікації та рецепції
   - Переклади на європейські мови
   - '"Маруся" як "адвокат" української культури'
 - section: Сюжет і структура повісті
   words: 700
-  subsections:
+  points:
   - Історія кохання Марусі та Василя
   - Трагічний фінал
   - Роль долі (фатуму) у сюжеті
 - section: Маруся vs Наталка — два полюси
   words: 700
-  subsections:
+  points:
   - Активна Наталка vs пасивна Маруся
   - Архетип "ідеальної українки"
   - Покора і святість vs боротьба
 - section: Етнографія як мистецтво
   words: 700
-  subsections:
+  points:
   - Весільний обряд у повісті
   - Похоронний обряд як кульмінація
   - '"Євангеліє від народу"'
 - section: Мовні засоби катарсису
   words: 600
-  subsections:
+  points:
   - Сентиментальна лексика (емотиви)
   - Пестливі форми (димінутиви)
   - Риторичні оклики та звертання
 - section: Підсумок — Квітка vs Гоголь
   words: 400
-  subsections:
+  points:
   - Шлях сльози vs шлях сміху
   - Два погляди на українське село
   - Спадщина сентименталізму
 word_target: 4500
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - сентименталізм
-  - фатум
-  - покора
-  - катарсис
-  - архетип
-  - етнографія
-  - емотив
-  - димінутив
-  - оклик
-  - звертання
+  - сентименталізм (sentimentalism)
+  - фатум (fate/destiny)
+  - покора (submission/humility)
+  - катарсис (catharsis)
+  - архетип (archetype)
+  - етнографія (ethnography)
+  - емотив (emotive word)
+  - димінутив (diminutive)
+  - оклик (exclamation)
+  - звертання (address/vocative)
   recommended:
-  - ідеал
-  - святість
-  - трагедія
-  - мелодрама
-  - рецепція
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - cloze
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - ідеал (ideal)
+  - святість (sanctity)
+  - трагедія (tragedy)
+  - мелодрама (melodrama)
+  - рецепція (reception)
+activity_hints:
+- type: reading
+  focus: Ключові епізоди "Марусі"
+  source: UkrLib tid=252
+  items: 5+
+- type: quiz
+  focus: Сюжет та персонажі повісті
+  items: 15+
+- type: match-up
+  focus: Маруся vs Наталка — риси характеру
+  items: 12+
+- type: essay-response
+  focus: Чому Квітка вбив своїх героїв?
+  word_target: 300
+  output: Аналітичне есе
+- type: group-sort
+  focus: Сентиментальна лексика (емотиви / димінутиви / оклики)
+  items: 20+
+- type: cloze
+  focus: Цитати з повісті
+  items: 12+
+focus: literature
+pedagogy: literature
+prerequisites:
+- lit-06 (Kvitka biography)
+- lit-05 (Natalka Poltavka for comparison)
 connects_to:
-  previous: lit-06 (Kvitka biography)
-  related:
-  - lit-09 (Ethnography — весільні та похоронні обряди)
-  - lit-18 (Women in Kobzar — жіночі архетипи)
-constraints:
-  min_engagement_boxes: 3
-  min_examples: 15
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- lit-09 (Ethnography — весільні та похоронні обряди)
+- lit-18 (Women in Kobzar — жіночі архетипи)
+objectives:
+- Analyze the plot and characters of "Marusya"
+- Contrast "Marusya" with "Natalka Poltavka"
+- Identify features of Ukrainian Sentimentalism
+grammar:
+- Sentimentalist vocabulary (emotives)
+- Diminutives usage
+- Narrative syntax (rhetorical questions, exclamations)
+module_type: literature
+sources:
+- name: Маруся — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=252
+  type: primary
+  notes: Повість для детального аналізу
+- name: Аналіз "Марусі"
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=252
+  type: secondary
+  notes: Літературознавчий аналіз
+- name: Біографія Квітки
+  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1646
+  type: reference
+  notes: Авторський контекст
+immersion: 100% Ukrainian
+phase: LIT.2 Sentimentalism (Kvitka-Osnovianenko)

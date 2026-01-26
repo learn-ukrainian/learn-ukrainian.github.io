@@ -1,0 +1,122 @@
+module: style-blending
+level: C2
+slug: style-blending
+version: '2.0'
+title: Змішування стилів і гібридні регістри
+content_outline:
+- section: Вступ — коли стилі змішуються
+  words: 500
+  points:
+  - Чисті стилі vs. гібриди
+  - Функції змішування стилів
+  - Комунікативна доцільність
+- section: Науково-популярний стиль
+  words: 700
+  points:
+  - Елементи наукового стилю (термінологія, логіка)
+  - Елементи розмовного (доступність, приклади)
+  - Баланс точності та зрозумілості
+  - Приклади з українських медіа
+- section: Художньо-публіцистичний стиль
+  words: 600
+  points:
+  - Літературна журналістика
+  - Есей як гібридний жанр
+  - Репортаж з елементами белетристики
+  - Колонки Курков, Андрухович
+- section: Офіційно-публіцистичний стиль
+  words: 600
+  points:
+  - Державна комунікація з громадянами
+  - Пом'якшення бюрократичної мови
+  - Прес-релізи та офіційні заяви
+  - Соціальні мережі державних органів
+- section: Розмовно-художній стиль
+  words: 600
+  points:
+  - Сказ як літературний прийом
+  - Діалектизми в літературі
+  - Стилізація усного мовлення
+  - Приклади з української прози
+- section: Епістолярно-есеїстичний стиль
+  words: 500
+  points:
+  - Лист як літературна форма
+  - Відкритий лист як публіцистика
+  - Есеїстичні елементи в листуванні
+  - Письменницькі листи як жанр
+- section: Підсумок та практика
+  words: 500
+  points:
+  - Оцінка доцільності змішування
+  - Ризики невдалого змішування
+  - Створення власного гібридного тексту
+word_target: 4000
+vocabulary_hints:
+  required:
+  - гібридний (hybrid)
+  - змішування (blending)
+  - науково-популярний (popular science)
+  - художньо-публіцистичний (literary journalism)
+  - регістр (register)
+  - сказ (skaz/oral narrative style)
+  - есей (essay)
+  - доцільність (appropriateness)
+  - адаптація (adaptation)
+  - синтез (synthesis)
+  recommended:
+  - белетристика (belles-lettres)
+  - репортаж (reportage)
+  - колонка (column)
+  - фейлетон (feuilleton)
+  - нарис (sketch/essay)
+activity_hints:
+- type: essay-response
+  focus: Transform scientific abstract into popular science blog post
+  word_target: 400
+  output: Original and transformed versions
+- type: critical-analysis
+  focus: Identify style elements in hybrid text
+  output: Breakdown of which elements come from which style
+- type: quiz
+  focus: Classify hybrid style examples
+  items: 15+
+- type: essay-response
+  focus: Write literary journalism piece on current event
+  word_target: 500
+  output: Text combining художній and публіцистичний elements
+- type: comparative-study
+  focus: Compare effective vs. ineffective style blending
+  output: Analysis of what makes blending succeed or fail
+- type: essay-response
+  focus: Create open letter in epistolary-essay style
+  word_target: 400
+  output: Letter with literary qualities
+- type: match-up
+  focus: Match hybrid styles to their component elements
+  items: 12+
+focus: stylistics
+prerequisites:
+- c2-03-09 (All 7 Functional Styles)
+- c2-10-11 (Style Transformation I & II)
+- c2-23 (Intertextuality)
+connects_to:
+- c2-25 (C2.1 Final Checkpoint)
+- c2-32 (Writing Literary Essays)
+- 'c2-37 (Creative Writing: Prose)'
+module_type: style
+sources:
+- name: Функціональні стилі української мови
+  url: https://uk.wikipedia.org/wiki/Функціональний_стиль
+  type: reference
+  notes: Foundation of 7 Ukrainian styles
+- name: Науково-популярний стиль
+  url: https://uk.wikipedia.org/wiki/Науково-популярний_стиль
+  type: reference
+  notes: Example of hybrid style analysis
+- name: Сучасна українська публіцистика
+  url: https://ukrlib.com.ua/
+  type: primary
+  notes: Examples of style blending in contemporary journalism
+immersion: 100% Ukrainian
+phase: C2.1 Stylistics Mastery

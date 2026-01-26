@@ -1,56 +1,32 @@
 module: ivan-nechuy-levytskyi
-level: c1-bio
-sequence: 103
+level: C1-BIO
+slug: ivan-nechuy-levytskyi
 version: '2.0'
 title: 'Іван Нечуй-Левицький: Майстер українського реалізму'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Іван_Нечуй-Левицький
-    title: Іван Нечуй-Левицький (Wikipedia UA)
-    notes: Biography, works, literary significance
-  secondary:
-  - url: https://uk.wikipedia.org/wiki/Кайдашева_сім%27я
-    title: Кайдашева сім'я
-    notes: His most famous novel
-  - url: https://uk.wikipedia.org/wiki/Микола_Джеря
-    title: Микола Джеря
-    notes: Novel about serfdom and industrialization
-  - url: https://uk.wikipedia.org/wiki/Реалізм_(література)
-    title: Український реалізм
-    notes: Literary movement context
-  - url: https://www.ukrlib.com.ua/bio/printit.php?tid=1646
-    title: UkrLib - Нечуй-Левицький
-    notes: Full texts and analysis
 content_outline:
 - section: Вступ — Великий оповідач
   words: 400
-  subsections:
+  points:
   - Нечуй-Левицький як вершина українського реалізму
   - Його унікальний "візуальний" стиль
   - Значення для становлення літературної мови
 - section: Походження та освіта
   words: 600
-  subsections:
+  points:
   - Народження в родині священика (1838)
   - Навчання в Київській духовній академії
   - Вплив Шевченка та народницьких ідей
   - Перші літературні спроби
 - section: Учительська кар'єра
   words: 500
-  subsections:
+  points:
   - Викладання в різних містах України
   - Спостереження за життям різних верств
   - Збирання матеріалу для творів
   - Конфлікти з цензурою
 - section: '"Кайдашева сім''я" — шедевр реалізму'
   words: 800
-  subsections:
+  points:
   - Історія створення (1878)
   - Родинний конфлікт як дзеркало суспільства
   - Образи Кайдашихи, Мотрі, Омелька
@@ -58,14 +34,14 @@ content_outline:
   - Гумор і трагізм поєднані
 - section: '"Микола Джеря" та соціальна критика'
   words: 600
-  subsections:
+  points:
   - Тема кріпацтва та втечі
   - Індустріалізація в українській літературі
   - Образ "нового українського героя"
   - Порівняння села та міста
 - section: Мовна революція
   words: 600
-  subsections:
+  points:
   - Автентична народна мова в літературі
   - Діалектизми Київщини
   - Лайка як літературний прийом
@@ -73,53 +49,84 @@ content_outline:
   - Конфлікт із Грінченком
 - section: Останні роки та спадщина
   words: 500
-  subsections:
+  points:
   - Життя під час революції 1917
   - Смерть від голоду в 1918 році
   - Трагічна іронія долі письменника
   - Вплив на українську літературу XX століття
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - реалізм
-  - оповідач
-  - кріпацтво
-  - селянство
-  - родинний конфлікт
-  - діалектизм
-  - просторіччя
-  - візуальний стиль
-  - народницький
-  - етнографічний
+  - реалізм (realism)
+  - оповідач (narrator/storyteller)
+  - кріпацтво (serfdom)
+  - селянство (peasantry)
+  - родинний конфлікт (family conflict)
+  - діалектизм (dialectism)
+  - просторіччя (colloquial speech)
+  - візуальний стиль (visual style)
+  - народницький (populist)
+  - етнографічний (ethnographic)
   recommended:
-  - дрібні чвари
-  - сільський побут
-  - соціальна критика
-  - натуралізм
-  - мовна полеміка
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  - critical-analysis
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - дрібні чвари (petty quarrels)
+  - сільський побут (village life)
+  - соціальна критика (social criticism)
+  - натуралізм (naturalism)
+  - мовна полеміка (language polemic)
+activity_hints:
+- type: reading
+  focus: Excerpts from "Кайдашева сім'я" and "Микола Джеря"
+  source: UkrLib
+  items: 4 passages
+- type: quiz
+  focus: Nechuy-Levytsky's biography and literary contributions
+  items: 12+
+- type: match-up
+  focus: Characters and their traits from Kaidasheva Simia
+  items: 10+
+- type: essay-response
+  focus: Why is "Кайдашева сім'я" still relevant today?
+  word_target: 300
+  output: Social analysis with modern parallels
+- type: group-sort
+  focus: Romantic vs. Realistic elements in Ukrainian literature
+  items: 12+
+- type: fill-in
+  focus: Famous quotes from Nechuy-Levytsky's works
+  items: 10+
+- type: critical-analysis
+  focus: Compare Nechuy-Levytsky with European realists (Zola, Dickens)
+  output: Comparative literature analysis
+focus: biography
+prerequisites:
+- c1-bio-102 (Kvitka-Osnovianenko - predecessor)
+- c1-bio-28 (Ivan Franko - contemporary)
+- Understanding of literary realism
 connects_to:
-  previous: c1-bio-102 (Kvitka-Osnovianenko - predecessor)
-  related:
-  - lit-26 through lit-30 (Literary analysis of Nechuy's works)
-  - c1-bio-47 (Marko Vovchok - contemporary)
-  - c1-bio-31 (Olha Kobylianska - later realist)
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- lit-26 through lit-30 (Literary analysis of Nechuy's works)
+- c1-bio-47 (Marko Vovchok - contemporary)
+- c1-bio-31 (Olha Kobylianska - later realist)
+module_type: biography
+sources:
+- name: Іван Нечуй-Левицький (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Іван_Нечуй-Левицький
+  type: primary
+  notes: Biography, works, literary significance
+- name: Кайдашева сім'я
+  url: https://uk.wikipedia.org/wiki/Кайдашева_сім%27я
+  type: reference
+  notes: His most famous novel
+- name: Микола Джеря
+  url: https://uk.wikipedia.org/wiki/Микола_Джеря
+  type: reference
+  notes: Novel about serfdom and industrialization
+- name: Український реалізм
+  url: https://uk.wikipedia.org/wiki/Реалізм_(література)
+  type: reference
+  notes: Literary movement context
+- name: UkrLib - Нечуй-Левицький
+  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1646
+  type: reference
+  notes: Full texts and analysis
+immersion: 100% Ukrainian
+phase: C1-BIO

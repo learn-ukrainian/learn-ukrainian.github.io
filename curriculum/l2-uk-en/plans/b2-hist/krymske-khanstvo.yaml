@@ -1,14 +1,9 @@
 module: krymske-khanstvo
-level: b2-hist
-sequence: 27
-version: '1.0'
+level: B2-HIST
+slug: krymske-khanstvo
+version: '2.0'
 title: 'Кримське ханство: Золотоординська спадщина'
-focus: history
-pedagogy: CBI
-objectives:
-- Учень може описати процес виникнення Кримського ханства
-- Учень розуміє державний устрій та роль роду Гіреїв
-- Учень може аналізувати відносини між ханством та українськими землями
+subtitle: Виникнення та державність Гіреїв
 content_outline:
 - section: Контекст
   words: 550
@@ -19,3 +14,13 @@ content_outline:
 - section: Деколонізаційний погляд
   words: 403
 word_target: 4153
+focus: history
+pedagogy: CBI
+objectives:
+- Учень може описати процес виникнення Кримського ханства
+- Учень розуміє державний устрій та роль роду Гіреїв
+- Учень може аналізувати відносини між ханством та українськими землями
+grammar:
+- Historical narrative style
+- Descriptive constructions
+phase: B2.3c [Українська історія]

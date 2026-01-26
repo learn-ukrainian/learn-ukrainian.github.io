@@ -1,94 +1,13 @@
 module: b1-46
-id: b1-46
+level: B1
 slug: past-passive-participles-2
-title: "Пасивні дієприкметники: коротка форма"
-subtitle: "Past Passive Participles II - Short Forms (-но/-то)"
 version: '2.0'
-phase: "B1.4a [Participles]"
-focus: grammar
-pedagogy: TTT
-register: розмовний
-duration: 90
-transliteration: none
-objectives:
-  - "Learner can form short passive participles using -но/-то"
-  - "Learner can use impersonal passive constructions"
-  - "Learner understands difference between full and short forms"
-  - "Learner can choose appropriate form for context"
-grammar:
-  - "Коротка форма пасивних дієприкметників (-но/-то)"
-  - "Безособові пасивні конструкції"
-  - "Повна vs коротка форма usage"
-word_target: 1200
-content_outline:
-  - section: "Introduction: Short Passive Forms"
-    words: 150
-    points:
-      - "What are short forms"
-      - "Impersonal passive meaning"
-      - "No gender/number agreement"
-  - section: "Formation: -но/-то Suffixes"
-    words: 250
-    points:
-      - "написано, зроблено, прочитано"
-      - "вибито, відкрито, закрито"
-      - "Same stem as full form"
-  - section: "Impersonal Passive Constructions"
-    words: 250
-    points:
-      - "Листа написано (The letter has been written)"
-      - "Agent in instrumental (ким?)"
-      - "Object in accusative or nominative"
-  - section: "Full vs Short Form"
-    words: 250
-    points:
-      - "Лист написаний vs Листа написано"
-      - "Stylistic differences"
-      - "Focus and emphasis"
-  - section: "Common Short Form Expressions"
-    words: 200
-    points:
-      - "Заборонено (forbidden)"
-      - "Дозволено (permitted)"
-      - "Signs and announcements"
-  - section: "Practice: Short Passive Forms"
-    words: 100
-    points:
-      - "Transform full to short"
-      - "Create impersonal sentences"
-vocabulary_hints:
-  required:
-    - коротка форма (short form)
-    - безособовий (impersonal)
-    - написано (written - impersonal)
-    - зроблено (done - impersonal)
-    - заборонено (forbidden)
-    - дозволено (permitted)
-    - відкрито (opened - impersonal)
-    - завершено (completed)
-  recommended:
-    - наголос (emphasis)
-    - орудний відмінок (instrumental case)
-    - агент (agent)
-    - оголошення (announcement)
-activity_hints:
-  - type: transformation
-    focus: "Full to short form"
-    items: 25
-  - type: fill-in
-    focus: "Complete impersonal sentences"
-    items: 20
-  - type: multiple-choice
-    focus: "Choose full or short form"
-    items: 15
-  - type: translation
-    focus: "English to Ukrainian passive"
-    items: 10
-prerequisites:
-  - b1-45 (Past Passive Participles 1)
-connects_to:
-  - b1-47 (Passive Constructions)
+id: b1-46
 naturalness:
   score: 9
   status: PASS
-  justification: "Essential impersonal passive"
+  justification: Essential impersonal passive
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-26'

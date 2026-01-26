@@ -1,112 +1,116 @@
 module: yevhen-konovalets
-level: c1-bio
-sequence: 108
+level: C1-BIO
+slug: yevhen-konovalets
 version: '2.0'
 title: 'Євген Коновалець: Полковник і організатор'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Коновалець_Євген_Михайлович
-    title: Євген Коновалець (Wikipedia UA)
-    notes: Military career, OUN leadership, assassination
-  secondary:
-  - url: https://uk.wikipedia.org/wiki/Січові_стрільці
-    title: Січові Стрільці
-    notes: Military formation he led
-  - url: https://uk.wikipedia.org/wiki/Організація_українських_націоналістів
-    title: Організація українських націоналістів
-    notes: Organization he founded
-  - url: https://szru.gov.ua/en/history/stories/leaders-of-the-liberation-movement--about-ukrainian-statehood-yevhen-konovalets
-    title: СЗР України - Коновалець
-    notes: Intelligence service historical page
 content_outline:
 - section: Вступ — Архітектор національного руху
   words: 457
-  subsections:
+  points:
   - Коновалець як творець організованого опору
   - Від військового командира до політичного лідера
   - Трагічна загибель від рук НКВД
 - section: Молодість і Перша світова війна
   words: 685
-  subsections:
+  points:
   - Народження в Галичині (1891)
   - Юридична освіта у Львові
   - Служба в австрійській армії
   - Російський полон і формування Січових Стрільців
 - section: Командир Січових Стрільців
   words: 800
-  subsections:
+  points:
   - Бої за Київ (1918)
   - Захист УНР
   - Листопадовий чин у Львові
   - Поразка і еміграція
 - section: Створення ОУН
   words: 800
-  subsections:
+  points:
   - Українська Військова Організація (1920)
   - Підпільна боротьба в Польщі
   - Заснування ОУН (1929)
   - Ідеологія та стратегія руху
 - section: Лідер в еміграції
   words: 685
-  subsections:
+  points:
   - Дипломатична діяльність
   - Пошук союзників для України
   - Конфлікти всередині руху
   - Підготовка до майбутньої боротьби
 - section: Вбивство та спадщина
   words: 573
-  subsections:
+  points:
   - Замах НКВД у Роттердамі (1938)
   - Павло Судоплатов — вбивця
   - Вплив на ОУН після смерті
   - Коновалець як символ боротьби
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - полковник
-  - Січові Стрільці
-  - підпілля
-  - націоналізм
-  - еміграція
-  - замах
-  - визвольний рух
-  - організатор
-  - диверсія
-  - конспірація
+  - полковник (colonel)
+  - Січові Стрільці (Sich Riflemen)
+  - підпілля (underground)
+  - націоналізм (nationalism)
+  - еміграція (emigration)
+  - замах (assassination attempt)
+  - визвольний рух (liberation movement)
+  - організатор (organizer)
+  - диверсія (sabotage)
+  - конспірація (conspiracy)
   recommended:
-  - ідеологія
-  - збройна боротьба
-  - політв'язень
-  - самостійність
-  - інтернований
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - ідеологія (ideology)
+  - збройна боротьба (armed struggle)
+  - політв'язень (political prisoner)
+  - самостійність (independence)
+  - інтернований (interned)
+activity_hints:
+- type: reading
+  focus: Konovalets's speeches and documents
+  source: Historical archives
+  items: 3 passages
+- type: quiz
+  focus: Konovalets's military and political career
+  items: 12+
+- type: match-up
+  focus: Organizations and their roles
+  items: 10+
+- type: essay-response
+  focus: How did Konovalets transform military defeat into political movement?
+  word_target: 300
+  output: Strategic analysis
+- type: group-sort
+  focus: Military vs. political phases of his career
+  items: 12+
+- type: fill-in
+  focus: Key dates and events
+  items: 10+
+focus: biography
+prerequisites:
+- c1-bio-44 (Symon Petliura - UNR leader)
+- c1-bio-53 (Petro Bolbochan - military figure)
+- Understanding of interwar Ukrainian politics
 connects_to:
-  previous: c1-bio-44 (Symon Petliura - UNR leader)
-  related:
-  - c1-bio-109 (Roman Shukhevych - his successor)
-  - c1-bio-52 (Dmytro Dontsov - ideologist)
-  - c1-bio-44 (Symon Petliura - earlier leader)
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-109 (Roman Shukhevych - his successor)
+- c1-bio-52 (Dmytro Dontsov - ideologist)
+- c1-bio-44 (Symon Petliura - earlier leader)
+module_type: biography
+sources:
+- name: Євген Коновалець (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Коновалець_Євген_Михайлович
+  type: primary
+  notes: Military career, OUN leadership, assassination
+- name: Січові Стрільці
+  url: https://uk.wikipedia.org/wiki/Січові_стрільці
+  type: reference
+  notes: Military formation he led
+- name: Організація українських націоналістів
+  url: https://uk.wikipedia.org/wiki/Організація_українських_націоналістів
+  type: reference
+  notes: Organization he founded
+- name: СЗР України - Коновалець
+  url: https://szru.gov.ua/en/history/stories/leaders-of-the-liberation-movement--about-ukrainian-statehood-yevhen-konovalets
+  type: reference
+  notes: Intelligence service historical page
+immersion: 100% Ukrainian
+phase: C1-BIO

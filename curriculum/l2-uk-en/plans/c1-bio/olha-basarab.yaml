@@ -1,109 +1,110 @@
 module: olha-basarab
-level: c1-bio
-sequence: 59
+level: C1-BIO
+slug: olha-basarab
 version: '2.0'
 title: 'Ольга Басараб: Розвідниця і мучениця'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Басараб_Ольга_Михайлівна
-    title: Ольга Басараб (Wikipedia UA)
-    notes: Біографія, розвідницька діяльність, загибель
-  secondary:
-  - url: https://mvbu.org.ua
-    title: Музей визвольної боротьби України
-    notes: УВО та розвідка
-  - url: https://cdvr.org.ua
-    title: Центр досліджень визвольного руху
-    notes: Дослідження підпільної діяльності
 content_outline:
 - section: Вступ — Незламна розвідниця
   words: 400
-  subsections:
+  points:
   - Басараб як символ жіночого героїзму в підпіллі
   - Трагічна загибель під тортурами
   - Значення для українського визвольного руху
 - section: Молодість та формування (1889-1914)
   words: 600
-  subsections:
+  points:
   - Народження у Львові в інтелігентній родині
   - Навчання та музична освіта
   - Участь у культурному житті Львова
   - Шлюб з Дмитром Басарабом
 - section: Перша світова війна та УСС (1914-1918)
   words: 700
-  subsections:
+  points:
   - Благодійна діяльність під час війни
   - Зв'язки з Українськими Січовими Стрільцями
   - Формування підпільної мережі
   - Початок розвідницької діяльності
 - section: Розвідниця УВО (1920-1924)
   words: 800
-  subsections:
+  points:
   - Вступ до Української Військової Організації
   - Організація розвідницької мережі у Львові
   - Координація з центром у Відні
   - Ризикована подвійна гра
 - section: Арешт та загибель (1924)
   words: 800
-  subsections:
+  points:
   - Викриття та арешт польською поліцією
   - Жорстокі допити та тортури
   - Відмова видати товаришів
   - Загибель у в'язниці — офіційно «самогубство»
 - section: Посмертна слава та пам'ять
   words: 700
-  subsections:
+  points:
   - Реакція українського суспільства на загибель
   - Культ Ольги Басараб в українському русі
   - Пісні та вірші, присвячені їй
   - Вшанування в незалежній Україні
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - розвідниця
-  - підпілля
-  - УВО
-  - тортури
-  - допит
-  - в'язниця
-  - мучениця
-  - зрада
-  - конспірація
-  - героїзм
+  - розвідниця (female intelligence agent)
+  - підпілля (underground)
+  - УВО (Ukrainian Military Organization)
+  - тортури (torture)
+  - допит (interrogation)
+  - в'язниця (prison)
+  - мучениця (martyr)
+  - зрада (betrayal)
+  - конспірація (conspiracy/secrecy)
+  - героїзм (heroism)
   recommended:
-  - польська поліція
-  - Січові Стрільці
-  - розвідницька мережа
-  - подвійна гра
-  - самогубство
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - польська поліція (Polish police)
+  - Січові Стрільці (Sich Riflemen)
+  - розвідницька мережа (intelligence network)
+  - подвійна гра (double game)
+  - самогубство (suicide)
+activity_hints:
+- type: reading
+  focus: Історія підпілля
+  source: Історичні дослідження та мемуари
+  items: 3 passages
+- type: quiz
+  focus: Біографія та діяльність УВО
+  items: 12+
+- type: match-up
+  focus: Етапи життя та події
+  items: 10+
+- type: essay-response
+  focus: Чому Басараб стала символом?
+  word_target: 300
+  output: Історичне есе
+- type: group-sort
+  focus: Публічне життя vs підпільна діяльність
+  items: 12+
+- type: fill-in
+  focus: Термінологія підпільної боротьби
+  items: 10+
+focus: biography
+prerequisites:
+- c1-bio-44 (Симон Петлюра)
 connects_to:
-  previous: c1-bio-44 (Симон Петлюра)
-  related:
-  - c1-bio-61 (Олена Степанів)
-  - c1-bio-68 (Олена Теліга)
-  - c1-bio-108 (Євген Коновалець)
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-61 (Олена Степанів)
+- c1-bio-68 (Олена Теліга)
+- c1-bio-108 (Євген Коновалець)
+module_type: biography
+sources:
+- name: Ольга Басараб (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Басараб_Ольга_Михайлівна
+  type: primary
+  notes: Біографія, розвідницька діяльність, загибель
+- name: Музей визвольної боротьби України
+  url: https://mvbu.org.ua
+  type: reference
+  notes: УВО та розвідка
+- name: Центр досліджень визвольного руху
+  url: https://cdvr.org.ua
+  type: reference
+  notes: Дослідження підпільної діяльності
+immersion: 100% Ukrainian
+phase: C1-BIO

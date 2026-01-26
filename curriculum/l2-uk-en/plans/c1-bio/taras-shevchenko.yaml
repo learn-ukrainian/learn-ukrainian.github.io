@@ -1,109 +1,110 @@
 module: taras-shevchenko
-level: c1-bio
-sequence: 20
+level: C1-BIO
+slug: taras-shevchenko
 version: '2.0'
 title: 'Тарас Шевченко: Національний Пророк'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Шевченко_Тарас_Григорович
-    title: Тарас Шевченко (Wikipedia UA)
-    notes: Основна біографічна інформація
-  secondary:
-  - url: https://shevchenko.inst.gov.ua/
-    title: Інститут літератури НАН України
-    notes: Академічні дослідження творчості
-  - url: https://museumshevchenko.org.ua/
-    title: Музей Тараса Шевченка
-    notes: Архівні матеріали та експозиції
 content_outline:
 - section: Вступ — Більше ніж поет
   words: 400
-  subsections:
+  points:
   - Шевченко як духовний батько української нації
   - Від кріпака до національного символу
   - Актуальність його спадщини сьогодні
 - section: Кріпацтво та ранні роки
   words: 600
-  subsections:
+  points:
   - Народження в Моринцях (1814)
   - Сирітське дитинство
   - Талант до малювання як порятунок
 - section: Викуп та становлення митця
   words: 700
-  subsections:
+  points:
   - Роль Брюллова та Жуковського
   - Навчання в Академії мистецтв
   - Перші літературні спроби
 - section: Кобзар та пробудження нації
   words: 800
-  subsections:
+  points:
   - Вихід першого Кобзаря (1840)
   - Революційний вплив на українську свідомість
   - Найважливіші твори раннього періоду
 - section: Кирило-Мефодіївське братство та заслання
   words: 800
-  subsections:
+  points:
   - Участь у таємному товаристві
   - Арешт та вирок (1847)
   - Десять років солдатчини
 - section: Останні роки та безсмертя
   words: 500
-  subsections:
+  points:
   - Повернення із заслання
   - Останні твори та Заповіт
   - Смерть і перепоховання
 - section: Дискусія — Шевченко в деколонізаційному дискурсі
   words: 200
-  subsections:
+  points:
   - Імперська спадщина та її подолання
   - Шевченко як антиколоніальний голос
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - кріпак
-  - викуп
-  - заслання
-  - пророк
-  - Кобзар
-  - національне пробудження
-  - братство
-  - солдатчина
-  - Заповіт
-  - перепоховання
+  - кріпак (serf)
+  - викуп (ransom/redemption)
+  - заслання (exile)
+  - пророк (prophet)
+  - Кобзар (Kobzar)
+  - національне пробудження (national awakening)
+  - братство (brotherhood)
+  - солдатчина (military service/conscription)
+  - Заповіт (Testament)
+  - перепоховання (reburial)
   recommended:
-  - деколонізація
-  - антиімперський
-  - канонізація
-  - культ особи
-  - літературний канон
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - деколонізація (decolonization)
+  - антиімперський (anti-imperial)
+  - канонізація (canonization)
+  - культ особи (cult of personality)
+  - літературний канон (literary canon)
+activity_hints:
+- type: reading
+  focus: Фрагменти Заповіту та листів
+  source: Первинні джерела
+  items: 3 passages
+- type: quiz
+  focus: Хронологія життя Шевченка
+  items: 12+
+- type: match-up
+  focus: Твори та їхні теми
+  items: 10+
+- type: essay-response
+  focus: Чому Шевченко став національним символом?
+  word_target: 300
+  output: Аргументований есей
+- type: group-sort
+  focus: Періоди творчості
+  items: 12+
+- type: fill-in
+  focus: Ключові дати та події
+  items: 10+
+focus: biography
+prerequisites:
+- b2-hist-national-awakening
 connects_to:
-  previous: b2-hist-national-awakening
-  related:
-  - c1-bio-97-panteleimon-kulish
-  - c1-bio-28-ivan-franko
-  - c1-bio-40-lesya-ukrainka
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-97-panteleimon-kulish
+- c1-bio-28-ivan-franko
+- c1-bio-40-lesya-ukrainka
+module_type: biography
+sources:
+- name: Тарас Шевченко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Шевченко_Тарас_Григорович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Інститут літератури НАН України
+  url: https://shevchenko.inst.gov.ua/
+  type: reference
+  notes: Академічні дослідження творчості
+- name: Музей Тараса Шевченка
+  url: https://museumshevchenko.org.ua/
+  type: reference
+  notes: Архівні матеріали та експозиції
+immersion: 100% Ukrainian
+phase: C1-BIO

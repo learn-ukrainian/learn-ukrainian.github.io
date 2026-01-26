@@ -1,9 +1,34 @@
-module: 41-aspect-nuances-secondary-imperfectivization
-level: b2
-sequence: 41
-version: '1.0'
+module: b2-41
+level: B2
+slug: 41-aspect-nuances-secondary-imperfectivization
+version: '2.0'
 title: 'Видові нюанси I: Вторинна імперфективація'
 subtitle: Secondary Imperfectivization - Deriving Imperfective from Perfective
+content_outline:
+- section: Вступ — Вторинна імперфективація
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Key Mechanics
+  words: 500
+  points:
+  - 'Suffix shifting: перечитати (P) → перечитувати (I)'
+  - 'Root vowel change: допомогти (P) → допомагати (I)'
+  - 'Stress shift: розрі́зати (P) → розріза́ти (I)'
+- section: Usage Contexts
+  words: 500
+  points:
+  - '"I used to do this repeatedly" (Iterative)'
+  - '"I was in the middle of re-doing it" (Process)'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: grammar
 pedagogy: TTT
 objectives:
@@ -11,13 +36,9 @@ objectives:
 - Learner can apply correct suffixation patterns for imperfectivization
 - Learner can distinguish iterative and process meanings of secondary imperfectives
 - Learner can use secondary imperfectives appropriately in context
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Secondary imperfectivization (вторинна імперфективація)
+- 'Suffix patterns: -ува-/-юва-, -ва-, -а-/-я-'
+- Vowel alternation in roots
+- Aspectual pairs with prefixes
+phase: B2.2 [Phraseology & Synonymy]

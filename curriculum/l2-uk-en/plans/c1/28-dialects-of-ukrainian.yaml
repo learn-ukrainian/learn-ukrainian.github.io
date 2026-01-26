@@ -1,21 +1,8 @@
 module: 28-dialects-of-ukrainian
-level: c1
-sequence: 28
+level: C1
+slug: 28-dialects-of-ukrainian
 version: '2.0'
 title: Діалекти та наріччя
-focus: grammar
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Атлас української мови
-  url: https://r2u.org.ua/
-  type: primary
-  notes: Dialectological atlas of Ukrainian
-- name: Українська діалектологія
-  url: https://mova.info/
-  type: reference
-  notes: Dialectology textbook
 content_outline:
 - section: Вступ — Діалектологія
   words: 400
@@ -60,7 +47,7 @@ content_outline:
   - Аналіз текстів
   - Слухання діалектних зразків
 word_target: 4000
-vocabulary:
+vocabulary_hints:
   required:
   - діалект (dialect)
   - наріччя (dialect group)
@@ -78,19 +65,42 @@ vocabulary:
   - стандартизація (standardization)
   - діалектний атлас (dialect atlas)
   - мовна норма (linguistic norm)
-  forbidden: []
-activities:
-  types_required:
-  - group-sort
-  - quiz
-  - cloze
-  - fill-in
-  - match-up
-  - true-false
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: Identify dialect by features
+  items: 15+
+- type: match-up
+  focus: Dialectal word → standard equivalent
+  items: 15+
+- type: group-sort
+  focus: Features by dialect group
+  items: 12+
+- type: fill-in
+  focus: Dialectal text comprehension
+  items: 10+
+- type: cloze
+  focus: Dialectological terminology
+  items: 10+
+- type: true-false
+  focus: Dialect facts and myths
+  items: 12+
+focus: grammar
+prerequisites:
+- c1-27 (Global Context)
+- B2 register awareness
 connects_to:
 - c1-29 (Surzhyk)
 - c1-30 (History of Language)
 - c1-31 (Diaspora Ukrainian)
+module_type: grammar
+sources:
+- name: Атлас української мови
+  url: https://r2u.org.ua/
+  type: primary
+  notes: Dialectological atlas of Ukrainian
+- name: Українська діалектологія
+  url: https://mova.info/
+  type: reference
+  notes: Dialectology textbook
+immersion: 100% Ukrainian
+phase: C1.2 Professional Communication

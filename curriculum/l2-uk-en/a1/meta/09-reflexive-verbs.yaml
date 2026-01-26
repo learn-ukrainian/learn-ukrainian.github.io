@@ -1,94 +1,13 @@
 module: a1-09
-id: a1-09
+level: A1
 slug: reflexive-verbs
-title: "Reflexive Verbs (-ся)"
-subtitle: "Actions Directed at Oneself"
 version: '2.0'
-phase: "A1.1 [First Contact]"
-focus: grammar
-pedagogy: PPP
-register: розмовний
-duration: 60
-transliteration: none
-objectives:
-  - "Learner can identify reflexive verbs ending in -ся"
-  - "Learner can conjugate reflexive verbs in present tense"
-  - "Learner understands difference between transitive and reflexive verbs"
-  - "Learner can use common reflexive verbs like дивитися, сміятися"
-grammar:
-  - "Reflexive particle -ся/-сь"
-  - "Conjugation of reflexive verbs"
-  - "Transitive vs reflexive pairs"
-word_target: 900
-content_outline:
-  - section: "Introduction: What Are Reflexive Verbs?"
-    words: 100
-    points:
-      - "Action directed back at subject"
-      - "Marked by -ся or -сь ending"
-      - "Common in daily routines"
-  - section: "The Reflexive Particle"
-    words: 200
-    points:
-      - "-ся after consonants: вмиватися"
-      - "-сь after vowels: вмиваюсь"
-      - "Always at the very end"
-  - section: "Conjugating Reflexive Verbs"
-    words: 200
-    points:
-      - "Same endings as regular verbs + -ся/-сь"
-      - "вмиватися: вмиваюся, вмиваєшся..."
-      - "дивитися: дивлюся, дивишся..."
-  - section: "Common Reflexive Verbs"
-    words: 200
-    points:
-      - "Daily routines: вмиватися, одягатися, голитися"
-      - "Emotions: сміятися, дивуватися"
-      - "Movement: повертатися, зупинятися"
-  - section: "Transitive vs Reflexive Pairs"
-    words: 100
-    points:
-      - "мити (to wash sth) vs митися (to wash oneself)"
-      - "одягати vs одягатися"
-  - section: "Practice: Daily Routine"
-    words: 100
-    points:
-      - "Describe morning routine"
-      - "Ask about habits"
-vocabulary_hints:
-  required:
-    - вмиватися (to wash oneself)
-    - одягатися (to dress oneself)
-    - дивитися (to watch/look)
-    - сміятися (to laugh)
-    - називатися (to be called)
-    - вчитися (to study)
-    - займатися (to do/engage in)
-    - повертатися (to return)
-  recommended:
-    - голитися (to shave)
-    - зупинятися (to stop)
-    - знайомитися (to get acquainted)
-    - цікавитися (to be interested)
-activity_hints:
-  - type: conjugation-drill
-    focus: "Conjugate reflexive verbs"
-    items: 25
-  - type: fill-in
-    focus: "Choose -ся or -сь"
-    items: 15
-  - type: matching
-    focus: "Transitive ↔ reflexive pairs"
-    items: 12
-  - type: dialogue
-    focus: "Daily routine conversations"
-    items: 6
-prerequisites:
-  - a1-08 (The Living Verb II)
-connects_to:
-  - a1-10 (Checkpoint - First Contact)
-  - a1-25 (My Daily Routine)
+id: a1-09
 naturalness:
   score: 10
   status: PASS
-  justification: "Practical daily vocabulary"
+  justification: Practical daily vocabulary
+duration: 60
+transliteration: none
+build:
+  last_modified: '2026-01-26'

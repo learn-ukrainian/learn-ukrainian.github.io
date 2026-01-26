@@ -1,105 +1,105 @@
 module: leonid-kadenyuk
-level: c1-bio
-sequence: 80
+level: C1-BIO
+slug: leonid-kadenyuk
 version: '2.0'
 title: 'Леонід Каденюк: Перший космонавт незалежної України'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Каденюк_Леонід_Костянтинович
-    title: Леонід Каденюк (Wikipedia UA)
-    notes: Biography of Ukraine's first astronaut
-  secondary:
-  - url: https://www.nasa.gov/mission_pages/shuttle/shuttlemissions/archives/sts-87.html
-    title: NASA - STS-87
-    notes: Mission information
 content_outline:
 - section: Вступ — Український прапор у космосі
   words: 400
-  subsections:
+  points:
   - Перший космонавт незалежної України
   - Політ на шатлі «Колумбія» (1997)
   - Символ української науки та гордості
 - section: Юність та мрія про небо (1951-1971)
   words: 600
-  subsections:
+  points:
   - Народження на Буковині
   - Дитячі мрії про космос
   - Льотне училище
   - Перші кроки до неба
 - section: Підготовка космонавта (1971-1996)
   words: 800
-  subsections:
+  points:
   - Служба у ВПС
   - Відбір до загону космонавтів
   - Десятиліття очікування
   - Радянська космічна програма
 - section: Політ на «Колумбії» (1997)
   words: 900
-  subsections:
+  points:
   - Місія STS-87
   - Наукові експерименти
   - Український прапор на орбіті
   - 15 діб у космосі
 - section: Після польоту (1997-2018)
   words: 600
-  subsections:
+  points:
   - Герой України
   - Громадська та політична діяльність
   - Популяризація космонавтики
   - Смерть у 2018 році
 - section: Спадщина — Зірка України
   words: 700
-  subsections:
+  points:
   - Значення для української космічної програми
   - Вплив на молоде покоління
   - Памятники та вшанування
   - Каденюк як символ можливостей
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - космонавт
-  - космос
-  - політ
-  - шатл
-  - орбіта
-  - місія
-  - експеримент
-  - невагомість
-  - Герой України
-  - космічна програма
+  - космонавт (astronaut)
+  - космос (space)
+  - політ (flight)
+  - шатл (shuttle)
+  - орбіта (orbit)
+  - місія (mission)
+  - експеримент (experiment)
+  - невагомість (weightlessness)
+  - Герой України (Hero of Ukraine)
+  - космічна програма (space program)
   recommended:
-  - орбітальний
-  - науковий
-  - астронавтика
-  - стикування
-  - запуск
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - орбітальний (orbital)
+  - науковий (scientific)
+  - астронавтика (astronautics)
+  - стикування (docking)
+  - запуск (launch)
+activity_hints:
+- type: reading
+  focus: Українська космічна програма
+  source: Scientific and historical sources
+  items: 3 passages
+- type: quiz
+  focus: Життя та космічний політ Каденюка
+  items: 12+
+- type: match-up
+  focus: Космічна термінологія
+  items: 10+
+- type: essay-response
+  focus: Яке значення мав політ Каденюка для незалежної України?
+  word_target: 300
+  output: Analytical essay
+- type: group-sort
+  focus: Етапи космічної кар'єри
+  items: 12+
+- type: fill-in
+  focus: Технічна та наукова термінологія
+  items: 10+
+focus: biography
+prerequisites:
+- c1-bio-79
 connects_to:
-  previous: c1-bio-79
-  related:
-  - c1-bio-117
-  - c1-bio-118
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-117
+- c1-bio-118
+module_type: biography
+sources:
+- name: Леонід Каденюк (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Каденюк_Леонід_Костянтинович
+  type: primary
+  notes: Biography of Ukraine's first astronaut
+- name: NASA - STS-87
+  url: https://www.nasa.gov/mission_pages/shuttle/shuttlemissions/archives/sts-87.html
+  type: reference
+  notes: Mission information
+immersion: 100% Ukrainian
+phase: C1-BIO

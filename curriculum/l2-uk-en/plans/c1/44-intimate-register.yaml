@@ -1,0 +1,45 @@
+module: c1-44
+level: C1
+slug: 44-intimate-register
+version: '2.0'
+title: 'Інтимно-ласкавий стиль: Мова близьких стосунків'
+subtitle: 'Intimate Register: Language of Close Relationships'
+content_outline:
+- section: Вступ — Мова близьких стосунків
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Humor Types
+  words: 500
+  points:
+  - 'Народний гумор: Folk jokes, proverbs'
+  - 'Сатира: Political, social criticism'
+  - 'Самоіронія: Self-deprecation'
+  - 'Абсурд: Absurdist humor'
+- section: Famous Humor Sources
+  words: 500
+  points:
+  - Остап Вишня (Ostap Vyshnia)
+  - '"Квартал 95" (Kvartal 95)'
+  - Internet memes
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
+focus: style
+pedagogy: Sociolinguistics
+objectives:
+- Learner can identify and use diminutive forms to express affection
+- Learner can distinguish between neutral and intimate registers
+- Learner can express deep emotions (love, care, longing) in Ukrainian
+grammar:
+- Diminutive suffixes (зменшувально-пестливі суфікси)
+- Intimate address forms (інтимні звертання)
+- Emotional syntax (емоційний синтаксис)
+immersion: 100
+phase: C1.4 Advanced Stylistics & Rhetoric

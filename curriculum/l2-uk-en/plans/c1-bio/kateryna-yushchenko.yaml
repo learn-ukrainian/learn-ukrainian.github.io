@@ -1,105 +1,105 @@
 module: kateryna-yushchenko
-level: c1-bio
-sequence: 70
+level: C1-BIO
+slug: kateryna-yushchenko
 version: '2.0'
 title: 'Катерина Ющенко: Піонерка кібернетики'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Ющенко_Катерина_Логвинівна
-    title: Катерина Ющенко (Wikipedia UA)
-    notes: Biography of the pioneering computer scientist
-  secondary:
-  - url: https://icyb.kiev.ua/
-    title: Інститут кібернетики ім. В.М. Глушкова НАН України
-    notes: Institute where Yushchenko worked
 content_outline:
 - section: Вступ — Мати мови програмування
   words: 400
-  subsections:
+  points:
   - Піонерка програмування в СРСР
   - Творець адресної мови — першої високорівневої мови програмування
   - Жінка-вчений у чоловічому світі
 - section: Юність та війна (1919-1945)
   words: 600
-  subsections:
+  points:
   - Народження в Чигирині
   - Освіта в Узбекистані
   - Математичні здібності
   - Війна та евакуація
 - section: Шлях до кібернетики (1945-1955)
   words: 800
-  subsections:
+  points:
   - Аспірантура з математики
   - Знайомство з комп'ютерами
   - Робота з МСЕМ та «Київ»
   - Входження в команду Глушкова
 - section: Адресна мова (1955-1965)
   words: 900
-  subsections:
+  points:
   - Створення першої високорівневої мови програмування
   - Концепція адресної мови
   - Вплив на розвиток програмування
   - Визнання в науковому світі
 - section: Пізній період (1965-2001)
   words: 600
-  subsections:
+  points:
   - Педагогічна діяльність
   - Наукові праці
   - Визнання та нагороди
   - Смерть у Києві
 - section: Спадщина — Забутий геній
   words: 700
-  subsections:
+  points:
   - Значення для світової інформатики
   - Чому її не знають на Заході
   - Сучасне вшанування
   - Ющенко як символ жінок у науці
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - кібернетика
-  - програмування
-  - мова програмування
-  - адресна мова
-  - комп'ютер
-  - алгоритм
-  - обчислювальна машина
-  - математик
-  - вчена
-  - піонер
+  - кібернетика (cybernetics)
+  - програмування (programming)
+  - мова програмування (programming language)
+  - адресна мова (address language)
+  - комп'ютер (computer)
+  - алгоритм (algorithm)
+  - обчислювальна машина (computing machine)
+  - математик (mathematician)
+  - вчена (woman scientist)
+  - піонер (pioneer)
   recommended:
-  - високорівнева мова
-  - код
-  - операційна система
-  - інформатика
-  - технічний прогрес
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - високорівнева мова (high-level language)
+  - код (code)
+  - операційна система (operating system)
+  - інформатика (computer science)
+  - технічний прогрес (technological progress)
+activity_hints:
+- type: reading
+  focus: Історія кібернетики в Україні
+  source: Scientific history sources
+  items: 3 passages
+- type: quiz
+  focus: Життя та наукова діяльність Ющенко
+  items: 12+
+- type: match-up
+  focus: Терміни інформатики та кібернетики
+  items: 10+
+- type: essay-response
+  focus: Чому адресна мова Ющенко важлива для історії програмування?
+  word_target: 300
+  output: Analytical essay
+- type: group-sort
+  focus: Етапи розвитку кібернетики в Україні
+  items: 12+
+- type: fill-in
+  focus: Технічна термінологія
+  items: 10+
+focus: biography
+prerequisites:
+- c1-bio-69
 connects_to:
-  previous: c1-bio-69
-  related:
-  - c1-bio-99
-  - c1-bio-112
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-99
+- c1-bio-112
+module_type: biography
+sources:
+- name: Катерина Ющенко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Ющенко_Катерина_Логвинівна
+  type: primary
+  notes: Biography of the pioneering computer scientist
+- name: Інститут кібернетики ім. В.М. Глушкова НАН України
+  url: https://icyb.kiev.ua/
+  type: reference
+  notes: Institute where Yushchenko worked
+immersion: 100% Ukrainian
+phase: C1-BIO

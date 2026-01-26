@@ -1,97 +1,13 @@
 module: a1-04
-id: a1-04
+level: A1
 slug: this-is-i-am
-title: "This Is / I Am"
-subtitle: "Zero Copula and Personal Pronouns"
 version: '2.0'
-phase: "A1.1 [First Contact]"
-focus: grammar
-pedagogy: PPP
-register: розмовний
-duration: 60
-transliteration: full
-objectives:
-  - "Learner can use personal pronouns (я, ти, він, вона, etc.)"
-  - "Learner can form identity statements without 'to be' (zero copula)"
-  - "Learner can use це to point out people and objects"
-  - "Learner can distinguish masculine/feminine nationality forms"
-grammar:
-  - "Personal pronouns"
-  - "Zero copula construction"
-  - "Demonstrative це"
-word_target: 900
-content_outline:
-  - section: "Introduction: No 'Is' Needed"
-    words: 100
-    points:
-      - "Ukrainian drops 'to be' in present tense"
-      - "Це книга = This (is) a book"
-      - "Я студент = I (am) a student"
-  - section: "Personal Pronouns"
-    words: 200
-    points:
-      - "я (I), ти (you informal)"
-      - "він (he), вона (she), воно (it)"
-      - "ми (we), ви (you formal/plural), вони (they)"
-  - section: "Це... (This Is...)"
-    words: 200
-    points:
-      - "Pointing out objects: Це стіл, це вікно"
-      - "Introducing people: Це мій брат"
-      - "Question: Що це? Хто це?"
-  - section: "Я... (I Am...)"
-    words: 150
-    points:
-      - "Self-introduction: Я Марія, Я студент"
-      - "Nationality: Я українець/українка"
-      - "Profession: Я вчитель/вчителька"
-  - section: "Gendered Forms"
-    words: 150
-    points:
-      - "Masculine: американець, українець"
-      - "Feminine: американка, українка"
-      - "Pattern recognition"
-  - section: "Practice: Introductions"
-    words: 100
-    points:
-      - "Complete self-introduction"
-      - "Role-play meeting someone"
-vocabulary_hints:
-  required:
-    - це (this is)
-    - я (I)
-    - ти (you)
-    - він (he)
-    - вона (she)
-    - хто (who)
-    - що (what)
-    - студент (student)
-  recommended:
-    - українець (Ukrainian m.)
-    - українка (Ukrainian f.)
-    - вчитель (teacher m.)
-    - вчителька (teacher f.)
-    - ми (we)
-    - вони (they)
-activity_hints:
-  - type: dialogue
-    focus: "Self-introduction practice"
-    items: 6
-  - type: fill-in
-    focus: "Complete sentences with pronouns"
-    items: 15
-  - type: translation
-    focus: "Translate identity statements"
-    items: 10
-  - type: role-play
-    focus: "Meeting someone new"
-    items: 4
-prerequisites:
-  - a1-03 (The Gender Code)
-connects_to:
-  - a1-05 (My World - Objects)
-  - a1-14 (Mine and Yours)
+id: a1-04
 naturalness:
   score: 10
   status: PASS
-  justification: "Practical first conversations"
+  justification: Practical first conversations
+duration: 60
+transliteration: full
+build:
+  last_modified: '2026-01-26'

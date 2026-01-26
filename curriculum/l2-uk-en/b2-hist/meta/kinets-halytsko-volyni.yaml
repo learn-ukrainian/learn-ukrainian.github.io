@@ -1,12 +1,11 @@
-id: b2-hist-24
-title: 'Занепад Галицько-Волинської держави'
-subtitle: 'Трагедія 1340 року та боротьба за спадщину'
+module: kinets-halytsko-volyni
+level: B2-HIST
 slug: kinets-halytsko-volyni
 version: '2.0'
-phase: 'B2.3a [Українська історія]'
-focus: history
-pedagogy: CBI
-word_target: 4143
+id: b2-hist-24
+naturalness:
+  score: 9
+  status: PASS
 duration: 120
 transliteration: none
 tags:
@@ -14,23 +13,6 @@ tags:
 - decline
 - 1340
 - dynastic-crisis
-grammar:
-- Expressing cause and effect
-- Tragic narrative style
-objectives:
-- Учень може пояснити причини занепаду держави Романовичів
-- Учень розуміє наслідки отруєння Юрія ІІ
-- Учень може аналізувати боротьбу сусідніх держав за руську спадщину
 vocabulary_count: 25
-content_outline:
-- section: Контекст
-  words: 484
-- section: Читання
-  words: 2800
-- section: Первинні джерела
-  words: 350
-- section: Деколонізаційний погляд
-  words: 509
-naturalness:
-  score: 9
-  status: PASS
+build:
+  last_modified: '2026-01-26'

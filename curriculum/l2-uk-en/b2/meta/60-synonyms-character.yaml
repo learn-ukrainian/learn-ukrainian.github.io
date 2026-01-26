@@ -1,59 +1,17 @@
 module: b2-60
-title: 'Синоніми: Характер та Особистість'
-subtitle: Synonyms - Character and Personality
+level: B2
+slug: 60-synonyms-character
 version: '1.0'
-phase: B2.2 [Phraseology & Synonymy]
-pedagogy: CBI
-focus: phraseology
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
-immersion: 100
 tags:
 - vocabulary
 - synonyms
 - character
-grammar:
-- Adjectival nuances in personality
-- Abstract nouns for traits
-objectives:
-- Учень може розрізняти відтінки значень між синонімами на позначення інтелекту та
-  доброти
-- Учень вміє створювати детальні психологічні портрети, використовуючи лексику рівня
-  B2
-- Учень розуміє концепцію 'вдачі' та 'натури' в українському культурному контексті
 vocabulary_count: 35
-register: художній
 vocab_count: 115
-slug: 60-synonyms-character
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-- section: Вступ — Характер та Особистість
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-- section: Smart
-  words: 500
-  points:
-  - розумний (intelligent - general)
-  - мудрий (wise - experienced)
-  - кмітливий (quick-witted - practical)
-  - тямущий (clever - colloquial)
-  - геніальний (genius - exceptional)
-- section: Kind
-  words: 500
-  points:
-  - добрий (kind - general)
-  - щедрий (generous - giving)
-  - милосердний (merciful - compassionate)
-  - чуйний (sensitive/responsive)
-  - лагідний (gentle - soft)
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

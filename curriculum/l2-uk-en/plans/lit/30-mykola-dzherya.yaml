@@ -1,107 +1,112 @@
-module: 30-mykola-dzherya
-level: lit
-sequence: 30
-version: '1.0'
+module: mykola-dzherya
+level: LIT
+slug: mykola-dzherya
+version: '2.0'
 title: 'Микола Джеря: Епос Кріпацької Долі'
 subtitle: 'Mykola Dzherya: Epic of Serf Fate'
-focus: literature
-pedagogy: seminar
-objectives:
-- Проаналізувати образ Миколи як кріпака-бунтаря
-- Зрозуміти історичний контекст кріпацтва та реформи 1861 року
-- Дослідити жанрові особливості соціальної повісті
-- Підсумувати курс української літератури від Котляревського до Нечуя
-sources:
-  primary:
-  - url: https://www.ukrlib.com.ua/books/printit.php?tid=908
-    title: Микола Джеря — повний текст
-    notes: Для детального аналізу
-  - url: https://www.ukrlib.com.ua/styslo/printit.php?tid=3507
-    title: Микола Джеря — скорочено
-    notes: Для повторення сюжету
-  secondary:
-  - url: https://www.ukrlib.com.ua/tvory/printit.php?tid=8464
-    title: Микола Джеря — бунтар
-    notes: Аналіз образу
 content_outline:
 - section: Вступ — Тема кріпацтва в літературі
   words: 500
-  subsections:
+  points:
   - Шевченко і Нечуй — різні підходи
   - Чому "Микола Джеря" особливий
   - Історичний контекст (1840-1861)
 - section: Образ Миколи
   words: 800
-  subsections:
+  points:
   - Зовнішність і характер
   - Бунтар vs жертва
   - Серп як символ спротиву
 - section: Сюжет як одіссея
   words: 700
-  subsections:
+  points:
   - Втеча з Вербівки
   - Бурлакування на цукроварні
   - Повернення до хрестів
 - section: Жіночі образи
   words: 600
-  subsections:
+  points:
   - Нимидора — кохана
   - Мати — жертва системи
   - Трагедія очікування
 - section: Реформа 1861 року
   words: 600
-  subsections:
+  points:
   - Як Нечуй показує визволення
   - Ціна свободи
-  - Ірконія фіналу
+  - Іронія фіналу
 - section: Підсумок — Від Енея до Джері
   words: 400
-  subsections:
+  points:
   - Еволюція українського героя (курсовий підсумок)
   - Від сміху до правди
   - Що далі (література ХХ століття)
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - кріпацтво
-  - бунтар
-  - визволення
-  - бурлак
-  - цукроварня
-  - реформа
-  - одіссея
-  - жертва
-  - спротив
-  - ірконія
+  - кріпацтво (serfdom)
+  - бунтар (rebel)
+  - визволення (liberation)
+  - бурлак (wandering laborer)
+  - цукроварня (sugar factory)
+  - реформа (reform)
+  - одіссея (odyssey)
+  - жертва (victim)
+  - спротив (resistance)
+  - іронія (irony)
   recommended:
-  - каторга
-  - панщина
-  - втеча
-  - повернення
-  - символ
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - cloze
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
-  special_requirements:
-  - 'reading: Сцена з серпом, фінал повісті'
-  - 'essay-response: Курсовий підсумок — еволюція українського героя'
+  - каторга (hard labor)
+  - панщина (corvée)
+  - втеча (escape)
+  - повернення (return)
+  - символ (symbol)
+activity_hints:
+- type: reading
+  focus: Сцена з серпом, фінал повісті
+  source: UkrLib tid=908
+  items: 5+
+- type: quiz
+  focus: Сюжет та образи повісті
+  items: 15+
+- type: match-up
+  focus: Персонаж → його роль
+  items: 10+
+- type: essay-response
+  focus: Еволюція українського героя (курсовий підсумок)
+  word_target: 400
+  output: Підсумкове есе
+- type: cloze
+  focus: Ключові сцени та цитати
+  items: 15+
+focus: literature
+pedagogy: Seminar
+prerequisites:
+- lit-29 (Мова реалізму)
 connects_to:
-  previous: 29-language-of-realism
-  related:
-  - lit-11 (Молодий Шевченко — кріпацтво)
-  - lit-01 (Котляревський — початок курсу)
-constraints:
-  min_engagement_boxes: 3
-  min_examples: 15
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- lit-11 (Молодий Шевченко — кріпацтво)
+- lit-01 (Котляревський — початок курсу)
+objectives:
+- Проаналізувати образ Миколи як кріпака-бунтаря
+- Зрозуміти історичний контекст кріпацтва та реформи 1861 року
+- Дослідити жанрові особливості соціальної повісті
+- Підсумувати курс української літератури від Котляревського до Нечуя
+grammar:
+- Serfdom vocabulary
+- Historical narrative
+- Social protest language
+module_type: literature
+sources:
+- name: Микола Джеря — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=908
+  type: primary
+  notes: Для детального аналізу
+- name: Микола Джеря — скорочено
+  url: https://www.ukrlib.com.ua/styslo/printit.php?tid=3507
+  type: secondary
+  notes: Для повторення сюжету
+- name: Микола Джеря — бунтар
+  url: https://www.ukrlib.com.ua/tvory/printit.php?tid=8464
+  type: reference
+  notes: Аналіз образу
+immersion: 100% Ukrainian
+phase: LIT.5 Realism

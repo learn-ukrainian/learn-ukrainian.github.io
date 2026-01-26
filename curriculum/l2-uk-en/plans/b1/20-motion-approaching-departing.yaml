@@ -1,24 +1,9 @@
 module: 20-motion-approaching-departing
-level: b1
-sequence: 20
-version: '1.0'
+level: B1
+slug: 20-motion-approaching-departing
+version: '2.0'
 title: 'Рух: наближення і віддалення'
 subtitle: Motion - Approaching & Departing
-focus: grammar
-pedagogy: TTT
-objectives:
-- Learner can use під- for approaching
-- Learner can use від- for departing
-- Learner can use до- for reaching destination
-sources:
-- name: Ukrainian State Standard 2024 - Motion Prefixes
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official prefix meanings for approach/depart
-- name: Ukrainian Verbal Prefixes
-  url: https://uk.wikipedia.org/wiki/Дієслівні_префікси
-  type: reference
-  notes: під-, від-, до- semantics
 content_outline:
 - section: Тест
   words: 100
@@ -51,7 +36,7 @@ content_outline:
   - Examples and explanation
   - Practice or application
 word_target: 1500
-vocabulary:
+vocabulary_hints:
   required:
   - підійти/підходити (to approach on foot)
   - під'їхати/під'їжджати (to approach by vehicle)
@@ -69,16 +54,45 @@ vocabulary:
   - добігти/добігати (to reach running)
   - наблизитися (to approach - reflexive)
   - віддалитися (to move away - reflexive)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - quiz
-  - match-up
-  - cloze
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: під- vs від- vs до- selection
+  items: 15+
+- type: fill-in
+  focus: Route descriptions with direction
+  items: 12+
+- type: fill-in
+  focus: Approach → depart → reach sequence
+  items: 10+
+- type: cloze
+  focus: Narrative about a journey
+  items: 12+
+- type: match-up
+  focus: Situation → prefixed verb
+  items: 12+
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-19 (Motion - starting & returning)
 connects_to:
 - b1-21 (Motion - figurative uses)
 - b1-22 (Motion full prefix integration)
+objectives:
+- Learner can use під- for approaching
+- Learner can use від- for departing
+- Learner can use до- for reaching destination
+grammar:
+- Prefixes під-, від-, до-
+- Approaching, departing, reaching patterns
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Motion Prefixes
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official prefix meanings for approach/depart
+- name: Ukrainian Verbal Prefixes
+  url: https://uk.wikipedia.org/wiki/Дієслівні_префікси
+  type: reference
+  notes: під-, від-, до- semantics
+immersion: 100% Ukrainian
+phase: B1.2 Motion

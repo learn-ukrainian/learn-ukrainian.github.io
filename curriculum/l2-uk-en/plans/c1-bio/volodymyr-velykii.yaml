@@ -1,57 +1,39 @@
 module: volodymyr-velykii
-level: c1-bio
-sequence: 3
+level: C1-BIO
+slug: volodymyr-velykii
 version: '2.0'
 title: 'Володимир Великий: Хреститель Русі'
-focus: biography
-pedagogy: seminar
-objectives:
-- Analyze the geopolitical significance of the Christianization of Rus
-- Evaluate the state-building reforms of Volodymyr the Great (administrative, financial, symbolic)
-- Discuss the legacy of the Trident and the first currency in modern Ukrainian identity
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Володимир_Святославич
-    title: Володимир Святославич (Wikipedia UA)
-    notes: Biography, Christianization, reign
-  - url: https://uk.wikipedia.org/wiki/Хрещення_Русі
-    title: Хрещення Русі (Wikipedia UA)
-    notes: Process and significance of Christianization
-  secondary:
-  - url: https://uk.wikipedia.org/wiki/Вибір_віри
-    title: Вибір віри
-    notes: Legend of choosing religion
 content_outline:
 - section: Вступ — Від язичника до святого
   words: 400
-  subsections:
+  points:
   - Трансформація Володимира
   - Його місце в українській та світовій історії
   - Проблема джерел та інтерпретацій
 - section: Боротьба за владу
   words: 600
-  subsections:
+  points:
   - Син Святослава від ключниці Малуші
   - Княжіння в Новгороді
   - Усобиця з братами
   - Вбивство Ярополка та захоплення Києва
 - section: Язичницьке правління
   words: 600
-  subsections:
+  points:
   - Реформа язичництва
   - Пантеон богів на київському пагорбі
   - Військові походи
   - Гарем та діти
 - section: Вибір віри
   words: 700
-  subsections:
+  points:
   - Легенда про випробування вір
   - Посольства від різних релігій
   - Прагматичні та духовні мотиви вибору
   - Історична достовірність легенди
 - section: Хрещення Русі
   words: 800
-  subsections:
+  points:
   - Похід на Корсунь
   - Шлюб з Анною Порфірородною
   - Хрещення киян у Дніпрі 988 року
@@ -59,59 +41,88 @@ content_outline:
   - Опір та примусова християнізація
 - section: Християнський правитель
   words: 600
-  subsections:
+  points:
   - Будівництво церков та монастирів
   - Десятинна церква
   - Освітня діяльність
   - Зміна особистості — від жорстокості до милосердя
 - section: Спадщина та канонізація
   words: 300
-  subsections:
+  points:
   - Смерть та поділ спадщини
   - Канонізація як рівноапостольного
   - Сучасне значення Володимира
-word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - хрещення
-  - язичництво
-  - хреститель
-  - рівноапостольний
-  - пантеон
-  - ідол
-  - десятина
-  - усобиця
-  - порфірородна
-  - Корсунь
+  - хрещення (baptism/Christianization)
+  - язичництво (paganism)
+  - хреститель (baptizer)
+  - рівноапостольний (equal-to-the-apostles)
+  - пантеон (pantheon)
+  - ідол (idol)
+  - десятина (tithe)
+  - усобиця (internecine war)
+  - порфірородна (born in the purple)
+  - Корсунь (Chersonesus)
   recommended:
-  - клятва
-  - святиня
-  - монастир
-  - єпископ
-  - грамота
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  - critical-analysis
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - клятва (oath)
+  - святиня (shrine)
+  - монастир (monastery)
+  - єпископ (bishop)
+  - грамота (charter/literacy)
+activity_hints:
+- type: reading
+  focus: Chronicle account of the choice of faith
+  source: Повість минулих літ (adapted)
+  items: 3 passages
+- type: quiz
+  focus: Facts about Volodymyr's life and reign
+  items: 15+
+- type: match-up
+  focus: Religions and their representatives in the legend
+  items: 8+
+- type: essay-response
+  focus: Why did Volodymyr choose Byzantine Christianity?
+  word_target: 300
+  output: Analysis with historical and pragmatic factors
+- type: group-sort
+  focus: Before Christianization vs. After Christianization
+  items: 12+
+- type: fill-in
+  focus: Key dates and places in Volodymyr's biography
+  items: 10+
+- type: critical-analysis
+  focus: Evaluate the methods of Christianization
+  output: Balanced assessment with sources
+focus: biography
+pedagogy: CBI
+prerequisites:
+- c1-bio-01 (Knyahynia Olha - grandmother, first Christian)
+- c1-bio-02 (Kniaz Sviatoslav - father)
 connects_to:
-  previous: c1-bio-01 (Knyahynia Olha - grandmother, first Christian)
-  related:
-  - c1-bio-04 (Yaroslav Mudryi - son, continued church building)
-  - c1-bio-05 (Anna Yaroslavna - granddaughter)
-  - c1-bio-08 (Iov Boretskyi - Orthodox church defense)
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-04 (Yaroslav Mudryi - son, continued church building)
+- c1-bio-05 (Anna Yaroslavna - granddaughter)
+- c1-bio-08 (Iov Boretskyi - Orthodox church defense)
+objectives:
+- Analyze the geopolitical significance of the Christianization of Rus
+- Evaluate the state-building reforms of Volodymyr the Great (administrative, financial,
+  symbolic)
+- Discuss the legacy of the Trident and the first currency in modern Ukrainian identity
+grammar:
+- Historical narrative register
+module_type: biography
+sources:
+- name: Володимир Святославич (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Володимир_Святославич
+  type: primary
+  notes: Biography, Christianization, reign
+- name: Хрещення Русі (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Хрещення_Русі
+  type: primary
+  notes: Process and significance of Christianization
+- name: Вибір віри
+  url: https://uk.wikipedia.org/wiki/Вибір_віри
+  type: reference
+  notes: Legend of choosing religion
+immersion: 100% Ukrainian
+phase: C1-BIO

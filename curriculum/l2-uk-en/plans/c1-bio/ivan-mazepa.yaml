@@ -1,57 +1,39 @@
 module: ivan-mazepa
-level: c1-bio
-sequence: 12
+level: C1-BIO
+slug: ivan-mazepa
 version: '2.0'
 title: 'Іван Мазепа: Меценат і трагічний герой'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Іван_Мазепа
-    title: Іван Мазепа (Wikipedia UA)
-    notes: Biography, hetmanate, Poltava
-  secondary:
-  - url: https://uk.wikipedia.org/wiki/Полтавська_битва
-    title: Полтавська битва (Wikipedia UA)
-    notes: Military context and consequences
-  - url: https://uk.wikipedia.org/wiki/Мазепинське_бароко
-    title: Мазепинське бароко
-    notes: Cultural patronage
 content_outline:
 - section: Вступ — Між зрадою та героїзмом
   words: 400
-  subsections:
+  points:
   - Суперечливість постаті Мазепи
   - Його місце в українській та російській історіографії
   - Значення його вибору 1708 року
 - section: Молодість та шлях до влади
   words: 600
-  subsections:
+  points:
   - Шляхетське походження
   - Освіта та служба при дворах
   - Козацька кар'єра
   - Обрання гетьманом 1687 року
 - section: 'Гетьманування: успіхи'
   words: 700
-  subsections:
+  points:
   - Внутрішня політика та реформи
   - Військові походи з Петром I
   - Культурний розквіт — мазепинське бароко
   - Меценатство та будівництво
 - section: Шлях до розриву з Москвою
   words: 800
-  subsections:
+  points:
   - Наростання суперечностей
   - Обмеження автономії
   - Північна війна та її тягар
   - Переговори з Карлом XII
 - section: Полтава та вигнання
   words: 800
-  subsections:
+  points:
   - Відкритий виступ 1708 року
   - Руйнування Батурина
   - Полтавська катастрофа
@@ -59,59 +41,81 @@ content_outline:
   - Смерть та анафема
 - section: Спадщина та реабілітація
   words: 400
-  subsections:
+  points:
   - Образ Мазепи в літературі
   - Байрон, Пушкін, Словацький
   - Реабілітація в незалежній Україні
   - Мазепа на банкноті
 - section: Підсумок — Трагічний вибір
   words: 300
-  subsections:
+  points:
   - Мазепа як символ боротьби за незалежність
   - Уроки його історії
   - Актуальність сьогодні
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - гетьман
-  - меценат
-  - бароко
-  - анафема
-  - зрада
-  - автономія
-  - союз
-  - вигнання
-  - універсал
-  - резиденція
+  - гетьман (hetman)
+  - меценат (patron)
+  - бароко (baroque)
+  - анафема (anathema)
+  - зрада (treason - in Russian narrative)
+  - автономія (autonomy)
+  - союз (alliance)
+  - вигнання (exile)
+  - універсал (decree)
+  - резиденція (residence)
   recommended:
-  - клейноди
-  - старшина
-  - гетьманщина
-  - протекторат
-  - капітуляція
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  - critical-analysis
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - клейноди (regalia)
+  - старшина (officer class)
+  - гетьманщина (Hetmanate)
+  - протекторат (protectorate)
+  - капітуляція (capitulation)
+activity_hints:
+- type: reading
+  focus: Mazepa's manifesto and correspondence
+  source: Primary sources (adapted)
+  items: 3 passages
+- type: quiz
+  focus: Facts about Mazepa's hetmanate and decision
+  items: 15+
+- type: match-up
+  focus: Mazepa's cultural projects and their locations
+  items: 10+
+- type: essay-response
+  focus: Was Mazepa a traitor or a patriot?
+  word_target: 300
+  output: Analysis of competing narratives
+- type: group-sort
+  focus: Cultural achievements vs. political actions
+  items: 12+
+- type: fill-in
+  focus: Key dates and events of Mazepa's life
+  items: 10+
+- type: critical-analysis
+  focus: Analyze Mazepa in Ukrainian vs. Russian historiography
+  output: Comparative historiography
+focus: biography
+prerequisites:
+- c1-bio-10 (Bohdan Khmelnytskyi - earlier hetman)
+- c1-bio-11 (Yuriy Nemyrych - European orientation)
 connects_to:
-  previous: c1-bio-10 (Bohdan Khmelnytskyi - earlier hetman)
-  related:
-  - c1-bio-13 (Kost Hordiyenko - ally)
-  - c1-bio-14 (Pylyp Orlyk - successor)
-  - c1-bio-15 (Petro Kalnyshevskyy - end of autonomy)
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-13 (Kost Hordiyenko - ally)
+- c1-bio-14 (Pylyp Orlyk - successor)
+- c1-bio-15 (Petro Kalnyshevskyy - end of autonomy)
+module_type: biography
+sources:
+- name: Іван Мазепа (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Іван_Мазепа
+  type: primary
+  notes: Biography, hetmanate, Poltava
+- name: Полтавська битва (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Полтавська_битва
+  type: reference
+  notes: Military context and consequences
+- name: Мазепинське бароко
+  url: https://uk.wikipedia.org/wiki/Мазепинське_бароко
+  type: reference
+  notes: Cultural patronage
+immersion: 100% Ukrainian
+phase: C1-BIO

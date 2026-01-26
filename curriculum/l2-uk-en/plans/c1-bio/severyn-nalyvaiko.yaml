@@ -1,75 +1,71 @@
-module: severyn-nalyvaiko
-level: c1-bio
-sequence: 0
+module: c1-bio-15
+level: C1-BIO
+slug: severyn-nalyvaiko
 version: '2.0'
 title: 'Северин Наливайко: Лідер козацького повстання'
-focus: biography
-pedagogy: seminar
-objectives:
-- Understand the causes of the first Cossack rebellions
-- Analyze Nalyvaiko's tactics and goals
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Северин_Наливайко
-    title: Северин Наливайко (Wikipedia UA)
-  - url: https://uk.wikipedia.org/wiki/Повстання_Наливайка
-    title: Повстання Наливайка
-  secondary: []
+subtitle: 'Severyn Nalyvaiko: The Cossack Rebel Leader'
 content_outline:
 - section: Вступ — Перший бунтар
   words: 450
-  subsections:
+  points:
   - Лідер першого масштабного козацького повстання (1594-1596)
   - Перехід від найманства до соціальної боротьби
   - Трагічна смерть у Варшаві
 - section: Життєпис
   words: 1200
-  subsections:
+  points:
   - Походження з роду Наливайків
   - Служба у князя Острозького
   - Походи на Молдову
   - Повстання та Солоницька трагедія
 - section: Історичний контекст
   words: 450
-  subsections:
+  points:
   - Криза Речі Посполитої
   - Релігійний фактор (Берестейська унія)
 - section: Внесок та Спадщина
   words: 450
-  subsections:
+  points:
   - Ідея Козацької держави
   - Військове мистецтво
   - Образ у літературі
 - section: Порівняльний аналіз
   words: 450
-  subsections:
+  points:
   - Наливайко vs. Хмельницький
 word_target: 3000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - повстання
-  - бунт
-  - ватажок
-  - табір
-  - облога
-  - страта
-  - зрада
-  - найманець
-  - поразка
-  recommended: []
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - essay-response
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+  - повстання (uprising)
+  - бунт (rebellion)
+  - ватажок (leader)
+  - табір (camp)
+  - облога (siege)
+  - страта (execution)
+  - зрада (betrayal)
+  - найманець (mercenary)
+  - поразка (defeat)
+activity_hints:
+- type: reading
+  focus: Chronicle description of Solonytsia
+- type: quiz
+  focus: Timeline of the uprising
+- type: essay-response
+  focus: Hero or Bandit? Perspectives on Nalyvaiko
+focus: biography
+pedagogy: CBI
+objectives:
+- Understand the causes of the first Cossack rebellions
+- Analyze Nalyvaiko's tactics and goals
+grammar:
+- Military terminology
+- Action narrative
+sources:
+- name: Северин Наливайко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Северин_Наливайко
+  type: primary
+- name: Повстання Наливайка
+  url: https://uk.wikipedia.org/wiki/Повстання_Наливайка
+  type: primary
+immersion: 100% Ukrainian
+phase: C1-BIO

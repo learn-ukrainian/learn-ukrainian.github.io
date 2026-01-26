@@ -1,0 +1,102 @@
+module: chomu-2022-spratsiuvalo
+level: C1-HIST
+slug: chomu-2022-spratsiuvalo
+version: '2.0'
+title: Чому 2022 спрацювало? Анатомія мобілізації
+content_outline:
+- section: Вступ — «Три дні» не сталось
+  words: 451
+  points:
+  - Російський план — швидка перемога
+  - Український спротив — миттєвий
+  - Чому?
+  - Структура модуля
+- section: Готовність суспільства
+  words: 790
+  points:
+  - 2014-2022 — 8 років війни
+  - Суспільство вже мобілізоване
+  - Досвід волонтерства
+  - Психологічна готовність
+- section: Інституційна база
+  words: 677
+  points:
+  - Територіальна оборона
+  - Реформа армії
+  - Західна підготовка
+  - IT-волонтери
+- section: Лідерство
+  words: 677
+  points:
+  - Зеленський — «мені потрібна зброя»
+  - Команда — залишились
+  - Місцеві лідери
+  - Децентралізація рішень
+- section: Громадянське суспільство
+  words: 564
+  points:
+  - Миттєва мобілізація
+  - Гуманітарна система
+  - Інформаційний фронт
+  - Міжнародна солідарність
+- section: Підсумок
+  words: 341
+  points:
+  - 2022 — кульмінація всього
+  - Не випадковість — підготовка
+  - Перехід до м'якої сили
+word_target: 3500
+vocabulary_hints:
+  required:
+  - мобілізація (mobilization)
+  - територіальна оборона (territorial defense)
+  - спротив (resistance)
+  - готовність (readiness)
+  - волонтер (volunteer)
+  - лідерство (leadership)
+  - децентралізація (decentralization)
+  - громадянське суспільство (civil society)
+  - інституційна база (institutional foundation)
+  - кульмінація (culmination)
+  recommended:
+  - «мені потрібна зброя» (I need ammunition)
+  - IT-армія (IT army)
+  - Bayraktar (Bayraktar)
+  - HIMARS (HIMARS)
+  - стійкість (resilience)
+activity_hints:
+- type: preparedness-analysis
+  focus: 2014-2022 — what prepared Ukraine
+  output: Preparedness factors
+- type: institutional-study
+  focus: Territorial defense — how it worked
+  output: Institution analysis
+- type: leadership-analysis
+  focus: Zelensky's crisis leadership
+  output: Leadership analysis
+- type: society-mobilization
+  focus: Civil society instant response
+  output: Mobilization anatomy
+- type: essay-response
+  focus: Що підготувало Україну до 24 лютого?
+  word_target: 500
+  model_answer: Required
+focus: history
+prerequisites:
+- c1-hist-130 (Women in revolutions)
+- c1-hist-127 (Civil society)
+connects_to:
+- c1-hist-132 (Soft power)
+- c1-hist-133 (Agency synthesis)
+module_type: thematic
+sources:
+- name: Мобілізація в Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Мобілізація_в_Україні_(2022)
+  type: reference
+  notes: 2022 mobilization
+- name: Територіальна оборона (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Сили_територіальної_оборони_України
+  type: reference
+  notes: Territorial defense
+immersion: 100% Ukrainian
+phase: C1-HIST.1 [Historiography]

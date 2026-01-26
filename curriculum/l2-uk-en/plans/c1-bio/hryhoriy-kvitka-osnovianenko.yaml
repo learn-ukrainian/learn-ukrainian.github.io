@@ -1,123 +1,129 @@
 module: hryhoriy-kvitka-osnovianenko
-level: c1-bio
-sequence: 102
+level: C1-BIO
+slug: hryhoriy-kvitka-osnovianenko
 version: '2.0'
 title: 'Григорій Квітка-Основ''яненко: Батько української прози'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Григорій_Квітка-Основ'яненко
-    title: Григорій Квітка-Основ'яненко (Wikipedia UA)
-    notes: Biography, works, literary significance
-  secondary:
-  - url: https://uk.wikipedia.org/wiki/Маруся_(повість)
-    title: Маруся (повість)
-    notes: His most famous sentimental work
-  - url: https://uk.wikipedia.org/wiki/Конотопська_відьма
-    title: Конотопська відьма
-    notes: His satirical masterpiece
-  - url: https://uk.wikipedia.org/wiki/Слобожанщина
-    title: Слобожанщина (історичний регіон)
-    notes: Regional context for his works
-  - url: https://uk.wikipedia.org/wiki/Харківський_національний_університет
-    title: Харківський університет
-    notes: Intellectual center of his era
 content_outline:
 - section: Вступ — Перший прозаїк
   words: 400
-  subsections:
+  points:
   - Квітка як засновник української художньої прози
   - Його роль у становленні літературної мови
   - Значення для розвитку реалізму
 - section: Походження та молодість
   words: 600
-  subsections:
+  points:
   - Народження в дворянській родині (1778)
   - Слобожанщина як культурний регіон
   - Військова служба та відставка
   - Перші літературні спроби російською
 - section: Звернення до української мови
   words: 600
-  subsections:
+  points:
   - Вплив Котляревського та "Енеїди"
   - Рішення писати українською
   - Полеміка про право української мови на літературу
   - Псевдонім "Грицько Основ'яненко"
 - section: Сентиментальна проза
   words: 700
-  subsections:
+  points:
   - '"Маруся" (1834) — перша українська повість'
   - Ідеалізація селянського життя
   - Трагічна любов як центральний мотив
   - Вплив європейського сентименталізму
 - section: Сатирична проза
   words: 700
-  subsections:
+  points:
   - '"Конотопська відьма" (1833)'
   - Сатира на козацьку старшину
   - Народні вірування та гумор
   - Реалістичні елементи в сатирі
 - section: Етнографічна спадщина
   words: 500
-  subsections:
+  points:
   - Описи народних звичаїв та обрядів
   - Весільні та поховальні традиції
   - Слобожанський діалект у творах
   - Внесок у фольклористику
 - section: Останні роки та значення
   words: 500
-  subsections:
+  points:
   - Робота в Харківському театрі
   - Смерть 1843 року
   - Вплив на Нечуя-Левицького та реалістів
   - '"Батько української прози" — заслужений титул'
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - прозаїк
-  - сентименталізм
-  - сатира
-  - повість
-  - відьма
-  - етнографія
-  - Слобожанщина
-  - псевдонім
-  - дворянин
-  - селянство
+  - прозаїк (prose writer)
+  - сентименталізм (sentimentalism)
+  - сатира (satire)
+  - повість (novella/tale)
+  - відьма (witch)
+  - етнографія (ethnography)
+  - Слобожанщина (Slobozhanshchyna region)
+  - псевдонім (pseudonym)
+  - дворянин (nobleman)
+  - селянство (peasantry)
   recommended:
-  - козацька старшина
-  - народні звичаї
-  - полеміка
-  - ідеалізація
-  - трагічна любов
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  - critical-analysis
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - козацька старшина (Cossack officers)
+  - народні звичаї (folk customs)
+  - полеміка (polemic)
+  - ідеалізація (idealization)
+  - трагічна любов (tragic love)
+activity_hints:
+- type: reading
+  focus: Excerpts from "Маруся" and "Конотопська відьма"
+  source: UkrLib or Wikisource
+  items: 4 passages
+- type: quiz
+  focus: Kvitka's biography and literary contributions
+  items: 12+
+- type: match-up
+  focus: Works and their characteristics
+  items: 10+
+- type: essay-response
+  focus: Why is Kvitka called "Father of Ukrainian Prose"?
+  word_target: 300
+  output: Literary analysis with examples
+- type: group-sort
+  focus: Sentimental vs. satirical elements in Kvitka's works
+  items: 12+
+- type: fill-in
+  focus: Key quotes and their context
+  items: 10+
+- type: critical-analysis
+  focus: Compare Kvitka's sentimentalism with European models
+  output: Comparative literature analysis
+focus: biography
+prerequisites:
+- c1-bio-46 (Ivan Kotliarevskyi - predecessor)
+- Understanding of sentimentalism and early realism
 connects_to:
-  previous: c1-bio-46 (Ivan Kotliarevskyi - predecessor)
-  related:
-  - c1-bio-103 (Nechuy-Levytsky - artistic heir)
-  - c1-bio-47 (Marko Vovchok - female prose pioneer)
-  - lit-06 through lit-10 (Literary analysis of Kvitka's works)
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-103 (Nechuy-Levytsky - artistic heir)
+- c1-bio-47 (Marko Vovchok - female prose pioneer)
+- lit-06 through lit-10 (Literary analysis of Kvitka's works)
+module_type: biography
+sources:
+- name: Григорій Квітка-Основ'яненко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Григорій_Квітка-Основ'яненко
+  type: primary
+  notes: Biography, works, literary significance
+- name: Маруся (повість)
+  url: https://uk.wikipedia.org/wiki/Маруся_(повість)
+  type: reference
+  notes: His most famous sentimental work
+- name: Конотопська відьма
+  url: https://uk.wikipedia.org/wiki/Конотопська_відьма
+  type: reference
+  notes: His satirical masterpiece
+- name: Слобожанщина (історичний регіон)
+  url: https://uk.wikipedia.org/wiki/Слобожанщина
+  type: reference
+  notes: Regional context for his works
+- name: Харківський університет
+  url: https://uk.wikipedia.org/wiki/Харківський_національний_університет
+  type: reference
+  notes: Intellectual center of his era
+immersion: 100% Ukrainian
+phase: C1-BIO

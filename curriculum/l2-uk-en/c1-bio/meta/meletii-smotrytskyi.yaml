@@ -1,16 +1,13 @@
 module: c1-bio-17
-id: c1-bio-meletii-smotrytskyi
-title: 'Мелетій Смотрицький: Архітектор слов''янської граматики'
-subtitle: 'Meletii Smotrytskyi: Architect of Slavic Grammar'
+level: C1-BIO
 slug: meletii-smotrytskyi
 version: '2.0'
-phase: C1-BIO
-pedagogy: CBI
-focus: biography
+id: c1-bio-meletii-smotrytskyi
+naturalness:
+  score: 10
+  status: PASS
 duration: 120
 transliteration: none
-word_target: 3000
-immersion: 100% Ukrainian
 tags:
 - history
 - biography
@@ -18,70 +15,6 @@ tags:
 - polemics
 - church
 - education
-grammar:
-- Linguistic terminology
-- Theological vocabulary
-objectives:
-- Evaluate the impact of Smotrytskyi's Grammar (1619)
-- Understand the tragedy of the 'Threnos' and his conversion to Uniatism
 vocabulary_count: 25
-sources:
-- name: Мелетій Смотрицький (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Мелетій_Смотрицький
-  type: primary
-- name: Тренос
-  url: https://uk.wikipedia.org/wiki/Тренос
-  type: primary
-- name: Граматика Смотрицького
-  url: https://uk.wikipedia.org/wiki/Граматика_слов%27янська_(1619)
-  type: primary
-content_outline:
-- section: Вступ — Голос плачучої церкви
-  words: 450
-  points:
-  - Автор "Треносу" (Плачу)
-  - Творець першої повної граматики церковнослов'янської мови
-  - Інтелектуал, що розірвався між Сходом і Заходом
-- section: Життєпис
-  words: 1200
-  points:
-  - Походження та освіта в Європі
-  - Видання "Треносу" та "Граматики"
-  - Архієпископство та криза сумління
-  - Перехід в унію та смерть
-- section: Історичний контекст
-  words: 450
-  points:
-  - Релігійна полеміка XVII ст.
-  - Розкол суспільства
-- section: Внесок та Спадщина
-  words: 450
-  points:
-  - Кодифікація мови
-  - Вершина бароко
-- section: Порівняльний аналіз
-  words: 450
-  points:
-  - Смотрицький vs. Вишенський
-vocabulary_hints:
-  required:
-  - граматика (grammar)
-  - полеміка (polemics)
-  - плач (lament/threnos)
-  - єресь (heresy)
-  - догмат (dogma)
-  - відступництво (apostasy)
-  - кодифікація (codification)
-  - синтаксис (syntax)
-  - православ'я (orthodoxy)
-  - унія (union)
-activity_hints:
-- type: reading
-  focus: Excerpts from "Threnos"
-- type: quiz
-  focus: Biography and works
-- type: essay-response
-  focus: 'The tragedy of choice: Faith vs. Unity'
-naturalness:
-  score: 10
-  status: PASS
+build:
+  last_modified: '2026-01-26'

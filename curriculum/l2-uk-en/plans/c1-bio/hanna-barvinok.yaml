@@ -1,105 +1,105 @@
 module: hanna-barvinok
-level: c1-bio
-sequence: 21
+level: C1-BIO
+slug: hanna-barvinok
 version: '2.0'
 title: 'Ганна Барвінок: Письменниця і етнографка'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Ганна_Барвінок
-    title: Ганна Барвінок (Wikipedia UA)
-    notes: Biography of the pioneering woman writer
-  secondary:
-  - url: https://ilnan.gov.ua/
-    title: Інститут літератури ім. Т.Г. Шевченка
-    notes: Literary archive materials
 content_outline:
 - section: Вступ — Перша з жінок української літератури
   words: 400
-  subsections:
+  points:
   - Одна з перших українських письменниць
   - Дружина Пантелеймона Куліша
   - Етнографічна та просвітницька діяльність
 - section: Юність та виховання (1828-1847)
   words: 600
-  subsections:
+  points:
   - Народження Олександри Білозерської
   - Родина та освіта
   - Вплив українського фольклору
   - Знайомство з Кулішем
 - section: Подружжя з Кулішем (1847-1860-ті)
   words: 800
-  subsections:
+  points:
   - Шлюб і спільна діяльність
   - Участь у Кирило-Мефодіївському братстві
   - Арешт Куліша та заслання
   - Чекання та листування
 - section: Літературна діяльність (1860-ті–1890-ті)
   words: 800
-  subsections:
+  points:
   - Псевдонім «Ганна Барвінок»
   - Оповідання про селянське життя
   - Етнографічні записи
   - Збірка «Оповідання з народних уст»
 - section: Пізній період (1890-1911)
   words: 700
-  subsections:
+  points:
   - Вдівство та продовження праці
   - Спогади про Куліша
   - Останні твори
   - Смерть у Мотронівці
 - section: Спадщина — Голос селянської України
   words: 700
-  subsections:
+  points:
   - Внесок в українську етнографію
   - Жіночий голос в літературі
   - Сучасне дослідження творчості
   - Барвінок як символ жіночої творчості
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - письменниця
-  - етнограф
-  - просвітниця
-  - псевдонім
-  - оповідання
-  - фольклор
-  - селянство
-  - побут
-  - обряд
-  - традиція
+  - письменниця (woman writer)
+  - етнограф (ethnographer)
+  - просвітниця (enlightener)
+  - псевдонім (pseudonym)
+  - оповідання (short story)
+  - фольклор (folklore)
+  - селянство (peasantry)
+  - побут (everyday life)
+  - обряд (ritual)
+  - традиція (tradition)
   recommended:
-  - усна творчість
-  - народна пісня
-  - звичай
-  - етнографічний запис
-  - жіноча література
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - усна творчість (oral tradition)
+  - народна пісня (folk song)
+  - звичай (custom)
+  - етнографічний запис (ethnographic record)
+  - жіноча література (women's literature)
+activity_hints:
+- type: reading
+  focus: Українська жіноча література XIX ст.
+  source: Literary history sources
+  items: 3 passages
+- type: quiz
+  focus: Життя та творчість Барвінок
+  items: 12+
+- type: match-up
+  focus: Етнографічні терміни
+  items: 10+
+- type: essay-response
+  focus: Яку роль відіграла Барвінок у збереженні українського фольклору?
+  word_target: 300
+  output: Analytical essay
+- type: group-sort
+  focus: Твори за жанрами та темами
+  items: 12+
+- type: fill-in
+  focus: Етнографічна та літературна лексика
+  items: 10+
+focus: biography
+prerequisites:
+- c1-bio-20
 connects_to:
-  previous: c1-bio-20
-  related:
-  - c1-bio-97
-  - c1-bio-24
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-97
+- c1-bio-24
+module_type: biography
+sources:
+- name: Ганна Барвінок (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Ганна_Барвінок
+  type: primary
+  notes: Biography of the pioneering woman writer
+- name: Інститут літератури ім. Т.Г. Шевченка
+  url: https://ilnan.gov.ua/
+  type: reference
+  notes: Literary archive materials
+immersion: 100% Ukrainian
+phase: C1-BIO

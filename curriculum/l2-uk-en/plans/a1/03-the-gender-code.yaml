@@ -1,16 +1,9 @@
-module: the-gender-code
-level: a1
-sequence: 3
+module: a1-03
+level: A1
+slug: the-gender-code
 version: '2.0'
 title: The Gender Code
 subtitle: Unlocking Ukrainian Gender Patterns
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can identify noun gender by word ending
-- Learner can categorize nouns into 4 declension families
-- 'Learner recognizes patterns: consonant (m), -а/-я (f), -о/-е (n)'
-- Learner knows common exceptions
 content_outline:
 - section: 'Introduction: Why Gender Matters'
   words: 100
@@ -48,7 +41,7 @@ content_outline:
   - Identify gender of new words
   - Memory strategies
 word_target: 900
-vocabulary:
+vocabulary_hints:
   required:
   - брат (brother)
   - сестра (sister)
@@ -65,16 +58,34 @@ vocabulary:
   - день (day)
   - земля (earth)
   - серце (heart)
-  forbidden: []
-activities:
-  types_required:
-  - quiz
-  - fill-in
-  - match-up
-  - sorting
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: sorting
+  focus: Sort nouns by gender
+  items: 30
+- type: quiz
+  focus: Identify gender by ending
+  items: 20
+- type: fill-in
+  focus: Choose correct gender
+  items: 15
+- type: match-up
+  focus: Noun → gender
+  items: 20
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-02 (The Cyrillic Code II)
 connects_to:
 - a1-04 (This Is, I Am)
 - a1-26 (Adjectives)
+objectives:
+- Learner can identify noun gender by word ending
+- Learner can categorize nouns into 4 declension families
+- 'Learner recognizes patterns: consonant (m), -а/-я (f), -о/-е (n)'
+- Learner knows common exceptions
+grammar:
+- Three-gender system
+- Declension families overview
+- Gender prediction rules
+register: розмовний
+phase: A1.1 [First Contact]

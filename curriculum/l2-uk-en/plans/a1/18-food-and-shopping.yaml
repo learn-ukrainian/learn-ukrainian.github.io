@@ -1,16 +1,9 @@
-module: food-and-shopping
-level: a1
-sequence: 18
+module: a1-18
+level: A1
+slug: food-and-shopping
 version: '2.0'
 title: Food, Drinks & Shopping
 subtitle: Practical Vocabulary for Market and Store
-focus: vocabulary
-pedagogy: PPP
-objectives:
-- Learner can order food items using accusative case
-- Learner can request quantities using genitive case
-- Learner can ask prices and make purchases
-- Learner can distinguish between food and drink categories
 content_outline:
 - section: 'Introduction: Food Vocabulary'
   words: 100
@@ -49,7 +42,7 @@ content_outline:
   - Role-play shopping
   - Make a shopping list
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - хліб (bread)
   - молоко (milk)
@@ -66,16 +59,34 @@ vocabulary:
   - сир (cheese)
   - яйце (egg)
   - цукор (sugar)
-  forbidden: []
-activities:
-  types_required:
-  - dialogue
-  - categorization
-  - fill-in
-  - vocabulary-drill
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: vocabulary-drill
+  focus: Food and drink names
+  items: 30
+- type: categorization
+  focus: Sort food by type
+  items: 20
+- type: dialogue
+  focus: Shopping conversations
+  items: 8
+- type: fill-in
+  focus: Complete with quantities
+  items: 15
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- a1-17 (Numbers and Money)
 connects_to:
 - a1-19 (At the Café)
 - a1-37 (At the Market)
+objectives:
+- Learner can order food items using accusative case
+- Learner can request quantities using genitive case
+- Learner can ask prices and make purchases
+- Learner can distinguish between food and drink categories
+grammar:
+- Accusative for direct objects (review)
+- Genitive for quantities
+- Price expressions
+register: розмовний
+phase: A1.2 [Navigation]

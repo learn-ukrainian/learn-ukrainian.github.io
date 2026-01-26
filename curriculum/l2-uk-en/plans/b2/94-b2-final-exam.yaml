@@ -1,9 +1,34 @@
 module: b2-final-exam
-level: b2
-sequence: 94
+level: B2
+slug: b2-final-exam
 version: '2.0'
 title: B2 Підсумковий іспит
 subtitle: B2 Final Exam
+content_outline:
+- section: Вступ — B2 Підсумковий іспит
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Основний матеріал
+  words: 600
+  points:
+  - Теоретичні основи
+  - Приклади та ілюстрації
+  - Типові помилки та як їх уникати
+- section: Поглиблене вивчення
+  words: 600
+  points:
+  - Додаткові випадки
+  - Контекстуальне використання
+  - Стилістичні нюанси
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: checkpoint
 pedagogy: TTT
 objectives:
@@ -12,13 +37,9 @@ objectives:
 - Learner can deliver effective presentations
 - Learner can participate in professional discussions
 - Learner can self-assess readiness for C1 level
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Integration of M85-93 Communication Skills
+- Comprehensive review and testing
+immersion: 100
+register: varies
+phase: B2.4 Communication Skills Checkpoint

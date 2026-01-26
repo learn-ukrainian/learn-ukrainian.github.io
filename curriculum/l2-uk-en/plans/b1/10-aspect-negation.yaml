@@ -1,25 +1,9 @@
-module: 10-aspect-negation
-level: b1
-sequence: 10
-version: '1.0'
+module: b1-10
+level: B1
+slug: 10-aspect-negation
+version: '2.0'
 title: Вид у запереченні
 subtitle: 'Aspect in Negation: How ''не'' Changes Aspect Selection'
-focus: grammar
-pedagogy: TTT
-objectives:
-- Learner understands why negation favors imperfective aspect
-- Learner can distinguish 'ще не' + perfective vs 'не' + imperfective
-- Learner can form negative imperatives with correct aspect
-- Learner recognizes exceptions to imperfective preference
-sources:
-- name: Ukrainian State Standard 2024 - Negation and Aspect
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official rules for aspect in negative contexts
-- name: Ukrainian Negation Patterns
-  url: https://uk.wikipedia.org/wiki/Заперечення_(мовознавство)
-  type: reference
-  notes: Negation with aspect selection
 content_outline:
 - section: Тест
   words: 150
@@ -51,7 +35,7 @@ content_outline:
   - Summary table
   - Self-check
 word_target: 1800
-vocabulary:
+vocabulary_hints:
   required:
   - заперечення
   - не
@@ -71,15 +55,48 @@ vocabulary:
   - ніщо
   - випадково
   - навмисне
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - quiz
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: Which aspect in negation?
+  items: 15
+- type: fill-in
+  focus: ще не + perfective patterns
+  items: 12
+- type: fill-in
+  focus: Affirmative → negative with correct aspect
+  items: 10
+- type: match-up
+  focus: Negation type → aspect
+  items: 12
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-06 (Aspect complete system)
+- b1-07 (Aspect past)
+- b1-08 (Aspect past)
+- b1-09 (Aspect future)
 connects_to:
 - b1-11 (Aspect in imperatives)
 - b1-14 (Aspect integration practice)
+objectives:
+- Learner understands why negation favors imperfective aspect
+- Learner can distinguish 'ще не' + perfective vs 'не' + imperfective
+- Learner can form negative imperatives with correct aspect
+- Learner recognizes exceptions to imperfective preference
+grammar:
+- Imperfective preference with не
+- ще не + perfective - expected completion
+- не + imperfective - general negation
+- Negative imperatives - наказові форми
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Negation and Aspect
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official rules for aspect in negative contexts
+- name: Ukrainian Negation Patterns
+  url: https://uk.wikipedia.org/wiki/Заперечення_(мовознавство)
+  type: reference
+  notes: Negation with aspect selection
+immersion: 100% Ukrainian
+phase: B1.1 Aspect

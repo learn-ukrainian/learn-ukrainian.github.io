@@ -1,110 +1,111 @@
 module: viacheslav-chornovil
-level: c1-bio
-sequence: 76
+level: C1-BIO
+slug: viacheslav-chornovil
 version: '2.0'
 title: 'В''ячеслав Чорновіл: Незламний правозахисник'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Чорновіл_В%27ячеслав_Максимович
-    title: В'ячеслав Чорновіл (Wikipedia UA)
-    notes: Основна біографічна інформація
-  secondary:
-  - url: https://helsinki.org.ua/
-    title: Український Гельсінський союз
-    notes: Історія правозахисного руху
-  - url: https://nru.org.ua/
-    title: Народний Рух України
-    notes: Політична діяльність
 content_outline:
 - section: Вступ — Людина, яка не схилялася
   words: 400
-  subsections:
+  points:
   - Чорновіл як символ української незламності
   - Від журналіста до кандидата в президенти
   - Трагічна загибель та незавершена місія
 - section: Черкащина та формування характеру
   words: 600
-  subsections:
+  points:
   - Народження в селі Єрки (1937)
   - Повоєнне дитинство
   - Освіта та журналістські початки
 - section: Журналіст-бунтар
   words: 700
-  subsections:
+  points:
   - Робота на телебаченні
   - Перші конфлікти з владою
   - Документування репресій
 - section: Лихо з розуму та перший арешт
   words: 800
-  subsections:
+  points:
   - Збірка документів про репресії 1965-1966
   - Арешт та ув'язнення (1967)
   - Роки в таборах
 - section: Гельсінська група та другий арешт
   words: 700
-  subsections:
+  points:
   - Участь в Українській Гельсінській групі
   - Правозахисна діяльність
   - Повторне ув'язнення
 - section: Незалежність та політика
   words: 600
-  subsections:
+  points:
   - Народний Рух України
   - Президентська кампанія 1991
   - Роль в розбудові держави
 - section: Загибель та спадщина
   words: 200
-  subsections:
+  points:
   - Загадкова автокатастрофа (1999)
   - Питання про причини смерті
   - Значення для української демократії
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - правозахисник
-  - дисидент
-  - Гельсінська група
-  - Рух
-  - незламність
-  - репресії
-  - політв'язень
-  - журналіст
-  - президентські вибори
-  - автокатастрофа
+  - правозахисник (human rights defender)
+  - дисидент (dissident)
+  - Гельсінська група (Helsinki Group)
+  - Рух (Movement/Rukh)
+  - незламність (unbreakability)
+  - репресії (repressions)
+  - політв'язень (political prisoner)
+  - журналіст (journalist)
+  - президентські вибори (presidential elections)
+  - автокатастрофа (car accident)
   recommended:
-  - самвидав
-  - правозахисний рух
-  - опозиція
-  - демократизація
-  - незалежність
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - самвидав (samizdat)
+  - правозахисний рух (human rights movement)
+  - опозиція (opposition)
+  - демократизація (democratization)
+  - незалежність (independence)
+activity_hints:
+- type: reading
+  focus: Фрагменти з Лихо з розуму
+  source: Первинні джерела
+  items: 3 passages
+- type: quiz
+  focus: Хронологія життя Чорновола
+  items: 12+
+- type: match-up
+  focus: Організації та їхні цілі
+  items: 10+
+- type: essay-response
+  focus: Що означає бути правозахисником?
+  word_target: 300
+  output: Етичний есей
+- type: group-sort
+  focus: Етапи дисидентської діяльності
+  items: 12+
+- type: fill-in
+  focus: Правозахисна термінологія
+  items: 10+
+focus: biography
+prerequisites:
+- c1-bio-75-vasyl-symonenko
 connects_to:
-  previous: c1-bio-75-vasyl-symonenko
-  related:
-  - c1-bio-77-vasyl-stus
-  - c1-bio-71-levko-lukyanenko
-  - c1-bio-78-myroslav-marynovych
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-77-vasyl-stus
+- c1-bio-71-levko-lukyanenko
+- c1-bio-78-myroslav-marynovych
+module_type: biography
+sources:
+- name: В'ячеслав Чорновіл (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Чорновіл_В%27ячеслав_Максимович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Український Гельсінський союз
+  url: https://helsinki.org.ua/
+  type: reference
+  notes: Історія правозахисного руху
+- name: Народний Рух України
+  url: https://nru.org.ua/
+  type: reference
+  notes: Політична діяльність
+immersion: 100% Ukrainian
+phase: C1-BIO

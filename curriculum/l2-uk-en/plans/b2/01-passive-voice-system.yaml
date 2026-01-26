@@ -1,25 +1,8 @@
 module: 01-passive-voice-system
-level: b2
-sequence: 1
-version: '1.0'
+level: B2
+slug: 01-passive-voice-system
+version: '2.0'
 title: 'Пасивний стан: повна система'
-focus: grammar
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Ukrainian State Standard 2024 - Passive Voice
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official B2 passive voice requirements, all 4 forms
-- name: CEFR B2 Grammar Descriptors
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
-  type: reference
-  notes: B2 grammar complexity expectations
-- name: Сучасна українська мова - Пономарів
-  url: https://uk.wikipedia.org/wiki/Пономарів_Олександр_Данилович
-  type: secondary
-  notes: Academic reference for passive voice usage and register
 content_outline:
 - section: Вступ — Що таке пасивний стан?
   words: 500
@@ -67,7 +50,7 @@ content_outline:
   - Ключові правила вибору пасиву
   - Зв'язок із наступними модулями
 word_target: 3800
-vocabulary:
+vocabulary_hints:
   required:
   - пасивний стан (passive voice)
   - дієприкметник (participle)
@@ -85,19 +68,53 @@ vocabulary:
   - трансформація (transformation)
   - контекст (context)
   - стиль (style)
-  forbidden: []
-activities:
-  types_required:
-  - group-sort
-  - quiz
-  - fill-in
-  - essay-response
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: Identify passive voice type from sentence
+  items: 15+
+- type: match-up
+  focus: Sentence → passive type classification
+  items: 12+
+- type: group-sort
+  focus: Classify sentences by passive form (4 categories)
+  items: 16+
+- type: fill-in
+  focus: Complete sentences with correct passive form
+  items: 12+
+- type: fill-in
+  focus: Active → passive transformation (choose appropriate type)
+  items: 10+
+- type: quiz
+  focus: Which passive for which register?
+  items: 12+
+- type: essay-response
+  focus: Rewrite paragraph using appropriate passive forms
+  word_target: 150
+  output: Model answer provided
+focus: grammar
+prerequisites:
+- B1 completion required
+- Active voice mastery
+- All 7 cases
+- Aspect system (perfective/imperfective)
 connects_to:
 - b2-02 (Past Passive Participles -ний/-тий)
 - b2-03 (Impersonal -но/-то)
 - b2-06 (Passive in Context)
 - b2-10 (B2.1a Checkpoint)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Passive Voice
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official B2 passive voice requirements, all 4 forms
+- name: CEFR B2 Grammar Descriptors
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 grammar complexity expectations
+- name: Сучасна українська мова - Пономарів
+  url: https://uk.wikipedia.org/wiki/Пономарів_Олександр_Данилович
+  type: secondary
+  notes: Academic reference for passive voice usage and register
+immersion: 100% Ukrainian
+phase: B2.1a [Passive Voice]

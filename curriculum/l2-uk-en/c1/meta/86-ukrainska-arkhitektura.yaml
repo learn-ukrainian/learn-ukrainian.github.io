@@ -1,10 +1,7 @@
 module: c1-86
-title: Українська архітектура
-subtitle: Ukrainian Architecture — Stone Chronicles
+level: C1
+slug: 86-ukrainska-arkhitektura
 version: '2.0'
-phase: C1.5 Folk Culture & Fine Arts
-focus: fine-arts
-pedagogy: CBI
 duration: 120
 transliteration: none
 tags:
@@ -12,33 +9,6 @@ tags:
 - architecture
 - baroque
 - modernism
-grammar:
-- Architectural terminology
-- Describing spatial forms
-objectives:
-- Learner explores the legacy of Kyivan Rus architecture (Sophia).
-- Learner understands the uniqueness of Ukrainian Baroque (Mazepa style).
-- Learner analyzes the wooden churches of the Carpathians.
 vocabulary_count: 25
-slug: 86-ukrainska-arkhitektura
-content_outline:
-- section: Вступ — Українська архітектура
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-- section: Content Areas
-  words: 500
-  points:
-  - 'Kyivan Rus'': Софія Київська, Печерська лавра — Byzantine heritage'
-  - 'Ukrainian Baroque: Козацьке бароко, Мазепинський стиль — unique national style'
-  - 'Wooden churches: Карпатські церкви (UNESCO) — world heritage'
-  - 'Modernism: Конструктивізм Харкова, Держпром — Soviet avant-garde'
-  - 'Contemporary: Сучасна архітектура, відбудова — post-war rebuilding'
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

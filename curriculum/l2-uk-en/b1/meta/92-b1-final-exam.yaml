@@ -1,91 +1,13 @@
 module: b1-92
-id: b1-92
+level: B1
 slug: b1-final-exam
-title: "Фінальний іспит B1"
-subtitle: "Comprehensive B1 Level Assessment"
 version: '2.0'
-phase: "B1.9 [Communication Skills]"
-focus: assessment
-pedagogy: TTT
-register: розмовний
-duration: 180
-transliteration: none
-objectives:
-  - "Learner demonstrates comprehensive B1 level proficiency"
-  - "Learner passes final reading, listening, writing, and speaking assessments"
-  - "Learner shows integration of grammar and vocabulary"
-  - "Learner is certified ready for B2 level"
-grammar:
-  - "Comprehensive B1 grammar review"
-  - "All aspect contexts"
-  - "Motion verbs and prefixes"
-  - "Complex sentences"
-  - "Participles and passive"
-word_target: 500
-content_outline:
-  - section: "Reading Comprehension"
-    words: 100
-    points:
-      - "Authentic text reading"
-      - "Comprehension questions"
-      - "Inference skills"
-  - section: "Listening Comprehension"
-    words: 100
-    points:
-      - "Authentic audio"
-      - "Note-taking"
-      - "Comprehension tasks"
-  - section: "Writing Assessment"
-    words: 100
-    points:
-      - "Extended writing task"
-      - "Grammar accuracy"
-      - "Vocabulary range"
-  - section: "Speaking Assessment"
-    words: 100
-    points:
-      - "Oral presentation"
-      - "Interactive dialogue"
-      - "Fluency evaluation"
-  - section: "Results and Feedback"
-    words: 100
-    points:
-      - "Score interpretation"
-      - "Strengths and weaknesses"
-      - "B2 preparation guidance"
-vocabulary_hints:
-  required:
-    - іспит (exam)
-    - оцінка (grade)
-    - результат (result)
-    - рівень (level)
-    - читання (reading)
-    - слухання (listening)
-    - письмо (writing)
-    - говоріння (speaking)
-  recommended:
-    - бал (score)
-    - сертифікат (certificate)
-    - готовність (readiness)
-    - прогрес (progress)
-activity_hints:
-  - type: reading-test
-    focus: "Authentic text comprehension"
-    items: 25
-  - type: listening-test
-    focus: "Audio comprehension"
-    items: 25
-  - type: writing-test
-    focus: "Extended writing"
-    items: 2
-  - type: speaking-test
-    focus: "Oral assessment"
-    items: 3
-prerequisites:
-  - b1-91 (Vocabulary in Context)
-connects_to:
-  - b2-01 (First B2 Module)
+id: b1-92
 naturalness:
   score: 9
   status: PASS
-  justification: "Essential final assessment for B1 certification"
+  justification: Essential final assessment for B1 certification
+duration: 180
+transliteration: none
+build:
+  last_modified: '2026-01-26'

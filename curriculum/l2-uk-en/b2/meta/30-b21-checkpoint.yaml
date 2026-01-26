@@ -1,10 +1,10 @@
 module: b2-30
-title: 'Контрольна точка: B2.1 Завершення'
-subtitle: Комплексна перевірка фаз B2.1a, B2.1b та B2.1c
+level: B2
+slug: 30-b21-checkpoint
 version: '1.0'
-phase: B2.1 [Complete Grammar & Register] Checkpoint
-pedagogy: checkpoint
-focus: checkpoint
+naturalness:
+  score: 9
+  status: PASS
 duration: 120
 transliteration: none
 tags:
@@ -14,43 +14,7 @@ tags:
 - participles
 - register
 - domain-vocabulary
-register: varies
-grammar:
-- Інтеграція M01-M29
-- Комплексна перевірка пасиву, дієприкметників, синтаксису та регістрів
-objectives:
-- Демонструвати майстерність усіх пасивних форм та дієприкметників
-- Застосовувати складний синтаксис для академічного та офіційного письма
-- Обирати відповідний регістр для різних комунікативних ситуацій
-- Використовувати доменну лексику (політика, право, економіка)
 vocabulary_count: 50
 vocab_count: 34
-slug: 30-b21-checkpoint
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-- section: Вступ — B2.1 Завершення
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-- section: Основний матеріал
-  words: 600
-  points:
-  - Теоретичні основи
-  - Приклади та ілюстрації
-  - Типові помилки та як їх уникати
-- section: Поглиблене вивчення
-  words: 600
-  points:
-  - Додаткові випадки
-  - Контекстуальне використання
-  - Стилістичні нюанси
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

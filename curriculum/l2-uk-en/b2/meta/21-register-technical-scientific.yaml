@@ -1,10 +1,10 @@
 module: b2-21
-title: 'Регістр: науково-технічний стиль'
-subtitle: Технічна документація та наукові тексти
+level: B2
+slug: 21-register-technical-scientific
 version: '1.0'
-phase: B2.1c [Register System & Domain Vocab]
-pedagogy: TTT
-focus: grammar
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
 tags:
@@ -12,47 +12,7 @@ tags:
 - register
 - technical
 - scientific
-grammar:
-- Passive constructions in technical texts
-- Impersonal constructions (-но/-то)
-- Numbered procedures and instructions
-- Abbreviations and acronyms
-objectives:
-- Learner can recognize and produce technical/scientific register
-- Learner can read and understand technical documentation
-- Learner can write step-by-step instructions
-- Learner can transform casual descriptions into technical style
 vocabulary_count: 30
 vocab_count: 167
-slug: 21-register-technical-scientific
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-- section: Вступ — науково-технічний стиль
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-  - Роль у системі української мови
-- section: Контексти науково-технічного стилю
-  words: 500
-  points:
-  - Технічна документація
-  - Наукові звіти
-  - Інструкції користувача
-  - Інженерні специфікації
-- section: Ключові особливості стилю
-  words: 500
-  points:
-  - Точна термінологія
-  - Абревіатури та акроніми
-  - Пасивні конструкції
-  - Нумеровані процедури
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

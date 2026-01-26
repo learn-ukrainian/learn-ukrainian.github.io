@@ -1,114 +1,11 @@
-id: lit-11
-title: 'Тарас Шевченко: Від Кріпака до Пророка'
-subtitle: 'LIT-011: Анатомія Генія'
+module: young-shevchenko
+level: LIT
 slug: young-shevchenko
-module_type: biography
-word_target: 4500
-immersion: 100% Ukrainian
-grammar:
-- Historical narrative style
-- Biography lexicon
-- Art and freedom vocabulary
-objectives:
-- Outline Shevchenko's path to freedom
-- Analyze the role of the 1838 lottery
-- Explore the "Romantic Hero" image
-sources:
-- name: Тарас Шевченко — біографія
-  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1749
-  type: primary
-  notes: Офіційна біографія на UkrLib
-- name: Кобзар — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=1
-  type: secondary
-  notes: Для контексту ранньої творчості
-- name: Шевченко і Академія мистецтв
-  url: https://uk.wikipedia.org/wiki/Тарас_Шевченко
-  type: reference
-  notes: Петербурзький період
-content_outline:
-- section: Вступ — Світ кріпацтва
-  words: 600
-  points:
-  - Історичний контекст (1814-1840)
-  - Що таке кріпацтво і як воно працювало
-  - Шанси кріпака стати вільним
-- section: Дитинство і юність (1814-1831)
-  words: 700
-  points:
-  - Село Моринці та родина
-  - Дякова школа і перші малюнки
-  - '"Козачок" пана Енгельгардта'
-- section: Петербург — місто контрастів
-  words: 700
-  points:
-  - Переїзд до столиці імперії
-  - Зустріч з Іваном Сошенком
-  - Літній сад — доленосна зустріч
-- section: Викуп — детективна історія
-  words: 800
-  points:
-  - Брюллов, Жуковський, Венеціанов
-  - Лотерея з портретом Жуковського
-  - 2500 рублів — ціна свободи
-- section: Академія і "Кобзар"
-  words: 600
-  points:
-  - Навчання у Брюллова
-  - 1840 рік — вихід "Кобзаря"
-  - Психологія "вільної людини"
-- section: Підсумок — Шанс, Талант, Солідарність
-  words: 400
-  points:
-  - Формула успіху Шевченка
-  - Роль випадку в історії
-  - Перехід до аналізу творчості
-vocabulary_hints:
-  required:
-  - кріпацтво (serfdom)
-  - кріпак (serf)
-  - поміщик (landowner)
-  - панщина (corvée)
-  - викуп (ransom/redemption)
-  - дяк (church clerk/teacher)
-  - академія (academy)
-  - лотерея (lottery)
-  - пророк (prophet)
-  - геній (genius)
-  recommended:
-  - козачок (servant boy)
-  - меценат (patron)
-  - портрет (portrait)
-  - живопис (painting)
-  - свобода (freedom)
-activity_hints:
-- type: reading
-  focus: Біографічні матеріали про Шевченка
-  source: UkrLib biography
-  items: 4+
-- type: quiz
-  focus: Хронологія життя Шевченка (1814-1840)
-  items: 15+
-- type: match-up
-  focus: Особа → її роль у викупі
-  items: 10+
-- type: essay-response
-  focus: Роль випадку в долі генія
-  word_target: 300
-  output: Біографічне есе
-- type: cloze
-  focus: Ключові дати і факти
-  items: 15+
-prerequisites:
-- lit-01 to lit-10 (Kotliarevsky and Kvitka phases)
-- Understanding of early 19th century Ukraine
-connects_to:
-- lit-12 (The Ballads — рання творчість)
-- lit-17 (The Artist — Шевченко-маляр)
 version: '1.0'
-phase: LIT.3 The Prophet (Taras Shevchenko)
-focus: biography
-pedagogy: literature
+id: lit-11
+naturalness:
+  score: 10
+  status: PASS
 duration: 120
 transliteration: none
 tags:
@@ -119,6 +16,5 @@ tags:
 - петербург
 - викуп
 - романтизм
-naturalness:
-  score: 10
-  status: PASS
+build:
+  last_modified: '2026-01-26'

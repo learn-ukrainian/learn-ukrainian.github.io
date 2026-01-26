@@ -1,107 +1,11 @@
-id: lit-25
-title: Кирило-Мефодіївське братство
-subtitle: The Cyrillo-Methodian Brotherhood
+module: cyrillo-methodian-brotherhood
+level: LIT
 slug: cyrillo-methodian-brotherhood
-module_type: history
-word_target: 4500
-immersion: 100% Ukrainian
-sources:
-- name: Кирило-Мефодіївське братство — стаття
-  url: https://uk.wikipedia.org/wiki/Кирило-Мефодіївське_братство
-  type: primary
-  notes: Історія організації
-- name: Книги буття українського народу
-  url: https://uk.wikipedia.org/wiki/Книги_буття_українського_народу
-  type: primary
-  notes: Програмний документ
-- name: Микола Костомаров — біографія
-  url: https://uk.wikipedia.org/wiki/Микола_Костомаров
-  type: secondary
-  notes: Біографія одного з лідерів
-content_outline:
-- section: Вступ — Перша політична організація
-  words: 500
-  points:
-  - Київ, 1845-1847 роки
-  - Чому це було революційно
-  - Таємне товариство в імперіях
-- section: Засновники і члени
-  words: 700
-  points:
-  - Микола Костомаров — ідеолог
-  - Пантелеймон Куліш — організатор
-  - Тарас Шевченко — найрадикальніший
-- section: Книги буття українського народу
-  words: 800
-  points:
-  - Жанр і структура документу
-  - Ідея слов'янської федерації
-  - Україна як "месія народів"
-- section: Політична програма
-  words: 700
-  points:
-  - Скасування кріпацтва
-  - Демократія і рівність
-  - Християнський соціалізм
-- section: Розгром і наслідки
-  words: 500
-  points:
-  - Донос і арешти (1847)
-  - Покарання членів
-  - Шевченко — найсуворіший вирок
-- section: Підсумок — Ідея, що пережила репресії
-  words: 400
-  points:
-  - Вплив братства на українську думку
-  - Від 1847 до 1991 року
-  - Завершення фази "Інтелектуалів"
-vocabulary_hints:
-  required:
-  - братство (brotherhood)
-  - таємне товариство (secret society)
-  - федерація (federation)
-  - месіанізм (messianism)
-  - ідеолог (ideologist)
-  - програма (program)
-  - донос (denunciation)
-  - арешт (arrest)
-  - кріпацтво (serfdom)
-  - рівність (equality)
-  recommended:
-  - маніфест (manifesto)
-  - утопія (utopia)
-  - панславізм (pan-Slavism)
-  - репресії (repressions)
-  - заслання (exile)
-activity_hints:
-- type: reading
-  focus: Уривки з "Книг буття українського народу"
-  source: Wikipedia and historical sources
-  items: 4+
-- type: quiz
-  focus: Факти про братство
-  items: 15+
-- type: match-up
-  focus: Член братства → його роль / покарання
-  items: 12+
-- type: essay-response
-  focus: Україна як "месія народів" — утопія чи візія?
-  word_target: 300
-  output: Політико-філософське есе
-- type: cloze
-  focus: Ключові дати і факти
-  items: 12+
-prerequisites:
-- lit-21 (Panteleimon Kulish)
-- lit-14 (Son — контекст арешту Шевченка)
-connects_to:
-- lit-26 (Nechuy-Levytsky — наступна фаза)
-- lit-20 (Cult of Shevchenko — Шевченко-революціонер)
-- c1-hist (Historical modules)
 version: '2.0'
-phase: LIT.4 The Intellectuals (Kulish & Kostomarov)
-focus: history
-pedagogy: Analysis
+id: lit-25
+naturalness:
+  score: 9
+  status: PASS
 duration: 100
 transliteration: none
 tags:
@@ -109,10 +13,5 @@ tags:
 - politics
 - kostomarov
 - secret-society
-grammar:
-- Political Terminology
-- Religious Rhetoric
-- Historical Narrative
-naturalness:
-  score: 9
-  status: PASS
+build:
+  last_modified: '2026-01-26'

@@ -1,25 +1,9 @@
 module: 03-dative-verbs
-level: a2
-sequence: 3
+level: A2
+slug: 03-dative-verbs
 version: '2.0'
 title: Dative Verbs
 subtitle: Verbs That Demand the Dative Case
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can use common verbs that require the dative case
-- Learner can distinguish between verbs taking dative vs accusative
-- Learner can construct sentences with indirect objects
-- Learner can use verbs of communication and interaction correctly
-sources:
-- name: Ukrainian State Standard 2024 - Verb Government
-  url: https://mon.gov.ua/
-  type: reference
-  notes: List of verbs requiring dative case per A2 level
-- name: Ukrainian Verb Government Reference
-  url: https://uk.wiktionary.org/
-  type: reference
-  notes: Case requirements for common verbs
 content_outline:
 - section: Introduction / Вступ
   words: 250
@@ -42,7 +26,7 @@ content_outline:
   points:
   - Contextual use of dative-hungry verbs
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - допомагати (to help)
   - заважати (to bother)
@@ -65,16 +49,51 @@ vocabulary:
   - належати (to belong)
   - сподобатися (to come to like - pf)
   - захотітися (to feel like - pf)
-  forbidden: []
-activities:
-  types_required:
-  - quiz
-  - match-up
-  - fill-in
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: Complete sentences with dative verbs
+  items: 12+
+- type: quiz
+  focus: Add dative object to sentences
+  items: 10+
+- type: quiz
+  focus: Which verbs require dative?
+  items: 12+
+- type: match-up
+  focus: Verb + appropriate case pattern
+  items: 10+
+- type: fill-in
+  focus: Dative vs accusative object selection
+  items: 10+
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a2-01 (Dative pronouns)
+- a2-02 (Dative nouns)
+- A1 verb conjugation
 connects_to:
 - a2-04 (Instrumental I)
 - a2-09 (All Cases Practice)
 - a2-11 (Checkpoint - Cases)
+objectives:
+- Learner can use common verbs that require the dative case
+- Learner can distinguish between verbs taking dative vs accusative
+- Learner can construct sentences with indirect objects
+- Learner can use verbs of communication and interaction correctly
+grammar:
+- verbs + dative
+- verbs + dative + accusative
+- indirect objects
+- verb government
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Verb Government
+  url: https://mon.gov.ua/
+  type: reference
+  notes: List of verbs requiring dative case per A2 level
+- name: Ukrainian Verb Government Reference
+  url: https://uk.wiktionary.org/
+  type: reference
+  notes: Case requirements for common verbs
+immersion: 40-50% Ukrainian
+phase: A2.1

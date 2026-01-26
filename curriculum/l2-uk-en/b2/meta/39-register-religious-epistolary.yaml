@@ -1,10 +1,10 @@
 module: b2-39
-title: Регістр — Релігійний та епістолярний стилі
-subtitle: Мова духовності та листування
+level: B2
+slug: 39-register-religious-epistolary
 version: '1.0'
-phase: B2
-pedagogy: TTT
-focus: grammar
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
 tags:
@@ -13,45 +13,7 @@ tags:
 - religious-style
 - epistolary-style
 - stylistics
-grammar:
-- religious-register
-- epistolary-register
-- letter-writing
-- formal-correspondence
-objectives:
-- Учень може розпізнавати характерні ознаки релігійного стилю
-- Учень може писати формальні та неформальні листи українською
-- Учень може трансформувати текст між формальним та неформальним регістрами
 vocabulary_count: 25
 vocab_count: 103
-slug: 39-register-religious-epistolary
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-- section: Вступ — Релігійний та епістолярний стилі
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-  - Роль у системі української мови
-- section: Religious Style (Релігійний стиль)
-  words: 500
-  points:
-  - 'Liturgical: Господь, благословіння, молитва'
-  - 'Biblical: Слава Богу! Христос воскрес! – Воістину воскрес!'
-  - 'Elevated: воістину, благословенний, всемогутній'
-  - 'Church vocabulary: храм, церква, парафія, священник'
-- section: Сучасні правила листування
-  words: 500
-  points:
-  - Доброго дня! (Good day! - modern greeting)
-  - У вкладенні надсилаю... (I'm attaching...)
-  - Заздалегідь вдячний/вдячна. (Thank you in advance.)
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

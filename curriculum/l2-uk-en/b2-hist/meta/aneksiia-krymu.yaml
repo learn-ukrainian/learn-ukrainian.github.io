@@ -1,93 +1,18 @@
 module: aneksiia-krymu
-id: b2-hist-128
-title: "Анексія Криму: Початок війни"
-subtitle: "Annexation of Crimea: The Beginning of War"
+level: B2-HIST
 slug: aneksiia-krymu
 version: '2.0'
-phase: "B2-HIST.12 [Independence]"
-focus: history
-pedagogy: CBI
-word_target: 4202
-duration: 120
-transliteration: none
-tags:
-  - history
-  - crimea
-  - 2014
-  - hybrid-warfare
-grammar:
-  - "Historical narrative tenses"
-  - "Official vs. Informal register"
-objectives:
-  - "Учень може описати механізм анексії Криму та роль «зелених чоловічків»"
-  - "Учень може проаналізувати порушення Будапештського меморандуму"
-  - "Учень може спростувати основні міфи російської пропаганди про Крим"
-content_outline:
-  - section: "Вступ"
-    words: 389
-    points:
-      - "Лютий 2014: контекст після Майдану"
-      - "Поява 'зелених чоловічків'"
-      - "Стратегічне значення півострова"
-  - section: "Читання: Хроніка злочину"
-    words: 2252
-    points:
-      - "Початок операції: Медаль за повернення"
-      - "Інформаційна агресія: Міф про «Поїзд дружби»"
-      - "Спротив: 26 лютого"
-      - "Блокада, флот і вода"
-      - "Фейковий референдум: Театр абсурду"
-      - "Мілітаризація Криму та зміна демографічного ландшафту"
-      - "Міжнародна реакція та правові наслідки"
-  - section: "Первинні джерела"
-    words: 546
-    points:
-      - "Будапештський меморандум"
-      - "Виступ Путіна 18 березня 2014 року"
-      - "Свідчення очевидців"
-      - "Резолюція Генасамблеї ООН 68/262"
-  - section: "Деколонізаційний погляд"
-    words: 514
-    points:
-      - "Міфи та реальність: спростування 'споконвічно російського' Криму"
-      - "Імперські наративи та їх розвінчання"
-vocabulary_hints:
-  required:
-    - анексія (annexation)
-    - окупація (occupation)
-    - санкції (sanctions)
-    - референдум (referendum)
-    - меморандум (memorandum)
-    - суверенітет (sovereignty)
-    - територіальна цілісність (territorial integrity)
-    - гібридна війна (hybrid war)
-    - спротив (resistance)
-    - блокада (blockade)
-  recommended:
-    - півострів (peninsula)
-    - аеропорт (airport)
-    - парламент (parliament)
-    - громадяни (citizens)
-    - переселення (resettlement)
-activity_hints:
-  - type: reading
-    focus: "Резолюція ООН та Меморандум"
-  - type: critical-analysis
-    focus: "Порівняння Анексії та Окупації"
-  - type: essay-response
-    focus: "Наслідки порушення міжнародного права"
-  - type: quiz
-    focus: "Хронологія подій 2014 року"
-sources:
-  - name: "Резолюція ГА ООН 68/262"
-    url: "https://undocs.org/ua/A/RES/68/262"
-    type: primary
-    notes: "Офіційний міжнародний документ"
-  - name: "КримSOS"
-    url: "https://krymsos.com"
-    type: secondary
-    notes: "Свідчення очевидців та звіти про порушення прав людини"
-vocabulary_count: 25
+id: b2-hist-128
 naturalness:
   score: 9
   status: PASS
+duration: 120
+transliteration: none
+tags:
+- history
+- crimea
+- 2014
+- hybrid-warfare
+vocabulary_count: 25
+build:
+  last_modified: '2026-01-26'

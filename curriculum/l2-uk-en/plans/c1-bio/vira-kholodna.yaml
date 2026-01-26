@@ -1,109 +1,110 @@
 module: vira-kholodna
-level: c1-bio
-sequence: 62
+level: C1-BIO
+slug: vira-kholodna
 version: '2.0'
 title: 'Віра Холодна: Королева німого кіно'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Холодна_Віра_Василівна
-    title: Віра Холодна (Wikipedia UA)
-    notes: Основна біографічна інформація
-  secondary:
-  - url: https://kinokolo.ua/
-    title: Історія українського кіно
-    notes: Контекст раннього кінематографу
-  - url: https://www.imdb.com/
-    title: Фільмографія
-    notes: Список фільмів
 content_outline:
 - section: Вступ — Зірка, яка згасла зарано
   words: 400
-  subsections:
+  points:
   - Холодна як перша справжня кінозірка
   - Феномен популярності в епоху німого кіно
   - Загадкова смерть у 25 років
 - section: Дитинство та юність
   words: 600
-  subsections:
+  points:
   - Народження в Полтаві (1893)
   - Переїзд до Москви
   - Ранній інтерес до театру та балету
 - section: Шлях до екрану
   words: 700
-  subsections:
+  points:
   - Перші ролі в кіно
   - Співпраця з режисерами
   - Формування екранного образу
 - section: Королева екрану
   words: 800
-  subsections:
+  points:
   - Найпопулярніші фільми
   - Феномен Віри Холодної
   - Масова любов публіки
 - section: Мистецтво німого кіно
   words: 700
-  subsections:
+  points:
   - Особливості акторської гри
   - Вираження емоцій без слів
   - Вплив на розвиток кінематографу
 - section: Трагічний фінал
   words: 600
-  subsections:
+  points:
   - Революція та громадянська війна
   - Перебування в Одесі
   - Загадкова смерть (1919)
 - section: Дискусія — Легенда та реальність
   words: 200
-  subsections:
+  points:
   - Версії про причини смерті
   - Холодна в українській культурній памяті
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - німе кіно
-  - кінозірка
-  - екран
-  - роль
-  - режисер
-  - акторська гра
-  - популярність
-  - феномен
-  - легенда
-  - трагедія
+  - німе кіно (silent cinema)
+  - кінозірка (film star)
+  - екран (screen)
+  - роль (role)
+  - режисер (director)
+  - акторська гра (acting)
+  - популярність (popularity)
+  - феномен (phenomenon)
+  - легенда (legend)
+  - трагедія (tragedy)
   recommended:
-  - мелодрама
-  - кінематограф
-  - кадр
-  - титри
-  - прем'єра
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - мелодрама (melodrama)
+  - кінематограф (cinematography)
+  - кадр (frame)
+  - титри (intertitles)
+  - прем'єра (premiere)
+activity_hints:
+- type: reading
+  focus: Описи фільмів та рецензії епохи
+  source: Архівні матеріали
+  items: 3 passages
+- type: quiz
+  focus: Факти про німе кіно
+  items: 12+
+- type: match-up
+  focus: Фільми та їхні сюжети
+  items: 10+
+- type: essay-response
+  focus: Чому німе кіно створювало такі сильні емоції?
+  word_target: 300
+  output: Культурологічний есей
+- type: group-sort
+  focus: Технології німого vs звукового кіно
+  items: 12+
+- type: fill-in
+  focus: Кінематографічна термінологія
+  items: 10+
+focus: biography
+prerequisites:
+- b2-hist-early-20th-century
 connects_to:
-  previous: b2-hist-early-20th-century
-  related:
-  - c1-bio-57-les-kurbas
-  - c1-bio-67-serge-lifar
-  - c1-bio-26-mariya-zankovetska
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-57-les-kurbas
+- c1-bio-67-serge-lifar
+- c1-bio-26-mariya-zankovetska
+module_type: biography
+sources:
+- name: Віра Холодна (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Холодна_Віра_Василівна
+  type: primary
+  notes: Основна біографічна інформація
+- name: Історія українського кіно
+  url: https://kinokolo.ua/
+  type: reference
+  notes: Контекст раннього кінематографу
+- name: Фільмографія
+  url: https://www.imdb.com/
+  type: reference
+  notes: Список фільмів
+immersion: 100% Ukrainian
+phase: C1-BIO

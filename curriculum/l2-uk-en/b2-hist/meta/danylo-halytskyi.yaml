@@ -1,12 +1,11 @@
-id: b2-hist-23
-title: 'Королювання Данила Романовича'
-subtitle: 'Король України та європейський вибір'
+module: danylo-halytskyi
+level: B2-HIST
 slug: danylo-halytskyi
 version: '2.0'
-phase: 'B2.3a [Українська історія]'
-focus: history
-pedagogy: CBI
-word_target: 4019
+id: b2-hist-23
+naturalness:
+  score: 9
+  status: PASS
 duration: 120
 transliteration: none
 tags:
@@ -14,23 +13,6 @@ tags:
 - danylo-halytskyi
 - coronation
 - europe
-grammar:
-- Titles and honorifics
-- Diplomatic register
-objectives:
-- Учень розуміє значення коронації Данила Галицького
-- Учень може аналізувати дипломатичну гру між Сходом та Заходом
-- Учень може пояснити цивілізаційний вибір Данила
 vocabulary_count: 25
-content_outline:
-- section: Контекст
-  words: 555
-- section: Читання
-  words: 2600
-- section: Первинні джерела
-  words: 400
-- section: Деколонізаційний погляд
-  words: 464
-naturalness:
-  score: 9
-  status: PASS
+build:
+  last_modified: '2026-01-26'

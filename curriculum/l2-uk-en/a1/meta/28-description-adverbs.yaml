@@ -1,98 +1,13 @@
 module: a1-28
-id: a1-28
+level: A1
 slug: description-adverbs
-title: "Description: Adverbs"
-subtitle: "How We Do Things"
 version: '2.0'
-phase: "A1.3 [Consolidation]"
-focus: grammar
-pedagogy: PPP
-register: розмовний
-duration: 60
-transliteration: none
-objectives:
-  - "Learner can form adverbs from adjectives"
-  - "Learner can use adverbs to describe how actions are done"
-  - "Learner can use frequency adverbs correctly"
-  - "Learner can distinguish adverbs from adjectives"
-grammar:
-  - "Adverbs of manner (adjective stem + -о)"
-  - "Adverbs of frequency"
-  - "Adverb placement in sentences"
-word_target: 1000
-content_outline:
-  - section: "Introduction: What Are Adverbs?"
-    words: 150
-    points:
-      - "Adverbs describe verbs"
-      - "How, when, where, how often"
-      - "Don't change form like adjectives"
-  - section: "Forming Adverbs of Manner"
-    words: 200
-    points:
-      - "Adjective stem + -о"
-      - "швидкий → швидко (quickly)"
-      - "повільний → повільно (slowly)"
-  - section: "Common Adverbs of Manner"
-    words: 200
-    points:
-      - "добре, погано (well, badly)"
-      - "швидко, повільно (quickly, slowly)"
-      - "голосно, тихо (loudly, quietly)"
-  - section: "Frequency Adverbs"
-    words: 200
-    points:
-      - "завжди (always)"
-      - "часто, іноді (often, sometimes)"
-      - "рідко, ніколи (rarely, never)"
-  - section: "Time and Place Adverbs"
-    words: 150
-    points:
-      - "сьогодні, завтра, вчора"
-      - "тут, там, далеко"
-      - "Position in sentence"
-  - section: "Practice: Describe Actions"
-    words: 100
-    points:
-      - "How do you do things?"
-      - "How often do you...?"
-vocabulary_hints:
-  required:
-    - добре (well)
-    - погано (badly)
-    - швидко (quickly)
-    - повільно (slowly)
-    - завжди (always)
-    - часто (often)
-    - іноді (sometimes)
-    - ніколи (never)
-  recommended:
-    - голосно (loudly)
-    - тихо (quietly)
-    - рідко (rarely)
-    - зазвичай (usually)
-    - легко (easily)
-    - важко (with difficulty)
-activity_hints:
-  - type: transformation
-    focus: "Form adverbs from adjectives"
-    items: 25
-  - type: fill-in
-    focus: "Complete with correct adverb"
-    items: 20
-  - type: ordering
-    focus: "Order frequency adverbs"
-    items: 10
-  - type: speaking
-    focus: "Describe how you do activities"
-    items: 8
-prerequisites:
-  - a1-26 (Describing Things - Adjectives)
-  - a1-27 (Colors and Clothing)
-connects_to:
-  - a1-29 (Weather and Seasons)
-  - a1-30 (Checkpoint Consolidation)
+id: a1-28
 naturalness:
   score: 10
   status: PASS
-  justification: "Clear adverb formation patterns"
+  justification: Clear adverb formation patterns
+duration: 60
+transliteration: none
+build:
+  last_modified: '2026-01-26'

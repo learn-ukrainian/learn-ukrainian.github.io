@@ -1,25 +1,8 @@
 module: 08-active-participles-past
-level: b2
-sequence: 8
-version: '1.0'
+level: B2
+slug: 08-active-participles-past
+version: '2.0'
 title: Активні дієприкметники минулого часу (-лий)
-focus: grammar
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Ukrainian State Standard 2024 - Participles
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Recognition of -лий forms, russism awareness
-- name: Антисуржик
-  url: https://uk.wikipedia.org/wiki/Антисуржик
-  type: secondary
-  notes: Distinguishing Ukrainian from Russian-influenced forms
-- name: Правопис української мови 2019
-  url: https://uk.wikipedia.org/wiki/Український_правопис
-  type: reference
-  notes: Official position on -лий participles
 content_outline:
 - section: Вступ — Минулі активні дієприкметники
   words: 400
@@ -67,7 +50,7 @@ content_outline:
   - Уникання русизмів
   - Підготовка до модуля 09
 word_target: 3800
-vocabulary:
+vocabulary_hints:
   required:
   - минулий (past)
   - майбутній (future)
@@ -85,18 +68,51 @@ vocabulary:
   - деколонізація (decolonization)
   - чистота мови (language purity)
   - альтернатива (alternative)
-  forbidden: []
-activities:
-  types_required:
-  - mark-the-words
-  - error-correction
-  - quiz
-  - fill-in
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: Legitimate vs russism participles — identification
+  items: 15+
+- type: fill-in
+  focus: Russism participle → relative clause
+  items: 12+
+- type: mark-the-words
+  focus: Spot participles in academic/literary text
+  items: 3 texts
+- type: fill-in
+  focus: Complete sentences with минулий/майбутній/колишній
+  items: 12+
+- type: fill-in
+  focus: Compound future → synthetic future
+  items: 10+
+- type: error-correction
+  focus: Replace russism participles with Ukrainian alternatives
+  items: 12+
+- type: match-up
+  focus: Russism → correct Ukrainian equivalent
+  items: 12+
+focus: grammar
+prerequisites:
+- b2-07 (Active Participles Present)
+- b2-02 (Past Passive Participles)
+- Past tense formation
+- Future tense (compound)
 connects_to:
 - b2-09 (Participles vs Relative Clauses)
 - b2-10 (B2.1a Checkpoint)
 - 'b2-22 (Register: Literary Ukrainian)'
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Participles
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Recognition of -лий forms, russism awareness
+- name: Антисуржик
+  url: https://uk.wikipedia.org/wiki/Антисуржик
+  type: secondary
+  notes: Distinguishing Ukrainian from Russian-influenced forms
+- name: Правопис української мови 2019
+  url: https://uk.wikipedia.org/wiki/Український_правопис
+  type: reference
+  notes: Official position on -лий participles
+immersion: 100% Ukrainian
+phase: B2.1a [Passive Voice]

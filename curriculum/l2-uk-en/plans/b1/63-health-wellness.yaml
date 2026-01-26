@@ -1,16 +1,9 @@
-module: health-wellness
-level: b1
-sequence: 63
+module: b1-63
+level: B1
+slug: health-wellness
 version: '2.0'
 title: Здоров'я та самопочуття
 subtitle: Health and Wellness
-focus: vocabulary
-pedagogy: PPP
-objectives:
-- Learner can use 30 health and wellness words in context
-- Learner can distinguish between здоров'я/самопочуття/стан
-- Learner can form natural collocations with health-related nouns
-- Learner can discuss health topics fluently
 content_outline:
 - section: 'Introduction: Health Vocabulary'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Discuss wellness topics
   - Give health advice
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - здоров'я (health)
   - самопочуття (well-being)
@@ -63,15 +56,33 @@ vocabulary:
   - профілактика (prevention)
   - імунітет (immunity)
   - релаксація (relaxation)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - discussion
-  - collocation
-  - role-play
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: collocation
+  focus: Health noun phrases
+  items: 25
+- type: fill-in
+  focus: Complete health sentences
+  items: 20
+- type: role-play
+  focus: Health consultation scenarios
+  items: 15
+- type: discussion
+  focus: Discuss wellness topics
+  items: 10
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-62 (Environment Ecology)
 connects_to:
 - b1-64 (Emotions Deep Dive)
+objectives:
+- Learner can use 30 health and wellness words in context
+- Learner can distinguish between здоров'я/самопочуття/стан
+- Learner can form natural collocations with health-related nouns
+- Learner can discuss health topics fluently
+grammar:
+- Noun collocations with health vocabulary
+- Adjective-noun agreement in health contexts
+- Expressing physical states
+register: розмовний
+phase: B1.6 [Vocabulary Expansion II]

@@ -1,12 +1,11 @@
-id: b2-hist-25
-title: 'Бояри та шляхта: Соціальна еліта'
-subtitle: 'Лицарська честь та політична суб''єктність'
+module: boiare-i-shliakhta
+level: B2-HIST
 slug: boiare-i-shliakhta
 version: '2.0'
-phase: 'B2.3a [Українська історія]'
-focus: history
-pedagogy: CBI
-word_target: 4052
+id: b2-hist-25
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
 tags:
@@ -15,23 +14,6 @@ tags:
 - nobility
 - boyars
 - szlachta
-grammar:
-- Social terminology
-- Formal address forms
-objectives:
-- Учень може пояснити різницю між боярством та шляхтою
-- Учень розуміє процеси формування привілейованих верств
-- Учень може аналізувати вплив права на українську аристократію
 vocabulary_count: 25
-content_outline:
-- section: Контекст
-  words: 600
-- section: Читання
-  words: 2600
-- section: Первинні джерела
-  words: 350
-- section: Деколонізаційний погляд
-  words: 502
-naturalness:
-  score: 9
-  status: PASS
+build:
+  last_modified: '2026-01-26'

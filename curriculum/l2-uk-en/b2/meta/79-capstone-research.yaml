@@ -1,49 +1,16 @@
-id: b2-79
+module: 79-capstone-research
+level: B2
 slug: 79-capstone-research
-title: 'Підсумковий проєкт: Дослідження'
-subtitle: 'Capstone Project: Research'
 version: '2.0'
-phase: B2.4 Skills & Capstone
-focus: checkpoint
-pedagogy: integration
+id: b2-79
+naturalness:
+  score: 9
+  status: PASS
 duration: 180
 transliteration: none
 tags:
 - project
 - research
 - skills
-grammar:
-- Узагальнення всіх граматичних тем рівня B2
-- Формальний стиль наукового звіту
-objectives:
-- Учень вміє обрати актуальну тему дослідження та обґрунтувати її вибір
-- Учень може самостійно знайти та опрацювати українськомовні джерела
-- Учень здатен скласти розгорнутий план-проспект майбутньої презентації
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-- section: Вступ — Дослідження
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-- section: Основний матеріал
-  words: 600
-  points:
-  - Теоретичні основи
-  - Приклади та ілюстрації
-  - Типові помилки та як їх уникати
-- section: Поглиблене вивчення
-  words: 600
-  points:
-  - Додаткові випадки
-  - Контекстуальне використання
-  - Стилістичні нюанси
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

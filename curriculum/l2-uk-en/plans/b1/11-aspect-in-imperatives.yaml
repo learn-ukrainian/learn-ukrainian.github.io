@@ -1,24 +1,9 @@
 module: 11-aspect-in-imperatives
-level: b1
-sequence: 11
-version: '1.0'
+level: B1
+slug: 11-aspect-in-imperatives
+version: '2.0'
 title: Вид у наказовому способі
 subtitle: Aspect in Imperatives
-focus: grammar
-pedagogy: TTT
-objectives:
-- Learner can choose correct aspect for different command types
-- Learner understands when to use НДВ vs ДВ in imperatives
-- Learner can form polite requests and direct commands
-sources:
-- name: Ukrainian State Standard 2024 - Imperative Mood
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official rules for aspect in imperative constructions
-- name: Ukrainian Imperative (Wikipedia)
-  url: https://uk.wikipedia.org/wiki/Наказовий_спосіб
-  type: reference
-  notes: Imperative formation with aspect
 content_outline:
 - section: Тест
   words: 150
@@ -46,7 +31,7 @@ content_outline:
   - Grammar in natural context
   - Various situations
 word_target: 1500
-vocabulary:
+vocabulary_hints:
   required:
   - наказовий спосіб (imperative mood)
   - команда (command)
@@ -64,15 +49,43 @@ vocabulary:
   - зачекай (wait - pf)
   - чекай (wait - impf)
   - давай (let's - impf)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - quiz
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: Which aspect for which command type?
+  items: 15+
+- type: fill-in
+  focus: Imperative aspect selection
+  items: 12+
+- type: fill-in
+  focus: General advice → specific command (НДВ → ДВ)
+  items: 10+
+- type: match-up
+  focus: Situation → appropriate imperative
+  items: 12+
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-10 (Aspect in negation)
+- All aspect modules M06-10
 connects_to:
 - b1-12 (Aspect pairs - essential 40)
 - b1-15 (Aspect mastery checkpoint)
+objectives:
+- Learner can choose correct aspect for different command types
+- Learner understands when to use НДВ vs ДВ in imperatives
+- Learner can form polite requests and direct commands
+grammar:
+- Aspect selection in imperatives
+- Perfective vs Imperfective commands
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Imperative Mood
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official rules for aspect in imperative constructions
+- name: Ukrainian Imperative (Wikipedia)
+  url: https://uk.wikipedia.org/wiki/Наказовий_спосіб
+  type: reference
+  notes: Imperative formation with aspect
+immersion: 100% Ukrainian
+phase: B1.1 Aspect

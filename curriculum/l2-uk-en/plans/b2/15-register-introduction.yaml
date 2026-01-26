@@ -1,25 +1,8 @@
 module: 15-register-introduction
-level: b2
-sequence: 15
-version: '1.0'
+level: B2
+slug: 15-register-introduction
+version: '2.0'
 title: Функціональні стилі мови
-focus: style
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Ukrainian State Standard 2024 - Functional Styles
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official classification of Ukrainian functional styles
-- name: Функціональні стилі української мови
-  url: https://uk.wikipedia.org/wiki/Стиль_мовлення
-  type: secondary
-  notes: Overview of five functional styles
-- name: CEFR B2 Sociolinguistic Competence
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
-  type: reference
-  notes: B2 register awareness requirements
 content_outline:
 - section: Вступ — Що таке функціональний стиль?
   words: 400
@@ -69,7 +52,7 @@ content_outline:
   - Критерії визначення стилю
   - Підготовка до детального вивчення кожного стилю
 word_target: 3800
-vocabulary:
+vocabulary_hints:
   required:
   - функціональний стиль (functional style)
   - розмовний стиль (colloquial style)
@@ -87,21 +70,53 @@ vocabulary:
   - стандартизованість (standardization)
   - актуальність (relevance/topicality)
   - емоційність (emotionality)
-  forbidden: []
-activities:
-  types_required:
-  - group-sort
-  - quiz
-  - reading
-  - fill-in
-  - essay-response
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: Identify functional style from text sample
+  items: 20+
+- type: match-up
+  focus: Style → characteristic features
+  items: 15+
+- type: group-sort
+  focus: Sort text excerpts by style
+  items: 15+
+- type: group-sort
+  focus: Same topic in different styles — analyze differences
+  items: 10+
+- type: fill-in
+  focus: Identify missing style markers
+  items: 12+
+- type: reading
+  focus: Analyze style features in authentic texts
+  items: 5 texts (one per style)
+- type: essay-response
+  focus: Write same news in two different styles
+  word_target: 200
+  output: Model answers for comparison
+focus: style
+prerequisites:
+- b2-01 through b2-14 (Grammar foundations)
+- Basic understanding of formality levels
+- Connector usage
 connects_to:
 - 'b2-16 (Register: Formal/Informal)'
 - 'b2-17 (Register: Business Ukrainian)'
 - 'b2-18 (Register: Academic Ukrainian)'
 - 'b2-19 (Register: Official-Legal)'
 - b2-25 (B2.1b Checkpoint)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Functional Styles
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official classification of Ukrainian functional styles
+- name: Функціональні стилі української мови
+  url: https://uk.wikipedia.org/wiki/Стиль_мовлення
+  type: secondary
+  notes: Overview of five functional styles
+- name: CEFR B2 Sociolinguistic Competence
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 register awareness requirements
+immersion: 100% Ukrainian
+phase: B2.1b [Participles & Register Intro]

@@ -1,16 +1,9 @@
-module: ukrainski-sviata-ta-festyvali
-level: b1
-sequence: 86
+module: b1-86
+level: B1
+slug: ukrainski-sviata-ta-festyvali
 version: '2.0'
 title: Українські свята та фестивалі
 subtitle: Ukrainian Holidays and Festivals
-focus: culture
-pedagogy: CBI
-objectives:
-- Learner can discuss Ukrainian holidays and festivals in context
-- Learner can understand authentic texts about Ukrainian celebrations
-- Learner can use celebration-related vocabulary in communicative contexts
-- Learner can compare Ukrainian festivals with their own cultural traditions
 content_outline:
 - section: 'Introduction: Ukrainian Calendar'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Describe celebrations
   - Compare traditions
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - свято (holiday)
   - фестиваль (festival)
@@ -63,15 +56,33 @@ vocabulary:
   - вертеп (nativity play)
   - кошик (Easter basket)
   - обряд (ritual)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - reading
-  - discussion
-  - matching
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: reading
+  focus: Holiday descriptions and traditions
+  items: 15
+- type: matching
+  focus: Match holidays to traditions
+  items: 20
+- type: fill-in
+  focus: Complete celebration descriptions
+  items: 15
+- type: discussion
+  focus: Compare cultural traditions
+  items: 10
+focus: culture
+pedagogy: CBI
+prerequisites:
+- b1-85 (Ukrainian Cuisine)
 connects_to:
 - b1-87 (News Reading)
+objectives:
+- Learner can discuss Ukrainian holidays and festivals in context
+- Learner can understand authentic texts about Ukrainian celebrations
+- Learner can use celebration-related vocabulary in communicative contexts
+- Learner can compare Ukrainian festivals with their own cultural traditions
+grammar:
+- Holiday and celebration vocabulary
+- Traditions and customs language
+- Calendar and date expressions
+register: розмовний
+phase: B1.7 [Contemporary Ukraine]

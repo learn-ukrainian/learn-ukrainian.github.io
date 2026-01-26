@@ -127,16 +127,30 @@ def extract_markdown_sections(md_path: Path) -> Dict[str, Dict[str, any]]:
 
 def load_content_outline(md_path: Path) -> Optional[List[Dict]]:
     """
-    Load content_outline from meta YAML file.
+    Load content_outline from meta YAML file OR plan YAML file (Split Architecture).
 
     Returns list of sections or None if no outline exists.
-
-    Example:
-        [
-            {"section": "Вступ", "words": 480, "points": [...]},
-            {"section": "Шлях до великого княжіння", "words": 640, "points": [...]}
-        ]
     """
+    # 1. Try Plan File first (Split Architecture)
+    try:
+        # Determine level from path or parent name
+        level = md_path.parent.name
+        if level not in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit', 'b2-hist', 'c1-bio', 'c1-hist']:
+             # Fallback logic if needed, but standard structure is reliable
+             pass
+        
+        base_dir = md_path.parent.parent # curriculum/l2-uk-en
+        plan_path = base_dir / 'plans' / level / f"{md_path.stem}.yaml"
+        
+        if plan_path.exists():
+            with open(plan_path, "r", encoding="utf-8") as f:
+                plan_data = yaml.safe_load(f)
+            if plan_data and "content_outline" in plan_data:
+                return plan_data["content_outline"]
+    except Exception:
+        pass
+
+    # 2. Fallback to Meta File (Legacy / Pre-migration)
     meta_dir = md_path.parent / "meta"
     meta_file = meta_dir / f"{md_path.stem}.yaml"
 

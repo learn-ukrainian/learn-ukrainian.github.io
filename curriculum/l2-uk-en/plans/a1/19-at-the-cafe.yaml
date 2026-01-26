@@ -1,16 +1,9 @@
-module: at-the-cafe
-level: a1
-sequence: 19
+module: a1-19
+level: A1
+slug: at-the-cafe
 version: '2.0'
 title: At the Café
 subtitle: Ordering Food and Drinks in Ukrainian
-focus: practical
-pedagogy: PPP
-objectives:
-- Learner can order food and drinks at a café
-- Learner can ask for recommendations
-- Learner can request the bill
-- Learner can use polite forms and cases correctly
 content_outline:
 - section: 'Introduction: Café Culture'
   words: 100
@@ -48,7 +41,7 @@ content_outline:
   - Order a complete meal
   - Handle problems
 word_target: 900
-vocabulary:
+vocabulary_hints:
   required:
   - кава (coffee)
   - чай (tea)
@@ -65,16 +58,34 @@ vocabulary:
   - капучіно (cappuccino)
   - чайові (tip)
   - картка (card)
-  forbidden: []
-activities:
-  types_required:
-  - dialogue
-  - role-play
-  - fill-in
-  - listening
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: dialogue
+  focus: Complete café ordering
+  items: 8
+- type: role-play
+  focus: Customer and waiter
+  items: 6
+- type: fill-in
+  focus: Complete ordering phrases
+  items: 15
+- type: listening
+  focus: Understand café dialogue
+  items: 10
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a1-18 (Food and Shopping)
 connects_to:
 - a1-20 (Checkpoint Navigation)
 - a1-36 (At the Restaurant)
+objectives:
+- Learner can order food and drinks at a café
+- Learner can ask for recommendations
+- Learner can request the bill
+- Learner can use polite forms and cases correctly
+grammar:
+- Integration of Accusative, Genitive, Locative
+- Polite imperatives (принесіть, візьміть)
+- Future tense preview (візьму)
+register: розмовний
+phase: A1.2 [Navigation]

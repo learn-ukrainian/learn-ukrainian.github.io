@@ -1,16 +1,9 @@
-module: shopping-services
-level: a2
-sequence: 53
+module: a2-53
+level: A2
+slug: shopping-services
 version: '2.0'
 title: Shopping and Services
 subtitle: Buying and Paying
-focus: vocabulary
-pedagogy: PPP
-objectives:
-- Learner can buy items in a shop
-- Learner can ask for price and pay
-- Learner can use service vocabulary (checkout, receipt)
-- Learner can describe payment methods
 content_outline:
 - section: 'Introduction: Shopping in Ukraine'
   words: 100
@@ -48,7 +41,7 @@ content_outline:
   - Buy items in a store
   - Ask about services
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - магазин (store)
   - ціна (price)
@@ -65,16 +58,34 @@ vocabulary:
   - пакет (bag)
   - примірка (fitting room)
   - розмір (size)
-  forbidden: []
-activities:
-  types_required:
-  - vocabulary-drill
-  - dialogue
-  - role-play
-  - fill-in
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: vocabulary-drill
+  focus: Shopping vocabulary
+  items: 30
+- type: dialogue
+  focus: Store conversation
+  items: 12
+- type: fill-in
+  focus: Complete shopping sentences
+  items: 15
+- type: role-play
+  focus: Buy items at a store
+  items: 8
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- a2-52 (Education and Learning)
 connects_to:
 - a2-54 (Sports and Fitness)
 - a2-63 (At the Bank)
+objectives:
+- Learner can buy items in a shop
+- Learner can ask for price and pay
+- Learner can use service vocabulary (checkout, receipt)
+- Learner can describe payment methods
+grammar:
+- Payment verbs (платити, купувати, продавати)
+- Accusative for prices and objects
+- Instrumental for means (карткою, готівкою)
+register: розмовний
+phase: A2.5 [Vocabulary Expansion]

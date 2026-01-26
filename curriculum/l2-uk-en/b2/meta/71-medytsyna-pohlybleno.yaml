@@ -1,10 +1,10 @@
 module: b2-71
-title: Медицина (поглиблено)
-subtitle: Medicine (Advanced)
+level: B2
+slug: 71-medytsyna-pohlybleno
 version: '2.0'
-phase: B2.4 Skills & Capstone
-focus: domain
-pedagogy: CBI
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
 tags:
@@ -12,40 +12,6 @@ tags:
 - medicine
 - health
 - professional
-grammar:
-- Medical register
-- Professional terminology
-objectives:
-- Використовувати медичну лексику для опису симптомів та діагнозів
-- Розуміти та вести діалог лікар-пацієнт українською
-- Орієнтуватися в українській системі охорони здоров'я
 vocabulary_count: 25
-slug: 71-medytsyna-pohlybleno
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-- section: Вступ — Медицина (поглиблено)
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-- section: Основний матеріал
-  words: 600
-  points:
-  - Теоретичні основи
-  - Приклади та ілюстрації
-  - Типові помилки та як їх уникати
-- section: Поглиблене вивчення
-  words: 600
-  points:
-  - Додаткові випадки
-  - Контекстуальне використання
-  - Стилістичні нюанси
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

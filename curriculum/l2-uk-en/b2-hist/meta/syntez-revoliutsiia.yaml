@@ -1,102 +1,13 @@
 module: b2-hist-98
-id: b2-hist-98
+level: B2-HIST
 slug: syntez-revoliutsiia
-title: "Синтез: Українська революція"
-subtitle: "Synthesis: The Ukrainian Revolution"
 version: '2.0'
-phase: "HIST.9 [WWI & Revolution]"
-focus: history
-pedagogy: CBI
-register: публіцистичний
-duration: 150
-transliteration: none
-objectives:
-  - "Учень може синтезувати знання про Українську революцію 1917-1921"
-  - "Учень може пояснити причини поразки визвольних змагань"
-  - "Учень може проаналізувати досягнення та помилки"
-  - "Учень може оцінити спадщину революції для сучасності"
-grammar:
-  - "Аналітичний стиль"
-  - "Причинно-наслідкові конструкції"
-  - "Складнопідрядні речення"
-word_target: 3000
-content_outline:
-  - section: "Вступ: Втрачена незалежність"
-    words: 300
-    points:
-      - "1917-1921: чотири роки боротьби"
-      - "Чому важлива революція"
-      - "Уроки для сьогодення"
-  - section: "Етапи революції"
-    words: 600
-    points:
-      - "Центральна Рада (1917-1918)"
-      - "Гетьманат (1918)"
-      - "Директорія (1918-1920)"
-      - "ЗУНР та Акт Злуки"
-  - section: "Причини поразки"
-    words: 700
-    points:
-      - "Внутрішні конфлікти"
-      - "Соціальні проблеми"
-      - "Зовнішні вороги"
-      - "Слабкість армії"
-      - "Чому більшовики перемогли"
-  - section: "Первинні джерела в синтезі"
-    words: 600
-    points:
-      - "Порівняння урядів"
-      - "Документи епохи"
-      - "Спогади учасників"
-  - section: "Деколонізаційний погляд"
-    words: 400
-    points:
-      - "Радянський наратив: «буржуазія»"
-      - "Реальність: національно-визвольний рух"
-      - "Революція в українській пам'яті"
-  - section: "Підсумок: Спадщина"
-    words: 400
-    points:
-      - "Що залишилось"
-      - "Від 1921 до 1991"
-      - "Революція та сучасна Україна"
-vocabulary_hints:
-  required:
-    - синтез (synthesis)
-    - революція (revolution)
-    - незалежність (independence)
-    - поразка (defeat)
-    - боротьба (struggle)
-    - визвольні змагання (liberation struggle)
-    - уряд (government)
-    - армія (army)
-  recommended:
-    - конфлікт (conflict)
-    - більшовики (Bolsheviks)
-    - інтервенція (intervention)
-    - еміграція (emigration)
-    - спадщина (legacy)
-    - пам'ять (memory)
-activity_hints:
-  - type: reading
-    focus: "Порівняльний аналіз урядів революції"
-    source: "Історичні документи"
-    items: 4
-  - type: quiz
-    focus: "Українська революція: синтез"
-    items: 15
-  - type: match-up
-    focus: "Уряд → досягнення та проблеми"
-    items: 10
-  - type: essay-response
-    focus: "Чому Українська революція 1917-1921 зазнала поразки?"
-    word_target: 300
-prerequisites:
-  - b2-hist-97 (Кінець визвольних змагань)
-connects_to:
-  - b2-hist-99 (Радянська Україна)
-  - b2-hist-100 (Механізм терору)
+id: b2-hist-98
 naturalness:
   score: 10
   status: PASS
-  justification: "Академічний український для синтетичного аналізу"
+  justification: Академічний український для синтетичного аналізу
+duration: 150
+transliteration: none
+build:
+  last_modified: '2026-01-26'

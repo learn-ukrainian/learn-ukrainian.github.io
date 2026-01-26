@@ -1,102 +1,13 @@
 module: b2-hist-110
-id: b2-hist-110
+level: B2-HIST
 slug: syntez-trahedii
-title: "Синтез: Трагедії XX століття"
-subtitle: "Synthesis: 20th Century Tragedies"
 version: '2.0'
-phase: "HIST.10 [WWII & Soviet Terror]"
-focus: history
-pedagogy: CBI
-register: публіцистичний
-duration: 150
-transliteration: none
-objectives:
-  - "Учень може синтезувати знання про трагедії України XX століття"
-  - "Учень може пояснити зв'язки між Голодомором, війною та репресіями"
-  - "Учень може проаналізувати механізми культурного виживання"
-  - "Учень може оцінити спадщину травми для сучасної України"
-grammar:
-  - "Аналітичний стиль"
-  - "Причинно-наслідкові конструкції"
-  - "Складнопідрядні речення"
-word_target: 3000
-content_outline:
-  - section: "Вступ: Століття травми"
-    words: 300
-    points:
-      - "XX століття: найтрагічніше в історії України"
-      - "Голодомор, війна, терор"
-      - "Як нація вижила"
-  - section: "Зв'язки між трагедіями"
-    words: 600
-    points:
-      - "Голодомор як геноцид"
-      - "Розстріляне відродження"
-      - "Друга світова війна"
-      - "Післявоєнні репресії"
-  - section: "Механізми виживання"
-    words: 700
-    points:
-      - "Культура в підпіллі"
-      - "Діаспора та пам'ять"
-      - "Дисиденти"
-      - "Збереження ідентичності"
-  - section: "Первинні джерела в синтезі"
-    words: 600
-    points:
-      - "Порівняння свідчень"
-      - "Аналіз документів"
-      - "Усна історія"
-  - section: "Деколонізаційний погляд"
-    words: 400
-    points:
-      - "Радянський наратив: замовчування"
-      - "Сучасне відновлення пам'яті"
-      - "Травма як частина ідентичності"
-  - section: "Підсумок: Уроки для сьогодення"
-    words: 400
-    points:
-      - "Чому пам'ять важлива"
-      - "Від травми до стійкості"
-      - "XX століття та війна 2022"
-vocabulary_hints:
-  required:
-    - синтез (synthesis)
-    - трагедія (tragedy)
-    - травма (trauma)
-    - геноцид (genocide)
-    - репресії (repressions)
-    - виживання (survival)
-    - пам'ять (memory)
-    - ідентичність (identity)
-  recommended:
-    - замовчування (silencing)
-    - відновлення (restoration)
-    - спадщина (legacy)
-    - покоління (generation)
-    - свідчення (testimony)
-    - деколонізація (decolonization)
-activity_hints:
-  - type: reading
-    focus: "Порівняльний аналіз свідчень"
-    source: "Усна історія"
-    items: 4
-  - type: quiz
-    focus: "Трагедії XX століття: синтез"
-    items: 15
-  - type: match-up
-    focus: "Трагедія → наслідки"
-    items: 10
-  - type: essay-response
-    focus: "Як трагедії XX століття вплинули на сучасну українську ідентичність?"
-    word_target: 300
-prerequisites:
-  - b2-hist-108 (Sürgünlik)
-  - b2-hist-109 (Депортації)
-connects_to:
-  - b2-hist-111 (Післявоєнна відбудова)
-  - b2-hist-115 (Шістдесятники)
+id: b2-hist-110
 naturalness:
   score: 10
   status: PASS
-  justification: "Академічний український для синтетичного аналізу"
+  justification: Академічний український для синтетичного аналізу
+duration: 150
+transliteration: none
+build:
+  last_modified: '2026-01-26'

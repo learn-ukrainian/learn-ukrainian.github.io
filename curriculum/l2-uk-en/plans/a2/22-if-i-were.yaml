@@ -1,25 +1,9 @@
 module: 22-if-i-were
-level: a2
-sequence: 22
+level: A2
+slug: 22-if-i-were
 version: '2.0'
 title: If I Were
 subtitle: The Conditional Mood
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can form the conditional mood using the particle б/би
-- Learner can distinguish between real (якщо) and unreal (якби) conditions
-- Learner can express wishes and dreams
-- Learner can make polite requests using the conditional
-sources:
-- name: Ukrainian State Standard 2024 - Conditional
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Conditional mood requirements for A2
-- name: Functional Grammar of Ukrainian - Modality
-  url: https://uk.wikipedia.org/wiki/Умовний_спосіб
-  type: reference
-  notes: Deep dive into hypothetical vs real conditions
 content_outline:
 - section: Introduction / Вступ
   words: 200
@@ -43,7 +27,27 @@ content_outline:
   points:
   - Planning a dream vacation or career
 word_target: 1000
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can form the conditional mood using the particle б/би
+- Learner can distinguish between real (якщо) and unreal (якби) conditions
+- Learner can express wishes and dreams
+- Learner can make polite requests using the conditional
+grammar:
+- conditional mood formation (б/би)
+- real condition (якщо)
+- unreal condition (якби)
+- polite requests (я б хотів)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Conditional
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Conditional mood requirements for A2
+- name: Functional Grammar of Ukrainian - Modality
+  url: https://uk.wikipedia.org/wiki/Умовний_спосіб
+  type: reference
+  notes: Deep dive into hypothetical vs real conditions
+immersion: 40-50% Ukrainian
+phase: A2.2

@@ -1,22 +1,38 @@
 module: 99-lesya-ukrainka-liryka
-level: c1
-sequence: 99
+level: C1
+slug: 99-lesya-ukrainka-liryka
 version: '2.0'
 title: 'Леся Українка: Лірична поезія'
 subtitle: Lesya Ukrainka's Lyric Poetry
+content_outline:
+- section: Вступ — Лірична поезія
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Contra Spem Spero: stoicism and willpower'
+  - 'Nature lyrics: connection with Polissia and Volyn'
+  - 'Patriotic cycles: "Seven Strings", "Slave Songs"'
+  - 'Philosophical themes: artist''s role, freedom vs. necessity'
+  - Feminist perspective in lyrical works
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: literature
 pedagogy: Literary Analysis
 objectives:
 - Learner can analyze the philosophy of stoicism in "Contra Spem Spero".
-- Learner can interpret the patriotic and feminist motifs in Lesya Ukrainka’s lyric cycles.
+- Learner can interpret the patriotic and feminist motifs in Lesya Ukrainka’s lyric
+  cycles.
 - Learner can discuss the role of nature and the artist in Lesya Ukrainka’s poetry.
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Rhetorical questions
+- Complex metaphors
+phase: C1.6 Literature

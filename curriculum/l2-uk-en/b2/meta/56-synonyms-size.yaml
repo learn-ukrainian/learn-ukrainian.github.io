@@ -1,56 +1,17 @@
 module: b2-56
-title: 'Синоніми: Розмір і Масштаб'
-subtitle: Synonyms - Size and Scale
+level: B2
+slug: 56-synonyms-size
 version: '1.0'
-phase: B2.2 [Phraseology & Synonymy]
-pedagogy: CBI
-focus: phraseology
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
-immersion: 100
 tags:
 - vocabulary
 - synonyms
 - size
-grammar:
-- Nuances in size adjectives
-- Intensifiers and scale
-objectives:
-- Учень може розрізняти відтінки значень синонімів на позначення розміру
-- Учень вміє вживати лексику масштабу в публіцистичному та художньому регістрах
 vocabulary_count: 35
-register: публіцистичний
 vocab_count: 112
-slug: 56-synonyms-size
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-- section: Вступ — Розмір і Масштаб
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-- section: Big
-  words: 500
-  points:
-  - великий (big - neutral)
-  - здоровенний (huge - colloquial)
-  - велетенський (gigantic - from "giant")
-  - величезний (enormous - emphatic)
-  - грандіозний (grand - impressive)
-- section: Small
-  words: 500
-  points:
-  - малий (small - neutral)
-  - маленький (little - diminutive)
-  - крихітний (tiny - very small)
-  - мізерний (minuscule - negligible)
-  - мініатюрний (miniature - cute small)
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

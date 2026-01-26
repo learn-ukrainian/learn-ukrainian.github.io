@@ -1,22 +1,41 @@
-module: 80-analiz-tekstu
-level: b2
-sequence: 80
+module: b2-80
+level: B2
+slug: 80-analiz-tekstu
 version: '2.0'
 title: Аналіз тексту
 subtitle: Text Analysis
+content_outline:
+- section: Вступ — Аналіз тексту
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Основний матеріал
+  words: 600
+  points:
+  - Теоретичні основи
+  - Приклади та ілюстрації
+  - Типові помилки та як їх уникати
+- section: Поглиблене вивчення
+  words: 600
+  points:
+  - Додаткові випадки
+  - Контекстуальне використання
+  - Стилістичні нюанси
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: skills
 pedagogy: CBI
 objectives:
 - Analyze texts for subtext and author intent
 - Identify bias and manipulation in media
 - Understand rhetorical structure of arguments
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Rhetorical analysis methods
+- Identifying bias and subtext
+phase: B2.4 Skills & Capstone

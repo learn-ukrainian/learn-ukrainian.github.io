@@ -1,105 +1,13 @@
 module: b2-hist-134
-id: b2-hist-134
+level: B2-HIST
 slug: mariupol-azovstal
-title: "Маріуполь та Азовсталь"
-subtitle: "Mariupol and Azovstal: The Siege"
 version: '2.0'
-phase: "HIST.13 [Russian Aggression]"
-focus: history
-pedagogy: CBI
-register: публіцистичний
-duration: 120
-transliteration: none
-objectives:
-  - "Учень може описати облогу Маріуполя"
-  - "Учень може пояснити значення оборони Азовсталі"
-  - "Учень може проаналізувати гуманітарну катастрофу"
-  - "Учень може оцінити символічне значення Маріуполя для України"
-grammar:
-  - "Минулий та теперішній час"
-  - "Військова та гуманітарна лексика"
-  - "Пасивні конструкції для опису подій"
-word_target: 4000
-content_outline:
-  - section: "Вступ: Місто-герой"
-    words: 400
-    points:
-      - "Маріуполь: історія та значення"
-      - "24 лютого 2022: початок облоги"
-      - "Чому Маріуполь став символом"
-  - section: "Облога міста"
-    words: 800
-    points:
-      - "Оточення та блокада"
-      - "Бомбардування житлових кварталів"
-      - "Драматеатр: трагедія мирних жителів"
-      - "Пологовий будинок: цинізм агресора"
-  - section: "Оборона Азовсталі"
-    words: 1000
-    points:
-      - "Полк «Азов» та морська піхота"
-      - "Підземна фортеця: цивільні та військові"
-      - "82 дні оборони"
-      - "Евакуація цивільних"
-      - "Рішення про здачу: врятувати життя"
-  - section: "Первинні джерела"
-    words: 800
-    points:
-      - "Відеозвернення захисників"
-      - "Свідчення евакуйованих"
-      - "Супутникові знімки руйнувань"
-  - section: "Деколонізаційний погляд"
-    words: 500
-    points:
-      - "Російська пропаганда про «визволення»"
-      - "Реальність: геноцид міста"
-      - "Маріуполь як доказ на трибуналі"
-  - section: "Підсумок: Пам'ять та відбудова"
-    words: 500
-    points:
-      - "Полонені захисники"
-      - "Обмін: Азов повертається"
-      - "Майбутня відбудова Маріуполя"
-vocabulary_hints:
-  required:
-    - облога (siege)
-    - оборона (defense)
-    - евакуація (evacuation)
-    - бомбардування (bombardment)
-    - полонений (prisoner of war)
-    - захисник (defender)
-    - блокада (blockade)
-    - руйнування (destruction)
-  recommended:
-    - підземелля (underground)
-    - гуманітарний коридор (humanitarian corridor)
-    - цивільний (civilian)
-    - обмін (exchange)
-    - пропаганда (propaganda)
-    - трибунал (tribunal)
-activity_hints:
-  - type: reading
-    focus: "Звернення захисників Азовсталі"
-    source: "Відеоматеріали"
-    items: 4
-  - type: quiz
-    focus: "Облога Маріуполя"
-    items: 15
-  - type: match-up
-    focus: "Дата → подія облоги"
-    items: 10
-  - type: fill-in
-    focus: "Військова лексика"
-    items: 10
-  - type: essay-response
-    focus: "Чому оборона Маріуполя стала символом українського спротиву?"
-    word_target: 250
-prerequisites:
-  - b2-hist-133 (Війна 2022: початок)
-connects_to:
-  - b2-hist-135 (Каховська ГЕС)
-  - b2-hist-139 (Злочини і стійкість)
+id: b2-hist-134
 naturalness:
   score: 10
   status: PASS
-  justification: "Сучасний український для воєнного наративу"
+  justification: Сучасний український для воєнного наративу
+duration: 120
+transliteration: none
+build:
+  last_modified: '2026-01-26'

@@ -1,105 +1,105 @@
 module: kateryna-bilokur
-level: c1-bio
-sequence: 66
+level: C1-BIO
+slug: kateryna-bilokur
 version: '2.0'
 title: 'Катерина Білокур: Геній наївного мистецтва'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Білокур_Катерина_Василівна
-    title: Катерина Білокур (Wikipedia UA)
-    notes: Biography of the self-taught folk artist
-  secondary:
-  - url: https://mundm.kiev.ua/
-    title: Національний музей українського народного декоративного мистецтва
-    notes: Major collection of Bilokur's works
 content_outline:
 - section: Вступ — Квіти, народжені геєм
   words: 400
-  subsections:
+  points:
   - Самоук з Полтавщини, що здивувала світ
   - Майстриня квіткового живопису
   - Життя між талантом і бідністю
 - section: Юність без можливостей (1900-1920-ті)
   words: 600
-  subsections:
+  points:
   - Народження в селі Богданівка
   - Важке дитинство та відсутність освіти
   - Перші спроби малювати
   - Опір родини мистецьким прагненням
 - section: Таємне мистецтво (1920-1940-ті)
   words: 800
-  subsections:
+  points:
   - Малювання вночі та в таємниці
   - Саморобні фарби та пензлі
   - Квіти як головна тема
   - Ізоляція від мистецького світу
 - section: Відкриття таланту (1940-ві)
   words: 800
-  subsections:
+  points:
   - Лист до Олександра Довженка
   - Визнання в радянському мистецтві
   - Народна художниця України
   - Виставки в СРСР та за кордоном
 - section: Пізній період (1950-1961)
   words: 700
-  subsections:
+  points:
   - Продовження творчості
   - Натюрморти світового рівня
   - Зустріч з Пабло Пікассо (легенда)
   - Смерть у бідності
 - section: Спадщина — Геній із села
   words: 700
-  subsections:
+  points:
   - Визнання після смерті
   - Музей у Богданівці
   - Вплив на українське мистецтво
   - Білокур як символ народного генія
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - наївне мистецтво
-  - самоук
-  - живопис
-  - натюрморт
-  - квіткова композиція
-  - фарба
-  - пензель
-  - полотно
-  - народний художник
-  - талант
+  - наївне мистецтво (naive art)
+  - самоук (self-taught artist)
+  - живопис (painting)
+  - натюрморт (still life)
+  - квіткова композиція (flower composition)
+  - фарба (paint)
+  - пензель (brush)
+  - полотно (canvas)
+  - народний художник (folk artist)
+  - талант (talent)
   recommended:
-  - декоративний
-  - колорит
-  - композиція
-  - примітивізм
-  - геній
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - декоративний (decorative)
+  - колорит (color palette)
+  - композиція (composition)
+  - примітивізм (primitivism)
+  - геній (genius)
+activity_hints:
+- type: reading
+  focus: Українське народне мистецтво XX ст.
+  source: Art history sources
+  items: 3 passages
+- type: quiz
+  focus: Життя та творчість Білокур
+  items: 12+
+- type: match-up
+  focus: Терміни образотворчого мистецтва
+  items: 10+
+- type: essay-response
+  focus: Як Білокур здолала перешкоди на шляху до мистецтва?
+  word_target: 300
+  output: Analytical essay
+- type: group-sort
+  focus: Картини за періодами творчості
+  items: 12+
+- type: fill-in
+  focus: Мистецтвознавча термінологія
+  items: 10+
+focus: biography
+prerequisites:
+- c1-bio-65
 connects_to:
-  previous: c1-bio-65
-  related:
-  - c1-bio-69
-  - c1-bio-50
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-69
+- c1-bio-50
+module_type: biography
+sources:
+- name: Катерина Білокур (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Білокур_Катерина_Василівна
+  type: primary
+  notes: Biography of the self-taught folk artist
+- name: Національний музей українського народного декоративного мистецтва
+  url: https://mundm.kiev.ua/
+  type: reference
+  notes: Major collection of Bilokur's works
+immersion: 100% Ukrainian
+phase: C1-BIO

@@ -1,14 +1,11 @@
-id: b1-08
-title: 'Вид у минулому: результат і процес'
-subtitle: 'Aspect in Past: Result vs Process'
+module: 08-aspect-past-result-process
+level: B1
 slug: 08-aspect-past-result-process
-module_type: grammar
-word_target: 1800
-immersion: 100% Ukrainian
 version: '1.0'
-phase: B1.1 Aspect
-pedagogy: TTT
-focus: grammar
+id: b1-08
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
 tags:
@@ -16,95 +13,5 @@ tags:
 - aspect
 - past-tense
 - duration
-grammar:
-- Result-oriented vs process-oriented aspect
-- Duration markers and aspect
-- Completed actions vs ongoing processes
-objectives:
-- Learner can distinguish result from process in past tense
-- Learner understands duration markers with imperfective
-- Learner can select aspect based on speaker's focus (result vs activity)
-- Learner recognizes completion markers with perfective
-sources:
-- name: Ukrainian State Standard 2024 - Aspect and Result
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official guidance on result-oriented aspect usage
-- name: Ukrainian Grammar - Aspect
-  url: https://uk.wikipedia.org/wiki/Вид_дієслова
-  type: reference
-  notes: Process vs result distinction in Ukrainian
-content_outline:
-- section: Тест
-  words: 200
-  points:
-  - Narrative comparison
-  - Result vs Process focus
-- section: Пояснення
-  words: 500
-  points:
-  - Perfective (Result)
-  - Imperfective (Process)
-  - Markers
-- section: Контраст
-  words: 450
-  points:
-  - Same fact, different focus
-  - Communication intent
-- section: Практика
-  words: 300
-  points:
-  - Algorithm
-  - Common mistakes
-  - Daily life scenarios
-- section: Діалоги
-  words: 350
-  points:
-  - Work report
-  - Study experience
-  - Moving houses
-- section: Підсумок
-  words: 150
-  points:
-  - Key rules
-  - Self-check
-vocabulary_hints:
-  required:
-  - результат (result)
-  - процес (process)
-  - завершення (completion)
-  - тривалість (duration)
-  - весь день (all day)
-  - годину (for an hour)
-  - вже (already)
-  - нарешті (finally)
-  - до кінця (to the end)
-  - довго (for a long time)
-  recommended:
-  - ще (still/yet)
-  - зараз (now)
-  - поступово (gradually)
-  - раптом (suddenly)
-  - миттєво (instantly)
-activity_hints:
-- type: quiz
-  focus: Result or process aspect?
-  items: 15+
-- type: fill-in
-  focus: Duration markers with imperfective
-  items: 12+
-- type: fill-in
-  focus: Add result marker → change to perfective
-  items: 10+
-- type: cloze
-  focus: Narrative with result/process focus
-  items: 10+
-prerequisites:
-- b1-06 (Aspect complete system)
-- b1-07 (Aspect past - single vs repeated)
-connects_to:
-- b1-09 (Aspect in future)
-- b1-14 (Aspect integration practice)
-naturalness:
-  score: 9
-  status: PASS
+build:
+  last_modified: '2026-01-26'

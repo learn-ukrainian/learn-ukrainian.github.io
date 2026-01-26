@@ -1,96 +1,13 @@
 module: a2-68
-id: a2-68
+level: A2
 slug: texting-messaging
-title: "Texting and Messaging"
-subtitle: "Chatting with Friends"
 version: '2.0'
-phase: "A2.6 [Practical]"
-focus: practical
-pedagogy: PPP
-register: розмовний
-duration: 60
-transliteration: none
-objectives:
-  - "Learner can send and receive text messages"
-  - "Learner can use common abbreviations"
-  - "Learner can understand informal chat language"
-  - "Learner can arrange meetings via text"
-grammar:
-  - "Text abbreviations (прив, дяк, норм)"
-  - "Informal syntax in chats"
-  - "Polite vs informal messaging"
-word_target: 1000
-content_outline:
-  - section: "Introduction: Ukrainian Texting"
-    words: 100
-    points:
-      - "Messaging culture"
-      - "Popular apps"
-      - "Texting vocabulary"
-  - section: "Common Abbreviations"
-    words: 200
-    points:
-      - "прив (привіт), дяк (дякую)"
-      - "норм, ок, лол"
-      - "When to use them"
-  - section: "Informal Language"
-    words: 200
-    points:
-      - "Shortened sentences"
-      - "Emoji and stickers"
-      - "Tone in messages"
-  - section: "Making Plans by Text"
-    words: 200
-    points:
-      - "Arranging meetings"
-      - "Confirming and canceling"
-      - "Time and place"
-  - section: "Polite vs Casual"
-    words: 150
-    points:
-      - "Friends vs work"
-      - "Register differences"
-      - "When to be formal"
-  - section: "Practice: Text Conversations"
-    words: 150
-    points:
-      - "Chat with friends"
-      - "Arrange a meeting"
-vocabulary_hints:
-  required:
-    - повідомлення (message)
-    - надіслати (to send)
-    - отримати (to receive)
-    - прив (hi - abbreviated)
-    - дяк (thanks - abbreviated)
-    - чат (chat)
-    - смайлик (emoji)
-    - голосове (voice message)
-  recommended:
-    - норм (normal/fine)
-    - прикольно (cool)
-    - круто (awesome)
-    - стікер (sticker)
-    - пересилати (to forward)
-    - видалити (to delete)
-activity_hints:
-  - type: vocabulary-drill
-    focus: "Texting vocabulary"
-    items: 25
-  - type: fill-in
-    focus: "Complete text messages"
-    items: 15
-  - type: writing
-    focus: "Write text conversations"
-    items: 10
-  - type: matching
-    focus: "Match abbreviations to meanings"
-    items: 15
-prerequisites:
-  - a2-67 (Social Media Ukrainian)
-connects_to:
-  - a2-69 (Online Services)
+id: a2-68
 naturalness:
   score: 10
   status: PASS
-  justification: "Essential digital communication"
+  justification: Essential digital communication
+duration: 60
+transliteration: none
+build:
+  last_modified: '2026-01-26'

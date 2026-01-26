@@ -1,16 +1,9 @@
-module: integrated-grammar-lab
-level: b1
-sequence: 50
+module: b1-50
+level: B1
+slug: integrated-grammar-lab
 version: '2.0'
 title: Інтегрована граматична лабораторія
 subtitle: Integrated Grammar Lab - B1.4 Synthesis
-focus: grammar
-pedagogy: TTT
-objectives:
-- Learner can combine B1.4 grammar constructions in coherent texts
-- Learner can distinguish between styles and registers
-- Learner can edit texts for appropriate style
-- Learner can flexibly switch between constructions
 content_outline:
 - section: 'Introduction: Synthesis Goals'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Write integrated paragraphs
   - Edit for style
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - інтеграція (integration)
   - синтез (synthesis)
@@ -63,15 +56,33 @@ vocabulary:
   - доречність (appropriateness)
   - текстотворення (text production)
   - аудиторія (audience)
-  forbidden: []
-activities:
-  types_required:
-  - writing
-  - text-editing
-  - error-correction
-  - multiple-choice
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: text-editing
+  focus: Revise texts for style
+  items: 20
+- type: writing
+  focus: Create multi-feature paragraphs
+  items: 15
+- type: error-correction
+  focus: Fix style inconsistencies
+  items: 15
+- type: multiple-choice
+  focus: Choose appropriate form
+  items: 20
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-49 (Numerals Collectives Fractions)
 connects_to:
 - b1-51 (Checkpoint Advanced Grammar)
+objectives:
+- Learner can combine B1.4 grammar constructions in coherent texts
+- Learner can distinguish between styles and registers
+- Learner can edit texts for appropriate style
+- Learner can flexibly switch between constructions
+grammar:
+- 'Синтез: дієприкметники + пасив + демінутиви + числівники'
+- Стилістична гнучкість (stylistic flexibility)
+- Перемикання регістрів (register switching)
+register: розмовний
+phase: B1.4b [Advanced Grammar Synthesis]

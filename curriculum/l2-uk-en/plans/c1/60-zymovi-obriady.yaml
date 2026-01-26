@@ -1,22 +1,37 @@
-module: 60-zymovi-obriady
-level: c1
-sequence: 60
+module: c1-60
+level: C1
+slug: 60-zymovi-obriady
 version: '2.0'
 title: Зимові обряди
 subtitle: Winter Calendar Rituals
+content_outline:
+- section: Вступ — Зимові обряди
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Гуцульський аркан: Carpathian circle dance'
+  - 'Коломийка: Western Ukrainian couple dance'
+  - 'Полісські танці: forest region traditions'
+  - 'Буковинські танці: border influences'
+  - Dance as regional identity marker
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: culture
 pedagogy: Immersion & Analysis
 objectives:
 - Learner can describe the cycle of winter holidays in Ukraine
 - Learner understands the symbolism of ritual foods and actions
 - Learner can analyze the blend of pagan and Christian elements in winter rituals
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Ethnographic terminology
+- Narrative and ritual registers
+phase: C1.5 Folk Culture & Fine Arts

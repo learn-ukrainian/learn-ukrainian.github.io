@@ -1,16 +1,9 @@
-module: ukrainian-music-today
-level: b1
-sequence: 76
+module: b1-76
+level: B1
+slug: ukrainian-music-today
 version: '2.0'
 title: Українська музика сьогодні
 subtitle: Contemporary Ukrainian Music Scene
-focus: culture
-pedagogy: CBI
-objectives:
-- Learner can discuss Ukrainian music genres and artists in context
-- Learner can understand authentic texts about Ukrainian music scene
-- Learner can use music-related vocabulary to express preferences
-- Learner can compare Ukrainian music with their own musical culture
 content_outline:
 - section: 'Introduction: Ukrainian Music'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Discuss favorite artists
   - Compare music cultures
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - музика (music)
   - співак/співачка (singer m/f)
@@ -63,15 +56,33 @@ vocabulary:
   - рок (rock)
   - поп (pop)
   - електронна музика (electronic music)
-  forbidden: []
-activities:
-  types_required:
-  - listening
-  - reading
-  - discussion
-  - matching
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: reading
+  focus: Texts about Ukrainian artists
+  items: 15
+- type: listening
+  focus: Understand song themes
+  items: 15
+- type: matching
+  focus: Match artists to genres
+  items: 20
+- type: discussion
+  focus: Share music preferences
+  items: 10
+focus: culture
+pedagogy: CBI
+prerequisites:
+- b1-75 (Regions Center)
 connects_to:
 - b1-77 (Ukrainian Cinema and TV)
+objectives:
+- Learner can discuss Ukrainian music genres and artists in context
+- Learner can understand authentic texts about Ukrainian music scene
+- Learner can use music-related vocabulary to express preferences
+- Learner can compare Ukrainian music with their own musical culture
+grammar:
+- Music and arts vocabulary
+- Cultural commentary patterns
+- Expressing preferences
+register: розмовний
+phase: B1.7 [Contemporary Ukraine]

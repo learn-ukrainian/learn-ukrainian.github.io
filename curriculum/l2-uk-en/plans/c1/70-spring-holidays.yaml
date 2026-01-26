@@ -1,9 +1,30 @@
-module: 70-spring-holidays
-level: c1
-sequence: 70
-version: '1.0'
+module: c1-70
+level: C1
+slug: 70-spring-holidays
+version: '2.0'
 title: Українські свята - весняний цикл
 subtitle: Ukrainian Holidays - Spring Cycle
+content_outline:
+- section: Вступ — весняний цикл
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Хрестини: baptism, godparents'' role, gifts'
+  - 'Сватання: matchmaking, formal proposal'
+  - 'Заручини: engagement rituals'
+  - 'Весілля: multi-day celebration, rituals'
+  - 'Посаг: dowry traditions'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: cultural
 pedagogy: CBI
 objectives:
@@ -11,13 +32,7 @@ objectives:
 - Learner can explain the symbolism of pysanka and paska
 - Learner can analyze the lyrics of vesnianky (spring songs)
 - Learner can discuss the concept of "summoning spring"
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- ritual songs analysis
+- imperative in invocations
+phase: C1.5 Folk Culture & Arts

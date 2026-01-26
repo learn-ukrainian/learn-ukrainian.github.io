@@ -1,22 +1,37 @@
-module: 52-rehionalni-tantsi
-level: c1
-sequence: 52
+module: c1-52
+level: C1
+slug: 52-rehionalni-tantsi
 version: '2.0'
 title: 'Регіональні танці: Від Аркана до Коломийки'
 subtitle: 'Regional Dances: From Arkan to Kolomyika'
+content_outline:
+- section: Вступ — Від Аркана до Коломийки
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Intimate Features
+  words: 500
+  points:
+  - 'Пестливі імена: Петрусь, Оленка, сонечко'
+  - 'Зменшувальні суфікси: -ик, -очк-, -еньк-'
+  - 'Особливі звертання: коханий/кохана, любий/люба'
+  - 'Неформальні вирази: Як справи? Що нового?'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: history
 pedagogy: CBI
 objectives:
 - Analyze the ritual significance of the Arkan for the Hutsul community
 - Identify the musical and choreographic features of the Kolomyika
 - Distinguish regional dance styles from Central, Western, and Southern Ukraine
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Comparative registers
+- Descriptive ethnography
+phase: C1.5 Folk Culture & Fine Arts

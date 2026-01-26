@@ -1,16 +1,9 @@
-module: checkpoint-advanced-grammar
-level: b1
-sequence: 51
+module: b1-51
+level: B1
+slug: checkpoint-advanced-grammar
 version: '2.0'
 title: 'Контрольна точка: Просунута граматика'
 subtitle: Advanced Grammar Phase Checkpoint
-focus: checkpoint
-pedagogy: TTT
-objectives:
-- Learner can demonstrate mastery of advanced grammar forms
-- Learner can integrate knowledge from M42-M50
-- Learner can form and use adverbial and passive participles
-- Learner can self-assess readiness for Vocabulary Expansion phase
 content_outline:
 - section: 'Pre-Test: Self-Assessment'
   words: 100
@@ -49,7 +42,7 @@ content_outline:
   - Plan for B1.5
   - Identify review needs
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - контрольна точка (checkpoint)
   - оцінювання (assessment)
@@ -64,15 +57,33 @@ vocabulary:
   - прогрес (progress)
   - майстерність (mastery)
   - самооцінка (self-assessment)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - quiz
-  - writing
-  - transformation
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: B1.4 comprehensive test
+  items: 30
+- type: transformation
+  focus: All participle and passive conversions
+  items: 25
+- type: fill-in
+  focus: Complete with appropriate forms
+  items: 20
+- type: writing
+  focus: Write integrated paragraphs
+  items: 10
+focus: checkpoint
+pedagogy: TTT
+prerequisites:
+- b1-50 (Integrated Grammar Lab)
 connects_to:
 - b1-52 (Abstract Concepts Ideas)
+objectives:
+- Learner can demonstrate mastery of advanced grammar forms
+- Learner can integrate knowledge from M42-M50
+- Learner can form and use adverbial and passive participles
+- Learner can self-assess readiness for Vocabulary Expansion phase
+grammar:
+- Integration of M42-M50
+- Participles, passive voice, diminutives, numerals
+- Comprehensive review and testing
+register: розмовний
+phase: B1.4b [Advanced Grammar Checkpoint]

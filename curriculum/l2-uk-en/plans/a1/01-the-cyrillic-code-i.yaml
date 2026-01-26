@@ -1,16 +1,9 @@
-module: the-cyrillic-code-i
-level: a1
-sequence: 1
+module: a1-01
+level: A1
+slug: the-cyrillic-code-i
 version: '2.0'
 title: The Cyrillic Code I
 subtitle: Cracking the Ukrainian Alphabet
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can recognize True Friends (letters that look AND sound like English)
-- Learner can decode False Friends (letters that look familiar but sound different)
-- Learner can read 19 Cyrillic letters
-- Learner can pronounce basic international words in Ukrainian
 content_outline:
 - section: 'Introduction: The Cyrillic Mystery'
   words: 100
@@ -47,7 +40,7 @@ content_outline:
   - Review of all letters learned
   - Preparation for Part II
 word_target: 800
-vocabulary:
+vocabulary_hints:
   required:
   - так (yes)
   - банк (bank)
@@ -62,15 +55,32 @@ vocabulary:
   - бар (bar)
   - факт (fact)
   - план (plan)
-  forbidden: []
-activities:
-  types_required:
-  - audio-match
-  - letter-recognition
-  - quiz
-  - reading-drill
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: letter-recognition
+  focus: Identify True Friends
+  items: 15
+- type: audio-match
+  focus: Match sound to letter
+  items: 20
+- type: reading-drill
+  focus: Read simple words aloud
+  items: 15
+- type: quiz
+  focus: Letter identification
+  items: 20
+focus: grammar
+pedagogy: PPP
+prerequisites: []
 connects_to:
 - a1-02 (The Cyrillic Code II)
+objectives:
+- Learner can recognize True Friends (letters that look AND sound like English)
+- Learner can decode False Friends (letters that look familiar but sound different)
+- Learner can read 19 Cyrillic letters
+- Learner can pronounce basic international words in Ukrainian
+grammar:
+- Letter recognition
+- Sound-letter correspondence
+- Basic pronunciation rules
+register: розмовний
+phase: A1.1 [First Contact]

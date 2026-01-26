@@ -1,16 +1,9 @@
-module: numerals-collectives-fractions
-level: b1
-sequence: 49
+module: b1-49
+level: B1
+slug: numerals-collectives-fractions
 version: '2.0'
 title: 'Числівники: збірні та дроби'
 subtitle: Numerals - Collectives and Fractions
-focus: grammar
-pedagogy: TTT
-objectives:
-- Learner can use collective numerals correctly
-- Learner understands when to use collectives vs cardinals
-- Learner can express fractions and percentages
-- Learner can combine numerals with various noun types
 content_outline:
 - section: 'Introduction: Beyond Cardinal Numbers'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Choose cardinal vs collective
   - Express fractions
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - збірний числівник (collective numeral)
   - дробовий числівник (fractional numeral)
@@ -63,15 +56,33 @@ vocabulary:
   - десятковий (decimal)
   - множина (plural)
   - ножиці (scissors)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - calculation
-  - transformation
-  - multiple-choice
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: Choose cardinal or collective
+  items: 25
+- type: transformation
+  focus: Express as fractions
+  items: 20
+- type: multiple-choice
+  focus: Select correct numeral form
+  items: 15
+- type: calculation
+  focus: Express math in Ukrainian
+  items: 10
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-48 (Diminutives Master Class)
 connects_to:
 - b1-50 (Checkpoint Participles Numerals)
+objectives:
+- Learner can use collective numerals correctly
+- Learner understands when to use collectives vs cardinals
+- Learner can express fractions and percentages
+- Learner can combine numerals with various noun types
+grammar:
+- Збірні числівники (двоє, троє, четверо)
+- Дробові числівники (половина, третина, чверть)
+- Вживання збірних з різними типами іменників
+register: розмовний
+phase: B1.4b [Word Formation]

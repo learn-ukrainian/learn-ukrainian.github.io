@@ -1,25 +1,8 @@
 module: 13-emphasis-and-inversion
-level: b2
-sequence: 13
-version: '1.0'
+level: B2
+slug: 13-emphasis-and-inversion
+version: '2.0'
 title: Емфаза та інверсія
-focus: grammar
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Ukrainian State Standard 2024 - Word Order
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Stylistic word order variations at B2
-- name: Сучасна українська літературна мова - Стилістика
-  url: https://uk.wikipedia.org/wiki/Стилістика
-  type: secondary
-  notes: Emphatic constructions in Ukrainian
-- name: CEFR B2 Stylistic Competence
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
-  type: reference
-  notes: B2 style and register awareness
 content_outline:
 - section: Вступ — Порядок слів в українській мові
   words: 400
@@ -68,7 +51,7 @@ content_outline:
   - Створення емфатичних конструкцій
   - Підготовка до модуля 14
 word_target: 3800
-vocabulary:
+vocabulary_hints:
   required:
   - емфаза (emphasis)
   - інверсія (inversion)
@@ -86,19 +69,51 @@ vocabulary:
   - контекст (context)
   - наголос (stress/emphasis)
   - художній стиль (artistic style)
-  forbidden: []
-activities:
-  types_required:
-  - group-sort
-  - quiz
-  - reading
-  - fill-in
-  - essay-response
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: Identify neutral vs emphatic word order
+  items: 15+
+- type: fill-in
+  focus: Change neutral sentence to emphatic
+  items: 12+
+- type: match-up
+  focus: Sentence → communicative effect
+  items: 12+
+- type: group-sort
+  focus: Analyze different word orders of same sentence
+  items: 10+
+- type: fill-in
+  focus: Complete sentences with emphatic constructions
+  items: 12+
+- type: reading
+  focus: Identify emphatic structures in literary text
+  items: 3 texts
+- type: essay-response
+  focus: Rewrite paragraph with emphatic structures
+  word_target: 150
+  output: Model answer with analysis
+focus: grammar
+prerequisites:
+- b2-11 (Multi-clause Sentences)
+- b2-12 (Parenthetical Expressions)
+- Basic word order
 connects_to:
 - b2-14 (Stylistic Connectors)
 - 'b2-22 (Register: Literary Ukrainian)'
 - b2-25 (B2.1b Checkpoint)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Word Order
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Stylistic word order variations at B2
+- name: Сучасна українська літературна мова - Стилістика
+  url: https://uk.wikipedia.org/wiki/Стилістика
+  type: secondary
+  notes: Emphatic constructions in Ukrainian
+- name: CEFR B2 Stylistic Competence
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 style and register awareness
+immersion: 100% Ukrainian
+phase: B2.1b [Participles & Register Intro]

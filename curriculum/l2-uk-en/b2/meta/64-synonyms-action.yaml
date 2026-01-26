@@ -1,58 +1,17 @@
 module: b2-64
-title: 'Синоніми: Дія та Перетворення'
-subtitle: Synonyms - Action and Transformation
+level: B2
+slug: 64-synonyms-action
 version: '1.0'
-phase: B2.2 [Phraseology & Synonymy]
-pedagogy: CBI
-focus: phraseology
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
-immersion: 100
 tags:
 - vocabulary
 - synonyms
 - action
-grammar:
-- Nuances in verbs of action
-- Aspectual pairs and intensity
-objectives:
-- Учень може розрізняти відтінки значень дієслів на позначення дії (робити, чинити,
-  діяти)
-- Учень вміє обирати точне слово для опису професійних та творчих процесів
-- Учень розуміє концепцію вчинку та результату в українському культурному контексті
 vocabulary_count: 35
-register: публіцистичний
 vocab_count: 67
-slug: 64-synonyms-action
-naturalness:
-  score: 9
-  status: PASS
-content_outline:
-- section: Вступ — Дія та Перетворення
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-- section: Do/Make
-  words: 500
-  points:
-  - робити (do/make - general)
-  - чинити (do - formal/legal)
-  - діяти (act - take action)
-  - виконувати (perform - fulfill)
-  - здійснювати (realize - implement)
-- section: Take
-  words: 500
-  points:
-  - брати (take - general)
-  - взяти (take - perfective)
-  - хапати (grab - quick)
-  - вихоплювати (snatch - sudden)
-  - отримувати (receive - get given)
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

@@ -1,37 +1,48 @@
 module: pravoslavna-tserkva-17
-level: b2-hist
-sequence: 17
-version: '1.0'
+level: B2-HIST
+slug: pravoslavna-tserkva-17
+version: '2.0'
 title: Православна церква XVII століття
-focus: history
-pedagogy: CBI
-objectives: []
 content_outline:
 - section: Вступ
   words: 500
+  title: Боротьба за віру та ідентичність
 - section: Відновлення ієрархії
   words: 2000
+  subsections:
+  - title: 'Історичне тло: У горнилі конфлікту'
+  - title: 'Основні події: Велика гра Сагайдачного'
+  - title: 'Процес легалізації: Пункти заспокоєння'
 - section: 'Читання: Голоси епохи'
   words: 200
+  title: Голоси епохи
 - section: Первинні джерела
   words: 950
+  subsections:
+  - title: 'Документ 1: Протестація Йова Борецького (1621)'
+  - title: 'Документ 2: Пункти заспокоєння руського народу (1632)'
 - section: Деколонізаційний погляд
   words: 650
+  subsections:
+  - title: 'Міфи 및 реальність: Спростування імперських наративів'
+  - title: 'Сучасність: Гідність та незалежність у ХХІ столітті'
 - section: Потрібно більше практики?
   words: 150
+  title: Практика
 word_target: 4000
-vocabulary:
-- ієрархія
-- митрополит
-- висвячення
-- легітимність
-- братство
-- унія
-- полеміка
-- маєстат
-- сповідувати
-- патріарх
-activities:
+vocabulary_hints:
+  required:
+  - ієрархія
+  - митрополит
+  - висвячення
+  - легітимність
+  - братство
+  - унія
+  - полеміка
+  - маєстат
+  - сповідувати
+  - патріарх
+activity_hints:
 - type: reading
   focus: primary source analysis
 - type: critical-analysis
@@ -48,6 +59,17 @@ activities:
   focus: context
 - type: comparative-study
   focus: analytical comparison
+focus: history
+pedagogy: CBI
+learning_outcomes:
+- Understand the status of the Orthodox Church after the Union of Brest
+- Analyze the restoration of the Kyiv Metropolitanate in 1620
+- Evaluate the role of Petro Sahaidachny in protecting the Church
+- Discuss the 'Articles for the Pacification of the Ruthenian People' (1632)
+grammar:
+- Historical narrative tenses (Past/Present Historical)
+- Passive voice in official documents
+- Religious and ecclesiastical terminology
 sources:
 - name: Історія України-Руси (Грушевський)
   url: http://litopys.org.ua/hrushrus/iur.htm
@@ -55,3 +77,4 @@ sources:
 - name: Енциклопедія українознавства
   url: http://www.encyclopediaofukraine.com/
   type: reference
+phase: HIST.4 [Lithuanian-Polish Era]

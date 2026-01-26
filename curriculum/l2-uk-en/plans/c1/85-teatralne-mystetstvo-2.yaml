@@ -1,22 +1,36 @@
-module: 85-teatralne-mystetstvo-2
-level: c1
-sequence: 85
+module: c1-85
+level: C1
+slug: 85-teatralne-mystetstvo-2
 version: '2.0'
 title: Театральне мистецтво II
 subtitle: Theater Arts II — Contemporary Stage
+content_outline:
+- section: Вступ — Театральне мистецтво II
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Major theaters: Франка, Молодий театр, Театр на Лівому березі'
+  - 'Contemporary directors: Сучасна режисура, нові імена'
+  - 'Experimental: Dakh Daughters, театр-перформанс'
+  - 'War and theater: Театр під час війни, cultural resistance'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: fine-arts
 pedagogy: CBI
 objectives:
 - Learner explores the contemporary Ukrainian theater scene (Franko, Left Bank).
 - Learner understands the phenomenon of Dakh Daughters and experimental theater.
 - Learner analyzes the role of theater during the war.
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Theater criticism terminology
+- Reviewing a performance
+phase: C1.5 Folk Culture & Fine Arts

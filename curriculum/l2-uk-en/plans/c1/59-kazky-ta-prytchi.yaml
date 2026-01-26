@@ -1,22 +1,37 @@
-module: 59-kazky-ta-prytchi
-level: c1
-sequence: 59
+module: c1-59
+level: C1
+slug: 59-kazky-ta-prytchi
 version: '2.0'
 title: Казки та притчі
 subtitle: Ukrainian Folk Tales and Parables
+content_outline:
+- section: Вступ — Казки та притчі
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Гопак: history, movements, acrobatic elements'
+  - 'Козачок: origins, regional variants'
+  - 'Dance vocabulary: присядка, розніжка, повороти'
+  - Role in Cossack culture and military training
+  - Modern stage adaptations (Вірський ensemble)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: vocabulary
 pedagogy: Immersion & Analysis
 objectives:
 - Learner can categorize Ukrainian folk tales into magic, animal, and social types
 - Learner can analyze the moral and philosophical layers of Ukrainian parables
 - Learner can use traditional storytelling formulas in their own narratives
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Narrative structures
+- Moral and allegorical registers
+phase: C1.5 Folk Culture & Fine Arts

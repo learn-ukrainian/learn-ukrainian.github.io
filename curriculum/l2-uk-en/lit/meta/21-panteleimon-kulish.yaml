@@ -1,107 +1,11 @@
-id: lit-21
-title: 'Пантелеймон Куліш: Європеєць на Хуторі'
-subtitle: 'Panteleimon Kulish: The European on the Farmstead'
+module: panteleimon-kulish
+level: LIT
 slug: panteleimon-kulish
-module_type: biography
-word_target: 4500
-immersion: 100% Ukrainian
-sources:
-- name: Пантелеймон Куліш — біографія
-  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1701
-  type: primary
-  notes: Офіційна біографія на UkrLib
-- name: Чорна рада — текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=263
-  type: secondary
-  notes: Головний роман для контексту
-- name: Куліш і українська орфографія
-  url: https://uk.wikipedia.org/wiki/Кулішівка
-  type: reference
-  notes: Мовознавчий контекст
-content_outline:
-- section: Вступ — Інтелектуал епохи романтизму
-  words: 500
-  points:
-  - Куліш у трійці Шевченко-Куліш-Костомаров
-  - Гарячий характер і суперечливість
-  - Чому його менше знають
-- section: Біографія — від села до Європи
-  words: 700
-  points:
-  - Дитинство на Чернігівщині
-  - Освіта і перші твори
-  - Подорожі Європою
-- section: Куліш і Шевченко
-  words: 700
-  points:
-  - Дружба і конфлікти
-  - Різні погляди на Україну
-  - Куліш як видавець "Кобзаря"
-- section: Перекладач і мовознавець
-  words: 700
-  points:
-  - Переклади Шекспіра
-  - Переклад Біблії
-  - Кулішівка — система правопису
-- section: Хуторянство як філософія
-  words: 600
-  points:
-  - Ідеалізація сільського життя
-  - Критика міста і модернізації
-  - Європеїзм vs консерватизм
-- section: Підсумок — Найсуперечливіша постать
-  words: 400
-  points:
-  - Внесок Куліша в українську культуру
-  - Чому його переоцінюють і недооцінюють
-  - Перехід до "Чорної ради"
-vocabulary_hints:
-  required:
-  - інтелектуал (intellectual)
-  - романтизм (romanticism)
-  - хуторянство (ruralism/khutorianstvo)
-  - перекладач (translator)
-  - правопис (orthography)
-  - суперечливий (controversial)
-  - європеїзм (Europeanism)
-  - консерватизм (conservatism)
-  - видавець (publisher)
-  - епістолярний (epistolary)
-  recommended:
-  - полеміка (polemics)
-  - ідеалізація (idealization)
-  - модернізація (modernization)
-  - конфлікт (conflict)
-  - спадщина (legacy)
-activity_hints:
-- type: reading
-  focus: Біографічні матеріали про Куліша
-  source: UkrLib biography
-  items: 4+
-- type: quiz
-  focus: Факти біографії Куліша
-  items: 15+
-- type: match-up
-  focus: Куліш vs Шевченко — погляди
-  items: 12+
-- type: essay-response
-  focus: Дуалізм Куліша (європеїзм vs хуторянство)
-  word_target: 300
-  output: Біографічне есе
-- type: cloze
-  focus: Ключові факти біографії
-  items: 12+
-prerequisites:
-- lit-11 to lit-20 (Shevchenko phase)
-- Understanding of Ukrainian Romanticism
-connects_to:
-- lit-22 (Black Council History — історичний контекст)
-- lit-24 (Language Question — Кулішівка)
-- lit-25 (Cyrillo-Methodian Brotherhood)
 version: '1.0'
-phase: LIT.4 The Intellectuals (Kulish & Kostomarov)
-focus: biography
-pedagogy: Seminar
+id: lit-21
+naturalness:
+  score: 10
+  status: PASS
 duration: 120
 transliteration: none
 tags:
@@ -110,13 +14,5 @@ tags:
 - kulish
 - romanticism
 - translation
-objectives:
-- Evaluate Kulish's role as the "architect" of modern Ukrainian culture alongside Shevchenko.
-- Understand the "Khutor" philosophy as a path to Europeanization.
-- Analyze the impact of "Kulishivka" and his translations on Ukrainian identity.
-grammar:
-- Epistolary style
-- Intellectual lexicon
-naturalness:
-  score: 10
-  status: PASS
+build:
+  last_modified: '2026-01-26'

@@ -1,114 +1,11 @@
-id: lit-08
-title: 'Конотопська Відьма: Сатира на Руїну'
-subtitle: 'LIT-008: Гумор як Дзеркало Деградації'
+module: konotop-witch
+level: LIT
 slug: konotop-witch
-module_type: literature
-word_target: 4500
-immersion: 100% Ukrainian
-grammar:
-- Burlesque style elements
-- Use of surzhik/macaronic language for satire
-- Archaic bureaucratic vocabulary (Kantseliaryt)
-objectives:
-- Analyze the satire in "Konotop Witch"
-- Contrast satire with sentimentalism
-- Evaluate the historical context of the Hetmanate's decline
-sources:
-- name: Конотопська відьма — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=254
-  type: primary
-  notes: Повість для детального аналізу
-- name: Аналіз "Конотопської відьми"
-  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=254
-  type: secondary
-  notes: Літературознавчий аналіз
-- name: Козацька старшина XVIII ст.
-  url: https://uk.wikipedia.org/wiki/Козацька_старшина
-  type: reference
-  notes: Історичний контекст
-content_outline:
-- section: Вступ — Найтемніша і найсмішніша повість
-  words: 500
-  points:
-  - Контраст з "Марусею"
-  - Бурлескний реалізм
-  - Сатира на адміністративний ідіотизм
-- section: Сюжет — полювання на відьму
-  words: 700
-  points:
-  - Сотник Забрьоха і його «похід»
-  - Писар Пістряк — справжній керманич
-  - 'Кульмінація: топлення жінок'
-- section: Антигерої — галерея типів
-  words: 800
-  points:
-  - Забрьоха — тупість і лінь
-  - Пістряк — хитрість і корупція
-  - '"Еліта" як антипод народу'
-- section: Готика та народна демонологія
-  words: 600
-  points:
-  - Елементи готичного роману
-  - Відьма як літературний образ
-  - Функція фантастичного (не налякати — висміяти)
-- section: Мовна стилізація
-  words: 600
-  points:
-  - Канцеляризми XVIII століття
-  - '"Макаронічна" мова Пістряка'
-  - Вульгаризми та лайка
-- section: Підсумок — Енциклопедія шахрайства
-  words: 400
-  points:
-  - Вплив на "Майстра і Маргариту"
-  - Актуальність сатири сьогодні
-  - Квітка між сміхом і сльозами
-vocabulary_hints:
-  required:
-  - сатира (satire)
-  - бурлеск (burlesque)
-  - антигерой (antihero)
-  - демонологія (demonology)
-  - готика (gothic)
-  - канцеляризм (bureaucratic language)
-  - вульгаризм (vulgarism)
-  - сотник (sotnik/captain)
-  - писар (scribe)
-  - забобон (superstition)
-  recommended:
-  - корупція (corruption)
-  - деградація (degradation)
-  - ідіотизм (idiocy)
-  - шахрайство (fraud)
-  - неуцтво (ignorance)
-activity_hints:
-- type: reading
-  focus: Ключові епізоди "Конотопської відьми"
-  source: UkrLib tid=254
-  items: 5+
-- type: quiz
-  focus: Сюжет та персонажі повісті
-  items: 15+
-- type: match-up
-  focus: Персонаж → його вада
-  items: 10+
-- type: essay-response
-  focus: Чому Квітка використовує гумор для критики влади?
-  word_target: 300
-  output: Критичне есе
-- type: group-sort
-  focus: Лексика (канцеляризми / вульгаризми / діалектизми)
-  items: 20+
-prerequisites:
-- lit-06 (Kvitka biography)
-- lit-02 to lit-04 (Eneida for burlesque comparison)
-connects_to:
-- lit-10 (Language of Kvitka — стилістичний аналіз)
-- lit-14 (Son — політична сатира Шевченка)
 version: '1.0'
-phase: LIT.2 Sentimentalism (Kvitka-Osnovianenko)
-focus: literature
-pedagogy: literature
+id: lit-08
+naturalness:
+  score: 10
+  status: PASS
 duration: 120
 transliteration: none
 tags:
@@ -117,6 +14,5 @@ tags:
 - квітка-основ'яненко
 - козацтво
 - містика
-naturalness:
-  score: 10
-  status: PASS
+build:
+  last_modified: '2026-01-26'

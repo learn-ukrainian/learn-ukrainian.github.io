@@ -1,98 +1,13 @@
 module: a1-07
-id: a1-07
+level: A1
 slug: questions-and-negation
-title: "Questions & Negation"
-subtitle: "Asking Questions and Saying No"
 version: '2.0'
-phase: "A1.1 [First Contact]"
-focus: grammar
-pedagogy: PPP
-register: розмовний
-duration: 60
-transliteration: none
-objectives:
-  - "Learner can ask yes/no questions using 'чи'"
-  - "Learner can form questions with question words (що, хто, де, коли)"
-  - "Learner can make negative statements with 'не'"
-  - "Learner understands frequency adverbs (завжди, часто, іноді, ніколи)"
-grammar:
-  - "Yes/no questions with чи"
-  - "Question words"
-  - "Negation with не"
-word_target: 1000
-content_outline:
-  - section: "Introduction: The Power of Questions"
-    words: 100
-    points:
-      - "Questions unlock conversation"
-      - "Two types: yes/no and open questions"
-      - "Negation completes the picture"
-  - section: "Yes/No Questions with Чи"
-    words: 200
-    points:
-      - "Чи ти студент? = Are you a student?"
-      - "Чи + statement = question"
-      - "Intonation alternative"
-  - section: "Question Words"
-    words: 250
-    points:
-      - "що (what), хто (who)"
-      - "де (where), куди (where to)"
-      - "коли (when), чому (why)"
-      - "як (how), скільки (how much/many)"
-  - section: "Negation with Не"
-    words: 200
-    points:
-      - "Я не знаю = I don't know"
-      - "Не directly before verb"
-      - "Double negation: Я ніколи не..."
-  - section: "Frequency Adverbs"
-    words: 150
-    points:
-      - "завжди (always), часто (often)"
-      - "іноді (sometimes), рідко (rarely)"
-      - "ніколи (never) with double negative"
-  - section: "Practice: Question & Answer"
-    words: 100
-    points:
-      - "Interview practice"
-      - "Conversation building"
-vocabulary_hints:
-  required:
-    - чи (question particle)
-    - що (what)
-    - хто (who)
-    - де (where)
-    - коли (when)
-    - не (not)
-    - так (yes)
-    - ні (no)
-  recommended:
-    - куди (where to)
-    - чому (why)
-    - як (how)
-    - скільки (how much)
-    - завжди (always)
-    - ніколи (never)
-activity_hints:
-  - type: question-formation
-    focus: "Form questions with чи"
-    items: 15
-  - type: fill-in
-    focus: "Complete with question words"
-    items: 20
-  - type: transformation
-    focus: "Make sentences negative"
-    items: 15
-  - type: dialogue
-    focus: "Question-answer pairs"
-    items: 8
-prerequisites:
-  - a1-06 (The Living Verb I)
-connects_to:
-  - a1-08 (The Living Verb II)
-  - a1-19 (At the Café)
+id: a1-07
 naturalness:
   score: 10
   status: PASS
-  justification: "Essential conversation skills"
+  justification: Essential conversation skills
+duration: 60
+transliteration: none
+build:
+  last_modified: '2026-01-26'

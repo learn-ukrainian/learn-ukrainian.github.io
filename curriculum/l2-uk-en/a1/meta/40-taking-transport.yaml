@@ -1,96 +1,13 @@
 module: a1-40
-id: a1-40
+level: A1
 slug: taking-transport
-title: "Taking Transport"
-subtitle: "Navigating the City"
 version: '2.0'
-phase: "A1.4 [Practical Scenarios]"
-focus: practical
-pedagogy: PPP
-register: розмовний
-duration: 60
-transliteration: none
-objectives:
-  - "Learner can use public transport"
-  - "Learner can ask for directions"
-  - "Learner can understand announcements"
-  - "Learner can validate tickets"
-grammar:
-  - "Direction questions (Як доїхати до...?)"
-  - "Imperative for directions"
-  - "Locative for stops"
-word_target: 800
-content_outline:
-  - section: "Introduction: Public Transport"
-    words: 100
-    points:
-      - "Metro, bus, tram, trolleybus"
-      - "How to pay"
-      - "Finding your way"
-  - section: "Asking for Directions"
-    words: 200
-    points:
-      - "Як доїхати до...?"
-      - "Який автобус їде до...?"
-      - "Де зупинка?"
-  - section: "On the Transport"
-    words: 150
-    points:
-      - "Прокомпостуйте квиток"
-      - "Наступна зупинка..."
-      - "Вихід праворуч/ліворуч"
-  - section: "Metro Navigation"
-    words: 150
-    points:
-      - "Яка це станція?"
-      - "Пересадка на..."
-      - "Reading metro maps"
-  - section: "Problems"
-    words: 100
-    points:
-      - "Я загубився/загубилася"
-      - "Мені потрібно вийти"
-      - "Handling mistakes"
-  - section: "Practice: Getting Around"
-    words: 100
-    points:
-      - "Plan a route"
-      - "Navigate the city"
-vocabulary_hints:
-  required:
-    - зупинка (stop)
-    - метро (metro)
-    - трамвай (tram)
-    - тролейбус (trolleybus)
-    - маршрут (route)
-    - станція (station)
-    - пересадка (transfer)
-    - виходити (to exit)
-  recommended:
-    - прокомпостувати (to validate)
-    - проїзний (transit pass)
-    - кондуктор (conductor)
-    - водій (driver)
-activity_hints:
-  - type: dialogue
-    focus: "Asking for transport help"
-    items: 10
-  - type: listening
-    focus: "Transport announcements"
-    items: 12
-  - type: matching
-    focus: "Match routes to destinations"
-    items: 15
-  - type: role-play
-    focus: "On the bus/metro"
-    items: 5
-prerequisites:
-  - a1-15 (Around the City)
-  - a1-39 (Buying Tickets)
-connects_to:
-  - a1-41 (Phone Basics)
-  - a1-42 (Emergencies)
+id: a1-40
 naturalness:
   score: 10
   status: PASS
-  justification: "Essential transport skills"
+  justification: Essential transport skills
+duration: 60
+transliteration: none
+build:
+  last_modified: '2026-01-26'

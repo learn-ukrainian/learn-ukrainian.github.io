@@ -1,16 +1,9 @@
-module: education-learning
-level: a2
-sequence: 52
+module: a2-52
+level: A2
+slug: education-learning
 version: '2.0'
 title: Education and Learning
 subtitle: School and University
-focus: vocabulary
-pedagogy: PPP
-objectives:
-- Learner can describe their studies
-- Learner can use 'вчитися' and 'вивчати' correctly
-- Learner can talk about school/university subjects
-- Learner can discuss exams and grades
 content_outline:
 - section: 'Introduction: Ukrainian Education'
   words: 100
@@ -48,7 +41,7 @@ content_outline:
   - Describe your education
   - Discuss subjects and exams
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - школа (school)
   - університет (university)
@@ -65,15 +58,33 @@ vocabulary:
   - диплом (diploma)
   - стипендія (scholarship)
   - курсова (course paper)
-  forbidden: []
-activities:
-  types_required:
-  - vocabulary-drill
-  - dialogue
-  - speaking
-  - fill-in
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: vocabulary-drill
+  focus: Education vocabulary
+  items: 30
+- type: fill-in
+  focus: Complete academic sentences
+  items: 20
+- type: dialogue
+  focus: University conversation
+  items: 10
+- type: speaking
+  focus: Describe your studies
+  items: 8
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- a2-51 (Hobbies and Leisure)
 connects_to:
 - a2-53 (Shopping and Services)
+objectives:
+- Learner can describe their studies
+- Learner can use 'вчитися' and 'вивчати' correctly
+- Learner can talk about school/university subjects
+- Learner can discuss exams and grades
+grammar:
+- Education verbs (вчитися, вивчати, навчати)
+- School subjects vocabulary
+- Grades, exams, and academic terms
+register: розмовний
+phase: A2.5 [Vocabulary Expansion]

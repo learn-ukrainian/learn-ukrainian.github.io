@@ -1,109 +1,110 @@
 module: vasyl-symonenko
-level: c1-bio
-sequence: 75
+level: C1-BIO
+slug: vasyl-symonenko
 version: '2.0'
 title: 'Василь Симоненко: Ніжний бунтар'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Симоненко_Василь_Андрійович
-    title: Василь Симоненко (Wikipedia UA)
-    notes: Основна біографічна інформація
-  secondary:
-  - url: https://litmuseum.org.ua/
-    title: Літературний музей
-    notes: Архівні матеріали
-  - url: https://ukrlib.com.ua/
-    title: Збірки поезій
-    notes: Повні тексти творів
 content_outline:
 - section: Вступ — Поет, який не встиг постаріти
   words: 400
-  subsections:
+  points:
   - Трагічна коротка доля (1935-1963)
   - Символ покоління шістдесятників
   - Україно, ти моя молитва як гімн національного пробудження
 - section: Полтавське дитинство
   words: 600
-  subsections:
+  points:
   - Народження в селі Біївці (1935)
   - Сирітське повоєнне дитинство
   - Ранній інтерес до літератури
 - section: Студентські роки
   words: 700
-  subsections:
+  points:
   - Навчання в Київському університеті
   - Перші публікації
   - Формування поетичного голосу
 - section: Журналіст і громадський діяч
   words: 700
-  subsections:
+  points:
   - Робота в газетах Черкащини
   - Казки для сина
   - Публіцистика як форма спротиву
 - section: Поезія як сповідь
   words: 800
-  subsections:
+  points:
   - Тиша і грім — головна збірка
   - Теми любові, нації, справедливості
   - Цензура та заборона публікацій
 - section: Загадкова смерть та посмертна слава
   words: 600
-  subsections:
+  points:
   - Побиття та хвороба
   - Смерть у 28 років
   - Канонізація в незалежній Україні
 - section: Дискусія — Чому молоді поети стають символами?
   words: 200
-  subsections:
+  points:
   - Феномен ранньої смерті митця
   - Симоненко vs Стус: два шляхи спротиву
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - шістдесятник
-  - публіцистика
-  - цензура
-  - національне пробудження
-  - казка
-  - сповідь
-  - молитва
-  - побиття
-  - канонізація
-  - посмертний
+  - шістдесятник (Sixtier)
+  - публіцистика (publicistic writing)
+  - цензура (censorship)
+  - національне пробудження (national awakening)
+  - казка (fairy tale)
+  - сповідь (confession)
+  - молитва (prayer)
+  - побиття (beating)
+  - канонізація (canonization)
+  - посмертний (posthumous)
   recommended:
-  - ліричний герой
-  - громадянська поезія
-  - інтимна лірика
-  - самвидав
-  - опозиційність
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - ліричний герой (lyrical hero)
+  - громадянська поезія (civic poetry)
+  - інтимна лірика (intimate lyrics)
+  - самвидав (samizdat)
+  - опозиційність (opposition)
+activity_hints:
+- type: reading
+  focus: Поезії Симоненка
+  source: Первинні джерела
+  items: 3 passages
+- type: quiz
+  focus: Факти про життя Симоненка
+  items: 12+
+- type: match-up
+  focus: Вірші та їхні теми
+  items: 10+
+- type: essay-response
+  focus: Як поезія може бути спротивом?
+  word_target: 300
+  output: Аналітичний есей
+- type: group-sort
+  focus: Жанри творчості Симоненка
+  items: 12+
+- type: fill-in
+  focus: Цитати та їх значення
+  items: 10+
+focus: biography
+prerequisites:
+- c1-bio-74-lina-kostenko
 connects_to:
-  previous: c1-bio-74-lina-kostenko
-  related:
-  - c1-bio-77-vasyl-stus
-  - c1-bio-72-alla-horska
-  - c1-bio-73-dmytro-pavlychko
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-77-vasyl-stus
+- c1-bio-72-alla-horska
+- c1-bio-73-dmytro-pavlychko
+module_type: biography
+sources:
+- name: Василь Симоненко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Симоненко_Василь_Андрійович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Літературний музей
+  url: https://litmuseum.org.ua/
+  type: reference
+  notes: Архівні матеріали
+- name: Збірки поезій
+  url: https://ukrlib.com.ua/
+  type: reference
+  notes: Повні тексти творів
+immersion: 100% Ukrainian
+phase: C1-BIO

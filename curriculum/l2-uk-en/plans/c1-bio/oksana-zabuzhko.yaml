@@ -1,109 +1,111 @@
 module: oksana-zabuzhko
-level: c1-bio
-sequence: 86
+level: C1-BIO
+slug: oksana-zabuzhko
 version: '2.0'
 title: 'Оксана Забужко: Інтелектуал і феміністка'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Забужко_Оксана_Стефанівна
-    title: Оксана Забужко (Wikipedia UA)
-    notes: Біографія, літературна діяльність, філософія
-  secondary:
-  - url: https://zabuzhko.com
-    title: Офіційний сайт Оксани Забужко
-    notes: Бібліографія та есеїстика
-  - url: https://pen.org.ua
-    title: PEN Ukraine
-    notes: Громадська позиція та правозахисна діяльність
 content_outline:
 - section: Вступ — Голос українського інтелектуалізму
   words: 400
-  subsections:
+  points:
   - Забужко як найвпливовіша українська письменниця сучасності
   - Поєднання літератури, філософії та публіцистики
   - Роль у формуванні постколоніального дискурсу
 - section: Ранні роки та формування (1960-1987)
   words: 600
-  subsections:
+  points:
   - Народження в Луцьку в родині інтелігентів
   - Батько — дисидент та дослідник Лесі Українки
   - Навчання філософії в Київському університеті
   - Перші поетичні збірки
 - section: «Польові дослідження з українського сексу» (1996)
   words: 800
-  subsections:
+  points:
   - Революційність роману для української літератури
   - Тема травми та постколоніальної ідентичності
   - Фемінізм та сексуальність у літературі
   - Міжнародний успіх та переклади
 - section: «Музей покинутих секретів» (2009)
   words: 800
-  subsections:
+  points:
   - Епічний роман про українську історію XX століття
   - Тема УПА та замовчуваної пам'яті
   - Складна наративна структура
   - Літературна премія Анджелуса
 - section: Філософія та есеїстика
   words: 700
-  subsections:
+  points:
   - Дисертація про естетику Шевченка
   - Есеї про українську ідентичність
   - «Notre Dame d'Ukraine» — дослідження Лесі Українки
   - Публічний інтелектуал та коментатор
 - section: Громадська позиція та сучасність
   words: 700
-  subsections:
+  points:
   - Роль під час Революції гідності
   - Коментування російсько-української війни
   - Виступи на міжнародних форумах
   - Вплив на сучасну українську культуру
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - постколоніалізм
-  - фемінізм
-  - інтелектуал
-  - есеїстика
-  - наратив
-  - ідентичність
-  - травма
-  - дискурс
-  - деколонізація
-  - публіцистика
+  - постколоніалізм (postcolonialism)
+  - фемінізм (feminism)
+  - інтелектуал (intellectual)
+  - есеїстика (essay writing)
+  - наратив (narrative)
+  - ідентичність (identity)
+  - травма (trauma)
+  - дискурс (discourse)
+  - деколонізація (decolonization)
+  - публіцистика (opinion journalism)
   recommended:
-  - сексуальність
-  - пам'ять
-  - УПА
-  - естетика
-  - міжнародне визнання
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - сексуальність (sexuality)
+  - пам'ять (memory)
+  - УПА (UPA)
+  - естетика (aesthetics)
+  - міжнародне визнання (international recognition)
+activity_hints:
+- type: reading
+  focus: Літературна творчість
+  source: Уривки з романів та есеїв
+  items: 3 passages
+- type: quiz
+  focus: Біографія та ключові твори
+  items: 12+
+- type: match-up
+  focus: Твори та їхні теми
+  items: 10+
+- type: essay-response
+  focus: Як література допомагає опрацювати колективну травму?
+  word_target: 300
+  output: Аналітичне есе
+- type: group-sort
+  focus: Художня література vs есеїстика
+  items: 12+
+- type: fill-in
+  focus: Термінологія постколоніальної критики
+  items: 10+
+focus: biography
+prerequisites:
+- c1-bio-40 (Леся Українка)
+- c1-bio-74 (Ліна Костенко)
 connects_to:
-  previous: c1-bio-40 (Леся Українка)
-  related:
-  - c1-bio-84 (Галина Пагутяк)
-  - c1-bio-85 (Марія Матіос)
-  - c1-bio-94 (Софія Андрухович)
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-84 (Галина Пагутяк)
+- c1-bio-85 (Марія Матіос)
+- c1-bio-94 (Софія Андрухович)
+module_type: biography
+sources:
+- name: Оксана Забужко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Забужко_Оксана_Стефанівна
+  type: primary
+  notes: Біографія, літературна діяльність, філософія
+- name: Офіційний сайт Оксани Забужко
+  url: https://zabuzhko.com
+  type: reference
+  notes: Бібліографія та есеїстика
+- name: PEN Ukraine
+  url: https://pen.org.ua
+  type: reference
+  notes: Громадська позиція та правозахисна діяльність
+immersion: 100% Ukrainian
+phase: C1-BIO

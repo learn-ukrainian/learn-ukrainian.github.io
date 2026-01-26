@@ -1,10 +1,7 @@
 module: c1-62
-title: Хрестини та весілля
-subtitle: Birth and Marriage Rituals
+level: C1
+slug: 62-khrestyny-ta-vesillia
 version: '2.0'
-phase: C1.5 Folk Culture & Fine Arts
-focus: culture
-pedagogy: Immersion & Analysis
 duration: 120
 transliteration: none
 tags:
@@ -12,34 +9,6 @@ tags:
 - folk-traditions
 - rituals
 - wedding
-grammar:
-- Life-cycle ritual terminology
-- Ceremonial and social registers
-objectives:
-- Learner can describe the stages of traditional Ukrainian wedding and christening
-  rituals
-- Learner understands the social and legal functions of folk rituals in the past
-- Learner can analyze the symbolism of ritual objects like the korovay and rushnyk
 vocabulary_count: 32
-slug: 62-khrestyny-ta-vesillia
-content_outline:
-- section: Вступ — Хрестини та весілля
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-- section: Content Areas
-  words: 500
-  points:
-  - 'Вишивка техніки: хрестик, гладь, мережка'
-  - 'Regional patterns: Полтава, Київ, Поділля, Гуцульщина'
-  - Color symbolism in embroidery
-  - 'Social meaning: status, occasion, protection'
-  - Modern вишиванка revival and fashion
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

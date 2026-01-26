@@ -1,21 +1,8 @@
 module: 10-counterarguments
-level: c1
-sequence: 10
+level: C1
+slug: 10-counterarguments
 version: '2.0'
 title: Контраргументи та спростування
-focus: grammar
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Логіка та критичне мислення
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Argumentation and refutation techniques
-- name: Academic Debate in Ukrainian
-  url: https://mova.info/
-  type: secondary
-  notes: Debate language and structures
 content_outline:
 - section: Вступ — Сила контраргументу
   words: 400
@@ -60,7 +47,7 @@ content_outline:
   - Академічна дискусія
   - Етичне спростування
 word_target: 4000
-vocabulary:
+vocabulary_hints:
   required:
   - контраргумент (counterargument)
   - спростування (refutation)
@@ -78,19 +65,42 @@ vocabulary:
   - аргументація (argumentation)
   - софізм (sophism)
   - демагогія (demagoguery)
-  forbidden: []
-activities:
-  types_required:
-  - group-sort
-  - quiz
-  - essay-response
-  - cloze
-  - fill-in
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: match-up
+  focus: Acknowledge phrase to refute phrase pairs
+  items: 15+
+- type: fill-in
+  focus: Add counterargument to thesis
+  items: 12+
+- type: cloze
+  focus: Complete argument-counterargument pairs
+  items: 12+
+- type: quiz
+  focus: Identify logical fallacies
+  items: 12+
+- type: essay-response
+  focus: Write paragraph acknowledging and refuting opposing view
+  word_target: 200
+- type: group-sort
+  focus: Classify refutation types
+  items: 12+
+focus: grammar
+prerequisites:
+- c1-09 (Thesis Development)
+- Logical connectors mastery
 connects_to:
 - c1-11 (Summary & Paraphrase)
 - c1-18 (Essay Writing Practice)
 - c1-19 (Article Critique)
+module_type: grammar
+sources:
+- name: Логіка та критичне мислення
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Argumentation and refutation techniques
+- name: Academic Debate in Ukrainian
+  url: https://mova.info/
+  type: secondary
+  notes: Debate language and structures
+immersion: 100% Ukrainian
+phase: C1.1 Academic Ukrainian

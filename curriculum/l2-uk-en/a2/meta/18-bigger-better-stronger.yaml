@@ -1,14 +1,11 @@
-id: a2-18
-title: Bigger, Better, Stronger
-subtitle: The Comparative Degree
+module: 18-bigger-better-stronger
+level: A2
 slug: 18-bigger-better-stronger
-module_type: grammar
-word_target: 1000
-immersion: 40-50% Ukrainian
 version: '2.0'
-phase: A2.2
-focus: grammar
-pedagogy: PPP
+id: a2-18
+naturalness:
+  score: 9
+  status: PASS
 duration: 60
 transliteration: none
 tags:
@@ -16,94 +13,5 @@ tags:
 - adjectives
 - comparative
 - description
-grammar:
-- comparative adjectives formation
-- regular comparatives (-іший)
-- irregular comparatives (кращий, більший)
-- comparison structures (ніж, за)
-objectives:
-- Learner can form comparative adjectives
-- Learner can compare two objects using 'ніж' and 'за'
-- Learner can identify and use irregular comparative forms
-- Learner can describe differences in quality and quantity
-sources:
-- name: Ukrainian State Standard 2024 - Comparison
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Comparative adjective requirements for A2
-- name: Ukrainian Adjective Reference
-  url: https://uk.wikipedia.org/wiki/Прикметник
-  type: reference
-  notes: Complete comparison paradigms
-content_outline:
-- section: Introduction / Вступ
-  words: 200
-  points:
-  - Concept of comparison in daily life
-  - English vs Ukrainian comparative logic
-- section: Presentation / Презентація
-  words: 600
-  points:
-  - Regular formation (-іший/-ший)
-  - Irregular comparatives (The Big 10)
-  - Comparison structures: ніж vs за
-  - Intensifiers (набагато, трохи)
-- section: Practice / Практика
-  words: 150
-  points:
-  - Transformation drills
-  - Situational comparisons (Shopping/Family)
-- section: Dialogues / Діалоги
-  words: 50
-  points:
-  - Market dialogue comparing prices and quality
-vocabulary_hints:
-  required:
-  - більший (bigger)
-  - менший (smaller)
-  - кращий (better)
-  - гірший (worse)
-  - вищий (taller)
-  - нижчий (shorter)
-  - довший (longer)
-  - коротший (shorter)
-  - ширший (wider)
-  - вужчий (narrower)
-  - дорожчий (more expensive)
-  - дешевший (cheaper)
-  - старший (older)
-  - молодший (younger)
-  - ніж (than)
-  recommended:
-  - за (than + Acc)
-  - набагато (much)
-  - трохи (a little)
-  - значно (significantly)
-  - швидший (faster)
-activity_hints:
-- type: fill-in
-  focus: Transform positive to comparative
-  items: 15+
-- type: fill-in
-  focus: Comparison sentences with ніж/за
-  items: 12+
-- type: quiz
-  focus: Which is bigger/better/etc.?
-  items: 12+
-- type: match-up
-  focus: Adjective + comparative form
-  items: 12+
-- type: fill-in
-  focus: Irregular comparative forms
-  items: 10+
-prerequisites:
-- A1 adjective agreement
-- a2-17 (Possessive sviy)
-- Basic sentence structure
-connects_to:
-- a2-19 (The Best, The Worst)
-- a2-20 (Preferences and Choices)
-- a2-24 (Smart Shopping)
-naturalness:
-  score: 9
-  status: PASS
+build:
+  last_modified: '2026-01-26'

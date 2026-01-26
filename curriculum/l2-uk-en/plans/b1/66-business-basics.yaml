@@ -1,16 +1,9 @@
-module: business-basics
-level: b1
-sequence: 66
+module: b1-66
+level: B1
+slug: business-basics
 version: '2.0'
 title: Основи бізнесу
 subtitle: Business Basics
-focus: vocabulary
-pedagogy: PPP
-objectives:
-- Learner can use 30 business vocabulary words in context
-- Learner can distinguish between similar business terms (компанія/фірма/підприємство)
-- Learner can form natural collocations with business nouns
-- Learner can discuss basic business topics fluently
 content_outline:
 - section: 'Introduction: Business Vocabulary'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Discuss business topics
   - Use professional vocabulary
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - компанія (company)
   - підприємство (enterprise)
@@ -63,15 +56,33 @@ vocabulary:
   - маркетинг (marketing)
   - постачальник (supplier)
   - збитки (losses)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - collocation
-  - role-play
-  - matching
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: collocation
+  focus: Business noun phrases
+  items: 25
+- type: fill-in
+  focus: Complete business sentences
+  items: 20
+- type: matching
+  focus: Match terms to definitions
+  items: 15
+- type: role-play
+  focus: Business scenarios
+  items: 10
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-65 (Relationships)
 connects_to:
 - b1-67 (Travel Geography)
+objectives:
+- Learner can use 30 business vocabulary words in context
+- Learner can distinguish between similar business terms (компанія/фірма/підприємство)
+- Learner can form natural collocations with business nouns
+- Learner can discuss basic business topics fluently
+grammar:
+- Business vocabulary collocations
+- Professional register expressions
+- Formal business communication patterns
+register: розмовний
+phase: B1.6 [Vocabulary Expansion II]

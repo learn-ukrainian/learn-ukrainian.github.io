@@ -1,22 +1,41 @@
-module: 55-honcharstvo-ta-rizbyarstvo
-level: c1
-sequence: 55
+module: c1-55
+level: C1
+slug: 55-honcharstvo-ta-rizbyarstvo
 version: '2.0'
 title: Гончарство та різьбярство
 subtitle: Pottery and Woodcarving Traditions
+content_outline:
+- section: Вступ — Гончарство та різьбярство
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Основний матеріал
+  words: 600
+  points:
+  - Теоретичні основи
+  - Приклади та ілюстрації
+  - Типові помилки та як їх уникати
+- section: Поглиблене вивчення
+  words: 600
+  points:
+  - Додаткові випадки
+  - Контекстуальне використання
+  - Стилістичні нюанси
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: vocabulary
 pedagogy: Immersion & Analysis
 objectives:
 - Learner can analyze the stylistic differences between Opishne and Kosiv pottery
 - Learner can describe woodcarving techniques using specialized vocabulary
 - Learner can write a critical essay on folk art heritage
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Art terminology
+- Descriptive registers
+phase: C1.5 Folk Culture & Fine Arts

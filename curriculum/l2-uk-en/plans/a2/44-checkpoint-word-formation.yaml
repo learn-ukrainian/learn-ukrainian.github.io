@@ -1,16 +1,9 @@
-module: checkpoint-word-formation
-level: a2
-sequence: 44
+module: a2-44
+level: A2
+slug: checkpoint-word-formation
 version: '2.0'
 title: 'Checkpoint: Word Formation'
 subtitle: Review and Mastery Assessment
-focus: checkpoint
-pedagogy: TTT
-objectives:
-- Demonstrate confidence in identifying root families
-- Deduce meaning using morphological clues
-- Form words using correct prefixes and suffixes
-- Correct common word formation errors
 content_outline:
 - section: 'Part 1: Root Recognition'
   words: 80
@@ -49,7 +42,7 @@ content_outline:
   - Areas for review
   - Preview vocabulary expansion
 word_target: 500
-vocabulary:
+vocabulary_hints:
   required:
   - корінь (root)
   - префікс (prefix)
@@ -64,15 +57,33 @@ vocabulary:
   - аналіз (analysis)
   - синтез (synthesis)
   - похідний (derivative)
-  forbidden: []
-activities:
-  types_required:
-  - word-building
-  - quiz
-  - error-correction
-  - self-assessment
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: Word formation comprehensive
+  items: 35
+- type: word-building
+  focus: Create correct forms
+  items: 20
+- type: error-correction
+  focus: Fix formation errors
+  items: 15
+- type: self-assessment
+  focus: Rate word formation skills
+  items: 10
+focus: checkpoint
+pedagogy: TTT
+prerequisites:
+- a2-43 (WF Mastery)
 connects_to:
 - a2-45 (Food and Cooking)
+objectives:
+- Demonstrate confidence in identifying root families
+- Deduce meaning using morphological clues
+- Form words using correct prefixes and suffixes
+- Correct common word formation errors
+grammar:
+- Word formation comprehensive review
+- Root families review
+- Prefix/suffix application
+register: розмовний
+phase: A2.4 [Word Formation]

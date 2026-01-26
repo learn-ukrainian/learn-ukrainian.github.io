@@ -1,22 +1,37 @@
-module: 64-halychyna
-level: c1
-sequence: 64
+module: c1-64
+level: C1
+slug: 64-halychyna
 version: '2.0'
 title: Галичина
 subtitle: Galician Folk Traditions
+content_outline:
+- section: Вступ — Галичина
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - 'Домовик: house spirit, protection, offerings'
+  - 'Лісовик: forest spirit, hunters'' patron'
+  - 'Водяник: water spirit, dangers, appeasement'
+  - 'Мавка/русалка: forest maidens, tragic origins'
+  - 'Чугайстер: mountain spirit of Carpathians'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: culture
 pedagogy: Immersion & Analysis
 objectives:
 - Learner can identify the unique cultural markers of the Halychyna region
 - Learner understands the historical and religious factors shaping Galician identity
 - Learner can use specific Galician vocabulary in appropriate contexts
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Regional and dialectal terminology
+- Descriptive and historical registers
+phase: C1.5 Folk Culture & Fine Arts

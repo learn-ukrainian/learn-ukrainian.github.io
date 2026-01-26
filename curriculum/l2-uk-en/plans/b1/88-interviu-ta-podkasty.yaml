@@ -1,16 +1,9 @@
-module: interviu-ta-podkasty
-level: b1
-sequence: 88
+module: b1-88
+level: B1
+slug: interviu-ta-podkasty
 version: '2.0'
 title: Інтерв'ю та подкасти
 subtitle: Listening to Ukrainian Interviews and Podcasts
-focus: skills
-pedagogy: CBI
-objectives:
-- Learner can apply listening strategies to authentic Ukrainian interviews and podcasts
-- Learner can identify main points and key information in spoken discourse
-- Learner can take effective notes while listening to Ukrainian audio content
-- Learner is prepared for autonomous listening practice at B2
 content_outline:
 - section: 'Introduction: Listening Skills'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Listen and summarize
   - Discuss content
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - інтерв'ю (interview)
   - подкаст (podcast)
@@ -63,15 +56,33 @@ vocabulary:
   - тема (topic)
   - обговорення (discussion)
   - випуск (episode)
-  forbidden: []
-activities:
-  types_required:
-  - listening
-  - note-taking
-  - discussion
-  - matching
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: listening
+  focus: Authentic interview excerpts
+  items: 15
+- type: note-taking
+  focus: Practice note-taking
+  items: 15
+- type: matching
+  focus: Match speakers to opinions
+  items: 20
+- type: discussion
+  focus: Discuss podcast topics
+  items: 10
+focus: skills
+pedagogy: CBI
+prerequisites:
+- b1-87 (News Reading)
 connects_to:
 - b1-89 (Checkpoint Grammar Synthesis)
+objectives:
+- Learner can apply listening strategies to authentic Ukrainian interviews and podcasts
+- Learner can identify main points and key information in spoken discourse
+- Learner can take effective notes while listening to Ukrainian audio content
+- Learner is prepared for autonomous listening practice at B2
+grammar:
+- Listening comprehension strategies
+- Note-taking techniques
+- Spoken discourse markers
+register: розмовний
+phase: B1.8 [Skills & Integration]

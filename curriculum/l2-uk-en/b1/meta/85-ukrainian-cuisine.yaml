@@ -1,94 +1,13 @@
 module: b1-85
-id: b1-85
+level: B1
 slug: ukrainian-cuisine
-title: "Українська кухня"
-subtitle: "Ukrainian Cuisine and Food Culture"
 version: '2.0'
-phase: "B1.7 [Contemporary Ukraine]"
-focus: culture
-pedagogy: CBI
-register: розмовний
-duration: 90
-transliteration: none
-objectives:
-  - "Learner can discuss Ukrainian regional cuisines in context"
-  - "Learner can understand authentic texts about Ukrainian food traditions"
-  - "Learner can use food-related vocabulary to describe dishes and cooking methods"
-  - "Learner can compare Ukrainian cuisine with their own food culture"
-grammar:
-  - "Food and cooking vocabulary"
-  - "Recipe instructions"
-  - "Describing flavors and textures"
-word_target: 1200
-content_outline:
-  - section: "Introduction: Ukrainian Food"
-    words: 150
-    points:
-      - "Cuisine overview"
-      - "Regional traditions"
-      - "Food culture significance"
-  - section: "Traditional Dishes"
-    words: 250
-    points:
-      - "борщ, вареники, голубці"
-      - "Preparation methods"
-      - "Regional variations"
-  - section: "Holiday Food"
-    words: 250
-    points:
-      - "кутя, паска, узвар"
-      - "Christmas Eve dishes"
-      - "Easter traditions"
-  - section: "Modern Ukrainian Cuisine"
-    words: 250
-    points:
-      - "Contemporary restaurants"
-      - "Fusion trends"
-      - "Chef culture"
-  - section: "Regional Specialties"
-    words: 200
-    points:
-      - "Western, Eastern differences"
-      - "Local ingredients"
-      - "Seasonal dishes"
-  - section: "Practice: Food Discussion"
-    words: 100
-    points:
-      - "Describe favorite dishes"
-      - "Compare cuisines"
-vocabulary_hints:
-  required:
-    - борщ (borscht)
-    - вареники (varenyky)
-    - голубці (holubtsi)
-    - сало (salo)
-    - страва (dish)
-    - смак (taste)
-    - готувати (to cook)
-    - рецепт (recipe)
-  recommended:
-    - кутя (kutia)
-    - паска (paska)
-    - галушки (halushky)
-    - узвар (uzvar)
-activity_hints:
-  - type: reading
-    focus: "Recipes and food articles"
-    items: 15
-  - type: matching
-    focus: "Match dishes to regions"
-    items: 20
-  - type: fill-in
-    focus: "Complete recipe instructions"
-    items: 15
-  - type: discussion
-    focus: "Share food preferences"
-    items: 10
-prerequisites:
-  - b1-84 (Winter Sports)
-connects_to:
-  - b1-86 (Ukrainian Holidays and Festivals)
+id: b1-85
 naturalness:
   score: 9
   status: PASS
-  justification: "Essential cultural knowledge about Ukrainian food"
+  justification: Essential cultural knowledge about Ukrainian food
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-26'

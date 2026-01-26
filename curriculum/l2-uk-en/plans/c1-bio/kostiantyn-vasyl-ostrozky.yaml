@@ -1,32 +1,19 @@
-module: kostiantyn-vasyl-ostrozky
-level: c1-bio
-sequence: 0
+module: c1-bio-14
+level: C1-BIO
+slug: kostiantyn-vasyl-ostrozky
 version: '2.0'
 title: 'Костянтин-Василь Острозький: Князь-Просвітник'
-focus: biography
-pedagogy: seminar
-objectives:
-- Analyze the cultural impact of Ostroh Academy
-- Discuss the significance of the Ostroh Bible
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Костянтин-Василь_Острозький
-    title: Костянтин-Василь Острозький (Wikipedia UA)
-  - url: https://uk.wikipedia.org/wiki/Острозька_академія
-    title: Острозька академія
-  - url: https://uk.wikipedia.org/wiki/Острозька_Біблія
-    title: Острозька Біблія
-  secondary: []
+subtitle: 'Kostiantyn-Vasyl Ostrozky: The Enlightener Prince'
 content_outline:
 - section: Вступ — Некоронований король Русі
   words: 615
-  subsections:
+  points:
   - Найбагатший магнат Речі Посполитої
   - Засновник першого вищого навчального закладу (Академії)
   - Видавець першої повної друкованої Біблії слов'янською мовою
 - section: Життєпис
   words: 1538
-  subsections:
+  points:
   - Син Костянтина Івановича (М11)
   - Політичний вплив: воєвода київський, маршалок волинський
   - Культурна революція в Острозі ("Волинські Афіни")
@@ -34,48 +21,58 @@ content_outline:
   - Підтримка православ'я через освіту, а не лише зброю
 - section: Історичний контекст
   words: 615
-  subsections:
+  points:
   - Реформація і Контрреформація в Україні
   - Люблінська унія (1569) і перехід українських земель до Польщі
   - Криза православної церкви і пошук відповідей
 - section: Внесок та Спадщина
   words: 615
-  subsections:
+  points:
   - Острозька Біблія (1581) як канон
   - Острозька академія — синтез грецької, латинської та слов'янської вченості
   - Формування інтелектуальної еліти
 - section: Порівняльний аналіз
   words: 617
-  subsections:
+  points:
   - Острозький vs. єзуїти (конкуренція освітніх моделей)
   - Батько vs. Син (Меч vs. Книга)
 word_target: 3000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - академія
-  - біблія
-  - друкарня
-  - освіта
-  - полеміка
-  - унія
-  - воєвода
-  - меценат
-  - реформація
-  - контрреформація
-  recommended: []
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - essay-response
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+  - академія (academy)
+  - біблія (Bible)
+  - друкарня (printing house)
+  - освіта (education)
+  - полеміка (polemics)
+  - унія (union)
+  - воєвода (voivode)
+  - меценат (philanthropist)
+  - реформація (Reformation)
+  - контрреформація (Counter-Reformation)
+activity_hints:
+- type: reading
+  focus: Preface to Ostroh Bible
+- type: quiz
+  focus: Biography and cultural achievements
+- type: essay-response
+  focus: Education as a weapon of identity
+focus: biography
+pedagogy: CBI
+objectives:
+- Analyze the cultural impact of Ostroh Academy
+- Discuss the significance of the Ostroh Bible
+grammar:
+- Cultural and religious vocabulary
+- Academic register (Renaissance)
+sources:
+- name: Костянтин-Василь Острозький (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Костянтин-Василь_Острозький
+  type: primary
+- name: Острозька академія
+  url: https://uk.wikipedia.org/wiki/Острозька_академія
+  type: primary
+- name: Острозька Біблія
+  url: https://uk.wikipedia.org/wiki/Острозька_Біблія
+  type: primary
+immersion: 100% Ukrainian
+phase: C1-BIO

@@ -1,12 +1,8 @@
-version: '2.0'
 module: c1-103
-id: c1-103
-title: Літературознавча термінологія
-subtitle: Literary Analysis Terminology
+level: C1
 slug: 103-literaturoznavcha-terminolohiia
-phase: C1.6 Literature
-focus: analysis
-pedagogy: Academic
+version: '2.0'
+id: c1-103
 duration: 120
 transliteration: none
 tags:
@@ -14,31 +10,5 @@ tags:
 - terminology
 - academic
 - analysis
-grammar:
-- Academic register syntax
-- Abstract noun derivation
-objectives:
-- Learner can define and use key literary terms (сюжет, фабула, метафора, алегорія).
-- Learner can distinguish between narrative modes and focalization.
-- Learner can apply academic register in literary criticism.
-content_outline:
-- section: Вступ — Літературознавча термінологія
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-- section: Content Areas
-  words: 500
-  points:
-  - 'Наративні терміни: сюжет, фабула, оповідач, фокалізація'
-  - 'Образність: метафора, метонімія, символ, алегорія'
-  - 'Жанрові поняття: роман, повість, новела, драма'
-  - 'Аналітичні категорії: тема, мотив, ідея, конфлікт'
-  - 'Стилістичні прийоми: іронія, гротеск, парадокс'
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

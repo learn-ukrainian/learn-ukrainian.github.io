@@ -1,22 +1,39 @@
-module: 78-klasychna-muzyka-3-modernizm-i-suchasnist
-level: c1
-sequence: 78
+module: c1-78
+level: C1
+slug: 78-klasychna-muzyka-3-modernizm-i-suchasnist
 version: '2.0'
 title: Класична музика III — Модернізм і сучасність
 subtitle: Classical Music III — Modernism & Contemporary
+content_outline:
+- section: Вступ — Модернізм і сучасність
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Content Areas
+  words: 500
+  points:
+  - '**Борис Лятошинський** (1895-1968): Симфонії, "Золотий обруч" — greatest Ukrainian
+    symphonist'
+  - 'Левко Ревуцький: Симфонії, концерти — major Soviet-era voice'
+  - '**Мирослав Скорик** (1938-2020): **"Мелодія"**, film scores — iconic contemporary
+    composer'
+  - 'Валентин Сильвестров: "Тихі пісні" — avant-garde master'
+  - 'Євген Станкович: Симфонії, балети — living legend'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: fine-arts
 pedagogy: CBI
 objectives:
 - Learner identifies key figures of 20th-century Ukrainian modernism.
 - Learner understands the impact of Soviet repression on musical development.
 - Learner can discuss contemporary Ukrainian classical music in a global context.
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Comparative stylistic analysis
+- Register of academic critique
+phase: C1.5 Folk Culture & Fine Arts

@@ -1,9 +1,34 @@
-module: 93-discussion-debate
-level: b2
-sequence: 93
+module: b2-93
+level: B2
+slug: 93-discussion-debate
 version: '2.0'
 title: Дискусії та дебати
 subtitle: Discussion and Debate Skills
+content_outline:
+- section: Вступ — Дискусії та дебати
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Основний матеріал
+  words: 600
+  points:
+  - Теоретичні основи
+  - Приклади та ілюстрації
+  - Типові помилки та як їх уникати
+- section: Поглиблене вивчення
+  words: 600
+  points:
+  - Додаткові випадки
+  - Контекстуальне використання
+  - Стилістичні нюанси
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: skills
 pedagogy: CBI
 objectives:
@@ -12,13 +37,10 @@ objectives:
 - Learner can construct arguments with supporting evidence
 - Learner can respond effectively to counterarguments
 - Learner can participate in structured debates following formal rules
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Discussion and debate structures
+- Argumentation techniques
+- Turn-taking and interrupting politely
+immersion: 100
+register: публіцистичний
+phase: B2.4 Communication Skills

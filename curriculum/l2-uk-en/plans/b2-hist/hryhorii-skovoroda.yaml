@@ -1,52 +1,59 @@
 module: hryhorii-skovoroda
-level: b2-hist
-sequence: 0
-version: '1.0'
+level: B2-HIST
+slug: hryhorii-skovoroda
+version: '2.0'
 title: 'Григорій Сковорода: Мандрівний філософ'
-focus: history
-pedagogy: CBI
-objectives: []
+subtitle: 'Hryhorii Skovoroda: The Wandering Philosopher'
 content_outline:
 - section: 'Вступ: Український Сократ'
   words: 450
-  subsections:
+  points:
   - Skovoroda as a symbol of intellectual freedom
   - His refusal of worldly goods and titles
   - The legend of his life
 - section: 'Життєвий шлях: Від академії до дороги'
   words: 650
-  subsections:
+  points:
   - Studies at Kyiv-Mohyla Academy
   - Travels in Europe (Vienna, Bratislava, Tokaj)
   - The 'Tokaj Commission' and wine
   - Teaching at Kharkiv Collegium and conflict with the system
 - section: 'Філософія серця: Сродна праця'
   words: 800
-  subsections:
+  points:
   - Concept of 'affinity labor' (srodna pratsia)
   - The theory of two natures (visible and invisible)
   - The three worlds (macrocosm, microcosm, symbolic)
   - Happiness through self-knowledge
 - section: 'Літературна спадщина: Сад божественних пісень'
   words: 600
-  subsections:
+  points:
   - Basni Kharkovskie (Kharkiv Fables)
   - Garden of Divine Songs
   - Style and language (Baroque influence)
 - section: 'Читання: Байки та афоризми'
   words: 500
-  subsections:
+  points:
   - Analysis of 'The Bee and the Hornet'
   - Interpretation of key aphorisms
 - section: 'Первинні джерела: Листи до Михайла Ковалинського'
   words: 500
-  subsections:
+  points:
   - Friendship as a philosophical category
   - Pedagogical views of Skovoroda
 - section: 'Деколонізаційний погляд: Не «русский философ»'
   words: 500
-  subsections:
+  points:
   - Skovoroda's Ukrainian roots and identity
   - Distinction from Russian philosophical tradition
   - Impact on Ukrainian national revival
 word_target: 4000
+focus: history
+pedagogy: CBI
+prerequisites:
+- 'b2-hist-64: Іван Мазепа II'
+learning_outcomes:
+- Учень розуміє концепцію 'сродної праці' та її значення
+- Учень може описати життєвий шлях Сковороди та його вибір свободи
+- Учень знає основні байки та філософські твори Сковороди
+phase: HIST.7 [Mazepa & End of Hetmanate]

@@ -1,21 +1,9 @@
 module: 42-root-families-ii
-level: a2
-sequence: 42
+level: A2
+slug: 42-root-families-ii
 version: '2.0'
 title: Root Families II
 subtitle: Communication and Thought
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can identify communication and thought root families
-- Learner can derive verbs and nouns from abstract roots
-- Learner can understand the difference between 'мова' and 'розмова' roots
-- Learner can build a network of communication vocabulary
-sources:
-- name: Ukrainian Word Formation - Communication
-  url: https://uk.wikipedia.org/wiki/Словотворення_в_українській_мові
-  type: reference
-  notes: Focus on communicative root expansion
 content_outline:
 - section: Introduction / Вступ
   words: 200
@@ -40,7 +28,22 @@ content_outline:
   points:
   - A deep conversation: Discussing thoughts and opinions
 word_target: 1000
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can identify communication and thought root families
+- Learner can derive verbs and nouns from abstract roots
+- Learner can understand the difference between 'мова' and 'розмова' roots
+- Learner can build a network of communication vocabulary
+grammar:
+- common roots (дум-, говор-, мов-, слух-)
+- secondary prefix + root combinations
+- identifying semantic clusters
+module_type: word-formation
+sources:
+- name: Ukrainian Word Formation - Communication
+  url: https://uk.wikipedia.org/wiki/Словотворення_в_українській_мові
+  type: reference
+  notes: Focus on communicative root expansion
+immersion: 65-75% Ukrainian
+phase: A2.4

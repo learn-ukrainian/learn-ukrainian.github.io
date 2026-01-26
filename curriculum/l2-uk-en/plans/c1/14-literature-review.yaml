@@ -1,21 +1,8 @@
 module: 14-literature-review
-level: c1
-sequence: 14
+level: C1
+slug: 14-literature-review
 version: '2.0'
 title: Жанр — Огляд літератури
-focus: grammar
-pedagogy: TTT
-objectives:
-- TBD
-sources:
-- name: Методологія наукового дослідження
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Literature review methodology
-- name: Academic Synthesis Writing
-  url: https://mova.info/
-  type: secondary
-  notes: Source synthesis techniques
 content_outline:
 - section: Вступ — Що таке огляд літератури?
   words: 400
@@ -60,7 +47,7 @@ content_outline:
   - Синтез 3-5 джерел
   - Взаємне рецензування
 word_target: 4000
-vocabulary:
+vocabulary_hints:
   required:
   - огляд літератури (literature review)
   - синтез (synthesis)
@@ -78,19 +65,43 @@ vocabulary:
   - систематичний огляд (systematic review)
   - наукова дискусія (scholarly discourse)
   - консенсус (consensus)
-  forbidden: []
-activities:
-  types_required:
-  - group-sort
-  - quiz
-  - essay-response
-  - cloze
-  - fill-in
-  - match-up
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: cloze
+  focus: Synthesis phrases in literature review
+  items: 12+
+- type: match-up
+  focus: Source type to appropriate use
+  items: 12+
+- type: quiz
+  focus: Identify synthesis approach (thematic/chronological)
+  items: 10+
+- type: fill-in
+  focus: Complete comparison/contrast sentences
+  items: 12+
+- type: essay-response
+  focus: Write mini-review synthesizing 3 sources
+  word_target: 300
+- type: group-sort
+  focus: Classify sources by quality/relevance
+  items: 12+
+focus: grammar
+prerequisites:
+- c1-07 (Citation & Reference)
+- c1-11 (Summary & Paraphrase)
+- c1-13 (Abstract Writing)
 connects_to:
 - c1-18 (Essay Writing Practice)
 - c1-19 (Article Critique)
 - c1-20 (C1.1 Checkpoint)
+module_type: grammar
+sources:
+- name: Методологія наукового дослідження
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Literature review methodology
+- name: Academic Synthesis Writing
+  url: https://mova.info/
+  type: secondary
+  notes: Source synthesis techniques
+immersion: 100% Ukrainian
+phase: C1.1 Academic Ukrainian

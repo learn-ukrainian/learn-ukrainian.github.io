@@ -1,153 +1,18 @@
-# LIT Module 12: The Ballads
-# Status: SPEC (ready for content development)
-
-id: lit-12
-title: 'Балади: Між Світами'
-subtitle: 'LIT-012: Містика і Метаморфози у Раннього Шевченка'
+module: the-ballads
+level: LIT
 slug: the-ballads
-module_type: literature
-word_target: 4500
-immersion: "100% Ukrainian"
-grammar:
-  - Romantic ballad style
-  - Folk mythology lexicon
-  - Gothic atmosphere vocabulary
-
-objectives:
-  - Analyze the genre of Romantic Ballad
-  - Explore the "Metamorphosis" motif
-  - Compare "Priichynna" and "Topolya"
-
-# === AGENT BUILD SPEC ===
-
-sources:
-  - name: Причинна
-    url: https://www.ukrlib.com.ua/books/printit.php?tid=3
-    type: primary
-    notes: Балада для аналізу
-  - name: Тополя
-    url: https://www.ukrlib.com.ua/books/printit.php?tid=4
-    type: primary
-    notes: Балада для аналізу
-  - name: Утоплена
-    url: https://www.ukrlib.com.ua/books/printit.php?tid=5
-    type: primary
-    notes: Балада для аналізу
-  - name: Кобзар — повний текст
-    url: https://www.ukrlib.com.ua/books/printit.php?tid=1
-    type: secondary
-    notes: Контекст ранньої поезії
-
-content_outline:
-  - section: Вступ — Жанр романтичної балади
-    words: 500
-    points:
-      - Що таке балада (європейський контекст)
-      - Романтизм і фольклор
-      - Шевченко і народна традиція
-
-  - section: '"Причинна" — божевілля і русалки'
-    words: 700
-    points:
-      - Сюжет і символіка
-      - Образ "причинної" (божевільної)
-      - Зустріч із потойбічним світом
-
-  - section: '"Тополя" — метаморфоза'
-    words: 700
-    points:
-      - Міф про перетворення
-      - Дівчина-дерево як архетип
-      - Тема самотності та очікування
-
-  - section: '"Утоплена" — темна казка'
-    words: 700
-    points:
-      - Матір-відьма і помста води
-      - Готичні елементи
-      - Жіноча доля у баладах
-
-  - section: Народна демонологія
-    words: 600
-    points:
-      - Русалки, відьми, мавки
-      - Функція фантастичного
-      - Зв'язок з європейським романтизмом
-
-  - section: Підсумок — Фатум і доля
-    words: 400
-    points:
-      - Концепція долі у раннього Шевченка
-      - Від балад до епосу
-      - Містика як шлях до реальності
-
-vocabulary_hints:
-  required:
-    - балада (ballad)
-    - романтизм (romanticism)
-    - метаморфоза (metamorphosis)
-    - русалка (water nymph)
-    - фатум (fate)
-    - причинна (bewitched/mad woman)
-    - потойбіччя (afterworld)
-    - демонологія (demonology)
-    - архетип (archetype)
-    - символіка (symbolism)
-  recommended:
-    - мавка (forest nymph)
-    - відьма (witch)
-    - перетворення (transformation)
-    - самотність (loneliness)
-    - готика (gothic)
-
-activity_hints:
-  - type: reading
-    focus: Повні тексти балад
-    source: UkrLib
-    items: "5+"
-
-  - type: quiz
-    focus: Сюжети та символіка балад
-    items: "15+"
-
-  - type: match-up
-    focus: Балада → її центральний мотив
-    items: "10+"
-
-  - type: essay-response
-    focus: Концепція фатуму у раннього Шевченка
-    word_target: 300
-    output: Літературознавче есе
-
-  - type: group-sort
-    focus: Демонологічні образи (русалки / відьми / мавки)
-    items: "15+"
-
-  - type: cloze
-    focus: Ключові цитати з балад
-    items: "12+"
-
-prerequisites:
-  - lit-11 (Young Shevchenko)
-  - Understanding of Romanticism
-
-connects_to:
-  - lit-13 (Haidamaky — від балади до епосу)
-  - lit-18 (Women in Kobzar — жіночі образи)
-
-version: "1.0"
-phase: LIT.3 The Prophet (Taras Shevchenko)
-focus: literature
-pedagogy: literature
-duration: 120
-transliteration: none
-tags:
-  - література
-  - шевченко
-  - романтизм
-  - містика
-  - фольклор
-
+version: '1.0'
+id: lit-12
 naturalness:
   score: 10
   status: PASS
+duration: 120
+transliteration: none
+tags:
+- література
+- шевченко
+- романтизм
+- містика
+- фольклор
+build:
+  last_modified: '2026-01-26'

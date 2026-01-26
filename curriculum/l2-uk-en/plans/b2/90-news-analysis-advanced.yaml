@@ -1,10 +1,34 @@
 module: news-analysis-advanced
-level: b2
-sequence: 90
+level: B2
+slug: news-analysis-advanced
 version: '2.0'
 title: 'Аналіз новин: Поглиблено'
 subtitle: Advanced media literacy and critical news analysis
-focus: grammar
+content_outline:
+- section: Вступ — Поглиблено
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Основний матеріал
+  words: 600
+  points:
+  - Теоретичні основи
+  - Приклади та ілюстрації
+  - Типові помилки та як їх уникати
+- section: Поглиблене вивчення
+  words: 600
+  points:
+  - Додаткові випадки
+  - Контекстуальне використання
+  - Стилістичні нюанси
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 pedagogy: CBI
 objectives:
 - Learner can identify editorial bias and political perspectives in news coverage
@@ -12,13 +36,10 @@ objectives:
 - Learner can recognize propaganda techniques and rhetorical manipulation
 - Learner can evaluate source credibility and verify information
 - Learner can analyze framing, tone, and linguistic choices in journalism
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Риторичні прийоми у ЗМІ
+- Мовні маркери упередженості
+- Конструкції хеджування та модальності
+immersion: 100
+register: публіцистичний
+phase: B2.4 Communication Skills

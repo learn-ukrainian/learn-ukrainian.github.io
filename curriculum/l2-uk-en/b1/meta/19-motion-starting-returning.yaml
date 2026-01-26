@@ -1,103 +1,16 @@
-id: b1-19
-title: 'Рух: початок і повернення'
-subtitle: Motion - Starting & Returning
+module: 19-motion-starting-returning
+level: B1
 slug: 19-motion-starting-returning
-module_type: grammar
-word_target: 1500
-immersion: 100% Ukrainian
 version: '1.0'
-phase: B1.2 Motion
-pedagogy: TTT
-focus: grammar
+id: b1-19
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
 tags:
 - grammar
 - motion-verbs
 - prefixes
-grammar:
-- Prefixes по-, за-, роз-
-- Starting, stopping by, dispersing patterns
-objectives:
-- Learner can use по- for starting movement
-- Learner can use за- for stopping by
-- Learner can use роз- for dispersing
-sources:
-- name: Ukrainian State Standard 2024 - Motion Prefixes
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official prefix meanings for starting/returning
-- name: Ukrainian Verbal Prefixes
-  url: https://uk.wikipedia.org/wiki/Дієслівні_префікси
-  type: reference
-  notes: по-, за-, роз- semantics
-content_outline:
-- section: Діагностика
-  words: 100
-  points:
-  - Content for Діагностика
-  - Examples and explanation
-  - Practice or application
-- section: Пояснення
-  words: 600
-  points:
-  - Content for Пояснення
-  - Examples and explanation
-  - Practice or application
-- section: Поглиблення
-  words: 400
-  points:
-  - Content for Поглиблення
-  - Examples and explanation
-  - Practice or application
-- section: Практика
-  words: 100
-  points:
-  - Content for Практика
-  - Examples and explanation
-  - Practice or application
-- section: Діалоги
-  words: 350
-  points:
-  - Content for Діалоги
-  - Examples and explanation
-  - Practice or application
-vocabulary_hints:
-  required:
-  - піти/виходити (to leave on foot)
-  - поїхати/виїжджати (to leave by vehicle)
-  - зайти/заходити (to stop by on foot)
-  - заїхати/заїжджати (to stop by in vehicle)
-  - розійтися/розходитися (to disperse on foot)
-  - роз'їхатися/роз'їжджатися (to disperse by vehicle)
-  - початок (beginning)
-  - зупинка (stop)
-  - розходження (dispersal)
-  - напрямок (direction)
-  recommended:
-  - побігти (to start running)
-  - забігти (to run in briefly)
-  - розбігтися (to scatter running)
-  - заскочити (to pop in quickly)
-  - затриматися (to linger)
-activity_hints:
-- type: quiz
-  focus: по- vs за- vs роз- selection
-  items: 15+
-- type: fill-in
-  focus: Narratives about meetings and departures
-  items: 12+
-- type: fill-in
-  focus: Start → stop by → disperse sequence
-  items: 10+
-- type: cloze
-  focus: Story about a gathering
-  items: 12+
-prerequisites:
-- b1-18 (Motion - passing & crossing)
-connects_to:
-- b1-20 (Motion - approaching & departing)
-- b1-22 (Motion full prefix integration)
-naturalness:
-  score: 9
-  status: PASS
+build:
+  last_modified: '2026-01-26'

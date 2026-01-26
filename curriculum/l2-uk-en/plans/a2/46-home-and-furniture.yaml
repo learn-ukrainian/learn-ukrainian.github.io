@@ -1,16 +1,9 @@
-module: home-and-furniture
-level: a2
-sequence: 46
+module: a2-46
+level: A2
+slug: home-and-furniture
 version: '2.0'
 title: Home and Furniture
 subtitle: Where I Live
-focus: vocabulary
-pedagogy: PPP
-objectives:
-- Learner can name rooms in a house
-- Learner can describe furniture and appliances
-- Learner can say where things are located
-- Learner can describe their own home
 content_outline:
 - section: 'Introduction: Ukrainian Homes'
   words: 100
@@ -48,7 +41,7 @@ content_outline:
   - Give a home tour
   - Describe room layouts
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - кімната (room)
   - кухня (kitchen)
@@ -65,16 +58,34 @@ vocabulary:
   - пральна машина (washing machine)
   - квартира (apartment)
   - будинок (house)
-  forbidden: []
-activities:
-  types_required:
-  - vocabulary-drill
-  - matching
-  - speaking
-  - fill-in
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: vocabulary-drill
+  focus: Rooms and furniture
+  items: 30
+- type: matching
+  focus: Match furniture to rooms
+  items: 20
+- type: fill-in
+  focus: Complete home descriptions
+  items: 15
+- type: speaking
+  focus: Describe your home
+  items: 8
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- a2-45 (Food and Cooking)
 connects_to:
 - a2-47 (Nature and Weather)
 - a2-61 (Hotel Accommodation)
+objectives:
+- Learner can name rooms in a house
+- Learner can describe furniture and appliances
+- Learner can say where things are located
+- Learner can describe their own home
+grammar:
+- Locative case for location (у вітальні)
+- Prepositions of place review
+- Adjectives for home description
+register: розмовний
+phase: A2.5 [Vocabulary Expansion]

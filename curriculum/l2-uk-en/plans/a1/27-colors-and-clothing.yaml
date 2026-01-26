@@ -1,16 +1,9 @@
-module: colors-and-clothing
-level: a1
-sequence: 27
+module: a1-27
+level: A1
+slug: colors-and-clothing
 version: '2.0'
 title: Colors & Clothing
 subtitle: Describing What You Wear
-focus: vocabulary
-pedagogy: PPP
-objectives:
-- Learner can name basic colors in Ukrainian
-- Learner can use color adjectives with correct gender agreement
-- Learner can describe clothing items
-- Learner can describe what someone is wearing
 content_outline:
 - section: 'Introduction: Colors and Fashion'
   words: 100
@@ -48,7 +41,7 @@ content_outline:
   - Describe what people wear
   - Shopping for clothes
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - білий (white)
   - чорний (black)
@@ -65,16 +58,34 @@ vocabulary:
   - светр (sweater)
   - взуття (footwear)
   - носити (to wear)
-  forbidden: []
-activities:
-  types_required:
-  - dialogue
-  - matching
-  - vocabulary-drill
-  - description
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: vocabulary-drill
+  focus: Color and clothing names
+  items: 30
+- type: matching
+  focus: Match colors to items
+  items: 20
+- type: description
+  focus: Describe outfits in pictures
+  items: 10
+- type: dialogue
+  focus: Shopping for clothes
+  items: 6
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- a1-26 (Describing Things - Adjectives)
 connects_to:
 - a1-28 (Description - Adverbs)
 - a1-30 (Checkpoint Consolidation)
+objectives:
+- Learner can name basic colors in Ukrainian
+- Learner can use color adjectives with correct gender agreement
+- Learner can describe clothing items
+- Learner can describe what someone is wearing
+grammar:
+- Color adjectives with agreement
+- Clothing vocabulary
+- Носити (to wear) + accusative
+register: розмовний
+phase: A1.3 [Consolidation]

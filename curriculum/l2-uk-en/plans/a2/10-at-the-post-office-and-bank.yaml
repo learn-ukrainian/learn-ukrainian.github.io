@@ -1,25 +1,9 @@
 module: 10-at-the-post-office-and-bank
-level: a2
-sequence: 10
+level: A2
+slug: 10-at-the-post-office-and-bank
 version: '2.0'
 title: At the Post Office and Bank
 subtitle: Services and Money
-focus: vocabulary
-pedagogy: PPP
-objectives:
-- Learner can send a letter or package
-- Learner can buy stamps and envelopes
-- Learner can exchange currency
-- Learner can withdraw money from an ATM
-sources:
-- name: Ukrainian State Standard 2024 - Services Theme
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Required service vocabulary for A2
-- name: Ukrposhta Official
-  url: https://www.ukrposhta.ua/
-  type: reference
-  notes: Authentic postal service terminology
 content_outline:
 - section: Introduction / Вступ
   words: 200
@@ -43,7 +27,7 @@ content_outline:
   - At the Post Office
   - At the Bank
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - пошта (post office)
   - банк (bank)
@@ -66,16 +50,48 @@ vocabulary:
   - знімати (to withdraw)
   - вкладати (to deposit)
   - обмінювати (to exchange)
-  forbidden: []
-activities:
-  types_required:
-  - quiz
-  - match-up
-  - fill-in
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: Banking sentences with correct cases
+  items: 12+
+- type: quiz
+  focus: '"I want to..." service phrases'
+  items: 10+
+- type: match-up
+  focus: Service term + definition
+  items: 12+
+- type: fill-in
+  focus: Number and price expressions
+  items: 10+
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- a2-01 through a2-09 (all case knowledge)
+- A1 numbers 1-100
+- A1 basic transactions
 connects_to:
 - a2-11 (Checkpoint - Cases)
 - a2-53 (Shopping & Services)
 - a2-69 (Online Services)
+objectives:
+- Learner can send a letter or package
+- Learner can buy stamps and envelopes
+- Learner can exchange currency
+- Learner can withdraw money from an ATM
+grammar:
+- accusative for services (відправити листа)
+- numbers 100-1000
+- currency and exchange rates
+- polite requests (я хочу...)
+module_type: vocabulary
+sources:
+- name: Ukrainian State Standard 2024 - Services Theme
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Required service vocabulary for A2
+- name: Ukrposhta Official
+  url: https://www.ukrposhta.ua/
+  type: reference
+  notes: Authentic postal service terminology
+immersion: 40-50% Ukrainian
+phase: A2.1

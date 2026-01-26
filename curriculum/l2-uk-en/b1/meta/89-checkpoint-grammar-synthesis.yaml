@@ -1,96 +1,13 @@
 module: b1-89
-id: b1-89
+level: B1
 slug: checkpoint-grammar-synthesis
-title: "Checkpoint: Синтез граматики"
-subtitle: "Grammar Synthesis Assessment"
 version: '2.0'
-phase: "B1.8 [Skills & Integration]"
-focus: checkpoint
-pedagogy: TTT
-register: розмовний
-duration: 90
-transliteration: none
-objectives:
-  - "Learner demonstrates mastery of all B1 grammar (M01-88)"
-  - "Learner applies grammar in integrated contexts"
-  - "Learner identifies and corrects grammar errors"
-  - "Learner is ready for Phase B1.9 communication skills"
-grammar:
-  - "Aspect (all contexts)"
-  - "Motion verbs with prefixes"
-  - "Complex sentences (all types)"
-  - "Participles (adverbial and passive)"
-  - "Advanced word formation"
-word_target: 1000
-content_outline:
-  - section: "Diagnostic Test"
-    words: 150
-    points:
-      - "Identify grammar gaps"
-      - "Self-assessment"
-      - "Focus areas"
-  - section: "Aspect Synthesis"
-    words: 200
-    points:
-      - "All aspect contexts"
-      - "Aspect in discourse"
-      - "Complex cases"
-  - section: "Motion Verb Review"
-    words: 200
-    points:
-      - "Prefix system"
-      - "Aspect with motion"
-      - "Idiomatic uses"
-  - section: "Complex Sentences"
-    words: 200
-    points:
-      - "Subordinate clauses"
-      - "Relative clauses"
-      - "Conditional structures"
-  - section: "Participles and Passive"
-    words: 150
-    points:
-      - "Adverbial participles"
-      - "Passive constructions"
-      - "Stylistic awareness"
-  - section: "Final Assessment"
-    words: 100
-    points:
-      - "Integrated grammar test"
-      - "Error correction"
-vocabulary_hints:
-  required:
-    - граматика (grammar)
-    - аспект (aspect)
-    - дієприслівник (adverbial participle)
-    - пасив (passive)
-    - підрядне речення (subordinate clause)
-    - доконаний вид (perfective aspect)
-    - недоконаний вид (imperfective aspect)
-    - синтез (synthesis)
-  recommended:
-    - узгодження (agreement)
-    - відмінювання (conjugation)
-    - граматична помилка (grammar error)
-    - правильно (correctly)
-activity_hints:
-  - type: diagnostic
-    focus: "Identify grammar gaps"
-    items: 30
-  - type: error-correction
-    focus: "Fix grammar errors"
-    items: 25
-  - type: transformation
-    focus: "Transform sentence structures"
-    items: 20
-  - type: production
-    focus: "Produce correct grammar"
-    items: 15
-prerequisites:
-  - b1-88 (Interviews and Podcasts)
-connects_to:
-  - b1-90 (Grammar in Context)
+id: b1-89
 naturalness:
   score: 9
   status: PASS
-  justification: "Essential checkpoint for B1 grammar mastery"
+  justification: Essential checkpoint for B1 grammar mastery
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-26'

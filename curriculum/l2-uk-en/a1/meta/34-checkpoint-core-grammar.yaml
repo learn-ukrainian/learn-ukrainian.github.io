@@ -1,95 +1,13 @@
 module: a1-34
-id: a1-34
+level: A1
 slug: checkpoint-core-grammar
-title: "Checkpoint: Core Grammar"
-subtitle: "Confirm Grammar Readiness Before Practical Scenarios"
 version: '2.0'
-phase: "A1.3 [Consolidation]"
-focus: checkpoint
-pedagogy: TTT
-register: розмовний
-duration: 90
-transliteration: none
-objectives:
-  - "Demonstrate Cyrillic reading fluency"
-  - "Identify noun gender and use agreement correctly"
-  - "Conjugate verbs in present, past, and future tense"
-  - "Apply four cases (Nominative, Accusative, Genitive, Locative)"
-grammar:
-  - "All A1 cases review"
-  - "Verb tenses review"
-  - "Agreement patterns"
-word_target: 500
-content_outline:
-  - section: "Part 1: Reading and Writing"
-    words: 80
-    points:
-      - "Cyrillic recognition"
-      - "Spelling accuracy"
-      - "Reading comprehension"
-  - section: "Part 2: Gender and Agreement"
-    words: 80
-    points:
-      - "Noun gender identification"
-      - "Adjective agreement"
-      - "Pronoun usage"
-  - section: "Part 3: Verb Tenses"
-    words: 100
-    points:
-      - "Present tense conjugation"
-      - "Past tense with gender"
-      - "Future with буду"
-  - section: "Part 4: Cases"
-    words: 100
-    points:
-      - "Accusative for objects"
-      - "Genitive for absence/quantities"
-      - "Locative for location"
-  - section: "Part 5: Integrated Skills"
-    words: 80
-    points:
-      - "Combined grammar tasks"
-      - "Error correction"
-      - "Translation challenges"
-  - section: "Summary: Ready for Practical Scenarios"
-    words: 60
-    points:
-      - "Skills confirmed"
-      - "Areas for review"
-      - "Preview A1.4 phase"
-vocabulary_hints:
-  required:
-    - бути (to be)
-    - мати (to have)
-    - йти (to go)
-    - робити (to do)
-    - хотіти (to want)
-    - могти (can)
-    - знати (to know)
-    - говорити (to speak)
-  recommended:
-    - читати (to read)
-    - писати (to write)
-    - їсти (to eat)
-    - пити (to drink)
-activity_hints:
-  - type: quiz
-    focus: "A1.3 grammar comprehensive"
-    items: 40
-  - type: transformation
-    focus: "Case and tense changes"
-    items: 25
-  - type: error-correction
-    focus: "Find and fix errors"
-    items: 15
-  - type: self-assessment
-    focus: "Rate grammar confidence"
-    items: 10
-prerequisites:
-  - a1-33 (Holidays and Traditions)
-connects_to:
-  - a1-35 (At the Café Practical)
+id: a1-34
 naturalness:
   score: 10
   status: PASS
-  justification: "Clear checkpoint format"
+  justification: Clear checkpoint format
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-26'

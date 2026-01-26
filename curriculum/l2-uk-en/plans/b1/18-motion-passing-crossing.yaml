@@ -1,24 +1,9 @@
 module: 18-motion-passing-crossing
-level: b1
-sequence: 18
-version: '1.0'
+level: B1
+slug: 18-motion-passing-crossing
+version: '2.0'
 title: 'Рух: перехід і обхід'
 subtitle: Motion - Passing & Crossing
-focus: grammar
-pedagogy: TTT
-objectives:
-- Learner can use пере- for crossing
-- Learner can use про- for passing through/by
-- Learner can use об- for going around
-sources:
-- name: Ukrainian State Standard 2024 - Motion Prefixes
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official prefix meanings for crossing/passing
-- name: Ukrainian Verbal Prefixes
-  url: https://uk.wikipedia.org/wiki/Дієслівні_префікси
-  type: reference
-  notes: пере-, про-, об- semantics
 content_outline:
 - section: Тест
   words: 100
@@ -51,7 +36,7 @@ content_outline:
   - Examples and explanation
   - Practice or application
 word_target: 1500
-vocabulary:
+vocabulary_hints:
   required:
   - перейти/переходити (to cross on foot)
   - переїхати/переїжджати (to cross by vehicle)
@@ -69,16 +54,45 @@ vocabulary:
   - оббігти/оббігати (to run around)
   - яма (hole/pit)
   - перешкода (obstacle)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - quiz
-  - match-up
-  - cloze
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: пере- vs про- vs об- selection
+  items: 15+
+- type: fill-in
+  focus: Route descriptions with correct prefixes
+  items: 12+
+- type: fill-in
+  focus: Change movement type (cross → pass → around)
+  items: 10+
+- type: cloze
+  focus: Narrative describing a journey
+  items: 12+
+- type: match-up
+  focus: Situation → prefixed verb
+  items: 12+
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-17 (Motion - coming & going)
 connects_to:
 - b1-19 (Motion - starting & returning)
 - b1-22 (Motion full prefix integration)
+objectives:
+- Learner can use пере- for crossing
+- Learner can use про- for passing through/by
+- Learner can use об- for going around
+grammar:
+- Prefixes пере-, про-, об-
+- Crossing, passing, going around patterns
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Motion Prefixes
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official prefix meanings for crossing/passing
+- name: Ukrainian Verbal Prefixes
+  url: https://uk.wikipedia.org/wiki/Дієслівні_префікси
+  type: reference
+  notes: пере-, про-, об- semantics
+immersion: 100% Ukrainian
+phase: B1.2 Motion

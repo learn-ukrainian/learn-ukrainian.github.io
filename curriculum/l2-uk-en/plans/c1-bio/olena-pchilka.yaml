@@ -1,109 +1,111 @@
 module: olena-pchilka
-level: c1-bio
-sequence: 24
+level: C1-BIO
+slug: olena-pchilka
 version: '2.0'
 title: 'Олена Пчілка: Письменниця і громадська діячка'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Олена_Пчілка
-    title: Олена Пчілка (Wikipedia UA)
-    notes: Біографія, творчість, громадська діяльність
-  secondary:
-  - url: https://www.lesya.lutsk.ua
-    title: Музей Лесі Українки
-    notes: Родинна історія та спадщина
-  - url: https://ilnan.gov.ua
-    title: Інститут літератури НАНУ
-    notes: Літературознавчі дослідження
 content_outline:
 - section: Вступ — Мати українського відродження
   words: 400
-  subsections:
+  points:
   - Олена Пчілка як багатогранна постать українського руху
   - Роль у вихованні Лесі Українки
   - Внесок у літературу, етнографію та жіночий рух
 - section: Ранні роки та родина Косачів (1849-1868)
   words: 600
-  subsections:
+  points:
   - Народження Ольги Драгоманової в Гадячі
   - Родина Драгоманових та її інтелектуальне середовище
   - Брат Михайло Драгоманов та його вплив
   - Освіта та формування національної свідомості
 - section: Шлюб та літературні початки (1868-1880)
   words: 700
-  subsections:
+  points:
   - Шлюб із Петром Косачем
   - Народження дітей, зокрема Лесі
   - Перші літературні твори під псевдонімом Олена Пчілка
   - Переклади та етнографічні студії
 - section: Видавнича та просвітницька діяльність (1880-1905)
   words: 800
-  subsections:
+  points:
   - Журнал «Рідний край»
   - Боротьба за українську мову в освіті
   - Альманах «Перший вінок» спільно з Наталією Кобринською
   - Дитяча література та виховання
 - section: Революційні роки та трагедії (1905-1920)
   words: 800
-  subsections:
+  points:
   - Смерть Лесі Українки (1913)
   - Революція та громадянська війна
   - Втрата інших дітей
   - Продовження громадської діяльності попри все
 - section: Останні роки та спадщина (1920-1930)
   words: 700
-  subsections:
+  points:
   - Робота над спадщиною Лесі Українки
   - Переслідування радянською владою
   - Смерть у Києві
   - Значення для українського національного руху
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - письменниця
-  - етнографія
-  - просвітництво
-  - видавець
-  - журнал
-  - псевдонім
-  - національна свідомість
-  - жіночий рух
-  - переклад
-  - спадщина
+  - письменниця (writer)
+  - етнографія (ethnography)
+  - просвітництво (enlightenment)
+  - видавець (publisher)
+  - журнал (journal/magazine)
+  - псевдонім (pseudonym)
+  - національна свідомість (national consciousness)
+  - жіночий рух (women's movement)
+  - переклад (translation)
+  - спадщина (legacy)
   recommended:
-  - «Рідний край»
-  - родина Косачів
-  - дитяча література
-  - етнографічні студії
-  - громадська діячка
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - «Рідний край» (Native Land)
+  - родина Косачів (Kosach family)
+  - дитяча література (children's literature)
+  - етнографічні студії (ethnographic studies)
+  - громадська діячка (public activist)
+activity_hints:
+- type: reading
+  focus: Літературна та громадська спадщина
+  source: Уривки з творів та публіцистики
+  items: 3 passages
+- type: quiz
+  focus: Біографія та діяльність
+  items: 12+
+- type: match-up
+  focus: Твори та їхні теми
+  items: 10+
+- type: essay-response
+  focus: Яку роль відіграла Олена Пчілка у вихованні Лесі Українки?
+  word_target: 300
+  output: Біографічне есе
+- type: group-sort
+  focus: Літературна діяльність vs громадська діяльність
+  items: 12+
+- type: fill-in
+  focus: Термінологія національного руху
+  items: 10+
+focus: biography
+prerequisites:
+- c1-bio-20 (Тарас Шевченко)
+- c1-bio-22 (Михайло Драгоманов)
 connects_to:
-  previous: c1-bio-20 (Тарас Шевченко)
-  related:
-  - c1-bio-40 (Леся Українка)
-  - c1-bio-25 (Наталія Кобринська)
-  - c1-bio-28 (Іван Франко)
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-40 (Леся Українка)
+- c1-bio-25 (Наталія Кобринська)
+- c1-bio-28 (Іван Франко)
+module_type: biography
+sources:
+- name: Олена Пчілка (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Олена_Пчілка
+  type: primary
+  notes: Біографія, творчість, громадська діяльність
+- name: Музей Лесі Українки
+  url: https://www.lesya.lutsk.ua
+  type: reference
+  notes: Родинна історія та спадщина
+- name: Інститут літератури НАНУ
+  url: https://ilnan.gov.ua
+  type: reference
+  notes: Літературознавчі дослідження
+immersion: 100% Ukrainian
+phase: C1-BIO

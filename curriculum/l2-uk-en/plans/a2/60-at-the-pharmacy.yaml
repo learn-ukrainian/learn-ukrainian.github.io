@@ -1,16 +1,9 @@
-module: at-the-pharmacy
-level: a2
-sequence: 60
+module: a2-60
+level: A2
+slug: at-the-pharmacy
 version: '2.0'
 title: At the Pharmacy
 subtitle: Buying Medicine
-focus: practical
-pedagogy: PPP
-objectives:
-- Learner can ask for medicine by symptoms
-- Learner can understand dosage instructions
-- Learner can read medicine labels
-- Learner can discuss side effects
 content_outline:
 - section: 'Introduction: Ukrainian Pharmacies'
   words: 100
@@ -48,7 +41,7 @@ content_outline:
   - Buy medicine for common ailments
   - Ask about dosage
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - аптека (pharmacy)
   - ліки (medicine)
@@ -65,15 +58,33 @@ vocabulary:
   - протипоказання (contraindication)
   - алергія (allergy)
   - фармацевт (pharmacist)
-  forbidden: []
-activities:
-  types_required:
-  - vocabulary-drill
-  - dialogue
-  - role-play
-  - fill-in
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: vocabulary-drill
+  focus: Pharmacy vocabulary
+  items: 25
+- type: dialogue
+  focus: Pharmacy conversation
+  items: 12
+- type: fill-in
+  focus: Complete medicine instructions
+  items: 15
+- type: role-play
+  focus: Buy medicine at pharmacy
+  items: 8
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a2-59 (Doctor Visit)
 connects_to:
 - a2-61 (Hotel Accommodation)
+objectives:
+- Learner can ask for medicine by symptoms
+- Learner can understand dosage instructions
+- Learner can read medicine labels
+- Learner can discuss side effects
+grammar:
+- Asking for specific medicine by symptoms
+- Understanding dosage instructions
+- Side effects and warnings vocabulary
+register: розмовний
+phase: A2.6 [Practical]

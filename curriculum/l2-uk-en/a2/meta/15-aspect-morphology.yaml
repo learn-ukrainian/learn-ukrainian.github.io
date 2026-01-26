@@ -1,17 +1,11 @@
-# A2 Module 15: Aspect Morphology
-# Status: CONTENT (content exists, detailed spec added)
-
-id: a2-15
-title: Aspect Morphology
-subtitle: Prefixes and Suffixes
+module: 15-aspect-morphology
+level: A2
 slug: 15-aspect-morphology
-module_type: grammar
-word_target: 1000
-immersion: 40-50% Ukrainian
 version: '2.0'
-phase: A2.2
-focus: grammar
-pedagogy: PPP
+id: a2-15
+naturalness:
+  score: 8
+  status: PASS
 duration: 60
 transliteration: none
 tags:
@@ -20,107 +14,5 @@ tags:
 - aspect
 - morphology
 - word-formation
-grammar:
-- prefixes (про-, на-, з-, по-)
-- suffixes (-ва-, -ува-)
-- stem changes
-- suppletive pairs
-objectives:
-- Learner can identify aspect based on morphology
-- Learner can form perfective verbs using common prefixes
-- Learner can form imperfective verbs using suffixes
-- Learner can recognize irregular aspect pairs
-sources:
-- name: Ukrainian State Standard 2024 - Word Formation
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Verbal prefix and suffix patterns
-- name: Ukrainian Verb Morphology
-  url: https://uk.wikipedia.org/wiki/Словотвір
-  type: reference
-  notes: Aspect formation patterns
-content_outline:
-- section: Introduction / Вступ
-  words: 200
-  points:
-  - Concept of aspectual pairs as a family
-  - Morphological predictability
-- section: Presentation / Презентація
-  words: 600
-  points:
-  - Prefixation (the primary method: про-, на-, з-, по-)
-  - Suffixation (secondary imperfectives: -ва-, -ува-)
-  - Suppletive pairs (irregular roots)
-  - Spelling rules for prefixes (з- vs с-)
-- section: Practice / Практика
-  words: 150
-  points:
-  - Pattern recognition drills
-  - Matching and transformation
-- section: Dialogues / Діалоги
-  words: 50
-  points:
-  - Dialogue on learning patterns
-
-vocabulary_hints:
-  required:
-    - відпочивати/відпочити (to rest)
-    - вставати/встати (to get up)
-    - одягатися/одягнутися (to dress)
-    - сідати/сісти (to sit down)
-    - лягати/лягти (to lie down)
-    - відкривати/відкрити (to open)
-    - закривати/закрити (to close)
-    - вмикати/увімкнути (to turn on)
-    - вимикати/вимкнути (to turn off)
-    - починати/почати (to begin)
-    - закінчувати/закінчити (to finish)
-    - отримувати/отримати (to receive)
-    - посилати/послати (to send)
-    - вибирати/вибрати (to choose)
-    - вирішувати/вирішити (to decide)
-  recommended:
-    - префікс (prefix)
-    - суфікс (suffix)
-    - корінь (root)
-    - основа (stem)
-    - утворення (formation)
-
-activity_hints:
-  - type: match-up
-    focus: Extended aspect pairs
-    items: "15+"
-
-  - type: quiz
-    focus: Pattern recognition - identify prefix/suffix
-    items: "12+"
-
-  - type: fill-in
-    focus: Use correct pair member in context
-    items: "12+"
-
-  - type: quiz
-    focus: Predict aspect from verb form
-    items: "10+"
-
-  - type: fill-in
-    focus: Build perfective from imperfective
-    items: "10+"
-
-  - type: match-up
-    focus: Suppletive pairs matching
-    items: "8+"
-
-prerequisites:
-  - a2-12 (Aspect introduction)
-  - a2-13 (Perfective past)
-  - a2-14 (Perfective future)
-
-connects_to:
-  - a2-16 (Aspect Mastery Pairs)
-  - a2-36 (Basic Motion Prefixes)
-  - a2-38 (Action Verb Prefixes)
-
-naturalness:
-  score: 8
-  status: PASS
+build:
+  last_modified: '2026-01-26'

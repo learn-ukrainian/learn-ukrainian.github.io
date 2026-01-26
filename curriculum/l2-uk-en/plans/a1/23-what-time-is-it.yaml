@@ -1,16 +1,9 @@
-module: what-time-is-it
-level: a1
-sequence: 23
+module: a1-23
+level: A1
+slug: what-time-is-it
 version: '2.0'
 title: What Time Is It?
 subtitle: Telling Time, Days, and Months
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can ask and tell the time
-- Learner can name all days of the week
-- Learner can name all months of the year
-- Learner can use time prepositions correctly
 content_outline:
 - section: 'Introduction: Time in Ukrainian'
   words: 100
@@ -48,7 +41,7 @@ content_outline:
   - Make appointments
   - Discuss schedules
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - година (hour)
   - хвилина (minute)
@@ -65,16 +58,35 @@ vocabulary:
   - пізно (late)
   - рано (early)
   - о котрій (at what time)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - ordering
-  - matching
-  - dialogue
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: matching
+  focus: Match times to clock faces
+  items: 20
+- type: fill-in
+  focus: Complete time expressions
+  items: 20
+- type: ordering
+  focus: Order days and months
+  items: 15
+- type: dialogue
+  focus: Schedule a meeting
+  items: 6
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-17 (Numbers and Money)
+- a1-22 (Tomorrow - Future Tense)
 connects_to:
 - a1-24 (Can, Must, Want - Modals)
 - a1-25 (My Daily Routine)
+objectives:
+- Learner can ask and tell the time
+- Learner can name all days of the week
+- Learner can name all months of the year
+- Learner can use time prepositions correctly
+grammar:
+- Clock time expressions (Котра година?)
+- Time prepositions (о, до, після)
+- Days and months in context
+register: розмовний
+phase: A1.3 [Consolidation]

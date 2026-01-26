@@ -1,14 +1,11 @@
-id: a2-20
-title: Preferences and Choices
-subtitle: Expressing Likes and Dislikes
+module: 20-preferences-and-choices
+level: A2
 slug: 20-preferences-and-choices
-module_type: grammar
-word_target: 1000
-immersion: 40-50% Ukrainian
 version: '2.0'
-phase: A2.2
-focus: grammar
-pedagogy: PPP
+id: a2-20
+naturalness:
+  score: 10
+  status: PASS
 duration: 60
 transliteration: none
 tags:
@@ -16,42 +13,5 @@ tags:
 - vocabulary
 - preferences
 - choices
-objectives:
-- Learner can express preferences and choices
-- Learner can compare options using comparative forms
-- Learner can use 'would' structures for hypothetical choices
-- Learner can politely decline or accept offers
-sources:
-- name: Ukrainian State Standard 2024 - Preferences
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Communicative requirements for making choices
-- name: Ukrainian Language - Communicative Competence
-  url: https://uk.wikipedia.org/wiki/Комунікативна_компетентність
-  type: reference
-  notes: Expressions for polite refusal and preference
-content_outline:
-- section: Introduction / Вступ
-  words: 200
-  points:
-  - Making choices in daily life
-  - Politeness in preferences
-- section: Presentation / Презентація
-  words: 600
-  points:
-  - 'Dative Logic: Мені подобається'
-  - 'Formal Preference: Віддавати перевагу'
-  - 'Comparison structures for actions (краще ніж)'
-  - 'Conditional: Я б вибрав (Hypothetical)'
-- section: Practice / Практика
-  words: 150
-  points:
-  - Decision making scenarios (Restaurant/Store)
-  - Transformation drills
-- section: Dialogues / Діалоги
-  words: 50
-  points:
-  - Choosing a gift or activity with a friend
-naturalness:
-  score: 10
-  status: PASS
+build:
+  last_modified: '2026-01-26'

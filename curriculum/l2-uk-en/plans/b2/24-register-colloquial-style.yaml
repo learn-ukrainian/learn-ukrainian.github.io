@@ -1,9 +1,36 @@
-module: 24-register-colloquial-style
-level: b2
-sequence: 24
-version: '1.0'
+module: b2-24
+level: B2
+slug: 24-register-colloquial-style
+version: '2.0'
 title: Розмовний стиль
 subtitle: Ну, типу, як говорити по-справжньому
+content_outline:
+- section: Вступ — Розмовний стиль
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+  - Роль у системі української мови
+- section: Особливості розмовного стилю
+  words: 500
+  points:
+  - 'Shortened forms: тел (телефон), комп (комп''ютер)'
+  - 'Particles: ну, от, та, ж, же, бо'
+  - 'Fillers: типу, ну типу, як би'
+  - 'Informal interjections: ого, оце так, ні фіга'
+- section: Емоційні частки
+  words: 500
+  points:
+  - 'ж/же - emphasis: Скажи ж мені! (Tell me!)'
+  - 'бо - cause: Не йди, бо впадеш. (Don''t go, you''ll fall.)'
+  - 'таки - indeed: Я таки прийшов. (I did come.)'
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: grammar
 pedagogy: TTT
 objectives:
@@ -11,13 +38,9 @@ objectives:
 - Учень може трансформувати формальний текст у неформальний і навпаки
 - Учень може правильно використовувати частки ж/же, бо, таки для емфази
 - Учень може вживати скорочені форми слів та сленг доречно
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- 'Shortened word forms: тел, комп, інфа'
+- 'Particles: ж/же, бо, таки'
+- 'Наповнювачі: типу, ну, от, та'
+- 'Informal interjections: ого, класно, жесть'
+phase: B2.1b [Grammar Completion]

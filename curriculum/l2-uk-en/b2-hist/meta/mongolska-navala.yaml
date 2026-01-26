@@ -1,12 +1,11 @@
-id: b2-hist-21
-title: Монгольська навала 1240
-subtitle: Падіння Києва та кінець Київської Русі
+module: mongolska-navala
+level: B2-HIST
 slug: mongolska-navala
 version: '2.0'
-phase: B2-HIST.2 [Fragmentation]
-focus: history
-pedagogy: CBI
-word_target: 4024
+id: b2-hist-21
+naturalness:
+  score: 9
+  status: PASS
 duration: 120
 transliteration: none
 tags:
@@ -14,86 +13,6 @@ tags:
 - mongol-invasion
 - kyiv
 - 1240
-grammar:
-- Historical narrative tenses
-- Passive voice in historical writing
-objectives:
-- Учень може проаналізувати причини та наслідки монгольської навали
-- Учень може оцінити героїзм оборони Києва та роль Десятинної церкви
-- Учень може порівняти спадщину Русі та Золотої Орди в контексті деколонізації
-content_outline:
-- section: Вступ
-  words: 399
-  points:
-  - 1240 рік як геополітична катастрофа
-  - Київ як сакральний центр
-- section: 'Читання: Трагедія та злам епох'
-  words: 2750
-  points:
-  - Політична роздробленість та Битва на Калці
-  - Наступ Батия та облога Києва
-  - 'Доля інших міст: Чернігів та Переяслав'
-  - 'Останній оплот: Десятинна церква'
-  - 'Військова тактика: Зіткнення цивілізацій'
-  - 'Культурні втрати: Загибель майстрів'
-  - 'Героїчні постаті: Захисники Києва'
-  - 'Міжнародний резонанс: Європа у вогні'
-  - 'Життя в Золотій Орді: Побут та управління'
-  - 'Релігійний аспект: Віра в час апокаліпсису'
-  - 'Наслідки: Переміщення центру на Захід'
-  - Соціально-економічний вплив
-  - Археологія навали
-- section: Первинні джерела
-  words: 420
-  points:
-  - Свідчення Плано Карпіні (1246)
-  - Опис облоги в Іпатіївському літописі
-  - Галицько-Волинський літопис про візит Данила до Батия
-  - Проблема достовірності джерел
-- section: Деколонізаційний погляд
-  words: 438
-  points:
-  - 'Вплив на мову: Мовна стійкість'
-  - Міф про 'спільну колиску'
-  - Монгольський спадок Московії vs Європейськість України
-  - Спадщина Русі у Великому князівстві Литовському
-vocabulary_hints:
-  required:
-  - навала (invasion)
-  - облога (siege)
-  - ярмо (yoke)
-  - орда (horde)
-  - хан (khan)
-  - баскак (tax collector)
-  - ярлик (yarlyk/decree)
-  - спустошення (devastation)
-  - оборона (defense)
-  - воєвода (voivode)
-  recommended:
-  - катапульта (catapult)
-  - таран (battering ram)
-  - данина (tribute)
-  - васал (vassal)
-  - улус (ulus)
-activity_hints:
-- type: reading
-  focus: Свідчення Плано Карпіні
-- type: critical-analysis
-  focus: Аналіз облоги в літописі
-- type: essay-response
-  focus: Цивілізаційний вибір після 1240 року
-- type: comparative-study
-  focus: Україна vs Московія під Ордою
-sources:
-- name: Іпатіївський літопис
-  url: http://litopys.org.ua/ipatlet/ipat.htm
-  type: primary
-  notes: Основне джерело про події 1240 року
-- name: Джованні да Плано Карпіні. Історія Монгалів
-  url: http://litopys.org.ua/travelj/travelj.htm
-  type: primary
-  notes: Свідчення європейського мандрівника
 vocabulary_count: 25
-naturalness:
-  score: 9
-  status: PASS
+build:
+  last_modified: '2026-01-26'

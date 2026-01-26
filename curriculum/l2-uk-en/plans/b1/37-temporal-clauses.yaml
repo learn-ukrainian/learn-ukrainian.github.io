@@ -1,16 +1,9 @@
-module: temporal-clauses
-level: b1
-sequence: 37
+module: b1-37
+level: B1
+slug: temporal-clauses
 version: '2.0'
 title: Часові підрядні речення
 subtitle: Temporal Clauses Deep Dive
-focus: grammar
-pedagogy: TTT
-objectives:
-- Learner can express часові відношення using various temporal connectors
-- Learner can sequence events using appropriate temporal markers
-- Learner can distinguish simultaneous vs sequential actions
-- Learner can build complex temporal narratives
 content_outline:
 - section: 'Introduction: Time Relations'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Sequence events
   - Build temporal stories
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - коли (when)
   - поки (while/until)
@@ -63,15 +56,33 @@ vocabulary:
   - відтоді як (since - temporal)
   - до того як (before)
   - тим часом (meanwhile)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - sentence-combining
-  - error-correction
-  - writing
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: Complete temporal sentences
+  items: 25
+- type: sentence-combining
+  focus: Sequence events
+  items: 20
+- type: error-correction
+  focus: Fix temporal clause errors
+  items: 15
+- type: writing
+  focus: Write temporal narratives
+  items: 10
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-36 (Causal Result Clauses)
 connects_to:
 - b1-38 (Complex Sentence Integration)
+objectives:
+- Learner can express часові відношення using various temporal connectors
+- Learner can sequence events using appropriate temporal markers
+- Learner can distinguish simultaneous vs sequential actions
+- Learner can build complex temporal narratives
+grammar:
+- Temporal clauses with коли, після того як, поки
+- 'Sequence markers: перш ніж, як тільки'
+- Simultaneous vs sequential action
+register: розмовний
+phase: B1.3b [Complex Sentences]

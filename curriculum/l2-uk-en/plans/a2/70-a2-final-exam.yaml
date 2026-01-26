@@ -1,16 +1,9 @@
-module: a2-final-exam
-level: a2
-sequence: 70
+module: a2-70
+level: A2
+slug: a2-final-exam
 version: '2.0'
 title: A2 Final Exam
 subtitle: Level Completion
-focus: checkpoint
-pedagogy: TTT
-objectives:
-- Learner can demonstrate A2 level proficiency
-- Learner can solve practical problems in Ukrainian
-- Learner can understand main points of complex texts
-- Learner is ready for B1 level
 content_outline:
 - section: 'Pre-Exam: Preparation'
   words: 50
@@ -49,7 +42,7 @@ content_outline:
   - Areas for improvement
   - Transition to B1
 word_target: 600
-vocabulary:
+vocabulary_hints:
   required:
   - іспит (exam)
   - завдання (task)
@@ -64,15 +57,34 @@ vocabulary:
   - навички (skills)
   - досягнення (achievement)
   - сертифікат (certificate)
-  forbidden: []
-activities:
-  types_required:
-  - quiz
-  - speaking
-  - reading-comprehension
-  - listening
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: reading-comprehension
+  focus: A2 level texts
+  items: 15
+- type: listening
+  focus: A2 level audio
+  items: 15
+- type: quiz
+  focus: Comprehensive grammar test
+  items: 30
+- type: speaking
+  focus: Oral assessment
+  items: 10
+focus: checkpoint
+pedagogy: TTT
+prerequisites:
+- a2-69 (Online Services)
+- a2-56 (Checkpoint Full Grammar)
 connects_to:
 - b1-01 (How to Talk About Grammar)
+objectives:
+- Learner can demonstrate A2 level proficiency
+- Learner can solve practical problems in Ukrainian
+- Learner can understand main points of complex texts
+- Learner is ready for B1 level
+grammar:
+- Comprehensive A2 grammar review (all cases)
+- Verb aspect mastery
+- Complex sentence structures
+register: розмовний
+phase: A2.6 [Practical]

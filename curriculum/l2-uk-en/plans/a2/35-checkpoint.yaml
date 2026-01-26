@@ -1,25 +1,9 @@
 module: 35-checkpoint
-level: a2
-sequence: 35
+level: A2
+slug: 35-checkpoint
 version: '2.0'
 title: Checkpoint
 subtitle: Complex Sentences & Health
-focus: checkpoint
-pedagogy: TTT
-objectives:
-- Learner can build complex arguments using logical connectors
-- Learner can use relative clauses to define and describe
-- Learner can navigate medical situations confidently
-- Learner can correct common errors in complex sentences
-sources:
-- name: Ukrainian State Standard 2024 - A2.2 Assessment
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Proficiency benchmarks for complex sentences and health communication at A2.2
-- name: Review of Ukrainian Syntax for A2
-  url: https://uk.wikipedia.org/wiki/Синтаксис_української_мови
-  type: reference
-  notes: Synthesized logic for coordinating multiple subordinate clauses
 content_outline:
 - section: Overview / Огляд
   words: 200
@@ -60,7 +44,28 @@ content_outline:
   points:
   - A summary dialogue combining review items
 word_target: 1000
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+focus: checkpoint
+pedagogy: TTT
+objectives:
+- Learner can build complex arguments using logical connectors
+- Learner can use relative clauses to define and describe
+- Learner can navigate medical situations confidently
+- Learner can correct common errors in complex sentences
+grammar:
+- logical connectors review
+- relative clauses review
+- health vocabulary review
+- complex sentence structure
+module_type: checkpoint
+sources:
+- name: Ukrainian State Standard 2024 - A2.2 Assessment
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Proficiency benchmarks for complex sentences and health communication at
+    A2.2
+- name: Review of Ukrainian Syntax for A2
+  url: https://uk.wikipedia.org/wiki/Синтаксис_української_мови
+  type: reference
+  notes: Synthesized logic for coordinating multiple subordinate clauses
+immersion: 40-50% Ukrainian
+phase: A2.2

@@ -1,25 +1,9 @@
 module: 13-the-completed-past
-level: a2
-sequence: 13
+level: A2
+slug: 13-the-completed-past
 version: '2.0'
 title: The Completed Past
 subtitle: Using Perfective Aspect
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can form the past tense of perfective verbs
-- Learner can use perfective past to describe completed actions
-- Learner can narrate a sequence of events
-- Learner can distinguish between 'did' and 'done' contexts
-sources:
-- name: Ukrainian State Standard 2024 - Past Tense
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Perfective past tense requirements
-- name: Ukrainian Verb Conjugation
-  url: https://uk.wikipedia.org/wiki/Дієслово
-  type: reference
-  notes: Past tense formation patterns
 content_outline:
 - section: Introduction / Вступ
   words: 200
@@ -42,7 +26,7 @@ content_outline:
   points:
   - Yesterday evening dialogue
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - зробив (did/made - m)
   - написав (wrote - m)
@@ -65,15 +49,50 @@ vocabulary:
   - загубив (lost - m)
   - вийшов (exited - m)
   - увійшов (entered - m)
-  forbidden: []
-activities:
-  types_required:
-  - quiz
-  - fill-in
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: fill-in
+  focus: Transform imperfective to perfective past
+  items: 12+
+- type: fill-in
+  focus: Choose aspect based on context
+  items: 15+
+- type: quiz
+  focus: Did they finish or were they doing?
+  items: 12+
+- type: fill-in
+  focus: Narrative sequencing with perfective
+  items: 10+
+- type: quiz
+  focus: Complete the story with perfective verbs
+  items: 10+
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a2-12 (Aspect introduction)
+- A1 past tense formation
 connects_to:
 - a2-14 (Future Plans and Promises)
 - a2-15 (Aspect Morphology)
 - a2-26 (Telling Stories)
+objectives:
+- Learner can form the past tense of perfective verbs
+- Learner can use perfective past to describe completed actions
+- Learner can narrate a sequence of events
+- Learner can distinguish between 'did' and 'done' contexts
+grammar:
+- perfective past tense
+- formation of past tense
+- narrative sequencing
+- result-focused actions
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Past Tense
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Perfective past tense requirements
+- name: Ukrainian Verb Conjugation
+  url: https://uk.wikipedia.org/wiki/Дієслово
+  type: reference
+  notes: Past tense formation patterns
+immersion: 40-50% Ukrainian
+phase: A2.2

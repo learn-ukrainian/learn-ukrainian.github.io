@@ -1,0 +1,101 @@
+module: ukrainske-pytannia-xxi
+level: C1-HIST
+slug: ukrainske-pytannia-xxi
+version: '2.0'
+title: Українське питання XXI століття
+content_outline:
+- section: Вступ — Українське питання
+  words: 451
+  points:
+  - «Українське питання» — історичний термін
+  - Чи воно вирішене?
+  - Що означає для XXI століття
+  - Структура модуля
+- section: Всі теми разом
+  words: 790
+  points:
+  - Історіографія — як ми знаємо
+  - Джерела — на чому базуємось
+  - Механізми — як працює імперія
+  - Агентність — як Україна відповідає
+- section: Російське питання
+  words: 677
+  points:
+  - Імперія — чи може існувати без України
+  - Війна — не тільки територія
+  - Що Росія втрачає
+  - Майбутнє російсько-українських відносин
+- section: Європейське питання
+  words: 677
+  points:
+  - ЄС — чи готовий до України
+  - Україна — чи готова до ЄС
+  - Що означає інтеграція
+  - Ризики і можливості
+- section: Глобальне значення
+  words: 564
+  points:
+  - Україна як прецедент
+  - Міжнародний порядок
+  - Деколонізація XXI століття
+  - Що світ вчиться від України
+- section: Підсумок
+  words: 341
+  points:
+  - Українське питання — відкрите
+  - Відповідь пишеться зараз
+  - Перехід до фінального синтезу
+word_target: 3500
+vocabulary_hints:
+  required:
+  - «українське питання» (Ukrainian question)
+  - імперія (empire)
+  - деколонізація (decolonization)
+  - інтеграція (integration)
+  - міжнародний порядок (international order)
+  - прецедент (precedent)
+  - агентність (agency)
+  - майбутнє (future)
+  - суверенітет (sovereignty)
+  - самовизначення (self-determination)
+  recommended:
+  - «кінець історії» (end of history)
+  - мультиполярність (multipolarity)
+  - постколоніалізм (postcolonialism)
+  - глобальний Південь (Global South)
+  - трансформація (transformation)
+activity_hints:
+- type: integration
+  focus: Connect all course themes
+  output: Theme integration map
+- type: russia-analysis
+  focus: What does Ukraine mean for Russia's future?
+  output: Russia analysis
+- type: europe-analysis
+  focus: EU-Ukraine integration challenges
+  output: Integration analysis
+- type: global-significance
+  focus: Ukraine as global precedent
+  output: Global significance assessment
+- type: essay-response
+  focus: Чи 'українське питання' вирішене?
+  word_target: 500
+  model_answer: Required
+focus: history
+prerequisites:
+- c1-hist-133 (Agency synthesis)
+- All previous modules
+connects_to:
+- c1-hist-135 (Final synthesis)
+module_type: synthesis
+sources:
+- name: Україна у XXI столітті (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Історія_України#XXI_століття
+  type: reference
+  notes: 21st century Ukraine
+- name: Російсько-українська війна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Російсько-українська_війна
+  type: reference
+  notes: Current war
+immersion: 100% Ukrainian
+phase: C1-HIST.1 [Historiography]

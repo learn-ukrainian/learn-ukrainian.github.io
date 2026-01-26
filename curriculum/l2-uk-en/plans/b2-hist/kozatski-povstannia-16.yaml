@@ -1,58 +1,50 @@
 module: kozatski-povstannia-16
-level: b2-hist
-sequence: 44
-version: '1.0'
+level: B2-HIST
+slug: kozatski-povstannia-16
+version: '2.0'
 title: Козацькі повстання XVI століття
-focus: history
-pedagogy: CBI
-objectives:
-- Learner can identify the causes and consequences of the Kosynskyi and Nalyvaiko
-  uprisings
-- Learner can analyze the social and religious motivations behind the first cossack
-  wars
-- Learner can understand the significance of these uprisings for the formation of
-  national identity
+subtitle: The First Great Clashes for Rights and Freedoms
 content_outline:
 - section: Вступ
   words: 442
-  subsections:
+  points:
   - The accumulation of social tension in the late 16th century
   - The conflict between 'registrove' and 'neregistrove' cossackdom
 - section: Повстання Криштофа Косинського (1591–1593)
   words: 942
-  subsections:
+  points:
   - 'Causes: Private conflict vs. social grievance'
   - 'Course of events: Battle of Piatka'
   - Consequences and the role of the Ostrozkyi princes
 - section: Повстання Северина Наливайка (1594–1596)
   words: 930
-  subsections:
+  points:
   - 'Scale and geography: From Podillia to Belarus'
   - The union of registered and non-registered cossacks
   - The tragic finale at Solonytsia
   - Political program of Nalyvaiko
 - section: Читання
   words: 437
-  subsections:
+  points:
   - Analysis of the 'Seim Constitutions' regarding cossacks
   - Accounts of Stanislav Zholkevskyi
 - section: Соціальний та Релігійний Вимір боротьби
   words: 548
-  subsections:
+  points:
   - The struggle for rights and 'volnosti'
   - 'The religious factor: Defense of Orthodoxy'
 - section: Первинні джерела та свідчення очевидців
   words: 436
-  subsections:
+  points:
   - Excerpts from the accounts of contemporaries (Bielski, Heidenstein)
   - Letter of Nalyvaiko to the King
 - section: Деколонізаційний погляд на історію повстань
   words: 436
-  subsections:
+  points:
   - Reconceptualizing 'rebellion' as 'liberation war'
   - The myth of 'peasant riots' vs. professional military struggle
 word_target: 4800
-activities:
+activity_hints:
 - type: reading
   focus: Contemporary accounts of the Solonytsia massacre
 - type: quiz
@@ -63,3 +55,17 @@ activities:
   focus: 'Kosynskyi vs Nalyvaiko: Leadership styles and goals'
 - type: critical-analysis
   focus: Analyzing the reasons for the failure of early uprisings
+focus: history
+pedagogy: CBI
+objectives:
+- Learner can identify the causes and consequences of the Kosynskyi and Nalyvaiko
+  uprisings
+- Learner can analyze the social and religious motivations behind the first cossack
+  wars
+- Learner can understand the significance of these uprisings for the formation of
+  national identity
+grammar:
+- 'Historical narrative: complex sentences with causal links'
+- Conditionals in historical analysis (якби... то...)
+register: публіцистичний
+phase: HIST.5 [Rise of Cossacks]

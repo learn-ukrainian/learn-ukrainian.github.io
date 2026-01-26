@@ -1,43 +1,13 @@
 module: c1-75
-title: Поділля та Волинь
-subtitle: Podillia and Volyn
+level: C1
+slug: 75-podillia-ta-volyn
 version: '2.0'
-phase: C1.5 Folk Culture & Arts
-focus: culture
-pedagogy: CBI
 duration: 120
 transliteration: none
 tags:
 - folk-culture
 - region
 - traditions
-grammar:
-- Folk terminology
-- Regional dialect markers
-objectives:
-- Learner understands the unique cultural identities of Podillia and Volyn
-- Learner can describe regional embroidery and architecture
-- Learner can compare wedding traditions of Central-Western Ukraine
 vocabulary_count: 35
-slug: 75-podillia-ta-volyn
-content_outline:
-- section: Вступ — Поділля та Волинь
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-- section: Content Areas
-  words: 500
-  points:
-  - 'Поділля: rich agricultural traditions'
-  - 'Волинь: historical crossroads'
-  - 'Distinctive embroidery: чорна вишивка'
-  - 'Folk architecture: білі хати'
-  - Wedding traditions as regional markers
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

@@ -1,0 +1,109 @@
+module: syntez-serednovichni-dzherela
+level: C1-HIST
+slug: syntez-serednovichni-dzherela
+version: '2.0'
+title: 'Синтез: Методи роботи з літописами'
+content_outline:
+- section: Вступ — Що ми вивчили
+  words: 400
+  points:
+  - Огляд середньовічних джерел
+  - ПМЛ, Патерик, Слово, ГВЛ, грамоти
+  - Різні типи, різні методи
+  - Мета синтезу — систематизація
+- section: Порівняння джерел
+  words: 600
+  points:
+  - Літописи vs. агіографія vs. документи
+  - Що кожен тип дає історику?
+  - Сильні і слабкі сторони
+  - Таблиця порівняння
+- section: Методологічний інструментарій
+  words: 700
+  points:
+  - Зовнішня критика — автентичність
+  - Внутрішня критика — достовірність
+  - Текстологія — відновлення оригіналу
+  - Компаративний аналіз — порівняння джерел
+  - Контекстуалізація — історичне тло
+- section: Типові проблеми і рішення
+  words: 600
+  points:
+  - Проблема — джерело упереджене
+  - Проблема — джерело унікальне
+  - Проблема — пізня копія
+  - Проблема — суперечливі джерела
+  - Як вирішувати кожну
+- section: Практикум — комплексний аналіз
+  words: 600
+  points:
+  - Вибрана подія (напр., Батиєва навала)
+  - Що каже ПМЛ
+  - Що каже ГВЛ
+  - Що кажуть інші джерела
+  - Реконструкція події
+- section: Від Русі до козацтва
+  words: 400
+  points:
+  - Що змінюється в джерелах XVI-XVII ст.?
+  - Нові типи документів
+  - Нові мови — польська, латина
+  - Підготовка до наступної фази
+- section: Підсумок
+  words: 200
+  points:
+  - Чек-ліст для аналізу середньовічного джерела
+  - Ключові навички
+  - Готовність до козацьких джерел
+word_target: 3500
+vocabulary_hints:
+  required:
+  - синтез (synthesis)
+  - методологія (methodology)
+  - текстологія (textology)
+  - компаративний аналіз (comparative analysis)
+  - контекстуалізація (contextualization)
+  - реконструкція (reconstruction)
+  - верифікація (verification)
+  - критичний апарат (critical apparatus)
+  - інструментарій (toolkit)
+  - джерельна база (source base)
+  recommended:
+  - колація (collation)
+  - стема (stemma)
+  - археографія (archaeography)
+  - едиція (edition)
+  - коментар (commentary)
+activity_hints:
+- type: essay-response
+  focus: Create source comparison table for modules 11-17
+  output: Completed matrix
+- type: reading
+  focus: Apply full methodology to new source (provided)
+  output: Complete analysis
+- type: essay-response
+  focus: Який метод найважливіший для роботи з середньовічними джерелами?
+  word_target: 400
+  model_answer: Required
+focus: history
+prerequisites:
+- c1-hist-11 through c1-hist-17 (All medieval source modules)
+connects_to:
+- c1-hist-19 (Cossack chronicles overview)
+- c1-hist-28 (Synthesis — Cossack sources)
+module_type: synthesis
+sources:
+- name: Джерелознавство (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Джерелознавство
+  type: reference
+  notes: Source studies overview
+- name: Критика джерел
+  url: https://uk.wikipedia.org/wiki/Критика_джерел
+  type: reference
+  notes: Source criticism methods
+- name: Шахматов О.О.
+  url: https://uk.wikipedia.org/wiki/Шахматов_Олексій_Олександрович
+  type: reference
+  notes: Chronicle studies pioneer
+immersion: 100% Ukrainian
+phase: C1-HIST.1 [Historiography]

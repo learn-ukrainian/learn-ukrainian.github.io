@@ -1,68 +1,78 @@
 module: khozary-i-sloviany
-level: b2-hist
-sequence: 7
-version: '1.0'
+level: B2-HIST
+slug: khozary-i-sloviany
+version: '2.0'
 title: Хозарський каганат і слов'яни
-focus: history
-pedagogy: seminar
-objectives:
-- Учень може пояснити систему двовладдя в Хозарському каганаті (каган і бек)
-- Учень може проаналізувати причини прийняття іудаїзму хозарською елітою
-- Учень може оцінити вплив Pax Khazarica на економічний розвиток слов'янських племен
-- Учень може спростувати міф про «хозарське ярмо» як виключно негативне явище
+subtitle: The Khazar Khaganate and the Slavs
 content_outline:
 - section: 'Вступ: Велетень на Сході'
   words: 252
-  subsections:
+  points:
   - Роль Хозарії як щита Європи
 - section: 'Читання: Оповідь про каганат'
   words: 1617
-  subsections:
+  points:
   - Двовладдя, іудаїзм та Салтівська культура
 - section: Первинні джерела
   words: 1186
-  subsections:
+  points:
   - Аналіз Кембриджського документа, листа царя Йосипа та Ібн Фадлана
 - section: Деколонізаційний погляд
   words: 327
-  subsections:
+  points:
   - Спростування міфів про паразитарний характер каганату
 - section: Підсумкове есе
   words: 424
-  subsections:
+  points:
   - Аналітичне завдання про роль Хозарії в державотворенні Русі
 - section: Підсумок
   words: 235
-  subsections:
+  points:
   - Узагальнення історичного значення Хозарського каганату
 - section: Потрібно більше практики?
   words: 229
-  subsections:
+  points:
   - Ресурси для самостійного поглиблення знань
 word_target: 4000
-vocabulary:
-- каганат
-- двовладдя
-- сюзерен
-- васал
-- данина
-- протекторат
-- толерантність
-- іудаїзм
-- кочівники
-- осілість
-- дирхем
-- транзитна торгівля
-- форпост
-- асиміляція
-- державотворення
-activities:
+vocabulary_hints:
+  required:
+  - каганат (khaganate)
+  - двовладдя (diarchy)
+  - сюзерен (suzerain)
+  - васал (vassal)
+  - данина (tribute)
+  - протекторат (protectorate)
+  - толерантність (tolerance)
+  - іудаїзм (Judaism)
+  - кочівники (nomads)
+  - осілість (sedentarism)
+  - дирхем (dirham)
+  - транзитна торгівля (transit trade)
+  - форпост (outpost)
+  - асиміляція (assimilation)
+  - державотворення (state-building)
+activity_hints:
 - type: reading
   focus: Аналіз хозарської переписки
 - type: critical-analysis
   focus: Сакральна влада кагана
 - type: essay-response
   focus: Хозарія як каталізатор Русі
+focus: history
+pedagogy: seminar
+prerequisites:
+- 'b2-hist-06: Заснування Києва'
+connects_to:
+- 'b2-hist-08: Синтез: Від Трипілля до Києва'
+objectives:
+- Учень може пояснити систему двовладдя в Хозарському каганаті (каган і бек)
+- Учень може проаналізувати причини прийняття іудаїзму хозарською елітою
+- Учень може оцінити вплив Pax Khazarica на економічний розвиток слов'янських племен
+- Учень може спростувати міф про «хозарське ярмо» як виключно негативне явище
+grammar:
+- Складні речення з підрядними допустовими (хоч, незважаючи на)
+- Безособові дієслівні форми на -но, -то у пасивному контексті
+- Вживання термінології на позначення ієрархії та залежності
 sources:
 - name: Повість минулих літ
   url: https://litopys.org.ua/pvl/pvl01.htm
@@ -70,3 +80,5 @@ sources:
 - name: Лист царя Йосипа
   url: http://litopys.org.ua/khazar/kh02.htm
   type: primary
+register: публіцистичний
+phase: B2-HIST.1 [Origins]

@@ -1,24 +1,9 @@
 module: 01-how-to-talk-about-grammar
-level: b1
-sequence: 1
-version: '1.0'
+level: B1
+slug: 01-how-to-talk-about-grammar
+version: '2.0'
 title: Як говорити про граматику
 subtitle: Learning grammar terminology in Ukrainian
-focus: integration
-pedagogy: PPP
-objectives:
-- Learner can identify parts of speech using Ukrainian terminology
-- Learner can name all seven grammatical cases in Ukrainian
-- Learner can describe basic sentence elements using Ukrainian terms
-sources:
-- name: Ukrainian State Standard 2024 - Grammar Terminology
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official metalanguage terms for Ukrainian grammar education
-- name: Ukrainian Grammar (Wikipedia)
-  url: https://uk.wikipedia.org/wiki/Граматика_української_мови
-  type: reference
-  notes: Overview of Ukrainian grammatical terminology
 content_outline:
 - section: Introduction - Why Learn Grammar in Ukrainian?
   words: 180
@@ -62,7 +47,7 @@ content_outline:
   - Key terms review
   - Readiness check for M02
 word_target: 3000
-vocabulary:
+vocabulary_hints:
   required:
   - дієслово (verb)
   - іменник (noun)
@@ -82,17 +67,46 @@ vocabulary:
   - частка (particle)
   - граматика (grammar)
   - правило (rule)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - group-sort
-  - match-up
-  - quiz
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: match-up
+  focus: Ukrainian term → English equivalent
+  items: 12+
+- type: quiz
+  focus: Identify part of speech by Ukrainian name
+  items: 10+
+- type: fill-in
+  focus: Complete sentences about grammar using Ukrainian terms
+  items: 8+
+- type: group-sort
+  focus: Categorize terms by category (parts of speech vs cases)
+  items: 15+
+focus: integration
+pedagogy: PPP
+prerequisites:
+- A2 completion required
+- Familiarity with all 7 cases (conceptually)
+- Basic understanding of grammar concepts
 connects_to:
 - b1-02 (Verb-specific terminology)
 - b1-03 (Reading grammar rules)
 - b1-05 (Metalanguage checkpoint)
+objectives:
+- Learner can identify parts of speech using Ukrainian terminology
+- Learner can name all seven grammatical cases in Ukrainian
+- Learner can describe basic sentence elements using Ukrainian terms
+grammar:
+- Parts of speech names in Ukrainian
+- Case names in Ukrainian
+- Basic sentence structure terms
+module_type: bridge
+sources:
+- name: Ukrainian State Standard 2024 - Grammar Terminology
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official metalanguage terms for Ukrainian grammar education
+- name: Ukrainian Grammar (Wikipedia)
+  url: https://uk.wikipedia.org/wiki/Граматика_української_мови
+  type: reference
+  notes: Overview of Ukrainian grammatical terminology
+immersion: 75% Ukrainian
+phase: B1.0 Bridge

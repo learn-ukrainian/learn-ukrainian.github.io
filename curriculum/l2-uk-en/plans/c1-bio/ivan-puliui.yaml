@@ -1,71 +1,52 @@
 module: ivan-puliui
-level: c1-bio
-sequence: 119
+level: C1-BIO
+slug: ivan-puliui
 version: '2.0'
 title: 'Іван Пулюй: Фізик, який відкрив Х-промені'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Пулюй_Іван_Павлович
-    title: Іван Пулюй (Wikipedia UA)
-    notes: Biography, physics discoveries, Ukrainian activism
-  secondary:
-  - url: https://uk.wikipedia.org/wiki/Рентгенівське_випромінювання
-    title: Рентгенівське випромінювання
-    notes: X-ray discovery context
-  - url: https://uk.wikipedia.org/wiki/Біблія_в_перекладі_Куліша,_Пулюя_та_Нечуя-Левицького
-    title: Переклад Біблії Пулюя-Куліша
-    notes: His Bible translation work
 content_outline:
 - section: Вступ — Фізик і патріот
   words: 444
-  subsections:
+  points:
   - Пулюй як піонер рентгенівських досліджень
   - Український патріот у європейській науці
   - Перекладач Біблії українською
 - section: Молодість у Галичині
   words: 666
-  subsections:
+  points:
   - Народження в Гримайлові (1845)
   - Навчання в духовній семінарії
   - Вибір науки замість священства
   - Віденський університет
 - section: Наукові відкриття
   words: 888
-  subsections:
+  points:
   - Дослідження катодних променів
   - '"Лампа Пулюя" (1880-ті)'
   - Перші рентгенівські знімки до Рентгена
   - Чому Рентген отримав визнання першим
 - section: Професор у Празі
   words: 666
-  subsections:
+  points:
   - Празька політехніка
   - Ректор німецької політехніки
   - Електрифікація Праги
   - Міжнародне наукове визнання
 - section: Український патріот
   words: 777
-  subsections:
+  points:
   - Переклад Біблії з Кулішем
   - Публіцистика про Україну
   - '"Україна та її міжнародне становище"'
   - Зв'язки з українським рухом
 - section: Спадщина вченого-патріота
   words: 559
-  subsections:
+  points:
   - Смерть у Празі (1918)
   - Забуття за радянських часів
   - Відновлення пам'яті в незалежній Україні
   - Пулюй як взірець поєднання науки та нації
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
   - фізик
   - рентгенівські промені
@@ -83,27 +64,49 @@ vocabulary:
   - вакуум
   - експеримент
   - політехніка
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+activity_hints:
+- type: reading
+  focus: Puliui's scientific papers and political writings
+  source: Historical archives
+  items: 3 passages
+- type: quiz
+  focus: Puliui's biography and dual legacy
+  items: 12+
+- type: match-up
+  focus: Scientific vs. patriotic achievements
+  items: 10+
+- type: essay-response
+  focus: Why didn't Puliui receive credit for X-rays?
+  word_target: 300
+  output: Analysis of scientific recognition
+- type: group-sort
+  focus: Physics work vs. Ukrainian activism
+  items: 12+
+- type: fill-in
+  focus: Key dates and scientific terms
+  items: 10+
+focus: biography
+prerequisites:
+- Basic physics concepts
+- 19th century European context
+- c1-bio-97
 connects_to:
-  previous: Basic physics concepts
-  related:
-  - c1-bio-97
-  - c1-bio-117
-  - c1-bio-104
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-97
+- c1-bio-117
+- c1-bio-104
+module_type: biography
+sources:
+- name: Іван Пулюй (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Пулюй_Іван_Павлович
+  type: primary
+  notes: Biography, physics discoveries, Ukrainian activism
+- name: Рентгенівське випромінювання
+  url: https://uk.wikipedia.org/wiki/Рентгенівське_випромінювання
+  type: reference
+  notes: X-ray discovery context
+- name: Переклад Біблії Пулюя-Куліша
+  url: https://uk.wikipedia.org/wiki/Біблія_в_перекладі_Куліша,_Пулюя_та_Нечуя-Левицького
+  type: reference
+  notes: His Bible translation work
+immersion: 100% Ukrainian
+phase: C1-BIO

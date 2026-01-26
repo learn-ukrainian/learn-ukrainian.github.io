@@ -1,151 +1,18 @@
-# B1 Module 05: Готові до занурення
-# Status: SPEC (ready for content development)
-
-id: b1-05
-title: Готові до занурення
-subtitle: Metalanguage mastery checkpoint
+module: 05-ready-for-immersion
+level: B1
 slug: 05-ready-for-immersion
-module_type: checkpoint
-word_target: 1700
-immersion: "75% Ukrainian"
-
-# === EXISTING FIELDS ===
 version: '1.0'
-phase: B1.0 Bridge
-pedagogy: TTT
-focus: integration
+id: b1-05
+naturalness:
+  score: 9
+  status: PASS
 template: b1-metalanguage-module-template.md
 duration: 75
 transliteration: none
 tags:
-  - grammar
-  - metalanguage
-  - checkpoint
-  - bridge
-grammar:
-  - Integration of all metalanguage from M01-04
-  - Reading grammar in Ukrainian
-  - Comprehension test
-objectives:
-  - Learner can read and understand grammar explanations in Ukrainian
-  - Learner can answer questions about grammar rules in Ukrainian
-  - Learner can demonstrate metalanguage mastery for full immersion
-  - Learner can use negation and verb form terminology
-  - Learner can understand activity instruction verbs
-  - Learner can apply analytical terms and style/register concepts
-
-# === AGENT BUILD SPEC ===
-
-sources:
-  - name: Ukrainian Grammar Textbook Samples
-    url: https://mon.gov.ua/
-    type: primary
-    notes: Authentic grammar explanations for comprehension testing
-  - name: CEFR B1 Descriptors
-    url: https://www.coe.int/en/web/common-european-framework-reference-languages
-    type: reference
-    notes: Proficiency standards for checkpoint assessment
-
-content_outline:
-  - section: Presentation
-    words: 80
-    points:
-      - Why This Module Matters
-      - Proverb and cultural context
-
-  - section: Diagnostic Assessment
-    words: 150
-    points:
-      - Initial test of M01-04 metalanguage
-      - Identify areas needing review
-
-  - section: Parts of Speech Review
-    words: 50
-    points:
-      - All 10 parts of speech in Ukrainian
-      - Quick identification exercises
-
-  - section: Verb Terminology Review
-    words: 50
-    points:
-      - Aspect and tense terms
-
-  - section: Grammar Explanation Patterns
-    words: 50
-    points:
-      - Reading authentic grammar texts
-
-  - section: Sentence Structure Review
-    words: 150
-    points:
-      - Sentence parts identification
-
-  - section: Full Grammar Explanation Comprehension
-    words: 200
-    points:
-      - Extended grammar text in Ukrainian
-      - Comprehension questions
-
-  - section: Practice
-    words: 250
-    points:
-      - The Real Test
-      - Pop Culture Moment
-
-  - section: Mini-Dialogues
-    words: 250
-    points:
-      - Practical application
-      - Key term usage in context
-
-  - section: Summary
-    words: 150
-    points:
-      - Final self-assessment
-      - Readiness confirmation
-
-vocabulary_hints:
-  required:
-    - граматичне поняття (grammatical concept)
-    - мовознавство (linguistics)
-    - морфологія (morphology)
-    - синтаксис (syntax)
-    - правопис (orthography)
-    - наголос (stress/accent)
-    - вимова (pronunciation)
-    - правило (rule)
-    - закономірність (pattern/regularity)
-    - система (system)
-  recommended:
-    - категорія (category)
-    - ознака (feature/characteristic)
-    - властивість (property)
-    - значення (meaning)
-    - функція (function)
-
-activity_hints:
-  - type: cloze
-    focus: Complete a full grammar explanation passage
-    items: "15+"
-
-  - type: quiz
-    focus: Comprehensive metalanguage review
-    items: "20+"
-
-  - type: match-up
-    focus: Term → definition (all in Ukrainian)
-    items: "15+"
-
-prerequisites:
-  - b1-01 (Grammar terminology)
-  - b1-02 (Verb terminology)
-  - b1-03 (Reading grammar rules)
-  - b1-04 (Sentence structure)
-
-connects_to:
-  - b1-06 (Aspect complete system - first full immersion module)
-  - b1-15 (Aspect mastery checkpoint)
-
-naturalness:
-  score: 9
-  status: PASS
+- grammar
+- metalanguage
+- checkpoint
+- bridge
+build:
+  last_modified: '2026-01-26'

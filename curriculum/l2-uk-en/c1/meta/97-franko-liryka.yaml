@@ -1,11 +1,8 @@
+module: 97-franko-liryka
+level: C1
+slug: 97-franko-liryka
 version: '2.0'
 id: c1-97
-title: 'Франко: Громадянська та філософська лірика'
-subtitle: Franko's Civic and Philosophical Lyric
-slug: 97-franko-liryka
-phase: C1.6 Literature
-focus: literature
-pedagogy: Literary Analysis
 duration: 120
 transliteration: none
 tags:
@@ -13,32 +10,5 @@ tags:
 - franko
 - poetry
 - philosophy
-grammar:
-- Literary syntax
-- Rhetorical figures
-objectives:
-- Learner can analyze the imagery and revolutionary spirit of "Kameniari".
-- Learner can interpret the philosophical themes of "Moisei".
-- Learner can discuss Franko’s contribution to the development of Ukrainian modernist
-  poetry.
-content_outline:
-- section: Вступ — Громадянська та філософська лірика
-  words: 400
-  points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-- section: Content Areas
-  words: 500
-  points:
-  - 'Каменярі: revolutionary spirit and labor imagery'
-  - 'Зів''яле листя: tragic love and lyrical drama'
-  - 'Мойсей: philosophical poem analysis'
-  - 'Вічний революціонер: anthem of progress'
-  - Scientific realism in poetry
-- section: Практика та підсумок
-  words: 300
-  points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
-word_target: 2000
+build:
+  last_modified: '2026-01-26'

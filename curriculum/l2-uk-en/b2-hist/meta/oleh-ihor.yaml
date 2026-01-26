@@ -1,14 +1,11 @@
-id: b2-hist-09
 module: b2-hist-09
-title: 'Олег та Ігор: Перші правителі'
-subtitle: 'Oleh and Ihor: First Rulers'
+level: B2-HIST
 slug: oleh-ihor
 version: '1.0'
-phase: B2-HIST.1 [Kyivan Rus]
-focus: history
-pedagogy: CBI
-word_target: 4000
-register: публіцистичний
+id: b2-hist-09
+naturalness:
+  score: 10
+  status: PASS
 duration: 150
 transliteration: none
 tags:
@@ -18,133 +15,6 @@ tags:
 - ihor
 - byzantium
 - trade
-grammar:
-- Narrative tenses
-- Treaty language
-objectives:
-- Analyze the role of Varangians in state formation
-- Compare the policies of Oleh and Ihor
-- Evaluate the significance of Rus-Byzantine treaties
 vocabulary_count: 25
-naturalness:
-  score: 10
-  status: PASS
-sources:
-- name: Олег (князь київський) (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Олег_(князь_київський)
-  type: reference
-  notes: Overview of Prince Oleh
-- name: Ігор Рюрикович (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Ігор_Рюрикович
-  type: reference
-  notes: Overview of Prince Ihor
-- name: Повість минулих літ
-  url: https://litopys.org.ua/pvl/pvl.htm
-  type: primary
-  notes: Chronicle accounts of early rulers
-content_outline:
-- section: "Вступ: Варяги та Київ"
-  words: 750
-  points:
-  - "Варязьке питання"
-  - "Інфраструктура ранньої держави"
-  - "Загадка походження Олега"
-- section: "Читання: Князь Олег: Об'єднання земель"
-  words: 350
-  points:
-  - "Захоплення Києва (882)"
-  - "Матір міст руських"
-  - "Підкорення племен"
-- section: "Походи на Царгород і Договори"
-  words: 400
-  points:
-  - "Похід 907 року (легенда і реальність)"
-  - "Договір 911 року: Умови"
-  - "Міжнародне визнання Русі"
-- section: "Князь Ігор: Криза експансії"
-  words: 500
-  points:
-  - "Похід 941 (Грецький вогонь)"
-  - "Похід 944 (Компроміс)"
-  - "Повстання древлян (945)"
-- section: "Геоекономіка та Торгівля"
-  words: 200
-  points:
-  - "Шлях із варягів у греки"
-  - "Експорт (хутро, віск, раби)"
-  - "Імпорт (шовк, вино, золото)"
-- section: "Суспільство та Культура"
-  words: 550
-  points:
-  - "Повсякденне життя киян"
-  - "Релігійний світ (Перун vs Християнство)"
-  - "Статус жінки в ранній Русі"
-- section: "Первинні джерела: Голоси епохи"
-  words: 500
-  points:
-  - "Уривки з договорів"
-  - "Літописна легенда про смерть Олега"
-  - "Лінгвістичний аналіз"
-- section: "Деколонізаційний погляд"
-  words: 350
-  points:
-  - "Норманська теорія: Український погляд"
-  - "Руський vs Російський"
-  - "Тяглість державності"
-- section: "Спадщина"
-  words: 100
-  points:
-  - "Від військової демократії до держави"
-  - "Значення перших князів"
-- section: "Підсумок"
-  words: 200
-  points:
-  - "Заключне слово"
-vocabulary_hints:
-  required:
-  - князь (prince)
-  - варяги (Varangians)
-  - дружина (druzhina/retinue)
-  - данина (tribute)
-  - похід (campaign)
-  - договір (treaty)
-  - Візантія (Byzantium)
-  - літопис (chronicle)
-  - об'єднання (unification)
-  - підкорення (subjugation)
-  - правитель (ruler)
-  - династія (dynasty)
-  recommended:
-  - регент (regent)
-  - волхв (sorcerer/pagan priest)
-  - торговельні привілеї (trade privileges)
-  - легітимність (legitimacy)
-  - Щекавиця (Shchekavytsia)
-activity_hints:
-- type: reading
-  focus: Excerpt from Primary Chronicle about Oleh's campaigns
-  source: Provide in module
-- type: match-up
-  focus: Chronology of Oleh's and Ihor's reigns
-  items: 10+ events
-- type: fill-in
-  focus: Political and military terminology
-  items: 15+
-- type: quiz
-  focus: Geography of Campaigns and Expansion
-  items: 6+
-- type: quiz
-  focus: Facts about early Rus rulers
-  items: 12+
-- type: comparative-study
-  focus: Oleh vs Ihor — leadership styles and achievements
-  output: Comparison table
-- type: essay-response
-  focus: Чи можна вважати Олега засновником Київської Русі?
-prerequisites:
-- 'b2-hist-08 (Synthesis: Origins to Kyiv)'
-- Understanding of tribal society
-connects_to:
-- b2-hist-10 (Olha and Sviatoslav)
-- b2-hist-11 (Volodymyr and Baptism)
-- 'b2-hist-20 (Synthesis: Kyivan Rus)'
+build:
+  last_modified: '2026-01-26'

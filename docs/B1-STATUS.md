@@ -1,6 +1,6 @@
 # B1 Module Status
 
-**Generated:** 2026-01-25 19:23:01
+**Generated:** 2026-01-26 17:33:53
 **Total Modules:** 92
 **Status:** 89 passing, 3 failing, 0 stubs, 0 errors
 
@@ -14,11 +14,11 @@
 
 | # | Slug | Status | Words | Issues |
 |---|------|--------|-------|--------|
-| 001 | 01-how-to-talk-about-grammar | ✅ PASS | 2032/1200 | structure |
+| 001 | 01-how-to-talk-about-grammar | ✅ PASS | 2032/1200 | - |
 | 002 | 02-language-about-verbs | ✅ PASS | 2074/1200 | - |
 | 003 | 03-reading-grammar-rules | ✅ PASS | 2361/1200 | - |
 | 004 | 04-sentence-structure | ✅ PASS | 1659/1200 | - |
-| 005 | 05-ready-for-immersion | ✅ PASS | 1656/1200 | structure |
+| 005 | 05-ready-for-immersion | ✅ PASS | 1656/1200 | - |
 | 006 | 06-aspect-complete-system | ✅ PASS | 1591/1500 | hydration, structure |
 | 007 | 07-aspect-past-single-repeated | ✅ PASS | 1711/1500 | structure |
 | 008 | 08-aspect-past-result-process | ✅ PASS | 2166/1500 | structure |

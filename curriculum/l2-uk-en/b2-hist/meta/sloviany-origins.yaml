@@ -1,121 +1,17 @@
-id: b2-hist-04
 module: b2-hist-04
-title: 'Слов''яни на українських землях: Витоки державності'
-subtitle: 'Slavic Origins and Statehood'
+level: B2-HIST
 slug: sloviany-origins
 version: '2.0'
-phase: B2-HIST.1 [Витоки]
-focus: history
-pedagogy: seminar
-register: публіцистичний
-duration: 150
-transliteration: none
-tags:
-  - history
-  - early-medieval
-  - slavs
-grammar:
-  - Історичний наратив
-  - Минулий час у науковому тексті
-objectives:
-  - Учень може описувати слов'янські племена на українських землях
-  - Учень може аналізувати свідчення античних авторів про слов'ян
-  - Учень може аргументувати зв'язок між племінною демократією і українською політичною традицією
-vocabulary_count: 35
+id: b2-hist-04
 naturalness:
   score: 10
   status: PASS
-module_type: history
-word_target: 4000
-immersion: 100% Ukrainian
-sources:
-  - name: Слов'яни (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Слов%27яни
-    type: reference
-    notes: Overview of Slavic origins
-  - name: Праслов'яни (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Праслов%27яни
-    type: reference
-    notes: Proto-Slavic homeland theories
-  - name: Повість минулих літ
-    url: https://litopys.org.ua/pvl/pvl.htm
-    type: primary
-    notes: Primary Chronicle on Slavic origins
-content_outline:
-  - section: "Вступ"
-    words: 500
-    points:
-      - "Етимологія слов'ян: слово vs слава"
-      - "Концепт німців як німих"
-  - section: "Читання"
-    words: 2800
-    points:
-      - "Контекст: Пошук Прабатьківщини та археологія"
-      - "Основні події: Велике розселення та Антський Союз"
-      - "Основні події: Князь Бож та боротьба з аварами"
-      - "Наслідки: Побут, Економіка, Військове мистецтво"
-      - "Наслідки: Жінка в антському світі та виховання дітей"
-      - "Наслідки: Слов'янська дипломатія та кулінарія"
-  - section: "Первинні джерела"
-    words: 400
-    points:
-      - "Прокопій Кесарійський про демократію"
-      - "Маврикій Стратег про тактику"
-  - section: "Деколонізаційний погляд"
-    words: 500
-    points:
-      - "Спростування норманізму"
-      - "Україна як епіцентр слов'янства"
-      - "Початки Києва: Кий як антський князь"
-  - section: "Підсумок"
-    words: 300
-    points:
-      - "Тяглість демократичної традиції"
-vocabulary_hints:
-  required:
-    - слов'яни
-    - праслов'яни
-    - прабатьківщина
-    - розселення
-    - плем'я
-    - язичництво
-    - міграція
-    - народоправство
-    - віче
-    - громада
-    - верв
-    - капище
-    - волхв
-    - Перун
-    - Велес
-    - тризна
-    - землянка
-    - соха
-    - рало
-    - старійшина
-    - дружина
-    - вождь
-    - данина
-    - автохтон
-    - топонім
-  recommended:
-    - індоєвропейці
-    - Повість минулих літ
-    - каганат
-    - побут
-    - господарство
-activity_hints:
-  - type: reading
-    focus: 'Анти: Перші українці?'
-  - type: critical-analysis
-    focus: Аналіз антського суспільства
-  - type: comparative-study
-    focus: 'Влада народу і Влада царя (Слов''яни vs Візантія)'
-  - type: essay-response
-    focus: Тяглість демократичної традиції в історії України
-prerequisites:
-  - b2-hist-03 (Greek city-states)
-connects_to:
-  - b2-hist-05 (Slavic tribes on Ukrainian lands)
-  - b2-hist-07 (Khazar Khaganate)
-  - 'b2-hist-08 (Synthesis: Origins to Kyiv)'
+duration: 150
+transliteration: none
+tags:
+- history
+- early-medieval
+- slavs
+vocabulary_count: 35
+build:
+  last_modified: '2026-01-26'

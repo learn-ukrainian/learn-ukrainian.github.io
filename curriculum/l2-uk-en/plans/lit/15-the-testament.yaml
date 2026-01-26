@@ -1,101 +1,109 @@
-module: 15-the-testament
-level: lit
-sequence: 15
+module: the-testament
+level: LIT
+slug: the-testament
 version: '2.0'
 title: Заповіт
 subtitle: The Testament
-focus: literature
-pedagogy: seminar
-objectives:
-- Analyze the grammar of the imperative mood in a political context
-- Understand the historical context of 1845
-- Discuss the concept of 'righteous violence' in the poem
-- Recite key lines from memory
-sources:
-  primary:
-  - url: https://www.ukrlib.com.ua/books/printit.php?tid=2
-    title: Заповіт — повний текст
-    notes: Вірш для детального аналізу
-  secondary:
-  - url: https://www.ukrlib.com.ua/analiz/printit.php?tid=2
-    title: Аналіз "Заповіту"
-    notes: Літературознавчий аналіз
 content_outline:
 - section: Вступ — Найвідоміший вірш України
   words: 500
-  subsections:
+  points:
   - Історія написання (1845)
   - '"Заповіт" як неофіційний гімн'
   - Переклади на 150+ мов
 - section: Граматичний аналіз
   words: 800
-  subsections:
+  points:
   - Наказовий спосіб як політична інструкція
   - Майбутній час і мрія про волю
   - Умовні речення
 - section: Поетика тексту
   words: 700
-  subsections:
+  points:
   - Структура (три частини)
   - Ритм і рима
   - Лексичний аналіз
 - section: Політичний зміст
   words: 700
-  subsections:
+  points:
   - '"Вставайте, кайдани порвіте" — заклик до дії'
   - '"І вражою злою кров''ю" — питання насильства'
   - Концепція "сім'ї великої, вольної, нової"
 - section: Рецепція і використання
   words: 500
-  subsections:
+  points:
   - '"Заповіт" у радянській ідеології'
   - '"Заповіт" у діаспорі'
   - Сучасне прочитання
 - section: Підсумок — Текст як нація
   words: 400
-  subsections:
+  points:
   - Чому цей вірш став символом
   - Шевченко і національна ідентичність
   - Перехід до біблійних тем
 word_target: 4500
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - заповіт
-  - наказовий спосіб
-  - воля
-  - кайдани
-  - ворог
-  - гімн
-  - рецепція
-  - символ
-  - ідентичність
-  - політичний
+  - заповіт (testament)
+  - наказовий спосіб (imperative mood)
+  - воля (freedom)
+  - кайдани (chains)
+  - ворог (enemy)
+  - гімн (anthem)
+  - рецепція (reception)
+  - символ (symbol)
+  - ідентичність (identity)
+  - політичний (political)
   recommended:
-  - могила
-  - Дніпро
-  - рев
-  - степ
-  - сім'я
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - cloze
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - могила (grave)
+  - Дніпро (Dnipro)
+  - рев (roar)
+  - степ (steppe)
+  - сім'я (family)
+activity_hints:
+- type: reading
+  focus: Повний текст "Заповіту" з граматичним розбором
+  source: UkrLib tid=2
+  items: '1'
+- type: quiz
+  focus: Граматичні форми у вірші
+  items: 15+
+- type: match-up
+  focus: Рядок → його граматична функція
+  items: 12+
+- type: essay-response
+  focus: Чи закликає Шевченко до насильства?
+  word_target: 300
+  output: Інтерпретаційне есе
+- type: cloze
+  focus: Текст напам'ять
+  items: 15+
+focus: literature
+pedagogy: Analysis
+prerequisites:
+- lit-11 to lit-14 (Shevchenko modules)
+- Strong grammar foundation
 connects_to:
-  previous: lit-11 to lit-14 (Shevchenko modules)
-  related:
-  - lit-16 (Biblical Themes — високий стиль)
-  - lit-20 (Cult of Shevchenko — рецепція)
-constraints:
-  min_engagement_boxes: 3
-  min_examples: 15
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- lit-16 (Biblical Themes — високий стиль)
+- lit-20 (Cult of Shevchenko — рецепція)
+objectives:
+- Analyze the grammar of the imperative mood in a political context
+- Understand the historical context of 1845
+- Discuss the concept of 'righteous violence' in the poem
+- Recite key lines from memory
+grammar:
+- Imperative Mood
+- Future Tense
+- Conditional Sentences
+module_type: literature
+sources:
+- name: Заповіт — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=2
+  type: primary
+  notes: Вірш для детального аналізу
+- name: Аналіз "Заповіту"
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=2
+  type: secondary
+  notes: Літературознавчий аналіз
+immersion: 100% Ukrainian
+phase: LIT.3 The Prophet (Taras Shevchenko)

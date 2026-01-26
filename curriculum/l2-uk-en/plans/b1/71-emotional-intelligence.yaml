@@ -1,16 +1,9 @@
-module: emotional-intelligence
-level: b1
-sequence: 71
+module: b1-71
+level: B1
+slug: emotional-intelligence
 version: '2.0'
 title: Емоційний інтелект та міжособистісні навички
 subtitle: Emotional Intelligence & Interpersonal Skills
-focus: vocabulary
-pedagogy: TTT
-objectives:
-- Learner can use 30+ emotional and interpersonal vocabulary words in context
-- Learner can distinguish between similar concepts like співчуття/емпатія
-- Learner can form natural collocations with interpersonal nouns and verbs
-- Learner can discuss emotional intelligence concepts
 content_outline:
 - section: 'Introduction: Emotional Intelligence'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Apply EQ vocabulary
   - Role-play scenarios
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - емоційний інтелект (emotional intelligence)
   - емпатія (empathy)
@@ -63,15 +56,33 @@ vocabulary:
   - зворотний зв'язок (feedback)
   - примирення (reconciliation)
   - активне слухання (active listening)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - discussion
-  - role-play
-  - matching
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: matching
+  focus: Match EQ concepts
+  items: 25
+- type: fill-in
+  focus: Use interpersonal vocabulary
+  items: 20
+- type: role-play
+  focus: EQ scenarios
+  items: 15
+- type: discussion
+  focus: Discuss EQ topics
+  items: 10
+focus: vocabulary
+pedagogy: TTT
+prerequisites:
+- b1-70 (Collocations Expressions)
 connects_to:
 - b1-72 (Regions West)
+objectives:
+- Learner can use 30+ emotional and interpersonal vocabulary words in context
+- Learner can distinguish between similar concepts like співчуття/емпатія
+- Learner can form natural collocations with interpersonal nouns and verbs
+- Learner can discuss emotional intelligence concepts
+grammar:
+- Interpersonal vocabulary collocations
+- Emotional state expressions
+- Advice and support patterns
+register: розмовний
+phase: B1.6 [Vocabulary Expansion II]

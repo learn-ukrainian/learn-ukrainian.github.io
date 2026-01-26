@@ -1,104 +1,112 @@
-module: 17-the-artist
-level: lit
-sequence: 17
-version: '1.0'
+module: the-artist
+level: LIT
+slug: the-artist
+version: '2.0'
 title: 'Художник: Шевченко-маляр'
 subtitle: 'The Artist: Shevchenko the Painter'
-focus: literature
-pedagogy: seminar
-objectives:
-- Understand Shevchenko's dual talent as poet and painter
-- Analyze the influence of Karl Bryullov on Shevchenko's style
-- Discuss the autobiographical elements in the novella 'The Artist'
-- Recognize key artistic terms in Ukrainian (etching, chiaroscuro)
-sources:
-  primary:
-  - url: https://www.ukrlib.com.ua/books/printit.php?tid=43
-    title: Художник — повість
-    notes: Автобіографічна повість
-  - url: https://uk.wikipedia.org/wiki/Живопис_Тараса_Шевченка
-    title: Живопис Шевченка
-    notes: Огляд художньої спадщини
-  secondary:
-  - url: https://www.ukrlib.com.ua/bio/printit.php?tid=1749
-    title: Шевченко і Брюллов
-    notes: Контекст навчання
 content_outline:
 - section: Вступ — Поет чи художник?
   words: 500
-  subsections:
+  points:
   - Шевченко як "подвійний талант"
   - Академія мистецтв vs поезія
   - Чому живопис менш відомий
 - section: Навчання у Брюллова
   words: 700
-  subsections:
+  points:
   - Карл Брюллов як вчитель
   - Академічна школа живопису
   - Техніка і стиль раннього Шевченка
 - section: Портрети та офорти
   words: 700
-  subsections:
+  points:
   - Портретний живопис
   - Серія офортів (техніка гравюри)
   - Автопортрети
 - section: Пейзажі заслання
   words: 700
-  subsections:
+  points:
   - Казахські степи в акварелях
   - Документальна функція малюнків
   - Мистецтво vs заборона писати
 - section: Повість "Художник"
   words: 600
-  subsections:
+  points:
   - Автобіографічні елементи
   - Образ митця в суспільстві
   - Російська мова повісті
 - section: Підсумок — Слово і образ
   words: 400
-  subsections:
+  points:
   - Взаємодія поезії та живопису
   - Шевченко як візіонер
   - Перехід до жіночих образів
 word_target: 4500
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - художник
-  - живопис
-  - офорт
-  - акварель
-  - портрет
-  - автопортрет
-  - гравюра
-  - академія
-  - пейзаж
-  - техніка
+  - художник (artist/painter)
+  - живопис (painting)
+  - офорт (etching)
+  - акварель (watercolor)
+  - портрет (portrait)
+  - автопортрет (self-portrait)
+  - гравюра (engraving)
+  - академія (academy)
+  - пейзаж (landscape)
+  - техніка (technique)
   recommended:
-  - полотно
-  - пензель
-  - ескіз
-  - композиція
-  - світлотінь
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - cloze
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - полотно (canvas)
+  - пензель (brush)
+  - ескіз (sketch)
+  - композиція (composition)
+  - світлотінь (chiaroscuro)
+activity_hints:
+- type: reading
+  focus: Уривки з повісті "Художник"
+  source: UkrLib tid=43
+  items: 4+
+- type: quiz
+  focus: Факти про живопис Шевченка
+  items: 15+
+- type: match-up
+  focus: Жанр → приклади творів
+  items: 12+
+- type: essay-response
+  focus: Взаємодія слова і образу у Шевченка
+  word_target: 300
+  output: Мистецтвознавче есе
+- type: cloze
+  focus: Художня термінологія
+  items: 12+
+focus: biography
+pedagogy: Immersion & Analysis
+prerequisites:
+- lit-11 (Young Shevchenko — біографія)
+- lit-16 (Biblical Themes)
 connects_to:
-  previous: lit-11 (Young Shevchenko — біографія)
-  related:
-  - lit-18 (Women in Kobzar — образи)
-  - lit-19 (Diary — внутрішній світ)
-constraints:
-  min_engagement_boxes: 3
-  min_examples: 15
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- lit-18 (Women in Kobzar — образи)
+- lit-19 (Diary — внутрішній світ)
+objectives:
+- Understand Shevchenko's dual talent as poet and painter
+- Analyze the influence of Karl Bryullov on Shevchenko's style
+- Discuss the autobiographical elements in the novella 'The Artist'
+- Recognize key artistic terms in Ukrainian (etching, chiaroscuro)
+grammar:
+- Artistic Terminology
+- Biographical Narrative
+module_type: biography
+sources:
+- name: Художник — повість
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=43
+  type: primary
+  notes: Автобіографічна повість
+- name: Живопис Шевченка
+  url: https://uk.wikipedia.org/wiki/Живопис_Тараса_Шевченка
+  type: primary
+  notes: Огляд художньої спадщини
+- name: Шевченко і Брюллов
+  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1749
+  type: reference
+  notes: Контекст навчання
+immersion: 100% Ukrainian
+phase: LIT.3 The Prophet (Taras Shevchenko)

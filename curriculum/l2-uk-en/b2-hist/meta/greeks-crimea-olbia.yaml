@@ -1,13 +1,11 @@
-id: b2-hist-03
 module: b2-hist-03
-title: 'Грецькі міста-держави: Ольвія, Херсонес'
-subtitle: Antiquity on Ukrainian Lands
+level: B2-HIST
 slug: greeks-crimea-olbia
 version: '2.0'
-phase: B2-HIST.1 [Витоки]
-focus: history
-pedagogy: seminar
-register: публіцистичний
+id: b2-hist-03
+naturalness:
+  score: 10
+  status: PASS
 duration: 150
 transliteration: none
 tags:
@@ -16,136 +14,6 @@ tags:
 - greeks
 - crimea
 - colonization
-grammar:
-- Historical narrative register
-- Past tense mastery
-objectives:
-- Учень може пояснити причини грецької колонізації Північного Причорномор’я
-- Учень може описати політичний та соціальний устрій Ольвії та Херсонеса
-- Учень може проаналізувати взаємодію між еллінами та кочовими народами степу
-- Учень може аргументувати значення античної спадщини для історії України
 vocabulary_count: 35
-naturalness:
-  score: 10
-  status: PASS
-module_type: history
-word_target: 4000
-immersion: 100% Ukrainian
-sources:
-- name: Античні міста Північного Причорномор'я (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Античні_міста_Північного_Причорномор%27я
-  type: reference
-  notes: Overview of Greek colonies
-- name: Ольвія (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Ольвія_(місто)
-  type: reference
-  notes: History of Olbia
-- name: Херсонес Таврійський
-  url: https://uk.wikipedia.org/wiki/Херсонес_Таврійський
-  type: reference
-  notes: History of Chersonesus
-content_outline:
-- section: "Вступ: Греки на Понті"
-  words: 300
-  points:
-  - "Велика грецька колонізація"
-  - "Причини міграції (земля, торгівля)"
-  - "Ойкіст та священний вогонь"
-- section: "Читання: Ольвія — демократія в степу"
-  words: 600
-  points:
-  - "Заснування та розташування"
-  - "Політичний устрій (народні збори)"
-  - "Торгівля зі скіфами"
-  - "Облога Зопіріона"
-- section: "Херсонес Таврійський: Держава присяги"
-  words: 400
-  points:
-  - "Дорійський поліс"
-  - "Громадянська присяга"
-  - "Виноробство та хора"
-- section: "Боспорське царство та Тіра"
-  words: 430
-  points:
-  - "Монархія на сході (Пантікапей)"
-  - "Експорт зерна до Афін"
-  - "Війни Мітрідата"
-- section: "Економіка та Культура"
-  words: 1500
-  points:
-  - "Сільське господарство (виноград, оливки)"
-  - "Архітектура та побут (каналізація, театри)"
-  - "Релігія (Ахілл Понтарх)"
-  - "Медицина та освіта"
-- section: "Занепад античного світу"
-  words: 160
-  points:
-  - "Готська навала"
-  - "Гунська катастрофа"
-  - "Виживання Херсонеса"
-- section: "Первинні джерела: Голоси епохи"
-  words: 210
-  points:
-  - "Присяга громадян Херсонеса"
-  - "Декрет на честь Протогена"
-- section: "Деколонізаційний погляд"
-  words: 200
-  points:
-  - "Крим — не 'російська колиска'"
-  - "Європейське коріння України"
-  - "Взаємовплив культур"
-- section: "Підсумок"
-  words: 220
-  points:
-  - "Значення античної спадщини"
-  - "Україна як частина середземноморського світу"
-vocabulary_hints:
-  required:
-  - колонія (colony)
-  - місто-держава (city-state)
-  - поліс (polis)
-  - агора (agora)
-  - демократія (democracy)
-  - торгівля (trade)
-  - храм (temple)
-  - гирло (river mouth)
-  - Причорномор'я (Black Sea region)
-  - античний (ancient/classical)
-  - громадянин (citizen)
-  - республіка (republic)
-  recommended:
-  - милетяни (Miletians)
-  - дорійці (Dorians)
-  - виноробство (winemaking)
-  - амфора (amphora)
-  - некрополь (necropolis)
-  - акрополь (acropolis)
-activity_hints:
-- type: reading
-  focus: Oath of Chersonesus citizens (translated excerpt)
-  source: Provide in module
-- type: quiz
-  focus: Geography of Greek Colonies
-  items: 8+ cities
-- type: critical-analysis
-  focus: Artifact Analysis (Greek artifacts from Ukrainian museums)
-  items: 5-6 images
-- type: fill-in
-  focus: Classical and political terminology
-  items: 15+
-- type: comparative-study
-  focus: Olbia vs Chersonesus — differences in founding and governance
-  output: Comparison table
-- type: quiz
-  focus: Greek city-states facts
-  items: 12+
-- type: match-up
-  focus: Chronology of Colonization
-  items: 10+
-prerequisites:
-- b2-hist-02 (Scythians and Sarmatians)
-- Basic classical history knowledge
-connects_to:
-- b2-hist-02 (Scythians — trade partners)
-- b2-hist-11 (Volodymyr's baptism in Chersonesus)
-- 'b2-hist-08 (Synthesis: Origins to Kyiv)'
+build:
+  last_modified: '2026-01-26'

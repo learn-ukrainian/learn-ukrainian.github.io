@@ -1,96 +1,13 @@
 module: a1-30
-id: a1-30
+level: A1
 slug: prepositions-iii
-title: "Prepositions III"
-subtitle: "Direction, Location & Origin"
 version: '2.0'
-phase: "A1.3 [Consolidation]"
-focus: grammar
-pedagogy: PPP
-register: розмовний
-duration: 60
-transliteration: none
-objectives:
-  - "Learner can distinguish location from direction questions"
-  - "Learner can use в/на for location (Locative)"
-  - "Learner can use в/на/до for direction (Accusative/Genitive)"
-  - "Learner can use з/від for origin"
-grammar:
-  - "Location (Де?) vs Direction (Куди?) vs Origin (Звідки?)"
-  - "Prepositions with correct cases"
-  - "Movement verbs with prepositions"
-word_target: 1000
-content_outline:
-  - section: "Introduction: Three Questions"
-    words: 150
-    points:
-      - "Де? = Where (location)"
-      - "Куди? = Where to (direction)"
-      - "Звідки? = Where from (origin)"
-  - section: "Location: Де? + Locative"
-    words: 200
-    points:
-      - "в/у + locative (inside)"
-      - "на + locative (on, at)"
-      - "Я в школі, на роботі"
-  - section: "Direction: Куди? + Accusative/Genitive"
-    words: 200
-    points:
-      - "в/у + accusative (going into)"
-      - "на + accusative (going onto)"
-      - "до + genitive (toward)"
-  - section: "Origin: Звідки? + Genitive"
-    words: 200
-    points:
-      - "з + genitive (from inside)"
-      - "від + genitive (from someone)"
-      - "Я з України, від друга"
-  - section: "Common Patterns"
-    words: 150
-    points:
-      - "йти в/на... (go to)"
-      - "приїхати з... (arrive from)"
-      - "Movement verb patterns"
-  - section: "Practice: Where, Where to, Where from?"
-    words: 100
-    points:
-      - "Answer all three questions"
-      - "Describe journeys"
-vocabulary_hints:
-  required:
-    - де (where)
-    - куди (where to)
-    - звідки (where from)
-    - в/у (in, into)
-    - на (on, onto)
-    - до (to, toward)
-    - з (from)
-    - від (from)
-  recommended:
-    - йти (to go)
-    - їхати (to go by transport)
-    - приходити (to arrive)
-    - повертатися (to return)
-activity_hints:
-  - type: fill-in
-    focus: "Choose correct preposition"
-    items: 25
-  - type: transformation
-    focus: "Change location to direction"
-    items: 20
-  - type: quiz
-    focus: "Which question? Де/Куди/Звідки"
-    items: 15
-  - type: dialogue
-    focus: "Asking directions"
-    items: 6
-prerequisites:
-  - a1-13 (The Locative)
-  - a1-29 (Weather and Nature)
-connects_to:
-  - a1-31 (Body and Health)
-  - a1-34 (Checkpoint Core Grammar)
+id: a1-30
 naturalness:
   score: 10
   status: PASS
-  justification: "Clear preposition system"
+  justification: Clear preposition system
+duration: 60
+transliteration: none
+build:
+  last_modified: '2026-01-26'

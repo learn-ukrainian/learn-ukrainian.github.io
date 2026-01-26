@@ -1,22 +1,49 @@
-module: 67-advanced-conjunctions-i
-level: b2
-sequence: 67
-version: '1.0'
+module: b2-67
+level: B2
+slug: 67-advanced-conjunctions-i
+version: '2.0'
 title: 'Складні Сполучники I: Причина та Допуск'
 subtitle: Advanced Conjunctions I - Causal and Concessive
+content_outline:
+- section: Вступ — Причина та Допуск
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Causal Conjunctions
+  words: 500
+  points:
+  - тому що (because - neutral)
+  - оскільки (since - formal)
+  - бо (because - colloquial)
+  - через те що (due to the fact that)
+  - у зв'язку з тим що (in connection with)
+- section: Concessive Conjunctions
+  words: 500
+  points:
+  - хоча (although - neutral)
+  - незважаючи на те що (despite the fact that)
+  - попри те що (in spite of)
+  - дарма що (even though)
+  - хай (let/even if)
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: grammar
 pedagogy: Grammar
 objectives:
-- Учень може будувати складні причинно-наслідкові ланцюжки, використовуючи різноманітні сполучники
-- Учень вміє висловлювати допуск та протиставлення в офіційному та публіцистичному стилях
+- Учень може будувати складні причинно-наслідкові ланцюжки, використовуючи різноманітні
+  сполучники
+- Учень вміє висловлювати допуск та протиставлення в офіційному та публіцистичному
+  стилях
 - Учень розуміє стилістичні відтінки між бо, тому що та оскільки
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Causal conjunctions (тому що vs оскільки)
+- Concessive conjunctions (хоча vs незважаючи на)
+immersion: 100
+register: публіцистичний
+phase: B2.2 [Phraseology & Synonymy]

@@ -1,70 +1,66 @@
 module: bohdan-khmelnytskyi
-level: b2-hist
-sequence: 52
-version: '1.0'
+level: B2-HIST
+slug: bohdan-khmelnytskyi
+version: '2.0'
 title: 'Богдан Хмельницький: Постать в історії'
-focus: biography
-pedagogy: CBI
-objectives:
-- Учень може описати життєвий шлях Богдана Хмельницького
-- Учень може проаналізувати роль особистості в історії
-- Учень може оцінити внесок гетьмана у розбудову держави
+subtitle: 'Bohdan Khmelnytsky: A Figure in History'
 content_outline:
 - section: 'Вступ: Батько нації чи суперечлива фігура?'
   words: 400
-  subsections:
+  points:
   - Khmelnytsky's place in Ukrainian historical memory
   - Different interpretations of his legacy
 - section: 'Ранні роки: Освіта і служба'
   words: 600
-  subsections:
+  points:
   - Education at Lviv Jesuit College
   - Battle of Cecora and Turkish captivity
   - Service as a registered Cossack
 - section: Особиста драма як іскра повстання
   words: 600
-  subsections:
+  points:
   - The Subotiv conflict with Czaplinski
   - Failure of the Polish legal system
   - Flight to the Sich
 - section: Геній дипломатії та війни
   words: 800
-  subsections:
+  points:
   - Alliance with the Crimean Khanate
   - Victories at Zhovti Vody, Korsun, Pyliavtsi
   - Entry into Kyiv
 - section: Будівничий держави
   words: 600
-  subsections:
+  points:
   - Creation of the Hetmanate's administrative system
   - Social and economic reforms
 - section: 'Первинні джерела: Листи та промови'
   words: 500
-  subsections:
+  points:
   - Excerpts from letters to European monarchs
   - Speech to the Polish commissioners
 - section: 'Деколонізаційний погляд: Лідер, а не васал'
   words: 500
-  subsections:
+  points:
   - Debunking the myth of 'reunification'
   - Khmelnytsky as a sovereign ruler
 - section: Читання
   words: 100
-  subsections:
+  points:
   - Intro to reading tasks
 word_target: 3000
-vocabulary:
-- гетьман
-- державотворення
-- дипломатія
-- союз
-- універсал
-- полк
-- сотня
-- булава
-- автономія
-- суверенітет
-activities:
+vocabulary_hints:
+  required:
+  - гетьман
+  - державотворення
+  - дипломатія
+  - союз
+  - універсал
+  - полк
+  - сотня
+  - булава
+  - автономія
+  - суверенітет
+activity_hints:
 - type: reading
   focus: Analysis of Khmelnytsky's universals
 - type: quiz
@@ -75,6 +71,15 @@ activities:
   focus: Khmelnytsky vs. Cromwell
 - type: true-false
   focus: Myths and facts
+focus: biography
+pedagogy: CBI
+objectives:
+- Учень може описати життєвий шлях Богдана Хмельницького
+- Учень може проаналізувати роль особистості в історії
+- Учень може оцінити внесок гетьмана у розбудову держави
+grammar:
+- Biographical narrative structure
+- Verbs of political action
 sources:
 - name: History of Ukraine-Rus
   url: http://litopys.org.ua/hrushrus/iur.htm
@@ -84,3 +89,5 @@ sources:
   url: https://encyclopediaofukraine.com
   type: secondary
   notes: Modern analysis
+register: публіцистичний
+phase: HIST.5 [Rise of Cossacks]

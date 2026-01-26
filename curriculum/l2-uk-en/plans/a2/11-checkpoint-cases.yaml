@@ -1,25 +1,9 @@
 module: 11-checkpoint-cases
-level: a2
-sequence: 11
+level: A2
+slug: 11-checkpoint-cases
 version: '2.0'
 title: Checkpoint — Cases
 subtitle: Review and Mastery
-focus: checkpoint
-pedagogy: TTT
-objectives:
-- Learner can correctly identify and use all 7 cases
-- Learner can choose appropriate prepositions for each case
-- Learner can correct common case errors
-- Learner can apply case knowledge in mixed contexts
-sources:
-- name: Ukrainian State Standard 2024 - A2 Assessment
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Assessment criteria for case system mastery
-- name: CEFR A2 Can-Do Statements
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
-  type: reference
-  notes: A2 grammar proficiency requirements
 content_outline:
 - section: Overview
   words: 200
@@ -39,7 +23,7 @@ content_outline:
   - Mixed case narrative analysis
   - Final summary and next steps
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - відмінок (case)
   - давальний (dative)
@@ -62,16 +46,49 @@ vocabulary:
   - виправити (to correct)
   - перевірити (to check)
   - оцінка (assessment)
-  forbidden: []
-activities:
-  types_required:
-  - quiz
-  - match-up
-  - fill-in
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: Comprehensive case quiz - all 7 cases
+  items: 20+
+- type: fill-in
+  focus: Sentence transformation - change case
+  items: 15+
+- type: quiz
+  focus: Error identification and correction
+  items: 12+
+- type: match-up
+  focus: Preposition + case + meaning
+  items: 15+
+- type: fill-in
+  focus: Service interaction dialogues
+  items: 10+
+focus: checkpoint
+pedagogy: TTT
+prerequisites:
+- a2-01 through a2-10 (all A2.1 modules)
 connects_to:
 - a2-12 (Aspect Introduction)
 - a2-25 (Checkpoint - Aspect & Comparison)
 - a2-35 (Checkpoint - Complex Ideas)
+objectives:
+- Learner can correctly identify and use all 7 cases
+- Learner can choose appropriate prepositions for each case
+- Learner can correct common case errors
+- Learner can apply case knowledge in mixed contexts
+grammar:
+- case system review
+- prepositions review
+- case functions
+- error correction
+module_type: checkpoint
+sources:
+- name: Ukrainian State Standard 2024 - A2 Assessment
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Assessment criteria for case system mastery
+- name: CEFR A2 Can-Do Statements
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: A2 grammar proficiency requirements
+immersion: 40-50% Ukrainian
+phase: A2.1

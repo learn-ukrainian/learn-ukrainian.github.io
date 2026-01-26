@@ -1,9 +1,34 @@
 module: presentation-skills-advanced
-level: b2
-sequence: 92
+level: B2
+slug: presentation-skills-advanced
 version: '2.0'
 title: 'Презентації: Поглиблено'
 subtitle: Advanced Presentation Skills
+content_outline:
+- section: Вступ — Поглиблено
+  words: 400
+  points:
+  - Визначення та сфери застосування
+  - Зв'язок із попередніми модулями
+- section: Основний матеріал
+  words: 600
+  points:
+  - Теоретичні основи
+  - Приклади та ілюстрації
+  - Типові помилки та як їх уникати
+- section: Поглиблене вивчення
+  words: 600
+  points:
+  - Додаткові випадки
+  - Контекстуальне використання
+  - Стилістичні нюанси
+- section: Практика та підсумок
+  words: 300
+  points:
+  - Практичні вправи на закріплення
+  - Інтеграція з попередніми модулями
+  - Підготовка до наступного модуля
+word_target: 2000
 focus: skills
 pedagogy: CBI
 objectives:
@@ -12,13 +37,8 @@ objectives:
 - Learner can use storytelling and persuasive techniques in presentations
 - Learner can apply advanced visual design principles
 - Learner can deliver effective virtual presentations
-content_outline:
-- section: Introduction
-  words: 200
-  subsections:
-  - TBD
-word_target: 1500
-vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+grammar:
+- Rhetorical devices
+- Persuasive language
+register: публіцистичний
+phase: B2.4

@@ -1,16 +1,9 @@
-module: checkpoint-first-contact
-level: a1
-sequence: 10
+module: a1-10
+level: A1
+slug: checkpoint-first-contact
 version: '2.0'
 title: 'Checkpoint: First Contact'
 subtitle: Can You Do the A1.1 Skills?
-focus: checkpoint
-pedagogy: TTT
-objectives:
-- Demonstrate Cyrillic reading fluency
-- Identify noun gender by word ending
-- Conjugate First and Second Conjugation verbs correctly
-- Form questions and negative statements
 content_outline:
 - section: 'Part 1: Reading Assessment'
   words: 100
@@ -47,7 +40,7 @@ content_outline:
   - Skills mastered
   - Preview of Navigation phase
 word_target: 500
-vocabulary:
+vocabulary_hints:
   required:
   - читати (to read)
   - писати (to write)
@@ -62,15 +55,34 @@ vocabulary:
   - питати (to ask)
   - відповідати (to answer)
   - перевіряти (to check)
-  forbidden: []
-activities:
-  types_required:
-  - quiz
-  - self-assessment
-  - oral-task
-  - reading-assessment
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: reading-assessment
+  focus: Read aloud and comprehend
+  items: 10
+- type: quiz
+  focus: A1.1 grammar and vocabulary
+  items: 30
+- type: oral-task
+  focus: Self-introduction and Q&A
+  items: 5
+- type: self-assessment
+  focus: Rate your skills
+  items: 10
+focus: checkpoint
+pedagogy: TTT
+prerequisites:
+- a1-09 (Reflexive Verbs)
 connects_to:
 - a1-11 (The Accusative I)
+objectives:
+- Demonstrate Cyrillic reading fluency
+- Identify noun gender by word ending
+- Conjugate First and Second Conjugation verbs correctly
+- Form questions and negative statements
+grammar:
+- Cyrillic alphabet (all 33 letters)
+- Noun gender (m/f/n)
+- Present tense conjugation
+- Questions and negation
+register: розмовний
+phase: A1.1 [First Contact]

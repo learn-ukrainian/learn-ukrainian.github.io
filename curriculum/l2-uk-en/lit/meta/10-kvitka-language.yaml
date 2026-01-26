@@ -1,149 +1,18 @@
-# LIT Module 10: Language of Kvitka
-# Status: SPEC (ready for content development)
-
-id: lit-10
-title: 'Мова як Маніфест: Голос Слобожанщини'
-subtitle: 'LIT-010: Як Квітка створив Літературну Норму'
+module: kvitka-language
+level: LIT
 slug: kvitka-language
-module_type: style
-word_target: 4500
-immersion: "100% Ukrainian"
-grammar:
-  - Stylistic contrast (sentimentalism vs burlesque)
-  - Dialect features (Slobozhanshchyna)
-  - Emotive syntax and vocabulary
-
-objectives:
-  - Analyze Kvitka's language strategies
-  - Compare stylistic registers in his works
-  - Evaluate his role in establishing literary Ukrainian
-# === AGENT BUILD SPEC ===
-
-sources:
-  - name: Маруся — мовні особливості
-    url: https://www.ukrlib.com.ua/books/printit.php?tid=252
-    type: primary
-    notes: Сентиментальний стиль
-  - name: Конотопська відьма — мовні особливості
-    url: https://www.ukrlib.com.ua/books/printit.php?tid=254
-    type: primary
-    notes: Бурлескний стиль
-  - name: Слобожанський діалект
-    url: https://uk.wikipedia.org/wiki/Слобожанський_діалект
-    type: reference
-    notes: Діалектологічний контекст
-
-content_outline:
-  - section: Вступ — Як дворянин став "голосом народу"
-    words: 500
-    points:
-      - Мовна ситуація Квітки (українська vs російська)
-      - Свідомий вибір української мови
-      - Роль у становленні літературної норми
-
-  - section: '"Грицько Основ''яненко" — літературна маска'
-    words: 600
-    points:
-      - Оповідач-селянин як наративна стратегія
-      - Імітація усного мовлення
-      - Довіра читача до "свого"
-
-  - section: Два стилі — бурлеск vs сентименталізм
-    words: 800
-    points:
-      - '"Конотопська відьма" — лайка, канцеляризми, гротеск'
-      - '"Маруся" — пестливість, емотивність, піднесеність'
-      - Єдність авторського голосу за різних масок
-
-  - section: Слобожанський діалект
-    words: 700
-    points:
-      - Фонетичні особливості (характерні звуки)
-      - Лексичні діалектизми
-      - Синтаксичні конструкції
-
-  - section: Мовні портрети персонажів
-    words: 600
-    points:
-      - '"Макаронічна" мова Пістряка'
-      - Солдатський жаргон москаля
-      - Мова панства vs мова народу
-
-  - section: Підсумок — Слово як зброя
-    words: 400
-    points:
-      - Мова і національна гідність
-      - Вплив Квітки на літературну мову
-      - Перехід до Шевченка
-
-vocabulary_hints:
-  required:
-    - діалект (dialect)
-    - літературна норма (literary norm)
-    - оповідач (narrator)
-    - маска (mask)
-    - пестлива лексика (diminutive lexicon)
-    - канцеляризм (bureaucratic language)
-    - емотив (emotive)
-    - димінутив (diminutive)
-    - макаронічна мова (macaronic language)
-    - жаргон (jargon)
-  recommended:
-    - фонетика (phonetics)
-    - лексика (lexicon)
-    - синтаксис (syntax)
-    - гротеск (grotesque)
-    - наратив (narrative)
-
-activity_hints:
-  - type: reading
-    focus: Порівняння уривків з різних творів
-    source: UkrLib tid=252, 254
-    items: "6+"
-
-  - type: quiz
-    focus: Визначення стилю за уривком
-    items: "15+"
-
-  - type: group-sort
-    focus: Лексика (пестлива / бурлескна / нейтральна)
-    items: "25+"
-
-  - type: match-up
-    focus: Персонаж → його мовний портрет
-    items: "10+"
-
-  - type: essay-response
-    focus: Як слово стає зброєю в боротьбі за гідність нації?
-    word_target: 300
-    output: Мовознавче есе
-
-  - type: cloze
-    focus: Діалектизми Слобожанщини
-    items: "12+"
-
-prerequisites:
-  - lit-06 to lit-09 (all Kvitka modules)
-  - Understanding of Ukrainian dialects
-
-connects_to:
-  - lit-15 (Zapovit — мова Шевченка)
-  - lit-24 (Language Question — мовне питання)
-  - lit-29 (Language of Realism — мова Нечуя)
-
-version: "1.0"
-phase: LIT.2 Sentimentalism (Kvitka-Osnovianenko)
-focus: style
-pedagogy: literature
-duration: 120
-transliteration: none
-tags:
-  - література
-  - мова
-  - діалект
-  - стиль
-  - сентименталізм
-
+version: '1.0'
+id: lit-10
 naturalness:
   score: 10
   status: PASS
+duration: 120
+transliteration: none
+tags:
+- література
+- мова
+- діалект
+- стиль
+- сентименталізм
+build:
+  last_modified: '2026-01-26'

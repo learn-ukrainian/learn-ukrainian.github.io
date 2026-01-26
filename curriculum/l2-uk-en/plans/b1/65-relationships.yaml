@@ -1,16 +1,9 @@
-module: relationships
-level: b1
-sequence: 65
+module: b1-65
+level: B1
+slug: relationships
 version: '2.0'
 title: Стосунки та зв'язки
 subtitle: Relationships and Connections
-focus: vocabulary
-pedagogy: PPP
-objectives:
-- Learner can use 25 relationship vocabulary words in context
-- Learner can distinguish between стосунки/відносини/зв'язок
-- Learner can form natural collocations with relationship nouns
-- Learner can discuss Ukrainian cultural traditions related to relationships
 content_outline:
 - section: 'Introduction: Relationship Vocabulary'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Discuss relationships
   - Use cultural vocabulary
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - стосунки (relationships)
   - дружба (friendship)
@@ -63,15 +56,33 @@ vocabulary:
   - шлюб (marriage)
   - зв'язок (connection)
   - приятелювати (to be friends)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - discussion
-  - collocation
-  - matching
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: collocation
+  focus: Relationship noun phrases
+  items: 25
+- type: fill-in
+  focus: Describe relationships
+  items: 20
+- type: matching
+  focus: Match relationship types
+  items: 15
+- type: discussion
+  focus: Discuss relationship topics
+  items: 10
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-64 (Emotions Deep Dive)
 connects_to:
 - b1-66 (Business Basics)
+objectives:
+- Learner can use 25 relationship vocabulary words in context
+- Learner can distinguish between стосунки/відносини/зв'язок
+- Learner can form natural collocations with relationship nouns
+- Learner can discuss Ukrainian cultural traditions related to relationships
+grammar:
+- Noun collocations with relationship vocabulary
+- Verb patterns with emotional states
+- Preposition usage in relationship contexts
+register: розмовний
+phase: B1.6 [Vocabulary Expansion II]

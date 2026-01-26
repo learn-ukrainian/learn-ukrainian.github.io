@@ -1,16 +1,9 @@
-module: regions-south
-level: b1
-sequence: 74
+module: b1-74
+level: B1
+slug: regions-south
 version: '2.0'
 title: 'Українські регіони: Південь'
 subtitle: Southern Ukraine - Black Sea Coast and Steppe Heritage
-focus: culture
-pedagogy: CBI
-objectives:
-- Learner can discuss Southern Ukraine's geography and coastal culture
-- Learner can understand authentic texts about Odesa, Mykolaiv, and Kherson
-- Learner can use regional vocabulary to describe Southern Ukrainian traditions
-- Learner can compare Southern Ukraine with other regions
 content_outline:
 - section: 'Introduction: Southern Ukraine'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Discuss Southern Ukraine
   - Compare with other regions
 word_target: 1200
-vocabulary:
+vocabulary_hints:
   required:
   - Одеса (Odesa)
   - Миколаїв (Mykolaiv)
@@ -63,15 +56,33 @@ vocabulary:
   - кримські татари (Crimean Tatars)
   - багатокультурний (multicultural)
   - рибальство (fishing)
-  forbidden: []
-activities:
-  types_required:
-  - fill-in
-  - reading
-  - discussion
-  - matching
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: reading
+  focus: Authentic texts about Southern Ukraine
+  items: 15
+- type: matching
+  focus: Match cities to characteristics
+  items: 20
+- type: fill-in
+  focus: Complete regional descriptions
+  items: 15
+- type: discussion
+  focus: Discuss Southern Ukrainian culture
+  items: 10
+focus: culture
+pedagogy: CBI
+prerequisites:
+- b1-73 (Regions East)
 connects_to:
 - b1-75 (Regions Center)
+objectives:
+- Learner can discuss Southern Ukraine's geography and coastal culture
+- Learner can understand authentic texts about Odesa, Mykolaiv, and Kherson
+- Learner can use regional vocabulary to describe Southern Ukrainian traditions
+- Learner can compare Southern Ukraine with other regions
+grammar:
+- Reading comprehension strategies
+- Cultural vocabulary in context
+- Geographic and maritime vocabulary
+register: розмовний
+phase: B1.7 [Contemporary Ukraine]

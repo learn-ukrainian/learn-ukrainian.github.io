@@ -1,12 +1,11 @@
-id: b2-hist-22
-title: 'Галицько-Волинська держава: Розквіт'
-subtitle: 'Західний оплот Русі'
+module: galytsko-volynska-derzhava
+level: B2-HIST
 slug: galytsko-volynska-derzhava
 version: '2.0'
-phase: 'B2.3a [Українська історія]'
-focus: history
-pedagogy: CBI
-word_target: 4116
+id: b2-hist-22
+naturalness:
+  score: 9
+  status: PASS
 duration: 120
 transliteration: none
 tags:
@@ -14,29 +13,6 @@ tags:
 - galicia
 - volhynia
 - flourish
-grammar:
-- Historical narrative tenses
-- Descriptive adjectives
-objectives:
-- Учень може проаналізувати період розквіту Галицько-Волинської держави
-- Учень може оцінити роль князів Романовичів у стабілізації регіону
-- Учень може описати економічний та культурний розвиток краю
 vocabulary_count: 25
-content_outline:
-- section: Вступ
-  words: 484
-- section: Читання
-  words: 2800
-- section: Первинні джерела
-  words: 350
-- section: Деколонізаційний погляд
-  words: 482
-vocabulary_hints:
-  required:
-  - розквіт (flourish)
-  - оплот (stronghold)
-  - єдність (unity)
-  - коаліція (coalition)
-naturalness:
-  score: 9
-  status: PASS
+build:
+  last_modified: '2026-01-26'

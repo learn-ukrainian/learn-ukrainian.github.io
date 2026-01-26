@@ -1,16 +1,9 @@
-module: scheduling-appointments
-level: a2
-sequence: 63
+module: a2-63
+level: A2
+slug: scheduling-appointments
 version: '2.0'
 title: Scheduling Appointments
 subtitle: Making and Changing Plans
-focus: practical
-pedagogy: PPP
-objectives:
-- Learner can make an appointment by phone
-- Learner can reschedule or cancel a meeting
-- Learner can understand appointment details
-- Learner can use polite phrases for scheduling
 content_outline:
 - section: 'Introduction: Appointments in Ukraine'
   words: 100
@@ -48,7 +41,7 @@ content_outline:
   - Make appointment calls
   - Reschedule meetings
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - записатися (to make an appointment)
   - зустріч (meeting)
@@ -65,16 +58,34 @@ vocabulary:
   - зайнятий (busy)
   - раніше (earlier)
   - пізніше (later)
-  forbidden: []
-activities:
-  types_required:
-  - vocabulary-drill
-  - dialogue
-  - role-play
-  - listening
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: vocabulary-drill
+  focus: Scheduling vocabulary
+  items: 25
+- type: dialogue
+  focus: Phone appointment calls
+  items: 12
+- type: listening
+  focus: Understand phone conversations
+  items: 10
+- type: role-play
+  focus: Schedule and reschedule
+  items: 8
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a2-62 (Rental Accommodation)
 connects_to:
 - a2-64 (Scheduling Interviews)
 - a2-59 (Doctor Visit)
+objectives:
+- Learner can make an appointment by phone
+- Learner can reschedule or cancel a meeting
+- Learner can understand appointment details
+- Learner can use polite phrases for scheduling
+grammar:
+- Making appointments (записатися на)
+- Rescheduling and canceling
+- Polite phone etiquette
+register: розмовний
+phase: A2.6 [Practical]

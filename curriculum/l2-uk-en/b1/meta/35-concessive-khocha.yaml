@@ -1,94 +1,13 @@
 module: b1-35
-id: b1-35
+level: B1
 slug: concessive-khocha
-title: "Допустові речення: хоча, незважаючи на"
-subtitle: "Concessive Clauses - Although, Despite"
 version: '2.0'
-phase: "B1.3b [Complex Sentences]"
-focus: grammar
-pedagogy: TTT
-register: розмовний
-duration: 90
-transliteration: none
-objectives:
-  - "Learner understands concessive clause constructions"
-  - "Learner can express contrast and unexpected outcomes"
-  - "Learner can use various concessive connectors"
-  - "Learner can distinguish concessive from adversative clauses"
-grammar:
-  - "Concessive clauses with хоча (although)"
-  - "Concessive phrases with незважаючи на (despite)"
-  - "Contrast and unexpected outcome expressions"
-word_target: 1200
-content_outline:
-  - section: "Introduction: Concessive Meaning"
-    words: 150
-    points:
-      - "What are concessive clauses"
-      - "Unexpected outcomes"
-      - "Contrast relationships"
-  - section: "хоча - Although Clauses"
-    words: 250
-    points:
-      - "Хоча + clause structure"
-      - "Хоча він хворий, він прийшов"
-      - "Word order and punctuation"
-  - section: "незважаючи на - Despite"
-    words: 250
-    points:
-      - "Prepositional phrase + accusative"
-      - "Незважаючи на дощ..."
-      - "Nominalization patterns"
-  - section: "Other Concessive Connectors"
-    words: 250
-    points:
-      - "попри (despite)"
-      - "хоч би (even though)"
-      - "дарма що (in vain)"
-  - section: "Concessive vs Adversative"
-    words: 200
-    points:
-      - "хоча vs але"
-      - "Subordination vs coordination"
-      - "Choosing correctly"
-  - section: "Practice: Expressing Contrast"
-    words: 100
-    points:
-      - "Form concessive clauses"
-      - "Express unexpected outcomes"
-vocabulary_hints:
-  required:
-    - хоча (although)
-    - незважаючи на (despite)
-    - попри (despite - literary)
-    - контраст (contrast)
-    - неочікуваний (unexpected)
-    - результат (result)
-    - допустовий (concessive)
-    - проте (however)
-  recommended:
-    - хоч би (even though)
-    - дарма що (in vain)
-    - все одно (anyway)
-    - тим не менш (nevertheless)
-activity_hints:
-  - type: fill-in
-    focus: "Complete concessive sentences"
-    items: 25
-  - type: transformation
-    focus: "Convert sentences to concessive"
-    items: 20
-  - type: error-correction
-    focus: "Fix concessive clause errors"
-    items: 15
-  - type: translation
-    focus: "English to Ukrainian"
-    items: 15
-prerequisites:
-  - b1-34 (Checkpoint Complex Sentences 1)
-connects_to:
-  - b1-36 (Causal Result Clauses)
+id: b1-35
 naturalness:
   score: 9
   status: PASS
-  justification: "Essential contrast structure"
+  justification: Essential contrast structure
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-26'

@@ -1,16 +1,9 @@
-module: checkpoint-full-grammar
-level: a2
-sequence: 56
+module: a2-56
+level: A2
+slug: checkpoint-full-grammar
 version: '2.0'
 title: Checkpoint — Full Grammar
 subtitle: A2 Mastery Review
-focus: checkpoint
-pedagogy: TTT
-objectives:
-- Learner can integrate A2 vocabulary in conversation
-- Learner can use all grammatical cases correctly
-- Learner can navigate common daily situations
-- Learner can demonstrate A2 proficiency
 content_outline:
 - section: 'Pre-Test: Self Assessment'
   words: 100
@@ -49,7 +42,7 @@ content_outline:
   - Identify areas for improvement
   - Prepare for practical modules
 word_target: 800
-vocabulary:
+vocabulary_hints:
   required:
   - повторення (review)
   - відмінок (case)
@@ -64,15 +57,34 @@ vocabulary:
   - доконаний (perfective)
   - недоконаний (imperfective)
   - вправа (exercise)
-  forbidden: []
-activities:
-  types_required:
-  - quiz
-  - error-correction
-  - speaking
-  - fill-in
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: quiz
+  focus: A2 grammar comprehensive test
+  items: 30
+- type: fill-in
+  focus: Case and aspect selection
+  items: 25
+- type: error-correction
+  focus: Fix common mistakes
+  items: 15
+- type: speaking
+  focus: Demonstrate A2 proficiency
+  items: 10
+focus: checkpoint
+pedagogy: TTT
+prerequisites:
+- a2-54 (Sports and Fitness)
+- a2-55 (Vocabulary Expansion Checkpoint)
 connects_to:
 - a2-57 (Practical Intro)
+objectives:
+- Learner can integrate A2 vocabulary in conversation
+- Learner can use all grammatical cases correctly
+- Learner can navigate common daily situations
+- Learner can demonstrate A2 proficiency
+grammar:
+- A2 vocabulary review (all thematic areas)
+- Case system review (all 7 cases)
+- Verb aspect review (perfective/imperfective)
+register: розмовний
+phase: A2.5 [Vocabulary Expansion]

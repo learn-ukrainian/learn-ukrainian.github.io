@@ -1,0 +1,101 @@
+module: syntez-informatsiina-viina
+level: C1-HIST
+slug: syntez-informatsiina-viina
+version: '2.0'
+title: 'Синтез: Хто виграє війну наративів?'
+content_outline:
+- section: Вступ — Війна за правду
+  words: 451
+  points:
+  - Огляд модулів 108-112
+  - Інформаційна війна — частина війни
+  - 300 років vs 30 років
+  - Мета синтезу
+- section: Еволюція російської пропаганди
+  words: 677
+  points:
+  - «Малоросія» — імперський період
+  - Радянська — «дружба народів»
+  - Путінська — «фашисти»
+  - Спільне — заперечення України
+- section: Поле бою
+  words: 677
+  points:
+  - Росія — де виграє
+  - Україна — де виграє
+  - Захід — поле конкуренції
+  - Глобальний Південь
+- section: Уроки 2022
+  words: 790
+  points:
+  - Чому «3 дні» провалились
+  - Зеленський — ефект
+  - Західна консолідація
+  - Але — не перемога
+- section: Майбутнє інформаційної війни
+  words: 564
+  points:
+  - AI — нові загрози
+  - Deepfakes
+  - Як готуватися
+  - Роль освіти
+- section: Підсумок
+  words: 341
+  points:
+  - Війна наративів — довга
+  - Правда — не автоматично перемагає
+  - Перехід до польсько-українських відносин
+word_target: 3500
+vocabulary_hints:
+  required:
+  - синтез (synthesis)
+  - інформаційна війна (information war)
+  - наратив (narrative)
+  - пропаганда (propaganda)
+  - дезінформація (disinformation)
+  - контрнаратив (counter-narrative)
+  - «м'яка сила» (soft power)
+  - правда (truth)
+  - маніпуляція (manipulation)
+  - медіаграмотність (media literacy)
+  recommended:
+  - deepfake (deepfake)
+  - штучний інтелект (AI)
+  - ехо-камера (echo chamber)
+  - поляризація (polarization)
+  - когнітивна війна (cognitive warfare)
+activity_hints:
+- type: essay-response
+  focus: Create information warfare evolution timeline
+  output: Historical information war map
+- type: battlefield-analysis
+  focus: Where each side wins/loses information war
+  output: Battlefield assessment
+- type: future-analysis
+  focus: AI and deepfakes — future information war
+  output: Future scenario analysis
+- type: lessons-learned
+  focus: What 2022 taught about information warfare
+  output: Lessons compilation
+- type: essay-response
+  focus: Чи може правда перемогти пропаганду?
+  word_target: 500
+  model_answer: Required
+focus: history
+prerequisites:
+- c1-hist-108-112 (All information warfare modules)
+connects_to:
+- c1-hist-114 (Polish-Ukrainian relations)
+- c1-hist-132 (Ukrainian soft power)
+module_type: synthesis
+sources:
+- name: Інформаційна війна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Інформаційна_війна
+  type: reference
+  notes: Information warfare overview
+- name: Російсько-українська війна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Російське_вторгнення_в_Україну_(з_2022)
+  type: reference
+  notes: Current war context
+immersion: 100% Ukrainian
+phase: C1-HIST.1 [Historiography]

@@ -1,109 +1,112 @@
 module: yevhen-paton
-level: c1-bio
-sequence: 112
+level: C1-BIO
+slug: yevhen-paton
 version: '2.0'
 title: 'Євген Патон: Батько українського мостобудування'
-focus: biography
-pedagogy: seminar
-objectives:
-- Зрозуміти життєвий шлях та досягнення особи
-- Проаналізувати історичний контекст епохи
-- Оцінити внесок у українську культуру та історію
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Патон_Євген_Оскарович
-    title: Євген Патон (Wikipedia UA)
-    notes: Biography, engineering achievements, institute
-  secondary:
-  - url: https://uk.wikipedia.org/wiki/Інститут_електрозварювання_імені_Є._О._Патона
-    title: Інститут електрозварювання
-    notes: Institute he founded
-  - url: https://uk.wikipedia.org/wiki/Міст_Патона
-    title: Міст Патона
-    notes: Kyiv bridge named after him
 content_outline:
 - section: Вступ — Інженер, який з'єднав береги
   words: 457
-  subsections:
+  points:
   - Патон як засновник української школи зварювання
   - Мости та технології, що змінили інженерію
   - Київський міст як символ його спадщини
 - section: Від Росії до України
   words: 571
-  subsections:
+  points:
   - Народження в Ніцці (1870)
   - Інженерна освіта в Петербурзі
   - Переїзд до Києва (1904)
   - Вибір України як батьківщини
 - section: Мостобудівник
   words: 800
-  subsections:
+  points:
   - Проектування мостів через Дніпро
   - Інновації в конструкції мостів
   - Підготовка українських інженерів
   - Київський політехнічний інститут
 - section: Революція зварювання
   words: 914
-  subsections:
+  points:
   - Заснування Інституту електрозварювання (1934)
   - Автоматичне зварювання
   - Застосування у танкобудуванні (WWII)
   - Підвищення продуктивності в 10 разів
 - section: Післявоєнні досягнення
   words: 571
-  subsections:
+  points:
   - Відбудова зруйнованих мостів
   - Новий міст через Дніпро (1953)
   - Підготовка наступного покоління
   - Робота до останнього дня життя
 - section: Спадщина двох поколінь
   words: 687
-  subsections:
+  points:
   - Смерть 1953 року
   - Син Борис — продовжувач справи
   - Інститут Патона — світовий лідер
   - Міст Патона — пам'ятка Києва
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - мостобудування
-  - електрозварювання
-  - інженер
-  - конструкція
-  - інститут
-  - автоматизація
-  - продуктивність
-  - технологія
-  - проект
-  - школа
+  - мостобудування (bridge construction)
+  - електрозварювання (electric welding)
+  - інженер (engineer)
+  - конструкція (construction/design)
+  - інститут (institute)
+  - автоматизація (automation)
+  - продуктивність (productivity)
+  - технологія (technology)
+  - проект (project/design)
+  - школа (school/tradition)
   recommended:
-  - балка
-  - опора
-  - прогін
-  - метал
-  - плавлення
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - балка (beam)
+  - опора (support/pillar)
+  - прогін (span)
+  - метал (metal)
+  - плавлення (melting)
+activity_hints:
+- type: reading
+  focus: Technical descriptions and memoirs
+  source: Engineering archives
+  items: 3 passages
+- type: quiz
+  focus: Paton's biography and achievements
+  items: 12+
+- type: match-up
+  focus: Innovations and their applications
+  items: 10+
+- type: essay-response
+  focus: How did Paton's welding technology change industry?
+  word_target: 300
+  output: Technical impact analysis
+- type: group-sort
+  focus: Pre-war vs. wartime vs. post-war work
+  items: 12+
+- type: fill-in
+  focus: Key dates and technological terms
+  items: 10+
+focus: biography
+prerequisites:
+- Basic understanding of engineering
+- WWII industrial context
+- Soviet-era Ukraine
 connects_to:
-  previous: Basic understanding of engineering
-  related:
-  - c1-bio-113 (Boris Paton - his son)
-  - c1-bio-117 (Korolyov - contemporary engineer)
-  - c1-bio-114 (Amosov - same era scientist)
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-113 (Boris Paton - his son)
+- c1-bio-117 (Korolyov - contemporary engineer)
+- c1-bio-114 (Amosov - same era scientist)
+module_type: biography
+sources:
+- name: Євген Патон (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Патон_Євген_Оскарович
+  type: primary
+  notes: Biography, engineering achievements, institute
+- name: Інститут електрозварювання
+  url: https://uk.wikipedia.org/wiki/Інститут_електрозварювання_імені_Є._О._Патона
+  type: reference
+  notes: Institute he founded
+- name: Міст Патона
+  url: https://uk.wikipedia.org/wiki/Міст_Патона
+  type: reference
+  notes: Kyiv bridge named after him
+immersion: 100% Ukrainian
+phase: C1-BIO

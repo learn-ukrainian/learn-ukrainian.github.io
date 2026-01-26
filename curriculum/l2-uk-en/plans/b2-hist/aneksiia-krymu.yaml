@@ -1,24 +1,19 @@
 module: aneksiia-krymu
-level: b2-hist
-sequence: 128
-version: '1.0'
+level: B2-HIST
+slug: aneksiia-krymu
+version: '2.0'
 title: 'Анексія Криму: Початок війни'
-focus: history
-pedagogy: CBI
-objectives:
-- Учень може описати механізм анексії Криму та роль «зелених чоловічків»
-- Учень може проаналізувати порушення Будапештського меморандуму
-- Учень може спростувати основні міфи російської пропаганди про Крим
+subtitle: 'Annexation of Crimea: The Beginning of War'
 content_outline:
 - section: Вступ
   words: 389
-  subsections:
+  points:
   - 'Лютий 2014: контекст після Майдану'
   - Поява 'зелених чоловічків'
   - Стратегічне значення півострова
 - section: 'Читання: Хроніка злочину'
   words: 2252
-  subsections:
+  points:
   - 'Початок операції: Медаль за повернення'
   - 'Інформаційна агресія: Міф про «Поїзд дружби»'
   - 'Спротив: 26 лютого'
@@ -28,34 +23,36 @@ content_outline:
   - Міжнародна реакція та правові наслідки
 - section: Первинні джерела
   words: 546
-  subsections:
+  points:
   - Будапештський меморандум
   - Виступ Путіна 18 березня 2014 року
   - Свідчення очевидців
   - Резолюція Генасамблеї ООН 68/262
 - section: Деколонізаційний погляд
   words: 514
-  subsections:
+  points:
   - 'Міфи та реальність: спростування ''споконвічно російського'' Криму'
   - Імперські наративи та їх розвінчання
 word_target: 4202
-vocabulary:
-- анексія
-- окупація
-- санкції
-- референдум
-- меморандум
-- суверенітет
-- територіальна цілісність
-- гібридна війна
-- спротив
-- блокада
-- півострів
-- аеропорт
-- парламент
-- громадяни
-- переселення
-activities:
+vocabulary_hints:
+  required:
+  - анексія (annexation)
+  - окупація (occupation)
+  - санкції (sanctions)
+  - референдум (referendum)
+  - меморандум (memorandum)
+  - суверенітет (sovereignty)
+  - територіальна цілісність (territorial integrity)
+  - гібридна війна (hybrid war)
+  - спротив (resistance)
+  - блокада (blockade)
+  recommended:
+  - півострів (peninsula)
+  - аеропорт (airport)
+  - парламент (parliament)
+  - громадяни (citizens)
+  - переселення (resettlement)
+activity_hints:
 - type: reading
   focus: Резолюція ООН та Меморандум
 - type: critical-analysis
@@ -64,6 +61,15 @@ activities:
   focus: Наслідки порушення міжнародного права
 - type: quiz
   focus: Хронологія подій 2014 року
+focus: history
+pedagogy: CBI
+objectives:
+- Учень може описати механізм анексії Криму та роль «зелених чоловічків»
+- Учень може проаналізувати порушення Будапештського меморандуму
+- Учень може спростувати основні міфи російської пропаганди про Крим
+grammar:
+- Historical narrative tenses
+- Official vs. Informal register
 sources:
 - name: Резолюція ГА ООН 68/262
   url: https://undocs.org/ua/A/RES/68/262
@@ -73,3 +79,4 @@ sources:
   url: https://krymsos.com
   type: secondary
   notes: Свідчення очевидців та звіти про порушення прав людини
+phase: B2-HIST.12 [Independence]

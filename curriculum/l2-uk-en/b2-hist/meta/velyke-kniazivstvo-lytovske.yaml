@@ -1,12 +1,11 @@
-id: b2-hist-28
-title: 'Велике князівство Литовське — Руська держава'
-subtitle: 'Спадщина Gediminids та руська мова'
+module: velyke-kniazivstvo-lytovske
+level: B2-HIST
 slug: velyke-kniazivstvo-lytovske
 version: '2.0'
-phase: 'B2.3a [Українська історія]'
-focus: history
-pedagogy: CBI
-word_target: 4021
+id: b2-hist-28
+naturalness:
+  score: 9
+  status: PASS
 duration: 90
 transliteration: none
 tags:
@@ -14,23 +13,6 @@ tags:
 - medieval
 - lithuania
 - ruthenian
-grammar:
-- Passive voice in historical texts
-- Analytical structures
-objectives:
-- Учень може описувати роль українських земель у ВКЛ
-- Учень може аналізувати значення руської мови як державної
-- Учень може пояснювати принципи релігійної толерантності
 vocabulary_count: 35
-content_outline:
-- section: Вступ
-  words: 610
-- section: Читання
-  words: 2600
-- section: Первинні джерела
-  words: 400
-- section: Деколонізаційний погляд
-  words: 411
-naturalness:
-  score: 9
-  status: PASS
+build:
+  last_modified: '2026-01-26'

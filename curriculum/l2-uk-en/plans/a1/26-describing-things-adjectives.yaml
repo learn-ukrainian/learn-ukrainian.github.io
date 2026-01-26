@@ -1,16 +1,9 @@
-module: describing-things-adjectives
-level: a1
-sequence: 26
+module: a1-26
+level: A1
+slug: describing-things-adjectives
 version: '2.0'
 title: Describing Things - Adjectives
 subtitle: Adjective Agreement in Gender and Number
-focus: grammar
-pedagogy: PPP
-objectives:
-- Learner can use correct adjective endings for masculine nouns
-- Learner can use correct adjective endings for feminine nouns
-- Learner can use correct adjective endings for neuter nouns
-- Learner can form plural adjective forms
 content_outline:
 - section: 'Introduction: Adjective Agreement'
   words: 150
@@ -48,7 +41,7 @@ content_outline:
   - Describe things around you
   - Match adjectives to nouns
 word_target: 1000
-vocabulary:
+vocabulary_hints:
   required:
   - новий (new)
   - старий (old)
@@ -65,16 +58,35 @@ vocabulary:
   - дорогий (expensive)
   - дешевий (cheap)
   - смачний (tasty)
-  forbidden: []
-activities:
-  types_required:
-  - transformation
-  - fill-in
-  - matching
-  - description
-  min_items_per_type: 6
-  total_min_items: 30
-  no_mirroring: true
+activity_hints:
+- type: transformation
+  focus: Change adjective gender
+  items: 25
+- type: fill-in
+  focus: Complete with correct adjective form
+  items: 20
+- type: matching
+  focus: Match adjectives to nouns
+  items: 15
+- type: description
+  focus: Describe pictures using adjectives
+  items: 8
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-03 (The Gender Code)
+- a1-25 (My Daily Routine)
 connects_to:
 - a1-27 (Colors and Clothing)
 - a1-28 (Description - Adverbs)
+objectives:
+- Learner can use correct adjective endings for masculine nouns
+- Learner can use correct adjective endings for feminine nouns
+- Learner can use correct adjective endings for neuter nouns
+- Learner can form plural adjective forms
+grammar:
+- Adjective endings for gender (m/f/n)
+- Hard stem adjectives (-ий/-а/-е/-і)
+- Soft stem adjectives (-ій/-я/-є/-і)
+register: розмовний
+phase: A1.3 [Consolidation]

@@ -1,116 +1,129 @@
-module: roksolana
-level: c1-bio
-sequence: 7
+module: c1-bio-07
+level: C1-BIO
+slug: roksolana
 version: '2.0'
 title: 'Роксолана: Від рабині до султанші'
-focus: biography
-pedagogy: seminar
-objectives:
-- Проаналізувати біографію Роксолани як приклад соціальної мобільності
-- Дослідити феномен 'Жіночого султанату' та роль жінок в османській політиці
-- Вивчити дипломатичну лексику та епістолярний стиль XVI століття
-sources:
-  primary:
-  - url: https://uk.wikipedia.org/wiki/Роксолана
-    title: Роксолана (Wikipedia UA)
-    notes: Biography, rise to power, influence
-  secondary:
-  - url: https://uk.wikipedia.org/wiki/Сулейман_I
-    title: Сулейман I (Wikipedia UA)
-    notes: Context of Ottoman court
-  - url: https://uk.wikipedia.org/wiki/Гарем
-    title: Гарем (Wikipedia UA)
-    notes: Structure of Ottoman harem system
 content_outline:
 - section: Вступ — Найвпливовіша жінка Османської імперії
   words: 400
-  subsections:
+  points:
   - Унікальність долі Роксолани
   - Її місце в історії України та Туреччини
   - Проблема джерел та легенд
 - section: Викрадення та рабство
   words: 600
-  subsections:
+  points:
   - Походження з Рогатина (версії)
   - Татарський набіг та полон
   - Продаж на ринку рабів
   - Потрапляння до гарему
 - section: Сходження до влади
   words: 700
-  subsections:
+  points:
   - Прихильність Сулеймана
   - Від рабині до хасекі
   - Офіційний шлюб — безпрецедентний крок
   - Народження дітей
 - section: Політичний вплив
   words: 800
-  subsections:
+  points:
   - Участь у державних справах
   - Листування з європейськими монархами
   - Інтриги щодо спадкоємця
   - Доля Мустафи та Ібрагіма-паші
 - section: Благодійність та будівництво
   words: 600
-  subsections:
+  points:
   - Комплекс Хасекі
   - Лазні, мечеті, школи
   - Підтримка благодійних справ
   - Архітектурна спадщина в Стамбулі
 - section: Спадщина та образ у культурі
   words: 600
-  subsections:
+  points:
   - Смерть та поховання
   - Образ у літературі та мистецтві
   - Українська та турецька пам'ять
   - Сучасні серіали та суперечки
 - section: Підсумок — Жінка, що змінила імперію
   words: 300
-  subsections:
+  points:
   - Роксолана як символ сили волі
   - Її вплив на османську традицію
   - Значення для України
 word_target: 4000
-word_tolerance: 0.05
-vocabulary:
+vocabulary_hints:
   required:
-  - султанша
-  - хасекі
-  - гарем
-  - рабиня
-  - полон
-  - набіг
-  - спадкоємець
-  - інтрига
-  - благодійність
-  - меценатство
+  - султанша (sultana)
+  - хасекі (haseki - favorite consort)
+  - гарем (harem)
+  - рабиня (slave woman)
+  - полон (captivity)
+  - набіг (raid)
+  - спадкоємець (heir)
+  - інтрига (intrigue)
+  - благодійність (charity)
+  - меценатство (patronage)
   recommended:
-  - візир
-  - євнух
-  - фаворитка
-  - мечеть
-  - вакф
-  forbidden: []
-activities:
-  types_required:
-  - reading
-  - quiz
-  - match-up
-  - essay-response
-  - group-sort
-  - fill-in
-  - critical-analysis
-  min_items_per_type: 8
-  total_min_items: 40
-  no_mirroring: true
+  - візир (vizier)
+  - євнух (eunuch)
+  - фаворитка (favorite)
+  - мечеть (mosque)
+  - вакф (waqf - charitable endowment)
+activity_hints:
+- type: reading
+  focus: European diplomatic reports about Roksolana
+  source: Adapted historical sources
+  items: 3 passages
+- type: quiz
+  focus: Facts about Roksolana's life and influence
+  items: 12+
+- type: match-up
+  focus: Key figures at Ottoman court and their fates
+  items: 10+
+- type: essay-response
+  focus: Was Roksolana a victim or a manipulator?
+  word_target: 300
+  output: Balanced analysis with evidence
+- type: group-sort
+  focus: Facts vs. legends about Roksolana
+  items: 12+
+- type: fill-in
+  focus: Ottoman court terminology
+  items: 10+
+- type: critical-analysis
+  focus: Evaluate different interpretations of Roksolana
+  output: Ukrainian vs. Turkish perspectives
+focus: biography
+pedagogy: CBI
+prerequisites:
+- c1-bio-05 (Anna Yaroslavna - earlier Ukrainian woman abroad)
+- c1-bio-06 (Mykhailo Chernihivskyi - captivity theme)
 connects_to:
-  previous: c1-bio-05 (Anna Yaroslavna - earlier Ukrainian woman abroad)
-  related:
-  - c1-bio-10 (Bohdan Khmelnytskyi - later Cossack period)
-  - c1-bio-12 (Ivan Mazepa - patronage theme)
-  - c1-bio-41 (Solomiya Krushelnytska - later fame abroad)
-constraints:
-  min_engagement_boxes: 2
-  min_examples: 10
-  immersion_target: 1.0
-  naturalness_threshold: 8
-  min_primary_sources: 2
+- c1-bio-10 (Bohdan Khmelnytskyi - later Cossack period)
+- c1-bio-12 (Ivan Mazepa - patronage theme)
+- c1-bio-41 (Solomiya Krushelnytska - later fame abroad)
+objectives:
+- Проаналізувати біографію Роксолани як приклад соціальної мобільності
+- Дослідити феномен 'Жіночого султанату' та роль жінок в османській політиці
+- Вивчити дипломатичну лексику та епістолярний стиль XVI століття
+grammar:
+- Historical narrative tenses
+- Quoted speech conventions
+- Epistolary formulas
+module_type: biography
+sources:
+- name: Роксолана (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Роксолана
+  type: primary
+  notes: Biography, rise to power, influence
+- name: Сулейман I (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Сулейман_I
+  type: reference
+  notes: Context of Ottoman court
+- name: Гарем (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Гарем
+  type: reference
+  notes: Structure of Ottoman harem system
+immersion: 100% Ukrainian
+phase: C1-BIO
