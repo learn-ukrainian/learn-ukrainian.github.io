@@ -420,6 +420,19 @@ If outside range: Adjust largest section(s) to compensate.
 4. **Natural flow:** No robotic transitions, no template repetition
 5. **Discourse markers:** Use connectors (а, але, тому, також, спочатку, нарешті)
 
+### Naturalness (Write for 8+/10)
+
+**As you write, aim for naturalness score ≥8/10.** You'll evaluate this yourself in module-lesson-qa.
+
+**While generating content:**
+- Vary sentence structures (don't start 3+ sentences the same way)
+- Use discourse markers between ideas (потім, тому, але, крім того)
+- Maintain topic coherence within paragraphs
+- Avoid template patterns ("X є Y. X також є Z. X має W.")
+- Use natural intensifiers sparingly (limit "дуже", avoid "надзвичайно")
+
+**See:** `scripts/audit/ukrainian_naturalness_checker_prompt.md` for full criteria.
+
 ### Content Quality
 
 1. **Accuracy:** All historical/cultural facts must be verifiable from sources

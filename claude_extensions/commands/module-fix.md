@@ -76,11 +76,9 @@ Group violations by component:
 | **Vocab** | Missing IPA, wrong POS, duplicates | Fix vocabulary.yaml |
 | **Naturalness** | Score < 8, robotic text, template repetition | Fix affected content |
 
-### Step 4: Batch Fix Loop (OPTIMIZED)
+### Step 4: Smart Batching Fix Loop
 
-**CRITICAL:** Use **batch-fix-within-module** pattern (see NON-NEGOTIABLE-RULES.md #8).
-
-**NEVER use iterative fix-audit cycles. Instead:**
+**CRITICAL:** Use **threshold-based smart batching** for optimal efficiency + debuggability.
 
 ```
 while violations_exist:
@@ -98,129 +96,265 @@ while violations_exist:
     Read audit review file:
     - curriculum/l2-uk-en/${level}/audit/${slug}-review.md
 
-    Identify ALL violations across ALL components:
+    Count and categorize ALL violations:
 
-    Meta violations:
+    Meta violations (M):
       - INVALID_ACTIVITY_TYPE → which types are invalid?
       - Word target mismatch → actual vs target?
       - Activity_hints coverage → missing types?
 
-    Lesson violations:
-      - Word count shortfall → which sections under target?
-      - Missing engagement boxes → how many needed?
-      - Low immersion → where is English text?
-      - OUTLINE_MISMATCH → which sections missing?
-
-    Activity violations:
-      - Schema errors → which items malformed?
-      - Item count below minimum → how many needed?
-      - Mirroring issues → which activities copy lesson?
-      - Missing activity_hints coverage → which types not represented?
-
-    Vocab violations:
+    Vocab violations (V):
       - Missing IPA → how many items?
       - Wrong POS → which entries?
       - Duplicates → which words?
       - Count below target → how many needed?
 
-    Naturalness violations:
+    Activity violations (A):
+      - Schema errors → which items malformed?
+      - Item count below minimum → how many needed?
+      - Mirroring issues → which activities copy lesson?
+      - Missing activity_hints coverage → which types not represented?
+
+    Lesson violations (L):
+      - Word count shortfall → which sections under target?
+      - Missing engagement boxes → how many needed?
+      - Low immersion → where is English text?
+      - OUTLINE_MISMATCH → which sections missing?
+
+    Naturalness violations (N) - AGENT EVALUATED:
+      - If meta.yaml has naturalness.status = PENDING or FAIL → YOU must evaluate
       - Score < 8 → which sections flagged?
       - Red flags → template repetition? robotic transitions?
+      - NOTE: The audit script only checks if a score exists; YOU provide the evaluation
+
+    TOTAL_VIOLATIONS = M + V + A + L + N
 
     # ========================================
-    # 4.2 EXECUTE (Fix ALL Issues Atomically)
+    # 4.2 CHOOSE STRATEGY (Threshold-Based)
     # ========================================
 
-    Apply ALL fixes in ONE response:
+    if TOTAL_VIOLATIONS == 0:
+        break  # Done!
 
-    Order: meta → vocab → activities → markdown
-    (Dependencies flow downstream)
+    if TOTAL_VIOLATIONS <= 5:
+        # STRATEGY: Fix all at once (small enough to track)
+        execute_batch_fix_all()
+        audit_once()
 
-    # Meta fixes (if needed)
-    if meta_violations:
-        Read: claude_extensions/phases/module-meta-qa.md
-        Fix meta.yaml:
-          - Replace invalid activity types with valid ones
-          - Update word_target if legitimately wrong (rare)
-          - Ensure activity_hints covers all activity types
+    elif TOTAL_VIOLATIONS <= 15:
+        # STRATEGY: Fix by component (respects dependencies)
+        execute_component_rounds()
+        # Round 1: Meta (if M > 0)
+        # Round 2: Vocab (if V > 0)
+        # Round 3: Activities (if A > 0)
+        # Round 4: Lesson + Naturalness (if L > 0 or N > 0)
 
-    # Vocab fixes (if needed)
-    if vocab_violations:
-        Read: claude_extensions/phases/module-vocab-qa.md
-        Fix vocabulary.yaml:
-          - Add missing vocabulary items
-          - Fix POS tags
-          - Remove duplicates
-
-        If missing IPA/POS data:
-          .venv/bin/python scripts/vocab_enrich_nlp.py ${vocab_file}
-
-    # Activity fixes (if needed)
-    if activity_violations:
-        if violations <= 3:
-            Fix individually in activities.yaml:
-              - Fix schema errors
-              - Add missing items
-              - Rephrase mirroring activities
-        else:
-            Read: claude_extensions/phases/module-act-qa.md
-            Rebuild activities section with:
-              - Correct schemas
-              - Sufficient item counts
-              - Coverage of all activity_hints types
-              - No mirroring of lesson text
-
-    # Lesson fixes (if needed)
-    if lesson_violations:
-        Read: claude_extensions/phases/module-lesson-qa.md
-        Fix markdown:
-          - Expand under-length sections to hit targets
-          - Add missing engagement boxes
-          - Increase immersion (reduce English)
-          - Add missing sections from content_outline
-          - Fix naturalness (vary structures, add discourse markers)
-
-    # Naturalness fixes (if needed)
-    if naturalness_score < 8:
-        Fix affected prose in lesson/activities:
-          - Remove template repetition
-          - Add discourse markers
-          - Simplify robotic transitions
-          - Reduce excessive intensifiers
+    else:  # TOTAL_VIOLATIONS > 15
+        # STRATEGY: Fix by severity (get unblocked fast)
+        execute_severity_rounds()
+        # Round 1: BLOCKING (schema errors, missing sections)
+        # Round 2: MAJOR (word count, required vocab, structural)
+        # Round 3: MINOR (engagement boxes, examples, polish)
 
     # ========================================
-    # 4.3 VERIFY (ONE Final Audit)
+    # 4.3 EXECUTION DETAILS
     # ========================================
-
-    .venv/bin/python scripts/audit_module.py ${md_file}
-
-    Read audit review:
-    curriculum/l2-uk-en/${level}/audit/${slug}-review.md
-
-    # Check if all gates pass
-    if all_gates_pass:
-        break
-
-    # If still violations, repeat cycle
-    # (Should be rare with comprehensive batch fix)
 
 end while
 ```
 
-**Why This Works:**
+### Strategy 1: Batch Fix All (≤5 violations)
 
-1. **Efficiency:** One read + one fix + one audit = O(3) instead of O(3N)
-2. **Coherence:** Fixes can reference each other (e.g., new vocab drives section expansion)
-3. **Consistency:** Avoids intermediate states where vocab exists but isn't used in content
-4. **Speed:** Fewer API calls, less token usage
+**Use when:** Total violations ≤ 5
 
-### Step 5: Decision Matrix
+**Process:**
+```
+Apply ALL fixes in ONE response:
 
-| Violations | Action |
-|-----------|--------|
-| ≤3 total | Fix individually |
-| >3 in one component | Rebuild that component |
-| >10 OR structural | Consider full rebuild |
+Order: meta → vocab → activities → lesson → naturalness
+(Dependencies flow downstream)
+
+# Meta fixes
+if M > 0:
+    Read: claude_extensions/phases/module-meta-qa.md
+    Fix meta.yaml:
+      - Replace invalid activity types with valid ones
+      - Update word_target if legitimately wrong (rare)
+      - Ensure activity_hints covers all activity types
+
+# Vocab fixes
+if V > 0:
+    Read: claude_extensions/phases/module-vocab-qa.md
+    Fix vocabulary.yaml:
+      - Add missing vocabulary items
+      - Fix POS tags
+      - Remove duplicates
+    Run: .venv/bin/python scripts/vocab_enrich_nlp.py ${vocab_file}
+
+# Activity fixes
+if A > 0:
+    Read: claude_extensions/phases/module-act-qa.md
+    Fix activities.yaml:
+      - Fix schema errors
+      - Add missing items
+      - Rephrase mirroring activities
+
+# Lesson fixes
+if L > 0:
+    Read: claude_extensions/phases/module-lesson-qa.md
+    Fix markdown:
+      - Expand under-length sections
+      - Add missing engagement boxes
+      - Increase immersion
+      - Add missing sections
+
+# Naturalness fixes
+if N > 0:
+    Fix affected prose:
+      - Vary sentence structures
+      - Add discourse markers
+      - Remove template repetition
+
+Audit once: .venv/bin/python scripts/audit_module.py ${md_file}
+```
+
+**Why:** Small violation count = manageable in one pass, maximum efficiency.
+
+---
+
+### Strategy 2: Component Rounds (6-15 violations)
+
+**Use when:** Total violations 6-15
+
+**Process:**
+```
+Round 1: FIX META (if M > 0)
+  Read: claude_extensions/phases/module-meta-qa.md
+  Fix meta.yaml:
+    - Replace invalid activity types
+    - Update activity_hints coverage
+    - Adjust word_target if needed
+  Audit: .venv/bin/python scripts/audit_module.py ${md_file}
+  Check: Meta violations cleared? ✅
+
+Round 2: FIX VOCAB (if V > 0)
+  Read: claude_extensions/phases/module-vocab-qa.md
+  Fix vocabulary.yaml:
+    - Add missing vocabulary items
+    - Fix POS tags
+    - Remove duplicates
+  Run: .venv/bin/python scripts/vocab_enrich_nlp.py ${vocab_file}
+  Audit: .venv/bin/python scripts/audit_module.py ${md_file}
+  Check: Vocab violations cleared? ✅
+
+Round 3: FIX ACTIVITIES (if A > 0)
+  Read: claude_extensions/phases/module-act-qa.md
+  Fix activities.yaml:
+    - Fix ALL schema errors
+    - Add missing items to reach minimums
+    - Rephrase mirroring activities
+    - Ensure activity_hints coverage
+  Audit: .venv/bin/python scripts/audit_module.py ${md_file}
+  Check: Activity violations cleared? ✅
+
+Round 4: FIX LESSON + NATURALNESS (if L > 0 or N > 0)
+  Read: claude_extensions/phases/module-lesson-qa.md
+  Fix markdown:
+    - Expand sections below word count targets
+    - Add missing engagement boxes
+    - Increase immersion (reduce English)
+    - Add missing sections from content_outline
+    - Fix naturalness (vary structures, add discourse markers)
+  Audit: .venv/bin/python scripts/audit_module.py ${md_file}
+  Check: Lesson + naturalness violations cleared? ✅
+```
+
+**Why:**
+- Respects dependency chain (meta → vocab → activities → lesson)
+- Each component audited independently
+- Easier to debug which fix caused new issues
+- Medium violation count = needs organization but not overwhelming
+
+**Typical rounds:** 2-4 audits (vs 6-15 if done one-by-one)
+
+---
+
+### Strategy 3: Severity Rounds (>15 violations)
+
+**Use when:** Total violations > 15
+
+**Process:**
+```
+Round 1: FIX BLOCKING ISSUES
+  Identify BLOCKING violations:
+    - Schema errors (activities can't parse)
+    - Missing required sections (outline mismatch)
+    - Invalid YAML syntax
+    - Missing meta.yaml
+
+  Fix ALL blocking issues across ALL components:
+    - Fix schema errors in activities.yaml
+    - Add missing sections to markdown
+    - Fix YAML syntax in meta/vocab/activities
+
+  Audit: .venv/bin/python scripts/audit_module.py ${md_file}
+  Check: All BLOCKING cleared? ✅
+
+Round 2: FIX MAJOR ISSUES
+  Identify MAJOR violations:
+    - Word count < 90% of target
+    - Required vocabulary missing
+    - Structural issues (wrong pedagogy)
+    - Activity count below minimums
+    - Naturalness score < 7
+
+  Fix ALL major issues:
+    - Expand sections to hit word targets
+    - Add required vocabulary to content
+    - Fix structural mismatches
+    - Add activities to reach minimums
+    - Improve naturalness in flagged sections
+
+  Audit: .venv/bin/python scripts/audit_module.py ${md_file}
+  Check: All MAJOR cleared? ✅
+
+Round 3: FIX MINOR ISSUES
+  Identify MINOR violations:
+    - Missing engagement boxes
+    - Low example count
+    - Immersion < 98%
+    - Naturalness score 7-7.9
+
+  Fix ALL minor issues:
+    - Add engagement boxes
+    - Add example sentences
+    - Translate English to Ukrainian
+    - Polish naturalness
+
+  Audit: .venv/bin/python scripts/audit_module.py ${md_file}
+  Check: All MINOR cleared? ✅
+```
+
+**Why:**
+- Get unblocked fast (blocking → major → minor)
+- Group similar fixes together
+- High violation count = likely structural issues
+- Avoid fixing polish items before structure is solid
+
+**Typical rounds:** 3 audits (vs >15 if done one-by-one)
+
+---
+
+### Step 5: Benefits of Smart Batching
+
+| Aspect | Pure Batch (old) | Smart Batching (new) | One-by-One |
+|--------|------------------|----------------------|------------|
+| **Speed** | 1 audit | 2-4 audits | N audits |
+| **Debuggability** | Hard | Easy | Easy |
+| **Context load** | High | Medium | Low |
+| **Risk of regression** | High | Low | Very low |
+| **Dependency handling** | Manual | Automatic | Manual |
+| **Best for violations** | ≤5 | 6-15 | N/A |
 
 ### Step 6: Validation Complete
 
@@ -284,10 +418,22 @@ Related: ...
 # Mirroring → rephrase to differ from lesson text
 ```
 
-### Naturalness Fixes
+### Naturalness Fixes (Agent Evaluated)
+
+> **🤖 Your responsibility:** Evaluate naturalness yourself, then update meta.yaml:
+> ```yaml
+> naturalness:
+>   score: 9
+>   status: PASS
+> ```
+
 - Template repetition → vary sentence structures
 - Robotic transitions → simplify, use natural connectors
 - Excessive intensifiers → remove 50% of "дуже", etc.
+- Missing discourse markers → add потім, тому, але, тоді, також
+- Disconnected sentences → improve thematic coherence
+
+**Evaluation reference:** See `scripts/audit/ukrainian_naturalness_checker_prompt.md` for scoring criteria.
 
 ---
 

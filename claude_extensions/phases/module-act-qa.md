@@ -398,7 +398,55 @@ All Ukrainian text in activities:
 - Russian words (напрімер → наприклад): FAIL
 - Surzhyk (робота → праця in formal text): FAIL
 
-### 13. Activity Coverage from meta.yaml
+### 13. Activity Naturalness Check (Agent Evaluated)
+
+> **🤖 Agent Evaluation:** You (Claude/Gemini) evaluate activity naturalness directly.
+> Activities have different naturalness requirements than prose - they contain fragments,
+> fill-in-blanks, and isolated sentences that must still sound natural IN CONTEXT.
+
+**Why activity naturalness is tricky:**
+
+Activities contain:
+- **Isolated sentences** (fill-in, error-correction) - must be natural standalone
+- **Sentence fragments** (mark-the-words) - context-dependent
+- **Question-answer pairs** (quiz) - formal but not robotic
+- **Vocabulary items** (match-up) - single words/phrases
+
+**Evaluation criteria for activities:**
+
+1. **Complete sentences** (fill-in, cloze, error-correction, unjumble):
+   - Would a native speaker naturally say this?
+   - No template repetition across items (avoid "Я люблю X. Я люблю Y. Я люблю Z.")
+   - Variety in sentence structures
+   - Appropriate discourse markers when relevant
+
+2. **Quiz questions/explanations:**
+   - Questions are clear, not awkwardly phrased
+   - Explanations use natural Ukrainian, not mechanical translations
+   - No excessive "Це правильно, тому що..."
+
+3. **Mark-the-words texts:**
+   - Even though learners mark specific words, the text itself must be coherent
+   - Not a random list of sentences
+   - Has logical flow
+
+4. **Match-up pairs:**
+   - Terms and definitions are standard Ukrainian
+   - No artificial phrasing to fit the activity format
+
+**Red flags in activities:**
+
+| Issue | Example | Fix |
+|-------|---------|-----|
+| Template repetition | All fill-ins start with "Він/Вона..." | Vary subjects and structures |
+| Mechanical phrasing | "Це є правильним варіантом" | "Це правильно" |
+| Unnatural context | Random sentence about weather then about politics | Group thematically |
+| Over-complicated | Long nested sentences in A2 fill-in | Simplify for level |
+
+**Activity naturalness is NOT a blocking gate** but issues should be fixed during this phase.
+If 3+ activities have naturalness issues, flag for improvement.
+
+### 14. Activity Coverage from meta.yaml
 
 From `meta.yaml activity_hints`, verify all hints are covered:
 

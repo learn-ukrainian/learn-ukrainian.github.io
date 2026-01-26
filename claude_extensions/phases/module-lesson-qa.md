@@ -616,9 +616,13 @@ Flag content if ANY of these are true:
 
 **This check applies to B1+ only.** For A1-A2, focus on structural checks (1-11).
 
-### 18. Naturalness Check (MANDATORY)
+### 18. Naturalness Check (MANDATORY - Agent Evaluated)
 
 **CRITICAL:** Naturalness is NEVER skipped - every module with Ukrainian text requires evaluation.
+
+> **🤖 Agent Evaluation:** You (Claude/Gemini) evaluate naturalness directly during this QA phase.
+> There is no automated script for this - it's YOUR responsibility to analyze the prose.
+> The audit script only checks if a score exists in meta.yaml; YOU provide the actual evaluation.
 
 #### 15.1 Extract ALL Ukrainian Text
 
