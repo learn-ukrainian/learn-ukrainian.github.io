@@ -18,6 +18,8 @@ Read: `claude_extensions/phases/module-lesson-qa.md`
 
 ### Step 2: Load Files
 
+> **Architecture v2.0:** Compare build against plan (not just meta.yaml).
+
 **For tracks (b2-hist, c1-bio, lit, c1-hist, b2-pro):**
 
 1. Look up slug from manifest:
@@ -25,12 +27,17 @@ Read: `claude_extensions/phases/module-lesson-qa.md`
    yq ".levels.\"{level}\".modules[{module_num-1}]" curriculum/l2-uk-en/curriculum.yaml
    ```
 
-2. Load meta file (LOCKED - reference only):
+2. Load plan file (IMMUTABLE - content_outline, word_target):
+   ```
+   curriculum/l2-uk-en/plans/{level}/{slug}.yaml
+   ```
+
+3. Load meta file (MUTABLE - naturalness, version):
    ```
    curriculum/l2-uk-en/{level}/meta/{slug}.yaml
    ```
 
-3. Load lesson file:
+4. Load lesson file:
    ```
    curriculum/l2-uk-en/{level}/{slug}.md
    ```
@@ -41,9 +48,12 @@ Read: `claude_extensions/phases/module-lesson-qa.md`
 
 2. Load files:
    ```
-   curriculum/l2-uk-en/{level}/meta/{slug}.yaml
-   curriculum/l2-uk-en/{level}/{slug}.md
+   curriculum/l2-uk-en/plans/{level}/{slug}.yaml      # Plan (immutable)
+   curriculum/l2-uk-en/{level}/meta/{slug}.yaml      # Meta (mutable)
+   curriculum/l2-uk-en/{level}/{slug}.md             # Lesson content
    ```
+
+**Validation source:** Use plan's `content_outline` and `word_target` as source of truth.
 
 ### Step 3: Run All Checks
 
@@ -62,7 +72,17 @@ Follow validation checklist from phase instructions:
 11. Primary sources (if history module)
 12. Ukrainian language quality (optional)
 
-### Step 4: Output
+### Step 4: Update Status Cache
+
+After validation, run audit to update the status cache:
+
+```bash
+.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/{level}/{slug}.md
+```
+
+This updates `{level}/status/{slug}.json` with current gate status.
+
+### Step 5: Output
 
 **On PASS:**
 ```

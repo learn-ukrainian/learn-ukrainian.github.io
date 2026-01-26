@@ -16,7 +16,9 @@ Parse arguments: $ARGUMENTS
 
 Read: `claude_extensions/phases/module-lesson.md`
 
-### Step 2: Load Meta YAML
+### Step 2: Load Plan and Meta YAML
+
+> **Architecture v2.0:** Plans are immutable source of truth. Meta is mutable build config.
 
 **For tracks (b2-hist, c1-bio, lit, c1-hist, b2-pro):**
 
@@ -25,7 +27,12 @@ Read: `claude_extensions/phases/module-lesson.md`
    yq ".levels.\"{level}\".modules[{module_num-1}]" curriculum/l2-uk-en/curriculum.yaml
    ```
 
-2. Load meta file (LOCKED - read only):
+2. Load plan file (IMMUTABLE - content_outline, word_target, objectives):
+   ```
+   curriculum/l2-uk-en/plans/{level}/{slug}.yaml
+   ```
+
+3. Load meta file (MUTABLE - naturalness, version):
    ```
    curriculum/l2-uk-en/{level}/meta/{slug}.yaml
    ```
@@ -34,10 +41,20 @@ Read: `claude_extensions/phases/module-lesson.md`
 
 1. Determine slug from module number (usually zero-padded: 01, 02, etc.)
 
-2. Load meta file:
+2. Load plan file (IMMUTABLE):
    ```
-   curriculum/l2-uk-en/{level}/meta/{slug}.yaml
+   curriculum/l2-uk-en/plans/{level}/{num}-{slug}.yaml
    ```
+
+3. Load meta file (MUTABLE):
+   ```
+   curriculum/l2-uk-en/{level}/meta/{num}-{slug}.yaml
+   ```
+
+**Critical:** Content generation MUST follow the plan's `content_outline` exactly:
+- Section names from plan
+- Word targets from plan
+- Points to cover from plan
 
 ### Step 3: Generate Content
 

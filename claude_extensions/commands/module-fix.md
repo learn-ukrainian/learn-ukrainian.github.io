@@ -46,10 +46,17 @@ slug=$(yq ".levels.\"${level}\".modules[$((num-1))]" curriculum/l2-uk-en/curricu
 **Set file paths:**
 ```
 md_file=curriculum/l2-uk-en/${level}/${slug}.md
-meta_file=curriculum/l2-uk-en/${level}/meta/${slug}.yaml
+plan_file=curriculum/l2-uk-en/plans/${level}/${slug}.yaml   # IMMUTABLE - source of truth
+meta_file=curriculum/l2-uk-en/${level}/meta/${slug}.yaml    # MUTABLE - build config
 act_file=curriculum/l2-uk-en/${level}/activities/${slug}.yaml
 vocab_file=curriculum/l2-uk-en/${level}/vocabulary/${slug}.yaml
+status_file=curriculum/l2-uk-en/${level}/status/${slug}.json # AUTO-GENERATED - audit cache
 ```
+
+> **Architecture Note (v2.0):**
+> - **Plan** (`plans/`): Immutable source of truth - content_outline, word_target, objectives
+> - **Meta** (`meta/`): Mutable build config - naturalness, version, build timestamps
+> - **Status** (`status/`): Auto-generated audit cache - gates, violations, last_audit
 
 ### Step 2: Run Initial Audit
 
