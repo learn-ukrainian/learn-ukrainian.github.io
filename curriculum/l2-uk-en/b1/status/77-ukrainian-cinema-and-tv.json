@@ -1,0 +1,50 @@
+{
+  "module": "77-ukrainian-cinema-and-tv",
+  "level": "B1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:27:33.724105Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-24T22:47:27.831262Z",
+    "meta": "2026-01-26T15:44:41.695598Z",
+    "activities": "2026-01-11T23:20:02.224059Z",
+    "vocabulary": "2026-01-25T18:00:40.678993Z",
+    "plan": "2026-01-26T15:44:41.695309Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "1708/1500 (raw: 1931) | pedagogy: 1 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "11/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "47/25"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Outline Compliance Errors",
+      "Missing required activity types: discussion, fill-in, matching, reading"
+    ],
+    "pass_count": 4,
+    "fail_count": 1
+  }
+}

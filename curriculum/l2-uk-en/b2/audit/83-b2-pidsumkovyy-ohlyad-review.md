@@ -1,8 +1,8 @@
 # Audit Report: M83 — 83-b2-pidsumkovyy-ohlyad.md
-**Level:** B2 | **Module:** M83 | **Phase:** B2.4 | **Pedagogy:** TTT | **Target:** 1750
+**Level:** B2 | **Module:** M83 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:23:56
+**Generated:** 2026-01-26 22:28:41
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -70,25 +70,50 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ⚠️ Too many activities: 21 (target 15-19)
 - **Immersion:** 🇺🇦 99.1% (checkpoint - no gate)
-- **Richness:** ✅ 98% (checkpoint)
+- **Richness:** ❌ 77% < 95% min (grammar) - REWRITE needed
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 98% (minimum: 85%)
-**Module Type:** checkpoint
+**Score:** 77% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| activity_types | 10 | 8 | 100% | 25% | 25.0% |
-| review_sections | 23 | 3 | 100% | 20% | 20.0% |
-| variety | 0.92 | - | 92% | 15% | 13.8% |
-| engagement | 6 | 3 | 100% | 10% | 10.0% |
-| cultural | 9 | - | 100% | 10% | 10.0% |
-| visual | 10 | 3 | 100% | 10% | 10.0% |
-| paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
-| **TOTAL** | | | | | **98.8%** |
+| examples | 50 | 24 | 100% | 20% | 20.0% |
+| engagement | 6 | 5 | 100% | 15% | 15.0% |
+| dialogues | 0 | 4 | 0% | 15% | 0.0% |
+| variety | 0.92 | - | 92% | 10% | 9.2% |
+| cultural | 9 | 3 | 100% | 10% | 10.0% |
+| realworld | 1 | 3 | 33% | 10% | 3.3% |
+| visual | 10 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 24 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **77.5%** |
+
+### Dryness Flags & Fixes
+- ❌ **NO_DIALOGUE**
+  - FIX:
+    Add 4+ mini-dialogues. Use this exact format:
+    
+    **Діалог: [Location in Ukraine]**
+    
+    > — [Speaker 1 line with **bolded** grammar examples]
+    > — [Speaker 2 response with **bolded** grammar examples]
+    > — [Speaker 1 continuation]
+    > — [Speaker 2 conclusion]
+    
+    Example locations: На Бесарабському ринку, У львівській кав'ярні, В одеському трамваї, На Подолі
+- ❌ **ABSTRACT_ONLY**
+  - FIX:
+    Add 3+ real-world boxes. Use this exact format:
+    
+    > 🌍 **У реальному житті**
+    >
+    > [Specific scenario: "На співбесіді...", "У магазині...", "На вокзалі..."]
+    > [Example sentence showing grammar in that context]
 
 ## Section Audit
 | Section | Status | Count | Notes |

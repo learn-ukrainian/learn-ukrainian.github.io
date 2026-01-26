@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M37 | **Phase:** B2.3a | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 22:22:46
+**Generated:** 2026-01-26 22:54:33
 
 ## Configuration
 **Type:** B2-history

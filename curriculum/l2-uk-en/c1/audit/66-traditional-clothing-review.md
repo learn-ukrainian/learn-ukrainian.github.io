@@ -1,7 +1,7 @@
 # Audit Report: M66 — 66-traditional-clothing.md
-**Level:** C1 | **Module:** M66 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 3000
+**Level:** C1 | **Module:** M66 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:24:45
+**Generated:** 2026-01-26 22:29:35
 
 ## Configuration
 **Type:** C1-cultural
@@ -56,25 +56,25 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
 - **Immersion:** 🇺🇦 99.5% (target 90-100% (cultural))
-- **Richness:** ✅ 99% (cultural)
+- **Richness:** ✅ 99% (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
-**Module Type:** cultural
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| cultural | 7 | 5 | 100% | 33% | 33.3% |
-| engagement | 8 | 6 | 100% | 20% | 20.0% |
-| visual | 8 | 4 | 100% | 13% | 13.3% |
-| variety | 0.99 | - | 99% | 7% | 6.6% |
-| paragraph_var | 1.00 | - | 100% | 7% | 6.7% |
-| examples | 25 | - | 100% | 7% | 6.7% |
-| realworld | 5 | - | 100% | 7% | 6.7% |
-| questions | 8 | 4 | 100% | 7% | 6.7% |
+| examples | 25 | 15 | 100% | 25% | 25.0% |
+| engagement | 8 | 5 | 100% | 19% | 18.7% |
+| variety | 0.99 | - | 99% | 12% | 12.4% |
+| cultural | 7 | 4 | 100% | 12% | 12.5% |
+| realworld | 5 | 3 | 100% | 12% | 12.5% |
+| visual | 8 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 8 | 4 | 100% | 6% | 6.2% |
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit

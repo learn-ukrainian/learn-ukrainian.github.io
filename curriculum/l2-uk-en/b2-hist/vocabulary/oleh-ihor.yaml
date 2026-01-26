@@ -2,128 +2,126 @@ module: oleh-ihor
 level: B2-HIST
 version: '2.0'
 items:
-  - lemma: князь
-    ipa: /knʲɑzʲ/
-    translation: prince
-    pos: noun
-    gender: m
-  - lemma: варяги
-    ipa: /wɑˈrʲɑhɪ/
-    translation: Varangians
-    pos: noun
-    gender: pl
-  - lemma: дружина
-    ipa: /druˈʒɪnɑ/
-    translation: druzhina/retinue
-    pos: noun
-    gender: f
-  - lemma: данина
-    ipa: /dɑˈnɪnɑ/
-    translation: tribute
-    pos: noun
-    gender: f
-  - lemma: похід
-    ipa: /pɔˈxid/
-    translation: campaign
-    pos: noun
-    gender: m
-  - lemma: договір
-    ipa: /dɔhɔˈwir/
-    translation: treaty
-    pos: noun
-    gender: m
-  - lemma: Візантія
-    ipa: /wʲiˈzɑntʲijɑ/
-    translation: Byzantium
-    pos: noun
-    gender: f
-  - lemma: літопис
-    ipa: /ˈlʲitɔpɪs/
-    translation: chronicle
-    pos: noun
-    gender: m
-  - lemma: об'єднання
-    ipa: /ɔbˈjɛdnɑnʲːɑ/
-    translation: unification
-    pos: noun
-    gender: n
-  - lemma: підкорення
-    ipa: /pʲidˈkɔrɛnʲːɑ/
-    translation: subjugation
-    pos: noun
-    gender: n
-  - lemma: правитель
-    ipa: /prɑˈwɪtɛlʲ/
-    translation: ruler
-    pos: noun
-    gender: m
-  - lemma: династія
-    ipa: /dɪˈnɑstʲijɑ/
-    translation: dynasty
-    pos: noun
-    gender: f
-  - lemma: регент
-    ipa: /ˈrɛhɛnt/
-    translation: regent
-    pos: noun
-    gender: m
-  - lemma: волхв
-    ipa: /wɔlxw/
-    translation: sorcerer/pagan priest
-    pos: noun
-    gender: m
-  - lemma: торговельні привілеї
-    ipa: /tɔrhɔˈwɛlʲnʲi prɪwʲiˈlɛji/
-    translation: trade privileges
-    pos: phrase
-    gender: pl
-  - lemma: легітимність
-    ipa: /lɛhʲiˈtɪmnʲisʲtʲ/
-    translation: legitimacy
-    pos: noun
-    gender: f
-  - lemma: полюддя
-    ipa: /pɔˈlʲudʲːɑ/
-    translation: polyuddia (tribute collection)
-    pos: noun
-    gender: n
-  - lemma: становище
-    ipa: /stɑˈnɔwɪʃt͡ʃɛ/
-    translation: outpost/garrison
-    pos: noun
-    gender: n
-  - lemma: моноксил
-    ipa: /mɔnɔˈksɪl/
-    translation: monoxyl (single-tree boat)
-    pos: noun
-    gender: m
-  - lemma: грецький вогонь
-    ipa: /ˈhrɛt͡sʲkɪj wɔˈhɔnʲ/
-    translation: Greek fire
-    pos: phrase
-    gender: m
-  - lemma: щит
-    ipa: /ʃt͡ʃɪt/
-    translation: shield
-    pos: noun
-    gender: m
-  - lemma: змія
-    ipa: /zmʲiˈjɑ/
-    translation: snake
-    pos: noun
-    gender: f
-  - lemma: гривня
-    ipa: /ˈhrɪwnʲɑ/
-    translation: hryvnia (currency)
-    pos: noun
-    gender: f
-  - lemma: шовк
-    ipa: /ʃɔwk/
-    translation: silk
-    pos: noun
-    gender: m
-  - lemma: віск
-    ipa: /wʲisk/
-    translation: wax
-    pos: noun
-    gender: m
+- lemma: князь
+  ipa: /knʲɑzʲ/
+  translation: prince
+  pos: noun
+  gender: m
+- lemma: варяг
+  ipa: /wɑˈrʲɑhɪ/
+  translation: Varangians
+  pos: noun
+- lemma: дружина
+  ipa: /druˈʒɪnɑ/
+  translation: druzhina/retinue
+  pos: noun
+  gender: f
+- lemma: данина
+  ipa: /dɑˈnɪnɑ/
+  translation: tribute
+  pos: noun
+  gender: f
+- lemma: похід
+  ipa: /pɔˈxid/
+  translation: campaign
+  pos: noun
+  gender: m
+- lemma: договір
+  ipa: /dɔhɔˈwir/
+  translation: treaty
+  pos: noun
+  gender: m
+- lemma: візантія
+  ipa: /wʲiˈzɑntʲijɑ/
+  translation: Byzantium
+  pos: noun
+  gender: f
+- lemma: літопис
+  ipa: /ˈlʲitɔpɪs/
+  translation: chronicle
+  pos: noun
+  gender: m
+- lemma: об'єднання
+  ipa: /ɔbˈjɛdnɑnʲːɑ/
+  translation: unification
+  pos: noun
+  gender: n
+- lemma: підкорення
+  ipa: /pʲidˈkɔrɛnʲːɑ/
+  translation: subjugation
+  pos: noun
+  gender: n
+- lemma: правитель
+  ipa: /prɑˈwɪtɛlʲ/
+  translation: ruler
+  pos: noun
+  gender: m
+- lemma: династія
+  ipa: /dɪˈnɑstʲijɑ/
+  translation: dynasty
+  pos: noun
+  gender: f
+- lemma: регент
+  ipa: /ˈrɛhɛnt/
+  translation: regent
+  pos: noun
+  gender: m
+- lemma: волхв
+  ipa: /wɔlxw/
+  translation: sorcerer/pagan priest
+  pos: noun
+  gender: m
+- lemma: торговельні привілей
+  ipa: /tɔrhɔˈwɛlʲnʲi prɪwʲiˈlɛji/
+  translation: trade privileges
+  pos: noun
+- lemma: легітимність
+  ipa: /lɛhʲiˈtɪmnʲisʲtʲ/
+  translation: legitimacy
+  pos: noun
+  gender: f
+- lemma: полюддя
+  ipa: /pɔˈlʲudʲːɑ/
+  translation: polyuddia (tribute collection)
+  pos: noun
+  gender: n
+- lemma: становище
+  ipa: /stɑˈnɔwɪʃt͡ʃɛ/
+  translation: outpost/garrison
+  pos: noun
+  gender: n
+- lemma: моноксил
+  ipa: /mɔnɔˈksɪl/
+  translation: monoxyl (single-tree boat)
+  pos: noun
+  gender: m
+- lemma: грецький вогонь
+  ipa: /ˈhrɛt͡sʲkɪj wɔˈhɔnʲ/
+  translation: Greek fire
+  pos: noun
+  gender: m
+- lemma: щит
+  ipa: /ʃt͡ʃɪt/
+  translation: shield
+  pos: noun
+  gender: m
+- lemma: змія
+  ipa: /zmʲiˈjɑ/
+  translation: snake
+  pos: noun
+  gender: f
+- lemma: гривня
+  ipa: /ˈhrɪwnʲɑ/
+  translation: hryvnia (currency)
+  pos: noun
+  gender: f
+- lemma: шовк
+  ipa: /ʃɔwk/
+  translation: silk
+  pos: noun
+  gender: m
+- lemma: віск
+  ipa: /wʲisk/
+  translation: wax
+  pos: noun
+  gender: m

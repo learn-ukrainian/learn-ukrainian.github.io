@@ -1,8 +1,8 @@
 # Audit Report: M69 — 69-integration-practice.md
-**Level:** B2 | **Module:** M69 | **Phase:** B2.2 | **Pedagogy:** Practice | **Target:** 1750
+**Level:** B2 | **Module:** M69 | **Phase:** B2 | **Pedagogy:** Practice | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:23:47
+**Generated:** 2026-01-26 22:28:31
 
 ## Configuration
 **Type:** B2-vocab

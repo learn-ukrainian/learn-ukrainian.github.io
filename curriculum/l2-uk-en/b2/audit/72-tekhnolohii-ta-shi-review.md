@@ -1,8 +1,8 @@
 # Audit Report: M72 — 72-tekhnolohii-ta-shi.md
-**Level:** B2 | **Module:** M72 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2 | **Module:** M72 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:23:49
+**Generated:** 2026-01-26 22:28:34
 
 ## Configuration
 **Type:** B2-history
@@ -67,26 +67,28 @@
 - **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ⚠️ Too many activities: 14 (target 3-9)
 - **Immersion:** 🇺🇦 98.6% (target 90-100% (history))
-- **Richness:** ✅ 99% (content)
+- **Richness:** ❌ 90% < 95% min (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
-**Module Type:** content
+**Score:** 90% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 22 | 15 | 100% | 25% | 25.0% |
-| engagement | 16 | 5 | 100% | 19% | 18.7% |
-| variety | 0.99 | - | 99% | 12% | 12.4% |
-| cultural | 6 | 4 | 100% | 12% | 12.5% |
-| realworld | 3 | 3 | 100% | 12% | 12.5% |
-| visual | 12 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 0.91 | - | 91% | 6% | 5.7% |
-| questions | 10 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **99.3%** |
+| examples | 22 | 24 | 92% | 20% | 18.4% |
+| engagement | 16 | 5 | 100% | 15% | 15.0% |
+| dialogues | 2 | 4 | 50% | 15% | 7.5% |
+| variety | 0.99 | - | 99% | 10% | 9.9% |
+| cultural | 6 | 3 | 100% | 10% | 10.0% |
+| realworld | 3 | 3 | 100% | 10% | 10.0% |
+| visual | 12 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.91 | - | 91% | 5% | 4.6% |
+| questions | 10 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **90.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -1,0 +1,49 @@
+{
+  "module": "42-aspect-nuances-imperative-infinitive",
+  "level": "B2",
+  "plan_version": "1.0",
+  "last_audit": "2026-01-26T22:28:13.500036Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-11T22:56:18.120905Z",
+    "meta": "2026-01-26T17:21:19.180679Z",
+    "activities": "2026-01-11T23:26:18.627774Z",
+    "vocabulary": "2026-01-21T22:54:30.616442Z",
+    "plan": "2026-01-26T17:21:19.180447Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "2303/1750 (raw: 2706) | pedagogy: 1 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "19/10"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "3 < 25 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "1 Outline Compliance Errors"
+    ],
+    "pass_count": 3,
+    "fail_count": 1
+  }
+}

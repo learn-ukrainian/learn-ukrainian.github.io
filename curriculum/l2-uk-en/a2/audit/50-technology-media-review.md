@@ -1,8 +1,8 @@
 # Audit Report: M50 — 50-technology-media.md
-**Level:** A2 | **Module:** M50 | **Phase:** A2.3 | **Pedagogy:** PPP | **Target:** 1000
-**Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 08:59:36
+**Level:** A2 | **Module:** M50 | **Phase:** A2 | **Pedagogy:** PPP | **Target:** 1000
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-26 22:26:31
 
 ## Configuration
 **Type:** A2-vocab
@@ -11,6 +11,7 @@
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
 **Priority Types:** error-correction, fill-in, unjumble
+**Required Types:** dialogue, fill-in, matching, vocabulary-drill
 **Engagement:** ≥4 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
@@ -34,7 +35,17 @@
 - Total activities: 10 (target: 10-14) ✅
 - Unique types: 9 (minimum: 4) ✅
 - Priority types used: 2/3 (error-correction, unjumble) ✅
+- Required types used: 0/4 (none) ❌
 - Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['vocabulary-drill', 'matching', 'dialogue']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
+  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1153/1000 (raw: 1641)
@@ -47,11 +58,11 @@
 - **Vocab:** ✅ 56/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 81.8% (target 75-85% (A2.3))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 9/10 (High)
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
 | Section | Status | Count | Notes |

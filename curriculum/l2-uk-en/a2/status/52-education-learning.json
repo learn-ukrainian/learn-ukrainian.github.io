@@ -1,0 +1,50 @@
+{
+  "module": "52-education-learning",
+  "level": "A2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:26:32.871674Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-08T21:01:02.935176Z",
+    "meta": "2026-01-26T17:21:18.953593Z",
+    "activities": "2026-01-11T10:24:58.403897Z",
+    "vocabulary": "2026-01-25T18:00:39.856241Z",
+    "plan": "2026-01-26T17:21:18.953388Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "1068/1000 (raw: 1407) | pedagogy: 1 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "24/1"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Outline Compliance Errors",
+      "Missing required activity types: dialogue, speaking, vocabulary-drill"
+    ],
+    "pass_count": 4,
+    "fail_count": 1
+  }
+}

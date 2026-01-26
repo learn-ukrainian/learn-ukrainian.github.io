@@ -1,8 +1,8 @@
 # Audit Report: M77 — 77-academic-writing.md
-**Level:** B2 | **Module:** M77 | **Phase:** B2.4 | **Pedagogy:** TTT | **Target:** 1750
+**Level:** B2 | **Module:** M77 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:23:52
+**Generated:** 2026-01-26 22:28:37
 
 ## Configuration
 **Type:** B2-skills
@@ -68,26 +68,28 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (15 activities)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (skills))
-- **Richness:** ✅ 99% (skills)
+- **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 80%)
-**Module Type:** skills
+**Score:** 96% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 69 | 15 | 100% | 26% | 25.5% |
-| engagement | 9 | 5 | 100% | 19% | 19.4% |
-| variety | 0.98 | - | 98% | 12% | 12.0% |
-| cultural | 2 | - | 100% | 12% | 12.2% |
-| realworld | 5 | 3 | 100% | 12% | 12.2% |
-| visual | 6 | 2 | 100% | 6% | 6.1% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.1% |
-| questions | 12 | 4 | 100% | 6% | 6.1% |
-| **TOTAL** | | | | | **99.8%** |
+| examples | 69 | 24 | 100% | 20% | 20.0% |
+| engagement | 9 | 5 | 100% | 15% | 15.0% |
+| dialogues | 8 | 4 | 100% | 15% | 15.0% |
+| variety | 0.98 | - | 98% | 10% | 9.8% |
+| cultural | 2 | 3 | 67% | 10% | 6.7% |
+| realworld | 5 | 3 | 100% | 10% | 10.0% |
+| visual | 6 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 12 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **96.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

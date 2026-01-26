@@ -1,8 +1,8 @@
 # Audit Report: M08 — 08-logical-prepositions.md
-**Level:** A2 | **Module:** M08 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 1000
+**Level:** A2 | **Module:** M08 | **Phase:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 08:59:12
+**Generated:** 2026-01-26 22:26:07
 
 ## Configuration
 **Type:** A2-grammar
@@ -41,7 +41,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: знахідний, іменник, родовий
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: родовий, іменник, знахідний
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation

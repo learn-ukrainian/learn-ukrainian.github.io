@@ -1,0 +1,47 @@
+{
+  "module": "09-aspect-future",
+  "level": "B1",
+  "plan_version": "1.0",
+  "last_audit": "2026-01-26T22:26:49.413122Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-24T20:28:54.349601Z",
+    "meta": "2026-01-26T15:44:41.464130Z",
+    "activities": "2026-01-24T20:28:35.815348Z",
+    "vocabulary": "2026-01-25T18:00:40.051090Z",
+    "plan": "2026-01-26T15:44:41.463914Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "1854/1500 (raw: 2535) | pedagogy: 1 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "13/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "144/25"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 1
+  }
+}

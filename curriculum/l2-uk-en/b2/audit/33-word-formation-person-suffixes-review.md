@@ -1,8 +1,8 @@
 # Audit Report: M33 — 33-word-formation-person-suffixes.md
-**Level:** B2 | **Module:** M33 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 1750
+**Level:** B2 | **Module:** M33 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 19:23:24
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-26 22:28:07
 
 ## Configuration
 **Type:** B2-grammar

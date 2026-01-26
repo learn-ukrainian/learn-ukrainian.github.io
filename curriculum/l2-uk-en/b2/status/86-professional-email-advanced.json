@@ -1,0 +1,49 @@
+{
+  "module": "86-professional-email-advanced",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:28:43.476225Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-20T16:01:02.037166Z",
+    "meta": "2026-01-26T17:21:19.271455Z",
+    "activities": "2026-01-20T16:02:59.104806Z",
+    "vocabulary": "2026-01-21T22:54:37.165516Z",
+    "plan": "2026-01-26T17:21:19.271162Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 3,
+      "message": "4154/4000 (raw: 4236) | engagement: 4/5 | pedagogy: 2 violations | richness: 75% < 95% min (content)"
+    },
+    "activities": {
+      "status": "fail",
+      "violations": 1,
+      "message": "13/3 | priority: No priority types"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "20/20"
+    },
+    "naturalness": {
+      "status": "fail",
+      "violations": 1,
+      "message": "0/10 (PENDING) - Naturalness check required"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "Missing required activity types: essay-response, reading"
+    ],
+    "pass_count": 2,
+    "fail_count": 3
+  }
+}

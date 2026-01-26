@@ -1,0 +1,50 @@
+{
+  "module": "82-obrazotvorche-mystetstvo-2",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:29:45.745366Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-13T19:53:09.530193Z",
+    "meta": "2026-01-26T17:21:19.547923Z",
+    "activities": "2026-01-13T19:57:35.106157Z",
+    "vocabulary": null,
+    "plan": "2026-01-26T17:21:19.547701Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "1987/3000 (raw: 2098) | pedagogy: 2 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "17/12"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 25 (soft target)"
+    },
+    "naturalness": {
+      "status": "fail",
+      "violations": 1,
+      "message": "0/10 (PENDING) - Naturalness check required"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "1 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
+    ],
+    "pass_count": 1,
+    "fail_count": 3
+  }
+}

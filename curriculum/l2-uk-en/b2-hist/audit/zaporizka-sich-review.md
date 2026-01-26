@@ -1,8 +1,8 @@
 # Audit Report: M42 — zaporizka-sich.md
 **Level:** B2 | **Module:** M42 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 22:22:49
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-26 23:33:04
 
 ## Configuration
 **Type:** B2-history
@@ -37,19 +37,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 3631/4000 (raw: 3822)
+- **Words:** ✅ 4027/4000 (raw: 4218)
 - **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 8/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/5
+- **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 36/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (8 activities)
-- **Immersion:** 🇺🇦 98.5% (target 90-100% (history))
+- **Immersion:** 🇺🇦 98.6% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -61,15 +61,15 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 10 | 3 | 100% | 24% | 23.8% |
-| engagement | 7 | 6 | 100% | 14% | 14.3% |
-| timeline_markers | 26 | 10 | 100% | 14% | 14.3% |
+| primary_sources | 13 | 3 | 100% | 24% | 23.8% |
+| engagement | 10 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 28 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 7 | 4 | 100% | 10% | 9.5% |
-| visual | 6 | 4 | 100% | 10% | 9.5% |
-| variety | 0.98 | - | 98% | 5% | 4.7% |
+| visual | 7 | 4 | 100% | 10% | 9.5% |
+| variety | 0.97 | - | 97% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 15 | 3 | 100% | 5% | 4.8% |
+| questions | 17 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
@@ -77,11 +77,11 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Запорозька Січ — козацька республіка** | ⚪️ | 53 | Skipped |
-| **Контекст** | ✅ | 456 | Included in Core |
+| **Контекст** | ✅ | 559 | Included in Core |
 | **Острів Хортиця — серце козацтва** | ⚪️ | 1082 | Skipped |
 | **Читання** | ✅ | 355 | Included in Core |
-| **Демократичний устрій Січі** | ⚪️ | 437 | Skipped |
-| **Вплив на європейську політику** | ⚪️ | 152 | Skipped |
+| **Демократичний устрій Січі** | ⚪️ | 572 | Skipped |
+| **Вплив на європейську політику** | ⚪️ | 269 | Skipped |
 | **Первинні джерела** | ✅ | 533 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 431 | Included in Core |
-| **Підсумок** | ✅ | 132 | Included in Core |
+| **Підсумок** | ✅ | 173 | Included in Core |

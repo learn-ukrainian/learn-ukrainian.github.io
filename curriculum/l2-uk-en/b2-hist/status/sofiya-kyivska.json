@@ -1,0 +1,47 @@
+{
+  "module": "sofiya-kyivska",
+  "level": "B2",
+  "plan_version": "1.0",
+  "last_audit": "2026-01-26T23:24:34.504601Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-22T20:58:10.116108Z",
+    "meta": "2026-01-26T22:20:13.604889Z",
+    "activities": "2026-01-23T21:49:47.276025Z",
+    "vocabulary": "2026-01-22T12:48:58.955632Z",
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "warn",
+      "violations": 0,
+      "message": "3965/4000 (raw: 4235) (35 short)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "8/3"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "17 < 20 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 3,
+    "fail_count": 0
+  }
+}

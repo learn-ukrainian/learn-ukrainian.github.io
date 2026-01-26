@@ -1,0 +1,47 @@
+{
+  "module": "05-the-instrumental-ii-means-and-tools",
+  "level": "A2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:26:06.015620Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-25T09:24:10.781601Z",
+    "meta": "2026-01-26T17:21:18.800848Z",
+    "activities": "2026-01-25T09:23:07.244280Z",
+    "vocabulary": "2026-01-25T18:00:39.561941Z",
+    "plan": "2026-01-26T17:21:18.800508Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "1323/1000 (raw: 1485)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "11/10"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "82/1"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

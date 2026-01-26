@@ -1,7 +1,7 @@
 # Audit Report: M57 — 57-narodna-medytsyna.md
-**Level:** C1 | **Module:** M57 | **Phase:** C1.5 | **Pedagogy:** Immersion & Analysis | **Target:** 3000
+**Level:** C1 | **Module:** M57 | **Phase:** C1 | **Pedagogy:** Immersion & Analysis | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:24:39
+**Generated:** 2026-01-26 22:29:29
 
 ## Configuration
 **Type:** C1-vocab
@@ -56,26 +56,26 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
 - **Immersion:** 🇺🇦 99.7% (target 90-100% (vocab))
-- **Richness:** ✅ 99% (vocabulary)
+- **Richness:** ✅ 98% (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
-**Module Type:** vocabulary
+**Score:** 98% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| collocations | 30 | 20 | 100% | 25% | 25.0% |
-| usage_examples | 51 | 15 | 100% | 20% | 20.0% |
-| engagement | 9 | 4 | 100% | 15% | 15.0% |
-| cultural | 6 | 3 | 100% | 10% | 10.0% |
-| visual | 3 | 3 | 100% | 10% | 10.0% |
-| register_notes | 7 | 5 | 100% | 10% | 10.0% |
-| variety | 0.99 | - | 99% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **100.0%** |
+| examples | 51 | 15 | 100% | 25% | 25.0% |
+| engagement | 9 | 5 | 100% | 19% | 18.7% |
+| variety | 0.99 | - | 99% | 12% | 12.4% |
+| cultural | 6 | 4 | 100% | 12% | 12.5% |
+| realworld | 9 | 3 | 100% | 12% | 12.5% |
+| visual | 3 | 4 | 75% | 6% | 4.7% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 6 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **98.3%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

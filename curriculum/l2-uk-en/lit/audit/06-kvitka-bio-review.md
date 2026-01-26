@@ -2,7 +2,7 @@
 **Level:** LIT | **Module:** M06 | **Phase:** LIT.2 | **Pedagogy:** literature | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:28:02
+**Generated:** 2026-01-26 22:57:37
 
 ## Configuration
 **Type:** LIT-biography
@@ -52,28 +52,28 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.5% (target 95-100% (biography))
-- **Richness:** ✅ 99% (biography)
+- **Richness:** ✅ 96% (literature)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
-**Module Type:** biography
+**Score:** 96% (minimum: 90%)
+**Module Type:** literature
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 8 | 4 | 100% | 19% | 19.0% |
-| engagement | 8 | 6 | 100% | 14% | 14.3% |
-| quotes | 6 | 3 | 100% | 14% | 14.3% |
-| cultural | 12 | 4 | 100% | 10% | 9.5% |
-| visual | 12 | 4 | 100% | 10% | 9.5% |
-| timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
-| legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.98 | - | 98% | 5% | 4.7% |
-| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 20 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.9%** |
+| analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
+| literary_citations | 6 | 5 | 100% | 17% | 17.4% |
+| engagement | 8 | 4 | 100% | 13% | 13.0% |
+| historical_context | 30 | 3 | 100% | 13% | 13.0% |
+| essays | 5 | 2 | 100% | 13% | 13.0% |
+| resources | 2 | 3 | 67% | 9% | 5.8% |
+| variety | 0.98 | - | 98% | 4% | 4.3% |
+| cultural | 12 | - | 100% | 4% | 4.3% |
+| visual | 12 | 1 | 100% | 4% | 4.3% |
+| paragraph_var | 1.00 | - | 100% | 4% | 4.3% |
+| **TOTAL** | | | | | **97.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

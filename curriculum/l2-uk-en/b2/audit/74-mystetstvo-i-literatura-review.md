@@ -1,8 +1,8 @@
 # Audit Report: M74 — 74-mystetstvo-i-literatura.md
-**Level:** B2 | **Module:** M74 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2 | **Module:** M74 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:23:50
+**Generated:** 2026-01-26 22:28:35
 
 ## Configuration
 **Type:** B2-history
@@ -64,26 +64,28 @@
 - **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ⚠️ Too many activities: 11 (target 3-9)
 - **Immersion:** 🇺🇦 98.7% (target 90-100% (history))
-- **Richness:** ✅ 98% (content)
+- **Richness:** ❌ 91% < 95% min (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 98% (minimum: 95%)
-**Module Type:** content
+**Score:** 91% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 56 | 15 | 100% | 25% | 25.0% |
-| engagement | 12 | 5 | 100% | 19% | 18.7% |
-| variety | 0.97 | - | 97% | 12% | 12.1% |
-| cultural | 18 | 4 | 100% | 12% | 12.5% |
-| realworld | 3 | 3 | 100% | 12% | 12.5% |
-| visual | 4 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 0.76 | - | 76% | 6% | 4.8% |
-| questions | 8 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **98.1%** |
+| examples | 56 | 24 | 100% | 20% | 20.0% |
+| engagement | 12 | 5 | 100% | 15% | 15.0% |
+| dialogues | 2 | 4 | 50% | 15% | 7.5% |
+| variety | 0.97 | - | 97% | 10% | 9.7% |
+| cultural | 18 | 3 | 100% | 10% | 10.0% |
+| realworld | 3 | 3 | 100% | 10% | 10.0% |
+| visual | 4 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.76 | - | 76% | 5% | 3.8% |
+| questions | 8 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **91.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

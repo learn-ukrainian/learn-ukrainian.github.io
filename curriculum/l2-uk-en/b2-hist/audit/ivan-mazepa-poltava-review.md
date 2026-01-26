@@ -1,8 +1,8 @@
 # Audit Report: M66 — ivan-mazepa-poltava.md
-**Level:** B2 | **Module:** M66 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4000
-**Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 22:23:06
+**Level:** B2 | **Module:** M66 | **Phase:** HIST.7 | **Pedagogy:** CBI | **Target:** 4000
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-26 22:54:52
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading
+**Required Types:** essay-response, match-up, quiz, reading, true-false
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -35,7 +35,7 @@
 - Total activities: 10 (target: 3-9) ❌
 - Unique types: 10 (minimum: 2) ✅
 - Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
-- Required types used: 2/2 (essay-response, reading) ✅
+- Required types used: 5/5 (essay-response, match-up, quiz, reading, true-false) ✅
 - Low density activities: 0
 
 ## Gates
@@ -54,7 +54,7 @@
 - **Immersion:** 🇺🇦 98.4% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 9/10 (High)
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)

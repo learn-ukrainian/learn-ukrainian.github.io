@@ -1,8 +1,8 @@
 # Audit Report: M16 — 16-advanced-punctuation.md
-**Level:** C1 | **Module:** M16 | **Phase:** C1.1 | **Pedagogy:** Not Specified | **Target:** 3000
+**Level:** C1 | **Module:** M16 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:24:14
+**Generated:** 2026-01-26 22:29:04
 
 ## Configuration
 **Type:** C1-grammar
@@ -68,28 +68,26 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (grammar))
-- **Richness:** ✅ 96% (grammar)
+- **Richness:** ✅ 99% (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 96% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 99% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 26 | 24 | 100% | 20% | 20.0% |
-| engagement | 12 | 5 | 100% | 15% | 15.0% |
-| dialogues | 3 | 4 | 75% | 15% | 11.2% |
-| variety | 0.99 | - | 99% | 10% | 9.9% |
-| cultural | 8 | 3 | 100% | 10% | 10.0% |
-| realworld | 6 | 3 | 100% | 10% | 10.0% |
-| visual | 7 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 10 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **96.2%** |
+| examples | 26 | 15 | 100% | 25% | 25.0% |
+| engagement | 12 | 5 | 100% | 19% | 18.7% |
+| variety | 0.99 | - | 99% | 12% | 12.4% |
+| cultural | 8 | 4 | 100% | 12% | 12.5% |
+| realworld | 6 | 3 | 100% | 12% | 12.5% |
+| visual | 7 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 10 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

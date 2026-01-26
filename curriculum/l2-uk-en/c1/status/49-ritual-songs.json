@@ -1,0 +1,50 @@
+{
+  "module": "49-ritual-songs",
+  "level": "C1",
+  "plan_version": "1.0",
+  "last_audit": "2026-01-26T22:29:25.009043Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-10T15:29:40.493142Z",
+    "meta": "2026-01-26T17:21:19.487142Z",
+    "activities": "2026-01-10T15:28:15.514983Z",
+    "vocabulary": null,
+    "plan": "2026-01-26T17:21:19.486899Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 3,
+      "message": "2034/3000 (raw: 2139) | pedagogy: 1 violations | richness: 91% < 95% min (content)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "15/12"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 25 (soft target)"
+    },
+    "naturalness": {
+      "status": "fail",
+      "violations": 1,
+      "message": "0/10 (PENDING) - Naturalness check required"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "2 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
+    ],
+    "pass_count": 1,
+    "fail_count": 3
+  }
+}

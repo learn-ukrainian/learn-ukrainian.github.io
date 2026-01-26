@@ -1,7 +1,7 @@
 # Audit Report: M117 — chornobyl.md
 **Level:** B2 | **Module:** M117 | **Phase:** HIST.11 | **Pedagogy:** Not Specified | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 22:23:38
+**Generated:** 2026-01-26 22:55:24
 
 ## Configuration
 **Type:** B2-history

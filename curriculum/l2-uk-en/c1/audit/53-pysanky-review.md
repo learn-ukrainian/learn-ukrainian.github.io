@@ -1,7 +1,7 @@
 # Audit Report: M53 — 53-pysanky.md
-**Level:** C1 | **Module:** M53 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** C1 | **Module:** M53 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:24:37
+**Generated:** 2026-01-26 22:29:27
 
 ## Configuration
 **Type:** C1-history
@@ -63,27 +63,26 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⚠️ Too many activities: 12 (target 3-9)
 - **Immersion:** 🇺🇦 99.8% (target 95-100% (history))
-- **Richness:** ✅ 100% (history)
+- **Richness:** ❌ 91% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 100% (minimum: 95%)
-**Module Type:** history
+**Score:** 91% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 4 | 3 | 100% | 24% | 23.8% |
-| engagement | 8 | 6 | 100% | 14% | 14.3% |
-| timeline_markers | 15 | 10 | 100% | 14% | 14.3% |
-| decolonization | 6 | 2 | 100% | 14% | 14.3% |
-| cultural | 5 | 4 | 100% | 10% | 9.5% |
-| visual | 10 | 4 | 100% | 10% | 9.5% |
-| variety | 1.00 | - | 100% | 5% | 4.8% |
-| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 6 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **100.0%** |
+| examples | 16 | 15 | 100% | 25% | 25.0% |
+| engagement | 8 | 5 | 100% | 19% | 18.7% |
+| variety | 1.00 | - | 100% | 12% | 12.5% |
+| cultural | 5 | 4 | 100% | 12% | 12.5% |
+| realworld | 1 | 3 | 33% | 12% | 4.1% |
+| visual | 10 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 6 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **91.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

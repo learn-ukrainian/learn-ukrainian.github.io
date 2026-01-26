@@ -1,0 +1,50 @@
+{
+  "module": "37-temporal-clauses",
+  "level": "B1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:27:07.803867Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-24T21:59:29.305687Z",
+    "meta": "2026-01-26T15:44:41.566296Z",
+    "activities": "2026-01-11T22:51:42.922595Z",
+    "vocabulary": "2026-01-25T15:55:15.301946Z",
+    "plan": "2026-01-26T15:44:41.565991Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "1573/1500 (raw: 2077) | pedagogy: 1 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "11/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "26/25"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Outline Compliance Errors",
+      "Missing required activity types: sentence-combining, writing"
+    ],
+    "pass_count": 4,
+    "fail_count": 1
+  }
+}

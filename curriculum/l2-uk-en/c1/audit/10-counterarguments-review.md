@@ -1,8 +1,8 @@
 # Audit Report: M10 — 10-counterarguments.md
-**Level:** C1 | **Module:** M10 | **Phase:** C1.1 | **Pedagogy:** Not Specified | **Target:** 3000
+**Level:** C1 | **Module:** M10 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:24:10
+**Generated:** 2026-01-26 22:28:55
 
 ## Configuration
 **Type:** C1-grammar
@@ -63,28 +63,26 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.6% (target 90-100% (grammar))
-- **Richness:** ✅ 99% (grammar)
+- **Richness:** ✅ 96% (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 96% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 64 | 24 | 100% | 20% | 20.0% |
-| engagement | 7 | 5 | 100% | 15% | 15.0% |
-| dialogues | 4 | 4 | 100% | 15% | 15.0% |
-| variety | 0.97 | - | 97% | 10% | 9.7% |
-| cultural | 3 | 3 | 100% | 10% | 10.0% |
-| realworld | 4 | 3 | 100% | 10% | 10.0% |
-| visual | 17 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 11 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.7%** |
+| examples | 64 | 15 | 100% | 25% | 25.0% |
+| engagement | 7 | 5 | 100% | 19% | 18.7% |
+| variety | 0.97 | - | 97% | 12% | 12.1% |
+| cultural | 3 | 4 | 75% | 12% | 9.4% |
+| realworld | 4 | 3 | 100% | 12% | 12.5% |
+| visual | 17 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 11 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **96.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

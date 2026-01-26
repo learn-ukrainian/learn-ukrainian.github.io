@@ -2,103 +2,103 @@ module: ludy-rusi
 level: B2-HIST
 version: '2.0'
 items:
-  - lemma: суспільство
-    ipa: /susˈpʲilʲstwɔ/
-    translation: society
-    pos: noun
-    gender: n
-  - lemma: побут
-    ipa: /ˈpɔbut/
-    translation: everyday life
-    pos: noun
-    gender: m
-  - lemma: смерд
-    ipa: /smɛrd/
-    translation: smerd/peasant
-    pos: noun
-    gender: m
-  - lemma: закуп
-    ipa: /ˈzɑkup/
-    translation: zakup/debt bondsman
-    pos: noun
-    gender: m
-  - lemma: холоп
-    ipa: /xɔˈlɔp/
-    translation: kholop/slave
-    pos: noun
-    gender: m
-  - lemma: боярин
-    ipa: /bɔˈjɑrɪn/
-    translation: boyar
-    pos: noun
-    gender: m
-  - lemma: дружина
-    ipa: /druˈʒɪnɑ/
-    translation: druzhina
-    pos: noun
-    gender: f
-  - lemma: купець
-    ipa: /kuˈpɛt͡sʲ/
-    translation: merchant
-    pos: noun
-    gender: m
-  - lemma: ремісник
-    ipa: /rɛmʲisˈnɪk/
-    translation: craftsman
-    pos: noun
-    gender: m
-  - lemma: віче
-    ipa: /ˈwʲit͡ʃɛ/
-    translation: veche - assembly
-    pos: noun
-    gender: n
-  - lemma: громада
-    ipa: /hrɔˈmɑdɑ/
-    translation: community
-    pos: noun
-    gender: f
-  - lemma: рало
-    ipa: /ˈrɑlɔ/
-    translation: ard/plow
-    pos: noun
-    gender: n
-  - lemma: рядович
-    ipa: /rʲɑdɔˈwɪt͡ʃ/
-    translation: contract laborer
-    pos: noun
-    gender: m
-  - lemma: челядь
-    ipa: /ˈt͡ʃɛlʲɑdʲ/
-    translation: household slaves
-    pos: noun
-    gender: f
-  - lemma: терем
-    ipa: /ˈtɛrɛm/
-    translation: terem/tower
-    pos: noun
-    gender: m
-  - lemma: городище
-    ipa: /hɔrɔˈdɪʃt͡ʃɛ/
-    translation: fortified settlement
-    pos: noun
-    gender: n
-  - lemma: соха
-    ipa: /sɔˈxɑ/
-    translation: sokha/plow
-    pos: noun
-    gender: f
-  - lemma: ізгой
-    ipa: /izˈɦɔj/
-    translation: outcast
-    pos: noun
-    gender: m
-  - lemma: верв
-    ipa: /wɛrw/
-    translation: community/territorial unit
-    pos: noun
-    gender: f
-  - lemma: тіун
-    ipa: /tʲiˈun/
-    translation: steward/administrator
-    pos: noun
-    gender: m
+- lemma: суспільство
+  ipa: /susˈpʲilʲstwɔ/
+  translation: society
+  pos: noun
+  gender: n
+- lemma: побут
+  ipa: /ˈpɔbut/
+  translation: everyday life
+  pos: noun
+  gender: m
+- lemma: смерд
+  ipa: /smɛrd/
+  translation: smerd/peasant
+  pos: noun
+  gender: m
+- lemma: закуп
+  ipa: /ˈzɑkup/
+  translation: zakup/debt bondsman
+  pos: noun
+  gender: m
+- lemma: холоп
+  ipa: /xɔˈlɔp/
+  translation: kholop/slave
+  pos: noun
+  gender: m
+- lemma: боярин
+  ipa: /bɔˈjɑrɪn/
+  translation: boyar
+  pos: noun
+  gender: m
+- lemma: дружина
+  ipa: /druˈʒɪnɑ/
+  translation: druzhina
+  pos: noun
+  gender: f
+- lemma: купець
+  ipa: /kuˈpɛt͡sʲ/
+  translation: merchant
+  pos: noun
+  gender: f
+- lemma: ремісник
+  ipa: /rɛmʲisˈnɪk/
+  translation: craftsman
+  pos: noun
+  gender: m
+- lemma: віча
+  ipa: /ˈwʲit͡ʃɛ/
+  translation: veche - assembly
+  pos: noun
+  gender: f
+- lemma: громада
+  ipa: /hrɔˈmɑdɑ/
+  translation: community
+  pos: noun
+  gender: f
+- lemma: рало
+  ipa: /ˈrɑlɔ/
+  translation: ard/plow
+  pos: noun
+  gender: n
+- lemma: рядович
+  ipa: /rʲɑdɔˈwɪt͡ʃ/
+  translation: contract laborer
+  pos: noun
+  gender: m
+- lemma: челядь
+  ipa: /ˈt͡ʃɛlʲɑdʲ/
+  translation: household slaves
+  pos: noun
+  gender: f
+- lemma: терем
+  ipa: /ˈtɛrɛm/
+  translation: terem/tower
+  pos: noun
+  gender: m
+- lemma: городище
+  ipa: /hɔrɔˈdɪʃt͡ʃɛ/
+  translation: fortified settlement
+  pos: noun
+  gender: n
+- lemma: соха
+  ipa: /sɔˈxɑ/
+  translation: sokha/plow
+  pos: noun
+  gender: f
+- lemma: ізгой
+  ipa: /izˈɦɔj/
+  translation: outcast
+  pos: noun
+  gender: m
+- lemma: верв
+  ipa: /wɛrw/
+  translation: community/territorial unit
+  pos: noun
+  gender: m
+- lemma: тіун
+  ipa: /tʲiˈun/
+  translation: steward/administrator
+  pos: noun
+  gender: m

@@ -1,8 +1,8 @@
 # Audit Report: M15 — 15-checkpoint-aspect-mastery.md
-**Level:** B1 | **Module:** M15 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 1200
+**Level:** B1 | **Module:** M15 | **Phase:** B1 | **Pedagogy:** TTT | **Target:** 1200
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 19:22:13
+**Generated:** 2026-01-26 22:26:53
 
 ## Configuration
 **Type:** B1-checkpoint
@@ -58,25 +58,28 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.8% (checkpoint - no gate)
-- **Richness:** ✅ 98% (checkpoint)
+- **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 98% (minimum: 85%)
-**Module Type:** checkpoint
+**Score:** 99% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| activity_types | 11 | 8 | 100% | 25% | 25.0% |
-| review_sections | 26 | 3 | 100% | 20% | 20.0% |
-| variety | 0.92 | - | 92% | 15% | 13.8% |
-| engagement | 6 | 3 | 100% | 10% | 10.0% |
-| cultural | 3 | - | 100% | 10% | 10.0% |
-| visual | 8 | 3 | 100% | 10% | 10.0% |
-| paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
-| **TOTAL** | | | | | **98.8%** |
+| examples | 30 | 24 | 100% | 20% | 20.0% |
+| engagement | 6 | 5 | 100% | 15% | 15.0% |
+| dialogues | 10 | 4 | 100% | 15% | 15.0% |
+| variety | 0.92 | - | 92% | 10% | 9.2% |
+| cultural | 3 | 3 | 100% | 10% | 10.0% |
+| realworld | 7 | 3 | 100% | 10% | 10.0% |
+| visual | 8 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 44 | 5 | 100% | 5% | 5.0% |
+| proverbs | 4 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.2%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

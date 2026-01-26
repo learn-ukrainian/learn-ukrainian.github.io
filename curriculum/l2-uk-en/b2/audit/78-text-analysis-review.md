@@ -1,8 +1,8 @@
 # Audit Report: M78 — 78-text-analysis.md
-**Level:** B2 | **Module:** M78 | **Phase:** B2.4 | **Pedagogy:** TTT | **Target:** 1750
+**Level:** B2 | **Module:** M78 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:23:52
+**Generated:** 2026-01-26 22:28:38
 
 ## Configuration
 **Type:** B2-skills
@@ -72,25 +72,27 @@
 - **Pedagogy:** ❌ 3 violations
 - **Content_heavy:** ✅ Content-heavy OK (15 activities)
 - **Immersion:** 🇺🇦 99.0% (target 90-100% (skills))
-- **Richness:** ✅ 99% (skills)
+- **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 80%)
-**Module Type:** skills
+**Score:** 99% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 88 | 15 | 100% | 26% | 25.5% |
-| engagement | 7 | 5 | 100% | 19% | 19.4% |
-| variety | 0.98 | - | 98% | 12% | 12.0% |
-| cultural | 3 | - | 100% | 12% | 12.2% |
-| realworld | 6 | 3 | 100% | 12% | 12.2% |
-| visual | 3 | 2 | 100% | 6% | 6.1% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.1% |
-| questions | 13 | 4 | 100% | 6% | 6.1% |
+| examples | 88 | 24 | 100% | 20% | 20.0% |
+| engagement | 7 | 5 | 100% | 15% | 15.0% |
+| dialogues | 8 | 4 | 100% | 15% | 15.0% |
+| variety | 0.98 | - | 98% | 10% | 9.8% |
+| cultural | 3 | 3 | 100% | 10% | 10.0% |
+| realworld | 6 | 3 | 100% | 10% | 10.0% |
+| visual | 3 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 13 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit

@@ -1,8 +1,8 @@
 # Audit Report: M27 — 27-relative-clauses-de-kudy-zvidky.md
-**Level:** B1 | **Module:** M27 | **Phase:** B1.3a | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M27 | **Phase:** B1 | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 19:22:21
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-26 22:27:01
 
 ## Configuration
 **Type:** B1-grammar
@@ -11,6 +11,7 @@
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
 **Priority Types:** cloze, error-correction, fill-in, unjumble
+**Required Types:** fill-in, matching, sentence-combining, translation
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥25 words
@@ -36,7 +37,17 @@
 - Total activities: 12 (target: 8-12) ✅
 - Unique types: 10 (minimum: 4) ✅
 - Priority types used: 3/4 (cloze, error-correction, unjumble) ✅
+- Required types used: 0/4 (none) ❌
 - Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['sentence-combining', 'matching', 'translation']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
+  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1788/1500 (raw: 2059)
@@ -49,7 +60,7 @@
 - **Vocab:** ✅ 57/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.8% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 98% (grammar)

@@ -1,0 +1,49 @@
+{
+  "module": "14-stylistic-connectors",
+  "level": "B2",
+  "plan_version": "1.0",
+  "last_audit": "2026-01-26T22:27:53.612610Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-14T21:25:28.475663Z",
+    "meta": "2026-01-26T17:21:19.103777Z",
+    "activities": "2026-01-11T23:20:02.146491Z",
+    "vocabulary": "2026-01-21T22:54:26.316015Z",
+    "plan": "2026-01-26T17:21:19.103595Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "2451/1750 (raw: 3435) | pedagogy: 5 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "14/10"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "4 < 25 (soft target)"
+    },
+    "naturalness": {
+      "status": "fail",
+      "violations": 1,
+      "message": "1/10 (PENDING) - Naturalness check required"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "6 Outline Compliance Errors"
+    ],
+    "pass_count": 2,
+    "fail_count": 2
+  }
+}

@@ -1,8 +1,8 @@
 # Audit Report: M20 — 20-register-medical-ukrainian.md
-**Level:** B2 | **Module:** M20 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 1750
+**Level:** B2 | **Module:** M20 | **Phase:** B2 | **Pedagogy:** Not Specified | **Target:** 1750
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:23:15
+**Generated:** 2026-01-26 22:27:57
 
 ## Configuration
 **Type:** B2-grammar
@@ -67,26 +67,28 @@
 - **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
-- **Richness:** ✅ 99% (style)
+- **Richness:** ✅ 95% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
-**Module Type:** style
+**Score:** 95% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| exemplar_texts | 6 | 2 | 100% | 25% | 25.0% |
-| model_answers | 100 | 3 | 100% | 20% | 20.0% |
+| examples | 100 | 24 | 100% | 20% | 20.0% |
 | engagement | 9 | 5 | 100% | 15% | 15.0% |
-| register_analysis | 15 | 5 | 100% | 15% | 15.0% |
-| visual | 12 | 4 | 100% | 10% | 10.0% |
-| variety | 0.91 | - | 91% | 5% | 4.6% |
-| cultural | 6 | - | 100% | 5% | 5.0% |
+| dialogues | 67 | 4 | 100% | 15% | 15.0% |
+| variety | 0.91 | - | 91% | 10% | 9.1% |
+| cultural | 6 | 3 | 100% | 10% | 10.0% |
+| realworld | 2 | 3 | 67% | 10% | 6.7% |
+| visual | 12 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.5%** |
+| questions | 87 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **95.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

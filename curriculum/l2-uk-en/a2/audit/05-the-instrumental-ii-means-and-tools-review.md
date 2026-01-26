@@ -1,8 +1,8 @@
 # Audit Report: M05 — 05-the-instrumental-ii-means-and-tools.md
-**Level:** A2 | **Module:** M05 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 1000
+**Level:** A2 | **Module:** M05 | **Phase:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 08:59:11
+**Generated:** 2026-01-26 22:26:06
 
 ## Configuration
 **Type:** A2-grammar
@@ -38,15 +38,6 @@
 - Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
 - Required types used: 3/3 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
-
-## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (5 words): машиною, руками, ножем, літаком, очима...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1323/1000 (raw: 1485)

@@ -1,8 +1,8 @@
 # Audit Report: M20 — 20-c1-1-checkpoint.md
-**Level:** C1 | **Module:** M20 | **Phase:** C1.1 | **Pedagogy:** Not Specified | **Target:** 1750
+**Level:** C1 | **Module:** M20 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 1750
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:24:16
+**Generated:** 2026-01-26 22:29:06
 
 ## Configuration
 **Type:** C1-checkpoint
@@ -81,25 +81,26 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 97.9% (checkpoint - no gate)
-- **Richness:** ✅ 99% (checkpoint)
+- **Richness:** ❌ 93% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 99% (minimum: 85%)
-**Module Type:** checkpoint
+**Score:** 93% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| activity_types | 9 | 8 | 100% | 25% | 25.0% |
-| review_sections | 23 | 3 | 100% | 20% | 20.0% |
-| variety | 0.95 | - | 95% | 15% | 14.2% |
-| engagement | 8 | 3 | 100% | 10% | 10.0% |
-| cultural | 2 | - | 100% | 10% | 10.0% |
-| visual | 14 | 3 | 100% | 10% | 10.0% |
-| paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
-| **TOTAL** | | | | | **99.2%** |
+| examples | 41 | 15 | 100% | 25% | 25.0% |
+| engagement | 8 | 5 | 100% | 19% | 18.7% |
+| variety | 0.95 | - | 95% | 12% | 11.9% |
+| cultural | 2 | 4 | 50% | 12% | 6.2% |
+| realworld | 5 | 3 | 100% | 12% | 12.5% |
+| visual | 14 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 20 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **93.1%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

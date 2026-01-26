@@ -1,0 +1,50 @@
+{
+  "module": "90-praktyka-2-vysoke-mystetstvo",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:29:50.838584Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-13T21:54:48.306021Z",
+    "meta": "2026-01-26T17:21:19.564034Z",
+    "activities": "2026-01-13T21:56:44.295218Z",
+    "vocabulary": null,
+    "plan": "2026-01-26T17:21:19.563487Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "2057/3000 (raw: 2162) | pedagogy: 1 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "17/12"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 25 (soft target)"
+    },
+    "naturalness": {
+      "status": "fail",
+      "violations": 1,
+      "message": "0/10 (PENDING) - Naturalness check required"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "1 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
+    ],
+    "pass_count": 1,
+    "fail_count": 3
+  }
+}

@@ -2,83 +2,82 @@ module: khozary-i-sloviany
 level: B2-HIST
 version: '2.0'
 items:
-  - lemma: каганат
-    ipa: /kɑhɑˈnɑt/
-    translation: khaganate
-    pos: noun
-    gender: m
-  - lemma: каган
-    ipa: /kɑˈhɑn/
-    translation: khagan
-    pos: noun
-    gender: m
-  - lemma: хозари
-    ipa: /xɔˈzɑrɪ/
-    translation: Khazars
-    pos: noun
-    gender: pl
-  - lemma: данина
-    ipa: /dɑˈnɪnɑ/
-    translation: tribute
-    pos: noun
-    gender: f
-  - lemma: іудаїзм
-    ipa: /iudɑˈjizm/
-    translation: Judaism
-    pos: noun
-    gender: m
-  - lemma: толерантність
-    ipa: /tɔlɛˈrɑntnʲisʲtʲ/
-    translation: tolerance
-    pos: noun
-    gender: f
-  - lemma: фортеця
-    ipa: /fɔrˈtɛt͡sʲɑ/
-    translation: fortress
-    pos: noun
-    gender: f
-  - lemma: похід
-    ipa: /pɔˈxid/
-    translation: campaign
-    pos: noun
-    gender: m
-  - lemma: торгівля
-    ipa: /tɔrˈhiwlʲɑ/
-    translation: trade
-    pos: noun
-    gender: f
-  - lemma: імперія
-    ipa: /imˈpɛrʲijɑ/
-    translation: empire
-    pos: noun
-    gender: f
-  - lemma: степ
-    ipa: /stɛp/
-    translation: steppe
-    pos: noun
-    gender: m
-  - lemma: залежність
-    ipa: /zɑˈlɛʒnʲisʲtʲ/
-    translation: dependency
-    pos: noun
-    gender: f
-  - lemma: Ітіль
-    ipa: /iˈtʲilʲ/
-    translation: Itil
-    pos: noun
-    gender: m
-  - lemma: Саркел
-    ipa: /sɑrˈkɛl/
-    translation: Sarkel
-    pos: noun
-    gender: m
-  - lemma: в'ятичі
-    ipa: /wˈjɑtɪt͡ʃi/
-    translation: Vyatichi
-    pos: noun
-    gender: pl
-  - lemma: верхівка
-    ipa: /wɛrˈxiwkɑ/
-    translation: elite
-    pos: noun
-    gender: f
+- lemma: каганат
+  ipa: /kɑhɑˈnɑt/
+  translation: khaganate
+  pos: noun
+  gender: m
+- lemma: каган
+  ipa: /kɑˈhɑn/
+  translation: khagan
+  pos: noun
+  gender: m
+- lemma: хозар
+  ipa: /xɔˈzɑrɪ/
+  translation: Khazars
+  pos: noun
+- lemma: данина
+  ipa: /dɑˈnɪnɑ/
+  translation: tribute
+  pos: noun
+  gender: f
+- lemma: іудаїзм
+  ipa: /iudɑˈjizm/
+  translation: Judaism
+  pos: noun
+  gender: m
+- lemma: толерантність
+  ipa: /tɔlɛˈrɑntnʲisʲtʲ/
+  translation: tolerance
+  pos: noun
+  gender: f
+- lemma: фортеця
+  ipa: /fɔrˈtɛt͡sʲɑ/
+  translation: fortress
+  pos: noun
+  gender: f
+- lemma: похід
+  ipa: /pɔˈxid/
+  translation: campaign
+  pos: noun
+  gender: m
+- lemma: торгівля
+  ipa: /tɔrˈhiwlʲɑ/
+  translation: trade
+  pos: noun
+  gender: f
+- lemma: імперія
+  ipa: /imˈpɛrʲijɑ/
+  translation: empire
+  pos: noun
+  gender: f
+- lemma: степ
+  ipa: /stɛp/
+  translation: steppe
+  pos: noun
+  gender: m
+- lemma: залежність
+  ipa: /zɑˈlɛʒnʲisʲtʲ/
+  translation: dependency
+  pos: noun
+  gender: f
+- lemma: ітіль
+  ipa: /iˈtʲilʲ/
+  translation: Itil
+  pos: noun
+  gender: f
+- lemma: саркел
+  ipa: /sɑrˈkɛl/
+  translation: Sarkel
+  pos: noun
+  gender: m
+- lemma: в'ятич
+  ipa: /wˈjɑtɪt͡ʃi/
+  translation: Vyatichi
+  pos: noun
+  gender: m
+- lemma: верхівка
+  ipa: /wɛrˈxiwkɑ/
+  translation: elite
+  pos: noun
+  gender: f

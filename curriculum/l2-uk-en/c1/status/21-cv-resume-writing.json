@@ -1,0 +1,50 @@
+{
+  "module": "21-cv-resume-writing",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:29:07.578831Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-09T21:35:37.262137Z",
+    "meta": "2026-01-26T17:21:19.397250Z",
+    "activities": "2026-01-13T17:43:16.653093Z",
+    "vocabulary": "2026-01-21T21:57:33.893483Z",
+    "plan": "2026-01-26T17:21:19.397054Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "2613/3000 (raw: 2794)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "16/12"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 25 (soft target)"
+    },
+    "naturalness": {
+      "status": "fail",
+      "violations": 1,
+      "message": "None/10 (PENDING) - Naturalness check required"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "7 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
+    ],
+    "pass_count": 1,
+    "fail_count": 3
+  }
+}

@@ -1,7 +1,7 @@
 # Audit Report: M104 — 104-analiz-poezii.md
-**Level:** C1 | **Module:** M104 | **Phase:** C1.6 | **Pedagogy:** Literary Analysis | **Target:** 3500
+**Level:** C1 | **Module:** M104 | **Phase:** C1 | **Pedagogy:** Literary Analysis | **Target:** 3500
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:25:08
+**Generated:** 2026-01-26 22:28:59
 
 ## Configuration
 **Type:** C1-literature
@@ -62,28 +62,26 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (13 activities)
 - **Immersion:** 🇺🇦 100.0% (target 90-100% (literature))
-- **Richness:** ✅ 96% (literature)
+- **Richness:** ❌ 88% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 96% (minimum: 90%)
-**Module Type:** literature
+**Score:** 88% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
-| literary_citations | 4 | 5 | 80% | 17% | 13.9% |
-| engagement | 6 | 4 | 100% | 13% | 13.0% |
-| historical_context | 5 | 3 | 100% | 13% | 13.0% |
-| essays | 5 | 2 | 100% | 13% | 13.0% |
-| resources | 5 | 3 | 100% | 9% | 8.7% |
-| variety | 0.99 | - | 99% | 4% | 4.3% |
-| cultural | 3 | - | 100% | 4% | 4.3% |
-| visual | 4 | 1 | 100% | 4% | 4.3% |
-| paragraph_var | 1.00 | - | 100% | 4% | 4.3% |
-| **TOTAL** | | | | | **96.5%** |
+| examples | 21 | 15 | 100% | 25% | 25.0% |
+| engagement | 6 | 5 | 100% | 19% | 18.7% |
+| variety | 0.99 | - | 99% | 12% | 12.4% |
+| cultural | 3 | 4 | 75% | 12% | 9.4% |
+| realworld | 1 | 3 | 33% | 12% | 4.1% |
+| visual | 4 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 16 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **88.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

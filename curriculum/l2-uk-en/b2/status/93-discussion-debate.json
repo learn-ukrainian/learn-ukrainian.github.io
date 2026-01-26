@@ -1,0 +1,49 @@
+{
+  "module": "93-discussion-debate",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:28:48.432733Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-21T10:46:24.786227Z",
+    "meta": "2026-01-26T17:21:19.296699Z",
+    "activities": "2026-01-21T11:05:20.959257Z",
+    "vocabulary": "2026-01-21T22:54:39.138269Z",
+    "plan": "2026-01-26T17:21:19.296437Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4228/1750 (raw: 4400)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "14/14"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "15 < 20 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "8/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "2 Outline Compliance Errors"
+    ],
+    "pass_count": 4,
+    "fail_count": 0
+  }
+}

@@ -1,7 +1,7 @@
 # Audit Report: M56 — 56-narodna-mifolohiia.md
-**Level:** C1 | **Module:** M56 | **Phase:** C1.5 | **Pedagogy:** Immersion & Analysis | **Target:** 3000
+**Level:** C1 | **Module:** M56 | **Phase:** C1 | **Pedagogy:** Immersion & Analysis | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:24:39
+**Generated:** 2026-01-26 22:29:29
 
 ## Configuration
 **Type:** C1-vocab
@@ -60,26 +60,26 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (16 activities)
 - **Immersion:** 🇺🇦 99.8% (target 90-100% (vocab))
-- **Richness:** ✅ 96% (vocabulary)
+- **Richness:** ✅ 96% (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 96% (minimum: 95%)
-**Module Type:** vocabulary
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| collocations | 30 | 20 | 100% | 25% | 25.0% |
-| usage_examples | 18 | 15 | 100% | 20% | 20.0% |
-| engagement | 7 | 4 | 100% | 15% | 15.0% |
-| cultural | 6 | 3 | 100% | 10% | 10.0% |
-| visual | 2 | 3 | 67% | 10% | 6.7% |
-| register_notes | 6 | 5 | 100% | 10% | 10.0% |
-| variety | 0.99 | - | 99% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **96.7%** |
+| examples | 18 | 15 | 100% | 25% | 25.0% |
+| engagement | 7 | 5 | 100% | 19% | 18.7% |
+| variety | 0.99 | - | 99% | 12% | 12.4% |
+| cultural | 6 | 4 | 100% | 12% | 12.5% |
+| realworld | 7 | 3 | 100% | 12% | 12.5% |
+| visual | 2 | 4 | 50% | 6% | 3.1% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 7 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **96.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

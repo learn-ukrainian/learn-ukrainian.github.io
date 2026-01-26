@@ -1,0 +1,52 @@
+{
+  "module": "yuriy-nemyrych",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:56:05.998564Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-17T21:45:15.870687Z",
+    "meta": "2026-01-26T17:21:21.193691Z",
+    "activities": "2026-01-17T21:45:15.814219Z",
+    "vocabulary": null,
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "2127/4000 (raw: 2301) | pedagogy: 1 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "16/3"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 24 (soft target)"
+    },
+    "naturalness": {
+      "status": "fail",
+      "violations": 1,
+      "message": "None/10 (PENDING) - Naturalness check required"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "1 Critical Template Violations",
+      "6 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
+      "Missing required activity types: reading"
+    ],
+    "pass_count": 1,
+    "fail_count": 3
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "module": "22-black-council-history",
+  "level": "LIT",
+  "plan_version": "1.0",
+  "last_audit": "2026-01-26T22:57:57.197719Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-17T21:45:15.875253Z",
+    "meta": "2026-01-26T17:21:21.862962Z",
+    "activities": "2026-01-18T21:54:47.730875Z",
+    "vocabulary": null,
+    "plan": "2026-01-26T17:21:21.862585Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "3529/4000 (raw: 3874) | richness: 64% < 90% min (literature) - REWRITE needed"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5/3"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "0/0"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
+      "Missing required activity types: cloze, group-sort, match-up"
+    ],
+    "pass_count": 3,
+    "fail_count": 2
+  }
+}

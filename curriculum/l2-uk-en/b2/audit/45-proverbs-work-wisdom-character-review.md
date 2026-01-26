@@ -1,8 +1,8 @@
 # Audit Report: M45 — 45-proverbs-work-wisdom-character.md
-**Level:** B2 | **Module:** M45 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 1750
+**Level:** B2 | **Module:** M45 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:23:31
+**Generated:** 2026-01-26 22:28:15
 
 ## Configuration
 **Type:** B2-vocab
@@ -64,26 +64,28 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (vocab))
-- **Richness:** ✅ 99% (phraseology)
+- **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
-**Module Type:** phraseology
+**Score:** 96% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| engagement | 8 | 4 | 100% | 25% | 25.0% |
-| variety | 0.98 | - | 98% | 17% | 16.3% |
-| cultural | 2 | - | 100% | 17% | 16.7% |
-| visual | 3 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 1.00 | - | 100% | 8% | 8.3% |
-| examples | 43 | - | 100% | 8% | 8.3% |
-| realworld | 6 | - | 100% | 8% | 8.3% |
-| questions | 6 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **99.7%** |
+| examples | 43 | 24 | 100% | 20% | 20.0% |
+| engagement | 8 | 5 | 100% | 15% | 15.0% |
+| dialogues | 5 | 4 | 100% | 15% | 15.0% |
+| variety | 0.98 | - | 98% | 10% | 9.8% |
+| cultural | 2 | 3 | 67% | 10% | 6.7% |
+| realworld | 6 | 3 | 100% | 10% | 10.0% |
+| visual | 3 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 6 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **96.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

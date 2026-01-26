@@ -1,8 +1,8 @@
 # Audit Report: M87 — 87-professional-reports-basics.md
-**Level:** B2 | **Module:** M87 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 1750
+**Level:** B2 | **Module:** M87 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:23:58
+**Generated:** 2026-01-26 22:28:44
 
 ## Configuration
 **Type:** B2-skills

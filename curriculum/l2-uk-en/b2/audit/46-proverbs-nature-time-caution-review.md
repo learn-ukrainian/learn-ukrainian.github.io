@@ -1,8 +1,8 @@
 # Audit Report: M46 — 46-proverbs-nature-time-caution.md
-**Level:** B2 | **Module:** M46 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 1750
+**Level:** B2 | **Module:** M46 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:23:32
+**Generated:** 2026-01-26 22:28:16
 
 ## Configuration
 **Type:** B2-vocab
@@ -73,26 +73,28 @@
 - **Pedagogy:** ❌ 6 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (vocab))
-- **Richness:** ✅ 96% (phraseology)
+- **Richness:** ✅ 97% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 96% (minimum: 95%)
-**Module Type:** phraseology
+**Score:** 97% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| engagement | 12 | 4 | 100% | 25% | 25.0% |
-| variety | 0.77 | - | 77% | 17% | 12.8% |
-| cultural | 12 | - | 100% | 17% | 16.7% |
-| visual | 4 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 1.00 | - | 100% | 8% | 8.3% |
-| examples | 55 | - | 100% | 8% | 8.3% |
-| realworld | 5 | - | 100% | 8% | 8.3% |
-| questions | 12 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **96.2%** |
+| examples | 55 | 24 | 100% | 20% | 20.0% |
+| engagement | 12 | 5 | 100% | 15% | 15.0% |
+| dialogues | 26 | 4 | 100% | 15% | 15.0% |
+| variety | 0.77 | - | 77% | 10% | 7.7% |
+| cultural | 12 | 3 | 100% | 10% | 10.0% |
+| realworld | 5 | 3 | 100% | 10% | 10.0% |
+| visual | 4 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 12 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **97.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

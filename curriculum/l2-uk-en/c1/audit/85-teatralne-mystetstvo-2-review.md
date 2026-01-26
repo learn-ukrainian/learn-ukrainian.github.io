@@ -1,7 +1,7 @@
 # Audit Report: M85 — 85-teatralne-mystetstvo-2.md
-**Level:** C1 | **Module:** M85 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 3000
+**Level:** C1 | **Module:** M85 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:24:57
+**Generated:** 2026-01-26 22:29:47
 
 ## Configuration
 **Type:** C1-fine-arts

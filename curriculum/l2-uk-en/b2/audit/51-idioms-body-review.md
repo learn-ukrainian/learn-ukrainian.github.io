@@ -1,8 +1,8 @@
 # Audit Report: M51 — 51-idioms-body.md
-**Level:** B2 | **Module:** M51 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 1750
+**Level:** B2 | **Module:** M51 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:23:35
+**Generated:** 2026-01-26 22:28:19
 
 ## Configuration
 **Type:** B2-vocab
@@ -63,26 +63,28 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.9% (target 90-100% (vocab))
-- **Richness:** ✅ 99% (phraseology)
+- **Richness:** ❌ 93% < 95% min (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
-**Module Type:** phraseology
+**Score:** 93% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| engagement | 11 | 4 | 100% | 25% | 25.0% |
-| variety | 0.98 | - | 98% | 17% | 16.3% |
-| cultural | 4 | - | 100% | 17% | 16.7% |
-| visual | 4 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 1.00 | - | 100% | 8% | 8.3% |
-| examples | 16 | - | 100% | 8% | 8.3% |
-| realworld | 7 | - | 100% | 8% | 8.3% |
-| questions | 16 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **99.7%** |
+| examples | 16 | 24 | 67% | 20% | 13.4% |
+| engagement | 11 | 5 | 100% | 15% | 15.0% |
+| dialogues | 20 | 4 | 100% | 15% | 15.0% |
+| variety | 0.98 | - | 98% | 10% | 9.8% |
+| cultural | 4 | 3 | 100% | 10% | 10.0% |
+| realworld | 7 | 3 | 100% | 10% | 10.0% |
+| visual | 4 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 16 | 5 | 100% | 5% | 5.0% |
+| proverbs | 1 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **93.2%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

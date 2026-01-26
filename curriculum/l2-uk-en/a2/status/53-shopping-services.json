@@ -1,0 +1,50 @@
+{
+  "module": "53-shopping-services",
+  "level": "A2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:26:33.447171Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-08T21:07:44.694454Z",
+    "meta": "2026-01-26T17:21:18.956678Z",
+    "activities": "2026-01-12T14:26:36.693560Z",
+    "vocabulary": "2026-01-25T15:44:11.576734Z",
+    "plan": "2026-01-26T17:21:18.956470Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "1328/1000 (raw: 1689) | pedagogy: 1 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "47/1"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Outline Compliance Errors",
+      "Missing required activity types: dialogue, fill-in, role-play, vocabulary-drill"
+    ],
+    "pass_count": 4,
+    "fail_count": 1
+  }
+}

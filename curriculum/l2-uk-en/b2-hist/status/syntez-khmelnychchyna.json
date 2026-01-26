@@ -1,0 +1,47 @@
+{
+  "module": "syntez-khmelnychchyna",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:54:50.275980Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-24T22:49:50.323217Z",
+    "meta": "2026-01-26T22:20:13.637329Z",
+    "activities": "2026-01-24T22:34:56.898663Z",
+    "vocabulary": "2026-01-24T22:18:01.825768Z",
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4493/4000 (raw: 4570)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5/3"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "20/20"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

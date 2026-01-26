@@ -1,4 +1,104 @@
 module: liublinska-uniia
 level: B2-HIST
 version: '2.0'
-items: []
+items:
+  - lemma: інкорпорація
+    ipa: /inkorpɔˈrat͡s⁽ʲ⁾ijɐ/
+    translation: incorporation
+    pos: noun
+    gender: f
+  - lemma: привілей
+    ipa: /prɪʋ⁽ʲ⁾iˈlɛi̯/
+    translation: privilege
+    pos: noun
+    gender: m
+  - lemma: сейм
+    ipa: /sɛi̯m/
+    translation: diet/parliament
+    pos: noun
+    gender: m
+  - lemma: унія
+    ipa: /ˈun⁽ʲ⁾ijɐ/
+    translation: union
+    pos: noun
+    gender: f
+  - lemma: Річ Посполита
+    ipa: /r⁽ʲ⁾it͡ʃ pɔspɔˈlɪtɐ/
+    translation: Polish-Lithuanian Commonwealth
+    pos: noun
+    gender: f
+  - lemma: шляхта
+    ipa: /ˈʃlʲɐxtɐ/
+    translation: nobility
+    pos: noun
+    gender: f
+  - lemma: народоправство
+    ipa: /nɐrɔdɔˈprɑu̯stʋɔ/
+    translation: democracy/folk rule
+    pos: noun
+    gender: n
+  - lemma: федерація
+    ipa: /fɛdɛˈrat͡s⁽ʲ⁾ijɐ/
+    translation: federation
+    pos: noun
+    gender: f
+  - lemma: магнат
+    ipa: /mɐˈɦnɑt/
+    translation: magnate/tycoon
+    pos: noun
+    gender: m
+  - lemma: суб'єктність
+    ipa: /subˈjɛktn⁽ʲ⁾is⁽ʲ⁾tʲ/
+    translation: agency/subjectivity
+    pos: noun
+    gender: f
+  - lemma: автономія
+    ipa: /ɐu̯tɔˈnɔm⁽ʲ⁾ijɐ/
+    translation: autonomy
+    pos: noun
+    gender: f
+  - lemma: діловодство
+    ipa: /d⁽ʲ⁾ilɔˈʋɔdstʋɔ/
+    translation: record-keeping/office work
+    pos: noun
+    gender: n
+  - lemma: полонізація
+    ipa: /pɔlɔn⁽ʲ⁾izˈat͡s⁽ʲ⁾ijɐ/
+    translation: Polonization
+    pos: noun
+    gender: f
+  - lemma: ідентичність
+    ipa: /idɛnˈtɪt͡ʃn⁽ʲ⁾is⁽ʲ⁾tʲ/
+    translation: identity
+    pos: noun
+    gender: f
+  - lemma: плюралізм
+    ipa: /plʲurɐˈl⁽ʲ⁾izm/
+    translation: pluralism
+    pos: noun
+    gender: m
+  - lemma: латифундія
+    ipa: /lɐtɪˈfund⁽ʲ⁾ijɐ/
+    translation: latifundia/large estate
+    pos: noun
+    gender: f
+  - lemma: фільварок
+    ipa: /f⁽ʲ⁾ilʲˈʋɑrɔk/
+    translation: manorial farm
+    pos: noun
+    gender: m
+  - lemma: ренесанс
+    ipa: /rɛnɛˈsɑns/
+    translation: renaissance
+    pos: noun
+    gender: m
+  - lemma: Реформація
+    ipa: /rɛfɔrˈmat͡s⁽ʲ⁾ijɐ/
+    translation: Reformation
+    pos: noun
+    gender: f
+  - lemma: полеміка
+    ipa: /pɔˈlɛm⁽ʲ⁾ikɐ/
+    translation: polemic/debate
+    pos: noun
+    gender: f

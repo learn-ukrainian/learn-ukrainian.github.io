@@ -1,0 +1,47 @@
+{
+  "module": "kozatski-povstannia-16",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T23:52:02.905607Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-25T21:28:31.750921Z",
+    "meta": "2026-01-26T22:20:13.236258Z",
+    "activities": "2026-01-25T21:28:31.750612Z",
+    "vocabulary": "2026-01-23T21:52:22.929147Z",
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4802/4000 (raw: 4975)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5/3"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "25/20"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

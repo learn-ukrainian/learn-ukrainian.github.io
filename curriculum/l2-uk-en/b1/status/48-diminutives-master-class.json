@@ -1,0 +1,50 @@
+{
+  "module": "48-diminutives-master-class",
+  "level": "B1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:27:14.876818Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-24T22:22:47.073544Z",
+    "meta": "2026-01-26T15:44:41.602519Z",
+    "activities": "2026-01-10T23:40:48.334760Z",
+    "vocabulary": "2026-01-25T18:00:40.485972Z",
+    "plan": "2026-01-26T15:44:41.602319Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "1668/1500 (raw: 2074) | pedagogy: 1 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "11/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "131/25"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Outline Compliance Errors",
+      "Missing required activity types: context-matching, formation, multiple-choice"
+    ],
+    "pass_count": 4,
+    "fail_count": 1
+  }
+}

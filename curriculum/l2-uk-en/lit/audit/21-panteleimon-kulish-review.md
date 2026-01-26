@@ -2,7 +2,7 @@
 **Level:** LIT | **Module:** M21 | **Phase:** LIT.4 | **Pedagogy:** Seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:28:26
+**Generated:** 2026-01-26 22:57:56
 
 ## Configuration
 **Type:** LIT-biography
@@ -53,28 +53,38 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 99.8% (target 95-100% (biography))
-- **Richness:** ✅ 95% (biography)
+- **Richness:** ⚠️ 91% (literature) - 1 flags
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 95% (minimum: 95%)
-**Module Type:** biography
+**Score:** 91% (minimum: 90%)
+**Module Type:** literature
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 13 | 4 | 100% | 19% | 19.0% |
-| engagement | 4 | 6 | 67% | 14% | 9.6% |
-| quotes | 8 | 3 | 100% | 14% | 14.3% |
-| cultural | 9 | 4 | 100% | 10% | 9.5% |
-| visual | 6 | 4 | 100% | 10% | 9.5% |
-| timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
-| legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.99 | - | 99% | 5% | 4.7% |
-| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 10 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **95.2%** |
+| analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
+| literary_citations | 8 | 5 | 100% | 17% | 17.4% |
+| engagement | 4 | 4 | 100% | 13% | 13.0% |
+| historical_context | 30 | 3 | 100% | 13% | 13.0% |
+| essays | 3 | 2 | 100% | 13% | 13.0% |
+| resources | 0 | 3 | 0% | 9% | 0.0% |
+| variety | 0.99 | - | 99% | 4% | 4.3% |
+| cultural | 9 | - | 100% | 4% | 4.3% |
+| visual | 6 | 1 | 100% | 4% | 4.3% |
+| paragraph_var | 1.00 | - | 100% | 4% | 4.3% |
+| **TOTAL** | | | | | **91.3%** |
+
+### Dryness Flags & Fixes
+- ❌ **NO_RESOURCES**
+  - FIX:
+    Add 2+ resource blocks. Use this format:
+    
+    > [!resources] Додаткові ресурси
+    >
+    > - [Resource 1 with link or description]
+    > - [Resource 2 with link or description]
 
 ## Section Audit
 | Section | Status | Count | Notes |

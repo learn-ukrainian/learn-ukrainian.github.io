@@ -1,8 +1,8 @@
 # Audit Report: M27 — 27-global-context.md
-**Level:** C1 | **Module:** M27 | **Phase:** C1.2 | **Pedagogy:** Not Specified | **Target:** 3000
+**Level:** C1 | **Module:** M27 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:24:21
+**Generated:** 2026-01-26 22:29:11
 
 ## Configuration
 **Type:** C1
@@ -64,26 +64,26 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.1% (target 90-100%)
-- **Richness:** ✅ 99% (skills)
+- **Richness:** ✅ 96% (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 99% (minimum: 80%)
-**Module Type:** skills
+**Score:** 96% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 21 | 15 | 100% | 26% | 25.5% |
-| engagement | 11 | 5 | 100% | 19% | 19.4% |
-| variety | 0.99 | - | 99% | 12% | 12.1% |
-| cultural | 3 | - | 100% | 12% | 12.2% |
-| realworld | 3 | 3 | 100% | 12% | 12.2% |
-| visual | 15 | 2 | 100% | 6% | 6.1% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.1% |
-| questions | 10 | 4 | 100% | 6% | 6.1% |
-| **TOTAL** | | | | | **99.9%** |
+| examples | 21 | 15 | 100% | 25% | 25.0% |
+| engagement | 11 | 5 | 100% | 19% | 18.7% |
+| variety | 0.99 | - | 99% | 12% | 12.4% |
+| cultural | 3 | 4 | 75% | 12% | 9.4% |
+| realworld | 3 | 3 | 100% | 12% | 12.5% |
+| visual | 15 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 10 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **96.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

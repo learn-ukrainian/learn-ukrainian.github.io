@@ -1,0 +1,50 @@
+{
+  "module": "kyrylo-mefodiivtsi",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:55:02.576809Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-25T23:48:49.278992Z",
+    "meta": "2026-01-26T22:20:13.282229Z",
+    "activities": "2026-01-25T23:44:25.666290Z",
+    "vocabulary": "2026-01-25T23:43:00.508622Z",
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4119/4000 (raw: 4324)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "6/3"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "25/20"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Outline Compliance Errors",
+      "Missing required activity types: true-false"
+    ],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

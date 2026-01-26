@@ -1,8 +1,8 @@
 # Audit Report: M23 — 23-motion-patterns-other-verbs.md
-**Level:** B1 | **Module:** M23 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M23 | **Phase:** B1 | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:22:18
+**Generated:** 2026-01-26 22:26:58
 
 ## Configuration
 **Type:** B1-grammar

@@ -1,8 +1,8 @@
 # Audit Report: M47 — 47-set-expressions-i-body-animals.md
-**Level:** B2 | **Module:** M47 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 1750
+**Level:** B2 | **Module:** M47 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 19:23:33
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-26 22:28:16
 
 ## Configuration
 **Type:** B2-vocab
@@ -53,26 +53,28 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.7% (target 90-100% (vocab))
-- **Richness:** ✅ 96% (phraseology)
+- **Richness:** ✅ 97% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 96% (minimum: 95%)
-**Module Type:** phraseology
+**Score:** 97% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| engagement | 12 | 4 | 100% | 25% | 25.0% |
-| variety | 0.87 | - | 87% | 17% | 14.5% |
-| cultural | 6 | - | 100% | 17% | 16.7% |
-| visual | 3 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 0.82 | - | 82% | 8% | 6.8% |
-| examples | 56 | - | 100% | 8% | 8.3% |
-| realworld | 7 | - | 100% | 8% | 8.3% |
-| questions | 12 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **96.3%** |
+| examples | 56 | 24 | 100% | 20% | 20.0% |
+| engagement | 12 | 5 | 100% | 15% | 15.0% |
+| dialogues | 30 | 4 | 100% | 15% | 15.0% |
+| variety | 0.87 | - | 87% | 10% | 8.7% |
+| cultural | 6 | 3 | 100% | 10% | 10.0% |
+| realworld | 7 | 3 | 100% | 10% | 10.0% |
+| visual | 3 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.82 | - | 82% | 5% | 4.1% |
+| questions | 12 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **97.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -1,7 +1,7 @@
 # Audit Report: M106 — 106-c1-6-checkpoint.md
-**Level:** C1 | **Module:** M106 | **Phase:** C1.6 | **Pedagogy:** Assessment | **Target:** 1750
+**Level:** C1 | **Module:** M106 | **Phase:** C1 | **Pedagogy:** Assessment | **Target:** 1750
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:25:10
+**Generated:** 2026-01-26 22:29:00
 
 ## Configuration
 **Type:** C1-checkpoint
@@ -85,25 +85,26 @@
 - **Pedagogy:** ❌ 7 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.9% (checkpoint - no gate)
-- **Richness:** ✅ 98% (checkpoint)
+- **Richness:** ✅ 95% (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 98% (minimum: 85%)
-**Module Type:** checkpoint
+**Score:** 95% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| activity_types | 13 | 8 | 100% | 25% | 25.0% |
-| review_sections | 23 | 3 | 100% | 20% | 20.0% |
-| variety | 0.90 | - | 90% | 15% | 13.5% |
-| engagement | 5 | 3 | 100% | 10% | 10.0% |
-| cultural | 3 | - | 100% | 10% | 10.0% |
-| visual | 8 | 3 | 100% | 10% | 10.0% |
-| paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
-| **TOTAL** | | | | | **98.5%** |
+| examples | 15 | 15 | 100% | 25% | 25.0% |
+| engagement | 5 | 5 | 100% | 19% | 18.7% |
+| variety | 0.90 | - | 90% | 12% | 11.2% |
+| cultural | 3 | 4 | 75% | 12% | 9.4% |
+| realworld | 4 | 3 | 100% | 12% | 12.5% |
+| visual | 8 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 24 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **95.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -1,8 +1,8 @@
 # Audit Report: M19 — 19-register-official-legal.md
-**Level:** B2 | **Module:** M19 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 1750
+**Level:** B2 | **Module:** M19 | **Phase:** B2 | **Pedagogy:** Not Specified | **Target:** 1750
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:23:14
+**Generated:** 2026-01-26 22:27:57
 
 ## Configuration
 **Type:** B2-grammar
@@ -65,26 +65,28 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
-- **Richness:** ✅ 99% (style)
+- **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
-**Module Type:** style
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| exemplar_texts | 11 | 2 | 100% | 25% | 25.0% |
-| model_answers | 100 | 3 | 100% | 20% | 20.0% |
+| examples | 100 | 24 | 100% | 20% | 20.0% |
 | engagement | 9 | 5 | 100% | 15% | 15.0% |
-| register_analysis | 15 | 5 | 100% | 15% | 15.0% |
-| visual | 13 | 4 | 100% | 10% | 10.0% |
-| variety | 0.95 | - | 95% | 5% | 4.8% |
-| cultural | 5 | - | 100% | 5% | 5.0% |
+| dialogues | 28 | 4 | 100% | 15% | 15.0% |
+| variety | 0.95 | - | 95% | 10% | 9.5% |
+| cultural | 5 | 3 | 100% | 10% | 10.0% |
+| realworld | 4 | 3 | 100% | 10% | 10.0% |
+| visual | 13 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.8%** |
+| questions | 28 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -1,0 +1,47 @@
+{
+  "module": "25-checkpoint-motion-verbs",
+  "level": "B1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:26:59.989189Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-24T21:45:15.229737Z",
+    "meta": "2026-01-26T15:44:41.525192Z",
+    "activities": "2026-01-24T21:44:34.868645Z",
+    "vocabulary": "2026-01-25T16:02:18.311882Z",
+    "plan": "2026-01-26T15:44:41.524839Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "2817/1200 (raw: 3068)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "14/10"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "64/10"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

@@ -1,7 +1,7 @@
 # Audit Report: M39 — 39-euphemism-taboo.md
-**Level:** C1 | **Module:** M39 | **Phase:** C1.4 | **Pedagogy:** Immersion | **Target:** 3000
+**Level:** C1 | **Module:** M39 | **Phase:** C1 | **Pedagogy:** Immersion | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:24:28
+**Generated:** 2026-01-26 22:29:18
 
 ## Configuration
 **Type:** C1
@@ -65,26 +65,34 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
 - **Immersion:** 🇺🇦 99.4% (target 90-100%)
-- **Richness:** ✅ 99% (style)
+- **Richness:** ❌ 90% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
-**Module Type:** style
+**Score:** 90% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| exemplar_texts | 15 | 2 | 100% | 25% | 25.0% |
-| model_answers | 71 | 3 | 100% | 20% | 20.0% |
-| engagement | 7 | 5 | 100% | 15% | 15.0% |
-| register_analysis | 15 | 5 | 100% | 15% | 15.0% |
-| visual | 7 | 4 | 100% | 10% | 10.0% |
-| variety | 0.99 | - | 99% | 5% | 5.0% |
-| cultural | 1 | - | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **100.0%** |
+| examples | 71 | 15 | 100% | 25% | 25.0% |
+| engagement | 7 | 5 | 100% | 19% | 18.7% |
+| variety | 0.99 | - | 99% | 12% | 12.4% |
+| cultural | 1 | 4 | 25% | 12% | 3.1% |
+| realworld | 3 | 3 | 100% | 12% | 12.5% |
+| visual | 7 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 12 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **90.5%** |
+
+### Dryness Flags & Fixes
+- ❌ **LOW_CULTURAL_ANCHOR**
+  - FIX:
+    Add more cultural references (need 3+ total). Include:
+    - Named Ukrainian places (Поділ, Бесарабський ринок, Острозька академія)
+    - Ukrainian traditions or customs
+    - Contemporary Ukrainian life examples
 
 ## Section Audit
 | Section | Status | Count | Notes |

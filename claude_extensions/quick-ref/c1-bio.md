@@ -157,6 +157,8 @@ naturalness:
 - unjumble
 - anagram
 - mark-the-words
+- dialog (dialogs are inappropriate for seminar/academic content)
+- role-play (no conversational practice in biography modules)
 
 ### Essay Activities
 
@@ -228,7 +230,7 @@ Biography modules must achieve **95%+ richness score**:
 | Quotes           | 10%    | 2+ quotes               |
 | Cultural refs    | 10%    | 4+ Ukrainian references |
 | Visual elements  | 10%    | 2+ tables               |
-| Mini-dialogues   | 10%    | 1+ (if appropriate)     |
+| Source analysis  | 10%    | 1+ primary source block |
 
 ---
 

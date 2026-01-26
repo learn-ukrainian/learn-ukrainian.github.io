@@ -1,0 +1,50 @@
+{
+  "module": "67-travel-geography",
+  "level": "B1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:27:27.315591Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-11T20:08:00.811653Z",
+    "meta": "2026-01-26T15:44:41.663918Z",
+    "activities": "2026-01-11T23:20:02.221499Z",
+    "vocabulary": "2026-01-25T18:00:40.623997Z",
+    "plan": "2026-01-26T15:44:41.663610Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "1661/1500 (raw: 2410) | pedagogy: 1 violations | richness: 92% < 95% min (grammar)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "12/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "47/35"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Outline Compliance Errors",
+      "Missing required activity types: collocation, discussion, fill-in, matching"
+    ],
+    "pass_count": 4,
+    "fail_count": 1
+  }
+}

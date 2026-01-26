@@ -1,7 +1,7 @@
 # Audit Report: M45 — 45-slang-youth.md
-**Level:** C1 | **Module:** M45 | **Phase:** C1.4 | **Pedagogy:** Sociolinguistics | **Target:** 3000
+**Level:** C1 | **Module:** M45 | **Phase:** C1 | **Pedagogy:** Sociolinguistics | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:24:32
+**Generated:** 2026-01-26 22:29:22
 
 ## Configuration
 **Type:** C1
@@ -61,26 +61,26 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
 - **Immersion:** 🇺🇦 98.1% (target 90-100%)
-- **Richness:** ✅ 97% (style)
+- **Richness:** ✅ 98% (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 97% (minimum: 95%)
-**Module Type:** style
+**Score:** 98% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| exemplar_texts | 15 | 2 | 100% | 25% | 25.0% |
-| model_answers | 36 | 3 | 100% | 20% | 20.0% |
-| engagement | 8 | 5 | 100% | 15% | 15.0% |
-| register_analysis | 15 | 5 | 100% | 15% | 15.0% |
-| visual | 3 | 4 | 75% | 10% | 7.5% |
-| variety | 0.99 | - | 99% | 5% | 5.0% |
-| cultural | 5 | - | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **97.5%** |
+| examples | 36 | 15 | 100% | 25% | 25.0% |
+| engagement | 8 | 5 | 100% | 19% | 18.7% |
+| variety | 0.99 | - | 99% | 12% | 12.4% |
+| cultural | 5 | 4 | 100% | 12% | 12.5% |
+| realworld | 7 | 3 | 100% | 12% | 12.5% |
+| visual | 3 | 4 | 75% | 6% | 4.7% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 11 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **98.3%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

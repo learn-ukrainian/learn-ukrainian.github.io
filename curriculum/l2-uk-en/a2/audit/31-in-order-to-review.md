@@ -1,8 +1,8 @@
 # Audit Report: M31 — 31-in-order-to.md
-**Level:** A2 | **Module:** M31 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
+**Level:** A2 | **Module:** M31 | **Phase:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 08:59:25
+**Generated:** 2026-01-26 22:26:20
 
 ## Configuration
 **Type:** A2-grammar
@@ -35,15 +35,6 @@
 - Unique types: 9 (minimum: 4) ✅
 - Priority types used: 2/3 (error-correction, unjumble) ✅
 - Low density activities: 0
-
-## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): прочитав, дав, вивчив, розповів, зрозумів...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1112/1000 (raw: 1320)

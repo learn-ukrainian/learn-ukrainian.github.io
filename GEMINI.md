@@ -12,6 +12,10 @@
 
 ### Strategic Decisions
 
+- **Architecture v2.0 (Plan-Build-Status)**:
+  - **Plans** (Immutable): `plans/{level}/{slug}.yaml`. Defines *what* to build (outline, targets).
+  - **Build** (Mutable): `meta/{slug}.yaml`, `{slug}.md`, `activities/`, `vocabulary/`. The actual content.
+  - **Status** (Cached): `status/{slug}.json`. Auto-generated audit results.
 - **Pedagogy**:
   - **A1-A2**: PPP (Present-Practice-Produce). Focus on clarity and building blocks.
   - **B1+ Grammar**: TTT (Test-Teach-Test). Guided discovery from context.
@@ -25,7 +29,6 @@
 - **Production Support**:
   - **Model Answers**: Mandatory for all writing/speaking production tasks (B2+) using `> [!model-answer]`.
   - **Activity Density**: 8+ activities per module, 12+ items per activity.
-  - **Graduated Immersion (A1)**: M01-M10 (Tier 1) allow 1.5 ratio; M11-M24 (Tier 2) allow 0.8; M25+ (Tier 3) strict 0.4.
 
 ### Vocabulary Targets (Verified Dec 2025)
 
@@ -44,160 +47,89 @@
 - **Grammar Preference**: "Declension Group" (structural) approach over simple ending rules.
 - **Goal**: Theory-first curriculum; Vibe app is a secondary practice tool.
 
-## Work Status
+## Work Status (Migration Completed Jan 2026)
 
-- **A1 (01-34)**:
-  - Curriculum Plan: ✅ Updated & Aligned.
-  - Status: **COMPLETE**.
-- **A2 (01-57)**:
-  - Curriculum Plan: ✅ Updated & Aligned.
-  - Status: **COMPLETE**.
-- **B1 (01-86)**:
-  - Curriculum Plan: ✅ Updated & Aligned (TTT/Narrative strategy).
-  - Status: **CONTENT DRAFTED** (Modules 01-86 exist; in validation/review phase).
-- **B2 (01-145)**:
-  - Curriculum Plan: ✅ Updated & Aligned (CBI strategy).
-  - Status: **PLANNED** (Major expansion Dec 2025).
-- **C1 (01-182)**:
-  - Curriculum Plan: ✅ Updated & Aligned (Immersion & Analysis).
-  - Status: **PLANNED** (Arts & Biographies expansion Dec 2025).
-- **C2 (01-100)**:
-  - Curriculum Plan: ✅ Updated & Aligned (Stylistic Perfection).
-  - Status: **PLANNED**.
+- **Architecture Migration (Epic #465)**: ✅ **COMPLETE**. All levels migrated to V2.0 structure.
+- **A1 (01-34)**: ✅ Migrated to V2.0. Status: **COMPLETE**.
+- **A2 (01-57)**: ✅ Migrated to V2.0. Status: **COMPLETE**.
+- **B1 (01-86)**: ✅ Migrated to V2.0. Status: **CONTENT DRAFTED**.
+- **B2 (01-145)**: ✅ Migrated to V2.0. Status: **PLANNED** (Content pending).
+- **C1 (01-182)**: ✅ Migrated to V2.0. Status: **PLANNED** (Content pending).
+- **C2 (01-100)**: ✅ Migrated to V2.0. Status: **PLANNED**.
+- **Tracks (HIST, BIO, LIT)**: ✅ Migrated to V2.0. Status: **PLANNED**.
 
 ## Critical Workflow Rules (Gemini)
 
-0. **Use Mandatory Templates (CRITICAL)**: Every module MUST follow the structural guide in `docs/l2-uk-en/templates/` corresponding to its type (e.g., `b1-grammar-module-template.md`). The template defines the mandatory sections and layout.
-1. **Read Specs First**: Always read `{LEVEL}-CURRICULUM-PLAN.md` and `MODULE-RICHNESS-GUIDELINES-v2.md` before generating.
-2. **Audit Immediately**: After generating content, use `wc -w` (or equivalent logic) to verify Instructional Core word counts.
-3. **Narrative Vocabulary**: Use "Passive Vocabulary" freely in narratives for richness; restrict "Active Vocabulary" (drills) to the target list.
-4. **Standardized Activities**: Use Markdown types (`quiz`, `match-up`, `fill-in`) mapped from pedagogical concepts (`Production`, `Dialogue`).
-5. **Strict Header Hierarchy**: Use `# Summary`, `# Activities`, `# Vocabulary` (H1) for main sections. Use `##` (H2) for content within them.
-6. **Regenerate HTML**: Always regenerate HTML output immediately after fixing module markdown content to ensure fixes are live.
-7. **Strict Scope Enforcement**: NEVER use grammar or vocabulary that has not been explicitly introduced in the current or previous modules. (e.g., No "Model Answers" or "Topic Sentences" in A1 unless taught).
-8. **Decolonization & Patriotism (MANDATORY)**: Every module MUST include:
-   - **Myth Buster box**: Debunk Russian propaganda lies (e.g., "Ukrainian is a dialect", "Lenin created Ukraine").
-   - **History Bite box**: Highlight Ukrainian resistance (Ems Ukaz, Valuev Circular, Executed Renaissance).
-   - **Celebrate Ukrainian identity**: Unique letters (Ї, Є, Ґ, І), distinct linguistic heritage, cultural achievements.
-   - **Use "Prosecutor's Voice"**: Frame facts to actively dismantle imperial narratives.
-   - **Anti-Russian propaganda**: Actively counter common lies about Ukrainian language/culture/history.
-9. **Issue Tracking**: Use GitHub Issues for all task tracking. DO NOT use `docs/issues/` (folder has been deprecated and removed). Use `gh issue create` and `gh issue list`.
-10. **Workflow/Command Loading**: When user types `/slash-command`, load from `claude_extensions/commands/slash-command.md` (tracked in Git). NEVER load from `.agent/workflows/` (gitignored, not source of truth).
-11. **Virtual Environment**: Always run Python scripts in the virtual environment. Use `.venv/bin/python3` or `source .venv/bin/activate`. Never use system Python.
-12. **BROKEN TOOL AVOIDANCE**: The `search_file_content` tool is BROKEN (internal configuration error). DO NOT USE IT. Always use `run_shell_command("rg ...")` for searching the codebase. Use flags like `-i` (ignore case) or `-F` (fixed string) as needed.
-13. **Typography & JSX Safety (CRITICAL)**: ALWAYS use Ukrainian angular quotes `«...»` instead of ASCII double quotes `"` in all content (titles, text, values). ASCII double quotes break the JSX compiler when passed as props. The audit system will flag this.
-14. **Seminar Pedagogy & Legacy Activity Files (RFC #409)**: Reorganized tracks (`c1-bio`, `b2-hist`, `lit`) enforce a "Seminar" pedagogy (Reading -> Analysis -> Essay).
-    - **Legacy Detection**: If you find existing activity YAMLs in these tracks containing `quiz`, `match-up`, or `fill-in`, treat them as INCOMPATIBLE fossils.
-    - **Action**: Do NOT try to patch them. Immediately delete and rewrite them from scratch using the specialized schema (e.g., `schemas/activities-c1-bio.schema.json`).
-    - **YAML Syntax**: Ukrainian text containing colons (e.g., in `model_answer` or `explanation`) MUST be wrapped in double quotes `"` to prevent YAML parsing errors.
-    - **Advanced Types**: Seminar tracks REQUIRE advanced types: `reading` (with embedded `text`), `critical-analysis`, and `essay-response`.
-    - **Indentation**: Maintain strict 2-space indentation in activity YAMLs to avoid "block mapping" errors.
-15. **LLM Autonomy Rule (MANDATORY)**: You are the linguistic and pedagogical expert. **Do NOT use or create Python scripts to perform "LLM Reviews", "Grammar Checks", or "Content Migrations".** Scripts are strictly for technical statistics (word counts, file existence, schema validation). Linguistic quality, naturalness, historical accuracy, and decolonization alignment MUST be performed by you, the agent, using your internal reasoning skills before final verification.
+0. **Plan Immutability (CRITICAL)**: Plans in `plans/` are IMMUTABLE source of truth.
+   - **READ** plans to understand requirements (`content_outline`, `word_target`).
+   - **NEVER** modify plan files.
+   - **REPORT** if build cannot meet plan; do not lower targets yourself.
+1. **Meta is Build Config**: `meta/{slug}.yaml` stores mutable build data (`naturalness`, `timestamps`), NOT planning data.
+2. **Audit & Status**:
+   - Run `audit_module.py` to validate content and update the JSON status cache.
+   - Use `/module-status` or `/level-status` for instant status checks.
+3. **Use Mandatory Templates**: Every module MUST follow the structural guide in `docs/l2-uk-en/templates/`.
+4. **Read Specs First**: Always read the Plan (`plans/{level}/{slug}.yaml`) before generating.
+5. **Narrative Vocabulary**: Use "Passive Vocabulary" freely in narratives; restrict "Active Vocabulary" (drills) to the target list.
+6. **Strict Header Hierarchy**: `# Summary`, `# Activities` (H1), `##` (H2).
+7. **Regenerate HTML**: Always regenerate HTML output immediately after fixing module markdown.
+8. **Decolonization & Patriotism (MANDATORY)**: Include Myth Buster, History Bite, and celebrate Ukrainian identity. Use "Prosecutor's Voice".
+9. **Issue Tracking**: Use GitHub Issues. Do not use `docs/issues/`.
+10. **Workflow/Command Loading**: Load from `claude_extensions/commands/`.
+11. **Virtual Environment**: Always use `.venv/bin/python`.
+12. **BROKEN TOOL AVOIDANCE**: Use `run_shell_command("rg ...")` instead of `search_file_content`.
+13. **Typography & JSX Safety**: ALWAYS use Ukrainian angular quotes `«...»`.
+14. **Seminar Pedagogy (RFC #409)**: `c1-bio`, `b2-hist`, `lit` require `reading`, `critical-analysis`, `essay-response` activities.
+16. **Definition of Done (CRITICAL)**: A module is NOT done until:
+    1. `audit_module.py` passes (✅).
+    2. `npm run generate` has been executed to update the website.
+    3. `status/{slug}.json` is updated.
+    **NEVER** stop at audit pass. ALWAYS run generation.
 
-## File Structure Reference
+## File Structure Reference (V2.0)
 
-- **Curriculum Plans**: `docs/l2-uk-en/{LEVEL}-CURRICULUM-PLAN.md`
-- **Guidelines**: `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`
-- **Module Templates**: `docs/l2-uk-en/templates/`
-- **Module Content**: `curriculum/l2-uk-en/{level}/`
+- **Plans (Immutable)**: `curriculum/l2-uk-en/plans/{level}/{slug}.yaml`
+- **Content (Mutable)**: `curriculum/l2-uk-en/{level}/{slug}.md`
+- **Activities**: `curriculum/l2-uk-en/{level}/activities/{slug}.yaml`
+- **Vocabulary**: `curriculum/l2-uk-en/{level}/vocabulary/{slug}.yaml`
+- **Build Meta**: `curriculum/l2-uk-en/{level}/meta/{slug}.yaml`
+- **Status Cache**: `curriculum/l2-uk-en/{level}/status/{slug}.json`
 - **Key Scripts**:
+  - `scripts/audit_module.py` (Validates build against plan, writes cache)
+  - `scripts/generate_level_status.py` (Reads cache, generates reports)
   - `scripts/pipeline.py` (Main generation/validation workflow)
-  - `scripts/audit_module.py` (Content quality & structure check)
-  - `scripts/generate_mdx.py` (Converts MD to Docusaurus MDX)
-- **CLI Setup**: `docs/GEMINI-CLI-SETUP.md`
-- **CLI Config**: `.gemini/config.yaml`
 
-## B2+ Module Creation Workflow (CRITICAL)
+## B2+ Module Creation Workflow (V2.0)
 
-For B2+ levels (B2, C1, C2), follow this EXACT workflow:
+For B2+ levels (B2, C1, C2, Tracks), follow this EXACT workflow:
 
-### 1. Create Metadata Sidecar FIRST
+### 1. Read Immutable Plan
 
-Create `curriculum/l2-uk-en/{level}/meta/{slug}.yaml`:
+Read `curriculum/l2-uk-en/plans/{level}/{slug}.yaml`. This contains the `content_outline`, `objectives`, and `word_target`.
 
-```yaml
-module: b2-112
-title: 'Друга світова: окупації'
-subtitle: 'WWII: Occupations'
-version: '2.0'
-phase: 'B2.3c Trauma & Resistance'
-focus: history # CRITICAL: Must be set for history modules!
-pedagogy: 'CBI'
-duration: 120
-transliteration: none
-tags:
-  - history
-  - wwii
-grammar:
-  - 'Historical narrative register'
-objectives:
-  - 'Learner understands...'
-vocabulary_count: 25
-slug: 112-druha-svitova-okupatsii
-```
+### 2. Create/Update Build Metadata
 
-**CRITICAL**: The `focus` field MUST be set to one of:
+Ensure `curriculum/l2-uk-en/{level}/meta/{slug}.yaml` exists (migrated from plan or created new). It tracks `naturalness` and build status.
 
-- `history` - for history modules (M71-145 in B2)
-- `biography` - for biography modules
-- `grammar` - for grammar-focused modules
-- `vocabulary` - for vocabulary expansion modules
-- `style` - for register/style modules
-- `checkpoint` - for checkpoint modules
+### 3. Create Vocabulary YAML
 
-### 2. Create Vocabulary YAML (NOT Embedded Table)
+Create `curriculum/l2-uk-en/{level}/vocabulary/{slug}.yaml` (enriched with IPA).
 
-For B2+ modules, vocabulary goes in a SEPARATE YAML file:
-
-Create `curriculum/l2-uk-en/{level}/vocabulary/{slug}.yaml`:
-
-```yaml
-module: 112-druha-svitova-okupatsii
-level: B2
-version: '2.0'
-items:
-  - lemma: окупація
-    ipa: /okʊˈpat͡sʲija/ # Include IPA!
-    translation: occupation
-    pos: noun
-    gender: f
-```
-
-**DO NOT add embedded `# Словник` table to the markdown for B2+ modules.**
-
-### 3. Create Module Content
+### 4. Create Module Content
 
 Create `curriculum/l2-uk-en/{level}/{slug}.md`:
+- Follow `content_outline` from the **Plan** exactly.
+- Use B2+ history callouts: `[!history-bite]`, `[!myth-buster]`.
+- End with `> [!resources]`.
 
-- Start directly with `# Title` (no frontmatter needed - use sidecar)
-- Use B2+ history callouts: `[!history-bite]`, `[!myth-buster]`, `[!quote]`, `[!context]`
-- End with `> [!resources]` section
+### 5. Create Activities YAML
 
-### 4. Create Activities YAML
+Create `curriculum/l2-uk-en/{level}/activities/{slug}.yaml`.
 
-Create `curriculum/l2-uk-en/{level}/activities/{slug}.yaml`
-
-### 5. Run Audit
+### 6. Run Audit (Updates Cache)
 
 ```bash
 .venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/{level}/{slug}.md
 ```
 
 **All gates must pass before proceeding.**
-
-## B2+ History Callout Types
-
-Use these engagement box types for history modules:
-
-| Callout           | Purpose                          |
-| ----------------- | -------------------------------- |
-| `[!history-bite]` | Interesting historical fact      |
-| `[!myth-buster]`  | Debunk Russian/Soviet propaganda |
-| `[!quote]`        | Primary source quote             |
-| `[!context]`      | Historical context               |
-| `[!analysis]`     | Source analysis guidance         |
-| `[!source]`       | Primary source introduction      |
-| `[!legacy]`       | Modern legacy/impact             |
-| `[!reflection]`   | Reflective moment                |
-
-These are recognized by the audit system alongside standard callouts (`[!tip]`, `[!important]`, etc.).

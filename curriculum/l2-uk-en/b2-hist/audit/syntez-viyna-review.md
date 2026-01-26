@@ -1,8 +1,8 @@
 # Audit Report: M140 — syntez-viyna.md
-**Level:** B2 | **Module:** M140 | **Phase:** B2.3e | **Pedagogy:** CBI | **Target:** 4000
-**Naturalness:** 9/10 (PASS)
+**Level:** B2 | **Module:** M140 | **Phase:** HIST.13 | **Pedagogy:** CBI | **Target:** 4000
+**Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 22:23:52
+**Generated:** 2026-01-26 22:55:38
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading
+**Required Types:** essay-response, match-up, quiz, reading, timeline
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -41,10 +41,12 @@
 - Total activities: 16 (target: 3-9) ❌
 - Unique types: 12 (minimum: 2) ✅
 - Priority types used: 2/4 (comparative-study, essay-response) ✅
-- Required types used: 1/2 (essay-response) ❌
+- Required types used: 3/5 (essay-response, match-up, quiz) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['timeline']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
+  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
 - **[YAML_SCHEMA_VIOLATION]** Schema error in syntez-viyna.yaml: Schema validation error at key 'words': ['Підписання', 'других', 'Мінських', 'домовленостей', 'про', 'припинення', 'вогню'] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
@@ -55,7 +57,7 @@
 ## Recommendation
 **📝 UPDATE** (severity 25/100)
 
-- 2 violations (minor)
+- 3 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
@@ -69,12 +71,12 @@
 - **Vocab:** ⚠️ 0 < 20 (soft target)
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ⚠️ Too many activities: 16 (target 3-9)
 - **Immersion:** 🇺🇦 96.3% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 9/10 (High)
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)

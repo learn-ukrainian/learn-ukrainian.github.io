@@ -1,7 +1,7 @@
 # Audit Report: M97 — 97-franko-liryka.md
-**Level:** C1 | **Module:** M97 | **Phase:** C1.6 | **Pedagogy:** Literary Analysis | **Target:** 3500
+**Level:** C1 | **Module:** M97 | **Phase:** C1 | **Pedagogy:** Literary Analysis | **Target:** 3500
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:25:04
+**Generated:** 2026-01-26 22:29:55
 
 ## Configuration
 **Type:** C1-literature
@@ -57,28 +57,26 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (13 activities)
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (literature))
-- **Richness:** ✅ 99% (literature)
+- **Richness:** ❌ 85% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 99% (minimum: 90%)
-**Module Type:** literature
+**Score:** 85% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
-| literary_citations | 13 | 5 | 100% | 17% | 17.4% |
-| engagement | 5 | 4 | 100% | 13% | 13.0% |
-| historical_context | 16 | 3 | 100% | 13% | 13.0% |
-| essays | 5 | 2 | 100% | 13% | 13.0% |
-| resources | 5 | 3 | 100% | 9% | 8.7% |
-| variety | 0.98 | - | 98% | 4% | 4.3% |
-| cultural | 2 | - | 100% | 4% | 4.3% |
-| visual | 7 | 1 | 100% | 4% | 4.3% |
-| paragraph_var | 1.00 | - | 100% | 4% | 4.3% |
-| **TOTAL** | | | | | **99.9%** |
+| examples | 50 | 15 | 100% | 25% | 25.0% |
+| engagement | 5 | 5 | 100% | 19% | 18.7% |
+| variety | 0.98 | - | 98% | 12% | 12.2% |
+| cultural | 2 | 4 | 50% | 12% | 6.2% |
+| realworld | 1 | 3 | 33% | 12% | 4.1% |
+| visual | 7 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 27 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **85.1%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

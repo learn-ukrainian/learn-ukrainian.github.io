@@ -2,103 +2,101 @@ module: kniazivski-usobiytsi
 level: B2-HIST
 version: '2.0'
 items:
-  - lemma: усобиця
-    ipa: /uˈsɔbɪt͡sʲɑ/
-    translation: internecine war
-    pos: noun
-    gender: f
-  - lemma: роздроблення
-    ipa: /rɔzˈdrɔblɛnʲːɑ/
-    translation: fragmentation
-    pos: noun
-    gender: n
-  - lemma: лествичне право
-    ipa: /ˈlɛstwɪt͡ʃnɛ ˈprɑwɔ/
-    translation: rota system (ladder succession)
-    pos: phrase
-    gender: n
-  - lemma: престолонаслідування
-    ipa: /prɛstɔlɔnɑsˈlʲiduwɑnʲːɑ/
-    translation: succession to the throne
-    pos: noun
-    gender: n
-  - lemma: отчина
-    ipa: /ˈɔtt͡ʃɪnɑ/
-    translation: patrimony (fatherland)
-    pos: noun
-    gender: f
-  - lemma: з'їзд
-    ipa: /zjazd/
-    translation: congress
-    pos: noun
-    gender: m
-  - lemma: боярин
-    ipa: /bɔˈjɑrɪn/
-    translation: boyar
-    pos: noun
-    gender: m
-  - lemma: князівство
-    ipa: /knʲɑˈzʲiwstwɔ/
-    translation: principality
-    pos: noun
-    gender: n
-  - lemma: половці
-    ipa: /pɔˈlɔwt͡sʲi/
-    translation: Polovtsians (Cumans)
-    pos: noun
-    gender: pl
-  - lemma: єдність
-    ipa: /ˈjɛdnʲisʲtʲ/
-    translation: unity
-    pos: noun
-    gender: f
-  - lemma: центральна влада
-    ipa: /t͡sɛnˈtrɑlʲnɑ ˈwlɑdɑ/
-    translation: central authority
-    pos: phrase
-    gender: f
-  - lemma: місцева еліта
-    ipa: /mʲisˈt͡sɛwɑ ɛˈlʲitɑ/
-    translation: local elite
-    pos: phrase
-    gender: f
-  - lemma: засліплення
-    ipa: /zɑsˈlʲiplɛnʲːɑ/
-    translation: blinding
-    pos: noun
-    gender: n
-  - lemma: номінальний
-    ipa: /nɔmʲiˈnɑlʲnɪj/
-    translation: nominal
-    pos: adj
-    gender: m
-  - lemma: союз
-    ipa: /sɔˈjuz/
-    translation: alliance
-    pos: noun
-    gender: m
-  - lemma: культурний розквіт
-    ipa: /kulʲˈturnɪj ˈrɔzkwit/
-    translation: cultural flourishing
-    pos: phrase
-    gender: m
-  - lemma: тріумвірат
-    ipa: /trʲiumwiˈrɑt/
-    translation: triumvirate
-    pos: noun
-    gender: m
-  - lemma: устав
-    ipa: /usˈtɑw/
-    translation: statute
-    pos: noun
-    gender: m
-  - lemma: лихвар
-    ipa: /lɪxˈwɑr/
-    translation: usurer
-    pos: noun
-    gender: m
-  - lemma: снем
-    ipa: /snɛm/
-    translation: congress (archaic)
-    pos: noun
-    gender: m
+- lemma: усобиця
+  ipa: /uˈsɔbɪt͡sʲɑ/
+  translation: internecine war
+  pos: noun
+  gender: f
+- lemma: роздроблення
+  ipa: /rɔzˈdrɔblɛnʲːɑ/
+  translation: fragmentation
+  pos: noun
+  gender: n
+- lemma: лествичне права
+  ipa: /ˈlɛstwɪt͡ʃnɛ ˈprɑwɔ/
+  translation: rota system (ladder succession)
+  pos: noun
+  gender: f
+- lemma: престолонаслідування
+  ipa: /prɛstɔlɔnɑsˈlʲiduwɑnʲːɑ/
+  translation: succession to the throne
+  pos: noun
+  gender: n
+- lemma: отчина
+  ipa: /ˈɔtt͡ʃɪnɑ/
+  translation: patrimony (fatherland)
+  pos: noun
+  gender: f
+- lemma: з'їзд
+  ipa: /zjazd/
+  translation: congress
+  pos: noun
+  gender: m
+- lemma: боярин
+  ipa: /bɔˈjɑrɪn/
+  translation: boyar
+  pos: noun
+  gender: m
+- lemma: князівство
+  ipa: /knʲɑˈzʲiwstwɔ/
+  translation: principality
+  pos: noun
+  gender: n
+- lemma: половець
+  ipa: /pɔˈlɔwt͡sʲi/
+  translation: Polovtsians (Cumans)
+  pos: noun
+  gender: m
+- lemma: єдність
+  ipa: /ˈjɛdnʲisʲtʲ/
+  translation: unity
+  pos: noun
+  gender: f
+- lemma: центральна влада
+  ipa: /t͡sɛnˈtrɑlʲnɑ ˈwlɑdɑ/
+  translation: central authority
+  pos: noun
+  gender: f
+- lemma: місцева еліта
+  ipa: /mʲisˈt͡sɛwɑ ɛˈlʲitɑ/
+  translation: local elite
+  pos: noun
+  gender: f
+- lemma: засліплення
+  ipa: /zɑsˈlʲiplɛnʲːɑ/
+  translation: blinding
+  pos: noun
+  gender: n
+- lemma: номінальний
+  ipa: /nɔmʲiˈnɑlʲnɪj/
+  translation: nominal
+  pos: adj
+- lemma: союз
+  ipa: /sɔˈjuz/
+  translation: alliance
+  pos: noun
+  gender: m
+- lemma: культурний розквіт
+  ipa: /kulʲˈturnɪj ˈrɔzkwit/
+  translation: cultural flourishing
+  pos: noun
+  gender: m
+- lemma: тріумвірат
+  ipa: /trʲiumwiˈrɑt/
+  translation: triumvirate
+  pos: noun
+  gender: m
+- lemma: устав
+  ipa: /usˈtɑw/
+  translation: statute
+  pos: noun
+  gender: m
+- lemma: лихвар
+  ipa: /lɪxˈwɑr/
+  translation: usurer
+  pos: noun
+  gender: m
+- lemma: снути
+  ipa: /snɛm/
+  translation: congress (archaic)
+  pos: verb

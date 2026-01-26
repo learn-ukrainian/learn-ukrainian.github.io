@@ -2,6 +2,8 @@ module: slobozhanshchyna
 level: B2-HIST
 slug: slobozhanshchyna
 version: '2.0'
+focus: history
+pedagogy: CBI
 naturalness:
   score: 9
   status: PASS
@@ -15,3 +17,4 @@ tags:
 vocabulary_count: 26
 build:
   last_modified: '2026-01-26'
+phase: HIST.4

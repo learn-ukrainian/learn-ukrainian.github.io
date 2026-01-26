@@ -1,8 +1,8 @@
 # Audit Report: M50 — 50-idioms-body-hands-legs.md
-**Level:** B2 | **Module:** M50 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 1750
+**Level:** B2 | **Module:** M50 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 19:23:35
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-26 22:28:19
 
 ## Configuration
 **Type:** B2-vocab
@@ -55,26 +55,38 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 90-100% (vocab))
-- **Richness:** ✅ 98% (phraseology)
+- **Richness:** ❌ 86% < 95% min (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 98% (minimum: 95%)
-**Module Type:** phraseology
+**Score:** 86% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| engagement | 4 | 4 | 100% | 25% | 25.0% |
-| variety | 0.99 | - | 99% | 17% | 16.5% |
-| cultural | 2 | - | 100% | 17% | 16.7% |
-| visual | 6 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 0.85 | - | 85% | 8% | 7.1% |
-| examples | 57 | - | 100% | 8% | 8.3% |
-| realworld | 1 | - | 100% | 8% | 8.3% |
-| questions | 18 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **98.6%** |
+| examples | 57 | 24 | 100% | 20% | 20.0% |
+| engagement | 4 | 5 | 80% | 15% | 12.0% |
+| dialogues | 21 | 4 | 100% | 15% | 15.0% |
+| variety | 0.99 | - | 99% | 10% | 9.9% |
+| cultural | 2 | 3 | 67% | 10% | 6.7% |
+| realworld | 1 | 3 | 33% | 10% | 3.3% |
+| visual | 6 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.85 | - | 85% | 5% | 4.2% |
+| questions | 18 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **86.2%** |
+
+### Dryness Flags & Fixes
+- ❌ **ABSTRACT_ONLY**
+  - FIX:
+    Add 3+ real-world boxes. Use this exact format:
+    
+    > 🌍 **У реальному житті**
+    >
+    > [Specific scenario: "На співбесіді...", "У магазині...", "На вокзалі..."]
+    > [Example sentence showing grammar in that context]
 
 ## Section Audit
 | Section | Status | Count | Notes |

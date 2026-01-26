@@ -1,7 +1,7 @@
 # Audit Report: M84 — 84-teatralne-mystetstvo-1.md
-**Level:** C1 | **Module:** M84 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 3000
+**Level:** C1 | **Module:** M84 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:24:56
+**Generated:** 2026-01-26 22:29:46
 
 ## Configuration
 **Type:** C1-fine-arts

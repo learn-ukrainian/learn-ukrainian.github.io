@@ -1,7 +1,7 @@
 # Audit Report: M47 — 47-checkpoint-c1-4.md
-**Level:** C1 | **Module:** M47 | **Phase:** C1.4 | **Pedagogy:** Assessment | **Target:** 1750
+**Level:** C1 | **Module:** M47 | **Phase:** C1 | **Pedagogy:** Assessment | **Target:** 1750
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:24:33
+**Generated:** 2026-01-26 22:29:23
 
 ## Configuration
 **Type:** C1-checkpoint
@@ -63,25 +63,37 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (14 activities)
 - **Immersion:** 🇺🇦 99.4% (checkpoint - no gate)
-- **Richness:** ✅ 85% (checkpoint)
+- **Richness:** ❌ 83% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 85% (minimum: 85%)
-**Module Type:** checkpoint
+**Score:** 83% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| activity_types | 10 | 8 | 100% | 25% | 25.0% |
-| review_sections | 32 | 3 | 100% | 20% | 20.0% |
-| variety | 0.97 | - | 97% | 15% | 14.5% |
-| engagement | 10 | 3 | 100% | 10% | 10.0% |
-| cultural | 0 | - | 0% | 10% | 0.0% |
-| visual | 2 | 3 | 67% | 10% | 6.7% |
-| paragraph_var | 0.90 | - | 90% | 10% | 9.0% |
-| **TOTAL** | | | | | **85.2%** |
+| examples | 63 | 15 | 100% | 25% | 25.0% |
+| engagement | 10 | 5 | 100% | 19% | 18.7% |
+| variety | 0.97 | - | 97% | 12% | 12.1% |
+| cultural | 0 | 4 | 0% | 12% | 0.0% |
+| realworld | 10 | 3 | 100% | 12% | 12.5% |
+| visual | 2 | 4 | 50% | 6% | 3.1% |
+| paragraph_var | 0.90 | - | 90% | 6% | 5.6% |
+| questions | 32 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **83.4%** |
+
+### Dryness Flags & Fixes
+- ❌ **NO_CULTURAL_ANCHOR**
+  - FIX:
+    Add 3+ cultural references. Use this exact format:
+    
+    > 🇺🇦 **Культурний момент**
+    >
+    > [Reference to Ukrainian place (Київ, Львів, Одеса, Карпати), tradition, or custom]
+    > [How it connects to the grammar/vocabulary being taught]
+    > [Example sentence using the grammar with cultural context]
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -1,0 +1,47 @@
+{
+  "module": "06-aspect-complete-system",
+  "level": "B1",
+  "plan_version": "1.0",
+  "last_audit": "2026-01-26T22:26:47.317502Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-10T22:46:02.130223Z",
+    "meta": "2026-01-26T15:44:41.453071Z",
+    "activities": "2026-01-11T10:24:11.773177Z",
+    "vocabulary": "2026-01-25T16:02:18.036083Z",
+    "plan": "2026-01-26T15:44:41.452761Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "1591/1500 (raw: 1799)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "12/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "122/25"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

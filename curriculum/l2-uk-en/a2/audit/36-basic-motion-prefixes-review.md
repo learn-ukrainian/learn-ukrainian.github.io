@@ -1,8 +1,8 @@
 # Audit Report: M36 — 36-basic-motion-prefixes.md
-**Level:** A2 | **Module:** M36 | **Phase:** A2.3 | **Pedagogy:** PPP | **Target:** 1000
+**Level:** A2 | **Module:** M36 | **Phase:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 08:59:28
+**Generated:** 2026-01-26 22:26:23
 
 ## Configuration
 **Type:** A2-grammar

@@ -717,7 +717,7 @@ def audit_module(file_path: str) -> bool:
             'title', 'subtitle', 'content_outline', 'word_target', 
             'vocabulary_hints', 'activity_hints', 'focus', 'pedagogy', 
             'prerequisites', 'connects_to', 'objectives', 'learning_outcomes',
-            'grammar', 'module_type', 'sources', 'immersion', 'register'
+            'grammar', 'module_type', 'sources', 'immersion', 'register', 'phase'
         ]
         for field in PLAN_FIELDS_TO_MERGE:
             if field in plan_data:

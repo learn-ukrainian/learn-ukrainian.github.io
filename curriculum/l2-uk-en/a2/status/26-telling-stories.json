@@ -1,0 +1,47 @@
+{
+  "module": "26-telling-stories",
+  "level": "A2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:26:18.063858Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-25T21:03:50.146544Z",
+    "meta": "2026-01-26T17:21:18.876454Z",
+    "activities": "2026-01-12T13:54:28.611658Z",
+    "vocabulary": "2026-01-25T21:04:54.273895Z",
+    "plan": "2026-01-26T17:21:18.876023Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "1263/1000 (raw: 1352)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "35/1"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

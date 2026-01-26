@@ -1,8 +1,8 @@
 # Audit Report: M18 — 18-essay-writing-practice.md
-**Level:** C1 | **Module:** M18 | **Phase:** C1.1 | **Pedagogy:** Not Specified | **Target:** 3000
+**Level:** C1 | **Module:** M18 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:24:15
+**Generated:** 2026-01-26 22:29:05
 
 ## Configuration
 **Type:** C1
@@ -59,26 +59,26 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.5% (target 90-100%)
-- **Richness:** ✅ 99% (academic)
+- **Richness:** ❌ 93% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
-**Module Type:** academic
+**Score:** 93% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| citations | 7 | 5 | 100% | 24% | 23.8% |
-| data_refs | 7 | 3 | 100% | 19% | 19.0% |
-| visual | 8 | 5 | 100% | 14% | 14.3% |
-| questions | 14 | 4 | 100% | 14% | 14.3% |
-| engagement | 8 | 5 | 100% | 10% | 9.5% |
-| variety | 1.00 | - | 100% | 10% | 9.5% |
-| cultural | 2 | - | 100% | 5% | 4.8% |
-| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **100.0%** |
+| examples | 45 | 15 | 100% | 25% | 25.0% |
+| engagement | 8 | 5 | 100% | 19% | 18.7% |
+| variety | 1.00 | - | 100% | 12% | 12.5% |
+| cultural | 2 | 4 | 50% | 12% | 6.2% |
+| realworld | 3 | 3 | 100% | 12% | 12.5% |
+| visual | 8 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 14 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **93.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

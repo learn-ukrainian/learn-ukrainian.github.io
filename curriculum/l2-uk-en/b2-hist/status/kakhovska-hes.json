@@ -1,0 +1,52 @@
+{
+  "module": "kakhovska-hes",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:55:35.476599Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-17T21:45:15.712884Z",
+    "meta": "2026-01-26T22:20:13.138180Z",
+    "activities": "2026-01-17T21:45:15.675424Z",
+    "vocabulary": null,
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 5,
+      "message": "26/4000 (raw: 103) | engagement: 0/5 | pedagogy: 4 violations | immersion: 17.8% LOW (target 90-100% (history)) | richness: 6% < 95% min (history) - REWRITE needed"
+    },
+    "activities": {
+      "status": "fail",
+      "violations": 4,
+      "message": "0/3 | density: 0 < 1 | unique_types: 0/2 types | priority: No priority types"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 20 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "2 Critical Template Violations",
+      "5 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
+      "Missing required activity types: essay-response, fill-in, match-up, quiz, reading"
+    ],
+    "pass_count": 1,
+    "fail_count": 3
+  }
+}

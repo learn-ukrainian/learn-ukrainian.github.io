@@ -1,8 +1,8 @@
 # Audit Report: M84 — 84-checkpoint-register-synthesis.md
-**Level:** B2 | **Module:** M84 | **Phase:** B2.4 | **Pedagogy:** Test | **Target:** 1750
+**Level:** B2 | **Module:** M84 | **Phase:** B2 | **Pedagogy:** Test | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:23:56
+**Generated:** 2026-01-26 22:28:42
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -70,25 +70,42 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ⚠️ Too many activities: 21 (target 15-19)
 - **Immersion:** 🇺🇦 99.8% (checkpoint - no gate)
-- **Richness:** ✅ 98% (checkpoint)
+- **Richness:** ❌ 80% < 95% min (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 98% (minimum: 85%)
-**Module Type:** checkpoint
+**Score:** 80% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| activity_types | 10 | 8 | 100% | 25% | 25.0% |
-| review_sections | 23 | 3 | 100% | 20% | 20.0% |
-| variety | 0.91 | - | 91% | 15% | 13.7% |
-| engagement | 6 | 3 | 100% | 10% | 10.0% |
-| cultural | 2 | - | 100% | 10% | 10.0% |
-| visual | 10 | 3 | 100% | 10% | 10.0% |
-| paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
-| **TOTAL** | | | | | **98.7%** |
+| examples | 41 | 24 | 100% | 20% | 20.0% |
+| engagement | 6 | 5 | 100% | 15% | 15.0% |
+| dialogues | 0 | 4 | 0% | 15% | 0.0% |
+| variety | 0.91 | - | 91% | 10% | 9.1% |
+| cultural | 2 | 3 | 67% | 10% | 6.7% |
+| realworld | 6 | 3 | 100% | 10% | 10.0% |
+| visual | 10 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 19 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **80.8%** |
+
+### Dryness Flags & Fixes
+- ❌ **NO_DIALOGUE**
+  - FIX:
+    Add 4+ mini-dialogues. Use this exact format:
+    
+    **Діалог: [Location in Ukraine]**
+    
+    > — [Speaker 1 line with **bolded** grammar examples]
+    > — [Speaker 2 response with **bolded** grammar examples]
+    > — [Speaker 1 continuation]
+    > — [Speaker 2 conclusion]
+    
+    Example locations: На Бесарабському ринку, У львівській кав'ярні, В одеському трамваї, На Подолі
 
 ## Section Audit
 | Section | Status | Count | Notes |

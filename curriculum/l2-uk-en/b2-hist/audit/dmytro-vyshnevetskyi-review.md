@@ -1,8 +1,8 @@
 # Audit Report: M43 — dmytro-vyshnevetskyi.md
 **Level:** B2 | **Module:** M43 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 22:22:50
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-26 23:51:55
 
 ## Configuration
 **Type:** B2-history
@@ -34,19 +34,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 3555/4000 (raw: 3693)
+- **Words:** ⚠️ 3975/4000 (raw: 4115) (25 short)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/5
+- **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 98.5% (target 90-100% (history))
+- **Immersion:** 🇺🇦 98.7% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -59,27 +59,27 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 9 | 3 | 100% | 24% | 23.8% |
-| engagement | 8 | 6 | 100% | 14% | 14.3% |
-| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
+| engagement | 10 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 18 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 7 | 4 | 100% | 10% | 9.5% |
+| cultural | 4 | 4 | 100% | 10% | 9.5% |
 | visual | 7 | 4 | 100% | 10% | 9.5% |
-| variety | 0.97 | - | 97% | 5% | 4.6% |
+| variety | 0.94 | - | 94% | 5% | 4.5% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 10 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.9%** |
+| questions | 12 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Дмитро Вишневецький: Перший кошовий** | ⚪️ | 86 | Skipped |
-| **Вступ** | ✅ | 301 | Included in Core |
-| **Шлях князя: Від Волині до Степу** | ⚪️ | 758 | Skipped |
-| **Заснування Малої Хортиці** | ⚪️ | 647 | Skipped |
+| **Вступ** | ✅ | 328 | Included in Core |
+| **Шлях князя: Від Волині до Степу** | ⚪️ | 968 | Skipped |
+| **Заснування Малої Хортиці** | ⚪️ | 629 | Skipped |
 | **Читання** | ✅ | 352 | Included in Core |
-| **Геополітика і Дипломатія** | ⚪️ | 521 | Skipped |
+| **Геополітика і Дипломатія** | ⚪️ | 591 | Skipped |
 | **Первинні джерела** | ✅ | 348 | Included in Core |
-| **Деколонізаційний погляд** | ✅ | 307 | Included in Core |
-| **Підсумок** | ✅ | 128 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 342 | Included in Core |
+| **Підсумок** | ✅ | 224 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 107 | Skipped |

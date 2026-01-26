@@ -1,8 +1,8 @@
 # Audit Report: M01 — 01-b2-review-bridge.md
-**Level:** C1 | **Module:** M01 | **Phase:** C1.1 | **Pedagogy:** Not Specified | **Target:** 3000
+**Level:** C1 | **Module:** M01 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:24:04
+**Generated:** 2026-01-26 22:28:49
 
 ## Configuration
 **Type:** C1-grammar
@@ -64,28 +64,26 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.9% (target 90-100% (grammar))
-- **Richness:** ✅ 96% (grammar)
+- **Richness:** ❌ 93% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 96% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 93% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 60 | 24 | 100% | 20% | 20.0% |
-| engagement | 9 | 5 | 100% | 15% | 15.0% |
-| dialogues | 9 | 4 | 100% | 15% | 15.0% |
-| variety | 0.99 | - | 99% | 10% | 9.9% |
-| cultural | 2 | 3 | 67% | 10% | 6.7% |
-| realworld | 10 | 3 | 100% | 10% | 10.0% |
-| visual | 9 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 15 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **96.6%** |
+| examples | 60 | 15 | 100% | 25% | 25.0% |
+| engagement | 9 | 5 | 100% | 19% | 18.7% |
+| variety | 0.99 | - | 99% | 12% | 12.4% |
+| cultural | 2 | 4 | 50% | 12% | 6.2% |
+| realworld | 10 | 3 | 100% | 12% | 12.5% |
+| visual | 9 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 15 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **93.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -1,8 +1,8 @@
 # Audit Report: M83 — 83-cycling-water.md
-**Level:** B1 | **Module:** M83 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 1500
+**Level:** B1 | **Module:** M83 | **Phase:** B1 | **Pedagogy:** CBI | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 19:22:56
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-26 22:27:37
 
 ## Configuration
 **Type:** B1-skills
@@ -11,6 +11,7 @@
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
 **Priority Types:** cloze, fill-in, mark-the-words
+**Required Types:** discussion, fill-in, matching, reading
 **Engagement:** ≥4 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥15 words
@@ -35,7 +36,17 @@
 - Total activities: 11 (target: 10-14) ✅
 - Unique types: 11 (minimum: 4) ✅
 - Priority types used: 3/3 (cloze, fill-in, mark-the-words) ✅
+- Required types used: 1/4 (fill-in) ❌
 - Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['matching', 'discussion']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
+  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1775/1500 (raw: 1858)
@@ -48,29 +59,42 @@
 - **Vocab:** ✅ 51/15
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 97.9% (target 85-100% (B1.7-8 Ukraine))
-- **Richness:** ✅ 98% (content)
+- **Richness:** ❌ 86% < 95% min (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 98% (minimum: 95%)
-**Module Type:** content
+**Score:** 86% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 14 | 15 | 93% | 25% | 23.2% |
-| engagement | 7 | 5 | 100% | 19% | 18.7% |
-| variety | 0.98 | - | 98% | 12% | 12.2% |
-| cultural | 6 | 4 | 100% | 12% | 12.5% |
-| realworld | 5 | 3 | 100% | 12% | 12.5% |
-| visual | 7 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 24 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **98.0%** |
+| examples | 14 | 24 | 58% | 20% | 11.6% |
+| engagement | 7 | 5 | 100% | 15% | 15.0% |
+| dialogues | 13 | 4 | 100% | 15% | 15.0% |
+| variety | 0.98 | - | 98% | 10% | 9.8% |
+| cultural | 6 | 3 | 100% | 10% | 10.0% |
+| realworld | 5 | 3 | 100% | 10% | 10.0% |
+| visual | 7 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 24 | 5 | 100% | 5% | 5.0% |
+| proverbs | 0 | 1 | 0% | 5% | 0.0% |
+| **TOTAL** | | | | | **86.4%** |
+
+### Dryness Flags & Fixes
+- ❌ **NO_PROVERBS**
+  - FIX:
+    Add 1+ Ukrainian proverb. Use this format:
+    
+    Українці кажу|ть: «[Proverb in Ukrainian]»
+    
+    Зверніть увагу: **[word]** — [aspect] вид, бо [explanation why this aspect is used].
+    
+    Example: «Не кажи гоп, поки не перескочиш» — **перескочиш** is perfective because it's about the result.
 
 ## Section Audit
 | Section | Status | Count | Notes |

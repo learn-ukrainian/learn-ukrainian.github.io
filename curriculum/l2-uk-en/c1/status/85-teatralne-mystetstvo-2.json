@@ -1,0 +1,51 @@
+{
+  "module": "85-teatralne-mystetstvo-2",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:29:47.643214Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-13T20:34:54.234267Z",
+    "meta": "2026-01-26T17:21:19.553760Z",
+    "activities": "2026-01-13T20:21:22.365168Z",
+    "vocabulary": null,
+    "plan": "2026-01-26T17:21:19.553548Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 3,
+      "message": "1462/3000 (raw: 1564) | engagement: 5/7 | pedagogy: 13 violations"
+    },
+    "activities": {
+      "status": "fail",
+      "violations": 1,
+      "message": "14/12 | density: 2 < 12"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 25 (soft target)"
+    },
+    "naturalness": {
+      "status": "fail",
+      "violations": 1,
+      "message": "0/10 (PENDING) - Naturalness check required"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "1 Critical Template Violations",
+      "1 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
+    ],
+    "pass_count": 0,
+    "fail_count": 4
+  }
+}

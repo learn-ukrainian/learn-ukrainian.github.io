@@ -1,4 +1,94 @@
 module: bratstva-i-osvita
 level: B2-HIST
 version: '2.0'
-items: []
+items:
+  - lemma: братство
+    translation: brotherhood
+    note: religious-civic organization of townspeople in 16th-17th centuries
+  - lemma: ставропігія
+    translation: stavropigion
+    note: status of direct subordination to patriarch, bypassing local bishop
+  - lemma: міщанин
+    translation: townsman, burgher
+    note: member of urban middle class (craftsmen, merchants)
+  - lemma: братчик
+    translation: brotherhood member
+    note: member of a religious brotherhood
+  - lemma: статут
+    translation: statute, charter
+    note: written constitution of an organization
+  - lemma: академія
+    translation: academy
+    note: higher educational institution
+  - lemma: меценат
+    translation: patron, philanthropist
+    note: person who supports arts, sciences, or culture financially
+  - lemma: друкарня
+    translation: printing house
+    note: place where books are printed
+  - lemma: друкар
+    translation: printer
+    note: person who operates printing press
+  - lemma: полеміка
+    translation: polemic, controversy
+    note: literary or theological dispute
+  - lemma: полонізація
+    translation: Polonization
+    note: process of adopting Polish language and culture
+  - lemma: асиміляція
+    translation: assimilation
+    note: absorption into another culture
+  - lemma: шпиталь
+    translation: hospital, almshouse
+    note: charitable institution for sick and poor
+  - lemma: єзуїт
+    translation: Jesuit
+    note: member of Catholic Society of Jesus order
+  - lemma: колегіум
+    translation: collegium
+    note: Jesuit educational institution
+  - lemma: спудей
+    translation: student, pupil
+    note: archaic term for student
+  - lemma: риторика
+    translation: rhetoric
+    note: art of persuasive speaking and writing
+  - lemma: діалектика
+    translation: dialectics
+    note: art of logical argumentation
+  - lemma: тривіум
+    translation: trivium
+    note: grammar, rhetoric, and dialectics
+  - lemma: квадрівіум
+    translation: quadrivium
+    note: arithmetic, geometry, astronomy, and music
+  - lemma: фундатор
+    translation: founder, benefactor
+    note: person who establishes and funds an institution
+  - lemma: ідентичність
+    translation: identity
+    note: sense of national or cultural belonging
+  - lemma: самоврядування
+    translation: self-governance, autonomy
+    note: system where community governs itself
+  - lemma: магістрат
+    translation: magistrate, city council
+    note: municipal government body
+  - lemma: цех
+    translation: guild, craft association
+    note: organization of craftsmen in same trade
+  - lemma: патріарх
+    translation: patriarch
+    note: highest bishop in Orthodox church
+  - lemma: владика
+    translation: bishop, hierarch
+    note: Orthodox church bishop
+  - lemma: просвітництво
+    translation: enlightenment, education movement
+    note: spreading of knowledge and culture
+  - lemma: унія
+    translation: union
+    note: ecclesiastical union (specifically Union of Brest)
+  - lemma: невігластво
+    translation: ignorance, illiteracy
+    note: lack of knowledge or education

@@ -1,7 +1,7 @@
 # Audit Report: M85 — 85-professional-email-basics.md
-**Level:** B2 | **Module:** M85 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 1750
+**Level:** B2 | **Module:** M85 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:23:57
+**Generated:** 2026-01-26 22:28:42
 
 ## Configuration
 **Type:** B2-skills
@@ -54,26 +54,46 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (15 activities)
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (skills))
-- **Richness:** ✅ 96% (skills)
+- **Richness:** ❌ 79% < 95% min (grammar) - REWRITE needed
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 96% (minimum: 80%)
-**Module Type:** skills
+**Score:** 79% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 65 | 15 | 100% | 26% | 25.5% |
-| engagement | 7 | 5 | 100% | 19% | 19.4% |
-| variety | 0.93 | - | 93% | 12% | 11.4% |
-| cultural | 1 | - | 100% | 12% | 12.2% |
-| realworld | 4 | 3 | 100% | 12% | 12.2% |
-| visual | 18 | 2 | 100% | 6% | 6.1% |
-| paragraph_var | 0.58 | - | 58% | 6% | 3.6% |
-| questions | 9 | 4 | 100% | 6% | 6.1% |
-| **TOTAL** | | | | | **96.6%** |
+| examples | 65 | 24 | 100% | 20% | 20.0% |
+| engagement | 7 | 5 | 100% | 15% | 15.0% |
+| dialogues | 1 | 4 | 25% | 15% | 3.8% |
+| variety | 0.93 | - | 93% | 10% | 9.3% |
+| cultural | 1 | 3 | 33% | 10% | 3.3% |
+| realworld | 4 | 3 | 100% | 10% | 10.0% |
+| visual | 18 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.58 | - | 58% | 5% | 2.9% |
+| questions | 9 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **79.2%** |
+
+### Dryness Flags & Fixes
+- ❌ **LOW_DIALOGUE**
+  - FIX:
+    Add more mini-dialogues (need 4+ total). Use this exact format:
+    
+    **Діалог: [Location in Ukraine]**
+    
+    > — [Speaker 1 line with **bolded** grammar examples]
+    > — [Speaker 2 response with **bolded** grammar examples]
+    > — [Speaker 1 continuation]
+    > — [Speaker 2 conclusion]
+- ❌ **LOW_CULTURAL_ANCHOR**
+  - FIX:
+    Add more cultural references (need 3+ total). Include:
+    - Named Ukrainian places (Поділ, Бесарабський ринок, Острозька академія)
+    - Ukrainian traditions or customs
+    - Contemporary Ukrainian life examples
 
 ## Section Audit
 | Section | Status | Count | Notes |

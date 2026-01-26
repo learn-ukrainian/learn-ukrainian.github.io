@@ -2,63 +2,60 @@ module: slavic-tribes
 level: B2-HIST
 version: '2.0'
 items:
-  - lemma: поляни
-    ipa: /pɔˈlʲɑnɪ/
-    translation: Polyany
-    pos: noun
-    gender: pl
-  - lemma: древляни
-    ipa: /drɛˈwlʲɑnɪ/
-    translation: Derevlyany
-    pos: noun
-    gender: pl
-  - lemma: сіверяни
-    ipa: /sʲiˈwɛrʲɑnɪ/
-    translation: Siveryany
-    pos: noun
-    gender: pl
-  - lemma: уличі
-    ipa: /ˈulɪt͡ʃʲi/
-    translation: Ulychi
-    pos: noun
-    gender: pl
-  - lemma: тиверці
-    ipa: /ˈtɪwɛrt͡sʲi/
-    translation: Tyvertsi
-    pos: noun
-    gender: pl
-  - lemma: волиняни
-    ipa: /wɔlɪˈnʲɑnɪ/
-    translation: Volhynians
-    pos: noun
-    gender: pl
-  - lemma: племінний союз
-    ipa: /plɛmʲiˈnːɪj sɔˈjuz/
-    translation: tribal union
-    pos: phrase
-    gender: m
-  - lemma: данина
-    ipa: /dɑˈnɪnɑ/
-    translation: tribute
-    pos: noun
-    gender: f
-  - lemma: святилище
-    ipa: /swʲɑˈtɪlɪʃt͡ʃɛ/
-    translation: sanctuary
-    pos: noun
-    gender: n
-  - lemma: обряд
-    ipa: /ɔˈbrʲɑd/
-    translation: ritual
-    pos: noun
-    gender: m
-  - lemma: городище
-    ipa: /ɦɔrɔˈdɪʃt͡ʃɛ/
-    translation: fortified settlement
-    pos: noun
-    gender: n
-  - lemma: літопис
-    ipa: /ˈlʲitɔpɪs/
-    translation: chronicle
-    pos: noun
-    gender: m
+- lemma: поляна
+  ipa: /pɔˈlʲɑnɪ/
+  translation: Polyany
+  pos: noun
+  gender: f
+- lemma: древлянин
+  ipa: /drɛˈwlʲɑnɪ/
+  translation: Derevlyany
+  pos: noun
+- lemma: сіверянин
+  ipa: /sʲiˈwɛrʲɑnɪ/
+  translation: Siveryany
+  pos: noun
+- lemma: улич
+  ipa: /ˈulɪt͡ʃʲi/
+  translation: Ulychi
+  pos: noun
+  gender: m
+- lemma: тиверець
+  ipa: /ˈtɪwɛrt͡sʲi/
+  translation: Tyvertsi
+  pos: noun
+  gender: m
+- lemma: волинянин
+  ipa: /wɔlɪˈnʲɑnɪ/
+  translation: Volhynians
+  pos: noun
+- lemma: племінний союз
+  ipa: /plɛmʲiˈnːɪj sɔˈjuz/
+  translation: tribal union
+  pos: noun
+  gender: m
+- lemma: данина
+  ipa: /dɑˈnɪnɑ/
+  translation: tribute
+  pos: noun
+  gender: f
+- lemma: святилище
+  ipa: /swʲɑˈtɪlɪʃt͡ʃɛ/
+  translation: sanctuary
+  pos: noun
+  gender: n
+- lemma: обряд
+  ipa: /ɔˈbrʲɑd/
+  translation: ritual
+  pos: noun
+  gender: m
+- lemma: городище
+  ipa: /ɦɔrɔˈdɪʃt͡ʃɛ/
+  translation: fortified settlement
+  pos: noun
+  gender: n
+- lemma: літопис
+  ipa: /ˈlʲitɔpɪs/
+  translation: chronicle
+  pos: noun
+  gender: m

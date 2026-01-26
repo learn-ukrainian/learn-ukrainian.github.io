@@ -1,6 +1,6 @@
 # A1 Module Status
 
-**Generated:** 2026-01-25 20:07:29
+**Generated:** 2026-01-26 22:33:48
 **Total Modules:** 44
 **Status:** 44 passing, 0 failing, 0 stubs, 0 errors
 
@@ -44,20 +44,20 @@
 | 028 | 28-description-adverbs | ✅ PASS | 886/750 | - |
 | 029 | 29-weather-and-nature | ✅ PASS | 937/750 | - |
 | 030 | 30-prepositions-iii | ✅ PASS | 1050/750 | - |
-| 031 | 31-body-and-health | ✅ PASS | 800/750 | structure |
-| 032 | 32-my-family | ✅ PASS | 912/750 | structure |
-| 033 | 33-holidays-and-traditions | ✅ PASS | 805/750 | structure |
-| 034 | 34-checkpoint-core-grammar | ✅ PASS | 1351/750 | structure |
-| 035 | 35-at-the-cafe-practical | ✅ PASS | 908/750 | structure |
-| 036 | at-the-restaurant | ✅ PASS | 808/750 | structure |
-| 037 | at-the-market | ✅ PASS | 812/750 | structure |
-| 038 | at-the-store | ✅ PASS | 754/750 | structure |
-| 039 | buying-tickets | ✅ PASS | 769/750 | structure |
-| 040 | taking-transport | ✅ PASS | 820/750 | structure |
-| 041 | phone-basics | ✅ PASS | 813/750 | structure |
-| 042 | emergencies | ✅ PASS | 798/750 | structure |
-| 043 | combined-practice | ✅ PASS | 810/750 | structure |
-| 044 | a1-final-exam | ✅ PASS | 834/750 | structure |
+| 031 | 31-body-and-health | ✅ PASS | 800/750 | - |
+| 032 | 32-my-family | ✅ PASS | 912/750 | - |
+| 033 | 33-holidays-and-traditions | ✅ PASS | 805/750 | - |
+| 034 | 34-checkpoint-core-grammar | ✅ PASS | 1351/750 | - |
+| 035 | 35-at-the-cafe-practical | ✅ PASS | 908/750 | - |
+| 036 | at-the-restaurant | ✅ PASS | 808/750 | - |
+| 037 | at-the-market | ✅ PASS | 812/750 | - |
+| 038 | at-the-store | ✅ PASS | 754/750 | - |
+| 039 | buying-tickets | ✅ PASS | 769/750 | - |
+| 040 | taking-transport | ✅ PASS | 820/750 | - |
+| 041 | phone-basics | ✅ PASS | 813/750 | - |
+| 042 | emergencies | ✅ PASS | 798/750 | - |
+| 043 | combined-practice | ✅ PASS | 810/750 | - |
+| 044 | a1-final-exam | ✅ PASS | 834/750 | - |
 
 ---
 

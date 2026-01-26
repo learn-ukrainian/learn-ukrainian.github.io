@@ -1,0 +1,49 @@
+{
+  "module": "84-checkpoint-register-synthesis",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:28:42.083068Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-15T15:34:10.349958Z",
+    "meta": "2026-01-26T17:21:19.266066Z",
+    "activities": "2026-01-13T11:07:01.633087Z",
+    "vocabulary": "2026-01-21T22:54:36.827637Z",
+    "plan": "2026-01-26T17:21:19.265822Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "1796/1750 (raw: 1980) | pedagogy: 1 violations | richness: 80% < 95% min (grammar)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "21/15"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "5 < 10 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "4 Outline Compliance Errors"
+    ],
+    "pass_count": 3,
+    "fail_count": 1
+  }
+}

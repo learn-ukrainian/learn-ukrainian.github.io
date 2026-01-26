@@ -1675,6 +1675,25 @@ def main():
                     meta_data = yaml.safe_load(f)
             except Exception as e:
                 print(f'    ⚠️ Error parsing YAML metadata for {mod.slug}: {e}')
+
+        # Load PLAN file for title/subtitle (Architecture v2.0: title lives in plan, not meta)
+        # Try both slug-only and numbered formats
+        plan_file = CURRICULUM_DIR / lang_pair / 'plans' / mod.level.lower() / f"{mod.slug}.yaml"
+        if not plan_file.exists():
+            plan_file = CURRICULUM_DIR / lang_pair / 'plans' / mod.level.lower() / f"{mod.local_num:02d}-{mod.slug}.yaml"
+        if plan_file.exists():
+            try:
+                with open(plan_file, 'r', encoding='utf-8') as f:
+                    plan_data = yaml.safe_load(f)
+                    # Merge title/subtitle from plan into meta_data
+                    if meta_data is None:
+                        meta_data = {}
+                    if 'title' not in meta_data and plan_data and 'title' in plan_data:
+                        meta_data['title'] = plan_data['title']
+                    if 'subtitle' not in meta_data and plan_data and 'subtitle' in plan_data:
+                        meta_data['subtitle'] = plan_data['subtitle']
+            except Exception as e:
+                print(f'    ⚠️ Error parsing plan file for {mod.slug}: {e}')
                 
         # Load VOCABULARY
         vocab_file = level_dir / 'vocabulary' / f"{mod.slug}.yaml"

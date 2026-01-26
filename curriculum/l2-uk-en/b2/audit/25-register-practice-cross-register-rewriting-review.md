@@ -1,8 +1,8 @@
 # Audit Report: M25 — 25-register-practice-cross-register-rewriting.md
 **Level:** B2 | **Module:** M25 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 19:23:18
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-26 22:28:01
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -55,25 +55,28 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.4% (checkpoint - no gate)
-- **Richness:** ✅ 99% (checkpoint)
+- **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 85%)
-**Module Type:** checkpoint
+**Score:** 96% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| activity_types | 12 | 8 | 100% | 25% | 25.0% |
-| review_sections | 37 | 3 | 100% | 20% | 20.0% |
-| variety | 0.97 | - | 97% | 15% | 14.5% |
-| engagement | 10 | 3 | 100% | 10% | 10.0% |
-| cultural | 3 | - | 100% | 10% | 10.0% |
-| visual | 8 | 3 | 100% | 10% | 10.0% |
-| paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
-| **TOTAL** | | | | | **99.5%** |
+| examples | 91 | 24 | 100% | 20% | 20.0% |
+| engagement | 10 | 5 | 100% | 15% | 15.0% |
+| dialogues | 26 | 4 | 100% | 15% | 15.0% |
+| variety | 0.97 | - | 97% | 10% | 9.7% |
+| cultural | 3 | 3 | 100% | 10% | 10.0% |
+| realworld | 2 | 3 | 67% | 10% | 6.7% |
+| visual | 8 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 54 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **96.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -1,8 +1,8 @@
 # Audit Report: M31 — liublinska-uniia.md
 **Level:** B2 | **Module:** M31 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 22:22:42
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-26 23:01:13
 
 ## Configuration
 **Type:** B2-history
@@ -39,19 +39,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ⚠️ 3911/4000 (raw: 4105) (89 short)
+- **Words:** ✅ 4264/4000 (raw: 4468)
 - **Activities:** ✅ 10/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 10/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 20 (soft target)
+- **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⚠️ Too many activities: 10 (target 3-9)
-- **Immersion:** 🇺🇦 98.4% (target 90-100% (history))
+- **Immersion:** 🇺🇦 98.6% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -63,7 +63,7 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 14 | 3 | 100% | 24% | 23.8% |
+| primary_sources | 15 | 3 | 100% | 24% | 23.8% |
 | engagement | 8 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
@@ -71,7 +71,7 @@
 | visual | 9 | 4 | 100% | 10% | 9.5% |
 | variety | 0.98 | - | 98% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 18 | 3 | 100% | 5% | 4.8% |
+| questions | 20 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
@@ -79,14 +79,14 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Люблінська унія 1569: Народження Речі Посполитої** | ⚪️ | 116 | Skipped |
-| **Вступ** | ✅ | 522 | Included in Core |
+| **Вступ** | ✅ | 599 | Included in Core |
 | **Шлях до унії: Криза та необхідність** | ⚪️ | 845 | Skipped |
-| **Люблінський сейм 1569 року: Драма та компроміс** | ⚪️ | 527 | Skipped |
-| **Нова карта Європи: Українські землі у складі Польщі** | ⚪️ | 481 | Skipped |
+| **Люблінський сейм 1569 року: Драма та компроміс** | ⚪️ | 662 | Skipped |
+| **Нова карта Європи: Українські землі у складі Польщі** | ⚪️ | 540 | Skipped |
 | **Читання: Культурний шок та адаптація** | ✅ | 326 | Included in Core |
 | **Первинні джерела** | ✅ | 298 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 261 | Included in Core |
 | **Критерії оцінювання** | ⚪️ | 0 | Skipped |
 | **Зразок відповіді** | ⚪️ | 316 | Skipped |
 | **Підсумок** | ✅ | 134 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 85 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 167 | Skipped |

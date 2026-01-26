@@ -1,8 +1,8 @@
 # Audit Report: M30 — 30-b21-checkpoint.md
-**Level:** B2 | **Module:** M30 | **Phase:** B2.1 | **Pedagogy:** checkpoint | **Target:** 1750
+**Level:** B2 | **Module:** M30 | **Phase:** B2 | **Pedagogy:** checkpoint | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:23:22
+**Generated:** 2026-01-26 22:28:05
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -68,25 +68,49 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (checkpoint - no gate)
-- **Richness:** ✅ 88% (checkpoint)
+- **Richness:** ❌ 77% < 95% min (grammar) - REWRITE needed
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 88% (minimum: 85%)
-**Module Type:** checkpoint
+**Score:** 77% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| activity_types | 11 | 8 | 100% | 25% | 25.0% |
-| review_sections | 35 | 3 | 100% | 20% | 20.0% |
-| variety | 0.90 | - | 90% | 15% | 13.5% |
-| engagement | 7 | 3 | 100% | 10% | 10.0% |
-| cultural | 0 | - | 0% | 10% | 0.0% |
-| visual | 16 | 3 | 100% | 10% | 10.0% |
-| paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
-| **TOTAL** | | | | | **88.5%** |
+| examples | 41 | 24 | 100% | 20% | 20.0% |
+| engagement | 7 | 5 | 100% | 15% | 15.0% |
+| dialogues | 1 | 4 | 25% | 15% | 3.8% |
+| variety | 0.90 | - | 90% | 10% | 9.0% |
+| cultural | 0 | 3 | 0% | 10% | 0.0% |
+| realworld | 3 | 3 | 100% | 10% | 10.0% |
+| visual | 16 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 33 | 5 | 100% | 5% | 5.0% |
+| proverbs | 1 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **77.8%** |
+
+### Dryness Flags & Fixes
+- ❌ **LOW_DIALOGUE**
+  - FIX:
+    Add more mini-dialogues (need 4+ total). Use this exact format:
+    
+    **Діалог: [Location in Ukraine]**
+    
+    > — [Speaker 1 line with **bolded** grammar examples]
+    > — [Speaker 2 response with **bolded** grammar examples]
+    > — [Speaker 1 continuation]
+    > — [Speaker 2 conclusion]
+- ❌ **NO_CULTURAL_ANCHOR**
+  - FIX:
+    Add 3+ cultural references. Use this exact format:
+    
+    > 🇺🇦 **Культурний момент**
+    >
+    > [Reference to Ukrainian place (Київ, Львів, Одеса, Карпати), tradition, or custom]
+    > [How it connects to the grammar/vocabulary being taught]
+    > [Example sentence using the grammar with cultural context]
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -1,8 +1,8 @@
 # Audit Report: M67 — 67-advanced-conjunctions-i.md
-**Level:** B2 | **Module:** M67 | **Phase:** B2.2 | **Pedagogy:** Grammar | **Target:** 1750
+**Level:** B2 | **Module:** M67 | **Phase:** B2 | **Pedagogy:** Grammar | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:23:45
+**Generated:** 2026-01-26 22:28:30
 
 ## Configuration
 **Type:** B2-grammar

@@ -1,8 +1,8 @@
 # Audit Report: M82 — 82-capstone-prezentatsiya.md
-**Level:** B2 | **Module:** M82 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2 | **Module:** M82 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:23:55
+**Generated:** 2026-01-26 22:28:40
 
 ## Configuration
 **Type:** B2-history
@@ -68,26 +68,51 @@
 - **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ⚠️ Too many activities: 15 (target 3-9)
 - **Immersion:** 🇺🇦 98.8% (target 90-100% (history))
-- **Richness:** ✅ 96% (content)
+- **Richness:** ❌ 70% < 95% min (grammar) - REWRITE needed
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 96% (minimum: 95%)
-**Module Type:** content
+**Score:** 70% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 13 | 15 | 87% | 25% | 21.8% |
-| engagement | 7 | 5 | 100% | 19% | 18.7% |
-| variety | 0.99 | - | 99% | 12% | 12.4% |
-| cultural | 6 | 4 | 100% | 12% | 12.5% |
-| realworld | 9 | 3 | 100% | 12% | 12.5% |
-| visual | 8 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 15 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **96.6%** |
+| examples | 13 | 24 | 54% | 20% | 10.8% |
+| engagement | 7 | 5 | 100% | 15% | 15.0% |
+| dialogues | 0 | 4 | 0% | 15% | 0.0% |
+| variety | 0.99 | - | 99% | 10% | 9.9% |
+| cultural | 6 | 3 | 100% | 10% | 10.0% |
+| realworld | 9 | 3 | 100% | 10% | 10.0% |
+| visual | 8 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 15 | 5 | 100% | 5% | 5.0% |
+| proverbs | 0 | 1 | 0% | 5% | 0.0% |
+| **TOTAL** | | | | | **70.7%** |
+
+### Dryness Flags & Fixes
+- ❌ **NO_DIALOGUE**
+  - FIX:
+    Add 4+ mini-dialogues. Use this exact format:
+    
+    **Діалог: [Location in Ukraine]**
+    
+    > — [Speaker 1 line with **bolded** grammar examples]
+    > — [Speaker 2 response with **bolded** grammar examples]
+    > — [Speaker 1 continuation]
+    > — [Speaker 2 conclusion]
+    
+    Example locations: На Бесарабському ринку, У львівській кав'ярні, В одеському трамваї, На Подолі
+- ❌ **NO_PROVERBS**
+  - FIX:
+    Add 1+ Ukrainian proverb. Use this format:
+    
+    Українці кажу|ть: «[Proverb in Ukrainian]»
+    
+    Зверніть увагу: **[word]** — [aspect] вид, бо [explanation why this aspect is used].
+    
+    Example: «Не кажи гоп, поки не перескочиш» — **перескочиш** is perfective because it's about the result.
 
 ## Section Audit
 | Section | Status | Count | Notes |

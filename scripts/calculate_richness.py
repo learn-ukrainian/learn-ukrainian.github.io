@@ -542,6 +542,10 @@ def extract_module_type(content: str, file_path: Union[str, Path, None] = None) 
     path_str = str(file_path).lower()
     if '/lit/' in path_str:
         return 'literature'
+    if '/b2-hist/' in path_str or '/c1-hist/' in path_str:
+        return 'history'
+    if '/c1-bio/' in path_str:
+        return 'biography'
 
     # Default to grammar for B1-B2, content for others
     level = extract_level(file_path)

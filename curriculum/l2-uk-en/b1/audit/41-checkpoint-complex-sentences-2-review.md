@@ -1,8 +1,8 @@
 # Audit Report: M41 — 41-checkpoint-complex-sentences-2.md
-**Level:** B1 | **Module:** M41 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 1200
+**Level:** B1 | **Module:** M41 | **Phase:** B1 | **Pedagogy:** TTT | **Target:** 1200
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 19:22:30
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-26 22:27:10
 
 ## Configuration
 **Type:** B1-checkpoint
@@ -11,6 +11,7 @@
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
 **Priority Types:** error-correction, fill-in, quiz
+**Required Types:** fill-in, quiz, transformation, writing
 **Engagement:** ≥3 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥10 words
@@ -38,7 +39,17 @@
 - Total activities: 14 (target: 10-14) ✅
 - Unique types: 11 (minimum: 4) ✅
 - Priority types used: 3/3 (error-correction, fill-in, quiz) ✅
+- Required types used: 2/4 (fill-in, quiz) ❌
 - Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['transformation', 'writing']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
+  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 2114/1200 (raw: 2310)
@@ -51,28 +62,62 @@
 - **Vocab:** ✅ 31/10
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (checkpoint - no gate)
-- **Richness:** ✅ 85% (checkpoint)
+- **Richness:** ❌ 62% < 95% min (grammar) - REWRITE needed
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 85% (minimum: 85%)
-**Module Type:** checkpoint
+**Score:** 62% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| activity_types | 11 | 8 | 100% | 25% | 25.0% |
-| review_sections | 37 | 3 | 100% | 20% | 20.0% |
-| variety | 0.90 | - | 90% | 15% | 13.5% |
-| engagement | 4 | 3 | 100% | 10% | 10.0% |
-| cultural | 0 | - | 0% | 10% | 0.0% |
-| visual | 2 | 3 | 67% | 10% | 6.7% |
-| paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
-| **TOTAL** | | | | | **85.2%** |
+| examples | 64 | 24 | 100% | 20% | 20.0% |
+| engagement | 4 | 5 | 80% | 15% | 12.0% |
+| dialogues | 0 | 4 | 0% | 15% | 0.0% |
+| variety | 0.90 | - | 90% | 10% | 9.0% |
+| cultural | 0 | 3 | 0% | 10% | 0.0% |
+| realworld | 1 | 3 | 33% | 10% | 3.3% |
+| visual | 2 | 3 | 67% | 5% | 3.4% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 35 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **62.6%** |
+
+### Dryness Flags & Fixes
+- ❌ **NO_DIALOGUE**
+  - FIX:
+    Add 4+ mini-dialogues. Use this exact format:
+    
+    **Діалог: [Location in Ukraine]**
+    
+    > — [Speaker 1 line with **bolded** grammar examples]
+    > — [Speaker 2 response with **bolded** grammar examples]
+    > — [Speaker 1 continuation]
+    > — [Speaker 2 conclusion]
+    
+    Example locations: На Бесарабському ринку, У львівській кав'ярні, В одеському трамваї, На Подолі
+- ❌ **ABSTRACT_ONLY**
+  - FIX:
+    Add 3+ real-world boxes. Use this exact format:
+    
+    > 🌍 **У реальному житті**
+    >
+    > [Specific scenario: "На співбесіді...", "У магазині...", "На вокзалі..."]
+    > [Example sentence showing grammar in that context]
+- ❌ **NO_CULTURAL_ANCHOR**
+  - FIX:
+    Add 3+ cultural references. Use this exact format:
+    
+    > 🇺🇦 **Культурний момент**
+    >
+    > [Reference to Ukrainian place (Київ, Львів, Одеса, Карпати), tradition, or custom]
+    > [How it connects to the grammar/vocabulary being taught]
+    > [Example sentence using the grammar with cultural context]
 
 ## Section Audit
 | Section | Status | Count | Notes |

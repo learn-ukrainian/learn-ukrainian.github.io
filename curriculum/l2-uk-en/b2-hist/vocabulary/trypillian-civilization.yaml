@@ -42,6 +42,7 @@ items:
   ipa: /barabˈan/
   translation: drum
   pos: noun
+  gender: m
 - lemma: берегиня
   ipa: /bɛrɛɦˈɪnja/
   translation: Berehynia (protector goddess)
@@ -56,6 +57,7 @@ items:
   ipa: /bɔbˈɛr/
   translation: beaver
   pos: noun
+  gender: m
 - lemma: бобовий
   ipa: /bɔbˈɔʋɪj/
   translation: legume, bean-related
@@ -69,6 +71,7 @@ items:
   ipa: /braslˈɛt/
   translation: bracelet
   pos: noun
+  gender: m
 - lemma: бронза
   ipa: /brˈɔnza/
   translation: bronze
@@ -99,6 +102,7 @@ items:
   ipa: /ʋɛrstˈat/
   translation: loom, machine tool
   pos: noun
+  gender: m
 - lemma: видобувати
   ipa: /ʋɪdɔbuʋˈatɪ/
   translation: to extract, to mine
@@ -171,10 +175,12 @@ items:
   ipa: /ʋˈɔrɔɦ-zaʋɔjɔʋnɪk/
   translation: enemy-conqueror
   pos: noun
+  gender: m
 - lemma: вуглевод
   ipa: /ʋuɦlɛʋˈɔd/
   translation: carbohydrate
   pos: noun
+  gender: m
 - lemma: вівтар
   ipa: /ʋˈiʋtar/
   translation: altar
@@ -214,6 +220,7 @@ items:
   ipa: /ɦlˈɛt͡ʃɪk/
   translation: jug, pitcher
   pos: noun
+  gender: m
 - lemma: глина
   ipa: /ɦlˈɪna/
   translation: clay
@@ -243,19 +250,22 @@ items:
 - lemma: городній
   ipa: /ɦɔrˈɔdnij/
   translation: garden-related, vegetable
-  pos: adj
+  pos: noun
+  gender: f
 - lemma: горщик
   ipa: /ɦˈɔrʃt͡ʃɪk/
   translation: pot
   pos: noun
+  gender: m
 - lemma: господарський
   ipa: /ɦɔspɔdarsʲkɪj/
   translation: economic, household
   pos: adj
-- lemma: груди
+- lemma: груда
   ipa: /ɦrˈudɪ/
   translation: chest, breasts
   pos: noun
+  gender: f
 - lemma: двозернянка
   ipa: /dʋɔzɛrnˈjanka/
   translation: emmer (type of wheat)
@@ -322,10 +332,12 @@ items:
   ipa: /ʒˈɔludʲ/
   translation: acorn
   pos: noun
+  gender: m
 - lemma: жрець-деспот
   ipa: /ʒrɛt͡sʲ-dˈɛspɔt/
   translation: priest-despot
   pos: noun
+  gender: m
 - lemma: жриця
   ipa: /ʒrˈɪt͡sja/
   translation: priestess
@@ -421,10 +433,12 @@ items:
   ipa: /zibrˈannja/
   translation: assembly, collection
   pos: noun
+  gender: n
 - lemma: кабан
   ipa: /kabˈan/
   translation: wild boar
   pos: noun
+  gender: m
 - lemma: карбуна
   ipa: /karbuna/
   translation: Karbuna (site)
@@ -438,11 +452,7 @@ items:
   ipa: /kɛrˈamik/
   translation: ceramicist, potter
   pos: noun
-- lemma: кераміка
-  ipa: /kɛrˈamika/
-  translation: ceramics, pottery
-  pos: noun
-  gender: f
+  gender: m
 - lemma: керамічний
   ipa: /kɛramˈit͡ʃnɪj/
   translation: ceramic
@@ -536,10 +546,11 @@ items:
   ipa: /lisɔstɛpɔʋˈɪj/
   translation: forest-steppe
   pos: adj
-- lemma: м'яти
+- lemma: м'ята
   ipa: /mˈjatɪ/
   translation: to knead, to trample
-  pos: verb
+  pos: noun
+  gender: f
 - lemma: майданецький
   ipa: /majdanˈɛt͡sʲkɪj/
   translation: Maydanetske (site)
@@ -552,6 +563,7 @@ items:
   ipa: /malɔrˈɔs/
   translation: '"Little Russian"'
   pos: noun
+  gender: m
 - lemma: масштабний
   ipa: /masʃtˈabnɪj/
   translation: large-scale
@@ -583,6 +595,7 @@ items:
   ipa: /mɛtalˈurɦ/
   translation: metallurgist
   pos: noun
+  gender: m
 - lemma: мисливський
   ipa: /mɪslˈɪʋsʲkɪj/
   translation: hunting (adj)
@@ -643,6 +656,7 @@ items:
   ipa: /nakɔnˈɛt͡ʃnɪk/
   translation: arrowhead, tip
   pos: noun
+  gender: m
 - lemma: налічувати
   ipa: /nalˈit͡ʃuʋatɪ/
   translation: to number, to total
@@ -721,6 +735,7 @@ items:
   ipa: /ɔʋˈal/
   translation: oval
   pos: noun
+  gender: m
 - lemma: овес
   ipa: /ɔʋˈɛs/
   translation: oats
@@ -745,6 +760,7 @@ items:
   ipa: /ɔrnˈamɛnt/
   translation: ornament, pattern
   pos: noun
+  gender: m
 - lemma: освоювати
   ipa: /ɔsʋˈɔjuʋatɪ/
   translation: to master, to reclaim
@@ -765,16 +781,16 @@ items:
   ipa: /palˈat͡s/
   translation: palace
   pos: noun
+  gender: m
 - lemma: паливо
   ipa: /pˈalɪʋɔ/
   translation: fuel
   pos: noun
   gender: n
-- lemma: пар
+- lemma: пара
   ipa: /par/
   translation: fallow (land)
   pos: noun
-  gender: m
 - lemma: патріархальний
   ipa: /patriarxˈalʲnɪj/
   translation: patriarchal
@@ -834,6 +850,7 @@ items:
   ipa: /pˈɔlis/
   translation: polis (city-state)
   pos: noun
+  gender: m
 - lemma: помаранчево-червонити
   ipa: /pɔmarant͡ʃɛʋɔ-t͡ʃɛrʋɔnˈɪtɪ/
   translation: to turn orange-red
@@ -911,6 +928,7 @@ items:
   ipa: /prɔtɔmˈistɔ-ɦiɦant/
   translation: giant proto-city
   pos: noun
+  gender: n
 - lemma: пряслице
   ipa: /prˈjaslɪt͡sɛ/
   translation: spindle whorl
@@ -946,6 +964,7 @@ items:
   ipa: /pidraxˈunɔk/
   translation: counting, calculation
   pos: noun
+  gender: m
 - lemma: підривати
   ipa: /pidrɪʋˈatɪ/
   translation: to undermine
@@ -954,6 +973,7 @@ items:
   ipa: /rabɔʋlˈasnɪk/
   translation: slave owner
   pos: noun
+  gender: m
 - lemma: радіальний
   ipa: /radiˈalʲnɪj/
   translation: radial
@@ -975,6 +995,7 @@ items:
   ipa: /rɛmisnˈɪk/
   translation: craftsman, artisan
   pos: noun
+  gender: m
 - lemma: ремісничий
   ipa: /rɛmisnˈɪt͡ʃɪj/
   translation: craft-related, artisan
@@ -1004,6 +1025,7 @@ items:
   ipa: /rɔdˈɔʋɪʃt͡ʃɛ/
   translation: deposit, field
   pos: noun
+  gender: n
 - lemma: родючість
   ipa: /rɔdˈjut͡ʃistʲ/
   translation: fertility
@@ -1072,6 +1094,7 @@ items:
   ipa: /sarmˈat/
   translation: Sarmatian
   pos: noun
+  gender: m
 - lemma: свиний
   ipa: /sʋɪnɪj/
   translation: pork (adj), pig's
@@ -1080,6 +1103,7 @@ items:
   ipa: /sʋɪnˈja/
   translation: pig
   pos: noun
+  gender: f
 - lemma: світло-жовтий
   ipa: /sʋˈitlɔ-ʒɔʋtɪj/
   translation: light yellow
@@ -1093,6 +1117,7 @@ items:
   ipa: /sɛlɪʃt͡ʃɛ/
   translation: settlement, village
   pos: noun
+  gender: n
 - lemma: середземномор'я
   ipa: /sɛrɛdzɛmnɔmˈɔrja/
   translation: Mediterranean
@@ -1102,6 +1127,7 @@ items:
   ipa: /sɛrp/
   translation: sickle
   pos: noun
+  gender: m
 - lemma: серповий
   ipa: /sɛrpɔʋˈɪj/
   translation: sickle (adj)
@@ -1124,10 +1150,12 @@ items:
   ipa: /skrɛbˈɔk/
   translation: scraper
   pos: noun
+  gender: m
 - lemma: скіф
   ipa: /skif/
   translation: Scythian
   pos: noun
+  gender: m
 - lemma: слива
   ipa: /slˈɪʋa/
   translation: plum
@@ -1188,6 +1216,7 @@ items:
   ipa: /stɛɦnˈɔ/
   translation: thigh, hip
   pos: noun
+  gender: n
 - lemma: стоунхендж
   ipa: /stɔunxˈɛndʒ/
   translation: Stonehenge
@@ -1228,6 +1257,7 @@ items:
   ipa: /tˈɪɦɛlʲ/
   translation: crucible
   pos: noun
+  gender: m
 - lemma: тисячоліття
   ipa: /tɪsjat͡ʃɔlˈittja/
   translation: millennium
@@ -1259,6 +1289,7 @@ items:
   ipa: /trˈaktɔr/
   translation: tractor
   pos: noun
+  gender: m
 - lemma: трипілець
   ipa: /trɪpˈilɛt͡sʲ/
   translation: Trypillian (person)
@@ -1361,7 +1392,7 @@ items:
   ipa: /t͡sˈɛlʲsij/
   translation: Celsius
   pos: noun
-  gender: m
+  gender: f
 - lemma: централізований
   ipa: /t͡sɛntralizˈɔʋanɪj/
   translation: centralized
@@ -1370,10 +1401,12 @@ items:
   ipa: /t͡sɪʋilizˈatɔr/
   translation: civilizer
   pos: noun
+  gender: m
 - lemma: цивілізація
   ipa: /t͡sɪʋilizˈat͡sija/
   translation: civilization
   pos: noun
+  gender: f
 - lemma: циклічність
   ipa: /t͡sɪklˈit͡ʃnistʲ/
   translation: cyclicity
@@ -1383,6 +1416,7 @@ items:
   ipa: /t͡ʃaɦarnˈɪk/
   translation: shrub, bush
   pos: noun
+  gender: m
 - lemma: чесати
   ipa: /t͡ʃɛsˈatɪ/
   translation: to comb (wool/flax)
@@ -1400,7 +1434,7 @@ items:
   ipa: /ʃˈɪlɔ/
   translation: awl
   pos: noun
-  gender: n
+  gender: f
 - lemma: шумер
   ipa: /ʃumˈɛr/
   translation: Sumer
@@ -1427,7 +1461,8 @@ items:
 - lemma: індський
   ipa: /indsʲkɪj/
   translation: Indus (adj)
-  pos: adj
+  pos: noun
+  gender: m
 - lemma: індія
   ipa: /ˈindija/
   translation: India

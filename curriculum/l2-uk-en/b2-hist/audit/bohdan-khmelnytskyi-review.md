@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M52 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 3000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 22:22:56
+**Generated:** 2026-01-26 22:54:43
 
 ## Configuration
 **Type:** B2-biography
@@ -52,24 +52,23 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⚠️ 1 fill-in with year answers
 - **Immersion:** 🇺🇦 99.6% (target 90-100% (biography))
-- **Richness:** ✅ 99% (biography)
+- **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
-**Module Type:** biography
+**Module Type:** history
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 8 | 4 | 100% | 19% | 19.0% |
+| primary_sources | 8 | 3 | 100% | 24% | 23.8% |
 | engagement | 6 | 6 | 100% | 14% | 14.3% |
-| quotes | 3 | 3 | 100% | 14% | 14.3% |
+| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
+| decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 6 | 4 | 100% | 10% | 9.5% |
 | visual | 6 | 4 | 100% | 10% | 9.5% |
-| timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
-| legacy | 14 | 2 | 100% | 10% | 9.5% |
 | variety | 0.99 | - | 99% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 3 | 3 | 100% | 5% | 4.8% |

@@ -1,0 +1,51 @@
+{
+  "module": "09-thesis-development",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:28:55.210882Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-13T12:09:36.573615Z",
+    "meta": "2026-01-26T17:21:19.334185Z",
+    "activities": "2026-01-11T00:20:28.283446Z",
+    "vocabulary": null,
+    "plan": "2026-01-26T17:21:19.333998Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "2070/3000 (raw: 2146) | pedagogy: 1 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "16/12"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 25 (soft target)"
+    },
+    "naturalness": {
+      "status": "fail",
+      "violations": 1,
+      "message": "None/10 (PENDING) - Naturalness check required"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "7 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
+      "Missing required activity types: error-correction, group-sort"
+    ],
+    "pass_count": 1,
+    "fail_count": 3
+  }
+}

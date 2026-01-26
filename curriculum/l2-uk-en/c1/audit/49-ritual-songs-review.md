@@ -1,7 +1,7 @@
 # Audit Report: M49 — 49-ritual-songs.md
-**Level:** C1 | **Module:** M49 | **Phase:** C1.5 | **Pedagogy:** Cultural Immersion | **Target:** 3000
+**Level:** C1 | **Module:** M49 | **Phase:** C1 | **Pedagogy:** Cultural Immersion | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:24:34
+**Generated:** 2026-01-26 22:29:25
 
 ## Configuration
 **Type:** C1-cultural
@@ -64,26 +64,26 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (15 activities)
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (cultural))
-- **Richness:** ✅ 100% (cultural)
+- **Richness:** ❌ 91% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 100% (minimum: 95%)
-**Module Type:** cultural
+**Score:** 91% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| cultural | 11 | 5 | 100% | 33% | 33.3% |
-| engagement | 8 | 6 | 100% | 20% | 20.0% |
-| visual | 8 | 4 | 100% | 13% | 13.3% |
-| variety | 1.00 | - | 100% | 7% | 6.7% |
-| paragraph_var | 1.00 | - | 100% | 7% | 6.7% |
-| examples | 21 | - | 100% | 7% | 6.7% |
-| realworld | 1 | - | 100% | 7% | 6.7% |
-| questions | 10 | 4 | 100% | 7% | 6.7% |
-| **TOTAL** | | | | | **100.0%** |
+| examples | 21 | 15 | 100% | 25% | 25.0% |
+| engagement | 8 | 5 | 100% | 19% | 18.7% |
+| variety | 1.00 | - | 100% | 12% | 12.5% |
+| cultural | 11 | 4 | 100% | 12% | 12.5% |
+| realworld | 1 | 3 | 33% | 12% | 4.1% |
+| visual | 8 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 10 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **91.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

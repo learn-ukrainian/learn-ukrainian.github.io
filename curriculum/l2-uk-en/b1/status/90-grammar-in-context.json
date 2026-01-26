@@ -1,0 +1,50 @@
+{
+  "module": "90-grammar-in-context",
+  "level": "B1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:27:42.217305Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-15T16:19:11.735418Z",
+    "meta": "2026-01-26T15:44:41.744181Z",
+    "activities": "2026-01-11T23:20:02.216802Z",
+    "vocabulary": "2026-01-25T16:02:18.836986Z",
+    "plan": "2026-01-26T15:44:41.743624Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "2084/1500 (raw: 2613) | pedagogy: 1 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "13/10"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "25/15"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Outline Compliance Errors",
+      "Missing required activity types: speaking, task, writing"
+    ],
+    "pass_count": 4,
+    "fail_count": 1
+  }
+}

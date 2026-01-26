@@ -1,8 +1,8 @@
 # Audit Report: M19 — 19-practice-ii-article-critique.md
-**Level:** C1 | **Module:** M19 | **Phase:** C1.1 | **Pedagogy:** Not Specified | **Target:** 3000
+**Level:** C1 | **Module:** M19 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:24:16
+**Generated:** 2026-01-26 22:29:06
 
 ## Configuration
 **Type:** C1
@@ -59,26 +59,34 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.9% (target 90-100%)
-- **Richness:** ✅ 99% (academic)
+- **Richness:** ❌ 90% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
-**Module Type:** academic
+**Score:** 90% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| citations | 6 | 5 | 100% | 24% | 23.8% |
-| data_refs | 6 | 3 | 100% | 19% | 19.0% |
-| visual | 13 | 5 | 100% | 14% | 14.3% |
-| questions | 36 | 4 | 100% | 14% | 14.3% |
-| engagement | 7 | 5 | 100% | 10% | 9.5% |
-| variety | 0.97 | - | 97% | 10% | 9.2% |
-| cultural | 1 | - | 100% | 5% | 4.8% |
-| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.7%** |
+| examples | 70 | 15 | 100% | 25% | 25.0% |
+| engagement | 7 | 5 | 100% | 19% | 18.7% |
+| variety | 0.97 | - | 97% | 12% | 12.1% |
+| cultural | 1 | 4 | 25% | 12% | 3.1% |
+| realworld | 4 | 3 | 100% | 12% | 12.5% |
+| visual | 13 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 36 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **90.2%** |
+
+### Dryness Flags & Fixes
+- ❌ **LOW_CULTURAL_ANCHOR**
+  - FIX:
+    Add more cultural references (need 3+ total). Include:
+    - Named Ukrainian places (Поділ, Бесарабський ринок, Острозька академія)
+    - Ukrainian traditions or customs
+    - Contemporary Ukrainian life examples
 
 ## Section Audit
 | Section | Status | Count | Notes |

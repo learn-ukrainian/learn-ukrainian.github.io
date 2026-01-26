@@ -1,0 +1,47 @@
+{
+  "module": "knyahynia-olha",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:55:53.233055Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-23T23:48:31.924082Z",
+    "meta": "2026-01-26T17:21:20.794234Z",
+    "activities": "2026-01-19T13:10:48.867109Z",
+    "vocabulary": "2026-01-23T23:47:46.512379Z",
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4064/4000 (raw: 4351)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "6/3"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 24 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
+  }
+}

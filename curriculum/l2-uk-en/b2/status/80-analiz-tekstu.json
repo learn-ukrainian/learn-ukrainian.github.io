@@ -1,0 +1,50 @@
+{
+  "module": "80-analiz-tekstu",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:28:39.482375Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-13T10:28:25.793593Z",
+    "meta": "2026-01-26T17:21:19.258619Z",
+    "activities": "2026-01-13T10:25:08.915051Z",
+    "vocabulary": "2026-01-21T22:54:36.457211Z",
+    "plan": "2026-01-26T17:21:19.258390Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "2147/1750 (raw: 2324) | pedagogy: 1 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "15/14"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "1 < 20 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "1 Critical Template Violations",
+      "2 Outline Compliance Errors"
+    ],
+    "pass_count": 3,
+    "fail_count": 1
+  }
+}

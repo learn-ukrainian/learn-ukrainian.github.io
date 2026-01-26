@@ -2,11 +2,11 @@
   "module": "20-checkpoint-navigation",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T21:48:06.467545Z",
+  "last_audit": "2026-01-26T22:25:49.480344Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-16T00:22:53.724937Z",
-    "meta": "2026-01-26T17:21:18.699870Z",
+    "meta": "2026-01-26T21:56:47.931803Z",
     "activities": "2026-01-16T00:24:37.804633Z",
     "vocabulary": "2026-01-25T01:39:03.422010Z",
     "plan": "2026-01-26T21:47:36.714587Z"

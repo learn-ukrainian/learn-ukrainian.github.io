@@ -1,4 +1,104 @@
 module: rich-pospolyta
 level: B2-HIST
 version: '2.0'
-items: []
+items:
+  - lemma: полонізація
+    ipa: /pɔlɔn⁽ʲ⁾izˈat͡s⁽ʲ⁾ijɐ/
+    translation: Polonization
+    pos: noun
+    gender: f
+  - lemma: кріпацтво
+    ipa: /kr⁽ʲ⁾iˈpat͡stʋɔ/
+    translation: serfdom
+    pos: noun
+    gender: n
+  - lemma: інкорпорація
+    ipa: /inkorpɔˈrat͡s⁽ʲ⁾ijɐ/
+    translation: incorporation
+    pos: noun
+    gender: f
+  - lemma: асиміляція
+    ipa: /ɐsɪm⁽ʲ⁾ilʲˈat͡s⁽ʲ⁾ijɐ/
+    translation: assimilation
+    pos: noun
+    gender: f
+  - lemma: спротив
+    ipa: /ˈsprɔtɪu̯/
+    translation: resistance
+    pos: noun
+    gender: m
+  - lemma: панщина
+    ipa: /ˈpɑnʲʃt͡ʃɪnɐ/
+    translation: corvée labor
+    pos: noun
+    gender: f
+  - lemma: фільварок
+    ipa: /f⁽ʲ⁾ilʲˈʋɑrɔk/
+    translation: manorial farm
+    pos: noun
+    gender: m
+  - lemma: латифундія
+    ipa: /lɐtɪˈfund⁽ʲ⁾ijɐ/
+    translation: latifundia
+    pos: noun
+    gender: f
+  - lemma: шляхта
+    ipa: /ˈʃlʲɐxtɐ/
+    translation: nobility
+    pos: noun
+    gender: f
+  - lemma: сейм
+    ipa: /sɛi̯m/
+    translation: diet/parliament
+    pos: noun
+    gender: m
+  - lemma: вето
+    ipa: /ˈʋɛtɔ/
+    translation: veto
+    pos: noun
+    gender: n
+  - lemma: анархія
+    ipa: /ɐˈnɑrx⁽ʲ⁾ijɐ/
+    translation: anarchy
+    pos: noun
+    gender: f
+  - lemma: привілей
+    ipa: /prɪʋ⁽ʲ⁾iˈlɛi̯/
+    translation: privilege
+    pos: noun
+    gender: m
+  - lemma: братство
+    ipa: /ˈbrɑtstʋɔ/
+    translation: brotherhood
+    pos: noun
+    gender: n
+  - lemma: полеміка
+    ipa: /pɔˈlɛm⁽ʲ⁾ikɐ/
+    translation: polemic
+    pos: noun
+    gender: f
+  - lemma: гніт
+    ipa: /ɦn⁽ʲ⁾it/
+    translation: oppression
+    pos: noun
+    gender: m
+  - lemma: визиск
+    ipa: /ˈʋɪzɪsk/
+    translation: exploitation
+    pos: noun
+    gender: m
+  - lemma: реєстр
+    ipa: /rɛˈjɛstr/
+    translation: register
+    pos: noun
+    gender: m
+  - lemma: ординація
+    ipa: /ɔrdɪˈnat͡s⁽ʲ⁾ijɐ/
+    translation: ordinance/regulation
+    pos: noun
+    gender: f
+  - lemma: єзуїт
+    ipa: /jɛzʊˈjit/
+    translation: Jesuit
+    pos: noun
+    gender: m

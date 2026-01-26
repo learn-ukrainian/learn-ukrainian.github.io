@@ -1,8 +1,8 @@
 # Audit Report: M71 — koliivshchyna.md
 **Level:** B2 | **Module:** M71 | **Phase:** HIST.7 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 22:55:21
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-26 22:54:56
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading
+**Required Types:** essay-response, match-up, quiz, reading, true-false
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -32,7 +32,7 @@
 - Total activities: 7 (target: 3-9) ✅
 - Unique types: 6 (minimum: 2) ✅
 - Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
-- Required types used: 2/2 (essay-response, reading) ✅
+- Required types used: 4/5 (essay-response, match-up, quiz, reading) ❌
 - Low density activities: 0
 
 ## Gates

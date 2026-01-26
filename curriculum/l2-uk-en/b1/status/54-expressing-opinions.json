@@ -1,0 +1,50 @@
+{
+  "module": "54-expressing-opinions",
+  "level": "B1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:27:18.826995Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-11T19:41:30.991473Z",
+    "meta": "2026-01-26T15:44:41.621802Z",
+    "activities": "2026-01-11T19:45:24.944618Z",
+    "vocabulary": "2026-01-25T16:02:18.579620Z",
+    "plan": "2026-01-26T15:44:41.621606Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "1632/1500 (raw: 2348) | pedagogy: 1 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "16/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "36/35"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Outline Compliance Errors",
+      "Missing required activity types: role-play, transformation, writing"
+    ],
+    "pass_count": 4,
+    "fail_count": 1
+  }
+}

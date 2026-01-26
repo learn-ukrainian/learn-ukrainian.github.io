@@ -1,8 +1,8 @@
 # Audit Report: M81 — 81-capstone-doslidzhennya.md
-**Level:** B2 | **Module:** M81 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2 | **Module:** M81 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:23:54
+**Generated:** 2026-01-26 22:28:40
 
 ## Configuration
 **Type:** B2-history
@@ -66,26 +66,28 @@
 - **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ⚠️ Too many activities: 12 (target 3-9)
 - **Immersion:** 🇺🇦 98.1% (target 90-100% (history))
-- **Richness:** ✅ 97% (content)
+- **Richness:** ❌ 91% < 95% min (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 97% (minimum: 95%)
-**Module Type:** content
+**Score:** 91% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 14 | 15 | 93% | 25% | 23.2% |
-| engagement | 8 | 5 | 100% | 19% | 18.7% |
-| variety | 0.97 | - | 97% | 12% | 12.1% |
-| cultural | 7 | 4 | 100% | 12% | 12.5% |
-| realworld | 20 | 3 | 100% | 12% | 12.5% |
-| visual | 9 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 9 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **97.9%** |
+| examples | 14 | 24 | 58% | 20% | 11.6% |
+| engagement | 8 | 5 | 100% | 15% | 15.0% |
+| dialogues | 4 | 4 | 100% | 15% | 15.0% |
+| variety | 0.97 | - | 97% | 10% | 9.7% |
+| cultural | 7 | 3 | 100% | 10% | 10.0% |
+| realworld | 20 | 3 | 100% | 10% | 10.0% |
+| visual | 9 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 9 | 5 | 100% | 5% | 5.0% |
+| proverbs | 8 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **91.3%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

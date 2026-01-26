@@ -228,8 +228,9 @@ Every LIT module must contain moments that connect literature to identity:
 
 1.  **NO EMBEDDED COMPONENTS** — NEVER include `# Словник` or `# Activities` in the Markdown file. Use YAML sidecars.
 2.  **NO STANDARD DRILLS** — No "match-up", "quiz", "fill-in". Only essays and deep **reading** tasks.
-3.  **NO ENGLISH** — 100% Ukrainian immersion (English only in Metadata `subtitle`).
-4.  **DO NOT SIMPLIFY** — LIT learners need complex syntax. Don't dumb it down.
+3.  **NO DIALOGS** — Dialogs and role-plays are inappropriate for academic/seminar content. LIT is scholarly analysis, not conversational practice.
+4.  **NO ENGLISH** — 100% Ukrainian immersion (English only in Metadata `subtitle`).
+5.  **DO NOT SIMPLIFY** — LIT learners need complex syntax. Don't dumb it down.
 
 ---
 

@@ -1,0 +1,50 @@
+{
+  "module": "pivden-novorosiia",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:55:00.363492Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-25T23:34:53.186677Z",
+    "meta": "2026-01-26T22:20:13.442449Z",
+    "activities": "2026-01-25T23:22:54.569778Z",
+    "vocabulary": "2026-01-25T23:19:10.280156Z",
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5112/4000 (raw: 5332)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "6/3"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "25/20"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "2 Outline Compliance Errors",
+      "Missing required activity types: true-false"
+    ],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

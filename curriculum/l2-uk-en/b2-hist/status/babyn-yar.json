@@ -1,0 +1,52 @@
+{
+  "module": "babyn-yar",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:55:18.145977Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-17T21:45:15.704980Z",
+    "meta": "2026-01-26T22:20:12.914463Z",
+    "activities": "2026-01-17T21:45:15.663321Z",
+    "vocabulary": null,
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 5,
+      "message": "29/4000 (raw: 115) | engagement: 0/5 | pedagogy: 5 violations | immersion: 19.3% LOW (target 90-100% (history)) | richness: 8% < 95% min (history) - REWRITE needed"
+    },
+    "activities": {
+      "status": "fail",
+      "violations": 4,
+      "message": "0/3 | density: 0 < 1 | unique_types: 0/2 types | priority: No priority types"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 20 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "2 Critical Template Violations",
+      "6 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
+      "Missing required activity types: essay-response, match-up, quiz, reading"
+    ],
+    "pass_count": 1,
+    "fail_count": 3
+  }
+}

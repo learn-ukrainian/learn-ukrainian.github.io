@@ -137,6 +137,10 @@ prerequisites:
 - `comparative-study` - Cross-period or cross-figure comparisons
 - `true-false` - Only for factual checks (allowed in B2-HIST)
 
+**Forbidden activity types (NEVER use):**
+- `dialog` - Dialogs are inappropriate for seminar/academic content
+- `role-play` - No conversational practice in history modules
+
 ### Essay Activities
 
 Essays are defined ONLY in `activities/{slug}.yaml`, NOT in markdown:

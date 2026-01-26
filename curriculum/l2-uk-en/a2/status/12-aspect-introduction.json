@@ -1,0 +1,47 @@
+{
+  "module": "12-aspect-introduction",
+  "level": "A2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:26:10.072053Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-25T17:32:37.691186Z",
+    "meta": "2026-01-26T17:21:18.828241Z",
+    "activities": "2026-01-25T17:31:56.362574Z",
+    "vocabulary": "2026-01-25T17:31:26.296475Z",
+    "plan": "2026-01-26T17:21:18.827986Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "1469/1000 (raw: 1547)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "11/10"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "17/1"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

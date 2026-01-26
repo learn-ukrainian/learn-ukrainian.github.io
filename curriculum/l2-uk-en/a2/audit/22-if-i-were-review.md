@@ -1,8 +1,8 @@
 # Audit Report: M22 — 22-if-i-were.md
-**Level:** A2 | **Module:** M22 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
+**Level:** A2 | **Module:** M22 | **Phase:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 08:59:20
+**Generated:** 2026-01-26 22:26:15
 
 ## Configuration
 **Type:** A2-grammar
@@ -35,15 +35,6 @@
 - Unique types: 9 (minimum: 4) ✅
 - Priority types used: 2/3 (fill-in, unjumble) ✅
 - Low density activities: 0
-
-## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (1 words): пішов...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1284/1000 (raw: 1433)

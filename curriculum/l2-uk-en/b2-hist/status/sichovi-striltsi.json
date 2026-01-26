@@ -1,0 +1,51 @@
+{
+  "module": "sichovi-striltsi",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:55:08.252673Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-25T21:29:25.206586Z",
+    "meta": "2026-01-26T22:20:13.569209Z",
+    "activities": "2026-01-25T21:29:25.206388Z",
+    "vocabulary": null,
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "1742/4000 (raw: 1872) | pedagogy: 1 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/3"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 20 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
+      "Missing required activity types: reading"
+    ],
+    "pass_count": 2,
+    "fail_count": 2
+  }
+}

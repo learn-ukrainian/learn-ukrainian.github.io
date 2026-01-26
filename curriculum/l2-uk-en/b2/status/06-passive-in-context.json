@@ -1,0 +1,49 @@
+{
+  "module": "06-passive-in-context",
+  "level": "B2",
+  "plan_version": "1.0",
+  "last_audit": "2026-01-26T22:27:47.908229Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-11T21:11:29.944852Z",
+    "meta": "2026-01-26T17:21:19.067553Z",
+    "activities": "2026-01-11T23:20:02.161638Z",
+    "vocabulary": "2026-01-21T22:54:25.244912Z",
+    "plan": "2026-01-26T17:21:19.067343Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "2114/1750 (raw: 2518) | pedagogy: 1 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "15/10"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "5 < 25 (soft target)"
+    },
+    "naturalness": {
+      "status": "fail",
+      "violations": 1,
+      "message": "1/10 (PENDING) - Naturalness check required"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "7 Outline Compliance Errors"
+    ],
+    "pass_count": 2,
+    "fail_count": 2
+  }
+}

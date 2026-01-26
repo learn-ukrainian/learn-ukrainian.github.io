@@ -2,7 +2,7 @@
 **Level:** C1 | **Module:** M127 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:27:54
+**Generated:** 2026-01-26 22:57:20
 
 ## Configuration
 **Type:** C1-biography
@@ -49,7 +49,7 @@
   - FIX: Rename '## Сучасний етап' to '## Останні роки' to maintain correct biographical tone.
 - ❌ **[FORBIDDEN_HEADER_TONE]** Header '## Вплив' is inappropriate for a deceased person. Use '## Спадщина' instead.
   - FIX: Rename '## Вплив' to '## Спадщина' to maintain correct biographical tone.
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Спадщина|Вплив' found: Вплив на сучасників та глобальний рух, Вплив
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Спадщина|Вплив' found: Вплив, Вплив на сучасників та глобальний рух
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 
 ## Recommendation

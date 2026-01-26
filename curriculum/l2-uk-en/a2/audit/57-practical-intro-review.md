@@ -1,16 +1,17 @@
 # Audit Report: M57 — 57-practical-intro.md
-**Level:** A2 | **Module:** M57 | **Phase:** A2.3 | **Pedagogy:** PPP | **Target:** 1000
+**Level:** A2 | **Module:** M57 | **Phase:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 08:59:40
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-26 22:26:35
 
 ## Configuration
-**Type:** A2-grammar
+**Type:** A2
 **Word Target:** 1000 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
 **Priority Types:** error-correction, fill-in, unjumble
+**Required Types:** error-correction, fill-in, quiz, sentence-building
 **Engagement:** ≥4 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
@@ -34,16 +35,19 @@
 - Total activities: 10 (target: 10-14) ✅
 - Unique types: 9 (minimum: 4) ✅
 - Priority types used: 2/3 (error-correction, unjumble) ✅
+- Required types used: 2/4 (error-correction, quiz) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: родовий, доконаний, кличний, називний, орудний
+- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['sentence-building']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
+  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: іменник, родовий, називний, знахідний, вид
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1184/1000 (raw: 1323)
@@ -56,7 +60,7 @@
 - **Vocab:** ✅ 6/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 77.6% (target 75-85% (A2.3))
 - **Grammar:** ℹ️ N/A (covered by naturalness)

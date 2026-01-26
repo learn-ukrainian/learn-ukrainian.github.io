@@ -1,0 +1,49 @@
+{
+  "module": "29-b21-integration-practice",
+  "level": "B2",
+  "plan_version": "1.0",
+  "last_audit": "2026-01-26T22:28:04.312274Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-11T22:32:11.954741Z",
+    "meta": "2026-01-26T17:21:19.150623Z",
+    "activities": "2026-01-13T11:42:15.291689Z",
+    "vocabulary": "2026-01-21T22:54:29.127361Z",
+    "plan": "2026-01-26T17:21:19.150388Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "1850/1750 (raw: 1957)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "14/10"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "2 < 25 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "1 Outline Compliance Errors"
+    ],
+    "pass_count": 4,
+    "fail_count": 0
+  }
+}

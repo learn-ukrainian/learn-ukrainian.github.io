@@ -1,0 +1,51 @@
+{
+  "module": "30-mykola-dzherya",
+  "level": "LIT",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:58:04.757705Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-18T19:20:25.671898Z",
+    "meta": "2026-01-26T17:21:21.900421Z",
+    "activities": "2026-01-18T18:02:53.018292Z",
+    "vocabulary": null,
+    "plan": "2026-01-26T17:21:21.900142Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "3532/4000 (raw: 3975) | pedagogy: 2 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5/3"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "0/0"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
+      "Missing required activity types: cloze"
+    ],
+    "pass_count": 3,
+    "fail_count": 2
+  }
+}

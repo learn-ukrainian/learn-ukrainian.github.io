@@ -1,8 +1,8 @@
 # Audit Report: M35 — 35-speaking-practice.md
-**Level:** C1 | **Module:** M35 | **Phase:** C1.2 | **Pedagogy:** Not Specified | **Target:** 1750
+**Level:** C1 | **Module:** M35 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 1750
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:24:26
+**Generated:** 2026-01-26 22:29:16
 
 ## Configuration
 **Type:** C1-checkpoint
@@ -66,25 +66,26 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.8% (checkpoint - no gate)
-- **Richness:** ✅ 96% (checkpoint)
+- **Richness:** ❌ 93% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 96% (minimum: 85%)
-**Module Type:** checkpoint
+**Score:** 93% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| activity_types | 7 | 8 | 88% | 25% | 22.0% |
-| review_sections | 33 | 3 | 100% | 20% | 20.0% |
-| variety | 0.98 | - | 98% | 15% | 14.7% |
-| engagement | 10 | 3 | 100% | 10% | 10.0% |
-| cultural | 2 | - | 100% | 10% | 10.0% |
-| visual | 11 | 3 | 100% | 10% | 10.0% |
-| paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
-| **TOTAL** | | | | | **96.7%** |
+| examples | 23 | 15 | 100% | 25% | 25.0% |
+| engagement | 10 | 5 | 100% | 19% | 18.7% |
+| variety | 0.98 | - | 98% | 12% | 12.2% |
+| cultural | 2 | 4 | 50% | 12% | 6.2% |
+| realworld | 12 | 3 | 100% | 12% | 12.5% |
+| visual | 11 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 28 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **93.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -1,8 +1,8 @@
 # Audit Report: M17 — 17-register-business-ukrainian.md
-**Level:** B2 | **Module:** M17 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 1750
+**Level:** B2 | **Module:** M17 | **Phase:** B2 | **Pedagogy:** Not Specified | **Target:** 1750
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:23:13
+**Generated:** 2026-01-26 22:27:55
 
 ## Configuration
 **Type:** B2-grammar
@@ -67,26 +67,28 @@
 - **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.2% (target 90-100% (grammar))
-- **Richness:** ✅ 99% (style)
+- **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
-**Module Type:** style
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| exemplar_texts | 5 | 2 | 100% | 25% | 25.0% |
-| model_answers | 98 | 3 | 100% | 20% | 20.0% |
+| examples | 98 | 24 | 100% | 20% | 20.0% |
 | engagement | 9 | 5 | 100% | 15% | 15.0% |
-| register_analysis | 15 | 5 | 100% | 15% | 15.0% |
-| visual | 24 | 4 | 100% | 10% | 10.0% |
-| variety | 0.92 | - | 92% | 5% | 4.6% |
-| cultural | 4 | - | 100% | 5% | 5.0% |
+| dialogues | 30 | 4 | 100% | 15% | 15.0% |
+| variety | 0.92 | - | 92% | 10% | 9.2% |
+| cultural | 4 | 3 | 100% | 10% | 10.0% |
+| realworld | 5 | 3 | 100% | 10% | 10.0% |
+| visual | 24 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 0.97 | - | 97% | 5% | 4.9% |
-| **TOTAL** | | | | | **99.4%** |
+| questions | 37 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

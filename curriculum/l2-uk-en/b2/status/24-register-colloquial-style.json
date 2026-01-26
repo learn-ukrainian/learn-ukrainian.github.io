@@ -1,0 +1,49 @@
+{
+  "module": "24-register-colloquial-style",
+  "level": "B2",
+  "plan_version": "1.0",
+  "last_audit": "2026-01-26T22:28:00.780581Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-11T21:19:52.643243Z",
+    "meta": "2026-01-26T17:21:19.138757Z",
+    "activities": "2026-01-11T23:20:02.142144Z",
+    "vocabulary": "2026-01-21T22:54:28.108473Z",
+    "plan": "2026-01-26T17:21:19.138510Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "1869/1750 (raw: 2741) | pedagogy: 1 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "14/10"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "11 < 25 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "2 Outline Compliance Errors"
+    ],
+    "pass_count": 3,
+    "fail_count": 1
+  }
+}

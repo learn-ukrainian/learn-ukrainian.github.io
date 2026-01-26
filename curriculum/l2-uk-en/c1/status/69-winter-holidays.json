@@ -1,0 +1,50 @@
+{
+  "module": "69-winter-holidays",
+  "level": "C1",
+  "plan_version": "1.0",
+  "last_audit": "2026-01-26T22:29:37.341622Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-11T20:48:15.209073Z",
+    "meta": "2026-01-26T17:21:19.523405Z",
+    "activities": "2026-01-11T20:47:30.127186Z",
+    "vocabulary": null,
+    "plan": "2026-01-26T17:21:19.523204Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "2063/3000 (raw: 2157)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "12/12"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 25 (soft target)"
+    },
+    "naturalness": {
+      "status": "fail",
+      "violations": 1,
+      "message": "0/10 (PENDING) - Naturalness check required"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "1 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
+    ],
+    "pass_count": 1,
+    "fail_count": 3
+  }
+}

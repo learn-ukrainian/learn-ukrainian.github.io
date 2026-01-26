@@ -1,8 +1,8 @@
 # Audit Report: M44 — 44-checkpoint-word-formation.md
-**Level:** A2 | **Module:** M44 | **Phase:** A2.3 | **Pedagogy:** TTT | **Target:** 800
-**Naturalness:** 8/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 08:59:32
+**Level:** A2 | **Module:** M44 | **Phase:** A2 | **Pedagogy:** TTT | **Target:** 800
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-26 22:26:28
 
 ## Configuration
 **Type:** A2-checkpoint
@@ -11,6 +11,7 @@
 **Items per Activity:** ≥10 items
 **Unique Types:** ≥4 types required
 **Priority Types:** error-correction, fill-in, quiz
+**Required Types:** error-correction, quiz, self-assessment, word-building
 **Engagement:** ≥3 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
@@ -34,7 +35,17 @@
 - Total activities: 10 (target: 10-14) ✅
 - Unique types: 8 (minimum: 4) ✅
 - Priority types used: 1/3 (quiz) ✅
+- Required types used: 1/4 (quiz) ❌
 - Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['word-building', 'self-assessment']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
+  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 985/800 (raw: 1382)
@@ -47,11 +58,11 @@
 - **Vocab:** ✅ 5/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 37.3% (checkpoint - no gate)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 8/10 (High)
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
 | Section | Status | Count | Notes |

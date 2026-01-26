@@ -1,0 +1,47 @@
+{
+  "module": "10-aspect-negation",
+  "level": "B1",
+  "plan_version": "1.0",
+  "last_audit": "2026-01-26T22:26:50.072125Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-24T20:38:47.637605Z",
+    "meta": "2026-01-26T15:44:41.467666Z",
+    "activities": "2026-01-24T20:38:35.870044Z",
+    "vocabulary": "2026-01-25T18:00:40.063581Z",
+    "plan": "2026-01-26T15:44:41.467460Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "1929/1500 (raw: 2685)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "14/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "73/25"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

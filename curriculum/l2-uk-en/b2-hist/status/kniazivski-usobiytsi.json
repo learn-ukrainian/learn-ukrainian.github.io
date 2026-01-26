@@ -1,0 +1,47 @@
+{
+  "module": "kniazivski-usobiytsi",
+  "level": "B2",
+  "plan_version": "1.0",
+  "last_audit": "2026-01-26T23:24:53.267600Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-25T10:47:04.090081Z",
+    "meta": "2026-01-26T22:20:13.194683Z",
+    "activities": "2026-01-22T21:17:47.677565Z",
+    "vocabulary": "2026-01-25T10:43:38.421066Z",
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4007/4000 (raw: 4101)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/3"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "20/20"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

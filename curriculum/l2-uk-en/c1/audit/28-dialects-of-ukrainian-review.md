@@ -1,8 +1,8 @@
 # Audit Report: M28 — 28-dialects-of-ukrainian.md
-**Level:** C1 | **Module:** M28 | **Phase:** C1.2 | **Pedagogy:** Not Specified | **Target:** 3000
+**Level:** C1 | **Module:** M28 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:24:21
+**Generated:** 2026-01-26 22:29:12
 
 ## Configuration
 **Type:** C1-grammar
@@ -89,28 +89,26 @@
 - **Pedagogy:** ❌ 10 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.2% (target 90-100% (grammar))
-- **Richness:** ✅ 97% (grammar)
+- **Richness:** ✅ 98% (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 97% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 98% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 22 | 24 | 92% | 20% | 18.4% |
-| engagement | 14 | 5 | 100% | 15% | 15.0% |
-| dialogues | 4 | 4 | 100% | 15% | 15.0% |
-| variety | 0.92 | - | 92% | 10% | 9.2% |
-| cultural | 13 | 3 | 100% | 10% | 10.0% |
-| realworld | 3 | 3 | 100% | 10% | 10.0% |
-| visual | 29 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.95 | - | 95% | 5% | 4.8% |
-| questions | 13 | 5 | 100% | 5% | 5.0% |
-| proverbs | 4 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **97.4%** |
+| examples | 22 | 15 | 100% | 25% | 25.0% |
+| engagement | 14 | 5 | 100% | 19% | 18.7% |
+| variety | 0.92 | - | 92% | 12% | 11.5% |
+| cultural | 13 | 4 | 100% | 12% | 12.5% |
+| realworld | 3 | 3 | 100% | 12% | 12.5% |
+| visual | 29 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 0.95 | - | 95% | 6% | 5.9% |
+| questions | 13 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **98.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

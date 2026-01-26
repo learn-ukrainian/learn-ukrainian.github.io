@@ -1,8 +1,8 @@
 # Audit Report: M01 — 01-the-dative-i-pronouns.md
-**Level:** A2 | **Module:** M01 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 1000
+**Level:** A2 | **Module:** M01 | **Phase:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 08:59:08
+**Generated:** 2026-01-26 22:26:03
 
 ## Configuration
 **Type:** A2-grammar

@@ -1,8 +1,8 @@
 # Audit Report: M24 — 24-register-colloquial-style.md
-**Level:** B2 | **Module:** M24 | **Phase:** B2.1b | **Pedagogy:** TTT | **Target:** 1750
+**Level:** B2 | **Module:** M24 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:23:18
+**Generated:** 2026-01-26 22:28:00
 
 ## Configuration
 **Type:** B2-grammar

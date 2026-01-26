@@ -1,0 +1,50 @@
+{
+  "module": "29-purpose-shchob-infinitive",
+  "level": "B1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:27:02.622038Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-24T21:48:43.380849Z",
+    "meta": "2026-01-26T15:44:41.538493Z",
+    "activities": "2026-01-11T22:51:42.668630Z",
+    "vocabulary": "2026-01-25T18:00:40.311964Z",
+    "plan": "2026-01-26T15:44:41.538296Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "1676/1500 (raw: 1950) | pedagogy: 1 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "12/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "69/25"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Outline Compliance Errors",
+      "Missing required activity types: fill-in, sentence-combining, translation"
+    ],
+    "pass_count": 4,
+    "fail_count": 1
+  }
+}

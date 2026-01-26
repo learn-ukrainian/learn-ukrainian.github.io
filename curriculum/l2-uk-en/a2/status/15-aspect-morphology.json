@@ -1,0 +1,47 @@
+{
+  "module": "15-aspect-morphology",
+  "level": "A2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:26:11.781601Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-25T18:04:31.864036Z",
+    "meta": "2026-01-26T17:21:18.839850Z",
+    "activities": "2026-01-11T23:20:54.285150Z",
+    "vocabulary": "2026-01-25T18:02:44.618208Z",
+    "plan": "2026-01-26T17:21:18.839450Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "1392/1000 (raw: 1813)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "46/1"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "8/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "module": "yuriy-lvovych",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:55:59.082008Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-19T23:29:47.724080Z",
+    "meta": "2026-01-26T17:21:21.189021Z",
+    "activities": "2026-01-19T23:23:27.012580Z",
+    "vocabulary": null,
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4585/4000 (raw: 4861)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "8/3"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 24 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
+      "Missing required activity types: fill-in"
+    ],
+    "pass_count": 3,
+    "fail_count": 1
+  }
+}

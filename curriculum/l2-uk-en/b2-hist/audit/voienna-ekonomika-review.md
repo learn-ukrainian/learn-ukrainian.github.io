@@ -1,7 +1,8 @@
 # Audit Report: M136 — voienna-ekonomika.md
-**Level:** B2 | **Module:** M136 | **Phase:** HIST.13 | **Pedagogy:** Not Specified | **Target:** 4000
+**Level:** B2 | **Module:** M136 | **Phase:** HIST.13 | **Pedagogy:** CBI | **Target:** 4000
+**Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 22:23:49
+**Generated:** 2026-01-26 22:55:36
 
 ## Configuration
 **Type:** B2-history
@@ -10,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading
+**Required Types:** essay-response, fill-in, match-up, quiz, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -63,28 +64,27 @@
 - **Pedagogy:** ❌ 4 violations
 - **Content_heavy:** ⚠️ Too few activities: 0 (target 3-9)
 - **Immersion:** ❌ 18.6% LOW (target 90-100% (history))
-- **Richness:** ❌ 7% < 95% min (grammar) - REWRITE needed
+- **Richness:** ❌ 6% < 95% min (history) - REWRITE needed
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 7% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 6% (minimum: 95%)
+**Module Type:** history
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 0 | 24 | 0% | 20% | 0.0% |
-| engagement | 0 | 5 | 0% | 15% | 0.0% |
-| dialogues | 0 | 4 | 0% | 15% | 0.0% |
-| variety | 0.50 | - | 50% | 10% | 5.0% |
-| cultural | 0 | 3 | 0% | 10% | 0.0% |
-| realworld | 0 | 3 | 0% | 10% | 0.0% |
-| visual | 0 | 3 | 0% | 5% | 0.0% |
-| paragraph_var | 0.50 | - | 50% | 5% | 2.5% |
-| questions | 0 | 5 | 0% | 5% | 0.0% |
-| proverbs | 0 | 1 | 0% | 5% | 0.0% |
-| **TOTAL** | | | | | **7.5%** |
+| primary_sources | 0 | 3 | 0% | 24% | 0.0% |
+| engagement | 0 | 6 | 0% | 14% | 0.0% |
+| timeline_markers | 1 | 10 | 10% | 14% | 1.4% |
+| decolonization | 0 | 2 | 0% | 14% | 0.0% |
+| cultural | 0 | 4 | 0% | 10% | 0.0% |
+| visual | 0 | 4 | 0% | 10% | 0.0% |
+| variety | 0.50 | - | 50% | 5% | 2.4% |
+| paragraph_var | 0.50 | - | 50% | 5% | 2.4% |
+| questions | 0 | 3 | 0% | 5% | 0.0% |
+| **TOTAL** | | | | | **6.2%** |
 
 ### Dryness Flags & Fixes
 - ❌ **NO_ENGAGEMENT**
@@ -102,47 +102,18 @@
     > 🌍 **У реальному житті**
     >
     > [Practical scenario where this grammar is used]
-- ❌ **NO_DIALOGUE**
+- ❌ **NO_PRIMARY_SOURCES**
   - FIX:
-    Add 4+ mini-dialogues. Use this exact format:
+    Add 2+ primary source quotes. Use this format:
     
-    **Діалог: [Location in Ukraine]**
-    
-    > — [Speaker 1 line with **bolded** grammar examples]
-    > — [Speaker 2 response with **bolded** grammar examples]
-    > — [Speaker 1 continuation]
-    > — [Speaker 2 conclusion]
-    
-    Example locations: На Бесарабському ринку, У львівській кав'ярні, В одеському трамваї, На Подолі
-- ❌ **NO_EXAMPLES**
+    > «[Exact quote from historical document]»
+    > — *[Source name], [year]*
+- ❌ **NO_TIMELINE**
   - FIX:
-    Add 24+ example sentences. Each grammar point needs 3-4 examples showing the pattern in context.
-- ❌ **ABSTRACT_ONLY**
+    Add 5+ timeline markers: specific years (1876, 1918), periods (XVIII ст.), sequences (спочатку... потім... нарешті).
+- ❌ **NO_DECOLONIZATION_PERSPECTIVE**
   - FIX:
-    Add 3+ real-world boxes. Use this exact format:
-    
-    > 🌍 **У реальному житті**
-    >
-    > [Specific scenario: "На співбесіді...", "У магазині...", "На вокзалі..."]
-    > [Example sentence showing grammar in that context]
-- ❌ **NO_PROVERBS**
-  - FIX:
-    Add 1+ Ukrainian proverb. Use this format:
-    
-    Українці кажу|ть: «[Proverb in Ukrainian]»
-    
-    Зверніть увагу: **[word]** — [aspect] вид, бо [explanation why this aspect is used].
-    
-    Example: «Не кажи гоп, поки не перескочиш» — **перескочиш** is perfective because it's about the result.
-- ❌ **NO_CULTURAL_ANCHOR**
-  - FIX:
-    Add 3+ cultural references. Use this exact format:
-    
-    > 🇺🇦 **Культурний момент**
-    >
-    > [Reference to Ukrainian place (Київ, Львів, Одеса, Карпати), tradition, or custom]
-    > [How it connects to the grammar/vocabulary being taught]
-    > [Example sentence using the grammar with cultural context]
+    Add Ukrainian perspective on historical events. Avoid Russocentric framing. Use Ukrainian names for cities/people.
 
 ## Section Audit
 | Section | Status | Count | Notes |

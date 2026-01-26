@@ -1,8 +1,8 @@
 # Audit Report: M05 — 05-logical-connectors.md
-**Level:** C1 | **Module:** M05 | **Phase:** C1.1 | **Pedagogy:** Not Specified | **Target:** 3000
+**Level:** C1 | **Module:** M05 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:24:07
+**Generated:** 2026-01-26 22:28:52
 
 ## Configuration
 **Type:** C1-grammar
@@ -69,28 +69,26 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.6% (target 90-100% (grammar))
-- **Richness:** ✅ 96% (grammar)
+- **Richness:** ✅ 99% (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 96% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 99% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 55 | 24 | 100% | 20% | 20.0% |
-| engagement | 8 | 5 | 100% | 15% | 15.0% |
-| dialogues | 3 | 4 | 75% | 15% | 11.2% |
-| variety | 0.98 | - | 98% | 10% | 9.8% |
-| cultural | 5 | 3 | 100% | 10% | 10.0% |
-| realworld | 7 | 3 | 100% | 10% | 10.0% |
-| visual | 14 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 9 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **96.0%** |
+| examples | 55 | 15 | 100% | 25% | 25.0% |
+| engagement | 8 | 5 | 100% | 19% | 18.7% |
+| variety | 0.98 | - | 98% | 12% | 12.2% |
+| cultural | 5 | 4 | 100% | 12% | 12.5% |
+| realworld | 7 | 3 | 100% | 12% | 12.5% |
+| visual | 14 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 9 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

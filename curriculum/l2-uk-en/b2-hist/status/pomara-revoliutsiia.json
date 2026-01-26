@@ -1,0 +1,51 @@
+{
+  "module": "pomara-revoliutsiia",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:55:28.312542Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-25T21:33:22.033511Z",
+    "meta": "2026-01-26T22:20:13.448908Z",
+    "activities": "2026-01-25T21:29:25.418447Z",
+    "vocabulary": null,
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "2290/4000 (raw: 2484) | pedagogy: 27 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "16/3"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 20 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "7 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
+      "Missing required activity types: reading"
+    ],
+    "pass_count": 2,
+    "fail_count": 2
+  }
+}

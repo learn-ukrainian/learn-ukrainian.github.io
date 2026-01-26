@@ -1,7 +1,7 @@
 # Audit Report: M103 — 103-literaturoznavcha-terminolohiia.md
-**Level:** C1 | **Module:** M103 | **Phase:** C1.6 | **Pedagogy:** Academic | **Target:** 3000
+**Level:** C1 | **Module:** M103 | **Phase:** C1 | **Pedagogy:** Academic | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:25:08
+**Generated:** 2026-01-26 22:28:58
 
 ## Configuration
 **Type:** C1
@@ -62,26 +62,37 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.7% (target 90-100%)
-- **Richness:** ✅ 95% (academic)
+- **Richness:** ❌ 87% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 95% (minimum: 95%)
-**Module Type:** academic
+**Score:** 87% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| citations | 15 | 5 | 100% | 24% | 23.8% |
-| data_refs | 15 | 3 | 100% | 19% | 19.0% |
-| visual | 6 | 5 | 100% | 14% | 14.3% |
-| questions | 14 | 4 | 100% | 14% | 14.3% |
-| engagement | 7 | 5 | 100% | 10% | 9.5% |
-| variety | 0.98 | - | 98% | 10% | 9.3% |
-| cultural | 0 | - | 0% | 5% | 0.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **95.0%** |
+| examples | 27 | 15 | 100% | 25% | 25.0% |
+| engagement | 7 | 5 | 100% | 19% | 18.7% |
+| variety | 0.98 | - | 98% | 12% | 12.2% |
+| cultural | 0 | 4 | 0% | 12% | 0.0% |
+| realworld | 4 | 3 | 100% | 12% | 12.5% |
+| visual | 6 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 14 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **87.2%** |
+
+### Dryness Flags & Fixes
+- ❌ **NO_CULTURAL_ANCHOR**
+  - FIX:
+    Add 3+ cultural references. Use this exact format:
+    
+    > 🇺🇦 **Культурний момент**
+    >
+    > [Reference to Ukrainian place (Київ, Львів, Одеса, Карпати), tradition, or custom]
+    > [How it connects to the grammar/vocabulary being taught]
+    > [Example sentence using the grammar with cultural context]
 
 ## Section Audit
 | Section | Status | Count | Notes |

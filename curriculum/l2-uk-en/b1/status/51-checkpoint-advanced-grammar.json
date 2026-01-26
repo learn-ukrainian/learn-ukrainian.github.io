@@ -1,0 +1,50 @@
+{
+  "module": "51-checkpoint-advanced-grammar",
+  "level": "B1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:27:16.845167Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-24T22:32:21.241014Z",
+    "meta": "2026-01-26T15:44:41.612257Z",
+    "activities": "2026-01-11T22:51:43.314119Z",
+    "vocabulary": "2026-01-25T16:02:18.556890Z",
+    "plan": "2026-01-26T15:44:41.612056Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "2011/1200 (raw: 2257) | pedagogy: 1 violations | richness: 84% < 95% min (grammar)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "19/10"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "48/10"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "6 Outline Compliance Errors",
+      "Missing required activity types: transformation, writing"
+    ],
+    "pass_count": 4,
+    "fail_count": 1
+  }
+}

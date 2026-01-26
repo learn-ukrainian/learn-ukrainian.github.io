@@ -1,8 +1,8 @@
 # Audit Report: M75 — rosiiska-imperiia-ukraina.md
 **Level:** B2 | **Module:** M75 | **Phase:** HIST.8 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 23:10:27
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-26 22:54:58
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading
+**Required Types:** essay-response, fill-in, match-up, quiz, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -31,57 +31,78 @@
 - Total activities: 6 (target: 3-9) ✅
 - Unique types: 6 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 2/2 (essay-response, reading) ✅
+- Required types used: 4/5 (essay-response, match-up, quiz, reading) ❌
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[LINGUISTIC_PURITY]** Found forbidden or historical characters outside of allowed context: ы
+  - FIX: Remove non-Ukrainian characters (ё, ъ, ы, э, ѣ, etc.) or ensure they are inside a citation (> ) in the LIT track.
+- **[LINGUISTIC_PURITY]** Found forbidden or historical characters outside of allowed context: ы
+  - FIX: Remove non-Ukrainian characters (ё, ъ, ы, э, ѣ, etc.) or ensure they are inside a citation (> ) in the LIT track.
+
+## TEMPLATE COMPLIANCE
+- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!quote]' per template 'b2-history-module-template.md'
+  - FIX: Add a `> [!quote]` box as specified in the template. This enhances module quality.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 3 violations (minor)
+
 ## Gates
-- **Words:** ✅ 4047/4000 (raw: 4308)
+- **Words:** ❌ 2050/4000 (raw: 2191)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/5
+- **Engagement:** ❌ 4/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
-- **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
-- **Richness:** ✅ 99% (history)
+- **Immersion:** 🇺🇦 99.5% (target 90-100% (history))
+- **Richness:** ❌ 76% < 95% min (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
+**Score:** 76% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 15 | 3 | 100% | 24% | 23.8% |
-| engagement | 8 | 6 | 100% | 14% | 14.3% |
-| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
+| primary_sources | 1 | 3 | 33% | 24% | 7.9% |
+| engagement | 4 | 6 | 67% | 14% | 9.6% |
+| timeline_markers | 14 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 14 | 4 | 100% | 10% | 9.5% |
-| visual | 7 | 4 | 100% | 10% | 9.5% |
-| variety | 0.96 | - | 96% | 5% | 4.6% |
+| cultural | 8 | 4 | 100% | 10% | 9.5% |
+| visual | 3 | 4 | 75% | 10% | 7.1% |
+| variety | 0.98 | - | 98% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 5 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.8%** |
+| questions | 7 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **76.9%** |
+
+### Dryness Flags & Fixes
+- ❌ **NO_PRIMARY_SOURCES**
+  - FIX:
+    Add 2+ primary source quotes. Use this format:
+    
+    > «[Exact quote from historical document]»
+    > — *[Source name], [year]*
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 133 | Included in Core |
-| **Вступ: Тінь двоголового орла над Дніпром та епоха великого виклику** | ✅ | 397 | Included in Core |
-| **Адміністративний зашморг: Від вільних полків до казенних губерній** | ⚪️ | 506 | Skipped |
-| **Соціальна катастрофа: Кріпацтво та рекрутчина як інструменти імперського терору** | ⚪️ | 589 | Skipped |
-| **Економічна експлуатація: Україна як колоніальна сировинна база та житниця імперії** | ⚪️ | 404 | Skipped |
-| **Культурний фронт: Русифікація та народження спротиву через вогненне слово** | ✅ | 512 | Included in Core |
-| **Деколонізаційний погляд: Україна як суб’єкт світової історії, а не безголосий додаток** | ✅ | 353 | Included in Core |
-| **Спадщина імперської доби: Травми, виклики та наші великі перемоги** | ⚪️ | 225 | Skipped |
-| **Читання: Голос святої правди крізь товсті стіни імперської цензури** | ✅ | 285 | Included in Core |
-| **Первинні джерела: Документи колоніального насилля та імперського страху** | ✅ | 256 | Included in Core |
-| **Підсумок: Нескорена нація в ланцюгах великої та похмурої імперії** | ✅ | 233 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 154 | Skipped |
+| **Intro/Narrative** | ✅ | 120 | Included in Core |
+| **Вступ: "Дике поле" чи Великий Луг?** | ✅ | 307 | Included in Core |
+| **Козацький Південь: Зимівники, паланки та слободи** | ⚪️ | 336 | Skipped |
+| **Міф про "Новоросію": Анатомія імперської брехні** | ⚪️ | 336 | Skipped |
+| **Етнічна палітра: Південь як плавильний казан чи мозаїка?** | ⚪️ | 250 | Skipped |
+| **Деколонізаційний погляд: Повернення імен** | ✅ | 221 | Included in Core |
+| **Читання: Український голос у степовому вітрі** | ✅ | 134 | Included in Core |
+| **Первинні джерела: Сліди, які не стерти** | ✅ | 106 | Included in Core |
+| **Підсумок: Південь — це українське море** | ✅ | 133 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 107 | Skipped |

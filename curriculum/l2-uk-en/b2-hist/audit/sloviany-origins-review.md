@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M04 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 22:22:23
+**Generated:** 2026-01-26 23:11:05
 
 ## Configuration
 **Type:** B2-history
@@ -35,19 +35,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4962/4000 (raw: 5056)
+- **Words:** ✅ 5581/4000 (raw: 5698)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/5
+- **Engagement:** ✅ 17/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 35/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
-- **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.7% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -59,24 +59,24 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 11 | 3 | 100% | 24% | 23.8% |
-| engagement | 6 | 6 | 100% | 14% | 14.3% |
+| primary_sources | 15 | 3 | 100% | 24% | 23.8% |
+| engagement | 17 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 9 | 4 | 100% | 10% | 9.5% |
-| visual | 7 | 4 | 100% | 10% | 9.5% |
-| variety | 0.98 | - | 98% | 5% | 4.7% |
+| cultural | 10 | 4 | 100% | 10% | 9.5% |
+| visual | 12 | 4 | 100% | 10% | 9.5% |
+| variety | 0.95 | - | 95% | 5% | 4.5% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 11 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.9%** |
+| questions | 13 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 99 | Included in Core |
-| **Вступ** | ✅ | 540 | Included in Core |
-| **Читання** | ✅ | 2823 | Included in Core |
-| **Первинні джерела** | ✅ | 453 | Included in Core |
+| **Вступ** | ✅ | 593 | Included in Core |
+| **Читання** | ✅ | 3161 | Included in Core |
+| **Первинні джерела** | ✅ | 666 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 533 | Included in Core |
 | **Підсумок** | ✅ | 307 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 207 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 222 | Skipped |

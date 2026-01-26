@@ -1,0 +1,47 @@
+{
+  "module": "21-numerals-and-nouns",
+  "level": "A2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:26:15.223890Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-25T21:30:43.029178Z",
+    "meta": "2026-01-26T17:21:18.862096Z",
+    "activities": "2026-01-14T13:07:46.316830Z",
+    "vocabulary": "2026-01-25T22:40:24.799395Z",
+    "plan": "2026-01-26T17:21:18.861637Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "1577/1000 (raw: 1772)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "108/1"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "8/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

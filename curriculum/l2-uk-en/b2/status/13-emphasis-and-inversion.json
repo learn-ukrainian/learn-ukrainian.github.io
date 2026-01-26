@@ -1,0 +1,50 @@
+{
+  "module": "13-emphasis-and-inversion",
+  "level": "B2",
+  "plan_version": "1.0",
+  "last_audit": "2026-01-26T22:27:52.864051Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-11T21:16:40.409477Z",
+    "meta": "2026-01-26T17:21:19.099371Z",
+    "activities": "2026-01-11T23:20:02.171092Z",
+    "vocabulary": "2026-01-21T22:54:26.243387Z",
+    "plan": "2026-01-26T17:21:19.099188Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "2596/1750 (raw: 3121) | pedagogy: 2 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "14/10"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "11 < 25 (soft target)"
+    },
+    "naturalness": {
+      "status": "fail",
+      "violations": 1,
+      "message": "1/10 (PENDING) - Naturalness check required"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "6 Outline Compliance Errors",
+      "Missing required activity types: reading"
+    ],
+    "pass_count": 2,
+    "fail_count": 2
+  }
+}

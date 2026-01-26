@@ -1,0 +1,50 @@
+{
+  "module": "106-c1-6-checkpoint",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:29:00.462155Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-14T00:06:12.957687Z",
+    "meta": "2026-01-26T17:21:19.350698Z",
+    "activities": "2026-01-14T00:04:50.575868Z",
+    "vocabulary": null,
+    "plan": "2026-01-26T17:21:19.350496Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "2523/1750 (raw: 2681) | pedagogy: 7 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "23/14"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 15 (soft target)"
+    },
+    "naturalness": {
+      "status": "fail",
+      "violations": 1,
+      "message": "0/10 (PENDING) - Naturalness check required"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "3 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
+    ],
+    "pass_count": 1,
+    "fail_count": 3
+  }
+}

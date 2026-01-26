@@ -1,8 +1,8 @@
 # Audit Report: M23 — 23-complete-imperative.md
-**Level:** A2 | **Module:** M23 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
+**Level:** A2 | **Module:** M23 | **Phase:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 08:59:21
+**Generated:** 2026-01-26 22:26:16
 
 ## Configuration
 **Type:** A2-grammar
@@ -39,13 +39,11 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: однина, множина
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): допоможіть, скажіть, робімо, будь, прошу...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1106/1000 (raw: 1268)

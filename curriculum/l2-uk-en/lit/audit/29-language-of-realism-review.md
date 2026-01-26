@@ -1,17 +1,17 @@
 # Audit Report: M29 — 29-language-of-realism.md
-**Level:** LIT | **Module:** M29 | **Phase:** LIT.5 | **Pedagogy:** Analysis | **Target:** 4000
+**Level:** LIT | **Module:** M29 | **Phase:** LIT.5 | **Pedagogy:** Seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:28:37
+**Generated:** 2026-01-26 22:58:03
 
 ## Configuration
-**Type:** LIT
+**Type:** LIT-literature
 **Word Target:** 4000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** critical-analysis, essay-response, reading
+**Required Types:** cloze, essay-response, match-up, quiz, reading
 **Engagement:** ≥4 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥0 words
@@ -30,12 +30,12 @@
 - Total activities: 5 (target: 3-9) ✅
 - Unique types: 4 (minimum: 2) ✅
 - Priority types used: 2/4 (essay-response, reading) ✅
-- Required types used: 2/3 (essay-response, reading) ❌
+- Required types used: 4/5 (essay-response, match-up, quiz, reading) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[INVALID_META_YAML]** Meta YAML Schema Violation at 'root': 'id' is a required property
-  - FIX: Correct the YAML structure to match schemas/meta-module.schema.json
+- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: literature) missing advanced activity type: critical-analysis
+  - FIX: Add a critical-analysis activity to meet advanced richness standards.
 
 ## Recommendation
 **📝 UPDATE** (severity 25/100)
@@ -55,28 +55,39 @@
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.5% (target 95-100%)
-- **Richness:** ✅ 99% (style)
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Immersion:** 🇺🇦 99.5% (target 95-100% (literature))
+- **Richness:** ❌ 89% < 90% min (literature)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
-**Module Type:** style
+**Score:** 89% (minimum: 90%)
+**Module Type:** literature
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| exemplar_texts | 2 | 2 | 100% | 25% | 25.0% |
-| model_answers | 16 | 3 | 100% | 20% | 20.0% |
-| engagement | 5 | 5 | 100% | 15% | 15.0% |
-| register_analysis | 15 | 5 | 100% | 15% | 15.0% |
-| visual | 11 | 4 | 100% | 10% | 10.0% |
-| variety | 0.97 | - | 97% | 5% | 4.9% |
-| cultural | 9 | - | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.8%** |
+| analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
+| literary_citations | 2 | 5 | 40% | 17% | 7.0% |
+| engagement | 5 | 4 | 100% | 13% | 13.0% |
+| historical_context | 10 | 3 | 100% | 13% | 13.0% |
+| essays | 5 | 2 | 100% | 13% | 13.0% |
+| resources | 5 | 3 | 100% | 9% | 8.7% |
+| variety | 0.97 | - | 97% | 4% | 4.2% |
+| cultural | 9 | - | 100% | 4% | 4.3% |
+| visual | 11 | 1 | 100% | 4% | 4.3% |
+| paragraph_var | 1.00 | - | 100% | 4% | 4.3% |
+| **TOTAL** | | | | | **89.4%** |
+
+### Dryness Flags & Fixes
+- ❌ **NO_LITERARY_CITATIONS**
+  - FIX:
+    Add 3+ literary citations. Use this exact format:
+    
+    «[Quote from the literary work, minimum 20 characters]»
+    
+    Example: «Зібравши троянців в остатки / І швидше прийнявши присягу»
 
 ## Section Audit
 | Section | Status | Count | Notes |

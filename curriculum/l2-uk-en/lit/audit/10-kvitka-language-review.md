@@ -2,7 +2,7 @@
 **Level:** LIT | **Module:** M10 | **Phase:** LIT.2 | **Pedagogy:** literature | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:28:08
+**Generated:** 2026-01-26 22:57:43
 
 ## Configuration
 **Type:** LIT
@@ -51,26 +51,28 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.7% (target 95-100%)
-- **Richness:** ✅ 96% (style)
+- **Richness:** ✅ 99% (literature)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 96% (minimum: 95%)
-**Module Type:** style
+**Score:** 99% (minimum: 90%)
+**Module Type:** literature
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| exemplar_texts | 5 | 2 | 100% | 25% | 25.0% |
-| model_answers | 24 | 3 | 100% | 20% | 20.0% |
-| engagement | 4 | 5 | 80% | 15% | 12.0% |
-| register_analysis | 13 | 5 | 100% | 15% | 15.0% |
-| visual | 11 | 4 | 100% | 10% | 10.0% |
-| variety | 0.97 | - | 97% | 5% | 4.9% |
-| cultural | 14 | - | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **96.8%** |
+| analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
+| literary_citations | 5 | 5 | 100% | 17% | 17.4% |
+| engagement | 4 | 4 | 100% | 13% | 13.0% |
+| historical_context | 21 | 3 | 100% | 13% | 13.0% |
+| essays | 5 | 2 | 100% | 13% | 13.0% |
+| resources | 6 | 3 | 100% | 9% | 8.7% |
+| variety | 0.97 | - | 97% | 4% | 4.2% |
+| cultural | 14 | - | 100% | 4% | 4.3% |
+| visual | 11 | 1 | 100% | 4% | 4.3% |
+| paragraph_var | 1.00 | - | 100% | 4% | 4.3% |
+| **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

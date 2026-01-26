@@ -1,0 +1,50 @@
+{
+  "module": "59-media-news",
+  "level": "B1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:27:22.075943Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-24T22:33:42.978858Z",
+    "meta": "2026-01-26T15:44:41.638368Z",
+    "activities": "2026-01-11T22:51:43.613426Z",
+    "vocabulary": "2026-01-25T16:02:18.609399Z",
+    "plan": "2026-01-26T15:44:41.638076Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "1637/1500 (raw: 2498) | pedagogy: 1 violations | richness: 91% < 95% min (grammar)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "12/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "39/35"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Outline Compliance Errors",
+      "Missing required activity types: collocation, discussion, matching"
+    ],
+    "pass_count": 4,
+    "fail_count": 1
+  }
+}

@@ -1,8 +1,8 @@
 # Audit Report: M75 — 75-modern-diaspora.md
-**Level:** B2 | **Module:** M75 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2 | **Module:** M75 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:23:51
+**Generated:** 2026-01-26 22:28:36
 
 ## Configuration
 **Type:** B2-history
@@ -68,26 +68,28 @@
 - **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ⚠️ Too many activities: 15 (target 3-9)
 - **Immersion:** 🇺🇦 98.5% (target 90-100% (history))
-- **Richness:** ✅ 98% (content)
+- **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 98% (minimum: 95%)
-**Module Type:** content
+**Score:** 99% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 26 | 15 | 100% | 25% | 25.0% |
-| engagement | 7 | 5 | 100% | 19% | 18.7% |
-| variety | 0.99 | - | 99% | 12% | 12.4% |
-| cultural | 4 | 4 | 100% | 12% | 12.5% |
-| realworld | 3 | 3 | 100% | 12% | 12.5% |
-| visual | 3 | 4 | 75% | 6% | 4.7% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 8 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **98.3%** |
+| examples | 26 | 24 | 100% | 20% | 20.0% |
+| engagement | 7 | 5 | 100% | 15% | 15.0% |
+| dialogues | 8 | 4 | 100% | 15% | 15.0% |
+| variety | 0.99 | - | 99% | 10% | 9.9% |
+| cultural | 4 | 3 | 100% | 10% | 10.0% |
+| realworld | 3 | 3 | 100% | 10% | 10.0% |
+| visual | 3 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 8 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

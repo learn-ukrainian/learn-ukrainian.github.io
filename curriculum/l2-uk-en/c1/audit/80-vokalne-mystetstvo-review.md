@@ -1,7 +1,7 @@
 # Audit Report: M80 — 80-vokalne-mystetstvo.md
-**Level:** C1 | **Module:** M80 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 3000
+**Level:** C1 | **Module:** M80 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:24:54
+**Generated:** 2026-01-26 22:29:44
 
 ## Configuration
 **Type:** C1-fine-arts

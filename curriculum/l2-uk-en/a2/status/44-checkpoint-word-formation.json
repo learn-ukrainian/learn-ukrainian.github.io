@@ -1,0 +1,50 @@
+{
+  "module": "44-checkpoint-word-formation",
+  "level": "A2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:26:28.247369Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-08T14:11:55.768174Z",
+    "meta": "2026-01-26T17:21:18.927313Z",
+    "activities": "2026-01-11T23:20:54.284913Z",
+    "vocabulary": "2026-01-25T18:00:39.781038Z",
+    "plan": "2026-01-26T17:21:18.927085Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "985/800 (raw: 1382) | pedagogy: 1 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5/1"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Outline Compliance Errors",
+      "Missing required activity types: error-correction, self-assessment, word-building"
+    ],
+    "pass_count": 4,
+    "fail_count": 1
+  }
+}

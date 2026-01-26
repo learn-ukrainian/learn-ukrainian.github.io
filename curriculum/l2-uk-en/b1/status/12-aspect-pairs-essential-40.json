@@ -1,0 +1,47 @@
+{
+  "module": "12-aspect-pairs-essential-40",
+  "level": "B1",
+  "plan_version": "1.0",
+  "last_audit": "2026-01-26T22:26:51.398788Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-24T21:23:54.588580Z",
+    "meta": "2026-01-26T15:44:41.474951Z",
+    "activities": "2026-01-24T11:53:35.347469Z",
+    "vocabulary": "2026-01-25T16:02:18.139546Z",
+    "plan": "2026-01-26T15:44:41.474624Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "1670/1500 (raw: 2405)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "12/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "93/25"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

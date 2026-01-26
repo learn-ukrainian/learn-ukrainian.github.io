@@ -2,78 +2,76 @@ module: syntez-vytoky-1
 level: B2-HIST
 version: '2.0'
 items:
-  - lemma: синтез
-    ipa: /sɪnˈtɛz/
-    translation: synthesis
-    pos: noun
-    gender: m
-  - lemma: цивілізація
-    ipa: /t͡sɪwʲilʲiˈzɑt͡sʲijɑ/
-    translation: civilization
-    pos: noun
-    gender: f
-  - lemma: спадщина
-    ipa: /ˈspɑdʃt͡ʃɪnɑ/
-    translation: heritage
-    pos: noun
-    gender: f
-  - lemma: закономірність
-    ipa: /zɑkɔnɔˈmʲirnʲisʲtʲ/
-    translation: pattern
-    pos: noun
-    gender: f
-  - lemma: перехрестя
-    ipa: /pɛrɛˈxrɛsʲtʲɑ/
-    translation: crossroads
-    pos: noun
-    gender: n
-  - lemma: культурний обмін
-    ipa: /kulʲˈturnɪj ˈɔbmʲin/
-    translation: cultural exchange
-    pos: phrase
-    gender: m
-  - lemma: етнічний
-    ipa: /ɛtˈnʲit͡ʃnɪj/
-    translation: ethnic
-    pos: adj
-    gender: m
-  - lemma: державотворення
-    ipa: /dɛrʒɑwɔˈtwɔrɛnʲːɑ/
-    translation: state formation
-    pos: noun
-    gender: n
-  - lemma: археологія
-    ipa: /ɑrxɛɔˈlɔɦʲijɑ/
-    translation: archaeology
-    pos: noun
-    gender: f
-  - lemma: хронологія
-    ipa: /xrɔnɔˈlɔɦʲijɑ/
-    translation: chronology
-    pos: noun
-    gender: f
-  - lemma: наступність
-    ipa: /nɑˈstupnʲisʲtʲ/
-    translation: continuity
-    pos: noun
-    gender: f
-  - lemma: взаємовплив
-    ipa: /wzɑjɛmɔˈwplɪw/
-    translation: mutual influence
-    pos: noun
-    gender: m
-  - lemma: автохтонний
-    ipa: /ɑwtɔxˈtɔnːɪj/
-    translation: autochthonous
-    pos: adj
-    gender: m
-  - lemma: міграція
-    ipa: /mʲiˈhrɑt͡sʲijɑ/
-    translation: migration
-    pos: noun
-    gender: f
-  - lemma: асиміляція
-    ipa: /ɑsɪmʲiˈlʲɑt͡sʲijɑ/
-    translation: assimilation
-    pos: noun
-    gender: f
+- lemma: синтез
+  ipa: /sɪnˈtɛz/
+  translation: synthesis
+  pos: noun
+  gender: m
+- lemma: цивілізація
+  ipa: /t͡sɪwʲilʲiˈzɑt͡sʲijɑ/
+  translation: civilization
+  pos: noun
+  gender: f
+- lemma: спадщина
+  ipa: /ˈspɑdʃt͡ʃɪnɑ/
+  translation: heritage
+  pos: noun
+  gender: f
+- lemma: закономірність
+  ipa: /zɑkɔnɔˈmʲirnʲisʲtʲ/
+  translation: pattern
+  pos: noun
+  gender: f
+- lemma: перехрестя
+  ipa: /pɛrɛˈxrɛsʲtʲɑ/
+  translation: crossroads
+  pos: noun
+  gender: n
+- lemma: культурний обмін
+  ipa: /kulʲˈturnɪj ˈɔbmʲin/
+  translation: cultural exchange
+  pos: noun
+  gender: m
+- lemma: етнічний
+  ipa: /ɛtˈnʲit͡ʃnɪj/
+  translation: ethnic
+  pos: adj
+- lemma: державотворення
+  ipa: /dɛrʒɑwɔˈtwɔrɛnʲːɑ/
+  translation: state formation
+  pos: noun
+  gender: n
+- lemma: археологія
+  ipa: /ɑrxɛɔˈlɔɦʲijɑ/
+  translation: archaeology
+  pos: noun
+  gender: f
+- lemma: хронологія
+  ipa: /xrɔnɔˈlɔɦʲijɑ/
+  translation: chronology
+  pos: noun
+  gender: f
+- lemma: наступність
+  ipa: /nɑˈstupnʲisʲtʲ/
+  translation: continuity
+  pos: noun
+  gender: f
+- lemma: взаємовплив
+  ipa: /wzɑjɛmɔˈwplɪw/
+  translation: mutual influence
+  pos: noun
+  gender: m
+- lemma: автохтонний
+  ipa: /ɑwtɔxˈtɔnːɪj/
+  translation: autochthonous
+  pos: adj
+- lemma: міграція
+  ipa: /mʲiˈhrɑt͡sʲijɑ/
+  translation: migration
+  pos: noun
+  gender: f
+- lemma: асиміляція
+  ipa: /ɑsɪmʲiˈlʲɑt͡sʲijɑ/
+  translation: assimilation
+  pos: noun
+  gender: f

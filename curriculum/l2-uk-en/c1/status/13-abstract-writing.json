@@ -1,0 +1,51 @@
+{
+  "module": "13-abstract-writing",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:29:02.397348Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-09T21:35:37.193188Z",
+    "meta": "2026-01-26T17:21:19.365369Z",
+    "activities": "2026-01-13T13:30:45.793985Z",
+    "vocabulary": null,
+    "plan": "2026-01-26T17:21:19.365017Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 3,
+      "message": "2230/3000 (raw: 2461) | pedagogy: 1 violations | richness: 87% < 95% min (content)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "16/12"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 25 (soft target)"
+    },
+    "naturalness": {
+      "status": "fail",
+      "violations": 1,
+      "message": "None/10 (PENDING) - Naturalness check required"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "7 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
+      "Missing required activity types: cloze"
+    ],
+    "pass_count": 1,
+    "fail_count": 3
+  }
+}

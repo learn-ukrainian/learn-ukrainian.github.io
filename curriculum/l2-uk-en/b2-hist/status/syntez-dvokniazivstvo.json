@@ -1,0 +1,47 @@
+{
+  "module": "syntez-dvokniazivstvo",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T23:26:13.631649Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-22T22:19:36.236942Z",
+    "meta": "2026-01-26T22:20:13.624563Z",
+    "activities": "2026-01-21T10:46:24.746392Z",
+    "vocabulary": "2026-01-22T22:18:18.061954Z",
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "3383/3000 (raw: 3907)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 20 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
+  }
+}

@@ -1,8 +1,8 @@
 # Audit Report: M15 — 15-aspect-morphology.md
-**Level:** A2 | **Module:** M15 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
+**Level:** A2 | **Module:** M15 | **Phase:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 08:59:16
+**Generated:** 2026-01-26 22:26:11
 
 ## Configuration
 **Type:** A2-grammar

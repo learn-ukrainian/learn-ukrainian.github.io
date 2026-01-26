@@ -1,14 +1,14 @@
 # B2-HIST Module Status
 
-**Generated:** 2026-01-25 22:23:52
+**Generated:** 2026-01-26 22:55:38
 **Total Modules:** 140
-**Status:** 65 passing, 39 failing, 36 stubs, 0 errors
+**Status:** 60 passing, 51 failing, 29 stubs, 0 errors
 
 ## Quick Summary
 
-- ✅ **Passing:** 65/140 (46%)
-- ❌ **Failing:** 39/140
-- 📝 **Stubs:** 36/140
+- ✅ **Passing:** 60/140 (42%)
+- ❌ **Failing:** 51/140
+- 📝 **Stubs:** 29/140
 
 ## Module Details
 
@@ -17,7 +17,7 @@
 | 001 | trypillian-civilization | ✅ PASS | 6403/4000 | structure |
 | 002 | scythians-sarmatians | ✅ PASS | 4038/4000 | structure |
 | 003 | greeks-crimea-olbia | ✅ PASS | 4371/4000 | - |
-| 004 | sloviany-origins | ✅ PASS | 4962/4000 | - |
+| 004 | sloviany-origins | ✅ PASS | 5515/4000 | - |
 | 005 | slavic-tribes | ✅ PASS | 4583/4000 | hydration |
 | 006 | zasnuvannia-kyieva | ✅ PASS | 4084/4000 | structure |
 | 007 | khozary-i-sloviany | ✅ PASS | 4348/4000 | structure |
@@ -76,30 +76,30 @@
 | 060 | andrusivske-peremyrya | ✅ PASS | 4883/4000 | - |
 | 061 | ivan-sirko | ✅ PASS | 4635/4000 | - |
 | 062 | syntez-khmelnychchyna | ✅ PASS | 4493/4000 | - |
-| 063 | ivan-mazepa-derzhavnyk | ✅ PASS | 4050/4000 | - |
+| 063 | ivan-mazepa-derzhavnyk | ❌ FAIL | 4050/4000 | activities, structure |
 | 064 | ivan-mazepa-kultura | ✅ PASS | 4662/4000 | - |
 | 065 | kost-hordiyenko-sich | ✅ PASS | 4301/4000 | structure |
-| 066 | ivan-mazepa-poltava | ✅ PASS | 4158/4000 | - |
+| 066 | ivan-mazepa-poltava | ❌ FAIL | 4158/4000 | structure |
 | 067 | pylyp-orlyk-konstytutsiia | ✅ PASS | 4751/4000 | - |
 | 068 | hryhorii-skovoroda | ✅ PASS | 4568/4000 | - |
 | 069 | pavlo-polubotok | ✅ PASS | 4091/4000 | - |
 | 070 | danylo-apostol | ✅ PASS | 4027/4000 | hydration, structure |
-| 071 | koliivshchyna | ❌ FAIL | 2842/4000 | word_count, activities, structure |
-| 072 | opryshky | 📝 STUB | 25/4000 | empty, activities, structure |
-| 073 | petro-kalnyshevskyi | 📝 STUB | 27/4000 | empty, activities, structure |
-| 074 | kinets-hetmanshchyny | ✅ PASS | 3978/4000 | - |
-| 075 | rosiiska-imperiia-ukraina | 📝 STUB | 27/4000 | empty, activities, structure |
-| 076 | habsburzka-halichyna | ✅ PASS | 4047/4000 | - |
-| 077 | pivden-novorosiia | 📝 STUB | 27/4000 | empty, activities, structure |
-| 078 | nova-serbiya | 📝 STUB | 28/4000 | empty, activities, structure |
-| 079 | krypatsvo-selo | 📝 STUB | 27/4000 | empty, activities, structure |
-| 080 | kyrylo-mefodiivtsi | 📝 STUB | 25/4000 | empty, activities, structure |
+| 071 | koliivshchyna | ❌ FAIL | 4137/4000 | activities, structure |
+| 072 | opryshky | ❌ FAIL | 4037/4000 | structure |
+| 073 | petro-kalnyshevskyi | ❌ FAIL | 4006/4000 | activities, structure |
+| 074 | kinets-hetmanshchyny | ❌ FAIL | 3978/4000 | structure |
+| 075 | rosiiska-imperiia-ukraina | ❌ FAIL | 2050/4000 | word_count, activities, structure |
+| 076 | habsburzka-halichyna | ❌ FAIL | 4047/4000 | structure |
+| 077 | pivden-novorosiia | ❌ FAIL | 5112/4000 | activities, structure |
+| 078 | nova-serbiya | ❌ FAIL | 4119/4000 | activities, structure |
+| 079 | krypatsvo-selo | ❌ FAIL | 4144/4000 | activities, structure |
+| 080 | kyrylo-mefodiivtsi | ❌ FAIL | 4119/4000 | activities, structure |
 | 081 | shevchenko-awakening | ❌ FAIL | 2183/4000 | word_count, activities, structure |
 | 082 | valuevskyi-emskyi | ❌ FAIL | 1989/4000 | word_count, activities, structure |
 | 083 | hromady | 📝 STUB | 25/4000 | empty, activities, structure |
 | 084 | drahomanov | ❌ FAIL | 2090/4000 | word_count, activities, structure |
 | 085 | franko-lesia-hrinchenko | ❌ FAIL | 2106/4000 | word_count, activities, structure |
-| 086 | syntez-imperska-doba | 📝 STUB | 26/4000 | empty, activities, structure |
+| 086 | syntez-imperska-doba | 📝 STUB | 26/4000 | hydration, empty, activities, structure |
 | 087 | hrushevskyi | ❌ FAIL | 2098/4000 | word_count, activities, structure |
 | 088 | persha-svitova | ❌ FAIL | 2251/4000 | word_count, activities, structure |
 | 089 | sichovi-striltsi | ❌ FAIL | 1742/4000 | word_count, activities, structure |
@@ -111,17 +111,17 @@
 | 095 | bilshovytsko-ukrainska-viyna | 📝 STUB | 25/4000 | empty, activities, structure |
 | 096 | kholodnyi-yar | 📝 STUB | 27/4000 | empty, activities, structure |
 | 097 | karpatska-ukraina | 📝 STUB | 26/4000 | empty, activities, structure |
-| 098 | syntez-revoliutsiia | 📝 STUB | 26/4000 | empty, activities, structure |
+| 098 | syntez-revoliutsiia | 📝 STUB | 26/4000 | hydration, empty, activities, structure |
 | 099 | rozstriliane-vidrodzennia | ❌ FAIL | 2052/4000 | word_count, activities, structure |
 | 100 | mekhanizm-teroru | ❌ FAIL | 2055/4000 | word_count, activities, structure |
 | 101 | holodomor-mekhanizm | ❌ FAIL | 4227/4000 | activities, structure |
 | 102 | holodomor-pamiat | ❌ FAIL | 1940/4000 | word_count, activities, structure |
 | 103 | pacyfikatsiia | 📝 STUB | 27/4000 | empty, activities, structure |
 | 104 | oun | 📝 STUB | 25/4000 | empty, activities, structure |
-| 105 | druha-svitova-pochatok | ✅ PASS | 3999/4000 | - |
+| 105 | druha-svitova-pochatok | ❌ FAIL | 3999/4000 | structure |
 | 106 | babyn-yar | 📝 STUB | 29/4000 | empty, activities, structure |
 | 107 | upa | ❌ FAIL | 2009/4000 | word_count, activities, structure |
-| 108 | syntez-trahedii | ❌ FAIL | 2402/4000 | word_count, activities, structure |
+| 108 | syntez-trahedii | ❌ FAIL | 2402/4000 | hydration, word_count, activities, structure |
 | 109 | povoienne-vidbudova | 📝 STUB | 25/4000 | empty, activities, structure |
 | 110 | deportatsii-ukraintsiv | ❌ FAIL | 1930/4000 | word_count, activities, structure |
 | 111 | surgunlik | ❌ FAIL | 2011/4000 | word_count, activities, structure |
@@ -136,14 +136,14 @@
 | 120 | rukh | 📝 STUB | 27/4000 | empty, activities, structure |
 | 121 | nezalezhnist-1991 | ❌ FAIL | 1991/4000 | word_count, activities, structure |
 | 122 | ukraine-90s | 📝 STUB | 28/4000 | empty, activities, structure |
-| 123 | pomara-revoliutsiia | ❌ FAIL | 2290/4000 | hydration, word_count, activities, structure |
+| 123 | pomara-revoliutsiia | ❌ FAIL | 2290/4000 | word_count, activities, structure |
 | 124 | tomos | ❌ FAIL | 1737/4000 | word_count, activities, structure |
 | 125 | yanukovych | ❌ FAIL | 1843/4000 | word_count, activities, structure |
 | 126 | movna-polityka | 📝 STUB | 27/4000 | empty, activities, structure |
 | 127 | revoliutsiia-hidnosti | ❌ FAIL | 2139/4000 | word_count, activities, structure |
 | 128 | aneksiia-krymu | ✅ PASS | 4144/4000 | hydration, structure |
 | 129 | krymski-tatary-pislia-2014 | 📝 STUB | 27/4000 | empty, activities, structure |
-| 130 | syntez-nezalezhnist | 📝 STUB | 26/4000 | empty, activities, structure |
+| 130 | syntez-nezalezhnist | 📝 STUB | 26/4000 | hydration, empty, activities, structure |
 | 131 | viyna-donbas | ❌ FAIL | 2061/4000 | word_count, activities, structure |
 | 132 | povnomasshtabne-vtorhnessnia | ❌ FAIL | 2131/4000 | word_count, activities, structure |
 | 133 | mariupol-azovstal | 📝 STUB | 26/4000 | empty, activities, structure |
@@ -153,7 +153,7 @@
 | 137 | hromadske-suspilstvo | 📝 STUB | 27/4000 | empty, activities, structure |
 | 138 | mizhnarodna-pidtrymka | 📝 STUB | 25/4000 | empty, activities, structure |
 | 139 | zlochyny-stiikist | ❌ FAIL | 2009/4000 | word_count, activities, structure |
-| 140 | syntez-viyna | ❌ FAIL | 1872/4000 | word_count, activities, structure |
+| 140 | syntez-viyna | ❌ FAIL | 1872/4000 | hydration, word_count, activities, structure |
 
 ---
 

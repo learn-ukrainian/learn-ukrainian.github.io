@@ -1,8 +1,8 @@
 # Audit Report: M13 — 13-abstract-writing.md
-**Level:** C1 | **Module:** M13 | **Phase:** C1.1 | **Pedagogy:** Not Specified | **Target:** 3000
+**Level:** C1 | **Module:** M13 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:24:12
+**Generated:** 2026-01-26 22:29:02
 
 ## Configuration
 **Type:** C1-grammar
@@ -68,28 +68,26 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.6% (target 90-100% (grammar))
-- **Richness:** ❌ 82% < 95% min (grammar)
+- **Richness:** ❌ 87% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 82% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 87% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 26 | 24 | 100% | 20% | 20.0% |
-| engagement | 11 | 5 | 100% | 15% | 15.0% |
-| dialogues | 2 | 4 | 50% | 15% | 7.5% |
-| variety | 0.98 | - | 98% | 10% | 9.8% |
-| cultural | 0 | 3 | 0% | 10% | 0.0% |
-| realworld | 6 | 3 | 100% | 10% | 10.0% |
-| visual | 15 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 15 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **82.3%** |
+| examples | 26 | 15 | 100% | 25% | 25.0% |
+| engagement | 11 | 5 | 100% | 19% | 18.7% |
+| variety | 0.98 | - | 98% | 12% | 12.2% |
+| cultural | 0 | 4 | 0% | 12% | 0.0% |
+| realworld | 6 | 3 | 100% | 12% | 12.5% |
+| visual | 15 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 15 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **87.2%** |
 
 ### Dryness Flags & Fixes
 - ❌ **NO_CULTURAL_ANCHOR**

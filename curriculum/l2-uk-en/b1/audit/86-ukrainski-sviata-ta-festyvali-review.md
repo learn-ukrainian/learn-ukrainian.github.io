@@ -1,8 +1,8 @@
 # Audit Report: M86 — 86-ukrainski-sviata-ta-festyvali.md
-**Level:** B1 | **Module:** M86 | **Phase:** B1.7 | **Pedagogy:** cultural | **Target:** 1500
+**Level:** B1 | **Module:** M86 | **Phase:** B1 | **Pedagogy:** CBI | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 19:22:57
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-26 22:27:39
 
 ## Configuration
 **Type:** B1-skills
@@ -11,6 +11,7 @@
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
 **Priority Types:** cloze, fill-in, mark-the-words
+**Required Types:** discussion, fill-in, matching, reading
 **Engagement:** ≥4 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥15 words
@@ -35,7 +36,17 @@
 - Total activities: 11 (target: 10-14) ✅
 - Unique types: 10 (minimum: 4) ✅
 - Priority types used: 2/3 (cloze, mark-the-words) ✅
+- Required types used: 0/4 (none) ❌
 - Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['matching', 'discussion']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
+  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 2020/1500 (raw: 2096)
@@ -48,29 +59,31 @@
 - **Vocab:** ✅ 65/15
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 97.5% (target 85-100% (B1.7-8 Ukraine))
-- **Richness:** ✅ 95% (cultural)
+- **Richness:** ✅ 98% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 95% (minimum: 95%)
-**Module Type:** cultural
+**Score:** 98% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| cultural | 13 | 5 | 100% | 33% | 33.3% |
-| engagement | 9 | 6 | 100% | 20% | 20.0% |
-| visual | 3 | 4 | 75% | 13% | 10.0% |
-| variety | 0.95 | - | 95% | 7% | 6.3% |
-| paragraph_var | 0.87 | - | 87% | 7% | 5.8% |
-| examples | 43 | - | 100% | 7% | 6.7% |
-| realworld | 6 | - | 100% | 7% | 6.7% |
-| questions | 30 | 4 | 100% | 7% | 6.7% |
-| **TOTAL** | | | | | **95.5%** |
+| examples | 43 | 24 | 100% | 20% | 20.0% |
+| engagement | 9 | 5 | 100% | 15% | 15.0% |
+| dialogues | 15 | 4 | 100% | 15% | 15.0% |
+| variety | 0.95 | - | 95% | 10% | 9.5% |
+| cultural | 13 | 3 | 100% | 10% | 10.0% |
+| realworld | 6 | 3 | 100% | 10% | 10.0% |
+| visual | 3 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.87 | - | 87% | 5% | 4.4% |
+| questions | 30 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **98.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

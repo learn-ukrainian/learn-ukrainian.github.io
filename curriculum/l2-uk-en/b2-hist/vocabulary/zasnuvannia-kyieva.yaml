@@ -2,93 +2,93 @@ module: zasnuvannia-kyieva
 level: B2-HIST
 version: '2.0'
 items:
-  - lemma: заснування
-    ipa: /zɑsnuˈwɑnʲːɑ/
-    translation: founding
-    pos: noun
-    gender: n
-  - lemma: легенда
-    ipa: /lɛˈɦɛndɑ/
-    translation: legend
-    pos: noun
-    gender: f
-  - lemma: археологія
-    ipa: /ɑrxɛɔˈlɔɦʲijɑ/
-    translation: archaeology
-    pos: noun
-    gender: f
-  - lemma: городище
-    ipa: /hɔrɔˈdɪʃt͡ʃɛ/
-    translation: fortified settlement
-    pos: noun
-    gender: n
-  - lemma: перевізник
-    ipa: /pɛrɛˈwʲiznɪk/
-    translation: ferryman
-    pos: noun
-    gender: m
-  - lemma: гора
-    ipa: /hɔˈrɑ/
-    translation: hill/mountain
-    pos: noun
-    gender: f
-  - lemma: князь
-    ipa: /knʲɑzʲ/
-    translation: prince
-    pos: noun
-    gender: m
-  - lemma: топонім
-    ipa: /tɔˈpɔnʲim/
-    translation: toponym
-    pos: noun
-    gender: m
-  - lemma: джерело
-    ipa: /dʒɛrɛˈlɔ/
-    translation: source
-    pos: noun
-    gender: n
-  - lemma: датування
-    ipa: /dɑtuˈwɑnʲːɑ/
-    translation: dating
-    pos: noun
-    gender: n
-  - lemma: поселення
-    ipa: /pɔˈsɛlɛnʲːɑ/
-    translation: settlement
-    pos: noun
-    gender: n
-  - lemma: торговий шлях
-    ipa: /tɔrˈhɔwɪj ʃlʲɑx/
-    translation: trade route
-    pos: phrase
-    gender: m
-  - lemma: Старокиївська гора
-    ipa: /stɑrɔkɪˈjiwsʲkɑ hɔˈrɑ/
-    translation: Old Kyiv Hill
-    pos: phrase
-    gender: f
-  - lemma: Щекавиця
-    ipa: /ʃt͡ʃɛkɑˈwɪt͡sʲɑ/
-    translation: Shchekavytsia
-    pos: noun
-    gender: f
-  - lemma: Хоревиця
-    ipa: /xɔrɛˈwɪt͡sʲɑ/
-    translation: Khorevytsia
-    pos: noun
-    gender: f
-  - lemma: Либідь
-    ipa: /lɪˈbʲidʲ/
-    translation: Lybid
-    pos: noun
-    gender: f
-  - lemma: Замкова гора
-    ipa: /zɑmˈkɔwɑ hɔˈrɑ/
-    translation: Castle Hill
-    pos: phrase
-    gender: f
-  - lemma: герб
-    ipa: /hɛrb/
-    translation: coat of arms
-    pos: noun
-    gender: m
+- lemma: заснування
+  ipa: /zɑsnuˈwɑnʲːɑ/
+  translation: founding
+  pos: noun
+  gender: n
+- lemma: легенда
+  ipa: /lɛˈɦɛndɑ/
+  translation: legend
+  pos: noun
+  gender: f
+- lemma: археологія
+  ipa: /ɑrxɛɔˈlɔɦʲijɑ/
+  translation: archaeology
+  pos: noun
+  gender: f
+- lemma: городище
+  ipa: /hɔrɔˈdɪʃt͡ʃɛ/
+  translation: fortified settlement
+  pos: noun
+  gender: n
+- lemma: перевізник
+  ipa: /pɛrɛˈwʲiznɪk/
+  translation: ferryman
+  pos: noun
+  gender: m
+- lemma: гора
+  ipa: /hɔˈrɑ/
+  translation: hill/mountain
+  pos: noun
+  gender: f
+- lemma: князь
+  ipa: /knʲɑzʲ/
+  translation: prince
+  pos: noun
+  gender: m
+- lemma: топонім
+  ipa: /tɔˈpɔnʲim/
+  translation: toponym
+  pos: noun
+  gender: m
+- lemma: джерело
+  ipa: /dʒɛrɛˈlɔ/
+  translation: source
+  pos: noun
+  gender: n
+- lemma: датування
+  ipa: /dɑtuˈwɑnʲːɑ/
+  translation: dating
+  pos: noun
+  gender: n
+- lemma: поселення
+  ipa: /pɔˈsɛlɛnʲːɑ/
+  translation: settlement
+  pos: noun
+  gender: n
+- lemma: торговий шлях
+  ipa: /tɔrˈhɔwɪj ʃlʲɑx/
+  translation: trade route
+  pos: noun
+  gender: m
+- lemma: старокиївська гора
+  ipa: /stɑrɔkɪˈjiwsʲkɑ hɔˈrɑ/
+  translation: Old Kyiv Hill
+  pos: noun
+  gender: f
+- lemma: щекавиця
+  ipa: /ʃt͡ʃɛkɑˈwɪt͡sʲɑ/
+  translation: Shchekavytsia
+  pos: noun
+  gender: f
+- lemma: хоревиця
+  ipa: /xɔrɛˈwɪt͡sʲɑ/
+  translation: Khorevytsia
+  pos: noun
+  gender: f
+- lemma: либідь
+  ipa: /lɪˈbʲidʲ/
+  translation: Lybid
+  pos: noun
+  gender: f
+- lemma: замкова гора
+  ipa: /zɑmˈkɔwɑ hɔˈrɑ/
+  translation: Castle Hill
+  pos: noun
+  gender: f
+- lemma: герб
+  ipa: /hɛrb/
+  translation: coat of arms
+  pos: noun
+  gender: m

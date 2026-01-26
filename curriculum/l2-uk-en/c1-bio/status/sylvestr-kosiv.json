@@ -1,0 +1,51 @@
+{
+  "module": "sylvestr-kosiv",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:56:04.713459Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-19T20:58:40.374711Z",
+    "meta": "2026-01-26T17:21:21.082180Z",
+    "activities": "2026-01-19T20:29:29.827229Z",
+    "vocabulary": null,
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4547/4000 (raw: 4798)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "8/3"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 24 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "4 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
+      "Missing required activity types: fill-in, group-sort, match-up, quiz"
+    ],
+    "pass_count": 3,
+    "fail_count": 1
+  }
+}

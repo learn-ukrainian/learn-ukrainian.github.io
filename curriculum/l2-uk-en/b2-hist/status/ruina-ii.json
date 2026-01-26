@@ -1,0 +1,47 @@
+{
+  "module": "ruina-ii",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:54:48.251084Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-24T22:04:20.142388Z",
+    "meta": "2026-01-26T22:20:13.515871Z",
+    "activities": "2026-01-24T00:12:17.580337Z",
+    "vocabulary": "2026-01-24T00:11:07.724363Z",
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5504/4000 (raw: 5583)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "16/3"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 20 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
+  }
+}

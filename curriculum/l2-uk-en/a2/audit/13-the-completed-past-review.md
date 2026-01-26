@@ -1,8 +1,8 @@
 # Audit Report: M13 — 13-the-completed-past.md
-**Level:** A2 | **Module:** M13 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
+**Level:** A2 | **Module:** M13 | **Phase:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 08:59:15
+**Generated:** 2026-01-26 22:26:10
 
 ## Configuration
 **Type:** A2-grammar
@@ -37,15 +37,6 @@
 - Priority types used: 2/3 (fill-in, unjumble) ✅
 - Required types used: 2/2 (fill-in, quiz) ✅
 - Low density activities: 0
-
-## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (11 words): запам'ятав, зробив, прийшов, дав, взяв...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1427/1000 (raw: 1613)

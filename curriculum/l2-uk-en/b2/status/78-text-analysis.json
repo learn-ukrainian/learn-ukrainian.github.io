@@ -1,0 +1,50 @@
+{
+  "module": "78-text-analysis",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:28:38.205678Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-13T10:01:02.830972Z",
+    "meta": "2026-01-26T17:21:19.254806Z",
+    "activities": "2026-01-13T10:01:06.858546Z",
+    "vocabulary": "2026-01-21T22:54:36.269388Z",
+    "plan": "2026-01-26T17:21:19.254571Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "2441/1750 (raw: 2528) | pedagogy: 3 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "15/14"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "6 < 20 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "1 Critical Template Violations",
+      "2 Outline Compliance Errors"
+    ],
+    "pass_count": 3,
+    "fail_count": 1
+  }
+}

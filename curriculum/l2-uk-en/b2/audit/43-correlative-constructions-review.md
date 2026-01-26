@@ -1,8 +1,8 @@
 # Audit Report: M43 — 43-correlative-constructions.md
-**Level:** B2 | **Module:** M43 | **Phase:** B2.2 | **Pedagogy:** TTT | **Target:** 1750
+**Level:** B2 | **Module:** M43 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:23:30
+**Generated:** 2026-01-26 22:28:14
 
 ## Configuration
 **Type:** B2-grammar

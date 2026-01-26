@@ -1,8 +1,8 @@
 # Audit Report: M92 — 92-presentation-skills-advanced.md
-**Level:** B2 | **Module:** M92 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 1750
+**Level:** B2 | **Module:** M92 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 8/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 19:24:02
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-26 22:28:47
 
 ## Configuration
 **Type:** B2-skills
@@ -54,26 +54,28 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (14 activities)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (skills))
-- **Richness:** ✅ 90% (skills)
+- **Richness:** ❌ 89% < 95% min (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
-**Score:** 90% (minimum: 80%)
-**Module Type:** skills
+**Score:** 89% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 86 | 15 | 100% | 26% | 25.5% |
-| engagement | 13 | 5 | 100% | 19% | 19.4% |
-| variety | 0.97 | - | 97% | 12% | 11.9% |
-| cultural | 2 | - | 100% | 12% | 12.2% |
-| realworld | 10 | 3 | 100% | 12% | 12.2% |
-| visual | 0 | 2 | 0% | 6% | 0.0% |
-| paragraph_var | 0.58 | - | 58% | 6% | 3.6% |
-| questions | 48 | 4 | 100% | 6% | 6.1% |
-| **TOTAL** | | | | | **90.9%** |
+| examples | 86 | 24 | 100% | 20% | 20.0% |
+| engagement | 13 | 5 | 100% | 15% | 15.0% |
+| dialogues | 5 | 4 | 100% | 15% | 15.0% |
+| variety | 0.97 | - | 97% | 10% | 9.7% |
+| cultural | 2 | 3 | 67% | 10% | 6.7% |
+| realworld | 10 | 3 | 100% | 10% | 10.0% |
+| visual | 0 | 3 | 0% | 5% | 0.0% |
+| paragraph_var | 0.58 | - | 58% | 5% | 2.9% |
+| questions | 48 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **89.3%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

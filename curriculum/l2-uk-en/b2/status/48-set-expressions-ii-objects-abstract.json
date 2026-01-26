@@ -1,0 +1,49 @@
+{
+  "module": "48-set-expressions-ii-objects-abstract",
+  "level": "B2",
+  "plan_version": "1.0",
+  "last_audit": "2026-01-26T22:28:17.631220Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-12T00:30:46.326491Z",
+    "meta": "2026-01-26T17:21:19.193045Z",
+    "activities": "2026-01-12T00:33:40.790378Z",
+    "vocabulary": "2026-01-21T22:54:31.729629Z",
+    "plan": "2026-01-26T17:21:19.192793Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "1975/1750 (raw: 2404)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "13/10"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "14 < 35 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "4 Outline Compliance Errors"
+    ],
+    "pass_count": 4,
+    "fail_count": 0
+  }
+}

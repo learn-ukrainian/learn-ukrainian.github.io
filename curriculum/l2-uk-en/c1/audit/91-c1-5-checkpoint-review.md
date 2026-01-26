@@ -1,7 +1,7 @@
 # Audit Report: M91 — 91-c1-5-checkpoint.md
-**Level:** C1 | **Module:** M91 | **Phase:** C1.5 | **Pedagogy:** Assessment | **Target:** 1750
+**Level:** C1 | **Module:** M91 | **Phase:** C1 | **Pedagogy:** Assessment | **Target:** 1750
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:25:00
+**Generated:** 2026-01-26 22:29:51
 
 ## Configuration
 **Type:** C1-checkpoint
@@ -58,25 +58,26 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (14 activities)
 - **Immersion:** 🇺🇦 99.2% (checkpoint - no gate)
-- **Richness:** ✅ 98% (checkpoint)
+- **Richness:** ❌ 94% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 98% (minimum: 85%)
-**Module Type:** checkpoint
+**Score:** 94% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| activity_types | 12 | 8 | 100% | 25% | 25.0% |
-| review_sections | 30 | 3 | 100% | 20% | 20.0% |
-| variety | 0.92 | - | 92% | 15% | 13.8% |
-| engagement | 5 | 3 | 100% | 10% | 10.0% |
-| cultural | 13 | - | 100% | 10% | 10.0% |
-| visual | 7 | 3 | 100% | 10% | 10.0% |
-| paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
-| **TOTAL** | | | | | **98.8%** |
+| examples | 22 | 15 | 100% | 25% | 25.0% |
+| engagement | 5 | 5 | 100% | 19% | 18.7% |
+| variety | 0.92 | - | 92% | 12% | 11.5% |
+| cultural | 13 | 4 | 100% | 12% | 12.5% |
+| realworld | 2 | 3 | 67% | 12% | 8.4% |
+| visual | 7 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 24 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **94.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

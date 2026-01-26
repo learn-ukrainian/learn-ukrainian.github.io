@@ -1,0 +1,50 @@
+{
+  "module": "34-checkpoint-complex-sentences-1",
+  "level": "B1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:27:05.893600Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-24T21:56:57.182361Z",
+    "meta": "2026-01-26T15:44:41.556414Z",
+    "activities": "2026-01-11T22:51:42.827789Z",
+    "vocabulary": "2026-01-25T15:44:16.918850Z",
+    "plan": "2026-01-26T15:44:41.556062Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "1271/1200 (raw: 1346) | pedagogy: 1 violations | richness: 74% < 95% min (grammar)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "12/10"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "19/10"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "6 Outline Compliance Errors",
+      "Missing required activity types: sentence-combining"
+    ],
+    "pass_count": 4,
+    "fail_count": 1
+  }
+}

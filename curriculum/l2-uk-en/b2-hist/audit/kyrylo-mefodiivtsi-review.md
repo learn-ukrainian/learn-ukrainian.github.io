@@ -1,8 +1,8 @@
 # Audit Report: M80 — kyrylo-mefodiivtsi.md
 **Level:** B2 | **Module:** M80 | **Phase:** HIST.8 | **Pedagogy:** CBI | **Target:** 4000
-**Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 23:48:53
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-26 22:55:02
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading
+**Required Types:** essay-response, match-up, quiz, reading, true-false
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -31,7 +31,7 @@
 - Total activities: 6 (target: 3-9) ✅
 - Unique types: 6 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 2/2 (essay-response, reading) ✅
+- Required types used: 4/5 (essay-response, match-up, quiz, reading) ❌
 - Low density activities: 0
 
 ## Gates
@@ -50,7 +50,7 @@
 - **Immersion:** 🇺🇦 100.0% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 9/10 (High)
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)

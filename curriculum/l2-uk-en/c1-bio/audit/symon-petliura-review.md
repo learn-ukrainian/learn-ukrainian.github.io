@@ -2,7 +2,7 @@
 **Level:** C1 | **Module:** M67 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:27:21
+**Generated:** 2026-01-26 22:56:31
 
 ## Configuration
 **Type:** C1-biography
@@ -50,7 +50,7 @@
 ## TEMPLATE COMPLIANCE
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Останні роки' per template 'c1-biography-module-template.md'
   - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Спадщина|Вплив' found: Спадщина Отамана, Спадщина
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Спадщина|Вплив' found: Спадщина, Спадщина Отамана
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 
 ## Recommendation

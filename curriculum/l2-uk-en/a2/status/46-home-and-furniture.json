@@ -1,0 +1,50 @@
+{
+  "module": "46-home-and-furniture",
+  "level": "A2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:26:29.378533Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-08T15:35:44.905377Z",
+    "meta": "2026-01-26T17:21:18.934094Z",
+    "activities": "2026-01-14T12:49:34.096186Z",
+    "vocabulary": "2026-01-25T16:02:17.831447Z",
+    "plan": "2026-01-26T17:21:18.933764Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "1505/1000 (raw: 2100) | pedagogy: 1 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "55/1"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Outline Compliance Errors",
+      "Missing required activity types: fill-in, matching, speaking, vocabulary-drill"
+    ],
+    "pass_count": 4,
+    "fail_count": 1
+  }
+}

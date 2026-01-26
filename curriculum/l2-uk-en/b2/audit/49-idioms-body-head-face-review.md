@@ -1,8 +1,8 @@
 # Audit Report: M49 — 49-idioms-body-head-face.md
-**Level:** B2 | **Module:** M49 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 1750
+**Level:** B2 | **Module:** M49 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 19:23:34
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-26 22:28:18
 
 ## Configuration
 **Type:** B2-vocab
@@ -52,26 +52,28 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.8% (target 90-100% (vocab))
-- **Richness:** ✅ 97% (phraseology)
+- **Richness:** ✅ 98% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 97% (minimum: 95%)
-**Module Type:** phraseology
+**Score:** 98% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| engagement | 10 | 4 | 100% | 25% | 25.0% |
-| variety | 0.92 | - | 92% | 17% | 15.3% |
-| cultural | 6 | - | 100% | 17% | 16.7% |
-| visual | 4 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 0.79 | - | 79% | 8% | 6.6% |
-| examples | 49 | - | 100% | 8% | 8.3% |
-| realworld | 6 | - | 100% | 8% | 8.3% |
-| questions | 15 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **96.9%** |
+| examples | 49 | 24 | 100% | 20% | 20.0% |
+| engagement | 10 | 5 | 100% | 15% | 15.0% |
+| dialogues | 29 | 4 | 100% | 15% | 15.0% |
+| variety | 0.92 | - | 92% | 10% | 9.2% |
+| cultural | 6 | 3 | 100% | 10% | 10.0% |
+| realworld | 6 | 3 | 100% | 10% | 10.0% |
+| visual | 4 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.79 | - | 79% | 5% | 4.0% |
+| questions | 15 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **98.2%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

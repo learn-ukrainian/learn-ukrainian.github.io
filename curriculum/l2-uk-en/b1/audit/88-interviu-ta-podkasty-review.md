@@ -1,8 +1,8 @@
 # Audit Report: M88 — 88-interviu-ta-podkasty.md
-**Level:** B1 | **Module:** M88 | **Phase:** B1.8 | **Pedagogy:** CBI | **Target:** 1500
+**Level:** B1 | **Module:** M88 | **Phase:** B1 | **Pedagogy:** CBI | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 19:22:59
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-26 22:27:40
 
 ## Configuration
 **Type:** B1-skills
@@ -11,6 +11,7 @@
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
 **Priority Types:** cloze, fill-in, mark-the-words
+**Required Types:** discussion, listening, matching, note-taking
 **Engagement:** ≥4 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥15 words
@@ -35,7 +36,17 @@
 - Total activities: 11 (target: 10-14) ✅
 - Unique types: 10 (minimum: 4) ✅
 - Priority types used: 2/3 (cloze, mark-the-words) ✅
+- Required types used: 0/4 (none) ❌
 - Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['listening', 'note-taking', 'matching', 'discussion']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
+  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 2162/1500 (raw: 2271)
@@ -48,29 +59,31 @@
 - **Vocab:** ✅ 53/15
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.0% (target 85-100% (B1.7-8 Ukraine))
-- **Richness:** ✅ 99% (skills)
+- **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 80%)
-**Module Type:** skills
+**Score:** 99% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 45 | 15 | 100% | 26% | 25.5% |
-| engagement | 11 | 5 | 100% | 19% | 19.4% |
-| variety | 0.97 | - | 97% | 12% | 11.9% |
-| cultural | 3 | - | 100% | 12% | 12.2% |
-| realworld | 11 | 3 | 100% | 12% | 12.2% |
-| visual | 6 | 2 | 100% | 6% | 6.1% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.1% |
-| questions | 40 | 4 | 100% | 6% | 6.1% |
-| **TOTAL** | | | | | **99.6%** |
+| examples | 45 | 24 | 100% | 20% | 20.0% |
+| engagement | 11 | 5 | 100% | 15% | 15.0% |
+| dialogues | 4 | 4 | 100% | 15% | 15.0% |
+| variety | 0.97 | - | 97% | 10% | 9.7% |
+| cultural | 3 | 3 | 100% | 10% | 10.0% |
+| realworld | 11 | 3 | 100% | 10% | 10.0% |
+| visual | 6 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 40 | 5 | 100% | 5% | 5.0% |
+| proverbs | 2 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

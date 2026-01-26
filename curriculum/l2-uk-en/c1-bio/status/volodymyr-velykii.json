@@ -1,0 +1,51 @@
+{
+  "module": "volodymyr-velykii",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:55:54.550788Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-19T13:36:02.605043Z",
+    "meta": "2026-01-26T17:21:21.151678Z",
+    "activities": "2026-01-19T13:18:49.396317Z",
+    "vocabulary": null,
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4013/4000 (raw: 4191)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4/3"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 24 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "7 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
+      "Missing required activity types: fill-in, group-sort, match-up, quiz, reading"
+    ],
+    "pass_count": 3,
+    "fail_count": 1
+  }
+}

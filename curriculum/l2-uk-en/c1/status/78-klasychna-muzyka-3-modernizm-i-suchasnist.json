@@ -1,0 +1,50 @@
+{
+  "module": "78-klasychna-muzyka-3-modernizm-i-suchasnist",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:29:43.179153Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-13T18:29:00.360047Z",
+    "meta": "2026-01-26T17:21:19.540165Z",
+    "activities": "2026-01-13T18:18:44.405481Z",
+    "vocabulary": null,
+    "plan": "2026-01-26T17:21:19.539922Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "2704/3000 (raw: 2889)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "14/12"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 25 (soft target)"
+    },
+    "naturalness": {
+      "status": "fail",
+      "violations": 1,
+      "message": "0/10 (PENDING) - Naturalness check required"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "1 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
+    ],
+    "pass_count": 1,
+    "fail_count": 3
+  }
+}

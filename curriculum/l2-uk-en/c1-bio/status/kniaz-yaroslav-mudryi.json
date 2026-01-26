@@ -1,0 +1,51 @@
+{
+  "module": "kniaz-yaroslav-mudryi",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:55:55.182895Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-19T14:03:07.158545Z",
+    "meta": "2026-01-26T17:21:20.789035Z",
+    "activities": "2026-01-19T14:01:50.183972Z",
+    "vocabulary": null,
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4018/4000 (raw: 4217)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5/3"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 24 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "6 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
+      "Missing required activity types: fill-in, group-sort, match-up, quiz"
+    ],
+    "pass_count": 3,
+    "fail_count": 1
+  }
+}

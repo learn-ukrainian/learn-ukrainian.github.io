@@ -1,8 +1,8 @@
 # Audit Report: M04 — 04-analysis-vocabulary.md
-**Level:** C1 | **Module:** M04 | **Phase:** C1.1 | **Pedagogy:** Not Specified | **Target:** 3000
+**Level:** C1 | **Module:** M04 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:24:06
+**Generated:** 2026-01-26 22:28:51
 
 ## Configuration
 **Type:** C1-vocab
@@ -70,26 +70,26 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 96.9% (target 90-100% (vocab))
-- **Richness:** ✅ 97% (vocabulary)
+- **Richness:** ❌ 91% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 97% (minimum: 95%)
-**Module Type:** vocabulary
+**Score:** 91% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| collocations | 18 | 20 | 90% | 25% | 22.5% |
-| usage_examples | 62 | 15 | 100% | 20% | 20.0% |
-| engagement | 12 | 4 | 100% | 15% | 15.0% |
-| cultural | 4 | 3 | 100% | 10% | 10.0% |
-| visual | 15 | 3 | 100% | 10% | 10.0% |
-| register_notes | 8 | 5 | 100% | 10% | 10.0% |
-| variety | 0.98 | - | 98% | 5% | 4.9% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **97.4%** |
+| examples | 62 | 15 | 100% | 25% | 25.0% |
+| engagement | 12 | 5 | 100% | 19% | 18.7% |
+| variety | 0.98 | - | 98% | 12% | 12.2% |
+| cultural | 4 | 4 | 100% | 12% | 12.5% |
+| realworld | 1 | 3 | 33% | 12% | 4.1% |
+| visual | 15 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 18 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **91.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

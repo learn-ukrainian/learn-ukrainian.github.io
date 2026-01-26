@@ -187,11 +187,23 @@ Every analytical activity MUST link to a reading source:
 | match-up              | 1-2   | Ukrainian term ↔ Ukrainian definition                            |
 | select/mark-the-words | 1-2   | Find grammatical features in text                                |
 
-### Forbidden Patterns
+### Forbidden Activity Types
 
-❌ "У якому році [event]?"  
-❌ "Хто був [person]?"  
-❌ "Скільки [number]?"  
+<critical>
+**NO DIALOGS in history, biography, or seminar modules.**
+
+Dialogs are inappropriate for academic/seminar content. These tracks focus on reading comprehension, analytical writing, and critical thinking — not conversational practice.
+
+❌ `type: dialog` — Never use
+❌ `type: role-play` — Never use
+❌ Conversational exercises with speakers (А:, Б:, etc.)
+</critical>
+
+### Forbidden Question Patterns
+
+❌ "У якому році [event]?"
+❌ "Хто був [person]?"
+❌ "Скільки [number]?"
 ❌ "Що символізує [symbol]?" (without "як автор тлумачить")
 
 ### Required Patterns

@@ -1,8 +1,8 @@
 # Audit Report: M28 — 28-economics-business-vocabulary.md
-**Level:** B2 | **Module:** M28 | **Phase:** B2.1c | **Pedagogy:** CLIL | **Target:** 1750
+**Level:** B2 | **Module:** M28 | **Phase:** B2 | **Pedagogy:** CLIL | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 19:23:20
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-26 22:28:03
 
 ## Configuration
 **Type:** B2-grammar

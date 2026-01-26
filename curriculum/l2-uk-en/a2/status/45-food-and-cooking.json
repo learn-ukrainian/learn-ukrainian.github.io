@@ -1,0 +1,50 @@
+{
+  "module": "45-food-and-cooking",
+  "level": "A2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:26:28.814536Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-25T17:19:28.734685Z",
+    "meta": "2026-01-26T17:21:18.930800Z",
+    "activities": "2026-01-14T13:20:51.922504Z",
+    "vocabulary": "2026-01-25T17:19:41.282920Z",
+    "plan": "2026-01-26T17:21:18.930483Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "1414/1000 (raw: 1952) | pedagogy: 1 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "63/1"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Outline Compliance Errors",
+      "Missing required activity types: dialogue, fill-in, sequencing, vocabulary-drill"
+    ],
+    "pass_count": 4,
+    "fail_count": 1
+  }
+}

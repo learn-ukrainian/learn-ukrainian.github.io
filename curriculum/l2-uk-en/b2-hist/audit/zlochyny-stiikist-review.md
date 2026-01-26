@@ -1,8 +1,8 @@
 # Audit Report: M139 — zlochyny-stiikist.md
-**Level:** B2 | **Module:** M139 | **Phase:** B2.3e | **Pedagogy:** CBI | **Target:** 4000
-**Naturalness:** 9/10 (PASS)
+**Level:** B2 | **Module:** M139 | **Phase:** HIST.13 | **Pedagogy:** CBI | **Target:** 4000
+**Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 22:23:51
+**Generated:** 2026-01-26 22:55:37
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading
+**Required Types:** essay-response, fill-in, match-up, quiz, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -41,7 +41,7 @@
 - Total activities: 16 (target: 3-9) ❌
 - Unique types: 12 (minimum: 2) ✅
 - Priority types used: 2/4 (comparative-study, essay-response) ✅
-- Required types used: 1/2 (essay-response) ❌
+- Required types used: 4/5 (essay-response, fill-in, match-up, quiz) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
@@ -70,7 +70,7 @@
 - **Immersion:** 🇺🇦 96.1% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 9/10 (High)
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
 **Score:** 97% (minimum: 95%)

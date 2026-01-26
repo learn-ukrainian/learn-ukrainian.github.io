@@ -1,0 +1,49 @@
+{
+  "module": "60-synonyms-character",
+  "level": "B2",
+  "plan_version": "1.0",
+  "last_audit": "2026-01-26T22:28:25.745095Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-12T11:08:52.932731Z",
+    "meta": "2026-01-26T17:21:19.217700Z",
+    "activities": "2026-01-12T11:09:15.082627Z",
+    "vocabulary": "2026-01-21T22:54:33.145263Z",
+    "plan": "2026-01-26T17:21:19.217455Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "2671/1750 (raw: 2879) | pedagogy: 1 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "15/10"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "18 < 35 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "2 Outline Compliance Errors"
+    ],
+    "pass_count": 3,
+    "fail_count": 1
+  }
+}

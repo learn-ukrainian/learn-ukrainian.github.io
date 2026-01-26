@@ -1,0 +1,51 @@
+{
+  "module": "01-introduction-to-kotliarevsky",
+  "level": "LIT",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:57:30.769484Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-07T23:21:59.088273Z",
+    "meta": "2026-01-26T17:21:21.766084Z",
+    "activities": "2026-01-18T20:23:03.231554Z",
+    "vocabulary": null,
+    "plan": "2026-01-26T17:21:21.765812Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "3671/4000 (raw: 3843)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "6/3"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "0/0"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
+      "Missing required activity types: cloze, match-up, quiz"
+    ],
+    "pass_count": 3,
+    "fail_count": 2
+  }
+}

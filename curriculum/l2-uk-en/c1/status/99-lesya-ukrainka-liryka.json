@@ -1,0 +1,50 @@
+{
+  "module": "99-lesya-ukrainka-liryka",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:29:56.755214Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-13T22:57:38.662169Z",
+    "meta": "2026-01-26T17:21:19.587781Z",
+    "activities": "2026-01-13T22:57:43.536458Z",
+    "vocabulary": null,
+    "plan": "2026-01-26T17:21:19.587210Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 3,
+      "message": "2332/3500 (raw: 2689) | pedagogy: 1 violations | richness: 87% < 95% min (content)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "13/12"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 24 (soft target)"
+    },
+    "naturalness": {
+      "status": "fail",
+      "violations": 1,
+      "message": "0/10 (PENDING) - Naturalness check required"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "2 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
+    ],
+    "pass_count": 1,
+    "fail_count": 3
+  }
+}

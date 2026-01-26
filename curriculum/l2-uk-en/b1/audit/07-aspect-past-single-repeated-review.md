@@ -1,8 +1,8 @@
 # Audit Report: M07 — 07-aspect-past-single-repeated.md
-**Level:** B1 | **Module:** M07 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M07 | **Phase:** B1 | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 19:22:08
+**Generated:** 2026-01-26 22:26:47
 
 ## Configuration
 **Type:** B1-grammar

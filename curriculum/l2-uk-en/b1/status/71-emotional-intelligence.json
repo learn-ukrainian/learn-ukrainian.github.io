@@ -1,0 +1,50 @@
+{
+  "module": "71-emotional-intelligence",
+  "level": "B1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:27:29.914339Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-11T20:27:28.551008Z",
+    "meta": "2026-01-26T15:44:41.676780Z",
+    "activities": "2026-01-11T23:20:02.217503Z",
+    "vocabulary": "2026-01-25T15:44:17.256024Z",
+    "plan": "2026-01-26T15:44:41.676565Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "1748/1500 (raw: 2484) | pedagogy: 1 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "12/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "42/35"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Outline Compliance Errors",
+      "Missing required activity types: discussion, fill-in, matching, role-play"
+    ],
+    "pass_count": 4,
+    "fail_count": 1
+  }
+}

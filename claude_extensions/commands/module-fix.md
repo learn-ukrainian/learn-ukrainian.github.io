@@ -363,13 +363,22 @@ Round 3: FIX MINOR ISSUES
 | **Dependency handling** | Manual | Automatic | Manual |
 | **Best for violations** | ≤5 | 6-15 | N/A |
 
-### Step 6: Validation Complete
+### Step 6: Validation Complete + MDX Generation
 
 When ALL audit gates show ✅:
 
+**MANDATORY: Generate MDX file for the website:**
+
 ```bash
-# Run full pipeline
-npm run pipeline l2-uk-en ${level} ${module_num}
+# Generate MDX (REQUIRED - must run after audit passes)
+.venv/bin/python scripts/generate_mdx.py l2-uk-en ${level} ${module_num}
+```
+
+This generates: `docusaurus/docs/${level}/${slug}.mdx`
+
+**Verify the MDX was created:**
+```bash
+ls -la docusaurus/docs/${level}/${slug}.mdx
 ```
 
 ---
@@ -446,7 +455,7 @@ Related: ...
 
 ## Output
 
-**On COMPLETE:**
+**On COMPLETE (after MDX generation):**
 
 ```
 MODULE FIX: COMPLETE ✅
@@ -467,11 +476,14 @@ Final metrics:
   - Activities: {count} ({types} types)
   - Immersion: {percentage}%
 
-Pipeline: PASS
-MDX: docusaurus/docs/{level}/{slug}.mdx
+MDX Generated: ✅ docusaurus/docs/{level}/{slug}.mdx
 
 MODULE APPROVED
 ```
+
+**CRITICAL:** The MDX generation step is MANDATORY. Do not output "MODULE APPROVED" until you have:
+1. Run the MDX generation command
+2. Verified the MDX file exists
 
 **THERE IS NO FAILURE OUTPUT.**
 

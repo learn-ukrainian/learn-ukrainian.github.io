@@ -1,0 +1,47 @@
+{
+  "module": "22-motion-full-prefix-integration",
+  "level": "B1",
+  "plan_version": "1.7",
+  "last_audit": "2026-01-26T22:26:58.026781Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-24T22:16:14.148228Z",
+    "meta": "2026-01-26T15:44:41.512492Z",
+    "activities": "2026-01-11T10:24:12.211500Z",
+    "vocabulary": "2026-01-25T18:00:40.241611Z",
+    "plan": "2026-01-26T15:44:41.512148Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "1813/1500 (raw: 1920)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "12/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "70/25"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

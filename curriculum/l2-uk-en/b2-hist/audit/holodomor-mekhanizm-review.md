@@ -1,7 +1,7 @@
 # Audit Report: M101 — holodomor-mekhanizm.md
 **Level:** B2 | **Module:** M101 | **Phase:** HIST.10 | **Pedagogy:** seminar | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 22:23:28
+**Generated:** 2026-01-26 22:55:15
 
 ## Configuration
 **Type:** B2-history

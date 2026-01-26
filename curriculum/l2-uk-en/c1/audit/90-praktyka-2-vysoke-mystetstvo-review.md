@@ -1,7 +1,7 @@
 # Audit Report: M90 — 90-praktyka-2-vysoke-mystetstvo.md
-**Level:** C1 | **Module:** M90 | **Phase:** C1.5 | **Pedagogy:** Immersion & Analysis | **Target:** 3000
+**Level:** C1 | **Module:** M90 | **Phase:** C1 | **Pedagogy:** Immersion & Analysis | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:25:00
+**Generated:** 2026-01-26 22:29:50
 
 ## Configuration
 **Type:** C1

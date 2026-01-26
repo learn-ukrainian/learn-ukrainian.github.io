@@ -1,8 +1,8 @@
 # Audit Report: M40 — 40-b21c-checkpoint.md
-**Level:** B2 | **Module:** M40 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 1750
+**Level:** B2 | **Module:** M40 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 19:23:28
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-26 22:28:12
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -56,25 +56,46 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (checkpoint - no gate)
-- **Richness:** ✅ 98% (checkpoint)
+- **Richness:** ❌ 81% < 95% min (grammar) - REWRITE needed
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 98% (minimum: 85%)
-**Module Type:** checkpoint
+**Score:** 81% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| activity_types | 8 | 8 | 100% | 25% | 25.0% |
-| review_sections | 35 | 3 | 100% | 20% | 20.0% |
-| variety | 0.93 | - | 93% | 15% | 14.0% |
-| engagement | 8 | 3 | 100% | 10% | 10.0% |
-| cultural | 1 | - | 100% | 10% | 10.0% |
-| visual | 8 | 3 | 100% | 10% | 10.0% |
-| paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
-| **TOTAL** | | | | | **99.0%** |
+| examples | 61 | 24 | 100% | 20% | 20.0% |
+| engagement | 8 | 5 | 100% | 15% | 15.0% |
+| dialogues | 1 | 4 | 25% | 15% | 3.8% |
+| variety | 0.93 | - | 93% | 10% | 9.3% |
+| cultural | 1 | 3 | 33% | 10% | 3.3% |
+| realworld | 3 | 3 | 100% | 10% | 10.0% |
+| visual | 8 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 40 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **81.3%** |
+
+### Dryness Flags & Fixes
+- ❌ **LOW_DIALOGUE**
+  - FIX:
+    Add more mini-dialogues (need 4+ total). Use this exact format:
+    
+    **Діалог: [Location in Ukraine]**
+    
+    > — [Speaker 1 line with **bolded** grammar examples]
+    > — [Speaker 2 response with **bolded** grammar examples]
+    > — [Speaker 1 continuation]
+    > — [Speaker 2 conclusion]
+- ❌ **LOW_CULTURAL_ANCHOR**
+  - FIX:
+    Add more cultural references (need 3+ total). Include:
+    - Named Ukrainian places (Поділ, Бесарабський ринок, Острозька академія)
+    - Ukrainian traditions or customs
+    - Contemporary Ukrainian life examples
 
 ## Section Audit
 | Section | Status | Count | Notes |

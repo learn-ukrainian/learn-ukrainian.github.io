@@ -1,0 +1,50 @@
+{
+  "module": "50-technology-media",
+  "level": "A2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:26:31.716574Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-08T20:57:33.733593Z",
+    "meta": "2026-01-26T17:21:18.946983Z",
+    "activities": "2026-01-12T14:25:28.980135Z",
+    "vocabulary": "2026-01-25T18:00:39.843155Z",
+    "plan": "2026-01-26T17:21:18.946766Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "1153/1000 (raw: 1641) | pedagogy: 1 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "56/1"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Outline Compliance Errors",
+      "Missing required activity types: dialogue, fill-in, matching, vocabulary-drill"
+    ],
+    "pass_count": 4,
+    "fail_count": 1
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "module": "boiare-i-shliakhta",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T23:25:54.785611Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-25T22:20:07.450109Z",
+    "meta": "2026-01-26T22:20:12.947402Z",
+    "activities": "2026-01-25T21:29:24.931327Z",
+    "vocabulary": "2026-01-22T21:48:18.539293Z",
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4454/4000 (raw: 4622)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5/3"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 20 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
+  }
+}

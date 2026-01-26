@@ -1,0 +1,47 @@
+{
+  "module": "20-motion-approaching-departing",
+  "level": "B1",
+  "plan_version": "1.0",
+  "last_audit": "2026-01-26T22:26:56.615572Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-24T21:57:06.623805Z",
+    "meta": "2026-01-26T15:44:41.504697Z",
+    "activities": "2026-01-11T22:51:42.222115Z",
+    "vocabulary": "2026-01-25T16:02:18.252627Z",
+    "plan": "2026-01-26T15:44:41.504448Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "2047/1500 (raw: 2545)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "12/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "84/25"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

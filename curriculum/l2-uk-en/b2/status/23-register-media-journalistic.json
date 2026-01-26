@@ -1,0 +1,49 @@
+{
+  "module": "23-register-media-journalistic",
+  "level": "B2",
+  "plan_version": "1.0",
+  "last_audit": "2026-01-26T22:28:00.073550Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-11T21:16:22.187307Z",
+    "meta": "2026-01-26T17:21:19.136531Z",
+    "activities": "2026-01-11T23:20:02.166004Z",
+    "vocabulary": "2026-01-21T22:54:27.952265Z",
+    "plan": "2026-01-26T17:21:19.136276Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "2086/1750 (raw: 2578)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "15/10"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "18 < 25 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "3 Outline Compliance Errors"
+    ],
+    "pass_count": 4,
+    "fail_count": 0
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "module": "87-professional-reports-basics",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:28:44.203763Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-21T13:28:19.273131Z",
+    "meta": "2026-01-26T17:21:19.277570Z",
+    "activities": "2026-01-21T10:46:24.786903Z",
+    "vocabulary": "2026-01-21T22:54:37.555957Z",
+    "plan": "2026-01-26T17:21:19.276994Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "4554/1750 (raw: 4957) | pedagogy: 1 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "14/14"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "27/20"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "8/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 1
+  }
+}

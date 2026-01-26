@@ -1,8 +1,8 @@
 # Audit Report: M105 — druha-svitova-pochatok.md
-**Level:** B2 | **Module:** M105 | **Phase:** B2.3c | **Pedagogy:** CBI | **Target:** 4000
-**Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 22:23:30
+**Level:** B2 | **Module:** M105 | **Phase:** HIST.10 | **Pedagogy:** CBI | **Target:** 4000
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-26 22:55:17
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading
+**Required Types:** essay-response, fill-in, match-up, quiz, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -47,7 +47,7 @@
 - Total activities: 22 (target: 3-9) ❌
 - Unique types: 13 (minimum: 2) ✅
 - Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
-- Required types used: 2/2 (essay-response, reading) ✅
+- Required types used: 5/5 (essay-response, fill-in, match-up, quiz, reading) ✅
 - Low density activities: 0
 
 ## Gates
@@ -66,7 +66,7 @@
 - **Immersion:** 🇺🇦 98.0% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 9/10 (High)
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)

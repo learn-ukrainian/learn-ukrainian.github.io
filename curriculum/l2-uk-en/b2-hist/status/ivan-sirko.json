@@ -1,0 +1,47 @@
+{
+  "module": "ivan-sirko",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:54:49.609152Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-24T16:33:43.271497Z",
+    "meta": "2026-01-26T22:20:13.131674Z",
+    "activities": "2026-01-24T16:25:43.200574Z",
+    "vocabulary": "2026-01-24T16:18:51.407902Z",
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4635/4000 (raw: 4709)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "6/3"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "25/20"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

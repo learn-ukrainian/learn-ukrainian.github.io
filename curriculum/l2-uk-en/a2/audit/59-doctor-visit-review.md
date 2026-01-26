@@ -1,16 +1,17 @@
 # Audit Report: M59 — 59-doctor-visit.md
-**Level:** A2 | **Module:** M59 | **Phase:** A2.3 | **Pedagogy:** PPP | **Target:** 1000
+**Level:** A2 | **Module:** M59 | **Phase:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 08:59:41
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-26 22:26:36
 
 ## Configuration
-**Type:** A2-vocab
+**Type:** A2
 **Word Target:** 1000 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
 **Priority Types:** error-correction, fill-in, unjumble
+**Required Types:** dialogue, fill-in, role-play, vocabulary-drill
 **Engagement:** ≥4 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
@@ -34,11 +35,12 @@
 - Total activities: 10 (target: 10-14) ✅
 - Unique types: 10 (minimum: 4) ✅
 - Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
+- Required types used: 1/4 (fill-in) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (5 words): симптом, діагноз, болить, одужати, аналіз...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
+- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['vocabulary-drill', 'dialogue', 'role-play']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
+  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
@@ -56,7 +58,7 @@
 - **Vocab:** ✅ 22/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 78.7% (target 75-85% (A2.3))
 - **Grammar:** ℹ️ N/A (covered by naturalness)

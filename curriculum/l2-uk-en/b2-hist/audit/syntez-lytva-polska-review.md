@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M40 | **Phase:** HIST.4 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 22:22:48
+**Generated:** 2026-01-26 23:32:58
 
 ## Configuration
 **Type:** B2-history
@@ -41,7 +41,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 20 (soft target)
+- **Vocab:** ✅ 30/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

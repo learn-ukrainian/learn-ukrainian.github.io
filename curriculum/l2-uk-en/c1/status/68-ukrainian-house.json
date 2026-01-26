@@ -1,0 +1,50 @@
+{
+  "module": "68-ukrainian-house",
+  "level": "C1",
+  "plan_version": "1.0",
+  "last_audit": "2026-01-26T22:29:36.727590Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-11T20:43:28.901975Z",
+    "meta": "2026-01-26T17:21:19.521650Z",
+    "activities": "2026-01-11T20:42:32.595968Z",
+    "vocabulary": null,
+    "plan": "2026-01-26T17:21:19.521448Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "2599/3000 (raw: 2704)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "12/12"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 25 (soft target)"
+    },
+    "naturalness": {
+      "status": "fail",
+      "violations": 1,
+      "message": "0/10 (PENDING) - Naturalness check required"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "1 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
+    ],
+    "pass_count": 1,
+    "fail_count": 3
+  }
+}

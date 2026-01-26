@@ -1,8 +1,8 @@
 # Audit Report: M58 — 58-synonyms-quality.md
-**Level:** B2 | **Module:** M58 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 1750
+**Level:** B2 | **Module:** M58 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:23:40
+**Generated:** 2026-01-26 22:28:24
 
 ## Configuration
 **Type:** B2-vocab
@@ -64,26 +64,42 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (vocab))
-- **Richness:** ✅ 98% (phraseology)
+- **Richness:** ❌ 84% < 95% min (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 98% (minimum: 95%)
-**Module Type:** phraseology
+**Score:** 84% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| engagement | 9 | 4 | 100% | 25% | 25.0% |
-| variety | 0.99 | - | 99% | 17% | 16.5% |
-| cultural | 9 | - | 100% | 17% | 16.7% |
-| visual | 4 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 0.89 | - | 89% | 8% | 7.4% |
-| examples | 40 | - | 100% | 8% | 8.3% |
-| realworld | 10 | - | 100% | 8% | 8.3% |
-| questions | 5 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **98.9%** |
+| examples | 40 | 24 | 100% | 20% | 20.0% |
+| engagement | 9 | 5 | 100% | 15% | 15.0% |
+| dialogues | 0 | 4 | 0% | 15% | 0.0% |
+| variety | 0.99 | - | 99% | 10% | 9.9% |
+| cultural | 9 | 3 | 100% | 10% | 10.0% |
+| realworld | 10 | 3 | 100% | 10% | 10.0% |
+| visual | 4 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.89 | - | 89% | 5% | 4.5% |
+| questions | 5 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **84.4%** |
+
+### Dryness Flags & Fixes
+- ❌ **NO_DIALOGUE**
+  - FIX:
+    Add 4+ mini-dialogues. Use this exact format:
+    
+    **Діалог: [Location in Ukraine]**
+    
+    > — [Speaker 1 line with **bolded** grammar examples]
+    > — [Speaker 2 response with **bolded** grammar examples]
+    > — [Speaker 1 continuation]
+    > — [Speaker 2 conclusion]
+    
+    Example locations: На Бесарабському ринку, У львівській кав'ярні, В одеському трамваї, На Подолі
 
 ## Section Audit
 | Section | Status | Count | Notes |

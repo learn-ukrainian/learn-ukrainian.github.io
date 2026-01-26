@@ -1,8 +1,8 @@
 # Audit Report: M34 — 34-review.md
-**Level:** C1 | **Module:** M34 | **Phase:** C1.2 | **Pedagogy:** Not Specified | **Target:** 3000
+**Level:** C1 | **Module:** M34 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:24:25
+**Generated:** 2026-01-26 22:29:15
 
 ## Configuration
 **Type:** C1
@@ -64,25 +64,31 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.9% (target 90-100%)
-- **Richness:** ✅ 100% (checkpoint)
+- **Richness:** ❌ 85% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 100% (minimum: 85%)
-**Module Type:** checkpoint
+**Score:** 85% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| activity_types | 9 | 8 | 100% | 25% | 25.0% |
-| review_sections | 17 | 3 | 100% | 20% | 20.0% |
-| variety | 1.00 | - | 100% | 15% | 15.0% |
-| engagement | 8 | 3 | 100% | 10% | 10.0% |
-| cultural | 4 | - | 100% | 10% | 10.0% |
-| visual | 10 | 3 | 100% | 10% | 10.0% |
-| paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
-| **TOTAL** | | | | | **100.0%** |
+| examples | 6 | 15 | 40% | 25% | 10.0% |
+| engagement | 8 | 5 | 100% | 19% | 18.7% |
+| variety | 1.00 | - | 100% | 12% | 12.5% |
+| cultural | 4 | 4 | 100% | 12% | 12.5% |
+| realworld | 6 | 3 | 100% | 12% | 12.5% |
+| visual | 10 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 9 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **85.0%** |
+
+### Dryness Flags & Fixes
+- ❌ **NO_EXAMPLES**
+  - FIX:
+    Add 24+ example sentences. Each grammar point needs 3-4 examples showing the pattern in context.
 
 ## Section Audit
 | Section | Status | Count | Notes |

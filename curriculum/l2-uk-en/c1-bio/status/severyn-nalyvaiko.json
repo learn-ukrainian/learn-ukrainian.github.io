@@ -1,0 +1,50 @@
+{
+  "module": "severyn-nalyvaiko",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:56:02.231612Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-21T10:46:24.798799Z",
+    "meta": "2026-01-26T17:21:21.064389Z",
+    "activities": "2026-01-19T22:57:29.360649Z",
+    "vocabulary": null,
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "3265/4000 (raw: 3403)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5/3"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 24 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
+      "Missing required activity types: quiz"
+    ],
+    "pass_count": 2,
+    "fail_count": 2
+  }
+}

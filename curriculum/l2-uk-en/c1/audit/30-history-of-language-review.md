@@ -1,8 +1,8 @@
 # Audit Report: M30 — 30-history-of-language.md
-**Level:** C1 | **Module:** M30 | **Phase:** C1.2 | **Pedagogy:** Not Specified | **Target:** 4000
+**Level:** C1 | **Module:** M30 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:24:23
+**Generated:** 2026-01-26 22:29:13
 
 ## Configuration
 **Type:** C1-history
@@ -68,27 +68,31 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ⚠️ Too many activities: 12 (target 3-9); 1 fill-in with year answers
 - **Immersion:** 🇺🇦 98.9% (target 95-100% (history))
-- **Richness:** ✅ 99% (history)
+- **Richness:** ❌ 76% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
-**Module Type:** history
+**Score:** 76% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 4 | 3 | 100% | 24% | 23.8% |
-| engagement | 7 | 6 | 100% | 14% | 14.3% |
-| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
-| decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 8 | 4 | 100% | 10% | 9.5% |
-| visual | 7 | 4 | 100% | 10% | 9.5% |
-| variety | 0.99 | - | 99% | 5% | 4.7% |
-| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 5 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **100.0%** |
+| examples | 1 | 15 | 7% | 25% | 1.8% |
+| engagement | 7 | 5 | 100% | 19% | 18.7% |
+| variety | 0.99 | - | 99% | 12% | 12.4% |
+| cultural | 8 | 4 | 100% | 12% | 12.5% |
+| realworld | 5 | 3 | 100% | 12% | 12.5% |
+| visual | 7 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 5 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **76.6%** |
+
+### Dryness Flags & Fixes
+- ❌ **NO_EXAMPLES**
+  - FIX:
+    Add 24+ example sentences. Each grammar point needs 3-4 examples showing the pattern in context.
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -1,0 +1,49 @@
+{
+  "module": "94-b2-final-exam",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:28:49.128379Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-21T12:42:37.540627Z",
+    "meta": "2026-01-26T17:21:19.298877Z",
+    "activities": "2026-01-21T12:41:29.585128Z",
+    "vocabulary": "2026-01-21T22:54:39.301696Z",
+    "plan": "2026-01-26T17:21:19.298651Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "2566/1750 (raw: 2756) | pedagogy: 1 violations | richness: 83% < 95% min (grammar)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "18/15"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "8 < 10 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "8/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "3 Outline Compliance Errors"
+    ],
+    "pass_count": 3,
+    "fail_count": 1
+  }
+}

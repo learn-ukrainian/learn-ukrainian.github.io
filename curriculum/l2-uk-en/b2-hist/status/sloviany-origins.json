@@ -1,0 +1,47 @@
+{
+  "module": "sloviany-origins",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T23:11:05.080298Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-26T23:09:59.953328Z",
+    "meta": "2026-01-26T22:20:13.598217Z",
+    "activities": "2026-01-22T15:08:35.248522Z",
+    "vocabulary": "2026-01-25T14:01:58.010371Z",
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5581/4000 (raw: 5698)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "6/3"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "35/20"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

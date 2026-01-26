@@ -1,0 +1,50 @@
+{
+  "module": "55-honcharstvo-ta-rizbyarstvo",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:29:28.675241Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-10T16:28:37.357734Z",
+    "meta": "2026-01-26T17:21:19.498038Z",
+    "activities": "2026-01-10T16:29:14.277944Z",
+    "vocabulary": null,
+    "plan": "2026-01-26T17:21:19.497852Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "2390/3000 (raw: 2883)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "16/12"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 25 (soft target)"
+    },
+    "naturalness": {
+      "status": "fail",
+      "violations": 1,
+      "message": "0/10 (PENDING) - Naturalness check required"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "2 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
+    ],
+    "pass_count": 1,
+    "fail_count": 3
+  }
+}

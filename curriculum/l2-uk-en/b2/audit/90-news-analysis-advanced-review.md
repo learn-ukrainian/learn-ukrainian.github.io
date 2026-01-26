@@ -1,8 +1,8 @@
 # Audit Report: M90 — 90-news-analysis-advanced.md
-**Level:** B2 | **Module:** M90 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2 | **Module:** M90 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:24:00
+**Generated:** 2026-01-26 22:28:46
 
 ## Configuration
 **Type:** B2-history

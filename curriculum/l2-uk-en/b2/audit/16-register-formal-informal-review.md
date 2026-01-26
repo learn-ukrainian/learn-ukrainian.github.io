@@ -1,8 +1,8 @@
 # Audit Report: M16 — 16-register-formal-informal.md
-**Level:** B2 | **Module:** M16 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 1750
+**Level:** B2 | **Module:** M16 | **Phase:** B2 | **Pedagogy:** Not Specified | **Target:** 1750
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:23:12
+**Generated:** 2026-01-26 22:27:55
 
 ## Configuration
 **Type:** B2-grammar
@@ -69,36 +69,28 @@
 - **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
-- **Richness:** ❌ 74% < 95% min (style)
+- **Richness:** ✅ 95% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 74% (minimum: 95%)
-**Module Type:** style
+**Score:** 95% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| exemplar_texts | 0 | 2 | 0% | 25% | 0.0% |
-| model_answers | 100 | 3 | 100% | 20% | 20.0% |
+| examples | 100 | 24 | 100% | 20% | 20.0% |
 | engagement | 9 | 5 | 100% | 15% | 15.0% |
-| register_analysis | 15 | 5 | 100% | 15% | 15.0% |
-| visual | 9 | 4 | 100% | 10% | 10.0% |
-| variety | 0.89 | - | 89% | 5% | 4.5% |
-| cultural | 2 | - | 100% | 5% | 5.0% |
+| dialogues | 30 | 4 | 100% | 15% | 15.0% |
+| variety | 0.89 | - | 89% | 10% | 8.9% |
+| cultural | 2 | 3 | 67% | 10% | 6.7% |
+| realworld | 6 | 3 | 100% | 10% | 10.0% |
+| visual | 9 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **74.5%** |
-
-### Dryness Flags & Fixes
-- ❌ **NO_EXEMPLAR_TEXTS**
-  - FIX:
-    Add 2+ exemplar text excerpts. Use this format:
-    
-    **Зразок [style type]:**
-    
-    > «[Extended quote showing the style, 50+ words]»
-    > — *[Source]*
+| questions | 73 | 5 | 100% | 5% | 5.0% |
+| proverbs | 4 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **95.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

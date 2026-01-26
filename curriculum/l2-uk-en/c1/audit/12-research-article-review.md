@@ -1,8 +1,8 @@
 # Audit Report: M12 — 12-research-article.md
-**Level:** C1 | **Module:** M12 | **Phase:** C1.1 | **Pedagogy:** Not Specified | **Target:** 3000
+**Level:** C1 | **Module:** M12 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:24:11
+**Generated:** 2026-01-26 22:29:01
 
 ## Configuration
 **Type:** C1-grammar
@@ -70,40 +70,28 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.5% (target 90-100% (grammar))
-- **Richness:** ❌ 82% < 95% min (grammar) - REWRITE needed
+- **Richness:** ❌ 90% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 82% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 90% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 95 | 24 | 100% | 20% | 20.0% |
-| engagement | 7 | 5 | 100% | 15% | 15.0% |
-| dialogues | 1 | 4 | 25% | 15% | 3.8% |
-| variety | 1.00 | - | 100% | 10% | 10.0% |
-| cultural | 1 | 3 | 33% | 10% | 3.3% |
-| realworld | 9 | 3 | 100% | 10% | 10.0% |
-| visual | 8 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 17 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **82.0%** |
+| examples | 95 | 15 | 100% | 25% | 25.0% |
+| engagement | 7 | 5 | 100% | 19% | 18.7% |
+| variety | 1.00 | - | 100% | 12% | 12.5% |
+| cultural | 1 | 4 | 25% | 12% | 3.1% |
+| realworld | 9 | 3 | 100% | 12% | 12.5% |
+| visual | 8 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 17 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **90.6%** |
 
 ### Dryness Flags & Fixes
-- ❌ **LOW_DIALOGUE**
-  - FIX:
-    Add more mini-dialogues (need 4+ total). Use this exact format:
-    
-    **Діалог: [Location in Ukraine]**
-    
-    > — [Speaker 1 line with **bolded** grammar examples]
-    > — [Speaker 2 response with **bolded** grammar examples]
-    > — [Speaker 1 continuation]
-    > — [Speaker 2 conclusion]
 - ❌ **LOW_CULTURAL_ANCHOR**
   - FIX:
     Add more cultural references (need 3+ total). Include:

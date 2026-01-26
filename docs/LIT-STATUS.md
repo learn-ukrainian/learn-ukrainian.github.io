@@ -1,14 +1,14 @@
 # LIT Module Status
 
-**Generated:** 2026-01-25 19:28:38
+**Generated:** 2026-01-26 22:58:04
 **Total Modules:** 30
-**Status:** 0 passing, 28 failing, 2 stubs, 0 errors
+**Status:** 0 passing, 30 failing, 0 stubs, 0 errors
 
 ## Quick Summary
 
 - ✅ **Passing:** 0/30 (0%)
-- ❌ **Failing:** 28/30
-- 📝 **Stubs:** 2/30
+- ❌ **Failing:** 30/30
+- 📝 **Stubs:** 0/30
 
 ## Module Details
 
@@ -25,11 +25,11 @@
 | 009 | ethnography | ❌ FAIL | 4126/4000 | hydration, activities, structure |
 | 010 | kvitka-language | ❌ FAIL | 3752/4000 | hydration, word_count, activities, structure |
 | 011 | young-shevchenko | ❌ FAIL | 4039/4000 | activities, structure |
-| 012 | the-ballads | 📝 STUB | 0/0 | hydration, empty, activities, structure |
+| 012 | the-ballads | ❌ FAIL | 3919/4000 | hydration, activities, structure |
 | 013 | haidamaky | ❌ FAIL | 4007/4000 | hydration, activities, structure |
 | 014 | son | ❌ FAIL | 3543/4000 | hydration, word_count, activities, structure |
 | 015 | the-testament | ❌ FAIL | 3572/4000 | hydration, word_count, activities, structure |
-| 016 | biblical-themes | 📝 STUB | 0/0 | hydration, empty, activities, structure |
+| 016 | biblical-themes | ❌ FAIL | 3917/4000 | hydration, activities, structure |
 | 017 | the-artist | ❌ FAIL | 3564/4000 | hydration, word_count, activities, structure |
 | 018 | women-in-kobzar | ❌ FAIL | 3605/4000 | hydration, word_count, activities, structure |
 | 019 | shevchenkos-diary | ❌ FAIL | 3441/4000 | hydration, word_count, activities, structure |
@@ -39,11 +39,11 @@
 | 023 | black-council-plot | ❌ FAIL | 3773/4000 | hydration, word_count, activities, structure |
 | 024 | language-question-linguistics | ❌ FAIL | 3411/4000 | hydration, word_count, activities, structure |
 | 025 | cyrillo-methodian-brotherhood | ❌ FAIL | 3429/4000 | hydration, word_count, activities, structure |
-| 026 | nechuy-levytsky | ❌ FAIL | 3556/4000 | word_count, structure |
-| 027 | kaidash-family-characters | ❌ FAIL | 3541/4000 | word_count, structure |
-| 028 | kaidash-family-conflict | ❌ FAIL | 3444/4000 | word_count, structure |
-| 029 | language-of-realism | ❌ FAIL | 3557/4000 | word_count, activities, structure |
-| 030 | mykola-dzherya | ❌ FAIL | 3532/4000 | word_count, activities, structure |
+| 026 | nechuy-levytsky | ❌ FAIL | 3556/4000 | hydration, word_count, activities, structure |
+| 027 | kaidash-family-characters | ❌ FAIL | 3541/4000 | hydration, word_count, activities, structure |
+| 028 | kaidash-family-conflict | ❌ FAIL | 3444/4000 | hydration, word_count, activities, structure |
+| 029 | language-of-realism | ❌ FAIL | 3557/4000 | hydration, word_count, activities, structure |
+| 030 | mykola-dzherya | ❌ FAIL | 3532/4000 | hydration, word_count, activities, structure |
 
 ---
 

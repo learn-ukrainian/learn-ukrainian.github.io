@@ -1,8 +1,8 @@
 # Audit Report: M76 — 76-religion-in-ukraine.md
-**Level:** B2 | **Module:** M76 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2 | **Module:** M76 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:23:51
+**Generated:** 2026-01-26 22:28:36
 
 ## Configuration
 **Type:** B2-history
@@ -68,26 +68,28 @@
 - **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ⚠️ Too many activities: 15 (target 3-9)
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (history))
-- **Richness:** ✅ 95% (content)
+- **Richness:** ❌ 94% < 95% min (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 95% (minimum: 95%)
-**Module Type:** content
+**Score:** 94% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 21 | 15 | 100% | 25% | 25.0% |
-| engagement | 10 | 5 | 100% | 19% | 18.7% |
-| variety | 0.99 | - | 99% | 12% | 12.4% |
-| cultural | 8 | 4 | 100% | 12% | 12.5% |
-| realworld | 2 | 3 | 67% | 12% | 8.4% |
-| visual | 5 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 10 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **95.8%** |
+| examples | 21 | 24 | 88% | 20% | 17.6% |
+| engagement | 10 | 5 | 100% | 15% | 15.0% |
+| dialogues | 10 | 4 | 100% | 15% | 15.0% |
+| variety | 0.99 | - | 99% | 10% | 9.9% |
+| cultural | 8 | 3 | 100% | 10% | 10.0% |
+| realworld | 2 | 3 | 67% | 10% | 6.7% |
+| visual | 5 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 10 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **94.2%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

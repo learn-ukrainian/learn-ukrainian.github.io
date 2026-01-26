@@ -1,0 +1,49 @@
+{
+  "module": "bukovyna-zakarpattia",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:54:33.345345Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-25T21:31:52.412994Z",
+    "meta": "2026-01-26T22:20:12.967202Z",
+    "activities": "2026-01-25T21:29:25.302125Z",
+    "vocabulary": "2026-01-22T22:51:58.353660Z",
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "3736/4000 (raw: 3926)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "8/3"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 20 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "1 Outline Compliance Errors"
+    ],
+    "pass_count": 3,
+    "fail_count": 1
+  }
+}

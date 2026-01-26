@@ -1,7 +1,7 @@
 # Audit Report: M65 — 65-ukrainian-avant-garde.md
-**Level:** C1 | **Module:** M65 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 3000
+**Level:** C1 | **Module:** M65 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:24:44
+**Generated:** 2026-01-26 22:29:34
 
 ## Configuration
 **Type:** C1-cultural
@@ -56,26 +56,26 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (cultural))
-- **Richness:** ✅ 99% (cultural)
+- **Richness:** ✅ 95% (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
-**Module Type:** cultural
+**Score:** 95% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| cultural | 5 | 5 | 100% | 33% | 33.3% |
-| engagement | 10 | 6 | 100% | 20% | 20.0% |
-| visual | 11 | 4 | 100% | 13% | 13.3% |
-| variety | 0.99 | - | 99% | 7% | 6.6% |
-| paragraph_var | 1.00 | - | 100% | 7% | 6.7% |
-| examples | 48 | - | 100% | 7% | 6.7% |
-| realworld | 2 | - | 100% | 7% | 6.7% |
-| questions | 14 | 4 | 100% | 7% | 6.7% |
-| **TOTAL** | | | | | **99.9%** |
+| examples | 48 | 15 | 100% | 25% | 25.0% |
+| engagement | 10 | 5 | 100% | 19% | 18.7% |
+| variety | 0.99 | - | 99% | 12% | 12.4% |
+| cultural | 5 | 4 | 100% | 12% | 12.5% |
+| realworld | 2 | 3 | 67% | 12% | 8.4% |
+| visual | 11 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 14 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **95.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -1,0 +1,52 @@
+{
+  "module": "mykhailo-hrushevskyi-biography",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:56:25.241826Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-17T21:45:15.850388Z",
+    "meta": "2026-01-26T17:21:20.905176Z",
+    "activities": "2026-01-17T21:45:15.799053Z",
+    "vocabulary": null,
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "1947/4000 (raw: 2196) | pedagogy: 1 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "12/3"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 24 (soft target)"
+    },
+    "naturalness": {
+      "status": "fail",
+      "violations": 1,
+      "message": "1/10 (PENDING) - Naturalness check required"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Critical Template Violations",
+      "6 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
+      "Missing required activity types: reading"
+    ],
+    "pass_count": 1,
+    "fail_count": 3
+  }
+}

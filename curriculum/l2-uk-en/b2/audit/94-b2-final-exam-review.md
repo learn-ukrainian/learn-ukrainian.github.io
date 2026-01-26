@@ -1,8 +1,8 @@
 # Audit Report: M94 — 94-b2-final-exam.md
-**Level:** B2 | **Module:** M94 | **Phase:** B2.4 | **Pedagogy:** TTT | **Target:** 1750
+**Level:** B2 | **Module:** M94 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 1750
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:24:03
+**Generated:** 2026-01-26 22:28:49
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -67,25 +67,36 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (18 activities)
 - **Immersion:** 🇺🇦 99.1% (checkpoint - no gate)
-- **Richness:** ✅ 99% (checkpoint)
+- **Richness:** ❌ 83% < 95% min (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 85%)
-**Module Type:** checkpoint
+**Score:** 83% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| activity_types | 13 | 8 | 100% | 25% | 25.0% |
-| review_sections | 24 | 3 | 100% | 20% | 20.0% |
-| variety | 0.95 | - | 95% | 15% | 14.2% |
-| engagement | 3 | 3 | 100% | 10% | 10.0% |
-| cultural | 1 | - | 100% | 10% | 10.0% |
-| visual | 7 | 3 | 100% | 10% | 10.0% |
-| paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
-| **TOTAL** | | | | | **99.2%** |
+| examples | 38 | 24 | 100% | 20% | 20.0% |
+| engagement | 3 | 5 | 60% | 15% | 9.0% |
+| dialogues | 3 | 4 | 75% | 15% | 11.2% |
+| variety | 0.95 | - | 95% | 10% | 9.5% |
+| cultural | 1 | 3 | 33% | 10% | 3.3% |
+| realworld | 3 | 3 | 100% | 10% | 10.0% |
+| visual | 7 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 49 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **83.0%** |
+
+### Dryness Flags & Fixes
+- ❌ **LOW_CULTURAL_ANCHOR**
+  - FIX:
+    Add more cultural references (need 3+ total). Include:
+    - Named Ukrainian places (Поділ, Бесарабський ринок, Острозька академія)
+    - Ukrainian traditions or customs
+    - Contemporary Ukrainian life examples
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -1,8 +1,8 @@
 # Audit Report: M36 — bratstva-i-osvita.md
 **Level:** B2 | **Module:** M36 | **Phase:** B2.3a | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 22:22:45
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-26 23:34:55
 
 ## Configuration
 **Type:** B2-history
@@ -36,29 +36,20 @@
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
-## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Вступ, Європейський контекст: Реформація та Контрреформація
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ❌ 3842/4000 (raw: 4024)
+- **Words:** ✅ 4122/4000 (raw: 4298)
 - **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 8/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 20 (soft target)
+- **Vocab:** ✅ 30/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (8 activities)
-- **Immersion:** 🇺🇦 98.3% (target 90-100% (history))
+- **Immersion:** 🇺🇦 98.4% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -86,13 +77,13 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Братства та освіта: Острозька академія** | ⚪️ | 101 | Skipped |
-| **Вступ** | ✅ | 349 | Included in Core |
-| **Феномен братств: самоврядування та захист прав** | ⚪️ | 699 | Skipped |
+| **Вступ** | ✅ | 256 | Included in Core |
+| **Реформація та Контрреформація** | ⚪️ | 582 | Skipped |
+| **Феномен братств** | ⚪️ | 699 | Skipped |
 | **Освітня діяльність братств** | ⚪️ | 603 | Skipped |
 | **Острозька академія: «Волинські Афіни»** | ⚪️ | 536 | Skipped |
 | **Читання** | ✅ | 293 | Included in Core |
 | **Первинні джерела** | ✅ | 404 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 328 | Included in Core |
-| **Європейський контекст: Реформація та Контрреформація** | ✅ | 209 | Included in Core |
 | **Підсумок** | ✅ | 219 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 101 | Skipped |

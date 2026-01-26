@@ -1,7 +1,7 @@
 # Audit Report: M60 — 60-zymovi-obriady.md
-**Level:** C1 | **Module:** M60 | **Phase:** C1.5 | **Pedagogy:** Immersion & Analysis | **Target:** 3000
+**Level:** C1 | **Module:** M60 | **Phase:** C1 | **Pedagogy:** Immersion & Analysis | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:24:41
+**Generated:** 2026-01-26 22:29:31
 
 ## Configuration
 **Type:** C1

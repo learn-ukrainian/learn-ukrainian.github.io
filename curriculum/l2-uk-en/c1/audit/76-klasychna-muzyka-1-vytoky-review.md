@@ -1,7 +1,7 @@
 # Audit Report: M76 — 76-klasychna-muzyka-1-vytoky.md
-**Level:** C1 | **Module:** M76 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 3000
+**Level:** C1 | **Module:** M76 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:24:51
+**Generated:** 2026-01-26 22:29:41
 
 ## Configuration
 **Type:** C1-fine-arts

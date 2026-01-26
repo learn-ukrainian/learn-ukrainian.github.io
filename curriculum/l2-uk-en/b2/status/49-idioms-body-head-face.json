@@ -1,0 +1,49 @@
+{
+  "module": "49-idioms-body-head-face",
+  "level": "B2",
+  "plan_version": "1.0",
+  "last_audit": "2026-01-26T22:28:18.315937Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-12T00:35:33.372547Z",
+    "meta": "2026-01-26T17:21:19.195117Z",
+    "activities": "2026-01-12T00:39:21.761385Z",
+    "vocabulary": "2026-01-21T22:54:31.901930Z",
+    "plan": "2026-01-26T17:21:19.194889Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "2147/1750 (raw: 2510)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "12/10"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "14 < 35 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "2 Outline Compliance Errors"
+    ],
+    "pass_count": 4,
+    "fail_count": 0
+  }
+}

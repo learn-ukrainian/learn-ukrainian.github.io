@@ -1,8 +1,8 @@
 # Audit Report: M08 — 08-aspect-past-result-process.md
-**Level:** B1 | **Module:** M08 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M08 | **Phase:** B1 | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 19:22:09
+**Generated:** 2026-01-26 22:26:48
 
 ## Configuration
 **Type:** B1-grammar

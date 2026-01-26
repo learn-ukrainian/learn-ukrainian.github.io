@@ -1,7 +1,7 @@
 # Audit Report: M101 — 101-vovchok-myrnyi.md
-**Level:** C1 | **Module:** M101 | **Phase:** C1.6 | **Pedagogy:** Literary Analysis | **Target:** 3500
+**Level:** C1 | **Module:** M101 | **Phase:** C1 | **Pedagogy:** Literary Analysis | **Target:** 3500
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:25:07
+**Generated:** 2026-01-26 22:28:57
 
 ## Configuration
 **Type:** C1-literature
@@ -57,28 +57,36 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (13 activities)
 - **Immersion:** 🇺🇦 99.8% (target 90-100% (literature))
-- **Richness:** ✅ 100% (literature)
+- **Richness:** ❌ 84% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 100% (minimum: 90%)
-**Module Type:** literature
+**Score:** 84% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
-| literary_citations | 13 | 5 | 100% | 17% | 17.4% |
-| engagement | 5 | 4 | 100% | 13% | 13.0% |
-| historical_context | 17 | 3 | 100% | 13% | 13.0% |
-| essays | 5 | 2 | 100% | 13% | 13.0% |
-| resources | 6 | 3 | 100% | 9% | 8.7% |
-| variety | 1.00 | - | 100% | 4% | 4.3% |
-| cultural | 3 | - | 100% | 4% | 4.3% |
-| visual | 7 | 1 | 100% | 4% | 4.3% |
-| paragraph_var | 1.00 | - | 100% | 4% | 4.3% |
-| **TOTAL** | | | | | **100.0%** |
+| examples | 41 | 15 | 100% | 25% | 25.0% |
+| engagement | 5 | 5 | 100% | 19% | 18.7% |
+| variety | 1.00 | - | 100% | 12% | 12.5% |
+| cultural | 3 | 4 | 75% | 12% | 9.4% |
+| realworld | 0 | 3 | 0% | 12% | 0.0% |
+| visual | 7 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 30 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **84.4%** |
+
+### Dryness Flags & Fixes
+- ❌ **ABSTRACT_ONLY**
+  - FIX:
+    Add 3+ real-world boxes. Use this exact format:
+    
+    > 🌍 **У реальному житті**
+    >
+    > [Specific scenario: "На співбесіді...", "У магазині...", "На вокзалі..."]
+    > [Example sentence showing grammar in that context]
 
 ## Section Audit
 | Section | Status | Count | Notes |

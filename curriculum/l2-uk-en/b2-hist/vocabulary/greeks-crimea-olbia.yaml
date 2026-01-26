@@ -2,153 +2,149 @@ module: greeks-crimea-olbia
 level: B2-HIST
 version: '2.0'
 items:
-  - lemma: колонія
-    ipa: /kɔˈlɔnʲijɑ/
-    translation: colony
-    pos: noun
-    gender: f
-  - lemma: місто-держава
-    ipa: /mʲistɔ dɛrˈʒɑwɑ/
-    translation: city-state
-    pos: noun
-    gender: n
-  - lemma: поліс
-    ipa: /ˈpɔlʲis/
-    translation: polis
-    pos: noun
-    gender: m
-  - lemma: агора
-    ipa: /ɑˈɦɔrɑ/
-    translation: agora
-    pos: noun
-    gender: f
-  - lemma: демократія
-    ipa: /dɛmɔˈkrɑtʲijɑ/
-    translation: democracy
-    pos: noun
-    gender: f
-  - lemma: торгівля
-    ipa: /tɔrˈɦʲiwlʲɑ/
-    translation: trade
-    pos: noun
-    gender: f
-  - lemma: храм
-    ipa: /xrɑm/
-    translation: temple
-    pos: noun
-    gender: m
-  - lemma: гирло
-    ipa: /ˈɦɪrlɔ/
-    translation: river mouth
-    pos: noun
-    gender: n
-  - lemma: Причорномор'я
-    ipa: /prɪt͡ʃɔrnɔˈmɔrjɑ/
-    translation: Black Sea region
-    pos: noun
-    gender: n
-  - lemma: античний
-    ipa: /ɑnˈtɪt͡ʃnɪj/
-    translation: ancient/classical
-    pos: adj
-    gender: m
-  - lemma: громадянин
-    ipa: /hrɔmɑdʲɑˈnɪn/
-    translation: citizen
-    pos: noun
-    gender: m
-  - lemma: республіка
-    ipa: /rɛsˈpublʲikɑ/
-    translation: republic
-    pos: noun
-    gender: f
-  - lemma: милетяни
-    ipa: /mɪlɛˈtʲɑnɪ/
-    translation: Miletians
-    pos: noun
-    gender: pl
-  - lemma: дорійці
-    ipa: /dɔˈrʲijtsʲi/
-    translation: Dorians
-    pos: noun
-    gender: pl
-  - lemma: виноробство
-    ipa: /wɪnɔˈrɔbstwɔ/
-    translation: winemaking
-    pos: noun
-    gender: n
-  - lemma: амфора
-    ipa: /ˈɑmfɔrɑ/
-    translation: amphora
-    pos: noun
-    gender: f
-  - lemma: некрополь
-    ipa: /nɛˈkrɔpɔlʲ/
-    translation: necropolis
-    pos: noun
-    gender: m
-  - lemma: акрополь
-    ipa: /ɑˈkrɔpɔlʲ/
-    translation: acropolis
-    pos: noun
-    gender: m
-  - lemma: хора
-    ipa: /ˈxɔrɑ/
-    translation: chora (agricultural territory)
-    pos: noun
-    gender: f
-  - lemma: клер
-    ipa: /klɛr/
-    translation: kleros (plot of land)
-    pos: noun
-    gender: m
-  - lemma: піфос
-    ipa: /ˈpifɔs/
-    translation: pithos (large storage jar)
-    pos: noun
-    gender: m
-  - lemma: стратег
-    ipa: /strɑˈtɛh/
-    translation: strategos (general)
-    pos: noun
-    gender: m
-  - lemma: гімнасій
-    ipa: /ɦimˈnɑsʲij/
-    translation: gymnasium
-    pos: noun
-    gender: m
-  - lemma: театр
-    ipa: /tɛˈɑtr/
-    translation: theater
-    pos: noun
-    gender: m
-  - lemma: ойкіст
-    ipa: /ɔjˈkʲist/
-    translation: oikist (founder of a colony)
-    pos: noun
-    gender: m
-  - lemma: Понт
-    ipa: /pɔnt/
-    translation: Pontus (Black Sea)
-    pos: noun
-    gender: m
-  - lemma: Пантікапей
-    ipa: /pɑntʲikɑˈpɛj/
-    translation: Panticapaeum
-    pos: noun
-    gender: m
-  - lemma: Тіра
-    ipa: /ˈtʲirɑ/
-    translation: Tyras
-    pos: noun
-    gender: f
-  - lemma: монета
-    ipa: /mɔˈnɛtɑ/
-    translation: coin
-    pos: noun
-    gender: f
-  - lemma: варвар
-    ipa: /ˈwɑrwɑr/
-    translation: barbarian
-    pos: noun
-    gender: m
+- lemma: колонія
+  ipa: /kɔˈlɔnʲijɑ/
+  translation: colony
+  pos: noun
+  gender: f
+- lemma: місто-держава
+  ipa: /mʲistɔ dɛrˈʒɑwɑ/
+  translation: city-state
+  pos: noun
+  gender: f
+- lemma: поліс
+  ipa: /ˈpɔlʲis/
+  translation: polis
+  pos: noun
+  gender: m
+- lemma: агора
+  ipa: /ɑˈɦɔrɑ/
+  translation: agora
+  pos: noun
+  gender: f
+- lemma: демократія
+  ipa: /dɛmɔˈkrɑtʲijɑ/
+  translation: democracy
+  pos: noun
+  gender: f
+- lemma: торгівля
+  ipa: /tɔrˈɦʲiwlʲɑ/
+  translation: trade
+  pos: noun
+  gender: f
+- lemma: храм
+  ipa: /xrɑm/
+  translation: temple
+  pos: noun
+  gender: m
+- lemma: гирло
+  ipa: /ˈɦɪrlɔ/
+  translation: river mouth
+  pos: noun
+  gender: n
+- lemma: причорномор'я
+  ipa: /prɪt͡ʃɔrnɔˈmɔrjɑ/
+  translation: Black Sea region
+  pos: noun
+  gender: n
+- lemma: античний
+  ipa: /ɑnˈtɪt͡ʃnɪj/
+  translation: ancient/classical
+  pos: adj
+- lemma: громадянин
+  ipa: /hrɔmɑdʲɑˈnɪn/
+  translation: citizen
+  pos: noun
+  gender: m
+- lemma: республіка
+  ipa: /rɛsˈpublʲikɑ/
+  translation: republic
+  pos: noun
+  gender: f
+- lemma: милетяна
+  ipa: /mɪlɛˈtʲɑnɪ/
+  translation: Miletians
+  pos: noun
+  gender: f
+- lemma: дорієць
+  ipa: /dɔˈrʲijtsʲi/
+  translation: Dorians
+  pos: noun
+  gender: m
+- lemma: виноробство
+  ipa: /wɪnɔˈrɔbstwɔ/
+  translation: winemaking
+  pos: noun
+  gender: n
+- lemma: амфора
+  ipa: /ˈɑmfɔrɑ/
+  translation: amphora
+  pos: noun
+  gender: f
+- lemma: некрополь
+  ipa: /nɛˈkrɔpɔlʲ/
+  translation: necropolis
+  pos: noun
+  gender: m
+- lemma: акрополь
+  ipa: /ɑˈkrɔpɔlʲ/
+  translation: acropolis
+  pos: noun
+  gender: m
+- lemma: хорий
+  ipa: /ˈxɔrɑ/
+  translation: chora (agricultural territory)
+  pos: adj
+- lemma: клер
+  ipa: /klɛr/
+  translation: kleros (plot of land)
+  pos: noun
+  gender: f
+- lemma: піфос
+  ipa: /ˈpifɔs/
+  translation: pithos (large storage jar)
+  pos: noun
+  gender: m
+- lemma: стратег
+  ipa: /strɑˈtɛh/
+  translation: strategos (general)
+  pos: noun
+  gender: m
+- lemma: гімнасіяти
+  ipa: /ɦimˈnɑsʲij/
+  translation: gymnasium
+  pos: verb
+- lemma: театр
+  ipa: /tɛˈɑtr/
+  translation: theater
+  pos: noun
+  gender: m
+- lemma: ойкіста
+  ipa: /ɔjˈkʲist/
+  translation: oikist (founder of a colony)
+  pos: noun
+- lemma: понт
+  ipa: /pɔnt/
+  translation: Pontus (Black Sea)
+  pos: noun
+  gender: m
+- lemma: пантікапей
+  ipa: /pɑntʲikɑˈpɛj/
+  translation: Panticapaeum
+  pos: noun
+  gender: m
+- lemma: тіра
+  ipa: /ˈtʲirɑ/
+  translation: Tyras
+  pos: noun
+  gender: f
+- lemma: монета
+  ipa: /mɔˈnɛtɑ/
+  translation: coin
+  pos: noun
+  gender: f
+- lemma: варвар
+  ipa: /ˈwɑrwɑr/
+  translation: barbarian
+  pos: noun
+  gender: m

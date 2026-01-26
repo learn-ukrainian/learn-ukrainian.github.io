@@ -1,0 +1,50 @@
+{
+  "module": "17-register-business-ukrainian",
+  "level": "B2",
+  "plan_version": "1.0",
+  "last_audit": "2026-01-26T22:27:55.793308Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-11T21:19:38.055387Z",
+    "meta": "2026-01-26T17:21:19.116799Z",
+    "activities": "2026-01-14T13:27:12.540753Z",
+    "vocabulary": "2026-01-21T22:54:26.730886Z",
+    "plan": "2026-01-26T17:21:19.116586Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "2164/1750 (raw: 2968) | pedagogy: 2 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "14/10"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "9 < 25 (soft target)"
+    },
+    "naturalness": {
+      "status": "fail",
+      "violations": 1,
+      "message": "1/10 (PENDING) - Naturalness check required"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "7 Outline Compliance Errors",
+      "Missing required activity types: reading"
+    ],
+    "pass_count": 2,
+    "fail_count": 2
+  }
+}

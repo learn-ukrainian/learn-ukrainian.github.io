@@ -1,8 +1,8 @@
 # Audit Report: M54 — 54-expressing-opinions.md
-**Level:** B1 | **Module:** M54 | **Phase:** B1.5 | **Pedagogy:** PPP | **Target:** 1500
+**Level:** B1 | **Module:** M54 | **Phase:** B1 | **Pedagogy:** PPP | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 19:22:38
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-26 22:27:18
 
 ## Configuration
 **Type:** B1-vocab
@@ -11,6 +11,7 @@
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
 **Priority Types:** mark-the-words, match-up, quiz, translate
+**Required Types:** fill-in, role-play, transformation, writing
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥35 words
@@ -40,7 +41,17 @@
 - Total activities: 16 (target: 8-12) ❌
 - Unique types: 11 (minimum: 4) ✅
 - Priority types used: 4/4 (mark-the-words, match-up, quiz, translate) ✅
+- Required types used: 1/4 (fill-in) ❌
 - Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['transformation', 'role-play', 'writing']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
+  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1632/1500 (raw: 2348)
@@ -53,29 +64,31 @@
 - **Vocab:** ✅ 36/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 85-100% (B1.5-6 Vocab))
-- **Richness:** ✅ 99% (vocabulary)
+- **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
-**Module Type:** vocabulary
+**Score:** 96% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| collocations | 30 | 20 | 100% | 25% | 25.0% |
-| usage_examples | 20 | 15 | 100% | 20% | 20.0% |
-| engagement | 11 | 4 | 100% | 15% | 15.0% |
+| examples | 20 | 24 | 83% | 20% | 16.6% |
+| engagement | 11 | 5 | 100% | 15% | 15.0% |
+| dialogues | 15 | 4 | 100% | 15% | 15.0% |
+| variety | 0.94 | - | 94% | 10% | 9.4% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
-| visual | 8 | 3 | 100% | 10% | 10.0% |
-| register_notes | 15 | 5 | 100% | 10% | 10.0% |
-| variety | 0.94 | - | 94% | 5% | 4.7% |
+| realworld | 4 | 3 | 100% | 10% | 10.0% |
+| visual | 8 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.7%** |
+| questions | 24 | 5 | 100% | 5% | 5.0% |
+| proverbs | 1 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **96.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

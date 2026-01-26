@@ -2,7 +2,7 @@
 **Level:** LIT | **Module:** M25 | **Phase:** LIT.4 | **Pedagogy:** Analysis | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:28:32
+**Generated:** 2026-01-26 22:57:58
 
 ## Configuration
 **Type:** LIT-history
@@ -58,27 +58,28 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 99.9% (target 95-100% (history))
-- **Richness:** ✅ 99% (history)
+- **Richness:** ❌ 86% < 90% min (literature)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
-**Module Type:** history
+**Score:** 86% (minimum: 90%)
+**Module Type:** literature
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 15 | 3 | 100% | 24% | 23.8% |
-| engagement | 22 | 6 | 100% | 14% | 14.3% |
-| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
-| decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 9 | 4 | 100% | 10% | 9.5% |
-| visual | 23 | 4 | 100% | 10% | 9.5% |
-| variety | 0.99 | - | 99% | 5% | 4.7% |
-| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 9 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **100.0%** |
+| analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
+| literary_citations | 15 | 5 | 100% | 17% | 17.4% |
+| engagement | 22 | 4 | 100% | 13% | 13.0% |
+| historical_context | 30 | 3 | 100% | 13% | 13.0% |
+| essays | 0 | 2 | 0% | 13% | 0.0% |
+| resources | 4 | 3 | 100% | 9% | 8.7% |
+| variety | 0.99 | - | 99% | 4% | 4.3% |
+| cultural | 9 | - | 100% | 4% | 4.3% |
+| visual | 23 | 1 | 100% | 4% | 4.3% |
+| paragraph_var | 1.00 | - | 100% | 4% | 4.3% |
+| **TOTAL** | | | | | **86.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -1,8 +1,8 @@
 # Audit Report: M53 — 53-idioms-animals-ii.md
-**Level:** B2 | **Module:** M53 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 1750
+**Level:** B2 | **Module:** M53 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:23:36
+**Generated:** 2026-01-26 22:28:20
 
 ## Configuration
 **Type:** B2-vocab
@@ -63,26 +63,28 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (vocab))
-- **Richness:** ✅ 99% (phraseology)
+- **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
-**Module Type:** phraseology
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| engagement | 9 | 4 | 100% | 25% | 25.0% |
-| variety | 0.99 | - | 99% | 17% | 16.5% |
-| cultural | 6 | - | 100% | 17% | 16.7% |
-| visual | 3 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 0.97 | - | 97% | 8% | 8.1% |
-| examples | 24 | - | 100% | 8% | 8.3% |
-| realworld | 8 | - | 100% | 8% | 8.3% |
-| questions | 14 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **99.6%** |
+| examples | 24 | 24 | 100% | 20% | 20.0% |
+| engagement | 9 | 5 | 100% | 15% | 15.0% |
+| dialogues | 11 | 4 | 100% | 15% | 15.0% |
+| variety | 0.99 | - | 99% | 10% | 9.9% |
+| cultural | 6 | 3 | 100% | 10% | 10.0% |
+| realworld | 8 | 3 | 100% | 10% | 10.0% |
+| visual | 3 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.97 | - | 97% | 5% | 4.9% |
+| questions | 14 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

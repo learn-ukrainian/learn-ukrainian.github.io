@@ -1,0 +1,88 @@
+module: liudy-ricchi-pospolytoi
+level: B2-HIST
+version: '2.0'
+items:
+  - lemma: шляхта
+    translation: szlachta, nobility
+    note: Polish-Lithuanian noble class with exclusive political rights
+  - lemma: магнат
+    translation: magnate
+    note: Great landowner, member of the highest aristocracy
+  - lemma: посполиті
+    translation: common people, peasants
+    note: Term for ordinary peasants (from "pospolity" - common)
+  - lemma: панщина
+    translation: serfdom, corvée labor
+    note: Obligatory unpaid labor on lord's land
+  - lemma: кріпацтво
+    translation: serfdom
+    note: System of binding peasants to the land
+  - lemma: фільварок
+    translation: folwark, manorial farm
+    note: Lord's estate oriented toward grain export
+  - lemma: магдебурзьке право
+    translation: Magdeburg law
+    note: System of urban self-governance borrowed from Germany
+  - lemma: магістрат
+    translation: magistrate, city council
+    note: Urban governing body under Magdeburg law
+  - lemma: міщани
+    translation: burghers, townspeople
+    note: Urban residents with certain privileges
+  - lemma: цех
+    translation: guild
+    note: Craft association that regulated production and trade
+  - lemma: братство
+    translation: brotherhood
+    note: Orthodox civic organization (e.g., Lviv Dormition Brotherhood)
+  - lemma: полонізація
+    translation: Polonization
+    note: Process of adopting Polish language, religion, culture
+  - lemma: золота свобода
+    translation: golden liberty (złota wolność)
+    note: Szlachta's extensive political privileges
+  - lemma: сейм
+    translation: Sejm, parliament
+    note: Legislative assembly of the Commonwealth
+  - lemma: liberum veto
+    translation: liberum veto
+    note: Right of any nobleman to block Sejm decisions
+  - lemma: латифундія
+    translation: latifundium, large estate
+    note: Extensive landholding controlled by magnates
+  - lemma: орендар
+    translation: leaseholder, tenant
+    note: Often Jewish entrepreneur leasing estates or taverns
+  - lemma: арендна система
+    translation: lease system
+    note: System where magnates leased towns/villages to entrepreneurs
+  - lemma: православний
+    translation: Orthodox
+    note: Member of Eastern Orthodox Church
+  - lemma: уніат
+    translation: Uniate
+    note: Member of Greek Catholic Church after Union of Brest 1596
+  - lemma: станова ієрархія
+    translation: estate hierarchy, class system
+    note: Social stratification based on legal estates
+  - lemma: привілей
+    translation: privilege, charter
+    note: Legal document granting rights or exemptions
+  - lemma: юрисдикція
+    translation: jurisdiction
+    note: Legal authority over territory or people
+  - lemma: закріпачення
+    translation: enserfment
+    note: Process of binding peasants to land and lord
+  - lemma: соціальна мобільність
+    translation: social mobility
+    note: Ability to move between social classes
+  - lemma: експлуатація
+    translation: exploitation
+    note: Economic extraction of labor or resources
+  - lemma: пригноблення
+    translation: oppression, subjugation
+    note: Systematic suppression of rights or freedoms
+  - lemma: станове суспільство
+    translation: estate society
+    note: Society organized by legal estates with different rights

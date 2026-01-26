@@ -1,7 +1,7 @@
 # Audit Report: M98 — 98-franko-proza.md
-**Level:** C1 | **Module:** M98 | **Phase:** C1.6 | **Pedagogy:** Literary Analysis | **Target:** 3500
+**Level:** C1 | **Module:** M98 | **Phase:** C1 | **Pedagogy:** Literary Analysis | **Target:** 3500
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:25:05
+**Generated:** 2026-01-26 22:29:56
 
 ## Configuration
 **Type:** C1-literature
@@ -57,28 +57,26 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (13 activities)
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (literature))
-- **Richness:** ✅ 99% (literature)
+- **Richness:** ❌ 89% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 99% (minimum: 90%)
-**Module Type:** literature
+**Score:** 89% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
-| literary_citations | 8 | 5 | 100% | 17% | 17.4% |
-| engagement | 5 | 4 | 100% | 13% | 13.0% |
-| historical_context | 15 | 3 | 100% | 13% | 13.0% |
-| essays | 5 | 2 | 100% | 13% | 13.0% |
-| resources | 5 | 3 | 100% | 9% | 8.7% |
-| variety | 0.99 | - | 99% | 4% | 4.3% |
-| cultural | 2 | - | 100% | 4% | 4.3% |
-| visual | 7 | 1 | 100% | 4% | 4.3% |
-| paragraph_var | 1.00 | - | 100% | 4% | 4.3% |
-| **TOTAL** | | | | | **100.0%** |
+| examples | 42 | 15 | 100% | 25% | 25.0% |
+| engagement | 5 | 5 | 100% | 19% | 18.7% |
+| variety | 0.99 | - | 99% | 12% | 12.4% |
+| cultural | 2 | 4 | 50% | 12% | 6.2% |
+| realworld | 2 | 3 | 67% | 12% | 8.4% |
+| visual | 7 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 23 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **89.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

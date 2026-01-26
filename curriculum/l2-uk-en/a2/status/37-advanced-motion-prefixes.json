@@ -1,0 +1,47 @@
+{
+  "module": "37-advanced-motion-prefixes",
+  "level": "A2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:26:24.265875Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-26T08:29:41.146168Z",
+    "meta": "2026-01-26T17:21:18.906857Z",
+    "activities": "2026-01-26T08:31:06.848543Z",
+    "vocabulary": "2026-01-25T15:44:11.401094Z",
+    "plan": "2026-01-26T17:21:18.906479Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "1390/1000 (raw: 1492)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "28/1"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

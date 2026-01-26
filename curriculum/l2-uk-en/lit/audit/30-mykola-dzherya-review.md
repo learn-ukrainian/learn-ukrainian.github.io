@@ -1,17 +1,17 @@
 # Audit Report: M30 — 30-mykola-dzherya.md
-**Level:** LIT | **Module:** M30 | **Phase:** LIT.5 | **Pedagogy:** analysis | **Target:** 4000
+**Level:** LIT | **Module:** M30 | **Phase:** LIT.5 | **Pedagogy:** Seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:28:38
+**Generated:** 2026-01-26 22:58:04
 
 ## Configuration
-**Type:** LIT
+**Type:** LIT-literature
 **Word Target:** 4000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** critical-analysis, essay-response, reading
+**Required Types:** cloze, essay-response, match-up, quiz, reading
 **Engagement:** ≥4 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥0 words
@@ -30,14 +30,14 @@
 - Total activities: 5 (target: 3-9) ✅
 - Unique types: 5 (minimum: 2) ✅
 - Priority types used: 2/4 (essay-response, reading) ✅
-- Required types used: 2/3 (essay-response, reading) ❌
+- Required types used: 4/5 (essay-response, match-up, quiz, reading) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[INVALID_META_YAML]** Meta YAML Schema Violation at 'root': 'id' is a required property
-  - FIX: Correct the YAML structure to match schemas/meta-module.schema.json
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'втік з...'.
   - FIX: Vary sentence structure.
+- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: literature) missing advanced activity type: critical-analysis
+  - FIX: Add a critical-analysis activity to meet advanced richness standards.
 
 ## Recommendation
 **📝 UPDATE** (severity 25/100)
@@ -57,8 +57,8 @@
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 2 violations
-- **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.6% (target 95-100%)
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Immersion:** 🇺🇦 99.6% (target 95-100% (literature))
 - **Richness:** ✅ 92% (literature)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)

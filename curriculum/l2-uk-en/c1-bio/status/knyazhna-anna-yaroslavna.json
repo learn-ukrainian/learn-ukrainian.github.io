@@ -1,0 +1,51 @@
+{
+  "module": "knyazhna-anna-yaroslavna",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:55:55.824236Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-19T17:36:36.727294Z",
+    "meta": "2026-01-26T17:21:20.799403Z",
+    "activities": "2026-01-19T17:44:34.282537Z",
+    "vocabulary": null,
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4091/4000 (raw: 4296)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "8/3"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 24 (soft target)"
+    },
+    "naturalness": {
+      "status": "fail",
+      "violations": 1,
+      "message": "10/10 (APPROVED) - Naturalness check required"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
+      "Missing required activity types: fill-in, group-sort, match-up, quiz"
+    ],
+    "pass_count": 2,
+    "fail_count": 2
+  }
+}

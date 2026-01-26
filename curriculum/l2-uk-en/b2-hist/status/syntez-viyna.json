@@ -1,0 +1,52 @@
+{
+  "module": "syntez-viyna",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:55:38.402220Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-25T21:34:08.806083Z",
+    "meta": "2026-01-26T22:20:13.687285Z",
+    "activities": "2026-01-25T21:29:25.360483Z",
+    "vocabulary": null,
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "1872/4000 (raw: 2338) | pedagogy: 2 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "16/3"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 20 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "1 Critical Template Violations",
+      "4 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
+      "Missing required activity types: reading, timeline"
+    ],
+    "pass_count": 2,
+    "fail_count": 2
+  }
+}

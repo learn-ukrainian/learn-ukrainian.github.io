@@ -1,0 +1,51 @@
+{
+  "module": "08-konotop-witch",
+  "level": "LIT",
+  "plan_version": "1.0",
+  "last_audit": "2026-01-26T22:57:40.723070Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-18T20:57:43.996974Z",
+    "meta": "2026-01-26T17:21:21.799254Z",
+    "activities": "2026-01-18T20:57:41.859381Z",
+    "vocabulary": null,
+    "plan": "2026-01-26T17:21:21.798947Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "3630/4000 (raw: 4299) | pedagogy: 2 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4/3"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "0/0"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
+      "Missing required activity types: group-sort, match-up, quiz"
+    ],
+    "pass_count": 3,
+    "fail_count": 2
+  }
+}

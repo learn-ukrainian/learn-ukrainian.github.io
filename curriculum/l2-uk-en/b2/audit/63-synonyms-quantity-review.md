@@ -1,8 +1,8 @@
 # Audit Report: M63 — 63-synonyms-quantity.md
-**Level:** B2 | **Module:** M63 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 1750
+**Level:** B2 | **Module:** M63 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:23:43
+**Generated:** 2026-01-26 22:28:27
 
 ## Configuration
 **Type:** B2-vocab
@@ -64,26 +64,28 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 90-100% (vocab))
-- **Richness:** ✅ 98% (phraseology)
+- **Richness:** ✅ 95% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 98% (minimum: 95%)
-**Module Type:** phraseology
+**Score:** 95% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| engagement | 7 | 4 | 100% | 25% | 25.0% |
-| variety | 0.99 | - | 99% | 17% | 16.5% |
-| cultural | 2 | - | 100% | 17% | 16.7% |
-| visual | 4 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 0.88 | - | 88% | 8% | 7.3% |
-| examples | 57 | - | 100% | 8% | 8.3% |
-| realworld | 6 | - | 100% | 8% | 8.3% |
-| questions | 8 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **98.8%** |
+| examples | 57 | 24 | 100% | 20% | 20.0% |
+| engagement | 7 | 5 | 100% | 15% | 15.0% |
+| dialogues | 5 | 4 | 100% | 15% | 15.0% |
+| variety | 0.99 | - | 99% | 10% | 9.9% |
+| cultural | 2 | 3 | 67% | 10% | 6.7% |
+| realworld | 6 | 3 | 100% | 10% | 10.0% |
+| visual | 4 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.88 | - | 88% | 5% | 4.4% |
+| questions | 8 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **96.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

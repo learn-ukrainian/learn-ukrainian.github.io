@@ -1,8 +1,8 @@
 # Audit Report: M05 — 05-third-person-plural-passive.md
-**Level:** B2 | **Module:** M05 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 1750
+**Level:** B2 | **Module:** M05 | **Phase:** B2 | **Pedagogy:** Not Specified | **Target:** 1750
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:23:05
+**Generated:** 2026-01-26 22:27:47
 
 ## Configuration
 **Type:** B2-grammar

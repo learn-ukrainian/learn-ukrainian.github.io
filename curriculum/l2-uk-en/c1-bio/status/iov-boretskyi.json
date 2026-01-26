@@ -1,0 +1,51 @@
+{
+  "module": "iov-boretskyi",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:56:02.880972Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-21T10:46:24.797725Z",
+    "meta": "2026-01-26T17:21:20.724982Z",
+    "activities": "2026-01-19T17:57:25.316198Z",
+    "vocabulary": null,
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4280/4000 (raw: 4523)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "8/3"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 24 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "4 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
+      "Missing required activity types: fill-in, group-sort, match-up, quiz"
+    ],
+    "pass_count": 3,
+    "fail_count": 1
+  }
+}

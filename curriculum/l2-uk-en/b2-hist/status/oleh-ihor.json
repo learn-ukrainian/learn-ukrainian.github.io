@@ -1,0 +1,47 @@
+{
+  "module": "oleh-ihor",
+  "level": "B2",
+  "plan_version": "1.0",
+  "last_audit": "2026-01-26T23:19:21.093942Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-25T10:34:00.390939Z",
+    "meta": "2026-01-26T22:20:13.369483Z",
+    "activities": "2026-01-25T10:28:21.022317Z",
+    "vocabulary": "2026-01-25T10:25:38.327953Z",
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4102/4000 (raw: 4311)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "11/3"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "25/20"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

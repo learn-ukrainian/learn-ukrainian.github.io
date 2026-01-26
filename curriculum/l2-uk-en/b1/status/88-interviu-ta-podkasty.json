@@ -1,0 +1,50 @@
+{
+  "module": "88-interviu-ta-podkasty",
+  "level": "B1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:27:40.873410Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-11T20:36:11.332999Z",
+    "meta": "2026-01-26T15:44:41.735535Z",
+    "activities": "2026-01-11T23:20:02.221226Z",
+    "vocabulary": "2026-01-25T18:00:40.762777Z",
+    "plan": "2026-01-26T15:44:41.734816Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "2162/1500 (raw: 2271) | pedagogy: 1 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "11/10"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "53/15"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Outline Compliance Errors",
+      "Missing required activity types: discussion, listening, matching, note-taking"
+    ],
+    "pass_count": 4,
+    "fail_count": 1
+  }
+}

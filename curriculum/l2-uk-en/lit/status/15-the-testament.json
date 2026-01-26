@@ -1,0 +1,51 @@
+{
+  "module": "15-the-testament",
+  "level": "LIT",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:57:47.621715Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-17T23:36:08.507491Z",
+    "meta": "2026-01-26T17:21:21.831404Z",
+    "activities": "2026-01-18T21:38:35.704314Z",
+    "vocabulary": null,
+    "plan": "2026-01-26T17:21:21.831167Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "3572/4000 (raw: 4454)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4/3"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "0/0"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
+      "Missing required activity types: cloze, match-up, quiz"
+    ],
+    "pass_count": 3,
+    "fail_count": 2
+  }
+}

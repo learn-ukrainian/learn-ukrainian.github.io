@@ -1,8 +1,8 @@
 # Audit Report: M13 — 13-emphasis-and-inversion.md
-**Level:** B2 | **Module:** M13 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 1750
+**Level:** B2 | **Module:** M13 | **Phase:** B2 | **Pedagogy:** Not Specified | **Target:** 1750
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:23:10
+**Generated:** 2026-01-26 22:27:52
 
 ## Configuration
 **Type:** B2-grammar

@@ -1,0 +1,49 @@
+{
+  "module": "57-synonyms-movement",
+  "level": "B2",
+  "plan_version": "1.0",
+  "last_audit": "2026-01-26T22:28:23.673372Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-14T21:51:21.487209Z",
+    "meta": "2026-01-26T17:21:19.211485Z",
+    "activities": "2026-01-11T23:54:52.684276Z",
+    "vocabulary": "2026-01-21T22:54:32.786959Z",
+    "plan": "2026-01-26T17:21:19.211235Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "1814/1750 (raw: 2025) | pedagogy: 1 violations | richness: 84% < 95% min (grammar)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "15/10"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "6 < 35 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "4 Outline Compliance Errors"
+    ],
+    "pass_count": 3,
+    "fail_count": 1
+  }
+}

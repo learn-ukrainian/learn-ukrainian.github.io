@@ -1,8 +1,8 @@
 # Audit Report: M70 — 70-a2-final-exam.md
-**Level:** A2 | **Module:** M70 | **Phase:** A2.4 | **Pedagogy:** TTT | **Target:** 800
+**Level:** A2 | **Module:** M70 | **Phase:** A2 | **Pedagogy:** TTT | **Target:** 800
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 08:59:47
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-26 22:26:43
 
 ## Configuration
 **Type:** A2-checkpoint
@@ -11,6 +11,7 @@
 **Items per Activity:** ≥10 items
 **Unique Types:** ≥4 types required
 **Priority Types:** error-correction, fill-in, quiz
+**Required Types:** listening, quiz, reading-comprehension, speaking
 **Engagement:** ≥3 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
@@ -34,16 +35,19 @@
 - Total activities: 10 (target: 10-14) ✅
 - Unique types: 10 (minimum: 4) ✅
 - Priority types used: 3/3 (error-correction, fill-in, quiz) ✅
+- Required types used: 1/4 (quiz) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: кличний, недоконаний, місцевий, знахідний, орудний
+- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['reading-comprehension', 'listening', 'speaking']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
+  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: родовий, орудний, доконаний, знахідний, місцевий
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1163/800 (raw: 1349)
@@ -56,7 +60,7 @@
 - **Vocab:** ✅ 3/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 75.0% (checkpoint - no gate)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

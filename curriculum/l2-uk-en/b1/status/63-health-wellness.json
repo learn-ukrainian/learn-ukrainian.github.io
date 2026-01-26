@@ -1,0 +1,50 @@
+{
+  "module": "63-health-wellness",
+  "level": "B1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:27:24.717451Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-24T22:38:13.814632Z",
+    "meta": "2026-01-26T15:44:41.651375Z",
+    "activities": "2026-01-11T23:20:02.219045Z",
+    "vocabulary": "2026-01-25T18:00:40.593313Z",
+    "plan": "2026-01-26T15:44:41.650995Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "1632/1500 (raw: 2362) | pedagogy: 1 violations | richness: 87% < 95% min (grammar)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "12/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "45/35"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Outline Compliance Errors",
+      "Missing required activity types: collocation, discussion, fill-in, role-play"
+    ],
+    "pass_count": 4,
+    "fail_count": 1
+  }
+}

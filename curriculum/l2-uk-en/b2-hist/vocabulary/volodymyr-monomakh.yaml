@@ -2,113 +2,112 @@ module: volodymyr-monomakh
 level: B2-HIST
 version: '2.0'
 items:
-  - lemma: великий князь
-    ipa: /wɛˈlɪkɪj knʲɑzʲ/
-    translation: grand prince
-    pos: phrase
-    gender: m
-  - lemma: половці
-    ipa: /ˈpɔlɔwt͡sʲi/
-    translation: Polovtsians/Cumans
-    pos: noun
-    gender: pl
-  - lemma: з'їзд
-    ipa: /zʲjizd/
-    translation: congress
-    pos: noun
-    gender: m
-  - lemma: отчина
-    ipa: /ˈɔtt͡ʃɪnɑ/
-    translation: patrimony
-    pos: noun
-    gender: f
-  - lemma: устав
-    ipa: /usˈtɑw/
-    translation: statute
-    pos: noun
-    gender: m
-  - lemma: лихварство
-    ipa: /lɪxˈwɑrstwɔ/
-    translation: usury
-    pos: noun
-    gender: n
-  - lemma: повчання
-    ipa: /pɔwˈt͡ʃɑnʲːɑ/
-    translation: instruction
-    pos: noun
-    gender: n
-  - lemma: настанова
-    ipa: /nɑstɑˈnɔwɑ/
-    translation: admonition
-    pos: noun
-    gender: f
-  - lemma: єдність
-    ipa: /ˈjɛdnʲisʲtʲ/
-    translation: unity
-    pos: noun
-    gender: f
-  - lemma: роздроблення
-    ipa: /rɔzˈdrɔblɛnʲːɑ/
-    translation: fragmentation
-    pos: noun
-    gender: n
-  - lemma: боржник
-    ipa: /bɔrʒˈnɪk/
-    translation: debtor
-    pos: noun
-    gender: m
-  - lemma: шапка Мономаха
-    ipa: /ˈʃɑpkɑ mɔnɔˈmɑxɑ/
-    translation: Monomakh's Cap
-    pos: phrase
-    gender: f
-  - lemma: засліплення
-    ipa: /zɑˈsʲlʲiplɛnʲːɑ/
-    translation: blinding
-    pos: noun
-    gender: n
-  - lemma: лінуватися
-    ipa: /lʲinuˈwɑtɪsʲɑ/
-    translation: to be lazy
-    pos: verb
-    gender: '-'
-  - lemma: Любеч
-    ipa: /ˈlʲubɛt͡ʃ/
-    translation: Liubech
-    pos: noun
-    gender: m
-  - lemma: Теребовля
-    ipa: /tɛrɛˈbɔwlʲɑ/
-    translation: Terebovlia
-    pos: noun
-    gender: f
-  - lemma: автобіографія
-    ipa: /ɑwtɔbʲiɔˈhrɑfʲijɑ/
-    translation: autobiography
-    pos: noun
-    gender: f
-  - lemma: дружина
-    ipa: /druˈʒɪnɑ/
-    translation: prince's army/retinue
-    pos: noun
-    gender: f
-  - lemma: смерд
-    ipa: /smɛrd/
-    translation: free peasant
-    pos: noun
-    gender: m
-  - lemma: закуп
-    ipa: /ˈzɑkup/
-    translation: indentured laborer
-    pos: noun
-    gender: m
-  - lemma: плінфа
-    ipa: /ˈplʲinfɑ/
-    translation: thin Byzantine brick
-    pos: noun
-    gender: f
-  - lemma: вотчина
-    ipa: /ˈwɔtt͡ʃɪnɑ/
-    translation: hereditary estate
-    pos: noun
-    gender: f
+- lemma: великий князь
+  ipa: /wɛˈlɪkɪj knʲɑzʲ/
+  translation: grand prince
+  pos: noun
+  gender: m
+- lemma: половець
+  ipa: /ˈpɔlɔwt͡sʲi/
+  translation: Polovtsians/Cumans
+  pos: noun
+  gender: m
+- lemma: з'їзд
+  ipa: /zʲjizd/
+  translation: congress
+  pos: noun
+  gender: m
+- lemma: отчина
+  ipa: /ˈɔtt͡ʃɪnɑ/
+  translation: patrimony
+  pos: noun
+  gender: f
+- lemma: устав
+  ipa: /usˈtɑw/
+  translation: statute
+  pos: noun
+  gender: m
+- lemma: лихварство
+  ipa: /lɪxˈwɑrstwɔ/
+  translation: usury
+  pos: noun
+  gender: n
+- lemma: повчання
+  ipa: /pɔwˈt͡ʃɑnʲːɑ/
+  translation: instruction
+  pos: noun
+  gender: n
+- lemma: настанова
+  ipa: /nɑstɑˈnɔwɑ/
+  translation: admonition
+  pos: noun
+  gender: f
+- lemma: єдність
+  ipa: /ˈjɛdnʲisʲtʲ/
+  translation: unity
+  pos: noun
+  gender: f
+- lemma: роздроблення
+  ipa: /rɔzˈdrɔblɛnʲːɑ/
+  translation: fragmentation
+  pos: noun
+  gender: n
+- lemma: боржник
+  ipa: /bɔrʒˈnɪk/
+  translation: debtor
+  pos: noun
+  gender: m
+- lemma: шапка мономаха
+  ipa: /ˈʃɑpkɑ mɔnɔˈmɑxɑ/
+  translation: Monomakh's Cap
+  pos: noun
+  gender: f
+- lemma: засліплення
+  ipa: /zɑˈsʲlʲiplɛnʲːɑ/
+  translation: blinding
+  pos: noun
+  gender: n
+- lemma: лінуватися
+  ipa: /lʲinuˈwɑtɪsʲɑ/
+  translation: to be lazy
+  pos: verb
+- lemma: любеч
+  ipa: /ˈlʲubɛt͡ʃ/
+  translation: Liubech
+  pos: noun
+  gender: m
+- lemma: теребовля
+  ipa: /tɛrɛˈbɔwlʲɑ/
+  translation: Terebovlia
+  pos: noun
+  gender: f
+- lemma: автобіографія
+  ipa: /ɑwtɔbʲiɔˈhrɑfʲijɑ/
+  translation: autobiography
+  pos: noun
+  gender: f
+- lemma: дружина
+  ipa: /druˈʒɪnɑ/
+  translation: prince's army/retinue
+  pos: noun
+  gender: f
+- lemma: смерд
+  ipa: /smɛrd/
+  translation: free peasant
+  pos: noun
+  gender: m
+- lemma: закуп
+  ipa: /ˈzɑkup/
+  translation: indentured laborer
+  pos: noun
+  gender: m
+- lemma: плінфа
+  ipa: /ˈplʲinfɑ/
+  translation: thin Byzantine brick
+  pos: noun
+  gender: f
+- lemma: вотчина
+  ipa: /ˈwɔtt͡ʃɪnɑ/
+  translation: hereditary estate
+  pos: noun
+  gender: f

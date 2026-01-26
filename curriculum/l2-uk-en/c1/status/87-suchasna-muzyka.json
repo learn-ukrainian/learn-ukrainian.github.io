@@ -1,0 +1,51 @@
+{
+  "module": "87-suchasna-muzyka",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:29:48.887991Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-13T20:35:48.757330Z",
+    "meta": "2026-01-26T17:21:19.557577Z",
+    "activities": "2026-01-13T20:26:09.738721Z",
+    "vocabulary": null,
+    "plan": "2026-01-26T17:21:19.557338Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 4,
+      "message": "1138/3000 (raw: 1212) | engagement: 4/7 | pedagogy: 13 violations | richness: 78% < 95% min (content)"
+    },
+    "activities": {
+      "status": "fail",
+      "violations": 1,
+      "message": "14/12 | density: 2 < 12"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 25 (soft target)"
+    },
+    "naturalness": {
+      "status": "fail",
+      "violations": 1,
+      "message": "0/10 (PENDING) - Naturalness check required"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "1 Critical Template Violations",
+      "3 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
+    ],
+    "pass_count": 0,
+    "fail_count": 4
+  }
+}

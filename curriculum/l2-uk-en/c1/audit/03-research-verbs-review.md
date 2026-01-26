@@ -1,8 +1,8 @@
 # Audit Report: M03 — 03-research-verbs.md
-**Level:** C1 | **Module:** M03 | **Phase:** C1.1 | **Pedagogy:** Not Specified | **Target:** 3000
+**Level:** C1 | **Module:** M03 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:24:05
+**Generated:** 2026-01-26 22:28:51
 
 ## Configuration
 **Type:** C1-vocab
@@ -69,31 +69,26 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (vocab))
-- **Richness:** ❌ 74% < 95% min (vocabulary)
+- **Richness:** ✅ 99% (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 74% (minimum: 95%)
-**Module Type:** vocabulary
+**Score:** 99% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| collocations | 0 | 20 | 0% | 25% | 0.0% |
-| usage_examples | 48 | 15 | 100% | 20% | 20.0% |
-| engagement | 8 | 4 | 100% | 15% | 15.0% |
-| cultural | 4 | 3 | 100% | 10% | 10.0% |
-| visual | 9 | 3 | 100% | 10% | 10.0% |
-| register_notes | 7 | 5 | 100% | 10% | 10.0% |
-| variety | 0.98 | - | 98% | 5% | 4.9% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **74.9%** |
-
-### Dryness Flags & Fixes
-- ❌ **NO_COLLOCATIONS**
-  - FIX:
-    Add 5+ collocations in format: **слово** + noun/verb (e.g., **важка** робота, **приймати** рішення)
+| examples | 48 | 15 | 100% | 25% | 25.0% |
+| engagement | 8 | 5 | 100% | 19% | 18.7% |
+| variety | 0.98 | - | 98% | 12% | 12.2% |
+| cultural | 4 | 4 | 100% | 12% | 12.5% |
+| realworld | 5 | 3 | 100% | 12% | 12.5% |
+| visual | 9 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 19 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -1,0 +1,47 @@
+{
+  "module": "08-logical-prepositions",
+  "level": "A2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:26:07.746950Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-25T09:40:05.259258Z",
+    "meta": "2026-01-26T17:21:18.811994Z",
+    "activities": "2026-01-12T13:38:11.055737Z",
+    "vocabulary": "2026-01-25T15:44:11.307828Z",
+    "plan": "2026-01-26T17:21:18.811656Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "1377/1000 (raw: 1471)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "12/10"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "63/1"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

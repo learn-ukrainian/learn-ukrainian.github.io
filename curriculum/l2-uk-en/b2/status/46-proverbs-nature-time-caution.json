@@ -1,0 +1,49 @@
+{
+  "module": "46-proverbs-nature-time-caution",
+  "level": "B2",
+  "plan_version": "1.0",
+  "last_audit": "2026-01-26T22:28:16.251915Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-12T00:23:17.540720Z",
+    "meta": "2026-01-26T17:21:19.189008Z",
+    "activities": "2026-01-12T00:27:06.602694Z",
+    "vocabulary": "2026-01-21T22:54:31.311872Z",
+    "plan": "2026-01-26T17:21:19.188752Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "2876/1750 (raw: 3287) | pedagogy: 6 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "14/10"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "17 < 35 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "2 Outline Compliance Errors"
+    ],
+    "pass_count": 3,
+    "fail_count": 1
+  }
+}

@@ -2,7 +2,7 @@
 **Level:** LIT | **Module:** M27 | **Phase:** LIT.5 | **Pedagogy:** Seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:28:34
+**Generated:** 2026-01-26 22:58:01
 
 ## Configuration
 **Type:** LIT-literature
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** critical-analysis, essay-response, reading
+**Required Types:** cloze, essay-response, match-up, quiz, reading
 **Engagement:** ≥4 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥0 words
@@ -29,17 +29,12 @@
 - Total activities: 4 (target: 3-9) ✅
 - Unique types: 4 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
+- Required types used: 2/5 (essay-response, reading) ❌
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[INVALID_META_YAML]** Meta YAML Schema Violation at 'root': 'id' is a required property
-  - FIX: Correct the YAML structure to match schemas/meta-module.schema.json
-
 ## Recommendation
-**📝 UPDATE** (severity 25/100)
+**📝 UPDATE** (severity 20/100)
 
-- 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
@@ -53,7 +48,7 @@
 - **Vocab:** ✅ 0/0
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (4 activities)
 - **Immersion:** 🇺🇦 99.6% (target 95-100% (literature))
 - **Richness:** ✅ 99% (literature)

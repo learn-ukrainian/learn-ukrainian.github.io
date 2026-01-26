@@ -1,8 +1,8 @@
 # Audit Report: M80 — 80-analiz-tekstu.md
-**Level:** B2 | **Module:** M80 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 1750
+**Level:** B2 | **Module:** M80 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:23:54
+**Generated:** 2026-01-26 22:28:39
 
 ## Configuration
 **Type:** B2-skills
@@ -68,26 +68,28 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (15 activities)
 - **Immersion:** 🇺🇦 98.5% (target 90-100% (skills))
-- **Richness:** ✅ 99% (skills)
+- **Richness:** ✅ 98% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 80%)
-**Module Type:** skills
+**Score:** 98% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 22 | 15 | 100% | 26% | 25.5% |
-| engagement | 11 | 5 | 100% | 19% | 19.4% |
-| variety | 1.00 | - | 100% | 12% | 12.2% |
-| cultural | 4 | - | 100% | 12% | 12.2% |
-| realworld | 13 | 3 | 100% | 12% | 12.2% |
-| visual | 8 | 2 | 100% | 6% | 6.1% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.1% |
-| questions | 32 | 4 | 100% | 6% | 6.1% |
-| **TOTAL** | | | | | **100.0%** |
+| examples | 22 | 24 | 92% | 20% | 18.4% |
+| engagement | 11 | 5 | 100% | 15% | 15.0% |
+| dialogues | 7 | 4 | 100% | 15% | 15.0% |
+| variety | 1.00 | - | 100% | 10% | 10.0% |
+| cultural | 4 | 3 | 100% | 10% | 10.0% |
+| realworld | 13 | 3 | 100% | 10% | 10.0% |
+| visual | 8 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 32 | 5 | 100% | 5% | 5.0% |
+| proverbs | 6 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **98.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

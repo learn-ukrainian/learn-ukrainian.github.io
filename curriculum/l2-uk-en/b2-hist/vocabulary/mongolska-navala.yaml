@@ -2,78 +2,78 @@ module: mongolska-navala
 level: B2
 version: '2.0'
 items:
-  - lemma: навала
-    ipa: /nɐˈʋalɐ/
-    translation: invasion
-    pos: noun
-    gender: f
-  - lemma: облога
-    ipa: /ɔˈbɫɔɦɐ/
-    translation: siege
-    pos: noun
-    gender: f
-  - lemma: ярмо
-    ipa: /jɐrˈmɔ/
-    translation: yoke
-    pos: noun
-    gender: n
-  - lemma: орда
-    ipa: /ɔrˈdɑ/
-    translation: horde
-    pos: noun
-    gender: f
-  - lemma: хан
-    ipa: /xɑn/
-    translation: khan
-    pos: noun
-    gender: m
-  - lemma: баскак
-    ipa: /bɐsˈkɑk/
-    translation: tax collector (in Golden Horde)
-    pos: noun
-    gender: m
-  - lemma: ярлик
-    ipa: /jɐrˈɫɪk/
-    translation: yarlyk (decree/label)
-    pos: noun
-    gender: m
-  - lemma: спустошення
-    ipa: /spʊsˈtɔʃenʲːɐ/
-    translation: devastation
-    pos: noun
-    gender: n
-  - lemma: оборона
-    ipa: /ɔbɔˈrɔnɐ/
-    translation: defense
-    pos: noun
-    gender: f
-  - lemma: воєвода
-    ipa: /wɔjeˈwɔdɐ/
-    translation: voivode (warlord)
-    pos: noun
-    gender: m
-  - lemma: катапульта
-    ipa: /kɐtɐˈpulʲtɐ/
-    translation: catapult
-    pos: noun
-    gender: f
-  - lemma: таран
-    ipa: /tɐˈrɑn/
-    translation: battering ram
-    pos: noun
-    gender: m
-  - lemma: данина
-    ipa: /dɐnɪˈnɑ/
-    translation: tribute
-    pos: noun
-    gender: f
-  - lemma: васал
-    ipa: /wɐˈsɑɫ/
-    translation: vassal
-    pos: noun
-    gender: m
-  - lemma: улус
-    ipa: /ʊˈɫus/
-    translation: ulus (district in Golden Horde)
-    pos: noun
-    gender: m
+- lemma: навала
+  ipa: /nɐˈʋalɐ/
+  translation: invasion
+  pos: noun
+  gender: f
+- lemma: облога
+  ipa: /ɔˈbɫɔɦɐ/
+  translation: siege
+  pos: noun
+  gender: f
+- lemma: ярмо
+  ipa: /jɐrˈmɔ/
+  translation: yoke
+  pos: noun
+  gender: n
+- lemma: орда
+  ipa: /ɔrˈdɑ/
+  translation: horde
+  pos: noun
+  gender: f
+- lemma: хан
+  ipa: /xɑn/
+  translation: khan
+  pos: noun
+  gender: m
+- lemma: баскак
+  ipa: /bɐsˈkɑk/
+  translation: tax collector (in Golden Horde)
+  pos: noun
+  gender: m
+- lemma: ярлик
+  ipa: /jɐrˈɫɪk/
+  translation: yarlyk (decree/label)
+  pos: noun
+  gender: m
+- lemma: спустошення
+  ipa: /spʊsˈtɔʃenʲːɐ/
+  translation: devastation
+  pos: noun
+  gender: n
+- lemma: оборона
+  ipa: /ɔbɔˈrɔnɐ/
+  translation: defense
+  pos: noun
+  gender: f
+- lemma: воєвода
+  ipa: /wɔjeˈwɔdɐ/
+  translation: voivode (warlord)
+  pos: noun
+  gender: m
+- lemma: катапульта
+  ipa: /kɐtɐˈpulʲtɐ/
+  translation: catapult
+  pos: noun
+  gender: f
+- lemma: таран
+  ipa: /tɐˈrɑn/
+  translation: battering ram
+  pos: noun
+  gender: m
+- lemma: данина
+  ipa: /dɐnɪˈnɑ/
+  translation: tribute
+  pos: noun
+  gender: f
+- lemma: васал
+  ipa: /wɐˈsɑɫ/
+  translation: vassal
+  pos: noun
+  gender: m
+- lemma: улус
+  ipa: /ʊˈɫus/
+  translation: ulus (district in Golden Horde)
+  pos: noun
+  gender: m

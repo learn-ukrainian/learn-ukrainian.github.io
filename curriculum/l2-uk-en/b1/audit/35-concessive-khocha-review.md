@@ -1,8 +1,8 @@
 # Audit Report: M35 — 35-concessive-khocha.md
-**Level:** B1 | **Module:** M35 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M35 | **Phase:** B1 | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 19:22:26
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-26 22:27:06
 
 ## Configuration
 **Type:** B1-grammar
@@ -11,6 +11,7 @@
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
 **Priority Types:** cloze, error-correction, fill-in, unjumble
+**Required Types:** error-correction, fill-in, transformation, translation
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥25 words
@@ -36,7 +37,17 @@
 - Total activities: 12 (target: 8-12) ✅
 - Unique types: 11 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Required types used: 2/4 (error-correction, fill-in) ❌
 - Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['transformation', 'translation']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
+  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1727/1500 (raw: 2099)
@@ -49,7 +60,7 @@
 - **Vocab:** ✅ 75/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 96.9% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 95% (grammar)

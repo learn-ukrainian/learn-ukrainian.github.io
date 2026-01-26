@@ -1,8 +1,8 @@
 # Audit Report: M71 — 71-medytsyna-pohlybleno.md
-**Level:** B2 | **Module:** M71 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2 | **Module:** M71 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:23:48
+**Generated:** 2026-01-26 22:28:33
 
 ## Configuration
 **Type:** B2-history
@@ -68,26 +68,28 @@
 - **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ⚠️ Too many activities: 15 (target 3-9)
 - **Immersion:** 🇺🇦 98.8% (target 90-100% (history))
-- **Richness:** ✅ 96% (content)
+- **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 96% (minimum: 95%)
-**Module Type:** content
+**Score:** 99% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 61 | 15 | 100% | 25% | 25.0% |
-| engagement | 12 | 5 | 100% | 19% | 18.7% |
-| variety | 0.97 | - | 97% | 12% | 12.1% |
-| cultural | 3 | 4 | 75% | 12% | 9.4% |
-| realworld | 4 | 3 | 100% | 12% | 12.5% |
-| visual | 4 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 28 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **96.5%** |
+| examples | 61 | 24 | 100% | 20% | 20.0% |
+| engagement | 12 | 5 | 100% | 15% | 15.0% |
+| dialogues | 7 | 4 | 100% | 15% | 15.0% |
+| variety | 0.97 | - | 97% | 10% | 9.7% |
+| cultural | 3 | 3 | 100% | 10% | 10.0% |
+| realworld | 4 | 3 | 100% | 10% | 10.0% |
+| visual | 4 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 28 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -1,0 +1,47 @@
+{
+  "module": "38-slobozhanshchyna",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T23:44:19.839930Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-26T23:40:17.941207Z",
+    "meta": null,
+    "activities": "2026-01-26T23:44:15.558605Z",
+    "vocabulary": "2026-01-26T23:37:17.537928Z",
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "4141/4000 (raw: 4200) | pedagogy: 1 violations | richness: 93% < 95% min (history)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "7/3"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "27/20"
+    },
+    "naturalness": {
+      "status": "fail",
+      "violations": 1,
+      "message": "0/10 (PENDING) - Naturalness check required"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [],
+    "pass_count": 3,
+    "fail_count": 2
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "module": "ruska-pravda",
+  "level": "B2",
+  "plan_version": "1.0",
+  "last_audit": "2026-01-26T23:24:29.235848Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-25T10:17:06.708044Z",
+    "meta": "2026-01-26T22:20:13.535879Z",
+    "activities": "2026-01-23T20:10:04.611472Z",
+    "vocabulary": "2026-01-25T10:17:23.964697Z",
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4274/4000 (raw: 4438)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "8/3"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "20/20"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

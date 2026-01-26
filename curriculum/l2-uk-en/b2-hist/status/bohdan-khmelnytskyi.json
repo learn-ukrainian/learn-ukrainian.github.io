@@ -1,0 +1,47 @@
+{
+  "module": "bohdan-khmelnytskyi",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:54:43.333950Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-25T21:05:23.917261Z",
+    "meta": "2026-01-26T22:20:12.941149Z",
+    "activities": "2026-01-24T20:26:51.247481Z",
+    "vocabulary": "2026-01-22T12:44:11.114085Z",
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4266/3000 (raw: 4316)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "25/20"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "module": "70-b2-checkpoint",
+  "level": "B2",
+  "plan_version": "1.0",
+  "last_audit": "2026-01-26T22:28:32.650710Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-12T12:09:28.512502Z",
+    "meta": "2026-01-26T17:21:19.239201Z",
+    "activities": "2026-01-12T11:50:57.495409Z",
+    "vocabulary": "2026-01-21T22:54:34.286174Z",
+    "plan": "2026-01-26T17:21:19.238977Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "1835/1750 (raw: 2021) | pedagogy: 1 violations | richness: 74% < 95% min (grammar) - REWRITE needed"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "15/15"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "2 < 10 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Outline Compliance Errors"
+    ],
+    "pass_count": 3,
+    "fail_count": 1
+  }
+}

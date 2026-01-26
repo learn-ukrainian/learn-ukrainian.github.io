@@ -1,7 +1,7 @@
 # Audit Report: M92 — 92-istoriia-ukrainskoi-literatury.md
-**Level:** C1 | **Module:** M92 | **Phase:** C1.6 | **Pedagogy:** Immersion & Analysis | **Target:** 3500
+**Level:** C1 | **Module:** M92 | **Phase:** C1 | **Pedagogy:** Immersion & Analysis | **Target:** 3500
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:25:01
+**Generated:** 2026-01-26 22:29:52
 
 ## Configuration
 **Type:** C1-literature
@@ -59,28 +59,26 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (15 activities)
 - **Immersion:** 🇺🇦 99.7% (target 90-100% (literature))
-- **Richness:** ✅ 99% (literature)
+- **Richness:** ✅ 95% (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 99% (minimum: 90%)
-**Module Type:** literature
+**Score:** 95% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
-| literary_citations | 15 | 5 | 100% | 17% | 17.4% |
-| engagement | 5 | 4 | 100% | 13% | 13.0% |
-| historical_context | 30 | 3 | 100% | 13% | 13.0% |
-| essays | 4 | 2 | 100% | 13% | 13.0% |
-| resources | 8 | 3 | 100% | 9% | 8.7% |
-| variety | 0.98 | - | 98% | 4% | 4.3% |
-| cultural | 10 | - | 100% | 4% | 4.3% |
-| visual | 9 | 1 | 100% | 4% | 4.3% |
-| paragraph_var | 1.00 | - | 100% | 4% | 4.3% |
-| **TOTAL** | | | | | **99.9%** |
+| examples | 35 | 15 | 100% | 25% | 25.0% |
+| engagement | 5 | 5 | 100% | 19% | 18.7% |
+| variety | 0.98 | - | 98% | 12% | 12.2% |
+| cultural | 10 | 4 | 100% | 12% | 12.5% |
+| realworld | 2 | 3 | 67% | 12% | 8.4% |
+| visual | 9 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 4 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **95.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

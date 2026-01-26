@@ -1,7 +1,7 @@
 # Audit Report: M105 — 105-c1-6-review.md
-**Level:** C1 | **Module:** M105 | **Phase:** C1.6 | **Pedagogy:** Integration | **Target:** 3000
+**Level:** C1 | **Module:** M105 | **Phase:** C1 | **Pedagogy:** Integration | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:25:09
+**Generated:** 2026-01-26 22:28:59
 
 ## Configuration
 **Type:** C1
@@ -57,25 +57,26 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.7% (target 90-100%)
-- **Richness:** ✅ 99% (checkpoint)
+- **Richness:** ❌ 91% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 99% (minimum: 85%)
-**Module Type:** checkpoint
+**Score:** 91% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| activity_types | 13 | 8 | 100% | 25% | 25.0% |
-| review_sections | 10 | 3 | 100% | 20% | 20.0% |
-| variety | 0.99 | - | 99% | 15% | 14.8% |
-| engagement | 7 | 3 | 100% | 10% | 10.0% |
-| cultural | 5 | - | 100% | 10% | 10.0% |
-| visual | 4 | 3 | 100% | 10% | 10.0% |
-| paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
-| **TOTAL** | | | | | **99.8%** |
+| examples | 18 | 15 | 100% | 25% | 25.0% |
+| engagement | 7 | 5 | 100% | 19% | 18.7% |
+| variety | 0.99 | - | 99% | 12% | 12.4% |
+| cultural | 5 | 4 | 100% | 12% | 12.5% |
+| realworld | 1 | 3 | 33% | 12% | 4.1% |
+| visual | 4 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 11 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **91.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

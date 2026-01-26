@@ -1,0 +1,50 @@
+{
+  "module": "61-professional-communication",
+  "level": "B1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T22:27:23.416373Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-24T22:35:23.927051Z",
+    "meta": "2026-01-26T15:44:41.644683Z",
+    "activities": "2026-01-11T23:20:02.219192Z",
+    "vocabulary": "2026-01-25T18:00:40.572326Z",
+    "plan": "2026-01-26T15:44:41.644450Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "1752/1500 (raw: 2623) | pedagogy: 1 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "12/8"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "31 < 35 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Outline Compliance Errors",
+      "Missing required activity types: collocation, fill-in, role-play, writing"
+    ],
+    "pass_count": 3,
+    "fail_count": 1
+  }
+}

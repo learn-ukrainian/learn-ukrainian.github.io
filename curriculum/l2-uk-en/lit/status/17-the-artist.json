@@ -1,0 +1,51 @@
+{
+  "module": "17-the-artist",
+  "level": "LIT",
+  "plan_version": "1.0",
+  "last_audit": "2026-01-26T22:57:50.350386Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-17T21:45:15.872574Z",
+    "meta": "2026-01-26T17:21:21.840599Z",
+    "activities": "2026-01-18T21:48:54.738561Z",
+    "vocabulary": null,
+    "plan": "2026-01-26T17:21:21.840367Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "3564/4000 (raw: 3871) | pedagogy: 15 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4/3"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "0/0"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
+      "Missing required activity types: cloze, match-up, quiz"
+    ],
+    "pass_count": 3,
+    "fail_count": 2
+  }
+}

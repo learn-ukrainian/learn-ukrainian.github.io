@@ -1,8 +1,8 @@
 # Audit Report: M38 — 38-one-member-sentences.md
-**Level:** B2 | **Module:** M38 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 1750
+**Level:** B2 | **Module:** M38 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:23:27
+**Generated:** 2026-01-26 22:28:10
 
 ## Configuration
 **Type:** B2-grammar
