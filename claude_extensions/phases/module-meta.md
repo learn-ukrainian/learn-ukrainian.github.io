@@ -2,6 +2,13 @@
 
 Create the module metadata sidecar file (`meta/{slug}.yaml`).
 
+> **Architecture v2.0:** This phase creates both PLAN and META files.
+> - **Plan** (`plans/{level}/{slug}.yaml`): IMMUTABLE source of truth (content_outline, word_target, objectives, vocabulary_hints, activity_hints)
+> - **Meta** (`{level}/meta/{slug}.yaml`): MUTABLE build config (naturalness, grammar points, build timestamps)
+>
+> For existing modules, the meta file may contain planning data for backward compatibility.
+> New modules should use separate plan files.
+
 ## Usage
 
 ```
@@ -11,8 +18,9 @@ Create the module metadata sidecar file (`meta/{slug}.yaml`).
 ## Input Required
 
 1. **Curriculum plan**: `docs/l2-uk-en/{LEVEL}-CURRICULUM-PLAN.md`
-2. **Module position**: Which module number in the sequence
-3. **Previous vocabulary**: For tracks, cumulative from A1→B2 core
+2. **Plan file** (if exists): `curriculum/l2-uk-en/plans/{level}/{slug}.yaml`
+3. **Module position**: Which module number in the sequence
+4. **Previous vocabulary**: For tracks, cumulative from A1→B2 core
 
 ## Output
 

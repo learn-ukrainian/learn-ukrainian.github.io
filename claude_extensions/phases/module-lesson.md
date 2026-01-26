@@ -1,6 +1,10 @@
 # Phase 3: module-lesson
 
-Generate main lesson content from locked meta.yaml.
+Generate main lesson content from plan and meta.
+
+> **Architecture v2.0:** Plans are immutable source of truth. Meta is mutable build config.
+> - **Plan** (`plans/{level}/{slug}.yaml`): content_outline, word_target, objectives
+> - **Meta** (`{level}/meta/{slug}.yaml`): naturalness score, build timestamps
 
 ## Usage
 
@@ -10,25 +14,27 @@ Generate main lesson content from locked meta.yaml.
 
 ## Input
 
-- `curriculum/l2-uk-en/{level}/meta/{slug}.yaml` (LOCKED from Phase 2)
+- `curriculum/l2-uk-en/plans/{level}/{slug}.yaml` (IMMUTABLE - content_outline, word_target)
+- `curriculum/l2-uk-en/{level}/meta/{slug}.yaml` (MUTABLE - naturalness, build config)
 
 ## Output
 
 - `curriculum/l2-uk-en/{level}/{slug}.md`
 
-## Step 0: Hydration Pre-Check (CRITICAL)
+## Step 0: Plan Pre-Check (CRITICAL)
 
-Before generating ANY content, verify the metadata is fully hydrated:
+Before generating ANY content, verify the plan exists:
 
 ```bash
 slug=$(yq ".levels.\"{level}\".modules[{num-1}]" curriculum/l2-uk-en/curriculum.yaml) # Or file detection
-if [ ! -f "curriculum/l2-uk-en/{level}/meta/${slug}.yaml" ] || ! grep -q "content_outline:" "curriculum/l2-uk-en/{level}/meta/${slug}.yaml"; then
-  echo "ERROR: Missing hydrated outline. Run /module-meta then /architect first."
+plan_file="curriculum/l2-uk-en/plans/{level}/${slug}.yaml"
+if [ ! -f "$plan_file" ] || ! grep -q "content_outline:" "$plan_file"; then
+  echo "ERROR: Missing plan with content_outline. Check: $plan_file"
   exit 1
 fi
 ```
 
-**If this check fails, STOP immediately.**
+**If this check fails, STOP immediately.** Plans are created separately by humans/architects.
 
 ## Critical Rules
 
@@ -87,15 +93,21 @@ fi
 
 ## Content Generation Process
 
-### Step 1: Load Meta and Template
+### Step 1: Load Plan, Meta, and Template
 
-1. Read meta.yaml:
+1. Read plan (IMMUTABLE - content_outline, word_target, objectives):
+
+   ```bash
+   curriculum/l2-uk-en/plans/{level}/{slug}.yaml
+   ```
+
+2. Read meta (MUTABLE - naturalness, pedagogy):
 
    ```bash
    curriculum/l2-uk-en/{level}/meta/{slug}.yaml
    ```
 
-2. Read appropriate template:
+3. Read appropriate template:
    - **A1**: `docs/l2-uk-en/templates/a1-module-template.md`
    - **A2**: `docs/l2-uk-en/templates/a2-module-template.md`
    - **B1**: `docs/l2-uk-en/templates/b1-grammar-module-template.md` (or cultural/vocabulary based on focus)
@@ -107,7 +119,7 @@ fi
    - **C1-PRO**: `docs/l2-uk-en/templates/ai/c1-pro-module-template.md`
    - **LIT**: `docs/l2-uk-en/templates/ai/lit-module-template.md`
 
-3. Read quality standards:
+4. Read quality standards:
    ```
    docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md
    ```

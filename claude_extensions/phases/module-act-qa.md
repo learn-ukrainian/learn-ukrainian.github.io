@@ -2,6 +2,10 @@
 
 Validate activities YAML before locking.
 
+> **Architecture v2.0:** Plans are immutable source of truth. Meta is mutable build config.
+> - **Plan** (`plans/{level}/{slug}.yaml`): activity_hints, vocabulary_hints
+> - **Meta** (`{level}/meta/{slug}.yaml`): grammar points, naturalness
+
 ## Usage
 
 ```
@@ -11,7 +15,8 @@ Validate activities YAML before locking.
 ## Input
 
 - `curriculum/l2-uk-en/{level}/activities/{slug}.yaml`
-- `curriculum/l2-uk-en/{level}/meta/{slug}.yaml` (for validation rules)
+- `curriculum/l2-uk-en/plans/{level}/{slug}.yaml` (IMMUTABLE - activity_hints, vocabulary_hints)
+- `curriculum/l2-uk-en/{level}/meta/{slug}.yaml` (grammar points)
 - `curriculum/l2-uk-en/{level}/{slug}.md` (for vocabulary checking)
 
 ## Validation Checks
@@ -21,28 +26,27 @@ Validate activities YAML before locking.
 **This is the FIRST check. FAIL immediately if not satisfied.**
 
 ```python
-# Load meta.yaml activity_hints
-meta = yaml.safe_load(open(f'meta/{slug}.yaml'))
-hints = meta.get('activity_hints', [])
+# Load plan activity_hints
+plan = yaml.safe_load(open(f'plans/{level}/{slug}.yaml'))
+required_types = plan.get('activity_hints', {}).get('types_required', [])
 
 # Load activities.yaml
 activities = yaml.safe_load(open(f'activities/{slug}.yaml'))
 activity_types = [a['type'] for a in activities]
 
-# Check each hint type is present
-for hint in hints:
-    hint_type = hint['type']
+# Check each required type is present
+for hint_type in required_types:
     if hint_type not in activity_types:
-        FAIL: "Missing activity type '{hint_type}' required by meta.yaml activity_hints"
+        FAIL: "Missing activity type '{hint_type}' required by plan activity_hints"
 ```
 
 **Example:**
 
-- Meta says: `activity_hints: [{type: reading}, {type: quiz}, {type: essay-response}]`
+- Plan says: `activity_hints.types_required: [reading, quiz, essay-response]`
 - Activities has: quiz, fill-in, match-up (NO reading, NO essay-response)
 - **Result: FAIL** - Missing reading and essay-response
 
-**On FAIL:** Regenerate activities following meta.yaml activity_hints exactly.
+**On FAIL:** Regenerate activities following plan activity_hints exactly.
 
 ---
 
@@ -219,9 +223,10 @@ Each activity type has required fields. Validate against schema:
 
 ### 6. Required Vocabulary Coverage
 
-From `meta.yaml`, check `vocabulary_hints.required`:
+From **plan file**, check `vocabulary_hints.required`:
 
 ```yaml
+# plans/{level}/{slug}.yaml
 vocabulary_hints:
   required:
     - слово1
@@ -446,38 +451,30 @@ Activities contain:
 **Activity naturalness is NOT a blocking gate** but issues should be fixed during this phase.
 If 3+ activities have naturalness issues, flag for improvement.
 
-### 14. Activity Coverage from meta.yaml
+### 14. Activity Coverage from Plan
 
-From `meta.yaml activity_hints`, verify all hints are covered:
+From **plan file** `activity_hints`, verify all requirements are covered:
 
 ```yaml
+# plans/{level}/{slug}.yaml
 activity_hints:
-  - type: reading
-    focus: 'Primary source analysis'
-    items: 2-3
-  - type: quiz
-    focus: 'Comprehension'
-    items: 12+
-  - type: essay-response
-    focus: 'Decolonization analysis'
-    min_words: 400
-  - type: fill-in
-    focus: 'Vocabulary'
-    items: 10+
-  - type: match-up
-    focus: 'Historical terms'
-    items: 8+
+  types_required:
+    - reading
+    - quiz
+    - essay-response
+    - fill-in
+    - match-up
+  min_items_per_type: 6
+  total_min_items: 30
 ```
 
 **Check:**
 
-- [ ] 2-3 reading activities present
-- [ ] 12+ quiz items total
-- [ ] 1 essay-response with 400+ words
-- [ ] 10+ fill-in items
-- [ ] 1 match-up with 8+ pairs
+- [ ] All types_required are present
+- [ ] Each activity type has at least min_items_per_type items
+- [ ] Total items across all activities ≥ total_min_items
 
-All hints must be satisfied.
+All plan activity requirements must be satisfied.
 
 ---
 

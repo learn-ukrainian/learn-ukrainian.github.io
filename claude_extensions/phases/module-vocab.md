@@ -2,6 +2,10 @@
 
 Generate vocabulary YAML table from locked lesson content.
 
+> **Architecture v2.0:** Plans are immutable source of truth. Meta is mutable build config.
+> - **Plan** (`plans/{level}/{slug}.yaml`): vocabulary_hints (required terms)
+> - **Meta** (`{level}/meta/{slug}.yaml`): build config
+
 ## Usage
 
 ```
@@ -11,7 +15,7 @@ Generate vocabulary YAML table from locked lesson content.
 ## Input
 
 - `curriculum/l2-uk-en/{level}/{slug}.md` (LOCKED from Phase 4)
-- `curriculum/l2-uk-en/{level}/meta/{slug}.yaml` (for vocabulary_hints)
+- `curriculum/l2-uk-en/plans/{level}/{slug}.yaml` (IMMUTABLE - vocabulary_hints)
 
 ## Output
 

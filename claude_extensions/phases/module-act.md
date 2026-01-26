@@ -1,6 +1,10 @@
 # Phase 5: module-act
 
-Generate activities YAML from locked meta.yaml and lesson content.
+Generate activities YAML from locked lesson content following plan requirements.
+
+> **Architecture v2.0:** Plans are immutable source of truth. Meta is mutable build config.
+> - **Plan** (`plans/{level}/{slug}.yaml`): activity_hints, vocabulary_hints
+> - **Meta** (`{level}/meta/{slug}.yaml`): grammar points, naturalness, build config
 
 ## Usage
 
@@ -10,7 +14,8 @@ Generate activities YAML from locked meta.yaml and lesson content.
 
 ## Input
 
-- `curriculum/l2-uk-en/{level}/meta/{slug}.yaml` (LOCKED from Phase 2)
+- `curriculum/l2-uk-en/plans/{level}/{slug}.yaml` (IMMUTABLE - activity_hints, vocabulary_hints)
+- `curriculum/l2-uk-en/{level}/meta/{slug}.yaml` (MUTABLE - grammar points)
 - `curriculum/l2-uk-en/{level}/{slug}.md` (LOCKED from Phase 4)
 
 ## Output
@@ -21,19 +26,17 @@ Generate activities YAML from locked meta.yaml and lesson content.
 
 > [!IMPORTANT]
 >
-> ### FOLLOW activity_hints FROM META (MANDATORY)
+> ### FOLLOW activity_hints FROM PLAN (MANDATORY)
 >
-> **You MUST generate activities that match `activity_hints` in meta.yaml.**
+> **You MUST generate activities that match `activity_hints` in the plan file.**
 >
 > ```yaml
-> # If meta.yaml has:
+> # If plan.yaml has:
 > activity_hints:
->   - type: reading
->     focus: 'Primary source analysis'
->   - type: quiz
->     focus: 'Comprehension'
->   - type: essay-response
->     focus: 'Analysis'
+>   types_required:
+>     - reading
+>     - quiz
+>     - essay-response
 > ```
 >
 > **Then activities.yaml MUST have:**
@@ -44,9 +47,9 @@ Generate activities YAML from locked meta.yaml and lesson content.
 >
 > **DO NOT:**
 >
-> - ❌ Skip activity types listed in meta
-> - ❌ Add many extra types not in meta
-> - ❌ Generate 12 activities when meta suggests 4
+> - ❌ Skip activity types listed in plan
+> - ❌ Add many extra types not in plan
+> - ❌ Generate 12 activities when plan suggests 4
 >
 > **The audit will FAIL if activity_hints are not covered.**
 
@@ -126,19 +129,17 @@ Generate activities YAML from locked meta.yaml and lesson content.
 
 ### Step 2: Extract Activity Requirements
 
-From `meta.yaml`, read `activity_hints` array:
+From the **plan file**, read `activity_hints`:
 
 ```yaml
+# plans/{level}/{slug}.yaml
 activity_hints:
-  - type: reading
-    focus: 'What to test'
-    items: 2-3
-  - type: quiz
-    focus: 'What to test'
-    items: 12+
-  - type: essay-response
-    focus: 'Essay topic'
-    min_words: 200
+  types_required:
+    - reading
+    - quiz
+    - essay-response
+  min_items_per_type: 6
+  total_min_items: 30
 ```
 
 Each hint specifies:
@@ -514,7 +515,7 @@ Before outputting, verify:
 - [ ] All activity types valid (from ACTIVITY-YAML-REFERENCE.md)
 - [ ] Activity counts meet level minimums
 - [ ] All vocabulary from lesson content only
-- [ ] Required vocabulary from meta tested
+- [ ] Required vocabulary from plan tested
 - [ ] Grammar points from meta demonstrated
 - [ ] Quiz items have explanations
 - [ ] Fill-in items have 4 options
@@ -524,7 +525,7 @@ Before outputting, verify:
 - [ ] All text in Ukrainian (except URLs, IDs)
 - [ ] No Surzhyk, clean Ukrainian
 - [ ] Use «» not "" for quotes
-- [ ] All activity_hints from meta covered
+- [ ] All activity_hints from plan covered
 
 ---
 

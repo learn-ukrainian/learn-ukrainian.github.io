@@ -2,6 +2,10 @@
 
 Validate vocabulary YAML before locking.
 
+> **Architecture v2.0:** Plans are immutable source of truth. Meta is mutable build config.
+> - **Plan** (`plans/{level}/{slug}.yaml`): vocabulary_hints (required terms)
+> - **Meta** (`{level}/meta/{slug}.yaml`): build config
+
 ## Usage
 
 ```
@@ -11,7 +15,7 @@ Validate vocabulary YAML before locking.
 ## Input
 
 - `curriculum/l2-uk-en/{level}/vocabulary/{slug}.yaml`
-- `curriculum/l2-uk-en/{level}/meta/{slug}.yaml` (for required vocabulary)
+- `curriculum/l2-uk-en/plans/{level}/{slug}.yaml` (IMMUTABLE - required vocabulary)
 - `curriculum/l2-uk-en/{level}/{slug}.md` (for vocabulary source validation)
 
 ## Validation Checks
@@ -172,9 +176,10 @@ for item in data['items']:
 
 ### 6. Required Vocabulary Coverage
 
-From `meta.yaml`, check `vocabulary_hints.required`:
+From **plan file**, check `vocabulary_hints.required`:
 
 ```yaml
+# plans/{level}/{slug}.yaml
 vocabulary_hints:
   required:
     - трипільська культура
@@ -187,7 +192,8 @@ vocabulary_hints:
 **Check:** Each required term must appear in items[].lemma or items[].translation.
 
 ```python
-required_terms = meta['vocabulary_hints']['required']
+plan = yaml.safe_load(open(f'plans/{level}/{slug}.yaml'))
+required_terms = plan.get('vocabulary_hints', {}).get('required', [])
 vocab_lemmas = [item['lemma'] for item in data['items']]
 
 for term in required_terms:

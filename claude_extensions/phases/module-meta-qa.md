@@ -2,6 +2,12 @@
 
 Validate module metadata before locking.
 
+> **Architecture v2.0:** Validates both plan and meta files where applicable.
+> - **Plan** (`plans/{level}/{slug}.yaml`): IMMUTABLE - validates content_outline, word_target, objectives
+> - **Meta** (`{level}/meta/{slug}.yaml`): MUTABLE - validates grammar, pedagogy, build config
+>
+> For modules with separate plan files, planning data is validated from plans/.
+
 ## Usage
 
 ```
@@ -10,7 +16,8 @@ Validate module metadata before locking.
 
 ## Input
 
-- `curriculum/l2-uk-en/{level}/meta/{slug}.yaml`
+- `curriculum/l2-uk-en/plans/{level}/{slug}.yaml` (IMMUTABLE - if exists)
+- `curriculum/l2-uk-en/{level}/meta/{slug}.yaml` (MUTABLE)
 
 ## Validation Checks
 

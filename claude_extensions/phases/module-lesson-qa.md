@@ -2,6 +2,10 @@
 
 Validate lesson content before locking.
 
+> **Architecture v2.0:** Plans are immutable source of truth. Meta is mutable build config.
+> - **Plan** (`plans/{level}/{slug}.yaml`): content_outline, word_target, objectives, vocabulary_hints
+> - **Meta** (`{level}/meta/{slug}.yaml`): naturalness score, build timestamps
+
 ## Usage
 
 ```
@@ -10,7 +14,8 @@ Validate lesson content before locking.
 
 ## Input
 
-- `curriculum/l2-uk-en/{level}/meta/{slug}.yaml` (LOCKED)
+- `curriculum/l2-uk-en/plans/{level}/{slug}.yaml` (IMMUTABLE - content_outline, word_target, vocabulary_hints)
+- `curriculum/l2-uk-en/{level}/meta/{slug}.yaml` (MUTABLE - naturalness, build config)
 - `curriculum/l2-uk-en/{level}/{slug}.md` (from Phase 3)
 
 ## Validation Checks
@@ -127,12 +132,12 @@ All these MUST exist:
    - Exclude YAML, SCOPE comment, Підсумок
    - Count actual prose words
 
-2. **Compare to meta.yaml targets:**
+2. **Compare to plan targets:**
 
    ```
-   For each section in meta.content_outline:
+   For each section in plan.content_outline:
      actual = count_words(section_content)
-     target = meta.content_outline[i].words
+     target = plan.content_outline[i].words
      tolerance = ±10% of target
 
      if actual < (target * 0.9):
@@ -146,7 +151,7 @@ All these MUST exist:
 
    ```
    total_actual = sum(all_section_word_counts)
-   total_target = meta.word_target
+   total_target = plan.word_target
    tolerance = ±5% of target
 
    if total_actual < (target * 0.95):
@@ -178,15 +183,15 @@ Result: Both sections balanced, total unchanged
 
 ### 4. Content Outline Coverage
 
-All sections from `meta.content_outline` MUST be present as H2 headers:
+All sections from `plan.content_outline` MUST be present as H2 headers:
 
 ```
-For each section in meta.content_outline:
+For each section in plan.content_outline:
   if section.section not found as H2 in markdown:
     FAIL: Missing section "{section.section}"
 ```
 
-**Exception:** Empty sections with 0 words in meta can be skipped.
+**Exception:** Empty sections with 0 words in plan can be skipped.
 
 ### 5. Engagement Boxes
 
@@ -254,10 +259,10 @@ if meta.focus in [grammar, vocabulary]:
 
 ### 8. Required Vocabulary
 
-All vocabulary from `meta.vocabulary_hints.required` MUST appear in content:
+All vocabulary from `plan.vocabulary_hints.required` MUST appear in content:
 
 ```
-For each word in meta.vocabulary_hints.required:
+For each word in plan.vocabulary_hints.required:
   if word not found in markdown content:
     FAIL: Required vocabulary "{word}" not used
 ```
@@ -289,13 +294,13 @@ For each word in meta.vocabulary_hints.required:
    ```
    For each word in content:
      if word not in cumulative_allowed_vocabulary:
-       if word not in meta.vocabulary_hints (required + recommended):
+       if word not in plan.vocabulary_hints (required + recommended):
          WARNING: Out-of-scope vocabulary "{word}" (too advanced for {level})
    ```
 
 **Special cases:**
 
-- Words in `meta.vocabulary_hints.recommended` are allowed even if not in cumulative list (pre-teaching)
+- Words in `plan.vocabulary_hints.recommended` are allowed even if not in cumulative list (pre-teaching)
 - Proper nouns (names, places) are exempt
 - International cognates are exempt at all levels
 
@@ -736,10 +741,12 @@ If score < threshold:
 **Requires Phase Rewind:**
 
 - Frontmatter doesn't match meta → Phase 1 rewind (meta.yaml needs fixing)
-- Wrong pedagogy structure → Phase 1 rewind (meta.content_outline needs restructuring)
-- Vocabulary fundamentally wrong → Phase 1 rewind (vocabulary_hints need correction)
-- Word count targets impossible to meet → Phase 1 rewind (meta.word_target needs adjustment)
-- Missing required sections → Phase 1 rewind (content_outline incomplete)
+- Wrong pedagogy structure → Plan update needed (plan.content_outline needs restructuring)
+- Vocabulary fundamentally wrong → Plan update needed (vocabulary_hints need correction)
+- Word count targets impossible to meet → Plan update needed (plan.word_target needs adjustment)
+- Missing required sections → Plan update needed (content_outline incomplete)
+
+**Note:** Plan changes require human approval - agents cannot modify plan files.
 
 **Action:** Output "PHASE UNLOCK REQUIRED" with specific reason, halt validation.
 
