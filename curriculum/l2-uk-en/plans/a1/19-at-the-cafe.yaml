@@ -5,42 +5,27 @@ version: '2.0'
 title: At the Café
 subtitle: Ordering Food and Drinks in Ukrainian
 content_outline:
-- section: 'Introduction: Café Culture'
-  words: 100
+- section: Warm-up
+  words: 52
   points:
-  - Ukrainian café traditions
-  - Useful phrases
-  - Polite communication
-- section: Ordering Food
-  words: 200
+  - Content for Warm-up
+- section: Presentation
+  words: 517
   points:
-  - Мені, будь ласка... (For me, please...)
-  - Я візьму... (I'll take...)
-  - Принесіть, будь ласка... (Please bring...)
-- section: Menu Items
-  words: 200
+  - Content for Presentation
+- section: Practice
+  words: 280
   points:
-  - 'Coffee drinks: еспресо, капучіно, лате'
-  - 'Tea and other: чай, сік, вода'
-  - 'Snacks: круасан, тістечко, сендвіч'
-- section: Special Requests
-  words: 150
+  - Content for Practice
+- section: Production
+  words: 92
   points:
-  - без цукру (without sugar)
-  - з молоком (with milk)
-  - гарячий/холодний (hot/cold)
-- section: The Bill
-  words: 150
+  - Content for Production
+- section: Cultural Insight
+  words: 134
   points:
-  - Рахунок, будь ласка (The bill, please)
-  - Скільки з мене? (How much do I owe?)
-  - Paying and tipping
-- section: 'Practice: Café Role-Play'
-  words: 100
-  points:
-  - Order a complete meal
-  - Handle problems
-word_target: 900
+  - Content for Cultural Insight
+word_target: 1075
 vocabulary_hints:
   required:
   - кава (coffee)
@@ -59,16 +44,16 @@ vocabulary_hints:
   - чайові (tip)
   - картка (card)
 activity_hints:
-- type: dialogue
+- type: fill-in
   focus: Complete café ordering
   items: 8
-- type: role-play
+- type: fill-in
   focus: Customer and waiter
   items: 6
 - type: fill-in
   focus: Complete ordering phrases
   items: 15
-- type: listening
+- type: quiz
   focus: Understand café dialogue
   items: 10
 focus: practical

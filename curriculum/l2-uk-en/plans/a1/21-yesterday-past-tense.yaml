@@ -5,42 +5,19 @@ version: '2.0'
 title: Yesterday - Past Tense
 subtitle: Talking About What Happened
 content_outline:
-- section: 'Introduction: The Past Tense'
-  words: 150
+- section: Warm-up
+  words: 163
   points:
-  - Ukrainian past tense is simple
-  - One form for all persons
-  - Agreement with subject gender
-- section: Forming the L-Participle
-  words: 200
+  - Content for Warm-up
+- section: Presentation
+  words: 908
   points:
-  - Remove -ти from infinitive
-  - Add -в (masculine), -ла (feminine), -ло (neuter)
-  - 'Plural for all genders: -ли'
-- section: Gender Agreement
-  words: 200
+  - Content for Presentation
+- section: Практика
+  words: 21
   points:
-  - Я читав (male speaker)
-  - Я читала (female speaker)
-  - Воно було (neuter subject)
-- section: Common Past Tense Verbs
-  words: 200
-  points:
-  - був/була/було/були (was/were)
-  - робив/робила (did)
-  - їв/їла (ate), пив/пила (drank)
-- section: Time Expressions
-  words: 150
-  points:
-  - вчора (yesterday)
-  - минулого тижня (last week)
-  - раніше (earlier, before)
-- section: 'Practice: What Did You Do?'
-  words: 100
-  points:
-  - Describe yesterday
-  - Ask about past activities
-word_target: 1000
+  - Content for Практика
+word_target: 1092
 vocabulary_hints:
   required:
   - вчора (yesterday)
@@ -59,16 +36,13 @@ vocabulary_hints:
   - спати (to sleep)
   - працювати (to work)
 activity_hints:
-- type: transformation
+- type: fill-in
   focus: Change verbs to past tense
   items: 25
 - type: fill-in
   focus: Complete with correct gender ending
   items: 20
-- type: translation
-  focus: Translate past tense sentences
-  items: 15
-- type: dialogue
+- type: fill-in
   focus: What did you do yesterday?
   items: 6
 focus: grammar

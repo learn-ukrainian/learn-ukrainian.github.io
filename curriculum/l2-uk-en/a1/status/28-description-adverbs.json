@@ -1,0 +1,47 @@
+{
+  "module": "28-description-adverbs",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T21:48:10.923808Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-16T00:38:30.452835Z",
+    "meta": "2026-01-26T17:21:18.727586Z",
+    "activities": "2026-01-16T00:39:49.802644Z",
+    "vocabulary": "2026-01-25T15:44:11.151596Z",
+    "plan": "2026-01-26T21:42:58.137109Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "886/750 (raw: 1129)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "3/1"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

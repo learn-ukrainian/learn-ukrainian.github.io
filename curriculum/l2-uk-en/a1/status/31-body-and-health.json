@@ -1,0 +1,47 @@
+{
+  "module": "31-body-and-health",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T21:48:12.592058Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-16T00:50:09.419853Z",
+    "meta": "2026-01-26T17:21:18.737494Z",
+    "activities": "2026-01-16T00:50:01.282727Z",
+    "vocabulary": "2026-01-25T18:00:39.420738Z",
+    "plan": "2026-01-26T21:42:59.822819Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "800/750 (raw: 1159)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/1"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "module": "05-my-world-objects",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T21:47:58.070364Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-25T02:16:10.439659Z",
+    "meta": "2026-01-26T17:21:18.650036Z",
+    "activities": "2026-01-15T23:44:53.008333Z",
+    "vocabulary": "2026-01-25T01:42:20.944660Z",
+    "plan": "2026-01-26T21:42:45.242931Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "1603/300 (raw: 1840)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "8/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "27/1"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

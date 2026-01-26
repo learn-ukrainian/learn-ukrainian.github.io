@@ -5,42 +5,23 @@ version: '2.0'
 title: At the Café
 subtitle: Ordering Drinks and Snacks
 content_outline:
-- section: 'Introduction: Café Scenario'
-  words: 100
+- section: Warm-up
+  words: 146
   points:
-  - Real-world café situation
-  - Integrated grammar practice
-  - Polite communication
-- section: Arriving and Ordering
-  words: 200
+  - Content for Warm-up
+- section: Presentation
+  words: 417
   points:
-  - Меню, будь ласка
-  - Мені каву, будь ласка
-  - Що ви порекомендуєте?
-- section: Menu Items Review
-  words: 150
+  - Content for Presentation
+- section: Практика
+  words: 125
   points:
-  - Hot and cold drinks
-  - Snacks and pastries
-  - Understanding menu descriptions
-- section: Special Requests
-  words: 150
+  - Content for Практика
+- section: 'Narrative: Morning in Lviv (Ранок у Львові)'
+  words: 137
   points:
-  - з молоком/без цукру
-  - Гарячий чи холодний?
-  - На виніс (to go)
-- section: Paying
-  words: 100
-  points:
-  - Рахунок, будь ласка
-  - Карткою чи готівкою?
-  - Дякую, до побачення
-- section: 'Practice: Full Café Scenario'
-  words: 100
-  points:
-  - Complete ordering sequence
-  - Handle variations
-word_target: 800
+  - 'Content for Narrative: Morning in Lviv (Ранок у Львові)'
+word_target: 825
 vocabulary_hints:
   required:
   - кава (coffee)
@@ -57,13 +38,13 @@ vocabulary_hints:
   - молоко (milk)
   - цукор (sugar)
 activity_hints:
-- type: dialogue
+- type: fill-in
   focus: Complete café ordering
   items: 10
-- type: role-play
+- type: fill-in
   focus: Customer and waiter
   items: 6
-- type: listening
+- type: quiz
   focus: Understand café phrases
   items: 10
 - type: fill-in

@@ -5,41 +5,34 @@ version: '2.0'
 title: The Cyrillic Code I
 subtitle: Cracking the Ukrainian Alphabet
 content_outline:
-- section: 'Introduction: The Cyrillic Mystery'
-  words: 100
+- section: Warm-up
+  words: 112
   points:
   - Why Ukrainian uses Cyrillic
   - 'Good news: Many letters are familiar'
   - 'Strategy: True Friends vs False Friends'
-- section: True Friends (А, Е, І, О, К, М, Т)
-  words: 150
+- section: Presentation
+  words: 549
   points:
-  - Letters that look AND sound like English
-  - 'Practice words: такт, кіт, мама'
-  - Reading drill
-- section: False Friends (В, Н, Р, С, У, Х)
-  words: 200
+  - True Friends (А, Е, І, О, К, М, Т) - look AND sound like English
+  - False Friends (В, Н, Р, С, У, Х) - look familiar but sound different
+  - New Letters (Б, Д, З, Л, П, Ф) - unique to Cyrillic
+- section: Practice
+  words: 128
   points:
-  - Letters that look familiar but sound different
-  - В = V, Н = N, Р = R, С = S, У = U, Х = Kh
-  - Common mistakes to avoid
-- section: New Friends (Б, Г, Д, Ж, З, Л, П, Ф)
-  words: 200
+  - Reading international words (банк, метро, кафе)
+  - Mini-dialogues at metro station and café
+- section: Cultural Insight
+  words: 145
   points:
-  - Letters unique to Cyrillic
-  - Sound introduction with examples
-  - Practice with simple words
-- section: 'Practice: International Words'
-  words: 100
+  - Why Ukrainian uses Cyrillic (not Russian alphabet)
+  - Unique Ukrainian letters (І, Ї, Є, Ґ)
+- section: Production
+  words: 85
   points:
-  - 'Reading cognates: банк, метро, кафе'
-  - Building confidence with familiar vocabulary
-- section: 'Summary: Your First 19 Letters'
-  words: 50
-  points:
-  - Review of all letters learned
-  - Preparation for Part II
-word_target: 800
+  - Decoding international words
+  - Reading practice with IPA
+word_target: 1019
 vocabulary_hints:
   required:
   - так (yes)
@@ -56,18 +49,18 @@ vocabulary_hints:
   - факт (fact)
   - план (plan)
 activity_hints:
-- type: letter-recognition
-  focus: Identify True Friends
-  items: 15
-- type: audio-match
-  focus: Match sound to letter
-  items: 20
-- type: reading-drill
-  focus: Read simple words aloud
+- type: match-up
+  focus: Match letters to sounds
   items: 15
 - type: quiz
   focus: Letter identification
   items: 20
+- type: group-sort
+  focus: Sort True Friends vs False Friends
+  items: 12
+- type: anagram
+  focus: Unscramble simple words
+  items: 10
 focus: grammar
 pedagogy: PPP
 prerequisites: []

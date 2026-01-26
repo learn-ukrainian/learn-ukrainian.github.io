@@ -1,8 +1,8 @@
 # Audit Report: M04 — 04-this-is-i-am.md
-**Level:** A1 | **Module:** M04 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 300
-**Naturalness:** 9/10 (PASS)
+**Level:** A1 | **Module:** M04 | **Phase:** A1 | **Pedagogy:** PPP | **Target:** 300
+**Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:06:57
+**Generated:** 2026-01-26 21:47:57
 
 ## Configuration
 **Type:** A1-grammar
@@ -11,6 +11,7 @@
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
 **Priority Types:** anagram, fill-in, match-up, quiz, unjumble
+**Required Types:** fill-in
 **Engagement:** ≥3 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
@@ -32,6 +33,7 @@
 - Total activities: 8 (target: 8-12) ✅
 - Unique types: 6 (minimum: 4) ✅
 - Priority types used: 4/5 (anagram, fill-in, match-up, quiz) ✅
+- Required types used: 1/1 (fill-in) ✅
 - Low density activities: 0
 
 ## Gates
@@ -49,7 +51,7 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 14.1% (target 10-25% (M04))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 9/10 (High)
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
 | Section | Status | Count | Notes |

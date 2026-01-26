@@ -1,16 +1,17 @@
 # Audit Report: M15 — 15-around-the-city.md
-**Level:** A1 | **Module:** M15 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 750
+**Level:** A1 | **Module:** M15 | **Phase:** A1 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:07:05
+**Generated:** 2026-01-26 21:48:03
 
 ## Configuration
-**Type:** A1-grammar
+**Type:** A1
 **Word Target:** 750 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
 **Priority Types:** anagram, fill-in, match-up, quiz, unjumble
+**Required Types:** fill-in, match-up
 **Engagement:** ≥3 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
@@ -35,16 +36,8 @@
 - Total activities: 11 (target: 8-12) ✅
 - Unique types: 5 (minimum: 4) ✅
 - Priority types used: 3/5 (fill-in, match-up, quiz) ✅
+- Required types used: 2/2 (fill-in, match-up) ✅
 - Low density activities: 0
-
-## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): пішки, близько, назад, далеко, сюди...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1839/750 (raw: 1983)

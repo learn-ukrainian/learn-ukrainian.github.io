@@ -1,0 +1,47 @@
+{
+  "module": "36-at-the-restaurant",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T21:48:15.381529Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-16T00:58:22.253623Z",
+    "meta": "2026-01-26T17:21:18.753816Z",
+    "activities": "2026-01-16T00:58:18.682793Z",
+    "vocabulary": "2026-01-25T01:31:45.030501Z",
+    "plan": "2026-01-26T21:43:02.626575Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "808/750 (raw: 1037)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "8/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5/1"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

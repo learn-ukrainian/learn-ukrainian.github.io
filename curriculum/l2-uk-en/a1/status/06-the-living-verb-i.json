@@ -1,0 +1,47 @@
+{
+  "module": "06-the-living-verb-i",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T21:47:58.619924Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-15T23:56:48.734745Z",
+    "meta": "2026-01-26T17:21:18.653702Z",
+    "activities": "2026-01-15T23:54:43.129688Z",
+    "vocabulary": "2026-01-25T18:00:39.378152Z",
+    "plan": "2026-01-26T21:45:01.556628Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "1407/500 (raw: 1721)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "8/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "12/1"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

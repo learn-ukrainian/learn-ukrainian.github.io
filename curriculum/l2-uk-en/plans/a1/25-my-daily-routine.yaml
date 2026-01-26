@@ -5,42 +5,23 @@ version: '2.0'
 title: My Daily Routine
 subtitle: Reflexive Verbs and Daily Activities
 content_outline:
-- section: 'Introduction: A Typical Day'
-  words: 150
+- section: Introduction
+  words: 80
   points:
-  - Describing daily routine
-  - Reflexive verbs for self-care
-  - Time + activity structure
-- section: Morning Routine
-  words: 200
+  - Content for Introduction
+- section: Presentation
+  words: 185
   points:
-  - прокидатися (to wake up)
-  - вмиватися, одягатися
-  - снідати (to have breakfast)
-- section: Daytime Activities
-  words: 200
+  - Content for Presentation
+- section: Dialogues
+  words: 348
   points:
-  - працювати, вчитися
-  - обідати (to have lunch)
-  - відпочивати (to rest)
-- section: Evening Routine
-  words: 200
+  - Content for Dialogues
+- section: Практика
+  words: 17
   points:
-  - вечеряти (to have dinner)
-  - дивитися телевізор
-  - лягати спати (to go to bed)
-- section: Sequence Words
-  words: 150
-  points:
-  - спочатку (first)
-  - потім (then)
-  - нарешті (finally)
-- section: 'Practice: Describe Your Day'
-  words: 100
-  points:
-  - Full day description
-  - Compare routines
-word_target: 1000
+  - Content for Практика
+word_target: 630
 vocabulary_hints:
   required:
   - прокидатися (to wake up)
@@ -59,16 +40,16 @@ vocabulary_hints:
   - щодня (every day)
   - відпочивати (to rest)
 activity_hints:
-- type: ordering
+- type: unjumble
   focus: Order daily activities
   items: 20
 - type: fill-in
   focus: Complete routine descriptions
   items: 20
-- type: matching
+- type: match-up
   focus: Match activities to times
   items: 15
-- type: speaking
+- type: fill-in
   focus: Describe your typical day
   items: 6
 focus: practical

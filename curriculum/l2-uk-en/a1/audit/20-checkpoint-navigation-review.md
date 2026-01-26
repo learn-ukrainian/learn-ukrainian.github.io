@@ -1,8 +1,8 @@
 # Audit Report: M20 — 20-checkpoint-navigation.md
-**Level:** A1 | **Module:** M20 | **Phase:** A1.2 | **Pedagogy:** Review | **Target:** 750
+**Level:** A1 | **Module:** M20 | **Phase:** A1 | **Pedagogy:** TTT | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:07:08
+**Generated:** 2026-01-26 21:48:06
 
 ## Configuration
 **Type:** A1-checkpoint
@@ -11,6 +11,7 @@
 **Items per Activity:** ≥10 items
 **Unique Types:** ≥4 types required
 **Priority Types:** fill-in, match-up, quiz
+**Required Types:** quiz
 **Engagement:** ≥2 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
@@ -34,6 +35,7 @@
 - Total activities: 10 (target: 8-12) ✅
 - Unique types: 5 (minimum: 4) ✅
 - Priority types used: 3/3 (fill-in, match-up, quiz) ✅
+- Required types used: 1/1 (quiz) ✅
 - Low density activities: 0
 
 ## Gates

@@ -5,42 +5,31 @@ version: '2.0'
 title: My Family
 subtitle: Родина
 content_outline:
-- section: 'Introduction: Family in Ukrainian Culture'
-  words: 100
+- section: Warm-up
+  words: 104
   points:
-  - Family is central to Ukrainian life
-  - Talking about relatives
-  - Family structures
-- section: Immediate Family
-  words: 250
+  - Content for Warm-up
+- section: Граматика (Grammar)
+  words: 149
   points:
-  - мама/мати, тато/батько
-  - брат, сестра
-  - дідусь, бабуся
-- section: Extended Family
-  words: 200
+  - Content for Граматика (Grammar)
+- section: Describing Family Members (Опис членів сім'ї)
+  words: 255
   points:
-  - дядько, тітка
-  - двоюрідний брат/сестра
-  - онук, онука, племінник
-- section: Family Relationships
-  words: 200
+  - Content for Describing Family Members (Опис членів сім'ї)
+- section: Приклади (Examples)
+  words: 101
   points:
-  - чоловік, дружина
-  - син, донька, діти
-  - свекруха, теща, зять, невістка
-- section: Talking About Your Family
-  words: 150
+  - Content for Приклади (Examples)
+- section: Діалоги (Dialogues)
+  words: 294
   points:
-  - У мене є... (I have...)
-  - Мого брата звати... (My brother's name is...)
-  - Describing family members
-- section: 'Practice: Family Tree'
-  words: 100
+  - Content for Діалоги (Dialogues)
+- section: Практика (Practice)
+  words: 13
   points:
-  - Describe your family
-  - Ask about others' families
-word_target: 1000
+  - Content for Практика (Practice)
+word_target: 916
 vocabulary_hints:
   required:
   - мама (mom)
@@ -59,16 +48,16 @@ vocabulary_hints:
   - чоловік (husband)
   - родина (family)
 activity_hints:
-- type: vocabulary-drill
+- type: match-up
   focus: Family member names
   items: 25
-- type: matching
+- type: match-up
   focus: Match relationships
   items: 20
 - type: fill-in
   focus: Complete family descriptions
   items: 15
-- type: speaking
+- type: fill-in
   focus: Describe your family
   items: 6
 focus: vocabulary

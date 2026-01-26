@@ -5,42 +5,27 @@ version: '2.0'
 title: This Is / I Am
 subtitle: Zero Copula and Personal Pronouns
 content_outline:
-- section: 'Introduction: No ''Is'' Needed'
-  words: 100
+- section: Warm-up
+  words: 139
   points:
-  - Ukrainian drops 'to be' in present tense
-  - Це книга = This (is) a book
-  - Я студент = I (am) a student
-- section: Personal Pronouns
-  words: 200
+  - Content for Warm-up
+- section: Presentation
+  words: 864
   points:
-  - я (I), ти (you informal)
-  - він (he), вона (she), воно (it)
-  - ми (we), ви (you formal/plural), вони (they)
-- section: Це... (This Is...)
-  words: 200
+  - Content for Presentation
+- section: Practice
+  words: 153
   points:
-  - 'Pointing out objects: Це стіл, це вікно'
-  - 'Introducing people: Це мій брат'
-  - 'Question: Що це? Хто це?'
-- section: Я... (I Am...)
-  words: 150
+  - Content for Practice
+- section: Production
+  words: 126
   points:
-  - 'Self-introduction: Я Марія, Я студент'
-  - 'Nationality: Я українець/українка'
-  - 'Profession: Я вчитель/вчителька'
-- section: Gendered Forms
-  words: 150
+  - Content for Production
+- section: Cultural Insight
+  words: 166
   points:
-  - 'Masculine: американець, українець'
-  - 'Feminine: американка, українка'
-  - Pattern recognition
-- section: 'Practice: Introductions'
-  words: 100
-  points:
-  - Complete self-introduction
-  - Role-play meeting someone
-word_target: 900
+  - Content for Cultural Insight
+word_target: 1448
 vocabulary_hints:
   required:
   - це (this is)
@@ -59,16 +44,13 @@ vocabulary_hints:
   - ми (we)
   - вони (they)
 activity_hints:
-- type: dialogue
+- type: fill-in
   focus: Self-introduction practice
   items: 6
 - type: fill-in
   focus: Complete sentences with pronouns
   items: 15
-- type: translation
-  focus: Translate identity statements
-  items: 10
-- type: role-play
+- type: fill-in
   focus: Meeting someone new
   items: 4
 focus: grammar

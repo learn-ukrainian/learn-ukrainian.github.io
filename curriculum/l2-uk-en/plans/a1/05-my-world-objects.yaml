@@ -5,43 +5,27 @@ version: '2.0'
 title: 'My World: Objects'
 subtitle: Pointing to Things with Demonstratives
 content_outline:
-- section: 'Introduction: Pointing to Things'
-  words: 100
+- section: Warm-up
+  words: 173
   points:
-  - This vs That in Ukrainian
-  - Demonstratives agree with noun gender
-  - Essential for everyday communication
-- section: This (цей/ця/це/ці)
-  words: 200
+  - Content for Warm-up
+- section: Presentation
+  words: 415
   points:
-  - 'цей (m): цей стіл, цей дім'
-  - 'ця (f): ця книга, ця лампа'
-  - 'це (n): це вікно, це молоко'
-  - 'ці (pl): ці речі'
-- section: That (той/та/те/ті)
-  words: 200
+  - Content for Presentation
+- section: Practice
+  words: 360
   points:
-  - 'той (m): той чоловік'
-  - 'та (f): та жінка'
-  - 'те (n): те місто'
-  - 'ті (pl): ті люди'
-- section: Household Objects
-  words: 200
+  - Content for Practice
+- section: Cultural Insight
+  words: 389
   points:
-  - 'Furniture: стіл, стілець, ліжко, шафа'
-  - 'Items: лампа, книга, ручка, телефон'
-  - 'Rooms: кімната, кухня, ванна'
-- section: Everyday Objects
-  words: 100
+  - Content for Cultural Insight
+- section: Production
+  words: 75
   points:
-  - 'Technology: комп''ютер, телевізор'
-  - 'Personal items: сумка, ключі'
-- section: 'Practice: What''s This?'
-  words: 100
-  points:
-  - Що це? conversations
-  - Describing your space
-word_target: 900
+  - Content for Production
+word_target: 1412
 vocabulary_hints:
   required:
   - цей (this m.)
@@ -60,7 +44,7 @@ vocabulary_hints:
   - шафа (wardrobe)
   - двері (door)
 activity_hints:
-- type: labeling
+- type: match-up
   focus: Label room objects
   items: 20
 - type: quiz
@@ -69,7 +53,7 @@ activity_hints:
 - type: fill-in
   focus: Complete with цей/ця/це
   items: 15
-- type: dialogue
+- type: fill-in
   focus: Що це? conversations
   items: 6
 focus: grammar

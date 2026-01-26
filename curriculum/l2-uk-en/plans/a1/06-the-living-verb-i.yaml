@@ -5,45 +5,23 @@ version: '2.0'
 title: The Living Verb I
 subtitle: First Conjugation (-ати/-яти)
 content_outline:
-- section: 'Introduction: Verbs Bring Language to Life'
-  words: 100
+- section: Warm-up
+  words: 44
   points:
-  - Why verbs are essential
-  - Two conjugation patterns in Ukrainian
-  - Starting with First Conjugation
-- section: First Conjugation Pattern
-  words: 250
+  - Content for Warm-up
+- section: Presentation
+  words: 750
   points:
-  - Infinitive ends in -ати or -яти
-  - Remove -ти, add personal endings
-  - 'Full paradigm: читати → читаю, читаєш, читає...'
-- section: Personal Endings
-  words: 200
+  - Content for Presentation
+- section: Practice
+  words: 191
   points:
-  - я → -ю (читаю)
-  - ти → -єш (читаєш)
-  - він/вона → -є (читає)
-  - ми → -ємо (читаємо)
-  - ви → -єте (читаєте)
-  - вони → -ють (читають)
-- section: Common First Conjugation Verbs
-  words: 200
+  - Content for Practice
+- section: Cultural Insight
+  words: 225
   points:
-  - читати (to read), писати (to write)
-  - знати (to know), працювати (to work)
-  - слухати (to listen), питати (to ask)
-- section: Building Sentences
-  words: 150
-  points:
-  - 'Subject + Verb: Я читаю'
-  - 'Subject + Verb + Object: Я читаю книгу'
-  - Word order flexibility
-- section: 'Practice: Daily Actions'
-  words: 100
-  points:
-  - Describe what you do
-  - Ask what others do
-word_target: 1000
+  - Content for Cultural Insight
+word_target: 1210
 vocabulary_hints:
   required:
   - читати (to read)
@@ -60,16 +38,13 @@ vocabulary_hints:
   - вивчати (to study)
   - відпочивати (to rest)
 activity_hints:
-- type: conjugation-drill
+- type: fill-in
   focus: Conjugate First Conjugation verbs
   items: 30
 - type: fill-in
   focus: Complete with correct verb form
   items: 20
-- type: translation
-  focus: Translate action sentences
-  items: 15
-- type: matching
+- type: match-up
   focus: Match pronoun to verb form
   items: 18
 focus: grammar

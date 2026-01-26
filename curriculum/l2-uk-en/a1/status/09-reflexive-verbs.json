@@ -1,0 +1,47 @@
+{
+  "module": "09-reflexive-verbs",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T21:48:00.284294Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-16T00:05:30.158914Z",
+    "meta": "2026-01-26T17:21:18.663735Z",
+    "activities": "2026-01-16T00:08:19.349744Z",
+    "vocabulary": "2026-01-25T18:00:39.384187Z",
+    "plan": "2026-01-26T21:42:47.450643Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "557/500 (raw: 710)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "8/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "16/1"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

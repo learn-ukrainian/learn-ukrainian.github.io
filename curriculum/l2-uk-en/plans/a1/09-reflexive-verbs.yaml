@@ -5,41 +5,23 @@ version: '2.0'
 title: Reflexive Verbs (-ся)
 subtitle: Actions Directed at Oneself
 content_outline:
-- section: 'Introduction: What Are Reflexive Verbs?'
-  words: 100
+- section: Warm-up
+  words: 98
   points:
-  - Action directed back at subject
-  - Marked by -ся or -сь ending
-  - Common in daily routines
-- section: The Reflexive Particle
-  words: 200
+  - Content for Warm-up
+- section: Presentation
+  words: 285
   points:
-  - '-ся after consonants: вмиватися'
-  - '-сь after vowels: вмиваюсь'
-  - Always at the very end
-- section: Conjugating Reflexive Verbs
-  words: 200
+  - Content for Presentation
+- section: Practice
+  words: 87
   points:
-  - Same endings as regular verbs + -ся/-сь
-  - 'вмиватися: вмиваюся, вмиваєшся...'
-  - 'дивитися: дивлюся, дивишся...'
-- section: Common Reflexive Verbs
-  words: 200
+  - Content for Practice
+- section: Cultural Insight
+  words: 49
   points:
-  - 'Daily routines: вмиватися, одягатися, голитися'
-  - 'Emotions: сміятися, дивуватися'
-  - 'Movement: повертатися, зупинятися'
-- section: Transitive vs Reflexive Pairs
-  words: 100
-  points:
-  - мити (to wash sth) vs митися (to wash oneself)
-  - одягати vs одягатися
-- section: 'Practice: Daily Routine'
-  words: 100
-  points:
-  - Describe morning routine
-  - Ask about habits
-word_target: 900
+  - Content for Cultural Insight
+word_target: 519
 vocabulary_hints:
   required:
   - вмиватися (to wash oneself)
@@ -56,16 +38,16 @@ vocabulary_hints:
   - знайомитися (to get acquainted)
   - цікавитися (to be interested)
 activity_hints:
-- type: conjugation-drill
+- type: fill-in
   focus: Conjugate reflexive verbs
   items: 25
 - type: fill-in
   focus: Choose -ся or -сь
   items: 15
-- type: matching
+- type: match-up
   focus: Transitive ↔ reflexive pairs
   items: 12
-- type: dialogue
+- type: fill-in
   focus: Daily routine conversations
   items: 6
 focus: grammar

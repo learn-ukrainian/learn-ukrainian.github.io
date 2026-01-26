@@ -5,43 +5,23 @@ version: '2.0'
 title: Food, Drinks & Shopping
 subtitle: Practical Vocabulary for Market and Store
 content_outline:
-- section: 'Introduction: Food Vocabulary'
-  words: 100
+- section: Warm-up
+  words: 112
   points:
-  - Essential food words
-  - Shopping situations
-  - Grammar in context
-- section: Food Categories
-  words: 250
+  - Content for Warm-up
+- section: Presentation
+  words: 457
   points:
-  - 'Fruits: яблуко, банан, апельсин'
-  - 'Vegetables: картопля, морква, помідор'
-  - 'Bread/Grains: хліб, рис, макарони'
-  - 'Meat/Fish: м''ясо, курка, риба'
-- section: Drinks
-  words: 150
+  - Content for Presentation
+- section: Practice
+  words: 54
   points:
-  - вода, сік, молоко
-  - кава, чай
-  - пиво, вино (adult beverages)
-- section: Quantities and Measures
-  words: 200
+  - Content for Practice
+- section: Cultural Insight
+  words: 35
   points:
-  - кілограм, грам, літр
-  - пляшка (bottle), пакет (package)
-  - Genitive after quantities
-- section: Shopping Phrases
-  words: 200
-  points:
-  - Дайте, будь ласка... (Please give me...)
-  - Мені потрібно... (I need...)
-  - Скільки коштує? Це все.
-- section: 'Practice: At the Market'
-  words: 100
-  points:
-  - Role-play shopping
-  - Make a shopping list
-word_target: 1000
+  - Content for Cultural Insight
+word_target: 658
 vocabulary_hints:
   required:
   - хліб (bread)
@@ -60,13 +40,13 @@ vocabulary_hints:
   - яйце (egg)
   - цукор (sugar)
 activity_hints:
-- type: vocabulary-drill
+- type: match-up
   focus: Food and drink names
   items: 30
-- type: categorization
+- type: group-sort
   focus: Sort food by type
   items: 20
-- type: dialogue
+- type: fill-in
   focus: Shopping conversations
   items: 8
 - type: fill-in

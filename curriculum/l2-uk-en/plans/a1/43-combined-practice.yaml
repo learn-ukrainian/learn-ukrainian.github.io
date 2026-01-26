@@ -5,42 +5,23 @@ version: '2.0'
 title: Combined Practice
 subtitle: Review of Practical Skills
 content_outline:
-- section: 'Introduction: Real-Life Complexity'
-  words: 100
+- section: Warm-up
+  words: 125
   points:
-  - Real situations are complex
-  - Combining skills
-  - Adapting to changes
-- section: 'Scenario 1: A Day Out'
-  words: 150
+  - Content for Warm-up
+- section: Presentation
+  words: 157
   points:
-  - Transport + restaurant + shopping
-  - Plan and execute
-  - Handle small problems
-- section: 'Scenario 2: Travel Day'
-  words: 150
+  - Content for Presentation
+- section: Практика
+  words: 161
   points:
-  - Buy tickets + navigate + find hotel
-  - Multi-step planning
-  - Time management
-- section: 'Scenario 3: Problem Solving'
-  words: 150
+  - Content for Практика
+- section: 'Narrative: A Busy Saturday (Зайнята субота)'
+  words: 188
   points:
-  - Lost item + asking for help
-  - Changing plans
-  - Unexpected situations
-- section: 'Scenario 4: Social Event'
-  words: 150
-  points:
-  - Making plans + meeting people
-  - Small talk
-  - Polite communication
-- section: 'Practice: Integrated Challenges'
-  words: 100
-  points:
-  - Extended role-plays
-  - Multi-scenario challenges
-word_target: 800
+  - 'Content for Narrative: A Busy Saturday (Зайнята субота)'
+word_target: 631
 vocabulary_hints:
   required:
   - спочатку (first)
@@ -57,16 +38,16 @@ vocabulary_hints:
   - вирішити (to solve)
   - змінити (to change)
 activity_hints:
-- type: role-play
+- type: fill-in
   focus: Extended scenarios
   items: 8
-- type: dialogue
+- type: fill-in
   focus: Multi-part conversations
   items: 10
-- type: problem-solving
+- type: quiz
   focus: Handle unexpected situations
   items: 6
-- type: listening
+- type: quiz
   focus: Complex interactions
   items: 10
 focus: practical

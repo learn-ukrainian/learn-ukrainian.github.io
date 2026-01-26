@@ -5,42 +5,23 @@ version: '2.0'
 title: Emergencies
 subtitle: Help and Safety
 content_outline:
-- section: 'Introduction: Emergency Situations'
-  words: 100
+- section: Warm-up
+  words: 97
   points:
-  - Emergency numbers (103, 101, 102)
-  - When to call for help
-  - Staying calm
-- section: Calling for Help
-  words: 200
+  - Content for Warm-up
+- section: Presentation
+  words: 139
   points:
-  - Допоможіть! (Help!)
-  - Викличте швидку/поліцію!
-  - Emergency phrases
-- section: Describing Problems
-  words: 150
+  - Content for Presentation
+- section: Практика
+  words: 106
   points:
-  - Мені погано (I feel bad)
-  - Сталася аварія (There was an accident)
-  - Я загубив/загубила...
-- section: Giving Location
-  words: 150
+  - Content for Практика
+- section: 'Narrative: Where is my Passport? (Де мій паспорт?)'
+  words: 245
   points:
-  - Я на вулиці...
-  - Біля станції метро...
-  - Address format
-- section: At the Hospital/Police
-  words: 100
-  points:
-  - Basic hospital vocabulary
-  - Police report basics
-  - Showing documents
-- section: 'Practice: Emergency Scenarios'
-  words: 100
-  points:
-  - Call emergency services
-  - Report a problem
-word_target: 800
+  - 'Content for Narrative: Where is my Passport? (Де мій паспорт?)'
+word_target: 587
 vocabulary_hints:
   required:
   - допомога (help)
@@ -59,16 +40,16 @@ vocabulary_hints:
   - свідок (witness)
   - заява (statement)
 activity_hints:
-- type: vocabulary-drill
+- type: match-up
   focus: Emergency vocabulary
   items: 20
-- type: dialogue
+- type: fill-in
   focus: Emergency calls
   items: 8
-- type: listening
+- type: quiz
   focus: Emergency instructions
   items: 10
-- type: role-play
+- type: fill-in
   focus: Reporting an emergency
   items: 5
 focus: practical

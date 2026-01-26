@@ -5,42 +5,23 @@ version: '2.0'
 title: At the Store
 subtitle: Supermarket Shopping
 content_outline:
-- section: 'Introduction: Supermarket Shopping'
-  words: 100
+- section: Warm-up
+  words: 117
   points:
-  - Ukrainian supermarket layout
-  - Self-service shopping
-  - Finding what you need
-- section: Finding Products
-  words: 150
+  - Content for Warm-up
+- section: Presentation
+  words: 280
   points:
-  - Де знаходиться молоко?
-  - У якому відділі...?
-  - Store sections
-- section: Store Sections
-  words: 150
+  - Content for Presentation
+- section: Практика
+  words: 167
   points:
-  - молочний відділ (dairy section)
-  - хлібний відділ (bakery)
-  - м'ясний відділ (meat section)
-- section: At the Checkout
-  words: 150
+  - Content for Практика
+- section: 'Narrative: Grocery Shopping (Покупки продуктів)'
+  words: 113
   points:
-  - каса (checkout)
-  - Пакет потрібен?
-  - Карткою чи готівкою?
-- section: Problems and Questions
-  words: 150
-  points:
-  - Це не працює
-  - Де банкомат?
-  - Handling issues
-- section: 'Practice: Supermarket Trip'
-  words: 100
-  points:
-  - Complete shopping trip
-  - Handle checkout
-word_target: 800
+  - 'Content for Narrative: Grocery Shopping (Покупки продуктів)'
+word_target: 677
 vocabulary_hints:
   required:
   - магазин (store)
@@ -57,16 +38,16 @@ vocabulary_hints:
   - полиця (shelf)
   - акція (sale/promotion)
 activity_hints:
-- type: dialogue
+- type: fill-in
   focus: Supermarket conversation
   items: 10
-- type: vocabulary-drill
+- type: match-up
   focus: Store section names
   items: 20
-- type: listening
+- type: quiz
   focus: Checkout interactions
   items: 10
-- type: role-play
+- type: fill-in
   focus: Shopping scenario
   items: 5
 focus: practical

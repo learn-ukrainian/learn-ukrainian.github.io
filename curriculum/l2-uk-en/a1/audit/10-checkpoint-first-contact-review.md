@@ -1,8 +1,8 @@
 # Audit Report: M10 — 10-checkpoint-first-contact.md
-**Level:** A1 | **Module:** M10 | **Phase:** A1.1 | **Pedagogy:** Review | **Target:** 500
+**Level:** A1 | **Module:** M10 | **Phase:** A1 | **Pedagogy:** TTT | **Target:** 500
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:07:01
+**Generated:** 2026-01-26 21:48:00
 
 ## Configuration
 **Type:** A1-checkpoint
@@ -11,6 +11,7 @@
 **Items per Activity:** ≥10 items
 **Unique Types:** ≥4 types required
 **Priority Types:** fill-in, match-up, quiz
+**Required Types:** quiz
 **Engagement:** ≥2 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
@@ -35,6 +36,7 @@
 - Total activities: 11 (target: 8-12) ✅
 - Unique types: 7 (minimum: 4) ✅
 - Priority types used: 3/3 (fill-in, match-up, quiz) ✅
+- Required types used: 1/1 (quiz) ✅
 - Low density activities: 0
 
 ## Gates

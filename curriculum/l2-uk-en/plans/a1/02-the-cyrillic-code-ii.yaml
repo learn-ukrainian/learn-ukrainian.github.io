@@ -5,42 +5,35 @@ version: '2.0'
 title: The Cyrillic Code II
 subtitle: The Final 14 Letters
 content_outline:
-- section: 'Review: Your First 19 Letters'
+- section: Warm-up
   words: 100
   points:
-  - Quick review of Part I
+  - Quick review of Part I letters
   - Reading diagnostic
-- section: Unique Ukrainian Sounds (Ц, Ч, Ш, Щ)
-  words: 150
+- section: Presentation
+  words: 886
   points:
-  - Ц = ts, Ч = ch, Ш = sh, Щ = shch
-  - 'Practice words: центр, чай, школа, ще'
-  - Tongue positioning
-- section: Special Consonants (Г, Ґ, Ж)
-  words: 150
+  - Unique Seven (Г, Ґ, Ж, Ш, Щ, Ч, Ц)
+  - Iotated Four (Є, Ї, Ю, Я)
+  - Soft Sign (Ь)
+  - Hard I (И) vs Soft I (І)
+  - Short Y (Й)
+- section: Practice
+  words: 166
   points:
-  - Г = voiced h, Ґ = hard g, Ж = zh
-  - Г vs Ґ distinction
-  - 'Practice: гарний, ґанок, жити'
-- section: The Soft Sign (Ь) and И vs І
-  words: 150
+  - Reading words with new letters
+  - Distinguishing similar sounds
+- section: Production
+  words: 89
   points:
-  - Ь softens preceding consonant
-  - И = hard i (between i and y)
-  - І = soft i (like English ee)
-- section: Iotated Vowels (Є, Ї, Ю, Я)
-  words: 150
+  - Reading practice
+  - Self-assessment
+- section: Cultural Insight
+  words: 290
   points:
-  - Є = ye, Ї = yi, Ю = yu, Я = ya
-  - Used after vowels and at word start
-  - 'Practice: Європа, їжа, юнак, яблуко'
-- section: 'Summary: Complete Alphabet Mastery'
-  words: 100
-  points:
-  - All 33 letters reviewed
-  - Italic variants overview
-  - Ready for reading practice
-word_target: 800
+  - Kyiv spelling and Ukrainian identity
+  - Italic variants warning
+word_target: 1531
 vocabulary_hints:
   required:
   - центр (center)
@@ -59,16 +52,16 @@ vocabulary_hints:
   - ніч (night)
   - сім'я (family)
 activity_hints:
-- type: letter-recognition
+- type: quiz
   focus: Identify final 14 letters
   items: 20
-- type: audio-match
+- type: match-up
   focus: Match unique sounds to letters
   items: 20
-- type: minimal-pairs
+- type: group-sort
   focus: Distinguish И/І, Г/Ґ
   items: 15
-- type: reading-drill
+- type: quiz
   focus: Read words with new letters
   items: 20
 focus: grammar

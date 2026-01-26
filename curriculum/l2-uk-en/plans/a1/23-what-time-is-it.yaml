@@ -5,42 +5,45 @@ version: '2.0'
 title: What Time Is It?
 subtitle: Telling Time, Days, and Months
 content_outline:
-- section: 'Introduction: Time in Ukrainian'
-  words: 100
+- section: Warm-up
+  words: 32
   points:
-  - Asking and telling time
-  - Time is essential for daily life
-  - Scheduling and planning
-- section: Telling Time
-  words: 250
+  - Content for Warm-up
+- section: Grammar
+  words: 251
   points:
-  - Котра година? (What time is it?)
-  - Перша/друга/третя година
-  - Half past, quarter to/past
+  - Content for Grammar
 - section: Days of the Week
-  words: 200
+  words: 77
   points:
   - понеділок, вівторок, середа
   - четвер, п'ятниця, субота, неділя
   - У понеділок (On Monday)
 - section: Months of the Year
-  words: 200
+  words: 123
   points:
   - січень - грудень (January - December)
   - У січні (In January)
   - Seasons connection
 - section: Time Prepositions
-  words: 150
+  words: 92
   points:
   - о + locative (at a time)
   - до + genitive (until)
   - після + genitive (after)
-- section: 'Practice: Scheduling'
-  words: 100
+- section: Examples in Context
+  words: 260
   points:
-  - Make appointments
-  - Discuss schedules
-word_target: 1000
+  - Content for Examples in Context
+- section: Dialogues
+  words: 210
+  points:
+  - Content for Dialogues
+- section: Практика
+  words: 19
+  points:
+  - Content for Практика
+word_target: 1064
 vocabulary_hints:
   required:
   - година (hour)
@@ -59,16 +62,16 @@ vocabulary_hints:
   - рано (early)
   - о котрій (at what time)
 activity_hints:
-- type: matching
+- type: match-up
   focus: Match times to clock faces
   items: 20
 - type: fill-in
   focus: Complete time expressions
   items: 20
-- type: ordering
+- type: unjumble
   focus: Order days and months
   items: 15
-- type: dialogue
+- type: fill-in
   focus: Schedule a meeting
   items: 6
 focus: grammar

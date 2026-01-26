@@ -1,8 +1,8 @@
 # Audit Report: M02 — 02-the-cyrillic-code-ii.md
-**Level:** A1 | **Module:** M02 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 300
-**Naturalness:** 9/10 (PASS)
+**Level:** A1 | **Module:** M02 | **Phase:** A1 | **Pedagogy:** PPP | **Target:** 300
+**Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:06:56
+**Generated:** 2026-01-26 21:47:56
 
 ## Configuration
 **Type:** A1-grammar
@@ -11,6 +11,7 @@
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
 **Priority Types:** anagram, fill-in, match-up, quiz, unjumble
+**Required Types:** group-sort, match-up, quiz
 **Engagement:** ≥3 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
@@ -33,16 +34,8 @@
 - Total activities: 9 (target: 8-12) ✅
 - Unique types: 6 (minimum: 4) ✅
 - Priority types used: 4/5 (anagram, fill-in, match-up, quiz) ✅
+- Required types used: 3/3 (group-sort, match-up, quiz) ✅
 - Low density activities: 0
-
-## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): чемпіон, дякую, буква, вибачте, джаз...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1463/300 (raw: 1964)
@@ -59,7 +52,7 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 9.0% (target 5-15% (M02))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 9/10 (High)
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
 | Section | Status | Count | Notes |

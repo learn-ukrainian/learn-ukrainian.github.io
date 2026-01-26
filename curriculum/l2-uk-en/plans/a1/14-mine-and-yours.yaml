@@ -5,43 +5,27 @@ version: '2.0'
 title: Mine and Yours
 subtitle: Possessive Pronouns in Ukrainian
 content_outline:
-- section: 'Introduction: Whose Is It?'
-  words: 100
+- section: Warm-up
+  words: 99
   points:
-  - Possession in Ukrainian
-  - Two types of possessives
-  - Agreement with noun
-- section: Variable Possessives (мій, твій, наш, ваш)
-  words: 250
+  - Content for Warm-up
+- section: Presentation
+  words: 643
   points:
-  - мій/моя/моє/мої (my)
-  - твій/твоя/твоє/твої (your informal)
-  - наш/наша/наше/наші (our)
-  - ваш/ваша/ваше/ваші (your formal/plural)
-- section: Invariable Possessives (його, її, їхній)
-  words: 200
+  - Content for Presentation
+- section: Practice
+  words: 201
   points:
-  - його (his) - never changes
-  - її (her) - never changes
-  - їхній/їхня/їхнє/їхні (their) - changes
-- section: Agreement Practice
-  words: 150
+  - Content for Practice
+- section: Production
+  words: 179
   points:
-  - мій брат, моя сестра, моє місто
-  - Match to noun gender
-  - Common mistakes
-- section: Asking About Possession
-  words: 100
+  - Content for Production
+- section: Cultural Insight
+  words: 185
   points:
-  - Чий? Чия? Чиє? Чиї?
-  - Whose book is this?
-  - Answer patterns
-- section: 'Practice: What''s Yours?'
-  words: 100
-  points:
-  - Describe your possessions
-  - Ask about others' things
-word_target: 900
+  - Content for Cultural Insight
+word_target: 1307
 vocabulary_hints:
   required:
   - мій (my m.)
@@ -61,13 +45,13 @@ activity_hints:
 - type: fill-in
   focus: Complete with correct possessive
   items: 25
-- type: matching
+- type: match-up
   focus: Match possessive to gender
   items: 20
-- type: transformation
+- type: fill-in
   focus: Change gender of possessives
   items: 15
-- type: dialogue
+- type: fill-in
   focus: Whose is this? conversations
   items: 6
 focus: grammar

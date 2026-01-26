@@ -5,42 +5,27 @@ version: '2.0'
 title: Around the City
 subtitle: Navigating Urban Spaces with Confidence
 content_outline:
-- section: 'Introduction: Getting Around'
-  words: 100
+- section: Warm-up
+  words: 144
   points:
-  - City navigation essentials
-  - Asking for directions
-  - Understanding responses
-- section: Directional Words
-  words: 200
+  - Content for Warm-up
+- section: Presentation
+  words: 650
   points:
-  - прямо (straight), наліво (left), направо (right)
-  - тут (here), там (there)
-  - близько (near), далеко (far)
-- section: Location Prepositions
-  words: 200
+  - Content for Presentation
+- section: Practice
+  words: 387
   points:
-  - біля (near/by), навпроти (across from)
-  - за (behind), перед (in front of)
-  - між (between)
-- section: City Places
-  words: 200
+  - Content for Practice
+- section: Production
+  words: 225
   points:
-  - вулиця (street), площа (square)
-  - зупинка (stop), станція (station)
-  - аптека, пошта, банк, магазин
-- section: Asking Directions
-  words: 200
+  - Content for Production
+- section: Cultural Insight
+  words: 196
   points:
-  - Де знаходиться...?
-  - Як дістатися до...?
-  - Understanding responses
-- section: 'Practice: Find the Way'
-  words: 100
-  points:
-  - Give and follow directions
-  - City map activities
-word_target: 1000
+  - Content for Cultural Insight
+word_target: 1602
 vocabulary_hints:
   required:
   - прямо (straight)
@@ -59,16 +44,16 @@ vocabulary_hints:
   - світлофор (traffic light)
   - тротуар (sidewalk)
 activity_hints:
-- type: map-activity
+- type: match-up
   focus: Follow directions on a map
   items: 10
-- type: dialogue
+- type: fill-in
   focus: Ask for and give directions
   items: 8
 - type: fill-in
   focus: Complete with prepositions
   items: 15
-- type: matching
+- type: match-up
   focus: Place → description
   items: 15
 focus: practical

@@ -1,0 +1,47 @@
+{
+  "module": "10-checkpoint-first-contact",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-26T21:48:00.847658Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-16T00:09:10.134599Z",
+    "meta": "2026-01-26T17:21:18.666991Z",
+    "activities": "2026-01-16T00:10:14.593020Z",
+    "vocabulary": "2026-01-25T15:44:11.118128Z",
+    "plan": "2026-01-26T21:47:31.039109Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "1145/500 (raw: 1409)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "11/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "7/1"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

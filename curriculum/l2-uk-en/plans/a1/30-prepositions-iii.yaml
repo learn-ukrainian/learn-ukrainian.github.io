@@ -5,42 +5,43 @@ version: '2.0'
 title: Prepositions III
 subtitle: Direction, Location & Origin
 content_outline:
-- section: 'Introduction: Three Questions'
-  words: 150
+- section: Warm-up
+  words: 71
   points:
-  - Де? = Where (location)
-  - Куди? = Where to (direction)
-  - Звідки? = Where from (origin)
-- section: 'Location: Де? + Locative'
-  words: 200
+  - Content for Warm-up
+- section: Grammar
+  words: 46
   points:
-  - в/у + locative (inside)
-  - на + locative (on, at)
-  - Я в школі, на роботі
-- section: 'Direction: Куди? + Accusative/Genitive'
-  words: 200
+  - Content for Grammar
+- section: 'Location: Де? (Where?)'
+  words: 78
   points:
-  - в/у + accusative (going into)
-  - на + accusative (going onto)
-  - до + genitive (toward)
-- section: 'Origin: Звідки? + Genitive'
-  words: 200
+  - 'Content for Location: Де? (Where?)'
+- section: 'Direction: Куди? (Where to?)'
+  words: 119
   points:
-  - з + genitive (from inside)
-  - від + genitive (from someone)
-  - Я з України, від друга
-- section: Common Patterns
-  words: 150
+  - 'Content for Direction: Куди? (Where to?)'
+- section: 'Origin: Звідки? (Where from?)'
+  words: 80
   points:
-  - йти в/на... (go to)
-  - приїхати з... (arrive from)
-  - Movement verb patterns
-- section: 'Practice: Where, Where to, Where from?'
-  words: 100
+  - 'Content for Origin: Звідки? (Where from?)'
+- section: Location vs Direction Pairs
+  words: 38
   points:
-  - Answer all three questions
-  - Describe journeys
-word_target: 1000
+  - Content for Location vs Direction Pairs
+- section: Examples in Context
+  words: 139
+  points:
+  - Content for Examples in Context
+- section: Dialogues
+  words: 352
+  points:
+  - Content for Dialogues
+- section: Практика
+  words: 13
+  points:
+  - Content for Практика
+word_target: 936
 vocabulary_hints:
   required:
   - де (where)
@@ -60,13 +61,13 @@ activity_hints:
 - type: fill-in
   focus: Choose correct preposition
   items: 25
-- type: transformation
+- type: fill-in
   focus: Change location to direction
   items: 20
 - type: quiz
   focus: Which question? Де/Куди/Звідки
   items: 15
-- type: dialogue
+- type: fill-in
   focus: Asking directions
   items: 6
 focus: grammar

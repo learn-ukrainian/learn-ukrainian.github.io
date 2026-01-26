@@ -1,16 +1,17 @@
 # Audit Report: M31 — 31-body-and-health.md
-**Level:** A1 | **Module:** M31 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 750
+**Level:** A1 | **Module:** M31 | **Phase:** A1 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:07:15
+**Generated:** 2026-01-26 21:48:12
 
 ## Configuration
-**Type:** A1-grammar
+**Type:** A1-vocab
 **Word Target:** 750 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
 **Priority Types:** anagram, fill-in, match-up, quiz, unjumble
+**Required Types:** fill-in, match-up
 **Engagement:** ≥3 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
@@ -34,16 +35,8 @@
 - Total activities: 10 (target: 8-12) ✅
 - Unique types: 6 (minimum: 4) ✅
 - Priority types used: 4/5 (fill-in, match-up, quiz, unjumble) ✅
+- Required types used: 2/2 (fill-in, match-up) ✅
 - Low density activities: 0
-
-## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (23 words): тіло, болить, викликати, температура, допомагати...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 800/750 (raw: 1159)

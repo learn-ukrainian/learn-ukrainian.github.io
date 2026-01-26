@@ -5,42 +5,23 @@ version: '2.0'
 title: Phone Basics
 subtitle: Making Calls and Texting
 content_outline:
-- section: 'Introduction: Phone Communication'
-  words: 100
+- section: Warm-up
+  words: 108
   points:
-  - Phone call etiquette
-  - Formal vs informal calls
-  - Texting basics
-- section: Making a Call
+  - Content for Warm-up
+- section: Presentation
   words: 200
   points:
-  - Алло! Добрий день!
-  - Чи можу я поговорити з...?
-  - Це [name] говорить
-- section: Receiving a Call
-  words: 150
+  - Content for Presentation
+- section: Практика
+  words: 144
   points:
-  - Так, слухаю
-  - Хвилинку, будь ласка
-  - Він/вона зараз зайнятий/зайнята
-- section: Problems and Messages
-  words: 150
+  - Content for Практика
+- section: 'Narrative: The Delivery (Доставка)'
+  words: 152
   points:
-  - Ви помилилися номером
-  - Можете передати...?
-  - Я передзвоню пізніше
-- section: Text Messaging
-  words: 100
-  points:
-  - Common abbreviations
-  - Дзвони мені
-  - Чекаю на відповідь
-- section: 'Practice: Phone Conversations'
-  words: 100
-  points:
-  - Make a call
-  - Leave a message
-word_target: 800
+  - 'Content for Narrative: The Delivery (Доставка)'
+word_target: 604
 vocabulary_hints:
   required:
   - телефон (phone)
@@ -57,13 +38,13 @@ vocabulary_hints:
   - помилитися (to make a mistake)
   - передати (to pass on)
 activity_hints:
-- type: dialogue
+- type: fill-in
   focus: Phone conversations
   items: 10
-- type: listening
+- type: quiz
   focus: Phone call comprehension
   items: 10
-- type: role-play
+- type: fill-in
   focus: Making and receiving calls
   items: 6
 - type: fill-in

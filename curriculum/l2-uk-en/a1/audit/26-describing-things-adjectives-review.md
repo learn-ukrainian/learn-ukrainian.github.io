@@ -1,8 +1,8 @@
 # Audit Report: M26 — 26-describing-things-adjectives.md
-**Level:** A1 | **Module:** M26 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 750
+**Level:** A1 | **Module:** M26 | **Phase:** A1 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:07:12
+**Generated:** 2026-01-26 21:48:09
 
 ## Configuration
 **Type:** A1-grammar
@@ -11,6 +11,7 @@
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
 **Priority Types:** anagram, fill-in, match-up, quiz, unjumble
+**Required Types:** fill-in, match-up
 **Engagement:** ≥3 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
@@ -32,6 +33,7 @@
 - Total activities: 8 (target: 8-12) ✅
 - Unique types: 6 (minimum: 4) ✅
 - Priority types used: 4/5 (fill-in, match-up, quiz, unjumble) ✅
+- Required types used: 2/2 (fill-in, match-up) ✅
 - Low density activities: 0
 
 ## Gates

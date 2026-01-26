@@ -5,42 +5,27 @@ version: '2.0'
 title: The Living Verb II
 subtitle: Second Conjugation (-ити verbs)
 content_outline:
-- section: 'Review: First Conjugation'
-  words: 100
+- section: Warm-up
+  words: 94
   points:
-  - Quick review of -ати pattern
-  - How to identify conjugation type
-- section: Second Conjugation Pattern
-  words: 250
+  - Content for Warm-up
+- section: Presentation
+  words: 379
   points:
-  - Infinitive ends in -ити
-  - 'Endings: -у/-ю, -иш, -ить, -имо, -ите, -ять'
-  - 'Full paradigm: говорити → говорю, говориш...'
-- section: Consonant Mutations
-  words: 200
+  - Content for Presentation
+- section: Practice
+  words: 294
   points:
-  - First person singular changes
-  - 'д → дж: ходити → ходжу'
-  - 'т → ч: платити → плачу'
-  - 'с → ш: просити → прошу'
-- section: Common Second Conjugation Verbs
-  words: 200
+  - Content for Practice
+- section: Production
+  words: 44
   points:
-  - говорити (to speak), робити (to do)
-  - любити (to love), бачити (to see)
-  - ходити (to walk), просити (to ask/request)
-- section: 'Irregular Verbs: їсти, пити'
-  words: 150
+  - Content for Production
+- section: Cultural Insight
+  words: 161
   points:
-  - 'їсти: їм, їси, їсть, їмо, їсте, їдять'
-  - 'пити: п''ю, п''єш, п''є...'
-  - Essential daily vocabulary
-- section: 'Practice: Comparing Conjugations'
-  words: 100
-  points:
-  - First vs Second Conjugation drills
-  - Mixed verb sentences
-word_target: 1000
+  - Content for Cultural Insight
+word_target: 972
 vocabulary_hints:
   required:
   - говорити (to speak)
@@ -57,18 +42,15 @@ vocabulary_hints:
   - платити (to pay)
   - вчити (to teach/learn)
 activity_hints:
-- type: conjugation-drill
+- type: fill-in
   focus: Conjugate Second Conjugation verbs
   items: 30
-- type: sorting
+- type: group-sort
   focus: Sort verbs by conjugation type
   items: 20
 - type: fill-in
   focus: Complete with mutated forms
   items: 15
-- type: translation
-  focus: Translate sentences with both conjugations
-  items: 12
 focus: grammar
 pedagogy: PPP
 prerequisites:

@@ -5,42 +5,35 @@ version: '2.0'
 title: Colors & Clothing
 subtitle: Describing What You Wear
 content_outline:
-- section: 'Introduction: Colors and Fashion'
-  words: 100
+- section: Warm-up
+  words: 36
   points:
-  - Colors as adjectives
-  - Describing appearance
-  - Fashion vocabulary
-- section: Basic Colors
-  words: 250
+  - Content for Warm-up
+- section: Grammar
+  words: 83
   points:
-  - білий, чорний, сірий
-  - червоний, синій, зелений
-  - жовтий, помаранчевий, рожевий
-- section: Color Agreement
-  words: 200
+  - Content for Grammar
+- section: Describing What You Wear
+  words: 106
   points:
-  - біла сорочка, білий светр
-  - чорне плаття, чорні штани
-  - Colors follow adjective rules
-- section: Clothing Items
-  words: 200
+  - Content for Describing What You Wear
+- section: Pluralia Tantum (Always Plural)
+  words: 60
   points:
-  - сорочка, светр, куртка
-  - штани, джинси, спідниця
-  - плаття, пальто, взуття
-- section: Describing Outfits
-  words: 150
+  - Content for Pluralia Tantum (Always Plural)
+- section: Examples in Context
+  words: 137
   points:
-  - Він носить синю сорочку
-  - Вона в червоній сукні
-  - What are you wearing?
-- section: 'Practice: Fashion Show'
-  words: 100
+  - Content for Examples in Context
+- section: Dialogues
+  words: 232
   points:
-  - Describe what people wear
-  - Shopping for clothes
-word_target: 1000
+  - Content for Dialogues
+- section: Практика
+  words: 18
+  points:
+  - Content for Практика
+word_target: 672
 vocabulary_hints:
   required:
   - білий (white)
@@ -59,16 +52,16 @@ vocabulary_hints:
   - взуття (footwear)
   - носити (to wear)
 activity_hints:
-- type: vocabulary-drill
+- type: match-up
   focus: Color and clothing names
   items: 30
-- type: matching
+- type: match-up
   focus: Match colors to items
   items: 20
-- type: description
+- type: fill-in
   focus: Describe outfits in pictures
   items: 10
-- type: dialogue
+- type: fill-in
   focus: Shopping for clothes
   items: 6
 focus: vocabulary

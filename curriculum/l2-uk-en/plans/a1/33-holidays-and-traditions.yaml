@@ -5,42 +5,35 @@ version: '2.0'
 title: Holidays & Traditions
 subtitle: Свята і традиції
 content_outline:
-- section: 'Introduction: Ukrainian Holidays'
-  words: 100
+- section: Warm-up
+  words: 78
   points:
-  - Ukraine's holiday calendar
-  - Traditions and celebrations
-  - Greetings and wishes
-- section: Major Holidays
-  words: 250
+  - Content for Warm-up
+- section: Граматика (Grammar)
+  words: 121
   points:
-  - Новий рік, Різдво
-  - Великдень, День незалежності
-  - День народження
-- section: Holiday Greetings
-  words: 200
+  - Content for Граматика (Grammar)
+- section: Making Wishes (Побажання)
+  words: 72
   points:
-  - З Новим роком! (Happy New Year!)
-  - З днем народження! (Happy Birthday!)
-  - З Різдвом Христовим!
-- section: Wishes and Toasts
-  words: 200
+  - Content for Making Wishes (Побажання)
+- section: When Is Your Birthday? (Коли твій день народження?)
+  words: 38
   points:
-  - Бажаю щастя, здоров'я
-  - Многая літа! (Many years!)
-  - За + accusative (toasting)
-- section: Dates and Celebrations
-  words: 150
+  - Content for When Is Your Birthday? (Коли твій день народження?)
+- section: Приклади (Examples)
+  words: 55
   points:
-  - 'Date format: day + genitive month'
-  - When is your birthday?
-  - Planning celebrations
-- section: 'Practice: Holiday Wishes'
-  words: 100
+  - Content for Приклади (Examples)
+- section: Діалоги (Dialogues)
+  words: 344
   points:
-  - Write holiday greetings
-  - Celebrate a birthday
-word_target: 1000
+  - Content for Діалоги (Dialogues)
+- section: Практика (Practice)
+  words: 13
+  points:
+  - Content for Практика (Practice)
+word_target: 721
 vocabulary_hints:
   required:
   - свято (holiday)
@@ -59,16 +52,16 @@ vocabulary_hints:
   - торт (cake)
   - свічка (candle)
 activity_hints:
-- type: vocabulary-drill
+- type: match-up
   focus: Holiday names and greetings
   items: 25
-- type: matching
+- type: match-up
   focus: Match holidays to dates
   items: 15
 - type: fill-in
   focus: Complete holiday wishes
   items: 20
-- type: dialogue
+- type: fill-in
   focus: Birthday party conversation
   items: 6
 focus: cultural

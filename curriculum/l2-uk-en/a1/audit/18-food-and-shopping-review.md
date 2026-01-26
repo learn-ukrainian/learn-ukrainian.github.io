@@ -1,16 +1,17 @@
 # Audit Report: M18 — 18-food-and-shopping.md
-**Level:** A1 | **Module:** M18 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 750
-**Naturalness:** 9/10 (PASS)
+**Level:** A1 | **Module:** M18 | **Phase:** A1 | **Pedagogy:** PPP | **Target:** 750
+**Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:07:07
+**Generated:** 2026-01-26 21:48:05
 
 ## Configuration
-**Type:** A1-grammar
+**Type:** A1-vocab
 **Word Target:** 750 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
 **Priority Types:** anagram, fill-in, match-up, quiz, unjumble
+**Required Types:** fill-in, group-sort, match-up
 **Engagement:** ≥3 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
@@ -33,16 +34,8 @@
 - Total activities: 9 (target: 8-12) ✅
 - Unique types: 5 (minimum: 4) ✅
 - Priority types used: 3/5 (fill-in, match-up, quiz) ✅
+- Required types used: 3/3 (fill-in, group-sort, match-up) ✅
 - Low density activities: 0
-
-## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (28 words): вино, офіціант, купувати, борщ, дорого...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 810/750 (raw: 879)
@@ -59,7 +52,7 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 27.8% (target 25-40% (M18))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 9/10 (High)
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
 | Section | Status | Count | Notes |

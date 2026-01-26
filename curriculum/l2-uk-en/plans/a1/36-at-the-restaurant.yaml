@@ -5,42 +5,23 @@ version: '2.0'
 title: At the Restaurant
 subtitle: Dining Out in Ukraine
 content_outline:
-- section: 'Introduction: Restaurant Dining'
-  words: 100
+- section: Warm-up
+  words: 124
   points:
-  - Restaurant etiquette
-  - Full dining experience
-  - From arrival to payment
-- section: Making a Reservation
-  words: 150
+  - Content for Warm-up
+- section: Presentation
+  words: 329
   points:
-  - Я хочу замовити столик
-  - На скільки осіб?
-  - На котру годину?
-- section: Being Seated
-  words: 150
+  - Content for Presentation
+- section: Практика
+  words: 160
   points:
-  - Столик біля вікна
-  - Меню, будь ласка
-  - Що ви рекомендуєте?
-- section: Ordering Food
-  words: 200
+  - Content for Практика
+- section: 'Narrative: Dinner with Friends (Вечеря з друзями)'
+  words: 136
   points:
-  - На перше... (For first course...)
-  - На друге... (For main course...)
-  - На десерт...
-- section: Special Needs
-  words: 150
-  points:
-  - Я вегетаріанець/вегетаріанка
-  - Без глютену/лактози
-  - Алергія на...
-- section: 'Practice: Restaurant Role-Play'
-  words: 150
-  points:
-  - Complete dining scenario
-  - Handle complications
-word_target: 900
+  - 'Content for Narrative: Dinner with Friends (Вечеря з друзями)'
+word_target: 749
 vocabulary_hints:
   required:
   - столик (table)
@@ -59,16 +40,16 @@ vocabulary_hints:
   - чайові (tip)
   - резервація (reservation)
 activity_hints:
-- type: dialogue
+- type: fill-in
   focus: Full restaurant experience
   items: 12
-- type: role-play
+- type: fill-in
   focus: Waiter and customer
   items: 6
-- type: vocabulary-drill
+- type: match-up
   focus: Menu item names
   items: 20
-- type: listening
+- type: quiz
   focus: Restaurant conversations
   items: 10
 focus: practical

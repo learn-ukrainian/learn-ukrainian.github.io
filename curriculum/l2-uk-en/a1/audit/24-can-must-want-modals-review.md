@@ -1,8 +1,8 @@
 # Audit Report: M24 — 24-can-must-want-modals.md
-**Level:** A1 | **Module:** M24 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 750
+**Level:** A1 | **Module:** M24 | **Phase:** A1 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:07:11
+**Generated:** 2026-01-26 21:48:08
 
 ## Configuration
 **Type:** A1-grammar
@@ -11,6 +11,7 @@
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
 **Priority Types:** anagram, fill-in, match-up, quiz, unjumble
+**Required Types:** fill-in
 **Engagement:** ≥3 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
@@ -32,16 +33,8 @@
 - Total activities: 8 (target: 8-12) ✅
 - Unique types: 6 (minimum: 4) ✅
 - Priority types used: 4/5 (fill-in, match-up, quiz, unjumble) ✅
+- Required types used: 1/1 (fill-in) ✅
 - Low density activities: 0
-
-## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (20 words): вдаватися, згодний, повинен, можна, змозі...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 962/750 (raw: 1707)

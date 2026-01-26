@@ -5,42 +5,27 @@ version: '2.0'
 title: The Gender Code
 subtitle: Unlocking Ukrainian Gender Patterns
 content_outline:
-- section: 'Introduction: Why Gender Matters'
-  words: 100
+- section: Warm-up
+  words: 97
   points:
-  - Every noun has a gender
-  - Gender affects adjectives, verbs, pronouns
-  - 'Good news: Endings are predictable'
-- section: Masculine Nouns
-  words: 200
+  - Content for Warm-up
+- section: Presentation
+  words: 313
   points:
-  - 'End in consonant: брат, стіл, дім'
-  - 'Professions: студент, лікар, вчитель'
-  - 'Family members: тато, дядько (exceptions)'
-- section: Feminine Nouns
-  words: 200
+  - Content for Presentation
+- section: Practice
+  words: 323
   points:
-  - 'End in -а: мама, сестра, книга'
-  - 'End in -я: земля, сім''я, історія'
-  - 'Soft sign: ніч, річ, любов'
-- section: Neuter Nouns
-  words: 200
+  - Content for Practice
+- section: Production
+  words: 71
   points:
-  - 'End in -о: вікно, молоко, місто'
-  - 'End in -е: море, серце, сонце'
-  - Abstract concepts common
-- section: Declension Families Preview
-  words: 100
+  - Content for Production
+- section: Cultural Insight
+  words: 130
   points:
-  - Four families based on ending
-  - Why families matter for cases
-  - Quick reference chart
-- section: 'Practice: Gender Detective'
-  words: 100
-  points:
-  - Identify gender of new words
-  - Memory strategies
-word_target: 900
+  - Content for Cultural Insight
+word_target: 934
 vocabulary_hints:
   required:
   - брат (brother)
@@ -59,7 +44,7 @@ vocabulary_hints:
   - земля (earth)
   - серце (heart)
 activity_hints:
-- type: sorting
+- type: group-sort
   focus: Sort nouns by gender
   items: 30
 - type: quiz

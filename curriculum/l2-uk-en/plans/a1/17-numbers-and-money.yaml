@@ -5,43 +5,23 @@ version: '2.0'
 title: Numbers & Money
 subtitle: Counting and Shopping in Ukraine
 content_outline:
-- section: 'Introduction: Numbers in Daily Life'
-  words: 100
+- section: Warm-up
+  words: 75
   points:
-  - Counting is essential
-  - Prices, quantities, time
-  - Number-noun agreement
-- section: Numbers 0-20
-  words: 200
+  - Content for Warm-up
+- section: Presentation
+  words: 599
   points:
-  - 0 нуль, 1 один/одна/одне
-  - 2 два/дві, 3 три, 4 чотири
-  - '5-10: п''ять, шість, сім, вісім, дев''ять, десять'
-  - '11-20: одинадцять... двадцять'
-- section: Numbers 20-100
-  words: 200
+  - Content for Presentation
+- section: Practice
+  words: 221
   points:
-  - 'Tens: двадцять, тридцять... сто'
-  - 'Compound numbers: двадцять один'
-  - Practice counting
-- section: Number Agreement Rules
-  words: 200
+  - Content for Practice
+- section: Cultural Insight
+  words: 196
   points:
-  - '1 + nominative singular: одна гривня'
-  - '2-4 + nominative plural: дві гривні'
-  - '5+ + genitive plural: п''ять гривень'
-- section: Money and Prices
-  words: 200
-  points:
-  - гривня, гривні, гривень
-  - Скільки коштує? (How much?)
-  - Це коштує... (It costs...)
-- section: 'Practice: Shopping Math'
-  words: 100
-  points:
-  - Calculate totals
-  - Ask about prices
-word_target: 1000
+  - Content for Cultural Insight
+word_target: 1091
 vocabulary_hints:
   required:
   - один (one)
@@ -60,16 +40,16 @@ vocabulary_hints:
   - дешево (cheap)
   - здача (change)
 activity_hints:
-- type: number-drill
+- type: fill-in
   focus: Counting practice
   items: 30
 - type: fill-in
   focus: Complete with correct number form
   items: 20
-- type: listening
+- type: quiz
   focus: Identify numbers heard
   items: 15
-- type: role-play
+- type: fill-in
   focus: Shopping transactions
   items: 6
 focus: grammar

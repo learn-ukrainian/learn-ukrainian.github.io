@@ -5,41 +5,35 @@ version: '2.0'
 title: 'Checkpoint: First Contact'
 subtitle: Can You Do the A1.1 Skills?
 content_outline:
-- section: 'Part 1: Reading Assessment'
+- section: Огляд
+  words: 72
+  points:
+  - Content for Огляд
+- section: 'Skill 1: Reading Cyrillic'
   words: 100
   points:
-  - Read words and sentences aloud
-  - Demonstrate letter recognition
-  - Show pronunciation accuracy
-- section: 'Part 2: Grammar Check'
-  words: 100
+  - 'Content for Skill 1: Reading Cyrillic'
+- section: 'Skill 2: Identifying Gender'
+  words: 111
   points:
-  - Identify noun gender
-  - Conjugate verbs correctly
-  - Form questions and negatives
-- section: 'Part 3: Vocabulary Review'
-  words: 100
+  - 'Content for Skill 2: Identifying Gender'
+- section: 'Skill 3: Conjugating Verbs'
+  words: 212
   points:
-  - Common objects and actions
-  - Question words
-  - Basic phrases
-- section: 'Part 4: Communication Tasks'
-  words: 100
+  - 'Content for Skill 3: Conjugating Verbs'
+- section: 'Skill 4: Asking Questions'
+  words: 138
   points:
-  - Self-introduction
-  - Ask and answer basic questions
-  - Describe daily actions
-- section: 'Part 5: Self-Assessment'
-  words: 50
+  - 'Content for Skill 4: Asking Questions'
+- section: 'Skill 5: Ordering Food'
+  words: 140
   points:
-  - What went well?
-  - Areas to review
-- section: 'Summary: Ready for A1.2'
-  words: 50
+  - 'Content for Skill 5: Ordering Food'
+- section: Integration Challenge
+  words: 102
   points:
-  - Skills mastered
-  - Preview of Navigation phase
-word_target: 500
+  - Content for Integration Challenge
+word_target: 875
 vocabulary_hints:
   required:
   - читати (to read)
@@ -56,18 +50,9 @@ vocabulary_hints:
   - відповідати (to answer)
   - перевіряти (to check)
 activity_hints:
-- type: reading-assessment
-  focus: Read aloud and comprehend
-  items: 10
 - type: quiz
   focus: A1.1 grammar and vocabulary
   items: 30
-- type: oral-task
-  focus: Self-introduction and Q&A
-  items: 5
-- type: self-assessment
-  focus: Rate your skills
-  items: 10
 focus: checkpoint
 pedagogy: TTT
 prerequisites:

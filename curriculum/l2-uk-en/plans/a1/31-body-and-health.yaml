@@ -5,42 +5,35 @@ version: '2.0'
 title: Body & Health
 subtitle: At the Doctor's
 content_outline:
-- section: 'Introduction: Health Communication'
-  words: 100
+- section: Warm-up
+  words: 94
   points:
-  - Essential health vocabulary
-  - Communicating symptoms
-  - Doctor and pharmacy visits
-- section: Body Parts
-  words: 250
+  - Content for Warm-up
+- section: Grammar
+  words: 157
   points:
-  - голова, шия, плече
-  - рука, нога, спина
-  - живіт, груди, горло
-- section: Expressing Pain
-  words: 200
+  - Content for Grammar
+- section: Common Health Expressions
+  words: 96
   points:
-  - У мене болить голова
-  - Болить живіт/горло
-  - Мені погано (I feel bad)
-- section: Common Symptoms
-  words: 200
+  - Content for Common Health Expressions
+- section: At the Pharmacy (В аптеці)
+  words: 75
   points:
-  - температура, кашель, нежить
-  - Я хворий/хвора (I'm sick)
-  - Мене нудить (I feel nauseous)
-- section: At the Doctor/Pharmacy
-  words: 150
+  - Content for At the Pharmacy (В аптеці)
+- section: Examples in Context
+  words: 56
   points:
-  - Мені потрібен лікар
-  - Де аптека? (Where's the pharmacy?)
-  - Мені потрібні ліки (I need medicine)
-- section: 'Practice: Doctor Visit Role-Play'
-  words: 100
+  - Content for Examples in Context
+- section: Dialogues
+  words: 329
   points:
-  - Describe symptoms
-  - Understand basic instructions
-word_target: 1000
+  - Content for Dialogues
+- section: Практика
+  words: 13
+  points:
+  - Content for Практика
+word_target: 820
 vocabulary_hints:
   required:
   - голова (head)
@@ -59,16 +52,16 @@ vocabulary_hints:
   - здоровий (healthy)
   - рецепт (prescription)
 activity_hints:
-- type: vocabulary-drill
+- type: match-up
   focus: Body parts
   items: 25
 - type: fill-in
   focus: Complete symptom descriptions
   items: 20
-- type: dialogue
+- type: fill-in
   focus: Doctor visit conversation
   items: 8
-- type: role-play
+- type: fill-in
   focus: Pharmacy scenario
   items: 5
 focus: vocabulary

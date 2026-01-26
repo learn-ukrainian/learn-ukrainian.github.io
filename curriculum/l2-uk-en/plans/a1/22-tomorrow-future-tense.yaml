@@ -5,42 +5,39 @@ version: '2.0'
 title: Tomorrow - Future Tense
 subtitle: Talking About What Will Happen
 content_outline:
-- section: 'Introduction: The Future Tense'
-  words: 150
+- section: Introduction
+  words: 18
   points:
-  - Compound future for imperfective verbs
-  - буду + infinitive structure
-  - Plans and ongoing future actions
-- section: Conjugating Буду
-  words: 200
+  - Content for Introduction
+- section: Grammar
+  words: 257
   points:
-  - я буду, ти будеш, він/вона буде
-  - ми будемо, ви будете, вони будуть
-  - Practice all forms
-- section: Forming Compound Future
-  words: 200
+  - Content for Grammar
+- section: Expressing Plans and Intentions
+  words: 136
   points:
-  - буду читати (I will read)
-  - буде працювати (will work)
-  - будемо їсти (we will eat)
-- section: Future Time Expressions
-  words: 200
+  - Content for Expressing Plans and Intentions
+- section: Time Expressions for the Future
+  words: 117
   points:
-  - завтра (tomorrow)
-  - наступного тижня (next week)
-  - незабаром (soon)
-- section: Expressing Plans
-  words: 150
+  - Content for Time Expressions for the Future
+- section: Useful Adverbs
+  words: 76
   points:
-  - Я буду... (I will...)
-  - Ми будемо... (We will...)
-  - Making plans with friends
-- section: 'Practice: What Will You Do?'
-  words: 100
+  - Content for Useful Adverbs
+- section: Examples in Context
+  words: 190
   points:
-  - Describe tomorrow's plans
-  - Ask about future activities
-word_target: 1000
+  - Content for Examples in Context
+- section: Dialogues
+  words: 270
+  points:
+  - Content for Dialogues
+- section: Практика
+  words: 18
+  points:
+  - Content for Практика
+word_target: 1082
 vocabulary_hints:
   required:
   - завтра (tomorrow)
@@ -59,18 +56,9 @@ vocabulary_hints:
   - планувати (to plan)
   - обіцяти (to promise)
 activity_hints:
-- type: conjugation
-  focus: Conjugate буду with different subjects
-  items: 20
 - type: fill-in
   focus: Complete future tense sentences
   items: 20
-- type: translation
-  focus: Translate future plans
-  items: 15
-- type: dialogue
-  focus: What will you do tomorrow?
-  items: 6
 focus: grammar
 pedagogy: PPP
 prerequisites:

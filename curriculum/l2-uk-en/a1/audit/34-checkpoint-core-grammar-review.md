@@ -1,8 +1,8 @@
 # Audit Report: M34 — 34-checkpoint-core-grammar.md
-**Level:** A1 | **Module:** M34 | **Phase:** A1.3 | **Pedagogy:** Review | **Target:** 750
+**Level:** A1 | **Module:** M34 | **Phase:** A1 | **Pedagogy:** TTT | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:07:18
+**Generated:** 2026-01-26 21:48:14
 
 ## Configuration
 **Type:** A1-checkpoint
@@ -11,6 +11,7 @@
 **Items per Activity:** ≥10 items
 **Unique Types:** ≥4 types required
 **Priority Types:** fill-in, match-up, quiz
+**Required Types:** quiz
 **Engagement:** ≥2 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
@@ -36,6 +37,7 @@
 - Total activities: 12 (target: 8-12) ✅
 - Unique types: 7 (minimum: 4) ✅
 - Priority types used: 3/3 (fill-in, match-up, quiz) ✅
+- Required types used: 1/1 (quiz) ✅
 - Low density activities: 0
 
 ## Gates
