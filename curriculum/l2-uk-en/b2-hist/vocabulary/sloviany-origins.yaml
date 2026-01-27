@@ -65,11 +65,11 @@ items:
   translation: democracy (rule of people)
   pos: noun
   gender: n
-- lemma: віча
+- lemma: віче
   ipa: /ˈwit͡ʃɛ/
   translation: veche (people's assembly)
   pos: noun
-  gender: f
+  gender: n
 - lemma: громада
   ipa: /hrɔˈmɑdɑ/
   translation: community
