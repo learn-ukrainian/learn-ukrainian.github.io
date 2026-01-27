@@ -2,6 +2,16 @@
 
 ---
 
+## 🎯 TOP PRIORITY: LECTURE EXPERIENCE CHECK
+
+> **THIS IS THE MOST IMPORTANT SECTION. EVALUATE FIRST.**
+>
+> Before checking technical dimensions, ask: **"Would I want to attend this lecture?"**
+> A module can pass all technical gates and still be a boring, forgettable experience.
+> Our goal is **A+ seminar quality** — content that engages, surprises, and transforms.
+
+---
+
 ## ⚠️ MANDATORY OUTPUT FORMAT — NO EXCEPTIONS
 
 **READ THIS FIRST. FOLLOW EXACTLY. NO VARIATIONS.**
@@ -35,6 +45,7 @@ curriculum/l2-uk-en/{level}/review/{slug}-review.md
 
 | Dimension | Score | Notes |
 |-----------|-------|-------|
+| **Lecture Quality** | X/10 | {note} ← TOP PRIORITY |
 | Coherence | X/10 | {note} |
 | Relevance | X/10 | {note} |
 | Educational | X/10 | {note} |
@@ -52,7 +63,211 @@ curriculum/l2-uk-en/{level}/review/{slug}-review.md
 - Title MUST be `# Module {NUM}: {Ukrainian Title}` (not "Content Review", not "Review V3")
 - Timestamp MUST include time: `2026-01-24 20:43:15` (not just date)
 - Scores table MUST use pipe format (not bullet list)
-- ALL 11 dimensions MUST be scored
+- ALL 12 dimensions MUST be scored (**Lecture Quality** FIRST, then 11 others)
+
+---
+
+## 🎓 SECTION 0: LECTURE EXPERIENCE AUDIT (DO THIS FIRST)
+
+> **CRITICAL:** This is NOT a spot-check. Read the ENTIRE module as a student would.
+> Evaluate the complete lecture experience from first word to last.
+
+### 0a. The "Would I Stay?" Test
+
+**Read the module from start to finish.** Time yourself. Ask:
+
+| Question | Pass | Fail |
+|----------|------|------|
+| Did I want to keep reading? | Genuinely curious what's next | Skimmed or got bored |
+| Did I learn something surprising? | At least 2 "I didn't know that!" moments | Everything predictable |
+| Could I retell this to a friend? | Clear narrative arc I remember | Jumbled facts |
+| Did I feel something? | Connection, curiosity, pride, amusement | Nothing, flat |
+| Would I recommend this? | "You should read this module" | "It covers the topic" |
+
+**Scoring:**
+- 5/5 Pass → Lecture Quality 10/10
+- 4/5 Pass → Lecture Quality 9/10
+- 3/5 Pass → Lecture Quality 8/10 (needs work)
+- 2/5 Pass → Lecture Quality 7/10 (significant revision)
+- 0-1/5 Pass → Lecture Quality ≤6/10 (rewrite required)
+
+### 0b. Narrative Arc Analysis
+
+**Every great lecture has a story structure:**
+
+```
+HOOK → TENSION → JOURNEY → CLIMAX → RESOLUTION → CALL TO ACTION
+```
+
+**Check each element:**
+
+| Element | What to Look For | Red Flag |
+|---------|------------------|----------|
+| **HOOK** (first 100 words) | Grabs attention, poses question, creates stakes | Generic intro, "In this module we will..." |
+| **TENSION** | Problem to solve, mystery to uncover, conflict to resolve | No driving question, just facts |
+| **JOURNEY** | Progressive revelation, building complexity | Random fact dump, no progression |
+| **CLIMAX** | Key insight, turning point, "aha!" moment | No peak, everything equally weighted |
+| **RESOLUTION** | Answers the hook, ties threads together | Abrupt ending, unresolved questions |
+| **CALL TO ACTION** | "Now you can...", "Try this...", connection to life | Generic "practice more" |
+
+**Score:** Each element 0-2 points. Total /12 → convert to /10.
+
+### 0c. Pacing & Breathing Room
+
+**Dense walls of text kill lectures.** Check:
+
+| Metric | A+ Standard | Fail |
+|--------|-------------|------|
+| Max paragraph length | ≤150 words | >200 words without break |
+| Engagement breaks | Every 300-400 words | >500 words without callout/question/example |
+| Sentence variety | Mix of 10-word and 40-word sentences | All sentences same length |
+| White space | Visual rhythm on page | Intimidating text blocks |
+
+### 0d. Emotional Journey Mapping
+
+**Mark emotional beats through the module:**
+
+```
+😐 Neutral → 🤔 Curious → 😮 Surprised → 😊 Satisfied → 💪 Empowered
+```
+
+**Required emotional moments:**
+- ≥1 **Curiosity trigger** (question, mystery, "but why?")
+- ≥1 **Surprise/delight** (unexpected fact, counterintuitive insight)
+- ≥1 **Pride/connection** (Ukrainian identity, cultural resonance)
+- ≥1 **Empowerment** ("now you can...", practical application)
+
+**If any category missing → Flag for enrichment**
+
+### 0e. The "So What?" Test
+
+**For each major section, answer: "Why should the learner care?"**
+
+| Section | Has Clear "So What?" | Missing "So What?" |
+|---------|---------------------|-------------------|
+| ✅ Good | "Understanding this helps you read historical texts" | ❌ Bad: Just presents facts |
+| ✅ Good | "This is why Ukrainians today still..." | ❌ Bad: "Here is information about X" |
+| ✅ Good | "Without this, you'll misunderstand..." | ❌ Bad: Academic description |
+
+**Count sections missing "so what" → >30% missing = Lecture Quality -2 points**
+
+### 0f. Weak Moment Detection & Mandatory Rewrite
+
+**CRITICAL: Find ALL weak moments and FIX them.**
+
+**Weak Moment Categories:**
+
+| Category | Pattern | Example | Required Fix |
+|----------|---------|---------|--------------|
+| **DEAD_INTRO** | Generic opening | "Слов'яни — це група народів..." | Replace with hook, question, or vivid scene |
+| **WALL_OF_FACTS** | >3 facts without interpretation | "X happened. Then Y. Then Z." | Add "why this matters" after 2 facts |
+| **FORCED_CONNECTION** | Superficial modern parallel | "This is like modern startups" | Make genuine or remove |
+| **ENERGY_DROP** | Section where interest dies | Long technical explanation | Add example, break up, or cut |
+| **ANTICLIMAX** | Weak ending after strong content | "In conclusion, X was important" | End with resonance, not summary |
+| **ORPHAN_FACT** | Interesting fact that goes nowhere | "Interestingly, they also..." | Connect to main narrative or cut |
+| **TEXTBOOK_VOICE** | Academic passive tone | "It should be noted that..." | Rewrite as direct address |
+| **MISSING_STAKES** | No reason to care | "There were many tribes" | Add consequence: "Without unity, they faced..." |
+
+**Process:**
+1. Read module completely
+2. Mark EVERY weak moment with category
+3. Write specific rewrite for each
+4. Apply fixes
+5. Re-read to verify improvement
+
+### 0g. A+ Seminar Standard Checklist
+
+**For History/Cultural/Biography modules (CBI pedagogy):**
+
+| Criterion | A+ Standard | B Standard | C or Below |
+|-----------|-------------|------------|------------|
+| **Opening** | Vivid scene, provocative question, or personal stake | Clear topic introduction | Generic "In this module..." |
+| **Primary Sources** | Woven into narrative, analyzed, voices heard | Present but separate | Missing or token |
+| **Narrative Thread** | Clear protagonist(s), conflict, resolution | Events in order | Random fact collection |
+| **Decolonization** | Integrated perspective, not preachy | Section present | Missing or superficial |
+| **Emotional Peak** | Moment of genuine impact | Some engagement | Flat throughout |
+| **Modern Relevance** | Organic connection to today | Mentioned at end | Missing |
+| **Closing** | Memorable, quotable, actionable | Summarizes content | Abrupt or generic |
+| **Overall Experience** | "I'll remember this" | "I learned something" | "I read it" |
+
+**Scoring:**
+- 8/8 A+ → Lecture Quality 10/10
+- 7/8 A+ → Lecture Quality 9/10
+- 5-6/8 A+ → Lecture Quality 8/10
+- 3-4/8 A+ → Lecture Quality 7/10 (needs enrichment)
+- <3/8 A+ → Lecture Quality ≤6/10 (major revision)
+
+### 0h. Lecture Quality Score (NEW DIMENSION #12)
+
+**Add to scores table:**
+
+```markdown
+| Lecture Quality | X/10 | {note} |
+```
+
+**Rubric:**
+
+| Score | Description | Action |
+|-------|-------------|--------|
+| 10 | Exceptional — memorable, engaging, would recommend | None |
+| 9 | Excellent — compelling throughout, minor polish only | Light touch-ups |
+| 8 | Good — solid but missing 1-2 "wow" moments | Add emotional peaks |
+| 7 | Adequate — informative but forgettable | Significant enrichment needed |
+| 6 | Weak — technically correct but boring | Major narrative restructure |
+| ≤5 | Poor — fails as educational experience | Full rewrite |
+
+**Weight in overall score: 1.5 (same as Linguistic Accuracy)**
+
+---
+
+## 🔧 LECTURE IMPROVEMENT STRATEGIES
+
+When Lecture Quality < 9, apply these fixes:
+
+### Strategy L1: Inject Drama
+
+**Before (flat):**
+> Антський союз існував протягом IV-VII століть.
+
+**After (dramatic):**
+> Уявіть: IV століття. Готські орди прокотилися Європою, залишаючи попіл. Але на берегах Дніпра щось вистояло — Антський союз, конфедерація, що проіснує триста років і закладе фундамент майбутньої України.
+
+### Strategy L2: Create Stakes
+
+**Before (no stakes):**
+> Слов'яни практикували народоправство.
+
+**After (with stakes):**
+> Слов'яни практикували народоправство — і це врятувало їх від знищення. Коли готи стратили князя Божа разом із 70 старійшинами, вони вірили, що обезголовили народ. Але вже за рік союз обрав нових лідерів. Влада не належала одній людині — вона належала закону громади.
+
+### Strategy L3: Add the "Why It Matters Now"
+
+**Before (orphan fact):**
+> Слов'яни цінували дане слово понад усе.
+
+**After (connected):**
+> Слов'яни цінували дане слово понад усе. Ця етика "людей слова" пройшла крізь тисячоліття — від антського віча до козацької присяги і до сучасного волонтерського руху, де довіра є основою всього.
+
+### Strategy L4: Break Up Dense Sections
+
+**Before (wall):**
+> [200 words of continuous historical description]
+
+**After (with breathing room):**
+> [100 words of description]
+>
+> > 💡 **Чи знали ви?**
+> > [Surprising fact that illustrates the point]
+>
+> [100 words continuing the narrative]
+
+### Strategy L5: End Sections with Forward Momentum
+
+**Before (dead end):**
+> Так закінчився антський період.
+
+**After (momentum):**
+> Антський союз зник з карт — але не з історії. Його традиції, його віче, його дух свободи — все це ввійшло в кров народу, що незабаром побудує Київську Русь.
 
 ---
 
@@ -73,17 +288,19 @@ curriculum/l2-uk-en/{level}/review/{slug}-review.md
 ```yaml
 ---
 name: review-content-v3
-description: 0-10 scoring rubric for content quality review after audit passes
-version: '3.2'
+description: 0-10 scoring rubric with A+ seminar lecture quality assessment
+version: '4.0'
 category: quality
 dependencies: audit_module.py
+changelog: v4.0 - Added Lecture Experience Audit as TOP PRIORITY (dimension 12)
 ---
 ```
 
 ## Critical Sections Index (DO NOT SKIP)
 
+0. **🎓 LECTURE EXPERIENCE AUDIT (DO FIRST)** ← TOP PRIORITY
 1. Template Compliance (auto-fail if violated)
-2. **Linguistic Accuracy (auto-fail for factual errors)** ← NEW
+2. **Linguistic Accuracy (auto-fail for factual errors)**
 3. Activity Quality (auto-fail for structure/wrong answers)
 4. Richness Red Flags (auto-fail for AI slop)
 5. Red Flags (multiple auto-fails)
@@ -93,7 +310,7 @@ dependencies: audit_module.py
 9. Human Warmth Checklist (<2 markers = fail)
 10. LLM Fingerprint Detection (B1+ critical)
 
-**CHECKPOINT:** Evaluate ALL 10 sections.
+**CHECKPOINT:** Evaluate ALL 11 sections. START with Lecture Experience.
 
 ## Module Number to Slug Lookup
 
@@ -275,17 +492,18 @@ For modules making historical or etymological claims:
 
 **Score each dimension 0-10 (see Scoring Philosophy below):**
 
-1. **Coherence (0-10):** Logical flow, transitions, progressive difficulty, consistent terminology.
-2. **Relevance (0-10):** Alignment with module goals, curriculum plan, level targets.
-3. **Educational (0-10):** Clear explanations, useful examples, learning effectiveness.
-4. **Language (0-10):** Ukrainian quality, absence of Russianisms/calques, euphony, naturalness.
-5. **Pedagogy (0-10):** Teaching approach, scaffolding, level-appropriateness, TTT/CBI/PPP alignment.
-6. **Immersion (0-10):** Ukrainian-to-English ratio, appropriate scaffolding for level.
-7. **Activities (0-10):** Quality, density, variety, correct answers, format compliance.
-8. **Richness (0-10):** Examples, engagement boxes, cultural references, proverbs, dialogues, visuals.
-9. **Humanity (0-10):** Teacher voice, direct address, encouragement, warmth, real-world validation.
-10. **LLM Fingerprint (0-10):** AI-generated patterns vs. authentic human writing.
-11. **Linguistic Accuracy (0-10):** Factual correctness of all grammar rules, verb pairs, linguistic claims.
+1. **🎓 Lecture Quality (0-10):** Overall experience as a lecture — engaging, memorable, worth attending. **EVALUATE FIRST.**
+2. **Coherence (0-10):** Logical flow, transitions, progressive difficulty, consistent terminology.
+3. **Relevance (0-10):** Alignment with module goals, curriculum plan, level targets.
+4. **Educational (0-10):** Clear explanations, useful examples, learning effectiveness.
+5. **Language (0-10):** Ukrainian quality, absence of Russianisms/calques, euphony, naturalness.
+6. **Pedagogy (0-10):** Teaching approach, scaffolding, level-appropriateness, TTT/CBI/PPP alignment.
+7. **Immersion (0-10):** Ukrainian-to-English ratio, appropriate scaffolding for level.
+8. **Activities (0-10):** Quality, density, variety, correct answers, format compliance.
+9. **Richness (0-10):** Examples, engagement boxes, cultural references, proverbs, dialogues, visuals.
+10. **Humanity (0-10):** Teacher voice, direct address, encouragement, warmth, real-world validation.
+11. **LLM Fingerprint (0-10):** AI-generated patterns vs. authentic human writing.
+12. **Linguistic Accuracy (0-10):** Factual correctness of all grammar rules, verb pairs, linguistic claims.
 
 ---
 
@@ -694,6 +912,19 @@ Encyclopedic passive voice → **Auto-fail**
 
 ## Dimension Rubrics (0-10 Scale)
 
+### 0. Lecture Quality (TOP PRIORITY)
+- 0-4: FAIL - Unreadable (boring, confusing, no narrative)
+- 5-6: FAIL - Forgettable (technically correct but no engagement)
+- 7-8: INSUFFICIENT - Adequate (informative but missing emotional peaks)
+- 9-10: PASS - Memorable (compelling, would recommend to others)
+
+**Key indicators for 9-10:**
+- Clear narrative arc (hook → tension → climax → resolution)
+- ≥2 genuine "I didn't know that!" moments
+- Emotional engagement throughout
+- Organic modern connections
+- Memorable closing that resonates
+
 ### 1. Coherence
 - 0-4: FAIL - Incoherent (missing sections, jumps)
 - 5-6: FAIL - Basic (present, awkward transitions)
@@ -867,12 +1098,14 @@ Encyclopedic passive voice → **Auto-fail**
 **Weighted:**
 
 ```
-Overall = (Coherence × 1.0 + Relevance × 1.0 + Educational × 1.2 + Language × 1.1 +
-          Pedagogy × 1.2 + Immersion × 0.8 + Activities × 1.3 + Richness × 0.9 +
-          Humanity × 0.8 + LLM × 1.1 + Linguistic_Accuracy × 1.5) / 11.9
+Overall = (Lecture_Quality × 1.5 + Coherence × 1.0 + Relevance × 1.0 + Educational × 1.2 +
+          Language × 1.1 + Pedagogy × 1.2 + Immersion × 0.8 + Activities × 1.3 +
+          Richness × 0.9 + Humanity × 0.8 + LLM × 1.1 + Linguistic_Accuracy × 1.5) / 13.4
 ```
 
-**Note:** Linguistic Accuracy has highest weight (1.5) because factual errors are critical.
+**Note:** Lecture Quality and Linguistic Accuracy have highest weight (1.5 each) because:
+- A boring lecture fails regardless of technical quality
+- Factual errors destroy credibility
 
 **Round:** Nearest 0.5.
 
@@ -894,6 +1127,27 @@ There is ONE format. No variations. See "⚠️ MANDATORY OUTPUT FORMAT" section
 ### Additional Sections (after scores table)
 
 ```markdown
+## Lecture Experience Analysis
+
+**Narrative Arc:** {HOOK ✅/❌} → {TENSION ✅/❌} → {JOURNEY ✅/❌} → {CLIMAX ✅/❌} → {RESOLUTION ✅/❌}
+**Emotional Beats:** {Count curiosity/surprise/pride/empowerment moments}
+**Pacing Issues:** {List sections with walls of text or energy drops}
+
+## Weak Moments & Rewrites
+
+### Weak Moment 1: {Category}
+**Location:** Line {X} / Section "{name}"
+**Original:**
+> {Quote the weak text}
+
+**Problem:** {Why it's weak}
+
+**Rewrite:**
+> {Improved version}
+
+### Weak Moment 2: {Category}
+...
+
 ## Linguistic Accuracy Issues
 
 - {Quote} → {Correction} — {Source}
