@@ -1,8 +1,12 @@
 # Як говорити про граматику
 
-> 🎯 **Why This Module Matters**
+> 🎯 **Вітаємо на B1!**
 >
-> You're at B1 now. From this point forward, you'll encounter grammar explanations written *in Ukrainian* — in textbooks, online resources, and conversations with native speakers. To understand these resources, you need to know what Ukrainians call the parts of speech, the cases, and other grammar concepts. This module gives you that vocabulary. By the end, you'll be able to read a Ukrainian grammar explanation and understand what it's talking about.
+> Ви пройшли A1 і A2 — молодці. Тепер починається новий етап.
+>
+> Спробуйте прочитати це: *«Дієслово недоконаного виду вживається з прислівником часу...»* Поки що — незрозуміло? Через п'ять модулів ви читатимете такі пояснення вільно.
+>
+> Ці модулі — ваш міст до повного занурення в українську. Ви вивчите терміни, якими українські вчителі пояснюють граматику своїм учням. Ті самі слова, які знає кожен українець зі школи. Після цього — все українською.
 
 ## Introduction - Why Learn Grammar in Ukrainian?
 
