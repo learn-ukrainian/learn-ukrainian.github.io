@@ -69,22 +69,10 @@ activity_hints:
   focus: Уривки з драм та поезій Старицької-Черняхівської
   source: Оригінальні твори
   items: 3 passages
-- type: quiz
-  focus: Біографія та літературна спадщина
-  items: 12+
-- type: match-up
-  focus: Твори та їхні теми
-  items: 10+
 - type: essay-response
   focus: Як радянська влада знищувала українську інтелігенцію?
   word_target: 300
   output: Historical analysis
-- type: group-sort
-  focus: Етапи життя та творчості
-  items: 12+
-- type: fill-in
-  focus: Літературна та історична термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-48-marko-kropyvnytskyi
@@ -107,3 +95,7 @@ sources:
   notes: Батько — класик української літератури
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of людмила старицька-черняхівська: драматургиня'
+- Evaluate the contributions of дочка корифея, жертва імперії
+- Trace the career and influence of реабілітація та пам'ять

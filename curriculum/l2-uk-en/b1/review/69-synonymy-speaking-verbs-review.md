@@ -12,10 +12,10 @@
 | ------------------- | ----- | -------------------------------------------------------------------------------------------------------------------------- |
 | Coherence           | 10/10 | Logical groups: Informing -> Arguing -> Clarifying -> Quoting.                                                             |
 | Relevance           | 10/10 | Essential for B1 -> B2 nuance (avoiding repetitive "Він сказав").                                                          |
-| Educational         | 10/10 | Excellent nuance: _говорити_ (speak) vs _казати_ (say) vs _розповідати_ (tell/narrate).                                    |
+| Educational         | 10/10 | Excellent nuance: *говорити* (speak) vs *казати* (say) vs *розповідати* (tell/narrate).                                    |
 | Language            | 10/10 | High-quality synonyms.                                                                                                     |
 | Pedagogy            | 9/10  | Narrative Arc (Information War) is highly relevant context.                                                                |
-| Immersion           | 10/10 | Discussing _russian propaganda_ vs _Ukrainian truth_ makes the verbs meaningful (e.g., _стверджувати_ vs _спростовувати_). |
+| Immersion           | 10/10 | Discussing *russian propaganda* vs *Ukrainian truth* makes the verbs meaningful (e.g., *стверджувати* vs *спростовувати*). |
 | Activities          | 10/10 | Strong matching tasks.                                                                                                     |
 | Richness            | 9/10  | Good depth.                                                                                                                |
 | Humanity            | 9/10  | Engaging.                                                                                                                  |
@@ -25,7 +25,7 @@
 ## Linguistic Accuracy Issues
 
 - **Vocabulary:** `нікакий`. This is a Russism (никакой). The Ukrainian word is `ніякий`.
-  - _Action:_ Change to `ніякий`.
+  - *Action:* Change to `ніякий`.
 
 ## Strengths
 

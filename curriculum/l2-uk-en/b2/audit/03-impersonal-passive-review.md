@@ -1,10 +1,12 @@
 # Audit Report: M03 — 03-impersonal-passive.md
+
 **Level:** B2 | **Module:** M03 | **Phase:** B2 | **Pedagogy:** Not Specified | **Target:** 1750
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:27:45
 
 ## Configuration
+
 **Type:** B2-grammar
 **Word Target:** 1750 words
 **Activities:** 10-14 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння конструкцій -но/-то | 16 | 8 | ✅ |
@@ -44,17 +47,20 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✓ |...'.
   - FIX: Vary sentence structure.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 03-impersonal-passive.yaml: Schema validation error at key 'min_words': 100 is less than the minimum of 150
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 2 violations (minor)
 
 ## Gates
+
 - **Words:** ✅ 1925/1750 (raw: 2579)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
@@ -73,10 +79,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 98% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 58 | 24 | 100% | 20% | 20.0% |
@@ -92,6 +100,7 @@
 | **TOTAL** | | | | | **98.9%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 45 | Included in Core |

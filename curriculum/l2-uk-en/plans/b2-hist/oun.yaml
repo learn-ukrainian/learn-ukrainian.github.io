@@ -67,12 +67,6 @@ activity_hints:
   focus: Програмові документи ОУН
   source: Архівні матеріали
   items: 4
-- type: quiz
-  focus: 'ОУН: створення та діяльність'
-  items: 15
-- type: match-up
-  focus: Постать → роль в ОУН
-  items: 10
 - type: true-false
   focus: Міфи про ОУН
   items: 10

@@ -5,27 +5,27 @@ version: '2.0'
 title: Буковина та Закарпаття під сусідами
 content_outline:
 - section: Вступ
-  words: 349
+  words: 370
 - section: Буковина
-  words: 533
+  words: 565
 - section: 'Повсякденне життя: Мульткультурний Вавилон'
-  words: 250
+  words: 265
   points:
   - Chernivtsi as a multicultural hub
   - Rural life in Zakarpattia
   - Ethnic diversity and tolerance
 - section: Закарпаття
-  words: 747
+  words: 792
 - section: Культурний опір та збереження ідентичності
-  words: 681
+  words: 722
 - section: Читання
-  words: 351
+  words: 372
 - section: Первинні джерела
-  words: 364
+  words: 386
 - section: Деколонізаційний погляд
-  words: 390
+  words: 414
 - section: Потрібно більше практики?
-  words: 107
+  words: 114
 word_target: 4000
 focus: history
 pedagogy: CBI

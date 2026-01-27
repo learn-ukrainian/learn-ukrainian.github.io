@@ -67,15 +67,6 @@ activity_hints:
   focus: Указ 1783 року про закріпачення
   source: Архівні документи
   items: 4
-- type: quiz
-  focus: Кріпацтво в Україні
-  items: 15
-- type: match-up
-  focus: Термін → визначення
-  items: 10
-- type: fill-in
-  focus: Соціально-економічна лексика
-  items: 10
 - type: essay-response
   focus: Як кріпацтво знищило козацьку вільну Україну?
   word_target: 250

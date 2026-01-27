@@ -1,10 +1,12 @@
 # Audit Report: M20 — 20-checkpoint-navigation.md
+
 **Level:** A1 | **Module:** M20 | **Phase:** A1 | **Pedagogy:** TTT | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
 **Generated:** 2026-01-26 22:25:49
 
 ## Configuration
+
 **Type:** A1-checkpoint
 **Word Target:** 750 words
 **Activities:** 8-12 required
@@ -18,6 +20,7 @@
 **Transliteration:** Allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | fill-in | Case Mastery - Accusative | 12 | 8 | ✅ |
@@ -39,6 +42,7 @@
 - Low density activities: 0
 
 ## Gates
+
 - **Words:** ✅ 1406/750 (raw: 1709)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 10
@@ -56,6 +60,7 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

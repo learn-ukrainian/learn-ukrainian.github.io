@@ -5,42 +5,37 @@ version: '2.0'
 title: 'Підрядні речення мети: щоб + інфінітив'
 subtitle: Purpose Clauses - Same Subject
 content_outline:
-- section: 'Introduction: Purpose Clauses'
-  words: 150
+- section: Тест
+  words: 247
+  points: []
+- section: Граматика
+  words: 404
   points:
-  - Expressing purpose in Ukrainian
-  - Same-subject condition
-  - щоб as purpose marker
-- section: щоб + Infinitive Structure
-  words: 250
+  - Правило однакового підмета
+  - Альтернативні вирази мети
+- section: Поглиблення
+  words: 1364
   points:
-  - 'Basic pattern: Я прийшов, щоб...'
-  - Aspect choice in infinitive
-  - Common verb combinations
-- section: Same-Subject Rule
-  words: 250
+  - Типові дієслова з щоб + інфінітив
+  - Інфінітив доконаного і недоконаного виду
+  - Позиція щоб-речення
+  - Типові помилки та як їх уникнути
+  - Заперечні конструкції
+- section: Практика
+  words: 760
   points:
-  - Why infinitive is used
-  - Subject must be same in both clauses
-  - Recognizing same-subject contexts
-- section: Alternative Expressions
-  words: 250
+  - 'Діалог 1: На роботі'
+  - 'Діалог 2: Про навчання'
+  - 'Діалог 3: Про спорт'
+  - 'Діалог 4: Про подорож'
+  - 'Діалог 5: Про покупки'
+- section: Потрібно більше практики?
+  words: 225
   points:
-  - для того щоб (in order to)
-  - аби (dialectal/literary)
-  - Formal vs informal usage
-- section: Purpose vs Other Meanings
-  words: 200
-  points:
-  - Purpose vs result
-  - Purpose vs wish
-  - Distinguishing contexts
-- section: 'Practice: Purpose Clauses'
-  words: 100
-  points:
-  - Form same-subject purpose clauses
-  - Choose correct expression
-word_target: 1200
+  - Інтеграція знань
+  - Реальне застосування
+  - Онлайн-ресурси
+word_target: 3000
 vocabulary_hints:
   required:
   - щоб (in order to)
@@ -60,13 +55,13 @@ activity_hints:
 - type: fill-in
   focus: Purpose clause completion
   items: 25
-- type: sentence-combining
+- type: unjumble
   focus: Combine with purpose clauses
   items: 20
 - type: error-correction
   focus: Fix purpose clause errors
   items: 15
-- type: translation
+- type: translate
   focus: English to Ukrainian
   items: 15
 focus: grammar

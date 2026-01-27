@@ -1,6 +1,7 @@
 # B1 Restructure Plan - Implementation Strategy
 
 ## Goal
+
 Establish a robust implementation strategy for the B1 Curriculum (Modules 01-80) to bridge the gap from A2 basic competence to independent usage.
 
 **Status Assessment (2025-12-15):**
@@ -12,39 +13,43 @@ Establish a robust implementation strategy for the B1 Curriculum (Modules 01-80)
 ## Proposed Changes
 
 ### 1. Implementation Strategy: Greenfield Creation & Graduated Immersion
+
 For Modules 06-80, we will follow the **"Create"** strategy with strict adherence to the 8-phase curriculum structure.
 
 1.  **Pedagogy**: **TTT (Test-Teach-Test)**.
-    *   *Approach*: Start with a complex text → Analyze grammar → Practice.
+    -   *Approach*: Start with a complex text → Analyze grammar → Practice.
 2.  **Graduated Immersion Scale**:
-    *   **B1.1 (M01-M10)**: 45-50% Ukrainian. (M01-05 are complete).
-    *   **B1.2 (M11-M20)**: 50-55% Ukrainian.
-    *   **B1.3-B1.4 (M21-M45)**: 55-60% Ukrainian.
-    *   **B1.5-B1.6 (M46-M65)**: 60-65% Ukrainian.
-    *   **B1.7-B1.8 (M66-M80)**: 65-70% Ukrainian.
+    -   **B1.1 (M01-M10)**: 45-50% Ukrainian. (M01-05 are complete).
+    -   **B1.2 (M11-M20)**: 50-55% Ukrainian.
+    -   **B1.3-B1.4 (M21-M45)**: 55-60% Ukrainian.
+    -   **B1.5-B1.6 (M46-M65)**: 60-65% Ukrainian.
+    -   **B1.7-B1.8 (M66-M80)**: 65-70% Ukrainian.
 3.  **Vocabulary Strategy: Expansion & De-duplication**
     1.  **Expansion**: ~30-40 *new* words per module.
     2.  **Context**: Narrative-driven (stories >300 words), NO lists.
     3.  **Drilling Focus**: Distinguish Active (drilled) vs Passive (contextual) vocabulary.
     4.  **De-duplication Policy**:
-        *   **Check**: Verify against `vocab.db` (A1/A2 corpus).
-        *   **Exceptions**: Polysemy (teaching new meaning) or register shifts are allowed but must be tagged.
-        *   **Base Forms**: Ensure uniqueness of base forms unless teaching morphology.
+        -   **Check**: Verify against `vocab.db` (A1/A2 corpus).
+        -   **Exceptions**: Polysemy (teaching new meaning) or register shifts are allowed but must be tagged.
+        -   **Base Forms**: Ensure uniqueness of base forms unless teaching morphology.
 
 ### 2. State Standard Compliance
+
 The B1 plan has been updated (Issue 113) to address previous gaps. New modules must implement:
-*   **Participle Phrases**: Dedicated focus (M38).
-*   **One-member Sentences**: Explicit teaching (M40).
-*   **Synthetic Future**: *читатиму* vs *буду читати* (M04 - done).
+-   **Participle Phrases**: Dedicated focus (M38).
+-   **One-member Sentences**: Explicit teaching (M40).
+-   **Synthetic Future**: *читатиму* vs *буду читати* (M04 - done).
 
 ## Acceptance Criteria for B1 Compliance
 
 ### 1. Pedagogical Compliance
+
 - [ ] **Method**: TTT approach for Grammar modules.
 - [ ] **Immersion**: Validated against the specific B1.x phase target.
 - [ ] **Narrative**: Every vocabulary module must have a >300 word story.
 
 ### 2. Module Richness (Audit Pass)
+
 - [ ] **Word Count**: > 1000 words.
 - [ ] **Activity Density**: > 12 activities, > 12 items per activity.
 - [ ] **Culture**: Every module must have a "Culture Bite".

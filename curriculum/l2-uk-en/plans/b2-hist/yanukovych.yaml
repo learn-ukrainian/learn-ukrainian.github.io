@@ -67,12 +67,6 @@ activity_hints:
   focus: Документи та розслідування про корупцію
   source: Журналістські матеріали
   items: 4
-- type: quiz
-  focus: Епоха Януковича
-  items: 15
-- type: match-up
-  focus: Подія → наслідки
-  items: 10
 - type: true-false
   focus: Факти про режим Януковича
   items: 10

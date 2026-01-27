@@ -69,22 +69,10 @@ activity_hints:
   focus: Аналіз промов Петлюри
   source: Історичні документи УНР
   items: 3 passages
-- type: quiz
-  focus: Хронологія подій визвольних змагань
-  items: 12+
-- type: match-up
-  focus: Політичні діячі та їхні позиції
-  items: 10+
 - type: essay-response
   focus: Чи був Петлюра ефективним лідером?
   word_target: 300
   output: Аргументований есей
-- type: group-sort
-  focus: Союзники та противники УНР
-  items: 12+
-- type: fill-in
-  focus: Ключові дати та події
-  items: 10+
 focus: biography
 prerequisites:
 - b2-hist-ukrainian-revolution
@@ -108,3 +96,7 @@ sources:
   notes: Документи періоду Директорії
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of симон петлюра: головний отаман'
+- Evaluate the contributions of людина, яка стала символом боротьби
+- Trace the career and influence of петлюра в історичній памяті

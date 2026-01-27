@@ -31,6 +31,7 @@ Parse arguments: $ARGUMENTS
 **Step 2: For Each Module**
 
 ### Extract Content
+
 1. Read the module file
 2. Extract lesson content (everything BEFORE `## Activities`)
    - Include: Summary, all instructional sections, examples, engagement boxes
@@ -463,6 +464,7 @@ These trigger automatic REWRITE recommendation:
 ## Common Activity Issues (Examples)
 
 ### Issue 1: Multiple Valid Answers
+
 ```markdown
 ## fill-in: Transform to Perfective
 1. читати → [___]
@@ -473,6 +475,7 @@ These trigger automatic REWRITE recommendation:
 **Fix:** Rephrase to "Give the COMPLETIVE perfective" or add note "result-focused form".
 
 ### Issue 2: Mixed Activity Syntax
+
 ```markdown
 ## fill-in: Transform to Perfective
 7. говорити | ___ (suppletive pair)
@@ -484,6 +487,7 @@ These trigger automatic REWRITE recommendation:
 **Fix:** Use only `[!answer]` and `[!options]` for fill-in activities.
 
 ### Issue 3: Duplicate Items
+
 ```markdown
 7. розуміти → [___]
 8. готувати → [___]
@@ -494,6 +498,7 @@ These trigger automatic REWRITE recommendation:
 **Fix:** Remove duplicates.
 
 ### Issue 4: Unrelated External Resources
+
 ```markdown
 > [!resources]
 > - [Cat Videos Compilation](https://youtube.com/...)  ← UNRELATED

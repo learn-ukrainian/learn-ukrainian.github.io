@@ -5,50 +5,52 @@ version: '1.0'
 title: Українське питання XXI століття
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- Analyze the causes and consequences of українське питання xxi століття
+- Evaluate the historical significance of українське питання
 content_outline:
 - section: Вступ — Українське питання
-  words: 451
+  words: 515
   subsections:
   - «Українське питання» — історичний термін
   - Чи воно вирішене?
   - Що означає для XXI століття
   - Структура модуля
 - section: Всі теми разом
-  words: 790
+  words: 903
   subsections:
   - Історіографія — як ми знаємо
   - Джерела — на чому базуємось
   - Механізми — як працює імперія
   - Агентність — як Україна відповідає
 - section: Російське питання
-  words: 677
+  words: 774
   subsections:
   - Імперія — чи може існувати без України
   - Війна — не тільки територія
   - Що Росія втрачає
   - Майбутнє російсько-українських відносин
 - section: Європейське питання
-  words: 677
+  words: 774
   subsections:
   - ЄС — чи готовий до України
   - Україна — чи готова до ЄС
   - Що означає інтеграція
   - Ризики і можливості
 - section: Глобальне значення
-  words: 564
+  words: 645
   subsections:
   - Україна як прецедент
   - Міжнародний порядок
   - Деколонізація XXI століття
   - Що світ вчиться від України
 - section: Підсумок
-  words: 341
+  words: 389
   subsections:
   - Українське питання — відкрите
   - Відповідь пишеться зараз
   - Перехід до фінального синтезу
-word_target: 3500
+word_target: 4000
 vocabulary:
 - «українське питання»
 - імперія
@@ -66,13 +68,11 @@ vocabulary:
 - глобальний Південь
 - трансформація
 activities:
-- type: integration
-  focus: Connect all course themes
-- type: russia-analysis
+- type: critical-analysis
   focus: What does Ukraine mean for Russia's future?
-- type: europe-analysis
+- type: critical-analysis
   focus: EU-Ukraine integration challenges
-- type: global-significance
+- type: critical-analysis
   focus: Ukraine as global precedent
 - type: essay-response
   focus: Чи 'українське питання' вирішене?

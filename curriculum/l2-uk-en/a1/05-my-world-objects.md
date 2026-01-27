@@ -111,7 +111,7 @@ You're describing furniture to someone on the phone:
 
 > 🎬 **Pop Culture Moment: The Witcher**
 >
-> In the Ukrainian dub of _The Witcher_, when Geralt points to objects, he uses perfect demonstrative agreement. «Цей меч» (this sword, m), «Та книга» (that book, f). Even fictional monster hunters follow Ukrainian grammar!
+> In the Ukrainian dub of *The Witcher*, when Geralt points to objects, he uses perfect demonstrative agreement. «Цей меч» (this sword, m), «Та книга» (that book, f). Even fictional monster hunters follow Ukrainian grammar!
 
 ### Everyday Scenarios
 
@@ -133,22 +133,22 @@ You're describing furniture to someone on the phone:
 
 ### Mini-Dialogue 1: Lost Keys
 
-— Де мої ключі? _(De moyi klyuchi?)_ — Where are my keys?
-— Ці ключі? _(Tsi klyuchi?)_ — These keys?
-— Так! Дякую! _(Tak! Dyakuyu!)_ — Yes! Thank you!
+— Де мої ключі? *(De moyi klyuchi?)* — Where are my keys?
+— Ці ключі? *(Tsi klyuchi?)* — These keys?
+— Так! Дякую! *(Tak! Dyakuyu!)* — Yes! Thank you!
 
 ### Mini-Dialogue 2: Choosing Furniture
 
-— Цей стілець гарний? _(Tsey stilets' harnyy?)_ — Is this chair nice?
-— Так! Цей стілець гарний. _(Tak! Tsey stilets' harnyy.)_ — Yes! This chair is nice.
-— а те крісло? _(A te krislo?)_ — And that armchair?
-— Те крісло теж гарне. _(Te krislo tezh harne.)_ — That armchair is also nice.
+— Цей стілець гарний? *(Tsey stilets' harnyy?)* — Is this chair nice?
+— Так! Цей стілець гарний. *(Tak! Tsey stilets' harnyy.)* — Yes! This chair is nice.
+— а те крісло? *(A te krislo?)* — And that armchair?
+— Те крісло теж гарне. *(Te krislo tezh harne.)* — That armchair is also nice.
 
 ### Mini-Dialogue 3: Showing Around
 
-— Це моя кімната. _(Tse moya kimnata.)_ — This is my room.
-— О! Ця лампа дуже гарна! _(O! Tsya lampa duzhe harna!)_ — Oh! This lamp is very nice!
-— Дякую! Той годинник теж новий. _(Dyakuyu! Toy hodynnyk tezh novyy.)_ — Thank you! That clock is also new.
+— Це моя кімната. *(Tse moya kimnata.)* — This is my room.
+— О! Ця лампа дуже гарна! *(O! Tsya lampa duzhe harna!)* — Oh! This lamp is very nice!
+— Дякую! Той годинник теж новий. *(Dyakuyu! Toy hodynnyk tezh novyy.)* — Thank you! That clock is also new.
 
 ## Cultural Insight
 

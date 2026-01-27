@@ -67,12 +67,6 @@ activity_hints:
   focus: Фрагменти «Історії України-Руси»
   source: Наукові тексти
   items: 4
-- type: quiz
-  focus: Життя та діяльність Грушевського
-  items: 15
-- type: match-up
-  focus: Період життя → діяльність
-  items: 10
 - type: true-false
   focus: Міфи про Грушевського
   items: 10

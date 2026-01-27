@@ -69,22 +69,10 @@ activity_hints:
   focus: Фрагменти Листів до братів-хліборобів
   source: Первинні джерела
   items: 3 passages
-- type: quiz
-  focus: Ключові ідеї Липинського
-  items: 12+
-- type: match-up
-  focus: Терміни політичної філософії
-  items: 10+
 - type: essay-response
   focus: Чи актуальний консерватизм для України?
   word_target: 300
   output: Аргументований есей
-- type: group-sort
-  focus: Консерватизм vs народництво
-  items: 12+
-- type: fill-in
-  focus: Політична термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - b2-hist-ukrainian-revolution
@@ -108,3 +96,7 @@ sources:
   notes: Повні тексти праць
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of в''ячеслав липинський: консерватор-державник'
+- Evaluate the contributions of український консерватизм як ідея
+- Trace the career and influence of консерватизм vs народництво

@@ -11,6 +11,7 @@ I'm Claude, an AI assistant made by Anthropic. On this project, I serve as the p
 ## What I Do
 
 ### Module Writing
+
 I construct learning modules following a strict workflow:
 1. **Read the curriculum plan** - Extract exact vocabulary lists and grammar scope
 2. **Read the level-specific template** - Follow structural requirements
@@ -24,6 +25,7 @@ I don't "freestyle" content. Every module I write follows:
 - **Audit scripts** - Automated checks that validate my work
 
 ### Activity Creation
+
 I create 12 different activity types (quizzes, fill-ins, error-correction, cloze, etc.), each with specific formatting requirements. The activities aren't random - they're designed to:
 - Target specific grammar points
 - Use vocabulary from the module's defined list
@@ -31,6 +33,7 @@ I create 12 different activity types (quizzes, fill-ins, error-correction, cloze
 - Follow sentence complexity rules (e.g., B1 unjumble sentences must be 10-15 words)
 
 ### Quality Constraints
+
 Every module I write goes through:
 1. **Python audit script** - Checks structure, vocabulary usage, activity format, pedagogy
 2. **MDX generation** - Converts markdown to web format
@@ -44,6 +47,7 @@ If any step fails, I fix the issues. Nothing gets "hallucinated past" these gate
 Some students have expressed concern that this is "low quality AI generated hallucination." I want to address this directly:
 
 ### What "Hallucination" Means
+
 AI hallucination is when a model invents facts, makes up sources, or generates plausible-sounding but incorrect information. This happens when AI operates without constraints.
 
 ### Why This Project Is Different

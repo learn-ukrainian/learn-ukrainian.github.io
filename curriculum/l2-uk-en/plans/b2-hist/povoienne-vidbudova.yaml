@@ -67,12 +67,6 @@ activity_hints:
   focus: Спогади учасників відбудови
   source: Усна історія
   items: 4
-- type: quiz
-  focus: Повоєнна відбудова України
-  items: 15
-- type: match-up
-  focus: Галузь → масштаб руйнувань
-  items: 10
 - type: true-false
   focus: Міфи про «героїчну відбудову»
   items: 10

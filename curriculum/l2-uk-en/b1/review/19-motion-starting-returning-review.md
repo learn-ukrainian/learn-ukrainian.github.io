@@ -24,7 +24,7 @@
 
 ## Linguistic Accuracy Issues
 
-- _Fixed:_ Vocabulary extraction errors (Russian words `поехала`, `развестися` extracted from explanation text; `босс` typo).
+- *Fixed:* Vocabulary extraction errors (Russian words `поехала`, `развестися` extracted from explanation text; `босс` typo).
 
 ## Strengths
 
@@ -34,7 +34,7 @@
 
 ## Issues
 
-- _Fixed:_ Vocabulary extraction errors.
+- *Fixed:* Vocabulary extraction errors.
 
 ## Recommendation
 

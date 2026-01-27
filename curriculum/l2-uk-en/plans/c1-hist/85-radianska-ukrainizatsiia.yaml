@@ -5,54 +5,54 @@ version: '2.0'
 title: 'Радянська українізація: Пастка 1920-х'
 content_outline:
 - section: Вступ — Підступна обіцянка
-  words: 400
+  words: 457
   points:
   - 1920-ті — «золота доба»?
   - Чому Москва дозволила
   - Пастка — як це працювало
   - Структура модуля
 - section: Фаза 1 — Обіцянка (1923-1928)
-  words: 700
+  words: 800
   points:
   - Коренізація — загальна політика
   - Українізація — конкретика
   - Мова в школах, пресі, адміністрації
   - Культурний розквіт
 - section: Фаза 2 — Залежність (1928-1932)
-  words: 600
+  words: 686
   points:
   - Інтелігенція — вийшла з підпілля
   - Кадри — створені, відомі
   - Інституції — під контролем партії
   - Списки готові
 - section: Фаза 3 — Зрада (1932-1933)
-  words: 600
+  words: 686
   points:
   - Постанова проти українізації
   - «Націоналістичний ухил»
   - Голодомор — одночасно
   - Зв'язок культурного і фізичного терору
 - section: Фаза 4 — Знищення (1933-1937)
-  words: 500
+  words: 571
   points:
   - Розстріляне відродження
   - Масштаби репресій
   - Хто загинув — списки
   - Культурний геноцид
 - section: Чому пастка спрацювала
-  words: 400
+  words: 457
   points:
   - Надія на «новий порядок»
   - Віра в соціалізм
   - Створення видимих цілей
   - Урок для майбутнього
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Українізація — класична пастка
   - Кооптація через надію
   - Перехід до Хрущова-Шелеста
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - українізація (Ukrainization)
@@ -75,10 +75,10 @@ activity_hints:
 - type: critical-analysis
   focus: Map Ukrainization through co-optation cycle
   output: Cycle diagram
-- type: policy-analysis
+- type: critical-analysis
   focus: Why did Moscow allow Ukrainization?
   output: Policy motivation analysis
-- type: trap-mechanics
+- type: critical-analysis
   focus: How the trap worked — step by step
   output: Mechanism analysis
 - type: comparative-study
@@ -111,3 +111,6 @@ sources:
   notes: Cultural outcome
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of радянська українізація: пастка 1920-х'
+- Evaluate the historical significance of підступна обіцянка

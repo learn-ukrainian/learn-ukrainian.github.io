@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M124 | **Phase:** HIST.12 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:55:28
+**Generated:** 2026-01-27 15:51:38
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, match-up, quiz, reading, true-false
+**Required Types:** essay-response, reading, true-false
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -20,31 +20,20 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Читання: Перевірка розуміння | 8 | 8 | ✅ |
-| 2 | fill-in | Заповніть пропуски відповідними словами з лексики модуля. | 8 | 8 | ✅ |
-| 3 | match-up | Встановіть відповідність між особами/термінами та їхньою роллю. | 12 | 8 | ✅ |
-| 4 | error-correction | Виправте граматичні помилки у реченнях про духовну незалежність. | 6 | 6 | ✅ |
-| 5 | true-false | Визначте правдивість тверджень про Православну Церкву України. | 10 | 8 | ✅ |
-| 6 | mark-the-words | Знайдіть церковні та історичні терміни | 8 | 6 | ✅ |
-| 7 | unjumble | Складіть речення про Об'єднавчий собор та Томос. | 6 | 6 | ✅ |
-| 8 | group-sort | Розподіліть поняття за категоріями. | 18 | 1 | ✅ |
-| 9 | cloze | Заповніть пропуски у тексті про Томос (13 слів). | 14 | 1 | ✅ |
-| 10 | translate | Перекладіть церковні та політичні терміни українською мовою. | 8 | 6 | ✅ |
-| 11 | true-false | Визначте правдивість тверджень про роль ПЦУ в суспільстві. | 8 | 8 | ✅ |
-| 12 | quiz | Перевірте знання про світове православ'я та місце України в ньому. | 8 | 8 | ✅ |
-| 13 | match-up | Доберіть синоніми до церковних та історичних термінів. | 12 | 8 | ✅ |
-| 14 | essay-response | Томос — свідоцтво про духовну незалежність | 1 | 1 | ✅ |
-| 15 | comparative-study | Порівняння моделей існування церкви | 1 | 1 | ✅ |
+| 1 | true-false | Визначте правдивість тверджень про Православну Церкву України. | 10 | 8 | ✅ |
+| 2 | true-false | Визначте правдивість тверджень про роль ПЦУ в суспільстві. | 8 | 8 | ✅ |
+| 3 | essay-response | Томос — свідоцтво про духовну незалежність | 1 | 1 | ✅ |
+| 4 | comparative-study | Порівняння моделей існування церкви | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 3-9) ❌
-- Unique types: 12 (minimum: 2) ✅
+- Total activities: 4 (target: 3-9) ✅
+- Unique types: 3 (minimum: 2) ✅
 - Priority types used: 2/4 (comparative-study, essay-response) ✅
-- Required types used: 4/5 (essay-response, match-up, quiz, true-false) ❌
+- Required types used: 2/3 (essay-response, true-false) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in tomos.yaml: Schema validation error at key '10': {'type': 'true-false', 'items': [{'statement': 'Церква, що молиться мовою свого народу, зміцнює державу.', 'correct': True}, {'statement': 'РПЦ є інструментом російського впливу в сучасній Україні.', 'correct': False}, {'statement': 'ПЦУ є активним учасником волонтерського руху та духовної опіки воїнів.', 'correct': True}, {'statement': 'Автокефалія є основою духовної деколонізації українського суспільства.', 'correct': True}, {'statement': 'ПЦУ — це відкрита церква, що веде діалог із громадянським суспільством.', 'correct': True}, {'statement': 'Отримання Томосу було виключно політичним піаром без канонічної ваги.', 'correct': False}, {'statement': 'Росія намагалася зірвати надання автокефалії через шантаж та залякування.', 'correct': True}, {'statement': 'Томос назавжди зафіксував місце України серед незалежних церков світу.', 'correct': True}], 'title': 'Визначте правдивість тверджень про роль ПЦУ в суспільстві.', 'instruction': 'Визначте, чи є твердження правильним.'} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in tomos.yaml: Insufficient activities: 4 found, minimum 5 required for B2-HIST
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
@@ -55,9 +44,9 @@
 
 ## Gates
 - **Words:** ❌ 1737/4000 (raw: 1915)
-- **Activities:** ✅ 15/3
+- **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 12/2 types
+- **Unique_types:** ✅ 3/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
@@ -65,7 +54,7 @@
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ⚠️ Too many activities: 15 (target 3-9)
+- **Content_heavy:** ✅ Content-heavy OK (4 activities)
 - **Immersion:** 🇺🇦 96.8% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

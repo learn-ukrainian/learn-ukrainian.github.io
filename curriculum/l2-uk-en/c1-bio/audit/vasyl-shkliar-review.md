@@ -1,10 +1,12 @@
 # Audit Report: M111 — vasyl-shkliar.md
+
 **Level:** C1 | **Module:** M111 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:53
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Первинні джерела: Уривок з роману «Чорний Ворон» | 3 | 1 | ✅ |
@@ -43,16 +46,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in vasyl-shkliar.yaml: Schema validation error at key 'blanks': [{'id': 1, 'answer': 'історичної', 'options': ['історичної', 'наукової', 'дитячої', 'гумористичної']}, {'id': 2, 'answer': 'Чорний Ворон', 'options': ['Чорний Ворон', 'Тіні забутих предків', 'Захар Беркут', "Кайдашева сім'я"]}, {'id': 3, 'answer': '1920-х', 'options': ['1920-х', '1990-х', '1840-х', '2020-х']}, {'id': 4, 'answer': 'підпільну', 'options': ['підпільну', 'парламентську', 'мирну', 'дипломатичну']}, {'id': 5, 'answer': 'діалектних', 'options': ['діалектних', 'іноземних', 'нових', 'технічних']}, {'id': 6, 'answer': 'динамічним', 'options': ['динамічним', 'нудним', 'повільним', 'заплутаним']}, {'id': 7, 'answer': 'бестселером', 'options': ['бестселером', 'провалом', 'секретом', 'чернеткою']}, {'id': 8, 'answer': 'бестселера', 'options': ['бестселера', 'театру', 'кіно', 'спорту']}, {'id': 9, 'answer': 'Шевченківської', 'options': ['Шевченківської', 'Нобелівської', 'Оскара', 'Пулітцерівської']}, {'id': 10, 'answer': 'гідності', 'options': ['гідності', 'страху', 'байдужості', 'жадібності']}, {'id': 11, 'answer': 'перемогу', 'options': ['перемогу', 'поразку', 'смерть', 'втечу']}, {'id': 12, 'answer': 'незламного', 'options': ['незламного', 'слабкого', 'хитрого', 'байдужого']}] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2018/4000 (raw: 2263)
 - **Activities:** ✅ 14/3
 - **Density:** ✅ All > 1
@@ -71,10 +77,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 95% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 4 | 4 | 100% | 19% | 19.0% |
@@ -90,6 +98,7 @@
 | **TOTAL** | | | | | **95.2%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 74 | Included in Core |

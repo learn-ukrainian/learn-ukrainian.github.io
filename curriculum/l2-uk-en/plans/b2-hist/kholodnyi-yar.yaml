@@ -67,12 +67,6 @@ activity_hints:
   focus: Фрагменти книги «Холодний Яр»
   source: Юрій Горліс-Горський
   items: 4
-- type: quiz
-  focus: Холодноярська республіка
-  items: 15
-- type: match-up
-  focus: Командир → діяльність
-  items: 10
 - type: true-false
   focus: Міфи та правда про Холодний Яр
   items: 10

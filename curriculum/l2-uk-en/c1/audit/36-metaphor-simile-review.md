@@ -1,9 +1,11 @@
 # Audit Report: M36 — 36-metaphor-simile.md
+
 **Level:** C1 | **Module:** M36 | **Phase:** C1 | **Pedagogy:** Immersion | **Target:** 3000
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:17
 
 ## Configuration
+
 **Type:** C1
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -16,6 +18,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння метафори та порівняння | 5 | 5 | ✅ |
@@ -38,20 +41,24 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 36-metaphor-simile.yaml: Schema validation error at key 'min_words': 100 is less than the minimum of 200
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ' per template 'c1-module-template.md'
   - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/c1-module-template.md.md
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 2 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 1993/3000 (raw: 2189)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
@@ -70,10 +77,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 74 | 15 | 100% | 25% | 25.0% |
@@ -87,6 +96,7 @@
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 72 | Included in Core |

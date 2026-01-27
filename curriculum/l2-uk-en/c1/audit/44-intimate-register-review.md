@@ -1,9 +1,11 @@
 # Audit Report: M44 — 44-intimate-register.md
+
 **Level:** C1 | **Module:** M44 | **Phase:** C1 | **Pedagogy:** Sociolinguistics | **Target:** 3000
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:21
 
 ## Configuration
+
 **Type:** C1
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -16,6 +18,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння текстів модуля | 5 | 5 | ✅ |
@@ -38,16 +41,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 44-intimate-register.yaml: Schema validation error at key 'words': ['Ти', 'найкраще', 'і', 'найдорожче', 'що', 'є', 'у', 'моєму', 'житті', 'моє', 'золотце'] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2041/3000 (raw: 2233)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
@@ -66,10 +72,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 94% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 57 | 15 | 100% | 25% | 25.0% |
@@ -83,6 +91,7 @@
 | **TOTAL** | | | | | **94.3%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 82 | Included in Core |

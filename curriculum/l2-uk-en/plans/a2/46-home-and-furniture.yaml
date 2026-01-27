@@ -5,42 +5,32 @@ version: '2.0'
 title: Home and Furniture
 subtitle: Where I Live
 content_outline:
-- section: 'Introduction: Ukrainian Homes'
-  words: 100
+- section: 'Вступ'
+  words: 150
   points:
   - Types of housing
-  - Urban vs rural
-  - Home vocabulary
-- section: Rooms of the House
-  words: 200
+  - Home vocabulary introduction
+- section: 'Граматика'
+  words: 700
   points:
-  - кухня, вітальня, спальня
-  - ванна, туалет, коридор
-  - балкон, підвал, горище
-- section: Furniture
-  words: 200
+  - Rooms (кухня, вітальня, спальня)
+  - Furniture (стіл, стілець, диван, ліжко)
+  - Appliances (холодильник, пральна машина)
+  - Locative case for location
+- section: 'Практика'
+  words: 450
   points:
-  - стіл, стілець, диван, ліжко
-  - шафа, комод, полиця
-  - Using locative for placement
-- section: Appliances
-  words: 150
+  - Dialogues about homes
+  - Room descriptions
+- section: 'Корисні вирази'
+  words: 100
   points:
-  - холодильник, пральна машина
-  - телевізор, комп'ютер
-  - побутова техніка
-- section: Describing Your Home
-  words: 200
+  - Useful home phrases
+- section: 'Підсумок'
+  words: 100
   points:
-  - Я живу в... (I live in...)
-  - У мене є... (I have...)
-  - Room sizes and features
-- section: 'Practice: Home Tour'
-  words: 150
-  points:
-  - Give a home tour
-  - Describe room layouts
-word_target: 1000
+  - Summary of vocabulary
+word_target: 1500
 vocabulary_hints:
   required:
   - кімната (room)
@@ -59,16 +49,16 @@ vocabulary_hints:
   - квартира (apartment)
   - будинок (house)
 activity_hints:
-- type: vocabulary-drill
+- type: match-up
   focus: Rooms and furniture
   items: 30
-- type: matching
+- type: match-up
   focus: Match furniture to rooms
   items: 20
 - type: fill-in
   focus: Complete home descriptions
   items: 15
-- type: speaking
+- type: quiz
   focus: Describe your home
   items: 8
 focus: vocabulary

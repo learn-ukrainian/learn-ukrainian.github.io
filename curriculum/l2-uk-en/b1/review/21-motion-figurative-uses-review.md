@@ -24,8 +24,8 @@
 
 ## Linguistic Accuracy Issues
 
-- _Fixed:_ Vocabulary extraction errors (proper names capitalization, wrong lemmas `рівновагий` -> `рівновага`, `сутий` -> `суть`).
-- _Fixed:_ `війти` -> `увійти`.
+- *Fixed:* Vocabulary extraction errors (proper names capitalization, wrong lemmas `рівновагий` -> `рівновага`, `сутий` -> `суть`).
+- *Fixed:* `війти` -> `увійти`.
 
 ## Strengths
 
@@ -34,7 +34,7 @@
 
 ## Issues
 
-- _Fixed:_ Minor vocabulary inconsistencies.
+- *Fixed:* Minor vocabulary inconsistencies.
 
 ## Recommendation
 

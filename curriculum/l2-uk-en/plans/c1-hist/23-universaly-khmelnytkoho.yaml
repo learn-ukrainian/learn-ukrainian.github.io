@@ -5,14 +5,14 @@ version: '2.0'
 title: Універсали Хмельницького
 content_outline:
 - section: Вступ — Голос гетьмана
-  words: 400
+  words: 457
   points:
   - Що таке універсал?
   - Хмельницький як автор
   - Політична риторика XVII ст.
   - Чому це важливе джерело
 - section: Типи універсалів
-  words: 500
+  words: 571
   points:
   - Військові — заклики до повстання
   - Адміністративні — накази
@@ -20,7 +20,7 @@ content_outline:
   - Привілейні — пожалування
   - Формуляр — структура документа
 - section: Ключові універсали
-  words: 700
+  words: 800
   points:
   - Перші заклики 1648 року
   - Звернення до козаків
@@ -28,7 +28,7 @@ content_outline:
   - Дипломатичні — до Москви, Варшави
   - Еволюція риторики
 - section: Фрагмент — Універсал 1648 року
-  words: 600
+  words: 686
   points:
   - Текст (з глосами)
   - До кого звернено
@@ -36,7 +36,7 @@ content_outline:
   - Релігійні мотиви
   - Соціальні мотиви
 - section: Політична риторика
-  words: 600
+  words: 686
   points:
   - Образ ворога — поляки, євреї
   - Образ «народу руського»
@@ -44,19 +44,19 @@ content_outline:
   - Православ'я як ідентичність
   - Порівняння з польською пропагандою
 - section: Критика джерела
-  words: 400
+  words: 457
   points:
   - Пропаганда vs. реальні наміри
   - Що замовчано
   - Різні аудиторії — різні меседжі
   - Як верифікувати
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Універсали як первинне джерело
   - Голос влади — критичне читання
   - Зв'язок із Переяславом
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - універсал (universal/proclamation)
@@ -115,3 +115,6 @@ sources:
   notes: Document collection
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- Analyze the causes and consequences of універсали хмельницького
+- Evaluate the historical significance of голос гетьмана

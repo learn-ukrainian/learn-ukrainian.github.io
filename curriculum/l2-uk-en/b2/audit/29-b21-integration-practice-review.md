@@ -1,10 +1,12 @@
 # Audit Report: M29 — 29-b21-integration-practice.md
+
 **Level:** B2 | **Module:** M29 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:04
 
 ## Configuration
+
 **Type:** B2-grammar
 **Word Target:** 1750 words
 **Activities:** 10-14 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Визначення пасивних конструкцій | 16 | 8 | ✅ |
@@ -41,6 +44,7 @@
 - Low density activities: 0
 
 ## Gates
+
 - **Words:** ✅ 1850/1750 (raw: 1957)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
@@ -59,10 +63,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 32 | 24 | 100% | 20% | 20.0% |
@@ -78,6 +84,7 @@
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 71 | Included in Core |

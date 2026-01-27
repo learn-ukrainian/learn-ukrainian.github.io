@@ -1,8 +1,8 @@
 # Audit Report: M09 — 09-aspect-future.md
-**Level:** B1 | **Module:** M09 | **Phase:** B1 | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M09 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:26:49
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-27 16:25:47
 
 ## Configuration
 **Type:** B1-grammar
@@ -41,17 +41,8 @@
 - Required types used: 3/3 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✅ **правильно:**...'.
-  - FIX: Vary sentence structure.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 1854/1500 (raw: 2535)
+- **Words:** ✅ 1857/1500 (raw: 2538)
 - **Activities:** ✅ 13/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -61,7 +52,7 @@
 - **Vocab:** ✅ 144/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.6% (target 85-100% (B1.1 Aspect))
 - **Richness:** ✅ 95% (grammar)
@@ -93,7 +84,7 @@
 | **Intro/Narrative** | ✅ | 9 | Included in Core |
 | **Тест** | ⚪️ | 167 | Skipped |
 | **Пояснення** | ⚪️ | 430 | Skipped |
-| **Практика** | ⚪️ | 312 | Skipped |
+| **Практика** | ⚪️ | 315 | Skipped |
 | **Діалоги** | ✅ | 612 | Included in Core |
 | **Підсумок** | ✅ | 0 | Included in Core |
 | **Три форми майбутнього часу** | ⚪️ | 65 | Skipped |

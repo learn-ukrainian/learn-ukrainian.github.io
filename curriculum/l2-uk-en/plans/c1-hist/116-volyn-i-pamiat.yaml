@@ -5,47 +5,47 @@ version: '2.0'
 title: 'Волинь 1943: Трагедія і контекст'
 content_outline:
 - section: Вступ — Найболючіша тема
-  words: 451
+  words: 515
   points:
   - Волинь 1943 — незагоєна рана
   - Не виправдання, а розуміння
   - Контекст ≠ виправдання
   - Структура модуля
 - section: Контекст — що передувало
-  words: 790
+  words: 903
   points:
   - Міжвоєнний період — дискримінація
   - Пацифікації 1930-х
   - Нацистська окупація
   - Голод і насильство з усіх боків
 - section: Акція «Антиполяк»
-  words: 677
+  words: 774
   points:
   - Рішення ОУН-УПА
   - Масштаб — цифри
   - Методи — жорстокість
   - Чому так — версії
 - section: Польська відповідь
-  words: 564
+  words: 645
   points:
   - Армія Крайова
   - Українські жертви
   - Не лише «одна сторона»
   - Масштаб відповіді
 - section: Пам'ять і політика
-  words: 677
+  words: 774
   points:
   - Польська пам'ять — «Wołyń»
   - Українська пам'ять — контекст
   - Законодавчі війни
   - Інструменталізація
 - section: Підсумок
-  words: 341
+  words: 389
   points:
   - Трагедія — для обох народів
   - Визнання без релятивізації
   - Перехід до 2022
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - Волинська трагедія (Volhynia tragedy)
@@ -65,16 +65,16 @@ vocabulary_hints:
   - декретизація (decree-based policy)
   - колабораціонізм (collaboration)
 activity_hints:
-- type: context-analysis
+- type: critical-analysis
   focus: What preceded Volhynia 1943
   output: Contextual timeline
-- type: source-comparison
+- type: comparative-study
   focus: Polish vs Ukrainian sources on Volhynia
   output: Source comparison
-- type: memory-politics
+- type: critical-analysis
   focus: How Volhynia is used politically
   output: Memory politics analysis
-- type: ethical-analysis
+- type: critical-analysis
   focus: Context vs justification — where's the line?
   output: Ethical framework
 - type: essay-response
@@ -104,3 +104,6 @@ sources:
   notes: AK context
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of волинь 1943: трагедія і контекст'
+- Evaluate the historical significance of найболючіша тема

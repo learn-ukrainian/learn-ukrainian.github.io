@@ -2,13 +2,13 @@
   "module": "oleh-ihor",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T23:19:21.093942Z",
+  "last_audit": "2026-01-27T15:49:12.284896Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-25T10:34:00.390939Z",
+    "md": "2026-01-27T15:24:10.347042Z",
     "meta": "2026-01-26T22:20:13.369483Z",
-    "activities": "2026-01-25T10:28:21.022317Z",
-    "vocabulary": "2026-01-25T10:25:38.327953Z",
+    "activities": "2026-01-27T15:34:54.358175Z",
+    "vocabulary": "2026-01-26T23:20:26.338778Z",
     "plan": null
   },
   "gates": {
@@ -25,7 +25,7 @@
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "11/3"
+      "message": "7/3"
     },
     "vocabulary": {
       "status": "pass",

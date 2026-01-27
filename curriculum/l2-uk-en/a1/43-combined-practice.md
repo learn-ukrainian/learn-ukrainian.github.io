@@ -138,5 +138,3 @@ When planning your errands, it is important to know the typical **графік �
 
 > [!tip]
 > Спробуйте описати свій робочий графік українською мовою! (Try to describe your work schedule in Ukrainian!)
-
-

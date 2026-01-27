@@ -69,22 +69,10 @@ activity_hints:
   focus: Українська космічна програма
   source: Scientific and historical sources
   items: 3 passages
-- type: quiz
-  focus: Життя та космічний політ Каденюка
-  items: 12+
-- type: match-up
-  focus: Космічна термінологія
-  items: 10+
 - type: essay-response
   focus: Яке значення мав політ Каденюка для незалежної України?
   word_target: 300
   output: Analytical essay
-- type: group-sort
-  focus: Етапи космічної кар'єри
-  items: 12+
-- type: fill-in
-  focus: Технічна та наукова термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-79
@@ -103,3 +91,7 @@ sources:
   notes: Mission information
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of леонід каденюк: перший космонавт незалежної україни'
+- Evaluate the contributions of український прапор у космосі
+- Trace the career and influence of зірка україни

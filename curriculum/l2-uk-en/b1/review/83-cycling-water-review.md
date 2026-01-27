@@ -12,7 +12,7 @@
 | ------------------- | ----- | ---------------------------------------------------------------------------------- |
 | Coherence           | 10/10 | Logical structure (Cycling -> Kayaking -> SUP).                                    |
 | Relevance           | 10/10 | SUP (Stand Up Paddling) is specifically popular in Kyiv (Dnipro).                  |
-| Educational         | 10/10 | Good differentiation of _веслувати_ (row) vs _плавати_ (swim).                     |
+| Educational         | 10/10 | Good differentiation of *веслувати* (row) vs *плавати* (swim).                     |
 | Language            | 10/10 | Modern usage (`сап`, `каяк`).                                                      |
 | Pedagogy            | 10/10 | "Vyshyvanyi Shliakh" (Embroidered Path) cycling route connects sport with culture. |
 | Immersion           | 10/10 | Dnister Canyon & Desna River are authentic locations.                              |
@@ -25,11 +25,11 @@
 ## Linguistic Accuracy Issues
 
 - **Vocabulary:** `наділ`. Possibly "land allotment" (archaic)? Or typo for `надягнув`? Context: putting on a life vest?
-  - _Investigation:_ `наділ жилет` (put on a vest)? Grammatically implies `наділ` as past tense verb "he put on", but listed as noun.
-  - _Action:_ Change to `надягнути`/`надіти` (verb) or remove if noun was intended.
+  - *Investigation:* `наділ жилет` (put on a vest)? Grammatically implies `наділ` as past tense verb "he put on", but listed as noun.
+  - *Action:* Change to `надягнути`/`надіти` (verb) or remove if noun was intended.
 - **Vocabulary:** `Десна` is lowercased `десна`.
 - **Vocabulary:** `Сапа` (Hoe) listed for SUP? SUP is `сап` or `сапборд`. `Сапа` is a gardening tool. `САП` (SUP) is acronym-ish.
-  - _Action:_ Change `сапа` to `сап`.
+  - *Action:* Change `сапа` to `сап`.
 
 ## Strengths
 

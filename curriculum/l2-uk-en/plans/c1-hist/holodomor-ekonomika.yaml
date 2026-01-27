@@ -5,50 +5,52 @@ version: '1.0'
 title: Голодомор як економічна зброя
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- Analyze the causes and consequences of голодомор як економічна зброя
+- Evaluate the historical significance of голод як інструмент
 content_outline:
 - section: Вступ — Голод як інструмент
-  words: 451
+  words: 515
   subsections:
   - Голодомор — не природна катастрофа
   - Економічний вимір геноциду
   - Як це працювало
   - Структура модуля
 - section: Експорт під час голоду
-  words: 790
+  words: 903
   subsections:
   - Цифри — скільки вивезли
   - Куди пішло зерно
   - Валюта для індустріалізації
   - Смерть як «побічний ефект»
 - section: Конфіскація як механізм
-  words: 677
+  words: 774
   subsections:
   - «Чорні дошки»
   - Забирали все — до насіння
   - Хто виконував
   - Неможливість виживання
 - section: Економічна логіка Сталіна
-  words: 677
+  words: 774
   subsections:
   - Первісне накопичення
   - Селяни — «внутрішня колонія»
   - Україна — найбагатша жертва
   - Раціональність злочину
 - section: Довгострокові наслідки
-  words: 564
+  words: 645
   subsections:
   - Знищення селянства
   - Демографічна катастрофа
   - Економічні втрати
   - Травма поколінь
 - section: Підсумок
-  words: 341
+  words: 389
   subsections:
   - Голодомор — економічний терор
   - Україна платила життям
   - Перехід до газової зброї
-word_target: 3500
+word_target: 4000
 vocabulary:
 - економічна зброя
 - експорт зерна
@@ -66,11 +68,11 @@ vocabulary:
 - «куркуль»
 - деселянізація
 activities:
-- type: economic-analysis
+- type: critical-analysis
   focus: Grain export during famine — numbers and destinations
-- type: mechanism-study
+- type: comparative-study
   focus: How confiscation system worked economically
-- type: logic-analysis
+- type: critical-analysis
   focus: Stalin's economic rationality behind genocide
 - type: critical-analysis
   focus: Economic consequences of Holodomor

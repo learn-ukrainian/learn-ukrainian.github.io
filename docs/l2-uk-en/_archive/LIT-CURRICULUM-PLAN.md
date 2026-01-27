@@ -367,4 +367,3 @@ This track is designed for **Advanced (C1)** learners who want to move from bein
 - **Comparison:** Chart comparing Mykola's life stages
 
 ---
-

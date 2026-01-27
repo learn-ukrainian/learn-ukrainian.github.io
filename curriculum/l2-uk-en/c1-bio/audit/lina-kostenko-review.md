@@ -1,10 +1,12 @@
 # Audit Report: M105 — lina-kostenko.md
+
 **Level:** C1 | **Module:** M105 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:49
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння біографії | 5 | 5 | ✅ |
@@ -41,16 +44,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in lina-kostenko.yaml: Schema validation error at key '7': {'type': 'error-correction', 'title': 'Складні речення', 'items': [{'sentence': 'Ліна яка не писала віршів мовчала.', 'error': 'Ліна яка', 'answer': 'Ліна, яка', 'options': ['Ліна яка', 'Ліна, яка', 'Ліна: яка', 'none'], 'explanation': 'Виділення підрядного речення комами.'}, {'sentence': 'Вона сказала що не носить біжутерії.', 'error': 'сказала що', 'answer': 'сказала, що', 'options': ['сказала що', 'сказала, що', 'сказала: що', 'none'], 'explanation': 'Кома перед «що».'}, {'sentence': 'Коли вийшов роман його розкупили.', 'error': 'роман його', 'answer': 'роман, його', 'options': ['роман його', 'роман, його', 'роман: його', 'none'], 'explanation': 'Кома між частинами складного речення.'}, {'sentence': 'Це була жінка, яку поважали всі.', 'error': 'none', 'answer': '✓', 'options': ['жінка', 'яку', 'поважали', '✓'], 'explanation': 'Речення побудоване правильно.'}, {'sentence': 'Вона знала, що правда переможе.', 'error': 'none', 'answer': '✓', 'options': ['знала', 'що', 'правда', '✓'], 'explanation': 'Речення побудоване правильно.'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2647/4000 (raw: 2958)
 - **Activities:** ✅ 12/3
 - **Density:** ✅ All > 1
@@ -69,10 +75,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 92% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 15 | 4 | 100% | 19% | 19.0% |
@@ -88,6 +96,7 @@
 | **TOTAL** | | | | | **92.8%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 85 | Included in Core |

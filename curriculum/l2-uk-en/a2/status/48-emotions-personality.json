@@ -2,14 +2,14 @@
   "module": "48-emotions-personality",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:26:30.555221Z",
+  "last_audit": "2026-01-27T12:41:07.182078Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-08T20:54:47.422148Z",
     "meta": "2026-01-26T17:21:18.940605Z",
-    "activities": "2026-01-12T14:24:55.839036Z",
+    "activities": "2026-01-27T12:35:28.295278Z",
     "vocabulary": "2026-01-25T18:00:39.827593Z",
-    "plan": "2026-01-26T17:21:18.940380Z"
+    "plan": "2026-01-27T12:35:02.081593Z"
   },
   "gates": {
     "meta": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1967/1000 (raw: 2511) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "1967/1000 (raw: 2511)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "10/10"
+      "message": "11/10"
     },
     "vocabulary": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Missing required activity types: fill-in, matching, speaking, vocabulary-drill"
-    ],
-    "pass_count": 4,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

@@ -1,10 +1,12 @@
 # Audit Report: M12 — 12-the-accusative-ii-people.md
+
 **Level:** A1 | **Module:** M12 | **Phase:** A1 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
 **Generated:** 2026-01-26 22:25:44
 
 ## Configuration
+
 **Type:** A1-grammar
 **Word Target:** 750 words
 **Activities:** 8-12 required
@@ -18,6 +20,7 @@
 **Transliteration:** Allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | People in Your Life | 10 | 8 | ✅ |
@@ -37,6 +40,7 @@
 - Low density activities: 0
 
 ## Gates
+
 - **Words:** ✅ 1342/750 (raw: 1662)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
@@ -54,6 +58,7 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

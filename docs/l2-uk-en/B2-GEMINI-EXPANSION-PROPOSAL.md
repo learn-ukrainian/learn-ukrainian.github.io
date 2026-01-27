@@ -14,49 +14,59 @@
 > - **Status:** ✅ Built (M01-M10)
 
 #### Module 01: Passive Voice System Overview
+
 **Grammar:** The 4 forms of Ukrainian Passive.
 **Focus:** Structural overview & selection logic.
 **Key Concept:** Agent suppression.
 
 #### Module 02: Past Passive Participles (-ний/-тий)
+
 **Grammar:** Forming participles from Perfective verbs.
 **Focus:** Adjectival use (State description).
 **Vocabulary:** зроблений, відкритий, написаний, забутий.
 
 #### Module 03: Impersonal Passive (-но/-то)
+
 **Grammar:** Predicative forms (Events/Facts).
 **Focus:** Official reports, News headings.
 **Examples:** Рішення прийнято. Роботу виконано.
 
 #### Module 04: Reflexive Passive (-ся)
+
 **Grammar:** Action-focus verbs.
 **Focus:** Processes and recurring events.
 **Examples:** Будинок будується. Проблема вирішується.
 
 #### Module 05: Third Person Plural (Definite/Indefinite)
+
 **Grammar:** "They say/do" constructions.
 **Focus:** Colloquial & Informal passive equivalent.
 **Examples:** Кажуть, що... (It is said that...)
 
 #### Module 06: Passive in Context
+
 **Focus:** Textual analysis.
 **Activity:** Switching between Active and Passive texts.
 
 #### Module 07: Active Participles (Present)
+
 **Grammar:** -уч/-юч, -ач/-яч suffix nuances.
 **Focus:** "Running man" (біжучий) vs "Man who runs".
 **Note:** Stylistic limitation (less common in modern Ukr).
 
 #### Module 08: Active Participles (Past)
+
 **Grammar:** -лий suffix (Past active).
 **Focus:** State resulting from action.
 **Examples:** Посивілий, зів'ялий.
 
 #### Module 09: Participles vs Relative Clauses
+
 **Grammar:** "Який..." construction vs Participle.
 **Focus:** Stylistic Choice (Spoken "Який" vs Written "Participle").
 
 #### Module 10: Checkpoint - Passive Voice
+
 **Assessment:** Logic, Form generation, Register appropriateness.
 
 ---
@@ -69,53 +79,68 @@
 > - **Status:** ✅ Built (M11-M24), Planning (M25)
 
 #### Module 11: Multi-clause Sentences (Complex)
+
 **Grammar:** Subordination, Conjunctions.
 **Focus:** Building complex thoughts.
 
 #### Module 12: Parenthetical Expressions
+
 **Grammar:** Inserted words (Mabut, Zvichaino).
 **Focus:** Modifying certainty and attitude.
 
 #### Module 13: Emphasis and Inversion
+
 **Grammar:** Word order (Rheme/Theme).
 **Focus:** Changing focus by moving words.
 
 #### Module 14: Stylistic Connectors
+
 **Grammar:** Advanced linkers (Prote, Odnak, Vtim).
 **Focus:** Cohesion in formal writing.
 
 #### Module 15: Register Introduction
+
 **Focus:** The concept of 5 styles (Official, Scientific, Media, Literary, Colloquial).
 
 #### Module 16: Formal vs Informal
+
 **Focus:** Binary distinction practice.
 **Activity:** "Translate" formal to informal.
 
 #### Module 17: Register: Business Ukrainian
+
 **Focus:** Correspondence, Contracts, negotiation.
 
 #### Module 18: Register: Academic Ukrainian
+
 **Focus:** Citations, Passive usage, abstract nouns.
 
 #### Module 19: Register: Official/Legal
+
 **Focus:** Laws, rights, "dry" language.
 
 #### Module 20: Register: Medical Ukrainian
+
 **Focus:** Patient-Doctor, symptoms, instructions.
 
 #### Module 21: Register: Technical/Scientific
+
 **Focus:** Instructions, processes, manuals.
 
 #### Module 22: Register: Literary Ukrainian
+
 **Focus:** Imagery, archaic words, descriptions.
 
 #### Module 23: Register: Media/Journalistic
+
 **Focus:** Headlines, reporting, bias.
 
 #### Module 24: Register: Colloquial Style
+
 **Focus:** Slang, contractions, emotional particles.
 
 #### Module 25: Checkpoint - Register System
+
 **Assessment:** Identification of styles, rewriting text in Style X.
 
 ---
@@ -127,10 +152,10 @@
 > - **Pedagogy:** CBI (Content-Based Instruction)
 > - **Key Requirement:** Terms must be presented in professional context (contracts, news, business meetings).
 
-
 > **Checkpoint:** M40 tests M26-39 skill groups.
 
 #### Module 26: Politics & Government Vocabulary
+
 **Grammar:** Domain-specific vocabulary with register awareness
 **Focus:** Political structure, elections, diplomacy.
 
@@ -149,6 +174,7 @@
 3. Vocabulary: Political term quiz
 
 #### Module 27: Law & Justice Vocabulary
+
 **Grammar:** Legal terminology
 **Focus:** Court system, rights, crime.
 
@@ -161,6 +187,7 @@
 3. Discuss: Rights and responsibilities
 
 #### Module 28: Economics & Business Vocabulary
+
 **Grammar:** Economic terminology
 **Focus:** Macroeconomics, finance, markets.
 
@@ -173,6 +200,7 @@
 3. Discuss: Ukrainian economy
 
 #### Module 29: B2.1 Integration Practice
+
 **Grammar:** All B2.1 content combined
 **Focus:** Combining Passive Voice, Register, and Domain Vocab.
 
@@ -190,10 +218,12 @@
 3. Analyze: Complex text for grammar features
 
 #### Module 30: B2.1 Checkpoint
+
 **Assessment:** Logic, Register identification, Passive forms.
 **Required Skill Groups:** Passive Voice System, Participles, Multi-clause Sentences, Register System, Domain Vocabulary.
 
 #### Module 31: Numeral Declension I - Time & Dates
+
 **Grammar:** Time and date expressions with declension
 **Time Expressions:** о другій годині (at 2 o'clock), пів на першу (half past twelve)
 **Date Expressions:** перше січня (Jan 1, nom), першого січня (of Jan 1, gen)
@@ -207,6 +237,7 @@
 3. Practice: Schedule reading and writing
 
 #### Module 32: Numeral Declension II - Compound Numbers
+
 **Grammar:** Complex numeral declension with compounds
 **Focus:** Compounds (345), Years (1991), Statistics.
 
@@ -219,6 +250,7 @@
 3. Read: Statistical text with numbers
 
 #### Module 33: Word Formation - Person Suffixes
+
 **Grammar:** Forming nouns for people (-ар, -ач, -ник)
 **Examples:** бібліотекар, викладач, працівник.
 
@@ -231,6 +263,7 @@
 3. Quiz: Choose correct suffix
 
 #### Module 34: Word Formation - Abstract Nouns
+
 **Grammar:** Forming abstract nouns (-ння, -ість, -ок)
 **Examples:** читання, гордість, здобуток.
 
@@ -243,6 +276,7 @@
 3. Quiz: Identify formation pattern
 
 #### Module 35: Word Formation - Place & Object Names
+
 **Grammar:** Forming place and object names (-ня, -ище, -арня)
 **Examples:** читальня, сховище, лікарня.
 
@@ -255,6 +289,7 @@
 3. Quiz: Choose correct suffix
 
 #### Module 36: Word Formation - Adjective Formation
+
 **Grammar:** Forming adjectives (-ський, -ний, compounds)
 **Examples:** український, національний, синьо-жовтий.
 
@@ -267,6 +302,7 @@
 3. Analyze: Compound adjective structure
 
 #### Module 37: Word Formation - Adverb & Integration
+
 **Grammar:** Adverb formation and integration
 **Examples:** швидко, добре, по-українськи.
 
@@ -279,6 +315,7 @@
 3. Review: All word formation patterns
 
 #### Module 38: One-member Sentences (Односкладні)
+
 **Grammar:** Sentences with one main clause component
 **Types:** Definite (Люблю...), Indefinite (Кажуть...), Impersonal (Світає...), Nominative (Ніч.).
 
@@ -291,6 +328,7 @@
 3. Create: Write one-member sentences
 
 #### Module 39: Register - Religious & Epistolary Styles
+
 **Grammar:** Church vocabulary and letter-writing
 **Religious:** Бог, храм, молитва, благословенний.
 **Epistolary:** Шановний, З повагою, Вкладення.
@@ -304,6 +342,7 @@
 3. Transform: Informal → formal letter
 
 #### Module 40: Advanced Pronoun Declension
+
 **Grammar:** Indefinite, negative, and defining pronouns
 **Types:** хтось, ніхто, весь, сам.
 
@@ -324,7 +363,6 @@
 > - **Pedagogy:** CBI with Narrative Arc.
 > - **Key Requirement:** 15-20 idioms per module. Organize by semantic category (e.g., Somatic).
 > - **Validation:** Must include "Match-up" and "Context Selection" activities.
-
 
 > **Checkpoint:** M70 tests M41-69 skill groups.
 
@@ -352,6 +390,7 @@
 3. Rewrite: "He did it once" → "He used to do it often"
 
 #### Module 42: Aspect Nuances II - Imperative & Infinitive
+
 **Grammar:** Aspect usage in commands and infinite forms
 **Focus:** Politeness, urgency, prohibition.
 **Imperative:** Роби (polite/process) vs Зроби (order/urgency).
@@ -366,6 +405,7 @@
 3. Transform: Order vs Invitation
 
 #### Module 43: Correlative Constructions (Співвідносні)
+
 **Grammar:** Paired demonstrative and relative words (Standard 4500-4501)
 **Pairs:** той... хто, те... що, такий... який, там... де.
 
@@ -378,6 +418,7 @@
 3. Translation: "The one who..." constructions
 
 #### Module 44: Complex Syntax - Ellipsis & Parcelling
+
 **Grammar:** Omitted words and stylistic fragmentation
 **Focus:** Literature and Expressive Speech.
 **Ellipsis:** Я — додому.
@@ -392,6 +433,7 @@
 3. Dialogue: Use elliptical questions/answers
 
 #### Module 45: Proverbs I - Work, Wisdom & Character
+
 **Type:** Phraseology (Merged M41-42)
 **Focus:** Fundamental wisdom about life, work, and people.
 **Key Proverbs:** Без труда нема плода. Хто рано встає, тому Бог дає.
@@ -405,6 +447,7 @@
 3. Complete: The second half of the proverb
 
 #### Module 46: Proverbs II - Nature, Time & Caution
+
 **Type:** Phraseology (Merged M43-44)
 **Focus:** Planning, risk, and natural cycles.
 **Key Proverbs:** Готуй сани влітку. Сім разів відміряй.
@@ -418,6 +461,7 @@
 3. Quiz: English equivalents
 
 #### Module 47: Set Expressions I - Body & Animals
+
 **Type:** Phraseology (Merged M45-46)
 **Focus:** Somatic and Zoomorphic idioms.
 **Key Expressions:** Руки чешуться, Кіт наплакав, Біла ворона.
@@ -431,6 +475,7 @@
 3. Story: Insert animal idioms into a fable
 
 #### Module 48: Set Expressions II - Objects & Abstract
+
 **Type:** Phraseology (Merged M47-48)
 **Focus:** Metaphors with objects and general concepts.
 **Key Expressions:** Ложка дьогтю, Камінь спотикання, Грати з вогнем.
@@ -444,6 +489,7 @@
 3. Rewrite: Replace literal phrases with set expressions
 
 #### Module 49: Idioms - Body (Head/Face)
+
 **Type:** Phraseology
 **Idioms:** Голова йде обертом, Тримати язик за зубами.
 
@@ -456,6 +502,7 @@
 3. Dialogue: Use 3 idioms in conversation
 
 #### Module 50: Idioms - Body (Hands/Legs)
+
 **Type:** Phraseology
 **Idioms:** Майстер на всі руки, Сісти в калюжу.
 
@@ -468,6 +515,7 @@
 3. Compare: Similar idioms in other languages
 
 #### Module 51: Idioms - Body (Heart/Soul)
+
 **Type:** Phraseology
 **Idioms:** Камінь з душі, Душа в п'яти.
 
@@ -480,6 +528,7 @@
 3. Discuss: Emotional expression in Ukrainian
 
 #### Module 52: Idioms - Animals I (Wolf, Dog, Horse)
+
 **Type:** Phraseology
 **Idioms:** Вовком вити, Собаку з'їв, Темна конячка.
 
@@ -492,6 +541,7 @@
 3. Create: Story using animal idioms
 
 #### Module 53: Idioms - Animals II (Birds, Fish, Insects)
+
 **Type:** Phraseology
 **Idioms:** Вбити двох зайців, Робити з мухи слона.
 
@@ -504,6 +554,7 @@
 3. Use: Idioms in appropriate contexts
 
 #### Module 54: Idioms - Nature (Water, Fire, Earth, Wind)
+
 **Type:** Phraseology
 **Idioms:** Вивести на чисту воду, Гратися з вогнем, Вітер у голові.
 
@@ -516,6 +567,7 @@
 3. Write: Paragraph using nature idioms
 
 #### Module 55: Synonyms - Emotion
+
 **Synonyms:** Радість (joy), Щастя (happiness), Сум (sadness), Журба (melancholy).
 
 **Vocabulary (30 words):**
@@ -527,6 +579,7 @@
 3. Write: Express same emotion with different synonyms
 
 #### Module 56: Synonyms - Size
+
 **Synonyms:** Великий, Величезний, Грандіозний; Малий, Крихітний, Мізерний.
 
 **Vocabulary (30 words):**
@@ -538,6 +591,7 @@
 3. Replace: Find best synonym for context
 
 #### Module 57: Synonyms - Movement
+
 **Synonyms:** Йти (go), Крокувати (stride), Брести (trudge); Бігти (run), Мчати (race).
 
 **Vocabulary (30 words):**
@@ -549,6 +603,7 @@
 3. Use: Precise movement verbs in narration
 
 #### Module 58: Synonyms - Quality
+
 **Synonyms:** Добрий, Хороший, Чудовий; Поганий, Кепський, Жахливий.
 
 **Vocabulary (30 words):**
@@ -560,6 +615,7 @@
 3. Describe: Same object with different synonyms
 
 #### Module 59: Synonyms - Communication
+
 **Synonyms:** Казати, Говорити, Повідомляти; Питати, Цікавитися, Допитувати.
 
 **Vocabulary (30 words):**
@@ -571,6 +627,7 @@
 3. Analyze: Register of communication verbs
 
 #### Module 60: Synonyms - Character
+
 **Synonyms:** Розумний, Мудрий, Кмітливий; Добрий, Щедрий, Чуйний.
 
 **Vocabulary (30 words):**
@@ -582,6 +639,7 @@
 3. Analyze: Character in literature
 
 #### Module 61: Synonyms - Time
+
 **Synonyms:** Зараз, Тепер, Нині; Раніше, Колись, Давно.
 
 **Vocabulary (30 words):**
@@ -593,6 +651,7 @@
 3. Rewrite: Same sentence with different time words
 
 #### Module 62: Synonyms - Place
+
 **Synonyms:** Тут, Тутечки, Ось тут; Там, Туди, Звідти.
 
 **Vocabulary (25 words):**
@@ -604,6 +663,7 @@
 3. Describe: Location with various synonyms
 
 #### Module 63: Synonyms - Quantity
+
 **Synonyms:** Багато, Чимало, Безліч; Мало, Трохи, Кілька.
 
 **Vocabulary (25 words):**
@@ -615,6 +675,7 @@
 3. Compare: Quantity expressions in context
 
 #### Module 64: Synonyms - Action
+
 **Synonyms:** Робити, Чинити, Діяти; Брати, Хапати.
 
 **Vocabulary (30 words):**
@@ -626,6 +687,7 @@
 3. Register: Formal vs colloquial action verbs
 
 #### Module 65: Synonyms - State
+
 **Synonyms:** Бути, Існувати, Перебувати; Здаватися, Виглядати.
 
 **Vocabulary (25 words):**
@@ -637,6 +699,7 @@
 3. Analyze: State expressions in formal text
 
 #### Module 66: Synonyms - Abstract Concepts
+
 **Synonyms:** Думка, Ідея, Погляд; Поняття, Концепція.
 
 **Vocabulary (30 words):**
@@ -648,6 +711,7 @@
 3. Argue: Express ideas with varied vocabulary
 
 #### Module 67: Advanced Conjunctions I - Causal & Concessive
+
 **Grammar:** Тому що, Оскільки, Бо; Хоча, Незважаючи на.
 
 **Vocabulary (25 words):**
@@ -659,6 +723,7 @@
 3. Argue: Build causal chains
 
 #### Module 68: Advanced Conjunctions II - Temporal & Conditional
+
 **Grammar:** Коли, Щойно, Поки; Якщо, Якби, За умови.
 
 **Vocabulary (25 words):**
@@ -670,6 +735,7 @@
 3. Complex: Multi-conjunction sentences
 
 #### Module 69: B2.2 Integration Practice
+
 **Task:** Essay writing using idioms, synonyms, and conjunctions.
 **Vocabulary (15 words):**
 інтеграція, практика, застосування, комплексний, комбінований, різноманітний, багатий, виразний, природний, автентичний, рівень, прогрес, майстерність, вільне володіння, компетентність
@@ -680,6 +746,7 @@
 3. Analyze: Text for phraseological richness
 
 #### Module 70: B2.2 Checkpoint
+
 **Assessment:** Proverbs, Idioms, Synonyms, Complex Syntax.
 
 ---
@@ -694,8 +761,8 @@
 > - **Key Requirement:** 100% Ukrainian Immersion. At least 2 PRIMARY SOURCE excerpts per module.
 > - **Decolonization:** Mandatory "Myth vs Reality" section in every module.
 
-
 #### Module 71: Трипільська цивілізація (Trypillian Civilization)
+
 **Focus:** Europe's oldest civilization, proto-Ukrainian roots.
 **Decolonization:** Debunking "Slavs appeared late" myths. Showing deep roots.
 **Primary Source:** Archaeological descriptions / Vikentiy Khvoyka excerpts.
@@ -709,6 +776,7 @@
 3. Myth-bust: "Who lived here 5000 years ago?"
 
 #### Module 72: Скіфи та сармати (Scythians and Sarmatians)
+
 **Focus:** Steppe nomads, Greek colonies, Herodotus.
 **Primary Source:** Herodotus "Histories" (Book 4 on Scythia).
 **Key Concept:** The Great Steppe as a highway of civilizations.
@@ -722,6 +790,7 @@
 3. Compare: Nomadic vs Sedentary lifestyle
 
 #### Module 73: Слов'яни на українських землях (Early Slavs)
+
 **Focus:** Antes, Sclaveni, Polans, tribal democracy.
 **Primary Source:** Procopius of Caesarea (on Slavic democracy).
 **Key Concept:** "Narodopravstvo" (democracy) roots.
@@ -735,6 +804,7 @@
 3. Discuss: Roots of Ukrainian democratic tradition
 
 #### Module 74: Заснування Києва (Founding of Kyiv)
+
 **Focus:** Kyi, Shchek, Khoryv, Lybid. Askold & Dir.
 **Primary Source:** Primary Chronicle (Povist Mynulykh Lit).
 **Key Concept:** Kyiv as a trade hub (Varangian to Greek route).
@@ -748,6 +818,7 @@
 3. Myth-bust: "Russian city"? (Kyiv existed long before Moscow)
 
 #### Module 75: Володимир і хрещення (Volodymyr & Baptism)
+
 **Focus:** 988 Christianization, choice of faith, centralization.
 **Primary Source:** Chronicle (The choice of faiths).
 **Key Concept:** Civilizational choice (Europe/Byzantium over Asia).
@@ -761,6 +832,7 @@
 3. Analyze: The Trident (Volodymyr's symbol)
 
 #### Module 76: Ярослав Мудрий (Yaroslav the Wise)
+
 **Focus:** Golden Age, Ruska Pravda (Law), Saint Sophia.
 **Primary Source:** Ruska Pravda (articles).
 **Key Concept:** "Father-in-law of Europe" (Dynastic ties).
@@ -774,6 +846,7 @@
 3. Describe: Saint Sophia Cathedral
 
 #### Module 77: Культура Київської Русі (Culture of Rus)
+
 **Focus:** Literacy (graffiti), literature, mosaics.
 **Primary Source:** Graffiti from St. Sophia walls.
 **Decolonization:** Literacy was widespread (unlike in Muscovy later).
@@ -787,6 +860,7 @@
 3. Discuss: Common people's literacy
 
 #### Module 78: Занепад і роздроблення (Decline & Fragmentation)
+
 **Focus:** Congress of Liubech (1097), civil wars, princely feuds.
 **Primary Source:** Testament of Volodymyr Monomakh.
 **Key Concept:** "Let each keep his own patrimony" - fatal flaw.
@@ -800,6 +874,7 @@
 3. Cause/Effect: Why did Rus decline?
 
 #### Module 79: Монгольська навала 1240 (Mongol Invasion)
+
 **Focus:** Fall of Kyiv, Batu Khan, "end of an era".
 **Primary Source:** Chronicle account of the siege of Kyiv.
 **Decolonization:** Kyiv was destroyed, not "moved" to Moscow.
@@ -813,6 +888,7 @@
 3. Myth-bust: The "Transfer of Power" myth
 
 #### Module 80: Галицько-Волинське князівство (Galicia-Volhynia)
+
 **Focus:** Kingdom of Rus', King Danylo, Western orientation.
 **Primary Source:** Galician-Volhynian Chronicle.
 **Key Concept:** Continuity of statemanship.
@@ -826,6 +902,7 @@
 3. Discuss: Western vs Eastern vector
 
 #### Module 81: Велике князівство Литовське (Grand Duchy of Lithuania)
+
 **Focus:** "Ruthenian" autonomy, Old Ukrainian language as state language.
 **Primary Source:** Lithuanian Statute.
 **Key Concept:** "We do not destroy the old, nor introduce the new."
@@ -839,6 +916,7 @@
 3. Compare: Lithuanian rule vs Mongol rule
 
 #### Module 82: Річ Посполита (Polish-Lithuanian Commonwealth)
+
 **Focus:** Union of Lublin (1569), Polonization, religious pressure.
 **Primary Source:** Union of Lublin text / Polemical literature.
 **Key Concept:** Loss of elite (Polonization) -> need for new defenders.
@@ -852,6 +930,7 @@
 3. Analyze: Why did nobles switch to Catholicism?
 
 #### Module 83: Checkpoint: Витоки (Origins)
+
 **Assessment:** Tests M71-82.
 **Task:** Essay "From Trypillia to Commonwealth: The Continuity of People."
 
@@ -865,8 +944,8 @@
 > - **Key Requirement:** Focus on Statehood traditions. Primary sources: Treaties, Letters, Chronicles.
 > - **Decolonization:** Explicitly debunk "Reunification" myths (M89, M96).
 
-
 #### Module 84: Козацтво: витоки (Origins of Cossacks)
+
 **Focus:** The Wild Field, emergence of free warriors, social structure.
 **Primary Source:** Description by Guillaume Le Vasseur de Beauplan.
 **Key Concept:** "Voonosti" (Liberties) vs Feudalism.
@@ -880,6 +959,7 @@
 3. Discuss: Why did peasants flee to the steppe?
 
 #### Module 85: Запорозька Січ (Zaporozhian Sich)
+
 **Focus:** Military republic, democratic structure, fortifications.
 **Primary Source:** Dmytro Yavornytsky (modern historian) or Chronicle.
 **Key Concept:** "Mother Sich" - the fortress of freedom.
@@ -893,6 +973,7 @@
 3. Analyze: Cossack justice system
 
 #### Module 86: Козацька культура (Cossack Culture)
+
 **Focus:** Kobzars, Dumy (epic songs), Baroque influence, Education.
 **Primary Source:** Text of a "Duma" (e.g., Marusia Bohuslavka).
 **Key Concept:** The singing chronicles of history.
@@ -906,6 +987,7 @@
 3. Discuss: Role of blind kobzars as news-bringers
 
 #### Module 87: Хмельниччина I: повстання (Khmelnytsky Uprising)
+
 **Focus:** 1648 revolt, Zhovti Vody, Korsun, Pyliavtsi.
 **Primary Source:** Letter from Khmelnytsky to Polish King.
 **Key Concept:** From revolt to war of liberation.
@@ -919,6 +1001,7 @@
 3. Strategy: Analyzing the diff between peasant mob and army
 
 #### Module 88: Хмельниччина II: держава (The Cossack State)
+
 **Focus:** Building the Hetmanate (Viysko Zaporozke), Zboriv Treaty.
 **Primary Source:** Conditions of Zboriv Treaty (1649).
 **Key Concept:** De facto independence.
@@ -932,6 +1015,7 @@
 3. Discuss: Was the Zboriv Treaty a victory or defeat?
 
 #### Module 89: Переяславська угода ⚠️ (Pereiaslav Treaty)
+
 **Focus:** 1654, The Myths vs Reality. Military alliance, not submission.
 **Decolonization:** Debunking "Reunification of two brotherly peoples".
 **Primary Source:** The March Articles (1654).
@@ -945,6 +1029,7 @@
 3. Contrast: Soviet interpretation vs Historical text
 
 #### Module 90: Руїна I: Вигорщина і розкол (The Ruin Begins)
+
 **Focus:** Vyhovsky, Konotop Victory (1659), Split into Left/Right Bank.
 **Primary Source:** Hadiach Treaty text excerpts.
 **Key Concept:** The missed chance like Europe (Grand Duchy of Rus).
@@ -958,6 +1043,7 @@
 3. Discuss: The tragedy of the "Black Council" (populism vs elite)
 
 #### Module 91: Руїна II: Дорошенко і надія (Doroshenko)
+
 **Focus:** Petro Doroshenko, "Sun of the Ruin", Turkish alliance.
 **Primary Source:** Doroshenko's letters to Istanbul.
 **Key Concept:** Fighting everyone for unity.
@@ -971,6 +1057,7 @@
 3. Discuss: The cost of the Turkish alliance (slave trade)
 
 #### Module 92: Іван Мазепа I: державник (Mazepa the Statesman)
+
 **Focus:** Rise to power, Kolomak Articles, alliance with Peter I.
 **Primary Source:** Mazepa's early decrees.
 **Key Concept:** Machiavellian diplomacy for Ukraine's good.
@@ -984,6 +1071,7 @@
 3. Read: Contemporary accounts of order returning to Ukraine
 
 #### Module 93: Іван Мазепа II: культура (Mazepa the Patron)
+
 **Focus:** The "Mazepian Baroque", Kyiv-Mohyla Academy, Literature.
 **Primary Source:** Photo of churches built by Mazepa / Dedications.
 **Key Concept:** Cultural bloom before the storm.
@@ -997,6 +1085,7 @@
 3. Map: Churches built/restored by Mazepa
 
 #### Module 94: Іван Мазепа III: Полтава (Poltava & Exile)
+
 **Focus:** Alliance with Sweden (Charles XII), Baturyn Massacre, Poltava 1709.
 **Primary Source:** Constitution of Pylyp Orlyk ( Bendery).
 **Key Concept:** The "Anathema" and the birth of political emigration.
@@ -1010,6 +1099,7 @@
 3. Discuss: "Traitor" vs "Patriot" (Russian vs Ukrainian view)
 
 #### Module 95: Григорій Сковорода (Hryhorii Skovoroda)
+
 **Focus:** 18th Century Philosophy, "The World Caught Me", Cordocentrism.
 **Primary Source:** Fables / "De Libertate".
 **Key Concept:** Personal freedom and spiritual independence.
@@ -1023,6 +1113,7 @@
 3. Read: "De Libertate" (Why is B. Khmelnytsky a hero for him?)
 
 #### Module 96: Російські міфи про Україну (Russian Myths Synthesis) ⚠️
+
 **Focus:** Deconstructing imperial propaganda using linguistic/historical facts.
 **Myth 1:** "One People". **Fact:** Genetic, linguistic, cultural distance.
 **Myth 2:** "Novorossiya/Gift of Lenin". **Fact:** Cossack settlements vs Imperial cities.
@@ -1037,6 +1128,7 @@
 3. Comparative: Russian vs Ukrainian basic vocab (differ by ~38%) -> Proof of difference.
 
 #### Module 97: Кінець Гетьманщини (End of Hetmanate)
+
 **Focus:** Razumovsky, Catherine II, Liquidation of Sich (1775).
 **Primary Source:** Catherine's Manifesto on destruction of Sich.
 **Key Concept:** From autonomy to province ("Malorossiya").
@@ -1050,6 +1142,7 @@
 3. Discuss: Enserfment of Ukrainian peasants (1783)
 
 #### Module 98: Російська імперія: Емський указ (Linguistic Genocide)
+
 **Focus:** 19th c. bans, Valuev Circular (1863), Ems Ukaz (1876).
 **Primary Source:** Text of Ems Ukaz.
 **Key Concept:** "No distinct Little Russian language exists."
@@ -1063,6 +1156,7 @@
 3. Discuss: Cultural consequences of the ban
 
 #### Module 99: Австрійська Галичина (Austrian Galicia)
+
 **Focus:** The "Piedmont", Greek-Catholic Church, Spring of Nations.
 **Primary Source:** "Rusalka Dnistrova" intro.
 **Key Concept:** Western Ukraine as the safe haven for culture.
@@ -1076,6 +1170,7 @@
 3. Discuss: Role of the Greek-Catholic Church
 
 #### Module 100: Шевченко і пробудження (Shevchenko)
+
 **Focus:** Kobzar, Cyril-Methodius Brotherhood, Arrest.
 **Primary Source:** "Zapovit" / "Kavkaz".
 **Key Concept:** Shift from nostalgia (Cossacks) to modern political nation.
@@ -1089,6 +1184,7 @@
 3. Bio: From serf to icon
 
 #### Module 101: Ідеологи: Драгоманов, Куліш (Intellectuals)
+
 **Focus:** Politics (Drahomanov's socialism/federalism) and Language (Kulish's Bible).
 **Primary Source:** Kulish's letters / Drahomanov's articles.
 **Key Concept:** Building "High Culture" and Political Thought.
@@ -1102,6 +1198,7 @@
 3. Contrast: Cultural work vs Political work
 
 #### Module 102: Франко, Леся, Грінченко (The Titans)
+
 **Focus:** Ivan Franko (Stonecutter), Lesya Ukrainka (Forest Song), Borys Hrinchenko (Dictionary).
 **Primary Source:** Dictionary formatting / Forest Song excerpt.
 **Key Concept:** Professionalization of Ukrainian culture.
@@ -1115,6 +1212,7 @@
 3. Discuss: Franko as potential Nobel winner
 
 #### Module 103: Перша світова війна (WWI)
+
 **Focus:** Fratricide (Ukrainians in Austrian vs Russian armies), Sich Riflemen (USS).
 **Primary Source:** "Oy u luzi chervona kalyna" lyrics history.
 **Key Concept:** Training ground for future army.
@@ -1128,6 +1226,7 @@
 3. Read: Letters from soldiers on opposite sides
 
 #### Module 104: УНР і ЗУНР (Revolution 1917-1921)
+
 **Focus:** Central Rada, Universal IV (Independence), Unification Act (Sobornist).
 **Primary Source:** Fourth Universal text.
 **Key Concept:** The First Independence.
@@ -1141,6 +1240,7 @@
 3. Concept: What does "Sobornist" mean today?
 
 #### Module 105: Вістовці та Неокласики (1920s Culture)
+
 **Focus:** "Ukrainization", Khvylovy, Zerov, Kurbas. High Modernism.
 **Primary Source:** "Away from Moscow!" slogan context.
 **Key Concept:** "A psychological Europe".
@@ -1154,6 +1254,7 @@
 3. Analyze: Kurbas's theater innovations
 
 #### Module 106: Checkpoint: Козаччина — 1920
+
 **Assessment:** Tests M84-105.
 **Task:** Comparative Essay: "Mazepa vs Petliura - struggle for statehood."
 
@@ -1165,8 +1266,8 @@
 > - **Sensitive Content:** Handle trauma (Holodomor, Deportation) with respect. Focus on facts and resilience.
 > - **Primary Sources:** Diaries, Memoirs, Decrees.
 
-
 #### Module 107: Розстріляне відродження (Executed Renaissance)
+
 **Focus:** The Great Terror, Solovki, Sandarmokh. Systematic destruction of elite.
 **Primary Source:** List of executed writers in Sandarmokh.
 **Key Concept:** "The generation that could have changed everything."
@@ -1180,6 +1281,7 @@
 3. Read: Last letters from prison
 
 #### Module 108: Голодомор I: механізм (Holodomor Mechanism)
+
 **Focus:** 1932-33, Collectivization, "Law of 5 Ears of Corn".
 **Primary Source:** Decree on "Black Boards" (Chorni Doshky).
 **Key Concept:** Food as a weapon.
@@ -1193,6 +1295,7 @@
 3. Read: Memoirs of the "grain searchers"
 
 #### Module 109: Голодомор II: пам'ять (Holodomor Memory)
+
 **Focus:** Survival stories, trauma, hiding the truth, recognition.
 **Primary Source:** Gareth Jones' diaries.
 **Key Concept:** "Never Again" -> Recognition.
@@ -1206,6 +1309,7 @@
 3. Discuss: Intergenerational trauma
 
 #### Module 110: Друга світова: окупації (WWII Occupations)
+
 **Focus:** 1939-1945. "Bloodlands". Nazi vs Soviet occupation.
 **Primary Source:** Dovzhenko's diary ("Ukraine in flames").
 **Key Concept:** Ukraine as the main battlefield.
@@ -1219,6 +1323,7 @@
 3. Contrast: "Liberation" vs "Re-occupation"
 
 #### Module 111: УПА і збройний опір (UPA)
+
 **Focus:** OUN, UPA, Bandera, Shukhevych. War on two fronts.
 **Primary Source:** Decalogue of Ukrainian Nationalist.
 **Key Concept:** Army without a state.
@@ -1232,6 +1337,7 @@
 3. Discuss: The Volyn Tragedy (complexity/trauma)
 
 #### Module 112: Повоєнне радянське панування (Post-War Soviet)
+
 **Focus:** 1950s-70s. Industrialization, Russification, Stagnation.
 **Primary Source:** Example of "Russified" vocabulary lists.
 **Key Concept:** "Merging of nations".
@@ -1245,6 +1351,7 @@
 3. Discuss: Prestige of Russian language in USSR
 
 #### Module 113: Sürgünlik: Депортація 1944 (Crimean Tatar Genocide)
+
 **Focus:** May 18, 1944. Deportation to Central Asia. Erasure of Crimea.
 **Primary Source:** Eyewitness testimony of train journey.
 **Key Concept:** Colonial erasure of indigenous people.
@@ -1258,6 +1365,7 @@
 3. Vocabulary: Replacing "Sudak" with Qırım names
 
 #### Module 114: Шістдесятники (The Sixtiers)
+
 **Focus:** Cultural thaw. Symonenko, Stus, Kostenko.
 **Primary Source:** Stus poetry.
 **Key Concept:** "Poets are born in silence, but die in noise."
@@ -1271,6 +1379,7 @@
 3. Watch: "Shadows of Forgotten Ancestors" clip
 
 #### Module 115: Чорнобиль (Chornobyl)
+
 **Focus:** 1986 disaster, state lies, ecological awakening.
 **Primary Source:** Phone intercepts "It's burning".
 **Key Concept:** The Catalyst of Collapse.
@@ -1284,6 +1393,7 @@
 3. Discuss: How lies destroyed the USSR
 
 #### Module 116: Діаспора: Ковчег Держави (The Diaspora Ark)
+
 **Focus:** UNR Government in exile (1921-1992), Plast, preservation of culture.
 **Primary Source:** Act of Transferring Power (Piavyuk to Kravchuk).
 **Key Concept:** Legal continuity of the Republic.
@@ -1297,6 +1407,7 @@
 3. Concept: "Ukraine was not born in 1991, it returned."
 
 #### Module 117: Checkpoint: Трагедії XX ст.
+
 **Assessment:** Tests M107-116.
 **Task:** Project "Family History - 20th Century."
 
@@ -1307,8 +1418,8 @@
 > - **Pedagogy:** CBI.
 > - **Key Requirement:** Modern political vocabulary. Understanding the "why" of Independence.
 
-
 #### Module 118: Шлях до незалежності (Road to Independence)
+
 **Focus:** 1989-1991. Rukh, Granite Revolution, Act of Independence.
 **Primary Source:** Act of August 24, 1991.
 
@@ -1316,6 +1427,7 @@
 перебудова, гласність, перебудова, рух, народний, чорновіл, живий ланцюг, єдність, граніт, голодування, студент, 1990, 1991, гкчп, путч, москва, дкнс, проголошення, акт, кравчук, лук'яненко, доленосний, референдум, грудень, 90 відсотків
 
 #### Module 119: Україна 1991-2004 (Transition Era)
+
 **Focus:** Kravchuk, Kuchma, Constitution, Oligarchy.
 **Key Concept:** "Multivectorism" and "Budapest Memorandum".
 
@@ -1323,6 +1435,7 @@
 незалежність, ейфорія, криза, інфляція, купони, кравчук, будапешт, меморандум, ядерна зброя, відмова, гарантія, кучма, конституція, 1996, ніч, гривня, приватизація, олігарх, клан, корупція, гонгадзе, плівки, касетний, протест, кучму геть
 
 #### Module 120: Помаранчева революція (Orange Revolution)
+
 **Focus:** 2004 Elections, Yushchenko, Maidan 1.0.
 **Key Concept:** First massive peaceful protest.
 
@@ -1330,6 +1443,7 @@
 вибори, 2004, ющенко, янукович, фальсифікація, отруєння, діоксин, обличчя, майдан, сцена, намет, помаранчевий, колір, так, разом, нас багато, революція, верховний суд, третій тур, перемога, надія, розчарування, гризня, універсал, реванш
 
 #### Module 121: Епоха Януковича (The Yanukovych Era)
+
 **Focus:** 2010-2013. Authoritarianism, Kharkiv Pact, Language Law.
 **Key Concept:** Creeping occupation.
 
@@ -1337,6 +1451,7 @@
 реванш, янукович, донецький, клан, сім'я, стоматолог, межигір'я, корупція, золотий батон, харківські угоди, флот, крим, здача, ківалов, колесніченко, мовний закон, мовний майдан, узурпація, влада, суд, тимошенко, в'язниця, єс, асоціація, відмова
 
 #### Module 122: Духовний Фронт: Томос (Spiritual Independence) ⚠️
+
 **Focus:** 1686 Annexation -> 2018 Unification Council -> 2019 Tomos.
 **Primary Source:** Tomos Text.
 **Decolonization:** "Canonical" status returned to Kyiv.
@@ -1345,6 +1460,7 @@
 церква, православ'я, розділення, київський, московський, патріархат, філія, фсб, томос, автокефалія, незалежність, варфоломій, константинополь, вселенський, собор, об'єднавчий, епіфаній, предстоятель, пцу, канонічний, визнання, перехід, громада, війна, дух
 
 #### Module 123: Checkpoint: Шлях до Волі
+
 **Assessment:** Tests M118-122.
 
 ### Phase B2.3f: War for Existence (M124-129)
@@ -1355,8 +1471,8 @@
 > - **Key Requirement:** Recent history (2014-2024). Accuracy is critical.
 > - **Decolonization:** Countering "Civil War" and "Nazi" narratives.
 
-
 #### Module 124: Революція Гідності (Revolution of Dignity)
+
 **Focus:** Nov 2013 - Feb 2014. Euromaidan, Dictatorship Laws, Sniper shootings.
 **Primary Source:** "Plyve Kacha" video/context.
 
@@ -1364,6 +1480,7 @@
 євромайдан, студент, побиття, беркут, йолка, мільйон, віче, гідність, барикада, шина, вогонь, грушевського, коктейль, молотов, каска, щит, бруківка, закони 16 січня, диктатура, снайпер, розстріл, інститутська, небесна сотня, пливе кача, втеча
 
 #### Module 125: Анексія Криму (Annexation of Crimea)
+
 **Focus:** Feb-Mar 2014. "Little Green Men", Hybrid aggression.
 **Key Concept:** "KrymNash" hysteria vs International Law.
 
@@ -1371,6 +1488,7 @@
 крим, анексія, захоплення, парламент, зелені чоловічки, ввічливі, спецназ, російський, флот, блокада, частина, зрада, присяга, вірність, сопротив, мітинг, 26 лютого, прапор, референдум, фейковий, дула, автомат, окупація, санкції, світ
 
 #### Module 126: Війна на Донбасі 2014-2022 (ATO/OOS)
+
 **Focus:** Sloviansk, Ilovaisk, DAP (Cyborgs), Minsk Agreements.
 **Key Concept:** "It's not a civil war."
 
@@ -1378,6 +1496,7 @@
 донбас, схід, слов'янськ, гіркін, терорист, сепаратист, ато, добробат, волонтер, армія, іловайськ, котел, вторгнення, регулярний, війська, мінськ, угоди, лінія, розмежування, аеропорт, дап, кіборг, вистояли, бетон, війна
 
 #### Module 127: Повномасштабне вторгнення (Full-Scale Invasion)
+
 **Focus:** Feb 24, 2022. Defense of Kyiv, Unity, Failure of Blitzkrieg.
 **Primary Source:** Zelensky's "President tut" video.
 
@@ -1385,6 +1504,7 @@
 лютий, 24, ранок, вибух, ракета, сирена, тривога, вторгнення, повномасштабне, наступ, колона, танк, київ, за три дні, оборона, зсу, тероборона, черга, військкомат, коктейль, бандера-смузі, привид, мрія, знищення, президент, тут
 
 #### Module 128: Злочини і Стійкість (Crimes & Resilience)
+
 **Focus:** Bucha (War Crimes), Mariupol (Azovstal), Kharkiv/Kherson.
 **Key Concept:** Existential war.
 
@@ -1392,6 +1512,7 @@
 окупація, буча, ірпінь, звірство, розстріл, катування, підвал, мародер, унітаз, русня, орк, маріуполь, блокада, драмтеатр, діти, азовсталь, гарнізон, полон, оленівка, херсон, звільнення, кавун, блекаут, світло, генератор
 
 #### Module 129: B2.3 Final Checkpoint
+
 **Assessment:** Tests M124-128.
 **Task:** Essay "What is Victory?"
 
@@ -1404,10 +1525,10 @@
 > - **Pedagogy:** Project-Based Learning (Capstone) / ESP (Medicine, Tech).
 > - **Key Requirement:** Practical application of B2 skills.
 
-
 > **Checkpoint:** M143 (Final Exam) tests M130-142 + all B2 skills.
 
 #### Module 130: Medicine Advanced
+
 **Focus:** Doctor-patient interaction, symptoms, complex treatment instructions.
 **Vocabulary:** Diagnosis, anatomy, chronic conditions.
 
@@ -1420,6 +1541,7 @@
 3. Write: Medical history summary
 
 #### Module 131: Technology & AI
+
 **Focus:** Software development, data science, artificial intelligence terms.
 **Vocabulary:** Algorithm, interface, cybersecurity.
 
@@ -1432,6 +1554,7 @@
 3. Vocabulary: User interface terms (Download, Swipe, Login)
 
 #### Module 132: Science & Research
+
 **Focus:** Scientific method, hypothesis, academic abstract writing.
 **Vocabulary:** Theory, experiment, evidence.
 
@@ -1444,6 +1567,7 @@
 3. Transform: Simple explanation → Scientific definition
 
 #### Module 133: Arts & Literature
+
 **Focus:** Literary genres, art criticism, analyzing style.
 **Vocabulary:** Metaphor, genre, composition.
 
@@ -1456,6 +1580,7 @@
 3. Identify: Genres of literary excerpts
 
 #### Module 134: Psychology & Mind
+
 **Focus:** Emotional intelligence, mental health, cognitive processes.
 **Vocabulary:** Consciousness, trauma, motivation.
 
@@ -1468,6 +1593,7 @@
 3. Role-play: Giving supportive advice
 
 #### Module 135: Ukrainian Mentality (Culture)
+
 **Focus:** Cordocentrism (philosophy of the heart), individualism vs collectivism.
 **Key Concept:** "My house is on the edge" (Indifference vs Independence).
 **Connection:** Link back to Skovoroda (M95).
@@ -1481,6 +1607,7 @@
 3. Essay: "The Heart in Ukrainian Philosophy"
 
 #### Module 136: Modern Diaspora (Culture)
+
 **Focus:** Global Ukrainians today. Lobbying, cultural diplomacy, aid.
 **Key Concept:** "Global Ukrainians" - 20 million strong.
 
@@ -1493,6 +1620,7 @@
 3. Project: Interview a diaspora member (simulated)
 
 #### Module 137: Religion in Ukraine (Culture)
+
 **Focus:** Religious diversity, holidays, interfaith peace.
 **Key Concept:** "Kyiv - the Second Jerusalem" (Multi-faith history).
 
@@ -1505,6 +1633,7 @@
 3. Discuss: Role of Council of Churches in society
 
 #### Module 138: Academic Writing (Skills)
+
 **Focus:** Essay structure, citation styles, formal argumentation.
 **Skill:** Writing a structured argumentative essay (250 words).
 
@@ -1517,6 +1646,7 @@
 3. Write: Full argumentative essay
 
 #### Module 139: Text Analysis (Skills)
+
 **Focus:** Reading between the lines. Subtext, bias, intent.
 **Skill:** Analyzing political speeches or literary excerpts.
 
@@ -1529,6 +1659,7 @@
 3. Deconstruct: Literary passage (Imagery mapping)
 
 #### Module 140: Capstone Project: Research
+
 **Type:** Project
 **Task:** Choose a topic (History, Culture, Politics), conduct research, draft outline.
 **Output:** Project Proposal + Bibliography (Ukrainian sources only).
@@ -1540,6 +1671,7 @@
 4. Detailed Outline
 
 #### Module 141: Capstone Project: Presentation
+
 **Type:** Project
 **Task:** Write the paper/script and create a presentation.
 **Output:** Written Report (500 words) + Recorded Presentation (5 mins).
@@ -1551,6 +1683,7 @@
 4. Recording/Delivery
 
 #### Module 142: B2 Review
+
 **Focus:** Comprehensive review of History, Grammar, Phraseology.
 **Activity:** Mock Exam questions.
 
@@ -1561,6 +1694,7 @@
 4. Skills (Reading, Listening, Writing)
 
 #### Module 143: B2 FINAL EXAM
+
 **Format:**
 1. **Reading:** 3 texts (News, History, Literature) with Q&A.
 2. **Use of Language:** 50 questions (Grammar & Vocab).
@@ -1570,5 +1704,6 @@
 ---
 
 ## End of B2 Curriculum Plan
+
 **Total Modules:** 143
 **Next Step:** C1 Curriculum (Academic & Professional Mastery)

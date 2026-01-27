@@ -1,10 +1,12 @@
 # Audit Report: M62 — 62-synonyms-place.md
+
 **Level:** B2 | **Module:** M62 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:27
 
 ## Configuration
+
 **Type:** B2-vocab
 **Word Target:** 1750 words
 **Activities:** 10-14 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть місце | 12 | 8 | ✅ |
@@ -42,17 +45,20 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'ми бачимо,...'.
   - FIX: Vary sentence structure.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 62-synonyms-place.yaml: Schema validation error at key '13': {'type': 'select', 'title': 'Типи територій', 'instruction': 'Оберіть усі слова, що описують масштабні території (6 елементів).', 'items': [{'question': 'Які терміни вказують на великі простори? (Оберіть 6)', 'options': [{'text': 'область', 'correct': True}, {'text': 'територія', 'correct': True}, {'text': 'регіон', 'correct': True}, {'text': 'зона', 'correct': True}, {'text': 'район', 'correct': True}, {'text': 'країна', 'correct': True}]}, {'question': "Оберіть синоніми до слова 'місце':", 'options': [{'text': 'локація', 'correct': True}, {'text': 'точка', 'correct': True}, {'text': 'осередок', 'correct': True}, {'text': 'мить', 'correct': False}]}, {'question': "Які слова позначають 'кордони':", 'options': [{'text': 'межа', 'correct': True}, {'text': 'край', 'correct': True}, {'text': 'кордон', 'correct': True}, {'text': 'центр', 'correct': False}]}, {'question': 'Оберіть слова для опису міського простору:', 'options': [{'text': 'квартал', 'correct': True}, {'text': 'площа', 'correct': True}, {'text': 'майдан', 'correct': True}, {'text': 'ліс', 'correct': False}]}, {'question': "Які слова вказують на 'віддаленість':", 'options': [{'text': 'далеко', 'correct': True}, {'text': 'вдалині', 'correct': True}, {'text': 'на обрії', 'correct': True}, {'text': 'поруч', 'correct': False}]}, {'question': "Оберіть назви 'водних просторів':", 'options': [{'text': 'акваторія', 'correct': True}, {'text': 'плесо', 'correct': True}, {'text': 'гладь', 'correct': True}, {'text': 'гора', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 2 violations (minor)
 
 ## Gates
+
 - **Words:** ✅ 2115/1750 (raw: 2329)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
@@ -71,10 +77,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 98% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 54 | 24 | 100% | 20% | 20.0% |
@@ -90,6 +98,7 @@
 | **TOTAL** | | | | | **98.5%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 87 | Included in Core |

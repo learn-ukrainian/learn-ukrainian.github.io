@@ -69,22 +69,10 @@ activity_hints:
   focus: Український авангард XX ст.
   source: Art history sources
   items: 3 passages
-- type: quiz
-  focus: Життя та творчість Малевича
-  items: 12+
-- type: match-up
-  focus: Мистецькі терміни та напрямки
-  items: 10+
 - type: essay-response
   focus: Чому «Чорний квадрат» став революцією в мистецтві?
   word_target: 300
   output: Analytical essay
-- type: group-sort
-  focus: Твори за періодами творчості
-  items: 12+
-- type: fill-in
-  focus: Мистецтвознавча термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-44
@@ -103,3 +91,7 @@ sources:
   notes: International context of Malevich's work
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of казимир малевич: революція в мистецтві'
+- Evaluate the contributions of чорний квадрат і нуль форми
+- Trace the career and influence of українець у світовому мистецтві

@@ -256,7 +256,47 @@ Generate report at `/tmp/{level}-naturalness-scan-m{start}-m{end}.md`:
 - Accept 6-7/10 for comprehensive assessments
 - Mark as DEFERRED if unclear standards
 
-### 6. Economical Scanning
+### 6. Genre-Specific Naturalness Criteria
+
+**Different genres have different naturalness expectations.** Do NOT penalize genre-appropriate style.
+
+| Genre | Naturalness Markers | What NOT to penalize |
+|-------|---------------------|---------------------|
+| **Formal/business letters** | Formulaic structure, consistent register, polite forms | Fewer discourse markers, repetitive closings (З повагою, Щиро дякую) |
+| **Narrative/dialogue** | Discourse markers (а, але, потім), varied sentence length, emotional range | Colloquial expressions at appropriate levels |
+| **Historical/seminar (HIST/BIO)** | Literary quality, era-appropriate terminology, academic register | Formal tone, complex sentences, fewer informal markers |
+| **Activity instructions** | Task-appropriate formality, clear imperatives | Repetitive patterns (Виберіть, Заповніть, З'єднайте) |
+| **Checkpoint assessments** | Assessment register, consistent format | Lower variety (6-7/10 acceptable) |
+
+**Examples:**
+
+```yaml
+# Formal letter - CORRECT (fewer discourse markers expected)
+text: |
+  Шановна пані Коваленко,
+
+  Пишу, щоб запитати про можливість стажування.
+
+  З повагою,
+  Андрій
+naturalness: 9/10  # Appropriate for formal letter
+
+# Narrative - needs discourse markers
+text: |
+  Спочатку Марія пішла до крамниці. Потім вона купила хліб.
+  А ввечері вона приготувала вечерю.
+naturalness: 9/10  # Good flow with markers
+
+# Historical module - literary register expected
+text: |
+  Козацька старшина зібралася на раду. Гетьман виступив з промовою,
+  закликаючи до єдності перед спільним ворогом.
+naturalness: 9/10  # Appropriate formal/historical register
+```
+
+**Key principle:** Evaluate naturalness WITHIN the genre's conventions, not against a universal standard.
+
+### 7. Economical Scanning
 
 To minimize token usage:
 - Batch file reads (Read multiple activity files in parallel)
@@ -264,7 +304,7 @@ To minimize token usage:
 - Group similar issues in report
 - Read meta files in parallel with activity files
 
-### 7. After Scan Complete
+### 8. After Scan Complete
 
 Present summary to user:
 ```

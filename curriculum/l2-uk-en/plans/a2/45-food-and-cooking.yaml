@@ -5,42 +5,31 @@ version: '2.0'
 title: Food and Cooking
 subtitle: In the Kitchen
 content_outline:
-- section: 'Introduction: Ukrainian Kitchen'
-  words: 100
+- section: 'Вступ'
+  words: 150
   points:
   - Cooking culture in Ukraine
   - Traditional dishes
   - Kitchen vocabulary
-- section: Kitchen Equipment
-  words: 200
+- section: 'Граматика'
+  words: 650
   points:
-  - ніж, ложка, виделка
-  - каструля, сковорода, духовка
-  - Using instrumental case
-- section: Cooking Verbs
-  words: 200
+  - Kitchen equipment (каструля, сковорода, духовка)
+  - Cooking methods (варити, смажити, пекти)
+  - Meals of the day (сніданок, обід, вечеря)
+  - Tastes (солодкий, солоний, кислий)
+- section: 'Практика'
+  words: 500
   points:
-  - варити, смажити, пекти
-  - різати, змішувати, додавати
-  - Imperative forms for instructions
-- section: Tastes and Textures
-  words: 150
+  - Dialogues: cooking with grandmother
+  - Recipe practice
+  - Table phrases
+- section: 'Підсумок'
+  words: 100
   points:
-  - солодкий, солоний, кислий, гіркий
-  - м'який, твердий, хрусткий
-  - Describing food
-- section: Following a Recipe
-  words: 200
-  points:
-  - Recipe structure
-  - Ingredients and quantities
-  - Step-by-step instructions
-- section: 'Practice: Cook a Dish'
-  words: 150
-  points:
-  - Read and follow a recipe
-  - Describe cooking process
-word_target: 1000
+  - Summary of learned vocabulary
+  - Cultural insights
+word_target: 1400
 vocabulary_hints:
   required:
   - варити (to boil/cook)
@@ -59,17 +48,29 @@ vocabulary_hints:
   - інгредієнт (ingredient)
   - страва (dish)
 activity_hints:
-- type: vocabulary-drill
+- type: match-up
   focus: Kitchen and cooking words
-  items: 30
-- type: sequencing
-  focus: Order recipe steps
-  items: 15
-- type: fill-in
+  items: 12
+- type: cloze
   focus: Complete cooking instructions
-  items: 20
-- type: dialogue
-  focus: Cooking conversation
+  items: 12
+- type: quiz
+  focus: Food and cooking vocabulary
+  items: 8
+- type: unjumble
+  focus: Cooking sentences
+  items: 8
+- type: error-correction
+  focus: Kitchen mistakes
+  items: 6
+- type: group-sort
+  focus: Kitchen categories
+  items: 16
+- type: true-false
+  focus: Kitchen facts
+  items: 12
+- type: translate
+  focus: Food words
   items: 8
 focus: vocabulary
 pedagogy: PPP

@@ -5,43 +5,54 @@ version: '2.0'
 title: 'Контрольна точка: складні речення (частина 2)'
 subtitle: Checkpoint - Complex Sentences Part 2
 content_outline:
-- section: 'Pre-Test: Self-Assessment'
-  words: 100
+- section: Огляд
+  words: 157
   points:
   - Review B1.3b objectives
   - Identify strengths and gaps
-  - Set checkpoint goals
-- section: Clause Types Review
-  words: 200
+- section: 'Skill 1: Допустові речення'
+  words: 205
   points:
   - Concessive (хоча, незважаючи на)
+- section: 'Skill 2: Причинові та наслідкові речення'
+  words: 239
+  points:
   - Causal (тому що, бо)
+- section: 'Skill 3: Часові речення'
+  words: 255
+  points:
   - Temporal (коли, поки, після того як)
-- section: Reported Speech Review
+- section: 'Skill 4: Інтеграція типів підрядних речень'
+  words: 255
+  points:
+  - Multi-clause sentences
+- section: 'Skill 5: Непряма мова — твердження'
   words: 200
   points:
   - Reported statements
-  - Reported questions
-  - Reported commands
-- section: Integration Test
-  words: 200
+- section: 'Skill 6: Непряма мова — питання'
+  words: 195
   points:
-  - Multi-clause sentences
+  - Reported questions
+- section: 'Skill 7: Непряма мова — накази та прохання'
+  words: 195
+  points:
+  - Reported commands
+- section: Integration Challenge
+  words: 391
+  points:
   - Mixed transformations
   - Complex writing
-- section: Comprehensive Assessment
-  words: 200
+- section: Практика
+  words: 744
   points:
   - All B1.3 structures
-  - Error analysis
   - Proficiency check
-- section: Feedback and Planning
-  words: 100
+- section: Потрібно більше практики?
+  words: 164
   points:
-  - Review results
-  - Plan for B1.4
-  - Identify review needs
-word_target: 1000
+  - Additional exercises
+word_target: 3000
 vocabulary_hints:
   required:
   - контрольна точка (checkpoint)
@@ -61,13 +72,13 @@ activity_hints:
 - type: quiz
   focus: B1.3b comprehensive test
   items: 30
-- type: transformation
+- type: cloze
   focus: All speech type conversions
   items: 25
 - type: fill-in
   focus: Complete complex sentences
   items: 20
-- type: writing
+- type: cloze
   focus: Write complex paragraphs
   items: 10
 focus: checkpoint

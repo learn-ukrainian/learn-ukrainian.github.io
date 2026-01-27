@@ -5,42 +5,42 @@ version: '2.0'
 title: 'Підрядні означальні: коли, що'
 subtitle: Time and Fact Relative Clauses
 content_outline:
-- section: 'Introduction: Time and Fact Relatives'
-  words: 150
+- section: Тест
+  words: 293
+  points: []
+- section: Теорія (Аналіз)
+  words: 435
   points:
-  - коли for time expressions
-  - що as relative pronoun
-  - Distinguishing functions
-- section: коли - Time Relatives
-  words: 250
+  - Коли — для часових відносин
+  - Що — для фактів та ідей
+- section: Поглиблення
+  words: 1357
   points:
-  - Час, коли... (the time when...)
-  - День, коли... (the day when...)
-  - Tense in time clauses
-- section: що - Fact Relatives
-  words: 250
-  points:
-  - Те, що... (that which...)
-  - Все, що... (everything that...)
-  - Referring to statements
-- section: 'що: Relative vs Conjunction'
-  words: 250
-  points:
-  - 'Relative: replaces noun'
-  - 'Conjunction: introduces fact'
-  - Distinguishing tests
-- section: Complex Time Expressions
-  words: 200
-  points:
-  - Before, after, while clauses
-  - Temporal sequence
-  - Combined time patterns
-- section: 'Practice: Time and Fact Clauses'
+  - Коли в часових підрядних реченнях
+  - Складені вирази з коли
+  - Що як відносний займенник
+  - Що з абстрактними іменниками
+  - Що (відносний займенник) vs Що (сполучник)
+  - Типові помилки та як їх уникнути
+- section: Практика
   words: 100
   points:
-  - Create time relatives
-  - Use що correctly
-word_target: 1200
+  - Типові ситуації для вибору
+- section: Діалоги
+  words: 688
+  points:
+  - 'Діалог 1: Про спогади'
+  - 'Діалог 2: Про історію'
+  - 'Діалог 3: Про роботу'
+  - 'Діалог 4: Про відносини'
+  - 'Діалог 5: Про майбутнє'
+- section: Потрібно більше практики?
+  words: 127
+  points:
+  - Інтеграція знань
+  - Реальне застосування
+  - Онлайн-ресурси
+word_target: 3000
 vocabulary_hints:
   required:
   - коли (when)
@@ -60,13 +60,13 @@ activity_hints:
 - type: fill-in
   focus: коли/що selection
   items: 25
-- type: sentence-combining
+- type: unjumble
   focus: Combine with time relatives
   items: 20
 - type: error-correction
   focus: Fix що usage errors
   items: 15
-- type: translation
+- type: translate
   focus: English to Ukrainian
   items: 15
 focus: grammar

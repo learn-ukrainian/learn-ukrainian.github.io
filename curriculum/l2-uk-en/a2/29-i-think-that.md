@@ -116,7 +116,7 @@ Respond to the statement: «Україна — найкраща країна д�
 **Борис:** **Безумовно**, ти правий. Давай обговоримо це завтра. (Certainly, you are right. Let's discuss it tomorrow.)
 
 > [!context] **Debate Etiquette in Ukraine**
-> Ukrainians can be quite passionate in debates, especially about politics or history. However, using formal markers like «Вважаю» and «На мою думку» acts as a safety valve. It signals that you are expressing a _personal_ view, not attacking the other person's reality. When in doubt, start with «Мені здається...» — it’s the softest way to disagree.
+> Ukrainians can be quite passionate in debates, especially about politics or history. However, using formal markers like «Вважаю» and «На мою думку» acts as a safety valve. It signals that you are expressing a *personal* view, not attacking the other person's reality. When in doubt, start with «Мені здається...» — it’s the softest way to disagree.
 
 # Summary / Підсумок
 

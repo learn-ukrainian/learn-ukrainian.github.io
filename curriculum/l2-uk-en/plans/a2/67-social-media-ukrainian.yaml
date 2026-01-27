@@ -5,42 +5,34 @@ version: '2.0'
 title: Social Media Ukrainian
 subtitle: Digital Life
 content_outline:
-- section: 'Introduction: Social Media in Ukraine'
-  words: 100
+- section: 'Introduction (Вступ)'
+  words: 160
   points:
   - Popular platforms
   - Digital culture
+- section: 'Presentation (Презентація)'
+  words: 330
+  points:
   - Social media vocabulary
-- section: Profile and Settings
-  words: 200
-  points:
-  - профіль, налаштування
-  - Privacy options
-  - Account management
-- section: Posts and Content
-  words: 200
-  points:
-  - пост, фото, відео
-  - Writing captions
-  - Sharing content
-- section: Interaction
-  words: 200
-  points:
-  - лайк, коментар, репост
-  - Writing comments
-  - Reacting to posts
-- section: Digital Slang
-  words: 150
-  points:
-  - Internet abbreviations
-  - Emoji usage
-  - Trending expressions
-- section: 'Practice: Social Media Activity'
-  words: 150
+  - Posts, likes, comments
+- section: 'Practice (Практика)'
+  words: 35
   points:
   - Write posts and comments
-  - Navigate interfaces
-word_target: 1000
+- section: 'Dialogues (Діалоги)'
+  words: 160
+  points:
+  - Online conversations
+  - Commenting exchanges
+- section: 'Narrative (Розповідь)'
+  words: 315
+  points:
+  - Social media story
+- section: 'Need More Practice?'
+  words: 45
+  points:
+  - Summary and links
+word_target: 1045
 vocabulary_hints:
   required:
   - профіль (profile)
@@ -59,16 +51,16 @@ vocabulary_hints:
   - блокувати (to block)
   - сповіщення (notification)
 activity_hints:
-- type: vocabulary-drill
+- type: match-up
   focus: Social media vocabulary
   items: 25
 - type: fill-in
   focus: Complete social media texts
   items: 15
-- type: writing
+- type: cloze
   focus: Write posts and comments
   items: 10
-- type: matching
+- type: match-up
   focus: Match actions to icons
   items: 15
 focus: practical

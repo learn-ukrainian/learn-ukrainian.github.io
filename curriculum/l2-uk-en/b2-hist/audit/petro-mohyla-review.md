@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M35 | **Phase:** HIST.4 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 23:29:17
+**Generated:** 2026-01-27 17:37:55
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** cloze, error-correction, fill-in, match-up, quiz, true-false, unjumble
+**Required Types:** true-false
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -20,29 +20,24 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Перевірка розуміння | 8 | 8 | ✅ |
-| 2 | match-up | Історична лексика | 12 | 8 | ✅ |
-| 3 | fill-in | Лексика в контексті | 10 | 8 | ✅ |
-| 4 | true-false | Правда чи міф? | 10 | 8 | ✅ |
-| 5 | unjumble | Будова речення | 8 | 6 | ✅ |
-| 6 | error-correction | Редагування тексту | 8 | 6 | ✅ |
-| 7 | match-up | Переклад термінів | 14 | 8 | ✅ |
-| 8 | essay-response | Есе: Роль Петра Могили | 1 | 1 | ✅ |
-| 9 | comparative-study | Порівняння освітніх систем | 1 | 1 | ✅ |
-| 10 | cloze | Відновлення тексту про реформи | 6 | 1 | ✅ |
+| 1 | true-false | Правда чи міф? | 10 | 8 | ✅ |
+| 2 | essay-response | Есе: Роль Петра Могили | 1 | 1 | ✅ |
+| 3 | comparative-study | Порівняння освітніх систем | 1 | 1 | ✅ |
+| 4 | reading | Духовний заповіт Петра Могили | 3 | 1 | ✅ |
+| 5 | critical-analysis | Аналіз стратегії реформ | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 10 (target: 3-9) ❌
-- Unique types: 9 (minimum: 2) ✅
-- Priority types used: 2/4 (comparative-study, essay-response) ✅
-- Required types used: 7/7 (cloze, error-correction, fill-in, match-up, quiz, true-false, unjumble) ✅
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 1/1 (true-false) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ✅ 4347/4000 (raw: 4444)
-- **Activities:** ✅ 10/3
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 9/2 types
+- **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
@@ -50,7 +45,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ Too many activities: 10 (target 3-9)
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.6% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

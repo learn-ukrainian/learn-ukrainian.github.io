@@ -2,14 +2,14 @@
   "module": "85-ukrainian-cuisine",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:27:38.885748Z",
+  "last_audit": "2026-01-27T20:14:48.994618Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-14T21:17:33.152982Z",
+    "md": "2026-01-27T20:08:32.422189Z",
     "meta": "2026-01-26T15:44:41.723566Z",
-    "activities": "2026-01-24T22:53:44.937172Z",
+    "activities": "2026-01-27T20:07:59.130399Z",
     "vocabulary": "2026-01-25T18:00:40.736681Z",
-    "plan": "2026-01-26T15:44:41.723147Z"
+    "plan": "2026-01-27T20:01:57.902559Z"
   },
   "gates": {
     "meta": {
@@ -18,19 +18,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "1828/1500 (raw: 2188) | pedagogy: 1 violations | richness: 92% < 95% min (grammar)"
+      "status": "pass",
+      "violations": 0,
+      "message": "1855/1500 (raw: 2215)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "12/10"
+      "message": "14/8"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "64/15"
+      "message": "64/25"
     },
     "naturalness": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Missing required activity types: discussion, fill-in, matching, reading"
-    ],
-    "pass_count": 4,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

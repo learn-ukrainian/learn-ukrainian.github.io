@@ -96,18 +96,9 @@ activity_hints:
 - type: reading
   focus: Excerpts from Ruska Pravda with translation
   source: Provide in module
-- type: fill-in
-  focus: Legal and social terminology
-  items: 18+
 - type: comparative-study
   focus: Punishments for crimes against different social classes
   output: Table of wergild amounts
-- type: quiz
-  focus: Social structure and legal concepts
-  items: 15+
-- type: group-sort
-  focus: Categorize social classes by status (free, semi-free, unfree)
-  items: 10+
 - type: essay-response
   focus: Що Руська Правда розповідає про суспільство Київської Русі?
 - type: essay-response

@@ -24,9 +24,9 @@
 
 ## Linguistic Accuracy Issues
 
-- _Fixed:_ Typo in vocabulary (`підїхати` missing apostrophe).
-- _Fixed:_ Russism `пробка` (traffic jam) replaced with Ukrainian `затор`.
-- _Fixed:_ Capitalization of proper nouns (`Бориспіль`).
+- *Fixed:* Typo in vocabulary (`підїхати` missing apostrophe).
+- *Fixed:* Russism `пробка` (traffic jam) replaced with Ukrainian `затор`.
+- *Fixed:* Capitalization of proper nouns (`Бориспіль`).
 
 ## Strengths
 
@@ -36,7 +36,7 @@
 
 ## Issues
 
-- _Fixed:_ Minor vocabulary and terminology issues.
+- *Fixed:* Minor vocabulary and terminology issues.
 
 ## Recommendation
 

@@ -2,128 +2,128 @@ module: khotynska-viyna
 level: B2
 version: '2.0'
 items:
-  - lemma: облога
-    ipa: /obˈlɔɦa/
-    translation: siege
-    pos: noun
-    gender: f
-  - lemma: яничар
-    ipa: /janɪˈt͡ʃar/
-    translation: janissary
-    pos: noun
-    gender: m
-  - lemma: султан
-    ipa: /sulˈtan/
-    translation: sultan
-    pos: noun
-    gender: m
-  - lemma: табір
-    ipa: /ˈtab⁽ʲ⁾ir/
-    translation: camp / tabor
-    pos: noun
-    gender: m
-  - lemma: вал
-    ipa: /wal/
-    translation: rampart / earthwork
-    pos: noun
-    gender: m
-  - lemma: штурм
-    ipa: /ʃturm/
-    translation: assault / storming
-    pos: noun
-    gender: m
-  - lemma: артилерія
-    ipa: /artɪˈlɛr⁽ʲ⁾ija/
-    translation: artillery
-    pos: noun
-    gender: f
-  - lemma: союзник
-    ipa: /soˈjuznɪk/
-    translation: ally
-    pos: noun
-    gender: m
-  - lemma: експансія
-    ipa: /ekspanˈs⁽ʲ⁾ija/
-    translation: expansion
-    pos: noun
-    gender: f
-  - lemma: мир
-    ipa: /mɪr/
-    translation: peace
-    pos: noun
-    gender: m
-  - lemma: угода
-    ipa: /uˈɦɔda/
-    translation: agreement / treaty
-    pos: noun
-    gender: f
-  - lemma: жертва
-    ipa: /ˈʒɛrtwa/
-    translation: victim / sacrifice
-    pos: noun
-    gender: f
-  - lemma: перемога
-    ipa: /pɛrɛˈmɔɦa/
-    translation: victory
-    pos: noun
-    gender: f
-  - lemma: поразка
-    ipa: /poˈrazka/
-    translation: defeat
-    pos: noun
-    gender: f
-  - lemma: навала
-    ipa: /naˈwala/
-    translation: invasion / influx
-    pos: noun
-    gender: f
-  - lemma: окоп
-    ipa: /oˈkɔp/
-    translation: trench
-    pos: noun
-    gender: m
-  - lemma: гармата
-    ipa: /ɦarˈmata/
-    translation: cannon
-    pos: noun
-    gender: f
-  - lemma: піхота
-    ipa: /p⁽ʲ⁾iˈxɔta/
-    translation: infantry
-    pos: noun
-    gender: f
-  - lemma: кавалерія
-    ipa: /kawaˈlɛr⁽ʲ⁾ija/
-    translation: cavalry
-    pos: noun
-    gender: f
-  - lemma: слон
-    ipa: /slɔn/
-    translation: elephant (used in Ottoman army)
-    pos: noun
-    gender: m
-  - lemma: шатро
-    ipa: /ʃaˈtrɔ/
-    translation: tent
-    pos: noun
-    gender: n
-  - lemma: вилазка
-    ipa: /ˈwɪlazka/
-    translation: sortie / raid
-    pos: noun
-    gender: f
-  - lemma: комісар
-    ipa: /kom⁽ʲ⁾iˈsar/
-    translation: commissioner
-    pos: noun
-    gender: m
-  - lemma: присяга
-    ipa: /prɪˈsʲaɦa/
-    translation: oath
-    pos: noun
-    gender: f
-  - lemma: слава
-    ipa: /ˈslawa/
-    translation: glory
-    pos: noun
-    gender: f
+- lemma: облога
+  ipa: /obˈlɔɦa/
+  translation: siege
+  pos: noun
+  gender: f
+- lemma: яничар
+  ipa: /janɪˈt͡ʃar/
+  translation: janissary
+  pos: noun
+  gender: m
+- lemma: султан
+  ipa: /sulˈtan/
+  translation: sultan
+  pos: noun
+  gender: m
+- lemma: табір
+  ipa: /ˈtab⁽ʲ⁾ir/
+  translation: camp / tabor
+  pos: noun
+  gender: m
+- lemma: вал
+  ipa: /wal/
+  translation: rampart / earthwork
+  pos: noun
+  gender: m
+- lemma: штурм
+  ipa: /ʃturm/
+  translation: assault / storming
+  pos: noun
+  gender: m
+- lemma: артилерія
+  ipa: /artɪˈlɛr⁽ʲ⁾ija/
+  translation: artillery
+  pos: noun
+  gender: f
+- lemma: союзник
+  ipa: /soˈjuznɪk/
+  translation: ally
+  pos: noun
+  gender: m
+- lemma: експансія
+  ipa: /ekspanˈs⁽ʲ⁾ija/
+  translation: expansion
+  pos: noun
+  gender: f
+- lemma: мир
+  ipa: /mɪr/
+  translation: peace
+  pos: noun
+  gender: m
+- lemma: угода
+  ipa: /uˈɦɔda/
+  translation: agreement / treaty
+  pos: noun
+  gender: f
+- lemma: жертва
+  ipa: /ˈʒɛrtwa/
+  translation: victim / sacrifice
+  pos: noun
+  gender: f
+- lemma: перемога
+  ipa: /pɛrɛˈmɔɦa/
+  translation: victory
+  pos: noun
+  gender: f
+- lemma: поразка
+  ipa: /poˈrazka/
+  translation: defeat
+  pos: noun
+  gender: f
+- lemma: навала
+  ipa: /naˈwala/
+  translation: invasion / influx
+  pos: noun
+  gender: f
+- lemma: окоп
+  ipa: /oˈkɔp/
+  translation: trench
+  pos: noun
+  gender: m
+- lemma: гармата
+  ipa: /ɦarˈmata/
+  translation: cannon
+  pos: noun
+  gender: f
+- lemma: піхота
+  ipa: /p⁽ʲ⁾iˈxɔta/
+  translation: infantry
+  pos: noun
+  gender: f
+- lemma: кавалерія
+  ipa: /kawaˈlɛr⁽ʲ⁾ija/
+  translation: cavalry
+  pos: noun
+  gender: f
+- lemma: слон
+  ipa: /slɔn/
+  translation: elephant (used in Ottoman army)
+  pos: noun
+  gender: m
+- lemma: шатро
+  ipa: /ʃaˈtrɔ/
+  translation: tent
+  pos: noun
+  gender: n
+- lemma: вилазка
+  ipa: /ˈwɪlazka/
+  translation: sortie / raid
+  pos: noun
+  gender: f
+- lemma: комісар
+  ipa: /kom⁽ʲ⁾iˈsar/
+  translation: commissioner
+  pos: noun
+  gender: f
+- lemma: присяга
+  ipa: /prɪˈsʲaɦa/
+  translation: oath
+  pos: noun
+  gender: f
+- lemma: слава
+  ipa: /ˈslawa/
+  translation: glory
+  pos: noun
+  gender: m

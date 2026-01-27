@@ -5,17 +5,19 @@ version: '1.0'
 title: 'Синтез: 2022 — Зміна парадигми?'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of синтез: 2022 — зміна парадигми?'
+- Evaluate the historical significance of щось змінилося?
 content_outline:
 - section: Вступ — Щось змінилося?
-  words: 400
+  words: 457
   subsections:
   - Огляд модулів 95-101
   - 2022 — інша реакція
   - Чи це зміна парадигми
   - Мета синтезу
 - section: Порівняння з минулим
-  words: 600
+  words: 686
   subsections:
   - 1918 — нічого
   - 1945 — зрада
@@ -24,7 +26,7 @@ content_outline:
   - 2008, 2014 — слабкість
   - 2022 — ?
 - section: Що змінилося у 2022
-  words: 700
+  words: 800
   subsections:
   - Масштаб допомоги
   - Санкції — серйозні
@@ -32,7 +34,7 @@ content_outline:
   - Політична підтримка
   - Але...
 - section: Що не змінилося
-  words: 600
+  words: 686
   subsections:
   - «Не провокувати»
   - Поступові рішення
@@ -40,25 +42,25 @@ content_outline:
   - «Переможець не потрібен»?
   - Паттерн — досі присутній
 - section: Чому 2022 інший
-  words: 500
+  words: 571
   subsections:
   - Український спротив — ключ
   - Неможливо ігнорувати
   - Громадська думка на Заході
   - Путін перейшов межу
 - section: Чи тривкі зміни
-  words: 400
+  words: 457
   subsections:
   - Втома від війни — ризик
   - Вибори — зміни політики
   - Як закріпити підтримку
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - 2022 — можливий поворот
   - Але не гарантований
   - Перехід до економічної експлуатації
-word_target: 3500
+word_target: 4000
 vocabulary:
 - синтез
 - парадигма
@@ -78,11 +80,11 @@ vocabulary:
 activities:
 - type: essay-response
   focus: Create Western policy evolution timeline
-- type: change-analysis
+- type: critical-analysis
   focus: What specifically changed in 2022?
-- type: continuity-analysis
+- type: critical-analysis
   focus: What patterns continue despite 2022?
-- type: future-scenarios
+- type: essay-response
   focus: Will 2022 changes last?
 - type: essay-response
   focus: Чи 2022 рік став справжнім переломом у західній політиці щодо України?

@@ -1,10 +1,12 @@
 # Audit Report: M35 — marko-vovchok.md
+
 **Level:** C1 | **Module:** M35 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:14
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | «Розуміння біографії Марка Вовчка» | 12 | 5 | ✅ |
@@ -44,21 +47,25 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in marko-vovchok.yaml: Schema validation error at key 'words': ['«Її»', '«Народні»', '«оповідання»', '«стали»', '«літературною»', '«сенсацією', '»', '«відкривши»', '«світові»', '«трагедію»', '«українського»', '«кріпацтва»', '«очима»', '«жінки.»'] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Останні роки' per template 'c1-biography-module-template.md'
   - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 - ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Спадщина|Вплив' found: Спадщина, Вплив на європейську літературу
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 3 violations (minor)
 
 ## Gates
+
 - **Words:** ❌ 2035/4000 (raw: 2265)
 - **Activities:** ✅ 15/3
 - **Density:** ✅ All > 1
@@ -77,10 +84,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 6 | 4 | 100% | 19% | 19.0% |
@@ -96,6 +105,7 @@
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 70 | Included in Core |

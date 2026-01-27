@@ -8,7 +8,7 @@ When you want to say "He was a doctor," "She will become a scientist," or "I wor
 
 ### Ким бути? (To be who?)
 
-Ukrainian distinguishes between what someone _is_ fundamentally (identity) and the _role_ they fulfill. In the present tense, we usually use the **Nominative case** with no verb: **Він лікар** (He is a doctor). However, as soon as we move to the past or future tenses, or use dynamic verbs like "become" or "work as", the language shifts to the **Instrumental case**. This shift is subtle but very important for accuracy.
+Ukrainian distinguishes between what someone *is* fundamentally (identity) and the *role* they fulfill. In the present tense, we usually use the **Nominative case** with no verb: **Він лікар** (He is a doctor). However, as soon as we move to the past or future tenses, or use dynamic verbs like "become" or "work as", the language shifts to the **Instrumental case**. This shift is subtle but very important for accuracy.
 
 This shift emphasizes that a profession or role is something we "act as" or "wield" like a tool. It is not our permanent essence, but our current activity or a achieved status. The question we ask for this use is **ким?** (as whom?). By the end of this module, you will be able to describe your past, present, and future choices with grammatical precision. You will learn to express not just who you are, but the professional version of yourself.
 
@@ -61,7 +61,7 @@ Ukrainian differentiates between masculine and feminine forms of professions. It
 У сучасній українській мові використання жіночих форм професій (фемінітивів) є нормою та ознакою поваги. Наприклад: «Вона стала чудовою **письменницею**». Використання правильної форми робить вашу мову більш природною та сучасною. Це також допомагає слухачу швидше зрозуміти, про кого ви говорите. Жінки-професіонали цінують правильне вживання цих форм. Це демонструє вашу обізнаність з культурою.
 
 > [!reflection] **Identity vs Role**
-> Why use Nominative in the present but Instrumental in the past? The Nominative (**Хто?**) states what someone _is_ at their core. The Instrumental (**Ким?**) describes the _role_ or _capacity_ someone acts in. It shows that being a student or a doctor is a functional part of your identity that can change over time.
+> Why use Nominative in the present but Instrumental in the past? The Nominative (**Хто?**) states what someone *is* at their core. The Instrumental (**Ким?**) describes the *role* or *capacity* someone acts in. It shows that being a student or a doctor is a functional part of your identity that can change over time.
 
 > [!tip] **Invisible "Is"**
 > In parenthetical or formal definitions, the verb **бути** (є) can be used in the present tense with Instrumental: **«Степан є директором»**. However, in 99% of daily conversations, just say **«Степан — директор»**. The short form is much more natural for everyday life and casual chat.

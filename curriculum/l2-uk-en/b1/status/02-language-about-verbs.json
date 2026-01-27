@@ -2,14 +2,14 @@
   "module": "02-language-about-verbs",
   "level": "B1",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:26:44.647777Z",
+  "last_audit": "2026-01-27T16:25:44.776726Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-24T20:53:08.435008Z",
+    "md": "2026-01-27T15:24:10.349886Z",
     "meta": "2026-01-26T15:44:41.435032Z",
     "activities": "2026-01-11T10:24:11.596551Z",
     "vocabulary": "2026-01-25T18:00:39.954173Z",
-    "plan": "2026-01-26T15:44:41.434767Z"
+    "plan": "2026-01-27T12:02:43.958337Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2074/1200 (raw: 2639)"
+      "message": "3080/1200 (raw: 3645)"
     },
     "activities": {
       "status": "pass",

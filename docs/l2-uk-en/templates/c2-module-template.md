@@ -67,6 +67,7 @@ TEMPLATE_METADATA:
 Before submitting a C2 module, verify:
 
 ### Content Requirements
+
 - [ ] **Word count:** 3000+ words (core prose: explanations, examples, engagement boxes — excludes vocabulary section, activities section, and tables)
 - [ ] **Vocabulary:** 40+ items in 3-column format (Слово | Переклад | Примітки)
 - [ ] **Text passages:** 600-1000+ word native-level texts
@@ -75,6 +76,7 @@ Before submitting a C2 module, verify:
 - [ ] **Engagement boxes:** 7-8 boxes with expert-level depth
 
 ### Activity Requirements (Seminar Style)
+
 - [ ] **Activities:** 3-9 production-focused activities (C2 seminar standard)
 - [ ] **Activity types:**
   - reading: Primary text presentation
@@ -84,12 +86,12 @@ Before submitting a C2 module, verify:
   - Translation analysis: Compare translations, discuss choices
 
 ### Immersion & Quality
+
 - [ ] **Immersion:** 100% Ukrainian (English ONLY in vocabulary translations)
 - [ ] **Native-level texts:** No simplification
 - [ ] **Creative production:** Original writing required
 - [ ] **Stylistic precision:** Nuanced register/style control
 - [ ] **No violations:** Check for pedagogical red flags
-
 
 ---
 
@@ -367,6 +369,7 @@ items:
 **Activity Mix for C2:**
 
 #### Core Activities (Refined for C2)
+
 1. **quiz** (10-12 items — complex, nuanced)
 2. **fill-in** (12+ items, stylistic/register choices)
 3. **unjumble** (10+ items)
@@ -376,24 +379,27 @@ items:
 **Sentence Complexity:** See `scripts/audit/config.py` ACTIVITY_COMPLEXITY['C2'] for CEFR-aligned word count targets
 
 #### C2-Specific Creative Activities (Use new Schema types)
+
 6. **[essay-response]** (Publication-ready writing)
-    *   *Requires `rubric` and `model_answer` in YAML.*
+    -   *Requires `rubric` and `model_answer` in YAML.*
 7. **[comparative-study]** (Synthesis of multiple sources)
-    *   *Complex comparison of 3+ texts or translations.*
+    -   *Complex comparison of 3+ texts or translations.*
 8. **[critical-analysis]** (Scholar-level critique)
-    *   *Analyze style, tone, and intertextuality.*
+    -   *Analyze style, tone, and intertextuality.*
 9. **[authorial-intent]** (Reconstruction of creative choices)
-    *   *Reverse-engineer the author's stylistic decisions.*
+    -   *Reverse-engineer the author's stylistic decisions.*
 10. **Style transformation** (Formal → Ironic, Neutral → Literary, etc.)
-    *   *Use `essay-response` type with specific prompt.*
+    -   *Use `essay-response` type with specific prompt.*
 
 #### Meta-Linguistic Activities
+
 11. **Stylistic analysis** (Identify all devices in passage, explain function)
 12. **Translation comparison** (Compare 2+ translations, discuss choices)
 13. **Error detection** (Subtle stylistic/register errors)
 14. **Literary criticism** (Analyze author's style, technique)
 
 #### Professional Activities (C2.3 modules)
+
 15. **Professional document production** (Contract, report, memo — with Model Answer)
 16. **Professional correspondence** (Formal letters, emails — with rubric)
 
@@ -639,6 +645,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 ## Common Pitfalls to Avoid
 
 ### ❌ DON'T:
+
 - **Don't skip Model Answers** — Creative tasks MUST have gold standard examples
 - **Don't simplify texts** — C2 requires native-level complexity
 - **Don't ignore stylistic nuance** — Synonym choice matters at C2
@@ -647,6 +654,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 - **Don't under-count creative tasks** — C2 is about production
 
 ### ✅ DO:
+
 - **Provide Model Answers for ALL creative tasks** — Poetry, prose, translation
 - **Use native-level literary/professional texts** — No simplification
 - **Focus on stylistic precision** — Nuanced register/style control
@@ -659,6 +667,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 ## Pre-Submission Checklist
 
 ### Content
+
 - [ ] 2200+ words before activities
 - [ ] 40+ vocabulary items in 3-column format
 - [ ] 600-1000+ word reading passages
@@ -668,6 +677,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 - [ ] Native-level complexity throughout
 
 ### Activities
+
 - [ ] 3-9 activities (seminar style)
 - [ ] All activity types represented
 - [ ] Creative production activities included
@@ -676,6 +686,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 - [ ] Instructions in Ukrainian
 
 ### Immersion & Quality
+
 - [ ] 98-100% Ukrainian (English only in vocabulary "Переклад" column)
 - [ ] Native-level texts (no simplification)
 - [ ] Creative production demonstrated
@@ -684,6 +695,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 - [ ] No pedagogical violations
 
 ### Audit
+
 - [ ] Module passes `python3 scripts/audit_module.py`
 - [ ] Immersion ≥98%
 - [ ] Vocabulary count matches frontmatter

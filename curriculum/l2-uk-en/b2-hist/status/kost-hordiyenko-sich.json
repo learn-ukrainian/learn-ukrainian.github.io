@@ -2,13 +2,13 @@
   "module": "kost-hordiyenko-sich",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:54:52.254715Z",
+  "last_audit": "2026-01-27T20:42:53.561779Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-24T23:05:30.896223Z",
+    "md": "2026-01-27T15:24:10.346960Z",
     "meta": "2026-01-26T22:20:13.208884Z",
-    "activities": "2026-01-24T22:58:50.181448Z",
-    "vocabulary": "2026-01-24T23:00:11.426853Z",
+    "activities": "2026-01-27T20:42:37.637222Z",
+    "vocabulary": "2026-01-27T11:59:25.565076Z",
     "plan": null
   },
   "gates": {

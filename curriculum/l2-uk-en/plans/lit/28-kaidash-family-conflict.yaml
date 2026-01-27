@@ -6,42 +6,42 @@ title: 'Кайдашева сім''я: Анатомія Конфлікту'
 subtitle: 'Kaidash Family: Anatomy of Conflict'
 content_outline:
 - section: Вступ — Чому вони сваряться?
-  words: 500
+  words: 643
   points:
   - Сімейні конфлікти в літературі
   - Структура конфліктів у повісті
   - Від комічного до трагічного
 - section: Конфлікт поколінь
-  words: 700
+  words: 900
   points:
   - Батьки vs діти
   - Боротьба за владу в родині
   - Економічні причини напруги
 - section: Конфлікт невісток
-  words: 700
+  words: 900
   points:
   - Мотря vs Мелашка
   - Груша як символ абсурду
   - Побутова дрібниця як каталізатор
 - section: Розподіл спадщини
-  words: 600
+  words: 771
   points:
   - Земля і власність
   - Справедливість vs традиція
   - Роздвоєння родини
 - section: Гумор і трагедія
-  words: 600
+  words: 771
   points:
   - Сміх крізь сльози
   - Де закінчується сатира
   - Читацьке співчуття
 - section: Підсумок — Сучасність класики
-  words: 400
+  words: 515
   points:
   - Чи змінилися сімейні конфлікти?
   - Універсальність Нечуя
   - Перехід до мови реалізму
-word_target: 3800
+word_target: 4500
 vocabulary_hints:
   required:
   - конфлікт (conflict)
@@ -65,19 +65,10 @@ activity_hints:
   focus: Сцена сварки через грушу
   source: UkrLib tid=907
   items: 4+
-- type: quiz
-  focus: Причини та наслідки конфліктів
-  items: 15+
-- type: match-up
-  focus: Конфлікт → його причина
-  items: 10+
 - type: essay-response
   focus: Актуальність для сучасної родини
   word_target: 300
   output: Аналітичне есе
-- type: cloze
-  focus: Ключові сцени конфліктів
-  items: 12+
 focus: literature
 pedagogy: Seminar
 prerequisites:

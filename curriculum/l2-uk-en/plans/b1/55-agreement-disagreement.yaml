@@ -5,42 +5,43 @@ version: '2.0'
 title: Згода і незгода
 subtitle: Agreement & Disagreement
 content_outline:
-- section: 'Introduction: Agreeing and Disagreeing'
-  words: 150
+- section: Вступ
+  words: 171
   points:
   - Importance in conversation
   - Cultural considerations
   - Politeness strategies
-- section: Expressing Agreement
-  words: 250
+- section: Вивчення слів
+  words: 1333
   points:
-  - Так, згоден/згодна
-  - Абсолютно, безумовно
-  - Levels of agreement
-- section: Partial Agreement
-  words: 200
+  - Six vocabulary groups
+  - Full agreement, strengthening agreement
+  - Disagreement, strengthening disagreement
+  - Discussion and compromise
+- section: Вживання
+  words: 387
   points:
-  - Частково згоден
-  - Так, але...
-  - Acknowledging valid points
-- section: Polite Disagreement
-  words: 250
+  - Agreement levels (weak to strongest)
+  - Disagreement levels (polite to categorical)
+  - Register considerations
+- section: Читання
+  words: 450
   points:
-  - Не зовсім згоден
-  - Дозвольте не погодитися
-  - Hedged disagreement
-- section: Strong Disagreement
-  words: 200
+  - Work meeting text
+  - Ecology debate
+  - Messenger chat (informal)
+- section: Діалоги
+  words: 423
   points:
-  - Категорично не згоден
-  - Це неприпустимо
-  - When and how to disagree strongly
-- section: 'Practice: Debate Skills'
-  words: 150
+  - Colleagues at work (neutral)
+  - Friends (informal)
+  - Formal discussion, family
+- section: Підсумок
+  words: 236
   points:
-  - Practice agreeing and disagreeing
-  - Manage conversation flow
-word_target: 1200
+  - Key vocabulary recap
+  - Practice recommendations
+word_target: 3000
 vocabulary_hints:
   required:
   - згода (agreement)
@@ -57,16 +58,16 @@ vocabulary_hints:
   - спростовувати (to refute)
   - підтримувати (to support)
 activity_hints:
-- type: role-play
+- type: cloze
   focus: Debate scenarios
   items: 20
-- type: transformation
+- type: cloze
   focus: Adjust agreement intensity
   items: 20
 - type: fill-in
   focus: Complete debate exchanges
   items: 15
-- type: listening
+- type: quiz
   focus: Identify agreement/disagreement
   items: 15
 focus: vocabulary

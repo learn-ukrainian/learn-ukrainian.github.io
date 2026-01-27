@@ -67,15 +67,6 @@ activity_hints:
   focus: Свідчення українських волонтерів
   source: Сучасні медіа
   items: 4
-- type: quiz
-  focus: Волонтерський рух та організації
-  items: 15
-- type: match-up
-  focus: Організація → сфера діяльності
-  items: 10
-- type: fill-in
-  focus: Лексика громадянського суспільства
-  items: 10
 - type: essay-response
   focus: Як громадянське суспільство допомагає Україні вистояти у війні?
   word_target: 250

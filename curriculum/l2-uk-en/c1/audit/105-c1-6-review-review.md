@@ -1,9 +1,11 @@
 # Audit Report: M105 — 105-c1-6-review.md
+
 **Level:** C1 | **Module:** M105 | **Phase:** C1 | **Pedagogy:** Integration | **Target:** 3000
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:59
 
 ## Configuration
+
 **Type:** C1
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -16,6 +18,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Автори та їхні літературні амплуа | 12 | 6 | ✅ |
@@ -39,11 +42,13 @@
 - Low density activities: 0
 
 ## Recommendation
+
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 1935/3000 (raw: 2147)
 - **Activities:** ✅ 13/12
 - **Density:** ✅ All > 12
@@ -62,10 +67,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 91% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 18 | 15 | 100% | 25% | 25.0% |
@@ -79,6 +86,7 @@
 | **TOTAL** | | | | | **91.5%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 97 | Included in Core |

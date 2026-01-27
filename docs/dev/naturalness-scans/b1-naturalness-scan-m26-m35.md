@@ -1,4 +1,5 @@
 # B1 Naturalness Scan Report - M26-M35
+
 **Date:** 2026-01-12
 **Protocol:** claude_extensions/protocols/a1-naturalness-scan.md
 **Scope:** M26-M35 (10 modules - Complex Sentences I section)
@@ -22,6 +23,7 @@
 ## Scan Results by Module
 
 ### M26: Relative Clauses - який (Which) [✅ PASS]
+
 **Status:** EXCELLENT PROGRESSION - Quiz foundation + coherent prose
 **Activities:** 11 activities (1,767 lines) - Mix of systematic drills and contextual application
 
@@ -50,6 +52,7 @@
 ---
 
 ### M27: Relative Clauses - де/куди/звідки [✅ PASS]
+
 **Status:** COHERENT NARRATIVE - Village visit story
 **Activities:** 10 activities (881 lines) - Systematic drills + contextual cloze
 
@@ -79,6 +82,7 @@
 ---
 
 ### M28: Relative Clauses - коли/що [✅ PASS]
+
 **Status:** COHERENT PERSONAL NARRATIVE
 **Activities:** 10 activities (894 lines) - Systematic drills + Kyiv arrival story
 
@@ -107,6 +111,7 @@
 ---
 
 ### M29: Purpose Clauses - щоб + Infinitive [✅ PASS]
+
 **Status:** COHERENT TRAVEL NARRATIVE
 **Activities:** 10 activities (877 lines) - Systematic drills + Carpathian trip story
 
@@ -135,6 +140,7 @@
 ---
 
 ### M30: Purpose Clauses - щоб + Past Form [✅ PASS]
+
 **Status:** EXCELLENT WORKPLACE SCENARIOS
 **Activities:** 10 activities (824 lines) - Systematic workplace/medical/school contexts
 
@@ -163,6 +169,7 @@
 ---
 
 ### M31: Conditional Sentences - Real (якщо) [✅ PASS]
+
 **Status:** COHERENT PLANNING DIALOGUE
 **Activities:** 9 activities (543 lines) - Systematic drills + weekend planning dialogue
 
@@ -187,6 +194,7 @@
 ---
 
 ### M32: Conditional Sentences - Unreal (якби) [✅ PASS]
+
 **Status:** EXCELLENT HYPOTHETICAL SCENARIOS
 **Activities:** 13 activities (880 lines) - Rich unreal condition contexts
 
@@ -213,6 +221,7 @@
 ---
 
 ### M33: Conditional Sentences - Mixed & Complex [✅ PASS]
+
 **Status:** SOPHISTICATED INTEGRATION
 **Activities:** 8 activities (594 lines) - Mixed conditionals + chain conditionals + alternative consequences
 
@@ -245,6 +254,7 @@ ___ не встигнемо вчасно, доведеться чекати на
 ---
 
 ### M34: Checkpoint - Complex Sentences I [⏸️ DEFERRED]
+
 **Status:** CHECKPOINT - Comprehensive assessment
 **Activities:** 13 activities (732 lines) - Tests M26-M33 (relative clauses, purpose, conditionals)
 
@@ -272,6 +282,7 @@ ___ не встигнемо вчасно, доведеться чекати на
 ---
 
 ### M35: Concessive Clauses - хоча [✅ PASS]
+
 **Status:** EXCELLENT MOTIVATIONAL NARRATIVE
 **Activities:** 13 activities (912 lines) - Rich concessive contexts
 
@@ -305,6 +316,7 @@ ___ не встигнемо вчасно, доведеться чекати на
 ## Summary by Status
 
 ### ✅ PASS (9 content modules)
+
 - M26: Relative Clauses - який (score 9/10) ⭐
 - M27: Relative Clauses - де/куди/звідки (score 9/10) ⭐
 - M28: Relative Clauses - коли/що (score 8/10)
@@ -316,12 +328,15 @@ ___ не встигнемо вчасно, доведеться чекати на
 - M35: Concessive Clauses (score 9/10) ⭐
 
 ### ⚠️ FLAGGED (0 modules)
+
 None - all content modules meet or exceed 8/10 target
 
 ### ⏸️ DEFERRED (1 module)
+
 - M34: Checkpoint Complex Sentences I (score 7/10) - Checkpoint standards apply
 
 ### N/A - QUIZ ONLY (0 modules)
+
 None - all modules include multi-sentence prose
 
 ---
@@ -404,18 +419,21 @@ All content modules meet or exceed 8/10 target:
 ## Comparison with Previous B1 Sections
 
 ### B1 M01-M05 (Metalanguage Bridge)
+
 - Average score: 7.0/10 → improved to 8.0/10+
 - Prose density: Very low (3 passages across 5 modules)
 - Purpose: Teach grammar terminology before immersion
 - Flagged: 40%
 
 ### B1 M06-M15 (Aspect Mastery)
+
 - Average score: 8.3/10
 - Prose density: Very high (extensive narratives)
 - Purpose: Teach aspect through natural stories
 - Flagged: 0%
 
 ### B1 M16-M25 (Motion Verbs)
+
 - Average score: 8.2/10 (content modules with prose)
 - Prose density: Medium (6 modules with prose, 3 quiz-only)
 - Purpose: Teach motion verb prefix system
@@ -423,6 +441,7 @@ All content modules meet or exceed 8/10 target:
 - Exceptional: M21 (9/10) - figurative uses
 
 ### B1 M26-M35 (Complex Sentences I)
+
 - Average score: 8.4/10 (content modules)
 - Prose density: Very high (9/9 content modules have rich prose)
 - Purpose: Teach complex sentence structures
@@ -479,11 +498,13 @@ All activities appropriately use:
 ## Next Steps
 
 ### Immediate
+
 1. ✅ **B1 M26-M35 scan: COMPLETE**
 2. **Commit scan report to documentation**
 3. **Celebration note:** This section achieves highest B1 quality to date
 
 ### B1 Remaining Sections
+
 - M36-M45: Time & Temporal Relations (10 modules)
 - M46-M55: Abstract Vocabulary I (10 modules)
 - M56-M65: Abstract Vocabulary II (10 modules)
@@ -531,6 +552,7 @@ M26-M35 (Complex Syntax):   8.4/10  [0% flagged]  → Peak quality ⭐
 ## Cultural Content Highlights
 
 ### M27 Ukrainian Village (9/10)
+
 **Exemplary cultural teaching through grammar:**
 
 The village visit narrative teaches де/куди/звідки while immersing learners in:
@@ -545,6 +567,7 @@ The village visit narrative teaches де/куди/звідки while immersing l
 **Pedagogical achievement:** Teaches spatial prepositions/relatives while creating emotional connection to Ukrainian rural culture and family traditions.
 
 ### M35 Marathon Achievement (9/10)
+
 **Modern Ukrainian aspirations:**
 
 Maria's running journey demonstrates хоча while showing:

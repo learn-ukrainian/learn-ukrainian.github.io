@@ -429,6 +429,7 @@ By module 50, learners can:
 **Grammar:** Dative case pronouns (кому?)
 
 **Pronouns:**
+
 | Nominative | Dative |
 |------------|--------|
 | я | мені |
@@ -462,6 +463,7 @@ By module 50, learners can:
 **Grammar:** Dative case noun endings
 
 **Endings:**
+
 | Gender | Nom ending | Dat ending | Example |
 |--------|------------|------------|---------|
 | M hard | consonant | -ові/-у | друг → другові |
@@ -529,6 +531,7 @@ By module 50, learners can:
 **Grammar:** Instrumental case with preposition з/із/зі
 
 **Endings with з:**
+
 | Gender | Nom ending | Instr ending | Example |
 |--------|------------|--------------|---------|
 | M hard | consonant | -ом | друг → з другом |
@@ -615,6 +618,7 @@ By module 50, learners can:
 **Grammar:** Location and Motion prepositions
 
 **Spatial relations:**
+
 | Prep | Case | Meaning | Example |
 |------|------|---------|---------|
 | в/у | Acc | into | йти в кімнату |
@@ -647,6 +651,7 @@ By module 50, learners can:
 **Grammar:** Abstract, Temporal, and Causal prepositions
 
 **Key Prepositions:**
+
 | Prep | Case | Meaning | Example |
 |------|------|---------|---------|
 | для | Gen | for (benefit) | для тебе |
@@ -676,6 +681,7 @@ By module 50, learners can:
 **Grammar:** 7-case integration exercises
 
 **Case Summary:**
+
 | Case | Question | Primary Use | Example |
 |------|----------|-------------|---------|
 | Nom | хто? що? | Subject | Книга лежить. |
@@ -803,6 +809,7 @@ By module 50, learners can:
 - Result focus: Ми вже зробили це. (We already did this.)
 
 **Common pairs:**
+
 | Imperfective | Perfective | Meaning |
 |--------------|------------|---------|
 | читати | прочитати | to read |
@@ -886,6 +893,7 @@ By module 50, learners can:
 **Grammar:** How pairs are formed (prefixes/suffixes)
 
 **Prefixation patterns:**
+
 | Prefix | Impf → Perf | Meaning |
 |--------|-------------|---------|
 | на- | писати → написати | completion |
@@ -895,6 +903,7 @@ By module 50, learners can:
 | ви- | вчити → вивчити | master |
 
 **Suffixation patterns:**
+
 | Imperfective | Perfective | Pattern |
 |--------------|------------|---------|
 | давати | дати | -ва- removal |
@@ -989,6 +998,7 @@ By module 50, learners can:
 - менш + adjective: менш цікавий (less interesting)
 
 **Irregular comparatives:**
+
 | Positive | Comparative | Meaning |
 |----------|-------------|---------|
 | добрий | кращий | good → better |
@@ -1029,6 +1039,7 @@ By module 50, learners can:
 - надзвичайно + adj: надзвичайно цікавий (extremely interesting)
 
 **Irregular superlatives:**
+
 | Comparative | Superlative |
 |-------------|-------------|
 | кращий | найкращий (best) |
@@ -1446,6 +1457,7 @@ By module 50, learners can:
 - Хлопець, якому я допомагаю... (The boy whom I'm helping...)
 
 **Case in relative clause:**
+
 | Role in clause | Case of який |
 |----------------|--------------|
 | Subject | Nominative |
@@ -1577,6 +1589,7 @@ By module 50, learners can:
 **Grammar:** Directional entry/exit/arrival
 
 **Key prefixes:**
+
 | Prefix | Meaning | Example |
 |--------|---------|---------|
 | при- | arrival | прийти (come/arrive) |
@@ -1605,6 +1618,7 @@ By module 50, learners can:
 **Grammar:** Complex paths sequences
 
 **Key prefixes:**
+
 | Prefix | Meaning | Example |
 |--------|---------|---------|
 | пере- | across/re- | перейти (cross) |
@@ -1635,6 +1649,7 @@ By module 50, learners can:
 **Grammar:** Prefixes with non-motion verbs
 
 **Productive prefixes:**
+
 | Prefix | Meaning | Example |
 |--------|---------|---------|
 | на- | accumulation | написати (write out) |
@@ -2144,6 +2159,7 @@ graph TD
 ### Module Content Specifications A2.6 (M59-69)
 
 #### Module 59: At the Doctor
+
 **Focus:** Describing symptoms, understanding diagnoses, prescriptions
 
 **Key patterns:**
@@ -2162,6 +2178,7 @@ graph TD
 ---
 
 #### Module 60: At the Pharmacy
+
 **Focus:** Medications, dosages, side effects
 
 **Key patterns:**
@@ -2180,6 +2197,7 @@ graph TD
 ---
 
 #### Module 61: Hotel Check-in
+
 **Focus:** Reservations, room types, amenities, complaints
 
 **Key patterns:**
@@ -2198,6 +2216,7 @@ graph TD
 ---
 
 #### Module 62: Apartment Rental
+
 **Focus:** Viewing, lease terms, utilities
 
 **Key patterns:**
@@ -2216,6 +2235,7 @@ graph TD
 ---
 
 #### Module 63: Making Appointments
+
 **Focus:** Scheduling, confirming, rescheduling, cancelling
 
 **Key patterns:**
@@ -2234,6 +2254,7 @@ graph TD
 ---
 
 #### Module 64: Job Interview Basics
+
 **Focus:** Self-presentation, experience, asking questions
 
 **Key patterns:**
@@ -2252,6 +2273,7 @@ graph TD
 ---
 
 #### Module 65: Giving Directions
+
 **Focus:** Landmarks, distances, step-by-step navigation
 
 **Key patterns:**
@@ -2270,6 +2292,7 @@ graph TD
 ---
 
 #### Module 66: Asking for Directions
+
 **Focus:** When lost, using maps, public transit routes
 
 **Key patterns:**
@@ -2288,6 +2311,7 @@ graph TD
 ---
 
 #### Module 67: Social Media Ukrainian
+
 **Focus:** Posts, comments, messaging conventions
 
 **Key patterns:**
@@ -2306,6 +2330,7 @@ graph TD
 ---
 
 #### Module 68: Texting & Messaging
+
 **Focus:** Abbreviations, emoji, informal register
 
 **Key patterns:**
@@ -2324,6 +2349,7 @@ graph TD
 ---
 
 #### Module 69: Online Services
+
 **Focus:** Banking apps, delivery, booking platforms
 
 **Key patterns:**
@@ -2342,6 +2368,7 @@ graph TD
 ---
 
 #### Module 70: A2 Final Exam (A2 Підсумковий іспит)
+
 **Covers:** M01-69 (CUMULATIVE - All A2 grammar + practical scenarios)
 
 > **LEVEL FINAL:** This is the comprehensive A2 certification exam testing all grammar, vocabulary, and practical skills from the entire level.

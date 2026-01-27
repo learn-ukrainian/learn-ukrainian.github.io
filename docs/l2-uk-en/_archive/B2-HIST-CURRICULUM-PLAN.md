@@ -239,26 +239,31 @@ This expanded track tells the complete story of Ukraine from prehistoric times t
 Throughout the curriculum, several thematic strands recur:
 
 ### 1. Decolonization (throughout)
+
 - M26: "Російські міфи про Україну" - explicit debunking
 - Imperial narratives challenged in every phase
 - Primary source analysis to counter Russian historiography
 
 ### 2. Regional Diversity (Phase 4, 7, 8)
+
 - Bukovyna, Transcarpathia, Slobozhanshchyna coverage
 - Southern Ukraine/Crimea history
 - Regional identities within Ukrainian nation
 
 ### 3. Religious History (Phases 4, 8, 12)
+
 - Orthodox Church splits
 - Uniate/Greek-Catholic formation
 - Tomos and modern church independence
 
 ### 4. Social/Economic History (throughout)
+
 - Peasant life, serfdom
 - Industrialization
 - Economic transformations
 
 ### 5. Women in Ukrainian History (integrated)
+
 - Lesya Ukrainka, Olha of Kyiv
 - Rozaliya Zemliachka controversy
 - Contemporary women's roles

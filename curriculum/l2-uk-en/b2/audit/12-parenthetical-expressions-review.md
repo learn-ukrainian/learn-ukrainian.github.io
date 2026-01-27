@@ -1,10 +1,12 @@
 # Audit Report: M12 — 12-parenthetical-expressions.md
+
 **Level:** B2 | **Module:** M12 | **Phase:** B2 | **Pedagogy:** Not Specified | **Target:** 1750
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:27:52
 
 ## Configuration
+
 **Type:** B2-grammar
 **Word Target:** 1750 words
 **Activities:** 10-14 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Визначення категорії вставного слова | 16 | 8 | ✅ |
@@ -43,6 +46,7 @@
 - Low density activities: 0
 
 ## Gates
+
 - **Words:** ✅ 2236/1750 (raw: 3020)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
@@ -61,10 +65,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 96% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 51 | 24 | 100% | 20% | 20.0% |
@@ -80,6 +86,7 @@
 | **TOTAL** | | | | | **96.2%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 65 | Included in Core |

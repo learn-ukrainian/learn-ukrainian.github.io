@@ -19,7 +19,7 @@ Practical and reassuring.
 
 **1. Accuracy of Examples:** 10/10
 Examples are accurate.
-_Fixed:_ Replaced incorrect "Present Tense" translations in the Practice section with actual health vocabulary sentences.
+*Fixed:* Replaced incorrect "Present Tense" translations in the Practice section with actual health vocabulary sentences.
 
 **2. Relevance of Scenarios:** 10/10
 Covers doctor visits, pharmacy runs, and calling an ambulance. Vital skills.

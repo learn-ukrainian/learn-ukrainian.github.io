@@ -1,10 +1,12 @@
 # Audit Report: M29 — 29-language-of-realism.md
+
 **Level:** LIT | **Module:** M29 | **Phase:** LIT.5 | **Pedagogy:** Seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:58:03
 
 ## Configuration
+
 **Type:** LIT-literature
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Нечуй-Левицький: Кайдашева сім'я — Сцена сварки | 4 | 1 | ✅ |
@@ -34,16 +37,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: literature) missing advanced activity type: critical-analysis
   - FIX: Add a critical-analysis activity to meet advanced richness standards.
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 3557/4000 (raw: 4274)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
@@ -62,10 +68,12 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
+
 **Score:** 89% (minimum: 90%)
 **Module Type:** literature
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
@@ -81,15 +89,17 @@
 | **TOTAL** | | | | | **89.4%** |
 
 ### Dryness Flags & Fixes
+
 - ❌ **NO_LITERARY_CITATIONS**
   - FIX:
     Add 3+ literary citations. Use this exact format:
-    
+
     «[Quote from the literary work, minimum 20 characters]»
-    
+
     Example: «Зібравши троянців в остатки / І швидше прийнявши присягу»
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 51 | Included in Core |

@@ -5,42 +5,21 @@ version: '2.0'
 title: Українська кухня
 subtitle: Ukrainian Cuisine and Food Culture
 content_outline:
-- section: 'Introduction: Ukrainian Food'
-  words: 150
-  points:
-  - Cuisine overview
-  - Regional traditions
-  - Food culture significance
-- section: Traditional Dishes
-  words: 250
-  points:
-  - борщ, вареники, голубці
-  - Preparation methods
-  - Regional variations
-- section: Holiday Food
-  words: 250
-  points:
-  - кутя, паска, узвар
-  - Christmas Eve dishes
-  - Easter traditions
-- section: Modern Ukrainian Cuisine
-  words: 250
-  points:
-  - Contemporary restaurants
-  - Fusion trends
-  - Chef culture
-- section: Regional Specialties
-  words: 200
-  points:
-  - Western, Eastern differences
-  - Local ingredients
-  - Seasonal dishes
-- section: 'Practice: Food Discussion'
-  words: 100
-  points:
-  - Describe favorite dishes
-  - Compare cuisines
-word_target: 1200
+- section: Огляд
+  words: 58
+- section: Вступ
+  words: 129
+- section: Інтеграція
+  words: 713
+- section: Практика
+  words: 371
+- section: Продукція
+  words: 326
+- section: Підсумок
+  words: 107
+- section: Потрібно більше практики?
+  words: 109
+word_target: 1813
 vocabulary_hints:
   required:
   - борщ (borscht)
@@ -60,13 +39,13 @@ activity_hints:
 - type: reading
   focus: Recipes and food articles
   items: 15
-- type: matching
+- type: match-up
   focus: Match dishes to regions
   items: 20
 - type: fill-in
   focus: Complete recipe instructions
   items: 15
-- type: discussion
+- type: quiz
   focus: Share food preferences
   items: 10
 focus: culture

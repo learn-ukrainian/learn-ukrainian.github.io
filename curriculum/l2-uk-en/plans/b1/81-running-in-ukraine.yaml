@@ -5,42 +5,19 @@ version: '2.0'
 title: Біг в Україні
 subtitle: Running Culture and Marathon Events
 content_outline:
-- section: 'Introduction: Running Culture'
-  words: 150
-  points:
-  - Running popularity
-  - Ukrainian running community
-  - Benefits of running
-- section: Major Running Events
-  words: 250
-  points:
-  - Kyiv Marathon
-  - Half-marathons
-  - Regional races
-- section: Training and Preparation
-  words: 250
-  points:
-  - Training vocabulary
-  - Preparation tips
-  - Equipment
-- section: Race Day
-  words: 250
-  points:
-  - Registration process
-  - Race categories
-  - Finish and results
-- section: Running Community
-  words: 200
-  points:
-  - Running clubs
-  - Parkrun culture
-  - Social running
-- section: 'Practice: Running Discussion'
-  words: 100
-  points:
-  - Share running experiences
-  - Plan for races
-word_target: 1200
+- section: Огляд
+  words: 4
+- section: Інтеграція
+  words: 841
+- section: Практика
+  words: 76
+- section: Продукція
+  words: 402
+- section: Підсумок
+  words: 114
+- section: Потрібно більше практики?
+  words: 109
+word_target: 1546
 vocabulary_hints:
   required:
   - біг (running)
@@ -60,13 +37,13 @@ activity_hints:
 - type: reading
   focus: Race descriptions and runner stories
   items: 15
-- type: matching
+- type: match-up
   focus: Match terms to definitions
   items: 20
 - type: fill-in
   focus: Complete training plans
   items: 15
-- type: discussion
+- type: quiz
   focus: Share running goals
   items: 10
 focus: culture

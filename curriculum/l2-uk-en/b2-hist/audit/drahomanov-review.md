@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M84 | **Phase:** HIST.8 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:55:05
+**Generated:** 2026-01-27 15:51:27
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, fill-in, match-up, quiz, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -20,28 +20,19 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Розуміння тексту про Куліша та Драгоманова | 16 | 8 | ✅ |
-| 2 | match-up | Термінологія ідеологів XIX століття | 16 | 8 | ✅ |
-| 3 | cloze | Історична лексика в контексті | 16 | 1 | ✅ |
-| 4 | true-false | Факти про Куліша та Драгоманова | 16 | 8 | ✅ |
-| 5 | group-sort | Класифікація внеску Куліша та Драгоманова | 16 | 1 | ✅ |
-| 6 | unjumble | Складіть речення про ідеологів | 16 | 6 | ✅ |
-| 7 | error-correction | Граматика в історичних реченнях | 16 | 6 | ✅ |
-| 8 | cloze | Заповніть текст про Куліша та Драгоманова | 16 | 1 | ✅ |
-| 9 | mark-the-words | Знайдіть терміни ідеологів | 10 | 6 | ✅ |
-| 10 | select | Оберіть усі правильні твердження згідно з текстом | 6 | 6 | ✅ |
-| 11 | essay-response | Твоя думка | 1 | 1 | ✅ |
-| 12 | comparative-study | Порівняння ідеологів | 1 | 1 | ✅ |
+| 1 | true-false | Факти про Куліша та Драгоманова | 16 | 8 | ✅ |
+| 2 | essay-response | Твоя думка | 1 | 1 | ✅ |
+| 3 | comparative-study | Порівняння ідеологів | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 12 (target: 3-9) ❌
-- Unique types: 11 (minimum: 2) ✅
+- Total activities: 3 (target: 3-9) ✅
+- Unique types: 3 (minimum: 2) ✅
 - Priority types used: 2/4 (comparative-study, essay-response) ✅
-- Required types used: 3/5 (essay-response, match-up, quiz) ❌
+- Required types used: 1/2 (essay-response) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in drahomanov.yaml: Schema validation error at key 'min_words': 100 is less than the minimum of 150
+- **[YAML_SCHEMA_VIOLATION]** Schema error in drahomanov.yaml: Insufficient activities: 3 found, minimum 5 required for B2-HIST
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
@@ -52,9 +43,9 @@
 
 ## Gates
 - **Words:** ❌ 2090/4000 (raw: 2420)
-- **Activities:** ✅ 12/3
+- **Activities:** ✅ 3/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 11/2 types
+- **Unique_types:** ✅ 3/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 16/5
 - **Audio:** ℹ️ No audio
@@ -62,7 +53,7 @@
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ⚠️ Too many activities: 12 (target 3-9); 1 cloze with year blanks
+- **Content_heavy:** ✅ Content-heavy OK (3 activities)
 - **Immersion:** 🇺🇦 96.5% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

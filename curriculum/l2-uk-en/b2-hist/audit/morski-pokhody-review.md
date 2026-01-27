@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M49 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 23:54:13
+**Generated:** 2026-01-27 17:53:23
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** comparative-study, essay-response, quiz, reading, true-false
+**Required Types:** comparative-study, essay-response, reading, true-false
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -22,24 +22,22 @@
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Боплан про козацьку винахідливість на морі | 3 | 1 | ✅ |
 | 2 | critical-analysis | Тактика морської герильї | 1 | 1 | ✅ |
-| 3 | quiz | Морські походи: Географія та технології | 8 | 8 | ✅ |
-| 4 | comparative-study | Морські гіганти vs Степові вовки | 1 | 1 | ✅ |
-| 5 | true-false | Морські таємниці запорожців | 10 | 8 | ✅ |
-| 6 | essay-response | Морська ідентичність України | 1 | 1 | ✅ |
-| 7 | fill-in | Морська термінологія | 10 | 8 | ✅ |
+| 3 | comparative-study | Морські гіганти vs Степові вовки | 1 | 1 | ✅ |
+| 4 | true-false | Морські таємниці запорожців | 10 | 8 | ✅ |
+| 5 | essay-response | Морська ідентичність України | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 7 (target: 3-9) ✅
-- Unique types: 7 (minimum: 2) ✅
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 5/5 (comparative-study, essay-response, quiz, reading, true-false) ✅
+- Required types used: 4/4 (comparative-study, essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ✅ 4080/4000 (raw: 4337)
-- **Activities:** ✅ 7/3
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 7/2 types
+- **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
@@ -47,7 +45,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (7 activities)
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 98.7% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

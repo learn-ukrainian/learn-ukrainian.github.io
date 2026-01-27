@@ -1,10 +1,12 @@
 # Audit Report: M127 — oleksandra-matviichuk.md
+
 **Level:** C1 | **Module:** M127 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:57:20
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння біографії та діяльності | 5 | 5 | ✅ |
@@ -41,10 +44,12 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in oleksandra-matviichuk.yaml: Schema validation error at key '9': {'type': 'true-false', 'title': 'Правда чи міф: Діяльність Олександри Матвійчук', 'items': [{'statement': 'Олександра Матвійчук стала першою в історії України жінкою, яка виступила з нобелівською лекцією.', 'correct': True, 'explanation': 'Це підтверджується текстом модуля як історичний факт.'}, {'statement': 'Ініціатива «Євромайдан SOS» була створена для фінансової підтримки політичних партій.', 'correct': False, 'explanation': 'Ініціатива була створена для надання юридичної допомоги переслідуваним учасникам протестів.'}, {'statement': 'Центр громадянських свобод був заснований у 2022 році відразу після початку повномасштабної війни.', 'correct': False, 'explanation': 'ЦГС був заснований значно раніше, у 2007 році.'}, {'statement': "Кампанія #LetMyPeopleGo фокусувалася на звільненні українських політв'язнів з російського полону.", 'correct': True, 'explanation': 'Це була одна з ключових міжнародних адвокаційних кампаній ЦГС.'}, {'statement': 'Матвійчук вважає, що правосуддя має здійснюватися виключно після повного закінчення бойових дій.', 'correct': False, 'explanation': 'Навпаки, вона наполягає на документуванні та покаранні злочинців під час війни.'}, {'statement': "Образ Матвійчук у світі часто називають прикладом «м'якої сили» України.", 'correct': True, 'explanation': 'Текст прямо вказує на це як на форму інтелектуального та правового впливу.'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[FORBIDDEN_HEADER_TONE]** Header '## Сучасний етап' is inappropriate for a deceased person. Use '## Останні роки' instead.
   - FIX: Rename '## Сучасний етап' to '## Останні роки' to maintain correct biographical tone.
 - ❌ **[FORBIDDEN_HEADER_TONE]** Header '## Вплив' is inappropriate for a deceased person. Use '## Спадщина' instead.
@@ -53,12 +58,14 @@
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 
 ## Recommendation
+
 **📝 UPDATE** (severity 35/100)
 
 - 4 violations (moderate)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2213/4000 (raw: 2401)
 - **Activities:** ✅ 12/3
 - **Density:** ✅ All > 1
@@ -77,10 +84,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 97% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 15 | 4 | 100% | 19% | 19.0% |
@@ -96,6 +105,7 @@
 | **TOTAL** | | | | | **97.6%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 92 | Included in Core |

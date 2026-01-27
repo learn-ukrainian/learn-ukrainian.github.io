@@ -14,17 +14,17 @@
 | Structure           | 10/10 | Logical progression from forms to meaning (regret, hypothesis).                                                       |
 | Relevance           | 10/10 | "If I were rich...", "If you had told me..." — very high frequency.                                                   |
 | Language            | 10/10 | "Кайдашева сім'я" and "Захар Беркут" references are culturally deep.                                                  |
-| Pedagogy            | 10/10 | Good explanation of _б_ vs _би_.                                                                                      |
+| Pedagogy            | 10/10 | Good explanation of *б* vs *би*.                                                                                      |
 | Immersion           | 10/10 | Folk song "Якби я мала криленята" captures the Ukrainian soul.                                                        |
 | Activities          | 10/10 | High density.                                                                                                         |
-| Richness            | 10/10 | Gaming references (_Witcher 3_, _S.T.A.L.K.E.R._) make grammar relatable to modern users.                             |
+| Richness            | 10/10 | Gaming references (*Witcher 3*, *S.T.A.L.K.E.R.*) make grammar relatable to modern users.                             |
 | Humanity            | 10/10 | Dialogues about life choices and regrets feel very human.                                                             |
 | LLM Fingerprint     | 10/10 | No issues.                                                                                                            |
 | Linguistic Accuracy | 10/10 | Accurate after fixes.                                                                                                 |
 
 ## Linguistic Accuracy Issues
 
-- _Fixed:_ Vocabulary extraction errors (`зраза` -> `зразу`, `жалити` -> `жаліти`, proper nouns capitalization).
+- *Fixed:* Vocabulary extraction errors (`зраза` -> `зразу`, `жалити` -> `жаліти`, proper nouns capitalization).
 
 ## Strengths
 
@@ -33,7 +33,7 @@
 
 ## Issues
 
-- _Fixed:_ Semantic errors in vocabulary extraction.
+- *Fixed:* Semantic errors in vocabulary extraction.
 
 ## Recommendation
 

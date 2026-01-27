@@ -1,8 +1,8 @@
 # Audit Report: M74 — kinets-hetmanshchyny.md
-**Level:** B2 | **Module:** M74 | **Phase:** HIST.7 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2 | **Module:** M74 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:54:58
+**Generated:** 2026-01-27 15:51:21
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, match-up, quiz, reading, true-false
+**Required Types:** essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -21,42 +21,39 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Секретна інструкція Катерини II (1764) | 3 | 1 | ✅ |
-| 2 | quiz | Розуміння тексту про ліквідацію Гетьманщини | 16 | 8 | ✅ |
-| 3 | match-up | Термінологія ліквідації автономії | 16 | 8 | ✅ |
-| 4 | cloze | Історична лексика в контексті | 16 | 1 | ✅ |
-| 5 | true-false | Факти про кінець Гетьманщини | 16 | 8 | ✅ |
-| 6 | group-sort | Класифікація понять | 16 | 1 | ✅ |
-| 7 | unjumble | Складіть речення про Гетьманщину | 16 | 6 | ✅ |
-| 8 | error-correction | Граматика в історичних реченнях | 16 | 6 | ✅ |
-| 9 | cloze | Заповніть текст про Гетьманщину | 19 | 1 | ✅ |
-| 10 | mark-the-words | Знайдіть терміни колоніальної політики | 10 | 6 | ✅ |
-| 11 | select | Оберіть усі правильні твердження згідно з текстом | 8 | 6 | ✅ |
-| 12 | translate | Переклад історичної лексики | 16 | 6 | ✅ |
-| 13 | fill-in | Вибір правильного відмінка | 16 | 8 | ✅ |
-| 14 | quiz | Аналіз первинних джерел | 16 | 8 | ✅ |
-| 15 | essay-response | Історична пам'ять | 1 | 1 | ✅ |
-| 16 | comparative-study | Ліквідація автономії vs Сучасність | 1 | 1 | ✅ |
+| 2 | critical-analysis | Аналіз первинних джерел | 1 | 1 | ✅ |
+| 3 | essay-response | Історична пам'ять | 1 | 1 | ✅ |
+| 4 | comparative-study | Ліквідація автономії vs Сучасність | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 16 (target: 3-9) ❌
-- Unique types: 14 (minimum: 2) ✅
-- Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
-- Required types used: 5/5 (essay-response, match-up, quiz, reading, true-false) ✅
+- Total activities: 4 (target: 3-9) ✅
+- Unique types: 4 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in kinets-hetmanshchyny.yaml: Insufficient activities: 4 found, minimum 5 required for B2-HIST
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
-- **Words:** ⚠️ 3978/4000 (raw: 4140) (22 short)
-- **Activities:** ✅ 16/3
+- **Words:** ✅ 4138/4000 (raw: 4257)
+- **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 14/2 types
+- **Unique_types:** ✅ 4/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 14/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ Too many activities: 16 (target 3-9); 2 cloze with year blanks
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ✅ Content-heavy OK (4 activities)
 - **Immersion:** 🇺🇦 98.2% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -85,12 +82,9 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Кінець Гетьманщини** | ⚪️ | 54 | Skipped |
-| **Вступ** | ✅ | 151 | Included in Core |
-| **Читання** | ✅ | 594 | Included in Core |
-| **Ліквідація Гетьманщини (1764)** | ⚪️ | 463 | Skipped |
-| **Знищення Запорозької Січі (1775)** | ⚪️ | 651 | Skipped |
-| **Наслідки: від свободи до рабства** | ⚪️ | 1234 | Skipped |
+| **Вступ** | ✅ | 239 | Included in Core |
+| **Читання** | ✅ | 2972 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 131 | Included in Core |
 | **Первинні джерела** | ✅ | 481 | Included in Core |
-| **Підсумок** | ✅ | 109 | Included in Core |
+| **Підсумок** | ✅ | 151 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

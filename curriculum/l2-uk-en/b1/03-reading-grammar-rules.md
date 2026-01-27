@@ -2,19 +2,19 @@
 
 > 🎯 **Why This Module Matters**
 >
-> You've learned the names for parts of speech, cases, aspects, and tenses. Now you need to understand _how_ Ukrainian grammar books explain rules. This module teaches you the patterns and phrases that appear in every Ukrainian grammar resource — so you can learn independently from materials written for native speakers.
+> You've learned the names for parts of speech, cases, aspects, and tenses. Now you need to understand *how* Ukrainian grammar books explain rules. This module teaches you the patterns and phrases that appear in every Ukrainian grammar resource — so you can learn independently from materials written for native speakers.
 
 ## Introduction - Reading Grammar in Ukrainian
 
 ### Мова граматичних пояснень
 
-Ukrainians have a proverb: **«Без правил і мова — не мова.»** — «Without rules, even language isn't language.» This captures why Ukrainians value grammar so highly. To learn from their textbooks, you need to speak the language _of_ grammar.
+Ukrainians have a proverb: **«Без правил і мова — не мова.»** — «Without rules, even language isn't language.» This captures why Ukrainians value grammar so highly. To learn from their textbooks, you need to speak the language *of* grammar.
 
 When you open a Ukrainian grammar book, you see patterns like:
 
-- _«X використовується, коли...»_ (X is used when...)
-- _«X означає...»_ (X means...)
-- _«Порівняйте:»_ (Compare:)
+- *«X використовується, коли...»* (X is used when...)
+- *«X означає...»* (X means...)
+- *«Порівняйте:»* (Compare:)
 
 These aren't random — they're standard patterns that every grammar book uses. Learn them once, understand them everywhere.
 
@@ -37,17 +37,22 @@ Where do Ukrainians learn these patterns? Київ is home to the National Acade
 | **використовується** | is used     | «Родовий відмінок використовується після прийменника 'без'.» |
 | **вживається**       | is employed | «Недоконаний вид вживається для повторюваних дій.»           |
 
-When you see «X використовується, коли...» or «X вживається для...», the grammar is telling you _when_ to use X.
+When you see «X використовується, коли...» or «X вживається для...», the grammar is telling you *when* to use X.
 
 **Родовий відмінок використовується після прийменника «без».** (The genitive is used after the preposition «without.»)
 
+- This pattern is purely prescriptive: "Do X when Y happens." It's the most common instruction in beginner texts.
+- **Вживається** is a synonym for **використовується**. They are interchangeable in 99% of grammar contexts.
+
 **Недоконаний вид вживається для повторюваних дій.** (Imperfective is used for repeated actions.)
+
+- Here, the rule connects a grammatical form to a semantic concept (repetition).
 
 **Знахідний відмінок використовується для прямого об'єкта.** (Accusative is used for direct objects.)
 
 ### «Means / Shows / Expresses»
 
-These patterns explain _what_ a form means:
+These patterns explain *what* a form means:
 
 | Pattern       | English   | Example                                     |
 | ------------- | --------- | ------------------------------------------- |
@@ -55,16 +60,23 @@ These patterns explain _what_ a form means:
 | **показує**   | shows     | «Цей суфікс показує зменшувальне значення.» |
 | **виражає**   | expresses | «Давальний відмінок виражає адресата.»      |
 | **вказує на** | indicates | «Закінчення -а вказує на жіночий рід.»      |
+| **позначає**  | denotes   | «Слово 'стіл' позначає предмет.»            |
 
 **Доконаний вид означає завершену дію з результатом.** (Perfective means a completed action with result.)
 
+- **Означає** is the most direct definition. "X = Y".
+
 **Давальний відмінок виражає адресата повідомлення.** (Dative expresses the addressee of a message.)
+
+- **Виражає** is slightly more abstract. It's about the function or role the form plays.
 
 **Закінчення -а вказує на жіночий рід іменника.** (The ending -а indicates feminine gender of a noun.)
 
+- **Вказує на** suggests a "pointer" or "clue."
+
 > 🌍 **Real World: Online Forums**
 >
-> On Ukrainian language forums, native speakers use these exact patterns to explain grammar. For example, «Тут використовується знахідний відмінок, бо...» (Here the accusative is used because...). Such explanations appear constantly. For instance, when someone asks about case usage, they might get «Родовий використовується тут, бо...» (Genitive is used here because...). Now you can follow these explanations!
+> On Ukrainian language forums, native speakers use these exact patterns to explain grammar. For example, «Тут використовується знахідний відмінок, бо...» (Here the accusative is used because...). Such explanations appear constantly. For instance, when someone asks about case usage, they might get «Родовий використовується тут, бо...» (Genitive is used here because...). Now you can follow these explanations! Mastery of these three verbs (**використовується, означає, вказує**) allows you to understand 80% of grammar rules written in Ukrainian.
 
 ---
 
@@ -85,9 +97,23 @@ Grammar exercises use imperative forms. Learn these instruction verbs:
 
 **Порівняйте ці два речення і знайдіть відмінності.** (Compare these two sentences and find the differences.)
 
+- This command asks you to analyze, not just read. Look for changes in endings or word order.
+
 **Зверніть увагу на закінчення іменника в кожному відмінку.** (Pay attention to the noun ending in each case.)
 
+- **Зверніть увагу** is a "focus marker." The author is telling you: "This is the important part, don't miss it!"
+
+**Наприклад:** «книга → книги». (For example: book → books.)
+
+- Examples usually follow the rule immediately.
+
 **Отже, це дієслово вимагає родового відмінка.** (Therefore, this verb requires the genitive case.)
+
+- **Отже** signals the conclusion or the rule derived from the examples.
+
+**Тобто** (that is) acts as an equals sign. It rephrases a complex idea into simpler logical terms. "Це прислівник, тобто незмінна частина мови" means "It's an adverb = it doesn't change."
+
+**Таким чином** (thus) summarizes the process. "Таким чином утворюється майбутній час" means "This is the procedure for forming the future tense."
 
 > 🎬 **Pop Culture Moment: Language Apps**
 >
@@ -104,7 +130,19 @@ Grammar often compares forms:
 
 **На відміну від англійської, українська має сім відмінків.** (In contrast to English, Ukrainian has seven cases.)
 
+- Use **«на відміну від»** to highlight unique features of Ukrainian. It helps define what Ukrainian *is* by establishing what it *is not*.
+
 **Подібно до інших слов'янських мов, українська розрізняє вид дієслова.** (Similar to other Slavic languages, Ukrainian distinguishes verb aspect.)
+
+- Use **«подібно до»** to draw analogies. If you know Polish or Russian, this phrase helps you transfer that knowledge.
+
+**Так само, як...** (Just as...)
+
+- «Так само, як в англійській, тут є інтоніція.» (Just as in English, there is intonation here.)
+
+**Більш того / Крім того** (Moreover / Besides)
+
+- These add extra arguments. «Крім того, ця форма дуже давня.» (Besides, this form is very ancient.)
 
 ---
 
@@ -126,9 +164,23 @@ To understand how words are built, you need these terms:
 
 **Основа слова «написати» складається з префікса і кореня.** (The stem of «napisaty» consists of prefix and root.)
 
+- **Основа** is the foundation. Grammatically, endings attach to the stem. The stem holds the lexical meaning.
+
 **Корінь «пис-» є спільним для слів писати, письмо, письменник.** (The root «pys-» is common to pisaty, pysmo, pysmennyk.)
 
+- Finding the **корінь** helps you guess the meaning of unknown words. If you know "пис", you know it's about writing.
+
 **Суфікс «-ок» утворює зменшувальні форми іменників.** (The suffix «-ok» forms diminutive noun forms.)
+
+- Suffixes modify the meaning (smallness, profession, abstractness).
+
+**Префікс** modifies the direction or aspect.
+
+- **При-** (arrival), **По-** (start/little bit), **За-** (into/behind).
+
+**Закінчення** (ending) is the grammar manager.
+
+- It changes for case, number, and gender. It connects the word to the rest of the sentence.
 
 > 💡 **Did You Know?**
 >
@@ -159,11 +211,16 @@ When you work with grammar exercises, you'll see these specific instruction verb
 
 **Examples in exercises:**
 
-- «**Виберіть** правильну форму дієслова.» (Choose the correct verb form.)
-- «**Знайдіть** помилку в реченні.» (Find the error in the sentence.)
-- «**З'єднайте** українські слова з англійськими.» (Match Ukrainian words with English.)
-- «**Розташуйте** слова в правильному порядку.» (Arrange words in correct order.)
-- «**Доповніть** речення правильним закінченням.» (Complete the sentence with the correct ending.)
+- «**Виберіть** правильну форму дієслова.» (Choose the correct verb form.) - Standard multiple choice instruction.
+- «**Знайдіть** помилку в реченні.» (Find the error in the sentence.) - Requires critical reading.
+- «**З'єднайте** українські слова з англійськими.» (Match Ukrainian words with English.) - Vocabulary building.
+- «**Розташуйте** слова в правильному порядку.» (Arrange words in correct order.) - Syntax practice.
+- «**Доповніть** речення правильним закінченням.» (Complete the sentence with the correct ending.) - Grammar drilling.
+- «**Вставте** пропущені літери.» (Insert missing letters.) - Spelling focus.
+- «**Підкресліть** підмет і присудок.» (Underline subject and predicate.) - Syntactic analysis.
+- «**Перепишіть** речення в минулому часі.» (Rewrite sentence in past tense.) - Transformation exercise.
+
+Understanding these verbs transforms an exercise from a guessing game into a clear task. You stop wondering "What do they want me to do?" and start doing it.
 
 > 🎮 **Gamer's Corner**
 >
@@ -194,6 +251,11 @@ Grammar discussions use these analytical terms to describe linguistic concepts:
 - «Слово 'вже' є **маркером** результату.» ('Вже' is a marker of result.)
 - «**Частота** вживання цієї форми висока.» (The frequency of this form's use is high.)
 - «Знайдіть **аспектуальну пару** дієслова 'писати'.» (Find the aspectual pair of the verb 'писати'.)
+- «**Узгодження** між прикметником та іменником.» (Agreement between adjective and noun.)
+- «**Керування** відмінками.» (Case governance - which case a verb demands.)
+
+**Контекст** is king in Ukrainian. Often, the rule says "depends on context" (**залежить від контексту**).
+**Маркер** is your hint. Words like "вчора," "завтра," "зазвичай" are time markers (**часові маркери**) that dictate tense.
 
 > 🌍 **Real World: Linguistics**
 >
@@ -222,10 +284,14 @@ Grammar books discuss different language styles:
 
 **Examples:**
 
-- «Це слово належить до **розмовної мови**.» (This word belongs to colloquial language.)
-- «У **літературній мові** вживають 'так', а не 'да'.» (In literary language, use 'так', not 'да'.)
-- «Цей **регістр** підходить для офіційних документів.» (This register suits official documents.)
-- «**Формальна мова** вимагає повних форм дієслів.» (Formal language requires full verb forms.)
+- «Це слово належить до **розмовної мови**.» (This word belongs to colloquial language.) - Use with friends, not in essays.
+- «У **літературній мові** вживають 'так', а не 'да'.» (In literary language, use 'так', not 'да'.) - The gold standard.
+- «Цей **регістр** підходить для офіційних документів.» (This register suits official documents.) - Very formal (Passport office style).
+- «**Формальна мова** вимагає повних форм дієслів.» (Formal language requires full verb forms.) - No slang allowed.
+- «**Застаріле слово**.» (Archaic word.) - Only found in old books.
+- «**Діалектизм**.» (Dialect word.) - Regional, not standard.
+
+Distinguishing registers prevents embarrassment. You don't want to use **розмовну мову** in a formal letter, nor **формальну мову** at a party. Grammar books explicitly label these: (розмов.), (офіц.), (заст.).
 
 > 💡 **Did You Know?**
 >
@@ -239,7 +305,7 @@ Grammar books discuss different language styles:
 
 Here's a real grammar text. Can you understand it now?
 
-> _Прикметник змінюється за родами, числами і відмінками. Він узгоджується з іменником. Наприклад: «гарна книга» — жіночий рід, «гарний стіл» — чоловічий рід. Зверніть увагу на закінчення: -а для жіночого, -ий для чоловічого роду._
+> *Прикметник змінюється за родами, числами і відмінками. Він узгоджується з іменником. Наприклад: «гарна книга» — жіночий рід, «гарний стіл» — чоловічий рід. Зверніть увагу на закінчення: -а для жіночого, -ий для чоловічого роду.*
 
 **Translation:** The adjective changes by gender, number, and case. It agrees with the noun. For example: «good book» is feminine, «good table» is masculine. Note the endings: -а for feminine, -ий for masculine.
 
@@ -247,23 +313,23 @@ Here's a real grammar text. Can you understand it now?
 
 Identify the function of each phrase:
 
-1. _«Використовується після прийменника.»_
+1. *«Використовується після прийменника.»*
    - Explains **when** to use something.
 
-2. _«Означає завершену дію.»_
+2. *«Означає завершену дію.»*
    - Explains **what** something means.
 
-3. _«Порівняйте ці два приклади.»_
+3. *«Порівняйте ці два приклади.»*
    - **Instruction** to compare.
 
-4. _«Зверніть увагу на корінь слова.»_
+4. *«Зверніть увагу на корінь слова.»*
    - **Instruction** to pay attention.
 
 ### Reading Another Grammar Text
 
 Here's a more complex explanation about verb aspect:
 
-> _Дієслівний вид показує характер дії. Недоконаний вид використовується для повторюваних або тривалих дій. На відміну від недоконаного, доконаний вид означає завершену дію з результатом. Порівняйте: «писати» — недоконаний, «написати» — доконаний. Тобто, «писати» — процес, а «написати» — результат. Зверніть увагу на префікс «на-», який часто утворює доконаний вид._
+> *Дієслівний вид показує характер дії. Недоконаний вид використовується для повторюваних або тривалих дій. На відміну від недоконаного, доконаний вид означає завершену дію з результатом. Порівняйте: «писати» — недоконаний, «написати» — доконаний. Тобто, «писати» — процес, а «написати» — результат. Зверніть увагу на префікс «на-», який часто утворює доконаний вид.*
 
 **Translation:** Verbal aspect shows the character of action. Imperfective is used for repeated or ongoing actions. In contrast to imperfective, perfective means a completed action with result. Compare: «pisaty» is imperfective, «napysaty» is perfective. That is, «pisaty» is process, and «napysaty» is result. Note the prefix «na-», which often forms perfective.
 
@@ -271,7 +337,7 @@ Here's a more complex explanation about verb aspect:
 
 Look at how Ukrainian grammar books explain word formation:
 
-> _Слово «написати» складається з таких частин: префікс «на-», корінь «пис-», суфікс «-а-», закінчення «-ти». Основа слова — «написа-». Корінь «пис-» є в усіх споріднених словах: писати, письмо, письменник. Отже, корінь несе основне значення слова._
+> *Слово «написати» складається з таких частин: префікс «на-», корінь «пис-», суфікс «-а-», закінчення «-ти». Основа слова — «написа-». Корінь «пис-» є в усіх споріднених словах: писати, письмо, письменник. Отже, корінь несе основне значення слова.*
 
 **Translation:** The word «napysaty» consists of these parts: prefix «na-», root «pys-», suffix «-a-», ending «-ty». The stem is «napysa-». The root «pys-» is in all related words: pisaty, pysmo, pysmennyk. Therefore, the root carries the main meaning of the word.
 
@@ -378,6 +444,40 @@ When you see these words, you know the grammar is signaling a logical step. «О
 **Олексій:** Тобто дієслово вимагає знахідного відмінка?
 
 **Марія:** Саме так. Тепер ми можемо читати граматичні пояснення українською!
+
+---
+
+### Діалог 7: Частини мови і відмінки
+
+**Викладач:** Іменник відповідає на питання "хто?" або "що?". Він змінюється за відмінками.
+
+**Студент:** Тобто, якщо слово не змінюється, це не іменник?
+
+**Викладач:** Зазвичай так. Прислівник, наприклад, не змінюється взагалі. Це його головна ознака.
+
+**Студент:** Зрозумів. А прикметник?
+
+**Викладач:** Прикметник узгоджується з іменником.
+
+**Студент:** "Узгоджується" означає "agrees"?
+
+**Викладач:** Так. Вони повинні мати однаковий рід, число і відмінок.
+
+---
+
+### Діалог 8: Аналіз помилок
+
+**Редактор:** Знайдіть помилку в цьому тексті.
+
+**Автор:** Я не бачу помилок. Тут все правильно.
+
+**Редактор:** Зверніть увагу на порядок слів.
+
+**Автор:** А, бачу! "Я вчора ходив" краще ніж "Я ходив вчора" у цьому контексті?
+
+**Редактор:** Так, тут порядок слів змінює акцент. Це питання стилістики.
+
+**Автор:** Дякую за зауваження. Я виправлю це.
 
 > 🌍 **Real World: Academic Ukrainian**
 >

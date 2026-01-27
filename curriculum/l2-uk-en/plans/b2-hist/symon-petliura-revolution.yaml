@@ -67,15 +67,6 @@ activity_hints:
   focus: Звернення Петлюри до армії
   source: Архівні документи
   items: 4
-- type: quiz
-  focus: 'Симон Петлюра: життя та діяльність'
-  items: 15
-- type: match-up
-  focus: Подія → дата та наслідки
-  items: 10
-- type: fill-in
-  focus: Військово-політична лексика
-  items: 10
 - type: essay-response
   focus: Чому постать Петлюри залишається контроверсійною?
   word_target: 250

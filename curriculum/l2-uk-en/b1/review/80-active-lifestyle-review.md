@@ -12,7 +12,7 @@
 | ------------------- | ----- | -------------------------------------------------------------------------------------------- |
 | Coherence           | 10/10 | Logical structure (Daily movement -> Urban spaces -> Health benefits).                       |
 | Relevance           | 10/10 | High. "Healthy lifestyle" is a global topic but the context is local.                        |
-| Educational         | 10/10 | Good differentiation of _бігати_ (run) vs _пробіжка_ (jogging).                              |
+| Educational         | 10/10 | Good differentiation of *бігати* (run) vs *пробіжка* (jogging).                              |
 | Language            | 10/10 | Modern urban vocabulary (`велодоріжка`, `воркаут`).                                          |
 | Pedagogy            | 10/10 | Trukhaniv Island & Sykhiv serve as perfect specific examples of "active zones" in Kyiv/Lviv. |
 | Immersion           | 10/10 | Authentic.                                                                                   |
@@ -26,7 +26,7 @@
 
 - **Vocabulary:** Proper nouns lowercased (`труханів` (island), `сихів` (district), `світоліна`).
 - **Vocabulary:** `Спортмастер` - this is a Russian brand that is sanctioned/boycotted in Ukraine. Using it as a generic term (like "shoppig at Sportmaster") is culturally insensitive today. Better to use `Інтерспорт` (which is also listed) or generic `спортивний магазин`.
-  - _Action:_ Remove `Спортмастер`.
+  - *Action:* Remove `Спортмастер`.
 
 ## Strengths
 

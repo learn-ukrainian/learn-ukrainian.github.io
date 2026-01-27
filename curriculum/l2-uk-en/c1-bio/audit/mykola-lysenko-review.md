@@ -1,10 +1,12 @@
 # Audit Report: M40 — mykola-lysenko.md
+
 **Level:** C1 | **Module:** M40 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:16
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Життя та музично-громадський внесок Миколи Лисенка | 12 | 5 | ✅ |
@@ -46,20 +49,24 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in mykola-lysenko.yaml: Schema validation error at key '15': {'type': 'reading', 'title': 'Аналіз музично-критичних текстів', 'resource': {'type': 'article', 'url': 'https://mus.art.co.ua/mikola-lysenko-osnova-ukrainskoji-muzichnoji-kulturi/', 'title': 'Микола Лисенко: основа української музичної культури'}, 'tasks': ['Які саме риси стилю Лисенка автор статті називає «європейськими»?', 'Проаналізуйте аргументи щодо значення «Тараса Бульби» для світової опери.', 'Знайдіть цитати учнів Лисенка про його педагогічні методи.']} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Останні роки' per template 'c1-biography-module-template.md'
   - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 2 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2042/4000 (raw: 2359)
 - **Activities:** ✅ 17/3
 - **Density:** ✅ All > 1
@@ -78,10 +85,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 5 | 4 | 100% | 19% | 19.0% |
@@ -97,6 +106,7 @@
 | **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 86 | Included in Core |

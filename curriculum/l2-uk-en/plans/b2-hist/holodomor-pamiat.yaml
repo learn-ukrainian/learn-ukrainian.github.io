@@ -67,12 +67,6 @@ activity_hints:
   focus: Статті Гарета Джонса
   source: Архівні матеріали
   items: 4
-- type: quiz
-  focus: Історія боротьби за визнання Голодомору
-  items: 15
-- type: match-up
-  focus: Свідок → внесок у збереження правди
-  items: 10
 - type: true-false
   focus: Факти та міфи про Голодомор
   items: 10

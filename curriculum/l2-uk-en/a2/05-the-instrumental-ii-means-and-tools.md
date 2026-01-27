@@ -8,7 +8,7 @@ In English, we often use different prepositions for these concepts: "by" for tra
 
 ### Чому ми не використовуємо прийменник? (Why No Preposition?)
 
-When we talk about a tool or transport, we treat the object as the _means_ of performing the action.
+When we talk about a tool or transport, we treat the object as the *means* of performing the action.
 Коли ми говоримо про інструмент або транспорт, ми розглядаємо предмет як засіб виконання дії. Наприклад, ми пишемо **ручкою** або їдемо **автобусом**. Тут немає супроводу, тому прийменник «з» не потрібен. Орудний відмінок без прийменника вказує безпосередньо на спосіб виконання дії.
 
 The bare Instrumental indicates the method directly. This is why it is so powerful.
@@ -56,13 +56,13 @@ Even our own body parts can act as "tools" for actions like waving, nodding, or 
 Використання частин тіла в орудному відмінку допомагає точніше описувати рухи та жести. Це робить ваші розповіді більш живими та виразними. Наприклад, ми вітаємося, махаючи **рукою**, або висловлюємо згоду, киваючи **головою**. Очі — це особливе слово. Його форма в орудному відмінку — **очима**. Це давня форма, яку важливо запам'ятати. It adds a touch of history to your speech.
 
 > [!reflection] **The Logic of Means**
-> In Ukrainian, the Instrumental case without a preposition represents the _force_ or _method_ behind an action. When you use it correctly, you are showing how the subject interacts with the physical world through tools and vehicles.
+> In Ukrainian, the Instrumental case without a preposition represents the *force* or *method* behind an action. When you use it correctly, you are showing how the subject interacts with the physical world through tools and vehicles.
 
 > [!tip] **Metro and Taxi**
 > Remember that borrowed words ending in vowels like **метро, таксі, кіно** are indeclinable. They never change their endings, which makes them very easy to use in any sentence!
 
 > [!context] **Instrumental vs Locative**
-> While "автобусом" means _by means of_ a bus, the phrase "на автобусі" refers to being _on_ the bus. Use the Instrumental when the focus is on the journey or the method of travel.
+> While "автобусом" means *by means of* a bus, the phrase "на автобусі" refers to being *on* the bus. Use the Instrumental when the focus is on the journey or the method of travel.
 
 > [!important] **Accompaniment Reminder**
 > If you say "з автобусом" (with a bus), it means the bus is walking next to you like a friend! Always use the bare Instrumental for means and tools. «З» — це тільки супровід. Для інструментів прийменник не потрібен.

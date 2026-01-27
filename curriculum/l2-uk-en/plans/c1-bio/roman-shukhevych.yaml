@@ -69,22 +69,10 @@ activity_hints:
   focus: UPA documents and Shukhevych's orders
   source: Historical archives
   items: 3 passages
-- type: quiz
-  focus: Shukhevych's biography and UPA history
-  items: 12+
-- type: match-up
-  focus: Military operations and their outcomes
-  items: 10+
 - type: essay-response
   focus: How did UPA fight on two fronts simultaneously?
   word_target: 300
   output: Military strategy analysis
-- type: group-sort
-  focus: Phases of Shukhevych's career
-  items: 12+
-- type: fill-in
-  focus: Key dates and battles
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-108 (Yevhen Konovalets - predecessor)
@@ -110,3 +98,7 @@ sources:
   notes: State recognition
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of роман шухевич: головний командир упа'
+- Evaluate the contributions of легенда упа
+- Trace the career and influence of спадщина та визнання

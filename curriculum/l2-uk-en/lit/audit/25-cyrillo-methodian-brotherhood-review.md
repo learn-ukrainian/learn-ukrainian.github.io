@@ -1,10 +1,12 @@
 # Audit Report: M25 — 25-cyrillo-methodian-brotherhood.md
+
 **Level:** LIT | **Module:** M25 | **Phase:** LIT.4 | **Pedagogy:** Analysis | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:57:58
 
 ## Configuration
+
 **Type:** LIT-history
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Вікторина про Братство | 4 | 1 | ✅ |
@@ -35,16 +38,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 25-cyrillo-methodian-brotherhood.yaml: Schema validation error at key '2': {'title': 'Політична програма', 'type': 'fill-in', 'items': [{'sentence': 'Братство хотіло скасувати ___ у всіх слов’янських землях.', 'answer': 'кріпацтво', 'options': ['кріпацтво', 'податки', 'армію', 'цензуру']}, {'sentence': 'Україна мала стати центром слов’янської ___.', 'answer': 'федерації', 'options': ['федерації', 'імперії', 'колонії', 'республіки']}, {'sentence': 'Головними принципами були християнська ___ і свобода.', 'answer': 'мораль', 'options': ['мораль', 'війна', 'культура', 'освіта']}, {'sentence': 'Шевченко був більш ___, ніж Костомаров.', 'answer': 'радикальним', 'options': ['радикальним', 'поміркованим', 'обережним', 'сміливим']}, {'sentence': 'Братство проіснувало лише ___ перш ніж його викрили.', 'answer': '14 місяців', 'options': ['14 місяців', '10 років', '5 років', '2 роки']}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 3429/4000 (raw: 3561)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
@@ -63,10 +69,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 86% (minimum: 90%)
 **Module Type:** literature
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
@@ -82,6 +90,7 @@
 | **TOTAL** | | | | | **86.9%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

@@ -69,22 +69,10 @@ activity_hints:
   focus: Фрагменти Заповіту та листів
   source: Первинні джерела
   items: 3 passages
-- type: quiz
-  focus: Хронологія життя Шевченка
-  items: 12+
-- type: match-up
-  focus: Твори та їхні теми
-  items: 10+
 - type: essay-response
   focus: Чому Шевченко став національним символом?
   word_target: 300
   output: Аргументований есей
-- type: group-sort
-  focus: Періоди творчості
-  items: 12+
-- type: fill-in
-  focus: Ключові дати та події
-  items: 10+
 focus: biography
 prerequisites:
 - b2-hist-national-awakening
@@ -108,3 +96,7 @@ sources:
   notes: Архівні матеріали та експозиції
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of тарас шевченко: національний пророк'
+- Evaluate the contributions of більше ніж поет
+- Trace the career and influence of шевченко в деколонізаційному дискурсі

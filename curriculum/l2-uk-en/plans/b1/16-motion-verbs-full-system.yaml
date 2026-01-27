@@ -6,30 +6,26 @@ title: 'Дієслова руху: повна система'
 subtitle: Motion Verbs - The Full System
 content_outline:
 - section: Вступ
-  words: 200
+  words: 360
   points:
-  - Content for Вступ
-  - Examples and explanation
-  - Practice or application
+  - Introduction to motion verb system
+  - Overview of unidirectional vs multidirectional
 - section: Пояснення
-  words: 350
+  words: 625
   points:
-  - Content for Пояснення
-  - Examples and explanation
-  - Practice or application
+  - 14 motion verb pairs explained
+  - Usage patterns
 - section: Практика
-  words: 900
+  words: 1599
   points:
-  - Content for Практика
-  - Examples and explanation
-  - Practice or application
+  - Decision-making exercises
+  - Context selection
 - section: Діалоги
-  words: 400
+  words: 416
   points:
-  - Content for Діалоги
-  - Examples and explanation
-  - Practice or application
-word_target: 1500
+  - Motion verbs in conversation
+  - Natural usage
+word_target: 3000
 vocabulary_hints:
   required:
   - односпрямований (unidirectional)

@@ -69,22 +69,10 @@ activity_hints:
   focus: Excerpts from "Думка і мова"
   source: Original texts (adapted)
   items: 3 passages
-- type: quiz
-  focus: Potebnya's biography and key concepts
-  items: 12+
-- type: match-up
-  focus: Linguistic terms and their definitions
-  items: 12+
 - type: essay-response
   focus: How did Potebnya defend Ukrainian language rights?
   word_target: 300
   output: Analysis of his linguistic arguments
-- type: group-sort
-  focus: Potebnya's ideas vs. other linguistic schools
-  items: 10+
-- type: fill-in
-  focus: Key quotes from his works
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-30 (Borys Hrinchenko - lexicographer)
@@ -114,3 +102,7 @@ sources:
   notes: His seminal work
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of олександр потебня: філософ мови'
+- Evaluate the contributions of український гумбольдт
+- Trace the career and influence of спадщина та визнання

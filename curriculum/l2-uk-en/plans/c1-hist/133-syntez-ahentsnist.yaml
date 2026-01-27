@@ -5,47 +5,47 @@ version: '2.0'
 title: 'Синтез: Від жертви до суб''єкта'
 content_outline:
 - section: Вступ — Наратив агентності
-  words: 451
+  words: 515
   points:
   - Огляд модулів 126-132
   - Україна — не лише жертва
   - Активне творення історії
   - Мета синтезу
 - section: Стратегії виживання
-  words: 677
+  words: 774
   points:
   - Культурна резистенція
   - Громадянське суспільство
   - Революційна традиція
   - Накопичення досвіду
 - section: Поворотні моменти агентності
-  words: 790
+  words: 903
   points:
   - Гранітна революція 1990
   - Помаранчева 2004
   - Євромайдан 2014
   - 24 лютого 2022
 - section: Хто будував Україну
-  words: 677
+  words: 774
   points:
   - Не лише еліти
   - Жінки — прихована історія
   - Волонтери — нова сила
   - Звичайні люди — герої
 - section: Від об'єкта до суб'єкта
-  words: 564
+  words: 645
   points:
   - Імперська історія — Україна як об'єкт
   - Власна історія — Україна як суб'єкт
   - 2022 — точка переходу
   - Що це означає
 - section: Підсумок
-  words: 341
+  words: 389
   points:
   - Агентність — ключ до розуміння
   - Україна — творець власної долі
   - Перехід до фінального синтезу
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - синтез (synthesis)
@@ -68,15 +68,12 @@ activity_hints:
 - type: essay-response
   focus: Map Ukrainian agency across 500 years
   output: Agency evolution map
-- type: turning-points
+- type: critical-analysis
   focus: Connect all turning points of agency
   output: Turning point synthesis
-- type: actors-analysis
+- type: critical-analysis
   focus: Who built Ukraine — beyond elites
   output: Actor identification
-- type: transformation-analysis
-  focus: From object to subject — what changed
-  output: Transformation analysis
 - type: essay-response
   focus: Як Україна стала суб'єктом історії?
   word_target: 500
@@ -99,3 +96,6 @@ sources:
   notes: National identity
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of синтез: від жертви до суб''єкта'
+- Evaluate the historical significance of наратив агентності

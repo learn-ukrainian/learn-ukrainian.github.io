@@ -19,7 +19,7 @@ The section on "Future in Song" connects grammar to Ukrainian optimism.
 
 **1. Accuracy of Examples:** 10/10
 All examples are correct.
-_Fixed:_ Replaced incorrect "Present Tense" translations in the Practice section with actual Future Tense sentences.
+*Fixed:* Replaced incorrect "Present Tense" translations in the Practice section with actual Future Tense sentences.
 
 **2. Relevance of Scenarios:** 10/10
 "Planning the Weekend" and "New Year Resolutions" cover short-term and long-term future.

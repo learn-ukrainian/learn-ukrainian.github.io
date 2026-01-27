@@ -5,40 +5,40 @@ version: '2.0'
 title: 'Йов Борецький: Захисник православ''я'
 content_outline:
 - section: Вступ — Відновлення православної ієрархії
-  words: 450
+  words: 414
   points:
   - Значення 1620 року для православ'я
   - Роль Йова Борецького в церковному відродженні
   - Контекст релігійної боротьби
 - section: Життєпис
-  words: 1500
+  words: 1379
   points:
   - Молодість та освіта
   - Освітня діяльність та ректорство
   - Львівський та Київський періоди
 - section: Берестейська унія та її наслідки
-  words: 700
+  words: 644
   points:
   - Суть унії 1596 року
   - Ліквідація православної ієрархії
   - Правовий статус православних
   - Братства як осередки опору
 - section: Відновлення ієрархії 1620 року
-  words: 800
+  words: 736
   points:
   - Прибуття патріарха Феофана
   - Висвячення єпископів та митрополита
   - Йов як Митрополит Київський
   - Реакція польської влади
 - section: Митрополитство та спадщина
-  words: 600
+  words: 552
   points:
   - Керівництво церквою в умовах переслідувань
   - Полемічна література
   - Смерть та канонізація
   - Вплив на подальший церковний розвиток
 - section: Підсумок — Віра як опір
-  words: 300
+  words: 275
   points:
   - Йов як символ духовного спротиву
   - Зв'язок освіти та релігії
@@ -67,22 +67,10 @@ activity_hints:
   focus: Excerpts from Orthodox polemical literature
   source: 17th century texts (adapted)
   items: 3 passages
-- type: quiz
-  focus: Facts about the religious struggle of the 17th century
-  items: 12+
-- type: match-up
-  focus: Key figures in Orthodox revival and their roles
-  items: 10+
 - type: essay-response
   focus: Why was restoring the hierarchy so important?
   word_target: 250
   output: Historical and spiritual analysis
-- type: group-sort
-  focus: Uniate vs. Orthodox positions
-  items: 12+
-- type: fill-in
-  focus: Ecclesiastical terminology
-  items: 10+
 focus: biography
 pedagogy: CBI
 prerequisites:

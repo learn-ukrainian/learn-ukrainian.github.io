@@ -276,6 +276,7 @@ Analyze these words by breaking them into parts:
 > All from root **ход-** (walk), but prefix changes meaning completely!
 
 # Підсумок
+
 | Skill | Key Pattern | Example |
 |-------|-------------|---------|
 | Prefixes | Change verb meaning | при-/ви-/пере- + йти |

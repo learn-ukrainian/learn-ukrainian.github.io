@@ -557,18 +557,21 @@ See #468 for migration details. Summary:
 ## Related Documents
 
 ### This Document Covers
+
 - Plan/Build/Status separation
 - File formats for plans and status cache
 - Agent rules for plan consumption
 - Workflow for creating modules from plans
 
 ### For Operational Details, See
+
 - **`docs/ARCHITECTURE.md`** - Full system architecture (generators, components, validation)
 - **`docs/SCRIPTS.md`** - Script reference (audit, generate, vocab)
 - **`docs/MARKDOWN-FORMAT.md`** - Markdown syntax specification
 - **`docs/ACTIVITY-YAML-REFERENCE.md`** - Activity format reference
 
 ### GitHub Issues
+
 - [Epic #465: Plan-Build-Status System](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/465)
 - [M1: Design Plan Schema #466](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/466)
 - [JSON Schemas](../schemas/)

@@ -5,21 +5,21 @@ version: '2.0'
 title: 'Третя хвиля: ДіПі (1945-1950)'
 content_outline:
 - section: Вступ — Хто такі ДіПі?
-  words: 400
+  words: 457
   points:
   - Displaced Persons — визначення
   - Масштаби — мільйони людей
   - Хто серед українців
   - Структура модуля
 - section: Як опинилися на Заході
-  words: 600
+  words: 686
   points:
   - Остарбайтери — примусові робітники
   - Біженці 1944 — хто тікав
   - Вояки — дивізія, УПА
   - Політична еміграція
 - section: Табори ДіПі
-  words: 700
+  words: 800
   points:
   - Німеччина — основний регіон
   - Австрія — менша кількість
@@ -27,33 +27,33 @@ content_outline:
   - Культурне життя — школи, театри, преса
   - «Маленька Україна» в таборах
 - section: Загроза репатріації
-  words: 600
+  words: 686
   points:
   - Ялтинські угоди — примусова репатріація
   - Операція «Кіл Хаул»
   - Як уникали видачі
   - Трагедії — хто не уник
 - section: Еміграція до «третіх країн»
-  words: 500
+  words: 571
   points:
   - США — закон 1948
   - Канада — повоєнна імміграція
   - Австралія — нові громади
   - Південна Америка — продовження
 - section: Спадщина третьої хвилі
-  words: 400
+  words: 457
   points:
   - Інтелектуальний потенціал
   - Інституції — УВАН, НТШ
   - Політична активність
   - Антирадянська діяльність
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - ДіПі — найосвіченіша хвиля
   - Збереження культури
   - Вплив на незалежність 1991
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - переміщена особа (displaced person)
@@ -114,3 +114,6 @@ sources:
   notes: Ukrainian DPs specifically
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of третя хвиля: діпі (1945-1950)'
+- Evaluate the historical significance of хто такі діпі?

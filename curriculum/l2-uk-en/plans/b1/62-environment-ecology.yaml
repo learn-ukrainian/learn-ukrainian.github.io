@@ -5,42 +5,23 @@ version: '2.0'
 title: Довкілля та екологія
 subtitle: Environment & Ecology
 content_outline:
-- section: 'Introduction: Environmental Vocabulary'
-  words: 150
+- section: Вступ
+  words: 329
   points:
   - Why ecology matters in Ukraine
   - Core environmental concepts
   - Vocabulary overview
-- section: Nature and Environment
-  words: 250
+- section: Читання
+  words: 1207
   points:
-  - довкілля, природа, екосистема
-  - клімат, атмосфера, біосфера
-  - Basic environmental terms
-- section: Environmental Problems
-  words: 250
-  points:
-  - забруднення, викиди, відходи
-  - глобальне потепління, зміна клімату
-  - Problem vocabulary
-- section: Conservation and Solutions
-  words: 250
-  points:
-  - захист, збереження, переробка
-  - відновлювана енергія
-  - Solution vocabulary
-- section: Environmental Actions
-  words: 200
-  points:
-  - забруднювати, захищати, переробляти
-  - зберігати, відновлювати
-  - Environmental verbs
-- section: 'Practice: Environmental Discussion'
-  words: 100
+  - Environmental texts
+  - Ecological challenges in Ukraine
+- section: Діалоги
+  words: 1464
   points:
   - Discuss ecological issues
   - Propose solutions
-word_target: 1200
+word_target: 3000
 vocabulary_hints:
   required:
   - довкілля (environment)
@@ -57,16 +38,16 @@ vocabulary_hints:
   - відновлювана енергія (renewable energy)
   - екосистема (ecosystem)
 activity_hints:
-- type: collocation
+- type: match-up
   focus: Environmental noun phrases
   items: 25
 - type: fill-in
   focus: Describe environmental issues
   items: 20
-- type: matching
+- type: match-up
   focus: Match problems and solutions
   items: 15
-- type: discussion
+- type: quiz
   focus: Discuss ecological topics
   items: 10
 focus: vocabulary

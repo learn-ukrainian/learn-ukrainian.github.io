@@ -8,7 +8,6 @@
 
 > **Note:** Regular history modules (M71-82, M84-107, etc.) use `b2-history-module-template.md` instead.
 
-
 <!--
 TEMPLATE_METADATA:
   required_sections:
@@ -61,6 +60,7 @@ Synthesis modules **culminate** each historical era with thematic analysis rathe
 Before submitting a B2 synthesis module, verify:
 
 ### Synthesis-Specific Requirements
+
 - [ ] **CBI pedagogy:** Content-Based Instruction with Thematic Analysis
 - [ ] **Era overview:** 500+ word synthesis text connecting ALL modules in era
 - [ ] **Chronology activity:** Timeline reconstruction (12+ events)
@@ -71,7 +71,6 @@ Before submitting a B2 synthesis module, verify:
 - [ ] **Immersion:** 100% Ukrainian (English only in vocabulary translations)
 - [ ] **Word count:** 3000+ words total
 - [ ] **Activities:** 10-12 activities (fewer than regular modules, more analytical)
-
 
 ---
 
@@ -259,11 +258,13 @@ vocabulary_count: 30  # Must match count in vocabulary/{slug}.yaml
 **CRITICAL: DO NOT include an `## Есе` section in the markdown file.** This section is defined exclusively in `activities/{slug}.yaml` as an `essay-response` activity.
 
 #### Essay Requirements (for YAML `model_answer`):
+
 1. **Word Count:** 300-400 words.
 2. **Structure:** Thesis → 2 Arguments with historical evidence → Conclusion with modern connection.
 3. **Perspective:** Must maintain a decolonization lens.
 
 #### Useful Argumentation Phrases (Use in YAML `model_answer`):
+
 | Function | Expressions |
 |---------|--------|
 | Thesis | На мою думку... / Я вважаю, що... / Очевидно, що... |

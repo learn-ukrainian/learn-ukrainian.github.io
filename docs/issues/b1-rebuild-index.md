@@ -21,6 +21,7 @@
 ## Documentation Files
 
 ### 1. Quick Summary (Start Here)
+
 **File:** `b1-audit-quick-summary.md`
 
 **Contents:**
@@ -36,6 +37,7 @@
 ---
 
 ### 2. Comprehensive Analysis
+
 **File:** `b1-rebuild-audit-summary.md`
 
 **Contents:**
@@ -54,6 +56,7 @@
 ---
 
 ### 3. Implementation Checklist
+
 **File:** `b1-fix-scripts-needed.md`
 
 **Contents:**
@@ -70,6 +73,7 @@
 ---
 
 ### 4. Full Audit Report (Raw Data)
+
 **File:** `b1-rebuild-audit-report.md` (473KB)
 
 **Contents:**
@@ -117,16 +121,19 @@ M72-91 (Cultural/Integration)       [ 0/20] ❌❌❌❌❌ 0%
 ## Recommended Reading Order
 
 ### For Decision Makers
+
 1. **Quick Summary** (`b1-audit-quick-summary.md`)
 2. **Implementation Checklist** (timeline section only)
 3. **Comprehensive Analysis** (executive summary + recommendations)
 
 ### For Implementers
+
 1. **Implementation Checklist** (`b1-fix-scripts-needed.md`) - Full read
 2. **Comprehensive Analysis** (`b1-rebuild-audit-summary.md`) - Error patterns section
 3. **Full Audit Report** (`b1-rebuild-audit-report.md`) - As needed for debugging
 
 ### For Reviewers/QA
+
 1. **Quick Summary** (error categories + examples)
 2. **Full Audit Report** (specific modules being tested)
 
@@ -135,16 +142,19 @@ M72-91 (Cultural/Integration)       [ 0/20] ❌❌❌❌❌ 0%
 ## Next Steps
 
 ### Immediate (This Week)
+
 1. **Review documentation** → Confirm fix strategy
 2. **Prioritize scripts** → Decide implementation order
 3. **Set up testing** → Sample modules for validation
 
 ### Short-term (Week 1-2)
+
 4. **Implement P1 scripts** → YAML schema, missing sections, word count
 5. **Test on M11-15** → Validate fixes work correctly
 6. **Batch apply to B1** → Run fixes on all 81 modules
 
 ### Long-term (Week 3)
+
 7. **Implement P2-P3 scripts** → Activity quality, cleanup
 8. **Re-audit all B1** → Validate 95%+ pass rate
 9. **Run pipeline** → Generate MDX and validate HTML

@@ -1,10 +1,12 @@
 # Audit Report: M79 — krypatsvo-selo.md
+
 **Level:** B2 | **Module:** M79 | **Phase:** HIST.8 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:55:01
 
 ## Configuration
+
 **Type:** B2-history
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Указ Катерини II про закріпачення селян (1783) | 2 | 1 | ✅ |
@@ -35,6 +38,7 @@
 - Low density activities: 0
 
 ## Gates
+
 - **Words:** ✅ 4144/4000 (raw: 4383)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
@@ -53,10 +57,12 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 12 | 3 | 100% | 24% | 23.8% |
@@ -71,6 +77,7 @@
 | **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 113 | Included in Core |

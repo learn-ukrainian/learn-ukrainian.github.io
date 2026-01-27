@@ -69,22 +69,10 @@ activity_hints:
   focus: Фрагменти роману НепрОсті
   source: Художній текст
   items: 3 passages
-- type: quiz
-  focus: Факти про Станіславівський феномен
-  items: 12+
-- type: match-up
-  focus: Літературні терміни та визначення
-  items: 10+
 - type: essay-response
   focus: Як місце формує письменника?
   word_target: 300
   output: Аналітичний есей
-- type: group-sort
-  focus: Теми у творчості Прохаська
-  items: 12+
-- type: fill-in
-  focus: Літературознавча термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-82-yuriy-vynnychuk
@@ -108,3 +96,7 @@ sources:
   notes: Аналіз творчості
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of тарас прохасько: станіславівський феномен'
+- Evaluate the contributions of письменник як ботанік і філософ
+- Trace the career and influence of література як спосіб бачити світ

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M01 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:54:09
+**Generated:** 2026-01-27 15:46:00
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** critical-analysis, essay-response, fill-in, match-up, quiz, reading
+**Required Types:** comparative-study, critical-analysis, essay-response, reading, true-false
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -21,36 +21,31 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Аналіз первинного джерела: звіт Вікентія Хвойки | 4 | 1 | ✅ |
-| 2 | quiz | Перевірка розуміння: Трипільська цивілізація | 15 | 8 | ✅ |
-| 3 | fill-in | Заповніть пропуски: археологічна термінологія | 14 | 8 | ✅ |
-| 4 | match-up | Співставте терміни з визначеннями | 12 | 8 | ✅ |
-| 5 | true-false | Правда чи міф? | 10 | 8 | ✅ |
-| 6 | quiz | Хронологія та порівняння цивілізацій | 8 | 8 | ✅ |
-| 7 | quiz | Географія трипільських поселень | 8 | 8 | ✅ |
-| 8 | essay-response | Есе: Трипільці та сучасні українці | 1 | 1 | ✅ |
-| 9 | critical-analysis | Аналіз: Символіка трипільської кераміки | 1 | 1 | ✅ |
-| 10 | comparative-study | Порівняння цивілізацій: Трипілля vs Месопотамія | 1 | 1 | ✅ |
+| 2 | true-false | Правда чи міф? | 10 | 8 | ✅ |
+| 3 | essay-response | Есе: Трипільці та сучасні українці | 1 | 1 | ✅ |
+| 4 | critical-analysis | Аналіз: Символіка трипільської кераміки | 1 | 1 | ✅ |
+| 5 | comparative-study | Порівняння цивілізацій: Трипілля vs Месопотамія | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 10 (target: 3-9) ❌
-- Unique types: 8 (minimum: 2) ✅
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 6/6 (critical-analysis, essay-response, fill-in, match-up, quiz, reading) ✅
+- Required types used: 5/5 (comparative-study, critical-analysis, essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ✅ 6403/4000 (raw: 6491)
-- **Activities:** ✅ 10/3
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 8/2 types
+- **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 325/20
+- **Vocab:** ✅ 324/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ Too many activities: 10 (target 3-9)
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

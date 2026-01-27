@@ -1,10 +1,12 @@
 # Audit Report: M86 — syntez-imperska-doba.md
+
 **Level:** B2 | **Module:** M86 | **Phase:** HIST.8 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:55:06
 
 ## Configuration
+
 **Type:** B2-history
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[HEADING_LEVEL]** Main section 'Підсумок' uses H2 (##) but spec requires H1 (#)
   - FIX: Change '## Підсумок' to '# Підсумок' for top-level TOC compliance
 - **[YAML_SCHEMA_VIOLATION]** Schema error in syntez-imperska-doba.yaml: Insufficient activities: 1 found, minimum 5 required for B2-HIST
@@ -30,6 +33,7 @@
   - FIX: Add more Ukrainian content to reach 90.0%+ immersion
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Читання' per template 'b2-history-module-template.md'
   - FIX: Add '## Читання' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md.md
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Деколонізаційний погляд' per template 'b2-history-module-template.md'
@@ -42,6 +46,7 @@
   - FIX: Add a `> [!quote]` box as specified in the template. This enhances module quality.
 
 ## Recommendation
+
 **🔄 REWRITE** (severity 100/100)
 
 - 10 violations (significant)
@@ -51,6 +56,7 @@
 - Activity density below minimum
 
 ## Gates
+
 - **Words:** ❌ 26/4000 (raw: 99)
 - **Activities:** ❌ 0/3
 - **Density:** ❌ 0 < 1
@@ -69,10 +75,12 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
+
 **Score:** 13% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 0 | 3 | 0% | 24% | 0.0% |
@@ -87,25 +95,26 @@
 | **TOTAL** | | | | | **13.3%** |
 
 ### Dryness Flags & Fixes
+
 - ❌ **NO_ENGAGEMENT**
   - FIX:
     Add 2+ engagement boxes. Use this exact format:
-    
+
     > 💡 **Чи знали ви?**
     >
     > [Interesting fact about the grammar/vocabulary topic in Ukrainian]
-    
+
     > 🇺🇦 **Культурний момент**
     >
     > [Cultural context connecting grammar to Ukrainian life/places]
-    
+
     > 🌍 **У реальному житті**
     >
     > [Practical scenario where this grammar is used]
 - ❌ **NO_PRIMARY_SOURCES**
   - FIX:
     Add 2+ primary source quotes. Use this format:
-    
+
     > «[Exact quote from historical document]»
     > — *[Source name], [year]*
 - ❌ **NO_TIMELINE**
@@ -113,6 +122,7 @@
     Add 5+ timeline markers: specific years (1876, 1918), periods (XVIII ст.), sequences (спочатку... потім... нарешті).
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 14 | Included in Core |

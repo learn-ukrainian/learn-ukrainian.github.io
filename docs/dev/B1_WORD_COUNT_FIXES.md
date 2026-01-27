@@ -33,6 +33,7 @@
 ## Process for Each Module
 
 ### 1. Find Module File
+
 ```bash
 # Example for M44
 fd "^44-" curriculum/l2-uk-en/b1/
@@ -40,6 +41,7 @@ fd "^44-" curriculum/l2-uk-en/b1/
 ```
 
 ### 2. Read Module
+
 Use Read tool to understand:
 - Module topic and focus
 - Existing content structure
@@ -104,6 +106,7 @@ npm run pipeline l2-uk-en b1 44
 ## Rules & Constraints
 
 ### ✅ DO
+
 - Add natural narrative expansion
 - Enrich examples and explanations
 - Add cultural context and real-world connections
@@ -111,6 +114,7 @@ npm run pipeline l2-uk-en b1 44
 - Maintain 100% Ukrainian in body text
 
 ### ❌ DO NOT
+
 - Change vocabulary (must match curriculum plan)
 - Modify grammar explanations (must stay accurate)
 - Change activities (separate YAML files)
@@ -153,6 +157,7 @@ For each module:
 When complete, report:
 
 1. **Summary table:**
+
    | Module | Words Added | Final Count | Audit | Pipeline |
    |--------|-------------|-------------|-------|----------|
    | M44 | +26 | 1500 | ✅ | ✅ |

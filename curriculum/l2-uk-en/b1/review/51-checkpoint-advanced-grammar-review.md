@@ -14,7 +14,7 @@
 | Relevance           | 10/10 | Tests specifically the "formal vs informal" distinction bred in M42-50. |
 | Educational         | 10/10 | Concept Tables (Participles/Passive) are crystal clear.                 |
 | Language            | 10/10 | Natural Ukrainian.                                                      |
-| Pedagogy            | 10/10 | Strong focus on _register_ (Formal News vs Diminutives).                |
+| Pedagogy            | 10/10 | Strong focus on *register* (Formal News vs Diminutives).                |
 | Immersion           | 10/10 | The art exhibition scenario weaves all B1.4 topics together seamlessly. |
 | Activities          | 10/10 | High variety and volume (30+ items).                                    |
 | Richness            | 10/10 | Practice section uses a narrative approach.                             |
@@ -29,7 +29,7 @@
 ## Strengths
 
 - **Register Contrast:** The module masterfully tests the learner's ability to switch between "official" (participles/passive) and "private" (diminutives) registers, which is the core goal of B1.4.
-- **Narrative Practice:** The art exhibition story allows learners to use _all_ the new tools in a single context: reading the _written_ catalogue (passive) and speaking to the _human_ seller (diminutives).
+- **Narrative Practice:** The art exhibition story allows learners to use *all* the new tools in a single context: reading the *written* catalogue (passive) and speaking to the *human* seller (diminutives).
 
 ## Issues
 

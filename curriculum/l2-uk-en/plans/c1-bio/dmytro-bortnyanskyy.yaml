@@ -76,22 +76,10 @@ activity_hints:
   focus: Historical descriptions of Bortnyanskyy's work
   source: Adapted historical sources
   items: 3 passages
-- type: quiz
-  focus: Facts about Bortnyanskyy's life and career
-  items: 12+
-- type: match-up
-  focus: Works and their characteristics
-  items: 10+
 - type: essay-response
   focus: Is Bortnyanskyy Ukrainian or Russian?
   word_target: 300
   output: Analysis of cultural identity debates
-- type: group-sort
-  focus: Ukrainian heritage vs. Imperial career
-  items: 12+
-- type: fill-in
-  focus: Musical and institutional terminology
-  items: 8+
 - type: critical-analysis
   focus: How did empire appropriate Ukrainian talent?
   output: Decolonial perspective
@@ -119,3 +107,6 @@ sources:
   notes: Early education
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of дмитро бортнянський: придворний маестро'
+- Evaluate the contributions of між україною та імперією

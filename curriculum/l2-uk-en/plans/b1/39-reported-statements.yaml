@@ -5,42 +5,30 @@ version: '2.0'
 title: 'Непряма мова: твердження'
 subtitle: Reported Statements
 content_outline:
-- section: 'Introduction: Reported Speech'
-  words: 150
+- section: Тест
+  words: 420
+  points:
+  - Diagnostic quiz on reported speech
+  - Self-assessment questions
+- section: Пояснення
+  words: 1789
   points:
   - Direct vs indirect speech
-  - When to use reported speech
-  - Basic structure
-- section: Basic Reported Statements
-  words: 250
-  points:
-  - Він сказав, що...
-  - Вона думає, що...
-  - що as speech introducer
-- section: Tense Changes
-  words: 250
-  points:
-  - Present → past in subordinate
-  - Future → conditional
-  - Exceptions and variations
-- section: Pronoun and Reference Changes
-  words: 250
-  points:
-  - я → він/вона
-  - тут → там
-  - сьогодні → того дня
-- section: Reporting Verbs
-  words: 200
-  points:
-  - сказати, розповісти
-  - стверджувати, пояснювати
-  - Nuances of meaning
-- section: 'Practice: Reporting Statements'
-  words: 100
+  - Basic Reported Statements (Він сказав, що...)
+  - Tense Changes
+  - Pronoun and Reference Changes
+  - Reporting Verbs (сказати, розповісти, стверджувати)
+- section: Практика
+  words: 326
   points:
   - Transform direct to indirect
   - Use various reporting verbs
-word_target: 1200
+- section: Діалоги
+  words: 465
+  points:
+  - Reported speech in conversation
+  - Storytelling scenarios
+word_target: 3000
 vocabulary_hints:
   required:
   - непряма мова (indirect speech)
@@ -57,7 +45,7 @@ vocabulary_hints:
   - зазначити (to note)
   - підтвердити (to confirm)
 activity_hints:
-- type: transformation
+- type: cloze
   focus: Direct to indirect conversion
   items: 25
 - type: fill-in
@@ -66,7 +54,7 @@ activity_hints:
 - type: error-correction
   focus: Fix reported speech errors
   items: 15
-- type: writing
+- type: cloze
   focus: Write reported paragraphs
   items: 10
 focus: grammar

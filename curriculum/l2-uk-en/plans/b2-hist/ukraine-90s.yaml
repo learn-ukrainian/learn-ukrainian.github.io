@@ -67,12 +67,6 @@ activity_hints:
   focus: Журналістські розслідування 1990-х
   source: Медіа-архіви
   items: 4
-- type: quiz
-  focus: Україна в 1990-х роках
-  items: 15
-- type: match-up
-  focus: Олігарх → сфера впливу
-  items: 10
 - type: true-false
   focus: Факти про 1990-ті
   items: 10

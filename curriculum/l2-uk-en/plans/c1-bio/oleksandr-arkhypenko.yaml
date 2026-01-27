@@ -69,22 +69,10 @@ activity_hints:
   focus: Мистецька біографія
   source: Уривки з теоретичних праць та каталогів
   items: 3 passages
-- type: quiz
-  focus: Етапи творчості та інновації
-  items: 12+
-- type: match-up
-  focus: Роботи та періоди творчості
-  items: 10+
 - type: essay-response
   focus: Як порожнеча може бути елементом скульптури?
   word_target: 300
   output: Мистецтвознавче есе
-- type: group-sort
-  focus: Європейський період vs американський період
-  items: 12+
-- type: fill-in
-  focus: Термінологія скульптури та авангарду
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-45 (Казимир Малевич)
@@ -108,3 +96,7 @@ sources:
   notes: Роботи в колекції Музею сучасного мистецтва
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of олександр архипенко: скульптор авангарду'
+- Evaluate the contributions of революціонер у скульптурі
+- Trace the career and influence of спадщина та вплив

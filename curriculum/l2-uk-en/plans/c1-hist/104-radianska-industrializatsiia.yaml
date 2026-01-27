@@ -5,53 +5,53 @@ version: '2.0'
 title: 'Радянська індустріалізація: Хто платив?'
 content_outline:
 - section: Вступ — Для кого будували
-  words: 400
+  words: 457
   points:
   - 1930-ті — індустріалізація
   - Донбас, Дніпро — центри
   - Хто отримав користь
   - Структура модуля
 - section: П'ятирічки в Україні
-  words: 600
+  words: 686
   points:
   - Дніпрогес
   - Металургійні гіганти
   - Шахти Донбасу
   - Масштаби будівництва
 - section: Ціна — Голодомор
-  words: 700
+  words: 800
   points:
   - Зв'язок колективізації та індустріалізації
   - Хліб на експорт → валюта → машини
   - Селяни платять життям
   - Економіка геноциду
 - section: Потоки ресурсів
-  words: 600
+  words: 686
   points:
   - Що виробляли
   - Куди йшло
   - Центральне планування — Москва
   - Україна — цех, не власник
 - section: Робоча сила
-  words: 500
+  words: 571
   points:
   - Примусова міграція
   - ГУЛАГ — безкоштовна праця
   - Депортовані народи
   - Імпортовані робітники
 - section: Після війни
-  words: 400
+  words: 457
   points:
   - Відбудова — ким і для кого
   - Ресурси знову з України
   - Модель не змінилась
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Індустріалізація — за рахунок України
   - Прибутки — до центру
   - Перехід до Голодомору як зброї
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - індустріалізація (industrialization)
@@ -71,13 +71,13 @@ vocabulary_hints:
   - союзний бюджет (union budget)
   - «п'ятирічку — за чотири роки» (five-year plan in four years)
 activity_hints:
-- type: resource-flow
+- type: critical-analysis
   focus: Map where Ukrainian industrial output went
   output: Resource flow diagram
-- type: cost-benefit
+- type: critical-analysis
   focus: Who paid, who benefited from industrialization
   output: Cost-benefit analysis
-- type: holodomor-connection
+- type: critical-analysis
   focus: Economic link between Holodomor and industrialization
   output: Causal connection
 - type: comparative-study
@@ -110,3 +110,6 @@ sources:
   notes: Collectivization context
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of радянська індустріалізація: хто платив?'
+- Evaluate the historical significance of для кого будували

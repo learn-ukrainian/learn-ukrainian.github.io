@@ -12,10 +12,10 @@
 | ------------------- | ----- | ------------------------------------------------------------------------------- |
 | Coherence           | 10/10 | Logical flow (Friendship -> Love -> Marriage -> Conflict).                      |
 | Relevance           | 10/10 | Universal topic.                                                                |
-| Educational         | 10/10 | Good distinction between _дружина_ (wife) and _жінка_ (woman/wife - informal).  |
+| Educational         | 10/10 | Good distinction between *дружина* (wife) and *жінка* (woman/wife - informal).  |
 | Language            | 10/10 | Modern dating vocabulary.                                                       |
-| Pedagogy            | 10/10 | Using a Traditional Ukrainian Wedding (_Весілля_) is the perfect cultural hook. |
-| Immersion           | 10/10 | Teaches specific traditions: _коровай_, _вінчання_, _рушник_.                   |
+| Pedagogy            | 10/10 | Using a Traditional Ukrainian Wedding (*Весілля*) is the perfect cultural hook. |
+| Immersion           | 10/10 | Teaches specific traditions: *коровай*, *вінчання*, *рушник*.                   |
 | Activities          | 10/10 | Good variety.                                                                   |
 | Richness            | 9/10  | Good depth.                                                                     |
 | Humanity            | 9/10  | Engaging.                                                                       |
@@ -25,13 +25,13 @@
 ## Linguistic Accuracy Issues
 
 - **Vocabulary:** `болячий` (in list). Standard is `болючий` (painful). `Болячий` sounds dialectal or archaic.
-  - _Action:_ Change to `болючий`.
+  - *Action:* Change to `болючий`.
 - **Vocabulary:** `РАЦС` (Civil Registry) is lowercased `рацс`. Should be capitalized.
 
 ## Strengths
 
 - **Cultural Trademarks:** The "Pumpkin" (`дати гарбуза` - to reject a proposal) is a classic Ukrainian cultural meme that every learner loves.
-- **Stages of Life:** Covers the full lifecycle of a relationship, including _breaks_ and _reconciliation_, not just the "happy ending".
+- **Stages of Life:** Covers the full lifecycle of a relationship, including *breaks* and *reconciliation*, not just the "happy ending".
 
 ## Issues
 

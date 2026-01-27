@@ -5,12 +5,12 @@ version: '2.0'
 title: 'Синоніми: Емоції та почуття'
 content_outline:
 - section: Вступ — Емоції та почуття
-  words: 400
+  words: 471
   points:
   - Визначення та сфери застосування
   - Зв'язок із попередніми модулями
 - section: Joy
-  words: 500
+  words: 588
   points:
   - радість (joy - general)
   - щастя (happiness - deeper)
@@ -18,7 +18,7 @@ content_outline:
   - втіха (delight - often from children)
   - насолода (pleasure - sensory)
 - section: Sadness
-  words: 500
+  words: 588
   points:
   - сум (sadness - general)
   - журба (melancholy - poetic)
@@ -26,7 +26,7 @@ content_outline:
   - горе (grief - intense)
   - туга (longing - nostalgic)
 - section: Практика та підсумок
-  words: 300
+  words: 353
   points:
   - Практичні вправи на закріплення
   - Інтеграція з попередніми модулями

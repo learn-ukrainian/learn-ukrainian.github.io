@@ -5,42 +5,33 @@ version: '2.0'
 title: 'Пасивні дієприкметники: коротка форма'
 subtitle: Past Passive Participles II - Short Forms (-но/-то)
 content_outline:
-- section: 'Introduction: Short Passive Forms'
-  words: 150
+- section: Тест
+  words: 192
   points:
   - What are short forms
   - Impersonal passive meaning
-  - No gender/number agreement
-- section: 'Formation: -но/-то Suffixes'
-  words: 250
+- section: Пояснення
+  words: 866
   points:
-  - написано, зроблено, прочитано
-  - вибито, відкрито, закрито
-  - Same stem as full form
-- section: Impersonal Passive Constructions
-  words: 250
-  points:
-  - Листа написано (The letter has been written)
-  - Agent in instrumental (ким?)
-  - Object in accusative or nominative
-- section: Full vs Short Form
-  words: 250
-  points:
-  - Лист написаний vs Листа написано
-  - Stylistic differences
-  - Focus and emphasis
-- section: Common Short Form Expressions
-  words: 200
-  points:
-  - Заборонено (forbidden)
-  - Дозволено (permitted)
-  - Signs and announcements
-- section: 'Practice: Short Passive Forms'
-  words: 100
+  - Formation -но/-то suffixes
+  - Impersonal passive constructions
+  - Full vs short form
+- section: Практика
+  words: 327
   points:
   - Transform full to short
   - Create impersonal sentences
-word_target: 1200
+- section: Діалоги
+  words: 1418
+  points:
+  - Common short form expressions
+  - Signs and announcements
+  - Real-world usage
+- section: Потрібно більше практики?
+  words: 197
+  points:
+  - Additional exercises
+word_target: 3000
 vocabulary_hints:
   required:
   - коротка форма (short form)
@@ -57,16 +48,16 @@ vocabulary_hints:
   - агент (agent)
   - оголошення (announcement)
 activity_hints:
-- type: transformation
+- type: cloze
   focus: Full to short form
   items: 25
 - type: fill-in
   focus: Complete impersonal sentences
   items: 20
-- type: multiple-choice
+- type: quiz
   focus: Choose full or short form
   items: 15
-- type: translation
+- type: translate
   focus: English to Ukrainian passive
   items: 10
 focus: grammar

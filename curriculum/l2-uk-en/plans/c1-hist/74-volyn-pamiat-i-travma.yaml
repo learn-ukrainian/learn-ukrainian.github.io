@@ -5,21 +5,21 @@ version: '2.0'
 title: 'Волинь: Пам''ять і травма'
 content_outline:
 - section: Вступ — Більше ніж 1943
-  words: 400
+  words: 457
   points:
   - Волинь — не тільки трагедія
   - Століття співіснування
   - Чому потрібен контекст
   - Структура модуля
 - section: Історична Волинь
-  words: 600
+  words: 686
   points:
   - Волинське князівство
   - Під Литвою і Польщею
   - Православна Волинь
   - Етнічний склад
 - section: Міжвоєнний період (1921-1939)
-  words: 700
+  words: 800
   points:
   - Польська влада
   - Пацифікація
@@ -27,7 +27,7 @@ content_outline:
   - Українська відповідь
   - Наростання напруги
 - section: Війна і трагедія (1939-1944)
-  words: 700
+  words: 800
   points:
   - Радянська окупація (1939-1941)
   - Німецька окупація
@@ -35,25 +35,25 @@ content_outline:
   - 1943 — етнічні чистки
   - Жертви обох сторін
 - section: Контекст і причини
-  words: 500
+  words: 571
   points:
   - Не виправдання — пояснення
   - Нацистська окупація
   - Польські репресії — реакція
   - Радикалізація
 - section: Пам'ять і примирення
-  words: 300
+  words: 343
   points:
   - Різні наративи
   - Діалог після 1991
   - 2022 — несподіване примирення
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Волинь — складна історія
   - Пам'ять без спрощення
   - Перехід до синтезу
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - Волинь (Volhynia)
@@ -73,16 +73,16 @@ vocabulary_hints:
   - підпілля (underground)
   - двосторонній (bilateral)
 activity_hints:
-- type: historical-context
+- type: critical-analysis
   focus: Pre-1943 Polish-Ukrainian relations in Volhynia
   output: Contextual analysis
-- type: cause-analysis
+- type: critical-analysis
   focus: Factors leading to 1943 violence
   output: Causal analysis
 - type: critical-analysis
   focus: Polish vs. Ukrainian narratives
   output: Memory comparison
-- type: reconciliation-analysis
+- type: critical-analysis
   focus: Post-1991 dialogue — what worked
   output: Reconciliation study
 - type: essay-response
@@ -113,3 +113,6 @@ sources:
   notes: Bilateral context
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of волинь: пам''ять і травма'
+- Evaluate the historical significance of більше ніж 1943

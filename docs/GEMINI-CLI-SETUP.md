@@ -3,6 +3,7 @@
 This guide outlines the recommended configuration and workflow for using `gemini-cli` within the `learn-ukrainian` project. It ensures consistent behavior, effective context management, and seamless integration with our existing tools.
 
 ## 1. Project Root Initialization
+
 Always run `gemini-cli` from the root of the project repository. This ensures relative paths for configuration, context files, and output directories are resolved correctly.
 
 ```bash
@@ -11,6 +12,7 @@ gemini-cli
 ```
 
 ## 2. Configuration (`.gemini/config.yaml`)
+
 Store project-specific settings in `.gemini/config.yaml`. This file defines how the agent behaves and interacts with the system.
 
 **Key Settings:**
@@ -19,6 +21,7 @@ Store project-specific settings in `.gemini/config.yaml`. This file defines how 
 - **`tools`**: Enable necessary toolsets (File System, Shell, Web Search).
 
 ## 3. Context Management
+
 Define critical context sources to ground the agent in the project's reality. Configure `context_files` in your setup to auto-load these references.
 
 **Essential Context Files:**
@@ -28,18 +31,21 @@ Define critical context sources to ground the agent in the project's reality. Co
 - `package.json` / `pyproject.toml`: Dependency and script awareness.
 
 ## 4. Memory & Persistence
+
 Utilize `.gemini/memory.json` (or `GEMINI.md` as a persistent markdown memory) to maintain state across sessions.
 
 - **Ephemeral Memory**: The agent remembers the current session context automatically.
 - **Long-term Memory**: Use the `save_memory` tool or update `GEMINI.md` manually to persist architectural decisions, completed milestones, or style preferences.
 
 ## 5. Hooks & Validation
+
 Integrate with existing pre-commit hooks to ensure quality *before* finalizing changes.
 
 - **Pre-Commit**: The agent should respect and fix issues flagged by hooks (e.g., `validate-issue-fields.py`).
 - **Validation Scripts**: Regularly invoke scripts like `scripts/validate_content_quality.py` or `scripts/validate_mdx.py` to verify generated content.
 
 ## 6. Workflow Integration
+
 Leverage the "Shared Core" architecture by loading workflows dynamically from `claude_extensions/`.
 
 - **Source of Truth**: `claude_extensions/` contains the prompts and stage definitions.
@@ -47,6 +53,7 @@ Leverage the "Shared Core" architecture by loading workflows dynamically from `c
 - **Do not fork**: Do not create separate `.gemini/workflows/` unless absolutely necessary.
 
 ## 7. CLI Arguments & Execution
+
 Pass specific file paths or module identifiers as arguments to focus the agent's attention.
 
 **Example:**
@@ -56,12 +63,14 @@ gemini-cli "Refactor the vocabulary table in curriculum/l2-uk-en/b1/module-10.md
 ```
 
 ## 8. Output & Logging
+
 Redirect verbose logs to a temporary location to keep the console clean while retaining debug information.
 
 - **Log Path**: `/tmp/gemini.log` (or project temp dir).
 - **Console Output**: Keep interaction concise. Use tools for heavy lifting and provide short summaries to the user.
 
 ## 9. Version Control
+
 Treat the agent as a collaborator.
 
 - **Git Status**: The agent should check `git status` before starting work to avoid overwriting unstaged changes.
@@ -69,6 +78,7 @@ Treat the agent as a collaborator.
 - **Branching**: Always work on feature branches (e.g., `gemini/feature-name`), never directly on `main` or `claude-coder-work` unless instructed.
 
 ## 10. CI/CD Integration
+
 Automate setup in pipelines (e.g., GitHub Actions) for tasks like automated code review or documentation generation.
 
 - **Environment Variables**: specific API keys and configuration paths via environment variables in the CI runner.

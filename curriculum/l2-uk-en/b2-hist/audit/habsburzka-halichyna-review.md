@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M76 | **Phase:** HIST.8 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:54:59
+**Generated:** 2026-01-27 15:51:23
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, match-up, quiz, reading, true-false
+**Required Types:** essay-response, reading, true-false
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -21,34 +21,23 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Статут товариства «Просвіта» (1868) | 3 | 1 | ✅ |
-| 2 | quiz | Розуміння тексту: Австрійська Галичина | 16 | 8 | ✅ |
-| 3 | fill-in | Історична лексика в контексті | 16 | 8 | ✅ |
-| 4 | match-up | Історична лексика: значення | 16 | 8 | ✅ |
-| 5 | error-correction | Граматичні помилки в історичних реченнях | 16 | 6 | ✅ |
-| 6 | true-false | Правда чи міф? | 16 | 8 | ✅ |
-| 7 | cloze | Заповніть пропуски в тексті | 16 | 1 | ✅ |
-| 8 | group-sort | Хронологія подій | 18 | 1 | ✅ |
-| 9 | unjumble | Відновіть порядок слів | 16 | 6 | ✅ |
-| 10 | mark-the-words | Знайдіть пасивні конструкції | 12 | 6 | ✅ |
-| 11 | true-false | Аналіз первинного джерела | 10 | 8 | ✅ |
-| 12 | translate | Переклад історичної лексики | 16 | 6 | ✅ |
-| 13 | quiz | Деколонізаційні питання | 16 | 8 | ✅ |
-| 14 | match-up | Історичні постаті та їх роль | 16 | 8 | ✅ |
-| 15 | essay-response | Есей: Роль Галичини | 1 | 1 | ✅ |
-| 16 | comparative-study | Порівняння імперських політик | 1 | 1 | ✅ |
+| 2 | true-false | Правда чи міф? | 16 | 8 | ✅ |
+| 3 | true-false | Аналіз первинного джерела | 10 | 8 | ✅ |
+| 4 | essay-response | Есей: Роль Галичини | 1 | 1 | ✅ |
+| 5 | comparative-study | Порівняння імперських політик | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 16 (target: 3-9) ❌
-- Unique types: 13 (minimum: 2) ✅
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 4 (minimum: 2) ✅
 - Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
-- Required types used: 5/5 (essay-response, match-up, quiz, reading, true-false) ✅
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ✅ 4047/4000 (raw: 4188)
-- **Activities:** ✅ 16/3
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 13/2 types
+- **Unique_types:** ✅ 4/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 14/5
 - **Audio:** ℹ️ No audio
@@ -56,7 +45,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ Too many activities: 16 (target 3-9)
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 98.2% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

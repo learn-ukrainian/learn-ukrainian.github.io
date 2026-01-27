@@ -2,13 +2,13 @@
   "module": "ivan-sirko",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:54:49.609152Z",
+  "last_audit": "2026-01-27T20:42:50.847947Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-24T16:33:43.271497Z",
+    "md": "2026-01-27T15:24:10.346899Z",
     "meta": "2026-01-26T22:20:13.131674Z",
-    "activities": "2026-01-24T16:25:43.200574Z",
-    "vocabulary": "2026-01-24T16:18:51.407902Z",
+    "activities": "2026-01-27T20:41:14.670005Z",
+    "vocabulary": "2026-01-27T11:59:24.794592Z",
     "plan": null
   },
   "gates": {
@@ -25,7 +25,7 @@
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "6/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "pass",

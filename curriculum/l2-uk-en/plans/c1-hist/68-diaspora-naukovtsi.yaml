@@ -5,14 +5,14 @@ version: '2.0'
 title: 'Діаспорні науковці: Збереження спадщини'
 content_outline:
 - section: Вступ — Наука в еміграції
-  words: 400
+  words: 457
   points:
   - Чому потрібні наукові інституції
   - Науковці серед ДіПі
   - Створення альтернативного простору
   - Структура модуля
 - section: Гарвардський український інститут (HURI)
-  words: 700
+  words: 800
   points:
   - Заснування — 1973
   - Омелян Пріцак — візія
@@ -20,7 +20,7 @@ content_outline:
   - Видання — Harvard Ukrainian Studies
   - Вплив на західну науку
 - section: УВАН — Українська вільна академія наук
-  words: 600
+  words: 686
   points:
   - Заснування — 1945, Аугсбург
   - Переїзд до Нью-Йорка
@@ -28,14 +28,14 @@ content_outline:
   - Видання і публікації
   - Збереження традиції
 - section: НТШ в діаспорі
-  words: 500
+  words: 571
   points:
   - Історія — від Львова до еміграції
   - Відновлення в діаспорі
   - Наукові осередки — США, Канада, Європа
   - Енциклопедія українознавства
 - section: Ключові постаті
-  words: 600
+  words: 686
   points:
   - Омелян Пріцак — орієнталіст
   - Ярослав Пеленський — політолог
@@ -43,19 +43,19 @@ content_outline:
   - Роман Шпорлюк — націолог
   - Оксана Забужко — письменниця-науковиця
 - section: Спадщина для України
-  words: 400
+  words: 457
   points:
   - Що зберегли — бібліотеки, архіви
   - Вплив після 1991
   - Повернення знань
   - Сучасна співпраця
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Діаспора — «інтелектуальний ковчег»
   - Без діаспори — що б втратили
   - Зв'язок з незалежною Україною
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - науковець (scholar)
@@ -75,16 +75,16 @@ vocabulary_hints:
   - історіографія (historiography)
   - рецепція (reception)
 activity_hints:
-- type: institutional-study
+- type: comparative-study
   focus: Compare HURI, UVAN, NTSh — missions and methods
   output: Institutional comparison
 - type: reading
   focus: Pritsak's vision for Ukrainian studies
   output: Biographical-intellectual analysis
-- type: bibliographic-analysis
+- type: critical-analysis
   focus: Key diaspora publications and their impact
   output: Publication analysis
-- type: knowledge-transfer
+- type: critical-analysis
   focus: How diaspora knowledge returned to Ukraine after 1991
   output: Transfer analysis
 - type: essay-response
@@ -115,3 +115,6 @@ sources:
   notes: Shevchenko Society
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of діаспорні науковці: збереження спадщини'
+- Evaluate the historical significance of наука в еміграції

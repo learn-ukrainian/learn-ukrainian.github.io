@@ -136,9 +136,9 @@
 
 ### Self-Check
 
-- ☐ Can you explain «Why» using _тому що_?
-- ☐ Can you explain «What for» using _щоб_?
-- ☐ Can you describe a person or object using _який_?
+- ☐ Can you explain «Why» using *тому що*?
+- ☐ Can you explain «What for» using *щоб*?
+- ☐ Can you describe a person or object using *який*?
 - ☐ Do you remember to put a comma before these connectors?
 
 ---
@@ -156,7 +156,7 @@
 
 > **2. Керування дієслів** (Verb Governance)
 > ❌ **Я дякую тебе.** (Знахідний використано замість Давального)
-> ✅ **Я дякую тобі.** (Дієслова як _дякувати_ вимагають Давального)
+> ✅ **Я дякую тобі.** (Дієслова як *дякувати* вимагають Давального)
 
 > **3. Логіка володіння** (Possession Logic)
 > ❌ **Я маю болить голова.** (Дослівний переклад)

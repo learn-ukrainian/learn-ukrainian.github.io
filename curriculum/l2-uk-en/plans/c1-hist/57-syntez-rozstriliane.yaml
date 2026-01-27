@@ -5,21 +5,21 @@ version: '2.0'
 title: 'Синтез: Культурний геноцид'
 content_outline:
 - section: Вступ — Що ми дізналися
-  words: 400
+  words: 457
   points:
   - Огляд модулів 52-56
   - Від контексту до механізмів
   - Мета синтезу — інтеграція
   - Культурний геноцид як рамка
 - section: Паттерн знищення
-  words: 600
+  words: 686
   points:
   - Дозвіл → Контроль → Знищення
   - Чому цей паттерн?
   - Порівняння з Голодомором
   - Синхронність подій
 - section: Що втрачено
-  words: 600
+  words: 686
   points:
   - Літературна спадщина
   - Театральна школа
@@ -27,7 +27,7 @@ content_outline:
   - Альтернативний шлях розвитку
   - Що могло б бути
 - section: Культурний геноцид — поняття
-  words: 600
+  words: 686
   points:
   - Визначення
   - Чи застосовне до України?
@@ -35,7 +35,7 @@ content_outline:
   - Дебати про термін
   - Правові імплікації
 - section: Пам'ять і відновлення
-  words: 500
+  words: 571
   points:
   - Як повертали забуте
   - Діаспора — збереження
@@ -43,19 +43,19 @@ content_outline:
   - Сучасна рецепція
   - Чи можна відновити втрачене?
 - section: Уроки для сьогодні
-  words: 500
+  words: 571
   points:
   - Культура як мішень — 2022
   - Паралелі з минулим
   - Захист культури
   - Документування злочинів
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Розстріляне відродження — парадигма
   - Від знищення до відродження
   - Перехід до релігійної ідентичності
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - синтез (synthesis)
@@ -110,3 +110,6 @@ sources:
   notes: Concept
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of синтез: культурний геноцид'
+- Evaluate the historical significance of що ми дізналися

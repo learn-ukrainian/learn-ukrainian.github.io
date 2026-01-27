@@ -49,6 +49,7 @@ Learn Ukrainian has three complementary quality validation systems:
 ### System Details
 
 #### 1. Audit (Required)
+
 - **Script**: `scripts/audit_module.py`
 - **Checks**:
   - Structure (sections, headers, frontmatter)
@@ -61,6 +62,7 @@ Learn Ukrainian has three complementary quality validation systems:
 - **Gates**: Blocks pipeline if FAIL
 
 #### 2. Grammar Validation (Recommended for B1+)
+
 - **Skill**: `/grammar-validate` (Claude Code skill)
 - **Checks**:
   - Russianisms (кушать → їсти)
@@ -76,6 +78,7 @@ Learn Ukrainian has three complementary quality validation systems:
 - **Gates**: Informational (doesn't block audit)
 
 #### 3. Content Quality Review (Optional)
+
 - **Skill**: `/review-content` (Claude Code skill)
 - **Checks**:
   - Pedagogical coherence (objectives ↔ activities alignment)
@@ -91,6 +94,7 @@ Learn Ukrainian has three complementary quality validation systems:
 - **Documentation**: `docs/CONTENT-QUALITY-AUDIT.md`
 
 #### 4. Activity Quality Validation (Optional)
+
 - **Type**: Hybrid (deterministic + manual semantic validation)
 - **Checks**:
   - **Naturalness** (1-5): Robotic → Highly Natural
@@ -937,6 +941,7 @@ npm run validate:html l2-uk-en b1 50
 Use this checklist for every B1+ module:
 
 ### Stage 1: Skeleton
+
 - [ ] Read level quick-ref (`claude_extensions/quick-ref/{level}.md`)
 - [ ] Read curriculum plan section for this module
 - [ ] Run `/module-stage-1 {level} {num}`
@@ -944,6 +949,7 @@ Use this checklist for every B1+ module:
 - [ ] Run audit (structure check only)
 
 ### Stage 2: Content
+
 - [ ] Read module template (`docs/l2-uk-en/templates/{level}-{type}-module-template.md`)
 - [ ] Run `/module-stage-2 {level} {num}`
 - [ ] Verify word count meets level requirements
@@ -953,6 +959,7 @@ Use this checklist for every B1+ module:
 - [ ] Fix all violations before Stage 3
 
 ### Stage 3: Activities
+
 - [ ] Read richness guidelines (`docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`)
 - [ ] Run `/module-stage-3 {level} {num}`
 - [ ] Verify activity count, types, items meet requirements
@@ -962,6 +969,7 @@ Use this checklist for every B1+ module:
 - [ ] Fix all violations before Stage 4
 
 ### Stage 4: Review & Fix
+
 - [ ] Run `/module-stage-4 {level} {num}` (or manual audit)
 - [ ] Audit: PASS (required)
 - [ ] Optional: Grammar validation (recommended for B1+)
@@ -971,6 +979,7 @@ Use this checklist for every B1+ module:
 - [ ] Loop until audit PASS (max 3 iterations)
 
 ### Pipeline Generation
+
 - [ ] Run `npm run pipeline l2-uk-en {level} {num}`
 - [ ] MDX generated successfully
 - [ ] JSON generated successfully
@@ -978,6 +987,7 @@ Use this checklist for every B1+ module:
 - [ ] HTML validation PASS (if dev server running)
 
 ### Final Verification
+
 - [ ] Open in Docusaurus (http://localhost:3000/learn-ukrainian/{level}/module-{num})
 - [ ] Test all activities (interactive, correct answers)
 - [ ] Check vocabulary table (6 columns, correct data)

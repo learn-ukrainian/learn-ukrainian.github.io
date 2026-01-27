@@ -25,13 +25,13 @@
 ## Linguistic Accuracy Issues
 
 - **Vocabulary File Garbage:** The `vocabulary/43-adverbial-participles-perfective.yaml` file contains broken tokens/hallucinations: `прийш-`, `прийшвши`, `прийшів` (non-existent), `прийшівши`, `прочита-`, `піш-`, `пішвши`, `овши`.
-- **Note:** The module _content_ correctly teaches `прийшовши` and `пішовши`. The garbage is only in the YAML dataset.
+- **Note:** The module *content* correctly teaches `прийшовши` and `пішовши`. The garbage is only in the YAML dataset.
 
 ## Strengths
 
 - **Heuristic Quality:** Teaching the formation via the masculine past tense (`зробив` + `ши` -> `зробивши`) is highly effective and linguistically robust for learners.
-- **Concept Clarity:** Clearly distinguishes proper usage: Perfective Participle = Finished action _before_ the main verb.
-- **Error Prevention:** Addresses common mismatch errors (subjects must differ? No, subjects must be the _same_, but time is different).
+- **Concept Clarity:** Clearly distinguishes proper usage: Perfective Participle = Finished action *before* the main verb.
+- **Error Prevention:** Addresses common mismatch errors (subjects must differ? No, subjects must be the *same*, but time is different).
 
 ## Issues
 

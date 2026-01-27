@@ -1,4 +1,5 @@
 # B2 Naturalness Scan Report - M01-M10
+
 **Date:** 2026-01-12
 **Protocol:** claude_extensions/protocols/a1-naturalness-scan.md
 **Scope:** M01-M10 (10 modules - Passive Voice section)
@@ -21,6 +22,7 @@
 ## Scan Results by Module
 
 ### M01: Passive Voice System [✅ PASS]
+
 **Status:** Technical overview - Quiz-heavy with example sentences
 **Activities:** Quiz (comprehensive), match-up, fill-in, cloze, true-false, group-sort, unjumble, select, translate, mark-the-words, essay-response
 
@@ -49,6 +51,7 @@
 ---
 
 ### M02: Past Passive Participles [✅ PASS]
+
 **Status:** Technical grammar - Participle formation drill
 **Activities:** Quiz, match-up (verb → participle transformations)
 
@@ -71,6 +74,7 @@
 ---
 
 ### M03: Impersonal Passive (-но/-то) [✅ PASS]
+
 **Status:** Technical style - Official/formal register focus
 **Activities:** 16-question quiz, cloze, error-correction, match-up, group-sort, unjumble (15 items), true-false, fill-in, essay-response
 
@@ -96,6 +100,7 @@
 ---
 
 ### M04: Reflexive Passive (-ся) [✅ PASS]
+
 **Status:** Scientific/technical register focus
 **Activities:** Quiz, cloze, match-up, true-false, group-sort, unjumble (15 items), error-correction, fill-in, quiz, essay-response
 
@@ -121,6 +126,7 @@
 ---
 
 ### M05: Third Person Plural Passive [✅ PASS]
+
 **Status:** Conversational register + Review of M01-M04
 **Activities:** Quiz "Повторення M01-M04", quiz "Визначте регістр", cloze with pronoun cases, fill-in, error-correction, unjumble (30 items total), cloze narrative, match-up, true-false, group-sort, select, translate, mark-the-words, essay-response
 
@@ -146,6 +152,7 @@
 ---
 
 ### M06: Passive in Context [✅ PASS]
+
 **Status:** Register/style discrimination training
 **Activities:** Quizzes on register selection, match-up (form ↔ register), cloze, true-false, group-sort (by register), error-correction, unjumble (15 items), fill-in, essay-response
 
@@ -171,6 +178,7 @@
 ---
 
 ### M07: Active Participles Present [✅ PASS]
+
 **Status:** Archaic forms - Teaching what NOT to use
 **Activities:** Quiz, match-up (participle ↔ relative clause), fill-in, true-false, group-sort (by register appropriateness), unjumble (15 items), error-correction, cloze, mark-the-words
 
@@ -196,6 +204,7 @@
 ---
 
 ### M08: Active Participles Past [✅ PASS]
+
 **Status:** Rusisms - Teaching what to avoid
 **Activities:** Quiz, match-up, cloze, true-false, group-sort, unjumble (15 items), error-correction, fill-in, essay-response
 
@@ -218,6 +227,7 @@ CORRECT: Людина, яка приїхала з Києва, працює ту�
 ---
 
 ### M09: Participles vs Relative Clauses [✅ PASS]
+
 **Status:** Transformation/equivalence training
 **Activities:** Quiz, match-up (participle ↔ relative clause), cloze, true-false, group-sort (by register), unjumble (15 items), error-correction, fill-in, quiz, translate, select, essay-response
 
@@ -244,6 +254,7 @@ CORRECT: Людина, яка приїхала з Києва, працює ту�
 ---
 
 ### M10: Checkpoint Passive Voice [⏸️ DEFERRED]
+
 **Status:** CHECKPOINT - comprehensive assessment
 **Activities:** Quizzes, match-ups, fill-in, cloze, true-false, group-sorts, error-correction, unjumble, select, translate, mark-the-words, essay-response
 
@@ -264,6 +275,7 @@ CORRECT: Людина, яка приїхала з Києва, працює ту�
 ## Summary by Status
 
 ### ✅ PASS (9 modules)
+
 - M01: Passive Voice System (score 7/10)
 - M02: Past Passive Participles (score 7/10)
 - M03: Impersonal Passive (score 8/10)
@@ -275,9 +287,11 @@ CORRECT: Людина, яка приїхала з Києва, працює ту�
 - M09: Participles vs Relative Clauses (score 8/10)
 
 ### ⏸️ DEFERRED (1 module)
+
 - M10: Checkpoint Passive Voice (score 7/10) - Checkpoint standards apply
 
 ### ⚠️ FLAGGED (0 modules)
+
 None
 
 ---

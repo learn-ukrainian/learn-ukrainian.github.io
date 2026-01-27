@@ -5,24 +5,26 @@ version: '1.0'
 title: 'Перша хвиля еміграції: Трудова (1880-1914)'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of перша хвиля еміграції: трудова (1880-1914)'
+- Evaluate the historical significance of чому виїжджали?
 content_outline:
 - section: Вступ — Чому виїжджали?
-  words: 400
+  words: 457
   subsections:
   - Економічні причини — земельний голод
   - Перенаселення Галичини
   - Тиск імперій
   - Структура модуля
 - section: Галицькі селяни в дорозі
-  words: 600
+  words: 686
   subsections:
   - Хто виїжджав — соціальний портрет
   - Маршрути — порти, кораблі
   - Агенти еміграції — реклама «нового світу»
   - Ілюзії і реальність
 - section: Канада — «безкрайні прерії»
-  words: 700
+  words: 800
   subsections:
   - Сіфтон і «чоловіки в кожухах»
   - Заселення прерій
@@ -30,33 +32,33 @@ content_outline:
   - Важке життя — землянки, холод
   - Перші церкви і школи
 - section: США — вугільні копальні
-  words: 600
+  words: 686
   subsections:
   - Пенсільванія — шахтарські містечка
   - Важка праця — умови
   - Робітничий рух
   - Міські громади — Нью-Йорк, Чикаго
 - section: Південна Америка
-  words: 400
+  words: 457
   subsections:
   - Бразилія — кавові плантації
   - Аргентина — пампаси
   - Менші хвилі — Парагвай, Уругвай
   - Збереження vs. асиміляція
 - section: Формування громад
-  words: 500
+  words: 571
   subsections:
   - Церква як центр
   - Читальні та «Просвіти»
   - Преса — перші газети
   - Мова — збереження чи втрата?
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - Масштаби — скільки виїхало
   - Закладення фундаменту
   - Підготовка до політичної хвилі
-word_target: 3500
+word_target: 4000
 vocabulary:
 - еміграція
 - діаспора
@@ -74,13 +76,13 @@ vocabulary:
 - репатріація
 - тимчасова міграція
 activities:
-- type: demographic-analysis
+- type: critical-analysis
   focus: Map emigration from specific Galician regions
-- type: settlement-study
+- type: comparative-study
   focus: Compare Canadian vs. American settlement patterns
-- type: testimony-analysis
+- type: critical-analysis
   focus: Analyze emigrant letters home
-- type: community-formation
+- type: critical-analysis
   focus: How Ukrainian institutions formed in diaspora
 - type: essay-response
   focus: Чому саме галичани становили більшість першої хвилі?

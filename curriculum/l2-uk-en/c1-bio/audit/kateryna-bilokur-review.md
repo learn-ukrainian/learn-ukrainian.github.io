@@ -1,10 +1,12 @@
 # Audit Report: M90 — kateryna-bilokur.md
+
 **Level:** C1 | **Module:** M90 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:43
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння біографії | 5 | 5 | ✅ |
@@ -42,22 +45,26 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in kateryna-bilokur.yaml: Schema validation error at key '8': {'type': 'error-correction', 'title': 'Складні речення', 'items': [{'sentence': 'Хоча вона не мала офіційного диплома, але її талант визнали в усьому світі.', 'error': 'але', 'answer': 'none', 'options': ['хоча', 'але', 'визнали', 'none'], 'explanation': 'Для літературної мови краще уникати дублювання «хоча» та «але».'}, {'sentence': 'Вона малювала так старанно, що кожна квітка здавалася справді живою.', 'error': 'none', 'answer': '✓', 'options': ['що', 'старанно', 'здавалася', '✓'], 'explanation': 'Правильне вживання сполучника «що» у підрядному реченні.'}, {'sentence': 'Катерина знала, який колір краще пасує для пелюстки троянди.', 'error': 'none', 'answer': '✓', 'options': ['який', 'пасує', 'пелюстки', '✓'], 'explanation': 'Речення побудоване правильно.'}, {'sentence': 'Батьки не розуміли, чому їхня донька витрачає час на малювання.', 'error': 'none', 'answer': '✓', 'options': ['чому', 'витрачає', 'час', '✓'], 'explanation': 'Речення побудоване правильно.'}, {'sentence': 'Коли вона отримала визнання, її життя трохи полегшилося.', 'error': 'none', 'answer': '✓', 'options': ['коли', 'отримала', 'визнання', '✓'], 'explanation': 'Речення побудоване правильно.'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template.md'
   - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template.md'
   - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 3 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2401/4000 (raw: 2718)
 - **Activities:** ✅ 13/3
 - **Density:** ✅ All > 1
@@ -76,10 +83,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 97% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 10 | 4 | 100% | 19% | 19.0% |
@@ -95,6 +104,7 @@
 | **TOTAL** | | | | | **97.6%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 84 | Included in Core |

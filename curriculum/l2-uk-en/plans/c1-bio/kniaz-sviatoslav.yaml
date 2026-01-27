@@ -76,22 +76,10 @@ activity_hints:
   focus: Chronicle description of Sviatoslav's campaigns
   source: Повість минулих літ (adapted)
   items: 3 passages
-- type: quiz
-  focus: Military campaigns chronology and geography
-  items: 12+
-- type: match-up
-  focus: Enemies of Sviatoslav and outcomes
-  items: 10+
 - type: essay-response
   focus: Evaluate Sviatoslav's legacy - conqueror or destroyer?
   word_target: 250
   output: Balanced argument with evidence
-- type: group-sort
-  focus: Categorize actions as diplomatic vs. military
-  items: 12+
-- type: fill-in
-  focus: Famous quotes and their contexts
-  items: 8+
 focus: biography
 pedagogy: CBI
 prerequisites:
@@ -126,3 +114,4 @@ sources:
   notes: Context for Khazar campaign
 immersion: 100% Ukrainian
 phase: C1.3 Biographies
+word_target: 4000

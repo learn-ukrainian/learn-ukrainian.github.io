@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M65 | **Phase:** HIST.7 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:54:52
+**Generated:** 2026-01-27 20:42:53
 
 ## Configuration
 **Type:** B2-history
@@ -21,15 +21,15 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Промова Костя Гордієнка | 3 | 1 | ✅ |
-| 2 | quiz | Кость Гордієнко та запорозька вольниця | 8 | 8 | ✅ |
-| 3 | essay-response | Есе: Січ як демократична альтернатива | 1 | 1 | ✅ |
-| 4 | comparative-study | Порівняння: Кошовий отаман vs Московський цар | 1 | 1 | ✅ |
-| 5 | true-false | Правда чи міф про Костя Гордієнка | 10 | 8 | ✅ |
+| 2 | essay-response | Есе: Січ як демократична альтернатива | 1 | 1 | ✅ |
+| 3 | comparative-study | Порівняння: Кошовий отаман vs Московський цар | 1 | 1 | ✅ |
+| 4 | true-false | Правда чи міф про Костя Гордієнка | 10 | 8 | ✅ |
+| 5 | critical-analysis | Конституція Пилипа Орлика та роль Запорожжя | 1 | 1 | ✅ |
 
 **Summary:**
 - Total activities: 5 (target: 3-9) ✅
 - Unique types: 5 (minimum: 2) ✅
-- Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 

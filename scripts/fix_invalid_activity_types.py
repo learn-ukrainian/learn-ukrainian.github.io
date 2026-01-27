@@ -1,203 +1,190 @@
 #!/usr/bin/env python3
-"""
-Fix invalid activity types in meta/*.yaml files.
+"""Fix invalid activity types in plan YAML files.
 
-Mappings:
-- transform → fill-in (verb form transformation)
-- conjugation → fill-in (verb conjugation)
-- dialogue → REMOVE (content type, not activity)
-- roleplay → REMOVE (content type, not activity)
-- self-assessment → REMOVE (content type, not activity)
-- flashcards → match-up (memorization alternative)
+Maps hallucinated activity types to valid schema types.
 """
 
+import re
 import sys
 from pathlib import Path
-import yaml
 
-# Mapping of invalid types to valid replacements (None = remove entirely)
-TYPE_MAPPINGS = {
-    'transform': 'fill-in',
-    'conjugation': 'fill-in',
-    'dialogue': None,  # Remove - content type, not activity
-    'roleplay': None,  # Remove - content type, not activity
-    'role-play': None,  # Remove - content type, not activity
-    'self-assessment': None,  # Remove - content type, not activity
-    'flashcards': 'match-up',
-    'rewrite': 'error-correction',  # Transform sentences = error correction
-    'compare': 'group-sort',  # Comparison = sorting/categorizing
-    'identify': 'mark-the-words',  # Identify = mark in text
-    'diagram': None,  # Remove - not an activity type
-    'writing': 'essay-response',  # Writing = essay
-    'discussion': None,  # Remove - content type, not activity
-    'edit': 'error-correction',  # Editing text = correcting/improving
-    'vocabulary': 'match-up',  # Vocabulary matching = match-up
-    'source-evaluation': 'critical-analysis',  # Evaluating sources = critical analysis
-    # C1-HIST specialized types → map to standard types
-    'practical': 'reading',  # Practical exercises = reading with application
-    'vocabulary-building': 'match-up',  # Vocabulary building = match-up
-    'close-reading': 'reading',  # Close reading = reading
-    'creative': 'essay-response',  # Creative writing = essay response
-    'research': 'reading',  # Research = reading with analysis
-    'map-exercise': None,  # Remove - not a text-based activity
-    'timeline': None,  # Remove - not a text-based activity
-    'ideology-analysis': 'critical-analysis',  # Ideology analysis = critical analysis
-    'document-analysis': 'critical-analysis',  # Document analysis = critical analysis
-    'rhetoric-analysis': 'critical-analysis',  # Rhetoric analysis = critical analysis
-    'legal-analysis': 'critical-analysis',  # Legal analysis = critical analysis
-    'bibliography': None,  # Remove - not an activity type
-    # Additional C1-HIST specialized types
-    'debate': None,  # Remove - discussion format, not activity
-    'synthesis': 'essay-response',  # Synthesis = essay response
-    'portfolio': None,  # Remove - process, not activity
-    'peer-review': None,  # Remove - process, not activity
-    'counterfactual': 'essay-response',  # Counterfactual = essay response
-    'consequence-analysis': 'critical-analysis',
-    'methodology-critique': 'critical-analysis',
-    'ethical-reflection': 'essay-response',
-    'evidence-building': 'critical-analysis',
-    'biography-study': 'reading',
-    'biographical-study': 'reading',
-    'legacy-tracing': 'critical-analysis',
-    'mechanism-mapping': 'critical-analysis',
-    'mapping': None,  # Remove - visual, not text
-    'context-mapping': 'critical-analysis',
-    'paradox-analysis': 'critical-analysis',
-    'memory-study': 'critical-analysis',
-    'contemporary-parallel': 'comparative-study',
-    'stakeholder-analysis': 'critical-analysis',
-    'perspective-comparison': 'comparative-study',
-    'long-term-impact': 'critical-analysis',
-    'camp-life-analysis': 'critical-analysis',
-    'ideological-comparison': 'comparative-study',
-    'institutional-analysis': 'critical-analysis',
-    'institutional-comparison': 'comparative-study',
-    'social-analysis': 'critical-analysis',
-    'layered-history': 'critical-analysis',
-    'tatar-history': 'reading',
-    'deportation-study': 'critical-analysis',
-    'cycle-mapping': 'critical-analysis',
-    'pattern-application': 'critical-analysis',
-    'negotiation-analysis': 'critical-analysis',
-    '2014-test': 'quiz',  # Test = quiz
+VALID_TYPES = {
+    'match-up', 'fill-in', 'quiz', 'true-false', 'group-sort',
+    'unjumble', 'error-correction', 'anagram', 'select', 'translate',
+    'cloze', 'mark-the-words', 'reading', 'essay-response',
+    'critical-analysis', 'comparative-study', 'authorial-intent'
 }
 
-VALID_ACTIVITY_TYPES = [
-    "match-up", "fill-in", "quiz", "true-false", "group-sort", "unjumble",
-    "error-correction", "anagram", "select", "translate", "cloze",
-    "mark-the-words", "reading", "essay-response", "critical-analysis",
-    "comparative-study", "authorial-intent"
-]
+# Explicit mappings for common invalid types
+EXPLICIT_MAPPING = {
+    # Direct renames
+    'matching': 'match-up',
+    'translation': 'translate',
+    'multiple-choice': 'quiz',
+    
+    # Reading variants
+    'reading-comprehension': 'reading',
+    'reading-test': 'reading',
+    
+    # Quiz variants
+    'quiz-test': 'quiz',
+    'diagnostic': 'quiz',
+    'recognition': 'quiz',
+    'prediction': 'quiz',
+    'prophecy-test': 'quiz',
+    'skill-assessment': 'quiz',
+    
+    # Cloze variants
+    'cloze-test': 'cloze',
+    'cloze-analysis': 'cloze',
+    'role-play': 'cloze',
+    'dialogue': 'cloze',
+    'production': 'cloze',
+    'formation': 'cloze',
+    'calculation': 'cloze',
+    'context-matching': 'cloze',
+    'note-taking': 'cloze',
+    'integration': 'cloze',
+    'task': 'cloze',
+    
+    # Unjumble/sentence variants  
+    'sentence-combining': 'unjumble',
+    'sentence-building': 'unjumble',
+    'unjumble-construction': 'unjumble',
+    
+    # Error correction variants
+    'text-editing': 'error-correction',
+    
+    # Fill-in variants
+    'word-building': 'fill-in',
+    'agreement': 'fill-in',
+    
+    # Match-up variants
+    'vocabulary-drill': 'match-up',
+    'collocation': 'match-up',
+    
+    # Group-sort variants
+    'organization': 'group-sort',
+    
+    # Not supported (audio/speaking)
+    'speaking': 'quiz',
+    'discussion': 'quiz',
+    'listening': 'quiz',
+    'oral-presentation': 'quiz',
+    
+    # Other
+    'self-assessment': 'quiz',
+    'transformation': 'cloze',
+    'writing': 'cloze',
+    'sequencing': 'unjumble',
+    'timeline': 'unjumble',
+}
+
+# Pattern-based mappings for C1-HIST analytical types
+PATTERN_MAPPING = {
+    r'.*-analysis$': 'critical-analysis',
+    r'.*-study$': 'comparative-study',
+    r'.*-comparison$': 'comparative-study',
+    r'.*-mapping$': 'critical-analysis',
+    r'.*-assessment$': 'critical-analysis',
+    r'.*-evaluation$': 'critical-analysis',
+    r'.*-reflection$': 'essay-response',
+    r'.*-connection$': 'critical-analysis',
+    r'.*-recognition$': 'critical-analysis',
+    r'.*-tracking$': 'critical-analysis',
+    r'.*-reconstruction$': 'critical-analysis',
+    r'.*-documentation$': 'critical-analysis',
+    r'.*-deconstruction$': 'critical-analysis',
+    r'.*-mechanics$': 'critical-analysis',
+    r'.*-scenarios$': 'essay-response',
+    r'.*-questions$': 'essay-response',
+    r'.*-debate$': 'essay-response',
+    r'.*-politics$': 'critical-analysis',
+    r'.*-table$': 'match-up',
+    r'.*-source$': 'reading',
+    r'.*-stories$': 'reading',
+    r'.*-learned$': 'essay-response',
+}
 
 
-def fix_meta_file(meta_path: Path, dry_run: bool = True) -> tuple[int, list[str]]:
-    """
-    Fix invalid activity types in a meta YAML file.
+def get_replacement(invalid_type: str) -> str | None:
+    """Get the valid type to replace an invalid type."""
+    if invalid_type in VALID_TYPES:
+        return None  # Already valid
+    
+    # Check explicit mapping first
+    if invalid_type in EXPLICIT_MAPPING:
+        return EXPLICIT_MAPPING[invalid_type]
+    
+    # Check pattern mapping
+    for pattern, replacement in PATTERN_MAPPING.items():
+        if re.match(pattern, invalid_type):
+            return replacement
+    
+    # Default fallback for unknown types
+    return 'critical-analysis'
 
-    Returns (num_fixes, list of change messages)
-    """
+
+def fix_file(filepath: Path, dry_run: bool = True) -> list[str]:
+    """Fix invalid activity types in a single file."""
     changes = []
+    content = filepath.read_text()
+    new_content = content
 
-    with open(meta_path, 'r', encoding='utf-8') as f:
-        content = f.read()
+    # Find all "- type: X" patterns
+    for match in re.finditer(r'- type: ([a-z0-9-]+)', content):
+        old_type = match.group(1)
+        new_type = get_replacement(old_type)
+        
+        if new_type:
+            old_pattern = f'- type: {old_type}'
+            new_pattern = f'- type: {new_type}'
+            
+            if old_pattern in new_content:
+                count = new_content.count(old_pattern)
+                new_content = new_content.replace(old_pattern, new_pattern)
+                changes.append(f"  {old_type} → {new_type} ({count}x)")
 
-    try:
-        data = yaml.safe_load(content)
-    except yaml.YAMLError as e:
-        return 0, [f"  ❌ YAML parse error: {e}"]
+    # Deduplicate changes (same replacement might be found multiple times)
+    changes = list(dict.fromkeys(changes))
+    
+    if changes and not dry_run:
+        filepath.write_text(new_content)
 
-    if not data or 'activity_hints' not in data:
-        return 0, []
-
-    activity_hints = data.get('activity_hints', [])
-    if not activity_hints:
-        return 0, []
-
-    new_hints = []
-    num_fixes = 0
-
-    for hint in activity_hints:
-        if not isinstance(hint, dict):
-            new_hints.append(hint)
-            continue
-
-        activity_type = hint.get('type')
-
-        if activity_type in TYPE_MAPPINGS:
-            replacement = TYPE_MAPPINGS[activity_type]
-            if replacement is None:
-                # Remove this entry
-                changes.append(f"  🗑️  REMOVED: {activity_type} (content type, not activity)")
-                num_fixes += 1
-            else:
-                # Replace with valid type
-                hint['type'] = replacement
-                changes.append(f"  🔄 REPLACED: {activity_type} → {replacement}")
-                new_hints.append(hint)
-                num_fixes += 1
-        elif activity_type not in VALID_ACTIVITY_TYPES:
-            # Unknown invalid type - flag but keep
-            changes.append(f"  ⚠️  UNKNOWN: {activity_type} (not in mappings, keeping)")
-            new_hints.append(hint)
-        else:
-            # Valid type - keep as is
-            new_hints.append(hint)
-
-    if num_fixes == 0:
-        return 0, []
-
-    # Update the data
-    data['activity_hints'] = new_hints
-
-    if not dry_run:
-        # Write back with preserved formatting (using ruamel.yaml would be better, but this works)
-        with open(meta_path, 'w', encoding='utf-8') as f:
-            yaml.dump(data, f, allow_unicode=True, default_flow_style=False, sort_keys=False, width=120)
-
-    return num_fixes, changes
+    return changes
 
 
 def main():
-    import argparse
-    parser = argparse.ArgumentParser(description='Fix invalid activity types in meta/*.yaml files')
-    parser.add_argument('path', nargs='?', default='curriculum/l2-uk-en', help='Path to search for meta files')
-    parser.add_argument('--level', help='Filter by level (e.g., b1, b2)')
-    parser.add_argument('--apply', action='store_true', help='Apply fixes (default is dry-run)')
-    args = parser.parse_args()
+    dry_run = '--fix' not in sys.argv
+    plans_dir = Path('curriculum/l2-uk-en/plans')
 
-    base_path = Path(args.path)
+    if not plans_dir.exists():
+        print(f"Error: {plans_dir} not found")
+        sys.exit(1)
 
-    # Find all meta directories
-    if args.level:
-        meta_dirs = [base_path / args.level / 'meta']
+    print(f"{'DRY RUN - ' if dry_run else ''}Scanning {plans_dir}...")
+    if dry_run:
+        print("Add --fix to apply changes\n")
     else:
-        meta_dirs = list(base_path.glob('*/meta'))
+        print()
 
-    total_fixes = 0
-    files_changed = 0
+    total_files = 0
+    total_changes = 0
 
-    for meta_dir in sorted(meta_dirs):
-        if not meta_dir.exists():
-            continue
+    for yaml_file in sorted(plans_dir.rglob('*.yaml')):
+        changes = fix_file(yaml_file, dry_run)
+        if changes:
+            total_files += 1
+            total_changes += len(changes)
+            print(f"{yaml_file.relative_to(plans_dir)}:")
+            for change in changes:
+                print(change)
+            print()
 
-        level = meta_dir.parent.name
+    print(f"\n{'Would fix' if dry_run else 'Fixed'}: {total_changes} type(s) in {total_files} file(s)")
 
-        for meta_file in sorted(meta_dir.glob('*.yaml')):
-            num_fixes, changes = fix_meta_file(meta_file, dry_run=not args.apply)
-
-            if num_fixes > 0:
-                print(f"\n📄 {level}/{meta_file.name}")
-                for change in changes:
-                    print(change)
-                total_fixes += num_fixes
-                files_changed += 1
-
-    print(f"\n{'='*50}")
-    if args.apply:
-        print(f"✅ APPLIED: {total_fixes} fixes in {files_changed} files")
-    else:
-        print(f"🔍 DRY RUN: {total_fixes} fixes would be made in {files_changed} files")
-        print("   Run with --apply to apply changes")
+    if dry_run and total_files > 0:
+        print("\nRun with --fix to apply changes")
 
 
 if __name__ == '__main__':

@@ -1,10 +1,12 @@
 # Audit Report: M121 — nezalezhnist-1991.md
+
 **Level:** B2 | **Module:** M121 | **Phase:** HIST.12 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:55:27
 
 ## Configuration
+
 **Type:** B2-history
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Читання: Перевірка розуміння | 10 | 8 | ✅ |
@@ -45,16 +48,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in nezalezhnist-1991.yaml: Schema validation error at key '12': {'type': 'true-false', 'items': [{'statement': 'Велика кількість запозичень з англійської (бізнес, приватизація)', 'correct': True}, {'statement': 'Повернення застарілих слів козацької доби (гетьман, булава)', 'correct': False}, {'statement': "Поява неологізмів, пов'язаних з кризою (кравчучка, купони)", 'correct': True}, {'statement': "Використання виключно церковнослов'янської термінології", 'correct': False}, {'statement': 'Формування нової політичної та юридичної термінології', 'correct': True}, {'statement': 'Перехід на використання латинського алфавіту в медіа', 'correct': False}, {'statement': 'Стрімка українізація всіх сфер життя у 1990-х роках', 'correct': False}, {'statement': 'Поява нових термінів на позначення олігархічних структур', 'correct': True}], 'title': 'Визначте правдивість лінгвістичних тенденцій періоду.', 'instruction': 'Визначте, чи є твердження правдивим.'} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 1991/4000 (raw: 2170)
 - **Activities:** ✅ 16/3
 - **Density:** ✅ All > 1
@@ -73,10 +79,12 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
+
 **Score:** 95% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 14 | 3 | 100% | 24% | 23.8% |
@@ -91,6 +99,7 @@
 | **TOTAL** | | | | | **95.2%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

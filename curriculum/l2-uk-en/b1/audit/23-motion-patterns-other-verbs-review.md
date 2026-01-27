@@ -1,8 +1,8 @@
 # Audit Report: M23 — 23-motion-patterns-other-verbs.md
-**Level:** B1 | **Module:** M23 | **Phase:** B1 | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M23 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:26:58
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-27 16:25:52
 
 ## Configuration
 **Type:** B1-grammar
@@ -54,18 +54,18 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 97.5% (target 85-100% (B1.3-4 Complex))
-- **Richness:** ❌ 89% < 95% min (grammar)
+- **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 89% (minimum: 95%)
+**Score:** 96% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 15 | 24 | 62% | 20% | 12.4% |
+| examples | 25 | 24 | 100% | 20% | 20.0% |
 | engagement | 8 | 5 | 100% | 15% | 15.0% |
 | dialogues | 8 | 4 | 100% | 15% | 15.0% |
 | variety | 1.00 | - | 100% | 10% | 10.0% |
@@ -75,7 +75,7 @@
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | questions | 14 | 5 | 100% | 5% | 5.0% |
 | proverbs | 4 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **89.1%** |
+| **TOTAL** | | | | | **96.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -76,22 +76,10 @@ activity_hints:
   focus: Excerpts from the Constitution of 1710
   source: Original text (adapted)
   items: 4 passages
-- type: quiz
-  focus: Structure and provisions of Orlyk's Constitution
-  items: 15+
-- type: match-up
-  focus: Constitutional provisions and their modern equivalents
-  items: 12+
 - type: essay-response
   focus: Was Orlyk's Constitution democratic for its time?
   word_target: 300
   output: Comparative constitutional analysis
-- type: group-sort
-  focus: Orlyk's Constitution vs. contemporary European documents
-  items: 12+
-- type: fill-in
-  focus: Constitutional and legal terminology
-  items: 10+
 - type: critical-analysis
   focus: Evaluate claims of "first European constitution"
   output: Balanced assessment with context
@@ -120,3 +108,6 @@ sources:
   notes: Context of political exile
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of пилип орлик: автор першої конституції'
+- Evaluate the contributions of батько українського конституціоналізму

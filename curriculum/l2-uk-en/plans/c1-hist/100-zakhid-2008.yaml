@@ -5,53 +5,53 @@ version: '2.0'
 title: 'Бухарест 2008: NATO каже «ні»'
 content_outline:
 - section: Вступ — Вето на безпеку
-  words: 400
+  words: 457
   points:
   - Квітень 2008 — Бухарест
   - Україна і Грузія — просять MAP
   - Меркель і Саркозі — «ні»
   - Структура модуля
 - section: Контекст — Що таке MAP
-  words: 500
+  words: 571
   points:
   - План дій щодо членства
   - Не членство — шлях до нього
   - Чому важливо
   - Хто вже отримав
 - section: Хто за, хто проти
-  words: 600
+  words: 686
   points:
   - США — за
   - Німеччина, Франція — проти
   - Аргументи проти
   - «Провокація Росії»
 - section: Компроміс — гірший за відмову
-  words: 700
+  words: 800
   points:
   - «Колись стануть членами»
   - Але без MAP зараз
   - Найгірший варіант
   - Сигнал для Росії
 - section: Серпень 2008 — Грузія
-  words: 500
+  words: 571
   points:
   - Війна через 4 місяці
   - Зв'язок з Бухарестом
   - «Бачите — НАТО провокує»
   - Урок — не засвоєний
 - section: Наслідки для України
-  words: 500
+  words: 571
   points:
   - 2014 — без захисту
   - «Двері відчинені» — порожня фраза
   - Меркель визнала помилку (2022)
 - section: Підсумок
-  words: 300
+  words: 344
   points:
   - Бухарест — ключова помилка
   - Зелене світло для Путіна
   - Перехід до 2014
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - Бухарест (Bucharest)
@@ -71,16 +71,16 @@ vocabulary_hints:
   - стаття 5 (Article 5)
   - умиротворення (appeasement)
 activity_hints:
-- type: decision-analysis
+- type: critical-analysis
   focus: Why did Germany and France block MAP?
   output: Veto analysis
-- type: signal-analysis
+- type: critical-analysis
   focus: What signal did Bucharest send to Putin?
   output: Signal interpretation
 - type: essay-response
   focus: What if Ukraine got MAP in 2008?
   output: Alternative scenario
-- type: Georgia-connection
+- type: critical-analysis
   focus: Bucharest → Georgia 2008 → Ukraine 2014
   output: Causal chain analysis
 - type: essay-response
@@ -109,3 +109,6 @@ sources:
   notes: Enlargement context
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of бухарест 2008: nato каже «ні»'
+- Evaluate the historical significance of вето на безпеку

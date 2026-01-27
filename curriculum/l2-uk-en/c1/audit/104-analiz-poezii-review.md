@@ -1,9 +1,11 @@
 # Audit Report: M104 — 104-analiz-poezii.md
+
 **Level:** C1 | **Module:** M104 | **Phase:** C1 | **Pedagogy:** Literary Analysis | **Target:** 3500
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:59
 
 ## Configuration
+
 **Type:** C1-literature
 **Word Target:** 3500 words
 **Activities:** 12-16 required
@@ -16,6 +18,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння версифікації та звукопису | 12 | 5 | ✅ |
@@ -39,16 +42,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 104-analiz-poezii.yaml: Schema validation error at key 'words': ['Силабо-тонічна', 'система', 'версифікації', 'дозволяє', 'автору', 'чітко', 'організувати', 'ритмічний', 'малюнок', 'твору'] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2023/3500 (raw: 2185)
 - **Activities:** ✅ 13/12
 - **Density:** ✅ All > 12
@@ -67,10 +73,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 88% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 21 | 15 | 100% | 25% | 25.0% |
@@ -84,6 +92,7 @@
 | **TOTAL** | | | | | **88.4%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 74 | Included in Core |

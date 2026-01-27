@@ -1,10 +1,12 @@
 # Audit Report: M122 — tamara-horikha-zernya.md
+
 **Level:** C1 | **Module:** M122 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:57:17
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Біографія та творчість | 5 | 5 | ✅ |
@@ -41,16 +44,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in tamara-horikha-zernya.yaml: Schema validation error at key '9': {'type': 'fill-in', 'title': 'Психологія героїні', 'items': [{'sentence': 'Героїня відчуває, що війна зробила її [сильнішою], але забрала спокій.', 'answer': 'сильнішою', 'options': ['сильнішою', 'слабшою', 'багатшою', 'веселою']}, {'sentence': 'Вона вчиться жити одним [днем], не будуючи далеких планів.', 'answer': 'днем', 'options': ['днем', 'роком', 'тижнем', 'місяцем']}, {'sentence': 'Найбільший страх для неї — це [втратити] тих, кого вона любить.', 'answer': 'втратити', 'options': ['втратити', 'знайти', 'забути', 'продати']}, {'sentence': 'Вона розуміє, що повернення до [мирного] життя буде складним.', 'answer': 'мирного', 'options': ['мирного', 'військового', 'сільського', 'нічного']}, {'sentence': 'Її ненависть до ворога є [холодною] і розважливою, а не істеричною.', 'answer': 'холодною', 'options': ['холодною', 'гарячою', 'слабкою', 'швидкою']}, {'sentence': 'Доця вірить, що перемога [неминуча], якщо кожен робитиме свою справу.', 'answer': 'неминуча', 'options': ['неминуча', 'неможлива', 'випадкова', 'далека']}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 1996/4000 (raw: 2185)
 - **Activities:** ✅ 12/3
 - **Density:** ✅ All > 1
@@ -69,10 +75,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 97% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 8 | 4 | 100% | 19% | 19.0% |
@@ -88,6 +96,7 @@
 | **TOTAL** | | | | | **97.4%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 74 | Included in Core |

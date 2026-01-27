@@ -27,30 +27,35 @@ Spot-checked 19 Priority 2 mappings (scores 75-89) across all levels to verify a
 ### A1 Level (5 samples)
 
 #### 1. ✅ a1-checkpoint-first-contact → ulp-blog-000 (Alphabet guide)
+
 **Score:** 80 | **Priority:** 2
 **Topic Match:** Partial match: {'cyrillic', 'letters', 'alphabet'}
 **Verification:** ✅ Checkpoint module reviewing early A1 content - alphabet guide appropriate
 **Status:** APPROVED
 
 #### 2. ✅ a1-checkpoint-navigation → ULP-057 (Accusative case episode)
+
 **Score:** 85 | **Priority:** 2
 **Topic Match:** Exact match: {'dative', 'instrumental', 'vocative', 'genitive', 'locative', 'accusative'}
 **Verification:** ✅ Navigation checkpoint covers case usage - case episode appropriate
 **Status:** APPROVED
 
 #### 3. ✅ a1-checkpoint-navigation → ULP-067 (Locative case episode)
+
 **Score:** 85 | **Priority:** 2
 **Topic Match:** Exact match: {'dative', 'instrumental', 'vocative', 'genitive', 'locative', 'accusative'}
 **Verification:** ✅ Navigation checkpoint - case episode appropriate
 **Status:** APPROVED
 
 #### 4. ✅ a1-the-accusative-ii-people → ULP-033 (Books + Accusative)
+
 **Score:** 80 | **Priority:** 2
 **Topic Match:** Partial match: {'accusative', 'people'}
 **Verification:** ✅ Accusative case module - episode teaching accusative appropriate (even if topic is books, grammatical focus matches)
 **Status:** APPROVED
 
 #### 5. ✅ a1-tomorrow-future-tense → ULP-097 (Tense-related episode)
+
 **Score:** 80 | **Priority:** 2
 **Topic Match:** Core match: {'present', 'tense', 'future', 'past'}
 **Verification:** ✅ Future tense module - tense-related content appropriate
@@ -61,30 +66,35 @@ Spot-checked 19 Priority 2 mappings (scores 75-89) across all levels to verify a
 ### A2 Level (5 samples)
 
 #### 6. ✅ a2-all-cases-practice → ULP-032 (Shopping + Accusative)
+
 **Score:** 85 | **Priority:** 2
 **Topic Match:** Exact match: {'dative', 'instrumental', 'vocative', 'genitive', 'locative', 'accusative'}
 **Verification:** ✅ All-cases practice module - case episode appropriate
 **Status:** APPROVED
 
 #### 7. ✅ a2-at-the-post-office-and-bank → ULP-047 (Food festivals + Genitive)
+
 **Score:** 85 | **Priority:** 2
 **Topic Match:** Exact match: {'dative', 'instrumental', 'vocative', 'genitive', 'locative', 'accusative'}
 **Verification:** ✅ Transactional module (post office/bank) uses cases - genitive case episode appropriate
 **Status:** APPROVED
 
 #### 8. ✅ a2-logical-prepositions → ULP-056 (Asking for advice + Accusative)
+
 **Score:** 80 | **Priority:** 2
 **Topic Match:** Partial match: {'dative', 'instrumental', '2', 'genitive', 'vocative', 'locative', 'accusative', 'case'}
 **Verification:** ✅ Prepositions module (prepositions govern cases) - case episode appropriate
 **Status:** APPROVED
 
 #### 9. ✅ a2-possessive-sviy → ULP-066 (Sharing memories + Locative)
+
 **Score:** 80 | **Priority:** 2
 **Topic Match:** Partial match: {'dative', 'instrumental', '2', 'genitive', 'vocative', 'locative', 'accusative', 'case'}
 **Verification:** ✅ Possessive pronouns decline by case - case episode provides context
 **Status:** APPROVED
 
 #### 10. ✅ a2-spatial-prepositions → ulp-blog-003 (Genitive Case guide)
+
 **Score:** 80 | **Priority:** 2
 **Topic Match:** Core match: {'dative', 'instrumental', 'genitive', 'vocative', 'locative', 'accusative'}
 **Verification:** ✅ Spatial prepositions govern cases (especially genitive/locative) - genitive guide appropriate
@@ -95,24 +105,28 @@ Spot-checked 19 Priority 2 mappings (scores 75-89) across all levels to verify a
 ### B1 Level (5 samples)
 
 #### 11. ✅ b1-aspect-complete-system → ULP-092 (Aspect-related episode)
+
 **Score:** 85 | **Priority:** 2
 **Topic Match:** Exact match: {'verbs', 'aspect', 'perfective', 'imperfective', 'verb'}
 **Verification:** ✅ Aspect system module - aspect episode appropriate
 **Status:** APPROVED
 
 #### 12. ✅ b1-aspect-negation → ulp-blog-006 (Verb Prefixes guide)
+
 **Score:** 85 | **Priority:** 2
 **Topic Match:** Partial match: {'verbs', 'aspect', 'perfective', 'imperfective', 'verb'}
 **Verification:** ✅ Aspect negation involves prefixes - verb prefix guide appropriate
 **Status:** APPROVED
 
 #### 13. ✅ b1-aspect-past-result-process → ULP-094 (Aspect episode)
+
 **Score:** 75 | **Priority:** 2
 **Topic Match:** Partial match: {'imperfective', 'perfective', 'verbs'}
 **Verification:** ✅ Module distinguishing perfective (result) vs imperfective (process) - aspect episode appropriate
 **Status:** APPROVED
 
 #### 14. ✅ b1-checkpoint-aspect-mastery → ULP-094 (Aspect episode)
+
 **Score:** 75 | **Priority:** 2
 **Topic Match:** Partial match: {'3', 'verbs', 'imperfective', 'у', 'perfective'}
 **Note:** Contains noise words ('3', 'у') but core match is valid
@@ -120,6 +134,7 @@ Spot-checked 19 Priority 2 mappings (scores 75-89) across all levels to verify a
 **Status:** APPROVED (semantic expansion working, stop words could be improved but match is valid)
 
 #### 15. ✅ b1-motion-patterns-other-verbs → ulp-blog-008 (Reflexive Verbs guide)
+
 **Score:** 80 | **Priority:** 2
 **Topic Match:** Partial match: {'verbs'}
 **Verification:** ✅ Motion verbs module - general verb guide provides context (though not motion-specific)
@@ -130,24 +145,28 @@ Spot-checked 19 Priority 2 mappings (scores 75-89) across all levels to verify a
 ### B2 Level (4 samples - all Priority 2 B2 mappings)
 
 #### 16. ✅ b2-aspect-nuances-imperative-infinitive → ulp-blog-007 (Verb Aspect guide)
+
 **Score:** 85 | **Priority:** 2
 **Topic Match:** Exact match: {'verbs', 'aspect', 'perfective', 'imperfective', 'verb'}
 **Verification:** ✅ Advanced aspect nuances - comprehensive aspect guide appropriate
 **Status:** APPROVED
 
 #### 17. ✅ b2-aspect-nuances-secondary-imperfectivization → ulp-blog-006 (Verb Prefixes)
+
 **Score:** 85 | **Priority:** 2
 **Topic Match:** Core match: {'verb', 'imperfective', 'perfective', 'verbs'}
 **Verification:** ✅ Secondary imperfectivization involves prefixes - prefix guide appropriate
 **Status:** APPROVED
 
 #### 18. ✅ b2-aspect-nuances-secondary-imperfectivization → ulp-blog-007 (Verb Aspect)
+
 **Score:** 80 | **Priority:** 2
 **Topic Match:** Core match: {'verbs', 'aspect', 'perfective', 'imperfective', 'verb'}
 **Verification:** ✅ Advanced aspect topic - aspect guide appropriate
 **Status:** APPROVED
 
 #### 19. ✅ b2-reflexive-passive → ulp-blog-008 (Reflexive Verbs guide)
+
 **Score:** 85 | **Priority:** 2
 **Topic Match:** Partial match: {'reflexive'}
 **Verification:** ✅ Reflexive-passive constructions - reflexive verb guide directly relevant
@@ -324,6 +343,7 @@ Spot-checked 19 Priority 2 mappings (scores 75-89) across all levels to verify a
 ## Appendix: Full Sample Data
 
 ### A1 Samples (5)
+
 1. a1-checkpoint-first-contact → ulp-blog-000 | 80
 2. a1-checkpoint-navigation → ULP-057 | 85
 3. a1-checkpoint-navigation → ULP-067 | 85
@@ -331,6 +351,7 @@ Spot-checked 19 Priority 2 mappings (scores 75-89) across all levels to verify a
 5. a1-tomorrow-future-tense → ULP-097 | 80
 
 ### A2 Samples (5)
+
 6. a2-all-cases-practice → ULP-032 | 85
 7. a2-at-the-post-office-and-bank → ULP-047 | 85
 8. a2-logical-prepositions → ULP-056 | 80
@@ -338,6 +359,7 @@ Spot-checked 19 Priority 2 mappings (scores 75-89) across all levels to verify a
 10. a2-spatial-prepositions → ulp-blog-003 | 80
 
 ### B1 Samples (5)
+
 11. b1-aspect-complete-system → ULP-092 | 85
 12. b1-aspect-negation → ulp-blog-006 | 85
 13. b1-aspect-past-result-process → ULP-094 | 75
@@ -345,6 +367,7 @@ Spot-checked 19 Priority 2 mappings (scores 75-89) across all levels to verify a
 15. b1-motion-patterns-other-verbs → ulp-blog-008 | 80
 
 ### B2 Samples (4)
+
 16. b2-aspect-nuances-imperative-infinitive → ulp-blog-007 | 85
 17. b2-aspect-nuances-secondary-imperfectivization → ulp-blog-006 | 85
 18. b2-aspect-nuances-secondary-imperfectivization → ulp-blog-007 | 80

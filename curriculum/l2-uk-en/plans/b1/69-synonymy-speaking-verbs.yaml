@@ -5,42 +5,23 @@ version: '2.0'
 title: 'Синоніми II: дієслова мовлення'
 subtitle: 'Synonymy II: Speaking Verbs'
 content_outline:
-- section: 'Introduction: Speaking Verbs'
-  words: 150
+- section: Вступ
+  words: 331
   points:
   - Beyond казати and говорити
   - Verb categories
   - Register awareness
-- section: Basic Speaking Verbs
-  words: 250
+- section: Читання
+  words: 1134
   points:
-  - казати, говорити, сказати
+  - Speaking verb texts
   - Semantic differences
-  - Usage contexts
-- section: Reporting Verbs
-  words: 250
-  points:
-  - розповідати, повідомляти, заявляти
-  - Formal reporting vocabulary
-  - News and journalism verbs
-- section: Conversation Verbs
-  words: 250
-  points:
-  - розмовляти, спілкуватися, обговорювати
-  - Interactive communication
-  - Dialogue vocabulary
-- section: Specialized Speaking
-  words: 200
-  points:
-  - пояснювати, описувати, запитувати
-  - Purpose-specific verbs
-  - Collocations
-- section: 'Practice: Varied Reporting'
-  words: 100
+- section: Діалоги
+  words: 1535
   points:
   - Use varied speaking verbs
   - Report conversations
-word_target: 1200
+word_target: 3000
 vocabulary_hints:
   required:
   - казати (to say)
@@ -57,16 +38,16 @@ vocabulary_hints:
   - описувати (to describe)
   - спілкуватися (to communicate)
 activity_hints:
-- type: matching
+- type: match-up
   focus: Match verbs to contexts
   items: 25
 - type: fill-in
   focus: Choose correct speaking verb
   items: 20
-- type: transformation
+- type: cloze
   focus: Vary reporting verbs
   items: 15
-- type: writing
+- type: cloze
   focus: Report dialogues
   items: 10
 focus: vocabulary

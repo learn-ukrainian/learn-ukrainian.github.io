@@ -2,12 +2,12 @@
   "module": "petro-kalnyshevskyi",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:54:57.624712Z",
+  "last_audit": "2026-01-27T12:44:25.862551Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-25T23:04:01.345952Z",
     "meta": "2026-01-26T22:20:13.422252Z",
-    "activities": "2026-01-25T23:03:26.463577Z",
+    "activities": "2026-01-27T12:43:36.387106Z",
     "vocabulary": "2026-01-25T22:57:16.428638Z",
     "plan": null
   },
@@ -25,7 +25,7 @@
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "6/3"
+      "message": "7/3"
     },
     "vocabulary": {
       "status": "pass",
@@ -39,11 +39,8 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "3 Outline Compliance Errors",
-      "Missing required activity types: fill-in"
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 5,
     "fail_count": 0
   }

@@ -9,9 +9,10 @@ naturalness:
 duration: 75
 transliteration: none
 tags:
-- grammar
-- metalanguage
-- terminology
-- bridge
+  - grammar
+  - metalanguage
+  - terminology
+  - bridge
 build:
   last_modified: '2026-01-26'
+

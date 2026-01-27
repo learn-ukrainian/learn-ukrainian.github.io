@@ -11,10 +11,12 @@ items:
   ipa: /drɛˈwlʲɑnɪ/
   translation: Derevlyany
   pos: noun
+  gender: m
 - lemma: сіверянин
   ipa: /sʲiˈwɛrʲɑnɪ/
   translation: Siveryany
   pos: noun
+  gender: m
 - lemma: улич
   ipa: /ˈulɪt͡ʃʲi/
   translation: Ulychi
@@ -29,6 +31,7 @@ items:
   ipa: /wɔlɪˈnʲɑnɪ/
   translation: Volhynians
   pos: noun
+  gender: m
 - lemma: племінний союз
   ipa: /plɛmʲiˈnːɪj sɔˈjuz/
   translation: tribal union

@@ -5,47 +5,47 @@ version: '2.0'
 title: 'Цикл культурних відроджень: Теорія'
 content_outline:
 - section: Вступ — Пригнічення → Відродження
-  words: 451
+  words: 515
   points:
   - Український культурний цикл
   - 'Паттерн: пригнічення → підпілля → розквіт'
   - Чому повторюється
   - Структура модуля
 - section: Теоретична рамка
-  words: 790
+  words: 903
   points:
   - Культура як резистенція
   - Мова — головне поле бою
   - «Смерть» і «відродження»
   - Порівняння з іншими народами
 - section: Історичні цикли
-  words: 677
+  words: 774
   points:
   - XVII ст. — козацька культура
   - XIX ст. — романтичне відродження
   - 1920-ті — розстріляне відродження
   - Пост-Сталін — шістдесятники
 - section: Механізми виживання
-  words: 677
+  words: 774
   points:
   - Самвидав
   - Діаспора як «ковчег»
   - Церква — носій культури
   - Індивідуальна пам'ять
 - section: Чому культура виживає
-  words: 564
+  words: 645
   points:
   - Що неможливо знищити
   - Роль травми
   - Кожне покоління — з нуля?
   - Континуїтет vs переривання
 - section: Підсумок
-  words: 341
+  words: 389
   points:
   - Цикл — не фатальність
   - 2022 — новий виток
   - Перехід до пост-Емського періоду
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - культурне відродження (cultural revival)
@@ -65,13 +65,13 @@ vocabulary_hints:
   - культурний спадок (cultural heritage)
   - реконструкція (reconstruction)
 activity_hints:
-- type: theory-development
+- type: critical-analysis
   focus: Build theoretical framework for cultural cycles
   output: Theoretical framework
 - type: critical-analysis
   focus: Map all Ukrainian cultural revival cycles
   output: Cycle timeline
-- type: survival-mechanisms
+- type: critical-analysis
   focus: How culture survived suppression
   output: Mechanism analysis
 - type: comparative-study
@@ -100,3 +100,6 @@ sources:
   notes: Cultural policy context
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of цикл культурних відроджень: теорія'
+- Evaluate the historical significance of пригнічення → відродження

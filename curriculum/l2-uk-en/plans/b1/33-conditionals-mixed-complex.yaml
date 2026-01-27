@@ -5,42 +5,30 @@ version: '2.0'
 title: 'Умовні речення: змішані та складні умови'
 subtitle: Mixed and Complex Conditionals
 content_outline:
-- section: 'Introduction: Mixed Conditionals'
-  words: 150
+- section: 'Тест: Перевірте себе'
+  words: 297
+  points:
+  - Diagnostic quiz on mixed conditionals
+  - Self-assessment questions
+- section: Пояснення
+  words: 1613
   points:
   - Beyond simple conditionals
-  - Mixing time frames
-  - Complex scenarios
-- section: Past Condition, Present Result
-  words: 250
-  points:
-  - If I had done..., I would be...
-  - Past hypothetical → present consequence
-  - Common patterns
-- section: Present Condition, Past Result
-  words: 250
-  points:
-  - If I were..., I would have...
-  - Present state → past consequence
-  - Expressing regrets
-- section: Chained Conditionals
-  words: 250
-  points:
-  - If A, then B; if B, then C
-  - Multiple conditions
-  - Logical sequences
-- section: Complex Condition Patterns
-  words: 200
-  points:
-  - Unless (якщо не)
-  - Even if (навіть якщо/якби)
-  - As long as (доки)
-- section: 'Practice: Complex Conditionals'
-  words: 100
+  - Past Condition, Present Result
+  - Present Condition, Past Result
+  - Chained Conditionals
+  - Complex Condition Patterns (якщо не, навіть якщо/якби)
+- section: Практика
+  words: 645
   points:
   - Form mixed conditionals
   - Create conditional chains
-word_target: 1200
+- section: Діалоги
+  words: 445
+  points:
+  - Mixed conditionals in conversation
+  - Complex scenarios
+word_target: 3000
 vocabulary_hints:
   required:
   - змішаний (mixed)
@@ -60,13 +48,13 @@ activity_hints:
 - type: fill-in
   focus: Complete mixed conditionals
   items: 25
-- type: sentence-combining
+- type: unjumble
   focus: Create conditional chains
   items: 20
 - type: error-correction
   focus: Fix complex conditional errors
   items: 15
-- type: speaking
+- type: quiz
   focus: Discuss hypothetical scenarios
   items: 10
 focus: grammar

@@ -410,12 +410,14 @@ When permission is denied, find alternatives:
 ## Quarterly Review
 
 ### Q1 Review (Date: __)
+
 - [ ] All pending requests followed up
 - [ ] Denied sources replaced
 - [ ] New sources identified
 - [ ] Attribution accuracy verified
 
 ### Q2 Review (Date: __)
+
 - [ ] All pending requests followed up
 - [ ] Denied sources replaced
 - [ ] New sources identified

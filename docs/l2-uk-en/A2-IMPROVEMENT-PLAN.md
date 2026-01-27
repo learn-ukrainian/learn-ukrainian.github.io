@@ -130,6 +130,7 @@ The curriculum plan header stated 1,500 words but the summary showed 1,050. This
 A2 starting immersion was lower than A1 ending immersion. This was fixed.
 
 **Implemented progression:**
+
 | Level Phase | Immersion Target |
 |-------------|------------------|
 | A1 end | 40% |
@@ -314,11 +315,13 @@ All modules meet quality standards established by M01-M05.
 ## Implementation Phases
 
 ### Phase 1: Plan Fixes (P0 planning)
+
 - [x] Reconcile vocabulary target → ~1,250 words
 - [x] Fix immersion progression in plan
 - [x] Decide on word formation reordering → kept order, restructured modules
 
 ### Phase 2: Module Creation (P0 implementation)
+
 - [x] Create M01-M11 (Cases + Checkpoint)
 - [x] Create M12-M24 (Aspect, Comparison + Checkpoint)
 - [x] Create M25-M34 (Complex Sentences + Checkpoint)
@@ -326,12 +329,14 @@ All modules meet quality standards established by M01-M05.
 - [x] Create M44-M57 (Vocabulary + Reviews)
 
 ### Phase 3: Quality Assurance (P1)
+
 - [x] All checkpoints with skill-based format
 - [x] свій contrastive section in M17
 - [x] Vocabulary modules with thematic integration
 - [x] All 57 modules pass audit
 
 ### Phase 4: Enhancement (P2)
+
 - [x] External resources (YouTube, podcasts) in checkpoints
 - [x] Audio from authentic YouTube sources
 

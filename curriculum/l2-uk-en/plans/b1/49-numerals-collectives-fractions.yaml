@@ -5,42 +5,36 @@ version: '2.0'
 title: 'Числівники: збірні та дроби'
 subtitle: Numerals - Collectives and Fractions
 content_outline:
-- section: 'Introduction: Beyond Cardinal Numbers'
-  words: 150
+- section: Тест
+  words: 371
   points:
   - Collective vs cardinal numerals
-  - When collectives are required
   - Fractional expressions
-- section: Collective Numerals
-  words: 250
+- section: Пояснення
+  words: 772
   points:
-  - двоє, троє, четверо, п'ятеро...
-  - Declension patterns
-  - Case agreement rules
-- section: When to Use Collectives
-  words: 250
+  - Collective numerals
+  - When to use collectives
+- section: Дроби та відсотки
+  words: 571
   points:
-  - 'Pluralia tantum: двоє ножиць'
-  - 'Groups of people: троє друзів'
-  - Mixed gender groups
-- section: Fractions
-  words: 250
-  points:
-  - половина, третина, чверть
-  - одна друга, три четвертих
-  - Case of following noun
-- section: Percentages and Decimals
-  words: 200
-  points:
-  - відсоток, процент
-  - Decimal expressions
-  - Mathematical contexts
-- section: 'Practice: Complex Numerals'
-  words: 100
+  - Fractions
+  - Percentages and decimals
+- section: Практика
+  words: 288
   points:
   - Choose cardinal vs collective
   - Express fractions
-word_target: 1200
+- section: Діалоги
+  words: 829
+  points:
+  - Real-world numeral usage
+  - Mathematical contexts
+- section: Потрібно більше практики?
+  words: 169
+  points:
+  - Additional exercises
+word_target: 3000
 vocabulary_hints:
   required:
   - збірний числівник (collective numeral)
@@ -60,13 +54,13 @@ activity_hints:
 - type: fill-in
   focus: Choose cardinal or collective
   items: 25
-- type: transformation
+- type: cloze
   focus: Express as fractions
   items: 20
-- type: multiple-choice
+- type: quiz
   focus: Select correct numeral form
   items: 15
-- type: calculation
+- type: cloze
   focus: Express math in Ukrainian
   items: 10
 focus: grammar

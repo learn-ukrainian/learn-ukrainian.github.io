@@ -1,8 +1,8 @@
 # Audit Report: M70 — danylo-apostol.md
 **Level:** B2 | **Module:** M70 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:54:55
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-27 15:51:20
 
 ## Configuration
 **Type:** B2-history
@@ -21,36 +21,39 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Рішительні пункти 1728 року | 3 | 1 | ✅ |
-| 2 | quiz | Данило Апостол та Кирило Розумовський | 8 | 8 | ✅ |
-| 3 | essay-response | Есе: Дві стратегії виживання | 1 | 1 | ✅ |
-| 4 | comparative-study | Порівняння: Апостол vs Розумовський | 1 | 1 | ✅ |
-| 5 | true-false | Факти про останніх гетьманів | 10 | 8 | ✅ |
-| 6 | match-up | Терміни XVIII століття | 12 | 8 | ✅ |
-| 7 | unjumble | Складіть речення про гетьманів | 8 | 6 | ✅ |
-| 8 | fill-in | Заповніть пропуски в тексті | 10 | 8 | ✅ |
-| 9 | error-correction | Виправте історичні помилки | 8 | 6 | ✅ |
-| 10 | select | Оберіть правильні твердження про епоху | 8 | 6 | ✅ |
+| 2 | essay-response | Есе: Дві стратегії виживання | 1 | 1 | ✅ |
+| 3 | comparative-study | Порівняння: Апостол vs Розумовський | 1 | 1 | ✅ |
+| 4 | true-false | Факти про останніх гетьманів | 10 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 10 (target: 3-9) ❌
-- Unique types: 10 (minimum: 2) ✅
+- Total activities: 4 (target: 3-9) ✅
+- Unique types: 4 (minimum: 2) ✅
 - Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in danylo-apostol.yaml: Insufficient activities: 4 found, minimum 5 required for B2-HIST
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 4027/4000 (raw: 4124)
-- **Activities:** ✅ 10/3
+- **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 10/2 types
+- **Unique_types:** ✅ 4/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ Too many activities: 10 (target 3-9); 1 fill-in with year answers
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ✅ Content-heavy OK (4 activities)
 - **Immersion:** 🇺🇦 99.7% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

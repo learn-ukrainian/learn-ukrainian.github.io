@@ -5,31 +5,33 @@ version: '1.0'
 title: «Український вісник» Чорновола
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- Analyze the causes and consequences of «український вісник» чорновола
+- Evaluate the historical significance of хроніка опору
 content_outline:
 - section: Вступ — Хроніка опору
-  words: 400
+  words: 457
   subsections:
   - Що таке «Український вісник»?
   - Чорновіл — редактор
   - Мета видання
   - Значення для руху
 - section: В'ячеслав Чорновіл
-  words: 500
+  words: 571
   subsections:
   - Біографія
   - Журналіст стає дисидентом
   - «Лихо з розуму» — перша праця
   - Арешти і заслання
 - section: Історія видання
-  words: 600
+  words: 686
   subsections:
   - Перший номер — 1970
   - Шість номерів до арешту
   - Відновлення — 1987
   - Легалізація — Рух
 - section: Структура і зміст
-  words: 600
+  words: 686
   subsections:
   - Хроніка репресій
   - Документи
@@ -37,26 +39,26 @@ content_outline:
   - Літературні твори
   - Статті про культуру
 - section: Фрагмент — Хроніка репресій
-  words: 700
+  words: 800
   subsections:
   - Текст (з глосами)
   - Стиль — документальний
   - Факти без коментарів
   - Сила простого свідчення
 - section: Значення для руху
-  words: 400
+  words: 457
   subsections:
   - Інформування — хто знає, може діяти
   - Зв'язок із Заходом
   - Моральна підтримка
   - Зразок для інших
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - «Вісник» як модель
   - Чорновіл — символ
   - Зв'язок із незалежністю
-word_target: 3500
+word_target: 4000
 vocabulary:
 - вісник
 - хроніка
@@ -76,11 +78,11 @@ vocabulary:
 activities:
 - type: reading
   focus: Repression chronicle excerpt
-- type: journalism-analysis
+- type: critical-analysis
   focus: How does Chornovil document without editorializing?
 - type: comparative-study
   focus: Compare "Visnyk" with Russian "Хроника текущих событий"
-- type: impact-assessment
+- type: critical-analysis
   focus: How did the publication affect the movement?
 - type: essay-response
   focus: Яку роль відіграв 'Український вісник' у дисидентському русі?

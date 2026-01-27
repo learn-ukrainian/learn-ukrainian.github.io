@@ -5,14 +5,14 @@ version: '2.0'
 title: Літературна дискусія 1925-1928
 content_outline:
 - section: Вступ — Битва за культуру
-  words: 400
+  words: 457
   points:
   - Що таке «літературна дискусія»?
   - Чому це не тільки про літературу
   - Політичний вимір
   - Структура модуля
 - section: Учасники і позиції
-  words: 600
+  words: 686
   points:
   - ВАПЛІТЕ — модерністи
   - Хвильовий — лідер
@@ -20,7 +20,7 @@ content_outline:
   - Партійне втручання
   - Хто з ким сперечався
 - section: Головні питання дискусії
-  words: 700
+  words: 800
   points:
   - Якою має бути українська література?
   - Орієнтація — Москва чи Європа?
@@ -28,7 +28,7 @@ content_outline:
   - Традиція чи модернізм?
   - «Азіатський ренесанс» — що це
 - section: «Геть від Москви!» — Хвильовий
-  words: 600
+  words: 686
   points:
   - Тези Хвильового
   - Психологічна Європа
@@ -36,26 +36,26 @@ content_outline:
   - Реакція партії
   - Самокритика — вимушена
 - section: Як дискусія закінчилась
-  words: 500
+  words: 571
   points:
   - Партійне рішення 1928
   - Ліквідація ВАПЛІТЕ
   - Доля учасників
   - Що залишилось від дискусії
 - section: Значення дискусії
-  words: 400
+  words: 457
   points:
   - Остання вільна дискусія
   - Питання актуальні досі
   - Хвильовий і 2022
   - Культура vs. політика
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Від дискусії до терору
   - Хвильовий — символ
   - Підготовка до наступного модуля
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - літературна дискусія (literary discussion)
@@ -78,10 +78,10 @@ activity_hints:
 - type: reading
   focus: Excerpts from Khvylovyi's pamphlets
   source: Provide excerpts
-- type: position-mapping
+- type: critical-analysis
   focus: Map different positions in the debate
   output: Debate diagram
-- type: contemporary-connection
+- type: critical-analysis
   focus: How do Khvylovyi's arguments apply today?
   output: Relevance analysis
 - type: reading
@@ -114,3 +114,6 @@ sources:
   notes: Key figure
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- Analyze the causes and consequences of літературна дискусія 1925-1928
+- Evaluate the historical significance of битва за культуру

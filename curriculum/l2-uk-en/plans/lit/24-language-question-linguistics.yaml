@@ -6,37 +6,37 @@ title: Мовне питання
 subtitle: The Language Question
 content_outline:
 - section: Вступ — Чому правопис — це політика?
-  words: 500
+  words: 625
   points:
   - Мова як поле битви
   - Зв'язок орфографії та ідентичності
   - XIX століття — час "мовних війн"
 - section: Кулішівка — система Куліша
-  words: 800
+  words: 1000
   points:
   - Принципи фонетичного правопису
   - Як Кулішівка відрізняється від етимологічного
   - Практичне застосування
 - section: «Війни алфавітів» XIX століття
-  words: 700
+  words: 875
   points:
   - Максимовичівка vs Кулішівка
   - Ярижка (російська транслітерація)
   - Позиція Австро-Угорщини
 - section: Імперські заборони
-  words: 700
+  words: 875
   points:
   - Валуєвський циркуляр (1863)
   - Емський указ (1876)
   - Наслідки для української літератури
 - section: Фонетика vs етимологія
-  words: 500
+  words: 625
   points:
   - 'Фонетичний принцип: «як чую, так пишу»'
   - 'Етимологічний принцип: історичне написання'
   - Сучасний український правопис
 - section: Підсумок — Мова як нація
-  words: 400
+  words: 500
   points:
   - Внесок Куліша в мовознавство
   - Від XIX до XXI століття
@@ -65,22 +65,10 @@ activity_hints:
   focus: Статті про історію українського правопису
   source: Wikipedia
   items: 4+
-- type: quiz
-  focus: Факти про мовні реформи XIX ст.
-  items: 15+
-- type: match-up
-  focus: Система правопису → її автор / принцип
-  items: 12+
 - type: essay-response
   focus: Чому імперія боялася українського правопису?
   word_target: 300
   output: Політико-лінгвістичне есе
-- type: group-sort
-  focus: Фонетичні vs етимологічні написання
-  items: 20+
-- type: cloze
-  focus: Ключові дати і закони
-  items: 12+
 focus: linguistics
 pedagogy: Analysis
 prerequisites:
@@ -109,3 +97,6 @@ sources:
   notes: Політичний контекст
 immersion: 100% Ukrainian
 phase: LIT.4 The Intellectuals (Kulish & Kostomarov)
+objectives:
+- Understand and apply мовне питання
+- Analyze and evaluate це політика?

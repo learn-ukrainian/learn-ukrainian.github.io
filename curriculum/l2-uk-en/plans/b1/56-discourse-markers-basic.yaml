@@ -5,42 +5,48 @@ version: '2.0'
 title: 'Дискурсивні маркери: базові конектори'
 subtitle: 'Discourse Markers: Basic Connectors'
 content_outline:
-- section: 'Introduction: Text Cohesion'
-  words: 150
+- section: Вступ
+  words: 130
   points:
   - What discourse markers do
   - Categories of connectors
   - Written vs spoken markers
-- section: Addition and Sequence
-  words: 250
+- section: Вивчення слів
+  words: 1009
   points:
-  - також, крім того, до того ж
-  - спочатку, потім, нарешті
-  - Building logical flow
-- section: Contrast and Concession
-  words: 250
+  - Five vocabulary groups
+  - Addition, contrast, cause/result
+  - Clarification, generalization
+- section: Вживання
+  words: 383
   points:
-  - але, однак, проте
-  - хоча, незважаючи на
-  - Showing opposing ideas
-- section: Cause and Result
-  words: 250
+  - Position in sentence
+  - Punctuation rules
+  - Formal vs informal register
+- section: Читання
+  words: 383
   points:
-  - тому що, через те що
-  - отже, тому, внаслідок
-  - Logical reasoning
-- section: Examples and Clarification
-  words: 200
+  - News article
+  - Academic text
+  - Blog (informal)
+- section: Діалоги
+  words: 426
   points:
-  - наприклад, зокрема
-  - тобто, іншими словами
-  - Supporting statements
-- section: 'Practice: Building Cohesion'
-  words: 100
+  - Work meeting (formal)
+  - Friends discussing plans (informal)
+  - Student discussion, advice
+- section: Додаткові маркери
+  words: 400
   points:
-  - Connect ideas with markers
-  - Improve text flow
-word_target: 1200
+  - Replacement and alternatives
+  - Clarification and examples
+  - Emphasis and affirmation
+- section: Підсумок
+  words: 269
+  points:
+  - Key markers recap
+  - Practice recommendations
+word_target: 3000
 vocabulary_hints:
   required:
   - також (also)
@@ -60,13 +66,13 @@ activity_hints:
 - type: fill-in
   focus: Insert appropriate markers
   items: 25
-- type: transformation
+- type: cloze
   focus: Connect sentences with markers
   items: 20
 - type: error-correction
   focus: Fix marker usage
   items: 15
-- type: writing
+- type: cloze
   focus: Write cohesive paragraphs
   items: 10
 focus: vocabulary

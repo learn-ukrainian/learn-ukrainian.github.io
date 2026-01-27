@@ -1,9 +1,11 @@
 # Audit Report: M77 — 77-klasychna-muzyka-2-natsionalna-shkola.md
+
 **Level:** C1 | **Module:** M77 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:42
 
 ## Configuration
+
 **Type:** C1-fine-arts
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -16,6 +18,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Життя та фундаментальна діяльність Миколи Лисенка | 12 | 5 | ✅ |
@@ -42,16 +45,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 77-klasychna-muzyka-2-natsionalna-shkola.yaml: Schema validation error at key 'words': ['Микола', 'Лисенко', 'був', 'центральним', 'архітектором', 'української', 'професійної', 'музики', 'та', 'національної', 'ідентичності'] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2656/3000 (raw: 2805)
 - **Activities:** ✅ 16/12
 - **Density:** ✅ All > 12
@@ -70,10 +76,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 96% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 36 | 15 | 100% | 25% | 25.0% |
@@ -87,6 +95,7 @@
 | **TOTAL** | | | | | **96.6%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 95 | Included in Core |

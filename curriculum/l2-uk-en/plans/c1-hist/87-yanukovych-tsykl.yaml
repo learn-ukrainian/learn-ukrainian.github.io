@@ -5,54 +5,54 @@ version: '2.0'
 title: 'Янукович: Сучасна версія циклу'
 content_outline:
 - section: Вступ — Цикл у XXI столітті
-  words: 400
+  words: 457
   points:
   - Янукович — не перший і не останній
   - Чому це кооптація
   - Сучасна версія старого паттерну
   - Структура модуля
 - section: Фаза 1 — Підкуп (2010-2013)
-  words: 700
+  words: 800
   points:
   - 15 мільярдів від Путіна
   - Харківські угоди — флот
   - Знижка на газ
   - Що обіцяли натомість
 - section: Фаза 2 — Залежність
-  words: 600
+  words: 686
   points:
   - Газова залежність
   - Кредитна залежність
   - Політичний тиск
   - Шлях до ЄС — закритий
 - section: Фаза 3 — Вілнюс 2013
-  words: 600
+  words: 686
   points:
   - Угода про асоціацію — готова
   - Відмова — чому
   - Тиск Росії
   - Точка неповернення
 - section: Фаза 4 — Крах
-  words: 500
+  words: 571
   points:
   - Майдан
   - Втеча
   - Анексія Криму
   - Війна на Донбасі
 - section: Чому цикл зламався
-  words: 400
+  words: 457
   points:
   - Громадянське суспільство
   - Досвід 2004
   - Європейський вибір
   - Народ — не еліта
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Янукович — останній «гетьман»?
   - Цикл vs. революція
   - Перехід до синтезу
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - Янукович (Yanukovych)
@@ -75,10 +75,10 @@ activity_hints:
 - type: critical-analysis
   focus: Map Yanukovych through co-optation cycle
   output: Cycle diagram
-- type: contemporary-analysis
+- type: critical-analysis
   focus: 2010-2014 — how Russia's cycle worked
   output: Contemporary analysis
-- type: breaking-point
+- type: critical-analysis
   focus: Why did the cycle break in 2014?
   output: Revolution analysis
 - type: comparative-study
@@ -110,3 +110,6 @@ sources:
   notes: 2010 agreements
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of янукович: сучасна версія циклу'
+- Evaluate the historical significance of цикл у xxi столітті

@@ -25,6 +25,7 @@ This checkpoint confirms your grammar readiness before Phase A2.6 practical scen
 > **Вечеряти** — to have dinner, **засинати** — to fall asleep
 
 **Daily routine verbs:**
+
 | Verb | Meaning |
 |------|---------|
 | прокидатися | to wake up |
@@ -86,6 +87,7 @@ This checkpoint confirms your grammar readiness before Phase A2.6 practical scen
 > Вона працює **вчителькою**. (She works as a teacher.)
 
 **Key professions:**
+
 | Ukrainian | English |
 |-----------|---------|
 | лікар | doctor |
@@ -147,6 +149,7 @@ This checkpoint confirms your grammar readiness before Phase A2.6 practical scen
 > **Мені погано.** (I feel bad.)
 
 **Body parts:**
+
 | Ukrainian | English |
 |-----------|---------|
 | голова | head |
@@ -213,6 +216,7 @@ This checkpoint confirms your grammar readiness before Phase A2.6 practical scen
 > **Чи є знижка?** (Is there a discount?)
 
 **Shopping vocabulary:**
+
 | Ukrainian | English |
 |-----------|---------|
 | гроші | money |
@@ -291,6 +295,7 @@ Read the story and answer the questions:
    > Квитки — tickets
 
 # Підсумок
+
 | Skill           | Key Pattern         | Example               |
 | --------------- | ------------------- | --------------------- |
 | Daily Life      | Routine verbs       | прокидатися, снідати  |
@@ -301,7 +306,7 @@ Read the story and answer the questions:
 > 💡 **Успіхи!**
 >
 > Ви закінчили рівень A2! Тепер ви можете говорити про щоденне життя, роботу, здоров'я і подорожі.
-> _You finished A2 level! Now you can talk about daily life, work, health, and travel._
+> *You finished A2 level! Now you can talk about daily life, work, health, and travel.*
 
 ---
 

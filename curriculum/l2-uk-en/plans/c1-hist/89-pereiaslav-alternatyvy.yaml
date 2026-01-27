@@ -5,54 +5,54 @@ version: '2.0'
 title: 'Переяслав 1654: Які були альтернативи?'
 content_outline:
 - section: Вступ — «Що якби...»
-  words: 400
+  words: 457
   points:
   - Переяслав — не єдиний варіант
   - Контрфактична історія — навіщо
   - Альтернативи, що існували
   - Структура модуля
 - section: Швецька альтернатива
-  words: 600
+  words: 686
   points:
   - Карл X Густав — контакти
   - Що пропонували
   - Чому не вибрали
   - Якби вибрали — сценарій
 - section: Османська альтернатива
-  words: 600
+  words: 686
   points:
   - Туреччина — протектор Криму
   - Хмельницький і султан
   - Ризики і можливості
   - Кримськотатарський союз
 - section: Польська альтернатива
-  words: 600
+  words: 686
   points:
   - Переговори з Річчю Посполитою
   - Гадяцька унія (1658) — що могло бути
   - Чому переговори провалились
   - Структурні перешкоди
 - section: Незалежність
-  words: 500
+  words: 571
   points:
   - Чи була можливою?
   - Козацька держава — ресурси
   - Геополітичний контекст
   - Чому Хмельницький не вірив
 - section: Чому Москва?
-  words: 500
+  words: 571
   points:
   - Релігійний аргумент
   - Військова допомога — негайна
   - Ілюзія «братства»
   - Короткостроковий погляд
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Альтернативи існували
   - Вибір Москви — не неминучий
   - Уроки для рішень
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - альтернатива (alternative)
@@ -75,13 +75,13 @@ activity_hints:
 - type: essay-response
   focus: Swedish alternative — what if scenario
   output: Counterfactual analysis
-- type: decision-tree
+- type: critical-analysis
   focus: Map Khmelnytsky's options in 1654
   output: Decision tree
 - type: comparative-study
   focus: Compare four alternatives — pros and cons
   output: Options comparison
-- type: structural-analysis
+- type: critical-analysis
   focus: Why was independence difficult?
   output: Structural barriers analysis
 - type: essay-response
@@ -111,3 +111,6 @@ sources:
   notes: Decision-maker
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of переяслав 1654: які були альтернативи?'
+- Evaluate the historical significance of «що якби...»

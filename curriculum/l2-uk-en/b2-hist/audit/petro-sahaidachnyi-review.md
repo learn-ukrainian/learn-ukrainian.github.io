@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M45 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 23:52:10
+**Generated:** 2026-01-27 18:07:11
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** comparative-study, critical-analysis, essay-response, quiz, reading
+**Required Types:** comparative-study, critical-analysis, essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -22,19 +22,19 @@
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Лицарська слава: 'Вірші на жалісний погреб' | 3 | 1 | ✅ |
 | 2 | critical-analysis | Аналіз барокового ідеалу гетьмана | 1 | 1 | ✅ |
-| 3 | quiz | Життя та реформи Петра Сагайдачного | 8 | 8 | ✅ |
-| 4 | comparative-study | Сагайдачний vs Наливайко: Дві стратегії боротьби | 1 | 1 | ✅ |
-| 5 | essay-response | Ідеал козацького лицарства | 1 | 1 | ✅ |
+| 3 | comparative-study | Сагайдачний vs Наливайко: Дві стратегії боротьби | 1 | 1 | ✅ |
+| 4 | essay-response | Ідеал козацького лицарства | 1 | 1 | ✅ |
+| 5 | true-false | Петро Сагайдачний: Правда чи міф? | 10 | 8 | ✅ |
 
 **Summary:**
 - Total activities: 5 (target: 3-9) ✅
 - Unique types: 5 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 5/5 (comparative-study, critical-analysis, essay-response, quiz, reading) ✅
+- Required types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 5422/4000 (raw: 5574)
+- **Words:** ✅ 5431/4000 (raw: 5583)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -74,7 +74,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Петро Сагайдачний: Гетьман і меценат** | ⚪️ | 100 | Skipped |
-| **Вступ** | ✅ | 464 | Included in Core |
+| **Вступ** | ✅ | 473 | Included in Core |
 | **Шлях від Кульчиць до Січі** | ⚪️ | 906 | Skipped |
 | **Військова слава: Кафа та Москва — шлях переможця** | ⚪️ | 808 | Skipped |
 | **Читання: Голос барокової епохи** | ✅ | 351 | Included in Core |

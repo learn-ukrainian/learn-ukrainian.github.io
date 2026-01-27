@@ -85,7 +85,7 @@ Let's see the accusative in action:
 — Добре. Ви берете **конверт**?
 — Так, дайте один **конверт**, будь ласка.
 
-_(Good day! I want to send a parcel. — Please. Show your passport. — Here you are. I also have a letter. — Good. Are you taking an envelope? — Yes, give me one envelope, please.)_
+*(Good day! I want to send a parcel. — Please. Show your passport. — Here you are. I also have a letter. — Good. Are you taking an envelope? — Yes, give me one envelope, please.)*
 
 ### Mini-Dialogue 2: Packing for a Trip
 
@@ -95,7 +95,7 @@ _(Good day! I want to send a parcel. — Please. Show your passport. — Here yo
 — Я вже маю **паспорт**. Де **квитки**?
 — Вони в **коробці** на столі.
 
-_(Do you have a suitcase? — Yes, I'm taking a bag and a suitcase. — Don't forget your passport and tickets! — I already have my passport. Where are the tickets? — They're in the box on the table.)_
+*(Do you have a suitcase? — Yes, I'm taking a bag and a suitcase. — Don't forget your passport and tickets! — I already have my passport. Where are the tickets? — They're in the box on the table.)*
 
 ### Mini-Dialogue 3: Reading the News
 
@@ -104,7 +104,7 @@ _(Do you have a suitcase? — Yes, I'm taking a bag and a suitcase. — Don't fo
 — А я маю цікавий **журнал**. Хочеш бачити?
 — Так! Покажи **журнал**.
 
-_(What are you reading? — I'm reading a newspaper. — And I have an interesting magazine. Do you want to see? — Yes! Show me the magazine.)_
+*(What are you reading? — I'm reading a newspaper. — And I have an interesting magazine. Do you want to see? — Yes! Show me the magazine.)*
 
 ## Practice
 

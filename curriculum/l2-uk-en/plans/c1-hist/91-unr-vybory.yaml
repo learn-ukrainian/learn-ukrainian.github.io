@@ -5,54 +5,54 @@ version: '2.0'
 title: 'УНР 1917-1921: Стратегічні помилки'
 content_outline:
 - section: Вступ — Втрачена незалежність
-  words: 400
+  words: 457
   points:
   - 1917-1921 — шанс і провал
   - Чому важливо аналізувати
   - Стратегічні рішення — ключові
   - Структура модуля
 - section: Помилка 1 — Федералізм замість незалежності
-  words: 600
+  words: 686
   points:
   - Центральна Рада — автономія
   - Чому не одразу незалежність
   - Втрачений час
   - Коли змінили курс — пізно
 - section: Помилка 2 — Армія
-  words: 600
+  words: 686
   points:
   - Небажання мілітаризму
   - «Вільне козацтво» — не армія
   - Без армії — без держави
   - Що могли зробити
 - section: Помилка 3 — Брест-Литовськ
-  words: 600
+  words: 686
   points:
   - Угода з Німеччиною
   - Окупація — ціна допомоги
   - Гетьманат Скоропадського
   - Делегітимізація УНР
 - section: Помилка 4 — Союзники
-  words: 500
+  words: 571
   points:
   - Польща — війна і союз
   - Антанта — ігнорування
   - Ставка на одного партнера
   - Геополітична наївність
 - section: Що могли зробити інакше
-  words: 500
+  words: 571
   points:
   - Раніша незалежність
   - Створення армії
   - Інша зовнішня політика
   - Чи було шанс?
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - УНР — трагедія помилок
   - Уроки для майбутнього
   - Перехід до 1991
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - УНР (UNR - Ukrainian People's Republic)
@@ -72,7 +72,7 @@ vocabulary_hints:
   - геополітична наївність (geopolitical naivety)
   - реальполітик (realpolitik)
 activity_hints:
-- type: mistake-analysis
+- type: critical-analysis
   focus: Catalog UNR strategic errors
   output: Mistake inventory
 - type: essay-response
@@ -81,7 +81,7 @@ activity_hints:
 - type: comparative-study
   focus: UNR vs. successful independence movements
   output: Movement comparison
-- type: military-analysis
+- type: critical-analysis
   focus: Could UNR have built an effective army?
   output: Military capacity analysis
 - type: essay-response
@@ -111,3 +111,6 @@ sources:
   notes: Government
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of унр 1917-1921: стратегічні помилки'
+- Evaluate the historical significance of втрачена незалежність

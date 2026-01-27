@@ -24,8 +24,8 @@
 
 ## Linguistic Accuracy Issues
 
-- _Fixed:_ "Заборона конкретної дії (ДВ)" was incorrect. Rewrote section to explain that Prohibition is almost always IPF ("Не роби"), while PF is used for Warnings ("Не зроби").
-- _Fixed:_ Vocabulary typos (`понеділко` -> `понеділок`, `віко` -> `вікно`).
+- *Fixed:* "Заборона конкретної дії (ДВ)" was incorrect. Rewrote section to explain that Prohibition is almost always IPF ("Не роби"), while PF is used for Warnings ("Не зроби").
+- *Fixed:* Vocabulary typos (`понеділко` -> `понеділок`, `віко` -> `вікно`).
 
 ## Strengths
 

@@ -1,10 +1,12 @@
 # Audit Report: M20 — 20-c1-1-checkpoint.md
+
 **Level:** C1 | **Module:** M20 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 1750
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:06
 
 ## Configuration
+
 **Type:** C1-checkpoint
 **Word Target:** 1750 words
 **Activities:** 14-18 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Академічний стиль (M02) | 9 | 5 | ✅ |
@@ -54,6 +57,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (95% overlap): "## Перевірка знань
 
 Ця контрольна точка перевіряє такі навички:
@@ -62,12 +66,14 @@
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ✅ 2012/1750 (raw: 2187)
 - **Activities:** ✅ 25/14
 - **Density:** ✅ All > 14
@@ -86,10 +92,12 @@
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 93% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 41 | 15 | 100% | 25% | 25.0% |
@@ -103,6 +111,7 @@
 | **TOTAL** | | | | | **93.1%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 43 | Included in Core |

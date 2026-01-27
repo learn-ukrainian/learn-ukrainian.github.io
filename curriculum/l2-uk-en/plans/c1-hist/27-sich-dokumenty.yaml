@@ -5,14 +5,14 @@ version: '2.0'
 title: 'Документи Січі: Козацьке самоврядування'
 content_outline:
 - section: Вступ — Січ як держава
-  words: 400
+  words: 457
   points:
   - Запорозька Січ — що це було?
   - Самоврядування — унікальний феномен
   - Документи Січі — що збереглося
   - Чому важливо вивчати
 - section: Устрій Січі
-  words: 600
+  words: 686
   points:
   - Козацька рада — верховна влада
   - Кошовий отаман — виконавча
@@ -20,7 +20,7 @@ content_outline:
   - Вибори — як працювали
   - Демократія чи олігархія?
 - section: Типи документів
-  words: 500
+  words: 571
   points:
   - Протоколи рад
   - Судові справи
@@ -28,7 +28,7 @@ content_outline:
   - Дипломатичне листування
   - Що втрачено
 - section: Козацьке право
-  words: 700
+  words: 800
   points:
   - Звичаєве право — не писане
   - Судочинство — як працювало
@@ -36,26 +36,26 @@ content_outline:
   - Захист власності
   - Рівність? — для кого
 - section: Фрагмент — Судова справа
-  words: 600
+  words: 686
   points:
   - Текст (з глосами)
   - Процедура суду
   - Аргументи сторін
   - Вирок і виконання
 - section: Січ і зовнішній світ
-  words: 400
+  words: 457
   points:
   - Відносини з Гетьманщиною
   - Відносини з Москвою
   - Дипломатія з Кримом і Туреччиною
   - Документальні свідчення
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Січ — протодержава?
   - Унікальність документів
   - Романтизація vs. реальність
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - Січ (Sich)
@@ -111,3 +111,6 @@ sources:
   notes: Cossack council
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of документи січі: козацьке самоврядування'
+- Evaluate the historical significance of січ як держава

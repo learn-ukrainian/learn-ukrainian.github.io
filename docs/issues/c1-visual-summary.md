@@ -67,11 +67,13 @@ After Fixes (estimated):
 ## Key Insights from Visual Analysis
 
 ### 1. Completion Pattern
+
 - **Strongest:** Contemporary period (M100-M130) - 100% complete, 96.8% pass
 - **Weakest:** Historical period (M36-M99) - 43.8% complete, 46.4% pass
 - **Not started:** Checkpoints (M33-M35) and Literature track (M151-M196)
 
 ### 2. Quality Pattern
+
 **U-shaped quality curve:**
 - Phase 1: High (90.9%) - Recent academic modules
 - Phase 2: Low (46.4%) - Older biographical modules ← needs fixes
@@ -81,6 +83,7 @@ After Fixes (estimated):
 **Explanation:** Quality improved over time as templates matured. Phase 2 was created earlier, Phase 3 created later with better processes.
 
 ### 3. Error Concentration
+
 **75% of errors** are YAML syntax in one phase (M36-M99):
 - Concentrated in historical biographies
 - Same error pattern (mapping values)
@@ -92,6 +95,7 @@ After Fixes (estimated):
 - One automated script adds all sections
 
 ### 4. Comparison Advantage
+
 **C1 outperforms B1/B2 by massive margin:**
 - C1: 81.1% pass (green zone)
 - B2: 48.1% pass (yellow zone)
@@ -102,6 +106,7 @@ After Fixes (estimated):
 ## Strategic Takeaways
 
 ### Quick Wins (High Impact, Low Effort)
+
 1. **Fix YAML errors** → +21 modules pass (2-3h)
 2. **Add missing sections** → +23 modules improved (3-4h)
 3. **Remove duplicate M04** → Clean numbering (5min)
@@ -109,10 +114,12 @@ After Fixes (estimated):
 **Total effort:** 7-9 hours → **95%+ pass rate**
 
 ### Medium Wins (Medium Impact, Medium Effort)
+
 4. **Create M33-M35 checkpoints** → 77% complete (6-8h)
 5. **Investigate unknowns** → Identify root causes (1h)
 
 ### Long-Term Investments (High Impact, High Effort)
+
 6. **Complete historical bios** → 95% complete (108-144h)
 7. **Create literature track** → 100% complete (184-276h)
 
@@ -142,36 +149,42 @@ Future: Decide on Literature track
 Use this section to track fix progress:
 
 ### Fix #1: YAML Syntax (21 modules)
+
 ```
 Progress: [░░░░░░░░░░░░░░░░░░░░] 0/21 (0%)
 Status: ⏳ Pending
 ```
 
 ### Fix #2: Missing Sections (23 modules)
+
 ```
 Progress: [░░░░░░░░░░░░░░░░░░░░] 0/23 (0%)
 Status: ⏳ Pending
 ```
 
 ### Fix #3: Duplicate M04
+
 ```
 Progress: [░] 0/1 (0%)
 Status: ⏳ Pending
 ```
 
 ### Fix #4: Schema Violations (2 modules)
+
 ```
 Progress: [░░] 0/2 (0%)
 Status: ⏳ Pending
 ```
 
 ### Fix #5: Unknown Errors (4 modules)
+
 ```
 Progress: [░░░░] 0/4 (0%)
 Status: ⏳ Pending
 ```
 
 ### Overall Fix Progress
+
 ```
 Current:  [████████████████████████████████░░░░░░] 120/148 (81.1%)
 Target:   [██████████████████████████████████████] 143/148 (95%+)

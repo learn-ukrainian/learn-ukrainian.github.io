@@ -74,22 +74,10 @@ activity_hints:
   focus: Chronicle descriptions of Lviv's founding and growth
   source: Галицько-Волинський літопис (adapted)
   items: 3 passages
-- type: quiz
-  focus: Key events in Lev's reign
-  items: 12+
-- type: match-up
-  focus: Cities and their significance in Galicia-Volhynia
-  items: 10+
 - type: essay-response
   focus: Why did Lev move the capital to Lviv?
   word_target: 250
   output: Strategic analysis
-- type: group-sort
-  focus: Military vs. economic vs. cultural achievements
-  items: 12+
-- type: fill-in
-  focus: Key dates and territorial acquisitions
-  items: 8+
 focus: biography
 pedagogy: seminar
 prerequisites:

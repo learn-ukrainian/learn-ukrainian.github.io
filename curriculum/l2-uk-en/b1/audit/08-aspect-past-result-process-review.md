@@ -1,8 +1,8 @@
 # Audit Report: M08 — 08-aspect-past-result-process.md
-**Level:** B1 | **Module:** M08 | **Phase:** B1 | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M08 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:26:48
+**Generated:** 2026-01-27 16:25:47
 
 ## Configuration
 **Type:** B1-grammar
@@ -20,41 +20,36 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Результат чи процес? | 14 | 8 | ✅ |
-| 2 | match-up | Маркери результату та процесу | 12 | 8 | ✅ |
-| 3 | cloze | Вибір виду — результат чи процес | 14 | 12 | ✅ |
-| 4 | select | Вибір речення за контекстом | 6 | 6 | ✅ |
-| 5 | true-false | Правда чи неправда про вид | 8 | 8 | ✅ |
-| 6 | group-sort | Результат чи процес? | 18 | 12 | ✅ |
-| 7 | unjumble | Речення про результат і процес | 8 | 6 | ✅ |
-| 8 | error-correction | Виправлення помилок виду | 8 | 6 | ✅ |
-| 9 | cloze | Вид у контексті | 16 | 12 | ✅ |
-| 10 | mark-the-words | Маркери результату | 7 | 6 | ✅ |
-| 11 | select | Множинний вибір — результат і процес | 6 | 6 | ✅ |
-| 12 | translate | Переклад — результат чи процес | 6 | 6 | ✅ |
-| 13 | fill-in | Маркери тривалості | 12 | 8 | ✅ |
+| 1 | quiz | Процес чи Результат? | 8 | 8 | ✅ |
+| 2 | match-up | Пари Виду | 12 | 8 | ✅ |
+| 3 | true-false | Аналіз Ситуацій | 8 | 8 | ✅ |
+| 4 | group-sort | Сортування Маркерів | 12 | 12 | ✅ |
+| 5 | fill-in | Професійний контекст | 8 | 8 | ✅ |
+| 6 | quiz | Фінальний Тест | 8 | 8 | ✅ |
+| 7 | fill-in | Вибір дієслова | 10 | 8 | ✅ |
+| 8 | cloze | Історія про ремонт | 15 | 12 | ✅ |
 
 **Summary:**
-- Total activities: 13 (target: 8-12) ❌
-- Unique types: 11 (minimum: 4) ✅
-- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Total activities: 8 (target: 8-12) ✅
+- Unique types: 6 (minimum: 4) ✅
+- Priority types used: 2/4 (cloze, fill-in) ✅
 - Required types used: 3/3 (cloze, fill-in, quiz) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2166/1500 (raw: 2505)
-- **Activities:** ✅ 13/8
+- **Words:** ✅ 2837/1500 (raw: 3463)
+- **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 13/5
+- **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 131/25
+- **Vocab:** ✅ 25/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.9% (target 85-100% (B1.1 Aspect))
+- **Immersion:** 🇺🇦 92.6% (target 85-100% (B1.1 Aspect))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -66,26 +61,27 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 46 | 24 | 100% | 20% | 20.0% |
-| engagement | 9 | 5 | 100% | 15% | 15.0% |
-| dialogues | 18 | 4 | 100% | 15% | 15.0% |
-| variety | 0.96 | - | 96% | 10% | 9.6% |
-| cultural | 8 | 3 | 100% | 10% | 10.0% |
-| realworld | 8 | 3 | 100% | 10% | 10.0% |
-| visual | 4 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.91 | - | 91% | 5% | 4.6% |
-| questions | 39 | 5 | 100% | 5% | 5.0% |
-| proverbs | 7 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.1%** |
+| examples | 88 | 24 | 100% | 20% | 20.0% |
+| engagement | 8 | 5 | 100% | 15% | 15.0% |
+| dialogues | 28 | 4 | 100% | 15% | 15.0% |
+| variety | 0.99 | - | 99% | 10% | 9.9% |
+| cultural | 5 | 3 | 100% | 10% | 10.0% |
+| realworld | 12 | 3 | 100% | 10% | 10.0% |
+| visual | 12 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 78 | 5 | 100% | 5% | 5.0% |
+| proverbs | 1 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 61 | Included in Core |
-| **Тест** | ⚪️ | 128 | Skipped |
-| **Пояснення** | ⚪️ | 452 | Skipped |
-| **Контраст: той самий факт, різний акцент** | ⚪️ | 413 | Skipped |
-| **Практика** | ⚪️ | 517 | Skipped |
-| **Діалоги** | ✅ | 341 | Included in Core |
-| **Підсумок** | ✅ | 195 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 59 | Skipped |
+| **Intro/Narrative** | ✅ | 65 | Included in Core |
+| **Тест** | ⚪️ | 349 | Skipped |
+| **Пояснення** | ⚪️ | 773 | Skipped |
+| **Контраст** | ⚪️ | 421 | Skipped |
+| **Практика** | ⚪️ | 444 | Skipped |
+| **Діалоги** | ✅ | 507 | Included in Core |
+| **Культурний погляд: Результативність українців** | ✅ | 86 | Included in Core |
+| **Шпаргалка (Cheat Sheet)** | ⚪️ | 32 | Skipped |
+| **Підсумок** | ✅ | 160 | Included in Core |

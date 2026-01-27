@@ -193,22 +193,26 @@ B2 Core (M01-70)
 ## Key Vocabulary Themes
 
 ### Executive Communication (M01-15)
+
 - Leadership vocabulary (візія, місія, стратегія, виконання)
 - Stakeholder terms (зацікавлені сторони, очікування, звітність)
 - Crisis vocabulary (криза, ризик, пом'якшення, відновлення)
 
 ### Academic Publishing (M16-30)
+
 - Research methodology (гіпотеза, вибірка, змінна, достовірність)
 - Publication terms (рецензування, редколегія, імпакт-фактор)
 - Academic discourse (дискурс, парадигма, концепція, теорія)
 
 ### Industry Specialization (M31-45)
+
 - IT management (Agile, спринт, деплой, архітектура)
 - Finance (капіталізація, ліквідність, хеджування)
 - Legal (статут, устав, compliance, належна обачність)
 - Healthcare (протокол, випробування, регуляторний)
 
 ### Mastery (M46-50)
+
 - Career vocabulary (бренд, репутація, нетворк, менторство)
 - Integration terms (синтез, інтеграція, застосування)
 

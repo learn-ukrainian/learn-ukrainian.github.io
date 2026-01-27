@@ -1,45 +1,50 @@
 # Audit Report: M71 — koliivshchyna.md
-**Level:** B2 | **Module:** M71 | **Phase:** HIST.7 | **Pedagogy:** CBI | **Target:** 4000
+
+**Level:** B2 | **Module:** M71 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:54:56
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-27 12:38:56
 
 ## Configuration
+
 **Type:** B2-history
 **Word Target:** 4000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, match-up, quiz, reading, true-false
+**Required Types:** essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Свідчення сучасника: Уманська облога | 3 | 1 | ✅ |
-| 2 | reading | Сучасний погляд на Коліївщину | 3 | 1 | ✅ |
-| 3 | quiz | Перевірка розуміння контексту | 8 | 8 | ✅ |
-| 4 | fill-in | Лексика гайдамацького руху | 10 | 8 | ✅ |
-| 5 | match-up | Зіставлення термінів та визначень | 14 | 8 | ✅ |
-| 6 | essay-response | Есе: Трагедія та велич Коліївщини | 1 | 1 | ✅ |
-| 7 | comparative-study | Порівняльний аналіз постатей | 1 | 1 | ✅ |
+| 2 | true-false | Правда чи міф про Коліївщину | 10 | 8 | ✅ |
+| 3 | critical-analysis | Сучасний погляд на Коліївщину | 1 | 1 | ✅ |
+| 4 | quiz | Перевірка розуміння контексту | 8 | 8 | ✅ |
+| 5 | fill-in | Лексика гайдамацького руху | 10 | 8 | ✅ |
+| 6 | match-up | Зіставлення термінів та визначень | 12 | 8 | ✅ |
+| 7 | essay-response | Есе: Трагедія та велич Коліївщини | 1 | 1 | ✅ |
+| 8 | comparative-study | Порівняльний аналіз постатей | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 7 (target: 3-9) ✅
-- Unique types: 6 (minimum: 2) ✅
-- Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
-- Required types used: 4/5 (essay-response, match-up, quiz, reading) ❌
+- Total activities: 8 (target: 3-9) ✅
+- Unique types: 8 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
+
 - **Words:** ✅ 4137/4000 (raw: 4448)
-- **Activities:** ✅ 7/3
+- **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 6/2 types
+- **Unique_types:** ✅ 8/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
@@ -47,17 +52,19 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (7 activities)
+- **Content_heavy:** ✅ Content-heavy OK (8 activities)
 - **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 8 | 3 | 100% | 24% | 23.8% |
@@ -72,6 +79,7 @@
 | **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 156 | Included in Core |

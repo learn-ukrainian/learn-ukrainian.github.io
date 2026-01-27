@@ -1,9 +1,11 @@
 # Audit Report: M106 — 106-c1-6-checkpoint.md
+
 **Level:** C1 | **Module:** M106 | **Phase:** C1 | **Pedagogy:** Assessment | **Target:** 1750
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:00
 
 ## Configuration
+
 **Type:** C1-checkpoint
 **Word Target:** 1750 words
 **Activities:** 14-18 required
@@ -16,6 +18,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Літературні терміни та приклади | 14 | 6 | ✅ |
@@ -49,6 +52,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Ваші аргументовані висновки мають базуватися на глибокому знанні тексту та контексту.". Shares significant keywords with sentence at index 9.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Використання термінологічного апарату дозволяє нам артикулювати власні враження у науковому дискурсі...". Shares significant keywords with sentence at index 63.
@@ -65,6 +69,7 @@
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
@@ -72,6 +77,7 @@
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ✅ 2523/1750 (raw: 2681)
 - **Activities:** ✅ 23/14
 - **Density:** ✅ All > 14
@@ -90,10 +96,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 95% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 15 | 15 | 100% | 25% | 25.0% |
@@ -107,6 +115,7 @@
 | **TOTAL** | | | | | **95.6%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 107 | Included in Core |

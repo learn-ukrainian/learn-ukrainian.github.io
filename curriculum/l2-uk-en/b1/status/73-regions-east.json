@@ -2,14 +2,14 @@
   "module": "73-regions-east",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:27:31.179899Z",
+  "last_audit": "2026-01-27T19:15:45.002630Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-11T20:29:47.819638Z",
-    "meta": "2026-01-26T15:44:41.683223Z",
-    "activities": "2026-01-12T18:02:02.998846Z",
+    "md": "2026-01-27T15:24:10.350162Z",
+    "meta": "2026-01-27T18:54:47.221669Z",
+    "activities": "2026-01-27T19:08:22.506641Z",
     "vocabulary": "2026-01-25T16:02:18.691963Z",
-    "plan": "2026-01-26T15:44:41.683021Z"
+    "plan": "2026-01-27T19:14:06.371973Z"
   },
   "gates": {
     "meta": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1884/1500 (raw: 1978) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "1888/1500 (raw: 1982)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "12/8"
+      "message": "14/8"
     },
     "vocabulary": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Missing required activity types: discussion, fill-in, matching, reading"
-    ],
-    "pass_count": 4,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

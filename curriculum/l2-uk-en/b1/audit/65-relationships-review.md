@@ -1,8 +1,8 @@
 # Audit Report: M65 — 65-relationships.md
-**Level:** B1 | **Module:** M65 | **Phase:** B1 | **Pedagogy:** PPP | **Target:** 1500
+**Level:** B1 | **Module:** M65 | **Phase:** B1.6 | **Pedagogy:** PPP | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:27:26
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-27 19:01:39
 
 ## Configuration
 **Type:** B1-vocab
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
 **Priority Types:** mark-the-words, match-up, quiz, translate
-**Required Types:** collocation, discussion, fill-in, matching
+**Required Types:** fill-in, match-up, quiz
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥35 words
@@ -32,50 +32,42 @@
 | 10 | error-correction | Виправте помилки в колокаціях | 8 | 6 | ✅ |
 | 11 | translate | Переклад речень | 8 | 6 | ✅ |
 | 12 | mark-the-words | Знайдіть лексику стосунків | 12 | 6 | ✅ |
+| 13 | fill-in | Доповніть речення лексикою стосунків | 8 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 12 (target: 8-12) ✅
-- Unique types: 10 (minimum: 4) ✅
+- Total activities: 13 (target: 8-12) ❌
+- Unique types: 11 (minimum: 4) ✅
 - Priority types used: 4/4 (mark-the-words, match-up, quiz, translate) ✅
-- Required types used: 0/4 (none) ❌
+- Required types used: 3/3 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['collocation', 'matching', 'discussion']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
-  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 1624/1500 (raw: 2413)
-- **Activities:** ✅ 12/8
+- **Words:** ✅ 1750/1500 (raw: 2542)
+- **Activities:** ✅ 13/8
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 10/4 types
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 11/5
+- **Engagement:** ✅ 12/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 42/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.9% (target 85-100% (B1.5-6 Vocab))
-- **Richness:** ❌ 89% < 95% min (grammar)
+- **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 89% (minimum: 95%)
+**Score:** 96% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 16 | 24 | 67% | 20% | 13.4% |
-| engagement | 11 | 5 | 100% | 15% | 15.0% |
+| examples | 24 | 24 | 100% | 20% | 20.0% |
+| engagement | 12 | 5 | 100% | 15% | 15.0% |
 | dialogues | 15 | 4 | 100% | 15% | 15.0% |
 | variety | 0.98 | - | 98% | 10% | 9.8% |
 | cultural | 6 | 3 | 100% | 10% | 10.0% |
@@ -83,15 +75,15 @@
 | visual | 7 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | questions | 23 | 5 | 100% | 5% | 5.0% |
-| proverbs | 1 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **89.9%** |
+| proverbs | 9 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **96.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 59 | Included in Core |
 | **Вступ** | ✅ | 104 | Included in Core |
-| **Вживання** | ⚪️ | 240 | Skipped |
+| **Вживання** | ⚪️ | 366 | Skipped |
 | **Читання** | ✅ | 349 | Included in Core |
 | **Діалоги** | ✅ | 272 | Included in Core |
 | **Підсумок** | ✅ | 181 | Included in Core |

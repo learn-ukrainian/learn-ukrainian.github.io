@@ -6,7 +6,6 @@
 
 **Related Issue:** [#306](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/306)
 
-
 <!--
 TEMPLATE_METADATA:
   required_sections:
@@ -27,6 +26,7 @@ TEMPLATE_METADATA:
 Before submitting a C1 folk culture module, verify all items from `c1-module-template.md` PLUS:
 
 ### Folk Culture-Specific Requirements
+
 - [ ] **CBI pedagogy:** Content-Based Instruction (cultural content drives language)
 - [ ] **Authentic materials:** Folk songs, proverbs, ritual descriptions, craft terminology
 - [ ] **Reading tasks (2-3):** External reading assignments with linguistic analysis of authentic materials
@@ -69,7 +69,6 @@ Before submitting a C1 folk culture module, verify all items from `c1-module-tem
 | M141-142 | Regional Variation | Полісся, Галичина, Слобожанщина, Поділля |
 | M143-144 | Revival Movements | Сучасне відродження традицій |
 | M145 | Folk Culture Checkpoint |
-
 
 ---
 
@@ -482,6 +481,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 ## Content Structure Note
 
 ### Vocabulary & Activities
+
 **CRITICAL:** Do NOT add `## Vocabulary` or `## Activities` headers. These sections are injected automatically from:
 - `vocabulary/{slug}.yaml`
 - `activities/{slug}.yaml`

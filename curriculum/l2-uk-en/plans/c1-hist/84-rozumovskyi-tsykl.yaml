@@ -5,54 +5,54 @@ version: '2.0'
 title: 'Розумовський цикл: Останній гетьман'
 content_outline:
 - section: Вступ — Фаворит, що скасував себе
-  words: 400
+  words: 457
   points:
   - Розумовський — брат фаворита
   - Гетьман з ласки цариці
   - Як він завершив гетьманат
   - Структура модуля
 - section: Фаза 1 — Кооптація через родину
-  words: 700
+  words: 800
   points:
   - Олексій Розумовський — коханець Єлизавети
   - Кирило — президент Академії в 18 років
   - Гетьманство — 1750
   - Найвищий статус українця в імперії
 - section: Фаза 2 — Ілюзія автономії
-  words: 600
+  words: 686
   points:
   - Реформи гетьмана
   - Батурин — нова столиця
   - Культурне життя
   - Але під контролем Петербурга
 - section: Фаза 3 — Спроба спадковості
-  words: 500
+  words: 571
   points:
   - Клопотання про спадкове гетьманство
   - Катерина II — відмова
   - «Що за гетьмани?»
   - Виклик до Петербурга
 - section: Фаза 4 — Добровільна (?) капітуляція
-  words: 600
+  words: 686
   points:
   - 1764 — зречення
   - Що отримав натомість
   - Компенсація чи примус
   - Кінець Гетьманщини
 - section: Аналіз — чому погодився
-  words: 400
+  words: 457
   points:
   - Особиста безпека
   - Родинні інтереси
   - Відсутність альтернатив
   - Урок для еліт
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Розумовський — кооптована еліта
   - Цикл завершився ліквідацією
   - Перехід до радянського періоду
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - Розумовський (Rozumovsky)
@@ -75,10 +75,10 @@ activity_hints:
 - type: critical-analysis
   focus: Map Rozumovsky through co-optation cycle
   output: Cycle diagram
-- type: family-analysis
+- type: critical-analysis
   focus: Rozumovsky brothers — different paths
   output: Family dynamics study
-- type: decision-analysis
+- type: critical-analysis
   focus: 1764 — what were Rozumovsky's real options?
   output: Decision analysis
 - type: comparative-study
@@ -110,3 +110,6 @@ sources:
   notes: Brother context
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of розумовський цикл: останній гетьман'
+- Evaluate the historical significance of фаворит, що скасував себе

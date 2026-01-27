@@ -5,17 +5,19 @@ version: '1.0'
 title: Православна ідентичність XVII-XVIII ст.
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- Analyze the causes and consequences of православна ідентичність xvii-xviii ст.
+- Evaluate the historical significance of відповідь на унію
 content_outline:
 - section: Вступ — Відповідь на унію
-  words: 400
+  words: 457
   subsections:
   - Православ'я після Берестя
   - Криза як стимул
   - Відродження XVII ст.
   - Структура модуля
 - section: Петро Могила — реформатор
-  words: 700
+  words: 800
   subsections:
   - Біографія — молдавський князь
   - Митрополит Київський
@@ -23,7 +25,7 @@ content_outline:
   - Могилянська академія
   - «Православна відповідь» католицизму
 - section: Києво-Могилянська академія
-  words: 600
+  words: 686
   subsections:
   - Заснування (1632)
   - Програма — латина, філософія
@@ -31,14 +33,14 @@ content_outline:
   - Випускники — еліта
   - Вплив на всю православну Східну Європу
 - section: Українське православне бароко
-  words: 500
+  words: 571
   subsections:
   - Архітектура — новий стиль
   - Література — полемічна і проповідницька
   - Мистецтво — ікони і гравюри
   - Синтез західного і східного
 - section: Проблема Москви
-  words: 600
+  words: 686
   subsections:
   - 1686 — перехід митрополії
   - Втрата автономії
@@ -46,19 +48,19 @@ content_outline:
   - Як Київ «цивілізував» Москву
   - Але втратив незалежність
 - section: Православ'я і козацтво
-  words: 400
+  words: 457
   subsections:
   - Козаки — захисники віри
   - Хмельницький — релігійний вимір
   - Гетьманщина і церква
   - Складні відносини
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - Православне відродження
   - Але під тиском
   - Підготовка до УГКЦ
-word_target: 3500
+word_target: 4000
 vocabulary:
 - православ'я
 - митрополит
@@ -80,9 +82,9 @@ activities:
   focus: Petro Mohyla's reforms — what changed?
 - type: critical-analysis
   focus: Kyiv-Mohyla Academy curriculum and influence
-- type: cultural-analysis
+- type: critical-analysis
   focus: Ukrainian Baroque — Western and Eastern elements
-- type: geopolitical-analysis
+- type: critical-analysis
   focus: 1686 transfer — why and what consequences?
 - type: essay-response
   focus: Як Київська церква XVII ст. відповіла на виклик унії?

@@ -6,7 +6,6 @@
 
 **Related Issue:** [#298](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/298)
 
-
 <!--
 TEMPLATE_METADATA:
   required_sections:
@@ -52,6 +51,7 @@ TEMPLATE_METADATA:
 Before submitting a B1 metalanguage module, verify:
 
 ### Content Requirements
+
 - [ ] **Word count:** 1200+ words (core prose: explanations, examples, engagement boxes — excludes vocabulary section, activities section, tables)
 - [ ] **Vocabulary:** 25-45 items in 5-column format (Слово | Вимова | Переклад | ЧМ | Примітка)
 - [ ] **Terminology coverage:** All target terms introduced with Ukrainian + English
@@ -59,6 +59,7 @@ Before submitting a B1 metalanguage module, verify:
 - [ ] **Bilingual scaffolding:** Tables with Ukrainian terms + English translations
 
 ### Activity Requirements
+
 - [ ] **Activities:** 10-12 minimum (fewer than grammar modules, focus on terminology)
 - [ ] **Activity density:**
   - Quiz: 8+ items (testing terminology knowledge)
@@ -70,11 +71,11 @@ Before submitting a B1 metalanguage module, verify:
 - [ ] **Engagement boxes:** 4-5 boxes (Did You Know, Real World, etc.)
 
 ### Immersion & Quality
+
 - [ ] **Immersion:** Flexible (bilingual scaffolding allowed)
 - [ ] **Pedagogy:** PPP (Presentation-Practice-Production)
 - [ ] **No violations:** Check for pedagogical red flags
 - [ ] **Bridge function:** Clear preparation for M06+ full immersion
-
 
 ---
 
@@ -177,6 +178,7 @@ vocabulary_count: 25  # Must match count in vocabulary/{slug}.yaml
 **Structure for PPP pedagogy:**
 
 #### Section 1: Presentation (Введення)
+
 - Introduce the terminology domain
 - Explain why Ukrainians learn this too
 - Contextualize the terms (etymology, usage)
@@ -205,6 +207,7 @@ If you don't know that **іменник** means "noun," **родовий від�
 - Shows cultural connection (Ukrainian schoolchildren learn this too)
 
 #### Section 2: Terminology Tables (700-800 words)
+
 - Present all terms in **bilingual tables**
 - Organize by category (content words vs. function words, etc.)
 - Include Ukrainian term, English equivalent, examples
@@ -253,6 +256,7 @@ Notice how each Ukrainian term describes what the word category does. The іме
 - Bilingual format scaffolds understanding
 
 #### Section 3: Usage in Context (200-300 words)
+
 - Show how these terms appear in Ukrainian grammar explanations
 - Provide sample Ukrainian grammar text with terminology highlighted
 - Demonstrate comprehension
@@ -280,6 +284,7 @@ You can now read Ukrainian grammar independently!
 - Builds confidence for M06+ immersion
 
 #### Section 4: Engagement Boxes (4-5 boxes)
+
 - 💡 **Did You Know** — Interesting linguistic facts
 - 🌍 **Real World** — How natives use these terms
 - 🎯 **Fun Fact** — Memorable trivia about terminology
@@ -323,6 +328,7 @@ items:
 **Activity Mix for Metalanguage Modules:**
 
 #### Must-Have Activities:
+
 1. **quiz** (8+ items) — Test terminology knowledge
 2. **match-up** (8+ pairs) — Match Ukrainian terms ↔ English equivalents
 3. **fill-in** (8+ items) — Use terminology in context
@@ -330,6 +336,7 @@ items:
 5. **translate** (6+ items) — Translate grammar explanations Ukrainian ↔ English
 
 #### Recommended Activities:
+
 6. **unjumble** (6+ items) — Sentences using terminology
 7. **true-false** (8+ items) — Statements about grammar concepts
 8. **error-correction** (6+ items) — Fix misused terminology
@@ -395,6 +402,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 ## Common Pitfalls to Avoid
 
 ### ❌ DON'T:
+
 - **Don't apologize for bilingual scaffolding** — It's pedagogically necessary
 - **Don't skip etymology** — Memory hooks matter for 40+ terms
 - **Don't present terms without examples** — Context aids retention
@@ -403,6 +411,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 - **Don't use activities that require grammar knowledge** — These modules teach terms, not grammar
 
 ### ✅ DO:
+
 - **Use bilingual tables generously** — Make terms scannable
 - **Show terms in authentic Ukrainian grammar texts** — Build confidence
 - **Reference Ukrainian schoolchildren** — Reduces anxiety ("natives learn this too!")
@@ -415,26 +424,31 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 ## Module-Specific Guidance
 
 ### M01: Parts of Speech + Cases
+
 - Focus: 10 parts of speech + 7 cases
 - Vocabulary: ~25 terms
 - Tables: Parts of speech (content vs. function), case names + questions
 
 ### M02: Verb Terminology
+
 - Focus: Aspect, tense, mood, negation, verb forms
 - Vocabulary: ~30 terms
 - Tables: Aspect types, tenses, moods, negation patterns
 
 ### M03: Grammar Explanation Patterns
+
 - Focus: How Ukrainian grammar books explain concepts
 - Vocabulary: ~35 terms
 - Tables: Explanation verbs, instruction verbs, analytical terms
 
 ### M04: Sentence Structure
+
 - Focus: Sentence elements, sentence types, punctuation
 - Vocabulary: ~30 terms
 - Tables: Sentence elements, simple vs. complex sentences
 
 ### M05: Integration Checkpoint
+
 - Focus: Review of M01-04, comprehension test
 - Vocabulary: ~44 terms (comprehensive review)
 - Activity: Read Ukrainian grammar text, answer questions
@@ -444,6 +458,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 ## Pre-Submission Checklist
 
 ### Content
+
 - [ ] 1200+ words before activities
 - [ ] 25-45 vocabulary items in 5-column format
 - [ ] All target terminology introduced with Ukrainian + English
@@ -452,6 +467,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 - [ ] Sample Ukrainian grammar text showing terms in context
 
 ### Activities
+
 - [ ] 10-12 activities minimum
 - [ ] quiz (8+ items)
 - [ ] match-up (8+ pairs)
@@ -461,6 +477,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 - [ ] Activity items test terminology, not grammar concepts
 
 ### Immersion & Quality
+
 - [ ] Flexible immersion (bilingual scaffolding allowed)
 - [ ] PPP pedagogy (Presentation-Practice-Production)
 - [ ] Bridge function clearly stated ("After M05, full Ukrainian immersion")
@@ -469,6 +486,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 - [ ] No pedagogical violations
 
 ### Audit
+
 - [ ] Module passes `python3 scripts/audit_module.py`
 - [ ] Vocabulary count matches frontmatter
 - [ ] All activities formatted correctly

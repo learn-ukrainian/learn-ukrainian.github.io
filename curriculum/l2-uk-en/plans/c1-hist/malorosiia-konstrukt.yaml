@@ -5,57 +5,59 @@ version: '1.0'
 title: '«Малоросія»: Як створювався міф'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of «малоросія»: як створювався міф'
+- Evaluate the historical significance of назви мають силу
 content_outline:
 - section: Вступ — Назви мають силу
-  words: 400
+  words: 457
   subsections:
   - «Малоросія» — не географія
   - Назва як інструмент підкорення
   - 300 років побудови наративу
   - Структура модуля
 - section: Витоки терміна
-  words: 600
+  words: 686
   subsections:
   - Візантійське походження
   - Церковне значення
   - Імперське переосмислення
   - «Мала» = «менша»
 - section: XVIII століття — Закріплення
-  words: 700
+  words: 800
   subsections:
   - Скасування гетьманщини
   - «Малоросійська колегія»
   - Офіційний статус терміна
   - Інтеграція еліти
 - section: XIX століття — Теоретизація
-  words: 600
+  words: 686
   subsections:
   - «Велика, Мала, Біла Русь»
   - Погодін, Уваров — теоретики
   - «Триєдиний народ»
   - Наукове обґрунтування міфу
 - section: Протидія — Українофільство
-  words: 500
+  words: 571
   subsections:
   - Шевченко — «Україна»
   - Костомаров — альтернатива
   - Емський указ — заборона
   - Боротьба за назву
 - section: XX-XXI століття
-  words: 400
+  words: 457
   subsections:
   - Радянський період
   - Сучасна пропаганда
   - «Новоросія» — та сама логіка
   - Живучість міфу
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - «Малоросія» — політичний проект
   - Не описує — створює реальність
   - Перехід до радянської пропаганди
-word_target: 3500
+word_target: 4000
 vocabulary:
 - «Малоросія»
 - міф
@@ -73,13 +75,13 @@ vocabulary:
 - офіційний дискурс
 - контрнаратив
 activities:
-- type: term-analysis
+- type: critical-analysis
   focus: How "Little Russia" term evolved over 300 years
-- type: text-analysis
+- type: critical-analysis
   focus: Imperial texts that constructed "Little Russia"
 - type: comparative-study
   focus: «Little Russia» vs. other colonial naming
-- type: contemporary-analysis
+- type: critical-analysis
   focus: How the same logic appears today
 - type: essay-response
   focus: Чому 'Малоросія' — не географічний, а політичний термін?

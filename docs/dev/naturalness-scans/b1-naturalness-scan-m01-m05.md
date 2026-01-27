@@ -1,4 +1,5 @@
 # B1 Naturalness Scan Report - M01-M05
+
 **Date:** 2026-01-12
 **Protocol:** claude_extensions/protocols/a1-naturalness-scan.md
 **Scope:** M01-M05 (5 modules - Pre-immersion metalanguage bridge)
@@ -18,6 +19,7 @@
 ## Scan Results by Module
 
 ### M01: How to Talk About Grammar [✅ PASS]
+
 **Status:** Quiz-based terminology module
 **Activities:** Match-up, quiz, fill-in, true-false, unjumble, error-correction
 **Terminology taught:**
@@ -39,6 +41,7 @@
 ---
 
 ### M02: Language About Verbs [✅ PASS]
+
 **Status:** Quiz-based terminology module
 **Activities:** Match-up, quiz, fill-in, true-false, unjumble, group-sort, error-correction
 **Terminology taught:**
@@ -61,6 +64,7 @@
 ---
 
 ### M03: Reading Grammar Rules [✅ PASS]
+
 **Status:** Metalanguage vocabulary with one cloze passage
 **Activities:** Match-up, group-sort, quiz, fill-in, error-correction, mark-the-words, translate, **1 cloze passage**
 **Terminology taught:**
@@ -87,6 +91,7 @@
 ---
 
 ### M04: Sentence Structure [✅ PASS]
+
 **Status:** Syntax terminology with one drill passage
 **Activities:** Match-up, group-sort, quiz, true-false, fill-in, error-correction, mark-the-words, **1 cloze drill**
 **Terminology taught:**
@@ -116,6 +121,7 @@
 ---
 
 ### M05: Ready for Immersion [✅ PASS]
+
 **Status:** Comprehensive capstone review module (2424 lines)
 **Activities:** 9 comprehensive quizzes (87 questions total), extensive match-up, fill-in (40+ items), true-false (14 items), group-sort, unjumble (20+ definitions), error-correction (20+ items), **1 comprehensive cloze passage**, mark-the-words, select, translate
 
@@ -152,6 +158,7 @@
 ## Summary by Status
 
 ### ✅ PASS (5 modules)
+
 - M01: How to Talk About Grammar (quiz-based, no prose)
 - M02: Language About Verbs (quiz-based, no prose)
 - M03: Reading Grammar Rules (score 7/10)
@@ -159,6 +166,7 @@
 - M05: Ready for Immersion (score 8/10)
 
 ### ⚠️ FLAGGED (0 modules)
+
 None - all modules meet metalanguage standards
 
 ---
@@ -200,6 +208,7 @@ All B1 M01-M05 modules meet these standards.
 ## Key Findings
 
 ### 1. Module Design Appropriateness
+
 All 5 modules appropriately serve their metalanguage teaching purpose:
 - **M01-M02**: Pure terminology drilling via quizzes (no prose needed)
 - **M03**: Introduces explanatory discourse markers + word structure passage
@@ -207,6 +216,7 @@ All 5 modules appropriately serve their metalanguage teaching purpose:
 - **M05**: Massive comprehensive review (2424 lines) with encouraging capstone passage
 
 ### 2. Prose Density
+
 - **M01-M02**: 0% prose (entirely quiz-based)
 - **M03**: 1 cloze passage (coherent explanation)
 - **M04**: 1 cloze drill (syntax analysis, not narrative)
@@ -215,6 +225,7 @@ All 5 modules appropriately serve their metalanguage teaching purpose:
 Low prose density is **pedagogically appropriate** for metalanguage acquisition phase.
 
 ### 3. Pedagogical Progression
+
 ```
 M01 → Parts of speech + Cases
 M02 → Verb terminology (aspect, tense, mood)
@@ -226,6 +237,7 @@ M05 → Comprehensive integration + readiness for immersion
 Logical progression from basic terminology → advanced concepts → analytical skills → comprehensive review.
 
 ### 4. Bridge to Immersion
+
 M05's final cloze passage effectively:
 - Consolidates all M01-M04 terminology
 - Builds student confidence ("Ви вивчили", "Ви знаєте", "Ви розумієте")

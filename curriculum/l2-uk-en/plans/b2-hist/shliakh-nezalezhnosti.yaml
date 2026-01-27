@@ -67,12 +67,6 @@ activity_hints:
   focus: Текст Акту про незалежність
   source: Офіційні документи
   items: 4
-- type: quiz
-  focus: Шлях України до незалежності
-  items: 15
-- type: match-up
-  focus: Дата → подія 1989-1991
-  items: 10
 - type: true-false
   focus: Факти про незалежність
   items: 10

@@ -67,15 +67,6 @@ activity_hints:
   focus: Меморандум УГГ
   source: Архівні документи
   items: 4
-- type: quiz
-  focus: Українська Гельсінська група
-  items: 15
-- type: match-up
-  focus: Член групи → доля
-  items: 10
-- type: fill-in
-  focus: Правозахисна лексика
-  items: 10
 - type: essay-response
   focus: Яку роль відіграла УГГ у боротьбі за незалежність?
   word_target: 250

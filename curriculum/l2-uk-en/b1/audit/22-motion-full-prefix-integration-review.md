@@ -1,8 +1,8 @@
 # Audit Report: M22 — 22-motion-full-prefix-integration.md
-**Level:** B1 | **Module:** M22 | **Phase:** B1 | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M22 | **Phase:** B1.3 | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:26:58
+**Generated:** 2026-01-27 16:25:51
 
 ## Configuration
 **Type:** B1-grammar
@@ -65,7 +65,7 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 43 | 24 | 100% | 20% | 20.0% |
+| examples | 60 | 24 | 100% | 20% | 20.0% |
 | engagement | 9 | 5 | 100% | 15% | 15.0% |
 | dialogues | 11 | 4 | 100% | 15% | 15.0% |
 | variety | 0.99 | - | 99% | 10% | 9.9% |

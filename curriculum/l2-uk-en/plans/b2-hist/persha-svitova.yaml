@@ -67,15 +67,6 @@ activity_hints:
   focus: Спогади січових стрільців
   source: Архівні матеріали
   items: 4
-- type: quiz
-  focus: Українці в Першій світовій війні
-  items: 15
-- type: match-up
-  focus: Подія → дата та наслідки
-  items: 10
-- type: fill-in
-  focus: Військова лексика
-  items: 10
 - type: essay-response
   focus: Чому Перша світова війна стала каталізатором українського національного руху?
   word_target: 250

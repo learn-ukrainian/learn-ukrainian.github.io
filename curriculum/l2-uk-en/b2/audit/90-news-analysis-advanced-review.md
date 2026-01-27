@@ -1,10 +1,12 @@
 # Audit Report: M90 — 90-news-analysis-advanced.md
+
 **Level:** B2 | **Module:** M90 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:46
 
 ## Configuration
+
 **Type:** B2-history
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розпізнавання упередженості в новинах | 10 | 8 | ✅ |
@@ -43,6 +46,7 @@
 - Low density activities: 0
 
 ## Gates
+
 - **Words:** ✅ 4057/4000 (raw: 4179)
 - **Activities:** ✅ 14/3
 - **Density:** ✅ All > 1
@@ -61,10 +65,12 @@
 - **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
+
 **Score:** 95% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 20 | 15 | 100% | 25% | 25.0% |
@@ -78,6 +84,7 @@
 | **TOTAL** | | | | | **95.2%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 109 | Included in Core |

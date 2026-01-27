@@ -1,10 +1,12 @@
 # Audit Report: M101 — mykola-pohribnyi.md
+
 **Level:** C1 | **Module:** M101 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:46
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Життя та діяльність Миколи Погрібного | 6 | 5 | ✅ |
@@ -41,16 +44,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in mykola-pohribnyi.yaml: Schema validation error at key '11': {'type': 'fill-in', 'title': 'Правила української вимови', 'instruction': 'Заповніть пропуски, використовуючи терміни з праць Погрібного.', 'items': [{'sentence': 'В українській мові голосні звуки вимовляються _____ і чітко.', 'answer': 'повнозвучно', 'options': ['повнозвучно', 'невиразно', 'коротко', 'тихо']}, {'sentence': 'Дзвінкі приголосні в кінці слова _____ оглушуються.', 'answer': 'не', 'options': ['не', 'завжди', 'часто', 'іноді']}, {'sentence': 'Літера «г» в українській мові позначає _____ звук.', 'answer': 'гортанний', 'options': ['гортанний', 'проривний', 'шиплячий', 'носовий']}, {'sentence': "М'які приголосні потребують _____ артикуляції.", 'answer': 'палаталізованої', 'options': ['палаталізованої', 'твердої', 'губної', 'зубної']}, {'sentence': 'Наголос в українській мові є _____.', 'answer': 'рухомим', 'options': ['рухомим', 'сталим', 'фіксованим', 'подвійним']}, {'sentence': 'Милозвучність досягається чергуванням _____ та приголосних.', 'answer': 'голосних', 'options': ['голосних', 'наголошених', 'глухих', 'дзвінких']}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2473/4000 (raw: 2663)
 - **Activities:** ✅ 12/3
 - **Density:** ✅ All > 1
@@ -69,10 +75,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 95% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 10 | 4 | 100% | 19% | 19.0% |
@@ -88,6 +96,7 @@
 | **TOTAL** | | | | | **95.2%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

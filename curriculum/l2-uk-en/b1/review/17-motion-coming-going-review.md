@@ -24,7 +24,7 @@
 
 ## Linguistic Accuracy Issues
 
-- _Fixed:_ Typo `внесті` -> `внести`.
+- *Fixed:* Typo `внесті` -> `внести`.
 
 ## Strengths
 
@@ -34,7 +34,7 @@
 
 ## Issues
 
-- _Fixed:_ Typo in explanation text.
+- *Fixed:* Typo in explanation text.
 
 ## Recommendation
 

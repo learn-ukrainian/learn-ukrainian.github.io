@@ -1,10 +1,12 @@
 # Audit Report: M64 — 64-synonyms-action.md
+
 **Level:** B2 | **Module:** M64 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:28
 
 ## Configuration
+
 **Type:** B2-vocab
 **Word Target:** 1750 words
 **Activities:** 10-14 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть характер дії | 12 | 8 | ✅ |
@@ -42,15 +45,18 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 64-synonyms-action.yaml: Schema validation error at key '13': {'type': 'select', 'title': 'Творча та Технічна Дія', 'instruction': 'Оберіть усі слова, що описують складні та інноваційні процеси (6 елементів).', 'items': [{'question': 'Які терміни вказують на модернізацію та розвиток? (Оберіть 6)', 'options': [{'text': 'модернізувати', 'correct': True}, {'text': 'оптимізувати', 'correct': True}, {'text': 'інтегрувати', 'correct': True}, {'text': 'впроваджувати', 'correct': True}, {'text': 'трансформувати', 'correct': True}, {'text': 'удосконалювати', 'correct': True}]}, {'question': "Оберіть синоніми до слова 'створювати':", 'options': [{'text': 'творити', 'correct': True}, {'text': 'засновувати', 'correct': True}, {'text': 'фундадувати', 'correct': True}, {'text': 'руйнувати', 'correct': False}]}, {'question': "Які слова описують 'швидку реакцію':", 'options': [{'text': 'оперативно', 'correct': True}, {'text': 'негайно', 'correct': True}, {'text': 'миттєво', 'correct': True}, {'text': 'повільно', 'correct': False}]}, {'question': 'Оберіть слова для опису професійної дії:', 'options': [{'text': 'кваліфіковано', 'correct': True}, {'text': 'фахово', 'correct': True}, {'text': 'майстерно', 'correct': True}, {'text': 'абияк', 'correct': False}]}, {'question': "Які слова вказують на 'результативність':", 'options': [{'text': 'ефективно', 'correct': True}, {'text': 'продуктивно', 'correct': True}, {'text': 'успішно', 'correct': True}, {'text': 'марно', 'correct': False}]}, {'question': "Оберіть назви 'творчих процесів':", 'options': [{'text': 'натхнення', 'correct': True}, {'text': 'візуалізація', 'correct': True}, {'text': 'репетиція', 'correct': True}, {'text': 'рутина', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
+
 - **Words:** ✅ 2180/1750 (raw: 2387)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
@@ -69,10 +75,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 98% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 68 | 24 | 100% | 20% | 20.0% |
@@ -88,6 +96,7 @@
 | **TOTAL** | | | | | **98.7%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 87 | Included in Core |

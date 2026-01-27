@@ -1,10 +1,12 @@
 # Audit Report: M103 — alla-horska.md
+
 **Level:** C1 | **Module:** M103 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:48
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння біографії | 5 | 5 | ✅ |
@@ -41,10 +44,12 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in alla-horska.yaml: Schema validation error at key '7': {'type': 'error-correction', 'title': 'Складні речення', 'items': [{'sentence': 'Алла яка була лідером загинула першою.', 'error': 'Алла яка', 'answer': 'Алла, яка', 'options': ['Алла яка', 'Алла, яка', 'Алла: яка', 'none'], 'explanation': 'Виділення підрядного речення комами.'}, {'sentence': 'Вона розуміла що за нею стежать.', 'error': 'розуміла що', 'answer': 'розуміла, що', 'options': ['розуміла що', 'розуміла, що', 'розуміла: що', 'none'], 'explanation': 'Кома перед сполучником «що».'}, {'sentence': 'Коли вітраж розбили вона не заплакала.', 'error': 'розбили вона', 'answer': 'розбили, вона', 'options': ['розбили вона', 'розбили, вона', 'розбили: вона', 'none'], 'explanation': 'Кома між частинами складного речення.'}, {'sentence': 'Це була жінка, яку неможливо було зламати.', 'error': 'none', 'answer': '✓', 'options': ['жінка', 'яку', 'зламати', '✓'], 'explanation': 'Речення побудоване правильно.'}, {'sentence': 'Вона хотіла, щоб правда перемогла брехню.', 'error': 'none', 'answer': '✓', 'options': ['хотіла', 'щоб', 'перемогла', '✓'], 'explanation': 'Речення побудоване правильно.'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template.md'
   - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template.md'
@@ -53,12 +58,14 @@
   - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 
 ## Recommendation
+
 **📝 UPDATE** (severity 35/100)
 
 - 4 violations (moderate)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2316/4000 (raw: 2599)
 - **Activities:** ✅ 12/3
 - **Density:** ✅ All > 1
@@ -77,10 +84,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 95% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 7 | 4 | 100% | 19% | 19.0% |
@@ -96,6 +105,7 @@
 | **TOTAL** | | | | | **95.2%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 73 | Included in Core |

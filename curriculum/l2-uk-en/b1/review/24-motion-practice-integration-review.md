@@ -24,7 +24,7 @@
 
 ## Linguistic Accuracy Issues
 
-- _Fixed:_ Vocabulary extraction errors (`лізима` -> `лізти`, `заходжий` removed, `Одіссея` capitalized).
+- *Fixed:* Vocabulary extraction errors (`лізима` -> `лізти`, `заходжий` removed, `Одіссея` capitalized).
 
 ## Strengths
 
@@ -33,7 +33,7 @@
 
 ## Issues
 
-- _Fixed:_ Minor vocabulary artifacts.
+- *Fixed:* Minor vocabulary artifacts.
 
 ## Recommendation
 

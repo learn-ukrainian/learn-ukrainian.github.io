@@ -67,15 +67,6 @@ activity_hints:
   focus: Свідчення вижилих
   source: Усна історія
   items: 4
-- type: quiz
-  focus: Депортація кримських татар
-  items: 15
-- type: match-up
-  focus: Дата → етап депортації/повернення
-  items: 10
-- type: fill-in
-  focus: Лексика депортації
-  items: 10
 - type: essay-response
   focus: Чому депортація кримських татар є геноцидом?
   word_target: 250

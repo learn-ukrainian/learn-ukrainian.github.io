@@ -24,7 +24,7 @@
 
 ## Linguistic Accuracy Issues
 
-- _Fixed:_ Vocabulary extraction errors (`пройда`, `ійти`, `зелень`).
+- *Fixed:* Vocabulary extraction errors (`пройда`, `ійти`, `зелень`).
 
 ## Strengths
 
@@ -33,7 +33,7 @@
 
 ## Issues
 
-- _Fixed:_ Minor vocabulary artifacts.
+- *Fixed:* Minor vocabulary artifacts.
 
 ## Recommendation
 

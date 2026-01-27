@@ -5,16 +5,18 @@ version: '1.0'
 title: 'Синтез: Голоси козацької доби'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of синтез: голоси козацької доби'
+- Evaluate the historical significance of що ми вивчили
 content_outline:
 - section: Вступ — Що ми вивчили
-  words: 400
+  words: 457
   subsections:
   - Огляд модулів 19-27
   - Різноманітність козацьких джерел
   - Мета синтезу — системний погляд
 - section: Типологія козацьких джерел
-  words: 600
+  words: 686
   subsections:
   - Літописи — три головні
   - Документи — універсали, статті
@@ -22,7 +24,7 @@ content_outline:
   - Правові документи — Конституція, суди
   - Таблиця порівняння
 - section: Голоси епохи — хто говорить?
-  words: 700
+  words: 800
   subsections:
   - Старшина — домінуючий голос
   - Рядові козаки — де їхній голос?
@@ -30,7 +32,7 @@ content_outline:
   - Жінки — відсутні
   - Інші — поляки, росіяни
 - section: Що джерела кажуть vs. що замовчують
-  words: 600
+  words: 686
   subsections:
   - Героїзація vs. критика
   - Внутрішні конфлікти — приховані
@@ -38,7 +40,7 @@ content_outline:
   - Соціальні протиріччя
   - Реконструкція замовчаного
 - section: Методологічні уроки
-  words: 500
+  words: 571
   subsections:
   - Порівняння джерел — ключ до правди
   - Критика упередженості
@@ -46,19 +48,19 @@ content_outline:
   - Російські джерела — інша перспектива
   - Комплексний підхід
 - section: Практикум — комплексний аналіз
-  words: 500
+  words: 571
   subsections:
   - Одна подія — кілька джерел
   - 'Наприклад: Полтава в різних джерелах'
   - Що збігається, що суперечить
   - Реконструкція події
 - section: Підсумок
-  words: 200
+  words: 229
   subsections:
   - Від середньовіччя до модерну
   - Чек-ліст для козацьких джерел
   - Підготовка до XIX-XX ст.
-word_target: 3500
+word_target: 4000
 vocabulary:
 - синтез
 - типологія
@@ -78,9 +80,9 @@ vocabulary:
 activities:
 - type: essay-response
   focus: Create comprehensive source matrix for modules 19-27
-- type: multi-source-analysis
+- type: critical-analysis
   focus: One event from 4+ sources — compare
-- type: gap-analysis
+- type: critical-analysis
   focus: What social groups are missing from sources?
 - type: essay-response
   focus: Чий голос домінує в козацьких джерелах і чому?

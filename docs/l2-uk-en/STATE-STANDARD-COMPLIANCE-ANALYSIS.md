@@ -17,6 +17,7 @@ This document analyzes compliance gaps between our curriculum plans and the offi
 **Status:** ✅ Good coverage with minor gaps
 
 ### Covered by Curriculum
+
 - ✅ Noun gender (masculine, feminine, neuter)
 - ✅ Noun number (singular/plural)
 - ✅ 5 cases (Nominative, Accusative, Genitive, Locative, Instrumental)
@@ -36,12 +37,14 @@ This document analyzes compliance gaps between our curriculum plans and the offi
 - ✅ Question formation
 
 ### Gaps to Address
+
 | Gap | State Standard Requirement | Action |
 |-----|---------------------------|--------|
 | Vocative basics | Звертання в українській мові | Add basic vocative forms in appropriate module (мамо!, тату!, друже!) |
 | Reflexive possessive | свій/своя/своє | Currently light - needs explicit teaching in M14 or M32 |
 
 ### Priority
+
 **Low** - A1 is well-aligned. Minor additions only.
 
 ---
@@ -51,6 +54,7 @@ This document analyzes compliance gaps between our curriculum plans and the offi
 **Status:** ⚠️ Partial coverage - needs aspect pairs explicitly
 
 ### Covered by Curriculum
+
 - ✅ All 7 cases (including Dative and Vocative)
 - ✅ Adjective comparison (вищий/найвищий ступінь)
 - ✅ Aspect basics (imperfective/perfective concept)
@@ -61,6 +65,7 @@ This document analyzes compliance gaps between our curriculum plans and the offi
 - ✅ Reported speech basics
 
 ### Gaps to Address
+
 | Gap | State Standard Requirement | Action |
 |-----|---------------------------|--------|
 | Explicit aspect pairs | Видова пара (писати-написати) | Add dedicated aspect pair vocabulary lists; drill common pairs |
@@ -69,6 +74,7 @@ This document analyzes compliance gaps between our curriculum plans and the offi
 | Numerals with cases | Числівники + іменники в різних відмінках | Add practice with numeral-noun agreement patterns |
 
 ### Priority
+
 **Medium** - Plan exists but needs explicit aspect pair drilling.
 
 ---
@@ -78,6 +84,7 @@ This document analyzes compliance gaps between our curriculum plans and the offi
 **Status:** ⚠️ Partial coverage - needs participle phrases and one-member sentences
 
 ### Covered by Curriculum
+
 - ✅ Aspect mastery (perfective/imperfective distinction)
 - ✅ Motion verb pairs (їхати/їздити, летіти/літати)
 - ✅ All verbal forms (tenses, moods)
@@ -86,6 +93,7 @@ This document analyzes compliance gaps between our curriculum plans and the offi
 - ✅ Indirect speech
 
 ### Gaps to Address
+
 | Gap | State Standard Requirement | Action |
 |-----|---------------------------|--------|
 | Participle phrases | Дієприкметниковий зворот | Add dedicated module on adjectival participle phrases |
@@ -96,6 +104,7 @@ This document analyzes compliance gaps between our curriculum plans and the offi
 | Passive -но/-то | Пасивні форми на -но/-то | Add coverage: Книгу написано. Двері зачинено. |
 
 ### Priority
+
 **High** - Grammar-heavy level requires explicit participle and sentence structure coverage.
 
 ---
@@ -105,6 +114,7 @@ This document analyzes compliance gaps between our curriculum plans and the offi
 **Status:** 🔴 Critical - 0% implemented
 
 ### State Standard Requirements (Каталог В for B2)
+
 The State Standard requires mastery of:
 
 1. **Passive voice forms** (all types):
@@ -135,6 +145,7 @@ The State Standard requires mastery of:
    - Academic style basics
 
 ### Current Plan Coverage
+
 The B2-CURRICULUM-PLAN.md covers:
 - ✅ Passive voice (M01-05)
 - ✅ Participles (M11-15)
@@ -144,12 +155,14 @@ The B2-CURRICULUM-PLAN.md covers:
 - ⚠️ Need to verify plan aligns with State Standard
 
 ### Action Required
+
 1. **Verify plan alignment** with State Standard Каталог В for B2
 2. **Implement all 125-135 modules** as per B2-IMPROVEMENT-PLAN
 3. **Ensure participle coverage** matches State Standard depth
 4. **Add register explicit teaching** if insufficient
 
 ### Priority
+
 **Critical** - 0% implemented. Must create modules from scratch.
 
 ---
@@ -158,8 +171,8 @@ The B2-CURRICULUM-PLAN.md covers:
 
 **Status:** ✅ Good - Plan Aligned
 
-
 ### State Standard Requirements (Каталог В for C1)
+
 Expected requirements include:
 
 1. **Functional styles** (all 5):
@@ -184,14 +197,15 @@ Expected requirements include:
    - Historical language layers
 
 ### Action Required
+
 1. ~~**Read C1-CURRICULUM-PLAN.md**~~ ✅ Done
 2. ~~**Create C1 pedagogical assessment**~~ ✅ Done
 3. ~~**Map State Standard requirements to plan**~~ ✅ Verified (Registers, Dialects, History present)
 4. ~~**Identify specific gaps**~~ ✅ Resolved (Added Syntactic Period to M48)
 
 ### Priority
-**Low** - Plan is robust and aligned.
 
+**Low** - Plan is robust and aligned.
 
 ---
 
@@ -199,8 +213,8 @@ Expected requirements include:
 
 **Status:** ✅ Good - Plan Aligned (Meta-skills Strategy)
 
-
 ### State Standard Requirements (Каталог В for C2)
+
 Expected requirements include:
 
 1. **Native-like proficiency**:
@@ -220,14 +234,15 @@ Expected requirements include:
    - Historical context
 
 ### Action Required
+
 1. ~~**Read C2-CURRICULUM-PLAN.md**~~ ✅ Done
 2. ~~**Create C2 pedagogical assessment**~~ ✅ Done
 3. ~~**Map State Standard requirements to plan**~~ ✅ Verified (Meta-skills approach for domains accepted)
 4. ~~**Identify specific gaps**~~ ✅ None found (Plan allows for unlimited specialization)
 
 ### Priority
-**Low** - Plan is robust and aligned.
 
+**Low** - Plan is robust and aligned.
 
 ---
 
@@ -241,7 +256,6 @@ Expected requirements include:
 | B2 | 🔴 Critical | 0% implemented | Critical |
 | C1 | ✅ Good | Syntactic Period added to M48 | Low |
 | C2 | ✅ Good | Meta-skills strategy for domains | Low |
-
 
 ---
 

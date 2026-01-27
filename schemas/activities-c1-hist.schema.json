@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://learn-ukrainian.github.io/schemas/activities-c1-hist.schema.json",
   "title": "C1-HIST Track Module Activities (Seminar Style)",
-  "description": "Activity schema for c1-hist track modules (post-C1 specialization). Uses SEMINAR pedagogy: reading (INPUT) → analytical response (OUTPUT). Forbidden: quiz, match-up, fill-in, unjumble, cloze, anagram, mark-the-words. Required: reading + essay-response + critical-analysis.",
+  "description": "Activity schema for C1-HIST track modules (advanced historiography). Uses SEMINAR pedagogy: reading (INPUT) → analytical response (OUTPUT). Primary types: reading, essay-response, critical-analysis, comparative-study, source-evaluation, debate. Required: reading + essay-response + critical-analysis.",
   "type": "array",
   "minItems": 3,
   "items": {
@@ -54,6 +54,12 @@
       },
       {
         "$ref": "#/definitions/reading-c1-hist"
+      },
+      {
+        "$ref": "#/definitions/source-evaluation-c1-hist"
+      },
+      {
+        "$ref": "#/definitions/debate-c1-hist"
       }
     ]
   },
@@ -709,8 +715,8 @@
         },
         "min_words": {
           "type": "integer",
-          "minimum": 150,
-          "description": "Minimum word count (LIT: 300-500, C1: 300-500, B2: 150-250)"
+          "minimum": 500,
+          "description": "Minimum word count for C1-HIST academic essays (500+ words with thesis, evidence, analysis)"
         },
         "model_answer": {
           "type": "string",
@@ -930,6 +936,171 @@
           "type": "string",
           "minLength": 10,
           "description": "Primary source text for analysis"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        }
+      }
+    },
+    "source-evaluation-c1-hist": {
+      "type": "object",
+      "description": "Structured source analysis activity for historiographical methodology. Applies the 5-question method (Who? When? For whom? Why? What's omitted?) to primary and secondary sources.",
+      "required": [
+        "type",
+        "title",
+        "source_text",
+        "evaluation_criteria"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "source-evaluation"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_text": {
+          "type": "string",
+          "minLength": 50,
+          "description": "The historical source to be evaluated (document, excerpt, image description)"
+        },
+        "source_metadata": {
+          "type": "object",
+          "description": "Known information about the source",
+          "properties": {
+            "author": {
+              "type": "string"
+            },
+            "date": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "description": "Source type: chronicle, memoir, official document, propaganda, academic text, etc."
+            },
+            "context": {
+              "type": "string",
+              "description": "Historical context of creation"
+            }
+          }
+        },
+        "evaluation_criteria": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "string",
+            "enum": [
+              "authorship",
+              "date_and_context",
+              "intended_audience",
+              "purpose_and_bias",
+              "omissions",
+              "reliability",
+              "corroboration",
+              "perspective"
+            ]
+          },
+          "description": "Which aspects of source criticism to apply"
+        },
+        "guiding_questions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Specific questions to guide the evaluation"
+        },
+        "model_evaluation": {
+          "type": "string",
+          "description": "Model answer demonstrating proper source criticism methodology"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        }
+      }
+    },
+    "debate-c1-hist": {
+      "type": "object",
+      "description": "Contested historiographical interpretation activity. Presents multiple scholarly positions on a historical question and asks learners to analyze arguments.",
+      "required": [
+        "type",
+        "title",
+        "debate_question",
+        "positions"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "debate"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "debate_question": {
+          "type": "string",
+          "minLength": 10,
+          "description": "The contested historical question (e.g., 'Was 1654 a 'reunification' or a military alliance?')"
+        },
+        "historical_context": {
+          "type": "string",
+          "description": "Background information needed to understand the debate"
+        },
+        "positions": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 4,
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "proponents",
+              "argument",
+              "evidence"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Position label (e.g., 'Reunification thesis', 'Colonial subordination thesis')"
+              },
+              "proponents": {
+                "type": "string",
+                "description": "Historians/schools associated with this position"
+              },
+              "argument": {
+                "type": "string",
+                "description": "Core argument of this position"
+              },
+              "evidence": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Key evidence cited for this position"
+              },
+              "weaknesses": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Critiques of this position"
+              }
+            }
+          },
+          "description": "The competing historiographical positions"
+        },
+        "analysis_tasks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Tasks for learners (e.g., 'Identify the strongest argument', 'Find common ground')"
+        },
+        "model_analysis": {
+          "type": "string",
+          "description": "Model answer showing balanced evaluation of positions"
         },
         "instruction": {
           "type": "string",

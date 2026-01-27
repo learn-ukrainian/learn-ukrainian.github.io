@@ -131,7 +131,7 @@ This approach is pedagogically sound because:
 To help learners bridge the gap from "basic competence" to "independent fluency", this level shifts pedagogical focus:
 
 1.  **Transition to TTT (Test-Teach-Test):** Move away from simple instruction (PPP).
-    - **Test:** Present learners with a rich narrative or complex text containing the target grammar/vocabulary _first_.
+    - **Test:** Present learners with a rich narrative or complex text containing the target grammar/vocabulary *first*.
     - **Teach:** Guide them to deduce the rules or meanings from context, then provide explicit theory.
     - **Test:** Practice in a new, freer context.
 2.  **Narrative-Driven Vocabulary:** Lists are forbidden. Vocabulary MUST be introduced within compelling story arcs (e.g., "A Startup's Journey" for business terms) to build retention and context.
@@ -437,7 +437,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Signature Activity Concepts:**
 
 1. Match-up: Ukrainian term → English equivalent
@@ -463,7 +462,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 25+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
-
 
 **Signature Activity Concepts:**
 
@@ -496,7 +494,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Signature Activity Concepts:**
 
 1. Mark-the-words: Find instruction patterns in grammar text
@@ -523,7 +520,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 25+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
-
 
 **Signature Activity Concepts:**
 
@@ -606,7 +602,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Signature Activity Concepts:**
 
 1. Quiz: Identify aspect pairs
@@ -632,7 +627,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Signature Activity Concepts:**
 
 1. Gap-fill: Time marker → aspect
@@ -657,7 +651,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 25+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
-
 
 **Signature Activity Concepts:**
 
@@ -689,7 +682,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Signature Activity Concepts:**
 
 1. Transform: Compound → synthetic future
@@ -714,7 +706,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 25+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
-
 
 **Signature Activity Concepts:**
 
@@ -741,7 +732,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Signature Activity Concepts:**
 
 1. Choose: Which aspect for which command type?
@@ -758,6 +748,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 **Rationale:** Merged to reduce vocabulary drilling fatigue. 40 most useful pairs selected; remaining pairs encountered organically in later modules.
 
 **Aspect Pairs (40):**
+
 | Imperfective | Perfective | Meaning |
 |--------------|------------|---------|
 | робити | зробити | do, make |
@@ -835,7 +826,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Narrative Structure:**
 
 - **Понеділок:** Planning the week (future aspect: "цього тижня я зроблю...")
@@ -870,7 +860,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 25+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
-
 
 **Signature Activity Concepts:**
 
@@ -977,6 +966,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 **Grammar:** All 14 motion verb pairs
 
 **Motion Verb Pairs:**
+
 | Unidirectional | Multidirectional | Meaning |
 |----------------|------------------|---------|
 | іти | ходити | go (on foot) |
@@ -999,7 +989,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 25+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
-
 
 **Signature Activity Concepts:**
 
@@ -1031,7 +1020,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Signature Activity Concepts:**
 
 1. Gap-fill: при-/ви-/в- with motion verbs
@@ -1061,7 +1049,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 25+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
-
 
 **Signature Activity Concepts:**
 
@@ -1093,7 +1080,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Signature Activity Concepts:**
 
 1. Gap-fill: по-/за-/роз- with motion verbs
@@ -1124,7 +1110,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Signature Activity Concepts:**
 
 1. Gap-fill: під-/від-/до- selection
@@ -1154,7 +1139,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Signature Activity Concepts:**
 
 1. Match-up: Expression → meaning
@@ -1168,6 +1152,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 **Grammar:** All prefixes with all motion verbs
 
 **Prefix System Summary:**
+
 | Prefix | Meaning | Example |
 |--------|---------|---------|
 | при- | arrival | прийти |
@@ -1190,7 +1175,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 25+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
-
 
 **Signature Activity Concepts:**
 
@@ -1218,7 +1202,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Signature Activity Concepts:**
 
 1. Match-up: Prefix meaning in motion vs non-motion verbs
@@ -1243,7 +1226,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 25+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
-
 
 **Signature Activity Concepts:**
 
@@ -1351,7 +1333,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Signature Activity Concepts:**
 
 1. Gap-fill: Choose correct який form
@@ -1375,7 +1356,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 25+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
-
 
 **Signature Activity Concepts:**
 
@@ -1402,7 +1382,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Signature Activity Concepts:**
 
 1. Gap-fill: коли vs що (relative)
@@ -1426,7 +1405,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 25+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
-
 
 **Signature Activity Concepts:**
 
@@ -1453,7 +1431,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Signature Activity Concepts:**
 
 1. Gap-fill: щоб + past form with different subjects
@@ -1478,7 +1455,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Signature Activity Concepts:**
 
 1. Gap-fill: Complete real conditionals
@@ -1502,7 +1478,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 25+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
-
 
 **Signature Activity Concepts:**
 
@@ -1532,7 +1507,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 25+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
-
 
 **Signature Activity Concepts:**
 
@@ -1637,7 +1611,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Signature Activity Concepts:**
 
 1. Combine: Contrasting sentences
@@ -1662,7 +1635,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 25+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
-
 
 **Signature Activity Concepts:**
 
@@ -1689,7 +1661,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 25+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
-
 
 **Signature Activity Concepts:**
 
@@ -1731,7 +1702,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Signature Activity Concepts:**
 
 1. Combine: Multi-clause sentences
@@ -1758,7 +1728,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Signature Activity Concepts:**
 
 1. Transform: Direct → indirect speech
@@ -1783,7 +1752,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 25+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
-
 
 **Signature Activity Concepts:**
 
@@ -1895,7 +1863,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Signature Activity Concepts:**
 
 1. Form: Infinitive → imperfective participle
@@ -1924,7 +1891,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 25+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
-
 
 **Signature Activity Concepts:**
 
@@ -1957,7 +1923,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Signature Activity Concepts:**
 
 1. Stylistic Transform: "Bureaucratic" text → Natural Ukrainian (Participle → Clause)
@@ -1989,7 +1954,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Signature Activity Concepts:**
 
 1. Form: Verb → passive participle
@@ -2019,7 +1983,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 25+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
-
 
 **Signature Activity Concepts:**
 
@@ -2051,7 +2014,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Signature Activity Concepts:**
 
 1. Transform: Active → passive (all types)
@@ -2079,7 +2041,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 25+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
-
 
 **Signature Activity Concepts:**
 
@@ -2229,7 +2190,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Key Patterns:**
 
 - У мене є ідея. (I have an idea.)
@@ -2255,7 +2215,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Key Patterns:**
 
 - Це тривалий процес. (This is a long process.)
@@ -2279,7 +2238,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 25+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
-
 
 **Key Patterns:**
 
@@ -2305,7 +2263,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 25+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
-
 
 **Key Patterns:**
 
@@ -2333,7 +2290,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Key Patterns:**
 
 - Проте я все ж поїхав. (However, I still went.)
@@ -2359,7 +2315,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Key Patterns:**
 
 - По-перше, це дорого. По-друге, немає часу. (Firstly, it's expensive. Secondly, there's no time.)
@@ -2383,7 +2338,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 25+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
-
 
 **Key Patterns:**
 
@@ -2409,7 +2363,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Key Patterns:**
 
 - Я читав про це в газеті. (I read about it in the newspaper.)
@@ -2434,7 +2387,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Key Patterns:**
 
 - Уряд ухвалив закон. (The government passed a law.)
@@ -2458,7 +2410,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 25+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
-
 
 **Key Patterns:**
 
@@ -2504,7 +2455,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Signature Activity Concepts:**
 
 1. Match: Environmental terms
@@ -2522,7 +2472,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 25+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
-
 
 **Signature Activity Concepts:**
 
@@ -2542,7 +2491,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Signature Activity Concepts:**
 
 1. Match: Emotion → situation
@@ -2561,7 +2509,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Signature Activity Concepts:**
 
 1. Vocabulary: Relationship stages
@@ -2579,7 +2526,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 25+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
-
 
 **Signature Activity Concepts:**
 
@@ -2601,7 +2547,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** паспорт
 
-
 **Signature Activity Concepts:**
 
 1. Vocabulary: Travel planning
@@ -2619,7 +2564,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 25+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
-
 
 **Key Distinctions:**
 
@@ -2646,7 +2590,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Key Distinctions:**
 
 - казати (say something specific)
@@ -2672,7 +2615,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Signature Activity Concepts:**
 
 1. Match: Verb + noun collocations
@@ -2690,7 +2632,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 25+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
-
 
 **Key Patterns:**
 
@@ -2737,7 +2678,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** Львів, Львівщина, Галичина, Закарпаття, Волинь, Буковина, Івано-Франківщина
 
-
 **Cultural Content:**
 
 - Львів: cultural capital, Habsburg heritage, coffee culture
@@ -2763,7 +2703,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Register and complexity appropriate to B1 level
 
 **Key themes/places:** Харків, Харківщина, Слобожанщина, Донбас
-
 
 **Cultural Content:**
 
@@ -2791,7 +2730,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** Одеса, Одещина, Херсон, Миколаїв, Крим, Чорне море, Азовське море
 
-
 **Cultural Content:**
 
 - Одеса: port city, unique humor and dialect
@@ -2818,7 +2756,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** Київ, Київщина, Полтава, Полтавщина, Черкаси, Черкащина, Русь, Шевченко
 
-
 **Cultural Content:**
 
 - Київ: capital, historical heart
@@ -2844,7 +2781,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Register and complexity appropriate to B1 level
 
 **Key themes/places:** музика, фестиваль, електронна музика
-
 
 **Cultural Content:**
 
@@ -2873,7 +2809,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** кіно, кінострічка
 
-
 **Cultural Content:**
 
 - Dovzhenko legacy
@@ -2900,7 +2835,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Register and complexity appropriate to B1 level
 
 **Key themes/places:** ІТ
-
 
 **Cultural Content:**
 
@@ -2931,7 +2865,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** спорт
 
-
 **Cultural Content:**
 
 - Football (Dynamo, Shakhtar)
@@ -2959,7 +2892,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** займатися спортом, спортзал
 
-
 **Cultural Content:**
 
 - Urban parks and recreation zones
@@ -2983,7 +2915,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 25+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
-
 
 **Cultural Content:**
 
@@ -3009,7 +2940,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Cultural Content:**
 
 - Hiking routes to Hoverla and Pip Ivan
@@ -3033,7 +2963,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 25+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
-
 
 **Cultural Content:**
 
@@ -3059,7 +2988,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Cultural Content:**
 
 - Bukovel resort facilities
@@ -3083,7 +3011,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 25+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
-
 
 **Cultural Content:**
 
@@ -3111,7 +3038,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Register and complexity appropriate to B1 level
 
 **Key themes/places:** фестиваль, традиція, Різдво, Великдень, Івана Купала, День Незалежності, Масляна
-
 
 **Key Patterns:**
 
@@ -3158,7 +3084,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
 
-
 **Skills:**
 
 - Understanding headlines and leads
@@ -3183,7 +3108,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 25+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B1 level
-
 
 **Skills:**
 

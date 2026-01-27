@@ -5,26 +5,26 @@ version: '2.0'
 title: 'Чорнобиль: Трагедія і Попередження'
 content_outline:
 - section: Вступ — Мирний атом?
-  words: 533
+  words: 615
   points:
   - Pripyat as a Soviet model city of the future
   - The narrative of the 'safe' peaceful atom
   - Ukraine's role as the energy hub of the USSR
 - section: Аварія 1986 року
-  words: 1333
+  words: 1538
   points:
   - 'The night of April 26: The explosion and the first firefighters'
   - The 36-hour delay in evacuation and the radioactive cloud
   - 'The ''Liquidators'': heroism and sacrifice of mobilized reservists'
   - The construction of the Sarcophagus
 - section: Первинні джерела
-  words: 800
+  words: 923
   points:
   - Transcripts of emergency calls to the fire station
   - The official announcement of evacuation (short, dry)
   - Excerpts from diaries of Pripyat residents
 - section: Деколонізаційний погляд
-  words: 800
+  words: 924
   points:
   - 'Moscow''s criminal silence: The May 1st Parade in Kyiv under radiation'
   - Colonial exploitation of Ukrainian territory for dangerous industries
@@ -37,3 +37,7 @@ focus: history
 prerequisites: []
 learning_outcomes: []
 phase: HIST.11 [Post-War Soviet Ukraine]
+objectives:
+- 'Analyze the causes and consequences of чорнобиль: трагедія і попередження'
+- Evaluate the historical significance of мирний атом?
+- Trace the development of деколонізаційний погляд

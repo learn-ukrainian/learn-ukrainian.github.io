@@ -1,8 +1,8 @@
 # Audit Report: M68 — hryhorii-skovoroda.md
 **Level:** B2 | **Module:** M68 | **Phase:** HIST.7 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:54:54
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-27 15:51:18
 
 ## Configuration
 **Type:** B2-history
@@ -21,36 +21,39 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Байка «Бджола та Шершень» (адаптовано) | 3 | 1 | ✅ |
-| 2 | quiz | Життя та філософія Сковороди | 8 | 8 | ✅ |
-| 3 | essay-response | Есе: Сродна праця сьогодні | 1 | 1 | ✅ |
-| 4 | comparative-study | Порівняння: Сковорода vs Сучасний коуч | 1 | 1 | ✅ |
-| 5 | true-false | Факти про філософію Сковороди | 10 | 8 | ✅ |
-| 6 | match-up | Філософські терміни Сковороди | 12 | 8 | ✅ |
-| 7 | unjumble | Складіть афоризми Сковороди | 8 | 6 | ✅ |
-| 8 | fill-in | Заповніть пропуски в біографії Сковороди | 10 | 8 | ✅ |
-| 9 | error-correction | Виправте помилки в твердженнях про Сковороду | 8 | 6 | ✅ |
-| 10 | select | Оберіть правильні твердження про філософію Сковороди | 8 | 6 | ✅ |
+| 2 | essay-response | Есе: Сродна праця сьогодні | 1 | 1 | ✅ |
+| 3 | comparative-study | Порівняння: Сковорода vs Сучасний коуч | 1 | 1 | ✅ |
+| 4 | true-false | Факти про філософію Сковороди | 10 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 10 (target: 3-9) ❌
-- Unique types: 10 (minimum: 2) ✅
+- Total activities: 4 (target: 3-9) ✅
+- Unique types: 4 (minimum: 2) ✅
 - Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in hryhorii-skovoroda.yaml: Insufficient activities: 4 found, minimum 5 required for B2-HIST
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 4568/4000 (raw: 4619)
-- **Activities:** ✅ 10/3
+- **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 10/2 types
+- **Unique_types:** ✅ 4/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ Too many activities: 10 (target 3-9)
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ✅ Content-heavy OK (4 activities)
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

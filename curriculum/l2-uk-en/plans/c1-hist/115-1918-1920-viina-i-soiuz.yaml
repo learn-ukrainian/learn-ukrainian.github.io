@@ -5,47 +5,47 @@ version: '2.0'
 title: '1918-1920: Війна і союз одночасно'
 content_outline:
 - section: Вступ — Парадокс 1918-1920
-  words: 451
+  words: 515
   points:
   - Війна в Галичині
   - Союз проти більшовиків
   - Одночасно
   - Структура модуля
 - section: Війна за Львів 1918-1919
-  words: 790
+  words: 903
   points:
   - ЗУНР vs Польща
   - «Орлята Львова»
   - Україна програє
   - Наслідки поразки
 - section: Варшавський договір 1920
-  words: 677
+  words: 774
   points:
   - Петлюра і Пілсудський
   - Умови союзу
   - Ціна — Галичина
   - Чому Петлюра погодився
 - section: Київська операція
-  words: 677
+  words: 774
   points:
   - Спільний похід
   - Взяття Києва
   - Радянський контрнаступ
   - «Чудо на Віслі»
 - section: Ризький мир 1921
-  words: 564
+  words: 645
   points:
   - Україну поділили
   - Без участі українців
   - Петлюра — зраджений союзник
   - Наслідки на 20 років
 - section: Підсумок
-  words: 341
+  words: 389
   points:
   - Війна і союз — не протиріччя
   - Спільний ворог — більшовики
   - Перехід до Волині 1943
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - парадокс (paradox)
@@ -68,7 +68,7 @@ activity_hints:
 - type: critical-analysis
   focus: How war and alliance coexisted 1918-1920
   output: Paradox explanation
-- type: treaty-analysis
+- type: critical-analysis
   focus: Warsaw Treaty 1920 — terms and consequences
   output: Treaty analysis
 - type: comparative-study
@@ -104,3 +104,6 @@ sources:
   notes: Soviet-Polish war
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of 1918-1920: війна і союз одночасно'
+- Evaluate the historical significance of парадокс 1918-1920

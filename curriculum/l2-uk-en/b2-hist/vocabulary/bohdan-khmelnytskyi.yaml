@@ -2,128 +2,125 @@ module: bohdan-khmelnytskyi
 level: B2
 version: '2.0'
 items:
-  - lemma: гетьман
-    ipa: /ˈɦɛtʲmɐn/
-    translation: hetman (Cossack military leader)
-    pos: noun
-    gender: m
-  - lemma: повстання
-    ipa: /pou̯ˈstɑnʲːɐ/
-    translation: uprising
-    pos: noun
-    gender: n
-  - lemma: козацтво
-    ipa: /koˈzɑt͡stuo̯/
-    translation: Cossackdom
-    pos: noun
-    gender: n
-  - lemma: Запорізька Січ
-    ipa: /zɐpoˈrʲizʲkɐ sʲit͡ʃ/
-    translation: Zaporozhian Sich
-    pos: noun
-    gender: f
-  - lemma: старшина
-    ipa: /stɐrˈʃɪnɐ/
-    translation: Cossack officers/elite
-    pos: noun
-    gender: f
-  - lemma: реєстр
-    ipa: /reˈɛstr/
-    translation: register (list of privileged Cossacks)
-    pos: noun
-    gender: m
-  - lemma: шляхта
-    ipa: /ˈʃlʲɐxtɐ/
-    translation: nobility (gentry)
-    pos: noun
-    gender: f
-  - lemma: Річ Посполита
-    ipa: /rit͡ʃ pospoˈlɪtɐ/
-    translation: Polish-Lithuanian Commonwealth
-    pos: noun
-    gender: f
-  - lemma: дипломатія
-    ipa: /dɪploˈmɑtʲijɐ/
-    translation: diplomacy
-    pos: noun
-    gender: f
-  - lemma: державність
-    ipa: /derˈʒɑu̯nʲistʲ/
-    translation: statehood
-    pos: noun
-    gender: f
-  - lemma: булава
-    ipa: /bʊlɐˈu̯ɑ/
-    translation: mace (symbol of authority)
-    pos: noun
-    gender: f
-  - lemma: полк
-    ipa: /polk/
-    translation: regiment
-    pos: noun
-    gender: m
-  - lemma: полковник
-    ipa: /polˈkou̯nɪk/
-    translation: colonel
-    pos: noun
-    gender: m
-  - lemma: сотник
-    ipa: /ˈsotnɪk/
-    translation: centurion/sotnyk
-    pos: noun
-    gender: m
-  - lemma: універсал
-    ipa: /ʊnʲiuerˈsɑl/
-    translation: universal (formal decree)
-    pos: noun
-    gender: m
-  - lemma: козацька рада
-    ipa: /koˈzɑt͡sʲkɐ ˈrɑdɐ/
-    translation: Cossack council
-    pos: noun
-    gender: f
-  - lemma: чорна рада
-    ipa: /ˈt͡ʃornɐ ˈrɑdɐ/
-    translation: black council (general assembly)
-    pos: noun
-    gender: f
-  - lemma: шляхтич
-    ipa: /ˈʃlʲɐxtɪt͡ʃ/
-    translation: nobleman
-    pos: noun
-    gender: m
-  - lemma: самодержець
-    ipa: /sɐmoˈdɛrʒet͡sʲ/
-    translation: autocrat
-    pos: noun
-    gender: m
-  - lemma: військо
-    ipa: /ˈu̯ijʲsʲko/
-    translation: army/military
-    pos: noun
-    gender: n
-  - lemma: переговори
-    ipa: /perɛɦoˈu̯orɪ/
-    translation: negotiations
-    pos: noun
-    gender: pl
-  - lemma: союз
-    ipa: /soˈjuz/
-    translation: alliance/union
-    pos: noun
-    gender: m
-  - lemma: клейноди
-    ipa: /klɛjˈnɔdɪ/
-    translation: Cossack regalia/symbols
-    pos: noun
-    gender: pl
-  - lemma: магнат
-    ipa: /mɐɦˈnɑt/
-    translation: magnate
-    pos: noun
-    gender: m
-  - lemma: підпанок
-    ipa: /pidˈpɑnok/
-    translation: sub-lord/local official
-    pos: noun
-    gender: m
+- lemma: гетьман
+  ipa: /ˈɦɛtʲmɐn/
+  translation: hetman (Cossack military leader)
+  pos: noun
+  gender: m
+- lemma: повстання
+  ipa: /pou̯ˈstɑnʲːɐ/
+  translation: uprising
+  pos: noun
+  gender: n
+- lemma: козацтво
+  ipa: /koˈzɑt͡stuo̯/
+  translation: Cossackdom
+  pos: noun
+  gender: n
+- lemma: запорізька січ
+  ipa: /zɐpoˈrʲizʲkɐ sʲit͡ʃ/
+  translation: Zaporozhian Sich
+  pos: noun
+  gender: f
+- lemma: старшина
+  ipa: /stɐrˈʃɪnɐ/
+  translation: Cossack officers/elite
+  pos: noun
+  gender: f
+- lemma: реєстр
+  ipa: /reˈɛstr/
+  translation: register (list of privileged Cossacks)
+  pos: noun
+  gender: m
+- lemma: шляхта
+  ipa: /ˈʃlʲɐxtɐ/
+  translation: nobility (gentry)
+  pos: noun
+  gender: f
+- lemma: річ посполитий
+  ipa: /rit͡ʃ pospoˈlɪtɐ/
+  translation: Polish-Lithuanian Commonwealth
+  pos: adj
+- lemma: дипломатія
+  ipa: /dɪploˈmɑtʲijɐ/
+  translation: diplomacy
+  pos: noun
+  gender: f
+- lemma: державність
+  ipa: /derˈʒɑu̯nʲistʲ/
+  translation: statehood
+  pos: noun
+  gender: f
+- lemma: булава
+  ipa: /bʊlɐˈu̯ɑ/
+  translation: mace (symbol of authority)
+  pos: noun
+  gender: f
+- lemma: полк
+  ipa: /polk/
+  translation: regiment
+  pos: noun
+  gender: m
+- lemma: полковник
+  ipa: /polˈkou̯nɪk/
+  translation: colonel
+  pos: noun
+  gender: m
+- lemma: сотник
+  ipa: /ˈsotnɪk/
+  translation: centurion/sotnyk
+  pos: noun
+  gender: f
+- lemma: універсал
+  ipa: /ʊnʲiuerˈsɑl/
+  translation: universal (formal decree)
+  pos: noun
+  gender: m
+- lemma: козацька рада
+  ipa: /koˈzɑt͡sʲkɐ ˈrɑdɐ/
+  translation: Cossack council
+  pos: noun
+  gender: f
+- lemma: чорна рада
+  ipa: /ˈt͡ʃornɐ ˈrɑdɐ/
+  translation: black council (general assembly)
+  pos: noun
+  gender: f
+- lemma: шляхтич
+  ipa: /ˈʃlʲɐxtɪt͡ʃ/
+  translation: nobleman
+  pos: noun
+  gender: m
+- lemma: самодержець
+  ipa: /sɐmoˈdɛrʒet͡sʲ/
+  translation: autocrat
+  pos: noun
+  gender: m
+- lemma: військо
+  ipa: /ˈu̯ijʲsʲko/
+  translation: army/military
+  pos: noun
+  gender: n
+- lemma: переговори
+  ipa: /perɛɦoˈu̯orɪ/
+  translation: negotiations
+  pos: noun
+- lemma: союз
+  ipa: /soˈjuz/
+  translation: alliance/union
+  pos: noun
+  gender: m
+- lemma: клейнод
+  ipa: /klɛjˈnɔdɪ/
+  translation: Cossack regalia/symbols
+  pos: noun
+- lemma: магнат
+  ipa: /mɐɦˈnɑt/
+  translation: magnate
+  pos: noun
+  gender: m
+- lemma: підпанок
+  ipa: /pidˈpɑnok/
+  translation: sub-lord/local official
+  pos: noun
+  gender: m

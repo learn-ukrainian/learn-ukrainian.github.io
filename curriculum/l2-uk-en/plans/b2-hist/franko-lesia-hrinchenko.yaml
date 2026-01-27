@@ -66,15 +66,6 @@ activity_hints:
   focus: Фрагменти творів Франка, Лесі, Грінченка
   source: Літературні твори
   items: 4
-- type: quiz
-  focus: Біографії та творчість титанів
-  items: 15
-- type: match-up
-  focus: Автор → твір
-  items: 10
-- type: fill-in
-  focus: Літературознавча лексика
-  items: 10
 - type: essay-response
   focus: Як література кінця XIX століття сприяла національному пробудженню?
   word_target: 250

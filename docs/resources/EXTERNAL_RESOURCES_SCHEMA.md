@@ -242,6 +242,7 @@ resources:
 ## Validation Rules
 
 ### Required Validations
+
 1. **No duplicate URLs** within same module
 2. **All podcast episode_ids exist** in `podcast_db.json`
 3. **All URLs are valid** (HTTP 200 response or flagged for review)
@@ -249,6 +250,7 @@ resources:
 5. **Module IDs exist** in curriculum
 
 ### Warning Validations
+
 1. **YouTube URL format** matches `youtube.com/watch?v=` or `youtu.be/`
 2. **Missing descriptions** for high-relevance resources
 3. **Too many resources** (>10 per type per module)
@@ -287,6 +289,7 @@ resources:
 ## Migration from Existing Resources
 
 ### Phase 1: Extract
+
 Parse existing `[!resources]` sections from 304 markdown files:
 - Identify resource type (YouTube, article, etc.)
 - Extract title, URL, source
@@ -294,18 +297,21 @@ Parse existing `[!resources]` sections from 304 markdown files:
 - Structure by module_id
 
 ### Phase 2: Merge ULP Mappings
+
 Add podcast mappings from `ulp_mapping.yaml`:
 - Convert to unified schema format
 - Add `match_reason` from mapping
 - Deduplicate if manually added
 
 ### Phase 3: Validate
+
 Run validation script:
 - Check URLs (flag broken links)
 - Verify podcast episode_ids
 - Check for duplicates
 
 ### Phase 4: Regenerate
+
 Generate updated markdown sections:
 - Replace existing `[!resources]`
 - Use unified template
@@ -316,6 +322,7 @@ Generate updated markdown sections:
 ## Scripts
 
 ### Extract: `scripts/extract_external_resources.py`
+
 ```bash
 python scripts/extract_external_resources.py \
   --curriculum curriculum/l2-uk-en/ \
@@ -323,6 +330,7 @@ python scripts/extract_external_resources.py \
 ```
 
 ### Merge: `scripts/merge_podcast_mappings.py`
+
 ```bash
 python scripts/merge_podcast_mappings.py \
   --existing docs/resources/external_resources.yaml \
@@ -331,12 +339,14 @@ python scripts/merge_podcast_mappings.py \
 ```
 
 ### Validate: `scripts/validate_external_resources.py`
+
 ```bash
 python scripts/validate_external_resources.py \
   docs/resources/external_resources.yaml
 ```
 
 ### Generate: `scripts/generate_resource_sections.py`
+
 ```bash
 python scripts/generate_resource_sections.py \
   --input docs/resources/external_resources.yaml \

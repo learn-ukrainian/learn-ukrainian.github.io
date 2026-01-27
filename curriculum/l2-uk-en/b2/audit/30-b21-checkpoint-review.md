@@ -1,10 +1,12 @@
 # Audit Report: M30 — 30-b21-checkpoint.md
+
 **Level:** B2 | **Module:** M30 | **Phase:** B2 | **Pedagogy:** checkpoint | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:05
 
 ## Configuration
+
 **Type:** B2-checkpoint
 **Word Target:** 1750 words
 **Activities:** 15-19 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Пасивний стан: розпізнавання форм | 16 | 8 | ✅ |
@@ -46,15 +49,18 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (71% overlap): "Компанія, **що існує** вже двадцять років, розширює діяльність.". Shares significant keywords with sentence at index 15.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
+
 - **Words:** ✅ 2130/1750 (raw: 2351)
 - **Activities:** ✅ 19/15
 - **Density:** ✅ All > 14
@@ -73,10 +79,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 77% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 41 | 24 | 100% | 20% | 20.0% |
@@ -92,12 +100,13 @@
 | **TOTAL** | | | | | **77.8%** |
 
 ### Dryness Flags & Fixes
+
 - ❌ **LOW_DIALOGUE**
   - FIX:
     Add more mini-dialogues (need 4+ total). Use this exact format:
-    
+
     **Діалог: [Location in Ukraine]**
-    
+
     > — [Speaker 1 line with **bolded** grammar examples]
     > — [Speaker 2 response with **bolded** grammar examples]
     > — [Speaker 1 continuation]
@@ -105,7 +114,7 @@
 - ❌ **NO_CULTURAL_ANCHOR**
   - FIX:
     Add 3+ cultural references. Use this exact format:
-    
+
     > 🇺🇦 **Культурний момент**
     >
     > [Reference to Ukrainian place (Київ, Львів, Одеса, Карпати), tradition, or custom]
@@ -113,6 +122,7 @@
     > [Example sentence using the grammar with cultural context]
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 58 | Included in Core |

@@ -1,10 +1,12 @@
 # Audit Report: M49 — 49-idioms-body-head-face.md
+
 **Level:** B2 | **Module:** M49 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:18
 
 ## Configuration
+
 **Type:** B2-vocab
 **Word Target:** 1750 words
 **Activities:** 10-14 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Значення фразеологізмів | 15 | 8 | ✅ |
@@ -39,6 +42,7 @@
 - Low density activities: 0
 
 ## Gates
+
 - **Words:** ✅ 2147/1750 (raw: 2510)
 - **Activities:** ✅ 12/10
 - **Density:** ✅ All > 14
@@ -57,10 +61,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 98% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 49 | 24 | 100% | 20% | 20.0% |
@@ -76,6 +82,7 @@
 | **TOTAL** | | | | | **98.2%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 72 | Included in Core |

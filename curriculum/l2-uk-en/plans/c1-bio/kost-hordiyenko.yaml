@@ -75,22 +75,10 @@ activity_hints:
   focus: Hordiyenko's manifestos and appeals
   source: Primary sources (adapted)
   items: 3 passages
-- type: quiz
-  focus: Sich governance and Hordiyenko's actions
-  items: 12+
-- type: match-up
-  focus: Sich offices and their functions
-  items: 10+
 - type: essay-response
   focus: Why did the Sich support Mazepa?
   word_target: 250
   output: Analysis of Sich interests
-- type: group-sort
-  focus: Sich traditions vs. Hetmanate traditions
-  items: 12+
-- type: fill-in
-  focus: Cossack self-governance terminology
-  items: 8+
 focus: biography
 prerequisites:
 - c1-bio-12 (Ivan Mazepa - alliance context)
@@ -115,3 +103,6 @@ sources:
   notes: Exile period
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of кость гордієнко: запорозький кошовий'
+- Evaluate the contributions of голос запорозької волі

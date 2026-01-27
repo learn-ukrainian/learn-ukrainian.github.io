@@ -1,10 +1,12 @@
 # Audit Report: M14 — 14-literature-review.md
+
 **Level:** C1 | **Module:** M14 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:03
 
 ## Configuration
+
 **Type:** C1-grammar
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Функції огляду | 8 | 5 | ✅ |
@@ -45,16 +48,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 14-literature-review.yaml: Schema validation error at key 'min_words': 100 is less than the minimum of 200
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 1909/3000 (raw: 2007)
 - **Activities:** ✅ 16/12
 - **Density:** ✅ All > 12
@@ -73,10 +79,12 @@
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 78% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 10 | 15 | 67% | 25% | 16.8% |
@@ -90,10 +98,11 @@
 | **TOTAL** | | | | | **79.0%** |
 
 ### Dryness Flags & Fixes
+
 - ❌ **NO_CULTURAL_ANCHOR**
   - FIX:
     Add 3+ cultural references. Use this exact format:
-    
+
     > 🇺🇦 **Культурний момент**
     >
     > [Reference to Ukrainian place (Київ, Львів, Одеса, Карпати), tradition, or custom]
@@ -101,6 +110,7 @@
     > [Example sentence using the grammar with cultural context]
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 91 | Included in Core |

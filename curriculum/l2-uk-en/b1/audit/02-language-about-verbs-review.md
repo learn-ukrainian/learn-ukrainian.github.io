@@ -1,8 +1,8 @@
 # Audit Report: M02 — 02-language-about-verbs.md
-**Level:** B1 | **Module:** M02 | **Phase:** B1 | **Pedagogy:** PPP | **Target:** 1200
+**Level:** B1 | **Module:** M02 | **Phase:** B1.0 | **Pedagogy:** PPP | **Target:** 1200
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:26:44
+**Generated:** 2026-01-27 16:25:44
 
 ## Configuration
 **Type:** B1-bridge
@@ -41,7 +41,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2074/1200 (raw: 2639)
+- **Words:** ✅ 3080/1200 (raw: 3645)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/5 types
@@ -53,7 +53,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 37.5% (B1.1 Aspect)
+- **Immersion:** 🇺🇦 31.9% (B1.1 Aspect)
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -65,15 +65,15 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 49 | 24 | 100% | 20% | 20.0% |
+| examples | 53 | 24 | 100% | 20% | 20.0% |
 | engagement | 11 | 5 | 100% | 15% | 15.0% |
-| dialogues | 14 | 4 | 100% | 15% | 15.0% |
+| dialogues | 17 | 4 | 100% | 15% | 15.0% |
 | variety | 0.99 | - | 99% | 10% | 9.9% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
-| realworld | 4 | 3 | 100% | 10% | 10.0% |
+| realworld | 8 | 3 | 100% | 10% | 10.0% |
 | visual | 6 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 22 | 5 | 100% | 5% | 5.0% |
+| questions | 45 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.9%** |
 
@@ -81,14 +81,14 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 55 | Included in Core |
-| **Introduction - The Verb System** | ✅ | 211 | Included in Core |
-| **Aspect Terms (Вид дієслова)** | ⚪️ | 127 | Skipped |
-| **Action Concepts** | ✅ | 173 | Included in Core |
-| **Tense Terms (Час дієслова)** | ⚪️ | 299 | Skipped |
-| **Additional Verb Terms** | ⚪️ | 69 | Skipped |
-| **Negation Terminology** | ⚪️ | 108 | Skipped |
-| **Verb Form Terminology** | ⚪️ | 275 | Skipped |
+| **Introduction - The Verb System** | ✅ | 295 | Included in Core |
+| **Aspect Terms (Вид дієслова)** | ⚪️ | 221 | Skipped |
+| **Action Concepts** | ✅ | 274 | Included in Core |
+| **Tense Terms (Час дієслова)** | ⚪️ | 412 | Skipped |
+| **Additional Verb Terms** | ⚪️ | 218 | Skipped |
+| **Negation Terminology** | ⚪️ | 225 | Skipped |
+| **Verb Form Terminology** | ⚪️ | 356 | Skipped |
 | **Practice Reading Grammar Explanations** | ⚪️ | 0 | Skipped (using YAML) |
-| **Mini-Dialogues** | ✅ | 291 | Included in Core |
+| **Mini-Dialogues** | ✅ | 386 | Included in Core |
 | **Summary and Practice** | ✅ | 112 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 78 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 212 | Skipped |

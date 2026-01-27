@@ -5,50 +5,52 @@ version: '1.0'
 title: 'Після Сталіна: Шістдесятники'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of після сталіна: шістдесятники'
+- Evaluate the historical significance of відлига
 content_outline:
 - section: Вступ — Відлига
-  words: 451
+  words: 515
   subsections:
   - 1953 — смерть Сталіна
   - Хрущовська відлига
   - Нове покоління
   - Структура модуля
 - section: Хто такі шістдесятники
-  words: 790
+  words: 903
   subsections:
   - Покоління — хто вони
   - Стус, Симоненко, Костенко
   - Не політики — митці
   - «Клуб творчої молоді»
 - section: Культурний вибух
-  words: 677
+  words: 774
   subsections:
   - Нова поезія
   - Кіно — Параджанов
   - Мистецтво — нові форми
   - Повернення до заборонених тем
 - section: Репресії
-  words: 677
+  words: 774
   subsections:
   - 1965-1972 — арешти
   - Шелест падає
   - Щербицький — нова хвиля
   - Табори
 - section: Від культури до політики
-  words: 564
+  words: 645
   subsections:
   - Українська Гельсінська група
   - Правозахисний рух
   - Зв'язок з культурою
   - Спадок для 1991
 - section: Підсумок
-  words: 341
+  words: 389
   subsections:
   - Шістдесятники — міст
   - Від культури до незалежності
   - Перехід до пост-2014
-word_target: 3500
+word_target: 4000
 vocabulary:
 - шістдесятники
 - відлига
@@ -66,11 +68,11 @@ vocabulary:
 - Параджанов
 - «Клуб творчої молоді»
 activities:
-- type: generation-study
+- type: comparative-study
   focus: Who were the Sixtiers — profiles
-- type: cultural-analysis
+- type: critical-analysis
   focus: Sixtiers cultural output — poetry, cinema, art
-- type: repression-documentation
+- type: critical-analysis
   focus: 1965-1972 repressions — timeline
 - type: critical-analysis
   focus: Sixtiers → Ukrainian Helsinki Group → 1991

@@ -75,22 +75,10 @@ activity_hints:
   focus: French chronicle descriptions of Anna
   source: Adapted medieval sources
   items: 3 passages
-- type: quiz
-  focus: Facts about Anna's life in France
-  items: 12+
-- type: match-up
-  focus: Anna's family members and their fates
-  items: 10+
 - type: essay-response
   focus: Compare Anna's life in Kyiv vs. Paris
   word_target: 250
   output: Comparative analysis
-- type: group-sort
-  focus: Ukrainian heritage vs. French queenship
-  items: 12+
-- type: fill-in
-  focus: Key dates and names in Anna's biography
-  items: 8+
 - type: critical-analysis
   focus: Evaluate competing Ukrainian and French claims to Anna
   output: Balanced assessment

@@ -69,22 +69,10 @@ activity_hints:
   focus: Paton's speeches and interviews
   source: NAS archives
   items: 3 passages
-- type: quiz
-  focus: Paton's biography and achievements
-  items: 12+
-- type: match-up
-  focus: Innovations and their fields of application
-  items: 10+
 - type: essay-response
   focus: How did Borys Paton preserve Ukrainian science through political changes?
   word_target: 300
   output: Science and politics analysis
-- type: group-sort
-  focus: Soviet-era vs. independence-era achievements
-  items: 12+
-- type: fill-in
-  focus: Key dates and inventions
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-112 (Yevhen Paton - his father)
@@ -110,3 +98,7 @@ sources:
   notes: His pioneering space technology
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of борис патон: академік століття'
+- Evaluate the contributions of найдовше президентство в історії науки
+- Trace the career and influence of спадщина столітнього академіка

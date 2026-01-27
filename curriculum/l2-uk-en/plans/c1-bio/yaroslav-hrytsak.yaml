@@ -69,22 +69,10 @@ activity_hints:
   focus: Фрагменти праць Грицака
   source: Академічні та публіцистичні тексти
   items: 3 passages
-- type: quiz
-  focus: Ключові ідеї Грицака
-  items: 12+
-- type: match-up
-  focus: Історичні концепції та їхній зміст
-  items: 10+
 - type: essay-response
   focus: Чи повинен історик бути обєктивним?
   word_target: 300
   output: Аргументований есей
-- type: group-sort
-  focus: Традиційна vs критична історія
-  items: 12+
-- type: fill-in
-  focus: Історіографічна термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - b2-hist-independence
@@ -108,3 +96,7 @@ sources:
   notes: Наукові праці
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of ярослав грицак: публічний історик'
+- Evaluate the contributions of історик, який говорить з людьми
+- Trace the career and influence of обов'язок історика

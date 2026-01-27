@@ -5,53 +5,53 @@ version: '2.0'
 title: 'Синтез: Закономірність чи випадок?'
 content_outline:
 - section: Вступ — Паттерни на роздоріжжях
-  words: 400
+  words: 457
   points:
   - Огляд модулів 89-93
   - Чи є закономірності
   - Роль вибору vs. структури
   - Мета синтезу
 - section: Порівняння поворотних точок
-  words: 600
+  words: 686
   points:
   - 1654 → 1709 → 1917 → 1991 → 2004 → 2014
   - Що спільного
   - Що відрізняється
   - Таблиця порівняння
 - section: Структурні фактори
-  words: 700
+  words: 800
   points:
   - Геополітичне положення
   - Ресурси — завжди обмежені
   - Зовнішні актори — завжди присутні
   - Внутрішня єдність — варіативна
 - section: Роль агентності
-  words: 600
+  words: 686
   points:
   - Лідери мають вибір
   - Помилки і правильні рішення
   - Народ як актор (2004, 2014, 2022)
   - Зростання агентності з часом
 - section: Чи можна передбачити
-  words: 500
+  words: 571
   points:
   - Закономірності — так
   - Конкретний результат — ні
   - Цінність історичного аналізу
   - Підготовка до майбутнього
 - section: 2022 — найбільше роздоріжжя
-  words: 400
+  words: 457
   points:
   - Всі попередні досвіди
   - Чому результат інший
   - Новий етап історії?
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Історія — не випадкова, але не детермінована
   - Роль вибору зростає
   - Перехід до Заходу
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - синтез (synthesis)
@@ -74,13 +74,13 @@ activity_hints:
 - type: essay-response
   focus: Create master turning points comparison
   output: Comprehensive comparison
-- type: pattern-analysis
+- type: critical-analysis
   focus: What patterns emerge across turning points?
   output: Pattern identification
-- type: agency-analysis
+- type: critical-analysis
   focus: How has Ukrainian agency grown over time?
   output: Agency evolution study
-- type: methodology-reflection
+- type: essay-response
   focus: What can and can't historical analysis predict?
   output: Methodological reflection
 - type: essay-response
@@ -105,3 +105,6 @@ sources:
   notes: Methodology
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of синтез: закономірність чи випадок?'
+- Evaluate the historical significance of паттерни на роздоріжжях

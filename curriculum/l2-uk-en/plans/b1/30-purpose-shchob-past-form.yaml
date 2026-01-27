@@ -5,42 +5,39 @@ version: '2.0'
 title: 'Підрядні речення мети: щоб + минула форма'
 subtitle: Purpose Clauses - Different Subjects
 content_outline:
-- section: 'Introduction: Different-Subject Purpose'
-  words: 150
+- section: 'Тест: Перевірте себе'
+  words: 195
+  points: []
+- section: Пояснення
+  words: 932
   points:
-  - When subjects differ
-  - Past form as subjunctive
-  - Comparison with infinitive pattern
-- section: щоб + Past Form Structure
-  words: 250
+  - Коли використовувати щоб + минулу форму
+  - Структура речення
+  - Дієслова, що вимагають цієї конструкції
+  - Узгодження форми
+  - Аспект у конструкції з «щоб»
+  - Заперечення в конструкції
+  - 'Порівняння: інфінітив чи минула форма?'
+- section: Практика
+  words: 725
   points:
-  - Я хочу, щоб ти зробив...
-  - Gender agreement required
-  - Number agreement required
-- section: Subject in Subordinate Clause
-  words: 250
+  - Як обрати правильну конструкцію?
+  - Типові помилки та як їх уникнути
+- section: Діалоги
+  words: 936
   points:
-  - Explicit subject required
-  - Pronoun vs noun subjects
-  - Word order patterns
-- section: Verb Form Agreement
-  words: 250
+  - 'Діалог 1: На роботі'
+  - 'Діалог 2: Батьки і діти'
+  - 'Діалог 3: Лікар і пацієнт'
+  - 'Діалог 4: Вчитель і учні'
+  - 'Діалог 5: Планування подорожі'
+- section: Потрібно більше практики?
+  words: 212
   points:
-  - 'Past masculine: -в'
-  - 'Past feminine: -ла'
-  - 'Plural: -ли'
-- section: Comparing Both Patterns
-  words: 200
-  points:
-  - Infinitive vs past form choice
-  - Common errors
-  - Decision flowchart
-- section: 'Practice: Different-Subject Clauses'
-  words: 100
-  points:
-  - Form purpose clauses
-  - Choose correct pattern
-word_target: 1200
+  - Інтеграція знань
+  - Реальне застосування
+  - Онлайн-ресурси
+word_target: 3000
 vocabulary_hints:
   required:
   - щоб (in order to/so that)
@@ -60,13 +57,13 @@ activity_hints:
 - type: fill-in
   focus: Different-subject purpose clauses
   items: 25
-- type: sentence-combining
+- type: unjumble
   focus: Combine with correct pattern
   items: 20
 - type: error-correction
   focus: Fix agreement errors
   items: 15
-- type: translation
+- type: translate
   focus: English to Ukrainian
   items: 15
 focus: grammar

@@ -1,10 +1,12 @@
 # Audit Report: M42 — 42-aspect-nuances-imperative-infinitive.md
+
 **Level:** B2 | **Module:** M42 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:13
 
 ## Configuration
+
 **Type:** B2-grammar
 **Word Target:** 1750 words
 **Activities:** 10-14 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | cloze | Вибір виду: наказовий спосіб | 16 | 14 | ✅ |
@@ -46,15 +49,18 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'не можна...'.
   - FIX: Vary sentence structure.
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
+
 - **Words:** ✅ 2303/1750 (raw: 2706)
 - **Activities:** ✅ 19/10
 - **Density:** ✅ All > 14
@@ -73,10 +79,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 98% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 100 | 24 | 100% | 20% | 20.0% |
@@ -92,6 +100,7 @@
 | **TOTAL** | | | | | **98.5%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 61 | Included in Core |

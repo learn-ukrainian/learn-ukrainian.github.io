@@ -6,12 +6,12 @@ title: Балет і танець
 subtitle: Ballet and Dance
 content_outline:
 - section: Вступ — Балет і танець
-  words: 400
+  words: 1000
   points:
   - Визначення та сфери застосування
   - Зв'язок із попередніми модулями
 - section: Content Areas
-  words: 500
+  words: 1250
   points:
   - '**Серж Лифар** (1904-1986): Kyiv-born, Paris Opera director (1929-1958), transformed
     20th century ballet'
@@ -19,12 +19,12 @@ content_outline:
   - 'Folk dance: Гопак, Аркан, ансамблі (Вірський)'
   - 'Contemporary: Kyiv Modern Ballet, сучасний танець'
 - section: Практика та підсумок
-  words: 300
+  words: 750
   points:
   - Практичні вправи на закріплення
   - Інтеграція з попередніми модулями
   - Підготовка до наступного модуля
-word_target: 2000
+word_target: 3000
 focus: fine-arts
 pedagogy: CBI
 objectives:

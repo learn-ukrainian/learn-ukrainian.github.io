@@ -86,15 +86,15 @@ Many words in Ukrainian are international. They're borrowed from Latin, Greek, o
 
 ### Mini-Dialogue 1: At the Metro Station
 
-— Це метро? _(Tse metro?)_ — Is this the metro?
-— Так, метро. _(Tak, metro.)_ — Yes, the metro.
+— Це метро? *(Tse metro?)* — Is this the metro?
+— Так, метро. *(Tak, metro.)* — Yes, the metro.
 
 Notice how **метро** looks almost English? That's because it IS almost English. Just written in Cyrillic!
 
 ### Mini-Dialogue 2: At a Café
 
-— Кава? _(Kava?)_ — Coffee?
-— Так, кава. _(Tak, kava.)_ — Yes, coffee.
+— Кава? *(Kava?)* — Coffee?
+— Так, кава. *(Tak, kava.)* — Yes, coffee.
 
 The word **кава** comes from the same root as English «coffee» but took a different path through Turkish and Arabic. In Ukrainian, it sounds like «kava.»
 

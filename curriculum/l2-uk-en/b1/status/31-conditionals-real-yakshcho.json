@@ -2,14 +2,14 @@
   "module": "31-conditionals-real-yakshcho",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:27:03.965306Z",
+  "last_audit": "2026-01-27T16:25:54.930099Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-24T21:54:14.891921Z",
+    "md": "2026-01-27T15:24:10.350165Z",
     "meta": "2026-01-26T15:44:41.545412Z",
     "activities": "2026-01-11T22:51:42.730768Z",
     "vocabulary": "2026-01-25T15:44:16.904723Z",
-    "plan": "2026-01-26T15:44:41.545194Z"
+    "plan": "2026-01-27T16:19:35.844234Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1589/1500 (raw: 1978) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "1589/1500 (raw: 1978)"
     },
     "activities": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Missing required activity types: sentence-combining, translation"
-    ],
-    "pass_count": 4,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

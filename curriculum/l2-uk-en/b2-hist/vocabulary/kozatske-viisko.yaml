@@ -2,128 +2,127 @@ module: kozatske-viisko
 level: B2
 version: '2.0'
 items:
-  - lemma: булава
-    ipa: /bʊˈɫɑu̯ɐ/
-    translation: mace (symbol of hetman's power)
-    pos: noun
-    gender: f
-  - lemma: пернач
-    ipa: /perˈnat͡ʃ/
-    translation: pernach (six-flanged mace, symbol of colonel's power)
-    pos: noun
-    gender: m
-  - lemma: самопал
-    ipa: /sɐmoˈpɑɫ/
-    translation: samopal (matchlock or flintlock musket)
-    pos: noun
-    gender: m
-  - lemma: шабля
-    ipa: /ˈʃɑbʲlʲɐ/
-    translation: sabre
-    pos: noun
-    gender: f
-  - lemma: гармата
-    ipa: /ɦɐrˈmɑtɐ/
-    translation: cannon
-    pos: noun
-    gender: f
-  - lemma: полк
-    ipa: /pɔɫk/
-    translation: regiment
-    pos: noun
-    gender: m
-  - lemma: сотня
-    ipa: /ˈsɔtʲnʲɐ/
-    translation: sotnia (hundred, military unit)
-    pos: noun
-    gender: f
-  - lemma: кіш
-    ipa: /kiʃ/
-    translation: kish (central military administrative body)
-    pos: noun
-    gender: m
-  - lemma: обоз
-    ipa: /oˈbɔz/
-    translation: supply train / baggage train
-    pos: noun
-    gender: m
-  - lemma: хоругва
-    ipa: /xoˈruɦu̯ɐ/
-    translation: banner / standard
-    pos: noun
-    gender: f
-  - lemma: бунчук
-    ipa: /bʊnˈt͡ʃuk/
-    translation: bunchuk (symbol of power, staff with horse tail)
-    pos: noun
-    gender: m
-  - lemma: пістоль
-    ipa: /pisˈtɔlʲ/
-    translation: pistol
-    pos: noun
-    gender: m
-  - lemma: келеп
-    ipa: /ˈkɛɫep/
-    translation: war hammer
-    pos: noun
-    gender: m
-  - lemma: пірнач
-    ipa: /pirˈnat͡ʃ/
-    translation: pernach (alternative spelling)
-    pos: noun
-    gender: m
-  - lemma: полковник
-    ipa: /pɔɫˈkɔu̯nɪk/
-    translation: colonel
-    pos: noun
-    gender: m
-  - lemma: сотник
-    ipa: /ˈsɔtnɪk/
-    translation: sotnyk (commander of a hundred)
-    pos: noun
-    gender: m
-  - lemma: осавул
-    ipa: /osɐˈuɫ/
-    translation: osavul (aide-de-camp / adjutant)
-    pos: noun
-    gender: m
-  - lemma: писар
-    ipa: /ˈpɪsɐr/
-    translation: scribe / secretary
-    pos: noun
-    gender: m
-  - lemma: клейноди
-    ipa: /kɫɛi̯ˈnɔdɪ/
-    translation: regalia / symbols of power
-    pos: noun
-    gender: pl
-  - lemma: пластун
-    ipa: /pɫɐsˈtun/
-    translation: plastun (Cossack scout/special forces)
-    pos: noun
-    gender: m
-  - lemma: засідка
-    ipa: /ˈzɑsʲidkɐ/
-    translation: ambush
-    pos: noun
-    gender: f
-  - lemma: облога
-    ipa: /obˈɫɔɦɐ/
-    translation: siege
-    pos: noun
-    gender: f
-  - lemma: штурм
-    ipa: /ˈʃturm/
-    translation: assault / storming
-    pos: noun
-    gender: m
-  - lemma: вишкіл
-    ipa: /ˈu̯ɪʃkil/
-    translation: military training
-    pos: noun
-    gender: m
-  - lemma: дисципліна
-    ipa: /dɪst͡sɪˈpɫinɐ/
-    translation: discipline
-    pos: noun
-    gender: f
+- lemma: булава
+  ipa: /bʊˈɫɑu̯ɐ/
+  translation: mace (symbol of hetman's power)
+  pos: noun
+  gender: f
+- lemma: пернач
+  ipa: /perˈnat͡ʃ/
+  translation: pernach (six-flanged mace, symbol of colonel's power)
+  pos: noun
+  gender: m
+- lemma: самопал
+  ipa: /sɐmoˈpɑɫ/
+  translation: samopal (matchlock or flintlock musket)
+  pos: noun
+  gender: m
+- lemma: шабля
+  ipa: /ˈʃɑbʲlʲɐ/
+  translation: sabre
+  pos: noun
+  gender: f
+- lemma: гармата
+  ipa: /ɦɐrˈmɑtɐ/
+  translation: cannon
+  pos: noun
+  gender: f
+- lemma: полк
+  ipa: /pɔɫk/
+  translation: regiment
+  pos: noun
+  gender: m
+- lemma: сотня
+  ipa: /ˈsɔtʲnʲɐ/
+  translation: sotnia (hundred, military unit)
+  pos: noun
+  gender: f
+- lemma: кіш
+  ipa: /kiʃ/
+  translation: kish (central military administrative body)
+  pos: noun
+  gender: m
+- lemma: обоз
+  ipa: /oˈbɔz/
+  translation: supply train / baggage train
+  pos: noun
+  gender: m
+- lemma: хоругва
+  ipa: /xoˈruɦu̯ɐ/
+  translation: banner / standard
+  pos: noun
+  gender: f
+- lemma: бунчук
+  ipa: /bʊnˈt͡ʃuk/
+  translation: bunchuk (symbol of power, staff with horse tail)
+  pos: noun
+  gender: m
+- lemma: пістоль
+  ipa: /pisˈtɔlʲ/
+  translation: pistol
+  pos: noun
+  gender: m
+- lemma: келеп
+  ipa: /ˈkɛɫep/
+  translation: war hammer
+  pos: noun
+  gender: m
+- lemma: пірнач
+  ipa: /pirˈnat͡ʃ/
+  translation: pernach (alternative spelling)
+  pos: noun
+  gender: m
+- lemma: полковник
+  ipa: /pɔɫˈkɔu̯nɪk/
+  translation: colonel
+  pos: noun
+  gender: m
+- lemma: сотник
+  ipa: /ˈsɔtnɪk/
+  translation: sotnyk (commander of a hundred)
+  pos: noun
+  gender: f
+- lemma: осавул
+  ipa: /osɐˈuɫ/
+  translation: osavul (aide-de-camp / adjutant)
+  pos: noun
+  gender: m
+- lemma: писар
+  ipa: /ˈpɪsɐr/
+  translation: scribe / secretary
+  pos: noun
+  gender: m
+- lemma: клейнод
+  ipa: /kɫɛi̯ˈnɔdɪ/
+  translation: regalia / symbols of power
+  pos: noun
+- lemma: пластун
+  ipa: /pɫɐsˈtun/
+  translation: plastun (Cossack scout/special forces)
+  pos: noun
+  gender: m
+- lemma: засідка
+  ipa: /ˈzɑsʲidkɐ/
+  translation: ambush
+  pos: noun
+  gender: f
+- lemma: облога
+  ipa: /obˈɫɔɦɐ/
+  translation: siege
+  pos: noun
+  gender: f
+- lemma: штурм
+  ipa: /ˈʃturm/
+  translation: assault / storming
+  pos: noun
+  gender: m
+- lemma: вишкіл
+  ipa: /ˈu̯ɪʃkil/
+  translation: military training
+  pos: noun
+  gender: m
+- lemma: дисципліна
+  ipa: /dɪst͡sɪˈpɫinɐ/
+  translation: discipline
+  pos: noun
+  gender: f

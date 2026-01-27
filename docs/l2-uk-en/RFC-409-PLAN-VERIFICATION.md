@@ -39,6 +39,7 @@ All curriculum plans have been reviewed for completeness against RFC #409 Curric
 ## RFC #409 New Module Specifications
 
 ### A1 Phase A1.4: Practical Scenarios (M35-44)
+
 - M35: At the Café
 - M36: At the Restaurant
 - M37: At the Market
@@ -51,6 +52,7 @@ All curriculum plans have been reviewed for completeness against RFC #409 Curric
 - M44: A1 Practical Checkpoint
 
 ### A2 Phase A2.7: Practical Scenarios (M59-70)
+
 - M59: At the Doctor
 - M60: At the Pharmacy
 - M61-62: Accommodation (hotel, rental)
@@ -61,6 +63,7 @@ All curriculum plans have been reviewed for completeness against RFC #409 Curric
 - M70: A2 Practical Checkpoint
 
 ### B1 Phase B1.9: Communication Skills (M92-99)
+
 - M92: Email Writing Basics
 - M93: Formal Letters
 - M94: Informal Writing
@@ -71,6 +74,7 @@ All curriculum plans have been reviewed for completeness against RFC #409 Curric
 - M99: B1 Skills Checkpoint
 
 ### B2 Phase B2.4: Communication Skills (M85-94)
+
 - M85-86: Professional Email
 - M87-88: Professional Reports
 - M89-90: News Analysis
@@ -83,6 +87,7 @@ All curriculum plans have been reviewed for completeness against RFC #409 Curric
 ## CEFR Compliance Checklist
 
 ### A1 (Початковий рівень)
+
 - [x] Can-do statements defined in plan
 - [x] Grammar scope limited: Nom/Acc/Loc/Gen/Voc cases only
 - [x] No Dative/Instrumental at A1
@@ -90,6 +95,7 @@ All curriculum plans have been reviewed for completeness against RFC #409 Curric
 - [x] Practical scenarios for basic survival needs
 
 ### A2 (Базовий рівень)
+
 - [x] All 7 cases introduced
 - [x] Dative (M01) and Instrumental (M04) present
 - [x] Full adjective declension
@@ -97,6 +103,7 @@ All curriculum plans have been reviewed for completeness against RFC #409 Curric
 - [x] Vocabulary target: ~1,100 new words
 
 ### B1 (Середній рівень)
+
 - [x] Aspect mastery modules present
 - [x] Motion verb system covered
 - [x] Complex sentence formation
@@ -104,12 +111,14 @@ All curriculum plans have been reviewed for completeness against RFC #409 Curric
 - [x] Vocabulary target: ~1,800 words
 
 ### B2 (Вищий середній рівень)
+
 - [x] Passive voice system complete
 - [x] Register differentiation (formal/informal/business/academic)
 - [x] Professional communication basics (RFC #409)
 - [x] Vocabulary target: ~2,000 words
 
 ### C1 (Просунутий рівень)
+
 - [x] Academic foundation covered
 - [x] Stylistics and rhetoric present
 - [x] Folk culture and fine arts modules
@@ -117,6 +126,7 @@ All curriculum plans have been reviewed for completeness against RFC #409 Curric
 - [x] Vocabulary target: ~2,500 words
 
 ### C2 (Рівень вільного володіння)
+
 - [x] Complete morphological mastery
 - [x] Stylistic perfection focus
 - [x] Creative production requirements
@@ -132,12 +142,14 @@ All curriculum plans reference and align with:
 > **Document:** `docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt`
 
 ### Grammar Requirements (Каталог В)
+
 - [x] Case system progression documented per level
 - [x] Verb tense/aspect requirements met
 - [x] Adjective/numeral/pronoun paradigms covered
 - [x] Syntax complexity appropriate per level
 
 ### Thematic Requirements (Каталог Б)
+
 - [x] Personal/family topics at A1
 - [x] Professional/social topics at B1-B2
 - [x] Abstract/academic topics at C1-C2

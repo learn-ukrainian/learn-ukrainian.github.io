@@ -69,22 +69,10 @@ activity_hints:
   focus: Фрагменти перекладу Біблії та праць про мову
   source: Первинні джерела
   items: 3 passages
-- type: quiz
-  focus: Факти про життя та діяльність Огієнка
-  items: 12+
-- type: match-up
-  focus: Праці та їхній зміст
-  items: 10+
 - type: essay-response
   focus: Чому важливо мати Біблію рідною мовою?
   word_target: 300
   output: Культурологічний есей
-- type: group-sort
-  focus: Церковна vs світська діяльність
-  items: 12+
-- type: fill-in
-  focus: Релігійна та мовознавча термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-97-panteleimon-kulish
@@ -108,3 +96,7 @@ sources:
   notes: Церковна діяльність
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of іван огієнко: митрополит і захисник мови'
+- Evaluate the contributions of людина багатьох покликань
+- Trace the career and influence of мова і віра як основи нації

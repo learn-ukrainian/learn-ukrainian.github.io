@@ -5,42 +5,23 @@ version: '2.0'
 title: Стосунки та зв'язки
 subtitle: Relationships and Connections
 content_outline:
-- section: 'Introduction: Relationship Vocabulary'
-  words: 150
+- section: Вступ
+  words: 349
   points:
   - Types of relationships
   - Cultural context
   - Vocabulary overview
-- section: Family Relationships
-  words: 250
+- section: Читання
+  words: 1186
   points:
-  - родина, сім'я, рід
-  - Extended family terms
-  - Family dynamics vocabulary
-- section: Romantic Relationships
-  words: 250
-  points:
-  - кохання, закоханість, стосунки
-  - партнер, пара, шлюб
-  - Romance vocabulary
-- section: Friendships and Social
-  words: 250
-  points:
-  - дружба, приятелювання
-  - знайомство, зв'язок
-  - Social connection vocabulary
-- section: Relationship Actions
-  words: 200
-  points:
-  - кохати, дружити, спілкуватися
-  - підтримувати, зберігати
-  - Relationship verbs
-- section: 'Practice: Relationship Discussions'
-  words: 100
+  - Relationship texts
+  - Ukrainian traditions
+- section: Діалоги
+  words: 1465
   points:
   - Discuss relationships
   - Use cultural vocabulary
-word_target: 1200
+word_target: 3000
 vocabulary_hints:
   required:
   - стосунки (relationships)
@@ -57,16 +38,16 @@ vocabulary_hints:
   - зв'язок (connection)
   - приятелювати (to be friends)
 activity_hints:
-- type: collocation
+- type: match-up
   focus: Relationship noun phrases
   items: 25
 - type: fill-in
   focus: Describe relationships
   items: 20
-- type: matching
+- type: match-up
   focus: Match relationship types
   items: 15
-- type: discussion
+- type: quiz
   focus: Discuss relationship topics
   items: 10
 focus: vocabulary

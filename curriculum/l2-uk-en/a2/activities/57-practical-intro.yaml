@@ -641,3 +641,31 @@
       correct: false
     explanation: See mom.
   instruction: Оберіть усі правильні відповіді.
+- type: fill-in
+  title: Grammar Practice Fill-In
+  instruction: Заповніть пропуски правильним словом.
+  items:
+    - sentence: 'Я даю книгу [___].'
+      answer: другові
+      options: [другові, друг, друга, другом]
+    - sentence: 'Ми їдемо [___] Львова.'
+      answer: до
+      options: [до, на, в, у]
+    - sentence: 'Він [___] лист учора.'
+      answer: написав
+      options: [написав, писав, пише, напише]
+    - sentence: 'Вона працює [___].'
+      answer: лікаркою
+      options: [лікаркою, лікарка, лікарку, лікарці]
+    - sentence: 'Я телефоную [___].'
+      answer: мамі
+      options: [мамі, маму, мама, мамою]
+    - sentence: 'Діти [___] у парку щодня.'
+      answer: гралися
+      options: [гралися, пограли, грають, погралися]
+    - sentence: 'Машина стоїть біля [___].'
+      answer: будинку
+      options: [будинку, будинок, будинком, будинки]
+    - sentence: 'Я [___] українську мову три роки.'
+      answer: вивчаю
+      options: [вивчаю, вивчив, вивчу, вивчати]

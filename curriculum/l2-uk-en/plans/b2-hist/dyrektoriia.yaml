@@ -67,15 +67,6 @@ activity_hints:
   focus: Універсали Директорії
   source: Архівні документи
   items: 4
-- type: quiz
-  focus: 'Директорія УНР: факти та постаті'
-  items: 15
-- type: match-up
-  focus: Постать → роль у Директорії
-  items: 10
-- type: fill-in
-  focus: Політична та військова лексика
-  items: 10
 - type: essay-response
   focus: Які внутрішні та зовнішні причини призвели до поразки Директорії?
   word_target: 250

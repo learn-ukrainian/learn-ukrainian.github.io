@@ -69,22 +69,10 @@ activity_hints:
   focus: Становлення української літератури
   source: Literary history sources
   items: 3 passages
-- type: quiz
-  focus: Життя та творчість Котляревського
-  items: 12+
-- type: match-up
-  focus: Літературні терміни та жанри
-  items: 10+
 - type: essay-response
   focus: Чому «Енеїду» вважають початком нової української літератури?
   word_target: 300
   output: Analytical essay
-- type: group-sort
-  focus: Твори за жанрами
-  items: 12+
-- type: fill-in
-  focus: Літературознавча термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-45
@@ -103,3 +91,7 @@ sources:
   notes: Museum dedicated to Kotliarevsky's life and work
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of іван котляревський: батько нової літератури'
+- Evaluate the contributions of народження нової літератури
+- Trace the career and influence of батько нової літератури

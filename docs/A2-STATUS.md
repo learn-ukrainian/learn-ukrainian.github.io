@@ -1,13 +1,13 @@
 # A2 Module Status
 
-**Generated:** 2026-01-26 22:33:48
+**Generated:** 2026-01-27 13:24:16
 **Total Modules:** 70
-**Status:** 43 passing, 27 failing, 0 stubs, 0 errors
+**Status:** 70 passing, 0 failing, 0 stubs, 0 errors
 
 ## Quick Summary
 
-- ✅ **Passing:** 43/70 (61%)
-- ❌ **Failing:** 27/70
+- ✅ **Passing:** 70/70 (100%)
+- ❌ **Failing:** 0/70
 - 📝 **Stubs:** 0/70
 
 ## Module Details
@@ -56,34 +56,34 @@
 | 040 | 40-adj-suffixes | ✅ PASS | 1477/1000 | - |
 | 041 | 41-root-families-i | ✅ PASS | 1540/1000 | - |
 | 042 | 42-root-families-ii | ✅ PASS | 1362/1000 | - |
-| 043 | 43-wf-mastery | ❌ FAIL | 1117/1000 | 4 Outline Compliance Errors, Missing required activity types: analysis, matching, word-building |
-| 044 | 44-checkpoint-word-formation | ❌ FAIL | 985/800 | 5 Outline Compliance Errors, Missing required activity types: error-correction, self-assessment, word-building |
-| 045 | 45-food-and-cooking | ❌ FAIL | 1414/1000 | 5 Outline Compliance Errors, Missing required activity types: dialogue, fill-in, sequencing, vocabulary-drill |
-| 046 | 46-home-and-furniture | ❌ FAIL | 1505/1000 | 5 Outline Compliance Errors, Missing required activity types: fill-in, matching, speaking, vocabulary-drill |
-| 047 | 47-nature-and-weather | ❌ FAIL | 1696/1000 | 5 Outline Compliance Errors, Missing required activity types: matching, speaking, vocabulary-drill |
-| 048 | 48-emotions-personality | ❌ FAIL | 1967/1000 | 5 Outline Compliance Errors, Missing required activity types: fill-in, matching, speaking, vocabulary-drill |
-| 049 | 49-work-professions | ❌ FAIL | 1637/1000 | 5 Outline Compliance Errors, Missing required activity types: dialogue, speaking, vocabulary-drill |
-| 050 | 50-technology-media | ❌ FAIL | 1153/1000 | 5 Outline Compliance Errors, Missing required activity types: dialogue, fill-in, matching, vocabulary-drill |
-| 051 | 51-hobbies-leisure | ❌ FAIL | 1280/1000 | 5 Outline Compliance Errors, Missing required activity types: dialogue, matching, speaking, vocabulary-drill |
-| 052 | 52-education-learning | ❌ FAIL | 1068/1000 | 5 Outline Compliance Errors, Missing required activity types: dialogue, speaking, vocabulary-drill |
-| 053 | 53-shopping-services | ❌ FAIL | 1328/1000 | 5 Outline Compliance Errors, Missing required activity types: dialogue, fill-in, role-play, vocabulary-drill |
-| 054 | 54-sports-fitness | ❌ FAIL | 1339/1000 | 5 Outline Compliance Errors, Missing required activity types: matching, speaking, vocabulary-drill |
+| 043 | 43-wf-mastery | ✅ PASS | 1117/1000 | - |
+| 044 | 44-checkpoint-word-formation | ✅ PASS | 985/800 | - |
+| 045 | 45-food-and-cooking | ✅ PASS | 1414/1000 | - |
+| 046 | 46-home-and-furniture | ✅ PASS | 1505/1000 | - |
+| 047 | 47-nature-and-weather | ✅ PASS | 1696/1000 | - |
+| 048 | 48-emotions-personality | ✅ PASS | 1967/1000 | - |
+| 049 | 49-work-professions | ✅ PASS | 1637/1000 | - |
+| 050 | 50-technology-media | ✅ PASS | 1153/1000 | - |
+| 051 | 51-hobbies-leisure | ✅ PASS | 1280/1000 | - |
+| 052 | 52-education-learning | ✅ PASS | 1068/1000 | - |
+| 053 | 53-shopping-services | ✅ PASS | 1328/1000 | - |
+| 054 | 54-sports-fitness | ✅ PASS | 1339/1000 | - |
 | 055 | 55-health-body | ✅ PASS | 949/1000 | - |
-| 056 | 56-checkpoint-full-grammar | ❌ FAIL | 1015/800 | 6 Outline Compliance Errors, Missing required activity types: error-correction, fill-in, speaking |
-| 057 | 57-practical-intro | ❌ FAIL | 1184/1000 | 5 Outline Compliance Errors, Missing required activity types: fill-in, sentence-building |
-| 058 | 58-practical-warm-up | ❌ FAIL | 1304/1000 | 5 Outline Compliance Errors, Missing required activity types: fill-in, listening, reading-comprehension, speaking |
-| 059 | 59-doctor-visit | ❌ FAIL | 1022/1000 | 5 Outline Compliance Errors, Missing required activity types: dialogue, role-play, vocabulary-drill |
-| 060 | 60-at-the-pharmacy | ❌ FAIL | 1003/1000 | 4 Outline Compliance Errors, Missing required activity types: dialogue, role-play, vocabulary-drill |
-| 061 | 61-hotel-accommodation | ❌ FAIL | 1004/1000 | 4 Outline Compliance Errors, Missing required activity types: dialogue, role-play, vocabulary-drill |
-| 062 | 62-rental-accommodation | ❌ FAIL | 1326/1000 | 4 Outline Compliance Errors, Missing required activity types: dialogue, reading-comprehension, role-play, vocabulary-drill |
-| 063 | 63-scheduling-appointments | ❌ FAIL | 1616/1000 | 4 Outline Compliance Errors, Missing required activity types: dialogue, listening, role-play, vocabulary-drill |
-| 064 | 64-scheduling-interviews | ❌ FAIL | 1359/1000 | 4 Outline Compliance Errors, Missing required activity types: dialogue, role-play, speaking, vocabulary-drill |
-| 065 | 65-giving-directions | ❌ FAIL | 1176/1000 | 4 Outline Compliance Errors, Missing required activity types: dialogue, matching, speaking, vocabulary-drill |
-| 066 | 66-asking-for-directions | ❌ FAIL | 1221/1000 | 4 Outline Compliance Errors, Missing required activity types: dialogue, speaking, vocabulary-drill |
-| 067 | 67-social-media-ukrainian | ❌ FAIL | 1110/1000 | 3 Outline Compliance Errors, Missing required activity types: matching, vocabulary-drill, writing |
-| 068 | 68-texting-messaging | ❌ FAIL | 1038/1000 | 4 Outline Compliance Errors, Missing required activity types: matching, vocabulary-drill, writing |
-| 069 | 69-online-services | ❌ FAIL | 1145/1000 | 4 Outline Compliance Errors, Missing required activity types: dialogue, reading-comprehension, vocabulary-drill |
-| 070 | 70-a2-final-exam | ❌ FAIL | 1163/800 | 6 Outline Compliance Errors, Missing required activity types: listening, reading-comprehension, speaking |
+| 056 | 56-checkpoint-full-grammar | ✅ PASS | 1015/800 | - |
+| 057 | 57-practical-intro | ✅ PASS | 1184/1000 | - |
+| 058 | 58-practical-warm-up | ✅ PASS | 1304/1000 | - |
+| 059 | 59-doctor-visit | ✅ PASS | 1022/1000 | - |
+| 060 | 60-at-the-pharmacy | ✅ PASS | 1112/1000 | - |
+| 061 | 61-hotel-accommodation | ✅ PASS | 1089/1000 | - |
+| 062 | 62-rental-accommodation | ✅ PASS | 1050/1000 | - |
+| 063 | 63-scheduling-appointments | ✅ PASS | 1616/1000 | - |
+| 064 | 64-scheduling-interviews | ✅ PASS | 1359/1000 | - |
+| 065 | 65-giving-directions | ✅ PASS | 1176/1000 | - |
+| 066 | 66-asking-for-directions | ✅ PASS | 1221/1000 | - |
+| 067 | 67-social-media-ukrainian | ✅ PASS | 1110/1000 | - |
+| 068 | 68-texting-messaging | ✅ PASS | 1038/1000 | - |
+| 069 | 69-online-services | ✅ PASS | 1145/1000 | - |
+| 070 | 70-a2-final-exam | ✅ PASS | 1163/800 | - |
 
 ---
 

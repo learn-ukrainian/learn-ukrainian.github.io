@@ -1,10 +1,12 @@
 # Audit Report: M67 — 67-advanced-conjunctions-i.md
+
 **Level:** B2 | **Module:** M67 | **Phase:** B2 | **Pedagogy:** Grammar | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:30
 
 ## Configuration
+
 **Type:** B2-grammar
 **Word Target:** 1750 words
 **Activities:** 10-14 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть логічний зв'язок | 12 | 8 | ✅ |
@@ -42,15 +45,18 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: Schema validation error at key '13': {'type': 'select', 'title': 'Допустові конструкції', 'instruction': 'Оберіть усі сполучники допуску (до 6 елементів).', 'items': [{'question': 'Які слова вказують на допуск?', 'options': [{'text': 'хоча', 'correct': True}, {'text': 'незважаючи на те що', 'correct': True}, {'text': 'попри те що', 'correct': True}, {'text': 'дарма що', 'correct': True}, {'text': 'хай', 'correct': True}, {'text': 'нехай', 'correct': True}]}, {'question': "Оберіть синоніми до 'незважаючи на':", 'options': [{'text': 'попри', 'correct': True}, {'text': 'наперекір', 'correct': True}, {'text': 'всупереч', 'correct': True}, {'text': 'завдяки', 'correct': False}]}, {'question': 'Які слова виражають іронічний допуск?', 'options': [{'text': 'дарма що', 'correct': True}, {'text': 'хоч і', 'correct': True}, {'text': 'куди там', 'correct': True}, {'text': 'тому що', 'correct': False}]}, {'question': 'Оберіть сполучники для опису перешкод:', 'options': [{'text': 'хоча', 'correct': True}, {'text': 'незважаючи на', 'correct': True}, {'text': 'попри', 'correct': True}, {'text': 'оскільки', 'correct': False}]}, {'question': 'Які слова вказують на крайню поступку?', 'options': [{'text': 'хай', 'correct': True}, {'text': 'нехай', 'correct': True}, {'text': 'навіть якщо', 'correct': True}, {'text': 'бо', 'correct': False}]}, {'question': 'Оберіть ознаки допустового речення:', 'options': [{'text': 'наявність перешкоди', 'correct': True}, {'text': 'дія всупереч', 'correct': True}, {'text': 'логічний парадокс', 'correct': True}, {'text': 'проста причина', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
+
 - **Words:** ✅ 2262/1750 (raw: 2450)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
@@ -69,10 +75,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 52 | 24 | 100% | 20% | 20.0% |
@@ -88,6 +96,7 @@
 | **TOTAL** | | | | | **99.5%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 77 | Included in Core |

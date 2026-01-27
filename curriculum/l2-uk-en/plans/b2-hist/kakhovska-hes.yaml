@@ -68,15 +68,6 @@ activity_hints:
   focus: Свідчення постраждалих від затоплення
   source: Українські медіа
   items: 4
-- type: quiz
-  focus: 'Каховська катастрофа: факти та наслідки'
-  items: 15
-- type: match-up
-  focus: Наслідок → сфера впливу
-  items: 10
-- type: fill-in
-  focus: Екологічна лексика
-  items: 10
 - type: essay-response
   focus: Чому знищення Каховської ГЕС — це екоцид?
   word_target: 250

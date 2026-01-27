@@ -5,54 +5,54 @@ version: '2.0'
 title: 'Будапештський меморандум: Гарантії без гарантій'
 content_outline:
 - section: Вступ — Угода без зубів
-  words: 400
+  words: 457
   points:
   - 1994 — Україна віддає ядерну зброю
   - Що отримала натомість
   - 2014 — цінність «гарантій»
   - Структура модуля
 - section: Контекст — Третій ядерний арсенал
-  words: 600
+  words: 686
   points:
   - Україна після СРСР — 1700+ боєголовок
   - Тиск на роззброєння
   - Західні страхи — проліферація
   - Українські сумніви
 - section: Переговори
-  words: 600
+  words: 686
   points:
   - Що хотіла Україна
   - Що пропонували США, Британія, Росія
   - Компроміс — меморандум
   - Чому не договір
 - section: Текст меморандуму
-  words: 700
+  words: 800
   points:
   - «Гарантії» безпеки — які саме
   - Зобов'язання сторін
   - Юридична сила — жодної
   - Що насправді підписали
 - section: 2014 — Провал
-  words: 500
+  words: 571
   points:
   - Росія порушує
   - США і Британія — що зробили
   - «Гарантії» = консультації
   - Урок — папір без сили
 - section: Чи могла Україна інакше
-  words: 400
+  words: 457
   points:
   - Залишити зброю — реалістично?
   - Тиск — надто сильний
   - Але могла вимагати більше
   - Уроки для переговорів
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Меморандум — пастка
   - Довіра — помилка
   - Перехід до Чорноморського флоту
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - Будапештський меморандум (Budapest Memorandum)
@@ -78,9 +78,6 @@ activity_hints:
 - type: critical-analysis
   focus: What could Ukraine have demanded?
   output: Negotiation assessment
-- type: quiz
-  focus: How memorandum failed in 2014
-  output: Failure analysis
 - type: comparative-study
   focus: «Guarantees» vs. actual obligations
   output: Legal comparison
@@ -108,3 +105,6 @@ sources:
   notes: Nuclear disarmament
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of будапештський меморандум: гарантії без гарантій'
+- Evaluate the historical significance of угода без зубів

@@ -308,6 +308,18 @@ WHILE true:
   Continue loop → Re-audit with all fixes applied
 
 END WHILE
+
+# ========================================
+# 6.4 GENERATE MDX (After Audit Passes)
+# ========================================
+
+Once audit passes, generate MDX:
+
+```bash
+.venv/bin/python scripts/generate_mdx.py l2-uk-en ${level} ${num}
+```
+
+This ensures the MDX is always up-to-date with the fixed content.
 ```
 
 **Why This Works:**
@@ -355,23 +367,25 @@ For each module_num in range:
   1. Run /module {level} {module_num}
      - This includes the audit+fix loop (Step 6)
      - Module is NOT done until audit passes
-  2. Only move to next module after current one DEPLOYED
+  2. Generate MDX after audit passes:
+     .venv/bin/python scripts/generate_mdx.py l2-uk-en ${level} ${module_num}
+  3. Only move to next module after current one DEPLOYED + MDX generated
 ```
 
-**Each module must pass audit before proceeding to the next.**
+**Each module must pass audit AND have MDX generated before proceeding to the next.**
 
-**Batch summary (all should be DEPLOYED):**
+**Batch summary (all should be DEPLOYED with MDX):**
 
 ```
 Batch: b2-hist 1-5
 Results:
-  - 1: ✅ DEPLOYED (4235/4000 words, audit PASS)
-  - 2: ✅ DEPLOYED (4102/4000 words, audit PASS)
-  - 3: ✅ DEPLOYED (4050/4000 words, audit PASS)
-  - 4: ✅ DEPLOYED (4310/4000 words, audit PASS)
-  - 5: ✅ DEPLOYED (4200/4000 words, audit PASS)
+  - 1: ✅ DEPLOYED + MDX (4235/4000 words, audit PASS)
+  - 2: ✅ DEPLOYED + MDX (4102/4000 words, audit PASS)
+  - 3: ✅ DEPLOYED + MDX (4050/4000 words, audit PASS)
+  - 4: ✅ DEPLOYED + MDX (4310/4000 words, audit PASS)
+  - 5: ✅ DEPLOYED + MDX (4200/4000 words, audit PASS)
 
-Summary: 5/5 deployed
+Summary: 5/5 deployed with MDX
 
 Next: Run /module-vocab-enrich b2-hist
 ```

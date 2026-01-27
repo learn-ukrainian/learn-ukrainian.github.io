@@ -53,7 +53,7 @@ from .checks import (
 )
 from .checks.content_purity import check_content_purity
 from .checks.outline_compliance import print_section_summary
-from .checks.activities import check_mark_the_words_format, check_hints_in_activities, check_error_correction_hints, check_malformed_cloze_activities, check_cloze_syntax_errors, check_error_correction_format, check_yaml_activity_types, check_advanced_activities_presence
+from .checks.activities import check_mark_the_words_format, check_hints_in_activities, check_error_correction_hints, check_malformed_cloze_activities, check_cloze_syntax_errors, check_error_correction_format, check_yaml_activity_types, check_advanced_activities_presence, check_forbidden_activity_types
 from .checks.vocabulary_integration import check_vocabulary_integration
 from .checks.activity_validation import (
     check_morpheme_patterns,
@@ -197,12 +197,28 @@ def detect_level(file_path: str, frontmatter_str: str) -> tuple[str, int]:
     return level_code, module_num
 
 
-def detect_focus(frontmatter_str: str, level_code: str, module_num: int, title: str = "") -> str | None:
+def detect_focus(frontmatter_str: str, level_code: str, module_num: int, title: str = "", file_path: str = "") -> str | None:
     """Detect module focus (grammar, vocab, checkpoint, skills, cultural, history, etc.)."""
+    # Detect track directories first (b2-hist, c1-bio, c1-hist, lit)
+    # These override all other detection methods
+    if file_path:
+        track_match = re.search(r'/([abc][12])-([a-z]+)/', file_path.lower())
+        if track_match:
+            track_suffix = track_match.group(2)
+            if track_suffix == 'hist':
+                return 'history'
+            elif track_suffix == 'bio':
+                return 'biography'
+            elif track_suffix == 'pro':
+                return 'professional'
+        # LIT track
+        if '/lit/' in file_path.lower():
+            return 'literature'
+
     # Check frontmatter for explicit focus - recognize all valid config types
     # Including content-heavy types: history, literature, biography, folk-culture, fine-arts, synthesis
     focus_match = re.search(
-        r'^focus:\s*["\']?(grammar|vocab|vocabulary|checkpoint|skills|cultural|capstone|bridge|history|literature|biography|folk-culture|fine-arts|synthesis)["\']?$',
+        r'^focus:\s*["\']?(grammar|vocab|vocabulary|checkpoint|skills|culture|cultural|capstone|bridge|history|literature|biography|folk-culture|fine-arts|synthesis)["\']?$',
         frontmatter_str, re.MULTILINE | re.IGNORECASE
     )
     if focus_match:
@@ -210,6 +226,9 @@ def detect_focus(frontmatter_str: str, level_code: str, module_num: int, title: 
         # Normalize vocabulary -> vocab
         if focus_val == 'vocabulary':
             return 'vocab'
+        # Normalize cultural -> culture
+        if focus_val == 'cultural':
+            return 'culture'
         return focus_val
 
     # Detect checkpoint from title or filename
@@ -226,7 +245,7 @@ def detect_focus(frontmatter_str: str, level_code: str, module_num: int, title: 
         elif module_num <= 71:
             return 'vocab'  # M52-71: Vocabulary modules
         elif module_num <= 81:
-            return 'cultural'  # M72-81: Cultural modules
+            return 'culture'  # M72-81: Cultural modules
         else:
             return 'skills'  # M82-86: Integration/Skills modules
     elif level_code == 'B2':
@@ -752,7 +771,7 @@ def audit_module(file_path: str) -> bool:
         if curriculum_module_num is not None:
             module_num = curriculum_module_num
 
-    module_focus = detect_focus(frontmatter_str, level_code, module_num, meta_data.get('title') if meta_data else "")
+    module_focus = detect_focus(frontmatter_str, level_code, module_num, meta_data.get('title') if meta_data else "", file_path)
 
     # Parse phase (for report - defaults to level_code if not specified)
     phase_match = re.search(r'phase:\s*([A-Za-z0-9\.]+)', frontmatter_str)
@@ -1121,6 +1140,18 @@ def audit_module(file_path: str) -> bool:
             print(f"  ⚠️  invalid activity types in YAML: {len(invalid_type_violations)}")
             for v in invalid_type_violations:
                 print(f"     → {v['issue']}")
+
+    # Check for forbidden activity types (seminar tracks)
+    forbidden_type_violations = []
+    if yaml_activities:
+        forbidden_type_violations = check_forbidden_activity_types(yaml_activities, level_code, module_focus)
+        if forbidden_type_violations:
+            print(f"  🔴 FORBIDDEN activity types in seminar track: {len(forbidden_type_violations)}")
+            for v in forbidden_type_violations:
+                print(f"     → {v['issue']}")
+                print(f"        Fix: {v['fix']}")
+            has_critical_failure = True
+            critical_failure_reasons.append(f"{len(forbidden_type_violations)} forbidden activity types (use --fix to remove)")
 
     # Check morpheme patterns (Issue #363: validate *morpheme*word patterns)
     morpheme_violations = []

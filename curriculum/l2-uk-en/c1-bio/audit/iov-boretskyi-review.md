@@ -1,10 +1,12 @@
 # Audit Report: M16 — iov-boretskyi.md
+
 **Level:** C1 | **Module:** M16 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:02
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | «Протестація» Іова Борецького (1621) | 1 | 1 | ✅ |
@@ -37,11 +40,13 @@
 - Low density activities: 0
 
 ## Recommendation
+
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ✅ 4280/4000 (raw: 4523)
 - **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
@@ -60,10 +65,12 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 5 | 4 | 100% | 19% | 19.0% |
@@ -79,6 +86,7 @@
 | **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 111 | Included in Core |

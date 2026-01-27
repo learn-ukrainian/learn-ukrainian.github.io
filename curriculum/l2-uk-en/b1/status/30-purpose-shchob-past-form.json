@@ -2,14 +2,14 @@
   "module": "30-purpose-shchob-past-form",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:27:03.334075Z",
+  "last_audit": "2026-01-27T16:25:54.617716Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-24T21:49:03.986713Z",
+    "md": "2026-01-27T15:24:10.350056Z",
     "meta": "2026-01-26T15:44:41.542211Z",
-    "activities": "2026-01-11T22:51:42.706263Z",
+    "activities": "2026-01-27T16:24:07.009137Z",
     "vocabulary": "2026-01-25T18:00:40.321095Z",
-    "plan": "2026-01-26T15:44:41.541892Z"
+    "plan": "2026-01-27T16:16:55.820781Z"
   },
   "gates": {
     "meta": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1725/1500 (raw: 2352) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "1725/1500 (raw: 2352)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "12/8"
+      "message": "13/8"
     },
     "vocabulary": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Missing required activity types: fill-in, sentence-combining, translation"
-    ],
-    "pass_count": 4,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

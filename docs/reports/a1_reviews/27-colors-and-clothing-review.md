@@ -19,7 +19,7 @@ References to "Shadows of Forgotten Ancestors" adds high-culture context.
 
 **1. Accuracy of Examples:** 10/10
 All agreements are correct.
-_Fixed:_ Replaced incorrect "Present Tense" translations in the Practice section with actual Clothing/Color sentences.
+*Fixed:* Replaced incorrect "Present Tense" translations in the Practice section with actual Clothing/Color sentences.
 
 **2. Relevance of Scenarios:** 10/10
 Shopping dialogue is practical.

@@ -236,17 +236,20 @@ B2  █████████████████████████�
 **Updated recommendations:**
 
 ### B1: Use Opus Liberally
+
 - All content generation (sentence extension, activity creation)
 - Section population with engaging content
 - Natural Ukrainian flow critical
 
 ### B2: Opus Essential
+
 - Historical content (207+ violations)
 - Sentence complexity (3,030 violations)
 - Cultural authenticity required
 - Volume is massive (~3,000 sentences)
 
 ### C1: Minimal Opus
+
 - Mostly automated fixes
 - Use Opus only for unknown errors or quality polish
 
@@ -293,12 +296,14 @@ Fix all levels simultaneously - NOT recommended due to:
 ## Completion Status
 
 ### B1 (91/91 modules exist - 100%)
+
 | Range | Description | Pass Rate |
 |-------|-------------|-----------|
 | M01-M10 | Metalanguage + Aspect | 100% ✅ |
 | M11-M91 | Grammar/Vocab/Cultural | 0% ❌ |
 
 ### B2 (131/145 modules exist - 90%)
+
 | Range | Description | Pass Rate |
 |-------|-------------|-----------|
 | M01-M70 | Grammar/Vocab | ~3% ❌ |
@@ -308,6 +313,7 @@ Fix all levels simultaneously - NOT recommended due to:
 **Blocker:** M132-M145 need creation before B2 complete
 
 ### C1 (148/196 modules exist - 75.5%)
+
 | Range | Description | Exists | Pass Rate |
 |-------|-------------|--------|-----------|
 | M01-M32 | Academic Writing | 33/32* | 90.9% ✅ |
@@ -431,18 +437,21 @@ All issues updated with:
 ## Success Criteria
 
 ### B1
+
 - [ ] Pass rate ≥ 95% (87/91)
 - [ ] All checkpoints pass (M15, M25, M34, M41, M51)
 - [ ] Pipeline validation passes
 - [ ] 100% Ukrainian immersion (M06+)
 
 ### B2
+
 - [ ] Pass rate ≥ 95% (138/145)
 - [ ] All 145 modules exist (create M132-M145)
 - [ ] History modules complete
 - [ ] Complexity targets met
 
 ### C1
+
 - [ ] Pass rate ≥ 95% (143/148)
 - [ ] All YAML parse errors fixed
 - [ ] Template sections complete

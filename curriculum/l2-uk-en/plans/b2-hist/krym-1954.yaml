@@ -67,12 +67,6 @@ activity_hints:
   focus: Указ 1954 року про передачу Криму
   source: Архівні документи
   items: 4
-- type: quiz
-  focus: 'Крим 1954: факти та міфи'
-  items: 15
-- type: match-up
-  focus: Аргумент → джерело (радянський/російський/український)
-  items: 10
 - type: true-false
   focus: Міфи про «подарунок» Криму
   items: 10

@@ -69,22 +69,10 @@ activity_hints:
   focus: Excerpts from "Не вбий" pastoral letter
   source: Historical documents
   items: 3 passages
-- type: quiz
-  focus: Sheptytsky's biography and achievements
-  items: 12+
-- type: match-up
-  focus: Institutions he founded and their purposes
-  items: 10+
 - type: essay-response
   focus: Why did Sheptytsky risk his life to save Jews?
   word_target: 300
   output: Moral and theological analysis
-- type: group-sort
-  focus: Sheptytsky's actions under different regimes
-  items: 12+
-- type: fill-in
-  focus: Key dates and events in his life
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-08 (Iov Boretskyi - earlier church leader)
@@ -114,3 +102,7 @@ sources:
   notes: Museum he founded
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of митрополит андрей шептицький: пастир і рятівник'
+- Evaluate the contributions of найвеличніший українець xx століття
+- Trace the career and influence of смерть і спадщина

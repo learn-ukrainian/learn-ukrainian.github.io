@@ -69,22 +69,10 @@ activity_hints:
   focus: Excerpts from "Серце віддаю дітям"
   source: Educational texts
   items: 3 passages
-- type: quiz
-  focus: Sukhomlynskyi's biography and ideas
-  items: 12+
-- type: match-up
-  focus: Educational principles and their applications
-  items: 10+
 - type: essay-response
   focus: How did Sukhomlynskyi challenge Soviet educational orthodoxy?
   word_target: 300
   output: Analysis of humanist pedagogy
-- type: group-sort
-  focus: Traditional vs. Sukhomlynskyi's methods
-  items: 12+
-- type: fill-in
-  focus: Key concepts from his philosophy
-  items: 10+
 focus: biography
 prerequisites:
 - Understanding of Soviet educational system
@@ -110,3 +98,7 @@ sources:
   notes: His most famous work
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of василь сухомлинський: педагог серця'
+- Evaluate the contributions of найвидатніший педагог україни
+- Trace the career and influence of спадщина та вплив

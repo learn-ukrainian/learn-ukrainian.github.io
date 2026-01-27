@@ -1,10 +1,12 @@
 # Audit Report: M28 — dmytro-bortnyanskyy.md
+
 **Level:** C1 | **Module:** M28 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:10
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння біографії та внеску | 8 | 5 | ✅ |
@@ -44,16 +47,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in dmytro-bortnyanskyy.yaml: Schema validation error at key '13': {'type': 'reading', 'title': 'Дослідження спадщини', 'resource': {'type': 'primary_source', 'url': 'https://www.youtube.com/watch?v=R6w6_79VnOQ', 'title': "Дмитро Бортнянський: Концерт №32 'Скажи ми, Господи, кончину мою'"}, 'tasks': ['Прослухайте твір та опишіть його емоційну динаміку, використовуючи лексику модуля.', "Які музичні інструменти (якщо є) ви чуєте? Чому для Бортнянського було важливо саме хорове виконання 'a cappella'?", 'Знайдіть у тексті (або почуйте) ключові слова, що вказують на релігійний зміст твору.']} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2073/4000 (raw: 2287)
 - **Activities:** ✅ 15/3
 - **Density:** ✅ All > 1
@@ -72,10 +78,12 @@
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 95% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 6 | 4 | 100% | 19% | 19.0% |
@@ -91,6 +99,7 @@
 | **TOTAL** | | | | | **95.1%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 70 | Included in Core |

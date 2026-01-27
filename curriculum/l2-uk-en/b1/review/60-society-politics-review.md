@@ -12,9 +12,9 @@
 | ------------------- | ----- | ------------------------------------------------------------------------------------------------- |
 | Coherence           | 10/10 | Logical structure (Foundations -> Process -> Action -> Digital).                                  |
 | Relevance           | 10/10 | Essential for understanding Ukrainian news/daily life.                                            |
-| Educational         | 10/10 | Good distinction between _держава_ (state) and _країна_ (country).                                |
+| Educational         | 10/10 | Good distinction between *держава* (state) and *країна* (country).                                |
 | Language            | 10/10 | Precise political terminology.                                                                    |
-| Pedagogy            | 10/10 | Using the "Granite Revolution" to "Maidan" trajectory effectively teaches _volia_ (will/freedom). |
+| Pedagogy            | 10/10 | Using the "Granite Revolution" to "Maidan" trajectory effectively teaches *volia* (will/freedom). |
 | Immersion           | 9/10  | Authentic.                                                                                        |
 | Activities          | 10/10 | Good mix of definitions and context.                                                              |
 | Richness            | 9/10  | Good depth.                                                                                       |
@@ -25,12 +25,12 @@
 ## Linguistic Accuracy Issues
 
 - **Vocabulary:** `чеснути` (in list). This looks like a hallucination or typo. `Чесний` (honest) is an adjective. There is no verb `чеснути`. Maybe meant `чесність` (honesty) or `честити` (archaic)?
-  - _Action:_ Remove `чеснути`.
+  - *Action:* Remove `чеснути`.
 
 ## Strengths
 
-- **Civic Focus:** The module focuses on _Civil Society_ (`громадянське суспільство`) and _Volunteering_ (`волонтерство`), which is the beating heart of modern Ukraine, rather than just dry government structure.
-- **Modernity:** Inclusion of `цифрова держава` (Diia) shows Ukraine as it is _now_.
+- **Civic Focus:** The module focuses on *Civil Society* (`громадянське суспільство`) and *Volunteering* (`волонтерство`), which is the beating heart of modern Ukraine, rather than just dry government structure.
+- **Modernity:** Inclusion of `цифрова держава` (Diia) shows Ukraine as it is *now*.
 
 ## Issues
 

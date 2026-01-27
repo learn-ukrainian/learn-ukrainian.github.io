@@ -6,22 +6,22 @@ title: Buying Tickets
 subtitle: Travel Arrangements
 content_outline:
 - section: Warm-up
-  words: 125
+  words: 151
   points:
   - Content for Warm-up
 - section: Presentation
-  words: 212
+  words: 257
   points:
   - Content for Presentation
 - section: Практика
-  words: 168
+  words: 204
   points:
   - Content for Практика
 - section: 'Narrative: A Trip to the Mountains (Поїздка в гори)'
-  words: 114
+  words: 138
   points:
   - 'Content for Narrative: A Trip to the Mountains (Поїздка в гори)'
-word_target: 619
+word_target: 750
 vocabulary_hints:
   required:
   - квиток (ticket)

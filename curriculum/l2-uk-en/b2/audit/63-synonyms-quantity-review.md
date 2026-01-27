@@ -1,10 +1,12 @@
 # Audit Report: M63 — 63-synonyms-quantity.md
+
 **Level:** B2 | **Module:** M63 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:27
 
 ## Configuration
+
 **Type:** B2-vocab
 **Word Target:** 1750 words
 **Activities:** 10-14 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть точну міру | 12 | 8 | ✅ |
@@ -42,15 +45,18 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 63-synonyms-quantity.yaml: Schema validation error at key '13': {'type': 'select', 'title': 'Кількісна етика', 'instruction': 'Оберіть усі слова, що позначають позитивний підхід до ресурсів (6 елементів).', 'items': [{'question': 'Які терміни вказують на розумне споживання? (Оберіть 6)', 'options': [{'text': 'ощадливий', 'correct': True}, {'text': 'раціональний', 'correct': True}, {'text': 'виважений', 'correct': True}, {'text': 'оптимальний', 'correct': True}, {'text': 'щедрий', 'correct': True}, {'text': 'поміркований', 'correct': True}]}, {'question': "Оберіть синоніми до слова 'достатньо':", 'options': [{'text': 'доволі', 'correct': True}, {'text': 'вдосталь', 'correct': True}, {'text': 'вистачить', 'correct': True}, {'text': 'замало', 'correct': False}]}, {'question': "Які слова описують 'надлишок':", 'options': [{'text': 'надмір', 'correct': True}, {'text': 'забагато', 'correct': True}, {'text': 'перебір', 'correct': True}, {'text': 'дефіцит', 'correct': False}]}, {'question': 'Оберіть слова для опису великих фінансів:', 'options': [{'text': 'капітал', 'correct': True}, {'text': 'бюджет', 'correct': True}, {'text': 'інвестиції', 'correct': True}, {'text': 'копійка', 'correct': False}]}, {'question': "Які слова вказують на 'важливість внеску':", 'options': [{'text': 'вагомий', 'correct': True}, {'text': 'суттєвий', 'correct': True}, {'text': 'значний', 'correct': True}, {'text': 'мізерний', 'correct': False}]}, {'question': "Оберіть назви 'масштабних процесів':", 'options': [{'text': 'глобальний', 'correct': True}, {'text': 'колосальний', 'correct': True}, {'text': 'масштабний', 'correct': True}, {'text': 'точковий', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
+
 - **Words:** ✅ 1784/1750 (raw: 1937)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
@@ -69,10 +75,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 95% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 57 | 24 | 100% | 20% | 20.0% |
@@ -88,6 +96,7 @@
 | **TOTAL** | | | | | **96.0%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 69 | Included in Core |

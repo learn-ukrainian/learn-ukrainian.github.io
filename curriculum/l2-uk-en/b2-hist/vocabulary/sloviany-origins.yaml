@@ -6,10 +6,12 @@ items:
   ipa: /slɔˈvʲɑnɪ/
   translation: Slavs
   pos: noun
+  gender: m
 - lemma: праслов'янин
   ipa: /prɑslɔˈvʲɑnɪ/
   translation: Proto-Slavs
   pos: noun
+  gender: m
 - lemma: прабатьківщина
   ipa: /prɑbɑtʲkʲiwˈʃt͡ʃɪnɑ/
   translation: homeland
@@ -65,11 +67,11 @@ items:
   translation: democracy (rule of people)
   pos: noun
   gender: n
-- lemma: віче
+- lemma: віча
   ipa: /ˈwit͡ʃɛ/
   translation: veche (people's assembly)
   pos: noun
-  gender: n
+  gender: f
 - lemma: громада
   ipa: /hrɔˈmɑdɑ/
   translation: community

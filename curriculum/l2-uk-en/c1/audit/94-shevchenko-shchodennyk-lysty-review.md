@@ -1,9 +1,11 @@
 # Audit Report: M94 — 94-shevchenko-shchodennyk-lysty.md
+
 **Level:** C1 | **Module:** M94 | **Phase:** C1 | **Pedagogy:** Immersion & Analysis | **Target:** 3500
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:53
 
 ## Configuration
+
 **Type:** C1-literature
 **Word Target:** 3500 words
 **Activities:** 12-16 required
@@ -16,6 +18,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Емоційна Палітра Щоденника | 12 | 6 | ✅ |
@@ -42,16 +45,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 94-shevchenko-shchodennyk-lysty.yaml: Schema validation error at key 'words': ['Я', 'не', 'став', 'ні', 'запеклим', 'ні', 'лихим', 'ні', 'розчарованим', 'бо', 'вірю', 'в', 'Бога', 'і', 'люблю', 'людей', 'так', 'само', 'як', 'і', 'раніше'] is too long
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2003/3500 (raw: 2310)
 - **Activities:** ✅ 16/12
 - **Density:** ✅ All > 12
@@ -70,10 +76,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 88% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 22 | 15 | 100% | 25% | 25.0% |
@@ -87,6 +95,7 @@
 | **TOTAL** | | | | | **88.4%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 86 | Included in Core |

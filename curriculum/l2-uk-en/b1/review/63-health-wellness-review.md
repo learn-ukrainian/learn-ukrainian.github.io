@@ -12,7 +12,7 @@
 | ------------------- | ----- | --------------------------------------------------------------------------------- |
 | Coherence           | 10/10 | Logical flow from Physical (Symptoms) to Mental (Stress) to Lifestyle (Diet/Spa). |
 | Relevance           | 10/10 | Essential. "Mental health" vocab is vital for modern learners.                    |
-| Educational         | 10/10 | Good distinction: _лікувати_ (treat) vs _вилікувати_ (cure).                      |
+| Educational         | 10/10 | Good distinction: *лікувати* (treat) vs *вилікувати* (cure).                      |
 | Language            | 10/10 | Modern usage (`вигорання`, `ментальне здоров'я`).                                 |
 | Pedagogy            | 10/10 | Sanatorium culture (Morshyn, Myrhorod) is a brilliant cultural hook.              |
 | Immersion           | 10/10 | Authentic Ukrainian wellness traditions.                                          |
@@ -25,7 +25,7 @@
 ## Linguistic Accuracy Issues
 
 - **Vocabulary:** `здор` (in list). Looks like a truncated `здоров'я` or `здоровий`. `Здір` (fat) exists, but `здор` is not a standard B1 word.
-  - _Action:_ Remove or fix.
+  - *Action:* Remove or fix.
 
 ## Strengths
 

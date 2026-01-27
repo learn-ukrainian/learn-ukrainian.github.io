@@ -8,7 +8,6 @@
 
 **Related Issue:** [#293](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/293)
 
-
 <!--
 TEMPLATE_METADATA:
   required_sections:
@@ -29,6 +28,7 @@ TEMPLATE_METADATA:
 Before submitting a C1 module, verify:
 
 ### Content Requirements
+
 - [ ] **Word count:** 3000+ words (core prose: explanations, examples, engagement boxes — excludes vocabulary section, activities section, and tables)
 - [ ] **Vocabulary:** 35+ items in 3-column format (Слово | Переклад | Примітки)
 - [ ] **Text passages:** 500-800+ word university-level texts
@@ -37,6 +37,7 @@ Before submitting a C1 module, verify:
 - [ ] **Engagement boxes:** 6-7 boxes with academic/cultural depth
 
 ### Activity Requirements
+
 - [ ] **Activities:** 12+ minimum (C1 standard)
 - [ ] **Activity density:**
   - Quiz: 12+ items
@@ -50,12 +51,12 @@ Before submitting a C1 module, verify:
   - Text-comparison: 2+ texts analyzed
 
 ### Immersion & Quality
+
 - [ ] **Immersion:** 100% Ukrainian (English ONLY in vocabulary translations)
 - [ ] **Academic rigor:** University-level complexity
 - [ ] **Comparative analysis:** Multiple texts/perspectives compared
 - [ ] **Register mastery:** Sophisticated register use and awareness
 - [ ] **No violations:** Check for pedagogical red flags
-
 
 ---
 
@@ -271,6 +272,7 @@ C1 modules teach both Ukrainian AND subject matter (academic, literary, cultural
 **Activity Mix for C1:**
 
 #### Core Activities (Must Have)
+
 1. **quiz** (12+ items)
 2. **fill-in** (12+ items, academic/literary context)
 3. **unjumble** (10+ items)
@@ -281,6 +283,7 @@ C1 modules teach both Ukrainian AND subject matter (academic, literary, cultural
 **Sentence Complexity:** See `scripts/audit/config.py` ACTIVITY_COMPLEXITY['C1'] for CEFR-aligned word count targets
 
 #### C1-Specific Activities
+
 7. **text-comparison** (Analyze 2+ texts side-by-side)
 8. **register-identification** (Identify register, justify with evidence)
 9. **stylistic-analysis** (Identify metaphors, irony, hyperbole, etc.)
@@ -289,14 +292,15 @@ C1 modules teach both Ukrainian AND subject matter (academic, literary, cultural
 12. **translation-comparison** (Compare translations, discuss choices)
 
 #### Advanced Writing/Production (Use new Schema types)
+
 13. **[essay-response]** (400+ words, Argumentative/Academic)
-    *   *Must include `rubric` and `model_answer` in YAML.*
+    -   *Must include `rubric` and `model_answer` in YAML.*
 14. **[comparative-study]** (Compare 2+ texts/perspectives)
-    *   *Define `items_to_compare` and `criteria`.*
+    -   *Define `items_to_compare` and `criteria`.*
 15. **[critical-analysis]** (Deconstruct bias/tone)
-    *   *Use `focus_points` to guide analysis.*
+    -   *Use `focus_points` to guide analysis.*
 16. **[authorial-intent]** (Evaluate purpose)
-    *   *Identify specific techniques used by the author.*
+    -   *Identify specific techniques used by the author.*
 
 ### Activity Format Quick Reference
 
@@ -535,6 +539,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 ## Common Pitfalls to Avoid
 
 ### ❌ DON'T:
+
 - **Don't simplify texts** — C1 requires university-level complexity
 - **Don't skip comparative analysis** — C1 is about critical thinking
 - **Don't use only one text** — Always compare perspectives
@@ -543,6 +548,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 - **Don't under-count activities** — 12+ is the minimum
 
 ### ✅ DO:
+
 - **Use authentic university-level texts** — Academic papers, literary excerpts
 - **Compare multiple texts/perspectives** — Develop critical analysis
 - **Provide Model Answers for all writing** — Support sophisticated production
@@ -555,6 +561,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 ## Pre-Submission Checklist
 
 ### Content
+
 - [ ] 3000+ words before activities
 - [ ] 35+ vocabulary items in 3-column format
 - [ ] 500-800+ word reading passages
@@ -564,6 +571,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 - [ ] Academic rigor throughout
 
 ### Activities
+
 - [ ] 12+ activities minimum
 - [ ] All activity types represented
 - [ ] Activity density meets C1 standards
@@ -572,6 +580,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 - [ ] Instructions in Ukrainian
 
 ### Immersion & Quality
+
 - [ ] 100% Ukrainian (English only in vocabulary "Переклад" column)
 - [ ] University-level texts (no simplification)
 - [ ] Critical analysis demonstrated
@@ -579,6 +588,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 - [ ] No pedagogical violations
 
 ### Audit
+
 - [ ] Module passes `python3 scripts/audit_module.py`
 - [ ] Immersion ≥98%
 - [ ] Vocabulary count matches frontmatter

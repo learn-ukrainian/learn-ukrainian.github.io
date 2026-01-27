@@ -5,53 +5,53 @@ version: '2.0'
 title: 'Помаранчева vs Гідності: Чому різні результати?'
 content_outline:
 - section: Вступ — Дві революції, різні наслідки
-  words: 400
+  words: 457
   points:
   - 2004 — перемога, потім розчарування
   - 2014 — трагедія, потім трансформація
   - Чому так по-різному
   - Структура модуля
 - section: Помаранчева 2004
-  words: 700
+  words: 800
   points:
   - Причини — фальсифікація виборів
   - Методи — мирний протест
   - Результат — перевибори, Ющенко
   - Чому не втримали
 - section: Гідності 2014
-  words: 700
+  words: 800
   points:
   - Причини — Вільнюс, побиття студентів
   - Ескалація — насильство, жертви
   - Результат — втеча Януковича, війна
   - Чому тривалі зміни
 - section: Ключові відмінності
-  words: 600
+  words: 686
   points:
   - Мета — вибори vs. система
   - Ціна — мирна vs. кров
   - Зовнішній фактор — Росія 2004 vs. 2014
   - Громадянське суспільство — слабке vs. сильне
 - section: Уроки 2004 для 2014
-  words: 500
+  words: 571
   points:
   - Що засвоїли
   - Не вірити обіцянкам
   - Системні зміни важливіші
   - Ціна свободи
 - section: Чому 2014 тривалий
-  words: 300
+  words: 343
   points:
   - Війна — консолідація
   - Неможливість повернення
   - Європейський вибір — незворотний
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Дві революції — різні траєкторії
   - 2014 — справжній перелом
   - Перехід до синтезу
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - Помаранчева революція (Orange Revolution)
@@ -74,13 +74,13 @@ activity_hints:
 - type: comparative-study
   focus: 2004 vs. 2014 — systematic comparison
   output: Revolution comparison table
-- type: outcome-analysis
+- type: critical-analysis
   focus: Why did 2004 fail and 2014 succeed?
   output: Outcome analysis
-- type: factor-analysis
+- type: critical-analysis
   focus: What factors made 2014 transformative?
   output: Success factor identification
-- type: lesson-analysis
+- type: critical-analysis
   focus: How 2004 lessons informed 2014
   output: Learning analysis
 - type: essay-response
@@ -110,3 +110,6 @@ sources:
   notes: 2004 leader
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of помаранчева vs гідності: чому різні результати?'
+- Evaluate the historical significance of дві революції, різні наслідки

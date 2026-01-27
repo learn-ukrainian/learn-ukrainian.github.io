@@ -5,42 +5,32 @@ version: '2.0'
 title: Дієприслівники недоконаного виду
 subtitle: Adverbial Participles - Imperfective (-ючи/-ачи)
 content_outline:
-- section: 'Introduction: What Are Adverbial Participles?'
-  words: 150
+- section: Вступ
+  words: 165
   points:
   - Дієприслівники as verbal adverbs
   - Difference from дієприкметники
-  - Function in sentences
-- section: 'Formation: -ючи/-ачи Suffixes'
-  words: 250
+- section: Пояснення
+  words: 1311
   points:
-  - From imperfective verb stem
-  - -ючи after vowels and soft consonants
-  - -ачи after hard consonants
-- section: Expressing Simultaneous Actions
-  words: 250
-  points:
-  - Читаючи книгу, він слухав музику
-  - Same subject requirement
-  - Replacing коли + verb clauses
-- section: Common Imperfective Participles
-  words: 250
-  points:
-  - роблячи, читаючи, слухаючи
-  - бігаючи, гуляючи, розмовляючи
-  - Irregular forms
-- section: Stylistic Considerations
-  words: 200
-  points:
-  - Literary vs conversational usage
-  - When to avoid participles
-  - Modern Ukrainian norms
-- section: 'Practice: Simultaneous Actions'
-  words: 100
+  - Formation -ючи/-ачи suffixes
+  - Expressing simultaneous actions
+  - Common imperfective participles
+- section: Практика
+  words: 643
   points:
   - Form participles from verbs
   - Transform clauses to participles
-word_target: 1200
+- section: Діалоги
+  words: 712
+  points:
+  - Participles in conversation
+  - Real-world usage
+- section: Потрібно більше практики?
+  words: 169
+  points:
+  - Additional exercises
+word_target: 3000
 vocabulary_hints:
   required:
   - дієприслівник (adverbial participle)
@@ -57,13 +47,13 @@ vocabulary_hints:
   - підрядне речення (subordinate clause)
   - замінювати (to replace)
 activity_hints:
-- type: transformation
+- type: cloze
   focus: Verb to participle conversion
   items: 25
 - type: fill-in
   focus: Complete sentences with participles
   items: 20
-- type: sentence-combining
+- type: unjumble
   focus: Combine with adverbial participles
   items: 15
 - type: error-correction

@@ -1,8 +1,8 @@
 # Audit Report: M03 — 03-reading-grammar-rules.md
-**Level:** B1 | **Module:** M03 | **Phase:** B1 | **Pedagogy:** PPP | **Target:** 1200
+**Level:** B1 | **Module:** M03 | **Phase:** B1.0 | **Pedagogy:** PPP | **Target:** 1200
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:26:45
+**Generated:** 2026-01-27 16:25:45
 
 ## Configuration
 **Type:** B1-bridge
@@ -41,7 +41,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2361/1200 (raw: 3110)
+- **Words:** ✅ 3064/1200 (raw: 3837)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/5 types
@@ -53,7 +53,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 36.3% (B1.1 Aspect)
+- **Immersion:** 🇺🇦 35.9% (B1.1 Aspect)
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -65,31 +65,31 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 82 | 24 | 100% | 20% | 20.0% |
+| examples | 88 | 24 | 100% | 20% | 20.0% |
 | engagement | 11 | 5 | 100% | 15% | 15.0% |
-| dialogues | 14 | 4 | 100% | 15% | 15.0% |
-| variety | 0.91 | - | 91% | 10% | 9.1% |
+| dialogues | 21 | 4 | 100% | 15% | 15.0% |
+| variety | 0.94 | - | 94% | 10% | 9.4% |
 | cultural | 5 | 3 | 100% | 10% | 10.0% |
 | realworld | 20 | 3 | 100% | 10% | 10.0% |
 | visual | 9 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 25 | 5 | 100% | 5% | 5.0% |
+| questions | 32 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.1%** |
+| **TOTAL** | | | | | **99.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 58 | Included in Core |
 | **Introduction - Reading Grammar in Ukrainian** | ⚪️ | 0 | Skipped (using YAML) |
-| **Grammar Explanation Patterns** | ✅ | 180 | Included in Core |
-| **Instruction Words** | ⚪️ | 116 | Skipped |
-| **Comparison Patterns** | ✅ | 38 | Included in Core |
-| **Word Formation Terms** | ⚪️ | 123 | Skipped |
-| **Activity Instruction Verbs** | ➖ | 176 | Excluded Type |
-| **Analytical Terms** | ⚪️ | 176 | Skipped |
-| **Style and Register Terminology** | ⚪️ | 161 | Skipped |
+| **Grammar Explanation Patterns** | ✅ | 279 | Included in Core |
+| **Instruction Words** | ⚪️ | 234 | Skipped |
+| **Comparison Patterns** | ✅ | 128 | Included in Core |
+| **Word Formation Terms** | ⚪️ | 207 | Skipped |
+| **Activity Instruction Verbs** | ➖ | 258 | Excluded Type |
+| **Analytical Terms** | ⚪️ | 230 | Skipped |
+| **Style and Register Terminology** | ⚪️ | 230 | Skipped |
 | **Practice** | ⚪️ | 408 | Skipped |
-| **Dialogues** | ✅ | 337 | Included in Core |
+| **Dialogues** | ✅ | 444 | Included in Core |
 | **Summary** | ✅ | 361 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 43 | Skipped |

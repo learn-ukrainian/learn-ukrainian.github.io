@@ -3,6 +3,7 @@ level: B1
 slug: ukrainian-music-today
 version: '2.0'
 id: b1-76
+focus: cultural
 naturalness:
   score: 9
   status: PASS

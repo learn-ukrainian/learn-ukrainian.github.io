@@ -57,33 +57,33 @@ The "Reading Hall" section found in LIT modules is **not** a passive resource li
 If a LIT module is missing standard components, it is considered an **error state** that must be rectified during migration.
 
 ### Missing Vocabulary
-*   **Condition:** No `# Vocabulary` / `# Словник` table in Markdown and no existing `vocabulary/` sidecar.
-*   **Action:** Extract **15-20 key terms** from the text.
-    *   Focus: Literary terms (e.g., *бурлеск*, *травестія*), historical context (*гетьманщина*, *кріпацтво*), and sophisticated abstract nouns (*суб'єктність*, *ідентичність*).
-    *   Enrich with IPA and English translations.
+-   **Condition:** No `# Vocabulary` / `# Словник` table in Markdown and no existing `vocabulary/` sidecar.
+-   **Action:** Extract **15-20 key terms** from the text.
+  -   Focus: Literary terms (e.g., *бурлеск*, *травестія*), historical context (*гетьманщина*, *кріпацтво*), and sophisticated abstract nouns (*суб'єктність*, *ідентичність*).
+  -   Enrich with IPA and English translations.
 
 ### Missing Resources
-*   **Condition:** No "Reading Hall" and no "Resources" section.
-*   **Action:**
+-   **Condition:** No "Reading Hall" and no "Resources" section.
+-   **Action:**
     1.  Locate the **Primary Source** text (e.g., full text on UkrLib, Yakaboo, or reputable academic sources).
     2.  Add it to `external_resources.yaml`.
     3.  If applicable, generate a `reading` activity for it.
 
 ### Missing Activities
-*   **Condition:** No `# Activities` section.
-*   **Action:** Generate **3 Critical Thinking Prompts** (Essay/Discussion topics).
-    *   *Type:* `writing` or `discussion`.
-    *   *Level:* C1 (Analysis, Synthesis, Evaluation).
-    *   *Example:* "Analyze the contrast between..." rather than "What year was..."
+-   **Condition:** No `# Activities` section.
+-   **Action:** Generate **3 Critical Thinking Prompts** (Essay/Discussion topics).
+  -   *Type:* `writing` or `discussion`.
+  -   *Level:* C1 (Analysis, Synthesis, Evaluation).
+  -   *Example:* "Analyze the contrast between..." rather than "What year was..."
 
 ## 3. Migration Workflow
 
 1.  **Inventory:** Scan `curriculum/l2-uk-en/lit/` for all `.md` files.
 2.  **Meta Extraction:** Ensure `meta/{slug}.yaml` exists and is complete.
 3.  **Content Migration:**
-    *   Identify `## 🏛️ Читальна Зала` -> Move to `activities/` (Type: `reading`).
-    *   Identify `# Activities` -> Move to `activities/` (Standard types).
-    *   Identify `# Vocabulary` -> Move to `vocabulary/`.
-    *   Identify `## Resources` -> Move to `docs/resources/external_resources.yaml`.
+    -   Identify `## 🏛️ Читальна Зала` -> Move to `activities/` (Type: `reading`).
+    -   Identify `# Activities` -> Move to `activities/` (Standard types).
+    -   Identify `# Vocabulary` -> Move to `vocabulary/`.
+    -   Identify `## Resources` -> Move to `docs/resources/external_resources.yaml`.
 4.  **Cleanup:** Remove migrated sections from `.md`.
 5.  **Audit:** Run `scripts/audit_module.py`.

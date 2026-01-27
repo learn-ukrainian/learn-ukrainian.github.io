@@ -1,10 +1,12 @@
 # Audit Report: M12 — 12-research-article.md
+
 **Level:** C1 | **Module:** M12 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:01
 
 ## Configuration
+
 **Type:** C1-grammar
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Архітектура статті (IMRaD) | 8 | 6 | ✅ |
@@ -47,16 +50,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '[ ]...'.
   - FIX: Vary sentence structure.
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2056/3000 (raw: 2158)
 - **Activities:** ✅ 18/12
 - **Density:** ✅ All > 12
@@ -75,10 +81,12 @@
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 90% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 95 | 15 | 100% | 25% | 25.0% |
@@ -92,6 +100,7 @@
 | **TOTAL** | | | | | **90.6%** |
 
 ### Dryness Flags & Fixes
+
 - ❌ **LOW_CULTURAL_ANCHOR**
   - FIX:
     Add more cultural references (need 3+ total). Include:
@@ -100,6 +109,7 @@
     - Contemporary Ukrainian life examples
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 89 | Included in Core |

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M36 | **Phase:** B2.3a | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 23:34:55
+**Generated:** 2026-01-27 17:43:08
 
 ## Configuration
 **Type:** B2-history
@@ -24,23 +24,20 @@
 | 2 | critical-analysis | Аналіз демократичних засад | 1 | 1 | ✅ |
 | 3 | comparative-study | Братська школа vs Сучасна школа | 1 | 1 | ✅ |
 | 4 | essay-response | Освіта як зброя | 1 | 1 | ✅ |
-| 5 | quiz | Історія братств та освіти | 8 | 8 | ✅ |
-| 6 | match-up | Терміни та визначення | 12 | 8 | ✅ |
-| 7 | fill-in | Освіта і культура | 10 | 8 | ✅ |
-| 8 | error-correction | Виправлення історичних фактів | 8 | 6 | ✅ |
+| 5 | true-false | Братства та освіта: Факти та вигадки | 10 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 8 (target: 3-9) ✅
-- Unique types: 8 (minimum: 2) ✅
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4122/4000 (raw: 4298)
-- **Activities:** ✅ 8/3
+- **Words:** ✅ 5504/4000 (raw: 5693)
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 8/2 types
+- **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
@@ -48,8 +45,8 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (8 activities)
-- **Immersion:** 🇺🇦 98.4% (target 90-100% (history))
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Immersion:** 🇺🇦 98.8% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -69,7 +66,7 @@
 | visual | 6 | 4 | 100% | 10% | 9.5% |
 | variety | 0.98 | - | 98% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 20 | 3 | 100% | 5% | 4.8% |
+| questions | 19 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
@@ -77,13 +74,13 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Братства та освіта: Острозька академія** | ⚪️ | 101 | Skipped |
-| **Вступ** | ✅ | 256 | Included in Core |
+| **Вступ** | ✅ | 429 | Included in Core |
 | **Реформація та Контрреформація** | ⚪️ | 582 | Skipped |
-| **Феномен братств** | ⚪️ | 699 | Skipped |
-| **Освітня діяльність братств** | ⚪️ | 603 | Skipped |
-| **Острозька академія: «Волинські Афіни»** | ⚪️ | 536 | Skipped |
-| **Читання** | ✅ | 293 | Included in Core |
-| **Первинні джерела** | ✅ | 404 | Included in Core |
-| **Деколонізаційний погляд** | ✅ | 328 | Included in Core |
-| **Підсумок** | ✅ | 219 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 101 | Skipped |
+| **Феномен братств** | ⚪️ | 926 | Skipped |
+| **Освітня діяльність братств** | ⚪️ | 895 | Skipped |
+| **Острозька академія: «Волинські Афіни»** | ⚪️ | 602 | Skipped |
+| **Читання** | ✅ | 397 | Included in Core |
+| **Первинні джерела** | ✅ | 560 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 491 | Included in Core |
+| **Підсумок** | ✅ | 294 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 227 | Skipped |

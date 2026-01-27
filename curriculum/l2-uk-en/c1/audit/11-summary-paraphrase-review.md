@@ -1,10 +1,12 @@
 # Audit Report: M11 — 11-summary-paraphrase.md
+
 **Level:** C1 | **Module:** M11 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:01
 
 ## Configuration
+
 **Type:** C1-grammar
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння концепції переказу | 9 | 5 | ✅ |
@@ -45,16 +48,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 11-summary-paraphrase.yaml: Schema validation error at key 'min_words': 100 is less than the minimum of 200
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2026/3000 (raw: 2110)
 - **Activities:** ✅ 16/12
 - **Density:** ✅ All > 12
@@ -73,10 +79,12 @@
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 93% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 40 | 15 | 100% | 25% | 25.0% |
@@ -90,6 +98,7 @@
 | **TOTAL** | | | | | **93.6%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 60 | Included in Core |

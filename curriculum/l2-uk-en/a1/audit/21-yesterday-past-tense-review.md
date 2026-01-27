@@ -1,10 +1,12 @@
 # Audit Report: M21 — 21-yesterday-past-tense.md
+
 **Level:** A1 | **Module:** M21 | **Phase:** A1 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
 **Generated:** 2026-01-26 22:25:50
 
 ## Configuration
+
 **Type:** A1-grammar
 **Word Target:** 750 words
 **Activities:** 8-12 required
@@ -18,6 +20,7 @@
 **Transliteration:** Allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Past Tense Vocabulary | 10 | 8 | ✅ |
@@ -37,15 +40,18 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: рід
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
+
 - **Words:** ✅ 1121/750 (raw: 1612)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
@@ -63,6 +69,7 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

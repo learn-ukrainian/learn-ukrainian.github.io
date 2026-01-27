@@ -1,8 +1,10 @@
 # Audit Report: 32-c12-practice-i.md
+
 **Phase:** C1.2 | **Level:** C1 | **Pedagogy:** academic | **Target:** 1750
 **Overall Status:** ❌ FAIL
 
 ## Gates
+
 - **Words:** ❌ 1338/1750
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
@@ -20,10 +22,12 @@
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
+
 **Score:** 68% (minimum: 95%)
 **Module Type:** academic
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | citations | 1 | 5 | 20% | 24% | 4.8% |
@@ -37,6 +41,7 @@
 | **TOTAL** | | | | | **68.2%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 69 | Included in Core |

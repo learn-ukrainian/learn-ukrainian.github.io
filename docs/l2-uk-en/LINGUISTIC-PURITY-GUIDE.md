@@ -56,6 +56,7 @@ Direct mapping from English structures is permitted if it reduces cognitive load
 We reject "Tourist Ukrainian". We teach the full, logical system, even if complex.
 
 ### 1. The Vocative Case (Кличний відмінок)
+
 **Rule:** Mandatory. Never optional.
 *   ❌ *Привіт, Андрій!* (Simplification/Russian style)
 *   ✅ *Привіт, Андрі**ю**!*
@@ -63,22 +64,25 @@ We reject "Tourist Ukrainian". We teach the full, logical system, even if comple
 *   ✅ *Мам**о**, йди сюди.*
 
 ### 2. Sound Alterations (Cherhuvannia)
+
 **Rule:** Must be taught and enforced, not glossed over.
 *   **O -> I / E -> I:**
-    *   *Стіл* (Nom) -> *Стола* (Gen). NOT *Стіла*.
-    *   *Львів* (Nom) -> *Львова* (Gen). NOT *Львіва*.
+  *   *Стіл* (Nom) -> *Стола* (Gen). NOT *Стіла*.
+  *   *Львів* (Nom) -> *Львова* (Gen). NOT *Львіва*.
 *   **G/K/Kh -> Z/Ts/S** (Locative/Dative):
-    *   *Нога* -> *На нозі*. NOT *На ногі*.
-    *   *Рука* -> *У руці*. NOT *У рукі*.
+  *   *Нога* -> *На нозі*. NOT *На ногі*.
+  *   *Рука* -> *У руці*. NOT *У рукі*.
 
 ### 3. Aspect Precision (Vid)
+
 **Rule:** Do not treat Future Tense loosely.
 *   Distinguish clearly:
-    *   *Я буду читати* (Process - Imperfective).
-    *   *Я прочитаю* (Result - Perfective).
+  *   *Я буду читати* (Process - Imperfective).
+  *   *Я прочитаю* (Result - Perfective).
 *   **Constraint:** In A1, we focus on Imperfective Future (*Budu + Inf*). But we DO NOT use Perfective meanings disguised as Imperfective. If a Perfective concept is needed (e.g. "I will buy it"), we explicitly mark it as "Advanced" or introduce the Perfective form if enabled by curriculum.
 
 ### 4. Motion Verb Nuance
+
 **Rule:** Never confuse *Йти* vs *Їхати*.
 *   They are completely distinct roots.
 *   "To Go" does not exist in Ukrainian. You either Walk or Drive (or Fly/Swim).
@@ -96,6 +100,7 @@ When auditing a module, perform a **Search/Find** for these roots:
 5.  **"Pryima"** (Прийма) -> Check "Pryimaty uchast". Fix to **Braty**.
 
 ### Formatting for Fixes
+
 If you find these errors, use the **> [!WARNING]** alert in the review report:
 > [!WARNING] Russification Detected
 > "Самий кращий" found on Line 45. Corrected to "Найкращий".
@@ -124,22 +129,26 @@ Mixed language creates a pidgin that does not exist in reality. It prevents the 
 The curriculum is designed for English speakers. Comparisons to Russian are linguistically sloppy and politically insensitive.
 
 ### 1. No Phonetic Comparisons to Russian
+
 **Rule:** Never define a Ukrainian sound by how it differs from Russian.
 *   ❌ **Forbidden:** "Ukrainian **И** is like Russian **Ы**." (Lazy, inaccurate, assumes prior knowledge).
 *   ✅ **Allowed:** "Ukrainian **И** is like **i** in 'bit'." (Direct English approximation).
 
 ### 2. No "Ghost Words" (Russian Vocabulary)
+
 **Rule:** Do not use Russian words as examples, even if similar.
 *   ❌ **Forbidden:** Using `кон` (Russian) instead of `кінь` (Ukrainian).
 *   ❌ **Forbidden:** Using `брать` (Russian) instead of `брати` (Ukrainian).
 *   **Reason:** This often happens when copy-pasting from poor resources. Always verify examples in a dictionary (`goroh.pp.ua`).
 
 ### 3. No Russian Characters
+
 **Rule:** The following letters must NEVER appear in the content:
 *   **ё, ъ, ы, э**
 *   **EXCEPTION:** Use only in "Prosecutor's Voice" / "Myth Buster" sections to explicitly debunk Russian propaganda or explain historical suppression.
 
 ### 4. The "Prosecutor's Voice" Exception
+
 **Allowance:** You MAY mention Russian only to:
 *   Debunk myths (e.g. "Ukrainian is not a dialect").
 *   Highlight historical crimes (e.g. Ems Ukaz).

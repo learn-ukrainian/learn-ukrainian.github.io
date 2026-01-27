@@ -67,12 +67,6 @@ activity_hints:
   focus: Свідчення постраждалих від пацифікації
   source: Архівні матеріали
   items: 4
-- type: quiz
-  focus: Пацифікація 1930 року
-  items: 15
-- type: match-up
-  focus: Подія → наслідок
-  items: 10
 - type: true-false
   focus: Міфи про пацифікацію
   items: 10

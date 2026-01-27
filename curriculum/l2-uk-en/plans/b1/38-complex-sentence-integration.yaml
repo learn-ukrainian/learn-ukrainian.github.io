@@ -5,42 +5,29 @@ version: '2.0'
 title: Інтеграція складних речень
 subtitle: Complex Sentence Integration
 content_outline:
-- section: 'Introduction: Sentence Integration'
-  words: 150
+- section: Тест
+  words: 421
   points:
-  - Beyond single subordination
-  - Multi-clause sentences
-  - Complexity management
-- section: Two-Clause Combinations
-  words: 250
+  - Diagnostic quiz on complex sentences
+  - Self-assessment questions
+- section: Пояснення
+  words: 1643
   points:
-  - Temporal + causal
-  - Conditional + concessive
-  - Purpose + temporal
-- section: Three+ Clause Sentences
-  words: 250
-  points:
-  - Main + multiple subordinates
-  - Nested clauses
-  - Parallel structures
-- section: Coordination + Subordination
-  words: 250
-  points:
-  - і, але, або with subordinate clauses
-  - Compound-complex sentences
-  - Balancing complexity
-- section: Punctuation and Style
-  words: 200
-  points:
-  - Comma placement
-  - Avoiding run-on sentences
-  - Readable complexity
-- section: 'Practice: Complex Writing'
-  words: 100
+  - Two-Clause Combinations
+  - Three+ Clause Sentences
+  - Coordination + Subordination
+  - Punctuation and Style
+- section: Практика
+  words: 369
   points:
   - Build multi-clause sentences
   - Edit for clarity
-word_target: 1200
+- section: Діалоги
+  words: 567
+  points:
+  - Complex sentences in conversation
+  - Multi-clause scenarios
+word_target: 3000
 vocabulary_hints:
   required:
   - інтеграція (integration)
@@ -57,7 +44,7 @@ vocabulary_hints:
   - зрозумілість (clarity)
   - стиль (style)
 activity_hints:
-- type: sentence-combining
+- type: unjumble
   focus: Build multi-clause sentences
   items: 25
 - type: error-correction
@@ -66,7 +53,7 @@ activity_hints:
 - type: fill-in
   focus: Complete integrated sentences
   items: 15
-- type: writing
+- type: cloze
   focus: Write complex paragraphs
   items: 10
 focus: grammar

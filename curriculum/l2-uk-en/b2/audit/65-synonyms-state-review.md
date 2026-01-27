@@ -1,10 +1,12 @@
 # Audit Report: M65 — 65-synonyms-state.md
+
 **Level:** B2 | **Module:** M65 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:29
 
 ## Configuration
+
 **Type:** B2-vocab
 **Word Target:** 1750 words
 **Activities:** 10-14 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть відтінок стану | 12 | 8 | ✅ |
@@ -42,15 +45,18 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 65-synonyms-state.yaml: Schema validation error at key '13': {'type': 'select', 'title': 'Складні стани', 'instruction': 'Оберіть усі слова, що описують стабільність та гармонію (6 елементів).', 'items': [{'question': 'Які терміни вказують на врівноважений стан? (Оберіть 6)', 'options': [{'text': 'стабільність', 'correct': True}, {'text': 'гармонія', 'correct': True}, {'text': 'рівновага', 'correct': True}, {'text': 'спокій', 'correct': True}, {'text': 'впевненість', 'correct': True}, {'text': 'непохитність', 'correct': True}]}, {'question': "Оберіть синоніми до слова 'становище':", 'options': [{'text': 'положення', 'correct': True}, {'text': 'ситуація', 'correct': True}, {'text': 'обставини', 'correct': True}, {'text': 'мить', 'correct': False}]}, {'question': "Які слова описують 'соціальний стан':", 'options': [{'text': 'престиж', 'correct': True}, {'text': 'авторитет', 'correct': True}, {'text': 'репутація', 'correct': True}, {'text': 'вага', 'correct': False}]}, {'question': "Оберіть слова для опису 'здоров'я':", 'options': [{'text': 'самопочуття', 'correct': True}, {'text': 'тонус', 'correct': True}, {'text': 'бадьорість', 'correct': True}, {'text': 'час', 'correct': False}]}, {'question': "Які слова вказують на 'негативний стан':", 'options': [{'text': 'занепад', 'correct': True}, {'text': 'криза', 'correct': True}, {'text': 'деградація', 'correct': True}, {'text': 'розквіт', 'correct': False}]}, {'question': "Оберіть назви 'психологічних станів':", 'options': [{'text': 'стрес', 'correct': True}, {'text': 'тривога', 'correct': True}, {'text': 'апатія', 'correct': True}, {'text': 'чин', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
+
 - **Words:** ✅ 2047/1750 (raw: 2235)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
@@ -69,10 +75,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 98% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 66 | 24 | 100% | 20% | 20.0% |
@@ -88,6 +96,7 @@
 | **TOTAL** | | | | | **98.5%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 80 | Included in Core |

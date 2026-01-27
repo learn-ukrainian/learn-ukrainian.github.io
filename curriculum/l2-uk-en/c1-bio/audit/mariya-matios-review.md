@@ -1,10 +1,12 @@
 # Audit Report: M117 — mariya-matios.md
+
 **Level:** C1 | **Module:** M117 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:56
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Життєвий і творчий шлях Марії Матіос | 5 | 5 | ✅ |
@@ -41,16 +44,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in mariya-matios.yaml: Schema validation error at key '7': {'type': 'fill-in', 'title': 'Роль Марії Матіос у сучасній культурі', 'items': [{'sentence': 'Марія Матіос стала голосом [німих] жертв радянського режиму, яких хотіли викреслити з історії.', 'answer': 'німих', 'options': ['німих', 'голосних', 'веселих', 'багатих']}, {'sentence': "Її творчість є потужним актом [деколонізації] української пам'яті та свідомості.", 'answer': 'деколонізації', 'options': ['деколонізації', 'ідеалізації', 'глобалізації', 'містифікації']}, {'sentence': "Вона вчить нас, що пам'ять — це справжня [зброя] у боротьбі за незалежність.", 'answer': 'зброя', 'options': ['зброя', 'іграшка', 'перешкода', 'помилка']}, {'sentence': 'Роман «Солодка Даруся» став еталоном [психологічної] прози про історичну правду.', 'answer': 'психологічної', 'options': ['психологічної', 'технічної', 'дитячої', 'комічної']}, {'sentence': 'Письменниця залишається «залізною [леді]» української літератури через свою безкомпромісність.', 'answer': 'леді', 'options': ['леді', 'вдовою', 'дитиною', 'служницею']}, {'sentence': 'Правда у її творах є болючою, але необхідною для духовного [одужання] нації.', 'answer': 'одужання', 'options': ['одужання', 'занепаду', 'забуття', 'сну']}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2109/4000 (raw: 2389)
 - **Activities:** ✅ 12/3
 - **Density:** ✅ All > 1
@@ -69,10 +75,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 97% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 4 | 4 | 100% | 19% | 19.0% |
@@ -88,6 +96,7 @@
 | **TOTAL** | | | | | **97.5%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 72 | Included in Core |

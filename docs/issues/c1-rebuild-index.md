@@ -38,6 +38,7 @@
 ## Completion Status by Phase
 
 ### ✅ Phase 1: Academic Writing (M01-M32)
+
 **Status:** Complete + 1 duplicate
 **Completion:** 33/32 (103%)
 **Pass Rate:** 30/33 (90.9%)
@@ -84,6 +85,7 @@
 ---
 
 ### ❌ Phase 1 Gap: Practice/Checkpoint (M33-M35)
+
 **Status:** Missing
 **Completion:** 0/3 (0%)
 
@@ -99,6 +101,7 @@
 ---
 
 ### 🚧 Phase 2: Historical Biographies (M36-M99)
+
 **Status:** Incomplete
 **Completion:** 28/64 (43.8%)
 **Pass Rate:** 13/28 (46.4%)
@@ -184,6 +187,7 @@ Historical figures not yet created (Kyivan Rus to early 20th century)
 ---
 
 ### ✅ Phase 3: Contemporary Biographies (M100-M130)
+
 **Status:** Complete
 **Completion:** 31/31 (100%)
 **Pass Rate:** 30/31 (96.8%)
@@ -229,6 +233,7 @@ Historical figures not yet created (Kyivan Rus to early 20th century)
 ---
 
 ### ✅ Phase 3 Checkpoint (M131)
+
 **Status:** Complete
 **Completion:** 1/1 (100%)
 **Pass Rate:** 1/1 (100%)
@@ -239,6 +244,7 @@ Historical figures not yet created (Kyivan Rus to early 20th century)
 ---
 
 ### ✅ Phase 4: Stylistics & Culture (M132-M150)
+
 **Status:** Complete
 **Completion:** 19/19 (100%)
 **Pass Rate:** 15/19 (78.9%)
@@ -274,6 +280,7 @@ Unknown errors (need investigation):
 ---
 
 ### ❌ Phase 5: Literature Track (M151-M196)
+
 **Status:** Not Started
 **Completion:** 0/46 (0%)
 
@@ -295,6 +302,7 @@ Unknown errors (need investigation):
 ## Fix Progress Tracker
 
 ### Before Fixes
+
 | Metric | Value |
 |--------|-------|
 | Total Modules | 148 |
@@ -312,6 +320,7 @@ Unknown errors (need investigation):
 | **5** | Investigate Unknown Errors | 4 | ⏳ Pending | P1 |
 
 ### After Fixes (Target)
+
 | Metric | Target |
 |--------|--------|
 | Total Modules | 148 |
@@ -323,6 +332,7 @@ Unknown errors (need investigation):
 ## Error Patterns Summary
 
 ### YAML Parse Errors (21 modules)
+
 **Pattern:** "mapping values are not allowed here"
 **Cause:** Unquoted strings containing colons in YAML
 **Fix:** Automated script to quote values
@@ -332,6 +342,7 @@ Unknown errors (need investigation):
 M36, M37, M38, M39, M40, M41, M42, M44, M46, M83, M84, M85, M86, M87, M88, M89, M90
 
 ### Missing Template Sections (23 modules)
+
 **Pattern:** Biography modules missing required sections
 **Sections:** Життєпис, Внесок, Спадщина, Need More Practice?
 **Fix:** Automated script to add empty sections
@@ -341,18 +352,21 @@ M36, M37, M38, M39, M40, M41, M42, M44, M46, M83, M84, M85, M86, M87, M88, M89, 
 M36, M37, M38, M39, M40, M41, M42, M44, M46, M83, M84, M85, M86, M87, M88, M89, M96, M98, M109
 
 ### Duplicate Modules (1 instance)
+
 **Pattern:** Two M04 modules with different names
 **Modules:** 04-analysis-vocab (failed), 04-analysis-vocabulary (passed)
 **Fix:** Manual deletion of failed version
 **Effort:** 5 minutes
 
 ### Schema Violations (2 modules)
+
 **Pattern:** Options arrays too short, min_words too low
 **Modules:** M14 (literature-review)
 **Fix:** Manual addition of options
 **Effort:** 30 minutes
 
 ### Unknown Errors (4 modules)
+
 **Pattern:** Audit produces no error output
 **Modules:** M134, M135, M136, M146
 **Fix:** Manual investigation required
@@ -390,6 +404,7 @@ M36, M37, M38, M39, M40, M41, M42, M44, M46, M83, M84, M85, M86, M87, M88, M89, 
 ## Recommendations
 
 ### Priority 1: Fix Existing Issues (1-2 days)
+
 **Goal:** Bring pass rate from 81% to 95%+
 
 - [x] Run Fix #1: YAML syntax (21 modules)
@@ -401,6 +416,7 @@ M36, M37, M38, M39, M40, M41, M42, M44, M46, M83, M84, M85, M86, M87, M88, M89, 
 **Result:** 143+/148 modules pass (95%+)
 
 ### Priority 2: Complete Foundation (1-2 days)
+
 **Goal:** Bring completion from 75.5% to 77%
 
 - [ ] Create M33-M35 (checkpoints for Phase 1)
@@ -410,6 +426,7 @@ M36, M37, M38, M39, M40, M41, M42, M44, M46, M83, M84, M85, M86, M87, M88, M89, 
 **Result:** 151/196 modules (77%)
 
 ### Priority 3: Systematic Validation (1 day)
+
 **Goal:** Production-ready C1 modules
 
 - [ ] Vocabulary enrichment: `npm run vocab:enrich l2-uk-en`
@@ -420,6 +437,7 @@ M36, M37, M38, M39, M40, M41, M42, M44, M46, M83, M84, M85, M86, M87, M88, M89, 
 **Result:** All C1 modules validated and deployed
 
 ### Priority 4 (Defer): Complete Biographies
+
 **Goal:** Bring completion from 77% to 95%
 
 - [ ] Create remaining 36 historical biography modules (M36-M99 range)
@@ -428,6 +446,7 @@ M36, M37, M38, M39, M40, M41, M42, M44, M46, M83, M84, M85, M86, M87, M88, M89, 
 **Decision:** Defer until after B2 complete?
 
 ### Priority 5 (Defer): Literature Track
+
 **Goal:** Bring completion from 95% to 100%
 
 - [ ] Create LIT specialization track (M151-M196)
@@ -472,12 +491,14 @@ M36, M37, M38, M39, M40, M41, M42, M44, M46, M83, M84, M85, M86, M87, M88, M89, 
 ## Related Documents
 
 ### B1/B2 Rebuilds (Reference)
+
 - `b1-rebuild-audit-report.md` - B1 audit (47.3% pass rate)
 - `b2-rebuild-audit-report.md` - B2 audit (48.1% pass rate)
 - `b1-fix-scripts.md` - B1 fix implementation
 - `b2-fix-scripts.md` - B2 fix implementation
 
 ### C1 Documentation (Current)
+
 - `c1-rebuild-audit-report.md` - Full audit logs
 - `c1-audit-quick-summary.md` - Executive summary
 - `c1-rebuild-audit-summary.md` - Detailed analysis
@@ -485,9 +506,11 @@ M36, M37, M38, M39, M40, M41, M42, M44, M46, M83, M84, M85, M86, M87, M88, M89, 
 - `c1-rebuild-index.md` - This document
 
 ### Templates (Reference)
+
 - `docs/l2-uk-en/templates/c1-module-template.md` - Standard C1 template
 - `docs/l2-uk-en/templates/c1-biography-module-template.md` - Biography template
 - `docs/l2-uk-en/templates/b1-checkpoint-module-template.md` - Checkpoint template
 
 ### Curriculum Plans
+
 - `docs/l2-uk-en/C1-CURRICULUM-PLAN.md` - Full C1 scope and sequence

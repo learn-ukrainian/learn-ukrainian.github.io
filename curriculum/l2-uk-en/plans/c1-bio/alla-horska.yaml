@@ -69,22 +69,10 @@ activity_hints:
   focus: Мистецтво шістдесятників
   source: Art criticism sources
   items: 3 passages
-- type: quiz
-  focus: Життя та творчість Горської
-  items: 12+
-- type: match-up
-  focus: Твори та їхні характеристики
-  items: 10+
 - type: essay-response
   focus: Чому влада боялася мистецтва Горської?
   word_target: 300
   output: Analytical essay
-- type: group-sort
-  focus: Представники шістдесятництва за галузями
-  items: 12+
-- type: fill-in
-  focus: Термінологія монументального мистецтва
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-71
@@ -103,3 +91,7 @@ sources:
   notes: Archives of Shistdesiatnyky movement
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of алла горська: художниця-дисидентка'
+- Evaluate the contributions of вітраж, розбитий владою
+- Trace the career and influence of душа українського модернізму

@@ -2,128 +2,127 @@ module: danylo-apostol
 level: B2
 version: '1.0'
 items:
-  - lemma: гетьман
-    ipa: /ˈɦɛtʲ.man/
-    translation: hetman
-    pos: noun
-    gender: m
-  - lemma: булава
-    ipa: /bu.la.ˈwa/
-    translation: mace (symbol of power)
-    pos: noun
-    gender: f
-  - lemma: старшина
-    ipa: /star.ʃɪ.ˈna/
-    translation: starshyna (officers/elite)
-    pos: noun
-    gender: f
-  - lemma: автономія
-    ipa: /aw.to.ˈnɔ.mʲi.jɐ/
-    translation: autonomy
-    pos: noun
-    gender: f
-  - lemma: петиція
-    ipa: /pɛ.ˈtɪ.t͡sʲi.jɐ/
-    translation: petition
-    pos: noun
-    gender: f
-  - lemma: колегія
-    ipa: /ko.ˈlɛ.ɦʲi.jɐ/
-    translation: collegium
-    pos: noun
-    gender: f
-  - lemma: реформа
-    ipa: /rɛ.ˈfɔr.ma/
-    translation: reform
-    pos: noun
-    gender: f
-  - lemma: маєтність
-    ipa: /ma.ˈjɛt.nʲisʲtʲ/
-    translation: estate, property
-    pos: noun
-    gender: f
-  - lemma: слідство
-    ipa: /ˈs⁽ʲ⁾l⁽ʲ⁾id.stwo/
-    translation: investigation
-    pos: noun
-    gender: n
-  - lemma: кодифікація
-    ipa: /ko.dɪ.fi.ˈka.t͡sʲi.jɐ/
-    translation: codification
-    pos: noun
-    gender: f
-  - lemma: університет
-    ipa: /u.ni.wɛr.sɪ.ˈtɛt/
-    translation: university
-    pos: noun
-    gender: m
-  - lemma: бароко
-    ipa: /ba.ˈrɔ.ko/
-    translation: baroque
-    pos: noun
-    gender: n
-  - lemma: шляхта
-    ipa: /ˈʃlʲax.ta/
-    translation: nobility, gentry
-    pos: noun
-    gender: f
-  - lemma: інструкція
-    ipa: /in.ˈstruk.t͡sʲi.jɐ/
-    translation: instruction
-    pos: noun
-    gender: f
-  - lemma: асиміляція
-    ipa: /a.sɪ.mi.ˈlʲa.t͡sʲi.jɐ/
-    translation: assimilation
-    pos: noun
-    gender: f
-  - lemma: провінція
-    ipa: /pro.ˈwin.t͡sʲi.jɐ/
-    translation: province
-    pos: noun
-    gender: f
-  - lemma: кріпацтво
-    ipa: /kri.ˈpat͡s.two/
-    translation: serfdom
-    pos: noun
-    gender: n
-  - lemma: меценат
-    ipa: /mɛ.t͡sɛ.ˈnat/
-    translation: patron of arts
-    pos: noun
-    gender: m
-  - lemma: палац
-    ipa: /pa.ˈlat͡s/
-    translation: palace
-    pos: noun
-    gender: m
-  - lemma: опера
-    ipa: /ˈɔ.pɛ.ra/
-    translation: opera
-    pos: noun
-    gender: f
-  - lemma: податок
-    ipa: /po.ˈda.tok/
-    translation: tax
-    pos: noun
-    gender: m
-  - lemma: бюджет
-    ipa: /bʲu.ˈd͡ʒɛt/
-    translation: budget
-    pos: noun
-    gender: m
-  - lemma: сирота
-    ipa: /sɪ.ro.ˈta/
-    translation: orphan
-    pos: noun
-    gender: m
-  - lemma: вдова
-    ipa: /wdo.ˈwa/
-    translation: widow
-    pos: noun
-    gender: f
-  - lemma: суд
-    ipa: /sud/
-    translation: court
-    pos: noun
-    gender: m
+- lemma: гетьман
+  ipa: /ˈɦɛtʲ.man/
+  translation: hetman
+  pos: noun
+  gender: m
+- lemma: булава
+  ipa: /bu.la.ˈwa/
+  translation: mace (symbol of power)
+  pos: noun
+  gender: f
+- lemma: старшина
+  ipa: /star.ʃɪ.ˈna/
+  translation: starshyna (officers/elite)
+  pos: noun
+  gender: f
+- lemma: автономія
+  ipa: /aw.to.ˈnɔ.mʲi.jɐ/
+  translation: autonomy
+  pos: noun
+  gender: f
+- lemma: петиція
+  ipa: /pɛ.ˈtɪ.t͡sʲi.jɐ/
+  translation: petition
+  pos: noun
+  gender: f
+- lemma: колегія
+  ipa: /ko.ˈlɛ.ɦʲi.jɐ/
+  translation: collegium
+  pos: noun
+  gender: f
+- lemma: реформа
+  ipa: /rɛ.ˈfɔr.ma/
+  translation: reform
+  pos: noun
+  gender: f
+- lemma: маєтність
+  ipa: /ma.ˈjɛt.nʲisʲtʲ/
+  translation: estate, property
+  pos: noun
+  gender: f
+- lemma: слідство
+  ipa: /ˈs⁽ʲ⁾l⁽ʲ⁾id.stwo/
+  translation: investigation
+  pos: noun
+  gender: n
+- lemma: кодифікація
+  ipa: /ko.dɪ.fi.ˈka.t͡sʲi.jɐ/
+  translation: codification
+  pos: noun
+  gender: f
+- lemma: університет
+  ipa: /u.ni.wɛr.sɪ.ˈtɛt/
+  translation: university
+  pos: noun
+  gender: m
+- lemma: бароко
+  ipa: /ba.ˈrɔ.ko/
+  translation: baroque
+  pos: noun
+  gender: n
+- lemma: шляхта
+  ipa: /ˈʃlʲax.ta/
+  translation: nobility, gentry
+  pos: noun
+  gender: f
+- lemma: інструкція
+  ipa: /in.ˈstruk.t͡sʲi.jɐ/
+  translation: instruction
+  pos: noun
+  gender: f
+- lemma: асиміляція
+  ipa: /a.sɪ.mi.ˈlʲa.t͡sʲi.jɐ/
+  translation: assimilation
+  pos: noun
+  gender: f
+- lemma: провінція
+  ipa: /pro.ˈwin.t͡sʲi.jɐ/
+  translation: province
+  pos: noun
+  gender: f
+- lemma: кріпацтво
+  ipa: /kri.ˈpat͡s.two/
+  translation: serfdom
+  pos: noun
+  gender: n
+- lemma: меценат
+  ipa: /mɛ.t͡sɛ.ˈnat/
+  translation: patron of arts
+  pos: noun
+  gender: m
+- lemma: палац
+  ipa: /pa.ˈlat͡s/
+  translation: palace
+  pos: noun
+  gender: m
+- lemma: опера
+  ipa: /ˈɔ.pɛ.ra/
+  translation: opera
+  pos: noun
+  gender: f
+- lemma: податок
+  ipa: /po.ˈda.tok/
+  translation: tax
+  pos: noun
+  gender: m
+- lemma: бюджет
+  ipa: /bʲu.ˈd͡ʒɛt/
+  translation: budget
+  pos: noun
+  gender: m
+- lemma: сирота
+  ipa: /sɪ.ro.ˈta/
+  translation: orphan
+  pos: noun
+  gender: m
+- lemma: вдовий
+  ipa: /wdo.ˈwa/
+  translation: widow
+  pos: adj
+- lemma: суд
+  ipa: /sud/
+  translation: court
+  pos: noun
+  gender: m

@@ -6,35 +6,35 @@ title: 'Вид у минулому: одного разу vs щодня'
 subtitle: 'Aspect in Past: Single vs Repeated Actions'
 content_outline:
 - section: Тест
-  words: 120
+  words: 212
   points:
   - Compare two narratives
   - Deduce rule (One vs Many)
 - section: Пояснення
-  words: 700
+  words: 1235
   points:
   - Single events (markers: once, that time)
   - Repeated actions (markers: always, often)
   - Contrast table
   - Special cases (once, long ago)
 - section: Практика
-  words: 300
+  words: 529
   points:
   - Selection algorithm
   - Common mistakes
   - Aspect in daily life
 - section: Діалоги
-  words: 350
+  words: 618
   points:
   - School memories
   - Summer stories
   - Work experience
 - section: Підсумок
-  words: 230
+  words: 406
   points:
   - Summary of markers
   - Self-check
-word_target: 1700
+word_target: 3000
 vocabulary_hints:
   required:
   - одного разу (once)

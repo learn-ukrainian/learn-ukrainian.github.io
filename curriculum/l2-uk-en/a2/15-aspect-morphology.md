@@ -64,7 +64,7 @@ This pattern is extremely useful for describing routines. For example, «Я за
 
 ### 4. Semantic Changes Beyond Aspect (Більше ніж просто вид)
 
-It's important to realize that adding a prefix can change the core meaning of a verb, not just its aspect. Once a verb gets a new meaning, it often forms its _own_ new aspectual pair using the suffixation method mentioned above.
+It's important to realize that adding a prefix can change the core meaning of a verb, not just its aspect. Once a verb gets a new meaning, it often forms its *own* new aspectual pair using the suffixation method mentioned above.
 
 **Example with «писати» (to write):**
 
@@ -75,7 +75,7 @@ It's important to realize that adding a prefix can change the core meaning of a 
 This hierarchical system is what makes Ukrainian verb morphology so rich and precise. You start with a root, add a prefix for meaning/aspect, and then potentially add a suffix to recapture the process.
 
 > [!reflection] **The Logic of Finding**
-> Notice the pair **шукати / знайти**. In Ukrainian logic, "finding" is not just another type of action, but the successful _perfection_ of "searching." This shows how aspect is deeply woven into the very semantics of the word roots themselves. It reflects a mindset where the search and the discovery are two sides of the same coin.
+> Notice the pair **шукати / знайти**. In Ukrainian logic, "finding" is not just another type of action, but the successful *perfection* of "searching." This shows how aspect is deeply woven into the very semantics of the word roots themselves. It reflects a mindset where the search and the discovery are two sides of the same coin.
 
 > [!tip] **Suffix Shortcut**
 > If a verb ends in **-вати** or **-увати**, it's almost always **imperfective**. Removing the suffix (and sometimes adjusting the stem) often reveals the perfective form. This is your quickest hint for identifying whether you are talking about an intention or an achievement!

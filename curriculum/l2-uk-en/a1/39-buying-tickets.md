@@ -152,12 +152,8 @@ Don't forget your **паспорт**! You often need it to buy train tickets in 
 
 ## Need More Practice?
 
-
-
 - **Online Booking:** Visit the Ukrzaliznytsia website (booking.uz.gov.ua) and try to "buy" a ticket (without paying) to see the interface.
 
 - **Plan a Trip:** Imagine you are going from Kyiv to Lviv. Write down the dialogue you would have at the station.
 
 - **Timetables:** Look up a train schedule online and read the departure and arrival times in Ukrainian.
-
-

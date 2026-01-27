@@ -3,6 +3,7 @@
 ## Current Problems
 
 ### 1. Scope Compression
+
 The current plan tries to cover **7000+ years** in **24 content modules**:
 - M71 alone covers Trypillia (5000 BC) to Kyiv founding (882 AD) = 6000 years
 - Cossack era (1550-1700) gets only 5 modules despite being THE formative period
@@ -10,6 +11,7 @@ The current plan tries to cover **7000+ years** in **24 content modules**:
 - 2014-present gets 1 module for an ongoing existential war
 
 ### 2. Mazepa Erasure
+
 M79 "Hetmanate Period" lumps Mazepa with general hetmanate history. This is absurd. Mazepa was:
 - **THE** pre-Bandera Ukrainian villain in Russian propaganda
 - A major European cultural figure (patron of baroque architecture, education, literature)
@@ -19,6 +21,7 @@ M79 "Hetmanate Period" lumps Mazepa with general hetmanate history. This is absu
 Cramming him into "Hetmanate Period" with vocab "гетьманщина, автономія" is an insult.
 
 ### 3. Missing Decolonization Depth
+
 The current plan mentions "decolonization" but doesn't execute it:
 - Pereiaslav myths get 1 module (good)
 - But Valuev Decree, Ems Ukaz, Shevelov's censorship get nothing
@@ -26,6 +29,7 @@ The current plan mentions "decolonization" but doesn't execute it:
 - Missing: How Russian historiography erased Ukraine
 
 ### 4. Dialogs in History Modules
+
 The template doesn't require them, but they crept in. History modules should be **reading-centric**—primary sources, narratives, analysis. Not tourist dialogs.
 
 ---
@@ -176,16 +180,19 @@ With restructure: **B2.1-B2.2 (70) + B2.3 (50) + B2.4 (15) = 135 modules**
 ## Template Changes Required
 
 ### Remove from History Template:
+
 - [ ] Dialog requirements (irrelevant to history modules)
 - [ ] "Реальна ситуація" dialogues
 
 ### Add to History Template:
+
 - [ ] Primary source requirements (at least 2 per module)
 - [ ] Decolonization framing guide
 - [ ] Era-specific vocabulary lists
 - [ ] Historiographical notes (Ukrainian vs. Russian interpretation)
 
 ### Adjust Audit:
+
 - [ ] Reduce "engagement" requirement for history (content IS engagement)
 - [ ] Increase "cultural" and "realworld" weights
 - [ ] Add "primary_sources" metric (count `[!quote]` blocks)
@@ -206,6 +213,7 @@ With restructure: **B2.1-B2.2 (70) + B2.3 (50) + B2.4 (15) = 135 modules**
 ## Mazepa Deep Dive (Why 3 Modules)
 
 ### M91: Іван Мазепа I — Державник
+
 **Focus:** Political career, diplomacy, administration
 - Rise to power, relationship with Peter I
 - Hetmanate administration reforms
@@ -214,6 +222,7 @@ With restructure: **B2.1-B2.2 (70) + B2.3 (50) + B2.4 (15) = 135 modules**
 - Orthodox church relations
 
 ### M92: Іван Мазепа II — Освіта і культура
+
 **Focus:** Cultural patronage, education
 - Kyiv-Mohyla Academy expansion
 - Baroque architecture patronage (churches, monasteries)
@@ -222,6 +231,7 @@ With restructure: **B2.1-B2.2 (70) + B2.3 (50) + B2.4 (15) = 135 modules**
 - Why this matters: Counter-narrative to "traitor" myth
 
 ### M93: Полтава і вигнання
+
 **Focus:** Swedish alliance, defeat, exile
 - Why alliance with Charles XII made sense
 - Poltava battle (1709)

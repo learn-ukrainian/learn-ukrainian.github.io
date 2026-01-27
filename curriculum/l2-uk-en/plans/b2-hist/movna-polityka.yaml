@@ -67,12 +67,6 @@ activity_hints:
   focus: Фрагменти мовних законів
   source: Законодавство України
   items: 4
-- type: quiz
-  focus: Мовна політика України
-  items: 15
-- type: match-up
-  focus: Рік → мовний закон
-  items: 10
 - type: true-false
   focus: Міфи про «утиски російської мови»
   items: 10

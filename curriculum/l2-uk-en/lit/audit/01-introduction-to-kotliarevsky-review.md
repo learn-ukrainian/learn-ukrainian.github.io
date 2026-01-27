@@ -1,10 +1,12 @@
 # Audit Report: M01 — 01-introduction-to-kotliarevsky.md
+
 **Level:** LIT | **Module:** M01 | **Phase:** LIT.1 | **Pedagogy:** literature | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:57:30
 
 ## Configuration
+
 **Type:** LIT-literature
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Іван Котляревський: Біографія та Контекст | 3 | 1 | ✅ |
@@ -35,11 +38,13 @@
 - Low density activities: 0
 
 ## Recommendation
+
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 3671/4000 (raw: 3843)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
@@ -58,10 +63,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 97% (minimum: 90%)
 **Module Type:** literature
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
@@ -77,6 +84,7 @@
 | **TOTAL** | | | | | **97.1%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 34 | Included in Core |

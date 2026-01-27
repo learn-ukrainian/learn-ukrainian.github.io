@@ -215,7 +215,7 @@ LSP is a **structural validator**, not a natural language checker. It cannot val
      # ← Should show error: missing required field 'items'
    ```
 3. Hover over errors to see validation messages
-4. Type `type: ` and see autocomplete suggestions
+4. Type `type:` and see autocomplete suggestions
 
 ### Test Markdown Linting
 

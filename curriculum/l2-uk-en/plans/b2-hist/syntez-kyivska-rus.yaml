@@ -75,26 +75,11 @@ vocabulary_hints:
   - Грушевський (Hrushevsky)
   - деколонізація (decolonization)
 activity_hints:
-- type: match-up
-  focus: Comprehensive Kyivan Rus timeline (Chronology)
-  items: 20+ key events
-- type: fill-in
-  focus: Review all Phase 2 terminology
-  items: 30+
 - type: comparative-study
   focus: Ukrainian vs Russian views on Rus legacy
   output: Critical analysis table
 - type: essay-response
   focus: Чому Київська Русь важлива для української ідентичності?
-- type: quiz
-  focus: Comprehensive Phase 2 review
-  items: 25+
-- type: quiz
-  focus: Geography Review (Kyivan Rus at its peak vs fragmented)
-  items: 8+
-- type: group-sort
-  focus: Match achievements to rulers
-  items: 15+
 - type: essay-response
   focus: Хто є справжнім спадкоємцем Київської Русі?
 focus: history

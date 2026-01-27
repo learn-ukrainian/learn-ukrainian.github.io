@@ -24,16 +24,16 @@
 
 ## Linguistic Accuracy Issues
 
-- _Fixed:_ Vocabulary extraction errors (`дзвін` -> `дзвонити`, `ум` -> `умовний`, proper nouns capitalization).
+- *Fixed:* Vocabulary extraction errors (`дзвін` -> `дзвонити`, `ум` -> `умовний`, proper nouns capitalization).
 
 ## Strengths
 
-- **Etymology:** The note about _якщо_ coming from _яко + ща_ is a great piece of linguistic trivia.
+- **Etymology:** The note about *якщо* coming from *яко + ща* is a great piece of linguistic trivia.
 - **Real World Usage:** Mentioning the clipped colloquial "Якщо що — дзвони" is very helpful for understanding casual speech.
 
 ## Issues
 
-- _Fixed:_ Semantic errors in vocabulary extraction.
+- *Fixed:* Semantic errors in vocabulary extraction.
 
 ## Recommendation
 

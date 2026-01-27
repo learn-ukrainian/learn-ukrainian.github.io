@@ -12,11 +12,11 @@
 | ------------------- | ----- | ---------------------------------------------------------------------- |
 | Coherence           | 10/10 | Well-structured division between Collectives and Fractions.            |
 | Relevance           | 10/10 | Collectives are frequent in spoken Ukrainian (children, items).        |
-| Educational         | 10/10 | Clear rules on _when_ to use collectives (men, kids, pluralia tantum). |
+| Educational         | 10/10 | Clear rules on *when* to use collectives (men, kids, pluralia tantum). |
 | Language            | 10/10 | Standard usage; proper distinction of pivtora/pivtory.                 |
 | Pedagogy            | 10/10 | Good use of "Sociology" context to make numbers interesting.           |
 | Immersion           | 9/10  | Census/polling context is effective.                                   |
-| Activities          | 10/10 | Targets agreement errors (e.g., _троє сестер_ - wrong).                |
+| Activities          | 10/10 | Targets agreement errors (e.g., *троє сестер* - wrong).                |
 | Richness            | 9/10  | Good context.                                                          |
 | Humanity            | 9/10  | Engaging.                                                              |
 | LLM Fingerprint     | 9/10  | Natural.                                                               |

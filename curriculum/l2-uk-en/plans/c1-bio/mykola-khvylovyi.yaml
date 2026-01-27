@@ -69,22 +69,10 @@ activity_hints:
   focus: Уривки з памфлетів та прози Хвильового
   source: Оригінальні твори
   items: 3 passages
-- type: quiz
-  focus: Біографія та літературна дискусія
-  items: 12+
-- type: match-up
-  focus: Твори та ідеї
-  items: 10+
 - type: essay-response
   focus: Чому гасло «Геть від Москви!» актуальне сьогодні?
   word_target: 300
   output: Contemporary analysis
-- type: group-sort
-  focus: Етапи творчості та ключові ідеї
-  items: 12+
-- type: fill-in
-  focus: Літературознавча та ідеологічна лексика
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-57-les-kurbas
@@ -107,3 +95,7 @@ sources:
   notes: Доля української інтелігенції 1920-30-х
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of микола хвильовий: геть від москви!'
+- Evaluate the contributions of бунтар, що обрав смерть
+- Trace the career and influence of спадщина та реабілітація

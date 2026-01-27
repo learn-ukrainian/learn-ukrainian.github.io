@@ -12,7 +12,7 @@
 | ------------------- | ----- | --------------------------------------------------------------------- |
 | Coherence           | 10/10 | Logical tour: Lviv -> Carpathians -> Castles.                         |
 | Relevance           | 10/10 | High. Lviv is the #1 tourist destination in Ukraine.                  |
-| Educational         | 10/10 | Explains _Galychna_ vs _Volyn_ vs _Transcarpathia_ distinctions well. |
+| Educational         | 10/10 | Explains *Galychna* vs *Volyn* vs *Transcarpathia* distinctions well. |
 | Language            | 10/10 | Rich cultural vocabulary (`бануш`, `трембіта`).                       |
 | Pedagogy            | 10/10 | Narrative Arc (Hutsul traditions) is magical.                         |
 | Immersion           | 10/10 | Lviv Coffee mining legend + Carpathian molfars = Peak atmosphere.     |
@@ -25,8 +25,8 @@
 ## Linguistic Accuracy Issues
 
 - **Vocabulary:** `п'єрникнути`. This looks like a hallucination or a very obscure dialect word. `Пряник` is gingerbread. `П'єр` is a name. `Никнути` is to fade.
-  - _Investigation:_ Maybe meant _переникнути_ (permeate)? Or related to _piernik_ (Polish for gingerbread)?
-  - _Action:_ Remove.
+  - *Investigation:* Maybe meant *переникнути* (permeate)? Or related to *piernik* (Polish for gingerbread)?
+  - *Action:* Remove.
 
 ## Strengths
 

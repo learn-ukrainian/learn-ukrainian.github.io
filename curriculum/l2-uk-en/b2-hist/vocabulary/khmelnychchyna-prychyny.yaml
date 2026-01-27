@@ -2,128 +2,128 @@ module: khmelnychchyna-prychyny
 level: B2
 version: '2.0'
 items:
-  - lemma: повстання
-    ipa: /pou̯ˈstɑnʲːɐ/
-    translation: uprising / rebellion
-    pos: noun
-    gender: n
-  - lemma: гніт
-    ipa: /ɦnʲit/
-    translation: oppression
-    pos: noun
-    gender: m
-  - lemma: унія
-    ipa: /ˈunijɐ/
-    translation: union (religious or political)
-    pos: noun
-    gender: f
-  - lemma: шляхта
-    ipa: /ˈʃlʲɑxtɐ/
-    translation: szlachta (nobility)
-    pos: noun
-    gender: f
-  - lemma: реєстр
-    ipa: /reˈjɛstr/
-    translation: register (list of paid cossacks)
-    pos: noun
-    gender: m
-  - lemma: універсал
-    ipa: /uniu̯erˈsɑɫ/
-    translation: universal (decree/manifesto)
-    pos: noun
-    gender: m
-  - lemma: союз
-    ipa: /soˈjuz/
-    translation: alliance
-    pos: noun
-    gender: m
-  - lemma: засідка
-    ipa: /ˈzɑsʲidkɐ/
-    translation: ambush
-    pos: noun
-    gender: f
-  - lemma: перемога
-    ipa: /pereˈmɔɦɐ/
-    translation: victory
-    pos: noun
-    gender: f
-  - lemma: воля
-    ipa: /ˈvɔlʲɐ/
-    translation: freedom / will
-    pos: noun
-    gender: f
-  - lemma: магнат
-    ipa: /mɐɦˈnɑt/
-    translation: magnate
-    pos: noun
-    gender: m
-  - lemma: хутір
-    ipa: /ˈxutir/
-    translation: khutir (farmstead)
-    pos: noun
-    gender: m
-  - lemma: свавілля
-    ipa: /su̯ɐˈvʲilʲːɐ/
-    translation: arbitrariness / lawlessness
-    pos: noun
-    gender: n
-  - lemma: кривда
-    ipa: /ˈkrɪu̯dɐ/
-    translation: injustice / wrong
-    pos: noun
-    gender: f
-  - lemma: привід
-    ipa: /ˈprɪu̯id/
-    translation: pretext / occasion
-    pos: noun
-    gender: m
-  - lemma: хан
-    ipa: /xɑn/
-    translation: khan
-    pos: noun
-    gender: m
-  - lemma: орда
-    ipa: /orˈdɑ/
-    translation: horde
-    pos: noun
-    gender: f
-  - lemma: авангард
-    ipa: /ɐu̯ɐnˈɦɑrd/
-    translation: vanguard
-    pos: noun
-    gender: m
-  - lemma: полон
-    ipa: /poˈɫɔn/
-    translation: captivity
-    pos: noun
-    gender: m
-  - lemma: яр
-    ipa: /jɑr/
-    translation: ravine
-    pos: noun
-    gender: m
-  - lemma: гать
-    ipa: /ɦɑtʲ/
-    translation: dam / causeway
-    pos: noun
-    gender: f
-  - lemma: паніка
-    ipa: /ˈpɑnikɐ/
-    translation: panic
-    pos: noun
-    gender: f
-  - lemma: викуп
-    ipa: /ˈvɪkʊp/
-    translation: ransom
-    pos: noun
-    gender: m
-  - lemma: посол
-    ipa: /poˈsɔɫ/
-    translation: ambassador / envoy
-    pos: noun
-    gender: m
-  - lemma: віче
-    ipa: /ˈvit͡ʃe/
-    translation: viche (popular assembly)
-    pos: noun
-    gender: n
+- lemma: повстання
+  ipa: /pou̯ˈstɑnʲːɐ/
+  translation: uprising / rebellion
+  pos: noun
+  gender: n
+- lemma: гніт
+  ipa: /ɦnʲit/
+  translation: oppression
+  pos: noun
+  gender: m
+- lemma: унія
+  ipa: /ˈunijɐ/
+  translation: union (religious or political)
+  pos: noun
+  gender: f
+- lemma: шляхта
+  ipa: /ˈʃlʲɑxtɐ/
+  translation: szlachta (nobility)
+  pos: noun
+  gender: f
+- lemma: реєстр
+  ipa: /reˈjɛstr/
+  translation: register (list of paid cossacks)
+  pos: noun
+  gender: m
+- lemma: універсал
+  ipa: /uniu̯erˈsɑɫ/
+  translation: universal (decree/manifesto)
+  pos: noun
+  gender: m
+- lemma: союз
+  ipa: /soˈjuz/
+  translation: alliance
+  pos: noun
+  gender: m
+- lemma: засідка
+  ipa: /ˈzɑsʲidkɐ/
+  translation: ambush
+  pos: noun
+  gender: f
+- lemma: перемога
+  ipa: /pereˈmɔɦɐ/
+  translation: victory
+  pos: noun
+  gender: f
+- lemma: воля
+  ipa: /ˈvɔlʲɐ/
+  translation: freedom / will
+  pos: noun
+  gender: f
+- lemma: магнат
+  ipa: /mɐɦˈnɑt/
+  translation: magnate
+  pos: noun
+  gender: m
+- lemma: хутір
+  ipa: /ˈxutir/
+  translation: khutir (farmstead)
+  pos: noun
+  gender: m
+- lemma: свавілля
+  ipa: /su̯ɐˈvʲilʲːɐ/
+  translation: arbitrariness / lawlessness
+  pos: noun
+  gender: n
+- lemma: кривда
+  ipa: /ˈkrɪu̯dɐ/
+  translation: injustice / wrong
+  pos: noun
+  gender: f
+- lemma: привід
+  ipa: /ˈprɪu̯id/
+  translation: pretext / occasion
+  pos: noun
+  gender: m
+- lemma: хан
+  ipa: /xɑn/
+  translation: khan
+  pos: noun
+  gender: m
+- lemma: орда
+  ipa: /orˈdɑ/
+  translation: horde
+  pos: noun
+  gender: f
+- lemma: авангард
+  ipa: /ɐu̯ɐnˈɦɑrd/
+  translation: vanguard
+  pos: noun
+  gender: m
+- lemma: полон
+  ipa: /poˈɫɔn/
+  translation: captivity
+  pos: noun
+  gender: m
+- lemma: яр
+  ipa: /jɑr/
+  translation: ravine
+  pos: noun
+  gender: m
+- lemma: гать
+  ipa: /ɦɑtʲ/
+  translation: dam / causeway
+  pos: noun
+  gender: f
+- lemma: паніка
+  ipa: /ˈpɑnikɐ/
+  translation: panic
+  pos: noun
+  gender: f
+- lemma: викуп
+  ipa: /ˈvɪkʊp/
+  translation: ransom
+  pos: noun
+  gender: m
+- lemma: посол
+  ipa: /poˈsɔɫ/
+  translation: ambassador / envoy
+  pos: noun
+  gender: m
+- lemma: віча
+  ipa: /ˈvit͡ʃe/
+  translation: viche (popular assembly)
+  pos: noun
+  gender: f

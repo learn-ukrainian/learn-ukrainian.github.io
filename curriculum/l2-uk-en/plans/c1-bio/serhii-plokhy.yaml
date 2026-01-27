@@ -69,22 +69,10 @@ activity_hints:
   focus: Excerpts from Plokhy's books
   source: Historical texts
   items: 3 passages
-- type: quiz
-  focus: Plokhy's biography and works
-  items: 12+
-- type: match-up
-  focus: Books and their historical topics
-  items: 10+
 - type: essay-response
   focus: How does Plokhy challenge traditional narratives?
   word_target: 300
   output: Historiographical analysis
-- type: group-sort
-  focus: Academic works vs. popular books
-  items: 12+
-- type: fill-in
-  focus: Key dates and book titles
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-105 (Shevelov - earlier diaspora scholar)
@@ -110,3 +98,7 @@ sources:
   notes: His major work on Ukrainian history
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of сергій плохій: історик, який пояснив україну світові'
+- Evaluate the contributions of голос україни в гарварді
+- Trace the career and influence of значення для україни

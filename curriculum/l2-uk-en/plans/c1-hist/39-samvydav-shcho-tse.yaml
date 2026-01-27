@@ -5,21 +5,21 @@ version: '2.0'
 title: 'Самвидав: Що це було?'
 content_outline:
 - section: Вступ — Підпільна література
-  words: 400
+  words: 457
   points:
   - Що таке самвидав?
   - Чому виник — цензура
   - Форми — машинопис, копії
   - Значення для опору
 - section: Історія самвидаву
-  words: 600
+  words: 686
   points:
   - Витоки — 1950-60-ті
   - «Відлига» — відносна свобода
   - Шістдесятники — нове покоління
   - Повернення репресій
 - section: Як працював самвидав
-  words: 600
+  words: 686
   points:
   - Техніка — друкарська машинка
   - Копіювання — 5-7 копій
@@ -27,7 +27,7 @@ content_outline:
   - Ризики — що загрожувало
   - Вивезення на Захід
 - section: Типи текстів
-  words: 500
+  words: 571
   points:
   - Літературні твори
   - Хроніки репресій
@@ -35,26 +35,26 @@ content_outline:
   - Переклади
   - Історичні дослідження
 - section: Український самвидав — особливості
-  words: 600
+  words: 686
   points:
   - Національне питання — центральне
   - Мова як опір
   - «Український вісник» Чорновола
   - Зв'язок із загальносоюзним
 - section: Фрагмент — Перший номер
-  words: 500
+  words: 571
   points:
   - Текст (з глосами)
   - Мета видання
   - Тон і стиль
   - Аудиторія
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Самвидав як феномен
   - Значення для історії
   - Підготовка до наступних модулів
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - самвидав (samizdat)
@@ -77,10 +77,10 @@ activity_hints:
 - type: reading
   focus: Sample samvydav text — introduction to a publication
   source: diasporiana.org.ua
-- type: process-analysis
+- type: critical-analysis
   focus: Map the samvydav production and distribution network
   output: Process diagram
-- type: risk-assessment
+- type: critical-analysis
   focus: What were the risks at each stage?
   output: Risk analysis
 - type: comparative-study
@@ -114,3 +114,6 @@ sources:
   notes: Diaspora digital archive
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of самвидав: що це було?'
+- Evaluate the historical significance of підпільна література

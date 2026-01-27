@@ -2,13 +2,13 @@
   "module": "bukovyna-zakarpattia",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:54:33.345345Z",
+  "last_audit": "2026-01-27T17:37:57.294913Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-25T21:31:52.412994Z",
+    "md": "2026-01-27T15:24:10.346766Z",
     "meta": "2026-01-26T22:20:12.967202Z",
-    "activities": "2026-01-25T21:29:25.302125Z",
-    "vocabulary": "2026-01-22T22:51:58.353660Z",
+    "activities": "2026-01-27T15:34:53.690827Z",
+    "vocabulary": "2026-01-27T11:24:53.717567Z",
     "plan": null
   },
   "gates": {
@@ -18,19 +18,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "3736/4000 (raw: 3926)"
+      "status": "pass",
+      "violations": 0,
+      "message": "4224/4000 (raw: 4418)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "8/3"
+      "message": "5/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 20 (soft target)"
+      "message": "20/20"
     },
     "naturalness": {
       "status": "pass",
@@ -39,11 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "1 Outline Compliance Errors"
-    ],
-    "pass_count": 3,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

@@ -433,3 +433,65 @@
     - text: Посуд
       correct: false
   instruction: Оберіть правильний переклад.
+- type: error-correction
+  title: Grammar Errors
+  items:
+  - sentence: Я йду до магазина.
+    error: магазина
+    answer: магазину
+    options: [магазину, магазина, магазині, магазином]
+    explanation: Genitive of магазин is магазину (masculine -ин → -у).
+  - sentence: Вона читає книга.
+    error: книга
+    answer: книгу
+    options: [книгу, книга, книги, книгою]
+    explanation: Accusative feminine -а → -у.
+  - sentence: Я купила новий сумка.
+    error: новий
+    answer: нову
+    options: [нову, новий, нова, нової]
+    explanation: Adjective must agree with feminine noun сумка.
+  - sentence: Він працюють у банку.
+    error: працюють
+    answer: працює
+    options: [працює, працюють, працюємо, працюєш]
+    explanation: Third person singular needs -є ending.
+  - sentence: Ми їхали до Львова вчора.
+    error: їхали
+    answer: поїхали
+    options: [поїхали, їхали, їдемо, їздили]
+    explanation: Single completed action requires perfective поїхали.
+  - sentence: Діти грають на футбол.
+    error: на
+    answer: у
+    options: [у, на, в, до]
+    explanation: Play football = грати у/в футбол.
+  instruction: Знайдіть і виправте помилку в реченні.
+- type: fill-in
+  title: Grammar Fill-In
+  instruction: Заповніть пропуски правильним словом.
+  items:
+    - sentence: 'Я іду [___] роботу.'
+      answer: на
+      options: [на, до, в, від]
+    - sentence: 'Вона живе [___] Києві.'
+      answer: у
+      options: [у, на, до, від]
+    - sentence: 'Він [___] українську мову щодня.'
+      answer: вивчає
+      options: [вивчає, вчиться, навчає, вивчати]
+    - sentence: 'Ми [___] в кіно вчора ввечері.'
+      answer: ходили
+      options: [ходили, ходимо, йшли, піти]
+    - sentence: 'Мені [___] допомога.'
+      answer: потрібна
+      options: [потрібна, потрібно, потрібні, потрібний]
+    - sentence: 'Вони [___] на концерт наступної суботи.'
+      answer: підуть
+      options: [підуть, йдуть, ходять, піти]
+    - sentence: 'Я [___] каву без цукру.'
+      answer: п'ю
+      options: [п'ю, їм, пити, випити]
+    - sentence: 'Студенти [___] іспит завтра.'
+      answer: складатимуть
+      options: [складатимуть, склали, складають, здавати]

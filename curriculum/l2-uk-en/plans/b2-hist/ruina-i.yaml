@@ -65,8 +65,6 @@ vocabulary_hints:
 activity_hints:
 - type: reading
   focus: Analysis of the Black Council description
-- type: quiz
-  focus: Chronology of the Ruin and key figures
 - type: essay-response
   focus: 'Causes of the Ruin: internal or external?'
 - type: comparative-study

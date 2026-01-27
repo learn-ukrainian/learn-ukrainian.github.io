@@ -67,15 +67,6 @@ activity_hints:
   focus: Звернення президента Зеленського
   source: Офіційні джерела
   items: 4
-- type: quiz
-  focus: Перші дні повномасштабного вторгнення
-  items: 15
-- type: match-up
-  focus: Дата → подія лютого-березня 2022
-  items: 10
-- type: fill-in
-  focus: Військова лексика
-  items: 10
 - type: essay-response
   focus: Чому російський план «три дні до Києва» провалився?
   word_target: 250

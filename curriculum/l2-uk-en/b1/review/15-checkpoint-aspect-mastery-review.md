@@ -24,9 +24,9 @@
 
 ## Linguistic Accuracy Issues
 
-- _Fixed:_ "Візьміть сдача" -> "Візьміть решту".
-- _Fixed:_ "ще похожу" -> "ще походжу".
-- _Fixed:_ "супплетивний" -> "суплетивний".
+- *Fixed:* "Візьміть сдача" -> "Візьміть решту".
+- *Fixed:* "ще похожу" -> "ще походжу".
+- *Fixed:* "супплетивний" -> "суплетивний".
 
 ## Strengths
 
@@ -36,7 +36,7 @@
 
 ## Issues
 
-- _Fixed:_ Vocabulary extraction errors and Russisms.
+- *Fixed:* Vocabulary extraction errors and Russisms.
 
 ## Recommendation
 

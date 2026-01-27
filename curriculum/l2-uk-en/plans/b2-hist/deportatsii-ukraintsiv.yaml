@@ -66,15 +66,6 @@ activity_hints:
   focus: Спогади депортованих лемків
   source: Усна історія
   items: 4
-- type: quiz
-  focus: Факти та хронологія депортацій
-  items: 15
-- type: match-up
-  focus: Регіон → доля населення
-  items: 10
-- type: fill-in
-  focus: Лексика переміщення та репресій
-  items: 10
 - type: essay-response
   focus: Чому операція «Вісла» — це етнічна чистка?
   word_target: 250

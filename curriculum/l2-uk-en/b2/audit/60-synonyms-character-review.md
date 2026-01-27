@@ -1,10 +1,12 @@
 # Audit Report: M60 — 60-synonyms-character.md
+
 **Level:** B2 | **Module:** M60 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:25
 
 ## Configuration
+
 **Type:** B2-vocab
 **Word Target:** 1750 words
 **Activities:** 10-14 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть точне слово | 12 | 8 | ✅ |
@@ -42,15 +45,18 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 60-synonyms-character.yaml: Schema validation error at key '13': {'type': 'select', 'title': 'Чесноти та Вади', 'instruction': 'Оберіть усі слова, що позначають позитивні якості (6 елементів).', 'items': [{'question': 'Які слова описують шляхетну людину? (Оберіть 6)', 'options': [{'text': 'милосердний', 'correct': True}, {'text': 'чуйний', 'correct': True}, {'text': 'щедрий', 'correct': True}, {'text': 'принциповий', 'correct': True}, {'text': 'незламний', 'correct': True}, {'text': 'сумлінний', 'correct': True}]}, {'question': 'Оберіть вади характеру:', 'options': [{'text': 'байдужість', 'correct': True}, {'text': 'егоїзм', 'correct': True}, {'text': 'жорстокість', 'correct': True}, {'text': 'мудрість', 'correct': False}]}, {'question': 'Які слова описують активну доброту?', 'options': [{'text': 'жертовний', 'correct': True}, {'text': 'невтомний', 'correct': True}, {'text': 'дбайливий', 'correct': True}, {'text': 'пасивний', 'correct': False}]}, {'question': 'Оберіть ознаки емоційного інтелекту:', 'options': [{'text': 'емпатія', 'correct': True}, {'text': 'співпереживання', 'correct': True}, {'text': 'чуйність', 'correct': True}, {'text': 'агресія', 'correct': False}]}, {'question': 'Які слова вказують на професійний характер?', 'options': [{'text': 'пунктуальний', 'correct': True}, {'text': 'відповідальний', 'correct': True}, {'text': 'сумлінний', 'correct': True}, {'text': 'лінивий', 'correct': False}]}, {'question': 'Оберіть риси сучасного лідера:', 'options': [{'text': 'харизматичний', 'correct': True}, {'text': 'далекоглядний', 'correct': True}, {'text': 'гнучкий', 'correct': True}, {'text': 'жорсткий', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
+
 - **Words:** ✅ 2671/1750 (raw: 2879)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
@@ -69,10 +75,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 97% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 76 | 24 | 100% | 20% | 20.0% |
@@ -88,6 +96,7 @@
 | **TOTAL** | | | | | **98.0%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 72 | Included in Core |

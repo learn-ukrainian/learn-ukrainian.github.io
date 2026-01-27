@@ -5,42 +5,19 @@ version: '2.0'
 title: Спорт в Україні
 subtitle: Spectator Sports and Ukrainian Athletes
 content_outline:
-- section: 'Introduction: Sports in Ukraine'
+- section: Історія та культура
+  words: 213
+- section: Сучасність
+  words: 700
+- section: Практика
   words: 150
-  points:
-  - Sports culture overview
-  - Popular sports
-  - National pride
-- section: Football
-  words: 250
-  points:
-  - Football traditions
-  - Famous clubs
-  - National team
-- section: Boxing and Combat Sports
-  words: 250
-  points:
-  - Boxing champions
-  - Klitschko brothers
-  - Usyk and others
-- section: Olympic Sports
-  words: 250
-  points:
-  - Olympic achievements
-  - Gymnastics, swimming
-  - Winter sports
-- section: Sports and Society
-  words: 200
-  points:
-  - Sports during wartime
-  - Athletes as ambassadors
-  - Sports diplomacy
-- section: 'Practice: Sports Discussion'
-  words: 100
-  points:
-  - Discuss favorite sports
-  - Talk about athletes
-word_target: 1200
+- section: Продукція
+  words: 339
+- section: Підсумок
+  words: 199
+- section: Потрібно більше практики?
+  words: 109
+word_target: 1710
 vocabulary_hints:
   required:
   - спорт (sport)
@@ -60,13 +37,13 @@ activity_hints:
 - type: reading
   focus: Athlete profiles and sports news
   items: 15
-- type: matching
+- type: match-up
   focus: Match athletes to sports
   items: 20
 - type: fill-in
   focus: Complete sports reports
   items: 15
-- type: discussion
+- type: quiz
   focus: Discuss sports preferences
   items: 10
 focus: culture

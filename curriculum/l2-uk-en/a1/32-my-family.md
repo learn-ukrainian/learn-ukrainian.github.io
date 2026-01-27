@@ -187,23 +187,13 @@
 
 ## Практика (Practice)
 
-
-
 Використовуйте ці вправи. Це гарна практика. (Use these exercises. This is good practice.)
-
-
 
 # Підсумок (Summary)
 
-
-
 Ви вивчили багато слів про сім'ю! Тепер ви знаєте, як звати ваших батьків, братів та сестер. (You learned many words about family! Now you know how to name your parents, brothers and sisters.) You're building a great foundation. Ви знаєте, як сказати «у мене є» або «у мене немає». Це був чудовий урок! (This was a great lesson!)
 
-
-
 ## Need More Practice?
-
-
 
 > [!tip]
 

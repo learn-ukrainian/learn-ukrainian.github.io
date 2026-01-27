@@ -12,7 +12,7 @@
 | ------------------- | ----- | ------------------------------------------------------------------------------------------- |
 | Coherence           | 10/10 | Logical flow: Empathy -> Conflict -> Forgiveness -> Praise.                                 |
 | Relevance           | 10/10 | High. "Non-violent communication" is a modern B1 standard.                                  |
-| Educational         | 10/10 | Excellent nuance: _вибачте_ (polite) vs _пробач_ (personal/emotional).                      |
+| Educational         | 10/10 | Excellent nuance: *вибачте* (polite) vs *пробач* (personal/emotional).                      |
 | Language            | 10/10 | Positive psychological vocabulary.                                                          |
 | Pedagogy            | 9/10  | Svitlana Roiz (child psychologist) is a perfect modern Ukrainian role model for this topic. |
 | Immersion           | 10/10 | Authentic.                                                                                  |
@@ -25,8 +25,8 @@
 ## Linguistic Accuracy Issues
 
 - **Vocabulary:** `надал` (Rafael Nadal?). The tennis player? In "Emotional Intelligence"?
-  - _Investigation:_ Maybe meant _надалі_ (in future)? Or it's a hallucination. There is no context for Nadal in the visible text.
-  - _Action:_ Recommend removal.
+  - *Investigation:* Maybe meant *надалі* (in future)? Or it's a hallucination. There is no context for Nadal in the visible text.
+  - *Action:* Recommend removal.
 - **Vocabulary:** `Ройз` is lowercased `ройз`. Should be capitalized.
 
 ## Strengths

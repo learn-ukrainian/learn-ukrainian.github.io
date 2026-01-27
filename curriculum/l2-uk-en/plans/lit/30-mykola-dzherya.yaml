@@ -6,42 +6,42 @@ title: 'Микола Джеря: Епос Кріпацької Долі'
 subtitle: 'Mykola Dzherya: Epic of Serf Fate'
 content_outline:
 - section: Вступ — Тема кріпацтва в літературі
-  words: 500
+  words: 625
   points:
   - Шевченко і Нечуй — різні підходи
   - Чому "Микола Джеря" особливий
   - Історичний контекст (1840-1861)
 - section: Образ Миколи
-  words: 800
+  words: 1000
   points:
   - Зовнішність і характер
   - Бунтар vs жертва
   - Серп як символ спротиву
 - section: Сюжет як одіссея
-  words: 700
+  words: 875
   points:
   - Втеча з Вербівки
   - Бурлакування на цукроварні
   - Повернення до хрестів
 - section: Жіночі образи
-  words: 600
+  words: 750
   points:
   - Нимидора — кохана
   - Мати — жертва системи
   - Трагедія очікування
 - section: Реформа 1861 року
-  words: 600
+  words: 750
   points:
   - Як Нечуй показує визволення
   - Ціна свободи
   - Іронія фіналу
 - section: Підсумок — Від Енея до Джері
-  words: 400
+  words: 500
   points:
   - Еволюція українського героя (курсовий підсумок)
   - Від сміху до правди
   - Що далі (література ХХ століття)
-word_target: 4000
+word_target: 4500
 vocabulary_hints:
   required:
   - кріпацтво (serfdom)
@@ -65,19 +65,10 @@ activity_hints:
   focus: Сцена з серпом, фінал повісті
   source: UkrLib tid=908
   items: 5+
-- type: quiz
-  focus: Сюжет та образи повісті
-  items: 15+
-- type: match-up
-  focus: Персонаж → його роль
-  items: 10+
 - type: essay-response
   focus: Еволюція українського героя (курсовий підсумок)
   word_target: 400
   output: Підсумкове есе
-- type: cloze
-  focus: Ключові сцени та цитати
-  items: 15+
 focus: literature
 pedagogy: Seminar
 prerequisites:

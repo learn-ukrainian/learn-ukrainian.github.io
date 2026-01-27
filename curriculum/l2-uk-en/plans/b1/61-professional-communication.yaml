@@ -5,42 +5,23 @@ version: '2.0'
 title: Професійна комунікація
 subtitle: Professional Communication
 content_outline:
-- section: 'Introduction: Professional Language'
-  words: 150
+- section: Вступ
+  words: 319
   points:
   - Workplace communication needs
   - Formal vs informal register
   - Professional context
-- section: Workplace Basics
-  words: 250
+- section: Читання
+  words: 979
   points:
-  - колега, керівник, підлеглий
-  - відділ, компанія, організація
-  - Workplace roles and structures
-- section: Meetings and Communication
-  words: 250
-  points:
-  - нарада, зустріч, презентація
-  - обговорювати, доповідати
-  - Meeting vocabulary
-- section: Documents and Reports
-  words: 250
-  points:
-  - звіт, протокол, договір
-  - складати, підписувати
-  - Business documents
-- section: Professional Actions
-  words: 200
-  points:
-  - співпрацювати, координувати
-  - делегувати, контролювати
-  - Management verbs
-- section: 'Practice: Workplace Scenarios'
-  words: 100
+  - Professional texts and documents
+  - Workplace scenarios
+- section: Діалоги
+  words: 1702
   points:
   - Professional dialogues
   - Formal correspondence
-word_target: 1200
+word_target: 3000
 vocabulary_hints:
   required:
   - колега (colleague)
@@ -57,16 +38,16 @@ vocabulary_hints:
   - делегувати (to delegate)
   - координувати (to coordinate)
 activity_hints:
-- type: collocation
+- type: match-up
   focus: Professional noun phrases
   items: 25
-- type: role-play
+- type: cloze
   focus: Workplace scenarios
   items: 20
 - type: fill-in
   focus: Complete professional texts
   items: 15
-- type: writing
+- type: cloze
   focus: Write professional messages
   items: 10
 focus: vocabulary

@@ -5,53 +5,53 @@ version: '2.0'
 title: 'Полтава 1709: Якби Мазепа переміг?'
 content_outline:
 - section: Вступ — Доля Європи на одному полі
-  words: 400
+  words: 457
   points:
   - Полтава — вирішальна битва
   - Що планував Мазепа
   - Контрфактичний підхід
   - Структура модуля
 - section: План Мазепи-Карла
-  words: 600
+  words: 686
   points:
   - Союз зі Швецією — умови
   - Конституція Орлика — підготовка
   - Військовий план
   - Що мало статися
 - section: Чому програли
-  words: 600
+  words: 686
   points:
   - Батурин — втрата бази
   - Зима 1708-1709
   - Недостатня підтримка козаків
   - Помилки Карла XII
 - section: Сценарій перемоги
-  words: 700
+  words: 800
   points:
   - Якби Швеція перемогла
   - Росія без виходу в Європу
   - Українська автономія під Швецією
   - Європейський баланс — інший
 - section: Наслідки для України
-  words: 500
+  words: 571
   points:
   - Конституція Орлика — можлива реальність
   - Залежність від Швеції — краща чи гірша?
   - Шведська імперія — що з нею стало
   - Довгострокові сценарії
 - section: Наслідки для Європи
-  words: 400
+  words: 457
   points:
   - Росія як імперія — без Полтави?
   - Балтика — шведське озеро
   - XVIII століття — інший сценарій
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Полтава — поворотний момент
   - Альтернативна історія — уроки
   - Перехід до УНР
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - Полтава (Poltava)
@@ -74,13 +74,13 @@ activity_hints:
 - type: essay-response
   focus: Swedish victory at Poltava — full scenario
   output: Alternative history
-- type: battle-analysis
+- type: critical-analysis
   focus: Why did Mazepa-Charles lose?
   output: Military analysis
-- type: constitutional-analysis
+- type: critical-analysis
   focus: Orlik Constitution — would it have worked?
   output: Constitutional analysis
-- type: european-impact
+- type: critical-analysis
   focus: Russia without Poltava victory
   output: European history counterfactual
 - type: essay-response
@@ -110,3 +110,6 @@ sources:
   notes: Mazepa's plan
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of полтава 1709: якби мазепа переміг?'
+- Evaluate the historical significance of доля європи на одному полі

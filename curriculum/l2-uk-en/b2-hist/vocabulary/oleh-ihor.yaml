@@ -11,6 +11,7 @@ items:
   ipa: /wɑˈrʲɑhɪ/
   translation: Varangians
   pos: noun
+  gender: m
 - lemma: дружина
   ipa: /druˈʒɪnɑ/
   translation: druzhina/retinue
@@ -75,6 +76,7 @@ items:
   ipa: /tɔrhɔˈwɛlʲnʲi prɪwʲiˈlɛji/
   translation: trade privileges
   pos: noun
+  gender: m
 - lemma: легітимність
   ipa: /lɛhʲiˈtɪmnʲisʲtʲ/
   translation: legitimacy

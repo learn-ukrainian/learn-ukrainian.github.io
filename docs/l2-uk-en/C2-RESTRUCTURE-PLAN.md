@@ -1,6 +1,7 @@
 # C2 Restructure Plan - Implementation Strategy
 
 ## Goal
+
 Establish a robust implementation strategy for the C2 Curriculum (Modules 03-80) to ensure they match the "Gold Standard" quality of the existing Modules 01-02.
 
 **Status Assessment (2025-12-15):**
@@ -9,45 +10,51 @@ Establish a robust implementation strategy for the C2 Curriculum (Modules 03-80)
 - **Restructure Need**: **NONE**. The C2 curriculum is proceeding correctly. This document establishes **Implementation Governance**.
 
 ## Proposed Changes
+
 C2 is a greenfield project focused on **Mastery & Stylistics**.
 
 ### 1. Implementation Strategy: Greenfield Creation
+
 For Modules 03-80, we will follow the **"Create"** strategy with strict adherence to the 4-phase curriculum structure.
 
 1.  **Template**: Use M02 (`02-euphony-complete-system.md`) as the template for "Concept Heavy" modules.
 2.  **Pedagogy**: Focus on **Stylistic Precision** and **Creative Production**.
-    *   *Activities*: Must include "Transform" (Style rewriting) and "Analyze" (Literary critique).
-    *   *Immersion*: **100% Ukrainian**. English is allowed ONLY in vocabulary table translations.
+    -   *Activities*: Must include "Transform" (Style rewriting) and "Analyze" (Literary critique).
+    -   *Immersion*: **100% Ukrainian**. English is allowed ONLY in vocabulary table translations.
 3.  **Vocabulary Strategy: Expansion & De-duplication**
     We will conduct a **Vocabulary Review** for every module during the creation process:
 
     1.  **Expansion**: Ensure each module introduces ~25 *new* high-level stylistic/literary words.
     2.  **Drilling Focus**: Distinguish between "Active Vocabulary" (drilled in activities) and "Passive Vocabulary" (contextual in literary readings).
     3.  **De-duplication Policy**:
-        *   **Check**: Verify new words against the `vocab.db` (accumulated A1-C1 vocabulary) to prevent re-teaching known words.
-        *   **Register/Shade**: Duplicates allowed ONLY if analyzing shade of meaning (e.g., *йти* vs *шкандибати* vs *чимчикувати*).
-        *   **Form**: Ensure base forms are unique unless teaching specific stylistic variants.
+        -   **Check**: Verify new words against the `vocab.db` (accumulated A1-C1 vocabulary) to prevent re-teaching known words.
+        -   **Register/Shade**: Duplicates allowed ONLY if analyzing shade of meaning (e.g., *йти* vs *шкандибати* vs *чимчикувати*).
+        -   **Form**: Ensure base forms are unique unless teaching specific stylistic variants.
 
 ### 2. State Standard Compliance
+
 Aligned with C2 ("Рівень вільного володіння другого ступеня").
-*   **Key Requirements**:
-    *   Full euphonic mastery (M02 - done).
-    *   Publication-ready academic writing (M03-M13).
-    *   Literary creation (M21-M40).
+-   **Key Requirements**:
+  -   Full euphonic mastery (M02 - done).
+  -   Publication-ready academic writing (M03-M13).
+  -   Literary creation (M21-M40).
 
 ## Acceptance Criteria for C2 Compliance
 
 ### 1. Pedagogical Compliance
+
 - [ ] **Stylistic Transformation**: Every module must task the learner with rewriting a text from one style to another.
 - [ ] **Model Answers**: MANDATORY for all creative writing tasks.
 - [ ] **Immersion**: 100% Ukrainian (English only in vocabulary translations).
 
 ### 2. Module Richness (Audit Pass)
+
 - [ ] **Word Count**: > 1200 words (C2 modules are dense theoretical & literary texts).
 - [ ] **Activity Density**: > 16 activities, > 15 items per activity (per C2-CURRICULUM-PLAN.md).
 - [ ] **Authenticity**: Use excerpts from real modern Ukrainian literature/media.
 
 ### 3. Verification
+
 - [ ] **Automated**: `audit_module.py` passes.
 - [ ] **Manual**: "Vibe Check" - does it feel like a native-level literary text?
 

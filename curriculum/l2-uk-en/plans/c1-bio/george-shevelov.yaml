@@ -69,22 +69,10 @@ activity_hints:
   focus: Excerpts from Shevelov's works
   source: Encyclopedia articles and adaptations
   items: 3 passages
-- type: quiz
-  focus: Shevelov's biography and contributions
-  items: 12+
-- type: match-up
-  focus: His works and their significance
-  items: 10+
 - type: essay-response
   focus: How did Shevelov prove Ukrainian language continuity?
   word_target: 300
   output: Summary of his arguments against Russian myths
-- type: group-sort
-  focus: Shevelov's diaspora vs. Soviet-era linguistics
-  items: 12+
-- type: fill-in
-  focus: Key terms from Historical Phonology
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-104 (Oleksander Potebnya - predecessor)
@@ -110,3 +98,7 @@ sources:
   notes: His magnum opus
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of юрій шевельов: архітектор української лінгвістики'
+- Evaluate the contributions of голос української мови у світі
+- Trace the career and influence of спадщина та повернення в україну

@@ -5,42 +5,34 @@ version: '2.0'
 title: Online Services
 subtitle: Apps and Delivery
 content_outline:
-- section: 'Introduction: Digital Services'
-  words: 100
+- section: 'Introduction (Вступ)'
+  words: 155
   points:
   - Online services in Ukraine
   - Popular apps
+- section: 'Presentation (Презентація)'
+  words: 380
+  points:
   - Service vocabulary
-- section: Food Delivery Apps
-  words: 200
-  points:
   - замовлення, кошик, доставка
-  - Placing orders
-  - Tracking delivery
-- section: Online Banking
-  words: 200
-  points:
-  - переказ, баланс, виписка
-  - Basic transactions
-  - Security vocabulary
-- section: Ride-sharing Apps
-  words: 200
-  points:
-  - таксі, водій, маршрут
-  - Ordering a ride
-  - Payment options
-- section: Customer Support
-  words: 150
-  points:
-  - звернення, скарга, допомога
-  - Writing support requests
-  - Understanding responses
-- section: 'Practice: Using Apps'
-  words: 150
+- section: 'Practice (Практика)'
+  words: 35
   points:
   - Order food delivery
-  - Use banking app
-word_target: 1000
+- section: 'Dialogues (Діалоги)'
+  words: 165
+  points:
+  - Customer support conversation
+  - App interactions
+- section: 'Narrative (Розповідь)'
+  words: 310
+  points:
+  - Online services story
+- section: 'Need More Practice?'
+  words: 45
+  points:
+  - Summary and links
+word_target: 1090
 vocabulary_hints:
   required:
   - замовлення (order)
@@ -59,18 +51,15 @@ vocabulary_hints:
   - повернення (refund)
   - промокод (promo code)
 activity_hints:
-- type: vocabulary-drill
+- type: match-up
   focus: Online services vocabulary
   items: 25
-- type: reading-comprehension
-  focus: Understand app interfaces
+- type: quiz
+  focus: Understand app interfaces (reading comprehension)
   items: 15
 - type: fill-in
   focus: Complete service requests
   items: 15
-- type: dialogue
-  focus: Customer support conversation
-  items: 10
 focus: practical
 pedagogy: PPP
 prerequisites:

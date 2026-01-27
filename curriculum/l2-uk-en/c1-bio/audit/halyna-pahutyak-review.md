@@ -1,10 +1,12 @@
 # Audit Report: M116 — halyna-pahutyak.md
+
 **Level:** C1 | **Module:** M116 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:55
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Життя та філософія Галини Пагутяк | 5 | 5 | ✅ |
@@ -41,22 +44,26 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in halyna-pahutyak.yaml: Schema validation error at key '7': {'type': 'fill-in', 'title': 'Естетика та місія письменниці', 'items': [{'sentence': 'Творчість Пагутяк є прикладом повернення до власних метафізичних [джерел].', 'answer': 'джерел', 'options': ['джерел', 'ілюзій', 'проблем', 'схем']}, {'sentence': 'Вона вчить читача не боятися [самотності], бо саме в ній народжується свобода.', 'answer': 'самотності', 'options': ['самотності', 'натовпу', 'влади', 'злиднів']}, {'sentence': 'Для неї література — це не спосіб розваги, а інструмент порятунку [душі] від байдужості.', 'answer': 'душі', 'options': ['душі', 'тіла', 'гаманця', 'рейтингу']}, {'sentence': 'Авторка сприймає природу як [сакральний] простір, де кожна істота має значення.', 'answer': 'сакральний', 'options': ['сакральний', 'технічний', 'пустий', 'небезпечний']}, {'sentence': 'Її проза допомагає долати імперські [шаблони] та будувати власну ідентичність.', 'answer': 'шаблони', 'options': ['шаблони', 'будинки', 'дороги', 'парки']}, {'sentence': 'Пагутяк залишається «голосом [совісті]» у питаннях відповідальності людини перед вічністю.', 'answer': 'совісті', 'options': ['совісті', 'влади', 'грошей', 'реклами']}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[FORBIDDEN_HEADER_TONE]** Header '## Сучасний етап' is inappropriate for a deceased person. Use '## Останні роки' instead.
   - FIX: Rename '## Сучасний етап' to '## Останні роки' to maintain correct biographical tone.
 - ❌ **[FORBIDDEN_HEADER_TONE]** Header '## Вплив' is inappropriate for a deceased person. Use '## Спадщина' instead.
   - FIX: Rename '## Вплив' to '## Спадщина' to maintain correct biographical tone.
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 3 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2112/4000 (raw: 2324)
 - **Activities:** ✅ 12/3
 - **Density:** ✅ All > 1
@@ -75,10 +82,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 5 | 4 | 100% | 19% | 19.0% |
@@ -94,6 +103,7 @@
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 68 | Included in Core |

@@ -53,8 +53,6 @@ vocabulary_hints:
 activity_hints:
 - type: reading
   focus: Chronicle accounts of Orsha
-- type: quiz
-  focus: Comprehension of military career
 - type: essay-response
   focus: Ostrozky's role in preserving Orthodox identity
   word_target: 300

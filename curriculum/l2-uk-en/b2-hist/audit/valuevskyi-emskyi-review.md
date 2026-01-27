@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M82 | **Phase:** HIST.8 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:55:03
+**Generated:** 2026-01-27 15:51:26
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, match-up, quiz, reading, true-false
+**Required Types:** essay-response, reading, true-false
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -20,47 +20,40 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Розуміння тексту про імперські заборони | 16 | 8 | ✅ |
-| 2 | match-up | Термінологія імперських заборон | 16 | 8 | ✅ |
-| 3 | cloze | Історична лексика в контексті | 16 | 1 | ✅ |
-| 4 | true-false | Факти про імперські заборони | 16 | 8 | ✅ |
-| 5 | group-sort | Класифікація понять | 16 | 1 | ✅ |
-| 6 | unjumble | Складіть речення про заборони мови | 16 | 6 | ✅ |
-| 7 | error-correction | Граматика в історичних реченнях | 16 | 6 | ✅ |
-| 8 | cloze | Заповніть текст про Емський указ | 16 | 1 | ✅ |
-| 9 | mark-the-words | Знайдіть терміни імперської політики | 9 | 6 | ✅ |
-| 10 | select | Оберіть усі правильні твердження згідно з текстом | 8 | 6 | ✅ |
-| 11 | translate | Переклад історичної лексики | 16 | 6 | ✅ |
-| 12 | fill-in | Вибір правильного відмінка | 16 | 8 | ✅ |
-| 13 | quiz | Аналіз первинних джерел | 16 | 8 | ✅ |
-| 14 | essay-response | Мова як зброя | 1 | 1 | ✅ |
-| 15 | comparative-study | Імперська політика: XIX vs XXI століття | 1 | 1 | ✅ |
+| 1 | true-false | Факти про імперські заборони | 16 | 8 | ✅ |
+| 2 | essay-response | Мова як зброя | 1 | 1 | ✅ |
+| 3 | comparative-study | Імперська політика: XIX vs XXI століття | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 3-9) ❌
-- Unique types: 13 (minimum: 2) ✅
+- Total activities: 3 (target: 3-9) ✅
+- Unique types: 3 (minimum: 2) ✅
 - Priority types used: 2/4 (comparative-study, essay-response) ✅
-- Required types used: 4/5 (essay-response, match-up, quiz, true-false) ❌
+- Required types used: 2/3 (essay-response, true-false) ❌
 - Low density activities: 0
 
-## Recommendation
-**📝 UPDATE** (severity 20/100)
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in valuevskyi-emskyi.yaml: Insufficient activities: 3 found, minimum 5 required for B2-HIST
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
+## Recommendation
+**📝 UPDATE** (severity 25/100)
+
+- 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
 - **Words:** ❌ 1989/4000 (raw: 2297)
-- **Activities:** ✅ 15/3
+- **Activities:** ✅ 3/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 13/2 types
+- **Unique_types:** ✅ 3/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 16/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 0 < 20 (soft target)
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ Too many activities: 15 (target 3-9); 1 cloze with year blanks
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ✅ Content-heavy OK (3 activities)
 - **Immersion:** 🇺🇦 96.4% (target 90-100% (history))
 - **Richness:** ✅ 98% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

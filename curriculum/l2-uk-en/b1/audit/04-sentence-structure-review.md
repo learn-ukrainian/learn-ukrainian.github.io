@@ -1,8 +1,8 @@
 # Audit Report: M04 — 04-sentence-structure.md
-**Level:** B1 | **Module:** M04 | **Phase:** B1 | **Pedagogy:** PPP | **Target:** 1200
+**Level:** B1 | **Module:** M04 | **Phase:** B1.0 | **Pedagogy:** PPP | **Target:** 1200
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:26:45
+**Generated:** 2026-01-27 16:25:45
 
 ## Configuration
 **Type:** B1-bridge
@@ -43,7 +43,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1659/1200 (raw: 2291)
+- **Words:** ✅ 2731/1200 (raw: 3587)
 - **Activities:** ✅ 14/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 10/5 types
@@ -55,42 +55,42 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 44.6% (B1.1 Aspect)
-- **Richness:** ✅ 98% (grammar)
+- **Immersion:** 🇺🇦 40.7% (B1.1 Aspect)
+- **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 98% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 50 | 24 | 100% | 20% | 20.0% |
+| examples | 66 | 24 | 100% | 20% | 20.0% |
 | engagement | 9 | 5 | 100% | 15% | 15.0% |
-| dialogues | 14 | 4 | 100% | 15% | 15.0% |
-| variety | 0.96 | - | 96% | 10% | 9.6% |
-| cultural | 5 | 3 | 100% | 10% | 10.0% |
+| dialogues | 25 | 4 | 100% | 15% | 15.0% |
+| variety | 0.95 | - | 95% | 10% | 9.5% |
+| cultural | 6 | 3 | 100% | 10% | 10.0% |
 | realworld | 8 | 3 | 100% | 10% | 10.0% |
 | visual | 10 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.83 | - | 83% | 5% | 4.2% |
-| questions | 28 | 5 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 68 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **98.8%** |
+| **TOTAL** | | | | | **99.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 47 | Included in Core |
-| **Introduction - Understanding Sentence Structure** | ✅ | 174 | Included in Core |
-| **Sentence Parts (Члени речення)** | ⚪️ | 413 | Skipped |
-| **Sentence Types** | ⚪️ | 62 | Skipped |
-| **Clause Types** | ⚪️ | 65 | Skipped |
-| **Conjunctions** | ⚪️ | 41 | Skipped |
-| **Punctuation Terms** | ⚪️ | 72 | Skipped |
-| **Additional Syntax Terms** | ⚪️ | 36 | Skipped |
-| **Practice Analyzing Sentences** | ⚪️ | 163 | Skipped |
-| **Dialogues** | ✅ | 279 | Included in Core |
-| **Summary** | ✅ | 250 | Included in Core |
+| **Introduction - Understanding Sentence Structure** | ✅ | 262 | Included in Core |
+| **Sentence Parts (Члени речення)** | ⚪️ | 672 | Skipped |
+| **Sentence Types** | ⚪️ | 150 | Skipped |
+| **Clause Types** | ⚪️ | 146 | Skipped |
+| **Conjunctions** | ⚪️ | 100 | Skipped |
+| **Punctuation Terms** | ⚪️ | 156 | Skipped |
+| **Additional Syntax Terms** | ⚪️ | 93 | Skipped |
+| **Practice Analyzing Sentences** | ⚪️ | 222 | Skipped |
+| **Dialogues** | ✅ | 476 | Included in Core |
+| **Summary** | ✅ | 350 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 57 | Skipped |

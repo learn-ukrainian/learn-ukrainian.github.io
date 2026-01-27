@@ -230,16 +230,19 @@ MINIMUM_ITEMS_PER_ACTIVITY = {
 ## Expected Outcomes
 
 ### Workload Relief
+
 - **25% fewer activities** to create per module
 - **Focus on quality:** 8-10 excellent activities > 12+ mediocre ones
 - **Faster module creation:** Less time per module during rebuild
 
 ### Quality Improvement
+
 - More time per activity → better distractors, richer contexts
 - Clearer activity purpose (each one serves distinct pedagogical goal)
 - Less "filler" activities added just to meet count
 
 ### Audit Impact
+
 - **B1:** ~73 fewer violations expected (activity count + density)
 - **B2:** Minimal immediate impact (no activity violations currently)
 - **Easier pass rate:** Modules pass with 8-10 quality activities vs. struggling to reach 12-14

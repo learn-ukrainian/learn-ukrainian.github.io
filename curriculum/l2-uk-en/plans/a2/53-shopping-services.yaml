@@ -5,42 +5,28 @@ version: '2.0'
 title: Shopping and Services
 subtitle: Buying and Paying
 content_outline:
-- section: 'Introduction: Shopping in Ukraine'
-  words: 100
+- section: 'Вступ'
+  words: 145
   points:
   - Types of stores
   - Shopping culture
-  - Payment methods
-- section: In the Store
-  words: 200
+- section: 'Граматика'
+  words: 560
   points:
-  - магазин, супермаркет, ринок
-  - продавець, покупець
-  - Finding products
-- section: Prices and Paying
-  words: 200
+  - Store vocabulary (магазин, супермаркет, ринок)
+  - Prices and paying (Скільки коштує?, платити)
+  - Checkout vocabulary (каса, чек, здача)
+  - Services (хімчистка, перукарня, ремонт)
+- section: 'Практика'
+  words: 610
   points:
-  - Скільки коштує?
-  - платити карткою/готівкою
-  - Accusative for prices
-- section: At the Checkout
-  words: 200
+  - Shopping dialogues
+  - Service requests
+- section: 'Підсумок'
+  words: 125
   points:
-  - каса, чек, здача
-  - знижка, акція
-  - Checkout dialogue
-- section: Services
-  words: 150
-  points:
-  - хімчистка, перукарня
-  - ремонт, доставка
-  - Service vocabulary
-- section: 'Practice: Shopping Dialogue'
-  words: 150
-  points:
-  - Buy items in a store
-  - Ask about services
-word_target: 1000
+  - Summary of vocabulary
+word_target: 1440
 vocabulary_hints:
   required:
   - магазин (store)
@@ -59,16 +45,16 @@ vocabulary_hints:
   - примірка (fitting room)
   - розмір (size)
 activity_hints:
-- type: vocabulary-drill
+- type: match-up
   focus: Shopping vocabulary
   items: 30
-- type: dialogue
+- type: cloze
   focus: Store conversation
   items: 12
 - type: fill-in
   focus: Complete shopping sentences
   items: 15
-- type: role-play
+- type: cloze
   focus: Buy items at a store
   items: 8
 focus: vocabulary

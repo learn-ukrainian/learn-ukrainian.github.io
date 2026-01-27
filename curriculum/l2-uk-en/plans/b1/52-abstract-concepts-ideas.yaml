@@ -5,42 +5,41 @@ version: '2.0'
 title: 'Абстрактні концепції: ідеї та думки'
 subtitle: 'Abstract Concepts: Ideas and Thoughts'
 content_outline:
-- section: 'Introduction: Abstract Vocabulary'
-  words: 150
+- section: Вступ
+  words: 236
   points:
   - Why abstract words matter
   - Beyond concrete nouns
   - Intellectual discourse
-- section: Ideas and Thoughts
-  words: 250
+- section: Вивчення слів
+  words: 943
   points:
-  - ідея, думка, погляд, переконання
-  - мати/висловлювати ідею
+  - ідея, думка, аргумент, рішення
+  - Six vocabulary groups
   - Collocations and usage
-- section: Concepts and Theories
-  words: 250
+- section: Вживання
+  words: 756
   points:
-  - концепція, теорія, гіпотеза
-  - розробляти теорію
-  - Academic context
-- section: Values and Beliefs
-  words: 250
+  - Collocations patterns
+  - Register considerations
+  - Cultural aspects
+- section: Читання
+  words: 407
   points:
-  - цінність, принцип, ідеал
-  - дотримуватися принципу
-  - Ethical vocabulary
-- section: Abstract Qualities
-  words: 200
+  - News article, academic text, blog
+  - Three registers demonstrated
+- section: Діалоги
+  words: 447
   points:
-  - істина, правда, справедливість
-  - свобода, рівність
-  - Philosophical terms
-- section: 'Practice: Using Abstracts'
-  words: 100
+  - Work meeting (formal)
+  - News discussion (informal)
+  - Friend advice, university seminar
+- section: Підсумок
+  words: 211
   points:
-  - Build collocations
-  - Discuss abstract topics
-word_target: 1200
+  - Key vocabulary recap
+  - Practice recommendations
+word_target: 3000
 vocabulary_hints:
   required:
   - ідея (idea)
@@ -57,16 +56,16 @@ vocabulary_hints:
   - справедливість (justice)
   - ідеал (ideal)
 activity_hints:
-- type: collocation
+- type: match-up
   focus: Build abstract noun phrases
   items: 25
 - type: fill-in
   focus: Complete sentences with abstracts
   items: 20
-- type: matching
+- type: match-up
   focus: Match similar/different meanings
   items: 15
-- type: discussion
+- type: quiz
   focus: Discuss abstract topics
   items: 10
 focus: vocabulary

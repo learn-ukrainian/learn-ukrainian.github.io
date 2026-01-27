@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M140 | **Phase:** HIST.13 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:55:38
+**Generated:** 2026-01-27 15:51:43
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, match-up, quiz, reading, timeline
+**Required Types:** essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -20,35 +20,18 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | unjumble | Хронологія великої боротьби | 16 | 6 | ✅ |
-| 2 | quiz | Аналіз сучасної суб'єктності | 12 | 8 | ✅ |
-| 3 | fill-in | Синтез понять та ідей | 16 | 8 | ✅ |
-| 4 | match-up | Героїчні місця та їх значення | 16 | 8 | ✅ |
-| 5 | group-sort | Патерни агресії та спротиву | 23 | 1 | ✅ |
-| 6 | cloze | Логіка сучасної стійкості | 16 | 1 | ✅ |
-| 7 | true-false | Критерії справжньої Перемоги | 12 | 8 | ✅ |
-| 8 | error-correction | Спростування дезінформації | 8 | 6 | ✅ |
-| 9 | translate | Аналітичний переклад | 12 | 6 | ✅ |
-| 10 | match-up | Колокації сучасної історії | 16 | 8 | ✅ |
-| 11 | mark-the-words | Пасивний стан в історії | 12 | 6 | ✅ |
-| 12 | true-false | Факти сучасної війни | 12 | 8 | ✅ |
-| 13 | quiz | Міжнародна підтримка та солідарність | 8 | 8 | ✅ |
-| 14 | true-false | Цінності українського опору | 12 | 8 | ✅ |
-| 15 | essay-response | Від «Об'єкта» до «Суб'єкта» | 1 | 1 | ✅ |
-| 16 | comparative-study | Еволюція війни: 2014 vs 2022 | 1 | 1 | ✅ |
+| 1 | true-false | Критерії справжньої Перемоги | 12 | 8 | ✅ |
+| 2 | true-false | Факти сучасної війни | 12 | 8 | ✅ |
+| 3 | true-false | Цінності українського опору | 12 | 8 | ✅ |
+| 4 | essay-response | Від «Об'єкта» до «Суб'єкта» | 1 | 1 | ✅ |
+| 5 | comparative-study | Еволюція війни: 2014 vs 2022 | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 16 (target: 3-9) ❌
-- Unique types: 12 (minimum: 2) ✅
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 3 (minimum: 2) ✅
 - Priority types used: 2/4 (comparative-study, essay-response) ✅
-- Required types used: 3/5 (essay-response, match-up, quiz) ❌
+- Required types used: 1/2 (essay-response) ❌
 - Low density activities: 0
-
-## PEDAGOGICAL VIOLATIONS
-- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['timeline']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
-  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
-- **[YAML_SCHEMA_VIOLATION]** Schema error in syntez-viyna.yaml: Schema validation error at key 'words': ['Підписання', 'других', 'Мінських', 'домовленостей', 'про', 'припинення', 'вогню'] is too short
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
 - ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Європейський контекст: Еволюція війни, Вступ: Поворотний момент історії
@@ -57,22 +40,22 @@
 ## Recommendation
 **📝 UPDATE** (severity 25/100)
 
-- 3 violations (minor)
+- 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
 - **Words:** ❌ 1872/4000 (raw: 2338)
-- **Activities:** ✅ 16/3
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 12/2 types
+- **Unique_types:** ✅ 3/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 0 < 20 (soft target)
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
-- **Content_heavy:** ⚠️ Too many activities: 16 (target 3-9)
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 96.3% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

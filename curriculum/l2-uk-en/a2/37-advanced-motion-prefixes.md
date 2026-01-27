@@ -22,15 +22,15 @@ Your verbs must know how to navigate the world's complex map. We've already lear
 Ця пара часто плутає студентів. Уявіть площину та простір:
 
 **Пере- (Across):** Ви перетинаєте лінію або кордон. Ви були на одному боці, тепер ви на іншому. Це як перейти міст — важливий момент у дорозі, коли ви опиняєтеся в новому місці.
-- _Перейти дорогу._ (To cross the road — you end up on the other side).
-- _Переїхати міст._ (To cross the bridge by vehicle).
-- _Переплисти річку._ (To swim across the river).
-- _Перелетіти океан._ (To fly across the ocean).
+- *Перейти дорогу.* (To cross the road — you end up on the other side).
+- *Переїхати міст.* (To cross the bridge by vehicle).
+- *Переплисти річку.* (To swim across the river).
+- *Перелетіти океан.* (To fly across the ocean).
 
 **Про- (Through / Past):** Ви рухаєтеся крізь простір або повз об'єкт, не зупиняючись. Початкова та кінцева точки можуть бути однаковими — ви просто минаєте щось по дорозі.
-- _Пройти через парк._ (To walk through the park).
-- _Проїхати зупинку._ (To drive past the stop without stopping).
-- _Пробігти повз школу._ (To run past the school).
+- *Пройти через парк.* (To walk through the park).
+- *Проїхати зупинку.* (To drive past the stop without stopping).
+- *Пробігти повз школу.* (To run past the school).
 
 > [!warning] **Типова помилка**
 > Не плутайте: «Перейти парк» означає перетнути його насквозь, а «Пройти парком» означає використати парк як шлях, можливо прогулюючись.
@@ -38,38 +38,38 @@ Your verbs must know how to navigate the world's complex map. We've already lear
 ### 2. The Visit and the Arrival: За- vs. При- (Візит та Прибуття)
 
 **За- (Popping in / Behind):** Цей префікс має два основних значення. Перше — короткий візит по дорозі, не як кінцева мета, а як зупинка.
-- _Зайди до мене на каву._ (Drop in for a coffee — informal visit).
-- _Заїдемо в супермаркет._ (Let's stop by the supermarket).
-- _Він зайшов у аптеку._ (He popped into the pharmacy).
+- *Зайди до мене на каву.* (Drop in for a coffee — informal visit).
+- *Заїдемо в супермаркет.* (Let's stop by the supermarket).
+- *Він зайшов у аптеку.* (He popped into the pharmacy).
 
 Друге значення — рух за об'єкт, коли щось ховається або зникає з поля зору:
-- _Сонце зайшло за хмару._ (The sun went behind the cloud).
-- _Машина заїхала за будинок._ (The car drove behind the building).
+- *Сонце зайшло за хмару.* (The sun went behind the cloud).
+- *Машина заїхала за будинок.* (The car drove behind the building).
 
 **При- (Arriving / Home):** Це завершення подорожі. Ви нарешті досягли пункту призначення. Це звучить більш формально та остаточно.
-- _Ми нарешті приїхали!_ (We finally arrived!).
-- _Поїзд приходить о восьмій._ (The train arrives at eight).
-- _Вона прийшла додому пізно._ (She came home late).
+- *Ми нарешті приїхали!* (We finally arrived!).
+- *Поїзд приходить о восьмій.* (The train arrives at eight).
+- *Вона прийшла додому пізно.* (She came home late).
 
 ### 3. Proximity and Goal: Під- vs. До- (Наближення та Ціль)
 
 **Під- (Approaching):** Ви наближаєтеся до об'єкта і зупиняєтеся поруч з ним. Важливо: ви не заходите всередину, а залишаєтеся біля межі.
-- _Підійди до вікна._ (Approach the window — stand near it).
-- _Таксі під'їхало до готелю._ (The taxi pulled up to the hotel entrance).
-- _Собака підбіг до мене._ (The dog ran up to me).
+- *Підійди до вікна.* (Approach the window — stand near it).
+- *Таксі під'їхало до готелю.* (The taxi pulled up to the hotel entrance).
+- *Собака підбіг до мене.* (The dog ran up to me).
 
 **До- (Reaching the goal):** Ви рухаєтеся до самого кінця маршруту. Це повне досягнення мети, фініш.
-- _Я дійшов до кінця вулиці._ (I reached the end of the street).
-- _Ми доїхали до Львова за чотири години._ (We reached Lviv in four hours).
-- _Він добіг до зупинки._ (He ran all the way to the bus stop).
+- *Я дійшов до кінця вулиці.* (I reached the end of the street).
+- *Ми доїхали до Львова за чотири години.* (We reached Lviv in four hours).
+- *Він добіг до зупинки.* (He ran all the way to the bus stop).
 
 ### 4. Avoiding the Obstacle: Об- (Оминання)
 
 Коли на вашому шляху є перешкода — калюжа, затор, яма — вам потрібен префікс **об-**. Він показує рух по колу навколо чогось.
-- _Обійти калюжу._ (To walk around a puddle).
-- _Об'їхати затор._ (To drive around a traffic jam).
-- _Він обійшов стіл._ (He walked around the table).
-- _Треба оминути цей район — там небезпечно._ (We should avoid this area — it's dangerous).
+- *Обійти калюжу.* (To walk around a puddle).
+- *Об'їхати затор.* (To drive around a traffic jam).
+- *Він обійшов стіл.* (He walked around the table).
+- *Треба оминути цей район — там небезпечно.* (We should avoid this area — it's dangerous).
 
 > [!important] **Prefix-Preposition Harmony (Гармонія)**
 >

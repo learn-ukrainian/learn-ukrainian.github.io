@@ -75,22 +75,10 @@ activity_hints:
   focus: Excerpts from the Treaty of Hadiach
   source: Original text (adapted)
   items: 3 passages
-- type: quiz
-  focus: Details of the proposed Grand Duchy
-  items: 12+
-- type: match-up
-  focus: Treaty provisions and their significance
-  items: 10+
 - type: essay-response
   focus: Why did the Treaty of Hadiach fail?
   word_target: 300
   output: Multi-causal analysis
-- type: group-sort
-  focus: Hadiach provisions vs. Pereiaslav provisions
-  items: 12+
-- type: fill-in
-  focus: Political and legal terminology
-  items: 8+
 - type: critical-analysis
   focus: Compare Nemyrych's vision with modern European integration
   output: Historical parallels
@@ -118,3 +106,6 @@ sources:
   notes: Proposed state structure
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of юрій немирич: дипломат і мислитель'
+- Evaluate the contributions of архітектор нездійсненної держави

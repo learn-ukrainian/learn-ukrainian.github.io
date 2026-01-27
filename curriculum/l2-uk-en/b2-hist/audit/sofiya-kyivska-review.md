@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M14 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 23:24:34
+**Generated:** 2026-01-27 16:23:03
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** comparative-study, critical-analysis, essay-response, fill-in, quiz, reading
+**Required Types:** comparative-study, critical-analysis, essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -24,23 +24,20 @@
 | 2 | critical-analysis | Аналіз: Символіка архітектури | 1 | 1 | ✅ |
 | 3 | essay-response | Софія як кам'яна книга нації | 1 | 1 | ✅ |
 | 4 | comparative-study | Софія Київська vs Софія Константинопольська | 1 | 1 | ✅ |
-| 5 | quiz | Архітектурні та мистецькі секрети Софії | 8 | 8 | ✅ |
-| 6 | match-up | Термінологія та образи | 12 | 8 | ✅ |
-| 7 | fill-in | Архітектурна та культурна термінологія Софії | 10 | 8 | ✅ |
-| 8 | true-false | Істина про Софію | 10 | 8 | ✅ |
+| 5 | true-false | Істина про Софію | 10 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 8 (target: 3-9) ✅
-- Unique types: 8 (minimum: 2) ✅
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 6/6 (comparative-study, critical-analysis, essay-response, fill-in, quiz, reading) ✅
+- Required types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ⚠️ 3965/4000 (raw: 4235) (35 short)
-- **Activities:** ✅ 8/3
+- **Words:** ✅ 4038/4000 (raw: 4308)
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 8/2 types
+- **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
@@ -48,7 +45,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (8 activities)
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.5% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -76,7 +73,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 82 | Included in Core |
-| **Вступ** | ✅ | 281 | Included in Core |
+| **Вступ** | ✅ | 354 | Included in Core |
 | **Архітектура собору: Візантійський канон та київська сміливість** | ⚪️ | 458 | Skipped |
 | **Мозаїки та фрески: Біблія у кольорі** | ⚪️ | 519 | Skipped |
 | **Графіті Софії: Голоси киян XI-XIII століть** | ⚪️ | 279 | Skipped |

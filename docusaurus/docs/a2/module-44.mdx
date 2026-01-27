@@ -1,8 +1,8 @@
 ---
 sidebar_position: 44
-sidebar_label: "44. Checkpoint — Word Formation"
-title: "Checkpoint — Word Formation"
-description: "Review and Mastery"
+sidebar_label: "44. Checkpoint: Word Formation"
+title: "Checkpoint: Word Formation"
+description: "Review and Mastery Assessment"
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -23,6 +23,8 @@ import ComparativeStudy from '@site/src/components/ComparativeStudy';
 import ReadingActivity from '@site/src/components/ReadingActivity';
 import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
 import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
 
 
 ## Огляд
@@ -424,6 +426,10 @@ To solidify your knowledge, try writing five sentences using the grammar pattern
 
 ## 🎯 Activities
 
+### Word Formation Fill-In
+
+<FillIn items={JSON.parse(`[{"sentence": "Він [___] до класу вчасно.", "answer": "прийшов", "options": ["прийшов", "вийшов", "увійшов", "перейшов"]}, {"sentence": "Вона [___] з кімнати швидко.", "answer": "вийшла", "options": ["вийшла", "прийшла", "увійшла", "перейшла"]}, {"sentence": "[___] — це людина, яка читає книги.", "answer": "Читач", "options": ["Читач", "Читання", "Читати", "Читанка"]}, {"sentence": "Це дуже [___] інформація.", "answer": "важлива", "options": ["важлива", "важливість", "важливо", "важливим"]}, {"sentence": "Він [___] текст знову.", "answer": "переписав", "options": ["переписав", "написав", "дописав", "виписав"]}, {"sentence": "Ми слухаємо [___] музику.", "answer": "українську", "options": ["українську", "Україна", "українець", "українці"]}, {"sentence": "Це [___] театр у місті.", "answer": "музичний", "options": ["музичний", "музика", "музикант", "музичні"]}, {"sentence": "Він відомий [___].", "answer": "письменник", "options": ["письменник", "писання", "писати", "письмо"]}]`)} />
+
 ### Word Formation Pairs
 
 <MatchUp pairs={JSON.parse(`[{"left": "прийти", "right": "при- prefix"}, {"left": "вийти", "right": "ви- prefix"}, {"left": "читання", "right": "-ння suffix"}, {"left": "важливість", "right": "-ість suffix"}, {"left": "читач", "right": "-ач suffix"}, {"left": "музичний", "right": "-ний suffix"}, {"left": "український", "right": "-ський suffix"}, {"left": "словниковий", "right": "-овий suffix"}, {"left": "вхід", "right": "ход- root"}, {"left": "письменник", "right": "пис- root"}, {"left": "побачення", "right": "бач- root"}, {"left": "слухач", "right": "слух- root"}]`)} />
@@ -466,16 +472,23 @@ To solidify your knowledge, try writing five sentences using the grammar pattern
 
 <Translate questions={JSON.parse(`[{"source": "The writer", "options": [{"text": "Письменник", "correct": true}, {"text": "Писати", "correct": false}, {"text": "Письмовий", "correct": false}]}, {"source": "Ukrainian (adj.)", "options": [{"text": "Український", "correct": true}, {"text": "Україна", "correct": false}, {"text": "Українець", "correct": false}]}, {"source": "Entrance", "options": [{"text": "Вхід", "correct": true}, {"text": "Входити", "correct": false}, {"text": "Вихід", "correct": false}]}, {"source": "Exit", "options": [{"text": "Вихід", "correct": true}, {"text": "Виходити", "correct": false}, {"text": "Вхід", "correct": false}]}, {"source": "A listener", "options": [{"text": "Слухач", "correct": true}, {"text": "Слухати", "correct": false}, {"text": "Слух", "correct": false}]}, {"source": "Scientific", "options": [{"text": "Науковий", "correct": true}, {"text": "Наука", "correct": false}, {"text": "Науковець", "correct": false}]}]`)} />
 
+### Word Formation Errors
+
+<ErrorCorrection>
+  <ErrorCorrectionItem sentence="Це дуже важливість книга для мене." errorWord="важливість" correctForm="важлива" options={JSON.parse(`["важливість", "важлива", "важливо", "важливості"]`)} explanation="Потрібен прикметник «важлива», а не іменник «важливість»." />
+  <ErrorCorrectionItem sentence="Читання прийшов до бібліотеки." errorWord="Читання" correctForm="Читач" options={JSON.parse(`["Читання", "Читач", "Читати", "Читав"]`)} explanation="Людина — «читач» (-ач), а не дія «читання» (-ння)." />
+  <ErrorCorrectionItem sentence="Вона приходила з магазину." errorWord="приходила" correctForm="виходила" options={JSON.parse(`["приходила", "виходила", "уходила", "переходила"]`)} explanation="«З магазину» означає вихід, тому потрібен префікс ви-." />
+  <ErrorCorrectionItem sentence="Він музика грає на піаніно." errorWord="музика" correctForm="музикант" options={JSON.parse(`["музика", "музикант", "музичний", "музично"]`)} explanation="Людина — «музикант», а не іменник «музика»." />
+  <ErrorCorrectionItem sentence="Це київська місто." errorWord="київська" correctForm="київське" options={JSON.parse(`["київська", "київське", "київський", "київські"]`)} explanation="«Місто» — середній рід, тому «київське»." />
+  <ErrorCorrectionItem sentence="Письмення — це моя улюблена діяльність." errorWord="Письмення" correctForm="Писання" options={JSON.parse(`["Письмення", "Писання", "Писач", "Письма"]`)} explanation="Вірний суфікс для дії — «-ння»: писання." />
+</ErrorCorrection>
+
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 | --- | --- | --- | --- | --- | --- |
-| важлити | /ʋaʒlɪtɪ/ |  | verb |  |  |
 | вбачати | /ʋbat͡ʃˈatɪ/ | to see, to perceive | verb |  |  |
-| ик | /ɪk/ |  | noun |  |  |
-| руч | /rut͡ʃ/ |  | noun |  |  |
 | сильність | /sɪlʲnistʲ/ | strength | noun | ж |  |
 | спів | /spiʋ/ | singing | noun | ч |  |
-| ход- | /xɔd-/ |  | noun |  |  |
-| чита | /t͡ʃɪtˈa/ |  | noun | ж |  |
+| читати | /t͡ʃɪtˈa/ | to read | noun | ж |  |
 | інсайт | /insˈajt/ | insight | noun | ч |  |

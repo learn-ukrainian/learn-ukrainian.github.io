@@ -6,12 +6,12 @@ title: Практика II — Високе мистецтво
 subtitle: Practice II — Fine Arts
 content_outline:
 - section: Вступ — Високе мистецтво
-  words: 400
+  words: 1000
   points:
   - Визначення та сфери застосування
   - Зв'язок із попередніми модулями
 - section: Content Areas
-  words: 500
+  words: 1250
   points:
   - Review of classical music (M62-154)
   - Review of opera and vocal arts (M65-156)
@@ -19,12 +19,12 @@ content_outline:
   - Review of ballet and theater (M69-161)
   - Review of architecture (M72)
 - section: Практика та підсумок
-  words: 300
+  words: 750
   points:
   - Практичні вправи на закріплення
   - Інтеграція з попередніми модулями
   - Підготовка до наступного модуля
-word_target: 2000
+word_target: 3000
 focus: practice
 pedagogy: Immersion & Analysis
 objectives:

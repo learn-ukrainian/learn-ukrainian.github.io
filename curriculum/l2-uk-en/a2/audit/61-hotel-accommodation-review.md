@@ -1,23 +1,26 @@
 # Audit Report: M61 — 61-hotel-accommodation.md
-**Level:** A2 | **Module:** M61 | **Phase:** A2 | **Pedagogy:** PPP | **Target:** 1000
+
+**Level:** A2 | **Module:** M61 | **Phase:** A2.6 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:26:38
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-27 13:09:33
 
 ## Configuration
+
 **Type:** A2
 **Word Target:** 1000 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
 **Priority Types:** error-correction, fill-in, unjumble
-**Required Types:** dialogue, fill-in, role-play, vocabulary-drill
+**Required Types:** fill-in, match-up
 **Engagement:** ≥4 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Hotel Vocabulary | 12 | 8 | ✅ |
@@ -35,20 +38,12 @@
 - Total activities: 10 (target: 10-14) ✅
 - Unique types: 10 (minimum: 4) ✅
 - Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
-- Required types used: 1/4 (fill-in) ❌
+- Required types used: 2/2 (fill-in, match-up) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['vocabulary-drill', 'dialogue', 'role-play']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
-  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 1004/1000 (raw: 1148)
+
+- **Words:** ✅ 1089/1000 (raw: 1171)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
@@ -58,19 +53,24 @@
 - **Vocab:** ✅ 32/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 81.2% (target 75-85% (A2.3))
+- **Immersion:** 🇺🇦 85.0% (target 75-85% (A2.3))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Introduction (Вступ)** | ✅ | 90 | Included in Core |
-| **Presentation (Презентація)** | ✅ | 149 | Included in Core |
-| **Practice (Практика)** | ⚪️ | 333 | Skipped |
-| **Narrative (Розповідь)** | ✅ | 341 | Included in Core |
-| **Summary (Підсумок)** | ✅ | 45 | Included in Core |
-| **Need More Practice?** | ⚪️ | 46 | Skipped |
+| **Introduction: Hotels in Ukraine** | ✅ | 108 | Included in Core |
+| **Presentation** | ✅ | 9 | Included in Core |
+| **Making a Reservation** | ⚪️ | 71 | Skipped |
+| **Checking In** | ➖ | 41 | Excluded Type |
+| **Hotel Amenities** | ⚪️ | 45 | Skipped |
+| **Problems and Solutions** | ⚪️ | 41 | Skipped |
+| **Practice: Hotel Stay** | ⚪️ | 333 | Skipped |
+| **Narrative (Розповідь)** | ✅ | 369 | Included in Core |
+| **Summary** | ✅ | 46 | Included in Core |
+| **Need More Practice?** | ⚪️ | 26 | Skipped |

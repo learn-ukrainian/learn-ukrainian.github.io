@@ -65,11 +65,13 @@ These are incorrectly lemmatized as verbs ending in "-нити":
 Clear extraction errors with no valid pedagogical value:
 
 ### Fragments (< 3 chars with punctuation):
+
 - в-, ви-, за-, на-, пере-, пис-, при- (prefixes extracted as words)
 - да', не', так', вже' (quoted forms)
 - з-, об-, по-, про-, топ-, від-, до-, під-, роз-, зі-, пі- (incomplete)
 
 ### Complete List:
+
 See `/tmp/b1-to-remove.txt`
 
 ---
@@ -126,6 +128,7 @@ Words that appear to be valid Ukrainian lemmas needing translation.
 - дніпропетровщина (place name - Dnipropetrovsk region)
 
 ### Complete List:
+
 See `/tmp/b1-likely-valid-for-translation.txt` (324 words)
 
 ---
@@ -172,7 +175,7 @@ Checked if non-abbreviated case names exist in B1 vocabulary:
    - Add "давальний" with translation "dative (case)"
 
 4. **Fix existing translations:**
-   - місцевий: Add secondary meaning "locative (case)" 
+   - місцевий: Add secondary meaning "locative (case)"
 
 ### Phase 2: Translation (324 words)
 

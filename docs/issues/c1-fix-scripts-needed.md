@@ -24,9 +24,11 @@ Based on the C1 audit, we need **4 automated fix scripts** and **2 manual interv
 ## Fix #1: YAML Syntax Errors (P0)
 
 ### Problem
+
 21 modules have YAML parse error: "mapping values are not allowed here"
 
 ### Root Cause
+
 YAML interprets unquoted strings containing colons as nested mappings.
 
 **Example Error:**
@@ -39,6 +41,7 @@ key: "value: description"
 ```
 
 ### Affected Modules
+
 All in M36-M99 range (Historical Biographies):
 - M36, M37, M38, M39, M40, M41, M42, M44, M46
 - M83, M84, M85, M86, M87, M88, M89, M90
@@ -192,6 +195,7 @@ if __name__ == "__main__":
 ```
 
 ### Testing
+
 ```bash
 # Dry run first (add --dry-run flag to script)
 .venv/bin/python scripts/fix/fix_c1_yaml_syntax.py --dry-run
@@ -206,6 +210,7 @@ if __name__ == "__main__":
 ```
 
 ### Expected Outcome
+
 - 21 modules fixed
 - 21 YAML files pass validation
 - 0 remaining "mapping values not allowed" errors
@@ -215,6 +220,7 @@ if __name__ == "__main__":
 ## Fix #2: Missing Template Sections (P0)
 
 ### Problem
+
 23 modules missing required biography template sections:
 - "Життєпис" (Biography)
 - "Внесок" (Contribution)
@@ -222,9 +228,11 @@ if __name__ == "__main__":
 - "Need More Practice?"
 
 ### Root Cause
+
 Modules created before template standardization or template not followed.
 
 ### Affected Modules
+
 Overlaps with YAML errors (concentrated in M36-M99):
 - All modules from Fix #1
 - Plus: M109 (Lina Kostenko)
@@ -418,6 +426,7 @@ if __name__ == "__main__":
 ```
 
 ### Testing
+
 ```bash
 # Dry run on one module first
 .venv/bin/python scripts/fix/fix_c1_biography_sections.py --module 36 --dry-run
@@ -430,6 +439,7 @@ if __name__ == "__main__":
 ```
 
 ### Expected Outcome
+
 - 23 modules have all required sections
 - Sections with TODO markers flagged for manual content
 - 0 "MISSING_REQUIRED_SECTION" errors
@@ -439,15 +449,18 @@ if __name__ == "__main__":
 ## Fix #3: Remove Duplicate M04 (P1)
 
 ### Problem
+
 Two M04 modules exist:
 - `04-analysis-vocab.md` (FAILED audit)
 - `04-analysis-vocabulary.md` (PASSED audit)
 
 ### Decision
+
 **Keep:** `04-analysis-vocabulary.md` (passes audit)
 **Delete:** `04-analysis-vocab.md` (fails audit)
 
 ### Manual Steps
+
 ```bash
 # Verify which one passes
 .venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/c1/04-analysis-vocab.md
@@ -463,6 +476,7 @@ rg "04-analysis-vocab" curriculum/ docs/
 ```
 
 ### Expected Outcome
+
 - Only one M04 module remains
 - No broken references
 - No numbering conflicts
@@ -472,6 +486,7 @@ rg "04-analysis-vocab" curriculum/ docs/
 ## Fix #4: Schema Violations (P1)
 
 ### Problem
+
 3 modules have schema violations:
 - **M04** (analysis-vocab): Missing 'sentence' property, min_words too low
 - **M14** (literature-review): Options arrays too short
@@ -479,6 +494,7 @@ rg "04-analysis-vocab" curriculum/ docs/
 ### Fixes Required
 
 #### M04: 04-analysis-vocab.yaml
+
 **Note:** This file will be deleted (see Fix #3), so skip this fix.
 
 #### M14: 14-literature-review.yaml
@@ -502,6 +518,7 @@ options: ['велика дірка', 'дірка в науці', 'великий
 ```
 
 ### Manual Fix
+
 ```bash
 # Edit file directly
 vim curriculum/l2-uk-en/c1/activities/14-literature-review.yaml
@@ -511,6 +528,7 @@ vim curriculum/l2-uk-en/c1/activities/14-literature-review.yaml
 ```
 
 ### Expected Outcome
+
 - M14 passes schema validation
 - All fill-in activities have 4+ options
 - All error-correction activities have 4+ options
@@ -520,6 +538,7 @@ vim curriculum/l2-uk-en/c1/activities/14-literature-review.yaml
 ## Fix #5: Investigate Unknown Errors (P1)
 
 ### Problem
+
 4 modules produced no error output during audit:
 - M134 (Hyperbole-Litotes)
 - M135 (Euphemism-Taboo)
@@ -550,15 +569,18 @@ done
 ```
 
 ### Possible Issues
+
 1. **Empty files** - Need content
 2. **Missing frontmatter** - Add frontmatter
 3. **Corrupted markdown** - Repair structure
 4. **Critical structural errors** - Rebuild from template
 
 ### Resolution
+
 Based on investigation, create fix script or manual intervention.
 
 ### Expected Outcome
+
 - 4 modules either pass audit or have clear error messages
 - No "silent failures" (unknown errors)
 
@@ -567,6 +589,7 @@ Based on investigation, create fix script or manual intervention.
 ## Testing & Validation Plan
 
 ### Phase 1: Fix Application
+
 1. Run Fix #1 (YAML syntax)
 2. Run Fix #2 (missing sections)
 3. Apply Fix #3 (remove duplicate)
@@ -574,6 +597,7 @@ Based on investigation, create fix script or manual intervention.
 5. Complete Fix #5 (investigate unknowns)
 
 ### Phase 2: Verification
+
 ```bash
 # Re-audit all C1 modules
 for module in curriculum/l2-uk-en/c1/[0-9]*.md; do
@@ -588,6 +612,7 @@ grep "❌ AUDIT FAILED" c1-post-fix-audit.log | wc -l
 **Target:** 143+/148 pass (95%+)
 
 ### Phase 3: Pipeline Validation
+
 ```bash
 # Validate MDX generation
 npm run pipeline l2-uk-en c1
@@ -597,6 +622,7 @@ echo $?  # Should be 0
 ```
 
 ### Phase 4: Regression Check
+
 ```bash
 # Ensure fixes didn't break passing modules
 # Re-audit modules that were passing before
@@ -613,6 +639,7 @@ grep "✅" docs/issues/c1-rebuild-audit-report.md | head -20
 ## Implementation Schedule
 
 ### Day 1 (4 hours)
+
 **Morning (2h):**
 - [ ] Create `scripts/fix/fix_c1_yaml_syntax.py`
 - [ ] Test on 3 modules (M36, M37, M38)
@@ -626,6 +653,7 @@ grep "✅" docs/issues/c1-rebuild-audit-report.md | head -20
 - [ ] Verify sections present (TODOs acceptable)
 
 ### Day 2 (3 hours)
+
 **Morning (1.5h):**
 - [ ] Apply Fix #3 (remove duplicate M04)
 - [ ] Apply Fix #4 (schema violations in M14)
@@ -638,6 +666,7 @@ grep "✅" docs/issues/c1-rebuild-audit-report.md | head -20
 - [ ] Document remaining issues (if any)
 
 ### Day 3 (Optional - Content Filling)
+
 **If needed:**
 - [ ] Fill TODO sections in biography modules
 - [ ] Review and improve auto-generated content
@@ -649,6 +678,7 @@ grep "✅" docs/issues/c1-rebuild-audit-report.md | head -20
 ## Success Criteria
 
 ### Minimum Success (Day 1-2)
+
 - [x] YAML syntax errors: 21 → 0
 - [x] Missing sections: 23 → 0 (structure only, TODOs acceptable)
 - [x] Duplicate modules: 1 → 0
@@ -657,12 +687,14 @@ grep "✅" docs/issues/c1-rebuild-audit-report.md | head -20
 - [x] **Pass rate: 81% → 95%+**
 
 ### Full Success (Day 3)
+
 - [ ] All TODO sections filled with quality content
 - [ ] Pass rate: 95% → 98%+
 - [ ] Pipeline passes: `npm run pipeline l2-uk-en c1`
 - [ ] Landing page updated: `npm run sync:landing`
 
 ### Strategic Success (Future)
+
 - [ ] Complete M33-M35 (checkpoints) → 77% complete
 - [ ] Vocabulary enrichment → Full metadata
 - [ ] HTML validation → Production-ready
@@ -672,6 +704,7 @@ grep "✅" docs/issues/c1-rebuild-audit-report.md | head -20
 ## Risk Mitigation
 
 ### Backup Before Fixes
+
 ```bash
 # Create backup branch
 git checkout -b backup/c1-pre-fixes
@@ -684,6 +717,7 @@ tar -czf c1-backup-$(date +%Y%m%d).tar.gz curriculum/l2-uk-en/c1/
 ```
 
 ### Rollback Plan
+
 ```bash
 # If fixes break things
 git diff backup/c1-pre-fixes..main -- curriculum/l2-uk-en/c1/
@@ -693,6 +727,7 @@ git checkout backup/c1-pre-fixes -- curriculum/l2-uk-en/c1/
 ```
 
 ### Incremental Approach
+
 - Test each fix on 3 modules before applying to all
 - Commit after each fix type
 - Re-audit after each fix to verify improvement
@@ -702,12 +737,14 @@ git checkout backup/c1-pre-fixes -- curriculum/l2-uk-en/c1/
 ## Monitoring & Reporting
 
 ### Progress Tracking
+
 Update `c1-rebuild-index.md` with:
 - Fix completion status
 - Before/after metrics
 - Remaining issues
 
 ### Metrics Dashboard
+
 ```markdown
 ## Fix Progress
 
@@ -727,16 +764,21 @@ Update `c1-rebuild-index.md` with:
 ## Appendix: Affected Module List
 
 ### Fix #1: YAML Syntax (21 modules)
+
 M36, M37, M38, M39, M40, M41, M42, M44, M46, M83, M84, M85, M86, M87, M88, M89, M90
 
 ### Fix #2: Missing Sections (23 modules)
+
 M36, M37, M38, M39, M40, M41, M42, M44, M46, M83, M84, M85, M86, M87, M88, M89, M96, M98, M109
 
 ### Fix #3: Duplicate (1 module)
+
 M04 (analysis-vocab vs analysis-vocabulary)
 
 ### Fix #4: Schema (2 unique modules)
+
 M04 (will be deleted), M14
 
 ### Fix #5: Unknown (4 modules)
+
 M134, M135, M136, M146

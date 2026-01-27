@@ -1,9 +1,11 @@
 # Audit Report: M91 — 91-c1-5-checkpoint.md
+
 **Level:** C1 | **Module:** M91 | **Phase:** C1 | **Pedagogy:** Assessment | **Target:** 1750
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:51
 
 ## Configuration
+
 **Type:** C1-checkpoint
 **Word Target:** 1750 words
 **Activities:** 14-18 required
@@ -16,6 +18,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Народна музика та епос | 14 | 5 | ✅ |
@@ -40,11 +43,13 @@
 - Low density activities: 0
 
 ## Recommendation
+
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ✅ 1891/1750 (raw: 2128)
 - **Activities:** ✅ 14/14
 - **Density:** ✅ All > 14
@@ -63,10 +68,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 94% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 22 | 15 | 100% | 25% | 25.0% |
@@ -80,6 +87,7 @@
 | **TOTAL** | | | | | **94.9%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 92 | Included in Core |

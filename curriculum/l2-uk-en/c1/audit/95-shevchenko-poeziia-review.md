@@ -1,9 +1,11 @@
 # Audit Report: M95 — 95-shevchenko-poeziia.md
+
 **Level:** C1 | **Module:** M95 | **Phase:** C1 | **Pedagogy:** Literary Analysis | **Target:** 3500
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:54
 
 ## Configuration
+
 **Type:** C1-literature
 **Word Target:** 3500 words
 **Activities:** 12-16 required
@@ -16,6 +18,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння "Заповіту" | 12 | 5 | ✅ |
@@ -40,11 +43,13 @@
 - Low density activities: 0
 
 ## Recommendation
+
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2073/3500 (raw: 2400)
 - **Activities:** ✅ 14/12
 - **Density:** ✅ All > 12
@@ -63,10 +68,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 87% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 43 | 15 | 100% | 25% | 25.0% |
@@ -80,16 +87,18 @@
 | **TOTAL** | | | | | **87.5%** |
 
 ### Dryness Flags & Fixes
+
 - ❌ **ABSTRACT_ONLY**
   - FIX:
     Add 3+ real-world boxes. Use this exact format:
-    
+
     > 🌍 **У реальному житті**
     >
     > [Specific scenario: "На співбесіді...", "У магазині...", "На вокзалі..."]
     > [Example sentence showing grammar in that context]
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 73 | Included in Core |

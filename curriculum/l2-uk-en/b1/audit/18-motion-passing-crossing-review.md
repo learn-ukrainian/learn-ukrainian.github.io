@@ -1,8 +1,8 @@
 # Audit Report: M18 — 18-motion-passing-crossing.md
-**Level:** B1 | **Module:** M18 | **Phase:** B1 | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M18 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:26:55
+**Generated:** 2026-01-27 16:25:50
 
 ## Configuration
 **Type:** B1-grammar

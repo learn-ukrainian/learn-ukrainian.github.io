@@ -30,6 +30,7 @@
 ## Module Type Categories
 
 ### 1. Grammar Modules (B1-B2)
+
 **Pedagogy values:** `TTT`, `PPP`, `grammar`
 **Levels:** B1 M06-51, B2 M01-40
 
@@ -51,6 +52,7 @@
 ---
 
 ### 2. Vocabulary Expansion Modules (B1)
+
 **Pedagogy values:** `vocabulary`, `lexical`
 **Levels:** B1 M52-71
 
@@ -70,6 +72,7 @@
 ---
 
 ### 3. Cultural Modules (B1-C1)
+
 **Pedagogy values:** `cultural`, `CBI`
 **Levels:** B1 M72-81, C1 folk culture
 
@@ -88,6 +91,7 @@
 ---
 
 ### 4. History Modules (B2)
+
 **Pedagogy values:** `history`, `historical`
 **Levels:** B2 M41-70
 
@@ -106,6 +110,7 @@
 ---
 
 ### 5. Phraseology Modules (B2)
+
 **Pedagogy values:** `phraseology`, `idioms`
 **Levels:** B2 M71-80
 
@@ -124,6 +129,7 @@
 ---
 
 ### 6. Biography Modules (C1)
+
 **Pedagogy values:** `biography`, `biographical`
 **Levels:** C1 M01-40
 
@@ -142,6 +148,7 @@
 ---
 
 ### 7. Academic/Sociolinguistics Modules (C1)
+
 **Pedagogy values:** `academic`, `sociolinguistics`
 **Levels:** C1 M41-80
 
@@ -160,6 +167,7 @@
 ---
 
 ### 8. Style Modules (C2)
+
 **Pedagogy values:** `style`, `stylistics`
 **Levels:** C2 M01-30
 
@@ -178,6 +186,7 @@
 ---
 
 ### 9. Professional Modules (C2)
+
 **Pedagogy values:** `professional`, `specialized`
 **Levels:** C2 M31-60
 
@@ -196,6 +205,7 @@
 ---
 
 ### 10. Literature Modules (LIT)
+
 **Pedagogy values:** `literature`, `literary`, `LIT`
 **Levels:** LIT-001 to LIT-030
 
@@ -216,6 +226,7 @@
 ---
 
 ### 11. Checkpoint Modules (All Levels)
+
 **Pedagogy values:** `checkpoint`, `review`, `assessment`
 **Levels:** B1-C2 (phase-end assessments)
 

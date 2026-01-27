@@ -1,9 +1,11 @@
 # Audit Report: M70 — 70-spring-holidays.md
+
 **Level:** C1 | **Module:** M70 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:37
 
 ## Configuration
+
 **Type:** C1-cultural
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -16,6 +18,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння весняних обрядових традицій | 8 | 5 | ✅ |
@@ -38,17 +41,20 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (88% overlap): "> [!note] Писанка як дипломат
 > Українська писанка є одним із найпопулярніших подарунків на високому...". Shares significant keywords with sentence at index 73.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2072/3000 (raw: 2173)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
@@ -67,10 +73,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 16 | 15 | 100% | 25% | 25.0% |
@@ -84,6 +92,7 @@
 | **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 82 | Included in Core |

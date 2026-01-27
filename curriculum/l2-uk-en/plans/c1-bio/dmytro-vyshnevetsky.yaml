@@ -36,7 +36,7 @@ content_outline:
   words: 617
   points:
   - Вишневецький vs. Сагайдачний (авантюризм vs державництво)
-word_target: 3000
+word_target: 4000
 vocabulary_hints:
   required:
   - січ (Sich)
@@ -51,8 +51,6 @@ vocabulary_hints:
 activity_hints:
 - type: reading
   focus: '"Song of Baida" analysis'
-- type: quiz
-  focus: Biography facts
 - type: essay-response
   focus: '"Myth vs. Reality of Baida"'
 focus: biography

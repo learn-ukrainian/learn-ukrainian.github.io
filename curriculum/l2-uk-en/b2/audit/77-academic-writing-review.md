@@ -1,10 +1,12 @@
 # Audit Report: M77 — 77-academic-writing.md
+
 **Level:** B2 | **Module:** M77 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:37
 
 ## Configuration
+
 **Type:** B2-skills
 **Word Target:** 1750 words
 **Activities:** 14-18 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Структура та термінологія есе | 8 | 8 | ✅ |
@@ -42,19 +45,23 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 77-academic-writing.yaml: Schema validation error at key '12': {'type': 'quiz', 'title': 'Аналіз логічних зв’язків', 'items': [{'options': [{'text': 'Введення прикладу', 'correct': False}, {'text': 'Узагальнення/Висновок', 'correct': True}, {'text': 'Протиставлення', 'correct': False}, {'text': 'Перерахування', 'correct': False}], 'question': '«Отже, наведені факти дозволяють стверджувати...» Яку логічну функцію виконує вставне слово ОТЖЕ у цьому реченні?'}, {'options': [{'text': 'Додавання інформації', 'correct': False}, {'text': 'Контраст/Зміна перспективи', 'correct': True}, {'text': 'Підтвердження тези', 'correct': False}, {'text': 'Висновок', 'correct': False}], 'question': '«З іншого боку, існує ризик надмірної залежності від технологій». Яка функція З ІНШОГО БОКУ?'}, {'options': [{'text': 'Перерахування/Послідовність', 'correct': True}, {'text': 'Висновок', 'correct': False}, {'text': 'Приклад', 'correct': False}, {'text': 'Сумнів', 'correct': False}], 'question': '«По-перше, необхідно визначити методологію дослідження». Яку роль відіграє вставне слово ПО-ПЕРШЕ?'}, {'options': [{'text': 'Узагальнення', 'correct': False}, {'text': 'Уточнення/Приклад', 'correct': True}, {'text': 'Заперечення', 'correct': False}, {'text': 'Підсумок', 'correct': False}], 'question': '«Зокрема, це стосується студентів гуманітарних факультетів». Яка функція вставного слова ЗОКРЕМА?'}, {'options': [{'text': 'Початку есе', 'correct': False}, {'text': 'Резюмування/Наслідок', 'correct': True}, {'text': 'Сумніву', 'correct': False}, {'text': 'Переліку', 'correct': False}], 'question': '«Таким чином, ми бачимо системні зміни в освіті». Яку логічну функцію виконує конструкція ТАКИМ ЧИНОМ?'}, {'options': [{'text': 'Протиставлення', 'correct': True}, {'text': 'Додавання', 'correct': False}, {'text': 'Приклад', 'correct': False}, {'text': 'Завершення', 'correct': False}], 'question': '«Навпаки, використання ШІ стимулює креативність». Яку роль відіграє слово НАВПАКИ у цьому контексті?'}, {'options': [{'text': 'Доповнення/Розширення', 'correct': True}, {'text': 'Висновок', 'correct': False}, {'text': 'Протилежність', 'correct': False}, {'text': 'Теза', 'correct': False}], 'question': '«Крім того, варто згадати про економічний аспект». Яка функція конструкції КРІМ ТОГО?'}, {'options': [{'text': 'Сумніву', 'correct': False}, {'text': 'Впевненості/Наголосу', 'correct': True}, {'text': 'Прикладу', 'correct': False}, {'text': 'Висновок', 'correct': False}], 'question': '«Безумовно, академічна етика є пріоритетом». Яку функцію виконує вставне слово БЕЗУМОВНО?'}], 'instruction': 'Визначте логічну функцію вставного слова в реченні.'} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення' per template 'b2-module-template.md'
   - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md.md
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 2 violations (minor)
 
 ## Gates
+
 - **Words:** ✅ 2848/1750 (raw: 2930)
 - **Activities:** ✅ 15/14
 - **Density:** ✅ All > 14
@@ -73,10 +80,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 96% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 69 | 24 | 100% | 20% | 20.0% |
@@ -92,6 +101,7 @@
 | **TOTAL** | | | | | **96.5%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 61 | Included in Core |

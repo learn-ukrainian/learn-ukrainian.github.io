@@ -1,8 +1,8 @@
 # Audit Report: M38 — 38-complex-sentence-integration.md
-**Level:** B1 | **Module:** M38 | **Phase:** B1 | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M38 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:27:08
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-27 16:25:57
 
 ## Configuration
 **Type:** B1-grammar
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
 **Priority Types:** cloze, error-correction, fill-in, unjumble
-**Required Types:** error-correction, fill-in, sentence-combining, writing
+**Required Types:** cloze, error-correction, fill-in, unjumble
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥25 words
@@ -36,17 +36,8 @@
 - Total activities: 11 (target: 8-12) ✅
 - Unique types: 11 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
-- Required types used: 2/4 (error-correction, fill-in) ❌
+- Required types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
 - Low density activities: 0
-
-## PEDAGOGICAL VIOLATIONS
-- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['sentence-combining', 'writing']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
-  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1581/1500 (raw: 1872)
@@ -59,7 +50,7 @@
 - **Vocab:** ✅ 45/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.0% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 96% (grammar)

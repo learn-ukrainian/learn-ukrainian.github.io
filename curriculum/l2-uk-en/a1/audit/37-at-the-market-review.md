@@ -1,10 +1,12 @@
 # Audit Report: M37 — 37-at-the-market.md
+
 **Level:** A1 | **Module:** M37 | **Phase:** A1 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
 **Generated:** 2026-01-26 22:25:59
 
 ## Configuration
+
 **Type:** A1
 **Word Target:** 750 words
 **Activities:** 8-12 required
@@ -18,6 +20,7 @@
 **Transliteration:** Allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Market Vocabulary | 10 | 8 | ✅ |
@@ -37,6 +40,7 @@
 - Low density activities: 0
 
 ## Gates
+
 - **Words:** ✅ 812/750 (raw: 1024)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
@@ -54,6 +58,7 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

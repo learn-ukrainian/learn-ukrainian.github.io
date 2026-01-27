@@ -66,15 +66,6 @@ activity_hints:
   focus: Свідчення очевидців подій у Бучі
   source: Українські медіа, ООН
   items: 4
-- type: quiz
-  focus: Хронологія подій та факти
-  items: 15
-- type: match-up
-  focus: Термін → визначення (юридична лексика)
-  items: 10
-- type: fill-in
-  focus: Лексика правосуддя та злочинів
-  items: 10
 - type: essay-response
   focus: Чому документування злочинів важливе для майбутнього правосуддя?
   word_target: 250

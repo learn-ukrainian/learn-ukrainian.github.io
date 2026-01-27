@@ -6,36 +6,30 @@ title: 'Рух: початок і повернення'
 subtitle: Motion - Starting & Returning
 content_outline:
 - section: Діагностика
-  words: 100
+  words: 240
   points:
-  - Content for Діагностика
-  - Examples and explanation
-  - Practice or application
+  - Prefix diagnostic
+  - Intuition check
 - section: Пояснення
-  words: 600
+  words: 1250
   points:
-  - Content for Пояснення
-  - Examples and explanation
-  - Practice or application
+  - по-, за-, роз- prefixes
+  - Starting, stopping by, dispersing
 - section: Поглиблення
-  words: 400
+  words: 823
   points:
-  - Content for Поглиблення
-  - Examples and explanation
-  - Practice or application
+  - Extended patterns
+  - Nuanced usage
 - section: Практика
-  words: 100
+  words: 229
   points:
-  - Content for Практика
-  - Examples and explanation
-  - Practice or application
+  - Prefix selection exercises
 - section: Діалоги
-  words: 350
+  words: 458
   points:
-  - Content for Діалоги
-  - Examples and explanation
-  - Practice or application
-word_target: 1500
+  - Movement dialogues
+  - Natural usage
+word_target: 3000
 vocabulary_hints:
   required:
   - піти/виходити (to leave on foot)

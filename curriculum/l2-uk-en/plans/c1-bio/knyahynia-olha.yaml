@@ -84,9 +84,6 @@ activity_hints:
 - type: authorial-intent
   focus: 'Analyze the chroniclers intent: Why emphasize revenge?'
   output: Analytical response
-- type: quiz
-  focus: 'Conceptual check: Cause-and-effect of reforms'
-  items: 8 questions
 focus: biography
 pedagogy: seminar
 prerequisites:

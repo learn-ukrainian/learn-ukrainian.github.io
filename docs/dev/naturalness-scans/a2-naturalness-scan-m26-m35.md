@@ -1,4 +1,5 @@
 # A2 Naturalness Scan Report - M26-M35
+
 **Date:** 2026-01-12
 **Protocol:** claude_extensions/protocols/a1-naturalness-scan.md
 **Scope:** M26-M35 (10 modules - Mid-level discourse section)
@@ -17,6 +18,7 @@
 ## Scan Results by Module
 
 ### M26: Telling Stories [⚠️ FLAGGED]
+
 **Status:** MIXED - One passage disconnected, one coherent
 **Activities:** Two cloze passages
 
@@ -56,6 +58,7 @@
 ---
 
 ### M27: Because and Although [⚠️ FLAGGED]
+
 **Status:** DISCONNECTED CONNECTOR DRILL
 **Activities:** Multiple cloze passages with connectors
 
@@ -80,6 +83,7 @@
 ---
 
 ### M28: She Said That [✅ PASS]
+
 **Status:** Reported speech drill, acceptable
 **Activities:** Cloze and fill-in with reported speech constructions
 **Naturalness Analysis:**
@@ -92,6 +96,7 @@
 ---
 
 ### M29: I Think That [⚠️ FLAGGED]
+
 **Status:** DISCONNECTED OPINION DRILL
 **Activities:** Cloze passage with opinion expressions (lines 26-33)
 
@@ -116,6 +121,7 @@
 ---
 
 ### M30: I Feel Like [✅ PASS]
+
 **Status:** Emotional narrative, acceptable
 **Activities:** Cloze with feeling expressions + emotional story (lines 342+)
 
@@ -135,6 +141,7 @@
 ---
 
 ### M31: In Order To [✅ PASS]
+
 **Status:** Purpose clause narrative, acceptable
 **Activities:** Cloze with purpose constructions (lines 245+)
 
@@ -153,6 +160,7 @@
 ---
 
 ### M32: Which One [✅ PASS]
+
 **Status:** Relative pronoun drill, acceptable
 **Activities:** Cloze with relative clauses (lines 234-258)
 
@@ -174,6 +182,7 @@
 ---
 
 ### M33: Time Clauses [✅ PASS]
+
 **Status:** Temporal narrative, good
 **Activities:** Cloze with time clauses (lines 237-260)
 
@@ -195,6 +204,7 @@
 ---
 
 ### M34: At the Doctor [✅ PASS]
+
 **Status:** Medical dialogue, natural
 **Activities:** Cloze with medical scenario (lines 226-250)
 
@@ -216,6 +226,7 @@
 ---
 
 ### M35: Checkpoint Mid-Level [⏸️ DEFERRED]
+
 **Status:** CHECKPOINT - different standards apply
 **Activities:** Comprehensive review integrating M26-M34 (lines 30-38)
 
@@ -236,6 +247,7 @@
 ## Summary by Status
 
 ### ✅ PASS (6 modules)
+
 - M28: She Said That (score 7/10)
 - M30: I Feel Like (score 8/10)
 - M31: In Order To (score 8/10)
@@ -244,11 +256,13 @@
 - M34: At the Doctor (score 8/10)
 
 ### ⚠️ FLAGGED (3 modules)
+
 - **M26: Telling Stories (score 6/10)** - First passage disconnected (score 4/10)
 - **M27: Because and Although (score 5/10)** - Disconnected connector drill
 - **M29: I Think That (score 4/10)** - CRITICAL: Completely disconnected opinions
 
 ### ⏸️ DEFERRED (1 module)
+
 - M35: Checkpoint (score 7/10) - Checkpoint standards apply
 
 ---
@@ -256,6 +270,7 @@
 ## Recommended Actions
 
 ### Priority 1: Critical Fix (M29)
+
 **M29 - I Think That:**
 - Replace disconnected opinions with unified dialogue or monolog
 - Create person expressing opinions about single topic (e.g., город, подорож, робота)
@@ -263,6 +278,7 @@
 - Remove topic jumps (місто→квитки→погода→пропозиція→рішення→поїзд)
 
 ### Priority 2: Important Fixes (M26, M27)
+
 **M26 - Telling Stories (Passage 1 only):**
 - Replace disconnected mini-stories with unified narrative
 - Keep "Lost Keys" story (already 8/10)

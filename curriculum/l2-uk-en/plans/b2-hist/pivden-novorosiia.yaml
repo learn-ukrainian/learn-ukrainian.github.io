@@ -67,12 +67,6 @@ activity_hints:
   focus: Карти та описи Півдня XVIII століття
   source: Архівні матеріали
   items: 4
-- type: quiz
-  focus: Історія Півдня України
-  items: 15
-- type: match-up
-  focus: Місто → рік заснування та засновник
-  items: 10
 - type: true-false
   focus: Міфи «Новоросії»
   items: 10

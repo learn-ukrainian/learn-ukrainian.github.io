@@ -993,17 +993,20 @@ Every curriculum module should have rich external content in `[!resources]` sect
 **Status:** 🔄 NEW (2026-01-02)
 
 ### Problem
+
 - 304 existing `[!resources]` sections in markdown (YouTube, articles, etc.)
 - Need extraction before ULP podcast integration
 - No unified schema for external resources
 
 ### Solution
+
 1. **Extract** - Parse all 304 `[!resources]` sections → YAML
 2. **Design schema** - Unified format for all resource types (podcasts, YouTube, articles, books)
 3. **Merge ULP mappings** - Add Gemini's 173 podcast mappings to unified structure
 4. **Generate** - Script to regenerate `[!resources]` sections from YAML
 
 ### Deliverables
+
 - ✅ Schema designed: `docs/resources/EXTERNAL_RESOURCES_SCHEMA.md`
 - ⏳ Extraction script: `scripts/extract_external_resources.py`
 - ⏳ Merge script: `scripts/merge_podcast_mappings.py`
@@ -1012,10 +1015,12 @@ Every curriculum module should have rich external content in `[!resources]` sect
 - ⏳ Unified data: `docs/resources/external_resources.yaml`
 
 ### Dependencies
+
 **Blocks:** #338 (Phase 3b: Podcast Integration)
 **Uses:** Gemini's ULP mapping work (`ulp_mapping.yaml`)
 
 ### Next Steps
+
 1. Implement extraction script
 2. Run on all 304 modules
 3. Merge ULP mappings

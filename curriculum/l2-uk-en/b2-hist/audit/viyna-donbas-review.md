@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M131 | **Phase:** HIST.13 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:55:33
+**Generated:** 2026-01-27 15:51:40
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, fill-in, match-up, quiz, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -20,32 +20,19 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Дайте відповідь на запитання на основі прочитаного тексту про війну на Донбасі. | 8 | 8 | ✅ |
-| 2 | fill-in | Заповніть пропуски відповідними словами з лексичного мінімуму. | 8 | 8 | ✅ |
-| 3 | match-up | Поєднайте дати та події. | 12 | 8 | ✅ |
-| 4 | error-correction | Виправте помилки в узгодженні слів. | 6 | 6 | ✅ |
-| 5 | select | Аналіз подій та явищ війни | 6 | 6 | ✅ |
-| 6 | mark-the-words | Дієслова в історичному контексті | 7 | 6 | ✅ |
-| 7 | group-sort | Розподіліть поняття за відповідними категоріями. | 20 | 1 | ✅ |
-| 8 | cloze | Заповніть пропуски в тексті про війну на Донбасі. | 16 | 1 | ✅ |
-| 9 | unjumble | Складіть речення про війну. | 6 | 6 | ✅ |
-| 10 | translate | Перекладіть терміни українською мовою. | 8 | 6 | ✅ |
-| 11 | select | Символи та терміни війни на Донбасі | 6 | 6 | ✅ |
-| 12 | quiz | Перевірте свої знання фактів про війну. | 8 | 8 | ✅ |
-| 13 | true-false | Визначте правдивість тверджень. | 8 | 8 | ✅ |
-| 14 | select | Міста та реалії воєнного часу | 6 | 6 | ✅ |
-| 15 | essay-response | Есе: Феномен українського добровольчого руху | 1 | 1 | ✅ |
-| 16 | comparative-study | Порівняльний аналіз: АТО та ООС | 1 | 1 | ✅ |
+| 1 | true-false | Визначте правдивість тверджень. | 8 | 8 | ✅ |
+| 2 | essay-response | Есе: Феномен українського добровольчого руху | 1 | 1 | ✅ |
+| 3 | comparative-study | Порівняльний аналіз: АТО та ООС | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 16 (target: 3-9) ❌
-- Unique types: 13 (minimum: 2) ✅
+- Total activities: 3 (target: 3-9) ✅
+- Unique types: 3 (minimum: 2) ✅
 - Priority types used: 2/4 (comparative-study, essay-response) ✅
-- Required types used: 4/5 (essay-response, fill-in, match-up, quiz) ❌
+- Required types used: 1/2 (essay-response) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in viyna-donbas.yaml: Schema validation error at key '13': {'type': 'select', 'items': [{'question': 'Які міста були звільнені українською армією влітку 2014 року?', 'options': [{'text': "Слов'янськ", 'correct': True}, {'text': 'Краматорськ', 'correct': True}, {'text': 'Донецьк', 'correct': False}, {'text': 'Маріуполь', 'correct': True}, {'text': 'Луганськ', 'correct': False}, {'text': 'Сєвєродонецьк', 'correct': True}]}, {'question': 'Оберіть назви міст, що знаходилися на лінії розмежування.', 'options': [{'text': 'Авдіївка', 'correct': True}, {'text': "Мар'їнка", 'correct': True}, {'text': 'Львів', 'correct': False}, {'text': 'Піски', 'correct': True}]}, {'question': 'Виберіть терміни, що описують військовий побут.', 'options': [{'text': 'Бліндаж', 'correct': True}, {'text': 'Буржуйка', 'correct': True}, {'text': 'Басейн', 'correct': False}, {'text': 'Берці', 'correct': True}]}, {'question': 'Що було складовою Мінських домовленостей?', 'options': [{'text': 'Відведення важкого озброєння', 'correct': True}, {'text': "Обмін полоненими 'всіх на всіх'", 'correct': True}, {'text': 'Приєднання Донбасу до Росії', 'correct': False}, {'text': 'Припинення вогню', 'correct': True}]}, {'question': 'Які організації надавали гуманітарну допомогу?', 'options': [{'text': 'Червоний Хрест', 'correct': True}, {'text': 'ООН', 'correct': True}, {'text': 'НАТО', 'correct': False}, {'text': 'Місцеві волонтерські фонди', 'correct': True}]}, {'question': "Виберіть символи пам'яті про війну.", 'options': [{'text': "Дзвони пам'яті у Міноборони", 'correct': True}, {'text': "Маки пам'яті (символ перемоги над нацизмом)", 'correct': True}, {'text': 'Зірка героя (радянського зразка)', 'correct': False}, {'text': 'Мурали із зображенням воїнів', 'correct': True}]}], 'title': 'Міста та реалії воєнного часу', 'instruction': 'Оберіть усі правильні відповіді.'} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in viyna-donbas.yaml: Insufficient activities: 3 found, minimum 5 required for B2-HIST
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
@@ -56,9 +43,9 @@
 
 ## Gates
 - **Words:** ❌ 2061/4000 (raw: 2231)
-- **Activities:** ✅ 16/3
+- **Activities:** ✅ 3/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 13/2 types
+- **Unique_types:** ✅ 3/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/5
 - **Audio:** ℹ️ No audio
@@ -66,7 +53,7 @@
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ⚠️ Too many activities: 16 (target 3-9)
+- **Content_heavy:** ✅ Content-heavy OK (3 activities)
 - **Immersion:** 🇺🇦 96.1% (target 90-100% (history))
 - **Richness:** ✅ 95% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

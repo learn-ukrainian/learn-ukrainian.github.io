@@ -2,12 +2,12 @@
   "module": "persha-svitova",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:55:07.616613Z",
+  "last_audit": "2026-01-27T15:51:29.249399Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-17T21:45:15.747625Z",
+    "md": "2026-01-27T15:24:10.347092Z",
     "meta": "2026-01-26T22:20:13.415348Z",
-    "activities": "2026-01-17T21:45:15.685922Z",
+    "activities": "2026-01-27T15:34:54.426632Z",
     "vocabulary": null,
     "plan": null
   },
@@ -25,7 +25,7 @@
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "14/3"
+      "message": "3/3"
     },
     "vocabulary": {
       "status": "warn",
@@ -43,7 +43,7 @@
     "blocking_issues": [
       "5 Outline Compliance Errors",
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: fill-in, reading"
+      "Missing required activity types: reading"
     ],
     "pass_count": 2,
     "fail_count": 2

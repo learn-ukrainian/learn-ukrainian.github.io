@@ -1,10 +1,12 @@
 # Audit Report: M87 — 87-professional-reports-basics.md
+
 **Level:** B2 | **Module:** M87 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:44
 
 ## Configuration
+
 **Type:** B2-skills
 **Word Target:** 1750 words
 **Activities:** 14-18 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Терміни звітності | 16 | 8 | ✅ |
@@ -41,15 +44,18 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'звіт для...'.
   - FIX: Vary sentence structure.
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
+
 - **Words:** ✅ 4554/1750 (raw: 4957)
 - **Activities:** ✅ 14/14
 - **Density:** ✅ All > 14
@@ -68,10 +74,12 @@
 - **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
+
 **Score:** 95% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 45 | 15 | 100% | 25% | 25.0% |
@@ -85,6 +93,7 @@
 | **TOTAL** | | | | | **95.2%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 99 | Included in Core |

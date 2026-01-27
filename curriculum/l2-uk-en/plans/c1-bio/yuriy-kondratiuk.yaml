@@ -69,22 +69,10 @@ activity_hints:
   focus: Excerpts from "Завоювання міжпланетних просторів"
   source: Scientific texts
   items: 3 passages
-- type: quiz
-  focus: Kondratiuk's biography and contributions
-  items: 12+
-- type: match-up
-  focus: Scientific concepts and their applications
-  items: 10+
 - type: essay-response
   focus: How did Kondratiuk's ideas reach NASA?
   word_target: 300
   output: Analysis of knowledge transfer
-- type: group-sort
-  focus: His life as Sharhei vs. as Kondratiuk
-  items: 12+
-- type: fill-in
-  focus: Key scientific terms and dates
-  items: 10+
 focus: biography
 prerequisites:
 - Space exploration basics
@@ -110,3 +98,7 @@ sources:
   notes: American recognition of his work
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of юрій кондратюк: геній, що розрахував шлях до місяця'
+- Evaluate the contributions of український геній за чужим ім'ям
+- Trace the career and influence of визнання після смерті

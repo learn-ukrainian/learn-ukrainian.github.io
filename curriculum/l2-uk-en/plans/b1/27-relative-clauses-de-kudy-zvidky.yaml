@@ -5,42 +5,43 @@ version: '2.0'
 title: 'Підрядні означальні: де, куди, звідки'
 subtitle: Place Relative Clauses
 content_outline:
-- section: 'Introduction: Place Relatives'
-  words: 150
+- section: Тест
+  words: 233
+  points: []
+- section: Теорія
+  words: 427
   points:
-  - Three types of place questions
-  - Static vs directional meaning
-  - When to use each form
-- section: де - Static Location
-  words: 250
+  - Три типи просторових відносин
+  - Споріднені прислівники
+- section: Поглиблення
+  words: 1206
   points:
-  - Describing where something is
-  - Місце, де... (the place where...)
-  - Common patterns
-- section: куди - Direction To
-  words: 250
+  - Де — статична локація
+  - Куди — напрямок руху
+  - Звідки — походження
+  - Типові помилки та як їх уникнути
+  - Невизначені та заперечні форми
+- section: Практика
+  words: 110
+  points: []
+- section: Діалоги
+  words: 419
   points:
-  - Describing destination
-  - Місце, куди... (the place to which...)
-  - Motion verb requirements
-- section: звідки - Direction From
-  words: 250
+  - 'Діалог 1: Про переїзд'
+  - 'Діалог 2: Про подорож'
+  - 'Діалог 3: Про роботу'
+  - 'Діалог 4: Про навчання'
+  - 'Діалог 5: Про походження'
+- section: Українське прислів'я
+  words: 396
+  points: []
+- section: Потрібно більше практики?
+  words: 209
   points:
-  - Describing origin
-  - Місце, звідки... (the place from which...)
-  - Source and origin expressions
-- section: Combining Place Relatives
-  words: 200
-  points:
-  - Complex place descriptions
-  - Multiple relative clauses
-  - Word order in place clauses
-- section: 'Practice: Place Descriptions'
-  words: 100
-  points:
-  - Describe locations with relatives
-  - Choose correct place word
-word_target: 1200
+  - Інтеграція знань
+  - Реальне застосування
+  - Онлайн-ресурси
+word_target: 3000
 vocabulary_hints:
   required:
   - де (where - location)
@@ -60,13 +61,13 @@ activity_hints:
 - type: fill-in
   focus: де/куди/звідки selection
   items: 25
-- type: sentence-combining
+- type: unjumble
   focus: Combine with place relatives
   items: 20
-- type: matching
+- type: match-up
   focus: Match sentences to meanings
   items: 15
-- type: translation
+- type: translate
   focus: English to Ukrainian
   items: 15
 focus: grammar

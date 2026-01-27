@@ -321,6 +321,7 @@ sqlite3 curriculum/l2-uk-en/vocabulary.db "
 ## Metalanguage Vocabulary (Must Teach Before Use)
 
 ### A1 - Basic Grammar Terms
+
 | Ukrainian | English | Introduce In |
 |-----------|---------|--------------|
 | іменник | noun | M03 |
@@ -331,6 +332,7 @@ sqlite3 curriculum/l2-uk-en/vocabulary.db "
 | множина | plural | M07 |
 
 ### A2 - Case and Aspect Terms
+
 | Ukrainian | English | Introduce In |
 |-----------|---------|--------------|
 | відмінок | case | M01 |
@@ -347,6 +349,7 @@ sqlite3 curriculum/l2-uk-en/vocabulary.db "
 | час | tense | M08 |
 
 ### B1 - Advanced Grammar Terms
+
 | Ukrainian | English | Introduce In |
 |-----------|---------|--------------|
 | дієприкметник | participle | Before participle module |
@@ -357,6 +360,7 @@ sqlite3 curriculum/l2-uk-en/vocabulary.db "
 | дієслова руху | motion verbs | Before motion verb module |
 
 ### B2+ - Academic/Literary Terms
+
 | Ukrainian | English | Level |
 |-----------|---------|-------|
 | стиль | style | B2 |
@@ -372,24 +376,28 @@ sqlite3 curriculum/l2-uk-en/vocabulary.db "
 ## Anti-Patterns (DO NOT DO)
 
 ### 1. Vocabulary Improvisation
+
 ```
 ❌ "This sentence needs the word X, let me add it to vocabulary"
 ✅ "This sentence needs word X which isn't in the plan. STOP. Update plan first."
 ```
 
 ### 2. Mid-Level Vocabulary Changes
+
 ```
 ❌ "Module 15 needs more words, let me add 10 more"
 ✅ "Module 15 has insufficient vocabulary. Flag for plan review at level completion."
 ```
 
 ### 3. Recursive Fixes
+
 ```
 ❌ Module A needs word from Module B → Add to A → But A teaches it first → Change B → ...
 ✅ All vocabulary defined in plan BEFORE creation. No cross-module vocabulary changes.
 ```
 
 ### 4. Database-First Changes
+
 ```
 ❌ Add word to database, then update module to match
 ✅ Module is source of truth. Database rebuilt from modules.

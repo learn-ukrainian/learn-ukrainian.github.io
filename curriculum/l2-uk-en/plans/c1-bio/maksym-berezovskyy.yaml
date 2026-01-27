@@ -75,22 +75,10 @@ activity_hints:
   focus: Historical accounts of Berezovskyy's life
   source: Adapted historical sources
   items: 3 passages
-- type: quiz
-  focus: Facts about Berezovskyy's life and works
-  items: 12+
-- type: match-up
-  focus: Musical works and their characteristics
-  items: 10+
 - type: essay-response
   focus: Why was Berezovskyy forgotten in his time?
   word_target: 250
   output: Analysis of imperial cultural dynamics
-- type: group-sort
-  focus: Italian success vs. Russian failure
-  items: 10+
-- type: fill-in
-  focus: Musical terminology
-  items: 8+
 - type: critical-analysis
   focus: How does imperial context explain his tragedy?
   output: Decolonial interpretation
@@ -118,3 +106,6 @@ sources:
   notes: Musical education context
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of максим березовський: композитор барокко'
+- Evaluate the contributions of трагічний геній

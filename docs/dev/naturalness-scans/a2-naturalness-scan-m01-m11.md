@@ -1,4 +1,5 @@
 # A2 Naturalness Scan Report - M01-M11
+
 **Date:** 2026-01-12
 **Protocol:** claude_extensions/protocols/a1-naturalness-scan.md
 **Scope:** M01-M11 (11 modules - Cases section)
@@ -320,6 +321,7 @@ Passage 2: Моя квартира на третьому поверсі. У ві
 ## Summary by Status
 
 ### ✅ PASS (7 modules)
+
 - M01: The Dative I - Pronouns (8/10)
 - M02: The Dative II - Nouns (9/10)
 - M04: Instrumental I - Accompaniment (8/10)
@@ -327,15 +329,18 @@ Passage 2: Моя квартира на третьому поверсі. У ві
 - M10: At the Post Office and Bank (8/10 - one dialogue only)
 
 ### ⚠️ FLAGGED for naturalness issues (2 modules)
+
 - M03: Dative Verbs (5/10) - disconnected drill sentences
 - M08: Logical Prepositions (7/10) - pharmacy dialogue too mechanistic
 
 ### 🔴 CORRUPTED KEYS - CRITICAL (3 modules)
+
 - M05: Instrumental II - Means and Tools (N/A - wrong answer keys)
 - M06: Being and Becoming (0/10 - **gender/verb agreement errors**)
 - M09: All Cases Practice (N/A - corrupted keys)
 
 ### ⏸️ DEFERRED (1 module)
+
 - M11: Checkpoint - Cases (7/10 - checkpoint standards)
 
 ---

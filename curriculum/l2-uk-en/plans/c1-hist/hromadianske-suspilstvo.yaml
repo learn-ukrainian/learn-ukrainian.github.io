@@ -5,50 +5,52 @@ version: '1.0'
 title: 'Громадянське суспільство: Держава без держави'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of громадянське суспільство: держава без держави'
+- Evaluate the historical significance of самоорганізація
 content_outline:
 - section: Вступ — Самоорганізація
-  words: 451
+  words: 515
   subsections:
   - Громадянське суспільство — що це
   - Коли держава не працює
   - Україна — особливий випадок
   - Структура модуля
 - section: Історичні корені
-  words: 677
+  words: 774
   subsections:
   - Козацьке самоврядування
   - «Просвіта» і кооперативи
   - Радянський період — знищення
   - Відродження після 1991
 - section: Майдан як лабораторія
-  words: 790
+  words: 903
   subsections:
   - 2004 — Помаранчева революція
   - 2013-2014 — Євромайдан
   - Самоорганізація — як працювала
   - «Республіка Майдан»
 - section: Волонтерський рух
-  words: 677
+  words: 774
   subsections:
   - 2014 — армія без держави
   - Волонтери — хто вони
   - Масштаб — мільйони
   - Паралельні структури
 - section: Після 2022
-  words: 564
+  words: 645
   subsections:
   - Миттєва мобілізація
   - Територіальна оборона
   - Гуманітарна допомога
   - Держава + суспільство
 - section: Підсумок
-  words: 341
+  words: 389
   subsections:
   - Громадянське суспільство — сила
   - Коли держава слабка — суспільство сильне
   - Перехід до Гранітної революції
-word_target: 3500
+word_target: 4000
 vocabulary:
 - громадянське суспільство
 - самоорганізація
@@ -66,13 +68,13 @@ vocabulary:
 - низова ініціатива
 - «Республіка Майдан»
 activities:
-- type: historical-roots
+- type: critical-analysis
   focus: Trace civil society from Cossacks to Maidan
-- type: self-organization
+- type: critical-analysis
   focus: How Euromaidan self-organized — case study
-- type: volunteer-movement
+- type: critical-analysis
   focus: 2014 volunteer army — how it worked
-- type: 2022-analysis
+- type: critical-analysis
   focus: Instant mobilization — why it worked
 - type: essay-response
   focus: Чому українське громадянське суспільство сильніше за державу?

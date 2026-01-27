@@ -1,4 +1,5 @@
 # Session Summary: Activity Quality Validation Expansion
+
 **Date:** 2026-01-02
 **Coordinator:** Claude Sonnet (C1-a)
 **Status:** ✅ COMPLETE - Issue #355 Created & Delegated
@@ -146,11 +147,13 @@ User requested expansion of grammar validation system (`/grammar-validate`) to i
 ## Implementation Plan (6 Phases)
 
 ### Phase 1: ✅ COMPLETE (This Session)
+
 - Analysis document created
 - Deterministic checks module created
 - Command draft created
 
 ### Phase 2: ⏳ PENDING (Command Integration)
+
 **Assigned to:** TBD (awaiting agent assignment)
 **Tasks:**
 1. Decide: merge into `/review-content` or keep separate?
@@ -166,6 +169,7 @@ User requested expansion of grammar validation system (`/grammar-validate`) to i
 - Updated `claude_extensions/commands/review-content.md` OR finalized `activity-validate.md`
 
 ### Phase 3: ⏳ PENDING (Queue Generation Script)
+
 **Assigned to:** TBD
 **Tasks:**
 1. Create `scripts/audit/generate_activity_quality_queue.py`
@@ -208,6 +212,7 @@ activities:
 - Add npm script: `"activity:queue": "python scripts/audit/generate_activity_quality_queue.py"`
 
 ### Phase 4: ⏳ PENDING (Finalization Script)
+
 **Assigned to:** TBD
 **Tasks:**
 1. Create `scripts/audit/finalize_activity_quality.py`
@@ -250,6 +255,7 @@ C2: {
 - Add npm script: `"activity:finalize": "python scripts/audit/finalize_activity_quality.py"`
 
 ### Phase 5: ⏳ PENDING (Audit Integration)
+
 **Assigned to:** TBD
 **Tasks:**
 1. Update `scripts/audit/gates.py`:
@@ -268,6 +274,7 @@ C2: {
 - Modified `scripts/audit/config.py`
 
 ### Phase 6: ⏳ PENDING (Testing & Documentation)
+
 **Assigned to:** TBD
 **Tasks:**
 1. **Test workflow:**
@@ -302,25 +309,30 @@ C2: {
 ## Errors and Course Corrections
 
 ### Error 1: Assumed API-based validation
+
 **User feedback:** "we dont use api"
 **Fix:** Pivoted to manual validation workflow + deterministic code checks
 
 ### Error 2: Created duplicate functionality
+
 **User feedback:** "we have review-content and grammar-validate we havve to be carefull not to duplicate features"
 **Fix:** Recommended merging into `/review-content` Section 8
 
 ### Error 3: Started implementing instead of delegating
+
 **User feedback:** "no you should create an issue and implemenation plan and delegate it"
 **Fix:** Created Issue #355 and delegated to agents (this session)
 
 ## Quality Dimensions Defined
 
 ### 1. Grammar (Linguistic Correctness)
+
 - Russianisms, Surzhyk, calques
 - Case agreement, aspect usage
 - **Source:** Existing `/grammar-validate` + Ukrainian grammar validator prompt
 
 ### 2. Naturalness (1-5 scale)
+
 **Rubric:**
 - 1 = Robotic/translated (sounds like English)
 - 2 = Unnatural (grammatically correct but awkward)
@@ -334,6 +346,7 @@ C2: {
 - Discourse marker presence (ну, от, взагалі)
 
 ### 3. Difficulty (CEFR-appropriate)
+
 **Categories:**
 - `too_easy` - Below level expectations
 - `appropriate` - Matches level
@@ -345,6 +358,7 @@ C2: {
 - Cognitive load estimation
 
 ### 4. Engagement (1-5 scale)
+
 **Rubric:**
 - 1 = Boring/generic (could be any language textbook)
 - 2 = Low engagement (functional but dull)
@@ -355,6 +369,7 @@ C2: {
 **Focus:** Cultural relevance, contemporary topics, real-world context
 
 ### 5. Distractors (1-5 scale for MC activities)
+
 **Rubric:**
 - 1 = Nonsense (random unrelated words)
 - 2 = Weak (obviously wrong, different word class)

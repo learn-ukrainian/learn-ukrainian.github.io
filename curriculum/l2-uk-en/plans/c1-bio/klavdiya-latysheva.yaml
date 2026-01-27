@@ -69,22 +69,10 @@ activity_hints:
   focus: Жінки в науці та авіації XX ст.
   source: Scientific history sources
   items: 3 passages
-- type: quiz
-  focus: Життя та досягнення Латишевої
-  items: 12+
-- type: match-up
-  focus: Математичні та авіаційні терміни
-  items: 10+
 - type: essay-response
   focus: Як Латишева долала бар'єри в чоловічих професіях?
   word_target: 300
   output: Analytical essay
-- type: group-sort
-  focus: Досягнення за сферами (математика, авіація)
-  items: 12+
-- type: fill-in
-  focus: Наукова та технічна термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-64
@@ -103,3 +91,7 @@ sources:
   notes: University where Latysheva studied and worked
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of клавдія латишева: піонерка авіації'
+- Evaluate the contributions of математик, що підкорила небо і рівняння
+- Trace the career and influence of жінка без обмежень

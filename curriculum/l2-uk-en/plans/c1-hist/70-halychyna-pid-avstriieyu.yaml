@@ -5,54 +5,54 @@ version: '2.0'
 title: 'Галичина під Австрією: Особлива доля'
 content_outline:
 - section: Вступ — Інший шлях
-  words: 400
+  words: 457
   points:
   - Галичина — не під Росією
   - 1772 — поділ Польщі
   - Габсбурзька імперія — інша система
   - Структура модуля
 - section: Правовий статус
-  words: 600
+  words: 686
   points:
   - Королівство Галичини та Володимирії
   - Конституційний період (після 1867)
   - Права українців — порівняно з Росією
   - Обмеження — польська домінація
 - section: Освіта і церква
-  words: 700
+  words: 800
   points:
   - Греко-католицька церква — легальна
   - Семінарії — українською
   - Університет — доступ
   - Порівняння з Наддніпрянщиною
 - section: «Весна народів» 1848
-  words: 600
+  words: 686
   points:
   - Головна Руська Рада
   - Перша легальна організація
   - Скасування панщини
   - Чому не вдалося більше
 - section: Польсько-український конфлікт
-  words: 500
+  words: 571
   points:
   - Польська шляхта — домінація
   - Сейм — нерівність
   - Конкуренція за Галичину
   - «Полякування» vs. українізація
 - section: Порівняння з Росією
-  words: 400
+  words: 457
   points:
   - Що можна в Австрії
   - Чого не можна в Росії
   - Різні траєкторії
   - Чому це важливо
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Австрія — не ідеал, але краще
   - Галичина — «Український П'ємонт»
   - Підготовка до національного руху
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - Галичина (Galicia)
@@ -72,13 +72,13 @@ vocabulary_hints:
   - конституція (constitution)
   - громадянські права (civil rights)
 activity_hints:
-- type: legal-comparison
+- type: comparative-study
   focus: Rights of Ukrainians in Austria vs. Russia
   output: Comparative legal analysis
-- type: 1848-analysis
+- type: critical-analysis
   focus: What did 1848 achieve for Galicia?
   output: Revolutionary assessment
-- type: church-analysis
+- type: critical-analysis
   focus: UGCC under Habsburg rule
   output: Institutional analysis
 - type: essay-response
@@ -112,3 +112,6 @@ sources:
   notes: Ukrainian status
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of галичина під австрією: особлива доля'
+- Evaluate the historical significance of інший шлях

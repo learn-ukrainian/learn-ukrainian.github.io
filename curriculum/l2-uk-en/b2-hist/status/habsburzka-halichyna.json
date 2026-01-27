@@ -2,12 +2,12 @@
   "module": "habsburzka-halichyna",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:54:59.683821Z",
+  "last_audit": "2026-01-27T15:51:23.339944Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-25T20:14:16.643609Z",
+    "md": "2026-01-27T15:24:10.346999Z",
     "meta": "2026-01-26T22:20:13.064438Z",
-    "activities": "2026-01-25T20:20:30.576978Z",
+    "activities": "2026-01-27T15:34:53.926257Z",
     "vocabulary": "2026-01-25T20:05:44.888454Z",
     "plan": null
   },
@@ -25,7 +25,7 @@
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "16/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "pass",

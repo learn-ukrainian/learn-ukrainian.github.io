@@ -58,8 +58,8 @@ Use this when the order of events is the most important part of your message.
 
 Вибір виду дієслова  критично важливий у часових реченнях.
 
-- **Коли я снідала** (Imperf.), він прийшов. -> He arrived _during_ the breakfast.
-- **Коли я поснідала** (Perf.), він прийшов. -> He arrived _after_ the breakfast was over.
+- **Коли я снідала** (Imperf.), він прийшов. -> He arrived *during* the breakfast.
+- **Коли я поснідала** (Perf.), він прийшов. -> He arrived *after* the breakfast was over.
 
 > [!important] **Comma Placement**
 > Always put a **comma** before **коли**, **поки**, **після того як** та **перед тим як**, коли вони знаходяться в середині речення. Якщо речення починається зі сполучника, кома ставиться після закінчення всієї підрядної частини.
@@ -95,7 +95,7 @@ Complete the sentences using **поки не**.
 3. Ми не почнемо нараду, \_\_\_. (until the boss arrives) -> **поки бос не прийде.**
 
 > [!reflection] **The Rhythm of Time**
-> Time is not just a measurement; it’s a feeling. Using words like **щойно** adds a sense of urgency, while **поки** creates a sense of peaceful duration. Your choice of words tells the listener how you _felt_ about the time passing. Кожне слово — це інтонація вашого життя.
+> Time is not just a measurement; it’s a feeling. Using words like **щойно** adds a sense of urgency, while **поки** creates a sense of peaceful duration. Your choice of words tells the listener how you *felt* about the time passing. Кожне слово — це інтонація вашого життя.
 
 > [!tip] **Repetition with "Кожного разу"**
 > To say "Every time when...", use «**Кожного разу, коли...**». It’s a great way to talk about habits!

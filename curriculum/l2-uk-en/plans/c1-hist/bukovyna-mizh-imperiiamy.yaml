@@ -5,17 +5,19 @@ version: '1.0'
 title: Буковина між імперіями
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- Analyze the causes and consequences of буковина між імперіями
+- Evaluate the historical significance of багатонаціональний край
 content_outline:
 - section: Вступ — Багатонаціональний край
-  words: 400
+  words: 457
   subsections:
   - Буковина — де це
   - Населення — українці, румуни, євреї, німці
   - Історична доля — зміна імперій
   - Структура модуля
 - section: Під Австрією (1775-1918)
-  words: 700
+  words: 800
   subsections:
   - Приєднання від Молдови
   - Герцогство Буковина
@@ -23,40 +25,40 @@ content_outline:
   - Чернівецький університет
   - Українсько-румунське співіснування
 - section: Під Румунією (1918-1940)
-  words: 600
+  words: 686
   subsections:
   - Румунська анексія
   - Румунізація — політика
   - Придушення українців
   - Опір і адаптація
 - section: Радянський період
-  words: 500
+  words: 571
   subsections:
   - 1940 — анексія СРСР
   - Поділ — північ/південь
   - Репресії
   - Радянізація
 - section: Буковинська ідентичність
-  words: 500
+  words: 571
   subsections:
   - Особлива культура
   - Мова — діалектні особливості
   - Мультикультурність як спадщина
   - Чернівці — «маленький Відень»
 - section: Сучасність
-  words: 500
+  words: 571
   subsections:
   - Чернівецька область
   - Північна Буковина — Україна
   - Південна — Румунія
   - Поділений регіон
 - section: Підсумок
-  words: 300
+  words: 344
   subsections:
   - Буковина — мозаїка народів
   - Австрійська спадщина
   - Перехід до Закарпаття
-word_target: 3500
+word_target: 4000
 vocabulary:
 - Буковина
 - герцогство
@@ -74,13 +76,13 @@ vocabulary:
 - регіональна ідентичність
 - транскордонний
 activities:
-- type: demographic-analysis
+- type: critical-analysis
   focus: Bukovyna's ethnic composition — changes over time
-- type: policy-comparison
+- type: comparative-study
   focus: Austrian vs. Romanian treatment of Ukrainians
-- type: cultural-analysis
+- type: critical-analysis
   focus: Chernivtsi as multicultural city
-- type: contemporary-analysis
+- type: critical-analysis
   focus: Divided Bukovyna today — north vs. south
 - type: essay-response
   focus: Як австрійський період вплинув на буковинську ідентичність?

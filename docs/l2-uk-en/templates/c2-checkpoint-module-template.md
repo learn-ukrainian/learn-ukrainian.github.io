@@ -6,7 +6,6 @@
 
 **Related Issue:** [#307](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/307)
 
-
 <!--
 TEMPLATE_METADATA:
   required_sections:
@@ -27,6 +26,7 @@ TEMPLATE_METADATA:
 Before submitting a C2 checkpoint module, verify all items from `c2-module-template.md` PLUS:
 
 ### Checkpoint-Specific Requirements
+
 - [ ] **TTT pedagogy:** Test-Teach-Test structure (comprehensive review)
 - [ ] **Word count:** 2000+ words (review content, not new teaching)
 - [ ] **Vocabulary:** 50-60 items (review vocabulary from ALL modules in phase)
@@ -383,6 +383,7 @@ Each skill from the phase gets its own section with Model → Practice → Self-
 | Стиль | Бездоганний контроль регістру | Належний | Непослідовний |
 | Мова | Безпомилкова, багата | Майже без помилок | Є помилки |
 | Інтеграція | Повне застосування фази | Часткове | Мінімальне |
+
 ```
 
 #### Підсумок Section
@@ -511,6 +512,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 ## Content Structure Note
 
 ### Vocabulary & Activities
+
 **CRITICAL:** Do NOT add `## Vocabulary` or `## Activities` headers. These sections are injected automatically from:
 - `vocabulary/{slug}.yaml`
 - `activities/{slug}.yaml`
@@ -574,30 +576,37 @@ tags:
 ## Common Pitfalls to Avoid
 
 ### 1. **Introducing New Content**
+
 - ❌ Problem: Teaching new concepts in checkpoint
 - ✅ Solution: Checkpoints ONLY review and test. All content must come from prior modules.
 
 ### 2. **Insufficient Phase Coverage**
+
 - ❌ Problem: Testing only 2-3 topics out of 10-20 covered in phase
 - ✅ Solution: Create dedicated quiz for EACH major topic + integration quiz
 
 ### 3. **Missing Production Assessment**
+
 - ❌ Problem: Only multiple choice, no creative/professional production
 - ✅ Solution: Include substantial production tasks with Model Answers and rubrics
 
 ### 4. **Shallow Self-Assessment**
+
 - ❌ Problem: Generic "Чи можете ви..." questions
 - ✅ Solution: Specific criteria tied to each module cluster in phase
 
 ### 5. **Too Few Activities**
+
 - ❌ Problem: 14-16 activities (same as regular C2 modules)
 - ✅ Solution: 25+ activities for comprehensive testing
 
 ### 6. **Missing Model Answers**
+
 - ❌ Problem: Writing tasks without examples
 - ✅ Solution: ALL production tasks include complete Model Answers
 
 ### 7. **No Integration Testing**
+
 - ❌ Problem: Testing topics in isolation
 - ✅ Solution: Dedicated integration section combining all phase concepts
 

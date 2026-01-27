@@ -5,24 +5,26 @@ version: '1.0'
 title: 'Театр Курбаса: Реформа і знищення'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of театр курбаса: реформа і знищення'
+- Evaluate the historical significance of революціонер сцени
 content_outline:
 - section: Вступ — Революціонер сцени
-  words: 400
+  words: 457
   subsections:
   - Курбас — хто він
   - Театральна революція
   - Чому театр — політика
   - Структура модуля
 - section: Шлях до "Березоля"
-  words: 500
+  words: 571
   subsections:
   - Ранні роки і навчання
   - «Молодий театр» — перші експерименти
   - Перша світова і революція
   - Створення «Березоля» (1922)
 - section: Театральна реформа Курбаса
-  words: 700
+  words: 800
   subsections:
   - Проти традиційного театру
   - Система Курбаса — що нового
@@ -30,7 +32,7 @@ content_outline:
   - Синтетичний актор
   - Вплив європейського авангарду
 - section: Найважливіші постановки
-  words: 600
+  words: 686
   subsections:
   - «Газ» Кайзера
   - Джіммі Гіггінз
@@ -38,26 +40,26 @@ content_outline:
   - Що показували — як реагували
   - Критика і успіх
 - section: Конфлікт із владою
-  words: 500
+  words: 571
   subsections:
   - Тиск зростає — 1930-ті
   - «Формалізм» — звинувачення
   - Звільнення з театру (1933)
   - Заслання і арешт
 - section: Загибель і пам'ять
-  words: 500
+  words: 571
   subsections:
   - Соловецький табір
   - Розстріл (1937)
   - Реабілітація — коли і як
   - Спадщина — сучасний театр
 - section: Підсумок
-  words: 300
+  words: 344
   subsections:
   - Курбас — символ знищеного
   - Від експерименту до злочину
   - Підготовка до механізму знищення
-word_target: 3500
+word_target: 4000
 vocabulary:
 - театр
 - режисер
@@ -77,11 +79,11 @@ vocabulary:
 activities:
 - type: reading
   focus: Trace Kurbas's career arc
-- type: artistic-analysis
+- type: critical-analysis
   focus: What was revolutionary about Kurbas's method?
 - type: comparative-study
   focus: Compare Kurbas with European avant-garde (Meyerhold)
-- type: censorship-study
+- type: comparative-study
   focus: How was "formalism" used to attack artists?
 - type: essay-response
   focus: Чому радянська влада знищила авангардний театр?

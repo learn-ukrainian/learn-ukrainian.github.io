@@ -69,22 +69,10 @@ activity_hints:
   focus: Українська музика в діаспорі
   source: Cultural history sources
   items: 3 passages
-- type: quiz
-  focus: Життя та творчість Цісик
-  items: 12+
-- type: match-up
-  focus: Музичні терміни та альбоми
-  items: 10+
 - type: essay-response
   focus: Яку роль відіграла Цісик у збереженні української культури за кордоном?
   word_target: 300
   output: Analytical essay
-- type: group-sort
-  focus: Пісні за альбомами
-  items: 12+
-- type: fill-in
-  focus: Музична термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-82
@@ -103,3 +91,7 @@ sources:
   notes: Official site with discography and biography
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of квітка цісик: голос української діаспори'
+- Evaluate the contributions of голос, що повернув україну американцям
+- Trace the career and influence of голос української душі

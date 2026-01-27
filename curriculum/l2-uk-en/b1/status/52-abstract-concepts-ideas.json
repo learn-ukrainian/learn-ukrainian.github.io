@@ -2,14 +2,14 @@
   "module": "52-abstract-concepts-ideas",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:27:17.495188Z",
+  "last_audit": "2026-01-27T18:23:56.847227Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-24T22:32:37.536390Z",
+    "md": "2026-01-27T18:12:44.716476Z",
     "meta": "2026-01-26T15:44:41.615360Z",
-    "activities": "2026-01-11T23:20:02.214062Z",
+    "activities": "2026-01-27T18:09:13.298599Z",
     "vocabulary": "2026-01-25T16:02:18.566111Z",
-    "plan": "2026-01-26T15:44:41.615142Z"
+    "plan": "2026-01-27T18:17:11.806684Z"
   },
   "gates": {
     "meta": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "1704/1500 (raw: 2523) | pedagogy: 1 violations | richness: 93% < 95% min (grammar)"
+      "status": "pass",
+      "violations": 0,
+      "message": "1815/1500 (raw: 2634)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "12/8"
+      "message": "13/8"
     },
     "vocabulary": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Missing required activity types: collocation, discussion, fill-in, matching"
-    ],
-    "pass_count": 4,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

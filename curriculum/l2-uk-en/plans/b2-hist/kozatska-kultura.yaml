@@ -6,51 +6,51 @@ title: Козацька культура — кобзарі, думи та ба�
 subtitle: 'Cossack Culture: Kobzars, Dumas, and Baroque'
 content_outline:
 - section: Вступ та Контекст
-  words: 400
+  words: 427
   points:
   - 'Cultural intersection: East and West'
   - The Golden Age of Hetmanate culture
 - section: 'Кобзарі та лірники: голос народу'
-  words: 500
+  words: 533
   points:
   - The guild system (cekhy) and hierarchy
   - 'Lebiiska language: the secret code'
   - Social and political functions of kobzars
 - section: 'Українські Думи: Духовний хребет нації'
-  words: 500
+  words: 533
   points:
   - The uniqueness of the genre (recitative)
   - Improvisation and emotional depth
   - The role of dumas in shaping language
 - section: 'Козацьке бароко: Тріумф національного стилю'
-  words: 500
+  words: 533
   points:
   - Differences from Western Baroque
   - Symbolism and decorative richness
   - Major architectural monuments
 - section: 'Мистецтво: Феномен козацького бароко'
-  words: 250
+  words: 267
   points:
   - Synthesis of Western and Byzantine traditions
   - Architecture (Mazepa baroque)
   - Portraiture (Parsuna)
 - section: Меценатство як державна стратегія
-  words: 400
+  words: 427
   points:
   - The role of Ivan Mazepa and other hetmans
   - Legitimizing the state through art
 - section: 'Інтелектуальний центр: Києво-Могилянська академія'
-  words: 500
+  words: 533
   points:
   - Petro Mohyla's reforms
   - The seven liberal arts and Latin education
   - Impact on the entire Eastern European region
 - section: Первинні джерела та Читання
-  words: 300
+  words: 320
   points:
   - Analysis of Dumas and Academy statutes
 - section: Деколонізаційний погляд
-  words: 400
+  words: 427
   points:
   - Debunking the 'peasant culture' myth
   - Imperial appropriation of Ukrainian achievements
@@ -70,8 +70,6 @@ vocabulary_hints:
 activity_hints:
 - type: reading
   focus: Linguistic analysis of Duma texts and Academy rules
-- type: quiz
-  focus: Cultural terminology and historical figures
 - type: essay-response
   focus: The impact of kobzarstvo on national identity
 - type: comparative-study

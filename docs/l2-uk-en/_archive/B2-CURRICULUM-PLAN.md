@@ -122,11 +122,12 @@ B2 modules use **FULL immersion** — all body text is in Ukrainian:
 **Philosophy:** `claude_extensions/quick-ref/philosophy.md` (Strict Linguistic Standards)
 
 ### Content-Based Instruction (CBI): "Content is King"
+
 At B2, the focus shifts from "learning to read" to **"reading to learn"**. The primary driver of learning is **long, rich, detailed text**.
 
 1.  **Pedagogical Split:**
-    *   **Grammar Modules (G):** Use **TTT (Test-Teach-Test)**. Challenge students with complex texts containing the target grammar *before* explaining the rule.
-    *   **Vocabulary & History Modules (V/H):** Use **Narrative Arcs**. Vocabulary must be embedded in compelling, extended stories or historical accounts, not lists.
+    -   **Grammar Modules (G):** Use **TTT (Test-Teach-Test)**. Challenge students with complex texts containing the target grammar *before* explaining the rule.
+    -   **Vocabulary & History Modules (V/H):** Use **Narrative Arcs**. Vocabulary must be embedded in compelling, extended stories or historical accounts, not lists.
 2.  **Text Density:** Modules must feature substantial reading passages (300-500+ words) that mimic authentic Ukrainian media/literature.
 3.  **Writing Support:** All writing practices **MUST include a Model Answer** (e.g., a sample essay or letter) to support self-learners.
 
@@ -295,9 +296,11 @@ Before starting B2, learners have completed:
 ## CEFR B2 Can-Do Alignment
 
 ### CEFR B2 Descriptor (Council of Europe)
+>
 > Can understand the main ideas of complex text on both concrete and abstract topics, including technical discussions in their field of specialisation. Can interact with a degree of fluency and spontaneity that makes regular interaction with native speakers quite possible without strain for either party. Can produce clear, detailed text on a wide range of subjects and explain a viewpoint on a topical issue giving the advantages and disadvantages of various options.
 
 ### Learning Outcomes
+
 By module 110, learners can:
 
 **Understanding (Listening/Reading)**
@@ -364,6 +367,7 @@ The B2 curriculum bridges "competence" and "fluency". It shifts focus from *lear
 > **Note:** This section preserved for reference. Content has been reorganized into B2.1a/b/c phases above.
 
 ### Learning Goals
+
 - Master all 4 Ukrainian passive forms
 - Use participles for recognition and production
 - Build complex multi-clause sentences
@@ -410,6 +414,7 @@ The B2 curriculum bridges "competence" and "fluency". It shifts focus from *lear
 ---
 
 #### Module 01: Passive Voice - The Complete System
+
 **Grammar:** 4 Ukrainian passive forms overview
 
 **The 4 Passive Forms:**
@@ -430,7 +435,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Match-up: Sentence → passive type
 2. Quiz: Which passive for which register?
@@ -439,6 +443,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 02: Past Passive Participles
+
 **Grammar:** Formation and use of -ний/-тий participles
 
 **Formation:**
@@ -463,7 +468,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Transform: Active → Past passive participle
 2. Gap-fill: Agree participle with noun
@@ -472,6 +476,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 03: Impersonal -но/-то Constructions
+
 **Grammar:** The official/bureaucratic passive
 
 **Formation:**
@@ -497,7 +502,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Transform: Participle → -но/-то form
 2. Rewrite: Active sentences → official passive
@@ -506,6 +510,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 04: Reflexive Passive with -ся
+
 **Grammar:** Process-focused passive
 
 **Formation:**
@@ -529,7 +534,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Transform: Active → -ся passive
 2. Gap-fill: Process descriptions
@@ -538,6 +542,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 05: 3rd Person Plural Passive
+
 **Grammar:** Colloquial impersonal passive
 
 **Formation:**
@@ -561,7 +566,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Transform: Formal passive → colloquial
 2. Role-play: Retell events colloquially
@@ -570,9 +574,11 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 06: Passive in Context - Register Selection
+
 **Grammar:** Choosing the right passive for context
 
 **Register Guide:**
+
 | Context | Best Passive | Example |
 |---------|-------------|---------|
 | Legal document | -но/-то | Рішення прийнято. |
@@ -592,7 +598,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Rewrite: Same content in 4 passive forms
 2. Match-up: Context → appropriate passive
@@ -601,6 +606,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 07: Active Participles I - Present (-учий/-ючий)
+
 **Grammar:** Recognition of present active participles
 
 **Formation:**
@@ -624,7 +630,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Transform: Participle → relative clause
 2. Quiz: Identify participles in literary text
@@ -633,6 +638,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 08: Active Participles II - Past (-лий)
+
 **Grammar:** Recognition of past active participles
 
 **Formation:**
@@ -667,7 +673,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Identify: Spot participles in academic text
 2. Transform: Participle → relative clause
@@ -676,9 +681,11 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 09: Participles vs Relative Clauses
+
 **Grammar:** Stylistic choice between forms
 
 **Comparison:**
+
 | Participle (bookish) | Relative clause (neutral) |
 |---------------------|--------------------------|
 | працюючий студент | студент, який працює |
@@ -700,7 +707,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Rewrite: Participles → relative clauses (and vice versa)
 2. Quiz: Which style is more appropriate?
@@ -709,6 +715,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 10: B2.1a Checkpoint - Passive Voice System
+
 **Type:** Checkpoint  
 **Covers:** M01-M09 (Passive Voice System)
 
@@ -728,6 +735,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 11: Multi-clause Sentences
+
 **Grammar:** Nested clauses and complex punctuation
 
 **Clause Types:**
@@ -750,7 +758,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Diagram: Parse complex sentence structure
 2. Punctuate: Add commas to complex sentences
@@ -759,6 +766,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 12: Parenthetical Expressions
+
 **Grammar:** Вставні слова та вирази
 
 **Categories:**
@@ -799,7 +807,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Insert: Add parentheticals to neutral text
 2. Match-up: Parenthetical → function
@@ -808,6 +815,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 13: Emphasis & Inversion
+
 **Grammar:** Word order for stylistic impact
 
 **Neutral vs Emphatic:**
@@ -831,7 +839,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Reorder: Neutral → emphatic word order
 2. Identify: What is emphasized in each sentence?
@@ -840,6 +847,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 14: Stylistic Connectors
+
 **Grammar:** Advanced conjunctions and linking words
 
 **Contrast:**
@@ -872,7 +880,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Fill gaps: Insert appropriate connector
 2. Transform: Simple sentences → connected paragraph
@@ -881,6 +888,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 15: Register - Introduction to Functional Styles
+
 **Grammar:** The 5 Ukrainian functional styles
 
 **Functional Styles (Функціональні стилі):**
@@ -911,7 +919,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Match: Text excerpt → functional style
 2. Analyze: Identify style markers
@@ -920,6 +927,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 16: Register - Formal vs Informal
+
 **Grammar:** Ти/Ви and lexical choices
 
 **Forms of Address:**
@@ -928,6 +936,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - **Пан/Пані** + surname - formal business
 
 **Lexical Pairs (Informal/Formal):**
+
 | Informal | Formal |
 |----------|--------|
 | привіт | добрий день |
@@ -943,7 +952,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Transform: Informal dialogue → formal
 2. Role-play: Same request in formal/informal
@@ -952,6 +960,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 17: Register - Business Ukrainian
+
 **Grammar:** Corporate communication
 
 **Business Contexts:**
@@ -972,7 +981,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Write: Business email with proper register
 2. Transform: Casual request → business proposal
@@ -981,6 +989,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 18: Register - Academic Ukrainian
+
 **Grammar:** Academic writing conventions
 
 **Academic Contexts:**
@@ -1007,7 +1016,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Write: Academic paragraph with hedging
 2. Cite: Practice citation formats
@@ -1016,6 +1024,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 19: Register - Official/Legal Style
+
 **Grammar:** Documents, laws, applications
 
 **Document Types:**
@@ -1049,7 +1058,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Fill in: Official document templates
 2. Transform: Request → formal application
@@ -1058,6 +1066,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 20: Register - Medical Ukrainian
+
 **Grammar:** Healthcare communication
 
 **Medical Contexts:**
@@ -1084,7 +1093,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Role-play: Doctor-patient dialogue
 2. Read: Medical instructions
@@ -1093,6 +1101,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 21: Register - Technical/Scientific
+
 **Grammar:** Scientific and engineering communication
 
 **Technical Contexts:**
@@ -1113,7 +1122,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Read: Technical manual excerpt
 2. Write: Step-by-step instructions
@@ -1122,6 +1130,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 22: Register - Literary Ukrainian
+
 **Grammar:** Fiction and poetry language
 
 **Literary Features:**
@@ -1151,7 +1160,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Analyze: Literary devices in excerpt
 2. Transform: Neutral → literary style
@@ -1160,6 +1168,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 23: Register - Media/Journalistic
+
 **Grammar:** News and journalism language
 
 **Media Contexts:**
@@ -1184,7 +1193,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Write: News headline and lead
 2. Analyze: Bias in news article
@@ -1193,6 +1201,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 24: Register - Colloquial Style
+
 **Grammar:** Informal speech features
 
 **Colloquial Features:**
@@ -1212,7 +1221,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Transform: Formal → colloquial
 2. Identify: Colloquial markers in dialogue
@@ -1221,6 +1229,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 25: Register Practice - Cross-Register Rewriting
+
 **Grammar:** Applying all register knowledge
 
 **Practice Tasks:**
@@ -1241,7 +1250,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Transform: Same information in 3 registers
 2. Compare: Multiple register versions
@@ -1250,6 +1258,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 26: Politics & Government Vocabulary
+
 **Grammar:** Domain-specific vocabulary with register awareness
 
 **Political Terms:**
@@ -1271,7 +1280,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** Верховна Рада
 
-
 **Signature Activity Concepts:**
 1. Read: Political news article
 2. Discuss: Ukrainian political system
@@ -1280,6 +1288,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 27: Law & Justice Vocabulary
+
 **Grammar:** Legal terminology
 
 **Legal Terms:**
@@ -1298,7 +1307,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Read: Court report
 2. Vocabulary: Legal terms matching
@@ -1307,6 +1315,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 28: Economics & Business Vocabulary
+
 **Grammar:** Economic terminology
 
 **Economic Terms:**
@@ -1327,7 +1336,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** ВВП
 
-
 **Signature Activity Concepts:**
 1. Read: Economic news
 2. Analyze: Economic indicators
@@ -1336,6 +1344,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 29: B2.1 Integration Practice
+
 **Grammar:** All B2.1 content combined
 
 **Practice Scenarios:**
@@ -1356,7 +1365,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Write: Academic paragraph with all B2.1 features
 2. Transform: Text across registers
@@ -1365,6 +1373,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 30: B2.1 Checkpoint
+
 **Covers:** M01-29
 
 **Required Skill Groups:**
@@ -1392,6 +1401,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 > **NEW:** Added per Ukrainian State Standard 2024 cross-reference. Addresses gaps in numerals, word formation, one-member sentences, and register coverage.
 
 ### Learning Goals
+
 - Master complex numeral declension for dates, times, and statistics
 - Apply word formation patterns productively
 - Understand one-member sentence structures
@@ -1417,6 +1427,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 31: Numeral Declension I - Time & Dates
+
 **Grammar:** Time and date expressions with declension
 
 **Time Expressions:**
@@ -1431,6 +1442,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - до двадцять восьмого лютого (until February 28th)
 
 **Months in Cases:**
+
 | Month | Genitive | Prepositional |
 |-------|----------|---------------|
 | січень | січня | у січні |
@@ -1443,7 +1455,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Quiz: Tell the time in Ukrainian
 2. Fill-in: Complete date expressions
@@ -1452,6 +1463,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 32: Numeral Declension II - Compound Numbers
+
 **Grammar:** Complex numeral declension with compounds
 
 **Compound Ordinals:**
@@ -1460,6 +1472,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - у триста вісімдесят першому (in 381st - locative)
 
 **Compound Cardinals with Cases:**
+
 | Number | Genitive | Dative | Instrumental |
 |--------|----------|--------|--------------|
 | 25 | двадцяти п'яти | двадцяти п'яти | двадцятьма п'ятьма |
@@ -1477,7 +1490,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Transform: Write numbers in words
 2. Quiz: Decline compound numbers
@@ -1486,6 +1498,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 33: Word Formation - Person Suffixes
+
 **Grammar:** Forming nouns for people from other words
 
 **Suffix -ар/-яр (profession/activity):**
@@ -1512,7 +1525,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Match: Base word → person noun
 2. Form: Create person nouns from verbs
@@ -1521,6 +1533,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 34: Word Formation - Abstract Nouns
+
 **Grammar:** Forming abstract nouns from other words
 
 **Suffix -ння/-ення (action/process):**
@@ -1547,7 +1560,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Transform: Verb → abstract noun
 2. Match: Adjective → quality noun
@@ -1556,6 +1568,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 35: Word Formation - Place & Object Names
+
 **Grammar:** Forming place and object names
 
 **Suffix -ня (place of activity):**
@@ -1582,7 +1595,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Match: Activity → place name
 2. Form: Create place nouns
@@ -1591,6 +1603,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 36: Word Formation - Adjective Formation
+
 **Grammar:** Forming adjectives from nouns
 
 **Suffix -ський/-цький (belonging/origin):**
@@ -1619,7 +1632,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** музикальний
 
-
 **Signature Activity Concepts:**
 1. Form: Create adjectives from nouns
 2. Match: Adjective pattern → meaning
@@ -1628,6 +1640,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 37: Word Formation - Adverb & Integration
+
 **Grammar:** Adverb formation and word family review
 
 **Adverbs from Adjectives:**
@@ -1637,6 +1650,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - український → по-українськи (in Ukrainian)
 
 **Adverb Patterns:**
+
 | Pattern | Example | Meaning |
 |---------|---------|---------|
 | Adj + -о | швидко | quickly |
@@ -1656,7 +1670,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Form: Create adverbs from adjectives
 2. Transform: Word family chains
@@ -1665,6 +1678,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 38: One-member Sentences (Односкладні)
+
 **Grammar:** Sentences with one main clause component
 
 **Означено-особові (Definite-personal):**
@@ -1693,7 +1707,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Identify: Classify sentence types
 2. Transform: Two-member → one-member
@@ -1702,6 +1715,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 39: Register - Religious & Epistolary Styles
+
 **Grammar:** Religious and letter-writing registers
 
 **Religious Style (Релігійний стиль):**
@@ -1732,7 +1746,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** Господь, Бог
 
-
 **Signature Activity Concepts:**
 1. Identify: Religious vs secular text
 2. Write: Formal letter/email
@@ -1741,6 +1754,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 40: Advanced Pronoun Declension
+
 **Grammar:** Indefinite, negative, and defining pronoun declension
 
 **Indefinite Pronouns (State Standard 4240-4244):**
@@ -1772,7 +1786,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Fill-in: Decline indefinite/negative pronouns
 2. Quiz: Choose correct pronoun form
@@ -1785,6 +1798,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 > **Checkpoint:** M70 tests M41-69 skill groups. See `b2-checkpoint-module-template.md`.
 
 ### Learning Goals
+
 - Master Ukrainian proverbs for cultural literacy
 - Use set expressions naturally
 - Employ idioms appropriately
@@ -1814,6 +1828,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 41: Aspect Nuances I - Secondary Imperfectivization
+
 **Grammar:** Deriving imperfective verbs from perfective (Standard 4320-4325)
 **Focus:** Iterative actions and process focus derived from results.
 
@@ -1832,7 +1847,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Form: Derive Secondary Imperfective form
 2. Context: Choose nuances (result vs repeated process)
@@ -1841,6 +1855,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 42: Aspect Nuances II - Imperative & Infinitive
+
 **Grammar:** Aspect usage in commands and infinite forms
 **Focus:** Politeness, urgency, prohibition.
 
@@ -1859,7 +1874,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Context: "You are a host" -> Choose Polite Imperfective
 2. Quiz: Warning vs Rule (Perfective vs Imperfective)
@@ -1868,6 +1882,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 43: Correlative Constructions (Співвідносні)
+
 **Grammar:** Paired demonstrative and relative words (Standard 4500-4501)
 **Structure:** [Demonstrative Word] ... [Relative Word]
 
@@ -1890,7 +1905,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Combine: Join two sentences using correlatives
 2. Gap-fill: Complete the pair (Той, .... працює)
@@ -1899,6 +1913,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 44: Complex Syntax - Ellipsis & Parcelling
+
 **Grammar:** Omitted words and stylistic fragmentation
 **Focus:** Literature and Expressive Speech.
 
@@ -1917,7 +1932,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Recover: Fill in the omitted words
 2. Style: Rewrite standard sentence using Parcelling
@@ -1926,6 +1940,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 45: Proverbs I - Work, Wisdom & Character
+
 **Type:** Phraseology (Merged M41-42)
 **Focus:** Fundamental wisdom about life, work, and people.
 
@@ -1958,6 +1973,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 46: Proverbs II - Nature, Time & Caution
+
 **Type:** Phraseology (Merged M43-44)
 **Focus:** Planning, risk, and natural cycles.
 
@@ -1990,6 +2006,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 47: Set Expressions I - Body & Animals
+
 **Type:** Phraseology (Merged M45-46)
 **Focus:** Somatic and Zoomorphic idioms.
 
@@ -2022,6 +2039,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 48: Set Expressions II - Objects & Abstract
+
 **Type:** Phraseology (Merged M47-48)
 **Focus:** Metaphors with objects and general concepts.
 
@@ -2054,6 +2072,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 49: Idioms - Body (Head/Face)
+
 **Type:** Phraseology
 
 **Idioms:**
@@ -2072,7 +2091,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Match: Head/face idiom → meaning
 2. Act out: Literal vs figurative meaning
@@ -2081,6 +2099,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 50: Idioms - Body (Hands/Legs)
+
 **Type:** Phraseology
 
 **Idioms:**
@@ -2099,7 +2118,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Match: Hand/leg idiom → meaning
 2. Use: Create situations for each idiom
@@ -2108,6 +2126,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 51: Idioms - Body (Heart/Soul)
+
 **Type:** Phraseology
 
 **Idioms:**
@@ -2126,7 +2145,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Match: Heart/soul idiom → emotion
 2. Write: Short story using 3 idioms
@@ -2135,6 +2153,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 52: Idioms - Animals I (Wolf, Dog, Horse)
+
 **Type:** Phraseology
 
 **Idioms:**
@@ -2153,7 +2172,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Match: Animal idiom → meaning
 2. Discuss: Why these animals in idioms
@@ -2162,6 +2180,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 53: Idioms - Animals II (Birds, Fish, Insects)
+
 **Type:** Phraseology
 
 **Idioms:**
@@ -2180,7 +2199,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Match: Bird/fish/insect idiom → meaning
 2. Compare: Animal idioms across cultures
@@ -2189,6 +2207,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 54: Idioms - Nature (Water, Fire, Earth, Wind)
+
 **Type:** Phraseology
 
 **Idioms:**
@@ -2207,7 +2226,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Match: Nature idiom → meaning
 2. Categorize: Idioms by element
@@ -2216,6 +2234,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 55: Synonyms - Emotion
+
 **Type:** Vocabulary
 
 **Synonym Groups:**
@@ -2240,7 +2259,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Nuance: Explain difference between synonyms
 2. Context: Which synonym fits which situation
@@ -2249,6 +2267,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 56: Synonyms - Size
+
 **Type:** Vocabulary
 
 **Synonym Groups:**
@@ -2273,7 +2292,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Order: Rank synonyms by intensity
 2. Match: Synonym → appropriate context
@@ -2282,6 +2300,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 57: Synonyms - Movement
+
 **Type:** Vocabulary
 
 **Synonym Groups:**
@@ -2306,7 +2325,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Match: Movement verb → manner
 2. Describe: Different ways of moving
@@ -2315,6 +2333,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 58: Synonyms - Quality
+
 **Type:** Vocabulary
 
 **Synonym Groups:**
@@ -2339,7 +2358,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Scale: Rank quality synonyms
 2. Context: Formal vs informal quality words
@@ -2348,6 +2366,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 59: Synonyms - Communication
+
 **Type:** Vocabulary
 
 **Synonym Groups:**
@@ -2372,7 +2391,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Match: Communication verb → context
 2. Rewrite: Same dialogue with different verbs
@@ -2381,6 +2399,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 60: Synonyms - Character
+
 **Type:** Vocabulary
 
 **Synonym Groups:**
@@ -2405,7 +2424,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Profile: Describe person with character synonyms
 2. Contrast: Positive vs negative traits
@@ -2414,6 +2432,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 61: Synonyms - Time
+
 **Type:** Vocabulary
 
 **Synonym Groups:**
@@ -2438,7 +2457,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Timeline: Place time synonyms on timeline
 2. Nuance: Difference between now synonyms
@@ -2447,6 +2465,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 62: Synonyms - Place
+
 **Type:** Vocabulary
 
 **Synonym Groups:**
@@ -2469,7 +2488,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Map: Use place synonyms to give directions
 2. Distinguish: Static vs directional place words
@@ -2478,6 +2496,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 63: Synonyms - Quantity
+
 **Type:** Vocabulary
 
 **Synonym Groups:**
@@ -2502,7 +2521,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Quantify: Express amounts with synonyms
 2. Register: Formal vs informal quantity words
@@ -2511,6 +2529,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 64: Synonyms - Action
+
 **Type:** Vocabulary
 
 **Synonym Groups:**
@@ -2535,7 +2554,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Match: Action verb → context
 2. Aspect: Imperfective/perfective action pairs
@@ -2544,6 +2562,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 65: Synonyms - State
+
 **Type:** Vocabulary
 
 **Synonym Groups:**
@@ -2568,7 +2587,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Distinguish: State verbs nuances
 2. Describe: Current state with synonyms
@@ -2577,6 +2595,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 66: Synonyms - Abstract
+
 **Type:** Vocabulary
 
 **Synonym Groups:**
@@ -2601,7 +2620,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Distinguish: Abstract concept synonyms
 2. Academic: Use abstract vocabulary
@@ -2610,6 +2628,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 67: Advanced Conjunctions I - Causal & Concessive
+
 **Type:** Grammar
 
 **Causal Conjunctions:**
@@ -2633,7 +2652,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Connect: Join sentences with conjunctions
 2. Register: Formal vs informal conjunctions
@@ -2642,6 +2660,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 68: Advanced Conjunctions II - Temporal & Conditional
+
 **Type:** Grammar
 
 **Temporal Conjunctions:**
@@ -2667,7 +2686,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Combine: Sentences with temporal conjunctions
 2. Conditionals: Real vs unreal conditions
@@ -2676,6 +2694,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 69: B2.2 Integration Practice
+
 **Type:** Practice
 
 **Integration Tasks:**
@@ -2690,7 +2709,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to B2 level
 
-
 **Signature Activity Concepts:**
 1. Write: Essay using phraseology
 2. Speak: Presentation with varied vocabulary
@@ -2699,6 +2717,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 70: B2.2 Checkpoint
+
 **Covers:** M31-M69
 
 **Required Skill Groups:**
@@ -2738,6 +2757,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 > - M84: **Checkpoint: Register Synthesis** — confirms readiness for B2.4
 
 ### Learning Goals
+
 - Build advanced domain vocabulary (Medicine, Tech, Science, Arts)
 - Develop academic writing and text analysis skills
 - Understand Ukrainian cultural identity (Diaspora, Religion)
@@ -2792,6 +2812,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 > - M94: **B2 Final Exam** — cumulative assessment of ALL B2 (M01-93)
 
 ### Learning Goals
+
 - Master professional email and report writing
 - Develop news analysis and media literacy skills
 - Build presentation and public speaking abilities
@@ -2932,6 +2953,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ## Activity Types by Module Type
 
 ### G-Modules (Grammar Focus: M01-25)
+
 1. Quiz: Register identification
 2. Transform: Passive voice / Register rewriting
 3. Match-up: Grammar concept to style
@@ -2939,6 +2961,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 5. Error-correction: Stylistic errors
 
 ### V-Modules (Vocabulary Focus: M41-70)
+
 1. Match-up: Synonyms and nuance
 2. Fill-in: Narrative context
 3. Group-sort: Register sorting
@@ -2946,6 +2969,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 5. Quiz: Phraseology meaning
 
 ### C-Modules (Skills & Checkpoint: M71-84)
+
 1. Quiz: Comprehensive review
 2. Production: Extended writing with model answer
 3. Match-up: Cross-phase concepts

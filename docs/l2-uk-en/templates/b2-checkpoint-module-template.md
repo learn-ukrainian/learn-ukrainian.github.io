@@ -177,7 +177,6 @@ Each checkpoint tests specific **skill groups** — concrete abilities learners 
 [Extended passage testing ALL passive skills in context]
 ```
 
-
 ---
 
 ## Naturalness Quality Checklist

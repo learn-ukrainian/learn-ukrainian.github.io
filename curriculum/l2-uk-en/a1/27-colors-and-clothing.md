@@ -53,7 +53,7 @@
 
 **Describing what someone wears:**
 
-- Він у **білій** сорочці... _(wait, this uses locative case!)_
+- Він у **білій** сорочці... *(wait, this uses locative case!)*
 
 Actually, for A1, we describe clothing WITHOUT the locative case. Use simple sentences:
 

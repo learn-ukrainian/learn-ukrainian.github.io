@@ -1,9 +1,11 @@
 # Audit Report: M65 — 65-ukrainian-avant-garde.md
+
 **Level:** C1 | **Module:** M65 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:34
 
 ## Configuration
+
 **Type:** C1-cultural
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -16,6 +18,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння українського авангарду | 8 | 5 | ✅ |
@@ -38,11 +41,13 @@
 - Low density activities: 0
 
 ## Recommendation
+
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ✅ 3731/3000 (raw: 3865)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
@@ -61,10 +66,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 95% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 48 | 15 | 100% | 25% | 25.0% |
@@ -78,6 +85,7 @@
 | **TOTAL** | | | | | **95.8%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 79 | Included in Core |

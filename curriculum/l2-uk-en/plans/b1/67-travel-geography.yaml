@@ -5,42 +5,23 @@ version: '2.0'
 title: Подорожі та географія
 subtitle: Travel & Geography
 content_outline:
-- section: 'Introduction: Travel Vocabulary'
-  words: 150
+- section: Вступ
+  words: 368
   points:
   - Types of travel
   - Ukrainian geography basics
   - Vocabulary overview
-- section: Travel Types
-  words: 250
+- section: Читання
+  words: 1474
   points:
-  - подорож, мандрівка, поїздка
-  - екскурсія, тур, відпустка
-  - Distinguishing travel concepts
-- section: Geography Terms
-  words: 250
-  points:
-  - гори, ріки, озера, море
-  - регіон, область, район
-  - Ukrainian geography vocabulary
-- section: Travel Infrastructure
-  words: 250
-  points:
-  - аеропорт, вокзал, порт
-  - готель, хостел, курорт
-  - Tourism facilities
-- section: Travel Actions
-  words: 200
-  points:
-  - подорожувати, мандрувати
-  - бронювати, замовляти
-  - Travel verbs
-- section: 'Practice: Travel Planning'
-  words: 100
+  - Travel texts
+  - Ukrainian geography
+- section: Діалоги
+  words: 1158
   points:
   - Discuss travel experiences
   - Plan trips
-word_target: 1200
+word_target: 3000
 vocabulary_hints:
   required:
   - подорож (journey)
@@ -57,16 +38,16 @@ vocabulary_hints:
   - відпустка (vacation)
   - екскурсія (excursion)
 activity_hints:
-- type: collocation
+- type: match-up
   focus: Travel noun phrases
   items: 25
 - type: fill-in
   focus: Describe travel and geography
   items: 20
-- type: matching
+- type: match-up
   focus: Match geography terms
   items: 15
-- type: discussion
+- type: quiz
   focus: Discuss travel experiences
   items: 10
 focus: vocabulary

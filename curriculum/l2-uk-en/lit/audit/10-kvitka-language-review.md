@@ -1,10 +1,12 @@
 # Audit Report: M10 — 10-kvitka-language.md
+
 **Level:** LIT | **Module:** M10 | **Phase:** LIT.2 | **Pedagogy:** literature | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:57:43
 
 ## Configuration
+
 **Type:** LIT
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | essay-response | Есе-Роздум: Сльози і Сміх | 1 | 1 | ✅ |
@@ -33,11 +36,13 @@
 - Low density activities: 0
 
 ## Recommendation
+
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 3752/4000 (raw: 4341)
 - **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
@@ -56,10 +61,12 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
+
 **Score:** 99% (minimum: 90%)
 **Module Type:** literature
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
@@ -75,6 +82,7 @@
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

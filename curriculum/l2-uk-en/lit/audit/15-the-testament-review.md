@@ -1,10 +1,12 @@
 # Audit Report: M15 — 15-the-testament.md
+
 **Level:** LIT | **Module:** M15 | **Phase:** LIT.3 | **Pedagogy:** Analysis | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:57:47
 
 ## Configuration
+
 **Type:** LIT-literature
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | essay-response | Есе-аналіз | 1 | 1 | ✅ |
@@ -33,11 +36,13 @@
 - Low density activities: 0
 
 ## Recommendation
+
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 3572/4000 (raw: 4454)
 - **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
@@ -56,10 +61,12 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
+
 **Score:** 96% (minimum: 90%)
 **Module Type:** literature
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
@@ -75,11 +82,13 @@
 | **TOTAL** | | | | | **96.5%** |
 
 ### Dryness Flags & Fixes
+
 - ❌ **WALL_OF_TEXT**
   - FIX:
     Break paragraphs > 500 words. Insert headers (##), bullet lists, or callout boxes every 200-300 words.
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

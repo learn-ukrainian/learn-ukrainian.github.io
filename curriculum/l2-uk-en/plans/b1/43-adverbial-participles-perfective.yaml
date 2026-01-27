@@ -5,42 +5,32 @@ version: '2.0'
 title: Дієприслівники доконаного виду
 subtitle: Adverbial Participles - Perfective (-вши/-ши)
 content_outline:
-- section: 'Introduction: Completed Prior Actions'
-  words: 150
+- section: Вступ
+  words: 286
   points:
   - Perfective vs imperfective participles
   - Temporal relationship
-  - Before main action pattern
-- section: 'Formation: -вши/-ши Suffixes'
-  words: 250
+- section: Теоретичне пояснення
+  words: 1134
   points:
-  - From perfective past stem
-  - -вши after vowels
-  - -ши after consonants
-- section: Expressing Sequence
-  words: 250
-  points:
-  - Прочитавши книгу, вона заснула
-  - Action completed before main verb
-  - Replacing після того як clauses
-- section: Common Perfective Participles
-  words: 250
-  points:
-  - зробивши, прочитавши, написавши
-  - прийшовши, пішовши, взявши
-  - Irregular formations
-- section: Imperfective vs Perfective Choice
-  words: 200
-  points:
-  - Simultaneous (-ючи) vs prior (-вши)
-  - Semantic distinctions
-  - Context-dependent selection
-- section: 'Practice: Sequencing Actions'
-  words: 100
+  - Formation -вши/-ши suffixes
+  - Expressing sequence
+  - Common perfective participles
+- section: Практика
+  words: 733
   points:
   - Form perfective participles
   - Build sequential narratives
-word_target: 1200
+- section: Діалоги
+  words: 666
+  points:
+  - Participles in conversation
+  - Real-world usage
+- section: Потрібно більше практики?
+  words: 181
+  points:
+  - Additional exercises
+word_target: 3000
 vocabulary_hints:
   required:
   - доконаний вид (perfective aspect)
@@ -57,16 +47,16 @@ vocabulary_hints:
   - основа (stem)
   - закінчення (ending)
 activity_hints:
-- type: transformation
+- type: cloze
   focus: Perfective verb to participle
   items: 25
 - type: fill-in
   focus: Complete with perfective participles
   items: 20
-- type: matching
+- type: match-up
   focus: Match participle to meaning
   items: 15
-- type: writing
+- type: cloze
   focus: Write sequential narratives
   items: 10
 focus: grammar

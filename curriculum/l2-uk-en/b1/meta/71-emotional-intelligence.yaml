@@ -3,6 +3,7 @@ level: B1
 slug: emotional-intelligence
 version: '2.0'
 id: b1-71
+focus: vocabulary
 naturalness:
   score: 9
   status: PASS

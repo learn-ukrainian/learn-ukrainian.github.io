@@ -34,7 +34,7 @@
 
 ## Issues
 
-- _Fixed:_ Vocabulary extraction errors (`місяців` -> `місяць`, `налив` -> `налити`, `несподіване` -> `несподіваний`).
+- *Fixed:* Vocabulary extraction errors (`місяців` -> `місяць`, `налив` -> `налити`, `несподіване` -> `несподіваний`).
 
 ## Recommendation
 

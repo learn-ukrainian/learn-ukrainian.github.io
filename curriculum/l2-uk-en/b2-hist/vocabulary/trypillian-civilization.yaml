@@ -261,11 +261,11 @@ items:
   ipa: /ɦɔspɔdarsʲkɪj/
   translation: economic, household
   pos: adj
-- lemma: груда
+- lemma: груд
   ipa: /ɦrˈudɪ/
   translation: chest, breasts
   pos: noun
-  gender: f
+  gender: m
 - lemma: двозернянка
   ipa: /dʋɔzɛrnˈjanka/
   translation: emmer (type of wheat)
@@ -791,6 +791,7 @@ items:
   ipa: /par/
   translation: fallow (land)
   pos: noun
+  gender: f
 - lemma: патріархальний
   ipa: /patriarxˈalʲnɪj/
   translation: patriarchal

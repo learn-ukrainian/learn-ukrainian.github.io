@@ -59,18 +59,12 @@ vocabulary_hints:
   - алергія (allergy)
   - фармацевт (pharmacist)
 activity_hints:
-- type: vocabulary-drill
+- type: match-up
   focus: Pharmacy vocabulary
   items: 25
-- type: dialogue
-  focus: Pharmacy conversation
-  items: 12
 - type: fill-in
   focus: Complete medicine instructions
   items: 15
-- type: role-play
-  focus: Buy medicine at pharmacy
-  items: 8
 focus: practical
 pedagogy: PPP
 prerequisites:

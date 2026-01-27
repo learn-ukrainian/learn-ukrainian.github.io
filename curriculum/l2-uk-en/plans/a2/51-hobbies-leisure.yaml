@@ -5,42 +5,28 @@ version: '2.0'
 title: Hobbies and Leisure
 subtitle: What We Do for Fun
 content_outline:
-- section: 'Introduction: Free Time in Ukraine'
-  words: 100
+- section: 'Вступ'
+  words: 175
   points:
   - How Ukrainians spend free time
   - Hobbies vocabulary overview
-  - Cultural aspects of leisure
-- section: Indoor Hobbies
-  words: 200
+- section: 'Граматика'
+  words: 500
   points:
-  - читати, малювати, грати на гітарі
-  - дивитися фільми, слухати музику
-  - Creative hobbies
-- section: Outdoor Activities
-  words: 200
+  - Indoor hobbies (читати, малювати, грати на гітарі)
+  - Outdoor activities (грати у футбол, займатися спортом)
+  - Social activities (зустрічатися з друзями)
+  - Frequency expressions (часто, рідко, іноді)
+- section: 'Практика'
+  words: 650
   points:
-  - грати у футбол, теніс
-  - займатися спортом, бігати
-  - Accusative vs instrumental cases
-- section: Social Activities
-  words: 200
+  - Dialogues about weekend plans
+  - Describe hobbies and interests
+- section: 'Підсумок'
+  words: 105
   points:
-  - зустрічатися з друзями
-  - ходити в кіно, на концерт
-  - Weekend plans
-- section: Frequency and Preferences
-  words: 150
-  points:
-  - часто, рідко, іноді
-  - Я люблю / мені подобається
-  - Expressing preferences
-- section: 'Practice: Weekend Plans'
-  words: 150
-  points:
-  - Describe your hobbies
-  - Ask about others' interests
-word_target: 1000
+  - Summary of vocabulary
+word_target: 1430
 vocabulary_hints:
   required:
   - хобі (hobby)
@@ -59,16 +45,16 @@ vocabulary_hints:
   - концерт (concert)
   - виставка (exhibition)
 activity_hints:
-- type: vocabulary-drill
+- type: match-up
   focus: Hobbies and activities
   items: 30
-- type: matching
+- type: match-up
   focus: Match verbs to activities
   items: 20
-- type: dialogue
+- type: cloze
   focus: Weekend plans conversation
   items: 10
-- type: speaking
+- type: quiz
   focus: Describe your hobbies
   items: 8
 focus: vocabulary

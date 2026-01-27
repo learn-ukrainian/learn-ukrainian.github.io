@@ -2,128 +2,128 @@ module: opryshky
 level: B2
 version: '2.0'
 items:
-  - lemma: опришок
-    ipa: /ɔˈprɪʃɔk/
-    translation: opryshok (member of a rebel movement in the Carpathians)
-    pos: noun
-    gender: m
-  - lemma: легінь
-    ipa: /ˈlɛɦinʲ/
-    translation: young man, brave fellow (dialectal)
-    pos: noun
-    gender: m
-  - lemma: бартка
-    ipa: /ˈbɑrtkɑ/
-    translation: bartka (traditional Hutsul axe)
-    pos: noun
-    gender: f
-  - lemma: верховина
-    ipa: /ʋɛrxɔˈʋɪnɑ/
-    translation: highlands, upland area
-    pos: noun
-    gender: f
-  - lemma: полонина
-    ipa: /pɔlɔˈnɪnɑ/
-    translation: polonyna (high mountain pasture)
-    pos: noun
-    gender: f
-  - lemma: ватажок
-    ipa: /ʋɑtɑˈʒɔk/
-    translation: leader, chieftain
-    pos: noun
-    gender: m
-  - lemma: спротив
-    ipa: /ˈsprɔtɪu̯/
-    translation: resistance
-    pos: noun
-    gender: m
-  - lemma: гніт
-    ipa: /ɦnʲit/
-    translation: oppression
-    pos: noun
-    gender: m
-  - lemma: месник
-    ipa: /ˈmɛsnɪk/
-    translation: avenger
-    pos: noun
-    gender: m
-  - lemma: побратим
-    ipa: /pɔbrɑˈtɪm/
-    translation: brother-in-arms, sworn brother
-    pos: noun
-    gender: m
-  - lemma: скарб
-    ipa: /skɑrb/
-    translation: treasure
-    pos: noun
-    gender: m
-  - lemma: легенда
-    ipa: /lɛˈɦɛndɑ/
-    translation: legend
-    pos: noun
-    gender: f
-  - lemma: зрада
-    ipa: /ˈzrɑdɑ/
-    translation: betrayal
-    pos: noun
-    gender: f
-  - lemma: панщина
-    ipa: /ˈpɑnʲʃt͡ʃɪnɑ/
-    translation: corvee, labor service for a landlord
-    pos: noun
-    gender: f
-  - lemma: кріпацтво
-    ipa: /kriˈpɑt͡stʋɔ/
-    translation: serfdom
-    pos: noun
-    gender: n
-  - lemma: гуцул
-    ipa: /ˈɦut͡sul/
-    translation: Hutsul (highlander group in Carpathians)
-    pos: noun
-    gender: m
-  - lemma: кептар
-    ipa: /ˈkɛptɑr/
-    translation: keptar (traditional embroidered sheepskin vest)
-    pos: noun
-    gender: m
-  - lemma: топірець
-    ipa: /tɔpiˈrɛt͡sʲ/
-    translation: small axe
-    pos: noun
-    gender: m
-  - lemma: визволення
-    ipa: /ʋɪˈzʋɔlenʲːɑ/
-    translation: liberation
-    pos: noun
-    gender: n
-  - lemma: загорожа
-    ipa: /zɑɦɔˈrɔʒɑ/
-    translation: enclosure, fence
-    pos: noun
-    gender: f
-  - lemma: гулянка
-    ipa: /ɦuˈlʲɑnkɑ/
-    translation: party, revelry (sometimes used for a raid)
-    pos: noun
-    gender: f
-  - lemma: підпілля
-    ipa: /pidˈpilʲːɑ/
-    translation: underground, clandestine movement
-    pos: noun
-    gender: n
-  - lemma: відвага
-    ipa: /ˈʋidʋɑɦɑ/
-    translation: courage, bravery
-    pos: noun
-    gender: f
-  - lemma: прокляття
-    ipa: /prɔˈklʲɑtʲːɑ/
-    translation: curse
-    pos: noun
-    gender: n
-  - lemma: спогад
-    ipa: /ˈspɔɦɑd/
-    translation: memory, recollection
-    pos: noun
-    gender: m
+- lemma: опришок
+  ipa: /ɔˈprɪʃɔk/
+  translation: opryshok (member of a rebel movement in the Carpathians)
+  pos: noun
+  gender: m
+- lemma: легінь
+  ipa: /ˈlɛɦinʲ/
+  translation: young man, brave fellow (dialectal)
+  pos: noun
+  gender: m
+- lemma: бартка
+  ipa: /ˈbɑrtkɑ/
+  translation: bartka (traditional Hutsul axe)
+  pos: noun
+  gender: f
+- lemma: верховина
+  ipa: /ʋɛrxɔˈʋɪnɑ/
+  translation: highlands, upland area
+  pos: noun
+  gender: f
+- lemma: полонина
+  ipa: /pɔlɔˈnɪnɑ/
+  translation: polonyna (high mountain pasture)
+  pos: noun
+  gender: f
+- lemma: ватажок
+  ipa: /ʋɑtɑˈʒɔk/
+  translation: leader, chieftain
+  pos: noun
+  gender: m
+- lemma: спротив
+  ipa: /ˈsprɔtɪu̯/
+  translation: resistance
+  pos: noun
+  gender: m
+- lemma: гніт
+  ipa: /ɦnʲit/
+  translation: oppression
+  pos: noun
+  gender: m
+- lemma: месник
+  ipa: /ˈmɛsnɪk/
+  translation: avenger
+  pos: noun
+  gender: m
+- lemma: побратим
+  ipa: /pɔbrɑˈtɪm/
+  translation: brother-in-arms, sworn brother
+  pos: noun
+  gender: m
+- lemma: скарб
+  ipa: /skɑrb/
+  translation: treasure
+  pos: noun
+  gender: m
+- lemma: легенда
+  ipa: /lɛˈɦɛndɑ/
+  translation: legend
+  pos: noun
+  gender: f
+- lemma: зрада
+  ipa: /ˈzrɑdɑ/
+  translation: betrayal
+  pos: noun
+  gender: f
+- lemma: панщина
+  ipa: /ˈpɑnʲʃt͡ʃɪnɑ/
+  translation: corvee, labor service for a landlord
+  pos: noun
+  gender: f
+- lemma: кріпацтво
+  ipa: /kriˈpɑt͡stʋɔ/
+  translation: serfdom
+  pos: noun
+  gender: n
+- lemma: гуцул
+  ipa: /ˈɦut͡sul/
+  translation: Hutsul (highlander group in Carpathians)
+  pos: noun
+  gender: m
+- lemma: кептар
+  ipa: /ˈkɛptɑr/
+  translation: keptar (traditional embroidered sheepskin vest)
+  pos: noun
+  gender: m
+- lemma: топірець
+  ipa: /tɔpiˈrɛt͡sʲ/
+  translation: small axe
+  pos: noun
+  gender: m
+- lemma: визволення
+  ipa: /ʋɪˈzʋɔlenʲːɑ/
+  translation: liberation
+  pos: noun
+  gender: n
+- lemma: загорожа
+  ipa: /zɑɦɔˈrɔʒɑ/
+  translation: enclosure, fence
+  pos: noun
+  gender: f
+- lemma: гулянка
+  ipa: /ɦuˈlʲɑnkɑ/
+  translation: party, revelry (sometimes used for a raid)
+  pos: noun
+  gender: f
+- lemma: підпілля
+  ipa: /pidˈpilʲːɑ/
+  translation: underground, clandestine movement
+  pos: noun
+  gender: n
+- lemma: відвага
+  ipa: /ˈʋidʋɑɦɑ/
+  translation: courage, bravery
+  pos: noun
+  gender: f
+- lemma: прокляття
+  ipa: /prɔˈklʲɑtʲːɑ/
+  translation: curse
+  pos: noun
+  gender: n
+- lemma: спогад
+  ipa: /ˈspɔɦɑd/
+  translation: memory, recollection
+  pos: noun
+  gender: m

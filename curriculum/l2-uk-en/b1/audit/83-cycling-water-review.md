@@ -1,20 +1,20 @@
 # Audit Report: M83 — 83-cycling-water.md
-**Level:** B1 | **Module:** M83 | **Phase:** B1 | **Pedagogy:** CBI | **Target:** 1500
+**Level:** B1 | **Module:** M83 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:27:37
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-27 20:14:47
 
 ## Configuration
-**Type:** B1-skills
+**Type:** B1-culture
 **Word Target:** 1500 words
-**Activities:** 10-14 required
+**Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
-**Priority Types:** cloze, fill-in, mark-the-words
-**Required Types:** discussion, fill-in, matching, reading
-**Engagement:** ≥4 callouts
+**Priority Types:** fill-in, match-up, quiz, reading
+**Required Types:** fill-in, match-up, quiz, reading
+**Engagement:** ≥5 callouts
 **Immersion:** 90-100%
-**Vocab Target:** ≥15 words
+**Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
@@ -31,70 +31,49 @@
 | 9 | error-correction | Виправте помилки | 8 | 6 | ✅ |
 | 10 | translate | Переклад фраз | 8 | 6 | ✅ |
 | 11 | mark-the-words | Позначте дієслова | 12 | 6 | ✅ |
+| 12 | reading | Велосипедний туризм в Україні | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 11 (target: 10-14) ✅
-- Unique types: 11 (minimum: 4) ✅
-- Priority types used: 3/3 (cloze, fill-in, mark-the-words) ✅
-- Required types used: 1/4 (fill-in) ❌
+- Total activities: 12 (target: 8-12) ✅
+- Unique types: 12 (minimum: 4) ✅
+- Priority types used: 4/4 (fill-in, match-up, quiz, reading) ✅
+- Required types used: 4/4 (fill-in, match-up, quiz, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['matching', 'discussion']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
-  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 1775/1500 (raw: 1858)
-- **Activities:** ✅ 11/10
+- **Words:** ✅ 1800/1500 (raw: 1883)
+- **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/4
+- **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 51/15
+- **Vocab:** ✅ 51/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 97.9% (target 85-100% (B1.7-8 Ukraine))
-- **Richness:** ❌ 86% < 95% min (grammar)
+- **Immersion:** 🇺🇦 98.0% (target 85-100% (B1.7-8 Ukraine))
+- **Richness:** ✅ 99% (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 86% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 99% (minimum: 95%)
+**Module Type:** cultural
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 14 | 24 | 58% | 20% | 11.6% |
-| engagement | 7 | 5 | 100% | 15% | 15.0% |
-| dialogues | 13 | 4 | 100% | 15% | 15.0% |
-| variety | 0.98 | - | 98% | 10% | 9.8% |
-| cultural | 6 | 3 | 100% | 10% | 10.0% |
-| realworld | 5 | 3 | 100% | 10% | 10.0% |
-| visual | 7 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 24 | 5 | 100% | 5% | 5.0% |
-| proverbs | 0 | 1 | 0% | 5% | 0.0% |
-| **TOTAL** | | | | | **86.4%** |
-
-### Dryness Flags & Fixes
-- ❌ **NO_PROVERBS**
-  - FIX:
-    Add 1+ Ukrainian proverb. Use this format:
-    
-    Українці кажу|ть: «[Proverb in Ukrainian]»
-    
-    Зверніть увагу: **[word]** — [aspect] вид, бо [explanation why this aspect is used].
-    
-    Example: «Не кажи гоп, поки не перескочиш» — **перескочиш** is perfective because it's about the result.
+| cultural | 6 | 5 | 100% | 33% | 33.3% |
+| engagement | 7 | 6 | 100% | 20% | 20.0% |
+| visual | 8 | 4 | 100% | 13% | 13.3% |
+| variety | 0.98 | - | 98% | 7% | 6.5% |
+| paragraph_var | 1.00 | - | 100% | 7% | 6.7% |
+| examples | 15 | - | 100% | 7% | 6.7% |
+| realworld | 5 | - | 100% | 7% | 6.7% |
+| questions | 24 | 4 | 100% | 7% | 6.7% |
+| **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -105,5 +84,5 @@
 | **Інтеграція** | ⚪️ | 735 | Skipped |
 | **Практика** | ⚪️ | 112 | Skipped |
 | **Продукція** | ⚪️ | 435 | Skipped |
-| **Підсумок** | ✅ | 120 | Included in Core |
+| **Підсумок** | ✅ | 145 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

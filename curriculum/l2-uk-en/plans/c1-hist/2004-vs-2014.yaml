@@ -5,56 +5,58 @@ version: '1.0'
 title: 'Помаранчева vs Гідності: Чому різні результати?'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of помаранчева vs гідності: чому різні результати?'
+- Evaluate the historical significance of дві революції, різні наслідки
 content_outline:
 - section: Вступ — Дві революції, різні наслідки
-  words: 400
+  words: 457
   subsections:
   - 2004 — перемога, потім розчарування
   - 2014 — трагедія, потім трансформація
   - Чому так по-різному
   - Структура модуля
 - section: Помаранчева 2004
-  words: 700
+  words: 800
   subsections:
   - Причини — фальсифікація виборів
   - Методи — мирний протест
   - Результат — перевибори, Ющенко
   - Чому не втримали
 - section: Гідності 2014
-  words: 700
+  words: 800
   subsections:
   - Причини — Вільнюс, побиття студентів
   - Ескалація — насильство, жертви
   - Результат — втеча Януковича, війна
   - Чому тривалі зміни
 - section: Ключові відмінності
-  words: 600
+  words: 686
   subsections:
   - Мета — вибори vs. система
   - Ціна — мирна vs. кров
   - Зовнішній фактор — Росія 2004 vs. 2014
   - Громадянське суспільство — слабке vs. сильне
 - section: Уроки 2004 для 2014
-  words: 500
+  words: 571
   subsections:
   - Що засвоїли
   - Не вірити обіцянкам
   - Системні зміни важливіші
   - Ціна свободи
 - section: Чому 2014 тривалий
-  words: 300
+  words: 343
   subsections:
   - Війна — консолідація
   - Неможливість повернення
   - Європейський вибір — незворотний
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - Дві революції — різні траєкторії
   - 2014 — справжній перелом
   - Перехід до синтезу
-word_target: 3500
+word_target: 4000
 vocabulary:
 - Помаранчева революція
 - Революція гідності
@@ -74,11 +76,11 @@ vocabulary:
 activities:
 - type: comparative-study
   focus: 2004 vs. 2014 — systematic comparison
-- type: outcome-analysis
+- type: critical-analysis
   focus: Why did 2004 fail and 2014 succeed?
-- type: factor-analysis
+- type: critical-analysis
   focus: What factors made 2014 transformative?
-- type: lesson-analysis
+- type: critical-analysis
   focus: How 2004 lessons informed 2014
 - type: essay-response
   focus: Чому Помаранчева революція не принесла тривалих змін?

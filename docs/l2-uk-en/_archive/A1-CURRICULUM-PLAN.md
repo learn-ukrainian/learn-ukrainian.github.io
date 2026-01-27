@@ -230,9 +230,11 @@ Before writing/reviewing any A1 module, verify:
 ## CEFR A1 Can-Do Alignment
 
 ### CEFR A1 Descriptor (Council of Europe)
+>
 > Can understand and use familiar everyday expressions and very basic phrases aimed at the satisfaction of needs of a concrete type. Can introduce themselves and others and can ask and answer questions about personal details. Can interact in a simple way provided the other person talks slowly and clearly.
 
 ### Our A1 Can-Do Checklist
+
 By module 34, learners can:
 
 **Understanding (Listening/Reading)**
@@ -260,6 +262,7 @@ By module 34, learners can:
 ## Phase A1.1: First Contact (Modules 1-10)
 
 ### Learning Goals
+
 - Master Cyrillic alphabet (print + italic awareness)
 - Understand noun gender system
 - Use present tense of common verbs
@@ -301,6 +304,7 @@ By module 34, learners can:
 **Note on Activities:** Anagram activities are permitted in Modules 01-10 for Cyrillic scaffolding, as per MODULE-RICHNESS-GUIDELINES-v2.md.
 
 #### Module 01: The Cyrillic Code I
+
 **Letters covered:** А, Е, І, О, К, М, Т (True Friends) + В, Н, Р, С, У, Х (False Friends) + Б, Д, З, Л, П, Ф (New)
 
 **Vocabulary (35 words):**
@@ -314,6 +318,7 @@ By module 34, learners can:
 ---
 
 #### Module 02: The Cyrillic Code II
+
 **Letters covered:** Г, Ґ, Ж, Ш, Щ, Ч, Ц (unique) + Є, Ї, Ю, Я (iotated) + Ь (soft sign) + И (hard i)
 
 **Italic Warning:** т→m, п→n, д→g, и→u, л→hook, г→∂
@@ -330,6 +335,7 @@ By module 34, learners can:
 ---
 
 #### Module 03: The Gender Code
+
 **Grammar:** Noun gender (m/f/n) + 4 declension families
 
 **Patterns:**
@@ -354,6 +360,7 @@ By module 34, learners can:
 ---
 
 #### Module 04: This Is / I Am
+
 **Grammar:** Zero copula (no 'to be' in present) + Це + Personal pronouns
 
 **Key patterns:**
@@ -372,6 +379,7 @@ By module 34, learners can:
 ---
 
 #### Module 05: My World: Objects
+
 **Grammar:** Demonstratives цей (m), ця (f), це (n), ці (pl)
 
 **Vocabulary (40 words):**
@@ -385,6 +393,7 @@ By module 34, learners can:
 ---
 
 #### Module 06: The Living Verb I
+
 **Grammar:** Present tense Class I verbs (-ати/-яти)
 
 **Conjugation pattern:**
@@ -401,6 +410,7 @@ By module 34, learners can:
 ---
 
 #### Module 07: Questions & Negation
+
 **Grammar:** Чи-questions, question words, negation with не
 
 **Patterns:**
@@ -419,6 +429,7 @@ By module 34, learners can:
 ---
 
 #### Module 08: The Living Verb II
+
 **Grammar:** Present tense Class II verbs (-ити/-іти)
 
 **Conjugation pattern:**
@@ -437,6 +448,7 @@ By module 34, learners can:
 ---
 
 #### Module 09: Reflexive Verbs (-ся)
+
 **Grammar:** Reflexive verbs (-ся/-сь)
 
 **Key patterns:**
@@ -455,6 +467,7 @@ By module 34, learners can:
 ---
 
 #### Module 10: Checkpoint - First Contact
+
 **Covers:** M01-09
 
 **Required Skill Groups:**
@@ -472,6 +485,7 @@ By module 34, learners can:
 ## Phase A1.2: Navigation (Modules 11-20)
 
 ### Learning Goals
+
 - Use accusative case for direct objects
 - Use locative case for location
 - Use genitive for absence and quantity
@@ -518,6 +532,7 @@ By module 34, learners can:
 ### Module Content Specifications A1.2
 
 #### Module 11: The Accusative I - Things
+
 **Grammar:** Accusative case for inanimate direct objects
 
 **Case changes:**
@@ -542,6 +557,7 @@ By module 34, learners can:
 ---
 
 #### Module 12: The Accusative II - People
+
 **Grammar:** Accusative = Genitive for animate nouns
 
 **Case changes (animate):**
@@ -565,6 +581,7 @@ By module 34, learners can:
 ---
 
 #### Module 13: The Locative - Where Things Are
+
 **Grammar:** Locative case with в/у and на
 
 **Preposition choice:**
@@ -592,9 +609,11 @@ By module 34, learners can:
 ---
 
 #### Module 14: Mine and Yours
+
 **Grammar:** Possessive pronouns (all genders)
 
 **Forms:**
+
 | Pronoun | M | F | N | Pl |
 |---------|---|---|---|-----|
 | my | мій | моя | моє | мої |
@@ -621,6 +640,7 @@ By module 34, learners can:
 ---
 
 #### Module 15: Around the City
+
 **Grammar:** Locative in context + directional expressions
 
 **Directions:**
@@ -645,6 +665,7 @@ By module 34, learners can:
 ---
 
 #### Module 16: The Genitive I - Absence
+
 **Grammar:** Genitive case for negation/absence
 
 **Case endings:**
@@ -668,6 +689,7 @@ By module 34, learners can:
 ---
 
 #### Module 17: Numbers & Money
+
 **Grammar:** Cardinals 0-100, numbers 5+ use genitive plural (from M16)
 
 **Number patterns:**
@@ -691,6 +713,7 @@ By module 34, learners can:
 ---
 
 #### Module 18: Food, Drinks & Shopping
+
 **Grammar:** Accusative + Genitive in food/shopping context
 
 **Key patterns:**
@@ -709,6 +732,7 @@ By module 34, learners can:
 ---
 
 #### Module 19: At the Café
+
 **Grammar:** Functional integration (Acc, Gen, Loc)
 
 **Key phrases:**
@@ -730,6 +754,7 @@ By module 34, learners can:
 ---
 
 #### Module 20: Checkpoint - Navigation
+
 **Covers:** M11-19
 
 **Required Skill Groups:**
@@ -747,6 +772,7 @@ By module 34, learners can:
 ## Phase A1.3: Time & Self (Modules 21-34)
 
 ### Learning Goals
+
 - Use past and future tense
 - Talk about time, calendar, routine
 - Express ability, obligation, desire (modals)
@@ -794,6 +820,7 @@ By module 34, learners can:
 ### Module Content Specifications A1.3
 
 #### Module 21: Yesterday - Past Tense
+
 **Grammar:** Past tense with L-participle
 
 **Formation:**
@@ -816,6 +843,7 @@ By module 34, learners can:
 ---
 
 #### Module 22: Tomorrow - Future Tense
+
 **Grammar:** Compound future (буду + infinitive)
 
 **Formation:**
@@ -837,6 +865,7 @@ By module 34, learners can:
 ---
 
 #### Module 23: What Time Is It?
+
 **Grammar:** Time expressions, clock time, calendar
 
 **Clock time:**
@@ -860,6 +889,7 @@ By module 34, learners can:
 ---
 
 #### Module 24: Can, Must, Want - Modals
+
 **Grammar:** Modal constructions
 
 **Modal verbs:**
@@ -886,6 +916,7 @@ By module 34, learners can:
 ---
 
 #### Module 25: My Daily Routine
+
 **Grammar:** Reflexive verbs (-ся/-сь)
 
 **Common reflexive verbs:**
@@ -910,9 +941,11 @@ By module 34, learners can:
 ---
 
 #### Module 26: Describing Things - Adjectives
+
 **Grammar:** Adjective agreement (gender, number)
 
 **Agreement patterns:**
+
 | | M | F | N | Pl |
 |---|-----|-----|-----|------|
 | Hard | -ий | -а | -е | -і |
@@ -935,6 +968,7 @@ By module 34, learners can:
 ---
 
 #### Module 27: Colors & Clothing
+
 **Grammar:** Adjectives in context (colors agree)
 
 **Colors:**
@@ -959,6 +993,7 @@ By module 34, learners can:
 ---
 
 #### Module 28: Description (Adverbs)
+
 **Grammar:** Adverbs of Manner & Frequency + Comparison with Adjectives
 
 **Formation:**
@@ -982,6 +1017,7 @@ By module 34, learners can:
 ---
 
 #### Module 29: Weather & Nature
+
 **Grammar:** Impersonal constructions (weather)
 
 **Weather expressions:**
@@ -1004,6 +1040,7 @@ By module 34, learners can:
 ---
 
 #### Module 30: Prepositions III
+
 **Grammar:** Direction (Kudy?) vs Location (De?) vs Origin (Zvidky?)
 
 **Prepositions:**
@@ -1027,6 +1064,7 @@ By module 34, learners can:
 ---
 
 #### Module 31: Body & Health
+
 **Grammar:** "I have pain" (Болить...) + Body parts
 
 **Key patterns:**
@@ -1046,6 +1084,7 @@ By module 34, learners can:
 ---
 
 #### Module 32: My Family
+
 **Grammar:** Genitive for relationships + possessives
 
 **Family terms:**
@@ -1070,6 +1109,7 @@ By module 34, learners can:
 ---
 
 #### Module 33: Holidays & Traditions
+
 **Grammar:** Dates (Genitive of time) + Greetings
 
 **Key patterns:**
@@ -1089,6 +1129,7 @@ By module 34, learners can:
 ---
 
 #### Module 34: Checkpoint: Core Grammar (Базова граматика)
+
 **Covers:** M01-33 (All core grammar before practical scenarios)
 
 > **Note:** This checkpoint confirms grammar readiness before Phase A1.4 practical modules. It is NOT the final A1 assessment—that is M44.
@@ -1119,12 +1160,14 @@ By module 34, learners can:
 > **NEW** (RFC #409): These practical modules apply A1 grammar and vocabulary to real-world situations.
 
 ### Learning Goals
+
 - Apply A1 skills to realistic service encounters
 - Build confidence in transactional conversations
 - Handle basic emergencies and unexpected situations
 - Navigate daily life scenarios independently
 
 ### Grammar Application
+
 These modules reinforce M01-34 grammar (no new grammar introduced):
 - Accusative for ordering/requesting
 - Locative for places
@@ -1149,6 +1192,7 @@ These modules reinforce M01-34 grammar (no new grammar introduced):
 ### Module Content Specifications A1.4
 
 #### Module 35: At the Café
+
 **Focus:** Ordering drinks and snacks, asking for the bill
 
 **Key patterns:**
@@ -1167,6 +1211,7 @@ These modules reinforce M01-34 grammar (no new grammar introduced):
 ---
 
 #### Module 36: At the Restaurant
+
 **Focus:** Full meal ordering, dietary restrictions, feedback
 
 **Key patterns:**
@@ -1185,6 +1230,7 @@ These modules reinforce M01-34 grammar (no new grammar introduced):
 ---
 
 #### Module 37: At the Market
+
 **Focus:** Quantities, prices, freshness, basic negotiation
 
 **Key patterns:**
@@ -1203,6 +1249,7 @@ These modules reinforce M01-34 grammar (no new grammar introduced):
 ---
 
 #### Module 38: At the Store
+
 **Focus:** Checkout process, payment methods
 
 **Key patterns:**
@@ -1221,6 +1268,7 @@ These modules reinforce M01-34 grammar (no new grammar introduced):
 ---
 
 #### Module 39: Buying Tickets
+
 **Focus:** Transport tickets, destinations, classes
 
 **Key patterns:**
@@ -1239,6 +1287,7 @@ These modules reinforce M01-34 grammar (no new grammar introduced):
 ---
 
 #### Module 40: Taking Transport
+
 **Focus:** On public transport, stops, transfers
 
 **Key patterns:**
@@ -1257,6 +1306,7 @@ These modules reinforce M01-34 grammar (no new grammar introduced):
 ---
 
 #### Module 41: Phone Basics
+
 **Focus:** Answering, wrong numbers, simple messages
 
 **Key patterns:**
@@ -1275,6 +1325,7 @@ These modules reinforce M01-34 grammar (no new grammar introduced):
 ---
 
 #### Module 42: Introductions Extended
+
 **Focus:** Detailed self-introduction, meeting new people
 
 **Key patterns:**
@@ -1293,6 +1344,7 @@ These modules reinforce M01-34 grammar (no new grammar introduced):
 ---
 
 #### Module 43: Emergency Basics
+
 **Focus:** Asking for help, reporting problems, basic safety
 
 **Key patterns:**
@@ -1311,6 +1363,7 @@ These modules reinforce M01-34 grammar (no new grammar introduced):
 ---
 
 #### Module 44: A1 Final Exam (A1 Підсумковий іспит)
+
 **Covers:** M01-43 (CUMULATIVE - All A1 grammar + practical scenarios)
 
 > **LEVEL FINAL:** This is the comprehensive A1 certification exam testing all grammar, vocabulary, and practical skills from the entire level.
@@ -1372,6 +1425,7 @@ These modules reinforce M01-34 grammar (no new grammar introduced):
 ## Activity Types by Module Type
 
 ### G-Modules (Grammar Focus)
+
 1. Quiz: Pattern recognition (MCQ)
 2. Fill-in: Gap-fill exercises
 3. Transform: Transformation drills
@@ -1379,6 +1433,7 @@ These modules reinforce M01-34 grammar (no new grammar introduced):
 5. Error-correction: (A2+ only, simple recognition here)
 
 ### V-Modules (Vocabulary Focus)
+
 1. Match-up: Flash cards (conceptual)
 2. Match-up: Image matching
 3. Group-sort: Category sorting
@@ -1386,12 +1441,14 @@ These modules reinforce M01-34 grammar (no new grammar introduced):
 5. Quiz: Spaced repetition checks
 
 ### F-Modules (Functional)
+
 1. Dialogue: Completion tasks
 2. Dialogue: Role-play scenarios
 3. Quiz: Listening comprehension
 4. Fill-in: Real-world forms/tasks
 
 ### R-Modules (Review)
+
 1. Quiz: Mixed grammar check
 2. Fill-in: Vocabulary recall
 3. Match-up: Integrated skills

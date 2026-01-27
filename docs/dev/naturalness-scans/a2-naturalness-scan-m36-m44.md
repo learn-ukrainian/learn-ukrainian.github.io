@@ -1,4 +1,5 @@
 # A2 Naturalness Scan Report - M36-M44
+
 **Date:** 2026-01-12
 **Protocol:** claude_extensions/protocols/a1-naturalness-scan.md
 **Scope:** M36-M44 (9 modules - Word formation section)
@@ -17,6 +18,7 @@
 ## Scan Results by Module
 
 ### M36: Basic Motion Prefixes [⚠️ FLAGGED]
+
 **Status:** MIXED - First passage disconnected, second coherent
 **Activities:** Two cloze passages
 
@@ -51,6 +53,7 @@
 ---
 
 ### M37: Advanced Motion Prefixes [✅ PASS]
+
 **Status:** Coherent tour and trip narratives
 **Activities:** Tour Guide Instructions (lines 171-193), Carpathians Trip (lines 398-422)
 
@@ -69,6 +72,7 @@
 ---
 
 ### M38: Action Verb Prefixes [⚠️ FLAGGED]
+
 **Status:** MIXED - First passage disconnected, second coherent
 **Activities:** Two cloze passages
 
@@ -102,6 +106,7 @@
 ---
 
 ### M39: Adjective Suffixes Qualities [✅ PASS]
+
 **Status:** Coherent morning narrative
 **Activities:** "The Cozy Morning" (lines 242-246)
 
@@ -120,6 +125,7 @@
 ---
 
 ### M40: Adjective Suffixes [✅ PASS]
+
 **Status:** Coherent professor narrative
 **Activities:** "The Professor's Day" (lines 472-495)
 
@@ -138,6 +144,7 @@
 ---
 
 ### M41: Root Families I [⚠️ FLAGGED]
+
 **Status:** MIXED - First passage disconnected, second coherent
 **Activities:** Two cloze passages
 
@@ -173,6 +180,7 @@
 ---
 
 ### M42: Root Families II [⚠️ FLAGGED]
+
 **Status:** MIXED - First passage disconnected, second coherent
 **Activities:** Multiple cloze passages
 
@@ -208,6 +216,7 @@
 ---
 
 ### M43: WF Mastery [✅ PASS]
+
 **Status:** Review module with acceptable coherence
 **Activities:** Multiple review passages
 
@@ -226,6 +235,7 @@
 ---
 
 ### M44: Checkpoint Word Formation [⏸️ DEFERRED]
+
 **Status:** CHECKPOINT - different standards apply
 **Activities:** Comprehensive word formation review
 **Naturalness Analysis:**
@@ -240,18 +250,21 @@
 ## Summary by Status
 
 ### ✅ PASS (4 modules)
+
 - M37: Advanced Motion Prefixes (score 8/10)
 - M39: Adjective Suffixes Qualities (score 8/10)
 - M40: Adjective Suffixes (score 8/10)
 - M43: WF Mastery (score 7/10)
 
 ### ⚠️ FLAGGED (4 modules)
+
 - **M36: Basic Motion Prefixes (score 6/10)** - First passage disconnected (5/10)
 - **M38: Action Verb Prefixes (score 6/10)** - First passage disconnected (5/10)
 - **M41: Root Families I (score 6/10)** - First passage disconnected questions (5/10)
 - **M42: Root Families II (score 6/10)** - First passage disconnected drill (5/10)
 
 ### ⏸️ DEFERRED (1 module)
+
 - M44: Checkpoint (score 7/10) - Checkpoint standards apply
 
 ---

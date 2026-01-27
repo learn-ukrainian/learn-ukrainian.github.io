@@ -12,7 +12,7 @@
 | ------------------- | ----- | -------------------------------------------------------------------- |
 | Coherence           | 10/10 | Logical structure (Preparation -> Transit -> Geography).             |
 | Relevance           | 10/10 | Essential for travel.                                                |
-| Educational         | 10/10 | Good distinction between _подорож_ (trip) and _мандрівка_ (journey). |
+| Educational         | 10/10 | Good distinction between *подорож* (trip) and *мандрівка* (journey). |
 | Language            | 10/10 | Modern travel terms (low-cost, biometric passport).                  |
 | Pedagogy            | 10/10 | "Seven Wonders of Ukraine" is a classic cultural anchor.             |
 | Immersion           | 10/10 | Teaches specific geography (Kherson plains vs Carpathian mountains). |

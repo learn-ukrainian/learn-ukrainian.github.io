@@ -1,9 +1,11 @@
 # Audit Report: M99 — 99-lesya-ukrainka-liryka.md
+
 **Level:** C1 | **Module:** M99 | **Phase:** C1 | **Pedagogy:** Literary Analysis | **Target:** 3500
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:56
 
 ## Configuration
+
 **Type:** C1-literature
 **Word Target:** 3500 words
 **Activities:** 12-16 required
@@ -16,6 +18,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння аналізу лірики Лесі Українки | 12 | 5 | ✅ |
@@ -39,19 +42,22 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (85% overlap): "я буду крізь сльози сміятись,
 > Серед лиха співати пісні,
 > Без надії таки сподіватись,
 > Буду жити!". Shares significant keywords with sentence at index 36.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2332/3500 (raw: 2689)
 - **Activities:** ✅ 13/12
 - **Density:** ✅ All > 12
@@ -70,10 +76,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 87% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 58 | 15 | 100% | 25% | 25.0% |
@@ -87,16 +95,18 @@
 | **TOTAL** | | | | | **87.4%** |
 
 ### Dryness Flags & Fixes
+
 - ❌ **ABSTRACT_ONLY**
   - FIX:
     Add 3+ real-world boxes. Use this exact format:
-    
+
     > 🌍 **У реальному житті**
     >
     > [Specific scenario: "На співбесіді...", "У магазині...", "На вокзалі..."]
     > [Example sentence showing grammar in that context]
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 95 | Included in Core |

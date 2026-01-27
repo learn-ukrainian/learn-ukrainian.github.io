@@ -66,6 +66,7 @@ All 135 C1-HIST modules now have detailed YAML meta specification files ready fo
 - **connects_to**: Cross-references to related modules
 
 **Phase Breakdown**:
+
 | Phase | Modules | Title |
 |-------|---------|-------|
 | C1H.1 | 01-10 | Historiography & Methodology |
@@ -279,26 +280,31 @@ All 135 C1-HIST modules now have detailed YAML meta specification files ready fo
 ## 🔧 What's Currently Active
 
 ### 1. Wildcard Permissions
+
 - **Location**: `claude_extensions/settings.json` → deployed to `.claude/settings.json`
 - **Status**: Active right now
 - **Effect**: You should see ~90% fewer permission prompts
 
 ### 2. Curriculum Maintainer Agent
+
 - **Location**: `claude_extensions/agents/curriculum-maintainer.md` → deployed to `.claude/agents/`
 - **Status**: Auto-active when editing curriculum files
 - **Effect**: Every curriculum save triggers automatic validation
 
 ### 3. Custom Slash Commands
+
 - **Location**: `claude_extensions/commands/*.md` → deployed to `.claude/commands/`
 - **Status**: Available immediately
 - **Usage**: Type `claude /curriculum-validate` or any other command
 
 ### 4. Multilingual Mode
+
 - **Setting**: `language: "ukrainian"` in `.claude/settings.json`
 - **Status**: Active
 - **Effect**: Claude responds in Ukrainian when reviewing Ukrainian curriculum
 
 ### 5. Hot-Reload Skills
+
 - **Location**: `claude_extensions/skills/` → deployed to `.claude/skills/`
 - **Status**: Available for complex tasks
 - **Usage**: Claude can invoke these automatically when needed
@@ -349,6 +355,7 @@ claude_extensions/
 ## 🐛 Additional Fixes Applied
 
 ### Error-Correction Hint Removal
+
 - **Issue**: 119 error-correction activities had error words highlighted with `**bold**`
 - **Problem**: Highlighting ruins pedagogy by giving away the answer
 - **Fix**: Removed all markdown formatting from sentence fields where it matched error field
@@ -356,12 +363,14 @@ claude_extensions/
 - **Commit**: Part of 0b20df3a
 
 ### Angular Quotes Typography Check
+
 - **Issue**: Typography audit checked for angular quotes («») in markdown
 - **Problem**: Angular quotes incompatible with YAML (activities are in YAML sidecars)
 - **Fix**: Disabled typography check in `scripts/audit/core.py`
 - **Commit**: Part of 0b20df3a
 
 ### Audit System Enhancement
+
 - **Added**: `check_error_correction_hints()` function in `scripts/audit/checks/activities.py`
 - **Purpose**: Detect and flag any future error-correction hints
 - **Result**: Prevents pedagogical issue from recurring
@@ -471,27 +480,32 @@ For new workflow commands:
 ## 🎯 Next Possible Tasks
 
 ### Option 1: Complete B2 (14 modules remaining)
+
 - M132-145: Skills & Capstone modules
 - Integration modules combining all B2 concepts
 - Final capstone project
 
 ### Option 2: Continue C1 Development
+
 - Complete remaining C1 modules (156 remaining)
 - Focus areas: Biography, stylistics, folk culture, literature
 
 ### Option 3: Issue #399 Phase 4 (Collaboration)
+
 - Session teleportation
 - GitHub issues automation
 - Named sessions
 - **Priority**: Lower (implement if collaboration needs increase)
 
 ### Option 4: Issue #400 (LSP Integration)
+
 - Structural validation via Language Server Protocol
 - YAML/JSON schema validation
 - Real-time content validation
 - **Status**: Separate track, not started
 
 ### Option 5: Systematic B2 Review
+
 - Many B2 modules have pre-existing template violations
 - Could benefit from systematic review and fixes
 - Would bring B2 to same quality standard as A1/A2/B1

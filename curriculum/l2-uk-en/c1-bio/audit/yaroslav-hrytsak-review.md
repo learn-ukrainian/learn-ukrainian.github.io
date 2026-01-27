@@ -1,10 +1,12 @@
 # Audit Report: M119 — yaroslav-hrytsak.md
+
 **Level:** C1 | **Module:** M119 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:57
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Біографія та основні ідеї | 5 | 5 | ✅ |
@@ -41,16 +44,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in yaroslav-hrytsak.yaml: Schema validation error at key '7': {'type': 'fill-in', 'title': 'Майбутнє України', 'items': [{'sentence': 'Грицак вірить, що Україна приречена на [успіх], якщо зробить правильний ціннісний вибір.', 'answer': 'успіх', 'options': ['успіх', 'провал', 'застій', 'ізоляцію']}, {'sentence': 'У глобальному світі виграють нації, які сповідують цінності [довіри] та відповідальності.', 'answer': 'довіри', 'options': ['довіри', 'сили', 'хитрості', 'страху']}, {'sentence': 'Він вчить українців бути [дорослими] і не чекати месії.', 'answer': 'дорослими', 'options': ['дорослими', 'дітьми', 'слухняними', 'агресивними']}, {'sentence': 'Подолання минулого — це відмова від [патерналізму] та корупції.', 'answer': 'патерналізму', 'options': ['патерналізму', 'демократії', 'свободи', 'науки']}, {'sentence': 'Війна показала, що українці готові вмирати за [цінності], а не лише за інтереси.', 'answer': 'цінності', 'options': ['цінності', 'гроші', 'території', 'нафту']}, {'sentence': 'Історія — це не вирок, а [можливість] змінитися.', 'answer': 'можливість', 'options': ['можливість', 'кара', 'помилка', 'стіна']}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2063/4000 (raw: 2338)
 - **Activities:** ✅ 12/3
 - **Density:** ✅ All > 1
@@ -69,10 +75,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 13 | 4 | 100% | 19% | 19.0% |
@@ -88,6 +96,7 @@
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 74 | Included in Core |

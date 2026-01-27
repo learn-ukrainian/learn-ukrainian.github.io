@@ -1,10 +1,12 @@
 # Audit Report: M71 — 71-medytsyna-pohlybleno.md
+
 **Level:** B2 | **Module:** M71 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:33
 
 ## Configuration
+
 **Type:** B2-history
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть відповідність: спеціалісти та сфери | 12 | 8 | ✅ |
@@ -44,17 +47,20 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'чи можна...'.
   - FIX: Vary sentence structure.
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
   - FIX: Add a comparative-study activity to meet advanced richness standards.
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 2 violations (minor)
 
 ## Gates
+
 - **Words:** ❌ 2314/4000 (raw: 2649)
 - **Activities:** ✅ 15/3
 - **Density:** ✅ All > 1
@@ -73,10 +79,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 61 | 24 | 100% | 20% | 20.0% |
@@ -92,6 +100,7 @@
 | **TOTAL** | | | | | **99.7%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 68 | Included in Core |

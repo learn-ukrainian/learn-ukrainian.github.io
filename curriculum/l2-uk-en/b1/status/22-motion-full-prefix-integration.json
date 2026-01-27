@@ -2,14 +2,14 @@
   "module": "22-motion-full-prefix-integration",
   "level": "B1",
   "plan_version": "1.7",
-  "last_audit": "2026-01-26T22:26:58.026781Z",
+  "last_audit": "2026-01-27T16:25:51.834698Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-24T22:16:14.148228Z",
+    "md": "2026-01-27T15:24:10.350010Z",
     "meta": "2026-01-26T15:44:41.512492Z",
     "activities": "2026-01-11T10:24:12.211500Z",
     "vocabulary": "2026-01-25T18:00:40.241611Z",
-    "plan": "2026-01-26T15:44:41.512148Z"
+    "plan": "2026-01-27T16:18:37.529343Z"
   },
   "gates": {
     "meta": {

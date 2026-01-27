@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M19 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 23:25:03
+**Generated:** 2026-01-27 16:22:33
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, fill-in, match-up, quiz, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -22,37 +22,30 @@
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Джерело: Угода 911 року | 3 | 1 | ✅ |
 | 2 | reading | Джерело: Лист Анни Ярославни (міфічний) | 3 | 1 | ✅ |
-| 3 | quiz | Перевірка розуміння: Дипломатія Русі | 8 | 8 | ✅ |
-| 4 | match-up | Династичні шлюби | 12 | 8 | ✅ |
-| 5 | fill-in | Лексика: Дипломатія | 10 | 8 | ✅ |
-| 6 | error-correction | Виправте помилки в історичному тексті | 8 | 6 | ✅ |
-| 7 | essay-response | Есе: Русь як європейська держава | 1 | 1 | ✅ |
-| 8 | true-false | Факти про Русь: Правда чи Міф? | 10 | 8 | ✅ |
-| 9 | match-up | Хронологія дипломатії | 12 | 8 | ✅ |
-| 10 | comparative-study | Порівняння: Дипломатія Русі та Візантії | 1 | 1 | ✅ |
-| 11 | fill-in | Дипломатична та політична термінологія | 15 | 8 | ✅ |
-| 12 | quiz | Географія сусідів Русі | 8 | 8 | ✅ |
+| 3 | essay-response | Есе: Русь як європейська держава | 1 | 1 | ✅ |
+| 4 | true-false | Факти про Русь: Правда чи Міф? | 10 | 8 | ✅ |
+| 5 | comparative-study | Порівняння: Дипломатія Русі та Візантії | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 12 (target: 3-9) ❌
-- Unique types: 8 (minimum: 2) ✅
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 4 (minimum: 2) ✅
 - Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
-- Required types used: 5/5 (essay-response, fill-in, match-up, quiz, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ✅ 4569/4000 (raw: 4616)
-- **Activities:** ✅ 12/3
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 8/2 types
+- **Unique_types:** ✅ 4/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 20 (soft target)
+- **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ Too many activities: 12 (target 3-9)
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.7% (target 90-100% (history))
 - **Richness:** ✅ 100% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

@@ -1,9 +1,11 @@
 # Audit Report: M50 — 50-kolyskovi-ta-dumy.md
+
 **Level:** C1 | **Module:** M50 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:25
 
 ## Configuration
+
 **Type:** C1-history
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Теоретичні основи жанрів колискової та думи | 5 | 5 | ✅ |
@@ -40,11 +43,13 @@
 - Low density activities: 0
 
 ## Recommendation
+
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2086/4000 (raw: 2273)
 - **Activities:** ✅ 12/3
 - **Density:** ✅ All > 1
@@ -63,10 +68,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 91% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 20 | 15 | 100% | 25% | 25.0% |
@@ -80,6 +87,7 @@
 | **TOTAL** | | | | | **91.1%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 75 | Included in Core |

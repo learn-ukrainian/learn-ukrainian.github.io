@@ -1,10 +1,12 @@
 # Audit Report: M88 — 88-professional-reports-advanced.md
+
 **Level:** B2 | **Module:** M88 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ✅ PASS
 **Generated:** 2026-01-26 22:28:44
 
 ## Configuration
+
 **Type:** B2-skills
 **Word Target:** 1750 words
 **Activities:** 14-18 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння аналітичної звітності | 16 | 8 | ✅ |
@@ -41,6 +44,7 @@
 - Low density activities: 0
 
 ## Gates
+
 - **Words:** ✅ 3799/1750 (raw: 4311)
 - **Activities:** ✅ 14/14
 - **Density:** ✅ All > 14
@@ -59,10 +63,12 @@
 - **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 27 | 15 | 100% | 25% | 25.0% |
@@ -76,6 +82,7 @@
 | **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 100 | Included in Core |

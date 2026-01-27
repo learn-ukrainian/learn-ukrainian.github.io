@@ -1,10 +1,12 @@
 # Audit Report: M72 — 72-tekhnolohii-ta-shi.md
+
 **Level:** B2 | **Module:** M72 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:34
 
 ## Configuration
+
 **Type:** B2-history
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть відповідність: IT-терміни | 12 | 8 | ✅ |
@@ -43,17 +46,20 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 72-tekhnolohii-ta-shi.yaml: Schema validation error at key '12': {'type': 'fill-in', 'title': 'Заповніть факти про українські IT-компанії', 'instruction': 'Оберіть правильну інформацію про українські технологічні компанії.', 'items': [{'answer': 'Grammarly', 'options': ['Grammarly', 'Google', 'DeepL', 'Ginger'], 'sentence': '___ — сервіс перевірки граматики, заснований українцями.'}, {'answer': 'Сергій Лебедєв', 'options': ['Сергій Лебедєв', 'Алан Тюрінг', 'Стів Джобс', 'Білл Гейтс'], 'sentence': "Перший комп'ютер у континентальній Європі створив ___."}, {'answer': 'Preply', 'options': ['Preply', 'Duolingo', 'Babbel', 'Rosetta Stone'], 'sentence': '___ — українська платформа для вивчення мов.'}, {'answer': 'безпеки', 'options': ['безпеки', 'опалення', 'освітлення', 'розваг'], 'sentence': 'Ajax Systems виробляє розумні системи ___.'}, {'answer': 'Respeecher', 'options': ['Respeecher', 'Deepfake', 'Voice.ai', 'Synthesia'], 'sentence': '___ — технологія клонування голосу від української компанії.'}, {'answer': 'DOU', 'options': ['DOU', 'Reddit', 'Habr', 'Stack Overflow'], 'sentence': 'Головна українська IT-спільнота — ___.'}, {'answer': 'Prometheus', 'options': ['Prometheus', 'Coursera', 'Udemy', 'EdEra'], 'sentence': '___ — українська платформа безкоштовної онлайн-освіти.'}, {'answer': 'MacPaw', 'options': ['MacPaw', 'Microsoft', 'Apple', 'Adobe'], 'sentence': '___ — відома українська продуктова компанія, що створює програми для macOS.'}]} is not valid under any of the given schemas
+
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 72-tekhnolohii-ta-shi.yaml: Schema validation error at key '12': {'type': 'fill-in', 'title': 'Заповніть факти про українські IT-компанії', 'instruction': 'Оберіть правильну інформацію про українські технологічні компанії.', 'items': [{'answer': 'Grammarly', 'options': ['Grammarly', 'Google', 'DeepL', 'Ginger'], 'sentence': '___ — сервіс перевірки граматики, заснований українцями.'}, {'answer': 'Сергій Лебедєв', 'options': ['Сергій Лебедєв', 'Алан Тюрінг', 'Стів Джобс', 'Білл Гейтс'], 'sentence': "Перший комп'ютер у континентальній Європі створив ***."}, {'answer': 'Preply', 'options': ['Preply', 'Duolingo', 'Babbel', 'Rosetta Stone'], 'sentence': '*** — українська платформа для вивчення мов.'}, {'answer': 'безпеки', 'options': ['безпеки', 'опалення', 'освітлення', 'розваг'], 'sentence': 'Ajax Systems виробляє розумні системи ***.'}, {'answer': 'Respeecher', 'options': ['Respeecher', 'Deepfake', 'Voice.ai', 'Synthesia'], 'sentence': '*** — технологія клонування голосу від української компанії.'}, {'answer': 'DOU', 'options': ['DOU', 'Reddit', 'Habr', 'Stack Overflow'], 'sentence': 'Головна українська IT-спільнота — ***.'}, {'answer': 'Prometheus', 'options': ['Prometheus', 'Coursera', 'Udemy', 'EdEra'], 'sentence': '*** — українська платформа безкоштовної онлайн-освіти.'}, {'answer': 'MacPaw', 'options': ['MacPaw', 'Microsoft', 'Apple', 'Adobe'], 'sentence': '___ — відома українська продуктова компанія, що створює програми для macOS.'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
   - FIX: Add a comparative-study activity to meet advanced richness standards.
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 2 violations (minor)
 
 ## Gates
+
 - **Words:** ❌ 1787/4000 (raw: 2364)
 - **Activities:** ✅ 14/3
 - **Density:** ✅ All > 1
@@ -72,10 +78,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 90% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 22 | 24 | 92% | 20% | 18.4% |
@@ -91,6 +99,7 @@
 | **TOTAL** | | | | | **90.4%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 54 | Included in Core |

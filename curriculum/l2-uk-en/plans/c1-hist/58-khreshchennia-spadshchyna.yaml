@@ -5,21 +5,21 @@ version: '2.0'
 title: 'Спадщина Хрещення: Візантійська традиція'
 content_outline:
 - section: Вступ — Релігія і нація
-  words: 400
+  words: 457
   points:
   - Чому релігійна ідентичність важлива
   - Хрещення 988 — початок
   - Візантійський вибір — наслідки
   - Структура фази
 - section: Хрещення Русі — факти і міфи
-  words: 600
+  words: 686
   points:
   - Володимир і вибір віри — легенда
   - Політичні мотиви
   - Візантійський союз
   - Що насправді сталося
 - section: Візантійська спадщина
-  words: 700
+  words: 800
   points:
   - Літургія церковнослов'янською
   - Архітектура — Софія Київська
@@ -27,33 +27,33 @@ content_outline:
   - Література — перекладна
   - Мистецтво — ікони
 - section: Церква і держава
-  words: 500
+  words: 571
   points:
   - Візантійська модель — симфонія
   - Митрополія Київська
   - Залежність від Константинополя
   - Князі і церква
 - section: Дебати про спадщину
-  words: 600
+  words: 686
   points:
   - Чия спадщина — України, Росії, Білорусі?
   - Московська претензія
   - Українська позиція
   - Сучасні церковні конфлікти
 - section: Спадщина для ідентичності
-  words: 400
+  words: 457
   points:
   - Православ'я як ідентичність
   - Але не тільки православ'я
   - Різноманітність — УГКЦ, протестанти
   - Секуляризація
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Хрещення — початок історії
   - Від Візантії до сьогодення
   - Підготовка до Берестейської унії
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - Хрещення Русі (Baptism of Rus)
@@ -73,16 +73,16 @@ vocabulary_hints:
   - автокефалія (autocephaly)
   - обряд (rite)
 activity_hints:
-- type: source-analysis
+- type: critical-analysis
   focus: PVL baptism narrative — separate fact from legend
   output: Source criticism
-- type: heritage-debate
+- type: essay-response
   focus: Whose heritage is Kyivan Christianity?
   output: Position analysis
-- type: visual-analysis
+- type: critical-analysis
   focus: Analyze Byzantine influences in Ukrainian church art
   output: Visual comparison
-- type: contemporary-connection
+- type: critical-analysis
   focus: How does 988 legacy affect 2022 church conflicts?
   output: Contemporary relevance
 - type: essay-response
@@ -112,3 +112,6 @@ sources:
   notes: Orthodoxy overview
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of спадщина хрещення: візантійська традиція'
+- Evaluate the historical significance of релігія і нація

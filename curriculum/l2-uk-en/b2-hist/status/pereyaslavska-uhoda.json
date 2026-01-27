@@ -2,13 +2,13 @@
   "module": "pereyaslavska-uhoda",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:54:46.046765Z",
+  "last_audit": "2026-01-27T20:35:21.116157Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-24T21:37:36.121398Z",
     "meta": "2026-01-26T22:20:13.408572Z",
-    "activities": "2026-01-24T21:37:20.982211Z",
-    "vocabulary": "2026-01-24T21:15:39.054926Z",
+    "activities": "2026-01-27T20:32:13.397035Z",
+    "vocabulary": "2026-01-27T11:59:24.231549Z",
     "plan": null
   },
   "gates": {
@@ -25,7 +25,7 @@
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "9/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "pass",

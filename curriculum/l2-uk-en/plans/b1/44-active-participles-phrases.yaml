@@ -5,42 +5,33 @@ version: '2.0'
 title: Активні дієприкметники та їхній стиль
 subtitle: Active Participles & Phrases
 content_outline:
-- section: 'Introduction: Дієприкметники vs Дієприслівники'
-  words: 150
+- section: Вступ
+  words: 159
   points:
   - Participles as verbal adjectives
   - Agreement with nouns
-  - Function in sentences
-- section: Active Present Participles (-учий/-ючий)
-  words: 250
+- section: Теоретичне пояснення
+  words: 1743
   points:
-  - Formation from imperfective verbs
-  - читаючий, працюючий
-  - Limited modern usage
-- section: Active Past Participles (-лий)
-  words: 250
-  points:
-  - Formation from intransitive verbs
-  - минулий, зблідлий, постарілий
-  - Adjective-like usage
-- section: Stylistic Considerations
-  words: 250
-  points:
-  - Канцелярит (bureaucratese)
-  - Russian influence on participle overuse
-  - Modern Ukrainian preferences
-- section: When to Use Relative Clauses Instead
-  words: 200
-  points:
-  - який clauses as alternatives
-  - Natural vs artificial constructions
-  - Style guide recommendations
-- section: 'Practice: Recognition and Alternatives'
-  words: 100
+  - Active present participles (-учий/-ючий)
+  - Active past participles (-лий)
+  - Stylistic considerations
+  - Канцелярит and russicisms
+- section: Практика
+  words: 482
   points:
   - Identify participle types
   - Replace with relative clauses
-word_target: 1200
+- section: Приклади використання
+  words: 437
+  points:
+  - Natural vs artificial constructions
+  - Style guide recommendations
+- section: Потрібно більше практики?
+  words: 179
+  points:
+  - Additional exercises
+word_target: 3000
 vocabulary_hints:
   required:
   - дієприкметник (participle - adjective)
@@ -57,10 +48,10 @@ vocabulary_hints:
   - відносне речення (relative clause)
   - природність (naturalness)
 activity_hints:
-- type: recognition
+- type: quiz
   focus: Identify participle types
   items: 25
-- type: transformation
+- type: cloze
   focus: Participle to relative clause
   items: 20
 - type: error-correction

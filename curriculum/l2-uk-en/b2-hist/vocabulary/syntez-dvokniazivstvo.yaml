@@ -1,4 +1,92 @@
 module: syntez-dvokniazivstvo
 level: B2-HIST
 version: '2.0'
-items: []
+items:
+  - term: синтез
+    ipa: ˈsɪntɛz
+    pos: noun
+    translation: synthesis
+  - term: легітимність
+    ipa: lɛɦʲiˈtɪmnʲisʲtʲ
+    pos: noun
+    translation: legitimacy
+  - term: суверенітет
+    ipa: suvɛrɛnʲiˈtɛt
+    pos: noun
+    translation: sovereignty
+  - term: ойкумена
+    ipa: ɔi̯kuˈmɛnɐ
+    pos: noun
+    translation: ecumene (the inhabited world)
+  - term: тяглість
+    ipa: ˈtʲɑɦlʲisʲtʲ
+    pos: noun
+    translation: continuity
+  - term: самоврядування
+    ipa: sɐmɔwrʲɐˈduwɐnnʲɐ
+    pos: noun
+    translation: self-government
+  - term: кодифікація
+    ipa: kɔdɪfʲikɐˈt͡sʲijɐ
+    pos: noun
+    translation: codification
+  - term: лицарство
+    ipa: ˈlɪt͡sɐrstwɔ
+    pos: noun
+    translation: knighthood, chivalry
+  - term: аристократія
+    ipa: ɐrɪstɔˈkratʲijɐ
+    pos: noun
+    translation: aristocracy
+  - term: парламентаризм
+    ipa: pɐrlɐmɛntɐˈrɪzm
+    pos: noun
+    translation: parliamentarism
+  - term: суб'єктність
+    ipa: subʔjɛkˈtɪwnʲisʲtʲ
+    pos: noun
+    translation: subjectivity, agency
+  - term: асиміляція
+    ipa: ɐsɪmʲilʲɐˈt͡sʲijɐ
+    pos: noun
+    translation: assimilation
+  - term: автономія
+    ipa: ɐutɔˈnɔmʲijɐ
+    pos: noun
+    translation: autonomy
+  - term: ідентичність
+    ipa: idɛnˈtɪtʃnʲisʲtʲ
+    pos: noun
+    translation: identity
+  - term: деспотизм
+    ipa: dɛspɔˈtɪzm
+    pos: noun
+    translation: despotism
+  - term: солідарність
+    ipa: sɔlʲidˈɑrnʲisʲtʲ
+    pos: noun
+    translation: solidarity
+  - term: презумпція
+    ipa: prɛˈzumpt͡sʲijɐ
+    pos: noun
+    translation: presumption (e.g. of innocence)
+  - term: геральдика
+    ipa: ɦɛˈrɑlʲdɪkɐ
+    pos: noun
+    translation: heraldry
+  - term: трансформація
+    ipa: trɐnsfɔrmɐˈt͡sʲijɐ
+    pos: noun
+    translation: transformation
+  - term: протекторат
+    ipa: prɔtɛktɔˈrɑt
+    pos: noun
+    translation: protectorate
+  - term: деколонізація
+    ipa: dɛkɔlɔnʲizɐˈt͡sʲijɐ
+    pos: noun
+    translation: decolonization
+  - term: інституційний
+    ipa: instɪtut͡sʲijˈnɪi̯
+    pos: adjective
+    translation: institutional

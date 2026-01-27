@@ -76,22 +76,10 @@ activity_hints:
   focus: Documents about the liquidation of the Sich
   source: Imperial decrees and reports (adapted)
   items: 3 passages
-- type: quiz
-  focus: Facts about Kalnyshevskyi and the end of the Sich
-  items: 12+
-- type: match-up
-  focus: Key figures in 1775 events and their roles
-  items: 10+
 - type: essay-response
   focus: Why did the Empire destroy the Sich?
   word_target: 250
   output: Analysis of imperial motivations
-- type: group-sort
-  focus: Achievements of the Sich vs. reasons for destruction
-  items: 12+
-- type: fill-in
-  focus: Terminology of repression and martyrdom
-  items: 8+
 - type: critical-analysis
   focus: Evaluate the claim that he lived to 112
   output: Historical source criticism
@@ -120,3 +108,6 @@ sources:
   notes: Place of imprisonment
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of петро калнишевський: останній кошовий'
+- Evaluate the contributions of останній лицар степу

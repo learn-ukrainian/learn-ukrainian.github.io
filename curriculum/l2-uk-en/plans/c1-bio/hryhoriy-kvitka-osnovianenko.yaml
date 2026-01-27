@@ -76,22 +76,10 @@ activity_hints:
   focus: Excerpts from "Маруся" and "Конотопська відьма"
   source: UkrLib or Wikisource
   items: 4 passages
-- type: quiz
-  focus: Kvitka's biography and literary contributions
-  items: 12+
-- type: match-up
-  focus: Works and their characteristics
-  items: 10+
 - type: essay-response
   focus: Why is Kvitka called "Father of Ukrainian Prose"?
   word_target: 300
   output: Literary analysis with examples
-- type: group-sort
-  focus: Sentimental vs. satirical elements in Kvitka's works
-  items: 12+
-- type: fill-in
-  focus: Key quotes and their context
-  items: 10+
 - type: critical-analysis
   focus: Compare Kvitka's sentimentalism with European models
   output: Comparative literature analysis
@@ -127,3 +115,7 @@ sources:
   notes: Intellectual center of his era
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of григорій квітка-основ''яненко: батько української прози'
+- Evaluate the contributions of перший прозаїк
+- Trace the career and influence of останні роки та значення

@@ -1,10 +1,12 @@
 # Audit Report: M17 — 17-the-artist.md
+
 **Level:** LIT | **Module:** M17 | **Phase:** LIT.3 | **Pedagogy:** Immersion & Analysis | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:57:50
 
 ## Configuration
+
 **Type:** LIT-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Уривок: "Художник" | 2 | 1 | ✅ |
@@ -33,12 +36,13 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (86% overlap): "Ставши вільним і освіченим, Шевченко задумує грандіозний проект — періодичне видання офортів "Живопи...". Shares significant keywords with sentence at index 26.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Мета проекту
 
 Шевченко хотів показати світові (і самим українцям) красу їхньої землі, історію та поб...". Shares significant keywords with sentence at index 27.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "все, що тільки є в ній, і наткну носа багатьом дебелим землякам моїм».". Shares significant keywords with sentence at index 28.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Офорт (гравюра на металі) дозволяв робити багато копій і продавати їх дешево.". Shares significant keywords with sentence at index 29.
@@ -48,7 +52,7 @@
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Стиль і теми
 
 У "Живописній Україні" (вийшов лише один випуск у 1844 році) Шевченко виступає як етно...". Shares significant keywords with sentence at index 31.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "- **"У Києві"**: Дніпровські кручі, Лавра — пейзажна лірика.". Shares significant keywords with sentence at index 32.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "- **"Судна рада"**: Сцена сільського суду — жанровий реалізм, увага до побутових деталей.". Shares significant keywords with sentence at index 33.
@@ -61,7 +65,7 @@
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "> [!tip] **Термінологія: Офорт**
 > Офорт — це складна техніка глибокого друку.". Shares significant keywords with sentence at index 37.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Малюнок видряпується голкою на металевій пластині, вкритій лаком, а потім протравлюється кислотою (_...". Shares significant keywords with sentence at index 38.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Шевченко досяг у цьому віртуозності, ставши академіком саме з гравіювання.". Shares significant keywords with sentence at index 39.
@@ -70,6 +74,7 @@
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 
 ## Recommendation
+
 **📝 UPDATE** (severity 70/100)
 
 - Revision recommended (severity 70/100)
@@ -77,6 +82,7 @@
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 3564/4000 (raw: 3871)
 - **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
@@ -95,10 +101,12 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
+
 **Score:** 96% (minimum: 90%)
 **Module Type:** literature
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
@@ -114,6 +122,7 @@
 | **TOTAL** | | | | | **96.3%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 29 | Included in Core |

@@ -73,18 +73,9 @@ activity_hints:
 - type: critical-analysis
   focus: Analyze Scythian gold artifacts including the pectoral
   items: 5-6 images
-- type: quiz
-  focus: Geography of Steppe (Scythian and Sarmatian territories)
-  items: 2 maps
-- type: fill-in
-  focus: Archaeological and nomadic terminology
-  items: 15+
 - type: comparative-study
   focus: Scythians vs Sarmatians — similarities and differences
   output: Table or diagram
-- type: quiz
-  focus: Key facts about steppe civilizations
-  items: 12+
 - type: essay-response
   focus: Як кочівники вплинули на розвиток українських земель?
 focus: history
@@ -97,8 +88,7 @@ connects_to:
 - b2-hist-04 (Slavic origins)
 - 'b2-hist-08 (Synthesis: Origins to Kyiv)'
 objectives:
-- Учень може описувати скіфську та сарматську культури як важливі етапи історії українського
-  степу
+- Учень може описувати скіфську та сарматську культури як важливі етапи історії українського степу
 - Учень може аналізувати первинні джерела про кочові народи
 - Учень може аргументувати значення скіфської спадщини для української культури
 grammar:

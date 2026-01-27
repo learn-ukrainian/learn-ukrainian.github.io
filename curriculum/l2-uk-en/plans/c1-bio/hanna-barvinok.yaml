@@ -69,22 +69,10 @@ activity_hints:
   focus: Українська жіноча література XIX ст.
   source: Literary history sources
   items: 3 passages
-- type: quiz
-  focus: Життя та творчість Барвінок
-  items: 12+
-- type: match-up
-  focus: Етнографічні терміни
-  items: 10+
 - type: essay-response
   focus: Яку роль відіграла Барвінок у збереженні українського фольклору?
   word_target: 300
   output: Analytical essay
-- type: group-sort
-  focus: Твори за жанрами та темами
-  items: 12+
-- type: fill-in
-  focus: Етнографічна та літературна лексика
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-20
@@ -103,3 +91,7 @@ sources:
   notes: Literary archive materials
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of ганна барвінок: письменниця і етнографка'
+- Evaluate the contributions of перша з жінок української літератури
+- Trace the career and influence of голос селянської україни

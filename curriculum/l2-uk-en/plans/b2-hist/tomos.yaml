@@ -67,12 +67,6 @@ activity_hints:
   focus: Текст Томосу
   source: Церковні документи
   items: 4
-- type: quiz
-  focus: Шлях до Томосу
-  items: 15
-- type: match-up
-  focus: Дата → подія церковної історії
-  items: 10
 - type: true-false
   focus: Факти про автокефалію
   items: 10

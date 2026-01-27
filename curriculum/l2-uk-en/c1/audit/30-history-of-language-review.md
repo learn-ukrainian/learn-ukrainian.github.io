@@ -1,10 +1,12 @@
 # Audit Report: M30 — 30-history-of-language.md
+
 **Level:** C1 | **Module:** M30 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:13
 
 ## Configuration
+
 **Type:** C1-history
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Походження української мови | 8 | 5 | ✅ |
@@ -41,20 +44,24 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 30-history-of-language.yaml: Schema validation error at key 'min_words': 100 is less than the minimum of 200
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Аналіз' per template 'c1-module-template.md'
   - FIX: Add '## Аналіз' section as specified in docs/l2-uk-en/templates/c1-module-template.md.md
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 2 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2004/4000 (raw: 2080)
 - **Activities:** ✅ 12/3
 - **Density:** ✅ All > 1
@@ -73,10 +80,12 @@
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 76% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 1 | 15 | 7% | 25% | 1.8% |
@@ -90,11 +99,13 @@
 | **TOTAL** | | | | | **76.6%** |
 
 ### Dryness Flags & Fixes
+
 - ❌ **NO_EXAMPLES**
   - FIX:
     Add 24+ example sentences. Each grammar point needs 3-4 examples showing the pattern in context.
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 41 | Included in Core |

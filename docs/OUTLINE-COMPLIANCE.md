@@ -104,6 +104,7 @@ def fuzzy_match_section(markdown_section, outline_sections):
 **Three types of violations:**
 
 #### A. Missing Sections (ERROR)
+
 ```
 Section 'Повчання Мономаха' defined in outline but not found in markdown.
   Expected word count: 693
@@ -111,6 +112,7 @@ Section 'Повчання Мономаха' defined in outline but not found in 
 ```
 
 #### B. Word Count Mismatch (WARNING/ERROR)
+
 ```
 Section 'Вступ — Останній великий князь' is under target word count.
   Expected: ~480 words (minimum -10%)
@@ -125,6 +127,7 @@ Section 'Вступ — Останній великий князь' is under tar
 - Over target = No violation (acceptable)
 
 #### C. Extra Sections (WARNING)
+
 ```
 Section 'Деколонізаційний погляд' found in markdown but not in outline.
   Word count: 2568

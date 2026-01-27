@@ -29,6 +29,7 @@
 - A2 pass rate: **20.7%** (12/58 modules passing)
 
 **Remaining A2 Issues (46 modules):**
+
 | Issue Type | Count | Fix Approach |
 |------------|-------|--------------|
 | Pedagogy violations | 20 | match-up complexity, metalanguage |

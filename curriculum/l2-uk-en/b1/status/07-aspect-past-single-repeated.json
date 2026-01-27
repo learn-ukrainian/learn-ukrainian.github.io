@@ -1,15 +1,15 @@
 {
   "module": "07-aspect-past-single-repeated",
   "level": "B1",
-  "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:26:47.966311Z",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-27T16:25:46.718010Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-09T23:21:16.448448Z",
-    "meta": "2026-01-26T15:44:41.456767Z",
-    "activities": "2026-01-14T20:20:22.350351Z",
-    "vocabulary": "2026-01-25T16:02:18.055102Z",
-    "plan": "2026-01-26T15:44:41.456456Z"
+    "md": "2026-01-27T15:24:10.349906Z",
+    "meta": "2026-01-27T15:20:48.971904Z",
+    "activities": "2026-01-27T14:18:02.684920Z",
+    "vocabulary": "2026-01-27T14:07:21.304987Z",
+    "plan": "2026-01-27T12:02:43.991611Z"
   },
   "gates": {
     "meta": {
@@ -20,17 +20,17 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1711/1500 (raw: 2144)"
+      "message": "3353/1500 (raw: 3659)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "12/8"
+      "message": "8/8"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "123/25"
+      "message": "25/25"
     },
     "naturalness": {
       "status": "pass",

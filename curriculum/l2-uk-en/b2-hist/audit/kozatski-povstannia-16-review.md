@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M44 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 23:52:02
+**Generated:** 2026-01-27 18:03:14
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** comparative-study, critical-analysis, essay-response, quiz, reading
+**Required Types:** comparative-study, critical-analysis, essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -22,19 +22,19 @@
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Трагедія Солониці: Свідчення очевидців | 3 | 1 | ✅ |
 | 2 | critical-analysis | Аналіз причин поразки ранніх повстань | 1 | 1 | ✅ |
-| 3 | quiz | Хронологія та постаті повстань XVI століття | 8 | 8 | ✅ |
-| 4 | comparative-study | Косинський vs Наливайко: Портрети лідерів | 1 | 1 | ✅ |
-| 5 | essay-response | Еволюція козацького спротиву | 1 | 1 | ✅ |
+| 3 | comparative-study | Косинський vs Наливайко: Портрети лідерів | 1 | 1 | ✅ |
+| 4 | essay-response | Еволюція козацького спротиву | 1 | 1 | ✅ |
+| 5 | true-false | Козацькі повстання XVI століття: Правда чи міф? | 10 | 8 | ✅ |
 
 **Summary:**
 - Total activities: 5 (target: 3-9) ✅
 - Unique types: 5 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 5/5 (comparative-study, critical-analysis, essay-response, quiz, reading) ✅
+- Required types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4802/4000 (raw: 4975)
+- **Words:** ✅ 4862/4000 (raw: 5035)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -74,9 +74,9 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Козацькі повстання XVI століття** | ⚪️ | 108 | Skipped |
-| **Вступ** | ✅ | 441 | Included in Core |
-| **Повстання Криштофа Косинського (1591–1593)** | ⚪️ | 941 | Skipped |
-| **Повстання Северина Наливайка (1594–1596)** | ⚪️ | 929 | Skipped |
+| **Вступ** | ✅ | 482 | Included in Core |
+| **Повстання Криштофа Косинського (1591–1593)** | ⚪️ | 954 | Skipped |
+| **Повстання Северина Наливайка (1594–1596)** | ⚪️ | 935 | Skipped |
 | **Читання** | ✅ | 436 | Included in Core |
 | **Соціальний та Релігійний Вимір боротьби** | ⚪️ | 548 | Skipped |
 | **Первинні джерела та свідчення очевидців** | ✅ | 435 | Included in Core |

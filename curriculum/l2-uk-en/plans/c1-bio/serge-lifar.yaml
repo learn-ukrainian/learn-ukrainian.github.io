@@ -69,22 +69,10 @@ activity_hints:
   focus: Мистецька біографія
   source: Уривки з мемуарів та критичних статей
   items: 3 passages
-- type: quiz
-  focus: Біографія та балетна кар'єра
-  items: 12+
-- type: match-up
-  focus: Балети та їхні характеристики
-  items: 10+
 - type: essay-response
   focus: Чи виправдовує геніальність суперечливі рішення?
   word_target: 300
   output: Етичне есе
-- type: group-sort
-  focus: Танцівник vs хореограф
-  items: 12+
-- type: fill-in
-  focus: Балетна термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-41 (Соломія Крушельницька)
@@ -108,3 +96,7 @@ sources:
   notes: Документальні матеріали
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of серж лифар: зірка балету'
+- Evaluate the contributions of бог танцю з києва
+- Trace the career and influence of останні роки та пам'ять (1958-1986)

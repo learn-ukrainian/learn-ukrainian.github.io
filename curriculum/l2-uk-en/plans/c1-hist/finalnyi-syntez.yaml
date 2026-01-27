@@ -5,50 +5,52 @@ version: '1.0'
 title: 'Фінальний синтез: Що ми дізналися'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of фінальний синтез: що ми дізналися'
+- Evaluate the historical significance of кінець курсу, початок розуміння
 content_outline:
 - section: Вступ — Кінець курсу, початок розуміння
-  words: 451
+  words: 515
   subsections:
   - 135 модулів — що ми пройшли
   - Не факти — методи
   - Як думати про історію
   - Структура модуля
 - section: Методологічні уроки
-  words: 790
+  words: 903
   subsections:
   - Джерелознавство — чому важливе
   - Множинність інтерпретацій
   - Критичне мислення
   - Як оцінювати історичні твердження
 - section: Тематичні уроки
-  words: 677
+  words: 774
   subsections:
   - Імперські механізми — як розпізнавати
   - Культурна резистенція — як працює
   - Агентність — чому ключова
   - Пам'ять — як формується
 - section: Практичні уроки
-  words: 677
+  words: 774
   subsections:
   - Як читати джерела
   - Як оцінювати аргументи
   - Як писати про історію
   - Як розпізнавати пропаганду
 - section: Відкриті питання
-  words: 564
+  words: 645
   subsections:
   - Що залишається невідомим
   - Де потрібні дослідження
   - Нові джерела — нові інтерпретації
   - Історія — незавершений проект
 - section: Підсумок курсу
-  words: 341
+  words: 389
   subsections:
   - Від фактів до розуміння
   - Від споживача до критика
   - Завершення C1-HIST
-word_target: 3500
+word_target: 4000
 vocabulary:
 - фінальний синтез
 - методологія
@@ -66,13 +68,11 @@ vocabulary:
 - деконструкція
 - рефлексія
 activities:
-- type: course-reflection
+- type: essay-response
   focus: What did you learn in 135 modules?
-- type: methodology-summary
+- type: critical-analysis
   focus: Key methodological takeaways
-- type: skill-assessment
-  focus: Historical thinking skills self-assessment
-- type: future-questions
+- type: essay-response
   focus: What questions remain open?
 - type: essay-response
   focus: Як C1-HIST змінив ваше розуміння української історії?

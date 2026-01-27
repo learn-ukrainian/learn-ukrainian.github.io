@@ -67,15 +67,6 @@ activity_hints:
   focus: Спогади січових стрільців
   source: Архівні матеріали
   items: 4
-- type: quiz
-  focus: Українські січові стрільці
-  items: 15
-- type: match-up
-  focus: Битва → дата та наслідки
-  items: 10
-- type: fill-in
-  focus: Військова лексика
-  items: 10
 - type: essay-response
   focus: Яку роль відіграли УСС в українському національному відродженні?
   word_target: 250

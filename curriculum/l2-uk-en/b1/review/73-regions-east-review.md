@@ -14,8 +14,8 @@
 | Relevance           | 10/10 | Essential for understanding the war and Ukrainian identity.                                                                  |
 | Educational         | 10/10 | Tackles the "Surzhyk" reality head-on.                                                                                       |
 | Language            | 10/10 | Authentic industrial vocabulary (`шахта`, `металургія`).                                                                     |
-| Pedagogy            | 10/10 | Highlighting Kharkiv as a _university/science_ city (Karazin, Landau) counters the "pro-Russian/industrial only" stereotype. |
-| Immersion           | 10/10 | Mentions _Serhiy Zhadan_ (writer from Luhansk/Kharkiv) implicitly through the "Ukrainian Voice of the East" theme.           |
+| Pedagogy            | 10/10 | Highlighting Kharkiv as a *university/science* city (Karazin, Landau) counters the "pro-Russian/industrial only" stereotype. |
+| Immersion           | 10/10 | Mentions *Serhiy Zhadan* (writer from Luhansk/Kharkiv) implicitly through the "Ukrainian Voice of the East" theme.           |
 | Activities          | 10/10 | Good variety.                                                                                                                |
 | Richness            | 9/10  | Good depth.                                                                                                                  |
 | Humanity            | 9/10  | Engaging.                                                                                                                    |

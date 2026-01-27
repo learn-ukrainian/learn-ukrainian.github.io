@@ -5,50 +5,52 @@ version: '1.0'
 title: 'Синтез: Від жертви до суб''єкта'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of синтез: від жертви до суб''єкта'
+- Evaluate the historical significance of наратив агентності
 content_outline:
 - section: Вступ — Наратив агентності
-  words: 451
+  words: 515
   subsections:
   - Огляд модулів 126-132
   - Україна — не лише жертва
   - Активне творення історії
   - Мета синтезу
 - section: Стратегії виживання
-  words: 677
+  words: 774
   subsections:
   - Культурна резистенція
   - Громадянське суспільство
   - Революційна традиція
   - Накопичення досвіду
 - section: Поворотні моменти агентності
-  words: 790
+  words: 903
   subsections:
   - Гранітна революція 1990
   - Помаранчева 2004
   - Євромайдан 2014
   - 24 лютого 2022
 - section: Хто будував Україну
-  words: 677
+  words: 774
   subsections:
   - Не лише еліти
   - Жінки — прихована історія
   - Волонтери — нова сила
   - Звичайні люди — герої
 - section: Від об'єкта до суб'єкта
-  words: 564
+  words: 645
   subsections:
   - Імперська історія — Україна як об'єкт
   - Власна історія — Україна як суб'єкт
   - 2022 — точка переходу
   - Що це означає
 - section: Підсумок
-  words: 341
+  words: 389
   subsections:
   - Агентність — ключ до розуміння
   - Україна — творець власної долі
   - Перехід до фінального синтезу
-word_target: 3500
+word_target: 4000
 vocabulary:
 - синтез
 - агентність
@@ -68,12 +70,10 @@ vocabulary:
 activities:
 - type: essay-response
   focus: Map Ukrainian agency across 500 years
-- type: turning-points
+- type: critical-analysis
   focus: Connect all turning points of agency
-- type: actors-analysis
+- type: critical-analysis
   focus: Who built Ukraine — beyond elites
-- type: transformation-analysis
-  focus: From object to subject — what changed
 - type: essay-response
   focus: Як Україна стала суб'єктом історії?
 sources:

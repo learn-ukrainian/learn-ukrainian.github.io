@@ -24,14 +24,14 @@
 
 ## Linguistic Accuracy Issues
 
-- **Vocabulary:** `співставити` (to compare/juxtapose). This is technically a "calque" from Russian _сопоставить_. The recommended Ukrainian term is `зіставити` or `порівняти`. However, `співставити` is widely used.
-  - _Action:_ Recommend changing to `зіставити`.
+- **Vocabulary:** `співставити` (to compare/juxtapose). This is technically a "calque" from Russian *сопоставить*. The recommended Ukrainian term is `зіставити` or `порівняти`. However, `співставити` is widely used.
+  - *Action:* Recommend changing to `зіставити`.
 - **Vocabulary:** `іт-` prefix is lowercased (`іт-галузь`, `іт-країна`, `іт-фахівець`). Should be `ІТ-`.
 - **Vocabulary:** `Айтішник` (IT guy) is listed. This is accurate colloquialism, good inclusion!
 
 ## Strengths
 
-- **Realism:** The narrative acknowledges the _difficulties_ of adapting to a new city (`бентежити`, `випробування`), which resonates with the IDP experience.
+- **Realism:** The narrative acknowledges the *difficulties* of adapting to a new city (`бентежити`, `випробування`), which resonates with the IDP experience.
 - **IT Focus:** Continues the strong thread of "Ukraine as IT nation".
 
 ## Issues

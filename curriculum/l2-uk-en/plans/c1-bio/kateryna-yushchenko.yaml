@@ -69,22 +69,10 @@ activity_hints:
   focus: Історія кібернетики в Україні
   source: Scientific history sources
   items: 3 passages
-- type: quiz
-  focus: Життя та наукова діяльність Ющенко
-  items: 12+
-- type: match-up
-  focus: Терміни інформатики та кібернетики
-  items: 10+
 - type: essay-response
   focus: Чому адресна мова Ющенко важлива для історії програмування?
   word_target: 300
   output: Analytical essay
-- type: group-sort
-  focus: Етапи розвитку кібернетики в Україні
-  items: 12+
-- type: fill-in
-  focus: Технічна термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-69
@@ -103,3 +91,7 @@ sources:
   notes: Institute where Yushchenko worked
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of катерина ющенко: піонерка кібернетики'
+- Evaluate the contributions of мати мови програмування
+- Trace the career and influence of забутий геній

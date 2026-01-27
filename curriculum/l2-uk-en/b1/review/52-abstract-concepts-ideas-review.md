@@ -25,7 +25,7 @@
 ## Linguistic Accuracy Issues
 
 - **Vocabulary:** `ші` (intended as 'ШІ' - Artificial Intelligence?) is lowercased. Should be `ШІ`.
-- **Note:** `Прокопович` is listed as feminine gender (`f`) in the YAML; Feofan Prokopovych was a man (though the surname declines like a noun, it refers to a male). If referring to the _person_, it's masculine grammar on the surname.
+- **Note:** `Прокопович` is listed as feminine gender (`f`) in the YAML; Feofan Prokopovych was a man (though the surname declines like a noun, it refers to a male). If referring to the *person*, it's masculine grammar on the surname.
 
 ## Strengths
 

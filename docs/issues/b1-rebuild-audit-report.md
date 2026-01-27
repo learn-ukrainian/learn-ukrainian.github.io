@@ -1,4 +1,5 @@
 # B1 Rebuild - Comprehensive Audit Report
+
 Date: Sat Jan 10 00:10:12 CET 2026
 
 ## Module Status
@@ -103,7 +104,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 12-aspect-pairs-essential-40
 
 ```
@@ -176,7 +176,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 13-work-week-aspect-in-action
 
 ```
@@ -246,7 +245,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 14-aspect-integration-practice
 
@@ -322,7 +320,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 15-checkpoint-aspect-mastery
 
@@ -406,7 +403,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 16-motion-verbs-full-system
 
 ```
@@ -479,7 +475,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 17-motion-coming-going
 
@@ -559,7 +554,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 18-motion-passing-crossing
 
 ```
@@ -632,7 +626,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 19-motion-starting-returning
 
@@ -708,7 +701,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 20-motion-approaching-departing
 
@@ -787,7 +779,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 21-motion-figurative-uses
 
@@ -875,7 +866,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 22-motion-full-prefix-integration
 
 ```
@@ -960,7 +950,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 23-motion-patterns-other-verbs
 
@@ -1056,7 +1045,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 24-motion-practice-integration
 
 ```
@@ -1148,7 +1136,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 25-checkpoint-motion-verbs
 
 ```
@@ -1227,7 +1214,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 26-relative-clauses-yakyi
 
 ```
@@ -1297,7 +1283,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 27-relative-clauses-de-kudy-zvidky
 
@@ -1369,7 +1354,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 28-relative-clauses-koly-shcho
 
 ```
@@ -1439,7 +1423,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 29-purpose-shchob-infinitive
 
@@ -1513,7 +1496,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 30-purpose-shchob-past-form
 
 ```
@@ -1577,7 +1559,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 31-conditionals-real-yakshcho
 
@@ -1650,7 +1631,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 32-conditionals-unreal-yakby
 
@@ -1740,7 +1720,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 33-conditionals-mixed-complex
 
 ```
@@ -1818,7 +1797,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 34-checkpoint-complex-sentences-1
 
@@ -1907,7 +1885,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 35-concessive-khocha
 
 ```
@@ -1991,7 +1968,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 36-causal-result-clauses
 
 ```
@@ -2071,7 +2047,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 37-temporal-clauses
 
 ```
@@ -2150,7 +2125,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 38-complex-sentence-integration
 
@@ -2237,7 +2211,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 39-reported-statements
 
@@ -2331,7 +2304,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 40-reported-questions-commands
 
 ```
@@ -2403,7 +2375,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 41-checkpoint-complex-sentences-2
 
@@ -2496,7 +2467,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 42-adverbial-participles-imperfective
 
 ```
@@ -2580,7 +2550,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 43-adverbial-participles-perfective
 
@@ -2669,7 +2638,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 44-active-participles-phrases
 
@@ -2776,7 +2744,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 45-past-passive-participles-1
 
 ```
@@ -2881,7 +2848,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 46-past-passive-participles-2
 
 ```
@@ -2963,7 +2929,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 47-passive-constructions
 
 ```
@@ -3025,7 +2990,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 48-diminutives-master-class
 
@@ -3105,7 +3069,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 49-numerals-collectives-fractions
 
@@ -3191,7 +3154,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 50-integrated-grammar-lab
 
@@ -3284,7 +3246,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 51-checkpoint-advanced-grammar
 
@@ -3419,7 +3380,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 52-abstract-concepts-ideas
 
 ```
@@ -3538,7 +3498,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 53-abstract-concepts-processes
 
 ```
@@ -3651,7 +3610,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 54-expressing-opinions
 
@@ -3826,7 +3784,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 55-agreement-disagreement
 
 ```
@@ -3933,7 +3890,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 56-discourse-markers-basic
 
@@ -4042,7 +3998,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 57-discourse-markers-advanced
 
@@ -4155,7 +4110,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 58-describing-changes
 
@@ -4275,7 +4229,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 59-media-news
 
@@ -4398,7 +4351,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 60-society-politics
 
 ```
@@ -4516,7 +4468,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 61-professional-communication
 
 ```
@@ -4625,7 +4576,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 62-environment-ecology
 
@@ -4736,7 +4686,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 63-health-wellness
 
 ```
@@ -4843,7 +4792,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 64-emotions-deep-dive
 
@@ -4964,7 +4912,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 65-relationships
 
 ```
@@ -5073,7 +5020,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 66-business-basics
 
@@ -5198,7 +5144,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 67-travel-geography
 
 ```
@@ -5317,7 +5262,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 68-synonymy-thinking-verbs
 
@@ -5441,7 +5385,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 69-synonymy-speaking-verbs
 
 ```
@@ -5551,7 +5494,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 70-collocations-expressions
 
 ```
@@ -5654,7 +5596,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 71-emotional-intelligence
 
@@ -5792,7 +5733,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 72-regions-west
 
 ```
@@ -5890,7 +5830,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 73-regions-east
 
 ```
@@ -5982,7 +5921,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 74-regions-south
 
@@ -6084,7 +6022,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 75-regions-center
 
 ```
@@ -6182,7 +6119,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 76-ukrainian-music-today
 
 ```
@@ -6270,7 +6206,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 77-ukrainian-cinema-and-tv
 
 ```
@@ -6357,7 +6292,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 78-technology-and-startups
 
 ```
@@ -6437,7 +6371,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 79-sports-in-ukraine
 
@@ -6520,7 +6453,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 80-active-lifestyle
 
@@ -6630,7 +6562,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 81-running-in-ukraine
 
 ```
@@ -6722,7 +6653,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 82-mountains-trail
 
@@ -6838,7 +6768,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 83-cycling-water
 
 ```
@@ -6950,7 +6879,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 84-winter-sports
 
 ```
@@ -7058,7 +6986,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 85-ukrainian-cuisine
 
 ```
@@ -7155,7 +7082,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 86-ukrainski-sviata-ta-festyvali
 
@@ -7277,7 +7203,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 87-novyny-yak-chytaty
 
 ```
@@ -7361,7 +7286,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 88-interviu-ta-podkasty
 
@@ -7470,7 +7394,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 89-b1-grammar-integration
 
 ```
@@ -7540,7 +7463,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
-
 
 ### ❌ 90-b1-vocabulary-integration
 
@@ -7673,7 +7595,6 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ### ❌ 91-b1-capstone
 
 ```
@@ -7757,8 +7678,8 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
 
-
 ## Summary
+
 - Total modules: 91
 - Passed: 10
 - Failed: 81

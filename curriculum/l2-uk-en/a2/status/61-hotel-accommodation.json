@@ -2,14 +2,14 @@
   "module": "61-hotel-accommodation",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:26:38.025932Z",
+  "last_audit": "2026-01-27T13:09:33.725714Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-17T21:45:15.597933Z",
+    "md": "2026-01-27T12:28:01.436188Z",
     "meta": "2026-01-26T17:21:18.981222Z",
     "activities": "2026-01-25T17:24:25.006314Z",
     "vocabulary": "2026-01-25T17:24:52.552319Z",
-    "plan": "2026-01-26T17:21:18.980997Z"
+    "plan": "2026-01-27T12:23:09.728313Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1004/1000 (raw: 1148) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "1089/1000 (raw: 1171)"
     },
     "activities": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "4 Outline Compliance Errors",
-      "Missing required activity types: dialogue, role-play, vocabulary-drill"
-    ],
-    "pass_count": 4,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

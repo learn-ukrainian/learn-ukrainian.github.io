@@ -10,17 +10,20 @@
 ## What Makes Our Curriculum Valuable for NLP
 
 ### 1. Scale
+
 - 539 modules across 6 CEFR levels (A1→C2)
 - ~10,000+ pedagogically-validated Ukrainian sentences
 - ~12,000 vocabulary entries with translations
 
 ### 2. Structure
+
 - **CEFR-graded content** (A1 simple → C2 complex)
 - **Error annotations** (error-correction activities)
 - **Grammatical progression** (cases, aspect, syntax)
 - **Authentic Ukrainian** (no Russianisms, reviewed for purity)
 
 ### 3. Educational Focus
+
 - **Pedagogical simplifications** documented (A1: "Я є студент" → B2: "Я студент")
 - **Learner error patterns** (realistic mistakes in error-correction activities)
 - **Calque detection** (English thinking → Ukrainian expression)
@@ -32,6 +35,7 @@
 ### Phase 1: Low-Hanging Fruit (Now - 3 months)
 
 #### 1.1 Graded Ukrainian Corpus
+
 **What:** Extract all Ukrainian text from modules, tag by CEFR level
 
 **Format:**
@@ -57,6 +61,7 @@
 ---
 
 #### 1.2 Error Correction Dataset
+
 **What:** Extract error→correct pairs from error-correction activities
 
 **Format:**
@@ -85,6 +90,7 @@
 ---
 
 #### 1.3 Vocabulary Progressions
+
 **What:** All vocabulary entries with CEFR level + first occurrence
 
 **Format:**
@@ -115,6 +121,7 @@
 ### Phase 2: Medium Effort (3-6 months)
 
 #### 2.1 Calque Detection Dataset
+
 **What:** English loan translations flagged by Gemini, validated manually
 
 **Process:**
@@ -147,6 +154,7 @@
 ---
 
 #### 2.2 Pedagogical Simplifications Corpus
+
 **What:** Compare A1/A2 teaching language vs natural Ukrainian
 
 **Examples:**
@@ -182,6 +190,7 @@
 ### Phase 3: Long-term Research (6-12 months)
 
 #### 3.1 Integration with nlp_uk/Stanza
+
 **What:** Test our curriculum against Ukrainian NLP tools, report findings
 
 **Process:**
@@ -198,6 +207,7 @@
 ---
 
 #### 3.2 UNLP Workshop Paper Submission
+
 **What:** Submit to UNLP 2026 (May 29-30)
 
 **Possible Topics:**
@@ -219,22 +229,26 @@
 ## Contribution Workflow
 
 ### Immediate (This Month)
+
 1. ✅ Use Gemini for curriculum validation (primary goal)
 2. 📝 Document interesting patterns (calques, errors) as you find them
 3. 📊 Start collecting data for Phase 1 contributions
 
 ### Short-term (Next 3 Months)
+
 1. Complete A2 level (50 modules)
 2. Extract Phase 1 datasets (corpus, errors, vocabulary)
 3. Share on GitHub with CC-BY-4.0 license
 
 ### Medium-term (6 Months)
+
 1. Complete B1 level (85 modules)
 2. Create calque detection dataset
 3. Write blog post about findings
 4. Engage with Ukrainian NLP community (GitHub issues, discussions)
 
 ### Long-term (12 Months)
+
 1. Complete B2 level (110 modules)
 2. Prepare UNLP 2026 paper submission
 3. Release comprehensive dataset
@@ -245,16 +259,19 @@
 ## Community Engagement Strategy
 
 ### 1. Start Small (Low Commitment)
+
 - ⭐ Star repos: brown-uk/nlp_uk, osyvokon/awesome-ukrainian-nlp
 - 🐛 Submit issues when you find edge cases
 - 💬 Join Ukrainian NLP discussions (GitHub, forums)
 
 ### 2. Share Work in Progress
+
 - 📝 Blog posts about curriculum development
 - 🗂️ Interim dataset releases (A1, A2, B1 as completed)
 - 🧪 Experiments: "Testing nlp_uk on Educational Content"
 
 ### 3. Formal Contribution
+
 - 📄 Research paper at UNLP workshop
 - 📊 Full dataset release with documentation
 - 🤝 Collaboration offers (if researchers are interested)
@@ -276,11 +293,13 @@
 ## Success Metrics
 
 ### Curriculum Quality (Primary)
+
 - ✅ All modules pass audit
 - ✅ High learner satisfaction
 - ✅ Zero Russianisms/calques in final content
 
 ### NLP Contribution (Secondary)
+
 - 🎯 **Year 1:** Release 3 datasets (corpus, errors, vocabulary)
 - 🎯 **Year 2:** 1 paper published or submitted
 - 🎯 **Year 3:** Active collaboration with 1+ Ukrainian NLP researcher

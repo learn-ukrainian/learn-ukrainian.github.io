@@ -672,6 +672,7 @@ Use when referring to longer external materials:
 5. Invalid `source_reading` reference (points to non-existent id) triggers **CRITICAL**
 
 **Valid pairings:**
+
 | Reading Type | Valid Outputs |
 |--------------|---------------|
 | Primary source (poem, speech) | critical-analysis, essay-response |
@@ -850,6 +851,7 @@ answers: [день, радість, серце]
 - Allows incremental development (write 1 activity, validate structure, add more)
 
 **Activity Count Requirements (from config.py):**
+
 | Level | min_activities | Enforcement |
 |-------|----------------|-------------|
 | A1 | 8 | Audit |

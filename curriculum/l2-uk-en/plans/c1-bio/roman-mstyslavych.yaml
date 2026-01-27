@@ -75,22 +75,10 @@ activity_hints:
   focus: Chronicle descriptions of Roman's reign
   source: Галицько-Волинський літопис (adapted)
   items: 3 passages
-- type: quiz
-  focus: Key events in Roman's life and reign
-  items: 12+
-- type: match-up
-  focus: Territories and their political status
-  items: 10+
 - type: essay-response
   focus: Evaluate Roman's strategy for unifying Galicia and Volhynia
   word_target: 250
   output: Analytical argument with evidence
-- type: group-sort
-  focus: Domestic vs. foreign policy actions
-  items: 12+
-- type: fill-in
-  focus: Key dates and places in Roman's campaigns
-  items: 8+
 - type: critical-analysis
   focus: Why did Roman succeed where others failed?
   output: Comparative analysis

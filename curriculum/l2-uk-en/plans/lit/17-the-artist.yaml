@@ -6,37 +6,37 @@ title: 'Художник: Шевченко-маляр'
 subtitle: 'The Artist: Shevchenko the Painter'
 content_outline:
 - section: Вступ — Поет чи художник?
-  words: 500
+  words: 625
   points:
   - Шевченко як "подвійний талант"
   - Академія мистецтв vs поезія
   - Чому живопис менш відомий
 - section: Навчання у Брюллова
-  words: 700
+  words: 875
   points:
   - Карл Брюллов як вчитель
   - Академічна школа живопису
   - Техніка і стиль раннього Шевченка
 - section: Портрети та офорти
-  words: 700
+  words: 875
   points:
   - Портретний живопис
   - Серія офортів (техніка гравюри)
   - Автопортрети
 - section: Пейзажі заслання
-  words: 700
+  words: 875
   points:
   - Казахські степи в акварелях
   - Документальна функція малюнків
   - Мистецтво vs заборона писати
 - section: Повість "Художник"
-  words: 600
+  words: 750
   points:
   - Автобіографічні елементи
   - Образ митця в суспільстві
   - Російська мова повісті
 - section: Підсумок — Слово і образ
-  words: 400
+  words: 500
   points:
   - Взаємодія поезії та живопису
   - Шевченко як візіонер
@@ -65,19 +65,10 @@ activity_hints:
   focus: Уривки з повісті "Художник"
   source: UkrLib tid=43
   items: 4+
-- type: quiz
-  focus: Факти про живопис Шевченка
-  items: 15+
-- type: match-up
-  focus: Жанр → приклади творів
-  items: 12+
 - type: essay-response
   focus: Взаємодія слова і образу у Шевченка
   word_target: 300
   output: Мистецтвознавче есе
-- type: cloze
-  focus: Художня термінологія
-  items: 12+
 focus: biography
 pedagogy: Immersion & Analysis
 prerequisites:

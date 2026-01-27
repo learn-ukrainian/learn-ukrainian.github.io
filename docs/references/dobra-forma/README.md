@@ -25,6 +25,7 @@ Widely regarded as one of the most effective Ukrainian textbooks for its pedagog
 Dobra Forma is published as an **Open Educational Resource** under a Creative Commons license, designed to be freely shared, used, and learned from.
 
 ### What We CAN Do ✅
+
 - Save locally for reference and study
 - Learn from their pedagogical approach
 - Apply their teaching principles to our curriculum
@@ -32,6 +33,7 @@ Dobra Forma is published as an **Open Educational Resource** under a Creative Co
 - Share and distribute with attribution
 
 ### What We CANNOT Do ❌
+
 - Copy-paste their content into our modules (plagiarism)
 - Claim their work as ours
 - Remove or modify their attribution

@@ -113,10 +113,12 @@ All C1 templates are **correctly aligned** with the curriculum plan:
 ## Recommended Actions
 
 ### Must Fix
+
 1. [ ] Line 1619: Change "C1.3 Review" → "C1.4 Review"
 2. [ ] Rebuild mermaid diagram with correct phase structure
 
 ### For Discussion
+
 3. [ ] Consider adding C1.3 synthesis/checkpoint structure for 65 biographies
 
 ---

@@ -6,7 +6,6 @@
 
 **Related Issue:** [#307](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/307)
 
-
 <!--
 TEMPLATE_METADATA:
   required_sections:
@@ -27,6 +26,7 @@ TEMPLATE_METADATA:
 Before submitting a C2 meta-skills/capstone module, verify all items from `c2-module-template.md` PLUS:
 
 ### Meta-Skills-Specific Requirements
+
 - [ ] **Complete mastery demonstration:** Full grammar, vocabulary, and skills review
 - [ ] **Rare/archaic forms:** Understanding historical and literary Ukrainian
 - [ ] **Regional varieties:** Dialectal awareness without prescriptivism
@@ -77,7 +77,6 @@ Before submitting a C2 meta-skills/capstone module, verify all items from `c2-mo
 | M98 | Final Exam: Integrated Skills |
 | M99 | C2 Certification Preparation |
 | M100 | C2 РІВЕНЬ ЗАВЕРШЕНО |
-
 
 ---
 
@@ -515,6 +514,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 ## Content Structure Note
 
 ### Vocabulary & Activities
+
 **CRITICAL:** Do NOT add `## Vocabulary` or `## Activities` headers. These sections are injected automatically from:
 - `vocabulary/{slug}.yaml`
 - `activities/{slug}.yaml`
@@ -541,24 +541,28 @@ items:
 ## Capstone Project Types
 
 ### 1. Research Paper
+
 - **Length:** 10,000-12,000 words
 - **Sources:** 15+ academic sources
 - **Structure:** IMRAD or humanities format
 - **Defense:** 15-20 minute presentation
 
 ### 2. Literary Work
+
 - **Poetry:** 20+ poems with thematic coherence
 - **Prose:** 15,000+ words (novel excerpt, story collection)
 - **Includes:** Author's preface explaining artistic choices
 - **Defense:** Reading + discussion
 
 ### 3. Translation Project
+
 - **Length:** 50+ pages source text
 - **Includes:** Translator's preface, glossary, annotations
 - **Types:** Literary, technical, or mixed
 - **Defense:** Analysis of translation choices
 
 ### 4. Professional Portfolio
+
 - **Documents:** 10+ professional pieces
 - **Styles:** 3+ different registers
 - **Includes:** Cover letter, introduction

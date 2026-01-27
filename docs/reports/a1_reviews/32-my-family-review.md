@@ -19,7 +19,7 @@ Warm and relatable.
 
 **1. Accuracy of Examples:** 10/10
 Examples are correct.
-_Fixed:_ Replaced incorrect "Present Tense" translations in the Practice section with actual family vocabulary sentences.
+*Fixed:* Replaced incorrect "Present Tense" translations in the Practice section with actual family vocabulary sentences.
 
 **2. Relevance of Scenarios:** 10/10
 "Tell me about your family" is a standard A1 conversation starter.

@@ -5,42 +5,30 @@ version: '2.0'
 title: 'Допустові речення: хоча, незважаючи на'
 subtitle: Concessive Clauses - Although, Despite
 content_outline:
-- section: 'Introduction: Concessive Meaning'
-  words: 150
+- section: 'Тест: Перевірте себе'
+  words: 194
+  points:
+  - Diagnostic quiz on concessive clauses
+  - Self-assessment questions
+- section: Пояснення
+  words: 1702
   points:
   - What are concessive clauses
-  - Unexpected outcomes
-  - Contrast relationships
-- section: хоча - Although Clauses
-  words: 250
-  points:
-  - Хоча + clause structure
-  - Хоча він хворий, він прийшов
-  - Word order and punctuation
-- section: незважаючи на - Despite
-  words: 250
-  points:
-  - Prepositional phrase + accusative
-  - Незважаючи на дощ...
-  - Nominalization patterns
-- section: Other Concessive Connectors
-  words: 250
-  points:
-  - попри (despite)
-  - хоч би (even though)
-  - дарма що (in vain)
-- section: Concessive vs Adversative
-  words: 200
-  points:
-  - хоча vs але
-  - Subordination vs coordination
-  - Choosing correctly
-- section: 'Practice: Expressing Contrast'
-  words: 100
+  - хоча - Although Clauses
+  - незважаючи на - Despite
+  - Other Concessive Connectors (попри, хоч би)
+  - Concessive vs Adversative (хоча vs але)
+- section: Практика
+  words: 408
   points:
   - Form concessive clauses
   - Express unexpected outcomes
-word_target: 1200
+- section: Діалоги
+  words: 696
+  points:
+  - Concessive clauses in conversation
+  - Contrast scenarios
+word_target: 3000
 vocabulary_hints:
   required:
   - хоча (although)
@@ -60,13 +48,13 @@ activity_hints:
 - type: fill-in
   focus: Complete concessive sentences
   items: 25
-- type: transformation
+- type: cloze
   focus: Convert sentences to concessive
   items: 20
 - type: error-correction
   focus: Fix concessive clause errors
   items: 15
-- type: translation
+- type: translate
   focus: English to Ukrainian
   items: 15
 focus: grammar

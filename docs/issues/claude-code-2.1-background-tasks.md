@@ -159,16 +159,19 @@ No configuration needed - background tasks work out of the box in Claude Code 2.
 ## Troubleshooting
 
 ### "Task not responding"
+
 - Check if process crashed: `/tasks`
 - View error output: `Show output from task [ID]`
 - Restart if needed: Stop task, start new one
 
 ### "Too many background tasks"
+
 - List all tasks: `/tasks`
 - Kill unused tasks: `/kill [task_id]`
 - Clean up completed tasks
 
 ### "Can't background this task"
+
 - Some tasks require interaction
 - Run them in foreground
 - Or use separate terminal for those tasks

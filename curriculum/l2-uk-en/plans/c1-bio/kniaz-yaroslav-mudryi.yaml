@@ -75,22 +75,10 @@ activity_hints:
   focus: Excerpts from Ruska Pravda
   source: Original text (adapted)
   items: 3 passages
-- type: quiz
-  focus: Facts about Yaroslav's reign and achievements
-  items: 15+
-- type: match-up
-  focus: Yaroslav's children and their royal marriages
-  items: 10+
 - type: essay-response
   focus: Compare Yaroslav's lawgiving with Justinian or Charlemagne
   word_target: 300
   output: Comparative analysis
-- type: group-sort
-  focus: Military vs. Cultural vs. Legal achievements
-  items: 15+
-- type: fill-in
-  focus: Terms from Ruska Pravda
-  items: 10+
 - type: critical-analysis
   focus: Evaluate the title "Mudryi" (The Wise)
   output: Argument with evidence

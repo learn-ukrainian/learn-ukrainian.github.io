@@ -2,14 +2,14 @@
   "module": "63-health-wellness",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:27:24.717451Z",
+  "last_audit": "2026-01-27T19:01:34.508505Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-24T22:38:13.814632Z",
+    "md": "2026-01-27T18:54:14.986613Z",
     "meta": "2026-01-26T15:44:41.651375Z",
-    "activities": "2026-01-11T23:20:02.219045Z",
+    "activities": "2026-01-27T18:57:16.217607Z",
     "vocabulary": "2026-01-25T18:00:40.593313Z",
-    "plan": "2026-01-26T15:44:41.650995Z"
+    "plan": "2026-01-27T18:49:49.084989Z"
   },
   "gates": {
     "meta": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "1632/1500 (raw: 2362) | pedagogy: 1 violations | richness: 87% < 95% min (grammar)"
+      "status": "pass",
+      "violations": 0,
+      "message": "1734/1500 (raw: 2467)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "12/8"
+      "message": "13/8"
     },
     "vocabulary": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Missing required activity types: collocation, discussion, fill-in, role-play"
-    ],
-    "pass_count": 4,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

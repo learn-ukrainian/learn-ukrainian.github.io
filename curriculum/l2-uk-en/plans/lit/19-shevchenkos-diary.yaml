@@ -6,37 +6,37 @@ title: Щоденник ("Журнал") Шевченка
 subtitle: 'Shevchenko''s Diary: The Inner World'
 content_outline:
 - section: Вступ — Публічний vs приватний Шевченко
-  words: 500
+  words: 625
   points:
   - Кобзар vs Журнал
   - Чому щоденник написаний російською
   - Жанр щоденника в літературі
 - section: Контекст написання (1857-1858)
-  words: 700
+  words: 875
   points:
   - Кінець заслання
   - Шлях з Казахстану до Петербурга
   - Нове життя після неволі
 - section: Внутрішній світ поета
-  words: 800
+  words: 1000
   points:
   - Рефлексії про мистецтво
   - Погляди на театр і літературу
   - Технічні інтереси (фотографія)
 - section: Мовний аналіз
-  words: 600
+  words: 750
   points:
   - Розмовна російська XIX століття
   - Інтроспективна лексика
   - Порівняння з поетичною мовою
 - section: Психологічний портрет
-  words: 600
+  words: 750
   points:
   - Самотність і пошук кохання
   - Стосунки з друзями
   - Здоров'я і передчуття смерті
 - section: Підсумок — Людина за маскою пророка
-  words: 400
+  words: 500
   points:
   - Щоденник як документ епохи
   - Демістифікація генія
@@ -65,19 +65,10 @@ activity_hints:
   focus: Уривки з "Журналу" Шевченка
   source: UkrLib tid=44
   items: 5+
-- type: quiz
-  focus: Факти з щоденника
-  items: 15+
-- type: match-up
-  focus: Дата → подія з щоденника
-  items: 12+
 - type: essay-response
   focus: Контраст між "Кобзарем" і "Журналом"
   word_target: 300
   output: Компаративне есе
-- type: cloze
-  focus: Цитати з щоденника
-  items: 12+
 focus: literature
 pedagogy: Seminar
 prerequisites:

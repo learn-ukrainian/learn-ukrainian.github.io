@@ -25,7 +25,7 @@
 ## Linguistic Accuracy Issues
 
 - **Vocabulary:** `підход` (in vocab list). Standard form is `підхід` (with i). `Підход` is a Russism/surzhyk or dialect.
-  - _Action:_ Change to `підхід`.
+  - *Action:* Change to `підхід`.
 
 ## Strengths
 

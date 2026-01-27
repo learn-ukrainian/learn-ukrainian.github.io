@@ -1,10 +1,12 @@
 # Audit Report: M28 — 28-dialects-of-ukrainian.md
+
 **Level:** C1 | **Module:** M28 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:12
 
 ## Configuration
+
 **Type:** C1-grammar
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | group-sort | Діалектні групи | 14 | 12 | ✅ |
@@ -41,20 +44,21 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "> [!important]
 > **Визначення:**
 > Спочатку "суржиком" називали суміш жита і пшениці (борошно низько...". Shares significant keywords with sentence at index 20.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Сьогодні це мовлення, де українська граматика змішана з російськими словами.". Shares significant keywords with sentence at index 21.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): ">
 > - **Діалект:** Має історію століть, має свої правила.". Shares significant keywords with sentence at index 22.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "> [!example]
 > **Анатомія Суржику:**
 >
-> - _Суржик:_ "Я _поняв_, шо нада _робить_".". Shares significant keywords with sentence at index 23.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+> - *Суржик:* "Я *поняв*, шо нада *робить*".". Shares significant keywords with sentence at index 23.
+- FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Сучасна література (наприклад, п'єси Леся Подерв'янського) використовує суржик як художній прийом, щ...". Shares significant keywords with sentence at index 25.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Сміятися з суржику можна, але говорити ним на іспиті — ні.". Shares significant keywords with sentence at index 29.
@@ -69,6 +73,7 @@
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
@@ -76,6 +81,7 @@
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2237/3000 (raw: 2357)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
@@ -94,10 +100,12 @@
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 98% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 22 | 15 | 100% | 25% | 25.0% |
@@ -111,6 +119,7 @@
 | **TOTAL** | | | | | **98.7%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 77 | Included in Core |

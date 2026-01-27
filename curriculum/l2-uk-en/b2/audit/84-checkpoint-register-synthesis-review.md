@@ -1,10 +1,12 @@
 # Audit Report: M84 — 84-checkpoint-register-synthesis.md
+
 **Level:** B2 | **Module:** M84 | **Phase:** B2 | **Pedagogy:** Test | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:42
 
 ## Configuration
+
 **Type:** B2-checkpoint
 **Word Target:** 1750 words
 **Activities:** 15-19 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Читання: Розуміння тексту | 10 | 8 | ✅ |
@@ -48,15 +51,18 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 84-checkpoint-register-synthesis.yaml: Schema validation error at key '17': {'type': 'translate', 'title': 'Фрази для дискусій та дебатів', 'items': [{'source': 'I totally agree with your point of view.', 'options': [{'text': 'Я повністю згоден з вашою точкою зору.', 'correct': True}, {'text': 'Я думаю так само як і ви зараз.', 'correct': False}, {'text': 'Ваша думка мені дуже подобається.', 'correct': False}, {'text': 'Ви кажете правду, я вірю вам.', 'correct': False}]}, {'source': 'On the other hand, we should consider risks.', 'options': [{'text': 'З іншого боку, нам варто зважити на ризики.', 'correct': True}, {'text': 'З іншої руки, ми маємо думати про проблеми.', 'correct': False}, {'text': 'Але також є дуже великі небезпеки.', 'correct': False}, {'text': 'Навпаки, ми забули про всі ризики.', 'correct': False}]}, {'source': 'Summarizing the above, I would like to emphasize...', 'options': [{'text': 'Підсумовуючи вищесказане, я хотів би підкреслити...', 'correct': True}, {'text': 'Коротко кажучи про все, я скажу...', 'correct': False}, {'text': 'Наприкінці своєї промови я наголошу на...', 'correct': False}, {'text': 'Отже, я думаю, що це важливо знати...', 'correct': False}]}, {'source': 'Could you please clarify this point?', 'options': [{'text': 'Чи не могли б ви уточнити цей момент?', 'correct': True}, {'text': 'Що ви мали на увазі під цим словом?', 'correct': False}, {'text': 'Поясніть мені ще раз, я не зрозумів.', 'correct': False}, {'text': 'Кажіть простіше, будь ласка, я чекаю.', 'correct': False}]}, {'source': 'I am afraid I cannot support this idea.', 'options': [{'text': 'Боюсь, що я не можу підтримати цю ідею.', 'correct': True}, {'text': 'Я не хочу допомагати вам у цій справі.', 'correct': False}, {'text': 'Ця ідея мені зовсім не подобається.', 'correct': False}, {'text': 'Я маю великий страх перед вашою ідеєю.', 'correct': False}]}, {'source': 'According to the latest research data...', 'options': [{'text': 'Згідно з останніми даними досліджень...', 'correct': True}, {'text': 'Як кажуть нові наукові книжки...', 'correct': False}, {'text': 'Через останні результати нашої роботи...', 'correct': False}, {'text': 'По даним, які ми отримали вчора...', 'correct': False}]}], 'instruction': 'Оберіть найбільш влучний академічний переклад фрази для ведення професійної дискусії.'} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
+
 - **Words:** ✅ 1796/1750 (raw: 1980)
 - **Activities:** ✅ 21/15
 - **Density:** ✅ All > 14
@@ -75,10 +81,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 80% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 41 | 24 | 100% | 20% | 20.0% |
@@ -94,20 +102,22 @@
 | **TOTAL** | | | | | **80.8%** |
 
 ### Dryness Flags & Fixes
+
 - ❌ **NO_DIALOGUE**
   - FIX:
     Add 4+ mini-dialogues. Use this exact format:
-    
+
     **Діалог: [Location in Ukraine]**
-    
+
     > — [Speaker 1 line with **bolded** grammar examples]
     > — [Speaker 2 response with **bolded** grammar examples]
     > — [Speaker 1 continuation]
     > — [Speaker 2 conclusion]
-    
+
     Example locations: На Бесарабському ринку, У львівській кав'ярні, В одеському трамваї, На Подолі
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 52 | Included in Core |

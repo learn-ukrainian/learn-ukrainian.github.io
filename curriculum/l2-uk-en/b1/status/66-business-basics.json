@@ -2,14 +2,14 @@
   "module": "66-business-basics",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:27:26.666816Z",
+  "last_audit": "2026-01-27T19:01:42.149588Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-11T20:06:17.723240Z",
     "meta": "2026-01-26T15:44:41.660769Z",
-    "activities": "2026-01-11T23:20:02.214224Z",
+    "activities": "2026-01-27T18:57:20.167154Z",
     "vocabulary": "2026-01-25T18:00:40.615669Z",
-    "plan": "2026-01-26T15:44:41.660565Z"
+    "plan": "2026-01-27T18:50:19.695468Z"
   },
   "gates": {
     "meta": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1755/1500 (raw: 2382) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "1755/1500 (raw: 2382)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "12/8"
+      "message": "13/8"
     },
     "vocabulary": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Missing required activity types: collocation, fill-in, matching, role-play"
-    ],
-    "pass_count": 4,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

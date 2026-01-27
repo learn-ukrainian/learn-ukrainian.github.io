@@ -5,47 +5,47 @@ version: '2.0'
 title: Гранітна революція 1990
 content_outline:
 - section: Вступ — Забута революція
-  words: 451
+  words: 515
   points:
   - Жовтень 1990 — студенти
   - Перша українська революція
   - Чому забули
   - Структура модуля
 - section: Контекст — 1990 рік
-  words: 677
+  words: 774
   points:
   - СРСР ще існує
   - Декларація про суверенітет
   - Що хотіли студенти
   - Ризики — реальні
 - section: Голодування
-  words: 790
+  words: 903
   points:
   - Хто голодував — імена
   - Вимоги — п'ять пунктів
   - Намет на площі
   - Реакція влади
 - section: Перемога
-  words: 677
+  words: 774
   points:
   - Відставка Масола
   - Які вимоги виконали
   - Що це означало
   - Чому перемогли
 - section: Спадок
-  words: 564
+  words: 645
   points:
   - Перша успішна революція
   - Модель для Майданів
   - Учасники — хто вони сьогодні
   - Пам'ять і забуття
 - section: Підсумок
-  words: 341
+  words: 389
   points:
   - Гранітна — початок
   - Студенти — авангард
   - Перехід до 2004 кримської кризи
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - Гранітна революція (Granite Revolution)
@@ -65,13 +65,13 @@ vocabulary_hints:
   - молодіжний рух (youth movement)
   - ненасильницький спротив (nonviolent resistance)
 activity_hints:
-- type: event-reconstruction
+- type: critical-analysis
   focus: October 1990 — day-by-day reconstruction
   output: Event timeline
-- type: demands-analysis
+- type: critical-analysis
   focus: Five demands — what they meant
   output: Demand analysis
-- type: participant-study
+- type: comparative-study
   focus: Who were the students — where are they now
   output: Participant profiles
 - type: critical-analysis
@@ -100,3 +100,6 @@ sources:
   notes: Student hunger strike
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- Analyze the causes and consequences of гранітна революція 1990
+- Evaluate the historical significance of забута революція

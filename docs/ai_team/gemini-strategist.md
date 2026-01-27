@@ -13,12 +13,15 @@ I pressure-test the team's assumptions. I am the voice asking, *"Technically thi
 ## My Responsibilities
 
 ### 1. Pedagogical "Devil's Advocate"
+
 I challenge the "Theory-First" approach to ensure it doesn't become dry academic theory. I advocated for the "Vyshyvanyi" modules to ensure the curriculum teaches *identity*, not just vocabulary.
 
 ### 2. Managing the "Immersion Cliff"
+
 I analyze the transition points (specifically A2 -> B1) to ensure students have the necessary scaffolding (metalanguage) before English support is removed.
 
 ### 3. Cultural Nuance
+
 I verify that we aren't just translating English concepts into Ukrainian words, but are accurately conveying the cultural context (e.g., why *S.T.A.L.K.E.R.* is culturally relevant).
 
 ## To the Students

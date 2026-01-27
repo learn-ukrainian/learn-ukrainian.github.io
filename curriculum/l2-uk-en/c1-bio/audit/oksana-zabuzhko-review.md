@@ -1,10 +1,12 @@
 # Audit Report: M118 — oksana-zabuzhko.md
+
 **Level:** C1 | **Module:** M118 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:56
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Життєвий та творчий шлях | 5 | 5 | ✅ |
@@ -41,22 +44,26 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in oksana-zabuzhko.yaml: Schema validation error at key '7': {'type': 'fill-in', 'title': 'Роль Оксани Забужко', 'items': [{'sentence': 'Забужко виконує роль публічного [інтелектуала], формуючи смисли для суспільства.', 'answer': 'інтелектуала', 'options': ['інтелектуала', 'менеджера', 'артиста', 'банкіра']}, {'sentence': 'Вона стала піонером [феміністичної] критики в українській літературі 1990-х років.', 'answer': 'феміністичної', 'options': ['феміністичної', 'музичної', 'спортивної', 'кулінарної']}, {'sentence': 'Її есеїстика допомагає українцям позбутися комплексу [меншовартості].', 'answer': 'меншовартості', 'options': ['меншовартості', 'переваги', 'провини', 'радості']}, {'sentence': 'Письменниця переконана, що культура — це не розвага, а система [безпеки] нації.', 'answer': 'безпеки', 'options': ['безпеки', 'торгівлі', 'освіти', 'транспорту']}, {'sentence': 'Вона активно виступає на Заході, пояснюючи суть російського [імперіалізму].', 'answer': 'імперіалізму', 'options': ['імперіалізму', 'туризму', 'балету', 'клімату']}, {'sentence': 'Забужко називає письменника [психоаналітиком] нації, який лікує її травми.', 'answer': 'психоаналітиком', 'options': ['психоаналітиком', 'водієм', 'будівельником', 'кухарем']}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[FORBIDDEN_HEADER_TONE]** Header '## Сучасний етап' is inappropriate for a deceased person. Use '## Останні роки' instead.
   - FIX: Rename '## Сучасний етап' to '## Останні роки' to maintain correct biographical tone.
 - ❌ **[FORBIDDEN_HEADER_TONE]** Header '## Вплив' is inappropriate for a deceased person. Use '## Спадщина' instead.
   - FIX: Rename '## Вплив' to '## Спадщина' to maintain correct biographical tone.
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 3 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2041/4000 (raw: 2251)
 - **Activities:** ✅ 12/3
 - **Density:** ✅ All > 1
@@ -75,10 +82,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 97% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 10 | 4 | 100% | 19% | 19.0% |
@@ -94,6 +103,7 @@
 | **TOTAL** | | | | | **97.5%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 74 | Included in Core |

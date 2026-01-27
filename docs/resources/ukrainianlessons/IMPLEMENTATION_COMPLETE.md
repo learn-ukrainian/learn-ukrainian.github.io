@@ -312,12 +312,14 @@ semantic_expansions = {
 ## Verification Checklist
 
 ### User's Primary Concern ✅
+
 - [x] A1-01 has Ukrainian Lessons alphabet content
 - [x] Alphabet guide appears FIRST in Articles section
 - [x] Priority 1 assigned (highest priority)
 - [x] Verified in both MDX and JSON output
 
 ### Priority Sorting ✅
+
 - [x] Priority 1 resources appear before Priority 2
 - [x] Priority 2 resources appear before Priority 3
 - [x] Within same priority: high relevance before medium/low
@@ -325,6 +327,7 @@ semantic_expansions = {
 - [x] Sorting applied in both MDX and JSON generation
 
 ### Quality Assurance ✅
+
 - [x] All 76 Priority 1 mappings reviewed and approved
 - [x] 19 Priority 2 samples spot-checked and approved
 - [x] No false positives detected in review
@@ -332,6 +335,7 @@ semantic_expansions = {
 - [x] Level inference for ULP episodes accurate
 
 ### Technical Validation ✅
+
 - [x] MDX generation successful (tested A1-01)
 - [x] JSON generation successful (tested A1-01)
 - [x] Resources appear in correct order in output
@@ -339,6 +343,7 @@ semantic_expansions = {
 - [x] No generation errors
 
 ### Coverage Metrics ✅
+
 - [x] 47 modules have ULP content (15.2% of curriculum)
 - [x] A1: 33.3% coverage (11/33 modules)
 - [x] A2: 27.3% coverage (15/55 modules)

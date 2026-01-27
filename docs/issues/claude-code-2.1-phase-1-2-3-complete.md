@@ -122,6 +122,7 @@ Deploy: `npm run claude:deploy`
 ### Commands Implemented
 
 #### 1. `/curriculum-validate`
+
 **Purpose**: Full curriculum validation
 
 **What it does**:
@@ -134,6 +135,7 @@ Deploy: `npm run claude:deploy`
 **Usage**: One-command validation before major commits
 
 #### 2. `/audit-level`
+
 **Purpose**: Deep audit of specific level
 
 **What it does**:
@@ -145,6 +147,7 @@ Deploy: `npm run claude:deploy`
 **Usage**: `claude /audit-level b2`
 
 #### 3. `/enrich-vocab`
+
 **Purpose**: Vocabulary enrichment pipeline
 
 **What it does**:
@@ -259,17 +262,20 @@ Both directories are git-ignored (local config).
 ## Testing Results
 
 ### Phase 1 Testing
+
 - Tested with curriculum operations
 - Confirmed ~90% reduction in prompts
 - git, npm, Python operations work without prompts
 
 ### Phase 2 Testing
+
 - Edited B1 M06: ✅ Auto-audit triggered
 - Edited C1 M21: ✅ Auto-audit passed
 - Edited activity YAML: ✅ YAML validation triggered
 - Made git commit: ✅ Status update triggered
 
 ### Phase 3 Testing
+
 - `/curriculum-validate`: ✅ Validated all levels
 - `/audit-level b2`: ✅ Comprehensive B2 audit
 - `/enrich-vocab`: ✅ Vocabulary enrichment works

@@ -1,10 +1,12 @@
 # Audit Report: M13 — 13-emphasis-and-inversion.md
+
 **Level:** B2 | **Module:** M13 | **Phase:** B2 | **Pedagogy:** Not Specified | **Target:** 1750
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:27:52
 
 ## Configuration
+
 **Type:** B2-grammar
 **Word Target:** 1750 words
 **Activities:** 10-14 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Теоретичні основи порядку слів | 16 | 8 | ✅ |
@@ -43,17 +46,20 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "*Відповідь:* **Книгу** (тема) *читає Марія* (рема).". Shares significant keywords with sentence at index 18.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "**Понад мільйон** користувачів завантажили його за перший місяць!". Shares significant keywords with sentence at index 110.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 2 violations (minor)
 
 ## Gates
+
 - **Words:** ✅ 2596/1750 (raw: 3121)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
@@ -72,10 +78,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 100 | 24 | 100% | 20% | 20.0% |
@@ -91,6 +99,7 @@
 | **TOTAL** | | | | | **99.6%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 59 | Included in Core |

@@ -5,56 +5,58 @@ version: '1.0'
 title: 'Бухарест 2008: NATO каже «ні»'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of бухарест 2008: nato каже «ні»'
+- Evaluate the historical significance of вето на безпеку
 content_outline:
 - section: Вступ — Вето на безпеку
-  words: 400
+  words: 457
   subsections:
   - Квітень 2008 — Бухарест
   - Україна і Грузія — просять MAP
   - Меркель і Саркозі — «ні»
   - Структура модуля
 - section: Контекст — Що таке MAP
-  words: 500
+  words: 571
   subsections:
   - План дій щодо членства
   - Не членство — шлях до нього
   - Чому важливо
   - Хто вже отримав
 - section: Хто за, хто проти
-  words: 600
+  words: 686
   subsections:
   - США — за
   - Німеччина, Франція — проти
   - Аргументи проти
   - «Провокація Росії»
 - section: Компроміс — гірший за відмову
-  words: 700
+  words: 800
   subsections:
   - «Колись стануть членами»
   - Але без MAP зараз
   - Найгірший варіант
   - Сигнал для Росії
 - section: Серпень 2008 — Грузія
-  words: 500
+  words: 571
   subsections:
   - Війна через 4 місяці
   - Зв'язок з Бухарестом
   - «Бачите — НАТО провокує»
   - Урок — не засвоєний
 - section: Наслідки для України
-  words: 500
+  words: 571
   subsections:
   - 2014 — без захисту
   - «Двері відчинені» — порожня фраза
   - Меркель визнала помилку (2022)
 - section: Підсумок
-  words: 300
+  words: 344
   subsections:
   - Бухарест — ключова помилка
   - Зелене світло для Путіна
   - Перехід до 2014
-word_target: 3500
+word_target: 4000
 vocabulary:
 - Бухарест
 - саміт
@@ -72,13 +74,13 @@ vocabulary:
 - стаття 5
 - умиротворення
 activities:
-- type: decision-analysis
+- type: critical-analysis
   focus: Why did Germany and France block MAP?
-- type: signal-analysis
+- type: critical-analysis
   focus: What signal did Bucharest send to Putin?
 - type: essay-response
   focus: What if Ukraine got MAP in 2008?
-- type: Georgia-connection
+- type: critical-analysis
   focus: Bucharest → Georgia 2008 → Ukraine 2014
 - type: essay-response
   focus: Чи Бухарест 2008 спровокував агресію Росії?

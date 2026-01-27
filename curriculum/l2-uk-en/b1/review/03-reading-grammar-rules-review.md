@@ -12,7 +12,7 @@
 | ------------------- | ----- | ------------------------------------------------------------------------------- |
 | Coherence           | 10/10 | Well-structured progression: Patterns → Instructions → Word Parts → Style.      |
 | Relevance           | 10/10 | Directly enables independent learning from Ukrainian resources. High utility.   |
-| Educational         | 10/10 | Explains _how_ to learn, not just _what_. Metacognitive value is high.          |
+| Educational         | 10/10 | Explains *how* to learn, not just *what*. Metacognitive value is high.          |
 | Language            | 10/10 | Natural formatting of grammar explanations.                                     |
 | Pedagogy            | 10/10 | PPP structure works well here. "Action Instructions" section is very practical. |
 | Immersion           | 10/10 | 36% immersion is appropriate. Uses English to explain metalanguage.             |

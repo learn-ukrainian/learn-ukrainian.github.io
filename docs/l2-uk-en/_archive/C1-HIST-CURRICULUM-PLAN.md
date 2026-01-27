@@ -437,6 +437,7 @@ This equals approximately:
 ## Thematic Strands Across Phases
 
 ### 1. The Co-optation Cycle (throughout)
+
 Traced across multiple eras:
 - M82: Pereiaslav cycle
 - M83: Mazepa cycle
@@ -445,6 +446,7 @@ Traced across multiple eras:
 - M87: Yanukovych cycle
 
 ### 2. Cultural Revival Pattern (C1H.19 + throughout)
+
 - Post-Ems (1876) → Galician flourishing
 - Post-Stalin (1953) → Shestydesiatnyky
 - Post-1991 → Independence revival
@@ -452,6 +454,7 @@ Traced across multiple eras:
 - Post-2022 → Wartime cultural explosion
 
 ### 3. Western Abandonment Pattern (C1H.14)
+
 - 1918: UNR abandoned
 - 1945: Yalta betrayal
 - 1991: "Chicken Kyiv" speech
@@ -461,12 +464,14 @@ Traced across multiple eras:
 - 2022: Pattern breaks?
 
 ### 4. Information Warfare (C1H.16 + throughout)
+
 - "Little Russia" construction (300 years)
 - Soviet memory falsification
 - Modern disinformation infrastructure
 - Ukrainian counter-narratives
 
 ### 5. Interethnic Complexity (C1H.17-18)
+
 - Polish: 600 years of complexity
 - Jewish: Pogroms AND rescue
 - Both relationships transformed by 2022

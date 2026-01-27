@@ -1,8 +1,8 @@
 # Audit Report: M13 — 13-work-week-aspect-in-action.md
-**Level:** B1 | **Module:** M13 | **Phase:** B1 | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M13 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:26:52
+**Generated:** 2026-01-27 16:25:48
 
 ## Configuration
 **Type:** B1-grammar

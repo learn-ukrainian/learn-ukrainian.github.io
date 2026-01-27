@@ -5,47 +5,47 @@ version: '2.0'
 title: 'Голокост в Україні: Співучасть і рятування'
 content_outline:
 - section: Вступ — Найтемніша сторінка
-  words: 451
+  words: 515
   points:
   - Голокост в Україні — масштаб
   - 1,5 мільйона жертв
   - Співучасть І рятування
   - Структура модуля
 - section: «Голокост від куль»
-  words: 790
+  words: 903
   points:
   - Айнзацгрупи
   - Бабин Яр — символ
   - Методи знищення
   - Чому в Україні — особливо
 - section: Українська поліція
-  words: 677
+  words: 774
   points:
   - Допоміжна поліція — хто йшов
   - Роль у Голокості
   - Не виправдання — пояснення
   - Масштаб участі
 - section: ОУН і євреї
-  words: 677
+  words: 774
   points:
   - Антисемітизм в ОУН
   - Погроми 1941
   - Еволюція позиції
   - Суперечливість
 - section: Праведники
-  words: 564
+  words: 645
   points:
   - 2700+ українських праведників
   - Митрополит Шептицький
   - Ризик — смерть
   - Індивідуальний вибір
 - section: Підсумок
-  words: 341
+  words: 389
   points:
   - І злочинці, і рятівники
   - Не «українці» — окремі люди
   - Перехід до радянського антисемітизму
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - Голокост (Holocaust)
@@ -65,16 +65,16 @@ vocabulary_hints:
   - Шептицький (Sheptytsky)
   - колабораціонізм (collaborationism)
 activity_hints:
-- type: scale-analysis
+- type: critical-analysis
   focus: Holocaust in Ukraine — numbers and geography
   output: Scale documentation
-- type: collaboration-analysis
+- type: critical-analysis
   focus: Who collaborated and why
   output: Collaboration analysis
-- type: rescue-stories
+- type: reading
   focus: Ukrainian Righteous — stories and patterns
   output: Rescue documentation
-- type: oun-analysis
+- type: critical-analysis
   focus: OUN and Jews — complex relationship
   output: Nuanced analysis
 - type: essay-response
@@ -104,3 +104,6 @@ sources:
   notes: Righteous Among Nations
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of голокост в україні: співучасть і рятування'
+- Evaluate the historical significance of найтемніша сторінка

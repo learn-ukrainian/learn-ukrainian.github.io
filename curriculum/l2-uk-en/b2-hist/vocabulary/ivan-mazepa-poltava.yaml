@@ -2,127 +2,127 @@ module: ivan-mazepa-poltava
 level: B2
 version: '1.0'
 items:
-  - lemma: різанина
-    ipa: /ri.za.ˈnɪ.na/
-    translation: massacre
-    pos: noun
-    gender: f
-  - lemma: облога
-    ipa: /o.ˈblɔ.ɦa/
-    translation: siege
-    pos: noun
-    gender: f
-  - lemma: гарнізон
-    ipa: /ɦar.ni.ˈzɔn/
-    translation: garrison
-    pos: noun
-    gender: m
-  - lemma: поразка
-    ipa: /po.ˈraz.ka/
-    translation: defeat
-    pos: noun
-    gender: f
-  - lemma: втеча
-    ipa: /ˈwtɛ.t͡ʃa/
-    translation: escape, flight
-    pos: noun
-    gender: f
-  - lemma: анафема
-    ipa: /a.ˈna.fɛ.ma/
-    translation: anathema
-    pos: noun
-    gender: f
-  - lemma: вигнання
-    ipa: /wɪ.ˈɦna.ɲːɐ/
-    translation: exile
-    pos: noun
-    gender: n
-  - lemma: конституція
-    ipa: /kon.stɪ.ˈtu.t͡sʲi.jɐ/
-    translation: constitution
-    pos: noun
-    gender: f
-  - lemma: реквізиція
-    ipa: /rɛ.kwɪ.ˈzɪ.t͡sʲi.jɐ/
-    translation: requisition
-    pos: noun
-    gender: f
-  - lemma: провіант
-    ipa: /pro.wi.ˈant/
-    translation: provisions, victuals
-    pos: noun
-    gender: m
-  - lemma: артилерія
-    ipa: /ar.tɪ.ˈlɛ.rʲi.jɐ/
-    translation: artillery
-    pos: noun
-    gender: f
-  - lemma: переправа
-    ipa: /pɛ.rɛ.ˈpra.wa/
-    translation: crossing (river)
-    pos: noun
-    gender: f
-  - lemma: катастрофа
-    ipa: /ka.ta.ˈstrɔ.fa/
-    translation: catastrophe, disaster
-    pos: noun
-    gender: f
-  - lemma: тиранія
-    ipa: /tɪ.ra.ˈnʲi.jɐ/
-    translation: tyranny
-    pos: noun
-    gender: f
-  - lemma: протекція
-    ipa: /pro.ˈtɛk.t͡sʲi.jɐ/
-    translation: protection, patronage
-    pos: noun
-    gender: f
-  - lemma: сердюк
-    ipa: /sɛr.ˈdʲuk/
-    translation: serdiuk (mercenary Cossack)
-    pos: noun
-    gender: m
-  - lemma: зрада
-    ipa: /ˈzra.da/
-    translation: treason, betrayal
-    pos: noun
-    gender: f
-  - lemma: автономія
-    ipa: /aw.to.ˈnɔ.mʲi.jɐ/
-    translation: autonomy
-    pos: noun
-    gender: f
-  - lemma: альянс
-    ipa: /a.ˈlʲjan.s/
-    translation: alliance
-    pos: noun
-    gender: m
-  - lemma: битва
-    ipa: /ˈbɪ.twa/
-    translation: battle
-    pos: noun
-    gender: f
-  - lemma: капітуляція
-    ipa: /ka.pi.tu.ˈlʲa.t͡sʲi.jɐ/
-    translation: capitulation
-    pos: noun
-    gender: f
-  - lemma: колоніальний
-    ipa: /ko.lo.ni.ˈalʲ.nɪj/
-    translation: colonial
-    pos: adj
-  - lemma: суверенітет
-    ipa: /su.wɛ.rɛ.ni.ˈtɛt/
-    translation: sovereignty
-    pos: noun
-    gender: m
-  - lemma: універсал
-    ipa: /u.ni.wɛr.ˈsal/
-    translation: universal (hetman's decree)
-    pos: noun
-    gender: m
-  - lemma: елекція
-    ipa: /ɛ.ˈlɛk.t͡sʲi.jɐ/
-    translation: election
-    pos: noun
-    gender: f
+- lemma: різанина
+  ipa: /ri.za.ˈnɪ.na/
+  translation: massacre
+  pos: noun
+  gender: f
+- lemma: облога
+  ipa: /o.ˈblɔ.ɦa/
+  translation: siege
+  pos: noun
+  gender: f
+- lemma: гарнізон
+  ipa: /ɦar.ni.ˈzɔn/
+  translation: garrison
+  pos: noun
+  gender: m
+- lemma: поразка
+  ipa: /po.ˈraz.ka/
+  translation: defeat
+  pos: noun
+  gender: f
+- lemma: втеча
+  ipa: /ˈwtɛ.t͡ʃa/
+  translation: escape, flight
+  pos: noun
+  gender: f
+- lemma: анафема
+  ipa: /a.ˈna.fɛ.ma/
+  translation: anathema
+  pos: noun
+  gender: f
+- lemma: вигнання
+  ipa: /wɪ.ˈɦna.ɲːɐ/
+  translation: exile
+  pos: noun
+  gender: n
+- lemma: конституція
+  ipa: /kon.stɪ.ˈtu.t͡sʲi.jɐ/
+  translation: constitution
+  pos: noun
+  gender: f
+- lemma: реквізиція
+  ipa: /rɛ.kwɪ.ˈzɪ.t͡sʲi.jɐ/
+  translation: requisition
+  pos: noun
+  gender: f
+- lemma: провіант
+  ipa: /pro.wi.ˈant/
+  translation: provisions, victuals
+  pos: noun
+  gender: m
+- lemma: артилерія
+  ipa: /ar.tɪ.ˈlɛ.rʲi.jɐ/
+  translation: artillery
+  pos: noun
+  gender: f
+- lemma: переправа
+  ipa: /pɛ.rɛ.ˈpra.wa/
+  translation: crossing (river)
+  pos: noun
+  gender: f
+- lemma: катастрофа
+  ipa: /ka.ta.ˈstrɔ.fa/
+  translation: catastrophe, disaster
+  pos: noun
+  gender: f
+- lemma: тиранія
+  ipa: /tɪ.ra.ˈnʲi.jɐ/
+  translation: tyranny
+  pos: noun
+  gender: f
+- lemma: протекція
+  ipa: /pro.ˈtɛk.t͡sʲi.jɐ/
+  translation: protection, patronage
+  pos: noun
+  gender: f
+- lemma: сердюк
+  ipa: /sɛr.ˈdʲuk/
+  translation: serdiuk (mercenary Cossack)
+  pos: noun
+  gender: f
+- lemma: зрада
+  ipa: /ˈzra.da/
+  translation: treason, betrayal
+  pos: noun
+  gender: f
+- lemma: автономія
+  ipa: /aw.to.ˈnɔ.mʲi.jɐ/
+  translation: autonomy
+  pos: noun
+  gender: f
+- lemma: альянс
+  ipa: /a.ˈlʲjan.s/
+  translation: alliance
+  pos: noun
+  gender: m
+- lemma: битва
+  ipa: /ˈbɪ.twa/
+  translation: battle
+  pos: noun
+  gender: f
+- lemma: капітуляція
+  ipa: /ka.pi.tu.ˈlʲa.t͡sʲi.jɐ/
+  translation: capitulation
+  pos: noun
+  gender: f
+- lemma: колоніальний
+  ipa: /ko.lo.ni.ˈalʲ.nɪj/
+  translation: colonial
+  pos: adj
+- lemma: суверенітет
+  ipa: /su.wɛ.rɛ.ni.ˈtɛt/
+  translation: sovereignty
+  pos: noun
+  gender: m
+- lemma: універсал
+  ipa: /u.ni.wɛr.ˈsal/
+  translation: universal (hetman's decree)
+  pos: noun
+  gender: m
+- lemma: елекція
+  ipa: /ɛ.ˈlɛk.t͡sʲi.jɐ/
+  translation: election
+  pos: noun
+  gender: f

@@ -1,4 +1,5 @@
 # B1 Naturalness Scan Report - M36-M45
+
 **Date:** 2026-01-12
 **Protocol:** claude_extensions/protocols/a1-naturalness-scan.md
 **Scope:** M36-M45 (10 modules - Complex Sentences II & Participles section)
@@ -20,6 +21,7 @@
 ## Scan Results by Module
 
 ### M36: Causal Result Clauses [N/A - QUIZ ONLY]
+
 **Status:** QUIZ-HEAVY - No multi-sentence prose
 **Activities:** Quiz module teaching причинові та наслідкові сполучники (тому що, тому, оскільки, etc.)
 
@@ -33,6 +35,7 @@
 ---
 
 ### M37: Temporal Clauses [N/A - QUIZ ONLY]
+
 **Status:** QUIZ-HEAVY - No multi-sentence prose
 **Activities:** Quiz module teaching часові сполучники (коли, поки, після того як, як тільки, etc.)
 
@@ -46,6 +49,7 @@
 ---
 
 ### M38: Complex Sentence Integration [N/A - QUIZ ONLY]
+
 **Status:** QUIZ-HEAVY - Systematic grammar integration
 **Activities:** Quiz module integrating all complex sentence types from M26-M37
 
@@ -59,6 +63,7 @@
 ---
 
 ### M39: Reported Statements [N/A - QUIZ ONLY]
+
 **Status:** QUIZ-HEAVY - Systematic непряма мова instruction
 **Activities:** Quiz module teaching непряма мова for statements (що, pronoun shifts, time shifts)
 
@@ -72,6 +77,7 @@
 ---
 
 ### M40: Reported Questions Commands [✅ PASS]
+
 **Status:** COHERENT JOB INTERVIEW NARRATIVE
 **Activities:** Cloze activity with job interview scenario demonstrating reported speech
 
@@ -91,6 +97,7 @@
 ---
 
 ### M41: Checkpoint Complex Sentences 2 [⏸️ DEFERRED]
+
 **Status:** CHECKPOINT - Comprehensive assessment of M26-M40
 **Activities:** Comprehensive testing of all complex sentence types and reported speech (941 lines)
 
@@ -115,6 +122,7 @@ Contains systematic testing of:
 ---
 
 ### M42: Adverbial Participles Imperfective [✅ PASS]
+
 **Status:** EXCELLENT - Rich village visit narrative
 **Activities:** Extensive cloze narrative demonstrating дієприслівники НДВ in authentic context (1,767 lines total)
 
@@ -137,6 +145,7 @@ Contains systematic testing of:
 ---
 
 ### M43: Adverbial Participles Perfective [✅ PASS]
+
 **Status:** EXCELLENT - Compelling travel narrative
 **Activities:** Extensive cloze narrative demonstrating дієприслівники ДВ in authentic travel context
 
@@ -159,6 +168,7 @@ Contains systematic testing of:
 ---
 
 ### M44: Active Participles Phrases [✅ PASS]
+
 **Status:** EXCEPTIONAL - Decolonization pedagogy integrated with grammar
 **Activities:** Revolutionary module teaching active participles WHILE teaching language decolonization (763 lines)
 
@@ -192,6 +202,7 @@ pairs:
 ---
 
 ### M45: Past Passive Participles 1 [✅ PASS]
+
 **Status:** COHERENT - Systematic participle instruction with natural contexts
 **Activities:** Cloze narratives demonstrating пасивні дієприкметники минулого часу (793 lines total)
 
@@ -213,6 +224,7 @@ pairs:
 ## Summary by Status
 
 ### ✅ PASS (5 modules)
+
 - M40: Reported Questions Commands (score 8/10)
 - M42: Adverbial Participles Imperfective (score 9/10) ⭐
 - M43: Adverbial Participles Perfective (score 9/10) ⭐
@@ -220,12 +232,15 @@ pairs:
 - M45: Past Passive Participles 1 (score 8/10)
 
 ### ⚠️ FLAGGED (0 modules)
+
 None - all content modules meet or exceed 8/10 target
 
 ### ⏸️ DEFERRED (1 module)
+
 - M41: Checkpoint Complex Sentences 2 (score 7/10) - Checkpoint standards apply
 
 ### N/A - QUIZ ONLY (4 modules)
+
 - M36: Causal Result Clauses (foundational conjunction quiz)
 - M37: Temporal Clauses (foundational conjunction quiz)
 - M38: Complex Sentence Integration (systematic integration quiz)
@@ -289,17 +304,20 @@ All content modules meet or exceed 8/10 target:
 ## Comparison with Previous B1 Sections
 
 ### B1 M01-M05 (Metalanguage Bridge)
+
 - Average score: 7.0/10 → improved to 8.0/10+
 - Prose density: Very low (3 passages across 5 modules)
 - Purpose: Teach grammar terminology before immersion
 
 ### B1 M06-M15 (Aspect Mastery - Immersion)
+
 - Average score: 8.3/10
 - Prose density: Very high (extensive narratives)
 - Purpose: Teach aspect through natural stories
 - Flagged: 0 modules
 
 ### B1 M16-M25 (Motion Verbs - Mixed)
+
 - Average score: 8.2/10 (content modules with prose)
 - Prose density: Medium (6 modules with prose, 3 quiz-only)
 - Purpose: Teach motion verb prefix system
@@ -307,6 +325,7 @@ All content modules meet or exceed 8/10 target:
 - **Exceptional module:** M21 (9/10) - sophisticated linguistic analysis
 
 ### B1 M26-M35 (Complex Sentences I - Immersion)
+
 - Average score: 8.4/10 (highest to date)
 - Prose density: Very high (9 modules with prose, 1 checkpoint)
 - Purpose: Teach complex sentences through narratives
@@ -314,6 +333,7 @@ All content modules meet or exceed 8/10 target:
 - **Exceptional modules:** M26, M27, M29, M32, M35 (all 9/10)
 
 ### B1 M36-M45 (Complex Sentences II & Participles - Mixed)
+
 - Average score: 8.3/10 (content modules with prose)
 - Prose density: Medium-low (5 modules with prose, 4 quiz-only, 1 checkpoint)
 - Purpose: Systematic conjunctions + participle narratives
@@ -359,11 +379,13 @@ All activities appropriately use:
 ## Next Steps
 
 ### Immediate
+
 1. ✅ **B1 M36-M45 scan: COMPLETE**
 2. **Commit scan report to documentation**
 3. **Continue B1 scanning:** M46-M55 (Abstract Vocabulary I - next section)
 
 ### B1 Remaining Sections
+
 - M46-M55: Abstract Vocabulary I (10 modules)
 - M56-M65: Abstract Vocabulary II (10 modules)
 - M66-M71: Professional Vocabulary (6 modules)

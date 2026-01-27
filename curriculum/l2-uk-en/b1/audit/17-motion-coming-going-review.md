@@ -1,8 +1,8 @@
 # Audit Report: M17 — 17-motion-coming-going.md
-**Level:** B1 | **Module:** M17 | **Phase:** B1 | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M17 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:26:54
+**Generated:** 2026-01-27 16:25:50
 
 ## Configuration
 **Type:** B1-grammar

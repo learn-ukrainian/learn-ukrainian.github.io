@@ -1,10 +1,12 @@
 # Audit Report: M23 — 23-complete-imperative.md
+
 **Level:** A2 | **Module:** M23 | **Phase:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ✅ PASS
 **Generated:** 2026-01-26 22:26:16
 
 ## Configuration
+
 **Type:** A2-grammar
 **Word Target:** 1000 words
 **Activities:** 10-14 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | fill-in | Утворіть наказову форму | 8 | 8 | ✅ |
@@ -37,15 +40,18 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: однина, множина
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
+
 - **Words:** ✅ 1106/1000 (raw: 1268)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
@@ -63,6 +69,7 @@
 - **Naturalness:** ✅ 8/10 (High)
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

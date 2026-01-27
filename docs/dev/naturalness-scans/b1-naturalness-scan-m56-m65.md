@@ -1,4 +1,5 @@
 # B1 Naturalness Scan Report - M56-M65
+
 **Date:** 2026-01-12
 **Protocol:** claude_extensions/protocols/a1-naturalness-scan.md
 **Scope:** M56-M65 (10 modules - Abstract Vocabulary II & Thematic Modules section)
@@ -20,6 +21,7 @@
 ## Scan Results by Module
 
 ### M56: Discourse Markers Basic [✅ PASS]
+
 **Status:** COHERENT PEDAGOGICAL CONTENT
 **Activities:** Contains cloze passages demonstrating discourse marker usage in context
 
@@ -39,6 +41,7 @@
 ---
 
 ### M57: Discourse Markers Advanced [✅ PASS]
+
 **Status:** COHERENT ARGUMENTATIVE STRUCTURE
 **Activities:** Contains cloze passages demonstrating advanced discourse markers (по-перше, крім того, більше того, з іншого боку, врешті-решт)
 
@@ -60,6 +63,7 @@
 ---
 
 ### M58: Describing Changes [✅ PASS]
+
 **Status:** COHERENT ECONOMIC NARRATIVE
 **Activities:** Contains cloze passage demonstrating change vocabulary in natural economic context
 
@@ -83,6 +87,7 @@
 ---
 
 ### M59: Media & News [✅ PASS]
+
 **Status:** COHERENT MEDIA DISCOURSE
 **Activities:** Contains cloze passage about Ukrainian media landscape
 
@@ -105,6 +110,7 @@
 ---
 
 ### M60: Society & Politics [✅ PASS]
+
 **Status:** COHERENT POLITICAL DISCOURSE
 **Activities:** Contains cloze passages demonstrating political vocabulary in natural Ukrainian context
 
@@ -131,6 +137,7 @@
 ---
 
 ### M61: Professional Communication [✅ PASS]
+
 **Status:** COHERENT WORKPLACE NARRATIVE
 **Activities:** Contains cloze passage demonstrating professional vocabulary in job posting context
 
@@ -159,6 +166,7 @@ IT-компанія у Львові шукає керівника відділу
 ---
 
 ### M62: Environment & Ecology [✅ PASS]
+
 **Status:** COHERENT ECOLOGICAL DISCOURSE
 **Activities:** Contains cloze passages demonstrating environmental vocabulary in Ukrainian context
 
@@ -185,6 +193,7 @@ IT-компанія у Львові шукає керівника відділу
 ---
 
 ### M63: Health & Wellness [✅ PASS]
+
 **Status:** COHERENT HEALTH NARRATIVE
 **Activities:** Contains cloze passage demonstrating health vocabulary in stress management context
 
@@ -211,6 +220,7 @@ IT-компанія у Львові шукає керівника відділу
 ---
 
 ### M64: Emotions Deep Dive [✅ PASS]
+
 **Status:** COHERENT PSYCHOLOGICAL DISCOURSE
 **Activities:** Contains cloze passage on emotional intelligence concept
 
@@ -235,6 +245,7 @@ IT-компанія у Львові шукає керівника відділу
 ---
 
 ### M65: Relationships [✅ PASS]
+
 **Status:** COHERENT RELATIONSHIP NARRATIVE
 **Activities:** Contains cloze passage demonstrating relationship vocabulary through couple's story
 
@@ -263,6 +274,7 @@ IT-компанія у Львові шукає керівника відділу
 ## Summary by Status
 
 ### ✅ PASS (10 modules)
+
 - M56: Discourse Markers Basic (score 8/10)
 - M57: Discourse Markers Advanced (score 8/10)
 - M58: Describing Changes (score 9/10) ⭐
@@ -275,12 +287,15 @@ IT-компанія у Львові шукає керівника відділу
 - M65: Relationships (score 8/10)
 
 ### ⚠️ FLAGGED (0 modules)
+
 None - all content modules meet or exceed 8/10 target
 
 ### ⏸️ DEFERRED (0 modules)
+
 None - no checkpoint modules in this range
 
 ### N/A - QUIZ ONLY (0 modules)
+
 None - all modules contain substantial prose activities
 
 ---
@@ -353,17 +368,20 @@ All content modules meet or exceed 8/10 target:
 ## Comparison with Previous B1 Sections
 
 ### B1 M01-M05 (Metalanguage Bridge)
+
 - Average score: 7.0/10 → improved to 8.0/10+
 - Prose density: Very low (3 passages across 5 modules)
 - Purpose: Teach grammar terminology before immersion
 
 ### B1 M06-M15 (Aspect Mastery - Immersion)
+
 - Average score: 8.3/10
 - Prose density: Very high (extensive narratives)
 - Purpose: Teach aspect through natural stories
 - Flagged: 0 modules
 
 ### B1 M16-M25 (Motion Verbs - Mixed)
+
 - Average score: 8.2/10 (content modules with prose)
 - Prose density: Medium (6 modules with prose, 3 quiz-only)
 - Purpose: Teach motion verb prefix system
@@ -371,12 +389,14 @@ All content modules meet or exceed 8/10 target:
 - Exceptional module: M21 (9/10)
 
 ### B1 M26-M35 (Complex Sentences I)
+
 - Average score: 8.1/10
 - Prose density: High (coherent narratives)
 - Purpose: Teach subordinate clause system
 - Flagged: 0 modules
 
 ### B1 M36-M45 (Complex Sentences II & Participles)
+
 - Average score: 8.3/10
 - Prose density: High (sophisticated narratives)
 - Purpose: Teach participles and advanced clause types
@@ -384,6 +404,7 @@ All content modules meet or exceed 8/10 target:
 - Exceptional modules: M42 (9/10), M43 (9/10)
 
 ### B1 M46-M55 (Advanced Grammar Integration & Abstract Vocabulary I)
+
 - Average score: 8.2/10 (content modules with prose)
 - Prose density: Medium-high
 - Purpose: Integrate advanced grammar + abstract vocabulary
@@ -391,6 +412,7 @@ All content modules meet or exceed 8/10 target:
 - Exceptional modules: M54 (9/10), M55 (9/10)
 
 ### B1 M56-M65 (Abstract Vocabulary II & Thematic Modules)
+
 - Average score: 8.4/10 (ALL modules)
 - Prose density: Very high (all 10 modules have substantial prose)
 - Purpose: Thematic vocabulary through discourse
@@ -441,11 +463,13 @@ All activities appropriately use:
 ## Next Steps
 
 ### Immediate
+
 1. ✅ **B1 M56-M65 scan: COMPLETE**
 2. **Commit scan report to documentation**
 3. **Continue B1 scanning:** M66-M71 (Professional Vocabulary - next section)
 
 ### B1 Remaining Sections
+
 - M66-M71: Professional Vocabulary (6 modules)
 - M72-M86: Cultural Modules (15 modules)
 - M87-M91: Final Integration & Checkpoint (5 modules)

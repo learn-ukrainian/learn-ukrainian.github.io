@@ -6,48 +6,41 @@ title: 'Контрольна точка: Опанування виду'
 subtitle: Aspect Mastery Phase Checkpoint
 content_outline:
 - section: Огляд
-  words: 100
+  words: 135
   points:
-  - Content for Огляд
-  - Examples and explanation
-  - Practice or application
+  - Checkpoint introduction
+  - Self-assessment overview
 - section: 'Skill 1: Вид у минулому часі'
-  words: 250
+  words: 661
   points:
-  - 'Content for Skill 1: Вид у минулому часі'
-  - Examples and explanation
-  - Practice or application
+  - Past tense aspect review
+  - Practice exercises
 - section: 'Skill 2: Вид у майбутньому часі'
-  words: 150
+  words: 392
   points:
-  - 'Content for Skill 2: Вид у майбутньому часі'
-  - Examples and explanation
-  - Practice or application
+  - Future tense aspect review
+  - Practice exercises
 - section: 'Skill 3: Вид у запереченні'
-  words: 250
+  words: 637
   points:
-  - 'Content for Skill 3: Вид у запереченні'
-  - Examples and explanation
-  - Practice or application
+  - Negation aspect review
+  - Practice exercises
 - section: 'Skill 4: Вид у наказовому способі'
-  words: 200
+  words: 527
   points:
-  - 'Content for Skill 4: Вид у наказовому способі'
-  - Examples and explanation
-  - Practice or application
+  - Imperative aspect review
+  - Practice exercises
 - section: 'Skill 5: Видові пари'
-  words: 150
+  words: 306
   points:
-  - 'Content for Skill 5: Видові пари'
-  - Examples and explanation
-  - Practice or application
+  - Aspect pairs review
+  - Practice exercises
 - section: Інтеграційне завдання
-  words: 300
+  words: 342
   points:
-  - Content for Інтеграційне завдання
-  - Examples and explanation
-  - Practice or application
-word_target: 1200
+  - Integrated challenge
+  - Self-check
+word_target: 3000
 vocabulary_hints:
   required:
   - опанування (mastery)

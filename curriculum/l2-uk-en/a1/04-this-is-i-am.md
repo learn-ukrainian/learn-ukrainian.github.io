@@ -108,7 +108,7 @@ A: Я професорка.
 
 > 🎬 **Pop Culture Moment: Groot's Perfect Ukrainian**
 >
-> In the Ukrainian dub of _Guardians of the Galaxy_, Groot says «Я Ґрут» (I Groot). No verb needed! It's grammatically perfect Ukrainian—subject + predicate. Groot would ace this module.
+> In the Ukrainian dub of *Guardians of the Galaxy*, Groot says «Я Ґрут» (I Groot). No verb needed! It's grammatically perfect Ukrainian—subject + predicate. Groot would ace this module.
 
 ### People and Professions
 

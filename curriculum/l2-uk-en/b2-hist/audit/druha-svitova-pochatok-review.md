@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M105 | **Phase:** HIST.10 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:55:17
+**Generated:** 2026-01-27 15:51:33
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, fill-in, match-up, quiz, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -21,40 +21,25 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Свідчення Діни Пронічевої про Бабин Яр | 4 | 1 | ✅ |
-| 2 | quiz | Розуміння історичного тексту | 16 | 8 | ✅ |
-| 3 | cloze | Історична лексика | 16 | 1 | ✅ |
-| 4 | error-correction | Граматика та стиль | 16 | 6 | ✅ |
-| 5 | unjumble | Відновлення тексту | 8 | 6 | ✅ |
-| 6 | match-up | Історичні відповідності | 16 | 8 | ✅ |
-| 7 | essay-response | Твоя думка | 1 | 1 | ✅ |
-| 8 | comparative-study | Порівняння окупацій | 1 | 1 | ✅ |
-| 9 | true-false | Аналіз дипломатії 1939 року | 16 | 8 | ✅ |
-| 10 | true-false | Міфи та факти про війну | 16 | 8 | ✅ |
-| 11 | mark-the-words | Граматика в контексті | 25 | 6 | ✅ |
-| 12 | translate | Переклад історичних понять | 16 | 6 | ✅ |
-| 13 | group-sort | Класифікація понять | 24 | 1 | ✅ |
-| 14 | cloze | Трагедія Бабиного Яру | 16 | 1 | ✅ |
-| 15 | fill-in | Складні речення в історії | 16 | 8 | ✅ |
-| 16 | error-correction | Стилістичне редагування | 16 | 6 | ✅ |
-| 17 | unjumble | Відновлення цитати свідка | 16 | 6 | ✅ |
-| 18 | true-false | Правда чи пропаганда? | 16 | 8 | ✅ |
-| 19 | match-up | Історичні сталі вирази | 16 | 8 | ✅ |
-| 20 | match-up | Поняття та терміни | 16 | 8 | ✅ |
-| 21 | fill-in | Граматика результату | 16 | 8 | ✅ |
-| 22 | true-false | Жертви та Меморіали | 16 | 8 | ✅ |
+| 2 | essay-response | Твоя думка | 1 | 1 | ✅ |
+| 3 | comparative-study | Порівняння окупацій | 1 | 1 | ✅ |
+| 4 | true-false | Аналіз дипломатії 1939 року | 16 | 8 | ✅ |
+| 5 | true-false | Міфи та факти про війну | 16 | 8 | ✅ |
+| 6 | true-false | Правда чи пропаганда? | 16 | 8 | ✅ |
+| 7 | true-false | Жертви та Меморіали | 16 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 22 (target: 3-9) ❌
-- Unique types: 13 (minimum: 2) ✅
+- Total activities: 7 (target: 3-9) ✅
+- Unique types: 4 (minimum: 2) ✅
 - Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
-- Required types used: 5/5 (essay-response, fill-in, match-up, quiz, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ⚠️ 3999/4000 (raw: 4321) (1 short)
-- **Activities:** ✅ 22/3
+- **Activities:** ✅ 7/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 13/2 types
+- **Unique_types:** ✅ 4/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 23/5
 - **Audio:** ℹ️ No audio
@@ -62,7 +47,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ Too many activities: 22 (target 3-9)
+- **Content_heavy:** ✅ Content-heavy OK (7 activities)
 - **Immersion:** 🇺🇦 98.0% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

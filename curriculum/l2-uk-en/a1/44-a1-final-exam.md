@@ -127,5 +127,3 @@ Once you pass this exam, you are officially an A1 speaker! Level A2 will build o
 
 > [!tip]
 > Перегляньте всі модулі A1 ще раз перед тим, як переходити до A2! (Review all A1 modules once more before moving to A2!)
-
-

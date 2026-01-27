@@ -67,15 +67,6 @@ activity_hints:
   focus: Уривки з творів Хвильового
   source: Літературні твори
   items: 4
-- type: quiz
-  focus: Постаті Розстріляного відродження
-  items: 15
-- type: match-up
-  focus: Митець → твір/досягнення
-  items: 10
-- type: fill-in
-  focus: Літературна та мистецька лексика
-  items: 10
 - type: essay-response
   focus: Чому радянська влада знищила покоління українських митців 1920-х років?
   word_target: 250

@@ -69,22 +69,10 @@ activity_hints:
   focus: Уривки з п'єс та спогади сучасників
   source: Оригінальні твори та мемуари
   items: 3 passages
-- type: quiz
-  focus: Біографія та театральна діяльність
-  items: 12+
-- type: match-up
-  focus: П'єси та їхні теми
-  items: 10+
 - type: essay-response
   focus: Чому Кропивницького називають батьком українського театру?
   word_target: 300
   output: Historical analysis
-- type: group-sort
-  focus: Етапи кар'єри та досягнення
-  items: 12+
-- type: fill-in
-  focus: Театральна термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-46-ivan-kotliarevskyi
@@ -107,3 +95,7 @@ sources:
   notes: Контекст розвитку театру
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of марко кропивницький: корифей театру'
+- Evaluate the contributions of батько українського театру
+- Trace the career and influence of останні роки та спадщина (1900-1910)

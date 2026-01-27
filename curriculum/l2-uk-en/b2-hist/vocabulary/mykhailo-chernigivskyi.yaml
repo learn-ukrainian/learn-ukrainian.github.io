@@ -1,4 +1,92 @@
 module: mykhailo-chernigivskyi
 level: B2-HIST
 version: '2.0'
-items: []
+items:
+  - term: суверенітет
+    ipa: suvɛrɛnʲiˈtɛt
+    pos: noun
+    translation: sovereignty
+  - term: ідентичність
+    ipa: idɛnˈtɪtʃnʲisʲtʲ
+    pos: noun
+    translation: identity
+  - term: деспотія
+    ipa: dɛspɔˈtʲijɐ
+    pos: noun
+    translation: despotism
+  - term: легітимність
+    ipa: lɛɦʲiˈtɪmnʲisʲtʲ
+    pos: noun
+    translation: legitimacy
+  - term: мучеництво
+    ipa: muˈtʃɛnɪt͡stwɔ
+    pos: noun
+    translation: martyrdom
+  - term: ієрархія
+    ipa: ijɛˈrɑrxʲijɐ
+    pos: noun
+    translation: hierarchy
+  - term: дисидент
+    ipa: dɪsɪˈdɛnt
+    pos: noun
+    translation: dissident
+  - term: іго
+    ipa: ˈiɦɔ
+    pos: noun
+    translation: yoke (foreign rule)
+  - term: ярлик
+    ipa: jɐrˈlɪk
+    pos: noun
+    translation: yarlyk (khan's patent for rule)
+  - term: колаборант
+    ipa: kɔlɐbɔˈrɑnt
+    pos: noun
+    translation: collaborator
+  - term: суб'єктність
+    ipa: subʔjɛkˈtɪwnʲisʲtʲ
+    pos: noun
+    translation: subjectivity, agency
+  - term: асиміляція
+    ipa: ɐsɪmʲilʲɐˈt͡sʲijɐ
+    pos: noun
+    translation: assimilation
+  - term: солідарність
+    ipa: sɔlʲidˈɑrnʲisʲtʲ
+    pos: noun
+    translation: solidarity
+  - term: прагматизм
+    ipa: prɐɦmɐˈtɪzm
+    pos: noun
+    translation: pragmatism
+  - term: абсолютизм
+    ipa: ɐbsɔlʲuˈtɪzm
+    pos: noun
+    translation: absolutism
+  - term: авторитаризм
+    ipa: ɐutɔrɪtɐˈrɪzm
+    pos: noun
+    translation: authoritarianism
+  - term: опір
+    ipa: ˈɔpʲir
+    pos: noun
+    translation: resistance
+  - term: сповідник
+    ipa: spɔˈvʲidnɪk
+    pos: noun
+    translation: confessor (of faith)
+  - term: канонізація
+    ipa: kɐnɔnʲizɐˈt͡sʲijɐ
+    pos: noun
+    translation: canonization
+  - term: міжусобиця
+    ipa: mʲiʒuˈsɔbɪt͡sʲɐ
+    pos: noun
+    translation: internecine strife
+  - term: васалітет
+    ipa: vɐsɐlʲiˈtɛt
+    pos: noun
+    translation: vassalage
+  - term: підступність
+    ipa: pʲidˈstupnʲisʲtʲ
+    pos: noun
+    translation: treachery, guile

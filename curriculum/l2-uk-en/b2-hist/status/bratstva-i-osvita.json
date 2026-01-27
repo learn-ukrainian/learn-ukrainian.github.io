@@ -2,13 +2,13 @@
   "module": "bratstva-i-osvita",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T23:34:55.874978Z",
+  "last_audit": "2026-01-27T17:43:08.262375Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-26T23:34:40.654489Z",
+    "md": "2026-01-27T17:42:19.172776Z",
     "meta": "2026-01-26T22:20:12.954248Z",
-    "activities": "2026-01-25T21:29:25.377667Z",
-    "vocabulary": "2026-01-26T23:31:57.865008Z",
+    "activities": "2026-01-27T17:43:04.486835Z",
+    "vocabulary": "2026-01-27T11:24:53.299092Z",
     "plan": null
   },
   "gates": {
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4122/4000 (raw: 4298)"
+      "message": "5504/4000 (raw: 5693)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "8/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "pass",

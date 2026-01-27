@@ -67,15 +67,6 @@ activity_hints:
   focus: Аналіз ультиматуму Раднаркому
   source: Архівні документи
   items: 4
-- type: quiz
-  focus: Хронологія війни 1917-1921
-  items: 15
-- type: match-up
-  focus: Битва → дата та наслідки
-  items: 10
-- type: fill-in
-  focus: Військова лексика в контексті
-  items: 10
 - type: essay-response
   focus: Чому війна 1917-1921 років — це не «громадянська війна»?
   word_target: 250

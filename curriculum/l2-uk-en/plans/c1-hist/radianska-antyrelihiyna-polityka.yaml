@@ -5,17 +5,19 @@ version: '1.0'
 title: Радянська антирелігійна політика
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- Analyze the causes and consequences of радянська антирелігійна політика
+- Evaluate the historical significance of війна з богом
 content_outline:
 - section: Вступ — Війна з Богом
-  words: 400
+  words: 457
   subsections:
   - Більшовики і релігія
   - Опіум для народу
   - Особливості української ситуації
   - Структура модуля
 - section: Перша хвиля (1920-1930-ті)
-  words: 600
+  words: 686
   subsections:
   - Конфіскація церковного майна
   - Руйнування храмів
@@ -23,14 +25,14 @@ content_outline:
   - Автокефальна церква — спроба і знищення
   - Масштаби руйнувань
 - section: Друга хвиля (1940-1950-ті)
-  words: 600
+  words: 686
   subsections:
   - Західна Україна — нові території
   - Ліквідація УГКЦ (1946)
   - «Возз'єднання» з РПЦ
   - Хрущовська антирелігійна кампанія
 - section: Механізми репресій
-  words: 600
+  words: 686
   subsections:
   - Закриття храмів — процедура
   - Арешти — за що
@@ -38,7 +40,7 @@ content_outline:
   - Союз войовничих безбожників
   - Освіта — виховання атеїстів
 - section: Підпільна церква
-  words: 500
+  words: 571
   subsections:
   - Як виживали віруючі
   - Таємні служби
@@ -46,19 +48,19 @@ content_outline:
   - Ризики і жертви
   - Зв'язки з діаспорою
 - section: Наслідки
-  words: 500
+  words: 571
   subsections:
   - Що втрачено — архітектура, мистецтво
   - Вплив на суспільство
   - Релігійне відродження після 1991
   - Травма і пам'ять
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - Антирелігійна політика — частина терору
   - Паралель із культурним геноцидом
   - Підготовка до синтезу
-word_target: 3500
+word_target: 4000
 vocabulary:
 - антирелігійний
 - атеїзм
@@ -76,11 +78,11 @@ vocabulary:
 - ліквідація
 - секуляризація
 activities:
-- type: mechanism-analysis
+- type: critical-analysis
   focus: How did church closures work legally?
-- type: statistical-analysis
+- type: critical-analysis
   focus: Numbers of destroyed churches by region and period
-- type: testimony-study
+- type: comparative-study
   focus: Underground church experiences
 - type: comparative-study
   focus: Compare anti-religious policies in Ukraine vs. Russia

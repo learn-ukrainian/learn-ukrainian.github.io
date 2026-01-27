@@ -2,14 +2,14 @@
   "module": "57-discourse-markers-advanced",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:27:20.781091Z",
+  "last_audit": "2026-01-27T18:24:11.386263Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-11T19:46:02.763302Z",
+    "md": "2026-01-27T18:21:41.162072Z",
     "meta": "2026-01-26T15:44:41.631822Z",
-    "activities": "2026-01-11T23:20:02.218068Z",
+    "activities": "2026-01-27T18:10:04.088449Z",
     "vocabulary": "2026-01-25T18:00:40.545766Z",
-    "plan": "2026-01-26T15:44:41.631498Z"
+    "plan": "2026-01-27T18:17:43.352813Z"
   },
   "gates": {
     "meta": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "1718/1500 (raw: 2593) | pedagogy: 1 violations | richness: 91% < 95% min (grammar)"
+      "status": "pass",
+      "violations": 0,
+      "message": "1874/1500 (raw: 2776)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "12/8"
+      "message": "13/8"
     },
     "vocabulary": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Missing required activity types: fill-in, organization, transformation, writing"
-    ],
-    "pass_count": 4,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

@@ -75,22 +75,10 @@ activity_hints:
   focus: Chronicle account of the choice of faith
   source: Повість минулих літ (adapted)
   items: 3 passages
-- type: quiz
-  focus: Facts about Volodymyr's life and reign
-  items: 15+
-- type: match-up
-  focus: Religions and their representatives in the legend
-  items: 8+
 - type: essay-response
   focus: Why did Volodymyr choose Byzantine Christianity?
   word_target: 300
   output: Analysis with historical and pragmatic factors
-- type: group-sort
-  focus: Before Christianization vs. After Christianization
-  items: 12+
-- type: fill-in
-  focus: Key dates and places in Volodymyr's biography
-  items: 10+
 - type: critical-analysis
   focus: Evaluate the methods of Christianization
   output: Balanced assessment with sources
@@ -105,8 +93,7 @@ connects_to:
 - c1-bio-08 (Iov Boretskyi - Orthodox church defense)
 objectives:
 - Analyze the geopolitical significance of the Christianization of Rus
-- Evaluate the state-building reforms of Volodymyr the Great (administrative, financial,
-  symbolic)
+- Evaluate the state-building reforms of Volodymyr the Great (administrative, financial, symbolic)
 - Discuss the legacy of the Trident and the first currency in modern Ukrainian identity
 grammar:
 - Historical narrative register
@@ -126,3 +113,4 @@ sources:
   notes: Legend of choosing religion
 immersion: 100% Ukrainian
 phase: C1-BIO
+word_target: 4000

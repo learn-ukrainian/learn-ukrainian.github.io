@@ -6,31 +6,36 @@ title: 'Рух: інтеграція префіксів'
 subtitle: 'Motion: Full Prefix Integration'
 content_outline:
 - section: Тест
-  words: 150
-  points:
-  - 'Diagnostic contrast for рух: інтеграція префіксів'
-  - No explanation, just observation
-  - Engage critical thinking
+  words: 254
+  points: []
 - section: Пояснення
-  words: 800
+  words: 1303
   points:
-  - All 10 prefixes integrated
-  - Complex motion descriptions
-  - Prefix combinations
-  - Natural narratives
+  - 1. Система просторових префіксів
+  - '2. Аспект: Як префікси змінюють вид'
+  - 3. Переносні (фігуральні) значення
+  - Реальні приклади використання
 - section: Практика
-  words: 400
+  words: 514
   points:
-  - Decision-making framework
-  - Comparative examples
-  - Common mistakes section
+  - Як обрати правильне слово? Алгоритм.
+  - Типові помилки студентів
 - section: Діалоги
-  words: 150
+  words: 473
   points:
-  - 5-6 authentic dialogues
-  - Grammar in natural context
-  - Various situations
-word_target: 1500
+  - 'Діалог 1: Зустріч біля метро'
+  - 'Діалог 2: Екскурсія замком'
+  - 'Діалог 3: Загублений гаманець'
+- section: Підсумок
+  words: 244
+  points: []
+- section: Потрібно більше практики?
+  words: 212
+  points:
+  - Інтеграція знань
+  - Реальне застосування
+  - Онлайн-ресурси
+word_target: 3000
 vocabulary_hints:
   required:
   - при- (arrival)

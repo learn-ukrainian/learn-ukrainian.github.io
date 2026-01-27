@@ -5,42 +5,33 @@ version: '2.0'
 title: 'Демінутиви: майстер-клас'
 subtitle: Diminutives - Forms, Usage, and Nuance
 content_outline:
-- section: 'Introduction: Diminutives in Ukrainian'
-  words: 150
+- section: Тест
+  words: 167
   points:
   - Why diminutives matter
-  - More than just 'small'
   - Cultural significance
-- section: Noun Diminutive Suffixes
-  words: 250
+- section: Пояснення
+  words: 1617
   points:
-  - '-ик, -ок: хлопчик, синок'
-  - '-очок, -ечко: батечко, серденько'
-  - '-еньк-, -оньк-: донечка, матуся'
-- section: Adjective Diminutives
-  words: 200
-  points:
-  - '-еньк-, -есеньк-: гарненький, малесенький'
-  - Intensification patterns
-  - Emotional coloring
-- section: Pragmatic Functions
-  words: 250
-  points:
-  - Tenderness and affection
-  - Politeness and softening
-  - Irony and mockery
-- section: Context-Dependent Meaning
-  words: 250
-  points:
-  - Same form, different meanings
-  - Register shifts
-  - When to avoid diminutives
-- section: 'Practice: Creating and Using'
-  words: 100
+  - Noun diminutive suffixes
+  - Adjective diminutives
+  - Pragmatic functions
+  - Context-dependent meaning
+- section: Практика
+  words: 324
   points:
   - Form diminutives
   - Choose for context
-word_target: 1200
+- section: Діалоги
+  words: 713
+  points:
+  - Real-world diminutive usage
+  - Register shifts
+- section: Потрібно більше практики?
+  words: 179
+  points:
+  - Additional exercises
+word_target: 3000
 vocabulary_hints:
   required:
   - демінутив (diminutive)
@@ -57,16 +48,16 @@ vocabulary_hints:
   - зневажливий (dismissive)
   - інтенсифікація (intensification)
 activity_hints:
-- type: formation
+- type: cloze
   focus: Create diminutives from base forms
   items: 25
-- type: multiple-choice
+- type: quiz
   focus: Identify pragmatic function
   items: 20
 - type: fill-in
   focus: Complete with appropriate diminutive
   items: 15
-- type: context-matching
+- type: cloze
   focus: Match diminutive to situation
   items: 10
 focus: grammar

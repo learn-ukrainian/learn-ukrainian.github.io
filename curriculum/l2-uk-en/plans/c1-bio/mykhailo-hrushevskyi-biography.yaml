@@ -69,22 +69,10 @@ activity_hints:
   focus: Уривки з «Історії України-Руси» та промов
   source: Наукові та політичні твори
   items: 3 passages
-- type: quiz
-  focus: Біографія, наука та політика
-  items: 12+
-- type: match-up
-  focus: Періоди життя та досягнення
-  items: 10+
 - type: essay-response
   focus: Як історик може змінити свідомість нації?
   word_target: 300
   output: Historical analysis
-- type: group-sort
-  focus: Наукові та політичні здобутки
-  items: 12+
-- type: fill-in
-  focus: Історична та політична термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-22-mykhailo-drahomanov
@@ -107,3 +95,7 @@ sources:
   notes: Політична діяльність 1917-1918
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of михайло грушевський: історик і президент'
+- Evaluate the contributions of батько української історії
+- Trace the career and influence of смерть та спадщина

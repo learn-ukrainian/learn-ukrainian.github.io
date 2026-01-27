@@ -2,103 +2,83 @@ module: liublinska-uniia
 level: B2-HIST
 version: '2.0'
 items:
-  - lemma: інкорпорація
-    ipa: /inkorpɔˈrat͡s⁽ʲ⁾ijɐ/
-    translation: incorporation
+  - term: унія
+    ipa: ˈunʲijɐ
     pos: noun
-    gender: f
-  - lemma: привілей
-    ipa: /prɪʋ⁽ʲ⁾iˈlɛi̯/
-    translation: privilege
-    pos: noun
-    gender: m
-  - lemma: сейм
-    ipa: /sɛi̯m/
-    translation: diet/parliament
-    pos: noun
-    gender: m
-  - lemma: унія
-    ipa: /ˈun⁽ʲ⁾ijɐ/
     translation: union
+  - term: шляхетська республіка
+    ipa: ˈʃlʲɐxɛt͡sʲkɐ rɛsˈpublʲikɐ
+    pos: noun phrase
+    translation: noble republic
+  - term: експансія
+    ipa: ɛksˈpɑnsʲijɐ
     pos: noun
-    gender: f
-  - lemma: Річ Посполита
-    ipa: /r⁽ʲ⁾it͡ʃ pɔspɔˈlɪtɐ/
-    translation: Polish-Lithuanian Commonwealth
+    translation: expansion
+  - term: інкорпорація
+    ipa: inkɔrpɔˈrat͡sʲijɐ
     pos: noun
-    gender: f
-  - lemma: шляхта
-    ipa: /ˈʃlʲɐxtɐ/
-    translation: nobility
+    translation: incorporation
+  - term: федерація
+    ipa: fɛdɛˈrat͡sʲijɐ
     pos: noun
-    gender: f
-  - lemma: народоправство
-    ipa: /nɐrɔdɔˈprɑu̯stʋɔ/
-    translation: democracy/folk rule
-    pos: noun
-    gender: n
-  - lemma: федерація
-    ipa: /fɛdɛˈrat͡s⁽ʲ⁾ijɐ/
     translation: federation
+  - term: суверенітет
+    ipa: suvɛrɛnʲiˈtɛt
     pos: noun
-    gender: f
-  - lemma: магнат
-    ipa: /mɐˈɦnɑt/
-    translation: magnate/tycoon
+    translation: sovereignty
+  - term: сейм
+    ipa: sɛi̯m
     pos: noun
-    gender: m
-  - lemma: суб'єктність
-    ipa: /subˈjɛktn⁽ʲ⁾is⁽ʲ⁾tʲ/
-    translation: agency/subjectivity
+    translation: diet (parliament)
+  - term: магнат
+    ipa: mɐɦˈnɑt
     pos: noun
-    gender: f
-  - lemma: автономія
-    ipa: /ɐu̯tɔˈnɔm⁽ʲ⁾ijɐ/
-    translation: autonomy
+    translation: magnate
+  - term: шляхта
+    ipa: ˈʃlʲɐxtɐ
     pos: noun
-    gender: f
-  - lemma: діловодство
-    ipa: /d⁽ʲ⁾ilɔˈʋɔdstʋɔ/
-    translation: record-keeping/office work
+    translation: nobility
+  - term: вольність
+    ipa: ˈwɔlʲnʲisʲtʲ
     pos: noun
-    gender: n
-  - lemma: полонізація
-    ipa: /pɔlɔn⁽ʲ⁾izˈat͡s⁽ʲ⁾ijɐ/
-    translation: Polonization
+    translation: freedom, liberty
+  - term: привілей
+    ipa: prɪvʲiˈlɛi̯
     pos: noun
-    gender: f
-  - lemma: ідентичність
-    ipa: /idɛnˈtɪt͡ʃn⁽ʲ⁾is⁽ʲ⁾tʲ/
-    translation: identity
+    translation: privilege
+  - term: канцелярія
+    ipa: kɐnt͡sɛˈlʲɑrʲijɐ
     pos: noun
-    gender: f
-  - lemma: плюралізм
-    ipa: /plʲurɐˈl⁽ʲ⁾izm/
-    translation: pluralism
+    translation: chancellery
+  - term: діловодство
+    ipa: dʲilɔˈwɔdstwɔ
     pos: noun
-    gender: m
-  - lemma: латифундія
-    ipa: /lɐtɪˈfund⁽ʲ⁾ijɐ/
-    translation: latifundia/large estate
+    translation: records management, bookkeeping
+  - term: полонізація
+    ipa: pɔlɔnʲizɐˈt͡sʲijɐ
     pos: noun
-    gender: f
-  - lemma: фільварок
-    ipa: /f⁽ʲ⁾ilʲˈʋɑrɔk/
-    translation: manorial farm
+    translation: polonization
+  - term: окатоличення
+    ipa: ɔkɐˈtɔlɪt͡ʃɛnnʲɐ
     pos: noun
-    gender: m
-  - lemma: ренесанс
-    ipa: /rɛnɛˈsɑns/
-    translation: renaissance
+    translation: catholicization
+  - term: латифундія
+    ipa: lɐtɪˈfundʲijɐ
     pos: noun
-    gender: m
-  - lemma: Реформація
-    ipa: /rɛfɔrˈmat͡s⁽ʲ⁾ijɐ/
-    translation: Reformation
+    translation: latifundium (large estate)
+  - term: фільварок
+    ipa: fʲilʲˈwɑrɔk
     pos: noun
-    gender: f
-  - lemma: полеміка
-    ipa: /pɔˈlɛm⁽ʲ⁾ikɐ/
-    translation: polemic/debate
+    translation: folwark (manorial farm)
+  - term: кодифікація
+    ipa: kɔdɪfʲikɐˈt͡sʲijɐ
     pos: noun
-    gender: f
+    translation: codification
+  - term: анахронізм
+    ipa: ɐnɐxrɔˈnʲizm
+    pos: noun
+    translation: anachronism
+  - term: суб'єктність
+    ipa: subʔjɛkˈtɪwnʲisʲtʲ
+    pos: noun
+    translation: subjectivity, agency

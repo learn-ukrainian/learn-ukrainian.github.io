@@ -5,54 +5,54 @@ version: '2.0'
 title: '1991: Промова «Курча по-київськи»'
 content_outline:
 - section: Вступ — «Суїцидальний націоналізм»
-  words: 400
+  words: 457
   points:
   - 1 серпня 1991 — Буш у Києві
   - Що він сказав
   - Чому це називають «Курча по-київськи»
   - Структура модуля
 - section: Контекст — Горбачов і Буш
-  words: 600
+  words: 686
   points:
   - Буш вірить Горбачову
   - Страх розпаду СРСР
   - «Керований» процес — ілюзія
   - Чому Америка боялася
 - section: Текст промови
-  words: 700
+  words: 800
   points:
   - «Суїцидальний націоналізм»
   - Попередження українцям
   - Підтримка Горбачова
   - Аналіз риторики
 - section: Реакція в Україні
-  words: 500
+  words: 571
   points:
   - Шок і розчарування
   - Але не зупинило
   - 24 серпня — незалежність
   - 1 грудня — референдум
 - section: Чому Буш помилився
-  words: 500
+  words: 571
   points:
   - Нерозуміння України
   - Ставка на Москву
   - Страх невідомого
   - Традиційна політика
 - section: «Chicken Kyiv» — ярлик
-  words: 500
+  words: 571
   points:
   - Як виник термін
   - Критика Буша
   - Урок для політиків
   - Сучасне значення
 - section: Підсумок
-  words: 300
+  words: 344
   points:
   - США — проти незалежності
   - Але Україна вирішила сама
   - Перехід до Будапешту
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - «Курча по-київськи» (Chicken Kyiv)
@@ -72,13 +72,13 @@ vocabulary_hints:
   - зовнішня політика (foreign policy)
   - критика (criticism)
 activity_hints:
-- type: speech-analysis
+- type: critical-analysis
   focus: Close reading of Bush's Kiev speech
   output: Rhetorical analysis
-- type: context-analysis
+- type: critical-analysis
   focus: Why did Bush say this? US interests
   output: Policy motivation analysis
-- type: reaction-study
+- type: comparative-study
   focus: Ukrainian response to the speech
   output: Reception analysis
 - type: comparative-study
@@ -111,3 +111,6 @@ sources:
   notes: Independence context
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of 1991: промова «курча по-київськи»'
+- Evaluate the historical significance of «суїцидальний націоналізм»

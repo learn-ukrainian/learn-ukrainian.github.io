@@ -2,13 +2,13 @@
   "module": "kozatske-viisko",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T23:52:28.554914Z",
+  "last_audit": "2026-01-27T19:03:32.017001Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-25T21:28:31.641590Z",
+    "md": "2026-01-27T19:03:26.089028Z",
     "meta": "2026-01-26T22:20:13.229409Z",
-    "activities": "2026-01-25T21:28:31.640953Z",
-    "vocabulary": "2026-01-23T23:02:22.144986Z",
+    "activities": "2026-01-27T15:34:54.156524Z",
+    "vocabulary": "2026-01-27T11:35:39.667339Z",
     "plan": null
   },
   "gates": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "3904/4000 (raw: 4129) (96 short)"
+      "message": "4468/4000 (raw: 4693)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "6/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
+    "pass_count": 5,
     "fail_count": 0
   }
 }

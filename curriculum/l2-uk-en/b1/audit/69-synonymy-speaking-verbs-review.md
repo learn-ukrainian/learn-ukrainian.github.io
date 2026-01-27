@@ -1,8 +1,8 @@
 # Audit Report: M69 — 69-synonymy-speaking-verbs.md
-**Level:** B1 | **Module:** M69 | **Phase:** B1 | **Pedagogy:** PPP | **Target:** 1500
+**Level:** B1 | **Module:** M69 | **Phase:** B1.6 | **Pedagogy:** PPP | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:27:28
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-27 19:01:54
 
 ## Configuration
 **Type:** B1-vocab
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
 **Priority Types:** mark-the-words, match-up, quiz, translate
-**Required Types:** fill-in, matching, transformation, writing
+**Required Types:** cloze, fill-in, match-up
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥35 words
@@ -32,35 +32,27 @@
 | 10 | error-correction | Виправте помилки в колокаціях | 8 | 6 | ✅ |
 | 11 | translate | Переклад речень | 8 | 6 | ✅ |
 | 12 | mark-the-words | Знайдіть дієслова мовлення | 9 | 6 | ✅ |
+| 13 | fill-in | Доповніть речення дієсловами мовлення | 8 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 12 (target: 8-12) ✅
-- Unique types: 10 (minimum: 4) ✅
+- Total activities: 13 (target: 8-12) ❌
+- Unique types: 11 (minimum: 4) ✅
 - Priority types used: 4/4 (mark-the-words, match-up, quiz, translate) ✅
-- Required types used: 0/4 (none) ❌
+- Required types used: 3/3 (cloze, fill-in, match-up) ✅
 - Low density activities: 0
-
-## PEDAGOGICAL VIOLATIONS
-- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['matching', 'transformation', 'writing']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
-  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1745/1500 (raw: 2336)
-- **Activities:** ✅ 12/8
+- **Activities:** ✅ 13/8
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 10/4 types
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 17/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 31 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.8% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 99% (grammar)

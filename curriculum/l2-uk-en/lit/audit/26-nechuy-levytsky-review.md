@@ -1,10 +1,12 @@
 # Audit Report: M26 — 26-nechuy-levytsky.md
+
 **Level:** LIT | **Module:** M26 | **Phase:** LIT.5 | **Pedagogy:** Seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:58:00
 
 ## Configuration
+
 **Type:** LIT-literature
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Біографія Нечуя-Левицького | 3 | 1 | ✅ |
@@ -34,11 +37,13 @@
 - Low density activities: 0
 
 ## Recommendation
+
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 3556/4000 (raw: 3799)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
@@ -57,10 +62,12 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
+
 **Score:** 74% (minimum: 90%)
 **Module Type:** literature
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
@@ -76,23 +83,25 @@
 | **TOTAL** | | | | | **74.2%** |
 
 ### Dryness Flags & Fixes
+
 - ❌ **NO_LITERARY_CITATIONS**
   - FIX:
     Add 3+ literary citations. Use this exact format:
-    
+
     «[Quote from the literary work, minimum 20 characters]»
-    
+
     Example: «Зібравши троянців в остатки / І швидше прийнявши присягу»
 - ❌ **NO_RESOURCES**
   - FIX:
     Add 2+ resource blocks. Use this format:
-    
+
     > [!resources] Додаткові ресурси
     >
     > - [Resource 1 with link or description]
     > - [Resource 2 with link or description]
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 43 | Included in Core |

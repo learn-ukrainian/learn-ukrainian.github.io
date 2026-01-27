@@ -67,15 +67,6 @@ activity_hints:
   focus: Свідчення захисників Донецького аеропорту
   source: Усна історія
   items: 4
-- type: quiz
-  focus: Війна на Донбасі 2014-2022
-  items: 15
-- type: match-up
-  focus: Битва → дата та наслідки
-  items: 10
-- type: fill-in
-  focus: Військова лексика
-  items: 10
 - type: essay-response
   focus: Чому Мінські угоди не зупинили війну?
   word_target: 250

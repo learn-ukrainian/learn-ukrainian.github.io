@@ -1,8 +1,8 @@
 # Audit Report: M92 — 92-b1-final-exam.md
-**Level:** B1 | **Module:** M92 | **Phase:** B1 | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M92 | **Phase:** B1.9 | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:27:43
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-27 20:45:06
 
 ## Configuration
 **Type:** B1-skills
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
 **Priority Types:** cloze, fill-in, mark-the-words
-**Required Types:** listening-test, reading-test, speaking-test, writing-test
+**Required Types:** cloze, fill-in, group-sort, match-up, quiz
 **Engagement:** ≥4 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥15 words
@@ -31,81 +31,60 @@
 | 9 | group-sort | Лексика — Категоризація антонімів | 12 | 12 | ✅ |
 | 10 | fill-in | Лексика — Тематичний словник | 15 | 8 | ✅ |
 | 11 | fill-in | Лексика — Академічний словник | 15 | 8 | ✅ |
+| 12 | cloze | Письмові конструкції — Сполучники та зв'язність | 12 | 12 | ✅ |
 
 **Summary:**
-- Total activities: 11 (target: 10-14) ✅
-- Unique types: 4 (minimum: 4) ✅
-- Priority types used: 1/3 (fill-in) ✅
-- Required types used: 0/4 (none) ❌
+- Total activities: 12 (target: 10-14) ✅
+- Unique types: 5 (minimum: 4) ✅
+- Priority types used: 2/3 (cloze, fill-in) ✅
+- Required types used: 5/5 (cloze, fill-in, group-sort, match-up, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['reading-test', 'listening-test', 'writing-test', 'speaking-test']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
-  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 3539/1500 (raw: 3828)
-- **Activities:** ✅ 11/10
+- **Words:** ✅ 3797/1500 (raw: 4108)
+- **Activities:** ✅ 12/10
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 4/4 types
+- **Unique_types:** ✅ 5/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/4
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 79/15
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.8% (target 85-100% (B1.7-8 Ukraine))
-- **Richness:** ❌ 91% < 95% min (grammar)
+- **Richness:** ✅ 90% (checkpoint)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 91% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 90% (minimum: 85%)
+**Module Type:** checkpoint
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 100 | 24 | 100% | 20% | 20.0% |
-| engagement | 12 | 5 | 100% | 15% | 15.0% |
-| dialogues | 5 | 4 | 100% | 15% | 15.0% |
-| variety | 0.97 | - | 97% | 10% | 9.7% |
-| cultural | 2 | 3 | 67% | 10% | 6.7% |
-| realworld | 6 | 3 | 100% | 10% | 10.0% |
-| visual | 5 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 28 | 5 | 100% | 5% | 5.0% |
-| proverbs | 0 | 1 | 0% | 5% | 0.0% |
-| **TOTAL** | | | | | **91.4%** |
-
-### Dryness Flags & Fixes
-- ❌ **NO_PROVERBS**
-  - FIX:
-    Add 1+ Ukrainian proverb. Use this format:
-    
-    Українці кажу|ть: «[Proverb in Ukrainian]»
-    
-    Зверніть увагу: **[word]** — [aspect] вид, бо [explanation why this aspect is used].
-    
-    Example: «Не кажи гоп, поки не перескочиш» — **перескочиш** is perfective because it's about the result.
+| activity_types | 5 | 8 | 62% | 25% | 15.5% |
+| review_sections | 28 | 3 | 100% | 20% | 20.0% |
+| variety | 0.97 | - | 97% | 15% | 14.5% |
+| engagement | 12 | 3 | 100% | 10% | 10.0% |
+| cultural | 2 | - | 100% | 10% | 10.0% |
+| visual | 5 | 3 | 100% | 10% | 10.0% |
+| paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
+| **TOTAL** | | | | | **90.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 43 | Included in Core |
-| **Огляд** | ⚪️ | 28 | Skipped |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Вступ** | ✅ | 70 | Included in Core |
+| **Огляд** | ⚪️ | 84 | Skipped |
 | **Практика** | ⚪️ | 139 | Skipped |
 | **Навичка 1: Читання** | ✅ | 1141 | Included in Core |
 | **Навичка 2: Граматика** | ⚪️ | 825 | Skipped |
 | **Навичка 3: Лексика** | ⚪️ | 463 | Skipped |
-| **Навичка 4: Письмо** | ⚪️ | 284 | Skipped |
-| **Навичка 5: Самооцінка** | ⚪️ | 270 | Skipped |
+| **Навичка 4: Письмо** | ⚪️ | 367 | Skipped |
+| **Навичка 5: Самооцінка** | ⚪️ | 362 | Skipped |
 | **Підсумок** | ✅ | 148 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 198 | Skipped |

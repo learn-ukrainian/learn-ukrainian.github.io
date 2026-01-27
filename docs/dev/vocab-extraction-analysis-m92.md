@@ -96,16 +96,19 @@ Entries created:       0
 ### Source Tracing
 
 #### 1. `бізнес-проєкт` (business project)
+
 - **Source:** Markdown line 297 (Self-Assessment section)
 - **Context:** "складний бізнес-проєкт" (complex business project)
 - **Fix needed:** Add translation: "business project"
 
 #### 2. `відлетів-` (MALFORMED)
+
 - **Source:** Unknown - likely extraction artifact
 - **Context:** Appears to be truncated past tense verb form
 - **Fix needed:** Remove this entry (malformed lemma)
 
 #### 3. `жвава` (lively, vivacious)
+
 - **Source:** Markdown line 281 (Self-Assessment section)
 - **Context:** "жвава дискусія" (lively discussion)
 - **Issue:** Classified as noun instead of adjective
@@ -114,6 +117,7 @@ Entries created:       0
   - Add translation: "lively, vivacious"
 
 #### 4. `нуш` (FRAGMENT)
+
 - **Source:** Likely fragment from "Нью-Йорк" or similar compound
 - **Issue:** Extraction error - not a real word
 - **Fix needed:** Remove this entry

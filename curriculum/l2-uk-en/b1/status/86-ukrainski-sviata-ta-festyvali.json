@@ -2,14 +2,14 @@
   "module": "86-ukrainski-sviata-ta-festyvali",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:27:39.535342Z",
+  "last_audit": "2026-01-27T20:14:49.615897Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-24T22:57:17.190597Z",
+    "md": "2026-01-27T20:08:41.884176Z",
     "meta": "2026-01-26T15:44:41.727695Z",
-    "activities": "2026-01-24T22:54:56.648861Z",
+    "activities": "2026-01-27T20:08:13.260539Z",
     "vocabulary": "2026-01-25T16:02:18.811900Z",
-    "plan": "2026-01-26T15:44:41.727192Z"
+    "plan": "2026-01-27T20:01:57.906191Z"
   },
   "gates": {
     "meta": {
@@ -18,19 +18,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2020/1500 (raw: 2096) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "2045/1500 (raw: 2121)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "11/10"
+      "message": "13/8"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "65/15"
+      "message": "65/25"
     },
     "naturalness": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Missing required activity types: discussion, fill-in, matching, reading"
-    ],
-    "pass_count": 4,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

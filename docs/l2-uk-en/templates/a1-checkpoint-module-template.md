@@ -101,7 +101,6 @@ Mandatory section for review links.
 
 **CRITICAL:** Do NOT add `## Activities`, `## Vocabulary`, or `## External Resources` headers. These sections are injected automatically from YAML sidecars.
 
-
 ---
 
 ## Naturalness Quality Checklist
@@ -129,4 +128,3 @@ Before finalizing the module, verify prose activities (cloze, fill-in, unjumble 
 **See:** `claude_extensions/stages/stage-4-review-fix.md` Section 9 for detailed naturalness criteria.
 
 **For batch scanning:** Use `/scan-naturalness {level} {start} {end}` to scan completed modules.
-

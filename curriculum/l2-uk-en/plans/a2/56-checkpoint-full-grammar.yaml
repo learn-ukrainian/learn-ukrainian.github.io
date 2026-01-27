@@ -5,43 +5,41 @@ version: '2.0'
 title: Checkpoint — Full Grammar
 subtitle: A2 Mastery Review
 content_outline:
-- section: 'Pre-Test: Self Assessment'
-  words: 100
+- section: 'Огляд'
+  words: 75
   points:
-  - Identify strengths and weaknesses
-  - Review A2 learning goals
-  - Set assessment expectations
-- section: Vocabulary Integration
-  words: 150
+  - Overview of checkpoint
+  - Self-assessment focus
+- section: 'Skill 1: Daily Life'
+  words: 195
   points:
-  - Thematic vocabulary review
-  - Word formation patterns
-  - Common collocations
-- section: Case System Mastery
-  words: 200
+  - Daily life vocabulary review
+  - Practical situations
+- section: 'Skill 2: Work & Education'
+  words: 130
   points:
-  - All 7 cases in context
-  - Case selection exercises
-  - Common case errors
-- section: Verb Aspect Application
-  words: 150
+  - Work and education vocabulary
+  - Professional situations
+- section: 'Skill 3: Health & Body'
+  words: 135
   points:
-  - Perfective vs imperfective review
-  - Aspect in past and future
-  - Context-based selection
-- section: Integrated Skills Test
-  words: 100
+  - Health vocabulary review
+  - Body and wellness
+- section: 'Skill 4: Shopping & Travel'
+  words: 120
+  points:
+  - Shopping and travel vocabulary
+  - Practical transactions
+- section: 'Integration Challenge'
+  words: 90
   points:
   - Comprehensive assessment
-  - Mixed grammar tasks
-  - Practical application
-- section: Feedback and Next Steps
-  words: 100
+  - Mixed skills practice
+- section: 'Підсумок'
+  words: 65
   points:
-  - Review results
-  - Identify areas for improvement
-  - Prepare for practical modules
-word_target: 800
+  - Summary and next steps
+word_target: 810
 vocabulary_hints:
   required:
   - повторення (review)
@@ -67,7 +65,7 @@ activity_hints:
 - type: error-correction
   focus: Fix common mistakes
   items: 15
-- type: speaking
+- type: quiz
   focus: Demonstrate A2 proficiency
   items: 10
 focus: checkpoint

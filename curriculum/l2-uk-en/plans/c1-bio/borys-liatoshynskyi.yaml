@@ -69,22 +69,10 @@ activity_hints:
   focus: Українська класична музика XX ст.
   source: Musicological sources
   items: 3 passages
-- type: quiz
-  focus: Життя та творчість Лятошинського
-  items: 12+
-- type: match-up
-  focus: Твори та їхні характеристики
-  items: 10+
 - type: essay-response
   focus: Як Лятошинський балансував між мистецтвом і системою?
   word_target: 300
   output: Analytical essay
-- type: group-sort
-  focus: Музичні твори за жанрами
-  items: 12+
-- type: fill-in
-  focus: Музична термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-63
@@ -103,3 +91,7 @@ sources:
   notes: Archives of the academy where Lyatoshynsky taught
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of борис лятошинський: симфоніст'
+- Evaluate the contributions of голос української симфонії
+- Trace the career and influence of батько української симфонії

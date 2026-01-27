@@ -240,6 +240,7 @@ Example: **У нашому місті є старий парк. Парк у це
 ---
 
 # Підсумок
+
 You've mastered the locative case! Here's what you learned:
 
 ✅ **The locative case answers: Де? (Where?)**

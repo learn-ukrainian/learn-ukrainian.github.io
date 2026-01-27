@@ -1,10 +1,12 @@
 # Audit Report: M80 — 80-analiz-tekstu.md
+
 **Level:** B2 | **Module:** M80 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:39
 
 ## Configuration
+
 **Type:** B2-skills
 **Word Target:** 1750 words
 **Activities:** 14-18 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Термінологія аналізу | 14 | 8 | ✅ |
@@ -42,19 +45,23 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 80-analiz-tekstu.yaml: Schema validation error at key '12': {'type': 'quiz', 'title': 'Факт чи думка?', 'items': [{'question': '«Київ офіційно є головною столицею сучасної незалежної європейської держави Україна згідно з Основним Законом нашої країни».', 'options': [{'text': 'Факт', 'correct': True}, {'text': 'Думка', 'correct': False}, {'text': 'Гіпотеза', 'correct': False}, {'text': 'Міф', 'correct': False}]}, {'question': '«Київ — це, без жодного сумніву, найкраще місто для життя у світі».', 'options': [{'text': 'Думка', 'correct': True}, {'text': 'Факт', 'correct': False}, {'text': 'Статистика', 'correct': False}, {'text': 'Аксіома', 'correct': False}]}, {'question': '«Планета Земля постійно обертається навколо Сонця за певною еліптичною траєкторією, що зумовлює зміну пір року».', 'options': [{'text': 'Факт', 'correct': True}, {'text': 'Думка', 'correct': False}, {'text': 'Помилка', 'correct': False}, {'text': 'Вигадка', 'correct': False}]}, {'question': '«Цей новий пригодницький фільм здався мені надзвичайно нудним, затягнутим та абсолютно нецікавим для сучасного глядача».', 'options': [{'text': 'Думка', 'correct': True}, {'text': 'Факт', 'correct': False}, {'text': 'Доказ', 'correct': False}, {'text': 'Закон', 'correct': False}]}, {'question': '«В Україні на даний момент офіційно проживає понад тридцять мільйонів людей».', 'options': [{'text': 'Факт', 'correct': True}, {'text': 'Думка', 'correct': False}, {'text': 'Емоція', 'correct': False}, {'text': 'Смак', 'correct': False}]}, {'question': '«Податки у нашій країні є занадто високими для малого бізнесу».', 'options': [{'text': 'Думка', 'correct': True}, {'text': 'Факт', 'correct': False}, {'text': 'Число', 'correct': False}, {'text': 'Дата', 'correct': False}]}, {'question': '«День Незалежності України офіційно відзначається державою щороку саме двадцять четвертого серпня на честь проголошення Акту незалежності».', 'options': [{'text': 'Факт', 'correct': True}, {'text': 'Думка', 'correct': False}, {'text': 'Прогноз', 'correct': False}, {'text': 'План', 'correct': False}]}, {'question': '«Математика — це найбільш складна та нудна наука з усіх існуючих».', 'options': [{'text': 'Думка', 'correct': True}, {'text': 'Факт', 'correct': False}, {'text': "Об'єкт", 'correct': False}, {'text': 'Вимір', 'correct': False}]}], 'instruction': "Визначте, чи є наведене твердження об'єктивним фактом чи суб'єктивною думкою."} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення' per template 'b2-module-template.md'
   - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md.md
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 2 violations (minor)
 
 ## Gates
+
 - **Words:** ✅ 2147/1750 (raw: 2324)
 - **Activities:** ✅ 15/14
 - **Density:** ✅ All > 14
@@ -73,10 +80,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 98% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 22 | 24 | 92% | 20% | 18.4% |
@@ -92,6 +101,7 @@
 | **TOTAL** | | | | | **98.4%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 105 | Included in Core |

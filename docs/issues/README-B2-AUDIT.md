@@ -49,6 +49,7 @@ New to the B2 rebuild? **Start with the Executive Summary:**
 ## Reading Paths
 
 ### Path 1: Executive Overview (15 minutes)
+
 Perfect for stakeholders, project managers, or getting the big picture.
 
 1. [Executive Summary](./b2-rebuild-executive-summary.md) - 5 min
@@ -60,6 +61,7 @@ Perfect for stakeholders, project managers, or getting the big picture.
 ---
 
 ### Path 2: Implementation Guide (60 minutes)
+
 For developers ready to fix the issues.
 
 1. [Executive Summary](./b2-rebuild-executive-summary.md) - 5 min
@@ -72,6 +74,7 @@ For developers ready to fix the issues.
 ---
 
 ### Path 3: Deep Dive (2+ hours)
+
 For understanding every detail and edge case.
 
 1. All files in order of creation
@@ -85,11 +88,13 @@ For understanding every detail and edge case.
 ## Key Statistics
 
 ### Pass Rate
+
 - **Current:** 1.4% (2/145 modules)
 - **Target:** 95%+ (138/145 modules)
 - **Comparison:** B1 started at 8.8%, B2 is worse
 
 ### Error Distribution
+
 1. **COMPLEXITY_WORD_COUNT:** 3,030 (65.8%) - Sentences too short
 2. **YAML_SCHEMA_VIOLATION:** 734 (15.9%) - Invalid activity schemas
 3. **MISSING_REQUIRED_SECTION:** 663 (14.4%) - Template non-compliance
@@ -99,12 +104,14 @@ For understanding every detail and edge case.
 7. **EMPTY_REQUIRED_SECTION:** 2 (0.04%) - Content gaps
 
 ### Passing Modules
+
 - ✅ **M102:** Franko, Lesia Ukrainka, Hrinchenko (biography)
 - ✅ **M105:** UNR and ZUNR (history)
 
 Both are in the M91-M110 range, suggesting recent creation with current templates.
 
 ### Fix Timeline
+
 - **Phase 1 (Automated):** 2-3 hours → Fix 752 violations (16%)
 - **Phase 2 (History Content):** 4-6 hours → Fix 207+ violations, improve 61 modules
 - **Phase 3 (Complexity):** 8-12 hours → Fix 3,030 violations (66%)
@@ -156,15 +163,18 @@ Both are in the M91-M110 range, suggesting recent creation with current template
 ## Critical Files Referenced
 
 ### Templates
+
 - `docs/l2-uk-en/templates/b2-module-template.md` - Standard structure
 - `docs/l2-uk-en/templates/b2-history-module-template.md` - History requirements
 - `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md` - Quality standards
 
 ### Passing Modules (Reference Examples)
+
 - `curriculum/l2-uk-en/b2/102-franko-lesia-hrinchenko.md`
 - `curriculum/l2-uk-en/b2/105-unr-zunr.md`
 
 ### Related Documentation
+
 - `docs/issues/b1-rebuild-index.md` - B1 rebuild (completed, 95% pass rate)
 - `scripts/audit_module.py` - Audit tool source
 
@@ -173,21 +183,26 @@ Both are in the M91-M110 range, suggesting recent creation with current template
 ## FAQ
 
 ### Q: Why is B2 in worse condition than B1?
+
 **A:** Three reasons:
 1. Higher complexity targets (10-25 vs 8-20 words) not met
 2. 61 history modules with specialized requirements (Читання, Первинні джерела, etc.)
 3. More modules created before template standardization
 
 ### Q: Can we skip history sections and come back later?
+
 **A:** Not recommended. History sections are template-required and account for 207+ violations across 61 modules. Skipping them won't significantly reduce timeline but will leave B2 non-compliant.
 
 ### Q: Should we fix all 3,030 complexity violations?
+
 **A:** Target 90%+ (2,700+). Some edge cases may be acceptable with justification. LLM-assisted batch enrichment makes this tractable in 8-12 hours.
 
 ### Q: What's the expected final pass rate?
+
 **A:** 95%+ (138/145 modules) after all 4 phases. The remaining 5% may have edge cases requiring deeper investigation.
 
 ### Q: How does this compare to B1 rebuild?
+
 **A:** B2 is 33% more effort (16-24h vs 12-18h) due to:
 - +54 modules (+59%)
 - +1,803 violations (+64%)

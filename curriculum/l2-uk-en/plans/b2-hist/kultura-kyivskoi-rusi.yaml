@@ -5,25 +5,25 @@ version: '2.0'
 title: Культура Київської Русі
 content_outline:
 - section: Читання
-  words: 50
-- section: Вступ — Культурний світ Русі
-  words: 550
-- section: Писемність та освіта
-  words: 780
-- section: Література
-  words: 800
-- section: Архітектура
-  words: 700
-- section: Образотворче мистецтво
-  words: 800
-- section: Музика та усна творчість
-  words: 650
-- section: Деколонізаційний погляд
-  words: 500
-- section: Первинні джерела
-  words: 250
-- section: Потрібно більше практики?
   words: 100
+- section: Вступ — Культурний світ Русі
+  words: 425
+- section: Писемність та освіта
+  words: 602
+- section: Література
+  words: 618
+- section: Архітектура
+  words: 541
+- section: Образотворче мистецтво
+  words: 618
+- section: Музика та усна творчість
+  words: 502
+- section: Деколонізаційний погляд
+  words: 386
+- section: Первинні джерела
+  words: 193
+- section: Потрібно більше практики?
+  words: 15
 vocabulary_hints:
   required:
   - писемність (literacy)
@@ -48,21 +48,12 @@ activity_hints:
 - type: reading
   focus: Culture as a manifesto
   items: 1
-- type: match-up
-  focus: Cultural vocabulary
-  items: 12
-- type: quiz
-  focus: Cultural code
-  items: 5
 - type: critical-analysis
   focus: Art and decolonization
   items: 3
 - type: essay-response
   focus: Heritage and security
   items: 1
-- type: select
-  focus: Music
-  items: 2
 focus: history
 pedagogy: CBI
 prerequisites:
@@ -93,3 +84,4 @@ sources:
   notes: Epic poem text
 immersion: 100% Ukrainian
 phase: B2-HIST.1 [Kyivan Rus]
+word_target: 4000

@@ -394,7 +394,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
 
-
 **Signature Activity Concepts:**
 
 1. Quiz: Register selection for 4 passive types
@@ -420,7 +419,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 
@@ -454,7 +452,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
 
-
 **Signature Activity Concepts:**
 
 1. Group-sort: Verbs by function (investigate/argue/present/conclude)
@@ -478,7 +475,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 
@@ -510,7 +506,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
 
-
 **Signature Activity Concepts:**
 
 1. Group-sort: Connectors by function
@@ -540,7 +535,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
 
-
 **Signature Activity Concepts:**
 
 1. Quiz: Certainty scale (0-100%)
@@ -568,7 +562,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 
@@ -600,7 +593,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
 
-
 **Signature Activity Concepts:**
 
 1. Match-up: Essay part → function
@@ -627,7 +619,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 
@@ -659,7 +650,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
 
-
 **Signature Activity Concepts:**
 
 1. Match-up: Acknowledge phrase → refute phrase
@@ -689,7 +679,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 
@@ -721,7 +710,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
 
-
 **Signature Activity Concepts:**
 
 1. Order: Arrange article sections
@@ -746,7 +734,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 
@@ -779,7 +766,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
 
-
 **Signature Activity Concepts:**
 
 1. Group-sort: Sources by position (agree/disagree/neutral)
@@ -805,7 +791,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 
@@ -833,7 +818,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
 
-
 **Signature Activity Concepts:**
 
 1. Gap-fill: Insert correct punctuation
@@ -858,7 +842,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 
@@ -998,7 +981,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
 
-
 **Signature Activity Concepts:**
 
 1. Template: Fill CV template
@@ -1023,7 +1005,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 
@@ -1050,7 +1031,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 
@@ -1085,7 +1065,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
 
-
 **Signature Activity Concepts:**
 
 1. Write: Formal email on given topic
@@ -1112,7 +1091,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Register and complexity appropriate to C1 level
 
 **Key themes/places:** Верховна Рада, Кабінет Міністрів, Конституційний Суд
-
 
 **Signature Activity Concepts:**
 
@@ -1149,7 +1127,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** ЗМІ
 
-
 **Signature Activity Concepts:**
 
 1. Group-sort: Media types by reliability
@@ -1184,7 +1161,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** Європейський Союз, ЄС, НАТО, Північноатлантичний альянс, ООН, МВФ, Світовий банк, Рада Європи
 
-
 **Signature Activity Concepts:**
 
 1. Match-up: Organization → function
@@ -1214,7 +1190,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 
@@ -1247,7 +1222,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
 
-
 **Signature Activity Concepts:**
 
 1. Quiz: Identify surzhyk vs. standard
@@ -1276,7 +1250,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Register and complexity appropriate to C1 level
 
 **Key themes/places:** ЗМІ
-
 
 **Signature Activity Concepts:**
 
@@ -1309,7 +1282,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 
@@ -1473,7 +1445,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
 
-
 **Signature Activity Concepts:**
 
 1. Match-up: Metaphor → meaning
@@ -1505,7 +1476,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
 
-
 **Signature Activity Concepts:**
 
 1. Quiz: Identify ironic statements
@@ -1533,7 +1503,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 
@@ -1566,7 +1535,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
 
-
 **Signature Activity Concepts:**
 
 1. Match-up: Taboo → euphemism
@@ -1596,7 +1564,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
 
-
 **Signature Activity Concepts:**
 
 1. Quiz: Identify rhetorical questions
@@ -1622,7 +1589,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 
@@ -1654,7 +1620,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
 
-
 **Signature Activity Concepts:**
 
 1. Transform: Direct → polite request
@@ -1679,7 +1644,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 
@@ -1712,7 +1676,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
 
-
 **Signature Activity Concepts:**
 
 1. Quiz: Humor type identification
@@ -1737,7 +1700,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 
@@ -1770,7 +1732,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
 
-
 **Signature Activity Concepts:**
 
 1. Listening: Understand joke recordings
@@ -1795,7 +1756,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 
@@ -1822,7 +1782,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 
@@ -1855,7 +1814,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
 
-
 **Signature Activity Concepts:**
 
 1. Match-up: Church Slavonic → modern equivalent
@@ -1886,7 +1844,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 
@@ -1920,7 +1877,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
 
-
 **Signature Activity Concepts:**
 
 1. Reading: Official document excerpts
@@ -1945,7 +1901,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 
@@ -1973,7 +1928,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 
@@ -2114,7 +2068,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** традиція
 
-
 **Signature Activity Concepts:**
 
 1. Quiz: Identify bandura parts and playing techniques
@@ -2143,7 +2096,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** традиція
 
-
 **Signature Activity Concepts:**
 
 1. Group-sort: Songs by season/ritual type
@@ -2169,7 +2121,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 
@@ -2199,7 +2150,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** музика
 
-
 **Signature Activity Concepts:**
 
 1. Match-up: Dance movements → Ukrainian terms
@@ -2228,7 +2178,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** Гуцульщина, Полісся, Буковина, Поділля, традиція, музика
 
-
 **Signature Activity Concepts:**
 
 1. Group-sort: Dances by region
@@ -2255,7 +2204,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
 
-
 **Signature Activity Concepts:**
 
 1. Match-up: Pysanka symbols → meanings
@@ -2281,7 +2229,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 
@@ -2311,7 +2258,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** традиція
 
-
 **Signature Activity Concepts:**
 
 1. Match-up: Craft center → product type
@@ -2339,7 +2285,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
 
-
 **Signature Activity Concepts:**
 
 1. Match-up: Supernatural being → domain/function
@@ -2365,7 +2310,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 
@@ -2395,7 +2339,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** Січ, Запоріжжя
 
-
 **Signature Activity Concepts:**
 
 1. Quiz: Identify Cossack leaders and their deeds
@@ -2421,7 +2364,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 
@@ -2451,7 +2393,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** Святвечір, Різдво, Маланка, Водохреща
 
-
 **Signature Activity Concepts:**
 
 1. Match-up: Winter ritual → date/occasion
@@ -2480,7 +2421,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** Великдень, Зелені свята, Трійця, Купала
 
-
 **Signature Activity Concepts:**
 
 1. Group-sort: Rituals by season
@@ -2507,7 +2447,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
 
-
 **Signature Activity Concepts:**
 
 1. Match-up: Wedding ritual → stage of celebration
@@ -2533,7 +2472,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 
@@ -2563,7 +2501,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** Галичина, Львів, Карпати, традиція
 
-
 **Signature Activity Concepts:**
 
 1. Quiz: Identify Galician cultural markers
@@ -2591,7 +2528,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Register and complexity appropriate to C1 level
 
 **Key themes/places:** Слобожанщина, Харків, традиція, музика
-
 
 **Signature Activity Concepts:**
 
@@ -2621,7 +2557,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** Полісся, традиція
 
-
 **Signature Activity Concepts:**
 
 1. Quiz: Identify Polissia's archaic features
@@ -2650,7 +2585,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** Поділля, Волинь, традиція
 
-
 **Signature Activity Concepts:**
 
 1. Group-sort: Traditions by Podillia vs Volyn
@@ -2677,7 +2611,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Register and complexity appropriate to C1 level
 
 **Key themes/places:** хорова музика, духовна музика
-
 
 **Signature Activity Concepts:**
 
@@ -2707,7 +2640,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** традиція
 
-
 **Signature Activity Concepts:**
 
 1. Match-up: Composer → famous work
@@ -2734,7 +2666,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
 
-
 **Signature Activity Concepts:**
 
 1. Group-sort: Composers by era/style
@@ -2759,7 +2690,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 
@@ -2787,7 +2717,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** традиція
 
-
 **Signature Activity Concepts:**
 
 1. Match-up: Ensemble type → repertoire
@@ -2812,7 +2741,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 
@@ -2839,7 +2767,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
 
-
 **Signature Activity Concepts:**
 
 1. Group-sort: Artists by era/movement
@@ -2865,7 +2792,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 
@@ -2894,7 +2820,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** традиція
 
-
 **Signature Activity Concepts:**
 
 1. Match-up: Theater figure → era/achievement
@@ -2921,7 +2846,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Register and complexity appropriate to C1 level
 
 **Key themes/places:** фестиваль
-
 
 **Signature Activity Concepts:**
 
@@ -2951,7 +2875,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** ЮНЕСКО
 
-
 **Signature Activity Concepts:**
 
 1. Match-up: Building → era/style
@@ -2980,7 +2903,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** фестиваль, Євробачення
 
-
 **Signature Activity Concepts:**
 
 1. Match-up: Band/artist → genre/style
@@ -3008,7 +2930,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Register and complexity appropriate to C1 level
 
 **Key themes/places:** кіно, фестиваль, Оскар
-
 
 **Signature Activity Concepts:**
 
@@ -3155,7 +3076,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
 
-
 **Signature Activity Concepts:**
 
 1. Match-up: Literary period → key characteristics
@@ -3184,7 +3104,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** Котляревський, Енеїда, Вергілій, Еней
 
-
 **Signature Activity Concepts:**
 
 1. Quiz: Identify burlesque techniques in excerpts
@@ -3211,7 +3130,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 
@@ -3241,7 +3159,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** Кобзар, Катерина, Гайдамаки, Заповіт
 
-
 **Signature Activity Concepts:**
 
 1. Cloze: Famous poem excerpts
@@ -3270,7 +3187,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** традиція
 
-
 **Signature Activity Concepts:**
 
 1. Quiz: Shevchenko's influence on later writers
@@ -3297,7 +3213,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 
@@ -3327,7 +3242,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** Захар Беркут, Борислав, Карпати
 
-
 **Signature Activity Concepts:**
 
 1. Quiz: Identify Franko prose works by description
@@ -3354,7 +3268,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 
@@ -3384,7 +3297,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** Мавка, Лукаш
 
-
 **Signature Activity Concepts:**
 
 1. Quiz: Identify characters and their symbolic roles
@@ -3412,7 +3324,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Register and complexity appropriate to C1 level
 
 **Key themes/places:** Вовчок, Мирний
-
 
 **Signature Activity Concepts:**
 
@@ -3442,7 +3353,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 **Key themes/places:** Коцюбинський, Тіні забутих предків, Гуцульщина, Карпати
 
-
 **Signature Activity Concepts:**
 
 1. Cloze: Sensory passages from Shadows of Forgotten Ancestors
@@ -3469,7 +3379,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
 
-
 **Signature Activity Concepts:**
 
 1. Match-up: Literary term → definition
@@ -3495,7 +3404,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Richness targets: 30+ words per module
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C1 level
-
 
 **Signature Activity Concepts:**
 

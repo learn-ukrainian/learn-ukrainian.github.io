@@ -67,15 +67,6 @@ activity_hints:
   focus: Таємний протокол пакту Молотова-Ріббентропа
   source: Архівні документи
   items: 4
-- type: quiz
-  focus: Хронологія 1939-1941 років
-  items: 15
-- type: match-up
-  focus: Подія → дата та наслідки
-  items: 10
-- type: fill-in
-  focus: Військова та політична лексика
-  items: 10
 - type: essay-response
   focus: Чому «возз'єднання» 1939 року — це окупація?
   word_target: 250

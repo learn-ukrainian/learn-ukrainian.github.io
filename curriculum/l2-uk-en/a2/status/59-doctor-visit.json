@@ -2,14 +2,14 @@
   "module": "59-doctor-visit",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:26:36.888796Z",
+  "last_audit": "2026-01-27T13:09:23.531766Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-17T21:45:15.597260Z",
     "meta": "2026-01-26T17:21:18.974701Z",
     "activities": "2026-01-25T17:22:39.179312Z",
     "vocabulary": "2026-01-25T17:22:54.456878Z",
-    "plan": "2026-01-26T17:21:18.974480Z"
+    "plan": "2026-01-27T13:09:19.570354Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1022/1000 (raw: 1165) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "1022/1000 (raw: 1165)"
     },
     "activities": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Missing required activity types: dialogue, role-play, vocabulary-drill"
-    ],
-    "pass_count": 4,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

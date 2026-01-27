@@ -6,30 +6,26 @@ title: 'Рух: Прибуття та вихід'
 subtitle: Motion - Coming & Going
 content_outline:
 - section: Тест
-  words: 100
+  words: 213
   points:
-  - Content for Тест
-  - Examples and explanation
-  - Practice or application
+  - Prefix diagnostic
+  - Intuition check
 - section: Пояснення
-  words: 500
+  words: 1157
   points:
-  - Content for Пояснення
-  - Examples and explanation
-  - Practice or application
+  - при-, ви-, в-/у- prefixes
+  - Arrival, exit, entry patterns
 - section: Практика
-  words: 500
+  words: 1045
   points:
-  - Content for Практика
-  - Examples and explanation
-  - Practice or application
+  - Prefix selection exercises
+  - Context practice
 - section: Діалоги
-  words: 450
+  words: 585
   points:
-  - Content for Діалоги
-  - Examples and explanation
-  - Practice or application
-word_target: 1500
+  - Movement dialogues
+  - Natural prefix usage
+word_target: 3000
 vocabulary_hints:
   required:
   - прийти/приходити (to arrive on foot)

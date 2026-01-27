@@ -16,7 +16,7 @@
 | Language            | 10/10 | Explanations and examples are linguistically precise.               |
 | Pedagogy            | 9/10  | Good use of "Myth Buster" to contrast with Russian/English.         |
 | Immersion           | 9/10  | High.                                                               |
-| Activities          | 10/10 | Excellent distractors (e.g., _писаючи_ vs _пишучи_).                |
+| Activities          | 10/10 | Excellent distractors (e.g., *писаючи* vs *пишучи*).                |
 | Richness            | 8/10  | Good cultural history bite (Kyiv-Mohyla Academy).                   |
 | Humanity            | 9/10  | Warm tone.                                                          |
 | LLM Fingerprint     | 9/10  | No issues.                                                          |

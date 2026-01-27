@@ -4,7 +4,7 @@
 
 **Ви чули, що вона сказала?** Передавання чужих слів — це одна з найпоширеніших соціальних дій. Щодня ми переказуємо новини, інструкції колег або просто ділимося плітками з друзями. В українській мові це робиться за допомогою **непрямої мови**. Можливо, ви думаєте, що це складно, як в англійській мові (де часи «зсуваються» назад)? Насправді, в українській мові це набагато простіше! Ми зазвичай зберігаємо той час, у якому людина говорила спочатку. Сьогодні ми навчимося перетворювати прямі цитати на плавні розповіді. Ви будете змінювати займенники та використовувати правильні дієслова для передачі інформації. Вміння звітувати про сказане зробить вас частиною будь-якої розмови. Це дозволить вам бути впевненим посередником у спілкуванні.
 
-Reporting speech is a fundamental social skill. Whether you're relaying a boss's instructions, sharing family news, or telling a joke, you constantly repeat what others say. In English, this involves tricky "backshifting" of tenses (He said he _was_ going...). In Ukrainian, however, the logic is much more straightforward: you generally keep the original tense. If someone said "I am working," you report it as "He said that he _is_ working." This module will teach you how to use the versatile connector **що**, how to shift pronouns, and how to choose the right reporting verb to convey the tone of the message. By the end of this lesson, you'll be the master of the "She said that..." pattern, allowing you to narrate the world around you with ease.
+Reporting speech is a fundamental social skill. Whether you're relaying a boss's instructions, sharing family news, or telling a joke, you constantly repeat what others say. In English, this involves tricky "backshifting" of tenses (He said he *was* going...). In Ukrainian, however, the logic is much more straightforward: you generally keep the original tense. If someone said "I am working," you report it as "He said that he *is* working." This module will teach you how to use the versatile connector **що**, how to shift pronouns, and how to choose the right reporting verb to convey the tone of the message. By the end of this lesson, you'll be the master of the "She said that..." pattern, allowing you to narrate the world around you with ease.
 
 **Що ви вивчите в цьому модулі:**
 
@@ -23,7 +23,7 @@ Reporting speech is a fundamental social skill. Whether you're relaying a boss's
 - **Пряма мова:** Вона сказала: «Я **люблю** каву».
 - **Непряма мова:** Вона сказала, що вона **любить** каву. (She said that she loves coffee).
 
-**Logic:** At the moment she said it, she _loves_ it. We don't need to put it in the past unless we want to emphasize that she _used to_ love it but doesn't anymore.
+**Logic:** At the moment she said it, she *loves* it. We don't need to put it in the past unless we want to emphasize that she *used to* love it but doesn't anymore.
 
 ### 2. The Three Pillars of Reporting (Що, Чи, Щоб)
 
@@ -79,7 +79,7 @@ Change the direct quotes into indirect statements.
 ### 2. Choose the Tone (Оберіть дієслово)
 
 Fill in the gaps with the most suitable reporting verb.
-_(скаржиться, обіцяє, пояснює, повідомив)_
+*(скаржиться, обіцяє, пояснює, повідомив)*
 
 1. Лікар \_\_\_, що аналізи добрі. -> **повідомив**
 2. Він \_\_\_, що повернеться завтра. -> **обіцяє**

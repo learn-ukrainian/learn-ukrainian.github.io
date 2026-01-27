@@ -5,42 +5,28 @@ version: '2.0'
 title: Emotions and Personality
 subtitle: Describing People
 content_outline:
-- section: 'Introduction: Describing People'
+- section: 'Вступ'
+  words: 150
+  points:
+  - Personality vocabulary introduction
+  - Emotional expressions
+- section: 'Граматика'
+  words: 800
+  points:
+  - Personality traits (добрий, злий, щедрий)
+  - Emotional states (радість, сум, злість)
+  - Dative for feelings (мені сумно)
+  - Character descriptions
+- section: 'Практика'
+  words: 550
+  points:
+  - Dialogues about people
+  - Character descriptions
+- section: 'Підсумок'
   words: 100
   points:
-  - Personality vocabulary
-  - Emotional intelligence
-  - Cultural expressions
-- section: Personality Traits
-  words: 200
-  points:
-  - 'Positive: добрий, щедрий, чесний'
-  - 'Negative: злий, скупий, брехливий'
-  - 'Neutral: спокійний, активний'
-- section: Emotional States
-  words: 200
-  points:
-  - радість, сум, злість, страх
-  - Мені сумно/весело/страшно
-  - Expressing how you feel
-- section: Characterizing People
-  words: 200
-  points:
-  - Він/вона... (He/she is...)
-  - Character descriptions
-  - First impressions
-- section: Reactions and Responses
-  words: 150
-  points:
-  - дивуватися, радіти, сумувати
-  - Emotional reactions
-  - Expressing sympathy
-- section: 'Practice: Describe Characters'
-  words: 150
-  points:
-  - Describe personality
-  - Express emotions
-word_target: 1000
+  - Summary of vocabulary
+word_target: 1600
 vocabulary_hints:
   required:
   - добрий (kind)
@@ -59,16 +45,16 @@ vocabulary_hints:
   - працьовитий (hardworking)
   - терплячий (patient)
 activity_hints:
-- type: vocabulary-drill
+- type: match-up
   focus: Emotions and personality
   items: 30
-- type: matching
+- type: match-up
   focus: Match traits to descriptions
   items: 20
 - type: fill-in
   focus: Complete character descriptions
   items: 15
-- type: speaking
+- type: quiz
   focus: Describe people you know
   items: 8
 focus: vocabulary

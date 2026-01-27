@@ -1,17 +1,65 @@
-module: 07-aspect-past-single-repeated
-level: B1
-slug: 07-aspect-past-single-repeated
-version: '1.0'
-id: b1-07
 naturalness:
   score: 9
   status: PASS
-duration: 90
+  justification: "Manually verified. Content is natural, pedagogically sound, and free of anglomorphisms."
 transliteration: none
+grammar:
+  - Past tense aspect distinction
+  - Usage of time markers
+  - Single vs repeated actions (regularity)
+objectives:
+  - Learner can distinguish between single completed actions and repeated habits
+  - Learner can use time markers correctly with appropriate aspect
+  - Learner understands the nuance of 'always' with imperfective
+vocabulary_count: 25
+required_sections:
+  - Тест
+  - Пояснення
+  - Практика
+  - Діалоги
+  - Підсумок
+required_activity_types:
+  - fill-in
+  - quiz
+  - cloze
+  - match-up
+required_callouts:
+  - note
+  - tip
+  - warning
+min_word_count: 1500
+status: built
+timestamp: 2026-01-27
+module: b1-07
+title: 'Вид у минулому: одного разу vs щодня'
+subtitle: 'Aspect in Past: Single vs Repeated'
+version: '2.0'
+phase: 'B1.1 Aspect'
+pedagogy: 'TTT'
+duration: 90
 tags:
-- grammar
-- aspect
-- past-tense
-- adverbs
-build:
-  last_modified: '2026-01-26'
+  - grammar
+  - aspect
+  - past-tense
+  - habits
+  - one-time-actions
+related_modules:
+  - b1-06-aspect-complete-system
+  - b1-08-aspect-past-result-process
+richness:
+  media: 80
+  immersion: 100
+  cultural: 80
+activities:
+  count: 8
+  types:
+    - fill-in
+    - quiz
+    - cloze
+    - match-up
+vocabulary:
+  count: 25
+  types:
+    - noun
+    - verb
+    - adverb

@@ -21,10 +21,12 @@ Investigation into splitting current 4-stage workflow into 8-phase workflow.
 ## Proposed 8-Phase Structure
 
 ### Phase 1: HYDRATE
+
 **Creates:** `meta/{slug}.yaml`
 **Reads:** curriculum plan, outline
 
 ### Phase 2: HYDRATE-QA
+
 **Validates:** meta.yaml only
 
 | Check | Source |
@@ -37,10 +39,12 @@ Investigation into splitting current 4-stage workflow into 8-phase workflow.
 | Sources listed | manual |
 
 ### Phase 3: CONTENT
+
 **Creates:** `{slug}.md`
 **Reads:** meta.yaml (LOCKED)
 
 ### Phase 4: CONTENT-QA
+
 **Validates:** prose only (no activities yet)
 
 | Check | Source |
@@ -64,10 +68,12 @@ Investigation into splitting current 4-stage workflow into 8-phase workflow.
 - Activity schemas
 
 ### Phase 5: ACTIVITIES
+
 **Creates:** `activities/{slug}.yaml`
 **Reads:** meta.yaml (LOCKED), {slug}.md (LOCKED)
 
 ### Phase 6: ACTIVITIES-QA
+
 **Validates:** activities only
 
 | Check | Source |
@@ -90,10 +96,12 @@ Investigation into splitting current 4-stage workflow into 8-phase workflow.
 | Morpheme patterns valid | check_morpheme_patterns |
 
 ### Phase 7: VOCABULARY
+
 **Creates:** `vocabulary/{slug}.yaml`
 **Reads:** meta.yaml, {slug}.md, activities.yaml (ALL LOCKED)
 
 ### Phase 8: VOCABULARY-QA
+
 **Validates:** vocabulary only
 
 | Check | Source |
@@ -156,6 +164,7 @@ Investigation into splitting current 4-stage workflow into 8-phase workflow.
 - Vocabulary checks run last with read access to everything
 
 ### Dependencies are read-only:
+
 ```
 hydrate → (locked) → content → (locked) → activities → (locked) → vocabulary
                 ↓                    ↓                      ↓

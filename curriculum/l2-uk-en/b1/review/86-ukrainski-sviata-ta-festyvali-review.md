@@ -11,7 +11,7 @@
 | Dimension           | Score | Notes                                                                         |
 | ------------------- | ----- | ----------------------------------------------------------------------------- |
 | Coherence           | 10/10 | Logical structure (Religious -> Traditional/Pagan -> Modern/State).           |
-| Relevance           | 10/10 | High. Understanding _Christmas_ and _Independence Day_ is key to integration. |
+| Relevance           | 10/10 | High. Understanding *Christmas* and *Independence Day* is key to integration. |
 | Educational         | 10/10 | Notes the calendar shift (Dec 25), reflecting current political reality.      |
 | Language            | 10/10 | Authentic festive vocabulary (`вертеп`, `дідух`).                             |
 | Pedagogy            | 10/10 | "Atlas Weekend" connects with youth culture.                                  |
@@ -25,8 +25,8 @@
 ## Linguistic Accuracy Issues
 
 - **Vocabulary:** `збора` (meaning?). Usually `збори` (meetings) or `збір` (collection).
-  - _Context:_ Harvest? `Збір урожаю`.
-  - _Action:_ Fix to `збір` or remove if ambiguous.
+  - *Context:* Harvest? `Збір урожаю`.
+  - *Action:* Fix to `збір` or remove if ambiguous.
 - **Vocabulary:** `Морена` is lowercased. (Pagan goddess/effigy). Should be `Морена`.
 - **Vocabulary:** `Петрик` (name) is listed as feminine gender (`f`). It is masculine.
 

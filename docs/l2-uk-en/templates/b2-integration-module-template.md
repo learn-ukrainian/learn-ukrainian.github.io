@@ -6,7 +6,6 @@
 
 **Related Issue:** [#305](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/305)
 
-
 <!--
 TEMPLATE_METADATA:
   required_sections:
@@ -567,7 +566,6 @@ The build system will inject these sections at build time.
 
 - v1.1 (2025-12-29): Updated module range M132-145 (was M96-110)
 
-
 ---
 
 ## Naturalness Quality Checklist
@@ -595,4 +593,3 @@ Before finalizing the module, verify prose activities (cloze, fill-in, unjumble 
 **See:** `claude_extensions/stages/stage-4-review-fix.md` Section 9 for detailed naturalness criteria.
 
 **For batch scanning:** Use `/scan-naturalness {level} {start} {end}` to scan completed modules.
-

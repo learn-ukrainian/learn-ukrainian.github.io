@@ -2,14 +2,14 @@
   "module": "62-environment-ecology",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:27:24.072295Z",
+  "last_audit": "2026-01-27T19:01:32.262395Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-24T22:37:43.017801Z",
+    "md": "2026-01-27T18:54:32.098579Z",
     "meta": "2026-01-26T15:44:41.647991Z",
-    "activities": "2026-01-11T23:20:02.216110Z",
+    "activities": "2026-01-27T18:57:14.920466Z",
     "vocabulary": "2026-01-25T18:00:40.585680Z",
-    "plan": "2026-01-26T15:44:41.647744Z"
+    "plan": "2026-01-27T18:49:48.833285Z"
   },
   "gates": {
     "meta": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "1686/1500 (raw: 2457) | pedagogy: 1 violations | richness: 87% < 95% min (grammar)"
+      "status": "pass",
+      "violations": 0,
+      "message": "1844/1500 (raw: 2615)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "12/8"
+      "message": "13/8"
     },
     "vocabulary": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Missing required activity types: collocation, discussion, fill-in, matching"
-    ],
-    "pass_count": 4,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

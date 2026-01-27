@@ -1,0 +1,104 @@
+module: bukovyna-zakarpattia
+level: B2-HIST
+version: '2.0'
+items:
+- lemma: буковина
+  ipa: /bʊkɔˈʋɪnɐ/
+  translation: Bukovyna
+  pos: noun
+  gender: f
+- lemma: закарпаття
+  ipa: /zɐkɐrˈpɑtʲːɐ/
+  translation: Zakarpattia
+  pos: noun
+  gender: n
+- lemma: молдова
+  ipa: /mɔlˈdɔʋɐ/
+  translation: Moldova
+  pos: noun
+  gender: f
+- lemma: угорщина
+  ipa: /ʊˈɦɔrʃt͡ʃɪnɐ/
+  translation: Hungary
+  pos: noun
+  gender: f
+- lemma: опришок
+  ipa: /ɔˈprɪʃɔk/
+  translation: opryshok (rebel)
+  pos: noun
+  gender: m
+- lemma: шипинська земля
+  ipa: /ʃɪˈpɪnʲsʲkɐ zɛmˈlʲa/
+  translation: Shypynska land
+  pos: noun
+  gender: f
+- lemma: господар
+  ipa: /ɦɔˈspɔdɐr/
+  translation: hospodar (ruler)
+  pos: noun
+  gender: m
+- lemma: комітат
+  ipa: /kɔm⁽ʲ⁾iˈtɑt/
+  translation: comitatus (county)
+  pos: noun
+  gender: m
+- lemma: жупа
+  ipa: /ˈʒupɐ/
+  translation: zhupa (district)
+  pos: noun
+  gender: f
+- lemma: жупан
+  ipa: /ʒʊˈpɑn/
+  translation: zhupan (governor)
+  pos: noun
+  gender: m
+- lemma: дев'ятин
+  ipa: /dɛʋˈjɑtɪnɐ/
+  translation: tithe (tax)
+  pos: noun
+  gender: m
+- lemma: домінія
+  ipa: /dɔˈm⁽ʲ⁾in⁽ʲ⁾ijɐ/
+  translation: domain
+  pos: noun
+  gender: f
+- lemma: єпархія
+  ipa: /ɛˈpɑrx⁽ʲ⁾ijɐ/
+  translation: eparchy (diocese)
+  pos: noun
+  gender: f
+- lemma: зруб
+  ipa: /zrub/
+  translation: log structure
+  pos: noun
+  gender: m
+- lemma: ґонт
+  ipa: /ɦɔnt/
+  translation: shingle
+  pos: noun
+  gender: m
+- lemma: осереддя
+  ipa: /ɔsɛˈrɛdʲːɐ/
+  translation: center/core
+  pos: noun
+  gender: n
+- lemma: автохтон
+  ipa: /ɐu̯ˈtɔxtɔn/
+  translation: autochthon (indigenous)
+  pos: noun
+  gender: m
+- lemma: полонина
+  ipa: /pɔlɔˈnɪnɐ/
+  translation: polonyna (mountain pasture)
+  pos: noun
+  gender: f
+- lemma: вівчар
+  ipa: /ʋ⁽ʲ⁾iu̯ˈtʃɑr/
+  translation: shepherd
+  pos: noun
+  gender: m
+- lemma: сироваріння
+  ipa: /sɪrɔʋɐˈr⁽ʲ⁾inʲːɐ/
+  translation: cheesemaking
+  pos: noun
+  gender: n

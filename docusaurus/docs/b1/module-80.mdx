@@ -2,7 +2,7 @@
 sidebar_position: 80
 sidebar_label: "80. Активний відпочинок"
 title: "Активний відпочинок"
-description: "Active Lifestyle Basics"
+description: "Active Lifestyle and Outdoor Recreation"
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -23,6 +23,8 @@ import ComparativeStudy from '@site/src/components/ComparativeStudy';
 import ReadingActivity from '@site/src/components/ReadingActivity';
 import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
 import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
 
 
 ## Вступ
@@ -208,7 +210,6 @@ import AuthorialIntent from '@site/src/components/AuthorialIntent';
 
 ## Потрібно більше практики?
 
-
 Ви завершили цей модуль! Ось кілька способів закріпити матеріал:
 
 ### 🔄 Інтеграція знань
@@ -288,6 +289,10 @@ import AuthorialIntent from '@site/src/components/AuthorialIntent';
   <ErrorCorrectionItem sentence="В парку багато людей бігають на ранком." errorWord="на ранком" correctForm="вранці" options={JSON.parse(`["на ранком", "вранці", "ранок", "зранку"]`)} explanation="Коли? -> вранці (або зранку)." />
 </ErrorCorrection>
 
+### Активний відпочинок в Україні
+
+<ReadingActivity title="Активний відпочинок в Україні" context="" resource={JSON.parse(`{"type": "article", "url": "https://example.com/active-lifestyle", "title": "Стаття про здоровий спосіб життя"}`)} tasks={JSON.parse(`["Який парк у Києві отримав нагороду найкращого парку?", "Чим унікальна «Качалка» в Гідропарку?", "Як регулярний рух впливає на здоров'я людини?"]`)} isUkrainian={true} />
+
 ### Переклад фраз
 
 <Translate questions={JSON.parse(`[{"source": "I go to the gym twice a week.", "options": [{"text": "Я ходжу в спортзал двічі на тиждень.", "correct": true}, {"text": "Я йду в магазин кожен день.", "correct": false}, {"text": "Я люблю спортзал.", "correct": false}, {"text": "Я бігаю в парку двічі на рік.", "correct": false}]}, {"source": "Running is good for your health.", "options": [{"text": "Біг корисний для твого здоров'я.", "correct": true}, {"text": "Ходити пішки погано.", "correct": false}, {"text": "Здоров'я це головне.", "correct": false}, {"text": "Бігати важко.", "correct": false}]}, {"source": "Do you want to ride a bike?", "options": [{"text": "Ти хочеш кататися на велосипеді?", "correct": true}, {"text": "Ти маєш велосипед?", "correct": false}, {"text": "Де твій велосипед?", "correct": false}, {"text": "Ти любиш машини?", "correct": false}]}, {"source": "We need fresh air.", "options": [{"text": "Нам потрібне свіже повітря.", "correct": true}, {"text": "Ми любимо вітер.", "correct": false}, {"text": "Повітря в місті чисте.", "correct": false}, {"text": "Нам треба води.", "correct": false}]}, {"source": "My legs hurt after the workout.", "options": [{"text": "У мене болять ноги після тренування.", "correct": true}, {"text": "Я хочу піти на тренування.", "correct": false}, {"text": "Мої руки сильні.", "correct": false}, {"text": "Тренування було легким.", "correct": false}]}, {"source": "Keep yourself in shape.", "options": [{"text": "Тримай себе у формі.", "correct": true}, {"text": "Будь сильним.", "correct": false}, {"text": "Купи гарну форму.", "correct": false}, {"text": "Займайся спортом.", "correct": false}]}, {"source": "Movement is life.", "options": [{"text": "Рух — це життя.", "correct": true}, {"text": "Життя — це важка річ.", "correct": false}, {"text": "Треба більше рухатися.", "correct": false}, {"text": "Спорт — це все.", "correct": false}]}, {"source": "Where can I rent a kayak?", "options": [{"text": "Де я можу орендувати байдарку?", "correct": true}, {"text": "Де тут річка?", "correct": false}, {"text": "Скільки коштує човен?", "correct": false}, {"text": "Ти вмієш плавати?", "correct": false}]}]`)} />
@@ -300,17 +305,14 @@ import AuthorialIntent from '@site/src/components/AuthorialIntent';
 | **амосов** | /amˈɔsɔʋ/ | Amosov (name) | ім |  |
 | **асана** | /asˈana/ | asana | ім |  |
 | **асфальт** | /asfˈalʲt/ | asphalt | ім |  |
-| **багатоповерхівка** | /baɦatɔpɔʋɛrxˈiʋka/ | high-rise building | ім |  |
 | **баскетбольний** | /baskɛtbˈɔlʲnɪj/ | basketball (adj) | прикм |  |
 | **бодібілдер** | /bɔdibildɛr/ | bodybuilder | ім |  |
 | **брус** | /brus/ | beam, bar | ім |  |
 | **брутально** | /brutˈalʲnɔ/ | brutally, rudely | присл |  |
-| **ваги** | /ʋˈaɦɪ/ |  | ім |  |
-| **вднг** | /ʋdnɦ/ |  | ім |  |
+| **ваги** | /ʋˈaɦɪ/ | scales | ім |  |
 | **велодоріжка** | /ʋɛlɔdɔriʒka/ | bike path | ім |  |
 | **велосипедист** | /ʋɛlɔsɪpɛdˈɪst/ | cyclist | ім |  |
 | **велосипедний** | /ʋɛlɔsɪpˈɛdnɪj/ | bicycle (adj) | прикм |  |
-| **велоінфраструктура** | /ʋɛlɔinfrastruktura/ | cycling infrastructure | ім |  |
 | **витривалість** | /ʋɪtrɪʋˈalistʲ/ | endurance, stamina | ім |  |
 | **вмовити** | /ʋmˈɔʋɪtɪ/ | to persuade | дієсл |  |
 | **воркаут** | /ʋɔrkaut/ | workout | ім |  |
@@ -325,8 +327,7 @@ import AuthorialIntent from '@site/src/components/AuthorialIntent';
 | **доставляючи** | /dɔstaʋlˈjajut͡ʃɪ/ | delivering | дієсл |  |
 | **доступно** | /dɔstˈupnɔ/ | accessibly | присл |  |
 | **дофамін** | /dɔfamˈin/ | dopamine | ім |  |
-| **експоцентр** | /ɛkspɔt͡sˈɛntr/ | expo center | ім |  |
-| **еліна** | /ɛlina/ |  | ім |  |
+| **еліна** | /ɛlina/ | Elina | ім |  |
 | **ендорфін** | /ɛndɔrfin/ | endorphin | ім |  |
 | **ентузіаст** | /ɛntuziˈast/ | enthusiast | ім |  |
 | **заборонений** | /zabɔrˈɔnɛnɪj/ | forbidden, banned | прикм |  |
@@ -336,10 +337,9 @@ import AuthorialIntent from '@site/src/components/AuthorialIntent';
 | **зміцнювати** | /zmˈit͡snjuʋatɪ/ | to strengthen (imperfective) | дієсл |  |
 | **зноситися** | /znɔsɪtɪsja/ | to be worn out, to communicate (rarely used this way) | дієсл |  |
 | **зручніший** | /zrut͡ʃnˈiʃɪj/ | more convenient (adj) | прикм |  |
-| **зсж** | /zsʒ/ |  | ім |  |
 | **йог** | /jɔɦ/ | yogi | ім |  |
 | **калорія** | /kalˈɔrija/ | calorie | ім |  |
-| **каменський** | /kamˈɛnsʲkɪj/ |  | ім |  |
+| **каменський** | /kamˈɛnsʲkɪj/ | Kamensky | ім |  |
 | **кардіохірург** | /kardiɔxirˈurɦ/ | cardiac surgeon | ім |  |
 | **качалка** | /kat͡ʃˈalka/ | rolling pin | ім |  |
 | **кисень** | /kˈɪsɛnʲ/ | oxygen | ім |  |
@@ -353,7 +353,7 @@ import AuthorialIntent from '@site/src/components/AuthorialIntent';
 | **левандівка** | /lɛʋandiʋka/ | Levandivka (district in Lviv) | ім |  |
 | **лісопарковий** | /lisɔpˈarkɔʋɪj/ | forest park (adj) | прикм |  |
 | **метаболізм** | /mɛtabɔlˈizm/ | metabolism | ім |  |
-| **металлобрухт** | /mɛtallɔbruxt/ |  | ім |  |
+| **металлобрухт** | /mɛtallɔbruxt/ | scrap metal | ім |  |
 | **мозоля** | /mɔzˈɔlja/ | callus | ім |  |
 | **муромець** | /murɔmɛt͡sʲ/ | Muromets (hero) | ім |  |
 | **міряти** | /mˈirjatɪ/ | to measure | дієсл |  |
@@ -364,7 +364,6 @@ import AuthorialIntent from '@site/src/components/AuthorialIntent';
 | **опорно-руховий** | /ɔpɔrnɔ-ruxɔʋˈɪj/ | musculoskeletal | прикм |  |
 | **освітлення** | /ɔsʋˈitlɛnnja/ | lighting | ім |  |
 | **палець** | /pˈalɛt͡sʲ/ | finger, toe | ім |  |
-| **перезавантажити** | /pɛrɛzaʋantaʒɪtɪ/ | to restart, to reboot | дієсл |  |
 | **популярно** | /pɔpulˈjarnɔ/ | popularly | присл |  |
 | **порухатися** | /pɔrˈuxatɪsja/ | to move for a while, to stir | дієсл |  |
 | **пофарбований** | /pɔfarbˈɔʋanɪj/ | painted | прикм |  |
@@ -387,7 +386,7 @@ import AuthorialIntent from '@site/src/components/AuthorialIntent';
 | **синоптика** | /sɪnˈɔptɪka/ | synoptics, meteorology | ім |  |
 | **сихів** | /sˈɪxiʋ/ | Sykhiv | ім |  |
 | **спалювати** | /spˈaljuʋatɪ/ | to burn, to incinerate (imperfective) | дієсл |  |
-| **спортмастер** | /spɔrtmastɛr/ |  | ім |  |
+| **спортмастер** | /spɔrtmastɛr/ | Sportmaster | ім |  |
 | **статистика** | /statˈɪstɪka/ | statistics | ім |  |
 | **стоп** | /stɔp/ | stop | ім |  |
 | **сітка** | /sˈitka/ | net, grid, mesh | ім |  |
@@ -407,5 +406,4 @@ import AuthorialIntent from '@site/src/components/AuthorialIntent';
 | **інсульт** | /insˈulʲt/ | stroke (medical) | ім |  |
 | **інтенсивніший** | /intɛnsˈɪʋniʃɪj/ | more intensive | прикм |  |
 | **інтерспорт** | /intɛrspɔrt/ | Intersport | ім |  |
-| **інфаркт** | /infˈarkt/ | heart attack | ім |  |
 | **ґрунтовий** | /gruntɔʋˈɪj/ | soil (adj), unpaved | прикм |  |

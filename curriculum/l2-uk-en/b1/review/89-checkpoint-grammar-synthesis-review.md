@@ -12,7 +12,7 @@
 | ------------------- | ----- | -------------------------------------------------------------------------------------------------------------- |
 | Coherence           | 10/10 | Logical structure (Aspect -> Motion -> Participles -> Passive).                                                |
 | Relevance           | 10/10 | High. Consolidated grammar review is essential before B2.                                                      |
-| Educational         | 10/10 | Great examples of _Participles_ vs _Adverbial Participles_ (`читаючий` vs `читаючи`).                          |
+| Educational         | 10/10 | Great examples of *Participles* vs *Adverbial Participles* (`читаючий` vs `читаючи`).                          |
 | Language            | 10/10 | Accurate grammar explanations.                                                                                 |
 | Pedagogy            | 9/10  | Odesa Steps / Catacombs narrative makes the grammar review less dry.                                           |
 | Immersion           | 10/10 | Using Odesa as the backdrop for motion verbs (`ходити по сходах`, `спуститися в катакомби`) is a great choice. |

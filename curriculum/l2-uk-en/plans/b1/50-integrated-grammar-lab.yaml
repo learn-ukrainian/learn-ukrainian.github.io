@@ -5,42 +5,45 @@ version: '2.0'
 title: Інтегрована граматична лабораторія
 subtitle: Integrated Grammar Lab - B1.4 Synthesis
 content_outline:
-- section: 'Introduction: Synthesis Goals'
-  words: 150
+- section: Вступний тест
+  words: 420
   points:
   - Why integration matters
   - Beyond isolated grammar
-  - Real-world text production
-- section: Combining Participles and Passive
-  words: 250
+- section: Пояснення
+  words: 164
   points:
-  - Adverbial + passive in same sentence
-  - Stylistic effects
-  - Avoiding overuse
-- section: Diminutives in Context
-  words: 200
+  - Synthesis overview
+- section: 'Сценарій 1: Офіційний звіт'
+  words: 281
   points:
-  - Integration with other forms
-  - Register awareness
-  - Emotional tone management
-- section: Numerals in Complex Sentences
-  words: 200
-  points:
-  - Fractions with passive constructions
-  - Collectives in formal vs informal
+  - Formal register usage
   - Statistics and reports
-- section: Text Editing Workshop
-  words: 250
+- section: 'Сценарій 2: Сімейна розмова'
+  words: 424
+  points:
+  - Informal register
+  - Emotional tone
+- section: 'Сценарій 3: Новини'
+  words: 279
+  points:
+  - News register
+  - Passive in journalism
+- section: 'Практика: Редагування стилю'
+  words: 464
   points:
   - Identify style inconsistencies
   - Revise for target audience
-  - Apply grammar strategically
-- section: 'Practice: Multi-Feature Texts'
-  words: 150
+- section: Діалоги
+  words: 791
   points:
-  - Write integrated paragraphs
-  - Edit for style
-word_target: 1200
+  - Multi-feature usage
+  - Register switching
+- section: Потрібно більше практики?
+  words: 177
+  points:
+  - Additional exercises
+word_target: 3000
 vocabulary_hints:
   required:
   - інтеграція (integration)
@@ -57,16 +60,16 @@ vocabulary_hints:
   - текстотворення (text production)
   - аудиторія (audience)
 activity_hints:
-- type: text-editing
+- type: error-correction
   focus: Revise texts for style
   items: 20
-- type: writing
+- type: cloze
   focus: Create multi-feature paragraphs
   items: 15
 - type: error-correction
   focus: Fix style inconsistencies
   items: 15
-- type: multiple-choice
+- type: quiz
   focus: Choose appropriate form
   items: 20
 focus: grammar

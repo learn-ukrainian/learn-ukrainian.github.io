@@ -2,14 +2,14 @@
   "module": "76-ukrainian-music-today",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:27:33.088327Z",
+  "last_audit": "2026-01-27T19:16:07.330421Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-11T20:32:44.157912Z",
-    "meta": "2026-01-26T15:44:41.692430Z",
-    "activities": "2026-01-11T23:20:02.223585Z",
+    "meta": "2026-01-27T18:54:53.050471Z",
+    "activities": "2026-01-27T19:08:24.706663Z",
     "vocabulary": "2026-01-25T18:00:40.670743Z",
-    "plan": "2026-01-26T15:44:41.692224Z"
+    "plan": "2026-01-27T19:14:06.404160Z"
   },
   "gates": {
     "meta": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1730/1500 (raw: 2123) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "1730/1500 (raw: 2123)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "12/8"
+      "message": "13/8"
     },
     "vocabulary": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Missing required activity types: discussion, listening, matching, reading"
-    ],
-    "pass_count": 4,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

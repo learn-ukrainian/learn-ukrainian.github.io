@@ -14,7 +14,7 @@
 | Relevance           | 10/10 | Essential. Ukrainian music is a major soft power export (Kalush, Go_A).                                   |
 | Educational         | 10/10 | Good genre balance.                                                                                       |
 | Language            | 10/10 | Modern music terminology.                                                                                 |
-| Pedagogy            | 10/10 | Narrative Arc (Eurovision victories) explains _why_ the world is listening to Ukraine.                    |
+| Pedagogy            | 10/10 | Narrative Arc (Eurovision victories) explains *why* the world is listening to Ukraine.                    |
 | Immersion           | 10/10 | Mentioning specific artists (Skryabin, Okean Elzy, Jamala, Alyona Alyona) gives students a real playlist. |
 | Activities          | 10/10 | Good variety.                                                                                             |
 | Richness            | 9/10  | Good depth.                                                                                               |
@@ -25,7 +25,7 @@
 ## Linguistic Accuracy Issues
 
 - **Vocabulary:** `інд` (indi?). Probably truncated `інді` (indie music) or `Індія`.
-  - _Action:_ Change to `інді`.
+  - *Action:* Change to `інді`.
 - **Vocabulary:** Proper nouns lowercased (`джамала`, `скрябін`, `псюк`, `відоплясов`, `руслан`).
 - **Vocabulary:** `Вопл` (Scream) is listed as feminine gender (`f`). It is masculine (`ой лемент`, `ой крик`, `вопль`). `Воплі Відоплясова` is the band name.
 

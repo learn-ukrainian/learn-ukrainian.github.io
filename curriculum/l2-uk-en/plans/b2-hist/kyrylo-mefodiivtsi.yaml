@@ -67,12 +67,6 @@ activity_hints:
   focus: Фрагменти «Книг буття українського народу»
   source: Архівні документи
   items: 4
-- type: quiz
-  focus: Кирило-Мефодіївське братство
-  items: 15
-- type: match-up
-  focus: Учасник → його роль
-  items: 10
 - type: true-false
   focus: Міфи про братство
   items: 10

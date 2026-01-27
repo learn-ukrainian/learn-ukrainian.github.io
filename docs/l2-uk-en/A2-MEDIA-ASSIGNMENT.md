@@ -94,6 +94,7 @@ Every module MUST have a "Need More Practice?" section **before `## Activities`*
 **Live example:** [A1 Module 10](https://krisztiankoos.github.io/learn-ukrainian/docs/a1/module-10#need-more-practice)
 
 **Icon conventions:**
+
 | Icon | Type |
 |------|------|
 | 🎧 | Audio/Alphabet guides |
@@ -596,17 +597,20 @@ Use this table to identify WHAT to search for, then find the actual URL.
 ## Quality Standards
 
 ### Image Requirements
+
 - Minimum resolution: 800x600 pixels
 - Format: PNG or JPG
 - Alt text required for accessibility
 
 ### Audio Requirements
+
 - Format: MP3, 128kbps minimum
 - Native speaker recordings
 - Clear pronunciation
 - Duration: 30 seconds - 3 minutes per clip
 
 ### External Link Requirements
+
 - All links verified working
 - Ukrainian Lessons primary resource
 - Links to free content only
@@ -617,38 +621,45 @@ Use this table to identify WHAT to search for, then find the actual URL.
 ## Phase Summary
 
 ### A2.1 (M01-11): Cases
+
 - **Pop Culture**: S.T.A.L.K.E.R. (2 refs), Witcher (1 ref)
 - **External Resources**: Ukrainian Lessons (11 links)
 - **Self-Created**: Case charts, ending tables
 - **Audio**: Post office dialogue
 
 ### A2.2 (M12-16): Aspect
+
 - **Pop Culture**: Metro (1 ref)
 - **External Resources**: Ukrainian Lessons (5 links)
 - **Self-Created**: Aspect diagrams, verb pair tables
 
 ### A2.3 (M17-24): Comparison & Conditional
+
 - **Pop Culture**: Witcher (1 ref)
 - **External Resources**: Ukrainian Lessons (8 links)
 - **Real-World**: Shopping scenarios
 - **Audio**: Shopping dialogue
 
 ### A2.4 (M25-34): Complex Sentences
+
 - **External Resources**: Ukrainian Lessons (10 links)
 - **Self-Created**: Conjunction charts, clause diagrams
 - **Audio**: Doctor visit dialogue
 
 ### A2.5 (M35-43): Word Formation
+
 - **Pop Culture**: S.T.A.L.K.E.R. (1 ref)
 - **External Resources**: Ukrainian Lessons (9 links)
 - **Self-Created**: Prefix/suffix charts, root trees
 
 ### A2.6 (M44-55): Vocabulary Expansion
+
 - **External Resources**: Ukrainian Lessons (12 links), Klopotenko (1 module)
 - **Photos**: Pexels, Unsplash (CC licensed)
 - **Real-World**: Thematic scenarios
 
 ### A2.7 (M56-57): Review
+
 - **External Resources**: Ukrainian Lessons (2 links)
 - **Self-Created**: Comprehensive review charts
 

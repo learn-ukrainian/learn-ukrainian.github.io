@@ -1,9 +1,11 @@
 # Audit Report: M49 — 49-ritual-songs.md
+
 **Level:** C1 | **Module:** M49 | **Phase:** C1 | **Pedagogy:** Cultural Immersion | **Target:** 3000
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:25
 
 ## Configuration
+
 **Type:** C1-cultural
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -16,6 +18,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння обрядовості | 5 | 5 | ✅ |
@@ -41,16 +44,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 49-ritual-songs.yaml: Schema validation error at key 'words': ['Несе', 'Галя', 'воду', 'коромисло', 'гнеться', 'за', 'нею', 'Іванко', 'як', 'барвінок', "в'ється"] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2034/3000 (raw: 2139)
 - **Activities:** ✅ 15/12
 - **Density:** ✅ All > 12
@@ -69,10 +75,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 91% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 21 | 15 | 100% | 25% | 25.0% |
@@ -86,6 +94,7 @@
 | **TOTAL** | | | | | **91.6%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 87 | Included in Core |

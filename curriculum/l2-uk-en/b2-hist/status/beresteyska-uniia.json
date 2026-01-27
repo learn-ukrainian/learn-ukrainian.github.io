@@ -2,12 +2,12 @@
   "module": "beresteyska-uniia",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T23:29:05.496097Z",
+  "last_audit": "2026-01-27T17:37:54.560738Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-25T21:29:17.412578Z",
+    "md": "2026-01-27T17:18:46.057213Z",
     "meta": "2026-01-26T22:20:12.920986Z",
-    "activities": "2026-01-25T21:29:17.412133Z",
+    "activities": "2026-01-27T17:20:49.628695Z",
     "vocabulary": "2026-01-22T22:35:35.840253Z",
     "plan": null
   },
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4317/4000 (raw: 4507)"
+      "message": "4534/4000 (raw: 4724)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "9/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "warn",

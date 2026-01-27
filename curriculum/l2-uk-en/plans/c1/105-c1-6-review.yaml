@@ -6,12 +6,12 @@ title: 'C1.6 Література: Огляд та рефлексія'
 subtitle: 'C1.6 Literature: Review and Reflection'
 content_outline:
 - section: Вступ — Огляд та рефлексія
-  words: 400
+  words: 1000
   points:
   - Визначення та сфери застосування
   - Зв'язок із попередніми модулями
 - section: Review Areas
-  words: 500
+  words: 1250
   points:
   - 'Major authors: Kotlyarevsky, Shevchenko, Franko, Lesya Ukrainka'
   - 'Literary movements: Romanticism, Realism'
@@ -19,12 +19,12 @@ content_outline:
   - Literary analysis skills application
   - Cross-author comparisons
 - section: Практика та підсумок
-  words: 300
+  words: 750
   points:
   - Практичні вправи на закріплення
   - Інтеграція з попередніми модулями
   - Підготовка до наступного модуля
-word_target: 2000
+word_target: 3000
 focus: review
 pedagogy: Integration
 objectives:

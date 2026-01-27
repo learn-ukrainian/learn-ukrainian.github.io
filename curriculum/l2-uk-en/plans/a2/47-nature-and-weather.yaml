@@ -5,42 +5,32 @@ version: '2.0'
 title: Nature and Weather
 subtitle: The World Around Us
 content_outline:
-- section: 'Introduction: Ukrainian Nature'
-  words: 100
+- section: 'Вступ'
+  words: 150
   points:
   - Ukraine's diverse landscapes
-  - Climate zones
-  - Nature vocabulary expansion
-- section: Weather in Detail
-  words: 200
+  - Nature vocabulary introduction
+- section: 'Граматика'
+  words: 800
   points:
-  - 'Temperature: спекотно, морозно'
-  - 'Precipitation: злива, град, туман'
-  - Weather forecasts
-- section: Landscapes
-  words: 200
+  - Weather conditions (погода, дощ, сніг)
+  - Landscapes (гора, річка, ліс)
+  - Flora and fauna (дерева, тварини)
+  - Environment vocabulary
+- section: 'Практика'
+  words: 500
   points:
-  - гора, долина, рівнина
-  - річка, озеро, море
-  - ліс, степ, пустеля
-- section: Flora and Fauna
-  words: 200
-  points:
-  - 'Trees: дуб, береза, сосна'
-  - 'Animals: ведмідь, вовк, олень'
-  - Birds and insects
-- section: Environmental Topics
+  - Dialogues about weather
+  - Nature descriptions
+- section: 'Корисні вирази'
   words: 150
   points:
-  - довкілля (environment)
-  - забруднення, захист природи
-  - Climate change basics
-- section: 'Practice: Describe Nature'
-  words: 150
+  - Useful weather phrases
+- section: 'Підсумок'
+  words: 100
   points:
-  - Describe a landscape
-  - Weather reports
-word_target: 1000
+  - Summary of vocabulary
+word_target: 1700
 vocabulary_hints:
   required:
   - погода (weather)
@@ -59,16 +49,16 @@ vocabulary_hints:
   - довкілля (environment)
   - тварина (animal)
 activity_hints:
-- type: vocabulary-drill
+- type: match-up
   focus: Nature and weather words
   items: 35
-- type: matching
+- type: match-up
   focus: Match weather to descriptions
   items: 20
 - type: fill-in
   focus: Complete nature descriptions
   items: 15
-- type: speaking
+- type: quiz
   focus: Describe weather and landscapes
   items: 8
 focus: vocabulary

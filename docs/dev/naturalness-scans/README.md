@@ -216,6 +216,7 @@ python /tmp/query_{level}_vocab.py check "слово"
 ## Next Steps
 
 ### Completed ✅
+
 - ✅ **A1 M01-M34** full scan (all fixes applied) - 8.0/10+ average
   - Only 2 modules flagged (M21, M22) - 8% flagged rate
   - Simpler activities, less prone to naturalness issues
@@ -232,12 +233,14 @@ python /tmp/query_{level}_vocab.py check "слово"
   - **Final status:** READY FOR PRODUCTION
 
 ### In Progress 🔄
+
 - **B2 M01-M10** initial scan complete (7.2/10 average)
   - Passive Voice section analyzed
   - **Status:** On hold pending B2 audit completion
   - **Resume when:** B2 audits finished
 
 ### Pending ⏳
+
 - **B2 M11-M145** (135 remaining modules)
   - Priority: MEDIUM (per GitHub issue #415)
   - Start after B2 audits complete

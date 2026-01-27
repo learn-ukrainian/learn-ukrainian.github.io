@@ -705,6 +705,7 @@ Issues:
 ## Implementation Roadmap
 
 ### Week 1: Foundation Setup
+
 - [ ] Install Claude Code 2.1.1: `claude update`
 - [ ] Create `.claude/settings.json` with wildcard permissions
 - [ ] Configure multilingual mode (Ukrainian review)
@@ -714,6 +715,7 @@ Issues:
 - [ ] Review LSP integration plan (Issue #400)
 
 ### Week 2: Quality Automation
+
 - [ ] Create curriculum-maintainer agent with hooks
 - [ ] Create 3 core skills (generate, enrich, audit)
 - [ ] Test agent hooks with A1 module edits
@@ -722,6 +724,7 @@ Issues:
 - [ ] Begin LSP schema creation (parallel with Issue #400)
 
 ### Week 3: Collaboration
+
 - [ ] Set up session teleportation
 - [ ] Create named sessions for each level
 - [ ] Create GitHub issues automation skill
@@ -730,6 +733,7 @@ Issues:
 - [ ] Train team on new features
 
 ### Week 4: Testing & Documentation
+
 - [ ] Test full workflow: create → audit → review → commit
 - [ ] Validate custom slash commands across all levels
 - [ ] Test multilingual mode with Ukrainian reviewers

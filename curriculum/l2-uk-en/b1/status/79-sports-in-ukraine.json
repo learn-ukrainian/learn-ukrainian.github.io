@@ -2,14 +2,14 @@
   "module": "79-sports-in-ukraine",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:27:35.011996Z",
+  "last_audit": "2026-01-27T19:16:11.514020Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-24T22:48:44.957780Z",
-    "meta": "2026-01-26T15:44:41.702044Z",
-    "activities": "2026-01-11T23:20:02.223755Z",
+    "md": "2026-01-27T15:24:10.350176Z",
+    "meta": "2026-01-27T18:55:10.692136Z",
+    "activities": "2026-01-27T19:07:32.401966Z",
     "vocabulary": "2026-01-25T16:02:18.746271Z",
-    "plan": "2026-01-26T15:44:41.701806Z"
+    "plan": "2026-01-27T19:14:06.439191Z"
   },
   "gates": {
     "meta": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1844/1500 (raw: 2176) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "1844/1500 (raw: 2176)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "11/8"
+      "message": "13/8"
     },
     "vocabulary": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Missing required activity types: discussion, fill-in, matching, reading"
-    ],
-    "pass_count": 4,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

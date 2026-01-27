@@ -391,28 +391,33 @@ git checkout -b post-manifest-rollback
 ## Implementation Checklist
 
 ### Prerequisites
+
 - [ ] All levels A1-C2 in stable state
 - [ ] No pending major content changes
 
 ### Phase 1: Preparation
+
 - [ ] Create `curriculum.yaml` from current state
 - [ ] Write `scripts/manifest_utils.py` with loader/validator
 - [ ] Add `slug:` link resolver to `generate_mdx.py`
 - [ ] Test with subset of modules
 
 ### Phase 2: Migration
+
 - [ ] Create git tag `pre-manifest-migration`
 - [ ] Write `scripts/migrate_to_slugs.py`
 - [ ] Run migration on all levels
 - [ ] Verify no broken links
 
 ### Phase 3: Script Updates
+
 - [ ] Update `generate_mdx.py`
 - [ ] Update `audit_module.py`
 - [ ] Update `pipeline.py`
 - [ ] Update all path-dependent scripts
 
 ### Phase 4: Documentation
+
 - [ ] Update `CLAUDE.md`
 - [ ] Update workflow docs
 - [ ] Update templates
@@ -440,6 +445,7 @@ Tracks (b2-hist, c1-bio, b2-pro, c1-pro, lit) use:
 Core levels (a1, a2, b1, b2, c1, c2) retain numbered format until full migration.
 
 **Cleanup required:**
+
 | Track | Files with `module:` to remove |
 |-------|-------------------------------|
 | B2-HIST | 63 |

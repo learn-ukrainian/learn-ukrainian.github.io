@@ -1,9 +1,11 @@
 # Audit Report: M54 — 54-vyshyvanka.md
+
 **Level:** C1 | **Module:** M54 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:28
 
 ## Configuration
+
 **Type:** C1-history
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Теоретичні основи вишивального мистецтва | 5 | 5 | ✅ |
@@ -40,16 +43,19 @@
 - Low density activities: 0
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Аналіз' per template 'c1-module-template.md'
   - FIX: Add '## Аналіз' section as specified in docs/l2-uk-en/templates/c1-module-template.md.md
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 1956/4000 (raw: 2073)
 - **Activities:** ✅ 12/3
 - **Density:** ✅ All > 1
@@ -68,10 +74,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 89% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 14 | 15 | 93% | 25% | 23.2% |
@@ -85,6 +93,7 @@
 | **TOTAL** | | | | | **89.5%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 96 | Included in Core |

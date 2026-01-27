@@ -138,6 +138,7 @@ If LLM evaluation fails:
 ## Example Use Cases
 
 ### Check single module
+
 ```bash
 export GEMINI_API_KEY="your-key"
 export AUDIT_CONTENT_QUALITY="true"
@@ -145,6 +146,7 @@ python3 scripts/audit_module.py curriculum/l2-uk-en/a2/19-the-best-the-worst.md
 ```
 
 ### Check all A1 modules
+
 ```bash
 export GEMINI_API_KEY="your-key"
 export AUDIT_CONTENT_QUALITY="true"
@@ -156,6 +158,7 @@ done
 ```
 
 ### Batch check with summary
+
 ```bash
 export GEMINI_API_KEY="your-key"
 export AUDIT_CONTENT_QUALITY="true"

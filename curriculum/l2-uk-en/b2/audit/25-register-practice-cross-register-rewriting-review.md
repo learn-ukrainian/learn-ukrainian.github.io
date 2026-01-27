@@ -1,10 +1,12 @@
 # Audit Report: M25 — 25-register-practice-cross-register-rewriting.md
+
 **Level:** B2 | **Module:** M25 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:01
 
 ## Configuration
+
 **Type:** B2-checkpoint
 **Word Target:** 1750 words
 **Activities:** 15-19 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Принципи стильової трансформації | 16 | 8 | ✅ |
@@ -42,6 +45,7 @@
 - Low density activities: 0
 
 ## Gates
+
 - **Words:** ✅ 2783/1750 (raw: 3134)
 - **Activities:** ✅ 15/15
 - **Density:** ✅ All > 14
@@ -60,10 +64,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 96% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 91 | 24 | 100% | 20% | 20.0% |
@@ -79,6 +85,7 @@
 | **TOTAL** | | | | | **96.4%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 57 | Included in Core |

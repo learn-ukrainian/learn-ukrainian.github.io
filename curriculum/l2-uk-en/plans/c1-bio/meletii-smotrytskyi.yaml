@@ -6,33 +6,33 @@ title: 'Мелетій Смотрицький: Архітектор слов''я
 subtitle: 'Meletii Smotrytskyi: Architect of Slavic Grammar'
 content_outline:
 - section: Вступ — Голос плачучої церкви
-  words: 450
+  words: 600
   points:
   - Автор "Треносу" (Плачу)
   - Творець першої повної граматики церковнослов'янської мови
   - Інтелектуал, що розірвався між Сходом і Заходом
 - section: Життєпис
-  words: 1200
+  words: 1600
   points:
   - Походження та освіта в Європі
   - Видання "Треносу" та "Граматики"
   - Архієпископство та криза сумління
   - Перехід в унію та смерть
 - section: Історичний контекст
-  words: 450
+  words: 600
   points:
   - Релігійна полеміка XVII ст.
   - Розкол суспільства
 - section: Внесок та Спадщина
-  words: 450
+  words: 600
   points:
   - Кодифікація мови
   - Вершина бароко
 - section: Порівняльний аналіз
-  words: 450
+  words: 600
   points:
   - Смотрицький vs. Вишенський
-word_target: 3000
+word_target: 4000
 vocabulary_hints:
   required:
   - граматика (grammar)
@@ -48,8 +48,6 @@ vocabulary_hints:
 activity_hints:
 - type: reading
   focus: Excerpts from "Threnos"
-- type: quiz
-  focus: Biography and works
 - type: essay-response
   focus: 'The tragedy of choice: Faith vs. Unity'
 focus: biography

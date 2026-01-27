@@ -1,8 +1,8 @@
 # Audit Report: M49 — 49-numerals-collectives-fractions.md
-**Level:** B1 | **Module:** M49 | **Phase:** B1 | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M49 | **Phase:** B1.4b | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:27:15
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-27 18:08:38
 
 ## Configuration
 **Type:** B1-grammar
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
 **Priority Types:** cloze, error-correction, fill-in, unjumble
-**Required Types:** calculation, fill-in, multiple-choice, transformation
+**Required Types:** cloze, fill-in, quiz
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥25 words
@@ -30,36 +30,28 @@
 | 8 | cloze | Статистичний звіт | 14 | 12 | ✅ |
 | 9 | mark-the-words | Знайдіть числівники | 8 | 6 | ✅ |
 | 10 | select | Правильні форми | 6 | 6 | ✅ |
-| 11 | translate | Перекладіть українською | 6 | 6 | ✅ |
+| 11 | fill-in | Доповніть речення числівником | 8 | 8 | ✅ |
+| 12 | translate | Перекладіть українською | 6 | 6 | ✅ |
 
 **Summary:**
-- Total activities: 11 (target: 8-12) ✅
-- Unique types: 10 (minimum: 4) ✅
-- Priority types used: 3/4 (cloze, error-correction, unjumble) ✅
-- Required types used: 0/4 (none) ❌
+- Total activities: 12 (target: 8-12) ✅
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Required types used: 3/3 (cloze, fill-in, quiz) ✅
 - Low density activities: 0
-
-## PEDAGOGICAL VIOLATIONS
-- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['transformation', 'multiple-choice', 'calculation']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
-  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1733/1500 (raw: 2519)
-- **Activities:** ✅ 11/8
+- **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 10/4 types
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 19/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 50/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.0% (target 85-100% (B1.5-6 Vocab))
 - **Richness:** ✅ 98% (grammar)

@@ -23,6 +23,8 @@ import ComparativeStudy from '@site/src/components/ComparativeStudy';
 import ReadingActivity from '@site/src/components/ReadingActivity';
 import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
 import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
 
 
 ## Огляд
@@ -340,6 +342,21 @@ Before leaving A2, make sure you can:
 
 <Translate questions={JSON.parse(`[{"source": "I gave him the book.", "options": [{"text": "Я дав йому книгу.", "correct": true}, {"text": "Я давав йому книгу.", "correct": false}, {"text": "Я дам йому книгу.", "correct": false}]}, {"source": "If I were you...", "options": [{"text": "Якби я був на твоєму місці...", "correct": true}, {"text": "Якщо я ти...", "correct": false}, {"text": "Коли я був ти...", "correct": false}]}, {"source": "The best option", "options": [{"text": "Найкращий варіант", "correct": true}, {"text": "Кращий варіант", "correct": false}, {"text": "Добрий варіант", "correct": false}]}, {"source": "He entered the room.", "options": [{"text": "Він увійшов у кімнату.", "correct": true}, {"text": "Він вийшов у кімнату.", "correct": false}, {"text": "Він пішов у кімнату.", "correct": false}]}, {"source": "I was reading all day.", "options": [{"text": "Я читав увесь день.", "correct": true}, {"text": "Я прочитав увесь день.", "correct": false}, {"text": "Я читаю увесь день.", "correct": false}]}, {"source": "She said that...", "options": [{"text": "Вона сказала, що...", "correct": true}, {"text": "Вона каже, що...", "correct": false}, {"text": "Вона сказати, що...", "correct": false}]}]`)} />
 
+### Skills Practice Fill-In
+
+<FillIn items={JSON.parse(`[{"sentence": "Я [___] цей текст вчора.", "answer": "прочитав", "options": ["прочитав", "читав", "читаю", "читати"]}, {"sentence": "Вона [___] музику кожен день.", "answer": "слухає", "options": ["слухає", "слухала", "послухала", "слухати"]}, {"sentence": "Ми [___] відповідь на питання.", "answer": "знайшли", "options": ["знайшли", "знаходимо", "шукали", "знайти"]}, {"sentence": "Він не [___] головну ідею тексту.", "answer": "зрозумів", "options": ["зрозумів", "розуміє", "розумів", "зрозуміти"]}, {"sentence": "Я [___] нові слова в словнику.", "answer": "шукаю", "options": ["шукаю", "шукав", "знайшов", "шукати"]}, {"sentence": "Вони [___] про свої плани.", "answer": "розповіли", "options": ["розповіли", "розповідають", "розповідали", "розповісти"]}, {"sentence": "Студенти [___] питання викладачеві.", "answer": "ставлять", "options": ["ставлять", "поставили", "ставити", "задають"]}, {"sentence": "Я [___] цю інформацію в інтернеті.", "answer": "знайшов", "options": ["знайшов", "знаходжу", "шукав", "знайти"]}]`)} />
+
+### Grammar Errors
+
+<ErrorCorrection>
+  <ErrorCorrectionItem sentence="Я читаю книга." errorWord="книга" correctForm="книгу" options={JSON.parse(`["книгу", "книга", "книги", "книгою"]`)} explanation="Accusative feminine -а → -у." />
+  <ErrorCorrectionItem sentence="Вона слухала музика." errorWord="музика" correctForm="музику" options={JSON.parse(`["музику", "музика", "музики", "музикою"]`)} explanation="Accusative feminine -а → -у." />
+  <ErrorCorrectionItem sentence="Він зрозумів питання легко." errorWord="легко" correctForm="легко" options={JSON.parse(`["легко", "правильно", "Немає помилки", "швидко"]`)} explanation="This sentence is correct." />
+  <ErrorCorrectionItem sentence="Ми читали текстів." errorWord="текстів" correctForm="тексти" options={JSON.parse(`["тексти", "текстів", "текста", "текст"]`)} explanation="Accusative plural masculine = nominative plural." />
+  <ErrorCorrectionItem sentence="Студенти шукають інформація." errorWord="інформація" correctForm="інформацію" options={JSON.parse(`["інформацію", "інформація", "інформації", "інформацією"]`)} explanation="Accusative feminine -ія → -ію." />
+  <ErrorCorrectionItem sentence="Вона відповідає на питання." errorWord="питання" correctForm="питання" options={JSON.parse(`["питання", "Немає помилки", "питанню", "питаннями"]`)} explanation="This sentence is correct." />
+</ErrorCorrection>
+
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -356,7 +373,7 @@ Before leaving A2, make sure you can:
 | грошовий | /ɦrɔʃɔʋˈɪj/ | monetary | adj |  |  |
 | долоня | /dɔlˈɔnja/ | palm (of hand) | noun | ж |  |
 | дружба | /drˈuʒba/ | friendship | noun | ж |  |
-| кпі | /kpi/ |  | noun | ч |  |
+| кпі | /kpi/ | KPI | noun | ч |  |
 | медовий | /mɛdˈɔʋɪj/ | honey (adj) | adj |  |  |
 | недорого | /nɛdˈɔrɔɦɔ/ | inexpensively | adv |  |  |
 | область | /ˈɔblastʲ/ | region, oblast, field | noun | ж |  |

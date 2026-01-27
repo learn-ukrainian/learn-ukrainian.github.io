@@ -1,8 +1,10 @@
 # Audit Report: M86 — 86-communication-skills-86.md
+
 **Level:** B2 | **Module:** M86 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 4000
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[COMPLEXITY]** quiz 'Placeholder' has 0 items (minimum: 8)
   - FIX: Add more items. B2 quiz requires at least 8 items.
 - **[HEADING_LEVEL]** Main section 'Підсумок' uses H2 (##) but spec requires H1 (#)
@@ -17,12 +19,14 @@
   - FIX: Add more Ukrainian content to reach 90.0%+ immersion
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення' per template 'b2-module-template.md'
   - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md.md
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Потрібно більше практики?' per template 'b2-module-template.md'
   - FIX: Add '## Потрібно більше практики?' section as specified in docs/l2-uk-en/templates/b2-module-template.md.md
 
 ## Recommendation
+
 **🔄 REWRITE** (severity 95/100)
 
 - 8 violations (significant)
@@ -31,6 +35,7 @@
 - Activity density below minimum
 
 ## Gates
+
 - **Words:** ❌ 3/4000
 - **Activities:** ❌ 1/3
 - **Density:** ❌ 1 < 1
@@ -49,10 +54,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 9% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 0 | 15 | 0% | 25% | 0.0% |
@@ -66,18 +73,19 @@
 | **TOTAL** | | | | | **9.4%** |
 
 ### Dryness Flags & Fixes
+
 - ❌ **NO_ENGAGEMENT**
   - FIX:
     Add 2+ engagement boxes. Use this exact format:
-    
+
     > 💡 **Чи знали ви?**
     >
     > [Interesting fact about the grammar/vocabulary topic in Ukrainian]
-    
+
     > 🇺🇦 **Культурний момент**
     >
     > [Cultural context connecting grammar to Ukrainian life/places]
-    
+
     > 🌍 **У реальному житті**
     >
     > [Practical scenario where this grammar is used]
@@ -87,7 +95,7 @@
 - ❌ **ABSTRACT_ONLY**
   - FIX:
     Add 3+ real-world boxes. Use this exact format:
-    
+
     > 🌍 **У реальному житті**
     >
     > [Specific scenario: "На співбесіді...", "У магазині...", "На вокзалі..."]
@@ -95,7 +103,7 @@
 - ❌ **NO_CULTURAL_ANCHOR**
   - FIX:
     Add 3+ cultural references. Use this exact format:
-    
+
     > 🇺🇦 **Культурний момент**
     >
     > [Reference to Ukrainian place (Київ, Львів, Одеса, Карпати), tradition, or custom]
@@ -103,12 +111,13 @@
     > [Example sentence using the grammar with cultural context]
 
 ## Low Density Activities
+
 | Activity | Type | Items | Required | Fix |
 |----------|------|-------|----------|-----|
 | Placeholder | quiz | 0 | 8 | Add 8 more items |
 
-
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

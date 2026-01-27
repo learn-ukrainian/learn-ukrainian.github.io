@@ -2,13 +2,13 @@
   "module": "khozary-i-sloviany",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T23:18:13.360598Z",
+  "last_audit": "2026-01-27T15:48:49.769234Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-22T20:36:16.140268Z",
+    "md": "2026-01-27T15:24:10.346981Z",
     "meta": "2026-01-26T22:20:13.174686Z",
     "activities": "2026-01-19T21:11:29.058810Z",
-    "vocabulary": "2026-01-22T12:32:15.122804Z",
+    "vocabulary": "2026-01-26T23:20:25.958099Z",
     "plan": null
   },
   "gates": {

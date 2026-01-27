@@ -143,6 +143,7 @@ ACTIVITY_COMPLEXITY = {
 ## Gaps & Problems Identified
 
 ### 1. **No Naturalness Validation**
+
 **Problem:** Activities can be grammatically correct but feel robotic or unnatural.
 
 **Examples:**
@@ -164,6 +165,7 @@ options: ["Я їду до Львова", "Я їжджу до Львова", ...]
 ---
 
 ### 2. **No Difficulty Calibration**
+
 **Problem:** Activities marked as "B1" might be too easy (A2 level) or too hard (B2 level).
 
 **Examples:**
@@ -185,6 +187,7 @@ options: ["був", "буду", "є", "був би"]  # Requires subjunctive moo
 ---
 
 ### 3. **No Variety/Repetition Detection**
+
 **Problem:** Activities can follow repetitive patterns that feel mechanical.
 
 **Examples:**
@@ -210,6 +213,7 @@ options: ["був", "буду", "є", "був би"]  # Requires subjunctive moo
 ---
 
 ### 4. **No Pedagogical Coherence Validation**
+
 **Problem:** Activities might not align with module's learning objectives.
 
 **Examples:**
@@ -231,6 +235,7 @@ error-correction: "Я даю книгу мій друг." → "моєму дру
 ---
 
 ### 5. **No Engagement/Interest Validation**
+
 **Problem:** Activities can be boring or disconnected from learner interests.
 
 **Examples:**
@@ -250,6 +255,7 @@ translate: "Kyiv's metro is one of the deepest in the world."
 ---
 
 ### 6. **No Distractor Quality Validation**
+
 **Problem:** Quiz/fill-in options can have obvious wrong answers (bad distractors).
 
 **Examples:**
@@ -279,6 +285,7 @@ options:
 ---
 
 ### 7. **Pipeline Integration Gaps**
+
 **Problem:** Grammar validation runs separately, not integrated with audit gates.
 
 **Current state:**
@@ -777,6 +784,7 @@ results['activity_quality'] = evaluate_activity_quality(
 ## Updated Workflow
 
 ### Before (Current):
+
 ```bash
 1. Create module → manually write activities
 2. Run audit → check structure, counts
@@ -786,6 +794,7 @@ results['activity_quality'] = evaluate_activity_quality(
 ```
 
 ### After (Proposed):
+
 ```bash
 1. Create module → manually write activities
 2. Run audit → structure + counts + variety + coherence
@@ -921,6 +930,7 @@ Grammar Report: curriculum/l2-uk-en/b1/audit/52-abstract-concepts-ideas-grammar.
 ## Cost & Performance Estimates
 
 ### API Costs (Gemini 2.0 Flash):
+
 ```
 Current (grammar only):
   ~50-70 items per module → ~$0.02-0.03 per module
@@ -936,6 +946,7 @@ Full B2 (145 modules):
 ```
 
 ### Runtime:
+
 ```
 Current:
   ~30-60 seconds per module (Gemini API latency)
@@ -951,24 +962,28 @@ Can optimize with batch API calls (single request, multiple validations)
 ## Migration Strategy
 
 ### Phase 1: Non-Breaking Addition (Week 1)
+
 - Expand Gemini prompt to include new dimensions
 - Update grammar validation command
 - Add variety/coherence checks to audit
 - **No breaking changes** - new validations are warnings only
 
 ### Phase 2: B1 Testing (Week 2)
+
 - Run expanded validation on all B1 modules (86)
 - Collect quality metrics
 - Refine thresholds based on real data
 - Fix outliers manually
 
 ### Phase 3: Gate Integration (Week 3)
+
 - Add activity_quality gate to audit
 - Make quality thresholds blocking (fail audit if below)
 - Update documentation
 - Train on how to fix common issues
 
 ### Phase 4: Full Rollout (Week 4)
+
 - Apply to B2, C1, C2
 - Backfill A1-A2 with quality validation
 - Create quality dashboard (track metrics over time)

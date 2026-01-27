@@ -81,6 +81,7 @@ Add vocative forms to the vocabulary table for M32.
 ## Module Requirements (A1 Level)
 
 ### Structure
+
 ```markdown
 ---
 module: [number]
@@ -136,6 +137,7 @@ phase: A1.3
 | Unjumble sentences | 4-6 words minimum |
 
 ### Activity Types (use variety)
+
 - `quiz` - Multiple choice
 - `match-up` - Pair matching
 - `fill-in` - Gap fill with dropdowns

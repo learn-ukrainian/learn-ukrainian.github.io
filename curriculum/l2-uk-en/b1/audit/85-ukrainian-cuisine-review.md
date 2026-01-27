@@ -1,20 +1,20 @@
 # Audit Report: M85 — 85-ukrainian-cuisine.md
-**Level:** B1 | **Module:** M85 | **Phase:** B1 | **Pedagogy:** CBI | **Target:** 1500
+**Level:** B1 | **Module:** M85 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:27:38
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-27 20:14:48
 
 ## Configuration
-**Type:** B1-skills
+**Type:** B1-culture
 **Word Target:** 1500 words
-**Activities:** 10-14 required
+**Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
-**Priority Types:** cloze, fill-in, mark-the-words
-**Required Types:** discussion, fill-in, matching, reading
-**Engagement:** ≥4 callouts
+**Priority Types:** fill-in, match-up, quiz, reading
+**Required Types:** fill-in, match-up, quiz, reading
+**Engagement:** ≥5 callouts
 **Immersion:** 90-100%
-**Vocab Target:** ≥15 words
+**Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
@@ -32,70 +32,50 @@
 | 10 | error-correction | Виправте помилки в реченнях про їжу | 8 | 6 | ✅ |
 | 11 | translate | Переклад кулінарних фраз | 8 | 6 | ✅ |
 | 12 | mark-the-words | Знайдіть кулінарну лексику | 17 | 6 | ✅ |
+| 13 | fill-in | Вставте слово про українську кухню | 8 | 8 | ✅ |
+| 14 | reading | Українська кухня: Традиції та сучасність | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 12 (target: 10-14) ✅
-- Unique types: 10 (minimum: 4) ✅
-- Priority types used: 2/3 (cloze, mark-the-words) ✅
-- Required types used: 0/4 (none) ❌
+- Total activities: 14 (target: 8-12) ❌
+- Unique types: 12 (minimum: 4) ✅
+- Priority types used: 4/4 (fill-in, match-up, quiz, reading) ✅
+- Required types used: 4/4 (fill-in, match-up, quiz, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['matching', 'discussion']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
-  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 1828/1500 (raw: 2188)
-- **Activities:** ✅ 12/10
+- **Words:** ✅ 1855/1500 (raw: 2215)
+- **Activities:** ✅ 14/8
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 10/4 types
+- **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 9/4
+- **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 64/15
+- **Vocab:** ✅ 64/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.9% (target 85-100% (B1.7-8 Ukraine))
-- **Richness:** ❌ 92% < 95% min (grammar)
+- **Richness:** ✅ 98% (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 92% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 98% (minimum: 95%)
+**Module Type:** cultural
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 22 | 24 | 92% | 20% | 18.4% |
-| engagement | 9 | 5 | 100% | 15% | 15.0% |
-| dialogues | 21 | 4 | 100% | 15% | 15.0% |
-| variety | 0.98 | - | 98% | 10% | 9.8% |
-| cultural | 11 | 3 | 100% | 10% | 10.0% |
-| realworld | 6 | 3 | 100% | 10% | 10.0% |
-| visual | 5 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.84 | - | 84% | 5% | 4.2% |
-| questions | 36 | 5 | 100% | 5% | 5.0% |
-| proverbs | 0 | 1 | 0% | 5% | 0.0% |
-| **TOTAL** | | | | | **92.4%** |
-
-### Dryness Flags & Fixes
-- ❌ **NO_PROVERBS**
-  - FIX:
-    Add 1+ Ukrainian proverb. Use this format:
-    
-    Українці кажу|ть: «[Proverb in Ukrainian]»
-    
-    Зверніть увагу: **[word]** — [aspect] вид, бо [explanation why this aspect is used].
-    
-    Example: «Не кажи гоп, поки не перескочиш» — **перескочиш** is perfective because it's about the result.
+| cultural | 11 | 5 | 100% | 33% | 33.3% |
+| engagement | 9 | 6 | 100% | 20% | 20.0% |
+| visual | 6 | 4 | 100% | 13% | 13.3% |
+| variety | 0.98 | - | 98% | 7% | 6.5% |
+| paragraph_var | 0.83 | - | 83% | 7% | 5.5% |
+| examples | 23 | - | 100% | 7% | 6.7% |
+| realworld | 6 | - | 100% | 7% | 6.7% |
+| questions | 36 | 4 | 100% | 7% | 6.7% |
+| **TOTAL** | | | | | **98.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -106,5 +86,5 @@
 | **Інтеграція** | ⚪️ | 733 | Skipped |
 | **Практика** | ⚪️ | 311 | Skipped |
 | **Продукція** | ⚪️ | 323 | Skipped |
-| **Підсумок** | ✅ | 144 | Included in Core |
+| **Підсумок** | ✅ | 171 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

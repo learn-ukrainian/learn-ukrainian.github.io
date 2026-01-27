@@ -19,7 +19,7 @@ Cheerful and culturally rich.
 
 **1. Accuracy of Examples:** 10/10
 Examples are accurate.
-_Fixed:_ Replaced incorrect "Present Tense" translations in the Practice section with actual holiday greetings.
+*Fixed:* Replaced incorrect "Present Tense" translations in the Practice section with actual holiday greetings.
 
 **2. Relevance of Scenarios:** 10/10
 Everyone needs to know how to say "Happy Birthday" or "Merry Christmas".

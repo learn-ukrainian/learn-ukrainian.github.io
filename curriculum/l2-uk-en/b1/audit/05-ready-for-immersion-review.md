@@ -1,8 +1,8 @@
 # Audit Report: M05 — 05-ready-for-immersion.md
-**Level:** B1 | **Module:** M05 | **Phase:** B1 | **Pedagogy:** TTT | **Target:** 1200
+**Level:** B1 | **Module:** M05 | **Phase:** B1.0 | **Pedagogy:** TTT | **Target:** 1200
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:26:46
+**Generated:** 2026-01-27 16:25:45
 
 ## Configuration
 **Type:** B1-bridge
@@ -54,7 +54,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1656/1200 (raw: 1795)
+- **Words:** ✅ 3410/1200 (raw: 3916)
 - **Activities:** ✅ 25/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/5 types
@@ -66,42 +66,42 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 52.7% (B1.1 Aspect)
-- **Richness:** ✅ 96% (grammar)
+- **Immersion:** 🇺🇦 43.7% (B1.1 Aspect)
+- **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 96% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 33 | 24 | 100% | 20% | 20.0% |
+| examples | 59 | 24 | 100% | 20% | 20.0% |
 | engagement | 5 | 5 | 100% | 15% | 15.0% |
-| dialogues | 12 | 4 | 100% | 15% | 15.0% |
-| variety | 0.95 | - | 95% | 10% | 9.5% |
+| dialogues | 33 | 4 | 100% | 15% | 15.0% |
+| variety | 0.96 | - | 96% | 10% | 9.6% |
 | cultural | 5 | 3 | 100% | 10% | 10.0% |
-| realworld | 5 | 3 | 100% | 10% | 10.0% |
-| visual | 1 | 3 | 33% | 5% | 1.7% |
+| realworld | 11 | 3 | 100% | 10% | 10.0% |
+| visual | 4 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 28 | 5 | 100% | 5% | 5.0% |
-| proverbs | 9 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **96.2%** |
+| questions | 73 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 80 | Included in Core |
-| **Presentation** | ✅ | 61 | Included in Core |
-| **Diagnostic Assessment** | ✅ | 208 | Included in Core |
-| **Parts of Speech Review** | ✅ | 48 | Included in Core |
-| **Verb Terminology Review** | ✅ | 38 | Included in Core |
-| **Grammar Explanation Patterns** | ✅ | 63 | Included in Core |
-| **Sentence Structure Review** | ✅ | 192 | Included in Core |
-| **Full Grammar Explanation Comprehension** | ⚪️ | 220 | Skipped |
-| **Практика** | ⚪️ | 215 | Skipped |
-| **Mini-Dialogues** | ✅ | 261 | Included in Core |
-| **Summary** | ✅ | 222 | Included in Core |
-| **Need More Practice?** | ⚪️ | 48 | Skipped |
+| **Presentation** | ✅ | 202 | Included in Core |
+| **Diagnostic Assessment** | ✅ | 337 | Included in Core |
+| **Parts of Speech Review (Частини мови)** | ✅ | 114 | Included in Core |
+| **Verb Terminology Review (Дієслова)** | ✅ | 81 | Included in Core |
+| **Grammar Explanation Patterns (Шаблони пояснень)** | ✅ | 102 | Included in Core |
+| **Sentence Structure Review (Синтаксис)** | ✅ | 366 | Included in Core |
+| **Full Grammar Explanation Comprehension** | ⚪️ | 453 | Skipped |
+| **Practice** | ⚪️ | 548 | Skipped |
+| **Mini-Dialogues** | ✅ | 542 | Included in Core |
+| **Summary** | ✅ | 308 | Included in Core |
+| **Need More Practice?** | ⚪️ | 277 | Skipped |

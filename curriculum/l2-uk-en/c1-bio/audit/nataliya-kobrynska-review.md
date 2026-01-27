@@ -1,10 +1,12 @@
 # Audit Report: M45 — nataliya-kobrynska.md
+
 **Level:** C1 | **Module:** M45 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:18
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Життя і діяльність Наталії Кобринської | 12 | 5 | ✅ |
@@ -42,20 +45,24 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in nataliya-kobrynska.yaml: Schema validation error at key '12': {'type': 'translate', 'title': 'Переклад тез про Кобринську', 'items': [{'source': "She organized the first women's society in Halychyna.", 'options': [{'text': 'Вона організувала перше жіноче товариство в Галичині.', 'correct': True}, {'text': 'Вона організувала жіночий клуб у Києві.', 'correct': False}, {'text': 'Вона була членом чоловічого товариства.', 'correct': False}, {'text': 'Вона заснувала школу для дівчат.', 'correct': False}]}, {'source': 'She believed that economic independence is key to freedom.', 'options': [{'text': 'Вона вірила, що економічна незалежність є ключем до свободи.', 'correct': True}, {'text': 'Вона вважала, що гроші не важливі.', 'correct': False}, {'text': 'Вона думала, що свобода не залежить від економіки.', 'correct': False}, {'text': 'Вона хотіла, щоб жінки були багатими.', 'correct': False}]}, {'source': "She edited the almanac 'The First Wreath'.", 'options': [{'text': "Вона редагувала альманах 'Перший вінок'.", 'correct': True}, {'text': "Вона написала роман 'Перший вінок'.", 'correct': False}, {'text': 'Вона купила вінок.', 'correct': False}, {'text': 'Вона продавала альманахи.', 'correct': False}]}, {'source': 'Her works address acute social problems.', 'options': [{'text': 'Її твори порушують гострі соціальні проблеми.', 'correct': True}, {'text': 'Її твори описують природу.', 'correct': False}, {'text': "Вона писала про проблеми зі здоров'ям.", 'correct': False}, {'text': 'Вона уникала соціальних тем.', 'correct': False}]}, {'source': 'She died of typhus in 1920.', 'options': [{'text': 'Вона померла від тифу в 1920 році.', 'correct': True}, {'text': 'Вона народилася в 1920 році.', 'correct': False}, {'text': 'Вона виїхала в 1920 році.', 'correct': False}, {'text': 'Вона захворіла в 1920 році.', 'correct': False}]}, {'source': "She advocated for women's right to vote.", 'options': [{'text': 'Вона виступала за право жінок голосувати.', 'correct': True}, {'text': 'Вона була проти виборів.', 'correct': False}, {'text': 'Вона голосувала лише вдома.', 'correct': False}, {'text': 'Вона не цікавилася політикою.', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Останні роки' per template 'c1-biography-module-template.md'
   - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 2 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 1907/4000 (raw: 2145)
 - **Activities:** ✅ 13/3
 - **Density:** ✅ All > 1
@@ -74,10 +81,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 97% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 4 | 4 | 100% | 19% | 19.0% |
@@ -93,6 +102,7 @@
 | **TOTAL** | | | | | **97.5%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 76 | Included in Core |

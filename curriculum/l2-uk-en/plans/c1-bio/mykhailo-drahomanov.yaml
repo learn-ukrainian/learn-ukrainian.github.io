@@ -69,22 +69,10 @@ activity_hints:
   focus: Політичні есе та листування Драгоманова
   source: Публіцистичні твори
   items: 3 passages
-- type: quiz
-  focus: Біографія та політичні погляди
-  items: 12+
-- type: match-up
-  focus: Ідеї та їхній вплив
-  items: 10+
 - type: essay-response
   focus: Чи актуальні ідеї Драгоманова сьогодні?
   word_target: 300
   output: Political analysis
-- type: group-sort
-  focus: Етапи діяльності та ключові ідеї
-  items: 12+
-- type: fill-in
-  focus: Політологічна термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-20-taras-shevchenko
@@ -107,3 +95,7 @@ sources:
   notes: Рух національного пробудження
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of михайло драгоманов: політичний мислитель'
+- Evaluate the contributions of архітектор європейської україни
+- Trace the career and influence of останні роки та спадщина (1889-1895)

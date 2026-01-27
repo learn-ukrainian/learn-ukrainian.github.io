@@ -1,10 +1,12 @@
 # Audit Report: M123 — serhiy-zhadan.md
+
 **Level:** C1 | **Module:** M123 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:57:18
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Біографія та діяльність Сергія Жадана | 5 | 5 | ✅ |
@@ -41,22 +44,26 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in serhiy-zhadan.yaml: Schema validation error at key '9': {'type': 'fill-in', 'title': 'Музична діяльність', 'items': [{'sentence': 'Гурт «Жадан і [Собаки]» виконує музику в стилі ска-панк.', 'answer': 'Собаки', 'options': ['Собаки', 'Коти', 'Вовки', 'Птахи']}, {'sentence': 'Музика допомагає донести [поезію] до ширшої молодіжної аудиторії.', 'answer': 'поезію', 'options': ['поезію', 'прозу', 'новини', 'рекламу']}, {'sentence': "На концертах Жадан створює неймовірну [енергетику], яка об'єднує зал.", 'answer': 'енергетику', 'options': ['енергетику', 'тишу', 'нудьгу', 'паніку']}, {'sentence': 'Пісні гурту часто мають гостросоціальний та [сатиричний] характер.', 'answer': 'сатиричний', 'options': ['сатиричний', 'ліричний', 'сумний', 'дитячий']}, {'sentence': 'Під час війни музиканти дають концерти в [метро] та бомбосховищах.', 'answer': 'метро', 'options': ['метро', 'театрі', 'цирку', 'лісі']}, {'sentence': 'Жадан доводить, що українська культура може бути [драйвовою] і сучасною.', 'answer': 'драйвовою', 'options': ['драйвовою', 'нудною', 'старою', 'тихою']}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[FORBIDDEN_HEADER_TONE]** Header '## Сучасний етап' is inappropriate for a deceased person. Use '## Останні роки' instead.
   - FIX: Rename '## Сучасний етап' to '## Останні роки' to maintain correct biographical tone.
 - ❌ **[FORBIDDEN_HEADER_TONE]** Header '## Вплив' is inappropriate for a deceased person. Use '## Спадщина' instead.
   - FIX: Rename '## Вплив' to '## Спадщина' to maintain correct biographical tone.
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 3 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 1954/4000 (raw: 2223)
 - **Activities:** ✅ 12/3
 - **Density:** ✅ All > 1
@@ -75,10 +82,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 95% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 4 | 4 | 100% | 19% | 19.0% |
@@ -94,6 +103,7 @@
 | **TOTAL** | | | | | **95.2%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 72 | Included in Core |

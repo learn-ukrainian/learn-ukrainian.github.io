@@ -1,4 +1,5 @@
 # A2 Naturalness Scan Report - M12-M25
+
 **Date:** 2026-01-12
 **Protocol:** claude_extensions/protocols/a1-naturalness-scan.md
 **Scope:** M12-M25 (14 modules - Aspect & Comparison section)
@@ -17,6 +18,7 @@
 ## Scan Results by Module
 
 ### M12: Aspect Introduction [✅ PASS]
+
 **Status:** Grammar drill focus, acceptable for pedagogical purpose
 **Activities:** Cloze passages (lines 30-39)
 **Sample sentences:**
@@ -35,6 +37,7 @@
 ---
 
 ### M13: The Completed Past [✅ PASS]
+
 **Status:** Perfective past drill, acceptable
 **Activities:** Multiple cloze passages with perfective past practice
 **Sample:**
@@ -51,6 +54,7 @@
 ---
 
 ### M14: Future Plans and Promises [✅ PASS]
+
 **Status:** Future tense formation drill, acceptable
 **Activities:** Cloze passages with future tense choices
 **Naturalness Analysis:**
@@ -63,6 +67,7 @@
 ---
 
 ### M15: Aspect Morphology [✅ PASS]
+
 **Status:** Pattern identification exercises, technical focus
 **Activities:** Morphological pattern exercises
 **Naturalness Analysis:**
@@ -75,6 +80,7 @@
 ---
 
 ### M16: Aspect Mastery Pairs [✅ PASS]
+
 **Status:** Comprehensive aspect pair drills
 **Activities:** Transformation exercises
 **Naturalness Analysis:**
@@ -86,6 +92,7 @@
 ---
 
 ### M17: Possessive свій [✅ PASS]
+
 **Status:** Reflexive possessive drill, acceptable
 **Activities:** свій vs його/її distinction exercises
 **Naturalness Analysis:**
@@ -97,6 +104,7 @@
 ---
 
 ### M18: Bigger, Better, Stronger [✅ PASS]
+
 **Status:** Comparative adjectives, acceptable
 **Activities:** Comparative formation exercises
 **Naturalness Analysis:**
@@ -108,6 +116,7 @@
 ---
 
 ### M19: The Best, The Worst [✅ PASS]
+
 **Status:** Superlative adjectives, acceptable
 **Activities:** Superlative formation exercises
 **Naturalness Analysis:**
@@ -119,6 +128,7 @@
 ---
 
 ### M20: Preferences and Choices [⚠️ FLAGGED]
+
 **Status:** DISCONNECTED DRILL SENTENCES
 **Activities:** Cloze passage (lines 31-37)
 **Sample sentences:**
@@ -144,6 +154,7 @@
 ---
 
 ### M21: Numerals and Nouns [⚠️ FLAGGED]
+
 **Status:** MECHANISTIC SHOPPING DIALOGUE
 **Activities:** Cloze passage "Shopping at the Market" (lines 193-211)
 **Sample sentences:**
@@ -175,6 +186,7 @@
 ---
 
 ### M22: If I Were [⚠️ FLAGGED]
+
 **Status:** DISCONNECTED CONDITIONAL DRILL
 **Activities:** First cloze passage (lines 31-37)
 **Sample sentences:**
@@ -200,6 +212,7 @@
 ---
 
 ### M23: Complete Imperative [✅ PASS]
+
 **Status:** Dialogue with imperative particles, acceptable
 **Activities:** Cloze dialogue (lines 372-398)
 **Sample:**
@@ -219,6 +232,7 @@
 ---
 
 ### M24: Smart Shopping [⚠️ FLAGGED - MINOR]
+
 **Status:** SHOPPING DIALOGUE - slightly mechanical but mostly acceptable
 **Activities:** Cloze passage "Shopping Dialogue at the Center" (lines 510-527)
 **Sample sentences:**
@@ -249,6 +263,7 @@
 ---
 
 ### M25: Checkpoint Aspect Comparison [⏸️ DEFERRED]
+
 **Status:** CHECKPOINT - different standards apply
 **Activities:** Multiple comprehensive review passages
 **Naturalness Analysis:**
@@ -263,6 +278,7 @@
 ## Summary by Status
 
 ### ✅ PASS (9 modules)
+
 - M12: Aspect Introduction (score 8/10)
 - M13: The Completed Past (score 8/10)
 - M14: Future Plans (score 8/10)
@@ -274,12 +290,14 @@
 - M23: Complete Imperative (score 8/10)
 
 ### ⚠️ FLAGGED (4 modules)
+
 - **M20: Preferences and Choices (score 4/10)** - CRITICAL: Completely disconnected drill sentences
 - **M21: Numerals and Nouns (score 5/10)** - Mechanical shopping dialogue + grammar error
 - **M22: If I Were (score 4/10)** - CRITICAL: Completely disconnected drill sentences
 - **M24: Smart Shopping (score 7/10)** - MINOR: Repetitive "зараз" usage
 
 ### ⏸️ DEFERRED (1 module)
+
 - M25: Checkpoint (score 7/10) - Checkpoint standards apply
 
 ---
@@ -287,6 +305,7 @@
 ## Recommended Actions
 
 ### Priority 1: Critical Fixes (M20, M22)
+
 **M20 - Preferences and Choices:**
 - Replace disconnected drill with unified dialogue or monolog
 - Create person expressing consistent preferences
@@ -300,12 +319,14 @@
 - Remove redundant "допомога" theme
 
 ### Priority 2: Important Fix (M21)
+
 **M21 - Numerals and Nouns:**
 - Fix grammar error: "два золоті монети" → "дві золоті монети"
 - Make shopping dialogue more natural (add reactions, comments)
 - Fix unnatural enumeration ("У нас є чотири груші...")
 
 ### Priority 3: Minor Fix (M24)
+
 **M24 - Smart Shopping:**
 - Remove excessive "зараз" repetitions
 - Improve flow

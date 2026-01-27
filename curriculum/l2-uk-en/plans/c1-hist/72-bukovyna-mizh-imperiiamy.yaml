@@ -5,14 +5,14 @@ version: '2.0'
 title: Буковина між імперіями
 content_outline:
 - section: Вступ — Багатонаціональний край
-  words: 400
+  words: 457
   points:
   - Буковина — де це
   - Населення — українці, румуни, євреї, німці
   - Історична доля — зміна імперій
   - Структура модуля
 - section: Під Австрією (1775-1918)
-  words: 700
+  words: 800
   points:
   - Приєднання від Молдови
   - Герцогство Буковина
@@ -20,40 +20,40 @@ content_outline:
   - Чернівецький університет
   - Українсько-румунське співіснування
 - section: Під Румунією (1918-1940)
-  words: 600
+  words: 686
   points:
   - Румунська анексія
   - Румунізація — політика
   - Придушення українців
   - Опір і адаптація
 - section: Радянський період
-  words: 500
+  words: 571
   points:
   - 1940 — анексія СРСР
   - Поділ — північ/південь
   - Репресії
   - Радянізація
 - section: Буковинська ідентичність
-  words: 500
+  words: 571
   points:
   - Особлива культура
   - Мова — діалектні особливості
   - Мультикультурність як спадщина
   - Чернівці — «маленький Відень»
 - section: Сучасність
-  words: 500
+  words: 571
   points:
   - Чернівецька область
   - Північна Буковина — Україна
   - Південна — Румунія
   - Поділений регіон
 - section: Підсумок
-  words: 300
+  words: 344
   points:
   - Буковина — мозаїка народів
   - Австрійська спадщина
   - Перехід до Закарпаття
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - Буковина (Bukovyna)
@@ -73,16 +73,16 @@ vocabulary_hints:
   - регіональна ідентичність (regional identity)
   - транскордонний (cross-border)
 activity_hints:
-- type: demographic-analysis
+- type: critical-analysis
   focus: Bukovyna's ethnic composition — changes over time
   output: Demographic study
-- type: policy-comparison
+- type: comparative-study
   focus: Austrian vs. Romanian treatment of Ukrainians
   output: Policy comparison
-- type: cultural-analysis
+- type: critical-analysis
   focus: Chernivtsi as multicultural city
   output: Urban cultural study
-- type: contemporary-analysis
+- type: critical-analysis
   focus: Divided Bukovyna today — north vs. south
   output: Contemporary analysis
 - type: essay-response
@@ -112,3 +112,6 @@ sources:
   notes: Romanian period
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- Analyze the causes and consequences of буковина між імперіями
+- Evaluate the historical significance of багатонаціональний край

@@ -64,8 +64,6 @@ vocabulary_hints:
 activity_hints:
 - type: reading
   focus: Analysis of the Andrusovo treaty text
-- type: quiz
-  focus: Terms and consequences of the truce
 - type: essay-response
   focus: The tragedy of the partition of Ukraine
 - type: comparative-study

@@ -1,10 +1,12 @@
 # Audit Report: M10 — 10-checkpoint-first-contact.md
+
 **Level:** A1 | **Module:** M10 | **Phase:** A1 | **Pedagogy:** TTT | **Target:** 500
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
 **Generated:** 2026-01-26 22:25:43
 
 ## Configuration
+
 **Type:** A1-checkpoint
 **Word Target:** 500 words
 **Activities:** 8-12 required
@@ -18,6 +20,7 @@
 **Transliteration:** Allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Cyrillic Reading | 12 | 8 | ✅ |
@@ -40,6 +43,7 @@
 - Low density activities: 0
 
 ## Gates
+
 - **Words:** ✅ 1145/500 (raw: 1409)
 - **Activities:** ✅ 11/8
 - **Density:** ✅ All > 10
@@ -57,6 +61,7 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

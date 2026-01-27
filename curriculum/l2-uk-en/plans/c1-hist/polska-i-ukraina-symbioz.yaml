@@ -5,50 +5,52 @@ version: '1.0'
 title: 'Польща і Україна: Симбіоз і конфлікт'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of польща і україна: симбіоз і конфлікт'
+- Evaluate the historical significance of 600 років разом
 content_outline:
 - section: Вступ — 600 років разом
-  words: 451
+  words: 515
   subsections:
   - Найскладніші відносини в Європі
   - Спільна держава — 400 років
   - Конфлікт і співпраця
   - Структура модуля
 - section: Люблінська унія 1569
-  words: 677
+  words: 774
   subsections:
   - Об'єднання в одну державу
   - Що отримала Україна
   - Шляхта — українська еліта
   - Полонізація
 - section: Козацькі повстання
-  words: 790
+  words: 903
   subsections:
   - Наливайко, Жмайло
   - Хмельницький 1648
   - Ріки крові
   - Але не етнічна війна
 - section: Під розділами
-  words: 677
+  words: 774
   subsections:
   - 1795 — кінець Речі Посполитої
   - Спільна неволя
   - Польське повстання 1863
   - Українці — союзники чи конкуренти
 - section: Спільна культура
-  words: 564
+  words: 645
   subsections:
   - Мова — взаємовпливи
   - Костюшко, Міцкевич — походження
   - Архітектура Львова
   - Що залишилось
 - section: Підсумок
-  words: 341
+  words: 389
   subsections:
   - Симбіоз і конфлікт — одночасно
   - Неможливо спростити
   - Перехід до 1918-1920
-word_target: 3500
+word_target: 4000
 vocabulary:
 - симбіоз
 - конфлікт
@@ -66,13 +68,13 @@ vocabulary:
 - сарматизм
 - гайдамаки
 activities:
-- type: historical-analysis
+- type: critical-analysis
   focus: 400 years of Polish-Ukrainian shared state
-- type: complexity-analysis
+- type: critical-analysis
   focus: Why 1648 was not ethnic cleansing
-- type: cultural-study
+- type: comparative-study
   focus: Polish-Ukrainian cultural symbiosis
-- type: comparative-perspective
+- type: critical-analysis
   focus: Polish and Ukrainian views on shared history
 - type: essay-response
   focus: Чи Польща була колонізатором України?

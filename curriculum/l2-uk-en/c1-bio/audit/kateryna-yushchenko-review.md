@@ -1,10 +1,12 @@
 # Audit Report: M100 — kateryna-yushchenko.md
+
 **Level:** C1 | **Module:** M100 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:46
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння біографії | 5 | 5 | ✅ |
@@ -41,10 +44,12 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in kateryna-yushchenko.yaml: Schema validation error at key '7': {'type': 'error-correction', 'title': "Складні синтаксичні зв'язки", 'items': [{'sentence': 'Вона була жінкою яка бачила майбутнє.', 'error': 'жінкою яка', 'answer': 'жінкою, яка', 'options': ['жінкою яка', 'жінкою, яка', 'жінкою: яка', 'none'], 'explanation': 'Кома перед підрядним реченням.'}, {'sentence': 'Вона знала, що машина може більше ніж просто рахувати.', 'error': 'більше ніж', 'answer': 'більше, ніж', 'options': ['більше ніж', 'більше, ніж', 'більше: ніж', 'none'], 'explanation': 'Кома перед порівняльним сполучником «ніж».'}, {'sentence': 'Працюючи в лабораторії вона зробила відкриття.', 'error': 'в лабораторії вона', 'answer': 'в лабораторії, вона', 'options': ['в лабораторії вона', 'в лабораторії, вона', 'в лабораторії: вона', 'none'], 'explanation': 'Кома після дієприслівникового звороту.'}, {'sentence': 'Це був успіх української математичної школи.', 'error': 'none', 'answer': '✓', 'options': ['успіх', 'школи', 'математичної', '✓'], 'explanation': 'Речення побудоване правильно.'}, {'sentence': "Її ім'я вписане золотими буквами в історії науки.", 'error': 'в історії', 'answer': 'в історію', 'options': ['в історії', 'в історію', 'в історією', 'none'], 'explanation': 'Знахідний відмінок після дієслова «вписане у що?».'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template.md'
   - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template.md'
@@ -53,12 +58,14 @@
   - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 
 ## Recommendation
+
 **📝 UPDATE** (severity 35/100)
 
 - 4 violations (moderate)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2030/4000 (raw: 2304)
 - **Activities:** ✅ 12/3
 - **Density:** ✅ All > 1
@@ -77,10 +84,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 97% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 5 | 4 | 100% | 19% | 19.0% |
@@ -96,6 +105,7 @@
 | **TOTAL** | | | | | **97.5%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 70 | Included in Core |

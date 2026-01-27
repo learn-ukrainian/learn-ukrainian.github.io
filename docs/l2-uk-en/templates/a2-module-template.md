@@ -53,7 +53,6 @@ Before submitting, verify:
 
 See [METADATA_YAML_SCHEMA.md](../../docs/dev/METADATA_YAML_SCHEMA.md) for details.
 
-
 ---
 
 ## Naturalness Quality Checklist

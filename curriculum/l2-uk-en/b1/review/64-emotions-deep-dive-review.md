@@ -12,7 +12,7 @@
 | ------------------- | ----- | ------------------------------------------------------------------------ |
 | Coherence           | 10/10 | Logical structure (Basic -> Complex -> Metaphors).                       |
 | Relevance           | 10/10 | Crucial for expressing inner states beyond "I am fine".                  |
-| Educational         | 10/10 | Excellent nuance: _сором_ (shame) vs _провина_ (guilt).                  |
+| Educational         | 10/10 | Excellent nuance: *сором* (shame) vs *провина* (guilt).                  |
 | Language            | 10/10 | Poetic but usable vocabulary (`серце крається`).                         |
 | Pedagogy            | 9/10  | "Chervona Ruta" / Volodymyr Ivasyuk story adds deep emotional resonance. |
 | Immersion           | 10/10 | Using Ivasyuk's tragic story to teach sadness/grief is powerful.         |

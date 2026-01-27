@@ -1,10 +1,12 @@
 # Audit Report: M11 — kostiantyn-ostrozky-elder.md
+
 **Level:** C1 | **Module:** M11 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:55:59
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Літописна оповідь про битву під Оршею | 1 | 1 | ✅ |
@@ -39,11 +42,13 @@
 - Low density activities: 0
 
 ## Recommendation
+
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ✅ 4132/4000 (raw: 4436)
 - **Activities:** ✅ 10/3
 - **Density:** ✅ All > 1
@@ -62,10 +67,12 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
+
 **Score:** 95% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 3 | 4 | 75% | 19% | 14.3% |
@@ -81,6 +88,7 @@
 | **TOTAL** | | | | | **95.0%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 201 | Included in Core |

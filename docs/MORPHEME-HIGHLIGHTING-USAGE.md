@@ -35,23 +35,27 @@ text: 'Click on all words with arrival prefixes.
 ## Pattern Syntax
 
 ### Prefix Pattern
+
 ```yaml
 *при*йшов  # Highlights "при" at the start of "прийшов"
 *ви*йшов   # Highlights "ви" at the start of "вийшов"
 ```
 
 ### Suffix Pattern
+
 ```yaml
 Чит*ач*     # Highlights "ач" at the end of "Читач"
 читан*ня*   # Highlights "ня" at the end of "читання"
 ```
 
 ### Root Pattern (middle)
+
 ```yaml
 *важлив*ість  # Highlights "важлив" in the middle of "важливість"
 ```
 
 ### Whole Word
+
 ```yaml
 *Читач*  # Highlights entire word "Читач"
 ```
@@ -108,6 +112,7 @@ The audit checks:
 ## Examples by Type
 
 ### Prefix Activity (Best Practice)
+
 ```yaml
 - type: mark-the-words
   title: Find Arrival Prefixes
@@ -117,6 +122,7 @@ The audit checks:
 ```
 
 ### Root Family Activity
+
 ```yaml
 - type: mark-the-words
   title: Find "Walk" Root Family
@@ -126,6 +132,7 @@ The audit checks:
 ```
 
 ### Suffix Activity
+
 ```yaml
 - type: mark-the-words
   title: Find Agent Nouns

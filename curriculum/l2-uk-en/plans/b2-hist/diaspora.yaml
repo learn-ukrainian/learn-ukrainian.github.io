@@ -72,15 +72,6 @@ activity_hints:
   focus: Спогади українських емігрантів
   source: Усна історія
   items: 4
-- type: quiz
-  focus: Хвилі еміграції та їх характеристики
-  items: 15
-- type: match-up
-  focus: Хвиля → період та причини
-  items: 10
-- type: fill-in
-  focus: Лексика еміграції та діаспори
-  items: 10
 - type: essay-response
   focus: Яку роль відіграла діаспора у збереженні української ідентичності?
   word_target: 250

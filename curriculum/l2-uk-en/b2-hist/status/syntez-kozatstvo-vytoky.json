@@ -2,13 +2,13 @@
   "module": "syntez-kozatstvo-vytoky",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T23:54:23.332112Z",
+  "last_audit": "2026-01-27T19:06:10.863686Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-25T21:28:31.591750Z",
+    "md": "2026-01-27T19:06:05.274588Z",
     "meta": "2026-01-26T22:20:13.644092Z",
-    "activities": "2026-01-25T21:28:31.591341Z",
-    "vocabulary": "2026-01-23T23:12:07.564772Z",
+    "activities": "2026-01-27T15:34:54.881430Z",
+    "vocabulary": "2026-01-27T11:35:40.107145Z",
     "plan": null
   },
   "gates": {
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "3028/3000 (raw: 3187)"
+      "message": "4348/4000 (raw: 4507)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "10/10"
+      "message": "6/3"
     },
     "vocabulary": {
       "status": "pass",

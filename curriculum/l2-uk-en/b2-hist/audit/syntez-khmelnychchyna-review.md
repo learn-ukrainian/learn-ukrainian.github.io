@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M62 | **Phase:** HIST.6 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:54:50
+**Generated:** 2026-01-27 20:42:51
 
 ## Configuration
 **Type:** B2-history
@@ -22,14 +22,14 @@
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Аналіз Універсалу Богдана Хмельницького | 3 | 1 | ✅ |
 | 2 | comparative-study | Два шляхи: Зборів vs Біла Церква | 1 | 1 | ✅ |
-| 3 | quiz | Хронологія та події Хмельниччини | 8 | 8 | ✅ |
-| 4 | essay-response | Есе: Переяславська рада — вибір чи необхідність? | 1 | 1 | ✅ |
-| 5 | true-false | Міфи та факти про Хмельниччину | 10 | 8 | ✅ |
+| 3 | essay-response | Есе: Переяславська рада — вибір чи необхідність? | 1 | 1 | ✅ |
+| 4 | true-false | Міфи та факти про Хмельниччину | 10 | 8 | ✅ |
+| 5 | critical-analysis | Соціальна трансформація суспільства | 1 | 1 | ✅ |
 
 **Summary:**
 - Total activities: 5 (target: 3-9) ✅
 - Unique types: 5 (minimum: 2) ✅
-- Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 

@@ -305,18 +305,69 @@ Order matters: meta → vocab → activities → markdown
 
 **If you use iterative fix-audit loops, you are wasting tokens and user time.**
 
+### 9. Word Targets from config.py - SINGLE SOURCE OF TRUTH
+
+**config.py is the ONLY authoritative source for word targets.**
+
+**BEFORE generating content_outline or word budgets:**
+```bash
+# ALWAYS check config.py first
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from audit.config import LEVEL_CONFIG
+print(LEVEL_CONFIG['{LEVEL}']['target_words'])
+"
+
+# Or use the validation script
+.venv/bin/python scripts/validate_plan_config.py {level}
+```
+
+**Word targets by level (from config.py):**
+| Level | Config Key | target_words |
+|-------|------------|--------------|
+| A1 | A1 | 300-750 (graduated) |
+| A2 | A2 | 1000 |
+| B1 | B1-grammar/vocab/cultural | 1200-1500 |
+| B2 | B2 | 1750 |
+| B2-HIST | B2-history | 4000 |
+| C1 | C1 | 2000-3500 |
+| C1-HIST | C1-history | 4000 |
+| C1-BIO | C1-biography | 4000 |
+| LIT | LIT | 4500 |
+| C2 | C2 | 2000 |
+
+**You MUST:**
+- ✅ READ config.py target_words BEFORE generating content_outline
+- ✅ Ensure content_outline sections SUM to target_words
+- ✅ Run validation: `.venv/bin/python scripts/validate_plan_config.py`
+
+**ABSOLUTELY FORBIDDEN:**
+- ❌ Generating content_outline without checking config.py
+- ❌ Using hardcoded word targets from memory
+- ❌ Assuming "typical" values (e.g., "seminars are usually 3500")
+- ❌ Creating plans with word_target < config target_words
+
+**If plan word_target < config target_words:**
+```bash
+# Fix with:
+.venv/bin/python scripts/fix_plan_word_targets.py --fix {level}
+```
+
+**This rule exists because:** In January 2026, ALL 270 C1-HIST plans were generated with 3500 words instead of 4000 because Claude didn't check config.py. This wasted hours of debugging.
+
 ---
 
 ## How to Succeed
 
 1. **Read requirements fully**
-2. **Do the work completely**
-3. **Fix every violation**
-4. **Batch fixes within module** (NEW)
-5. **Loop until PASS**
-6. **Do NOT give up**
-7. **Do NOT negotiate**
-8. **FINISH THE JOB**
+2. **Check config.py for word targets** (NEW)
+3. **Do the work completely**
+4. **Fix every violation**
+5. **Batch fixes within module**
+6. **Loop until PASS**
+7. **Do NOT give up**
+8. **Do NOT negotiate**
+9. **FINISH THE JOB**
 
 ---
 

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M66 | **Phase:** HIST.7 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:54:52
+**Generated:** 2026-01-27 20:53:27
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, match-up, quiz, reading, true-false
+**Required Types:** essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -20,37 +20,40 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Розуміння тексту про Полтаву і вигнання | 10 | 8 | ✅ |
-| 2 | match-up | Військова та політична термінологія епохи Мазепи | 12 | 8 | ✅ |
-| 3 | reading | Аналіз Конституції Пилипа Орлика | 3 | 1 | ✅ |
-| 4 | true-false | Факти про Полтаву і вигнання гетьмана Мазепи | 10 | 8 | ✅ |
-| 5 | select | Оберіть усі правильні твердження згідно з текстом модуля | 8 | 6 | ✅ |
-| 6 | essay-response | Аналітичне есе про Полтавську битву | 1 | 1 | ✅ |
-| 7 | comparative-study | Порівняння історичних лідерів Полтавської епохи | 1 | 1 | ✅ |
-| 8 | unjumble | Складіть речення про Полтавську трагедію | 8 | 6 | ✅ |
-| 9 | error-correction | Виправте граматичні помилки в історичному тексті | 8 | 6 | ✅ |
-| 10 | fill-in | Вибір правильного відмінка для історичних описів | 10 | 8 | ✅ |
+| 1 | reading | Аналіз Конституції Пилипа Орлика | 3 | 1 | ✅ |
+| 2 | true-false | Факти про Полтаву і вигнання гетьмана Мазепи | 10 | 8 | ✅ |
+| 3 | essay-response | Аналітичне есе про Полтавську битву | 1 | 1 | ✅ |
+| 4 | comparative-study | Порівняння історичних лідерів Полтавської епохи | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 10 (target: 3-9) ❌
-- Unique types: 10 (minimum: 2) ✅
+- Total activities: 4 (target: 3-9) ✅
+- Unique types: 4 (minimum: 2) ✅
 - Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
-- Required types used: 5/5 (essay-response, match-up, quiz, reading, true-false) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in ivan-mazepa-poltava.yaml: Insufficient activities: 4 found, minimum 5 required for B2-HIST
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 4158/4000 (raw: 4338)
-- **Activities:** ✅ 10/3
+- **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 10/2 types
+- **Unique_types:** ✅ 4/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ Too many activities: 10 (target 3-9)
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ✅ Content-heavy OK (4 activities)
 - **Immersion:** 🇺🇦 98.4% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

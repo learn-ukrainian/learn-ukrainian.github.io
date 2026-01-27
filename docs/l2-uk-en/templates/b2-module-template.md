@@ -8,7 +8,6 @@
 
 **Related Issue:** [#292](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/292)
 
-
 <!--
 TEMPLATE_METADATA:
   required_sections:
@@ -29,6 +28,7 @@ TEMPLATE_METADATA:
 Before submitting a B2 module, verify:
 
 ### Content Requirements
+
 - [ ] **Word count:** 1750+ words (core prose: explanations, examples, engagement boxes — excludes vocabulary section, activities section, and tables)
 - [ ] **Vocabulary:** 30+ items in 3-column format (Слово | Переклад | Примітки)
 - [ ] **Text passages:** 300-500+ word authentic-style reading passages
@@ -36,6 +36,7 @@ Before submitting a B2 module, verify:
 - [ ] **Engagement boxes:** 5-6 boxes with pedagogical value
 
 ### Activity Requirements
+
 - [ ] **Activities:** 10-12 activities (quality over quantity, B2 standard)
 - [ ] **Activity density:**
   - Quiz: 10+ items
@@ -48,12 +49,12 @@ Before submitting a B2 module, verify:
   - Mark-the-words: 300+ word passage
 
 ### Immersion & Quality
+
 - [ ] **Immersion:** 100% Ukrainian (English ONLY in vocabulary translations)
 - [ ] **No Language Link boxes** — all explanations in Ukrainian
 - [ ] **Pedagogy:** CBI (Content-Based Instruction) — TTT for grammar, Narrative Arcs for vocab/history
 - [ ] **Register awareness:** Module uses appropriate functional style
 - [ ] **No violations:** Check for pedagogical red flags
-
 
 ---
 
@@ -274,6 +275,7 @@ register: "науковий"  # Options: офіційно-діловий, нау
 **Activity Mix for B2:**
 
 #### Core Activities (Required - choose 8-9)
+
 1. **quiz** (10+ items) — Comprehension, grammar application
 2. **fill-in** (10+ items) — Contextual vocabulary/grammar
 3. **unjumble** (8+ items) — Sentence construction
@@ -286,6 +288,7 @@ register: "науковий"  # Options: офіційно-діловий, нау
 **Sentence Complexity:** See `scripts/audit/config.py` ACTIVITY_COMPLEXITY['B2'] for CEFR-aligned word count targets
 
 #### Optional Activities (choose 2-4 to reach 10-12 total)
+
 9. **group-sort** (14+ items) — Complex categorization (registers, synonyms, etc.)
 10. **select** (multi-checkbox, 10+ items) — Multiple correct answers
 11. **true-false** (10+ items) — Statement verification
@@ -310,7 +313,6 @@ register: "науковий"  # Options: офіційно-діловий, нау
 | **select** | Multiple `- [x]` for all correct options |
 | **translate** | Multi-choice: `- [x] Correct translation.` with `> explanation` |
 | **mark-the-words** | `*marked*` words in blockquote passage |
-
 
 ---
 
@@ -509,6 +511,7 @@ register: "науковий"  # Options: офіційно-діловий, нау
 ## Common Pitfalls to Avoid
 
 ### ❌ DON'T:
+
 - **Don't use English in explanations** — 100% Ukrainian immersion required
 - **Don't create vocabulary lists** — Embed vocabulary in narratives
 - **Don't skip Model Answers** — Writing tasks MUST have examples
@@ -517,6 +520,7 @@ register: "науковий"  # Options: офіційно-діловий, нау
 - **Don't under-count activities** — 10-12 is the minimum (quality over quantity)
 
 ### ✅ DO:
+
 - **Use authentic-style passages** — Mimic Ukrainian journalism/literature
 - **Provide Model Answers for all writing** — Support self-learners
 - **Match register throughout** — Vocabulary, syntax, examples consistent
@@ -529,6 +533,7 @@ register: "науковий"  # Options: офіційно-діловий, нау
 ## Pre-Submission Checklist
 
 ### Content
+
 - [ ] 1800+ words before activities
 - [ ] 30+ vocabulary items in 3-column format
 - [ ] 300-500+ word reading passages
@@ -537,6 +542,7 @@ register: "науковий"  # Options: офіційно-діловий, нау
 - [ ] Register matches frontmatter declaration
 
 ### Activities
+
 - [ ] 10-12 activities minimum (quality over quantity)
 - [ ] Core activity types represented (8-9 required)
 - [ ] Activity density meets B2 standards (14+ items per activity)
@@ -544,6 +550,7 @@ register: "науковий"  # Options: офіційно-діловий, нау
 - [ ] Instructions in Ukrainian
 
 ### Immersion & Quality
+
 - [ ] 100% Ukrainian (English only in vocabulary "Переклад" column)
 - [ ] No Language Link boxes
 - [ ] Pedagogy appropriate (TTT for grammar, CBI for phraseology/integration)
@@ -551,6 +558,7 @@ register: "науковий"  # Options: офіційно-діловий, нау
 - [ ] Register awareness throughout
 
 ### Audit
+
 - [ ] Module passes `python3 scripts/audit_module.py`
 - [ ] Immersion ≥98%
 - [ ] Vocabulary count matches frontmatter

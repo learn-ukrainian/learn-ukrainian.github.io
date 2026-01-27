@@ -125,7 +125,7 @@ Use your numerals and currency rules.
 2. Одна сумка коштує 500 гривень. Після знижки 10% вона коштує... -> **Чотириста п'ятдесят гривень.**
 
 > [!reflection] **The Value of Choice**
-> Every purchase is a choice. In Ukrainian, having the vocabulary to express _why_ you choose something makes you a more conscious and integrated speaker. Comparisons are the colors of your decision-making palette. Кожна ваша покупка — це голос за якість та власну позицію!
+> Every purchase is a choice. In Ukrainian, having the vocabulary to express *why* you choose something makes you a more conscious and integrated speaker. Comparisons are the colors of your decision-making palette. Кожна ваша покупка — це голос за якість та власну позицію!
 
 > [!tip] **Eco-Friendly Choice**
 > Vendors often ask: «Пакет потрібен?» (Need a bag?). You can say «Ні, дякую, у мене є своя **еко-торбинка**» (No thanks, I have my own eco-bag). It’s a very modern and appreciated phrase in cities!

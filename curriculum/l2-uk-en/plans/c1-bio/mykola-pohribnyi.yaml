@@ -69,22 +69,10 @@ activity_hints:
   focus: Статті про культуру мови та спогади колег
   source: Публіцистика та мемуари
   items: 3 passages
-- type: quiz
-  focus: Біографія та внесок у мовну культуру
-  items: 12+
-- type: match-up
-  focus: Орфоепічні правила та приклади
-  items: 10+
 - type: essay-response
   focus: Яка роль радіо у збереженні мови?
   word_target: 300
   output: Media analysis
-- type: group-sort
-  focus: Етапи кар'єри та досягнення
-  items: 12+
-- type: fill-in
-  focus: Лінгвістична термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-97-panteleimon-kulish
@@ -107,3 +95,7 @@ sources:
   notes: Норми літературної мови та орфоепія
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of микола погрібний: українська редакторська школа'
+- Evaluate the contributions of голос української вимови
+- Trace the career and influence of останні роки та спадщина (1990-2003)

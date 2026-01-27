@@ -5,50 +5,52 @@ version: '1.0'
 title: 'Синтез: Після 2014 і 2022'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of синтез: після 2014 і 2022'
+- Evaluate the historical significance of новий цикл
 content_outline:
 - section: Вступ — Новий цикл
-  words: 451
+  words: 515
   subsections:
   - Огляд модулів 122-124
   - 2014 — початок деколонізації
   - 2022 — прискорення
   - Мета синтезу
 - section: Пост-2014 — Декомунізація
-  words: 790
+  words: 903
   subsections:
   - Закони 2015 року
   - Перейменування
   - Що це означало
   - Критика і підтримка
 - section: Мовний зсув
-  words: 677
+  words: 774
   subsections:
   - Закон про мову 2019
   - Практика vs закон
   - Російськомовні українці
   - Добровільний перехід
 - section: 2022 — Культурний вибух
-  words: 677
+  words: 774
   subsections:
   - Війна і культура
   - Нові митці
   - Міжнародний прорив
   - Культура як зброя
 - section: Чи це останній цикл?
-  words: 564
+  words: 645
   subsections:
   - Структурні зміни
   - Що відрізняє від попередніх
   - Ризики — що може зупинити
   - Умови успіху
 - section: Підсумок
-  words: 341
+  words: 389
   subsections:
   - Цикл продовжується — чи завершується?
   - Українська культура — наступ
   - Перехід до агентності
-word_target: 3500
+word_target: 4000
 vocabulary:
 - синтез
 - декомунізація
@@ -68,11 +70,11 @@ vocabulary:
 activities:
 - type: essay-response
   focus: Map cultural cycles from Ems to 2022
-- type: decommunization-analysis
+- type: critical-analysis
   focus: 2015 laws — impact assessment
-- type: language-shift
+- type: critical-analysis
   focus: Document post-2022 language shift
-- type: uniqueness-analysis
+- type: critical-analysis
   focus: How 2022 differs from previous cycles
 - type: essay-response
   focus: Чи 2022 — кінець циклу пригнічень?

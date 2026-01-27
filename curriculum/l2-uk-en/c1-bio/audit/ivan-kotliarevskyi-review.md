@@ -1,10 +1,12 @@
 # Audit Report: M29 — ivan-kotliarevskyi.md
+
 **Level:** C1 | **Module:** M29 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:11
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | «Розуміння біографії та творчості Івана Котляревського» | 12 | 5 | ✅ |
@@ -44,19 +47,23 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in ivan-kotliarevskyi.yaml: Schema validation error at key '7': {'type': 'reading', 'title': '«Історія першого видання»', 'resource': {'type': 'article', 'url': 'https://localhistory.org.ua/texts/statti/iak-kotliarevskii-eneidu-pisav-i-chomu-vona-stala-revoliutsiieiu/', 'title': '«Як Котляревський «Енеїду» писав і чому вона стала революцією»'}, 'tasks': ['«Як автор статті пояснює феномен успіху «Енеїди» серед російського дворянства?»', '«Які нові факти про видання Парпури наводяться у тексті?»', '«Чому Котляревський спочатку образився на першого видавця свого твору?»']} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Спадщина|Вплив' found: Вплив на розвиток мови, Спадщина
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 2 violations (minor)
 
 ## Gates
+
 - **Words:** ❌ 1978/4000 (raw: 2202)
 - **Activities:** ✅ 15/3
 - **Density:** ✅ All > 1
@@ -75,10 +82,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 7 | 4 | 100% | 19% | 19.0% |
@@ -94,6 +103,7 @@
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 80 | Included in Core |

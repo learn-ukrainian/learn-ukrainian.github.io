@@ -69,22 +69,10 @@ activity_hints:
   focus: Літературна творчість
   source: Уривки з «Землі» та «Царівни»
   items: 3 passages
-- type: quiz
-  focus: Біографія та ключові твори
-  items: 12+
-- type: match-up
-  focus: Твори та їхні теми
-  items: 10+
 - type: essay-response
   focus: Як Кобилянська змінила українську прозу?
   word_target: 300
   output: Літературознавче есе
-- type: group-sort
-  focus: Феміністичні теми vs селянська тематика
-  items: 12+
-- type: fill-in
-  focus: Літературознавча термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-25 (Наталія Кобринська)
@@ -108,3 +96,7 @@ sources:
   notes: Літературознавчі дослідження
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of ольга кобилянська: модерністка і феміністка'
+- Evaluate the contributions of орлиця буковини
+- Trace the career and influence of останні роки та спадщина (1914-1942)

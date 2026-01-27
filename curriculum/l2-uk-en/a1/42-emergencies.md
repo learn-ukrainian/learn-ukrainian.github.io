@@ -134,5 +134,3 @@ Stay safe! **Бережіть себе!** (Take care of yourself!) Ukraine is ge
 
 > [!tip]
 > Запам'ятайте номер 112 — він універсальний для всіх екстрених ситуацій! (Memorize the number 112 — it's universal for all emergency situations!)
-
-

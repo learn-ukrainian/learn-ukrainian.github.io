@@ -1,15 +1,15 @@
 {
   "module": "08-aspect-past-result-process",
   "level": "B1",
-  "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:26:48.710577Z",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-27T16:25:47.071975Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-24T20:26:14.466166Z",
-    "meta": "2026-01-26T15:44:41.460374Z",
-    "activities": "2026-01-24T20:27:36.379174Z",
-    "vocabulary": "2026-01-25T18:00:40.027898Z",
-    "plan": "2026-01-26T15:44:41.460048Z"
+    "md": "2026-01-27T15:33:45.469715Z",
+    "meta": "2026-01-27T15:24:52.421953Z",
+    "activities": "2026-01-27T14:28:30.316634Z",
+    "vocabulary": "2026-01-27T15:28:48.185390Z",
+    "plan": "2026-01-27T12:02:43.997062Z"
   },
   "gates": {
     "meta": {
@@ -20,17 +20,17 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2166/1500 (raw: 2505)"
+      "message": "2837/1500 (raw: 3463)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "13/8"
+      "message": "8/8"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "131/25"
+      "message": "25/25"
     },
     "naturalness": {
       "status": "pass",

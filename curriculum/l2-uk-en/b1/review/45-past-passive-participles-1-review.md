@@ -11,7 +11,7 @@
 | Dimension           | Score | Notes                                                               |
 | ------------------- | ----- | ------------------------------------------------------------------- |
 | Coherence           | 10/10 | Logical introduction to PPP formation (-ний suffix).                |
-| Relevance           | 10/10 | Essential for "object-focused" descriptions (e.g., _work is done_). |
+| Relevance           | 10/10 | Essential for "object-focused" descriptions (e.g., *work is done*). |
 | Educational         | 10/10 | Clear rules for stem changes (a -> anyj, y -> enyj).                |
 | Language            | 10/10 | Standard Ukrainian usage.                                           |
 | Pedagogy            | 10/10 | Good progression from formation to agreement/usage.                 |
@@ -30,7 +30,7 @@
 ## Strengths
 
 - **Clear Rules:** The sound alternation rules (robyty -> roblenyj) are explained clearly.
-- **Contextual Relevance:** Connecting passive participles to the history of _printing_ (First Printer Fedorov) is a brilliant thematic choice—books are "written", "printed", "published".
+- **Contextual Relevance:** Connecting passive participles to the history of *printing* (First Printer Fedorov) is a brilliant thematic choice—books are "written", "printed", "published".
 
 ## Issues
 

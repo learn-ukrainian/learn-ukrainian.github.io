@@ -1,10 +1,12 @@
 # Audit Report: M01 — knyahynia-olha.md
+
 **Level:** C1 | **Module:** M01 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 **Generated:** 2026-01-26 22:55:53
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Первинне джерело: «Повість минулих літ» про помсту Ольги | 1 | 1 | ✅ |
@@ -35,6 +38,7 @@
 - Low density activities: 0
 
 ## Gates
+
 - **Words:** ✅ 4064/4000 (raw: 4351)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
@@ -53,10 +57,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 7 | 4 | 100% | 19% | 19.0% |
@@ -72,6 +78,7 @@
 | **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

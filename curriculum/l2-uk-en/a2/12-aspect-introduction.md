@@ -61,11 +61,11 @@ Some of the most basic verbs use completely different roots for each aspect. You
 To choose the right aspect, always ask yourself: **"Am I describing a duration or a completion?"** This simple question will guide you through 90% of situations. Ukrainian speakers are very sensitive to this distinction. Contextual clues often dictate the aspect for you.
 
 1. **Duration markers:** Always point to Imperfective. Look for words such as **довго** (long), **цілий день** (all day), **три години** (three hours).
-   - _Він довго писав есе._ (He was writing the essay for a long time).
+   - *Він довго писав есе.* (He was writing the essay for a long time).
 2. **Frequency markers:** These also signal the Imperfective. Common indicators include **часто** (often), **завжди** (always), **кожен день** (every day).
-   - _Вона завжди купує квіти._ (She always buys flowers).
+   - *Вона завжди купує квіти.* (She always buys flowers).
 3. **Completion markers:** These require the Perfective. Watch out for **нарешті** (at last), **вже** (already), **раптом** (suddenly).
-   - _Я вже зробив домашнє завдання!_ (I have already done the homework!).
+   - *Я вже зробив домашнє завдання!* (I have already done the homework!).
 
 > [!reflection] **The Philosophy of Done**
 > In Ukrainian culture, there is a strong distinction between the effort (imperfective) and the achievement (perfective). Using the perfective aspect often implies a sense of responsibility and pride in having reached a goal. Коли ви кажете «Я вивчив», ви заявляєте про свою перемогу над темою. Це не просто опис дії, а опис вашого успіху.

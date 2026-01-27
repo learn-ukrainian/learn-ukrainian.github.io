@@ -1,10 +1,12 @@
 # Audit Report: M62 — lesya-ukrainka.md
+
 **Level:** C1 | **Module:** M62 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:28
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Життєвий та творчий шлях Лесі Українки | 12 | 5 | ✅ |
@@ -44,15 +47,18 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in lesya-ukrainka.yaml: Schema validation error at key '7': {'type': 'reading', 'title': '«Філософія «Лісової пісні»»', 'resource': {'type': 'article', 'url': 'https://osvita.ua/vnz/reports/ukr_lit/14114/', 'title': '«Проблематика та образи драми-феєрії «Лісова пісня»»'}, 'tasks': ['Які основні філософські конфлікти виділяє автор статті у творі?', 'Як у тексті пояснюється трагедія Мавки та Лукаша з лінгвістичної точки зору?', 'Знайдіть у статті визначення жанру «драма-феєрія» та випишіть його ключові ознаки.']} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
+
 - **Words:** ❌ 2154/4000 (raw: 2377)
 - **Activities:** ✅ 15/3
 - **Density:** ✅ All > 1
@@ -71,10 +77,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 7 | 4 | 100% | 19% | 19.0% |
@@ -90,6 +98,7 @@
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 83 | Included in Core |

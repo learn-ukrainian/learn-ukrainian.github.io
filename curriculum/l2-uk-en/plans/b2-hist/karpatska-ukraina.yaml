@@ -67,15 +67,6 @@ activity_hints:
   focus: Спогади учасників Карпатської Січі
   source: Архівні матеріали
   items: 4
-- type: quiz
-  focus: 'Карпатська Україна: факти та події'
-  items: 15
-- type: match-up
-  focus: Дата → подія 1938-1939
-  items: 10
-- type: fill-in
-  focus: Політична лексика
-  items: 10
 - type: essay-response
   focus: Чому Карпатська Україна важлива для української ідентичності?
   word_target: 250

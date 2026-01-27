@@ -3,9 +3,9 @@
 ## Example 1: High-Quality Module (Pass)
 
 ```bash
-$ export GEMINI_API_KEY="your-key"
-$ export AUDIT_CONTENT_QUALITY="true"
-$ python3 scripts/audit_module.py curriculum/l2-uk-en/a1/06-the-living-verb-i.md
+export GEMINI_API_KEY="your-key"
+export AUDIT_CONTENT_QUALITY="true"
+python3 scripts/audit_module.py curriculum/l2-uk-en/a1/06-the-living-verb-i.md
 ```
 
 **Output:**
@@ -40,9 +40,9 @@ Immersion    🇺🇦 12.5% (target 8-18% (M06))
 ## Example 2: Module with Issues (Warning)
 
 ```bash
-$ export GEMINI_API_KEY="your-key"
-$ export AUDIT_CONTENT_QUALITY="true"
-$ python3 scripts/audit_module.py curriculum/l2-uk-en/a2/12-aspect-introduction.md
+export GEMINI_API_KEY="your-key"
+export AUDIT_CONTENT_QUALITY="true"
+python3 scripts/audit_module.py curriculum/l2-uk-en/a2/12-aspect-introduction.md
 ```
 
 **Output:**
@@ -97,9 +97,9 @@ Immersion    🇺🇦 42.3% (target 35-55% (M12))
 ## Example 3: Word Salad Detected (Fail)
 
 ```bash
-$ export GEMINI_API_KEY="your-key"
-$ export AUDIT_CONTENT_QUALITY="true"
-$ python3 scripts/audit_module.py curriculum/l2-uk-en/b1/broken-module.md
+export GEMINI_API_KEY="your-key"
+export AUDIT_CONTENT_QUALITY="true"
+python3 scripts/audit_module.py curriculum/l2-uk-en/b1/broken-module.md
 ```
 
 **Output:**
@@ -166,7 +166,7 @@ Immersion    🇺🇦 38.5% (target 35-55% (M20))
 ## Example 4: API Not Configured (Default)
 
 ```bash
-$ python3 scripts/audit_module.py curriculum/l2-uk-en/a1/01-the-cyrillic-code-i.md
+python3 scripts/audit_module.py curriculum/l2-uk-en/a1/01-the-cyrillic-code-i.md
 ```
 
 **Output:**
@@ -246,6 +246,7 @@ Immersion    🇺🇦 9.9% (target 5-15% (M01))
 ## Integration Examples
 
 ### Check all A1 modules
+
 ```bash
 export GEMINI_API_KEY="your-key"
 export AUDIT_CONTENT_QUALITY="true"
@@ -258,6 +259,7 @@ done
 ```
 
 ### Pipeline with content quality
+
 ```bash
 export GEMINI_API_KEY="your-key"
 export AUDIT_CONTENT_QUALITY="true"
@@ -265,6 +267,7 @@ npm run pipeline l2-uk-en a1
 ```
 
 ### Batch report
+
 ```bash
 export GEMINI_API_KEY="your-key"
 export AUDIT_CONTENT_QUALITY="true"

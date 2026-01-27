@@ -1,8 +1,8 @@
 # Audit Report: M63 — ivan-mazepa-derzhavnyk.md
 **Level:** B2 | **Module:** M63 | **Phase:** HIST.7 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:54:50
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-27 20:42:52
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, fill-in, match-up, quiz, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -21,20 +21,20 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Листи Івана Мазепи | 3 | 1 | ✅ |
-| 2 | quiz | Іван Мазепа: Шлях до влади та політика | 8 | 8 | ✅ |
-| 3 | essay-response | Есе: Мазепа — політик чи меценат? | 1 | 1 | ✅ |
-| 4 | comparative-study | Два лідери: Мазепа vs Петро I | 1 | 1 | ✅ |
-| 5 | true-false | Правда чи міф про Мазепу | 10 | 8 | ✅ |
+| 2 | essay-response | Есе: Мазепа — політик чи меценат? | 1 | 1 | ✅ |
+| 3 | comparative-study | Два лідери: Мазепа vs Петро I | 1 | 1 | ✅ |
+| 4 | true-false | Життя та діяльність Мазепи | 10 | 8 | ✅ |
+| 5 | critical-analysis | Коломацькі статті 1687 року | 1 | 1 | ✅ |
 
 **Summary:**
 - Total activities: 5 (target: 3-9) ✅
 - Unique types: 5 (minimum: 2) ✅
-- Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
-- Required types used: 3/5 (essay-response, quiz, reading) ❌
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4050/4000 (raw: 4115)
+- **Words:** ✅ 4050/4000 (raw: 4118)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -73,14 +73,11 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 95 | Included in Core |
-| **Вступ: Людина епохи Бароко** | ✅ | 504 | Included in Core |
-| **Коломацькі статті 1687: Ціна влади** | ⚪️ | 470 | Skipped |
-| **Внутрішня політика: Економіка та еліта** | ⚪️ | 597 | Skipped |
-| **Дипломатія виживання: Мазепа і Петро I** | ⚪️ | 532 | Skipped |
-| **Батурин: Столиця європейського зразка** | ⚪️ | 370 | Skipped |
-| **Культурний фронт: Меценатство як політика** | ✅ | 486 | Included in Core |
+| **Вступ: Найвідоміший гетьман** | ✅ | 504 | Included in Core |
+| **Шлях до влади** | ⚪️ | 470 | Skipped |
+| **Гетьман-будівничий (1687-1708)** | ⚪️ | 1985 | Skipped |
 | **Читання** | ✅ | 143 | Included in Core |
 | **Первинні джерела** | ✅ | 200 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 387 | Included in Core |
-| **Підсумок** | ✅ | 120 | Included in Core |
+| **Підсумок: Гетьман на роздоріжжі** | ✅ | 120 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 146 | Skipped |

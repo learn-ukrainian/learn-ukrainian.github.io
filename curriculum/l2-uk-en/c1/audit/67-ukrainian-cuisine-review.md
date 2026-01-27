@@ -1,8 +1,10 @@
 # Audit Report: 163-ukrainian-cuisine.md
+
 **Phase:** C1.5 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 2000
 **Overall Status:** ❌ FAIL
 
 ## Gates
+
 - **Words:** ✅ 2236/2000
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
@@ -21,10 +23,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 100% (minimum: 95%)
 **Module Type:** cultural
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | cultural | 9 | 5 | 100% | 33% | 33.3% |
@@ -38,6 +42,7 @@
 | **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 88 | Included in Core |

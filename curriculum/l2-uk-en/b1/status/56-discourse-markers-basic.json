@@ -2,14 +2,14 @@
   "module": "56-discourse-markers-basic",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:27:20.127266Z",
+  "last_audit": "2026-01-27T18:24:08.555635Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-11T19:42:59.257396Z",
     "meta": "2026-01-26T15:44:41.628165Z",
     "activities": "2026-01-11T19:44:05.360766Z",
     "vocabulary": "2026-01-25T16:02:18.591139Z",
-    "plan": "2026-01-26T15:44:41.627933Z"
+    "plan": "2026-01-27T18:17:43.185535Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1660/1500 (raw: 2560) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "1660/1500 (raw: 2560)"
     },
     "activities": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Missing required activity types: transformation, writing"
-    ],
-    "pass_count": 3,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

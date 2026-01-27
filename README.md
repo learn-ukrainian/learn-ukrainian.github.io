@@ -39,12 +39,14 @@ A complete Ukrainian language curriculum for English speakers:
 ## Features
 
 ### For Learners
+
 - Step-by-step progression from zero to fluency
 - IPA pronunciation guides for every word
 - Authentic YouTube videos and podcasts
 - Self-assessment checkpoints every 10 lessons
 
 ### For Developers
+
 - Open-source curriculum in Markdown
 - Automated quality audits
 - JSON export for app integration
@@ -53,9 +55,11 @@ A complete Ukrainian language curriculum for English speakers:
 ## Getting Started
 
 ### Online (Recommended)
+
 Visit **[learn-ukrainian.github.io](https://learn-ukrainian.github.io)** and start with A1 Module 1.
 
 ### Local Development
+
 ```bash
 git clone https://github.com/learn-ukrainian/learn-ukrainian.github.io.git
 cd learn-ukrainian.github.io

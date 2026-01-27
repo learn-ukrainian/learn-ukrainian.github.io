@@ -115,7 +115,6 @@ Each checkpoint tests specific **skill groups** — concrete abilities learners 
 | Collective Numerals        | M49    | Use двоє, троє; fractions              |
 | Integrated Grammar         | M50    | Apply all advanced forms in context    |
 
-
 ---
 
 ## Naturalness Quality Checklist

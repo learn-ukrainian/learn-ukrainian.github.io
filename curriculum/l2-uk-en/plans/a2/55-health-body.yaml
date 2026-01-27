@@ -6,26 +6,26 @@ title: Health and Body
 subtitle: Feeling Good
 content_outline:
 - section: Introduction / Вступ
-  words: 150
+  words: 143
   points:
   - Essential health vocabulary
   - Grammar of 'болить'
 - section: Presentation / Презентація
-  words: 400
+  words: 381
   points:
   - Body parts (gender and agreement)
   - Symptoms and illnesses
   - Medical locations and treatments
 - section: Practice / Практика
-  words: 200
+  words: 190
   points:
   - Dialogue at the doctor
 - section: Dialogues / Діалоги
-  words: 200
+  words: 190
   points:
   - Story about an accident
 - section: Summary / Підсумок
-  words: 100
+  words: 96
   points:
   - Recap of body parts and symptoms
 focus: vocabulary
@@ -41,3 +41,4 @@ grammar:
 - body parts vocabulary
 - doctor's appointment
 phase: A2.3
+word_target: 1000

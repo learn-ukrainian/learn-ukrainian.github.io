@@ -5,57 +5,59 @@ version: '1.0'
 title: 'Розумовський цикл: Останній гетьман'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of розумовський цикл: останній гетьман'
+- Evaluate the historical significance of фаворит, що скасував себе
 content_outline:
 - section: Вступ — Фаворит, що скасував себе
-  words: 400
+  words: 457
   subsections:
   - Розумовський — брат фаворита
   - Гетьман з ласки цариці
   - Як він завершив гетьманат
   - Структура модуля
 - section: Фаза 1 — Кооптація через родину
-  words: 700
+  words: 800
   subsections:
   - Олексій Розумовський — коханець Єлизавети
   - Кирило — президент Академії в 18 років
   - Гетьманство — 1750
   - Найвищий статус українця в імперії
 - section: Фаза 2 — Ілюзія автономії
-  words: 600
+  words: 686
   subsections:
   - Реформи гетьмана
   - Батурин — нова столиця
   - Культурне життя
   - Але під контролем Петербурга
 - section: Фаза 3 — Спроба спадковості
-  words: 500
+  words: 571
   subsections:
   - Клопотання про спадкове гетьманство
   - Катерина II — відмова
   - «Що за гетьмани?»
   - Виклик до Петербурга
 - section: Фаза 4 — Добровільна (?) капітуляція
-  words: 600
+  words: 686
   subsections:
   - 1764 — зречення
   - Що отримав натомість
   - Компенсація чи примус
   - Кінець Гетьманщини
 - section: Аналіз — чому погодився
-  words: 400
+  words: 457
   subsections:
   - Особиста безпека
   - Родинні інтереси
   - Відсутність альтернатив
   - Урок для еліт
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - Розумовський — кооптована еліта
   - Цикл завершився ліквідацією
   - Перехід до радянського періоду
-word_target: 3500
+word_target: 4000
 vocabulary:
 - Розумовський
 - останній гетьман
@@ -75,9 +77,9 @@ vocabulary:
 activities:
 - type: critical-analysis
   focus: Map Rozumovsky through co-optation cycle
-- type: family-analysis
+- type: critical-analysis
   focus: Rozumovsky brothers — different paths
-- type: decision-analysis
+- type: critical-analysis
   focus: 1764 — what were Rozumovsky's real options?
 - type: comparative-study
   focus: Compare Mazepa (resistance) vs. Rozumovsky (capitulation)

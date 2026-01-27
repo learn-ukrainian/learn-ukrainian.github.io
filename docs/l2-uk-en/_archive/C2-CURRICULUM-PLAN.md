@@ -63,6 +63,7 @@ C2 — це найвищий рівень володіння українськ�
 **Philosophy:** `claude_extensions/quick-ref/philosophy.md` (Strict Linguistic Standards)
 
 ### Philosophy: Stylistic Perfection & Creative Production
+
 At C2, the learner acts as a creator and expert user of the language.
 
 1.  **Creative Production:** Learners must produce original literary and professional texts. **Model Answers** are mandatory for all such tasks to provide a "gold standard" for comparison.
@@ -70,6 +71,7 @@ At C2, the learner acts as a creator and expert user of the language.
 3.  **Stylistic Precision:** Activities must focus on the *nuance* between synonyms and register shifts (e.g., rewriting a text from "Neutral" to "Ironic").
 
 ### Advanced Activity Types (C2 Standard)
+
 C2 modules require creative production and deep analysis. Use these specific types:
 
 | Type | Description | Requirement |
@@ -290,9 +292,11 @@ Before starting C2, learners have completed:
 ## CEFR C2 Can-Do Alignment
 
 ### CEFR C2 Descriptor (Council of Europe)
+>
 > Can understand with ease virtually everything heard or read. Can summarise information from different spoken and written sources, reconstructing arguments and accounts in a coherent presentation. Can express him/herself spontaneously, very fluently and precisely, differentiating finer shades of meaning even in more complex situations.
 
 ### Learning Outcomes
+
 By module 80, learners can:
 
 **Understanding (Listening/Reading)**
@@ -338,6 +342,7 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 > **Checkpoints:** M20 (7 Styles) tests M01-19; M25 (Complete Mastery) tests M21-24. See `c2-checkpoint-module-template.md`.
 
 ### Learning Goals
+
 - Master all 7 Ukrainian functional styles
 - Control stylistic transformation
 - Perfect euphonic usage
@@ -383,6 +388,7 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 ---
 
 #### Module 01: C1 Bridge & Assessment
+
 **Grammar:** Comprehensive C1 consolidation and gap identification
 
 **Assessment Areas:**
@@ -398,7 +404,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C2 level
 
-
 **Signature Activity Concepts:**
 1. Diagnostic writing assessment (all styles)
 2. Oral fluency evaluation
@@ -407,6 +412,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 02: Милозвучність — Complete Euphonic System
+
 **Grammar:** All euphonic alternations in Ukrainian
 
 **Euphonic Patterns:**
@@ -427,7 +433,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C2 level
 
-
 **Signature Activity Concepts:**
 1. Error correction: Fix euphonic violations
 2. Transform: Apply all euphonic rules
@@ -436,6 +441,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 03: Науковий стиль — Publication-Ready
+
 **Grammar:** Advanced academic writing for publication
 
 **Publication Components:**
@@ -456,7 +462,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C2 level
 
-
 **Signature Activity Concepts:**
 1. Write: Abstract for research paper
 2. Transform: Thesis → article
@@ -465,6 +470,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 04: Офіційний стиль — Legal Documents
+
 **Grammar:** Legal and official document creation
 
 **Document Types:**
@@ -487,7 +493,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C2 level
 
-
 **Signature Activity Concepts:**
 1. Draft: Simple contract
 2. Transform: Informal agreement → legal document
@@ -496,6 +501,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 05: Публіцистичний стиль — Journalism
+
 **Grammar:** Journalistic writing and media production
 
 **Journalistic Genres:**
@@ -518,7 +524,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C2 level
 
-
 **Signature Activity Concepts:**
 1. Write: News report on current event
 2. Transform: Press release → news article
@@ -527,6 +532,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 06: Художній стиль — Creative Writing
+
 **Grammar:** Literary creation and stylistic techniques
 
 **Literary Forms:**
@@ -547,7 +553,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C2 level
 
-
 **Signature Activity Concepts:**
 1. Write: Flash fiction (500 words)
 2. Analyze: Narrative techniques in excerpt
@@ -556,6 +561,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 07: Розмовний стиль — Native Fluency
+
 **Grammar:** Colloquial Ukrainian at native level
 
 **Colloquial Features:**
@@ -576,7 +582,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C2 level
 
-
 **Signature Activity Concepts:**
 1. Dialogue: Natural conversation simulation
 2. Transform: Formal → colloquial
@@ -585,6 +590,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 08: Релігійний стиль — Liturgical Language
+
 **Grammar:** Understanding religious and liturgical texts
 
 **Religious Text Types:**
@@ -604,7 +610,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C2 level
 
-
 **Signature Activity Concepts:**
 1. Reading: Biblical excerpt with analysis
 2. Vocabulary: Church Slavonic → modern equivalents
@@ -613,6 +618,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 09: Епістолярний стиль — Complete Correspondence
+
 **Grammar:** All types of written correspondence
 
 **Letter Types:**
@@ -634,7 +640,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C2 level
 
-
 **Signature Activity Concepts:**
 1. Write: Formal complaint letter
 2. Transform: Email chain → formal letter
@@ -643,6 +648,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 10: Style Transformation I — Academic to Popular
+
 **Grammar:** Transforming научный → науково-популярний
 
 **Transformation Strategies:**
@@ -663,7 +669,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C2 level
 
-
 **Signature Activity Concepts:**
 1. Transform: Research abstract → blog post
 2. Analyze: Compare scientific and popular versions
@@ -672,6 +677,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 11: Style Transformation II — Official to Journalistic
+
 **Grammar:** Transforming офіційний → публіцистичний
 
 **Transformation Strategies:**
@@ -692,7 +698,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C2 level
 
-
 **Signature Activity Concepts:**
 1. Transform: Press release → news story
 2. Transform: Statistical report → feature article
@@ -701,6 +706,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 12: Lexical Stylistics
+
 **Grammar:** Precision in word choice
 
 **Lexical Tools:**
@@ -721,7 +727,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C2 level
 
-
 **Signature Activity Concepts:**
 1. Exercise: Choose most appropriate synonym
 2. Transform: Replace neutral with marked vocabulary
@@ -730,6 +735,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 13: Syntactic Stylistics
+
 **Grammar:** Sentence variety for effect
 
 **Syntactic Variation:**
@@ -750,7 +756,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C2 level
 
-
 **Signature Activity Concepts:**
 1. Transform: Simple sentences → complex
 2. Create: Paragraph with syntactic variety
@@ -759,6 +764,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 14: Individual Voice I — Developing Personal Style
+
 **Grammar:** Finding and developing distinctive writing voice
 
 **Voice Elements:**
@@ -778,7 +784,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C2 level
 
-
 **Signature Activity Concepts:**
 1. Analysis: Identify your voice in previous writing
 2. Experiment: Write same topic in different voices
@@ -787,6 +792,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 15: Individual Voice II — Refining Distinctive Style
+
 **Grammar:** Perfecting personal writing style
 
 **Refinement Strategies:**
@@ -807,7 +813,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C2 level
 
-
 **Signature Activity Concepts:**
 1. Edit: Refine previous writing for voice
 2. Create: Piece showcasing individual style
@@ -816,6 +821,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 16: Text Coherence — Seamless Flow
+
 **Grammar:** Creating perfectly flowing texts
 
 **Coherence Tools:**
@@ -836,7 +842,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C2 level
 
-
 **Signature Activity Concepts:**
 1. Analyze: Coherence devices in professional text
 2. Edit: Improve flow in weak text
@@ -845,6 +850,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 17: C2.1 Practice I — Style Portfolio
+
 **Grammar:** Creating diverse style portfolio
 
 **Portfolio Contents:**
@@ -872,6 +878,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 18: C2.1 Practice II — Transformation Exercises
+
 **Grammar:** Complex style transformation practice
 
 **Transformation Tasks:**
@@ -895,6 +902,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 19: C2.1 Review
+
 **Grammar:** Consolidation of stylistic mastery
 
 **Review Areas:**
@@ -915,6 +923,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 20: C2.1 Checkpoint
+
 **Covers:** M01-19
 
 **Required Skill Groups:**
@@ -936,6 +945,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 21: Stylistic Devices Mastery
+
 **Grammar:** Advanced figurative language and rhetorical devices
 
 **Stylistic Devices:**
@@ -951,7 +961,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C2 level
 
-
 **Signature Activity Concepts:**
 1. Analysis: Identify devices in literary texts
 2. Production: Create original examples
@@ -960,6 +969,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 22: Rhythm & Prosody in Prose
+
 **Grammar:** Controlling rhythm and sound patterns in prose writing
 
 **Prosodic Elements:**
@@ -975,7 +985,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C2 level
 
-
 **Signature Activity Concepts:**
 1. Analysis: Identify rhythm patterns
 2. Rewrite: Adjust rhythm for effect
@@ -984,6 +993,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 23: Intertextuality
+
 **Grammar:** Allusion, quotation, and intertextual references
 
 **Intertextual Techniques:**
@@ -999,7 +1009,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C2 level
 
-
 **Signature Activity Concepts:**
 1. Identify: Trace allusions in texts
 2. Create: Write with deliberate intertextuality
@@ -1008,6 +1017,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 24: Style Blending & Hybrid Registers
+
 **Grammar:** Creating hybrid styles for specific effects
 
 **Hybrid Techniques:**
@@ -1023,7 +1033,6 @@ Vocabulary will emerge naturally from thematic content and should meet:
 - Integration: 80% in activities, 50% in lesson text
 - Register and complexity appropriate to C2 level
 
-
 **Signature Activity Concepts:**
 1. Analysis: Identify style mixing in texts
 2. Create: Write in hybrid register
@@ -1032,6 +1041,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 ---
 
 #### Module 25: C2.1 Final Checkpoint
+
 **Covers:** M01-24 (Complete C2.1 Stylistic Perfection)
 
 **Required Skill Groups:**
@@ -1063,6 +1073,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 > **Checkpoint:** M45 tests M26-44 skill groups. See `c2-checkpoint-module-template.md`.
 
 ### Learning Goals
+
 - Master literary analysis at scholar level
 - Produce original creative writing
 - Understand translation theory
@@ -1098,6 +1109,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 | 45 | C2.2 Checkpoint | M26-44 | Assessment |
 
 ### Vocabulary Plan C2.2 (~500 words)
+
 - Literary theory: наратологія, фокалізація, інтертекстуальність, деконструкція
 - Poetry terms: верлібр, катрен, терцина, сонет, балада
 - Prose terms: новела, повість, роман, оповідання, нарис
@@ -1113,6 +1125,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 > **Ukrainian State Standard 2024 Compliance:** The standard requires C2 learners to handle "лекції і презентації на загальні чи професійні теми" (lectures and presentations on general or professional topics), "неадаптовані тексти зі сфери особистих і професійних зацікавлень" (unadapted texts from personal and professional interests), and produce "реферат, доповідь, повідомлення на теми зі сфери професійних чи особистих зацікавлень" (abstracts, reports, messages on professional topics). The standard does NOT prescribe specific professional domains — learners must be able to handle ANY professional field.
 
 ### Learning Goals
+
 - Develop meta-skills for acquiring ANY professional domain vocabulary
 - Master strategies for reading and understanding specialized texts
 - Learn to produce professional documents across domains
@@ -1176,6 +1189,7 @@ This approach:
 ### Module Content Highlights
 
 #### Module 47: Terminology Acquisition I
+
 **Skills:**
 - Identifying word formation patterns (prefixes, suffixes, roots)
 - Using context to infer meaning
@@ -1185,6 +1199,7 @@ This approach:
 **Practice Domain:** General science/technology (accessible to all learners)
 
 #### Module 49: Reading Professional Texts I
+
 **Skills:**
 - Skimming for structure
 - Scanning for specific information
@@ -1194,6 +1209,7 @@ This approach:
 **Text Types:** Research abstracts, technical manuals, professional articles
 
 #### Module 52: Writing Professional Documents I
+
 **Document Types:**
 - Реферат (Abstract/Summary)
 - Доповідь (Report)
@@ -1203,6 +1219,7 @@ This approach:
 **Focus:** Structure, register, conventions that apply across domains
 
 #### Module 54: Professional Oral Communication
+
 **Skills:**
 - Delivering presentations (PowerPoint culture in Ukrainian)
 - Participating in meetings (turn-taking, interrupting politely)
@@ -1249,6 +1266,7 @@ These tracks will be separate documents (e.g., `C2-TRACK-LEGAL.md`) with ~20-30 
 > **Checkpoint:** M100 (Final Certification) tests M76-99 + all C2 skills. See `c2-checkpoint-module-template.md`.
 
 ### Learning Goals
+
 - Demonstrate complete mastery
 - Complete capstone project
 - Prepare for professional use
@@ -1304,6 +1322,7 @@ These tracks will be separate documents (e.g., `C2-TRACK-LEGAL.md`) with ~20-30 
 - Practical value
 
 ### Vocabulary Plan C2.4 (~500 words)
+
 - Academic terminology for capstone
 - Rare/archaic vocabulary
 - Regional varieties vocabulary
@@ -1414,6 +1433,7 @@ graph TD
 ## Activity Types by Phase
 
 ### C2.1 Stylistic
+
 1. Transform: Style transformation exercises
 2. Transform: Register shifting practice
 3. Production: Original writing (Model Answer required)
@@ -1421,6 +1441,7 @@ graph TD
 5. Production: Voice development exercises
 
 ### C2.2 Literary
+
 1. Production: Literary analysis essays
 2. Production: Creative writing workshops
 3. Transform: Translation exercises
@@ -1428,6 +1449,7 @@ graph TD
 5. Quiz: Critical review analysis
 
 ### C2.3 Professional Preparation
+
 1. Match-up: Terminology acquisition strategies
 2. Fill-in: Professional document patterns
 3. Dialogue: Cross-domain communication
@@ -1435,6 +1457,7 @@ graph TD
 5. Production: Portfolio development
 
 ### C2.4 Capstone
+
 1. Production: Research methodology application
 2. Production: Long-form writing
 3. Error-correction: Revision and editing

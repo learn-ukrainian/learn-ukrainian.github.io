@@ -19,7 +19,7 @@ Highlighting Ukraine's diverse geography (Carpathians, Steppe, Sea) is engaging.
 
 **1. Accuracy of Examples:** 10/10
 Examples are correct.
-_Fixed:_ Replaced incorrect "Present Tense" translations in the Practice section with actual Weather sentences.
+*Fixed:* Replaced incorrect "Present Tense" translations in the Practice section with actual Weather sentences.
 
 **2. Relevance of Scenarios:** 10/10
 "Small Talk about Weather" is essential social glue.

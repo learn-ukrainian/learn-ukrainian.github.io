@@ -5,37 +5,68 @@ version: '2.0'
 title: Фінальний іспит B1
 subtitle: Comprehensive B1 Level Assessment
 content_outline:
-- section: Reading Comprehension
+- section: Вступ
+  words: 50
+  points:
+  - Welcome and exam overview
+- section: Огляд
+  words: 150
+  points:
+  - Exam structure table
+  - Time allocation
+  - Passing score
+- section: Практика
   words: 100
   points:
-  - Authentic text reading
+  - Purpose of the exam
+  - Preparation tips
+- section: 'Навичка 1: Читання'
+  words: 750
+  points:
+  - Text 1: Short news article
+  - Text 2: Medium complexity article
+  - Text 3: Long article on diaspora
   - Comprehension questions
-  - Inference skills
-- section: Listening Comprehension
-  words: 100
+- section: 'Навичка 2: Граматика'
+  words: 600
   points:
-  - Authentic audio
-  - Note-taking
-  - Comprehension tasks
-- section: Writing Assessment
-  words: 100
+  - Aspect (perfective/imperfective)
+  - Motion verbs with prefixes
+  - Complex sentences with conjunctions
+  - Participles and passive voice
+- section: 'Навичка 3: Лексика'
+  words: 400
   points:
-  - Extended writing task
-  - Grammar accuracy
-  - Vocabulary range
-- section: Speaking Assessment
-  words: 100
+  - Collocations
+  - Synonyms and antonyms
+  - Thematic vocabulary
+  - Academic vocabulary
+- section: 'Навичка 4: Письмо'
+  words: 350
   points:
-  - Oral presentation
-  - Interactive dialogue
-  - Fluency evaluation
-- section: Results and Feedback
-  words: 100
+  - Formal letter writing
+  - Argumentative essay
+  - Assessment criteria
+- section: 'Навичка 5: Самооцінка'
+  words: 400
   points:
+  - Reading self-assessment
+  - Grammar self-assessment
+  - Vocabulary self-assessment
+  - Writing self-assessment
+  - Results interpretation
+- section: Підсумок
+  words: 150
+  points:
+  - Skill summary
   - Score interpretation
-  - Strengths and weaknesses
-  - B2 preparation guidance
-word_target: 500
+  - Next steps
+- section: Потрібно більше практики?
+  words: 150
+  points:
+  - Resources for B2 preparation
+  - Next steps after exam
+word_target: 3100
 vocabulary_hints:
   required:
   - іспит (exam)
@@ -52,18 +83,21 @@ vocabulary_hints:
   - готовність (readiness)
   - прогрес (progress)
 activity_hints:
-- type: reading-test
-  focus: Authentic text comprehension
-  items: 25
-- type: listening-test
-  focus: Audio comprehension
-  items: 25
-- type: writing-test
-  focus: Extended writing
-  items: 2
-- type: speaking-test
-  focus: Oral assessment
-  items: 3
+- type: quiz
+  focus: Reading comprehension questions
+  items: 26
+- type: fill-in
+  focus: Grammar practice
+  items: 60
+- type: match-up
+  focus: Vocabulary matching
+  items: 12
+- type: group-sort
+  focus: Vocabulary categorization
+  items: 15
+- type: cloze
+  focus: Extended writing assessment
+  items: 12
 focus: assessment
 pedagogy: TTT
 prerequisites:

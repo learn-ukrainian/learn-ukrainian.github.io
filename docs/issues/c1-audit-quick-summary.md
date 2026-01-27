@@ -84,27 +84,33 @@
 ## Recommendations
 
 ### Priority 1: Fix Existing Modules (28 failures)
+
 **Effort:** 1-2 days
 - Fix YAML syntax errors (21 modules) - automated script
 - Add missing template sections (23 modules) - automated script
 - Remove duplicate M04 module
 
 ### Priority 2: Complete Missing Modules
+
 **Effort:** Depends on scope
 
 #### Option A: Finish C1 Foundation (3 modules)
+
 - Create M33-M35 (checkpoints for Phase 1)
 - Brings C1 to 151/196 (77%)
 
 #### Option B: Complete Biographies (39 modules)
+
 - Fill M33-M35 + remaining M36-M99 historical figures
 - Brings C1 to 187/196 (95%)
 
 #### Option C: Full C1 Completion (48 modules)
+
 - All above + M151-M196 (Literature track)
 - Requires significant curriculum planning for LIT track
 
 ### Priority 3: Systematic Validation
+
 - Run vocabulary enrichment across all C1 modules
 - Pipeline validation (MDX, HTML)
 - Landing page sync

@@ -29,9 +29,6 @@ Think of it like a secret code: the last letter reveals the gender. And once you
 >
 > Ukrainian noun gender is more predictable than German or French! In Ukrainian, **95% of the time**, you can guess the gender just by looking at the ending. No memorization needed — just pattern recognition.
 
-
-
-
 ## Presentation
 
 ### The Three Genders
@@ -187,6 +184,7 @@ This pattern consistency makes Ukrainian **easier to learn** than languages with
 > Gender isn't just grammar — it shapes how Ukrainians see the world!
 
 ---
+
 # Summary
 
 **You've unlocked the Ukrainian Gender Code!**
@@ -210,7 +208,7 @@ Gender affects adjectives, pronouns, and case endings. Master gender now, and ev
 ---
 > [!resources] 🔗 External Resources
 >
-> **YouTube:** [Gender of Ukrainian Nouns ](https://www.youtube.com/watch?v=Vl5MAW3AYoU) —  Basic Ukrainian Grammar|Learn Ukrainian with Vakulenko
+> **YouTube:** [Gender of Ukrainian Nouns](https://www.youtube.com/watch?v=Vl5MAW3AYoU) —  Basic Ukrainian Grammar|Learn Ukrainian with Vakulenko
 >
 >
 > **Grammar Guide:** [Noun Genders in Ukrainian](https://www.ukrainianlessons.com/noun-genders-in-ukrainian/) — Infographic with rules and exceptions
@@ -327,6 +325,7 @@ Gender affects adjectives, pronouns, and case endings. Master gender now, and ev
 ## group-sort: Sort by Gender
 
 ### Masculine
+
 - стіл
 - хліб
 - дім
@@ -338,6 +337,7 @@ Gender affects adjectives, pronouns, and case endings. Master gender now, and ev
 - огірок
 
 ### Feminine
+
 - книга
 - кімната
 - вода
@@ -351,6 +351,7 @@ Gender affects adjectives, pronouns, and case endings. Master gender now, and ev
 - річка
 
 ### Neuter
+
 - вікно
 - місто
 - село
@@ -602,6 +603,7 @@ Gender affects adjectives, pronouns, and case endings. Master gender now, and ev
    > Крісло ends in -о → neuter → воно
 
 ---
+
 # Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -651,4 +653,3 @@ Gender affects adjectives, pronouns, and case endings. Master gender now, and ev
 | цибуля | /t͡sɪˈbulʲɑ/ | onion | noun | f | ends in -я |
 | чай | /t͡ʃɑj/ | tea | noun | m | ends in consonant |
 | школа | /ˈʃkɔlɑ/ | school | noun | f | ends in -а |
-

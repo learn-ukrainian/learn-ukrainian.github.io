@@ -5,21 +5,21 @@ version: '2.0'
 title: 'Листи Мазепи: Дипломат і меценат'
 content_outline:
 - section: Вступ — Мазепа у листах
-  words: 400
+  words: 457
   points:
   - Листування як джерело
   - Чому важливі приватні документи?
   - Мазепа — багатогранна постать
   - Що збереглося
 - section: Типи кореспонденції
-  words: 500
+  words: 571
   points:
   - Дипломатичні листи — до царя
   - Внутрішня кореспонденція — старшина
   - Приватні листи
   - Меценатське листування — культура
 - section: Мазепа-дипломат
-  words: 700
+  words: 800
   points:
   - Листи до Петра І
   - Тон — підданий чи союзник?
@@ -27,33 +27,33 @@ content_outline:
   - Як маневрував
   - Останні листи перед зрадою
 - section: Фрагмент — Лист до Петра I
-  words: 600
+  words: 686
   points:
   - Текст (з глосами)
   - Формули ввічливості
   - Прихований зміст
   - Що не сказано
 - section: Мазепа-меценат
-  words: 600
+  words: 686
   points:
   - Листування про церкви
   - Підтримка освіти
   - Культурний патронат
   - Інший образ — не тільки політик
 - section: Критика джерела
-  words: 400
+  words: 457
   points:
   - Офіційні листи — маска
   - Що можна дізнатися
   - Порівняння з іншими джерелами
   - Чи знаємо «справжнього» Мазепу?
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Листування як вікно в епоху
   - Складність постаті
   - Зв'язок із циклом кооптації
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - листування (correspondence)
@@ -76,13 +76,13 @@ activity_hints:
 - type: reading
   focus: Letter to Peter I with glosses
   source: litopys.org.ua
-- type: between-the-lines
+- type: critical-analysis
   focus: What is NOT said in an official letter?
   output: Subtext analysis
 - type: comparative-study
   focus: Compare letter tone before and after 1708
   output: Transformation analysis
-- type: character-study
+- type: comparative-study
   focus: Reconstruct Mazepa's personality from letters
   output: Character profile
 - type: essay-response
@@ -112,3 +112,6 @@ sources:
   notes: Cultural patronage
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of листи мазепи: дипломат і меценат'
+- Evaluate the historical significance of мазепа у листах

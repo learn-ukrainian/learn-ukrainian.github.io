@@ -24,7 +24,7 @@
 
 ## Linguistic Accuracy Issues
 
-- _Fixed:_ Vocabulary extraction errors (`перевіз` verb treated as noun, `мости` plural).
+- *Fixed:* Vocabulary extraction errors (`перевіз` verb treated as noun, `мости` plural).
 
 ## Strengths
 
@@ -34,7 +34,7 @@
 
 ## Issues
 
-- _Fixed:_ Minor vocabulary extraction errors.
+- *Fixed:* Minor vocabulary extraction errors.
 
 ## Recommendation
 

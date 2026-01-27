@@ -1,10 +1,12 @@
 # Audit Report: M78 — 78-text-analysis.md
+
 **Level:** B2 | **Module:** M78 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:38
 
 ## Configuration
+
 **Type:** B2-skills
 **Word Target:** 1750 words
 **Activities:** 14-18 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Основи аналізу тексту | 8 | 8 | ✅ |
@@ -42,6 +45,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Культура діалогу в Україні базується на взаємній повазі до аргументів та фактів.". Shares significant keywords with sentence at index 118.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Наш аналіз має залишатися об'єктивним, незважаючи на будь-які особисті симпатії.". Shares significant keywords with sentence at index 119.
@@ -50,15 +54,18 @@
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення' per template 'b2-module-template.md'
   - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md.md
 
 ## Recommendation
+
 **📝 UPDATE** (severity 15/100)
 
 - 4 violations (moderate)
 
 ## Gates
+
 - **Words:** ✅ 2441/1750 (raw: 2528)
 - **Activities:** ✅ 15/14
 - **Density:** ✅ All > 14
@@ -77,10 +84,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 88 | 24 | 100% | 20% | 20.0% |
@@ -96,6 +105,7 @@
 | **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 69 | Included in Core |

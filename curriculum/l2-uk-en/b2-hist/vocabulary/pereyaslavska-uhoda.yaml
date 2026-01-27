@@ -2,123 +2,123 @@ module: pereyaslavska-uhoda
 level: B2
 version: '2.0'
 items:
-  - lemma: протекторат
-    ipa: /prɔtɛktɔˈrɐt/
-    translation: protectorate
-    pos: noun
-    gender: m
-  - lemma: присяга
-    ipa: /prɪˈsʲɐɦɐ/
-    translation: oath, allegiance
-    pos: noun
-    gender: f
-  - lemma: статті
-    ipa: /stɐtˈtʲi/
-    translation: articles (of a treaty)
-    pos: noun
-    gender: pl
-  - lemma: автономія
-    ipa: /ɐu̯tɔˈnɔmʲijɐ/
-    translation: autonomy
-    pos: noun
-    gender: f
-  - lemma: легітимність
-    ipa: /leɦʲiˈtɪmnʲistʲ/
-    translation: legitimacy
-    pos: noun
-    gender: f
-  - lemma: суб'єктність
-    ipa: /sʊbˈjɛktnʲistʲ/
-    translation: subjectivity, agency
-    pos: noun
-    gender: f
-  - lemma: возз'єднання
-    ipa: /wɔzˈjɛdnɐnnʲɐ/
-    translation: reunification (myth)
-    pos: noun
-    gender: n
-  - lemma: деколонізація
-    ipa: /dekɔɫɔnʲizɐˈt͡sʲijɐ/
-    translation: decolonization
-    pos: noun
-    gender: f
-  - lemma: зрада
-    ipa: /ˈzrɐdɐ/
-    translation: betrayal, treason
-    pos: noun
-    gender: f
-  - lemma: союзник
-    ipa: /sɔˈjuznɪk/
-    translation: ally
-    pos: noun
-    gender: m
-  - lemma: цар
-    ipa: /t͡sar/
-    translation: tsar
-    pos: noun
-    gender: m
-  - lemma: боярин
-    ipa: /bɔˈjɑrɪn/
-    translation: boyar
-    pos: noun
-    gender: m
-  - lemma: посольство
-    ipa: /pɔˈsɔlʲstwɔ/
-    translation: embassy
-    pos: noun
-    gender: n
-  - lemma: старшина
-    ipa: /stɐrˈʃɪnɐ/
-    translation: officer staff (Cossack)
-    pos: noun
-    gender: f
-  - lemma: духовенство
-    ipa: /dʊxɔˈwɛnstwɔ/
-    translation: clergy
-    pos: noun
-    gender: n
-  - lemma: митрополит
-    ipa: /mɪtrɔpɔˈlɪt/
-    translation: metropolitan
-    pos: noun
-    gender: m
-  - lemma: права
-    ipa: /prɐˈwɑ/
-    translation: rights
-    pos: noun
-    gender: pl
-  - lemma: вольності
-    ipa: /ˈwɔlʲnɔstʲi/
-    translation: liberties
-    pos: noun
-    gender: pl
-  - lemma: гетьманщина
-    ipa: /ɦetʲˈmɑnʃt͡ʃɪnɐ/
-    translation: Hetmanate
-    pos: noun
-    gender: f
-  - lemma: реєстр
-    ipa: /reˈjɛstr/
-    translation: register
-    pos: noun
-    gender: m
-  - lemma: дипломатія
-    ipa: /dɪpɫɔˈmɑtʲijɐ/
-    translation: diplomacy
-    pos: noun
-    gender: f
-  - lemma: опозиція
-    ipa: /ɔpɔˈzɪt͡sʲijɐ/
-    translation: opposition
-    pos: noun
-    gender: f
-  - lemma: війна
-    ipa: /wʲiˈjnɐ/
-    translation: war
-    pos: noun
-    gender: f
-  - lemma: мир
-    ipa: /mɪr/
-    translation: peace
-    pos: noun
-    gender: m
+- lemma: протекторат
+  ipa: /prɔtɛktɔˈrɐt/
+  translation: protectorate
+  pos: noun
+  gender: m
+- lemma: присяга
+  ipa: /prɪˈsʲɐɦɐ/
+  translation: oath, allegiance
+  pos: noun
+  gender: f
+- lemma: стаття
+  ipa: /stɐtˈtʲi/
+  translation: articles (of a treaty)
+  pos: noun
+  gender: f
+- lemma: автономія
+  ipa: /ɐu̯tɔˈnɔmʲijɐ/
+  translation: autonomy
+  pos: noun
+  gender: f
+- lemma: легітимність
+  ipa: /leɦʲiˈtɪmnʲistʲ/
+  translation: legitimacy
+  pos: noun
+  gender: f
+- lemma: суб'єктність
+  ipa: /sʊbˈjɛktnʲistʲ/
+  translation: subjectivity, agency
+  pos: noun
+  gender: f
+- lemma: возз'єднання
+  ipa: /wɔzˈjɛdnɐnnʲɐ/
+  translation: reunification (myth)
+  pos: noun
+  gender: n
+- lemma: деколонізація
+  ipa: /dekɔɫɔnʲizɐˈt͡sʲijɐ/
+  translation: decolonization
+  pos: noun
+  gender: f
+- lemma: зрада
+  ipa: /ˈzrɐdɐ/
+  translation: betrayal, treason
+  pos: noun
+  gender: f
+- lemma: союзник
+  ipa: /sɔˈjuznɪk/
+  translation: ally
+  pos: noun
+  gender: m
+- lemma: цар
+  ipa: /t͡sar/
+  translation: tsar
+  pos: noun
+  gender: m
+- lemma: боярин
+  ipa: /bɔˈjɑrɪn/
+  translation: boyar
+  pos: noun
+  gender: m
+- lemma: посольство
+  ipa: /pɔˈsɔlʲstwɔ/
+  translation: embassy
+  pos: noun
+  gender: n
+- lemma: старшина
+  ipa: /stɐrˈʃɪnɐ/
+  translation: officer staff (Cossack)
+  pos: noun
+  gender: f
+- lemma: духовенство
+  ipa: /dʊxɔˈwɛnstwɔ/
+  translation: clergy
+  pos: noun
+  gender: n
+- lemma: митрополит
+  ipa: /mɪtrɔpɔˈlɪt/
+  translation: metropolitan
+  pos: noun
+  gender: m
+- lemma: право
+  ipa: /prɐˈwɑ/
+  translation: rights
+  pos: noun
+  gender: n
+- lemma: вольність
+  ipa: /ˈwɔlʲnɔstʲi/
+  translation: liberties
+  pos: noun
+  gender: f
+- lemma: гетьманщина
+  ipa: /ɦetʲˈmɑnʃt͡ʃɪnɐ/
+  translation: Hetmanate
+  pos: noun
+  gender: f
+- lemma: реєстр
+  ipa: /reˈjɛstr/
+  translation: register
+  pos: noun
+  gender: m
+- lemma: дипломатія
+  ipa: /dɪpɫɔˈmɑtʲijɐ/
+  translation: diplomacy
+  pos: noun
+  gender: f
+- lemma: опозиція
+  ipa: /ɔpɔˈzɪt͡sʲijɐ/
+  translation: opposition
+  pos: noun
+  gender: f
+- lemma: війна
+  ipa: /wʲiˈjnɐ/
+  translation: war
+  pos: noun
+  gender: f
+- lemma: мир
+  ipa: /mɪr/
+  translation: peace
+  pos: noun
+  gender: m

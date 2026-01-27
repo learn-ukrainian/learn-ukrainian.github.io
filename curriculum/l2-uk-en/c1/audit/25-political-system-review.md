@@ -1,10 +1,12 @@
 # Audit Report: M25 — 25-political-system.md
+
 **Level:** C1 | **Module:** M25 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:10
 
 ## Configuration
+
 **Type:** C1
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Політичний устрій | 8 | 5 | ✅ |
@@ -42,27 +45,31 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (73% overlap): "Судова влада: В пошуках справедливості
 
 Судова система історично є найбільш проблемною ланкою через ...". Shares significant keywords with sentence at index 32.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "5):**
 > "Носієм суверенітету і єдиним джерелом влади в Україні є народ.". Shares significant keywords with sentence at index 95.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 25-political-system.yaml: Schema validation error at key 'min_words': 100 is less than the minimum of 200
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Аналіз' per template 'c1-module-template.md'
   - FIX: Add '## Аналіз' section as specified in docs/l2-uk-en/templates/c1-module-template.md.md
 
 ## Recommendation
+
 **📝 UPDATE** (severity 35/100)
 
 - 4 violations (moderate)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2070/3000 (raw: 2209)
 - **Activities:** ✅ 13/12
 - **Density:** ✅ All > 12
@@ -81,10 +88,12 @@
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 97% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 14 | 15 | 93% | 25% | 23.2% |
@@ -98,6 +107,7 @@
 | **TOTAL** | | | | | **97.5%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 30 | Included in Core |

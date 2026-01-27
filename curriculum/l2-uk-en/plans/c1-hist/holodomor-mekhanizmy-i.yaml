@@ -5,24 +5,26 @@ version: '1.0'
 title: 'Механізми Голодомору I: Колективізація'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of механізми голодомору i: колективізація'
+- Evaluate the historical significance of як створили голод
 content_outline:
 - section: Вступ — Як створили голод
-  words: 400
+  words: 457
   subsections:
   - Голодомор — не випадковість
   - Колективізація — передумова
   - Як економічна політика стала зброєю
   - Структура модуля
 - section: Сталінська колективізація
-  words: 600
+  words: 686
   subsections:
   - Мета — індустріалізація за рахунок села
   - П'ятирічка в чотири роки
   - Знищення приватного господарства
   - Чому саме Україна — житниця
 - section: Розкуркулення
-  words: 700
+  words: 800
   subsections:
   - Хто такий «куркуль»?
   - Три категорії — розстріл, заслання, виселення
@@ -30,7 +32,7 @@ content_outline:
   - Знищення найкращих господарів
   - Як це вплинуло на врожай
 - section: Колгоспна система
-  words: 600
+  words: 686
   subsections:
   - Як працював колгосп
   - Вилучення зерна — механізм
@@ -38,26 +40,26 @@ content_outline:
   - Чому селяни чинили опір
   - Форми опору
 - section: Україна vs. інші регіони
-  words: 500
+  words: 571
   subsections:
   - Чому Україна особливий випадок
   - Більший тиск — чому
   - Порівняння з Росією, Казахстаном
   - Націоналістичний компонент
 - section: Від колективізації до голоду
-  words: 400
+  words: 457
   subsections:
   - 1930-1931 — вже голод
   - Ігнорування сигналів
   - Ескалація 1932 року
   - Підготовка до наступного модуля
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - Колективізація як фундамент
   - Без неї — немає Голодомору
   - Зв'язок механізмів
-word_target: 3500
+word_target: 4000
 vocabulary:
 - колективізація
 - колгосп
@@ -75,13 +77,13 @@ vocabulary:
 - норма
 - саботаж
 activities:
-- type: mechanism-analysis
+- type: critical-analysis
   focus: 'Map the chain: collectivization → famine'
-- type: category-analysis
+- type: critical-analysis
   focus: Analyze "kulak" categorization — who decided, how?
 - type: comparative-study
   focus: Compare Ukrainian and Russian collectivization quotas
-- type: primary-source
+- type: reading
   focus: Analyze a dekulakization order
 - type: essay-response
   focus: Як колективізація створила передумови для Голодомору?

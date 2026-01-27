@@ -6,7 +6,7 @@ title: 'Професійні звіти: Поглиблення'
 subtitle: Advanced analytical reports and presentation
 content_outline:
 - section: Вступ
-  words: 400
+  words: 200
   points:
   - Перехід від базової звітності (М87) до аналітичної роботи
   - Роль аналітичних звітів у стратегічному плануванні компанії
@@ -14,7 +14,7 @@ content_outline:
   - Критичне мислення в інтерпретації даних
   - Зв'язок звіту з презентацією результатів керівництву
 - section: Імерсивна розповідь
-  words: 1600
+  words: 800
   subsections:
   - name: Багатоджерельний аналіз
     words: 400
@@ -49,7 +49,7 @@ content_outline:
     - 'Візуальна підтримка: слайди як доповнення, не заміна мовлення'
     - 'Управління часом: 5-хв vs 30-хв презентація'
 - section: Аналіз
-  words: 1000
+  words: 500
   subsections:
   - name: Критична оцінка звітів
     words: 350
@@ -75,7 +75,7 @@ content_outline:
     - 'Бізнес-аналітика: KPI, benchmark, SWOT, gap analysis'
     - 'Якісні методи: кейс-стаді, інтерв''ю, фокус-групи'
 - section: Граматика
-  words: 400
+  words: 200
   subsections:
   - name: Модальні конструкції для хеджування
     words: 200
@@ -92,7 +92,7 @@ content_outline:
     - Використання підрядних речень причини для обґрунтувань
     - Контрастивні конструкції для альтернативних інтерпретацій
 - section: Підсумок
-  words: 100
+  words: 50
   points:
   - 'Синтез: від базової звітності (М87) до аналітичної майстерності (М88)'
   - 'Ключові навички: багатоджерельний аналіз, складна візуалізація, хеджування, презентація'
@@ -106,3 +106,4 @@ objectives:
 - Learner can present report findings to stakeholders orally
 - Learner can critically evaluate existing reports for quality
 phase: B2.4 Communication Skills
+word_target: 1750

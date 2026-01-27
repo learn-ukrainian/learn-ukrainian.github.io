@@ -120,6 +120,7 @@ npm run pipeline l2-uk-en b1
 **Strategy:** Batch by phase to isolate failures
 
 #### Batch 1: Motion Verbs (M17-M25)
+
 ```bash
 for i in {17..25}; do
     .venv/bin/python scripts/md_to_yaml.py curriculum/l2-uk-en/b1/$i-*.md
@@ -127,6 +128,7 @@ done
 ```
 
 #### Batch 2: Complex Sentences I (M26-M34)
+
 ```bash
 for i in {26..34}; do
     .venv/bin/python scripts/md_to_yaml.py curriculum/l2-uk-en/b1/$i-*.md
@@ -134,6 +136,7 @@ done
 ```
 
 #### Batch 3: Complex Sentences II (M35-M41)
+
 ```bash
 for i in {35..41}; do
     .venv/bin/python scripts/md_to_yaml.py curriculum/l2-uk-en/b1/$i-*.md
@@ -141,6 +144,7 @@ done
 ```
 
 #### Batch 4: Advanced Grammar (M42-M51)
+
 ```bash
 for i in {42..51}; do
     .venv/bin/python scripts/md_to_yaml.py curriculum/l2-uk-en/b1/$i-*.md
@@ -178,16 +182,19 @@ git -C /Users/krisztiankoos/projects/learn-ukrainian branch -D migration-test-de
 ## Known Issues & Workarounds
 
 ### Issue 1: YAML Structure Variations
+
 Some modules use `activities:` wrapper, others are direct lists.
 
 **Workaround:** Update `load_yaml_activities()` to handle both formats.
 
 ### Issue 2: Activity Type Naming
+
 Some activities use `error-correction`, others `error_correction`.
 
 **Workaround:** Normalize in parser (already implemented in audit).
 
 ### Issue 3: Cloze Format Variations
+
 Inline `{answer|opt1|opt2}` vs dict format.
 
 **Workaround:** Parser should output inline format (recent fix).

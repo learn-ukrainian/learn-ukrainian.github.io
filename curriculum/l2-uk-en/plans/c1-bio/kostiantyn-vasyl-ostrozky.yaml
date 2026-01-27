@@ -36,7 +36,7 @@ content_outline:
   points:
   - Острозький vs. єзуїти (конкуренція освітніх моделей)
   - Батько vs. Син (Меч vs. Книга)
-word_target: 3000
+word_target: 4000
 vocabulary_hints:
   required:
   - академія (academy)
@@ -52,8 +52,6 @@ vocabulary_hints:
 activity_hints:
 - type: reading
   focus: Preface to Ostroh Bible
-- type: quiz
-  focus: Biography and cultural achievements
 - type: essay-response
   focus: Education as a weapon of identity
 focus: biography

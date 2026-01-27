@@ -67,15 +67,6 @@ activity_hints:
   focus: Історії українських підприємців на війні
   source: Медіа-матеріали
   items: 4
-- type: quiz
-  focus: Воєнна економіка України
-  items: 15
-- type: match-up
-  focus: Виклик → рішення
-  items: 10
-- type: fill-in
-  focus: Економічна лексика
-  items: 10
 - type: essay-response
   focus: Як волонтерський рух допоміг українській економіці вистояти?
   word_target: 250

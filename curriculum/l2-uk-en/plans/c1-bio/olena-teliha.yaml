@@ -69,22 +69,10 @@ activity_hints:
   focus: Поезія та біографія
   source: Вірші та есеї Теліги
   items: 3 passages
-- type: quiz
-  focus: Життєвий шлях та творчість
-  items: 12+
-- type: match-up
-  focus: Вірші та їхні теми
-  items: 10+
 - type: essay-response
   focus: Як поезія може бути формою національної боротьби?
   word_target: 300
   output: Літературознавче есе
-- type: group-sort
-  focus: Еміграційний період vs київський період
-  items: 12+
-- type: fill-in
-  focus: Літературна та історична термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-40 (Леся Українка)
@@ -108,3 +96,7 @@ sources:
   notes: Місце розстрілу
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of олена теліга: поетка-патріотка'
+- Evaluate the contributions of вогняна муза
+- Trace the career and influence of арешт та загибель (1942)

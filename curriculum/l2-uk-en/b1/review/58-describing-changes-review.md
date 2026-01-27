@@ -12,7 +12,7 @@
 | ------------------- | ----- | ----------------------------------------------------------------------- |
 | Coherence           | 10/10 | Logical flow from verbs of change -> adjectives -> adverbs.             |
 | Relevance           | 10/10 | Essential for analyzing trends (IELTS-style graphs).                    |
-| Educational         | 10/10 | Excellent breakdown of _speed_ and _direction_ of change.               |
+| Educational         | 10/10 | Excellent breakdown of *speed* and *direction* of change.               |
 | Language            | 10/10 | Precise economic vocab (`коливатися`, `стабілізуватися`).               |
 | Pedagogy            | 9/10  | Narrative Arc (Company report vs Medical chart) covers two key domains. |
 | Immersion           | 9/10  | Realistic.                                                              |
@@ -25,11 +25,11 @@
 ## Linguistic Accuracy Issues
 
 - **Vocabulary:** `впад` (in list). Probably `спад` (decline) or `впадок` (archaic). `Впад` is not standard.
-  - _Action:_ Change to `спад`.
+  - *Action:* Change to `спад`.
 
 ## Strengths
 
-- **Domain Versatility:** Shows how the same verbs (`зростати`, `падати`) apply to _economics_ (prices) and _health_ (temperature), which is high-value teaching.
+- **Domain Versatility:** Shows how the same verbs (`зростати`, `падати`) apply to *economics* (prices) and *health* (temperature), which is high-value teaching.
 - **Visual Vocabulary:** Teaching words like `пік`, `дно`, `коливатися` helps students visualize data.
 
 ## Issues

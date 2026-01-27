@@ -5,31 +5,33 @@ version: '1.0'
 title: Листи Василя Стуса з таборів
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- Analyze the causes and consequences of листи василя стуса з таборів
+- Evaluate the historical significance of голос із гулагу
 content_outline:
 - section: Вступ — Голос із ГУЛАГу
-  words: 400
+  words: 457
   subsections:
   - Стус — поет і дисидент
   - Листи — унікальне джерело
   - Умови написання
   - Чому важливі
 - section: Біографічний контекст
-  words: 500
+  words: 571
   subsections:
   - Життя до арешту
   - Перший арешт — 1972
   - Другий арешт — 1980
   - Смерть у таборі — 1985
 - section: Табір як контекст
-  words: 600
+  words: 686
   subsections:
   - Де утримувався — Мордовія, Пермь
   - Умови — режим, праця, харчування
   - Цензура листів
   - Що можна було писати
 - section: Листи до родини
-  words: 700
+  words: 800
   subsections:
   - Фрагменти (з глосами)
   - До дружини
@@ -37,26 +39,26 @@ content_outline:
   - Особисте і політичне
   - Як зберігав людяність
 - section: Філософські роздуми
-  words: 600
+  words: 686
   subsections:
   - Стус як мислитель
   - Українська ідентичність
   - Сенс опору
   - Готовність до смерті
 - section: Критика джерела
-  words: 400
+  words: 457
   subsections:
   - Цензура — що вирізано
   - Самоцензура — чого не писав
   - Як читати між рядками
   - Порівняння з поезією
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - Листи як духовний заповіт
   - Стус — символ опору
   - Зв'язок із сьогоденням
-word_target: 3500
+word_target: 4000
 vocabulary:
 - табір
 - ГУЛАГ
@@ -76,11 +78,11 @@ vocabulary:
 activities:
 - type: reading
   focus: Letter to son with glosses
-- type: between-the-lines
+- type: critical-analysis
   focus: Read a censored letter — what might have been cut?
 - type: comparative-study
   focus: Compare letter tone to poetry on same themes
-- type: character-study
+- type: comparative-study
   focus: What do letters reveal about Stus's worldview?
 - type: essay-response
   focus: Як Стус зберігав людяність у нелюдських умовах?

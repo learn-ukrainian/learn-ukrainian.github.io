@@ -6,38 +6,38 @@ title: 'Чорна рада: Роман'
 subtitle: 'The Black Council: The Novel'
 content_outline:
 - section: Вступ — Перший український історичний роман
-  words: 500
+  words: 625
   points:
   - Значення "Чорної ради" для літератури
   - Вплив Вальтера Скотта
   - Рік видання (1857)
 - section: Сюжет і структура
-  words: 700
+  words: 875
   points:
   - Основні сюжетні лінії
   - Хронологія подій
   - Фінал і його значення
 - section: Система персонажів
-  words: 800
+  words: 1000
   points:
   - Шрам — ідеал козацької честі
   - Череваний — прагматик
   - Сомко — трагічний герой
   - Брюховецький — антигерой
 - section: Літературні архетипи
-  words: 700
+  words: 875
   points:
   - Вальтерскоттівська модель
   - «Середній герой» як спостерігач
   - Історія як фон для особистої драми
 - section: Художні особливості
-  words: 500
+  words: 625
   points:
   - Мова роману (архаїзація)
   - Пейзаж і його функція
   - Діалоги vs авторські описи
 - section: Підсумок — Роман як історична філософія
-  words: 400
+  words: 500
   points:
   - Погляд Куліша на "народ"
   - Критика охлократії
@@ -66,19 +66,10 @@ activity_hints:
   focus: Ключові епізоди "Чорної ради"
   source: UkrLib tid=263
   items: 5+
-- type: quiz
-  focus: Сюжет та персонажі роману
-  items: 15+
-- type: match-up
-  focus: Персонаж → його характеристика / архетип
-  items: 12+
 - type: essay-response
   focus: Шрам vs Череваний — два погляди на Україну
   word_target: 300
   output: Компаративне есе
-- type: cloze
-  focus: Цитати з роману
-  items: 12+
 focus: literature
 pedagogy: Analysis
 prerequisites:
@@ -105,3 +96,6 @@ sources:
   notes: Літературний контекст
 immersion: 100% Ukrainian
 phase: LIT.4 The Intellectuals (Kulish & Kostomarov)
+objectives:
+- 'Analyze literary techniques in чорна рада: роман'
+- Interpret themes and motifs of перший український історичний роман

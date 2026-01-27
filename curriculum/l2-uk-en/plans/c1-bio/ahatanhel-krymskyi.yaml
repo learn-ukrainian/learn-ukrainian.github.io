@@ -69,22 +69,10 @@ activity_hints:
   focus: Наукова біографія
   source: Academic sources
   items: 3 passages
-- type: quiz
-  focus: Факти життя та наукова спадщина
-  items: 12+
-- type: match-up
-  focus: Мови та їхні характеристики
-  items: 10+
 - type: essay-response
   focus: Яку роль відіграв Кримський у заснуванні української науки?
   word_target: 300
   output: Analytical essay
-- type: group-sort
-  focus: Наукові праці за галузями
-  items: 12+
-- type: fill-in
-  focus: Терміни сходознавства
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-99
@@ -103,3 +91,7 @@ sources:
   notes: Academy founding documents and Krymsky's role
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of агатангел кримський: поліглот і мученик науки'
+- Evaluate the contributions of людина тридцяти мов
+- Trace the career and influence of повернення імені

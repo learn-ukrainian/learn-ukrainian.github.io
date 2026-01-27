@@ -24,8 +24,8 @@
 
 ## Linguistic Accuracy Issues
 
-- _Fixed:_ Verb conjugation typo in text (`з'їздижу` -> `з'їжджу`).
-- _Fixed:_ Vocabulary extraction errors (garbage `зв`, prefix-only lemmas, capitalization).
+- *Fixed:* Verb conjugation typo in text (`з'їздижу` -> `з'їжджу`).
+- *Fixed:* Vocabulary extraction errors (garbage `зв`, prefix-only lemmas, capitalization).
 
 ## Strengths
 
@@ -34,7 +34,7 @@
 
 ## Issues
 
-- _Fixed:_ Minor typo in dialogue.
+- *Fixed:* Minor typo in dialogue.
 
 ## Recommendation
 

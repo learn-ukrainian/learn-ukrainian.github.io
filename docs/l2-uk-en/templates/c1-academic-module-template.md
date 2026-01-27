@@ -6,7 +6,6 @@
 
 **Related Issue:** [#306](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/306)
 
-
 <!--
 TEMPLATE_METADATA:
   required_sections:
@@ -28,13 +27,13 @@ TEMPLATE_METADATA:
 Before submitting a C1 academic module, verify all items from `c1-module-template.md` PLUS:
 
 ### Academic-Specific Requirements
+
 - [ ] **Academic rigor:** University-level texts (500-800+ words)
 - [ ] **Research writing:** Teaches academic writing conventions
 - [ ] **Citation practices:** Proper referencing in Ukrainian academic tradition
 - [ ] **Argumentation structure:** Thesis, evidence, counterargument, conclusion
 - [ ] **Register:** Науковий (scientific/academic) primary register
 - [ ] **Comparative analysis:** Analyze 2+ academic sources
-
 
 ---
 
@@ -412,11 +411,90 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 ---
 
+## Advanced Seminar-Style Activities
+
+### Source-Evaluation Activity
+
+**Use for analyzing academic sources, research papers, and scholarly debates:**
+
+```yaml
+- type: source-evaluation
+  title: "Оцінка джерела: Наукова стаття/Дисертація"
+  instruction: "Застосуйте метод критичного аналізу до цього академічного джерела."
+  source_text: |
+    [Excerpt from academic paper, dissertation abstract, or scholarly debate — 100-200 words]
+  source_metadata:
+    author: "[Researcher name, institution]"
+    date: "[Year of publication]"
+    type: "[journal_article/dissertation/conference_paper/monograph]"
+    context: "[Academic field, school of thought, funding context]"
+  evaluation_criteria:
+    - authorship
+    - date_and_context
+    - intended_audience
+    - purpose_and_bias
+    - omissions
+  guiding_questions:
+    - "До якої наукової школи належить автор?"
+    - "Який методологічний підхід використовується?"
+    - "Яка цільова аудиторія публікації?"
+    - "Які альтернативні підходи автор не розглядає?"
+  model_evaluation: |
+    **1. Авторство:** [Who wrote it, their academic affiliation and school]
+    **2. Методологія:** [Research approach, theoretical framework]
+    **3. Контекст публікації:** [Journal, institution, funding]
+    **4. Упередження:** [Disciplinary, theoretical, or ideological biases]
+    **5. Обмеження:** [What the research doesn't address]
+```
+
+### Debate Activity
+
+**Use for contested scholarly debates and methodological disputes:**
+
+```yaml
+- type: debate
+  title: "Дискусія: [Contested Academic Question]"
+  instruction: "Проаналізуйте конкуруючі наукові позиції та оцініть їхні методологічні підходи."
+  debate_question: "[The contested scholarly question]"
+  historical_context: |
+    [Background on the academic debate — 50-100 words]
+  positions:
+    - name: "[Position 1 — e.g., Традиційний підхід]"
+      proponents: "[Scholars, institutions]"
+      argument: "[Core academic argument]"
+      evidence:
+        - "[Research evidence]"
+        - "[Methodological basis]"
+      weaknesses:
+        - "[Methodological limitation]"
+    - name: "[Position 2 — e.g., Новий підхід]"
+      proponents: "[Who holds this view]"
+      argument: "[Core argument]"
+      evidence:
+        - "[Evidence]"
+      weaknesses:
+        - "[Critique]"
+  analysis_tasks:
+    - "Які методологічні відмінності між позиціями?"
+    - "Як емпіричні дані підтримують кожну позицію?"
+    - "Чи можливий методологічний синтез?"
+    - "Яку позицію ви вважаєте більш обґрунтованою? Чому?"
+  model_analysis: |
+    [Balanced evaluation of scholarly positions, focusing on methodological rigor
+    and evidence quality rather than ideological preference.]
+```
+
+**Example contested questions for academic modules:**
+- "Кількісні чи якісні методи: що краще для соціолінгвістики?"
+- "Як визначати межі української літературної мови?"
+- "Чи існує об'єктивна наукова істина?"
+
 ---
 
 ## Content Structure Note
 
 ### Vocabulary & Activities
+
 **CRITICAL:** Do NOT add `## Vocabulary` or `## Activities` headers. These sections are injected automatically from:
 - `vocabulary/{slug}.yaml`
 - `activities/{slug}.yaml`

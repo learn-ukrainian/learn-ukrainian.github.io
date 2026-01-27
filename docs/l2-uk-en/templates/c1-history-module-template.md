@@ -97,6 +97,7 @@ TEMPLATE_METADATA:
 Before submitting a C1-HIST module, verify all items from `c1-module-template.md` PLUS:
 
 ### History Analysis-Specific Requirements
+
 - [ ] **CLIL pedagogy:** Content and Language Integrated Learning at academic level
 - [ ] **Primary sources (≥1):** Include excerpt with glosses for archaic forms using `[!quote]` callouts
 - [ ] **Source criticism:** Every primary source includes authorship, bias, purpose analysis
@@ -309,7 +310,66 @@ vocabulary_focus:
     - "Як застосувати цей метод критики джерел до інших періодів?"
     - "Які обмеження має цей тип джерела?"
     - "Як сучасна деколонізація змінює інтерпретацію цього періоду?"
+
+- type: source-evaluation
+  title: "Оцінка джерела: [Source Name]"
+  source_text: |
+    [Historical source excerpt to evaluate]
+  source_metadata:
+    author: "[Author name or 'Anonymous']"
+    date: "[Date or period]"
+    type: "[chronicle/memoir/official document/propaganda/academic]"
+    context: "[Historical context of creation]"
+  evaluation_criteria:
+    - authorship
+    - date_and_context
+    - intended_audience
+    - purpose_and_bias
+    - omissions
+  guiding_questions:
+    - "Яким був політичний контекст створення цього джерела?"
+    - "Які упередження автора можна виявити?"
+    - "Що це джерело замовчує?"
+  model_evaluation: |
+    [Model answer demonstrating proper source criticism methodology]
+
+- type: debate
+  title: "Дискусія: [Contested Question]"
+  debate_question: "[The contested historiographical question]"
+  historical_context: "[Background needed to understand the debate]"
+  positions:
+    - name: "[Position 1 name]"
+      proponents: "[Historians/schools]"
+      argument: "[Core argument]"
+      evidence:
+        - "[Key evidence 1]"
+        - "[Key evidence 2]"
+      weaknesses:
+        - "[Critique of this position]"
+    - name: "[Position 2 name]"
+      proponents: "[Historians/schools]"
+      argument: "[Core argument]"
+      evidence:
+        - "[Key evidence 1]"
+      weaknesses:
+        - "[Critique of this position]"
+  analysis_tasks:
+    - "Визначте найсильніший аргумент кожної позиції."
+    - "Чи є спільні точки між позиціями?"
+    - "Яку позицію ви вважаєте переконливішою? Чому?"
+  model_analysis: |
+    [Model answer showing balanced evaluation of positions]
 ```
+
+### Additional C1-HIST Activity Types
+
+In addition to the required types above, C1-HIST supports:
+
+- **`source-evaluation`**: Structured 5-question method (Хто? Коли? Для кого? Чому? Що опущено?) applied to primary/secondary sources. Use for historiographical methodology training.
+
+- **`debate`**: Presents 2-4 competing historiographical positions on a contested question. Learners analyze arguments, evidence, and weaknesses. Use for complex interpretive questions (e.g., "Was Pereiaslav a reunification or a military alliance?").
+
+- **`comparative-study`**: Compare historians, schools, or interpretations across criteria. Already supported in base schema.
 
 ### Forbidden Activity Types
 
@@ -352,6 +412,7 @@ Per config.py, C1-HIST does NOT use:
 ## Content Structure Note
 
 ### Vocabulary & Activities
+
 **CRITICAL:** Do NOT add `## Vocabulary` or `## Activities` headers. These sections are injected automatically from:
 - `vocabulary/{slug}.yaml`
 - `activities/{slug}.yaml`

@@ -5,42 +5,33 @@ version: '2.0'
 title: 'Пасивні конструкції: повна система'
 subtitle: Passive Constructions - Complete System
 content_outline:
-- section: 'Introduction: Ukrainian Passive System'
-  words: 150
+- section: Тест
+  words: 245
   points:
   - Three passive types overview
   - Active vs passive voice
-  - When to use passive
-- section: Participle Passive
-  words: 200
+- section: Пояснення
+  words: 985
   points:
-  - Книга була написана
-  - Agreement with subject
-  - бути + participle
-- section: Short Form Passive
-  words: 200
-  points:
-  - Книгу написано
-  - Impersonal, no agreement
-  - Accusative object pattern
-- section: Reflexive Passive (-ся)
-  words: 250
-  points:
-  - Книга пишеться
-  - Process emphasis
-  - Agent rare or impossible
-- section: Choosing the Right Passive
-  words: 250
-  points:
-  - Context and style factors
-  - Register considerations
-  - Avoiding passive overuse
-- section: 'Practice: Active to Passive'
-  words: 150
+  - Participle passive
+  - Short form passive
+  - Reflexive passive (-ся)
+  - Choosing the right passive
+- section: Практика
+  words: 803
   points:
   - Transform with all three types
   - Compare meanings
-word_target: 1200
+- section: Діалоги
+  words: 791
+  points:
+  - Real-world passive usage
+  - Context and style
+- section: Потрібно більше практики?
+  words: 176
+  points:
+  - Additional exercises
+word_target: 3000
 vocabulary_hints:
   required:
   - пасивний стан (passive voice)
@@ -57,16 +48,16 @@ vocabulary_hints:
   - регістр (register)
   - уникати (to avoid)
 activity_hints:
-- type: transformation
+- type: cloze
   focus: Active to three passive types
   items: 25
-- type: multiple-choice
+- type: quiz
   focus: Choose best passive type
   items: 20
 - type: fill-in
   focus: Complete passive sentences
   items: 15
-- type: writing
+- type: cloze
   focus: Write using varied passives
   items: 10
 focus: grammar

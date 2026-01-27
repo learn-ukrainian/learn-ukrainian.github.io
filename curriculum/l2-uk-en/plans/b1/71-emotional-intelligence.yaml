@@ -5,42 +5,21 @@ version: '2.0'
 title: Емоційний інтелект та міжособистісні навички
 subtitle: Emotional Intelligence & Interpersonal Skills
 content_outline:
-- section: 'Introduction: Emotional Intelligence'
-  words: 150
-  points:
-  - What is EQ
-  - Interpersonal skills
-  - Ukrainian cultural context
-- section: Self-Awareness Vocabulary
-  words: 250
-  points:
-  - самоусвідомлення, саморефлексія
-  - емоційний стан, настрій
-  - Internal vocabulary
-- section: Empathy and Understanding
-  words: 250
-  points:
-  - емпатія, співчуття, розуміння
-  - підтримка, турбота
-  - Connecting with others
-- section: Communication Skills
-  words: 250
-  points:
-  - активне слухання, зворотний зв'язок
-  - конструктивна критика
-  - Communication vocabulary
-- section: Conflict and Resolution
-  words: 200
-  points:
-  - конфлікт, примирення
-  - вибачення, пробачення
-  - Resolution vocabulary
-- section: 'Practice: EQ in Action'
-  words: 100
-  points:
-  - Apply EQ vocabulary
-  - Role-play scenarios
-word_target: 1200
+- section: Вступ
+  words: 94
+- section: Вживання
+  words: 231
+- section: Читання
+  words: 313
+- section: Діалоги
+  words: 363
+- section: Підсумок
+  words: 131
+- section: Лексика
+  words: 636
+- section: Потрібно більше практики?
+  words: 109
+word_target: 1877
 vocabulary_hints:
   required:
   - емоційний інтелект (emotional intelligence)
@@ -57,16 +36,16 @@ vocabulary_hints:
   - примирення (reconciliation)
   - активне слухання (active listening)
 activity_hints:
-- type: matching
+- type: match-up
   focus: Match EQ concepts
   items: 25
 - type: fill-in
   focus: Use interpersonal vocabulary
   items: 20
-- type: role-play
+- type: cloze
   focus: EQ scenarios
   items: 15
-- type: discussion
+- type: quiz
   focus: Discuss EQ topics
   items: 10
 focus: vocabulary

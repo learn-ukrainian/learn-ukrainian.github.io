@@ -1,4 +1,92 @@
 module: ukrainski-zemli-u-vkl
 level: B2-HIST
 version: '2.0'
-items: []
+items:
+  - term: мозаїка
+    ipa: mɔˈzɑjikɐ
+    pos: noun
+    translation: mosaic
+  - term: суб'єктність
+    ipa: subʔjɛkˈtɪwnʲisʲtʲ
+    pos: noun
+    translation: subjectivity, agency
+  - term: скіпетр
+    ipa: ˈskʲipɛtr
+    pos: noun
+    translation: scepter
+  - term: оплот
+    ipa: ɔˈplɔt
+    pos: noun
+    translation: stronghold, bulwark
+  - term: аристократія
+    ipa: ɐrɪstɔˈkratʲijɐ
+    pos: noun
+    translation: aristocracy
+  - term: форпост
+    ipa: fɔrˈpɔst
+    pos: noun
+    translation: outpost
+  - term: анатомія
+    ipa: ɐnɐˈtɔmʲijɐ
+    pos: noun
+    translation: anatomy
+  - term: самоврядування
+    ipa: sɐmɔwrʲɐˈduwɐnnʲɐ
+    pos: noun
+    translation: self-government
+  - term: заповіт
+    ipa: zɐpɔˈvʲit
+    pos: noun
+    translation: testament, will
+  - term: магнат
+    ipa: mɐɦˈnɑt
+    pos: noun
+    translation: magnate
+  - term: шляхтич
+    ipa: ˈʃlʲɐxtɪtʃ
+    pos: noun
+    translation: nobleman (szlachcic)
+  - term: магістрат
+    ipa: mɐɦʲisˈtrɑt
+    pos: noun
+    translation: magistrate
+  - term: автономія
+    ipa: ɐutɔˈnɔmʲijɐ
+    pos: noun
+    translation: autonomy
+  - term: легітимність
+    ipa: lɛɦʲiˈtɪmnʲisʲtʲ
+    pos: noun
+    translation: legitimacy
+  - term: децентралізація
+    ipa: dɛt͡sɛntrɐlʲizɐˈt͡sʲijɐ
+    pos: noun
+    translation: decentralization
+  - term: ідентичність
+    ipa: idɛnˈtɪtʃnʲisʲtʲ
+    pos: noun
+    translation: identity
+  - term: тяглість
+    ipa: ˈtʲɑɦlʲisʲtʲ
+    pos: noun
+    translation: continuity
+  - term: суверенітет
+    ipa: suvɛrɛnʲiˈtɛt
+    pos: noun
+    translation: sovereignty
+  - term: експансія
+    ipa: ɛkˈspɑnsʲijɐ
+    pos: noun
+    translation: expansion
+  - term: правосуддя
+    ipa: prɐwɔˈsudʲdʲɐ
+    pos: noun
+    translation: justice
+  - term: деколонізація
+    ipa: dɛkɔlɔnʲizɐˈt͡sʲijɐ
+    pos: noun
+    translation: decolonization
+  - term: регіоналізм
+    ipa: rɛɦʲiɔnɐˈlʲizm
+    pos: noun
+    translation: regionalism

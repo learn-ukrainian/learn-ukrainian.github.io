@@ -262,6 +262,51 @@ class AuthorialIntentActivity:
     model_answer: str = ""
 
 
+@dataclass
+class SourceMetadata:
+    """Metadata for a historical source."""
+    author: str = ""
+    date: str = ""
+    type: str = ""  # chronicle, memoir, official, propaganda, academic
+    context: str = ""
+
+
+@dataclass
+class SourceEvaluationActivity:
+    """C1-HIST: Structured source criticism using the 5-question method."""
+    type: str = "source-evaluation"
+    title: str = ""
+    instruction: str = ""
+    source_text: str = ""
+    source_metadata: Optional[SourceMetadata] = None
+    evaluation_criteria: list[str] = field(default_factory=list)  # authorship, date_and_context, etc.
+    guiding_questions: list[str] = field(default_factory=list)
+    model_evaluation: str = ""
+
+
+@dataclass
+class DebatePosition:
+    """A single position in a historiographical debate."""
+    name: str = ""
+    proponents: str = ""
+    argument: str = ""
+    evidence: list[str] = field(default_factory=list)
+    weaknesses: list[str] = field(default_factory=list)
+
+
+@dataclass
+class DebateActivity:
+    """C1-HIST: Contested historiographical interpretations."""
+    type: str = "debate"
+    title: str = ""
+    instruction: str = ""
+    debate_question: str = ""
+    historical_context: str = ""
+    positions: list[DebatePosition] = field(default_factory=list)
+    analysis_tasks: list[str] = field(default_factory=list)
+    model_analysis: str = ""
+
+
 # Type alias
 Activity = Union[
     QuizActivity, SelectActivity, TrueFalseActivity, FillInActivity,
@@ -269,7 +314,8 @@ Activity = Union[
     ErrorCorrectionActivity, MarkTheWordsActivity,
     TranslateActivity, AnagramActivity, ReadingActivity,
     EssayResponseActivity, CriticalAnalysisActivity,
-    ComparativeStudyActivity, AuthorialIntentActivity
+    ComparativeStudyActivity, AuthorialIntentActivity,
+    SourceEvaluationActivity, DebateActivity
 ]
 
 
@@ -338,6 +384,8 @@ class ActivityParser:
             'critical-analysis': self._parse_critical_analysis,
             'comparative-study': self._parse_comparative_study,
             'authorial-intent': self._parse_authorial_intent,
+            'source-evaluation': self._parse_source_evaluation,
+            'debate': self._parse_debate,
         }
         parser = parsers.get(activity_type)
         return parser(data) if parser else None
@@ -537,6 +585,48 @@ class ActivityParser:
             model_answer=data.get('model_answer', '')
         )
 
+    def _parse_source_evaluation(self, data: dict) -> SourceEvaluationActivity:
+        """Parse source-evaluation activity (C1-HIST)."""
+        metadata_raw = data.get('source_metadata', {})
+        metadata = None
+        if metadata_raw:
+            metadata = SourceMetadata(
+                author=metadata_raw.get('author', ''),
+                date=metadata_raw.get('date', ''),
+                type=metadata_raw.get('type', ''),
+                context=metadata_raw.get('context', '')
+            )
+        return SourceEvaluationActivity(
+            title=data.get('title', ''),
+            instruction=data.get('instruction', ''),
+            source_text=data.get('source_text', ''),
+            source_metadata=metadata,
+            evaluation_criteria=data.get('evaluation_criteria', []),
+            guiding_questions=data.get('guiding_questions', []),
+            model_evaluation=data.get('model_evaluation', '')
+        )
+
+    def _parse_debate(self, data: dict) -> DebateActivity:
+        """Parse debate activity (C1-HIST)."""
+        positions = []
+        for pos_data in data.get('positions', []):
+            positions.append(DebatePosition(
+                name=pos_data.get('name', ''),
+                proponents=pos_data.get('proponents', ''),
+                argument=pos_data.get('argument', ''),
+                evidence=pos_data.get('evidence', []),
+                weaknesses=pos_data.get('weaknesses', [])
+            ))
+        return DebateActivity(
+            title=data.get('title', ''),
+            instruction=data.get('instruction', ''),
+            debate_question=data.get('debate_question', ''),
+            historical_context=data.get('historical_context', ''),
+            positions=positions,
+            analysis_tasks=data.get('analysis_tasks', []),
+            model_analysis=data.get('model_analysis', '')
+        )
+
     def _escape_jsx(self, text: str) -> str:
         """Escapes characters that break JSX parsing when used as a string literal attribute."""
         if not text: return ""
@@ -588,6 +678,8 @@ class ActivityParser:
         if isinstance(activity, CriticalAnalysisActivity): return self._critical_analysis_to_mdx(activity, is_ukrainian_forced)
         if isinstance(activity, ComparativeStudyActivity): return self._comparative_study_to_mdx(activity, is_ukrainian_forced)
         if isinstance(activity, AuthorialIntentActivity): return self._authorial_intent_to_mdx(activity, is_ukrainian_forced)
+        if isinstance(activity, SourceEvaluationActivity): return self._source_evaluation_to_mdx(activity, is_ukrainian_forced)
+        if isinstance(activity, DebateActivity): return self._debate_to_mdx(activity, is_ukrainian_forced)
         return ''
 
     def _quiz_to_mdx(self, activity: QuizActivity) -> str:
@@ -708,3 +800,46 @@ class ActivityParser:
     def _authorial_intent_to_mdx(self, activity: AuthorialIntentActivity, is_ukrainian_forced: bool = False) -> str:
         questions = self._dump_safe_json(activity.questions)
         return f"### {self._escape_jsx(activity.title)}\n\n<AuthorialIntent title=\"{self._escape_jsx(activity.title)}\" excerpt={{{json.dumps(activity.excerpt, ensure_ascii=False)}}} questions={{JSON.parse(`{questions}`)}} modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+
+    def _source_evaluation_to_mdx(self, activity: SourceEvaluationActivity, is_ukrainian_forced: bool = False) -> str:
+        """Convert source-evaluation activity to SourceEvaluation component (C1-HIST)."""
+        # Build sourceMetadata object
+        metadata_dict = {}
+        if activity.source_metadata:
+            if activity.source_metadata.author:
+                metadata_dict['author'] = activity.source_metadata.author
+            if activity.source_metadata.date:
+                metadata_dict['date'] = activity.source_metadata.date
+            if activity.source_metadata.type:
+                metadata_dict['type'] = activity.source_metadata.type
+            if activity.source_metadata.context:
+                metadata_dict['context'] = activity.source_metadata.context
+
+        instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
+        metadata_prop = f' sourceMetadata={{JSON.parse(`{self._dump_safe_json(metadata_dict)}`)}}' if metadata_dict else ''
+        criteria_prop = f' evaluationCriteria={{JSON.parse(`{self._dump_safe_json(activity.evaluation_criteria)}`)}}' if activity.evaluation_criteria else ''
+        questions_prop = f' guidingQuestions={{JSON.parse(`{self._dump_safe_json(activity.guiding_questions)}`)}}' if activity.guiding_questions else ''
+
+        return f"### {self._escape_jsx(activity.title)}\n\n<SourceEvaluation title=\"{self._escape_jsx(activity.title)}\"{instruction_prop} sourceText={{{json.dumps(activity.source_text, ensure_ascii=False)}}}{metadata_prop}{criteria_prop}{questions_prop} modelEvaluation={{{json.dumps(activity.model_evaluation, ensure_ascii=False)}}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+
+    def _debate_to_mdx(self, activity: DebateActivity, is_ukrainian_forced: bool = False) -> str:
+        """Convert debate activity to Debate component (C1-HIST)."""
+        # Build positions array
+        positions_data = []
+        for pos in activity.positions:
+            pos_dict = {
+                'name': pos.name,
+                'proponents': pos.proponents,
+                'argument': pos.argument
+            }
+            if pos.evidence:
+                pos_dict['evidence'] = pos.evidence
+            if pos.weaknesses:
+                pos_dict['weaknesses'] = pos.weaknesses
+            positions_data.append(pos_dict)
+
+        instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
+        context_prop = f' historicalContext={{{json.dumps(activity.historical_context, ensure_ascii=False)}}}' if activity.historical_context else ''
+        tasks_prop = f' analysisTasks={{JSON.parse(`{self._dump_safe_json(activity.analysis_tasks)}`)}}' if activity.analysis_tasks else ''
+
+        return f"### {self._escape_jsx(activity.title)}\n\n<Debate title=\"{self._escape_jsx(activity.title)}\"{instruction_prop} debateQuestion={{{json.dumps(activity.debate_question, ensure_ascii=False)}}}{context_prop} positions={{JSON.parse(`{self._dump_safe_json(positions_data)}`)}}{tasks_prop} modelAnalysis={{{json.dumps(activity.model_analysis, ensure_ascii=False)}}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"

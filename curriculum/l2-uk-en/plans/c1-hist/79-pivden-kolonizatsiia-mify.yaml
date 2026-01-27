@@ -5,21 +5,21 @@ version: '2.0'
 title: 'Південь: Колонізація та міфи «Новоросії»'
 content_outline:
 - section: Вступ — «Новоросія» — що це?
-  words: 400
+  words: 457
   points:
   - Імперська назва
   - Сучасне відродження міфу
   - Чому потрібна деконструкція
   - Структура модуля
 - section: До «Новоросії»
-  words: 600
+  words: 686
   points:
   - Дике поле — не пусте
   - Козацька присутність
   - Запорозька Січ
   - Кримськотатарські землі
 - section: Російська колонізація
-  words: 700
+  words: 800
   points:
   - Потьомкін і Катерина
   - Заселення — хто приїхав
@@ -27,33 +27,33 @@ content_outline:
   - Греки, болгари, німці
   - Росіяни — меншість
 - section: Одеса — імперське місто
-  words: 600
+  words: 686
   points:
   - Заснування — 1794
   - Мультикультурне місто
   - Українці в Одесі
   - Одеський міф — «не українське місто»?
 - section: Херсон, Миколаїв, Маріуполь
-  words: 500
+  words: 571
   points:
   - Інші міста Півдня
   - Українська присутність
   - Русифікація XX ст.
   - Збереження ідентичності
 - section: «Новоросія» 2014
-  words: 400
+  words: 457
   points:
   - Російський проект — провал
   - Чому не спрацювало
   - 2022 — Херсон, Запоріжжя
   - Спротив Півдня
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Південь — не російський
   - «Новоросія» — імперський міф
   - Перехід до синтезу
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - Новоросія (Novorossiya)
@@ -73,16 +73,16 @@ vocabulary_hints:
   - етнічний склад (ethnic composition)
   - регіональний міф (regional myth)
 activity_hints:
-- type: myth-deconstruction
+- type: critical-analysis
   focus: «Novorossiya» — imperial construct analysis
   output: Myth analysis
-- type: demographic-study
+- type: comparative-study
   focus: Who settled Southern Ukraine — ethnic breakdown
   output: Demographic analysis
-- type: city-analysis
+- type: critical-analysis
   focus: Odesa — Ukrainian or "other"?
   output: Urban identity study
-- type: contemporary-analysis
+- type: critical-analysis
   focus: 2014 vs. 2022 — why "Novorossiya" project failed
   output: Contemporary analysis
 - type: essay-response
@@ -111,3 +111,6 @@ sources:
   notes: Ukrainian presence
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of південь: колонізація та міфи «новоросії»'
+- Evaluate the historical significance of що це?

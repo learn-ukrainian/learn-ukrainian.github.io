@@ -68,22 +68,10 @@ activity_hints:
   focus: Church documents from Kosiv's era
   source: Adapted historical sources
   items: 3 passages
-- type: quiz
-  focus: Facts about church-state relations in 17th century
-  items: 12+
-- type: match-up
-  focus: Key figures and their positions
-  items: 10+
 - type: essay-response
   focus: How did Kosiv balance church autonomy and political realities?
   word_target: 250
   output: Analysis with specific examples
-- type: group-sort
-  focus: Polish period vs. Muscovite period church status
-  items: 12+
-- type: fill-in
-  focus: Church administrative terminology
-  items: 8+
 focus: biography
 pedagogy: CBI
 prerequisites:

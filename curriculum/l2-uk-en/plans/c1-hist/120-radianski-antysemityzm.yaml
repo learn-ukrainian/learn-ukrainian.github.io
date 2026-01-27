@@ -5,47 +5,47 @@ version: '2.0'
 title: Радянський антисемітизм
 content_outline:
 - section: Вступ — Антисемітизм «без антисемітів»
-  words: 451
+  words: 515
   points:
   - СРСР — «інтернаціоналізм»
   - Але — антисемітизм
   - Як поєднувалось
   - Структура модуля
 - section: Бабин Яр без пам'яті
-  words: 790
+  words: 903
   points:
   - Замовчування — 50 років
   - Не «євреї» — «радянські громадяни»
   - Спроби увічнення — провал
   - Сміттєзвалище на могилах
 - section: «Безрідні космополіти»
-  words: 677
+  words: 774
   points:
   - 1948-1953 — антисемітська кампанія
   - Кодова мова
   - Єврейський антифашистський комітет
   - «Справа лікарів»
 - section: Пізній СРСР
-  words: 677
+  words: 774
   points:
   - «П'ята графа»
   - Обмеження у кар'єрі
   - Еміграція — як «зрада»
   - Відмовники
 - section: Спадок
-  words: 564
+  words: 645
   points:
   - Що залишилось у свідомості
   - Пострадянський антисемітизм
   - Як Росія використовує сьогодні
   - «Денацифікація»
 - section: Підсумок
-  words: 341
+  words: 389
   points:
   - Радянський антисемітизм — реальний
   - Спадок не зник
   - Перехід до синтезу
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - антисемітизм (antisemitism)
@@ -65,16 +65,16 @@ vocabulary_hints:
   - дисидент (dissident)
   - алія (aliyah)
 activity_hints:
-- type: memory-analysis
+- type: critical-analysis
   focus: How Babi Yar was erased from Soviet memory
   output: Memory suppression study
-- type: campaign-analysis
+- type: critical-analysis
   focus: «Rootless cosmopolitans» — coded antisemitism
   output: Campaign analysis
-- type: discrimination-study
+- type: comparative-study
   focus: «Fifth paragraph» — practical discrimination
   output: Discrimination documentation
-- type: legacy-analysis
+- type: critical-analysis
   focus: Soviet antisemitism legacy today
   output: Legacy assessment
 - type: essay-response
@@ -104,3 +104,6 @@ sources:
   notes: Doctors' plot
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- Analyze the causes and consequences of радянський антисемітизм
+- Evaluate the historical significance of антисемітизм «без антисемітів»

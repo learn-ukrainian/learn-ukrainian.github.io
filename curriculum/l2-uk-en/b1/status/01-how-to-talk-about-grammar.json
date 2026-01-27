@@ -2,14 +2,14 @@
   "module": "01-how-to-talk-about-grammar",
   "level": "B1",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:26:43.984924Z",
+  "last_audit": "2026-01-27T16:25:44.406921Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-24T19:18:36.790025Z",
-    "meta": "2026-01-26T15:44:41.429807Z",
+    "md": "2026-01-27T15:24:10.349899Z",
+    "meta": "2026-01-27T13:34:16.261558Z",
     "activities": "2026-01-24T19:21:15.049529Z",
     "vocabulary": "2026-01-25T18:00:39.937918Z",
-    "plan": "2026-01-26T15:44:41.429382Z"
+    "plan": "2026-01-27T12:02:43.950255Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2032/1200 (raw: 2520)"
+      "message": "3367/1200 (raw: 3923)"
     },
     "activities": {
       "status": "pass",

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M03 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 23:17:02
+**Generated:** 2026-01-27 15:46:18
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** comparative-study, critical-analysis, fill-in, match-up, quiz, reading
+**Required Types:** comparative-study, critical-analysis, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -24,23 +24,20 @@
 | 2 | critical-analysis | Аналіз: Демократичні цінності античного поліса | 1 | 1 | ✅ |
 | 3 | comparative-study | Порівняння: Ольвія та Херсонес — Моделі розвитку | 1 | 1 | ✅ |
 | 4 | essay-response | Есе: Антична цивілізація як фундамент української тяглості | 1 | 1 | ✅ |
-| 5 | quiz | Комплексна перевірка: Еллінський світ Причорномор'я | 10 | 8 | ✅ |
-| 6 | match-up | Антична термінологія та реалії | 12 | 8 | ✅ |
-| 7 | true-false | Міфи та історичні факти про грецьку колонізацію | 10 | 8 | ✅ |
-| 8 | fill-in | Історичний контекст та лексика | 12 | 8 | ✅ |
+| 5 | true-false | Міфи та історичні факти про грецьку колонізацію | 10 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 8 (target: 3-9) ✅
-- Unique types: 8 (minimum: 2) ✅
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 6/6 (comparative-study, critical-analysis, fill-in, match-up, quiz, reading) ✅
+- Required types used: 3/3 (comparative-study, critical-analysis, reading) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ✅ 4371/4000 (raw: 4609)
-- **Activities:** ✅ 8/3
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 8/2 types
+- **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
@@ -48,7 +45,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (8 activities)
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 97.8% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

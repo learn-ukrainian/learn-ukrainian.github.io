@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M21 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 23:25:21
+**Generated:** 2026-01-27 16:24:06
 
 ## Configuration
 **Type:** B2-history
@@ -20,27 +20,24 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Розуміння тексту про навалу | 8 | 8 | ✅ |
-| 2 | match-up | Історична термінологія | 12 | 8 | ✅ |
-| 3 | fill-in | Події навали | 10 | 8 | ✅ |
-| 4 | true-false | Міфи та факти про навалу | 10 | 8 | ✅ |
-| 5 | reading | Свідчення очевидця: Плано Карпіні | 3 | 1 | ✅ |
-| 6 | critical-analysis | Аналіз стану Києва після навали | 1 | 1 | ✅ |
-| 7 | essay-response | Аналітичне есе про наслідки навали | 1 | 1 | ✅ |
-| 8 | comparative-study | Україна vs Московія під Ордою | 1 | 1 | ✅ |
+| 1 | true-false | Міфи та факти про навалу | 10 | 8 | ✅ |
+| 2 | reading | Свідчення очевидця: Плано Карпіні | 3 | 1 | ✅ |
+| 3 | critical-analysis | Аналіз стану Києва після навали | 1 | 1 | ✅ |
+| 4 | essay-response | Аналітичне есе про наслідки навали | 1 | 1 | ✅ |
+| 5 | comparative-study | Україна vs Московія під Ордою | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 8 (target: 3-9) ✅
-- Unique types: 8 (minimum: 2) ✅
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ✅ 4264/4000 (raw: 4502)
-- **Activities:** ✅ 8/3
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 8/2 types
+- **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
@@ -48,7 +45,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (8 activities)
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 98.8% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

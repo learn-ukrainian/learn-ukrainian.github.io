@@ -1,10 +1,12 @@
 # Audit Report: M60 — yulian-bachynskyi.md
+
 **Level:** C1 | **Module:** M60 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:27
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння біографії та ідей Юліана Бачинського | 12 | 5 | ✅ |
@@ -44,15 +47,18 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in yulian-bachynskyi.yaml: Schema validation error at key '7': {'type': 'reading', 'title': '«Аналіз сучасного історичного нарису»', 'resource': {'type': 'article', 'url': 'https://localhistory.org.ua/texts/statti/yulian-bachinskii-prorok-ukrayinskoyi-samostiinosti/', 'title': '«Юліан Бачинський: пророк української самостійності»'}, 'tasks': ['Як автор статті характеризує трагедію вибору Бачинського щодо переїзду в СРСР?', 'Порівняйте мову цієї сучасної статті з уривками Бачинського. Які лексичні зміни ви помітили?', 'Знайдіть у тексті синоніми до слова «незалежність», які використовує автор.']} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
+
 - **Words:** ❌ 2078/4000 (raw: 2324)
 - **Activities:** ✅ 15/3
 - **Density:** ✅ All > 1
@@ -71,10 +77,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 97% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 13 | 4 | 100% | 19% | 19.0% |
@@ -90,6 +98,7 @@
 | **TOTAL** | | | | | **97.5%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 67 | Included in Core |

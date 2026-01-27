@@ -5,47 +5,47 @@ version: '2.0'
 title: 'Українська м''яка сила: Культурна дипломатія'
 content_outline:
 - section: Вступ — Культура як зброя
-  words: 451
+  words: 515
   points:
   - М'яка сила — що це
   - Україна до 2022 — невидима
   - Після 2022 — прорив
   - Структура модуля
 - section: Eurovision як фронт
-  words: 790
+  words: 903
   points:
   - Джамала 2016 — «1944»
   - Kalush Orchestra 2022 — «Stefania»
   - Політика через музику
   - Міжнародний резонанс
 - section: Кінематограф
-  words: 677
+  words: 774
   points:
   - Сенцов — символ
   - «20 днів у Маріуполі»
   - Документалістика війни
   - Фестивалі — платформа
 - section: Мистецтво і дизайн
-  words: 677
+  words: 774
   points:
   - Українські бренди
   - Вишиванка — глобальний символ
   - Музеї під обстрілами
   - Мистецтво спротиву
 - section: Цифрова дипломатія
-  words: 564
+  words: 645
   points:
   - Соцмережі — миттєвий вплив
   - Мемо-культура
   - Зеленський — глобальна зірка
   - United24
 - section: Підсумок
-  words: 341
+  words: 389
   points:
   - М'яка сила — справжня сила
   - Україна — більше не невидима
   - Перехід до синтезу агентності
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - «м'яка сила» (soft power)
@@ -65,16 +65,16 @@ vocabulary_hints:
   - United24 (United24)
   - інфлюенсер (influencer)
 activity_hints:
-- type: soft-power-analysis
+- type: critical-analysis
   focus: Map Ukraine's soft power assets
   output: Soft power inventory
-- type: eurovision-study
+- type: comparative-study
   focus: Eurovision as political platform
   output: Eurovision analysis
-- type: digital-diplomacy
+- type: critical-analysis
   focus: Ukraine's digital diplomacy success
   output: Digital strategy analysis
-- type: brand-study
+- type: comparative-study
   focus: Ukrainian cultural branding
   output: Brand assessment
 - type: essay-response
@@ -104,3 +104,6 @@ sources:
   notes: Cultural diplomacy
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of українська м''яка сила: культурна дипломатія'
+- Evaluate the historical significance of культура як зброя

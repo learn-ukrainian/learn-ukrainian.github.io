@@ -5,30 +5,30 @@ version: '2.0'
 title: Річ Посполита — полонізація та кріпацтво
 content_outline:
 - section: Вступ
-  words: 200
+  words: 410
 - section: Формування Речі Посполитої та інкорпорація земель
-  words: 200
+  words: 410
 - section: Процеси асиміляції та культурного спротиву
-  words: 200
+  words: 410
 - section: Полонізація та ополячення
-  words: 200
+  words: 410
 - section: 'Шляхетська демократія: Свобода чи анархія?'
-  words: 250
+  words: 513
   points:
   - Golden Freedoms vs Absolute Monarchy
   - The paralysis of Liberum Veto
   - Lessons on responsible democracy
 - section: Читання
-  words: 200
+  words: 410
 - section: Первинні джерела
-  words: 200
+  words: 410
 - section: Деколонізаційний погляд
-  words: 200
+  words: 410
 - section: Наслідки для козацтва
-  words: 200
+  words: 410
 - section: Потрібно більше практики?
-  words: 100
-word_target: 3000
+  words: 207
+word_target: 4000
 focus: history
 pedagogy: CBI
 objectives:

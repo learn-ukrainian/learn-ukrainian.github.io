@@ -5,50 +5,52 @@ version: '1.0'
 title: 'Економіка імперії: Україна як житниця'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of економіка імперії: україна як житниця'
+- Evaluate the historical significance of колонія ресурсів
 content_outline:
 - section: Вступ — Колонія ресурсів
-  words: 466
+  words: 533
   subsections:
   - Україна — «житниця Європи»
   - Економічна колонізація
   - Ресурсний вимір залежності
   - Структура модуля
 - section: Зерновий експорт XVIII-XIX ст.
-  words: 816
+  words: 933
   subsections:
   - Чорноземи — багатство
   - Хто отримував прибуток
   - Одеса — порт імперії
   - Селяни — виробники, не бенефіціари
 - section: Кріпацтво як економічна система
-  words: 700
+  words: 800
   subsections:
   - Безкоштовна робоча сила
   - Латифундії — російських і польських панів
   - Скасування 1861 — що змінилось
   - Борги і залежність
 - section: Цукрова промисловість
-  words: 583
+  words: 666
   subsections:
   - Українські цукроварні
   - Хто володів
   - Прибутки — куди йшли
   - Терещенки — виняток чи правило
 - section: Залізниці і порти
-  words: 583
+  words: 666
   subsections:
   - Інфраструктура — для експорту
   - Не для розвитку України
   - Колоніальна модель
   - Порівняння з іншими колоніями
 - section: Підсумок
-  words: 352
+  words: 402
   subsections:
   - Україна — економічна колонія
   - Багатство — експортоване
   - Перехід до радянської індустріалізації
-word_target: 3500
+word_target: 4000
 vocabulary:
 - житниця
 - економічна колонія
@@ -66,13 +68,13 @@ vocabulary:
 - колоніальна модель
 - метрополія
 activities:
-- type: economic-analysis
+- type: critical-analysis
   focus: Where did Ukrainian grain profits go?
-- type: colonial-comparison
+- type: comparative-study
   focus: Ukraine vs. other colonies — economic extraction
-- type: infrastructure-analysis
+- type: critical-analysis
   focus: Railways for empire, not for Ukraine
-- type: class-analysis
+- type: critical-analysis
   focus: Who benefited from Ukrainian agriculture?
 - type: essay-response
   focus: Чи була Україна економічною колонією Російської імперії?

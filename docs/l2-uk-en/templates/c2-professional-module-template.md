@@ -69,6 +69,7 @@ TEMPLATE_METADATA:
 Before submitting a C2 professional module, verify all items from `c2-module-template.md` PLUS:
 
 ### Professional-Specific Requirements (Seminar Style)
+
 - [ ] **Seminar pedagogy:** Production-focused, not drill-focused
 - [ ] **Activities:** 3-9 production activities (reading, essay-response, critical-analysis)
 - [ ] **Essay requirements:** 300-500 words per essay (with Model Answer)
@@ -119,7 +120,6 @@ Before submitting a C2 professional module, verify all items from `c2-module-tem
 | M73 | Professional Identity |
 | M74 | C2.3 Review |
 | M75 | C2.3 Checkpoint |
-
 
 ---
 
@@ -516,6 +516,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 ## Content Structure Note
 
 ### Vocabulary & Activities
+
 **CRITICAL:** Do NOT add `## Vocabulary` or `## Activities` headers. These sections are injected automatically from:
 - `vocabulary/{slug}.yaml`
 - `activities/{slug}.yaml`

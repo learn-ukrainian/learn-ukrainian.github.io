@@ -19,7 +19,7 @@ Good use of cultural references (songs).
 
 **1. Accuracy of Examples:** 10/10
 Examples are correct.
-_Fixed:_ Replaced incorrect "Present Tense" translations in the Practice section with actual Adverb sentences.
+*Fixed:* Replaced incorrect "Present Tense" translations in the Practice section with actual Adverb sentences.
 
 **2. Relevance of Scenarios:** 10/10
 "How are things?" is the #1 most used phrase.

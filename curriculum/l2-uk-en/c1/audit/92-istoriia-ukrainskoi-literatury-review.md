@@ -1,9 +1,11 @@
 # Audit Report: M92 — 92-istoriia-ukrainskoi-literatury.md
+
 **Level:** C1 | **Module:** M92 | **Phase:** C1 | **Pedagogy:** Immersion & Analysis | **Target:** 3500
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:52
 
 ## Configuration
+
 **Type:** C1-literature
 **Word Target:** 3500 words
 **Activities:** 12-16 required
@@ -16,6 +18,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Літературні періоди та Характеристики | 12 | 6 | ✅ |
@@ -41,11 +44,13 @@
 - Low density activities: 0
 
 ## Recommendation
+
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 1997/3500 (raw: 2325)
 - **Activities:** ✅ 15/12
 - **Density:** ✅ All > 12
@@ -64,10 +69,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 95% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 35 | 15 | 100% | 25% | 25.0% |
@@ -81,6 +88,7 @@
 | **TOTAL** | | | | | **95.6%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 78 | Included in Core |

@@ -5,38 +5,40 @@ version: '1.0'
 title: Універсали УНР
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- Analyze the causes and consequences of універсали унр
+- Evaluate the historical significance of чотири кроки до незалежності
 content_outline:
 - section: Вступ — Чотири кроки до незалежності
-  words: 400
+  words: 457
   subsections:
   - 1917-1918 — революційний рік
   - Чотири універсали Центральної Ради
   - Від автономії до незалежності
   - Чому така еволюція
 - section: Історичний контекст
-  words: 500
+  words: 571
   subsections:
   - Лютнева революція 1917
   - Центральна Рада — як виникла
   - Грушевський — лідер
   - Відносини з Тимчасовим урядом
 - section: Перший універсал (10 червня 1917)
-  words: 600
+  words: 686
   subsections:
   - Текст (з глосами)
   - Автономія — не незалежність
   - Чому ще не сепарація
   - Реакція Петрограда
 - section: Від другого до третього
-  words: 500
+  words: 571
   subsections:
   - Другий універсал — компроміс
   - Жовтневий переворот
   - Третій універсал — УНР проголошено
   - Федерація vs. незалежність
 - section: Четвертий універсал (22 січня 1918)
-  words: 700
+  words: 800
   subsections:
   - Текст (з глосами)
   - Самостійна, ні від кого незалежна
@@ -44,19 +46,19 @@ content_outline:
   - Брестський мир — контекст
   - Соціальні реформи в універсалі
 - section: Порівняльний аналіз
-  words: 500
+  words: 571
   subsections:
   - Еволюція риторики
   - Від «народ український» до «нація»
   - Таблиця — чотири універсали
   - Історична логіка
 - section: Підсумок
-  words: 300
+  words: 344
   subsections:
   - Універсали як свідчення
   - Чому не вдалося?
   - Зв'язок із 1991
-word_target: 3500
+word_target: 4000
 vocabulary:
 - універсал
 - Центральна Рада
@@ -76,7 +78,7 @@ vocabulary:
 activities:
 - type: reading
   focus: First and Fourth Universals side by side
-- type: evolution-analysis
+- type: critical-analysis
   focus: Track language change across four universals
 - type: comparative-study
   focus: Compare UNR Universals with Khmelnytsky's Universals

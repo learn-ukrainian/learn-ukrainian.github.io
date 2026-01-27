@@ -1,9 +1,11 @@
 # Audit Report: M51 — 51-hopak-i-kozachok.md
+
 **Level:** C1 | **Module:** M51 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:26
 
 ## Configuration
+
 **Type:** C1-history
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Теоретичні основи гопака та козачка | 5 | 5 | ✅ |
@@ -40,11 +43,13 @@
 - Low density activities: 0
 
 ## Recommendation
+
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 1993/4000 (raw: 2193)
 - **Activities:** ✅ 12/3
 - **Density:** ✅ All > 1
@@ -63,10 +68,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 91% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 19 | 15 | 100% | 25% | 25.0% |
@@ -80,6 +87,7 @@
 | **TOTAL** | | | | | **91.6%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 82 | Included in Core |

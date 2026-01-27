@@ -1,4 +1,5 @@
 # B1 Naturalness Fixes - M72-M75 (Regional Modules)
+
 **Date:** 2026-01-12
 **Status:** COMPLETED
 **Modules affected:** M72 (Західна Україна), M73 (Східна Україна), M74 (Південна Україна), M75 (Центральна Україна)
@@ -25,6 +26,7 @@ Applied naturalness improvements to 4 regional modules (M72-M75) based on findin
 ### Changes Applied (5 sentences)
 
 #### 1. Removed "по праву" + "справжньою"
+
 **Before:**
 ```
 Львів по праву вважається справжньою культурною столицею сучасної України.
@@ -38,6 +40,7 @@ Applied naturalness improvements to 4 regional modules (M72-M75) based on findin
 ---
 
 #### 2. Broke "унікальний регіон" template
+
 **Before:**
 ```
 Це унікальний регіон з надзвичайно багатою культурною та історичною спадщиною.
@@ -55,6 +58,7 @@ Applied naturalness improvements to 4 regional modules (M72-M75) based on findin
 ---
 
 #### 3. Removed intensifier "дуже" + "сучасній"
+
 **Before:**
 ```
 Габсбурзький період залишив дуже глибокий культурний слід в сучасній Галичині.
@@ -68,6 +72,7 @@ Applied naturalness improvements to 4 regional modules (M72-M75) based on findin
 ---
 
 #### 4. Added discourse marker "також" + changed "унікальною"
+
 **Before:**
 ```
 Львів відомий усьому світу своєю унікальною кавовою культурою.
@@ -84,6 +89,7 @@ Applied naturalness improvements to 4 regional modules (M72-M75) based on findin
 ---
 
 #### 5. Removed intensifiers "високих" + "унікальні"
+
 **Before:**
 ```
 У високих Карпатах живуть три унікальні етнографічні групи українців.
@@ -101,6 +107,7 @@ Applied naturalness improvements to 4 regional modules (M72-M75) based on findin
 ### Changes Applied (2 sentences)
 
 #### 6. Broke "унікальний регіон" template (2nd occurrence)
+
 **Before:**
 ```
 Слобожанщина — це унікальний історичний регіон зі славною козацькою спадщиною.
@@ -114,6 +121,7 @@ Applied naturalness improvements to 4 regional modules (M72-M75) based on findin
 ---
 
 #### 7. Fixed pleonasm "головною основою"
+
 **Before:**
 ```
 Важка промисловість завжди була головною основою економіки цього індустріального регіону.
@@ -131,6 +139,7 @@ Applied naturalness improvements to 4 regional modules (M72-M75) based on findin
 ### Changes Applied (5 sentences)
 
 #### 8. Broke "унікальний регіон" template (3rd occurrence)
+
 **Before:**
 ```
 Південна Україна — це унікальний регіон широких степів і теплих морів.
@@ -146,6 +155,7 @@ Applied naturalness improvements to 4 regional modules (M72-M75) based on findin
 ---
 
 #### 9. Removed bookish "заслужено"
+
 **Before:**
 ```
 Миколаїв заслужено називають містом корабелів і центром суднобудування.
@@ -159,6 +169,7 @@ Applied naturalness improvements to 4 regional modules (M72-M75) based on findin
 ---
 
 #### 10. Fixed pleonasm "солодкими та смачними"
+
 **Before:**
 ```
 Сонячний Херсон славиться своїми солодкими та смачними кавунами.
@@ -172,6 +183,7 @@ Applied naturalness improvements to 4 regional modules (M72-M75) based on findin
 ---
 
 #### 11. Removed "унікальний" (4th use in module)
+
 **Before:**
 ```
 Це унікальний багатонаціональний регіон різних культур та народів.
@@ -185,6 +197,7 @@ Applied naturalness improvements to 4 regional modules (M72-M75) based on findin
 ---
 
 #### 12. Removed "справжній" intensifier
+
 **Before:**
 ```
 Кримські татари — це справжній корінний народ півострова Крим.
@@ -202,6 +215,7 @@ Applied naturalness improvements to 4 regional modules (M72-M75) based on findin
 ### Changes Applied (4 sentences)
 
 #### 13. Removed tautology "Стародавній... сучасна"
+
 **Before:**
 ```
 Стародавній Київ — це сучасна столиця та серце України.
@@ -215,6 +229,7 @@ Applied naturalness improvements to 4 regional modules (M72-M75) based on findin
 ---
 
 #### 14. Removed "справжнє" intensifier
+
 **Before:**
 ```
 Черкащина — це справжнє історичне серце козацької України.
@@ -228,6 +243,7 @@ Applied naturalness improvements to 4 regional modules (M72-M75) based on findin
 ---
 
 #### 15. Fixed double superlative (Critical!)
+
 **Before:**
 ```
 Тарас Шевченко — це найвидатніший та найвідоміший український поет.
@@ -244,6 +260,7 @@ Applied naturalness improvements to 4 regional modules (M72-M75) based on findin
 ---
 
 #### 16. Fixed double superlative + "всієї"
+
 **Before:**
 ```
 Дніпро — це найбільша та найголовніша річка всієї України.
@@ -264,6 +281,7 @@ Applied naturalness improvements to 4 regional modules (M72-M75) based on findin
 ### Issues Eliminated
 
 #### 1. "Унікальний регіон" Template (3 occurrences)
+
 - M72: "унікальний регіон з надзвичайно багатою..."
 - M73: "унікальний історичний регіон зі славною..."
 - M74: "унікальний регіон широких степів..."
@@ -273,6 +291,7 @@ Applied naturalness improvements to 4 regional modules (M72-M75) based on findin
 ---
 
 #### 2. Double Superlatives (2 occurrences, both M75)
+
 - "найвидатніший та найвідоміший"
 - "найбільша та найголовніша"
 
@@ -281,6 +300,7 @@ Applied naturalness improvements to 4 regional modules (M72-M75) based on findin
 ---
 
 #### 3. Excessive Intensifiers (9 occurrences removed)
+
 - **"унікальний/унікальна/унікальні":** 5 uses
 - **"дуже":** 1 use
 - **"надзвичайно":** 1 use
@@ -293,6 +313,7 @@ Applied naturalness improvements to 4 regional modules (M72-M75) based on findin
 ---
 
 #### 4. Pleonasms (2 occurrences)
+
 - "головна основа" (main basis)
 - "солодкі та смачні кавуни" (sweet and tasty watermelons)
 
@@ -303,6 +324,7 @@ Applied naturalness improvements to 4 regional modules (M72-M75) based on findin
 ## Validation
 
 ### Vocabulary Check
+
 ✅ All replacement words verified against B1 M01-M75 cumulative vocabulary:
 - "край" (introduced M38)
 - "має" (introduced M01)
@@ -310,6 +332,7 @@ Applied naturalness improvements to 4 regional modules (M72-M75) based on findin
 - "особливий" (introduced M48)
 
 ### Grammar Check
+
 ✅ All constructions use grammar introduced by B1 curriculum:
 - Instrumental case ("багатою спадщиною" → "багату спадщину" accusative)
 - Discourse markers ("також")
@@ -320,18 +343,21 @@ Applied naturalness improvements to 4 regional modules (M72-M75) based on findin
 ## Impact Assessment
 
 ### Before Fixes
+
 - **Average naturalness score:** 6.0/10 (M72-M75)
 - **Pattern repetition:** "Унікальний регіон" in 3 consecutive modules
 - **Double superlatives:** 2 instances in M75
 - **Excessive intensifiers:** 9+ instances across 4 modules
 
 ### After Fixes
+
 - **Expected score improvement:** 6.0 → 8.0+/10
 - **Pattern variety:** Each module now uses distinct structures
 - **Redundancy:** Eliminated pleonasms and double superlatives
 - **Natural flow:** Added discourse marker "також" for coherence
 
 ### Comparison with Previous B1 Sections
+
 | Section | Before | After | Status |
 |---------|--------|-------|--------|
 | M01-M05 | 7.0 | 8.0+ | Fixed (previous session) |
@@ -346,11 +372,13 @@ Applied naturalness improvements to 4 regional modules (M72-M75) based on findin
 ## Next Steps
 
 ### Immediate
+
 1. ✅ Apply fixes to M72-M75 activity files
 2. ⏳ Address M80 cloze passage flow (Priority 3 from scan report)
 3. ⏳ Re-scan M72-M75 to verify improvements
 
 ### Optional
+
 - Consider adding more discourse markers to M72-M75 unjumble activities (Priority 2 from scan)
 - Review quiz-only modules (M76-M86) for potential prose activity additions
 

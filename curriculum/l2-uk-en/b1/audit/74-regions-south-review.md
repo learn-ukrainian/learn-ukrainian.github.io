@@ -1,17 +1,17 @@
 # Audit Report: M74 — 74-regions-south.md
-**Level:** B1 | **Module:** M74 | **Phase:** B1 | **Pedagogy:** CBI | **Target:** 1500
+**Level:** B1 | **Module:** M74 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:27:31
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-27 19:15:46
 
 ## Configuration
-**Type:** B1-cultural
+**Type:** B1-culture
 **Word Target:** 1500 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
-**Priority Types:** error-correction, fill-in, unjumble
-**Required Types:** discussion, fill-in, matching, reading
+**Priority Types:** fill-in, match-up, quiz, reading
+**Required Types:** fill-in, match-up, quiz, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥25 words
@@ -32,59 +32,50 @@
 | 10 | select | Виберіть усі правильні відповіді | 8 | 6 | ✅ |
 | 11 | translate | Перекладіть речення | 8 | 6 | ✅ |
 | 12 | mark-the-words | Знайдіть географічні та культурні терміни | 15 | 6 | ✅ |
+| 13 | fill-in | Доповніть речення про Південну Україну | 8 | 8 | ✅ |
+| 14 | reading | Одеса: перлина біля моря | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 12 (target: 8-12) ✅
-- Unique types: 10 (minimum: 4) ✅
-- Priority types used: 2/3 (error-correction, unjumble) ✅
-- Required types used: 0/4 (none) ❌
+- Total activities: 14 (target: 8-12) ❌
+- Unique types: 12 (minimum: 4) ✅
+- Priority types used: 4/4 (fill-in, match-up, quiz, reading) ✅
+- Required types used: 4/4 (fill-in, match-up, quiz, reading) ✅
 - Low density activities: 0
-
-## PEDAGOGICAL VIOLATIONS
-- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['matching', 'discussion']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
-  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1699/1500 (raw: 1792)
-- **Activities:** ✅ 12/8
+- **Activities:** ✅ 14/8
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 10/4 types
+- **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 99/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 85-100% (B1.7-8 Ukraine))
-- **Richness:** ✅ 95% (grammar)
+- **Richness:** ✅ 97% (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 95% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 97% (minimum: 95%)
+**Module Type:** cultural
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 21 | 24 | 88% | 20% | 17.6% |
-| engagement | 10 | 5 | 100% | 15% | 15.0% |
-| dialogues | 16 | 4 | 100% | 15% | 15.0% |
-| variety | 0.97 | - | 97% | 10% | 9.7% |
-| cultural | 10 | 3 | 100% | 10% | 10.0% |
-| realworld | 3 | 3 | 100% | 10% | 10.0% |
-| visual | 4 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.65 | - | 65% | 5% | 3.2% |
-| questions | 26 | 5 | 100% | 5% | 5.0% |
-| proverbs | 6 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **95.6%** |
+| cultural | 10 | 5 | 100% | 33% | 33.3% |
+| engagement | 10 | 6 | 100% | 20% | 20.0% |
+| visual | 4 | 4 | 100% | 13% | 13.3% |
+| variety | 0.97 | - | 97% | 7% | 6.5% |
+| paragraph_var | 0.65 | - | 65% | 7% | 4.3% |
+| examples | 21 | - | 100% | 7% | 6.7% |
+| realworld | 3 | - | 100% | 7% | 6.7% |
+| questions | 26 | 4 | 100% | 7% | 6.7% |
+| **TOTAL** | | | | | **97.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

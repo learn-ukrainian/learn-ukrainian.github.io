@@ -1,10 +1,12 @@
 # Audit Report: M23 — 23-black-council-plot.md
+
 **Level:** LIT | **Module:** M23 | **Phase:** LIT.4 | **Pedagogy:** Analysis | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:57:57
 
 ## Configuration
+
 **Type:** LIT-literature
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Літературний квіз: Сюжет | 5 | 1 | ✅ |
@@ -34,16 +37,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 23-black-council-plot.yaml: Schema validation error at key 'pairs': [{'left': 'Яким Сомко', 'right': 'Ідеальний правитель-лицар'}, {'left': 'Іван Брюховецький', 'right': 'Демагог і трикстер'}, {'left': 'Михайло Черевань', 'right': 'Пасивний обиватель (хуторянин)'}, {'left': 'Кирило Тур', 'right': 'Романтичний бунтар (байронічний герой)'}, {'left': 'Полковник Шрам', 'right': 'Священик-воїтель (поборник традиції)'}] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 3773/4000 (raw: 4226)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
@@ -62,10 +68,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 92% (minimum: 90%)
 **Module Type:** literature
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
@@ -81,6 +89,7 @@
 | **TOTAL** | | | | | **92.9%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 96 | Included in Core |

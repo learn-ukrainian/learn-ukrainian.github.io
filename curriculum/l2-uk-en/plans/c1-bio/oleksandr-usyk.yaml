@@ -69,22 +69,10 @@ activity_hints:
   focus: Usyk's interviews and statements
   source: Sports media
   items: 3 passages
-- type: quiz
-  focus: Usyk's biography and achievements
-  items: 12+
-- type: match-up
-  focus: Fights and their significance
-  items: 10+
 - type: essay-response
   focus: How does Usyk represent Ukraine to the world?
   word_target: 300
   output: Sports diplomacy analysis
-- type: group-sort
-  focus: Sports achievements vs. patriotic actions
-  items: 12+
-- type: fill-in
-  focus: Key dates and boxing terms
-  items: 10+
 focus: biography
 prerequisites:
 - Understanding of boxing
@@ -110,3 +98,7 @@ sources:
   notes: His championship status
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of олександр усик: чемпіон із серцем воїна'
+- Evaluate the contributions of абсолютний чемпіон світу
+- Trace the career and influence of значення для нації

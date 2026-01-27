@@ -1,8 +1,8 @@
 # Audit Report: M21 — 21-motion-figurative-uses.md
-**Level:** B1 | **Module:** M21 | **Phase:** B1 | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M21 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:26:57
+**Generated:** 2026-01-27 16:25:51
 
 ## Configuration
 **Type:** B1-grammar
@@ -65,7 +65,7 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 40 | 24 | 100% | 20% | 20.0% |
+| examples | 50 | 24 | 100% | 20% | 20.0% |
 | engagement | 12 | 5 | 100% | 15% | 15.0% |
 | dialogues | 7 | 4 | 100% | 15% | 15.0% |
 | variety | 0.98 | - | 98% | 10% | 9.8% |

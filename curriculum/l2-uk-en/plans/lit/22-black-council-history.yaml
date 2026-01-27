@@ -6,37 +6,37 @@ title: 'Чорна рада: Історичний контекст'
 subtitle: 'The Black Council: Historical Context'
 content_outline:
 - section: Вступ — Що таке "Руїна"?
-  words: 600
+  words: 750
   points:
   - Період 1657-1687 років
   - Розкол України на Лівобережну і Правобережну
   - Чому цей період називають "Руїною"
 - section: Чорна рада 1663 року
-  words: 800
+  words: 1000
   points:
   - Що таке "чорна рада" (загальна козацька рада)
   - Конфлікт Сомка і Брюховецького
   - Результат ради і наслідки
 - section: Політичні сили епохи
-  words: 700
+  words: 875
   points:
   - Козацька старшина vs голота
   - Московський вплив
   - Польський фактор
 - section: Охлократія як проблема
-  words: 600
+  words: 750
   points:
   - Що таке охлократія (влада натовпу)
   - Чорна рада як приклад
   - Куліш і його погляд на "народ"
 - section: Історичні постаті
-  words: 500
+  words: 625
   points:
   - Яким Сомко — трагічний герой
   - Іван Брюховецький — демагог
   - Василь Золотаренко
 - section: Підсумок — Від історії до роману
-  words: 400
+  words: 500
   points:
   - Як Куліш використав історію
   - Художня правда vs документальна
@@ -65,22 +65,10 @@ activity_hints:
   focus: Історичні джерела про Чорну раду
   source: Wikipedia and historical sources
   items: 4+
-- type: quiz
-  focus: Історичні факти періоду Руїни
-  items: 15+
-- type: match-up
-  focus: Історична постать → її роль
-  items: 12+
 - type: essay-response
   focus: Чи була Чорна рада "демократією" чи "охлократією"?
   word_target: 300
   output: Історичне есе
-- type: group-sort
-  focus: Політичні сили (старшина / голота / Москва / Польща)
-  items: 15+
-- type: cloze
-  focus: Ключові дати і події
-  items: 12+
 focus: history
 pedagogy: Immersion
 prerequisites:
@@ -91,10 +79,8 @@ connects_to:
 - lit-13 (Haidamaky — інший історичний період)
 - c1-hist (Historical modules)
 objectives:
-- Understand the historical context of "The Ruin" (1657-1687) and the Black Council
-  of 1663.
-- Contrast the political models of Somko (elite/law) and Briukhovetsky (populism/mob
-  rule).
+- Understand the historical context of "The Ruin" (1657-1687) and the Black Council of 1663.
+- Contrast the political models of Somko (elite/law) and Briukhovetsky (populism/mob rule).
 - Analyze the consequences of internal discord for Ukrainian statehood.
 grammar:
 - Historical terminology

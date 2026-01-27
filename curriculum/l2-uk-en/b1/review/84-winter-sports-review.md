@@ -12,7 +12,7 @@
 | ------------------- | ----- | ---------------------------------------------------------------------------------- |
 | Coherence           | 10/10 | Logical structure (Preparation -> Actions -> Culture).                             |
 | Relevance           | 10/10 | High. Bukovel is "the" destination for winter holidays.                            |
-| Educational         | 10/10 | Good differentiation of _лижі_ (skis) vs _ковзани_ (skates).                       |
+| Educational         | 10/10 | Good differentiation of *лижі* (skis) vs *ковзани* (skates).                       |
 | Language            | 10/10 | Modern usage (`скі-пас`, `фрірайд`).                                               |
 | Pedagogy            | 10/10 | Linking skiing to Christmas traditions (`коляда` in the Carpathians) is brilliant. |
 | Immersion           | 10/10 | Bukovel and Slavsko are iconic locations.                                          |
@@ -25,8 +25,8 @@
 ## Linguistic Accuracy Issues
 
 - **Vocabulary:** `коль` (m)? Looks like truncated `колір` or `Микола`.
-  - _Investigation:_ Maybe `колія` (track)? But that's feminine. Or `Коля` (name)?
-  - _Action:_ Remove.
+  - *Investigation:* Maybe `колія` (track)? But that's feminine. Or `Коля` (name)?
+  - *Action:* Remove.
 - **Vocabulary:** `сало` is listed as feminine (`f`). It is neuter (`n`).
 
 ## Strengths

@@ -25,10 +25,10 @@
 ## Linguistic Accuracy Issues
 
 - **Vocabulary:** `волити` (to wish/prefer). Archaic/poetic. Standard is `хотіти`, `бажати`. Is this intended for the literary context (Shevchenko)?
-  - _Investigation:_ Acceptable in context of 19th-century literature.
+  - *Investigation:* Acceptable in context of 19th-century literature.
 - **Vocabulary:** Capitalization issues (`канів`, `черкас`, `гоголь`, `диканька`).
-- **Vocabulary:** `Черкас` is listed as singular. Usually referred to as _Черкаси_ (plural name). `Черкас` would be the genitive plural or a singular archaic demonym (a Circassian).
-  - _Action:_ Change to `Черкаси`.
+- **Vocabulary:** `Черкас` is listed as singular. Usually referred to as *Черкаси* (plural name). `Черкас` would be the genitive plural or a singular archaic demonym (a Circassian).
+  - *Action:* Change to `Черкаси`.
 
 ## Strengths
 

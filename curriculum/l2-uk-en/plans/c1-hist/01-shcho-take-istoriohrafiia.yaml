@@ -6,14 +6,14 @@ title: Що таке історіографія?
 subtitle: What is Historiography?
 content_outline:
 - section: Вступ — Історія vs. Історіографія
-  words: 424
+  words: 485
   points:
   - Що таке історія? Що таке історіографія?
   - Різниця між подіями та інтерпретацією подій
   - Чому один і той самий факт описують по-різному?
   - Приклад — Переяславська рада 1654 (3 версії)
 - section: Ключові поняття історіографії
-  words: 636
+  words: 727
   points:
   - Наратив (narrative) — як розповідь формує розуміння
   - Первинні джерела vs. вторинні джерела
@@ -21,7 +21,7 @@ content_outline:
   - Упередження (bias) та перспектива автора
   - Контекст створення тексту
 - section: Хто пише історію?
-  words: 530
+  words: 606
   points:
   - Літописці (Chronicle writers) — середньовічна традиція
   - Академічні історики — університетська традиція
@@ -29,7 +29,7 @@ content_outline:
   - Еміграція та діаспора — альтернативні голоси
   - Сучасність — public history, Wikipedia, соцмережі
 - section: Українська історіографічна традиція — огляд
-  words: 636
+  words: 727
   points:
   - Від літописів до Грушевського
   - Чому українська історія довго писалася як «частина російської»
@@ -37,24 +37,24 @@ content_outline:
   - Радянські деформації
   - Відродження після 1991
 - section: Чому це важливо для вас?
-  words: 424
+  words: 485
   points:
   - Критичне читання — не вірити одному джерелу
   - Розпізнавання пропаганди
   - Формування власної позиції на основі доказів
   - Україна як об'єкт інформаційної війни
 - section: Практичне застосування
-  words: 530
+  words: 606
   points:
   - Як читати історичний текст критично?
   - 5 питань до кожного джерела (хто? коли? для кого? чому? що опущено?)
   - Приклад аналізу — радянський підручник vs. сучасний
 - section: Підсумок та перехід
-  words: 320
+  words: 364
   points:
   - Ключові терміни модуля
   - Що далі — українська історіографічна традиція детально
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - історіографія (historiography)
@@ -78,11 +78,19 @@ activity_hints:
   focus: Read two descriptions of Pereiaslav 1654 (Ukrainian vs Russian textbook)
   source: Provide excerpts in module
 - type: critical-analysis
-  focus: Apply 5 questions to a Soviet-era text about Ukrainian history
-  output: Identify bias markers
-- type: match-up
-  focus: Match historiographical terms to definitions
-  items: 12+
+  focus: Analyze lexical bias markers in both texts
+  output: Compare vocabulary choices and their implications
+- type: source-evaluation
+  focus: Apply 5-question method to Soviet-era 1953 textbook
+  criteria: authorship, date_and_context, intended_audience, purpose_and_bias, omissions
+  output: Full source criticism with model evaluation
+- type: debate
+  focus: How to interpret the Pereiaslav Agreement of 1654
+  positions: Reunification theory, Military alliance theory, Colonization theory
+  output: Analyze competing historiographical positions
+- type: comparative-study
+  focus: Compare historiographical schools (Soviet, Ukrainian national, Western)
+  criteria: View of Ukrainian statehood, Pereiaslav interpretation, role of ideology
 - type: essay-response
   focus: Чому важливо знати, хто написав історію?
   word_target: 300

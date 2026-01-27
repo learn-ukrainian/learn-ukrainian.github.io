@@ -5,42 +5,21 @@ version: '2.0'
 title: Зимові види спорту
 subtitle: Skiing and Snowboarding in Ukraine
 content_outline:
-- section: 'Introduction: Winter Sports'
-  words: 150
-  points:
-  - Winter sports culture
-  - Ukrainian ski resorts
-  - Season overview
-- section: Skiing Fundamentals
-  words: 250
-  points:
-  - Skiing vocabulary
-  - Equipment rental
-  - Skill levels
-- section: Snowboarding
-  words: 250
-  points:
-  - Snowboard vocabulary
-  - Freestyle culture
-  - Equipment differences
-- section: Ukrainian Ski Resorts
-  words: 250
-  points:
-  - Bukovel, Drahobrat
-  - Resort facilities
-  - Booking and passes
-- section: Conditions and Safety
-  words: 200
-  points:
-  - Snow conditions
-  - Avalanche awareness
-  - Safety equipment
-- section: 'Practice: Winter Trip Planning'
-  words: 100
-  points:
-  - Plan a ski trip
-  - Compare resorts
-word_target: 1200
+- section: Огляд
+  words: 18
+- section: Вступ
+  words: 235
+- section: Інтеграція
+  words: 731
+- section: Практика
+  words: 130
+- section: Продукція
+  words: 308
+- section: Підсумок
+  words: 106
+- section: Потрібно більше практики?
+  words: 109
+word_target: 1637
 vocabulary_hints:
   required:
   - лижі (skis)
@@ -60,13 +39,13 @@ activity_hints:
 - type: reading
   focus: Resort descriptions and snow reports
   items: 15
-- type: matching
+- type: match-up
   focus: Match equipment to sports
   items: 20
 - type: fill-in
   focus: Complete booking dialogues
   items: 15
-- type: discussion
+- type: quiz
   focus: Plan winter vacations
   items: 10
 focus: culture

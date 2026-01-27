@@ -69,22 +69,10 @@ activity_hints:
   focus: Документи репресій
   source: Архівні матеріали
   items: 3 passages
-- type: quiz
-  focus: Факти про Великий терор
-  items: 12+
-- type: match-up
-  focus: Терміни репресій та визначення
-  items: 10+
 - type: essay-response
   focus: Як зберігати памятка про жертв?
   word_target: 300
   output: Рефлексивний есей
-- type: group-sort
-  focus: Хвилі репресій в Україні
-  items: 12+
-- type: fill-in
-  focus: Хронологія терору
-  items: 10+
 focus: biography
 prerequisites:
 - b2-hist-holodomor
@@ -108,3 +96,7 @@ sources:
   notes: Науковий контекст
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of валентина радзимовська: жертва терору'
+- Evaluate the contributions of наука як жертва режиму
+- Trace the career and influence of ціна репресій для нації

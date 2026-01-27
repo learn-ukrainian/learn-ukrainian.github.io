@@ -2,13 +2,13 @@
   "module": "kinets-hetmanshchyny",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:54:58.347300Z",
+  "last_audit": "2026-01-27T15:51:21.832914Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-25T20:03:25.298270Z",
+    "md": "2026-01-27T15:24:10.346998Z",
     "meta": "2026-01-26T22:20:13.188120Z",
-    "activities": "2026-01-25T19:55:34.256753Z",
-    "vocabulary": "2026-01-25T19:55:07.955247Z",
+    "activities": "2026-01-27T15:34:54.086018Z",
+    "vocabulary": "2026-01-27T13:28:46.680066Z",
     "plan": null
   },
   "gates": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "warn",
-      "violations": 0,
-      "message": "3978/4000 (raw: 4140) (22 short)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4138/4000 (raw: 4257) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "16/3"
+      "message": "4/3"
     },
     "vocabulary": {
       "status": "pass",
@@ -40,10 +40,8 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors"
-    ],
+    "blocking_issues": [],
     "pass_count": 4,
-    "fail_count": 0
+    "fail_count": 1
   }
 }

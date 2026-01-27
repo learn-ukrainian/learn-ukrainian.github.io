@@ -1,0 +1,102 @@
+module: liudy-ricchi-pospolytoi
+level: B2-HIST
+version: '2.0'
+items:
+- lemma: шляхта
+  ipa: /ˈʃlʲɐxtɐ/
+  translation: nobility
+  pos: noun
+  gender: f
+- lemma: магнат
+  ipa: /mɐɦˈnɑt/
+  translation: magnate
+  pos: noun
+  gender: m
+- lemma: посполитий
+  ipa: /pɔspɔˈlɪtɪi̯/
+  translation: commoner/peasant
+  pos: adj
+- lemma: кріпацтво
+  ipa: /kr⁽ʲ⁾iˈpat͡stʋɔ/
+  translation: serfdom
+  pos: noun
+  gender: n
+- lemma: панщина
+  ipa: /ˈpɑnʲʃt͡ʃɪnɐ/
+  translation: corvée labor
+  pos: noun
+  gender: f
+- lemma: фільварок
+  ipa: /f⁽ʲ⁾ilʲˈʋɑrɔk/
+  translation: manorial farm
+  pos: noun
+  gender: m
+- lemma: сейм
+  ipa: /sɛi̯m/
+  translation: diet/parliament
+  pos: noun
+  gender: m
+- lemma: сеймик
+  ipa: /ˈsɛi̯mɪk/
+  translation: local diet
+  pos: noun
+  gender: m
+- lemma: магістрат
+  ipa: /mɐɦ⁽ʲ⁾isˈtrɑt/
+  translation: city council
+  pos: noun
+  gender: m
+- lemma: війт
+  ipa: /ʋ⁽ʲ⁾ijt/
+  translation: vogt (head of town)
+  pos: noun
+  gender: m
+- lemma: міщанин
+  ipa: /m⁽ʲ⁾iʃt͡ʃɐˈnɪn/
+  translation: burgher/townsman
+  pos: noun
+  gender: m
+- lemma: цех
+  ipa: /t͡sɛx/
+  translation: guild
+  pos: noun
+  gender: m
+- lemma: привілей
+  ipa: /prɪʋ⁽ʲ⁾iˈlɛi̯/
+  translation: privilege
+  pos: noun
+  gender: m
+- lemma: латифундія
+  ipa: /lɐtɪˈfund⁽ʲ⁾ijɐ/
+  translation: latifundia
+  pos: noun
+  gender: f
+- lemma: полонізація
+  ipa: /pɔlɔn⁽ʲ⁾izˈat͡s⁽ʲ⁾ijɐ/
+  translation: Polonization
+  pos: noun
+  gender: f
+- lemma: асиміляція
+  ipa: /ɐsɪm⁽ʲ⁾ilʲˈat͡s⁽ʲ⁾ijɐ/
+  translation: assimilation
+  pos: noun
+  gender: f
+- lemma: статок
+  ipa: /ˈstɑtkɪ/
+  translation: wealth/assets
+  pos: noun
+- lemma: чинш
+  ipa: /t͡ʃɪnʃ/
+  translation: quit-rent (tax)
+  pos: noun
+  gender: m
+- lemma: дев'ятин
+  ipa: /dɛʋˈjɑtɪnɐ/
+  translation: tithe
+  pos: noun
+  gender: m
+- lemma: ярмарок
+  ipa: /ˈjɑrmɐrɔk/
+  translation: fair/market
+  pos: noun
+  gender: m

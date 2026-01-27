@@ -113,6 +113,7 @@ Every module MUST have a "Need More Practice?" section **before `## Activities`*
 **Live example:** [A1 Module 10](https://krisztiankoos.github.io/learn-ukrainian/docs/a1/module-10#need-more-practice)
 
 **Icon conventions:**
+
 | Icon | Type |
 |------|------|
 | 🎧 | Audio/Pronunciation guides |
@@ -685,18 +686,21 @@ See `docs/l2-uk-en/MEDIA-SOURCES.md` for:
 ## Quality Standards
 
 ### Image Requirements
+
 - Minimum resolution: 1200x800 pixels
 - Format: PNG or JPG
 - Alt text required for accessibility
 - Caption with source attribution
 
 ### Audio Requirements
+
 - Format: MP3, 128kbps minimum
 - Native speaker recordings
 - Clear pronunciation
 - Duration: 30 seconds - 3 minutes per clip
 
 ### Video Requirements
+
 - Format: MP4 or embedded YouTube
 - Maximum duration: 5 minutes per clip
 - Subtitles available (or transcription provided)

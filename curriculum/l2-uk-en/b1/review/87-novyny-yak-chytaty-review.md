@@ -12,7 +12,7 @@
 | ------------------- | ----- | ----------------------------------------------------------------------------------------------------- |
 | Coherence           | 10/10 | Logical structure (Structure -> Trust -> Manipulation).                                               |
 | Relevance           | 10/10 | Critical skill. Reading news in Ukrainian is a primary goal for many learners.                        |
-| Educational         | 10/10 | Good differentiation of _заголовок_ (headline) vs _лід_ (lead).                                       |
+| Educational         | 10/10 | Good differentiation of *заголовок* (headline) vs *лід* (lead).                                       |
 | Language            | 10/10 | Modern media vocab (`джинса`, `клікбейт`).                                                            |
 | Pedagogy            | 10/10 | Narrative Arc (Gongadze) is powerful and explains the "freedom of speech" struggle.                   |
 | Immersion           | 10/10 | Mentions specific trusted media (`Українська правда`, `Suspilne`) which gives learners a "whitelist". |
@@ -25,8 +25,8 @@
 ## Linguistic Accuracy Issues
 
 - **Vocabulary:** `ова` (interjection: wow!). Seems random in a news module.
-  - _Context:_ Maybe from a headline example?
-  - _Action:_ Remove if not central.
+  - *Context:* Maybe from a headline example?
+  - *Action:* Remove if not central.
 - **Vocabulary:** Capitalization of acronyms (`ТСН`, `УП`, `МЗС`).
 - **Vocabulary:** `Ґонґадзе` is lowercased.
 

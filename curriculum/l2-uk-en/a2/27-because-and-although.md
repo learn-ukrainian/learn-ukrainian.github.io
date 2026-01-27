@@ -26,13 +26,13 @@ Welcome to the module where we build complex and logical sentences! At the A2 le
 | **бо**       | Conversational, informal, short | Я не дзвонив, **бо** забув номер.               |
 | **оскільки** | Formal, logical reasoning       | **Оскільки** проект складний, нам потрібен час. |
 
-**Important Note:** In spoken Ukrainian, **бо** is remarkably popular because it is short and punchy. However, it usually cannot start a sentence. If you want to put the reason _first_, use **оскільки**.
+**Important Note:** In spoken Ukrainian, **бо** is remarkably popular because it is short and punchy. However, it usually cannot start a sentence. If you want to put the reason *first*, use **оскільки**.
 
 ---
 
 ### 2. The Logic of Concession (Допустові речення: хоча та проте)
 
-Щоб показати, що щось сталося _всупереч_ логіці або очікуванням, ми використовуємо сполучники контрасту. Це дозволяє нам додавати нюанси та драматизм до нашого мовлення.
+Щоб показати, що щось сталося *всупереч* логіці або очікуванням, ми використовуємо сполучники контрасту. Це дозволяє нам додавати нюанси та драматизм до нашого мовлення.
 
 - **Хоча** (Although) — найуніверсальніший сполучник.
   - **Хоча** йшов дощ, ми пішли гуляти. (Although it rained, we went for a walk.)
@@ -97,7 +97,7 @@ Choose the correct preposition.
 > Using connectors elevates your status as a speaker. Instead of sounding like a list of facts, you sound like a thinker. Every "because" and "although" shows that you understand the complex relationships of the world. Кожна логічна зв'язка — це ваша перемога над простотою.
 
 > [!tip] **Reinforcing Emphasis**
-> You can add the particle **й** to **хоча** for extra emphasis: «Хоча **й** було важко, ми це зробили.» (Even though it _was_ hard, we did it.) It adds a dramatic flourish to your narrative!
+> You can add the particle **й** to **хоча** for extra emphasis: «Хоча **й** було важко, ми це зробили.» (Even though it *was* hard, we did it.) It adds a dramatic flourish to your narrative!
 
 ## Dialogues / Діалоги
 

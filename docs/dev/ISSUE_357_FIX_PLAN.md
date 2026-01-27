@@ -11,6 +11,7 @@
 **Issue #357 and LIT_MIGRATION_STRATEGY.md incorrectly conflate two independent curricula:**
 
 ### 1. LIT Track (Standalone Specialization)
+
 - **Modules:** LIT-001 to LIT-030
 - **Location:** `curriculum/l2-uk-en/lit/`
 - **Prerequisite:** C1 Core completion (strict)
@@ -21,6 +22,7 @@
 - **Skill:** `claude_extensions/skills/literature-module-architect/`
 
 ### 2. C1 Literature Modules (Part of C1 Core)
+
 - **Modules:** C1.6 Phase (M146-160)
 - **Location:** `curriculum/l2-uk-en/c1/`
 - **Prerequisite:** C1.1-C1.5 phases
@@ -174,16 +176,19 @@ C1 core curriculum has its own literature modules (C1.6 Phase: M146-160) which u
 ## Execution Plan
 
 ### Phase 1: Clarify Issue #357 (Gemini)
+
 1. Update Issue #357 body on GitHub (scope clarification)
 2. Update LIT_MIGRATION_STRATEGY.md (add distinction section)
 3. Post clarification comment on Issue #357 explaining the fix
 
 ### Phase 2: Update Skills & Templates (C1-c)
+
 1. Update `literature-module-architect/SKILL.md` (add LIT vs C1 distinction)
 2. Update `lit-module-template.md` (add warning section)
 3. Update my review comment on Issue #357 (remove C1/C2 coordination note)
 
 ### Phase 3: Deploy (User)
+
 1. Run `npm run claude:deploy` to deploy skill changes
 2. Verify Gemini understands the corrected scope
 

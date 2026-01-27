@@ -2,182 +2,151 @@ module: syntez-lytva-polska
 level: B2-HIST
 version: '2.0'
 items:
-  - lemma: шляхта
-    ipa: /ˈʃlʲɑxtɑ/
-    translation: nobility
-    pos: ім.
-    note: привілейований благородний стан у Речі Посполитій
-
-  - lemma: магнат
-    ipa: /mɑɦˈnɑt/
-    translation: magnate
-    pos: ім.
-    note: найбагатший і найвпливовіший шляхтич
-
-  - lemma: воєводство
-    ipa: /wojeˈwɔdstwo/
-    translation: voivodeship
-    pos: ім.
-    note: адміністративно-територіальна одиниця
-
-  - lemma: сейм
-    ipa: /sɛjm/
-    translation: sejm, parliament
-    pos: ім.
-    note: загальнодержавний парламент Речі Посполитої
-
-  - lemma: унія
-    ipa: /ˈuniʲɑ/
-    translation: union
-    pos: ім.
-    note: союз, об'єднання (держав або церков)
-
-  - lemma: братство
-    ipa: /ˈbrɑtstwo/
-    translation: brotherhood
-    pos: ім.
-    note: церковна громадська організація, що опікувалася освітою
-
-  - lemma: митрополит
-    ipa: /mɪtropoˈlɪt/
-    translation: metropolitan
-    pos: ім.
-    note: глава церковної провінції
-
-  - lemma: уніат
-    ipa: /uniˈɑt/
-    translation: Uniate
-    pos: ім.
-    note: прихильник унії з Римом, греко-католик
-
-  - lemma: схизма
-    ipa: /ˈsxɪzmɑ/
-    translation: schism
-    pos: ім.
-    note: розкол, відступництво
-
-  - lemma: колегіум
-    ipa: /koˈlɛɡium/
-    translation: collegium
-    pos: ім.
-    note: навчальний заклад середнього рівня
-
-  - lemma: кріпак
-    ipa: /kriˈpɑk/
-    translation: serf
-    pos: ім.
-    note: закріпачений селянин без права переходу
-
-  - lemma: посполитий
-    ipa: /pospoˈlɪtɪj/
-    translation: commoner, peasant
-    pos: прикм.
-    note: залежний селянин у козацьких землях
-
-  - lemma: фільварок
-    ipa: /filʲˈwɑrok/
-    translation: folwark, manor farm
-    pos: ім.
-    note: панський маєток, орієнтований на експорт
-
-  - lemma: панщина
-    ipa: /pɑnˈʃtʃɪnɑ/
-    translation: corvée, serf labor
-    pos: ім.
-    note: примусова безкоштовна праця на панській землі
-
-  - lemma: чинш
-    ipa: /tʃɪnʃ/
-    translation: rent, tribute
-    pos: ім.
-    note: грошовий податок селянина панові
-
-  - lemma: полонізація
-    ipa: /polonizɑˈt͡sʲiʲɑ/
-    translation: Polonization
-    pos: ім.
-    note: процес культурного та мовного ополячення
-
-  - lemma: закріпачення
-    ipa: /zɑkriˈpɑtʃenʲːɑ/
-    translation: enserfment
-    pos: ім.
-    note: процес позбавлення селян права переходу
-
-  - lemma: ординація
-    ipa: /ordɪˈnɑt͡sʲiʲɑ/
-    translation: ordinance
-    pos: ім.
-    note: королівський указ, що регламентував козацькі права (1638)
-
-  - lemma: литопис
-    ipa: /ˈlʲitopɪs/
-    translation: chronicle
-    pos: ім.
-    note: історичний документ, що фіксує події по роках
-
-  - lemma: статут
-    ipa: /stɑˈtut/
-    translation: statute
-    pos: ім.
-    note: кодекс законів (Литовський статут 1529, 1566, 1588)
-
-  - lemma: привілей
-    ipa: /prɪvʲiˈlɛj/
-    translation: privilege
-    pos: ім.
-    note: особливі права, надані королем або князем
-
-  - lemma: цех
-    ipa: /t͡sɛx/
-    translation: guild
-    pos: ім.
-    note: об'єднання ремісників однієї спеціальності
-
-  - lemma: ярмарок
-    ipa: /ˈjɑrmɑrok/
-    translation: fair
-    pos: ім.
-    note: сезонний торговий з'їзд
-
-  - lemma: державність
-    ipa: /derzʲɑˈwnʲistʲ/
-    translation: statehood
-    pos: ім.
-    note: якість бути державою, державна організація
-
-  - lemma: автономія
-    ipa: /ɑwtoˈnɔmiʲɑ/
-    translation: autonomy
-    pos: ім.
-    note: право на самоврядування в складі держави
-
-  - lemma: експлуатація
-    ipa: /ekspluɑˈtɑt͡sʲiʲɑ/
-    translation: exploitation
-    pos: ім.
-    note: використання праці інших для власного збагачення
-
-  - lemma: гноблення
-    ipa: /ɦnobˈlɛnʲːɑ/
-    translation: oppression
-    pos: ім.
-    note: пригнічення, позбавлення прав
-
-  - lemma: ідентичність
-    ipa: /idenˈtɪtʃnʲistʲ/
-    translation: identity
-    pos: ім.
-    note: усвідомлення належності до певної групи
-
-  - lemma: деколонізація
-    ipa: /dekolonizɑˈt͡sʲiʲɑ/
-    translation: decolonization
-    pos: ім.
-    note: процес звільнення від колоніального мислення
-
-  - lemma: причинно-наслідковий
-    ipa: /prɪtʃɪnːoˈnɑslʲidkowɪj/
-    translation: cause-and-effect
-    pos: прикм.
-    note: що стосується зв'язку причин і наслідків
+- lemma: шляхта
+  ipa: /ˈʃlʲɑxtɑ/
+  translation: nobility
+  pos: noun
+  gender: f
+- lemma: магнат
+  ipa: /mɑɦˈnɑt/
+  translation: magnate
+  pos: noun
+  gender: m
+- lemma: воєводство
+  ipa: /wojeˈwɔdstwo/
+  translation: voivodeship
+  pos: noun
+  gender: n
+- lemma: сейм
+  ipa: /sɛjm/
+  translation: sejm, parliament
+  pos: noun
+  gender: m
+- lemma: унія
+  ipa: /ˈuniʲɑ/
+  translation: union
+  pos: noun
+  gender: f
+- lemma: братство
+  ipa: /ˈbrɑtstwo/
+  translation: brotherhood
+  pos: noun
+  gender: n
+- lemma: митрополит
+  ipa: /mɪtropoˈlɪt/
+  translation: metropolitan
+  pos: noun
+  gender: m
+- lemma: уніат
+  ipa: /uniˈɑt/
+  translation: Uniate
+  pos: noun
+  gender: m
+- lemma: схизма
+  ipa: /ˈsxɪzmɑ/
+  translation: schism
+  pos: noun
+  gender: f
+- lemma: колегіум
+  ipa: /koˈlɛɡium/
+  translation: collegium
+  pos: noun
+  gender: m
+- lemma: кріпак
+  ipa: /kriˈpɑk/
+  translation: serf
+  pos: noun
+  gender: m
+- lemma: посполитий
+  ipa: /pospoˈlɪtɪj/
+  translation: commoner, peasant
+  pos: adj
+- lemma: фільварок
+  ipa: /filʲˈwɑrok/
+  translation: folwark, manor farm
+  pos: noun
+  gender: m
+- lemma: панщина
+  ipa: /pɑnˈʃtʃɪnɑ/
+  translation: corvée, serf labor
+  pos: noun
+  gender: f
+- lemma: чинш
+  ipa: /tʃɪnʃ/
+  translation: rent, tribute
+  pos: noun
+  gender: m
+- lemma: полонізація
+  ipa: /polonizɑˈt͡sʲiʲɑ/
+  translation: Polonization
+  pos: noun
+  gender: f
+- lemma: закріпачення
+  ipa: /zɑkriˈpɑtʃenʲːɑ/
+  translation: enserfment
+  pos: noun
+  gender: n
+- lemma: ординація
+  ipa: /ordɪˈnɑt͡sʲiʲɑ/
+  translation: ordinance
+  pos: noun
+  gender: f
+- lemma: литопис
+  ipa: /ˈlʲitopɪs/
+  translation: chronicle
+  pos: noun
+  gender: m
+- lemma: статут
+  ipa: /stɑˈtut/
+  translation: statute
+  pos: noun
+  gender: m
+- lemma: привілей
+  ipa: /prɪvʲiˈlɛj/
+  translation: privilege
+  pos: noun
+  gender: m
+- lemma: цех
+  ipa: /t͡sɛx/
+  translation: guild
+  pos: noun
+  gender: m
+- lemma: ярмарок
+  ipa: /ˈjɑrmɑrok/
+  translation: fair
+  pos: noun
+  gender: m
+- lemma: державність
+  ipa: /derzʲɑˈwnʲistʲ/
+  translation: statehood
+  pos: noun
+  gender: f
+- lemma: автономія
+  ipa: /ɑwtoˈnɔmiʲɑ/
+  translation: autonomy
+  pos: noun
+  gender: f
+- lemma: експлуатація
+  ipa: /ekspluɑˈtɑt͡sʲiʲɑ/
+  translation: exploitation
+  pos: noun
+  gender: f
+- lemma: гноблення
+  ipa: /ɦnobˈlɛnʲːɑ/
+  translation: oppression
+  pos: noun
+  gender: n
+- lemma: ідентичність
+  ipa: /idenˈtɪtʃnʲistʲ/
+  translation: identity
+  pos: noun
+  gender: f
+- lemma: деколонізація
+  ipa: /dekolonizɑˈt͡sʲiʲɑ/
+  translation: decolonization
+  pos: noun
+  gender: f
+- lemma: причинно-наслідковий
+  ipa: /prɪtʃɪnːoˈnɑslʲidkowɪj/
+  translation: cause-and-effect
+  pos: adj

@@ -5,6 +5,7 @@
 **Modules:** 01-30
 
 ## Summary
+
 All 34 modules of Level A1 have been generated, enriched, and audited against the V2 Quality Gates.
 Every module meets or exceeds the following strict criteria:
 - **Instructional Core Word Count:** 750+ words (A1.1-A1.3).
@@ -16,19 +17,21 @@ Every module meets or exceeds the following strict criteria:
 - **Audio/IPA:** 100% coverage for vocab lists.
 
 ## Recent Fixes
+
 Following user feedback, the following critical issues were addressed in the final sweep:
 
 1.  **Activity Type Corrections (Anagram vs. Unjumble):**
-    *   **Module 01:** Fixed `unjumble` -> `anagram` for "Build Words".
-    *   **Module 29 & 30:** Fixed `anagram` -> `unjumble` for Sentence Construction.
-    *   **Module 28:** Fixed broken "Story Reorder" format.
-    *   **Global Cleanup:** Removed all bolding (`**`) from activity prompts to prevent parser errors.
+    -   **Module 01:** Fixed `unjumble` -> `anagram` for "Build Words".
+    -   **Module 29 & 30:** Fixed `anagram` -> `unjumble` for Sentence Construction.
+    -   **Module 28:** Fixed broken "Story Reorder" format.
+    -   **Global Cleanup:** Removed all bolding (`**`) from activity prompts to prevent parser errors.
 
 2.  **Audit Tool Improvements:**
-    *   Updated `module-audit.ts` and `audit_module.py` to output reports to `gemini/` subfolder.
-    *   Patched tool to ignore `.audit.md` files during scanning.
+    -   Updated `module-audit.ts` and `audit_module.py` to output reports to `gemini/` subfolder.
+    -   Patched tool to ignore `.audit.md` files during scanning.
 
 ## Module Status
+
 | Module | Title | Status | Audit Report |
 |--------|-------|--------|--------------|
 | 01 | The Cyrillic Code I (A-M) | ✅ PASSED | [View](curriculum/l2-uk-en/a1/gemini/01-the-cyrillic-code-i.audit.md) |
@@ -67,5 +70,6 @@ Following user feedback, the following critical issues were addressed in the fin
 | 34 | Checkpoint: Final Review | ✅ PASSED | [View](curriculum/l2-uk-en/a1/gemini/34-checkpoint-final.audit.md) |
 
 ## Next Steps
+
 1.  **HTML Generation:** Run final site generation on A1.
 2.  **Begin A2:** Start planning Phase A2 (Modules 01-50).

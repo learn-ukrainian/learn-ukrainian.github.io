@@ -5,42 +5,21 @@ version: '2.0'
 title: Активний відпочинок
 subtitle: Active Lifestyle and Outdoor Recreation
 content_outline:
-- section: 'Introduction: Active Living'
-  words: 150
-  points:
-  - Active lifestyle overview
-  - Ukrainian fitness culture
-  - Outdoor traditions
-- section: Fitness and Gym Culture
-  words: 250
-  points:
-  - Gym vocabulary
-  - Fitness trends
-  - Health awareness
-- section: Outdoor Activities
-  words: 250
-  points:
-  - Hiking and camping
-  - Parks and nature
-  - Seasonal activities
-- section: Group Sports
-  words: 250
-  points:
-  - Team sports
-  - Community activities
-  - Sports clubs
-- section: Active Tourism
-  words: 200
-  points:
-  - Adventure tourism
-  - Eco-tourism
-  - Active vacations
-- section: 'Practice: Lifestyle Discussion'
-  words: 100
-  points:
-  - Share activities
-  - Plan outdoor events
-word_target: 1200
+- section: Вступ
+  words: 218
+- section: Історія та культура
+  words: 310
+- section: Сучасність
+  words: 704
+- section: Практика
+  words: 38
+- section: Продукція
+  words: 527
+- section: Підсумок
+  words: 127
+- section: Потрібно більше практики?
+  words: 109
+word_target: 2033
 vocabulary_hints:
   required:
   - активний (active)
@@ -60,13 +39,13 @@ activity_hints:
 - type: reading
   focus: Fitness and outdoor activity texts
   items: 15
-- type: matching
+- type: match-up
   focus: Match activities to equipment
   items: 20
 - type: fill-in
   focus: Complete activity descriptions
   items: 15
-- type: discussion
+- type: quiz
   focus: Share fitness routines
   items: 10
 focus: culture

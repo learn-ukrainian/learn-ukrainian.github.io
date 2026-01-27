@@ -6,37 +6,37 @@ title: Феномен Івана Котляревського
 subtitle: Ivan Kotliarevsky
 content_outline:
 - section: Вступ — Чому 1798 рік?
-  words: 600
+  words: 750
   points:
   - Історичний контекст появи "Енеїди"
   - Стан української культури наприкінці XVIII століття
   - Чому цей "жарт" став початком нової літератури
 - section: Біографія як драма вибору
-  words: 800
+  words: 1000
   points:
   - Дитинство та освіта в Полтаві
   - Військова кар'єра та масонство
   - Театральна діяльність і просвітництво
 - section: Феномен "Котляревщини"
-  words: 700
+  words: 875
   points:
   - Що таке бурлеск і травестія
   - Жива народна мова vs книжна мова
   - Роль сміху як культурної зброї
 - section: '"Енеїда" в європейському контексті'
-  words: 600
+  words: 750
   points:
   - Традиція травестії Вергілія в Європі
   - Унікальність українського варіанту
   - Козак замість римлянина
 - section: Роль особистості в культурі
-  words: 500
+  words: 625
   points:
   - Асиміляція vs опір
   - '"Людина вчинку" — Котляревський як архетип'
   - Вплив на наступні покоління
 - section: Підсумок — Від жарту до нації
-  words: 400
+  words: 500
   points:
   - Значення Котляревського для українського відродження
   - Його місце в літературному каноні
@@ -65,19 +65,10 @@ activity_hints:
   focus: Уривки з біографії Котляревського
   source: UkrLib biography
   items: 3+
-- type: quiz
-  focus: Історичний контекст XVIII століття
-  items: 12+
-- type: match-up
-  focus: Літературні терміни (бурлеск, травестія, пародія)
-  items: 10+
 - type: essay-response
   focus: Роль особистості в історії культури
   word_target: 300
   output: Аргументативне есе
-- type: cloze
-  focus: Ключові факти біографії
-  items: 15+
 focus: literature
 pedagogy: literature
 prerequisites:
@@ -103,3 +94,6 @@ sources:
   notes: Літературознавчий аналіз
 immersion: 100% Ukrainian
 phase: LIT.1 Burlesque & Folk Origins
+objectives:
+- Analyze literary techniques in феномен івана котляревського
+- Interpret themes and motifs of чому 1798 рік?

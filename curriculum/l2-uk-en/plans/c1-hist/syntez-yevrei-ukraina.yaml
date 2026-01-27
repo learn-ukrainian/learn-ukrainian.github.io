@@ -5,50 +5,52 @@ version: '1.0'
 title: 'Синтез: Зеленський і нова сторінка'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of синтез: зеленський і нова сторінка'
+- Evaluate the historical significance of символічний момент
 content_outline:
 - section: Вступ — Символічний момент
-  words: 451
+  words: 515
   subsections:
   - Огляд модулів 118-120
   - Єврейський президент України
   - Що це означає
   - Мета синтезу
 - section: Зеленський як символ
-  words: 790
+  words: 903
   subsections:
   - Біографія — єврейські корені
   - Обрання 2019 — без «єврейського питання»
   - Родина в Голокості
   - Ідентичність — український єврей
 - section: Меморіал Бабин Яр
-  words: 677
+  words: 774
   subsections:
   - Десятиліття суперечок
   - Новий проект — 2020-ті
   - Російський удар 2022
   - Пам'ять як боротьба
 - section: «Денацифікація» — іронія
-  words: 677
+  words: 774
   subsections:
   - 'Путін: «нацистська Україна»'
   - Президент-єврей
   - Як Україна відповіла
   - Міжнародна реакція
 - section: Єврейська громада сьогодні
-  words: 564
+  words: 645
   subsections:
   - 50-100 тисяч
   - Інституції
   - Еміграція vs залишення
   - Майбутнє громади
 - section: Підсумок
-  words: 341
+  words: 389
   subsections:
   - Нова сторінка — не кінець історії
   - Примирення триває
   - Перехід до культурних циклів
-word_target: 3500
+word_target: 4000
 vocabulary:
 - синтез
 - символ
@@ -68,11 +70,11 @@ vocabulary:
 activities:
 - type: essay-response
   focus: 1000 years → Zelensky moment
-- type: symbolism-analysis
+- type: critical-analysis
   focus: What Zelensky's election means historically
-- type: propaganda-deconstruction
+- type: critical-analysis
   focus: «Denazification» claim vs. Jewish president
-- type: community-study
+- type: comparative-study
   focus: Jewish community in Ukraine today
 - type: essay-response
   focus: Чи Зеленський — кінець єврейсько-українського конфлікту?

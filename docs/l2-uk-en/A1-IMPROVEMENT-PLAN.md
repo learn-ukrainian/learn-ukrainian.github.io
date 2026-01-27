@@ -100,6 +100,7 @@ The Ukrainian State Standard 2024 (Каталог В) requires two elements curr
 A1 cannot achieve CEFR can-do outcomes without past/future tense, time, adjectives, and the capstone.
 
 **Modules to create:**
+
 | Module | Topic | Grammar |
 |--------|-------|---------|
 | 21 | Yesterday - Past Tense | L-participle |
@@ -317,20 +318,24 @@ Add curated external resources (YouTube, podcasts, websites) for supplementary l
 ## Implementation Phases
 
 ### Phase 1: Foundation (P0)
+
 - [ ] Create M21-M34 following curriculum plan
 - [ ] Apply all quality standards (8+ activities, immersion %, engagement boxes)
 - [ ] Include production activities from the start
 
 ### Phase 2: Quality (P1)
+
 - [ ] Verify IPA in M01-M20
 - [ ] Add production activities to M01-M20
 - [ ] Enrich checkpoint modules M10, M20, M34
 
 ### Phase 3: Enhancement (P2)
+
 - [ ] Add audio placeholders
 - [ ] Run full audit on all 34 modules
 
 ### Phase 4: Polish (P3)
+
 - [ ] Add external resources when available
 - [ ] Review case pacing based on feedback
 

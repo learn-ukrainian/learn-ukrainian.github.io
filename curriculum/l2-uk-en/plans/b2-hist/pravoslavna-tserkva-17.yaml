@@ -5,29 +5,29 @@ version: '2.0'
 title: Православна церква XVII століття
 content_outline:
 - section: Вступ
-  words: 500
+  words: 449
   title: Боротьба за віру та ідентичність
 - section: Відновлення ієрархії
-  words: 2000
+  words: 1798
   subsections:
   - title: 'Історичне тло: У горнилі конфлікту'
   - title: 'Основні події: Велика гра Сагайдачного'
   - title: 'Процес легалізації: Пункти заспокоєння'
 - section: 'Читання: Голоси епохи'
-  words: 200
+  words: 180
   title: Голоси епохи
 - section: Первинні джерела
-  words: 950
+  words: 854
   subsections:
   - title: 'Документ 1: Протестація Йова Борецького (1621)'
   - title: 'Документ 2: Пункти заспокоєння руського народу (1632)'
 - section: Деколонізаційний погляд
-  words: 650
+  words: 584
   subsections:
   - title: 'Міфи 및 реальність: Спростування імперських наративів'
   - title: 'Сучасність: Гідність та незалежність у ХХІ столітті'
 - section: Потрібно більше практики?
-  words: 150
+  words: 135
   title: Практика
 word_target: 4000
 vocabulary_hints:
@@ -49,14 +49,8 @@ activity_hints:
   focus: linguistic analysis
 - type: essay-response
   focus: historical argumentation
-- type: quiz
-  focus: comprehension
 - type: true-false
   focus: factual accuracy
-- type: match-up
-  focus: terminology
-- type: fill-in
-  focus: context
 - type: comparative-study
   focus: analytical comparison
 focus: history
@@ -78,3 +72,7 @@ sources:
   url: http://www.encyclopediaofukraine.com/
   type: reference
 phase: HIST.4 [Lithuanian-Polish Era]
+objectives:
+- Analyze the causes and consequences of православна церква xvii століття
+- Evaluate the historical significance of вступ
+- Trace the development of потрібно більше практики?

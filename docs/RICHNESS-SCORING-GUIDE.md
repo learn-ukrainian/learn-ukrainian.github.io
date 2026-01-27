@@ -22,6 +22,7 @@ Richness is calculated by `scripts/calculate_richness.py`. Each module type has 
 Module type is detected from `pedagogy:` frontmatter field.
 
 #### Grammar (TTT, PPP)
+
 | Metric | Target | Weight |
 |--------|--------|--------|
 | examples | 24 | 20% |
@@ -36,6 +37,7 @@ Module type is detected from `pedagogy:` frontmatter field.
 | proverbs | 1 | 5% |
 
 #### Vocabulary
+
 | Metric | Target | Weight |
 |--------|--------|--------|
 | collocations | 20 | 25% |
@@ -48,6 +50,7 @@ Module type is detected from `pedagogy:` frontmatter field.
 | paragraph_var | - | 5% |
 
 #### Checkpoint (Assessment)
+
 | Metric | Target | Weight |
 |--------|--------|--------|
 | activity_types | 8 | 25% |
@@ -59,6 +62,7 @@ Module type is detected from `pedagogy:` frontmatter field.
 | paragraph_var | - | 10% |
 
 #### Cultural
+
 | Metric | Weight |
 |--------|--------|
 | cultural | 25% |
@@ -71,6 +75,7 @@ Module type is detected from `pedagogy:` frontmatter field.
 | paragraph_var | 5% |
 
 #### History
+
 | Metric | Weight |
 |--------|--------|
 | primary_sources | 25% |
@@ -83,6 +88,7 @@ Module type is detected from `pedagogy:` frontmatter field.
 | paragraph_var | 5% |
 
 #### Literature
+
 | Metric | Weight |
 |--------|--------|
 | analysis_sections | 20% |

@@ -5,57 +5,59 @@ version: '1.0'
 title: 'Мазепинський цикл: 20 років вірності → анафема'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of мазепинський цикл: 20 років вірності → анафема'
+- Evaluate the historical significance of вірний слуга стає «зрадником»
 content_outline:
 - section: Вступ — Вірний слуга стає «зрадником»
-  words: 400
+  words: 457
   subsections:
   - Мазепа — 20 років гетьманства
   - Вірність царю — і результат
   - Чому це цикл кооптації
   - Структура модуля
 - section: Фаза 1 — Кооптація (1687-1700)
-  words: 700
+  words: 800
   subsections:
   - Отримання гетьманства — як
   - Вірність Петру I
   - Участь у війнах царя
   - Нагороди і титули
 - section: Фаза 2 — Залежність (1700-1708)
-  words: 600
+  words: 686
   subsections:
   - Північна війна — тягар
   - Козацькі втрати
   - Петро ігнорує попередження
   - Наростання конфлікту
 - section: Фаза 3 — Точка невповернення (1708)
-  words: 600
+  words: 686
   subsections:
   - Батурин — загроза
   - Рішення про союз зі Швецією
   - Логіка Мазепи
   - Що він сподівався отримати
 - section: Фаза 4 — Знищення (1708-...)
-  words: 500
+  words: 571
   subsections:
   - Батуринська різанина
   - Полтава
   - Анафема — досі не знята
   - «Мазепинець» як ярлик на 300 років
 - section: Наратив зради
-  words: 400
+  words: 457
   subsections:
   - Як Росія створила міф
   - Чому «зрадник» — хто кого зрадив
   - Реабілітація в Україні
   - Досі в анафемі — чому важливо
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - Мазепа — приклад невдалого виходу
   - Цикл продовжується
   - Перехід до Розумовського
-word_target: 3500
+word_target: 4000
 vocabulary:
 - Мазепа
 - анафема
@@ -75,9 +77,9 @@ vocabulary:
 activities:
 - type: critical-analysis
   focus: Map Mazepa's path through co-optation cycle
-- type: narrative-analysis
+- type: critical-analysis
   focus: «Traitor» narrative — construction and persistence
-- type: decision-analysis
+- type: critical-analysis
   focus: 1708 decision — what were Mazepa's options?
 - type: comparative-study
   focus: Mazepa vs. Khmelnytsky — different choices, same cycle

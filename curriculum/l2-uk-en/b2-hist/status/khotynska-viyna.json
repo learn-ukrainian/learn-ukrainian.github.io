@@ -2,13 +2,13 @@
   "module": "khotynska-viyna",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T23:52:07.529251Z",
+  "last_audit": "2026-01-27T18:58:19.779372Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-25T21:28:31.367146Z",
+    "md": "2026-01-27T18:58:06.253350Z",
     "meta": "2026-01-26T22:20:13.164913Z",
-    "activities": "2026-01-25T21:28:31.365290Z",
-    "vocabulary": "2026-01-23T22:20:44.072632Z",
+    "activities": "2026-01-27T18:55:56.792856Z",
+    "vocabulary": "2026-01-27T11:35:39.239763Z",
     "plan": null
   },
   "gates": {
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4080/4000 (raw: 4282)"
+      "message": "4976/4000 (raw: 5136)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "6/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "pass",

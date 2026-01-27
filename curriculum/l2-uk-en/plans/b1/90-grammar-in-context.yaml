@@ -5,42 +5,19 @@ version: '2.0'
 title: Граматика в контексті
 subtitle: Applying Grammar to Practical Communication
 content_outline:
-- section: 'Introduction: Grammar for Communication'
-  words: 150
-  points:
-  - Grammar as tool
-  - Context-based approach
-  - Self-correction strategies
-- section: Narrating Events
-  words: 200
-  points:
-  - Aspect in storytelling
-  - Sequence markers
-  - Natural narrative flow
-- section: Describing Experiences
-  words: 200
-  points:
-  - Past tense integration
-  - Motion in context
-  - Emotional vocabulary
-- section: Explaining and Arguing
-  words: 200
-  points:
-  - Complex sentences
-  - Logical connectors
-  - Opinion structures
-- section: Writing Tasks
-  words: 150
-  points:
-  - Extended writing
-  - Grammar accuracy
-  - Self-editing
-- section: 'Practice: Integrated Tasks'
-  words: 100
-  points:
-  - Apply grammar
-  - Produce texts
-word_target: 1000
+- section: Діагностика
+  words: 115
+- section: Огляд
+  words: 1230
+- section: Інтеграція
+  words: 282
+- section: Практика
+  words: 236
+- section: Підсумок
+  words: 115
+- section: Потрібно більше практики?
+  words: 109
+word_target: 2087
 vocabulary_hints:
   required:
   - граматика (grammar)
@@ -57,16 +34,16 @@ vocabulary_hints:
   - зв'язність (coherence)
   - редагування (editing)
 activity_hints:
-- type: writing
+- type: cloze
   focus: Extended narratives
   items: 10
-- type: task
+- type: cloze
   focus: Communication tasks
   items: 15
 - type: error-correction
   focus: Self-editing practice
   items: 20
-- type: speaking
+- type: quiz
   focus: Oral presentations
   items: 10
 focus: communication

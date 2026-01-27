@@ -6,7 +6,6 @@
 
 **Related Issue:** [#332](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/332)
 
-
 <!--
 TEMPLATE_METADATA:
   required_sections:
@@ -55,6 +54,7 @@ Synthesis modules replace traditional checkpoints in the B2.3 History track. Unl
 Before submitting a B2 Synthesis module, verify:
 
 ### Synthesis-Specific Requirements
+
 - [ ] **CBI pedagogy:** Content-Based Instruction with Synthesis Arc
 - [ ] **Thematic approach:** NOT chronological recap — cross-era thematic connections
 - [ ] **Analysis activities:** Primary source comparison, historiographical analysis
@@ -64,12 +64,12 @@ Before submitting a B2 Synthesis module, verify:
 - [ ] **NO new content:** Only synthesize material from covered modules
 
 ### Inherited from History Template
+
 - [ ] **Primary sources (≥3):** From different modules/eras for comparison
 - [ ] **100% Ukrainian immersion:** English only in vocabulary translations
 - [ ] **Word count:** 2000+ words (synthesis narrative)
 - [ ] **Activities:** 10+ with analysis focus
 - [ ] **NO DIALOGS:** Synthesis modules are analysis-centric
-
 
 ---
 
@@ -429,22 +429,27 @@ items:
 ## Common Pitfalls to Avoid
 
 ### 1. **Chronological Recap**
+
 - ❌ Problem: "First we studied M71, then M72..."
 - ✅ Solution: Thematic synthesis across eras, not module-by-module review
 
 ### 2. **Testing Recall Instead of Analysis**
+
 - ❌ Problem: "In what year was Pereiaslav signed?"
 - ✅ Solution: "How does Pereiaslav relate to modern Russian policy?"
 
 ### 3. **Missing Cross-Era Connections**
+
 - ❌ Problem: Analyzing each era separately
 - ✅ Solution: Every question/activity should connect ≥2 eras
 
 ### 4. **New Historical Content**
+
 - ❌ Problem: Introducing events not covered in prior modules
 - ✅ Solution: Synthesize only what was already taught
 
 ### 5. **Weak Decolonization Synthesis**
+
 - ❌ Problem: Just listing myths without showing the pattern
 - ✅ Solution: Show how myths connect to systematic colonial narrative
 

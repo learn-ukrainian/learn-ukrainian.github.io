@@ -42,6 +42,7 @@ This plan reorganizes the Ukrainian curriculum to:
 ### Identified Gaps
 
 #### A1 Gaps (Survival Ukrainian)
+
 | Gap | Description | Priority |
 |-----|-------------|----------|
 | Restaurant ordering | No functional cafe/restaurant scenarios | HIGH |
@@ -53,6 +54,7 @@ This plan reorganizes the Ukrainian curriculum to:
 | Emergencies | Basic emergency phrases missing | HIGH |
 
 #### A2 Gaps (Real-world Independence)
+
 | Gap | Description | Priority |
 |-----|-------------|----------|
 | Doctor/pharmacy | Health vocab exists, no roleplay scenarios | HIGH |
@@ -63,6 +65,7 @@ This plan reorganizes the Ukrainian curriculum to:
 | Social media/texting | Modern register missing | MEDIUM |
 
 #### B1 Gaps (Functional Communication)
+
 | Gap | Description | Priority |
 |-----|-------------|----------|
 | Podcast listening | No explicit listening skills training | MEDIUM |
@@ -71,6 +74,7 @@ This plan reorganizes the Ukrainian curriculum to:
 | News comprehension | M82-86 exist but thin | LOW |
 
 #### B2 Gaps (Professional Basics)
+
 | Gap | Description | Priority |
 |-----|-------------|----------|
 | Professional email | Registers covered, no email-specific | HIGH |
@@ -79,10 +83,12 @@ This plan reorganizes the Ukrainian curriculum to:
 | Technical documentation | Completely missing | MEDIUM |
 
 #### C1 Gaps
+
 - No content gaps identified
 - Structure issue: 96 biographies should be optional track
 
 #### C2 Gaps
+
 - No gaps identified
 - Well-structured for mastery level
 
@@ -299,6 +305,7 @@ After moving M36-131 to c1-bio:
 **Detailed Module Plan:**
 
 **Phase B2-PRO.1: Business Communication (M01-15)**
+
 | # | Title | Content |
 |---|-------|---------|
 | 01 | Business Email Foundations | Tone, structure, etiquette |
@@ -318,6 +325,7 @@ After moving M36-131 to c1-bio:
 | 15 | Business Communication Capstone | Final business assessment |
 
 **Phase B2-PRO.2: Technical & Domain-Specific (M16-30)**
+
 | # | Title | Content |
 |---|-------|---------|
 | 16 | IT Vocabulary I | Hardware, software, systems |
@@ -337,6 +345,7 @@ After moving M36-131 to c1-bio:
 | 30 | Technical Integration | Final technical assessment |
 
 **Phase B2-PRO.3: Media & Public Discourse (M31-40)**
+
 | # | Title | Content |
 |---|-------|---------|
 | 31 | News Analysis I | Reading Ukrainian news critically |
@@ -464,16 +473,19 @@ After moving M36-131 to c1-bio:
 ## Part 7: Implementation Phases
 
 ### Prerequisites (Do First)
+
 - [ ] Complete A1-C1 to production ready status
 - [ ] All existing modules pass audit and pipeline
 - [ ] Document current state in version control
 
 ### Phase A: Planning Complete
+
 - [ ] This document finalized
 - [ ] GitHub issue created for tracking
 - [ ] Team review and approval
 
 ### Phase B: Infrastructure Updates
+
 - [ ] Update `template_mappings.yaml` for new tracks
 - [ ] Create new folder structure
 - [ ] Update pipeline scripts to handle new paths
@@ -481,6 +493,7 @@ After moving M36-131 to c1-bio:
 - [ ] Update MDX generator for new track routing
 
 ### Phase C: Content Relocation
+
 - [ ] Move B2 M71-131 to b2-hist (with renumbering script)
 - [ ] Move C1 M36-131 to c1-bio (with renumbering script)
 - [ ] Renumber B2 core (M132-145 → M71-84)
@@ -488,6 +501,7 @@ After moving M36-131 to c1-bio:
 - [ ] Update all internal references and links
 
 ### Phase D: Create New Curriculum Plans
+
 - [ ] Create B2-HIST-CURRICULUM-PLAN.md
 - [ ] Create C1-BIO-CURRICULUM-PLAN.md
 - [ ] Create B2-PRO-CURRICULUM-PLAN.md
@@ -495,16 +509,19 @@ After moving M36-131 to c1-bio:
 - [ ] Update existing curriculum plans (A1, A2, B1, B2, C1)
 
 ### Phase E: Create New Modules
+
 - [ ] A1 practical scenarios (10 modules)
 - [ ] A2 practical scenarios (12 modules)
 - [ ] B1 skills modules (8 modules)
 - [ ] B2 core skills (10 modules)
 
 ### Phase F: Create New Tracks
+
 - [ ] B2-PRO modules (40 modules)
 - [ ] C1-PRO modules (50 modules)
 
 ### Phase G: Validation
+
 - [ ] All modules pass audit
 - [ ] All modules pass pipeline
 - [ ] Landing pages updated
@@ -571,17 +588,20 @@ C2 Core (100)
 ## Appendix B: File Naming Conventions
 
 ### Core Levels
+
 - `a1/01-module-slug.md` through `a1/44-module-slug.md`
 - `a2/01-module-slug.md` through `a2/70-module-slug.md`
 - etc.
 
 ### Specialized Tracks
+
 - `b2-hist/01-module-slug.md` through `b2-hist/61-module-slug.md`
 - `c1-bio/01-module-slug.md` through `c1-bio/96-module-slug.md`
 - `b2-pro/01-module-slug.md` through `b2-pro/40-module-slug.md`
 - `c1-pro/01-module-slug.md` through `c1-pro/50-module-slug.md`
 
 ### Curriculum Plans
+
 - `B2-HIST-CURRICULUM-PLAN.md`
 - `C1-BIO-CURRICULUM-PLAN.md`
 - `B2-PRO-CURRICULUM-PLAN.md`

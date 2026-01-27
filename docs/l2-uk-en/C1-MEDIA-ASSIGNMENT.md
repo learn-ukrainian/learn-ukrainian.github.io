@@ -81,6 +81,7 @@ Every module MUST have a "Need More Practice?" section **before `## Activities`*
 **Live example:** [A1 Module 10](https://krisztiankoos.github.io/learn-ukrainian/docs/a1/module-10#need-more-practice)
 
 **Icon conventions:**
+
 | Icon | Type |
 |------|------|
 | 🎧 | Audio/Pronunciation guides |
@@ -194,6 +195,7 @@ Every module MUST have a "Need More Practice?" section **before `## Activities`*
 | 20 | C1.1 Checkpoint | Assessment materials | Self-created |
 
 ### Audio Needs (C1.1)
+
 - [ ] Academic lecture excerpts (university recordings)
 - [ ] Conference presentation samples
 - [ ] Dissertation defense audio
@@ -224,6 +226,7 @@ Every module MUST have a "Need More Practice?" section **before `## Activities`*
 | 35 | C1.2 Checkpoint | Assessment materials | Self-created |
 
 ### Audio Needs (C1.2)
+
 - [ ] Dialect audio samples (all regions)
 - [ ] Business interview recordings
 - [ ] News broadcast excerpts

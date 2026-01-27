@@ -23,6 +23,8 @@ import ComparativeStudy from '@site/src/components/ComparativeStudy';
 import ReadingActivity from '@site/src/components/ReadingActivity';
 import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
 import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
 
 
 ## Вступ
@@ -307,25 +309,26 @@ Try: «Я роблю покупки в супермаркеті біля дом�
 
 <Select questions={JSON.parse(`[{"question": "To pay money.", "options": [{"text": "Платити.", "correct": true}, {"text": "Плакати.", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Pay vs Cry."}, {"question": "To buy.", "options": [{"text": "Купувати.", "correct": true}, {"text": "Купати.", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Buy vs Bathe."}, {"question": "To order.", "options": [{"text": "Замовляти.", "correct": true}, {"text": "Мовчати.", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Order vs Be silent."}, {"question": "Receipt.", "options": [{"text": "Чек.", "correct": true}, {"text": "Чех.", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Receipt vs Czech person."}, {"question": "Cash.", "options": [{"text": "Готівка.", "correct": true}, {"text": "Готування.", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Cash vs Cooking."}, {"question": "Price.", "options": [{"text": "Ціна.", "correct": true}, {"text": "Стіна.", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Price vs Wall."}, {"question": "Discount.", "options": [{"text": "Знижка.", "correct": true}, {"text": "Книжка.", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Discount vs Book."}, {"question": "Market.", "options": [{"text": "Ринок.", "correct": true}, {"text": "Ранок.", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Market vs Morning."}, {"question": "Shop.", "options": [{"text": "Магазин.", "correct": true}, {"text": "Журнал", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Shop. False friend \\"Journal\\"."}, {"question": "Pharmacy.", "options": [{"text": "Аптека.", "correct": true}, {"text": "Бібліотека.", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Pharmacy."}, {"question": "Post Office.", "options": [{"text": "Пошта.", "correct": true}, {"text": "Площа.", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Post vs Square."}, {"question": "To try on.", "options": [{"text": "Міряти.", "correct": true}, {"text": "Мирити.", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Try on vs Reconcile."}]`)} />
 
+### Shopping Fill-In
+
+<FillIn items={JSON.parse(`[{"sentence": "Скільки [___] ці яблука?", "answer": "коштують", "options": ["коштують", "платять", "купують", "продають"]}, {"sentence": "Я хочу [___] карткою.", "answer": "заплатити", "options": ["заплатити", "купити", "продати", "взяти"]}, {"sentence": "Візьміть ваш [___], будь ласка.", "answer": "чек", "options": ["чек", "пакет", "товар", "ціну"]}, {"sentence": "Сьогодні у нас велика [___] на молочні продукти.", "answer": "знижка", "options": ["знижка", "ціна", "каса", "здача"]}, {"sentence": "Ваша [___] — п'ять гривень.", "answer": "здача", "options": ["здача", "ціна", "знижка", "каса"]}, {"sentence": "Можу я [___] цю сукню?", "answer": "поміряти", "options": ["поміряти", "купити", "продати", "взяти"]}, {"sentence": "Де тут [___]? Я хочу заплатити.", "answer": "каса", "options": ["каса", "вхід", "вихід", "примірка"]}, {"sentence": "Мені потрібен [___] для продуктів.", "answer": "пакет", "options": ["пакет", "чек", "каса", "товар"]}]`)} />
+
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 | --- | --- | --- | --- | --- | --- |
-| бланк | /blank/ | form, blank | noun | ч |  |
 | борода | /bɔrɔdˈa/ | beard | noun | ж |  |
 | бідна | /bˈidna/ | poor (female) | noun | ж |  |
-| бізнес-сектор | /bˈiznɛs-sɛktɔr/ |  | noun | ч |  |
+| бізнес-сектор | /bˈiznɛs-sɛktɔr/ | business sector | noun | ч |  |
 | вдячність | /ʋdˈjat͡ʃnistʲ/ | gratitude | noun | ж |  |
 | вимити | /ʋˈɪmɪtɪ/ | to wash (perfective) | verb |  |  |
 | вміст | /ʋmist/ | content | noun | ч |  |
 | відділення | /ʋiddˈilɛnnja/ | department, branch, separation | noun | с |  |
-| відслідковувати | /ʋidslidkˈɔʋuʋatɪ/ | to track, to monitor | verb |  |  |
 | гребінець | /ɦrɛbinˈɛt͡sʲ/ | comb | noun | ч |  |
 | грудка | /ɦrˈudka/ | lump, chest | noun | ж |  |
-| дружня | /drˈuʒnja/ |  | noun | ж |  |
+| дружній | /drˈuʒnja/ | friendly | noun | ж |  |
 | експрес | /ɛksprˈɛs/ | express | noun | ч |  |
 | експрес-доставка | /ɛksprˈɛs-dɔstaʋka/ | express delivery | noun | ж |  |
-| екстравагантний | /ɛkstraʋaɦˈantnɪj/ | extravagant | adj |  |  |
 | заповнювати | /zapˈɔʋnjuʋatɪ/ | to fill (imperfective) | verb |  |  |
 | зважувати | /zʋˈaʒuʋatɪ/ | to weigh (imperfective) | verb |  |  |
 | клієнтка | /kliˈjɛntka/ | client (female) | noun | ж |  |

@@ -1,9 +1,11 @@
 # Audit Report: M47 — 47-checkpoint-c1-4.md
+
 **Level:** C1 | **Module:** M47 | **Phase:** C1 | **Pedagogy:** Assessment | **Target:** 1750
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:23
 
 ## Configuration
+
 **Type:** C1-checkpoint
 **Word Target:** 1750 words
 **Activities:** 14-18 required
@@ -16,6 +18,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Ідентифікація регістру (Тест) | 5 | 5 | ✅ |
@@ -40,16 +43,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 47-checkpoint-c1-4.yaml: Schema validation error at key 'words': ['Рішення', 'про', 'виділення', 'коштів', 'було', 'ухвалено', 'на', 'позачерговому', 'засіданні', 'міської', 'ради'] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ⚠️ 1668/1750 (raw: 1865) (82 short)
 - **Activities:** ✅ 14/14
 - **Density:** ✅ All > 14
@@ -68,10 +74,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 83% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 63 | 15 | 100% | 25% | 25.0% |
@@ -85,10 +93,11 @@
 | **TOTAL** | | | | | **83.4%** |
 
 ### Dryness Flags & Fixes
+
 - ❌ **NO_CULTURAL_ANCHOR**
   - FIX:
     Add 3+ cultural references. Use this exact format:
-    
+
     > 🇺🇦 **Культурний момент**
     >
     > [Reference to Ukrainian place (Київ, Львів, Одеса, Карпати), tradition, or custom]
@@ -96,6 +105,7 @@
     > [Example sentence using the grammar with cultural context]
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 59 | Included in Core |

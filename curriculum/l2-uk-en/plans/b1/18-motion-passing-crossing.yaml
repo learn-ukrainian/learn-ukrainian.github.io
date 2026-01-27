@@ -6,36 +6,30 @@ title: 'Рух: перехід і обхід'
 subtitle: Motion - Passing & Crossing
 content_outline:
 - section: Тест
-  words: 100
+  words: 204
   points:
-  - Content for Тест
-  - Examples and explanation
-  - Practice or application
+  - Prefix diagnostic
+  - Intuition check
 - section: Пояснення
-  words: 600
+  words: 1059
   points:
-  - Content for Пояснення
-  - Examples and explanation
-  - Practice or application
+  - пере-, про-, об- prefixes
+  - Crossing, passing, going around
 - section: Поглиблення
-  words: 400
+  words: 724
   points:
-  - Content for Поглиблення
-  - Examples and explanation
-  - Practice or application
+  - Extended patterns
+  - Nuanced usage
 - section: Практика
-  words: 100
+  words: 223
   points:
-  - Content for Практика
-  - Examples and explanation
-  - Practice or application
+  - Prefix selection exercises
 - section: Діалоги
-  words: 600
+  words: 790
   points:
-  - Content for Діалоги
-  - Examples and explanation
-  - Practice or application
-word_target: 1500
+  - Route description dialogues
+  - Natural usage
+word_target: 3000
 vocabulary_hints:
   required:
   - перейти/переходити (to cross on foot)

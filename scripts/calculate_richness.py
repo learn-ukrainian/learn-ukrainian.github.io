@@ -39,6 +39,7 @@ MODULE_TYPE_MAP = {
     'lexical': 'vocabulary',
     # Cultural types
     'cultural': 'cultural',
+    'culture': 'cultural',  # Alias for cultural
     'cbi': 'content',  # Can be history, biography, or cultural
     # History types
     'history': 'history',
@@ -512,6 +513,36 @@ def extract_module_type(content: str, file_path: Union[str, Path, None] = None) 
                     fm = yaml.safe_load(f)
             except (yaml.YAMLError, IOError):
                 pass
+
+    # Also check plan file for focus (plans take precedence for focus)
+    plan_focus = None
+    if file_path:
+        path = Path(file_path) if isinstance(file_path, str) else file_path
+        # Get level from path (e.g., b1 from curriculum/l2-uk-en/b1/module.md)
+        level_dir = path.parent.name.lower()
+        # Clean slug: remove leading number prefix
+        import re
+        slug = path.stem
+        clean_slug = re.sub(r'^\d+-', '', slug)
+        # Try plan file paths
+        plan_paths = [
+            path.parents[1] / 'plans' / level_dir / f'{clean_slug}.yaml',
+            path.parents[1] / 'plans' / level_dir / f'{slug}.yaml',
+        ]
+        for plan_path in plan_paths:
+            if plan_path.exists():
+                try:
+                    with open(plan_path, 'r', encoding='utf-8') as f:
+                        plan_data = yaml.safe_load(f)
+                        if plan_data and plan_data.get('focus'):
+                            plan_focus = str(plan_data['focus']).lower().strip()
+                            break
+                except (yaml.YAMLError, IOError):
+                    pass
+
+    # Check plan focus first (highest priority)
+    if plan_focus and plan_focus in MODULE_TYPE_MAP:
+        return MODULE_TYPE_MAP[plan_focus]
 
     # Process frontmatter (from either source)
     if fm:

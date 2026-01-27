@@ -2,14 +2,14 @@
   "module": "27-relative-clauses-de-kudy-zvidky",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:27:01.305150Z",
+  "last_audit": "2026-01-27T16:25:53.562718Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-24T21:47:00.972466Z",
+    "md": "2026-01-27T15:24:10.350030Z",
     "meta": "2026-01-26T15:44:41.532047Z",
-    "activities": "2026-01-11T22:51:42.587163Z",
+    "activities": "2026-01-27T16:23:06.963710Z",
     "vocabulary": "2026-01-25T18:00:40.292082Z",
-    "plan": "2026-01-26T15:44:41.531842Z"
+    "plan": "2026-01-27T16:16:55.808265Z"
   },
   "gates": {
     "meta": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1788/1500 (raw: 2059) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "1788/1500 (raw: 2059)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "12/8"
+      "message": "13/8"
     },
     "vocabulary": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Missing required activity types: fill-in, matching, sentence-combining, translation"
-    ],
-    "pass_count": 4,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

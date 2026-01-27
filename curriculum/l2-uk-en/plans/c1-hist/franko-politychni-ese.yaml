@@ -5,24 +5,26 @@ version: '1.0'
 title: 'Франко: Політичні есе'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of франко: політичні есе'
+- Evaluate the historical significance of франко як мислитель
 content_outline:
 - section: Вступ — Франко як мислитель
-  words: 400
+  words: 457
   subsections:
   - Не тільки поет — публіцист
   - Політичні есе — окремий жанр
   - «Поза межами можливого» — головний текст
   - Чому важливо читати сьогодні
 - section: Контекст — Галичина кінця XIX ст.
-  words: 500
+  words: 571
   subsections:
   - Австрійська Галичина — інші умови
   - Політичні партії — як виникали
   - Франко — соціаліст чи націоналіст?
   - Еволюція поглядів
 - section: «Поза межами можливого» (1900)
-  words: 800
+  words: 914
   subsections:
   - Текст (фрагменти з глосами)
   - Критика «реальної політики»
@@ -30,33 +32,33 @@ content_outline:
   - Духовна суверенність
   - Роль інтелігенції
 - section: Аналіз аргументації
-  words: 600
+  words: 686
   subsections:
   - Логіка есе
   - Полеміка з опонентами
   - Що таке «можливе»?
   - Роль мрії в політиці
 - section: Інші політичні есе
-  words: 500
+  words: 571
   subsections:
   - Що таке поступ?
   - Ukraina irredenta
   - Критика москвофільства
   - Критика полонофільства
 - section: Франко vs. Драгоманов
-  words: 400
+  words: 457
   subsections:
   - Два підходи
   - Федералізм vs. незалежність
   - Поколінній конфлікт
   - Хто виявився правий?
 - section: Підсумок
-  words: 300
+  words: 344
   subsections:
   - Франко — ідеолог незалежності
   - Від публіцистики до політики
   - Актуальність сьогодні
-word_target: 3500
+word_target: 4000
 vocabulary:
 - есе
 - публіцистика
@@ -76,9 +78,9 @@ vocabulary:
 activities:
 - type: reading
   focus: Excerpt from "Poza mezhamy mozhlyvoho"
-- type: argument-analysis
+- type: critical-analysis
   focus: Map Franko's argument structure
-- type: contemporary-connection
+- type: critical-analysis
   focus: How does Franko's argument apply to 2022?
 - type: essay-response
   focus: Що означає 'поза межами можливого' для Франка?

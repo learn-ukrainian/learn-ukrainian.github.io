@@ -98,16 +98,16 @@ When Ukrainians write in cursive or italic, some letters look COMPLETELY differe
 
 | Printed | Italic | Looks Like  | Sound          |
 | ------- | ------ | ----------- | -------------- |
-| **т**   | _т_    | Latin «m»   | «t» (not m!)   |
-| **п**   | _п_    | Latin «n»   | «p» (not n!)   |
-| **д**   | _д_    | Latin «g»   | «d» (not g!)   |
-| **и**   | _и_    | Latin «u»   | «y/i» (not u!) |
-| **л**   | _л_    | hook shape  | «l»            |
-| **г**   | _г_    | round shape | «h»            |
+| **т**   | *т*    | Latin «m»   | «t» (not m!)   |
+| **п**   | *п*    | Latin «n»   | «p» (not n!)   |
+| **д**   | *д*    | Latin «g»   | «d» (not g!)   |
+| **и**   | *и*    | Latin «u»   | «y/i» (not u!) |
+| **л**   | *л*    | hook shape  | «l»            |
+| **г**   | *г*    | round shape | «h»            |
 
-So the word **мама** (mama) in italic looks like _мама_, which might look like «mama» but with weird shapes. Don't panic. It's still «mama.»
+So the word **мама** (mama) in italic looks like *мама*, which might look like «mama» but with weird shapes. Don't panic. It's still «mama.»
 
-The word **привіт** (hello) in italic is _привіт_. That italic **т** at the end looks like an «m,» but it's still a «t» sound.
+The word **привіт** (hello) in italic is *привіт*. That italic **т** at the end looks like an «m,» but it's still a «t» sound.
 
 ## Practice
 
@@ -133,18 +133,18 @@ Now that you know all 33 letters, let's read some real Ukrainian phrases:
 
 ### Mini-Dialogue 1: First Meeting
 
-— Привіт! Як справи? _(Pryvit! Yak spravy?)_ — Hello! How are things?
-— Добре, дякую! _(Dobre, dyakuyu!)_ — Good, thank you!
-— Ласкаво просимо! _(Laskavo prosymo!)_ — Welcome!
+— Привіт! Як справи? *(Pryvit! Yak spravy?)* — Hello! How are things?
+— Добре, дякую! *(Dobre, dyakuyu!)* — Good, thank you!
+— Ласкаво просимо! *(Laskavo prosymo!)* — Welcome!
 
 Notice **дякую** uses the iotated **Я** (ya) and **Ю** (yu). It flows: «dya-ku-yu.» This is one of the most useful words in Ukrainian!
 
 ### Mini-Dialogue 2: At a Café in Lviv
 
-— Борщ? _(Borshch?)_ — Borscht?
-— Так, борщ, будь ласка. _(Tak, borshch, budʲ laska.)_ — Yes, borscht, please.
-— Цукор? _(Tsukor?)_ — Sugar?
-— Ні, дякую. _(Ni, dyakuyu.)_ — No, thank you.
+— Борщ? *(Borshch?)* — Borscht?
+— Так, борщ, будь ласка. *(Tak, borshch, budʲ laska.)* — Yes, borscht, please.
+— Цукор? *(Tsukor?)* — Sugar?
+— Ні, дякую. *(Ni, dyakuyu.)* — No, thank you.
 
 The word **борщ** showcases the **Щ** sound perfectly. It's not «borsh,» it's «borshch» — that soft «shch» blend is uniquely Ukrainian.
 
@@ -214,6 +214,7 @@ You know every single one now. Congratulations!
 ---
 
 # Підсумок
+
 In this module, you learned the final 14 letters of Ukrainian Cyrillic:
 
 You learned:

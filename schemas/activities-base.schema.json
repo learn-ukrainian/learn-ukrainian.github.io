@@ -884,55 +884,64 @@
     },
     "reading": {
       "type": "object",
-      "description": "Reading comprehension task with external resource",
-      "required": [
-        "type",
-        "title",
-        "resource",
-        "tasks"
-      ],
-      "additionalProperties": false,
-      "properties": {
-        "type": {
-          "const": "reading"
-        },
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the activity"
-        },
-        "title": {
-          "type": "string",
-          "minLength": 1
-        },
-        "resource": {
-          "type": "object",
-          "required": [
-            "type",
-            "url",
-            "title"
-          ],
+      "description": "Reading comprehension task with inline text OR external resource",
+      "oneOf": [
+        {
+          "description": "Format 1: Inline primary source text",
+          "required": ["type", "title", "text", "tasks"],
           "additionalProperties": false,
           "properties": {
-            "type": {
-              "type": "string"
+            "type": { "const": "reading" },
+            "id": {
+              "type": "string",
+              "description": "Unique identifier for the activity"
             },
-            "url": {
-              "type": "string"
+            "title": { "type": "string", "minLength": 1 },
+            "source": {
+              "type": "string",
+              "description": "Attribution (e.g., author, year)"
             },
-            "title": {
-              "type": "string"
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Inline primary source text (Ukrainian)"
+            },
+            "tasks": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "type": "string", "minLength": 1 }
             }
           }
         },
-        "tasks": {
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "type": "string",
-            "minLength": 1
+        {
+          "description": "Format 2: External resource link",
+          "required": ["type", "title", "resource", "tasks"],
+          "additionalProperties": false,
+          "properties": {
+            "type": { "const": "reading" },
+            "id": {
+              "type": "string",
+              "description": "Unique identifier for the activity"
+            },
+            "title": { "type": "string", "minLength": 1 },
+            "resource": {
+              "type": "object",
+              "required": ["url"],
+              "additionalProperties": false,
+              "properties": {
+                "type": { "type": "string" },
+                "url": { "type": "string" },
+                "title": { "type": "string" }
+              }
+            },
+            "tasks": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "type": "string", "minLength": 1 }
+            }
           }
         }
-      }
+      ]
     }
   }
 }

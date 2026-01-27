@@ -5,42 +5,30 @@ version: '2.0'
 title: Причинові та наслідкові речення
 subtitle: Causal and Result Clauses
 content_outline:
-- section: 'Introduction: Cause and Effect'
-  words: 150
+- section: Тест
+  words: 216
+  points:
+  - Diagnostic quiz on causal/result clauses
+  - Self-assessment questions
+- section: Пояснення
+  words: 1963
   points:
   - Expressing reasons
-  - Expressing consequences
-  - Logic in Ukrainian
-- section: Causal Connectors
-  words: 250
-  points:
-  - тому що (because)
-  - бо (because - colloquial)
-  - через те що (due to the fact)
-- section: Result Connectors
-  words: 250
-  points:
-  - тому (therefore)
-  - отже (thus/hence)
-  - внаслідок (as a result)
-- section: Cause → Result Transformation
-  words: 250
-  points:
-  - Reversing cause and effect
-  - Word order changes
-  - Connector selection
-- section: Advanced Patterns
-  words: 200
-  points:
-  - завдяки тому що (thanks to)
-  - оскільки (since)
-  - Complex cause-effect chains
-- section: 'Practice: Logical Relations'
-  words: 100
+  - Causal Connectors (тому що, бо, через те що)
+  - Result Connectors (тому, отже, внаслідок)
+  - Cause → Result Transformation
+  - Advanced Patterns (завдяки тому що, оскільки)
+- section: Практика
+  words: 356
   points:
   - Express cause and effect
   - Transform statements
-word_target: 1200
+- section: Діалоги
+  words: 465
+  points:
+  - Causal/result clauses in conversation
+  - Everyday reasoning scenarios
+word_target: 3000
 vocabulary_hints:
   required:
   - причина (cause/reason)
@@ -60,13 +48,13 @@ activity_hints:
 - type: fill-in
   focus: Complete causal/result sentences
   items: 25
-- type: transformation
+- type: cloze
   focus: Cause to result conversion
   items: 20
-- type: sentence-combining
+- type: unjumble
   focus: Link cause and effect
   items: 15
-- type: translation
+- type: translate
   focus: English to Ukrainian
   items: 15
 focus: grammar

@@ -2,13 +2,13 @@
   "module": "syntez-vytoky-1",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T23:18:33.905080Z",
+  "last_audit": "2026-01-27T15:49:01.717051Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-22T21:00:31.224604Z",
+    "md": "2026-01-27T15:24:10.347234Z",
     "meta": "2026-01-26T22:20:13.694207Z",
-    "activities": "2026-01-22T21:03:20.833013Z",
-    "vocabulary": "2026-01-22T12:32:25.797124Z",
+    "activities": "2026-01-27T15:34:54.995535Z",
+    "vocabulary": "2026-01-26T23:20:26.146154Z",
     "plan": null
   },
   "gates": {
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4610/3000 (raw: 5156)"
+      "message": "4610/4000 (raw: 5156)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "11/10"
+      "message": "7/3"
     },
     "vocabulary": {
       "status": "warn",

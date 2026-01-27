@@ -69,22 +69,10 @@ activity_hints:
   focus: Korolyov's letters and memoirs
   source: Historical archives
   items: 3 passages
-- type: quiz
-  focus: Korolyov's biography and achievements
-  items: 12+
-- type: match-up
-  focus: Space missions and their significance
-  items: 10+
 - type: essay-response
   focus: Why is Korolyov considered Ukrainian heritage?
   word_target: 300
   output: Analysis of reclaimed identity
-- type: group-sort
-  focus: Ukrainian roots vs. Soviet suppression
-  items: 12+
-- type: fill-in
-  focus: Key dates and space achievements
-  items: 10+
 focus: biography
 prerequisites:
 - Space race historical context
@@ -110,3 +98,7 @@ sources:
   notes: His imprisonment
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of сергій корольов: батько космічної ери'
+- Evaluate the contributions of українець, який відкрив космос
+- Trace the career and influence of спадщина та повернення в україну

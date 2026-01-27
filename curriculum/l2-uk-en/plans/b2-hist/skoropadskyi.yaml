@@ -67,12 +67,6 @@ activity_hints:
   focus: Грамота про Українську Державу
   source: Архівні документи
   items: 4
-- type: quiz
-  focus: Гетьманат Скоропадського
-  items: 15
-- type: match-up
-  focus: Реформа → результат
-  items: 10
 - type: true-false
   focus: Факти про Гетьманат
   items: 10

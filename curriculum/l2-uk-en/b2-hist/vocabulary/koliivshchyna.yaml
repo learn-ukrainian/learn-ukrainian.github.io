@@ -2,128 +2,128 @@ module: koliivshchyna
 level: B2
 version: '2.0'
 items:
-  - lemma: гайдамака
-    ipa: /ɦɑjdɑˈmɑkɑ/
-    translation: haidamak (rebel in 18th-century Ukraine)
-    pos: noun
-    gender: m
-  - lemma: Коліївщина
-    ipa: /koliˈjiu̯ʃt͡ʃɪnɑ/
-    translation: Koliivshchyna (major Haidamak uprising of 1768)
-    pos: noun
-    gender: f
-  - lemma: повстання
-    ipa: /pou̯ˈstɑnʲːɑ/
-    translation: uprising, rebellion
-    pos: noun
-    gender: n
-  - lemma: гніт
-    ipa: /ɦnʲit/
-    translation: oppression
-    pos: noun
-    gender: m
-  - lemma: спротив
-    ipa: /ˈsprɔtɪu̯/
-    translation: resistance
-    pos: noun
-    gender: m
-  - lemma: шляхта
-    ipa: /ˈʃlʲɑxtɑ/
-    translation: Polish gentry/nobility
-    pos: noun
-    gender: f
-  - lemma: уніат
-    ipa: /uniˈɑt/
-    translation: Uniate (Greek Catholic)
-    pos: noun
-    gender: m
-  - lemma: кріпацтво
-    ipa: /kriˈpɑt͡stʋɔ/
-    translation: serfdom
-    pos: noun
-    gender: n
-  - lemma: освячення
-    ipa: /ɔˈsʲʋʲɑt͡ʃenʲːɑ/
-    translation: consecration, blessing
-    pos: noun
-    gender: n
-  - lemma: ватажок
-    ipa: /ʋɑtɑˈʒɔk/
-    translation: leader, chieftain (of a rebel group)
-    pos: noun
-    gender: m
-  - lemma: маніфест
-    ipa: /mɑniˈfɛst/
-    translation: manifesto
-    pos: noun
-    gender: m
-  - lemma: універсал
-    ipa: /uniʋɛrˈsɑl/
-    translation: universal (proclamation/decree)
-    pos: noun
-    gender: m
-  - lemma: зрада
-    ipa: /ˈzrɑdɑ/
-    translation: betrayal, treason
-    pos: noun
-    gender: f
-  - lemma: розправа
-    ipa: /rɔzˈprɑʋɑ/
-    translation: reprisal, punishment
-    pos: noun
-    gender: f
-  - lemma: історіографія
-    ipa: /istɔriɔˈɦrɑfʲijɑ/
-    translation: historiography
-    pos: noun
-    gender: f
-  - lemma: міф
-    ipa: /mif/
-    translation: myth
-    pos: noun
-    gender: m
-  - lemma: визволення
-    ipa: /ʋɪˈzʋɔlenʲːɑ/
-    translation: liberation
-    pos: noun
-    gender: n
-  - lemma: підступність
-    ipa: /pidˈstupnʲistʲ/
-    translation: treachery, cunning
-    pos: noun
-    gender: f
-  - lemma: заслання
-    ipa: /zɑˈslɑnʲːɑ/
-    translation: exile
-    pos: noun
-    gender: n
-  - lemma: страта
-    ipa: /ˈstrɑtɑ/
-    translation: execution
-    pos: noun
-    gender: f
-  - lemma: правобережжя
-    ipa: /prɑʋɔbeˈrɛʒʲːɑ/
-    translation: Right-bank (territory west of the Dnipro)
-    pos: noun
-    gender: n
-  - lemma: месник
-    ipa: /ˈmɛsnɪk/
-    translation: avenger
-    pos: noun
-    gender: m
-  - lemma: свавілля
-    ipa: /sʋɑˈʋilʲːɑ/
-    translation: lawlessness, tyranny
-    pos: noun
-    gender: n
-  - lemma: розмах
-    ipa: /ˈrɔzmɑx/
-    translation: scale, scope
-    pos: noun
-    gender: m
-  - lemma: відлуння
-    ipa: /ʋidˈlunʲːɑ/
-    translation: echo, repercussion
-    pos: noun
-    gender: n
+- lemma: гайдамак
+  ipa: /ɦɑjdɑˈmɑkɑ/
+  translation: haidamak (rebel in 18th-century Ukraine)
+  pos: noun
+  gender: m
+- lemma: коліївщина
+  ipa: /koliˈjiu̯ʃt͡ʃɪnɑ/
+  translation: Koliivshchyna (major Haidamak uprising of 1768)
+  pos: noun
+  gender: f
+- lemma: повстання
+  ipa: /pou̯ˈstɑnʲːɑ/
+  translation: uprising, rebellion
+  pos: noun
+  gender: n
+- lemma: гніт
+  ipa: /ɦnʲit/
+  translation: oppression
+  pos: noun
+  gender: m
+- lemma: спротив
+  ipa: /ˈsprɔtɪu̯/
+  translation: resistance
+  pos: noun
+  gender: m
+- lemma: шляхта
+  ipa: /ˈʃlʲɑxtɑ/
+  translation: Polish gentry/nobility
+  pos: noun
+  gender: f
+- lemma: уніат
+  ipa: /uniˈɑt/
+  translation: Uniate (Greek Catholic)
+  pos: noun
+  gender: m
+- lemma: кріпацтво
+  ipa: /kriˈpɑt͡stʋɔ/
+  translation: serfdom
+  pos: noun
+  gender: n
+- lemma: освячення
+  ipa: /ɔˈsʲʋʲɑt͡ʃenʲːɑ/
+  translation: consecration, blessing
+  pos: noun
+  gender: n
+- lemma: ватажок
+  ipa: /ʋɑtɑˈʒɔk/
+  translation: leader, chieftain (of a rebel group)
+  pos: noun
+  gender: m
+- lemma: маніфест
+  ipa: /mɑniˈfɛst/
+  translation: manifesto
+  pos: noun
+  gender: m
+- lemma: універсал
+  ipa: /uniʋɛrˈsɑl/
+  translation: universal (proclamation/decree)
+  pos: noun
+  gender: m
+- lemma: зрада
+  ipa: /ˈzrɑdɑ/
+  translation: betrayal, treason
+  pos: noun
+  gender: f
+- lemma: розправа
+  ipa: /rɔzˈprɑʋɑ/
+  translation: reprisal, punishment
+  pos: noun
+  gender: f
+- lemma: історіографія
+  ipa: /istɔriɔˈɦrɑfʲijɑ/
+  translation: historiography
+  pos: noun
+  gender: f
+- lemma: міф
+  ipa: /mif/
+  translation: myth
+  pos: noun
+  gender: m
+- lemma: визволення
+  ipa: /ʋɪˈzʋɔlenʲːɑ/
+  translation: liberation
+  pos: noun
+  gender: n
+- lemma: підступність
+  ipa: /pidˈstupnʲistʲ/
+  translation: treachery, cunning
+  pos: noun
+  gender: f
+- lemma: заслання
+  ipa: /zɑˈslɑnʲːɑ/
+  translation: exile
+  pos: noun
+  gender: n
+- lemma: страта
+  ipa: /ˈstrɑtɑ/
+  translation: execution
+  pos: noun
+  gender: f
+- lemma: правобережжя
+  ipa: /prɑʋɔbeˈrɛʒʲːɑ/
+  translation: Right-bank (territory west of the Dnipro)
+  pos: noun
+  gender: n
+- lemma: месник
+  ipa: /ˈmɛsnɪk/
+  translation: avenger
+  pos: noun
+  gender: m
+- lemma: свавілля
+  ipa: /sʋɑˈʋilʲːɑ/
+  translation: lawlessness, tyranny
+  pos: noun
+  gender: n
+- lemma: розмах
+  ipa: /ˈrɔzmɑx/
+  translation: scale, scope
+  pos: noun
+  gender: m
+- lemma: відлуння
+  ipa: /ʋidˈlunʲːɑ/
+  translation: echo, repercussion
+  pos: noun
+  gender: n

@@ -1,10 +1,12 @@
 # Audit Report: M114 — kvitka-tsisyk.md
+
 **Level:** C1 | **Module:** M114 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:55
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Життєвий шлях Квітки Цісик | 5 | 5 | ✅ |
@@ -41,10 +44,12 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in kvitka-tsisyk.yaml: Schema validation error at key '7': {'type': 'fill-in', 'title': 'Спадщина Квітки Цісик', 'items': [{'sentence': "Сьогодні Квітка Цісик є символом культурної [м'якої] сили України у світі.", 'answer': "м'якої", 'options': ["м'якої", 'жорсткої', 'фінансової', 'військової']}, {'sentence': 'Її приклад надихає сучасних музикантів експериментувати з [фольклором] та народною музикою.', 'answer': 'фольклором', 'options': ['фольклором', 'джазом', 'роком', 'шансоном']}, {'sentence': 'Голос Квітки став частиною сучасного українського культурного [коду].', 'answer': 'коду', 'options': ['коду', 'статуту', 'права', 'архіву']}, {'sentence': 'Вона довела, що щирість та професіоналізм здатні долати будь-які [кордони] та відстані.', 'answer': 'кордони', 'options': ['кордони', 'перешкоди', 'іспити', 'рівні']}, {'sentence': "Пам'ять про співачку в Україні вшановують назвами вулиць та мистецькими [фестивалями].", 'answer': 'фестивалями', 'options': ['фестивалями', 'мітингами', 'реформами', 'законами']}, {'sentence': 'Квітка назавжди залишиться для нас [білою] пташкою з українським серцем.', 'answer': 'білою', 'options': ['білою', 'чорною', 'синьою', 'золотою']}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template.md'
   - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template.md'
@@ -55,12 +60,14 @@
   - FIX: Add '## Спадщина' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 
 ## Recommendation
+
 **📝 UPDATE** (severity 35/100)
 
 - 5 violations (moderate)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2182/4000 (raw: 2461)
 - **Activities:** ✅ 12/3
 - **Density:** ✅ All > 1
@@ -79,10 +86,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 7 | 4 | 100% | 19% | 19.0% |
@@ -98,6 +107,7 @@
 | **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 74 | Included in Core |

@@ -5,42 +5,31 @@ version: '2.0'
 title: 'Умовні речення: нереальна умова (якби)'
 subtitle: Unreal Conditionals - Hypothetical Situations
 content_outline:
-- section: 'Introduction: Unreal Conditionals'
-  words: 150
+- section: 'Тест: Перевірте себе'
+  words: 210
+  points:
+  - Diagnostic quiz on unreal conditionals
+  - Self-assessment questions
+- section: Пояснення
+  words: 1588
   points:
   - What are unreal conditionals
   - якби as unreal marker
-  - Hypothetical situations
-- section: якби + Past Form
-  words: 250
-  points:
-  - 'Structure: якби + past, past + би'
-  - Both clauses use past forms
-  - Particle б/би placement
-- section: Conditional Mood Formation
-  words: 250
-  points:
-  - Past tense + би
-  - 'Contraction: якби'
-  - Would = past + би
-- section: Present vs Past Hypotheticals
-  words: 250
-  points:
-  - 'Present unreal: if I were...'
-  - 'Past unreal: if I had been...'
-  - Ukrainian uses same form
-- section: Real vs Unreal Comparison
-  words: 200
-  points:
-  - якщо vs якби
-  - Likelihood differences
-  - Choosing correctly
-- section: 'Practice: Unreal Conditionals'
-  words: 100
+  - якби + Past Form structure
+  - Conditional Mood Formation (past + би)
+  - Present vs Past Hypotheticals
+  - Real vs Unreal Comparison (якщо vs якби)
+- section: Практика
+  words: 463
   points:
   - Form hypothetical sentences
   - Express wishes and dreams
-word_target: 1200
+- section: Діалоги
+  words: 739
+  points:
+  - Unreal conditionals in conversation
+  - Hypothetical scenarios
+word_target: 3000
 vocabulary_hints:
   required:
   - якби (if - unreal)
@@ -60,13 +49,13 @@ activity_hints:
 - type: fill-in
   focus: Complete unreal conditionals
   items: 25
-- type: transformation
+- type: cloze
   focus: Real to unreal conversion
   items: 20
 - type: error-correction
   focus: Fix conditional errors
   items: 15
-- type: speaking
+- type: quiz
   focus: Express hypotheticals
   items: 10
 focus: grammar

@@ -1,10 +1,12 @@
 # Audit Report: M18 — 18-food-and-shopping.md
+
 **Level:** A1 | **Module:** M18 | **Phase:** A1 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
 **Generated:** 2026-01-26 22:25:48
 
 ## Configuration
+
 **Type:** A1-vocab
 **Word Target:** 750 words
 **Activities:** 8-12 required
@@ -18,6 +20,7 @@
 **Transliteration:** Allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Food & Drinks Vocabulary | 10 | 8 | ✅ |
@@ -38,6 +41,7 @@
 - Low density activities: 0
 
 ## Gates
+
 - **Words:** ✅ 810/750 (raw: 879)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
@@ -55,6 +59,7 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

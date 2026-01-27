@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M20 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 23:25:13
+**Generated:** 2026-01-27 16:22:34
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** comparative-study, essay-response, fill-in, group-sort, match-up, quiz
+**Required Types:** comparative-study, essay-response
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -20,35 +20,32 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | match-up | Хронологія епохи | 15 | 8 | ✅ |
-| 2 | quiz | Узагальнення: Політична історія | 8 | 8 | ✅ |
-| 3 | group-sort | Князі та їхні досягнення | 15 | 1 | ✅ |
-| 4 | fill-in | Терміни епохи | 10 | 8 | ✅ |
-| 5 | critical-analysis | Деколонізація: Спадщина Русі | 1 | 1 | ✅ |
-| 6 | essay-response | Есе: Ідентичність через історію | 1 | 1 | ✅ |
-| 7 | comparative-study | Русь і Європа | 1 | 1 | ✅ |
-| 8 | true-false | Факти про Русь: Правда чи Міф? | 10 | 8 | ✅ |
+| 1 | reading | Спадщина Київської Русі: Суперечка тисячоліття | 3 | 1 | ✅ |
+| 2 | critical-analysis | Деколонізація: Аналіз спадщини | 1 | 1 | ✅ |
+| 3 | essay-response | Есе: Ідентичність через історію | 1 | 1 | ✅ |
+| 4 | comparative-study | Русь і Європа: Порівняльна перспектива | 1 | 1 | ✅ |
+| 5 | true-false | Факти про Русь: Перевірка знань | 10 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 8 (target: 3-9) ✅
-- Unique types: 8 (minimum: 2) ✅
-- Priority types used: 3/4 (comparative-study, critical-analysis, essay-response) ✅
-- Required types used: 6/6 (comparative-study, essay-response, fill-in, group-sort, match-up, quiz) ✅
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 2/2 (comparative-study, essay-response) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ✅ 4748/4000 (raw: 4885)
-- **Activities:** ✅ 8/3
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 8/2 types
+- **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 20 (soft target)
+- **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (8 activities)
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.6% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

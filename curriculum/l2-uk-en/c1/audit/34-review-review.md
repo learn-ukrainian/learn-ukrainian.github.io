@@ -1,10 +1,12 @@
 # Audit Report: M34 — 34-review.md
+
 **Level:** C1 | **Module:** M34 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:15
 
 ## Configuration
+
 **Type:** C1
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Комплексний огляд | 8 | 5 | ✅ |
@@ -41,16 +44,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 34-review.yaml: Schema validation error at key 'min_words': 150 is less than the minimum of 200
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2128/3000 (raw: 2233)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
@@ -69,10 +75,12 @@
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 85% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 6 | 15 | 40% | 25% | 10.0% |
@@ -86,11 +94,13 @@
 | **TOTAL** | | | | | **85.0%** |
 
 ### Dryness Flags & Fixes
+
 - ❌ **NO_EXAMPLES**
   - FIX:
     Add 24+ example sentences. Each grammar point needs 3-4 examples showing the pattern in context.
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

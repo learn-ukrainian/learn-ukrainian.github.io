@@ -1,4 +1,5 @@
 # B1 Naturalness Scan Report - M46-M55
+
 **Date:** 2026-01-12
 **Protocol:** claude_extensions/protocols/a1-naturalness-scan.md
 **Scope:** M46-M55 (10 modules - Advanced Grammar Integration & Abstract Vocabulary I)
@@ -20,6 +21,7 @@
 ## Scan Results by Module
 
 ### M46: Past Passive Participles 2 [N/A - QUIZ ONLY]
+
 **Status:** QUIZ-HEAVY - No multi-sentence prose
 **Activities:** Quiz module teaching short passive forms (-но/-то), focused on formal style
 
@@ -33,6 +35,7 @@
 ---
 
 ### M47: Passive Constructions [N/A - QUIZ ONLY]
+
 **Status:** QUIZ-HEAVY - No multi-sentence prose
 **Activities:** Quiz module differentiating full passive, short passive, and reflexive passive
 
@@ -46,6 +49,7 @@
 ---
 
 ### M48: Diminutives Master Class [✅ PASS]
+
 **Status:** CULTURALLY RICH - Authentic Ukrainian usage
 **Activities:** Extensive cultural exploration of демінутиви in Ukrainian language and culture
 
@@ -68,6 +72,7 @@
 ---
 
 ### M49: Numerals - Collectives & Fractions [N/A - QUIZ ONLY]
+
 **Status:** QUIZ-HEAVY - No multi-sentence prose
 **Activities:** Systematic teaching of збірні числівники and дробові числівники
 
@@ -81,6 +86,7 @@
 ---
 
 ### M50: Integrated Grammar Lab [✅ PASS]
+
 **Status:** STYLISTIC INTEGRATION - Formal style mastery
 **Activities:** Combines all advanced grammar (participles, passive, diminutives, numerals) with stylistic awareness
 
@@ -109,6 +115,7 @@
 ---
 
 ### M51: Checkpoint Advanced Grammar [⏸️ DEFERRED]
+
 **Status:** CHECKPOINT - Different standards apply
 **Activities:** Comprehensive assessment of M42-M50 content (1,189 lines)
 
@@ -140,6 +147,7 @@ Museum narrative cloze (lines 1011-1020):
 ---
 
 ### M52: Abstract Concepts - Ideas [✅ PASS]
+
 **Status:** VOCABULARY MODULE - Clear collocations
 **Activities:** Teaches abstract vocabulary (ідея, думка, проблема, рішення, etc.) with proper collocations
 
@@ -161,6 +169,7 @@ Museum narrative cloze (lines 1011-1020):
 ---
 
 ### M53: Abstract Concepts - Processes [✅ PASS]
+
 **Status:** VOCABULARY MODULE - Economic/social processes
 **Activities:** Teaches process vocabulary (зростання, розвиток, криза, реформа, трансформація, etc.)
 
@@ -182,6 +191,7 @@ Museum narrative cloze (lines 1011-1020):
 ---
 
 ### M54: Expressing Opinions [✅ PASS]
+
 **Status:** OPINION DISCOURSE - Formal and informal registers
 **Activities:** Teaches opinion vocabulary and expressions (вважати, думати, переконаний, сумніватися, etc.)
 
@@ -206,6 +216,7 @@ Museum narrative cloze (lines 1011-1020):
 ---
 
 ### M55: Agreement & Disagreement [✅ PASS]
+
 **Status:** DIALOGUE DISCOURSE - Professional discussion
 **Activities:** Teaches agreement/disagreement vocabulary (погоджуватися, заперечувати, компроміс, консенсус, etc.)
 
@@ -236,6 +247,7 @@ Museum narrative cloze (lines 1011-1020):
 ## Summary by Status
 
 ### ✅ PASS (6 modules)
+
 - M48: Diminutives Master Class (score 8/10)
 - M50: Integrated Grammar Lab (score 8/10)
 - M52: Abstract Concepts - Ideas (score 8/10)
@@ -244,12 +256,15 @@ Museum narrative cloze (lines 1011-1020):
 - M55: Agreement & Disagreement (score 9/10) ⭐
 
 ### ⚠️ FLAGGED (0 modules)
+
 None - all content modules meet or exceed 8/10 target
 
 ### ⏸️ DEFERRED (1 module)
+
 - M51: Checkpoint Advanced Grammar (score 7/10) - Checkpoint standards apply
 
 ### N/A - QUIZ ONLY (3 modules)
+
 - M46: Past Passive Participles 2 (formal grammar drilling)
 - M47: Passive Constructions (grammar comparison)
 - M49: Numerals - Collectives & Fractions (numerical concepts)
@@ -319,17 +334,20 @@ All content modules meet or exceed 8/10 target:
 ## Comparison with Previous B1 Sections
 
 ### B1 M01-M05 (Metalanguage Bridge)
+
 - Average score: 7.0/10 → improved to 8.0/10+
 - Prose density: Very low (3 passages across 5 modules)
 - Purpose: Teach grammar terminology before immersion
 
 ### B1 M06-M15 (Aspect Mastery - Immersion)
+
 - Average score: 8.3/10
 - Prose density: Very high (extensive narratives)
 - Purpose: Teach aspect through natural stories
 - Flagged: 0 modules
 
 ### B1 M16-M25 (Motion Verbs - Mixed)
+
 - Average score: 8.2/10
 - Prose density: Medium (6 modules with prose, 3 quiz-only)
 - Purpose: Teach motion verb prefix system
@@ -337,6 +355,7 @@ All content modules meet or exceed 8/10 target:
 - **Exceptional module:** M21 (9/10) - figurative uses
 
 ### B1 M26-M35 (Complex Sentences I)
+
 - Average score: 8.4/10
 - Prose density: High (9 modules with prose, 1 quiz-only)
 - Purpose: Teach complex sentences through immersion
@@ -344,6 +363,7 @@ All content modules meet or exceed 8/10 target:
 - **Exceptional modules:** M28, M29, M32 (all 9/10)
 
 ### B1 M36-M45 (Complex Sentences II & Participles)
+
 - Average score: 8.3/10
 - Prose density: Medium (5 modules with prose, 4 quiz-only)
 - Purpose: Teach participles and advanced complex sentences
@@ -352,6 +372,7 @@ All content modules meet or exceed 8/10 target:
 - **Innovation:** M44's decolonization pedagogy
 
 ### B1 M46-M55 (Advanced Grammar Integration & Abstract Vocabulary I)
+
 - Average score: 8.2/10 (content modules with prose)
 - Prose density: Medium (6 modules with prose, 3 quiz-only)
 - Purpose: Integrate advanced grammar + teach abstract vocabulary/opinion discourse
@@ -400,11 +421,13 @@ All activities appropriately use:
 ## Next Steps
 
 ### Immediate
+
 1. ✅ **B1 M46-M55 scan: COMPLETE**
 2. **Commit scan report to documentation**
 3. **Continue B1 scanning:** M56-M65 (Abstract Vocabulary II - next section)
 
 ### B1 Remaining Sections
+
 - M56-M65: Abstract Vocabulary II (10 modules)
 - M66-M71: Professional Vocabulary (6 modules)
 - M72-M86: Cultural Modules (15 modules)

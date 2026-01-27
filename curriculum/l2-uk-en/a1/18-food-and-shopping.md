@@ -131,6 +131,7 @@ When you ask for a specific amount, use Genitive (of...).
 ## Practice
 
 ### Shopping List Challenge
+
 Translate these orders:
 1. I want water. (Accusative) -> Я хочу **воду**.
 2. A bottle of water. (Genitive) -> Пляшку **води**.
@@ -138,17 +139,20 @@ Translate these orders:
 4. How much is the coffee? -> Скільки коштує **кава**?
 
 ### Menu Reader
+
 Imagine you are at a cafe. Order a full meal (soup, main, drink).
 - Я буду **борщ**, **курку** і **сік**. (I will have...)
 
 ## Cultural Insight
 
 ### Bread is Head (Хліб усьому голова)
+
 Bread is sacred. You'll see **коровай** (wedding bread) and be greeted with **хліб і сіль** (bread and salt). Never throw bread away!
 
 Also, **борщ** is the soul of the kitchen. «Борщ — душа української кухні.»
 
 # Підсумок
+
 You can now feed yourself in Ukraine!
 - **Eat & Drink**: їсти, пити, снідати, обідати, вечеряти.
 - **Shop**: Скільки коштує?, Я хочу..., кілограм...

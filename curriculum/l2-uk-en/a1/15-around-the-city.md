@@ -130,7 +130,7 @@ How you get there matters. Ukrainians use several transportation phrases to desc
 - **на трамваї** — by tram (on the tram)
 - **метро** — by metro (indeclinable noun, used alone: «їду метро»)
 - **на таксі** — by taxi (in a taxi)
-  _Example:_ Я їду на **таксі**. (I go by taxi.)
+  *Example:* Я їду на **таксі**. (I go by taxi.)
 - **на машині** — by car (in a car)
 - **на велосипеді** — by bicycle (on a bicycle)
 
@@ -294,6 +294,7 @@ Beyond official public transport, every Ukrainian city runs **маршрутки
 ---
 
 # Підсумок
+
 You now have the vocabulary to:
 
 - **Give and follow directions** using прямо, наліво, направо, назад

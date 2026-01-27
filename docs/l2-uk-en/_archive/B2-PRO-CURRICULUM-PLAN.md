@@ -171,17 +171,20 @@ B2 Core (M01-70) ─┬─► B2-HIST (History)
 ## Key Vocabulary Themes
 
 ### Business Communication (M01-15)
+
 - Formal register markers (шановний, з повагою, прошу)
 - Meeting vocabulary (порядок денний, протокол, ухвала)
 - Negotiation terms (пропозиція, компроміс, умови)
 
 ### Technical Domains (M16-30)
+
 - IT terminology (сервер, база даних, хмарні технології)
 - Financial terms (баланс, актив, пасив, прибуток)
 - Legal vocabulary (договір, сторона, зобов'язання)
 - Medical terms (діагноз, лікування, рецепт)
 
 ### Media & Public Discourse (M31-40)
+
 - Journalistic language (джерело, кореспондент, репортаж)
 - Rhetoric terms (аргумент, контраргумент, доказ)
 - Public speaking (промова, аудиторія, переконання)

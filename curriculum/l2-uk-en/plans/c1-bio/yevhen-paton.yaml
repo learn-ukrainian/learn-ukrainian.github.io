@@ -69,22 +69,10 @@ activity_hints:
   focus: Technical descriptions and memoirs
   source: Engineering archives
   items: 3 passages
-- type: quiz
-  focus: Paton's biography and achievements
-  items: 12+
-- type: match-up
-  focus: Innovations and their applications
-  items: 10+
 - type: essay-response
   focus: How did Paton's welding technology change industry?
   word_target: 300
   output: Technical impact analysis
-- type: group-sort
-  focus: Pre-war vs. wartime vs. post-war work
-  items: 12+
-- type: fill-in
-  focus: Key dates and technological terms
-  items: 10+
 focus: biography
 prerequisites:
 - Basic understanding of engineering
@@ -110,3 +98,7 @@ sources:
   notes: Kyiv bridge named after him
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of євген патон: батько українського мостобудування'
+- Evaluate the contributions of інженер, який з'єднав береги
+- Trace the career and influence of спадщина двох поколінь

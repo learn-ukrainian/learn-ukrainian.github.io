@@ -69,22 +69,10 @@ activity_hints:
   focus: Спогади про Вишиваного
   source: Мемуарна література
   items: 3 passages
-- type: quiz
-  focus: Факти про життя Вишиваного
-  items: 12+
-- type: match-up
-  focus: Етапи життя та місця
-  items: 10+
 - type: essay-response
   focus: Чи можна обрати національну ідентичність?
   word_target: 300
   output: Філософський есей
-- type: group-sort
-  focus: Австрійське vs українське в його житті
-  items: 12+
-- type: fill-in
-  focus: Військова термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - b2-hist-wwi-ukraine
@@ -108,3 +96,7 @@ sources:
   notes: Документи військової служби
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of василь вишиваний: князь-українець'
+- Evaluate the contributions of ерцгерцог, що обрав україну
+- Trace the career and influence of національний вибір проти крові

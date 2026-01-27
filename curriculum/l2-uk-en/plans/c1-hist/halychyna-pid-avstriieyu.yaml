@@ -5,57 +5,59 @@ version: '1.0'
 title: 'Галичина під Австрією: Особлива доля'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of галичина під австрією: особлива доля'
+- Evaluate the historical significance of інший шлях
 content_outline:
 - section: Вступ — Інший шлях
-  words: 400
+  words: 457
   subsections:
   - Галичина — не під Росією
   - 1772 — поділ Польщі
   - Габсбурзька імперія — інша система
   - Структура модуля
 - section: Правовий статус
-  words: 600
+  words: 686
   subsections:
   - Королівство Галичини та Володимирії
   - Конституційний період (після 1867)
   - Права українців — порівняно з Росією
   - Обмеження — польська домінація
 - section: Освіта і церква
-  words: 700
+  words: 800
   subsections:
   - Греко-католицька церква — легальна
   - Семінарії — українською
   - Університет — доступ
   - Порівняння з Наддніпрянщиною
 - section: «Весна народів» 1848
-  words: 600
+  words: 686
   subsections:
   - Головна Руська Рада
   - Перша легальна організація
   - Скасування панщини
   - Чому не вдалося більше
 - section: Польсько-український конфлікт
-  words: 500
+  words: 571
   subsections:
   - Польська шляхта — домінація
   - Сейм — нерівність
   - Конкуренція за Галичину
   - «Полякування» vs. українізація
 - section: Порівняння з Росією
-  words: 400
+  words: 457
   subsections:
   - Що можна в Австрії
   - Чого не можна в Росії
   - Різні траєкторії
   - Чому це важливо
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - Австрія — не ідеал, але краще
   - Галичина — «Український П'ємонт»
   - Підготовка до національного руху
-word_target: 3500
+word_target: 4000
 vocabulary:
 - Галичина
 - Габсбурги
@@ -73,11 +75,11 @@ vocabulary:
 - конституція
 - громадянські права
 activities:
-- type: legal-comparison
+- type: comparative-study
   focus: Rights of Ukrainians in Austria vs. Russia
-- type: 1848-analysis
+- type: critical-analysis
   focus: What did 1848 achieve for Galicia?
-- type: church-analysis
+- type: critical-analysis
   focus: UGCC under Habsburg rule
 - type: essay-response
   focus: What if Galicia was under Russia?

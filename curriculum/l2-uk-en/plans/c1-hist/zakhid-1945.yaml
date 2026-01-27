@@ -5,56 +5,58 @@ version: '1.0'
 title: '1945: Ялта і зрада'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of 1945: ялта і зрада'
+- Evaluate the historical significance of друга зрада
 content_outline:
 - section: Вступ — Друга зрада
-  words: 400
+  words: 457
   subsections:
   - 1945 — новий світовий порядок
   - Україна — знову забута
   - Примусова репатріація — злочин
   - Структура модуля
 - section: Ялтинська конференція
-  words: 600
+  words: 686
   subsections:
   - Велика трійка
   - Поділ Європи
   - Україна — в радянській сфері
   - Жодних питань
 - section: Західна Україна
-  words: 600
+  words: 686
   subsections:
   - Галичина, Волинь — у СРСР
   - Закарпаття — «добровільно»
   - Польща отримує компенсацію
   - Примусове переселення
 - section: Примусова репатріація
-  words: 700
+  words: 800
   subsections:
   - ДіПі — хто хотів повернутися
   - Операція Keelhaul
   - Самогубства, опір
   - Західні союзники — співучасники
 - section: Чому погодились
-  words: 500
+  words: 571
   subsections:
   - Сталін — союзник
   - Реальполітик — цинічний
   - Незнання чи байдужість
   - Масштаб злочину
 - section: Наслідки для України
-  words: 400
+  words: 457
   subsections:
   - Західна Україна — радянізація
   - ДіПі — врятувалися хто зміг
   - Травма і пам'ять
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - Ялта — зрада заради миру
   - Паттерн продовжується
   - Перехід до «Курча по-київськи»
-word_target: 3500
+word_target: 4000
 vocabulary:
 - Ялта
 - конференція
@@ -72,11 +74,11 @@ vocabulary:
 - табір ДіПі
 - цинізм
 activities:
-- type: conference-analysis
+- type: critical-analysis
   focus: What was decided at Yalta about Ukraine?
-- type: moral-analysis
+- type: critical-analysis
   focus: Forced repatriation — Western responsibility
-- type: testimony-study
+- type: comparative-study
   focus: DP experiences with repatriation threat
 - type: comparative-study
   focus: 1918 vs. 1945 — patterns of Western betrayal

@@ -1,10 +1,12 @@
 # Audit Report: M35 — 35-speaking-practice.md
+
 **Level:** C1 | **Module:** M35 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 1750
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:16
 
 ## Configuration
+
 **Type:** C1-checkpoint
 **Word Target:** 1750 words
 **Activities:** 14-18 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Структура дебатів | 8 | 6 | ✅ |
@@ -43,16 +46,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'чи можете...'.
   - FIX: Vary sentence structure.
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ✅ 2341/1750 (raw: 2486)
 - **Activities:** ✅ 14/14
 - **Density:** ✅ All > 14
@@ -71,10 +77,12 @@
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 93% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 23 | 15 | 100% | 25% | 25.0% |
@@ -88,6 +96,7 @@
 | **TOTAL** | | | | | **93.5%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

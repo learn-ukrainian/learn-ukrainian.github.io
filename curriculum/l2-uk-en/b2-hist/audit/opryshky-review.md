@@ -1,8 +1,8 @@
 # Audit Report: M72 — opryshky.md
-**Level:** B2 | **Module:** M72 | **Phase:** HIST.7 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2 | **Module:** M72 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:54:56
+**Generated:** 2026-01-27 15:51:21
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, fill-in, match-up, quiz, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -22,32 +22,38 @@
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Народна балада про Довбуша | 3 | 1 | ✅ |
 | 2 | reading | Протокол допиту опришка (XVIII ст.) | 3 | 1 | ✅ |
-| 3 | quiz | Перевірка знань про опришківство | 8 | 8 | ✅ |
-| 4 | fill-in | Лексика опришківського світу | 10 | 8 | ✅ |
-| 5 | match-up | Зіставлення опришківських термінів | 14 | 8 | ✅ |
-| 6 | essay-response | Есе: Довбуш як символ незламності | 1 | 1 | ✅ |
-| 7 | comparative-study | Порівняння опришківства та гайдамаччини | 1 | 1 | ✅ |
+| 3 | essay-response | Есе: Довбуш як символ незламності | 1 | 1 | ✅ |
+| 4 | comparative-study | Порівняння опришківства та гайдамаччини | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 7 (target: 3-9) ✅
-- Unique types: 6 (minimum: 2) ✅
+- Total activities: 4 (target: 3-9) ✅
+- Unique types: 3 (minimum: 2) ✅
 - Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
-- Required types used: 5/5 (essay-response, fill-in, match-up, quiz, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in opryshky.yaml: Insufficient activities: 4 found, minimum 5 required for B2-HIST
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 4037/4000 (raw: 4281)
-- **Activities:** ✅ 7/3
+- **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 6/2 types
+- **Unique_types:** ✅ 3/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (7 activities)
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ✅ Content-heavy OK (4 activities)
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

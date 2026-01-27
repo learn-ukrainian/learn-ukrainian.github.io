@@ -1,10 +1,12 @@
 # Audit Report: M96 — mariia-prymachenko.md
+
 **Level:** C1 | **Module:** M96 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:45
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння біографії | 5 | 5 | ✅ |
@@ -41,10 +44,12 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in mariia-prymachenko.yaml: Schema validation error at key '7': {'type': 'error-correction', 'title': 'Складні прикметники та узгодження', 'items': [{'sentence': 'Вона створила глибоко філософську серію робіт про атомну загрозу.', 'error': 'глибоко філософську', 'answer': 'глибокофілософську', 'options': ['глибоко філософську', 'глибокофілософську', 'глибоко-філософську', 'none'], 'explanation': 'Складні прикметники, де одна частина залежить від іншої, пишуться разом.'}, {'sentence': 'Її диво-звірі мають ярко-сині та яскраво-жовті кольори.', 'error': 'ярко-сині', 'answer': 'яскраво-сині', 'options': ['ярко-сині', 'яскраво-сині', 'яркосині', 'none'], 'explanation': 'Назви відтінків кольорів пишуться через дефіс, правильно «яскраво».'}, {'sentence': 'Поліська природа дарувала їй багато ідей для творчості.', 'error': 'none', 'answer': '✓', 'options': ['дарувала', 'ідей', 'природа', '✓'], 'explanation': 'Речення побудоване правильно.'}, {'sentence': 'Картина була врятована з палаючого будівлі музею.', 'error': 'з палаючого', 'answer': 'з палаючої', 'options': ['з палаючого', 'з палаючої', 'з палаючою', 'none'], 'explanation': 'Прикметник (дієприкметник) має узгоджуватися з іменником «будівля» (жін. рід).'}, {'sentence': 'Примаченко є найвідоміша художниця українського наїву.', 'error': 'найвідоміша', 'answer': 'найвідомішою', 'options': ['найвідоміша', 'найвідомішою', 'найвідомішу', 'none'], 'explanation': 'Орудний відмінок у ролі іменної частини присудка.'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template.md'
   - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template.md'
@@ -53,12 +58,14 @@
   - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 
 ## Recommendation
+
 **📝 UPDATE** (severity 35/100)
 
 - 4 violations (moderate)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2576/4000 (raw: 2901)
 - **Activities:** ✅ 12/3
 - **Density:** ✅ All > 1
@@ -77,10 +84,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 97% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 6 | 4 | 100% | 19% | 19.0% |
@@ -96,6 +105,7 @@
 | **TOTAL** | | | | | **97.5%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 87 | Included in Core |

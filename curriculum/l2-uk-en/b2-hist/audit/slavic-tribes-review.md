@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M05 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 23:17:38
+**Generated:** 2026-01-27 15:47:35
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** comparative-study, critical-analysis, essay-response, quiz, reading
+**Required Types:** comparative-study, critical-analysis, essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -20,26 +20,25 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Історія та розселення племен | 8 | 8 | ✅ |
-| 2 | reading | Древлянський Коростень | 3 | 1 | ✅ |
-| 3 | critical-analysis | Аналіз древлянського центру | 1 | 1 | ✅ |
-| 4 | reading | Білі Хорвати: Загадка Карпат | 3 | 1 | ✅ |
-| 5 | critical-analysis | Аналіз карпатського племені | 1 | 1 | ✅ |
-| 6 | essay-response | Племінна спадщина | 1 | 1 | ✅ |
-| 7 | comparative-study | Порівняння полян і древлян | 1 | 1 | ✅ |
+| 1 | reading | Древлянський Коростень | 3 | 1 | ✅ |
+| 2 | critical-analysis | Аналіз древлянського центру | 1 | 1 | ✅ |
+| 3 | reading | Білі Хорвати: Загадка Карпат | 3 | 1 | ✅ |
+| 4 | critical-analysis | Аналіз карпатського племені | 1 | 1 | ✅ |
+| 5 | essay-response | Племінна спадщина | 1 | 1 | ✅ |
+| 6 | comparative-study | Порівняння полян і древлян | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 7 (target: 3-9) ✅
-- Unique types: 5 (minimum: 2) ✅
+- Total activities: 6 (target: 3-9) ✅
+- Unique types: 4 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 5/5 (comparative-study, critical-analysis, essay-response, quiz, reading) ✅
+- Required types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ✅ 4583/4000 (raw: 4892)
-- **Activities:** ✅ 7/3
+- **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 5/2 types
+- **Unique_types:** ✅ 4/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
@@ -47,7 +46,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (7 activities)
+- **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 96.9% (target 90-100% (history))
 - **Richness:** ✅ 100% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

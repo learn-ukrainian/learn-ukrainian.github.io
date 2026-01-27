@@ -12,7 +12,7 @@
 | ------------------- | ----- | --------------------------------------------------------------------------------------------------------- |
 | Coherence           | 10/10 | Logical flow from "Press" to "Structure of News" to "Critical Thinking".                                  |
 | Relevance           | 10/10 | Essential for media literacy (finding truthful info about Ukraine).                                       |
-| Educational         | 10/10 | Excellent differentiation of _видання/випуск/тираж_.                                                      |
+| Educational         | 10/10 | Excellent differentiation of *видання/випуск/тираж*.                                                      |
 | Language            | 10/10 | Precise terminology.                                                                                      |
 | Pedagogy            | 10/10 | Using Georgiy Gongadze and Ukrainska Pravda as the anchor story is powerful and historically significant. |
 | Immersion           | 9/10  | Highly authentic.                                                                                         |
@@ -28,7 +28,7 @@
 
 ## Strengths
 
-- **Media Literacy Focus:** The module goes beyond just translating words; it teaches how to _consume_ Ukrainian news (checking sources, identifying `фейки`, verifying `достовірність`).
+- **Media Literacy Focus:** The module goes beyond just translating words; it teaches how to *consume* Ukrainian news (checking sources, identifying `фейки`, verifying `достовірність`).
 - **Memory Hook:** The story of "Ukrainska Pravda" founding (Gongadze) provides a real emotional hook for why independent media matters in Ukraine.
 
 ## Issues

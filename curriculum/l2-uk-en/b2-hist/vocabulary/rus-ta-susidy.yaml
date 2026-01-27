@@ -1,4 +1,104 @@
 module: rus-ta-susidy
 level: B2-HIST
 version: '2.0'
-items: []
+items:
+  - term: дипломатія
+    ipa: dɪplɔˈmatʲijɐ
+    pos: noun
+    translation: diplomacy
+  - term: геополітика
+    ipa: ɦɛɔpɔˈlʲitɪkɐ
+    pos: noun
+    translation: geopolitics
+  - term: торговельний шлях
+    ipa: tɔrɦɔˈvɛlʲnɪi̯ ʃlʲax
+    pos: noun phrase
+    translation: trade route
+  - term: династичний шлюб
+    ipa: dɪnɐsˈtɪtʃnɪi̯ ʃlʲub
+    pos: noun phrase
+    translation: dynastic marriage
+  - term: союзник
+    ipa: sɔˈjuznɪk
+    pos: noun
+    translation: ally
+  - term: суверенітет
+    ipa: suvɛrɛnʲiˈtɛt
+    pos: noun
+    translation: sovereignty
+  - term: легітимність
+    ipa: lɛɦʲiˈtɪmnʲisʲtʲ
+    pos: noun
+    translation: legitimacy
+  - term: хроніст
+    ipa: xrɔˈnʲist
+    pos: noun
+    translation: chronicler
+  - term: варанги
+    ipa: vɐˈrɑnɦɪ
+    pos: noun
+    translation: Varangians
+  - term: василевс
+    ipa: vɐsɪˈlɛu̯s
+    pos: noun
+    translation: basileus
+  - term: порфірородна
+    ipa: pɔrfʲirɔˈrɔdnɐ
+    pos: adjective
+    translation: porphyrogenita (born in the purple)
+  - term: номоканон
+    ipa: nɔmɔkɐˈnɔn
+    pos: noun
+    translation: nomocanon (collection of ecclesiastical law)
+  - term: абетка
+    ipa: ɐˈbɛtkɐ
+    pos: noun
+    translation: alphabet
+  - term: васал
+    ipa: vɐˈsɑl
+    pos: noun
+    translation: vassal
+  - term: прикордонний
+    ipa: prɪkɔrˈdɔnnɪi̯
+    pos: adjective
+    translation: border, frontier
+  - term: реліквія
+    ipa: rɛˈlʲikvʲijɐ
+    pos: noun
+    translation: relic
+  - term: перевал
+    ipa: pɛrɛˈvɑl
+    pos: noun
+    translation: mountain pass
+  - term: кочівник
+    ipa: kɔˈtʃʲiunɪk
+    pos: noun
+    translation: nomad
+  - term: фронтир
+    ipa: frɔnˈtɪr
+    pos: noun
+    translation: frontier
+  - term: міжусобиця
+    ipa: mʲiʒuˈsɔbɪt͡sʲɐ
+    pos: noun
+    translation: internecine strife
+  - term: клобук
+    ipa: klɔˈbuk
+    pos: noun
+    translation: klobuk (type of hat)
+  - term: сага
+    ipa: ˈsɑɦɐ
+    pos: noun
+    translation: saga
+  - term: апокриф
+    ipa: ɐˈpɔkrɪf
+    pos: noun
+    translation: apocrypha
+  - term: автокефалія
+    ipa: ɐu̯tɔkɛˈfɑlʲijɐ
+    pos: noun
+    translation: autocephaly
+  - term: томос
+    ipa: ˈtɔmɔs
+    pos: noun
+    translation: tomos (decree of autocephaly)

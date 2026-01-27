@@ -63,6 +63,7 @@ Let's take **читати** (chytaty — to read) as our example:
 Most First Conjugation verbs are very regular. Let's look at two common subgroups:
 
 #### 1. Regular -ати/-яти Verbs
+
 These verbs keep their stem exactly as it appears in the infinitive (minus -ти).
 
 | Infinitive | Stem    | я form   | English         |
@@ -224,6 +225,7 @@ I have breakfast. Then I work. I have lunch. I walk to the park. I read a book. 
 ---
 
 # Підсумок
+
 You've unlocked **First Conjugation verbs** (-ати/-яти)! You can now:
 
 - Conjugate verbs like **читати, писати, працювати, грати**

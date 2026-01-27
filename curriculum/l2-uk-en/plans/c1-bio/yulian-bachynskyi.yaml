@@ -69,22 +69,10 @@ activity_hints:
   focus: Фрагменти Україна irredenta
   source: Первинні джерела
   items: 3 passages
-- type: quiz
-  focus: Ключові ідеї Бачинського
-  items: 12+
-- type: match-up
-  focus: Політичні терміни та визначення
-  items: 10+
 - type: essay-response
   focus: Чи можна передбачити майбутнє нації?
   word_target: 300
   output: Аргументований есей
-- type: group-sort
-  focus: Соціалізм vs націоналізм у Бачинського
-  items: 12+
-- type: fill-in
-  focus: Політологічна термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-22-mykhailo-drahomanov
@@ -108,3 +96,7 @@ sources:
   notes: Контекст політичної думки
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of юліан бачинський: теоретик незалежності'
+- Evaluate the contributions of пророк незалежності
+- Trace the career and influence of ідеї, що випереджають час

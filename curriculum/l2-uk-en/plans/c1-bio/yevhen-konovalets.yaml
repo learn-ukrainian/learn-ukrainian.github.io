@@ -69,22 +69,10 @@ activity_hints:
   focus: Konovalets's speeches and documents
   source: Historical archives
   items: 3 passages
-- type: quiz
-  focus: Konovalets's military and political career
-  items: 12+
-- type: match-up
-  focus: Organizations and their roles
-  items: 10+
 - type: essay-response
   focus: How did Konovalets transform military defeat into political movement?
   word_target: 300
   output: Strategic analysis
-- type: group-sort
-  focus: Military vs. political phases of his career
-  items: 12+
-- type: fill-in
-  focus: Key dates and events
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-44 (Symon Petliura - UNR leader)
@@ -114,3 +102,7 @@ sources:
   notes: Intelligence service historical page
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of євген коновалець: полковник і організатор'
+- Evaluate the contributions of архітектор національного руху
+- Trace the career and influence of вбивство та спадщина

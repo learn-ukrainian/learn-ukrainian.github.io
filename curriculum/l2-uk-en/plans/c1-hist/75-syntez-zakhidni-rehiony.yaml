@@ -5,54 +5,54 @@ version: '2.0'
 title: 'Синтез: Західні землі'
 content_outline:
 - section: Вступ — Чому «більш українські»?
-  words: 400
+  words: 457
   points:
   - Огляд модулів 70-74
   - Стереотип «справжніх українців»
   - Чи це правда?
   - Мета синтезу
 - section: Порівняння регіонів
-  words: 600
+  words: 686
   points:
   - Галичина vs. Буковина vs. Закарпаття vs. Волинь
   - Різні імперії — різні долі
   - Спільне і відмінне
   - Таблиця порівняння
 - section: Чому зберегли ідентичність
-  words: 700
+  words: 800
   points:
   - Австрія vs. Росія — ключ
   - Церква — греко-католицька
   - Освіта — можливості
   - Політичний досвід
 - section: Західні землі в XX столітті
-  words: 600
+  words: 686
   points:
   - 1918 — ЗУНР
   - Міжвоєнний період — під Польщею, Румунією, Чехословаччиною
   - 1939-1945 — окупації
   - «Возз'єднання» 1939/1945
 - section: Західна Україна в СРСР
-  words: 500
+  words: 571
   points:
   - Радянізація
   - Опір — УПА
   - Репресії
   - Збереження ідентичності
 - section: Роль після 1991
-  words: 400
+  words: 457
   points:
   - «Український П'ємонт» — знову
   - Помаранчева революція
   - Революція Гідності
   - 2022 — чи ще актуальний поділ?
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Західні землі — інша історія
   - Але частина України
   - Перехід до східних регіонів
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - синтез (synthesis)
@@ -75,13 +75,10 @@ activity_hints:
 - type: essay-response
   focus: Create western regions comparison diagram
   output: Regional map
-- type: comparative-table
-  focus: Four regions — empire, church, language, outcome
-  output: Comparison table
-- type: historical-analysis
+- type: critical-analysis
   focus: Why did western lands preserve identity better?
   output: Causal analysis
-- type: contemporary-analysis
+- type: critical-analysis
   focus: Is the west-east divide still relevant?
   output: Contemporary assessment
 - type: essay-response
@@ -106,3 +103,6 @@ sources:
   notes: Galicia summary
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of синтез: західні землі'
+- Evaluate the historical significance of чому «більш українські»?

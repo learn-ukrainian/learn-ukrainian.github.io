@@ -28,4 +28,4 @@
 
 ## Conclusion
 
-This module provides the structural blueprint for the rest of B1. Understanding "підрядне речення" is a prerequisite for the complex grammar coming in B1.1. The explicit focus on punctuation rules (commas before _що_) answers a very common learner question.
+This module provides the structural blueprint for the rest of B1. Understanding "підрядне речення" is a prerequisite for the complex grammar coming in B1.1. The explicit focus on punctuation rules (commas before *що*) answers a very common learner question.

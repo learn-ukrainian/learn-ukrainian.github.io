@@ -69,22 +69,10 @@ activity_hints:
   focus: Українська література XIX ст.
   source: Literary history sources
   items: 3 passages
-- type: quiz
-  focus: Життя та творчість Франка
-  items: 12+
-- type: match-up
-  focus: Твори та їхні жанри
-  items: 10+
 - type: essay-response
   focus: Чому Франка називають «титаном праці»?
   word_target: 300
   output: Analytical essay
-- type: group-sort
-  focus: Діяльність Франка за сферами
-  items: 12+
-- type: fill-in
-  focus: Літературна та суспільно-політична термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-27
@@ -103,3 +91,7 @@ sources:
   notes: Academic institution dedicated to Franko studies
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of іван франко: каменяр'
+- Evaluate the contributions of титан праці
+- Trace the career and influence of вічний каменяр

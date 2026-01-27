@@ -6,7 +6,6 @@
 
 **Related Issue:** [#306](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/306)
 
-
 <!--
 TEMPLATE_METADATA:
   required_sections:
@@ -27,6 +26,7 @@ TEMPLATE_METADATA:
 Before submitting a C1 sociolinguistics module, verify all items from `c1-module-template.md` PLUS:
 
 ### Sociolinguistics-Specific Requirements
+
 - [ ] **Comparative analysis:** Multiple texts/varieties compared
 - [ ] **Authentic samples:** Real examples of dialects, Surzhyk, register variation
 - [ ] **Linguistic terminology:** стилістичні засоби, діалектні маркери, регістр
@@ -73,7 +73,6 @@ Before submitting a C1 sociolinguistics module, verify all items from `c1-module
 | M119 | Deliberate Mixing | Stylistic effect, code-switching |
 
 ### Checkpoint (M120)
-
 
 ---
 
@@ -470,6 +469,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 ## Content Structure Note
 
 ### Vocabulary & Activities
+
 **CRITICAL:** Do NOT add `## Vocabulary` or `## Activities` headers. These sections are injected automatically from:
 - `vocabulary/{slug}.yaml`
 - `activities/{slug}.yaml`

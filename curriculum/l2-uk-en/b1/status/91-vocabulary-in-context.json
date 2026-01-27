@@ -2,14 +2,14 @@
   "module": "91-vocabulary-in-context",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:27:42.876401Z",
+  "last_audit": "2026-01-27T20:45:11.345685Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-24T22:58:39.004887Z",
+    "md": "2026-01-27T20:39:19.122674Z",
     "meta": "2026-01-26T15:44:41.751529Z",
-    "activities": "2026-01-11T22:51:44.544183Z",
+    "activities": "2026-01-27T20:40:53.634449Z",
     "vocabulary": "2026-01-25T15:44:17.429635Z",
-    "plan": "2026-01-26T15:44:41.750672Z"
+    "plan": "2026-01-27T20:29:10.032292Z"
   },
   "gates": {
     "meta": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1537/1500 (raw: 2036) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "1984/1500 (raw: 2283)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "12/10"
+      "message": "13/10"
     },
     "vocabulary": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "3 Outline Compliance Errors",
-      "Missing required activity types: analysis, role-play, task, writing"
-    ],
-    "pass_count": 4,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

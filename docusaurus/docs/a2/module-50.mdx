@@ -23,6 +23,8 @@ import ComparativeStudy from '@site/src/components/ComparativeStudy';
 import ReadingActivity from '@site/src/components/ReadingActivity';
 import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
 import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
 
 
 ## Вступ
@@ -308,6 +310,10 @@ Try: «Я маю новий ноутбук. Я читаю новини онла�
 
 <Select questions={JSON.parse(`[{"question": "I need to enter my...", "options": [{"text": "пароль", "correct": true}, {"text": "паспорт", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Password."}, {"question": "Click on the...", "options": [{"text": "посилання", "correct": true}, {"text": "пошту", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Link."}, {"question": "Read the...", "options": [{"text": "статтю", "correct": true}, {"text": "стілець", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Article."}, {"question": "Connect to the...", "options": [{"text": "мережі", "correct": true}, {"text": "вулиці", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Network."}, {"question": "Send a...", "options": [{"text": "повідомлення", "correct": true}, {"text": "книгу", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Message."}, {"question": "Watch a...", "options": [{"text": "відео", "correct": true}, {"text": "радіо", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Video."}, {"question": "Write a...", "options": [{"text": "коментар", "correct": true}, {"text": "роман", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Comment."}, {"question": "Buy a...", "options": [{"text": "ноутбук", "correct": true}, {"text": "вікно", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Laptop."}, {"question": "Search in...", "options": [{"text": "Гуглі", "correct": true}, {"text": "кишені", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Google."}, {"question": "Charge the...", "options": [{"text": "смартфон", "correct": true}, {"text": "стіл", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Smartphone."}, {"question": "Listen to a...", "options": [{"text": "подкаст", "correct": true}, {"text": "газету", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Podcast."}, {"question": "Work...", "options": [{"text": "онлайн", "correct": true}, {"text": "у лісі", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Online."}]`)} />
 
+### Technology Fill-In
+
+<FillIn items={JSON.parse(`[{"sentence": "Я працюю за [___] цілий день.", "answer": "комп'ютером", "options": ["комп'ютером", "телефоном", "планшетом", "ноутбуком"]}, {"sentence": "Надішли мені [___] на цю статтю.", "answer": "посилання", "options": ["посилання", "пароль", "коментар", "лайк"]}, {"sentence": "У мене немає [___] до цього сайту.", "answer": "пароля", "options": ["пароля", "посилання", "доступу", "логіна"]}, {"sentence": "Вона щодня читає [___] онлайн.", "answer": "новини", "options": ["новини", "книги", "музику", "фільми"]}, {"sentence": "Я слухаю музику через [___].", "answer": "навушники", "options": ["навушники", "екран", "клавіатуру", "мишку"]}, {"sentence": "Він завантажує файли з [___].", "answer": "інтернету", "options": ["інтернету", "телефону", "книги", "газети"]}, {"sentence": "Поставте [___] під моїм фото!", "answer": "лайк", "options": ["лайк", "пароль", "посилання", "екран"]}, {"sentence": "Мій улюблений [___] про подорожі.", "answer": "блог", "options": ["блог", "фільм", "телефон", "пароль"]}]`)} />
+
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -328,9 +334,7 @@ Try: «Я маю новий ноутбук. Я читаю новини онла�
 | знімати | /znimˈatɪ/ | to take off, to film, to rent (imperfective) | verb |  |  |
 | клавіатура | /klaʋiatˈura/ | keyboard | noun | ж |  |
 | клікнути | /kliknutɪ/ | to click | verb |  |  |
-| колегий | /kɔlɛɦɪj/ |  | adj |  |  |
 | красуня | /krasˈunja/ | beauty (woman) | noun | ж |  |
-| лайк | /lajk/ | like (social media) | noun | ч |  |
 | лайка | /lˈajka/ | swearing, abuse, husky (dog) | noun | ж |  |
 | логін | /lɔɦˈin/ | login | noun | ч |  |
 | мишко | /mˈɪʃkɔ/ | Myshko (name) | noun | ч |  |
@@ -350,7 +354,7 @@ Try: «Я маю новий ноутбук. Я читаю новини онла�
 | пробіжка | /prɔbˈiʒka/ | jogging, run | noun | ж |  |
 | профіль | /prˈɔfilʲ/ | profile | noun | ч |  |
 | підписник | /pidpɪsnɪk/ | subscriber | noun |  |  |
-| підругама | /pidruɦama/ |  | noun | ж |  |
+| підругама | /pidruɦama/ | girlfriends | noun | ж |  |
 | підсвітка | /pidsʋitka/ | backlight, illumination | noun | ж |  |
 | садівництво | /sadiʋnˈɪt͡stʋɔ/ | gardening | noun | с |  |
 | сегмент | /sɛɦmˈɛnt/ | segment | noun | ч |  |

@@ -67,15 +67,6 @@ activity_hints:
   focus: Статті з журналу «Основа»
   source: Архівні матеріали
   items: 4
-- type: quiz
-  focus: Громадівський рух
-  items: 15
-- type: match-up
-  focus: Громада → місто та діяльність
-  items: 10
-- type: fill-in
-  focus: Культурно-просвітницька лексика
-  items: 10
 - type: essay-response
   focus: Як громади зберігали українську ідентичність в умовах заборони?
   word_target: 250

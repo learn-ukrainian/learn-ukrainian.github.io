@@ -76,22 +76,10 @@ activity_hints:
   focus: Chronicle account of Danylo's visit to Batu Khan
   source: Галицько-Волинський літопис (adapted)
   items: 3 passages
-- type: quiz
-  focus: Key events and dates in Danylo's reign
-  items: 15+
-- type: match-up
-  focus: Foreign rulers and their relations with Danylo
-  items: 10+
 - type: essay-response
   focus: Was Danylo's coronation a success or a failure?
   word_target: 300
   output: Balanced argument with evidence
-- type: group-sort
-  focus: Actions of resistance vs. accommodation with Mongols
-  items: 12+
-- type: fill-in
-  focus: Key terms from royal and diplomatic vocabulary
-  items: 10+
 - type: critical-analysis
   focus: Compare Danylo with Alexander Nevsky - different strategies
   output: Comparative analysis

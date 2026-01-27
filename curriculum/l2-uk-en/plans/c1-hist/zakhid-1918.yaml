@@ -5,56 +5,58 @@ version: '1.0'
 title: '1918-1921: Чому Антанта не допомогла УНР?'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of 1918-1921: чому антанта не допомогла унр?'
+- Evaluate the historical significance of забуті союзники
 content_outline:
 - section: Вступ — Забуті союзники
-  words: 400
+  words: 457
   subsections:
   - УНР шукала допомоги
   - Антанта — не допомогла
   - Паттерн починається
   - Структура модуля
 - section: Контекст — Хто був Антанта
-  words: 500
+  words: 571
   subsections:
   - Британія, Франція, США
   - Перемога у Першій світовій
   - Переформатування Європи
   - Принцип самовизначення — для кого
 - section: Чому Україну ігнорували
-  words: 700
+  words: 800
   subsections:
   - Невідома країна
   - «Мала Росія» — стереотип
   - Підтримка білих — проти червоних
   - Польща — важливіша
 - section: Паризька конференція
-  words: 600
+  words: 686
   subsections:
   - Українська делегація — не допущена
   - Лобіювання — провал
   - Про Україну — без України
   - Результат — ніякої підтримки
 - section: Франція і Одеса
-  words: 500
+  words: 571
   subsections:
   - Французькі війська в Одесі
   - Підтримка білих, не українців
   - Швидкий відступ
   - Ілюзії розвіяні
 - section: Наслідки
-  words: 500
+  words: 571
   subsections:
   - УНР — сама проти всіх
   - Поразка — частково через це
   - Урок — Захід не допоможе
 - section: Підсумок
-  words: 300
+  words: 344
   subsections:
   - Перша зрада Заходу
   - Паттерн встановлено
   - Перехід до Ялти
-word_target: 3500
+word_target: 4000
 vocabulary:
 - Антанта
 - Паризька конференція
@@ -72,13 +74,13 @@ vocabulary:
 - геополітика
 - буферна держава
 activities:
-- type: diplomatic-analysis
+- type: critical-analysis
   focus: Why wasn't Ukraine recognized at Paris?
-- type: perception-study
+- type: comparative-study
   focus: How did the West see Ukraine in 1918?
 - type: comparative-study
   focus: Poland vs. Ukraine — different treatment
-- type: source-analysis
+- type: critical-analysis
   focus: Ukrainian delegation reports from Paris
 - type: essay-response
   focus: Чому принцип самовизначення не поширився на Україну?

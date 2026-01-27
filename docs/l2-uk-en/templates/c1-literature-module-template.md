@@ -6,7 +6,6 @@
 
 **Related Issue:** [#306](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/306)
 
-
 <!--
 TEMPLATE_METADATA:
   required_sections:
@@ -28,6 +27,7 @@ TEMPLATE_METADATA:
 Before submitting a C1 literature module, verify all items from `c1-module-template.md` PLUS:
 
 ### Literature-Specific Requirements
+
 - [ ] **Literary analysis:** Close reading, stylistic analysis, thematic interpretation
 - [ ] **Primary texts:** Full poems or 500-800 word prose excerpts using `[!quote]` callouts
 - [ ] **Comparative analysis:** 2+ texts compared (same author different works, or different authors)
@@ -69,7 +69,6 @@ Before submitting a C1 literature module, verify all items from `c1-module-templ
 | M159 | Literature Review | Integration |
 
 ### Final Exam (M160)
-
 
 ---
 
@@ -541,6 +540,94 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 ---
 
+## Advanced Seminar-Style Activities
+
+### Source-Evaluation Activity
+
+**Use for analyzing literary criticism and scholarly interpretations:**
+
+```yaml
+- type: source-evaluation
+  title: "Оцінка джерела: Критична стаття про [Author/Work]"
+  instruction: "Застосуйте метод критичного аналізу до цієї літературознавчої статті."
+  source_text: |
+    [Excerpt from literary criticism — 100-200 words]
+  source_metadata:
+    author: "[Critic's name]"
+    date: "[Year of publication]"
+    type: "[academic/popular/soviet-era/diaspora/contemporary]"
+    context: "[School of criticism, ideological context]"
+  evaluation_criteria:
+    - authorship
+    - date_and_context
+    - intended_audience
+    - purpose_and_bias
+    - omissions
+  guiding_questions:
+    - "До якої критичної школи належить автор? (формалізм, структуралізм, постколоніалізм...)"
+    - "Який ідеологічний контекст статті? (радянський, діаспорний, сучасний...)"
+    - "Які аспекти твору автор ігнорує або применшує?"
+    - "Як змінилася б ця інтерпретація з сучасної перспективи?"
+  model_evaluation: |
+    **1. Авторство:** [Who is the critic, their critical school]
+    **2. Контекст:** [When/where published, ideological pressures]
+    **3. Методологія:** [What critical approach is used]
+    **4. Упередження:** [What the critic emphasizes or ignores]
+    **5. Сучасна перспектива:** [How we might read this differently today]
+```
+
+### Debate Activity
+
+**Use for contested literary interpretations:**
+
+```yaml
+- type: debate
+  title: "Дискусія: Як інтерпретувати [Work/Author]?"
+  instruction: "Проаналізуйте конкуруючі літературознавчі інтерпретації та сформулюйте власну позицію."
+  debate_question: "[The contested interpretive question]"
+  historical_context: |
+    [Background on the work and why interpretations differ — 50-100 words]
+  positions:
+    - name: "[Interpretation 1 — e.g., Романтична інтерпретація]"
+      proponents: "[Critics/schools who hold this view]"
+      argument: "[Core argument]"
+      evidence:
+        - "[Textual evidence — quote from work]"
+        - "[Critical argument]"
+      weaknesses:
+        - "[Limitation of this reading]"
+    - name: "[Interpretation 2 — e.g., Національна інтерпретація]"
+      proponents: "[Who holds this view]"
+      argument: "[Core argument]"
+      evidence:
+        - "[Textual evidence]"
+      weaknesses:
+        - "[Critique]"
+    - name: "[Interpretation 3 — e.g., Радянська/деколонізаційна]"
+      proponents: "[School of thought]"
+      argument: "[Their reading]"
+      evidence:
+        - "[Their evidence]"
+      weaknesses:
+        - "[Why problematic or limited]"
+  analysis_tasks:
+    - "Які текстуальні докази найсильніші для кожної інтерпретації?"
+    - "Як історичний контекст критика впливає на його читання?"
+    - "Чи можна поєднати ці інтерпретації?"
+    - "Яку позицію ви вважаєте найбільш переконливою? Чому?"
+  model_analysis: |
+    [Balanced evaluation showing how to analyze competing literary interpretations.
+    Should demonstrate close reading skills and awareness of critical schools.]
+```
+
+**Example contested questions for literature:**
+- "Чи Шевченко — передусім романтик чи реаліст?"
+- "Чи 'Лісова пісня' — модерністська драма чи неоромантична казка?"
+- "Як читати Стуса: екзистенціалізм чи національний опір?"
+- "Хвильовий: модерніст чи радянський письменник?"
+
+---
+
 ## Engagement Boxes for Literature Modules
 
 ```markdown
@@ -576,6 +663,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 ## Content Structure Note
 
 ### Vocabulary & Activities
+
 **CRITICAL:** Do NOT add `## Vocabulary` or `## Activities` headers. These sections are injected automatically from:
 - `vocabulary/{slug}.yaml`
 - `activities/{slug}.yaml`

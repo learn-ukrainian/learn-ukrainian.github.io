@@ -5,57 +5,59 @@ version: '1.0'
 title: 'Синтез: Західні землі'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of синтез: західні землі'
+- Evaluate the historical significance of чому «більш українські»?
 content_outline:
 - section: Вступ — Чому «більш українські»?
-  words: 400
+  words: 457
   subsections:
   - Огляд модулів 70-74
   - Стереотип «справжніх українців»
   - Чи це правда?
   - Мета синтезу
 - section: Порівняння регіонів
-  words: 600
+  words: 686
   subsections:
   - Галичина vs. Буковина vs. Закарпаття vs. Волинь
   - Різні імперії — різні долі
   - Спільне і відмінне
   - Таблиця порівняння
 - section: Чому зберегли ідентичність
-  words: 700
+  words: 800
   subsections:
   - Австрія vs. Росія — ключ
   - Церква — греко-католицька
   - Освіта — можливості
   - Політичний досвід
 - section: Західні землі в XX столітті
-  words: 600
+  words: 686
   subsections:
   - 1918 — ЗУНР
   - Міжвоєнний період — під Польщею, Румунією, Чехословаччиною
   - 1939-1945 — окупації
   - «Возз'єднання» 1939/1945
 - section: Західна Україна в СРСР
-  words: 500
+  words: 571
   subsections:
   - Радянізація
   - Опір — УПА
   - Репресії
   - Збереження ідентичності
 - section: Роль після 1991
-  words: 400
+  words: 457
   subsections:
   - «Український П'ємонт» — знову
   - Помаранчева революція
   - Революція Гідності
   - 2022 — чи ще актуальний поділ?
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - Західні землі — інша історія
   - Але частина України
   - Перехід до східних регіонів
-word_target: 3500
+word_target: 4000
 vocabulary:
 - синтез
 - західні землі
@@ -75,11 +77,9 @@ vocabulary:
 activities:
 - type: essay-response
   focus: Create western regions comparison diagram
-- type: comparative-table
-  focus: Four regions — empire, church, language, outcome
-- type: historical-analysis
+- type: critical-analysis
   focus: Why did western lands preserve identity better?
-- type: contemporary-analysis
+- type: critical-analysis
   focus: Is the west-east divide still relevant?
 - type: essay-response
   focus: Чому західні українці 'більш українські'? Чи це міф?

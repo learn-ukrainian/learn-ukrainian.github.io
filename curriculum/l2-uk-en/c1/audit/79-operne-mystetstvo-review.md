@@ -1,9 +1,11 @@
 # Audit Report: M79 — 79-operne-mystetstvo.md
+
 **Level:** C1 | **Module:** M79 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:43
 
 ## Configuration
+
 **Type:** C1-fine-arts
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -16,6 +18,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Оперна інституційність та архітектурні шедеври | 12 | 5 | ✅ |
@@ -39,16 +42,19 @@
 - Low density activities: 0
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Сучасні тенденції: Оксана Линів та глобальний контекст опери, Вступ: Опера як дзеркало національних амбіцій
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2562/3000 (raw: 2717)
 - **Activities:** ✅ 13/12
 - **Density:** ✅ All > 12
@@ -67,10 +73,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 98% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 26 | 15 | 100% | 25% | 25.0% |
@@ -84,6 +92,7 @@
 | **TOTAL** | | | | | **98.2%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 121 | Included in Core |

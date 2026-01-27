@@ -69,22 +69,10 @@ activity_hints:
   focus: Військова біографія
   source: Уривки з мемуарів та історичних досліджень
   items: 3 passages
-- type: quiz
-  focus: Біографія та військові операції
-  items: 12+
-- type: match-up
-  focus: Битви та їхні результати
-  items: 10+
 - type: essay-response
   focus: Чому українська армія програла війну за незалежність?
   word_target: 300
   output: Аналітичне есе
-- type: group-sort
-  focus: Російська армія vs Армія УНР
-  items: 12+
-- type: fill-in
-  focus: Військова термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-44 (Симон Петлюра)
@@ -108,3 +96,7 @@ sources:
   notes: Військова історія УНР
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of олександр греків: полководець унр'
+- Evaluate the contributions of генерал української незалежності
+- Trace the career and influence of еміграція та спадщина (1920-1958)

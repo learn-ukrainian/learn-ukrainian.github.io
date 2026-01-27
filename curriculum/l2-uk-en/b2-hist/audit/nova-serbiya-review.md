@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M78 | **Phase:** HIST.8 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:55:01
+**Generated:** 2026-01-27 15:51:24
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, fill-in, match-up, quiz, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -21,18 +21,20 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Жалувана грамота Івану Хорвату (1752) | 2 | 1 | ✅ |
-| 2 | quiz | Історія Нової Сербії та Слов’яносербії | 8 | 8 | ✅ |
-| 3 | match-up | Терміни та постаті балканської колонізації | 12 | 8 | ✅ |
-| 4 | critical-analysis | Земельні конфлікти та імперська стратегія | 1 | 1 | ✅ |
-| 5 | comparative-study | Козацька паланка vs Сербська рота | 1 | 1 | ✅ |
-| 6 | essay-response | Есе: Балканський "клин" в історії України | 1 | 1 | ✅ |
+| 2 | critical-analysis | Земельні конфлікти та імперська стратегія | 1 | 1 | ✅ |
+| 3 | comparative-study | Козацька паланка vs Сербська рота | 1 | 1 | ✅ |
+| 4 | essay-response | Есе: Балканський "клин" в історії України | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 6 (target: 3-9) ✅
-- Unique types: 6 (minimum: 2) ✅
+- Total activities: 4 (target: 3-9) ✅
+- Unique types: 4 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 4/5 (essay-response, match-up, quiz, reading) ❌
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in nova-serbiya.yaml: Insufficient activities: 4 found, minimum 5 required for B2-HIST
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
 - ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!history-bite]' per template 'b2-history-module-template.md'
@@ -41,21 +43,21 @@
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 
 ## Gates
 - **Words:** ✅ 4119/4000 (raw: 4305)
-- **Activities:** ✅ 6/3
+- **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 6/2 types
+- **Unique_types:** ✅ 4/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (6 activities)
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ✅ Content-heavy OK (4 activities)
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

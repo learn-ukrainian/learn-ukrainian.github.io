@@ -5,17 +5,19 @@ version: '1.0'
 title: 'Географія Голодомору: Регіональні відмінності'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of географія голодомору: регіональні відмінності'
+- Evaluate the historical significance of голодомор на карті
 content_outline:
 - section: Вступ — Голодомор на карті
-  words: 400
+  words: 457
   subsections:
   - Не всі регіони постраждали однаково
   - Чому географія важлива
   - Що нам говорять карти
   - Структура модуля
 - section: Найбільш постраждалі регіони
-  words: 700
+  words: 800
   subsections:
   - Київщина — епіцентр
   - Харківщина — другий центр
@@ -23,40 +25,40 @@ content_outline:
   - Степова Україна
   - Карта з даними
 - section: Менш постраждалі регіони
-  words: 500
+  words: 571
   subsections:
   - Західна Україна — під Польщею
   - Донбас — промисловий регіон
   - Міста vs. села
   - Чому різниця?
 - section: Кубань і етнічні українці
-  words: 600
+  words: 686
   subsections:
   - Українці за межами УРСР
   - Кубань — особливий випадок
   - Знищення українськості
   - Паралелі з Україною
 - section: Чому саме ці регіони
-  words: 600
+  words: 686
   subsections:
   - Зернові райони — більший тиск
   - Опір колективізації
   - Національний фактор
   - «Покарання» vs. «політика»
 - section: Демографічні наслідки
-  words: 500
+  words: 571
   subsections:
   - Скільки загинуло — дискусія
   - 3.9 мільйона — консервативна оцінка
   - Вплив на населення — до сьогодні
   - Втрачені покоління
 - section: Підсумок
-  words: 200
+  words: 229
   subsections:
   - Географія як доказ
   - Від карт до свідчень
   - Підготовка до усної історії
-word_target: 3500
+word_target: 4000
 vocabulary:
 - географія
 - регіон
@@ -74,13 +76,13 @@ vocabulary:
 - народжуваність
 - депопуляція
 activities:
-- type: map-analysis
+- type: critical-analysis
   focus: Analyze Holodomor mortality map — what patterns?
 - type: comparative-study
   focus: Compare mortality rates in different oblasts
-- type: explanation-building
+- type: critical-analysis
   focus: Explain why specific regions suffered most
-- type: data-analysis
+- type: critical-analysis
   focus: Work with demographic data
 - type: essay-response
   focus: Що географія Голодомору говорить нам про його характер?

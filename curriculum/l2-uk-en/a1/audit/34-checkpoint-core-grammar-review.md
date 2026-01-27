@@ -1,10 +1,12 @@
 # Audit Report: M34 — 34-checkpoint-core-grammar.md
+
 **Level:** A1 | **Module:** M34 | **Phase:** A1 | **Pedagogy:** TTT | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
 **Generated:** 2026-01-26 22:25:57
 
 ## Configuration
+
 **Type:** A1-checkpoint
 **Word Target:** 750 words
 **Activities:** 8-12 required
@@ -18,6 +20,7 @@
 **Transliteration:** Allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Cyrillic Mastery | 12 | 8 | ✅ |
@@ -41,6 +44,7 @@
 - Low density activities: 0
 
 ## Gates
+
 - **Words:** ✅ 1351/750 (raw: 1490)
 - **Activities:** ✅ 12/8
 - **Density:** ✅ All > 10
@@ -58,6 +62,7 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

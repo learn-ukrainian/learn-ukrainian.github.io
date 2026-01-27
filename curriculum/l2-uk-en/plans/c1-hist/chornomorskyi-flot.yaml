@@ -5,56 +5,58 @@ version: '1.0'
 title: 'Чорноморський флот: Фіаско 1992-2017'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of чорноморський флот: фіаско 1992-2017'
+- Evaluate the historical significance of база ворога на своїй території
 content_outline:
 - section: Вступ — База ворога на своїй території
-  words: 400
+  words: 457
   subsections:
   - Севастополь — російська база
   - 25 років переговорів
   - Як це сталося
   - Структура модуля
 - section: 1992-1997 — Поділ флоту
-  words: 600
+  words: 686
   subsections:
   - Радянський флот — чий?
   - Переговори і конфлікти
   - Угода 1997 — компроміс
   - Оренда до 2017
 - section: Севастополь — особливий статус
-  words: 600
+  words: 686
   subsections:
   - Російська база в Криму
   - Юридичний статус
   - Постійна напруга
   - Російська присутність — щодня
 - section: 2010 — Харківські угоди
-  words: 700
+  words: 800
   subsections:
   - Янукович продовжує до 2042
   - Ціна — знижка на газ
   - Парламентська «битва»
   - Що Україна втратила
 - section: Як флот став загрозою
-  words: 500
+  words: 571
   subsections:
   - 2014 — база для анексії
   - «Зелені чоловічки» — звідки
   - Флот як плацдарм
   - Чому не передбачили
 - section: Уроки
-  words: 400
+  words: 457
   subsections:
   - Іноземні бази — ризик
   - Економія — не аргумент
   - Суверенітет — пріоритет
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - Флот — троянський кінь
   - Помилка 25 років
   - Перехід до Бухаресту
-word_target: 3500
+word_target: 4000
 vocabulary:
 - Чорноморський флот
 - Севастополь
@@ -72,11 +74,11 @@ vocabulary:
 - екстериторіальність
 - ратифікація
 activities:
-- type: agreement-analysis
+- type: critical-analysis
   focus: 1997 vs. 2010 agreements — what changed
-- type: security-analysis
+- type: critical-analysis
   focus: Fleet as security threat — how it was used in 2014
-- type: decision-analysis
+- type: critical-analysis
   focus: 2010 Kharkiv — why did Yanukovych agree?
 - type: essay-response
   focus: What if Ukraine had not extended the lease?

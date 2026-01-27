@@ -35,22 +35,26 @@
 | **33** | **Holidays** | **3.12 Holidays (Theme)** | `553-556` | Traditions, Greetings. |
 
 ## A2 Level (Початковий рівень другого ступеня)
+
 * **Themes (Catalog B):** Lines `1072-1164`
 * **Grammar (Catalog V):** Lines `1165-1850`
 
 ## B1 Level (Середній рівень першого ступеня)
+
 * **Themes (Catalog B):** Lines `1853-1980`
 * **Grammar (Catalog V):** Lines `1981-2870`
 
 ## B2 Level (Середній рівень другого ступеня)
+
 * **Themes (Catalog B):** Lines `2874-3065`
 * **Grammar (Catalog V):** Lines `3066-3915`
 
 ## C1 Level (Рівень вільного володіння I)
+
 * **Themes (Catalog B):** Lines `3916-4136`
 * **Grammar (Catalog V):** Lines `4137-5069`
 
 ## C2 Level (Рівень вільного володіння II)
+
 * **Themes (Catalog B):** Lines `5070-5300`
 * **Grammar (Catalog V):** Lines `5301-6000`
-

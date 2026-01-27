@@ -5,17 +5,19 @@ version: '1.0'
 title: 'Механізм кооптації: Теоретична рамка'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of механізм кооптації: теоретична рамка'
+- Evaluate the historical significance of цикл, що повторюється
 content_outline:
 - section: Вступ — Цикл, що повторюється
-  words: 400
+  words: 457
   subsections:
   - Що таке кооптація
   - Чому цикл
   - Російська специфіка
   - Структура модуля
 - section: Теоретична модель
-  words: 700
+  words: 800
   subsections:
   - Підкуп — пропозиція привілеїв
   - Залежність — поступове обмеження
@@ -23,40 +25,40 @@ content_outline:
   - Знищення — ліквідація автономії
   - BBBB — Bribe, Bind, Betray, Burn
 - section: Порівняння з іншими імперіями
-  words: 600
+  words: 686
   subsections:
   - Британська модель — непряме управління
   - Французька — асиміляція
   - Російська — кооптація + знищення
   - Чому різні підходи
 - section: Механізми кооптації
-  words: 600
+  words: 686
   subsections:
   - Еліти — титули, землі, гроші
   - Обіцянки — автономія, права
   - Залежність — економічна, військова
   - Точка неповернення
 - section: Механізми знищення
-  words: 500
+  words: 571
   subsections:
   - Скасування — юридичне
   - Репресії — фізичне
   - Перейменування — символічне
   - Забуття — історичне
 - section: Чому цикл повторюється
-  words: 400
+  words: 457
   subsections:
   - Надія на «цього разу інакше»
   - Відсутність альтернатив
   - Коротка пам'ять
   - Як розірвати цикл
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - Кооптація — імперський інструмент
   - Український досвід
   - Застосування до конкретних випадків
-word_target: 3500
+word_target: 4000
 vocabulary:
 - кооптація
 - цикл
@@ -74,13 +76,13 @@ vocabulary:
 - точка неповернення
 - інструменталізація
 activities:
-- type: theoretical-framework
+- type: critical-analysis
   focus: Build co-optation cycle model
 - type: comparative-study
   focus: Russian vs. other empires — co-optation methods
-- type: mechanism-analysis
+- type: critical-analysis
   focus: How each stage of the cycle works
-- type: pattern-recognition
+- type: critical-analysis
   focus: Identify co-optation in historical cases
 - type: essay-response
   focus: Чому російська імперія використовувала кооптацію, а не асиміляцію?

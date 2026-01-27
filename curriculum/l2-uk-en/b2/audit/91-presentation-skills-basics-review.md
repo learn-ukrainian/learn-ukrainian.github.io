@@ -1,10 +1,12 @@
 # Audit Report: M91 — 91-presentation-skills-basics.md
+
 **Level:** B2 | **Module:** M91 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:47
 
 ## Configuration
+
 **Type:** B2-skills
 **Word Target:** 1750 words
 **Activities:** 14-18 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Структура презентації | 16 | 8 | ✅ |
@@ -41,6 +44,7 @@
 - Low density activities: 0
 
 ## Gates
+
 - **Words:** ✅ 2282/1750 (raw: 2343)
 - **Activities:** ✅ 14/14
 - **Density:** ✅ All > 14
@@ -59,10 +63,12 @@
 - **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
+
 **Score:** 71% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 33 | 24 | 100% | 20% | 20.0% |
@@ -78,17 +84,18 @@
 | **TOTAL** | | | | | **71.3%** |
 
 ### Dryness Flags & Fixes
+
 - ❌ **NO_DIALOGUE**
   - FIX:
     Add 4+ mini-dialogues. Use this exact format:
-    
+
     **Діалог: [Location in Ukraine]**
-    
+
     > — [Speaker 1 line with **bolded** grammar examples]
     > — [Speaker 2 response with **bolded** grammar examples]
     > — [Speaker 1 continuation]
     > — [Speaker 2 conclusion]
-    
+
     Example locations: На Бесарабському ринку, У львівській кав'ярні, В одеському трамваї, На Подолі
 - ❌ **LOW_CULTURAL_ANCHOR**
   - FIX:
@@ -98,6 +105,7 @@
     - Contemporary Ukrainian life examples
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 62 | Included in Core |

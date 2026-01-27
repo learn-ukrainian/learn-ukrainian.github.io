@@ -15,7 +15,7 @@
 | Relevance           | 10/10 | Crucial for spatial descriptions.                                   |
 | Language            | 10/10 | Examples like "Де народився, там і пригодився" are great.           |
 | Pedagogy            | 10/10 | Addresses common mistakes (confusing de/kudy) effectively.          |
-| Immersion           | 10/10 | References to _Zakhar Berkut_ and _Shadows of Forgotten Ancestors_. |
+| Immersion           | 10/10 | References to *Zakhar Berkut* and *Shadows of Forgotten Ancestors*. |
 | Activities          | 10/10 | Activity 4 (Dialogue about education) is very realistic.            |
 | Richness            | 10/10 | Good variety of contexts (travel, home, work).                      |
 | Humanity            | 10/10 | Personal tone in dialogues.                                         |
@@ -24,16 +24,16 @@
 
 ## Linguistic Accuracy Issues
 
-- _Fixed:_ Vocabulary extraction errors (`харко`, `тухолька` removed; `тур` gender fixed to `m`; `гірш` -> `гірший`).
+- *Fixed:* Vocabulary extraction errors (`харко`, `тухолька` removed; `тур` gender fixed to `m`; `гірш` -> `гірший`).
 
 ## Strengths
 
 - **Conceptual Clarity:** The explanation of "spatial relations" helps abstract the grammar rules into concepts.
-- **Indefinite Adverbs:** Including _десь/кудись/звідкись_ is a great bonus that adds conversational utility.
+- **Indefinite Adverbs:** Including *десь/кудись/звідкись* is a great bonus that adds conversational utility.
 
 ## Issues
 
-- _Fixed:_ Minor vocabulary artifacts.
+- *Fixed:* Minor vocabulary artifacts.
 
 ## Recommendation
 

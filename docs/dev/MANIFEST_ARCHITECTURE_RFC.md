@@ -4,6 +4,7 @@
 **Goal:** Decouple curriculum logic (ordering, numbering) from physical storage (filenames, folders) to enable "Renumber-Free" restructuring.
 
 ## The Problem
+
 Currently, the curriculum structure is tightly coupled to the filesystem:
 1.  **Ordering:** Defined by `01-`, `02-` prefixes in filenames.
 2.  **Discovery:** Scripts iterate specific folders (`a1`, `b2`) and glob `*.md`.
@@ -13,6 +14,7 @@ Currently, the curriculum structure is tightly coupled to the filesystem:
 ## The Solution: Manifest-Driven Architecture
 
 ### 1. The Manifest (`curriculum.yaml`)
+
 A single source of truth defining the *logical* structure of the course.
 
 ```yaml
@@ -44,6 +46,7 @@ curriculum:
 ```
 
 ### 2. Physical Storage (The "Repository")
+
 Files are stored in "buckets" or tracks, but **filenames do not contain numbers**.
 
 *   `curriculum/l2-uk-en/a1/alphabet-intro.md`
@@ -56,6 +59,7 @@ Files are stored in "buckets" or tracks, but **filenames do not contain numbers*
 *   To move track: Move line in `curriculum.yaml`.
 
 ### 3. Stable Linking Strategy
+
 Links must survive reordering.
 
 **New Syntax Proposal:**
@@ -80,6 +84,7 @@ Links must survive reordering.
 2.  Update all internal links to use `slug:` syntax (via script).
 
 ## Immediate Next Steps (Pre-Reorganization)
+
 1.  Create `scripts/generate_manifest.py` to snapshot current state.
 2.  Draft `curriculum.yaml`.
 3.  This allows us to implement the Reorganization (RFC #409) purely by editing the YAML file, avoiding the "renumbering hell".

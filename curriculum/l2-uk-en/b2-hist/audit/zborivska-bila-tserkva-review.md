@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M54 | **Phase:** HIST.6 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:54:44
+**Generated:** 2026-01-27 20:35:19
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** comparative-study, essay-response, match-up, quiz, reading, true-false
+**Required Types:** comparative-study, essay-response, reading, true-false
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -21,25 +21,23 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Джерело: Зборівський договір | 3 | 1 | ✅ |
-| 2 | quiz | Умови договорів та події | 8 | 8 | ✅ |
-| 3 | match-up | Терміни та дати | 12 | 8 | ✅ |
-| 4 | fill-in | Дипломатичні перегони | 10 | 8 | ✅ |
-| 5 | true-false | Аналіз подій | 10 | 8 | ✅ |
-| 6 | essay-response | Есе: Еволюція державності | 1 | 1 | ✅ |
-| 7 | comparative-study | Порівняння: Зборів проти Білої Церкви | 1 | 1 | ✅ |
+| 2 | true-false | Аналіз подій | 10 | 8 | ✅ |
+| 3 | essay-response | Есе: Еволюція державності | 1 | 1 | ✅ |
+| 4 | comparative-study | Порівняння: Зборів проти Білої Церкви | 1 | 1 | ✅ |
+| 5 | critical-analysis | Дипломатія Хмельницького в умовах кризи | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 7 (target: 3-9) ✅
-- Unique types: 7 (minimum: 2) ✅
-- Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
-- Required types used: 6/6 (comparative-study, essay-response, match-up, quiz, reading, true-false) ✅
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 4/4 (comparative-study, essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ✅ 4465/4000 (raw: 4527)
-- **Activities:** ✅ 7/3
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 7/2 types
+- **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
@@ -47,7 +45,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (7 activities)
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

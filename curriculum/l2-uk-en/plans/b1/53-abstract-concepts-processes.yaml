@@ -5,42 +5,42 @@ version: '2.0'
 title: 'Абстрактні концепції: процеси та зміни'
 subtitle: 'Abstract Concepts: Processes and Changes'
 content_outline:
-- section: 'Introduction: Process Vocabulary'
-  words: 150
+- section: Вступ
+  words: 160
   points:
   - Describing how things change
   - Temporal dimension
   - Causation and result
-- section: Development and Progress
-  words: 250
+- section: Вивчення слів
+  words: 1269
   points:
-  - розвиток, прогрес, еволюція
-  - досягати прогресу
-  - Stages of development
-- section: Change and Transformation
-  words: 250
+  - Six vocabulary groups
+  - Base processes, positive/negative trends
+  - Speed of change, systemic changes
+- section: Вживання
+  words: 266
   points:
-  - зміна, перетворення, трансформація
-  - зазнавати змін
-  - Positive and negative changes
-- section: Growth and Decline
-  words: 250
+  - Collocations patterns
+  - Register considerations
+  - Cultural aspects
+- section: Читання
+  words: 604
   points:
-  - зростання, занепад, спад
-  - темпи зростання
-  - Economic and social contexts
-- section: Trends and Patterns
-  words: 200
+  - Economic review
+  - Historical perspective
+  - Personal development blog
+- section: Діалоги
+  words: 426
   points:
-  - тенденція, тренд, закономірність
-  - простежувати тенденцію
-  - Statistical language
-- section: 'Practice: Describing Changes'
-  words: 100
+  - Business meeting (formal)
+  - News discussion (informal)
+  - Personal development, academic seminar
+- section: Підсумок
+  words: 275
   points:
-  - Narrate developments
-  - Use process vocabulary
-word_target: 1200
+  - Key vocabulary recap
+  - Practice recommendations
+word_target: 3000
 vocabulary_hints:
   required:
   - розвиток (development)
@@ -57,16 +57,16 @@ vocabulary_hints:
   - закономірність (pattern/regularity)
   - темп (rate/pace)
 activity_hints:
-- type: collocation
+- type: match-up
   focus: Process noun phrases
   items: 25
 - type: fill-in
   focus: Describe trends and changes
   items: 20
-- type: matching
+- type: match-up
   focus: Match process word to context
   items: 15
-- type: writing
+- type: cloze
   focus: Write about changes
   items: 10
 focus: vocabulary

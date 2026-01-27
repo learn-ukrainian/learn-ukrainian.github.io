@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M09 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 23:19:21
+**Generated:** 2026-01-27 15:49:12
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** comparative-study, essay-response, fill-in, match-up, quiz, reading
+**Required Types:** comparative-study, essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -26,24 +26,20 @@
 | 4 | comparative-study | Олег vs Ігор | 1 | 1 | ✅ |
 | 5 | essay-response | Смерть Ігоря: Урок історії | 1 | 1 | ✅ |
 | 6 | comparative-study | Легенда про смерть Олега | 1 | 1 | ✅ |
-| 7 | match-up | Хронологія правління | 12 | 8 | ✅ |
-| 8 | fill-in | Військова та політична термінологія | 15 | 8 | ✅ |
-| 9 | quiz | Географія походів та експансії | 8 | 8 | ✅ |
-| 10 | quiz | Факти про перших правителів | 12 | 8 | ✅ |
-| 11 | essay-response | Дипломатія меча і пера | 1 | 1 | ✅ |
+| 7 | essay-response | Дипломатія меча і пера | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 11 (target: 3-9) ❌
-- Unique types: 7 (minimum: 2) ✅
+- Total activities: 7 (target: 3-9) ✅
+- Unique types: 4 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 6/6 (comparative-study, essay-response, fill-in, match-up, quiz, reading) ✅
+- Required types used: 3/3 (comparative-study, essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ✅ 4102/4000 (raw: 4311)
-- **Activities:** ✅ 11/3
+- **Activities:** ✅ 7/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 7/2 types
+- **Unique_types:** ✅ 4/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
@@ -51,7 +47,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ Too many activities: 11 (target 3-9)
+- **Content_heavy:** ✅ Content-heavy OK (7 activities)
 - **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

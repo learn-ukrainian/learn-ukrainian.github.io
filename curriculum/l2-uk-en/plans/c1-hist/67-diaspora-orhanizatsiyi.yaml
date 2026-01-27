@@ -5,54 +5,54 @@ version: '2.0'
 title: 'Діаспорні організації: UCC, UCCA, OUN'
 content_outline:
 - section: Вступ — Держава в еміграції
-  words: 400
+  words: 457
   points:
   - Без держави — потреба організації
   - Функції діаспорних інституцій
   - «Замінники держави»
   - Структура модуля
 - section: Конгрес українців Канади (UCC)
-  words: 600
+  words: 686
   points:
   - Заснування — 1940
   - Структура — парасолькова організація
   - Функції — представництво, лобіювання
   - Досягнення — мультикультуралізм
 - section: UCCA — Український конгрес Америки
-  words: 600
+  words: 686
   points:
   - Заснування — 1940
   - Структура і членство
   - Холодна війна — антикомуністична діяльність
   - Лобіювання в Конгресі
 - section: Світовий конгрес українців
-  words: 500
+  words: 571
   points:
   - Координація діаспор
   - Міжнародне представництво
   - Зв'язок з Україною після 1991
   - Сучасна роль
 - section: Політичні організації — ОУН в еміграції
-  words: 600
+  words: 686
   points:
   - Бандерівці vs. мельниківці
   - Антибольшовицький блок народів (АБН)
   - Холодна війна — співпраця з Заходом
   - Контроверсії і спадщина
 - section: Церковні структури
-  words: 500
+  words: 571
   points:
   - УГКЦ в діаспорі — кардинал Сліпий
   - УАПЦ — автокефалія в еміграції
   - Церква як центр громади
   - Після 1991 — зміни
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Діаспора як «держава в еміграції»
   - Політичні конфлікти
   - Роль у незалежності
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - організація (organization)
@@ -72,18 +72,15 @@ vocabulary_hints:
   - громадська організація (civic organization)
   - політичний розкол (political split)
 activity_hints:
-- type: organizational-analysis
+- type: critical-analysis
   focus: Compare UCC vs. UCCA structures
   output: Organizational comparison
-- type: policy-analysis
+- type: critical-analysis
   focus: What did diaspora organizations achieve politically?
   output: Achievement analysis
-- type: conflict-study
+- type: comparative-study
   focus: Map political divisions in diaspora
   output: Conflict analysis
-- type: timeline-construction
-  focus: Key moments in diaspora organizational history
-  output: Historical timeline
 - type: essay-response
   focus: Як діаспорні організації виконували функції держави?
   word_target: 400
@@ -111,3 +108,6 @@ sources:
   notes: World Congress
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of діаспорні організації: ucc, ucca, oun'
+- Evaluate the historical significance of держава в еміграції

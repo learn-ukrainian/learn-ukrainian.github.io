@@ -11,6 +11,7 @@ After comprehensive auditing of A1-B2 curriculum (313 completed modules), we det
 ## Audit Results (Phase 1 Completed)
 
 ### Uniqueness Audit
+
 Ran `scripts/audit_curriculum_uniqueness.py` on all A1-C2 curriculum plans:
 
 | Metric | Result |
@@ -23,6 +24,7 @@ Ran `scripts/audit_curriculum_uniqueness.py` on all A1-C2 curriculum plans:
 **Analysis:** The ~1,600 duplicates exist in **plan documents** (blueprints), not implementations. Words like "традиція" appear in A1 (Holidays), B1 (Regions), C1 (Folk Culture) - this is pedagogically sound review/depth, not a problem.
 
 ### Implementation Integrity Audit
+
 Ran `scripts/check_missing_core_words.py` to check if planned words were forgotten:
 
 | Level | Planned | Implemented | Ratio |
@@ -84,12 +86,14 @@ Updated `scripts/audit/checks/pedagogy.py` documentation:
 ## New Vocabulary Workflow
 
 ### For A1-A2 (Foundation Levels)
+
 **Keep vocabulary lists** in plans as reference:
 - Small modules (~20-30 words)
 - Controlled progression
 - Useful for future maintainers
 
 ### For B1-C2-LIT (Content-Rich Levels)
+
 **No vocabulary lists** in plans:
 - Vocabulary emerges from thematic content
 - Historical/cultural modules need domain-specific terms
@@ -100,6 +104,7 @@ Updated `scripts/audit/checks/pedagogy.py` documentation:
   - Module YAML files as source of truth
 
 ### For C1+ Development (Parallel Work)
+
 Builders now have clear guidance:
 1. Read plan for themes, grammar scope, pop culture anchors
 2. Choose vocabulary appropriate for content

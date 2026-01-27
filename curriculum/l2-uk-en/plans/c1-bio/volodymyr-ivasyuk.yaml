@@ -69,22 +69,10 @@ activity_hints:
   focus: Тексти пісень Івасюка
   source: Первинні джерела
   items: 3 passages
-- type: quiz
-  focus: Факти про життя та творчість Івасюка
-  items: 12+
-- type: match-up
-  focus: Пісні та їхні виконавці
-  items: 10+
 - type: essay-response
   focus: Чому Червона рута стала символом?
   word_target: 300
   output: Культурологічний есей
-- type: group-sort
-  focus: Етапи творчості Івасюка
-  items: 12+
-- type: fill-in
-  focus: Музична термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-75-vasyl-symonenko
@@ -108,3 +96,7 @@ sources:
   notes: Культурний вплив
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of володимир івасюк: автор червоної рути'
+- Evaluate the contributions of пісня, яка стала гімном
+- Trace the career and influence of мистецтво як опір

@@ -1,9 +1,11 @@
 # Audit Report: M42 — 42-politeness-strategies.md
+
 **Level:** C1 | **Module:** M42 | **Phase:** C1 | **Pedagogy:** Sociolinguistics | **Target:** 3000
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:20
 
 ## Configuration
+
 **Type:** C1
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -16,6 +18,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння стратегій ввічливості | 5 | 5 | ✅ |
@@ -40,11 +43,13 @@
 - Low density activities: 0
 
 ## Recommendation
+
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2370/3000 (raw: 2626)
 - **Activities:** ✅ 14/12
 - **Density:** ✅ All > 12
@@ -63,10 +68,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 90% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 47 | 15 | 100% | 25% | 25.0% |
@@ -80,6 +87,7 @@
 | **TOTAL** | | | | | **90.1%** |
 
 ### Dryness Flags & Fixes
+
 - ❌ **LOW_CULTURAL_ANCHOR**
   - FIX:
     Add more cultural references (need 3+ total). Include:
@@ -88,6 +96,7 @@
     - Contemporary Ukrainian life examples
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 89 | Included in Core |

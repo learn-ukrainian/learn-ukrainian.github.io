@@ -3,6 +3,7 @@ level: B1
 slug: regions-east
 version: '2.0'
 id: b1-73
+focus: cultural
 naturalness:
   score: 9
   status: PASS

@@ -5,24 +5,26 @@ version: '1.0'
 title: 'Хвильовий: «Геть від Москви!»'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of хвильовий: «геть від москви!»'
+- Evaluate the historical significance of найсміливіший голос
 content_outline:
 - section: Вступ — Найсміливіший голос
-  words: 400
+  words: 457
   subsections:
   - Хвильовий — хто він
   - Памфлети як жанр
   - Чому так важливі
   - Структура модуля
 - section: Біографічний контекст
-  words: 500
+  words: 571
   subsections:
   - Від комуніста до критика
   - Участь у революції
   - Літературна кар'єра
   - Шлях до памфлетів
 - section: «Камо грядеши» (1925)
-  words: 700
+  words: 800
   subsections:
   - Текст (фрагменти з глосами)
   - «Куди йдеш?» — питання
@@ -30,7 +32,7 @@ content_outline:
   - Орієнтація на Європу
   - Що таке «психологічна Європа»
 - section: «Думки проти течії» (1926)
-  words: 600
+  words: 686
   subsections:
   - Текст (фрагменти)
   - Більш радикальна критика
@@ -38,7 +40,7 @@ content_outline:
   - Азіатський ренесанс
   - Реакція партії
 - section: Трагічний фінал
-  words: 500
+  words: 571
   subsections:
   - Вимушена самокритика
   - Продовження тиску
@@ -46,19 +48,19 @@ content_outline:
   - Листок — «за комунізм, за Гетьмана»
   - Символічне значення
 - section: Спадщина Хвильового
-  words: 500
+  words: 571
   subsections:
   - Заборонений і повернений
   - Актуальність сьогодні
   - «Європейський вибір» — пророцтво?
   - Хвильовий і 2022
 - section: Підсумок
-  words: 300
+  words: 344
   subsections:
   - Від слова до долі
   - Культурний герой
   - Зв'язок із театром Курбаса
-word_target: 3500
+word_target: 4000
 vocabulary:
 - памфлет
 - орієнтація
@@ -78,11 +80,9 @@ vocabulary:
 activities:
 - type: reading
   focus: Key passages from "Kamo hriadeshi"
-- type: argument-analysis
+- type: critical-analysis
   focus: Reconstruct Khvylovyi's main argument
-- type: prophecy-test
-  focus: What did Khvylovyi predict? Was he right?
-- type: letter-analysis
+- type: critical-analysis
   focus: Analyze suicide note — what does it mean?
 - type: essay-response
   focus: Чому ідеї Хвильового актуальні й сьогодні?

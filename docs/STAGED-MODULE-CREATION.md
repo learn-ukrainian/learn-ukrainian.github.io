@@ -91,6 +91,7 @@ For manual control or resuming work:
 - Proper sequencing (easy → hard)
 
 **Activity Types**:
+
 | Level | Required | Optional |
 |-------|----------|----------|
 | A1 | fill-in, match-up, quiz, true-false, group-sort, anagram/unjumble | - |
@@ -167,15 +168,18 @@ The difference is stages break the work into smaller, token-efficient chunks.
 ## Troubleshooting
 
 ### "Run Stage X first"
+
 The module file doesn't have content from the previous stage. Run stages in order.
 
 ### Stage 4 loops forever
+
 After 3 fix iterations, the system stops and reports persistent issues. Options:
 - Rebuild from an earlier stage
 - Manual intervention
 - Check if constraints are too strict for this module
 
 ### Vocabulary violations
+
 Activities can only use:
 1. Words from the module's vocabulary table
 2. Words from prior modules (cumulative database)
@@ -189,6 +193,7 @@ python3 scripts/audit_module.py {file}  # Syncs vocab automatically
 ## Examples
 
 ### Create A1 Module 15
+
 ```bash
 # Full pipeline
 /module-create a1 15
@@ -201,12 +206,14 @@ python3 scripts/audit_module.py {file}  # Syncs vocab automatically
 ```
 
 ### Create B2 Module 45
+
 ```bash
 # B2 uses Opus model (complex grammar)
 /module-create b2 45
 ```
 
 ### Resume from Stage 3
+
 If content is done but activities need work:
 ```bash
 /module-stage-3 b1 30    # Regenerate activities

@@ -10,9 +10,9 @@ This document defines the standard markdown format for all curriculum modules. T
 > [!IMPORTANT]
 > **Strict Header Hierarchy**
 > The generator strictly adheres to the following header levels. Deviating will cause sections to be ignored.
-> *   **H1 (`#`)**: Main Sections (Title, Summary, Activities, Vocabulary).
-> *   **H2 (`##`)**: Content Subsections (Warm-up, Presentation, Activity Items).
-> *   **H3 (`###`)**: Deep nested content (rarely used).
+> -   **H1 (`#`)**: Main Sections (Title, Summary, Activities, Vocabulary).
+> -   **H2 (`##`)**: Content Subsections (Warm-up, Presentation, Activity Items).
+> -   **H3 (`###`)**: Deep nested content (rarely used).
 
 ---
 
@@ -198,8 +198,8 @@ External resources (podcasts, YouTube videos, articles, books, websites) are:
 
 | Old Pattern | New Pattern | Context |
 |-------------|-------------|---------|
-| `   → **answer**` | `> [!answer] **answer**` | Indented arrow = answer |
-| `   - → **answer**` | `> [!answer] **answer**` | List arrow = answer |
+| `→ **answer**` | `> [!answer] **answer**` | Indented arrow = answer |
+| `- → **answer**` | `> [!answer] **answer**` | List arrow = answer |
 | `question → answer` in exercise | `question` + `> [!answer] answer` | Split inline answers |
 | `→ answer (explanation)` | `> [!answer] answer` + `> [!explanation] explanation` | Parenthetical = explanation |
 | `→ ✅ **Правда.** text` | `> [!answer] Правда` + `> [!explanation] text` | True/false answers |
@@ -271,37 +271,21 @@ External resources (podcasts, YouTube videos, articles, books, websites) are:
 
 ## Activity Section Format
 
-
-
 **CRITICAL: YAML-First Architecture**
-
-
 
 As of Jan 2026, all activities must be defined in `activities/{slug}.yaml`.
 
 **Do NOT embed activities in the Markdown file.**
 
-
-
 The `generate_mdx.py` script will automatically inject activities from the YAML file during the build process.
-
-
 
 See [ACTIVITY-YAML-REFERENCE.md](ACTIVITY-YAML-REFERENCE.md) for the complete schema and examples.
 
-
-
 ### Legacy Markdown Format (Deprecated)
-
-
 
 *The following section describes the legacy embedded format. It is retained for reference only and should not be used for new modules.*
 
-
-
 All activities appear under `# Activities` using pure markdown syntax (NOT YAML).
-
-
 
 ### Quiz Format
 
@@ -388,7 +372,6 @@ All activities appear under `# Activities` using pure markdown syntax (NOT YAML)
 - Use `> [!error]` to identify the incorrect word (or `none`).
 - Use `> [!answer]` for the correct form.
 - Use `> [!options]` for multiple choice correction (optional but recommended).
-
 
 ### Group-sort Format
 
@@ -753,37 +736,21 @@ Open-ended practice...
 
 ## Vocabulary Section Formats
 
-
-
 **CRITICAL: YAML-First Architecture**
-
-
 
 As of Jan 2026, all vocabulary must be defined in `vocabulary/{slug}.yaml`.
 
 **Do NOT embed a vocabulary table in the Markdown file.**
 
-
-
 The `generate_mdx.py` script will automatically inject the vocabulary table from the YAML file during the build process.
-
-
 
 See `docs/l2-uk-en/templates/` for level-specific YAML examples.
 
-
-
 ### Legacy Markdown Format (Deprecated)
-
-
 
 *The following section describes the legacy embedded format. It is retained for reference only and should not be used for new modules.*
 
-
-
 The vocabulary section format varies by level to support immersion progression. The parser (`scripts/lib/parsers/vocabulary.ts`) supports all formats dynamically.
-
-
 
 ### Tier 1: A1 (All Modules) — Maximum Scaffolding
 

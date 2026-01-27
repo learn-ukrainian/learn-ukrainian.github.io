@@ -5,43 +5,39 @@ version: '2.0'
 title: 'Контрольна точка: складні речення (частина 1)'
 subtitle: Checkpoint - Complex Sentences Part 1
 content_outline:
-- section: 'Pre-Test: Self-Assessment'
-  words: 100
+- section: Огляд
+  words: 303
   points:
   - Review learning objectives
-  - Identify strengths and gaps
   - Set checkpoint goals
-- section: Relative Clauses Review
-  words: 200
+- section: 'Skill 1: Відносні речення'
+  words: 490
   points:
   - який in all cases
   - Place relatives (де, куди, звідки)
   - Time/fact relatives (коли, що)
-- section: Purpose Clauses Review
-  words: 200
+- section: 'Skill 2: Підрядні речення мети'
+  words: 384
   points:
   - щоб + infinitive (same subject)
   - щоб + past form (different subjects)
-  - Alternative purpose expressions
-- section: Conditionals Review
-  words: 200
+- section: 'Skill 3: Умовні речення'
+  words: 486
   points:
   - Real conditionals (якщо)
   - Unreal conditionals (якби)
   - Mixed conditionals
-- section: Integrated Assessment
-  words: 200
+- section: Integration Challenge
+  words: 516
   points:
   - Comprehensive test
   - Mixed sentence types
-  - Error analysis
-- section: Feedback and Planning
-  words: 100
+- section: Практика
+  words: 821
   points:
-  - Review results
+  - Error analysis
   - Identify areas for review
-  - Prepare for B1.3b
-word_target: 1000
+word_target: 3000
 vocabulary_hints:
   required:
   - контрольна точка (checkpoint)
@@ -67,7 +63,7 @@ activity_hints:
 - type: error-correction
   focus: Fix sentence errors
   items: 20
-- type: sentence-combining
+- type: unjumble
   focus: Create complex sentences
   items: 15
 focus: checkpoint

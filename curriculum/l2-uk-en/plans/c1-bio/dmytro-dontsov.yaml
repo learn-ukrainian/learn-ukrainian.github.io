@@ -69,22 +69,10 @@ activity_hints:
   focus: Українська політична думка XX ст.
   source: Political philosophy sources
   items: 3 passages
-- type: quiz
-  focus: Життя та ідеї Донцова
-  items: 12+
-- type: match-up
-  focus: Терміни політичної філософії
-  items: 10+
 - type: essay-response
   focus: Як оцінювати суперечливих історичних постатей?
   word_target: 300
   output: Analytical essay
-- type: group-sort
-  focus: Праці Донцова за періодами
-  items: 12+
-- type: fill-in
-  focus: Ідеологічна термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-51
@@ -103,3 +91,7 @@ sources:
   notes: Academic analysis of Dontsov's ideology
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of дмитро донцов: ідеолог націоналізму'
+- Evaluate the contributions of апостол волюнтаризму
+- Trace the career and influence of між генієм і демоном

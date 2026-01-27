@@ -1,0 +1,18 @@
+module: b1-91
+level: B1
+slug: vocabulary-in-context
+version: '2.0'
+id: b1-91
+focus: communication
+naturalness:
+  score: 9
+  status: PASS
+  justification: Communication-focused vocabulary integration module
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-27'
+activity_hints:
+  required_types:
+    - cloze
+    - critical-analysis

@@ -5,56 +5,58 @@ version: '1.0'
 title: '2014: Анексія без відповіді'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of 2014: анексія без відповіді'
+- Evaluate the historical significance of безкарність
 content_outline:
 - section: Вступ — Безкарність
-  words: 400
+  words: 457
   subsections:
   - Лютий-березень 2014
   - Росія захоплює Крим
   - Захід — що зробив
   - Структура модуля
 - section: Анексія — хроніка
-  words: 600
+  words: 686
   subsections:
   - «Зелені чоловічки»
   - «Референдум»
   - Анексія — 18 березня
   - Швидкість шокує
 - section: Західна реакція
-  words: 700
+  words: 800
   subsections:
   - Заяви засудження
   - Санкції — символічні
   - «Летальна зброя» — відмова
   - «Деескалація» — пріоритет
 - section: Мінськ — капітуляція під виглядом дипломатії
-  words: 600
+  words: 686
   subsections:
   - Мінськ I, Мінськ II
   - Що підписали
   - Чому невигідно Україні
   - Меркель і Олланд — посередники чи?
 - section: Чому слабка відповідь
-  words: 500
+  words: 571
   subsections:
   - Економічні інтереси
   - Nord Stream 2
   - «Не провокувати»
   - Нерозуміння загрози
 - section: Наслідки
-  words: 400
+  words: 457
   subsections:
   - Путін бачить безкарність
   - 2015-2021 — підготовка
   - Україна — сама
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - 2014 — повторення паттерну
   - Але щось змінюється
   - Перехід до 2022
-word_target: 3500
+word_target: 4000
 vocabulary:
 - анексія
 - санкції
@@ -72,13 +74,13 @@ vocabulary:
 - символічний
 - двосторонні переговори
 activities:
-- type: response-analysis
+- type: critical-analysis
   focus: What did the West actually do in 2014?
-- type: minsk-analysis
+- type: critical-analysis
   focus: Minsk Agreements — who benefited?
-- type: motivation-study
+- type: comparative-study
   focus: Why was Western response weak?
-- type: pattern-analysis
+- type: critical-analysis
   focus: 2014 as continuation of Western pattern
 - type: essay-response
   focus: Чи слабка відповідь Заходу у 2014 спричинила 2022?

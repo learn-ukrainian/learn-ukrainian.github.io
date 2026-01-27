@@ -1,10 +1,12 @@
 # Audit Report: M58 — 58-synonyms-quality.md
+
 **Level:** B2 | **Module:** M58 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:24
 
 ## Configuration
+
 **Type:** B2-vocab
 **Word Target:** 1750 words
 **Activities:** 10-14 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть відповідність (Якість) | 12 | 8 | ✅ |
@@ -42,15 +45,18 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 58-synonyms-quality.yaml: Schema validation error at key '14': {'type': 'select', 'title': 'Соціальна оцінка', 'instruction': 'Оберіть слова, які описують соціальну значущість явища або людини.', 'items': [{'question': 'Яка лексика вказує на вагу в суспільстві?', 'options': [{'text': 'впливовий', 'correct': True}, {'text': 'авторитетний', 'correct': True}, {'text': 'незначний', 'correct': True}, {'text': 'пересічний', 'correct': True}, {'text': 'видатний', 'correct': True}, {'text': "дріб'язковий", 'correct': True}]}, {'question': "Оберіть синоніми до слова 'відомий':", 'options': [{'text': 'знаменитий', 'correct': True}, {'text': 'публічний', 'correct': True}, {'text': 'популярний', 'correct': True}, {'text': 'таємний', 'correct': False}]}, {'question': 'Які слова описують професійне визнання?', 'options': [{'text': 'кваліфікований', 'correct': True}, {'text': 'досвідчений', 'correct': True}, {'text': 'дилетантський', 'correct': False}, {'text': 'майстерний', 'correct': True}]}, {'question': "Оберіть антоніми до слова 'видатний':", 'options': [{'text': 'пересічний', 'correct': True}, {'text': 'непомітний', 'correct': True}, {'text': 'геніальний', 'correct': False}, {'text': 'звичайний', 'correct': True}]}, {'question': 'Слова для опису етичної якості лідера:', 'options': [{'text': 'справедливий', 'correct': True}, {'text': 'чесний', 'correct': True}, {'text': 'корумпований', 'correct': False}, {'text': 'відповідальний', 'correct': True}]}, {'question': 'Які терміни вказують на високий стандарт якості?', 'options': [{'text': 'еталонний', 'correct': True}, {'text': 'взірцевий', 'correct': True}, {'text': 'посередній', 'correct': False}, {'text': 'зразковий', 'correct': True}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
+
 - **Words:** ✅ 1777/1750 (raw: 1981)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
@@ -69,10 +75,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 84% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 40 | 24 | 100% | 20% | 20.0% |
@@ -88,20 +96,22 @@
 | **TOTAL** | | | | | **84.4%** |
 
 ### Dryness Flags & Fixes
+
 - ❌ **NO_DIALOGUE**
   - FIX:
     Add 4+ mini-dialogues. Use this exact format:
-    
+
     **Діалог: [Location in Ukraine]**
-    
+
     > — [Speaker 1 line with **bolded** grammar examples]
     > — [Speaker 2 response with **bolded** grammar examples]
     > — [Speaker 1 continuation]
     > — [Speaker 2 conclusion]
-    
+
     Example locations: На Бесарабському ринку, У львівській кав'ярні, В одеському трамваї, На Подолі
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 71 | Included in Core |

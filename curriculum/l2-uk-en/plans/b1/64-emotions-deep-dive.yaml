@@ -5,42 +5,23 @@ version: '2.0'
 title: 'Емоції: глибоке занурення'
 subtitle: 'Emotions: Deep Dive'
 content_outline:
-- section: 'Introduction: Emotional Language'
-  words: 150
+- section: Вступ
+  words: 329
   points:
   - Beyond basic emotions
   - Nuance and intensity
   - Cultural expression
-- section: Positive Emotions
-  words: 250
+- section: Читання
+  words: 988
   points:
-  - радість, щастя, захоплення
-  - задоволення, натхнення
-  - Positive emotion spectrum
-- section: Negative Emotions
-  words: 250
-  points:
-  - смуток, тривога, розчарування
-  - гнів, страх, відчай
-  - Negative emotion nuances
-- section: Complex Emotions
-  words: 250
-  points:
-  - ностальгія, меланхолія
-  - заздрість, сором, провина
-  - Mixed emotional states
-- section: Expressing Emotions
-  words: 200
-  points:
-  - відчувати, переживати
-  - Intensity markers
-  - Describing emotional states
-- section: 'Practice: Emotional Expression'
-  words: 100
+  - Emotional texts
+  - Describing feelings
+- section: Діалоги
+  words: 1683
   points:
   - Describe feelings precisely
   - Express emotional nuance
-word_target: 1200
+word_target: 3000
 vocabulary_hints:
   required:
   - радість (joy)
@@ -57,16 +38,16 @@ vocabulary_hints:
   - відчай (despair)
   - заздрість (envy)
 activity_hints:
-- type: matching
+- type: match-up
   focus: Match emotions to descriptions
   items: 25
 - type: fill-in
   focus: Express emotional states
   items: 20
-- type: collocation
+- type: match-up
   focus: Emotional expressions
   items: 15
-- type: writing
+- type: cloze
   focus: Describe emotional experiences
   items: 10
 focus: vocabulary

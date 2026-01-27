@@ -5,50 +5,52 @@ version: '1.0'
 title: 'Цикл культурних відроджень: Теорія'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of цикл культурних відроджень: теорія'
+- Evaluate the historical significance of пригнічення → відродження
 content_outline:
 - section: Вступ — Пригнічення → Відродження
-  words: 451
+  words: 515
   subsections:
   - Український культурний цикл
   - 'Паттерн: пригнічення → підпілля → розквіт'
   - Чому повторюється
   - Структура модуля
 - section: Теоретична рамка
-  words: 790
+  words: 903
   subsections:
   - Культура як резистенція
   - Мова — головне поле бою
   - «Смерть» і «відродження»
   - Порівняння з іншими народами
 - section: Історичні цикли
-  words: 677
+  words: 774
   subsections:
   - XVII ст. — козацька культура
   - XIX ст. — романтичне відродження
   - 1920-ті — розстріляне відродження
   - Пост-Сталін — шістдесятники
 - section: Механізми виживання
-  words: 677
+  words: 774
   subsections:
   - Самвидав
   - Діаспора як «ковчег»
   - Церква — носій культури
   - Індивідуальна пам'ять
 - section: Чому культура виживає
-  words: 564
+  words: 645
   subsections:
   - Що неможливо знищити
   - Роль травми
   - Кожне покоління — з нуля?
   - Континуїтет vs переривання
 - section: Підсумок
-  words: 341
+  words: 389
   subsections:
   - Цикл — не фатальність
   - 2022 — новий виток
   - Перехід до пост-Емського періоду
-word_target: 3500
+word_target: 4000
 vocabulary:
 - культурне відродження
 - цикл
@@ -66,11 +68,11 @@ vocabulary:
 - культурний спадок
 - реконструкція
 activities:
-- type: theory-development
+- type: critical-analysis
   focus: Build theoretical framework for cultural cycles
 - type: critical-analysis
   focus: Map all Ukrainian cultural revival cycles
-- type: survival-mechanisms
+- type: critical-analysis
   focus: How culture survived suppression
 - type: comparative-study
   focus: Ukrainian cycles vs. other colonized cultures

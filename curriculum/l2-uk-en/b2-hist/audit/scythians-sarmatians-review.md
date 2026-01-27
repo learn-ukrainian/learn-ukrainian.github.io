@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M02 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 23:16:42
+**Generated:** 2026-01-27 15:46:08
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** comparative-study, critical-analysis, essay-response, fill-in, quiz, reading
+**Required Types:** comparative-study, critical-analysis, essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -25,23 +25,20 @@
 | 3 | reading | Джерело: Страбон про сарматів | 3 | 1 | ✅ |
 | 4 | comparative-study | Порівняння: Скіфи проти Сарматів | 1 | 1 | ✅ |
 | 5 | essay-response | Есе: Спадщина Володарів степу та національний код | 1 | 1 | ✅ |
-| 6 | quiz | Комплексна перевірка: Світ кочових цивілізацій | 10 | 8 | ✅ |
-| 7 | match-up | Термінологія степових воїнів | 12 | 8 | ✅ |
-| 8 | fill-in | Заповніть пропуски: Археологічна та кочова термінологія | 15 | 8 | ✅ |
-| 9 | true-false | Міфи та історичні факти | 10 | 8 | ✅ |
+| 6 | true-false | Міфи та історичні факти | 10 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 9 (target: 3-9) ✅
-- Unique types: 8 (minimum: 2) ✅
+- Total activities: 6 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 6/6 (comparative-study, critical-analysis, essay-response, fill-in, quiz, reading) ✅
+- Required types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ✅ 4038/4000 (raw: 4217)
-- **Activities:** ✅ 9/3
+- **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 8/2 types
+- **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 14/5
 - **Audio:** ℹ️ No audio
@@ -49,7 +46,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (9 activities)
+- **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 97.4% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

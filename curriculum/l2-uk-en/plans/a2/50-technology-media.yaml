@@ -5,42 +5,31 @@ version: '2.0'
 title: Technology and Media
 subtitle: Digital World
 content_outline:
-- section: 'Introduction: Digital Ukraine'
-  words: 100
+- section: 'Вступ'
+  words: 175
   points:
   - Technology in daily life
   - Digital vocabulary
   - Internet culture
-- section: Devices
-  words: 200
+- section: 'Граматика'
+  words: 500
   points:
-  - комп'ютер, ноутбук, планшет
-  - смартфон, телефон
-  - Device vocabulary
-- section: Internet Activities
-  words: 200
+  - Devices (комп'ютер, ноутбук, планшет, смартфон)
+  - Internet vocabulary (вебсайт, посилання, пароль)
+  - Media and content (новини, стаття, блог, подкаст)
+  - Digital verbs (шукати, завантажувати, публікувати)
+- section: 'Практика'
+  words: 570
   points:
-  - шукати, завантажувати
-  - відправляти, отримувати
-  - Online actions
-- section: Social Media
-  words: 200
+  - Dialogues about remote work
+  - Story about becoming a blogger
+  - Story about grandma learning tech
+- section: 'Підсумок'
+  words: 105
   points:
-  - соціальні мережі
-  - пост, лайк, коментар
-  - Social media vocabulary
-- section: Apps and Software
-  words: 150
-  points:
-  - додаток, програма
-  - встановити, оновити
-  - App vocabulary
-- section: 'Practice: Digital Life'
-  words: 150
-  points:
-  - Describe your tech use
-  - Online activities
-word_target: 1000
+  - Summary of vocabulary
+  - Practice suggestions
+word_target: 1350
 vocabulary_hints:
   required:
   - комп'ютер (computer)
@@ -59,16 +48,16 @@ vocabulary_hints:
   - підписка (subscription)
   - мережа (network)
 activity_hints:
-- type: vocabulary-drill
+- type: match-up
   focus: Technology terms
   items: 30
-- type: matching
+- type: match-up
   focus: Match actions to devices
   items: 20
 - type: fill-in
   focus: Complete tech descriptions
   items: 15
-- type: dialogue
+- type: cloze
   focus: Tech support conversation
   items: 8
 focus: vocabulary

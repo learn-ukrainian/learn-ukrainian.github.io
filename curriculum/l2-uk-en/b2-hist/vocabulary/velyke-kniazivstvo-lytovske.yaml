@@ -1,4 +1,92 @@
 module: velyke-kniazivstvo-lytovske
 level: B2-HIST
 version: '2.0'
-items: []
+items:
+  - term: партнерство
+    ipa: pɐrtˈnɛrstwɔ
+    pos: noun
+    translation: partnership
+  - term: династія
+    ipa: dɪˈnɑstʲijɐ
+    pos: noun
+    translation: dynasty
+  - term: архітектор
+    ipa: ɐrxʲiˈtɛktɔr
+    pos: noun
+    translation: architect (often figurative)
+  - term: вектор
+    ipa: vɛktɔr
+    pos: noun
+    translation: vector, direction
+  - term: творець
+    ipa: twɔˈrɛt͡sʲ
+    pos: noun
+    translation: creator
+  - term: тріумф
+    ipa: trʲiˈumf
+    pos: noun
+    translation: triumph
+  - term: толерантність
+    ipa: tɔlɛˈrɑntnʲisʲtʲ
+    pos: noun
+    translation: tolerance
+  - term: автономія
+    ipa: ɐutɔˈnɔmʲijɐ
+    pos: noun
+    translation: autonomy
+  - term: шляхетство
+    ipa: ˈʃlʲɐxɛtstwɔ
+    pos: noun
+    translation: nobility (szlachta)
+  - term: самоврядування
+    ipa: sɐmɔwrʲɐˈduwɐnnʲɐ
+    pos: noun
+    translation: self-government
+  - term: статут
+    ipa: stɐˈtut
+    pos: noun
+    translation: statute
+  - term: шляхта
+    ipa: ˈʃlʲɐxtɐ
+    pos: noun
+    translation: nobility
+  - term: правосуддя
+    ipa: prɐwɔˈsudʲdʲɐ
+    pos: noun
+    translation: justice
+  - term: суверенітет
+    ipa: suvɛrɛnʲiˈtɛt
+    pos: noun
+    translation: sovereignty
+  - term: експансія
+    ipa: ɛkˈspɑnsʲijɐ
+    pos: noun
+    translation: expansion
+  - term: деспотія
+    ipa: dɛspɔˈtʲijɐ
+    pos: noun
+    translation: despotism
+  - term: асиміляція
+    ipa: ɐsɪmʲilʲɐˈt͡sʲijɐ
+    pos: noun
+    translation: assimilation
+  - term: кодифікація
+    ipa: kɔdɪfʲikɐˈt͡sʲijɐ
+    pos: noun
+    translation: codification
+  - term: звичаєве право
+    ipa: zwɪˈtʃɑjɛwɛ ˈprɑwɔ
+    pos: noun phrase
+    translation: customary law
+  - term: війт
+    ipa: vʲii̯t
+    pos: noun
+    translation: reeve, vogt (city official)
+  - term: магістрат
+    ipa: mɐɦʲisˈtrɑt
+    pos: noun
+    translation: magistrate
+  - term: братство
+    ipa: ˈbrɑtstwɔ
+    pos: noun
+    translation: brotherhood, fraternity

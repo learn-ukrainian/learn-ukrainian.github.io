@@ -6,37 +6,37 @@ title: 'Культ Шевченка: Рецепція і Міфи'
 subtitle: 'The Cult of Shevchenko: Modern Reception'
 content_outline:
 - section: Вступ — Від Пророка до Ікони
-  words: 500
+  words: 625
   points:
   - Еволюція образу Шевченка
   - Поет → символ → міф
   - Чому це важливо аналізувати
 - section: Радянський Шевченко
-  words: 700
+  words: 875
   points:
   - Канонізація в СРСР
   - Революційний демократ
   - Що приховували і що підкреслювали
 - section: Діаспорний Шевченко
-  words: 700
+  words: 875
   points:
   - Шевченко як "батько нації"
   - Пам'ятники по світу
   - Ритуали (марші, декламації)
 - section: Сучасні реінтерпретації
-  words: 800
+  words: 1000
   points:
   - Андрій Грехов і "Кобзар 2.0"
   - Шевченко в мемах і поп-культурі
   - Деканонізація vs нова канонізація
 - section: Концепція "Національного Батька"
-  words: 500
+  words: 625
   points:
   - Ризики сакралізації
   - Шевченко як "шкільний тягар"
   - Як читати класика по-новому
 - section: Підсумок — Живий чи бронзовий?
-  words: 400
+  words: 500
   points:
   - Шевченко для XXI століття
   - Від культу до діалогу
@@ -65,19 +65,10 @@ activity_hints:
   focus: Критичні статті про рецепцію Шевченка
   source: Wikipedia and academic sources
   items: 4+
-- type: quiz
-  focus: Факти про меморіальну культуру
-  items: 15+
-- type: match-up
-  focus: Інтерпретація → її контекст (радянська / діаспорна / сучасна)
-  items: 12+
 - type: essay-response
   focus: Концепція "Національного Батька" — ризики і переваги
   word_target: 300
   output: Критичне есе
-- type: group-sort
-  focus: Факти vs міфи про Шевченка
-  items: 15+
 focus: culture
 pedagogy: Seminar
 prerequisites:

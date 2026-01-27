@@ -6,7 +6,6 @@
 
 **Related Issue:** [#307](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/307)
 
-
 <!--
 TEMPLATE_METADATA:
   required_sections:
@@ -27,6 +26,7 @@ TEMPLATE_METADATA:
 Before submitting a C2 style module, verify all items from `c2-module-template.md` PLUS:
 
 ### Style-Specific Requirements
+
 - [ ] **Creative Production pedagogy:** Focus on creating, not just analyzing
 - [ ] **7 functional styles:** Module covers or references appropriate styles
 - [ ] **Style transformation:** Demonstrate shifting between registers
@@ -71,7 +71,6 @@ Before submitting a C2 style module, verify all items from `c2-module-template.m
 | M23 | Intertextuality | Allusion, quotation, parody |
 | M24 | Style Blending | Hybrid registers |
 | M25 | C2.1 Final Checkpoint | Complete stylistic mastery |
-
 
 ---
 
@@ -430,6 +429,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 ## Content Structure Note
 
 ### Vocabulary & Activities
+
 **CRITICAL:** Do NOT add `## Vocabulary` or `## Activities` headers. These sections are injected automatically from:
 - `vocabulary/{slug}.yaml`
 - `activities/{slug}.yaml`
@@ -456,22 +456,27 @@ items:
 ## Common Pitfalls to Avoid
 
 ### 1. **Style Confusion**
+
 - ❌ Problem: Mixing style markers inappropriately
 - ✅ Solution: Maintain consistent register throughout
 
 ### 2. **Missing Euphony**
+
 - ❌ Problem: Ignoring у/в, і/й, з/зі/із alternations
 - ✅ Solution: Apply all euphonic rules systematically
 
 ### 3. **No Model Answers**
+
 - ❌ Problem: Creative tasks without examples
 - ✅ Solution: ALL production tasks include gold standard Model Answer
 
 ### 4. **Shallow Analysis**
+
 - ❌ Problem: "This is formal style" without explaining WHY
 - ✅ Solution: Analyze specific linguistic features that create the style
 
 ### 5. **No Voice Development**
+
 - ❌ Problem: Only copying styles, not developing personal voice
 - ✅ Solution: Include self-analysis and voice development activities
 

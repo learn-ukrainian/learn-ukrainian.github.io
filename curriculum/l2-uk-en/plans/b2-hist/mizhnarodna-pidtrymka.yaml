@@ -67,15 +67,6 @@ activity_hints:
   focus: Промови світових лідерів про Україну
   source: Офіційні джерела
   items: 4
-- type: quiz
-  focus: Міжнародна підтримка України
-  items: 15
-- type: match-up
-  focus: Країна → тип допомоги
-  items: 10
-- type: fill-in
-  focus: Дипломатична лексика
-  items: 10
 - type: essay-response
   focus: Чому підтримка України — це захист демократії у світі?
   word_target: 250

@@ -70,22 +70,10 @@ activity_hints:
   focus: Історія ув'язнення та боротьби
   source: Інтерв'ю та документальні матеріали
   items: 3 passages
-- type: quiz
-  focus: Біографія та хронологія подій
-  items: 12+
-- type: match-up
-  focus: Фільми та їхні теми
-  items: 10+
 - type: essay-response
   focus: Як мистецтво стає формою опору?
   word_target: 300
   output: Аналітичне есе
-- type: group-sort
-  focus: Творча діяльність vs громадянський активізм
-  items: 12+
-- type: fill-in
-  focus: Термінологія політичних репресій
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-77 (Василь Стус)
@@ -109,3 +97,7 @@ sources:
   notes: Нагороди та міжнародне визнання
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of олег сенцов: режисер-в''язень'
+- Evaluate the contributions of символ опору
+- Trace the career and influence of війна та військова служба (2022-сьогодні)

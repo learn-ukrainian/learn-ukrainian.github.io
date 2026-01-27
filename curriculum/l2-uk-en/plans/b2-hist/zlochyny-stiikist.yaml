@@ -67,15 +67,6 @@ activity_hints:
   focus: Свідчення вижилих з Бучі
   source: Усна історія
   items: 4
-- type: quiz
-  focus: Злочини і стійкість
-  items: 15
-- type: match-up
-  focus: Місто → дата звільнення
-  items: 10
-- type: fill-in
-  focus: Юридична лексика
-  items: 10
 - type: essay-response
   focus: Як Україна демонструє стійкість під час війни?
   word_target: 250

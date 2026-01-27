@@ -6,10 +6,12 @@ items:
   ipa: /sʲkʲifɪ/
   translation: Scythians
   pos: noun
+  gender: m
 - lemma: сармат
   ipa: /sarmˈɑtɪ/
   translation: Sarmatians
   pos: noun
+  gender: m
 - lemma: кочівник
   ipa: /kɔt͡ʃiwˈnɪk/
   translation: nomad
@@ -123,3 +125,4 @@ items:
   ipa: /hɛrˈrɔs/
   translation: Gerrhos (sacred land)
   pos: noun
+  gender: f

@@ -5,24 +5,26 @@ version: '1.0'
 title: 'Греко-католицька церква: Між Сходом і Заходом'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of греко-католицька церква: між сходом і заходом'
+- Evaluate the historical significance of унікальна церква
 content_outline:
 - section: Вступ — Унікальна церква
-  words: 400
+  words: 457
   subsections:
   - УГКЦ — що це
   - Між Римом і Константинополем
   - Чому важлива для ідентичності
   - Структура модуля
 - section: Від Берестя до Галичини
-  words: 600
+  words: 686
   subsections:
   - Перші століття — боротьба за виживання
   - Втрата території на сході
   - Зосередження в Галичині
   - Під Австрією — золота доба
 - section: Церква і національний рух
-  words: 700
+  words: 800
   subsections:
   - Священики — національні лідери
   - Селянство і церква
@@ -30,7 +32,7 @@ content_outline:
   - Москвофіли vs. народовці
   - Церква як нація-замінник
 - section: Андрей Шептицький
-  words: 600
+  words: 686
   subsections:
   - Біографія — польський граф стає українським митрополитом
   - 44 роки служіння
@@ -38,7 +40,7 @@ content_outline:
   - Складні відносини з ОУН
   - Спадщина
 - section: Знищення і підпілля
-  words: 600
+  words: 686
   subsections:
   - 1946 — Львівський псевдособор
   - Примусове «возз'єднання» з РПЦ
@@ -46,19 +48,19 @@ content_outline:
   - Переслідування священиків
   - Діаспора — збереження
 - section: Відродження
-  words: 400
+  words: 457
   subsections:
   - 1989 — легалізація
   - Повернення храмів
   - Сучасна УГКЦ
   - Роль у війні 2022
 - section: Підсумок
-  words: 200
+  words: 228
   subsections:
   - УГКЦ — маркер ідентичності
   - Між Сходом і Заходом
   - Підготовка до радянської антирелігійної політики
-word_target: 3500
+word_target: 4000
 vocabulary:
 - УГКЦ
 - греко-католицький
@@ -78,11 +80,11 @@ vocabulary:
 activities:
 - type: reading
   focus: Sheptytsky — complex figure analysis
-- type: persecution-study
+- type: comparative-study
   focus: Analyze 1946 pseudo-council — how liquidation worked
 - type: comparative-study
   focus: UGCC vs. Orthodox in identity formation
-- type: contemporary-analysis
+- type: critical-analysis
   focus: UGCC role in 2022 — what changed?
 - type: essay-response
   focus: Чому УГКЦ стала символом галицької української ідентичності?

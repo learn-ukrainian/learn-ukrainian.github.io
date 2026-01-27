@@ -25,7 +25,7 @@
 ## Linguistic Accuracy Issues
 
 - **Vocabulary:** `ихна`. This is not a word. Possibly a hallucinated name or typo.
-  - _Action:_ Remove.
+  - *Action:* Remove.
 - **Vocabulary:** `Зеленський` is lowercased.
 - **Vocabulary:** `Слабошпицький` is lowercased.
 - **Vocabulary:** `Канни` is lowercased.
@@ -34,7 +34,7 @@
 ## Strengths
 
 - **The Oscars:** Directly addresses the recent success of Ukrainian documentaries (`20 днів у Маріуполі`), connecting language learning to global news.
-- **Art House:** Mentions _The Tribe_ (`Плем'я`), showing Ukraine as a creator of high art, not just war news.
+- **Art House:** Mentions *The Tribe* (`Плем'я`), showing Ukraine as a creator of high art, not just war news.
 
 ## Issues
 

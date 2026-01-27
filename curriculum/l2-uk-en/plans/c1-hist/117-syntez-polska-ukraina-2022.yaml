@@ -5,47 +5,47 @@ version: '2.0'
 title: 'Синтез: 2022 — Історичний перелом'
 content_outline:
 - section: Вступ — Неочікуване братерство
-  words: 451
+  words: 515
   points:
   - Огляд модулів 114-116
   - 24.02.2022 — все змінилось
   - Від травми до солідарності
   - Мета синтезу
 - section: Що змінилось
-  words: 790
+  words: 903
   points:
   - Мільйони біженців — прийняли
   - Військова допомога — перша
   - Громадянське суспільство
   - «Нарешті спільний ворог»
 - section: Роль пам'яті
-  words: 677
+  words: 774
   points:
   - Волинь — відкладено, не забуто
   - Спільні герої — нові
   - «Ми розберемося після війни»
   - Примирення чи пауза?
 - section: Структурні зміни
-  words: 677
+  words: 774
   points:
   - Політичні еліти
   - Громадська думка
   - Економічні зв'язки
   - Культурні обміни
 - section: Виклики і ризики
-  words: 564
+  words: 645
   points:
   - Зерновий конфлікт 2023
   - Втомленість від біженців
   - Вибори і популізм
   - Чи це триватиме
 - section: Підсумок
-  words: 341
+  words: 389
   points:
   - 2022 — поворотний момент
   - Не кінець історії
   - Перехід до єврейсько-українських відносин
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - синтез (synthesis)
@@ -68,10 +68,10 @@ activity_hints:
 - type: essay-response
   focus: 600 years → 2022 transformation
   output: Historical transformation map
-- type: change-analysis
+- type: critical-analysis
   focus: What changed in Polish-Ukrainian relations post-2022
   output: Change assessment
-- type: sustainability-analysis
+- type: critical-analysis
   focus: Will solidarity last?
   output: Future scenarios
 - type: comparative-study
@@ -99,3 +99,6 @@ sources:
   notes: Polish aid to Ukraine
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of синтез: 2022 — історичний перелом'
+- Evaluate the historical significance of неочікуване братерство

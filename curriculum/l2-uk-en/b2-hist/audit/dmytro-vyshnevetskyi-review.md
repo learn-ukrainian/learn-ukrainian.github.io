@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M43 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 23:51:55
+**Generated:** 2026-01-27 17:59:13
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** comparative-study, critical-analysis, essay-response, quiz, reading
+**Required Types:** comparative-study, critical-analysis, essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -22,19 +22,19 @@
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Легенда про Байду: Духовний портрет героя | 3 | 1 | ✅ |
 | 2 | critical-analysis | Аналіз козацького кодексу честі | 1 | 1 | ✅ |
-| 3 | quiz | Життя та діяльність Дмитра Вишневецького | 8 | 8 | ✅ |
-| 4 | comparative-study | Вишневецький vs Пізніші козацькі лідери | 1 | 1 | ✅ |
-| 5 | essay-response | Байда як архітектор козацької волі | 1 | 1 | ✅ |
+| 3 | comparative-study | Вишневецький vs Пізніші козацькі лідери | 1 | 1 | ✅ |
+| 4 | essay-response | Байда як архітектор козацької волі | 1 | 1 | ✅ |
+| 5 | true-false | Дмитро Вишневецький: Правда чи міф? | 10 | 8 | ✅ |
 
 **Summary:**
 - Total activities: 5 (target: 3-9) ✅
 - Unique types: 5 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 5/5 (comparative-study, critical-analysis, essay-response, quiz, reading) ✅
+- Required types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ⚠️ 3975/4000 (raw: 4115) (25 short)
+- **Words:** ✅ 4070/4000 (raw: 4210)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -60,26 +60,26 @@
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 9 | 3 | 100% | 24% | 23.8% |
 | engagement | 10 | 6 | 100% | 14% | 14.3% |
-| timeline_markers | 18 | 10 | 100% | 14% | 14.3% |
+| timeline_markers | 19 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 4 | 4 | 100% | 10% | 9.5% |
 | visual | 7 | 4 | 100% | 10% | 9.5% |
-| variety | 0.94 | - | 94% | 5% | 4.5% |
+| variety | 0.95 | - | 95% | 5% | 4.5% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 12 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.7%** |
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Дмитро Вишневецький: Перший кошовий** | ⚪️ | 86 | Skipped |
-| **Вступ** | ✅ | 328 | Included in Core |
+| **Вступ** | ✅ | 341 | Included in Core |
 | **Шлях князя: Від Волині до Степу** | ⚪️ | 968 | Skipped |
-| **Заснування Малої Хортиці** | ⚪️ | 629 | Skipped |
-| **Читання** | ✅ | 352 | Included in Core |
-| **Геополітика і Дипломатія** | ⚪️ | 591 | Skipped |
-| **Первинні джерела** | ✅ | 348 | Included in Core |
+| **Заснування Малої Хортиці** | ⚪️ | 706 | Skipped |
+| **Читання** | ✅ | 386 | Included in Core |
+| **Геополітика і Дипломатія** | ⚪️ | 548 | Skipped |
+| **Первинні джерела** | ✅ | 362 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 342 | Included in Core |
 | **Підсумок** | ✅ | 224 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 107 | Skipped |

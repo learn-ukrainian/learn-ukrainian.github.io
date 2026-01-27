@@ -30,6 +30,7 @@ You created:
 ## Desired Architecture
 
 ### Activities Pattern (Proven, Working)
+
 ```
 activities/*.yaml (source of truth)
          ↓
@@ -39,6 +40,7 @@ Markdown files: NO activity content (clean)
 ```
 
 ### Resources Should Match This
+
 ```
 external_resources.yaml (source of truth)
          ↓

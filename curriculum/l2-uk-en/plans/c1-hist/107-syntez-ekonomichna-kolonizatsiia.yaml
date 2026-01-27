@@ -5,47 +5,47 @@ version: '2.0'
 title: 'Синтез: Економічна деколонізація'
 content_outline:
 - section: Вступ — Від колонії до суб'єкта
-  words: 451
+  words: 515
   points:
   - Огляд модулів 103-106
   - Економічна колонізація — 300 років
   - Деколонізація — що це означає
   - Мета синтезу
 - section: Еволюція експлуатації
-  words: 677
+  words: 774
   points:
   - Імперський період — зерно
   - Радянський — промисловість
   - Пострадянський — газ
   - Спільне — ресурси йдуть з України
 - section: Механізми залежності
-  words: 677
+  words: 774
   points:
   - Торговельні зв'язки
   - Технологічна залежність
   - Фінансова залежність
   - Як кожен працював
 - section: Розрив зв'язків
-  words: 790
+  words: 903
   points:
   - 2014 — початок
   - Торговельна переорієнтація
   - Енергетична незалежність
   - 2022 — повний розрив
 - section: ЄС — нова залежність чи партнерство?
-  words: 564
+  words: 645
   points:
   - Угода про асоціацію
   - Відмінності від Росії
   - Ризики і можливості
   - Умови успіху
 - section: Підсумок
-  words: 341
+  words: 389
   points:
   - Економічна деколонізація — процес
   - Не завершено
   - Перехід до інформаційної війни
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - синтез (synthesis)
@@ -68,13 +68,13 @@ activity_hints:
 - type: essay-response
   focus: Create economic colonization evolution diagram
   output: Historical economic map
-- type: mechanism-comparison
+- type: comparative-study
   focus: How each form of exploitation worked
   output: Mechanism comparison
-- type: decolonization-assessment
+- type: critical-analysis
   focus: How far has economic decolonization gone?
   output: Progress assessment
-- type: future-analysis
+- type: critical-analysis
   focus: EU integration — risks and opportunities
   output: Integration analysis
 - type: essay-response
@@ -99,3 +99,6 @@ sources:
   notes: EU integration
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of синтез: економічна деколонізація'
+- Evaluate the historical significance of від колонії до суб'єкта

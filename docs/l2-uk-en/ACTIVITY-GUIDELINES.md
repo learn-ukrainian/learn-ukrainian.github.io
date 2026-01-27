@@ -46,6 +46,7 @@ This document provides **activity templates and examples** for each CEFR level. 
 ## A1 Level (Modules 1-34) — Breakthrough
 
 ### CEFR A1 Can-Do Statements
+
 - Can understand and use familiar everyday expressions
 - Can introduce themselves and others
 - Can ask and answer simple questions about personal details
@@ -99,6 +100,7 @@ This document provides **activity templates and examples** for each CEFR level. 
 ### A1 Activity Examples
 
 #### 1. fill-in (10 items)
+
 ```markdown
 ## fill-in: Possessive Pronouns
 
@@ -118,6 +120,7 @@ This document provides **activity templates and examples** for each CEFR level. 
 ```
 
 #### 2. match-up (10 pairs)
+
 ```markdown
 ## match-up: Family Vocabulary
 
@@ -136,6 +139,7 @@ This document provides **activity templates and examples** for each CEFR level. 
 ```
 
 #### 3. unjumble (10 items, 3-5 words each)
+
 ```markdown
 ## unjumble: Build Simple Sentences
 
@@ -157,6 +161,7 @@ This document provides **activity templates and examples** for each CEFR level. 
 ```
 
 #### 4. quiz (10 questions)
+
 ```markdown
 ## quiz: Gender and Cases
 
@@ -174,6 +179,7 @@ This document provides **activity templates and examples** for each CEFR level. 
 ```
 
 #### 5. true-false (10 items)
+
 ```markdown
 ## true-false: Grammar Rules
 
@@ -188,6 +194,7 @@ This document provides **activity templates and examples** for each CEFR level. 
 ```
 
 #### 6. group-sort (2-3 categories, 10+ items)
+
 ```markdown
 ## group-sort: Noun Gender
 
@@ -206,6 +213,7 @@ This document provides **activity templates and examples** for each CEFR level. 
 ## A2 Level (Modules 1-50) — Waystage
 
 ### CEFR A2 Can-Do Statements
+
 - Can communicate in simple, routine tasks
 - Can describe aspects of background, environment, and immediate needs
 - Can handle short social exchanges
@@ -243,6 +251,7 @@ This document provides **activity templates and examples** for each CEFR level. 
 ### A2 Activity Examples
 
 #### 1. fill-in #1: Case Endings (10 items)
+
 ```markdown
 ## fill-in: Case Practice
 
@@ -262,6 +271,7 @@ This document provides **activity templates and examples** for each CEFR level. 
 ```
 
 #### 2. fill-in #2: Verb Aspect (10 items)
+
 ```markdown
 ## fill-in: Aspect Choices
 
@@ -281,6 +291,7 @@ This document provides **activity templates and examples** for each CEFR level. 
 ```
 
 #### 3. match-up: Aspect Pairs (12 pairs)
+
 ```markdown
 ## match-up: Imperfective ↔ Perfective
 
@@ -301,6 +312,7 @@ This document provides **activity templates and examples** for each CEFR level. 
 ```
 
 #### 4. unjumble (10 items, 5-7 words)
+
 ```markdown
 ## unjumble: Compound Sentences
 
@@ -318,6 +330,7 @@ This document provides **activity templates and examples** for each CEFR level. 
 ```
 
 #### 5. quiz #1: Grammar Concepts (10 questions)
+
 ```markdown
 ## quiz: Case Usage
 
@@ -337,6 +350,7 @@ This document provides **activity templates and examples** for each CEFR level. 
 ```
 
 #### 6. quiz #2: Applied Reasoning (10 questions)
+
 ```markdown
 ## quiz: Why This Form?
 
@@ -356,6 +370,7 @@ This document provides **activity templates and examples** for each CEFR level. 
 ```
 
 #### 7. true-false (10 items)
+
 ```markdown
 ## true-false: Aspect and Tense
 
@@ -373,6 +388,7 @@ This document provides **activity templates and examples** for each CEFR level. 
 ```
 
 #### 8. error-correction (12 items) — INTRODUCING AT A2
+
 ```markdown
 ## error-correction: Find and Fix
 
@@ -454,6 +470,7 @@ This document provides **activity templates and examples** for each CEFR level. 
 ## B1 Level (Modules 1-80) — Threshold
 
 ### CEFR B1 Can-Do Statements
+
 - Can deal with most situations likely to arise while travelling
 - Can enter unprepared into conversation on familiar topics
 - Can produce simple connected text on familiar topics
@@ -491,6 +508,7 @@ This document provides **activity templates and examples** for each CEFR level. 
 ### A2+ Activity Examples
 
 #### 1. fill-in #1: Agreement Chains (10 items)
+
 ```markdown
 ## fill-in: Full Agreement
 
@@ -507,6 +525,7 @@ This document provides **activity templates and examples** for each CEFR level. 
 ```
 
 #### 2. fill-in #2: Aspect in Context (10 items)
+
 ```markdown
 ## fill-in: Aspect Choices in Context
 
@@ -520,6 +539,7 @@ This document provides **activity templates and examples** for each CEFR level. 
 ```
 
 #### 3. fill-in #3: Subordinate Clauses (10 items)
+
 ```markdown
 ## fill-in: Complex Sentences
 
@@ -533,6 +553,7 @@ This document provides **activity templates and examples** for each CEFR level. 
 ```
 
 #### 4. match-up: Contextual Synonyms (12 pairs)
+
 ```markdown
 ## match-up: Synonymous Expressions
 
@@ -553,6 +574,7 @@ This document provides **activity templates and examples** for each CEFR level. 
 ```
 
 #### 5. unjumble #1: Subordinate Clauses (10 items, 7-10 words)
+
 ```markdown
 ## unjumble: Complex Sentences
 
@@ -570,6 +592,7 @@ This document provides **activity templates and examples** for each CEFR level. 
 ```
 
 #### 6. unjumble #2: Conditional Structures (10 items)
+
 ```markdown
 ## unjumble: Conditional Sentences
 
@@ -583,6 +606,7 @@ This document provides **activity templates and examples** for each CEFR level. 
 ```
 
 #### 7. quiz #1: Compare Forms (10 questions)
+
 ```markdown
 ## quiz: Form Comparison
 
@@ -602,6 +626,7 @@ This document provides **activity templates and examples** for each CEFR level. 
 ```
 
 #### 8. quiz #2: Contextual Appropriateness (10 questions)
+
 ```markdown
 ## quiz: Which Form Fits?
 
@@ -617,6 +642,7 @@ This document provides **activity templates and examples** for each CEFR level. 
 ```
 
 #### 9. transform: Full Paradigm (10 items)
+
 ```markdown
 ## transform: Complete Transformations
 
@@ -634,6 +660,7 @@ This document provides **activity templates and examples** for each CEFR level. 
 ```
 
 #### 10. error-correction (10 items)
+
 ```markdown
 ## error-correction: Find and Fix
 
@@ -657,6 +684,7 @@ This document provides **activity templates and examples** for each CEFR level. 
 ## B2 Level (Modules 1-125) — Vantage
 
 ### CEFR B2 Can-Do Statements
+
 - Can interact with a degree of fluency and spontaneity
 - Can produce clear, detailed text on a wide range of subjects
 - Can explain a viewpoint on a topical issue giving advantages and disadvantages
@@ -920,6 +948,7 @@ This document provides **activity templates and examples** for each CEFR level. 
 ```
 
 #### 15. error-correction (subtle errors, 10 items)
+
 ```markdown
 ## error-correction: Subtle Style Errors
 

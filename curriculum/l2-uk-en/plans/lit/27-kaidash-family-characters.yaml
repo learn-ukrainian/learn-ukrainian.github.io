@@ -6,42 +6,42 @@ title: 'Кайдашева сім''я: Галерея Характерів'
 subtitle: 'Kaidash Family: A Gallery of Characters'
 content_outline:
 - section: Вступ — Сім'я як мікрокосм
-  words: 500
+  words: 625
   points:
   - Родина в українській літературі
   - Чому "Кайдашева сім'я" стала класикою
   - Історичний контекст (після 1861 року)
 - section: Омелько Кайдаш — патріарх
-  words: 700
+  words: 875
   points:
   - Характеристика голови родини
   - Слабкості та чесноти
   - Конфлікт традиції та змін
 - section: Маруся Кайдашиха — справжня влада
-  words: 700
+  words: 875
   points:
   - Образ свекрухи в українській культурі
   - Мотиви поведінки Кайдашихи
   - Сатира vs співчуття
 - section: Сини і невістки
-  words: 800
+  words: 1000
   points:
   - Карпо та Лаврін — два типи синів
   - Мотря і Мелашка — два типи невісток
   - Конфлікти поколінь
 - section: Другорядні персонажі
-  words: 500
+  words: 625
   points:
   - Село як колективний персонаж
   - Сусіди та їхня роль
   - Функція гумору
 - section: Підсумок — Від типу до індивідуальності
-  words: 400
+  words: 500
   points:
   - Як Нечуй створює живих людей
   - Порівняння з персонажами Квітки та Шевченка
   - Перехід до конфліктів повісті
-word_target: 4000
+word_target: 4500
 vocabulary_hints:
   required:
   - патріарх (patriarch)
@@ -65,19 +65,10 @@ activity_hints:
   focus: Ключові сцени з персонажами
   source: UkrLib tid=907
   items: 5+
-- type: quiz
-  focus: Характеристики персонажів
-  items: 15+
-- type: match-up
-  focus: Персонаж → характеристика
-  items: 12+
 - type: essay-response
   focus: Архетип свекрухи в українській культурі
   word_target: 300
   output: Літературознавче есе
-- type: cloze
-  focus: Цитати персонажів
-  items: 12+
 focus: literature
 pedagogy: Seminar
 prerequisites:

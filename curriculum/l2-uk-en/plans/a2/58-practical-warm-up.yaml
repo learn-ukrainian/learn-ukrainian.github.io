@@ -5,42 +5,37 @@ version: '2.0'
 title: Practical Warm-up
 subtitle: Getting Ready for Action
 content_outline:
-- section: 'Introduction: Skills Activation'
-  words: 100
+- section: 'Огляд'
+  words: 85
   points:
   - Preparing for practical scenarios
   - Warm-up strategies
-  - Building confidence
-- section: Reading Skills
-  words: 150
+- section: 'Skill 1: Reading Comprehension (Розуміння прочитаного)'
+  words: 510
   points:
   - Skimming for main ideas
   - Scanning for details
   - Understanding context clues
-- section: Listening Skills
-  words: 150
+- section: 'Skill 2: Listening & Speaking (Слухання та Говоріння)'
+  words: 155
   points:
   - Listening for gist
   - Identifying key information
-  - Note-taking strategies
-- section: Vocabulary Activation
-  words: 150
+- section: 'Skill 3: Writing Skills (Навички Письма)'
+  words: 200
   points:
-  - Recognizing learned words
-  - Context-based understanding
-  - Word families and patterns
-- section: Question Strategies
-  words: 150
-  points:
-  - Understanding question types
-  - Formulating answers
-  - Asking for clarification
-- section: 'Practice: Integrated Skills'
-  words: 100
+  - Writing practice
+  - Vocabulary in context
+- section: 'Інтеграційне завдання'
+  words: 200
   points:
   - Read, listen, respond
   - Apply all A2 skills
-word_target: 800
+- section: 'Підсумок'
+  words: 35
+  points:
+  - Summary and next steps
+word_target: 1185
 vocabulary_hints:
   required:
   - текст (text)
@@ -57,16 +52,16 @@ vocabulary_hints:
   - ключовий (key)
   - стратегія (strategy)
 activity_hints:
-- type: reading-comprehension
+- type: reading
   focus: Understand main ideas
   items: 15
-- type: listening
+- type: quiz
   focus: Listen for key information
   items: 10
 - type: fill-in
   focus: Vocabulary in context
   items: 15
-- type: speaking
+- type: quiz
   focus: Answer questions orally
   items: 10
 focus: practical

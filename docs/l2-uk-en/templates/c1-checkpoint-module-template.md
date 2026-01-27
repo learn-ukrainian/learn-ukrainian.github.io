@@ -23,6 +23,7 @@ TEMPLATE_METADATA:
 Before submitting a C1 checkpoint module, verify all items from `c1-module-template.md` PLUS:
 
 ### Checkpoint-Specific Requirements
+
 - [ ] **TTT pedagogy:** Test-Teach-Test structure (comprehensive review)
 - [ ] **Word count:** 1750+ words
 - [ ] **Vocabulary:** 50-60 items (review vocabulary from ALL modules in phase)
@@ -170,7 +171,6 @@ Each checkpoint tests specific **skill groups** — concrete abilities learners 
 
 [22+ blank academic passage testing ALL phase skills]
 ```
-
 
 ---
 
@@ -481,6 +481,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 ## Content Structure Note
 
 ### Vocabulary & Activities
+
 **CRITICAL:** Do NOT add `## Vocabulary` or `## Activities` headers. These sections are injected automatically from:
 - `vocabulary/{slug}.yaml`
 - `activities/{slug}.yaml`
@@ -539,26 +540,32 @@ tags:
 ## Common Pitfalls to Avoid
 
 ### 1. **Introducing New Content**
+
 - ❌ Problem: Teaching new concepts in checkpoint
 - ✅ Solution: Checkpoints ONLY review and test. All content must come from prior modules.
 
 ### 2. **Insufficient Phase Coverage**
+
 - ❌ Problem: Testing only 2-3 topics out of 10-20 covered in phase
 - ✅ Solution: Create dedicated quiz for EACH major topic + integration quiz
 
 ### 3. **Missing Comparative Analysis**
+
 - ❌ Problem: No text comparison in C1 checkpoint
 - ✅ Solution: Include at least one comparative analysis task with two texts
 
 ### 4. **Shallow Self-Assessment**
+
 - ❌ Problem: Generic "Чи можете ви..." questions
 - ✅ Solution: Specific criteria tied to each module cluster in phase
 
 ### 5. **Too Few Activities**
+
 - ❌ Problem: 16 activities (same as regular C1 modules)
 - ✅ Solution: 25+ activities for comprehensive testing
 
 ### 6. **Missing Model Answers**
+
 - ❌ Problem: Writing tasks without examples
 - ✅ Solution: ALL writing tasks include complete model answers
 

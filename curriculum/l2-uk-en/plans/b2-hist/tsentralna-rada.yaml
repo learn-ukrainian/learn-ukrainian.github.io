@@ -67,15 +67,6 @@ activity_hints:
   focus: Тексти Універсалів
   source: Архівні документи
   items: 4
-- type: quiz
-  focus: Центральна Рада та Універсали
-  items: 15
-- type: match-up
-  focus: Універсал → зміст та дата
-  items: 10
-- type: fill-in
-  focus: Політична лексика
-  items: 10
 - type: essay-response
   focus: Чому Центральна Рада еволюціонувала від автономії до незалежності?
   word_target: 250

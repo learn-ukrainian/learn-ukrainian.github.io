@@ -5,56 +5,58 @@ version: '1.0'
 title: 'Акт проголошення незалежності: Текст і контекст'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of акт проголошення незалежності: текст і контекст'
+- Evaluate the historical significance of найважливіший документ
 content_outline:
 - section: Вступ — Найважливіший документ
-  words: 400
+  words: 457
   subsections:
   - 24 серпня 1991
   - Контекст — путч у Москві
   - Значення документа
   - Чому такий короткий текст
 - section: Контекст серпня 1991
-  words: 600
+  words: 686
   subsections:
   - Путч 19-21 серпня
   - Верховна Рада УРСР
   - Хто голосував — комуністи!
   - Чому раптом підтримали
 - section: Текст Акту — детальний аналіз
-  words: 700
+  words: 800
   subsections:
   - Повний текст (з коментарями)
   - Тисячолітня традиція державотворення
   - Посилання на Декларацію суверенітету
   - Юридична формула незалежності
 - section: Хто голосував і чому
-  words: 500
+  words: 571
   subsections:
   - Голосування — 321 за
   - Комуністи vs. націоналісти
   - Мотивації різних груп
   - Кравчук — перевертень?
 - section: Референдум 1 грудня
-  words: 600
+  words: 686
   subsections:
   - Чому потрібен був референдум
   - 90.32% — що означає
   - Регіональний розподіл
   - Крим і Донбас теж голосували «так»
 - section: Міжнародне визнання
-  words: 400
+  words: 457
   subsections:
   - Перші країни
   - США і Росія — коли визнали
   - Розпад СРСР — наслідок
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - Акт як фундамент
   - Від документа до реальності
   - Зв'язок із 2022
-word_target: 3500
+word_target: 4000
 vocabulary:
 - акт
 - незалежність
@@ -74,9 +76,9 @@ vocabulary:
 activities:
 - type: reading
   focus: Full text with commentary
-- type: voting-analysis
+- type: critical-analysis
   focus: Who voted yes and why? Analyze motivations
-- type: referendum-mapping
+- type: critical-analysis
   focus: Map regional referendum results — what patterns?
 - type: comparative-study
   focus: Compare with Baltic independence declarations

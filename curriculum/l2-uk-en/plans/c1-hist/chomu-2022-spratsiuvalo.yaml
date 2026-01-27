@@ -5,50 +5,52 @@ version: '1.0'
 title: Чому 2022 спрацювало? Анатомія мобілізації
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- Analyze the causes and consequences of чому 2022 спрацювало? анатомія мобілізації
+- Evaluate the historical significance of «три дні» не сталось
 content_outline:
 - section: Вступ — «Три дні» не сталось
-  words: 451
+  words: 515
   subsections:
   - Російський план — швидка перемога
   - Український спротив — миттєвий
   - Чому?
   - Структура модуля
 - section: Готовність суспільства
-  words: 790
+  words: 903
   subsections:
   - 2014-2022 — 8 років війни
   - Суспільство вже мобілізоване
   - Досвід волонтерства
   - Психологічна готовність
 - section: Інституційна база
-  words: 677
+  words: 774
   subsections:
   - Територіальна оборона
   - Реформа армії
   - Західна підготовка
   - IT-волонтери
 - section: Лідерство
-  words: 677
+  words: 774
   subsections:
   - Зеленський — «мені потрібна зброя»
   - Команда — залишились
   - Місцеві лідери
   - Децентралізація рішень
 - section: Громадянське суспільство
-  words: 564
+  words: 645
   subsections:
   - Миттєва мобілізація
   - Гуманітарна система
   - Інформаційний фронт
   - Міжнародна солідарність
 - section: Підсумок
-  words: 341
+  words: 389
   subsections:
   - 2022 — кульмінація всього
   - Не випадковість — підготовка
   - Перехід до м'якої сили
-word_target: 3500
+word_target: 4000
 vocabulary:
 - мобілізація
 - територіальна оборона
@@ -66,13 +68,13 @@ vocabulary:
 - HIMARS
 - стійкість
 activities:
-- type: preparedness-analysis
+- type: critical-analysis
   focus: 2014-2022 — what prepared Ukraine
-- type: institutional-study
+- type: comparative-study
   focus: Territorial defense — how it worked
-- type: leadership-analysis
+- type: critical-analysis
   focus: Zelensky's crisis leadership
-- type: society-mobilization
+- type: critical-analysis
   focus: Civil society instant response
 - type: essay-response
   focus: Що підготувало Україну до 24 лютого?

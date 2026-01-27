@@ -6,48 +6,48 @@ title: 'Богдан Хмельницький: Постать в історії'
 subtitle: 'Bohdan Khmelnytsky: A Figure in History'
 content_outline:
 - section: 'Вступ: Батько нації чи суперечлива фігура?'
-  words: 400
+  words: 390
   points:
   - Khmelnytsky's place in Ukrainian historical memory
   - Different interpretations of his legacy
 - section: 'Ранні роки: Освіта і служба'
-  words: 600
+  words: 585
   points:
   - Education at Lviv Jesuit College
   - Battle of Cecora and Turkish captivity
   - Service as a registered Cossack
 - section: Особиста драма як іскра повстання
-  words: 600
+  words: 585
   points:
   - The Subotiv conflict with Czaplinski
   - Failure of the Polish legal system
   - Flight to the Sich
 - section: Геній дипломатії та війни
-  words: 800
+  words: 780
   points:
   - Alliance with the Crimean Khanate
   - Victories at Zhovti Vody, Korsun, Pyliavtsi
   - Entry into Kyiv
 - section: Будівничий держави
-  words: 600
+  words: 585
   points:
   - Creation of the Hetmanate's administrative system
   - Social and economic reforms
 - section: 'Первинні джерела: Листи та промови'
-  words: 500
+  words: 488
   points:
   - Excerpts from letters to European monarchs
   - Speech to the Polish commissioners
 - section: 'Деколонізаційний погляд: Лідер, а не васал'
-  words: 500
+  words: 488
   points:
   - Debunking the myth of 'reunification'
   - Khmelnytsky as a sovereign ruler
 - section: Читання
-  words: 100
+  words: 99
   points:
   - Intro to reading tasks
-word_target: 3000
+word_target: 4000
 vocabulary_hints:
   required:
   - гетьман
@@ -63,8 +63,6 @@ vocabulary_hints:
 activity_hints:
 - type: reading
   focus: Analysis of Khmelnytsky's universals
-- type: quiz
-  focus: Biographical facts
 - type: essay-response
   focus: Evaluation of his political decisions
 - type: comparative-study

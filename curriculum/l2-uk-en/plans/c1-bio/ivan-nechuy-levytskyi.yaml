@@ -78,22 +78,10 @@ activity_hints:
   focus: Excerpts from "Кайдашева сім'я" and "Микола Джеря"
   source: UkrLib
   items: 4 passages
-- type: quiz
-  focus: Nechuy-Levytsky's biography and literary contributions
-  items: 12+
-- type: match-up
-  focus: Characters and their traits from Kaidasheva Simia
-  items: 10+
 - type: essay-response
   focus: Why is "Кайдашева сім'я" still relevant today?
   word_target: 300
   output: Social analysis with modern parallels
-- type: group-sort
-  focus: Romantic vs. Realistic elements in Ukrainian literature
-  items: 12+
-- type: fill-in
-  focus: Famous quotes from Nechuy-Levytsky's works
-  items: 10+
 - type: critical-analysis
   focus: Compare Nechuy-Levytsky with European realists (Zola, Dickens)
   output: Comparative literature analysis
@@ -130,3 +118,7 @@ sources:
   notes: Full texts and analysis
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of іван нечуй-левицький: майстер українського реалізму'
+- Evaluate the contributions of великий оповідач
+- Trace the career and influence of останні роки та спадщина

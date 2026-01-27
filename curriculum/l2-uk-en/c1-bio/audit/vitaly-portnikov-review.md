@@ -1,10 +1,12 @@
 # Audit Report: M120 — vitaly-portnikov.md
+
 **Level:** C1 | **Module:** M120 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:58
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Біографія та професійна діяльність | 5 | 5 | ✅ |
@@ -41,16 +44,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in vitaly-portnikov.yaml: Schema validation error at key '9': {'type': 'fill-in', 'title': 'Значення для суспільства', 'items': [{'sentence': 'Портников допомагає суспільству [дорослішати] і брати відповідальність за свої рішення.', 'answer': 'дорослішати', 'options': ['дорослішати', 'старіти', 'гратися', 'мріяти']}, {'sentence': 'Його аналітика діє як інтелектуальний [щит] проти ворожої пропаганди.', 'answer': 'щит', 'options': ['щит', 'меч', 'прапор', 'гімн']}, {'sentence': 'Він доводить, що [інтелект] є найсильнішою зброєю у гібридній війні.', 'answer': 'інтелект', 'options': ['інтелект', 'гроші', 'обман', 'страх']}, {'sentence': 'Журналіст формує [світогляд] нації, пропонуючи чіткі ціннісні орієнтири.', 'answer': 'світогляд', 'options': ['світогляд', 'бюджет', 'план', 'меню']}, {'sentence': 'Він вчить нас відрізняти [зерно] від полови в інформаційному потоці.', 'answer': 'зерно', 'options': ['зерно', 'каміння', 'сміття', 'золото']}, {'sentence': 'Портников є прикладом того, як одна людина може впливати на [історію] словом.', 'answer': 'історію', 'options': ['історію', 'погоду', 'моду', 'спорт']}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2038/4000 (raw: 2282)
 - **Activities:** ✅ 12/3
 - **Density:** ✅ All > 1
@@ -69,10 +75,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 95% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 4 | 4 | 100% | 19% | 19.0% |
@@ -88,6 +96,7 @@
 | **TOTAL** | | | | | **95.1%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 61 | Included in Core |

@@ -67,12 +67,6 @@ activity_hints:
   focus: Останні листи розстріляних
   source: Архівні документи
   items: 4
-- type: quiz
-  focus: Механізм терору 1930-х
-  items: 15
-- type: match-up
-  focus: Жертва → доля
-  items: 10
 - type: true-false
   focus: Міфи про «ворогів народу»
   items: 10

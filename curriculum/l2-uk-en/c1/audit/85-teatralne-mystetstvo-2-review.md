@@ -1,9 +1,11 @@
 # Audit Report: M85 — 85-teatralne-mystetstvo-2.md
+
 **Level:** C1 | **Module:** M85 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:47
 
 ## Configuration
+
 **Type:** C1-fine-arts
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -16,6 +18,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Сучасний український театр | 12 | 5 | ✅ |
@@ -40,6 +43,7 @@
 - Low density activities: 2
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Сучасний український театр' Q2 prompt length 7 (target: 8-30)
   - FIX: Adjust prompt length to 8-30 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Сучасний український театр' Q3 prompt length 7 (target: 8-30)
@@ -68,10 +72,12 @@
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Аналіз' per template 'c1-module-template.md'
   - FIX: Add '## Аналіз' section as specified in docs/l2-uk-en/templates/c1-module-template.md.md
 
 ## Recommendation
+
 **🔄 REWRITE** (severity 80/100)
 
 - 14 violations (severe - consider revision)
@@ -79,6 +85,7 @@
 - Activity density below minimum
 
 ## Gates
+
 - **Words:** ❌ 1462/3000 (raw: 1564)
 - **Activities:** ✅ 14/12
 - **Density:** ❌ 2 < 12
@@ -97,10 +104,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 95% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 27 | 15 | 100% | 25% | 25.0% |
@@ -114,13 +123,14 @@
 | **TOTAL** | | | | | **95.2%** |
 
 ## Low Density Activities
+
 | Activity | Type | Items | Required | Fix |
 |----------|------|-------|----------|-----|
 | Феномен Dakh Daughters | cloze | 8 | 12 | Add 4 more items |
 | Типи театрів | group-sort | 11 | 12 | Add 1 more items |
 
-
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 68 | Included in Core |

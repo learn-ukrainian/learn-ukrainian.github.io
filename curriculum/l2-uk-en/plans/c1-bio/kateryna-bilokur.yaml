@@ -69,22 +69,10 @@ activity_hints:
   focus: Українське народне мистецтво XX ст.
   source: Art history sources
   items: 3 passages
-- type: quiz
-  focus: Життя та творчість Білокур
-  items: 12+
-- type: match-up
-  focus: Терміни образотворчого мистецтва
-  items: 10+
 - type: essay-response
   focus: Як Білокур здолала перешкоди на шляху до мистецтва?
   word_target: 300
   output: Analytical essay
-- type: group-sort
-  focus: Картини за періодами творчості
-  items: 12+
-- type: fill-in
-  focus: Мистецтвознавча термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-65
@@ -103,3 +91,7 @@ sources:
   notes: Major collection of Bilokur's works
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of катерина білокур: геній наївного мистецтва'
+- Evaluate the contributions of квіти, народжені геєм
+- Trace the career and influence of геній із села

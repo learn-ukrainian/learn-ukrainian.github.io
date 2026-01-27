@@ -1,8 +1,8 @@
 # Audit Report: M14 — 14-aspect-integration-practice.md
-**Level:** B1 | **Module:** M14 | **Phase:** B1 | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M14 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:26:52
+**Generated:** 2026-01-27 16:25:49
 
 ## Configuration
 **Type:** B1-grammar

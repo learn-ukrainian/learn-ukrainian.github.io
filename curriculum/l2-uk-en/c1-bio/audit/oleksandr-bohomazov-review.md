@@ -1,10 +1,12 @@
 # Audit Report: M69 — oleksandr-bohomazov.md
+
 **Level:** C1 | **Module:** M69 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:33
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | «Життя і творчість Олександра Богомазова» | 12 | 5 | ✅ |
@@ -47,22 +50,26 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[MALFORMED_ERROR_CORRECTION]** Error-correction activity '«Граматика мистецтвознавства»' uses placeholder syntax instead of real errors
   - FIX: Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found 11/12 items with placeholders/missing errors.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in oleksandr-bohomazov.yaml: Schema validation error at key 'id': 'c1-85-mark-words-1' does not match '^reading-[a-z0-9-]+$'
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Останні роки' per template 'c1-biography-module-template.md'
   - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 3 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2398/4000 (raw: 2605)
 - **Activities:** ✅ 18/3
 - **Density:** ✅ All > 1
@@ -81,10 +88,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 97% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 5 | 4 | 100% | 19% | 19.0% |
@@ -100,6 +109,7 @@
 | **TOTAL** | | | | | **97.5%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 67 | Included in Core |

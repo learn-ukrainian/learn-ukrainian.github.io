@@ -287,9 +287,11 @@ START: You want to create B1 module 50
 ## Common Questions
 
 ### Q: Do I run `/module-stage-1 b1 50`?
+
 **A:** Usually no. Just tell Claude "Create module 50 for B1" and Claude runs all stages. Only run manually if you want to review each stage individually.
 
 ### Q: What commands do I ALWAYS run?
+
 **A:** After agent creates module and audit passes:
 ```bash
 # YOU run this manually:
@@ -303,6 +305,7 @@ npm run pipeline l2-uk-en b1 50
 ```
 
 ### Q: What's optional?
+
 **A:** Tell agent to run these validations:
 ```bash
 # Grammar validation (recommended for B1+) - agent runs:
@@ -319,9 +322,11 @@ npm run quality:generate + manual validation + npm run quality:finalize
 ```
 
 ### Q: When do I use `/grammar-validate` or `/review-content`?
+
 **A:** Never directly. These are Claude Code skills that Claude uses internally. You run the Python scripts shown above.
 
 ### Q: Where do I see the validation results?
+
 **A:** In your terminal where you ran the command. Look for:
 - Audit: `Overall Status: PASS` or `FAIL`
 - Grammar: Violations listed in terminal

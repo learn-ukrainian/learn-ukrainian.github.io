@@ -5,19 +5,19 @@ version: '2.0'
 title: Данило Апостол та Кирило Розумовський
 content_outline:
 - section: 'Вступ: Між молотом і ковадлом'
-  words: 300
+  words: 350
 - section: 'Читання: Епоха Данила Апостола'
-  words: 600
+  words: 700
 - section: 'Економіка та суспільство: Стабільність і криза'
-  words: 600
+  words: 700
 - section: 'Епоха Розумовського: Європейська мрія'
   words: 800
 - section: 'Первинні джерела: Голоси епохи'
-  words: 500
+  words: 550
 - section: 'Деколонізаційний погляд: Дві стратегії виживання'
-  words: 600
+  words: 450
 - section: 'Підсумок: Захід сонця'
-  words: 200
+  words: 450
 word_target: 4000
 focus: history
 pedagogy: CBI

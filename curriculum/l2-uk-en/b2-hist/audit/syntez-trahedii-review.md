@@ -1,10 +1,12 @@
 # Audit Report: M108 — syntez-trahedii.md
+
 **Level:** B2 | **Module:** M108 | **Phase:** HIST.10 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:55:19
 
 ## Configuration
+
 **Type:** B2-history
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння синтезу травм | 8 | 8 | ✅ |
@@ -45,6 +48,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Ми не просто захищаємо власну територію, ми проводимо остаточну та болісну **деконструкцію** імперсь...". Shares significant keywords with sentence at index 70.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Це битва за майбутнє не лише України, а й всього демократичного світу.". Shares significant keywords with sentence at index 71.
@@ -59,12 +63,14 @@
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 35/100)
 
 - 6 violations (moderate)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2402/4000 (raw: 2856)
 - **Activities:** ✅ 16/3
 - **Density:** ✅ All > 1
@@ -83,10 +89,12 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 3 | 3 | 100% | 24% | 23.8% |
@@ -101,6 +109,7 @@
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

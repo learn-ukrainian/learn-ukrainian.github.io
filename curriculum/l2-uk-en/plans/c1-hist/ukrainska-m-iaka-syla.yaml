@@ -5,50 +5,52 @@ version: '1.0'
 title: 'Українська м''яка сила: Культурна дипломатія'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of українська м''яка сила: культурна дипломатія'
+- Evaluate the historical significance of культура як зброя
 content_outline:
 - section: Вступ — Культура як зброя
-  words: 451
+  words: 515
   subsections:
   - М'яка сила — що це
   - Україна до 2022 — невидима
   - Після 2022 — прорив
   - Структура модуля
 - section: Eurovision як фронт
-  words: 790
+  words: 903
   subsections:
   - Джамала 2016 — «1944»
   - Kalush Orchestra 2022 — «Stefania»
   - Політика через музику
   - Міжнародний резонанс
 - section: Кінематограф
-  words: 677
+  words: 774
   subsections:
   - Сенцов — символ
   - «20 днів у Маріуполі»
   - Документалістика війни
   - Фестивалі — платформа
 - section: Мистецтво і дизайн
-  words: 677
+  words: 774
   subsections:
   - Українські бренди
   - Вишиванка — глобальний символ
   - Музеї під обстрілами
   - Мистецтво спротиву
 - section: Цифрова дипломатія
-  words: 564
+  words: 645
   subsections:
   - Соцмережі — миттєвий вплив
   - Мемо-культура
   - Зеленський — глобальна зірка
   - United24
 - section: Підсумок
-  words: 341
+  words: 389
   subsections:
   - М'яка сила — справжня сила
   - Україна — більше не невидима
   - Перехід до синтезу агентності
-word_target: 3500
+word_target: 4000
 vocabulary:
 - «м'яка сила»
 - культурна дипломатія
@@ -66,13 +68,13 @@ vocabulary:
 - United24
 - інфлюенсер
 activities:
-- type: soft-power-analysis
+- type: critical-analysis
   focus: Map Ukraine's soft power assets
-- type: eurovision-study
+- type: comparative-study
   focus: Eurovision as political platform
-- type: digital-diplomacy
+- type: critical-analysis
   focus: Ukraine's digital diplomacy success
-- type: brand-study
+- type: comparative-study
   focus: Ukrainian cultural branding
 - type: essay-response
   focus: Як війна зробила Україну 'видимою'?

@@ -14,7 +14,7 @@
 | Relevance           | 10/10 | Diminutives are essential for sounding natural in Ukrainian.                          |
 | Educational         | 10/10 | Covers formation suffixes (-chk-, -еньк-) and pragmatics.                             |
 | Language            | 10/10 | Capture the "Cafe Style" register perfectly.                                          |
-| Pedagogy            | 10/10 | Excellent pragmatics: distinguishes between _affection_, _politeness_, and _sarcasm_. |
+| Pedagogy            | 10/10 | Excellent pragmatics: distinguishes between *affection*, *politeness*, and *sarcasm*. |
 | Immersion           | 10/10 | "Lviv Coffee Culture" context is the perfect vehicle for this topic.                  |
 | Activities          | 9/10  | Good transformation drills.                                                           |
 | Richness            | 9/10  | Very atmospheric.                                                                     |
@@ -29,7 +29,7 @@
 
 ## Strengths
 
-- **Pragmatic Depth:** It doesn't just teach _how_ to form them, but _when_ (and when NOT) to use them. The focus on sarcasm ("О, який ти експертик") is advanced and very useful.
+- **Pragmatic Depth:** It doesn't just teach *how* to form them, but *when* (and when NOT) to use them. The focus on sarcasm ("О, який ти експертик") is advanced and very useful.
 - **Atmosphere:** The module effectively guides the learner into the cozy ("затишний") Ukrainian linguistic space.
 
 ## Issues

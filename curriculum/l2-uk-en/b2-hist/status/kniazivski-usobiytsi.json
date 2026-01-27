@@ -2,13 +2,13 @@
   "module": "kniazivski-usobiytsi",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T23:24:53.267600Z",
+  "last_audit": "2026-01-27T16:22:31.591930Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-25T10:47:04.090081Z",
+    "md": "2026-01-27T15:24:10.346946Z",
     "meta": "2026-01-26T22:20:13.194683Z",
-    "activities": "2026-01-22T21:17:47.677565Z",
-    "vocabulary": "2026-01-25T10:43:38.421066Z",
+    "activities": "2026-01-27T15:34:54.099710Z",
+    "vocabulary": "2026-01-26T23:26:53.144606Z",
     "plan": null
   },
   "gates": {
@@ -25,7 +25,7 @@
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "10/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "pass",

@@ -1,9 +1,11 @@
 # Audit Report: M75 — 75-podillia-ta-volyn.md
+
 **Level:** C1 | **Module:** M75 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:41
 
 ## Configuration
+
 **Type:** C1
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -16,6 +18,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Автентичний опис подільського весілля | 3 | 3 | ✅ |
@@ -40,16 +43,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 75-podillia-ta-volyn.yaml: Schema validation error at key 'words': ['Розуміння', 'регіональних', 'відмінностей', 'дозволяє', 'глибше', 'осягнути', 'багатогранність', 'спільної', 'культурної', 'спадщини', 'України'] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ⚠️ 2999/3000 (raw: 3550) (1 short)
 - **Activities:** ✅ 14/12
 - **Density:** ✅ All > 12
@@ -68,10 +74,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 39 | 15 | 100% | 25% | 25.0% |
@@ -85,6 +93,7 @@
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 69 | Included in Core |

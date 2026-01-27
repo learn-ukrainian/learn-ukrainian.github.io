@@ -5,42 +5,21 @@ version: '2.0'
 title: Велосипед та водні види
 subtitle: Cycling and Water Sports
 content_outline:
-- section: 'Introduction: Summer Sports'
-  words: 150
-  points:
-  - Summer activity culture
-  - Popular water sports
-  - Cycling traditions
-- section: Cycling Culture
-  words: 250
-  points:
-  - Bike types and parts
-  - Cycling routes
-  - Urban cycling
-- section: Swimming and Beaches
-  words: 250
-  points:
-  - Swimming vocabulary
-  - Ukrainian beaches
-  - Pool culture
-- section: Kayaking and Paddling
-  words: 250
-  points:
-  - Kayak, SUP vocabulary
-  - River tourism
-  - Safety rules
-- section: Triathlon and Combined Sports
-  words: 200
-  points:
-  - Triathlon vocabulary
-  - Combined training
-  - Ukrainian events
-- section: 'Practice: Activity Planning'
-  words: 100
-  points:
-  - Plan summer activities
-  - Discuss preferences
-word_target: 1200
+- section: Огляд
+  words: 17
+- section: Вступ
+  words: 231
+- section: Інтеграція
+  words: 708
+- section: Практика
+  words: 109
+- section: Продукція
+  words: 424
+- section: Підсумок
+  words: 116
+- section: Потрібно більше практики?
+  words: 109
+word_target: 1714
 vocabulary_hints:
   required:
   - велосипед (bicycle)
@@ -60,13 +39,13 @@ activity_hints:
 - type: reading
   focus: Rental information and safety guides
   items: 15
-- type: matching
+- type: match-up
   focus: Match sports to equipment
   items: 20
 - type: fill-in
   focus: Complete activity descriptions
   items: 15
-- type: discussion
+- type: quiz
   focus: Plan summer activities
   items: 10
 focus: culture

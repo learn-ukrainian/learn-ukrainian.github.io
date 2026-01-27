@@ -6,7 +6,6 @@
 
 **Related Issue:** [#305](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/305)
 
-
 <!--
 TEMPLATE_METADATA:
   required_sections:
@@ -35,7 +34,6 @@ Before submitting a B2 grammar module, verify all items from `b2-module-template
 - [ ] **4 passive forms:** If teaching passive, cover all 4 forms with register distribution
 - [ ] **Transformation activities:** Active → Passive, register shifting
 - [ ] **Decision framework:** "Як обрати?" section with clear decision rules
-
 
 ---
 

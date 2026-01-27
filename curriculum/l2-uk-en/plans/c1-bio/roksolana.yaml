@@ -75,22 +75,10 @@ activity_hints:
   focus: European diplomatic reports about Roksolana
   source: Adapted historical sources
   items: 3 passages
-- type: quiz
-  focus: Facts about Roksolana's life and influence
-  items: 12+
-- type: match-up
-  focus: Key figures at Ottoman court and their fates
-  items: 10+
 - type: essay-response
   focus: Was Roksolana a victim or a manipulator?
   word_target: 300
   output: Balanced analysis with evidence
-- type: group-sort
-  focus: Facts vs. legends about Roksolana
-  items: 12+
-- type: fill-in
-  focus: Ottoman court terminology
-  items: 10+
 - type: critical-analysis
   focus: Evaluate different interpretations of Roksolana
   output: Ukrainian vs. Turkish perspectives

@@ -5,53 +5,53 @@ version: '2.0'
 title: Княжі усобиці та роздроблення
 content_outline:
 - section: Розминка
-  words: 200
+  words: 205
   points:
   - Defining sovereignty vs suzerainty
   - The map of 1054 vs 1132
 - section: 'Читання: Тріумвірат Ярославичів'
-  words: 700
+  words: 718
   points:
   - The will of Yaroslav the Wise
   - Battle of Alta (1068)
   - Kyiv Uprising
 - section: Любецький з'їзд (1097)
-  words: 450
+  words: 462
   points:
   - Every man holds his own fatherland
   - The blinding of Vasylko
   - Consequences of the Congress
 - section: Володимир Мономах
-  words: 700
+  words: 718
   points:
   - Crusades against Polovtsians
   - Monomakh's Reforms (Statute)
   - Instruction (Povchannia)
 - section: Соціальна структура та Економіка
-  words: 700
+  words: 718
   points:
   - Economic causes of fragmentation
   - Boyars, Druzhina, Smerds
   - Urban growth
 - section: Культура та Церква
-  words: 250
+  words: 256
   points:
   - Architecture (St. Michael's)
   - Chronicle writing (Nestor)
   - Church as unifying force
 - section: Первинні джерела
-  words: 400
+  words: 410
   points:
   - Extract from the Primary Chronicle on Liubech
   - Extract from Monomakh's Instruction
 - section: Деколонізаційний погляд
-  words: 350
+  words: 359
   points:
   - Reframing Fragmentation as Decentralization
   - European parallels
   - Myth of 'Feudal Disunity'
 - section: Підсумок
-  words: 150
+  words: 154
   points:
   - Legacy of the era
 vocabulary_hints:
@@ -77,18 +77,6 @@ activity_hints:
 - type: reading
   focus: Chronicle account of Liubech Congress
   source: Provide in module
-- type: quiz
-  focus: Major principalities after fragmentation (Geography)
-  items: 8+ principalities
-- type: fill-in
-  focus: Political and military terminology
-  items: 15+
-- type: match-up
-  focus: Key events of fragmentation 1054-1240 (Chronology)
-  items: 12+ events
-- type: quiz
-  focus: Causes and consequences of fragmentation
-  items: 12+
 - type: comparative-study
   focus: Unified Rus vs fragmented Rus
   output: Two-column analysis
@@ -125,3 +113,4 @@ sources:
   notes: Chronicle accounts
 immersion: 100% Ukrainian
 phase: B2-HIST.1 [Kyivan Rus]
+word_target: 4000

@@ -39,6 +39,7 @@ Epic 4: NLP Community Contribution (SECONDARY - Q2-Q3 2025)
 ## Tickets - Epic 1
 
 ### E1-T1: Test md_to_yaml Migration (Phase 1 - Single Module)
+
 **Status:** ✅ Done
 **Priority:** P0
 **Estimated Effort:** 2 hours → Actual: 2 hours
@@ -66,6 +67,7 @@ See: `docs/B1-MIGRATION-TEST-PLAN.md` for detailed plan.
 ---
 
 ### E1-T2: Batch Migration Test (Phase 2 - M17-M21)
+
 **Status:** Todo
 **Priority:** P0
 **Estimated Effort:** 4 hours
@@ -85,6 +87,7 @@ Batch convert M17-M21 (motion verbs phase) to validate migration works at scale.
 ---
 
 ### E1-T3: Full Migration (Phase 3 - M17-M51)
+
 **Status:** Todo
 **Priority:** P0
 **Estimated Effort:** 1 day
@@ -110,6 +113,7 @@ Convert all remaining B1 modules (M17-M51) to MD+YAML format in batches.
 ---
 
 ### E1-T4: Create Missing B1 Modules (M54-M85)
+
 **Status:** Todo
 **Priority:** P0
 **Estimated Effort:** 4 weeks
@@ -132,6 +136,7 @@ Create 33 missing B1 modules following curriculum plan:
 ---
 
 ### E1-T5: B1 Vocabulary Database Rebuild
+
 **Status:** Todo
 **Priority:** P1
 **Estimated Effort:** 1 day
@@ -153,6 +158,7 @@ After all B1 modules complete, rebuild vocabulary database to validate:
 ---
 
 ### E1-T6: B1 Full Pipeline Validation
+
 **Status:** Todo
 **Priority:** P0
 **Estimated Effort:** 2 days
@@ -192,6 +198,7 @@ Run full pipeline on all 85 B1 modules:
 ## Tickets - Epic 2
 
 ### E2-T1: Finalize Ukrainian Grammar Validator Prompt
+
 **Status:** Done ✅
 **Priority:** P1
 **Estimated Effort:** 1 day
@@ -210,6 +217,7 @@ Create and document Ukrainian Grammar Validator prompt adapted from Ukrainian Tu
 ---
 
 ### E2-T2: Create NLP Pattern Log Template
+
 **Status:** Todo
 **Priority:** P2
 **Estimated Effort:** 1 hour
@@ -242,6 +250,7 @@ Create a simple log file to track interesting linguistic patterns found during v
 ---
 
 ### E2-T3: Validate A2 M01-M05 with Gemini
+
 **Status:** Todo
 **Priority:** P1
 **Estimated Effort:** 2 hours
@@ -265,6 +274,7 @@ Use Gemini Grammar Validator to review first 5 A2 modules for:
 ---
 
 ### E2-T4: Add Audit Script Enhancement (Optional)
+
 **Status:** Todo
 **Priority:** P3 (Nice to have)
 **Estimated Effort:** 1 day
@@ -301,6 +311,7 @@ Add simple vocabulary coverage check to audit:
 ## Tickets - Epic 3
 
 ### E3-T1: Create Graded Corpus Extraction Script
+
 **Status:** Todo
 **Priority:** P2
 **Estimated Effort:** 2 days
@@ -332,6 +343,7 @@ Extract all Ukrainian sentences from A1+A2 modules, tag with CEFR level.
 ---
 
 ### E3-T2: Create Error Correction Dataset Extraction Script
+
 **Status:** Todo
 **Priority:** P2
 **Estimated Effort:** 3 days
@@ -366,6 +378,7 @@ Extract error→correct pairs from all error-correction activities.
 ---
 
 ### E3-T3: Export Vocabulary Database to JSON
+
 **Status:** Todo
 **Priority:** P2
 **Estimated Effort:** 1 day
@@ -398,6 +411,7 @@ Export `curriculum/l2-uk-en/vocabulary.db` to JSON with CEFR levels.
 ---
 
 ### E3-T4: Dataset Documentation & README
+
 **Status:** Todo
 **Priority:** P2
 **Estimated Effort:** 1 day
@@ -426,6 +440,7 @@ Write comprehensive documentation for all 3 datasets.
 ---
 
 ### E3-T5: GitHub Release - Phase 1 Datasets
+
 **Status:** Todo
 **Priority:** P2
 **Estimated Effort:** 1 day
@@ -466,6 +481,7 @@ Release Phase 1 datasets on GitHub.
 ## Tickets - Epic 4
 
 ### E4-T1: Calque Detection Dataset Creation
+
 **Status:** Todo
 **Priority:** P3
 **Estimated Effort:** 1 week
@@ -497,6 +513,7 @@ Run Gemini validation on all A1+A2 modules specifically to detect calques.
 ---
 
 ### E4-T2: Test Curriculum Against nlp_uk
+
 **Status:** Todo
 **Priority:** P3
 **Estimated Effort:** 3 days
@@ -520,6 +537,7 @@ Run nlp_uk on A1+A2 modules to find false positives (pedagogical simplifications
 ---
 
 ### E4-T3: Write Blog Post - "Building a Ukrainian Curriculum"
+
 **Status:** Todo
 **Priority:** P3
 **Estimated Effort:** 2 days
@@ -543,6 +561,7 @@ Write blog post about:
 ---
 
 ### E4-T4: UNLP 2026 Paper Submission (Optional)
+
 **Status:** Todo
 **Priority:** P4 (Optional - if ambitious)
 **Estimated Effort:** 3-4 weeks

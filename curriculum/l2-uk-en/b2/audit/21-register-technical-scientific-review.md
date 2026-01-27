@@ -1,10 +1,12 @@
 # Audit Report: M21 — 21-register-technical-scientific.md
+
 **Level:** B2 | **Module:** M21 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:27:58
 
 ## Configuration
+
 **Type:** B2-grammar
 **Word Target:** 1750 words
 **Activities:** 10-14 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Ознаки науково-технічного стилю | 16 | 8 | ✅ |
@@ -41,6 +44,7 @@
 - Low density activities: 0
 
 ## Gates
+
 - **Words:** ✅ 1858/1750 (raw: 2220)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
@@ -59,10 +63,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 93 | 24 | 100% | 20% | 20.0% |
@@ -78,6 +84,7 @@
 | **TOTAL** | | | | | **99.4%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

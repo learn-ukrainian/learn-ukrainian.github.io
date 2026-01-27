@@ -6,37 +6,37 @@ title: Жіноча доля в "Кобзарі"
 subtitle: 'Women in Kobzar: The Tragic Archetype'
 content_outline:
 - section: Вступ
-  words: 500
+  words: 608
   points:
   - Чому жінки — центральні персонажі
   - Біографічний контекст (сирітство)
   - Емпатія як творчий метод
 - section: Катерина
-  words: 800
+  words: 973
   points:
   - Сюжет поеми
   - Образ покритки в суспільстві
   - Критика подвійних стандартів
 - section: Наймичка
-  words: 800
+  words: 973
   points:
   - Сюжет поеми
   - Образ матері-страдниці
   - Порівняння з "Катериною"
 - section: Архетип Трагічної Матері
-  words: 700
+  words: 851
   points:
   - Покритка, наймичка, удова
   - Самотність і жертовність
   - Україна як мати
 - section: Димінутиви та емоційний пафос
-  words: 500
+  words: 608
   points:
   - Пестлива лексика у жіночих образах
   - Функція димінутивів
   - Катарсис через мову
 - section: Підсумок
-  words: 400
+  words: 487
   points:
   - Унікальність Шевченкової емпатії
   - Порівняння з іншими авторами
@@ -65,19 +65,10 @@ activity_hints:
   focus: Катерина і Наймичка (уривки)
   source: UkrLib
   items: 6+
-- type: quiz
-  focus: Сюжети та образи поем
-  items: 15+
-- type: match-up
-  focus: Жіночий образ → його характеристика
-  items: 12+
 - type: essay-response
   focus: Архетип Трагічної Матері у Шевченка
   word_target: 300
   output: Літературознавче есе
-- type: group-sort
-  focus: Димінутиви у жіночих образах
-  items: 20+
 focus: literature
 pedagogy: Seminar
 prerequisites:

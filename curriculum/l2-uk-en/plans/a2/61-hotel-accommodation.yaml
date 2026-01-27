@@ -59,18 +59,14 @@ vocabulary_hints:
   - прибирання (cleaning)
   - адміністратор (receptionist)
 activity_hints:
-- type: vocabulary-drill
+- type: match-up
   focus: Hotel vocabulary
   items: 25
-- type: dialogue
   focus: Check-in conversation
-  items: 12
 - type: fill-in
   focus: Complete hotel sentences
   items: 15
-- type: role-play
   focus: Hotel scenarios
-  items: 8
 focus: practical
 pedagogy: PPP
 prerequisites:

@@ -69,22 +69,10 @@ activity_hints:
   focus: Літературна творчість
   source: Уривки з романів та есеїв
   items: 3 passages
-- type: quiz
-  focus: Біографія та ключові твори
-  items: 12+
-- type: match-up
-  focus: Твори та їхні теми
-  items: 10+
 - type: essay-response
   focus: Як література допомагає опрацювати колективну травму?
   word_target: 300
   output: Аналітичне есе
-- type: group-sort
-  focus: Художня література vs есеїстика
-  items: 12+
-- type: fill-in
-  focus: Термінологія постколоніальної критики
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-40 (Леся Українка)
@@ -109,3 +97,7 @@ sources:
   notes: Громадська позиція та правозахисна діяльність
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of оксана забужко: інтелектуал і феміністка'
+- Evaluate the contributions of голос українського інтелектуалізму
+- Trace the career and influence of громадська позиція та сучасність

@@ -28,7 +28,7 @@
 
 ## Strengths
 
-- **Nuance:** It doesn't just list phrases but categorizes them by _certainty_. Teaching `мені здається` (low certainty) vs `я переконаний` (high certainty) prevents students from sounding incorrectly arrogant or unsure.
+- **Nuance:** It doesn't just list phrases but categorizes them by *certainty*. Teaching `мені здається` (low certainty) vs `я переконаний` (high certainty) prevents students from sounding incorrectly arrogant or unsure.
 - **Cultural Note:** The tip about direct disagreement being perceived as rude (and the need for softeners like "Я розумію, але...") is crucial pragmatic competence for Ukraine.
 
 ## Issues

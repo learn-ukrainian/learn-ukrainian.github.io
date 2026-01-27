@@ -12,7 +12,7 @@
 | ------------------- | ----- | ------------------------------------------------------------------------------------- |
 | Coherence           | 10/10 | Excellent synthesis of the entire B1.4 phase.                                         |
 | Relevance           | 10/10 | Connects grammar to register (Formal vs Informal).                                    |
-| Educational         | 10/10 | Scenarios (News vs Cafe) effectively demonstrate _why_ we have these different forms. |
+| Educational         | 10/10 | Scenarios (News vs Cafe) effectively demonstrate *why* we have these different forms. |
 | Language            | 9/10  | Generally excellent; one potential vocab question.                                    |
 | Pedagogy            | 10/10 | Task-based learning (creating a City Park project).                                   |
 | Immersion           | 10/10 | The "Public Hearing" vs "Gossip" dichotomy is very authentic.                         |
@@ -27,7 +27,7 @@
 - **Vocabulary:** `чаєчка` (in vocab list).
   - If "seagull": Correct.
   - If "tea" (diminutive): Incorrect (should be `чайок` or `чайочок`). `Чай` is masculine. `Чаєчка` implies feminine base `чайка`.
-  - _Action:_ Verify in context. If tea, replace.
+  - *Action:* Verify in context. If tea, replace.
 
 ## Strengths
 

@@ -5,19 +5,19 @@ version: '2.0'
 title: 'Берестейська унія: Церковний розкол'
 content_outline:
 - section: Вступ
-  words: 300
+  words: 333
 - section: Передумови унії та криза православ’я
-  words: 700
+  words: 778
 - section: Берестейський собор 1596 року та створення УГКЦ
-  words: 700
+  words: 778
 - section: Соціально-політичні наслідки та релігійна боротьба
-  words: 600
+  words: 667
 - section: Читання
-  words: 400
+  words: 444
 - section: Первинні джерела
-  words: 400
+  words: 444
 - section: Деколонізаційний погляд
-  words: 500
+  words: 556
 word_target: 4000
 focus: history
 pedagogy: CBI

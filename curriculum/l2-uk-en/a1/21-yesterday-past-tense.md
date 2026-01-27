@@ -17,17 +17,13 @@ Unlike English, where «I worked» and «she worked» look the same, Ukrainian p
 
 > [!tip] **Чи знаєте ви? (Did You Know?)**
 >
-> Минулий час (past tense) часто має букву **л**! Вона читала. Воно читало. Ми читали. Feminine, neuter, and plural forms always contain the letter **л**. Masculine forms usually end in **в** (Я читав), which historically evolved from an _l_ sound!
+> Минулий час (past tense) часто має букву **л**! Вона читала. Воно читало. Ми читали. Feminine, neuter, and plural forms always contain the letter **л**. Masculine forms usually end in **в** (Я читав), which historically evolved from an *l* sound!
 
 ## Presentation
 
 ### How Ukrainian Past Tense Works
 
-
-
 The past tense in Ukrainian is beautifully simple. You take the infinitive (like читати — to read), remove -ти, and add:
-
-
 
 | Who | Ending | IPA | Example | IPA |
 
@@ -40,8 +36,6 @@ The past tense in Ukrainian is beautifully simple. You take the infinitive (like
 | воно (it) | -**ло** | /lɔ/ | читало | /t͡ʃɪˈtɑlɔ/ |
 
 | вони (they) | -**ли** | /lɪ/ | читали | /t͡ʃɪˈtɑlɪ/ |
-
-
 
 **Key insight:** The ending matches the **gender of the subject**, not the person.
 
@@ -264,6 +258,7 @@ Translation:
 ## Практика
 
 ### Вправа 1: Переклад
+
 Перекладіть речення на українську мову.
 
 1. I was in the office yesterday.
@@ -271,7 +266,9 @@ Translation:
 3. They were working last week.
 
 ---
+
 # Підсумок
+
 Ви навчилися говорити про минуле українською! (You've learned to talk about the past!)
 
 **Запам'ятайте основні шаблони (Key patterns):**

@@ -67,12 +67,6 @@ activity_hints:
   focus: Тексти Валуєвського циркуляра та Емського указу
   source: Архівні документи
   items: 4
-- type: quiz
-  focus: Мовні заборони в Російській імперії
-  items: 15
-- type: match-up
-  focus: Документ → заборона
-  items: 10
 - type: true-false
   focus: Факти про мовні заборони
   items: 10

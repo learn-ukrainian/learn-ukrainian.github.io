@@ -67,15 +67,6 @@ activity_hints:
   focus: Свідчення репресованих кримських татар
   source: Правозахисні організації
   items: 4
-- type: quiz
-  focus: Кримські татари після 2014
-  items: 15
-- type: match-up
-  focus: Активіст → діяльність
-  items: 10
-- type: fill-in
-  focus: Правозахисна лексика
-  items: 10
 - type: essay-response
   focus: Як історія депортації 1944 року повторюється після 2014?
   word_target: 250

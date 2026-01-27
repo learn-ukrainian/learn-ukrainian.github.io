@@ -2,13 +2,13 @@
   "module": "ivan-mazepa-kultura",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:54:51.600289Z",
+  "last_audit": "2026-01-27T20:42:52.887278Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-25T21:08:33.766116Z",
     "meta": "2026-01-26T22:20:13.118062Z",
-    "activities": "2026-01-24T22:55:56.613090Z",
-    "vocabulary": "2026-01-24T22:27:07.008162Z",
+    "activities": "2026-01-27T20:42:16.162025Z",
+    "vocabulary": "2026-01-27T11:59:25.374272Z",
     "plan": null
   },
   "gates": {

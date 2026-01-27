@@ -1,10 +1,12 @@
 # Audit Report: M50 — 50-idioms-body-hands-legs.md
+
 **Level:** B2 | **Module:** M50 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:19
 
 ## Configuration
+
 **Type:** B2-vocab
 **Word Target:** 1750 words
 **Activities:** 10-14 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Значення соматичних фразеологізмів | 16 | 8 | ✅ |
@@ -42,6 +45,7 @@
 - Low density activities: 0
 
 ## Gates
+
 - **Words:** ✅ 1867/1750 (raw: 2276)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
@@ -60,10 +64,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 86% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 57 | 24 | 100% | 20% | 20.0% |
@@ -79,16 +85,18 @@
 | **TOTAL** | | | | | **86.2%** |
 
 ### Dryness Flags & Fixes
+
 - ❌ **ABSTRACT_ONLY**
   - FIX:
     Add 3+ real-world boxes. Use this exact format:
-    
+
     > 🌍 **У реальному житті**
     >
     > [Specific scenario: "На співбесіді...", "У магазині...", "На вокзалі..."]
     > [Example sentence showing grammar in that context]
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 56 | Included in Core |

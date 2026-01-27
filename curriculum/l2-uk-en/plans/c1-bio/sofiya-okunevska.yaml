@@ -69,22 +69,10 @@ activity_hints:
   focus: Біографія та медична діяльність
   source: Історичні дослідження та мемуари
   items: 3 passages
-- type: quiz
-  focus: Життєвий шлях та досягнення
-  items: 12+
-- type: match-up
-  focus: Етапи кар'єри та досягнення
-  items: 10+
 - type: essay-response
   focus: Чому жінкам було важко здобути освіту в XIX столітті?
   word_target: 300
   output: Історичне есе
-- type: group-sort
-  focus: Медична діяльність vs громадська діяльність
-  items: 12+
-- type: fill-in
-  focus: Медична та соціальна термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-25 (Наталія Кобринська)
@@ -108,3 +96,7 @@ sources:
   notes: Жіночий рух на Галичині
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of софія окуневська: перша жінка-лікар'
+- Evaluate the contributions of першопрохідниця медицини
+- Trace the career and influence of останні роки та спадщина (1920-1926)

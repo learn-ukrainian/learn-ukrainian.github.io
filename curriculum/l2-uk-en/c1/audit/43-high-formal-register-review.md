@@ -1,9 +1,11 @@
 # Audit Report: M43 — 43-high-formal-register.md
+
 **Level:** C1 | **Module:** M43 | **Phase:** C1 | **Pedagogy:** Academic | **Target:** 3000
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:21
 
 ## Configuration
+
 **Type:** C1
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -16,6 +18,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння офіційних текстів | 5 | 5 | ✅ |
@@ -38,11 +41,13 @@
 - Low density activities: 0
 
 ## Recommendation
+
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2004/3000 (raw: 2166)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
@@ -61,10 +66,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 83% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 45 | 15 | 100% | 25% | 25.0% |
@@ -78,6 +85,7 @@
 | **TOTAL** | | | | | **83.6%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 70 | Included in Core |

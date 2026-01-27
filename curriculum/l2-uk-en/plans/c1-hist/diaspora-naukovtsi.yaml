@@ -5,17 +5,19 @@ version: '1.0'
 title: 'Діаспорні науковці: Збереження спадщини'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of діаспорні науковці: збереження спадщини'
+- Evaluate the historical significance of наука в еміграції
 content_outline:
 - section: Вступ — Наука в еміграції
-  words: 400
+  words: 457
   subsections:
   - Чому потрібні наукові інституції
   - Науковці серед ДіПі
   - Створення альтернативного простору
   - Структура модуля
 - section: Гарвардський український інститут (HURI)
-  words: 700
+  words: 800
   subsections:
   - Заснування — 1973
   - Омелян Пріцак — візія
@@ -23,7 +25,7 @@ content_outline:
   - Видання — Harvard Ukrainian Studies
   - Вплив на західну науку
 - section: УВАН — Українська вільна академія наук
-  words: 600
+  words: 686
   subsections:
   - Заснування — 1945, Аугсбург
   - Переїзд до Нью-Йорка
@@ -31,14 +33,14 @@ content_outline:
   - Видання і публікації
   - Збереження традиції
 - section: НТШ в діаспорі
-  words: 500
+  words: 571
   subsections:
   - Історія — від Львова до еміграції
   - Відновлення в діаспорі
   - Наукові осередки — США, Канада, Європа
   - Енциклопедія українознавства
 - section: Ключові постаті
-  words: 600
+  words: 686
   subsections:
   - Омелян Пріцак — орієнталіст
   - Ярослав Пеленський — політолог
@@ -46,19 +48,19 @@ content_outline:
   - Роман Шпорлюк — націолог
   - Оксана Забужко — письменниця-науковиця
 - section: Спадщина для України
-  words: 400
+  words: 457
   subsections:
   - Що зберегли — бібліотеки, архіви
   - Вплив після 1991
   - Повернення знань
   - Сучасна співпраця
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - Діаспора — «інтелектуальний ковчег»
   - Без діаспори — що б втратили
   - Зв'язок з незалежною Україною
-word_target: 3500
+word_target: 4000
 vocabulary:
 - науковець
 - інститут
@@ -76,13 +78,13 @@ vocabulary:
 - історіографія
 - рецепція
 activities:
-- type: institutional-study
+- type: comparative-study
   focus: Compare HURI, UVAN, NTSh — missions and methods
 - type: reading
   focus: Pritsak's vision for Ukrainian studies
-- type: bibliographic-analysis
+- type: critical-analysis
   focus: Key diaspora publications and their impact
-- type: knowledge-transfer
+- type: critical-analysis
   focus: How diaspora knowledge returned to Ukraine after 1991
 - type: essay-response
   focus: Що українська наука втратила б без діаспори?

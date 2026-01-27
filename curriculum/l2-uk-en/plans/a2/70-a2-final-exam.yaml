@@ -5,43 +5,41 @@ version: '2.0'
 title: A2 Final Exam
 subtitle: Level Completion
 content_outline:
-- section: 'Pre-Exam: Preparation'
-  words: 50
+- section: 'Overview (Огляд)'
+  words: 130
   points:
   - Exam format overview
   - Skills to demonstrate
-  - Final preparation tips
-- section: Reading Comprehension
-  words: 100
+- section: 'Навичка 1: Майстерність відмінків'
+  words: 135
   points:
-  - Text understanding
-  - Main idea identification
-  - Detail extraction
-- section: Listening Comprehension
-  words: 100
+  - Case system mastery
+  - Practice exercises
+- section: 'Навичка 2: Вид дієслова'
+  words: 125
   points:
-  - Audio understanding
-  - Key information
-  - Following dialogues
-- section: Grammar and Vocabulary
-  words: 150
-  points:
-  - Case selection
   - Verb aspect usage
-  - Vocabulary in context
-- section: Speaking Assessment
-  words: 100
+  - Process vs result
+- section: 'Навичка 3: Навігація в місті'
+  words: 110
   points:
-  - Self-introduction
-  - Situation responses
-  - Conversation skills
-- section: Results and Next Steps
-  words: 100
+  - Navigation vocabulary
+  - Giving directions
+- section: 'Навичка 4: Словотвір'
+  words: 80
   points:
-  - Performance review
-  - Areas for improvement
+  - Word formation
+  - Roots and prefixes
+- section: 'Integration Challenge (Інтеграційне завдання)'
+  words: 365
+  points:
+  - Combined skills dialogue
+  - Cultural moments
+- section: 'Need More Practice?'
+  words: 80
+  points:
   - Transition to B1
-word_target: 600
+word_target: 1025
 vocabulary_hints:
   required:
   - іспит (exam)
@@ -58,17 +56,14 @@ vocabulary_hints:
   - досягнення (achievement)
   - сертифікат (certificate)
 activity_hints:
-- type: reading-comprehension
-  focus: A2 level texts
-  items: 15
-- type: listening
-  focus: A2 level audio
+- type: quiz
+  focus: Comprehensive A2 grammar test
+  items: 30
+- type: quiz
+  focus: A2 vocabulary mastery
   items: 15
 - type: quiz
-  focus: Comprehensive grammar test
-  items: 30
-- type: speaking
-  focus: Oral assessment
+  focus: A2 practical scenarios
   items: 10
 focus: checkpoint
 pedagogy: TTT

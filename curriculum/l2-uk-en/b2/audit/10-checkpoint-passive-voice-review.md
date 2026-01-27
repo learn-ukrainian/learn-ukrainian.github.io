@@ -1,10 +1,12 @@
 # Audit Report: M10 — 10-checkpoint-passive-voice.md
+
 **Level:** B2 | **Module:** M10 | **Phase:** B2 | **Pedagogy:** Not Specified | **Target:** 1750
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:27:50
 
 ## Configuration
+
 **Type:** B2-checkpoint
 **Word Target:** 1750 words
 **Activities:** 15-19 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Визначення типу пасиву (M01) | 10 | 8 | ✅ |
@@ -47,15 +50,18 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 10-checkpoint-passive-voice.yaml: Duplicate key 'instruction' at line 873 (first defined at line 872)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
+
 - **Words:** ⚠️ 1717/1750 (raw: 1921) (33 short)
 - **Activities:** ✅ 18/15
 - **Density:** ✅ All > 14
@@ -74,10 +80,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 74% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 50 | 24 | 100% | 20% | 20.0% |
@@ -93,12 +101,13 @@
 | **TOTAL** | | | | | **74.7%** |
 
 ### Dryness Flags & Fixes
+
 - ❌ **LOW_DIALOGUE**
   - FIX:
     Add more mini-dialogues (need 4+ total). Use this exact format:
-    
+
     **Діалог: [Location in Ukraine]**
-    
+
     > — [Speaker 1 line with **bolded** grammar examples]
     > — [Speaker 2 response with **bolded** grammar examples]
     > — [Speaker 1 continuation]
@@ -106,7 +115,7 @@
 - ❌ **NO_CULTURAL_ANCHOR**
   - FIX:
     Add 3+ cultural references. Use this exact format:
-    
+
     > 🇺🇦 **Культурний момент**
     >
     > [Reference to Ukrainian place (Київ, Львів, Одеса, Карпати), tradition, or custom]
@@ -114,6 +123,7 @@
     > [Example sentence using the grammar with cultural context]
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 64 | Included in Core |

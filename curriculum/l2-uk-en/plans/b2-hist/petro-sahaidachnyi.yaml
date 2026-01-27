@@ -6,45 +6,45 @@ title: 'Петро Сагайдачний: Гетьман і меценат'
 subtitle: The Knight of Orthodox Culture and Naval Glory
 content_outline:
 - section: Вступ
-  words: 465
+  words: 496
   points:
   - Sahaidachnyi as a statesman-leader
   - The transition to a professional cossack army
 - section: Шлях від Кульчиць до Січі
-  words: 907
+  words: 968
   points:
   - Origins and education in Ostroh
   - 'Military reforms: discipline and training'
   - 'The ''Marine'' strategy: Campaigns against Istanbul'
 - section: 'Військова слава: Кафа та Москва — шлях переможця'
-  words: 809
+  words: 864
   points:
   - The liberation of slaves in Caffa (1616)
   - The campaign of 1618 and the siege of Moscow
   - Tactical innovations of the cossack fleet
 - section: 'Читання: Голос барокової епохи'
-  words: 352
+  words: 376
   points:
   - Analysis of 'The Lament over the Grave of Sahaidachnyi' by Sakovych
 - section: 'Меценатство та Освіта: Революція духу'
-  words: 738
+  words: 788
   points:
   - Support for the Kyiv Brotherhood
   - Restoration of the Orthodox hierarchy (1620)
   - The union of the 'sword and the book'
 - section: 'Хотинська епопея (1621): Битва за майбутнє Європи'
-  words: 723
+  words: 772
   points:
   - The clash of civilizations at Khotyn
   - The decisive role of cossacks in saving Europe
   - The fatal wound and death of the Hetman
 - section: 'Первинні джерела: Свідчення очевидців та славослів''я'
-  words: 376
+  words: 401
   points:
   - Excerpts from contemporary panegyrics
   - Foreign accounts of Khotyn
 - section: 'Деколонізаційний погляд: Повернення справжнього гетьмана'
-  words: 501
+  words: 535
   points:
   - Sahaidachnyi as a European-style knight, not an imperial servant
   - Reclaiming the naval heritage of Ukraine
@@ -52,8 +52,6 @@ word_target: 5200
 activity_hints:
 - type: reading
   focus: Kassian Sakovych's panegyric analysis
-- type: quiz
-  focus: Key dates and achievements of Sahaidachnyi
 - type: essay-response
   focus: The concept of 'Knightly Ethos' in Sahaidachnyi's leadership
 - type: comparative-study

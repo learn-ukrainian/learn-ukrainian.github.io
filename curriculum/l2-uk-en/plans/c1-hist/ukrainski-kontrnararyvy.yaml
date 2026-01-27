@@ -5,57 +5,59 @@ version: '1.0'
 title: Українські контрнаративи
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- Analyze the causes and consequences of українські контрнаративи
+- Evaluate the historical significance of боротьба за наратив
 content_outline:
 - section: Вступ — Боротьба за наратив
-  words: 400
+  words: 457
   subsections:
   - Україна не тільки захищається
   - Контрнаратив — активна позиція
   - Від реактивності до стратегії
   - Структура модуля
 - section: Державні інструменти
-  words: 600
+  words: 686
   subsections:
   - Центр протидії дезінформації
   - Ukraine Crisis Media Center
   - Дипломатичний корпус
   - Зеленський як комунікатор
 - section: Громадянське суспільство
-  words: 700
+  words: 800
   subsections:
   - StopFake — піонери
   - Texty.org.ua — дата-журналістика
   - VoxCheck — фактчекінг
   - Волонтерська армія
 - section: NAFO і соцмережі
-  words: 600
+  words: 686
   subsections:
   - Що таке NAFO
   - Гумор як зброя
   - Міжнародна спільнота
   - Ефективність
 - section: Культурна дипломатія
-  words: 500
+  words: 571
   subsections:
   - Eurovision — Kalush Orchestra
   - Кінофестивалі
   - Мистецтво як послання
   - «Україна — це...»
 - section: Виклики і межі
-  words: 400
+  words: 457
   subsections:
   - Ресурсна асиметрія
   - Втомленість аудиторії
   - Ризики — пропаганда vs правда
   - Етичні питання
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - Контрнаратив — необхідність
   - Успіхи і обмеження
   - Перехід до синтезу
-word_target: 3500
+word_target: 4000
 vocabulary:
 - контрнаратив
 - фактчекінг
@@ -73,13 +75,13 @@ vocabulary:
 - інфлюенсер
 - «м'яка сила»
 activities:
-- type: institution-analysis
+- type: critical-analysis
   focus: Ukrainian counter-disinformation infrastructure
-- type: case-study
+- type: comparative-study
   focus: NAFO — how humor fights disinformation
-- type: effectiveness-analysis
+- type: critical-analysis
   focus: What works and what doesn't
-- type: ethical-analysis
+- type: critical-analysis
   focus: Counter-narrative vs. propaganda — where's the line?
 - type: essay-response
   focus: Чи може Україна виграти інформаційну війну?

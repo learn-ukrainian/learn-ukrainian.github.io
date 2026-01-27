@@ -12,7 +12,7 @@
 | ------------------- | ----- | ------------------------------------------------------------------------------- |
 | Coherence           | 10/10 | Logical groups: Opinion -> Process -> Imagination -> Judgment.                  |
 | Relevance           | 10/10 | Essential for B1 -> B2 nuance (avoiding repetitive "Я думаю").                  |
-| Educational         | 10/10 | Excellent nuance: _Гадати_ (to suppose/guess) vs _Думати_ (to think).           |
+| Educational         | 10/10 | Excellent nuance: *Гадати* (to suppose/guess) vs *Думати* (to think).           |
 | Language            | 10/10 | High-quality synonyms.                                                          |
 | Pedagogy            | 9/10  | "Cordocentrism" (Heart-centered thinking) is a fascinating philosophical angle. |
 | Immersion           | 10/10 | Connecting "Thinking" to Ukrainian philosophy (Pamfil Yurkevych) is deep.       |
@@ -25,7 +25,7 @@
 ## Linguistic Accuracy Issues
 
 - **Vocabulary:** `зна` (in list). Looks like a hallucination or truncation of `знати`. `Зна` is not a word.
-  - _Action:_ Remove.
+  - *Action:* Remove.
 
 ## Strengths
 

@@ -12,7 +12,7 @@
 | ------------------- | ----- | -------------------------------------------------------------------------------------------------------- |
 | Coherence           | 10/10 | Logical flow (Abstract Nouns -> Discourse Markers -> Argumentation).                                     |
 | Relevance           | 10/10 | Essential for B1 -> B2 academic writing shift.                                                           |
-| Educational         | 10/10 | Excellent focus on _text cohesion_ (`отже`, `по-перше`, `таким чином`).                                  |
+| Educational         | 10/10 | Excellent focus on *text cohesion* (`отже`, `по-перше`, `таким чином`).                                  |
 | Language            | 10/10 | Academic register.                                                                                       |
 | Pedagogy            | 9/10  | "Cultural Mosaic" theme allows using complex grammar to describe diversity.                              |
 | Immersion           | 10/10 | Comparing Lviv (Renaissance) vs Chernivtsi (Eclectic) vs Kyiv (Baroque) is a great architectural lesson. |
@@ -25,11 +25,11 @@
 ## Linguistic Accuracy Issues
 
 - **Vocabulary:** `зложитися`. Rare/dialectal for `скластися` (to composed of/to fold). The context is likely "culture is composed of elements". Standard Ukrainian uses `складатися`. `Зложити` is more "to deposit/lay down".
-  - _Action:_ Change to `скластися` / `складатися`.
+  - *Action:* Change to `скластися` / `складатися`.
 
 ## Strengths
 
-- **Academic Skills:** This module is the "bridge" to B2/C1. It teaches how to build an _argument_, not just a sentence.
+- **Academic Skills:** This module is the "bridge" to B2/C1. It teaches how to build an *argument*, not just a sentence.
 - **Architectural vocabulary:** `бароко`, `готика` gives students the words to describe what they actually see in Ukrainian cities.
 
 ## Issues

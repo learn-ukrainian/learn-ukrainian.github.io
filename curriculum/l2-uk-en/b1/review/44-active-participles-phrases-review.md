@@ -14,7 +14,7 @@
 | Relevance           | 10/10 | Crucial for de-Russifying student speech.                                      |
 | Educational         | 10/10 | Excellent explanation of why "-чий" forms (present active) are non-standard.   |
 | Language            | 10/10 | Module text is standard; examples of errors are clearly marked.                |
-| Pedagogy            | 10/10 | Teaches the _replacement_ strategy ("той, що...") rather than just formation.  |
+| Pedagogy            | 10/10 | Teaches the *replacement* strategy ("той, що...") rather than just formation.  |
 | Immersion           | 9/10  | Strong historical context (Russification).                                     |
 | Activities          | 10/10 | Activities reinforce converting unnatural participles to natural clauses.      |
 | Richness            | 9/10  | Good inclusion of "Executed Renaissance" context.                              |
@@ -25,7 +25,7 @@
 ## Linguistic Accuracy Issues
 
 - **Vocabulary File Garbage:** `vocabulary/44-active-participles-phrases.yaml` contains: `розстрілянега` (typo), `учий`, `ючий`, `ячий`.
-- **Note:** The inclusion of words like `читаючий`, `слідуючий` in the vocabulary list is acceptable _only if_ they are tagged or taught as forms to recognize but avoid. As raw flashcards, they might be misleading, but the module context handles them well.
+- **Note:** The inclusion of words like `читаючий`, `слідуючий` in the vocabulary list is acceptable *only if* they are tagged or taught as forms to recognize but avoid. As raw flashcards, they might be misleading, but the module context handles them well.
 
 ## Strengths
 

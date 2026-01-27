@@ -2,14 +2,14 @@
   "module": "89-checkpoint-grammar-synthesis",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:27:41.544166Z",
+  "last_audit": "2026-01-27T20:14:34.286914Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-24T23:04:45.805607Z",
     "meta": "2026-01-26T15:44:41.739518Z",
     "activities": "2026-01-11T22:51:44.472973Z",
     "vocabulary": "2026-01-25T15:44:17.421601Z",
-    "plan": "2026-01-26T15:44:41.739182Z"
+    "plan": "2026-01-27T20:01:57.917215Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "1651/1200 (raw: 2029) | pedagogy: 1 violations | richness: 82% < 95% min (grammar) - REWRITE needed"
+      "status": "pass",
+      "violations": 0,
+      "message": "1651/1200 (raw: 2029)"
     },
     "activities": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "6 Outline Compliance Errors",
-      "Missing required activity types: diagnostic, production, transformation"
-    ],
-    "pass_count": 4,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

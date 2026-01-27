@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M57 | **Phase:** HIST.6 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:54:46
+**Generated:** 2026-01-27 20:35:21
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** comparative-study, essay-response, quiz, reading, true-false
+**Required Types:** comparative-study, essay-response, reading, true-false
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -22,26 +22,22 @@
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Промова Юрія Немирича у Варшавському сеймі | 3 | 1 | ✅ |
 | 2 | comparative-study | Два шляхи України: Переяслав vs Гадяч | 1 | 1 | ✅ |
-| 3 | quiz | Юрій Немирич та проект Великого Князівства Руського | 8 | 8 | ✅ |
-| 4 | match-up | Поняття та терміни Гадяцького проекту | 12 | 8 | ✅ |
-| 5 | true-false | Гадяцька угода: Міфи та реальність | 10 | 8 | ✅ |
-| 6 | select | Ознаки державності Великого Князівства Руського | 8 | 6 | ✅ |
-| 7 | error-correction | Граматика в історичному оповіданні | 8 | 6 | ✅ |
-| 8 | cloze | Підсумок: Шанс Великого Князівства Руського | 13 | 1 | ✅ |
-| 9 | essay-response | Аналітичне есе: Юрій Немирич та інтелектуальна альтернатива | 1 | 1 | ✅ |
+| 3 | true-false | Гадяцька угода: Міфи та реальність | 10 | 8 | ✅ |
+| 4 | essay-response | Аналітичне есе: Юрій Немирич та інтелектуальна альтернатива | 1 | 1 | ✅ |
+| 5 | critical-analysis | Гадяцький проект як європейська альтернатива | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 9 (target: 3-9) ✅
-- Unique types: 9 (minimum: 2) ✅
-- Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
-- Required types used: 5/5 (comparative-study, essay-response, quiz, reading, true-false) ✅
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 4/4 (comparative-study, essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ✅ 4642/4000 (raw: 4710)
-- **Activities:** ✅ 9/3
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 9/2 types
+- **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
@@ -49,7 +45,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ 1 cloze with year blanks
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

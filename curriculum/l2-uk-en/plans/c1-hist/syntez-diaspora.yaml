@@ -5,17 +5,19 @@ version: '1.0'
 title: 'Синтез: Ковчег нації'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of синтез: ковчег нації'
+- Evaluate the historical significance of три хвилі, одна місія
 content_outline:
 - section: Вступ — Три хвилі, одна місія
-  words: 400
+  words: 457
   subsections:
   - Огляд модулів 64-68
   - Діаспора як феномен
   - «Паралельна держава»
   - Мета синтезу
 - section: Порівняння трьох хвиль
-  words: 600
+  words: 686
   subsections:
   - Соціальний склад
   - Географія
@@ -23,7 +25,7 @@ content_outline:
   - Збереження ідентичності
   - Що кожна хвиля принесла
 - section: Функції діаспори
-  words: 700
+  words: 800
   subsections:
   - Збереження культури
   - Політичне представництво
@@ -31,33 +33,33 @@ content_outline:
   - Лобіювання
   - «Голос нації» у світі
 - section: Діаспора і незалежність
-  words: 600
+  words: 686
   subsections:
   - Підтримка дисидентів
   - Тиск на Захід
   - 1991 — перші контакти
   - Після незалежності — нова роль
 - section: 2022 — Четверта хвиля?
-  words: 500
+  words: 571
   subsections:
   - Біженці 2022 — мільйони
   - Відмінності від попередніх хвиль
   - Нова діаспора — тимчасова чи постійна?
   - Зв'язок з Україною — технології
 - section: Виклики і майбутнє
-  words: 400
+  words: 457
   subsections:
   - Асиміляція — загроза
   - Молоде покоління
   - Роль після перемоги
   - Діаспора чи «транснаціональна нація»?
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - Діаспора — ковчег нації
   - Збереження, коли вдома не можна
   - Перехід до регіональних студій
-word_target: 3500
+word_target: 4000
 vocabulary:
 - синтез
 - ковчег
@@ -77,11 +79,11 @@ vocabulary:
 activities:
 - type: essay-response
   focus: Create diaspora evolution diagram
-- type: wave-comparison
+- type: comparative-study
   focus: Three waves — what united, what divided
-- type: function-analysis
+- type: critical-analysis
   focus: What did diaspora do for Ukraine?
-- type: contemporary-analysis
+- type: critical-analysis
   focus: 2022 refugees — new diaspora or different?
 - type: essay-response
   focus: Як діаспора вплинула на здобуття незалежності 1991 року?

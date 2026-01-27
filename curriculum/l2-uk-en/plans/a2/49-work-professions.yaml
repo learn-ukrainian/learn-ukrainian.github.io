@@ -5,42 +5,28 @@ version: '2.0'
 title: Work and Professions
 subtitle: Jobs and Careers
 content_outline:
-- section: 'Introduction: Work in Ukraine'
-  words: 100
-  points:
-  - Job market overview
-  - Common professions
-  - Work vocabulary
-- section: Professions
-  words: 250
-  points:
-  - лікар, вчитель, інженер
-  - програміст, бухгалтер, менеджер
-  - 'Instrumental: працюю лікарем'
-- section: Workplace
-  words: 200
-  points:
-  - офіс, завод, школа, лікарня
-  - Workplace locations
-  - Work environments
-- section: Job Activities
-  words: 200
-  points:
-  - Describing duties
-  - Daily work routine
-  - Responsibilities
-- section: Job Searching
+- section: 'Вступ'
   words: 150
   points:
-  - резюме, співбесіда
-  - Applying for jobs
-  - Interview basics
-- section: 'Practice: Talk About Work'
+  - Job market overview
+  - Work vocabulary introduction
+- section: 'Граматика'
+  words: 850
+  points:
+  - Professions (лікар, вчитель, інженер)
+  - Instrumental with professions
+  - Workplace vocabulary
+  - Job activities
+- section: 'Практика'
+  words: 500
+  points:
+  - Dialogues about work
+  - Job interview practice
+- section: 'Підсумок'
   words: 100
   points:
-  - Describe your job
-  - Job interview practice
-word_target: 1000
+  - Summary of vocabulary
+word_target: 1600
 vocabulary_hints:
   required:
   - робота (work/job)
@@ -59,16 +45,16 @@ vocabulary_hints:
   - керівник (manager)
   - підлеглий (subordinate)
 activity_hints:
-- type: vocabulary-drill
+- type: match-up
   focus: Professions and workplace
   items: 30
 - type: fill-in
   focus: Complete work descriptions
   items: 20
-- type: dialogue
+- type: cloze
   focus: Job interview
   items: 10
-- type: speaking
+- type: quiz
   focus: Describe your work
   items: 8
 focus: vocabulary

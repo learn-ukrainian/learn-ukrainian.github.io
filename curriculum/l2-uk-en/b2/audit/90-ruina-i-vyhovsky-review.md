@@ -1,9 +1,11 @@
 # Audit Report: 90-ruina-i-vyhovsky.md
+
 **Phase:** B2.3b | **Level:** B2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
+
 - **Words:** ⚠️ 1987/2000 (13 short)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
@@ -22,10 +24,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 98% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 15 | 3 | 100% | 24% | 23.8% |
@@ -40,6 +44,7 @@
 | **TOTAL** | | | | | **98.5%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 72 | Included in Core |

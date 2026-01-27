@@ -69,22 +69,10 @@ activity_hints:
   focus: Уривки з «Самостійної України» та промов
   source: Публіцистичні твори
   items: 3 passages
-- type: quiz
-  focus: Біографія та ідеологія
-  items: 12+
-- type: match-up
-  focus: Ідеї та їхній вплив
-  items: 10+
 - type: essay-response
   focus: Чому Міхновський випередив свій час?
   word_target: 300
   output: Historical analysis
-- type: group-sort
-  focus: Етапи політичної діяльності
-  items: 12+
-- type: fill-in
-  focus: Політологічна термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-22-mykhailo-drahomanov
@@ -107,3 +95,7 @@ sources:
   notes: Перша політична організація Міхновського
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of микола міхновський: ідеолог самостійництва'
+- Evaluate the contributions of голос української незалежності
+- Trace the career and influence of останні роки та загибель (1918-1924)

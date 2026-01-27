@@ -2,13 +2,13 @@
   "module": "pavlo-polubotok",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:54:54.978321Z",
+  "last_audit": "2026-01-27T15:51:19.221697Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-25T21:09:39.009311Z",
+    "md": "2026-01-27T15:24:10.347018Z",
     "meta": "2026-01-26T22:20:13.402430Z",
-    "activities": "2026-01-25T00:19:54.644119Z",
-    "vocabulary": "2026-01-25T00:16:10.940890Z",
+    "activities": "2026-01-27T15:34:54.393278Z",
+    "vocabulary": "2026-01-27T12:15:07.237497Z",
     "plan": null
   },
   "gates": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4091/4000 (raw: 4139)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4091/4000 (raw: 4139) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "10/3"
+      "message": "4/3"
     },
     "vocabulary": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 0
+    "pass_count": 4,
+    "fail_count": 1
   }
 }

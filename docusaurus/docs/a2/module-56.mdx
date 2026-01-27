@@ -23,6 +23,8 @@ import ComparativeStudy from '@site/src/components/ComparativeStudy';
 import ReadingActivity from '@site/src/components/ReadingActivity';
 import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
 import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
 
 
 ## Огляд
@@ -470,6 +472,21 @@ To solidify your knowledge, try writing five sentences using the grammar pattern
 ### Vocabulary Review Translation
 
 <Translate questions={JSON.parse(`[{"source": "Kitchen", "options": [{"text": "Кухня", "correct": true}, {"text": "Кімната", "correct": false}, {"text": "Коридор", "correct": false}]}, {"source": "Weather", "options": [{"text": "Погода", "correct": true}, {"text": "Природа", "correct": false}, {"text": "Пора", "correct": false}]}, {"source": "To cook", "options": [{"text": "Готувати", "correct": true}, {"text": "Варити", "correct": false}, {"text": "Смажити", "correct": false}]}, {"source": "Mountain", "options": [{"text": "Гора", "correct": true}, {"text": "Долина", "correct": false}, {"text": "Ріка", "correct": false}]}, {"source": "Summer", "options": [{"text": "Літо", "correct": true}, {"text": "Зима", "correct": false}, {"text": "Весна", "correct": false}]}, {"source": "Furniture", "options": [{"text": "Меблі", "correct": true}, {"text": "Одяг", "correct": false}, {"text": "Посуд", "correct": false}]}]`)} />
+
+### Grammar Errors
+
+<ErrorCorrection>
+  <ErrorCorrectionItem sentence="Я йду до магазина." errorWord="магазина" correctForm="магазину" options={JSON.parse(`["магазину", "магазина", "магазині", "магазином"]`)} explanation="Genitive of магазин is магазину (masculine -ин → -у)." />
+  <ErrorCorrectionItem sentence="Вона читає книга." errorWord="книга" correctForm="книгу" options={JSON.parse(`["книгу", "книга", "книги", "книгою"]`)} explanation="Accusative feminine -а → -у." />
+  <ErrorCorrectionItem sentence="Я купила новий сумка." errorWord="новий" correctForm="нову" options={JSON.parse(`["нову", "новий", "нова", "нової"]`)} explanation="Adjective must agree with feminine noun сумка." />
+  <ErrorCorrectionItem sentence="Він працюють у банку." errorWord="працюють" correctForm="працює" options={JSON.parse(`["працює", "працюють", "працюємо", "працюєш"]`)} explanation="Third person singular needs -є ending." />
+  <ErrorCorrectionItem sentence="Ми їхали до Львова вчора." errorWord="їхали" correctForm="поїхали" options={JSON.parse(`["поїхали", "їхали", "їдемо", "їздили"]`)} explanation="Single completed action requires perfective поїхали." />
+  <ErrorCorrectionItem sentence="Діти грають на футбол." errorWord="на" correctForm="у" options={JSON.parse(`["у", "на", "в", "до"]`)} explanation="Play football = грати у/в футбол." />
+</ErrorCorrection>
+
+### Grammar Fill-In
+
+<FillIn items={JSON.parse(`[{"sentence": "Я іду [___] роботу.", "answer": "на", "options": ["на", "до", "в", "від"]}, {"sentence": "Вона живе [___] Києві.", "answer": "у", "options": ["у", "на", "до", "від"]}, {"sentence": "Він [___] українську мову щодня.", "answer": "вивчає", "options": ["вивчає", "вчиться", "навчає", "вивчати"]}, {"sentence": "Ми [___] в кіно вчора ввечері.", "answer": "ходили", "options": ["ходили", "ходимо", "йшли", "піти"]}, {"sentence": "Мені [___] допомога.", "answer": "потрібна", "options": ["потрібна", "потрібно", "потрібні", "потрібний"]}, {"sentence": "Вони [___] на концерт наступної суботи.", "answer": "підуть", "options": ["підуть", "йдуть", "ходять", "піти"]}, {"sentence": "Я [___] каву без цукру.", "answer": "п'ю", "options": ["п'ю", "їм", "пити", "випити"]}, {"sentence": "Студенти [___] іспит завтра.", "answer": "складатимуть", "options": ["складатимуть", "склали", "складають", "здавати"]}]`)} />
 
 ## 📚 Vocabulary
 

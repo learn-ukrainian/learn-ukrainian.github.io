@@ -5,47 +5,47 @@ version: '2.0'
 title: '2004: Кримська криза під час Помаранчевої'
 content_outline:
 - section: Вступ — Забута загроза
-  words: 451
+  words: 515
   points:
   - Листопад 2004
   - Сепаратистський з'їзд у Сєвєродонецьку
   - Чому не спрацювало
   - Структура модуля
 - section: Помаранчева революція — контекст
-  words: 677
+  words: 774
   points:
   - Фальсифікація виборів
   - Київський Майдан
   - Позиція Сходу
   - Ризик розколу
 - section: Сєвєродонецький з'їзд
-  words: 790
+  words: 903
   points:
   - Хто скликав
   - Що пропонували
   - Лужков — присутність Росії
   - «Південно-східна автономія»
 - section: Чому провалилось
-  words: 677
+  words: 774
   points:
   - Місцеві еліти — не готові
   - Відсутність народної підтримки
   - Кучма — не пішов на розкол
   - Помаранчева перемога
 - section: Уроки для 2014
-  words: 564
+  words: 645
   points:
   - Що змінилось за 10 років
   - Чому 2014 — інакше
   - Підготовка до анексії
   - Порівняння сценаріїв
 - section: Підсумок
-  words: 341
+  words: 389
   points:
   - 2004 — репетиція
   - Україна не розкололась
   - Перехід до жінок у революціях
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - Помаранчева революція (Orange Revolution)
@@ -65,16 +65,16 @@ vocabulary_hints:
   - Кучма (Kuchma)
   - Янукович (Yanukovych)
 activity_hints:
-- type: event-analysis
+- type: critical-analysis
   focus: Severodonetsk congress — what happened
   output: Congress analysis
-- type: failure-analysis
+- type: critical-analysis
   focus: Why 2004 separatism failed
   output: Failure factors
-- type: comparison
+- type: critical-analysis
   focus: 2004 vs 2014 — why different outcomes
   output: Scenario comparison
-- type: elite-study
+- type: comparative-study
   focus: Regional elites — loyalty and calculation
   output: Elite behavior analysis
 - type: essay-response
@@ -100,3 +100,6 @@ sources:
   notes: Crimean separatism
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of 2004: кримська криза під час помаранчевої'
+- Evaluate the historical significance of забута загроза

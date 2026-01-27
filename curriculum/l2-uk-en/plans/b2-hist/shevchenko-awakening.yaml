@@ -69,15 +69,6 @@ activity_hints:
   focus: Уривки з творів Шевченка
   source: Кобзар
   items: 4
-- type: quiz
-  focus: Життя та творчість Шевченка
-  items: 15
-- type: match-up
-  focus: Твір → тема/зміст
-  items: 10
-- type: fill-in
-  focus: Біографічна лексика
-  items: 10
 - type: essay-response
   focus: Чому Шевченка називають творцем української нації?
   word_target: 250

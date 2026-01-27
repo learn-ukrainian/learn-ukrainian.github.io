@@ -2,13 +2,13 @@
   "module": "scythians-sarmatians",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T23:16:42.652056Z",
+  "last_audit": "2026-01-27T15:46:08.826800Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-25T13:44:21.285257Z",
+    "md": "2026-01-27T15:24:10.347190Z",
     "meta": "2026-01-26T22:20:13.542809Z",
-    "activities": "2026-01-25T13:34:41.259922Z",
-    "vocabulary": "2026-01-25T13:33:25.021579Z",
+    "activities": "2026-01-27T15:34:54.714090Z",
+    "vocabulary": "2026-01-26T23:20:25.009977Z",
     "plan": null
   },
   "gates": {
@@ -25,7 +25,7 @@
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "9/3"
+      "message": "6/3"
     },
     "vocabulary": {
       "status": "pass",

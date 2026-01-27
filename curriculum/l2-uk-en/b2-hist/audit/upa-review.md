@@ -1,10 +1,12 @@
 # Audit Report: M107 — upa.md
+
 **Level:** B2 | **Module:** M107 | **Phase:** HIST.10 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:55:18
 
 ## Configuration
+
 **Type:** B2-history
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння тексту: Контекст та стратегія | 11 | 8 | ✅ |
@@ -44,16 +47,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in upa.yaml: Schema validation error at key '12': {'type': 'translate', 'title': 'Перекладіть правильно', 'items': [{'source': 'They fought on two fronts.', 'options': [{'text': 'Вони воювали на два фронти.', 'correct': True}, {'text': 'Вони воювали на двох фронтів.', 'correct': False}, {'text': 'Вони воював на два фронти.', 'correct': False}]}, {'source': 'The leader of the organization.', 'options': [{'text': 'Провідник організації.', 'correct': True}, {'text': 'Провідника організація.', 'correct': False}, {'text': 'Провіднику організація.', 'correct': False}]}, {'source': 'Glory to Ukraine!', 'options': [{'text': 'Слава Україні!', 'correct': True}, {'text': 'Славу України!', 'correct': False}, {'text': 'Славою Україні!', 'correct': False}]}, {'source': 'Underground bunker.', 'options': [{'text': 'Підземна криївка.', 'correct': True}, {'text': 'Підземний криївка.', 'correct': False}, {'text': 'Підземне криївка.', 'correct': False}]}, {'source': 'Local population supported them.', 'options': [{'text': 'Місцеве населення підтримувало їх.', 'correct': True}, {'text': 'Місцеві населення підтримували їх.', 'correct': False}, {'text': 'Місцеве населення підтримував їх.', 'correct': False}]}, {'source': 'The army was secret.', 'options': [{'text': 'Армія була таємною.', 'correct': True}, {'text': 'Армія був таємний.', 'correct': False}, {'text': 'Армія було таємне.', 'correct': False}]}], 'instruction': 'Оберіть правильний переклад.'} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2009/4000 (raw: 2183)
 - **Activities:** ✅ 15/3
 - **Density:** ✅ All > 1
@@ -72,10 +78,12 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 14 | 3 | 100% | 24% | 23.8% |
@@ -90,6 +98,7 @@
 | **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

@@ -2,14 +2,14 @@
   "module": "43-wf-mastery",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:26:27.680785Z",
+  "last_audit": "2026-01-27T12:22:17.487051Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-25T16:17:07.825324Z",
     "meta": "2026-01-26T17:21:18.923999Z",
-    "activities": "2026-01-25T16:27:55.646807Z",
+    "activities": "2026-01-27T12:21:24.843210Z",
     "vocabulary": "2026-01-25T16:30:14.416117Z",
-    "plan": "2026-01-26T17:21:18.923772Z"
+    "plan": "2026-01-27T12:22:12.169930Z"
   },
   "gates": {
     "meta": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1117/1000 (raw: 1210) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "1117/1000 (raw: 1210)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "10/10"
+      "message": "11/10"
     },
     "vocabulary": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "4 Outline Compliance Errors",
-      "Missing required activity types: analysis, matching, word-building"
-    ],
-    "pass_count": 4,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

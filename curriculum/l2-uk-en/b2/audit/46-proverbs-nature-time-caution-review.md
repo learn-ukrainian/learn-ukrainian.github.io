@@ -1,10 +1,12 @@
 # Audit Report: M46 — 46-proverbs-nature-time-caution.md
+
 **Level:** B2 | **Module:** M46 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:16
 
 ## Configuration
+
 **Type:** B2-vocab
 **Word Target:** 1750 words
 **Activities:** 10-14 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Значення прислів'їв | 10 | 8 | ✅ |
@@ -41,6 +44,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "**Регістр:** Нейтральний, часто вживається в бізнес-контексті.". Shares significant keywords with sentence at index 34.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (71% overlap): "«Краще синиця в руках, ніж журавель у небі», — порадив батько.". Shares significant keywords with sentence at index 100.
@@ -55,11 +59,13 @@
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 15/100)
 
 - 6 violations (moderate)
 
 ## Gates
+
 - **Words:** ✅ 2876/1750 (raw: 3287)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
@@ -78,10 +84,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 97% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 55 | 24 | 100% | 20% | 20.0% |
@@ -97,6 +105,7 @@
 | **TOTAL** | | | | | **97.7%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 56 | Included in Core |

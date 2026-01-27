@@ -8,7 +8,6 @@
 
 **Proposed Modules:** See `C1-REVIEW-PROPOSAL.md` for the comprehensive arts expansion plan
 
-
 <!--
 TEMPLATE_METADATA:
   required_sections:
@@ -29,6 +28,7 @@ TEMPLATE_METADATA:
 Before submitting a C1 fine arts module, verify all items from `c1-module-template.md` PLUS:
 
 ### Fine Arts-Specific Requirements
+
 - [ ] **CBI pedagogy:** Content-Based Instruction (arts content drives language learning)
 - [ ] **Authentic materials:** Excerpts from reviews, librettos, exhibition catalogs, program notes
 - [ ] **Art-specific terminology:** музичний термін, сценічна мова, мистецтвознавство
@@ -84,7 +84,6 @@ Before submitting a C1 fine arts module, verify all items from `c1-module-templa
 | Module | Focus | Key Sites |
 |--------|-------|-----------|
 | M151 | Ukrainian Architecture | Бароко, модерн, конструктивізм, сучасна архітектура |
-
 
 ---
 
@@ -578,6 +577,94 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 ---
 
+## Advanced Seminar-Style Activities
+
+### Source-Evaluation Activity
+
+**Use for analyzing art criticism, exhibition catalogs, reviews, and program notes:**
+
+```yaml
+- type: source-evaluation
+  title: "Оцінка джерела: Рецензія/Каталог/Програмна примітка"
+  instruction: "Застосуйте метод критичного аналізу до цього мистецтвознавчого тексту."
+  source_text: |
+    [Excerpt from art review, exhibition catalog, concert program note — 100-200 words]
+  source_metadata:
+    author: "[Critic/curator name]"
+    date: "[Year of publication]"
+    type: "[review/catalog/program_note/manifesto]"
+    context: "[Publication venue, artistic context, ideological background]"
+  evaluation_criteria:
+    - authorship
+    - date_and_context
+    - intended_audience
+    - purpose_and_bias
+    - omissions
+  guiding_questions:
+    - "Яку естетичну позицію представляє автор?"
+    - "Який культурний/ідеологічний контекст публікації?"
+    - "Як автор оцінює український внесок у світове мистецтво?"
+    - "Що автор ігнорує або применшує?"
+  model_evaluation: |
+    **1. Авторство:** [Who wrote it, their aesthetic school]
+    **2. Контекст:** [When/where published, cultural moment]
+    **3. Естетична позиція:** [What aesthetic values the author promotes]
+    **4. Упередження:** [Nationalist, formalist, socialist realist, etc.]
+    **5. Опущення:** [What perspectives or artists are ignored]
+```
+
+### Debate Activity
+
+**Use for contested aesthetic questions and artistic interpretations:**
+
+```yaml
+- type: debate
+  title: "Дискусія: [Contested Aesthetic Question]"
+  instruction: "Проаналізуйте конкуруючі мистецтвознавчі позиції та сформулюйте власну оцінку."
+  debate_question: "[The contested question about art, style, or cultural significance]"
+  historical_context: |
+    [Background on the artistic controversy — 50-100 words]
+  positions:
+    - name: "[Position 1 — e.g., Національна школа]"
+      proponents: "[Critics, institutions who hold this view]"
+      argument: "[Core aesthetic argument]"
+      evidence:
+        - "[Artistic evidence — specific works, techniques]"
+        - "[Critical support]"
+      weaknesses:
+        - "[Limitation of this perspective]"
+    - name: "[Position 2 — e.g., Європейський контекст]"
+      proponents: "[Who holds this view]"
+      argument: "[Core argument]"
+      evidence:
+        - "[Evidence]"
+      weaknesses:
+        - "[Critique]"
+    - name: "[Position 3 — e.g., Радянська/офіційна позиція]"
+      proponents: "[Soviet/official criticism]"
+      argument: "[Their position]"
+      evidence:
+        - "[Their claimed evidence]"
+      weaknesses:
+        - "[Why problematic — ideological, limiting, etc.]"
+  analysis_tasks:
+    - "Які естетичні критерії використовує кожна позиція?"
+    - "Як ідеологія впливає на оцінку мистецтва?"
+    - "Чи можна поєднати національну та європейську перспективи?"
+    - "Яку позицію ви вважаєте найбільш переконливою? Чому?"
+  model_analysis: |
+    [Balanced evaluation showing how aesthetic debates reflect cultural politics.
+    Should demonstrate critical thinking about art criticism.]
+```
+
+**Example contested questions for fine arts:**
+- "Чи Малевич — український чи російський художник?"
+- "Як оцінювати соцреалістичне мистецтво: ідеологія чи естетика?"
+- "Чи українське бароко — регіональний варіант чи окремий стиль?"
+- "Лисенко: національний композитор чи європейський романтик?"
+
+---
+
 ## Engagement Boxes for Fine Arts Modules
 
 ```markdown
@@ -613,6 +700,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 ## Content Structure Note
 
 ### Vocabulary & Activities
+
 **CRITICAL:** Do NOT add `## Vocabulary` or `## Activities` headers. These sections are injected automatically from:
 - `vocabulary/{slug}.yaml`
 - `activities/{slug}.yaml`

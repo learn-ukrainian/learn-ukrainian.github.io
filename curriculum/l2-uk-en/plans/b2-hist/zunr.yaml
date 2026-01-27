@@ -67,15 +67,6 @@ activity_hints:
   focus: Текст Акту Злуки
   source: Архівні документи
   items: 4
-- type: quiz
-  focus: ЗУНР та Акт Злуки
-  items: 15
-- type: match-up
-  focus: Дата → подія 1918-1919
-  items: 10
-- type: fill-in
-  focus: Політична лексика
-  items: 10
 - type: essay-response
   focus: Чому Акт Злуки не привів до реального об'єднання?
   word_target: 250

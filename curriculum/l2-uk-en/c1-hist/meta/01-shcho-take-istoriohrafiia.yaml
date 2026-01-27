@@ -10,5 +10,8 @@ tags:
 - methodology
 - theory
 vocabulary_count: 30
+naturalness:
+  score: 10
+  status: PASS
 build:
   last_modified: '2026-01-26'

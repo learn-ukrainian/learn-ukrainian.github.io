@@ -22,6 +22,7 @@ Before reading ANY other document, internalize these:
 ## 📚 Document Reading Order
 
 ### Document 1: Level Curriculum Plan (REQUIRED FIRST)
+
 **Path:** `docs/l2-uk-en/{LEVEL}-CURRICULUM-PLAN.md`
 
 **What it contains:**
@@ -30,7 +31,7 @@ Before reading ANY other document, internalize these:
 - Cross-module dependencies
 
 **KEY RULE:**
-> ⚠️ Grammar is strictly scoped by module number. 
+> ⚠️ Grammar is strictly scoped by module number.
 > Example: Dative case is NOT allowed until M31 (A2).
 > Do NOT use grammar from modules the learner hasn't completed.
 
@@ -39,6 +40,7 @@ Before reading ANY other document, internalize these:
 ---
 
 ### Document 2: Module Richness Guidelines (REQUIRED)
+
 **Path:** `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`
 
 **What it contains:**
@@ -65,6 +67,7 @@ Before reading ANY other document, internalize these:
 ---
 
 ### Document 3: Linguistic Purity Guide (REQUIRED)
+
 **Path:** `docs/l2-uk-en/LINGUISTIC-PURITY-GUIDE.md`
 
 **What it contains:**
@@ -87,6 +90,7 @@ Before reading ANY other document, internalize these:
 ---
 
 ### Document 4: Markdown Format Specification (REQUIRED)
+
 **Path:** `docs/MARKDOWN-FORMAT.md`
 
 **What it contains:**
@@ -106,6 +110,7 @@ Before reading ANY other document, internalize these:
 ---
 
 ### Document 5: Module Skeleton (FOR CREATION)
+
 **Path:** `docs/l2-uk-en/MODULE-SKELETON.md`
 
 **What it contains:**
@@ -119,6 +124,7 @@ Before reading ANY other document, internalize these:
 ---
 
 ### Document 6: Ukrainian State Standard (REFERENCE)
+
 **Path:** `docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt`
 **Index:** `docs/l2-uk-en/UKRAINIAN-STANDARD-INDEX.md`
 
@@ -137,15 +143,18 @@ Before reading ANY other document, internalize these:
 Before starting ANY module work, you MUST be able to answer:
 
 ### For ALL Levels:
+
 1. What is the Core Word Count target for this level? ____
 2. How many activities are required? ____
 3. Is Latin transliteration allowed at this level? ____
 
 ### For This Specific Module:
+
 4. What grammar is allowed at this module number? (Check Каталог В)
 5. What vocabulary should this module teach? (Check Curriculum Plan)
 
 ### Format Check:
+
 6. Where does the vocabulary table go? → **END of file, as Markdown table**
 7. How do I format answers? → **`> [!answer]` callout**
 
@@ -167,6 +176,7 @@ npm run generate l2-uk-en {level} {module_num}
 ```
 
 ### Manual Checks:
+
 - [ ] No Latin transliteration (A2+)
 - [ ] Vocabulary table at END of file
 - [ ] All section headers lowercase
@@ -178,6 +188,7 @@ npm run generate l2-uk-en {level} {module_num}
 ## Level Quick Reference
 
 ### A1 (Modules 01-34)
+
 - **Word Count:** Graduated (M01-05: 300+, M06-10: 500+, M11-34: 750+)
 - **Transliteration:** ALLOWED (first-occurrence only, phases out by M20)
 - **Immersion:** 10-40% Ukrainian (graduated by module)
@@ -186,6 +197,7 @@ npm run generate l2-uk-en {level} {module_num}
 - **Verbs:** Present (M06+), Past/Future (M21+)
 
 ### A2 (Modules 01-50)
+
 - **Transliteration:** ⛔ FORBIDDEN
 - **Immersion:** 40% Ukrainian
 - **Pedagogy:** PPP transitioning to TTT
@@ -193,23 +205,27 @@ npm run generate l2-uk-en {level} {module_num}
 - **Aspect:** Pairs introduced
 
 ### B1 (Modules 01-80)
+
 - **Transliteration:** ⛔ FORBIDDEN
 - **Immersion:** 60% Ukrainian
 - **Pedagogy:** TTT / Narrative
 - **Full aspect system, motion verbs, participles**
 
 ### B2 (Modules 01-125)
+
 - **Transliteration:** ⛔ FORBIDDEN
 - **Immersion:** 80% Ukrainian
 - **Pedagogy:** TTT / Narrative / CLIL
 - **Passive voice, phraseology, history**
 
 ### C1 (Modules 01-115)
+
 - **Transliteration:** ⛔ FORBIDDEN
 - **Immersion:** 95% Ukrainian
 - **Academic/Professional focus**
 
 ### C2 (Modules 01-80)
+
 - **Transliteration:** ⛔ FORBIDDEN
 - **Immersion:** 100% Ukrainian
 - **Native mastery, literary style**

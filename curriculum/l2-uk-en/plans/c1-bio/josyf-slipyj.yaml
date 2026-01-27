@@ -69,22 +69,10 @@ activity_hints:
   focus: Excerpts from Slipyj's "Заповіт"
   source: Historical documents
   items: 3 passages
-- type: quiz
-  focus: Slipyj's biography and persecution
-  items: 12+
-- type: match-up
-  focus: Stages of his life and key events
-  items: 10+
 - type: essay-response
   focus: What gave Slipyj strength to survive 18 years?
   word_target: 300
   output: Analysis of faith and resistance
-- type: group-sort
-  focus: Soviet persecution vs. diaspora achievements
-  items: 12+
-- type: fill-in
-  focus: Key dates and places in his journey
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-106 (Andrey Sheptytsky - his predecessor)
@@ -110,3 +98,7 @@ sources:
   notes: Institution he founded
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of патріарх йосиф сліпий: незламний сповідник віри'
+- Evaluate the contributions of 18 років у гулазі
+- Trace the career and influence of спадщина сповідника

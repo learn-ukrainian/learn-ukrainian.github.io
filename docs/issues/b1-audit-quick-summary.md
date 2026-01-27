@@ -27,29 +27,34 @@
 ## Top 5 Issues (By Frequency)
 
 ### 1. Word Count Issues (565 occurrences)
+
 - **Problem:** Unjumble sentences too short (8-11 words instead of 12-16)
 - **Modules affected:** 51
 - **Fix:** Extend sentences with subordinate clauses
 
 ### 2. YAML Schema Violations (290 occurrences)
+
 - **Problem:** Missing required fields in activity YAML
 - **Most common:** Missing `correct_words` in mark-the-words
 - **Modules affected:** 81
 - **Fix:** Add missing fields per JSON schema
 
 ### 3. Empty Required Sections (150 occurrences)
+
 - **Problem:** Template sections exist but have no content
 - **Most common:** `## Потрібно більше практики?`
 - **Modules affected:** 81
 - **Fix:** Populate or remove sections
 
 ### 4. Missing Required Sections (150 occurrences)
+
 - **Problem:** Template sections completely absent
 - **Most common:** `## Граматична таблиця`, `## Спостерігайте`
 - **Modules affected:** 42
 - **Fix:** Generate missing sections
 
 ### 5. Activity Density Below Min (58 modules)
+
 - **Problem:** Activities have 10-12 items instead of 14+
 - **Fix:** Expand activities to meet density targets
 
@@ -114,6 +119,7 @@ M72-91 (Cultural/Integration)       [ 0/20] ❌❌❌❌❌❌❌❌❌❌ 0%
 ## Batch Fix Strategy
 
 ### Phase 1: Schema & Structure (Priority 1)
+
 ```bash
 # Fix YAML schema violations
 npm run fix:yaml-schema l2-uk-en b1
@@ -127,6 +133,7 @@ npm run fix:missing-sections l2-uk-en b1
 **Impact:** Fixes ~450 errors
 
 ### Phase 2: Activity Quality (Priority 2)
+
 ```bash
 # Expand activity density
 npm run fix:activity-density l2-uk-en b1
@@ -140,6 +147,7 @@ npm run fix:activity-count l2-uk-en b1
 **Impact:** Fixes ~280 errors
 
 ### Phase 3: Re-Audit
+
 ```bash
 .venv/bin/python scripts/audit_level.py l2-uk-en b1
 npm run pipeline l2-uk-en b1
@@ -151,6 +159,7 @@ npm run pipeline l2-uk-en b1
 ## Example Errors
 
 ### Module 11 (aspect-in-imperatives)
+
 ```
 ❌ YAML schema: Missing 'correct_words' in mark-the-words
 ❌ Empty section: "## Потрібно більше практики?"
@@ -160,6 +169,7 @@ npm run pipeline l2-uk-en b1
 ```
 
 ### Module 52 (abstract-concepts-ideas)
+
 ```
 ❌ YAML schema: 2 violations
 ❌ Missing sections: "## Граматика", "## Практика"

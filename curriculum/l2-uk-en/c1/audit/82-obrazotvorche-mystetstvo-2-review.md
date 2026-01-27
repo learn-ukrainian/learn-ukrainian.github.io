@@ -1,9 +1,11 @@
 # Audit Report: M82 — 82-obrazotvorche-mystetstvo-2.md
+
 **Level:** C1 | **Module:** M82 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:45
 
 ## Configuration
+
 **Type:** C1-fine-arts
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -16,6 +18,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Мистецтво XX-XXI століття | 12 | 5 | ✅ |
@@ -43,18 +46,21 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[COMPLEXITY_WORD_COUNT]** unjumble 'Цитати Марії Примаченко' item 4 has 10 words (target: 12-20)
   - FIX: Adjust sentence length to 12-20 words to match C1 complexity.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 82-obrazotvorche-mystetstvo-2.yaml: Schema validation error at key 'words': ['Я', 'люблю', 'малювати', 'людям', 'на', 'велику', 'радість', 'щоб', 'всі', 'були', 'щасливі'] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 2 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 1987/3000 (raw: 2098)
 - **Activities:** ✅ 17/12
 - **Density:** ✅ All > 12
@@ -73,10 +79,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 98% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 30 | 15 | 100% | 25% | 25.0% |
@@ -90,6 +98,7 @@
 | **TOTAL** | | | | | **98.3%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 84 | Included in Core |

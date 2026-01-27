@@ -5,14 +5,14 @@ version: '2.0'
 title: 'Закарпаття: Тисячоліття на перехресті'
 content_outline:
 - section: Вступ — Найзахідніший схід
-  words: 400
+  words: 457
   points:
   - Закарпаття — географія
   - Тисяча років під Угорщиною
   - Ізоляція від решти України
   - Структура модуля
 - section: Під Угорщиною (896-1918)
-  words: 700
+  words: 800
   points:
   - Угорська корона — тисячоліття
   - Статус — «руснаки»
@@ -20,14 +20,14 @@ content_outline:
   - Мадяризація
   - Еміграція до Америки
 - section: Чехословацький період (1919-1938)
-  words: 600
+  words: 686
   points:
   - Підкарпатська Русь
   - Автономія — обіцяна, не дана
   - Культурний розквіт
   - Ідентитети — русин, русский, український
 - section: Карпатська Україна 1939
-  words: 600
+  words: 686
   points:
   - Автономія — нарешті
   - Августин Волошин
@@ -35,26 +35,26 @@ content_outline:
   - Угорська окупація
   - Героїчна оборона
 - section: Радянський період
-  words: 500
+  words: 571
   points:
   - 1945 — «возз'єднання»
   - Примусова українізація?
   - Репресії
   - Ліквідація УГКЦ
 - section: Русинське питання
-  words: 400
+  words: 457
   points:
   - Русин vs. українець
   - Політичне маніпулювання
   - Сучасний статус
   - Як розуміти ідентичність
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Закарпаття — унікальний шлях
   - 1939 — перша незалежність
   - Перехід до Волині
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - Закарпаття (Transcarpathia)
@@ -74,16 +74,16 @@ vocabulary_hints:
   - регіональний сепаратизм (regional separatism)
   - інструменталізація (instrumentalization)
 activity_hints:
-- type: identity-analysis
+- type: critical-analysis
   focus: Rusyn vs. Ukrainian identity — what's the question?
   output: Identity analysis
-- type: 1939-study
+- type: comparative-study
   focus: Carpatho-Ukraine — shortest independence
   output: Historical analysis
 - type: comparative-study
   focus: Transcarpathia vs. other western regions
   output: Regional comparison
-- type: policy-analysis
+- type: critical-analysis
   focus: How different rulers treated Transcarpathia
   output: Policy comparison
 - type: essay-response
@@ -113,3 +113,6 @@ sources:
   notes: Rusyn identity question
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of закарпаття: тисячоліття на перехресті'
+- Evaluate the historical significance of найзахідніший схід

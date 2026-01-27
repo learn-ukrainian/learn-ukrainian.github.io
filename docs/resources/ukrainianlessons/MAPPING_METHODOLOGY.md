@@ -376,9 +376,9 @@ TOTAL SCORE (0-100) → Priority (1-5 or no mapping)
 
 **Secondary mappings (listening practice/review):**
 2. **A2 M10 "Small Talk"** → Priority 2
-   - Related topic (conversation basics)
-   - Adjacent level (A2 - review)
-   - **Score: 80**
+- Related topic (conversation basics)
+- Adjacent level (A2 - review)
+- **Score: 80**
 
 3. **B1 M54 "Expressing Opinions"** → Priority 4
    - Tangential (beginner listening practice)

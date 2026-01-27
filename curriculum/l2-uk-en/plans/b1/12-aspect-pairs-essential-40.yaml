@@ -6,30 +6,27 @@ title: 'Видові пари: 40 найважливіших'
 subtitle: Essential Aspect Pairs - The 40 most common verb pairs
 content_outline:
 - section: Тест
-  words: 100
+  words: 262
   points:
-  - Content for Тест
-  - Examples and explanation
-  - Practice or application
+  - Diagnostic aspect pair recognition
+  - Intuition check
 - section: Пояснення
-  words: 750
+  words: 1510
   points:
-  - Content for Пояснення
-  - Examples and explanation
-  - Practice or application
+  - 40 essential aspect pairs
+  - Formation patterns (prefix, suffix, suppletive)
+  - Usage in context
 - section: Практика
-  words: 300
+  words: 629
   points:
-  - Content for Практика
-  - Examples and explanation
-  - Practice or application
+  - Pair matching exercises
+  - Context selection
 - section: Діалоги
-  words: 450
+  words: 599
   points:
-  - Content for Діалоги
-  - Examples and explanation
-  - Practice or application
-word_target: 1500
+  - Aspect pairs in conversation
+  - Natural usage
+word_target: 3000
 vocabulary_hints:
   required:
   - робити/зробити (to do/make)

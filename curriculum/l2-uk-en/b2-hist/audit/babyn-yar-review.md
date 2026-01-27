@@ -1,10 +1,12 @@
 # Audit Report: M106 — babyn-yar.md
+
 **Level:** B2 | **Module:** M106 | **Phase:** HIST.10 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:55:18
 
 ## Configuration
+
 **Type:** B2-history
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[INVALID_META_YAML]** Meta YAML Schema Violation at 'root': 'sources' is a required property
   - FIX: Correct the YAML structure to match schemas/meta-module.schema.json
 - **[HEADING_LEVEL]** Main section 'Підсумок' uses H2 (##) but spec requires H1 (#)
@@ -32,6 +35,7 @@
   - FIX: Add more Ukrainian content to reach 90.0%+ immersion
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Читання' per template 'b2-history-module-template.md'
   - FIX: Add '## Читання' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md.md
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Деколонізаційний погляд' per template 'b2-history-module-template.md'
@@ -44,6 +48,7 @@
   - FIX: Add a `> [!quote]` box as specified in the template. This enhances module quality.
 
 ## Recommendation
+
 **🔄 REWRITE** (severity 100/100)
 
 - 11 violations (severe - consider revision)
@@ -53,6 +58,7 @@
 - Activity density below minimum
 
 ## Gates
+
 - **Words:** ❌ 29/4000 (raw: 115)
 - **Activities:** ❌ 0/3
 - **Density:** ❌ 0 < 1
@@ -71,10 +77,12 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
+
 **Score:** 8% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 0 | 3 | 0% | 24% | 0.0% |
@@ -89,25 +97,26 @@
 | **TOTAL** | | | | | **8.6%** |
 
 ### Dryness Flags & Fixes
+
 - ❌ **NO_ENGAGEMENT**
   - FIX:
     Add 2+ engagement boxes. Use this exact format:
-    
+
     > 💡 **Чи знали ви?**
     >
     > [Interesting fact about the grammar/vocabulary topic in Ukrainian]
-    
+
     > 🇺🇦 **Культурний момент**
     >
     > [Cultural context connecting grammar to Ukrainian life/places]
-    
+
     > 🌍 **У реальному житті**
     >
     > [Practical scenario where this grammar is used]
 - ❌ **NO_PRIMARY_SOURCES**
   - FIX:
     Add 2+ primary source quotes. Use this format:
-    
+
     > «[Exact quote from historical document]»
     > — *[Source name], [year]*
 - ❌ **NO_TIMELINE**
@@ -118,6 +127,7 @@
     Add Ukrainian perspective on historical events. Avoid Russocentric framing. Use Ukrainian names for cities/people.
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 17 | Included in Core |

@@ -5,42 +5,41 @@ version: '2.0'
 title: 'Дискурсивні маркери II: складна організація'
 subtitle: 'Discourse Markers II: Advanced Text Organization'
 content_outline:
-- section: 'Introduction: Advanced Organization'
-  words: 150
+- section: Вступ
+  words: 189
   points:
   - Beyond basic connectors
   - Academic writing needs
   - Complex argument structure
-- section: Ordinal and Sequence Markers
-  words: 250
+- section: Вивчення слів
+  words: 1315
   points:
-  - по-перше, по-друге, нарешті
-  - спершу, далі, насамкінець
-  - Structuring lists and arguments
-- section: Emphasis and Focus
-  words: 200
+  - Six vocabulary groups
+  - Sequence, addition, contrast
+  - Cause-effect, conclusions, clarification
+- section: Вживання
+  words: 460
   points:
-  - особливо, головне, передусім
-  - варто зазначити
-  - Highlighting key points
-- section: Summarizing and Concluding
-  words: 250
+  - Building argumentation
+  - Formal vs informal register
+  - Common errors, combining markers
+- section: Читання
+  words: 386
   points:
-  - отже, таким чином, підсумовуючи
-  - на завершення, загалом
-  - Wrapping up arguments
-- section: Academic Connectors
-  words: 250
+  - Analytical article
+  - Conference presentation
+- section: Діалоги
+  words: 427
   points:
-  - з одного боку... з іншого боку
-  - у зв'язку з цим
-  - Formal writing conventions
-- section: 'Practice: Extended Discourse'
-  words: 100
+  - Project presentation (formal)
+  - Discussing plans (informal)
+  - Academic discussion, interview
+- section: Підсумок
+  words: 223
   points:
-  - Structure complex texts
-  - Use advanced markers
-word_target: 1200
+  - Key markers recap
+  - Practice recommendations
+word_target: 3000
 vocabulary_hints:
   required:
   - по-перше (firstly)
@@ -57,16 +56,16 @@ vocabulary_hints:
   - з одного боку (on one hand)
   - з іншого боку (on the other hand)
 activity_hints:
-- type: organization
+- type: group-sort
   focus: Structure arguments with markers
   items: 20
 - type: fill-in
   focus: Complete academic texts
   items: 20
-- type: writing
+- type: cloze
   focus: Write structured essays
   items: 15
-- type: transformation
+- type: cloze
   focus: Improve text organization
   items: 15
 focus: vocabulary

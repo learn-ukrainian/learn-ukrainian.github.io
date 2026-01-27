@@ -69,22 +69,10 @@ activity_hints:
   focus: Excerpts from "Роздуми про здоров'я"
   source: Medical and philosophical texts
   items: 3 passages
-- type: quiz
-  focus: Amosov's biography and medical achievements
-  items: 12+
-- type: match-up
-  focus: Medical innovations and their significance
-  items: 10+
 - type: essay-response
   focus: How did Amosov combine medicine with philosophy?
   word_target: 300
   output: Analysis of holistic approach to health
-- type: group-sort
-  focus: Medical achievements vs. philosophical contributions
-  items: 12+
-- type: fill-in
-  focus: Key medical terms and dates
-  items: 10+
 focus: biography
 prerequisites:
 - Basic medical vocabulary
@@ -110,3 +98,7 @@ sources:
   notes: His famous book
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of микола амосов: хірург і філософ здоров''я'
+- Evaluate the contributions of лікар, який лікував україну
+- Trace the career and influence of спадщина лікаря-мислителя

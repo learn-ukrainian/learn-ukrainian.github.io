@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M30 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 23:26:25
+**Generated:** 2026-01-27 16:43:23
 
 ## Configuration
 **Type:** B2-history
@@ -23,35 +23,30 @@
 | 1 | reading | Заповіт волинського шляхтича | 3 | 1 | ✅ |
 | 2 | critical-analysis | Аналіз лицарської етики та права | 1 | 1 | ✅ |
 | 3 | comparative-study | Волинь vs Київщина: Регіональні моделі | 1 | 1 | ✅ |
-| 4 | essay-response | Аналітичне есе: Мозаїка автономій | 1 | 1 | ✅ |
-| 5 | quiz | Факти про українські землі у ВКЛ | 8 | 8 | ✅ |
-| 6 | match-up | Терміни та означення | 12 | 8 | ✅ |
-| 7 | select | Ознаки руської суб'єктності | 8 | 6 | ✅ |
-| 8 | fill-in | Термінологія регіональної історії | 10 | 8 | ✅ |
-| 9 | error-correction | Мова документів та звернень | 8 | 6 | ✅ |
-| 10 | mark-the-words | Юридична лексика руських земель | 10 | 6 | ✅ |
+| 4 | true-false | Правда чи хибність: Українські землі у ВКЛ | 10 | 8 | ✅ |
+| 5 | essay-response | Аналітичне есе: Мозаїка автономій | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 10 (target: 3-9) ❌
-- Unique types: 10 (minimum: 2) ✅
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4844/4000 (raw: 5101)
-- **Activities:** ✅ 10/3
+- **Words:** ✅ 4472/4000 (raw: 4719)
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 10/2 types
+- **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 20 (soft target)
+- **Vocab:** ✅ 22/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ Too many activities: 10 (target 3-9)
-- **Immersion:** 🇺🇦 99.0% (target 90-100% (history))
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Immersion:** 🇺🇦 98.9% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -63,29 +58,27 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 11 | 3 | 100% | 24% | 23.8% |
+| primary_sources | 8 | 3 | 100% | 24% | 23.8% |
 | engagement | 6 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 10 | 4 | 100% | 10% | 9.5% |
 | visual | 7 | 4 | 100% | 10% | 9.5% |
-| variety | 0.96 | - | 96% | 5% | 4.6% |
+| variety | 0.98 | - | 98% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 16 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.8%** |
+| questions | 11 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Українські землі у ВКЛ: Мозаїка автономій та регіональна суб'єктність** | ⚪️ | 150 | Skipped |
-| **Вступ** | ✅ | 568 | Included in Core |
-| **Регіональна автономія: Київ, Волинь, Поділля** | ⚪️ | 1084 | Skipped |
-| **Соціальний устрій: Анатомія вільного суспільства** | ⚪️ | 616 | Skipped |
-| **Читання** | ✅ | 274 | Included in Core |
-| **Первинні джерела** | ✅ | 935 | Included in Core |
-| **Деколонізаційний погляд** | ✅ | 453 | Included in Core |
+| **Українські землі у ВКЛ: Мозаїка автономій та регіональна суб'єктність** | ⚪️ | 149 | Skipped |
+| **Вступ** | ✅ | 720 | Included in Core |
+| **Читання** | ✅ | 2103 | Included in Core |
+| **Первинні джерела** | ✅ | 314 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 370 | Included in Core |
 | **Критерії оцінювання** | ⚪️ | 0 | Skipped |
 | **Зразок відповіді** | ⚪️ | 422 | Skipped |
 | **Підсумок** | ✅ | 170 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 172 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 224 | Skipped |

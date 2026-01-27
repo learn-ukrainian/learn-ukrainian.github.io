@@ -5,57 +5,59 @@ version: '1.0'
 title: 'Донбас: Індустріалізація та ідентичність'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of донбас: індустріалізація та ідентичність'
+- Evaluate the historical significance of регіон, якого не було
 content_outline:
 - section: Вступ — Регіон, якого не було
-  words: 400
+  words: 457
   subsections:
   - Донбас — штучне створення
   - До індустріалізації — степ
   - Промисловий регіон — з нуля
   - Структура модуля
 - section: Створення промислового центру
-  words: 700
+  words: 800
   subsections:
   - Джон Юз — засновник Донецька
   - Вугілля і метал
   - Імпортована робоча сила
   - Росіяни, українці, греки, євреї
 - section: «Робітнича» ідентичність
-  words: 600
+  words: 686
   subsections:
   - Клас, не нація
   - Радянська пропаганда
   - «Донбас — серце Росії»
   - Мовний зсув
 - section: Українці Донбасу
-  words: 600
+  words: 686
   subsections:
   - Частка населення
   - Село vs. місто
   - Збереження ідентичності
   - Дисиденти з Донбасу — Стус
 - section: Після 1991
-  words: 500
+  words: 571
   subsections:
   - Економічний колапс
   - Олігархи
   - Проросійські настрої — чому
   - Але й українські — теж
 - section: 2014-2022
-  words: 400
+  words: 457
   subsections:
   - «Русская весна»
   - Війна на Донбасі
   - Окупація
   - Донбас — не тільки сепаратизм
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - Донбас — створений регіон
   - Ідентичність — конкуренція наративів
   - Перехід до Криму
-word_target: 3500
+word_target: 4000
 vocabulary:
 - Донбас
 - індустріалізація
@@ -73,13 +75,13 @@ vocabulary:
 - регіоналізм
 - деіндустріалізація
 activities:
-- type: historical-analysis
+- type: critical-analysis
   focus: How Donbas was created — not ancient
-- type: identity-analysis
+- type: critical-analysis
   focus: Class vs. national identity in Donbas
-- type: demographic-study
+- type: comparative-study
   focus: Who lives in Donbas — ethnic composition over time
-- type: contemporary-analysis
+- type: critical-analysis
   focus: 2014-2022 — why separatism, but also resistance
 - type: essay-response
   focus: Чи Донбас 'російський'? Деконструкція міфу

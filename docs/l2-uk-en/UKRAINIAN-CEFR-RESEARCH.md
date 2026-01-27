@@ -11,6 +11,7 @@
 **Authority:** National Commission for State Language Standards (2024)
 
 ### Findings on Language of Instruction
+
 *   **No Explicit Ratio:** The Standard defines **outcomes** (competencies), not **methodology**. It does not prescribe a specific percentage of L1 (native language) vs L2 (target language) instruction.
 *   **Implied Complexity:** The Standard requires A1/A2 learners to master complex morphological concepts (7 cases, gender agreement, aspect introduction) that are alien to English speakers.
 *   **Pedagogical Inference:** Explaining abstract grammatical concepts like "perfective aspect" or "case government" *in Ukrainian* to an A1/A2 learner would create a cognitive overload, violating the "Theory-First" principle which prioritizes deep understanding.
@@ -34,6 +35,7 @@
 | **C2** | **100%** | **0%** | **Native.** No English support. |
 
 ### Rationale for Adjustment
+
 *   **A1 (Was 30% -> New 25%):** A1 modules focus heavily on *explaining* the Cyrillic alphabet, phonetics, and the concept of gender/cases. These require precise English analogies.
 *   **A2 (Was 50% -> New 40%):** A2 introduces **Verbal Aspect**, the hardest concept for Slavic learners. 50% Ukrainian would force us to simplify these explanations too much. 40% allows for deep theory while increasing exposure.
 *   **B1 (Was 75% -> New 60%):** B1 is the "Threshold". Moving to 75% too fast risks learners glossing over details. 60% is a safer "transitional" zone.

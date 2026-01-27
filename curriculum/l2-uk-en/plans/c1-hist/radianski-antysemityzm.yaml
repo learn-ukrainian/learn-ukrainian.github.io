@@ -5,50 +5,52 @@ version: '1.0'
 title: Радянський антисемітизм
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- Analyze the causes and consequences of радянський антисемітизм
+- Evaluate the historical significance of антисемітизм «без антисемітів»
 content_outline:
 - section: Вступ — Антисемітизм «без антисемітів»
-  words: 451
+  words: 515
   subsections:
   - СРСР — «інтернаціоналізм»
   - Але — антисемітизм
   - Як поєднувалось
   - Структура модуля
 - section: Бабин Яр без пам'яті
-  words: 790
+  words: 903
   subsections:
   - Замовчування — 50 років
   - Не «євреї» — «радянські громадяни»
   - Спроби увічнення — провал
   - Сміттєзвалище на могилах
 - section: «Безрідні космополіти»
-  words: 677
+  words: 774
   subsections:
   - 1948-1953 — антисемітська кампанія
   - Кодова мова
   - Єврейський антифашистський комітет
   - «Справа лікарів»
 - section: Пізній СРСР
-  words: 677
+  words: 774
   subsections:
   - «П'ята графа»
   - Обмеження у кар'єрі
   - Еміграція — як «зрада»
   - Відмовники
 - section: Спадок
-  words: 564
+  words: 645
   subsections:
   - Що залишилось у свідомості
   - Пострадянський антисемітизм
   - Як Росія використовує сьогодні
   - «Денацифікація»
 - section: Підсумок
-  words: 341
+  words: 389
   subsections:
   - Радянський антисемітизм — реальний
   - Спадок не зник
   - Перехід до синтезу
-word_target: 3500
+word_target: 4000
 vocabulary:
 - антисемітизм
 - «безрідний космополіт»
@@ -66,13 +68,13 @@ vocabulary:
 - дисидент
 - алія
 activities:
-- type: memory-analysis
+- type: critical-analysis
   focus: How Babi Yar was erased from Soviet memory
-- type: campaign-analysis
+- type: critical-analysis
   focus: «Rootless cosmopolitans» — coded antisemitism
-- type: discrimination-study
+- type: comparative-study
   focus: «Fifth paragraph» — practical discrimination
-- type: legacy-analysis
+- type: critical-analysis
   focus: Soviet antisemitism legacy today
 - type: essay-response
   focus: Чому СРСР заперечував свій антисемітизм?

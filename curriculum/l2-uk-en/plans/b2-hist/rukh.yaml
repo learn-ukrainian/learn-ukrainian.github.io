@@ -67,12 +67,6 @@ activity_hints:
   focus: Програма Руху та виступи лідерів
   source: Архівні документи
   items: 4
-- type: quiz
-  focus: Народний рух України
-  items: 15
-- type: match-up
-  focus: Лідер → досягнення/роль
-  items: 10
 - type: true-false
   focus: Факти про Рух
   items: 10

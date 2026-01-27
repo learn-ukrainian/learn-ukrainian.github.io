@@ -69,22 +69,10 @@ activity_hints:
   focus: Сучасна українська проза
   source: Literary criticism
   items: 3 passages
-- type: quiz
-  focus: Життя та творчість Пагутяк
-  items: 12+
-- type: match-up
-  focus: Твори та їхні теми
-  items: 10+
 - type: essay-response
   focus: Що таке «химерний реалізм» і як він проявляється у творах Пагутяк?
   word_target: 300
   output: Analytical essay
-- type: group-sort
-  focus: Романи за періодами творчості
-  items: 12+
-- type: fill-in
-  focus: Літературна термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-83
@@ -103,3 +91,7 @@ sources:
   notes: Publisher of Pahutyak's major works
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of галина пагутяк: містична письменниця'
+- Evaluate the contributions of голос з іншого світу
+- Trace the career and influence of архітекторка світів

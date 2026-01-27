@@ -122,14 +122,13 @@ Before submitting a B2 history module, verify all items from `b2-module-template
 - [ ] **Engagement boxes:** Historical context, myth-busting, modern relevance
 - [ ] **NO DIALOGS:** History modules are READING-CENTRIC. Do NOT include conversational dialogs — they waste space and distract from historical content. Use primary source excerpts instead.
 
-
 ---
 
 ## Naturalness Quality Checklist
 
-**Run this check during Stage 4 (Review & Fix) on prose activities.**
+**Run this check during Stage 4 (Review & Fix) on prose content.**
 
-Before finalizing the module, verify prose activities (cloze, fill-in, unjumble with 5+ sentences) achieve:
+Before finalizing the module, verify all narrative prose and essay prompts achieve:
 
 - [ ] **Subject consistency** - Clear subjects maintained throughout passages
 - [ ] **Discourse markers** - At least 2-3 connectors per 10-sentence passage (а, але, потім, тому, також, спочатку, нарешті)
@@ -372,16 +371,23 @@ History modules should include **2-3 external reading tasks** for deeper engagem
 
 See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas and examples.
 
-### Activity Examples (Conceptual)
+### Seminar-Style Activities (Required)
 
-_Note: These activities must be implemented in YAML._
+*Note: B2-HIST is a seminar track. All activities must be implemented in YAML using seminar-style types only.*
 
-1. **Reading Comprehension (quiz):** Test understanding of Ukrainian text, NOT recall of historical facts.
-2. **Vocabulary in Context (fill-in):** Test vocabulary and collocations from module.
-3. **Grammar in Historical Sentences (error-correction):** Test grammar using historical content as context.
-4. **Source Analysis (select):** Test close reading of primary source in Ukrainian.
-5. **Vocabulary Matching (match-up):** Test recognition of historical vocabulary.
-6. **Mark the Words (mark-the-words):** Test grammar recognition in authentic historical text.
+**Required activity types:**
+1. **Reading (`reading`):** External reading assignments with linguistic analysis questions — analyze primary sources, academic articles
+2. **Essay Response (`essay-response`):** Extended writing (150-250 words) with rubric — every module must include one
+
+**Recommended activity types:**
+3. **Critical Analysis (`critical-analysis`):** Deep analysis of texts, sources, or historiographical approaches
+4. **Comparative Study (`comparative-study`):** Compare perspectives, sources, or interpretations
+5. **Authorial Intent (`authorial-intent`):** Analyze author's purpose, bias, and rhetorical strategies in primary sources
+6. **True/False (`true-false`):** LIMITED use — only for verifying reading comprehension, not grammar drills
+
+**❌ NOT PERMITTED in B2-HIST:**
+- Grammar drills: quiz, fill-in, cloze, match-up, error-correction, unjumble, mark-the-words, group-sort, select, translate
+- These activity types are for language-focused modules, not history seminars
 
 ---
 
@@ -516,10 +522,11 @@ The build system will inject these sections at build time.
 
 ---
 
-**Last Updated:** 2025-12-29
-**Template Version:** 1.2
+**Last Updated:** 2026-01-27
+**Template Version:** 1.3
 
 **Changelog:**
 
+- v1.3 (2026-01-27): Converted to seminar-style activities only — removed grammar drill recommendations (quiz, fill-in, cloze, match-up, error-correction, unjumble, mark-the-words, group-sort, select, translate); now requires reading, essay-response, critical-analysis, comparative-study, authorial-intent
 - v1.2 (2025-12-29): Updated module range M71-131, added reference to synthesis template
 - v1.1 (2025-12-29): Added NO DIALOGS rule, made primary sources mandatory (≥2)

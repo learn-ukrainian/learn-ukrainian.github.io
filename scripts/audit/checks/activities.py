@@ -8,7 +8,7 @@ import re
 import sys
 from pathlib import Path
 from collections import Counter
-from ..config import STAGE_ORDER, ACTIVITY_RESTRICTIONS, ACTIVITY_COMPLEXITY, VALID_ACTIVITY_TYPES, REQUIRED_ADVANCED_TYPES
+from ..config import STAGE_ORDER, ACTIVITY_RESTRICTIONS, ACTIVITY_COMPLEXITY, VALID_ACTIVITY_TYPES, REQUIRED_ADVANCED_TYPES, LEVEL_CONFIG
 
 # Add parent dir to path for imports
 SCRIPT_DIR = Path(__file__).parent.parent.parent
@@ -1369,6 +1369,65 @@ def check_yaml_activity_types(activities: list) -> list[dict]:
                 'severity': 'error',
                 'issue': f"Invalid activity type '{act_type}' in YAML",
                 'fix': f"Use supported type: {', '.join(sorted(VALID_ACTIVITY_TYPES))}"
+            })
+
+    return violations
+
+
+def check_forbidden_activity_types(activities: list, level_code: str, module_focus: str = None) -> list[dict]:
+    """Check if activities contain types forbidden for this level/track.
+
+    Seminar tracks (B2-HIST, C1-HIST, C1-BIO, LIT) have strict activity type requirements.
+    Grammar drills are forbidden in favor of seminar-style activities.
+
+    Args:
+        activities: List of activity dicts/objects from YAML
+        level_code: CEFR level (B2, C1, etc.)
+        module_focus: Module focus (history, biography, etc.)
+
+    Returns:
+        List of violations for forbidden activity types (auto-fixable by removal)
+    """
+    violations = []
+
+    if not activities or not isinstance(activities, list):
+        return violations
+
+    # Get level config
+    config_key = f"{level_code}-{module_focus}" if module_focus else level_code
+    config = LEVEL_CONFIG.get(config_key, LEVEL_CONFIG.get(level_code, {}))
+
+    # Get forbidden types from config
+    forbidden_types = config.get('forbidden_types', set())
+    if not forbidden_types:
+        return violations
+
+    # Check each activity
+    for i, activity in enumerate(activities):
+        act_type = None
+        title = 'Untitled'
+
+        if hasattr(activity, 'type'):
+            act_type = activity.type
+            title = getattr(activity, 'title', 'Untitled')
+        elif isinstance(activity, dict):
+            act_type = activity.get('type', '')
+            title = activity.get('title', 'Untitled')
+
+        if not act_type:
+            continue
+
+        act_type_lower = act_type.lower()
+
+        if act_type_lower in forbidden_types:
+            violations.append({
+                'type': 'FORBIDDEN_ACTIVITY_TYPE',
+                'severity': 'critical',
+                'issue': f"Activity type '{act_type}' is forbidden in {config_key} track (activity: '{title}')",
+                'fix': f"Remove this activity. {config_key} allows only seminar-style activities: reading, essay-response, critical-analysis, comparative-study, authorial-intent, true-false (limited).",
+                'auto_fix': 'remove_activity',
+                'activity_index': i,
+                'activity_type': act_type_lower
             })
 
     return violations

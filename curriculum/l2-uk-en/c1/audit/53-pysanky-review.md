@@ -1,9 +1,11 @@
 # Audit Report: M53 — 53-pysanky.md
+
 **Level:** C1 | **Module:** M53 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:27
 
 ## Configuration
+
 **Type:** C1-history
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Теоретичні основи писанкарства | 5 | 5 | ✅ |
@@ -40,16 +43,19 @@
 - Low density activities: 0
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Аналіз' per template 'c1-module-template.md'
   - FIX: Add '## Аналіз' section as specified in docs/l2-uk-en/templates/c1-module-template.md.md
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 1902/4000 (raw: 2090)
 - **Activities:** ✅ 12/3
 - **Density:** ✅ All > 1
@@ -68,10 +74,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 91% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 16 | 15 | 100% | 25% | 25.0% |
@@ -85,6 +93,7 @@
 | **TOTAL** | | | | | **91.6%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 76 | Included in Core |

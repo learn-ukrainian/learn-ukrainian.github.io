@@ -1,4 +1,5 @@
 # B1 Naturalness Scan Report - M92 (B1 Final Exam)
+
 **Date:** 2026-01-24
 **Protocol:** claude_extensions/protocols/a1-naturalness-scan.md (adapted for B1)
 **Scope:** M92 (1 module - B1 Final Comprehensive Assessment)
@@ -28,6 +29,7 @@
 ## Scan Results by Module
 
 ### M92: B1 Final Exam (Comprehensive B1 Assessment) [✅ PASS]
+
 **Status:** Comprehensive final exam with mixed content types, excellent naturalness
 **Activities:** quiz (26 items across 3 texts), fill-in (60 items across 4 grammar sections + 2 vocabulary), match-up (12 pairs), group-sort (12 items)
 **Prose sample (Reading Text 1 - Metro News):**

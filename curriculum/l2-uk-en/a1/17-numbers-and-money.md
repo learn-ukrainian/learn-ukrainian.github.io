@@ -150,39 +150,39 @@ Now let's learn key phrases for shopping:
 ### Mini-Dialogue 1: At the Market in Lviv
 
 **Продавець:** Доброго дня! Що бажаєте?
-_Seller: Good afternoon! What would you like?_
+*Seller: Good afternoon! What would you like?*
 
 **Покупець:** Скільки коштує картопля?
-_Buyer: How much does the potato cost?_
+*Buyer: How much does the potato cost?*
 
 **Продавець:** П'ятнадцять гривень за кілограм.
-_Seller: Fifteen hryvnias per kilogram._
+*Seller: Fifteen hryvnias per kilogram.*
 
 **Покупець:** Добре. Два кілограми, будь ласка.
-_Buyer: Okay. Two kilograms, please._
+*Buyer: Okay. Two kilograms, please.*
 
 **Продавець:** Тридцять гривень, будь ласка.
-_Seller: Thirty hryvnias, please._
+*Seller: Thirty hryvnias, please.*
 
 **Покупець:** Ось гроші. Дякую!
-_Buyer: Here's the money. Thank you!_
+*Buyer: Here's the money. Thank you!*
 
 ### Mini-Dialogue 2: Coffee in Kyiv
 
 **Баріста:** Привіт! Що будете замовляти?
-_Barista: Hi! What will you order?_
+*Barista: Hi! What will you order?*
 
 **Клієнт:** Одну каву, будь ласка. Скільки коштує?
-_Client: One coffee, please. How much does it cost?_
+*Client: One coffee, please. How much does it cost?*
 
 **Баріста:** Сорок п'ять гривень.
-_Barista: Forty-five hryvnias._
+*Barista: Forty-five hryvnias.*
 
 **Клієнт:** Можна платити карткою?
-_Client: Can I pay by card?_
+*Client: Can I pay by card?*
 
 **Баріста:** Так, звичайно. Ось ваша кава!
-_Barista: Yes, of course. Here's your coffee!_
+*Barista: Yes, of course. Here's your coffee!*
 
 ### Reading Exercise: Shopping List
 
@@ -198,11 +198,11 @@ _Barista: Yes, of course. Here's your coffee!_
 
 **Всього:** сто двадцять гривень.
 
-_Maria's shopping list:_
+*Maria's shopping list:*
 
-_1. Bread - eight hryvnias 2. Milk - twenty hryvnias 3. Cheese - fifty hryvnias 4. Apples (1 kg) - thirty hryvnias 5. Water - twelve hryvnias_
+*1. Bread - eight hryvnias 2. Milk - twenty hryvnias 3. Cheese - fifty hryvnias 4. Apples (1 kg) - thirty hryvnias 5. Water - twelve hryvnias*
 
-_Total: one hundred twenty hryvnias._
+*Total: one hundred twenty hryvnias.*
 
 > 🌍 **Real World: Shopping in Ukraine**
 >

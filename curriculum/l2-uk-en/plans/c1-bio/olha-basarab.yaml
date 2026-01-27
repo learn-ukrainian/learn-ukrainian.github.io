@@ -69,22 +69,10 @@ activity_hints:
   focus: Історія підпілля
   source: Історичні дослідження та мемуари
   items: 3 passages
-- type: quiz
-  focus: Біографія та діяльність УВО
-  items: 12+
-- type: match-up
-  focus: Етапи життя та події
-  items: 10+
 - type: essay-response
   focus: Чому Басараб стала символом?
   word_target: 300
   output: Історичне есе
-- type: group-sort
-  focus: Публічне життя vs підпільна діяльність
-  items: 12+
-- type: fill-in
-  focus: Термінологія підпільної боротьби
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-44 (Симон Петлюра)
@@ -108,3 +96,7 @@ sources:
   notes: Дослідження підпільної діяльності
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of ольга басараб: розвідниця і мучениця'
+- Evaluate the contributions of незламна розвідниця
+- Trace the career and influence of посмертна слава та пам'ять

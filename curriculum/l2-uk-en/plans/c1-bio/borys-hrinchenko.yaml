@@ -69,22 +69,10 @@ activity_hints:
   focus: Українська лексикографія XIX ст.
   source: Linguistic history sources
   items: 3 passages
-- type: quiz
-  focus: Життя та творчість Грінченка
-  items: 12+
-- type: match-up
-  focus: Лексикографічні терміни
-  items: 10+
 - type: essay-response
   focus: Яке значення мав Словник Грінченка для української мови?
   word_target: 300
   output: Analytical essay
-- type: group-sort
-  focus: Діяльність Грінченка за сферами
-  items: 12+
-- type: fill-in
-  focus: Термінологія словникарства
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-29
@@ -103,3 +91,7 @@ sources:
   notes: Digital version of the famous dictionary
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of борис грінченко: лексикограф і просвітник'
+- Evaluate the contributions of вартовий українського слова
+- Trace the career and influence of каменяр словникарства

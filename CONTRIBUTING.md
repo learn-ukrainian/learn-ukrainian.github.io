@@ -7,6 +7,7 @@ This guide is for **both humans and AI agents** contributing to the project.
 Learn Ukrainian is a language curriculum generator for Ukrainian language learning. The primary curriculum is `l2-uk-en` (Ukrainian for English speakers).
 
 ### Key Files
+
 - `curriculum/l2-uk-en/modules/*.md` - Source module files
 - `curriculum/l2-uk-en/*-CURRICULUM-PLAN.md` - Curriculum plans by level
 - `scripts/generate.ts` - Generator script

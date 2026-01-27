@@ -5,24 +5,26 @@ version: '1.0'
 title: 'Південь: Колонізація та міфи «Новоросії»'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of південь: колонізація та міфи «новоросії»'
+- Evaluate the historical significance of що це?
 content_outline:
 - section: Вступ — «Новоросія» — що це?
-  words: 400
+  words: 457
   subsections:
   - Імперська назва
   - Сучасне відродження міфу
   - Чому потрібна деконструкція
   - Структура модуля
 - section: До «Новоросії»
-  words: 600
+  words: 686
   subsections:
   - Дике поле — не пусте
   - Козацька присутність
   - Запорозька Січ
   - Кримськотатарські землі
 - section: Російська колонізація
-  words: 700
+  words: 800
   subsections:
   - Потьомкін і Катерина
   - Заселення — хто приїхав
@@ -30,33 +32,33 @@ content_outline:
   - Греки, болгари, німці
   - Росіяни — меншість
 - section: Одеса — імперське місто
-  words: 600
+  words: 686
   subsections:
   - Заснування — 1794
   - Мультикультурне місто
   - Українці в Одесі
   - Одеський міф — «не українське місто»?
 - section: Херсон, Миколаїв, Маріуполь
-  words: 500
+  words: 571
   subsections:
   - Інші міста Півдня
   - Українська присутність
   - Русифікація XX ст.
   - Збереження ідентичності
 - section: «Новоросія» 2014
-  words: 400
+  words: 457
   subsections:
   - Російський проект — провал
   - Чому не спрацювало
   - 2022 — Херсон, Запоріжжя
   - Спротив Півдня
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - Південь — не російський
   - «Новоросія» — імперський міф
   - Перехід до синтезу
-word_target: 3500
+word_target: 4000
 vocabulary:
 - Новоросія
 - колонізація
@@ -74,13 +76,13 @@ vocabulary:
 - етнічний склад
 - регіональний міф
 activities:
-- type: myth-deconstruction
+- type: critical-analysis
   focus: «Novorossiya» — imperial construct analysis
-- type: demographic-study
+- type: comparative-study
   focus: Who settled Southern Ukraine — ethnic breakdown
-- type: city-analysis
+- type: critical-analysis
   focus: Odesa — Ukrainian or "other"?
-- type: contemporary-analysis
+- type: critical-analysis
   focus: 2014 vs. 2022 — why "Novorossiya" project failed
 - type: essay-response
   focus: Чому російський проект 'Новоросії' провалився?

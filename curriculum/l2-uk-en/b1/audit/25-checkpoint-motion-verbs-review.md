@@ -1,8 +1,8 @@
 # Audit Report: M25 — 25-checkpoint-motion-verbs.md
-**Level:** B1 | **Module:** M25 | **Phase:** B1 | **Pedagogy:** Checkpoint | **Target:** 1200
+**Level:** B1 | **Module:** M25 | **Phase:** B1.2 | **Pedagogy:** Checkpoint | **Target:** 1200
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:26:59
+**Generated:** 2026-01-27 16:25:52
 
 ## Configuration
 **Type:** B1-checkpoint

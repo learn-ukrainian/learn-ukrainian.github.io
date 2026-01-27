@@ -25,7 +25,9 @@ def auto_fix_yaml_violations(file_path: str) -> tuple[int, list[str]]:
     Returns (num_fixes, list_of_messages).
     """
     from pathlib import Path
-    from audit.checks.yaml_schema_validation import fix_yaml_file
+    from audit.checks.yaml_schema_validation import fix_yaml_file, remove_forbidden_activities
+    from audit.core import detect_level, detect_focus, load_yaml_meta
+    import re
 
     md_path = Path(file_path)
     slug = md_path.stem
@@ -35,8 +37,35 @@ def auto_fix_yaml_violations(file_path: str) -> tuple[int, list[str]]:
     if not yaml_path.exists():
         return 0, [f"  ℹ️ No YAML file found: {yaml_path.name}"]
 
+    total_fixes = 0
+    all_messages = []
+
+    # Run standard schema fixes first
     num_fixes, messages = fix_yaml_file(yaml_path, dry_run=False)
-    return num_fixes, messages
+    total_fixes += num_fixes
+    all_messages.extend(messages)
+
+    # Detect level and focus for forbidden activity removal
+    meta_data = load_yaml_meta(file_path)
+    with open(file_path, 'r', encoding='utf-8') as f:
+        content = f.read()
+
+    # Reconstruct frontmatter string for detection
+    if meta_data:
+        import yaml as yaml_lib
+        frontmatter_str = yaml_lib.dump(meta_data, sort_keys=False, allow_unicode=True)
+    else:
+        frontmatter_str = content.split('---')[1] if '---' in content else ''
+
+    level_code, module_num = detect_level(file_path, frontmatter_str)
+    module_focus = detect_focus(frontmatter_str, level_code, module_num, meta_data.get('title') if meta_data else "", file_path)
+
+    # Remove forbidden activities (for seminar tracks)
+    num_removed, remove_messages = remove_forbidden_activities(yaml_path, level_code, module_focus, dry_run=False)
+    total_fixes += num_removed
+    all_messages.extend(remove_messages)
+
+    return total_fixes, all_messages
 
 
 if __name__ == "__main__":

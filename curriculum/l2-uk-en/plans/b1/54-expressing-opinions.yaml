@@ -5,42 +5,42 @@ version: '2.0'
 title: Вираження думок та поглядів
 subtitle: Expressing Opinions
 content_outline:
-- section: 'Introduction: Expressing Views'
-  words: 150
+- section: Вступ
+  words: 179
   points:
   - Why opinion language matters
   - Strength of opinion spectrum
   - Register considerations
-- section: Basic Opinion Phrases
-  words: 250
+- section: Вивчення слів
+  words: 906
   points:
-  - Я думаю/вважаю/гадаю
-  - На мою думку
-  - Мені здається
-- section: Strong Opinion Expressions
-  words: 200
+  - Six vocabulary groups
+  - Verbs of thinking, certainty words
+  - Evaluation verbs, opinion phrases
+- section: Вживання
+  words: 504
   points:
-  - Я переконаний/впевнений
-  - Безсумнівно, очевидно
-  - When to use strong language
-- section: Hedging and Softening
-  words: 250
+  - Collocations patterns
+  - Register considerations
+  - Certainty scale, cultural aspects
+- section: Читання
+  words: 588
   points:
-  - Можливо, мабуть, певно
-  - Не виключено, що...
-  - Polite disagreement
-- section: Formal vs Informal
-  words: 250
+  - Technology discussion
+  - Editorial article
+  - Conversational blog
+- section: Діалоги
+  words: 542
   points:
-  - Academic opinion markers
-  - Casual conversation phrases
-  - Register switching
-- section: 'Practice: Expressing Views'
-  words: 100
+  - Work meeting (formal)
+  - News discussion (informal)
+  - Academic seminar, family discussion
+- section: Підсумок
+  words: 281
   points:
-  - Use varied opinion phrases
-  - Adjust for register
-word_target: 1200
+  - Key vocabulary recap
+  - Practice recommendations
+word_target: 3000
 vocabulary_hints:
   required:
   - думка (opinion/thought)
@@ -57,16 +57,16 @@ vocabulary_hints:
   - здаватися (to seem)
   - стверджувати (to claim)
 activity_hints:
-- type: transformation
+- type: cloze
   focus: Adjust opinion strength
   items: 25
 - type: fill-in
   focus: Complete opinion sentences
   items: 20
-- type: role-play
+- type: cloze
   focus: Express opinions in scenarios
   items: 15
-- type: writing
+- type: cloze
   focus: Write opinion paragraphs
   items: 10
 focus: vocabulary

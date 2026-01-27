@@ -1,10 +1,12 @@
 # Audit Report: M40 — 40-b21c-checkpoint.md
+
 **Level:** B2 | **Module:** M40 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:12
 
 ## Configuration
+
 **Type:** B2-checkpoint
 **Word Target:** 1750 words
 **Activities:** 15-19 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Комплексний тест: Відмінювання числівників (М31-32) | 10 | 8 | ✅ |
@@ -43,6 +46,7 @@
 - Low density activities: 0
 
 ## Gates
+
 - **Words:** ✅ 2355/1750 (raw: 2606)
 - **Activities:** ✅ 16/15
 - **Density:** ✅ All > 14
@@ -61,10 +65,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 81% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 61 | 24 | 100% | 20% | 20.0% |
@@ -80,12 +86,13 @@
 | **TOTAL** | | | | | **81.3%** |
 
 ### Dryness Flags & Fixes
+
 - ❌ **LOW_DIALOGUE**
   - FIX:
     Add more mini-dialogues (need 4+ total). Use this exact format:
-    
+
     **Діалог: [Location in Ukraine]**
-    
+
     > — [Speaker 1 line with **bolded** grammar examples]
     > — [Speaker 2 response with **bolded** grammar examples]
     > — [Speaker 1 continuation]
@@ -98,6 +105,7 @@
     - Contemporary Ukrainian life examples
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 51 | Included in Core |

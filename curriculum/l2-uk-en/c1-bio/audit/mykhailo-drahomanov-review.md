@@ -1,10 +1,12 @@
 # Audit Report: M39 — mykhailo-drahomanov.md
+
 **Level:** C1 | **Module:** M39 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:15
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Глибокий аналіз політичної філософії Михайла Драгоманова | 12 | 5 | ✅ |
@@ -46,20 +49,24 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in mykhailo-drahomanov.yaml: Schema validation error at key '15': {'type': 'reading', 'title': 'Читання та аналіз першоджерел', 'resource': {'type': 'article', 'url': 'https://shron1.chytomo.com/drahomanov-ukrainska-literatura-zaboronena-rosijskym-uryadom/', 'title': 'Українська література, заборонена російським урядом (конспект)'}, 'tasks': ['Які саме факти утисків наводить автор у своїй паризькій доповіді?', 'Як Драгоманов аргументує важливість української мови для загальноєвропейської культури?', 'Які прогнози він робить щодо майбутнього українського слова?']} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Останні роки' per template 'c1-biography-module-template.md'
   - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 2 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2082/4000 (raw: 2340)
 - **Activities:** ✅ 17/3
 - **Density:** ✅ All > 1
@@ -78,10 +85,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 12 | 4 | 100% | 19% | 19.0% |
@@ -97,6 +106,7 @@
 | **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 74 | Included in Core |

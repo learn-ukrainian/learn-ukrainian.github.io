@@ -5,56 +5,58 @@ version: '1.0'
 title: 'Газова зброя: Економічна війна 1991-2022'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of газова зброя: економічна війна 1991-2022'
+- Evaluate the historical significance of газ як зброя
 content_outline:
 - section: Вступ — Газ як зброя
-  words: 400
+  words: 457
   subsections:
   - Енергетична залежність
   - Росія — постачальник
   - Газ як інструмент тиску
   - Структура модуля
 - section: 1990-ті — Борги і залежність
-  words: 600
+  words: 686
   subsections:
   - Успадкована залежність
   - Накопичення боргів
   - Бартерні схеми
   - Корупція — з обох сторін
 - section: 2006 і 2009 — Газові війни
-  words: 700
+  words: 800
   subsections:
   - Відключення газу
   - Вплив на Європу
   - Україна — «ненадійний транзитер»
   - Хто виграв
 - section: Nord Stream — обхід України
-  words: 600
+  words: 686
   subsections:
   - Навіщо Росії
   - Німеччина — партнер
   - Втрата транзиту — втрата важеля
   - Nord Stream 2 — до 24.02.2022
 - section: Ціна газу як тиск
-  words: 500
+  words: 571
   subsections:
   - Знижки за лояльність
   - Харківські угоди 2010
   - Газ — валюта впливу
   - Залежність — добровільна?
 - section: Після 2022
-  words: 400
+  words: 457
   subsections:
   - Кінець залежності
   - Диверсифікація
   - Газ — більше не зброя
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - 30 років газового шантажу
   - Як звільнитися
   - Перехід до синтезу
-word_target: 3500
+word_target: 4000
 vocabulary:
 - газова зброя
 - енергетична залежність
@@ -72,13 +74,13 @@ vocabulary:
 - енергетична безпека
 - санкції
 activities:
-- type: conflict-analysis
+- type: critical-analysis
   focus: 2006 and 2009 gas wars — causes and outcomes
-- type: geopolitical-analysis
+- type: critical-analysis
   focus: Nord Stream as geopolitical weapon
-- type: dependence-analysis
+- type: critical-analysis
   focus: How gas dependence limited Ukraine's choices
-- type: contemporary-analysis
+- type: critical-analysis
   focus: Post-2022 — end of gas dependence?
 - type: essay-response
   focus: Як Україна звільнилася від газової залежності?

@@ -5,42 +5,23 @@ version: '2.0'
 title: Колокації та вирази
 subtitle: Collocations and Expressions
 content_outline:
-- section: 'Introduction: Why Collocations Matter'
-  words: 150
+- section: Вступ
+  words: 457
   points:
   - What are collocations
   - Natural vs unnatural combinations
   - Learning strategies
-- section: Verb-Noun Collocations
-  words: 250
+- section: Читання
+  words: 954
   points:
-  - приймати рішення, робити вибір
-  - мати право, брати участь
-  - Common verb-noun pairs
-- section: Adjective-Noun Collocations
-  words: 250
-  points:
-  - важливе питання, гарний настрій
-  - Fixed adjective-noun pairs
-  - Color and intensity
-- section: Delexical Verbs
-  words: 250
-  points:
-  - робити, мати, брати, давати
-  - Light verb constructions
-  - Common patterns
-- section: Fixed Expressions
-  words: 200
-  points:
-  - Semi-fixed phrases
-  - Idiomatic expressions
-  - Discourse markers
-- section: 'Practice: Natural Combinations'
-  words: 100
+  - Collocation texts
+  - Natural combinations
+- section: Діалоги
+  words: 1589
   points:
   - Build natural collocations
   - Avoid calques
-word_target: 1200
+word_target: 3000
 vocabulary_hints:
   required:
   - колокація (collocation)
@@ -57,7 +38,7 @@ vocabulary_hints:
   - набувати досвіду (to gain experience)
   - зберігати спокій (to keep calm)
 activity_hints:
-- type: matching
+- type: match-up
   focus: Match verb to noun
   items: 25
 - type: fill-in
@@ -66,7 +47,7 @@ activity_hints:
 - type: error-correction
   focus: Fix unnatural collocations
   items: 15
-- type: writing
+- type: cloze
   focus: Use collocations in context
   items: 10
 focus: vocabulary

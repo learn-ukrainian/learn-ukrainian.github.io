@@ -69,22 +69,10 @@ activity_hints:
   focus: Наукова біографія
   source: Уривки з «Історії України»
   items: 3 passages
-- type: quiz
-  focus: Етапи життя та наукові праці
-  items: 12+
-- type: match-up
-  focus: Праці та їхні теми
-  items: 10+
 - type: essay-response
   focus: Як еміграція впливає на наукову творчість?
   word_target: 300
   output: Аналітичне есе
-- type: group-sort
-  focus: Київський період vs еміграційний період
-  items: 12+
-- type: fill-in
-  focus: Термінологія історичної науки
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-35 (Михайло Грушевський)
@@ -107,3 +95,7 @@ sources:
   notes: Діяльність в еміграції
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of наталія полонська-василенко: історикиня'
+- Evaluate the contributions of жінка, яка написала історію україни
+- Trace the career and influence of наукова спадщина та значення

@@ -64,12 +64,6 @@ activity_hints:
   focus: Свідчення Діни Проничевої
   source: Архівні матеріали
   items: 4
-- type: quiz
-  focus: Факти та хронологія Голокосту в Україні
-  items: 15
-- type: match-up
-  focus: Місце трагедії → дата та масштаб
-  items: 10
 - type: essay-response
   focus: Чому пам'ять про Голокост важлива для України
   word_target: 300

@@ -23,6 +23,8 @@ import ComparativeStudy from '@site/src/components/ComparativeStudy';
 import ReadingActivity from '@site/src/components/ReadingActivity';
 import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
 import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
 
 
 ## Вступ
@@ -291,6 +293,10 @@ Try: «Моє хобі — фотографія. Я люблю фотограф�
 
 <Select questions={JSON.parse(`[{"question": "__ на гітарі.", "options": [{"text": "Грати", "correct": true}, {"text": "Гратися", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Play instrument."}, {"question": "__ пісні.", "options": [{"text": "Співати", "correct": true}, {"text": "Спати", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Sing songs."}, {"question": "__ марки.", "options": [{"text": "Колекціонувати", "correct": true}, {"text": "Читати", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Collect stamps."}, {"question": "__ картини.", "options": [{"text": "Малювати", "correct": true}, {"text": "Писати", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Paint pictures (Малювати). Note: artists say «писати картину», but «малювати» is standard for learners."}, {"question": "__ гопак.", "options": [{"text": "Танцювати", "correct": true}, {"text": "Співати", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Dance hopak."}, {"question": "__ місто.", "options": [{"text": "Оглядати", "correct": true}, {"text": "Дивитися", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Inspect/sightsee city."}, {"question": "__ у наметі.", "options": [{"text": "Спати", "correct": true}, {"text": "Грати", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Sleep in a tent."}, {"question": "__ квиток.", "options": [{"text": "Купувати", "correct": true}, {"text": "Продавати", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Buy a ticket."}, {"question": "__ музеї.", "options": [{"text": "Відвідувати", "correct": true}, {"text": "Жити", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Visit museums."}, {"question": "__ фото.", "options": [{"text": "Робити", "correct": true}, {"text": "Грати", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Make (take) photos. Or Фотографувати. 'Робити фото' is common."}, {"question": "__ вірші.", "options": [{"text": "Писати", "correct": true}, {"text": "Читати", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Write poems."}, {"question": "__ валізу.", "options": [{"text": "Збирати", "correct": true}, {"text": "Розкидати", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Pack (gather) suitcase."}]`)} />
 
+### Hobbies Fill-In
+
+<FillIn items={JSON.parse(`[{"sentence": "Я люблю [___] на гітарі.", "answer": "грати", "options": ["грати", "читати", "малювати", "співати"]}, {"sentence": "Він [___] спортом щодня.", "answer": "займається", "options": ["займається", "грає", "читає", "малює"]}, {"sentence": "Ми часто [___] в кіно на вихідних.", "answer": "ходимо", "options": ["ходимо", "граємо", "читаємо", "співаємо"]}, {"sentence": "Вона любить [___] книги ввечері.", "answer": "читати", "options": ["читати", "грати", "співати", "малювати"]}, {"sentence": "Мій брат [___] картини в університеті.", "answer": "малює", "options": ["малює", "грає", "співає", "читає"]}, {"sentence": "У вільний [___] я граю у футбол.", "answer": "час", "options": ["час", "день", "ранок", "вечір"]}, {"sentence": "Ти [___] слухаєш музику?", "answer": "часто", "options": ["часто", "мало", "музику", "книгу"]}, {"sentence": "Вони збираються піти на [___] у суботу.", "answer": "концерт", "options": ["концерт", "книгу", "музику", "картину"]}]`)} />
+
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -305,12 +311,11 @@ Try: «Моє хобі — фотографія. Я люблю фотограф�
 | вечорниця | /ʋɛt͡ʃɔrnɪt͡sja/ | vechornytsi (traditional evening gathering) | noun |  |  |
 | галерея | /ɦalɛrˈɛja/ | gallery | noun | ж |  |
 | глядач | /ɦljadˈat͡ʃ/ | spectator, viewer | noun | ч |  |
-| гм | /ɦm/ |  | noun |  |  |
 | говерла | /ɦɔʋˈɛrla/ | Hoverla (mountain) | noun | ж |  |
 | гітара | /ɦitˈara/ | guitar | noun | ж |  |
 | далекий | /dalˈɛkɪj/ | distant, far | adj |  |  |
 | дизайнерка | /dɪzˈajnɛrka/ | designer (female) | noun | ж |  |
-| дмитре | /dmɪtrɛ/ |  | noun | с |  |
+| дмитре | /dmɪtrɛ/ | Dmytro (vocative) | noun | с |  |
 | дозвілля | /dɔzʋˈillja/ | leisure, free time | noun | с |  |
 | драгобрат | /draɦɔbrat/ | Drahobrat (place) | noun | ч |  |
 | живопис | /ʒɪʋˈɔpɪs/ | painting, fine art | noun | ч |  |
@@ -325,7 +330,6 @@ Try: «Моє хобі — фотографія. Я люблю фотограф�
 | мистецький | /mɪstˈɛt͡sʲkɪj/ | artistic | adj |  |  |
 | мішок | /miʃˈɔk/ | bag, sack | noun | ч |  |
 | намет | /namˈɛt/ | tent | noun | ч |  |
-| невесло | /nɛʋɛslɔ/ |  | noun |  |  |
 | несамовитий | /nɛsamɔʋˈɪtɪj/ | frantic, furious | adj |  |  |
 | ночувати | /nɔt͡ʃuʋˈatɪ/ | to stay overnight | verb |  |  |
 | партер | /partˈɛr/ | parterre, stalls | noun | ч |  |
@@ -337,14 +341,13 @@ Try: «Моє хобі — фотографія. Я люблю фотограф�
 | самотність | /samˈɔtnistʲ/ | loneliness | noun | ж |  |
 | сенцов | /sɛnt͡sɔʋ/ | Sentsov (name) | noun | ч |  |
 | соняшник | /sˈɔnjaʃnɪk/ | sunflower | noun |  |  |
-| східній | /sxˈidnij/ |  | adj |  |  |
+| східній | /sxˈidnij/ | western | adj |  |  |
 | танець | /tˈanɛt͡sʲ/ | dance | noun | ч |  |
 | техно-рейвести | /tˈɛxnɔ-rɛjʋɛstɪ/ | techno-rave (to rave) | verb |  |  |
 | узяти | /uzˈjatɪ/ | to take (perfective) | verb |  |  |
-| унікаль | /unikalʲ/ |  | noun | ч |  |
 | фотоапарат | /fɔtɔaparˈat/ | camera | noun | ч |  |
 | художниця | /xudˈɔʒnɪt͡sja/ | painter, artist (female) | noun | ж |  |
 | церква | /t͡sˈɛrkʋa/ | church | noun | ж |  |
-| яремча | /jarˈɛmt͡ʃa/ |  | noun | ж |  |
+| яремча | /jarˈɛmt͡ʃa/ | Yaremche | noun | ж |  |
 | європейка | /jɛʋrɔpˈɛjka/ | European woman | noun | ж |  |
 | івано-франківський | /iʋanɔ-frankˈiʋsʲkɪj/ | Ivano-Frankivsk (adj) | adj |  |  |

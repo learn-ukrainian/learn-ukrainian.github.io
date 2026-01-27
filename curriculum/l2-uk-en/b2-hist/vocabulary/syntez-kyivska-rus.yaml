@@ -1,4 +1,84 @@
 module: syntez-kyivska-rus
 level: B2-HIST
 version: '2.0'
-items: []
+items:
+  - term: синтез
+    ipa: ˈsɪntɛz
+    pos: noun
+    translation: synthesis
+  - term: спадщина
+    ipa: ˈspadʃtʃɪnɐ
+    pos: noun
+    translation: heritage, legacy
+  - term: тяглість
+    ipa: ˈtʲɑɦlʲisʲtʲ
+    pos: noun
+    translation: continuity
+  - term: ідентичність
+    ipa: idɛnˈtɪtʃnʲisʲtʲ
+    pos: noun
+    translation: identity
+  - term: спадкоємець
+    ipa: spɐdˈkɔjɛmɛt͡sʲ
+    pos: noun
+    translation: heir, successor
+  - term: самобутність
+    ipa: sɐmɔˈbutnʲisʲtʲ
+    pos: noun
+    translation: originality, authenticity
+  - term: фундамент
+    ipa: funˈdɑmɛnt
+    pos: noun
+    translation: foundation
+  - term: етнос
+    ipa: ˈɛtnɔs
+    pos: noun
+    translation: ethnos
+  - term: консолідація
+    ipa: kɔnsɔlʲidɐˈt͡sʲijɐ
+    pos: noun
+    translation: consolidation
+  - term: суб’єктність
+    ipa: subʔjɛkˈtɪvnʲisʲtʲ
+    pos: noun
+    translation: subjectivity, agency
+  - term: державотворення
+    ipa: dɛrʒɐvɔˈtwɔrɛnnʲɐ
+    pos: noun
+    translation: state-building
+  - term: меншовартість
+    ipa: mɛnʃɔˈvɑrtʲisʲtʲ
+    pos: noun
+    translation: inferiority, underestimation
+  - term: привласнення
+    ipa: prɪˈwlɑsnɛnnʲɐ
+    pos: noun
+    translation: appropriation
+  - term: маніпуляція
+    ipa: mɐnʲipulʲɐˈt͡sʲijɐ
+    pos: noun
+    translation: manipulation
+  - term: міф
+    ipa: mʲif
+    pos: noun
+    translation: myth
+  - term: цивілізація
+    ipa: t͡sɪvʲilʲizɐˈt͡sʲijɐ
+    pos: noun
+    translation: civilization
+  - term: інтеграція
+    ipa: intɛˈɦrat͡sʲijɐ
+    pos: noun
+    translation: integration
+  - term: суверенітет
+    ipa: suvɛrɛnʲiˈtɛt
+    pos: noun
+    translation: sovereignty
+  - term: парадигма
+    ipa: pɐrɐˈdɪɦmɐ
+    pos: noun
+    translation: paradigm
+  - term: дискурс
+    ipa: ˈdɪskurs
+    pos: noun
+    translation: discourse

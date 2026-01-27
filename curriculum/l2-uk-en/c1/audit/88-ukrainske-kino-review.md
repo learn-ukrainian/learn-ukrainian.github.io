@@ -1,9 +1,11 @@
 # Audit Report: M88 — 88-ukrainske-kino.md
+
 **Level:** C1 | **Module:** M88 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:49
 
 ## Configuration
+
 **Type:** C1-fine-arts
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -16,6 +18,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Історія українського кіно | 12 | 5 | ✅ |
@@ -40,6 +43,7 @@
 - Low density activities: 2
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Історія українського кіно' Q2 prompt length 7 (target: 8-30)
   - FIX: Adjust prompt length to 8-30 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Історія українського кіно' Q4 prompt length 4 (target: 8-30)
@@ -70,10 +74,12 @@
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Аналіз' per template 'c1-module-template.md'
   - FIX: Add '## Аналіз' section as specified in docs/l2-uk-en/templates/c1-module-template.md.md
 
 ## Recommendation
+
 **🔄 REWRITE** (severity 80/100)
 
 - 15 violations (severe - consider revision)
@@ -81,6 +87,7 @@
 - Activity density below minimum
 
 ## Gates
+
 - **Words:** ❌ 1148/3000 (raw: 1233)
 - **Activities:** ✅ 14/12
 - **Density:** ❌ 2 < 12
@@ -99,10 +106,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 75% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 30 | 15 | 100% | 25% | 25.0% |
@@ -116,23 +125,25 @@
 | **TOTAL** | | | | | **75.3%** |
 
 ### Dryness Flags & Fixes
+
 - ❌ **ABSTRACT_ONLY**
   - FIX:
     Add 3+ real-world boxes. Use this exact format:
-    
+
     > 🌍 **У реальному житті**
     >
     > [Specific scenario: "На співбесіді...", "У магазині...", "На вокзалі..."]
     > [Example sentence showing grammar in that context]
 
 ## Low Density Activities
+
 | Activity | Type | Items | Required | Fix |
 |----------|------|-------|----------|-----|
 | Поетичне кіно | cloze | 9 | 12 | Add 3 more items |
 | Сучасні українські фільми | select | 3 | 5 | Add 2 more items |
 
-
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 67 | Included in Core |

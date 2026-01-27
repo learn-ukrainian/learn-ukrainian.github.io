@@ -5,24 +5,27 @@ version: '1.0'
 title: 'Слово о полку Ігоревім: Автентичність і значення'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of слово о полку ігоревім: автентичність і
+  значення'
+- Evaluate the historical significance of найзагадковіша пам'ятка
 content_outline:
 - section: Вступ — Найзагадковіша пам'ятка
-  words: 400
+  words: 457
   subsections:
   - Що таке Слово?
   - Чому ця пам'ятка особлива?
   - Історія відкриття (1795)
   - Чому дебати про автентичність?
 - section: Історія рукопису
-  words: 500
+  words: 571
   subsections:
   - Мусін-Пушкін і знахідка
   - Пожежа 1812 року — втрата оригіналу
   - Що залишилося — копії та видання
   - Чому це проблематично для науки
 - section: Дебати про автентичність
-  words: 700
+  words: 800
   subsections:
   - Аргументи за автентичність
   - Аргументи проти (підробка XVIII ст.?)
@@ -30,21 +33,21 @@ content_outline:
   - Зільдербауер, Зімін та інші скептики
   - Сучасний консенсус — здебільшого автентичне
 - section: Зміст і структура
-  words: 600
+  words: 686
   subsections:
   - Похід Ігоря 1185 року — історичний контекст
   - Структура — вступ, похід, поразка, плач, втеча
   - Плач Ярославни — найвідоміший фрагмент
   - Язичницькі та християнські елементи
 - section: Фрагмент — Плач Ярославни
-  words: 500
+  words: 571
   subsections:
   - Текст (з глосами)
   - Поетична краса
   - Жіночий голос у середньовічній літературі
   - Язичницькі мотиви — звернення до природи
 - section: Слово як історичне джерело
-  words: 500
+  words: 571
   subsections:
   - Що нам каже про XII ст.?
   - Політична роздробленість — моральний урок
@@ -52,12 +55,12 @@ content_outline:
   - Географія — топоніми
   - Літературна vs. історична цінність
 - section: Підсумок
-  words: 300
+  words: 344
   subsections:
   - Слово — національний символ
   - Важливість критичного підходу
   - Навіть з сумнівами — цінне джерело
-word_target: 3500
+word_target: 4000
 vocabulary:
 - автентичність
 - підробка
@@ -79,7 +82,7 @@ activities:
   focus: Yaroslavna's Lament with glosses
 - type: comparative-study
   focus: Compare Slovo's account with chronicle account of 1185 campaign
-- type: literary-analysis
+- type: critical-analysis
   focus: Identify pagan vs. Christian elements
 - type: essay-response
   focus: Яке значення має Слово о полку Ігоревім для української культури?

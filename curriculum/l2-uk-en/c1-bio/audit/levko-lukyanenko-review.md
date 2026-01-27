@@ -1,10 +1,12 @@
 # Audit Report: M102 — levko-lukyanenko.md
+
 **Level:** C1 | **Module:** M102 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:47
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння біографії | 5 | 5 | ✅ |
@@ -41,22 +44,26 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in levko-lukyanenko.yaml: Schema validation error at key '7': {'type': 'error-correction', 'title': 'Складні речення та пунктуація', 'items': [{'sentence': "Лук'яненко який пройшов табори став символом нації.", 'error': "Лук'яненко який", 'answer': "Лук'яненко, який", 'options': ["Лук'яненко який", "Лук'яненко, який", "Лук'яненко: який", 'none'], 'explanation': 'Виділення підрядного означального речення комами.'}, {'sentence': 'Він знав що Україна переможе.', 'error': 'знав що', 'answer': 'знав, що', 'options': ['знав що', 'знав, що', 'знав: що', 'none'], 'explanation': 'Кома перед сполучником «що» у складнопідрядному реченні.'}, {'sentence': 'Коли він вийшов на волю його зустрічали як героя.', 'error': 'волю його', 'answer': 'волю, його', 'options': ['волю його', 'волю, його', 'волю: його', 'none'], 'explanation': 'Кома між частинами складного речення.'}, {'sentence': 'Це була людина, яка не боялася смерті.', 'error': 'none', 'answer': '✓', 'options': ['людина', 'яка', 'смерті', '✓'], 'explanation': 'Речення побудоване правильно.'}, {'sentence': 'Він написав Акт, щоб Україна стала державою.', 'error': 'none', 'answer': '✓', 'options': ['Акт', 'щоб', 'державою', '✓'], 'explanation': 'Речення побудоване правильно.'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template.md'
   - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template.md'
   - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 3 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2209/4000 (raw: 2502)
 - **Activities:** ✅ 12/3
 - **Density:** ✅ All > 1
@@ -75,10 +82,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 95% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 11 | 4 | 100% | 19% | 19.0% |
@@ -94,6 +103,7 @@
 | **TOTAL** | | | | | **95.1%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 74 | Included in Core |

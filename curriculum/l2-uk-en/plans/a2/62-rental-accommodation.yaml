@@ -5,42 +5,45 @@ version: '2.0'
 title: Rental Accommodation
 subtitle: Finding an Apartment
 content_outline:
-- section: 'Introduction: Renting in Ukraine'
-  words: 100
+- section: 'Introduction'
+  words: 130
   points:
   - Rental market overview
   - Finding apartments
-  - Rental vocabulary
-- section: Reading Rental Ads
-  words: 200
+- section: 'Presentation'
+  words: 50
+  points:
+  - Rental vocabulary intro
+- section: 'Reading Context'
+  words: 95
   points:
   - здається, оренда, депозит
   - Room descriptions
-  - Price and conditions
-- section: Viewing an Apartment
-  words: 200
+- section: 'Viewing Dialogue'
+  words: 155
   points:
   - Asking about features
   - меблі, ремонт, техніка
-  - Location questions
-- section: Utilities and Bills
-  words: 200
+- section: 'Utilities Review'
+  words: 90
   points:
   - комунальні послуги
   - газ, вода, електрика
-  - Who pays what
-- section: The Lease Agreement
-  words: 150
+- section: 'Agreement Insight'
+  words: 130
   points:
   - договір оренди
   - Terms and conditions
-  - Signing and deposit
-- section: 'Practice: Rental Dialogue'
-  words: 150
+- section: 'Practice'
+  words: 105
   points:
   - Inquire about apartment
   - Discuss terms
-word_target: 1000
+- section: 'Narrative'
+  words: 180
+  points:
+  - Rental story
+word_target: 935
 vocabulary_hints:
   required:
   - оренда (rent)
@@ -59,18 +62,14 @@ vocabulary_hints:
   - завдаток (advance payment)
   - умови (conditions)
 activity_hints:
-- type: vocabulary-drill
+- type: match-up
   focus: Rental vocabulary
   items: 25
-- type: reading-comprehension
+- type: reading
   focus: Understand rental ads
   items: 10
-- type: dialogue
   focus: Apartment viewing
-  items: 12
-- type: role-play
   focus: Negotiate rental terms
-  items: 8
 focus: practical
 pedagogy: PPP
 prerequisites:

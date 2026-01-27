@@ -69,22 +69,10 @@ activity_hints:
   focus: Текст Акту незалежності та спогади Лук'яненка
   source: Історичні документи
   items: 3 passages
-- type: quiz
-  focus: Біографія та дисидентська діяльність
-  items: 12+
-- type: match-up
-  focus: Етапи боротьби та досягнення
-  items: 10+
 - type: essay-response
   focus: Чому шлях до незалежності тривав 30 років?
   word_target: 300
   output: Historical analysis
-- type: group-sort
-  focus: Періоди ув'язнення та політичної діяльності
-  items: 12+
-- type: fill-in
-  focus: Правова та політична термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-76-viacheslav-chornovil
@@ -107,3 +95,7 @@ sources:
   notes: Історичний контекст та авторство
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of левко лук''яненко: автор акту незалежності'
+- Evaluate the contributions of людина, що написала свободу
+- Trace the career and influence of державна діяльність та спадщина (1991-2018)

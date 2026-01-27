@@ -1,4 +1,5 @@
 # B1 Naturalness Scan Report - M06-M15
+
 **Date:** 2026-01-12
 **Protocol:** claude_extensions/protocols/a1-naturalness-scan.md
 **Scope:** M06-M15 (10 modules - First 100% immersion section: Aspect Mastery)
@@ -21,6 +22,7 @@
 ## Scan Results by Module
 
 ### M06: The Complete Aspect System [✅ PASS]
+
 **Status:** Immersion module introducing НДВ/ДВ system
 **Activities:** Quiz (20 questions), match-up (aspect pairs), group-sort (formation types), fill-in, true-false, unjumble, **cloze passage**, error-correction, mark-the-words, select, translate
 **Aspect concepts taught:**
@@ -48,6 +50,7 @@
 ---
 
 ### M07: Aspect in Past - Single vs Repeated [✅ PASS]
+
 **Status:** Immersion module teaching aspect distinction in past tense
 **Activities:** Quiz, match-up, group-sort, fill-in, true-false, **cloze passage**, unjumble, error-correction, mark-the-words, select, translate
 **Aspect concepts taught:**
@@ -74,6 +77,7 @@
 ---
 
 ### M08: Aspect in Past - Result vs Process [✅ PASS]
+
 **Status:** Immersion module teaching НДВ process vs ДВ result
 **Activities:** Quiz, match-up, group-sort, fill-in, true-false, **cloze passage**, unjumble, error-correction, mark-the-words, select, translate
 **Aspect concepts taught:**
@@ -100,6 +104,7 @@
 ---
 
 ### M09: Aspect in Future [✅ PASS]
+
 **Status:** Immersion module teaching aspect in future tense
 **Activities:** Quiz, match-up, group-sort, fill-in, true-false, **cloze passage**, unjumble, error-correction, mark-the-words, select, translate
 **Aspect concepts taught:**
@@ -126,6 +131,7 @@
 ---
 
 ### M10: Aspect with Negation [✅ PASS]
+
 **Status:** Immersion module teaching critical negation + aspect rules
 **Activities:** Quiz (15 questions on negation rules), match-up, group-sort, fill-in, true-false, **cloze passage**, unjumble, error-correction, mark-the-words, select, translate
 **Aspect concepts taught:**
@@ -152,6 +158,7 @@
 ---
 
 ### M11: Aspect in Imperatives [✅ PASS]
+
 **Status:** Immersion module teaching aspect in imperative mood
 **Activities:** Quiz, match-up, group-sort, fill-in, true-false, **cloze dialogue**, unjumble, error-correction, mark-the-words, select, translate
 **Aspect concepts taught:**
@@ -187,6 +194,7 @@
 ---
 
 ### M12: Essential 40 Aspect Pairs [✅ PASS]
+
 **Status:** Immersion module drilling 40 most common aspect pairs
 **Activities:** Match-up (40 aspect pairs), quiz, group-sort, fill-in, true-false, **cloze passage**, **unjumble (20 items with full sentences)**, error-correction, mark-the-words, select, translate
 **Aspect pairs taught:**
@@ -222,6 +230,7 @@
 ---
 
 ### M13: Work Week - Aspect in Action [✅ PASS]
+
 **Status:** Immersion module applying aspect to professional contexts
 **Activities:** Quiz, match-up, group-sort, fill-in, true-false, **cloze dialogue**, unjumble, error-correction, mark-the-words, select, translate
 **Professional contexts:**
@@ -259,6 +268,7 @@
 ---
 
 ### M14: Aspect Integration Practice [✅ PASS]
+
 **Status:** Immersion module integrating all aspect patterns in narratives
 **Activities:** Quiz, match-up, group-sort, fill-in, true-false, **cloze narrative**, unjumble, error-correction, mark-the-words, select, translate
 **Integration focus:**
@@ -289,6 +299,7 @@
 ---
 
 ### M15: Checkpoint - Aspect Mastery [⏸️ DEFERRED]
+
 **Status:** CHECKPOINT - comprehensive assessment of M06-M14
 **Activities:** Extensive review integrating all aspect concepts: match-up (40+ pairs), group-sort, quiz (25 questions), true-false (15 items), fill-in, **cloze passage**, unjumble (15 items), error-correction (20 items), mark-the-words, select, translate
 **Coverage:**
@@ -320,6 +331,7 @@
 ## Summary by Status
 
 ### ✅ PASS (9 modules - Content modules)
+
 - M06: The Complete Aspect System (8/10)
 - M07: Aspect in Past - Single vs Repeated (8/10)
 - M08: Aspect in Past - Result vs Process (9/10)
@@ -333,9 +345,11 @@
 **Average score:** 8.3/10
 
 ### ⏸️ DEFERRED (1 module - Checkpoint)
+
 - M15: Checkpoint - Aspect Mastery (7/10 - appropriate for assessment)
 
 ### ⚠️ FLAGGED (0 modules)
+
 **NONE** - All modules meet or exceed naturalness standards
 
 ---

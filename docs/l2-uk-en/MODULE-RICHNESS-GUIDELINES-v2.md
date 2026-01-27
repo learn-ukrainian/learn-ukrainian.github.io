@@ -626,9 +626,9 @@ To surprise and impress students, highlighting the beautiful, melodic, and rich 
 ### 6. Decolonization & Patriotism (The Truth of Ukraine)
 
 - **Bust Russian Myths:** Actively identify and dismantle common propaganda points.
-  - _Example:_ "Russian and Ukrainian are brotherly languages" -> **Truth:** Ukrainian is closer to Polish/Belarusian; Russian has significant Finno-Ugric/Turkic substrata.
-  - _Example:_ "Kyiv is the mother of Russian cities" -> **Truth:** Kyiv existed as a metropolis when Moscow was a swamp; Russia hijacked Kyivan Rus' history.
-  - _Example:_ "Lenin created Ukraine" -> **Truth:** Ukraine has a distinct statehood tradition dating back to Rus', the Cossack Hetmanate, and the UPR (1917).
+  - *Example:* "Russian and Ukrainian are brotherly languages" -> **Truth:** Ukrainian is closer to Polish/Belarusian; Russian has significant Finno-Ugric/Turkic substrata.
+  - *Example:* "Kyiv is the mother of Russian cities" -> **Truth:** Kyiv existed as a metropolis when Moscow was a swamp; Russia hijacked Kyivan Rus' history.
+  - *Example:* "Lenin created Ukraine" -> **Truth:** Ukraine has a distinct statehood tradition dating back to Rus', the Cossack Hetmanate, and the UPR (1917).
 - **Highlight Resistance:** When discussing language history, ALWAYS mention the Ems Ukaz (1876), Valuev Circular (1863), and the Executed Renaissance. Show that speaking Ukrainian was a revolutionary act.
 - **Unapologetic Tone:** Celebrate Ukrainian heroes, inventors, and artists without looking for Russian validation. Use the "Prosecutor's Voice" — present facts that indict the imperial narrative.
 
@@ -639,9 +639,9 @@ To surprise and impress students, highlighting the beautiful, melodic, and rich 
 > **Single Source of Truth** for strict grammatical definitions.
 > **Scope vs. Method:**
 >
-> - **The Scope (WHAT):** Defined by [`UKRAINIAN-STATE-STANDARD-2024`](UKRAINIAN-STATE-STANDARD-2024.txt). Modules must teach _at least_ these competencies.
-> - **The Method (HOW):** Defined by _this document_. We use specific pedagogical models (e.g., "4 Families") to teach the Standard's requirements effectively.
-> - _Example:_ Standard says "Know noun gender". Guidelines say "Teach Gender via 4-Family Model". Both are true.
+> - **The Scope (WHAT):** Defined by [`UKRAINIAN-STATE-STANDARD-2024`](UKRAINIAN-STATE-STANDARD-2024.txt). Modules must teach *at least* these competencies.
+> - **The Method (HOW):** Defined by *this document*. We use specific pedagogical models (e.g., "4 Families") to teach the Standard's requirements effectively.
+> - *Example:* Standard says "Know noun gender". Guidelines say "Teach Gender via 4-Family Model". Both are true.
 
 ### 1. Noun Declension Families (Відміни)
 
@@ -649,36 +649,36 @@ To surprise and impress students, highlighting the beautiful, melodic, and rich 
 
 - **Definition:** Nouns ending in **-А** or **-Я**.
 - **Gender Scope:**
-  - **Feminine:** vast majority (_Мама, Робота_).
-  - **Masculine:** names (_Микола, Ілля_).
-  - **Common:** dual-gender descriptors (_Сирота, Ненажера_).
-- **Groups:** Hard (_Мама_), Soft (_Земля_), Mixed (_Межа_).
+  - **Feminine:** vast majority (*Мама, Робота*).
+  - **Masculine:** names (*Микола, Ілля*).
+  - **Common:** dual-gender descriptors (*Сирота, Ненажера*).
+- **Groups:** Hard (*Мама*), Soft (*Земля*), Mixed (*Межа*).
 
 #### Family 2 (Declension II)
 
 - **Definition:**
-  - **Masculine:** Zero ending (_Стіл_) or ending in **-О** (_Батько, Тато, Дніпро_).
-  - **Neuter:** Ending in **-О, -Е** (_Вікно, Море_) or **-Я** (but **only** those that do NOT gain suffixes -at/-yat/-en during declension) (_Життя, Весілля, Обличчя_).
-- **Key Distinction:** If a Neuter noun ends in -Я and keeps its stem simple (_Життя -> Життя_), it is Family 2.
+  - **Masculine:** Zero ending (*Стіл*) or ending in **-О** (*Батько, Тато, Дніпро*).
+  - **Neuter:** Ending in **-О, -Е** (*Вікно, Море*) or **-Я** (but **only** those that do NOT gain suffixes -at/-yat/-en during declension) (*Життя, Весілля, Обличчя*).
+- **Key Distinction:** If a Neuter noun ends in -Я and keeps its stem simple (*Життя -> Життя*), it is Family 2.
 
 #### Family 3 (Declension III) - "The Consonant Feminines"
 
 - **Definition:** **Feminine** nouns ending in a **Consonant**.
 - **Specific Endings:**
-  1.  **Soft Sign (-Ь):** _Сіль, Осінь, Тінь, Любов, Кров_.
-  2.  **Sibilants (Ж, Ч, Ш):** Hard consonants but historically soft class. Examples: _Ніч, Подорож, Розкіш, Річ_.
-  3.  **Special:** The word _Мати_ (Mother).
-- **Validation Rule:** If it ends in a consonant and is Feminine, it is Family 3. Do NOT say "Ends in Soft Sign" (that excludes _Ніч_).
+  1.  **Soft Sign (-Ь):** *Сіль, Осінь, Тінь, Любов, Кров*.
+  2.  **Sibilants (Ж, Ч, Ш):** Hard consonants but historically soft class. Examples: *Ніч, Подорож, Розкіш, Річ*.
+  3.  **Special:** The word *Мати* (Mother).
+- **Validation Rule:** If it ends in a consonant and is Feminine, it is Family 3. Do NOT say "Ends in Soft Sign" (that excludes *Ніч*).
 
 #### Family 4 (Declension IV) - "The Suffix Gainers"
 
 - **Definition:** **Neuter** nouns ending in **-А** or **-Я** that **change their stem** during declension.
 - **Mechanism:** They gain suffixes **-ат-, -ят-, -ен-**.
 - **Examples:**
-  - _Ім'я_ (Name) -> _Імені_.
-  - _Цуценя_ (Puppy) -> _Цуценяти_.
-  - _Дівча_ (Girl) -> _Дівчати_.
-- **Key Distinction:** Family 4 is defined by _behavior_ (stem change), not just ending.
+  - *Ім'я* (Name) -> *Імені*.
+  - *Цуценя* (Puppy) -> *Цуценяти*.
+  - *Дівча* (Girl) -> *Дівчати*.
+- **Key Distinction:** Family 4 is defined by *behavior* (stem change), not just ending.
 
 ### 2. Verb Conjugation Groups (Дієвідміни)
 
@@ -687,20 +687,20 @@ To surprise and impress students, highlighting the beautiful, melodic, and rich 
 - **Stem Ending:** Usually ends in a consonant after dropping -ти.
 - **Key Vowel:** **-Е-** (or -Є-).
 - **3rd Plural:** **-УТЬ / -ЮТЬ**.
-- **Examples:** _Чита-ти -> Чита-ють_, _Писа-ти -> Пиш-уть_.
+- **Examples:** *Чита-ти -> Чита-ють*, *Писа-ти -> Пиш-уть*.
 
 #### Group II (I-Conjugation)
 
 - **Stem Ending:** Usually ends in -и, -і, -ї after lower vowel drop.
 - **Key Vowel:** **-И-** (or -Ї-).
 - **3rd Plural:** **-АТЬ / -ЯТЬ**.
-- **Examples:** _Говори-ти -> Говор-ять_, _Роби-ти -> Роб-лять_.
+- **Examples:** *Говори-ти -> Говор-ять*, *Роби-ти -> Роб-лять*.
 
 ### 3. Common Falsehoods to Avoid
 
 - ❌ "All feminine nouns end in -a/-ya." (False: Family 3 exists).
 - ❌ "Niches (Ніч) ends in a soft sign." (False: Ends in hard sibilant 'ch').
-- ❌ "Neuters in -ya are always Family 4." (False: _Zhyttya_ is Family 2).
+- ❌ "Neuters in -ya are always Family 4." (False: *Zhyttya* is Family 2).
 
 ---
 
@@ -758,7 +758,7 @@ To surprise and impress students, highlighting the beautiful, melodic, and rich 
 - Translate ×2 (production with alternatives), fill-in ×2, unjumble ×2
 - Mark-the-words rarely used (too basic at this level)
 
-**Rationale:** At B1+, learners need to _produce_ correct Ukrainian, not just recognize it. Error-correction builds metalinguistic awareness essential for self-correction.
+**Rationale:** At B1+, learners need to *produce* correct Ukrainian, not just recognize it. Error-correction builds metalinguistic awareness essential for self-correction.
 
 ### Error-Correction Progression
 
@@ -1683,7 +1683,7 @@ Always prefer standard Ukrainian over Russianisms:
 | ----------------- | ---------- | --------------------- |
 | вибачте           | ізвіняюсь  | Russian calque        |
 | будь ласка        | пожалуйста | Russian word          |
-| квиток            | білет      | Russian _билет_       |
+| квиток            | білет      | Russian *билет*       |
 | гаразд            | ладно      | Russian word          |
 | файно/чудово      | класно     | Russian slang         |
 | мабуть            | наверно    | Russian word          |
@@ -1984,7 +1984,7 @@ Pronunciation guidance must be integrated actively across all modules where new 
 
 ### Required Components
 
-1.  **IPA Transcriptions:** MUST be provided for _all new vocabulary_ in the vocabulary table.
+1.  **IPA Transcriptions:** MUST be provided for *all new vocabulary* in the vocabulary table.
 2.  **Key Sound Spotlights:** Dedicated sections or engagement boxes for challenging sounds (e.g., Г vs Ґ, Ь, И vs І), providing detailed articulation instructions (mouth position, tongue placement).
 3.  **Stress Pattern Guidance:**
     - For words with mobile stress (B1+), provide examples of stress shifts.

@@ -155,30 +155,36 @@ Successfully completed automated scoring and mapping of Ukrainian Lessons conten
 ## Algorithm Improvements Made
 
 ### Iteration 1: Initial Baseline
+
 - Simple Jaccard similarity on all keywords
 - **Result:** 83,080 mappings (100% acceptance rate - too lenient)
 - **Issue:** No quality filter, everything mapped
 
 ### Iteration 2: Add Topic Threshold (≥10 points)
+
 - Required minimum topic relevance
 - **Result:** 1,214 mappings (56% module coverage)
 - **Issue:** Single-word matches (e.g., "i", "more") creating false positives
 
 ### Iteration 3: Raise Topic Threshold (≥15 points)
+
 - Filter out tangential single-word matches
 - **Result:** 8 mappings (1.9% module coverage)
 - **Issue:** TOO STRICT - missed alphabet article on A1-01
 
 ### Iteration 4: Add Level Inference
+
 - Infer CEFR level from ULP episode ID (ULP-001-050 = A1, etc.)
 - Improved level_match accuracy
 
 ### Iteration 5: Weighted Keyword Matching
+
 - Title words weighted 3× vs topic words (1×)
 - **Result:** Still only 8 mappings
 - **Issue:** Alphabet article still not matching A1-01
 
 ### Iteration 6: Semantic Keyword Expansion (FINAL) ✅
+
 - Added semantic relationships:
   - `alphabet` ↔ `cyrillic` ↔ `letters`
   - `case` ↔ `accusative/genitive/dative/etc.`

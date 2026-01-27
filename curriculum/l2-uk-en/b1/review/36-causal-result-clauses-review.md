@@ -10,11 +10,11 @@
 
 | Dimension           | Score | Notes                                                                  |
 | ------------------- | ----- | ---------------------------------------------------------------------- |
-| Clarity             | 10/10 | Clear distinction between Cause (_чому?_) and Effect (_і що?_).        |
+| Clarity             | 10/10 | Clear distinction between Cause (*чому?*) and Effect (*і що?*).        |
 | Structure           | 10/10 | Logical table of conjunctions by register (conversational vs bookish). |
 | Relevance           | 10/10 | Essential for providing arguments and explanations.                    |
 | Language            | 10/10 | Good use of "Bessarabsky Market" context for real-life examples.       |
-| Pedagogy            | 10/10 | Excellent breakdown of nuances (_завдяки_ vs _через_).                 |
+| Pedagogy            | 10/10 | Excellent breakdown of nuances (*завдяки* vs *через*).                 |
 | Immersion           | 10/10 | Examples from Lviv railway station announcements are hyper-realistic.  |
 | Activities          | 10/10 | High density, good transformation exercises.                           |
 | Richness            | 10/10 | Note on "scientific thinking" (Cause -> Effect) elevates the topic.    |
@@ -24,16 +24,16 @@
 
 ## Linguistic Accuracy Issues
 
-- _Fixed:_ Vocabulary extraction errors (removed Russian _потому что_, fixed `король` gender).
+- *Fixed:* Vocabulary extraction errors (removed Russian *потому что*, fixed `король` gender).
 
 ## Strengths
 
 - **Real World Audio:** Describing announcements at Lviv Railway Station ("У зв'язку з тим що...") gives a perfect auditory anchor for formal grammar.
-- **Identity:** Explaining that _тому що_ has internal logic (_через те + що_) vs Russian calque _потому что_ is a great linguistic insight.
+- **Identity:** Explaining that *тому що* has internal logic (*через те + що*) vs Russian calque *потому что* is a great linguistic insight.
 
 ## Issues
 
-- _Fixed:_ Vocab errors.
+- *Fixed:* Vocab errors.
 
 ## Recommendation
 

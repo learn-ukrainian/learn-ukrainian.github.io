@@ -575,3 +575,65 @@
     - text: Вона сказати, що...
       correct: false
   instruction: Оберіть правильний переклад.
+- type: fill-in
+  title: Skills Practice Fill-In
+  instruction: Заповніть пропуски правильним словом.
+  items:
+    - sentence: 'Я [___] цей текст вчора.'
+      answer: прочитав
+      options: [прочитав, читав, читаю, читати]
+    - sentence: 'Вона [___] музику кожен день.'
+      answer: слухає
+      options: [слухає, слухала, послухала, слухати]
+    - sentence: 'Ми [___] відповідь на питання.'
+      answer: знайшли
+      options: [знайшли, знаходимо, шукали, знайти]
+    - sentence: 'Він не [___] головну ідею тексту.'
+      answer: зрозумів
+      options: [зрозумів, розуміє, розумів, зрозуміти]
+    - sentence: 'Я [___] нові слова в словнику.'
+      answer: шукаю
+      options: [шукаю, шукав, знайшов, шукати]
+    - sentence: 'Вони [___] про свої плани.'
+      answer: розповіли
+      options: [розповіли, розповідають, розповідали, розповісти]
+    - sentence: 'Студенти [___] питання викладачеві.'
+      answer: ставлять
+      options: [ставлять, поставили, ставити, задають]
+    - sentence: 'Я [___] цю інформацію в інтернеті.'
+      answer: знайшов
+      options: [знайшов, знаходжу, шукав, знайти]
+- type: error-correction
+  title: Grammar Errors
+  items:
+  - sentence: Я читаю книга.
+    error: книга
+    answer: книгу
+    options: [книгу, книга, книги, книгою]
+    explanation: Accusative feminine -а → -у.
+  - sentence: Вона слухала музика.
+    error: музика
+    answer: музику
+    options: [музику, музика, музики, музикою]
+    explanation: Accusative feminine -а → -у.
+  - sentence: Він зрозумів питання легко.
+    error: легко
+    answer: легко
+    options: [легко, правильно, Немає помилки, швидко]
+    explanation: This sentence is correct.
+  - sentence: Ми читали текстів.
+    error: текстів
+    answer: тексти
+    options: [тексти, текстів, текста, текст]
+    explanation: Accusative plural masculine = nominative plural.
+  - sentence: Студенти шукають інформація.
+    error: інформація
+    answer: інформацію
+    options: [інформацію, інформація, інформації, інформацією]
+    explanation: Accusative feminine -ія → -ію.
+  - sentence: Вона відповідає на питання.
+    error: питання
+    answer: питання
+    options: [питання, Немає помилки, питанню, питаннями]
+    explanation: This sentence is correct.
+  instruction: Знайдіть і виправте помилку в реченні.

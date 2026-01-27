@@ -21,7 +21,6 @@ Before submitting your cultural module, verify:
 - [ ] **Cultural accuracy:** All facts verified, no stereotypes
 - [ ] **Regional balance:** Neutral presentation of all Ukrainian regions
 
-
 <!--
 TEMPLATE_METADATA:
   required_sections:
@@ -713,7 +712,7 @@ immersion_target: 90-95%
 
 ### Section 8: External Resources
 
-_Added to `docs/resources/external_resources.yaml` with `module_id: b1-75`:_
+*Added to `docs/resources/external_resources.yaml` with `module_id: b1-75`:*
 
 - Євробачення - UA:PBC (website)
 - Ukrainian Music Wikipedia (article)
@@ -770,7 +769,6 @@ The module structure follows **Clean MD architecture**: Markdown contains narrat
 
 **End of B1 Cultural Module Template**
 
-
 ---
 
 ## Naturalness Quality Checklist
@@ -798,4 +796,3 @@ Before finalizing the module, verify prose activities (cloze, fill-in, unjumble 
 **See:** `claude_extensions/stages/stage-4-review-fix.md` Section 9 for detailed naturalness criteria.
 
 **For batch scanning:** Use `/scan-naturalness {level} {start} {end}` to scan completed modules.
-

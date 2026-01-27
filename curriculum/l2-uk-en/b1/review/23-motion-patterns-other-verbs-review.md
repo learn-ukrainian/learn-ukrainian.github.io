@@ -24,8 +24,8 @@
 
 ## Linguistic Accuracy Issues
 
-- _Fixed:_ Adjective agreement typo in dialogue (`попередні` -> `попередня`).
-- _Fixed:_ Vocabulary extraction artifacts (`пря`, `вестя`, `трим`).
+- *Fixed:* Adjective agreement typo in dialogue (`попередні` -> `попередня`).
+- *Fixed:* Vocabulary extraction artifacts (`пря`, `вестя`, `трим`).
 
 ## Strengths
 
@@ -34,7 +34,7 @@
 
 ## Issues
 
-- _Fixed:_ Minor typo.
+- *Fixed:* Minor typo.
 
 ## Recommendation
 

@@ -69,22 +69,10 @@ activity_hints:
   focus: Фрагменти щоденників Чикаленка
   source: Первинні джерела
   items: 3 passages
-- type: quiz
-  focus: Факти про меценатську діяльність
-  items: 12+
-- type: match-up
-  focus: Меценати та їхні проекти
-  items: 10+
 - type: essay-response
   focus: Яка роль грошей у національному русі?
   word_target: 300
   output: Аналітичний есей
-- type: group-sort
-  focus: Форми підтримки культури
-  items: 12+
-- type: fill-in
-  focus: Термінологія меценатства
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-28-ivan-franko
@@ -108,3 +96,7 @@ sources:
   notes: Видавнича діяльність
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of євген чикаленко: меценат і видавець'
+- Evaluate the contributions of людина, яка платила за україну
+- Trace the career and influence of роль меценатства в національному русі

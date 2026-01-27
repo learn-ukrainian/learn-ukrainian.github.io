@@ -5,28 +5,28 @@ version: '2.0'
 title: 'Слобожанщина: Формування ідентичності'
 content_outline:
 - section: Вступ — «Слободи» — вільні землі
-  words: 400
+  words: 457
   points:
   - Слобожанщина — де це
   - Назва — від «слобода»
   - Козацьке заселення
   - Структура модуля
 - section: Заселення (XVII ст.)
-  words: 600
+  words: 686
   points:
   - Втечі з Правобережжя
   - Козацькі полки — Харківський, Сумський, та ін.
   - Росія запрошує — чому
   - Особливий статус
 - section: Слобідське козацтво
-  words: 600
+  words: 686
   points:
   - Козацька організація
   - Відмінності від Запорожжя
   - Служба Росії
   - Скасування — 1765
 - section: Харків — культурний центр
-  words: 700
+  words: 800
   points:
   - Заснування — 1654
   - Університет — 1804
@@ -34,26 +34,26 @@ content_outline:
   - Котляревський, Квітка-Основ'яненко
   - Перша столиця УРСР
 - section: Русифікація
-  words: 500
+  words: 571
   points:
   - Раніше, ніж деінде
   - Близькість до Росії
   - Мовний зсув
   - Але збереження ідентичності
 - section: Сучасна Слобожанщина
-  words: 400
+  words: 457
   points:
   - Харківська область
   - «Другий фронт» 2022
   - Деокупація
   - Українська ідентичність під тиском
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Слобожанщина — козацька, але інша
   - Харків — українське місто
   - Перехід до Донбасу
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - Слобожанщина (Slobozhanshchyna)
@@ -73,16 +73,16 @@ vocabulary_hints:
   - регіональна свідомість (regional consciousness)
   - колонізація (colonization)
 activity_hints:
-- type: settlement-analysis
+- type: critical-analysis
   focus: Who settled Slobozhanshchyna and why
   output: Migration study
-- type: cultural-analysis
+- type: critical-analysis
   focus: Kharkiv as Ukrainian cultural center — key figures
   output: Cultural history
 - type: comparative-study
   focus: Slobozhanshchyna vs. Zaporozhian Cossacks
   output: Cossack comparison
-- type: contemporary-analysis
+- type: critical-analysis
   focus: Kharkiv 2022 — Ukrainian identity under siege
   output: Contemporary analysis
 - type: essay-response
@@ -112,3 +112,6 @@ sources:
   notes: City history
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of слобожанщина: формування ідентичності'
+- Evaluate the historical significance of вільні землі

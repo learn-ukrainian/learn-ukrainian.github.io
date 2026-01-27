@@ -65,12 +65,8 @@ vocabulary_hints:
 activity_hints:
 - type: reading
   focus: Analysis of diplomatic documents
-- type: quiz
-  focus: Conditions and dates of the treaties
 - type: essay-response
   focus: Evolution of Cossack autonomy
-- type: match-up
-  focus: Legal and political terminology
 - type: true-false
   focus: Common myths about the compromises
 - type: comparative-study

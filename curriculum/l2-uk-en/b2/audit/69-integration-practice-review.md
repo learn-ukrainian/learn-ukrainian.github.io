@@ -1,10 +1,12 @@
 # Audit Report: M69 — 69-integration-practice.md
+
 **Level:** B2 | **Module:** M69 | **Phase:** B2 | **Pedagogy:** Practice | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:31
 
 ## Configuration
+
 **Type:** B2-vocab
 **Word Target:** 1750 words
 **Activities:** 10-14 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть мудрість із контекстом | 12 | 8 | ✅ |
@@ -42,15 +45,18 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 69-integration-practice.yaml: Schema validation error at key '13': {'type': 'select', 'title': 'Майстерність виступу', 'instruction': 'Оберіть елементи успішного виступу рівня B2 (до 6 елементів).', 'items': [{'question': "Які риторичні прийоми варто обов'язково використовувати під час виступу?", 'options': [{'text': "влучні прислів'я", 'correct': True}, {'text': 'риторичні запитання', 'correct': True}, {'text': 'складні сполучники', 'correct': True}, {'text': 'професійна лексика', 'correct': True}, {'text': 'виразний висновок', 'correct': True}, {'text': 'емоційні ідіоми', 'correct': True}]}, {'question': 'Оберіть основні ознаки справді професійної та переконливої презентації:', 'options': [{'text': 'структурованість', 'correct': True}, {'text': 'аргументованість', 'correct': True}, {'text': 'динамічність', 'correct': True}, {'text': 'хаотичність', 'correct': False}]}, {'question': 'Які слова та вирази значно підсилюють довіру аудиторії до мовця?', 'options': [{'text': 'обґрунтовано', 'correct': True}, {'text': 'доведено', 'correct': True}, {'text': 'фахово', 'correct': True}, {'text': 'мабуть', 'correct': False}]}, {'question': 'Оберіть ефективні засоби невербальної комунікації під час мовлення:', 'options': [{'text': 'зоровий контакт', 'correct': True}, {'text': 'жестикуляція', 'correct': True}, {'text': 'впевнений голос', 'correct': True}, {'text': 'читання в підлогу', 'correct': False}]}, {'question': 'Які ідіоми найкраще пасують для енергійного заклику аудиторії до дії?', 'options': [{'text': 'гори звернути', 'correct': True}, {'text': 'взяти себе в руки', 'correct': True}, {'text': 'не пасти задніх', 'correct': True}, {'text': 'бити байдики', 'correct': False}]}, {'question': "Оберіть обов'язкові структурні частини будь-якого успішного виступу:", 'options': [{'text': 'яскравий вступ', 'correct': True}, {'text': 'доказова частина', 'correct': True}, {'text': 'сильний підсумок', 'correct': True}, {'text': 'мовчання', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
+
 - **Words:** ✅ 2011/1750 (raw: 2200)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
@@ -69,10 +75,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 35 | 24 | 100% | 20% | 20.0% |
@@ -88,6 +96,7 @@
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 48 | Included in Core |

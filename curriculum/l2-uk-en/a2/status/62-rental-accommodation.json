@@ -2,14 +2,14 @@
   "module": "62-rental-accommodation",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:26:38.598695Z",
+  "last_audit": "2026-01-27T13:11:57.376757Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-17T21:45:15.598704Z",
-    "meta": "2026-01-26T17:21:18.984397Z",
-    "activities": "2026-01-25T17:25:14.617263Z",
+    "md": "2026-01-27T13:09:46.582217Z",
+    "meta": "2026-01-27T13:11:53.654724Z",
+    "activities": "2026-01-27T12:36:43.293135Z",
     "vocabulary": "2026-01-25T17:25:45.076273Z",
-    "plan": "2026-01-26T17:21:18.984172Z"
+    "plan": "2026-01-27T13:10:30.207110Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1326/1000 (raw: 1413) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "1050/1000 (raw: 1102)"
     },
     "activities": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "4 Outline Compliance Errors",
-      "Missing required activity types: dialogue, reading-comprehension, role-play, vocabulary-drill"
-    ],
-    "pass_count": 4,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

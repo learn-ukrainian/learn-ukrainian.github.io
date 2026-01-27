@@ -202,21 +202,25 @@ git commit -m "fix: resolve issues in B2-HIST M05, M08, M10"
 ## Future Enhancements
 
 ### Phase 1 (Now): Manual Generation ✅
+
 - Script works
 - NPM commands added
 - Files committed to git
 - Manual regeneration
 
 ### Phase 2 (Optional): Smart Regeneration
+
 - Only regenerate if level files changed since last generation
 - Add `--check` flag to see if stale
 
 ### Phase 3 (Optional): CI Integration
+
 - GitHub Action to regenerate on push
 - Commit back to repo automatically
 - Weekly cron job for safety
 
 ### Phase 4 (Optional): Dashboard
+
 - HTML version with charts
 - Progress over time graphs
 - Issue correlation (which modules block which features)

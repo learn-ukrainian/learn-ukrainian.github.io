@@ -70,22 +70,10 @@ activity_hints:
   focus: Фрагменти з Лихо з розуму
   source: Первинні джерела
   items: 3 passages
-- type: quiz
-  focus: Хронологія життя Чорновола
-  items: 12+
-- type: match-up
-  focus: Організації та їхні цілі
-  items: 10+
 - type: essay-response
   focus: Що означає бути правозахисником?
   word_target: 300
   output: Етичний есей
-- type: group-sort
-  focus: Етапи дисидентської діяльності
-  items: 12+
-- type: fill-in
-  focus: Правозахисна термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-75-vasyl-symonenko
@@ -109,3 +97,7 @@ sources:
   notes: Політична діяльність
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of в''ячеслав чорновіл: незламний правозахисник'
+- Evaluate the contributions of людина, яка не схилялася
+- Trace the career and influence of загибель та спадщина

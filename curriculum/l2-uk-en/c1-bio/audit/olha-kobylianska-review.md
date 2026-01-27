@@ -1,10 +1,12 @@
 # Audit Report: M50 — olha-kobylianska.md
+
 **Level:** C1 | **Module:** M50 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:22
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння світу Ольги Кобилянської | 5 | 5 | ✅ |
@@ -44,10 +47,12 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in olha-kobylianska.yaml: Schema validation error at key '12': {'type': 'reading', 'title': 'Епістолярний діалог геніїв', 'resource': {'type': 'primary_source', 'url': 'https://shron1.chtyvo.org.ua/Ukrainka_Lesia/Lysty_do_Olhy_Kobylianskoi.pdf', 'title': '«Листи Лесі Українки до Ольги Кобилянської»'}, 'tasks': ['«Який регістр спілкування (інтимний, дружній, офіційний) домінує у цих листах? Наведіть приклади пестливих слів та звертань.»', '«Які творчі поради дає Леся Українка своїй подрузі щодо модернізації стилю? Випишіть ключові фрази.»', '«Знайдіть у листах згадки про європейських письменників, якими захоплювалися обидві авторки.»']} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template.md'
   - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template.md'
@@ -60,12 +65,14 @@
   - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
 
 ## Recommendation
+
 **📝 UPDATE** (severity 35/100)
 
 - 6 violations (moderate)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 1983/4000 (raw: 2175)
 - **Activities:** ✅ 15/3
 - **Density:** ✅ All > 1
@@ -84,10 +91,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 4 | 4 | 100% | 19% | 19.0% |
@@ -103,6 +112,7 @@
 | **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 76 | Included in Core |

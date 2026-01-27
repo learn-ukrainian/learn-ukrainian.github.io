@@ -2,14 +2,14 @@
   "module": "70-collocations-expressions",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:27:29.256420Z",
+  "last_audit": "2026-01-27T19:01:56.723376Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-11T20:18:03.856230Z",
     "meta": "2026-01-26T15:44:41.673688Z",
     "activities": "2026-01-11T22:51:43.935988Z",
     "vocabulary": "2026-01-25T15:45:32.937347Z",
-    "plan": "2026-01-26T15:44:41.673386Z"
+    "plan": "2026-01-27T18:50:25.883000Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1750/1500 (raw: 2327) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "1750/1500 (raw: 2327)"
     },
     "activities": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Missing required activity types: matching, writing"
-    ],
-    "pass_count": 3,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

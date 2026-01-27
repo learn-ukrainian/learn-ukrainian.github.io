@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M110 | **Phase:** HIST.11 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:55:20
+**Generated:** 2026-01-27 15:51:34
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, fill-in, match-up, quiz, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -20,31 +20,19 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Розуміння тексту: Радянська русифікація | 10 | 8 | ✅ |
-| 2 | fill-in | Лексика в контексті: Радянська система | 10 | 8 | ✅ |
-| 3 | match-up | Термінологія радянської епохи | 12 | 8 | ✅ |
-| 4 | essay-response | Ваша думка | 1 | 1 | ✅ |
-| 5 | comparative-study | Порівняння протесту | 1 | 1 | ✅ |
-| 6 | true-false | Правда чи хибність: Радянська Україна | 10 | 8 | ✅ |
-| 7 | error-correction | Виправте граматичні помилки | 8 | 6 | ✅ |
-| 8 | group-sort | Категоризація термінів | 20 | 1 | ✅ |
-| 9 | unjumble | Складіть речення | 8 | 6 | ✅ |
-| 10 | cloze | Текст: Механізми русифікації | 16 | 1 | ✅ |
-| 11 | select | Аналіз деколонізації | 6 | 6 | ✅ |
-| 12 | mark-the-words | Знайдіть назви організацій та рухів | 6 | 6 | ✅ |
-| 13 | translate | Перекладіть правильно | 6 | 6 | ✅ |
-| 14 | quiz | Аналітичний квіз: Постаті | 8 | 8 | ✅ |
-| 15 | mark-the-words | Знайдіть назви творів та документів | 6 | 6 | ✅ |
+| 1 | essay-response | Ваша думка | 1 | 1 | ✅ |
+| 2 | comparative-study | Порівняння протесту | 1 | 1 | ✅ |
+| 3 | true-false | Правда чи хибність: Радянська Україна | 10 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 3-9) ❌
-- Unique types: 13 (minimum: 2) ✅
+- Total activities: 3 (target: 3-9) ✅
+- Unique types: 3 (minimum: 2) ✅
 - Priority types used: 2/4 (comparative-study, essay-response) ✅
-- Required types used: 4/5 (essay-response, fill-in, match-up, quiz) ❌
+- Required types used: 1/2 (essay-response) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in deportatsii-ukraintsiv.yaml: Schema validation error at key '12': {'type': 'translate', 'title': 'Перекладіть правильно', 'items': [{'source': 'Censorship controlled every word.', 'options': [{'text': 'Цензура контролювала кожне слово.', 'correct': True}, {'text': 'Цензуру контролювала кожне слово.', 'correct': False}, {'text': 'Цензура контролювали кожне слово.', 'correct': False}]}, {'source': 'The party elite lived in luxury.', 'options': [{'text': 'Партійна еліта жила в розкоші.', 'correct': True}, {'text': 'Партійна еліта жив в розкоші.', 'correct': False}, {'text': 'Партійна еліти жила в розкош.', 'correct': False}]}, {'source': 'Russification was a gradual process.', 'options': [{'text': 'Русифікація була поступовим процесом.', 'correct': True}, {'text': 'Русифікацію була поступовий процес.', 'correct': False}, {'text': 'Русифікація був поступовим процесом.', 'correct': False}]}, {'source': 'Dissidents were imprisoned.', 'options': [{'text': "Дисидентів ув'язнювали.", 'correct': True}, {'text': "Дисиденти ув'язнювали.", 'correct': False}, {'text': "Дисидентам ув'язнювали.", 'correct': False}]}, {'source': 'Chornobyl became a symbol.', 'options': [{'text': 'Чорнобиль став символом.', 'correct': True}, {'text': 'Чорнобиль стала символом.', 'correct': False}, {'text': 'Чорнобиль стало символом.', 'correct': False}]}, {'source': 'The shortage was constant.', 'options': [{'text': 'Дефіцит був постійним.', 'correct': True}, {'text': 'Дефіциту був постійний.', 'correct': False}, {'text': 'Дефіцит була постійною.', 'correct': False}]}], 'instruction': 'Оберіть правильний переклад.'} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in deportatsii-ukraintsiv.yaml: Insufficient activities: 3 found, minimum 5 required for B2-HIST
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
@@ -55,9 +43,9 @@
 
 ## Gates
 - **Words:** ❌ 1930/4000 (raw: 2100)
-- **Activities:** ✅ 15/3
+- **Activities:** ✅ 3/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 13/2 types
+- **Unique_types:** ✅ 3/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 18/5
 - **Audio:** ℹ️ No audio
@@ -65,7 +53,7 @@
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ⚠️ Too many activities: 15 (target 3-9)
+- **Content_heavy:** ✅ Content-heavy OK (3 activities)
 - **Immersion:** 🇺🇦 96.3% (target 90-100% (history))
 - **Richness:** ✅ 96% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

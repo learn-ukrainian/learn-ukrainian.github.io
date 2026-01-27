@@ -2,13 +2,13 @@
   "module": "ukrainski-zemli-u-vkl",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T23:26:25.853606Z",
+  "last_audit": "2026-01-27T16:43:23.672307Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-25T22:11:48.874490Z",
+    "md": "2026-01-27T16:43:15.529333Z",
     "meta": "2026-01-26T22:20:13.730694Z",
-    "activities": "2026-01-25T21:29:24.997423Z",
-    "vocabulary": "2026-01-22T22:18:18.082769Z",
+    "activities": "2026-01-27T16:37:26.458596Z",
+    "vocabulary": "2026-01-27T16:36:09.166971Z",
     "plan": null
   },
   "gates": {
@@ -20,17 +20,17 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4844/4000 (raw: 5101)"
+      "message": "4472/4000 (raw: 4719)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "10/3"
+      "message": "5/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 20 (soft target)"
+      "message": "22/20"
     },
     "naturalness": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
+    "pass_count": 5,
     "fail_count": 0
   }
 }

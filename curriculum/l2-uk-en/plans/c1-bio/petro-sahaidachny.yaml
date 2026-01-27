@@ -54,8 +54,6 @@ vocabulary_hints:
 activity_hints:
 - type: reading
   focus: '"Verses on the Funeral of Sahaidachny" (1622)'
-- type: quiz
-  focus: Military campaigns map
 - type: essay-response
   focus: Why Sahaidachny supported the Church?
 focus: biography

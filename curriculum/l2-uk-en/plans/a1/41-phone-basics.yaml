@@ -6,22 +6,22 @@ title: Phone Basics
 subtitle: Making Calls and Texting
 content_outline:
 - section: Warm-up
-  words: 108
+  words: 134
   points:
   - Content for Warm-up
 - section: Presentation
-  words: 200
+  words: 248
   points:
   - Content for Presentation
 - section: Практика
-  words: 144
+  words: 179
   points:
   - Content for Практика
 - section: 'Narrative: The Delivery (Доставка)'
-  words: 152
+  words: 189
   points:
   - 'Content for Narrative: The Delivery (Доставка)'
-word_target: 604
+word_target: 750
 vocabulary_hints:
   required:
   - телефон (phone)

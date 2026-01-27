@@ -5,50 +5,52 @@ version: '1.0'
 title: 'Синтез: Хто виграє війну наративів?'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of синтез: хто виграє війну наративів?'
+- Evaluate the historical significance of війна за правду
 content_outline:
 - section: Вступ — Війна за правду
-  words: 451
+  words: 515
   subsections:
   - Огляд модулів 108-112
   - Інформаційна війна — частина війни
   - 300 років vs 30 років
   - Мета синтезу
 - section: Еволюція російської пропаганди
-  words: 677
+  words: 774
   subsections:
   - «Малоросія» — імперський період
   - Радянська — «дружба народів»
   - Путінська — «фашисти»
   - Спільне — заперечення України
 - section: Поле бою
-  words: 677
+  words: 774
   subsections:
   - Росія — де виграє
   - Україна — де виграє
   - Захід — поле конкуренції
   - Глобальний Південь
 - section: Уроки 2022
-  words: 790
+  words: 903
   subsections:
   - Чому «3 дні» провалились
   - Зеленський — ефект
   - Західна консолідація
   - Але — не перемога
 - section: Майбутнє інформаційної війни
-  words: 564
+  words: 645
   subsections:
   - AI — нові загрози
   - Deepfakes
   - Як готуватися
   - Роль освіти
 - section: Підсумок
-  words: 341
+  words: 389
   subsections:
   - Війна наративів — довга
   - Правда — не автоматично перемагає
   - Перехід до польсько-українських відносин
-word_target: 3500
+word_target: 4000
 vocabulary:
 - синтез
 - інформаційна війна
@@ -68,11 +70,11 @@ vocabulary:
 activities:
 - type: essay-response
   focus: Create information warfare evolution timeline
-- type: battlefield-analysis
+- type: critical-analysis
   focus: Where each side wins/loses information war
-- type: future-analysis
+- type: critical-analysis
   focus: AI and deepfakes — future information war
-- type: lessons-learned
+- type: essay-response
   focus: What 2022 taught about information warfare
 - type: essay-response
   focus: Чи може правда перемогти пропаганду?

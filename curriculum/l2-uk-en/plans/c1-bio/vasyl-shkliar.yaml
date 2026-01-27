@@ -69,22 +69,10 @@ activity_hints:
   focus: Фрагменти роману Чорний Ворон
   source: Художній текст
   items: 3 passages
-- type: quiz
-  focus: Факти про Холодний Яр та повстанський рух
-  items: 12+
-- type: match-up
-  focus: Персонажі та їхні прототипи
-  items: 10+
 - type: essay-response
   focus: Як художня література формує історичну памятка?
   word_target: 300
   output: Аналітичний есей
-- type: group-sort
-  focus: Факт vs художній домисел
-  items: 12+
-- type: fill-in
-  focus: Термінологія історичної прози
-  items: 10+
 focus: biography
 prerequisites:
 - b2-hist-civil-war
@@ -108,3 +96,7 @@ sources:
   notes: Рецензії та аналіз творчості
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of василь шкляр: майстер історичного роману'
+- Evaluate the contributions of бестселер як національний феномен
+- Trace the career and influence of історична правда vs художня вигадка

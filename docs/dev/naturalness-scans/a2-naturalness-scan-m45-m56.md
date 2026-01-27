@@ -1,4 +1,5 @@
 # A2 Naturalness Scan Report - M45-M56
+
 **Date:** 2026-01-12
 **Protocol:** claude_extensions/protocols/a1-naturalness-scan.md
 **Scope:** M45-M56 (12 modules - Vocabulary section)
@@ -17,6 +18,7 @@
 ## Scan Results by Module
 
 ### M45: Food and Cooking [⚠️ FLAGGED]
+
 **Status:** MIXED - First passage disconnected, second coherent
 **Activities:** Two cloze passages
 
@@ -49,6 +51,7 @@
 ---
 
 ### M46: Home and Furniture [⚠️ FLAGGED]
+
 **Status:** MIXED - First passage disconnected, second coherent
 **Activities:** Two cloze passages
 
@@ -86,6 +89,7 @@
 ---
 
 ### M47: Nature and Weather [✅ PASS]
+
 **Status:** Coherent geography narrative
 **Activities:** Fill-in + Story Comprehension (lines 175-181)
 
@@ -104,6 +108,7 @@
 ---
 
 ### M48: Emotions & Personality [⚠️ FLAGGED]
+
 **Status:** MIXED - First passage disconnected, second coherent
 **Activities:** Two cloze passages
 
@@ -141,6 +146,7 @@
 ---
 
 ### M49: Work & Professions [✅ PASS]
+
 **Status:** Coherent career narrative
 **Activities:** Career Ladder cloze (lines 470-483)
 
@@ -159,6 +165,7 @@
 ---
 
 ### M50: Technology & Media [⚠️ FLAGGED]
+
 **Status:** MIXED - First passage disconnected, second coherent
 **Activities:** Two cloze passages
 
@@ -197,6 +204,7 @@
 ---
 
 ### M51: Hobbies & Leisure [⚠️ FLAGGED]
+
 **Status:** MIXED - First passage disconnected, second coherent
 **Activities:** Two cloze passages
 
@@ -235,6 +243,7 @@
 ---
 
 ### M52: Education & Learning [✅ PASS]
+
 **Status:** Coherent university narrative
 **Activities:** University Day cloze (lines 554-570)
 
@@ -253,6 +262,7 @@
 ---
 
 ### M53: Shopping & Services [⚠️ FLAGGED]
+
 **Status:** MIXED - First passage disconnected, second coherent
 **Activities:** Two cloze passages
 
@@ -291,6 +301,7 @@
 ---
 
 ### M54: Sports & Fitness [✅ PASS]
+
 **Status:** Coherent football match narrative
 **Activities:** Football Match cloze (lines 548-575)
 
@@ -309,6 +320,7 @@
 ---
 
 ### M55: Health & Body [⚠️ FLAGGED]
+
 **Status:** MIXED - First passage disconnected, second coherent
 **Activities:** Two cloze passages
 
@@ -348,6 +360,7 @@
 ---
 
 ### M56: Checkpoint Vocabulary [⏸️ DEFERRED]
+
 **Status:** CHECKPOINT - different standards apply
 **Activities:** Comprehensive vocabulary review integrating M45-M55
 **Naturalness Analysis:**
@@ -362,12 +375,14 @@
 ## Summary by Status
 
 ### ✅ PASS (4 modules)
+
 - M47: Nature and Weather (score 8/10)
 - M49: Work & Professions (score 8/10)
 - M52: Education & Learning (score 8/10)
 - M54: Sports & Fitness (score 8/10)
 
 ### ⚠️ FLAGGED (7 modules)
+
 - **M45: Food and Cooking (score 6/10)** - First passage disconnected (5/10)
 - **M46: Home and Furniture (score 6/10)** - First passage disconnected (5/10)
 - **M48: Emotions & Personality (score 6/10)** - First passage disconnected (5/10)
@@ -377,6 +392,7 @@
 - **M55: Health & Body (score 6/10)** - First passage disconnected (5/10)
 
 ### ⏸️ DEFERRED (1 module)
+
 - M56: Checkpoint (score 7/10) - Checkpoint standards apply
 
 ---

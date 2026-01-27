@@ -12,9 +12,9 @@
 | ------------------- | ----- | --------------------------------------------------------------------------------------------------- |
 | Coherence           | 10/10 | Logical structure (Freelance -> Startup -> Corporation).                                            |
 | Relevance           | 10/10 | Essential for B1 Business track.                                                                    |
-| Educational         | 10/10 | Excellent nuance: _зарплата_ (salary) vs _дохід_ (income).                                          |
+| Educational         | 10/10 | Excellent nuance: *зарплата* (salary) vs *дохід* (income).                                          |
 | Language            | 10/10 | Standard business terminology.                                                                      |
-| Pedagogy            | 10/10 | The Tereshchenko Family narrative is perfect for contrasting "Oligarchs" vs "Patrons" (_меценати_). |
+| Pedagogy            | 10/10 | The Tereshchenko Family narrative is perfect for contrasting "Oligarchs" vs "Patrons" (*меценати*). |
 | Immersion           | 10/10 | Authentic history of Ukrainian entrepreneurship.                                                    |
 | Activities          | 10/10 | Good variety.                                                                                       |
 | Richness            | 9/10  | Good depth.                                                                                         |

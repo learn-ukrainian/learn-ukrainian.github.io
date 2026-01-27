@@ -334,4 +334,4 @@ Students should complete B2-HIST for historical context before studying individu
 
 ---
 
-_Last updated: January 2026 (RFC #409 relocation, added Kulish & Ohienko, expanded M102-119 with missing notable Ukrainians)_
+*Last updated: January 2026 (RFC #409 relocation, added Kulish & Ohienko, expanded M102-119 with missing notable Ukrainians)*

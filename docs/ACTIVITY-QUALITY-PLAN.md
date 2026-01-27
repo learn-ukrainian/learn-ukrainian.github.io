@@ -54,6 +54,7 @@
    - **Issue**: [#369](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/369)
 
 ### Total Impact
+
 - **73 activities need fixing** (2.5% of all activities)
 
 ---
@@ -61,11 +62,13 @@
 ## Cloze Activity Deep Dive
 
 ### Current Status
+
 - **233 total cloze** (8.0% of all activities)
 - **222 working** (95%)
 - **11 broken** (5%) - semantic issues
 
 ### Distribution by Level
+
 | Level | Total Activities | Cloze Count | Cloze % | Working | Broken |
 |-------|-----------------|-------------|---------|---------|--------|
 | A1 | 300 | 0 | 0% | 0 | 0 |
@@ -94,10 +97,12 @@
 ## Implementation Roadmap
 
 ### Phase 1: Fix Broken Activities (CRITICAL)
+
 **Timeline**: Week 1-3
 **Effort**: Medium
 
 #### Tasks
+
 1. ✅ **Automated fixes applied** (completed in #369)
    - Deleted 221 malformed cloze (dialogue-based)
    - Fixed 5 cloze syntax errors (removed colons)
@@ -126,6 +131,7 @@
 ---
 
 ### Phase 2: Expand Cloze Coverage (ENHANCEMENT)
+
 **Timeline**: Week 4+
 **Effort**: High
 **Priority**: Low (after Phase 1 complete)
@@ -150,6 +156,7 @@
 - [ ] Article cloze (reading comprehension)
 
 **Target Distribution**:
+
 | Level | Current | Target | New Activities Needed |
 |-------|---------|--------|----------------------|
 | A2 | 65 (11.6%) | 75 (13%) | +10 |
@@ -204,6 +211,7 @@
 ## Progress Tracking
 
 ### Automated Fixes (Completed ✅)
+
 - ✅ Created audit checks for malformed cloze, syntax errors, error-correction
 - ✅ Built batch fix script (`scripts/fix_broken_activities.py`)
 - ✅ Deleted 221 malformed cloze activities
@@ -212,12 +220,14 @@
 - ✅ Committed changes (ec8d7c66)
 
 ### Manual Fixes (Complete ✅)
+
 - ✅ Fix 11 broken cloze ([#371](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/371)) - CLOSED
 - ✅ Fix error-correction ([#369](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/369)) - CLOSED
   - **Approach**: Converted problematic error-correction → cloze format
   - **Result**: All activities now use proper format
 
 ### Expansion (Complete ✅)
+
 - ✅ Expand cloze activities ([#372](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/372)) - CLOSED
   - **Target**: 10%+ coverage
   - **Result**: 14.1% (exceeded target!)
@@ -228,12 +238,14 @@
 ## Success Metrics
 
 ### Phase 1 (Fix Broken)
+
 - [ ] 100% of activities pass pedagogy gate
 - [ ] 0 cloze activities render with `?`
 - [ ] 0 error-correction use placeholder syntax
 - [ ] All modules regenerate without errors
 
 ### Phase 2 (Expand Cloze)
+
 - [ ] Cloze activities reach 10% of total (290+)
 - [ ] Cloze distribution balanced across A2/B1/B2
 - [ ] Quality: multi-paragraph cloze in each level

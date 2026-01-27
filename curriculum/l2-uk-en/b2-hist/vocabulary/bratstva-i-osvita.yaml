@@ -2,93 +2,153 @@ module: bratstva-i-osvita
 level: B2-HIST
 version: '2.0'
 items:
-  - lemma: братство
-    translation: brotherhood
-    note: religious-civic organization of townspeople in 16th-17th centuries
-  - lemma: ставропігія
-    translation: stavropigion
-    note: status of direct subordination to patriarch, bypassing local bishop
-  - lemma: міщанин
-    translation: townsman, burgher
-    note: member of urban middle class (craftsmen, merchants)
-  - lemma: братчик
-    translation: brotherhood member
-    note: member of a religious brotherhood
-  - lemma: статут
-    translation: statute, charter
-    note: written constitution of an organization
-  - lemma: академія
-    translation: academy
-    note: higher educational institution
-  - lemma: меценат
-    translation: patron, philanthropist
-    note: person who supports arts, sciences, or culture financially
-  - lemma: друкарня
-    translation: printing house
-    note: place where books are printed
-  - lemma: друкар
-    translation: printer
-    note: person who operates printing press
-  - lemma: полеміка
-    translation: polemic, controversy
-    note: literary or theological dispute
-  - lemma: полонізація
-    translation: Polonization
-    note: process of adopting Polish language and culture
-  - lemma: асиміляція
-    translation: assimilation
-    note: absorption into another culture
-  - lemma: шпиталь
-    translation: hospital, almshouse
-    note: charitable institution for sick and poor
-  - lemma: єзуїт
-    translation: Jesuit
-    note: member of Catholic Society of Jesus order
-  - lemma: колегіум
-    translation: collegium
-    note: Jesuit educational institution
-  - lemma: спудей
-    translation: student, pupil
-    note: archaic term for student
-  - lemma: риторика
-    translation: rhetoric
-    note: art of persuasive speaking and writing
-  - lemma: діалектика
-    translation: dialectics
-    note: art of logical argumentation
-  - lemma: тривіум
-    translation: trivium
-    note: grammar, rhetoric, and dialectics
-  - lemma: квадрівіум
-    translation: quadrivium
-    note: arithmetic, geometry, astronomy, and music
-  - lemma: фундатор
-    translation: founder, benefactor
-    note: person who establishes and funds an institution
-  - lemma: ідентичність
-    translation: identity
-    note: sense of national or cultural belonging
-  - lemma: самоврядування
-    translation: self-governance, autonomy
-    note: system where community governs itself
-  - lemma: магістрат
-    translation: magistrate, city council
-    note: municipal government body
-  - lemma: цех
-    translation: guild, craft association
-    note: organization of craftsmen in same trade
-  - lemma: патріарх
-    translation: patriarch
-    note: highest bishop in Orthodox church
-  - lemma: владика
-    translation: bishop, hierarch
-    note: Orthodox church bishop
-  - lemma: просвітництво
-    translation: enlightenment, education movement
-    note: spreading of knowledge and culture
-  - lemma: унія
-    translation: union
-    note: ecclesiastical union (specifically Union of Brest)
-  - lemma: невігластво
-    translation: ignorance, illiteracy
-    note: lack of knowledge or education
+- lemma: братство
+  ipa: /brˈatstʋɔ/
+  translation: brotherhood
+  pos: noun
+  gender: n
+- lemma: ставропігія
+  ipa: /staʋrɔpˈiɦija/
+  translation: stavropigion
+  pos: noun
+  gender: f
+- lemma: міщанин
+  ipa: /miʃt͡ʃanˈɪn/
+  translation: townsman, burgher
+  pos: noun
+  gender: m
+- lemma: братчик
+  ipa: /brˈatt͡ʃɪk/
+  translation: brotherhood member
+  pos: noun
+  gender: m
+- lemma: статут
+  ipa: /statˈut/
+  translation: statute, charter
+  pos: noun
+  gender: m
+- lemma: академія
+  ipa: /akadˈɛmija/
+  translation: academy
+  pos: noun
+  gender: f
+- lemma: меценат
+  ipa: /mɛt͡sɛnˈat/
+  translation: patron, philanthropist
+  pos: noun
+  gender: m
+- lemma: друкарня
+  ipa: /drukˈarnja/
+  translation: printing house
+  pos: noun
+  gender: f
+- lemma: друкар
+  ipa: /drukˈar/
+  translation: printer
+  pos: noun
+  gender: m
+- lemma: полеміка
+  ipa: /pɔlˈɛmika/
+  translation: polemic, controversy
+  pos: noun
+  gender: f
+- lemma: полонізація
+  ipa: /pɔlɔnizˈat͡sija/
+  translation: Polonization
+  pos: noun
+  gender: f
+- lemma: асиміляція
+  ipa: /asɪmilˈjat͡sija/
+  translation: assimilation
+  pos: noun
+  gender: f
+- lemma: шпиталь
+  ipa: /ʃpɪtˈalʲ/
+  translation: hospital, almshouse
+  pos: noun
+  gender: m
+- lemma: єзуїт
+  ipa: /jɛzuˈjit/
+  translation: Jesuit
+  pos: noun
+  gender: m
+- lemma: колегіум
+  ipa: /kɔlˈɛɦium/
+  translation: collegium
+  pos: noun
+  gender: m
+- lemma: спудей
+  ipa: /spudˈɛj/
+  translation: student, pupil
+  pos: noun
+  gender: m
+- lemma: риторика
+  ipa: /rɪtˈɔrɪka/
+  translation: rhetoric
+  pos: noun
+  gender: f
+- lemma: діалектика
+  ipa: /dialˈɛktɪka/
+  translation: dialectics
+  pos: noun
+  gender: f
+- lemma: тривіум
+  ipa: /trˈɪʋium/
+  translation: trivium
+  pos: noun
+  gender: m
+- lemma: квадрівіум
+  ipa: /kʋadriʋium/
+  translation: quadrivium
+  pos: noun
+  gender: m
+- lemma: фундатор
+  ipa: /fundˈatɔr/
+  translation: founder, benefactor
+  pos: noun
+  gender: m
+- lemma: ідентичність
+  ipa: /idɛntˈɪt͡ʃnistʲ/
+  translation: identity
+  pos: noun
+  gender: f
+- lemma: самоврядування
+  ipa: /samɔʋrjaduʋˈannja/
+  translation: self-governance, autonomy
+  pos: noun
+  gender: n
+- lemma: магістрат
+  ipa: /maɦistrˈat/
+  translation: magistrate, city council
+  pos: noun
+  gender: m
+- lemma: цех
+  ipa: /t͡sɛx/
+  translation: guild, craft association
+  pos: noun
+  gender: m
+- lemma: патріарх
+  ipa: /patriˈarx/
+  translation: patriarch
+  pos: noun
+  gender: m
+- lemma: владика
+  ipa: /ʋladˈɪka/
+  translation: bishop, hierarch
+  pos: noun
+  gender: m
+- lemma: просвітництво
+  ipa: /prɔsʋˈitnɪt͡stʋɔ/
+  translation: enlightenment, education movement
+  pos: noun
+  gender: n
+- lemma: унія
+  ipa: /ˈunija/
+  translation: union
+  pos: noun
+  gender: f
+- lemma: невігластво
+  ipa: /nɛʋˈiɦlastʋɔ/
+  translation: ignorance, illiteracy
+  pos: noun
+  gender: n

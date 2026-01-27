@@ -5,21 +5,21 @@ version: '2.0'
 title: 'Валуєвський циркуляр: Повний текст'
 content_outline:
 - section: Вступ — Заборона мови
-  words: 400
+  words: 457
   points:
   - 1863 рік — контекст
   - Що таке циркуляр?
   - Чому заборонили українську?
   - Значення документа
 - section: Історичний контекст
-  words: 600
+  words: 686
   points:
   - Польське повстання 1863
   - Українофільство — що це?
   - Загроза для імперії
   - Валуєв — хто він
 - section: Текст циркуляра — повний аналіз
-  words: 800
+  words: 914
   points:
   - Текст (з глосами)
   - Малоросійської мови не було, немає і бути не може
@@ -27,32 +27,32 @@ content_outline:
   - Виключення — релігійна література
   - Мова документа — бюрократична
 - section: Логіка заборони
-  words: 500
+  words: 571
   points:
   - Аргументи циркуляра
   - «Наріччя» vs. мова
   - Сепаратизм — удаваний чи реальний?
   - Імперська логіка
 - section: Наслідки
-  words: 600
+  words: 686
   points:
   - Як виконувався
   - Перенесення культури до Галичини
   - Опір — як обходили
   - Довготривалий вплив
 - section: Критика джерела
-  words: 300
+  words: 343
   points:
   - Офіційний документ — що він відображає
   - Що за ним стоїть
   - Порівняння з Емським указом
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Від циркуляра до указу
   - Мовна політика імперії
   - Зв'язок із сучасністю
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - циркуляр (circular/decree)
@@ -112,3 +112,6 @@ sources:
   notes: Author biography
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of валуєвський циркуляр: повний текст'
+- Evaluate the historical significance of заборона мови

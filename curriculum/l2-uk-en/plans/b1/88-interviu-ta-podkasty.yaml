@@ -5,42 +5,19 @@ version: '2.0'
 title: Інтерв'ю та подкасти
 subtitle: Listening to Ukrainian Interviews and Podcasts
 content_outline:
-- section: 'Introduction: Listening Skills'
-  words: 150
-  points:
-  - Listening strategies
-  - Ukrainian podcast landscape
-  - Interview formats
-- section: Listening Strategies
-  words: 250
-  points:
-  - Pre-listening preparation
-  - Active listening
-  - Post-listening review
-- section: Note-Taking
-  words: 250
-  points:
-  - Note-taking vocabulary
-  - Abbreviation systems
-  - Organizing information
-- section: Interview Features
-  words: 250
-  points:
-  - Question types
-  - Response patterns
-  - Turn-taking
-- section: Podcast Genres
-  words: 200
-  points:
-  - News podcasts
-  - Educational content
-  - Recommended shows
-- section: 'Practice: Listening Tasks'
-  words: 100
-  points:
-  - Listen and summarize
-  - Discuss content
-word_target: 1200
+- section: Вступ
+  words: 142
+- section: Огляд
+  words: 982
+- section: Практика
+  words: 359
+- section: Продукція
+  words: 215
+- section: Підсумок
+  words: 85
+- section: Потрібно більше практики?
+  words: 109
+word_target: 1892
 vocabulary_hints:
   required:
   - інтерв'ю (interview)
@@ -57,16 +34,16 @@ vocabulary_hints:
   - обговорення (discussion)
   - випуск (episode)
 activity_hints:
-- type: listening
+- type: quiz
   focus: Authentic interview excerpts
   items: 15
-- type: note-taking
+- type: cloze
   focus: Practice note-taking
   items: 15
-- type: matching
+- type: match-up
   focus: Match speakers to opinions
   items: 20
-- type: discussion
+- type: quiz
   focus: Discuss podcast topics
   items: 10
 focus: skills

@@ -23,6 +23,8 @@ import ComparativeStudy from '@site/src/components/ComparativeStudy';
 import ReadingActivity from '@site/src/components/ReadingActivity';
 import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
 import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
 
 
 ## Вступ
@@ -324,6 +326,10 @@ Try describing your own home in Ukrainian: «У моїй квартирі є в�
 
 <Translate questions={JSON.parse(`[{"source": "Living room", "options": [{"text": "вітальня", "correct": true}, {"text": "спальня", "correct": false}, {"text": "кухня", "correct": false}]}, {"source": "Bedroom", "options": [{"text": "спальня", "correct": true}, {"text": "кухня", "correct": false}, {"text": "ванна", "correct": false}]}, {"source": "Sofa", "options": [{"text": "диван", "correct": true}, {"text": "крісло", "correct": false}, {"text": "стіл", "correct": false}]}, {"source": "Wardrobe", "options": [{"text": "шафа", "correct": true}, {"text": "полиця", "correct": false}, {"text": "комод", "correct": false}]}, {"source": "Bed", "options": [{"text": "ліжко", "correct": true}, {"text": "диван", "correct": false}, {"text": "крісло", "correct": false}]}, {"source": "Vacuum", "options": [{"text": "пилосос", "correct": true}, {"text": "пральна машина", "correct": false}, {"text": "праска", "correct": false}]}, {"source": "Balcony", "options": [{"text": "балкон", "correct": true}, {"text": "коридор", "correct": false}, {"text": "комора", "correct": false}]}, {"source": "Kitchen", "options": [{"text": "кухня", "correct": true}, {"text": "вітальня", "correct": false}, {"text": "спальня", "correct": false}]}]`)} />
 
+### Home Descriptions
+
+<FillIn items={JSON.parse(`[{"sentence": "Ми відпочиваємо на дивані у [___].", "answer": "вітальні", "options": ["вітальні", "спальні", "кухні", "ванні"]}, {"sentence": "Мама готує вечерю на [___].", "answer": "кухні", "options": ["кухні", "спальні", "балконі", "коридорі"]}, {"sentence": "Одяг висить у великій [___].", "answer": "шафі", "options": ["шафі", "полиці", "комоді", "столі"]}, {"sentence": "Діти сплять у своїй [___].", "answer": "спальні", "options": ["спальні", "вітальні", "кухні", "ванні"]}, {"sentence": "Ми миємо посуд у [___].", "answer": "мийці", "options": ["мийці", "пральній машині", "холодильнику", "духовці"]}, {"sentence": "Білизну перемо в пральній [___].", "answer": "машині", "options": ["машині", "холодильнику", "плиті", "пилососі"]}, {"sentence": "Тато працює в [___] за столом.", "answer": "кабінеті", "options": ["кабінеті", "спальні", "коридорі", "ванні"]}, {"sentence": "Квіти стоять на [___] біля вікна.", "answer": "підвіконні", "options": ["підвіконні", "підлозі", "килимі", "дивані"]}]`)} />
+
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -344,7 +350,7 @@ Try describing your own home in Ukrainian: «У моїй квартирі є в�
 | душовий | /duʃɔʋˈɪj/ | shower (adj) | adj |  |  |
 | займати | /zajmˈatɪ/ | to occupy, to take up | verb |  |  |
 | заміський | /zamisʲkˈɪj/ | country (adj), out-of-town | adj |  |  |
-| застеляти | /zastɛlˈjatɪ/ |  | verb |  |  |
+| застеляти | /zastɛlˈjatɪ/ | to make the bed | verb |  |  |
 | затишок | /zˈatɪʃɔk/ | coziness, shelter | noun | ч |  |
 | зверху | /zʋˈɛrxu/ | from above, on top | adv |  |  |
 | зітхати | /zitxˈatɪ/ | to sigh | verb |  |  |
@@ -369,16 +375,16 @@ Try describing your own home in Ukrainian: «У моїй квартирі є в�
 | прибирання | /prɪbɪrˈannja/ | cleaning | noun | с |  |
 | привести | /prɪʋɛstˈɪ/ | to lead to, to bring (perfective) | verb |  |  |
 | пригощати | /prɪɦɔʃt͡ʃˈatɪ/ | to treat (imperfective) | verb |  |  |
-| пятниця | /pjatnɪt͡sja/ |  | noun | ж |  |
+| пятниця | /pjatnɪt͡sja/ | Friday | noun | ж |  |
 | раковина | /rˈakɔʋɪna/ | shell, sink | noun | ж |  |
 | розкиданий | /rɔzkˈɪdanɪj/ | scattered | adj |  |  |
 | розкладати | /rɔzkladˈatɪ/ | to arrange, to decompose (imperfective) | verb |  |  |
 | рідкість | /rˈidkistʲ/ | rarity | noun | ж |  |
 | сезонний | /sɛzˈɔnnɪj/ | seasonal | adj |  |  |
 | тумбочка | /tˈumbɔt͡ʃka/ | nightstand, small chest | noun | ж |  |
-| фух | /fux/ |  | noun |  |  |
+| фух | /fux/ | phew | noun |  |  |
 | хліб-сіль | /xlib-silʲ/ | bread and salt (hospitality) | noun | ч |  |
-| ціле | /t͡sˈilɛ/ |  | noun | с |  |
+| ціле | /t͡sˈilɛ/ | whole | noun | с |  |
 | чистка | /t͡ʃˈɪstka/ | cleaning, purging | noun | ж |  |
 | шашлик | /ʃaʃlˈɪk/ | shashlik, kebab | noun | ч |  |
 | штора | /ʃtˈɔra/ | curtain | noun | ж |  |

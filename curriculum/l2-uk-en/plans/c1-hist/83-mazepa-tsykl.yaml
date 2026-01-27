@@ -5,54 +5,54 @@ version: '2.0'
 title: 'Мазепинський цикл: 20 років вірності → анафема'
 content_outline:
 - section: Вступ — Вірний слуга стає «зрадником»
-  words: 400
+  words: 457
   points:
   - Мазепа — 20 років гетьманства
   - Вірність царю — і результат
   - Чому це цикл кооптації
   - Структура модуля
 - section: Фаза 1 — Кооптація (1687-1700)
-  words: 700
+  words: 800
   points:
   - Отримання гетьманства — як
   - Вірність Петру I
   - Участь у війнах царя
   - Нагороди і титули
 - section: Фаза 2 — Залежність (1700-1708)
-  words: 600
+  words: 686
   points:
   - Північна війна — тягар
   - Козацькі втрати
   - Петро ігнорує попередження
   - Наростання конфлікту
 - section: Фаза 3 — Точка невповернення (1708)
-  words: 600
+  words: 686
   points:
   - Батурин — загроза
   - Рішення про союз зі Швецією
   - Логіка Мазепи
   - Що він сподівався отримати
 - section: Фаза 4 — Знищення (1708-...)
-  words: 500
+  words: 571
   points:
   - Батуринська різанина
   - Полтава
   - Анафема — досі не знята
   - «Мазепинець» як ярлик на 300 років
 - section: Наратив зради
-  words: 400
+  words: 457
   points:
   - Як Росія створила міф
   - Чому «зрадник» — хто кого зрадив
   - Реабілітація в Україні
   - Досі в анафемі — чому важливо
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Мазепа — приклад невдалого виходу
   - Цикл продовжується
   - Перехід до Розумовського
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - Мазепа (Mazepa)
@@ -75,10 +75,10 @@ activity_hints:
 - type: critical-analysis
   focus: Map Mazepa's path through co-optation cycle
   output: Cycle diagram
-- type: narrative-analysis
+- type: critical-analysis
   focus: «Traitor» narrative — construction and persistence
   output: Narrative study
-- type: decision-analysis
+- type: critical-analysis
   focus: 1708 decision — what were Mazepa's options?
   output: Decision tree analysis
 - type: comparative-study
@@ -111,3 +111,6 @@ sources:
   notes: Battle of Poltava
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of мазепинський цикл: 20 років вірності → анафема'
+- Evaluate the historical significance of вірний слуга стає «зрадником»

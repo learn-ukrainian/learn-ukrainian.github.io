@@ -5,54 +5,54 @@ version: '2.0'
 title: 'Крим: Багатошарова історія'
 content_outline:
 - section: Вступ — Шари історії
-  words: 400
+  words: 457
   points:
   - Крим — не тільки росіяни
   - Греки, татари, українці, росіяни
   - Кожен шар — своя історія
   - Структура модуля
 - section: Античний Крим
-  words: 500
+  words: 571
   points:
   - Грецькі колонії
   - Скіфи і таври
   - Боспорське царство
   - Візантійська спадщина
 - section: Кримське ханство (1441-1783)
-  words: 700
+  words: 800
   points:
   - Татарська держава
   - Відносини з Україною — набіги, але й торгівля
   - Кримськотатарська культура
   - Анексія Росією — 1783
 - section: Російський Крим (1783-1991)
-  words: 600
+  words: 686
   points:
   - Колонізація — виселення татар
   - Севастополь — імперський символ
   - «Потьомкінські села»
   - Українці в Криму
 - section: Депортація 1944
-  words: 500
+  words: 571
   points:
   - Звинувачення в колаборації
   - Масова депортація
   - Смертність
   - Повернення після 1989
 - section: 1954 і 2014
-  words: 500
+  words: 571
   points:
   - Передача Україні — що це було
   - Автономія в Україні
   - Анексія 2014
   - Окупація
 - section: Підсумок
-  words: 300
+  words: 344
   points:
   - Крим — не російський
   - Багатошарова спадщина
   - Перехід до Півдня
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - Крим (Crimea)
@@ -112,3 +112,6 @@ sources:
   notes: Crimean Tatars
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of крим: багатошарова історія'
+- Evaluate the historical significance of шари історії

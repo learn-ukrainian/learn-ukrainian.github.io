@@ -5,42 +5,23 @@ version: '2.0'
 title: Лексика в контексті
 subtitle: Applying Vocabulary to Practical Communication
 content_outline:
-- section: 'Introduction: Vocabulary for Communication'
-  words: 150
-  points:
-  - Vocabulary as resource
-  - Context-based selection
-  - Register matching
+- section: Introduction
+  words: 275
 - section: Professional Contexts
-  words: 200
-  points:
-  - Workplace vocabulary
-  - Formal register
-  - Business communication
+  words: 267
 - section: Social Contexts
-  words: 200
-  points:
-  - Informal register
-  - Social vocabulary
-  - Everyday communication
+  words: 266
 - section: Academic Contexts
-  words: 200
-  points:
-  - Academic vocabulary
-  - Formal discourse
-  - Argumentation
+  words: 219
 - section: Cultural Contexts
-  words: 150
-  points:
-  - Cultural vocabulary
-  - Idiomatic expressions
-  - Regional awareness
-- section: 'Practice: Integrated Tasks'
+  words: 237
+- section: Practice
+  words: 170
+- section: Підсумок
+  words: 72
+- section: Потрібно більше практики?
   words: 100
-  points:
-  - Apply vocabulary
-  - Produce texts
-word_target: 1000
+word_target: 1606
 vocabulary_hints:
   required:
   - лексика (vocabulary)
@@ -57,16 +38,16 @@ vocabulary_hints:
   - академічний (academic)
   - побутовий (everyday)
 activity_hints:
-- type: writing
+- type: cloze
   focus: Register-appropriate texts
   items: 10
-- type: task
+- type: cloze
   focus: Communication tasks
   items: 15
-- type: role-play
+- type: cloze
   focus: Context-based speaking
   items: 15
-- type: analysis
+- type: critical-analysis
   focus: Register identification
   items: 10
 focus: communication

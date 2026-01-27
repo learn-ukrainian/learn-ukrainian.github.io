@@ -5,50 +5,52 @@ version: '1.0'
 title: 'Після Емса: Галицький розквіт'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of після емса: галицький розквіт'
+- Evaluate the historical significance of культура переїжджає
 content_outline:
 - section: Вступ — Культура переїжджає
-  words: 451
+  words: 515
   subsections:
   - 1876 — Емський указ
   - Заборона української мови
   - Галичина — рятівний острів
   - Структура модуля
 - section: Емський указ — що заборонили
-  words: 677
+  words: 774
   subsections:
   - Текст указу
   - Що неможливо було друкувати
   - Освіта — закрита
   - Наслідки для Наддніпрянщини
 - section: Галичина — інший світ
-  words: 790
+  words: 903
   subsections:
   - Австрія — відносна свобода
   - Українські школи
   - Преса і видавництва
   - «Просвіта»
 - section: Інституційне будівництво
-  words: 677
+  words: 774
   subsections:
   - НТШ — українська академія
   - Франко, Грушевський — львівський період
   - Кооперативний рух
   - Політичні партії
 - section: Вплив на всю Україну
-  words: 564
+  words: 645
   subsections:
   - Львів — столиця культури
   - Книги контрабандою
   - «Галицький П'ємонт»
   - Ідеї перетинають кордон
 - section: Підсумок
-  words: 341
+  words: 389
   subsections:
   - Емс — не смерть, а переїзд
   - Галичина — носій до 1939
   - Перехід до шістдесятників
-word_target: 3500
+word_target: 4000
 vocabulary:
 - Емський указ
 - заборона
@@ -66,11 +68,11 @@ vocabulary:
 - греко-католицька церква
 - українофіли
 activities:
-- type: decree-analysis
+- type: critical-analysis
   focus: What Ems Decree prohibited — text analysis
-- type: institutional-study
+- type: comparative-study
   focus: Galician institution building 1876-1914
-- type: impact-analysis
+- type: critical-analysis
   focus: How Galicia influenced all of Ukraine
 - type: comparative-study
   focus: Galicia vs. Russian Empire — cultural freedom

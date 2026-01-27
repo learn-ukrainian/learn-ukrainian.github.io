@@ -1,10 +1,12 @@
 # Audit Report: M75 — 75-modern-diaspora.md
+
 **Level:** B2 | **Module:** M75 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:36
 
 ## Configuration
+
 **Type:** B2-history
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Історія та структура діаспори | 8 | 8 | ✅ |
@@ -44,17 +47,20 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 75-modern-diaspora.yaml: Schema validation error at key '13': {'type': 'quiz', 'title': 'Визначення регістру', 'items': [{'options': [{'text': 'Офіційно-діловий', 'correct': True}, {'text': 'Розмовний', 'correct': False}, {'text': 'Художній', 'correct': False}, {'text': 'Публіцистичний', 'correct': False}], 'question': '«Рішення про виділення гуманітарного пакету було ухвалено на засіданні комітету». Який це стиль?'}, {'options': [{'text': 'Офіційно-діловий', 'correct': False}, {'text': 'Розмовний', 'correct': True}, {'text': 'Науковий', 'correct': False}, {'text': 'Художній', 'correct': False}], 'question': '«Ну ти бачив, скільки там наших було на мітингу? Просто капець як круто!» Який це стиль?'}, {'options': [{'text': 'Науковий', 'correct': False}, {'text': 'Розмовний', 'correct': False}, {'text': 'Публіцистичний', 'correct': True}, {'text': 'Офіційно-діловий', 'correct': False}], 'question': '«Українська діаспора сьогодні — це авангард нашої боротьби на міжнародній арені». Який це стиль?'}, {'options': [{'text': 'Художній', 'correct': False}, {'text': 'Науковий', 'correct': True}, {'text': 'Розмовний', 'correct': False}, {'text': 'Офіційно-діловий', 'correct': False}], 'question': "«Термін 'асиміляція' описує соціокультурний процес втрати первинної ідентичності». Який це стиль?"}, {'options': [{'text': 'Художній', 'correct': True}, {'text': 'Офіційно-діловий', 'correct': False}, {'text': 'Публіцистичний', 'correct': False}, {'text': 'Науковий', 'correct': False}], 'question': '«Троянці, зговорившись в остатки, Еней з своєї сунув хатки». Який це стиль?'}, {'options': [{'text': 'Розмовний', 'correct': False}, {'text': 'Художній', 'correct': False}, {'text': 'Офіційно-діловий', 'correct': True}, {'text': 'Публіцистичний', 'correct': False}], 'question': '«Просимо надати звіт про використання волонтерських коштів до кінця поточного місяця». Який це стиль?'}, {'options': [{'text': 'Науковий', 'correct': False}, {'text': 'Публіцистичний', 'correct': True}, {'text': 'Офіційно-діловий', 'correct': False}, {'text': 'Розмовний', 'correct': False}], 'question': '«Громада — це не просто люди, це пульсуюче серце нації за кордоном». Який це стиль?'}, {'options': [{'text': 'Офіційно-діловий', 'correct': True}, {'text': 'Розмовний', 'correct': False}, {'text': 'Публіцистичний', 'correct': False}, {'text': 'Художній', 'correct': False}], 'question': '«Відповідно до пункту 5 Статуту СКУ, члени мають право на голос». Який це стиль?'}], 'instruction': 'Визначте функціональний стиль наведених уривків тексту.'} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
   - FIX: Add a comparative-study activity to meet advanced richness standards.
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 2 violations (minor)
 
 ## Gates
+
 - **Words:** ❌ 2867/4000 (raw: 2968)
 - **Activities:** ✅ 15/3
 - **Density:** ✅ All > 1
@@ -73,10 +79,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 26 | 24 | 100% | 20% | 20.0% |
@@ -92,6 +100,7 @@
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 65 | Included in Core |

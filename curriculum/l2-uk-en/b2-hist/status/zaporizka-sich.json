@@ -2,12 +2,12 @@
   "module": "zaporizka-sich",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T23:33:04.705870Z",
+  "last_audit": "2026-01-27T17:53:18.700227Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-26T23:32:58.974413Z",
+    "md": "2026-01-27T15:24:10.347275Z",
     "meta": "2026-01-26T22:20:13.810457Z",
-    "activities": "2026-01-25T21:29:25.158920Z",
+    "activities": "2026-01-27T15:34:55.229520Z",
     "vocabulary": "2026-01-23T21:37:05.926548Z",
     "plan": null
   },
@@ -25,7 +25,7 @@
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "8/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "pass",

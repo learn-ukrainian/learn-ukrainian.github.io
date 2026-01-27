@@ -112,6 +112,7 @@ TEMPLATE_METADATA:
 Before submitting a C1 biography module, verify all items from `c1-module-template.md` PLUS:
 
 ### Biography-Specific Requirements
+
 - [ ] **CBI pedagogy:** Content-Based Instruction (vocabulary through narrative)
 - [ ] **Extended narrative:** 800-1000 word biographical account
 - [ ] **Primary sources (≥2):** Include quotes, letters, or speeches from the figure using `[!quote]` callouts
@@ -123,7 +124,6 @@ Before submitting a C1 biography module, verify all items from `c1-module-templa
 - [ ] **Gender/era balance:** Follow curriculum diversity requirements
 - [ ] **Decolonization lens:** Ukrainian perspective, not Russian imperial framing
 - [ ] **NO DIALOGS:** Biography modules are READING-CENTRIC. Do NOT include conversational dialogs—focus on narrative, primary sources, and analysis. Fictional dialogs with historical figures are inappropriate.
-
 
 ---
 
@@ -428,6 +428,8 @@ Why GOOD: Requires understanding how the MODULE describes the figure's influence
 **OPTIONAL activity types:**
 - `comparative-study` - Cross-figure or cross-era comparisons
 - `authorial-intent` - Analysis of the figure's own writings
+- `source-evaluation` - Analyze biographical sources (memoirs, letters, autobiographies)
+- `debate` - Contested legacies and competing interpretations
 - `quiz` - ONLY for conceptual questions (NOT factual recall)
 
 **FORBIDDEN activity types (per config.py):**
@@ -559,6 +561,90 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
       explanation: 'У тексті автор наголошує на...'
 ```
 
+### 6. Source-Evaluation Activity
+
+**Use for analyzing biographical primary sources (memoirs, letters, autobiographies, contemporary accounts):**
+
+```yaml
+- type: source-evaluation
+  title: "Оцінка джерела: Лист/Мемуари [Figure Name]"
+  instruction: "Застосуйте метод критичного аналізу джерел до цього біографічного документа."
+  source_text: |
+    [Excerpt from letter, memoir, autobiography, or contemporary account — 100-200 words]
+  source_metadata:
+    author: "[Author name — the figure themselves or a contemporary]"
+    date: "[Date or period of writing]"
+    type: "[memoir/letter/autobiography/diary/contemporary_account]"
+    context: "[Circumstances of creation — exile, imprisonment, public occasion, private correspondence]"
+  evaluation_criteria:
+    - authorship
+    - date_and_context
+    - intended_audience
+    - purpose_and_bias
+    - omissions
+  guiding_questions:
+    - "Хто написав цей документ і за яких обставин?"
+    - "Для кого призначений цей текст — приватна переписка чи публічне висловлювання?"
+    - "Які упередження автора можна виявити? Чи є самоцензура?"
+    - "Що автор замовчує або применшує?"
+  model_evaluation: |
+    **1. Авторство:** [Analysis of who wrote it and their perspective]
+    **2. Контекст створення:** [When/where/why written]
+    **3. Аудиторія:** [Intended readers and how this shapes content]
+    **4. Упередження:** [Self-presentation, political caution, emotional state]
+    **5. Опущення:** [What the source doesn't reveal]
+    **Висновок:** [How reliable for understanding this figure's life/views]
+```
+
+### 7. Debate Activity
+
+**Use for contested legacies and competing interpretations of historical figures:**
+
+```yaml
+- type: debate
+  title: "Дискусія: Як оцінювати спадщину [Figure Name]?"
+  instruction: "Проаналізуйте конкуруючі інтерпретації цієї постаті та сформулюйте власну позицію."
+  debate_question: "[The contested question about the figure's legacy or actions]"
+  historical_context: |
+    [Background needed to understand why this figure is contested — 50-100 words]
+  positions:
+    - name: "[Position 1 — e.g., 'National Hero']"
+      proponents: "[Who holds this view — historians, political movements, etc.]"
+      argument: "[Core argument for this interpretation]"
+      evidence:
+        - "[Key evidence supporting this view]"
+        - "[Another piece of evidence]"
+      weaknesses:
+        - "[Critique or limitation of this position]"
+    - name: "[Position 2 — e.g., 'Controversial Figure']"
+      proponents: "[Who holds this view]"
+      argument: "[Core argument]"
+      evidence:
+        - "[Key evidence]"
+      weaknesses:
+        - "[Critique of this position]"
+    - name: "[Position 3 — e.g., 'Imperial/Soviet Narrative']"
+      proponents: "[Russian/Soviet historiography]"
+      argument: "[Their argument]"
+      evidence:
+        - "[Their claimed evidence]"
+      weaknesses:
+        - "[Why this narrative is problematic — decolonization perspective]"
+  analysis_tasks:
+    - "Визначте найсильніший аргумент кожної позиції."
+    - "Які докази кожна сторона ігнорує або применшує?"
+    - "Як сучасний український контекст впливає на оцінку цієї постаті?"
+    - "Яку позицію ви вважаєте найбільш обґрунтованою? Чому?"
+  model_analysis: |
+    [Balanced evaluation of positions, highlighting evidence quality and ideological factors.
+    Should demonstrate how to analyze contested legacies critically while maintaining
+    decolonization perspective.]
+```
+
+**When to use source-evaluation vs debate:**
+- **Source-evaluation:** Analyzing a specific document (letter, memoir, speech) for reliability and bias
+- **Debate:** Comparing how different historians/schools interpret the figure's overall legacy
+
 ---
 
 ## Engagement Boxes for Biography Modules
@@ -596,6 +682,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 ## Content Structure Note
 
 ### Vocabulary & Activities
+
 **CRITICAL:** Do NOT add `## Vocabulary` or `## Activities` headers. These sections are injected automatically from:
 - `vocabulary/{slug}.yaml`
 - `activities/{slug}.yaml`

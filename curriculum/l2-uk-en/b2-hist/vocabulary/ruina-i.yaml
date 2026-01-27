@@ -1,4 +1,101 @@
-module: ruina-i
-level: b2-hist
-version: '2.0'
-items: []
+vocabulary:
+  - term: руїна
+    ipa: /rʊˈjinɐ/
+    pos: noun
+    translation: the Ruin (period of decay/civil war)
+  - term: розкол
+    ipa: /rɔzˈkɔl/
+    pos: noun
+    translation: split, schism
+  - term: чорна рада
+    ipa: /ˈt͡ʃɔrnɐ ˈrɑdɐ/
+    pos: noun
+    translation: Black Council (general assembly including commoners)
+  - term: охлократія
+    ipa: /ɔxlɔˈkrɑt⁽ʲ⁾ijɐ/
+    pos: noun
+    translation: ochlocracy (mob rule)
+  - term: міжусобиця
+    ipa: /m⁽ʲ⁾iʒʊˈsɔbit͡sʲɐ/
+    pos: noun
+    translation: internecine strife
+  - term: булава
+    ipa: /bʊlɐˈwɑ/
+    pos: noun
+    translation: mace (symbol of hetman's power)
+  - term: промосковський
+    ipa: /prɔmɔsˈkɔwsʲkɪj/
+    pos: adjective
+    translation: pro-Muscovite
+  - term: пропольський
+    ipa: /prɔˈpɔlʲsʲkɪj/
+    pos: adjective
+    translation: pro-Polish
+  - term: лівобережжя
+    ipa: /l⁽ʲ⁾iwɔbeˈrɛʒʲːɐ/
+    pos: noun
+    translation: Left-bank (Ukraine)
+  - term: правобережжя
+    ipa: /prɑwɔbeˈrɛʒʲːɐ/
+    pos: noun
+    translation: Right-bank (Ukraine)
+  - term: старшина
+    ipa: /stɐrˈʃɪnɐ/
+    pos: noun
+    translation: Cossack officers/elite
+  - term: чернь
+    ipa: /t͡ʃɛrnʲ/
+    pos: noun
+    translation: commoners, mob, "the black folk"
+  - term: унія
+    ipa: /ˈun⁽ʲ⁾ijɐ/
+    pos: noun
+    translation: union, alliance
+  - term: федерація
+    ipa: /fedeˈrɑt͡s⁽ʲ⁾ijɐ/
+    pos: noun
+    translation: federation
+  - term: деспотія
+    ipa: /desˈpɔt⁽ʲ⁾ijɐ/
+    pos: noun
+    translation: despotism
+  - term: самодержавство
+    ipa: /sɐmɔdeˈrʒɑu̯stwɔ/
+    pos: noun
+    translation: autocracy
+  - term: маніпуляція
+    ipa: /mɐn⁽ʲ⁾ipʊˈlʲɑt͡s⁽ʲ⁾ijɐ/
+    pos: noun
+    translation: manipulation
+  - term: популізм
+    ipa: /pɔpʊˈl⁽ʲ⁾izm/
+    pos: noun
+    translation: populism
+  - term: суверенітет
+    ipa: /sʊweren⁽ʲ⁾iˈtɛt/
+    pos: noun
+    translation: sovereignty
+  - term: легітимність
+    ipa: /leɦ⁽ʲ⁾iˈtɪmn⁽ʲ⁾isʲtʲ/
+    pos: noun
+    translation: legitimacy
+  - term: суб'єктність
+    ipa: /sʊbˈjɛktn⁽ʲ⁾isʲtʲ/
+    pos: noun
+    translation: agency, subjecthood
+  - term: зрада
+    ipa: /ˈzrɑdɐ/
+    pos: noun
+    translation: treason, betrayal
+  - term: коаліція
+    ipa: /kɔɐˈl⁽ʲ⁾it͡s⁽ʲ⁾ijɐ/
+    pos: noun
+    translation: coalition
+  - term: перемир'я
+    ipa: /peremyrja/
+    pos: noun
+    translation: truce, armistice
+  - term: деколонізація
+    ipa: /dekɔlɔn⁽ʲ⁾izɑt͡s⁽ʲ⁾ijɐ/
+    pos: noun
+    translation: decolonization

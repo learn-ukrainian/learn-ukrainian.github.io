@@ -5,42 +5,37 @@ version: '2.0'
 title: 'Підрядні означальні: який'
 subtitle: Relative Clauses with який
 content_outline:
-- section: 'Introduction: Relative Clauses Overview'
-  words: 150
+- section: Тест
+  words: 279
+  points: []
+- section: Теорія
+  words: 181
   points:
-  - What are relative clauses
-  - який as relative pronoun
-  - Comparison with English 'which/that/who'
-- section: Agreement Patterns
-  words: 250
+  - Принцип узгодження
+  - Повна парадигма який у всіх відмінках
+- section: Поглиблення
+  words: 1205
   points:
-  - Gender agreement with antecedent
-  - Number agreement (singular/plural)
-  - Memorizing forms
-- section: Case in Subordinate Clause
-  words: 250
-  points:
-  - який as subject (nominative)
-  - який as object (accusative/genitive)
-  - який with prepositions
-- section: Complex Case Patterns
-  words: 250
-  points:
-  - Dative, instrumental, locative uses
-  - Prepositional phrases with який
-  - Common patterns
-- section: Sentence Combining
-  words: 200
-  points:
-  - Combining simple sentences
-  - Punctuation rules
-  - Word order considerations
-- section: 'Practice: Relative Clauses'
+  - Який у кожному відмінку з прикладами
+  - Типові помилки та як їх уникнути
+- section: Практика
   words: 100
+  points: []
+- section: Діалоги
+  words: 1092
   points:
-  - Create complex sentences
-  - Case selection drills
-word_target: 1200
+  - 'Діалог 1: Про нового колегу'
+  - 'Діалог 2: Про подорож'
+  - 'Діалог 3: Про книгу'
+  - 'Діалог 4: Про навчання'
+  - 'Діалог 5: Про ресторан'
+- section: Потрібно більше практики?
+  words: 143
+  points:
+  - Інтеграція знань
+  - Реальне застосування
+  - Онлайн-ресурси
+word_target: 3000
 vocabulary_hints:
   required:
   - який (which/that/who)
@@ -60,13 +55,13 @@ activity_hints:
 - type: fill-in
   focus: який case selection
   items: 25
-- type: sentence-combining
+- type: unjumble
   focus: Combine sentences with який
   items: 20
 - type: error-correction
   focus: Fix agreement errors
   items: 15
-- type: translation
+- type: translate
   focus: English to Ukrainian
   items: 15
 focus: grammar

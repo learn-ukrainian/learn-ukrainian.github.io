@@ -1,10 +1,12 @@
 # Audit Report: M89 — 89-news-analysis-basics.md
+
 **Level:** B2 | **Module:** M89 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ✅ PASS
 **Generated:** 2026-01-26 22:28:45
 
 ## Configuration
+
 **Type:** B2-skills
 **Word Target:** 1750 words
 **Activities:** 14-18 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Медійна термінологія | 16 | 8 | ✅ |
@@ -41,6 +44,7 @@
 - Low density activities: 0
 
 ## Gates
+
 - **Words:** ✅ 4258/1750 (raw: 4677)
 - **Activities:** ✅ 14/14
 - **Density:** ✅ All > 14
@@ -59,10 +63,12 @@
 - **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
+
 **Score:** 95% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 83 | 15 | 100% | 25% | 25.0% |
@@ -76,6 +82,7 @@
 | **TOTAL** | | | | | **95.2%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 108 | Included in Core |

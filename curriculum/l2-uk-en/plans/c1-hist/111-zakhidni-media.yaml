@@ -5,54 +5,54 @@ version: '2.0'
 title: 'Західні медіа: Сліпі плями'
 content_outline:
 - section: Вступ — Ненавмисна допомога
-  words: 400
+  words: 457
   points:
   - Західні медіа — не вороги
   - Але — сліпі плями
   - Як Кремль використовує
   - Структура модуля
 - section: «Обидві сторони»
-  words: 700
+  words: 800
   points:
   - Журналістський «баланс»
   - Коли баланс = спотворення
   - Прирівнювання агресора і жертви
   - Приклади
 - section: Кремлівські тези в мейнстримі
-  words: 600
+  words: 686
   points:
   - «Розширення НАТО»
   - «Українські націоналісти»
   - «Громадянська війна на Донбасі»
   - Як тези проникають
 - section: Незнання контексту
-  words: 600
+  words: 686
   points:
   - Україна = terra incognita
   - Бюро в Москві, не в Києві
   - Російськомовні «експерти»
   - Інформаційна асиметрія
 - section: «Реалізм» і «втомленість»
-  words: 500
+  words: 571
   points:
   - «Україна має домовлятися»
   - «Війна затягується»
   - Хто просуває ці тези
   - Наслідки для України
 - section: Зміни після 2022
-  words: 400
+  words: 457
   points:
   - Покращення чи тимчасовість
   - Нове покоління журналістів
   - Українські голоси
   - Виклики попереду
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Медіаграмотність — необхідність
   - Як читати західні медіа
   - Перехід до контрнаративів
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - сліпа пляма (blind spot)
@@ -72,16 +72,16 @@ vocabulary_hints:
   - «whataboutism» (whataboutism)
   - московський кореспондент (Moscow correspondent)
 activity_hints:
-- type: media-analysis
+- type: critical-analysis
   focus: «Both sides» coverage — examples and analysis
   output: Coverage analysis
-- type: narrative-tracking
+- type: critical-analysis
   focus: How Kremlin talking points appear in Western media
   output: Narrative penetration map
-- type: source-analysis
+- type: critical-analysis
   focus: Who are "Ukraine experts" in Western media?
   output: Expert analysis
-- type: comparative-coverage
+- type: critical-analysis
   focus: How same event covered in different outlets
   output: Coverage comparison
 - type: essay-response
@@ -106,3 +106,6 @@ sources:
   notes: How disinformation spreads
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of західні медіа: сліпі плями'
+- Evaluate the historical significance of ненавмисна допомога

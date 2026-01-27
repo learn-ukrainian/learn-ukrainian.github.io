@@ -5,42 +5,19 @@ version: '2.0'
 title: Технології та стартапи
 subtitle: Ukraine's Tech Industry and Startup Ecosystem
 content_outline:
-- section: 'Introduction: Tech Ukraine'
-  words: 150
-  points:
-  - IT industry overview
-  - Global reputation
-  - Key statistics
-- section: Major Tech Companies
-  words: 250
-  points:
-  - Ukrainian tech giants
-  - Global success stories
-  - Outsourcing industry
-- section: Startup Ecosystem
-  words: 250
-  points:
-  - Startup culture
-  - Investment landscape
-  - Success stories
-- section: Tech Education
-  words: 250
-  points:
-  - IT education
-  - Coding bootcamps
-  - University programs
-- section: Tech During Wartime
-  words: 200
-  points:
-  - Resilience and adaptation
-  - Remote work culture
-  - Tech for defense
-- section: 'Practice: Tech Discussion'
-  words: 100
-  points:
-  - Discuss tech trends
-  - Compare industries
-word_target: 1200
+- section: Історія та культура
+  words: 231
+- section: Сучасність
+  words: 539
+- section: Практика
+  words: 172
+- section: Продукція
+  words: 345
+- section: Підсумок
+  words: 171
+- section: Потрібно більше практики?
+  words: 109
+word_target: 1567
 vocabulary_hints:
   required:
   - технологія (technology)
@@ -60,13 +37,13 @@ activity_hints:
 - type: reading
   focus: Tech company profiles
   items: 15
-- type: matching
+- type: match-up
   focus: Match terms to definitions
   items: 20
 - type: fill-in
   focus: Complete tech descriptions
   items: 15
-- type: discussion
+- type: quiz
   focus: Discuss tech trends
   items: 10
 focus: culture

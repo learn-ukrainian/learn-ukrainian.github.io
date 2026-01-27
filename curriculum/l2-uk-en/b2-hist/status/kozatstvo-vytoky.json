@@ -2,12 +2,12 @@
   "module": "kozatstvo-vytoky",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T23:31:56.413353Z",
+  "last_audit": "2026-01-27T17:53:18.070516Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-24T16:36:32.225995Z",
+    "md": "2026-01-27T15:24:10.346972Z",
     "meta": "2026-01-26T22:20:13.243155Z",
-    "activities": "2026-01-24T15:35:42.085754Z",
+    "activities": "2026-01-27T15:34:54.184048Z",
     "vocabulary": "2026-01-24T15:24:58.043014Z",
     "plan": null
   },
@@ -25,7 +25,7 @@
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "9/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "pass",

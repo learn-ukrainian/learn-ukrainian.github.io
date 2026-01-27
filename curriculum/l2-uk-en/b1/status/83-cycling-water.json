@@ -2,14 +2,14 @@
   "module": "83-cycling-water",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:27:37.603547Z",
+  "last_audit": "2026-01-27T20:14:47.763270Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-14T21:17:06.671330Z",
+    "md": "2026-01-27T20:07:22.376041Z",
     "meta": "2026-01-26T15:44:41.715843Z",
-    "activities": "2026-01-24T22:54:12.302565Z",
+    "activities": "2026-01-27T20:07:03.356046Z",
     "vocabulary": "2026-01-25T15:44:17.370493Z",
-    "plan": "2026-01-26T15:44:41.715399Z"
+    "plan": "2026-01-27T20:01:57.895557Z"
   },
   "gates": {
     "meta": {
@@ -18,19 +18,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "1775/1500 (raw: 1858) | pedagogy: 1 violations | richness: 86% < 95% min (grammar)"
+      "status": "pass",
+      "violations": 0,
+      "message": "1800/1500 (raw: 1883)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "11/10"
+      "message": "12/8"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "51/15"
+      "message": "51/25"
     },
     "naturalness": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Missing required activity types: discussion, matching, reading"
-    ],
-    "pass_count": 4,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

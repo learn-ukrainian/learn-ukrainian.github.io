@@ -1263,6 +1263,7 @@ We already use tables extensively ✅
 ## Implementation Roadmap
 
 ### Week 1: Terminology Fixes (High Priority)
+
 - [ ] Module M06: Replace "Class I" with "First Conjugation: -ати Verbs"
 - [ ] Module M06: Add працювати type -ва- dropping rule
 - [ ] Module M08: Replace "Class II" with "Second Conjugation: -ити Verbs"
@@ -1270,6 +1271,7 @@ We already use tables extensively ✅
 - [ ] Update all activity prompts referencing "Class I/II"
 
 ### Week 2: Add Reflexive Verbs Module (High Priority)
+
 - [ ] Create new A1 M09: Reflexive Verbs (-ся)
 - [ ] Content: First conjugation -ся pattern, third-person -ється rule
 - [ ] Vocabulary: називатися, усміхатися, сміятися, дивитися
@@ -1277,24 +1279,28 @@ We already use tables extensively ✅
 - [ ] Renumber all subsequent A1 modules (M09→M10, M10→M11, etc.)
 
 ### Week 3: Add Aspect Awareness Notes (Moderate Priority)
+
 - [ ] Module M06/M08: Add "verb pairs exist" awareness box
 - [ ] Module M21: Add "imperfective past" note
 - [ ] Module M22: Add "imperfective future" note
 - [ ] Keep notes brief (3-4 sentences max)
 
 ### Week 4: Move Aspect Introduction Earlier (Moderate Priority)
+
 - [ ] Restructure A2 modules: Move aspect from M12 to M05-M08
 - [ ] Update curriculum plan: A2 M05-M08 = Aspect system
 - [ ] Keep same content, just resequence
 - [ ] Update module dependencies/prerequisites
 
 ### Week 5-6: Quality Enhancements (Nice-to-Have)
+
 - [ ] Module M22: Add synthetic future (читатиму) as recognition skill
 - [ ] Module M06: Add hard-vowel vs soft-vowel distinction
 - [ ] Module with вчитися: Add three "study" verbs distinction
 - [ ] Add register labels (formal/informal) throughout A1
 
 ### Week 7: Validation and Testing
+
 - [ ] Run audit on all modified modules
 - [ ] Test activity generation for new M09
 - [ ] Validate vocabulary additions

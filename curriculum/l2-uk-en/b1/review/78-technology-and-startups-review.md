@@ -12,7 +12,7 @@
 | ------------------- | ----- | ----------------------------------------------------------------------------------------------------------------- |
 | Coherence           | 10/10 | Logical structure: IT market -> Startups -> Digital State (Diia).                                                 |
 | Relevance           | 10/10 | Essential. IT is one of Ukraine's main export industries.                                                         |
-| Educational         | 10/10 | Good differentiation of _віддалена робота_ (remote) vs _фріланс_.                                                 |
+| Educational         | 10/10 | Good differentiation of *віддалена робота* (remote) vs *фріланс*.                                                 |
 | Language            | 10/10 | Modern "Anglicisms" (`коворкінг`, `аутсорсинг`, `стартап`) are realistically used.                                |
 | Pedagogy            | 10/10 | Grammarly & MacPaw as examples are perfect because everyone knows them but not everyone knows they are Ukrainian. |
 | Immersion           | 10/10 | "State in a Smartphone" (Diia) narrative is unique to Ukraine giving a sense of pride.                            |

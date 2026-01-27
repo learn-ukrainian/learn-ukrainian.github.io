@@ -5,27 +5,27 @@ version: '2.0'
 title: 'Братства та освіта: Острозька академія'
 content_outline:
 - section: Вступ
-  words: 368
-- section: 'Реформація та Контрреформація'
-  words: 250
+  words: 391
+- section: Реформація та Контрреформація
+  words: 266
   points:
   - Impact of Reformation and Counter-Reformation
   - Jesuit colleges vs Orthodox schools
   - Cultural synthesis
 - section: Феномен братств
-  words: 745
+  words: 792
 - section: Освітня діяльність братств
-  words: 635
+  words: 675
 - section: Острозька академія
-  words: 574
+  words: 610
 - section: Читання
-  words: 314
+  words: 334
 - section: Первинні джерела
-  words: 415
+  words: 441
 - section: Деколонізаційний погляд
-  words: 348
+  words: 370
 - section: Потрібно більше практики?
-  words: 113
+  words: 121
 word_target: 4000
 focus: history
 pedagogy: CBI

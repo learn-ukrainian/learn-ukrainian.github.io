@@ -27,233 +27,260 @@
     - left: кімната
       right: room
 
+- type: quiz
+  title: Rental Knowledge
+  instruction: Answer questions about rental practices in Ukraine.
+  items:
+    - question: «Який серед названих варіантів найкращий спосіб швидко знайти житло?»
+      options:
+        - text: «Сайти оголошень в інтернеті.»
+          correct: true
+        - text: «Запитати сусіда на вулиці.»
+          correct: false
+        - text: «Дивитися телевізор ввечері.»
+          correct: false
+        - text: «Йти до лікаря в лікарню.»
+          correct: false
+    - question: «Яка застава при оренді житла зазвичай потрібна власнику квартири?»
+      options:
+        - text: «В розмірі одного місяця оплати.»
+          correct: true
+        - text: «В розмірі одного року оплати.»
+          correct: false
+        - text: «Без жодної застави взагалі.»
+          correct: false
+        - text: «Дуже велика сума грошей.»
+          correct: false
+    - question: «Хто зазвичай платить за всі комунальні послуги в квартирі?»
+      options:
+        - text: «Орендар, який там живе.»
+          correct: true
+        - text: «Власник, якому належить дім.»
+          correct: false
+        - text: «Держава допомагає платити.»
+          correct: false
+        - text: «Ніхто не платить за це.»
+          correct: false
+    - question: «Що дуже важливо зробити перед вашим заселенням у житло?»
+      options:
+        - text: «Підписати письмовий договір оренди.»
+          correct: true
+        - text: «Прибрати всю квартиру самостійно.»
+          correct: false
+        - text: «Купити абсолютно нові меблі.»
+          correct: false
+        - text: «Викликати майстра для ремонту.»
+          correct: false
+    - question: «Чи входять зазвичай комунальні послуги в загальну ціну оренди?»
+      options:
+        - text: «Зазвичай орендар платить окремо.»
+          correct: true
+        - text: «Завжди входять у ціну.»
+          correct: false
+        - text: «Це завжди безкоштовно тут.»
+          correct: false
+        - text: «Я не знаю відповіді.»
+          correct: false
+    - question: «Що саме означає слово орендар в контексті пошуку дому?»
+      options:
+        - text: «Це людина, яка знімає житло.»
+          correct: true
+        - text: «Це людина, яка здає житло.»
+          correct: false
+        - text: «Це людина, яка робить ремонт.»
+          correct: false
+        - text: «Це людина, яка миє вікна.»
+          correct: false
+    - question: «Що саме зазвичай називають словом застава в договорі оренди?»
+      options:
+        - text: «Це спеціальний гарантійний депозит.»
+          correct: true
+        - text: «Це великий штраф за шум.»
+          correct: false
+        - text: «Це подарунок для власника.»
+          correct: false
+        - text: «Це ціна за всі меблі.»
+          correct: false
+    - question: «Де саме найкраще шукати нове житло в сучасній Україні?»
+      options:
+        - text: «На популярному веб-сайті OLX.»
+          correct: true
+        - text: «У великій міській бібліотеці.»
+          correct: false
+        - text: «У студентському спортзалі.»
+          correct: false
+        - text: «У великому міському парку.»
+          correct: false
+    - question: «Чи можна безпечно жити в орендованій квартирі без договору?»
+      options:
+        - text: «Завжди краще мати письмовий договір.»
+          correct: true
+        - text: «Це суворо заборонено законом.»
+          correct: false
+        - text: «Це обов'язково для всіх.»
+          correct: false
+        - text: «Договір зовсім не потрібен.»
+          correct: false
+    - question: «Яке опалення в квартирах вважається найкращим і чому саме?»
+      options:
+        - text: «Індивідуальне, бо воно економне.»
+          correct: true
+        - text: «Жодне опалення не потрібне.»
+          correct: false
+        - text: «Центральне завжди краще тут.»
+          correct: false
+        - text: «Занадто холодне взимку.»
+          correct: false
+    - question: «Хто такий професійний рієлтор у сфері нерухомості в Україні?»
+      options:
+        - text: «Це спеціальний посередник при оренді.»
+          correct: true
+        - text: «Це сам власник квартири.»
+          correct: false
+        - text: «Це сам орендар житла.»
+          correct: false
+        - text: «Це звичайний будівельник.»
+          correct: false
+    - question: «Що саме люди зазвичай мають на увазі під ремонтом?»
+      options:
+        - text: «Це повне оновлення всієї квартири.»
+          correct: true
+        - text: «Це якийсь злом квартири.»
+          correct: false
+        - text: «Це швидкий продаж квартири.»
+          correct: false
+        - text: «Це купівля нової квартири.»
+          correct: false
+
 - type: fill-in
   title: Calling the Owner
   instruction: Complete the dialogue with the correct words.
   items:
-    - sentence: «Алло! Я дзвоню щодо _____ квартири.»
+    - sentence: «Алло! Я дзвоню щодо ___ квартири.»
       answer: оренди
       options: [оренди, продажу, ремонту, купівлі]
-    - sentence: «Квартира ще _____?»
+    - sentence: «Квартира ще ___?»
       answer: вільна
       options: [вільна, зайнята, дорога, дешева]
-    - sentence: «Так, вільна. Ви _____?»
+    - sentence: «Так, вільна. Ви ___?»
       answer: орендар
       options: [орендар, власник, агент, сусід]
-    - sentence: «Я хочу _____ цю квартиру.»
+    - sentence: «Я хочу ___ цю квартиру.»
       answer: оглянути
       options: [оглянути, купити, продати, збудувати]
-    - sentence: «Скільки коштує _____ за місяць?»
+    - sentence: «Скільки коштує ___ за місяць?»
       answer: оренда
       options: [оренда, комунальні, застава, ремонт]
-    - sentence: «Десять тисяч гривень плюс _____.»
+    - sentence: «Десять тисяч гривень плюс ___ .»
       answer: комунальні
-      options: [комунальні, меблі, сусіди, вікна]
-    - sentence: «Чи є в квартирі _____?»
+      options: [комунальні, податки, меблі, продукти]
+    - sentence: «У вас є ___?»
       answer: меблі
-      options: [меблі, стіни, підлога, стеля]
-    - sentence: «Так, є ліжко і _____ для одягу.»
+      options: [меблі, книги, квіти, ліфт]
+    - sentence: «Так, у квартирі є велика ___ і стіл.»
       answer: шафа
-      options: [шафа, стіл, стілець, диван]
-    - sentence: «Яка там система _____?»
-      answer: опалення
-      options: [опалення, вода, газ, світло]
-    - sentence: «Опалення індивідуальне. Коли ви можете _____?»
-      answer: прийти
-      options: [прийти, піти, вийти, зайти]
-    - sentence: «Я можу прийти _____ ввечері.»
-      answer: сьогодні
-      options: [сьогодні, вчора, завтра, вранці]
-    - sentence: «Добре. Чекаю вашого _____.»
-      answer: дзвінка
-      options: [дзвінка, листа, приходу, слова]
-
-- type: quiz
-  title: Rental Knowledge
-  instruction: Choose the correct answer.
-  items:
-    - question: «Скажіть, будь ласка, хто такий «власник» квартири в Україні?»
-      options:
-        - text: «Людина, якій належить квартира.»
-          correct: true
-        - text: «Людина, яка знімає квартиру.»
-          correct: false
-        - text: «Агент з нерухомості.»
-          correct: false
-        - text: «Сусід по кімнаті.»
-          correct: false
-    - question: «Що саме означає термін «комунальні послуги» в договорі?»
-      options:
-        - text: «Плата за воду, газ, світло.»
-          correct: true
-        - text: «Плата за оренду.»
-          correct: false
-        - text: «Плата за інтернет.»
-          correct: false
-        - text: «Плата за прибирання.»
-          correct: false
-    - question: «Що таке «застава» (deposit) при оренді житла?»
-      options:
-        - text: «Гроші, які повертають при виїзді.»
-          correct: true
-        - text: «Гроші за перший місяць.»
-          correct: false
-        - text: «Гроші агенту.»
-          correct: false
-        - text: «Подарунок власнику.»
-          correct: false
-    - question: «Що ми обов'язково робимо з договором оренди?»
-      options:
-        - text: «Підписуємо його.»
-          correct: true
-        - text: «Малюємо його.»
-          correct: false
-        - text: «Їмо його.»
-          correct: false
-        - text: «Миємо його.»
-          correct: false
-    - question: «Що означає слово «ремонт» у квартирі в оголошенні?»
-      options:
-        - text: «Оновлення стін, підлоги, меблів.»
-          correct: true
-        - text: «Прибирання пилу.»
-          correct: false
-        - text: «Вечірка з друзями.»
-          correct: false
-        - text: «Оплата рахунків.»
-          correct: false
-    - question: «Ви шукаєте квартиру. Де ви дивитеся оголошення?»
-      options:
-        - text: «На сайті нерухомості (OLX, DOM.RIA).»
-          correct: true
-        - text: «У лісі.»
-          correct: false
-        - text: «У ресторані.»
-          correct: false
-        - text: «У лікарні.»
-          correct: false
-    - question: «Що означає популярна фраза «оглянути квартиру» перед орендою?»
-      options:
-        - text: «Подивитися квартиру перед орендою.»
-          correct: true
-        - text: «Купити квартиру.»
-          correct: false
-        - text: «Продати квартиру.»
-          correct: false
-        - text: «Прибрати квартиру.»
-          correct: false
-    - question: «Що таке «лічильники» на воду і газ?»
-      options:
-        - text: «Прилади для вимірювання води і газу.»
-          correct: true
-        - text: «Меблі на кухні.»
-          correct: false
-        - text: «Люди, які рахують гроші.»
-          correct: false
-        - text: «Ключі від квартири.»
-          correct: false
-
-- type: group-sort
-  title: Utilities vs Furniture
-  instruction: Sort into Utilities or Furniture.
-  groups:
-    - name: Комунальні (Utilities)
-      items:
-        - опалення
-        - електрика
-        - газ
-        - вода
-        - вивіз сміття
-        - інтернет
-    - name: Меблі (Furniture)
-      items:
-        - ліжко
-        - шафа
-        - стіл
-        - диван
-        - крісло
-        - комод
+      options: [шафа, ванна, підлога, стеля]
+    - sentence: «А яка побутова ___?»
+      answer: техніка
+      options: [техніка, музика, робота, допомога]
+    - sentence: «Є холодильник і ___ машина.»
+      answer: пральна
+      options: [пральна, швидка, стара, велика]
+    - sentence: «Це ___ район?»
+      answer: тихий
+      options: [тихий, злий, старий, новий]
+    - sentence: «Так, район спокійний. Ви ___?»
+      answer: заселяєтеся
+      options: [заселяєтеся, виїжджаєте, платите, питаєте]
 
 - type: true-false
   title: Rental Facts
-  instruction: True or False regarding renting in Ukraine.
+  instruction: Are these statements about renting in Ukraine true?
   items:
-    - statement: «Зазвичай оренда платиться за місяць вперед.»
-      correct: true
-      explanation: «Так, це стандартна практика.»
-    - statement: «Комунальні послуги завжди включені в ціну оренди.»
+    - statement: «Власник — це людина, яка знімає квартиру.»
       correct: false
-      explanation: «Ні, зазвичай комунальні платять окремо за лічильниками.»
-    - statement: «Рієлтор (агент) бере комісію за свої послуги.»
-      correct: true
-      explanation: «Так, комісія зазвичай становить 50% від місячної оренди.»
-    - statement: «Договір оренди не обов'язковий.»
+    - statement: «Комунальні послуги зазвичай входять у ціну оренди.»
       correct: false
-      explanation: «Договір захищає ваші права, він дуже важливий.»
-    - statement: «Заставу повертають, коли ви виїжджаєте.»
+    - statement: «Застава — це гарантійний депозит.»
       correct: true
-      explanation: «Так, якщо в квартирі все ціле.»
-    - statement: «В Україні не можна орендувати квартиру з тваринами.»
-      correct: false
-      explanation: «Можна, але треба питати дозвіл власника.»
-    - statement: «Взимку комунальні послуги дорожчі через опалення.»
+    - statement: «Доїзд до центру міста важливий при виборі житла.»
       correct: true
-      explanation: «Так, опалення коштує дорого.»
-    - statement: «Власник може приходити в квартиру, коли захоче.»
+    - statement: «Договір оренди — це необов’язковий документ.»
       correct: false
-      explanation: «Ні, він має попередити про візит.»
+    - statement: «В Україні можна зняти квартиру без рієлтора.»
+      correct: true
+    - statement: «Опалення — найдорожча послуга взимку.»
+      correct: true
+    - statement: «Тварини в квартирі завжди дозволені.»
+      correct: false
+    - statement: «Ремонт — це стан стін, підлоги та техніки.»
+      correct: true
+    - statement: «Депозит повертають при виселенні, якщо все добре.»
+      correct: true
+    - statement: «OLX — це сайт для пошуку лікаря.»
+      correct: false
+    - statement: «Орендар — це людина, яка здає своє житло.»
+      correct: false
+    - statement: «Квартира на першому поверсі зазвичай дорожча.»
+      correct: false
 
+- type: group-sort
+  title: Utilities vs Furniture
+  instruction: Sort these items into the correct categories.
+  groups:
+    - name: Комунальні послуги
+      items: [Вода, Газ, Електрика, Опалення, Інтернет, Сміття]
+    - name: Меблі та техніка
+      items: [Диван, Шафа, Стіл, Ліжко, Холодильник, Плита]
 
 - type: unjumble
   title: Questions to Owner
-  instruction: Put the words in order.
+  instruction: Unjumble the words to form correct questions.
   items:
-    - words: ["Скільки", "коштує", "оренда", "цієї", "квартири", "на", "місяць", "?"]
-      answer: «Скільки коштує оренда цієї квартири на місяць?»
-    - words: ["Які", "саме", "комунальні", "послуги", "треба", "платити", "?"]
-      answer: «Які саме комунальні послуги треба платити?»
-    - words: ["Чи", "можна", "мені", "жити", "тут", "з", "кішкою", "?"]
-      answer: «Чи можна мені жити тут з кішкою?»
-    - words: ["Коли", "я", "можу", "прийти", "і", "подивитися", "квартиру", "?"]
-      answer: «Коли я можу прийти і подивитися квартиру?»
-    - words: ["Який", "розмір", "застави", "за", "цю", "квартиру", "?"]
-      answer: «Який розмір застави за цю квартиру?»
-    - words: ["Чи", "є", "в", "цій", "квартирі", "пральна", "машина", "?"]
-      answer: «Чи є в цій квартирі пральна машина?»
-    - words: ["Хто", "платить", "за", "швидкісний", "інтернет", "у", "квартирі", "?"]
-      answer: «Хто платить за швидкісний інтернет у квартирі?»
-    - words: ["На", "який", "термін", "ми", "підписуємо", "договір", "оренди", "?"]
-      answer: «На який термін ми підписуємо договір оренди?»
+    - words: ["Скільки", "коштує", "оренда", "квартири", "за", "один", "місяць?"]
+      answer: Скільки коштує оренда квартири за один місяць?
+    - words: ["Яка", "саме", "у", "вас", "є", "побутова", "техніка?"]
+      answer: Яка саме у вас є побутова техніка?
+    - words: ["Коли", "саме", "можна", "прийти", "і", "подивитися", "квартиру?"]
+      answer: Коли саме можна прийти і подивитися квартиру?
+    - words: ["Скажіть,", "будь", "ласка,", "ви", "власник", "чи", "рієлтор?"]
+      answer: Скажіть, будь ласка, ви власник чи рієлтор?
+    - words: ["Чи", "всі", "комунальні", "послуги", "входять", "у", "вартість?"]
+      answer: Чи всі комунальні послуги входять у вартість?
+    - words: ["Скажіть,", "будь", "ласка,", "чи", "є", "швидкий", "інтернет?"]
+      answer: Скажіть, будь ласка, чи є швидкий інтернет?
+    - words: ["Чи", "можна", "мені", "жити", "тут", "з", "котом?"]
+      answer: Чи можна мені жити тут з котом?
+    - words: ["На", "який", "саме", "термін", "ви", "здаєте", "житло?"]
+      answer: На який саме термін ви здаєте житло?
+    - words: ["Який", "саме", "розмір", "застави", "вам", "зараз", "потрібен?"]
+      answer: Який саме розмір застави вам зараз потрібен?
+    - words: ["Чи", "є", "зовсім", "поруч", "зручна", "станція", "метро?"]
+      answer: Чи є зовсім поруч зручна станція метро?
+    - words: ["На", "якому", "саме", "поверсі", "знаходиться", "ця", "квартира?"]
+      answer: На якому саме поверсі знаходиться ця квартира?
+    - words: ["Чи", "стабільно", "працює", "ліфт", "у", "цьому", "під’їзді?"]
+      answer: Чи стабільно працює ліфт у цьому під’їзді?
 
 - type: select
   title: Rental Situations
-  instruction: Select the best phrase for the situation.
+  instruction: Choose the most appropriate response.
   items:
-    - question: «Ви дзвоните за оголошенням. Що ви скажете?»
+    - question: «Ви хочете дізнатися ціну. Ви питаєте:»
       options:
-        - text: «Я дзвоню щодо оренди квартири.»
+        - text: «Скільки коштує оренда?»
           correct: true
-        - text: «Я хочу купити будинок.»
-          correct: false
-        - text: «Де моя квартира?»
-          correct: false
-        - text: «Хто ви?»
-          correct: false
-    - question: «Вам подобається квартира. Ви кажете:»
-      options:
-        - text: «Я хочу зняти цю квартиру.»
-          correct: true
-        - text: «Я не хочу цю квартиру.»
-          correct: false
         - text: «Квартира погана.»
           correct: false
         - text: «Я йду додому.»
           correct: false
+        - text: «Ви любите гроші?»
+          correct: false
     - question: «Ви хочете дізнатися про інтернет. Ви питаєте:»
       options:
-        - text: «Чи є тут інтернет?»
+        - text: «Чи є у квартирі інтернет?»
           correct: true
-        - text: «Де комп'ютер?»
+        - text: «Де комп’ютер?»
           correct: false
         - text: «Скільки коштує телефон?»
           correct: false
@@ -271,7 +298,7 @@
           correct: false
     - question: «Вам дорого. Ви кажете:»
       options:
-        - text: «Це занадто дорого для мене.»
+        - text: «Для мене це занадто дорого.»
           correct: true
         - text: «Це дуже дешево.»
           correct: false
@@ -289,10 +316,80 @@
           correct: false
         - text: «Дайте ручку.»
           correct: false
+    - question: «Ви хочете запитати про заставу. Ви кажете:»
+      options:
+        - text: «Який розмір застави?»
+          correct: true
+        - text: «Застава — це що?»
+          correct: false
+        - text: «Ми любимо гроші.»
+          correct: false
+        - text: «Де мій банк?»
+          correct: false
+    - question: «Ви хочете знати, де ключі. Ви кажете:»
+      options:
+        - text: «Де мої ключі від дому?»
+          correct: true
+        - text: «Де моє взуття зараз?»
+          correct: false
+        - text: «Де мої друзі тепер?»
+          correct: false
+        - text: «Де мій старий ключ?»
+          correct: false
+    - question: «Вам дуже подобається цей район. Ви кажете:»
+      options:
+        - text: «Це чудовий тихий район.»
+          correct: true
+        - text: «Район занадто гучний нам.»
+          correct: false
+        - text: «Район дуже старий зараз.»
+          correct: false
+        - text: «Район занадто новий нам.»
+          correct: false
+    - question: «Ви готові платити за оренду зараз. Ви кажете:»
+      options:
+        - text: «Я готовий платити зараз.»
+          correct: true
+        - text: «Я зовсім не маю грошей.»
+          correct: false
+        - text: «Я не хочу платити вам.»
+          correct: false
+        - text: «Я буду платити завтра.»
+          correct: false
+    - question: «Вам обов'язково треба балкон. Ви питаєте:»
+      options:
+        - text: «У квартирі є балкон?»
+          correct: true
+        - text: «Тут є мале вікно?»
+          correct: false
+        - text: «Тут є великі двері?»
+          correct: false
+        - text: «Тут є старий дах?»
+          correct: false
+    - question: «Ви питаєте про всі наявні меблі. Ви кажете:»
+      options:
+        - text: «Які меблі є в кімнаті?»
+          correct: true
+        - text: «Які стіни в кімнаті?»
+          correct: false
+        - text: «Які книги є в кімнаті?»
+          correct: false
+        - text: «Які квіти є в кімнаті?»
+          correct: false
+    - question: «Ви питаєте на якому це поверсі. Ви кажете:»
+      options:
+        - text: «На якому поверсі квартира?»
+          correct: true
+        - text: «Який повний номер будинку?»
+          correct: false
+        - text: «Який номер під'їзду там?»
+          correct: false
+        - text: «Який номер поверху тепер?»
+          correct: false
 
 - type: cloze
   title: Rental Ad
-  passage: "Здається {однокімнатна|безкімнатна|шкільна}_ квартира в центрі. {Поверх|дах|підвал}_ другий. Є всі необхідні {меблі|люди|дерева}_: диван, шафа, стіл. Також є побутова {техніка|хімія|музика}_: холодильник, пральна машина. {Ціна|вага|довжина}_ 12000 гривень плюс {комунальні|соціальні|музичні}_. Без {тварин|людей|дітей}_. Звертатися за {телефоном|адресою|іменем}_. Огляд можливий {завтра|ніколи|вчора}_. {Застава|ціна|оренда}_ за один місяць. Шукаємо {порядних|поганих|злих}_ людей. Квартира {світла|темна|брудна}_."
+  passage: "Здається {однокімнатна|безкімнатна|шкільна} квартира в центрі. {Поверх|дах|підвал} другий. Є всі необхідні {меблі|люди|дерева}: диван, шафа, стіл. Також є побутова {техніка|хімія|музика}: холодильник, пральна машина. {Ціна|вага|довжина} 12000 гривень плюс {комунальні|соціальні|музичні}. Без {тварин|людей|дітей}. Звертатися за {телефоном|адресою|іменем}. Огляд можливий {завтра|ніколи|вчора}. {Застава|ціна|оренда} за один місяць. Шукаємо {порядних|поганих|злих} людей. Квартира {світла|темна|брудна}."
   instruction: Заповніть пропуски в оголошенні.
 
 - type: error-correction
@@ -303,12 +400,12 @@
       error: орендувати
       answer: зняти
       options: [орендувати, зняти, купити, продати]
-      explanation: "«Зняти» is more common for renting residential property (informal), though «орендувати» is also used. «Винайняти» is also good."
+      explanation: "«Зняти» is more common for renting residential property."
     - sentence: "Скільки стоїть оренда?"
       error: стоїть
       answer: коштує
       options: [стоїть, коштує, лежить, сидить]
-      explanation: "Price «коштує», not «стоїть» (stands)."
+      explanation: "Price «коштує», not «стоїть»."
     - sentence: "Я підписав контракт."
       error: контракт
       answer: договір
@@ -325,10 +422,10 @@
       options: [служби, послуги, роботи, речі]
       explanation: "Utilities are «комунальні послуги»."
     - sentence: "Я шукаю квартиру для жити."
-      error: для жити
-      answer: для проживання
-      options: [для жити, для проживання, щоб жити, на життя]
-      explanation: "«Для» requires a noun. Use «для проживання» or «щоб жити»."
+      error: жити
+      answer: проживання
+      options: [жити, проживання, життя, спання]
+      explanation: "«Для» requires a noun."
     - sentence: "Власник дуже добра."
       error: добра
       answer: добрий
@@ -339,6 +436,26 @@
       answer: меблі
       options: [мебля, меблі, меблям, меблями]
       explanation: "«Меблі» is plural only."
+    - sentence: "Я знімаю квартира."
+      error: квартира
+      answer: квартиру
+      options: [квартира, квартиру, квартирі, квартирою]
+      explanation: "Accusative case is needed."
+    - sentence: "Дайте мені ключі."
+      error: ключі
+      answer: ключ
+      options: [ключі, ключ, ключем, ключу]
+      explanation: "Singular for one key."
+    - sentence: "Я підписую договорі."
+      error: договорі
+      answer: договір
+      options: [договорі, договір, договору, договором]
+      explanation: "Singular direct object."
+    - sentence: "Це гарний района."
+      error: района
+      answer: район
+      options: [района, район, району, районі]
+      explanation: "Nominative case."
 
 - type: translate
   title: Rental Phrases
@@ -352,24 +469,18 @@
           correct: false
         - text: "Квартира велика?"
           correct: false
-        - text: "Де квартира?"
-          correct: false
     - source: "I want to rent it."
       options:
-        - text: "Я хочу її зняти (орендувати)."
+        - text: "Я хочу її зняти."
           correct: true
         - text: "Я хочу її купити."
           correct: false
         - text: "Я хочу її продати."
           correct: false
-        - text: "Я хочу її побачити."
-          correct: false
     - source: "Utilities are included."
       options:
         - text: "Комунальні включено."
           correct: true
-        - text: "Комунальні дорого."
-          correct: false
         - text: "Комунальні окремо."
           correct: false
         - text: "Немає комунальних."
@@ -382,14 +493,10 @@
           correct: false
         - text: "Коли я можу прийти?"
           correct: false
-        - text: "Коли я можу спати?"
-          correct: false
     - source: "First and last month payment."
       options:
         - text: "Оплата за перший і останній місяць."
           correct: true
-        - text: "Оплата тільки за перший місяць."
-          correct: false
         - text: "Оплата за рік."
           correct: false
         - text: "Без оплати."
@@ -398,9 +505,55 @@
       options:
         - text: "Підписати договір."
           correct: true
+        - text: "Загубити договір."
+          correct: false
         - text: "Читати договір."
           correct: false
-        - text: "Писати договір."
+    - source: "Where is the owner?"
+      options:
+        - text: "Де власник?"
+          correct: true
+        - text: "Де орендар?"
           correct: false
-        - text: "Загубити договір."
+        - text: "Де рієлтор?"
+          correct: false
+    - source: "Can I have the keys?"
+      options:
+        - text: "Можна взяти ключі?"
+          correct: true
+        - text: "Можна взяти паспорт?"
+          correct: false
+        - text: "Можна взяти сумку?"
+          correct: false
+    - source: "It is a big apartment."
+      options:
+        - text: "Це велика квартира."
+          correct: true
+        - text: "Це мала квартира."
+          correct: false
+        - text: "Це нова квартира."
+          correct: false
+    - source: "The renovation is good."
+      options:
+        - text: "Ремонт хороший."
+          correct: true
+        - text: "Ремонт старий."
+          correct: false
+        - text: "Ремонт поганий."
+          correct: false
+    - source: "The furniture is new."
+      options:
+        - text: "Меблі нові."
+          correct: true
+        - text: "Меблі старі."
+          correct: false
+        - text: "Меблі білі."
+          correct: false
+    - source: "I need internet."
+      options:
+        - text: "Мені потрібен інтернет."
+          correct: true
+        - text: "Мені потрібен газ."
+          correct: false
+        - text: "Мені потрібна вода."
           correct: false

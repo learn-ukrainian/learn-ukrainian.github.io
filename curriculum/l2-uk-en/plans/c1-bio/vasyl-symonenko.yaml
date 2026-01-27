@@ -69,22 +69,10 @@ activity_hints:
   focus: Поезії Симоненка
   source: Первинні джерела
   items: 3 passages
-- type: quiz
-  focus: Факти про життя Симоненка
-  items: 12+
-- type: match-up
-  focus: Вірші та їхні теми
-  items: 10+
 - type: essay-response
   focus: Як поезія може бути спротивом?
   word_target: 300
   output: Аналітичний есей
-- type: group-sort
-  focus: Жанри творчості Симоненка
-  items: 12+
-- type: fill-in
-  focus: Цитати та їх значення
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-74-lina-kostenko
@@ -108,3 +96,7 @@ sources:
   notes: Повні тексти творів
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of василь симоненко: ніжний бунтар'
+- Evaluate the contributions of поет, який не встиг постаріти
+- Trace the career and influence of чому молоді поети стають символами?

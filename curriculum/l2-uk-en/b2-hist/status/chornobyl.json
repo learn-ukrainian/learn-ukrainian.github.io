@@ -2,12 +2,12 @@
   "module": "chornobyl",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:55:24.678848Z",
+  "last_audit": "2026-01-27T15:51:36.331360Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-17T21:45:15.706335Z",
+    "md": "2026-01-27T15:24:10.346883Z",
     "meta": "2026-01-26T22:20:12.973229Z",
-    "activities": "2026-01-17T21:45:15.666811Z",
+    "activities": "2026-01-27T15:34:53.709931Z",
     "vocabulary": null,
     "plan": null
   },
@@ -25,7 +25,7 @@
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "16/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "warn",

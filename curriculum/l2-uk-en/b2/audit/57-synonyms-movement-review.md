@@ -1,10 +1,12 @@
 # Audit Report: M57 — 57-synonyms-movement.md
+
 **Level:** B2 | **Module:** M57 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:23
 
 ## Configuration
+
 **Type:** B2-vocab
 **Word Target:** 1750 words
 **Activities:** 10-14 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть манеру руху | 12 | 8 | ✅ |
@@ -42,15 +45,18 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 57-synonyms-movement.yaml: Schema validation error at key '14': {'type': 'select', 'title': 'Технічний та Офіційний рух', 'instruction': 'Оберіть слова, які доречні в офіційному або технічному контексті (6+ елементів).', 'items': [{'question': 'Яка лексика пасує для новин або документів?', 'options': [{'text': 'пересуватися', 'correct': True}, {'text': 'транспортувати', 'correct': True}, {'text': 'здійснювати переліт', 'correct': True}, {'text': 'марш', 'correct': True}, {'text': 'міграція', 'correct': True}, {'text': 'експортувати', 'correct': True}]}, {'question': 'Оберіть терміни для опису швидкості:', 'options': [{'text': 'інтенсивність', 'correct': True}, {'text': 'траєкторія', 'correct': True}, {'text': 'прискорення', 'correct': True}, {'text': 'чимчикування', 'correct': False}]}, {'question': 'Які слова описують рух великих груп людей?', 'options': [{'text': 'евакуація', 'correct': True}, {'text': 'переміщення', 'correct': True}, {'text': 'мандрівка', 'correct': False}, {'text': 'похід', 'correct': True}]}, {'question': 'Оберіть слова для опису руху транспорту за розкладом:', 'options': [{'text': 'курсувати', 'correct': True}, {'text': 'прибувати', 'correct': True}, {'text': 'відправлятися', 'correct': True}, {'text': 'летіти', 'correct': False}]}, {'question': 'Які слова вказують на зміну напрямку?', 'options': [{'text': 'маневрувати', 'correct': True}, {'text': 'повертати', 'correct': True}, {'text': 'гальмувати', 'correct': True}, {'text': 'стояти', 'correct': False}]}, {'question': 'Оберіть слова для опису подолання кордонів:', 'options': [{'text': 'перетинати', 'correct': True}, {'text': "в'їжджати", 'correct': True}, {'text': 'виїжджати', 'correct': True}, {'text': 'брести', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
+
 - **Words:** ✅ 1814/1750 (raw: 2025)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
@@ -69,10 +75,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 84% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 27 | 24 | 100% | 20% | 20.0% |
@@ -88,20 +96,22 @@
 | **TOTAL** | | | | | **84.9%** |
 
 ### Dryness Flags & Fixes
+
 - ❌ **NO_DIALOGUE**
   - FIX:
     Add 4+ mini-dialogues. Use this exact format:
-    
+
     **Діалог: [Location in Ukraine]**
-    
+
     > — [Speaker 1 line with **bolded** grammar examples]
     > — [Speaker 2 response with **bolded** grammar examples]
     > — [Speaker 1 continuation]
     > — [Speaker 2 conclusion]
-    
+
     Example locations: На Бесарабському ринку, У львівській кав'ярні, В одеському трамваї, На Подолі
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 92 | Included in Core |

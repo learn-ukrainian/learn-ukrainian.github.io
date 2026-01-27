@@ -96,25 +96,18 @@ activity_hints:
 - type: reading
   focus: 'Аналіз первинного джерела: звіт Вікентія Хвойки про розкопки 1896 року'
   source: Excerpt provided in lesson
-- type: quiz
-  focus: Перевірка знань про хронологію, географію, господарство та культуру Трипілля
-  items: 12+
+- type: true-false
+  focus: Перевірка розуміння фактів про хронологію, географію та культуру Трипілля
+  items: 10
 - type: essay-response
   focus: Чи можна вважати трипільців прямими предками сучасних українців? Аргументуйте.
   min_words: 200
-- type: match-up
-  focus: Порівняння Трипільської культури з іншими цивілізаціями (Єгипет, Шумер, Хараппа)
-  items: 8+
-- type: fill-in
-  focus: Археологічна та історична термінологія
-  items: 15+
-- type: quiz
-  focus: Позначити на карті основні трипільські поселення (Майданецьке, Тальянки,
-    Небелівка)
-  items: 6+
 - type: critical-analysis
   focus: Інтерпретація орнаментів трипільської кераміки та статуеток богині-матері
-  items: 4-5
+  items: 3
+- type: comparative-study
+  focus: Порівняння Трипільської культури з цивілізаціями Месопотамії
+  items: 1
 focus: history
 pedagogy: seminar
 prerequisites:

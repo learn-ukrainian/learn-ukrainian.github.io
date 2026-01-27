@@ -69,22 +69,10 @@ activity_hints:
   focus: Описи наукових відкриттів та біографічні нариси
   source: Наукові та біографічні статті
   items: 3 passages
-- type: quiz
-  focus: Біографія та наукові досягнення
-  items: 12+
-- type: match-up
-  focus: Відкриття та їхнє значення
-  items: 10+
 - type: essay-response
   focus: Які перешкоди долали жінки-науковці у XIX столітті?
   word_target: 300
   output: Historical analysis
-- type: group-sort
-  focus: Етапи наукової кар'єри
-  items: 12+
-- type: fill-in
-  focus: Наукова термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-26-mariya-zankovetska
@@ -107,3 +95,7 @@ sources:
   notes: Контекст жіночої участі у науці
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of марія павлова: видатний палеонтолог'
+- Evaluate the contributions of жінка, що читала кістки
+- Trace the career and influence of останні роки та спадщина (1920-1938)

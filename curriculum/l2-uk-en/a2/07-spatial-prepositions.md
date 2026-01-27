@@ -28,7 +28,7 @@ The most important concept to master is the difference between "Where?" (**Де?
 
 ### Prepositions with the Instrumental Case (З орудним відмінком)
 
-The Instrumental case is very versatile. Besides "means" and "roles," it is the standard case for prepositions that describe "static" spatial relationships like _under_, _above_, _behind_, or _between_. These prepositions help us pinpoint exactly where an object is located in relation to others.
+The Instrumental case is very versatile. Besides "means" and "roles," it is the standard case for prepositions that describe "static" spatial relationships like *under*, *above*, *behind*, or *between*. These prepositions help us pinpoint exactly where an object is located in relation to others.
 
 - **під** (under) -> Кіт спить **під столом**.
 - **над** (above) -> Лампа висить **над столом**.

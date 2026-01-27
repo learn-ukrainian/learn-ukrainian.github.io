@@ -1,10 +1,12 @@
 # Audit Report: M79 — 79-capstone-research.md
+
 **Level:** B2 | **Module:** M79 | **Phase:** B2 | **Pedagogy:** integration | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:38
 
 ## Configuration
+
 **Type:** B2-checkpoint
 **Word Target:** 1750 words
 **Activities:** 15-19 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Фази підготовчої роботи | 8 | 8 | ✅ |
@@ -42,15 +45,18 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 79-capstone-research.yaml: Schema validation error at key '14': {'type': 'translate', 'title': 'Ключові фрази дослідження', 'items': [{'options': [{'text': 'Актуальність теми обґрунтована...', 'correct': True}, {'text': 'Тема є гарною через...', 'correct': False}, {'text': 'Ми вибрали цю тему, бо...', 'correct': False}], 'source': 'The relevance of the topic is grounded in...'}, {'options': [{'text': 'На основі опрацьованих джерел...', 'correct': True}, {'text': 'Згідно з книжками, які я читав...', 'correct': False}, {'text': 'Виходячи з тексту...', 'correct': False}], 'source': 'Based on the analyzed sources...'}, {'options': [{'text': 'Об’єктом дослідження є...', 'correct': True}, {'text': 'Предмет праці — це...', 'correct': False}, {'text': 'Ми дивимося на...', 'correct': False}], 'source': 'The object of the study is...'}, {'options': [{'text': 'Результати вказують на те, що...', 'correct': True}, {'text': 'Ми бачимо, що...', 'correct': False}, {'text': 'Зрештою сталося так, що...', 'correct': False}], 'source': 'The results indicate that...'}, {'options': [{'text': 'Згідно з обраною методологією...', 'correct': True}, {'text': 'Дивлячись на правила...', 'correct': False}, {'text': 'Через наш метод...', 'correct': False}], 'source': 'According to the methodology...'}, {'options': [{'text': 'На завершення варто зауважити...', 'correct': True}, {'text': 'Короче, ми хочемо сказати...', 'correct': False}, {'text': 'В самому кінці ми пишемо...', 'correct': False}], 'source': 'In conclusion, it should be noted...'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
+
 - **Words:** ✅ 1791/1750 (raw: 1968)
 - **Activities:** ✅ 15/15
 - **Density:** ✅ All > 14
@@ -69,10 +75,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 84% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 30 | 24 | 100% | 20% | 20.0% |
@@ -88,20 +96,22 @@
 | **TOTAL** | | | | | **84.6%** |
 
 ### Dryness Flags & Fixes
+
 - ❌ **NO_DIALOGUE**
   - FIX:
     Add 4+ mini-dialogues. Use this exact format:
-    
+
     **Діалог: [Location in Ukraine]**
-    
+
     > — [Speaker 1 line with **bolded** grammar examples]
     > — [Speaker 2 response with **bolded** grammar examples]
     > — [Speaker 1 continuation]
     > — [Speaker 2 conclusion]
-    
+
     Example locations: На Бесарабському ринку, У львівській кав'ярні, В одеському трамваї, На Подолі
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

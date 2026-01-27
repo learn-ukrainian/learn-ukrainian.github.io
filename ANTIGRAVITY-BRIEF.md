@@ -1,6 +1,7 @@
 # Antigravity Brief: Fix Module 28
 
 ## Your Task
+
 Fix A1 Module 28 (Description - Adverbs) which currently FAILS audit.
 
 ## Step 1: Read These First (Required)

@@ -59,6 +59,7 @@ Sample violations detected (B2 level):
 ## Configuration
 
 ### `.mcp.json`
+
 ```json
 {
   "mcpServers": {
@@ -75,6 +76,7 @@ Sample violations detected (B2 level):
 ```
 
 ### `.claude/settings.json`
+
 ```json
 {
   "permissions": {
@@ -88,11 +90,13 @@ Sample violations detected (B2 level):
 ## Usage (After Claude Code Restart)
 
 ### Manual Validation
+
 ```
 /validate-ukrainian curriculum/l2-uk-en/b2/75-holodomor-mekhanizm.md
 ```
 
 ### Automated Validation (Future)
+
 Agent hooks will trigger validation when editing B1+ modules.
 
 ## Validation Response Format

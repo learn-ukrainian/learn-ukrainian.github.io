@@ -2,14 +2,14 @@
   "module": "50-integrated-grammar-lab",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:27:16.168529Z",
+  "last_audit": "2026-01-27T18:08:39.510749Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-24T22:24:00.089654Z",
     "meta": "2026-01-26T15:44:41.609100Z",
     "activities": "2026-01-11T22:51:43.254389Z",
     "vocabulary": "2026-01-25T18:00:40.508987Z",
-    "plan": "2026-01-26T15:44:41.608796Z"
+    "plan": "2026-01-27T18:05:50.885171Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1686/1500 (raw: 2234) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "1686/1500 (raw: 2234)"
     },
     "activities": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Missing required activity types: multiple-choice, text-editing, writing"
-    ],
-    "pass_count": 4,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

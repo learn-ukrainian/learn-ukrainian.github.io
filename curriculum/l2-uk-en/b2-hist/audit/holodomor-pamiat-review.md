@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M102 | **Phase:** HIST.10 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:55:15
+**Generated:** 2026-01-27 15:51:33
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, match-up, quiz, reading, true-false
+**Required Types:** essay-response, reading, true-false
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -20,32 +20,19 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Розуміння тексту | 8 | 8 | ✅ |
-| 2 | fill-in | Лексика пам'яті | 8 | 8 | ✅ |
-| 3 | match-up | Елемент ↔ Значення | 13 | 8 | ✅ |
-| 4 | true-false | Міфи та факти | 8 | 8 | ✅ |
-| 5 | cloze | Історія Гарета Джонса | 16 | 1 | ✅ |
-| 6 | select | Аналіз джерела (Радченко та Лисивець) | 6 | 6 | ✅ |
-| 7 | group-sort | Ролі в історії | 17 | 1 | ✅ |
-| 8 | quiz | Граматика: Пасивний стан (Revision) | 8 | 8 | ✅ |
-| 9 | error-correction | Виправлення історичних помилок | 6 | 6 | ✅ |
-| 10 | unjumble | Речення про пам'ять | 6 | 6 | ✅ |
-| 11 | essay-response | Ваша думка | 1 | 1 | ✅ |
-| 12 | comparative-study | Механізми брехні | 1 | 1 | ✅ |
-| 13 | translate | Англомовні поняття | 6 | 6 | ✅ |
-| 14 | cloze | Хронологія правди | 14 | 1 | ✅ |
-| 15 | mark-the-words | Емоційна лексика | 9 | 6 | ✅ |
-| 16 | fill-in | Числа трагедії | 8 | 8 | ✅ |
+| 1 | true-false | Міфи та факти | 8 | 8 | ✅ |
+| 2 | essay-response | Ваша думка | 1 | 1 | ✅ |
+| 3 | comparative-study | Механізми брехні | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 16 (target: 3-9) ❌
-- Unique types: 13 (minimum: 2) ✅
+- Total activities: 3 (target: 3-9) ✅
+- Unique types: 3 (minimum: 2) ✅
 - Priority types used: 2/4 (comparative-study, essay-response) ✅
-- Required types used: 4/5 (essay-response, match-up, quiz, true-false) ❌
+- Required types used: 2/3 (essay-response, true-false) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in holodomor-pamiat.yaml: Schema validation error at key '15': {'type': 'fill-in', 'title': 'Числа трагедії', 'instruction': 'Вставте правильні числа.', 'items': [{'sentence': 'Голодомор відбувся у [___] роках.', 'answer': '1932–1933', 'options': ['1932–1933', '1941–1945', '1917–1921', '2014–2022']}, {'sentence': 'За оцінками, загинуло до [___] мільйонів українців.', 'answer': '10', 'options': ['10', '1', '100', '50']}, {'sentence': "Акція пам'яті відбувається у [___] суботу листопада.", 'answer': 'четверту', 'options': ['першу', 'другу', 'третю', 'четверту']}, {'sentence': 'Понад [___] країн визнали геноцид.', 'answer': '30', 'options': ['30', '5', '10', '200']}, {'sentence': 'Гарет Джонс відвідав Україну у [___] році.', 'answer': '1933', 'options': ['1933', '1991', '2022', '1929']}, {'sentence': 'Західні журналісти знали правду, але вибрали [___].', 'answer': 'мовчання', 'options': ['мовчання', 'крик', 'бій', 'втечу']}, {'sentence': 'Перепис населення [___] року був засекречений.', 'answer': '1937', 'options': ['1937', '1933', '1945', '1991']}, {'sentence': 'Олександру Радченко засудили до [___] років таборів.', 'answer': '10', 'options': ['10', '5', '25', '2']}]} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in holodomor-pamiat.yaml: Insufficient activities: 3 found, minimum 5 required for B2-HIST
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
@@ -56,9 +43,9 @@
 
 ## Gates
 - **Words:** ❌ 1940/4000 (raw: 2078)
-- **Activities:** ✅ 16/3
+- **Activities:** ✅ 3/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 13/2 types
+- **Unique_types:** ✅ 3/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
@@ -66,7 +53,7 @@
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ⚠️ Too many activities: 16 (target 3-9); 2 cloze with year blanks; 1 fill-in with year answers
+- **Content_heavy:** ✅ Content-heavy OK (3 activities)
 - **Immersion:** 🇺🇦 95.4% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

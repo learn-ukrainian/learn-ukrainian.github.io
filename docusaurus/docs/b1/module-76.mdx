@@ -2,7 +2,7 @@
 sidebar_position: 76
 sidebar_label: "76. Українська музика сьогодні"
 title: "Українська музика сьогодні"
-description: "Contemporary Ukrainian Music"
+description: "Contemporary Ukrainian Music Scene"
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -23,6 +23,8 @@ import ComparativeStudy from '@site/src/components/ComparativeStudy';
 import ReadingActivity from '@site/src/components/ReadingActivity';
 import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
 import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
 
 
 > 🎯 **Чому це важливо?**
@@ -441,6 +443,10 @@ import AuthorialIntent from '@site/src/components/AuthorialIntent';
   <MarkTheWordsActivity instruction="Натисніть на всі слова, пов'язані з музикою." text="Українська музика переживає ренесанс. Сучасні гурти як Onuka та DakhaBrakha випускають нові альбоми та кліпи. Їхні концерти збирають тисячі шанувальників. На фестивалях як Atlas Weekend можна почути різні напрямки — від репу до електроніки. Українські артисти здобули міжнародне визнання, а їхні хіти звучать по всьому світу." correctWords={JSON.parse(`["музика", "гурти", "альбоми", "кліпи", "концерти", "шанувальників", "фестивалях", "репу", "електроніки", "хіти"]`)} />
 </MarkTheWords>
 
+### Українська музика сьогодні
+
+<ReadingActivity title="Українська музика сьогодні" context="" resource={JSON.parse(`{"type": "article", "url": "https://example.com/ukrainian-music", "title": "Стаття про музичну сцену України"}`)} tasks={JSON.parse(`["Що сталося з українською музикою після 2014 року?", "Який гурт представляв Україну на Євробаченні з піснею «Шум»?", "Які музичні фестивалі популярні в Україні?"]`)} isUkrainian={true} />
+
 ## 📚 Словник
 
 | Слово | Вимова | Переклад | ЧМ | Примітка |
@@ -450,17 +456,17 @@ import AuthorialIntent from '@site/src/components/AuthorialIntent';
 | **бандура** | /bandˈura/ | bandura (instrument) | ім |  |
 | **виконавиця** | /ʋɪkɔnˈaʋɪt͡sja/ | performer (female) | ім |  |
 | **витвір** | /ʋˈɪtʋir/ | creation, work of art | ім |  |
-| **вопл** | /ʋɔpl/ |  | ім |  |
-| **відоплясов** | /ʋidɔpljasɔʋ/ |  | ім |  |
+| **вопл** | /ʋɔpl/ | wail | ім |  |
+| **відоплясов** | /ʋidɔpljasɔʋ/ | Vidoplyasov | ім |  |
 | **десятиліття** | /dɛsjatɪlˈittja/ | decade | ім |  |
 | **джаз** | /dʒaz/ | jazz | ім |  |
 | **джазовий** | /dʒˈazɔʋɪj/ | jazz (adj) | прикм |  |
 | **джамала** | /dʒamala/ | Jamala (singer) | ім |  |
-| **електро-фолк** | /ɛlɛktrɔ-fɔlk/ |  | ім |  |
+| **електро-фолк** | /ɛlɛktrɔ-fɔlk/ | electro-folk | ім |  |
 | **електроніка** | /ɛlɛktrˈɔnika/ | electronics | ім |  |
-| **етно-хаос** | /ˈɛtnɔ-xaɔs/ |  | ім |  |
+| **етно-хаос** | /ˈɛtnɔ-xaɔs/ | ethno-chaos | ім |  |
 | **жанр** | /ʒanr/ | genre | ім |  |
-| **запорожець** | /zapɔrˈɔʒɛt͡sʲ/ |  | ім |  |
+| **запорожець** | /zapɔrˈɔʒɛt͡sʲ/ | Zaporozhets | ім |  |
 | **каное** | /kanˈɔɛ/ | canoe | ім |  |
 | **клубний** | /klˈubnɪj/ | club (adj) | прикм |  |
 | **кліп** | /klip/ | clip, music video | ім |  |
@@ -470,11 +476,9 @@ import AuthorialIntent from '@site/src/components/AuthorialIntent';
 | **неофолк** | /nɛɔfɔlk/ | neofolk | ім |  |
 | **неофіційний** | /nɛɔfit͡sˈijnɪj/ | unofficial | прикм |  |
 | **плейлист** | /plɛjlɪst/ | playlist | ім |  |
-| **поп** | /pɔp/ |  | ім |  |
 | **потужно** | /pɔtˈuʒnɔ/ | powerfully | присл |  |
 | **присвячений** | /prɪsʋˈjat͡ʃɛnɪj/ | dedicated | прикм |  |
 | **продюсер** | /prɔdˈjusɛr/ | producer | ім |  |
-| **псюк** | /psjuk/ |  | ім |  |
 | **ренесанс** | /rɛnɛsˈans/ | Renaissance | ім |  |
 | **реп** | /rɛp/ | rap (music) | ім |  |
 | **реп-музика** | /rɛp-mˈuzɪka/ | rap music | ім |  |
@@ -488,8 +492,6 @@ import AuthorialIntent from '@site/src/components/AuthorialIntent';
 | **створюючи** | /stʋˈɔrjujut͡ʃɪ/ | creating | дієсл |  |
 | **стійкість** | /stˈijkistʲ/ | stability, resilience | ім |  |
 | **торкнутися** | /tɔrknˈutɪsja/ | to touch (perfective) | дієсл |  |
-| **фолк** | /fɔlk/ | folk | ім |  |
 | **хіп-хоп** | /xip-xɔp/ | hip hop | ім |  |
 | **ширший** | /ʃˈɪrʃɪj/ | wider (adj) | прикм |  |
 | **шоу** | /ʃˈɔu/ | show | ім |  |
-| **інд** | /ind/ |  | ім |  |

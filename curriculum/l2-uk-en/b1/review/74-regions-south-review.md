@@ -11,7 +11,7 @@
 | Dimension           | Score | Notes                                                                                                                        |
 | ------------------- | ----- | ---------------------------------------------------------------------------------------------------------------------------- |
 | Coherence           | 10/10 | Logical flow: Steppe (Agriculture) -> Cities (Odesa) -> Crimea (History).                                                    |
-| Relevance           | 10/10 | Crucial for understanding Crimea as _Ukrainian/Tatar_ land, countering Russian narratives.                                   |
+| Relevance           | 10/10 | Crucial for understanding Crimea as *Ukrainian/Tatar* land, countering Russian narratives.                                   |
 | Educational         | 10/10 | Excellent integration of Crimean Tatar vocabulary (`чебурек`, `плов` - originally central asian but naturalized via Tatars). |
 | Language            | 10/10 | Authentic regional vocabulary (`форшмак`, `кавуни`).                                                                         |
 | Pedagogy            | 9/10  | Aïvazovsky (Crimean artist) narrative is beautiful.                                                                          |
@@ -25,7 +25,7 @@
 ## Linguistic Accuracy Issues
 
 - **Vocabulary:** `Потьомкін` (Potemkin). While historical, he is an agent of Russian Imperialism (destroyed the Sich). Ensure context is critical/neutral, not celebrative.
-  - _Context Check:_ Module mentions Odesa founding myth. Acceptable if balanced.
+  - *Context Check:* Module mentions Odesa founding myth. Acceptable if balanced.
 - **Vocabulary:** Proper nouns lowercased (`севастополь`, `херсонес`, `приазов'я`, `ісаак`).
 
 ## Strengths

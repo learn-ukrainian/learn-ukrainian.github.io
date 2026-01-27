@@ -5,17 +5,19 @@ version: '1.0'
 title: 'Закарпаття: Тисячоліття на перехресті'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of закарпаття: тисячоліття на перехресті'
+- Evaluate the historical significance of найзахідніший схід
 content_outline:
 - section: Вступ — Найзахідніший схід
-  words: 400
+  words: 457
   subsections:
   - Закарпаття — географія
   - Тисяча років під Угорщиною
   - Ізоляція від решти України
   - Структура модуля
 - section: Під Угорщиною (896-1918)
-  words: 700
+  words: 800
   subsections:
   - Угорська корона — тисячоліття
   - Статус — «руснаки»
@@ -23,14 +25,14 @@ content_outline:
   - Мадяризація
   - Еміграція до Америки
 - section: Чехословацький період (1919-1938)
-  words: 600
+  words: 686
   subsections:
   - Підкарпатська Русь
   - Автономія — обіцяна, не дана
   - Культурний розквіт
   - Ідентитети — русин, русский, український
 - section: Карпатська Україна 1939
-  words: 600
+  words: 686
   subsections:
   - Автономія — нарешті
   - Августин Волошин
@@ -38,26 +40,26 @@ content_outline:
   - Угорська окупація
   - Героїчна оборона
 - section: Радянський період
-  words: 500
+  words: 571
   subsections:
   - 1945 — «возз'єднання»
   - Примусова українізація?
   - Репресії
   - Ліквідація УГКЦ
 - section: Русинське питання
-  words: 400
+  words: 457
   subsections:
   - Русин vs. українець
   - Політичне маніпулювання
   - Сучасний статус
   - Як розуміти ідентичність
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - Закарпаття — унікальний шлях
   - 1939 — перша незалежність
   - Перехід до Волині
-word_target: 3500
+word_target: 4000
 vocabulary:
 - Закарпаття
 - русин
@@ -75,13 +77,13 @@ vocabulary:
 - регіональний сепаратизм
 - інструменталізація
 activities:
-- type: identity-analysis
+- type: critical-analysis
   focus: Rusyn vs. Ukrainian identity — what's the question?
-- type: 1939-study
+- type: comparative-study
   focus: Carpatho-Ukraine — shortest independence
 - type: comparative-study
   focus: Transcarpathia vs. other western regions
-- type: policy-analysis
+- type: critical-analysis
   focus: How different rulers treated Transcarpathia
 - type: essay-response
   focus: Чи русини — окремий народ чи частина українців?

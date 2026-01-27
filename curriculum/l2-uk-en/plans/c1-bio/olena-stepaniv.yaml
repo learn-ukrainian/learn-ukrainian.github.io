@@ -69,22 +69,10 @@ activity_hints:
   focus: Військова та наукова біографія
   source: Мемуари та історичні дослідження
   items: 3 passages
-- type: quiz
-  focus: Етапи життя та досягнення
-  items: 12+
-- type: match-up
-  focus: Періоди життя та діяльність
-  items: 10+
 - type: essay-response
   focus: Чому участь жінок у війні була революційною?
   word_target: 300
   output: Історичне есе
-- type: group-sort
-  focus: Військова кар'єра vs наукова кар'єра
-  items: 12+
-- type: fill-in
-  focus: Військова та наукова термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-32 (Кирило Трильовський)
@@ -108,3 +96,7 @@ sources:
   notes: Географічні дослідження
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of олена степанів: перша жінка-офіцер'
+- Evaluate the contributions of жінка, що зламала стереотипи
+- Trace the career and influence of спадщина та пам'ять

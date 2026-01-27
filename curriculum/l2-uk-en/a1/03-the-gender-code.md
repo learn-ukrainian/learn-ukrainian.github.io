@@ -26,7 +26,7 @@ This is your **foundational pattern**. Memorize it once, and you'll recognize th
 
 > 🎬 **Pop Culture Moment: S.T.A.L.K.E.R.**
 >
-> In the iconic Ukrainian game _S.T.A.L.K.E.R._, you explore locations like **Прип'ять** (Prypiat — feminine, ends in soft sign), **місто** (city — neuter, ends in -о), and **будинок** (building — masculine, consonant ending). Even in post-apocalyptic Ukraine, grammar survives!
+> In the iconic Ukrainian game *S.T.A.L.K.E.R.*, you explore locations like **Прип'ять** (Prypiat — feminine, ends in soft sign), **місто** (city — neuter, ends in -о), and **будинок** (building — masculine, consonant ending). Even in post-apocalyptic Ukraine, grammar survives!
 
 ### Why Gender Matters
 
@@ -160,7 +160,7 @@ Unlike English (which mostly lost grammatical gender), Ukrainian preserves a **t
 
 Compare:
 
-- **German:** _der Tisch_ (m), _die Tür_ (f), _das Fenster_ (n) — you must memorize articles.
+- **German:** *der Tisch* (m), *die Tür* (f), *das Fenster* (n) — you must memorize articles.
 - **Ukrainian:** стіл (ends in consonant = m), двері (plural only), вікно (ends in -о = n) — the ending IS the clue!
 
 This pattern consistency makes Ukrainian **easier to learn** than languages with hidden gender markers.
@@ -178,6 +178,7 @@ This pattern consistency makes Ukrainian **easier to learn** than languages with
 ---
 
 # Підсумок
+
 **You've unlocked the Ukrainian Gender Code!**
 
 **Three Genders:**

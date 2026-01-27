@@ -13,8 +13,8 @@
 | Clarity             | 10/10 | The distinction between "Past Action -> Present Result" and "Present Trait -> Past Action" is crystal clear. |
 | Structure           | 10/10 | Logical breakdown of mixed types, chaining, and consequence chains.                                          |
 | Relevance           | 10/10 | High frequency for analyzing life choices ("If I had studied... I would be...").                             |
-| Language            | 10/10 | Excellent examples from _Lisova Pisnya_ (Mavka) and Odessa humor.                                            |
-| Pedagogy            | 10/10 | Good warning against mixing _якщо_ and _якби_ in the same chain.                                             |
+| Language            | 10/10 | Excellent examples from *Lisova Pisnya* (Mavka) and Odessa humor.                                            |
+| Pedagogy            | 10/10 | Good warning against mixing *якщо* and *якби* in the same chain.                                             |
 | Immersion           | 10/10 | References to Lviv history and Odessa's Lanzheron beach grounding grammar in place.                          |
 | Activities          | 10/10 | High density, excellent "Unjumble" items for complex syntax.                                                 |
 | Richness            | 10/10 | Psychological angle ("rumination") adds depth.                                                               |
@@ -24,16 +24,16 @@
 
 ## Linguistic Accuracy Issues
 
-- _Fixed:_ Vocabulary extraction errors (`думок` -> `думка`, `старання` -> `старанний`, proper nouns capitalization).
+- *Fixed:* Vocabulary extraction errors (`думок` -> `думка`, `старання` -> `старанний`, proper nouns capitalization).
 
 ## Strengths
 
 - **Odessa Humor:** The example "Якщо хочеш на море... біжи на Ланжерон!" allows for a great linguistic snapshot of a specific region.
-- **Literary Depth:** Quoting Lesya Ukrainka's _Mavka_ ("If you hadn't loved me, I wouldn't exist") perfectly illustrates mixed conditionals in a poetic context.
+- **Literary Depth:** Quoting Lesya Ukrainka's *Mavka* ("If you hadn't loved me, I wouldn't exist") perfectly illustrates mixed conditionals in a poetic context.
 
 ## Issues
 
-- _Fixed:_ Semantic errors in vocabulary extraction.
+- *Fixed:* Semantic errors in vocabulary extraction.
 
 ## Recommendation
 

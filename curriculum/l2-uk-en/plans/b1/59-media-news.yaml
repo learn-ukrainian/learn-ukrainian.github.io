@@ -5,42 +5,42 @@ version: '2.0'
 title: Медіа та новини
 subtitle: Media and News
 content_outline:
-- section: 'Introduction: Media Landscape'
-  words: 150
+- section: Вступ
+  words: 142
   points:
   - Ukrainian media overview
   - Types of media
   - News vocabulary basics
-- section: News and Journalism
-  words: 250
+- section: Вживання
+  words: 600
   points:
-  - новини, стаття, репортаж
-  - журналіст, кореспондент
-  - News production vocabulary
-- section: Broadcast Media
-  words: 250
+  - Collocations patterns
+  - Register considerations
+  - Application domains, key expressions
+- section: Читання
+  words: 433
   points:
-  - телебачення, радіо, подкаст
-  - ефір, трансляція, випуск
-  - Broadcasting terminology
-- section: Print and Digital
-  words: 250
+  - News article
+  - Ukrainian media overview
+  - Blog (informal)
+- section: Діалоги
+  words: 467
   points:
-  - газета, журнал, онлайн-видання
-  - публікація, редакція
-  - Publishing vocabulary
-- section: Media Actions
-  words: 200
+  - News discussion (informal)
+  - In the editorial office (formal)
+  - Fact-checking, media expert interview
+- section: Лексика
+  words: 1142
   points:
-  - повідомляти, висвітлювати, оприлюднювати
-  - Reporting and publishing verbs
-  - Media consumption verbs
-- section: 'Practice: Discussing News'
-  words: 100
+  - Seven vocabulary groups
+  - Content types, professionals
+  - Media types, structure, sources
+- section: Підсумок
+  words: 216
   points:
-  - Talk about current events
-  - Use media vocabulary
-word_target: 1200
+  - Key vocabulary recap
+  - Practice recommendations
+word_target: 3000
 vocabulary_hints:
   required:
   - новини (news)
@@ -57,16 +57,16 @@ vocabulary_hints:
   - подкаст (podcast)
   - оприлюднювати (to publish/release)
 activity_hints:
-- type: collocation
+- type: match-up
   focus: Media noun phrases
   items: 25
 - type: fill-in
   focus: Complete media sentences
   items: 20
-- type: matching
+- type: match-up
   focus: Match media terms
   items: 15
-- type: discussion
+- type: quiz
   focus: Discuss current events
   items: 10
 focus: vocabulary

@@ -1,10 +1,12 @@
 # Audit Report: M11 — 11-young-shevchenko.md
+
 **Level:** LIT | **Module:** M11 | **Phase:** LIT.3 | **Pedagogy:** literature | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:57:44
 
 ## Configuration
+
 **Type:** LIT-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | essay-response | Есе-Роздум: Self-Made Man XIX Століття | 1 | 1 | ✅ |
@@ -33,21 +36,24 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (79% overlap): "Він гуляв у Літньому саду і побачив хлопця в брудному робочому халаті, який з неймовірною зосереджен...". Shares significant keywords with sentence at index 99.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (86% overlap): "Почувши рідну українську мову ("земляк!"), Сошенко заговорив.". Shares significant keywords with sentence at index 100.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "> [!didactic] **Ціна Людини**
 > Скільки це — 2500 рублів?". Shares significant keywords with sentence at index 116.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 3 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ✅ 4039/4000 (raw: 4282)
 - **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
@@ -66,10 +72,12 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
+
 **Score:** 94% (minimum: 90%)
 **Module Type:** literature
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
@@ -85,16 +93,18 @@
 | **TOTAL** | | | | | **94.0%** |
 
 ### Dryness Flags & Fixes
+
 - ❌ **NO_RESOURCES**
   - FIX:
     Add 2+ resource blocks. Use this format:
-    
+
     > [!resources] Додаткові ресурси
     >
     > - [Resource 1 with link or description]
     > - [Resource 2 with link or description]
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

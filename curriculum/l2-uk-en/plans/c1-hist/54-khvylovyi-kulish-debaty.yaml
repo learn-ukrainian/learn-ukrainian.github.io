@@ -5,21 +5,21 @@ version: '2.0'
 title: 'Хвильовий: «Геть від Москви!»'
 content_outline:
 - section: Вступ — Найсміливіший голос
-  words: 400
+  words: 457
   points:
   - Хвильовий — хто він
   - Памфлети як жанр
   - Чому так важливі
   - Структура модуля
 - section: Біографічний контекст
-  words: 500
+  words: 571
   points:
   - Від комуніста до критика
   - Участь у революції
   - Літературна кар'єра
   - Шлях до памфлетів
 - section: «Камо грядеши» (1925)
-  words: 700
+  words: 800
   points:
   - Текст (фрагменти з глосами)
   - «Куди йдеш?» — питання
@@ -27,7 +27,7 @@ content_outline:
   - Орієнтація на Європу
   - Що таке «психологічна Європа»
 - section: «Думки проти течії» (1926)
-  words: 600
+  words: 686
   points:
   - Текст (фрагменти)
   - Більш радикальна критика
@@ -35,7 +35,7 @@ content_outline:
   - Азіатський ренесанс
   - Реакція партії
 - section: Трагічний фінал
-  words: 500
+  words: 571
   points:
   - Вимушена самокритика
   - Продовження тиску
@@ -43,19 +43,19 @@ content_outline:
   - Листок — «за комунізм, за Гетьмана»
   - Символічне значення
 - section: Спадщина Хвильового
-  words: 500
+  words: 571
   points:
   - Заборонений і повернений
   - Актуальність сьогодні
   - «Європейський вибір» — пророцтво?
   - Хвильовий і 2022
 - section: Підсумок
-  words: 300
+  words: 344
   points:
   - Від слова до долі
   - Культурний герой
   - Зв'язок із театром Курбаса
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - памфлет (pamphlet)
@@ -78,13 +78,10 @@ activity_hints:
 - type: reading
   focus: Key passages from "Kamo hriadeshi"
   source: wikisource
-- type: argument-analysis
+- type: critical-analysis
   focus: Reconstruct Khvylovyi's main argument
   output: Argument diagram
-- type: prophecy-test
-  focus: What did Khvylovyi predict? Was he right?
-  output: Prediction assessment
-- type: letter-analysis
+- type: critical-analysis
   focus: Analyze suicide note — what does it mean?
   output: Interpretation
 - type: essay-response
@@ -114,3 +111,6 @@ sources:
   notes: Key work
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of хвильовий: «геть від москви!»'
+- Evaluate the historical significance of найсміливіший голос

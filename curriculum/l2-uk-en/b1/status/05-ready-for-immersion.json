@@ -2,14 +2,14 @@
   "module": "05-ready-for-immersion",
   "level": "B1",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:26:46.683279Z",
+  "last_audit": "2026-01-27T16:25:45.997198Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-24T19:42:19.931360Z",
+    "md": "2026-01-27T15:24:10.349978Z",
     "meta": "2026-01-26T15:44:41.449457Z",
     "activities": "2026-01-24T19:42:48.155931Z",
     "vocabulary": "2026-01-25T15:50:11.985059Z",
-    "plan": "2026-01-26T15:44:41.449106Z"
+    "plan": "2026-01-27T12:02:43.980582Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1656/1200 (raw: 1795)"
+      "message": "3410/1200 (raw: 3916)"
     },
     "activities": {
       "status": "pass",

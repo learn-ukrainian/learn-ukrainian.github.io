@@ -69,22 +69,10 @@ activity_hints:
   focus: Поезії Стуса з таборів
   source: Первинні джерела
   items: 3 passages
-- type: quiz
-  focus: Хронологія репресій проти Стуса
-  items: 12+
-- type: match-up
-  focus: Збірки поезій та їхні теми
-  items: 10+
 - type: essay-response
   focus: Що означає вертикальне стояння духу?
   word_target: 300
   output: Філософський есей
-- type: group-sort
-  focus: Етапи життя Стуса
-  items: 12+
-- type: fill-in
-  focus: Ключові дати та події
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-75-vasyl-symonenko
@@ -108,3 +96,7 @@ sources:
   notes: Матеріали про життя та творчість
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of василь стус: вертикальне стояння духу'
+- Evaluate the contributions of поезія як форма спротиву
+- Trace the career and influence of ціна свободи

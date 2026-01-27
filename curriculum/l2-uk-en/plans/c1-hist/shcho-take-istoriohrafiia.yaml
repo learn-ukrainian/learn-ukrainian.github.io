@@ -10,14 +10,14 @@ objectives:
 - Evaluate the impact of bias and narrative on historical writing
 content_outline:
 - section: Вступ — Історія vs. Історіографія
-  words: 424
+  words: 485
   subsections:
   - Що таке історія? Що таке історіографія?
   - Різниця між подіями та інтерпретацією подій
   - Чому один і той самий факт описують по-різному?
   - Приклад — Переяславська рада 1654 (3 версії)
 - section: Ключові поняття історіографії
-  words: 636
+  words: 727
   subsections:
   - Наратив (narrative) — як розповідь формує розуміння
   - Первинні джерела vs. вторинні джерела
@@ -25,7 +25,7 @@ content_outline:
   - Упередження (bias) та перспектива автора
   - Контекст створення тексту
 - section: Хто пише історію?
-  words: 530
+  words: 606
   subsections:
   - Літописці (Chronicle writers) — середньовічна традиція
   - Академічні історики — університетська традиція
@@ -33,7 +33,7 @@ content_outline:
   - Еміграція та діаспора — альтернативні голоси
   - Сучасність — public history, Wikipedia, соцмережі
 - section: Українська історіографічна традиція — огляд
-  words: 636
+  words: 727
   subsections:
   - Від літописів до Грушевського
   - Чому українська історія довго писалася як «частина російської»
@@ -41,24 +41,24 @@ content_outline:
   - Радянські деформації
   - Відродження після 1991
 - section: Чому це важливо для вас?
-  words: 424
+  words: 485
   subsections:
   - Критичне читання — не вірити одному джерелу
   - Розпізнавання пропаганди
   - Формування власної позиції на основі доказів
   - Україна як об'єкт інформаційної війни
 - section: Практичне застосування
-  words: 530
+  words: 606
   subsections:
   - Як читати історичний текст критично?
   - 5 питань до кожного джерела (хто? коли? для кого? чому? що опущено?)
   - Приклад аналізу — радянський підручник vs. сучасний
 - section: Підсумок та перехід
-  words: 320
+  words: 364
   subsections:
   - Ключові терміни модуля
   - Що далі — українська історіографічна традиція детально
-word_target: 3500
+word_target: 4000
 vocabulary:
 - історіографія
 - наратив
@@ -80,9 +80,8 @@ activities:
   focus: Read two descriptions of Pereiaslav 1654 (Ukrainian vs Russian textbook)
 - type: critical-analysis
   focus: Apply 5 questions to a Soviet-era text about Ukrainian history
-- type: match-up
-  focus: Match historiographical terms to definitions
-  items: 12+
+- type: critical-analysis
+  focus: Analyze methodology and apply source criticism to historiographical debates
 - type: essay-response
   focus: Чому важливо знати, хто написав історію?
 sources:

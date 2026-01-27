@@ -2,14 +2,14 @@
   "module": "18-motion-passing-crossing",
   "level": "B1",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:26:55.320375Z",
+  "last_audit": "2026-01-27T16:25:50.483309Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-24T21:30:05.032974Z",
+    "md": "2026-01-27T15:24:10.350002Z",
     "meta": "2026-01-26T15:44:41.497355Z",
     "activities": "2026-01-11T10:24:12.098299Z",
     "vocabulary": "2026-01-25T18:00:40.179897Z",
-    "plan": "2026-01-26T15:44:41.497014Z"
+    "plan": "2026-01-27T16:01:38.551000Z"
   },
   "gates": {
     "meta": {

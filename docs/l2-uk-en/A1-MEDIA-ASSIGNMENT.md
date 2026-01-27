@@ -91,6 +91,7 @@ Every module MUST have a "Need More Practice?" section **before `## Activities`*
 **Live example:** [A1 Module 10](https://krisztiankoos.github.io/learn-ukrainian/docs/a1/module-10#need-more-practice)
 
 **Icon conventions:**
+
 | Icon | Type |
 |------|------|
 | 🎧 | Audio/Alphabet guides |
@@ -438,17 +439,20 @@ yt-dlp "ytsearch5:Ukrainian verb conjugation beginners" --print "%(webpage_url)s
 ## Quality Standards Applied
 
 ### Image Requirements (when used)
+
 - Minimum resolution: 800x600 pixels (A1 lower requirement)
 - Format: PNG or JPG
 - Alt text required for accessibility
 
 ### Audio Requirements (when used)
+
 - Format: MP3, 128kbps minimum
 - Native speaker recordings
 - Clear pronunciation for beginners
 - Duration: 15-60 seconds per clip
 
 ### External Link Requirements
+
 - All links verified working
 - Ukrainian Lessons as primary resource partner
 - Links to free content only

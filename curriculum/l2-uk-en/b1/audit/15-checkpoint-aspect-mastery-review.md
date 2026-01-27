@@ -1,8 +1,8 @@
 # Audit Report: M15 — 15-checkpoint-aspect-mastery.md
-**Level:** B1 | **Module:** M15 | **Phase:** B1 | **Pedagogy:** TTT | **Target:** 1200
+**Level:** B1 | **Module:** M15 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 1200
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:26:53
+**Generated:** 2026-01-27 16:25:49
 
 ## Configuration
 **Type:** B1-checkpoint

@@ -27,9 +27,11 @@ The current B2 plan (with History Restructure) is strong. This counter-proposal 
 > ⚠️ **Checkpoint Cascade Warning:** This resequencing affects M10, M25, M40, M70 checkpoints and requires renumbering ~100 modules. **Recommend skipping** unless doing a major version bump.
 
 ### The Issue
+
 M41-42 (Aspect Nuances) are in B2.2 Phraseology, but they're grammar topics per State Standard 4320-4325. Ideally they'd be in B2.1.
 
 ### Recommendation
+
 **Keep M41-42 where they are.** The curriculum already works. The "grammar before phraseology" preference is a minor improvement not worth the renumbering pain.
 
 ### If You REALLY Want to Resequence (Not Recommended)
@@ -72,6 +74,7 @@ M41-42 (Aspect Nuances) are in B2.2 Phraseology, but they're grammar topics per 
 **Vocabulary split:** ~20 words each focusing on era-specific terms
 
 ### Cascade:
+
 Old M91-93 (Mazepa trilogy) → M92-94  
 All subsequent history modules shift by +1
 
@@ -118,6 +121,7 @@ A comprehensive catalogue of Russian historical lies paired with counter-evidenc
 - Connection to Holodomor (1932-33 → 1937-38 = continuous assault)
 
 ### Cascade:
+
 Old M103 checkpoint → M105  
 M104-114 → M106-116  
 And so on.

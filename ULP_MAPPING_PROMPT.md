@@ -28,6 +28,7 @@ cat docs/l2-uk-en/MEDIA-SOURCES.md | grep -A 10 "Ukrainian Lessons Podcast"
 ```
 
 ### Key Information
+
 - **ULP (Ukrainian Lessons Podcast):** 240 episodes, grammar-focused, beginner to advanced
 - **FMU (5 Minute Ukrainian):** Quick dialogues, A1-A2 aligned
 - **Current state:** Only 1/34 A1 modules have `[!resources]` sections
@@ -39,6 +40,7 @@ cat docs/l2-uk-en/MEDIA-SOURCES.md | grep -A 10 "Ukrainian Lessons Podcast"
 ## Step 2: Review Module Topics (Per Level)
 
 ### A1 Modules (34 total)
+
 ```bash
 # Get A1 module titles and topics
 for i in {1..34}; do
@@ -52,6 +54,7 @@ done
 **Focus areas:** Cyrillic, greetings, cases, basic verbs, food, shopping, time, modals
 
 ### A2 Modules (57 total)
+
 ```bash
 # Get A2 module titles
 for i in {1..57}; do
@@ -65,6 +68,7 @@ done
 **Focus areas:** Dative, instrumental, prepositions, aspect, comparisons, numerals, complex sentences
 
 ### B1 Modules (91 total)
+
 ```bash
 # Get B1 module titles
 for i in {1..91}; do
@@ -78,6 +82,7 @@ done
 **Focus areas:** Aspect mastery, motion verbs, complex sentences, participles, cultural topics
 
 ### B2 Modules (145 target, 131 exist)
+
 ```bash
 # Get B2 module titles
 for i in {1..145}; do
@@ -91,6 +96,7 @@ done
 **Focus areas:** Passive voice, registers, Ukrainian history, idioms, advanced syntax
 
 ### C1 Modules (196 planned)
+
 ```bash
 # Get C1 module titles (if they exist)
 ls curriculum/l2-uk-en/c1/*.md 2>/dev/null | wc -l
@@ -99,6 +105,7 @@ ls curriculum/l2-uk-en/c1/*.md 2>/dev/null | wc -l
 **Focus areas:** Biographies, stylistics, folk culture, literature (planned)
 
 ### C2 Modules (100 planned)
+
 ```bash
 # Get C2 module titles (if they exist)
 ls curriculum/l2-uk-en/c2/*.md 2>/dev/null | wc -l
@@ -221,6 +228,7 @@ mappings:
 ## Step 4: Analyze Podcast Database
 
 ### Extract Episode Metadata
+
 ```bash
 # View podcast structure
 jq '.episodes[] | {id, title, tags}' docs/resources/podcasts/podcast_db.json | head -50
@@ -233,6 +241,7 @@ jq '[.episodes[].tags[]?] | unique' docs/resources/podcasts/podcast_db.json
 ```
 
 ### Episode Data Format (Current JSON)
+
 ```json
 {
   "episodes": [
@@ -290,6 +299,7 @@ jq '[.episodes[].tags[]?] | unique' docs/resources/podcasts/podcast_db.json
 ## Step 6: Validation & Review
 
 ### Quality Checks
+
 - [ ] All episode IDs valid (exist in podcast_db.json)
 - [ ] All module IDs valid (files exist in curriculum)
 - [ ] Match reasons make sense
@@ -298,6 +308,7 @@ jq '[.episodes[].tags[]?] | unique' docs/resources/podcasts/podcast_db.json
 - [ ] YAML syntax valid (`yq . ulp_mapping.yaml`)
 
 ### Coverage Metrics
+
 ```bash
 # Count mapped modules per level
 yq '.mappings | group_by(.level) | map({level: .[0].level, count: length})' ulp_mapping.yaml
@@ -399,6 +410,7 @@ After this mapping is complete, Phase 2 will:
 ## Tools & Commands
 
 ### Helpful Commands
+
 ```bash
 # Count A1 modules
 ls curriculum/l2-uk-en/a1/*.md | wc -l
@@ -417,6 +429,7 @@ yq -P docs/resources/podcasts/ulp_mapping.yaml
 ```
 
 ### Modern CLI Tools Available
+
 - `rg` (ripgrep) - Fast search
 - `fd` - Find files
 - `jq` - JSON processor

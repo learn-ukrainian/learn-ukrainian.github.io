@@ -1,10 +1,12 @@
 # Audit Report: M20 — bohdan-khmelnytskyy.md
+
 **Level:** C1 | **Module:** M20 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:05
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Глибокий аналіз державотворчої стратегії Богдана Хмельницького | 5 | 5 | ✅ |
@@ -37,23 +40,26 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (75% overlap): "Його **стратегія** виживання вимагала постійного балансування між агресивними сусідами, що робить йо...". Shares significant keywords with sentence at index 170.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (90% overlap): "Кромвель мав тил у вигляді океану, Хмельницький мав лише степ і ворогів з усіх боків.". Shares significant keywords with sentence at index 173.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (82% overlap): "> [!reflection] **Роздуми для C1: Ціна свободи та тягар вибору**
 > Чи міг Хмельницький уникнути Пере...". Shares significant keywords with sentence at index 175.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (78% overlap): "Аналізуючи його дії, ми бачимо трагедію лідера, який змушений обирати між поганим і гіршим заради фі...". Shares significant keywords with sentence at index 177.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 
 ## Recommendation
+
 **📝 UPDATE** (severity 35/100)
 
 - 4 violations (moderate)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ✅ 4050/4000 (raw: 4390)
 - **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
@@ -72,10 +78,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 14 | 4 | 100% | 19% | 19.0% |
@@ -91,6 +99,7 @@
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 91 | Included in Core |

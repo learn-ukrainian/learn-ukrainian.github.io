@@ -67,15 +67,6 @@ activity_hints:
   focus: Звернення захисників Азовсталі
   source: Відеоматеріали
   items: 4
-- type: quiz
-  focus: Облога Маріуполя
-  items: 15
-- type: match-up
-  focus: Дата → подія облоги
-  items: 10
-- type: fill-in
-  focus: Військова лексика
-  items: 10
 - type: essay-response
   focus: Чому оборона Маріуполя стала символом українського спротиву?
   word_target: 250

@@ -29,7 +29,7 @@
 ## Strengths
 
 - **Stylistic Awareness:** The module explicitly warns against overusing passive voice ("канцелярит"), promoting active constructions as the Ukrainian standard. This is crucial for avoiding Russian-style passive-heavy bureaucratese.
-- **Contextual Fit:** Using news headlines to demonstrate where passive voice _is_ appropriate (e.g., "bridge closed", "law adopted") is excellent pedagogy.
+- **Contextual Fit:** Using news headlines to demonstrate where passive voice *is* appropriate (e.g., "bridge closed", "law adopted") is excellent pedagogy.
 
 ## Issues
 

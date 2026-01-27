@@ -42,7 +42,6 @@ Before submitting a B1 grammar module, verify:
 - [ ] **Pedagogy:** Level-appropriate complexity, no violations
 - [ ] **Structure:** TTT or Presentation-Practice-Production
 
-
 ---
 
 ## Naturalness Quality Checklist

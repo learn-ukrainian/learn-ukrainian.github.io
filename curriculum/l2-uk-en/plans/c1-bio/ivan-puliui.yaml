@@ -69,22 +69,10 @@ activity_hints:
   focus: Puliui's scientific papers and political writings
   source: Historical archives
   items: 3 passages
-- type: quiz
-  focus: Puliui's biography and dual legacy
-  items: 12+
-- type: match-up
-  focus: Scientific vs. patriotic achievements
-  items: 10+
 - type: essay-response
   focus: Why didn't Puliui receive credit for X-rays?
   word_target: 300
   output: Analysis of scientific recognition
-- type: group-sort
-  focus: Physics work vs. Ukrainian activism
-  items: 12+
-- type: fill-in
-  focus: Key dates and scientific terms
-  items: 10+
 focus: biography
 prerequisites:
 - Basic physics concepts
@@ -110,3 +98,7 @@ sources:
   notes: His Bible translation work
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of іван пулюй: фізик, який відкрив х-промені'
+- Evaluate the contributions of фізик і патріот
+- Trace the career and influence of спадщина вченого-патріота

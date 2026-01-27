@@ -6,7 +6,6 @@
 
 ---
 
-
 ## Section 1
 
 - **1.1** 1.1 Gender of Nouns

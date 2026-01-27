@@ -5,14 +5,14 @@ version: '2.0'
 title: 'Повість минулих літ I: Структура та автори'
 content_outline:
 - section: Вступ — Найстаріший літопис Русі
-  words: 400
+  words: 457
   points:
   - Що таке Повість минулих літ (ПМЛ)?
   - Чому це найважливіше джерело для ранньої історії?
   - Редакції — Лаврентіївська, Іпатіївська
   - Що ми розглянемо в цьому модулі
 - section: Структура літопису
-  words: 600
+  words: 686
   points:
   - Вступна частина — «звідки пішла Руська земля»
   - Недатована частина — легенди, походження
@@ -20,7 +20,7 @@ content_outline:
   - Принцип погодного запису
   - Що включено і що пропущено
 - section: Питання авторства
-  words: 700
+  words: 800
   points:
   - Нестор — традиційна атрибуція
   - Хто насправді писав? Кілька авторів
@@ -28,7 +28,7 @@ content_outline:
   - Як визначити різних авторів?
   - Політичні замовники — князі та церква
 - section: Редакції та рукописи
-  words: 600
+  words: 686
   points:
   - Лаврентіївський список (1377)
   - Іпатіївський список (XV ст.)
@@ -36,26 +36,26 @@ content_outline:
   - Чим відрізняються редакції?
   - Що додано, що прибрано
 - section: Мова літопису
-  words: 500
+  words: 571
   points:
   - Давньоруська як основа
   - Церковнослов'янські елементи
   - Як читати сьогодні — глосарій
   - Приклади з текстами
 - section: Чому важлива критика джерела
-  words: 400
+  words: 457
   points:
   - ПМЛ — не об'єктивна історія
   - Легенди vs. історичні факти
   - Політична заангажованість
   - Як використовувати критично
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - ПМЛ як фундамент історичної пам'яті
   - Підготовка до читання фрагментів
   - Зв'язок із наступним модулем
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - літопис (chronicle)
@@ -84,9 +84,6 @@ activity_hints:
 - type: comparative-study
   focus: Compare Laurentian vs. Hypatian redaction on one event
   output: Differences noted
-- type: match-up
-  focus: Old East Slavic terms still used in modern Ukrainian
-  output: Etymology exercise
 - type: essay-response
   focus: Чи можна довіряти Повісті минулих літ як історичному джерелу?
   word_target: 350
@@ -114,3 +111,6 @@ sources:
   notes: Traditional attribution
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of повість минулих літ i: структура та автори'
+- Evaluate the historical significance of найстаріший літопис русі

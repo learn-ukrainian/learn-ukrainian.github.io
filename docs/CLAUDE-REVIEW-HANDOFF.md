@@ -153,15 +153,18 @@ scripts/
 ## 4. Files Reference
 
 ### Curriculum Files
+
 - `curriculum/l2-uk-en/a1/module-01.md` through `module-30.md`
 - Missing: `module-31.md` through `module-34.md`
 
 ### Key Documentation
+
 - `docs/l2-uk-en/A1-CURRICULUM-PLAN.md` - 34-module plan
 - `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md` - Quality standards
 - `docs/l2-uk-en/LINGUISTIC-PURITY-GUIDE.md` - Anti-Surzhyk rules
 
 ### Key Scripts
+
 - `scripts/audit_module.py` - Run module audits
 - `scripts/generate-mdx.ts` - Generate MDX for Docusaurus
 - `scripts/generate_json.py` - Generate JSON for Vibe app

@@ -24,16 +24,16 @@
 
 ## Linguistic Accuracy Issues
 
-- _Fixed:_ Vocabulary extraction errors (`рол` -> `роль` context, removed; `механік` -> `механіка` context, removed). Capitalized `Настя`.
+- *Fixed:* Vocabulary extraction errors (`рол` -> `роль` context, removed; `механік` -> `механіка` context, removed). Capitalized `Настя`.
 
 ## Strengths
 
 - **Clear Rules:** The rule "Gender/Number from Antecedent, Case from Subordinate Clause" is repeated effectively.
-- **Contextual examples:** The gaming tips and news examples show the versatility of _який_.
+- **Contextual examples:** The gaming tips and news examples show the versatility of *який*.
 
 ## Issues
 
-- _Fixed:_ Minor vocabulary artifacts.
+- *Fixed:* Minor vocabulary artifacts.
 
 ## Recommendation
 

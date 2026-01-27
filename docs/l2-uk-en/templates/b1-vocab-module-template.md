@@ -15,7 +15,6 @@
 
 **Related Issue:** [#284](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/284)
 
-
 <!--
 TEMPLATE_METADATA:
   required_sections:
@@ -51,7 +50,6 @@ Before submitting a B1 vocabulary module, verify:
 - [ ] **Engagement boxes:** 5+ boxes with real-world usage
 - [ ] **Immersion:** 90-100% Ukrainian (vocabulary taught in context)
 - [ ] **Pedagogy:** Level-appropriate complexity
-
 
 ---
 

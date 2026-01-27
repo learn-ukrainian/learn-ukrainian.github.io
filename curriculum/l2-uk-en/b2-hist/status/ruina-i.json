@@ -2,13 +2,13 @@
   "module": "ruina-i",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:54:47.491731Z",
+  "last_audit": "2026-01-27T20:35:22.471996Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-24T21:58:24.778082Z",
+    "md": "2026-01-27T20:35:13.065574Z",
     "meta": "2026-01-26T22:20:13.509342Z",
-    "activities": "2026-01-24T21:52:51.848047Z",
-    "vocabulary": "2026-01-24T00:11:07.699329Z",
+    "activities": "2026-01-27T20:14:27.790226Z",
+    "vocabulary": "2026-01-27T20:30:03.011947Z",
     "plan": null
   },
   "gates": {
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4719/4000 (raw: 4796)"
+      "message": "4890/4000 (raw: 5029)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "16/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "warn",

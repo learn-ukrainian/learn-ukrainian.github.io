@@ -2,13 +2,13 @@
 
 > 🎯 **Why This Module Matters**
 >
-> You're at B1 now. From this point forward, you'll encounter grammar explanations written _in Ukrainian_ — in textbooks, online resources, and conversations with native speakers. To understand these resources, you need to know what Ukrainians call the parts of speech, the cases, and other grammar concepts. This module gives you that vocabulary. By the end, you'll be able to read a Ukrainian grammar explanation and understand what it's talking about.
+> You're at B1 now. From this point forward, you'll encounter grammar explanations written *in Ukrainian* — in textbooks, online resources, and conversations with native speakers. To understand these resources, you need to know what Ukrainians call the parts of speech, the cases, and other grammar concepts. This module gives you that vocabulary. By the end, you'll be able to read a Ukrainian grammar explanation and understand what it's talking about.
 
 ## Introduction - Why Learn Grammar in Ukrainian?
 
 ### Виклик вивчення граматики новою мовою
 
-Think about how you learned grammar in school. Someone taught you terms like "noun," "verb," "adjective." Now imagine picking up a Ukrainian grammar book. You open it and see: _"Іменник стоїть у родовому відмінку після прийменника..."_
+Think about how you learned grammar in school. Someone taught you terms like "noun," "verb," "adjective." Now imagine picking up a Ukrainian grammar book. You open it and see: *"Іменник стоїть у родовому відмінку після прийменника..."*
 
 If you don't know that **іменник** means "noun," **родовий відмінок** means "genitive case," and **прийменник** means "preposition," you're lost. This module solves that problem.
 
@@ -20,7 +20,13 @@ Every Ukrainian schoolchild learns these terms in school. When a Ukrainian teach
 
 > 💡 **Did You Know?**
 >
-> Ukrainian grammar terminology comes largely from Church Slavonic and Latin traditions. The word **відмінок** literally means "change" or "variation" — because the word _changes_ form depending on its role in the sentence. Think of **дієслово** as "action-word"—it's built from **дія** (action) and **слово** (word).
+> Ukrainian grammar terminology comes largely from Church Slavonic and Latin traditions, brought to Kyiv by scholars at the the Kyiv-Mohyla Academy in the 17th century. The word **відмінок** literally means "change" or "variation" — because the word *changes* form depending on its role in the sentence. Think of **дієслово** as "action-word"—it's built from **дія** (action) and **слово** (word). This calque (loan translation) pattern is common: **займенник** (pronoun) means "instead of a name" (за-іменник), mirroring the Latin *pro-nomen*.
+
+### The Psychological Shift
+
+Moving from A2 to B1 is about shifting your mental operating system. At A2, you translated from English to Ukrainian. At B1, you start thinking *in* Ukrainian. Learning grammar terms is the first step. When you can say "Це дієслово недоконаного виду" instead of "It's an imperfective verb," you are categorizing the world like a Ukrainian speaker.
+
+This module isn't just a glossary list; it's an initiation into the linguistic logic of the language. You will learn not just the *labels*, but the *concepts* they represent—concepts that sometimes don't even exist in English (like **вид** or **кличний відмінок**). Prepare to see the language from the inside out.
 
 ---
 
@@ -52,6 +58,55 @@ Or consider: **Тарас швидко біжить на метро «Хреща
 > When Ukrainians discuss language on forums or social media, they use these terms freely. You might see: "Тут треба вжити дієслово доконаного виду" (Here you need to use a perfective verb). Without knowing **дієслово** and **вид**, you'd miss the point entirely.
 
 Notice how each Ukrainian term describes what the word category does. The іменник comes from "ім'я" — it names things. The прикметник comes from "прикмета" — it describes characteristics. The прислівник literally means "by the verb" — adverbs typically modify verbs. Understanding these etymologies helps you remember the terms.
+
+#### Як розпізнати частини мови
+
+Even if you don't know a word's meaning, its shape often reveals its grammatical identity (частина мови).
+
+1.  **Іменники:**
+    - Often end in **-а/я** (жіночий рід: *мова, пісня*).
+    - Often end in a consonant (чоловічий рід: *стіл, дуб*).
+    - Often end in **-о/е** (середній рід: *вікно, море*).
+    - *Role:* They answer **хто?** (who?) or **що?** (what?).
+
+2.  **Прикметники:**
+    - Almost always end in **-ий, -а, -е, -і**.
+    - *Examples:* гарн**ий**, гарн**а**, гарн**е**, гарн**і**.
+    - *Role:* They answer **який? яка? яке? які?** (what kind?).
+
+3.  **Дієслова:**
+    - Infinitives end in **-ти** (*читати, знати*).
+    - Present tense forms end in **-ю, -єш, -е, -емо, -ете, -ють** (or similar).
+    - Past tense ends in **-в, -ла, -ло, -ли**.
+    - *Role:* They answer **що робити? що зробити?** (what to do?).
+
+4.  **Прислівники:**
+    - Often end in **-о** (*швидко, мало, добре*).
+    - Never change form (no gender, no case, no number).
+    - *Role:* They answer **як? де? коли?** (how? where? when?).
+
+This structural intuition is vital. Spotting a word ending in **-ого** should instantly trigger "adjective in genitive case" in your mind, even before you know the root. Similarly, seeing **-ому** suggests "dative or locative." This is how Ukrainians read rapidly—they parse the grammar endings effortlessly.
+
+### Understanding the Big Picture
+
+Grammar isn't just about rules; it's about relationships.
+
+- **Imennik** names the reality.
+- **Prykmetnyk** colors the reality.
+- **Diieslovo** moves the reality.
+- **Pryslivnyk** describes the movement.
+
+Combining them creates a sentence: *Гарний студент швидко читає.* (Reality + Color + Movement + Description).
+
+> ⚠️ **Common Learner Confusion**
+>
+> Beginners often confuse adjectives (прикметники) and adverbs (прислівники) because they look similar in English translation ("good" vs "well").
+> In Ukrainian, the distinction is strict:
+>
+> - **Це добрий борщ.** (*Dobryi* modifies *borscht* — adjective/прикметник).
+> - **Я добре чую.** (*Dobre* modifies *hear* — adverb/прислівник).
+>
+> If you are describing a *thing* (noun), use a **прикметник**. If you are describing an *action* (verb), use a **прислівник**.
 
 ### Function Words (Службові частини мови)
 
@@ -116,6 +171,66 @@ Let's trace one noun through all seven cases. Take **сестра** — sister:
 > - **Місцевий** (from "місце" — place) marks location
 > - **Кличний** (from "кликати" — to call) is for direct address
 
+### Deep Dive: The Seven Cases Explained
+
+Let's look closer at each case so you can talk about them with precision.
+
+#### 1. Називний відмінок
+
+- **Keyword:** Subject / Підмет
+- **Questions:** Хто? Що?
+- **Function:** This is the dictionary form. The actor of the sentence.
+- **Example:** "**Студент** читає." (Student is the actor).
+- **Metalanguage:** "Слово стоїть у називному відмінку." (The word is in the nominative case).
+
+#### 2. Родовий відмінок
+
+- **Keyword:** Possession / Absence / Of
+- **Questions:** Кого? Чого?
+- **Function:** Shows ownership (*book of Ivan*), lack of something (*no time*), or part of a whole. It is the most frequent case after Nominative.
+- **Example:** "Немає **часу**." (No time). "Книга **Андрія**." (Andriy's book).
+- **Metalanguage:** "Після прийменника 'без' вживаємо родовий відмінок." (After 'without' we use genitive).
+
+#### 3. Давальний відмінок
+
+- **Keyword:** Recipient / To
+- **Questions:** Кому? Чому?
+- **Function:** Indicates the person receiving something, or the person experiencing a state (indirect object).
+- **Example:** "Я допомагаю **другу**." (Helping [to] friend). "Мені холодно." ([To] me it is cold).
+- **Metalanguage:** "Дієслово 'допомагати' вимагає давального відмінка." (The verb 'to help' requires dative).
+
+#### 4. Знахідний відмінок
+
+- **Keyword:** Target / Direct Object
+- **Questions:** Кого? Що?
+- **Function:** The object that the action happens to.
+- **Example:** "Я бачу **дівчину**." (I see the girl). "Я читаю **книгу**." (I read the book).
+- **Metalanguage:** "Тут потрібен додаток у знахідному відмінку." (Here an object in accusative is needed).
+
+#### 5. Орудний відмінок
+
+- **Keyword:** Tool / With / As
+- **Questions:** Ким? Чим?
+- **Function:** How something is done (with a pen), accompaniment (with mom), or identity (working as a doctor).
+- **Example:** "Я пишу **ручкою**." (Writing with a pen). "Він працює **лікраем**." (He works as a doctor).
+- **Metalanguage:** "Орудний відмінок означає інструмент дії." (Instrumental case signifies the tool of action).
+
+#### 6. Місцевий відмінок
+
+- **Keyword:** Location / About
+- **Questions:** На/У кому? На/У чому?
+- **Function:** Used *only* with prepositions (на, у, по, при) to show location or the topic of thought/speech.
+- **Example:** "Книга на **столі**." (On the table). "Ми говоримо про **політику**." (About politics).
+- **Metalanguage:** "Місцевий відмінок завжди вживається з прийменником." (Locative case is always used with a preposition).
+
+#### 7. Кличний відмінок
+
+- **Keyword:** Hey you! / Address
+- **Questions:** —
+- **Function:** Used to call someone or address them directly. It adds warmth and respect. It is unique to Ukrainian among major Slavic languages (Russian lost it).
+- **Example:** "**Мамо**, де ти?" (Mom!). "**Іване**, привіт." (Ivan!). "**Україно**, вставай!" (Ukraine, rise!).
+- **Metalanguage:** "При звертанні використовуйте кличний відмінок." (When addressing, use vocative).
+
 ### The Master Term
 
 | Термін       | English          | Meaning                               |
@@ -143,7 +258,57 @@ The concept of рід is fundamental to Ukrainian grammar. Every noun has a gend
 
 See how these work together: **Новий студент прийшов.** vs. **Нова студентка прийшла.** The adjective **новий/нова** and the past tense verb **прийшов/прийшла** both change based on the рід of the noun.
 
-For число: **Студент читає.** (однина — one student) vs. **Студенти читають.** (множина — multiple students). Both the noun ending and the verb ending change.
+### Exploring the Categories
+
+#### 1. Рід
+
+Ukrainian grammar is obsessed with gender. Everything matches the gender of the noun.
+
+- **Чоловічий рід:** Usually consonant endings (*дім, стіл, брат*).
+- **Жіночий рід:** Usually -а/-я endings (*мама, пісня, кава*).
+- **Середній рід:** Usually -о/-е endings (*вікно, море, сонце*).
+
+Grammar explanations will often say: *"Прикметник узгоджується з іменником у роді, числі та відмінку."* (The adjective agrees with the noun in gender, number, and case). This phrase describes the core mechanic of the Ukrainian language.
+
+#### 2. Число
+
+Basic concept: one or many?
+
+- **Однина:** *Студент*.
+- **Множина:** *Студенти*.
+
+Some nouns exist *only* in plural (pluralia tantum): **двері** (door/doors), **окуляри** (glasses), **гроші** (money). A grammar book might note: *"Іменник 'гроші' вживається тільки у множині."*
+
+#### 3. Особа
+
+This applies mostly to verbs and pronouns.
+
+- **1-ша особа:** Я (однина), Ми (множина). Speaker.
+- **2-га особа:** Ти (однина), Ви (множина). Addressee.
+- **3-тя особа:** Він/Вона/Воно (однина), Вони (множина). Topic.
+
+Why does this matter? Because conjugation (відмінювання дієслів) depends entirely on person.
+
+- Reading a dictionary: "Verbs of the first conjugation take -ють in the 3rd person plural."
+- Translation: Дієслова першої дієвідміни мають закінчення -ють у третій особі множини.
+- Example: *Думати* -> \*Вони дума**ють\***.
+
+#### 4. Час
+
+Verbs exist in time.
+
+- **Теперішній час:** *Я читаю.* (Now).
+- **Минулий час:** *Я читав.* (Before).
+- **Майбутній час:** *Я буду читати.* (Later).
+
+#### 5. Вид
+
+This is the superpower of Slavic verbs. Every action is either a process or a result.
+
+- **Недоконаний вид:** Process, repetition, duration. *Читати* (to be reading).
+- **Доконаний вид:** Result, completion, one-time. *Прочитати* (to finish reading).
+
+You will dive deep into **вид** in Module 06, but you need the word now. Why? Because dictionaries list pairs: *читати/прочитати*. They are labeled *недок.* and *док.* knowing these abbreviations is essential for using a dictionary.
 
 And особа? Watch: **Я читаю.** (перша особа — I), **Ти читаєш.** (друга особа — you), **Він читає.** (третя особа — he). The закінчення of the verb tells you who's doing the action.
 
@@ -169,25 +334,42 @@ The good news is that once you learn these twenty-five terms, they unlock an ent
 
 Look at these Ukrainian grammar instructions and identify what they're asking:
 
-1. _"Поставте іменник у родовому відмінку."_
+1. *"Поставте іменник у родовому відмінку."*
    - Put the **noun** in the **genitive case**.
 
-2. _"Знайдіть усі дієслова в тексті."_
+2. *"Знайдіть усі дієслова в тексті."*
    - Find all the **verbs** in the text.
 
-3. _"Визначте рід цих іменників."_
+3. *"Визначте рід цих іменників."*
    - Determine the **gender** of these **nouns**.
 
-4. _"Утворіть прислівник від прикметника."_
+4. *"Утворіть прислівник від прикметника."*
    - Form an **adverb** from the **adjective**.
 
 ### Reading Ukrainian Grammar
 
 Here's a sample grammar explanation. Can you understand it?
 
-> _Іменник "книга" — жіночого роду. У знахідному відмінку він має форму "книгу". Після прийменника "на" вживається місцевий відмінок: "на книзі"._
+> *Іменник "книга" — жіночого роду. У знахідному відмінку він має форму "книгу". Після прийменника "на" вживається місцевий відмінок: "на книзі".*
 
 **Translation:** The noun "книга" is feminine gender. In the accusative case, it has the form "книгу". After the preposition "на", the locative case is used: "на книзі".
+
+Let's deduce more from this text.
+
+- **Жіночого роду:** We see the ending -ого, typical for adjectives in Genitive. Wait, why Genitive? Because "of feminine gender." It's stating a property.
+- **У знахідному відмінку:** Preposition "у" + Locative ending "-у"? No, because "відмінок" is masculine. This is actually Locative? No, wait. "У" can take Locative or Accusative. Here "відмінку" looks like Locative or Dative. Actually, it is Locative (on/in the case).
+- **Вживається:** Reflexive verb (ends in -ся). It means "is used" (literally "uses itself"). This passive construction is extremely common in grammar texts.
+
+When reading grammar rules, look for these keywords:
+
+- **Означає** (means/signifies)
+- **Вказує на** (points to/indicates)
+- **Виражає** (expresses)
+- **Вживається з** (is used with)
+- **Змінюється за** (changes according to)
+- **Має закінчення** (has the ending)
+
+Knowing these six verbs will let you read 90% of rule explanations.
 
 ---
 
@@ -244,6 +426,20 @@ Here's a sample grammar explanation. Can you understand it?
 **Тетяна:** Є мнемоніка: "На Різдво Дід Загубив Орішки Між Ковбасками."
 
 **Ігор:** О, класна ідея! Перші букви — Н, Р, Д, З, О, М, К!
+
+**Тетяна:** А ще є інша: "Навіщо Робити Домашнє Завдання, Оля Може Купити."
+
+**Ігор:** Ха-ха, це смішно, але менш корисно для іспиту. А знаєш, як запам'ятати питання?
+
+**Тетяна:** Так, я просто ставлю питання до слова "мама". Хто? Мама. Кого? Мами. Кому? Мамі. Це найкращий спосіб.
+
+**Ігор:** Слухай, а що з кличним?
+
+**Тетяна:** Ну, це просто звертання. "Мамо!", "Ігорю!", "Тетяно!". Ти ж використовуєш це щодня.
+
+**Ігор:** Точно. Дякую за допомогу, Тетяно!
+
+**Тетяна:** Будь ласка, Ігорю! Успіхів на іспиті!
 
 > 💡 **Did You Know?**
 >

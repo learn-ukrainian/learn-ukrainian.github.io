@@ -5,57 +5,59 @@ version: '1.0'
 title: 'Радянська пропаганда: Механізми'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of радянська пропаганда: механізми'
+- Evaluate the historical significance of машина переписування
 content_outline:
 - section: Вступ — Машина переписування
-  words: 400
+  words: 457
   subsections:
   - Радянська пропаганда — система
   - Не брехня, а реальність
   - Механізми впливу
   - Структура модуля
 - section: «Дружба народів»
-  words: 700
+  words: 800
   subsections:
   - Ідеологема — як працювала
   - Приховування конфліктів
   - «Старший брат»
   - Ієрархія всередині «рівності»
 - section: Заборонені теми
-  words: 600
+  words: 686
   subsections:
   - Голодомор — табу
   - Депортації — мовчання
   - УПА — тільки «бандерівці»
   - Що не можна було говорити
 - section: Переписування історії
-  words: 600
+  words: 686
   subsections:
   - Підручники — як змінювались
   - «Воссоєдиненіє» 1654
   - Київська Русь — «спільна колиска»
   - Фальсифікація як система
 - section: Контроль над мовою
-  words: 500
+  words: 571
   subsections:
   - Двомовність — формальна рівність
   - Престиж мов
   - «Мова міжнаціонального спілкування»
   - Мовна русифікація
 - section: Спадок
-  words: 400
+  words: 457
   subsections:
   - Що залишилось у свідомості
   - Ностальгія за СРСР
   - Як це використовує Росія
   - Деконструкція спадку
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - Пропаганда — не минуле
   - Інструменти живуть далі
   - Перехід до сучасної дезінформації
-word_target: 3500
+word_target: 4000
 vocabulary:
 - пропаганда
 - «дружба народів»
@@ -73,13 +75,13 @@ vocabulary:
 - «буржуазний націоналізм»
 - спадок
 activities:
-- type: mechanism-analysis
+- type: critical-analysis
   focus: How "friendship of peoples" ideology worked
-- type: text-comparison
+- type: comparative-study
   focus: Soviet textbooks — how history was rewritten
-- type: forbidden-topics
+- type: critical-analysis
   focus: What couldn't be discussed — mapping silences
-- type: legacy-analysis
+- type: critical-analysis
   focus: Soviet propaganda tropes that survive today
 - type: essay-response
   focus: Чи 'дружба народів' була рівною?

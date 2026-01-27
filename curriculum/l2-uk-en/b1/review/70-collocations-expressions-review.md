@@ -12,7 +12,7 @@
 | ------------------- | ----- | --------------------------------------------------------------------------------------------------- |
 | Coherence           | 10/10 | Logical groups: Business, Action, Influence, Resistance.                                            |
 | Relevance           | 10/10 | Essential for sounding native.                                                                      |
-| Educational         | 10/10 | Excellent correction of calques: _приймати участь_ -> _брати участь_.                               |
+| Educational         | 10/10 | Excellent correction of calques: *приймати участь* -> *брати участь*.                               |
 | Language            | 10/10 | High-quality idioms.                                                                                |
 | Pedagogy            | 9/10  | Pylyp Orlyk narrative (Constitution) is a great historical anchor for "Law/Agreement" collocations. |
 | Immersion           | 10/10 | Authentic history.                                                                                  |

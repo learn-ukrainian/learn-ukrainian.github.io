@@ -1,10 +1,12 @@
 # Audit Report: M47 — 47-set-expressions-i-body-animals.md
+
 **Level:** B2 | **Module:** M47 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:16
 
 ## Configuration
+
 **Type:** B2-vocab
 **Word Target:** 1750 words
 **Activities:** 10-14 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Значення фразеологізмів | 16 | 8 | ✅ |
@@ -40,6 +43,7 @@
 - Low density activities: 0
 
 ## Gates
+
 - **Words:** ✅ 2121/1750 (raw: 2521)
 - **Activities:** ✅ 13/10
 - **Density:** ✅ All > 14
@@ -58,10 +62,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 97% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 56 | 24 | 100% | 20% | 20.0% |
@@ -77,6 +83,7 @@
 | **TOTAL** | | | | | **97.8%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 58 | Included in Core |

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M15 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 23:24:40
+**Generated:** 2026-01-27 16:22:29
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** comparative-study, critical-analysis, essay-response, fill-in, match-up, quiz, reading
+**Required Types:** comparative-study, critical-analysis, essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -24,28 +24,21 @@
 | 2 | critical-analysis | Аналіз: Моральний кодекс правителя | 1 | 1 | ✅ |
 | 3 | comparative-study | Князі-законодавці: Ярослав Мудрий vs Володимир Мономах | 1 | 1 | ✅ |
 | 4 | essay-response | Мономах — останній об’єднувач | 1 | 1 | ✅ |
-| 5 | quiz | Життя та реформи Мономаха | 8 | 8 | ✅ |
-| 6 | match-up | Ключові поняття епохи Мономаха | 12 | 8 | ✅ |
-| 7 | true-false | Міфи та істина про життя Мономаха | 10 | 8 | ✅ |
-| 8 | error-correction | Виправляємо історичні та граматичні помилки | 8 | 6 | ✅ |
-| 9 | unjumble | Відновлення історичних тез | 8 | 6 | ✅ |
-| 10 | translate | Переклад: Історичний контекст | 8 | 6 | ✅ |
-| 11 | fill-in | Політична та моральна термінологія епохи | 15 | 8 | ✅ |
-| 12 | match-up | Хронологія подій та правління | 12 | 8 | ✅ |
-| 13 | comparative-study | Любецький з'їзд vs Віче | 1 | 1 | ✅ |
+| 5 | true-false | Міфи та істина про життя Мономаха | 10 | 8 | ✅ |
+| 6 | comparative-study | Любецький з'їзд vs Віче | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 13 (target: 3-9) ❌
-- Unique types: 11 (minimum: 2) ✅
+- Total activities: 6 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 7/7 (comparative-study, critical-analysis, essay-response, fill-in, match-up, quiz, reading) ✅
+- Required types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ✅ 4460/4000 (raw: 4823)
-- **Activities:** ✅ 13/3
+- **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 11/2 types
+- **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
@@ -53,7 +46,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ Too many activities: 13 (target 3-9)
+- **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

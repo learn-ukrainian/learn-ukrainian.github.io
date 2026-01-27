@@ -7,10 +7,12 @@
 **Section word targets are FLEXIBLE GUIDANCE, not hard limits.**
 
 ### What MUST be met
+
 1. ✅ **Total word count** ≥ `word_target` (e.g., 4000 for B2-HIST)
 2. ✅ Each section within **±10% tolerance** of target
 
 ### What is FLEXIBLE
+
 - ✅ You can redistribute words between sections
 - ✅ One section can be 20% over if another is 10% under
 - ✅ Content depth in one section is valuable

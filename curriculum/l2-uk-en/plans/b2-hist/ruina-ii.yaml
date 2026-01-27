@@ -67,8 +67,6 @@ vocabulary_hints:
 activity_hints:
 - type: reading
   focus: Analysis of diplomatic correspondence
-- type: quiz
-  focus: Events of 1665-1678
 - type: essay-response
   focus: Was the Turkish alliance a mistake?
 - type: comparative-study

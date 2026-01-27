@@ -69,22 +69,10 @@ activity_hints:
   focus: Аналітичні статті Портникова
   source: Медіаматеріали
   items: 3 passages
-- type: quiz
-  focus: Факти про українську журналістику
-  items: 12+
-- type: match-up
-  focus: Журналістські терміни та визначення
-  items: 10+
 - type: essay-response
   focus: Яка роль аналітика в суспільстві?
   word_target: 300
   output: Рефлексивний есей
-- type: group-sort
-  focus: Журналістика vs пропаганда
-  items: 12+
-- type: fill-in
-  focus: Медійна термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - b2-hist-euromaidan
@@ -108,3 +96,7 @@ sources:
   notes: Архів публікацій
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of віталій портников: журналіст і аналітик'
+- Evaluate the contributions of голос української журналістики
+- Trace the career and influence of журналістика як місія

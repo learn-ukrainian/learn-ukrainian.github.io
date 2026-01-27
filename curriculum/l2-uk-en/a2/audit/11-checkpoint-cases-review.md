@@ -1,10 +1,12 @@
 # Audit Report: M11 — 11-checkpoint-cases.md
+
 **Level:** A2 | **Module:** M11 | **Phase:** A2 | **Pedagogy:** TTT | **Target:** 800
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 **Generated:** 2026-01-26 22:26:09
 
 ## Configuration
+
 **Type:** A2-checkpoint
 **Word Target:** 800 words
 **Activities:** 10-14 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Case Questions and Prepositions | 12 | 8 | ✅ |
@@ -41,6 +44,7 @@
 - Low density activities: 0
 
 ## Gates
+
 - **Words:** ✅ 1545/800 (raw: 1697)
 - **Activities:** ✅ 12/10
 - **Density:** ✅ All > 10
@@ -58,6 +62,7 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

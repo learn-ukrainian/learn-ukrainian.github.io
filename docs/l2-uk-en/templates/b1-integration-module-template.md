@@ -21,7 +21,6 @@ Before submitting your integration module, verify:
 - [ ] **Meta-level guidance:** Explicit instruction on HOW to read/listen/integrate
 - [ ] **B2 readiness check:** Explicitly prepares for next level
 
-
 <!--
 TEMPLATE_METADATA:
   required_sections:
@@ -1147,7 +1146,7 @@ immersion_target: 90-95%
 
 ### Section 8: External Resources
 
-_Added to `docs/resources/external_resources.yaml` with `module_id: b1-81`:_
+*Added to `docs/resources/external_resources.yaml` with `module_id: b1-81`:*
 
 - Українська правда (website)
 - BBC News Україна (website)
@@ -1205,7 +1204,6 @@ The module structure follows **Clean MD architecture**: Markdown contains narrat
 
 **End of B1 Integration Module Template**
 
-
 ---
 
 ## Naturalness Quality Checklist
@@ -1233,4 +1231,3 @@ Before finalizing the module, verify prose activities (cloze, fill-in, unjumble 
 **See:** `claude_extensions/stages/stage-4-review-fix.md` Section 9 for detailed naturalness criteria.
 
 **For batch scanning:** Use `/scan-naturalness {level} {start} {end}` to scan completed modules.
-

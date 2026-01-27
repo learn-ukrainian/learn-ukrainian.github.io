@@ -1,10 +1,12 @@
 # Audit Report: M39 — 39-register-religious-epistolary.md
+
 **Level:** B2 | **Module:** M39 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:11
 
 ## Configuration
+
 **Type:** B2-grammar
 **Word Target:** 1750 words
 **Activities:** 10-14 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Характеристики релігійного та епістолярного стилів | 16 | 8 | ✅ |
@@ -40,6 +43,7 @@
 - Low density activities: 0
 
 ## Gates
+
 - **Words:** ✅ 2137/1750 (raw: 2610)
 - **Activities:** ✅ 13/10
 - **Density:** ✅ All > 14
@@ -58,10 +62,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 95% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 65 | 24 | 100% | 20% | 20.0% |
@@ -77,6 +83,7 @@
 | **TOTAL** | | | | | **95.2%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 60 | Included in Core |

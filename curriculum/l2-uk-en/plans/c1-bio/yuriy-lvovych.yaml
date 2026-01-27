@@ -75,22 +75,10 @@ activity_hints:
   focus: Royal documents and seals
   source: Historical analysis (adapted)
   items: 3 passages
-- type: quiz
-  focus: Key events in Yuriy's reign
-  items: 12+
-- type: match-up
-  focus: European rulers and their relations with Galicia-Volhynia
-  items: 10+
 - type: essay-response
   focus: Why was the Galician Metropolitanate important?
   word_target: 250
   output: Analysis of church politics
-- type: group-sort
-  focus: Political vs. ecclesiastical achievements
-  items: 12+
-- type: fill-in
-  focus: Key terms of royal and church vocabulary
-  items: 8+
 - type: critical-analysis
   focus: Compare the royal traditions of Galicia-Volhynia and Moscow
   output: Comparative analysis

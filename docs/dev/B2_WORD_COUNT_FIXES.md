@@ -26,6 +26,7 @@
 ## Process for Each Module
 
 ### 1. Find Module File
+
 ```bash
 # Example for M116
 fd "^116-" curriculum/l2-uk-en/b2/
@@ -33,6 +34,7 @@ fd "^116-" curriculum/l2-uk-en/b2/
 ```
 
 ### 2. Read Module
+
 Understand:
 - Module topic (likely history or advanced grammar)
 - Existing narrative structure
@@ -96,6 +98,7 @@ npm run pipeline l2-uk-en b2 116
 ## Rules & Constraints
 
 ### ✅ DO
+
 - Add scholarly depth and nuance
 - Enrich historical context and analysis
 - Expand critical thinking elements
@@ -103,6 +106,7 @@ npm run pipeline l2-uk-en b2 116
 - Maintain 100% Ukrainian in body text
 
 ### ❌ DO NOT
+
 - Change vocabulary (must match curriculum plan)
 - Modify grammar explanations (accuracy critical)
 - Change activities (separate YAML files)
@@ -172,6 +176,7 @@ Based on module numbers, likely topics:
 When complete, report:
 
 1. **Summary table:**
+
    | Module | Topic | Words Added | Final Count | Audit | Pipeline |
    |--------|-------|-------------|-------------|-------|----------|
    | M116 | [title] | +97 | 1750 | ✅ | ✅ |

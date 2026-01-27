@@ -2,14 +2,14 @@
   "module": "84-winter-sports",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:27:38.234963Z",
+  "last_audit": "2026-01-27T20:14:48.372565Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-14T21:17:18.389944Z",
+    "md": "2026-01-27T20:07:32.458555Z",
     "meta": "2026-01-26T15:44:41.719756Z",
-    "activities": "2026-01-24T22:53:27.877720Z",
+    "activities": "2026-01-27T20:07:03.361928Z",
     "vocabulary": "2026-01-25T18:00:40.726164Z",
-    "plan": "2026-01-26T15:44:41.719424Z"
+    "plan": "2026-01-27T20:01:57.899008Z"
   },
   "gates": {
     "meta": {
@@ -18,19 +18,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "1698/1500 (raw: 1777) | pedagogy: 1 violations | richness: 86% < 95% min (grammar)"
+      "status": "pass",
+      "violations": 0,
+      "message": "1724/1500 (raw: 1803)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "11/10"
+      "message": "12/8"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "34/15"
+      "message": "34/25"
     },
     "naturalness": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Missing required activity types: discussion, matching, reading"
-    ],
-    "pass_count": 4,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

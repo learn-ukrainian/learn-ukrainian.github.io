@@ -6,35 +6,35 @@ title: Вид у запереченні
 subtitle: 'Aspect in Negation: How ''не'' Changes Aspect Selection'
 content_outline:
 - section: Тест
-  words: 150
+  words: 319
   points:
   - Three types of negation
   - Intuition check
 - section: Пояснення
-  words: 500
+  words: 423
   points:
   - General negation (imperfective)
   - '''Not yet'' exception (perfective)'
   - '''Don''''t do it'' warnings (perfective)'
   - Negative imperatives
 - section: Практика
-  words: 350
+  words: 614
   points:
   - Decision algorithm
   - Common mistakes
   - Scenarios
 - section: Діалоги
-  words: 650
+  words: 1293
   points:
   - Bookstore
   - Movie discussion
   - Academic work
 - section: Підсумок
-  words: 250
+  words: 351
   points:
   - Summary table
   - Self-check
-word_target: 1800
+word_target: 3000
 vocabulary_hints:
   required:
   - заперечення

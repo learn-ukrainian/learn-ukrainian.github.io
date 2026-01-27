@@ -7,15 +7,16 @@ subtitle: 'High Formal Register: Language of Documents'
 focus: style
 pedagogy: Academic
 objectives:
-- Learner can analyze the structure and language of official documents (laws, decrees, contracts)
+- Learner can analyze the structure and language of official documents (laws, decrees,
+  contracts)
 - Learner can identify and use standard bureaucratic clichés
 - Learner can transform neutral text into official-business style
 content_outline:
 - section: Introduction
-  words: 200
+  words: 3000
   subsections:
   - TBD
-word_target: 1500
+word_target: 3000
 vocabulary:
   required: []
   recommended: []

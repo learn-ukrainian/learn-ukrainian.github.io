@@ -5,42 +5,21 @@ version: '2.0'
 title: Українська музика сьогодні
 subtitle: Contemporary Ukrainian Music Scene
 content_outline:
-- section: 'Introduction: Ukrainian Music'
-  words: 150
-  points:
-  - Music scene overview
-  - Traditional to contemporary
-  - Cultural significance
-- section: Pop and Rock
-  words: 250
-  points:
-  - Popular artists
-  - Ukrainian-language pop
-  - Rock traditions
-- section: Hip-Hop and Electronic
-  words: 250
-  points:
-  - Ukrainian hip-hop
-  - Electronic music
-  - Festival culture
-- section: Folk and Ethno
-  words: 250
-  points:
-  - Folk revival
-  - Ethno-fusion
-  - Traditional instruments
-- section: War and Music
-  words: 200
-  points:
-  - Music during wartime
-  - Patriotic songs
-  - Cultural resistance
-- section: 'Practice: Music Discussion'
-  words: 100
-  points:
-  - Discuss favorite artists
-  - Compare music cultures
-word_target: 1200
+- section: Вступ
+  words: 130
+- section: Історія та культура
+  words: 460
+- section: Сучасність
+  words: 211
+- section: Практика
+  words: 314
+- section: Продукція
+  words: 338
+- section: Підсумок
+  words: 110
+- section: Потрібно більше практики?
+  words: 109
+word_target: 1672
 vocabulary_hints:
   required:
   - музика (music)
@@ -60,13 +39,13 @@ activity_hints:
 - type: reading
   focus: Texts about Ukrainian artists
   items: 15
-- type: listening
+- type: quiz
   focus: Understand song themes
   items: 15
-- type: matching
+- type: match-up
   focus: Match artists to genres
   items: 20
-- type: discussion
+- type: quiz
   focus: Share music preferences
   items: 10
 focus: culture

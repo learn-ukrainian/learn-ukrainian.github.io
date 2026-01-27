@@ -149,23 +149,13 @@
 
 ## Практика (Practice)
 
-
-
 Використовуйте ці вправи. Це гарна практика. (Use these exercises. This is good practice.)
-
-
 
 # Підсумок (Summary)
 
-
-
 Ви вивчили українські свята та традиції! Тепер ви знаєте багато щирих привітань. (You learned Ukrainian holidays and traditions! Now you know many sincere greetings.) Ви знаєте, як вітати друзів та родину. Ви готові святкувати разом! (You are ready to celebrate together!) Ви знаєте слова: подарунок, торт, вечірка. Це був чудовий та веселий урок! (This was a wonderful and cheerful lesson!) Сім'я та свята — це серце України. (Family and holidays are the heart of Ukraine.) Хай щастить! (Good luck!)
 
-
-
 ## Need More Practice?
-
-
 
 > [!tip]
 

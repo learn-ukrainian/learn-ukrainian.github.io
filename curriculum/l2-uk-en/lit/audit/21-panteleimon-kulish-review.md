@@ -1,10 +1,12 @@
 # Audit Report: M21 — 21-panteleimon-kulish.md
+
 **Level:** LIT | **Module:** M21 | **Phase:** LIT.4 | **Pedagogy:** Seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:57:56
 
 ## Configuration
+
 **Type:** LIT-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Первинне джерело: Світогляд Куліша | 1 | 1 | ✅ |
@@ -35,11 +38,13 @@
 - Low density activities: 0
 
 ## Recommendation
+
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 3476/4000 (raw: 3878)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
@@ -58,10 +63,12 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
+
 **Score:** 91% (minimum: 90%)
 **Module Type:** literature
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
@@ -77,16 +84,18 @@
 | **TOTAL** | | | | | **91.3%** |
 
 ### Dryness Flags & Fixes
+
 - ❌ **NO_RESOURCES**
   - FIX:
     Add 2+ resource blocks. Use this format:
-    
+
     > [!resources] Додаткові ресурси
     >
     > - [Resource 1 with link or description]
     > - [Resource 2 with link or description]
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 144 | Included in Core |

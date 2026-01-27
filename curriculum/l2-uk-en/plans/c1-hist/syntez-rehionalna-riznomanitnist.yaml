@@ -5,17 +5,19 @@ version: '1.0'
 title: 'Синтез: Регіональна різноманітність'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of синтез: регіональна різноманітність'
+- Evaluate the historical significance of єдність у різноманітності
 content_outline:
 - section: Вступ — Єдність у різноманітності
-  words: 400
+  words: 457
   subsections:
   - Огляд модулів 70-79
   - Регіони — не перешкода
   - Єдина нація — різні шляхи
   - Мета синтезу
 - section: Порівняльна таблиця регіонів
-  words: 600
+  words: 686
   subsections:
   - Захід vs. Схід vs. Південь vs. Центр
   - Імперський досвід
@@ -23,40 +25,40 @@ content_outline:
   - Мова
   - Національна свідомість
 - section: Чому різні траєкторії?
-  words: 700
+  words: 800
   subsections:
   - Імперії — ключ до розуміння
   - Австрія дала шанс
   - Росія — русифікація
   - Різний час «пробудження»
 - section: Чи є «справжні українці»?
-  words: 600
+  words: 686
   subsections:
   - Міф «західників»
   - Міф «русифікованого сходу»
   - Реальність — спектр
   - Ідентичність — процес
 - section: 2014 і 2022 — перевірка
-  words: 500
+  words: 571
   subsections:
   - Майдан — не тільки Київ
   - 2014 — Схід і Південь
   - 2022 — загальна мобілізація
   - Регіоналізм vs. патріотизм
 - section: Майбутнє регіонів
-  words: 400
+  words: 457
   subsections:
   - Децентралізація
   - Регіональна ідентичність в єдиній державі
   - Європейський досвід
   - Україна після війни
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - Різноманітність — сила
   - Єдність — вибір
   - Перехід до імперських механізмів
-word_target: 3500
+word_target: 4000
 vocabulary:
 - синтез
 - регіональна різноманітність
@@ -76,11 +78,9 @@ vocabulary:
 activities:
 - type: essay-response
   focus: Create regional diversity map of Ukraine
-- type: comparative-table
-  focus: All regions — key characteristics
-- type: 2014-2022-analysis
+- type: critical-analysis
   focus: How regions responded to crises
-- type: future-scenarios
+- type: essay-response
   focus: Regional Ukraine after victory — what model?
 - type: essay-response
   focus: Чи регіональні відмінності загрожують єдності України?

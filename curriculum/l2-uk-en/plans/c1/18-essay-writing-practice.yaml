@@ -5,43 +5,43 @@ version: '2.0'
 title: Практикум — Написання есе
 content_outline:
 - section: Вступ — Інтеграція навичок
-  words: 300
+  words: 267
   points:
   - Огляд академічного письма M01-M17
   - Чек-лист есеїста
   - Критерії оцінювання
 - section: Планування есе
-  words: 600
+  words: 533
   points:
   - Аналіз теми (що вимагається)
   - Мозковий штурм ідей
   - Структурування плану
 - section: Написання чернетки
-  words: 800
+  words: 711
   points:
   - Від тези до абзаців
   - Інтеграція цитат і доказів
   - Логічні переходи
 - section: Редагування
-  words: 700
+  words: 622
   points:
   - Перевірка структури
   - Стилістичне редагування
   - Пунктуація і граматика
 - section: Взірцеве есе з аналізом
-  words: 1000
+  words: 889
   points:
   - Повний зразок академічного есе
   - Коментарі до кожної частини
   - Альтернативні підходи
 - section: Типові помилки
-  words: 600
+  words: 533
   points:
   - Структурні проблеми
   - Стилістичні невідповідності
   - Логічні прогалини
 - section: Практичне завдання
-  words: 500
+  words: 445
   points:
   - Тема для есе
   - Поетапні інструкції
@@ -104,3 +104,7 @@ sources:
   notes: Sample essays with analysis
 immersion: 100% Ukrainian
 phase: C1.1 Academic Ukrainian
+objectives:
+- Understand and apply практикум — написання есе
+- Analyze and evaluate інтеграція навичок
+- Identify key concepts of практичне завдання

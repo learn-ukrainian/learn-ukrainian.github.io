@@ -1,10 +1,12 @@
 # Audit Report: M79 — klavdiya-latysheva.md
+
 **Level:** C1 | **Module:** M79 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:39
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння тексту: Життя Клавдії Латишевої | 5 | 5 | ✅ |
@@ -42,16 +45,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in klavdiya-latysheva.yaml: Schema validation error at key '12': {'type': 'reading', 'title': 'Жінки в українській науці', 'resource': {'type': 'article', 'url': 'https://www.nas.gov.ua/', 'title': 'Видатні жінки-вчені України'}, 'tasks': ['Знайдіть у тексті інформацію про науковий внесок Латишевої.', 'Які ще імена жінок-математиків згадуються?', 'Як автор оцінює роль жінок у розвитку кібернетики?']} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2041/4000 (raw: 2322)
 - **Activities:** ✅ 13/3
 - **Density:** ✅ All > 1
@@ -70,10 +76,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 97% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 4 | 4 | 100% | 19% | 19.0% |
@@ -89,6 +97,7 @@
 | **TOTAL** | | | | | **97.4%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 95 | Included in Core |

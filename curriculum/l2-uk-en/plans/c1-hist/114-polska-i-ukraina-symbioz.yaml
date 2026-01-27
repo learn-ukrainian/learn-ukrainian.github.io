@@ -5,47 +5,47 @@ version: '2.0'
 title: 'Польща і Україна: Симбіоз і конфлікт'
 content_outline:
 - section: Вступ — 600 років разом
-  words: 451
+  words: 515
   points:
   - Найскладніші відносини в Європі
   - Спільна держава — 400 років
   - Конфлікт і співпраця
   - Структура модуля
 - section: Люблінська унія 1569
-  words: 677
+  words: 774
   points:
   - Об'єднання в одну державу
   - Що отримала Україна
   - Шляхта — українська еліта
   - Полонізація
 - section: Козацькі повстання
-  words: 790
+  words: 903
   points:
   - Наливайко, Жмайло
   - Хмельницький 1648
   - Ріки крові
   - Але не етнічна війна
 - section: Під розділами
-  words: 677
+  words: 774
   points:
   - 1795 — кінець Речі Посполитої
   - Спільна неволя
   - Польське повстання 1863
   - Українці — союзники чи конкуренти
 - section: Спільна культура
-  words: 564
+  words: 645
   points:
   - Мова — взаємовпливи
   - Костюшко, Міцкевич — походження
   - Архітектура Львова
   - Що залишилось
 - section: Підсумок
-  words: 341
+  words: 389
   points:
   - Симбіоз і конфлікт — одночасно
   - Неможливо спростити
   - Перехід до 1918-1920
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - симбіоз (symbiosis)
@@ -65,16 +65,16 @@ vocabulary_hints:
   - сарматизм (Sarmatism)
   - гайдамаки (Haidamaks)
 activity_hints:
-- type: historical-analysis
+- type: critical-analysis
   focus: 400 years of Polish-Ukrainian shared state
   output: Coexistence analysis
-- type: complexity-analysis
+- type: critical-analysis
   focus: Why 1648 was not ethnic cleansing
   output: Nuance identification
-- type: cultural-study
+- type: comparative-study
   focus: Polish-Ukrainian cultural symbiosis
   output: Cultural exchange mapping
-- type: comparative-perspective
+- type: critical-analysis
   focus: Polish and Ukrainian views on shared history
   output: Perspective comparison
 - type: essay-response
@@ -104,3 +104,6 @@ sources:
   notes: Cossack-Polish wars
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of польща і україна: симбіоз і конфлікт'
+- Evaluate the historical significance of 600 років разом

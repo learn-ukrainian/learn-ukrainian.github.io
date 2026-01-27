@@ -69,22 +69,10 @@ activity_hints:
   focus: Rudnytska's speeches and articles
   source: Historical archives
   items: 3 passages
-- type: quiz
-  focus: Rudnytska's biography and achievements
-  items: 12+
-- type: match-up
-  focus: Women's organizations and their goals
-  items: 10+
 - type: essay-response
   focus: How did Rudnytska combine feminism with national liberation?
   word_target: 300
   output: Analysis of intersectional activism
-- type: group-sort
-  focus: Domestic vs. international activities
-  items: 12+
-- type: fill-in
-  focus: Key dates and organizations
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-59 (Olha Basarab - earlier activist)
@@ -110,3 +98,7 @@ sources:
   notes: Political party she represented
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of мілена рудницька: голос українського фемінізму'
+- Evaluate the contributions of піонерка жіночого руху
+- Trace the career and influence of спадщина та визнання

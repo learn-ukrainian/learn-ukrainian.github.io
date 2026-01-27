@@ -1,10 +1,12 @@
 # Audit Report: M92 — olena-teliha.md
+
 **Level:** C1 | **Module:** M92 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:44
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння біографії | 5 | 5 | ✅ |
@@ -41,22 +44,26 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in olena-teliha.yaml: Schema validation error at key '7': {'type': 'error-correction', 'title': 'Складні синтаксичні структури', 'items': [{'sentence': 'Хоча друзі просили її поїхати, проте вона залишилася.', 'error': 'проте', 'answer': 'none', 'options': ['хоча', 'проте', 'залишилася', 'none'], 'explanation': 'Вживання «проте» після «хоча» є стилістично надлишковим у літературній мові.'}, {'sentence': 'Теліга була жінкою яка не знала страху.', 'error': 'жінкою яка', 'answer': 'жінкою, яка', 'options': ['жінкою яка', 'жінкою, яка', 'жінкою: яка', 'none'], 'explanation': 'Перед сполучним словом «яка» у підрядному реченні ставиться кома.'}, {'sentence': 'Вона знала що за нею прийдуть з Гестапо.', 'error': 'знала що', 'answer': 'знала, що', 'options': ['знала що', 'знала, що', 'знала: що', 'none'], 'explanation': 'Кома перед сполучником «що».'}, {'sentence': 'Читаючи її вірші, ми відчуваємо подих епохи.', 'error': 'none', 'answer': '✓', 'options': ['читаючи', 'її', 'відчуваємо', '✓'], 'explanation': 'Речення з дієприслівниковим зворотом побудоване правильно.'}, {'sentence': 'Вона хотіла щоб Україна була вільною та незалежною.', 'error': 'хотіла щоб', 'answer': 'хотіла, щоб', 'options': ['хотіла щоб', 'хотіла, щоб', 'хотіла: щоб', 'none'], 'explanation': 'Кома перед сполучником «щоб».'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template.md'
   - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template.md'
   - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 3 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2009/4000 (raw: 2273)
 - **Activities:** ✅ 12/3
 - **Density:** ✅ All > 1
@@ -75,10 +82,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 8 | 4 | 100% | 19% | 19.0% |
@@ -94,6 +103,7 @@
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 69 | Included in Core |

@@ -1,9 +1,11 @@
 # Audit Report: M46 — 46-review-c1-4.md
+
 **Level:** C1 | **Module:** M46 | **Phase:** C1 | **Pedagogy:** Review | **Target:** 3000
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:23
 
 ## Configuration
+
 **Type:** C1
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -16,6 +18,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Ідентифікація регістру | 5 | 5 | ✅ |
@@ -38,24 +41,27 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "---
 
 ## Розминка: Детектив стилів
 
 Перш ніж почати, спробуйте визначити стиль за одним словом.". Shares significant keywords with sentence at index 5.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Вміння миттєво класифікувати лексику — це база для вільного володіння мовою.". Shares significant keywords with sentence at index 6.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 46-review-c1-4.yaml: Schema validation error at key 'words': ['Як', 'же', 'я', 'за', 'тобою', 'неймовірно', 'сильно', 'скучила', 'мій', 'рідненький', 'котику'] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 3 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2004/3000 (raw: 2185)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
@@ -74,10 +80,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 94% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 82 | 15 | 100% | 25% | 25.0% |
@@ -91,6 +99,7 @@
 | **TOTAL** | | | | | **94.9%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 61 | Included in Core |

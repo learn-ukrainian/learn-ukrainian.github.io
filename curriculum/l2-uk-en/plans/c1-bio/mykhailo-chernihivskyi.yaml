@@ -75,19 +75,10 @@ activity_hints:
   focus: Hagiographic account of Mykhailo's martyrdom
   source: Medieval житіє (adapted)
   items: 3 passages
-- type: quiz
-  focus: Facts about Mykhailo's life and death
-  items: 12+
-- type: match-up
-  focus: Key figures and their roles in the narrative
-  items: 10+
 - type: essay-response
   focus: Analyze Mykhailo's choice - faith vs. survival
   word_target: 250
   output: Ethical and historical analysis
-- type: fill-in
-  focus: Terminology of martyrdom and canonization
-  items: 8+
 - type: critical-analysis
   focus: Distinguish hagiographic elements from historical facts
   output: Source criticism with examples

@@ -5,42 +5,42 @@ version: '2.0'
 title: Суспільство та політика
 subtitle: Society & Politics
 content_outline:
-- section: 'Introduction: Civic Vocabulary'
+- section: Вступ
   words: 150
   points:
   - Why political vocabulary matters
   - Ukrainian democratic context
   - Key concepts overview
-- section: Government and State
-  words: 250
+- section: Вживання
+  words: 380
   points:
-  - уряд, держава, влада
-  - парламент, президент, міністр
-  - State institution vocabulary
-- section: Democratic Processes
-  words: 250
+  - Collocations patterns
+  - Register considerations
+  - Application domains
+- section: Читання
+  words: 466
   points:
-  - вибори, голосування, референдум
-  - кандидат, партія, коаліція
-  - Election vocabulary
-- section: Rights and Society
-  words: 250
+  - News article
+  - Historical perspective
+  - Blog commentary
+- section: Діалоги
+  words: 380
   points:
-  - права, свободи, громадянин
-  - закон, конституція
-  - Civic rights vocabulary
-- section: Political Actions
-  words: 200
+  - News discussion (formal)
+  - Pre-election debate (informal)
+  - Activism conversation, political analysis
+- section: Лексика
+  words: 1416
   points:
-  - обирати, голосувати, протестувати
-  - ухвалювати, підтримувати
-  - Political verbs
-- section: 'Practice: Political Discussion'
-  words: 100
+  - Six vocabulary groups
+  - State/society, power/institutions
+  - Law, democratic process, reforms, concepts
+- section: Підсумок
+  words: 208
   points:
-  - Discuss civic topics
-  - Use formal vocabulary
-word_target: 1200
+  - Key vocabulary recap
+  - Practice recommendations
+word_target: 3000
 vocabulary_hints:
   required:
   - уряд (government)
@@ -57,16 +57,16 @@ vocabulary_hints:
   - демократія (democracy)
   - свобода (freedom)
 activity_hints:
-- type: collocation
+- type: match-up
   focus: Political noun phrases
   items: 25
 - type: fill-in
   focus: Complete civic sentences
   items: 20
-- type: matching
+- type: match-up
   focus: Match institutions and functions
   items: 15
-- type: discussion
+- type: quiz
   focus: Discuss civic topics
   items: 10
 focus: vocabulary

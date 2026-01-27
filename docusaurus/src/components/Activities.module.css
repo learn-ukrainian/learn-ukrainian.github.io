@@ -1357,6 +1357,232 @@
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
 }
 
+/* ============= SOURCE EVALUATION ============= */
+.metadataBox {
+  padding: 1rem;
+  background: var(--ifm-background-surface-color);
+  border-radius: 10px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  margin-bottom: 1rem;
+}
+
+.metadataTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+}
+
+.metadataTable td {
+  padding: 0.4rem 0.75rem;
+  border-bottom: 1px solid var(--ifm-color-emphasis-100);
+  font-size: 0.95rem;
+}
+
+.metadataTable td:first-child {
+  width: 120px;
+  color: var(--ifm-color-emphasis-600);
+}
+
+.criteriaBox {
+  margin-bottom: 1rem;
+}
+
+.criteriaTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.criteriaTag {
+  display: inline-block;
+  padding: 0.4rem 0.9rem;
+  background: var(--ifm-color-primary);
+  color: white;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* ============= DEBATE ============= */
+.debateQuestion {
+  padding: 1.25rem;
+  background: linear-gradient(135deg, rgba(0, 87, 183, 0.08) 0%, rgba(26, 115, 232, 0.05) 100%);
+  border-radius: 12px;
+  border-left: 5px solid var(--ifm-color-primary);
+  margin-bottom: 1rem;
+}
+
+.debateQuestion .questionText {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+}
+
+.positionsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.positionCard {
+  border: 2px solid var(--ifm-color-emphasis-300);
+  border-radius: 12px;
+  padding: 1rem;
+  background: var(--ifm-background-color);
+  transition: all 0.2s ease;
+}
+
+.positionCard:hover {
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.positionHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.positionNumber {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: var(--ifm-color-primary);
+  color: white;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.positionName {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--ifm-heading-color);
+  flex: 1;
+}
+
+.expandIcon {
+  color: var(--ifm-color-emphasis-500);
+  font-size: 0.85rem;
+}
+
+.positionProponents {
+  font-size: 0.9rem;
+  color: var(--ifm-color-emphasis-600);
+  margin-bottom: 0.75rem;
+  padding-left: 2.75rem;
+}
+
+.positionArgument {
+  padding-left: 2.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.positionArgument p {
+  margin: 0.5rem 0 0 0;
+  line-height: 1.6;
+}
+
+.positionDetails {
+  padding-left: 2.75rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.positionEvidence {
+  margin-bottom: 1rem;
+}
+
+.positionEvidence ul,
+.positionWeaknesses ul {
+  margin: 0.5rem 0 0 0;
+  padding-left: 1.25rem;
+}
+
+.positionEvidence li,
+.positionWeaknesses li {
+  margin-bottom: 0.4rem;
+  font-size: 0.95rem;
+}
+
+.positionWeaknesses {
+  color: var(--ifm-color-danger-dark);
+}
+
+/* ============= ESSAY / MODEL ANSWER SHARED ============= */
+.essayPrompt {
+  padding: 1rem;
+  background: var(--ifm-color-emphasis-100);
+  border-radius: 10px;
+  border-left: 4px solid var(--ifm-color-warning);
+  margin-bottom: 1rem;
+}
+
+.essayInputArea {
+  margin-bottom: 1rem;
+}
+
+.inputLabel {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--ifm-heading-color);
+}
+
+.essayTextarea {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid var(--ifm-color-emphasis-300);
+  border-radius: 10px;
+  font-size: 1rem;
+  font-family: inherit;
+  line-height: 1.6;
+  background: var(--ifm-background-color);
+  color: var(--ifm-font-color-base);
+  resize: vertical;
+  transition: all 0.25s ease;
+}
+
+.essayTextarea:focus {
+  outline: none;
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 0 0 3px rgba(0, 87, 183, 0.15);
+}
+
+.modelAnswer {
+  margin-top: 1rem;
+}
+
+.collapsibleHeader {
+  font-weight: 700;
+  color: var(--ifm-color-primary);
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+}
+
+.modelContent {
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.modelContent ol,
+.modelContent ul {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.modelContent li {
+  margin-bottom: 0.5rem;
+}
+
 /* ============= RESPONSIVE ============= */
 @media (max-width: 768px) {
   .matchUpContainer {

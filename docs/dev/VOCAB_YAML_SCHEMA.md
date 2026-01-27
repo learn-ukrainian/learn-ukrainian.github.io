@@ -29,8 +29,8 @@ items:                            # Required: List of vocabulary items
 | **`ipa`**         | string | **Required**  | International Phonetic Alphabet transcription.                                                                         |
 | **`translation`** | string | **Required**  | English translation. **Must be concise**.                                                                              |
 | **`pos`**         | enum   | **Required**  | Part of Speech. Valid: `noun`, `verb`, `adj`, `adv`, `pron`, `prep`, `conj`, `part`, `intj`, `num`, `phrase`, `propn`, `suffix`, `prefix`, `other`. |
-| `gender`          | enum   | _Conditional_ | Required for **nouns**. valid: `m` (masc), `f` (fem), `n` (neut), `pl` (plural-only).                                  |
-| `aspect`          | enum   | _Conditional_ | Required for **verbs** (B1+). valid: `imp` (imperfective), `perf` (perfective).                                        |
+| `gender`          | enum   | *Conditional* | Required for **nouns**. valid: `m` (masc), `f` (fem), `n` (neut), `pl` (plural-only).                                  |
+| `aspect`          | enum   | *Conditional* | Required for **verbs** (B1+). valid: `imp` (imperfective), `perf` (perfective).                                        |
 | `usage`           | string | Optional      | Context note (e.g., "formal", "slang").                                                                                |
 | `audio`           | string | Optional      | Filename of audio asset (e.g., `a1m01_tak.mp3`).                                                                       |
 | `tags`            | list   | Optional      | `core` (must drill), `passive` (recognition only), `cognate`.                                                          |

@@ -5,42 +5,42 @@ version: '2.0'
 title: Опис змін
 subtitle: Describing Changes
 content_outline:
-- section: 'Introduction: Language of Change'
-  words: 150
+- section: Вступ
+  words: 171
   points:
   - Why change vocabulary matters
   - Dynamic vs static descriptions
   - Temporal perspective
-- section: Verbs of Increase
-  words: 250
+- section: Вживання
+  words: 677
   points:
-  - зростати, збільшуватися, підвищуватися
-  - Gradual vs sudden increase
   - Collocations with adverbs
-- section: Verbs of Decrease
-  words: 250
+  - Typical constructions
+  - Application domains
+- section: Читання
+  words: 501
   points:
-  - зменшуватися, знижуватися, падати
-  - Decline vocabulary
-  - Negative change patterns
-- section: Verbs of Transformation
-  words: 250
+  - Economic review
+  - Weather forecast
+  - Social changes blog
+- section: Діалоги
+  words: 445
   points:
-  - змінюватися, перетворюватися, ставати
-  - Complete transformation
-  - Before-after descriptions
-- section: Adverbs and Qualifiers
-  words: 200
+  - Work meeting (formal)
+  - Weather discussion (informal)
+  - Economic discussion, doctor visit
+- section: Лексика
+  words: 955
   points:
-  - поступово, різко, стрімко
-  - Degree and manner
-  - Combining with verbs
-- section: 'Practice: Narrating Change'
-  words: 100
+  - Six vocabulary groups
+  - General change verbs, improvement/decline
+  - Growth/decrease, expansion, speed adverbs
+- section: Підсумок
+  words: 251
   points:
-  - Describe trends
-  - Narrate transformations
-word_target: 1200
+  - Key vocabulary recap
+  - Practice recommendations
+word_target: 3000
 vocabulary_hints:
   required:
   - зростати (to grow/increase)
@@ -57,16 +57,16 @@ vocabulary_hints:
   - падати (to fall)
   - ставати (to become)
 activity_hints:
-- type: collocation
+- type: match-up
   focus: Verb + adverb combinations
   items: 25
 - type: fill-in
   focus: Describe changes in context
   items: 20
-- type: transformation
+- type: cloze
   focus: Rephrase change descriptions
   items: 15
-- type: writing
+- type: cloze
   focus: Narrate trends
   items: 10
 focus: vocabulary

@@ -1,17 +1,60 @@
-module: 08-aspect-past-result-process
-level: B1
-slug: 08-aspect-past-result-process
-version: '1.0'
-id: b1-08
-naturalness:
-  score: 9
-  status: PASS
+module: b1-08
+title: 'Вид у минулому: результат і процес'
+subtitle: 'Aspect in Past: Result vs Process'
+version: '2.0'
+phase: 'B1.1 Aspect'
+pedagogy: 'TTT'
 duration: 90
 transliteration: none
 tags:
-- grammar
-- aspect
-- past-tense
-- duration
-build:
-  last_modified: '2026-01-26'
+  - grammar
+  - aspect
+  - past-tense
+  - result
+  - process
+related_modules:
+  - b1-07-aspect-past-single-repeated
+  - b1-09-aspect-future
+grammar:
+  - Result-oriented vs process-oriented aspect
+  - Duration markers and aspect
+  - Completed actions vs ongoing processes
+objectives:
+  - Learner can distinguish result from process in past tense
+  - Learner understands duration markers with imperfective
+  - Learner can select aspect based on speaker's focus (result vs activity)
+  - Learner recognizes completion markers with perfective
+vocabulary_count: 25
+required_sections:
+  - Тест
+  - Пояснення
+  - Контраст
+  - Практика
+  - Діалоги
+  - Підсумок
+required_activity_types:
+  - quiz
+  - fill-in
+  - cloze
+richness:
+  media: 80
+  immersion: 100
+  cultural: 80
+activities:
+  count: 8
+  types:
+    - quiz
+    - fill-in
+    - cloze
+vocabulary:
+  count: 25
+  types:
+    - noun
+    - verb
+    - adverb
+status: built
+timestamp: 2026-01-27
+naturalness:
+  score: 9
+  status: PASS
+  justification: "Clear distinction between result and process."

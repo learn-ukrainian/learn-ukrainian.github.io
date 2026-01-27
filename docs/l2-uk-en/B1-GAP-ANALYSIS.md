@@ -106,6 +106,7 @@ From analyzing the modules, these imperatives appear:
 ## Section 2: Cross-Reference Against Set A (M01-M05)
 
 ### M01: Parts of Speech & Cases
+
 **Teaches:**
 - 10 частин мови
 - 7 відмінків
@@ -119,6 +120,7 @@ From analyzing the modules, these imperatives appear:
 - заперечення (negation)
 
 ### M02: Verb Terminology
+
 **Teaches:**
 - вид (aspect): доконаний, недоконаний
 - час (tense): теперішній, минулий, майбутній
@@ -143,6 +145,7 @@ From analyzing the modules, these imperatives appear:
 - наказова форма (imperative form - "наказовий спосіб" is taught, but not "наказова форма")
 
 ### M03: Grammar Patterns
+
 **Teaches:**
 - використовується, означає, показує, виражає, вказує на
 - порівняйте, зверніть увагу, наприклад, тобто, отже
@@ -159,6 +162,7 @@ From analyzing the modules, these imperatives appear:
   - перекладіть
 
 ### M04: Sentence Structure
+
 **Teaches:**
 - підмет, присудок, додаток, означення, обставина
 - просте речення, складне речення, складносурядне, складнопідрядне
@@ -170,6 +174,7 @@ From analyzing the modules, these imperatives appear:
 - контекст (used extensively in M08, M09, M10 but never defined)
 
 ### M05: Checkpoint
+
 **Teaches:**
 - Integration of all M01-M04 terms
 - Reading comprehension practice

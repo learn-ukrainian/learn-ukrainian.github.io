@@ -1,9 +1,11 @@
 # Audit Report: M102 — 102-kotsiubynskyi.md
+
 **Level:** C1 | **Module:** M102 | **Phase:** C1 | **Pedagogy:** Literary Analysis | **Target:** 3500
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:57
 
 ## Configuration
+
 **Type:** C1-literature
 **Word Target:** 3500 words
 **Activities:** 12-16 required
@@ -16,6 +18,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння аналізу імпресіонізму Коцюбинського | 12 | 5 | ✅ |
@@ -39,6 +42,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "---
 
 ### Первинний аналіз
@@ -46,17 +50,19 @@
 **Питання для першого читання:**
 
 1.". Shares significant keywords with sentence at index 40.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 102-kotsiubynskyi.yaml: Schema validation error at key 'words': ['Мова', 'Коцюбинського', 'відзначається', 'вишуканістю', 'ритмічністю', 'та', 'багатством', 'художніх', 'засобів', 'особливо', 'епітетів'] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 2 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 1917/3500 (raw: 2132)
 - **Activities:** ✅ 13/12
 - **Density:** ✅ All > 12
@@ -75,10 +81,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 84% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 44 | 15 | 100% | 25% | 25.0% |
@@ -92,16 +100,18 @@
 | **TOTAL** | | | | | **84.1%** |
 
 ### Dryness Flags & Fixes
+
 - ❌ **ABSTRACT_ONLY**
   - FIX:
     Add 3+ real-world boxes. Use this exact format:
-    
+
     > 🌍 **У реальному житті**
     >
     > [Specific scenario: "На співбесіді...", "У магазині...", "На вокзалі..."]
     > [Example sentence showing grammar in that context]
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 71 | Included in Core |

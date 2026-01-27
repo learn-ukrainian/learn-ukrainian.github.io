@@ -5,42 +5,19 @@ version: '2.0'
 title: 'Новини: як читати'
 subtitle: News Reading Strategies for Ukrainian Media
 content_outline:
-- section: 'Introduction: News Literacy'
-  words: 150
-  points:
-  - News reading strategies
-  - Ukrainian media landscape
-  - Source evaluation
-- section: News Structure
-  words: 250
-  points:
-  - Headlines and leads
-  - Inverted pyramid
-  - Article organization
-- section: News Vocabulary
-  words: 250
-  points:
-  - Common news terms
-  - Formal register
-  - Abbreviations
-- section: Fact vs Opinion
-  words: 250
-  points:
-  - Identifying facts
-  - Recognizing opinion
-  - Bias awareness
-- section: Practice Strategies
-  words: 200
-  points:
-  - Skimming and scanning
-  - Key information extraction
-  - Summary skills
-- section: 'Practice: News Analysis'
-  words: 100
-  points:
-  - Analyze news articles
-  - Discuss current events
-word_target: 1200
+- section: Вступ
+  words: 106
+- section: Огляд
+  words: 1177
+- section: Практика
+  words: 513
+- section: Продукція
+  words: 249
+- section: Підсумок
+  words: 193
+- section: Потрібно більше практики?
+  words: 109
+word_target: 2347
 vocabulary_hints:
   required:
   - новини (news)
@@ -60,13 +37,13 @@ activity_hints:
 - type: reading
   focus: Authentic news articles
   items: 15
-- type: matching
+- type: match-up
   focus: Match headlines to content
   items: 20
 - type: fill-in
   focus: Complete news summaries
   items: 15
-- type: analysis
+- type: critical-analysis
   focus: Analyze news for bias
   items: 10
 focus: skills

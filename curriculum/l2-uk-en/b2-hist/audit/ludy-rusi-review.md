@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M18 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 23:24:58
+**Generated:** 2026-01-27 16:22:32
 
 ## Configuration
 **Type:** B2-history
@@ -21,26 +21,23 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Джерело: Руська Правда про соціальну ієрархію | 3 | 1 | ✅ |
-| 2 | quiz | Суспільство Київської Русі | 10 | 8 | ✅ |
-| 3 | match-up | Соціальні стани та їхні характеристики | 12 | 8 | ✅ |
-| 4 | critical-analysis | Аналіз: Система штрафів Руської Правди | 1 | 1 | ✅ |
-| 5 | essay-response | Феодалізм чи рабство в Київській Русі | 1 | 1 | ✅ |
-| 6 | comparative-study | Рабство в Русі vs Кріпацтво в Російській імперії | 1 | 1 | ✅ |
-| 7 | fill-in | Термінологія соціальної системи Русі | 10 | 8 | ✅ |
-| 8 | true-false | Факти про суспільство Київської Русі | 10 | 8 | ✅ |
+| 2 | critical-analysis | Аналіз: Система штрафів Руської Правди | 1 | 1 | ✅ |
+| 3 | essay-response | Феодалізм чи рабство в Київській Русі | 1 | 1 | ✅ |
+| 4 | comparative-study | Рабство в Русі vs Кріпацтво в Російській імперії | 1 | 1 | ✅ |
+| 5 | true-false | Факти про суспільство Київської Русі | 10 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 8 (target: 3-9) ✅
-- Unique types: 8 (minimum: 2) ✅
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ✅ 4224/4000 (raw: 4319)
-- **Activities:** ✅ 8/3
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 8/2 types
+- **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
@@ -48,7 +45,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (8 activities)
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.5% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

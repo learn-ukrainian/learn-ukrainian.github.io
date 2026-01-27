@@ -67,12 +67,6 @@ activity_hints:
   focus: Документи Головної Руської Ради
   source: Архівні документи
   items: 4
-- type: quiz
-  focus: Галичина під Габсбургами
-  items: 15
-- type: match-up
-  focus: Організація → функція
-  items: 10
 - type: true-false
   focus: Порівняння Австрії та Росії
   items: 10

@@ -1,4 +1,5 @@
 # B1 Naturalness Scan Report - M66-M71
+
 **Date:** 2026-01-12
 **Protocol:** claude_extensions/protocols/a1-naturalness-scan.md
 **Scope:** M66-M71 (6 modules - Professional Vocabulary & Synonymy section)
@@ -21,6 +22,7 @@
 ## Scan Results by Module
 
 ### M66: Business Basics [✅ PASS]
+
 **Status:** COHERENT BUSINESS NARRATIVE
 **Activities:** Quiz, match-up, group-sort, cloze (2), select, true-false, unjumble, error-correction, translate, mark-the-words
 
@@ -50,6 +52,7 @@
 ---
 
 ### M67: Travel & Geography [✅ PASS]
+
 **Status:** COHERENT TRAVEL NARRATIVE
 **Activities:** Quiz, match-up (2), group-sort, cloze (2), select, true-false, unjumble, error-correction, translate, mark-the-words
 
@@ -77,6 +80,7 @@
 ---
 
 ### M68: Synonymy - Thinking Verbs [✅ PASS]
+
 **Status:** SOPHISTICATED PHILOSOPHICAL DISCOURSE
 **Activities:** Quiz, match-up (2), group-sort, cloze (2), select, true-false, unjumble, error-correction, translate, mark-the-words
 
@@ -106,6 +110,7 @@
 ---
 
 ### M69: Synonymy - Speaking Verbs [✅ PASS]
+
 **Status:** COHERENT PRESS CONFERENCE NARRATIVE
 **Activities:** Quiz, match-up (2), group-sort, cloze (2), select, true-false, unjumble, error-correction, translate, mark-the-words
 
@@ -133,6 +138,7 @@
 ---
 
 ### M70: Collocations & Expressions [✅ PASS]
+
 **Status:** COHERENT BUSINESS COMMUNICATION
 **Activities:** Quiz, match-up (2), group-sort, fill-in, select, true-false, cloze, unjumble, error-correction, translate, mark-the-words
 
@@ -160,6 +166,7 @@
 ---
 
 ### M71: Emotional Intelligence [✅ PASS]
+
 **Status:** COHERENT PSYCHOLOGICAL DISCOURSE
 **Activities:** Quiz, match-up (2), group-sort, cloze (2), select, true-false, unjumble, error-correction, translate, mark-the-words
 
@@ -189,6 +196,7 @@
 ## Summary by Status
 
 ### ✅ PASS (6 modules)
+
 - M66: Business Basics (score 8/10)
 - M67: Travel & Geography (score 9/10) ⭐
 - M68: Synonymy - Thinking Verbs (score 9/10) ⭐
@@ -197,12 +205,15 @@
 - M71: Emotional Intelligence (score 8/10)
 
 ### ⚠️ FLAGGED (0 modules)
+
 None - all modules meet or exceed 8/10 target
 
 ### ⏸️ DEFERRED (0 modules)
+
 None - no checkpoints in this range
 
 ### N/A - QUIZ ONLY (0 modules)
+
 None - all modules contain substantial prose activities
 
 ---
@@ -270,47 +281,55 @@ All 6 modules meet or exceed 8/10 target:
 ## Comparison with Previous B1 Sections
 
 ### B1 M01-M05 (Metalanguage Bridge)
+
 - Average score: 7.0/10
 - Prose density: Very low (3 passages across 5 modules)
 - Purpose: Teach grammar terminology before immersion
 
 ### B1 M06-M15 (Aspect Mastery - Immersion)
+
 - Average score: 8.3/10
 - Prose density: Very high (extensive narratives)
 - Purpose: Teach aspect through natural stories
 - Exceptional: 0%
 
 ### B1 M16-M25 (Motion Verbs - Mixed)
+
 - Average score: 8.2/10 (content modules with prose)
 - Prose density: Medium (6 modules with prose, 3 quiz-only)
 - Purpose: Teach motion verb prefix system
 - Exceptional: 10% (M21 only)
 
 ### B1 M26-M35 (Complex Sentences I)
+
 - Average score: 8.1/10
 - Prose density: High
 - Purpose: Teach complex syntax
 - Exceptional: 0%
 
 ### B1 M36-M45 (Complex Sentences II & Participles)
+
 - Average score: 8.2/10
 - Prose density: High
 - Purpose: Advanced syntax and participles
 - Exceptional: 10% (M42 only)
 
 ### B1 M46-M55 (Advanced Grammar Integration & Abstract Vocabulary I)
+
 - Average score: 8.2/10
 - Prose density: High
 - Purpose: Integration + abstract vocabulary
 - Exceptional: 10% (M51 only)
 
 ### B1 M56-M65 (Abstract Vocabulary II & Thematic Modules)
+
 - Average score: 8.4/10
 - Prose density: Very high (100% coverage)
 - Purpose: Thematic vocabulary in natural contexts
 - Exceptional: 40% (M58, M59, M63, M64)
 
 ### B1 M66-M71 (Professional Vocabulary & Synonymy)
+
 - Average score: 8.5/10 (HIGHEST)
 - Prose density: Very high (100% coverage)
 - Purpose: Professional vocabulary + subtle verb distinctions
@@ -360,11 +379,13 @@ All activities appropriately use:
 ## Next Steps
 
 ### Immediate
+
 1. ✅ **B1 M66-M71 scan: COMPLETE**
 2. **Commit scan report to documentation**
 3. **Continue B1 scanning:** M72-M86 (Cultural Modules - next section)
 
 ### B1 Remaining Sections
+
 - M72-M86: Cultural Modules (15 modules)
 - M87-M91: Final Integration & Checkpoint (5 modules)
 - **Total remaining: 20 modules**

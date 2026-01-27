@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M128 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:55:31
+**Generated:** 2026-01-27 15:51:40
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** critical-analysis, essay-response, quiz, reading
+**Required Types:** critical-analysis, essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -20,27 +20,24 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Хронологія та факти анексії Криму | 8 | 8 | ✅ |
-| 2 | fill-in | Лексика анексії та окупації | 10 | 8 | ✅ |
-| 3 | match-up | Постаті та поняття анексії Криму | 14 | 8 | ✅ |
-| 4 | true-false | Факти про анексію Криму | 10 | 8 | ✅ |
-| 5 | reading | Аналіз Будапештського меморандуму | 3 | 1 | ✅ |
-| 6 | critical-analysis | Порушення міжнародних гарантій | 1 | 1 | ✅ |
-| 7 | essay-response | Есе: Анексія Криму та міжнародне право | 1 | 1 | ✅ |
-| 8 | comparative-study | Порівняльний аналіз: Крим 1944 та 2014 | 1 | 1 | ✅ |
+| 1 | true-false | Факти про анексію Криму | 10 | 8 | ✅ |
+| 2 | reading | Аналіз Будапештського меморандуму | 3 | 1 | ✅ |
+| 3 | critical-analysis | Порушення міжнародних гарантій | 1 | 1 | ✅ |
+| 4 | essay-response | Есе: Анексія Криму та міжнародне право | 1 | 1 | ✅ |
+| 5 | comparative-study | Порівняльний аналіз: Крим 1944 та 2014 | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 8 (target: 3-9) ✅
-- Unique types: 8 (minimum: 2) ✅
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 4/4 (critical-analysis, essay-response, quiz, reading) ✅
+- Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ✅ 4144/4000 (raw: 4300)
-- **Activities:** ✅ 8/3
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 8/2 types
+- **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 17/5
 - **Audio:** ℹ️ No audio
@@ -48,7 +45,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (8 activities)
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 98.6% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

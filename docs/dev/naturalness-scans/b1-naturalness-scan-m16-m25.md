@@ -1,4 +1,5 @@
 # B1 Naturalness Scan Report - M16-M25
+
 **Date:** 2026-01-12
 **Protocol:** claude_extensions/protocols/a1-naturalness-scan.md
 **Scope:** M16-M25 (10 modules - Motion verbs with prefixes section)
@@ -20,6 +21,7 @@
 ## Scan Results by Module
 
 ### M16: Motion Verbs Full System [N/A - QUIZ ONLY]
+
 **Status:** QUIZ-HEAVY - No multi-sentence prose
 **Activities:** Pure quiz module teaching motion verb pairs (йти/ходити, їхати/їздити, etc.)
 
@@ -33,6 +35,7 @@
 ---
 
 ### M17: Motion Coming Going [N/A - QUIZ ONLY]
+
 **Status:** QUIZ-HEAVY - No multi-sentence prose
 **Activities:** Quiz module teaching при- (arrival) and ви- (exit) prefixes
 
@@ -46,6 +49,7 @@
 ---
 
 ### M18: Motion Passing Crossing [N/A - QUIZ ONLY]
+
 **Status:** QUIZ-HEAVY - No multi-sentence prose
 **Activities:** Quiz module teaching пере- (crossing), об- (around), про- (through) prefixes
 
@@ -58,6 +62,7 @@
 ---
 
 ### M19: Motion Starting Returning [✅ PASS]
+
 **Status:** COHERENT NARRATIVE WITH PRACTICE
 **Activities:** Contains cloze and fill-in activities with по- (start) and за- (short visit) prefixes
 
@@ -75,6 +80,7 @@
 ---
 
 ### M20: Motion Approaching Departing [✅ PASS]
+
 **Status:** COHERENT SCENARIOS
 **Activities:** Contains activities with під- (approach) and від- (departure) prefixes
 
@@ -89,6 +95,7 @@
 ---
 
 ### M21: Motion Figurative Uses [✅ PASS]
+
 **Status:** EXCELLENT - Rich idiomatic content
 **Activities:** Extensive prose on figurative/idiomatic uses of motion verbs (1,616 lines)
 
@@ -112,6 +119,7 @@ The module includes sophisticated explanations of why physical motion serves as 
 ---
 
 ### M22: Motion Full Prefix Integration [✅ PASS]
+
 **Status:** INTEGRATION MODULE - Coherent practice
 **Activities:** Contains integration exercises applying all motion prefixes learned in M16-M21
 
@@ -126,6 +134,7 @@ The module includes sophisticated explanations of why physical motion serves as 
 ---
 
 ### M23: Motion Patterns Other Verbs [✅ PASS]
+
 **Status:** EXTENSION MODULE - Coherent
 **Activities:** Extends motion prefix patterns to other verbs (нести/носити, везти/возити)
 
@@ -140,6 +149,7 @@ The module includes sophisticated explanations of why physical motion serves as 
 ---
 
 ### M24: Motion Practice Integration [✅ PASS]
+
 **Status:** PRACTICE MODULE - Comprehensive scenarios
 **Activities:** Comprehensive practice integrating all motion verb knowledge
 
@@ -154,6 +164,7 @@ The module includes sophisticated explanations of why physical motion serves as 
 ---
 
 ### M25: Checkpoint Motion Verbs [⏸️ DEFERRED]
+
 **Status:** CHECKPOINT - Different standards apply
 **Activities:** Comprehensive assessment of M16-M24 content (954 lines)
 
@@ -179,6 +190,7 @@ Contains systematic testing of:
 ## Summary by Status
 
 ### ✅ PASS (6 modules)
+
 - M19: Motion Starting Returning (score 8/10)
 - M20: Motion Approaching Departing (score 8/10)
 - M21: Motion Figurative Uses (score 9/10) ⭐
@@ -187,12 +199,15 @@ Contains systematic testing of:
 - M24: Motion Practice Integration (score 8/10)
 
 ### ⚠️ FLAGGED (0 modules)
+
 None - all content modules meet or exceed 8/10 target
 
 ### ⏸️ DEFERRED (1 module)
+
 - M25: Checkpoint Motion Verbs (score 7/10) - Checkpoint standards apply
 
 ### N/A - QUIZ ONLY (3 modules)
+
 - M16: Motion Verbs Full System (foundational quiz module)
 - M17: Motion Coming Going (prefix introduction quiz)
 - M18: Motion Passing Crossing (prefix introduction quiz)
@@ -246,17 +261,20 @@ All content modules meet or exceed 8/10 target:
 ## Comparison with Previous B1 Sections
 
 ### B1 M01-M05 (Metalanguage Bridge)
+
 - Average score: 7.0/10 → improved to 8.0/10+
 - Prose density: Very low (3 passages across 5 modules)
 - Purpose: Teach grammar terminology before immersion
 
 ### B1 M06-M15 (Aspect Mastery - Immersion)
+
 - Average score: 8.3/10
 - Prose density: Very high (extensive narratives)
 - Purpose: Teach aspect through natural stories
 - Flagged: 0 modules
 
 ### B1 M16-M25 (Motion Verbs - Mixed)
+
 - Average score: 8.2/10 (content modules with prose)
 - Prose density: Medium (6 modules with prose, 3 quiz-only)
 - Purpose: Teach motion verb prefix system
@@ -299,11 +317,13 @@ All activities appropriately use:
 ## Next Steps
 
 ### Immediate
+
 1. ✅ **B1 M16-M25 scan: COMPLETE**
 2. **Commit scan report to documentation**
 3. **Continue B1 scanning:** M26-M35 (next section)
 
 ### B1 Remaining Sections
+
 - M26-M35: Adjectives & Description (10 modules)
 - M36-M45: Time & Temporal Relations (10 modules)
 - M46-M55: Abstract Vocabulary I (10 modules)

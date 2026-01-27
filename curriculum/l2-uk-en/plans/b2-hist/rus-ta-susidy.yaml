@@ -73,21 +73,6 @@ activity_hints:
 - type: reading
   focus: Excerpt from Russo-Byzantine treaty
   source: Provide in module
-- type: quiz
-  focus: Rus neighbors and trade routes (Geography)
-  items: 8+
-- type: fill-in
-  focus: Diplomatic and political terminology
-  items: 15+
-- type: match-up
-  focus: Key diplomatic events (Chronology)
-  items: 12+ events
-- type: quiz
-  focus: Foreign relations of Kyivan Rus
-  items: 12+
-- type: match-up
-  focus: Match rulers to their foreign policy achievements
-  items: 10+
 - type: essay-response
   focus: Чи була Русь частиною Європи?
 focus: history

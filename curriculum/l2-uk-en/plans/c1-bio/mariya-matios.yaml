@@ -69,22 +69,10 @@ activity_hints:
   focus: Уривки з «Солодкої Дарусі» та інтерв'ю
   source: Оригінальні твори та публіцистика
   items: 3 passages
-- type: quiz
-  focus: Біографія та творчість
-  items: 12+
-- type: match-up
-  focus: Твори та їхні теми
-  items: 10+
 - type: essay-response
   focus: Як регіональна ідентичність впливає на літературу?
   word_target: 300
   output: Literary analysis
-- type: group-sort
-  focus: Етапи творчості та жанри
-  items: 12+
-- type: fill-in
-  focus: Літературознавча та регіональна лексика
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-84-halyna-pahutyak
@@ -107,3 +95,7 @@ sources:
   notes: Регіональний контекст творчості
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of марія матіос: буковинський голос'
+- Evaluate the contributions of голос гірського краю
+- Trace the career and influence of поетика та мова

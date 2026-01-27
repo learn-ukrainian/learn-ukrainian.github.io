@@ -82,11 +82,7 @@ You ordered a taxi via an app.
 
 ## Narrative: Riding the Metro (Поїздка в метро)
 
-
-
 Read about Ihor's commute.
-
-
 
 Ігор живе в Києві. Він студент. Щодня він їздить в університет на **метро**.
 
@@ -120,19 +116,11 @@ Read about Ihor's commute.
 
 Ігор виходить на вулицю. Він вчасно на парі!
 
-
-
 Використовуйте ці вправи. Це гарна практика. (Use these exercises. This is good practice.)
-
-
 
 # Summary
 
-
-
 Great! You can now navigate the city like a local. Public transport in Ukraine is an adventure, but now you have the tools to enjoy it.
-
-
 
 You learned:
 
@@ -142,15 +130,9 @@ You learned:
 
 - Bus etiquette: **Ви виходите?**, **Можна пройти?**, **Передайте за проїзд**.
 
-
-
 ### Contactless Payment (Безконтактна оплата)
 
-
-
 Ukrainian cities are very modern when it comes to paying for transport.
-
-
 
 - **Е-квиток** (E-ticket) — Many cities have a unified city card (like «Kyiv Digital»).
 
@@ -158,22 +140,12 @@ Ukrainian cities are very modern when it comes to paying for transport.
 
 - **QR-код** (QR code) — In some cities (like Lviv), you can use the «Privat24» app to scan a QR code inside the tram to pay for your ticket.
 
-
-
 > 💡 **Tip:** In the Kyiv Metro, look for the yellow turnstiles. These are the ones that accept bank cards and Google/Apple Pay. It's much faster than buying a token or a paper ticket!
-
-
 
 Transportation is a great place to listen to announcements and read signs. Don't be afraid to ask for help. Most young people speak English, but they will love it if you start with «**Вибачте, де метро?**». Good luck!
 
-
-
 ## Need More Practice?
-
-
 
 > [!tip]
 
 > Перегляньте схему метро Києва та знайдіть станцію «Арсенальна»! (Check the Kyiv metro map and find the «Arsenalna» station!)
-
-

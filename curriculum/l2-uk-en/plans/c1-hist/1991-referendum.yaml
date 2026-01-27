@@ -5,17 +5,19 @@ version: '1.0'
 title: '1991: Чому 90% сказали «так»?'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of 1991: чому 90% сказали «так»?'
+- Evaluate the historical significance of неймовірний результат
 content_outline:
 - section: Вступ — Неймовірний результат
-  words: 400
+  words: 457
   subsections:
   - 90.32% за незалежність
   - Навіть Крим — 54%
   - Чому такий результат
   - Структура модуля
 - section: Що означала незалежність
-  words: 600
+  words: 686
   subsections:
   - Для національно свідомих
   - Для партійної еліти
@@ -23,21 +25,21 @@ content_outline:
   - Для селян
   - Різні мотивації — один результат
 - section: Економічний аргумент
-  words: 600
+  words: 686
   subsections:
   - «Годі годувати Москву»
   - Багата Україна — бідний СРСР
   - Сподівання на процвітання
   - Що реально було
 - section: Демократичний аргумент
-  words: 500
+  words: 571
   subsections:
   - СРСР — не демократія
   - Незалежність = свобода
   - Європейський вибір — навіть тоді
   - Рух і перебудова
 - section: Регіональний аналіз
-  words: 600
+  words: 686
   subsections:
   - Захід — 95%+
   - Центр — 90%+
@@ -45,18 +47,18 @@ content_outline:
   - Крим — 54%
   - Чому різниця, але скрізь «так»
 - section: Що пішло не так після
-  words: 500
+  words: 571
   subsections:
   - Економічна криза 1990-х
   - Невиправдані очікування
   - Але незалежність — зберегли
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - 1991 — поворотний момент
   - Легітимність незалежності
   - Перехід до порівняння революцій
-word_target: 3500
+word_target: 4000
 vocabulary:
 - референдум
 - незалежність
@@ -74,11 +76,11 @@ vocabulary:
 - декларація
 - консенсус
 activities:
-- type: motivation-analysis
+- type: critical-analysis
   focus: Different groups, different reasons for "yes"
-- type: regional-analysis
+- type: critical-analysis
   focus: Map and analyze regional voting patterns
-- type: expectation-analysis
+- type: critical-analysis
   focus: What did people expect from independence?
 - type: comparative-study
   focus: Ukraine vs. other post-Soviet referendums

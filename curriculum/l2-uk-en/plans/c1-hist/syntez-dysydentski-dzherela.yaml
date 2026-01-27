@@ -5,17 +5,19 @@ version: '1.0'
 title: 'Синтез: Голоси опору'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of синтез: голоси опору'
+- Evaluate the historical significance of від самвидаву до незалежності
 content_outline:
 - section: Вступ — Від самвидаву до незалежності
-  words: 400
+  words: 457
   subsections:
   - Огляд модулів 39-43
   - Різні голоси одного руху
   - Мета синтезу
   - Лінія від опору до держави
 - section: Типологія дисидентських джерел
-  words: 600
+  words: 686
   subsections:
   - Самвидавні видання
   - Приватне листування
@@ -23,7 +25,7 @@ content_outline:
   - Літературні твори
   - Таблиця порівняння
 - section: Голоси опору — хто говорив?
-  words: 600
+  words: 686
   subsections:
   - Інтелігенція — письменники, вчені
   - Правозахисники
@@ -31,7 +33,7 @@ content_outline:
   - Жінки в русі
   - Хто мовчав?
 - section: Стратегії опору
-  words: 600
+  words: 686
   subsections:
   - Культурний опір — мова, література
   - Правовий опір — посилання на закони
@@ -39,26 +41,26 @@ content_outline:
   - Міжнародний тиск
   - Що спрацювало?
 - section: Від опору до влади
-  words: 500
+  words: 571
   subsections:
   - Перебудова — нові можливості
   - Рух — від підпілля до партії
   - Дисиденти в політиці — Чорновіл, Лук'яненко
   - Парадокс — комуністи голосують за незалежність
 - section: Методологічні уроки
-  words: 500
+  words: 571
   subsections:
   - Читання цензурованих текстів
   - Реконструкція вирізаного
   - Голос vs. мовчання
   - Героїзація vs. критика
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - Завершення «Джерельної» фази
   - Від джерел до тематики
   - Чек-ліст для дисидентських джерел
-word_target: 3500
+word_target: 4000
 vocabulary:
 - синтез
 - опір
@@ -78,9 +80,9 @@ vocabulary:
 activities:
 - type: essay-response
   focus: Create comprehensive source matrix for modules 39-43
-- type: strategy-analysis
+- type: critical-analysis
   focus: Evaluate which resistance strategies were most effective
-- type: biography-comparison
+- type: comparative-study
   focus: Compare paths of 3 dissidents to independence
 - type: essay-response
   focus: Як дисидентський рух підготував незалежність?

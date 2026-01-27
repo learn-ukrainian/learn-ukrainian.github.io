@@ -1,10 +1,12 @@
 # Audit Report: M05 — 05-my-world-objects.md
+
 **Level:** A1 | **Module:** M05 | **Phase:** A1 | **Pedagogy:** PPP | **Target:** 300
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
 **Generated:** 2026-01-26 22:25:40
 
 ## Configuration
+
 **Type:** A1-grammar
 **Word Target:** 300 words
 **Activities:** 8-12 required
@@ -18,6 +20,7 @@
 **Transliteration:** Allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Demonstratives and Gender | 13 | 8 | ✅ |
@@ -37,6 +40,7 @@
 - Low density activities: 0
 
 ## Gates
+
 - **Words:** ✅ 1603/300 (raw: 1840)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
@@ -54,6 +58,7 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

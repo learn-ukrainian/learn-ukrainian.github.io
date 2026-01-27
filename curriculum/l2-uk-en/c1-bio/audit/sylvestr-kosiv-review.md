@@ -1,10 +1,12 @@
 # Audit Report: M19 — sylvestr-kosiv.md
+
 **Level:** C1 | **Module:** M19 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:04
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | «Патерикон» Сильвестра Косіва (1635) | 1 | 1 | ✅ |
@@ -37,11 +40,13 @@
 - Low density activities: 0
 
 ## Recommendation
+
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ✅ 4547/4000 (raw: 4798)
 - **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
@@ -60,10 +65,12 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 8 | 4 | 100% | 19% | 19.0% |
@@ -79,6 +86,7 @@
 | **TOTAL** | | | | | **99.7%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 88 | Included in Core |

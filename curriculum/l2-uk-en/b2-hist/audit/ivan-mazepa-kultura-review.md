@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M64 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:54:51
+**Generated:** 2026-01-27 20:42:52
 
 ## Configuration
 **Type:** B2-history
@@ -21,15 +21,15 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Мазепа і культура | 3 | 1 | ✅ |
-| 2 | quiz | Мазепинське бароко та освіта | 8 | 8 | ✅ |
-| 3 | essay-response | Есе: Культура як зброя | 1 | 1 | ✅ |
-| 4 | comparative-study | Архітектура: Європа vs Україна | 1 | 1 | ✅ |
-| 5 | true-false | Культурні факти | 10 | 8 | ✅ |
+| 2 | essay-response | Есе: Культура як зброя | 1 | 1 | ✅ |
+| 3 | comparative-study | Архітектура: Європа vs Україна | 1 | 1 | ✅ |
+| 4 | true-false | Культурні факти | 10 | 8 | ✅ |
+| 5 | critical-analysis | Освіта як фактор державотворення | 1 | 1 | ✅ |
 
 **Summary:**
 - Total activities: 5 (target: 3-9) ✅
 - Unique types: 5 (minimum: 2) ✅
-- Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 

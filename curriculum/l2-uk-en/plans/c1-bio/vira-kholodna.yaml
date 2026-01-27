@@ -69,22 +69,10 @@ activity_hints:
   focus: Описи фільмів та рецензії епохи
   source: Архівні матеріали
   items: 3 passages
-- type: quiz
-  focus: Факти про німе кіно
-  items: 12+
-- type: match-up
-  focus: Фільми та їхні сюжети
-  items: 10+
 - type: essay-response
   focus: Чому німе кіно створювало такі сильні емоції?
   word_target: 300
   output: Культурологічний есей
-- type: group-sort
-  focus: Технології німого vs звукового кіно
-  items: 12+
-- type: fill-in
-  focus: Кінематографічна термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - b2-hist-early-20th-century
@@ -108,3 +96,7 @@ sources:
   notes: Список фільмів
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of віра холодна: королева німого кіно'
+- Evaluate the contributions of зірка, яка згасла зарано
+- Trace the career and influence of легенда та реальність

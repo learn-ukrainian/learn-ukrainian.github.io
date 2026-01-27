@@ -1,10 +1,12 @@
 # Audit Report: M104 — dmytro-pavlychko.md
+
 **Level:** C1 | **Module:** M104 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:48
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння біографії | 5 | 5 | ✅ |
@@ -41,22 +44,26 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in dmytro-pavlychko.yaml: Schema validation error at key '7': {'type': 'error-correction', 'title': 'Складні речення', 'items': [{'sentence': 'Павличко який був поетом став політиком.', 'error': 'Павличко який', 'answer': 'Павличко, який', 'options': ['Павличко який', 'Павличко, який', 'Павличко: який', 'none'], 'explanation': 'Виділення підрядного речення комами.'}, {'sentence': 'Він знав що шлях до свободи важкий.', 'error': 'знав що', 'answer': 'знав, що', 'options': ['знав що', 'знав, що', 'знав: що', 'none'], 'explanation': 'Кома перед «що».'}, {'sentence': 'Коли Україна стала вільною він заплакав.', 'error': 'вільною він', 'answer': 'вільною, він', 'options': ['вільною він', 'вільною, він', 'вільною: він', 'none'], 'explanation': 'Кома між частинами складного речення.'}, {'sentence': 'Це була пісня, яку співали всі.', 'error': 'none', 'answer': '✓', 'options': ['пісня', 'яку', 'співали', '✓'], 'explanation': 'Речення побудоване правильно.'}, {'sentence': "Він хотів, щоб народ пам'ятав історію.", 'error': 'none', 'answer': '✓', 'options': ['хотів', 'щоб', "пам'ятав", '✓'], 'explanation': 'Речення побудоване правильно.'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template.md'
   - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template.md'
   - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 3 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2155/4000 (raw: 2463)
 - **Activities:** ✅ 12/3
 - **Density:** ✅ All > 1
@@ -75,10 +82,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 97% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 6 | 4 | 100% | 19% | 19.0% |
@@ -94,6 +103,7 @@
 | **TOTAL** | | | | | **97.5%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 74 | Included in Core |

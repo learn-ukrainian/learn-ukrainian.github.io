@@ -109,6 +109,7 @@ Every module MUST have a "Need More Practice?" section **before `## Activities`*
 **Live example:** [A1 Module 10](https://krisztiankoos.github.io/learn-ukrainian/docs/a1/module-10#need-more-practice)
 
 **Icon conventions:**
+
 | Icon | Type |
 |------|------|
 | 🎧 | Audio/Pronunciation guides |

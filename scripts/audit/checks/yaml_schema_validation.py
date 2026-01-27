@@ -794,6 +794,97 @@ def fix_raw_yaml_text(content: str) -> Tuple[str, List[str]]:
     return '\n'.join(fixed_lines), fixes
 
 
+def remove_forbidden_activities(yaml_path: Path, level_code: str, module_focus: str = None, dry_run: bool = False) -> Tuple[int, List[str]]:
+    """
+    Remove forbidden activity types from a YAML activity file.
+
+    For seminar tracks (B2-HIST, C1-HIST, C1-BIO, LIT), grammar drill activities
+    are forbidden and should be removed.
+
+    Args:
+        yaml_path: Path to the YAML file
+        level_code: CEFR level (B2, C1, etc.)
+        module_focus: Module focus (history, biography, etc.)
+        dry_run: If True, only report removals without saving
+
+    Returns (num_removed, list_of_messages).
+    """
+    from ..config import LEVEL_CONFIG
+
+    all_messages = []
+    removed_count = 0
+
+    if not yaml_path.exists():
+        return 0, []
+
+    # Get level config
+    config_key = f"{level_code}-{module_focus}" if module_focus else level_code
+    config = LEVEL_CONFIG.get(config_key, LEVEL_CONFIG.get(level_code, {}))
+
+    # Get forbidden types from config
+    forbidden_types = config.get('forbidden_types', set())
+    if not forbidden_types:
+        return 0, ["No forbidden types defined for this level/track"]
+
+    # Load activities from YAML
+    with open(yaml_path, 'r', encoding='utf-8') as f:
+        raw_content = f.read()
+
+    try:
+        data, _ = safe_load_with_duplicate_check(raw_content)
+    except yaml.YAMLError as e:
+        return 0, [f"YAML parse error: {e}"]
+
+    if not data:
+        return 0, []
+
+    # Handle both formats
+    if isinstance(data, dict) and 'activities' in data:
+        activities = data['activities']
+        root_is_dict = True
+    elif isinstance(data, list):
+        activities = data
+        root_is_dict = False
+    else:
+        return 0, ["Invalid YAML structure"]
+
+    # Find activities to remove
+    activities_to_keep = []
+    for i, activity in enumerate(activities):
+        if not isinstance(activity, dict):
+            activities_to_keep.append(activity)
+            continue
+
+        act_type = activity.get('type', '').lower()
+        title = activity.get('title', f'Activity {i+1}')
+
+        if act_type in forbidden_types:
+            removed_count += 1
+            all_messages.append(f"  🗑️  Removed [{act_type}] '{title[:40]}...' (forbidden in {config_key})")
+        else:
+            activities_to_keep.append(activity)
+
+    # Save if modifications were made and not dry run
+    if removed_count > 0:
+        if not dry_run:
+            try:
+                with open(yaml_path, 'w', encoding='utf-8') as f:
+                    if root_is_dict:
+                        yaml.dump({'activities': activities_to_keep}, f, allow_unicode=True,
+                                 default_flow_style=False, sort_keys=False)
+                    else:
+                        yaml.dump(activities_to_keep, f, allow_unicode=True,
+                                 default_flow_style=False, sort_keys=False)
+                all_messages.insert(0, f"✅ Removed {removed_count} forbidden activities from {yaml_path.name}")
+            except Exception as e:
+                all_messages.insert(0, f"❌ Error saving: {e}")
+                return 0, all_messages
+        else:
+            all_messages.insert(0, f"🔍 DRY RUN: Would remove {removed_count} forbidden activities from {yaml_path.name}")
+
+    return removed_count, all_messages
+
+
 def fix_yaml_file(yaml_path: Path, dry_run: bool = False) -> Tuple[int, List[str]]:
     """
     Auto-fix schema violations in a YAML activity file.
@@ -891,4 +982,5 @@ __all__ = [
     'fix_activity_violations',
     'fix_raw_yaml_text',
     'fix_yaml_file',
+    'remove_forbidden_activities',
 ]

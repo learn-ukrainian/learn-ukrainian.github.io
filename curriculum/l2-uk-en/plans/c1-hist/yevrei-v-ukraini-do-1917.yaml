@@ -5,50 +5,52 @@ version: '1.0'
 title: Євреї в Україні до 1917
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- Analyze the causes and consequences of євреї в україні до 1917
+- Evaluate the historical significance of спільна земля
 content_outline:
 - section: Вступ — Спільна земля
-  words: 451
+  words: 515
   subsections:
   - Євреї в Україні — 1000 років
   - Найбільша єврейська громада світу
   - Співіснування і конфлікт
   - Структура модуля
 - section: Середньовіччя і Козацька доба
-  words: 677
+  words: 774
   subsections:
   - Євреї в Речі Посполитій
   - Орендарі і посередники
   - Хмельниччина 1648
   - Гайдамаччина
 - section: Штетл — життя
-  words: 790
+  words: 903
   subsections:
   - «Смуга осілості»
   - Культура ідиш
   - Професії — обмеження
   - Взаємодія з українцями
 - section: Погроми XIX-початок XX ст.
-  words: 677
+  words: 774
   subsections:
   - 1881-1884
   - 1903-1906
   - Роль держави
   - Роль місцевого населення
 - section: Громадянська війна 1917-1921
-  words: 564
+  words: 645
   subsections:
   - Масштаб погромів
   - Хто чинив — всі сторони
   - Петлюра — суперечлива фігура
   - Наслідки
 - section: Підсумок
-  words: 341
+  words: 389
   subsections:
   - Складна історія
   - Не тільки погроми
   - Перехід до Голокосту
-word_target: 3500
+word_target: 4000
 vocabulary:
 - єврей
 - штетл
@@ -66,13 +68,13 @@ vocabulary:
 - сіоністський рух
 - «Чорна сотня»
 activities:
-- type: historical-analysis
+- type: critical-analysis
   focus: 1000 years of Jewish presence in Ukraine
-- type: context-study
+- type: comparative-study
   focus: Why Jews became middlemen — structural analysis
-- type: violence-analysis
+- type: critical-analysis
   focus: Who was responsible for pogroms?
-- type: cultural-study
+- type: comparative-study
   focus: Shtetl life and Ukrainian-Jewish interaction
 - type: essay-response
   focus: Чи український антисемітизм — 'особливий'?

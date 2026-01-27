@@ -5,14 +5,14 @@ version: '2.0'
 title: 'Синтез: Регіональна різноманітність'
 content_outline:
 - section: Вступ — Єдність у різноманітності
-  words: 400
+  words: 457
   points:
   - Огляд модулів 70-79
   - Регіони — не перешкода
   - Єдина нація — різні шляхи
   - Мета синтезу
 - section: Порівняльна таблиця регіонів
-  words: 600
+  words: 686
   points:
   - Захід vs. Схід vs. Південь vs. Центр
   - Імперський досвід
@@ -20,40 +20,40 @@ content_outline:
   - Мова
   - Національна свідомість
 - section: Чому різні траєкторії?
-  words: 700
+  words: 800
   points:
   - Імперії — ключ до розуміння
   - Австрія дала шанс
   - Росія — русифікація
   - Різний час «пробудження»
 - section: Чи є «справжні українці»?
-  words: 600
+  words: 686
   points:
   - Міф «західників»
   - Міф «русифікованого сходу»
   - Реальність — спектр
   - Ідентичність — процес
 - section: 2014 і 2022 — перевірка
-  words: 500
+  words: 571
   points:
   - Майдан — не тільки Київ
   - 2014 — Схід і Південь
   - 2022 — загальна мобілізація
   - Регіоналізм vs. патріотизм
 - section: Майбутнє регіонів
-  words: 400
+  words: 457
   points:
   - Децентралізація
   - Регіональна ідентичність в єдиній державі
   - Європейський досвід
   - Україна після війни
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Різноманітність — сила
   - Єдність — вибір
   - Перехід до імперських механізмів
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - синтез (synthesis)
@@ -76,13 +76,10 @@ activity_hints:
 - type: essay-response
   focus: Create regional diversity map of Ukraine
   output: Comparative regional map
-- type: comparative-table
-  focus: All regions — key characteristics
-  output: Master comparison table
-- type: 2014-2022-analysis
+- type: critical-analysis
   focus: How regions responded to crises
   output: Crisis response analysis
-- type: future-scenarios
+- type: essay-response
   focus: Regional Ukraine after victory — what model?
   output: Scenario analysis
 - type: essay-response
@@ -107,3 +104,6 @@ sources:
   notes: Identity studies
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of синтез: регіональна різноманітність'
+- Evaluate the historical significance of єдність у різноманітності

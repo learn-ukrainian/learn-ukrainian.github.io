@@ -41,40 +41,40 @@ The **Second Conjugation** (Ukrainian: **друга дієвідміна**) verb
 Let's see these verbs in action:
 
 1. **Я говорю українською.**
-   _I speak Ukrainian._
+   *I speak Ukrainian.*
 
 2. **Ти робиш вправу?**
-   _Do you do an exercise?_
+   *Do you do an exercise?*
 
 3. **Вона бачить студента.**
-   _She sees the student._
+   *She sees the student.*
 
 4. **Ми дивимося фільм.**
-   _We watch a movie._
+   *We watch a movie.*
 
 5. **Ви ходите в університет?**
-   _Do you go to university?_
+   *Do you go to university?*
 
 6. **Вони люблять Україну.**
-   _They love Ukraine._
+   *They love Ukraine.*
 
 7. **Я сиджу вдома.**
-   _I sit at home._
+   *I sit at home.*
 
 8. **Він стоїть біля вікна.**
-   _He stands by the window._
+   *He stands by the window.*
 
 9. **Вона спить.**
-   _She sleeps._
+   *She sleeps.*
 
 10. **Ми вчимо українську мову.**
-    _We study the Ukrainian language._
+    *We study the Ukrainian language.*
 
 11. **Ти пам'ятаєш це слово?**
-    _Do you remember this word?_
+    *Do you remember this word?*
 
 12. **Вони просять допомогу.**
-    _They ask for help._
+    *They ask for help.*
 
 ### Irregular Verbs: їсти, пити, хотіти
 
@@ -96,47 +96,47 @@ Some common verbs don't follow the standard pattern. Here are three essentials:
 | ------ | -------- | ------------- | --------- | --------- | ----------- |
 
 13. **Вона п'є каву.**
-    _She drinks coffee._
+    *She drinks coffee.*
 
 14. **Ми хочемо вчитися.**
-    _We want to study._
+    *We want to study.*
 
 15. **Ти хочеш борщ?**
-    _Do you want borscht?_
+    *Do you want borscht?*
 
 > [!example] **Pop Culture Moment**
 >
-> In the Ukrainian dub of _Harry Potter_, when Ron says «I want to eat,» it's **«Я хочу їсти»**. Two irregular verbs in one sentence! Ukrainian kids learn these patterns from the movies they love.
+> In the Ukrainian dub of *Harry Potter*, when Ron says «I want to eat,» it's **«Я хочу їсти»**. Two irregular verbs in one sentence! Ukrainian kids learn these patterns from the movies they love.
 
 ## Practice
 
 ### Mini-Dialogue 1: At the Café in Lviv
 
 **Марко:** Привіт, Олено! Ти п'єш каву?
-_Hi, Olena! Are you drinking coffee?_
+*Hi, Olena! Are you drinking coffee?*
 
 **Олена:** Так, я п'ю каву. Я також читаю книгу.
-_Yes, I'm drinking coffee. I also read a book._
+*Yes, I'm drinking coffee. I also read a book.*
 
 **Марко:** Я хочу їсти. Ти любиш борщ?
-_I want to eat. Do you love borscht?_
+*I want to eat. Do you love borscht?*
 
 **Олена:** Так, я дуже люблю борщ!
-_Yes, I love borscht very much!_
+*Yes, I love borscht very much!*
 
 ### Mini-Dialogue 2: On Campus in Kyiv
 
 **Іван:** Ти бачиш Катю?
-_Do you see Katya?_
+*Do you see Katya?*
 
 **Марія:** Так, вона стоїть біля вікна.
-_Yes, she stands by the window._
+*Yes, she stands by the window.*
 
 **Іван:** Вона телефонує?
-_Is she calling?_
+*Is she calling?*
 
 **Марія:** Так, вона говорить українською.
-_Yes, she speaks Ukrainian._
+*Yes, she speaks Ukrainian.*
 
 ### Pattern Recognition: Consonant Mutation
 
@@ -188,7 +188,7 @@ Now it's your turn! Try forming sentences:
 
 ### The Beauty of Ukrainian Verb Logic
 
-Ukrainian verbs are incredibly precise. Notice how **ходити** (to walk/go on foot) and **їздити** (to ride/go by vehicle) are two different verbs? In English, we just say «go,» but Ukrainian forces you to think: _How are you traveling?_
+Ukrainian verbs are incredibly precise. Notice how **ходити** (to walk/go on foot) and **їздити** (to ride/go by vehicle) are two different verbs? In English, we just say «go,» but Ukrainian forces you to think: *How are you traveling?*
 
 This precision extends to posture verbs too:
 
@@ -210,11 +210,12 @@ Ukrainians use these constantly:
 
 > [!tip] **Grammar Elegance**
 >
-> Why do some verbs change their consonant? Notice: **робити** → **роблю** (not _робю_), **ходити** → **ходжу** (not _ходю_). This is called **consonant mutation** — the final consonant of the stem changes before **-ю** to make pronunciation smoother. Ukrainian inherited this elegant feature from Proto-Slavic!
+> Why do some verbs change their consonant? Notice: **робити** → **роблю** (not *робю*), **ходити** → **ходжу** (not *ходю*). This is called **consonant mutation** — the final consonant of the stem changes before **-ю** to make pronunciation smoother. Ukrainian inherited this elegant feature from Proto-Slavic!
 
 ---
 
 # Підсумок
+
 You've now mastered **Second Conjugation verbs (-ити)**! Here's what you can do:
 
 - Conjugate regular Second Conjugation verbs (говорити, робити, бачити, любити)

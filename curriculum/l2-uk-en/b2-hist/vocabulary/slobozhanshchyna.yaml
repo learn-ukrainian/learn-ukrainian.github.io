@@ -1,0 +1,103 @@
+module: slobozhanshchyna
+level: B2-HIST
+version: '2.0'
+items:
+- lemma: слобожанщина
+  ipa: /slɔbɔˈʒɑnʲʃt͡ʃɪnɐ/
+  translation: Slobozhanshchyna
+  pos: noun
+  gender: f
+- lemma: слобода
+  ipa: /slɔˈbɔdɐ/
+  translation: sloboda (free settlement)
+  pos: noun
+  gender: f
+- lemma: переселенець
+  ipa: /pɛrɛsɛˈlɛnɛt͡sʲ/
+  translation: settler/migrant
+  pos: noun
+  gender: m
+- lemma: дике пол
+  ipa: /ˈdɪkɛ ˈpɔlɛ/
+  translation: Wild Fields
+  pos: noun
+  gender: m
+- lemma: ясир
+  ipa: /jɐˈsɪr/
+  translation: yasyr (captives)
+  pos: noun
+  gender: m
+- lemma: уходництво
+  ipa: /ʊˈxɔdnɪt͡stʋɔ/
+  translation: ukhodnytstvo (seasonal foraging)
+  pos: noun
+  gender: n
+- lemma: частокіл
+  ipa: /t͡ʃɐstɔˈk⁽ʲ⁾il/
+  translation: palisade
+  pos: noun
+  gender: m
+- lemma: вал
+  ipa: /ʋɑl/
+  translation: rampart
+  pos: noun
+  gender: m
+- lemma: полковник
+  ipa: /pɔlˈkɔu̯nɪk/
+  translation: colonel/regimental leader
+  pos: noun
+  gender: m
+- lemma: сотник
+  ipa: /ˈsɔtnɪk/
+  translation: centurion/hundred-leader
+  pos: noun
+  gender: f
+- lemma: старшина
+  ipa: /stɐrˈʃɪnɐ/
+  translation: starshyna (officer class)
+  pos: noun
+  gender: f
+- lemma: посполитий
+  ipa: /pɔspɔˈlɪtɪi̯/
+  translation: commoner/peasant
+  pos: adj
+- lemma: кріпацтво
+  ipa: /kr⁽ʲ⁾iˈpat͡stʋɔ/
+  translation: serfdom
+  pos: noun
+  gender: n
+- lemma: руїна
+  ipa: /rʊˈjinɐ/
+  translation: ruin/The Ruin (period)
+  pos: noun
+  gender: f
+- lemma: засічна лінія
+  ipa: /zɐˈs⁽ʲ⁾it͡ʃnɐ ˈl⁽ʲ⁾in⁽ʲ⁾ijɐ/
+  translation: defense line
+  pos: noun
+  gender: f
+- lemma: топонім
+  ipa: /tɔˈpɔn⁽ʲ⁾im/
+  translation: toponym
+  pos: noun
+  gender: m
+- lemma: ярмарок
+  ipa: /ˈjɑrmɐrɔk/
+  translation: fair/market
+  pos: noun
+  gender: m
+- lemma: самоврядування
+  ipa: /sɐmɔʋrʲɐˈduʋɐnʲːɐ/
+  translation: self-governance
+  pos: noun
+  gender: n
+- lemma: деколонізація
+  ipa: /dɛkɔlɔn⁽ʲ⁾izˈat͡s⁽ʲ⁾ijɐ/
+  translation: decolonization
+  pos: noun
+  gender: f
+- lemma: автохтонність
+  ipa: /ɐu̯tɔxˈtɔnʲːistʲ/
+  translation: autochthony (indigeneity)
+  pos: noun
+  gender: f

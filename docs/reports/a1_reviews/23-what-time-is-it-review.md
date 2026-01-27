@@ -19,7 +19,7 @@ The explanation of Month names (nature-based) turns rote memorization into a cul
 
 **1. Accuracy of Examples:** 10/10
 Examples are accurate.
-_Fixed:_ Replaced incorrect "Present Tense" translations in the Practice section with actual Time-related sentences.
+*Fixed:* Replaced incorrect "Present Tense" translations in the Practice section with actual Time-related sentences.
 
 **2. Relevance of Scenarios:** 10/10
 "Scheduling a Meeting" is the most practical dialogue possible.

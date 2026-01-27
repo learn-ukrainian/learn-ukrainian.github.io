@@ -69,22 +69,10 @@ activity_hints:
   focus: Українська поезія XX ст.
   source: Literary sources
   items: 3 passages
-- type: quiz
-  focus: Життя та творчість Павличка
-  items: 12+
-- type: match-up
-  focus: Збірки та їхні теми
-  items: 10+
 - type: essay-response
   focus: Як поезія може впливати на політичні зміни?
   word_target: 300
   output: Analytical essay
-- type: group-sort
-  focus: Діяльність Павличка за сферами
-  items: 12+
-- type: fill-in
-  focus: Літературна та політична термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-72
@@ -103,3 +91,7 @@ sources:
   notes: Literary biography and works
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of дмитро павличко: поет і дипломат'
+- Evaluate the contributions of два кольори однієї душі
+- Trace the career and influence of голос україни

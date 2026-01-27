@@ -5,42 +5,29 @@ version: '2.0'
 title: Часові підрядні речення
 subtitle: Temporal Clauses Deep Dive
 content_outline:
-- section: 'Introduction: Time Relations'
-  words: 150
+- section: Тест
+  words: 308
   points:
-  - Expressing when
-  - Before, during, after
-  - Temporal connectors overview
-- section: коли - Basic Time Clause
-  words: 200
+  - Diagnostic quiz on temporal clauses
+  - Self-assessment questions
+- section: Пояснення
+  words: 1793
   points:
-  - When something happens
-  - Tense in коли clauses
-  - Aspect with коли
-- section: Sequence Connectors
-  words: 250
-  points:
-  - перш ніж (before)
-  - після того як (after)
-  - як тільки (as soon as)
-- section: Duration Connectors
-  words: 250
-  points:
-  - поки (while/until)
-  - доки (while/as long as)
-  - під час того як (during)
-- section: Simultaneous Actions
-  words: 200
-  points:
-  - Actions happening together
-  - Background vs foreground
-  - Aspect interaction
-- section: 'Practice: Temporal Narratives'
-  words: 150
+  - коли - Basic Time Clause
+  - Sequence Connectors (перш ніж, після того як, як тільки)
+  - Duration Connectors (поки, доки, під час того як)
+  - Simultaneous Actions
+- section: Практика
+  words: 399
   points:
   - Sequence events
   - Build temporal stories
-word_target: 1200
+- section: Діалоги
+  words: 500
+  points:
+  - Temporal clauses in conversation
+  - Narrative scenarios
+word_target: 3000
 vocabulary_hints:
   required:
   - коли (when)
@@ -60,13 +47,13 @@ activity_hints:
 - type: fill-in
   focus: Complete temporal sentences
   items: 25
-- type: sentence-combining
+- type: unjumble
   focus: Sequence events
   items: 20
 - type: error-correction
   focus: Fix temporal clause errors
   items: 15
-- type: writing
+- type: cloze
   focus: Write temporal narratives
   items: 10
 focus: grammar

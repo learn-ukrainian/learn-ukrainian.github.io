@@ -67,15 +67,6 @@ activity_hints:
   focus: Акт проголошення незалежності
   source: Офіційні документи
   items: 4
-- type: quiz
-  focus: Україна 1991-2004
-  items: 15
-- type: match-up
-  focus: Рік → подія
-  items: 10
-- type: fill-in
-  focus: Політична лексика
-  items: 10
 - type: essay-response
   focus: Чому незалежність 1991 року не принесла швидкого добробуту?
   word_target: 250

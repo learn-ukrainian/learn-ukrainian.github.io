@@ -31,6 +31,7 @@ items:
   ipa: /uˈrɔk/
   translation: urok (fixed tribute)
   pos: noun
+  gender: m
 - lemma: данина
   ipa: /dɑˈnɪnɑ/
   translation: tribute
@@ -60,6 +61,7 @@ items:
   ipa: /pɛt͡ʃɛˈnʲihɪ/
   translation: Pechenegs
   pos: noun
+  gender: m
 - lemma: рівноапостольний
   ipa: /riwnɔɑˈpɔstɔlʲnɑ/
   translation: equal-to-apostles

@@ -1,9 +1,11 @@
 # Audit Report: M81 — 81-obrazotvorche-mystetstvo-1.md
+
 **Level:** C1 | **Module:** M81 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:45
 
 ## Configuration
+
 **Type:** C1-fine-arts
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -16,6 +18,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Від ікони до авангарду | 12 | 5 | ✅ |
@@ -39,16 +42,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 81-obrazotvorche-mystetstvo-1.yaml: Schema validation error at key 'words': ['Мистецтво', 'не', 'просто', 'відображає', 'життя', 'а', 'творить', 'його', 'нові', 'унікальні', 'форми'] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2000/3000 (raw: 2089)
 - **Activities:** ✅ 13/12
 - **Density:** ✅ All > 12
@@ -67,10 +73,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 95% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 21 | 15 | 100% | 25% | 25.0% |
@@ -84,6 +92,7 @@
 | **TOTAL** | | | | | **95.2%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 89 | Included in Core |

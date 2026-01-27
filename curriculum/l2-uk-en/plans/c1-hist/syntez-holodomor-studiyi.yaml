@@ -5,57 +5,59 @@ version: '1.0'
 title: 'Синтез: Голодомор як об''єкт дослідження'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of синтез: голодомор як об''єкт дослідження'
+- Evaluate the historical significance of що ми дізналися
 content_outline:
 - section: Вступ — Що ми дізналися
-  words: 400
+  words: 457
   subsections:
   - Огляд модулів 45-50
   - Голодомор як комплексний об'єкт
   - Мета синтезу
   - Від знання до розуміння
 - section: Інтеграція — історіографія + джерела + механізми
-  words: 600
+  words: 686
   subsections:
   - Як різні підходи доповнюють
   - Документи + свідчення = повніша картина
   - Механізми як каркас
   - Географія як доказ
 - section: Ключові дебати
-  words: 600
+  words: 686
   subsections:
   - Геноцид чи «просто» голод?
   - Скільки загинуло — чому це важливо
   - Намір — як довести?
   - Відкриті питання
 - section: Стан поля дослідження
-  words: 500
+  words: 571
   subsections:
   - Що вже зроблено
   - Що залишається — лакуни
   - Нові методи — digital humanities
   - Молоде покоління дослідників
 - section: Голодомор і сучасність
-  words: 600
+  words: 686
   subsections:
   - Пам'ять як політика
   - Голодомор і 2022 — паралелі
   - «Голодна зброя» — чи може повторитися?
   - Українська ідентичність і травма
 - section: Методологічні уроки
-  words: 500
+  words: 571
   subsections:
   - Як вивчати геноцид
   - Етика дослідження
   - Від академії до суспільства
   - Історик як свідок
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - Голодомор — ключова тема
   - Що означає «знати» Голодомор
   - Від Голодомору до Розстріляного відродження
-word_target: 3500
+word_target: 4000
 vocabulary:
 - синтез
 - об'єкт дослідження
@@ -75,11 +77,11 @@ vocabulary:
 activities:
 - type: essay-response
   focus: Create integrated Holodomor knowledge map
-- type: debate-evaluation
+- type: critical-analysis
   focus: Evaluate main scholarly debates — where do you stand?
-- type: gap-analysis
+- type: critical-analysis
   focus: What questions remain unanswered?
-- type: connection-building
+- type: critical-analysis
   focus: How does Holodomor connect to 2022 events?
 - type: essay-response
   focus: Що означає 'знати' Голодомор для сучасного українця?

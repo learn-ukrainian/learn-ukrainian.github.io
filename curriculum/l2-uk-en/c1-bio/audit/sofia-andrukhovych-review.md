@@ -1,10 +1,12 @@
 # Audit Report: M125 — sofia-andrukhovych.md
+
 **Level:** C1 | **Module:** M125 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:57:19
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Біографія та творчість | 5 | 5 | ✅ |
@@ -41,22 +44,26 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in sofia-andrukhovych.yaml: Schema validation error at key '9': {'type': 'fill-in', 'title': 'Значення творчості', 'items': [{'sentence': 'Софія Андрухович довела, що українська література може бути [інтелектуальною] і популярною.', 'answer': 'інтелектуальною', 'options': ['інтелектуальною', 'нудною', 'простою', 'дешевою']}, {'sentence': "Вона майстерно працює з [пам'яттю], заповнюючи білі плями нашої історії.", 'answer': "пам'яттю", 'options': ["пам'яттю", 'грошима', 'фарбами', 'цифрами']}, {'sentence': 'Її романи — це не просто історії, це [реконструкція] втраченого світу.', 'answer': 'реконструкція', 'options': ['реконструкція', 'руйнація', 'копія', 'пародія']}, {'sentence': 'Письменниця не боїться складних тем, таких як [Голокост] і репресії.', 'answer': 'Голокост', 'options': ['Голокост', 'свято', 'весілля', 'подорож']}, {'sentence': 'Вона створила власний літературний [світ], незалежний від слави батька.', 'answer': 'світ', 'options': ['світ', 'дім', 'сад', 'клуб']}, {'sentence': 'Її книги перекладені багатьма мовами і є [обличчям] сучасної України в Європі.', 'answer': 'обличчям', 'options': ['обличчям', 'спиною', 'рукою', 'ногою']}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[FORBIDDEN_HEADER_TONE]** Header '## Сучасний етап' is inappropriate for a deceased person. Use '## Останні роки' instead.
   - FIX: Rename '## Сучасний етап' to '## Останні роки' to maintain correct biographical tone.
 - ❌ **[FORBIDDEN_HEADER_TONE]** Header '## Вплив' is inappropriate for a deceased person. Use '## Спадщина' instead.
   - FIX: Rename '## Вплив' to '## Спадщина' to maintain correct biographical tone.
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 3 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2014/4000 (raw: 2198)
 - **Activities:** ✅ 12/3
 - **Density:** ✅ All > 1
@@ -75,10 +82,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 95% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 3 | 4 | 75% | 19% | 14.3% |
@@ -94,6 +103,7 @@
 | **TOTAL** | | | | | **95.1%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 69 | Included in Core |

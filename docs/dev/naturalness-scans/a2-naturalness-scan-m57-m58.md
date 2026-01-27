@@ -1,4 +1,5 @@
 # A2 Naturalness Scan Report - M57-M58
+
 **Date:** 2026-01-12
 **Protocol:** claude_extensions/protocols/a1-naturalness-scan.md
 **Scope:** M57-M58 (2 modules - Final review section)
@@ -17,6 +18,7 @@
 ## Scan Results by Module
 
 ### M57: Grammar Review [⏸️ DEFERRED]
+
 **Status:** REVIEW MODULE - Different standards apply
 **Activities:** Case Challenge cloze, Grammar Fill cloze, Perfective verb identification
 
@@ -52,6 +54,7 @@
 ---
 
 ### M58: Final Review [⏸️ DEFERRED]
+
 **Status:** CAPSTONE MODULE - Different standards apply
 **Activities:** Comprehensive reading/listening comprehension, grammar final test, fluency self-assessment
 
@@ -87,12 +90,15 @@
 ## Summary by Status
 
 ### ✅ PASS (0 modules)
+
 None - both are review modules
 
 ### ⚠️ FLAGGED (0 modules)
+
 None - both deferred
 
 ### ⏸️ DEFERRED (2 modules)
+
 - M57: Grammar Review (score 7/10) - Systematic grammar review with mixed drill/narrative
 - M58: Final Review (score 7/10) - Comprehensive capstone assessment
 

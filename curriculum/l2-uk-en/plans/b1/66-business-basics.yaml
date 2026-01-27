@@ -5,42 +5,23 @@ version: '2.0'
 title: Основи бізнесу
 subtitle: Business Basics
 content_outline:
-- section: 'Introduction: Business Vocabulary'
-  words: 150
+- section: Вступ
+  words: 325
   points:
   - Why business vocabulary matters
   - Ukrainian business context
   - Core concepts overview
-- section: Companies and Organizations
-  words: 250
+- section: Читання
+  words: 955
   points:
-  - компанія, фірма, підприємство
-  - корпорація, організація
-  - Business entity types
-- section: Business Activities
-  words: 250
-  points:
-  - виробництво, продаж, маркетинг
-  - інвестиції, прибуток, збитки
-  - Core business functions
-- section: Business People and Roles
-  words: 250
-  points:
-  - підприємець, бізнесмен, партнер
-  - інвестор, клієнт, постачальник
-  - Business relationships
-- section: Business Actions
-  words: 200
-  points:
-  - заснувати, керувати, розвивати
-  - інвестувати, продавати
-  - Business verbs
-- section: 'Practice: Business Discussions'
-  words: 100
+  - Business texts
+  - Company scenarios
+- section: Діалоги
+  words: 1720
   points:
   - Discuss business topics
   - Use professional vocabulary
-word_target: 1200
+word_target: 3000
 vocabulary_hints:
   required:
   - компанія (company)
@@ -57,16 +38,16 @@ vocabulary_hints:
   - постачальник (supplier)
   - збитки (losses)
 activity_hints:
-- type: collocation
+- type: match-up
   focus: Business noun phrases
   items: 25
 - type: fill-in
   focus: Complete business sentences
   items: 20
-- type: matching
+- type: match-up
   focus: Match terms to definitions
   items: 15
-- type: role-play
+- type: cloze
   focus: Business scenarios
   items: 10
 focus: vocabulary

@@ -6,12 +6,12 @@ title: Українська кухня - традиції та символи
 subtitle: Ukrainian Cuisine - Traditions and Symbols
 content_outline:
 - section: Вступ — традиції та символи
-  words: 400
+  words: 1000
   points:
   - Визначення та сфери застосування
   - Зв'язок із попередніми модулями
 - section: Content Areas
-  words: 500
+  words: 1250
   points:
   - 'Чарівні казки: magic helpers, transformations'
   - 'Тваринні казки: animal characters, moral lessons'
@@ -19,12 +19,12 @@ content_outline:
   - 'Famous collectors: Драгоманов, Грінченко'
   - Tale structures and formulas
 - section: Практика та підсумок
-  words: 300
+  words: 750
   points:
   - Практичні вправи на закріплення
   - Інтеграція з попередніми модулями
   - Підготовка до наступного модуля
-word_target: 2000
+word_target: 3000
 focus: cultural
 pedagogy: CBI
 objectives:

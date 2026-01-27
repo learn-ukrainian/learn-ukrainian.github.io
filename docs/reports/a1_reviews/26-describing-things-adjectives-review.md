@@ -19,7 +19,7 @@ Encouraging tone. "Reviewing the world!"
 
 **1. Accuracy of Examples:** 10/10
 All agreements are correct.
-_Fixed:_ Replaced incorrect "Present Tense" translations in the Practice section with actual Adjective sentences.
+*Fixed:* Replaced incorrect "Present Tense" translations in the Practice section with actual Adjective sentences.
 
 **2. Relevance of Scenarios:** 10/10
 "Shopping" (Big/Small, Cheap/Expensive) is immediately useful.

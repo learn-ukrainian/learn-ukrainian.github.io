@@ -19,7 +19,7 @@ Very relatable topic.
 
 **1. Accuracy of Examples:** 10/10
 Examples are accurate.
-_Fixed:_ Replaced incorrect "Present Tense" translations in the Practice section with actual Routine sentences.
+*Fixed:* Replaced incorrect "Present Tense" translations in the Practice section with actual Routine sentences.
 
 **2. Relevance of Scenarios:** 10/10
 "Daily Schedule" dialogue is a standard but essential conversation.

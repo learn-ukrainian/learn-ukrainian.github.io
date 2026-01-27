@@ -2,13 +2,13 @@
   "module": "yaroslav-wise",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T23:24:23.814788Z",
+  "last_audit": "2026-01-27T16:22:26.580174Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-25T21:48:07.034173Z",
+    "md": "2026-01-27T15:24:10.347282Z",
     "meta": "2026-01-26T22:20:13.796351Z",
-    "activities": "2026-01-23T20:08:34.725485Z",
-    "vocabulary": "2026-01-22T12:48:28.463239Z",
+    "activities": "2026-01-27T15:34:55.197808Z",
+    "vocabulary": "2026-01-26T23:26:52.141942Z",
     "plan": null
   },
   "gates": {
@@ -25,7 +25,7 @@
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "10/3"
+      "message": "6/3"
     },
     "vocabulary": {
       "status": "warn",

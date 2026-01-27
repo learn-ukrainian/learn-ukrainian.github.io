@@ -6,30 +6,27 @@ title: 'Інтеграція виду: практика'
 subtitle: Aspect Integration Practice
 content_outline:
 - section: Тест
-  words: 100
+  words: 238
   points:
-  - Content for Тест
-  - Examples and explanation
-  - Practice or application
+  - Integration diagnostic
+  - All aspect contexts check
 - section: Пояснення
-  words: 900
+  words: 1883
   points:
-  - Content for Пояснення
-  - Examples and explanation
-  - Practice or application
+  - Temporal connectors with aspect
+  - Complex narrative patterns
+  - Integration strategies
 - section: Застосування на практиці
-  words: 150
+  words: 269
   points:
-  - Content for Застосування на практиці
-  - Examples and explanation
-  - Practice or application
+  - Practice scenarios
+  - Combined contexts
 - section: Діалоги
-  words: 500
+  words: 610
   points:
-  - Content for Діалоги
-  - Examples and explanation
-  - Practice or application
-word_target: 1500
+  - Extended dialogues
+  - Natural aspect mixing
+word_target: 3000
 vocabulary_hints:
   required:
   - коли (when)

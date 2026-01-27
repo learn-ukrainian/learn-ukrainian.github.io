@@ -1,10 +1,12 @@
 # Audit Report: M43 — mariya-zankovetska.md
+
 **Level:** C1 | **Module:** M43 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:17
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | «Розуміння біографії та внеску Марії Заньковецької» | 12 | 5 | ✅ |
@@ -45,22 +48,26 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in mariya-zankovetska.yaml: Schema validation error at key '14': {'type': 'reading', 'title': '«Наукова розвідка про театр корифеїв»', 'resource': {'type': 'article', 'url': 'https://shron1.chytomo.com/teatr-koryfeiv-yak-tse-bulo-naspravdi/', 'title': '«Театр корифеїв — шлях від аматорства до професіоналізму»'}, 'tasks': ['«Як автор статті використовує біографічну лексику щодо Заньковецької?»', '«Знайдіть приклади академічного регістру в описі театральних реформ.»', '«Порівняйте оцінку внеску Заньковецької в статті з матеріалом модуля.»']} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Останні роки' per template 'c1-biography-module-template.md'
   - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 - ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Спадщина|Вплив' found: Вплив на сучасників, Спадщина
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 3 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2002/4000 (raw: 2277)
 - **Activities:** ✅ 16/3
 - **Density:** ✅ All > 1
@@ -79,10 +86,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 95% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 4 | 4 | 100% | 19% | 19.0% |
@@ -98,6 +107,7 @@
 | **TOTAL** | | | | | **95.1%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 87 | Included in Core |

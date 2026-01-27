@@ -5,53 +5,53 @@ version: '2.0'
 title: 'Газова зброя: Економічна війна 1991-2022'
 content_outline:
 - section: Вступ — Газ як зброя
-  words: 400
+  words: 457
   points:
   - Енергетична залежність
   - Росія — постачальник
   - Газ як інструмент тиску
   - Структура модуля
 - section: 1990-ті — Борги і залежність
-  words: 600
+  words: 686
   points:
   - Успадкована залежність
   - Накопичення боргів
   - Бартерні схеми
   - Корупція — з обох сторін
 - section: 2006 і 2009 — Газові війни
-  words: 700
+  words: 800
   points:
   - Відключення газу
   - Вплив на Європу
   - Україна — «ненадійний транзитер»
   - Хто виграв
 - section: Nord Stream — обхід України
-  words: 600
+  words: 686
   points:
   - Навіщо Росії
   - Німеччина — партнер
   - Втрата транзиту — втрата важеля
   - Nord Stream 2 — до 24.02.2022
 - section: Ціна газу як тиск
-  words: 500
+  words: 571
   points:
   - Знижки за лояльність
   - Харківські угоди 2010
   - Газ — валюта впливу
   - Залежність — добровільна?
 - section: Після 2022
-  words: 400
+  words: 457
   points:
   - Кінець залежності
   - Диверсифікація
   - Газ — більше не зброя
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - 30 років газового шантажу
   - Як звільнитися
   - Перехід до синтезу
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - газова зброя (gas weapon)
@@ -71,16 +71,16 @@ vocabulary_hints:
   - енергетична безпека (energy security)
   - санкції (sanctions)
 activity_hints:
-- type: conflict-analysis
+- type: critical-analysis
   focus: 2006 and 2009 gas wars — causes and outcomes
   output: Conflict analysis
-- type: geopolitical-analysis
+- type: critical-analysis
   focus: Nord Stream as geopolitical weapon
   output: Geopolitical assessment
-- type: dependence-analysis
+- type: critical-analysis
   focus: How gas dependence limited Ukraine's choices
   output: Dependence mapping
-- type: contemporary-analysis
+- type: critical-analysis
   focus: Post-2022 — end of gas dependence?
   output: Contemporary assessment
 - type: essay-response
@@ -109,3 +109,6 @@ sources:
   notes: Bypass pipelines
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of газова зброя: економічна війна 1991-2022'
+- Evaluate the historical significance of газ як зброя

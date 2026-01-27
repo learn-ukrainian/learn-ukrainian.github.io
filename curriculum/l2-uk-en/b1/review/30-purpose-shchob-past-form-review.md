@@ -10,10 +10,10 @@
 
 | Dimension           | Score | Notes                                                                       |
 | ------------------- | ----- | --------------------------------------------------------------------------- |
-| Clarity             | 10/10 | The distinction (Different Subjects = _щоб_ + Past Form) is crystal clear.  |
+| Clarity             | 10/10 | The distinction (Different Subjects = *щоб* + Past Form) is crystal clear.  |
 | Structure           | 10/10 | Well-organized categories of verbs (desire, demand, advice).                |
 | Relevance           | 10/10 | Essential for expressing wants/orders to others.                            |
-| Language            | 10/10 | Excellent examples from _The Witcher_ and _Shadows of Forgotten Ancestors_. |
+| Language            | 10/10 | Excellent examples from *The Witcher* and *Shadows of Forgotten Ancestors*. |
 | Pedagogy            | 10/10 | Explains that "past form" is actually subjunctive/conjunctive here.         |
 | Immersion           | 10/10 | References to Ostroh Academy and Bessarabsky Market fit perfectly.          |
 | Activities          | 10/10 | High density.                                                               |
@@ -24,16 +24,16 @@
 
 ## Linguistic Accuracy Issues
 
-- _Fixed:_ Vocabulary extraction errors (`латин` -> `латина`, `сашка` -> `Сашко`, `шипіт` -> `Шипіт`).
+- *Fixed:* Vocabulary extraction errors (`латин` -> `латина`, `сашка` -> `Сашко`, `шипіт` -> `Шипіт`).
 
 ## Strengths
 
-- **Gaming Context:** The reference to _S.T.A.L.K.E.R._ and _The Witcher_ quest logs ("I want you to find...") is brilliant for modern learners.
-- **Cultural Depth:** Explaining how this structure is used in traditional toasts (_Бажаємо, щоб ви жили..._) grounds the grammar in culture.
+- **Gaming Context:** The reference to *S.T.A.L.K.E.R.* and *The Witcher* quest logs ("I want you to find...") is brilliant for modern learners.
+- **Cultural Depth:** Explaining how this structure is used in traditional toasts (*Бажаємо, щоб ви жили...*) grounds the grammar in culture.
 
 ## Issues
 
-- _Fixed:_ Semantic errors in vocabulary extraction.
+- *Fixed:* Semantic errors in vocabulary extraction.
 
 ## Recommendation
 

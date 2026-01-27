@@ -1,9 +1,11 @@
 # Audit Report: M67 — 67-ukrainian-cuisine-traditions.md
+
 **Level:** C1 | **Module:** M67 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:36
 
 ## Configuration
+
 **Type:** C1-cultural
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -16,6 +18,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння українських кулінарних традицій | 8 | 5 | ✅ |
@@ -38,11 +41,13 @@
 - Low density activities: 0
 
 ## Recommendation
+
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2236/3000 (raw: 2337)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
@@ -61,10 +66,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 94% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 14 | 15 | 93% | 25% | 23.2% |
@@ -78,6 +85,7 @@
 | **TOTAL** | | | | | **94.1%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 88 | Included in Core |

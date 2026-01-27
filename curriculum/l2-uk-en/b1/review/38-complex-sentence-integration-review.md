@@ -24,7 +24,7 @@
 
 ## Linguistic Accuracy Issues
 
-- _Fixed:_ Vocabulary extraction errors (`вересна` -> `вересень`, proper nouns capitalization).
+- *Fixed:* Vocabulary extraction errors (`вересна` -> `вересень`, proper nouns capitalization).
 
 ## Strengths
 
@@ -33,7 +33,7 @@
 
 ## Issues
 
-- _Fixed:_ Vocab errors.
+- *Fixed:* Vocab errors.
 
 ## Recommendation
 

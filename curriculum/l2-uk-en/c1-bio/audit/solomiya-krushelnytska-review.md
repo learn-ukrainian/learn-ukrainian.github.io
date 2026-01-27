@@ -1,10 +1,12 @@
 # Audit Report: M63 — solomiya-krushelnytska.md
+
 **Level:** C1 | **Module:** M63 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:29
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | «Тріумф Соломії Крушельницької» | 12 | 5 | ✅ |
@@ -43,15 +46,18 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in solomiya-krushelnytska.yaml: Schema validation error at key '7': {'type': 'reading', 'title': '«Соломія Крушельницька та Джакомо Пуччіні»', 'resource': {'type': 'article', 'url': 'https://localhistory.org.ua/texts/statti/solomiia-krushelnitska-ukrayinska-priiatelka-puchchini/', 'title': '«Українська приятелька Пуччіні: Історія одного тріумфу»'}, 'tasks': ['«Як саме Соломія змінила трактування образу Чіо-Чіо-сан?»', '«Які емоції переживав композитор Пуччіні після тріумфу в Брешії?»', "«Яку роль відіграв цей успіх у подальшій світовій кар'єрі Крушельницької?»"]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
+
 - **Words:** ❌ 2081/4000 (raw: 2323)
 - **Activities:** ✅ 14/3
 - **Density:** ✅ All > 1
@@ -70,10 +76,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 95% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 8 | 4 | 100% | 19% | 19.0% |
@@ -89,6 +97,7 @@
 | **TOTAL** | | | | | **95.2%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 83 | Included in Core |

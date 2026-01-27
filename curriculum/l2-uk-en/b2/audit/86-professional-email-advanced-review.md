@@ -1,9 +1,11 @@
 # Audit Report: M86 — 86-professional-email-advanced.md
+
 **Level:** B2 | **Module:** M86 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:43
 
 ## Configuration
+
 **Type:** B2-history
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Ситуації та стратегії листування | 12 | 8 | ✅ |
@@ -41,17 +44,20 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
   - FIX: Add a comparative-study activity to meet advanced richness standards.
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 2 violations (minor)
 
 ## Gates
+
 - **Words:** ✅ 4154/4000 (raw: 4236)
 - **Activities:** ✅ 13/3
 - **Density:** ✅ All > 1
@@ -70,10 +76,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 75% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 47 | 15 | 100% | 25% | 25.0% |
@@ -87,10 +95,11 @@
 | **TOTAL** | | | | | **75.6%** |
 
 ### Dryness Flags & Fixes
+
 - ❌ **NO_CULTURAL_ANCHOR**
   - FIX:
     Add 3+ cultural references. Use this exact format:
-    
+
     > 🇺🇦 **Культурний момент**
     >
     > [Reference to Ukrainian place (Київ, Львів, Одеса, Карпати), tradition, or custom]
@@ -98,6 +107,7 @@
     > [Example sentence using the grammar with cultural context]
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 99 | Included in Core |

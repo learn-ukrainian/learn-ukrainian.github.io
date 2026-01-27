@@ -1,10 +1,12 @@
 # Audit Report: M26 — 26-telling-stories.md
+
 **Level:** A2 | **Module:** M26 | **Phase:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 **Generated:** 2026-01-26 22:26:18
 
 ## Configuration
+
 **Type:** A2-vocab
 **Word Target:** 1000 words
 **Activities:** 10-14 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Connectors and Meanings | 12 | 8 | ✅ |
@@ -37,6 +40,7 @@
 - Low density activities: 0
 
 ## Gates
+
 - **Words:** ✅ 1263/1000 (raw: 1352)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
@@ -54,6 +58,7 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

@@ -1,10 +1,12 @@
 # Audit Report: M61 — 61-synonyms-time.md
+
 **Level:** B2 | **Module:** M61 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:26
 
 ## Configuration
+
 **Type:** B2-vocab
 **Word Target:** 1750 words
 **Activities:** 10-14 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть часовий відтінок | 12 | 8 | ✅ |
@@ -42,15 +45,18 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 61-synonyms-time.yaml: Schema validation error at key '13': {'type': 'select', 'title': 'Масштаби часу', 'instruction': 'Оберіть усі слова, що описують великі часові проміжки (6 елементів).', 'items': [{'question': 'Які терміни позначають історію та вічність? (Оберіть 6)', 'options': [{'text': 'епоха', 'correct': True}, {'text': 'ера', 'correct': True}, {'text': 'століття', 'correct': True}, {'text': 'тисячоліття', 'correct': True}, {'text': 'вічність', 'correct': True}, {'text': 'період', 'correct': True}]}, {'question': 'Оберіть одиниці виміру часу:', 'options': [{'text': 'година', 'correct': True}, {'text': 'хвилина', 'correct': True}, {'text': 'секунда', 'correct': True}, {'text': 'метр', 'correct': False}]}, {'question': 'Які слова описують минуле?', 'options': [{'text': 'колись', 'correct': True}, {'text': 'раніше', 'correct': True}, {'text': 'вчора', 'correct': True}, {'text': 'завтра', 'correct': False}]}, {'question': 'Оберіть характеристики майбутнього:', 'options': [{'text': 'прийдешній', 'correct': True}, {'text': 'наступний', 'correct': True}, {'text': 'майбутній', 'correct': True}, {'text': 'минулий', 'correct': False}]}, {'question': 'Які слова вказують на швидкість?', 'options': [{'text': 'миттєво', 'correct': True}, {'text': 'швидко', 'correct': True}, {'text': 'стрімко', 'correct': True}, {'text': 'повільно', 'correct': False}]}, {'question': 'Оберіть слова, що позначають тривалість:', 'options': [{'text': 'протягом', 'correct': True}, {'text': 'упродовж', 'correct': True}, {'text': 'за', 'correct': True}, {'text': 'через', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
+
 - **Words:** ✅ 2176/1750 (raw: 2393)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
@@ -69,10 +75,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 98% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 53 | 24 | 100% | 20% | 20.0% |
@@ -88,6 +96,7 @@
 | **TOTAL** | | | | | **98.5%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 79 | Included in Core |

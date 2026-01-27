@@ -24,17 +24,17 @@
 
 ## Linguistic Accuracy Issues
 
-- None. The module correctly distinguishes between _true_ aspect pairs (shukaty/poshukaty) and semantic pairs (shukaty/znayty).
+- None. The module correctly distinguishes between *true* aspect pairs (shukaty/poshukaty) and semantic pairs (shukaty/znayty).
 
 ## Strengths
 
 - **Linguistic Precision:** The warning box "Не плутайте шукати і знайти" is gold. Many learners struggle here, and this module tackles it head-on.
-- **Cultural Texture:** Referencing the film _Shadows of Forgotten Ancestors_ and the game _S.T.A.L.K.E.R._ makes the grammar relevant to diverse interests.
+- **Cultural Texture:** Referencing the film *Shadows of Forgotten Ancestors* and the game *S.T.A.L.K.E.R.* makes the grammar relevant to diverse interests.
 - **Frequency Data:** Providing the top-10 list based on corpus data gives learners confidence they are learning useful words.
 
 ## Issues
 
-- _Fixed:_ Minor vocabulary lemma consistency (`пекарний` -> `пекарня`, `параджанов` -> `Параджанов`).
+- *Fixed:* Minor vocabulary lemma consistency (`пекарний` -> `пекарня`, `параджанов` -> `Параджанов`).
 
 ## Recommendation
 

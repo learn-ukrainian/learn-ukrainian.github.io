@@ -5,14 +5,14 @@ version: '2.0'
 title: 'Синтез: Джерела нової доби'
 content_outline:
 - section: Вступ — Від козаків до XX століття
-  words: 400
+  words: 457
   points:
   - Огляд модулів 29-37
   - Нові типи джерел
   - Нові проблеми
   - Мета синтезу
 - section: Типологія джерел XIX-XX ст.
-  words: 600
+  words: 686
   points:
   - Політичні маніфести
   - Імперські документи (заборони)
@@ -21,7 +21,7 @@ content_outline:
   - Архівні документи
   - Таблиця порівняння
 - section: Особливості модерних джерел
-  words: 600
+  words: 686
   points:
   - Більша кількість — більше голосів
   - Масова грамотність — ширший спектр
@@ -29,33 +29,33 @@ content_outline:
   - Фотографія і кіно
   - Проблема надлишку
 - section: Джерела репресій
-  words: 600
+  words: 686
   points:
   - Імперські vs. радянські
   - Як читати мову репресора
   - Голос жертви — де шукати
   - Етичні питання
 - section: Методологічні уроки
-  words: 500
+  words: 571
   points:
   - Порівняння офіційного і підпільного
   - Імперський дискурс — розпізнавання
   - Пропаганда vs. документ
   - Усна історія — місце в дослідженні
 - section: Практикум
-  words: 500
+  words: 571
   points:
   - Одна подія — різні джерела
   - 'Наприклад: 1933 рік'
   - Радянські документи + свідчення + преса
   - Комплексна реконструкція
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Готовність до дисидентських джерел
   - Чек-ліст для модерних джерел
   - Від минулого до сучасності
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - синтез (synthesis)
@@ -78,10 +78,10 @@ activity_hints:
 - type: essay-response
   focus: Create source matrix for modules 29-37
   output: Comprehensive typology
-- type: multi-source-analysis
+- type: critical-analysis
   focus: One event from 4+ source types
   output: Multi-perspective reconstruction
-- type: methodology
+- type: critical-analysis
   focus: Create checklist for analyzing 20th-century sources
   output: Methodology checklist
 - type: essay-response
@@ -106,3 +106,6 @@ sources:
   notes: Source types
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of синтез: джерела нової доби'
+- Evaluate the historical significance of від козаків до xx століття

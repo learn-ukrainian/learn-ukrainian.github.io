@@ -1,10 +1,12 @@
 # Audit Report: M66 — mykola-leontovych.md
+
 **Level:** C1 | **Module:** M66 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:31
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | «Геній Миколи Леонтовича» | 12 | 5 | ✅ |
@@ -43,19 +46,23 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in mykola-leontovych.yaml: Schema validation error at key '7': {'type': 'reading', 'title': '«Розслідування вбивства генія»', 'resource': {'type': 'article', 'url': 'https://www.istpravda.com.ua/articles/2011/01/21/17345/', 'title': '«Убивство Леонтовича: Справа чекіста Грищенка»'}, 'tasks': ['«Які докази причетності ДПУ до вбивства Леонтовича наводяться в статті?»', '«Як родина композитора намагалася зберегти правду про ту страшну ніч?»', '«Порівняйте радянську версію подій із даними відкритих архівів.»']} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Останні роки' per template 'c1-biography-module-template.md'
   - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 2 violations (minor)
 
 ## Gates
+
 - **Words:** ❌ 1937/4000 (raw: 2159)
 - **Activities:** ✅ 14/3
 - **Density:** ✅ All > 1
@@ -74,10 +81,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 100% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 6 | 4 | 100% | 19% | 19.0% |
@@ -93,6 +102,7 @@
 | **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 76 | Included in Core |

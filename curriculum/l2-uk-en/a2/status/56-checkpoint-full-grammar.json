@@ -2,14 +2,14 @@
   "module": "56-checkpoint-full-grammar",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:26:35.174864Z",
+  "last_audit": "2026-01-27T13:04:38.808050Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-15T15:59:37.730858Z",
     "meta": "2026-01-26T17:21:18.965538Z",
-    "activities": "2026-01-11T23:20:54.277614Z",
+    "activities": "2026-01-27T13:04:01.182234Z",
     "vocabulary": "2026-01-25T01:40:11.939211Z",
-    "plan": "2026-01-26T17:21:18.965305Z"
+    "plan": "2026-01-27T13:04:30.783217Z"
   },
   "gates": {
     "meta": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1015/800 (raw: 1305) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "1015/800 (raw: 1305)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "10/10"
+      "message": "12/10"
     },
     "vocabulary": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "6 Outline Compliance Errors",
-      "Missing required activity types: error-correction, fill-in, speaking"
-    ],
-    "pass_count": 4,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

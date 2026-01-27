@@ -108,12 +108,14 @@ Claude Code (displays violations to user)
 The MCP server automatically selects the appropriate model:
 
 ### A1-B1 Modules (Scaffolded)
+
 - **Model**: `gemini-3-flash-preview`
 - **Reason**: Content is scaffolded with English translations
 - **Speed**: < 5 seconds
 - **Cost**: ~$0.0001 per validation
 
 ### B2-C2 Modules (Immersed)
+
 - **Model**: `gemini-3-pro-preview`
 - **Reason**: 100% immersed Ukrainian requiring higher quality
 - **Speed**: 10-15 seconds
@@ -185,6 +187,7 @@ The validator detects 6 violation types:
 ## Files Created/Modified
 
 ### Created
+
 1. `.mcp/servers/ukrainian-validator/server.py` - MCP server (235 lines)
 2. `.mcp/test_ukrainian_validator.py` - Test harness
 3. `claude_extensions/commands/validate-ukrainian.md` - Slash command documentation
@@ -192,10 +195,12 @@ The validator detects 6 violation types:
 5. `docs/issues/401-mcp-bridge-complete.md` - This completion document
 
 ### Modified
+
 1. `.mcp.json` - Registered ukrainian-validator MCP server
 2. `.claude/settings.json` - Added MCP wildcard permissions
 
 ### Deployed
+
 1. `.claude/commands/validate-ukrainian.md` - Deployed from claude_extensions
 2. `.agent/commands/validate-ukrainian.md` - Deployed from claude_extensions
 3. `.agent/workflows/validate-ukrainian.md` - Deployed from claude_extensions
@@ -298,6 +303,7 @@ Not implemented yet. Would auto-trigger validation when editing B1+ modules.
 ## Future Enhancements (Not Implemented)
 
 ### 1. Agent Hooks
+
 Auto-trigger validation when editing B1+ modules.
 
 **Implementation**:
@@ -309,6 +315,7 @@ Auto-trigger validation when editing B1+ modules.
 **Status**: Deferred (not critical for current workflow)
 
 ### 2. Caching
+
 Cache validation results to avoid re-validating unchanged content.
 
 **Implementation**:
@@ -319,6 +326,7 @@ Cache validation results to avoid re-validating unchanged content.
 **Status**: Deferred (cost already negligible)
 
 ### 3. Batch Validation
+
 Validate multiple modules in one request.
 
 **Implementation**:
@@ -329,6 +337,7 @@ Validate multiple modules in one request.
 **Status**: Deferred (current single-file validation sufficient)
 
 ### 4. Audit Pipeline Integration
+
 Parse MCP JSON violations in audit reports.
 
 **Implementation**:
@@ -390,11 +399,13 @@ Expected: Structured violation report or "No violations detected"
 ## Dependencies
 
 ### Required
+
 - **gemini CLI**: `brew install gemini-cli` (or equivalent)
 - **Google AI API key**: Configured in `.gemini/config.yaml` or `GEMINI_API_KEY` env var
 - **Python venv**: `.venv/` with dependencies
 
 ### Optional
+
 - **Claude Code**: For `/validate-ukrainian` command
 - **Antigravity**: Also supported (shares `.agent/` deployment)
 

@@ -5,17 +5,19 @@ version: '1.0'
 title: 'Свідки і свідчення: Усна історія'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of свідки і свідчення: усна історія'
+- Evaluate the historical significance of голоси тих, хто пережив
 content_outline:
 - section: Вступ — Голоси тих, хто пережив
-  words: 400
+  words: 457
   subsections:
   - Повернення до усної історії
   - Тепер з контекстом механізмів
   - Як читати свідчення глибше
   - Структура модуля
 - section: Теми свідчень
-  words: 600
+  words: 686
   subsections:
   - Конфіскація — як описують
   - Голод — що їли (і не їли)
@@ -23,40 +25,40 @@ content_outline:
   - Виживання — стратегії
   - Канібалізм — табуйована тема
 - section: Фрагменти свідчень
-  words: 800
+  words: 914
   subsections:
   - Свідчення 1 — конфіскація
   - Свідчення 2 — голодна смерть близької людини
   - Свідчення 3 — виживання
   - Аналіз кожного
 - section: Дитячі спогади
-  words: 500
+  words: 571
   subsections:
   - Діти як свідки
   - Особливості дитячої пам'яті
   - Травма і мовчання
   - Що діти розуміли?
 - section: Травма і пам'ять
-  words: 600
+  words: 686
   subsections:
   - Посттравматичні ефекти
   - Чому так довго мовчали
   - Як передавалася травма
   - Сучасні нащадки
 - section: Методологічні питання
-  words: 400
+  words: 457
   subsections:
   - Як оцінювати свідчення
   - Що достовірно, що ні
   - Емоційна правда vs. фактична
   - Етика роботи з травмою
 - section: Підсумок
-  words: 200
+  words: 229
   subsections:
   - Свідчення як незамінне джерело
   - Від голосів до визнання
   - Підготовка до правового аспекту
-word_target: 3500
+word_target: 4000
 vocabulary:
 - свідок
 - свідчення
@@ -76,9 +78,9 @@ vocabulary:
 activities:
 - type: reading
   focus: Three testimonies with analysis questions
-- type: thematic-analysis
+- type: critical-analysis
   focus: Identify recurring themes across testimonies
-- type: methodology-reflection
+- type: essay-response
   focus: How should we work with trauma testimonies?
 - type: comparative-study
   focus: Compare adult vs. child testimonies

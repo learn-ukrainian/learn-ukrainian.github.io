@@ -5,42 +5,47 @@ version: '2.0'
 title: Пасивні дієприкметники минулого часу I
 subtitle: Past Passive Participles I (-ний/-тий)
 content_outline:
-- section: 'Introduction: Passive Participles'
-  words: 150
+- section: Вступний тест
+  words: 134
   points:
   - What passive means
   - Participle vs verb form
-  - Adjectival function
-- section: 'Formation: -ний Suffix'
-  words: 250
+- section: Теоретичне пояснення
+  words: 967
   points:
-  - From transitive verb stems
-  - написаний, прочитаний, зроблений
-  - Consonant changes
-- section: 'Formation: -тий Suffix'
-  words: 250
-  points:
-  - After certain stem types
-  - вибитий, одягнутий, помитий
-  - When to use -тий
-- section: Agreement Patterns
-  words: 250
-  points:
-  - 'Gender: -ний/-на/-не/-ні'
-  - Case agreement
-  - Number agreement
-- section: Attributive vs Predicative Use
-  words: 200
-  points:
-  - Написана книга (attributive)
-  - Книга написана (predicative)
-  - Word order effects
-- section: 'Practice: Formation and Agreement'
-  words: 100
+  - Formation -ний/-тий suffixes
+  - Agreement patterns
+- section: Практика
+  words: 310
   points:
   - Form participles from verbs
   - Agree with nouns
-word_target: 1200
+- section: Приклади використання
+  words: 390
+  points:
+  - Attributive vs predicative use
+  - Word order effects
+- section: Пасивні дієприкметники у формальному листуванні
+  words: 191
+  points:
+  - Formal register usage
+- section: Пасивні дієприкметники в українській культурі та літературі
+  words: 472
+  points:
+  - Cultural and literary examples
+- section: Порівняння з активними конструкціями
+  words: 100
+  points:
+  - Active vs passive comparison
+- section: Практичні поради для запам'ятовування
+  words: 286
+  points:
+  - Memorization tips
+- section: Потрібно більше практики?
+  words: 150
+  points:
+  - Additional exercises
+word_target: 3000
 vocabulary_hints:
   required:
   - пасивний (passive)
@@ -57,13 +62,13 @@ vocabulary_hints:
   - предикативний (predicative)
   - основа дієслова (verb stem)
 activity_hints:
-- type: transformation
+- type: cloze
   focus: Verb to passive participle
   items: 25
 - type: fill-in
   focus: Complete with correct form
   items: 20
-- type: agreement
+- type: fill-in
   focus: Match participle to noun
   items: 15
 - type: error-correction

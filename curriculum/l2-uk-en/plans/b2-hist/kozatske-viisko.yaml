@@ -6,43 +6,43 @@ title: Козацьке військо та озброєння
 subtitle: Cossack Army and Weaponry
 content_outline:
 - section: 'Вступ: Феномен козацького війська'
-  words: 400
+  words: 451
   points:
   - Universal military service and democracy
   - International reputation of Cossack mercenaries
 - section: 'Структура та Ієрархія: Від коша до полку'
-  words: 600
+  words: 676
   points:
   - The role of the Hetman and General Staff
   - Territorial and functional divisions
   - Discipline and military code
 - section: 'Озброєння: Шабля, самопал та гармата'
-  words: 600
+  words: 676
   points:
   - 'Individual weaponry: fire and steel'
   - The cult of the sabre (shablya)
   - 'Artillery: mobility and psychological impact'
 - section: 'Тактика бою: Козацький табір та розвідка'
-  words: 600
+  words: 676
   points:
   - The 'tabor' as a defensive fort
   - Cossack 'plastuny' (scouts)
   - Siege warfare and river raids
 - section: 'Символіка та Клейноди: Знаки влади'
-  words: 400
+  words: 451
   points:
   - Bulava, bunchuk, and seals
   - The sacred meaning of the banner (khoruhva)
 - section: 'Читання: Опис козацького вишколу'
-  words: 250
+  words: 282
   points:
   - Account of a foreign observer on Cossack training
 - section: 'Первинні джерела: Голоси епохи'
-  words: 300
+  words: 338
   points:
   - Analysis of official documents and letters
 - section: Деколонізаційний погляд
-  words: 400
+  words: 450
   points:
   - Cossacks as a modern professional army, not a 'rabble'
   - Influence on European military science
@@ -63,8 +63,6 @@ vocabulary_hints:
 activity_hints:
 - type: reading
   focus: Primary sources on military structure
-- type: quiz
-  focus: Terminology and hierarchy
 - type: essay-response
   focus: Cossack military ethics and modern parallels
 - type: comparative-study

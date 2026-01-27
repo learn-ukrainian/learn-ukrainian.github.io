@@ -1,9 +1,11 @@
 # Audit Report: 91-ruina-ii-doroshenko.md
+
 **Phase:** B2.3b | **Level:** B2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
+
 - **Words:** ⚠️ 1978/2000 (22 short)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
@@ -22,10 +24,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 8 | 3 | 100% | 24% | 23.8% |
@@ -40,6 +44,7 @@
 | **TOTAL** | | | | | **99.2%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 80 | Included in Core |

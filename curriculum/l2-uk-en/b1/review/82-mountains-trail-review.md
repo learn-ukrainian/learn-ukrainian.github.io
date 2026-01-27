@@ -12,7 +12,7 @@
 | ------------------- | ----- | ------------------------------------------------------------------------------------------------- |
 | Coherence           | 10/10 | Logical structure (Preparation -> Routes -> Safety).                                              |
 | Relevance           | 10/10 | High. The Carpathians are the #1 active leisure destination.                                      |
-| Educational         | 10/10 | Good differentiation of _похід_ (hike) vs _трейл_ (trail running).                                |
+| Educational         | 10/10 | Good differentiation of *похід* (hike) vs *трейл* (trail running).                                |
 | Language            | 10/10 | Authentic "Carpathian" vocab (`полонина`, `колиба`, `смерека`).                                   |
 | Pedagogy            | 10/10 | Borzhava & Chornohora routes are the real classics.                                               |
 | Immersion           | 10/10 | Mentions "White Elephant" (abandoned observatory on Pip Ivan) - obscure but cool cultural nugget. |

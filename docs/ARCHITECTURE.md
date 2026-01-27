@@ -24,6 +24,7 @@ The curriculum follows a strict three-layer separation of concerns to ensure con
 - **Human-readable view**: `docs/l2-uk-en/{LEVEL}-PLAN-GENERATED.md` (run `scripts/generate_plan_markdown.py`)
 
 ### 2. Build (Mutable Artifacts)
+
 Located in `curriculum/l2-uk-en/{level}/`.
 - **Ownership**: AI Agents (Builders)
 - **Components**:
@@ -33,6 +34,7 @@ Located in `curriculum/l2-uk-en/{level}/`.
   - `meta/{slug}.yaml`: Build-time metadata (naturalness score, last modified).
 
 ### 3. Status (Cached Audit Results)
+
 Located in `curriculum/l2-uk-en/{level}/status/{slug}.json`.
 - **Ownership**: System (Auditor)
 - **Content**: Results of all 16+ audit gates, violation counts, and source file timestamps.
@@ -425,6 +427,7 @@ Learn Ukrainian uses a multi-layered quality validation approach with four compl
 **Gates**: Informational (doesn't block audit)
 
 **Trusted Sources**:
+
 | Source | Type | Use For |
 |--------|------|---------|
 | **Словник.UA** (slovnyk.ua) | Online dictionary | Standard spelling |
@@ -481,6 +484,7 @@ AUDIT_CONTENT_QUALITY=true .venv/bin/python scripts/audit_module.py {file}
 - **Variety** (0-100%): Mechanical pattern detection
 
 **CEFR Quality Gates**:
+
 | Level | Min Naturalness | Min Variety | Min Distractors | Max Inappropriate |
 |-------|-----------------|-------------|-----------------|-------------------|
 | B1 | 3.5 | 60% | 4.0 | ≤20% |
@@ -688,26 +692,31 @@ See `vibe/docs/CO-VIBE-INTEGRATION.md` for the full spec.
 ## Related Documentation
 
 ### Workflows & Guides
+
 - **`docs/B1-PLUS-MODULE-WORKFLOW.md`** - Complete B1+ module creation & validation workflow
 - **`docs/STAGED-MODULE-CREATION.md`** - 4-stage creation pipeline overview
 - **`docs/MODULE-AUDIT-GUIDE.md`** - Legacy audit guide (deprecated, use B1+ workflow)
 
 ### Quality Validation
+
 - **`docs/CONTENT-QUALITY-AUDIT.md`** - Content quality review system (LLM-based)
 - **`docs/SCRIPTS.md`** - Complete scripts reference including activity quality validation
 - **`docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`** - Quality standards and targets
 
 ### Markdown & Format
+
 - **`docs/MARKDOWN-FORMAT.md`** - Complete markdown syntax specification
 - **`docs/ACTIVITY-YAML-REFERENCE.md`** - Activity format reference for AI agents
 
 ### Claude Code Extensions
+
 - **`claude_extensions/quick-ref/`** - Level-specific quick references (a1.md, b1.md, b2.md, c1.md, c2.md)
 - **`claude_extensions/stages/`** - Stage instruction documents
 - **`claude_extensions/commands/`** - Slash commands (/module, /module-stage-*, /review-content)
 - **`claude_extensions/skills/`** - Skills (grammar-check, vocab-enrichment, module architects)
 
 ### Templates
+
 - **`docs/l2-uk-en/templates/`** - 26 authoritative module templates by level and type
 
 ## Version History

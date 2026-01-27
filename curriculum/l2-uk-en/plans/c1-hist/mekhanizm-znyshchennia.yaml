@@ -5,17 +5,19 @@ version: '1.0'
 title: 'Механізм знищення: 1930-1937'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of механізм знищення: 1930-1937'
+- Evaluate the historical significance of як знищували культуру
 content_outline:
 - section: Вступ — Як знищували культуру
-  words: 400
+  words: 457
   subsections:
   - Від дискусій до репресій
   - Механізм — як працював
   - Чому культура — ціль
   - Структура модуля
 - section: Хронологія знищення
-  words: 600
+  words: 686
   subsections:
   - 1930-1933 — перша хвиля
   - Процес СВУ (1930)
@@ -23,7 +25,7 @@ content_outline:
   - 1937-1938 — Великий терор
   - Масштаби — скільки загинуло
 - section: Етапи знищення особистості
-  words: 700
+  words: 800
   subsections:
   - Критика в пресі
   - Вимога самокритики
@@ -32,7 +34,7 @@ content_outline:
   - Табір або розстріл
   - Паттерн — як повторювався
 - section: Звинувачення — словник терору
-  words: 600
+  words: 686
   subsections:
   - «Націоналізм» — що означало
   - «Формалізм» — проти митців
@@ -40,7 +42,7 @@ content_outline:
   - Троцькізм
   - Як звинувачення конструювалися
 - section: Долі — приклади
-  words: 500
+  words: 571
   subsections:
   - Курбас — розстріл
   - Хвильовий — самогубство
@@ -48,19 +50,19 @@ content_outline:
   - Зеров — розстріл
   - Хто вижив і як
 - section: Чому знищили
-  words: 400
+  words: 457
   subsections:
   - Національна культура = загроза
   - «Українізація» — помилка для виправлення
   - Паралель із Голодомором
   - Культурний геноцид?
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - Механізм як система
   - Від індивідуальних трагедій до патерну
   - Підготовка до синтезу
-word_target: 3500
+word_target: 4000
 vocabulary:
 - механізм
 - знищення
@@ -78,13 +80,13 @@ vocabulary:
 - вирок
 - реабілітація
 activities:
-- type: pattern-analysis
+- type: critical-analysis
   focus: Map the stages of persecution
-- type: vocabulary-study
+- type: comparative-study
   focus: Analyze terror vocabulary — how accusations work
-- type: statistical-analysis
+- type: critical-analysis
   focus: Numbers of repressions by year/type
-- type: biography-comparison
+- type: comparative-study
   focus: Compare fates of 5 cultural figures
 - type: essay-response
   focus: Чи було знищення Розстріляного відродження культурним геноцидом?

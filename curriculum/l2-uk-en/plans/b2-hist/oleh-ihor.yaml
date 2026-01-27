@@ -87,18 +87,6 @@ activity_hints:
 - type: reading
   focus: Excerpt from Primary Chronicle about Oleh's campaigns
   source: Provide in module
-- type: match-up
-  focus: Chronology of Oleh's and Ihor's reigns
-  items: 10+ events
-- type: fill-in
-  focus: Political and military terminology
-  items: 15+
-- type: quiz
-  focus: Geography of Campaigns and Expansion
-  items: 6+
-- type: quiz
-  focus: Facts about early Rus rulers
-  items: 12+
 - type: comparative-study
   focus: Oleh vs Ihor — leadership styles and achievements
   output: Comparison table

@@ -76,22 +76,10 @@ activity_hints:
   focus: Reviews and descriptions of "Zaporozhets"
   source: 19th century sources (adapted)
   items: 3 passages
-- type: quiz
-  focus: Facts about Hulak-Artemovskyy and his opera
-  items: 12+
-- type: match-up
-  focus: Characters in the opera and their roles
-  items: 8+
 - type: essay-response
   focus: Why was a Ukrainian opera significant in 1863?
   word_target: 250
   output: Analysis of cultural-political context
-- type: group-sort
-  focus: Opera elements - music, text, characters
-  items: 12+
-- type: fill-in
-  focus: Opera and theatrical terminology
-  items: 8+
 - type: critical-analysis
   focus: How does "Zaporozhets" represent Ukrainian identity?
   output: Cultural analysis
@@ -119,3 +107,6 @@ sources:
   notes: Mentorship context
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of семен гулак-артемовський: оперний співак'
+- Evaluate the contributions of творець першої української опери

@@ -6,30 +6,30 @@ title: 'Вид дієслова: повна система'
 subtitle: Perfective vs Imperfective - The complete picture
 content_outline:
 - section: Розминка
-  words: 100
+  words: 222
   points:
   - Content for Розминка
   - Examples and explanation
   - Practice or application
 - section: Граматика
-  words: 250
+  words: 556
   points:
   - Content for Граматика
   - Examples and explanation
   - Practice or application
 - section: Практика
-  words: 700
+  words: 1556
   points:
   - Content for Практика
   - Examples and explanation
   - Practice or application
 - section: Діалоги
-  words: 300
+  words: 666
   points:
   - Content for Діалоги
   - Examples and explanation
   - Practice or application
-word_target: 1500
+word_target: 3000
 vocabulary_hints:
   required:
   - доконаний вид (perfective aspect)

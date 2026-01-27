@@ -5,50 +5,52 @@ version: '1.0'
 title: 'Жінки в революціях: Прихована історія'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of жінки в революціях: прихована історія'
+- Evaluate the historical significance of невидимі героїні
 content_outline:
 - section: Вступ — Невидимі героїні
-  words: 451
+  words: 515
   subsections:
   - Жінки в українській історії — де вони?
   - Прихована агентність
   - Від 1917 до 2022
   - Структура модуля
 - section: 1917-1921 — Революція і війна
-  words: 677
+  words: 774
   subsections:
   - Жіночі організації УНР
   - Олена Теліга — символ
   - Медицина і тил
   - Чому забули
 - section: 1990 — Гранітна революція
-  words: 564
+  words: 645
   subsections:
   - Студентки — половина учасників
   - Організаторки
   - Чому в історії — тільки чоловіки
   - Приклади
 - section: 2004 і 2014
-  words: 790
+  words: 903
   subsections:
   - Помаранчева — жінки на сцені
   - Євромайдан — жінки в бою
   - «Жіноча сотня»
   - Волонтерство — переважно жіноче
 - section: 2022 — Нова видимість
-  words: 677
+  words: 774
   subsections:
   - Жінки в ЗСУ
   - Волонтерки
   - Політичне лідерство
   - Зміна наративу
 - section: Підсумок
-  words: 341
+  words: 389
   subsections:
   - Жінки завжди були
   - Історію писали чоловіки
   - Перехід до 2022 мобілізації
-word_target: 3500
+word_target: 4000
 vocabulary:
 - жіночий рух
 - прихована історія
@@ -66,13 +68,13 @@ vocabulary:
 - Теліга
 - рівність
 activities:
-- type: recovery-study
+- type: comparative-study
   focus: Recover women's roles in 1917-1921
-- type: visibility-analysis
+- type: critical-analysis
   focus: Why women disappeared from revolutionary history
-- type: maidan-women
+- type: critical-analysis
   focus: Women at Euromaidan — roles and recognition
-- type: 2022-change
+- type: critical-analysis
   focus: How 2022 changed women's visibility
 - type: essay-response
   focus: Чому жінок 'забули' в українській революційній історії?

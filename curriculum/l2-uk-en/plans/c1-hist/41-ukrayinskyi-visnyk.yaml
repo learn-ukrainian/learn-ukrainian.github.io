@@ -5,28 +5,28 @@ version: '2.0'
 title: «Український вісник» Чорновола
 content_outline:
 - section: Вступ — Хроніка опору
-  words: 400
+  words: 457
   points:
   - Що таке «Український вісник»?
   - Чорновіл — редактор
   - Мета видання
   - Значення для руху
 - section: В'ячеслав Чорновіл
-  words: 500
+  words: 571
   points:
   - Біографія
   - Журналіст стає дисидентом
   - «Лихо з розуму» — перша праця
   - Арешти і заслання
 - section: Історія видання
-  words: 600
+  words: 686
   points:
   - Перший номер — 1970
   - Шість номерів до арешту
   - Відновлення — 1987
   - Легалізація — Рух
 - section: Структура і зміст
-  words: 600
+  words: 686
   points:
   - Хроніка репресій
   - Документи
@@ -34,26 +34,26 @@ content_outline:
   - Літературні твори
   - Статті про культуру
 - section: Фрагмент — Хроніка репресій
-  words: 700
+  words: 800
   points:
   - Текст (з глосами)
   - Стиль — документальний
   - Факти без коментарів
   - Сила простого свідчення
 - section: Значення для руху
-  words: 400
+  words: 457
   points:
   - Інформування — хто знає, може діяти
   - Зв'язок із Заходом
   - Моральна підтримка
   - Зразок для інших
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - «Вісник» як модель
   - Чорновіл — символ
   - Зв'язок із незалежністю
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - вісник (herald/bulletin)
@@ -76,13 +76,13 @@ activity_hints:
 - type: reading
   focus: Repression chronicle excerpt
   source: khpg.org or diasporiana
-- type: journalism-analysis
+- type: critical-analysis
   focus: How does Chornovil document without editorializing?
   output: Style analysis
 - type: comparative-study
   focus: Compare "Visnyk" with Russian "Хроника текущих событий"
   output: Publication comparison
-- type: impact-assessment
+- type: critical-analysis
   focus: How did the publication affect the movement?
   output: Impact analysis
 - type: essay-response
@@ -112,3 +112,6 @@ sources:
   notes: Kharkiv Human Rights Group archive
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- Analyze the causes and consequences of «український вісник» чорновола
+- Evaluate the historical significance of хроніка опору

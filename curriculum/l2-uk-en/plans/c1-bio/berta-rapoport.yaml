@@ -69,22 +69,10 @@ activity_hints:
   focus: Жінки в медицині XIX-XX ст.
   source: Historical medical sources
   items: 3 passages
-- type: quiz
-  focus: Життя та діяльність Берти Рапопорт
-  items: 12+
-- type: match-up
-  focus: Терміни медицини та громадської діяльності
-  items: 10+
 - type: essay-response
   focus: Які перешкоди долали перші жінки-лікарі?
   word_target: 300
   output: Analytical essay
-- type: group-sort
-  focus: Сфери діяльності (медицина, благодійність, публіцистика)
-  items: 12+
-- type: fill-in
-  focus: Медична та феміністична термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-59
@@ -103,3 +91,7 @@ sources:
   notes: Historical medical archives of Odesa
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of берта рапопорт: лікарка і громадська діячка'
+- Evaluate the contributions of жінка, що лікувала і надихала
+- Trace the career and influence of повернення з небуття

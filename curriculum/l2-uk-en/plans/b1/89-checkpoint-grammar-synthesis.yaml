@@ -5,42 +5,23 @@ version: '2.0'
 title: 'Checkpoint: Синтез граматики'
 subtitle: Grammar Synthesis Assessment
 content_outline:
-- section: Diagnostic Test
-  words: 150
-  points:
-  - Identify grammar gaps
-  - Self-assessment
-  - Focus areas
-- section: Aspect Synthesis
-  words: 200
-  points:
-  - All aspect contexts
-  - Aspect in discourse
-  - Complex cases
-- section: Motion Verb Review
-  words: 200
-  points:
-  - Prefix system
-  - Aspect with motion
-  - Idiomatic uses
-- section: Complex Sentences
-  words: 200
-  points:
-  - Subordinate clauses
-  - Relative clauses
-  - Conditional structures
-- section: Participles and Passive
-  words: 150
-  points:
-  - Adverbial participles
-  - Passive constructions
-  - Stylistic awareness
-- section: Final Assessment
-  words: 100
-  points:
-  - Integrated grammar test
-  - Error correction
-word_target: 1000
+- section: Огляд
+  words: 61
+- section: Навичка 1
+  words: 216
+- section: Навичка 2
+  words: 240
+- section: Навичка 3
+  words: 264
+- section: Навичка 4
+  words: 230
+- section: Інтеграція
+  words: 303
+- section: Підсумок
+  words: 60
+- section: Потрібно більше практики?
+  words: 91
+word_target: 1465
 vocabulary_hints:
   required:
   - граматика (grammar)
@@ -57,16 +38,16 @@ vocabulary_hints:
   - граматична помилка (grammar error)
   - правильно (correctly)
 activity_hints:
-- type: diagnostic
+- type: quiz
   focus: Identify grammar gaps
   items: 30
 - type: error-correction
   focus: Fix grammar errors
   items: 25
-- type: transformation
+- type: cloze
   focus: Transform sentence structures
   items: 20
-- type: production
+- type: cloze
   focus: Produce correct grammar
   items: 15
 focus: checkpoint

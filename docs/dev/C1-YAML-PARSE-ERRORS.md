@@ -112,12 +112,14 @@ Once the 12 C1 files are fixed:
 ## Verification Commands
 
 ### Check parse errors
+
 ```bash
 .venv/bin/python -c "import yaml; yaml.safe_load(open('curriculum/l2-uk-en/c1/activities/36-knyahynia-olha.yaml'))"
 # Should show: mapping values are not allowed here
 ```
 
 ### Count remaining id properties
+
 ```bash
 rg '^  id: ' curriculum/l2-uk-en/c1/activities/*.yaml | wc -l
 # Current: 151
@@ -125,6 +127,7 @@ rg '^  id: ' curriculum/l2-uk-en/c1/activities/*.yaml | wc -l
 ```
 
 ### After fixing parse errors
+
 ```bash
 # Re-run fix script
 .venv/bin/python scripts/fix_activity_ids_a1_a2_c1.py

@@ -331,4 +331,3 @@ See detailed violation breakdown in **[Module Status Table](./b2-module-status-t
 - **Critical (30+ violations):** M30, M40, M132-135, M141-145
 - **Needs work (20-29 violations):** Most grammar/register modules (M01-M70)
 - **Nearly passing (<10 violations):** M101, M103, M107, M110, M83 (biography/synthesis modules)
-

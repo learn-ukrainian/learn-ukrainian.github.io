@@ -69,22 +69,10 @@ activity_hints:
   focus: Мовознавча та літературна спадщина
   source: Уривки з перекладу Біблії та «Чорної ради»
   items: 3 passages
-- type: quiz
-  focus: Біографія та внесок у мову
-  items: 12+
-- type: match-up
-  focus: Твори та їхні жанри
-  items: 10+
 - type: essay-response
   focus: Чому правопис важливий для національної ідентичності?
   word_target: 300
   output: Аналітичне есе
-- type: group-sort
-  focus: Літературна діяльність vs мовознавча діяльність
-  items: 12+
-- type: fill-in
-  focus: Термінологія правопису та мовознавства
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-20 (Тарас Шевченко)
@@ -108,3 +96,7 @@ sources:
   notes: Політична діяльність
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of пантелеймон куліш: будівничий української мови'
+- Evaluate the contributions of архітектор української писемності
+- Trace the career and influence of літературна спадщина та пізні роки (1860-1897)

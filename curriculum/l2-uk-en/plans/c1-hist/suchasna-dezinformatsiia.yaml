@@ -5,57 +5,59 @@ version: '1.0'
 title: Сучасна російська дезінформація
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- Analyze the causes and consequences of сучасна російська дезінформація
+- Evaluate the historical significance of війна без зброї
 content_outline:
 - section: Вступ — Війна без зброї
-  words: 400
+  words: 457
   subsections:
   - Інформаційна війна — реальна війна
   - Від пропаганди до дезінформації
   - Цифрові інструменти
   - Структура модуля
 - section: Інфраструктура
-  words: 700
+  words: 800
   subsections:
   - RT і Sputnik — глобальна мережа
   - Тролеферми — як працюють
   - Боти — масштаб операцій
   - Фінансування і координація
 - section: Методологія
-  words: 600
+  words: 686
   subsections:
   - «Пожежний шланг брехні»
   - Багато версій — жодної правди
   - Емоції > факти
   - Теорії змови
 - section: Наративи про Україну
-  words: 600
+  words: 686
   subsections:
   - «Нацисти при владі»
   - «Громадянська війна»
   - «Захист російськомовних»
   - MH17 — кейс-стаді
 - section: Цільові аудиторії
-  words: 500
+  words: 571
   subsections:
   - Внутрішня — росіяни
   - Зовнішня — Захід
   - Українська — розкол
   - Різні наративи для різних аудиторій
 - section: Після 24.02.2022
-  words: 400
+  words: 457
   subsections:
   - Посилення чи ослаблення?
   - Заборони RT у Європі
   - Адаптація методів
   - Нові платформи
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - Дезінформація — зброя
   - Як розпізнавати
   - Перехід до західних медіа
-word_target: 3500
+word_target: 4000
 vocabulary:
 - дезінформація
 - тролеферма
@@ -73,13 +75,13 @@ vocabulary:
 - алгоритм
 - ехо-камера
 activities:
-- type: infrastructure-analysis
+- type: critical-analysis
   focus: Map Russian disinformation infrastructure
-- type: methodology-study
+- type: comparative-study
   focus: «Firehose of falsehood» — how it works
-- type: case-study
+- type: comparative-study
   focus: MH17 disinformation campaign analysis
-- type: detection-practice
+- type: critical-analysis
   focus: Identifying disinformation markers
 - type: essay-response
   focus: Чому 'пожежний шланг брехні' ефективний?

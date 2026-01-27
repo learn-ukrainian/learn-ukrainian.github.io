@@ -5,42 +5,23 @@ version: '2.0'
 title: 'Українські регіони: Центр'
 subtitle: Central Ukraine - Kyiv, Poltava, and Cossack Heritage
 content_outline:
-- section: 'Introduction: Central Ukraine'
-  words: 150
-  points:
-  - Geographic overview
-  - Historical heartland
-  - Cultural significance
-- section: Kyiv and Kyiv Oblast
-  words: 250
-  points:
-  - Київ, київщина
-  - Capital city culture
-  - Historical monuments
-- section: Poltava Region
-  words: 250
-  points:
-  - Полтава, полтавщина
-  - Cossack heritage
-  - Literary traditions
-- section: Cherkasy and Dnieper Region
-  words: 250
-  points:
-  - Черкаси, Дніпро
-  - Cossack Sich heritage
-  - River culture
-- section: Central Ukrainian Identity
-  words: 200
-  points:
-  - Language traditions
-  - Agricultural heritage
-  - Contemporary life
-- section: 'Practice: Heritage Discussion'
-  words: 100
-  points:
-  - Discuss Central Ukraine
-  - Explore Cossack connections
-word_target: 1200
+- section: Вступ
+  words: 124
+- section: Сучасність
+  words: 194
+- section: Історія та культура
+  words: 576
+- section: Практика
+  words: 85
+- section: Продукція
+  words: 295
+- section: Підсумок
+  words: 0
+- section: Що ви дізналися
+  words: 111
+- section: Потрібно більше практики?
+  words: 109
+word_target: 1494
 vocabulary_hints:
   required:
   - Київ (Kyiv)
@@ -60,13 +41,13 @@ activity_hints:
 - type: reading
   focus: Authentic texts about Central Ukraine
   items: 15
-- type: matching
+- type: match-up
   focus: Match regions to heritage
   items: 20
 - type: fill-in
   focus: Complete historical descriptions
   items: 15
-- type: discussion
+- type: quiz
   focus: Discuss Cossack heritage
   items: 10
 focus: culture

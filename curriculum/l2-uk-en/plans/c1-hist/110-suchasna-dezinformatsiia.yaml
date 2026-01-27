@@ -5,54 +5,54 @@ version: '2.0'
 title: Сучасна російська дезінформація
 content_outline:
 - section: Вступ — Війна без зброї
-  words: 400
+  words: 457
   points:
   - Інформаційна війна — реальна війна
   - Від пропаганди до дезінформації
   - Цифрові інструменти
   - Структура модуля
 - section: Інфраструктура
-  words: 700
+  words: 800
   points:
   - RT і Sputnik — глобальна мережа
   - Тролеферми — як працюють
   - Боти — масштаб операцій
   - Фінансування і координація
 - section: Методологія
-  words: 600
+  words: 686
   points:
   - «Пожежний шланг брехні»
   - Багато версій — жодної правди
   - Емоції > факти
   - Теорії змови
 - section: Наративи про Україну
-  words: 600
+  words: 686
   points:
   - «Нацисти при владі»
   - «Громадянська війна»
   - «Захист російськомовних»
   - MH17 — кейс-стаді
 - section: Цільові аудиторії
-  words: 500
+  words: 571
   points:
   - Внутрішня — росіяни
   - Зовнішня — Захід
   - Українська — розкол
   - Різні наративи для різних аудиторій
 - section: Після 24.02.2022
-  words: 400
+  words: 457
   points:
   - Посилення чи ослаблення?
   - Заборони RT у Європі
   - Адаптація методів
   - Нові платформи
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Дезінформація — зброя
   - Як розпізнавати
   - Перехід до західних медіа
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - дезінформація (disinformation)
@@ -72,16 +72,16 @@ vocabulary_hints:
   - алгоритм (algorithm)
   - ехо-камера (echo chamber)
 activity_hints:
-- type: infrastructure-analysis
+- type: critical-analysis
   focus: Map Russian disinformation infrastructure
   output: Infrastructure diagram
-- type: methodology-study
+- type: comparative-study
   focus: «Firehose of falsehood» — how it works
   output: Methodology analysis
-- type: case-study
+- type: comparative-study
   focus: MH17 disinformation campaign analysis
   output: Case analysis
-- type: detection-practice
+- type: critical-analysis
   focus: Identifying disinformation markers
   output: Detection checklist
 - type: essay-response
@@ -110,3 +110,6 @@ sources:
   notes: Troll farms
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- Analyze the causes and consequences of сучасна російська дезінформація
+- Evaluate the historical significance of війна без зброї

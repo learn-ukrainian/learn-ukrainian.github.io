@@ -5,42 +5,28 @@ version: '2.0'
 title: Sports and Fitness
 subtitle: Active Lifestyle
 content_outline:
-- section: 'Introduction: Sports in Ukraine'
+- section: 'Вступ'
+  words: 140
+  points:
+  - Popular sports in Ukraine
+  - Ukrainian athletes
+- section: 'Граматика'
+  words: 550
+  points:
+  - Team sports (футбол, баскетбол, волейбол)
+  - Individual sports (плавання, біг, теніс)
+  - Fitness vocabulary (спортзал, тренування)
+  - Sports events (матч, змагання, чемпіонат)
+- section: 'Практика'
+  words: 615
+  points:
+  - Dialogues about sports
+  - Describe fitness routines
+- section: 'Підсумок'
   words: 100
   points:
-  - Popular sports
-  - Ukrainian athletes
-  - Sports culture
-- section: Team Sports
-  words: 200
-  points:
-  - футбол, баскетбол, волейбол
-  - грати у футбол
-  - Team vocabulary
-- section: Individual Sports
-  words: 200
-  points:
-  - плавання, біг, теніс
-  - займатися плаванням
-  - Accusative vs instrumental
-- section: Fitness and Gym
-  words: 200
-  points:
-  - спортзал, тренування
-  - тренер, вправа
-  - Workout vocabulary
-- section: Sports Events
-  words: 150
-  points:
-  - матч, змагання, чемпіонат
-  - вигравати, програвати
-  - Event descriptions
-- section: 'Practice: Sports Talk'
-  words: 150
-  points:
-  - Describe your fitness routine
-  - Talk about sports events
-word_target: 1000
+  - Summary of vocabulary
+word_target: 1405
 vocabulary_hints:
   required:
   - спорт (sport)
@@ -59,16 +45,16 @@ vocabulary_hints:
   - вигравати (to win)
   - програвати (to lose)
 activity_hints:
-- type: vocabulary-drill
+- type: match-up
   focus: Sports vocabulary
   items: 30
-- type: matching
+- type: match-up
   focus: Match verbs to sports
   items: 20
 - type: fill-in
   focus: Complete sports sentences
   items: 15
-- type: speaking
+- type: quiz
   focus: Describe your fitness routine
   items: 8
 focus: vocabulary

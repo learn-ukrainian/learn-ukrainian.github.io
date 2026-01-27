@@ -30,11 +30,11 @@
 
 - **Narrative Structure:** Structuring the grammar lesson around a recurring work week makes it intuitive and memorable.
 - **IT Slang Integration:** The "deployiv/zadeployiv" example is fantastic for modern relevance without sacrificing grammatical rigor.
-- **Negation Nuance:** Clearly explains why "I haven't done X _yet_" requires PF (negation of result), which is often counter-intuitive for learners.
+- **Negation Nuance:** Clearly explains why "I haven't done X *yet*" requires PF (negation of result), which is often counter-intuitive for learners.
 
 ## Issues
 
-- _Fixed:_ Vocabulary extraction errors (`термінов` -> `терміновий`, `теча` -> `текти`, `рутин` -> `рутина`, `айтема` -> `айтем`).
+- *Fixed:* Vocabulary extraction errors (`термінов` -> `терміновий`, `теча` -> `текти`, `рутин` -> `рутина`, `айтема` -> `айтем`).
 
 ## Recommendation
 

@@ -5,42 +5,23 @@ version: '2.0'
 title: Здоров'я та самопочуття
 subtitle: Health and Wellness
 content_outline:
-- section: 'Introduction: Health Vocabulary'
-  words: 150
+- section: Вступ
+  words: 344
   points:
   - Beyond basic illness words
   - Wellness concept
   - Ukrainian health context
-- section: Physical Health
-  words: 250
+- section: Читання
+  words: 1125
   points:
-  - здоров'я, самопочуття, стан
-  - симптом, діагноз, лікування
-  - Medical vocabulary
-- section: Mental Wellness
-  words: 250
-  points:
-  - психічне здоров'я, стрес
-  - релаксація, медитація
-  - Mental health vocabulary
-- section: Healthy Lifestyle
-  words: 250
-  points:
-  - харчування, фітнес, сон
-  - здоровий спосіб життя
-  - Lifestyle vocabulary
-- section: Health Actions
-  words: 200
-  points:
-  - лікувати, одужувати, підтримувати
-  - стежити за здоров'ям
-  - Health verbs and expressions
-- section: 'Practice: Health Discussions'
-  words: 100
+  - Health texts
+  - Wellness advice
+- section: Діалоги
+  words: 1531
   points:
   - Discuss wellness topics
   - Give health advice
-word_target: 1200
+word_target: 3000
 vocabulary_hints:
   required:
   - здоров'я (health)
@@ -57,16 +38,16 @@ vocabulary_hints:
   - імунітет (immunity)
   - релаксація (relaxation)
 activity_hints:
-- type: collocation
+- type: match-up
   focus: Health noun phrases
   items: 25
 - type: fill-in
   focus: Complete health sentences
   items: 20
-- type: role-play
+- type: cloze
   focus: Health consultation scenarios
   items: 15
-- type: discussion
+- type: quiz
   focus: Discuss wellness topics
   items: 10
 focus: vocabulary

@@ -1,10 +1,12 @@
 # Audit Report: M02 — kniaz-sviatoslav.md
+
 **Level:** C1 | **Module:** M02 | **Phase:** C1.3 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:55:53
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Князь-пардус: Воїнський етос | 1 | 1 | ✅ |
@@ -41,6 +44,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (71% overlap): "Святослав розумів: ліквідація Хазарії — це не просто питання воєнної слави, це питання фундаментальн...". Shares significant keywords with sentence at index 64.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Святослав виступив уже не як союзник імператора, а як самостійний претендент на панування в усьому р...". Shares significant keywords with sentence at index 95.
@@ -59,6 +63,7 @@
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 
 ## Recommendation
+
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
@@ -66,6 +71,7 @@
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ✅ 4017/4000 (raw: 4358)
 - **Activities:** ✅ 12/3
 - **Density:** ✅ All > 1
@@ -84,10 +90,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 10 | 4 | 100% | 19% | 19.0% |
@@ -103,6 +111,7 @@
 | **TOTAL** | | | | | **99.6%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 97 | Included in Core |

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M61 | **Phase:** HIST.6 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:54:49
+**Generated:** 2026-01-27 20:42:50
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, fill-in, quiz, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -21,24 +21,23 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Аналіз «Листа запорожців» | 3 | 1 | ✅ |
-| 2 | quiz | Іван Сірко: факти біографії та воєнне мистецтво | 8 | 8 | ✅ |
-| 3 | essay-response | Есе: Політика Івана Сірка та українська суб'єктність | 1 | 1 | ✅ |
-| 4 | fill-in | Термінологія та реалії доби Сірка | 10 | 8 | ✅ |
-| 5 | true-false | Легенди та факти про Сірка | 10 | 8 | ✅ |
-| 6 | comparative-study | Порівняння: Кошовий отаман vs Гетьман | 1 | 1 | ✅ |
+| 2 | essay-response | Есе: Політика Івана Сірка та українська суб'єктність | 1 | 1 | ✅ |
+| 3 | true-false | Легенди та факти про Сірка | 10 | 8 | ✅ |
+| 4 | comparative-study | Порівняння: Кошовий отаман vs Гетьман | 1 | 1 | ✅ |
+| 5 | critical-analysis | Феномен характерництва | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 6 (target: 3-9) ✅
-- Unique types: 6 (minimum: 2) ✅
-- Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
-- Required types used: 4/4 (essay-response, fill-in, quiz, reading) ✅
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ✅ 4635/4000 (raw: 4709)
-- **Activities:** ✅ 6/3
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 6/2 types
+- **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
@@ -46,7 +45,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (6 activities)
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

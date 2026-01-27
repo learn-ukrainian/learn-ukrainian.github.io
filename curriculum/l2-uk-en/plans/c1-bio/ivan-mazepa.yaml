@@ -76,22 +76,10 @@ activity_hints:
   focus: Mazepa's manifesto and correspondence
   source: Primary sources (adapted)
   items: 3 passages
-- type: quiz
-  focus: Facts about Mazepa's hetmanate and decision
-  items: 15+
-- type: match-up
-  focus: Mazepa's cultural projects and their locations
-  items: 10+
 - type: essay-response
   focus: Was Mazepa a traitor or a patriot?
   word_target: 300
   output: Analysis of competing narratives
-- type: group-sort
-  focus: Cultural achievements vs. political actions
-  items: 12+
-- type: fill-in
-  focus: Key dates and events of Mazepa's life
-  items: 10+
 - type: critical-analysis
   focus: Analyze Mazepa in Ukrainian vs. Russian historiography
   output: Comparative historiography
@@ -119,3 +107,6 @@ sources:
   notes: Cultural patronage
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of іван мазепа: меценат і трагічний герой'
+- Evaluate the contributions of між зрадою та героїзмом

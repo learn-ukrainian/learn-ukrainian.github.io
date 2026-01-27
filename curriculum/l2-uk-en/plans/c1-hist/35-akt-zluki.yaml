@@ -5,54 +5,54 @@ version: '2.0'
 title: 'Акт Злуки 1919: Символ єдності'
 content_outline:
 - section: Вступ — Найважливіший день
-  words: 400
+  words: 457
   points:
   - 22 січня 1919 — що відбулося
   - УНР + ЗУНР = соборна Україна
   - Символічне значення
   - Чому святкуємо досі
 - section: Історичний контекст
-  words: 600
+  words: 686
   points:
   - УНР — Наддніпрянщина
   - ЗУНР — Галичина і Волинь
   - Війна з Польщею
   - Потреба об'єднання
 - section: Текст Акту Злуки
-  words: 600
+  words: 686
   points:
   - Повний текст (з глосами)
   - Однині воєдино зливаються
   - Юридична формула
   - Що проголошено
 - section: Церемонія на Софійській площі
-  words: 500
+  words: 571
   points:
   - Як відбувалося
   - Учасники — хто був присутній
   - Символіка — місце, дата
   - Емоційний вимір
 - section: Реальність vs. символ
-  words: 600
+  words: 686
   points:
   - Чи відбулося реальне об'єднання?
   - Конфлікти УНР-ЗУНР
   - Війна і поразка
   - Чому символ важливіший за реальність
 - section: Акт Злуки в історичній пам'яті
-  words: 500
+  words: 571
   points:
   - Діаспорна пам'ять
   - Радянське замовчування
   - Після 1991 — державне свято
   - День Соборності сьогодні
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Злука як ідеал
   - Від 1919 до 2014
   - Соборність як цінність
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - Злука (unification)
@@ -75,10 +75,10 @@ activity_hints:
 - type: reading
   focus: Full Act text with glosses
   source: wikisource
-- type: ceremony-analysis
+- type: critical-analysis
   focus: What symbols were used and why?
   output: Symbolic analysis
-- type: reality-check
+- type: critical-analysis
   focus: What was the actual relationship UNR-ZUNR?
   output: Rhetoric vs. reality table
 - type: critical-analysis
@@ -111,3 +111,6 @@ sources:
   notes: Modern commemoration
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of акт злуки 1919: символ єдності'
+- Evaluate the historical significance of найважливіший день

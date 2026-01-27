@@ -92,6 +92,7 @@ TEMPLATE_METADATA:
 Before submitting a B2-PRO professional module, verify all items from `b2-module-template.md` PLUS:
 
 ### Professional-Specific Requirements (Seminar Style)
+
 - [ ] **Seminar pedagogy:** Production-focused, not drill-focused
 - [ ] **Activities:** 3-9 production activities (reading, essay-response, critical-analysis)
 - [ ] **Essay requirements:** 150-300 words per essay (with Model Answer)
@@ -358,6 +359,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 ## Content Structure Note
 
 ### Vocabulary & Activities
+
 **CRITICAL:** Do NOT add `## Vocabulary` or `## Activities` headers. These sections are injected automatically from:
 - `vocabulary/{slug}.yaml`
 - `activities/{slug}.yaml`

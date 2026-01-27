@@ -1,10 +1,12 @@
 # Audit Report: M51 — 51-idioms-body.md
+
 **Level:** B2 | **Module:** M51 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:28:19
 
 ## Configuration
+
 **Type:** B2-vocab
 **Word Target:** 1750 words
 **Activities:** 10-14 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть відповідність | 16 | 8 | ✅ |
@@ -41,15 +44,18 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 51-idioms-body.yaml: Schema validation error at key '12': {'type': 'quiz', 'title': 'Деталі значення', 'items': [{'question': 'Що означає вираз «душа не на місці» у контексті емоційного стану людини?', 'options': [{'text': 'Тривога, неспокій', 'correct': True}, {'text': 'Радість', 'correct': False}, {'text': 'Фізичний біль', 'correct': False}, {'text': 'Байдужість', 'correct': False}], 'explanation': 'Це стан тривоги та хвилювання.'}, {'question': 'Що означає фразеологізм «вкласти душу» у якусь справу чи роботу?', 'options': [{'text': "Зробити щось з любов'ю та старанням", 'correct': True}, {'text': 'Продати душу', 'correct': False}, {'text': 'Загубити душу', 'correct': False}, {'text': 'Купити щось', 'correct': False}], 'explanation': 'Це означає робити справу дуже якісно та емоційно.'}, {'question': 'Коли ми вживаємо вираз «ні душі», описуючи місце або приміщення?', 'options': [{'text': 'Коли нікого немає поруч', 'correct': True}, {'text': 'Коли темно', 'correct': False}, {'text': 'Коли страшно', 'correct': False}, {'text': 'Коли весело', 'correct': False}], 'explanation': 'Це означає повну відсутність людей.'}, {'question': 'Що означає вираз «стояти над душею» у побутовому спілкуванні між людьми?', 'options': [{'text': 'Набридати, контролювати', 'correct': True}, {'text': 'Захищати', 'correct': False}, {'text': 'Молитися', 'correct': False}, {'text': 'Любити', 'correct': False}], 'explanation': 'Це означає заважати своєю присутністю або контролем.'}, {'question': 'Що означає вираз «лізти в душу», коли хтось ставить занадто особисті питання?', 'options': [{'text': 'Втручатися в особисте життя', 'correct': True}, {'text': 'Лікувати', 'correct': False}, {'text': 'Обіймати', 'correct': False}, {'text': 'Хвалити', 'correct': False}], 'explanation': 'Це нетактовне втручання в особисті справи.'}, {'question': 'Що означає давній фразеологізм «віддати Богу душу» в українській мові?', 'options': [{'text': 'Померти', 'correct': True}, {'text': 'Помолитися', 'correct': False}, {'text': 'Покаятися', 'correct': False}, {'text': 'Заснути', 'correct': False}], 'explanation': 'Це евфемізм для слова «померти».'}, {'question': 'Що означає вираз «жити душа в душу» стосовно сімейної пари або друзів?', 'options': [{'text': 'Дружно, у злагоді', 'correct': True}, {'text': 'Тісно', 'correct': False}, {'text': 'Вороже', 'correct': False}, {'text': 'Окремо', 'correct': False}], 'explanation': 'Жити у повній гармонії та розумінні.'}, {'question': 'Що означає «кривити душею», коли людина говорить не те, що думає?', 'options': [{'text': 'Бути нещирим, лицемірити', 'correct': True}, {'text': 'Мати хвору душу', 'correct': False}, {'text': 'Помилятися', 'correct': False}, {'text': 'Жалітися', 'correct': False}], 'explanation': 'Говорити неправду, бути лицемірним.'}], 'instruction': 'Оберіть правильне значення.'} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
+
 - **Words:** ✅ 1977/1750 (raw: 2107)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
@@ -68,10 +74,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 93% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 16 | 24 | 67% | 20% | 13.4% |
@@ -87,6 +95,7 @@
 | **TOTAL** | | | | | **93.2%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 64 | Included in Core |

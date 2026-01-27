@@ -87,7 +87,7 @@ Transform these comparative forms into superlatives.
 ### 2. World Records Quiz (Вікторина рекордів)
 
 Use your knowledge of the world and Ukrainian grammar to fill in the blanks.
-_(найвища, найдовша, найбільша, найглибша)_
+*(найвища, найдовша, найбільша, найглибша)*
 
 1. Еверест — це \_\_\_ гора на нашій планеті. -> **найвища**
 2. Річка Амазонка вважається \_\_\_ у світі. -> **найдовша**

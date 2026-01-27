@@ -1,10 +1,12 @@
 # Audit Report: M18 — petro-sahaidachny.md
+
 **Level:** C1 | **Module:** M18 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:04
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Вірші на жалісний погреб Сагайдачного | 1 | 1 | ✅ |
@@ -34,16 +37,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'основна частина...'.
   - FIX: Vary sentence structure.
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 1676/4000 (raw: 1931)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
@@ -62,10 +68,12 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
+
 **Score:** 61% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 1 | 4 | 25% | 19% | 4.8% |
@@ -81,14 +89,16 @@
 | **TOTAL** | | | | | **61.9%** |
 
 ### Dryness Flags & Fixes
+
 - ❌ **NO_QUOTES**
   - FIX:
     Add 2+ direct quotes from the subject. Use this format:
-    
+
     > «[Exact quote from the person]»
     > — *[Person name], [context/year]*
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 91 | Included in Core |

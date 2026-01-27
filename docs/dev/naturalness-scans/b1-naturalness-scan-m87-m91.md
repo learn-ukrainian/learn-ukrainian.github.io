@@ -1,4 +1,5 @@
 # B1 Naturalness Scan Report - M87-M91 (Final Integration & Checkpoint)
+
 **Date:** 2026-01-12
 **Protocol:** claude_extensions/protocols/a1-naturalness-scan.md (adapted for B1)
 **Scope:** M87-M91 (5 modules - Final B1 Integration Section)
@@ -27,6 +28,7 @@
 ## Scan Results by Module
 
 ### M87: Новини — Як читати (News Reading Strategies) [N/A]
+
 **Status:** Quiz-only module (didactic content appropriate for instruction)
 **Activities:** quiz (10), true-false (12), match-up, cloze (2), group-sort, select, mark-the-words, unjumble (8), error-correction (8), translate (8)
 **Prose sample (from cloze):**
@@ -46,6 +48,7 @@
 ---
 
 ### M88: Інтерв'ю та подкасти (Interviews & Podcasts) [✅ PASS]
+
 **Status:** Prose activities present, excellent naturalness
 **Activities:** quiz (10), true-false (12), match-up, cloze (3), error-correction (10), unjumble (11), select (8), translate (10), mark-the-words
 **Prose sample (unjumble):**
@@ -68,6 +71,7 @@
 ---
 
 ### M89: B1 Grammar Integration [✅ PASS]
+
 **Status:** Comprehensive grammar checkpoint, excellent naturalness
 **Activities:** quiz (40 items across 3 topics), cloze (4), match-up (2), true-false (14), group-sort, unjumble (10), error-correction (14), translate (14), select, mark-the-words
 **Prose sample (unjumble):**
@@ -90,6 +94,7 @@
 ---
 
 ### M90: B1 Vocabulary Integration [✅ PASS]
+
 **Status:** Comprehensive vocabulary checkpoint, excellent naturalness
 **Activities:** quiz (13), match-up (2), group-sort, cloze (3), select (8), true-false (14), unjumble (11), error-correction (14), translate (10), mark-the-words (2)
 **Prose sample (unjumble):**
@@ -112,6 +117,7 @@
 ---
 
 ### M91: B1 Capstone [✅ PASS - HIGHEST QUALITY]
+
 **Status:** Final B1 assessment, exemplary naturalness
 **Activities:** quiz (10 reading comprehension), fill-in (14 aspect), error-correction (12), match-up, cloze (2), group-sort, unjumble (12), translate (10), true-false (10), select (6), mark-the-words (2)
 **Prose sample (unjumble):**
@@ -151,15 +157,18 @@
 ## Summary by Status
 
 ### ✅ PASS (8+/10) - 4 modules
+
 - **M88: Інтерв'ю та подкасти** — 8.5/10
 - **M89: B1 Grammar Integration** — 9/10
 - **M90: B1 Vocabulary Integration** — 9/10
 - **M91: B1 Capstone** — 9/10
 
 ### N/A (Quiz-only, instructional) - 1 module
+
 - **M87: Новини — Як читати** — N/A (didactic content appropriate)
 
 ### ⚠️ FLAGGED (<8/10 content, <7/10 checkpoint) - 0 modules
+
 *None*
 
 ---
@@ -167,6 +176,7 @@
 ## Key Findings
 
 ### Strengths (M87-M91 Section)
+
 1. **Discourse markers excellence**: Every prose module (M88-M91) uses authentic connectors ("хоча", "незважаючи на", "на мою думку", "на основі")
 2. **Subject variety**: No robotic "X — це Y" repetition; diverse sentence structures throughout
 3. **Topic coherence**: Integration modules embed grammar/vocabulary in realistic scenarios (podcasts, news, travel, decisions)
@@ -175,6 +185,7 @@
 6. **No redundancy**: Zero instances of "унікальний регіон", "справжній", or excessive intensifiers
 
 ### Comparison with Previous B1 Sections
+
 - **M01-M05** (Basic B1): 7.0 → 8.0+ after fixes
 - **M06-M15** (Aspect): 8.3/10 (0% flagged)
 - **M16-M25** (Motion Verbs): 8.2/10 (0% flagged)
@@ -193,12 +204,14 @@
 ## Recommended Actions
 
 ### For M87-M91: NO ACTIONS REQUIRED ✅
+
 All modules demonstrate excellent or acceptable naturalness for their type:
 - Integration modules (M88-M91) use authentic discourse, variety, and coherence
 - Quiz-only module (M87) appropriately uses instructional register
 - No robotic patterns, excessive repetition, or disconnected lists detected
 
 ### General B1 Maintenance
+
 - **Use M87-M91 as model**: Future integration/checkpoint modules should follow this naturalness standard
 - **Preserve quality**: Do not modify M88-M91 prose unless grammar errors found
 - **Apply lessons**: Discourse markers + subject variety + topic coherence = naturalness
@@ -208,6 +221,7 @@ All modules demonstrate excellent or acceptable naturalness for their type:
 ## Overall B1 Naturalness Summary (M01-M91)
 
 ### Section Performance
+
 1. **M66-M71** (Discourse): 8.5/10 — HIGHEST
 2. **M87-M91** (Final Integration): 8.8/10 — 2ND HIGHEST ✅
 3. **M26-M35** (Complex Sentences): 8.4/10 — 3RD HIGHEST
@@ -217,6 +231,7 @@ All modules demonstrate excellent or acceptable naturalness for their type:
 7. **M72-M86** (Regions): 6.6/10 (fixed to ~8+/10)
 
 ### Total B1 Statistics (Estimated)
+
 - **Total modules scanned**: 91
 - **Prose activity modules**: ~60 (estimate)
 - **Quiz-only modules**: ~31 (estimate)
@@ -224,6 +239,7 @@ All modules demonstrate excellent or acceptable naturalness for their type:
 - **Flagged modules remaining**: 0 (all fixed or N/A)
 
 ### Final B1 Assessment ✅
+
 **Status:** B1 curriculum achieves **excellent naturalness** across all 91 modules after fixes
 - Final integration section (M87-M91) demonstrates highest quality for assessment modules
 - Discourse section (M66-M71) demonstrates highest quality for instructional modules

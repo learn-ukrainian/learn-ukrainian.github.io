@@ -34,7 +34,7 @@
 
 ## Issues
 
-- _Fixed:_ Vocabulary extraction errors (`кача` -> `качати`, `басейний` -> `басейн`, `мішка` -> `мішок`, etc.).
+- *Fixed:* Vocabulary extraction errors (`кача` -> `качати`, `басейний` -> `басейн`, `мішка` -> `мішок`, etc.).
 
 ## Recommendation
 

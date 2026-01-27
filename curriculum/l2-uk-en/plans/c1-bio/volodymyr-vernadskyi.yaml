@@ -69,22 +69,10 @@ activity_hints:
   focus: Фрагменти праць Вернадського
   source: Наукові тексти
   items: 3 passages
-- type: quiz
-  focus: Факти про життя та наукові ідеї Вернадського
-  items: 12+
-- type: match-up
-  focus: Наукові терміни та визначення
-  items: 10+
 - type: essay-response
   focus: Чому ідеї Вернадського актуальні сьогодні?
   word_target: 300
   output: Науково-популярний есей
-- type: group-sort
-  focus: Наукові дисципліни та їхні засновники
-  items: 12+
-- type: fill-in
-  focus: Наукова термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-98-ivan-ohienko
@@ -108,3 +96,7 @@ sources:
   notes: Наукова спадщина
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of володимир вернадський: батько української науки'
+- Evaluate the contributions of вчений, який змінив науку
+- Trace the career and influence of наука та нація

@@ -1,10 +1,12 @@
 # Audit Report: M24 — 24-language-question-linguistics.md
+
 **Level:** LIT | **Module:** M24 | **Phase:** LIT.4 | **Pedagogy:** Analysis | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:57:58
 
 ## Configuration
+
 **Type:** LIT
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Вікторина з правопису | 4 | 1 | ✅ |
@@ -35,16 +38,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 24-language-question-linguistics.yaml: Schema validation error at key '2': {'title': 'Термінологія реформ', 'type': 'fill-in', 'items': [{'sentence': 'Пантелеймон Куліш скасував літеру ___ з кінця слів.', 'answer': 'єри', 'options': ['єри', 'ять', 'фіта', 'іжиця']}, {'sentence': 'Система "пишу як чую" називається ___ принципом.', 'answer': 'фонетичним', 'options': ['фонетичним', 'етимологічним', 'історичним', 'традиційним']}, {'sentence': 'Російська імперія намагалася нав’язати ___ правопис.', 'answer': 'етимологічний', 'options': ['етимологічний', 'фонетичний', 'новий', 'старий']}, {'sentence': 'Борис Грінченко видав відомий ___ української мови.', 'answer': 'словник', 'options': ['словник', 'підручник', 'буквар', 'катехизм']}, {'sentence': 'В Галичині використовували правопис ___ до 1922 року.', 'answer': 'Желехівка', 'options': ['Желехівка', 'Максимовичівка', 'Драгоманівка', 'Кулішівка']}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 3411/4000 (raw: 3588)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
@@ -63,10 +69,12 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
+
 **Score:** 93% (minimum: 90%)
 **Module Type:** literature
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
@@ -82,6 +90,7 @@
 | **TOTAL** | | | | | **93.3%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

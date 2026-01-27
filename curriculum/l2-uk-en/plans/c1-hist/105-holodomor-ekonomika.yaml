@@ -5,47 +5,47 @@ version: '2.0'
 title: Голодомор як економічна зброя
 content_outline:
 - section: Вступ — Голод як інструмент
-  words: 451
+  words: 515
   points:
   - Голодомор — не природна катастрофа
   - Економічний вимір геноциду
   - Як це працювало
   - Структура модуля
 - section: Експорт під час голоду
-  words: 790
+  words: 903
   points:
   - Цифри — скільки вивезли
   - Куди пішло зерно
   - Валюта для індустріалізації
   - Смерть як «побічний ефект»
 - section: Конфіскація як механізм
-  words: 677
+  words: 774
   points:
   - «Чорні дошки»
   - Забирали все — до насіння
   - Хто виконував
   - Неможливість виживання
 - section: Економічна логіка Сталіна
-  words: 677
+  words: 774
   points:
   - Первісне накопичення
   - Селяни — «внутрішня колонія»
   - Україна — найбагатша жертва
   - Раціональність злочину
 - section: Довгострокові наслідки
-  words: 564
+  words: 645
   points:
   - Знищення селянства
   - Демографічна катастрофа
   - Економічні втрати
   - Травма поколінь
 - section: Підсумок
-  words: 341
+  words: 389
   points:
   - Голодомор — економічний терор
   - Україна платила життям
   - Перехід до газової зброї
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - економічна зброя (economic weapon)
@@ -65,13 +65,13 @@ vocabulary_hints:
   - «куркуль» (kulak)
   - деселянізація (depeasantization)
 activity_hints:
-- type: economic-analysis
+- type: critical-analysis
   focus: Grain export during famine — numbers and destinations
   output: Export analysis
-- type: mechanism-study
+- type: comparative-study
   focus: How confiscation system worked economically
   output: Mechanism analysis
-- type: logic-analysis
+- type: critical-analysis
   focus: Stalin's economic rationality behind genocide
   output: Logic reconstruction
 - type: critical-analysis
@@ -100,3 +100,6 @@ sources:
   notes: Grain export during famine
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- Analyze the causes and consequences of голодомор як економічна зброя
+- Evaluate the historical significance of голод як інструмент

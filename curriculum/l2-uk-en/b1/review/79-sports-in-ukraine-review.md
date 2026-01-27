@@ -25,7 +25,7 @@
 ## Linguistic Accuracy Issues
 
 - **Vocabulary:** `мундир` (uniform) is listed. Correct, but `мунди` in review notes might be typo reference.
-  - _Clarification:_ `мундир` is in vocab.
+  - *Clarification:* `мундир` is in vocab.
 - **Vocabulary:** Proper nouns lowercased (`лобановський`, `ломаченко`, `усик`, `яна`, `сідней`).
 - **Vocabulary:** `євро-` (Euro 2012) is lowercased `євро-`. Should be `Євро-`.
 

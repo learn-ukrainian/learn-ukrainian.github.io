@@ -5,21 +5,21 @@ version: '2.0'
 title: 'Франко: Політичні есе'
 content_outline:
 - section: Вступ — Франко як мислитель
-  words: 400
+  words: 457
   points:
   - Не тільки поет — публіцист
   - Політичні есе — окремий жанр
   - «Поза межами можливого» — головний текст
   - Чому важливо читати сьогодні
 - section: Контекст — Галичина кінця XIX ст.
-  words: 500
+  words: 571
   points:
   - Австрійська Галичина — інші умови
   - Політичні партії — як виникали
   - Франко — соціаліст чи націоналіст?
   - Еволюція поглядів
 - section: «Поза межами можливого» (1900)
-  words: 800
+  words: 914
   points:
   - Текст (фрагменти з глосами)
   - Критика «реальної політики»
@@ -27,33 +27,33 @@ content_outline:
   - Духовна суверенність
   - Роль інтелігенції
 - section: Аналіз аргументації
-  words: 600
+  words: 686
   points:
   - Логіка есе
   - Полеміка з опонентами
   - Що таке «можливе»?
   - Роль мрії в політиці
 - section: Інші політичні есе
-  words: 500
+  words: 571
   points:
   - Що таке поступ?
   - Ukraina irredenta
   - Критика москвофільства
   - Критика полонофільства
 - section: Франко vs. Драгоманов
-  words: 400
+  words: 457
   points:
   - Два підходи
   - Федералізм vs. незалежність
   - Поколінній конфлікт
   - Хто виявився правий?
 - section: Підсумок
-  words: 300
+  words: 344
   points:
   - Франко — ідеолог незалежності
   - Від публіцистики до політики
   - Актуальність сьогодні
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - есе (essay)
@@ -76,10 +76,10 @@ activity_hints:
 - type: reading
   focus: Excerpt from "Poza mezhamy mozhlyvoho"
   source: wikisource
-- type: argument-analysis
+- type: critical-analysis
   focus: Map Franko's argument structure
   output: Argument diagram
-- type: contemporary-connection
+- type: critical-analysis
   focus: How does Franko's argument apply to 2022?
   output: Relevance analysis
 - type: essay-response
@@ -109,3 +109,6 @@ sources:
   notes: Publicistic works overview
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of франко: політичні есе'
+- Evaluate the historical significance of франко як мислитель

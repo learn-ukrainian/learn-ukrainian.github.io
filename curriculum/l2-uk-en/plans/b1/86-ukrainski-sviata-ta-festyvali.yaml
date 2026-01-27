@@ -5,42 +5,29 @@ version: '2.0'
 title: Українські свята та фестивалі
 subtitle: Ukrainian Holidays and Festivals
 content_outline:
-- section: 'Introduction: Ukrainian Calendar'
-  words: 150
-  points:
-  - Holiday overview
-  - Religious and secular
-  - Calendar differences
-- section: Christmas and New Year
-  words: 250
-  points:
-  - Різдво, Новий рік
-  - Christmas traditions
-  - Caroling customs
-- section: Easter Traditions
-  words: 250
-  points:
-  - Великдень, писанки
-  - Easter preparations
-  - Celebration customs
-- section: National Holidays
-  words: 250
-  points:
-  - День Незалежності
-  - Historical commemorations
-  - Contemporary significance
-- section: Festivals and Events
-  words: 200
-  points:
-  - Music festivals
-  - Cultural events
-  - Regional celebrations
-- section: 'Practice: Holiday Discussion'
+- section: Історія та культура
+  words: 716
+- section: Сучасність
+  words: 240
+- section: Практика
+  words: 156
+- section: Продукція
+  words: 0
+- section: Діалог 1
+  words: 92
+- section: Діалог 2
+  words: 90
+- section: Діалог 3
   words: 100
-  points:
-  - Describe celebrations
-  - Compare traditions
-word_target: 1200
+- section: Діалог 4
+  words: 137
+- section: Підсумок
+  words: 103
+- section: Ресурси
+  words: 0
+- section: Потрібно більше практики?
+  words: 109
+word_target: 1743
 vocabulary_hints:
   required:
   - свято (holiday)
@@ -60,13 +47,13 @@ activity_hints:
 - type: reading
   focus: Holiday descriptions and traditions
   items: 15
-- type: matching
+- type: match-up
   focus: Match holidays to traditions
   items: 20
 - type: fill-in
   focus: Complete celebration descriptions
   items: 15
-- type: discussion
+- type: quiz
   focus: Compare cultural traditions
   items: 10
 focus: culture

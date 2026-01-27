@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M33 | **Phase:** B2.3a | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 23:29:05
+**Generated:** 2026-01-27 17:37:54
 
 ## Configuration
 **Type:** B2-history
@@ -24,24 +24,20 @@
 | 2 | critical-analysis | Аналіз релігійної риторики | 1 | 1 | ✅ |
 | 3 | comparative-study | Православ'я vs Греко-католицизм (1596) | 1 | 1 | ✅ |
 | 4 | essay-response | Берестейська унія: Спадщина та виклики | 1 | 1 | ✅ |
-| 5 | quiz | Історія та ідеологія унії | 8 | 8 | ✅ |
-| 6 | match-up | Релігійні терміни | 12 | 8 | ✅ |
-| 7 | fill-in | Хронологія та події | 10 | 8 | ✅ |
-| 8 | mark-the-words | Церковна ієрархія | 7 | 6 | ✅ |
-| 9 | error-correction | Виправлення історичних фактів | 8 | 6 | ✅ |
+| 5 | true-false | Берестейська унія: Факти та міфи | 10 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 9 (target: 3-9) ✅
-- Unique types: 9 (minimum: 2) ✅
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4317/4000 (raw: 4507)
-- **Activities:** ✅ 9/3
+- **Words:** ✅ 4534/4000 (raw: 4724)
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 9/2 types
+- **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
@@ -49,8 +45,8 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ 1 fill-in with year answers
-- **Immersion:** 🇺🇦 98.5% (target 90-100% (history))
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Immersion:** 🇺🇦 98.6% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -78,10 +74,10 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Берестейська унія: Церковний розкол** | ⚪️ | 128 | Skipped |
-| **Вступ** | ✅ | 334 | Included in Core |
-| **Передумови унії та криза православ’я** | ⚪️ | 694 | Skipped |
+| **Вступ** | ✅ | 379 | Included in Core |
+| **Передумови унії та криза православ’я** | ⚪️ | 753 | Skipped |
 | **Берестейський собор 1596 року та створення УГКЦ** | ⚪️ | 812 | Skipped |
-| **Соціально-політичні наслідки та релігійна боротьба** | ⚪️ | 625 | Skipped |
+| **Соціально-політичні наслідки та релігійна боротьба** | ⚪️ | 738 | Skipped |
 | **Читання** | ✅ | 397 | Included in Core |
 | **Первинні джерела** | ✅ | 476 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 561 | Included in Core |

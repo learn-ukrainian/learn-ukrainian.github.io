@@ -1,6 +1,7 @@
 # A2 Restructure Plan - Compliance Updates
 
 ## Goal
+
 Address specific A2 compliance gaps identified in `STATE-STANDARD-COMPLIANCE-ANALYSIS.md` and optimize module pacing.
 
 Gaps to Address:
@@ -12,12 +13,13 @@ Gaps to Address:
 ## Proposed Changes
 
 ### 1. Handling Existing Files (CRITICAL)
+>
 > [!IMPORTANT]
 > A2 Modules 01-40 already exist on disk.
 > **Strategy:** Use `mv` commands to rename existing files to their new numbers *before* creating new content to avoid overwriting.
 
-
 ### 2. Implementation Strategy: Assessment & Reasoning
+
 **Status Assessment (2025-12-15):**
 We sampled existing modules (M07, M12, M25) and found them to be **high quality**. The strategy prioritizes the **"Compliance Gap"** modules first.
 
@@ -34,12 +36,14 @@ We sampled existing modules (M07, M12, M25) and found them to be **high quality*
     *   *Threshold*: Existing content 600-800 words triggers **Enrichment** (adding activities/narrative).
 
 ### 3. FAQ: Addressing Review Questions
+
 *   **Q: Why 57 modules (was 50)?**
-    *   A: A2 simulation revealed a significant vocabulary gap vs the ~2100 word target. The 5 new Grammar modules (Compliance) + 9 Vocab Expansion modules (M47-M55) are strictly necessary to hit C1 readiness without overwhelming density per module.
+  *   A: A2 simulation revealed a significant vocabulary gap vs the ~2100 word target. The 5 new Grammar modules (Compliance) + 9 Vocab Expansion modules (M47-M55) are strictly necessary to hit C1 readiness without overwhelming density per module.
 *   **Q: Is M47-M55 Essential?**
-    *   A: **Yes.** Without them, A2 learners would exit with ~1200 words, far below the B1 entry requirement. These are "Service Modules" for vocabulary acquisition.
+  *   A: **Yes.** Without them, A2 learners would exit with ~1200 words, far below the B1 entry requirement. These are "Service Modules" for vocabulary acquisition.
 
 ### 4. Vocabulary Strategy: Expansion & De-duplication
+
 We will conduct a **Vocabulary Review** for every module during the patch/creation process:
 
 1.  **Expansion**: Ensure each module introduces ~30 rich, relevant words (Instructional Core).
@@ -50,18 +54,20 @@ We will conduct a **Vocabulary Review** for every module during the patch/creati
     *   **Form**: Ensure base forms (nominative/infinitive) are unique.
 
 *   **[SPLIT] Module 07 ("Preposition Master Class")**:
-    *   **M07: Spatial Prepositions** (в, на, під, над, за, перед, між). Focus on location/motion.
-    *   **M08: Logical Prepositions** (для, без, через, про, з, до, від). Focus on relationships.
+  *   **M07: Spatial Prepositions** (в, на, під, над, за, перед, між). Focus on location/motion.
+  *   **M08: Logical Prepositions** (для, без, через, про, з, до, від). Focus on relationships.
 *   **[SPLIT] Module 31 ("Motion Verb Prefixes")**:
-    *   **M35: Basic Motion Prefixes** (при-, ви-, у-, від-). Directional basics.
-    *   **M36: Advanced Motion Prefixes** (пере-, за-, під-, об-, про-). Complex paths.
+  *   **M35: Basic Motion Prefixes** (при-, ви-, у-, від-). Directional basics.
+  *   **M36: Advanced Motion Prefixes** (пере-, за-, під-, об-, про-). Complex paths.
 
 ### 5. New Compliance Modules
+
 *   **[NEW] Module 16:** Aspect Mastery: Common Pairs (Drilling).
 *   **[NEW] Module 17:** Possessive: Свій vs Його.
 *   **[NEW] Module 21:** Numerals & Nouns.
 
 ### 6. Renumbering Map (Total 57 Modules)
+
 | Old File | New File | Title | Action |
 |---|---|---|---|
 | `01-*.md` | `01-*.md` | Dative Pronouns | Keep |
@@ -125,20 +131,25 @@ We will conduct a **Vocabulary Review** for every module during the patch/creati
 ## detailed content for New Modules
 
 ### Module 08: Logical Prepositions
+
 *   **Focus:** Abstract relationships.
 *   **Content:** для (benefit), без (absence), через (cause/path), про (topic).
 
 ### Module 16: Aspect Mastery - Common Pairs
+
 *   **Focus:** Pure drilling.
 *   **Content:** pair drills.
 
 ### Module 17: Possessive: Свій vs Його
+
 *   **Focus:** Contrastive.
 
 ### Module 21: Numerals & Nouns
+
 *   **Focus:** 1, 2-4, 5+ patterns.
 
 ### Module 35/36: Motion Prefixes Split
+
 *   **M35:** при-, ви-, в-, від- (Basic entry/exit).
 
 ## Acceptance Criteria for A2 Compliance
@@ -146,24 +157,21 @@ We will conduct a **Vocabulary Review** for every module during the patch/creati
 All modules (new and updated) must meet the following criteria to be considered "State Standard Compliant":
 
 ### 1. Pedagogical Compliance
-- [ ] **Drilling**: M16 must contain at least 4 "Transform" or "Rapid Fire" activities for aspect pairs.
-- [ ] **Contrast**: M17 must explicitly contrast `свій` vs `його` in at least 3 scenarios.
-- [ ] **Logic**: M08 must differentiate `для` vs `на` and `через` vs `тому що`.
-- [ ] **Agreement**: M21 must cover 1, 2-4, and 5+ case agreement patterns with <10% error rate in generated examples.
-- [ ] **Vocabulary**: No exact duplicates of words taught in A1 or previous A2 modules (unless distinct polysemy).
+* [ ] **Drilling**: M16 must contain at least 4 "Transform" or "Rapid Fire" activities for aspect pairs.
+* [ ] **Contrast**: M17 must explicitly contrast `свій` vs `його` in at least 3 scenarios.
+* [ ] **Logic**: M08 must differentiate `для` vs `на` and `через` vs `тому що`.
+* [ ] **Agreement**: M21 must cover 1, 2-4, and 5+ case agreement patterns with <10% error rate in generated examples.
+* [ ] **Vocabulary**: No exact duplicates of words taught in A1 or previous A2 modules (unless distinct polysemy).
 
 ### 2. Module Richness (Audit Pass)
-- [ ] **Word Count**: > 800 words (Instructional Core).
-- [ ] **Activity Density**: > 8 activities per module, > 12 items per activity.
-- [ ] **Immersion**: A2 Target is 35-45% Ukrainian. Narratives should be 100% UT (Ukrainian Text) where possible.
-- [ ] **Vocab Count**: ~30 active words per module.
+* [ ] **Word Count**: > 800 words (Instructional Core).
+* [ ] **Activity Density**: > 8 activities per module, > 12 items per activity.
+* [ ] **Immersion**: A2 Target is 35-45% Ukrainian. Narratives should be 100% UT (Ukrainian Text) where possible.
+* [ ] **Vocab Count**: ~30 active words per module.
 
 ### 3. Verification
-- [ ] **Automated**: `audit_module.py` passes with zero failures.
-- [ ] **Manual**: Human review confirms "Patch vs Recreate" decision was correctly applied.
-
-
-
+* [ ] **Automated**: `audit_module.py` passes with zero failures.
+* [ ] **Manual**: Human review confirms "Patch vs Recreate" decision was correctly applied.
 
 ## GitHub Tracking
 

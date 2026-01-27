@@ -123,6 +123,7 @@ items:
   ipa: /ɔjˈkʲist/
   translation: oikist (founder of a colony)
   pos: noun
+  gender: f
 - lemma: понт
   ipa: /pɔnt/
   translation: Pontus (Black Sea)

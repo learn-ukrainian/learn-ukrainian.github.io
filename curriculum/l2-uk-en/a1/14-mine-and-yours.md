@@ -138,7 +138,7 @@ Ukrainian has a special possessive **свій** that means «one's own» — ref
 
 > 🎬 **Pop Culture Moment: The Lord of the Rings**
 >
-> In the Ukrainian dub of _The Lord of the Rings_, when Frodo says «It's mine!» about the Ring, he says: «Це моє!» (Neuter, because «Кільце» = ring is neuter). But when Gollum says «It's his!», it's «Це його!» — frozen form, no agreement. Even fantasy grammar follows real rules!
+> In the Ukrainian dub of *The Lord of the Rings*, when Frodo says «It's mine!» about the Ring, he says: «Це моє!» (Neuter, because «Кільце» = ring is neuter). But when Gollum says «It's his!», it's «Це його!» — frozen form, no agreement. Even fantasy grammar follows real rules!
 
 ## Practice
 
@@ -207,13 +207,13 @@ Now it's your turn! Use possessive pronouns to describe things around you:
 
 ### Common Mistakes & How to Avoid Them
 
-**❌ Mistake 1:** _Це **мій** книга._ (Wrong gender)
+**❌ Mistake 1:** *Це **мій** книга.* (Wrong gender)
 **✅ Correct:** Це **моя** книга. (книга is feminine, so моя)
 
-**❌ Mistake 2:** _Це **його** машина мала._ (Trying to agree його)
+**❌ Mistake 2:** *Це **його** машина мала.* (Trying to agree його)
 **✅ Correct:** Це **його** машина. (його never changes!)
 
-**❌ Mistake 3:** _Де **ваша** брат?_ (Wrong gender)
+**❌ Mistake 3:** *Де **ваша** брат?* (Wrong gender)
 **✅ Correct:** Де **ваш** брат? (брат is masculine, so ваш)
 
 > 💡 **Memory Trick**
@@ -281,6 +281,7 @@ Remember from Module 04 that Ukrainian has **ти** (informal you) and **ви** 
 ---
 
 # Підсумок
+
 In this module, you learned how to show possession in Ukrainian using two types of possessive pronouns:
 
 1. **Змінні possessives** (мій, твій, наш, ваш, їхній) — change form to match the noun's gender and number.

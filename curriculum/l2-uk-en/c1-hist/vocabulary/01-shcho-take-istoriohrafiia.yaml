@@ -1,0 +1,147 @@
+items:
+  # Core historiographical terms
+  - lemma: історіографія
+    translation: historiography
+    note: наука про написання історії та аналіз історичних текстів
+
+  - lemma: наратив
+    translation: narrative
+    note: структура розповіді, яка надає сенсу історичним фактам
+
+  - lemma: інтерпретація
+    translation: interpretation
+    note: пояснення та оцінка фактів; завжди суб'єктивна
+
+  - lemma: первинне джерело
+    translation: primary source
+    note: документ, створений у досліджуваний період (літопис, лист, договір)
+
+  - lemma: вторинне джерело
+    translation: secondary source
+    note: дослідження, написане пізніше на основі первинних джерел
+
+  - lemma: упередження
+    translation: bias
+    note: систематичне відхилення від об'єктивності на користь певної позиції
+
+  - lemma: контекст
+    translation: context
+    note: обставини створення тексту (час, місце, політичний режим)
+
+  - lemma: перспектива
+    translation: perspective
+    note: точка зору, з якої автор бачить події
+
+  - lemma: критичний аналіз
+    translation: critical analysis
+    note: систематична оцінка джерела за допомогою аналітичних питань
+
+  - lemma: методологія
+    translation: methodology
+    note: сукупність методів дослідження; «як ми знаємо»
+
+  # Source criticism vocabulary
+  - lemma: достовірність
+    translation: reliability, credibility
+    note: ступінь, до якого можна довіряти інформації в джерелі
+
+  - lemma: верифікація
+    translation: verification
+    note: процес перевірки інформації за допомогою інших джерел
+
+  - lemma: автентичність
+    translation: authenticity
+    note: справжність документа; чи це оригінал, чи підробка
+
+  - lemma: деконтекстуалізація
+    translation: decontextualization
+    note: вилучення інформації з її історичного контексту (прийом маніпуляції)
+
+  # Historical tradition terms
+  - lemma: літопис
+    translation: chronicle
+    note: середньовічний жанр послідовного запису подій за роками
+
+  - lemma: літописець
+    translation: chronicler
+    note: автор літопису; у середньовіччі зазвичай чернець
+
+  - lemma: хроніка
+    translation: chronicle (secular)
+    note: послідовний опис подій; ширше значення, ніж «літопис»
+
+  # Decolonization terms
+  - lemma: деколонізація
+    translation: decolonization
+    note: перегляд історії з позиції колонізованих народів
+
+  - lemma: імперський наратив
+    translation: imperial narrative
+    note: версія історії, яка легітимізує панування імперії
+
+  - lemma: офіційний наратив
+    translation: official narrative
+    note: версія історії, яку просуває держава
+
+  - lemma: альтернативна історія
+    translation: alternative history
+    note: версія подій, що відрізняється від панівного наративу
+
+  - lemma: переосмислення
+    translation: reinterpretation, rethinking
+    note: новий погляд на усталену версію подій
+
+  # Academic discourse markers
+  - lemma: на думку
+    translation: according to, in the opinion of
+    note: вказує на позицію конкретного автора
+
+  - lemma: згідно з
+    translation: according to
+    note: посилання на джерело або авторитет
+
+  - lemma: з іншого боку
+    translation: on the other hand
+    note: вводить альтернативну перспективу
+
+  - lemma: слід зазначити
+    translation: it should be noted
+    note: академічний маркер для важливого спостереження
+
+  - lemma: постає питання
+    translation: the question arises
+    note: вводить дослідницьке питання або проблему
+
+  # Propaganda and manipulation
+  - lemma: пропаганда
+    translation: propaganda
+    note: систематичне поширення упереджених ідей; часто історичних
+
+  - lemma: маніпуляція
+    translation: manipulation
+    note: навмисне спотворення інформації для впливу
+
+  - lemma: фальсифікація
+    translation: falsification
+    note: навмисне спотворення фактів
+
+  - lemma: селективне цитування
+    translation: selective quotation
+    note: вибір цитат, що підтверджують позицію, ігнорування інших
+
+  # Key historical concepts from module
+  - lemma: возз'єднання
+    translation: reunification
+    note: радянський термін для Переяслава 1654; ідеологічно навантажений
+
+  - lemma: угода
+    translation: agreement, treaty
+    note: нейтральний термін для Переяслава; підкреслює договірний характер
+
+  - lemma: автономія
+    translation: autonomy
+    note: самоврядування в межах більшої держави
+
+  - lemma: вольності
+    translation: liberties, freedoms
+    note: козацькі права та привілеї

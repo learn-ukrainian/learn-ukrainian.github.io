@@ -6,36 +6,30 @@ title: Переносні значення дієслів руху
 subtitle: Figurative uses of motion verbs
 content_outline:
 - section: Тест
-  words: 200
-  points:
-  - Content for Тест
-  - Examples and explanation
-  - Practice or application
-- section: 'vocab_count: 25'
-  words: 100
-  points:
-  - 'Content for vocab_count: 25'
-  - Examples and explanation
-  - Practice or application
+  words: 338
+  points: []
 - section: Пояснення
-  words: 900
+  words: 1191
   points:
-  - Content for Пояснення
-  - Examples and explanation
-  - Practice or application
+  - Логіка переносних значень
+  - Детальний розбір ідіом
+  - Реальні приклади використання
 - section: Практика
-  words: 350
+  words: 559
   points:
-  - Content for Практика
-  - Examples and explanation
-  - Practice or application
+  - Як розрізняти значення?
+  - Типові помилки та як їх уникнути
+  - 'Діалог: Культурні плани'
 - section: 'Читання: Метафори в нашому житті'
-  words: 500
+  words: 748
+  points: []
+- section: Потрібно більше практики?
+  words: 164
   points:
-  - 'Content for Читання: Метафори в нашому житті'
-  - Examples and explanation
-  - Practice or application
-word_target: 1500
+  - Інтеграція знань
+  - Реальне застосування
+  - Онлайн-ресурси
+word_target: 3000
 vocabulary_hints:
   required:
   - виходить, що (it turns out that)

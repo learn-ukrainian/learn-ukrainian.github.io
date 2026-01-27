@@ -88,11 +88,17 @@ For **each of M81-84**, follow this workflow:
 2. **Read existing metadata** (`curriculum/l2-uk-en/b1/meta/{slug}.yaml`)
 3. **Read existing vocabulary** (`curriculum/l2-uk-en/b1/vocabulary/{slug}.yaml`)
 4. **Write content sections** following template structure:
+
    - # Вступ (200-300 words)
+
    - # Презентація (800-1000 words)
+
    - # Практика (100-200 words)
+
    - # Продукція (200-400 words)
+
    - # Підсумок (100-200 words)
+
 5. **Add engagement boxes** (6+ per module: [!didyouknow], [!realworld], [!popculture])
 6. **Create activities section** (12+ activities, see activity requirements below)
 7. **Verify word count** (must be 1500+, B1 HARD requirement)
@@ -157,21 +163,25 @@ Must pass MDX and HTML validation.
 ## Module Specifications
 
 ### Module 81: Біг в Україні (Running in Ukraine)
+
 - **Vocabulary:** біг, бігун, пробіжка, марафон, напівмарафон, трейлраннінг, забіг, старт, фініш, дистанція, etc. (30 total)
 - **Content focus:** Running culture, parkruns, marathons (Київський марафон, Kharkiv Marathon), trail running spots
 - **Real examples:** Parkrun Ukraine, popular routes (Труханів острів, Голосіївський парк)
 
 ### Module 82: Гори та трейлраннінг (Mountains & Trail Running)
+
 - **Vocabulary:** гора, вершина, стежка, підйом, спуск, трейл, висота, схил, маршрут, перевал, etc. (30 total)
 - **Content focus:** Carpathian trails, Ukrainian mountain running, ultra events
 - **Real examples:** Говерла, Чорногора, Свидовець, Ultra-trail Carpathians
 
 ### Module 83: Велосипед та водні види (Cycling & Water Sports)
+
 - **Vocabulary:** велосипед, велодоріжка, велопрогулянка, маршрут, каякінг, SUP, веслування, річка, озеро, etc. (30 total)
 - **Content focus:** Cycling infrastructure, bike routes, water sports (Dnipro, Black Sea)
 - **Real examples:** Велодоріжки Києва, каякінг на Дністрі, SUP на Дніпрі
 
 ### Module 84: Зимові види спорту (Winter Sports)
+
 - **Vocabulary:** лижі, сноуборд, гірськолижний курорт, підйомник, траса, сніг, схил, спуск, фрірайд, etc. (30 total)
 - **Content focus:** Ski resorts, winter sports culture in Ukraine
 - **Real examples:** Буковель, Драгобрат, Славське, Плай

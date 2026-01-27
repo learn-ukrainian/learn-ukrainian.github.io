@@ -69,8 +69,6 @@ vocabulary_hints:
 activity_hints:
 - type: reading
   focus: Analysis of historical texts
-- type: quiz
-  focus: Timeline and tactics of the battle
 - type: essay-response
   focus: The role of intelligence and diplomacy in victory
 - type: comparative-study

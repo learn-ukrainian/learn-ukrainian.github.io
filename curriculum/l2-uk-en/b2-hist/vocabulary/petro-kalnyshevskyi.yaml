@@ -2,128 +2,128 @@ module: petro-kalnyshevskyi
 level: B2
 version: '2.0'
 items:
-  - lemma: кошовий отаман
-    ipa: /koˈʃɔwɪj oˈtaman/
-    translation: kish otaman (supreme leader of the Sich)
-    pos: noun
-    gender: m
-  - lemma: заслання
-    ipa: /zaˈsɫanʲːɐ/
-    translation: exile
-    pos: noun
-    gender: n
-  - lemma: ліквідація
-    ipa: /likwiˈdat͡sʲija/
-    translation: liquidation / elimination
-    pos: noun
-    gender: f
-  - lemma: фортеця
-    ipa: /forˈtɛt͡sʲɐ/
-    translation: fortress
-    pos: noun
-    gender: f
-  - lemma: монастир
-    ipa: /monasˈtɪr/
-    translation: monastery
-    pos: noun
-    gender: m
-  - lemma: неволя
-    ipa: /neˈwɔlʲɐ/
-    translation: captivity / lack of freedom
-    pos: noun
-    gender: f
-  - lemma: каземат
-    ipa: /kazeˈmat/
-    translation: casemate / dungeon cell
-    pos: noun
-    gender: m
-  - lemma: покора
-    ipa: /poˈkɔrɐ/
-    translation: submission / obedience
-    pos: noun
-    gender: f
-  - lemma: стійкість
-    ipa: /ˈsʲtʲijkisʲtʲ/
-    translation: resilience / steadfastness
-    pos: noun
-    gender: f
-  - lemma: колонізація
-    ipa: /kolonʲiˈzat͡sʲija/
-    translation: colonization
-    pos: noun
-    gender: f
-  - lemma: маніфест
-    ipa: /manʲiˈfɛst/
-    translation: manifesto
-    pos: noun
-    gender: m
-  - lemma: автономія
-    ipa: /autoˈnɔmʲija/
-    translation: autonomy
-    pos: noun
-    gender: f
-  - lemma: зрада
-    ipa: /ˈzradɐ/
-    translation: betrayal / treason
-    pos: noun
-    gender: f
-  - lemma: вірність
-    ipa: /ˈwirnʲisʲtʲ/
-    translation: loyalty / faithfulness
-    pos: noun
-    gender: f
-  - lemma: шляхта
-    ipa: /ˈʃlʲaxtɐ/
-    translation: nobility
-    pos: noun
-    gender: f
-  - lemma: маєток
-    ipa: /maˈjɛtok/
-    translation: estate
-    pos: noun
-    gender: m
-  - lemma: меценат
-    ipa: /met͡sɛˈnat/
-    translation: patron / philanthropist
-    pos: noun
-    gender: m
-  - lemma: благочестя
-    ipa: /blaɦoˈt͡ʃɛsʲtʲɐ/
-    translation: piety
-    pos: noun
-    gender: n
-  - lemma: проща
-    ipa: /ˈprɔʃt͡ʃɐ/
-    translation: pilgrimage
-    pos: noun
-    gender: f
-  - lemma: святиня
-    ipa: /sʲwɐˈtɪnʲɐ/
-    translation: shrine / holy place
-    pos: noun
-    gender: f
-  - lemma: катування
-    ipa: /katuˈwanʲːɐ/
-    translation: torture
-    pos: noun
-    gender: n
-  - lemma: незламність
-    ipa: /neˈzɫamnʲisʲtʲ/
-    translation: indomitability
-    pos: noun
-    gender: f
-  - lemma: смирення
-    ipa: /smɪˈrɛnʲːɐ/
-    translation: humility
-    pos: noun
-    gender: n
-  - lemma: вічність
-    ipa: /ˈwit͡ʃnʲisʲtʲ/
-    translation: eternity
-    pos: noun
-    gender: f
-  - lemma: спадщина
-    ipa: /ˈspadʃt͡ʃɪnɐ/
-    translation: heritage / legacy
-    pos: noun
-    gender: f
+- lemma: кошовий отаман
+  ipa: /koˈʃɔwɪj oˈtaman/
+  translation: kish otaman (supreme leader of the Sich)
+  pos: noun
+  gender: m
+- lemma: заслання
+  ipa: /zaˈsɫanʲːɐ/
+  translation: exile
+  pos: noun
+  gender: n
+- lemma: ліквідація
+  ipa: /likwiˈdat͡sʲija/
+  translation: liquidation / elimination
+  pos: noun
+  gender: f
+- lemma: фортеця
+  ipa: /forˈtɛt͡sʲɐ/
+  translation: fortress
+  pos: noun
+  gender: f
+- lemma: монастир
+  ipa: /monasˈtɪr/
+  translation: monastery
+  pos: noun
+  gender: m
+- lemma: неволя
+  ipa: /neˈwɔlʲɐ/
+  translation: captivity / lack of freedom
+  pos: noun
+  gender: f
+- lemma: каземат
+  ipa: /kazeˈmat/
+  translation: casemate / dungeon cell
+  pos: noun
+  gender: m
+- lemma: покора
+  ipa: /poˈkɔrɐ/
+  translation: submission / obedience
+  pos: noun
+  gender: f
+- lemma: стійкість
+  ipa: /ˈsʲtʲijkisʲtʲ/
+  translation: resilience / steadfastness
+  pos: noun
+  gender: f
+- lemma: колонізація
+  ipa: /kolonʲiˈzat͡sʲija/
+  translation: colonization
+  pos: noun
+  gender: f
+- lemma: маніфест
+  ipa: /manʲiˈfɛst/
+  translation: manifesto
+  pos: noun
+  gender: m
+- lemma: автономія
+  ipa: /autoˈnɔmʲija/
+  translation: autonomy
+  pos: noun
+  gender: f
+- lemma: зрада
+  ipa: /ˈzradɐ/
+  translation: betrayal / treason
+  pos: noun
+  gender: f
+- lemma: вірність
+  ipa: /ˈwirnʲisʲtʲ/
+  translation: loyalty / faithfulness
+  pos: noun
+  gender: f
+- lemma: шляхта
+  ipa: /ˈʃlʲaxtɐ/
+  translation: nobility
+  pos: noun
+  gender: f
+- lemma: маєток
+  ipa: /maˈjɛtok/
+  translation: estate
+  pos: noun
+  gender: m
+- lemma: меценат
+  ipa: /met͡sɛˈnat/
+  translation: patron / philanthropist
+  pos: noun
+  gender: m
+- lemma: благочестя
+  ipa: /blaɦoˈt͡ʃɛsʲtʲɐ/
+  translation: piety
+  pos: noun
+  gender: n
+- lemma: проща
+  ipa: /ˈprɔʃt͡ʃɐ/
+  translation: pilgrimage
+  pos: noun
+  gender: f
+- lemma: святиня
+  ipa: /sʲwɐˈtɪnʲɐ/
+  translation: shrine / holy place
+  pos: noun
+  gender: f
+- lemma: катування
+  ipa: /katuˈwanʲːɐ/
+  translation: torture
+  pos: noun
+  gender: n
+- lemma: незламність
+  ipa: /neˈzɫamnʲisʲtʲ/
+  translation: indomitability
+  pos: noun
+  gender: f
+- lemma: смирення
+  ipa: /smɪˈrɛnʲːɐ/
+  translation: humility
+  pos: noun
+  gender: n
+- lemma: вічність
+  ipa: /ˈwit͡ʃnʲisʲtʲ/
+  translation: eternity
+  pos: noun
+  gender: f
+- lemma: спадщина
+  ipa: /ˈspadʃt͡ʃɪnɐ/
+  translation: heritage / legacy
+  pos: noun
+  gender: f

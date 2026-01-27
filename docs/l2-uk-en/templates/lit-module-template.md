@@ -8,7 +8,6 @@
 
 **Related Curriculum Plan:** `docs/l2-uk-en/LIT-CURRICULUM-PLAN.md`
 
-
 <!--
 TEMPLATE_METADATA:
   required_sections:
@@ -73,7 +72,7 @@ If you are compelled to create a module from scratch (e.g., Kvitka-Osnovianenko 
 
 ### 1. The "Bulk Content" Strategy (Crucial for Word Count)
 
-- **Problem:** It is extremely difficult to generate 4000+ words of _pure analysis_ from scratch without hallucinating.
+- **Problem:** It is extremely difficult to generate 4000+ words of *pure analysis* from scratch without hallucinating.
 - **Solution:** You MUST include large blocks of the **original public domain text** (from UkrLib) directly in the `Reading Hall` or `Analysis` sections.
 - **Quantity:** Include at least **3-4 full pages (1000-1500 words)** of the original text as indented blockquotes (`> text`) or within the `🏛️ Читальна Зала` section.
 - **Format:** Present these as "Key Excerpts for Analysis" and intersperse them with your philological commentary.
@@ -167,7 +166,6 @@ Before submitting a LIT module, verify:
 | **Pedagogy**   | TTT/CBI/Creative Production | Academic seminar style           |
 
 **Key shift:** LIT is a **graduate-level literature seminar**, not a language course. It assumes C1 mastery and focuses on cultural/historical depth.
-
 
 ---
 
@@ -520,6 +518,93 @@ Common UkrLib author IDs (verify before using):
 
 ---
 
+### 9. Source-Evaluation Activity
+
+**Use for analyzing literary criticism, historical reception, and scholarly interpretations:**
+
+```yaml
+- type: source-evaluation
+  title: "Оцінка джерела: Критична стаття/Рецензія/Маніфест"
+  instruction: "Застосуйте метод критичного аналізу до цього літературознавчого джерела."
+  source_text: |
+    [Excerpt from literary criticism, contemporary review, or manifesto — 100-200 words]
+  source_metadata:
+    author: "[Critic/writer name]"
+    date: "[Year of publication]"
+    type: "[criticism/review/manifesto/memoir]"
+    context: "[Literary movement, political context, relationship to author]"
+  evaluation_criteria:
+    - authorship
+    - date_and_context
+    - intended_audience
+    - purpose_and_bias
+    - omissions
+  guiding_questions:
+    - "Яку літературну позицію представляє критик?"
+    - "Як історичний контекст впливає на оцінку?"
+    - "Які естетичні критерії використовує автор?"
+    - "Що ця критика замовчує або применшує?"
+  model_evaluation: |
+    **1. Авторство:** [Who wrote it, their literary circle]
+    **2. Контекст:** [When written, literary debates of the era]
+    **3. Естетична позиція:** [What values the critic promotes]
+    **4. Упередження:** [Ideological, aesthetic, personal biases]
+    **5. Історична цінність:** [What this source reveals about reception history]
+```
+
+### 10. Debate Activity
+
+**Use for contested interpretations of literary works and authors' legacies:**
+
+```yaml
+- type: debate
+  title: "Дискусія: [Contested Literary Question]"
+  instruction: "Проаналізуйте конкуруючі інтерпретації та сформулюйте власну позицію."
+  debate_question: "[The contested question about interpretation or legacy]"
+  historical_context: |
+    [Background on the literary controversy — 50-100 words]
+  positions:
+    - name: "[Position 1 — e.g., Народницька інтерпретація]"
+      proponents: "[Critics, scholars who hold this view]"
+      argument: "[Core interpretive argument]"
+      evidence:
+        - "[Textual evidence]"
+        - "[Historical evidence]"
+      weaknesses:
+        - "[Limitation of this reading]"
+    - name: "[Position 2 — e.g., Модерністська інтерпретація]"
+      proponents: "[Who holds this view]"
+      argument: "[Core argument]"
+      evidence:
+        - "[Evidence]"
+      weaknesses:
+        - "[Critique]"
+    - name: "[Position 3 — e.g., Радянська інтерпретація]"
+      proponents: "[Soviet critics]"
+      argument: "[Their reading]"
+      evidence:
+        - "[Their claimed evidence]"
+      weaknesses:
+        - "[Why this is problematic — decolonization perspective]"
+  analysis_tasks:
+    - "Які текстуальні докази підтримують кожну позицію?"
+    - "Як ідеологія критика впливає на інтерпретацію?"
+    - "Як сучасна українська перспектива змінює читання?"
+    - "Яку позицію ви вважаєте найбільш переконливою? Чому?"
+  model_analysis: |
+    [Balanced evaluation of interpretive positions, demonstrating philological
+    rigor and awareness of how critical schools shape readings. Graduate-level
+    analysis should engage with reception history and decolonization.]
+```
+
+**Example contested questions for LIT track:**
+- "Котляревський: бурлеск чи національний маніфест?"
+- "Чи 'Енеїда' — пародія чи епос?"
+- "Шевченко: романтик, реаліст, чи модерніст avant la lettre?"
+- "Як читати колоніальну травму в класичних текстах?"
+
+---
+
 ## LIT-Specific Pedagogical Notes
 
 ### 1. No Traditional Activities
@@ -622,10 +707,10 @@ Common UkrLib author IDs (verify before using):
 | Module  | Type             | Content Focus                                              |
 | ------- | ---------------- | ---------------------------------------------------------- |
 | LIT-001 | Biography        | Kotliarevsky's life, historical context (Ruin period)      |
-| LIT-002 | Literary Work    | _Eneida_ Part I - burlesque style, Trojan-Cossack parallel |
-| LIT-003 | Vocabulary Study | Food/feast vocabulary from _Eneida_                        |
-| LIT-004 | Vocabulary Study | Military/war vocabulary from _Eneida_                      |
-| LIT-005 | Literary Work    | _Natalka Poltavka_ - sentimentalism, theater               |
+| LIT-002 | Literary Work    | *Eneida* Part I - burlesque style, Trojan-Cossack parallel |
+| LIT-003 | Vocabulary Study | Food/feast vocabulary from *Eneida*                        |
+| LIT-004 | Vocabulary Study | Military/war vocabulary from *Eneida*                      |
+| LIT-005 | Literary Work    | *Natalka Poltavka* - sentimentalism, theater               |
 
 **Word count:** 2200-2500 per module
 

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M42 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 23:33:04
+**Generated:** 2026-01-27 17:53:18
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** comparative-study, critical-analysis, essay-response, quiz, reading
+**Required Types:** comparative-study, critical-analysis, essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -22,25 +22,22 @@
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Свідчення Гійома де Боплана | 3 | 1 | ✅ |
 | 2 | critical-analysis | Аналіз козацької демократії | 1 | 1 | ✅ |
-| 3 | quiz | Розуміння тексту про Запорозьку Січ | 8 | 8 | ✅ |
-| 4 | match-up | Козацька термінологія | 16 | 8 | ✅ |
-| 5 | fill-in | Історичний контекст Січі | 15 | 8 | ✅ |
-| 6 | true-false | Факти про Запорозьку Січ | 12 | 8 | ✅ |
-| 7 | comparative-study | Порівняння соціальних моделей - Річ Посполита vs Запорозька Січ | 1 | 1 | ✅ |
-| 8 | essay-response | Запорозька Січ як взірець демократії | 1 | 1 | ✅ |
+| 3 | true-false | Факти про Запорозьку Січ | 12 | 8 | ✅ |
+| 4 | comparative-study | Порівняння соціальних моделей - Річ Посполита vs Запорозька Січ | 1 | 1 | ✅ |
+| 5 | essay-response | Запорозька Січ як взірець демократії | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 8 (target: 3-9) ✅
-- Unique types: 8 (minimum: 2) ✅
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 5/5 (comparative-study, critical-analysis, essay-response, quiz, reading) ✅
+- Required types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ✅ 4027/4000 (raw: 4218)
-- **Activities:** ✅ 8/3
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 8/2 types
+- **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
@@ -48,7 +45,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (8 activities)
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 98.6% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

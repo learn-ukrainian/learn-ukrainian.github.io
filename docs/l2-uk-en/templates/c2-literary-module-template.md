@@ -6,7 +6,6 @@
 
 **Related Issue:** [#307](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/307)
 
-
 <!--
 TEMPLATE_METADATA:
   required_sections:
@@ -27,6 +26,7 @@ TEMPLATE_METADATA:
 Before submitting a C2 literary module, verify all items from `c2-module-template.md` PLUS:
 
 ### Literary-Specific Requirements
+
 - [ ] **Scholar-level analysis:** Literary theory and criticism, not surface reading
 - [ ] **Original production:** Poetry, prose, or literary essay — YAML only (`essay-response` activity)
 - [ ] **Translation component:** Literary translation theory or practice
@@ -72,7 +72,6 @@ Before submitting a C2 literary module, verify all items from `c2-module-templat
 | M43 | C2.2 Practice I — Literary Portfolio |
 | M44 | C2.2 Practice II — Creative Portfolio |
 | M45 | C2.2 Checkpoint |
-
 
 ---
 
@@ -451,6 +450,95 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 ---
 
+## Advanced Seminar-Style Activities
+
+### Source-Evaluation Activity
+
+**Use for analyzing literary theory sources and critical schools:**
+
+```yaml
+- type: source-evaluation
+  title: "Оцінка джерела: Літературознавча стаття/Критичний маніфест"
+  instruction: "Застосуйте метод критичного аналізу до цього теоретичного джерела."
+  source_text: |
+    [Excerpt from literary theory, critical manifesto, or scholarly article — 100-200 words]
+  source_metadata:
+    author: "[Theorist/critic name]"
+    date: "[Year of publication]"
+    type: "[theory/manifesto/criticism/essay]"
+    context: "[Critical school, intellectual movement, historical moment]"
+  evaluation_criteria:
+    - authorship
+    - date_and_context
+    - intended_audience
+    - purpose_and_bias
+    - omissions
+  guiding_questions:
+    - "До якої критичної школи належить автор? (формалізм, структуралізм, постколоніалізм...)"
+    - "Який ідейний контекст теорії?"
+    - "Які тексти/автори підтверджують або спростовують цю теорію?"
+    - "Які альтернативні підходи автор ігнорує?"
+  model_evaluation: |
+    **1. Авторство:** [Who is the theorist, their critical school]
+    **2. Теоретичний контекст:** [Intellectual movement, predecessors]
+    **3. Методологія:** [How the theory approaches literature]
+    **4. Упередження:** [Theoretical blind spots, ideological assumptions]
+    **5. Застосування:** [What this theory illuminates and what it misses]
+```
+
+### Debate Activity
+
+**Use for contested critical positions and theoretical disputes:**
+
+```yaml
+- type: debate
+  title: "Дискусія: [Contested Theoretical Question]"
+  instruction: "Проаналізуйте конкуруючі теоретичні позиції та оцініть їхню пояснювальну силу."
+  debate_question: "[The contested question in literary theory]"
+  historical_context: |
+    [Background on the theoretical debate — 50-100 words]
+  positions:
+    - name: "[Position 1 — e.g., Формалістична позиція]"
+      proponents: "[Theorists, schools]"
+      argument: "[Core theoretical argument]"
+      evidence:
+        - "[Textual evidence — how texts support this reading]"
+        - "[Theoretical argument]"
+      weaknesses:
+        - "[Theoretical limitation]"
+    - name: "[Position 2 — e.g., Постколоніальна позиція]"
+      proponents: "[Who holds this view]"
+      argument: "[Core argument]"
+      evidence:
+        - "[Evidence]"
+      weaknesses:
+        - "[Critique]"
+    - name: "[Position 3 — e.g., Феміністична критика]"
+      proponents: "[Scholars]"
+      argument: "[Their reading]"
+      evidence:
+        - "[Evidence]"
+      weaknesses:
+        - "[Limitation]"
+  analysis_tasks:
+    - "Які методологічні припущення кожної позиції?"
+    - "Як кожен підхід читає конкретний текст по-різному?"
+    - "Чи можливий методологічний синтез?"
+    - "Яку позицію ви вважаєте найбільш продуктивною? Чому?"
+  model_analysis: |
+    [Balanced evaluation of theoretical positions, demonstrating how different
+    methodologies produce different readings of the same text. C2-level analysis
+    should show sophisticated understanding of critical theory.]
+```
+
+**Example contested questions for C2 literary:**
+- "Чи смерть автора справді звільняє текст?"
+- "Як деколонізувати канон: виключати чи перечитувати?"
+- "Формалізм vs. культурні студії: текст чи контекст?"
+- "Чи можлива феміністична критика класиків-чоловіків?"
+
+---
+
 ## Engagement Boxes for Literary Modules
 
 ```markdown
@@ -490,6 +578,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 ## Content Structure Note
 
 ### Vocabulary & Activities
+
 **CRITICAL:** Do NOT add `## Vocabulary` or `## Activities` headers. These sections are injected automatically from:
 - `vocabulary/{slug}.yaml`
 - `activities/{slug}.yaml`

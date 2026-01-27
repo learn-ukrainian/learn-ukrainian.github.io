@@ -1,10 +1,12 @@
 # Audit Report: M31 — semen-hulak-artemovskyy.md
+
 **Level:** C1 | **Module:** M31 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:11
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння біографії та внеску | 8 | 5 | ✅ |
@@ -44,16 +47,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in semen-hulak-artemovskyy.yaml: Schema validation error at key '13': {'type': 'reading', 'title': 'Дослідження першоджерела', 'resource': {'type': 'primary_source', 'url': 'https://www.youtube.com/watch?v=Xun6_X_vntM', 'title': 'С. Гулак-Артемовський: Дует Одарки та Карася (фрагмент)'}, 'tasks': ['Прослухайте дует та проаналізуйте мовні засоби комізму в діалозі.', 'Як музика підкреслює характери персонажів? Наведіть приклади змін темпу чи динаміки.', 'Які народні вислови ви почули у тексті дуету?']} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2063/4000 (raw: 2267)
 - **Activities:** ✅ 15/3
 - **Density:** ✅ All > 1
@@ -72,10 +78,12 @@
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 100% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 6 | 4 | 100% | 19% | 19.0% |
@@ -91,6 +99,7 @@
 | **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 81 | Included in Core |

@@ -1,6 +1,7 @@
 # B2 Restructure Plan - Implementation Strategy
 
 ## Goal
+
 Establish a robust implementation strategy for the B2 Curriculum (Modules 01-110) to achieve independent fluency.
 
 **Status Assessment (2025-12-25):**
@@ -15,34 +16,38 @@ Establish a robust implementation strategy for the B2 Curriculum (Modules 01-110
 ## Proposed Changes
 
 ### 1. Implementation Strategy: Greenfield Creation
+
 For Modules 02-110, we will follow the **"Create"** strategy with strict adherence to the 6-phase curriculum structure.
 
 1.  **Pedagogy**: **Content-Based Instruction (CBI)**.
-    *   *Motto*: "Reading to Learn".
-    *   *Immersion*: **100% Ukrainian**. English is allowed ONLY in vocabulary table translations.
+    -   *Motto*: "Reading to Learn".
+    -   *Immersion*: **100% Ukrainian**. English is allowed ONLY in vocabulary table translations.
 2.  **Vocabulary Strategy: Expansion & De-duplication**
     1.  **Expansion**: ~25 *new* words per module (High-value, low-frequency).
     2.  **Context**: Authentic texts (media, literature, history).
     3.  **Drilling Focus**: Active usage in professional/academic context.
     4.  **De-duplication Policy**:
-        *   **Check**: Verify against A1-B1 corpus.
-        *   **Register Shift**: Duplicates allowed ONLY for stylistic analysis (e.g., *йти* vs *прямувати*).
-        *   **Base Forms**: Strict uniqueness required.
+        -   **Check**: Verify against A1-B1 corpus.
+        -   **Register Shift**: Duplicates allowed ONLY for stylistic analysis (e.g., *йти* vs *прямувати*).
+        -   **Base Forms**: Strict uniqueness required.
 
 ### 2. State Standard Compliance
+
 The B2 plan has been updated (Issue 117). Critical requirements to implement:
-*   **Passive Voice**: Full system (M01-M06). M01 covers overview; M02-M06 provide deep dives into specific forms (-но/-то, -ся, etc.).
-*   **Participles**: Active/Passive production (M11-M15).
-*   **Register Awareness**: 5 Styles text analysis (M26-M30).
+-   **Passive Voice**: Full system (M01-M06). M01 covers overview; M02-M06 provide deep dives into specific forms (-но/-то, -ся, etc.).
+-   **Participles**: Active/Passive production (M11-M15).
+-   **Register Awareness**: 5 Styles text analysis (M26-M30).
 
 ## Acceptance Criteria for B2 Compliance
 
 ### 1. Pedagogical Compliance
+
 - [ ] **Authenticity**: Texts must mimic real Ukrainian media/literature styles.
 - [ ] **Model Answers**: MANDATORY for all writing tasks.
 - [ ] **Immersion**: 100% Ukrainian (English only in vocabulary translations).
 
 ### 2. Module Richness (Audit Pass)
+
 - [ ] **Word Count**: > 1200 words (high density reading).
 - [ ] **Activity Density**: > 14 activities (higher drill volume than B1).
 - [ ] **Content**: Must include "History Bite" or "Myth Buster".
@@ -61,6 +66,7 @@ The B2 plan has been updated (Issue 117). Critical requirements to implement:
 **Total: 110 modules** (104 content + 6 checkpoints)
 
 ## GitHub Tracking
+
 Issues to be created when implementation begins:
 
 | Phase | Issue Title | Modules |

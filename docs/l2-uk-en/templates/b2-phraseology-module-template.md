@@ -6,7 +6,6 @@
 
 **Related Issue:** [#305](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/305)
 
-
 <!--
 TEMPLATE_METADATA:
   required_sections:
@@ -35,7 +34,6 @@ Before submitting a B2 phraseology module, verify all items from `b2-module-temp
 - [ ] **Usage register:** Show where each expression is appropriate
 - [ ] **Cultural origin:** Explain cultural/historical background where relevant
 - [ ] **Synonym nuance:** Distinguish between near-synonyms with examples
-
 
 ---
 
@@ -245,7 +243,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 ### Activity Examples (Conceptual)
 
-_Note: These activities must be implemented in YAML._
+*Note: These activities must be implemented in YAML.*
 
 1. **Idiom Matching (match-up):** Match phrase to meaning.
 2. **Context Completion (fill-in):** Choose phrase for context.

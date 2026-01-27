@@ -2,128 +2,127 @@ module: kozatska-kultura
 level: B2
 version: '2.0'
 items:
-  - lemma: кобзар
-    ipa: /kobˈzar/
-    translation: kobzar (itinerant blind singer)
-    pos: noun
-    gender: m
-  - lemma: бандура
-    ipa: /banˈdurɐ/
-    translation: bandura (Ukrainian folk instrument)
-    pos: noun
-    gender: f
-  - lemma: дума
-    ipa: /ˈdumɐ/
-    translation: duma (epic song)
-    pos: noun
-    gender: f
-  - lemma: козацьке бароко
-    ipa: /koˈzat͡sʲke bɐˈrɔko/
-    translation: Cossack Baroque
-    pos: noun
-    gender: n
-  - lemma: меценатство
-    ipa: /met͡seˈnat͡stvo/
-    translation: patronage (of arts)
-    pos: noun
-    gender: n
-  - lemma: речитатив
-    ipa: /ret͡ʃɪtɐˈtɪu̯/
-    translation: recitative
-    pos: noun
-    gender: m
-  - lemma: лебійська мова
-    ipa: /leˈbijsʲkɐ ˈmɔu̯ɐ/
-    translation: Lebiiska language (kobzar argot)
-    pos: noun
-    gender: f
-  - lemma: спудей
-    ipa: /spʊˈdɛi̯/
-    translation: student (archaic, used in academies)
-    pos: noun
-    gender: m
-  - lemma: епос
-    ipa: /ˈɛpɔs/
-    translation: epic
-    pos: noun
-    gender: m
-  - lemma: фасад
-    ipa: /fɐˈsad/
-    translation: facade
-    pos: noun
-    gender: m
-  - lemma: лірник
-    ipa: /ˈlirnɪk/
-    translation: lyrnyk (player of hurdy-gurdy)
-    pos: noun
-    gender: m
-  - lemma: кобза
-    ipa: /ˈkɔbzɐ/
-    translation: kobza
-    pos: noun
-    gender: f
-  - lemma: цех
-    ipa: /t͡sɛx/
-    translation: guild
-    pos: noun
-    gender: m
-  - lemma: статут
-    ipa: /stɐˈtut/
-    translation: statute
-    pos: noun
-    gender: m
-  - lemma: арго
-    ipa: /ɐrˈɦɔ/
-    translation: argot
-    pos: noun
-    gender: n
-  - lemma: заплачка
-    ipa: /zɐˈplat͡ʃkɐ/
-    translation: lament (intro to duma)
-    pos: noun
-    gender: f
-  - lemma: славослів'я
-    ipa: /slɐvoˈsʲlʲiu̯jɐ/
-    translation: glorification (outro to duma)
-    pos: noun
-    gender: n
-  - lemma: баня
-    ipa: /ˈbanʲɐ/
-    translation: dome
-    pos: noun
-    gender: f
-  - lemma: фронтон
-    ipa: /fronˈtɔn/
-    translation: fronton
-    pos: noun
-    gender: m
-  - lemma: волюта
-    ipa: /voˈlʲutɐ/
-    translation: volute
-    pos: noun
-    gender: f
-  - lemma: іконостас
-    ipa: /ikonoˈstas/
-    translation: iconostasis
-    pos: noun
-    gender: m
-  - lemma: фундація
-    ipa: /fʊnˈdat͡sʲijɐ/
-    translation: foundation (endowment)
-    pos: noun
-    gender: f
-  - lemma: колегіум
-    ipa: /koˈlɛɦijʊm/
-    translation: collegium
-    pos: noun
-    gender: m
-  - lemma: риторика
-    ipa: /rɪˈtɔrɪkɐ/
-    translation: rhetoric
-    pos: noun
-    gender: f
-  - lemma: панегірик
-    ipa: /pɐneˈɦirɪk/
-    translation: panegyric
-    pos: noun
-    gender: m
+- lemma: кобзар
+  ipa: /kobˈzar/
+  translation: kobzar (itinerant blind singer)
+  pos: noun
+  gender: m
+- lemma: бандура
+  ipa: /banˈdurɐ/
+  translation: bandura (Ukrainian folk instrument)
+  pos: noun
+  gender: f
+- lemma: дума
+  ipa: /ˈdumɐ/
+  translation: duma (epic song)
+  pos: noun
+  gender: f
+- lemma: козацьке бароко
+  ipa: /koˈzat͡sʲke bɐˈrɔko/
+  translation: Cossack Baroque
+  pos: noun
+  gender: n
+- lemma: меценатство
+  ipa: /met͡seˈnat͡stvo/
+  translation: patronage (of arts)
+  pos: noun
+  gender: n
+- lemma: речитатив
+  ipa: /ret͡ʃɪtɐˈtɪu̯/
+  translation: recitative
+  pos: noun
+  gender: m
+- lemma: лебійська мовий
+  ipa: /leˈbijsʲkɐ ˈmɔu̯ɐ/
+  translation: Lebiiska language (kobzar argot)
+  pos: adj
+- lemma: спудей
+  ipa: /spʊˈdɛi̯/
+  translation: student (archaic, used in academies)
+  pos: noun
+  gender: m
+- lemma: епос
+  ipa: /ˈɛpɔs/
+  translation: epic
+  pos: noun
+  gender: m
+- lemma: фасад
+  ipa: /fɐˈsad/
+  translation: facade
+  pos: noun
+  gender: m
+- lemma: лірник
+  ipa: /ˈlirnɪk/
+  translation: lyrnyk (player of hurdy-gurdy)
+  pos: noun
+  gender: m
+- lemma: кобза
+  ipa: /ˈkɔbzɐ/
+  translation: kobza
+  pos: noun
+  gender: f
+- lemma: цех
+  ipa: /t͡sɛx/
+  translation: guild
+  pos: noun
+  gender: m
+- lemma: статут
+  ipa: /stɐˈtut/
+  translation: statute
+  pos: noun
+  gender: m
+- lemma: арго
+  ipa: /ɐrˈɦɔ/
+  translation: argot
+  pos: noun
+  gender: n
+- lemma: заплачка
+  ipa: /zɐˈplat͡ʃkɐ/
+  translation: lament (intro to duma)
+  pos: noun
+  gender: f
+- lemma: славослів'я
+  ipa: /slɐvoˈsʲlʲiu̯jɐ/
+  translation: glorification (outro to duma)
+  pos: noun
+  gender: n
+- lemma: баня
+  ipa: /ˈbanʲɐ/
+  translation: dome
+  pos: noun
+  gender: f
+- lemma: фронтон
+  ipa: /fronˈtɔn/
+  translation: fronton
+  pos: noun
+  gender: m
+- lemma: волюта
+  ipa: /voˈlʲutɐ/
+  translation: volute
+  pos: noun
+  gender: f
+- lemma: іконостас
+  ipa: /ikonoˈstas/
+  translation: iconostasis
+  pos: noun
+  gender: m
+- lemma: фундація
+  ipa: /fʊnˈdat͡sʲijɐ/
+  translation: foundation (endowment)
+  pos: noun
+  gender: f
+- lemma: колегіум
+  ipa: /koˈlɛɦijʊm/
+  translation: collegium
+  pos: noun
+  gender: m
+- lemma: риторика
+  ipa: /rɪˈtɔrɪkɐ/
+  translation: rhetoric
+  pos: noun
+  gender: f
+- lemma: панегірик
+  ipa: /pɐneˈɦirɪk/
+  translation: panegyric
+  pos: noun
+  gender: m

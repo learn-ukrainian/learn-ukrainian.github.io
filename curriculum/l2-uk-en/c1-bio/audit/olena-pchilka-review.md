@@ -1,10 +1,12 @@
 # Audit Report: M42 — olena-pchilka.md
+
 **Level:** C1 | **Module:** M42 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:17
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Життя і переконання | 12 | 5 | ✅ |
@@ -44,16 +47,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in olena-pchilka.yaml: Schema validation error at key '13': {'type': 'translate', 'title': 'Переклад думок про Пчілку', 'items': [{'source': 'She was the iron lady of Ukrainian culture.', 'options': [{'text': 'Вона була залізною леді української культури.', 'correct': True}, {'text': 'Вона була доброю жінкою в культурі.', 'correct': False}, {'text': 'Вона мала залізний характер.', 'correct': False}, {'text': 'Вона любила залізо і культуру.', 'correct': False}]}, {'source': 'She refused to speak Russian even in official settings.', 'options': [{'text': 'Вона відмовлялася говорити російською навіть в офіційних установах.', 'correct': True}, {'text': 'Вона не знала російської мови.', 'correct': False}, {'text': 'Вона говорила російською лише вдома.', 'correct': False}, {'text': 'Вона любила офіційні промови.', 'correct': False}]}, {'source': 'Her pseudonym symbolized tireless work.', 'options': [{'text': 'Її псевдонім символізував невтомну працю.', 'correct': True}, {'text': 'Вона любила бджіл і мед.', 'correct': False}, {'text': "Пчілка - це ім'я її улюбленої тварини.", 'correct': False}, {'text': 'Символ праці - це мураха.', 'correct': False}]}, {'source': 'She educated her children at home to preserve their identity.', 'options': [{'text': 'Вона навчала дітей вдома, щоб зберегти їхню ідентичність.', 'correct': True}, {'text': 'Діти не ходили до школи через хворобу.', 'correct': False}, {'text': 'Вона не мала грошей на школу.', 'correct': False}, {'text': 'Вдома вчитися легше.', 'correct': False}]}, {'source': 'She was a pioneer of the feminist movement.', 'options': [{'text': 'Вона була піонеркою феміністичного руху.', 'correct': True}, {'text': 'Вона не любила чоловіків.', 'correct': False}, {'text': 'Фемінізм був їй чужий.', 'correct': False}, {'text': 'Вона заснувала жіночий клуб.', 'correct': False}]}, {'source': 'She proved that language is a weapon.', 'options': [{'text': 'Вона довела, що мова — це зброя.', 'correct': True}, {'text': 'Вона показала, що зброя — це погано.', 'correct': False}, {'text': 'Вона купила зброю для захисту.', 'correct': False}, {'text': 'Вона не любила сперечатися.', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2037/4000 (raw: 2288)
 - **Activities:** ✅ 15/3
 - **Density:** ✅ All > 1
@@ -72,10 +78,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 5 | 4 | 100% | 19% | 19.0% |
@@ -91,6 +99,7 @@
 | **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 78 | Included in Core |

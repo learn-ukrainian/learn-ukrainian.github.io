@@ -22,12 +22,14 @@
 <critical>
 
 ### 1. Work in `claude_extensions/` First
+
 **NEVER** edit `.claude/`, `.agent/`, `.gemini/` directly.
 - Edit in `claude_extensions/` (commands, skills, stages, quick-ref)
 - Run `npm run claude:deploy` to sync
 - Structure: `commands/` (skills), `skills/` (architect prompts), `stages/` (workflow docs)
 
 ### 2. Use Python venv
+
 **ALWAYS** use `.venv/bin/python`, **NEVER** `python3` or `python` directly.
 ```bash
 .venv/bin/python scripts/audit_module.py {path}  # Correct
@@ -35,17 +37,21 @@ python3 scripts/audit_module.py {path}           # WRONG - missing deps
 ```
 
 ### 3. Use Modern CLI Tools
+
 Prefer fast tools: `rg` (grep), `fd` (find), `bat` (cat), `sd` (sed), `yq` (yaml), `jq` (json).
 
 ### 4. Fix Source, Not Symptoms
+
 When issues occur: fix documentation/tools **first**, then validate with manual fix.
 - Ask: What process/tool caused this? How to prevent recurrence?
 
 ### 5. Language Settings
+
 - **English**: All technical work (git, scripts, errors, planning)
 - **Ukrainian**: Curriculum content only (lessons, activities, vocabulary)
 
 ### 6. External LLM Access
+
 **No direct API keys** - use MCP server for Gemini access.
 - gemini-cli installed with Google AI Pro subscription
 - MCP server: `.mcp/servers/ukrainian-validator/server.py`
@@ -81,6 +87,12 @@ When issues occur: fix documentation/tools **first**, then validate with manual 
 ```bash
 # Audit module
 .venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/{level}/{file}.md
+
+# Validate plans vs config.py (RUN BEFORE GENERATING CONTENT)
+.venv/bin/python scripts/validate_plan_config.py {level}
+
+# Fix plan word_targets if mismatched
+.venv/bin/python scripts/fix_plan_word_targets.py --fix {level}
 
 # Update status (after module completion)
 .venv/bin/python scripts/update_status.py {level}
@@ -136,6 +148,7 @@ curriculum/l2-uk-en/{level}/status/
 <critical>
 
 ### Root Structure
+
 YAML files must be a **bare list at root**, NOT wrapped in `activities:`:
 ```yaml
 # CORRECT - bare list
@@ -148,6 +161,7 @@ activities:
 ```
 
 ### Mark-the-Words Format
+
 Use `text` (no asterisks) + `answers` array:
 ```yaml
 - type: mark-the-words

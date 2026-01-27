@@ -319,6 +319,7 @@
 ## Implementation Order
 
 ### Week 1: Priority 1 (Critical)
+
 **Day 1-2:** YAML schema validator (#1) → Fixes 290 violations
 **Day 3-4:** Add missing sections (#2) → Fixes 150 violations
 **Day 5:** Extend unjumble sentences (#3) → Fixes 565 violations
@@ -328,6 +329,7 @@
 ---
 
 ### Week 2: Priority 2 (High)
+
 **Day 1-2:** Populate empty sections (#4) → Fixes 150 violations
 **Day 3:** Expand activity density (#5) → Fixes 58 violations
 **Day 4:** Add missing activities (#6) → Fixes 45 violations
@@ -337,6 +339,7 @@
 ---
 
 ### Week 3: Priority 3 (Quality) + Re-Audit
+
 **Day 1:** Reorder sections (#7) + Merge duplicates (#8) → Fixes 90 violations
 **Day 2:** Remove English (#9) + Simplify fill-ins (#10) → Fixes 43 violations
 **Day 3-4:** Re-audit all B1 modules, fix edge cases
@@ -361,6 +364,7 @@
 ## Testing Strategy
 
 ### Unit Tests (Per Script)
+
 ```bash
 # Test on sample modules first
 .venv/bin/python scripts/fix/yaml_schema_validator.py \
@@ -372,6 +376,7 @@
 ```
 
 ### Integration Tests (Full Level)
+
 ```bash
 # Apply all fixes to B1
 npm run fix:all l2-uk-en b1
@@ -384,6 +389,7 @@ npm run pipeline l2-uk-en b1
 ```
 
 ### Regression Tests
+
 ```bash
 # Ensure M01-10 (currently passing) still pass after fixes
 npm run pipeline l2-uk-en b1 1

@@ -23,6 +23,8 @@ import ComparativeStudy from '@site/src/components/ComparativeStudy';
 import ReadingActivity from '@site/src/components/ReadingActivity';
 import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
 import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
 
 
 ## Вступ
@@ -355,6 +357,10 @@ Try describing your own personality: «Я добра людина. Я терпл
 
 <Select questions={JSON.parse(`[{"question": "Він боїться ____.", "options": [{"text": "темряви", "correct": true}, {"text": "темрява", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Боятися + genitive."}, {"question": "Вона сумує ____.", "options": [{"text": "за домом", "correct": true}, {"text": "за дім", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Сумувати за + instrumental."}, {"question": "Діти раділи ____.", "options": [{"text": "подарункам", "correct": true}, {"text": "подарунки", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Радіти + dative."}, {"question": "Вона є ____ людиною.", "options": [{"text": "доброю", "correct": true}, {"text": "добра", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "With бути + instrumental: доброю людиною."}, {"question": "Ми дивувалися ____.", "options": [{"text": "успіхам", "correct": true}, {"text": "успіхи", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Дивуватися + dative."}, {"question": "Я задоволений ____.", "options": [{"text": "роботою", "correct": true}, {"text": "робота", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Задоволений + instrumental."}, {"question": "Він був ____ воїном.", "options": [{"text": "сміливим", "correct": true}, {"text": "сміливий", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Instrumental after бути (минулий час)."}, {"question": "Мама хвилюється ____.", "options": [{"text": "за дітей", "correct": true}, {"text": "за діти", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Хвилюватися за + accusative."}, {"question": "Ти виглядаєш ____.", "options": [{"text": "щасливим", "correct": true}, {"text": "щасливий", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Instrumental for temporary state/appearance."}, {"question": "Я почуваюся ____.", "options": [{"text": "добре", "correct": true}, {"text": "добрий", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Adverb with почуватися."}, {"question": "Це був ____ вчинок.", "options": [{"text": "сміливий", "correct": true}, {"text": "сміливим", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Nominative for simple definition 'It was a brave deed'."}, {"question": "Вона стала ____.", "options": [{"text": "спокійною", "correct": true}, {"text": "спокійна", "correct": false}, {"text": "Неправильно", "correct": false}, {"text": "Інший варіант", "correct": false}], "explanation": "Стати + instrumental."}]`)} />
 
+### Emotions Fill-In
+
+<FillIn items={JSON.parse(`[{"sentence": "Вона дуже [___], завжди допомагає іншим.", "answer": "добра", "options": ["добра", "зла", "лінива", "сумна"]}, {"sentence": "Мені [___], бо я здав екзамен.", "answer": "радісно", "options": ["радісно", "сумно", "страшно", "нудно"]}, {"sentence": "Він [___] людина, ніколи не бреше.", "answer": "чесна", "options": ["чесна", "брехлива", "лінива", "боягузлива"]}, {"sentence": "Діти [___] на канікули.", "answer": "раділи", "options": ["раділи", "сумували", "боялися", "хвилювалися"]}, {"sentence": "Марія [___] за батьками.", "answer": "сумує", "options": ["сумує", "радіє", "боїться", "злиться"]}, {"sentence": "Він завжди [___], ніколи не нервує.", "answer": "спокійний", "options": ["спокійний", "нервовий", "злий", "сумний"]}, {"sentence": "Вона [___] перед виступом.", "answer": "хвилювалася", "options": ["хвилювалася", "раділа", "сміялася", "спала"]}, {"sentence": "Бабуся — [___] людина, все роздає.", "answer": "щедра", "options": ["щедра", "скупа", "лінива", "зла"]}]`)} />
+
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -377,7 +383,7 @@ Try describing your own personality: «Я добра людина. Я терпл
 | доброта | /dɔbrɔtˈa/ | kindness | noun | ж |  |
 | дрібниця | /dribnˈɪt͡sja/ | trifle, detail, small change | noun | ж |  |
 | дівчинка | /dˈiʋt͡ʃɪnka/ | girl (child) | noun | ж |  |
-| жити-бути | /ʒˈɪtɪ-butɪ/ |  | verb |  |  |
+| жити-бути | /ʒˈɪtɪ-butɪ/ | to live | verb |  |  |
 | журба | /ʒurbˈa/ | sorrow, sadness | noun | ж |  |
 | замислюватися | /zamˈɪsljuʋatɪsja/ | to ponder, to think | verb |  |  |
 | заспокоїти | /zaspɔkˈɔjitɪ/ | to calm | verb |  |  |
@@ -395,7 +401,6 @@ Try describing your own personality: «Я добра людина. Я терпл
 | навчати | /naʋt͡ʃˈatɪ/ | to teach | verb |  |  |
 | найважчий | /najʋˈaʒt͡ʃɪj/ | the hardest, heaviest | adj |  |  |
 | налаштування | /nalaʃtuʋˈannja/ | settings, configuration | noun | с |  |
-| не- | /nɛ-/ |  | noun |  |  |
 | небезпека | /nɛbɛzpˈɛka/ | danger | noun | ж |  |
 | недобрий | /nɛdˈɔbrɪj/ | unkind, bad | adj |  |  |
 | нетерплячий | /nɛtɛrplˈjat͡ʃɪj/ | impatient | adj |  |  |
@@ -405,7 +410,7 @@ Try describing your own personality: «Я добра людина. Я терпл
 | патріот | /patriˈɔt/ | patriot | noun | ч |  |
 | переставати | /pɛrɛstaʋˈatɪ/ | to stop (imperfective) | verb |  |  |
 | печаль | /pɛt͡ʃˈalʲ/ | sadness, sorrow | noun | ж |  |
-| пирог | /pɪrɔɦ/ |  | noun | ч |  |
+| пирог | /pɪrɔɦ/ | pie | noun | ч |  |
 | плакат | /plakˈat/ | poster | noun |  |  |
 | плакати | /plakˈatɪ/ | to cry | verb |  |  |
 | правдивий | /praʋdˈɪʋɪj/ | truthful, honest | adj |  |  |
@@ -422,7 +427,7 @@ Try describing your own personality: «Я добра людина. Я терпл
 | самовіддано | /samɔʋˈiddanɔ/ | selflessly | adv |  |  |
 | сльоза | /slʲɔzˈa/ | tear | noun | ж |  |
 | смуток | /smˈutɔk/ | sadness, sorrow | noun | ч |  |
-| сміливе | /smˈilɪʋɛ/ |  | noun | с |  |
+| сміливе | /smˈilɪʋɛ/ | brave | noun | с |  |
 | сміливий | /smˈilɪʋɪj/ | brave | adj |  |  |
 | сміливість | /smˈilɪʋistʲ/ | bravery, courage | noun | ж |  |
 | софійка | /sɔfˈijka/ | Sofiika (name) | noun | ж |  |
@@ -432,9 +437,8 @@ Try describing your own personality: «Я добра людина. Я терпл
 | старанний | /starˈannɪj/ | diligent, studious | adj |  |  |
 | страх | /strax/ | fear | noun | ч |  |
 | стурбований | /sturbˈɔʋanɪj/ | worried, concerned, anxious | adj |  |  |
-| схвильов | /sxʋɪlʲɔʋ/ |  | noun | ч |  |
+| схвильов | /sxʋɪlʲɔʋ/ | Skhvylov (surname) | noun | ч |  |
 | схвильований | /sxʋɪlʲˈɔʋanɪj/ | excited, agitated, worried | adj |  |  |
-| тати | /tˈatɪ/ |  | verb |  |  |
 | татусь | /tatˈusʲ/ | daddy | noun | ч |  |
 | темрява | /tˈɛmrjaʋa/ | darkness | noun | ж |  |
 | терплячий | /tɛrplˈjat͡ʃɪj/ | patient (adj) | adj |  |  |
@@ -449,5 +453,3 @@ Try describing your own personality: «Я добра людина. Я терпл
 | хоробрість | /xɔrˈɔbristʲ/ | bravery, courage | noun | ж |  |
 | чесний | /t͡ʃˈɛsnɪj/ | honest | adj |  |  |
 | чесність | /t͡ʃˈɛsnistʲ/ | honesty | noun | ж |  |
-| чко | /t͡ʃkɔ/ |  | noun |  |  |
-| щир | /ʃt͡ʃɪr/ |  | noun | ч |  |

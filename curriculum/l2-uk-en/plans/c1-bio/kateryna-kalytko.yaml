@@ -69,22 +69,10 @@ activity_hints:
   focus: Сучасна українська література про війну
   source: Literary criticism
   items: 3 passages
-- type: quiz
-  focus: Життя та творчість Калитко
-  items: 12+
-- type: match-up
-  focus: Твори та їхні теми
-  items: 10+
 - type: essay-response
   focus: Як література допомагає осмислити досвід війни?
   word_target: 300
   output: Analytical essay
-- type: group-sort
-  focus: Збірки за періодами
-  items: 12+
-- type: fill-in
-  focus: Літературознавча термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-92
@@ -103,3 +91,7 @@ sources:
   notes: Publisher of Kalytko's major works
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of катерина калитко: поезія війни'
+- Evaluate the contributions of голос тіла і війни
+- Trace the career and influence of голос покоління

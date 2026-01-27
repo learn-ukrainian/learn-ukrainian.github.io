@@ -2,128 +2,125 @@ module: bitva-pid-zhovtymy-vodamy
 level: B2
 version: '2.0'
 items:
-  - lemma: авангард
-    ipa: /ɐu̯ɐnˈɦɑrd/
-    translation: vanguard
-    pos: noun
-    gender: m
-  - lemma: облога
-    ipa: /obˈɫɔɦɐ/
-    translation: siege
-    pos: noun
-    gender: f
-  - lemma: переправа
-    ipa: /pereˈprɑu̯ɐ/
-    translation: river crossing
-    pos: noun
-    gender: f
-  - lemma: клейноди
-    ipa: /kɫɛi̯ˈnɔdɪ/
-    translation: regalia (symbols of power)
-    pos: noun
-    gender: pl
-  - lemma: реєстровці
-    ipa: /rejesˈtrɔu̯t͡sʲi/
-    translation: registered Cossacks
-    pos: noun
-    gender: pl
-  - lemma: зрада
-    ipa: /ˈzrɑdɐ/
-    translation: betrayal / treason
-    pos: noun
-    gender: f
-  - lemma: капітуляція
-    ipa: /kɐpitʊˈlʲɑt͡sʲijɐ/
-    translation: capitulation / surrender
-    pos: noun
-    gender: f
-  - lemma: тріумф
-    ipa: /triˈumf/
-    translation: triumph
-    pos: noun
-    gender: m
-  - lemma: байрак
-    ipa: /bɐi̯ˈrɑk/
-    translation: ravine (often wooded)
-    pos: noun
-    gender: m
-  - lemma: шанець
-    ipa: /ˈʃɑnet͡sʲ/
-    translation: trench / entrenchment
-    pos: noun
-    gender: m
-  - lemma: драгуни
-    ipa: /drɐˈɦunɪ/
-    translation: dragoons
-    pos: noun
-    gender: pl
-  - lemma: гармата
-    ipa: /ɦɐrˈmɑtɐ/
-    translation: cannon
-    pos: noun
-    gender: f
-  - lemma: табір
-    ipa: /ˈtɑbir/
-    translation: camp (fortified)
-    pos: noun
-    gender: m
-  - lemma: підкріплення
-    ipa: /pidˈkripɫenʲːɐ/
-    translation: reinforcements
-    pos: noun
-    gender: n
-  - lemma: розвідка
-    ipa: /rozˈvidkɐ/
-    translation: intelligence / reconnaissance
-    pos: noun
-    gender: f
-  - lemma: сотник
-    ipa: /ˈsɔtnɪk/
-    translation: sotnyk (captain)
-    pos: noun
-    gender: m
-  - lemma: полковник
-    ipa: /pɔɫˈkɔu̯nɪk/
-    translation: colonel
-    pos: noun
-    gender: m
-  - lemma: гетьман
-    ipa: /ˈɦɛtʲmɐn/
-    translation: hetman
-    pos: noun
-    gender: m
-  - lemma: шляхтич
-    ipa: /ˈʃlʲɑxtɪt͡ʃ/
-    translation: nobleman
-    pos: noun
-    gender: m
-  - lemma: переговори
-    ipa: /pereɦoˈvɔrɪ/
-    translation: negotiations
-    pos: noun
-    gender: pl
-  - lemma: заручник
-    ipa: /zɐˈrut͡ʃnɪk/
-    translation: hostage
-    pos: noun
-    gender: m
-  - lemma: здобич
-    ipa: /ˈzdɔbɪt͡ʃ/
-    translation: booty / spoils
-    pos: noun
-    gender: f
-  - lemma: стратегія
-    ipa: /strɐˈtɛɦijɐ/
-    translation: strategy
-    pos: noun
-    gender: f
-  - lemma: тактика
-    ipa: /ˈtɑktɪkɐ/
-    translation: tactics
-    pos: noun
-    gender: f
-  - lemma: перемога
-    ipa: /pereˈmɔɦɐ/
-    translation: victory
-    pos: noun
-    gender: f
+- lemma: авангард
+  ipa: /ɐu̯ɐnˈɦɑrd/
+  translation: vanguard
+  pos: noun
+  gender: m
+- lemma: облога
+  ipa: /obˈɫɔɦɐ/
+  translation: siege
+  pos: noun
+  gender: f
+- lemma: переправа
+  ipa: /pereˈprɑu̯ɐ/
+  translation: river crossing
+  pos: noun
+  gender: f
+- lemma: клейнод
+  ipa: /kɫɛi̯ˈnɔdɪ/
+  translation: regalia (symbols of power)
+  pos: noun
+- lemma: реєстровець
+  ipa: /rejesˈtrɔu̯t͡sʲi/
+  translation: registered Cossacks
+  pos: noun
+  gender: m
+- lemma: зрада
+  ipa: /ˈzrɑdɐ/
+  translation: betrayal / treason
+  pos: noun
+  gender: f
+- lemma: капітуляція
+  ipa: /kɐpitʊˈlʲɑt͡sʲijɐ/
+  translation: capitulation / surrender
+  pos: noun
+  gender: f
+- lemma: тріумф
+  ipa: /triˈumf/
+  translation: triumph
+  pos: noun
+  gender: m
+- lemma: байрак
+  ipa: /bɐi̯ˈrɑk/
+  translation: ravine (often wooded)
+  pos: noun
+  gender: f
+- lemma: шанець
+  ipa: /ˈʃɑnet͡sʲ/
+  translation: trench / entrenchment
+  pos: noun
+  gender: m
+- lemma: драгун
+  ipa: /drɐˈɦunɪ/
+  translation: dragoons
+  pos: noun
+- lemma: гармата
+  ipa: /ɦɐrˈmɑtɐ/
+  translation: cannon
+  pos: noun
+  gender: f
+- lemma: табір
+  ipa: /ˈtɑbir/
+  translation: camp (fortified)
+  pos: noun
+  gender: m
+- lemma: підкріплення
+  ipa: /pidˈkripɫenʲːɐ/
+  translation: reinforcements
+  pos: noun
+  gender: n
+- lemma: розвідка
+  ipa: /rozˈvidkɐ/
+  translation: intelligence / reconnaissance
+  pos: noun
+  gender: f
+- lemma: сотник
+  ipa: /ˈsɔtnɪk/
+  translation: sotnyk (captain)
+  pos: noun
+  gender: f
+- lemma: полковник
+  ipa: /pɔɫˈkɔu̯nɪk/
+  translation: colonel
+  pos: noun
+  gender: m
+- lemma: гетьман
+  ipa: /ˈɦɛtʲmɐn/
+  translation: hetman
+  pos: noun
+  gender: m
+- lemma: шляхтич
+  ipa: /ˈʃlʲɑxtɪt͡ʃ/
+  translation: nobleman
+  pos: noun
+  gender: m
+- lemma: переговори
+  ipa: /pereɦoˈvɔrɪ/
+  translation: negotiations
+  pos: noun
+- lemma: заручник
+  ipa: /zɐˈrut͡ʃnɪk/
+  translation: hostage
+  pos: noun
+  gender: m
+- lemma: здобич
+  ipa: /ˈzdɔbɪt͡ʃ/
+  translation: booty / spoils
+  pos: noun
+  gender: f
+- lemma: стратегія
+  ipa: /strɐˈtɛɦijɐ/
+  translation: strategy
+  pos: noun
+  gender: f
+- lemma: тактик
+  ipa: /ˈtɑktɪkɐ/
+  translation: tactics
+  pos: noun
+  gender: m
+- lemma: перемога
+  ipa: /pereˈmɔɦɐ/
+  translation: victory
+  pos: noun
+  gender: f

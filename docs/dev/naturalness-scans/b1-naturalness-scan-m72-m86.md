@@ -1,4 +1,5 @@
 # B1 Naturalness Scan Report - M72-M86
+
 **Date:** 2026-01-12
 **Protocol:** claude_extensions/protocols/a1-naturalness-scan.md (adapted for B1)
 **Scope:** M72-M86 (15 modules)
@@ -23,6 +24,7 @@
 ## Scan Results by Module
 
 ### M72: Західна Україна (Regions West) [⚠️ FLAGGED]
+
 **Status:** Prose activities present, naturalness issues detected
 **Activities:** cloze (2), unjumble (8)
 **Prose sample:**
@@ -45,6 +47,7 @@
 ---
 
 ### M73: Східна Україна (Regions East) [⚠️ FLAGGED]
+
 **Status:** Prose activities present, naturalness issues detected
 **Activities:** cloze (2), unjumble (8)
 **Prose sample:**
@@ -67,6 +70,7 @@
 ---
 
 ### M74: Південна Україна (Regions South) [⚠️ FLAGGED]
+
 **Status:** Prose activities present, naturalness issues detected
 **Activities:** cloze (2), unjumble (8)
 **Prose sample:**
@@ -89,6 +93,7 @@
 ---
 
 ### M75: Центральна Україна (Regions Center) [⚠️ FLAGGED]
+
 **Status:** Prose activities present, naturalness issues detected
 **Activities:** cloze (2), unjumble (8)
 **Prose sample:**
@@ -111,30 +116,35 @@
 ---
 
 ### M76: Українська музика сьогодні [⏸️ N/A - Quiz-only]
+
 **Status:** No prose activities (quiz, true-false, match-up, cloze, group-sort, select, unjumble, error-correction, translate, mark-the-words)
 **Activities:** All activities are quiz/drill-based, no multi-sentence prose passages
 
 ---
 
 ### M77: Українське кіно та ТБ [⏸️ N/A - Quiz-only]
+
 **Status:** No prose activities (quiz, true-false, match-up, fill-in, cloze, group-sort, select, unjumble, error-correction, translate, mark-the-words)
 **Activities:** All activities are quiz/drill-based
 
 ---
 
 ### M78: Технології та стартапи [⏸️ N/A - Quiz-only]
+
 **Status:** No prose activities (quiz, true-false, match-up, fill-in, cloze, group-sort, select, unjumble, error-correction, translate, mark-the-words)
 **Activities:** All activities are quiz/drill-based
 
 ---
 
 ### M79: Спорт в Україні [⏸️ N/A - Quiz-only]
+
 **Status:** No prose activities (quiz, true-false, match-up, fill-in, cloze, group-sort, select, unjumble, error-correction, translate, mark-the-words)
 **Activities:** All activities are quiz/drill-based
 
 ---
 
 ### M80: Активний спосіб життя [⚠️ FLAGGED]
+
 **Status:** Prose activities present, naturalness issues detected
 **Activities:** cloze (1 passage), unjumble (8)
 **Prose sample:**
@@ -162,36 +172,42 @@
 ---
 
 ### M81: Біг в Україні [⏸️ N/A - Quiz-only]
+
 **Status:** No prose activities (quiz, true-false, match-up, fill-in, cloze, group-sort, select, unjumble, error-correction, translate, mark-the-words)
 **Activities:** All activities are quiz/drill-based
 
 ---
 
 ### M82: Гори та трейл [⏸️ N/A - Quiz-only]
+
 **Status:** No prose activities (quiz, true-false, match-up, fill-in, cloze, group-sort, select, unjumble, error-correction, translate, mark-the-words)
 **Activities:** All activities are quiz/drill-based
 
 ---
 
 ### M83: Велосипед та вода [⏸️ N/A - Quiz-only]
+
 **Status:** No prose activities (quiz, true-false, match-up, fill-in, cloze, group-sort, select, unjumble, error-correction, translate, mark-the-words)
 **Activities:** All activities are quiz/drill-based
 
 ---
 
 ### M84: Зимові види спорту [⏸️ N/A - Quiz-only]
+
 **Status:** No prose activities (quiz, true-false, match-up, fill-in, cloze, group-sort, select, unjumble, error-correction, translate, mark-the-words)
 **Activities:** All activities are quiz/drill-based
 
 ---
 
 ### M85: Українська кухня [⏸️ N/A - Quiz-only]
+
 **Status:** No prose activities (quiz, true-false, match-up, fill-in, cloze, group-sort, select, unjumble, error-correction, translate, mark-the-words)
 **Activities:** All activities are quiz/drill-based
 
 ---
 
 ### M86: Українські свята та фестивалі [⏸️ N/A - Quiz-only]
+
 **Status:** No prose activities (quiz, true-false, match-up, fill-in, cloze, group-sort, select, unjumble, error-correction, translate, mark-the-words)
 **Activities:** All activities are quiz/drill-based
 
@@ -200,9 +216,11 @@
 ## Summary by Status
 
 ### ✅ PASS (0 modules)
+
 *No modules scored 8/10 or higher*
 
 ### ⚠️ FLAGGED (5 modules)
+
 - M72: Західна Україна (6.0/10)
 - M73: Східна Україна (6.5/10)
 - M74: Південна Україна (6.0/10)
@@ -210,6 +228,7 @@
 - M80: Активний спосіб життя (7.5/10)
 
 ### ⏸️ N/A - Quiz-only (10 modules)
+
 - M76: Українська музика сьогодні
 - M77: Українське кіно та ТБ
 - M78: Технології та стартапи
@@ -228,6 +247,7 @@
 ### Critical Issues Identified
 
 #### 1. **Formulaic "Унікальний регіон" Pattern (M72-M75)**
+
 **Pattern:**
 ```
 [Region] — це унікальний регіон з [adjective] [noun]
@@ -247,6 +267,7 @@
 ---
 
 #### 2. **Double Superlative Redundancy (M75)**
+
 **Pattern:**
 ```
 [Subject] — це [найA та найB] [noun]
@@ -264,6 +285,7 @@
 ---
 
 #### 3. **Missing Discourse Markers**
+
 **Current state:** 90% of unjumble sentences = independent facts with no connectors
 
 **Problem:** Trains students to produce disconnected declarative statements
@@ -283,6 +305,7 @@ After: Львів також відомий своєю особливою кав
 ---
 
 #### 4. **Excessive Intensifiers**
+
 **Problematic words (overused):**
 - "дуже" (5+ occurrences per module)
 - "надзвичайно"
@@ -299,6 +322,7 @@ After: Львів також відомий своєю особливою кав
 ## Recommended Actions
 
 ### Priority 1: Fix Regional Modules Pattern (M72-M75)
+
 **Target:** Break the "унікальний регіон" template
 
 **Strategy:**
@@ -325,6 +349,7 @@ M72 (proposed):
 ---
 
 ### Priority 2: Add Discourse Markers to Unjumble Activities
+
 **Target:** M72-M75 unjumble activities (32 sentences total)
 
 **Strategy:**
@@ -338,6 +363,7 @@ M72 (proposed):
 ---
 
 ### Priority 3: Improve M80 Cloze Passage Flow
+
 **Target:** "Ранкова пробіжка" passage
 
 **Current issue:** Robotic "і це допомагає" transitions

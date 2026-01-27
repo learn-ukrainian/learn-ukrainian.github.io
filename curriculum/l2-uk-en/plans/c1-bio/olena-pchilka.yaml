@@ -69,22 +69,10 @@ activity_hints:
   focus: Літературна та громадська спадщина
   source: Уривки з творів та публіцистики
   items: 3 passages
-- type: quiz
-  focus: Біографія та діяльність
-  items: 12+
-- type: match-up
-  focus: Твори та їхні теми
-  items: 10+
 - type: essay-response
   focus: Яку роль відіграла Олена Пчілка у вихованні Лесі Українки?
   word_target: 300
   output: Біографічне есе
-- type: group-sort
-  focus: Літературна діяльність vs громадська діяльність
-  items: 12+
-- type: fill-in
-  focus: Термінологія національного руху
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-20 (Тарас Шевченко)
@@ -109,3 +97,7 @@ sources:
   notes: Літературознавчі дослідження
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of олена пчілка: письменниця і громадська діячка'
+- Evaluate the contributions of мати українського відродження
+- Trace the career and influence of останні роки та спадщина (1920-1930)

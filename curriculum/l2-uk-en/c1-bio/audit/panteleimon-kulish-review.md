@@ -1,10 +1,12 @@
 # Audit Report: M33 — panteleimon-kulish.md
+
 **Level:** C1 | **Module:** M33 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:13
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Життя та діяльність Пантелеймона Куліша | 6 | 5 | ✅ |
@@ -41,16 +44,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in panteleimon-kulish.yaml: Schema validation error at key '11': {'type': 'fill-in', 'title': 'Роман «Чорна рада»', 'instruction': 'Заповніть пропуски в тексті про перший історичний роман.', 'items': [{'sentence': '«Чорна рада» описує події _____ року.', 'answer': '1663', 'options': ['1663', '1654', '1648', '1709']}, {'sentence': 'Головний конфлікт роману — боротьба за _____.', 'answer': 'булаву', 'options': ['булаву', 'землю', 'віру', 'гроші']}, {'sentence': 'Куліш писав роман двома мовами: українською та _____.', 'answer': 'російською', 'options': ['російською', 'польською', 'німецькою', 'французькою']}, {'sentence': 'Події відбуваються в місті _____.', 'answer': 'Ніжин', 'options': ['Ніжин', 'Київ', 'Чигирин', 'Батурин']}, {'sentence': '«Чорна рада» — це перший український _____ роман.', 'answer': 'історичний', 'options': ['історичний', 'пригодницький', 'соціальний', 'психологічний']}, {'sentence': 'Автор називає свій твір _____.', 'answer': 'хронікою', 'options': ['хронікою', 'літописом', 'поемою', 'драмою']}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2418/4000 (raw: 2500)
 - **Activities:** ✅ 12/3
 - **Density:** ✅ All > 1
@@ -69,10 +75,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 97% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 8 | 4 | 100% | 19% | 19.0% |
@@ -88,6 +96,7 @@
 | **TOTAL** | | | | | **97.0%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

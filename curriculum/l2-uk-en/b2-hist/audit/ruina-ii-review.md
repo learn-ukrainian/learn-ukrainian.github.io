@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M59 | **Phase:** HIST.6 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:54:48
+**Generated:** 2026-01-27 20:35:23
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** comparative-study, essay-response, quiz, reading, true-false
+**Required Types:** comparative-study, essay-response, reading, true-false
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -20,35 +20,24 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Розуміння тексту про Петра Дорошенка | 16 | 8 | ✅ |
-| 2 | match-up | Історична та політична термінологія | 16 | 8 | ✅ |
-| 3 | cloze | Історична лексика в контексті | 16 | 1 | ✅ |
-| 4 | true-false | Факти про Дорошенка та період Руїни | 16 | 8 | ✅ |
-| 5 | group-sort | Класифікація історичних понять | 18 | 1 | ✅ |
-| 6 | unjumble | Складіть речення про Дорошенка | 16 | 6 | ✅ |
-| 7 | error-correction | Граматика в історичних реченнях | 16 | 6 | ✅ |
-| 8 | cloze | Заповніть текст про Петра Дорошенка | 18 | 1 | ✅ |
-| 9 | mark-the-words | Знайдіть політичну та військову термінологію | 15 | 6 | ✅ |
-| 10 | select | Оберіть усі правильні твердження згідно з текстом | 8 | 6 | ✅ |
-| 11 | translate | Переклад історичних та політичних термінів | 16 | 6 | ✅ |
-| 12 | fill-in | Вибір правильного відмінка | 16 | 8 | ✅ |
-| 13 | quiz | Аналіз первинних джерел | 16 | 8 | ✅ |
-| 14 | essay-response | Аналітичне есе | 1 | 1 | ✅ |
-| 15 | comparative-study | Порівняння історичних постатей | 1 | 1 | ✅ |
-| 16 | reading | Історична оцінка Петра Дорошенка | 2 | 1 | ✅ |
+| 1 | true-false | Факти про Дорошенка та період Руїни | 16 | 8 | ✅ |
+| 2 | essay-response | Аналітичне есе | 1 | 1 | ✅ |
+| 3 | comparative-study | Порівняння історичних постатей | 1 | 1 | ✅ |
+| 4 | reading | Історична оцінка Петра Дорошенка | 2 | 1 | ✅ |
+| 5 | critical-analysis | Петро Дорошенко та пошук соборності | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 16 (target: 3-9) ❌
-- Unique types: 14 (minimum: 2) ✅
-- Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
-- Required types used: 5/5 (comparative-study, essay-response, quiz, reading, true-false) ✅
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 4/4 (comparative-study, essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ✅ 5504/4000 (raw: 5583)
-- **Activities:** ✅ 16/3
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 14/2 types
+- **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
@@ -56,7 +45,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ Too many activities: 16 (target 3-9); 1 cloze with year blanks
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

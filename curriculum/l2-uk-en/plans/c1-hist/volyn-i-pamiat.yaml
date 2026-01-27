@@ -5,50 +5,52 @@ version: '1.0'
 title: 'Волинь 1943: Трагедія і контекст'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of волинь 1943: трагедія і контекст'
+- Evaluate the historical significance of найболючіша тема
 content_outline:
 - section: Вступ — Найболючіша тема
-  words: 451
+  words: 515
   subsections:
   - Волинь 1943 — незагоєна рана
   - Не виправдання, а розуміння
   - Контекст ≠ виправдання
   - Структура модуля
 - section: Контекст — що передувало
-  words: 790
+  words: 903
   subsections:
   - Міжвоєнний період — дискримінація
   - Пацифікації 1930-х
   - Нацистська окупація
   - Голод і насильство з усіх боків
 - section: Акція «Антиполяк»
-  words: 677
+  words: 774
   subsections:
   - Рішення ОУН-УПА
   - Масштаб — цифри
   - Методи — жорстокість
   - Чому так — версії
 - section: Польська відповідь
-  words: 564
+  words: 645
   subsections:
   - Армія Крайова
   - Українські жертви
   - Не лише «одна сторона»
   - Масштаб відповіді
 - section: Пам'ять і політика
-  words: 677
+  words: 774
   subsections:
   - Польська пам'ять — «Wołyń»
   - Українська пам'ять — контекст
   - Законодавчі війни
   - Інструменталізація
 - section: Підсумок
-  words: 341
+  words: 389
   subsections:
   - Трагедія — для обох народів
   - Визнання без релятивізації
   - Перехід до 2022
-word_target: 3500
+word_target: 4000
 vocabulary:
 - Волинська трагедія
 - ОУН-УПА
@@ -66,13 +68,13 @@ vocabulary:
 - декретизація
 - колабораціонізм
 activities:
-- type: context-analysis
+- type: critical-analysis
   focus: What preceded Volhynia 1943
-- type: source-comparison
+- type: comparative-study
   focus: Polish vs Ukrainian sources on Volhynia
-- type: memory-politics
+- type: critical-analysis
   focus: How Volhynia is used politically
-- type: ethical-analysis
+- type: critical-analysis
   focus: Context vs justification — where's the line?
 - type: essay-response
   focus: Як говорити про Волинь без релятивізації?

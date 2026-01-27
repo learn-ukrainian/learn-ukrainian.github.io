@@ -67,15 +67,6 @@ activity_hints:
   focus: Документи та спогади учасників УПА
   source: Архівні матеріали
   items: 4
-- type: quiz
-  focus: Українська Повстанська Армія
-  items: 15
-- type: match-up
-  focus: Подія → дата та наслідки
-  items: 10
-- type: fill-in
-  focus: Військова лексика
-  items: 10
 - type: essay-response
   focus: Чому історія УПА залишається контроверсійною?
   word_target: 250

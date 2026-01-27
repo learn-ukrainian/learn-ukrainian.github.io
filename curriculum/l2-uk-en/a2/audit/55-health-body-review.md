@@ -1,10 +1,12 @@
 # Audit Report: M55 — 55-health-body.md
-**Level:** A2 | **Module:** M55 | **Phase:** A2 | **Pedagogy:** PPP | **Target:** 1000
+
+**Level:** A2 | **Module:** M55 | **Phase:** A2.3 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:26:34
+**Generated:** 2026-01-27 12:41:11
 
 ## Configuration
+
 **Type:** A2-vocab
 **Word Target:** 1000 words
 **Activities:** 10-14 required
@@ -17,6 +19,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Health Quiz | 12 | 8 | ✅ |
@@ -37,6 +40,7 @@
 - Low density activities: 0
 
 ## Gates
+
 - **Words:** ⚠️ 949/1000 (raw: 1339) (51 short)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
@@ -54,6 +58,7 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

@@ -1,10 +1,12 @@
 # Audit Report: M88 — berta-rapoport.md
+
 **Level:** C1 | **Module:** M88 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:43
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння тексту: Капітанка Рапопорт | 5 | 5 | ✅ |
@@ -42,12 +45,14 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Вона назавжди залишиться нашою першою Капітанкою, яка веде Україну крізь тумани історії до берегів с...". Shares significant keywords with sentence at index 57.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in berta-rapoport.yaml: Schema validation error at key '12': {'type': 'reading', 'title': 'Морський статут та етика', 'resource': {'type': 'primary_source', 'url': 'https://zakon.rada.gov.ua/', 'title': 'Кодекс торговельного мореплавства України'}, 'tasks': ['Знайдіть у тексті обов’язки капітана судна.', 'Які терміни використовуються для опису аварійних ситуацій?', 'Поясніть значення слова «фрахтування».']} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template.md'
   - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template.md'
@@ -56,12 +61,14 @@
   - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 
 ## Recommendation
+
 **📝 UPDATE** (severity 35/100)
 
 - 5 violations (moderate)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2060/4000 (raw: 2296)
 - **Activities:** ✅ 13/3
 - **Density:** ✅ All > 1
@@ -80,10 +87,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 97% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 7 | 4 | 100% | 19% | 19.0% |
@@ -99,6 +108,7 @@
 | **TOTAL** | | | | | **97.4%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 114 | Included in Core |

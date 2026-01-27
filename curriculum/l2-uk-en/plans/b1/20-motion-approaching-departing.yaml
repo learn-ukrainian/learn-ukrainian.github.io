@@ -6,36 +6,30 @@ title: 'Рух: наближення і віддалення'
 subtitle: Motion - Approaching & Departing
 content_outline:
 - section: Тест
-  words: 100
+  words: 194
   points:
-  - Content for Тест
-  - Examples and explanation
-  - Practice or application
+  - Prefix diagnostic
+  - Intuition check
 - section: Пояснення
-  words: 700
+  words: 1129
   points:
-  - Content for Пояснення
-  - Examples and explanation
-  - Practice or application
+  - під-, від-, до- prefixes
+  - Approaching, departing, reaching
 - section: Поглиблення
-  words: 400
+  words: 632
   points:
-  - Content for Поглиблення
-  - Examples and explanation
-  - Practice or application
+  - Extended patterns
+  - Nuanced usage
 - section: Практика
-  words: 200
+  words: 303
   points:
-  - Content for Практика
-  - Examples and explanation
-  - Practice or application
+  - Prefix selection exercises
 - section: Діалоги
-  words: 650
+  words: 742
   points:
-  - Content for Діалоги
-  - Examples and explanation
-  - Practice or application
-word_target: 1500
+  - Journey dialogues
+  - Natural usage
+word_target: 3000
 vocabulary_hints:
   required:
   - підійти/підходити (to approach on foot)

@@ -37,7 +37,7 @@ Masculine nouns are unique because they have two possible endings in the Dative 
 
 Іменики чоловічого роду мають закінчення **-ові/-еві** або **-у/-ю**. Форма на **-ові** звучить більш ввічливо та офіційно. Форма на **-у** частіше використовується в розмові. Обидві форми правильні.
 
-Actually, there is a small stylistic nuance: when you have multiple masculine nouns in a row, it's considered good style to alternate the endings to avoid sounding repetitive (e.g., _панові директору_ instead of _панові директорові_). This makes your Ukrainian sound much more natural and sophisticated.
+Actually, there is a small stylistic nuance: when you have multiple masculine nouns in a row, it's considered good style to alternate the endings to avoid sounding repetitive (e.g., *панові директору* instead of *панові директорові*). This makes your Ukrainian sound much more natural and sophisticated.
 
 - Я телефоную **братові**. (I am calling my brother.)
 - Я пишу **вчителеві**. (I am writing to the teacher.)
@@ -56,7 +56,7 @@ Feminine nouns that end in **-а** or **-я** take the ending **-і**. This is s
 | подруга | подрузі | Подарунок подрузі | г → з   |
 | донька  | доньці  | Пояснювати доньці | к → ц   |
 
-Закінчення жіночого роду — завжди **-і**. Але пам'ятайте про чергування: **г → з**, **к → ц**, **х → с**. Це робить українську мову дуже мелодійною. Наприклад: **книга** → **книзі**, **рука** → **руці**, **муха** → **мусі**. If you forget the shift and say _подругі_, a native speaker will understand you, but it will sound "crunchy" or non-native.
+Закінчення жіночого роду — завжди **-і**. Але пам'ятайте про чергування: **г → з**, **к → ц**, **х → с**. Це робить українську мову дуже мелодійною. Наприклад: **книга** → **книзі**, **рука** → **руці**, **муха** → **мусі**. If you forget the shift and say *подругі*, a native speaker will understand you, but it will sound "crunchy" or non-native.
 
 > [!reflection] **Patterns in Your Language**
 > Does your native language have cases? If you speak English, you see remnants of cases in pronouns (e.g., "I" vs "me", "he" vs "him"). The Dative case in Ukrainian is essentially the same as the "him" or "her" in "I gave it to **him**." We change the word "he" to "him" when he is the recipient. In Ukrainian, we do this for every single noun! How does your language handle recipients differently from subjects?

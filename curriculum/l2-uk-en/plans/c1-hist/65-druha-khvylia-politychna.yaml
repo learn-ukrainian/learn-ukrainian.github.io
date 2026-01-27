@@ -5,54 +5,54 @@ version: '2.0'
 title: 'Друга хвиля: Політична (1920-1923)'
 content_outline:
 - section: Вступ — Поразка і відступ
-  words: 400
+  words: 457
   points:
   - 1920-1921 — кінець визвольних змагань
   - Хто опинився за кордоном
   - Від армії до еміграції
   - Структура модуля
 - section: Табори інтернованих
-  words: 600
+  words: 686
   points:
   - Польща — Каліш, Вадовиці
   - Умови життя
   - Культурне життя в таборах
   - Шлях до цивільного життя
 - section: Прага — столиця еміграції
-  words: 700
+  words: 800
   points:
   - Чому Чехословаччина?
   - Масарик і «Руська акція»
   - Українські інституції
   - Академічна еміграція
 - section: Уряд в екзилі
-  words: 600
+  words: 686
   points:
   - УНР — безперервна державність
   - Президенти в екзилі
   - Дипломатична діяльність
   - Символічне значення
 - section: Інші центри
-  words: 400
+  words: 457
   points:
   - Відень — ранній центр
   - Берлін — до 1933
   - Париж — Петлюра
   - Варшава — складні відносини
 - section: Політичні течії
-  words: 500
+  words: 571
   points:
   - Петлюрівці vs. гетьманці
   - ОУН — нове покоління
   - Демократи vs. націоналісти
   - Конфлікти і розколи
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Політична еміграція — хто вижив
   - Збереження ідеї
   - Підготовка до третьої хвилі
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - політична еміграція (political emigration)
@@ -78,10 +78,10 @@ activity_hints:
 - type: reading
   focus: Paths of UNR leaders after 1921
   output: Biographical profiles
-- type: policy-analysis
+- type: critical-analysis
   focus: Czech "Russian Action" — why support Ukrainians?
   output: Policy analysis
-- type: political-mapping
+- type: critical-analysis
   focus: Map emigre political factions and conflicts
   output: Political landscape
 - type: essay-response
@@ -112,3 +112,6 @@ sources:
   notes: Internment camps
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of друга хвиля: політична (1920-1923)'
+- Evaluate the historical significance of поразка і відступ

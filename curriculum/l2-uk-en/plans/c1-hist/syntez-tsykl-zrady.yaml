@@ -5,24 +5,26 @@ version: '1.0'
 title: 'Синтез: Чому цикл повторюється?'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of синтез: чому цикл повторюється?'
+- Evaluate the historical significance of паттерн через віки
 content_outline:
 - section: Вступ — Паттерн через віки
-  words: 400
+  words: 457
   subsections:
   - Огляд модулів 81-87
   - Шість циклів — одна структура
   - Чому повторюється
   - Мета синтезу
 - section: Порівняльна таблиця циклів
-  words: 600
+  words: 686
   subsections:
   - Хмельницький → Мазепа → Розумовський
   - Українізація → Шелест → Янукович
   - Фази — скрізь однакові
   - Відмінності — масштаб, методи
 - section: Чому цикл працює
-  words: 700
+  words: 800
   subsections:
   - Асиметрія сили
   - Надія на «цього разу інакше»
@@ -30,7 +32,7 @@ content_outline:
   - Відсутність альтернатив (здавалося)
   - Недостатня пам'ять
 - section: Чому цикл ламається (2014, 2022)
-  words: 600
+  words: 686
   subsections:
   - Громадянське суспільство — новий актор
   - Інформаційна доступність
@@ -38,26 +40,26 @@ content_outline:
   - Національна свідомість — масова
   - Рішення приймає народ, не еліта
 - section: Чи зламався цикл назавжди?
-  words: 500
+  words: 571
   subsections:
   - 2022 — унікальна ситуація
   - Загрози — післявоєнна втома
   - Західна залежність — новий цикл?
   - Як запобігти
 - section: Уроки для майбутнього
-  words: 400
+  words: 457
   subsections:
   - Розпізнавати фази циклу
   - Не вірити обіцянкам
   - Шукати альтернативи
   - Пам'ятати історію
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - Цикл — не фатальний
   - 2014-2022 — можливий вихід
   - Перехід до поворотних точок
-word_target: 3500
+word_target: 4000
 vocabulary:
 - синтез
 - цикл
@@ -77,11 +79,11 @@ vocabulary:
 activities:
 - type: essay-response
   focus: Create master cycle comparison diagram
-- type: pattern-analysis
+- type: critical-analysis
   focus: What's constant, what changes across cycles
-- type: breaking-point-analysis
+- type: critical-analysis
   focus: Why 2014 and 2022 broke the cycle
-- type: future-scenarios
+- type: essay-response
   focus: Could cycle restart? How to prevent?
 - type: essay-response
   focus: Як Україна може назавжди вийти з циклу кооптації?

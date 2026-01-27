@@ -26,6 +26,7 @@ C1 is **75.5% complete** with **81.1% pass rate** on existing modules. This is *
 ### Phase-by-Phase Breakdown
 
 #### Phase 1: Academic Writing (M01-M32)
+
 **Status:** ✅ Complete + 1 duplicate
 **Found:** 33 modules (32 expected)
 **Pass Rate:** 30/33 = 90.9%
@@ -47,6 +48,7 @@ C1 is **75.5% complete** with **81.1% pass rate** on existing modules. This is *
 - Dialects, Surzhyk, language history, diaspora
 
 #### Phase 2: Historical Biographies (M36-M99)
+
 **Status:** 🚧 Incomplete
 **Found:** 28/64 modules (43.8%)
 **Pass Rate:** 13/28 = 46.4%
@@ -70,6 +72,7 @@ All have same pattern:
 **Passed Examples:** Bohdan Khmelnytskyy, Ivan Mazepa, Taras Shevchenko, Lesya Ukrainka, Ivan Franko
 
 #### Phase 3: Contemporary Biographies (M100-M130)
+
 **Status:** ✅ Complete
 **Found:** 31/31 modules (100%)
 **Pass Rate:** 30/31 = 96.8%
@@ -80,11 +83,13 @@ All have same pattern:
 **Passed Examples:** All others (M100-M108, M110-M130) covering 20th-21st century figures
 
 #### Phase 3 Checkpoint (M131)
+
 **Status:** ✅ Complete
 **Found:** 1/1 module (100%)
 **Pass Rate:** 1/1 = 100%
 
 #### Phase 4: Stylistics & Culture (M132-M150)
+
 **Status:** ✅ Complete
 **Found:** 19/19 modules (100%)
 **Pass Rate:** 16/19 = 84.2%
@@ -104,6 +109,7 @@ All have same pattern:
 - Kobzari, ritual songs, hopak, regional dances, pysanky, vyshyvanka
 
 #### Phase 5: Literature Track (M151-M196)
+
 **Status:** ❌ Not Started
 **Found:** 0/46 modules (0%)
 
@@ -212,12 +218,14 @@ key: "value: another_value"
 ## Module Quality Trends
 
 ### High Quality Ranges (>90% pass rate)
+
 - **M01-M32** (Phase 1): 90.9% pass - Academic writing
 - **M100-M130** (Phase 3): 96.8% pass - Contemporary biographies
 - **M131** (Checkpoint): 100% pass
 - **M132-M150** (Phase 4): 84.2% pass - Stylistics/culture (excluding unknowns)
 
 ### Lower Quality Ranges (<50% pass rate)
+
 - **M36-M99** (Phase 2): 46.4% pass - Historical biographies
   - **Root cause:** YAML syntax errors + missing template sections
   - **Pattern:** Older modules, possibly created before template standardization
@@ -238,12 +246,14 @@ key: "value: another_value"
 ## Missing Modules Detail
 
 ### M33-M35 (Practice/Checkpoint Gap)
+
 **Count:** 3 modules
 **Purpose:** Checkpoints and practice for Phase 1 (Academic Writing)
 **Effort:** Low (1-2 hours each)
 **Priority:** Medium (would complete Phase 1)
 
 ### M36-M99 Historical Biographies Gap
+
 **Count:** 36 modules (64 expected, 28 found)
 **Purpose:** Cover historical Ukrainian figures (Kyivan Rus → early 20th century)
 **Effort:** High (3-4 hours each = 108-144 hours)
@@ -256,6 +266,7 @@ key: "value: another_value"
 - Early 20th century: 6-8 figures
 
 ### M151-M196 Literature Track
+
 **Count:** 46 modules
 **Purpose:** Post-C1 specialization in Ukrainian literature and classics
 **Effort:** Very High (4-6 hours each = 184-276 hours)
@@ -273,6 +284,7 @@ key: "value: another_value"
 ### Immediate Actions (Priority 1)
 
 #### 1. Fix YAML Syntax Errors (21 modules)
+
 **Effort:** 2-3 hours
 **Method:** Automated script
 
@@ -285,6 +297,7 @@ key: "value: another_value"
 **Script:** Create `scripts/fix/fix_c1_yaml_syntax.py`
 
 #### 2. Add Missing Template Sections (23 modules)
+
 **Effort:** 3-4 hours
 **Method:** Automated script + manual review
 
@@ -299,6 +312,7 @@ key: "value: another_value"
 **Script:** Create `scripts/fix/fix_c1_biography_sections.py`
 
 #### 3. Remove Duplicate M04
+
 **Effort:** 5 minutes
 **Method:** Manual decision + deletion
 
@@ -309,6 +323,7 @@ key: "value: another_value"
 ```
 
 #### 4. Investigate Unknown Errors (4 modules)
+
 **Effort:** 1 hour
 **Method:** Manual inspection
 
@@ -323,6 +338,7 @@ key: "value: another_value"
 ### Short-Term Actions (Priority 2)
 
 #### 5. Complete M33-M35 (Checkpoints)
+
 **Effort:** 6-8 hours
 **Method:** Use checkpoint template
 
@@ -332,6 +348,7 @@ Benefits:
 - Low effort, high completeness gain
 
 #### 6. Re-audit All C1 Modules
+
 **Effort:** 10 minutes
 **Method:** Automated
 
@@ -343,6 +360,7 @@ Benefits:
 Expected result: 140+/148 pass (95%+)
 
 #### 7. Pipeline Validation
+
 **Effort:** 30 minutes
 **Method:** Automated
 
@@ -353,6 +371,7 @@ npm run pipeline l2-uk-en c1
 ### Medium-Term Actions (Priority 3)
 
 #### 8. Complete Historical Biographies (M36-M99)
+
 **Effort:** 108-144 hours
 **Method:** Biography template + research
 
@@ -364,6 +383,7 @@ Decision factors:
 Recommendation: **Defer** - Focus on completing B2 and C1 foundation first
 
 #### 9. Vocabulary Enrichment
+
 **Effort:** 2-3 hours
 **Method:** Automated
 
@@ -373,6 +393,7 @@ npm run vocab:rebuild
 ```
 
 #### 10. Landing Page Sync
+
 **Effort:** 5 minutes
 **Method:** Automated
 
@@ -383,6 +404,7 @@ npm run sync:landing
 ### Long-Term Actions (Priority 4)
 
 #### 11. Create Literature Track (M151-M196)
+
 **Effort:** 184-276 hours
 **Method:** LIT template + curriculum planning
 
@@ -396,14 +418,17 @@ Recommendation: **Defer** - Clarify curriculum scope for C1 vs C2 first
 ## Risk Assessment
 
 ### High Risk
+
 None - C1 is in good shape with 81% pass rate
 
 ### Medium Risk
+
 1. **Missing checkpoints (M33-M35)** - Learners have no Phase 1 assessment
 2. **Incomplete historical coverage** - Only 43.8% of planned biographies exist
 3. **YAML errors** - 21 modules blocked from pipeline until fixed
 
 ### Low Risk
+
 1. **Duplicate M04** - Minor numbering confusion
 2. **Unknown errors** - Only 4 modules (2.7%)
 3. **Missing LIT track** - Optional specialization, not blocking
@@ -411,21 +436,25 @@ None - C1 is in good shape with 81% pass rate
 ## Success Metrics
 
 ### Current State
+
 - **Completion:** 75.5% (148/196 modules)
 - **Quality:** 81.1% pass rate (120/148)
 - **Pipeline-Ready:** ~60% (estimated after YAML fixes)
 
 ### Target State (Minimal C1)
+
 - **Completion:** 77% (151/196) - Add M33-M35
 - **Quality:** 95%+ pass rate (143+/151)
 - **Pipeline-Ready:** 95% (all fixed modules)
 
 ### Target State (Full C1 Foundation)
+
 - **Completion:** 95% (187/196) - Complete all biographies
 - **Quality:** 95%+ pass rate
 - **Pipeline-Ready:** 95%
 
 ### Target State (Complete C1)
+
 - **Completion:** 100% (196/196) - Add LIT track
 - **Quality:** 95%+ pass rate
 - **Pipeline-Ready:** 95%

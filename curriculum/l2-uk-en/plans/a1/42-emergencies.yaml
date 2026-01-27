@@ -6,22 +6,22 @@ title: Emergencies
 subtitle: Help and Safety
 content_outline:
 - section: Warm-up
-  words: 97
+  words: 124
   points:
   - Content for Warm-up
 - section: Presentation
-  words: 139
+  words: 178
   points:
   - Content for Presentation
 - section: Практика
-  words: 106
+  words: 135
   points:
   - Content for Практика
 - section: 'Narrative: Where is my Passport? (Де мій паспорт?)'
-  words: 245
+  words: 313
   points:
   - 'Content for Narrative: Where is my Passport? (Де мій паспорт?)'
-word_target: 587
+word_target: 750
 vocabulary_hints:
   required:
   - допомога (help)

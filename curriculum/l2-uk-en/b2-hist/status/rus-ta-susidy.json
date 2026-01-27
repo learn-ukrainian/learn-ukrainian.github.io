@@ -2,13 +2,13 @@
   "module": "rus-ta-susidy",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T23:25:03.995854Z",
+  "last_audit": "2026-01-27T16:22:33.258876Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-21T10:46:24.775417Z",
+    "md": "2026-01-27T15:24:10.347134Z",
     "meta": "2026-01-26T22:20:13.528843Z",
-    "activities": "2026-01-23T20:41:35.999243Z",
-    "vocabulary": "2026-01-22T21:35:53.952767Z",
+    "activities": "2026-01-27T15:34:54.689658Z",
+    "vocabulary": "2026-01-27T16:20:00.105653Z",
     "plan": null
   },
   "gates": {
@@ -25,12 +25,12 @@
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "12/3"
+      "message": "5/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 20 (soft target)"
+      "message": "25/20"
     },
     "naturalness": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
+    "pass_count": 5,
     "fail_count": 0
   }
 }

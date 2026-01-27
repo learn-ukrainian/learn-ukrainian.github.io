@@ -124,7 +124,7 @@
 | Ви | вмиваєте | + **-ся** | **вмиваєтеся** | /vmɪˈvɑjɛtɛsʲɑ/ |
 | Вони | вмивають | + **-ся** | **вмиваються** | /vmɪˈvɑjut͡sʲːɑ/ |
 >
-> _Note: In the 3rd person (він/вони), notice the spelling **-ться**. It sounds like a long /tsː/ sound._
+> *Note: In the 3rd person (він/вони), notice the spelling **-ться**. It sounds like a long /tsː/ sound.*
 >
 > **Common Reflexive Verbs:**
 >

@@ -5,21 +5,21 @@ version: '2.0'
 title: 'Слово о полку Ігоревім: Автентичність і значення'
 content_outline:
 - section: Вступ — Найзагадковіша пам'ятка
-  words: 400
+  words: 457
   points:
   - Що таке Слово?
   - Чому ця пам'ятка особлива?
   - Історія відкриття (1795)
   - Чому дебати про автентичність?
 - section: Історія рукопису
-  words: 500
+  words: 571
   points:
   - Мусін-Пушкін і знахідка
   - Пожежа 1812 року — втрата оригіналу
   - Що залишилося — копії та видання
   - Чому це проблематично для науки
 - section: Дебати про автентичність
-  words: 700
+  words: 800
   points:
   - Аргументи за автентичність
   - Аргументи проти (підробка XVIII ст.?)
@@ -27,21 +27,21 @@ content_outline:
   - Зільдербауер, Зімін та інші скептики
   - Сучасний консенсус — здебільшого автентичне
 - section: Зміст і структура
-  words: 600
+  words: 686
   points:
   - Похід Ігоря 1185 року — історичний контекст
   - Структура — вступ, похід, поразка, плач, втеча
   - Плач Ярославни — найвідоміший фрагмент
   - Язичницькі та християнські елементи
 - section: Фрагмент — Плач Ярославни
-  words: 500
+  words: 571
   points:
   - Текст (з глосами)
   - Поетична краса
   - Жіночий голос у середньовічній літературі
   - Язичницькі мотиви — звернення до природи
 - section: Слово як історичне джерело
-  words: 500
+  words: 571
   points:
   - Що нам каже про XII ст.?
   - Політична роздробленість — моральний урок
@@ -49,12 +49,12 @@ content_outline:
   - Географія — топоніми
   - Літературна vs. історична цінність
 - section: Підсумок
-  words: 300
+  words: 344
   points:
   - Слово — національний символ
   - Важливість критичного підходу
   - Навіть з сумнівами — цінне джерело
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - автентичність (authenticity)
@@ -80,7 +80,7 @@ activity_hints:
 - type: comparative-study
   focus: Compare Slovo's account with chronicle account of 1185 campaign
   output: Discrepancy analysis
-- type: literary-analysis
+- type: critical-analysis
   focus: Identify pagan vs. Christian elements
   output: Classification table
 - type: essay-response
@@ -110,3 +110,7 @@ sources:
   notes: Historical context of 1185 campaign
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- 'Analyze the causes and consequences of слово о полку ігоревім: автентичність і
+  значення'
+- Evaluate the historical significance of найзагадковіша пам'ятка

@@ -5,26 +5,26 @@ version: '2.0'
 title: 'Шістдесятники: Бунт проти сірості'
 content_outline:
 - section: Вступ — Хрущовська відлига
-  words: 533
+  words: 615
   points:
   - The death of Stalin and the partial liberalization of the regime
   - The emergence of a new generation of intellectuals who demanded truth
   - The Club of Creative Youth 'Suchasnyk' in Kyiv
 - section: Культурний вибух
-  words: 1333
+  words: 1538
   points:
   - 'Literature: Vasyl Symonenko, Lina Kostenko, Ivan Drach'
   - 'Cinema: Serhiy Parajanov and ''Shadows of Forgotten Ancestors'''
   - 'Art: Alla Horska and the destroyed stained glass window at Kyiv University'
   - The premiere of 'Shadows' (1965) as the first public political protest
 - section: Первинні джерела
-  words: 800
+  words: 923
   points:
   - Excerpts from Vasyl Symonenko's diary ('Bereh chekan')
   - Fragments from Ivan Dzyuba's treatise 'Internationalism or Russification?'
   - KGB memos reporting on 'bourgeois nationalism' among youth
 - section: Деколонізаційний погляд
-  words: 800
+  words: 924
   points:
   - The fight for the Ukrainian language as a political act
   - Debunking the myth of 'Soviet People' (homo sovieticus)
@@ -37,3 +37,7 @@ focus: history
 prerequisites: []
 learning_outcomes: []
 phase: HIST.11 [Post-War Soviet Ukraine]
+objectives:
+- 'Analyze the causes and consequences of шістдесятники: бунт проти сірості'
+- Evaluate the historical significance of хрущовська відлига
+- Trace the development of деколонізаційний погляд

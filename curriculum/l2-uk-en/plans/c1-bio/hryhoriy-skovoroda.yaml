@@ -76,22 +76,10 @@ activity_hints:
   focus: Excerpts from Skovoroda's dialogues
   source: Original texts (adapted)
   items: 4 passages
-- type: quiz
-  focus: Skovoroda's biography and key concepts
-  items: 12+
-- type: match-up
-  focus: Philosophical concepts and their meanings
-  items: 10+
 - type: essay-response
   focus: How is "сродна праця" relevant today?
   word_target: 300
   output: Personal reflection with philosophical analysis
-- type: group-sort
-  focus: Skovoroda's ideas vs. Western Enlightenment
-  items: 12+
-- type: fill-in
-  focus: Famous aphorisms and their context
-  items: 10+
 - type: critical-analysis
   focus: Compare Skovoroda with Socrates or Diogenes
   output: Comparative philosophy
@@ -119,3 +107,6 @@ sources:
   notes: Educational background
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of григорій сковорода: мандрівний філософ'
+- Evaluate the contributions of український сократ

@@ -69,22 +69,10 @@ activity_hints:
   focus: Військова біографія та Кримський похід
   source: Історичні дослідження та мемуари
   items: 3 passages
-- type: quiz
-  focus: Біографія та Кримська операція
-  items: 12+
-- type: match-up
-  focus: Етапи походу та їхні результати
-  items: 10+
 - type: essay-response
   focus: Чи була страта Болбочана справедливою?
   word_target: 300
   output: Історичне есе
-- type: group-sort
-  focus: Військові успіхи vs політичні невдачі
-  items: 12+
-- type: fill-in
-  focus: Військова термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-44 (Симон Петлюра)
@@ -108,3 +96,7 @@ sources:
   notes: Військова історія УНР
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of петро болбочан: полковник-герой'
+- Evaluate the contributions of герой криму
+- Trace the career and influence of страта та реабілітація

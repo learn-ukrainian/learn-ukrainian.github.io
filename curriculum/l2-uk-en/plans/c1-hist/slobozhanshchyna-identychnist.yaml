@@ -5,31 +5,33 @@ version: '1.0'
 title: 'Слобожанщина: Формування ідентичності'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of слобожанщина: формування ідентичності'
+- Evaluate the historical significance of вільні землі
 content_outline:
 - section: Вступ — «Слободи» — вільні землі
-  words: 400
+  words: 457
   subsections:
   - Слобожанщина — де це
   - Назва — від «слобода»
   - Козацьке заселення
   - Структура модуля
 - section: Заселення (XVII ст.)
-  words: 600
+  words: 686
   subsections:
   - Втечі з Правобережжя
   - Козацькі полки — Харківський, Сумський, та ін.
   - Росія запрошує — чому
   - Особливий статус
 - section: Слобідське козацтво
-  words: 600
+  words: 686
   subsections:
   - Козацька організація
   - Відмінності від Запорожжя
   - Служба Росії
   - Скасування — 1765
 - section: Харків — культурний центр
-  words: 700
+  words: 800
   subsections:
   - Заснування — 1654
   - Університет — 1804
@@ -37,26 +39,26 @@ content_outline:
   - Котляревський, Квітка-Основ'яненко
   - Перша столиця УРСР
 - section: Русифікація
-  words: 500
+  words: 571
   subsections:
   - Раніше, ніж деінде
   - Близькість до Росії
   - Мовний зсув
   - Але збереження ідентичності
 - section: Сучасна Слобожанщина
-  words: 400
+  words: 457
   subsections:
   - Харківська область
   - «Другий фронт» 2022
   - Деокупація
   - Українська ідентичність під тиском
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - Слобожанщина — козацька, але інша
   - Харків — українське місто
   - Перехід до Донбасу
-word_target: 3500
+word_target: 4000
 vocabulary:
 - Слобожанщина
 - слобода
@@ -74,13 +76,13 @@ vocabulary:
 - регіональна свідомість
 - колонізація
 activities:
-- type: settlement-analysis
+- type: critical-analysis
   focus: Who settled Slobozhanshchyna and why
-- type: cultural-analysis
+- type: critical-analysis
   focus: Kharkiv as Ukrainian cultural center — key figures
 - type: comparative-study
   focus: Slobozhanshchyna vs. Zaporozhian Cossacks
-- type: contemporary-analysis
+- type: critical-analysis
   focus: Kharkiv 2022 — Ukrainian identity under siege
 - type: essay-response
   focus: Чому Харків став культурною столицею України у XIX ст.?

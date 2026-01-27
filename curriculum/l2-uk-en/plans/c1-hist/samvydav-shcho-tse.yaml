@@ -5,24 +5,26 @@ version: '1.0'
 title: 'Самвидав: Що це було?'
 focus: history
 pedagogy: seminar
-objectives: []
+objectives:
+- 'Analyze the causes and consequences of самвидав: що це було?'
+- Evaluate the historical significance of підпільна література
 content_outline:
 - section: Вступ — Підпільна література
-  words: 400
+  words: 457
   subsections:
   - Що таке самвидав?
   - Чому виник — цензура
   - Форми — машинопис, копії
   - Значення для опору
 - section: Історія самвидаву
-  words: 600
+  words: 686
   subsections:
   - Витоки — 1950-60-ті
   - «Відлига» — відносна свобода
   - Шістдесятники — нове покоління
   - Повернення репресій
 - section: Як працював самвидав
-  words: 600
+  words: 686
   subsections:
   - Техніка — друкарська машинка
   - Копіювання — 5-7 копій
@@ -30,7 +32,7 @@ content_outline:
   - Ризики — що загрожувало
   - Вивезення на Захід
 - section: Типи текстів
-  words: 500
+  words: 571
   subsections:
   - Літературні твори
   - Хроніки репресій
@@ -38,26 +40,26 @@ content_outline:
   - Переклади
   - Історичні дослідження
 - section: Український самвидав — особливості
-  words: 600
+  words: 686
   subsections:
   - Національне питання — центральне
   - Мова як опір
   - «Український вісник» Чорновола
   - Зв'язок із загальносоюзним
 - section: Фрагмент — Перший номер
-  words: 500
+  words: 571
   subsections:
   - Текст (з глосами)
   - Мета видання
   - Тон і стиль
   - Аудиторія
 - section: Підсумок
-  words: 300
+  words: 343
   subsections:
   - Самвидав як феномен
   - Значення для історії
   - Підготовка до наступних модулів
-word_target: 3500
+word_target: 4000
 vocabulary:
 - самвидав
 - цензура
@@ -77,9 +79,9 @@ vocabulary:
 activities:
 - type: reading
   focus: Sample samvydav text — introduction to a publication
-- type: process-analysis
+- type: critical-analysis
   focus: Map the samvydav production and distribution network
-- type: risk-assessment
+- type: critical-analysis
   focus: What were the risks at each stage?
 - type: comparative-study
   focus: Compare Ukrainian samvydav with Russian

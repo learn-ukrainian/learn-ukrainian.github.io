@@ -6,42 +6,42 @@ title: 'Мова Реалізму: Стиль Нечуя-Левицького'
 subtitle: 'The Language of Realism: Nechuy-Levytsky''s Style'
 content_outline:
 - section: Вступ — Від поезії до прози
-  words: 500
+  words: 643
   points:
   - Еволюція літературної мови (Котляревський → Нечуй)
   - Специфіка реалістичної прози
   - Мова як інструмент достовірності
 - section: Етнографічна точність
-  words: 700
+  words: 900
   points:
   - Діалектизми і регіоналізми
   - Побутова лексика
   - Точність описів
 - section: Мова персонажів
-  words: 700
+  words: 900
   points:
   - Індивідуалізація мовлення
   - Соціолект села
   - Гумор через мову
 - section: Дискусія про норму
-  words: 600
+  words: 771
   points:
   - '"Галицька" vs "наддніпрянська" мова'
   - Позиція Нечуя
   - Кривава пляма на сонці (полеміка)
 - section: Порівняльний аналіз
-  words: 600
+  words: 771
   points:
   - Нечуй vs Котляревський (бурлеск)
   - Нечуй vs Квітка (сентименталізм)
   - Нечуй vs Шевченко (поезія)
 - section: Підсумок — Спадщина для ХХ століття
-  words: 400
+  words: 515
   points:
   - Вплив на пізніших прозаїків
   - Актуальність дискусії про мову
   - Перехід до "Миколи Джері"
-word_target: 3800
+word_target: 4500
 vocabulary_hints:
   required:
   - діалектизм (dialectism)
@@ -65,19 +65,10 @@ activity_hints:
   focus: Порівняння уривків різних авторів
   source: UkrLib texts
   items: 5+
-- type: quiz
-  focus: Мовні особливості реалізму
-  items: 15+
-- type: match-up
-  focus: Автор → стильова ознака
-  items: 12+
 - type: essay-response
   focus: Мова як засіб характеризації
   word_target: 300
   output: Лінгвостилістичне есе
-- type: cloze
-  focus: Діалектизми в контексті
-  items: 12+
 focus: literature
 pedagogy: Seminar
 prerequisites:

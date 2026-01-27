@@ -1,10 +1,12 @@
 # Audit Report: M121 — taras-prokhasko.md
+
 **Level:** C1 | **Module:** M121 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:57:16
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Біографія та стиль письменника | 5 | 5 | ✅ |
@@ -41,16 +44,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[YAML_SCHEMA_VIOLATION]** Schema error in taras-prokhasko.yaml: Schema validation error at key '7': {'type': 'fill-in', 'title': 'Значення для культури', 'items': [{'sentence': 'Прохасько вчить нас зупинятися і проживати момент «тут і [зараз]».', 'answer': 'зараз', 'options': ['зараз', 'потім', 'ніколи', 'завжди']}, {'sentence': 'Його тексти діють як [терапія] для душі, втомленої від швидкого темпу життя.', 'answer': 'терапія', 'options': ['терапія', 'отрута', 'розвага', 'робота']}, {'sentence': 'Він довів, що [провінція] не є місцем культурної відсталості.', 'answer': 'провінція', 'options': ['провінція', 'столиця', 'село', 'місто']}, {'sentence': 'Автор закликає до [внутрішньої] еволюції, а не до зовнішніх революцій.', 'answer': 'внутрішньої', 'options': ['внутрішньої', 'політичної', 'технічної', 'військової']}, {'sentence': 'Його увага до деталей — це поєднання наукового підходу та [поетичного] бачення.', 'answer': 'поетичного', 'options': ['поетичного', 'сухого', 'ділового', 'холодного']}, {'sentence': "Прохасько є охоронцем [пам'яті] та співцем карпатського ландшафту.", 'answer': "пам'ять", 'options': ["пам'ять", 'скарбів', 'кордонів', 'законів']}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2049/4000 (raw: 2300)
 - **Activities:** ✅ 12/3
 - **Density:** ✅ All > 1
@@ -69,10 +75,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 6 | 4 | 100% | 19% | 19.0% |
@@ -88,6 +96,7 @@
 | **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 70 | Included in Core |

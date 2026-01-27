@@ -69,22 +69,10 @@ activity_hints:
   focus: Поезія та проза Жадана
   source: Уривки з романів та вірші
   items: 3 passages
-- type: quiz
-  focus: Біографія та ключові твори
-  items: 12+
-- type: match-up
-  focus: Романи та їхні теми
-  items: 10+
 - type: essay-response
   focus: Як війна змінює літературу та письменника?
   word_target: 300
   output: Літературознавче есе
-- type: group-sort
-  focus: Поезія vs проза vs музика
-  items: 12+
-- type: fill-in
-  focus: Літературна та воєнна термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-74 (Ліна Костенко)
@@ -108,3 +96,7 @@ sources:
   notes: Музична діяльність
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of сергій жадан: голос донбасу'
+- Evaluate the contributions of поет війни та миру
+- Trace the career and influence of повномасштабна війна та сьогодення (2022-)

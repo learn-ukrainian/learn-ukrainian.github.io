@@ -1,9 +1,11 @@
 # Audit Report: M62 — 62-khrestyny-ta-vesillia.md
+
 **Level:** C1 | **Module:** M62 | **Phase:** C1 | **Pedagogy:** Immersion & Analysis | **Target:** 3000
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:29:32
 
 ## Configuration
+
 **Type:** C1
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -16,6 +18,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Традиції хрестин | 5 | 5 | ✅ |
@@ -38,11 +41,13 @@
 - Low density activities: 0
 
 ## Recommendation
+
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2023/3000 (raw: 2352)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
@@ -61,10 +66,12 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 96% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 14 | 15 | 93% | 25% | 23.2% |
@@ -78,6 +85,7 @@
 | **TOTAL** | | | | | **96.6%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 95 | Included in Core |

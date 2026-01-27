@@ -69,22 +69,10 @@ activity_hints:
   focus: Фрагменти роману Доця
   source: Художній текст
   items: 3 passages
-- type: quiz
-  focus: Факти про волонтерський рух в Україні
-  items: 12+
-- type: match-up
-  focus: Волонтерська лексика та визначення
-  items: 10+
 - type: essay-response
   focus: Як особистий досвід формує літературу?
   word_target: 300
   output: Критичний есей
-- type: group-sort
-  focus: Художня література vs документалістика
-  items: 12+
-- type: fill-in
-  focus: Ключові терміни волонтерства
-  items: 10+
 focus: biography
 prerequisites:
 - b2-hist-euromaidan
@@ -108,3 +96,7 @@ sources:
   notes: Інформація про публікації
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of тамара горіха зерня: голос опору'
+- Evaluate the contributions of коли війна стає літературою
+- Trace the career and influence of література як документ епохи

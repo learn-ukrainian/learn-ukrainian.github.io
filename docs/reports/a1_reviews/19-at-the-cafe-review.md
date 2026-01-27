@@ -1,7 +1,7 @@
 # Logic / Theory Review
 
 **1. Clarity of Explanation:** 10/10
-This module focuses on _usage_ rather than new grammar, which is the right call for M19. It standardizes phrases like `Столик на двох` and `Рахунок, будь ласка`.
+This module focuses on *usage* rather than new grammar, which is the right call for M19. It standardizes phrases like `Столик на двох` and `Рахунок, будь ласка`.
 
 **2. Pacing of Concept Introduction:** 10/10
 It flows naturally from Entering -> Ordering -> Eating -> Paying.

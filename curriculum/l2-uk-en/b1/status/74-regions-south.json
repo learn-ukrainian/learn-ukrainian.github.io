@@ -2,14 +2,14 @@
   "module": "74-regions-south",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:27:31.816681Z",
+  "last_audit": "2026-01-27T19:15:46.355808Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-24T22:46:29.033760Z",
-    "meta": "2026-01-26T15:44:41.686320Z",
-    "activities": "2026-01-14T20:29:36.422288Z",
+    "meta": "2026-01-27T18:54:49.304924Z",
+    "activities": "2026-01-27T19:08:23.168673Z",
     "vocabulary": "2026-01-25T16:02:18.707556Z",
-    "plan": "2026-01-26T15:44:41.686112Z"
+    "plan": "2026-01-27T19:14:06.382114Z"
   },
   "gates": {
     "meta": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1699/1500 (raw: 1792) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "1699/1500 (raw: 1792)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "12/8"
+      "message": "14/8"
     },
     "vocabulary": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Missing required activity types: discussion, fill-in, matching, reading"
-    ],
-    "pass_count": 4,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

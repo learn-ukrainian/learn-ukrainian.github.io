@@ -69,12 +69,14 @@ Contains:
 ## File Structure
 
 ### Current Structure
+
 ```
 curriculum/l2-uk-en/b1/
 ├── 53-abstract-concepts-processes.md     # Everything in one file
 ```
 
 ### New Structure
+
 ```
 curriculum/l2-uk-en/b1/
 ├── 53-abstract-concepts-processes.md           # Prose only
@@ -453,29 +455,34 @@ npm run validate:yaml l2-uk-en b1 53
 ## Migration Timeline
 
 ### Phase 1: Infrastructure (Week 1-2)
+
 - [ ] Create JSON Schema for all 13 activity types
 - [ ] Create `validate_yaml.py` script
 - [ ] Update `generate_mdx.py` to read YAML activities
 - [ ] Add `npm run validate:yaml` command
 
 ### Phase 2: B2 Pilot (Week 3-4)
+
 - [ ] Convert 5 B2 modules to YAML format
 - [ ] Test full pipeline (validate → generate → audit)
 - [ ] Iterate on schema based on issues found
 - [ ] Document any edge cases
 
 ### Phase 3: B1 Migration (Week 5)
+
 - [ ] Run batch conversion on all B1 modules
 - [ ] Fix any conversion errors
 - [ ] Verify all modules pass audit
 
 ### Phase 4: A1/A2 Migration (Week 6)
+
 - [ ] Convert A1 modules (handle anagram type)
 - [ ] Convert A2 modules
 - [ ] Verify all modules pass audit
 - [ ] Update documentation
 
 ### Phase 5: Cleanup
+
 - [ ] Remove old markdown activity parsing code (optional)
 - [ ] Update templates to show YAML format
 - [ ] Update CLAUDE.md instructions
@@ -1261,11 +1268,13 @@ def validate_activity_file(yaml_path, level):
 ## Updated Migration Timeline
 
 ### Phase 0: Prerequisites (Before Starting)
+
 - [ ] All B1 modules pass audit (current state)
 - [ ] Git branch: `yaml-migration/main`
 - [ ] Backup: `curriculum-backup-pre-yaml/`
 
 ### Phase 1: Infrastructure (Week 1-2)
+
 - [ ] Create `schemas/activities-base.schema.json` with all 13 types
 - [ ] Create level-specific schemas (a1, a2, b1)
 - [ ] Create `scripts/yaml_activities.py` (shared parser)
@@ -1280,6 +1289,7 @@ def validate_activity_file(yaml_path, level):
 - [ ] Setup GitHub Actions workflow
 
 ### Phase 1.5: Dry Run (Week 2-3) — NEW
+
 - [ ] Convert ALL B1 modules to YAML (keep MD activities)
 - [ ] Run regression tests: compare MD vs YAML output
 - [ ] Document all edge cases found
@@ -1288,6 +1298,7 @@ def validate_activity_file(yaml_path, level):
 - [ ] **Decision gate:** Proceed only if equivalence confirmed
 
 ### Phase 2: B2 Pilot (Week 3-4)
+
 - [ ] Create 5 NEW B2 modules with YAML activities (not converted)
 - [ ] Test full pipeline (validate → generate → audit)
 - [ ] Iterate on schema based on issues found
@@ -1295,16 +1306,19 @@ def validate_activity_file(yaml_path, level):
 - [ ] **Decision gate:** Continue or rollback
 
 ### Phase 3: B1 Migration (Week 5)
+
 - [ ] Remove MD activities from B1 modules (YAML now source of truth)
 - [ ] Verify all modules pass audit
 - [ ] Run full pipeline for all B1 modules
 
 ### Phase 4: A1/A2 Migration (Week 6)
+
 - [ ] Convert A1 modules (handle anagram type)
 - [ ] Convert A2 modules
 - [ ] Verify all modules pass audit
 
 ### Phase 5: Cleanup (Week 7)
+
 - [ ] Remove MD activity parsing from generator (optional)
 - [ ] Update all documentation (see checklist)
 - [ ] Update all templates
@@ -1312,6 +1326,7 @@ def validate_activity_file(yaml_path, level):
 - [ ] Archive old markdown reference
 
 ### Phase 6: Stabilization (Week 8+)
+
 - [ ] Monitor for issues
 - [ ] Gather contributor feedback
 - [ ] Refine error messages
@@ -1601,11 +1616,13 @@ docs/l2-uk-en/templates/
 Use this checklist during Phase 5 (Cleanup):
 
 ### Core Documentation
+
 - [ ] `CLAUDE.md` - Activity format section updated
 - [ ] `docs/ACTIVITY-MARKDOWN-REFERENCE.md` - Deprecated or replaced
 - [ ] `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md` - Format note added
 
 ### Templates (28 total)
+
 - [ ] A1 template updated
 - [ ] A2 template updated
 - [ ] B1 templates updated (5)
@@ -1615,14 +1632,17 @@ Use this checklist during Phase 5 (Cleanup):
 - [ ] LIT template updated
 
 ### Workflow Documentation
+
 - [ ] `.claude/quick-ref/*.md` - All 6 files updated
 - [ ] `.claude/stages/stage-3-activities.md` - YAML creation
 - [ ] `.claude/stages/stage-4-review-fix.md` - YAML validation
 
 ### Skills
+
 - [ ] All architect skills updated with YAML guidance
 
 ### Scripts
+
 - [ ] `scripts/audit/config.py` - YAML support added
 - [ ] `scripts/generate_mdx.py` - YAML reading added
 - [ ] `scripts/validate_yaml.py` - Created

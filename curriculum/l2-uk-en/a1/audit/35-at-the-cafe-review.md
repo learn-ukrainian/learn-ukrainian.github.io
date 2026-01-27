@@ -1,10 +1,12 @@
 # Audit Report: M35 — 35-at-the-cafe.md
+
 **Level:** A1 | **Module:** M35 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
 **Generated:** 2026-01-25 19:59:17
 
 ## Configuration
+
 **Type:** A1
 **Word Target:** 750 words
 **Activities:** 8-12 required
@@ -17,6 +19,7 @@
 **Transliteration:** Allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Hot or Cold? | 10 | 8 | ✅ |
@@ -35,6 +38,7 @@
 - Low density activities: 0
 
 ## Gates
+
 - **Words:** ✅ 908/750 (raw: 1210)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
@@ -52,6 +56,7 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

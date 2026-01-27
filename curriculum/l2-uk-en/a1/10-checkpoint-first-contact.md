@@ -101,12 +101,12 @@ Look at each word. What gender is it?
 **First Conjugation (читати - to read):**
 
 > Я **читаю** книгу. Ти **читаєш** газету. Він **читає** журнал.
-> _(I read a book. You read a newspaper. He reads a magazine.)_
+> *(I read a book. You read a newspaper. He reads a magazine.)*
 
 **Second Conjugation (говорити - to speak):**
 
 > Я **говорю** українською. Ти **говориш** швидко. Вона **говорить** добре.
-> _(I speak Ukrainian. You speak fast. She speaks well.)_
+> *(I speak Ukrainian. You speak fast. She speaks well.)*
 
 **Notice the pattern:**
 
@@ -151,10 +151,10 @@ Complete with the correct verb form:
 
 ### Model: Question Words in Action
 
-> **Що** це? — Це книга. _(What is this? — This is a book.)_
-> **Хто** він? — Він студент. _(Who is he? — He's a student.)_
-> **Де** ти живеш? — Я живу в Києві. _(Where do you live? — I live in Kyiv.)_
-> **Як** справи? — Добре, дякую! _(How are things? — Good, thanks!)_
+> **Що** це? — Це книга. *(What is this? — This is a book.)*
+> **Хто** він? — Він студент. *(Who is he? — He's a student.)*
+> **Де** ти живеш? — Я живу в Києві. *(Where do you live? — I live in Kyiv.)*
+> **Як** справи? — Добре, дякую! *(How are things? — Good, thanks!)*
 
 **The Question Words:**
 
@@ -203,7 +203,7 @@ Which question word fits?
 > — Так, вареники.
 > — Смачного!
 
-_(Good day! What would you like? / Coffee, please. / Americano or latte? / Americano. / Anything else? / Yes, varenyky. / Enjoy your meal!)_
+*(Good day! What would you like? / Coffee, please. / Americano or latte? / Americano. / Anything else? / Yes, varenyky. / Enjoy your meal!)*
 
 **Key Phrases:**
 

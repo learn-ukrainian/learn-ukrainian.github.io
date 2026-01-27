@@ -1,10 +1,12 @@
 # Audit Report: M46 — ivan-franko.md
+
 **Level:** C1 | **Module:** M46 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:56:19
 
 ## Configuration
+
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння тексту про Івана Франка | 8 | 5 | ✅ |
@@ -43,22 +46,26 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (75% overlap): "Його називають «Титаном праці» за колосальну продуктивність — понад 5000 творів у різних галузях зна...". Shares significant keywords with sentence at index 1.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in ivan-franko.yaml: Schema validation error at key '11': {'type': 'reading', 'title': 'Дослідження поетичного модернізму', 'resource': {'type': 'primary_source', 'url': 'https://www.i-franko.name/uk/Poetry/ZivjaleLystja.html', 'title': "«Іван Франко — Збірка «Зів'яле листя»»"}, 'tasks': ['«Проаналізуйте використання емоційно забарвлених прикметників у першому «жмутку» поезій.»', '«Порівняйте мову інтимної лірики Франка з його публіцистичним стилем. Які відмінності у виборі дієслів ви помітили?»', '«Знайдіть приклади порівнянь та метафор, які автор використовує для опису душевного стану.»']} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
+
 - ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Спадщина|Вплив' found: Вплив на сучасників, Спадщина
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 3 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 2003/4000 (raw: 2224)
 - **Activities:** ✅ 14/3
 - **Density:** ✅ All > 1
@@ -77,10 +84,12 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
+
 **Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 4 | 4 | 100% | 19% | 19.0% |
@@ -96,6 +105,7 @@
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 69 | Included in Core |

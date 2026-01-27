@@ -5,42 +5,28 @@ version: '2.0'
 title: Education and Learning
 subtitle: School and University
 content_outline:
-- section: 'Introduction: Ukrainian Education'
-  words: 100
+- section: 'Вступ'
+  words: 180
   points:
   - Education system overview
   - School vs university
-  - Academic vocabulary
-- section: School Subjects
-  words: 200
+- section: 'Граматика'
+  words: 385
   points:
-  - математика, історія, українська мова
-  - фізика, хімія, біологія
-  - Subject preferences
-- section: Learning Verbs
-  words: 200
+  - School subjects (математика, історія, фізика)
+  - Learning verbs (вчитися, вивчати)
+  - Academic life (студент, лекція, семінар)
+  - Grades and exams (оцінка, іспит, залік)
+- section: 'Практика'
+  words: 480
   points:
-  - вчитися (to study/be a student)
-  - вивчати (to learn/study something)
-  - навчатися, здавати іспит
-- section: Academic Life
-  words: 200
+  - Dialogues about education
+  - Describe studies and exams
+- section: 'Підсумок'
+  words: 105
   points:
-  - студент, учень, викладач
-  - лекція, семінар, практика
-  - University terminology
-- section: Grades and Exams
-  words: 150
-  points:
-  - оцінка, іспит, залік
-  - здати, провалити
-  - Academic performance
-- section: 'Practice: Talk About Studies'
-  words: 150
-  points:
-  - Describe your education
-  - Discuss subjects and exams
-word_target: 1000
+  - Summary of vocabulary
+word_target: 1150
 vocabulary_hints:
   required:
   - школа (school)
@@ -59,16 +45,16 @@ vocabulary_hints:
   - стипендія (scholarship)
   - курсова (course paper)
 activity_hints:
-- type: vocabulary-drill
+- type: match-up
   focus: Education vocabulary
   items: 30
 - type: fill-in
   focus: Complete academic sentences
   items: 20
-- type: dialogue
+- type: cloze
   focus: University conversation
   items: 10
-- type: speaking
+- type: quiz
   focus: Describe your studies
   items: 8
 focus: vocabulary

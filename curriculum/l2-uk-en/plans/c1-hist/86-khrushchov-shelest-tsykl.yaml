@@ -5,53 +5,53 @@ version: '2.0'
 title: Хрущов — Шелест — Щербицький
 content_outline:
 - section: Вступ — Ще один цикл
-  words: 400
+  words: 457
   points:
   - Після Сталіна — надія
   - Хрущовська відлига
   - Шелест — «свій» у владі
   - Структура модуля
 - section: Фаза 1 — Відлига (1953-1964)
-  words: 700
+  words: 800
   points:
   - Десталінізація
   - Реабілітації — частково
   - Шістдесятники
   - Культурне пожвавлення
 - section: Фаза 2 — Шелест при владі (1963-1972)
-  words: 600
+  words: 686
   points:
   - Перший секретар України
   - Захист української мови
   - «Україна наша радянська»
   - Конфлікт з Москвою
 - section: Фаза 3 — Знищення відлиги
-  words: 600
+  words: 686
   points:
   - 1972 — арешти шістдесятників
   - Шелеста знято
   - «Націоналізм» — звинувачення
   - Щербицький — русифікатор
 - section: Фаза 4 — 17 років русифікації
-  words: 500
+  words: 571
   points:
   - Щербицький — 1972-1989
   - Русифікація освіти
   - Придушення дисидентів
   - «Зразкова республіка»
 - section: Порівняння з 1920-ми
-  words: 400
+  words: 457
   points:
   - Схожість — надія, розквіт, знищення
   - Відмінності — масштаб, методи
   - Чому цикл повторився
 - section: Підсумок
-  words: 300
+  words: 343
   points:
   - Шелест — кооптований, але «надто український»
   - Цикл у партійній еліті
   - Перехід до Януковича
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - відлига (thaw)
@@ -77,7 +77,7 @@ activity_hints:
 - type: comparative-study
   focus: 1920s vs. 1960s — same trap different packaging
   output: Historical comparison
-- type: policy-analysis
+- type: critical-analysis
   focus: Shcherbytsky's Russification — methods and results
   output: Policy analysis
 - type: essay-response
@@ -110,3 +110,6 @@ sources:
   notes: Thaw period
 immersion: 100% Ukrainian
 phase: C1-HIST.1 [Historiography]
+objectives:
+- Analyze the causes and consequences of хрущов — шелест — щербицький
+- Evaluate the historical significance of ще один цикл

@@ -18,7 +18,9 @@ Consider these two sentences: **Вчора я читав книгу.** vs. **В�
 
 > 💡 **Did You Know?**
 >
-> The word **вид** literally means "view" or "appearance." When you choose between доконаний and недоконаний вид, you're choosing _how to view_ the action — as a completed whole or as an ongoing process. The grammar term captures this beautifully.
+> The word **вид** literally means "view" or "appearance." By choosing between доконаний and недоконаний вид, you consciously decide *how to view* the action — as a completed whole or as an ongoing process. The grammar term captures this beautifully.
+
+Why is this "view" so important? Because it reflects how Ukrainians perceive reality. In English, you might say "I read the book" and the context tells us if you finished it. In Ukrainian, the verb itself carries this information. You cannot speak without making this distinction. Every time you open your mouth to describe an action, you must decide: am I focused on the process (doing) or the result (done)? This mental shift is the hardest but most rewarding part of mastering the language.
 
 ---
 
@@ -34,7 +36,11 @@ Consider these two sentences: **Вчора я читав книгу.** vs. **В�
 | **доконаний вид**   | perfective aspect   | Views action as complete |
 | **недоконаний вид** | imperfective aspect | Views action as process  |
 
-When a grammar book says «дієслово недоконаного виду», it means an imperfective verb. When it says «поставте у доконаному виді», it means «put in the perfective aspect».
+When a grammar book mentions «дієслово недоконаного виду», it refers to an imperfective verb. Seeing «поставте у доконаному виді» means «put in the perfective aspect».
+
+Understanding this dichotomy unlocks the logic of the entire language. It's not just about grammar; it's about philosophy. Use **недоконаний вид** when you want to zoom in on the action itself, like a video camera recording a scene. Use **доконаний вид** when you want to zoom out and see the finished product, like a photograph of the result.
+
+For example, asking "Що ти робив?" (What were you doing?) invites a story about the process. Asking "Що ти зробив?" (What did you get done?) demands a report on results. The distinction shapes conversations, negotiations, and even excuses.
 
 Here's the practical difference: **Я писав листа цілий вечір.** (I was writing the letter all evening — process, no endpoint) vs. **Я написав листа за годину.** (I wrote the letter in an hour — completed, done). The imperfective **писав** stretches across time; the perfective **написав** captures a finished result.
 
@@ -57,7 +63,15 @@ The imperfective and perfective aren't just grammar labels — they convey diffe
 | **початок**     | beginning    | Start of action                         |
 | **продовження** | continuation | Continuing action                       |
 
-When a textbook explains «недоконаний вид виражає тривалість дії», it means «the imperfective aspect expresses the duration of an action».
+Upon reading «недоконаний вид виражає тривалість дії», understand it as «the imperfective aspect expresses the duration of an action».
+
+These concepts are the building blocks of narrative. If you are telling a story, you will oscillate between these modes. You paint the background with **процес** and **тривалість** (The sun was shining, birds were singing), and then punctuate it with **подія** and **результат** (Suddenly, a tree fell).
+
+- **Тривалість** answers the question "How long?" (Як довго?).
+- **Результат** answers the question "What happened?" (Що сталося?).
+- **Повторення** answers the question "How often?" (Як часто?).
+
+Mastering these abstract nouns allows you to read linguistic descriptions without fear. Instead of skipping the introduction in your textbook, you can now appreciate the nuances it describes.
 
 Let's see these concepts in sentences:
 
@@ -88,7 +102,15 @@ Ukrainian has three tenses, and you need their Ukrainian names:
 | **минулий час**    | past tense    | читав, писав        |
 | **майбутній час**  | future tense  | читатиму, напишу    |
 
-When grammar says «поставте дієслово в минулому часі», you need to put the verb in past tense.
+Reading «поставте дієслово в минулому часі» instructs you to put the verb in past tense.
+
+Tense in Ukrainian is delightfully simple compared to English. There is no "Present Perfect Continuous" or "Future Perfect." There is simply **Past**, **Present**, and **Future**. Complexity arises only when Tense meets Aspect.
+
+- **Теперішній час** is strictly for what is happening *now* or happens *generally*.
+- **Минулий час** covers everything before now.
+- **Майбутній час** covers everything after now.
+
+This simplicity allows you to focus your mental energy on the Aspect decision. You don't need to worry about the sequence of tenses in the same way you do in English or Romance languages.
 
 Each tense tells a different story about when the action happens:
 
@@ -100,7 +122,7 @@ Why these cities? Київ is the capital where major universities set national 
 
 > 💡 **Did You Know?**
 >
-> The word **час** means both "time" and "tense" — because tense _is_ grammatical time. **Теперішній** means "present" (from "тепер" = now). **Минулий** means "past" (from "минути" = to pass). **Майбутній** means "future" (from "майбутнє" = what will be).
+> The word **час** means both "time" and "tense" — because tense *is* grammatical time. **Теперішній** means "present" (from "тепер" = now). **Минулий** means "past" (from "минути" = to pass). **Майбутній** means "future" (from "майбутнє" = what will be).
 
 ### Tense and Aspect Interaction
 
@@ -110,6 +132,8 @@ One critical rule to remember: **perfective verbs have no present tense**. Since
   - Теперішній: я читаю (I am reading)
   - Минулий: я читав (I was reading)
   - Майбутній: я буду читати / читатиму (I will be reading)
+
+The imperfective future has two forms: compound and synthetic. You can say **буду читати** OR **читатиму**. They mean exactly the same thing.
 
 - **Perfective (ДВ):** Has only past and future.
   - Минулий: я прочитав (I finished reading)
@@ -132,7 +156,16 @@ Grammarians use these terms when discussing verb forms:
 | **умовний спосіб**     | conditional mood   | Would/could (читав би)                        |
 | **спосіб**             | mood               | Category: indicative, imperative, conditional |
 | **стан**               | voice              | Active vs passive                             |
-| **активний стан**      | active voice       | Subject does action                           |
+
+Let's unpack these terms further, as they appear frequently in advanced materials:
+
+- **Спосіб:** This reflects the speaker's attitude. Is it a fact (**дійсний** - indicative)? A command (**наказовий**)? Or a possibility (**умовний**)?
+- **Стан:** Who is doing the work? In **активний стан**, the subject acts (Student reads book). In **пасивний стан**, the subject receives the action (Book is read by student). Ukrainian prefers the active voice for liveliness, but passive exists, especially in formal writing.
+- **Дієвідміна:** Just as nouns have declensions (відміни), verbs have conjugations. Knowing whether a verb is I or II conjugation helps you predict its endings (do you say -ють or -ять?).
+
+These concepts might sound abstract, but they are the toolkit for any serious language learner. If you know what **дієвідміна** means, you can look up conjugation tables. If you understand **спосіб**, you know why the verb form changed in a conditional sentence.
+
+| **активний стан** | active voice | Subject does action |
 
 Here's how these terms work in practice:
 
@@ -154,6 +187,12 @@ When discussing aspect with negation, Ukrainian grammar uses specific terms:
 | **очікувана дія**        | expected action  | Action expected but didn't happen (ДВ) |
 | **попередження**         | warning          | Warning against doing something        |
 | **заборона**             | prohibition      | Forbidding an action                   |
+
+Navigating negation requires precision. The choice of aspect often depends entirely on the *intent* of the negation.
+
+- **Загальне заперечення:** If you simply want to say an action never happened or you have no experience with it, use the imperfective. It denies the *fact* of the action.
+- **Попередження:** When you warn someone not to do something accidentally (like tripping or dropping something), you use the perfective impertaive with "не". It sounds weird to English speakers ("Don't have dropped it!"), but it makes perfect sense in Ukrainian ("Don't let the result of dropping happen").
+- **Заборона:** If you forbid an action strictly ("Don't smoke", "Don't enter"), it is usually imperfective because you are forbidding the *activity* itself.
 
 **Examples in context:**
 
@@ -178,6 +217,12 @@ Ukrainian textbooks use these terms to describe different verb forms:
 | **синтетична форма** | synthetic form  | Single-word form (читатиму)            |
 | **наказова форма**   | imperative form | Command form (читай!, прочитай!)       |
 | **парадигма**        | paradigm        | Complete set of forms for a verb       |
+
+These terms describe the *structure* of the word itself.
+
+- **Складна форма** (Compound) is logically "composed" of parts: the helper verb "бути" plus the infinitive. It is transparent and easy for learners (буду читати).
+- **Синтетична форма** (Synthetic) "synthesizes" everything into one word. It is punchier, shorter, and often preferred in poetry and dynamic speech (читатиму).
+- **Парадигма** is your roadmap. It shows every possible form a verb can take. When you "learn a verb," you are really learning its paradigm.
 
 **Examples:**
 
@@ -225,7 +270,7 @@ One of the most important concepts in Ukrainian verb grammar is the **видов
 
 Here's a real grammar explanation from a Ukrainian textbook. Can you understand the terminology now that you know the key terms?
 
-> _Дієслово «писати» — недоконаного виду. Воно змінюється за особами в теперішньому часі: я пишу, ти пишеш, він пише. У минулому часі: я писав, ти писав, він писав. Доконана пара — «написати». Це дієслово утворює майбутній час двома способами: «писатиму» (синтетична форма) або «буду писати» (аналітична форма)._
+> *Дієслово «писати» — недоконаного виду. Воно змінюється за особами в теперішньому часі: я пишу, ти пишеш, він пише. У минулому часі: я писав, ти писав, він писав. Доконана пара — «написати». Це дієслово утворює майбутній час двома способами: «писатиму» (синтетична форма) або «буду писати» (аналітична форма).*
 
 **Translation:** The verb «писати» is imperfective aspect. It conjugates by person in present tense: I write, you write, he writes. In past tense: I wrote, you wrote, he wrote. The perfective pair is «написати». This verb forms future tense in two ways: «писатиму» (synthetic form) or «буду писати» (analytic form).
 
@@ -237,24 +282,30 @@ Here's a real grammar explanation from a Ukrainian textbook. Can you understand 
 
 Match these grammar instructions to their meaning. These are the exact phrases you'll encounter in Ukrainian textbooks, grammar exercises, and language courses:
 
-1. _«Визначте вид дієслова.»_
+1. *«Визначте вид дієслова.»*
    - Determine the **aspect** of the verb.
 
-2. _«Утворіть форму майбутнього часу.»_
+2. *«Утворіть форму майбутнього часу.»*
    - Form the **future tense**.
 
-3. _«Поставте дієслово в наказовому способі.»_
+3. *«Поставте дієслово в наказовому способі.»*
    - Put the verb in **imperative mood**.
 
-4. _«Знайдіть дієслово доконаного виду.»_
+4. *«Знайдіть дієслово доконаного виду.»*
    - Find the **perfective** verb.
 
-5. _«Утворіть видову пару.»_
+5. *«Утворіть видову пару.»*
    - Form the **aspect pair**.
+
+6. *«Замініть активний стан на пасивний.»*
+   - Change **active voice** to **passive**.
+
+7. *«Випишіть дієслова минулого часу.»*
+   - Write out the **past tense** verbs.
 
 > 🌍 **Real World**
 >
-> These instructions appear constantly in Ukrainian school exams (ЗНО), university entrance tests, and language certification exams. Knowing this terminology is essential for studying Ukrainian at any level.
+> These instructions appear constantly in Ukrainian school exams (ЗНО), university entrance tests, and language certification exams. Knowing this terminology is essential for studying Ukrainian at any level. By mastering these prompts, you essentially unlock the ability to use native learning materials.
 
 ---
 
@@ -296,7 +347,11 @@ Match these grammar instructions to their meaning. These are the exact phrases y
 
 **Студентка:** Тобто недоконаний — це процес?
 
-**Професор:** Саме так. А доконаний — завершена дія з результатом.
+**Професор:** Саме так. А доконаний — завершена дія з результатом. Пам'ятайте про цю різницю на іспиті!
+
+**Студентка:** Дякую, тепер зрозуміло. А "тривалість" стосується тільки недоконаного виду?
+
+**Професор:** Абсолютно вірно. Доконаний вид не має тривалості, він миттєвий або результативний. Тому ми кажемо "я писав годину" (НДВ), але "я написав за годину" (ДВ).
 
 ---
 
@@ -335,6 +390,14 @@ Match these grammar instructions to their meaning. These are the exact phrases y
 **Ірина:** Цікаво! А я завжди використовую синтетичну. Мені здається, що «писатиму» звучить швидше і динамічніше.
 
 **Віктор:** Це правда. Головне — не плутати види. «Написатиму» — це доконаний майбутній, а «писатиму» — недоконаний. Одну літеру зміниш — і все значення зміниться!
+
+**Ірина:** А як щодо минулого часу? Ти «писав» чи «написав» вступ?
+
+**Віктор:** Я вже «написав» вступ (результат). Але я «писав» його три години (тривалість).
+
+**Ірина:** Бачиш, як цікаво! В одному реченні можна вжити обидва види, щоб показати різні аспекти реальності.
+
+**Віктор:** Так, це робить мову дуже гнучкою. Можна передати найменші нюанси часу і результату.
 
 ---
 
@@ -377,7 +440,11 @@ In this module, you learned the core terminology for discussing Ukrainian verbs:
 
 Want to solidify your understanding of verb terminology? Here are your next steps:
 
-- **Module 03** takes you deeper into reading Ukrainian grammar explanations with confidence
-- Review the abbreviations: ДВ (доконаний вид), НДВ (недоконаний вид), ТЧ (теперішній час), МЧ (минулий час), МайЧ (майбутній час)
-- Try reading a Ukrainian grammar book entry — you now have the vocabulary to understand it!
-- Practice explaining aspect to yourself in Ukrainian: «Доконаний вид показує результат. Недоконаний вид показує процес.»
+- **Module 03** takes you deeper into reading Ukrainian grammar explanations with confidence. You will analyze real textbook passages.
+- Review the abbreviations: ДВ (доконаний вид), НДВ (недоконаний вид), ТЧ (теперішній час), МЧ (минулий час), МайЧ (майбутній час). Create flashcards for these if necessary.
+- Try reading a Ukrainian grammar book entry — you now have the vocabulary to understand it! Look for a verb in a dictionary and find its aspect pair.
+- Practice explaining aspect to yourself in Ukrainian: «Доконаний вид показує результат. Недоконаний вид показує процес.» This meta-cognitive practice is powerful.
+- Find a text, highlight all the verbs, and try to label their Aspect and Tense. Is it **минулий, недоконаний**? Or **майбутній, доконаний**? This analysis builds speed.
+- Write a short diary entry about your day. Use imperfective for routine ("Я вставав, снідав") and perfective for achievements ("Я написав звіт, я купив хліб").
+
+Self-reflection is key. Ask yourself: do I truly feel the difference between "doing" and "done"? If not, don't worry. It takes time. But knowing the words **ПРОЦЕС** and **РЕЗУЛЬТАТ** gives you the mental hooks to hang these concepts on. You are no longer just memorizing endings; you are entering the Ukrainian mindset.

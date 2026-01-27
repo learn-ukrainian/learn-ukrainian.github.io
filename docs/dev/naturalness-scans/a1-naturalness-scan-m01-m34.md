@@ -1,4 +1,5 @@
 # A1 Naturalness Scan Report - COMPLETE
+
 **Date:** 2026-01-12
 **Protocol:** `claude_extensions/protocols/a1-naturalness-scan.md`
 **Scope:** M01-M34 (34 modules)
@@ -18,6 +19,7 @@
 ## Scan Results by Module
 
 ### M01-M09: No Prose Activities ✅
+
 **Status:** PASS
 **Activities:** Pure vocabulary drills (match-up, quiz, group-sort)
 **Naturalness:** N/A - no connected prose
@@ -25,6 +27,7 @@
 ---
 
 ### M10: Checkpoint - First Contact ⏸️
+
 **Status:** DEFERRED
 **Activities:** 4× fill-in (demonstratives, conjugation I, conjugation II, negation)
 **Sample sentences:**
@@ -44,6 +47,7 @@
 ---
 
 ### M11-M20: Single-Sentence Drills ✅
+
 **Status:** PASS
 **Activities:** Isolated grammar exercises (1 sentence per item)
 **Sample:**
@@ -64,6 +68,7 @@
 ---
 
 ### M21: Yesterday - Past Tense ⚠️ **FLAGGED**
+
 **Status:** NEEDS FIX
 **Topic:** Past tense (imperfective, gender agreement)
 **Activity:** fill-in "Complete with Past Tense" (lines 45-118)
@@ -98,6 +103,7 @@
 ---
 
 ### M22: Tomorrow - Future Tense ⚠️ **FLAGGED**
+
 **Status:** NEEDS FIX
 **Topic:** Future tense (compound буду + inf, planning expressions)
 **Activities:** 2× fill-in
@@ -146,6 +152,7 @@
 ---
 
 ### M23-M24: Single-Sentence Drills ✅
+
 **Status:** PASS
 **Activities:** Time expressions, modal verbs (isolated sentences)
 **Naturalness:** Appropriate for single-sentence format
@@ -153,6 +160,7 @@
 ---
 
 ### M25: My Daily Routine ✅ **PREVIOUSLY FIXED**
+
 **Status:** FIXED (committed 2026-01-12)
 **Commit:** `37c22336`
 **Activities:** 2× fill-in (reflexive verbs, sequence words)
@@ -163,6 +171,7 @@
 ---
 
 ### M26-M33: Single-Sentence Drills ✅
+
 **Status:** PASS
 **Activities:** Adjectives, colors, adverbs, weather, prepositions, health, family, holidays
 **Sample:**
@@ -180,6 +189,7 @@
 ---
 
 ### M34: Checkpoint - Final Review ⏸️
+
 **Status:** DEFERRED
 **Activities:** Comprehensive grammar review (all topics M01-33)
 **Format:** Single-sentence drills across all topics
@@ -190,6 +200,7 @@
 ## Summary by Status
 
 ### ✅ PASS (30 modules)
+
 - M01-M09: No prose activities
 - M11-M20: Single-sentence drills (appropriate format)
 - M23-M24: Single-sentence drills
@@ -197,10 +208,12 @@
 - M26-M33: Single-sentence drills
 
 ### ⚠️ FLAGGED (2 modules)
+
 - **M21:** Yesterday - Past Tense (score 4/10)
 - **M22:** Tomorrow - Future Tense (score 5-6/10)
 
 ### ⏸️ DEFERRED (2 modules)
+
 - M10: Checkpoint - First Contact
 - M34: Checkpoint - Final Review
 
@@ -283,4 +296,3 @@
 **Grammar reference:** `docs/l2-uk-en/A1-CURRICULUM-PLAN.md` (Ukrainian State Standard 2024)
 **Previously fixed:** M25 (commit `37c22336`)
 **Token usage:** ~100k (full systematic scan)
-

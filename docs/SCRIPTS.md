@@ -161,7 +161,8 @@ The following scripts are kept for backward compatibility but are superseded by 
 | `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md` | Quality standards by level (consolidated)                                                                |
 | `docs/MARKDOWN-FORMAT.md`                        | Markdown syntax specification                                                                            |
 | `docs/CONTENT-QUALITY-AUDIT.md`                  | Content quality review system (LLM-based)                                                                |
-| `claude_extensions/commands/review-content-*.md` | Content quality review commands (`/review-content-scoring`, etc.)                                        |
+| `claude_extensions/commands/review-content-v4.md` | Content quality review command (modular tier system)                                        |
+| `claude_extensions/commands/review-tiers/*.md` | Tier-specific review criteria (beginner, core, seminar, advanced)                                        |
 
 ---
 
@@ -169,41 +170,94 @@ The following scripts are kept for backward compatibility but are superseded by 
 
 > **When to use:** After `audit_module.py` passes structural gates. Review-content focuses on **pedagogical quality** (coherence, engagement, naturalness).
 
-### Available Commands
+### Primary Command: `/review-content-v4`
 
-| Command | Purpose | Size |
-|---------|---------|------|
-| `/review-content-scoring` | **Primary** - Compact post-audit quality review with 0-10 scoring | 13k |
-| `/review-content-scoring-0-10` | Detailed 0-10 rubric reference (dimensions, examples) | 23k |
-| `/review-content-enhancements` | AI slop detection & humanity checks (optional addon) | 16k |
+**v4.0 introduces a modular tier architecture** — short dispatcher (~260 lines) with tier-specific files (~250 lines each). This ensures AI reads and executes the full prompt without skipping sections.
+
+```bash
+/review-content-v4 b2-hist 5      # Review single module
+/review-content-v4 b1 1-10        # Review range (uses subagents)
+/review-content-v4 a1             # Review entire level
+```
+
+### Tier System
+
+| Tier | Levels | Experience Focus | File |
+|------|--------|------------------|------|
+| **Tier 1** | A1, A2 | Lesson Quality (encouraging tutor) | `tier-1-beginner.md` |
+| **Tier 2** | B1, B2 Core, B2-PRO | Teaching Quality (effective teaching) | `tier-2-core.md` |
+| **Tier 3** | B2-HIST, C1-HIST, C1-BIO, LIT | Lecture Quality (A+ seminar) | `tier-3-seminar.md` |
+| **Tier 4** | C1 Core, C1-PRO, C2 | Learning Quality (intellectual depth) | `tier-4-advanced.md` |
+
+**File locations:**
+- Dispatcher: `claude_extensions/commands/review-content-v4.md`
+- Tier files: `claude_extensions/commands/review-tiers/tier-{1-4}-*.md`
+
+### How It Works
+
+1. **Detect Tier** — Command auto-detects tier based on level
+2. **Read Tier File** — Loads tier-specific criteria (arc structure, pacing, weak moments)
+3. **Execute Experience Audit** — TOP PRIORITY: tier-appropriate "Would I...?" test
+4. **Score 12 Dimensions** — Same dimensions, tier-adjusted thresholds
+5. **Apply Fixes** — Safe fixes applied immediately
+6. **Generate Report** — Saves to `curriculum/l2-uk-en/{level}/review/{slug}-review.md`
+
+### 12 Scoring Dimensions (All Tiers)
+
+| # | Dimension | Weight | Notes |
+|---|-----------|--------|-------|
+| 1 | **Experience Quality** | 1.5 | TOP PRIORITY — tier-specific assessment |
+| 2 | Coherence | 1.0 | Logical flow, transitions |
+| 3 | Relevance | 1.0 | Alignment with module goals |
+| 4 | Educational | 1.2 | Clear explanations, useful examples |
+| 5 | Language | 1.1 | Ukrainian quality, no Russianisms |
+| 6 | Pedagogy | 1.2 | Teaching approach, scaffolding |
+| 7 | Immersion | 0.8 | Ukrainian-to-English ratio |
+| 8 | Activities | 1.3 | Quality, density, variety |
+| 9 | Richness | 0.9 | Examples, engagement, cultural refs |
+| 10 | Humanity | 0.8 | Teacher voice, warmth |
+| 11 | LLM Fingerprint | 1.1 | AI patterns vs. authentic writing |
+| 12 | **Linguistic Accuracy** | 1.5 | Factual correctness (AUTO-FAIL if wrong) |
+
+**Note:** "Experience Quality" adapts per tier:
+- Tier 1: Lesson Quality (tutoring experience)
+- Tier 2: Teaching Quality (learning effectiveness)
+- Tier 3: Lecture Quality (seminar engagement)
+- Tier 4: Learning Quality (intellectual depth)
+
+### Tier-Specific Criteria Examples
+
+**Tier 1 (A1/A2) — Safe Tutoring:**
+- Arc: WELCOME → PREVIEW → PRESENT → PRACTICE → CELEBRATE
+- Focus: Quick wins, English support, encouragement
+- Warmth threshold: ≥15 direct address, ≥3 encouragement phrases
+
+**Tier 3 (B2-HIST/C1-HIST/C1-BIO/LIT) — A+ Seminar:**
+- Arc: HOOK → TENSION → JOURNEY → CLIMAX → RESOLUTION → CALL TO ACTION
+- Focus: Narrative engagement, primary sources, emotional peaks
+- Weak moments: DEAD_INTRO, WALL_OF_FACTS, FORCED_CONNECTION, ENERGY_DROP, etc.
+
+### Scoring Philosophy
+
+- **0-6 FAIL** (fix immediately)
+- **7-8 INSUFFICIENT** (improve to 9+)
+- **9-10 PASS** (acceptable)
+
+**ONLY 9-10 IS ACCEPTABLE.**
+
+### Additional Commands
+
+| Command | Purpose |
+|---------|---------|
+| `/review-content-enhancements` | AI slop detection & humanity checks (optional addon) |
 
 ### Archived (Obsolete)
 
 | Command | Reason |
 |---------|--------|
-| `review-content.md` | Superseded by `-scoring` version (was 74k, too bloated) |
-| `review-content-v2.md` | Orphaned consolidation attempt |
-
-### Usage
-
-```bash
-/review-content-scoring b2-hist 5      # Review single module
-/review-content-scoring b2-hist 1-10   # Review range (uses subagents)
-```
-
-### Key Criteria (9 Critical Sections)
-
-1. Template Compliance (auto-fail if violated)
-2. Activity Quality (auto-fail for structure/wrong answers)
-3. Richness Red Flags (auto-fail for AI slop)
-4. Red Flags (multiple auto-fails)
-5. Content Richness (B1+ critical)
-6. Humanity & Flow Audit
-7. Dryness Flags (rewrite if 2+)
-8. Human Warmth Checklist (<2 markers = fail)
-9. LLM Fingerprint Detection (B1+ critical)
-
-**Scoring:** Only 9-10/10 is acceptable. Everything below 9 requires fixes.
+| `review-content-scoring.md` | Superseded by v4 modular architecture |
+| `review-content-scoring-0-10.md` | Merged into tier files |
+| `review-content-v3.md` | Renamed and refactored to v4 |
 
 ---
 
@@ -310,6 +364,7 @@ Comprehensive check-and-fix loop for a complete module. Orchestrates all QA chec
 5. Runs pipeline when complete
 
 **Decision matrix:**
+
 | Violations | Action |
 |-----------|--------|
 | ≤3 total | Fix individually |
@@ -338,6 +393,7 @@ Check and fix invalid activity types in meta.yaml files across the curriculum.
 **Valid activity types:** match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
 
 **Common invalid types and mappings:**
+
 | Invalid | Action | Rationale |
 |---------|--------|-----------|
 | transform | → fill-in | Verb transformation |
@@ -710,6 +766,7 @@ npm run sync:landing:dry       # Preview only (dry run)
 ```
 
 **Status Logic:**
+
 | Completion | Status | Meaning |
 |------------|--------|---------|
 | 100% | 🔍 In QA | All modules exist, needs final review |
@@ -804,6 +861,65 @@ The vocabulary system uses SQLite (`vocabulary.db`) to track all words across mo
 **Next step:** Run enrichment to fill IPA and translations (see `enrich_yaml_vocab.py` below).
 
 **Time savings:** 30 minutes → 5 minutes per module (83% reduction)
+
+---
+
+### vocab_enrich_nlp.py
+
+**Purpose:** NLP-based vocabulary enrichment using pymorphy2 (lemmatization, POS tagging) and ukrainian-word-stress (IPA generation).
+
+**Dependencies:**
+- `pymorphy2` with `pymorphy2-dicts-uk` - Ukrainian morphological analyzer
+- `ukrainian-word-stress` (v1.1.1+) - Stress marking and IPA generation
+
+**Usage:**
+
+```bash
+# Enrich vocabulary file with IPA, lemma, and POS
+.venv/bin/python scripts/vocab_enrich_nlp.py curriculum/l2-uk-en/b2-hist/vocabulary/trypillian-civilization.yaml
+
+# Dry run (preview changes)
+.venv/bin/python scripts/vocab_enrich_nlp.py curriculum/l2-uk-en/b2-hist/vocabulary/trypillian-civilization.yaml --dry-run
+```
+
+**What it does:**
+
+1. Reads vocabulary YAML file with skeleton entries
+2. For each entry missing IPA:
+   - Uses `ukrainian-word-stress` to add stress marks (e.g., цивіліза́ція)
+   - Converts stressed form to IPA notation (e.g., /t͡sɪvʲilʲiˈzat͡sʲijɐ/)
+3. For each entry missing POS:
+   - Uses `pymorphy2` to detect part of speech
+   - Maps to standard tags: noun, verb, adj, adv, etc.
+4. Writes enriched YAML back to file
+
+**Example transformation:**
+
+```yaml
+# Before (skeleton)
+- lemma: цивілізація
+  ipa: ''
+  translation: civilization
+  pos: ''
+
+# After (enriched)
+- lemma: цивілізація
+  ipa: /t͡sɪvʲilʲiˈzat͡sʲijɐ/
+  translation: civilization
+  pos: noun
+  gender: f
+```
+
+**Batch usage for entire level:**
+
+```bash
+# Enrich all vocabulary files in B2-HIST
+for f in curriculum/l2-uk-en/b2-hist/vocabulary/*.yaml; do
+  .venv/bin/python scripts/vocab_enrich_nlp.py "$f"
+done
+```
+
+**Related:** See GitHub issue #455 for implementation details.
 
 ---
 
@@ -940,6 +1056,7 @@ npx ts-node scripts/enrich-activities.ts l2-uk-en 1-100
 ```
 
 **Level Configuration:**
+
 | Level | Activities | Items/Activity | Refresher % | Complexity |
 |-------|------------|----------------|-------------|------------|
 | A1 | 6 | 10 | 10% | simple |

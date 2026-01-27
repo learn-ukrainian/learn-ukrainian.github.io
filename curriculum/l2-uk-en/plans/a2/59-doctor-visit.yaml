@@ -5,42 +5,32 @@ version: '2.0'
 title: At the Doctor
 subtitle: Medical Consultation
 content_outline:
-- section: 'Introduction: Healthcare in Ukraine'
-  words: 100
+- section: 'Вступ'
+  words: 80
   points:
   - Healthcare system basics
-  - Visiting a doctor
   - Medical vocabulary overview
-- section: Making an Appointment
-  words: 150
+- section: 'Презентація'
+  words: 295
   points:
-  - записатися до лікаря
-  - Clinic vs hospital
-  - Scheduling vocabulary
-- section: Describing Symptoms
-  words: 200
+  - Making appointments
+  - Describing symptoms
+  - Doctor's questions
+- section: 'Practice (Практика)'
+  words: 345
   points:
-  - У мене болить...
-  - Pain intensity and duration
-  - Common symptoms
-- section: Doctor's Questions
-  words: 200
+  - Medical dialogue exercises
+  - Complete consultation practice
+- section: 'Narrative (Розповідь)'
+  words: 205
   points:
-  - Medical history questions
-  - Allergies and medications
-  - Answering accurately
-- section: Diagnosis and Advice
-  words: 200
+  - Story about doctor visit
+  - Diagnosis and treatment
+- section: 'Need More Practice?'
+  words: 30
   points:
-  - діагноз, рецепт, лікування
-  - Understanding instructions
-  - Sick leave (лікарняний)
-- section: 'Practice: Medical Dialogue'
-  words: 150
-  points:
-  - Complete consultation
-  - Ask and answer questions
-word_target: 1000
+  - Summary and key phrases
+word_target: 955
 vocabulary_hints:
   required:
   - лікар (doctor)
@@ -59,16 +49,16 @@ vocabulary_hints:
   - температура (temperature)
   - тиск (blood pressure)
 activity_hints:
-- type: vocabulary-drill
+- type: match-up
   focus: Medical vocabulary
   items: 25
-- type: dialogue
+- type: cloze
   focus: Doctor-patient conversation
   items: 12
 - type: fill-in
   focus: Complete medical sentences
   items: 15
-- type: role-play
+- type: cloze
   focus: Medical consultation
   items: 8
 focus: practical

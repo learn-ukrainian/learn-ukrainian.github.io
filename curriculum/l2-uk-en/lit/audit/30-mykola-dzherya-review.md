@@ -1,10 +1,12 @@
 # Audit Report: M30 — 30-mykola-dzherya.md
+
 **Level:** LIT | **Module:** M30 | **Phase:** LIT.5 | **Pedagogy:** Seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
 **Generated:** 2026-01-26 22:58:04
 
 ## Configuration
+
 **Type:** LIT-literature
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -18,6 +20,7 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
+
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Уривок: Рішення про втечу | 3 | 1 | ✅ |
@@ -34,18 +37,21 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'втік з...'.
   - FIX: Vary sentence structure.
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: literature) missing advanced activity type: critical-analysis
   - FIX: Add a critical-analysis activity to meet advanced richness standards.
 
 ## Recommendation
+
 **📝 UPDATE** (severity 25/100)
 
 - 2 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
+
 - **Words:** ❌ 3532/4000 (raw: 3975)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
@@ -64,10 +70,12 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
+
 **Score:** 92% (minimum: 90%)
 **Module Type:** literature
 
 ### Score Breakdown
+
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
@@ -83,6 +91,7 @@
 | **TOTAL** | | | | | **92.9%** |
 
 ## Section Audit
+
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 144 | Included in Core |

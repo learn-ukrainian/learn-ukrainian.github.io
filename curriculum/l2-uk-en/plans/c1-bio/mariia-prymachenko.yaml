@@ -69,22 +69,10 @@ activity_hints:
   focus: Описи картин Примаченко та цитати сучасників
   source: Мистецтвознавчі статті
   items: 3 passages
-- type: quiz
-  focus: Біографія та творчість
-  items: 12+
-- type: match-up
-  focus: Картини та їхня символіка
-  items: 10+
 - type: essay-response
   focus: Чому наївне мистецтво стало символом України?
   word_target: 300
   output: Cultural analysis
-- type: group-sort
-  focus: Періоди творчості та мотиви
-  items: 12+
-- type: fill-in
-  focus: Мистецтвознавча термінологія
-  items: 10+
 focus: biography
 prerequisites:
 - c1-bio-66-kateryna-bilokur
@@ -107,3 +95,7 @@ sources:
   notes: Музей та доля колекції під час війни
 immersion: 100% Ukrainian
 phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of марія примаченко: народна художниця'
+- Evaluate the contributions of диво-звірі з болотні
+- Trace the career and influence of спадщина та війна 2022 року

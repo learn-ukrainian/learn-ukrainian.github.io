@@ -2,14 +2,14 @@
   "module": "04-sentence-structure",
   "level": "B1",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:26:45.955644Z",
+  "last_audit": "2026-01-27T16:25:45.528051Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-24T19:27:31.468756Z",
+    "md": "2026-01-27T16:04:34.043228Z",
     "meta": "2026-01-26T15:44:41.445060Z",
     "activities": "2026-01-12T16:11:12.252707Z",
     "vocabulary": "2026-01-25T16:02:18.012717Z",
-    "plan": "2026-01-26T15:44:41.444722Z"
+    "plan": "2026-01-27T12:02:43.974180Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1659/1200 (raw: 2291)"
+      "message": "2731/1200 (raw: 3587)"
     },
     "activities": {
       "status": "pass",

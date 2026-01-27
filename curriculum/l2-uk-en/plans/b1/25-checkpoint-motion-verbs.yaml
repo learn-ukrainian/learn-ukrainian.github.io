@@ -6,72 +6,73 @@ title: 'Контрольна точка: Дієслова руху'
 subtitle: 'Checkpoint: Motion Verbs'
 content_outline:
 - section: Огляд
-  words: 100
-  points:
-  - Content for Огляд
-  - Examples and explanation
-  - Practice or application
+  words: 106
+  points: []
 - section: 'Skill 1: Пари дієслів руху (M16)'
-  words: 250
+  words: 310
   points:
-  - 'Content for Skill 1: Пари дієслів руху (M16)'
-  - Examples and explanation
-  - Practice or application
+  - 'Model:'
+  - 'Practice:'
+  - 'Self-Check:'
 - section: 'Skill 2: Прихід і вихід (M17)'
-  words: 250
+  words: 300
   points:
-  - 'Content for Skill 2: Прихід і вихід (M17)'
-  - Examples and explanation
-  - Practice or application
+  - 'Model:'
+  - 'Practice:'
+  - 'Self-Check:'
 - section: 'Skill 3: Перехід і обхід (M18)'
-  words: 150
+  words: 211
   points:
-  - 'Content for Skill 3: Перехід і обхід (M18)'
-  - Examples and explanation
-  - Practice or application
+  - 'Model:'
+  - 'Practice:'
+  - 'Self-Check:'
 - section: 'Skill 4: Початок і повернення (M19)'
-  words: 200
+  words: 246
   points:
-  - 'Content for Skill 4: Початок і повернення (M19)'
-  - Examples and explanation
-  - Practice or application
+  - 'Model:'
+  - 'Practice:'
+  - 'Self-Check:'
 - section: 'Skill 5: Наближення і віддалення (M20)'
-  words: 100
+  words: 154
   points:
-  - 'Content for Skill 5: Наближення і віддалення (M20)'
-  - Examples and explanation
-  - Practice or application
+  - 'Model:'
+  - 'Practice:'
+  - 'Self-Check:'
 - section: 'Skill 6: Переносні значення (M21)'
-  words: 250
+  words: 297
   points:
-  - 'Content for Skill 6: Переносні значення (M21)'
-  - Examples and explanation
-  - Practice or application
+  - 'Model:'
+  - 'Practice:'
+  - 'Self-Check:'
 - section: 'Skill 7: Інтеграція префіксів (M22)'
-  words: 150
+  words: 195
   points:
-  - 'Content for Skill 7: Інтеграція префіксів (M22)'
-  - Examples and explanation
-  - Practice or application
+  - 'Model:'
+  - 'Practice:'
+  - 'Self-Check:'
 - section: 'Skill 8: Дієслова руху з об''єктами (M23)'
-  words: 250
+  words: 296
   points:
-  - 'Content for Skill 8: Дієслова руху з об''єктами (M23)'
-  - Examples and explanation
-  - Practice or application
+  - 'Model:'
+  - 'Practice:'
+  - 'Self-Check:'
 - section: 'Skill 9: Інтеграція у наративі (M24)'
-  words: 200
+  words: 288
   points:
-  - 'Content for Skill 9: Інтеграція у наративі (M24)'
-  - Examples and explanation
-  - Practice or application
+  - 'Model:'
+  - 'Practice:'
+  - 'Self-Check:'
 - section: Інтеграційне завдання
-  words: 400
+  words: 455
   points:
-  - Content for Інтеграційне завдання
-  - Examples and explanation
-  - Practice or application
-word_target: 1200
+  - Письмове завдання
+- section: Потрібно більше практики?
+  words: 142
+  points:
+  - Інтеграція знань
+  - Реальне застосування
+  - Онлайн-ресурси
+word_target: 3000
 vocabulary_hints:
   required:
   - односпрямований (unidirectional)

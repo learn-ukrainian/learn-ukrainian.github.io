@@ -1,13 +1,25 @@
 module: a2-62
 level: A2
 slug: rental-accommodation
-version: '2.0'
-id: a2-62
+title: Rental Accommodation
+transliteration: none
+content_outline:
+- section: 'Introduction'
+  words: 100
+- section: 'Presentation'
+  words: 50
+- section: 'Reading Context'
+  words: 100
+- section: 'Viewing Dialogue'
+  words: 100
+- section: 'Utilities Review'
+  words: 100
+- section: 'Agreement Insight'
+  words: 100
+- section: 'Practice'
+  words: 100
+word_target: 1000
 naturalness:
   score: 9
   status: PASS
-  justification: Essential rental scenario
-duration: 60
-transliteration: none
-build:
-  last_modified: '2026-01-26'
+immersion: 83

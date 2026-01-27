@@ -2,12 +2,12 @@
   "module": "tomos",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:55:28.937893Z",
+  "last_audit": "2026-01-27T15:51:38.250524Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-25T21:29:25.034544Z",
+    "md": "2026-01-27T15:24:10.347196Z",
     "meta": "2026-01-26T22:20:13.700923Z",
-    "activities": "2026-01-25T21:29:25.034302Z",
+    "activities": "2026-01-27T15:34:55.017135Z",
     "vocabulary": null,
     "plan": null
   },
@@ -25,7 +25,7 @@
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "15/3"
+      "message": "4/3"
     },
     "vocabulary": {
       "status": "warn",
