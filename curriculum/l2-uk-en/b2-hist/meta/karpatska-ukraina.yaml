@@ -1,14 +1,48 @@
-module: b2-hist-104
-level: B2-HIST
+module_id: b2-hist-104
 slug: karpatska-ukraina
+type: immersion
+level: b2
+track: history
+title: 'Карпатська Україна 1938-1939'
+subtitle: 'Carpatho-Ukraine: A Brief Independence'
+description: 'The story of the first Ukrainian independence of the 20th century in Transcarpathia, the presidency of Avhustyn Voloshyn, and the heroic defense of the Carpathian Sich.'
+transliteration: none
 version: '2.0'
-id: b2-hist-104
+status: draft
+timestamp: '2025-01-20T10:00:00Z'
+authors:
+- Gemini
+content_outline:
+- section: 'Вступ: Один день незалежності'
+  words: 400
+- section: Передісторія та автономія
+  words: 800
+- section: Незалежність та оборона
+  words: 1000
+- section: Первинні джерела
+  words: 800
+- section: Деколонізаційний погляд
+  words: 500
+- section: 'Підсумок: Спадщина та пам''ять'
+  words: 500
+required_activities:
+- critical-analysis
+- true-false
+- essay-response
+required_vocabulary:
+- автономія
+- проголошення
+- незалежність
+- окупація
+- оборона
+- січовик
+- агресія
+- уряд
+video_url: null
+audio_url: null
 naturalness:
   score: 10
   status: PASS
-  justification: Академічний український для політичної історії
-duration: 120
-transliteration: none
-build:
-  last_modified: '2026-01-26'
-phase: HIST.9 [WWI & Revolution]
+  justification: "Native-level history narrative."
+immersion_focus: true
+pedagogy: CBI

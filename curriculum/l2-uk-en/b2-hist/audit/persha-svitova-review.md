@@ -1,8 +1,8 @@
 # Audit Report: M88 — persha-svitova.md
 **Level:** B2 | **Module:** M88 | **Phase:** HIST.9 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-27 15:51:29
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-28 15:23:12
 
 ## Configuration
 **Type:** B2-history
@@ -20,41 +20,34 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | true-false | Правда чи міф? | 8 | 8 | ✅ |
-| 2 | essay-response | Спадщина УСС | 1 | 1 | ✅ |
-| 3 | comparative-study | Дві імперії, два підходи | 1 | 1 | ✅ |
+| 1 | reading | Локальна історія: Легіон УСС | 3 | 1 | ✅ |
+| 2 | authorial-intent | Аналіз намірів: Маніфест ГУР | 1 | 1 | ✅ |
+| 3 | comparative-study | Порівняння: Політика імперій в Україні | 1 | 1 | ✅ |
+| 4 | critical-analysis | Критичний аналіз: Трагедія розділеного народу | 1 | 1 | ✅ |
+| 5 | essay-response | Есе: Перша світова як каталізатор | 1 | 1 | ✅ |
+| 6 | true-false | Перевірка фактів: Велика війна | 10 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 3 (target: 3-9) ✅
-- Unique types: 3 (minimum: 2) ✅
-- Priority types used: 2/4 (comparative-study, essay-response) ✅
-- Required types used: 1/2 (essay-response) ❌
+- Total activities: 6 (target: 3-9) ✅
+- Unique types: 6 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in persha-svitova.yaml: Insufficient activities: 3 found, minimum 5 required for B2-HIST
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 25/100)
-
-- 1 violations (minor)
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
-
 ## Gates
-- **Words:** ❌ 2251/4000 (raw: 2413)
-- **Activities:** ✅ 3/3
+- **Words:** ✅ 5076/4000 (raw: 5248)
+- **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 3/2 types
+- **Unique_types:** ✅ 6/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 14/5
+- **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 20 (soft target)
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Vocab:** ✅ 20/20
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ✅ Content-heavy OK (3 activities)
-- **Immersion:** 🇺🇦 97.1% (target 90-100% (history))
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (6 activities)
+- **Immersion:** 🇺🇦 100.0% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -66,33 +59,26 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 8 | 3 | 100% | 24% | 23.8% |
-| engagement | 14 | 6 | 100% | 14% | 14.3% |
+| primary_sources | 15 | 3 | 100% | 24% | 23.8% |
+| engagement | 9 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 10 | 4 | 100% | 10% | 9.5% |
-| visual | 12 | 4 | 100% | 10% | 9.5% |
-| variety | 1.00 | - | 100% | 5% | 4.8% |
+| cultural | 8 | 4 | 100% | 10% | 9.5% |
+| visual | 7 | 4 | 100% | 10% | 9.5% |
+| variety | 0.97 | - | 97% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 6 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **100.0%** |
+| questions | 26 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Перша світова війна: Брат проти брата** | ⚪️ | 0 | Skipped |
-| **Цілі уроку** | ⚪️ | 38 | Skipped |
-| **Вступ** | ✅ | 192 | Included in Core |
-| **Легіон Українських Січових Стрільців (УСС)** | ⚪️ | 253 | Skipped |
-| **Жінки на війні: Олена Степанів** | ⚪️ | 136 | Skipped |
-| **Брусиловський прорив: пік трагедії** | ⚪️ | 110 | Skipped |
-| **Листопадовий чин: від війни до держави** | ⚪️ | 82 | Skipped |
-| **Життя на фронті** | ⚪️ | 282 | Skipped |
-| **Союз Визволення України (СВУ) і полонені** | ⚪️ | 153 | Skipped |
-| **Деколонізаційний погляд** | ✅ | 96 | Included in Core |
-| **Читання** | ✅ | 258 | Included in Core |
-| **Первинні джерела** | ✅ | 245 | Included in Core |
-| **Культурна спадщина УСС: Від пісень до літератури** | ✅ | 228 | Included in Core |
-| **Підсумок** | ✅ | 68 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Intro/Narrative** | ✅ | 105 | Included in Core |
+| **Вступ: Розділений народ** | ✅ | 623 | Included in Core |
+| **Українці в російській армії** | ⚪️ | 1118 | Skipped |
+| **Українці в австро-угорській армії** | ⚪️ | 1135 | Skipped |
+| **Читання** | ✅ | 334 | Included in Core |
+| **Первинні джерела** | ✅ | 667 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 517 | Included in Core |
+| **Підсумок: Шлях до 1917 року** | ✅ | 379 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 198 | Skipped |

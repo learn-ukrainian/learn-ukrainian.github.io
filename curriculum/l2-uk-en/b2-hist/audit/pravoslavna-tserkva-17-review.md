@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M34 | **Phase:** HIST.4 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 17:37:55
+**Generated:** 2026-01-27 23:38:45
 
 ## Configuration
 **Type:** B2-history
@@ -47,26 +47,27 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 98.9% (target 90-100% (history))
-- **Richness:** ✅ 99% (content)
+- **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
-**Module Type:** content
+**Module Type:** history
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 36 | 15 | 100% | 25% | 25.0% |
-| engagement | 21 | 5 | 100% | 19% | 18.7% |
-| variety | 0.96 | - | 96% | 12% | 12.0% |
-| cultural | 6 | 4 | 100% | 12% | 12.5% |
-| realworld | 6 | 3 | 100% | 12% | 12.5% |
-| visual | 21 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 7 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **99.5%** |
+| primary_sources | 12 | 3 | 100% | 24% | 23.8% |
+| engagement | 21 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
+| decolonization | 15 | 2 | 100% | 14% | 14.3% |
+| cultural | 6 | 4 | 100% | 10% | 9.5% |
+| visual | 21 | 4 | 100% | 10% | 9.5% |
+| variety | 0.96 | - | 96% | 5% | 4.6% |
+| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
+| questions | 7 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

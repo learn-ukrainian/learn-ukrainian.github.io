@@ -1,0 +1,125 @@
+module: upa
+level: B2-HIST
+version: '2.0'
+items:
+- term: УПА
+  translation: UPA (Ukrainian Insurgent Army)
+  pos: noun
+  gender: f
+  example: УПА воювала на два фронти — проти нацистів і більшовиків.
+
+- term: повстанець
+  translation: insurgent, rebel
+  pos: noun
+  gender: m
+  example: Кожен повстанець був готовий віддати життя за свободу України.
+
+- term: опір
+  translation: resistance
+  pos: noun
+  gender: m
+  example: Збройний опір тривав до початку 1960-х років.
+
+- term: партизан
+  translation: partisan, guerrilla
+  pos: noun
+  gender: m
+  example: Партизани використовували тактику «малої війни».
+
+- term: окупація
+  translation: occupation
+  pos: noun
+  gender: f
+  example: Під час німецької окупації українці страждали від жорстоких репресій.
+
+- term: незалежність
+  translation: independence
+  pos: noun
+  gender: f
+  example: Головною метою УПА була незалежність України.
+
+- term: командир
+  translation: commander
+  pos: noun
+  gender: m
+  example: Роман Шухевич став головним командиром УПА.
+
+- term: підпілля
+  translation: underground (movement)
+  pos: noun
+  gender: n
+  example: Підпілля функціонувало завдяки підтримці місцевого населення.
+
+- term: криївка
+  translation: hideout, underground bunker
+  pos: noun
+  gender: f
+  example: У криївках жили, працювали та планували операції.
+
+- term: схрон
+  translation: hideout, cache
+  pos: noun
+  gender: m
+  example: Схрони були ретельно замасковані під землею.
+
+- term: диверсія
+  translation: sabotage
+  pos: noun
+  gender: f
+  example: Повстанці проводили диверсії на залізницях.
+
+- term: репресії
+  translation: repressions
+  pos: noun
+  gender: f
+  plural: true
+  example: Радянські репресії не зламали дух опору.
+
+- term: депортація
+  translation: deportation
+  pos: noun
+  gender: f
+  example: Депортації українців до Сибіру були масовими.
+
+- term: зв'язкова
+  translation: liaison (female)
+  pos: noun
+  gender: f
+  example: Зв'язкові перевозили секретні повідомлення між підрозділами.
+
+- term: облава
+  translation: raid, manhunt
+  pos: noun
+  gender: f
+  example: Під час облави повстанці сиділи тихо в криївках.
+
+- term: самооборона
+  translation: self-defense
+  pos: noun
+  gender: f
+  example: З 1942 року почали формуватися загони самооборони.
+
+- term: штафета
+  translation: dispatch, secret message
+  pos: noun
+  gender: f
+  example: Штафети перевозили у волоссі або під взуттям.
+
+- term: бофони
+  translation: bofony (UPA currency)
+  pos: noun
+  gender: m
+  plural: true
+  example: Бофони були квитанціями за надані ресурси.
+
+- term: загарбник
+  translation: invader, aggressor
+  pos: noun
+  gender: m
+  example: Повстанці клялися боротися проти всіх загарбників.
+
+- term: спадщина
+  translation: legacy, heritage
+  pos: noun
+  gender: f
+  example: Спадщина УПА живе в сучасній українській армії.

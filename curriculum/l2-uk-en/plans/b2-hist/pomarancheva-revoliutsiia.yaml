@@ -1,7 +1,7 @@
 module: pomarancheva-revoliutsiia
-level: b2-hist
-sequence: 0
-version: '1.0'
+level: B2-HIST
+slug: pomarancheva-revoliutsiia
+version: '2.0'
 title: Помаранчева революція
 focus: history
 pedagogy: CBI

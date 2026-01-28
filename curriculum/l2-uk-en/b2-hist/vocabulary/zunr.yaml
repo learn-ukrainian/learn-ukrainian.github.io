@@ -1,0 +1,333 @@
+items:
+- lemma: ЗУНР
+  ipa: [zɛ u ɛn ˈɛr]
+  pos: proper noun
+  definition_en: Western Ukrainian People's Republic (Zakhidno-Ukrainska Narodna Respublika)
+  collocations:
+  - уряд ЗУНР
+  - проголошення ЗУНР
+  - президент ЗУНР
+  synonyms: []
+  antonyms: []
+  tags: [history, politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: злука
+  ipa: [ˈzlukɑ]
+  pos: noun
+  definition_en: unification, union (historical term)
+  collocations:
+  - Акт Злуки
+  - день Злуки
+  - ідея Злуки
+  synonyms: [об'єднання, єднання]
+  antonyms: [роз'єднання]
+  tags: [history, politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: соборність
+  ipa: [sɔˈbɔrn⁽ʲ⁾isʲtʲ]
+  pos: noun
+  definition_en: unity, collegiality, comprehensive integrity (of Ukrainian lands)
+  collocations:
+  - ідея соборності
+  - День Соборності
+  - свято соборності
+  synonyms: [єдність]
+  antonyms: [сепаратизм]
+  tags: [politics, philosophy]
+  morphology:
+    gender: f
+    number: sg
+- lemma: Галичина
+  ipa: [ɦɑlɪt͡ʃɪˈnɑ]
+  pos: proper noun
+  definition_en: Galicia, a historical region in Western Ukraine
+  collocations:
+  - Східна Галичина
+  - українці Галичини
+  - Галицька армія
+  synonyms: []
+  antonyms: []
+  tags: [geography, history]
+  morphology:
+    gender: f
+    number: sg
+- lemma: УГА
+  ipa: [u ɦɑ ˈɑ]
+  pos: proper noun
+  definition_en: Ukrainian Galician Army (Ukrainska Halytska Armiia)
+  collocations:
+  - воїни УГА
+  - командири УГА
+  - героїзм УГА
+  synonyms: []
+  antonyms: []
+  tags: [history, military]
+  morphology:
+    gender: f
+    number: sg
+- lemma: чин
+  ipa: [t͡ʃɪn]
+  pos: noun
+  definition_en: deed, act, action (often heroic)
+  collocations:
+  - Листопадовий чин
+  - великий чин
+  - історичний чин
+  synonyms: [дія, вчинок]
+  antonyms: [бездіяльність]
+  tags: [history]
+  morphology:
+    gender: m
+    number: sg
+- lemma: повстання
+  ipa: [powˈstɑnʲːɑ]
+  pos: noun
+  definition_en: uprising, rebellion
+  collocations:
+  - збройне повстання
+  - придушити повстання
+  - антипольське повстання
+  synonyms: [бунт]
+  antonyms: []
+  tags: [politics, military]
+  morphology:
+    gender: n
+    number: sg
+- lemma: делегація
+  ipa: [dɛlɛˈɦɑt͡s⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: delegation
+  collocations:
+  - українська делегація
+  - відправити делегацію
+  - повноважна делегація
+  synonyms: [місія]
+  antonyms: []
+  tags: [politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: універсал
+  ipa: [uniwɛrˈsɑl]
+  pos: noun
+  definition_en: universal (state decree)
+  collocations:
+  - Універсал Директорії
+  - текст Універсалу
+  - проголосити Універсал
+  synonyms: [указ]
+  antonyms: []
+  tags: [history, law]
+  morphology:
+    gender: m
+    number: sg
+- lemma: фронт
+  ipa: [frɔnt]
+  pos: noun
+  definition_en: front (military)
+  collocations:
+  - польський фронт
+  - лінія фронту
+  - прорвати фронт
+  synonyms: [передова]
+  antonyms: [тил]
+  tags: [military]
+  morphology:
+    gender: m
+    number: sg
+- lemma: президент
+  ipa: [prɛzɪˈdɛnt]
+  pos: noun
+  definition_en: president
+  collocations:
+  - президент ЗУНР
+  - обрати президента
+  - повноваження президента
+  synonyms: [голова]
+  antonyms: []
+  tags: [politics]
+  morphology:
+    gender: m
+    number: sg
+- lemma: диктатор
+  ipa: [dɪkˈtɑtɔr]
+  pos: noun
+  definition_en: dictator
+  collocations:
+  - повноваження диктатора
+  - військовий диктатор
+  - проголосити диктатором
+  synonyms: [правитель]
+  antonyms: [демократ]
+  tags: [politics]
+  morphology:
+    gender: m
+    number: sg
+- lemma: окупація
+  ipa: [ɔkupˈɑt͡s⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: occupation
+  collocations:
+  - польська окупація
+  - зона окупації
+  - режим окупації
+  synonyms: [загарбання]
+  antonyms: [визволення]
+  tags: [military, history]
+  morphology:
+    gender: f
+    number: sg
+- lemma: дипломатія
+  ipa: [dɪplɔˈmɑt⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: diplomacy
+  collocations:
+  - українська дипломатія
+  - успіх дипломатії
+  - засоби дипломатії
+  synonyms: []
+  antonyms: [війна]
+  tags: [politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: нафта
+  ipa: [ˈnɑftɑ]
+  pos: noun
+  definition_en: oil, petroleum
+  collocations:
+  - дрогобицька нафта
+  - боротьба за нафту
+  - експорт нафти
+  synonyms: []
+  antonyms: []
+  tags: [economy]
+  morphology:
+    gender: f
+    number: sg
+- lemma: трикутник
+  ipa: [trɪˈkutnɪk]
+  pos: noun
+  definition_en: triangle
+  collocations:
+  - "Трикутник смерті"
+  - опинитися в трикутнику
+  - геометрія трикутника
+  synonyms: []
+  antonyms: []
+  tags: [history, military]
+  morphology:
+    gender: m
+    number: sg
+- lemma: тиф
+  ipa: [tɪf]
+  pos: noun
+  definition_en: typhus
+  collocations:
+  - епідемія тифу
+  - плямистий тиф
+  - лікування тифу
+  synonyms: []
+  antonyms: []
+  tags: [medicine, history]
+  morphology:
+    gender: m
+    number: sg
+- lemma: інтелігенція
+  ipa: [intɛl⁽ʲ⁾iˈɦɛnʲt͡s⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: intelligentsia
+  collocations:
+  - галицька інтелігенція
+  - роль інтелігенції
+  - національна інтелігенція
+  synonyms: [еліта]
+  antonyms: []
+  tags: [society]
+  morphology:
+    gender: f
+    number: sg
+- lemma: церква
+  ipa: [ˈt͡sɛrkwɑ]
+  pos: noun
+  definition_en: church
+  collocations:
+  - греко-католицька церква
+  - роль церкви
+  - вплив церкви
+  synonyms: [храм]
+  antonyms: []
+  tags: [religion, culture]
+  morphology:
+    gender: f
+    number: sg
+- lemma: адвокат
+  ipa: [ɑdwɔˈkɑt]
+  pos: noun
+  definition_en: lawyer
+  collocations:
+  - відомий адвокат
+  - адвокати у владі
+  - фах адвоката
+  synonyms: [юрист]
+  antonyms: []
+  tags: [professions, society]
+  morphology:
+    gender: m
+    number: sg
+- lemma: офензива
+  ipa: [ɔfɛnˈzɪwɑ]
+  pos: noun
+  definition_en: offensive (military)
+  collocations:
+  - Чортківська офензива
+  - почати офензиву
+  synonyms: [наступ]
+  antonyms: [дефензива]
+  tags: [military, history]
+  morphology:
+    gender: f
+    number: sg
+- lemma: евакуація
+  ipa: [ɛwɑkuˈɑt͡s⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: evacuation
+  collocations:
+  - евакуація уряду
+  - термінова евакуація
+  synonyms: []
+  antonyms: []
+  tags: [military, history]
+  morphology:
+    gender: f
+    number: sg
+- lemma: солідарність
+  ipa: [sɔl⁽ʲ⁾idˈɑrn⁽ʲ⁾isʲtʲ]
+  pos: noun
+  definition_en: solidarity
+  collocations:
+  - національна солідарність
+  - виявити солідарність
+  synonyms: []
+  antonyms: []
+  tags: [society, politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: роз'єднання
+  ipa: [rɔzˈjɛdnɑnʲːɑ]
+  pos: noun
+  definition_en: disunity, fragmentation
+  collocations:
+  - вікове роз'єднання
+  - трагедія роз'єднання
+  synonyms: [розкол]
+  antonyms: [об'єднання]
+  tags: [history, society]
+  morphology:
+    gender: n
+    number: sg

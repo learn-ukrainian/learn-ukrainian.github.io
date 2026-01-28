@@ -1,8 +1,8 @@
 # Audit Report: M72 — opryshky.md
 **Level:** B2 | **Module:** M72 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-27 15:51:21
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-27 23:38:37
 
 ## Configuration
 **Type:** B2-history
@@ -24,36 +24,29 @@
 | 2 | reading | Протокол допиту опришка (XVIII ст.) | 3 | 1 | ✅ |
 | 3 | essay-response | Есе: Довбуш як символ незламності | 1 | 1 | ✅ |
 | 4 | comparative-study | Порівняння опришківства та гайдамаччини | 1 | 1 | ✅ |
+| 5 | true-false | Правда чи міф про опришків | 10 | 8 | ✅ |
+| 6 | critical-analysis | Опришківство як соціальний феномен | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 4 (target: 3-9) ✅
-- Unique types: 3 (minimum: 2) ✅
-- Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
+- Total activities: 6 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in opryshky.yaml: Insufficient activities: 4 found, minimum 5 required for B2-HIST
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
 - **Words:** ✅ 4037/4000 (raw: 4281)
-- **Activities:** ✅ 4/3
+- **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 3/2 types
+- **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ✅ Content-heavy OK (4 activities)
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

@@ -1,4 +1,4 @@
-module: b2-hist-106
+module: babyn-yar
 level: B2-HIST
 slug: babyn-yar
 version: '2.0'
@@ -70,10 +70,10 @@ activity_hints:
 focus: history
 pedagogy: seminar
 prerequisites:
-- b2-hist-105 (Друга світова: Початок)
+- "b2-hist-105 (Друга світова: Початок)"
 connects_to:
 - b2-hist-107 (УПА)
-- b2-hist-108 (Синтез: Трагедії)
+- "b2-hist-108 (Синтез: Трагедії)"
 objectives:
 - Учень може описати події Голокосту на території України та їхній масштаб
 - Учень може проаналізувати трагедію Бабиного Яру в контексті нацистської окупації

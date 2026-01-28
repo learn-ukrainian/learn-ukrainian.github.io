@@ -2,12 +2,12 @@
   "module": "rosiiska-imperiia-ukraina",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T15:51:22.630803Z",
+  "last_audit": "2026-01-27T23:38:48.501856Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.347239Z",
+    "md": "2026-01-27T22:37:22.713278Z",
     "meta": "2026-01-26T22:20:13.495572Z",
-    "activities": "2026-01-27T15:34:54.581468Z",
+    "activities": "2026-01-27T21:23:28.722985Z",
     "vocabulary": "2026-01-27T13:28:46.879528Z",
     "plan": null
   },
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "3935/4000 (raw: 4108) (65 short) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "4119/4000 (raw: 4216)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "3/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 1
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

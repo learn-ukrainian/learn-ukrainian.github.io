@@ -685,6 +685,13 @@
         "type": {
           "const": "essay-response"
         },
+        "id": {
+          "type": "string"
+        },
+        "source_reading": {
+          "type": "string",
+          "description": "ID of the reading activity this essay refers to"
+        },
         "instruction": {
           "type": "string",
           "description": "Additional instructions for the learner"
@@ -750,6 +757,13 @@
         "type": {
           "const": "critical-analysis"
         },
+        "id": {
+          "type": "string"
+        },
+        "source_reading": {
+          "type": "string",
+          "description": "ID of the reading activity this analysis refers to"
+        },
         "instruction": {
           "type": "string",
           "description": "Additional instructions for the learner"
@@ -806,6 +820,10 @@
           "type": "string",
           "description": "Unique identifier for the activity"
         },
+        "source_reading": {
+          "type": "string",
+          "description": "ID of the reading activity this comparison refers to"
+        },
         "instruction": {
           "type": "string",
           "description": "Additional instructions for the learner"
@@ -856,6 +874,10 @@
         "id": {
           "type": "string",
           "description": "Unique identifier for the activity"
+        },
+        "source_reading": {
+          "type": "string",
+          "description": "ID of the reading activity this refers to"
         },
         "instruction": {
           "type": "string",

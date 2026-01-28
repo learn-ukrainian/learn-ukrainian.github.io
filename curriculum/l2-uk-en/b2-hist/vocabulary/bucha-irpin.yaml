@@ -1,0 +1,123 @@
+module: bucha-irpin
+level: B2-HIST
+version: '2.0'
+items:
+- term: воєнний злочин
+  translation: war crime
+  pos: noun
+  gender: m
+  example: Масові страти в Бучі кваліфікуються як воєнні злочини.
+
+- term: окупація
+  translation: occupation
+  pos: noun
+  gender: f
+  example: Окупація Бучі тривала 33 дні.
+
+- term: страта
+  translation: execution
+  pos: noun
+  gender: f
+  example: Жертви були застрелені в потилицю — це класичний спосіб страти.
+
+- term: жертва
+  translation: victim
+  pos: noun
+  gender: f
+  example: У Бучі було виявлено понад 450 жертв серед цивільних.
+
+- term: свідчення
+  translation: testimony
+  pos: noun
+  gender: n
+  example: Свідчення очевидців допомагають відтворити картину злочинів.
+
+- term: розслідування
+  translation: investigation
+  pos: noun
+  gender: n
+  example: Розслідування злочинів у Бучі веде Міжнародний кримінальний суд.
+
+- term: ексгумація
+  translation: exhumation
+  pos: noun
+  gender: f
+  example: Ексгумація тіл необхідна для ідентифікації жертв.
+
+- term: геноцид
+  translation: genocide
+  pos: noun
+  gender: m
+  example: Події в Бучі все частіше називають геноцидом українського народу.
+
+- term: масове поховання
+  translation: mass grave
+  pos: noun
+  gender: n
+  example: Біля церкви було виявлено масове поховання з понад 70 тілами.
+
+- term: катування
+  translation: torture
+  pos: noun
+  gender: n
+  example: Слідчі знайшли сліди катувань на тілах загиблих.
+
+- term: мародерство
+  translation: looting
+  pos: noun
+  gender: n
+  example: Російські солдати займалися масовим мародерством у приватних будинках.
+
+- term: депортація
+  translation: deportation
+  pos: noun
+  gender: f
+  example: Примусова депортація цивільних до Росії є воєнним злочином.
+
+- term: трибунал
+  translation: tribunal
+  pos: noun
+  gender: m
+  example: Злочинці мають постати перед міжнародним трибуналом.
+
+- term: репарації
+  translation: reparations
+  pos: noun
+  gender: f
+  example: Україна вимагатиме репарації за знищену інфраструктуру.
+
+- term: позасудова страта
+  translation: extrajudicial execution
+  pos: noun
+  gender: f
+  example: ООН задокументувала численні позасудові страти в Бучі.
+
+- term: цивільне населення
+  translation: civilian population
+  pos: noun
+  gender: n
+  example: Жертвами були переважно цивільне населення — жінки, діти, літні люди.
+
+- term: ордер на арешт
+  translation: arrest warrant
+  pos: noun
+  gender: m
+  example: МКС видав ордер на арешт Путіна за воєнні злочини.
+
+- term: супутниковий знімок
+  translation: satellite image
+  pos: noun
+  gender: m
+  example: Супутникові знімки спростували російську брехню про «інсценування».
+
+- term: меморіал
+  translation: memorial
+  pos: noun
+  gender: m
+  example: На вулиці Яблунській встановлено меморіал жертвам.
+
+- term: безкарність
+  translation: impunity
+  pos: noun
+  gender: f
+  example: Україна бореться проти безкарності воєнних злочинців.

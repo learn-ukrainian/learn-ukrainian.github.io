@@ -6,9 +6,10 @@ id: b2-hist-82
 naturalness:
   score: 10
   status: PASS
-  justification: Академічний український для історії мовної політики
+  justification: Академічний український для політичної історії
 duration: 120
 transliteration: none
+practice: [true-false, essay-response, comparative-study, reading, critical-analysis]
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-01-28'
 phase: HIST.8 [Imperial Era]

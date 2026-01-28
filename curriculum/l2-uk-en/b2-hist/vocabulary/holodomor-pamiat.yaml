@@ -1,0 +1,263 @@
+items:
+- lemma: Голодомор
+  ipa: [ɦɔlɔdɔˈmɔr]
+  pos: noun
+  definition_en: Holodomor, famine-genocide
+  collocations:
+  - жертви Голодомору
+  - визнання Голодомору
+  - пам'ять про Голодомор
+  synonyms: [геноцид]
+  antonyms: []
+  tags: [history, tragedy]
+  morphology:
+    gender: m
+    number: sg
+- lemma: геноцид
+  ipa: [ɦɛnɔˈt͡sɪd]
+  pos: noun
+  definition_en: genocide
+  collocations:
+  - акт геноциду
+  - визнати геноцидом
+  - злочин геноциду
+  synonyms: [винищення]
+  antonyms: []
+  tags: [law, history]
+  morphology:
+    gender: m
+    number: sg
+- lemma: визнання
+  ipa: [wɪznɑˈnʲːɑ]
+  pos: noun
+  definition_en: recognition, acknowledgment
+  collocations:
+  - міжнародне визнання
+  - добитися визнання
+  synonyms: []
+  antonyms: [заперечення]
+  tags: [politics, law]
+  morphology:
+    gender: n
+    number: sg
+- lemma: замовчування
+  ipa: [zɑˈmɔwt͡ʃuwɑnʲːɑ]
+  pos: noun
+  definition_en: silencing, hush-up
+  collocations:
+  - політика замовчування
+  - роки замовчування
+  synonyms: [приховування]
+  antonyms: [розголос]
+  tags: [politics, history]
+  morphology:
+    gender: n
+    number: sg
+- lemma: свідок
+  ipa: [ˈs⁽ʲ⁾widɔk]
+  pos: noun
+  definition_en: witness
+  collocations:
+  - живий свідок
+  - свідчення свідків
+  synonyms: [очевидець]
+  antonyms: []
+  tags: [law, history]
+  morphology:
+    gender: m
+    number: sg
+- lemma: пам'ять
+  ipa: [ˈpɑmʲːɑtʲ]
+  pos: noun
+  definition_en: memory
+  collocations:
+  - національна пам'ять
+  - вшанувати пам'ять
+  synonyms: []
+  antonyms: [забуття]
+  tags: [culture, psychology]
+  morphology:
+    gender: f
+    number: sg
+- lemma: меморіал
+  ipa: [mɛmɔr⁽ʲ⁾iˈɑl]
+  pos: noun
+  definition_en: memorial
+  collocations:
+  - відкрити меморіал
+  - національний меморіал
+  synonyms: [пам'ятник]
+  antonyms: []
+  tags: [culture, history]
+  morphology:
+    gender: m
+    number: sg
+- lemma: заперечення
+  ipa: [zɑpɛˈrɛt͡ʃɛnʲːɑ]
+  pos: noun
+  definition_en: denial, negation
+  collocations:
+  - заперечення злочину
+  - категоричне заперечення
+  synonyms: [відмова]
+  antonyms: [визнання]
+  tags: [psychology, politics]
+  morphology:
+    gender: n
+    number: sg
+- lemma: комісія
+  ipa: [kɔˈm⁽ʲ⁾is⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: commission
+  collocations:
+  - слідча комісія
+  - висновки комісії
+  synonyms: []
+  antonyms: []
+  tags: [politics, law]
+  morphology:
+    gender: f
+    number: sg
+- lemma: резолюція
+  ipa: [rɛzɔˈlʲut͡s⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: resolution
+  collocations:
+  - ухвалити резолюцію
+  - текст резолюції
+  synonyms: [рішення]
+  antonyms: []
+  tags: [politics, law]
+  morphology:
+    gender: f
+    number: sg
+- lemma: архів
+  ipa: [ɑrˈx⁽ʲ⁾iw]
+  pos: noun
+  definition_en: archive
+  collocations:
+  - відкрити архіви
+  - секретний архів
+  synonyms: []
+  antonyms: []
+  tags: [history, science]
+  morphology:
+    gender: m
+    number: sg
+- lemma: дезінформація
+  ipa: [dɛzinfɔrˈmɑt͡s⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: disinformation
+  collocations:
+  - радянська дезінформація
+  - кампанія дезінформації
+  synonyms: [брехня]
+  antonyms: [правда]
+  tags: [politics, media]
+  morphology:
+    gender: f
+    number: sg
+- lemma: жертва
+  ipa: [ˈʒɛrtwɑ]
+  pos: noun
+  definition_en: victim, sacrifice
+  collocations:
+  - невинна жертва
+  - пам'ять жертв
+  synonyms: [постраждалий]
+  antonyms: [кат]
+  tags: [history, ethics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: справедливість
+  ipa: [sprɑwɛdˈlɪw⁽ʲ⁾isʲtʲ]
+  pos: noun
+  definition_en: justice
+  collocations:
+  - відновити справедливість
+  - історична справедливість
+  synonyms: [правосуддя]
+  antonyms: [кривда]
+  tags: [ethics, law]
+  morphology:
+    gender: f
+    number: sg
+- lemma: свічка
+  ipa: [s⁽ʲ⁾wit͡ʃkɑ]
+  pos: noun
+  definition_en: candle
+  collocations:
+  - запалити свічку
+  - свічка пам'яті
+  synonyms: []
+  antonyms: []
+  tags: [culture, religion]
+  morphology:
+    gender: f
+    number: sg
+- lemma: правда
+  ipa: [ˈprɑwdɑ]
+  pos: noun
+  definition_en: truth
+  collocations:
+  - гірка правда
+  - сказати правду
+  synonyms: [істина]
+  antonyms: [брехня]
+  tags: [ethics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: злочин
+  ipa: [zlɔt͡ʃɪn]
+  pos: noun
+  definition_en: crime
+  collocations:
+  - злочин проти людяності
+  - розслідувати злочин
+  synonyms: []
+  antonyms: []
+  tags: [law]
+  morphology:
+    gender: m
+    number: sg
+- lemma: нащадок
+  ipa: [nɑˈʃt͡ʃɑdɔk]
+  pos: noun
+  definition_en: descendant
+  collocations:
+  - нащадки жертв
+  - пам'ять нащадків
+  synonyms: []
+  antonyms: [предок]
+  tags: [family, history]
+  morphology:
+    gender: m
+    number: sg
+- lemma: травма
+  ipa: [ˈtrɑwmɑ]
+  pos: noun
+  definition_en: trauma
+  collocations:
+  - колективна травма
+  - психологічна травма
+  synonyms: []
+  antonyms: []
+  tags: [psychology, history]
+  morphology:
+    gender: f
+    number: sg
+- lemma: заготівля
+  ipa: [zɑɦɔˈt⁽ʲ⁾iwlʲɑ]
+  pos: noun
+  definition_en: procurement (of grain)
+  collocations:
+  - хлібозаготівля
+  - план заготівлі
+  synonyms: []
+  antonyms: []
+  tags: [history, economy]
+  morphology:
+    gender: f
+    number: sg

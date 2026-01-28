@@ -1,4 +1,4 @@
-module: b2-hist-04
+module: sloviany-origins
 level: B2-HIST
 slug: sloviany-origins
 version: '2.0'
@@ -88,12 +88,10 @@ connects_to:
 objectives:
 - Учень може описувати слов'янські племена на українських землях
 - Учень може аналізувати свідчення античних авторів про слов'ян
-- Учень може аргументувати зв'язок між племінною демократією і українською політичною
-  традицією
+- Учень може аргументувати зв'язок між племінною демократією і українською політичною традицією
 grammar:
 - Історичний наратив
 - Минулий час у науковому тексті
-module_type: history
 sources:
 - name: Слов'яни (Вікіпедія)
   url: https://uk.wikipedia.org/wiki/Слов%27яни
@@ -107,6 +105,7 @@ sources:
   url: https://litopys.org.ua/pvl/pvl.htm
   type: primary
   notes: Primary Chronicle on Slavic origins
-immersion: 100% Ukrainian
 register: публіцистичний
 phase: B2-HIST.1 [Витоки]
+module_type: history
+immersion: 100% Ukrainian

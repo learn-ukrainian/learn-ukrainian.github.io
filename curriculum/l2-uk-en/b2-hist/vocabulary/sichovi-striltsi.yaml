@@ -1,0 +1,84 @@
+module: b2-hist-89
+level: B2-HIST
+version: '2.0'
+items:
+- lemma: січовий стрілець
+  translation: Sich Rifleman
+  ipa: [sʲit͡ʃɔˈwɪj strʲiˈlɛt͡sʲ]
+  pos: noun
+- lemma: легіон
+  translation: legion
+  ipa: [lɛˈɦʲiɔn]
+  pos: noun
+- lemma: присяга
+  translation: oath
+  ipa: [prɪˈsʲɑɦɑ]
+  pos: noun
+- lemma: звитяга
+  translation: victory / glory / heroic deed
+  ipa: [zwɪˈtʲɑɦɑ]
+  pos: noun
+- lemma: мазепинка
+  translation: mazepynka (hat)
+  ipa: [mɐzeˈpɪnkɐ]
+  pos: noun
+- lemma: однострій
+  translation: uniform
+  ipa: [ɔdˈnɔstrʲij]
+  pos: noun
+- lemma: просвітництво
+  translation: enlightenment / education
+  ipa: [prɔˈsʲwʲitnɪt͡stwɔ]
+  pos: noun
+- lemma: соборність
+  translation: unity / sobornist
+  ipa: [sɔˈbɔrnʲistʲ]
+  pos: noun
+- lemma: доброволець
+  translation: volunteer
+  ipa: [dɔbrɔˈwɔlɛt͡sʲ]
+  pos: noun
+- lemma: отаман
+  translation: otaman / commander
+  ipa: [ɔtɐˈmɑn]
+  pos: noun
+- lemma: курінь
+  translation: kurin (battalion)
+  ipa: [kʊˈrʲinʲ]
+  pos: noun
+- lemma: сотня
+  translation: sotnia (company)
+  ipa: [ˈsɔtʲnʲɐ]
+  pos: noun
+- lemma: боєздатність
+  translation: combat effectiveness
+  ipa: [bɔjeˈzdɑtnʲistʲ]
+  pos: noun
+- lemma: національне відродження
+  translation: national revival
+  ipa: [nɐt͡sʲiɔˈnɑlʲne wʲidˈrɔdʒenʲːɐ]
+  pos: noun
+- lemma: мілітарний
+  translation: military
+  ipa: [mʲilʲiˈtɑrnɪj]
+  pos: adj
+- lemma: суб'єктність
+  translation: agency / subjectivity
+  ipa: [subˈjektʲnʲistʲ]
+  pos: noun
+- lemma: кулемет
+  translation: machine gun
+  ipa: [kʊleˈmɛt]
+  pos: noun
+- lemma: окоп
+  translation: trench
+  ipa: [ɔˈkɔp]
+  pos: noun
+- lemma: наступ
+  translation: offensive
+  ipa: [ˈnɑstup]
+  pos: noun
+- lemma: відступ
+  translation: retreat
+  ipa: [ˈwʲidstup]
+  pos: noun

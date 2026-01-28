@@ -1,4 +1,4 @@
-module: b2-hist-13
+module: ruska-pravda
 level: B2-HIST
 slug: ruska-pravda
 version: '2.0'
@@ -118,7 +118,6 @@ objectives:
 grammar:
 - Legal terminology
 - Conditional sentences
-module_type: history
 sources:
 - name: Руська Правда (Вікіпедія)
   url: https://uk.wikipedia.org/wiki/Руська_Правда
@@ -132,5 +131,6 @@ sources:
   url: https://uk.wikipedia.org/wiki/Правда_Ярослава
   type: reference
   notes: First version of the code
-immersion: 100% Ukrainian
 phase: B2-HIST.1 [Kyivan Rus]
+module_type: history
+immersion: 100% Ukrainian

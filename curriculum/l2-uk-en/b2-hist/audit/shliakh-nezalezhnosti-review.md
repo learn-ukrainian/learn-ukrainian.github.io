@@ -1,67 +1,52 @@
 # Audit Report: M119 — shliakh-nezalezhnosti.md
-
 **Level:** B2 | **Module:** M119 | **Phase:** HIST.12 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:55:25
+**Generated:** 2026-01-27 23:38:55
 
 ## Configuration
-
 **Type:** B2-history
 **Word Target:** 4000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, match-up, quiz, reading, true-false
+**Required Types:** essay-response, reading, true-false
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Читання: Перевірка розуміння | 8 | 8 | ✅ |
-| 2 | fill-in | Заповніть пропуски відповідними словами про історичні події. | 8 | 8 | ✅ |
-| 3 | true-false | Визначте, чи є твердження правдивими. | 8 | 8 | ✅ |
-| 4 | fill-in | Граматика в реченнях про державність | 10 | 8 | ✅ |
-| 5 | match-up | Поєднайте терміни з їхніми визначеннями. | 12 | 8 | ✅ |
-| 6 | match-up | Встановіть відповідність між датами та подіями. | 12 | 8 | ✅ |
-| 7 | true-false | Аналіз Акту незалежності | 8 | 8 | ✅ |
-| 8 | mark-the-words | Знайдіть дієслова минулого часу | 6 | 6 | ✅ |
-| 9 | unjumble | Складіть речення про боротьбу за незалежність. | 6 | 6 | ✅ |
-| 10 | group-sort | Гасла незалежності, студентські та радянські гасла | 17 | 1 | ✅ |
-| 11 | quiz | Перевірте знання про лідерів руху за незалежність. | 8 | 8 | ✅ |
-| 12 | essay-response | Феномен 1991 року | 1 | 1 | ✅ |
-| 13 | comparative-study | Порівняння революцій | 1 | 1 | ✅ |
+| 1 | true-false | Визначте, чи є твердження правдивими. | 8 | 8 | ✅ |
+| 2 | true-false | Аналіз Акту незалежності | 8 | 8 | ✅ |
+| 3 | essay-response | Феномен 1991 року | 1 | 1 | ✅ |
+| 4 | comparative-study | Порівняння революцій | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 13 (target: 3-9) ❌
-- Unique types: 9 (minimum: 2) ✅
+- Total activities: 4 (target: 3-9) ✅
+- Unique types: 3 (minimum: 2) ✅
 - Priority types used: 2/4 (comparative-study, essay-response) ✅
-- Required types used: 4/5 (essay-response, match-up, quiz, true-false) ❌
+- Required types used: 2/3 (essay-response, true-false) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
-- **[YAML_SCHEMA_VIOLATION]** Schema error in shliakh-nezalezhnosti.yaml: Schema validation error at key '8': {'type': 'unjumble', 'items': [{'words': ['Референдум', 'першого', 'грудня', 'став', 'остаточним', 'вибором', 'всього', 'українського', 'народу'], 'answer': 'Референдум першого грудня став остаточним вибором всього українського народу.'}, {'words': ['Студенти', 'на', 'Майдані', 'вимагали', 'реальних', 'і', 'швидких', 'демократичних', 'змін'], 'answer': 'Студенти на Майдані вимагали реальних і швидких демократичних змін.'}, {'words': ['Народний', 'Рух', "об'єднав", 'мільйони', 'активних', 'людей', 'заради', 'спільної', 'мети'], 'answer': "Народний Рух об'єднав мільйони активних людей заради спільної мети."}, {'words': ['Декларація', 'про', 'суверенітет', 'проголосила', 'верховенство', 'українських', 'законів', 'над', 'союзними'], 'answer': 'Декларація про суверенітет проголосила верховенство українських законів над союзними.'}, {'words': ['Живий', 'ланцюг', 'продемонстрував', 'всьому', 'світові', 'єдність', 'Сходу', 'та', 'Заходу'], 'answer': 'Живий ланцюг продемонстрував всьому світові єдність Сходу та Заходу.'}, {'words': ['Україна', 'пройшла', 'складний', 'шлях', 'до', 'незалежності', 'мирним', 'та', 'законним', 'способом'], 'answer': 'Україна пройшла складний шлях до незалежності мирним та законним способом.'}], 'title': 'Складіть речення про боротьбу за незалежність.', 'instruction': 'Розташуйте слова у правильному порядку.'} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in shliakh-nezalezhnosti.yaml: Insufficient activities: 4 found, minimum 5 required for B2-HIST
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
 - **Words:** ❌ 1672/4000 (raw: 1845)
-- **Activities:** ✅ 13/3
+- **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 9/2 types
+- **Unique_types:** ✅ 3/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
@@ -69,19 +54,17 @@
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ⚠️ Too many activities: 13 (target 3-9)
+- **Content_heavy:** ✅ Content-heavy OK (4 activities)
 - **Immersion:** 🇺🇦 96.8% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-
 **Score:** 99% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 11 | 3 | 100% | 24% | 23.8% |
@@ -96,7 +79,6 @@
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

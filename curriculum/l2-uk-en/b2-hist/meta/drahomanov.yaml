@@ -2,13 +2,35 @@ module: b2-hist-84
 level: B2-HIST
 slug: drahomanov
 version: '2.0'
-id: b2-hist-84
+type: narrative
+pedagogy: CBI
+status: draft
 naturalness:
   score: 10
   status: PASS
-  justification: Академічний український для інтелектуальної біографії
-duration: 120
-transliteration: none
-build:
-  last_modified: '2026-01-26'
-phase: HIST.8 [Imperial Era]
+  feedback: "Academic/Political register appropriate for subject."
+naturalness_score: 10
+naturalness_feedback: "Academic/Political register appropriate for subject."
+audio: false
+complexity:
+  - b2-hist
+tags:
+  - history
+  - politics
+  - 19th-century
+timestamp: 2026-01-27T23:30:00Z
+transliteration: "none"
+content_outline:
+  - section: 'Вступ: Голос української політичної думки'
+    words: 400
+  - section: 'Біографія та становлення'
+    words: 800
+  - section: 'Політичні ідеї'
+    words: 1000
+  - section: 'Первинні джерела'
+    words: 800
+  - section: 'Деколонізаційний погляд'
+    words: 500
+  - section: 'Підсумок: Спадщина Драгоманова'
+    words: 500
+ignore_vocab_check: false

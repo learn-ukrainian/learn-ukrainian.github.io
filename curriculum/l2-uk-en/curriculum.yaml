@@ -521,14 +521,14 @@ levels:
       - symon-petliura-revolution # [94]
       - bilshovytsko-ukrainska-viyna # [95]
       - kholodnyi-yar # [96]
-      - karpatska-ukraina # [97]
-      - syntez-revoliutsiia # [98]
-      - rozstriliane-vidrodzennia # [99]
-      - mekhanizm-teroru # [100]
-      - holodomor-mekhanizm # [101]
+      - syntez-revoliutsiia # [97]
+      - rozstriliane-vidrodzennia # [98]
+      - pacyfikatsiia # [99] (1930)
+      - oun # [100] (1929+)
+      - holodomor-mekhanizm # [101] (1932-33)
       - holodomor-pamiat # [102]
-      - pacyfikatsiia # [103]
-      - oun # [104]
+      - mekhanizm-teroru # [103] (Great Terror 1936-38)
+      - karpatska-ukraina # [104] (1938-39)
       - druha-svitova-pochatok # [105]
       - babyn-yar # [106]
       - upa # [107]
@@ -547,16 +547,16 @@ levels:
       - rukh # [120]
       - nezalezhnist-1991 # [121]
       - ukraine-90s # [122]
-      - pomara-revoliutsiia # [123]
-      - tomos # [124]
-      - yanukovych # [125]
-      - movna-polityka # [126]
-      - revoliutsiia-hidnosti # [127]
-      - aneksiia-krymu # [128]
-      - krymski-tatary-pislia-2014 # [129]
+      - pomarancheva-revoliutsiia # [123] (2004)
+      - yanukovych # [124] (2010-2014)
+      - movna-polityka # [125]
+      - revoliutsiia-hidnosti # [126] (2013-2014)
+      - aneksiia-krymu # [127] (2014)
+      - krymski-tatary-pislia-2014 # [128] (2014+)
+      - tomos # [129] (2018-2019)
       - syntez-nezalezhnist # [130]
-      - viyna-donbas # [131]
-      - povnomasshtabne-vtorhnessnia # [132]
+      - viyna-donbas # [131] (2014-2022)
+      - povnomasshtabne-vtorhnessnia # [132] (2022)
       - mariupol-azovstal # [133]
       - bucha-irpin # [134]
       - kakhovska-hes # [135]

@@ -1,12 +1,12 @@
 {
-  "module": "pomara-revoliutsiia",
+  "module": "pomarancheva-revoliutsiia",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T15:51:37.609842Z",
+  "last_audit": "2026-01-28T14:31:32.476929Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.347063Z",
-    "meta": "2026-01-26T22:20:13.448908Z",
+    "md": "2026-01-28T14:08:13.256389Z",
+    "meta": "2026-01-28T14:08:13.252938Z",
     "activities": "2026-01-27T15:34:54.486601Z",
     "vocabulary": null,
     "plan": null
@@ -41,7 +41,7 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "7 Outline Compliance Errors",
+      "1 Outline Compliance Errors",
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
       "Missing required activity types: reading"
     ],

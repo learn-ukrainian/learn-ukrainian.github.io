@@ -1,8 +1,8 @@
 # Audit Report: M80 — kyrylo-mefodiivtsi.md
 **Level:** B2 | **Module:** M80 | **Phase:** HIST.8 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-27 15:51:25
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-28 00:46:29
 
 ## Configuration
 **Type:** B2-history
@@ -24,36 +24,28 @@
 | 2 | critical-analysis | Деконструкція імперського страху | 1 | 1 | ✅ |
 | 3 | comparative-study | Імперська "Тріада" vs Програма Братства | 1 | 1 | ✅ |
 | 4 | essay-response | Есе: Братство як політичний "Великий Вибух" | 1 | 1 | ✅ |
+| 5 | true-false | Правда чи Міф: Братство | 10 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 4 (target: 3-9) ✅
-- Unique types: 4 (minimum: 2) ✅
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 2/3 (essay-response, reading) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in kyrylo-mefodiivtsi.yaml: Insufficient activities: 4 found, minimum 5 required for B2-HIST
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 4119/4000 (raw: 4324)
-- **Activities:** ✅ 4/3
+- **Words:** ✅ 4120/4000 (raw: 4304)
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 4/2 types
+- **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ✅ Content-heavy OK (4 activities)
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 100.0% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -66,7 +58,7 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 9 | 3 | 100% | 24% | 23.8% |
+| primary_sources | 8 | 3 | 100% | 24% | 23.8% |
 | engagement | 9 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 28 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
@@ -74,24 +66,18 @@
 | visual | 8 | 4 | 100% | 10% | 9.5% |
 | variety | 0.97 | - | 97% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 7 | 3 | 100% | 5% | 4.8% |
+| questions | 6 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 118 | Included in Core |
-| **Вступ: Весна народів у київських аудиторіях** | ✅ | 218 | Included in Core |
-| **Київський університет: Осередок неспокою** | ⚪️ | 180 | Skipped |
-| **Інтелектуальне коло: Хто стояв біля витоків** | ⚪️ | 207 | Skipped |
-| **"Книга буття українського народу": Маніфест віри та свободи** | ⚪️ | 295 | Skipped |
-| **Слов'янська солідарність у світовому вимірі** | ⚪️ | 265 | Skipped |
-| **Постаті Братства: Єдність у різноманітті** | ⚪️ | 475 | Skipped |
-| **Соціальна діяльність та просвіта: Йти в народ** | ⚪️ | 169 | Skipped |
-| **Катастрофа 1847 року: Зрада та арешт** | ⚪️ | 461 | Skipped |
-| **Значення Братства: "Великий вибух" українства** | ⚪️ | 442 | Skipped |
-| **Читання: Голоси Братства** | ✅ | 400 | Included in Core |
-| **Деколонізаційний погляд: Чому це була загроза для імперії?** | ✅ | 287 | Included in Core |
-| **Первинні джерела: Документи слідства** | ✅ | 253 | Included in Core |
-| **Підсумок: Спадщина Кирило-Мефодіївців у ХХІ столітті** | ✅ | 196 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 153 | Skipped |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Вступ: Таємне товариство: Пробудження нації та політичний вибух 1840-х** | ✅ | 516 | Included in Core |
+| **Засновники та учасники** | ⚪️ | 207 | Skipped |
+| **Ідеологія та програма** | ⚪️ | 2107 | Skipped |
+| **Читання: Голоси Братства** | ✅ | 687 | Included in Core |
+| **Первинні джерела** | ✅ | 191 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 62 | Included in Core |
+| **Підсумок: Розгром та спадщина** | ✅ | 196 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 154 | Skipped |

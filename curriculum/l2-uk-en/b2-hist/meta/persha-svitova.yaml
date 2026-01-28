@@ -6,9 +6,10 @@ id: b2-hist-88
 naturalness:
   score: 10
   status: PASS
-  justification: Академічний український для воєнної історії
+  justification: Академічний український для військової історії
 duration: 120
 transliteration: none
+practice: [reading, essay-response, comparative-study, critical-analysis, authorial-intent]
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-01-28'
 phase: HIST.9 [WWI & Revolution]

@@ -1,0 +1,109 @@
+items:
+- lemma: депортація
+  ipa: "dɛpɔrˈtɑt͡sʲijɑ"
+  translation: "deportation"
+  definition: "насильницьке виселення людей з їхньої землі"
+  pos: noun
+  gender: f
+- lemma: виселення
+  ipa: "ˈʋɪsɛlɛɲːɑ"
+  translation: "eviction / expulsion"
+  definition: "процес примусового залишення житла"
+  pos: noun
+  gender: n
+- lemma: спецпоселення
+  ipa: "spɛt͡spɔˈsɛlɛɲːɑ"
+  translation: "special settlement"
+  definition: "місце примусового проживання депортованих під наглядом"
+  pos: noun
+  gender: n
+- lemma: ешелон
+  ipa: "ɛʃɛˈlɔn"
+  translation: "train transport (echelon)"
+  definition: "поїзд, призначений для масового перевезення людей"
+  pos: noun
+  gender: m
+- lemma: етнічна чистка
+  ipa: "ɛtˈnʲit͡ʃnɑ ˈt͡ʃɪstkɑ"
+  translation: "ethnic cleansing"
+  definition: "політика усунення етнічної групи з певної території"
+  pos: noun
+  gender: f
+- lemma: асиміляція
+  ipa: "ɐsɪmʲiˈlʲɑt͡sʲijɑ"
+  translation: "assimilation"
+  definition: "процес розчинення одного народу в іншому"
+  pos: noun
+  gender: f
+- lemma: товарний вагон
+  ipa: "tɔˈʋɑrnɪj ʋɐˈɦɔn"
+  translation: "cargo wagon / cattle car"
+  definition: "вагон для вантажів, у якому примусово везли людей"
+  pos: noun
+  gender: m
+- lemma: конфіскація
+  ipa: "kɔnɸisˈkɑt͡sʲijɑ"
+  translation: "confiscation"
+  definition: "примусове вилучення майна державою"
+  pos: noun
+  gender: f
+- lemma: підпілля
+  ipa: "pidˈpʲilʲːɑ"
+  translation: "underground (movement)"
+  definition: "нелегальна організація для боротьби з владою"
+  pos: noun
+  gender: n
+- lemma: Закерзоння
+  ipa: "zɐkɛrˈzɔɲːɑ"
+  translation: "Zakerzonia"
+  definition: "українські етнічні землі на захід від лінії Керзона"
+  pos: noun
+  gender: n
+- lemma: переселенець
+  ipa: "pɛrɛˈsɛlɛnɛt͡sʲ"
+  translation: "resettler / displaced person"
+  definition: "людина, яка змушена переїхати на нове місце проживання"
+  pos: noun
+  gender: m
+- lemma: бойкот
+  ipa: "bɔjˈkɔt"
+  translation: "boycott"
+  definition: "відмова від співпраці або спілкування як протест"
+  pos: noun
+  gender: m
+- lemma: репатріація
+  ipa: "rɛpɐtrʲiˈɑt͡sʲijɑ"
+  translation: "repatriation"
+  definition: "повернення на батьківщину"
+  pos: noun
+  gender: f
+- lemma: колгоспне рабство
+  ipa: "kɔlˈɦɔspnɛ ˈrɑbstʋɔ"
+  translation: "collective farm slavery"
+  definition: "метафора для опису важкої праці селян без прав"
+  pos: noun
+  gender: n
+- lemma: уповноважений
+  ipa: "upɔʋnɔˈʋɑʒɛnɪj"
+  translation: "authorized official / commissioner"
+  definition: "особа, наділена владними повноваженнями для виконання акції"
+  pos: noun
+  gender: m
+- lemma: ворог народу
+  ipa: "ˈʋɔrɔɦ nɐˈrɔdu"
+  translation: "enemy of the people"
+  definition: "радянське ідеологічне кліше для репресованих"
+  pos: noun
+  gender: m
+- lemma: Сибір
+  ipa: "sɪˈbʲir"
+  translation: "Siberia"
+  definition: "регіон у Росії, місце каторги та заслання"
+  pos: noun
+  gender: m
+- lemma: пам'ять
+  ipa: "ˈpɑmjɐtʲ"
+  translation: "memory"
+  definition: "здатність зберігати інформацію про минуле"
+  pos: noun
+  gender: f

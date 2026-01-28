@@ -1,0 +1,84 @@
+module: b2-hist-83
+level: B2-HIST
+version: '2.0'
+items:
+- lemma: громада
+  translation: community (hromada)
+  ipa: [hroˈmada]
+  pos: noun
+- lemma: просвітництво
+  translation: enlightenment
+  ipa: [proˈsʋitnɪt͡stʋo]
+  pos: noun
+- lemma: підпілля
+  translation: underground
+  ipa: [pidˈpilʲːa]
+  pos: noun
+- lemma: заборона
+  translation: prohibition / ban
+  ipa: [zaboˈrɔna]
+  pos: noun
+- lemma: видавництво
+  translation: publishing house
+  ipa: [vɪdaʋˈnɪt͡stʋo]
+  pos: noun
+- lemma: етнографія
+  translation: ethnography
+  ipa: [etnoˈɦrafija]
+  pos: noun
+- lemma: фольклор
+  translation: folklore
+  ipa: [folʲˈklɔr]
+  pos: noun
+- lemma: інтелігенція
+  translation: intelligentsia
+  ipa: [inteliˈɦɛnt͡sija]
+  pos: noun
+- lemma: національна свідомість
+  translation: national consciousness
+  ipa: [nat͡sioˈnalʲna sʋiˈdɔmisʲtʲ]
+  pos: noun
+- lemma: недільна школа
+  translation: Sunday school
+  ipa: [neˈdilʲna ˈʃkɔla]
+  pos: noun
+- lemma: цензура
+  translation: censorship
+  ipa: [t͡senˈzura]
+  pos: noun
+- lemma: еміграція
+  translation: emigration
+  ipa: [emiˈɦrat͡sija]
+  pos: noun
+- lemma: нелегальний
+  translation: illegal
+  ipa: [neleˈɦalʲnɪj]
+  pos: adj
+- lemma: гурток
+  translation: circle (group)
+  ipa: [hurˈtɔk]
+  pos: noun
+- lemma: меценат
+  translation: patron of arts
+  ipa: [met͡seˈnat]
+  pos: noun
+- lemma: українофіл
+  translation: Ukrainophile
+  ipa: [ukrajinoˈfil]
+  pos: noun
+- lemma: активіст
+  translation: activist
+  ipa: [aktɪˈvist]
+  pos: noun
+- lemma: журнал
+  translation: magazine / journal
+  ipa: [ʒurˈnal]
+  pos: noun
+- lemma: друкарня
+  translation: printing house
+  ipa: [druˈkarnʲa]
+  pos: noun
+- lemma: жандарм
+  translation: gendarme
+  ipa: [ʒanˈdarm]
+  pos: noun

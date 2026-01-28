@@ -1,0 +1,273 @@
+items:
+- lemma: ультиматум
+  ipa: [ulʲtɪˈmɑtum]
+  pos: noun
+  definition_en: ultimatum
+  collocations:
+  - висунути ультиматум
+  - прийняти ультиматум
+  - умови ультиматуму
+  synonyms: [вимога]
+  antonyms: []
+  tags: [politics, diplomacy]
+  morphology:
+    gender: m
+    number: sg
+- lemma: агресія
+  ipa: [ɑˈɦrɛs⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: aggression
+  collocations:
+  - збройна агресія
+  - акт агресії
+  - зовнішня агресія
+  synonyms: [напад, вторгнення]
+  antonyms: [захист, мир]
+  tags: [military, politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: окупація
+  ipa: [ɔkuˈpɑt͡s⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: occupation
+  collocations:
+  - радянська окупація
+  - режим окупації
+  - звільнити від окупації
+  synonyms: [загарбання]
+  antonyms: [визволення]
+  tags: [history, politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: оборона
+  ipa: [ɔˈbɔrɔnɑ]
+  pos: noun
+  definition_en: defense
+  collocations:
+  - героїчна оборона
+  - лінія оборони
+  - тримати оборону
+  synonyms: [захист]
+  antonyms: [наступ, агресія]
+  tags: [military]
+  morphology:
+    gender: f
+    number: sg
+- lemma: відступ
+  ipa: [ˈwidstup]
+  pos: noun
+  definition_en: retreat
+  collocations:
+  - організований відступ
+  - наказ про відступ
+  - шлях відступу
+  synonyms: [відхід]
+  antonyms: [наступ]
+  tags: [military]
+  morphology:
+    gender: m
+    number: sg
+- lemma: контрнаступ
+  ipa: [kɔntrnɑˈstup]
+  pos: noun
+  definition_en: counteroffensive
+  collocations:
+  - успішний контрнаступ
+  - почати контрнаступ
+  - план контрнаступу
+  synonyms: []
+  antonyms: []
+  tags: [military]
+  morphology:
+    gender: m
+    number: sg
+- lemma: фронт
+  ipa: [frɔnt]
+  pos: noun
+  definition_en: front line
+  collocations:
+  - на фронті
+  - лінія фронту
+  - воювати на два фронти
+  synonyms: [передова]
+  antonyms: [тил]
+  tags: [military]
+  morphology:
+    gender: m
+    number: sg
+- lemma: більшовик
+  ipa: [bilʲʃɔˈwɪk]
+  pos: noun
+  definition_en: Bolshevik
+  collocations:
+  - прихід більшовиків
+  - більшовицька влада
+  - боротьба з більшовиками
+  synonyms: []
+  antonyms: []
+  tags: [history, politics]
+  morphology:
+    gender: m
+    number: sg
+- lemma: інтервенція
+  ipa: [intɛrˈwɛnt͡s⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: intervention
+  collocations:
+  - іноземна інтервенція
+  - військова інтервенція
+  synonyms: [втручання]
+  antonyms: []
+  tags: [politics, military]
+  morphology:
+    gender: f
+    number: sg
+- lemma: партизан
+  ipa: [pɑrtɪˈzɑn]
+  pos: noun
+  definition_en: partisan, guerrilla fighter
+  collocations:
+  - партизанський загін
+  - партизанська війна
+  - рух партизанів
+  synonyms: [повстанець]
+  antonyms: []
+  tags: [military, history]
+  morphology:
+    gender: m
+    number: sg
+- lemma: перемир'я
+  ipa: [pɛrɛˈmɪrʲːɑ]
+  pos: noun
+  definition_en: armistice, truce
+  collocations:
+  - укласти перемир'я
+  - тимчасове перемир'я
+  - умови перемир'я
+  synonyms: [затишшя]
+  antonyms: [війна, бій]
+  tags: [diplomacy, military]
+  morphology:
+    gender: n
+    number: sg
+- lemma: капітуляція
+  ipa: [kɑp⁽ʲ⁾ituˈlʲɑt͡s⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: capitulation, surrender
+  collocations:
+  - беззастережна капітуляція
+  - підписати капітуляцію
+  synonyms: [здача]
+  antonyms: [перемога, опір]
+  tags: [military, politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: мобілізація
+  ipa: [mɔb⁽ʲ⁾il⁽ʲ⁾izɑˈt͡s⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: mobilization
+  collocations:
+  - загальна мобілізація
+  - оголосити мобілізацію
+  synonyms: []
+  antonyms: [демобілізація]
+  tags: [military, society]
+  morphology:
+    gender: f
+    number: sg
+- lemma: гарнізон
+  ipa: [ɦɑrn⁽ʲ⁾iˈzɔn]
+  pos: noun
+  definition_en: garrison
+  collocations:
+  - військовий гарнізон
+  - начальник гарнізону
+  synonyms: []
+  antonyms: []
+  tags: [military]
+  morphology:
+    gender: m
+    number: sg
+- lemma: державність
+  ipa: [dɛrˈʒɑwn⁽ʲ⁾isʲtʲ]
+  pos: noun
+  definition_en: statehood
+  collocations:
+  - українська державність
+  - відродження державності
+  - втрата державності
+  synonyms: []
+  antonyms: []
+  tags: [politics, history]
+  morphology:
+    gender: f
+    number: sg
+- lemma: незалежність
+  ipa: [nɛzɑˈlɛʒn⁽ʲ⁾isʲtʲ]
+  pos: noun
+  definition_en: independence
+  collocations:
+  - проголосити незалежність
+  - боротьба за незалежність
+  synonyms: [самостійність]
+  antonyms: [залежність]
+  tags: [politics, history]
+  morphology:
+    gender: f
+    number: sg
+- lemma: спротив
+  ipa: [ˈsprɔtɪu̯]
+  pos: noun
+  definition_en: resistance
+  collocations:
+  - збройний спротив
+  - чинити спротив
+  - дух спротиву
+  synonyms: [опір]
+  antonyms: [покора]
+  tags: [military, psychology]
+  morphology:
+    gender: m
+    number: sg
+- lemma: територія
+  ipa: [tɛrɪˈtɔr⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: territory
+  collocations:
+  - окупована територія
+  - цілісність території
+  synonyms: [терен]
+  antonyms: []
+  tags: [geography, politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: уряд
+  ipa: [ˈurʲɑd]
+  pos: noun
+  definition_en: government
+  collocations:
+  - український уряд
+  - голова уряду
+  synonyms: [кабінет міністрів]
+  antonyms: []
+  tags: [politics]
+  morphology:
+    gender: m
+    number: sg
+- lemma: поразка
+  ipa: [pɔˈrɑzkɑ]
+  pos: noun
+  definition_en: defeat
+  collocations:
+  - зазнати поразки
+  - причини поразки
+  synonyms: [програш]
+  antonyms: [перемога]
+  tags: [history, military]
+  morphology:
+    gender: f
+    number: sg

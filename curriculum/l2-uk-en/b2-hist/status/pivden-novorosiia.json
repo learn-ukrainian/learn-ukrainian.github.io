@@ -2,12 +2,12 @@
   "module": "pivden-novorosiia",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T15:51:24.036237Z",
+  "last_audit": "2026-01-28T00:34:56.550992Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.347037Z",
-    "meta": "2026-01-26T22:20:13.442449Z",
-    "activities": "2026-01-27T15:34:54.463371Z",
+    "md": "2026-01-28T00:34:49.374823Z",
+    "meta": "2026-01-28T00:34:52.949260Z",
+    "activities": "2026-01-27T23:20:55.329790Z",
     "vocabulary": "2026-01-25T23:19:10.280156Z",
     "plan": null
   },
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "5112/4000 (raw: 5332) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "4720/4000 (raw: 4844)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "4/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "2 Outline Compliance Errors",
-      "Missing required activity types: true-false"
-    ],
-    "pass_count": 4,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

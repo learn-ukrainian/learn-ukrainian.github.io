@@ -1,8 +1,8 @@
 # Audit Report: M77 — pivden-novorosiia.md
 **Level:** B2 | **Module:** M77 | **Phase:** HIST.8 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-27 15:51:24
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-28 00:34:56
 
 ## Configuration
 **Type:** B2-history
@@ -24,36 +24,28 @@
 | 2 | critical-analysis | Деконструкція міфу про "порожню землю" | 1 | 1 | ✅ |
 | 3 | comparative-study | Порівняння типів колонізації | 1 | 1 | ✅ |
 | 4 | essay-response | Есе: Чий Південь? Історична правда проти пропаганди | 1 | 1 | ✅ |
+| 5 | true-false | Міфи та реальність Півдня | 10 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 4 (target: 3-9) ✅
-- Unique types: 4 (minimum: 2) ✅
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 2/3 (essay-response, reading) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in pivden-novorosiia.yaml: Insufficient activities: 4 found, minimum 5 required for B2-HIST
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 5112/4000 (raw: 5332)
-- **Activities:** ✅ 4/3
+- **Words:** ✅ 4720/4000 (raw: 4844)
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 4/2 types
+- **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/5
+- **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ✅ Content-heavy OK (4 activities)
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.7% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -66,27 +58,26 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 5 | 3 | 100% | 24% | 23.8% |
-| engagement | 6 | 6 | 100% | 14% | 14.3% |
-| timeline_markers | 21 | 10 | 100% | 14% | 14.3% |
+| primary_sources | 15 | 3 | 100% | 24% | 23.8% |
+| engagement | 9 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 10 | 4 | 100% | 10% | 9.5% |
-| visual | 5 | 4 | 100% | 10% | 9.5% |
+| cultural | 8 | 4 | 100% | 10% | 9.5% |
+| visual | 9 | 4 | 100% | 10% | 9.5% |
 | variety | 0.99 | - | 99% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 7 | 3 | 100% | 5% | 4.8% |
+| questions | 14 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 134 | Included in Core |
-| **Вступ: "Дике поле" чи Великий Луг? Історія, яку намагалися стерти** | ✅ | 474 | Included in Core |
-| **Козацький Південь: Зимівники, паланки та слободи як фундамент цивілізації** | ⚪️ | 1025 | Skipped |
-| **Міф про "Новоросію": Анатомія великої та цинічної імперської брехні** | ⚪️ | 910 | Skipped |
-| **Етнічна палітра: Південь як плавильний казан чи яскрава, строката мозаїка?** | ⚪️ | 834 | Skipped |
-| **Деколонізаційний погляд: Повернення вкрадених імен та втрачених сенсів** | ✅ | 441 | Included in Core |
-| **Читання: Український голос у вільному степовому вітрі** | ✅ | 383 | Included in Core |
-| **Первинні джерела: Сліди, які неможливо стерти і забути** | ✅ | 535 | Included in Core |
-| **Підсумок: Південь — це українське море і український степ** | ✅ | 199 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 177 | Skipped |
+| **Intro/Narrative** | ✅ | 117 | Included in Core |
+| **Вступ: Фейкова історія** | ✅ | 439 | Included in Core |
+| **Південь до колонізації** | ⚪️ | 842 | Skipped |
+| **Колонізація XVIII століття** | ⚪️ | 973 | Skipped |
+| **Читання** | ✅ | 388 | Included in Core |
+| **Первинні джерела** | ✅ | 759 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 407 | Included in Core |
+| **Підсумок: Сучасне значення** | ✅ | 464 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 331 | Skipped |

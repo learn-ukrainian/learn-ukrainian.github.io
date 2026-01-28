@@ -1,0 +1,122 @@
+module: oun
+level: B2-HIST
+version: '2.0'
+items:
+- lemma: націоналізм
+  translation: nationalism
+  ipa: "nɐt͡sʲionɐˈlʲizm"
+  definition: Ідеологія, що ставить націю найвищою цінністю.
+  pos: noun
+  gender: m
+- lemma: підпілля
+  translation: underground
+  ipa: "pidˈpilʲːɐ"
+  definition: Нелегальна діяльність організації.
+  pos: noun
+  gender: n
+- lemma: ідеологія
+  translation: ideology
+  ipa: "ideoloˈɦijɐ"
+  definition: Система поглядів та ідей.
+  pos: noun
+  gender: f
+- lemma: організація
+  translation: organization
+  ipa: "orɦɐnʲiˈzɑt͡sʲijɐ"
+  definition: Об'єднання людей для спільної мети.
+  pos: noun
+  gender: f
+- lemma: визвольний рух
+  translation: liberation movement
+  ipa: "vɪzˈvolʲnɪj rux"
+  definition: Боротьба народу за незалежність.
+  pos: noun
+  gender: m
+- lemma: терор
+  translation: terror
+  ipa: "teˈror"
+  definition: Залякування населення шляхом насильства.
+  pos: noun
+  gender: m
+- lemma: розкол
+  translation: split
+  ipa: "rozˈkol"
+  definition: Поділ організації на ворогуючі частини.
+  pos: noun
+  gender: m
+- lemma: провідник
+  translation: leader
+  ipa: "providˈnɪk"
+  definition: Керівник організації (титул в ОУН).
+  pos: noun
+  gender: m
+- lemma: радикальний
+  translation: radical
+  ipa: "rɐdɪˈkɑlʲnɪj"
+  definition: Рішучий, крайній у поглядах.
+  pos: adj
+- lemma: інтегральний
+  translation: integral
+  ipa: "inteˈɦrɑlʲnɪj"
+  definition: Цілісний, всеохоплюючий (тип націоналізму).
+  pos: adj
+- lemma: атентат
+  translation: assassination
+  ipa: "ɐtenˈtɑt"
+  definition: Політичне вбивство.
+  pos: noun
+  gender: m
+- lemma: конспірація
+  translation: conspiracy
+  ipa: "konspiˈrɑt͡sʲijɐ"
+  definition: Дотримання таємниці.
+  pos: noun
+  gender: f
+- lemma: еміграція
+  translation: emigration
+  ipa: "emiˈɦrɑt͡sʲijɐ"
+  definition: Виїзд з країни на постійне проживання.
+  pos: noun
+  gender: f
+- lemma: маніфест
+  translation: manifesto
+  ipa: "mɐnʲiˈfɛst"
+  definition: Письмове звернення з викладом поглядів.
+  pos: noun
+  gender: m
+- lemma: декалог
+  translation: decalogue
+  ipa: "dekɐˈloh"
+  definition: Десять заповідей (відомий текст ОУН).
+  pos: noun
+  gender: m
+- lemma: саботаж
+  translation: sabotage
+  ipa: "sɐboˈtɑʒ"
+  definition: Умисне зривання роботи.
+  pos: noun
+  gender: m
+- lemma: експропріація
+  translation: expropriation
+  ipa: "ekspropriˈjɑt͡sʲijɐ"
+  definition: Примусове вилучення власнсті (напад на пошти для фінансування).
+  pos: noun
+  gender: f
+- lemma: тризуб
+  translation: trident
+  ipa: "trɪˈzub"
+  definition: Герб України, символ ОУН.
+  pos: noun
+  gender: m
+- lemma: гасло
+  translation: slogan
+  ipa: "ˈɦɑslo"
+  definition: Короткий заклик ("Слава Україні!").
+  pos: noun
+  gender: n
+- lemma: революція
+  translation: revolution
+  ipa: "revoˈlʲut͡sʲijɐ"
+  definition: Корінний переворот у житті суспільства.
+  pos: noun
+  gender: f

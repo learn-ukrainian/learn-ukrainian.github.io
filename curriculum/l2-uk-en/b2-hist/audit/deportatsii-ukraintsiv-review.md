@@ -1,8 +1,8 @@
 # Audit Report: M110 — deportatsii-ukraintsiv.md
 **Level:** B2 | **Module:** M110 | **Phase:** HIST.11 | **Pedagogy:** CBI | **Target:** 4000
-**Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-27 15:51:34
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-29 00:13:47
 
 ## Configuration
 **Type:** B2-history
@@ -20,70 +20,63 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | essay-response | Ваша думка | 1 | 1 | ✅ |
-| 2 | comparative-study | Порівняння протесту | 1 | 1 | ✅ |
-| 3 | true-false | Правда чи хибність: Радянська Україна | 10 | 8 | ✅ |
+| 1 | reading | Спогади про Акцію "Вісла" | 8 | 1 | ✅ |
+| 2 | essay-response | Мета депортацій | 1 | 1 | ✅ |
+| 3 | comparative-study | Порівняльний аналіз операцій | 1 | 1 | ✅ |
+| 4 | critical-analysis | Аналіз звіту УПА | 1 | 1 | ✅ |
+| 5 | authorial-intent | Аналіз пропаганди | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 3 (target: 3-9) ✅
-- Unique types: 3 (minimum: 2) ✅
-- Priority types used: 2/4 (comparative-study, essay-response) ✅
-- Required types used: 1/2 (essay-response) ❌
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in deportatsii-ukraintsiv.yaml: Insufficient activities: 3 found, minimum 5 required for B2-HIST
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 25/100)
-
-- 1 violations (minor)
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
-
 ## Gates
-- **Words:** ❌ 1930/4000 (raw: 2100)
-- **Activities:** ✅ 3/3
+- **Words:** ✅ 4632/4000 (raw: 4717)
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 3/2 types
+- **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 18/5
+- **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 20 (soft target)
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Vocab:** ⚠️ 18 < 20 (soft target)
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ✅ Content-heavy OK (3 activities)
-- **Immersion:** 🇺🇦 96.3% (target 90-100% (history))
-- **Richness:** ✅ 96% (history)
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Immersion:** 🇺🇦 99.5% (target 90-100% (history))
+- **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 10/10 (High)
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 96% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 15 | 3 | 100% | 24% | 23.8% |
-| engagement | 18 | 6 | 100% | 14% | 14.3% |
+| engagement | 9 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 3 | 4 | 75% | 10% | 7.1% |
-| visual | 17 | 4 | 100% | 10% | 9.5% |
-| variety | 0.96 | - | 96% | 5% | 4.6% |
-| paragraph_var | 0.86 | - | 86% | 5% | 4.1% |
-| questions | 10 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **96.8%** |
+| cultural | 7 | 4 | 100% | 10% | 9.5% |
+| visual | 10 | 4 | 100% | 10% | 9.5% |
+| variety | 0.98 | - | 98% | 5% | 4.7% |
+| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
+| questions | 6 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Повоєнне радянське панування** | ⚪️ | 81 | Skipped |
-| **Читання** | ✅ | 1386 | Included in Core |
-| **Первинні джерела** | ✅ | 157 | Included in Core |
-| **Деколонізаційний погляд** | ✅ | 136 | Included in Core |
-| **Підсумок** | ✅ | 60 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Депортації українців 1944-1951** | ⚪️ | 119 | Skipped |
+| **Вступ: Післявоєнні переселення** | ✅ | 479 | Included in Core |
+| **Депортації до СРСР (1944-1946)** | ⚪️ | 1147 | Skipped |
+| **Операція «Вісла» (1947) — Читання** | ✅ | 1015 | Included in Core |
+| **Первинні джерела** | ✅ | 826 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 457 | Included in Core |
+| **Підсумок: Спадщина травми** | ✅ | 589 | Included in Core |

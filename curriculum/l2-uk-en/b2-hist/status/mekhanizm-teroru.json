@@ -2,35 +2,35 @@
   "module": "mekhanizm-teroru",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T15:51:31.837219Z",
+  "last_audit": "2026-01-28T22:38:03.109198Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.347008Z",
-    "meta": "2026-01-26T22:20:13.315318Z",
-    "activities": "2026-01-27T15:34:54.272961Z",
-    "vocabulary": null,
+    "md": "2026-01-28T19:06:37.369157Z",
+    "meta": "2026-01-28T19:06:53.770684Z",
+    "activities": "2026-01-28T19:05:48.471577Z",
+    "vocabulary": "2026-01-28T19:08:47.568112Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "2055/4000 (raw: 2289) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "4074/4000 (raw: 4288)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "3/3"
+      "message": "5/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 20 (soft target)"
+      "message": "20/20"
     },
     "naturalness": {
       "status": "pass",
@@ -39,13 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: reading"
-    ],
-    "pass_count": 2,
-    "fail_count": 2
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

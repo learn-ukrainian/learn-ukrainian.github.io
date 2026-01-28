@@ -1,0 +1,123 @@
+module: kakhovska-hes
+level: B2-HIST
+version: '2.0'
+items:
+- term: гребля
+  translation: dam
+  pos: noun
+  gender: f
+  example: Гребля Каховської ГЕС була найбільшою в Європі.
+
+- term: екоцид
+  translation: ecocide
+  pos: noun
+  gender: m
+  example: Руйнування ГЕС кваліфікується як екоцид.
+
+- term: затоплення
+  translation: flooding
+  pos: noun
+  gender: n
+  example: Затоплення охопило понад 600 квадратних кілометрів.
+
+- term: водосховище
+  translation: reservoir
+  pos: noun
+  gender: n
+  example: Каховське водосховище мало площу понад 2000 км².
+
+- term: екологічна катастрофа
+  translation: ecological catastrophe
+  pos: noun phrase
+  gender: f
+  example: Це найбільша екологічна катастрофа в Європі за останні десятиліття.
+
+- term: інфраструктура
+  translation: infrastructure
+  pos: noun
+  gender: f
+  example: Катастрофа знищила критичну інфраструктуру регіону.
+
+- term: евакуація
+  translation: evacuation
+  pos: noun
+  gender: f
+  example: Евакуацію оголосили о 3:30 ранку.
+
+- term: відбудова
+  translation: reconstruction
+  pos: noun
+  gender: f
+  example: Відбудова греблі займе роки і коштуватиме мільярди.
+
+- term: біорізноманіття
+  translation: biodiversity
+  pos: noun
+  gender: n
+  example: Біорізноманіття регіону зазнало катастрофічного удару.
+
+- term: гідроелектростанція
+  translation: hydroelectric power station
+  pos: noun
+  gender: f
+  example: Каховська ГЕС була найбільшою гідроелектростанцією в Європі.
+
+- term: зрошення
+  translation: irrigation
+  pos: noun
+  gender: n
+  example: Сільське господарство залежало від зрошення.
+
+- term: ґрунтові води
+  translation: groundwater
+  pos: noun phrase
+  gender: f pl
+  example: Ґрунтові води в регіоні почали зникати.
+
+- term: рятувальник
+  translation: rescuer
+  pos: noun
+  gender: m
+  example: Рятувальники витягували людей із затоплених будинків.
+
+- term: постраждалий
+  translation: victim, affected person
+  pos: noun
+  gender: m
+  example: Постраждалі отримали тимчасове житло.
+
+- term: засолення
+  translation: salinization
+  pos: noun
+  gender: n
+  example: Засолення ґрунтів робить землю непридатною для землеробства.
+
+- term: екосистема
+  translation: ecosystem
+  pos: noun
+  gender: f
+  example: Екосистема водосховища була повністю знищена.
+
+- term: машинний зал
+  translation: machine hall, turbine hall
+  pos: noun phrase
+  gender: m
+  example: Вибух стався в машинному залі станції.
+
+- term: навмисний
+  translation: deliberate, intentional
+  pos: adjective
+  gender: m
+  example: Це був навмисний, спланований злочин.
+
+- term: незворотний
+  translation: irreversible
+  pos: adjective
+  gender: m
+  example: Наслідки для біорізноманіття є незворотними.
+
+- term: техногенна катастрофа
+  translation: man-made disaster
+  pos: noun phrase
+  gender: f
+  example: Це найбільша техногенна катастрофа за десятиліття.

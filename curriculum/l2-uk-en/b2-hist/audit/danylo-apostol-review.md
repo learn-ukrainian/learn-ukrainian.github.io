@@ -1,8 +1,8 @@
 # Audit Report: M70 — danylo-apostol.md
 **Level:** B2 | **Module:** M70 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-27 15:51:20
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-27 23:37:57
 
 ## Configuration
 **Type:** B2-history
@@ -24,36 +24,28 @@
 | 2 | essay-response | Есе: Дві стратегії виживання | 1 | 1 | ✅ |
 | 3 | comparative-study | Порівняння: Апостол vs Розумовський | 1 | 1 | ✅ |
 | 4 | true-false | Факти про останніх гетьманів | 10 | 8 | ✅ |
+| 5 | critical-analysis | Феномен 'останнього шансу' автономії | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 4 (target: 3-9) ✅
-- Unique types: 4 (minimum: 2) ✅
-- Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in danylo-apostol.yaml: Insufficient activities: 4 found, minimum 5 required for B2-HIST
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 4027/4000 (raw: 4124)
-- **Activities:** ✅ 4/3
+- **Words:** ✅ 4075/4000 (raw: 4172)
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 4/2 types
+- **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ✅ Content-heavy OK (4 activities)
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.7% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -70,22 +62,22 @@
 | engagement | 6 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 6 | 4 | 100% | 10% | 9.5% |
+| cultural | 4 | 4 | 100% | 10% | 9.5% |
 | visual | 4 | 4 | 100% | 10% | 9.5% |
-| variety | 0.99 | - | 99% | 5% | 4.7% |
+| variety | 0.98 | - | 98% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 7 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **100.0%** |
+| questions | 9 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 84 | Included in Core |
-| **Вступ: Між молотом і ковадлом** | ✅ | 327 | Included in Core |
-| **Читання: Епоха Данила Апостола** | ✅ | 704 | Included in Core |
-| **Економіка та суспільство: Стабільність і криза** | ⚪️ | 699 | Skipped |
-| **Епоха Розумовського: Європейська мрія** | ⚪️ | 798 | Skipped |
-| **Первинні джерела: Голоси епохи** | ✅ | 546 | Included in Core |
-| **Деколонізаційний погляд: Дві стратегії виживання** | ✅ | 408 | Included in Core |
-| **Підсумок: Захід сонця** | ✅ | 399 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 62 | Skipped |
+| **Intro/Narrative** | ✅ | 94 | Included in Core |
+| **Вступ: Між молотом і ковадлом** | ✅ | 339 | Included in Core |
+| **Читання: Епоха Данила Апостола** | ✅ | 734 | Included in Core |
+| **Економіка та суспільство: Стабільність і криза** | ⚪️ | 685 | Skipped |
+| **Епоха Розумовського: Європейська мрія** | ⚪️ | 755 | Skipped |
+| **Первинні джерела: Голоси епохи** | ✅ | 499 | Included in Core |
+| **Деколонізаційний погляд: Дві стратегії виживання** | ✅ | 492 | Included in Core |
+| **Підсумок: Захід сонця** | ✅ | 376 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 101 | Skipped |

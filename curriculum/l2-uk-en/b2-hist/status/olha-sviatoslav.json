@@ -2,13 +2,13 @@
   "module": "olha-sviatoslav",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-27T15:49:40.236128Z",
+  "last_audit": "2026-01-27T23:38:36.621641Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.347056Z",
     "meta": "2026-01-26T22:20:13.376280Z",
     "activities": "2026-01-27T15:34:54.370413Z",
-    "vocabulary": "2026-01-26T23:20:26.525689Z",
+    "vocabulary": "2026-01-27T15:50:12.481571Z",
     "plan": null
   },
   "gates": {

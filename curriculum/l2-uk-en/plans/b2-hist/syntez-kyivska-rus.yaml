@@ -1,4 +1,4 @@
-module: b2-hist-20
+module: syntez-kyivska-rus
 level: B2-HIST
 slug: syntez-kyivska-rus
 version: '2.0'
@@ -105,5 +105,5 @@ sources:
   url: https://uk.wikipedia.org/wiki/Спадщина_Київської_Русі
   type: reference
   notes: Legacy and claims
-immersion: 100% Ukrainian
 phase: B2-HIST.1 [Kyivan Rus]
+immersion: 100% Ukrainian

@@ -1,0 +1,278 @@
+items:
+- lemma: отаман
+  ipa: [ɔtɑˈmɑn]
+  pos: noun
+  definition_en: chieftain, military leader
+  collocations:
+  - Головний Отаман
+  - козацький отаман
+  - отаманщина
+  synonyms: [ватажок, командир]
+  antonyms: []
+  tags: [history, military]
+  morphology:
+    gender: m
+    number: sg
+- lemma: Директорія
+  ipa: [dɪrɛkˈtɔr⁽ʲ⁾ijɑ]
+  pos: proper noun
+  definition_en: The Directory, the executive body of the UPR
+  collocations:
+  - уряд Директорії
+  - голова Директорії
+  synonyms: []
+  antonyms: []
+  tags: [history, politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: армія
+  ipa: [ˈɑrm⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: army
+  collocations:
+  - Армія УНР
+  - регулярна армія
+  - розбудова армії
+  synonyms: [військо]
+  antonyms: []
+  tags: [military]
+  morphology:
+    gender: f
+    number: sg
+- lemma: незалежність
+  ipa: [nɛzɑˈlɛʒn⁽ʲ⁾isʲtʲ]
+  pos: noun
+  definition_en: independence
+  collocations:
+  - державна незалежність
+  - боротьба за незалежність
+  - проголосити незалежність
+  synonyms: [самостійність]
+  antonyms: [залежність, неволя]
+  tags: [politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: боротьба
+  ipa: [bɔˈrɔtʲbɑ]
+  pos: noun
+  definition_en: struggle, fight
+  collocations:
+  - збройна боротьба
+  - національно-визвольна боротьба
+  - шлях боротьби
+  synonyms: [змагання, бій]
+  antonyms: [примирення, капітуляція]
+  tags: [history, politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: еміграція
+  ipa: [ɛm⁽ʲ⁾iˈɦrɑt͡s⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: emigration, exile
+  collocations:
+  - українська еміграція
+  - жити в еміграції
+  - виїхати в еміграцію
+  synonyms: [вигнання, екзиль]
+  antonyms: [репатріація]
+  tags: [society, politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: союз
+  ipa: [sɔˈjuz]
+  pos: noun
+  definition_en: alliance, union
+  collocations:
+  - військовий союз
+  - укласти союз
+  - союз із Польщею
+  synonyms: [альянс, угода]
+  antonyms: [ворожнеча, розрив]
+  tags: [politics, military]
+  morphology:
+    gender: m
+    number: sg
+- lemma: вбивство
+  ipa: [ˈwbɪwstwɔ]
+  pos: noun
+  definition_en: murder, assassination
+  collocations:
+  - політичне вбивство
+  - вбивство Петлюри
+  - розслідувати вбивство
+  synonyms: [атентат]
+  antonyms: []
+  tags: [crime, history]
+  morphology:
+    gender: n
+    number: sg
+- lemma: журналіст
+  ipa: [ʒurnɑˈl⁽ʲ⁾ist]
+  pos: noun
+  definition_en: journalist
+  collocations:
+  - відомий журналіст
+  - фах журналіста
+  - журналістська діяльність
+  synonyms: [кореспондент, часописець]
+  antonyms: []
+  tags: [professions, media]
+  morphology:
+    gender: m
+    number: sg
+- lemma: операція
+  ipa: [ɔpɛˈrɑt͡s⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: operation (military or surgical)
+  collocations:
+  - військова операція
+  - Київська операція
+  - план операції
+  synonyms: []
+  antonyms: []
+  tags: [military]
+  morphology:
+    gender: f
+    number: sg
+- lemma: поразка
+  ipa: [pɔˈrɑzkɑ]
+  pos: noun
+  definition_en: defeat
+  collocations:
+  - воєнна поразка
+  - зазнати поразки
+  - гіркота поразки
+  synonyms: [програш, фіаско]
+  antonyms: [перемога, звитяга]
+  tags: [history, military]
+  morphology:
+    gender: f
+    number: sg
+- lemma: погром
+  ipa: [pɔˈɦrɔm]
+  pos: noun
+  definition_en: pogrom
+  collocations:
+  - єврейський погром
+  - зупинити погроми
+  - трагедія погромів
+  synonyms: [різанина]
+  antonyms: []
+  tags: [history, tragedy]
+  morphology:
+    gender: m
+    number: sg
+- lemma: суд
+  ipa: [sud]
+  pos: noun
+  definition_en: court, trial
+  collocations:
+  - відкритий суд
+  - рішення суду
+  - постати перед судом
+  synonyms: [трибунал]
+  antonyms: []
+  tags: [law]
+  morphology:
+    gender: m
+    number: sg
+- lemma: символ
+  ipa: [ˈsɪmwɔl]
+  pos: noun
+  definition_en: symbol
+  collocations:
+  - символ боротьби
+  - національний символ
+  - стати символом
+  synonyms: [знак]
+  antonyms: []
+  tags: [culture, politics]
+  morphology:
+    gender: m
+    number: sg
+- lemma: соратник
+  ipa: [sɔˈrɑtnɪk]
+  pos: noun
+  definition_en: comrade-in-arms, associate
+  collocations:
+  - близький соратник
+  - вірний соратник
+  - спогади соратників
+  synonyms: [однодумець, побратим]
+  antonyms: [супротивник, ворог]
+  tags: [society, military]
+  morphology:
+    gender: m
+    number: sg
+- lemma: зрадник
+  ipa: [ˈzrɑdnɪk]
+  pos: noun
+  definition_en: traitor
+  collocations:
+  - національний зрадник
+  - виявити зрадника
+  synonyms: [запроданець, юда]
+  antonyms: [патріот, герой]
+  tags: [politics, ethics]
+  morphology:
+    gender: m
+    number: sg
+- lemma: пам'ять
+  ipa: [ˈpɑmʲːɑtʲ]
+  pos: noun
+  definition_en: memory
+  collocations:
+  - історична пам'ять
+  - національна пам'ять
+  - вшанувати пам'ять
+  synonyms: []
+  antonyms: [забуття]
+  tags: [culture, psychology]
+  morphology:
+    gender: f
+    number: sg
+- lemma: постать
+  ipa: [ˈpɔstɑtʲ]
+  pos: noun
+  definition_en: figure, personality (often prominent)
+  collocations:
+  - історична постать
+  - видатна постать
+  - суперечлива постать
+  synonyms: [особистість, особа]
+  antonyms: []
+  tags: [history, biography]
+  morphology:
+    gender: f
+    number: sg
+- lemma: міф
+  ipa: [m⁽ʲ⁾if]
+  pos: noun
+  definition_en: myth
+  collocations:
+  - радянський міф
+  - руйнування міфів
+  - міф про Петлюру
+  synonyms: [вигадка, легенда]
+  antonyms: [реальність, факт]
+  tags: [culture, history]
+  morphology:
+    gender: m
+    number: sg
+- lemma: атентат
+  ipa: [ɑtɛnˈtɑt]
+  pos: noun
+  definition_en: assassination attempt, political murder
+  collocations:
+  - вчинити атентат
+  - жертва атентату
+  synonyms: [вбивство]
+  antonyms: []
+  tags: [politics, history]
+  morphology:
+    gender: m
+    number: sg

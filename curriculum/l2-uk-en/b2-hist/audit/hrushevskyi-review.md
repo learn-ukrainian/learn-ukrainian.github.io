@@ -1,8 +1,8 @@
 # Audit Report: M87 — hrushevskyi.md
 **Level:** B2 | **Module:** M87 | **Phase:** HIST.9 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-27 15:51:28
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-28 15:22:56
 
 ## Configuration
 **Type:** B2-history
@@ -20,41 +20,35 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | true-false | Історичні факти про Грушевського | 16 | 8 | ✅ |
-| 2 | essay-response | Грушевський як національний архітектор | 1 | 1 | ✅ |
-| 3 | comparative-study | Порівняння імперських стратегій репресії | 1 | 1 | ✅ |
+| 1 | reading | IV Універсал Центральної Ради | 1 | 1 | ✅ |
+| 2 | critical-analysis | Аналіз IV Універсалу | 1 | 1 | ✅ |
+| 3 | true-false | Правда чи міф: Михайло Грушевський | 10 | 8 | ✅ |
+| 4 | essay-response | Есе: Історик як політик | 1 | 1 | ✅ |
+| 5 | critical-analysis | Аналіз схеми історії східного слов'янства | 1 | 1 | ✅ |
+| 6 | comparative-study | Грушевський vs Міхновський | 1 | 1 | ✅ |
+| 7 | authorial-intent | Аналіз стилю: Вступ до 'Історії України-Руси' | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 3 (target: 3-9) ✅
-- Unique types: 3 (minimum: 2) ✅
-- Priority types used: 2/4 (comparative-study, essay-response) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Total activities: 7 (target: 3-9) ✅
+- Unique types: 6 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in hrushevskyi.yaml: Insufficient activities: 3 found, minimum 5 required for B2-HIST
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 25/100)
-
-- 1 violations (minor)
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
-
 ## Gates
-- **Words:** ❌ 2098/4000 (raw: 2436)
-- **Activities:** ✅ 3/3
+- **Words:** ✅ 4037/4000 (raw: 4421)
+- **Activities:** ✅ 7/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 3/2 types
+- **Unique_types:** ✅ 6/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 14/5
+- **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 20 (soft target)
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Vocab:** ✅ 21/20
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ✅ Content-heavy OK (3 activities)
-- **Immersion:** 🇺🇦 96.4% (target 90-100% (history))
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (7 activities)
+- **Immersion:** 🇺🇦 99.6% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -66,29 +60,27 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 15 | 3 | 100% | 24% | 23.8% |
-| engagement | 14 | 6 | 100% | 14% | 14.3% |
+| primary_sources | 14 | 3 | 100% | 24% | 23.8% |
+| engagement | 6 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 7 | 4 | 100% | 10% | 9.5% |
-| visual | 15 | 4 | 100% | 10% | 9.5% |
-| variety | 0.97 | - | 97% | 5% | 4.6% |
+| visual | 6 | 4 | 100% | 10% | 9.5% |
+| variety | 0.99 | - | 99% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 3 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.9%** |
+| questions | 16 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Михайло Грушевський** | ⚪️ | 100 | Skipped |
-| **Вступ** | ✅ | 199 | Included in Core |
-| **Від Києва до Львова: формування вченого** | ⚪️ | 241 | Skipped |
-| **Наукове товариство імені Шевченка** | ⚪️ | 344 | Skipped |
-| **Центральна Рада і президентство** | ⚪️ | 192 | Skipped |
-| **Еміграція і повернення** | ⚪️ | 329 | Skipped |
-| **Деколонізаційний погляд** | ✅ | 368 | Included in Core |
-| **Читання** | ✅ | 9 | Included in Core |
-| **Первинні джерела** | ✅ | 30 | Included in Core |
-| **Підсумок** | ✅ | 176 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Intro/Narrative** | ✅ | 126 | Included in Core |
+| **Вступ: Людина-епоха** | ✅ | 340 | Included in Core |
+| **Біографія та наукова кар'єра** | ⚪️ | 699 | Skipped |
+| **Політична діяльність** | ⚪️ | 980 | Skipped |
+| **Первинні джерела та Наукова спадщина** | ✅ | 776 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 445 | Included in Core |
+| **Підсумок: Незнищенна спадщина** | ✅ | 519 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 62 | Skipped |
+| **Читання: Голос Епохи (Додаток)** | ✅ | 90 | Included in Core |
+| **Словник** | ⚪️ | 0 | Skipped |

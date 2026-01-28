@@ -1,0 +1,263 @@
+items:
+- lemma: повстання
+  ipa: [pɔwˈstɑnʲːɑ]
+  pos: noun
+  definition_en: uprising, insurrection
+  collocations:
+  - збройне повстання
+  - підняти повстання
+  - учасник повстання
+  synonyms: [заколот, бунт]
+  antonyms: []
+  tags: [history, military]
+  morphology:
+    gender: n
+    number: sg
+- lemma: повстанець
+  ipa: [pɔwˈstɑnɛt͡sʲ]
+  pos: noun
+  definition_en: insurgent, rebel
+  collocations:
+  - загін повстанців
+  - доля повстанця
+  synonyms: [бунтівник]
+  antonyms: []
+  tags: [military, society]
+  morphology:
+    gender: m
+    number: sg
+- lemma: опір
+  ipa: [ˈɔp⁽ʲ⁾ir]
+  pos: noun
+  definition_en: resistance
+  collocations:
+  - чинити опір
+  - героїчний опір
+  - воля до опору
+  synonyms: [спротив]
+  antonyms: [покора, згода]
+  tags: [military, psychology]
+  morphology:
+    gender: m
+    number: sg
+- lemma: партизан
+  ipa: [pɑrtɪˈzɑn]
+  pos: noun
+  definition_en: partisan, guerrilla
+  collocations:
+  - партизанська війна
+  - партизанський рух
+  synonyms: []
+  antonyms: []
+  tags: [military, history]
+  morphology:
+    gender: m
+    number: sg
+- lemma: командир
+  ipa: [kɔmɑnˈdɪr]
+  pos: noun
+  definition_en: commander
+  collocations:
+  - військовий командир
+  - наказ командира
+  synonyms: [начальник, провідник]
+  antonyms: [підлеглий]
+  tags: [military]
+  morphology:
+    gender: m
+    number: sg
+- lemma: загін
+  ipa: [zɑˈɦ⁽ʲ⁾in]
+  pos: noun
+  definition_en: detachment, squad, unit
+  collocations:
+  - повстанський загін
+  - сформувати загін
+  synonyms: [підрозділ]
+  antonyms: []
+  tags: [military]
+  morphology:
+    gender: m
+    number: sg
+- lemma: окупація
+  ipa: [ɔkuˈpɑt͡s⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: occupation
+  collocations:
+  - режим окупації
+  - боротьба проти окупації
+  synonyms: [загарбання]
+  antonyms: [визволення]
+  tags: [history, politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: придушення
+  ipa: [prɪˈduʃɛnʲːɑ]
+  pos: noun
+  definition_en: suppression, quelling
+  collocations:
+  - придушення повстання
+  - жорстоке придушення
+  synonyms: [приборкання]
+  antonyms: []
+  tags: [military, politics]
+  morphology:
+    gender: n
+    number: sg
+- lemma: засідка
+  ipa: [ˈzɑs⁽ʲ⁾idkɑ]
+  pos: noun
+  definition_en: ambush
+  collocations:
+  - влаштувати засідку
+  - потрапити в засідку
+  synonyms: []
+  antonyms: []
+  tags: [military]
+  morphology:
+    gender: f
+    number: sg
+- lemma: рейд
+  ipa: [rɛjd]
+  pos: noun
+  definition_en: raid
+  collocations:
+  - бойовий рейд
+  - глибокий рейд
+  synonyms: [виправа]
+  antonyms: []
+  tags: [military]
+  morphology:
+    gender: m
+    number: sg
+- lemma: підпілля
+  ipa: [p⁽ʲ⁾idˈpilʲːɑ]
+  pos: noun
+  definition_en: underground (movement)
+  collocations:
+  - діяти в підпіллі
+  - антирадянське підпілля
+  synonyms: []
+  antonyms: []
+  tags: [history, politics]
+  morphology:
+    gender: n
+    number: sg
+- lemma: отаман
+  ipa: [ɔtɑˈmɑn]
+  pos: noun
+  definition_en: otaman, chieftain
+  collocations:
+  - головний отаман
+  - отаманщина
+  synonyms: [ватажок]
+  antonyms: []
+  tags: [history, military]
+  morphology:
+    gender: m
+    number: sg
+- lemma: терор
+  ipa: [tɛˈrɔr]
+  pos: noun
+  definition_en: terror
+  collocations:
+  - червоний терор
+  - політика терору
+  synonyms: [залякування]
+  antonyms: []
+  tags: [politics, history]
+  morphology:
+    gender: m
+    number: sg
+- lemma: легенда
+  ipa: [lɛˈɦɛndɑ]
+  pos: noun
+  definition_en: legend
+  collocations:
+  - історична легенда
+  - стати легендою
+  synonyms: [переказ]
+  antonyms: [реальність]
+  tags: [culture, history]
+  morphology:
+    gender: f
+    number: sg
+- lemma: прапор
+  ipa: [ˈprɑpɔr]
+  pos: noun
+  definition_en: banner, flag
+  collocations:
+  - підняти прапор
+  - бойовий прапор
+  synonyms: [стяг]
+  antonyms: []
+  tags: [military, politics]
+  morphology:
+    gender: m
+    number: sg
+- lemma: гасло
+  ipa: [ˈɦɑslɔ]
+  pos: noun
+  definition_en: slogan, motto
+  collocations:
+  - бойове гасло
+  - виголосити гасло
+  synonyms: [девіз]
+  antonyms: []
+  tags: [politics, society]
+  morphology:
+    gender: n
+    number: sg
+- lemma: святиня
+  ipa: [swʲɑˈtɪnʲɑ]
+  pos: noun
+  definition_en: shrine, sacred thing
+  collocations:
+  - національна святиня
+  - осквернити святиню
+  synonyms: []
+  antonyms: []
+  tags: [culture, religion]
+  morphology:
+    gender: f
+    number: sg
+- lemma: незламність
+  ipa: [nɛˈzlɑmn⁽ʲ⁾isʲtʲ]
+  pos: noun
+  definition_en: indomitability, resilience
+  collocations:
+  - дух незламності
+  - символ незламності
+  synonyms: []
+  antonyms: [слабкість]
+  tags: [psychology, character]
+  morphology:
+    gender: f
+    number: sg
+- lemma: визволення
+  ipa: [wɪˈzwɔlɛnʲːɑ]
+  pos: noun
+  definition_en: liberation, emancipation
+  collocations:
+  - національне визволення
+  - день визволення
+  synonyms: [звільнення]
+  antonyms: [окупація]
+  tags: [politics, history]
+  morphology:
+    gender: n
+    number: sg
+- lemma: пам'ять
+  ipa: [ˈpɑmʲːɑtʲ]
+  pos: noun
+  definition_en: memory
+  collocations:
+  - історична пам'ять
+  - вшанувати пам'ять
+  synonyms: []
+  antonyms: [забуття]
+  tags: [culture]
+  morphology:
+    gender: f
+    number: sg

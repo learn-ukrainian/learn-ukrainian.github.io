@@ -1,14 +1,36 @@
-module: b2-hist-110
+module: deportatsii-ukraintsiv
 level: B2-HIST
 slug: deportatsii-ukraintsiv
 version: '2.0'
-id: b2-hist-110
-naturalness:
-  score: 10
-  status: PASS
-  justification: Академічний український для опису історичних трагедій
-duration: 120
+title: "Депортації українців 1944-1951"
+subtitle: Deportations of Ukrainians 1944-1951
+register: публіцистичний
+duration: 150
 transliteration: none
-build:
-  last_modified: '2026-01-26'
-phase: HIST.11 [Post-War Soviet Ukraine]
+word_target: 4000
+pedagogy: CBI
+focus: history
+status: draft
+timestamp: '2026-01-28T21:40:00Z'
+naturalness:
+  score: 9
+  status: PASS
+immersion_score: 99
+activity_count: 5
+content_heavy: true
+required_activity_types:
+- reading
+- essay-response
+content_outline:
+- section: 'Вступ: Післявоєнні переселення'
+  words: 400
+- section: Депортації до СРСР (1944-1946)
+  words: 800
+- section: Операція «Вісла» (1947)
+  words: 1000
+- section: Первинні джерела
+  words: 800
+- section: Деколонізаційний погляд
+  words: 500
+- section: 'Підсумок: Спадщина травми'
+  words: 500

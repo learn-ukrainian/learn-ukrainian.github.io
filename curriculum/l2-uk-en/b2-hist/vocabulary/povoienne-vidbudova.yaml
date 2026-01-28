@@ -1,0 +1,124 @@
+module: povoienne-vidbudova
+level: B2-HIST
+version: '2.0'
+items:
+- lemma: відбудова
+  ipa: "v\u02B2id\u02C8bud\u0254w\u0251"
+  translation: reconstruction / rebuilding
+  definition: "процес відновлення промисловості та міст після війни"
+  pos: noun
+  gender: f
+- lemma: руйнування
+  ipa: "rui\u032Fnu\u02C8w\u0251n\u02D0\u02B2\u0251"
+  translation: destruction / devastation
+  definition: "масштаб руйнувань в Україні був катастрофічним"
+  pos: noun
+  gender: n
+- lemma: п'ятирічка
+  ipa: "pja\u096bt\u0259\u02C8r\u02B2it\u0361\u0283k\u0251"
+  translation: five-year plan
+  definition: "планова радянська економіка базувалася на п'ятирічках"
+  pos: noun
+  gender: f
+- lemma: промисловість
+  ipa: "pr\u0254m\u026a\u02C8sl\u0254wist\u02B2"
+  translation: industry
+  definition: "важка промисловість мала пріоритет над легкою"
+  pos: noun
+  gender: f
+- lemma: голод
+  ipa: "\u0266\u0254l\u0254d"
+  translation: famine / hunger
+  definition: "голод 1946-1947 років був штучно створений владою"
+  pos: noun
+  gender: m
+- lemma: втрати
+  ipa: "\u02C8vtr\u0251t\u026a"
+  translation: losses / casualties
+  definition: "людські та матеріальні втрати під час війни"
+  pos: noun
+  gender: f
+- lemma: демографія
+  ipa: "d\u025bm\u0254\u02C8\u0266r\u0251f\u02B2ij\u0251"
+  translation: demography
+  definition: "війна спричинила глибоку демографічну кризу"
+  pos: noun
+  gender: f
+- lemma: експлуатація
+  ipa: "\u025bksplu\u0251\u02C8t\u0251t\u0361s\u02B2ij\u0251"
+  translation: exploitation
+  definition: "експлуатація ресурсів України московським центром"
+  pos: noun
+  gender: f
+- lemma: примусова праця
+  ipa: "pr\u026amu\u02C8s\u0254w\u0251 \u02C8pr\u0251t\u0361s\u02B2\u0251"
+  translation: forced labor
+  definition: "використання примусової праці для відбудови заводів"
+  pos: noun
+  gender: f
+- lemma: репатріація
+  ipa: "r\u025bp\u0251tr\u02B2i\u02C8\u0251t\u0361s\u02B2ij\u0251"
+  translation: repatriation
+  definition: "повернення військовополонених та цивільних на батьківщину"
+  pos: noun
+  gender: f
+- lemma: пропаганда
+  ipa: "pr\u0254p\u0251\u02C8\u0266\u0251nd\u0251"
+  translation: propaganda
+  definition: "радянська пропаганда зображувала відбудову як героїчний подвиг"
+  pos: noun
+  gender: f
+- lemma: русифікація
+  ipa: "rus\u026af\u02B2i\u02C8k\u0251t\u0361s\u02B2ij\u0251"
+  translation: Russification
+  definition: "посилення мовної та культурної асиміляції"
+  pos: noun
+  gender: f
+- lemma: травма
+  ipa: "\u02C8tr\u0251wm\u0251"
+  translation: trauma
+  definition: "психологічна травма покоління, що пережило війну"
+  pos: noun
+  gender: f
+- lemma: донор
+  ipa: "\u02C8d\u0254n\u0254r"
+  translation: donor
+  definition: "Україна стала донором ресурсів для всього СРСР"
+  pos: noun
+  gender: m
+- lemma: дефіцит
+  ipa: "d\u025bf\u026a\u02C8ts\u026at"
+  translation: shortage / deficit
+  definition: "постійний брак споживчих товарів"
+  pos: noun
+  gender: m
+- lemma: карткова система
+  ipa: "k\u0251rt\u02C8k\u0254w\u0251 s\u026a\u02C8st\u025bm\u0251"
+  translation: rationing system
+  definition: "скасування карткової системи у 1947 році було частковим"
+  pos: noun
+  gender: f
+- lemma: колгоспне рабство
+  ipa: "k\u0254l\u02C8\u0266\u0254spn\u025b \u02C8r\u0251bstw\u0254"
+  translation: kolkhoz slavery
+  definition: "фактичне закріпачення селян через відсутність паспортів"
+  pos: noun
+  gender: n
+- lemma: індустріалізація
+  ipa: "industr\u02B2i\u0251l\u02B2i\u02C8z\u0251t\u0361s\u02B2ij\u0251"
+  translation: industrialization
+  definition: "відновлення важкої промисловості було головною метою"
+  pos: noun
+  gender: f
+- lemma: відбудовчий період
+  ipa: "v\u02B2idbu\u02C8d\u0254wt\u0361\u0283\u026ai p\u025b\u02C8r\u02B2i\u0259d"
+  translation: reconstruction period
+  definition: "хронологічні межі відбудовчого періоду в Україні"
+  pos: noun
+  gender: m
+- lemma: житловий фонд
+  ipa: "\u0292\u026atl\u0254\u02C8w\u026ai f\u0254nd"
+  translation: housing stock
+  definition: "знищення величезної частини житлового фонду міст"
+  pos: noun
+  gender: m

@@ -1,14 +1,94 @@
-module: b2-hist-101
+module: b2-hist-98
 level: B2-HIST
 slug: rozstriliane-vidrodzennia
 version: '2.0'
-id: b2-hist-101
+id: b2-hist-98
+title: 'Розстріляне відродження: Постаті'
+subtitle: 'The Executed Renaissance: Key Figures'
+phase: 'HIST.10 [WWII & Soviet Terror]'
+focus: history
+pedagogy: seminar
+register: публіцистичний
+duration: 120
+transliteration: none
+word_target: 4000
+content_outline:
+  - section: 'Вступ: Покоління мрійників'
+    words: 400
+    points:
+      - '1920-ті: культурний ренесанс'
+      - Хто такі «розстріляні»
+      - Чому їх знищили
+  - section: Ключові постаті
+    words: 1000
+    points:
+      - 'Микола Хвильовий: «Геть від Москви»'
+      - 'Микола Зеров: неокласики'
+      - 'Лесь Курбас: театр «Березіль»'
+      - 'Михайло Бойчук: монументальний живопис'
+      - 'Інші жертви: Семенко, Куліш, Яловий'
+  - section: Будинок «Слово»
+    words: 800
+    points:
+      - Колективний дім письменників
+      - Хто там жив
+      - Арешти та знищення
+      - Символ культурного геноциду
+  - section: Первинні джерела
+    words: 800
+    points:
+      - Твори Хвильового
+      - Листи та щоденники
+      - Фотографії та документи НКВД
+  - section: Деколонізаційний погляд
+    words: 500
+    points:
+      - 'Радянський наратив: «буржуазія»'
+      - 'Реальність: цілеспрямоване знищення еліти'
+      - Культурний геноцид як частина Голодомору
+  - section: 'Підсумок: Сандармох і пам''ять'
+    words: 500
+    points:
+      - 'Місце розстрілів: Сандармох'
+      - Відновлення пам'яті після 1991
+      - Спадщина Розстріляного відродження
+objectives:
+  - Учень може описати ключові постаті Розстріляного відродження
+  - Учень може пояснити концепцію «Геть від Москви» та «психологічної Європи»
+  - Учень може проаналізувати культурне значення будинку «Слово»
+  - Учень може оцінити трагічну долю покоління 1920-х років
+grammar:
+  - Минулий час у біографічному наративі
+  - Літературна та мистецька лексика
+  - Пасивні конструкції
+vocabulary_hints:
+  required:
+    - відродження (renaissance)
+    - репресії (repressions)
+    - письменник (writer)
+    - митець (artist)
+    - розстріл (execution)
+    - НКВД (NKVD)
+    - культура (culture)
+    - геноцид (genocide)
+  recommended:
+    - неокласики (neoclassicists)
+    - авангард (avant-garde)
+    - театр (theater)
+    - живопис (painting)
+    - Сандармох (Sandarmokh)
+    - реабілітація (rehabilitation)
+activity_hints:
+  - type: reading
+    focus: Уривки з творів Хвильового
+    source: Літературні твори
+    items: 4
+  - type: essay-response
+    focus: Чому радянська влада знищила покоління українських митців 1920-х років?
+    word_target: 250
 naturalness:
   score: 10
   status: PASS
   justification: Академічний український для культурної історії
-duration: 120
-transliteration: none
 build:
-  last_modified: '2026-01-26'
-phase: HIST.10 [WWII & Soviet Terror]
+  last_modified: '2026-01-28'

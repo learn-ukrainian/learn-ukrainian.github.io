@@ -1,8 +1,8 @@
 # Audit Report: M102 — holodomor-pamiat.md
 **Level:** B2 | **Module:** M102 | **Phase:** HIST.10 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-27 15:51:33
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-28 22:51:12
 
 ## Configuration
 **Type:** B2-history
@@ -20,70 +20,63 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | true-false | Міфи та факти | 8 | 8 | ✅ |
-| 2 | essay-response | Ваша думка | 1 | 1 | ✅ |
-| 3 | comparative-study | Механізми брехні | 1 | 1 | ✅ |
+| 1 | reading | «Гарет Джонс: Правда проти брехні» | 3 | 1 | ✅ |
+| 2 | true-false | «Факти та міфи про Голодомор» | 10 | 8 | ✅ |
+| 3 | critical-analysis | «Механізми заперечення» | 1 | 1 | ✅ |
+| 4 | essay-response | «Чому важливо пам'ятати?» | 1 | 1 | ✅ |
+| 5 | comparative-study | «Два голоси: Джонс проти Дюранті» | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 3 (target: 3-9) ✅
-- Unique types: 3 (minimum: 2) ✅
-- Priority types used: 2/4 (comparative-study, essay-response) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in holodomor-pamiat.yaml: Insufficient activities: 3 found, minimum 5 required for B2-HIST
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 25/100)
-
-- 1 violations (minor)
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
-
 ## Gates
-- **Words:** ❌ 1940/4000 (raw: 2078)
-- **Activities:** ✅ 3/3
+- **Words:** ✅ 4586/4000 (raw: 4663)
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 3/2 types
+- **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/5
+- **Engagement:** ✅ 21/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 20 (soft target)
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Vocab:** ✅ 20/20
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ✅ Content-heavy OK (3 activities)
-- **Immersion:** 🇺🇦 95.4% (target 90-100% (history))
-- **Richness:** ✅ 97% (history)
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Immersion:** 🇺🇦 99.0% (target 90-100% (history))
+- **Richness:** ✅ 95% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 97% (minimum: 95%)
+**Score:** 95% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 13 | 3 | 100% | 24% | 23.8% |
-| engagement | 7 | 6 | 100% | 14% | 14.3% |
+| primary_sources | 15 | 3 | 100% | 24% | 23.8% |
+| engagement | 21 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
-| decolonization | 7 | 2 | 100% | 14% | 14.3% |
-| cultural | 3 | 4 | 75% | 10% | 7.1% |
-| visual | 6 | 4 | 100% | 10% | 9.5% |
-| variety | 0.98 | - | 98% | 5% | 4.7% |
+| decolonization | 15 | 2 | 100% | 14% | 14.3% |
+| cultural | 2 | 4 | 50% | 10% | 4.8% |
+| visual | 20 | 4 | 100% | 10% | 9.5% |
+| variety | 0.99 | - | 99% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 6 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **97.5%** |
+| questions | 3 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **95.2%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Голодомор II: Пам'ять про Геноцид** | ⚪️ | 95 | Skipped |
-| **Вступ** | ✅ | 170 | Included in Core |
-| **Читання** | ✅ | 856 | Included in Core |
-| **Деколонізаційний погляд** | ✅ | 632 | Included in Core |
-| **Підсумок** | ✅ | 77 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Intro/Narrative** | ✅ | 50 | Included in Core |
+| **Голодомор: Пам'ять та визнання** | ⚪️ | 130 | Skipped |
+| **Вступ: Злочин без кари** | ✅ | 447 | Included in Core |
+| **Свідки та журналісти** | ⚪️ | 840 | Skipped |
+| **Боротьба за визнання** | ⚪️ | 1243 | Skipped |
+| **Первинні джерела** | ✅ | 797 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 564 | Included in Core |
+| **Підсумок: Чому це важливо** | ✅ | 515 | Included in Core |

@@ -1,0 +1,84 @@
+module: b2-hist-88
+level: B2-HIST
+version: '2.0'
+items:
+- lemma: імперія
+  translation: empire
+  ipa: [imˈpɛrʲijɑ]
+  pos: noun
+- lemma: фронт
+  translation: front (military)
+  ipa: [frɔnt]
+  pos: noun
+- lemma: окоп
+  translation: trench
+  ipa: [ɔˈkɔp]
+  pos: noun
+- lemma: брат
+  translation: brother
+  ipa: [brɑt]
+  pos: noun
+- lemma: зрада
+  translation: betrayal
+  ipa: [ˈzrɑdɑ]
+  pos: noun
+- lemma: легіон
+  translation: legion
+  ipa: [lɛɦʲiˈɔn]
+  pos: noun
+- lemma: стрілець
+  translation: rifleman
+  ipa: [strʲiˈlɛt͡sʲ]
+  pos: noun
+- lemma: січовий
+  translation: sich (adj)
+  ipa: [sʲit͡ʃɔˈwɪj]
+  pos: adj
+- lemma: депортація
+  translation: deportation
+  ipa: [dɛpɔrˈtɑt͡sʲijɑ]
+  pos: noun
+- lemma: біженець
+  translation: refugee
+  ipa: [ˈbʲiʒɛnɛt͡sʲ]
+  pos: noun
+- lemma: окупація
+  translation: occupation
+  ipa: [ɔkuˈpɑt͡sʲijɑ]
+  pos: noun
+- lemma: маніфест
+  translation: manifesto
+  ipa: [mɑnʲiˈfɛst]
+  pos: noun
+- lemma: нейтралітет
+  translation: neutrality
+  ipa: [nɛjtrɑlʲiˈtɛt]
+  pos: noun
+- lemma: мобілізація
+  translation: mobilization
+  ipa: [mɔbʲilʲiˈzɑt͡sʲijɑ]
+  pos: noun
+- lemma: полонений
+  translation: prisoner of war
+  ipa: [pɔlɔˈnɛnɪj]
+  pos: noun
+- lemma: розвідка
+  translation: intelligence / reconnaissance
+  ipa: [ˈrɔzwʲidkɑ]
+  pos: noun
+- lemma: артилерія
+  translation: artillery
+  ipa: [ɑrtɪˈlɛrʲijɑ]
+  pos: noun
+- lemma: наступ
+  translation: offensive
+  ipa: [ˈnɑstup]
+  pos: noun
+- lemma: відступ
+  translation: retreat
+  ipa: [ˈwʲidstup]
+  pos: noun
+- lemma: перемир'я
+  translation: truce
+  ipa: [pɛrɛˈmɪrʲjɑ]
+  pos: noun

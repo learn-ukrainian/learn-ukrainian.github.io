@@ -1,8 +1,8 @@
 # Audit Report: M67 — pylyp-orlyk-konstytutsiia.md
 **Level:** B2 | **Module:** M67 | **Phase:** HIST.7 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-27 15:51:17
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-27 23:38:46
 
 ## Configuration
 **Type:** B2-history
@@ -24,36 +24,28 @@
 | 2 | essay-response | Есе: Демократія у вигнанні | 1 | 1 | ✅ |
 | 3 | comparative-study | Порівняння: Українська Конституція vs Європейський Абсолютизм | 1 | 1 | ✅ |
 | 4 | true-false | Факти про Пилипа Орлика | 10 | 8 | ✅ |
+| 5 | critical-analysis | Правова суб'єктність України за Орликом | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 4 (target: 3-9) ✅
-- Unique types: 4 (minimum: 2) ✅
-- Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in pylyp-orlyk-konstytutsiia.yaml: Insufficient activities: 4 found, minimum 5 required for B2-HIST
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
 - **Words:** ✅ 4754/4000 (raw: 4838)
-- **Activities:** ✅ 4/3
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 4/2 types
+- **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ✅ Content-heavy OK (4 activities)
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

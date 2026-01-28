@@ -1,0 +1,61 @@
+items:
+  - term: терор
+    translation: terror
+    ipa: [tɛˈrɔr]
+  - term: репресії
+    translation: repressions
+    ipa: [rɛˈprɛsʲiji]
+  - term: НКВС
+    translation: NKVD (People's Commissariat for Internal Affairs)
+    ipa: [ɛnkavɛˈɛs]
+  - term: розстріл
+    translation: execution (by shooting)
+    ipa: [rɔzˈstril]
+  - term: табір
+    translation: camp (GULAG)
+    ipa: [ˈtabir]
+  - term: засуджений
+    translation: condemned / convict
+    ipa: [zaˈsudʒɛnɪi̯]
+  - term: архів
+    translation: archive
+    ipa: [arˈxiu̯]
+  - term: геноцид
+    translation: genocide
+    ipa: [ɦɛnɔˈt͡sɪd]
+  - term: трійка
+    translation: troika (NKVD special board)
+    ipa: [ˈtrijka]
+  - term: катування
+    translation: torture
+    ipa: [katuˈʋanʲːa]
+  - term: зізнання
+    translation: confession
+    ipa: [zʲizˈnanʲːa]
+  - term: справа
+    translation: case (file)
+    ipa: [ˈspraʋa]
+  - term: реабілітація
+    translation: rehabilitation
+    ipa: [rɛabilʲiˈtat͡sʲija]
+  - term: меморіал
+    translation: memorial
+    ipa: [mɛmɔr⁽ʲ⁾iˈɑl]
+  - term: чистка
+    translation: purge
+    ipa: [ˈt͡ʃɪstka]
+  - term: вирок
+    translation: sentence / verdict
+    ipa: [ˈʋɪrɔk]
+  - term: етап
+    translation: convoy / prison transport stage
+    ipa: [ɛˈtap]
+  - term: ворог народу
+    translation: enemy of the people
+    ipa: [ˈvɔrɔɦ naˈrɔdu]
+  - term: спецслужба
+    translation: special service / secret police
+    ipa: [spɛt͡sˈsluʒba]
+  - term: підпілля
+    translation: underground
+    ipa: [pidˈpilʲːa]

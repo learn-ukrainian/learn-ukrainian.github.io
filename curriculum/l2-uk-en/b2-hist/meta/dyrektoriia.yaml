@@ -10,5 +10,13 @@ naturalness:
 duration: 120
 transliteration: none
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-01-28'
 phase: HIST.9 [WWI & Revolution]
+activity_hints:
+- type: reading
+  focus: Універсали Директорії
+  source: Архівні документи
+  items: 4
+- type: essay-response
+  focus: Які внутрішні та зовнішні причини призвели до поразки Директорії?
+  word_target: 250

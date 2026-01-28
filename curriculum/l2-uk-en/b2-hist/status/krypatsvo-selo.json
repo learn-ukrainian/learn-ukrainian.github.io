@@ -2,12 +2,12 @@
   "module": "krypatsvo-selo",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:55:01.912185Z",
+  "last_audit": "2026-01-28T00:46:19.016331Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-25T23:42:20.694755Z",
-    "meta": "2026-01-26T22:20:13.269258Z",
-    "activities": "2026-01-25T23:42:35.021430Z",
+    "md": "2026-01-28T00:46:14.804091Z",
+    "meta": "2026-01-28T00:42:46.892865Z",
+    "activities": "2026-01-28T00:44:06.154752Z",
     "vocabulary": "2026-01-25T23:39:34.036516Z",
     "plan": null
   },
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4144/4000 (raw: 4383)"
+      "message": "4367/4000 (raw: 4492)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "6/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "pass",
@@ -39,11 +39,8 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Missing required activity types: fill-in"
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 5,
     "fail_count": 0
   }

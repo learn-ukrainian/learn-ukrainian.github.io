@@ -1,0 +1,336 @@
+items:
+- lemma: Директорія
+  ipa: [dɪrɛkˈtɔr⁽ʲ⁾ijɑ]
+  pos: proper noun
+  definition_en: The Directory, the executive council of the Ukrainian People's Republic (1918-1920)
+  collocations:
+  - уряд Директорії
+  - проголошення Директорії
+  - доба Директорії
+  synonyms: [Рада Комісарів]
+  antonyms: []
+  tags: [history, politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: отаман
+  ipa: [ɔtɑˈmɑn]
+  pos: noun
+  definition_en: chieftain, military leader (specifically Petliura as Chief Otaman)
+  collocations:
+  - Головний Отаман
+  - козацький отаман
+  - отаманщина
+  synonyms: [командир, ватажок]
+  antonyms: []
+  tags: [history, military]
+  morphology:
+    gender: m
+    number: sg
+- lemma: повстання
+  ipa: [powˈstɑnʲːɑ]
+  pos: noun
+  definition_en: uprising, rebellion
+  collocations:
+  - антигетьманське повстання
+  - збройне повстання
+  - підняти повстання
+  synonyms: [бунт, заколот]
+  antonyms: [придушення]
+  tags: [history, military]
+  morphology:
+    gender: n
+    number: sg
+- lemma: універсал
+  ipa: [uniwɛrˈsɑl]
+  pos: noun
+  definition_en: universal, a state decree or manifesto
+  collocations:
+  - Четвертий Універсал
+  - видати універсал
+  - текст універсалу
+  synonyms: [маніфест, указ]
+  antonyms: []
+  tags: [history, law]
+  morphology:
+    gender: m
+    number: sg
+- lemma: інтервенція
+  ipa: [intɛrwɛnʲˈt͡s⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: intervention (military or political)
+  collocations:
+  - іноземна інтервенція
+  - військова інтервенція
+  - збройна інтервенція
+  synonyms: [втручання]
+  antonyms: []
+  tags: [politics, military]
+  morphology:
+    gender: f
+    number: sg
+- lemma: еміграція
+  ipa: [ɛm⁽ʲ⁾iˈɦrɑt͡s⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: emigration, exile
+  collocations:
+  - політична еміграція
+  - виїхати в еміграцію
+  - українська еміграція
+  synonyms: [вигнання]
+  antonyms: [імміграція]
+  tags: [society, politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: уряд
+  ipa: [ˈurʲɑd]
+  pos: noun
+  definition_en: government
+  collocations:
+  - уряд в екзилі
+  - сформувати уряд
+  - голова уряду
+  synonyms: [кабінет міністрів]
+  antonyms: []
+  tags: [politics]
+  morphology:
+    gender: m
+    number: sg
+- lemma: армія
+  ipa: [ˈɑrm⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: army
+  collocations:
+  - Армія УНР
+  - боєздатна армія
+  - регулярна армія
+  synonyms: [військо]
+  antonyms: []
+  tags: [military]
+  morphology:
+    gender: f
+    number: sg
+- lemma: соціалізм
+  ipa: [sɔt͡s⁽ʲ⁾iɑˈl⁽ʲ⁾izm]
+  pos: noun
+  definition_en: socialism
+  collocations:
+  - демократичний соціалізм
+  - ідеї соціалізму
+  - побудова соціалізму
+  synonyms: []
+  antonyms: [капіталізм]
+  tags: [ideology, politics]
+  morphology:
+    gender: m
+    number: sg
+- lemma: республіка
+  ipa: [rɛsˈpubl⁽ʲ⁾ikɑ]
+  pos: noun
+  definition_en: republic
+  collocations:
+  - Українська Народна Республіка
+  - проголосити республіку
+  - парламентська республіка
+  synonyms: []
+  antonyms: [монархія]
+  tags: [politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: коаліція
+  ipa: [kɔɑˈl⁽ʲ⁾it͡s⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: coalition
+  collocations:
+  - широка коаліція
+  - урядова коаліція
+  - вступити в коаліцію
+  synonyms: [союз, об'єднання]
+  antonyms: []
+  tags: [politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: фронт
+  ipa: [frɔnt]
+  pos: noun
+  definition_en: front (military)
+  collocations:
+  - тримати фронт
+  - лінія фронту
+  - бої на фронті
+  synonyms: [передова]
+  antonyms: [тил]
+  tags: [military]
+  morphology:
+    gender: m
+    number: sg
+- lemma: відступ
+  ipa: [ˈwidstup]
+  pos: noun
+  definition_en: retreat, withdrawal
+  collocations:
+  - організований відступ
+  - вимушений відступ
+  - наказ про відступ
+  synonyms: [відхід]
+  antonyms: [наступ]
+  tags: [military]
+  morphology:
+    gender: m
+    number: sg
+- lemma: перемир'я
+  ipa: [pɛrɛˈmɪrʲjɑ]
+  pos: noun
+  definition_en: armistice, truce
+  collocations:
+  - укласти перемир'я
+  - умови перемир'я
+  - тимчасове перемир'я
+  synonyms: [затишшя]
+  antonyms: [війна]
+  tags: [politics, military]
+  morphology:
+    gender: n
+    number: sg
+- lemma: договір
+  ipa: [ˈdɔɦɔwir]
+  pos: noun
+  definition_en: treaty, agreement
+  collocations:
+  - мирний договір
+  - підписати договір
+  - умови договору
+  synonyms: [угода, пакт]
+  antonyms: []
+  tags: [politics, law]
+  morphology:
+    gender: m
+    number: sg
+- lemma: погром
+  ipa: [pɔˈɦrɔm]
+  pos: noun
+  definition_en: pogrom, organized massacre
+  collocations:
+  - єврейський погром
+  - хвиля погромів
+  - зупинити погроми
+  synonyms: [різанина]
+  antonyms: []
+  tags: [history, tragedy]
+  morphology:
+    gender: m
+    number: sg
+- lemma: денонсація
+  ipa: [dɛnɔnˈsɑt͡s⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: denunciation (of a treaty)
+  collocations:
+  - денонсація угоди
+  - акт денонсації
+  synonyms: [розірвання]
+  antonyms: [ратифікація]
+  tags: [law, politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: екзиль
+  ipa: [ɛɡˈzɪlʲ]
+  pos: noun
+  definition_en: exile
+  collocations:
+  - уряд в екзилі
+  - жити в екзилі
+  - діячі екзилю
+  synonyms: [вигнання, еміграція]
+  antonyms: []
+  tags: [politics, history]
+  morphology:
+    gender: m
+    number: sg
+- lemma: контрнаступ
+  ipa: [kɔntrnɑˈstup]
+  pos: noun
+  definition_en: counter-offensive
+  collocations:
+  - почати контрнаступ
+  - успішний контрнаступ
+  - план контрнаступу
+  synonyms: []
+  antonyms: [відступ]
+  tags: [military]
+  morphology:
+    gender: m
+    number: sg
+- lemma: падіння
+  ipa: [pɑˈdinʲːɑ]
+  pos: noun
+  definition_en: fall, collapse (of a regime or city)
+  collocations:
+  - падіння Гетьманату
+  - падіння Києва
+  - причини падіння
+  synonyms: [крах, поразка]
+  antonyms: [зліт, розквіт]
+  tags: [history]
+  morphology:
+    gender: n
+    number: sg
+- lemma: окупація
+  ipa: [ɔkupˈɑt͡s⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: occupation
+  collocations:
+  - більшовицька окупація
+  - режим окупації
+  - звільнення від окупації
+  synonyms: [загарбання]
+  antonyms: [визволення]
+  tags: [military, history]
+  morphology:
+    gender: f
+    number: sg
+- lemma: союзник
+  ipa: [sɔˈjuznɪk]
+  pos: noun
+  definition_en: ally
+  collocations:
+  - вірний союзник
+  - пошук союзників
+  - зрада союзників
+  synonyms: [партнер]
+  antonyms: [ворог, супротивник]
+  tags: [politics, military]
+  morphology:
+    gender: m
+    number: sg
+- lemma: Симон Петлюра
+  ipa: [sɪˈmɔn pɛtˈlʲurɑ]
+  pos: proper noun
+  definition_en: Symon Petliura, Ukrainian politician and military leader
+  collocations:
+  - армія Петлюри
+  - вбивство Петлюри
+  - спадщина Петлюри
+  synonyms: []
+  antonyms: []
+  tags: [history, biography]
+  morphology:
+    gender: m
+    number: sg
+- lemma: Володимир Винниченко
+  ipa: [wɔlɔˈdɪmɪr wɪnnɪˈt͡ʃɛnkɔ]
+  pos: proper noun
+  definition_en: Volodymyr Vynnychenko, Ukrainian statesman and writer
+  collocations:
+  - мемуари Винниченка
+  - політика Винниченка
+  - роль Винниченка
+  synonyms: []
+  antonyms: []
+  tags: [history, biography]
+  morphology:
+    gender: m
+    number: sg

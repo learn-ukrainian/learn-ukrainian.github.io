@@ -2,35 +2,35 @@
   "module": "persha-svitova",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T15:51:29.249399Z",
+  "last_audit": "2026-01-28T15:23:12.751484Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.347092Z",
-    "meta": "2026-01-26T22:20:13.415348Z",
-    "activities": "2026-01-27T15:34:54.426632Z",
-    "vocabulary": null,
+    "md": "2026-01-28T13:41:49.450865Z",
+    "meta": "2026-01-28T13:34:09.958028Z",
+    "activities": "2026-01-28T13:40:43.539550Z",
+    "vocabulary": "2026-01-28T11:34:45.449381Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "2251/4000 (raw: 2413) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "5076/4000 (raw: 5248)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "3/3"
+      "message": "6/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 20 (soft target)"
+      "message": "20/20"
     },
     "naturalness": {
       "status": "pass",
@@ -39,13 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: reading"
-    ],
-    "pass_count": 2,
-    "fail_count": 2
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

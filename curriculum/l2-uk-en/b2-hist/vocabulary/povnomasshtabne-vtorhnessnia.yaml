@@ -1,0 +1,125 @@
+module: povnomasshtabne-vtorhnessnia
+level: B2-HIST
+version: '2.0'
+items:
+- term: вторгнення
+  translation: invasion
+  pos: noun
+  gender: n
+  example: Повномасштабне вторгнення Росії почалося 24 лютого 2022 року.
+
+- term: агресія
+  translation: aggression
+  pos: noun
+  gender: f
+  example: Російська агресія стала найбільшим військовим конфліктом у Європі з 1945 року.
+
+- term: оборона
+  translation: defense
+  pos: noun
+  gender: f
+  example: Оборона Києва тривала понад місяць і завершилася перемогою.
+
+- term: наступ
+  translation: offensive
+  pos: noun
+  gender: m
+  example: Російський наступ на Київ провалився через героїчний опір ЗСУ.
+
+- term: десант
+  translation: landing force, airborne troops
+  pos: noun
+  gender: m
+  example: Російський десант висадився в Гостомелі в перші години війни.
+
+- term: блискавична війна
+  translation: blitzkrieg, lightning war
+  pos: noun
+  gender: f
+  example: План блискавичної війни Кремля зазнав повного краху.
+
+- term: окупація
+  translation: occupation
+  pos: noun
+  gender: f
+  example: Окупація Бучі тривала понад місяць і супроводжувалася звірствами.
+
+- term: звільнення
+  translation: liberation
+  pos: noun
+  gender: n
+  example: Звільнення Київщини стало першою великою перемогою України.
+
+- term: спротив
+  translation: resistance
+  pos: noun
+  gender: m
+  example: Український спротив здивував увесь світ своєю силою.
+
+- term: евакуація
+  translation: evacuation
+  pos: noun
+  gender: f
+  example: Евакуація цивільних з Ірпеня проходила під постійними обстрілами.
+
+- term: санкції
+  translation: sanctions
+  pos: noun
+  gender: f
+  plural: true
+  example: Західні санкції проти Росії стали найжорсткішими в історії.
+
+- term: воєнний стан
+  translation: martial law
+  pos: noun
+  gender: m
+  example: Воєнний стан було введено в перші години вторгнення.
+
+- term: територіальна оборона
+  translation: territorial defense
+  pos: noun
+  gender: f
+  example: Бійці територіальної оборони стали основою народного опору.
+
+- term: бліцкриг
+  translation: blitzkrieg
+  pos: noun
+  gender: m
+  example: Російський бліцкриг зазнав поразки під стінами Києва.
+
+- term: колона
+  translation: convoy, column
+  pos: noun
+  gender: f
+  example: Російська колона техніки розтягнулася на 60 кілометрів.
+
+- term: відступ
+  translation: retreat
+  pos: noun
+  gender: m
+  example: Відступ росіян з півночі став визнанням поразки.
+
+- term: воєнний злочин
+  translation: war crime
+  pos: noun
+  gender: m
+  example: Буча стала символом російських воєнних злочинів.
+
+- term: геноцид
+  translation: genocide
+  pos: noun
+  gender: m
+  example: Верховна Рада визнала дії Росії геноцидом українського народу.
+
+- term: переселенці
+  translation: displaced persons, refugees
+  pos: noun
+  gender: m
+  plural: true
+  example: Мільйони переселенців покинули свої домівки через війну.
+
+- term: незламність
+  translation: resilience, invincibility
+  pos: noun
+  gender: f
+  example: Українська незламність стала прикладом для всього світу.

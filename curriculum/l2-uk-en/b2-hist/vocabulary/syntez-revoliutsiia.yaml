@@ -1,0 +1,261 @@
+items:
+- lemma: синтез
+  ipa: [ˈsɪntɛz]
+  pos: noun
+  definition_en: synthesis
+  collocations:
+  - історичний синтез
+  - зробити синтез
+  synonyms: [узагальнення, поєднання]
+  antonyms: [аналіз]
+  tags: [academic]
+  morphology:
+    gender: m
+    number: sg
+- lemma: революція
+  ipa: [rɛwɔˈlʲut͡s⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: revolution
+  collocations:
+  - Українська революція
+  - етапи революції
+  - здобутки революції
+  synonyms: [переворот]
+  antonyms: [еволюція]
+  tags: [history, politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: незалежність
+  ipa: [nɛzɑˈlɛʒn⁽ʲ⁾isʲtʲ]
+  pos: noun
+  definition_en: independence
+  collocations:
+  - проголосити незалежність
+  - втратити незалежність
+  synonyms: [самостійність]
+  antonyms: [залежність]
+  tags: [politics, history]
+  morphology:
+    gender: f
+    number: sg
+- lemma: поразка
+  ipa: [pɔˈrɑzkɑ]
+  pos: noun
+  definition_en: defeat
+  collocations:
+  - воєнна поразка
+  - причини поразки
+  synonyms: [програш]
+  antonyms: [перемога]
+  tags: [history, military]
+  morphology:
+    gender: f
+    number: sg
+- lemma: боротьба
+  ipa: [bɔˈrɔtʲbɑ]
+  pos: noun
+  definition_en: struggle, fight
+  collocations:
+  - збройна боротьба
+  - національно-визвольна боротьба
+  synonyms: [змагання]
+  antonyms: [примирення]
+  tags: [history, politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: визвольні змагання
+  ipa: [wɪˈzwɔlʲn⁽ʲ⁾i zmɑˈɦɑnʲːɑ]
+  pos: noun
+  definition_en: liberation struggle
+  collocations:
+  - доба визвольних змагань
+  - учасник визвольних змагань
+  synonyms: []
+  antonyms: []
+  tags: [history]
+  morphology:
+    number: pl
+- lemma: уряд
+  ipa: [ˈurʲɑd]
+  pos: noun
+  definition_en: government
+  collocations:
+  - тимчасовий уряд
+  - голова уряду
+  synonyms: [кабінет]
+  antonyms: []
+  tags: [politics]
+  morphology:
+    gender: m
+    number: sg
+- lemma: армія
+  ipa: [ˈɑrm⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: army
+  collocations:
+  - регулярна армія
+  - Армія УНР
+  synonyms: [військо]
+  antonyms: []
+  tags: [military]
+  morphology:
+    gender: f
+    number: sg
+- lemma: конфлікт
+  ipa: [kɔnˈfl⁽ʲ⁾ikt]
+  pos: noun
+  definition_en: conflict
+  collocations:
+  - внутрішній конфлікт
+  - розв'язати конфлікт
+  synonyms: [суперечка]
+  antonyms: [злагода]
+  tags: [politics, society]
+  morphology:
+    gender: m
+    number: sg
+- lemma: більшовик
+  ipa: [bilʲʃɔˈwɪk]
+  pos: noun
+  definition_en: Bolshevik
+  collocations:
+  - наступ більшовиків
+  - більшовицька ідеологія
+  synonyms: []
+  antonyms: []
+  tags: [history, politics]
+  morphology:
+    gender: m
+    number: sg
+- lemma: інтервенція
+  ipa: [intɛrˈwɛnt͡s⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: intervention
+  collocations:
+  - іноземна інтервенція
+  - почати інтервенцію
+  synonyms: [втручання]
+  antonyms: []
+  tags: [military, politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: еміграція
+  ipa: [ɛm⁽ʲ⁾iˈɦrɑt͡s⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: emigration, exile
+  collocations:
+  - політична еміграція
+  - виїхати в еміграцію
+  synonyms: [екзиль]
+  antonyms: [репатріація]
+  tags: [society, history]
+  morphology:
+    gender: f
+    number: sg
+- lemma: спадщина
+  ipa: [ˈspɑdʃt͡ʃɪnɑ]
+  pos: noun
+  definition_en: legacy, heritage
+  collocations:
+  - історична спадщина
+  - революційна спадщина
+  synonyms: [набуток]
+  antonyms: []
+  tags: [culture, history]
+  morphology:
+    gender: f
+    number: sg
+- lemma: пам'ять
+  ipa: [ˈpɑmʲːɑtʲ]
+  pos: noun
+  definition_en: memory
+  collocations:
+  - національна пам'ять
+  - вшанувати пам'ять
+  synonyms: []
+  antonyms: [забуття]
+  tags: [culture, psychology]
+  morphology:
+    gender: f
+    number: sg
+- lemma: соборність
+  ipa: [sɔˈbɔrn⁽ʲ⁾isʲtʲ]
+  pos: noun
+  definition_en: unity, sobornist
+  collocations:
+  - Акт Злуки та соборність
+  - ідея соборності
+  synonyms: [єдність]
+  antonyms: [розбрат]
+  tags: [politics, history]
+  morphology:
+    gender: f
+    number: sg
+- lemma: державотворення
+  ipa: [dɛrʒɑwɔˈtwɔrɛnʲːɑ]
+  pos: noun
+  definition_en: state-building
+  collocations:
+  - процес державотворення
+  - досвід державотворення
+  synonyms: []
+  antonyms: []
+  tags: [politics]
+  morphology:
+    gender: n
+    number: sg
+- lemma: суб'єктність
+  ipa: [subˈjɛktn⁽ʲ⁾isʲtʲ]
+  pos: noun
+  definition_en: agency, subjecthood
+  collocations:
+  - політична суб'єктність
+  - міжнародна суб'єктність
+  synonyms: [самодостатність]
+  antonyms: [об'єктність]
+  tags: [politics, philosophy]
+  morphology:
+    gender: f
+    number: sg
+- lemma: чин
+  ipa: [t͡ʃɪn]
+  pos: noun
+  definition_en: act, deed, feat
+  collocations:
+  - героїчний чин
+  - визвольний чин
+  synonyms: [подвиг, дія]
+  antonyms: []
+  tags: [history, ethics]
+  morphology:
+    gender: m
+    number: sg
+- lemma: тяглість
+  ipa: [ˈtʲɑɦl⁽ʲ⁾isʲtʲ]
+  pos: noun
+  definition_en: continuity
+  collocations:
+  - історична тяглість
+  - тяглість державності
+  synonyms: [неперервність]
+  antonyms: [перерва]
+  tags: [history, philosophy]
+  morphology:
+    gender: f
+    number: sg
+- lemma: міф
+  ipa: [m⁽ʲ⁾if]
+  pos: noun
+  definition_en: myth
+  collocations:
+  - радянський міф
+  - розвінчати міф
+  synonyms: [вигадка]
+  antonyms: [реальність, факт]
+  tags: [culture, history]
+  morphology:
+    gender: m
+    number: sg

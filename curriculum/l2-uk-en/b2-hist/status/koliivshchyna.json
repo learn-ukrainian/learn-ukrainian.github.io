@@ -2,13 +2,13 @@
   "module": "koliivshchyna",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T12:38:56.879801Z",
+  "last_audit": "2026-01-27T23:38:19.261441Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-25T22:34:18.826503Z",
     "meta": "2026-01-26T22:20:13.201945Z",
-    "activities": "2026-01-27T12:38:49.284410Z",
-    "vocabulary": "2026-01-25T22:14:41.020286Z",
+    "activities": "2026-01-27T15:34:54.108248Z",
+    "vocabulary": "2026-01-27T13:28:46.063602Z",
     "plan": null
   },
   "gates": {
@@ -25,7 +25,7 @@
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "8/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "pass",

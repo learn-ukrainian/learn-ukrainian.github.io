@@ -14,3 +14,12 @@ vocabulary_count: 25
 build:
   last_modified: '2026-01-26'
 phase: HIST.10
+naturalness:
+  score: 9
+  status: PASS
+activity_hints:
+- type: reading
+- type: true-false
+- type: critical-analysis
+- type: essay-response
+- type: comparative-study

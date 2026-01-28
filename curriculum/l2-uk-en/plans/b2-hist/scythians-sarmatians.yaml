@@ -1,4 +1,4 @@
-module: b2-hist-02
+module: scythians-sarmatians
 level: B2-HIST
 slug: scythians-sarmatians
 version: '2.0'
@@ -94,7 +94,6 @@ objectives:
 grammar:
 - Історичний наратив
 - Минулий час у науковому тексті
-module_type: history
 sources:
 - name: Скіфи (Вікіпедія)
   url: https://uk.wikipedia.org/wiki/Скіфи
@@ -108,6 +107,7 @@ sources:
   url: https://litopys.org.ua/
   type: primary
   notes: Ancient Greek descriptions of Scythians
-immersion: 100% Ukrainian
 register: публіцистичний
 phase: B2-HIST.1 [Витоки]
+module_type: history
+immersion: 100% Ukrainian

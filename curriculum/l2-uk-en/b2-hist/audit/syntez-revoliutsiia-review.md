@@ -1,138 +1,83 @@
-# Audit Report: M98 — syntez-revoliutsiia.md
-
-**Level:** B2 | **Module:** M98 | **Phase:** HIST.9 | **Pedagogy:** CBI | **Target:** 4000
+# Audit Report: M97 — syntez-revoliutsiia.md
+**Level:** B2 | **Module:** M97 | **Phase:** HIST.9 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:55:13
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-28 20:39:30
 
 ## Configuration
-
 **Type:** B2-history
 **Word Target:** 4000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, match-up, quiz, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
 **Transliteration:** Not allowed
 
-## PEDAGOGICAL VIOLATIONS
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Джерело: Універсали та маніфести | 3 | 1 | ✅ |
+| 2 | comparative-study | Порівняння: УНР vs Гетьманат | 1 | 1 | ✅ |
+| 3 | critical-analysis | Аналіз: Причини поразки | 1 | 1 | ✅ |
+| 4 | essay-response | Есе: Уроки революції | 1 | 1 | ✅ |
+| 5 | authorial-intent | Риторика соборності | 1 | 1 | ✅ |
 
-- **[HEADING_LEVEL]** Main section 'Підсумок' uses H2 (##) but spec requires H1 (#)
-  - FIX: Change '## Підсумок' to '# Підсумок' for top-level TOC compliance
-- **[YAML_SCHEMA_VIOLATION]** Schema error in syntez-revoliutsiia.yaml: Insufficient activities: 1 found, minimum 5 required for B2-HIST
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
-  - FIX: Add a essay-response activity to meet advanced richness standards.
-- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
-  - FIX: Add a comparative-study activity to meet advanced richness standards.
-- **[STATE_STANDARD_LOW_IMMERSION]** Module 98 has 22.4% immersion (target: 90.0%+)
-  - FIX: Add more Ukrainian content to reach 90.0%+ immersion
-
-## TEMPLATE COMPLIANCE
-
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Читання' per template 'b2-history-module-template.md'
-  - FIX: Add '## Читання' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Деколонізаційний погляд' per template 'b2-history-module-template.md'
-  - FIX: Add '## Деколонізаційний погляд' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md.md
-- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!myth-buster]' per template 'b2-history-module-template.md'
-  - FIX: Add a `> [!myth-buster]` box as specified in the template. This enhances module quality.
-- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!history-bite]' per template 'b2-history-module-template.md'
-  - FIX: Add a `> [!history-bite]` box as specified in the template. This enhances module quality.
-- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!quote]' per template 'b2-history-module-template.md'
-  - FIX: Add a `> [!quote]` box as specified in the template. This enhances module quality.
-
-## Recommendation
-
-**🔄 REWRITE** (severity 100/100)
-
-- 10 violations (significant)
-- Immersion 68% off target (major rebalancing needed)
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
-- Activity count below minimum
-- Activity density below minimum
+**Summary:**
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
+- Low density activities: 0
 
 ## Gates
-
-- **Words:** ❌ 26/4000 (raw: 98)
-- **Activities:** ❌ 0/3
-- **Density:** ❌ 0 < 1
-- **Unique_types:** ❌ 0/2 types
-- **Priority:** ❌ No priority types
-- **Engagement:** ❌ 0/5
+- **Words:** ✅ 4315/4000 (raw: 4384)
+- **Activities:** ✅ 5/3
+- **Density:** ✅ All > 1
+- **Unique_types:** ✅ 5/2 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 20 (soft target)
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Vocab:** ✅ 20/20
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 4 violations
-- **Content_heavy:** ⚠️ Too few activities: 0 (target 3-9)
-- **Immersion:** ❌ 22.4% LOW (target 90-100% (history))
-- **Richness:** ❌ 7% < 95% min (history) - REWRITE needed
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Immersion:** 🇺🇦 99.6% (target 90-100% (history))
+- **Richness:** ✅ 95% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-
-**Score:** 7% (minimum: 95%)
+**Score:** 95% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 0 | 3 | 0% | 24% | 0.0% |
-| engagement | 0 | 6 | 0% | 14% | 0.0% |
-| timeline_markers | 2 | 10 | 20% | 14% | 2.9% |
-| decolonization | 0 | 2 | 0% | 14% | 0.0% |
-| cultural | 0 | 4 | 0% | 10% | 0.0% |
-| visual | 0 | 4 | 0% | 10% | 0.0% |
-| variety | 0.50 | - | 50% | 5% | 2.4% |
-| paragraph_var | 0.50 | - | 50% | 5% | 2.4% |
-| questions | 0 | 3 | 0% | 5% | 0.0% |
-| **TOTAL** | | | | | **7.6%** |
-
-### Dryness Flags & Fixes
-
-- ❌ **NO_ENGAGEMENT**
-  - FIX:
-    Add 2+ engagement boxes. Use this exact format:
-
-    > 💡 **Чи знали ви?**
-    >
-    > [Interesting fact about the grammar/vocabulary topic in Ukrainian]
-
-    > 🇺🇦 **Культурний момент**
-    >
-    > [Cultural context connecting grammar to Ukrainian life/places]
-
-    > 🌍 **У реальному житті**
-    >
-    > [Practical scenario where this grammar is used]
-- ❌ **NO_PRIMARY_SOURCES**
-  - FIX:
-    Add 2+ primary source quotes. Use this format:
-
-    > «[Exact quote from historical document]»
-    > — *[Source name], [year]*
-- ❌ **NO_TIMELINE**
-  - FIX:
-    Add 5+ timeline markers: specific years (1876, 1918), periods (XVIII ст.), sequences (спочатку... потім... нарешті).
-- ❌ **NO_DECOLONIZATION_PERSPECTIVE**
-  - FIX:
-    Add Ukrainian perspective on historical events. Avoid Russocentric framing. Use Ukrainian names for cities/people.
+| primary_sources | 15 | 3 | 100% | 24% | 23.8% |
+| engagement | 8 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
+| decolonization | 15 | 2 | 100% | 14% | 14.3% |
+| cultural | 3 | 4 | 75% | 10% | 7.1% |
+| visual | 4 | 4 | 100% | 10% | 9.5% |
+| variety | 0.97 | - | 97% | 5% | 4.6% |
+| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
+| questions | 2 | 3 | 67% | 5% | 3.2% |
+| **TOTAL** | | | | | **95.9%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 14 | Included in Core |
-| **Синтез: Українська революція** | ⚪️ | 0 | Skipped |
-| **Вступ** | ✅ | 2 | Included in Core |
-| **Основний зміст** | ⚪️ | 2 | Skipped |
-| **Історичне значення** | ⚪️ | 1 | Skipped |
-| **Ключові постаті** | ⚪️ | 2 | Skipped |
-| **Первинні джерела** | ✅ | 4 | Included in Core |
-| **Підсумок** | ✅ | 1 | Included in Core |
+| **Intro/Narrative** | ✅ | 44 | Included in Core |
+| **Синтез: Українська революція** | ⚪️ | 146 | Skipped |
+| **Вступ: Втрачена незалежність** | ✅ | 442 | Included in Core |
+| **Етапи революції** | ⚪️ | 641 | Skipped |
+| **Причини поразки** | ⚪️ | 590 | Skipped |
+| **Читання** | ✅ | 533 | Included in Core |
+| **Первинні джерела в синтезі: Свідчення епохи** | ✅ | 646 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 637 | Included in Core |
+| **Підсумок: Спадщина** | ✅ | 636 | Included in Core |

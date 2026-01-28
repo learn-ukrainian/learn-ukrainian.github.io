@@ -1,0 +1,122 @@
+module: rozstriliane-vidrodzennia
+level: B2-HIST
+version: '2.0'
+items:
+- lemma: відродження
+  translation: renaissance
+  ipa: [vʲidˈrɔd͡ʒenʲːɐ]
+  definition: Процес відновлення, розквіту (культури, нації), що був жорстоко перерваний.
+  pos: noun
+  gender: n
+- lemma: репресії
+  translation: repressions
+  ipa: [reˈprɛsʲiji]
+  definition: Каральні заходи, покарання, що застосовуються державними органами.
+  pos: noun
+- lemma: письменник
+  translation: writer
+  ipa: [pɪsʲˈmɛnːɪk]
+  definition: Людина, яка пише літературні твори.
+  pos: noun
+  gender: m
+- lemma: митець
+  translation: artist
+  ipa: [mɪˈtɛt͡sʲ]
+  definition: Людина, яка займається мистецтвом (художник, скульптор, актор тощо).
+  pos: noun
+  gender: m
+- lemma: розстріл
+  translation: execution (by shooting)
+  ipa: [ˈrɔzʲsʲtʲrʲil]
+  definition: Страта через стріляння з вогнепальної зброї; спосіб знищення української еліти.
+  pos: noun
+  gender: m
+- lemma: НКВД
+  translation: NKVD
+  ipa: [en ka ve ˈde]
+  definition: Народний комісаріат внутрішніх справ; каральний орган СРСР.
+  pos: noun
+  gender: m
+- lemma: культура
+  translation: culture
+  ipa: [kulʲˈtura]
+  definition: Сукупність матеріальних і духовних цінностей.
+  pos: noun
+  gender: f
+- lemma: геноцид
+  translation: genocide
+  ipa: [ɦenɔˈt͡sɪd]
+  definition: Цілеспрямоване знищення народу або етнічної групи.
+  pos: noun
+  gender: m
+- lemma: неокласики
+  translation: neoclassicists
+  ipa: [neɔˈklɑsɪkɪ]
+  definition: Група українських поетів, які орієнтувалися на античне мистецтво та світову класику.
+  pos: noun
+- lemma: авангард
+  translation: avant-garde
+  ipa: [ɑvɑnˈɦɑrd]
+  definition: Новаторський напрям у мистецтві, що заперечує традиційні форми.
+  pos: noun
+  gender: m
+- lemma: театр
+  translation: theater
+  ipa: [teˈɑtr]
+  definition: Вид мистецтва, що відображає життя в сценічній дії.
+  pos: noun
+  gender: m
+- lemma: живопис
+  translation: painting
+  ipa: [ʒɪˈvɔpɪs]
+  definition: Образотворче мистецтво створення зображень за допомогою фарб.
+  pos: noun
+  gender: m
+- lemma: Сандармох
+  translation: Sandarmokh
+  ipa: [sɑndɑrˈmɔx]
+  definition: Урочище в Карелії, місце масових розстрілів української інтелігенції у 1937 році.
+  pos: noun
+  gender: m
+- lemma: реабілітація
+  translation: rehabilitation
+  ipa: [reɐbʲilʲiˈtɑt͡sʲijɐ]
+  definition: Відновлення доброго імені та прав незаконно засуджених осіб.
+  pos: noun
+  gender: f
+- lemma: диктатура
+  translation: dictatorship
+  ipa: [dɪktɐˈturɐ]
+  definition: Форма правління, при якій влада належить одній особі або групі.
+  pos: noun
+  gender: f
+- lemma: цензура
+  translation: censorship
+  ipa: [t͡senˈzurɐ]
+  definition: Контроль влади над змістом інформації.
+  pos: noun
+  gender: f
+- lemma: ідеологія
+  translation: ideology
+  ipa: [ideɔˈlɔɦijɐ]
+  definition: Система поглядів та ідей.
+  pos: noun
+  gender: f
+- lemma: арешт
+  translation: arrest
+  ipa: [ɐˈrɛʃt]
+  definition: Позбавлення волі, ув'язнення.
+  pos: noun
+  gender: m
+- lemma: заслання
+  translation: exile
+  ipa: [zɐsˈlɑnʲːɐ]
+  definition: Примусове виселення у віддалені місця.
+  pos: noun
+  gender: n
+- lemma: справа
+  translation: case (legal/criminal)
+  ipa: [ˈsprɑvɐ]
+  definition: Зібрання документів, що стосуються розслідування.
+  pos: noun
+  gender: f

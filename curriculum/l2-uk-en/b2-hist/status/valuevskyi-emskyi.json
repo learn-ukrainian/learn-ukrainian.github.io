@@ -2,35 +2,35 @@
   "module": "valuevskyi-emskyi",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T15:51:26.721457Z",
+  "last_audit": "2026-01-28T11:21:22.328736Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.347228Z",
-    "meta": "2026-01-26T22:20:13.744024Z",
-    "activities": "2026-01-27T15:34:55.092047Z",
-    "vocabulary": null,
+    "md": "2026-01-28T11:21:11.511963Z",
+    "meta": "2026-01-28T11:12:48.381854Z",
+    "activities": "2026-01-27T21:50:49.652053Z",
+    "vocabulary": "2026-01-28T11:12:41.394054Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "1989/4000 (raw: 2297) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "4367/4000 (raw: 4587)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "3/3"
+      "message": "5/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 20 (soft target)"
+      "message": "20/20"
     },
     "naturalness": {
       "status": "pass",
@@ -39,13 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: reading"
-    ],
-    "pass_count": 2,
-    "fail_count": 2
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

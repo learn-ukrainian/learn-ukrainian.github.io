@@ -1,4 +1,4 @@
-module: b2-hist-12
+module: yaroslav-wise
 level: B2-HIST
 slug: yaroslav-wise
 version: '2.0'
@@ -109,7 +109,6 @@ objectives:
 grammar:
 - Legal terminology
 - Diplomatic language
-module_type: history
 sources:
 - name: Ярослав Мудрий (Вікіпедія)
   url: https://uk.wikipedia.org/wiki/Ярослав_Мудрий
@@ -123,5 +122,6 @@ sources:
   url: https://litopys.org.ua/oldukr2/oldukr51.htm
   type: primary
   notes: Legal code text
-immersion: 100% Ukrainian
 phase: B2-HIST.1 [Kyivan Rus]
+module_type: history
+immersion: 100% Ukrainian

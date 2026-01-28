@@ -1,0 +1,261 @@
+items:
+- lemma: гетьман
+  ipa: [ˈɦɛtʲmɑn]
+  pos: noun
+  definition_en: hetman, a military and political leader in Ukraine
+  collocations:
+  - обрати гетьмана
+  - влада гетьмана
+  synonyms: [вождь, правитель]
+  antonyms: []
+  tags: [history, politics]
+  morphology:
+    gender: m
+    number: sg
+- lemma: гетьманат
+  ipa: [ɦɛtʲmɑˈnɑt]
+  pos: noun
+  definition_en: hetmanate, the period of rule by a hetman
+  collocations:
+  - доба Гетьманату
+  - падіння Гетьманату
+  synonyms: [Українська Держава]
+  antonyms: []
+  tags: [history, politics]
+  morphology:
+    gender: m
+    number: sg
+- lemma: переворот
+  ipa: [pɛrɛˈwɔrɔt]
+  pos: noun
+  definition_en: coup, overthrow of a government
+  collocations:
+  - державний переворот
+  - здійснити переворот
+  synonyms: [путч, заколот]
+  antonyms: []
+  tags: [politics]
+  morphology:
+    gender: m
+    number: sg
+- lemma: держава
+  ipa: [derˈʒɑwɑ]
+  pos: noun
+  definition_en: state, country
+  collocations:
+  - розбудова держави
+  - суверенна держава
+  synonyms: [країна]
+  antonyms: []
+  tags: [politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: консерватизм
+  ipa: [kɔnsɛrwɑˈtɪzm]
+  pos: noun
+  definition_en: conservatism
+  collocations:
+  - український консерватизм
+  - принципи консерватизму
+  synonyms: []
+  antonyms: [лібералізм, соціалізм]
+  tags: [politics, philosophy]
+  morphology:
+    gender: m
+    number: sg
+- lemma: реформа
+  ipa: [reˈfɔrmɑ]
+  pos: noun
+  definition_en: reform
+  collocations:
+  - земельна реформа
+  - освітня реформа
+  synonyms: [перетворення]
+  antonyms: []
+  tags: [politics, economy]
+  morphology:
+    gender: f
+    number: sg
+- lemma: окупація
+  ipa: [ɔkupˈɑt͡s⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: occupation
+  collocations:
+  - німецька окупація
+  - жити в окупації
+  synonyms: [загарбання]
+  antonyms: [визволення]
+  tags: [history, military]
+  morphology:
+    gender: f
+    number: sg
+- lemma: еміграція
+  ipa: [ɛmiˈɦrɑt͡s⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: emigration
+  collocations:
+  - політична еміграція
+  - піти в еміграцію
+  synonyms: []
+  antonyms: [імміграція]
+  tags: [politics, society]
+  morphology:
+    gender: f
+    number: sg
+- lemma: хлібороб
+  ipa: [xl⁽ʲ⁾ibɔˈrɔb]
+  pos: noun
+  definition_en: farmer, tiller of the soil
+  collocations:
+  - З'їзд хліборобів
+  - праця хлібороба
+  synonyms: [селянин, фермер]
+  antonyms: []
+  tags: [economy, agriculture]
+  morphology:
+    gender: m
+    number: sg
+- lemma: грамота
+  ipa: [ˈɦrɑmɔtɑ]
+  pos: noun
+  definition_en: decree, charter, literacy
+  collocations:
+  - гетьманська грамота
+  - вірча грамота
+  synonyms: [указ, документ]
+  antonyms: []
+  tags: [history, law]
+  morphology:
+    gender: f
+    number: sg
+- lemma: академія
+  ipa: [ɑkɑˈdɛm⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: academy
+  collocations:
+  - Академія наук
+  - заснувати академію
+  synonyms: []
+  antonyms: []
+  tags: [education, science]
+  morphology:
+    gender: f
+    number: sg
+- lemma: університет
+  ipa: [uniwɛrsɪˈtɛt]
+  pos: noun
+  definition_en: university
+  collocations:
+  - державний університет
+  - диплом університету
+  synonyms: [виш]
+  antonyms: []
+  tags: [education]
+  morphology:
+    gender: m
+    number: sg
+- lemma: автономія
+  ipa: [ɑu̯toˈnɔm⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: autonomy
+  collocations:
+  - вимагати автономії
+  - широка автономія
+  synonyms: [самоврядування]
+  antonyms: [незалежність]
+  tags: [politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: реставрація
+  ipa: [rɛstɑu̯ˈrɑt͡s⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: restoration
+  collocations:
+  - реставрація монархії
+  - реставрація порядків
+  synonyms: [відновлення]
+  antonyms: []
+  tags: [history, politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: власність
+  ipa: [ˈwlɑsʲn⁽ʲ⁾isʲtʲ]
+  pos: noun
+  definition_en: property, ownership
+  collocations:
+  - приватна власність
+  - право власності
+  synonyms: [майно]
+  antonyms: []
+  tags: [law, economy]
+  morphology:
+    gender: f
+    number: sg
+- lemma: порядок
+  ipa: [pɔˈrʲɑdɔk]
+  pos: noun
+  definition_en: order, procedure
+  collocations:
+  - навести порядок
+  - старий порядок
+  synonyms: [лад, дисципліна]
+  antonyms: [хаос, безлад]
+  tags: [politics, society]
+  morphology:
+    gender: m
+    number: sg
+- lemma: союзник
+  ipa: [sɔˈjuznɪk]
+  pos: noun
+  definition_en: ally
+  collocations:
+  - вірний союзник
+  - шукати союзників
+  synonyms: [партнер]
+  antonyms: [ворог, супротивник]
+  tags: [military, politics]
+  morphology:
+    gender: m
+    number: sg
+- lemma: диктатура
+  ipa: [dɪktɑˈturɑ]
+  pos: noun
+  definition_en: dictatorship
+  collocations:
+  - військова диктатура
+  - встановлення диктатури
+  synonyms: [деспотія]
+  antonyms: [демократія]
+  tags: [politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: традиція
+  ipa: [trɑˈdɪt͡s⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: tradition
+  collocations:
+  - козацька традиція
+  - зберігати традиції
+  synonyms: [звичаї]
+  antonyms: []
+  tags: [culture, history]
+  morphology:
+    gender: f
+    number: sg
+- lemma: еліта
+  ipa: [ɛˈl⁽ʲ⁾itɑ]
+  pos: noun
+  definition_en: elite
+  collocations:
+  - політична еліта
+  - національна еліта
+  synonyms: []
+  antonyms: []
+  tags: [society, politics]
+  morphology:
+    gender: f
+    number: sg

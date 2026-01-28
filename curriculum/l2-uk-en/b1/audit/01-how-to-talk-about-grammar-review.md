@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M01 | **Phase:** B1.0 | **Pedagogy:** PPP | **Target:** 1200
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 16:25:44
+**Generated:** 2026-01-28 16:32:00
 
 ## Configuration
 **Type:** B1-bridge
@@ -57,7 +57,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 34.2% (B1.1 Aspect)
+- **Immersion:** 🇺🇦 36.4% (B1.1 Aspect)
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -69,7 +69,7 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 54 | 24 | 100% | 20% | 20.0% |
+| examples | 56 | 24 | 100% | 20% | 20.0% |
 | engagement | 8 | 5 | 100% | 15% | 15.0% |
 | dialogues | 13 | 4 | 100% | 15% | 15.0% |
 | variety | 0.97 | - | 97% | 10% | 9.7% |
@@ -77,8 +77,8 @@
 | realworld | 15 | 3 | 100% | 10% | 10.0% |
 | visual | 6 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 84 | 5 | 100% | 5% | 5.0% |
-| proverbs | 3 | 1 | 100% | 5% | 5.0% |
+| questions | 85 | 5 | 100% | 5% | 5.0% |
+| proverbs | 4 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.7%** |
 
 ## Section Audit

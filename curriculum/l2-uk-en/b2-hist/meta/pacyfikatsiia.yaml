@@ -1,14 +1,104 @@
-module: b2-hist-104
+module: b2-hist-99
 level: B2-HIST
 slug: pacyfikatsiia
 version: '2.0'
-id: b2-hist-104
+id: b2-hist-99
+title: 'Пацифікація: Поляки в Галичині'
+subtitle: 'Pacification: Polish Repressions in Galicia'
+phase: 'HIST.10 [Soviet Terror]'
+focus: history
+pedagogy: seminar
+register: публіцистичний
+duration: 150
+transliteration: none
+word_target: 4000
+content_outline:
+  - section: 'Вступ: «Мирне» насильство'
+    words: 400
+    points:
+      - Що таке «пацифікація»? Парадокс назви
+      - Вересень-листопад 1930 року
+      - Галичина під польською владою
+  - section: 'Причини та контекст'
+    words: 800
+    points:
+      - Українці в Другій Речі Посполитій
+      - Дискримінація та невдоволення
+      - Саботажні акції ОУН
+      - Реакція польської влади
+  - section: 'Хід пацифікації'
+    words: 1000
+    points:
+      - Військові операції проти сіл
+      - Масові побиття та арешти
+      - Знищення майна
+      - Закриття українських інституцій
+      - 'Масштаб репресій: статистика'
+  - section: 'Первинні джерела'
+    words: 800
+    points:
+      - Свідчення постраждалих
+      - Доповіді польської влади
+      - Протести Ліги Націй
+  - section: 'Деколонізаційний погляд'
+    words: 500
+    points:
+      - 'Польський наратив: «наведення порядку»'
+      - 'Український погляд: колоніальне насильство'
+      - Радикалізація українського руху
+  - section: 'Підсумок: Наслідки'
+    words: 500
+    points:
+      - Ескалація конфлікту
+      - Шлях до трагедії Волині
+      - Уроки для українсько-польських відносин
+objectives:
+  - Учень може описати пацифікацію 1930 року
+  - Учень може пояснити причини та методи репресій
+  - Учень може проаналізувати українсько-польські відносини в міжвоєнний період
+  - Учень може оцінити наслідки пацифікації
+grammar:
+  - Минулий час в історичному наративі
+  - Юридична та військова лексика
+  - Пасивні конструкції
+vocabulary_hints:
+  required:
+    - пацифікація (pacification)
+    - репресії (repressions)
+    - дискримінація (discrimination)
+    - саботаж (sabotage)
+    - арешт (arrest)
+    - побиття (beating)
+    - інституція (institution)
+    - радикалізація (radicalization)
+  recommended:
+    - Річ Посполита (Polish Republic)
+    - меншина (minority)
+    - ліга націй (League of Nations)
+    - протест (protest)
+    - ескалація (escalation)
+    - конфлікт (conflict)
+activity_hints:
+  - type: reading
+    focus: Свідчення постраждалих від пацифікації
+    source: Архівні матеріали
+    items: 4
+  - type: true-false
+    focus: Міфи про пацифікацію
+    items: 10
+  - type: essay-response
+    focus: Як пацифікація вплинула на радикалізацію українського руху?
+    word_target: 250
+sources:
+  - name: 'Пацифікація у Галичині 1930 — Вікіпедія'
+    url: 'https://uk.wikipedia.org/wiki/Пацифікація_у_Галичині_1930'
+    type: reference
+  - name: 'Історична правда: Пацифікація'
+    url: 'https://www.istpravda.com.ua/articles/2010/10/4/581/'
+    type: reference
 naturalness:
   score: 10
   status: PASS
-  justification: Академічний український для теми репресій
-duration: 120
-transliteration: none
+  justification: Академічний український для складної історичної теми
 build:
-  last_modified: '2026-01-26'
-phase: HIST.10 [Soviet Terror]
+  last_modified: '2026-01-28'

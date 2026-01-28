@@ -1,4 +1,4 @@
-module: b2-hist-14
+module: sofiya-kyivska
 level: B2-HIST
 slug: sofiya-kyivska
 version: '2.0'
@@ -102,7 +102,6 @@ objectives:
 - Discuss cultural blooming of Kyivan Rus
 grammar:
 - Historical narrative
-module_type: history
 sources:
 - name: Софійський собор (Київ) (Вікіпедія)
   url: https://uk.wikipedia.org/wiki/Софійський_собор_(Київ)
@@ -116,5 +115,6 @@ sources:
   url: https://uk.wikipedia.org/wiki/Мозаїки_Софійського_собору_в_Києві
   type: reference
   notes: Art analysis
-immersion: 100% Ukrainian
 phase: B2-HIST.1 [Kyivan Rus]
+module_type: history
+immersion: 100% Ukrainian

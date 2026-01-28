@@ -1,14 +1,37 @@
-module: b2-hist-112
+module: povoienne-vidbudova
 level: B2-HIST
 slug: povoienne-vidbudova
 version: '2.0'
-id: b2-hist-112
-naturalness:
-  score: 10
-  status: PASS
-  justification: Академічний український для соціальної історії
-duration: 120
+title: 'Трагедія та тріумф: 1945-1950 роки'
+subtitle: Post-War Reconstruction
+register: публіцистичний
+duration: 150
 transliteration: none
-build:
-  last_modified: '2026-01-26'
-phase: HIST.11 [Post-War Soviet Ukraine]
+word_target: 4000
+pedagogy: CBI
+focus: history
+status: draft
+timestamp: '2026-01-28T21:35:00Z'
+naturalness:
+  score: 9
+  status: PASS
+immersion_score: 95
+activity_count: 8
+content_heavy: true
+required_activity_types:
+- reading
+- essay-response
+- true-false
+content_outline:
+- section: 'Вступ: Ціна перемоги'
+  words: 400
+- section: Масштаб руйнувань
+  words: 800
+- section: 'Відбудова (1945-1950): Героїзм і Примус'
+  words: 1000
+- section: Первинні джерела
+  words: 800
+- section: Деколонізаційний погляд
+  words: 500
+- section: 'Підсумок: Повоєнне суспільство'
+  words: 500

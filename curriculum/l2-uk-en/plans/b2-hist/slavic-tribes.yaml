@@ -1,4 +1,4 @@
-module: b2-hist-05
+module: slavic-tribes
 level: B2-HIST
 slug: slavic-tribes
 version: '2.0'
@@ -101,7 +101,6 @@ grammar:
 - Historical narrative register
 - Relative clauses (який, яка, яке)
 - Passive voice in archaeology
-module_type: history
 sources:
 - name: Східнослов'янські племена (Вікіпедія)
   url: https://uk.wikipedia.org/wiki/Східнослов%27янські_племена
@@ -115,5 +114,6 @@ sources:
   url: https://uk.wikipedia.org/wiki/Поляни_(плем%27я)
   type: reference
   notes: Detailed article on Polyany tribe
-immersion: 100% Ukrainian
 phase: B2-HIST.1 [Витоки]
+module_type: history
+immersion: 100% Ukrainian

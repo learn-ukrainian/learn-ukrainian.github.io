@@ -1,0 +1,257 @@
+items:
+- lemma: Центральна Рада
+  ipa: [t͡sɛnˈtrɑlʲnɑ ˈrɑdɑ]
+  pos: proper noun
+  definition_en: Central Rada (Council), the revolutionary parliament of Ukraine (1917-1918)
+  collocations:
+  - Українська Центральна Рада
+  - голова Центральної Ради
+  synonyms: []
+  antonyms: []
+  tags: [history, politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: Універсал
+  ipa: [uniwɛrˈsɑl]
+  pos: noun
+  definition_en: Universal, a state act or decree of the Central Rada
+  collocations:
+  - Четвертий Універсал
+  - проголосити Універсал
+  synonyms: [указ, декрет]
+  antonyms: []
+  tags: [history, law]
+  morphology:
+    gender: m
+    number: sg
+- lemma: автономія
+  ipa: [ɑu̯toˈnɔm⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: autonomy, self-government within a larger state
+  collocations:
+  - культурна автономія
+  - вимагати автономії
+  synonyms: [самоврядування]
+  antonyms: [незалежність, централізація]
+  tags: [politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: незалежність
+  ipa: [nezɑˈlɛʒn⁽ʲ⁾isʲtʲ]
+  pos: noun
+  definition_en: independence, sovereignty
+  collocations:
+  - проголошення незалежності
+  - боротьба за незалежність
+  synonyms: [самостійність, суверенітет]
+  antonyms: [залежність]
+  tags: [politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: УНР
+  ipa: [u ɛn ˈɛr]
+  pos: proper noun
+  definition_en: Ukrainian People's Republic (Ukrainska Narodna Respublika)
+  collocations:
+  - армія УНР
+  - уряд УНР
+  synonyms: []
+  antonyms: []
+  tags: [history]
+  morphology:
+    gender: f
+    number: sg
+- lemma: республіка
+  ipa: [resˈpublikɑ]
+  pos: noun
+  definition_en: republic
+  collocations:
+  - народна республіка
+  - демократична республіка
+  synonyms: []
+  antonyms: [монархія]
+  tags: [politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: голова
+  ipa: [ɦɔloˈwɑ]
+  pos: noun
+  definition_en: chairman, head, leader
+  collocations:
+  - голова уряду
+  - голова зборів
+  synonyms: [лідер, керівник]
+  antonyms: []
+  tags: [politics]
+  morphology:
+    gender: m
+    number: sg
+- lemma: революція
+  ipa: [rewolʲˈut͡s⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: revolution
+  collocations:
+  - національна революція
+  - початок революції
+  synonyms: [переворот]
+  antonyms: [еволюція]
+  tags: [politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: Тимчасовий уряд
+  ipa: [tɪmt͡ʃɑˈsɔwɪj ˈurjɑd]
+  pos: proper noun
+  definition_en: Provisional Government (of Russia in 1917)
+  collocations:
+  - падіння Тимчасового уряду
+  synonyms: []
+  antonyms: []
+  tags: [history]
+  morphology:
+    gender: m
+    number: sg
+- lemma: більшовики
+  ipa: [b⁽ʲ⁾ilʲʃowɪˈkɪ]
+  pos: noun
+  definition_en: Bolsheviks, members of the radical faction of the Russian Social Democratic Labour Party
+  collocations:
+  - напад більшовиків
+  synonyms: [комуністи]
+  antonyms: []
+  tags: [history, politics]
+  morphology:
+    gender: m
+    number: pl
+- lemma: реформа
+  ipa: [reˈfɔrmɑ]
+  pos: noun
+  definition_en: reform
+  collocations:
+  - земельна реформа
+  - проводити реформи
+  synonyms: [зміна, перетворення]
+  antonyms: [застій]
+  tags: [politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: проголошення
+  ipa: [proɦoˈlɔʃenʲːɑ]
+  pos: noun
+  definition_en: proclamation, declaration
+  collocations:
+  - проголошення незалежності
+  - акт проголошення
+  synonyms: [декларація]
+  antonyms: []
+  tags: [politics]
+  morphology:
+    gender: n
+    number: sg
+- lemma: демократія
+  ipa: [demoˈkrɑt⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: democracy
+  collocations:
+  - будувати демократію
+  - принципи демократії
+  synonyms: [на народовладдя]
+  antonyms: [диктатура]
+  tags: [politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: парламент
+  ipa: [pɑrˈlɑment]
+  pos: noun
+  definition_en: parliament
+  collocations:
+  - перший парламент
+  - будівля парламенту
+  synonyms: [рада]
+  antonyms: []
+  tags: [politics]
+  morphology:
+    gender: m
+    number: sg
+- lemma: федерація
+  ipa: [fedeˈrɑt͡s⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: federation
+  collocations:
+  - федеративний устрій
+  - ідея федерації
+  synonyms: [союз]
+  antonyms: [унітарна держава]
+  tags: [politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: самостійність
+  ipa: [sɑmoˈsʲtʲii̯n⁽ʲ⁾isʲtʲ]
+  pos: noun
+  definition_en: independence, self-reliance (synonym for nezalezhnist)
+  collocations:
+  - політична самостійність
+  synonyms: [незалежність]
+  antonyms: [залежність]
+  tags: [politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: суверенітет
+  ipa: [suweren⁽ʲ⁾iˈtɛt]
+  pos: noun
+  definition_en: sovereignty
+  collocations:
+  - державний суверенітет
+  synonyms: [незалежність]
+  antonyms: []
+  tags: [politics]
+  morphology:
+    gender: m
+    number: sg
+- lemma: держава
+  ipa: [derˈʒɑwɑ]
+  pos: noun
+  definition_en: state, country
+  collocations:
+  - вільна держава
+  - будувати державу
+  synonyms: [країна]
+  antonyms: []
+  tags: [politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: нація
+  ipa: [ˈnɑt͡s⁽ʲ⁾ijɑ]
+  pos: noun
+  definition_en: nation
+  collocations:
+  - українська нація
+  - відродження нації
+  synonyms: [народ]
+  antonyms: []
+  tags: [politics]
+  morphology:
+    gender: f
+    number: sg
+- lemma: компроміс
+  ipa: [komproˈmis]
+  pos: noun
+  definition_en: compromise
+  collocations:
+  - піти на компроміс
+  - розумний компроміс
+  synonyms: [угода]
+  antonyms: [конфлікт]
+  tags: [politics]
+  morphology:
+    gender: m
+    number: sg

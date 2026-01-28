@@ -2,12 +2,12 @@
   "module": "nezalezhnist-1991",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:55:27.125464Z",
+  "last_audit": "2026-01-27T23:38:34.570198Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-25T21:29:24.974020Z",
     "meta": "2026-01-26T22:20:13.355896Z",
-    "activities": "2026-01-25T21:29:24.973717Z",
+    "activities": "2026-01-27T15:34:54.336533Z",
     "vocabulary": null,
     "plan": null
   },
@@ -25,7 +25,7 @@
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "16/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "warn",

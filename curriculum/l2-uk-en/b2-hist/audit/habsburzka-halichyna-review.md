@@ -1,8 +1,8 @@
 # Audit Report: M76 — habsburzka-halichyna.md
 **Level:** B2 | **Module:** M76 | **Phase:** HIST.8 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-27 15:51:23
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-28 00:28:27
 
 ## Configuration
 **Type:** B2-history
@@ -34,19 +34,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4047/4000 (raw: 4188)
+- **Words:** ⚠️ 3933/4000 (raw: 4021) (67 short)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 14/5
+- **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 98.2% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.9% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -59,25 +59,25 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 15 | 3 | 100% | 24% | 23.8% |
-| engagement | 14 | 6 | 100% | 14% | 14.3% |
+| engagement | 8 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 10 | 4 | 100% | 10% | 9.5% |
-| visual | 10 | 4 | 100% | 10% | 9.5% |
-| variety | 0.98 | - | 98% | 5% | 4.7% |
+| cultural | 11 | 4 | 100% | 10% | 9.5% |
+| visual | 8 | 4 | 100% | 10% | 9.5% |
+| variety | 0.99 | - | 99% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 7 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.9%** |
+| questions | 16 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Австрійська Галичина: Український П'ємонт** | ⚪️ | 45 | Skipped |
-| **Вступ** | ✅ | 94 | Included in Core |
-| **Галичина під владою Габсбургів** | ⚪️ | 2300 | Skipped |
-| **Читання** | ✅ | 20 | Included in Core |
-| **Первинні джерела** | ✅ | 681 | Included in Core |
-| **Деколонізаційний погляд** | ✅ | 620 | Included in Core |
-| **Підсумок** | ✅ | 117 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 170 | Skipped |
+| **Intro/Narrative** | ✅ | 85 | Included in Core |
+| **Вступ: Дві долі українського народу** | ✅ | 372 | Included in Core |
+| **Читання** | ✅ | 9 | Included in Core |
+| **Початок австрійського правління (1772-1848)** | ⚪️ | 725 | Skipped |
+| **Національний рух (1848-1914)** | ⚪️ | 821 | Skipped |
+| **Первинні джерела** | ✅ | 691 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 464 | Included in Core |
+| **Підсумок: Спадщина Габсбургів** | ✅ | 412 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 354 | Skipped |

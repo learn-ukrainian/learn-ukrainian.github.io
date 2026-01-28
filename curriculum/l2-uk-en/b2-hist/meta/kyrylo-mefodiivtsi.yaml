@@ -9,6 +9,20 @@ naturalness:
   justification: Академічний український для інтелектуальної історії
 duration: 120
 transliteration: none
+word_target: 4000
+activity_hints:
+- type: reading
+- type: critical-analysis
+- type: comparative-study
+- type: essay-response
+- type: true-false
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-01-27'
 phase: HIST.8 [Imperial Era]
+content_outline:
+  "Вступ: Таємне товариство": 400
+  "Засновники та учасники": 800
+  "Ідеологія та програма": 1000
+  "Первинні джерела": 800
+  "Деколонізаційний погляд": 500
+  "Підсумок: Розгром та спадщина": 500

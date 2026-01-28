@@ -2,12 +2,12 @@
   "module": "opryshky",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T15:51:21.096120Z",
+  "last_audit": "2026-01-27T23:38:37.292567Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.347059Z",
     "meta": "2026-01-26T22:20:13.382793Z",
-    "activities": "2026-01-27T15:34:54.377430Z",
+    "activities": "2026-01-27T21:08:02.957336Z",
     "vocabulary": "2026-01-27T13:28:46.265308Z",
     "plan": null
   },
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "4037/4000 (raw: 4281) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "4037/4000 (raw: 4281)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "4/3"
+      "message": "6/3"
     },
     "vocabulary": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 1
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

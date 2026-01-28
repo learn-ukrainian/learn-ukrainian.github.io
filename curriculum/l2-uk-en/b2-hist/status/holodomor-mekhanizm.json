@@ -2,12 +2,12 @@
   "module": "holodomor-mekhanizm",
   "level": "B2",
   "plan_version": "2.14",
-  "last_audit": "2026-01-27T15:51:32.513613Z",
+  "last_audit": "2026-01-28T22:27:23.072076Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.346874Z",
-    "meta": "2026-01-26T22:20:13.070991Z",
-    "activities": "2026-01-27T15:34:53.933678Z",
+    "md": "2026-01-28T11:26:02.526771Z",
+    "meta": "2026-01-28T11:29:17.665683Z",
+    "activities": "2026-01-28T11:29:15.583838Z",
     "vocabulary": "2026-01-22T13:40:41.388511Z",
     "plan": null
   },
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "4227/4000 (raw: 4276) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "4315/4000 (raw: 4364)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "4/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "pass",
@@ -33,17 +33,15 @@
       "message": "25/20"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "0/10 (PENDING) - Naturalness check required"
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "Missing required activity types: critical-analysis"
-    ],
-    "pass_count": 3,
-    "fail_count": 2
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

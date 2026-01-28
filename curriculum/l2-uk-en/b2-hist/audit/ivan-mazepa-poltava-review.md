@@ -1,8 +1,8 @@
 # Audit Report: M66 — ivan-mazepa-poltava.md
 **Level:** B2 | **Module:** M66 | **Phase:** HIST.7 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-27 20:53:27
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-27 23:38:11
 
 ## Configuration
 **Type:** B2-history
@@ -24,37 +24,29 @@
 | 2 | true-false | Факти про Полтаву і вигнання гетьмана Мазепи | 10 | 8 | ✅ |
 | 3 | essay-response | Аналітичне есе про Полтавську битву | 1 | 1 | ✅ |
 | 4 | comparative-study | Порівняння історичних лідерів Полтавської епохи | 1 | 1 | ✅ |
+| 5 | critical-analysis | Трагедія Батурина та терор як інструмент | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 4 (target: 3-9) ✅
-- Unique types: 4 (minimum: 2) ✅
-- Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in ivan-mazepa-poltava.yaml: Insufficient activities: 4 found, minimum 5 required for B2-HIST
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 4158/4000 (raw: 4338)
-- **Activities:** ✅ 4/3
+- **Words:** ✅ 4687/4000 (raw: 4867)
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 4/2 types
+- **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ✅ Content-heavy OK (4 activities)
-- **Immersion:** 🇺🇦 98.4% (target 90-100% (history))
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Immersion:** 🇺🇦 98.5% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -74,7 +66,7 @@
 | visual | 5 | 4 | 100% | 10% | 9.5% |
 | variety | 0.98 | - | 98% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 8 | 3 | 100% | 5% | 4.8% |
+| questions | 9 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
@@ -82,13 +74,13 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Іван Мазепа III: Полтава і вигнання** | ⚪️ | 86 | Skipped |
-| **Вступ** | ✅ | 398 | Included in Core |
-| **Читання** | ✅ | 767 | Included in Core |
-| **Батуринська трагедія: Ціна спротиву** | ⚪️ | 640 | Skipped |
-| **Полтавська битва: Злам епох** | ⚪️ | 641 | Skipped |
-| **Вигнання, Смерть і Початок нової боротьби** | ⚪️ | 480 | Skipped |
-| **Мазепа в культурі: Між прокляттям і романтизмом** | ✅ | 189 | Included in Core |
+| **Вступ** | ✅ | 416 | Included in Core |
+| **Читання** | ✅ | 778 | Included in Core |
+| **Батуринська трагедія: Ціна спротиву** | ⚪️ | 656 | Skipped |
+| **Полтавська битва: Злам епох** | ⚪️ | 775 | Skipped |
+| **Вигнання, Смерть і Початок нової боротьби** | ⚪️ | 510 | Skipped |
+| **Мазепа в культурі: Між прокляттям і романтизмом** | ✅ | 297 | Included in Core |
 | **Первинні джерела** | ✅ | 140 | Included in Core |
-| **Деколонізаційний погляд: Руйнування імперських міфів** | ✅ | 475 | Included in Core |
-| **Підсумок** | ✅ | 154 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 188 | Skipped |
+| **Деколонізаційний погляд: Руйнування імперських міфів** | ✅ | 540 | Included in Core |
+| **Підсумок** | ✅ | 250 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 239 | Skipped |

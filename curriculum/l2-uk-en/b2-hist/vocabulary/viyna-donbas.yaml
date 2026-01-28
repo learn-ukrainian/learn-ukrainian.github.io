@@ -1,0 +1,129 @@
+module: viyna-donbas
+level: B2-HIST
+version: '2.0'
+items:
+- term: війна
+  translation: war
+  pos: noun
+  gender: f
+  example: Війна на Донбасі тривала вісім років до повномасштабного вторгнення.
+
+- term: окупація
+  translation: occupation
+  pos: noun
+  gender: f
+  example: Окупація частини Донбасу почалася у квітні 2014 року.
+
+- term: агресія
+  translation: aggression
+  pos: noun
+  gender: f
+  example: Російська агресія зруйнувала мільйони життів.
+
+- term: сепаратисти
+  translation: separatists
+  pos: noun
+  gender: m
+  plural: true
+  example: Сепаратисти захопили адмінбудівлі в Донецьку та Луганську.
+
+- term: добровольці
+  translation: volunteers
+  pos: noun
+  gender: m
+  plural: true
+  example: Добровольці прийшли на допомогу армії у найкритичніший момент.
+
+- term: кіборги
+  translation: cyborgs (defenders of Donetsk airport)
+  pos: noun
+  gender: m
+  plural: true
+  example: Кіборги тримали оборону аеропорту 242 дні.
+
+- term: Мінські угоди
+  translation: Minsk agreements
+  pos: noun
+  gender: f
+  plural: true
+  example: Мінські угоди не принесли справжнього миру на Донбас.
+
+- term: АТО
+  translation: ATO (Anti-Terrorist Operation)
+  pos: noun
+  gender: f
+  example: АТО було оголошено 14 квітня 2014 року.
+
+- term: обстріл
+  translation: shelling
+  pos: noun
+  gender: m
+  example: Обстріли прифронтових міст тривали щодня.
+
+- term: фронт
+  translation: front (military)
+  pos: noun
+  gender: m
+  example: Лінія фронту майже не змінювалася протягом семи років.
+
+- term: біженці
+  translation: refugees
+  pos: noun
+  gender: m
+  plural: true
+  example: Понад мільйон біженців покинули свої домівки на Донбасі.
+
+- term: перемир'я
+  translation: ceasefire
+  pos: noun
+  gender: n
+  example: Перемир'я порушувалося щодня з боку окупантів.
+
+- term: санкції
+  translation: sanctions
+  pos: noun
+  gender: f
+  plural: true
+  example: Західні санкції не зупинили агресію Росії.
+
+- term: гібридна війна
+  translation: hybrid warfare
+  pos: noun
+  gender: f
+  example: Гібридна війна поєднує військові дії з пропагандою та диверсіями.
+
+- term: добробат
+  translation: volunteer battalion
+  pos: noun
+  gender: m
+  example: Добробати «Донбас» та «Азов» стали символами опору.
+
+- term: волонтер
+  translation: volunteer (civilian)
+  pos: noun
+  gender: m
+  example: Волонтери забезпечували армію всім необхідним.
+
+- term: котел
+  translation: encirclement, cauldron
+  pos: noun
+  gender: m
+  example: Іловайський котел став найстрашнішою трагедією АТО.
+
+- term: ВПО
+  translation: IDP (internally displaced person)
+  pos: noun
+  gender: m/f
+  example: ВПО отримували допомогу від держави та волонтерів.
+
+- term: зелений коридор
+  translation: green corridor (safe passage)
+  pos: noun
+  gender: m
+  example: Обіцяний «зелений коридор» виявився пасткою.
+
+- term: бойовик
+  translation: militant, fighter
+  pos: noun
+  gender: m
+  example: Бойовики так званої «ДНР» підтримувалися Росією.

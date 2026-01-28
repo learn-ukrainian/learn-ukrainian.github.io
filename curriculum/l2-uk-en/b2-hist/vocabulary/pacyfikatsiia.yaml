@@ -1,0 +1,124 @@
+module: pacyfikatsiia
+level: B2-HIST
+version: '2.0'
+items:
+- lemma: пацифікація
+  translation: pacification
+  ipa: "pɐt͡sɪfʲiˈkɑt͡sʲijɐ"
+  definition: Політика державного терору Польщі проти українців у 1930 році.
+  pos: noun
+  gender: f
+- lemma: репресії
+  translation: repressions
+  ipa: "rɛˈprɛsʲiji"
+  definition: Каральні заходи держави.
+  pos: noun
+  gender: f
+- lemma: саботаж
+  translation: sabotage
+  ipa: "sɐboˈtɑʒ"
+  definition: Умисне пошкодження майна як форма протесту.
+  pos: noun
+  gender: m
+- lemma: терор
+  translation: terror
+  ipa: "tɛˈrɔr"
+  definition: Залякування населення шляхом насильства.
+  pos: noun
+  gender: m
+- lemma: катування
+  translation: torture
+  ipa: "kɐtuˈvɑnʲːɐ"
+  definition: Заподіяння сильного болю.
+  pos: noun
+  gender: n
+- lemma: екзекуція
+  translation: execution (punishment)
+  ipa: "ɛkzɛˈkut͡sʲijɐ"
+  definition: Виконання тілесного покарання.
+  pos: noun
+  gender: f
+- lemma: улан
+  translation: uhlan
+  ipa: "uˈlɑn"
+  definition: Воїн кавалерії.
+  pos: noun
+  gender: m
+- lemma: шомпол
+  translation: ramrod
+  ipa: "ˈʃɔmpol"
+  definition: Металевий прут для чистки зброї, що використовувався для биття.
+  pos: noun
+  gender: m
+- lemma: нагай
+  translation: whip
+  ipa: "nɐˈɦɑj"
+  definition: Шкіряний батіг.
+  pos: noun
+  gender: m
+- lemma: конфіскація
+  translation: confiscation
+  ipa: "konfʲiˈskɑt͡sʲijɐ"
+  definition: Примусове вилучення майна.
+  pos: noun
+  gender: f
+- lemma: меншина
+  translation: minority
+  ipa: "mɛnˈʃɪnɐ"
+  definition: Група населення, що відрізняється від більшості.
+  pos: noun
+  gender: f
+- lemma: беззаконня
+  translation: lawlessness
+  ipa: "bɛzzɐˈkɔnʲːɐ"
+  definition: Відсутність законності, свавілля.
+  pos: noun
+  gender: n
+- lemma: осадник
+  translation: settler (Polish colonist)
+  ipa: "oˈsɑdnɪk"
+  definition: Польський колоніст на українських землях.
+  pos: noun
+  gender: m
+- lemma: помста
+  translation: revenge
+  ipa: "ˈpɔmstɐ"
+  definition: Дія у відповідь на заподіяне зло.
+  pos: noun
+  gender: f
+- lemma: підпілля
+  translation: underground
+  ipa: "pʲidˈpʲilʲːɐ"
+  definition: Нелегальна діяльність організації.
+  pos: noun
+  gender: n
+- lemma: приниження
+  translation: humiliation
+  ipa: "prɪˈnɪʒenʲːɐ"
+  definition: Образа людської гідності.
+  pos: noun
+  gender: n
+- lemma: спротив
+  translation: resistance
+  ipa: "ˈsprotɪu̯"
+  definition: Активна протидія.
+  pos: noun
+  gender: m
+- lemma: відплата
+  translation: retaliation
+  ipa: "vʲidˈplɑtɐ"
+  definition: Покарання за вчинене.
+  pos: noun
+  gender: f
+- lemma: співжиття
+  translation: coexistence
+  ipa: "spʲivʒɪˈtʲːɐ"
+  definition: Спільне проживання різних груп.
+  pos: noun
+  gender: n
+- lemma: насильство
+  translation: violence
+  ipa: "nɐˈsɪlʲstvo"
+  definition: Застосування сили.
+  pos: noun
+  gender: n

@@ -1,4 +1,4 @@
-module: b2-hist-17
+module: kniazivski-usobiytsi
 level: B2-HIST
 slug: kniazivski-usobiytsi
 version: '2.0'
@@ -54,6 +54,7 @@ content_outline:
   words: 154
   points:
   - Legacy of the era
+word_target: 4000
 vocabulary_hints:
   required:
   - усобиця (internecine war)
@@ -111,6 +112,5 @@ sources:
   url: https://litopys.org.ua/pvl/pvl.htm
   type: primary
   notes: Chronicle accounts
-immersion: 100% Ukrainian
 phase: B2-HIST.1 [Kyivan Rus]
-word_target: 4000
+immersion: 100% Ukrainian

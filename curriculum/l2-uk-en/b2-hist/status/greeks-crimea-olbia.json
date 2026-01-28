@@ -2,13 +2,13 @@
   "module": "greeks-crimea-olbia",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T15:46:18.458415Z",
+  "last_audit": "2026-01-27T23:38:05.190241Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.346898Z",
     "meta": "2026-01-26T22:20:13.057294Z",
     "activities": "2026-01-27T15:34:53.888492Z",
-    "vocabulary": "2026-01-26T23:20:25.201110Z",
+    "vocabulary": "2026-01-27T15:50:11.098068Z",
     "plan": null
   },
   "gates": {

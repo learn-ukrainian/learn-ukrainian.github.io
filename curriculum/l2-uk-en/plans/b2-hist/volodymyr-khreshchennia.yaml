@@ -1,4 +1,4 @@
-module: b2-hist-11
+module: volodymyr-khreshchennia
 level: B2-HIST
 slug: volodymyr-khreshchennia
 version: '2.0'
@@ -133,7 +133,6 @@ objectives:
 grammar:
 - Past tense narrative
 - Religious terminology
-module_type: history
 sources:
 - name: Володимир Великий (Вікіпедія)
   url: https://uk.wikipedia.org/wiki/Володимир_Великий
@@ -147,5 +146,6 @@ sources:
   url: https://litopys.org.ua/pvl/pvl.htm
   type: primary
   notes: Chronicle account of baptism
-immersion: 100% Ukrainian
 phase: B2-HIST.1 [Kyivan Rus]
+module_type: history
+immersion: 100% Ukrainian

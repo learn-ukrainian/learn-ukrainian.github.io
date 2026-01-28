@@ -1,4 +1,4 @@
-module: b2-hist-03
+module: greeks-crimea-olbia
 level: B2-HIST
 slug: greeks-crimea-olbia
 version: '2.0'
@@ -108,7 +108,6 @@ objectives:
 grammar:
 - Historical narrative register
 - Past tense mastery
-module_type: history
 sources:
 - name: Античні міста Північного Причорномор'я (Вікіпедія)
   url: https://uk.wikipedia.org/wiki/Античні_міста_Північного_Причорномор%27я
@@ -122,6 +121,7 @@ sources:
   url: https://uk.wikipedia.org/wiki/Херсонес_Таврійський
   type: reference
   notes: History of Chersonesus
-immersion: 100% Ukrainian
 register: публіцистичний
 phase: B2-HIST.1 [Витоки]
+module_type: history
+immersion: 100% Ukrainian
