@@ -2,13 +2,13 @@
   "module": "lesya-ukrainka",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:56:28.418725Z",
+  "last_audit": "2026-01-29T22:02:57.658479Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-17T21:45:15.829660Z",
-    "meta": "2026-01-26T17:21:20.832461Z",
-    "activities": "2026-01-17T21:45:15.795300Z",
-    "vocabulary": null,
+    "md": "2026-01-29T22:00:39.294092Z",
+    "meta": "2026-01-29T21:27:50.056006Z",
+    "activities": "2026-01-29T22:02:36.739875Z",
+    "vocabulary": "2026-01-29T21:38:22.795458Z",
     "plan": null
   },
   "gates": {
@@ -18,32 +18,30 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "2154/4000 (raw: 2377) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "4668/4000 (raw: 4771)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "15/3"
+      "message": "9/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 24 (soft target)"
+      "message": "25/24"
     },
     "naturalness": {
       "status": "pass",
       "violations": 0,
-      "message": "9/10 (High)"
+      "message": "10/10 (High)"
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "6 Outline Compliance Errors"
-    ],
-    "pass_count": 3,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

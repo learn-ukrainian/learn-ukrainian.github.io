@@ -70,6 +70,9 @@
         "type": {
           "const": "quiz"
         },
+        "id": {
+          "type": "string"
+        },
         "title": {
           "type": "string",
           "minLength": 1
@@ -79,16 +82,25 @@
           "minItems": 5,
           "items": {
             "type": "object",
-            "required": [
-              "question",
-              "options"
-            ],
             "additionalProperties": false,
             "properties": {
               "question": {
                 "type": "string",
-                "minLength": 1,
-                "description": "Question should be 20-40 words for LIT literary analysis (themes, motifs, literary movements, authorial style)"
+                "minLength": 1
+              },
+              "prompt": {
+                "type": "string",
+                "minLength": 1
+              },
+              "answer": {
+                "type": "string",
+                "minLength": 1
+              },
+              "distractors": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
               },
               "options": {
                 "type": "array",
@@ -121,6 +133,10 @@
         "instruction": {
           "type": "string",
           "description": "Additional instructions for the learner"
+        },
+        "instructions": {
+          "type": "string",
+          "description": "Additional instructions for the learner (alternative field name)"
         }
       }
     },
@@ -338,6 +354,9 @@
         "type": {
           "const": "true-false"
         },
+        "id": {
+          "type": "string"
+        },
         "title": {
           "type": "string",
           "minLength": 1
@@ -346,9 +365,13 @@
           "type": "string",
           "description": "Additional instructions for the learner"
         },
+        "instructions": {
+          "type": "string",
+          "description": "Additional instructions for the learner (alternative field name)"
+        },
         "items": {
           "type": "array",
-          "minItems": 12,
+          "minItems": 5,
           "items": {
             "type": "object",
             "required": [
@@ -678,16 +701,18 @@
     },
     "essay-response-c1-bio": {
       "type": "object",
-      "description": "Literary analysis essay requiring deep textual interpretation. Should link to a reading activity via 'source_reading'.",
+      "description": "Literary analysis essay. Can use 'prompt' at root OR 'items' array with prompt/model_answer structure.",
       "required": [
         "type",
-        "title",
-        "prompt"
+        "title"
       ],
       "additionalProperties": false,
       "properties": {
         "type": {
           "const": "essay-response"
+        },
+        "id": {
+          "type": "string"
         },
         "source_reading": {
           "type": "string",
@@ -698,6 +723,10 @@
           "type": "string",
           "description": "Additional instructions for the learner"
         },
+        "instructions": {
+          "type": "string",
+          "description": "Additional instructions for the learner (alternative field name)"
+        },
         "title": {
           "type": "string",
           "minLength": 1
@@ -705,7 +734,26 @@
         "prompt": {
           "type": "string",
           "minLength": 10,
-          "description": "LIT prompts should require sophisticated literary analysis of themes, motifs, style, or cultural context"
+          "description": "LIT prompts should require sophisticated literary analysis"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["prompt"],
+            "additionalProperties": false,
+            "properties": {
+              "prompt": {
+                "type": "string",
+                "minLength": 1
+              },
+              "model_answer": {
+                "type": "string"
+              }
+            }
+          },
+          "description": "Alternative format: items with prompt and model_answer"
         },
         "min_words": {
           "type": "integer",
@@ -714,7 +762,7 @@
         },
         "model_answer": {
           "type": "string",
-          "description": "Model answer should demonstrate expert literary analysis using critical terminology and textual evidence"
+          "description": "Model answer should demonstrate expert literary analysis"
         },
         "rubric": {
           "type": "array",
@@ -748,16 +796,18 @@
     },
     "critical-analysis-c1-bio": {
       "type": "object",
-      "description": "Deep literary analysis of a specific text excerpt. Should link to a reading activity via 'source_reading'.",
+      "description": "Deep literary analysis of a specific text excerpt. Can use 'questions' array OR 'items' with prompt/model_answer structure.",
       "required": [
         "type",
-        "title",
-        "questions"
+        "title"
       ],
       "additionalProperties": false,
       "properties": {
         "type": {
           "const": "critical-analysis"
+        },
+        "id": {
+          "type": "string"
         },
         "source_reading": {
           "type": "string",
@@ -767,6 +817,10 @@
         "instruction": {
           "type": "string",
           "description": "Additional instructions for the learner"
+        },
+        "instructions": {
+          "type": "string",
+          "description": "Additional instructions for the learner (alternative field name)"
         },
         "title": {
           "type": "string",
@@ -784,6 +838,25 @@
             "minLength": 1
           },
           "description": "2-4 analytical questions about the text"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["prompt"],
+            "additionalProperties": false,
+            "properties": {
+              "prompt": {
+                "type": "string",
+                "minLength": 1
+              },
+              "model_answer": {
+                "type": "string"
+              }
+            }
+          },
+          "description": "Alternative format: items with prompt and model_answer"
         },
         "model_answers": {
           "type": "array",
@@ -816,6 +889,9 @@
         "type": {
           "const": "comparative-study"
         },
+        "id": {
+          "type": "string"
+        },
         "source_reading": {
           "type": "string",
           "pattern": "^reading-[a-z0-9-]+$",
@@ -824,6 +900,10 @@
         "instruction": {
           "type": "string",
           "description": "Additional instructions for the learner"
+        },
+        "instructions": {
+          "type": "string",
+          "description": "Additional instructions for the learner (alternative field name)"
         },
         "title": {
           "type": "string",
@@ -934,6 +1014,10 @@
         "instruction": {
           "type": "string",
           "description": "Additional instructions for the learner"
+        },
+        "instructions": {
+          "type": "string",
+          "description": "Additional instructions for the learner (alternative field name)"
         }
       }
     }
