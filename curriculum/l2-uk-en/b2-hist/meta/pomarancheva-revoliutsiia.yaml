@@ -1,4 +1,4 @@
-module: pomarancheva-revoliutsiia
+module: b2-hist-123
 level: B2-HIST
 slug: pomarancheva-revoliutsiia
 version: '2.0'
@@ -16,3 +16,4 @@ vocabulary_count: 25
 build:
   last_modified: '2026-01-26'
 phase: B2.3d Independence & War
+id: b2-hist-123

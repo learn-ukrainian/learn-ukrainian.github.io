@@ -1,8 +1,8 @@
-module: vira-kholodna
+module: c1-bio-085
 level: C1-BIO
 slug: vira-kholodna
 version: '2.0'
-id: c1-bio-62
+id: c1-bio-085
 naturalness:
   score: 1
   status: PENDING

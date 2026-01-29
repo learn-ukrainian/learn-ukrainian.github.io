@@ -1,34 +1,35 @@
 module: a2-67
 level: A2
+sequence: 67
 slug: social-media-ukrainian
 version: '2.0'
 title: Social Media Ukrainian
 subtitle: Digital Life
 content_outline:
-- section: 'Introduction (Вступ)'
+- section: Introduction (Вступ)
   words: 160
   points:
   - Popular platforms
   - Digital culture
-- section: 'Presentation (Презентація)'
+- section: Presentation (Презентація)
   words: 330
   points:
   - Social media vocabulary
   - Posts, likes, comments
-- section: 'Practice (Практика)'
+- section: Practice (Практика)
   words: 35
   points:
   - Write posts and comments
-- section: 'Dialogues (Діалоги)'
+- section: Dialogues (Діалоги)
   words: 160
   points:
   - Online conversations
   - Commenting exchanges
-- section: 'Narrative (Розповідь)'
+- section: Narrative (Розповідь)
   words: 315
   points:
   - Social media story
-- section: 'Need More Practice?'
+- section: Need More Practice?
   words: 45
   points:
   - Summary and links

@@ -1,4 +1,4 @@
-module: c1-58
+module: c1-058
 level: C1
 slug: 58-kozatski-lehendy
 version: '2.0'
@@ -12,3 +12,4 @@ tags:
 vocabulary_count: 30
 build:
   last_modified: '2026-01-26'
+id: c1-058

@@ -1,8 +1,8 @@
-module: b2-hist-05
+module: b2-hist-005
 level: B2-HIST
 slug: slavic-tribes
 version: '2.0'
-id: b2-hist-05
+id: b2-hist-005
 naturalness:
   score: 9
   status: PASS

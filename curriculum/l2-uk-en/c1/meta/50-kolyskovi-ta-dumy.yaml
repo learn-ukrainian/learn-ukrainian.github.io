@@ -1,4 +1,4 @@
-module: c1-50
+module: c1-050
 level: C1
 slug: 50-kolyskovi-ta-dumy
 version: '2.0'
@@ -11,3 +11,4 @@ tags:
 vocabulary_count: 28
 build:
   last_modified: '2026-01-26'
+id: c1-050

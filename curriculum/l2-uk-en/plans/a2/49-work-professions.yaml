@@ -1,28 +1,29 @@
 module: a2-49
 level: A2
+sequence: 49
 slug: work-professions
 version: '2.0'
 title: Work and Professions
 subtitle: Jobs and Careers
 content_outline:
-- section: 'Вступ'
+- section: Вступ
   words: 150
   points:
   - Job market overview
   - Work vocabulary introduction
-- section: 'Граматика'
+- section: Граматика
   words: 850
   points:
   - Professions (лікар, вчитель, інженер)
   - Instrumental with professions
   - Workplace vocabulary
   - Job activities
-- section: 'Практика'
+- section: Практика
   words: 500
   points:
   - Dialogues about work
   - Job interview practice
-- section: 'Підсумок'
+- section: Підсумок
   words: 100
   points:
   - Summary of vocabulary

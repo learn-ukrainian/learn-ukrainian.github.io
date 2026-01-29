@@ -1,8 +1,8 @@
-module: volodymyr-monomakh
+module: b2-hist-015
 level: B2-HIST
 slug: volodymyr-monomakh
 version: '2.0'
-id: b2-hist-15
+id: b2-hist-015
 naturalness:
   score: 9
   status: PASS

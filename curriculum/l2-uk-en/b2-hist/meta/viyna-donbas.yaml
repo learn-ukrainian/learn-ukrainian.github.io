@@ -1,8 +1,8 @@
-module: b2-hist-130
+module: b2-hist-131
 level: B2-HIST
 slug: viyna-donbas
 version: '2.0'
-id: b2-hist-130
+id: b2-hist-131
 naturalness:
   score: 10
   status: PASS

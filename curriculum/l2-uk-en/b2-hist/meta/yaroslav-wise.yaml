@@ -1,8 +1,8 @@
-module: b2-hist-12
+module: b2-hist-012
 level: B2-HIST
 slug: yaroslav-wise
 version: '1.0'
-id: b2-hist-12
+id: b2-hist-012
 naturalness:
   score: 10
   status: PASS

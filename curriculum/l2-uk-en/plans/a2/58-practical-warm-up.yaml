@@ -1,11 +1,12 @@
 module: a2-58
 level: A2
+sequence: 58
 slug: practical-warm-up
 version: '2.0'
 title: Practical Warm-up
 subtitle: Getting Ready for Action
 content_outline:
-- section: 'Огляд'
+- section: Огляд
   words: 85
   points:
   - Preparing for practical scenarios
@@ -26,12 +27,12 @@ content_outline:
   points:
   - Writing practice
   - Vocabulary in context
-- section: 'Інтеграційне завдання'
+- section: Інтеграційне завдання
   words: 200
   points:
   - Read, listen, respond
   - Apply all A2 skills
-- section: 'Підсумок'
+- section: Підсумок
   words: 35
   points:
   - Summary and next steps

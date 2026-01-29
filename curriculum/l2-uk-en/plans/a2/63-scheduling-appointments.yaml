@@ -1,36 +1,37 @@
 module: a2-63
 level: A2
+sequence: 63
 slug: scheduling-appointments
 version: '2.0'
 title: Scheduling Appointments
 subtitle: Making and Changing Plans
 content_outline:
-- section: 'Introduction (Вступ)'
+- section: Introduction (Вступ)
   words: 130
   points:
   - Appointment culture
   - Phone vs online booking
-- section: 'Presentation (Презентиція)'
+- section: Presentation (Презентиція)
   words: 430
   points:
   - Я хочу записатися на...
   - Choosing date and time
   - Phone etiquette
-- section: 'Practice (Практика)'
+- section: Practice (Практика)
   words: 320
   points:
   - Make appointment calls
   - Reschedule meetings
-- section: 'Dialogues (Діалоги)'
+- section: Dialogues (Діалоги)
   words: 390
   points:
   - Scheduling dialogues
   - Confirming details
-- section: 'Narrative (Розповідь)'
+- section: Narrative (Розповідь)
   words: 280
   points:
   - Scheduling story
-- section: 'Need More Practice?'
+- section: Need More Practice?
   words: 50
   points:
   - Summary and links
@@ -54,13 +55,11 @@ vocabulary_hints:
   - пізніше (later)
 activity_hints:
 - type: match-up
-  focus: Scheduling vocabulary
-  items: 25
   focus: Phone appointment calls
+  items: 25
 - type: quiz
-  focus: Understand phone conversations
-  items: 10
   focus: Schedule and reschedule
+  items: 10
 focus: practical
 pedagogy: PPP
 prerequisites:

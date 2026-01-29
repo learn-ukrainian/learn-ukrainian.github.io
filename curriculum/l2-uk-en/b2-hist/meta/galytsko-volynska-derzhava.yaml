@@ -1,8 +1,8 @@
-module: galytsko-volynska-derzhava
+module: b2-hist-024
 level: B2-HIST
 slug: galytsko-volynska-derzhava
 version: '2.0'
-id: b2-hist-22
+id: b2-hist-024
 naturalness:
   score: 9
   status: PASS

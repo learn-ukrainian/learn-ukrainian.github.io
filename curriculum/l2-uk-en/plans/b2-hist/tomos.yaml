@@ -1,5 +1,6 @@
 module: tomos
 level: B2-HIST
+sequence: 129
 slug: tomos
 version: '2.0'
 title: 'Томос: Духовна незалежність'

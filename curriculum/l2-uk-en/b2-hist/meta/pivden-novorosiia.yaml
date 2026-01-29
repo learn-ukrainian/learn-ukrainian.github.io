@@ -1,15 +1,20 @@
-module: b2-hist-77
+module: b2-hist-077
 level: B2-HIST
 slug: pivden-novorosiia
 version: '2.0'
-id: b2-hist-77
+id: b2-hist-077
 naturalness:
   score: 10
   status: PASS
   justification: Академічний український для регіональної історії
 duration: 120
 transliteration: none
-practice: [reading, critical-analysis, comparative-study, essay-response, true-false]
+practice:
+- reading
+- critical-analysis
+- comparative-study
+- essay-response
+- true-false
 build:
   last_modified: '2026-01-28'
 phase: HIST.8 [Imperial Era]

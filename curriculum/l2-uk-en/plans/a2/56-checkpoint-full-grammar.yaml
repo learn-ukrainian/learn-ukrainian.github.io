@@ -1,11 +1,12 @@
 module: a2-56
 level: A2
+sequence: 56
 slug: checkpoint-full-grammar
 version: '2.0'
 title: Checkpoint — Full Grammar
 subtitle: A2 Mastery Review
 content_outline:
-- section: 'Огляд'
+- section: Огляд
   words: 75
   points:
   - Overview of checkpoint
@@ -30,12 +31,12 @@ content_outline:
   points:
   - Shopping and travel vocabulary
   - Practical transactions
-- section: 'Integration Challenge'
+- section: Integration Challenge
   words: 90
   points:
   - Comprehensive assessment
   - Mixed skills practice
-- section: 'Підсумок'
+- section: Підсумок
   words: 65
   points:
   - Summary and next steps

@@ -1,5 +1,6 @@
 module: b2-25
 level: B2
+sequence: 25
 slug: 25-register-practice-cross-register-rewriting
 version: '2.0'
 title: 'Регістрова практика: Перенесення тексту між стилями'

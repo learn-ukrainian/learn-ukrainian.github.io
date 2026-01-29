@@ -1,8 +1,8 @@
-module: morski-pokhody
+module: b2-hist-049
 level: B2-HIST
 slug: morski-pokhody
 version: '2.0'
-id: b2-hist-49
+id: b2-hist-049
 naturalness:
   score: 9
   status: PASS

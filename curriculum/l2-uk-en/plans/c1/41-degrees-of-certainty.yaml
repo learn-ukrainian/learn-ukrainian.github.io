@@ -1,5 +1,6 @@
 module: c1-41
 level: C1
+sequence: 41
 slug: 41-degrees-of-certainty
 version: '2.0'
 title: 'Ступені впевненості: Модальність та хеджування'

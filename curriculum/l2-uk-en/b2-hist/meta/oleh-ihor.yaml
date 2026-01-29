@@ -1,8 +1,8 @@
-module: b2-hist-09
+module: b2-hist-009
 level: B2-HIST
 slug: oleh-ihor
 version: '1.0'
-id: b2-hist-09
+id: b2-hist-009
 naturalness:
   score: 10
   status: PASS

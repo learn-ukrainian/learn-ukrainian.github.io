@@ -1,8 +1,8 @@
-module: kinets-halytsko-volyni
+module: b2-hist-026
 level: B2-HIST
 slug: kinets-halytsko-volyni
 version: '2.0'
-id: b2-hist-24
+id: b2-hist-026
 naturalness:
   score: 9
   status: PASS

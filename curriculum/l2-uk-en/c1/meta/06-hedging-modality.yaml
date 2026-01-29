@@ -1,8 +1,8 @@
-module: 06-hedging-modality
+module: c1-006
 level: C1
 slug: 06-hedging-modality
 version: '2.0'
-id: c1-06
+id: c1-006
 naturalness:
   score: null
   status: PENDING

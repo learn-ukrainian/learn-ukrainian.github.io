@@ -1,8 +1,8 @@
-module: zborivska-bila-tserkva
+module: b2-hist-054
 level: B2-HIST
 slug: zborivska-bila-tserkva
 version: '2.0'
-id: b2-hist-54
+id: b2-hist-054
 naturalness:
   score: 9
   status: PASS

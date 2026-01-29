@@ -1,5 +1,6 @@
 module: b1-40
 level: B1
+sequence: 40
 slug: reported-questions-commands
 version: '2.0'
 title: Непрямі питання та накази

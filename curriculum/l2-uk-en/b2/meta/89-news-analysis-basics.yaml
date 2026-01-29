@@ -1,8 +1,8 @@
-module: news-analysis-basics
+module: b2-89
 level: B2
 slug: news-analysis-basics
 version: '2.0'
-id: 89
+id: b2-89
 naturalness:
   score: 8
   status: PASS

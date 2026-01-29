@@ -1,8 +1,8 @@
-module: nataliya-kobrynska
+module: c1-bio-045
 level: C1-BIO
 slug: nataliya-kobrynska
 version: '2.0'
-id: c1-bio-25
+id: c1-bio-045
 naturalness:
   score: 1
   status: PENDING

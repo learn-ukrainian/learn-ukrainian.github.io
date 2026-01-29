@@ -1,8 +1,8 @@
-module: 26-media-landscape
+module: c1-026
 level: C1
 slug: 26-media-landscape
 version: '2.0'
-id: c1-26
+id: c1-026
 naturalness:
   score: null
   status: PENDING

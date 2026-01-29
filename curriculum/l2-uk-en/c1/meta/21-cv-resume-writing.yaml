@@ -1,8 +1,8 @@
-module: 21-cv-resume-writing
+module: c1-021
 level: C1
 slug: 21-cv-resume-writing
 version: '2.0'
-id: c1-21
+id: c1-021
 naturalness:
   score: null
   status: PENDING

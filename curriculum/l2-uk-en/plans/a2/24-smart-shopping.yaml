@@ -1,5 +1,6 @@
 module: 24-smart-shopping
 level: A2
+sequence: 24
 slug: 24-smart-shopping
 version: '2.0'
 title: Smart Shopping

@@ -1,8 +1,8 @@
-module: kateryna-kalytko
+module: c1-bio-126
 level: C1-BIO
 slug: kateryna-kalytko
 version: '2.0'
-id: c1-bio-93
+id: c1-bio-126
 naturalness:
   score: 1
   status: PENDING

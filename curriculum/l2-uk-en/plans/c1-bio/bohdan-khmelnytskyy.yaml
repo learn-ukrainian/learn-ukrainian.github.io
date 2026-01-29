@@ -1,5 +1,6 @@
 module: c1-bio-10
 level: C1-BIO
+sequence: 20
 slug: bohdan-khmelnytskyy
 version: '2.0'
 title: 'Богдан Хмельницький: Гетьман-державотворець'
@@ -94,9 +95,12 @@ connects_to:
 - c1-bio-44 (Symon Petliura - later national leader)
 objectives:
 - Learner can analyze the role of Bohdan Khmelnytskyy in Ukrainian state-building
-- Learner can evaluate the geopolitical context of the mid-17th century in Eastern Europe
-- Learner can distinguish between different historiographical interpretations of the Pereyaslav Agreement
-- Learner can use advanced biographical and historical vocabulary in a comparative essay
+- Learner can evaluate the geopolitical context of the mid-17th century in Eastern
+  Europe
+- Learner can distinguish between different historiographical interpretations of the
+  Pereyaslav Agreement
+- Learner can use advanced biographical and historical vocabulary in a comparative
+  essay
 grammar:
 - Historical narrative register
 - Quoted speech conventions

@@ -1,32 +1,33 @@
 module: a2-46
 level: A2
+sequence: 46
 slug: home-and-furniture
 version: '2.0'
 title: Home and Furniture
 subtitle: Where I Live
 content_outline:
-- section: 'Вступ'
+- section: Вступ
   words: 150
   points:
   - Types of housing
   - Home vocabulary introduction
-- section: 'Граматика'
+- section: Граматика
   words: 700
   points:
   - Rooms (кухня, вітальня, спальня)
   - Furniture (стіл, стілець, диван, ліжко)
   - Appliances (холодильник, пральна машина)
   - Locative case for location
-- section: 'Практика'
+- section: Практика
   words: 450
   points:
   - Dialogues about homes
   - Room descriptions
-- section: 'Корисні вирази'
+- section: Корисні вирази
   words: 100
   points:
   - Useful home phrases
-- section: 'Підсумок'
+- section: Підсумок
   words: 100
   points:
   - Summary of vocabulary

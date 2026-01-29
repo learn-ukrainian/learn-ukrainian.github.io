@@ -1,4 +1,4 @@
-module: c1-88
+module: c1-088
 level: C1
 slug: 88-ukrainske-kino
 version: '2.0'
@@ -12,3 +12,4 @@ tags:
 vocabulary_count: 25
 build:
   last_modified: '2026-01-26'
+id: c1-088

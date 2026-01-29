@@ -1,8 +1,8 @@
-module: b2-hist-100
+module: b2-hist-103
 level: B2
 slug: mekhanizm-teroru
 version: '2.0'
-id: b2-hist-100
+id: b2-hist-103
 naturalness:
   score: 10
   status: PASS

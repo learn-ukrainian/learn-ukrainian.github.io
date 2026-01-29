@@ -1,8 +1,8 @@
-module: b2-hist-02
+module: b2-hist-002
 level: B2-HIST
 slug: scythians-sarmatians
 version: '2.0'
-id: b2-hist-02
+id: b2-hist-002
 naturalness:
   score: 10
   status: PASS

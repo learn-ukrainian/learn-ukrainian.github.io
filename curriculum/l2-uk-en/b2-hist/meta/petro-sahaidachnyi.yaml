@@ -1,8 +1,8 @@
-module: petro-sahaidachnyi
+module: b2-hist-045
 level: B2-HIST
 slug: petro-sahaidachnyi
 version: '2.0'
-id: b2-hist-45
+id: b2-hist-045
 naturalness:
   score: 9
   status: PASS

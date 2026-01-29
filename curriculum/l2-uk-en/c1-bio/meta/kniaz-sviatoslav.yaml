@@ -1,8 +1,8 @@
-module: c1-bio-02
+module: c1-bio-002
 level: C1-BIO
 slug: kniaz-sviatoslav
 version: '2.0'
-id: c1-bio-02
+id: c1-bio-002
 naturalness:
   score: 9
   status: PASS

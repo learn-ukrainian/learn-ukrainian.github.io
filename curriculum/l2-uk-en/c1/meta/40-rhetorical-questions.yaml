@@ -1,4 +1,4 @@
-module: c1-40
+module: c1-040
 level: C1
 slug: 40-rhetorical-questions
 version: '1.0'
@@ -13,3 +13,4 @@ tags:
 vocabulary_count: 25
 build:
   last_modified: '2026-01-26'
+id: c1-040

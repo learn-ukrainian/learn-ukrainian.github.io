@@ -1,8 +1,8 @@
-module: b2-hist-70
+module: b2-hist-072
 level: B2-HIST
 slug: opryshky
 version: '2.0'
-id: b2-hist-70
+id: b2-hist-072
 naturalness:
   score: 10
   status: PASS

@@ -1,8 +1,8 @@
-module: oksana-zabuzhko
+module: c1-bio-118
 level: C1-BIO
 slug: oksana-zabuzhko
 version: '2.0'
-id: c1-bio-86
+id: c1-bio-118
 naturalness:
   score: 1
   status: PENDING

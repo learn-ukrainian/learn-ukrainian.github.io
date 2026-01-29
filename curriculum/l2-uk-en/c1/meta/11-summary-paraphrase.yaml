@@ -1,8 +1,8 @@
-module: 11-summary-paraphrase
+module: c1-011
 level: C1
 slug: 11-summary-paraphrase
 version: '2.0'
-id: c1-11
+id: c1-011
 naturalness:
   score: null
   status: PENDING

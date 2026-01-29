@@ -1,4 +1,4 @@
-module: c1-64
+module: c1-064
 level: C1
 slug: 64-halychyna
 version: '2.0'
@@ -11,3 +11,4 @@ tags:
 vocabulary_count: 32
 build:
   last_modified: '2026-01-26'
+id: c1-064

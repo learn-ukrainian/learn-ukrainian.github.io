@@ -1,4 +1,4 @@
-module: c1-55
+module: c1-055
 level: C1
 slug: 55-honcharstvo-ta-rizbyarstvo
 version: '2.0'
@@ -12,3 +12,4 @@ tags:
 vocabulary_count: 32
 build:
   last_modified: '2026-01-26'
+id: c1-055

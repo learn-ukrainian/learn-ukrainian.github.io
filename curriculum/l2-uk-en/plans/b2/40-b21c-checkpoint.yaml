@@ -1,5 +1,6 @@
 module: b2-40
 level: B2
+sequence: 40
 slug: 40-b21c-checkpoint
 version: '2.0'
 title: 'Контрольна точка B2.1c: Числівники, словотвір та синтаксис'

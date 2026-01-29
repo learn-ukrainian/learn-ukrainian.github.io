@@ -1,11 +1,12 @@
 module: a2-57
 level: A2
+sequence: 57
 slug: practical-intro
 version: '2.0'
 title: Practical Intro
 subtitle: Real World Ukrainian
 content_outline:
-- section: 'Огляд'
+- section: Огляд
   words: 60
   points:
   - From theory to practice
@@ -30,12 +31,12 @@ content_outline:
   points:
   - Case confusion
   - Aspect errors
-- section: 'Інтеграційне завдання'
+- section: Інтеграційне завдання
   words: 90
   points:
   - Integration challenge
   - Apply all skills
-- section: 'Підсумок'
+- section: Підсумок
   words: 70
   points:
   - Summary and next steps

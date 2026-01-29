@@ -1,8 +1,8 @@
-module: mykola-vasylenko
+module: c1-bio-055
 level: C1-BIO
 slug: mykola-vasylenko
 version: '2.0'
-id: c1-bio-36
+id: c1-bio-055
 naturalness:
   score: 1
   status: PENDING

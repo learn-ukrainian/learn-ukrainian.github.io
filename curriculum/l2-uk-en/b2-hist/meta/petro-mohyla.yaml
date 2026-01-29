@@ -1,8 +1,8 @@
-module: petro-mohyla
+module: b2-hist-035
 level: B2
 slug: petro-mohyla
 version: '2.0'
-id: b2-hist-35
+id: b2-hist-035
 naturalness:
   score: 9
   status: PASS

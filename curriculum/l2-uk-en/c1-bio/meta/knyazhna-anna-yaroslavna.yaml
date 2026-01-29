@@ -1,8 +1,8 @@
-module: c1-bio-05
+module: c1-bio-005
 level: C1-BIO
 slug: knyazhna-anna-yaroslavna
 version: '2.0'
-id: c1-bio-05
+id: c1-bio-005
 naturalness:
   score: 10
   status: APPROVED

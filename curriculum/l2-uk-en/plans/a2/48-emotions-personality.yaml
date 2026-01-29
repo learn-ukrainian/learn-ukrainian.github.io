@@ -1,28 +1,29 @@
 module: a2-48
 level: A2
+sequence: 48
 slug: emotions-personality
 version: '2.0'
 title: Emotions and Personality
 subtitle: Describing People
 content_outline:
-- section: 'Вступ'
+- section: Вступ
   words: 150
   points:
   - Personality vocabulary introduction
   - Emotional expressions
-- section: 'Граматика'
+- section: Граматика
   words: 800
   points:
   - Personality traits (добрий, злий, щедрий)
   - Emotional states (радість, сум, злість)
   - Dative for feelings (мені сумно)
   - Character descriptions
-- section: 'Практика'
+- section: Практика
   words: 550
   points:
   - Dialogues about people
   - Character descriptions
-- section: 'Підсумок'
+- section: Підсумок
   words: 100
   points:
   - Summary of vocabulary

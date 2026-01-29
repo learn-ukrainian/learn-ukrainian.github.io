@@ -1,8 +1,8 @@
-module: symon-petliura
+module: c1-bio-067
 level: C1-BIO
 slug: symon-petliura
 version: '2.0'
-id: c1-bio-44
+id: c1-bio-067
 naturalness:
   score: 1
   status: PENDING

@@ -1,8 +1,8 @@
-module: b2-hist-125
+module: b2-hist-130
 level: B2-HIST
 slug: syntez-nezalezhnist
 version: '2.0'
-id: b2-hist-125
+id: b2-hist-130
 naturalness:
   score: 10
   status: PASS

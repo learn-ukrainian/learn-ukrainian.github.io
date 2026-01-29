@@ -1,5 +1,6 @@
 module: 22-motion-full-prefix-integration
 level: B1
+sequence: 22
 slug: 22-motion-full-prefix-integration
 version: '2.0'
 title: 'Рух: інтеграція префіксів'

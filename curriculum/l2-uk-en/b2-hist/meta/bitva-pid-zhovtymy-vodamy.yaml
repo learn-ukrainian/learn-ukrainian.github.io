@@ -1,8 +1,8 @@
-module: bitva-pid-zhovtymy-vodamy
+module: b2-hist-053
 level: B2-HIST
 slug: bitva-pid-zhovtymy-vodamy
 version: '2.0'
-id: b2-hist-53
+id: b2-hist-053
 naturalness:
   score: 9
   status: PASS

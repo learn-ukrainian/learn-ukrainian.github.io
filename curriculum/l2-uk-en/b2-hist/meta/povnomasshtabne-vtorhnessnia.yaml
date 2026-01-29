@@ -1,8 +1,8 @@
-module: b2-hist-133
+module: b2-hist-132
 level: B2-HIST
 slug: povnomasshtabne-vtorhnessnia
 version: '2.0'
-id: b2-hist-133
+id: b2-hist-132
 naturalness:
   score: 10
   status: PASS

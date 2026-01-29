@@ -1,8 +1,8 @@
-module: mykola-lysenko
+module: c1-bio-040
 level: C1-BIO
 slug: mykola-lysenko
 version: '2.0'
-id: c1-bio-23
+id: c1-bio-040
 naturalness:
   score: 1
   status: PENDING

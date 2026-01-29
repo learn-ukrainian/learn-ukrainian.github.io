@@ -1,8 +1,8 @@
-module: ivan-mazepa
+module: c1-bio-022
 level: C1-BIO
 slug: ivan-mazepa
 version: '2.0'
-id: c1-bio-12
+id: c1-bio-022
 naturalness:
   score: null
   status: PENDING

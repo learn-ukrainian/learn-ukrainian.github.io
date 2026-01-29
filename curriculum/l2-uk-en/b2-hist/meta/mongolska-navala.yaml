@@ -1,8 +1,8 @@
-module: mongolska-navala
+module: b2-hist-021
 level: B2-HIST
 slug: mongolska-navala
 version: '2.0'
-id: b2-hist-21
+id: b2-hist-021
 naturalness:
   score: 9
   status: PASS

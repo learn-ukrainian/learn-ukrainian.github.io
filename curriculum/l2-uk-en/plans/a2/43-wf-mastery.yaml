@@ -1,30 +1,31 @@
 module: a2-43
 level: A2
+sequence: 43
 slug: wf-mastery
 version: '2.0'
 title: 'Майстерня слів: Велика гра'
 subtitle: Word Formation Mastery
 content_outline:
-- section: 'Introduction / Вступ'
+- section: Introduction / Вступ
   words: 300
   points:
   - From analysis to synthesis
   - Creating new words
   - Pattern recognition
-- section: 'Presentation / Презентація'
+- section: Presentation / Презентація
   words: 250
   points:
   - The Word Architect and Derivative Chain
   - The 8 Super-Roots Review
   - The Mastery Matrix
   - Anatomy of a Complex Word
-- section: 'Practice / Практика'
+- section: Practice / Практика
   words: 150
   points:
   - Reverse Engineering
   - Word Architect Challenge
   - Logic Synthesis
-- section: 'Dialogues / Діалоги'
+- section: Dialogues / Діалоги
   words: 200
   points:
   - At the Linguistic Club conversation

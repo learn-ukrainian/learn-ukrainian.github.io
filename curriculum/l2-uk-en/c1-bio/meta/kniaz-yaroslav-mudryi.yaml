@@ -1,8 +1,8 @@
-module: kniaz-yaroslav-mudryi
+module: c1-bio-004
 level: C1-BIO
 slug: kniaz-yaroslav-mudryi
 version: '2.0'
-id: c1-bio-04
+id: c1-bio-004
 naturalness:
   score: 10
   status: PASS

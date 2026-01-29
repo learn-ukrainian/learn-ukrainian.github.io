@@ -1,8 +1,8 @@
-module: kyrylo-trylovskyi
+module: c1-bio-051
 level: C1-BIO
 slug: kyrylo-trylovskyi
 version: '2.0'
-id: c1-bio-32
+id: c1-bio-051
 naturalness:
   score: 1
   status: PENDING

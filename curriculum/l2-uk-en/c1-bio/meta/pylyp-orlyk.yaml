@@ -1,8 +1,8 @@
-module: pylyp-orlyk
+module: c1-bio-024
 level: C1-BIO
 slug: pylyp-orlyk
 version: '2.0'
-id: c1-bio-14
+id: c1-bio-024
 naturalness:
   score: null
   status: PENDING

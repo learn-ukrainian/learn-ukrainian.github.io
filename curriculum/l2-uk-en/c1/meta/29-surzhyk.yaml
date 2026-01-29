@@ -1,8 +1,8 @@
-module: 29-surzhyk
+module: c1-029
 level: C1
 slug: 29-surzhyk
 version: '2.0'
-id: c1-29
+id: c1-029
 naturalness:
   score: null
   status: PENDING

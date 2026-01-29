@@ -1,8 +1,8 @@
-module: deportatsii-ukraintsiv
+module: b2-hist-110
 level: B2-HIST
 slug: deportatsii-ukraintsiv
 version: '2.0'
-title: "Депортації українців 1944-1951"
+title: Депортації українців 1944-1951
 subtitle: Deportations of Ukrainians 1944-1951
 register: публіцистичний
 duration: 150
@@ -34,3 +34,4 @@ content_outline:
   words: 500
 - section: 'Підсумок: Спадщина травми'
   words: 500
+id: b2-hist-110

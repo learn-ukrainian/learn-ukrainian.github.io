@@ -1,4 +1,4 @@
-module: c1-41
+module: c1-041
 level: C1
 slug: 41-degrees-of-certainty
 version: '1.0'
@@ -13,3 +13,4 @@ tags:
 vocabulary_count: 36
 build:
   last_modified: '2026-01-26'
+id: c1-041

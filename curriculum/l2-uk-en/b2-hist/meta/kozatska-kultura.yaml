@@ -1,8 +1,8 @@
-module: kozatska-kultura
+module: b2-hist-047
 level: B2-HIST
 slug: kozatska-kultura
 version: '2.0'
-id: b2-hist-47
+id: b2-hist-047
 naturalness:
   score: 9
   status: PASS

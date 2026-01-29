@@ -1,30 +1,31 @@
 module: a2-50
 level: A2
+sequence: 50
 slug: technology-media
 version: '2.0'
 title: Technology and Media
 subtitle: Digital World
 content_outline:
-- section: 'Вступ'
+- section: Вступ
   words: 175
   points:
   - Technology in daily life
   - Digital vocabulary
   - Internet culture
-- section: 'Граматика'
+- section: Граматика
   words: 500
   points:
   - Devices (комп'ютер, ноутбук, планшет, смартфон)
   - Internet vocabulary (вебсайт, посилання, пароль)
   - Media and content (новини, стаття, блог, подкаст)
   - Digital verbs (шукати, завантажувати, публікувати)
-- section: 'Практика'
+- section: Практика
   words: 570
   points:
   - Dialogues about remote work
   - Story about becoming a blogger
   - Story about grandma learning tech
-- section: 'Підсумок'
+- section: Підсумок
   words: 105
   points:
   - Summary of vocabulary

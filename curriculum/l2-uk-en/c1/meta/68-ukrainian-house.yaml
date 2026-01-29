@@ -1,4 +1,4 @@
-module: c1-68
+module: c1-068
 level: C1
 slug: 68-ukrainian-house
 version: '1.0'
@@ -13,3 +13,4 @@ vocabulary_count: 30
 vocab_count: 30
 build:
   last_modified: '2026-01-26'
+id: c1-068

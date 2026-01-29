@@ -1,8 +1,8 @@
-module: aneksiia-krymu
+module: b2-hist-127
 level: B2-HIST
 slug: aneksiia-krymu
 version: '2.0'
-id: b2-hist-128
+id: b2-hist-127
 naturalness:
   score: 9
   status: PASS

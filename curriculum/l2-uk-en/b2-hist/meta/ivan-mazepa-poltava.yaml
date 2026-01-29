@@ -1,8 +1,8 @@
-module: b2-hist-66
+module: b2-hist-066
 level: B2-HIST
 slug: ivan-mazepa-poltava
 version: '2.0'
-id: b2-hist-66
+id: b2-hist-066
 naturalness:
   score: 10
   status: PASS

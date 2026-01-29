@@ -1,4 +1,4 @@
-module: c1-52
+module: c1-052
 level: C1
 slug: 52-rehionalni-tantsi
 version: '2.0'
@@ -11,3 +11,4 @@ tags:
 vocabulary_count: 28
 build:
   last_modified: '2026-01-26'
+id: c1-052

@@ -1,8 +1,8 @@
-module: ruina-i
+module: b2-hist-058
 level: B2-HIST
 slug: ruina-i
 version: '2.0'
-id: b2-hist-58
+id: b2-hist-058
 naturalness:
   score: 9
   status: PASS

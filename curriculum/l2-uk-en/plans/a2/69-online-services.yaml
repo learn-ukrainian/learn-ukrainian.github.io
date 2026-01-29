@@ -1,34 +1,35 @@
 module: a2-69
 level: A2
+sequence: 69
 slug: online-services
 version: '2.0'
 title: Online Services
 subtitle: Apps and Delivery
 content_outline:
-- section: 'Introduction (Вступ)'
+- section: Introduction (Вступ)
   words: 155
   points:
   - Online services in Ukraine
   - Popular apps
-- section: 'Presentation (Презентація)'
+- section: Presentation (Презентація)
   words: 380
   points:
   - Service vocabulary
   - замовлення, кошик, доставка
-- section: 'Practice (Практика)'
+- section: Practice (Практика)
   words: 35
   points:
   - Order food delivery
-- section: 'Dialogues (Діалоги)'
+- section: Dialogues (Діалоги)
   words: 165
   points:
   - Customer support conversation
   - App interactions
-- section: 'Narrative (Розповідь)'
+- section: Narrative (Розповідь)
   words: 310
   points:
   - Online services story
-- section: 'Need More Practice?'
+- section: Need More Practice?
   words: 45
   points:
   - Summary and links

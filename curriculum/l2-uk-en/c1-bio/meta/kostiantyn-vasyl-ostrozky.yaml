@@ -1,8 +1,8 @@
-module: c1-bio-14
+module: c1-bio-014
 level: C1-BIO
 slug: kostiantyn-vasyl-ostrozky
 version: '2.0'
-id: c1-bio-kostiantyn-vasyl-ostrozky
+id: c1-bio-014
 naturalness:
   score: 10
   status: PASS

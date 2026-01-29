@@ -1,8 +1,8 @@
-module: c1-bio-11
+module: c1-bio-011
 level: C1-BIO
 slug: kostiantyn-ostrozky-elder
 version: '2.0'
-id: c1-bio-kostiantyn-ostrozky-elder
+id: c1-bio-011
 naturalness:
   score: 10
   status: PASS

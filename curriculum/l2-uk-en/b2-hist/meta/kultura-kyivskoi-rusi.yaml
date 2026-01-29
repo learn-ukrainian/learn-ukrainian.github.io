@@ -1,8 +1,8 @@
-module: kultura-kyivskoi-rusi
+module: b2-hist-016
 level: B2-HIST
 slug: kultura-kyivskoi-rusi
 version: '1.0'
-id: b2-hist-16
+id: b2-hist-016
 naturalness:
   score: 10
   status: PASS

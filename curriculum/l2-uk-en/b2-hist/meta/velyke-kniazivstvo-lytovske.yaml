@@ -1,8 +1,8 @@
-module: velyke-kniazivstvo-lytovske
+module: b2-hist-029
 level: B2-HIST
 slug: velyke-kniazivstvo-lytovske
 version: '2.0'
-id: b2-hist-28
+id: b2-hist-029
 naturalness:
   score: 9
   status: PASS

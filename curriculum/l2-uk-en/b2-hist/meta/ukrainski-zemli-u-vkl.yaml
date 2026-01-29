@@ -1,8 +1,8 @@
-module: ukrainski-zemli-u-vkl
+module: b2-hist-030
 level: B2-HIST
 slug: ukrainski-zemli-u-vkl
 version: '2.0'
-id: b2-hist-26
+id: b2-hist-030
 naturalness:
   score: 9
   status: PASS

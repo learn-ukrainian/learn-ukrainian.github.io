@@ -1,8 +1,8 @@
-module: b2-hist-01
+module: b2-hist-001
 level: B2-HIST
 slug: trypillian-civilization
 version: '2.0'
-id: b2-hist-01
+id: b2-hist-001
 naturalness:
   score: 10
   status: PASS

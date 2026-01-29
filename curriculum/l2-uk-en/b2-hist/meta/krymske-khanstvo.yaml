@@ -1,8 +1,8 @@
-module: krymske-khanstvo
+module: b2-hist-027
 level: B2-HIST
 slug: krymske-khanstvo
 version: '2.0'
-id: b2-hist-27
+id: b2-hist-027
 naturalness:
   score: 9
   status: PASS

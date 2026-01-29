@@ -1,4 +1,4 @@
-module: c1-37
+module: c1-037
 level: C1
 slug: 37-irony-sarcasm
 version: '1.0'
@@ -13,3 +13,4 @@ tags:
 vocabulary_count: 25
 build:
   last_modified: '2026-01-26'
+id: c1-037

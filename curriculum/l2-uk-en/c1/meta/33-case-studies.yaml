@@ -1,8 +1,8 @@
-module: 33-case-studies
+module: c1-033
 level: C1
 slug: 33-case-studies
 version: '2.0'
-id: c1-33
+id: c1-033
 naturalness:
   score: null
   status: PENDING

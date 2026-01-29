@@ -1,8 +1,8 @@
-module: b2-hist-86
+module: b2-hist-086
 level: B2-HIST
 slug: syntez-imperska-doba
 version: '2.0'
-id: b2-hist-86
+id: b2-hist-086
 naturalness:
   score: 10
   status: PASS

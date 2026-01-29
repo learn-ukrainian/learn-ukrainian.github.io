@@ -1,8 +1,8 @@
-module: 09-thesis-development
+module: c1-009
 level: C1
 slug: 09-thesis-development
 version: '2.0'
-id: c1-09
+id: c1-009
 naturalness:
   score: null
   status: PENDING

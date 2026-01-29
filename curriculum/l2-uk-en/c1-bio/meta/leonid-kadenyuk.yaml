@@ -1,8 +1,8 @@
-module: leonid-kadenyuk
+module: c1-bio-112
 level: C1-BIO
 slug: leonid-kadenyuk
 version: '2.0'
-id: c1-bio-80
+id: c1-bio-112
 naturalness:
   score: 1
   status: PENDING

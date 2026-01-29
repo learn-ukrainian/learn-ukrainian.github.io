@@ -1,5 +1,6 @@
 module: c1-38
 level: C1
+sequence: 38
 slug: 38-hyperbole-litotes
 version: '2.0'
 title: 'Гіпербола та літота: Гра масштабів'

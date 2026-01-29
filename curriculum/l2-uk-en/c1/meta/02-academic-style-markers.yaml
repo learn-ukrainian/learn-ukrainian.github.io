@@ -1,8 +1,8 @@
-module: 02-academic-style-markers
+module: c1-002
 level: C1
 slug: 02-academic-style-markers
 version: '2.0'
-id: c1-02
+id: c1-002
 naturalness:
   score: null
   status: PENDING

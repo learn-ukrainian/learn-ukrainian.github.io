@@ -1,8 +1,8 @@
-module: b2-hist-74
+module: b2-hist-074
 level: B2-HIST
 slug: kinets-hetmanshchyny
 version: '2.0'
-id: b2-hist-74
+id: b2-hist-074
 naturalness:
   score: 10
   status: PASS

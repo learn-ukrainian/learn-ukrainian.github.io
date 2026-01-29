@@ -1,28 +1,29 @@
 module: a2-51
 level: A2
+sequence: 51
 slug: hobbies-leisure
 version: '2.0'
 title: Hobbies and Leisure
 subtitle: What We Do for Fun
 content_outline:
-- section: 'Вступ'
+- section: Вступ
   words: 175
   points:
   - How Ukrainians spend free time
   - Hobbies vocabulary overview
-- section: 'Граматика'
+- section: Граматика
   words: 500
   points:
   - Indoor hobbies (читати, малювати, грати на гітарі)
   - Outdoor activities (грати у футбол, займатися спортом)
   - Social activities (зустрічатися з друзями)
   - Frequency expressions (часто, рідко, іноді)
-- section: 'Практика'
+- section: Практика
   words: 650
   points:
   - Dialogues about weekend plans
   - Describe hobbies and interests
-- section: 'Підсумок'
+- section: Підсумок
   words: 105
   points:
   - Summary of vocabulary

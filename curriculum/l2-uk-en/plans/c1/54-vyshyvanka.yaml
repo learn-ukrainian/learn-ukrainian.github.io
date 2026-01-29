@@ -1,5 +1,6 @@
 module: c1-54
 level: C1
+sequence: 54
 slug: 54-vyshyvanka
 version: '2.0'
 title: 'Вишиванка: Зашифрована доля'

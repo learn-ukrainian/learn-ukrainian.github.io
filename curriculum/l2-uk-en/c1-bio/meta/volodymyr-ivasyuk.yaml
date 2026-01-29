@@ -1,8 +1,8 @@
-module: volodymyr-ivasyuk
+module: c1-bio-110
 level: C1-BIO
 slug: volodymyr-ivasyuk
 version: '2.0'
-id: c1-bio-79
+id: c1-bio-110
 naturalness:
   score: 1
   status: PENDING

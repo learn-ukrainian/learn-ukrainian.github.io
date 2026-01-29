@@ -1,21 +1,22 @@
 module: kinets-hetmanshchyny
 level: B2-HIST
+sequence: 74
 slug: kinets-hetmanshchyny
 version: '2.0'
-title: 'Кінець Гетьманщини'
-subtitle: 'The End of the Hetmanate'
+title: Кінець Гетьманщини
+subtitle: The End of the Hetmanate
 content_outline:
 - section: Вступ
   words: 200
 - section: Читання
   words: 2900
-- section: 'Деколонізаційний погляд'
+- section: Деколонізаційний погляд
   words: 150
-- section: 'Первинні джерела'
+- section: Первинні джерела
   words: 450
 - section: Підсумок
   words: 150
-- section: 'Потрібно більше практики?'
+- section: Потрібно більше практики?
   words: 150
 word_target: 4000
 focus: history

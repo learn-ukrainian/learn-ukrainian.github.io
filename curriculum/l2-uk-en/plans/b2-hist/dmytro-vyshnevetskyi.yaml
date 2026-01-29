@@ -1,5 +1,6 @@
 module: dmytro-vyshnevetskyi
 level: B2-HIST
+sequence: 43
 slug: dmytro-vyshnevetskyi
 version: '2.0'
 title: 'Дмитро Вишневецький: Перший кошовий'
@@ -54,7 +55,8 @@ activity_hints:
 focus: history
 pedagogy: CBI
 objectives:
-- Learner can describe the role of Dmytro Vyshnevetskyi in the founding of the first Sich
+- Learner can describe the role of Dmytro Vyshnevetskyi in the founding of the first
+  Sich
 - Learner can analyze the geopolitical significance of the Khortytsia fortress
 - Learner can understand the legendary status of Baida in Ukrainian folklore
 grammar:

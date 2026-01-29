@@ -1,11 +1,12 @@
 module: a2-44
 level: A2
+sequence: 44
 slug: checkpoint-word-formation
 version: '2.0'
 title: 'Checkpoint: Word Formation'
 subtitle: Review and Mastery Assessment
 content_outline:
-- section: 'Огляд'
+- section: Огляд
   words: 55
   points:
   - Skills overview
@@ -34,12 +35,12 @@ content_outline:
   - Core root meaning
   - Root recognition practice
   - Extended root families
-- section: 'Integration Challenge'
+- section: Integration Challenge
   words: 55
   points:
   - Word analysis practice
   - Common mistakes
-- section: 'Підсумок'
+- section: Підсумок
   words: 60
   points:
   - Summary table

@@ -1,4 +1,4 @@
-module: 01-how-to-talk-about-grammar
+module: b1-01
 level: B1
 slug: 01-how-to-talk-about-grammar
 version: '1.0'
@@ -9,10 +9,9 @@ naturalness:
 duration: 75
 transliteration: none
 tags:
-  - grammar
-  - metalanguage
-  - terminology
-  - bridge
+- grammar
+- metalanguage
+- terminology
+- bridge
 build:
   last_modified: '2026-01-26'
-

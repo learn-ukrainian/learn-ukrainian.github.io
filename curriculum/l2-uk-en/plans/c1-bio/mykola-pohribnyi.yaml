@@ -1,5 +1,6 @@
 module: mykola-pohribnyi
 level: C1-BIO
+sequence: 101
 slug: mykola-pohribnyi
 version: '2.0'
 title: 'Микола Погрібний: Українська редакторська школа'

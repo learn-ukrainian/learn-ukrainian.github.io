@@ -1,4 +1,4 @@
-module: shistdesiatnyky
+module: b2-hist-114
 level: B2
 slug: shistdesiatnyky
 version: '2.0'
@@ -7,3 +7,4 @@ track: history
 build:
   last_modified: '2026-01-26'
 phase: HIST.11 [Post-War Soviet Ukraine]
+id: b2-hist-114

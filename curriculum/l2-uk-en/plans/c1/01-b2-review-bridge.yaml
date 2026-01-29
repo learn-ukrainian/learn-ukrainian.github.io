@@ -1,5 +1,6 @@
 module: 01-b2-review-bridge
 level: C1
+sequence: 1
 slug: 01-b2-review-bridge
 version: '2.0'
 title: Огляд B2 та міст до C1

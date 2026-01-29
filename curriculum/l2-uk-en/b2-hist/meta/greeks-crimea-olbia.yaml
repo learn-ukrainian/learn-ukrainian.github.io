@@ -1,8 +1,8 @@
-module: b2-hist-03
+module: b2-hist-003
 level: B2-HIST
 slug: greeks-crimea-olbia
 version: '2.0'
-id: b2-hist-03
+id: b2-hist-003
 naturalness:
   score: 10
   status: PASS

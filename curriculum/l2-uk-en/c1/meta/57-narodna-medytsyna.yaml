@@ -1,4 +1,4 @@
-module: c1-57
+module: c1-057
 level: C1
 slug: 57-narodna-medytsyna
 version: '2.0'
@@ -11,3 +11,4 @@ tags:
 vocabulary_count: 30
 build:
   last_modified: '2026-01-26'
+id: c1-057

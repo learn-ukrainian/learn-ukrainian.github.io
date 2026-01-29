@@ -1,8 +1,8 @@
-module: b2-hist-137
+module: b2-hist-139
 level: B2-HIST
 slug: zlochyny-stiikist
 version: '2.0'
-id: b2-hist-137
+id: b2-hist-139
 naturalness:
   score: 10
   status: PASS

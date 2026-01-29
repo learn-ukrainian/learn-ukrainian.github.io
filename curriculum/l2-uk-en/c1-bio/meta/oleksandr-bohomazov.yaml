@@ -1,8 +1,8 @@
-module: oleksandr-bohomazov
+module: c1-bio-069
 level: C1-BIO
 slug: oleksandr-bohomazov
 version: '2.0'
-id: c1-bio-50
+id: c1-bio-069
 naturalness:
   score: 1
   status: PENDING

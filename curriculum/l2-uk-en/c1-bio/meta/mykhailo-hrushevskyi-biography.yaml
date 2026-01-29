@@ -1,8 +1,8 @@
-module: mykhailo-hrushevskyi-biography
+module: c1-bio-056
 level: C1-BIO
 slug: mykhailo-hrushevskyi-biography
 version: '2.0'
-id: c1-bio-35
+id: c1-bio-056
 naturalness:
   score: 1
   status: PENDING

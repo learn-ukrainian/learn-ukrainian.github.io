@@ -1,32 +1,33 @@
 module: a2-59
 level: A2
+sequence: 59
 slug: doctor-visit
 version: '2.0'
 title: At the Doctor
 subtitle: Medical Consultation
 content_outline:
-- section: 'Вступ'
+- section: Вступ
   words: 80
   points:
   - Healthcare system basics
   - Medical vocabulary overview
-- section: 'Презентація'
+- section: Презентація
   words: 295
   points:
   - Making appointments
   - Describing symptoms
   - Doctor's questions
-- section: 'Practice (Практика)'
+- section: Practice (Практика)
   words: 345
   points:
   - Medical dialogue exercises
   - Complete consultation practice
-- section: 'Narrative (Розповідь)'
+- section: Narrative (Розповідь)
   words: 205
   points:
   - Story about doctor visit
   - Diagnosis and treatment
-- section: 'Need More Practice?'
+- section: Need More Practice?
   words: 30
   points:
   - Summary and key phrases

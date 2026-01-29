@@ -1,8 +1,8 @@
-module: volodymyr-vernadskyi
+module: c1-bio-048
 level: C1-BIO
 slug: volodymyr-vernadskyi
 version: '2.0'
-id: c1-bio-99
+id: c1-bio-048
 naturalness:
   score: 1
   status: PENDING

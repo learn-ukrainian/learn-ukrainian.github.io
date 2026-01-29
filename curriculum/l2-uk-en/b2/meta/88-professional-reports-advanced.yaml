@@ -1,8 +1,8 @@
-module: professional-reports-advanced
+module: b2-88
 level: B2
 slug: professional-reports-advanced
 version: '2.0'
-id: 88
+id: b2-88
 naturalness:
   score: 8
   status: PASS

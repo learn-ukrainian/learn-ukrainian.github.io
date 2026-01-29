@@ -1,4 +1,4 @@
-module: syntez-dvokniazivstvo
+module: b2-hist-028
 level: b2-hist
 slug: syntez-dvokniazivstvo
 version: '2.0'
@@ -23,3 +23,4 @@ vocabulary_count: 74
 build:
   last_modified: '2026-01-26'
 phase: B2.3 [Ukrainian History] Synthesis
+id: b2-hist-028

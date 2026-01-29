@@ -1,5 +1,6 @@
 module: b1-80
 level: B1
+sequence: 80
 slug: active-lifestyle
 version: '2.0'
 title: Активний відпочинок

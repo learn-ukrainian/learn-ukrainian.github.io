@@ -1,11 +1,12 @@
 module: a2-70
 level: A2
+sequence: 70
 slug: a2-final-exam
 version: '2.0'
 title: A2 Final Exam
 subtitle: Level Completion
 content_outline:
-- section: 'Overview (Огляд)'
+- section: Overview (Огляд)
   words: 130
   points:
   - Exam format overview
@@ -30,12 +31,12 @@ content_outline:
   points:
   - Word formation
   - Roots and prefixes
-- section: 'Integration Challenge (Інтеграційне завдання)'
+- section: Integration Challenge (Інтеграційне завдання)
   words: 365
   points:
   - Combined skills dialogue
   - Cultural moments
-- section: 'Need More Practice?'
+- section: Need More Practice?
   words: 80
   points:
   - Transition to B1

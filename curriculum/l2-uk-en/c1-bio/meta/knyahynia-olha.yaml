@@ -1,8 +1,8 @@
-module: c1-bio-01
+module: c1-bio-001
 level: C1-BIO
 slug: knyahynia-olha
 version: '2.0'
-id: c1-bio-01
+id: c1-bio-001
 naturalness:
   score: 9
   status: PASS

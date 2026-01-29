@@ -1,8 +1,8 @@
-module: kateryna-yushchenko
+module: c1-bio-100
 level: C1-BIO
 slug: kateryna-yushchenko
 version: '2.0'
-id: c1-bio-70
+id: c1-bio-100
 naturalness:
   score: 1
   status: PENDING

@@ -1,8 +1,8 @@
-module: levko-lukyanenko
+module: c1-bio-102
 level: C1-BIO
 slug: levko-lukyanenko
 version: '2.0'
-id: c1-bio-71
+id: c1-bio-102
 naturalness:
   score: 1
   status: PENDING

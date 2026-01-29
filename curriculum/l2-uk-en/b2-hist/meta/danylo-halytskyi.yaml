@@ -1,8 +1,8 @@
-module: danylo-halytskyi
+module: b2-hist-023
 level: B2-HIST
 slug: danylo-halytskyi
 version: '2.0'
-id: b2-hist-23
+id: b2-hist-023
 naturalness:
   score: 9
   status: PASS

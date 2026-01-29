@@ -1,8 +1,8 @@
-module: b2-hist-118
+module: b2-hist-120
 level: B2-HIST
 slug: rukh
 version: '2.0'
-id: b2-hist-118
+id: b2-hist-120
 naturalness:
   score: 10
   status: PASS

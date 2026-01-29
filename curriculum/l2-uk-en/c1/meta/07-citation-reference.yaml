@@ -1,8 +1,8 @@
-module: 07-citation-reference
+module: c1-007
 level: C1
 slug: 07-citation-reference
 version: '2.0'
-id: c1-07
+id: c1-007
 naturalness:
   score: null
   status: PENDING

@@ -1,4 +1,4 @@
-module: hryhorii-skovoroda
+module: b2-hist-068
 level: B2
 slug: hryhorii-skovoroda
 version: '2.0'
@@ -11,3 +11,4 @@ transliteration: none
 build:
   last_modified: '2026-01-26'
 phase: HIST.7 [Mazepa & End of Hetmanate]
+id: b2-hist-068

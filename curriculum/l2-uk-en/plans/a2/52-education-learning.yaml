@@ -1,28 +1,29 @@
 module: a2-52
 level: A2
+sequence: 52
 slug: education-learning
 version: '2.0'
 title: Education and Learning
 subtitle: School and University
 content_outline:
-- section: 'Вступ'
+- section: Вступ
   words: 180
   points:
   - Education system overview
   - School vs university
-- section: 'Граматика'
+- section: Граматика
   words: 385
   points:
   - School subjects (математика, історія, фізика)
   - Learning verbs (вчитися, вивчати)
   - Academic life (студент, лекція, семінар)
   - Grades and exams (оцінка, іспит, залік)
-- section: 'Практика'
+- section: Практика
   words: 480
   points:
   - Dialogues about education
   - Describe studies and exams
-- section: 'Підсумок'
+- section: Підсумок
   words: 105
   points:
   - Summary of vocabulary

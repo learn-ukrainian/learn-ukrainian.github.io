@@ -1,8 +1,8 @@
-module: khozary-i-sloviany
+module: b2-hist-007
 level: B2-HIST
 slug: khozary-i-sloviany
 version: '2.0'
-id: b2-hist-07
+id: b2-hist-007
 naturalness:
   score: 9
   status: PASS

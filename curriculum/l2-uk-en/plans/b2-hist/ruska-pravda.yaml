@@ -1,5 +1,6 @@
 module: ruska-pravda
 level: B2-HIST
+sequence: 13
 slug: ruska-pravda
 version: '2.0'
 title: 'Руська Правда: Перший законодавчий кодекс'

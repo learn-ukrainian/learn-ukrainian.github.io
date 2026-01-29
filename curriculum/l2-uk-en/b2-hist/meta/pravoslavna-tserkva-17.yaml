@@ -1,4 +1,4 @@
-module: pravoslavna-tserkva-17
+module: b2-hist-034
 level: B2
 slug: pravoslavna-tserkva-17
 version: '2.0'
@@ -14,3 +14,4 @@ vocabulary_count: 24
 build:
   last_modified: '2026-01-26'
 phase: HIST.4 [Lithuanian-Polish Era]
+id: b2-hist-034

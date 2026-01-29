@@ -1,8 +1,8 @@
-module: b2-hist-90
+module: b2-hist-090
 level: B2-HIST
 slug: tsentralna-rada
 version: '2.0'
-id: b2-hist-90
+id: b2-hist-090
 naturalness:
   score: 10
   status: PASS

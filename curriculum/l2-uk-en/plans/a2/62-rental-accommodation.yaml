@@ -1,45 +1,46 @@
 module: a2-62
 level: A2
+sequence: 62
 slug: rental-accommodation
 version: '2.0'
 title: Rental Accommodation
 subtitle: Finding an Apartment
 content_outline:
-- section: 'Introduction'
+- section: Introduction
   words: 130
   points:
   - Rental market overview
   - Finding apartments
-- section: 'Presentation'
+- section: Presentation
   words: 50
   points:
   - Rental vocabulary intro
-- section: 'Reading Context'
+- section: Reading Context
   words: 95
   points:
   - здається, оренда, депозит
   - Room descriptions
-- section: 'Viewing Dialogue'
+- section: Viewing Dialogue
   words: 155
   points:
   - Asking about features
   - меблі, ремонт, техніка
-- section: 'Utilities Review'
+- section: Utilities Review
   words: 90
   points:
   - комунальні послуги
   - газ, вода, електрика
-- section: 'Agreement Insight'
+- section: Agreement Insight
   words: 130
   points:
   - договір оренди
   - Terms and conditions
-- section: 'Practice'
+- section: Practice
   words: 105
   points:
   - Inquire about apartment
   - Discuss terms
-- section: 'Narrative'
+- section: Narrative
   words: 180
   points:
   - Rental story
@@ -66,10 +67,8 @@ activity_hints:
   focus: Rental vocabulary
   items: 25
 - type: reading
-  focus: Understand rental ads
-  items: 10
-  focus: Apartment viewing
   focus: Negotiate rental terms
+  items: 10
 focus: practical
 pedagogy: PPP
 prerequisites:

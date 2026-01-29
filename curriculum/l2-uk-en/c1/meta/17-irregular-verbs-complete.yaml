@@ -1,8 +1,8 @@
-module: 17-irregular-verbs-complete
+module: c1-017
 level: C1
 slug: 17-irregular-verbs-complete
 version: '2.0'
-id: c1-17
+id: c1-017
 naturalness:
   score: null
   status: PENDING

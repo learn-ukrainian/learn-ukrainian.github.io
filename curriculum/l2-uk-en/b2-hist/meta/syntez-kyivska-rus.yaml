@@ -1,8 +1,8 @@
-module: b2-hist-20
+module: b2-hist-020
 level: B2-HIST
 slug: syntez-kyivska-rus
 version: '1.0'
-id: b2-hist-20
+id: b2-hist-020
 naturalness:
   score: 9
   status: PASS

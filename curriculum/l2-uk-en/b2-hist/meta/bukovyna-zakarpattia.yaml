@@ -1,4 +1,4 @@
-module: bukovyna-zakarpattia
+module: b2-hist-037
 level: B2
 slug: bukovyna-zakarpattia
 version: '2.0'
@@ -18,3 +18,4 @@ vocabulary_count: 30
 build:
   last_modified: '2026-01-26'
 phase: B2.3a [Українська історія]
+id: b2-hist-037

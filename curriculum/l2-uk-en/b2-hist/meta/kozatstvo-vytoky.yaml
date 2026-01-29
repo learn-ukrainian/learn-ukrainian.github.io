@@ -1,8 +1,8 @@
-module: b2-hist-41
+module: b2-hist-041
 level: B2-HIST
 slug: kozatstvo-vytoky
 version: '2.0'
-id: b2-hist-41
+id: b2-hist-041
 naturalness:
   score: 9
   status: PASS

@@ -1,8 +1,8 @@
-module: volodymyr-velykii
+module: c1-bio-003
 level: C1-BIO
 slug: volodymyr-velykii
 version: '2.0'
-id: c1-bio-03
+id: c1-bio-003
 naturalness:
   score: 10
   status: PASS

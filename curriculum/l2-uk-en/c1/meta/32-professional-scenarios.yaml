@@ -1,8 +1,8 @@
-module: 32-professional-scenarios
+module: c1-032
 level: C1
 slug: 32-professional-scenarios
 version: '2.0'
-id: c1-32
+id: c1-032
 naturalness:
   score: null
   status: PENDING

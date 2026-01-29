@@ -1,8 +1,8 @@
-module: borys-hrinchenko
+module: c1-bio-049
 level: C1-BIO
 slug: borys-hrinchenko
 version: '2.0'
-id: c1-bio-30
+id: c1-bio-049
 naturalness:
   score: 1
   status: PENDING

@@ -1,8 +1,8 @@
-module: borys-paton
+module: c1-bio-098
 level: C1-BIO
 slug: borys-paton
 version: '2.0'
-id: c1-bio-113
+id: c1-bio-098
 naturalness:
   score: 1
   status: PENDING

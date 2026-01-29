@@ -1,8 +1,8 @@
-module: 15-oral-presentations
+module: c1-015
 level: C1
 slug: 15-oral-presentations
 version: '2.0'
-id: c1-15
+id: c1-015
 naturalness:
   score: null
   status: PENDING

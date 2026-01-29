@@ -1,8 +1,8 @@
-module: 27-global-context
+module: c1-027
 level: C1
 slug: 27-global-context
 version: '2.0'
-id: c1-27
+id: c1-027
 naturalness:
   score: null
   status: PENDING

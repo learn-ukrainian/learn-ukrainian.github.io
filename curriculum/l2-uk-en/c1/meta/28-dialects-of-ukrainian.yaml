@@ -1,8 +1,8 @@
-module: 28-dialects-of-ukrainian
+module: c1-028
 level: C1
 slug: 28-dialects-of-ukrainian
 version: '2.0'
-id: c1-28
+id: c1-028
 naturalness:
   score: null
   status: PENDING

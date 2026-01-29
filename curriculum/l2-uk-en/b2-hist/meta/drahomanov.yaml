@@ -1,4 +1,4 @@
-module: b2-hist-84
+module: b2-hist-084
 level: B2-HIST
 slug: drahomanov
 version: '2.0'
@@ -8,29 +8,30 @@ status: draft
 naturalness:
   score: 10
   status: PASS
-  feedback: "Academic/Political register appropriate for subject."
+  feedback: Academic/Political register appropriate for subject.
 naturalness_score: 10
-naturalness_feedback: "Academic/Political register appropriate for subject."
+naturalness_feedback: Academic/Political register appropriate for subject.
 audio: false
 complexity:
-  - b2-hist
+- b2-hist
 tags:
-  - history
-  - politics
-  - 19th-century
-timestamp: 2026-01-27T23:30:00Z
-transliteration: "none"
+- history
+- politics
+- 19th-century
+timestamp: 2026-01-27 23:30:00+00:00
+transliteration: none
 content_outline:
-  - section: 'Вступ: Голос української політичної думки'
-    words: 400
-  - section: 'Біографія та становлення'
-    words: 800
-  - section: 'Політичні ідеї'
-    words: 1000
-  - section: 'Первинні джерела'
-    words: 800
-  - section: 'Деколонізаційний погляд'
-    words: 500
-  - section: 'Підсумок: Спадщина Драгоманова'
-    words: 500
+- section: 'Вступ: Голос української політичної думки'
+  words: 400
+- section: Біографія та становлення
+  words: 800
+- section: Політичні ідеї
+  words: 1000
+- section: Первинні джерела
+  words: 800
+- section: Деколонізаційний погляд
+  words: 500
+- section: 'Підсумок: Спадщина Драгоманова'
+  words: 500
 ignore_vocab_check: false
+id: b2-hist-084

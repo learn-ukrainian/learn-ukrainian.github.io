@@ -1,8 +1,8 @@
-module: les-kurbas
+module: c1-bio-077
 level: C1-BIO
 slug: les-kurbas
 version: '2.0'
-id: c1-bio-57
+id: c1-bio-077
 naturalness:
   score: 1
   status: PENDING

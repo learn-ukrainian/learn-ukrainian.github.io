@@ -1,8 +1,8 @@
-module: 19-practice-ii-article-critique
+module: c1-019
 level: C1
 slug: 19-practice-ii-article-critique
 version: '2.0'
-id: c1-19
+id: c1-019
 naturalness:
   score: null
   status: PENDING

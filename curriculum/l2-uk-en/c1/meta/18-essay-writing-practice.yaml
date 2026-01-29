@@ -1,8 +1,8 @@
-module: 18-essay-writing-practice
+module: c1-018
 level: C1
 slug: 18-essay-writing-practice
 version: '2.0'
-id: c1-18
+id: c1-018
 naturalness:
   score: null
   status: PENDING

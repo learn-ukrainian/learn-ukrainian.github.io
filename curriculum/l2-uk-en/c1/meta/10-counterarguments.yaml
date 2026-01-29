@@ -1,8 +1,8 @@
-module: 10-counterarguments
+module: c1-010
 level: C1
 slug: 10-counterarguments
 version: '2.0'
-id: c1-10
+id: c1-010
 naturalness:
   score: null
   status: PENDING

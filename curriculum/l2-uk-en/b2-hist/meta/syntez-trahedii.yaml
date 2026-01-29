@@ -1,8 +1,8 @@
-module: b2-hist-110
+module: b2-hist-108
 level: B2-HIST
 slug: syntez-trahedii
 version: '2.0'
-id: b2-hist-110
+id: b2-hist-108
 naturalness:
   score: 10
   status: PASS

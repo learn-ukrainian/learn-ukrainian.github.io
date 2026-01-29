@@ -1,8 +1,8 @@
-module: 03-research-verbs
+module: c1-003
 level: C1
 slug: 03-research-verbs
 version: '2.0'
-id: c1-03
+id: c1-003
 naturalness:
   score: null
   status: PENDING

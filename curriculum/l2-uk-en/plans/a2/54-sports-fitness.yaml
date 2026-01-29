@@ -1,28 +1,29 @@
 module: a2-54
 level: A2
+sequence: 54
 slug: sports-fitness
 version: '2.0'
 title: Sports and Fitness
 subtitle: Active Lifestyle
 content_outline:
-- section: 'Вступ'
+- section: Вступ
   words: 140
   points:
   - Popular sports in Ukraine
   - Ukrainian athletes
-- section: 'Граматика'
+- section: Граматика
   words: 550
   points:
   - Team sports (футбол, баскетбол, волейбол)
   - Individual sports (плавання, біг, теніс)
   - Fitness vocabulary (спортзал, тренування)
   - Sports events (матч, змагання, чемпіонат)
-- section: 'Практика'
+- section: Практика
   words: 615
   points:
   - Dialogues about sports
   - Describe fitness routines
-- section: 'Підсумок'
+- section: Підсумок
   words: 100
   points:
   - Summary of vocabulary

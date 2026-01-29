@@ -1,8 +1,8 @@
-module: 23-business-etiquette
+module: c1-023
 level: C1
 slug: 23-business-etiquette
 version: '2.0'
-id: c1-23
+id: c1-023
 naturalness:
   score: null
   status: PENDING

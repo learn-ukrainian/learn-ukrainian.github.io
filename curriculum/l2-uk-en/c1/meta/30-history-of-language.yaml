@@ -1,8 +1,8 @@
-module: 30-history-of-language
+module: c1-030
 level: C1
 slug: 30-history-of-language
 version: '2.0'
-id: c1-30
+id: c1-030
 naturalness:
   score: null
   status: PENDING

@@ -1,8 +1,8 @@
-module: serhiy-korolyov
+module: c1-bio-094
 level: C1-BIO
 slug: serhiy-korolyov
 version: '2.0'
-id: c1-bio-117
+id: c1-bio-094
 naturalness:
   score: 1
   status: PENDING

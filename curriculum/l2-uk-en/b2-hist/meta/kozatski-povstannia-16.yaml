@@ -1,8 +1,8 @@
-module: kozatski-povstannia-16
+module: b2-hist-044
 level: B2-HIST
 slug: kozatski-povstannia-16
 version: '2.0'
-id: b2-hist-44
+id: b2-hist-044
 naturalness:
   score: 9
   status: PASS

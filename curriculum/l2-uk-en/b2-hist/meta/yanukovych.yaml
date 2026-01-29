@@ -1,8 +1,8 @@
-module: b2-hist-126
+module: b2-hist-124
 level: B2-HIST
 slug: yanukovych
 version: '2.0'
-id: b2-hist-126
+id: b2-hist-124
 naturalness:
   score: 10
   status: PASS

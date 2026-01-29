@@ -1,8 +1,8 @@
-module: b2-hist-13
+module: b2-hist-013
 level: B2-HIST
 slug: ruska-pravda
 version: '1.0'
-id: b2-hist-13
+id: b2-hist-013
 naturalness:
   score: 10
   status: PASS

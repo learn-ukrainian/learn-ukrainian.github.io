@@ -1,5 +1,6 @@
 module: volodymyr-velykii
 level: C1-BIO
+sequence: 3
 slug: volodymyr-velykii
 version: '2.0'
 title: 'Володимир Великий: Хреститель Русі'
@@ -93,7 +94,8 @@ connects_to:
 - c1-bio-08 (Iov Boretskyi - Orthodox church defense)
 objectives:
 - Analyze the geopolitical significance of the Christianization of Rus
-- Evaluate the state-building reforms of Volodymyr the Great (administrative, financial, symbolic)
+- Evaluate the state-building reforms of Volodymyr the Great (administrative, financial,
+  symbolic)
 - Discuss the legacy of the Trident and the first currency in modern Ukrainian identity
 grammar:
 - Historical narrative register

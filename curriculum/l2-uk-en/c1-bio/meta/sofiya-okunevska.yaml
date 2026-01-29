@@ -1,8 +1,8 @@
-module: sofiya-okunevska
+module: c1-bio-054
 level: C1-BIO
 slug: sofiya-okunevska
 version: '2.0'
-id: c1-bio-33
+id: c1-bio-054
 naturalness:
   score: 1
   status: PENDING

@@ -1,8 +1,8 @@
-module: b2-hist-63
+module: b2-hist-063
 level: B2-HIST
 slug: ivan-mazepa-derzhavnyk
 version: '2.0'
-id: b2-hist-63
+id: b2-hist-063
 naturalness:
   score: 10
   status: PASS

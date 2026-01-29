@@ -1,8 +1,8 @@
-module: vasyl-symonenko
+module: c1-bio-106
 level: C1-BIO
 slug: vasyl-symonenko
 version: '2.0'
-id: c1-bio-75
+id: c1-bio-106
 naturalness:
   score: 1
   status: PENDING

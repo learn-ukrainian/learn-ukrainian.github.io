@@ -1,5 +1,6 @@
 module: c1-60
 level: C1
+sequence: 60
 slug: 60-zymovi-obriady
 version: '2.0'
 title: Зимові обряди

@@ -1,4 +1,4 @@
-module: c1-76
+module: c1-076
 level: C1
 slug: 76-klasychna-muzyka-1-vytoky
 version: '2.0'
@@ -12,3 +12,4 @@ tags:
 vocabulary_count: 35
 build:
   last_modified: '2026-01-26'
+id: c1-076

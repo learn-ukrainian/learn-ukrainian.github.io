@@ -1,8 +1,8 @@
-module: hryhoriy-skovoroda
+module: c1-bio-026
 level: C1-BIO
 slug: hryhoriy-skovoroda
 version: '2.0'
-id: c1-bio-16
+id: c1-bio-026
 naturalness:
   score: null
   status: PENDING

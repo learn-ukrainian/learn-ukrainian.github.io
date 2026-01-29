@@ -1,8 +1,8 @@
-module: panteleimon-kulish
+module: c1-bio-033
 level: C1-BIO
 slug: panteleimon-kulish
 version: '2.0'
-id: c1-bio-97
+id: c1-bio-033
 naturalness:
   score: 1
   status: PENDING

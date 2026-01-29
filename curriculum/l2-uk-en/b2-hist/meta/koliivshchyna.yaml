@@ -1,8 +1,8 @@
-module: b2-hist-71
+module: b2-hist-071
 level: B2-HIST
 slug: koliivshchyna
 version: '2.0'
-id: b2-hist-71
+id: b2-hist-071
 naturalness:
   score: 10
   status: PASS

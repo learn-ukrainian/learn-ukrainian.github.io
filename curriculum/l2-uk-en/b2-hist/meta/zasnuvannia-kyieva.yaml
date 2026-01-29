@@ -1,8 +1,8 @@
-module: zasnuvannia-kyieva
+module: b2-hist-006
 level: B2-HIST
 slug: zasnuvannia-kyieva
 version: '2.0'
-id: b2-hist-06
+id: b2-hist-006
 naturalness:
   score: 9
   status: PASS

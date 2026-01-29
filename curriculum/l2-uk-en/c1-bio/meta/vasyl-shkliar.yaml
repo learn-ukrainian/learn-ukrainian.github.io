@@ -1,8 +1,8 @@
-module: vasyl-shkliar
+module: c1-bio-111
 level: C1-BIO
 slug: vasyl-shkliar
 version: '2.0'
-id: c1-bio-81
+id: c1-bio-111
 naturalness:
   score: 1
   status: PENDING

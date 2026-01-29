@@ -1,8 +1,8 @@
-module: andrey-sheptytsky
+module: c1-bio-052
 level: C1-BIO
 slug: andrey-sheptytsky
 version: '2.0'
-id: c1-bio-106
+id: c1-bio-052
 naturalness:
   score: 1
   status: PENDING

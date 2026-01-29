@@ -1,8 +1,8 @@
-module: pereyaslavska-uhoda
+module: b2-hist-056
 level: B2-HIST
 slug: pereyaslavska-uhoda
 version: '2.0'
-id: b2-hist-56
+id: b2-hist-056
 naturalness:
   score: 9
   status: PASS

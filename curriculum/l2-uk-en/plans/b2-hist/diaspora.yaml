@@ -1,5 +1,6 @@
 module: diaspora
 level: B2-HIST
+sequence: 118
 slug: diaspora
 version: '2.0'
 title: 'Діаспора: Ковчег держави'

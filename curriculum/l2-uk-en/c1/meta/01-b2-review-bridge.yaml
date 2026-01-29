@@ -1,8 +1,8 @@
-module: 01-b2-review-bridge
+module: c1-001
 level: C1
 slug: 01-b2-review-bridge
 version: '2.0'
-id: c1-01
+id: c1-001
 naturalness:
   score: null
   status: PENDING

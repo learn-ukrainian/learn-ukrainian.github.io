@@ -1,8 +1,8 @@
-module: khmelnychchyna-prychyny
+module: b2-hist-051
 level: B2-HIST
 slug: khmelnychchyna-prychyny
 version: '2.0'
-id: b2-hist-51
+id: b2-hist-051
 naturalness:
   score: 9
   status: PASS

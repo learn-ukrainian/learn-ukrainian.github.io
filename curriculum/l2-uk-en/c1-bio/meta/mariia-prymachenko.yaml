@@ -1,8 +1,8 @@
-module: mariia-prymachenko
+module: c1-bio-096
 level: C1-BIO
 slug: mariia-prymachenko
 version: '2.0'
-id: c1-bio-69
+id: c1-bio-096
 naturalness:
   score: 1
   status: PENDING

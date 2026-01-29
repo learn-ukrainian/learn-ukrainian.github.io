@@ -1,8 +1,8 @@
-module: b2-hist-04
+module: b2-hist-004
 level: B2-HIST
 slug: sloviany-origins
 version: '2.0'
-id: b2-hist-04
+id: b2-hist-004
 naturalness:
   score: 10
   status: PASS

@@ -1,8 +1,8 @@
-module: dmytro-vyshnevetskyi
+module: b2-hist-043
 level: B2-HIST
 slug: dmytro-vyshnevetskyi
 version: '2.0'
-id: b2-hist-43
+id: b2-hist-043
 naturalness:
   score: 9
   status: PASS

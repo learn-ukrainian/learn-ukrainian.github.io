@@ -1,35 +1,36 @@
 module: a2-64
 level: A2
+sequence: 64
 slug: scheduling-interviews
 version: '2.0'
 title: Scheduling Interviews
 subtitle: Job Search and Interviews
 content_outline:
-- section: 'Introduction (Вступ)'
+- section: Introduction (Вступ)
   words: 155
   points:
   - Job market basics
   - Finding job openings
-- section: 'Presentation (Презентація)'
+- section: Presentation (Презентація)
   words: 465
   points:
   - призначити співбесіду
   - Confirming time and place
   - Interview vocabulary
-- section: 'Practice (Практика)'
+- section: Practice (Практика)
   words: 30
   points:
   - Scheduling practice
-- section: 'Dialogues (Діалоги)'
+- section: Dialogues (Діалоги)
   words: 180
   points:
   - Interview dialogues
   - Salary discussions
-- section: 'Narrative (Розповідь)'
+- section: Narrative (Розповідь)
   words: 395
   points:
   - Job search story
-- section: 'Need More Practice?'
+- section: Need More Practice?
   words: 75
   points:
   - Summary and links
@@ -53,13 +54,11 @@ vocabulary_hints:
   - підвищення (promotion)
 activity_hints:
 - type: match-up
-  focus: Job interview vocabulary
-  items: 25
   focus: Interview conversation
+  items: 25
 - type: quiz
-  focus: Describe your background
-  items: 10
   focus: Job interview simulation
+  items: 10
 focus: practical
 pedagogy: PPP
 prerequisites:

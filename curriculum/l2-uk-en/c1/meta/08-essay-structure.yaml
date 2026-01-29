@@ -1,8 +1,8 @@
-module: 08-essay-structure
+module: c1-008
 level: C1
 slug: 08-essay-structure
 version: '2.0'
-id: c1-08
+id: c1-008
 naturalness:
   score: null
   status: PENDING

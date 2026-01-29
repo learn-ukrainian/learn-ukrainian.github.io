@@ -1,8 +1,8 @@
-module: mykola-leontovych
+module: c1-bio-066
 level: C1-BIO
 slug: mykola-leontovych
 version: '2.0'
-id: c1-bio-43
+id: c1-bio-066
 naturalness:
   score: 1
   status: PENDING

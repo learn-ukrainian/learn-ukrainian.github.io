@@ -1,8 +1,8 @@
-module: mykhailo-chernihivskyi
+module: c1-bio-007
 level: C1-BIO
 slug: mykhailo-chernihivskyi
 version: '2.0'
-id: c1-bio-06
+id: c1-bio-007
 naturalness:
   score: 9
   status: PASS

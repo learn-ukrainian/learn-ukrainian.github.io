@@ -1,8 +1,8 @@
-module: b2-hist-76
+module: b2-hist-076
 level: B2-HIST
 slug: habsburzka-halichyna
 version: '2.0'
-id: b2-hist-76
+id: b2-hist-076
 naturalness:
   score: 10
   status: PASS

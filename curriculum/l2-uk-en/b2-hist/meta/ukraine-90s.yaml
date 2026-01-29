@@ -1,8 +1,8 @@
-module: b2-hist-121
+module: b2-hist-122
 level: B2-HIST
 slug: ukraine-90s
 version: '2.0'
-id: b2-hist-121
+id: b2-hist-122
 naturalness:
   score: 10
   status: PASS

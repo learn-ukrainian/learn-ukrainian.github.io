@@ -1,8 +1,8 @@
-module: b2-hist-19
+module: b2-hist-019
 level: B2-HIST
 slug: rus-ta-susidy
 version: '1.0'
-id: b2-hist-19
+id: b2-hist-019
 naturalness:
   score: 9
   status: PASS

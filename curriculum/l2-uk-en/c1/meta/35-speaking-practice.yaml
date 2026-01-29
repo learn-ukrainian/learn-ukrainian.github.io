@@ -1,8 +1,8 @@
-module: 35-speaking-practice
+module: c1-035
 level: C1
 slug: 35-speaking-practice
 version: '2.0'
-id: c1-35
+id: c1-035
 naturalness:
   score: null
   status: PENDING

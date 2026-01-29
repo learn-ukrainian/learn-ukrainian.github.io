@@ -1,5 +1,6 @@
 module: b1-38
 level: B1
+sequence: 38
 slug: complex-sentence-integration
 version: '2.0'
 title: Інтеграція складних речень

@@ -1,8 +1,8 @@
-module: b2-hist-93
+module: b2-hist-093
 level: B2-HIST
 slug: dyrektoriia
 version: '2.0'
-id: b2-hist-93
+id: b2-hist-093
 naturalness:
   score: 10
   status: PASS

@@ -1,8 +1,8 @@
-module: c1-bio-roman-mstyslavych
+module: c1-bio-006
 level: C1-BIO
 slug: roman-mstyslavych
 version: '2.0'
-id: c1-bio-roman-mstyslavych
+id: c1-bio-006
 naturalness:
   score: 10
   status: PASS

@@ -1,5 +1,6 @@
 module: kozatski-povstannia-16
 level: B2-HIST
+sequence: 44
 slug: kozatski-povstannia-16
 version: '2.0'
 title: Козацькі повстання XVI століття
@@ -56,9 +57,12 @@ activity_hints:
 focus: history
 pedagogy: CBI
 objectives:
-- Learner can identify the causes and consequences of the Kosynskyi and Nalyvaiko uprisings
-- Learner can analyze the social and religious motivations behind the first cossack wars
-- Learner can understand the significance of these uprisings for the formation of national identity
+- Learner can identify the causes and consequences of the Kosynskyi and Nalyvaiko
+  uprisings
+- Learner can analyze the social and religious motivations behind the first cossack
+  wars
+- Learner can understand the significance of these uprisings for the formation of
+  national identity
 grammar:
 - 'Historical narrative: complex sentences with causal links'
 - Conditionals in historical analysis (якби... то...)

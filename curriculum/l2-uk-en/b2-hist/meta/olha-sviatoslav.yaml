@@ -1,8 +1,8 @@
-module: b2-hist-10
+module: b2-hist-010
 level: B2-HIST
 slug: olha-sviatoslav
 version: '1.0'
-id: b2-hist-10
+id: b2-hist-010
 naturalness:
   score: 10
   status: PASS

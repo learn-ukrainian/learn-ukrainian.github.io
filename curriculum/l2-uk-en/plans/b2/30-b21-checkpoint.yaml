@@ -1,5 +1,6 @@
 module: b2-30
 level: B2
+sequence: 30
 slug: 30-b21-checkpoint
 version: '2.0'
 title: 'Контрольна точка: B2.1 Завершення'

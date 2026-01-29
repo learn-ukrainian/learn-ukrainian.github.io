@@ -1,32 +1,33 @@
 module: a2-47
 level: A2
+sequence: 47
 slug: nature-and-weather
 version: '2.0'
 title: Nature and Weather
 subtitle: The World Around Us
 content_outline:
-- section: 'Вступ'
+- section: Вступ
   words: 150
   points:
   - Ukraine's diverse landscapes
   - Nature vocabulary introduction
-- section: 'Граматика'
+- section: Граматика
   words: 800
   points:
   - Weather conditions (погода, дощ, сніг)
   - Landscapes (гора, річка, ліс)
   - Flora and fauna (дерева, тварини)
   - Environment vocabulary
-- section: 'Практика'
+- section: Практика
   words: 500
   points:
   - Dialogues about weather
   - Nature descriptions
-- section: 'Корисні вирази'
+- section: Корисні вирази
   words: 150
   points:
   - Useful weather phrases
-- section: 'Підсумок'
+- section: Підсумок
   words: 100
   points:
   - Summary of vocabulary

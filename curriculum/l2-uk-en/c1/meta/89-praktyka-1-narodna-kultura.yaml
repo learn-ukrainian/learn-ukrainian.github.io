@@ -1,4 +1,4 @@
-module: c1-89
+module: c1-089
 level: C1
 slug: 89-praktyka-1-narodna-kultura
 version: '2.0'
@@ -12,3 +12,4 @@ tags:
 vocabulary_count: 20
 build:
   last_modified: '2026-01-26'
+id: c1-089

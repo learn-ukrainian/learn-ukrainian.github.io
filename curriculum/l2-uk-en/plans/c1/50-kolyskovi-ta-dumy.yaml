@@ -1,5 +1,6 @@
 module: c1-50
 level: C1
+sequence: 50
 slug: 50-kolyskovi-ta-dumy
 version: '2.0'
 title: 'Колискові та думи: Від колиски до вічності'

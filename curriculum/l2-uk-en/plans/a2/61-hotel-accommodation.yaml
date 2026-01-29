@@ -1,5 +1,6 @@
 module: a2-61
 level: A2
+sequence: 61
 slug: hotel-accommodation
 version: '2.0'
 title: Hotel Accommodation
@@ -60,13 +61,11 @@ vocabulary_hints:
   - адміністратор (receptionist)
 activity_hints:
 - type: match-up
-  focus: Hotel vocabulary
-  items: 25
   focus: Check-in conversation
+  items: 25
 - type: fill-in
-  focus: Complete hotel sentences
-  items: 15
   focus: Hotel scenarios
+  items: 15
 focus: practical
 pedagogy: PPP
 prerequisites:

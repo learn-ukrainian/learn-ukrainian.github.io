@@ -1,4 +1,4 @@
-module: syntez-lytva-polska
+module: b2-hist-040
 level: B2-HIST
 slug: syntez-lytva-polska
 version: '2.0'
@@ -17,3 +17,4 @@ vocabulary_count: 30
 build:
   last_modified: '2026-01-26'
 phase: HIST.4
+id: b2-hist-040

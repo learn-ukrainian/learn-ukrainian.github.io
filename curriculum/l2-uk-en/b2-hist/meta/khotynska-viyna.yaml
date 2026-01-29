@@ -1,8 +1,8 @@
-module: khotynska-viyna
+module: b2-hist-046
 level: B2-HIST
 slug: khotynska-viyna
 version: '2.0'
-id: b2-hist-46
+id: b2-hist-046
 naturalness:
   score: 9
   status: PASS

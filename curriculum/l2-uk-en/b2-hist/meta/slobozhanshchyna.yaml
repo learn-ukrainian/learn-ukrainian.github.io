@@ -1,4 +1,4 @@
-module: slobozhanshchyna
+module: b2-hist-038
 level: B2-HIST
 slug: slobozhanshchyna
 version: '2.0'
@@ -18,3 +18,4 @@ vocabulary_count: 26
 build:
   last_modified: '2026-01-26'
 phase: HIST.4
+id: b2-hist-038

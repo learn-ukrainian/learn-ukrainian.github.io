@@ -1,8 +1,8 @@
-module: ludy-rusi
+module: b2-hist-018
 level: B2-HIST
 slug: ludy-rusi
 version: '2.0'
-id: b2-hist-18
+id: b2-hist-018
 naturalness:
   score: 9
   status: PASS

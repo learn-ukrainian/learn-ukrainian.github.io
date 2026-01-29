@@ -1,4 +1,4 @@
-module: c1-53
+module: c1-053
 level: C1
 slug: 53-pysanky
 version: '2.0'
@@ -11,3 +11,4 @@ tags:
 vocabulary_count: 28
 build:
   last_modified: '2026-01-26'
+id: c1-053

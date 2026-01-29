@@ -1,4 +1,4 @@
-module: mykhailo-chernigivskyi
+module: b2-hist-022
 level: B2
 slug: mykhailo-chernigivskyi
 version: '2.0'
@@ -12,3 +12,4 @@ transliteration: none
 build:
   last_modified: '2026-01-26'
 phase: HIST.3 [Mongol Era & Galicia-Volhynia]
+id: b2-hist-022

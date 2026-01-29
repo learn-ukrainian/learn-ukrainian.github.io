@@ -1,8 +1,8 @@
-module: b2-hist-116
+module: b2-hist-115
 level: B2-HIST
 slug: ukrainska-helsinska-hrupa
 version: '2.0'
-id: b2-hist-116
+id: b2-hist-115
 naturalness:
   score: 10
   status: PASS

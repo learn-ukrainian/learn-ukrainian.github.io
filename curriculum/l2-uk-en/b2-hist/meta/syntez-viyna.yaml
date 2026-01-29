@@ -1,8 +1,8 @@
-module: b2-hist-138
+module: b2-hist-140
 level: B2-HIST
 slug: syntez-viyna
 version: '2.0'
-id: b2-hist-138
+id: b2-hist-140
 naturalness:
   score: 10
   status: PASS

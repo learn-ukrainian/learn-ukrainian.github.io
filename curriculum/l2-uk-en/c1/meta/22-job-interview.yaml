@@ -1,8 +1,8 @@
-module: 22-job-interview
+module: c1-022
 level: C1
 slug: 22-job-interview
 version: '2.0'
-id: c1-22
+id: c1-022
 naturalness:
   score: null
   status: PENDING

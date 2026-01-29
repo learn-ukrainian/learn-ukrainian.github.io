@@ -1,8 +1,8 @@
-module: b2-hist-17
+module: b2-hist-017
 level: B2-HIST
 slug: kniazivski-usobiytsi
 version: '1.0'
-id: b2-hist-17
+id: b2-hist-017
 naturalness:
   score: 10
   status: PASS

@@ -1,28 +1,29 @@
 module: a2-53
 level: A2
+sequence: 53
 slug: shopping-services
 version: '2.0'
 title: Shopping and Services
 subtitle: Buying and Paying
 content_outline:
-- section: 'Вступ'
+- section: Вступ
   words: 145
   points:
   - Types of stores
   - Shopping culture
-- section: 'Граматика'
+- section: Граматика
   words: 560
   points:
   - Store vocabulary (магазин, супермаркет, ринок)
   - Prices and paying (Скільки коштує?, платити)
   - Checkout vocabulary (каса, чек, здача)
   - Services (хімчистка, перукарня, ремонт)
-- section: 'Практика'
+- section: Практика
   words: 610
   points:
   - Shopping dialogues
   - Service requests
-- section: 'Підсумок'
+- section: Підсумок
   words: 125
   points:
   - Summary of vocabulary

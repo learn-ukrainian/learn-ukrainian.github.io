@@ -1,8 +1,8 @@
-module: alla-horska
+module: c1-bio-103
 level: C1-BIO
 slug: alla-horska
 version: '2.0'
-id: c1-bio-72
+id: c1-bio-103
 naturalness:
   score: 1
   status: PENDING

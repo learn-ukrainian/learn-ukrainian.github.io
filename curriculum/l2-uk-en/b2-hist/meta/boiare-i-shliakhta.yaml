@@ -1,8 +1,8 @@
-module: boiare-i-shliakhta
+module: b2-hist-025
 level: B2-HIST
 slug: boiare-i-shliakhta
 version: '2.0'
-id: b2-hist-25
+id: b2-hist-025
 naturalness:
   score: 9
   status: PASS

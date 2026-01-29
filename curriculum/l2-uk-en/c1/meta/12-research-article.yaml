@@ -1,8 +1,8 @@
-module: 12-research-article
+module: c1-012
 level: C1
 slug: 12-research-article
 version: '2.0'
-id: c1-12
+id: c1-012
 naturalness:
   score: null
   status: PENDING

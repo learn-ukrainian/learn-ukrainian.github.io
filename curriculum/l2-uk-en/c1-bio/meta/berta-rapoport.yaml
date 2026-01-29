@@ -1,8 +1,8 @@
-module: berta-rapoport
+module: c1-bio-088
 level: C1-BIO
 slug: berta-rapoport
 version: '2.0'
-id: c1-bio-60
+id: c1-bio-088
 naturalness:
   score: 1
   status: PENDING

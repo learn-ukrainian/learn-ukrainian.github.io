@@ -1,8 +1,8 @@
-module: nataliia-polonska-vasylenko
+module: c1-bio-074
 level: C1-BIO
 slug: nataliia-polonska-vasylenko
 version: '2.0'
-id: c1-bio-54
+id: c1-bio-074
 naturalness:
   score: 1
   status: PENDING

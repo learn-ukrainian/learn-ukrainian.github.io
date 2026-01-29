@@ -1,8 +1,8 @@
-module: vasyl-stus
+module: c1-bio-108
 level: C1-BIO
 slug: vasyl-stus
 version: '2.0'
-id: c1-bio-77
+id: c1-bio-108
 naturalness:
   score: 1
   status: PENDING

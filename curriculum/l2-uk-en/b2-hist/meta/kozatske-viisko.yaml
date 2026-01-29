@@ -1,8 +1,8 @@
-module: kozatske-viisko
+module: b2-hist-048
 level: B2-HIST
 slug: kozatske-viisko
 version: '2.0'
-id: b2-hist-48
+id: b2-hist-048
 naturalness:
   score: 9
   status: PASS

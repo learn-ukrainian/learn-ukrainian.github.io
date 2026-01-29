@@ -1,8 +1,8 @@
-module: b2-hist-14
+module: b2-hist-014
 level: B2-HIST
 slug: sofiya-kyivska
 version: '1.0'
-id: b2-hist-14
+id: b2-hist-014
 naturalness:
   score: 9
   status: PASS

@@ -1,8 +1,8 @@
-module: 25-political-system
+module: c1-025
 level: C1
 slug: 25-political-system
 version: '2.0'
-id: c1-25
+id: c1-025
 naturalness:
   score: null
   status: PENDING

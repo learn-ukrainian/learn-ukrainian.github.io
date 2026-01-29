@@ -4,22 +4,23 @@ slug: rental-accommodation
 title: Rental Accommodation
 transliteration: none
 content_outline:
-- section: 'Introduction'
+- section: Introduction
   words: 100
-- section: 'Presentation'
+- section: Presentation
   words: 50
-- section: 'Reading Context'
+- section: Reading Context
   words: 100
-- section: 'Viewing Dialogue'
+- section: Viewing Dialogue
   words: 100
-- section: 'Utilities Review'
+- section: Utilities Review
   words: 100
-- section: 'Agreement Insight'
+- section: Agreement Insight
   words: 100
-- section: 'Practice'
+- section: Practice
   words: 100
 word_target: 1000
 naturalness:
   score: 9
   status: PASS
 immersion: 83
+id: a2-62

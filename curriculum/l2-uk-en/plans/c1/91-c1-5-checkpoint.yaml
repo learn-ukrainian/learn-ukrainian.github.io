@@ -1,5 +1,6 @@
 module: c1-91
 level: C1
+sequence: 91
 slug: 91-c1-5-checkpoint
 version: '2.0'
 title: C1.5 Контрольна точка

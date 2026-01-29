@@ -1,5 +1,6 @@
 module: c1-bio-lev-danylovych
 level: C1-BIO
+sequence: 9
 slug: lev-danylovych
 version: '2.0'
 title: 'Лев Данилович: Будівничий Львова'

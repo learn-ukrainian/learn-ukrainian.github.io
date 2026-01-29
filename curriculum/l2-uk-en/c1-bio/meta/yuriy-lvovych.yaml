@@ -1,8 +1,8 @@
-module: c1-bio-yuriy-lvovych
+module: c1-bio-010
 level: C1-BIO
 slug: yuriy-lvovych
 version: '2.0'
-id: c1-bio-yuriy-lvovych
+id: c1-bio-010
 naturalness:
   score: 10
   status: PASS

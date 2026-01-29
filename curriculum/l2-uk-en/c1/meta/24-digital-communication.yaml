@@ -1,8 +1,8 @@
-module: 24-digital-communication
+module: c1-024
 level: C1
 slug: 24-digital-communication
 version: '2.0'
-id: c1-24
+id: c1-024
 naturalness:
   score: null
   status: PENDING

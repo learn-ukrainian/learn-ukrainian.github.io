@@ -1,8 +1,8 @@
-module: b2-hist-92
+module: b2-hist-092
 level: B2-HIST
 slug: zunr
 version: '2.0'
-id: b2-hist-92
+id: b2-hist-092
 naturalness:
   score: 10
   status: PASS
@@ -13,27 +13,27 @@ build:
   last_modified: '2026-01-28'
 phase: HIST.9 [WWI & Revolution]
 activity_hints:
-  - type: reading
-    focus: Текст Акту Злуки
-    items: 12
-  - type: essay-response
-    focus: Чому Акт Злуки не привів до реального об'єднання?
-    word_target: 250
-  - type: critical-analysis
-    focus: Листопадовий чин
-    items: 12
-  - type: true-false
-    focus: Факти про ЗУНР
-    items: 12
-  - type: multiple-choice
-    focus: Державне будівництво ЗУНР
-    items: 12
-  - type: matching
-    focus: Діячі та їхні ролі
-    items: 12
-  - type: cloze
-    focus: Універсал Соборності
-    items: 12
-  - type: sorting
-    focus: Хронологія подій 1918-1919
-    items: 12
+- type: reading
+  focus: Текст Акту Злуки
+  items: 12
+- type: essay-response
+  focus: Чому Акт Злуки не привів до реального об'єднання?
+  word_target: 250
+- type: critical-analysis
+  focus: Листопадовий чин
+  items: 12
+- type: true-false
+  focus: Факти про ЗУНР
+  items: 12
+- type: multiple-choice
+  focus: Державне будівництво ЗУНР
+  items: 12
+- type: matching
+  focus: Діячі та їхні ролі
+  items: 12
+- type: cloze
+  focus: Універсал Соборності
+  items: 12
+- type: sorting
+  focus: Хронологія подій 1918-1919
+  items: 12

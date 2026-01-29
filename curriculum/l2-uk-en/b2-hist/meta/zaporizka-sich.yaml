@@ -1,8 +1,8 @@
-module: zaporizka-sich
+module: b2-hist-042
 level: B2-HIST
 slug: zaporizka-sich
 version: '2.0'
-id: b2-hist-42
+id: b2-hist-042
 naturalness:
   score: 9
   status: PASS

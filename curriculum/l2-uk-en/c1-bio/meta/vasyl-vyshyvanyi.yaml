@@ -1,8 +1,8 @@
-module: vasyl-vyshyvanyi
+module: c1-bio-087
 level: C1-BIO
 slug: vasyl-vyshyvanyi
 version: '2.0'
-id: c1-bio-58
+id: c1-bio-087
 naturalness:
   score: 1
   status: PENDING

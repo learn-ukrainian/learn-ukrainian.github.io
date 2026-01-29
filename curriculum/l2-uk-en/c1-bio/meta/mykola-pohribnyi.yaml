@@ -1,8 +1,8 @@
-module: mykola-pohribnyi
+module: c1-bio-101
 level: C1-BIO
 slug: mykola-pohribnyi
 version: '2.0'
-id: c1-bio-96
+id: c1-bio-101
 naturalness:
   score: 9
   status: PASS

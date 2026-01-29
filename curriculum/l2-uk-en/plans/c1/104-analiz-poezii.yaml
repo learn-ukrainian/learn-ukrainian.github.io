@@ -1,5 +1,6 @@
 module: c1-104
 level: C1
+sequence: 104
 slug: 104-analiz-poezii
 version: '2.0'
 title: Аналіз поезії

@@ -3,9 +3,11 @@ slug: karpatska-ukraina
 type: immersion
 level: b2
 track: history
-title: 'Карпатська Україна 1938-1939'
+title: Карпатська Україна 1938-1939
 subtitle: 'Carpatho-Ukraine: A Brief Independence'
-description: 'The story of the first Ukrainian independence of the 20th century in Transcarpathia, the presidency of Avhustyn Voloshyn, and the heroic defense of the Carpathian Sich.'
+description: The story of the first Ukrainian independence of the 20th century in
+  Transcarpathia, the presidency of Avhustyn Voloshyn, and the heroic defense of the
+  Carpathian Sich.
 transliteration: none
 version: '2.0'
 status: draft
@@ -43,6 +45,8 @@ audio_url: null
 naturalness:
   score: 10
   status: PASS
-  justification: "Native-level history narrative."
+  justification: Native-level history narrative.
 immersion_focus: true
 pedagogy: CBI
+module: b2-hist-104
+id: b2-hist-104

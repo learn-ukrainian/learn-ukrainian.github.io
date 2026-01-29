@@ -1,8 +1,8 @@
-module: b2-hist-11
+module: b2-hist-011
 level: B2-HIST
 slug: volodymyr-khreshchennia
 version: '1.0'
-id: b2-hist-11
+id: b2-hist-011
 naturalness:
   score: 10
   status: PASS

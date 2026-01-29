@@ -1,23 +1,24 @@
-id: 1
+id: c1-hist-001
 slug: shcho-take-istoriohrafiia
-title: 'Що таке історіографія?'
-subtitle: 'Вступ до історичного методу та критичного аналізу джерел'
+title: Що таке історіографія?
+subtitle: Вступ до історичного методу та критичного аналізу джерел
 version: '2.0'
-phase: 'C1-HIST'
-pedagogy: 'seminar'
+phase: C1-HIST
+pedagogy: seminar
 duration: 90
-transliteration: 'none'
+transliteration: none
 tags:
-  - historiography
-  - methodology
-  - source-criticism
-  - decolonization
+- historiography
+- methodology
+- source-criticism
+- decolonization
 grammar: []
 focus: history
 objectives:
-  - 'Розуміти різницю між історією та історіографією'
-  - 'Аналізувати вплив упередження та наративу на історичне письмо'
-  - 'Застосовувати базові методи критики джерел'
+- Розуміти різницю між історією та історіографією
+- Аналізувати вплив упередження та наративу на історичне письмо
+- Застосовувати базові методи критики джерел
 naturalness:
   score: 10
   status: pass
+module: c1-hist-001
