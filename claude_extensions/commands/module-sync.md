@@ -111,6 +111,20 @@ meta_file=curriculum/l2-uk-en/${level}/meta/${slug}.yaml
 
 ### Step 5: Run Audit
 
+> **📋 QUICK REFERENCES (read BEFORE fixing activities):**
+> - Activity schemas: `claude_extensions/quick-ref/ACTIVITY-SCHEMAS.md`
+> - Activity YAML reference: `docs/ACTIVITY-YAML-REFERENCE.md`
+
+**First, run fast schema validation on activities (if they exist):**
+
+```bash
+.venv/bin/python scripts/validate_activities_schema.py ${act_file}
+```
+
+If schema errors exist, note them for fixing in Step 7.
+
+**Then run full audit:**
+
 ```bash
 .venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/${level}/${slug}.md
 ```
@@ -133,8 +147,12 @@ meta_file=curriculum/l2-uk-en/${level}/meta/${slug}.yaml
 ### Step 7: Fix Activities
 
 **If activity violations exist:**
-- Fix minor issues (≤3) directly
-- Regenerate activities if major issues (>3)
+
+1. **Read schema quick-ref first:** `claude_extensions/quick-ref/ACTIVITY-SCHEMAS.md`
+2. **Run schema validation:** `.venv/bin/python scripts/validate_activities_schema.py ${act_file}`
+3. **Fix schema errors first** (wrong field names, missing required fields)
+4. Fix minor issues (≤3) directly
+5. Regenerate activities if major issues (>3)
 
 ### Step 8: Loop Until ALL Gates Pass (BATCH FIX PATTERN)
 

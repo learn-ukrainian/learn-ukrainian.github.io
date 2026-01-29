@@ -1,0 +1,102 @@
+# Vocabulary for Десталінізація в Україні
+
+items:
+  - lemma: десталінізація
+    translation: de-Stalinization
+    note: процес перегляду сталінської політики після 1953 року
+
+  - lemma: реабілітація
+    translation: rehabilitation
+    note: офіційне визнання невинності репресованих
+
+  - lemma: репресії
+    translation: repressions
+    note: масові переслідування з політичних мотивів
+
+  - lemma: відлига
+    translation: thaw
+    note: період послаблення контролю 1956–1964
+
+  - lemma: культ особи
+    translation: cult of personality
+    note: надмірне звеличення політичного лідера
+
+  - lemma: з'їзд
+    translation: congress
+    note: вищий орган партії; XX з'їзд КПРС
+
+  - lemma: ГУЛАГ
+    translation: Gulag
+    note: система примусових таборів у СРСР
+
+  - lemma: заслання
+    translation: exile
+    note: примусове переселення у віддалені райони
+
+  - lemma: амністія
+    translation: amnesty
+    note: офіційне звільнення від покарання
+
+  - lemma: перегляд справи
+    translation: case review
+    note: повторний розгляд судового рішення
+
+  - lemma: політв'язень
+    translation: political prisoner
+    note: особа, ув'язнена за політичні переконання
+
+  - lemma: цензура
+    translation: censorship
+    note: державний контроль над інформацією
+
+  - lemma: самвидав
+    translation: samizdat
+    note: нелегальне розповсюдження текстів
+
+  - lemma: номенклатура
+    translation: nomenklatura
+    note: керівна еліта радянської системи
+
+  - lemma: шістдесятники
+    translation: the Sixtiers
+    note: покоління українських митців 1960-х років
+
+  - lemma: таємна доповідь
+    translation: secret speech
+    note: виступ Хрущова на XX з'їзді КПРС
+
+  - lemma: реабілітований
+    translation: rehabilitated (person)
+    note: особа, визнана невинною після перегляду справи
+
+  - lemma: декомунізація
+    translation: decommunization
+    note: процес усунення комуністичної спадщини після 2014
+
+  - lemma: деколонізація
+    translation: decolonization
+    note: звільнення від імперського контролю
+
+  - lemma: імперська система
+    translation: imperial system
+    note: структура контролю метрополії над колоніями
+
+  - lemma: русифікація
+    translation: Russification
+    note: політика нав'язування російської мови та культури
+
+  - lemma: буржуазний націоналіст
+    translation: bourgeois nationalist
+    note: радянський ярлик для українських патріотів
+
+  - lemma: канцелярський стиль
+    translation: clerical/bureaucratic style
+    note: офіційно-діловий регістр мови
+
+  - lemma: пасивна конструкція
+    translation: passive construction
+    note: граматична структура з пасивним станом дієслова
+
+  - lemma: експресивна лексика
+    translation: expressive vocabulary
+    note: емоційно забарвлені слова

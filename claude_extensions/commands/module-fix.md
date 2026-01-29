@@ -60,6 +60,20 @@ status_file=curriculum/l2-uk-en/${level}/status/${slug}.json # AUTO-GENERATED - 
 
 ### Step 2: Run Initial Audit
 
+> **📋 QUICK REFERENCES (read BEFORE fixing activities):**
+> - Activity schemas: `claude_extensions/quick-ref/ACTIVITY-SCHEMAS.md`
+> - Activity YAML reference: `docs/ACTIVITY-YAML-REFERENCE.md`
+
+**First, run fast schema validation on activities:**
+
+```bash
+.venv/bin/python scripts/validate_activities_schema.py ${act_file}
+```
+
+If schema errors exist, fix those first (see quick-ref for exact field names).
+
+**Then run full audit:**
+
 ```bash
 .venv/bin/python scripts/audit_module.py ${md_file} --fix
 ```
@@ -200,9 +214,11 @@ if V > 0:
 
 # Activity fixes
 if A > 0:
+    Read: claude_extensions/quick-ref/ACTIVITY-SCHEMAS.md  # Field requirements
     Read: claude_extensions/phases/module-act-qa.md
+    Validate: .venv/bin/python scripts/validate_activities_schema.py ${act_file}
     Fix activities.yaml:
-      - Fix schema errors
+      - Fix schema errors (correct→not answer, criteria→not criterion)
       - Add missing items
       - Rephrase mirroring activities
 

@@ -93,6 +93,23 @@ Extract:
 
 **If range detected:** Jump to Batch Mode.
 
+### Step 1.5: Pre-flight Check (NEW)
+
+**Before any building, run pre-flight validation:**
+
+```bash
+.venv/bin/python scripts/preflight_check.py curriculum/l2-uk-en/${level}/${slug}.md
+```
+
+**What it catches early:**
+- ❌ Missing plan file
+- ❌ Missing meta file
+- ❌ Module number mismatch between plan and meta
+- ⚠️ Missing word target
+- ⚠️ Low vocabulary hints count
+
+**If pre-flight FAILS with blockers (❌):** Stop and fix before proceeding.
+
 ### Step 2: Resolve Module Slug
 
 > **⚠️ CRITICAL: Track files have NO numbered prefix!**
@@ -216,10 +233,27 @@ Run phases sequentially from start phase:
 
 **CRITICAL:** Use **batch-fix-within-module** pattern (see NON-NEGOTIABLE-RULES.md #8).
 
+> **📋 QUICK REFERENCES (read BEFORE writing):**
+> - Activity schemas: `claude_extensions/quick-ref/ACTIVITY-SCHEMAS.md`
+> - Activity YAML reference: `docs/ACTIVITY-YAML-REFERENCE.md`
+>
+> These prevent schema iteration loops by providing exact field requirements per activity type.
+
 **NEVER use iterative fix-audit cycles. Instead:**
 
 ```
 WHILE true:
+
+  # ========================================
+  # 6.0 FAST SCHEMA CHECK (Before Full Audit)
+  # ========================================
+
+  Run schema validation first (faster feedback):
+
+  .venv/bin/python scripts/validate_activities_schema.py curriculum/l2-uk-en/${level}/activities/${slug}.yaml
+
+  IF schema errors → fix YAML structure before full audit
+  (Common issues: wrong field names, missing required fields)
 
   # ========================================
   # 6.1 DIAGNOSE (Comprehensive Read)

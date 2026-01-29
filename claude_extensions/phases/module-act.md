@@ -6,6 +6,17 @@ Generate activities YAML from locked lesson content following plan requirements.
 > - **Plan** (`plans/{level}/{slug}.yaml`): activity_hints, vocabulary_hints
 > - **Meta** (`{level}/meta/{slug}.yaml`): grammar points, naturalness, build config
 
+> **📋 REQUIRED READING - Schema Quick Reference:**
+>
+> **BEFORE writing any activity YAML, read:**
+> `claude_extensions/quick-ref/ACTIVITY-SCHEMAS.md`
+>
+> This prevents schema validation failures by showing exact field requirements:
+> - `correct` not `answer` (true-false)
+> - `criteria` not `criterion` (essay rubric)
+> - `model_answer` required (essay-response, comparative-study)
+> - `target_text` + `model_answers` required (critical-analysis)
+
 ## Usage
 
 ```
@@ -526,6 +537,23 @@ Before outputting, verify:
 - [ ] No Surzhyk, clean Ukrainian
 - [ ] Use «» not "" for quotes
 - [ ] All activity_hints from plan covered
+
+## Schema Validation (Run Before Proceeding)
+
+After writing activities YAML, **always run schema validation:**
+
+```bash
+.venv/bin/python scripts/validate_activities_schema.py curriculum/l2-uk-en/${level}/activities/${slug}.yaml
+```
+
+**If validation fails:** Fix the reported issues before proceeding to Phase 6.
+
+Common fixes (see `claude_extensions/quick-ref/ACTIVITY-SCHEMAS.md`):
+- `answer` → `correct` (true-false items)
+- `criterion` → `criteria` (essay rubric)
+- Add missing `model_answer` (essay-response, comparative-study)
+- Add missing `target_text` and `model_answers` (critical-analysis)
+- Remove `id` from types that don't support it
 
 ---
 

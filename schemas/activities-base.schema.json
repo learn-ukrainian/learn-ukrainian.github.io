@@ -918,6 +918,10 @@
               "type": "string",
               "description": "Unique identifier for the activity"
             },
+            "instruction": {
+              "type": "string",
+              "description": "Additional instructions for the learner"
+            },
             "title": { "type": "string", "minLength": 1 },
             "source": {
               "type": "string",
@@ -944,6 +948,10 @@
             "id": {
               "type": "string",
               "description": "Unique identifier for the activity"
+            },
+            "instruction": {
+              "type": "string",
+              "description": "Additional instructions for the learner"
             },
             "title": { "type": "string", "minLength": 1 },
             "resource": {

@@ -21,6 +21,22 @@ Validate activities YAML before locking.
 
 ## Validation Checks
 
+### -1. Schema Validation (RUN FIRST - FAST CHECK)
+
+**Before any other checks, run schema validation:**
+
+```bash
+.venv/bin/python scripts/validate_activities_schema.py curriculum/l2-uk-en/${level}/activities/${slug}.yaml
+```
+
+**If this fails:** Fix schema errors first. Common issues:
+- `answer` → `correct` (true-false)
+- Missing `model_answer` (essay-response, comparative-study)
+- Missing `target_text` + `model_answers` (critical-analysis)
+- `criterion` → `criteria` in rubric
+
+**Reference:** `claude_extensions/quick-ref/ACTIVITY-SCHEMAS.md`
+
 ### 0. activity_hints Coverage (CRITICAL - CHECK FIRST)
 
 **This is the FIRST check. FAIL immediately if not satisfied.**
