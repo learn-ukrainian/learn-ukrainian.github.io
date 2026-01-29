@@ -1,0 +1,104 @@
+module: surgunlik
+level: B2
+version: '2.0'
+items:
+  - lemma: депортація
+    ipa: /dɛpɔrˈtɑt͡sʲijɐ/
+    translation: deportation
+    pos: noun
+    gender: f
+  - lemma: геноцид
+    ipa: /ɦɛnɔˈt͡sɪd/
+    translation: genocide
+    pos: noun
+    gender: m
+  - lemma: заслання
+    ipa: /zɐsˈlɑnʲːɐ/
+    translation: exile
+    pos: noun
+    gender: n
+  - lemma: кримські татари
+    ipa: /ˈkrɪmsʲkʲi tɐˈtɑrɪ/
+    translation: Crimean Tatars
+    pos: noun
+    gender: m
+  - lemma: репресії
+    ipa: /rɛˈprɛsʲiji/
+    translation: repressions
+    pos: noun
+    gender: f
+  - lemma: повернення
+    ipa: /pɔˈvɛrnɛnʲːɐ/
+    translation: return
+    pos: noun
+    gender: n
+  - lemma: етнічна чистка
+    ipa: /ɛtˈnʲit͡ʃnɐ ˈt͡ʃɪstkɐ/
+    translation: ethnic cleansing
+    pos: noun
+    gender: f
+  - lemma: пам'ять
+    ipa: /ˈpɑmjɐtʲ/
+    translation: memory
+    pos: noun
+    gender: f
+  - lemma: спецпоселення
+    ipa: /spɛt͡spɔˈsɛlɛnʲːɐ/
+    translation: special settlement
+    pos: noun
+    gender: n
+  - lemma: вагон
+    ipa: /vɐˈɦɔn/
+    translation: wagon / railcar
+    pos: noun
+    gender: m
+  - lemma: смертність
+    ipa: /ˈsmɛrtnʲisʲtʲ/
+    translation: mortality
+    pos: noun
+    gender: f
+  - lemma: реабілітація
+    ipa: /rɛɐbʲilʲiˈtɑt͡sʲijɐ/
+    translation: rehabilitation
+    pos: noun
+    gender: f
+  - lemma: батьківщина
+    ipa: /bɐtʲkʲiu̯ˈʃt͡ʃɪnɐ/
+    translation: homeland
+    pos: noun
+    gender: f
+  - lemma: вижилі
+    ipa: /ˈvɪʒɪlʲi/
+    translation: survivors
+    pos: noun
+    gender: m
+  - lemma: меджліс
+    ipa: /mɛd͡ʒˈlʲis/
+    translation: Mejlis (assembly)
+    pos: noun
+    gender: m
+  - lemma: Приазов'я
+    ipa: /prɪɐˈzɔu̯jɐ/
+    translation: Azov region / Pryazovia
+    pos: noun
+    gender: n
+  - lemma: колаборант
+    ipa: /kɔlɐbɔˈrɑnt/
+    translation: collaborator
+    pos: noun
+    gender: m
+  - lemma: звинувачення
+    ipa: /zvɪnʊˈvɑt͡ʃɛnʲːɐ/
+    translation: accusation
+    pos: noun
+    gender: n
+  - lemma: Sürgünlik
+    ipa: /syrɦynˈlɪk/
+    translation: The Exile (Crimean Tatar)
+    pos: noun
+    gender: m
+  - lemma: НКВС
+    ipa: /ɛnkɐˈvɛs/
+    translation: NKVD (secret police)
+    pos: noun
+    gender: m

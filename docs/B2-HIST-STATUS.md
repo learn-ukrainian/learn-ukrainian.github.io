@@ -1,14 +1,14 @@
 # B2-HIST Module Status
 
-**Generated:** 2026-01-28 22:52:08
+**Generated:** 2026-01-29 21:37:20
 **Total Modules:** 140
-**Status:** 114 passing, 14 failing, 12 stubs, 0 errors
+**Status:** 118 passing, 12 failing, 10 stubs, 0 errors
 
 ## Quick Summary
 
-- ✅ **Passing:** 114/140 (81%)
-- ❌ **Failing:** 14/140
-- 📝 **Stubs:** 12/140
+- ✅ **Passing:** 118/140 (84%)
+- ❌ **Failing:** 12/140
+- 📝 **Stubs:** 10/140
 
 ## Module Details
 
@@ -122,11 +122,11 @@
 | 106 | babyn-yar | ✅ PASS | 4370/4000 | - |
 | 107 | upa | ✅ PASS | 5505/4000 | - |
 | 108 | syntez-trahedii | ✅ PASS | 4552/4000 | - |
-| 109 | povoienne-vidbudova | ❌ FAIL | 4261/4000 | Structure: Missing '## Vocabulary' header OR vocabulary sidecar, 3 forbidden activity types (use --fix to remove) |
-| 110 | deportatsii-ukraintsiv | ❌ FAIL | 4205/4000 | - |
-| 111 | surgunlik | ❌ FAIL | 2011/4000 | 5 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
-| 112 | krym-1954 | 📝 STUB | 27/4000 | 2 Critical Template Violations, 5 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: essay-response, reading, true-false |
-| 113 | destalinizatsiia | 📝 STUB | 26/4000 | 2 Critical Template Violations, 5 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: essay-response, reading, true-false |
+| 109 | povoienne-vidbudova | ✅ PASS | 4419/4000 | - |
+| 110 | deportatsii-ukraintsiv | ✅ PASS | 4632/4000 | - |
+| 111 | surgunlik | ❌ FAIL | 4319/4000 | Missing required activity types: quiz, reading |
+| 112 | krym-1954 | ✅ PASS | 3989/4000 | - |
+| 113 | destalinizatsiia | ✅ PASS | 3945/4000 | - |
 | 114 | shistdesiatnyky | ❌ FAIL | 2109/4000 | 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
 | 115 | ukrainska-helsinska-hrupa | 📝 STUB | 26/4000 | 2 Critical Template Violations, 5 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: essay-response, reading |
 | 116 | afhanistan | 📝 STUB | 26/4000 | 2 Critical Template Violations, 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: essay-response, reading |

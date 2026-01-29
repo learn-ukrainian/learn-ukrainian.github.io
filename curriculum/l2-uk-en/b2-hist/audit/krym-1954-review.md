@@ -1,8 +1,8 @@
 # Audit Report: M112 — krym-1954.md
 **Level:** B2 | **Module:** M112 | **Phase:** HIST.11 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-27 23:38:24
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-29 21:33:49
 
 ## Configuration
 **Type:** B2-history
@@ -17,109 +17,67 @@
 **Vocab Target:** ≥20 words
 **Transliteration:** Not allowed
 
-## PEDAGOGICAL VIOLATIONS
-- **[HEADING_LEVEL]** Main section 'Підсумок' uses H2 (##) but spec requires H1 (#)
-  - FIX: Change '## Підсумок' to '# Підсумок' for top-level TOC compliance
-- **[YAML_SCHEMA_VIOLATION]** Schema error in krym-1954.yaml: Insufficient activities: 1 found, minimum 5 required for B2-HIST
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
-  - FIX: Add a essay-response activity to meet advanced richness standards.
-- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
-  - FIX: Add a comparative-study activity to meet advanced richness standards.
-- **[STATE_STANDARD_LOW_IMMERSION]** Module 112 has 19.6% immersion (target: 90.0%+)
-  - FIX: Add more Ukrainian content to reach 90.0%+ immersion
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Аналіз указу 1954 року | 4 | 1 | ✅ |
+| 2 | true-false | Міфи та факти про передачу Криму | 10 | 8 | ✅ |
+| 3 | essay-response | Есе: Деколонізація історичного наративу | 1 | 1 | ✅ |
+| 4 | critical-analysis | Порівняльний аналіз документів | 1 | 1 | ✅ |
+| 5 | comparative-study | Порівняння: Крим 1954 vs Крим 2014 | 1 | 1 | ✅ |
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Читання' per template 'b2-history-module-template.md'
-  - FIX: Add '## Читання' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Деколонізаційний погляд' per template 'b2-history-module-template.md'
-  - FIX: Add '## Деколонізаційний погляд' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md.md
-- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!myth-buster]' per template 'b2-history-module-template.md'
-  - FIX: Add a `> [!myth-buster]` box as specified in the template. This enhances module quality.
-- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!history-bite]' per template 'b2-history-module-template.md'
-  - FIX: Add a `> [!history-bite]` box as specified in the template. This enhances module quality.
-- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!quote]' per template 'b2-history-module-template.md'
-  - FIX: Add a `> [!quote]` box as specified in the template. This enhances module quality.
-
-## Recommendation
-**🔄 REWRITE** (severity 100/100)
-
-- 10 violations (significant)
-- Immersion 70% off target (major rebalancing needed)
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
-- Activity count below minimum
-- Activity density below minimum
+**Summary:**
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 27/4000 (raw: 108)
-- **Activities:** ❌ 0/3
-- **Density:** ❌ 0 < 1
-- **Unique_types:** ❌ 0/2 types
-- **Priority:** ❌ No priority types
-- **Engagement:** ❌ 0/5
+- **Words:** ⚠️ 3989/4000 (raw: 4180) (11 short)
+- **Activities:** ✅ 5/3
+- **Density:** ✅ All > 1
+- **Unique_types:** ✅ 5/2 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 20 (soft target)
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Vocab:** ✅ 25/20
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 4 violations
-- **Content_heavy:** ⚠️ Too few activities: 0 (target 3-9)
-- **Immersion:** ❌ 19.6% LOW (target 90-100% (history))
-- **Richness:** ❌ 15% < 95% min (history) - REWRITE needed
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Immersion:** 🇺🇦 98.7% (target 90-100% (history))
+- **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 15% (minimum: 95%)
+**Score:** 97% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 0 | 3 | 0% | 24% | 0.0% |
-| engagement | 0 | 6 | 0% | 14% | 0.0% |
-| timeline_markers | 6 | 10 | 60% | 14% | 8.6% |
-| decolonization | 0 | 2 | 0% | 14% | 0.0% |
-| cultural | 1 | 4 | 25% | 10% | 2.4% |
-| visual | 0 | 4 | 0% | 10% | 0.0% |
-| variety | 0.50 | - | 50% | 5% | 2.4% |
-| paragraph_var | 0.50 | - | 50% | 5% | 2.4% |
-| questions | 0 | 3 | 0% | 5% | 0.0% |
-| **TOTAL** | | | | | **15.7%** |
-
-### Dryness Flags & Fixes
-- ❌ **NO_ENGAGEMENT**
-  - FIX:
-    Add 2+ engagement boxes. Use this exact format:
-    
-    > 💡 **Чи знали ви?**
-    >
-    > [Interesting fact about the grammar/vocabulary topic in Ukrainian]
-    
-    > 🇺🇦 **Культурний момент**
-    >
-    > [Cultural context connecting grammar to Ukrainian life/places]
-    
-    > 🌍 **У реальному житті**
-    >
-    > [Practical scenario where this grammar is used]
-- ❌ **NO_PRIMARY_SOURCES**
-  - FIX:
-    Add 2+ primary source quotes. Use this format:
-    
-    > «[Exact quote from historical document]»
-    > — *[Source name], [year]*
-- ❌ **NO_DECOLONIZATION_PERSPECTIVE**
-  - FIX:
-    Add Ukrainian perspective on historical events. Avoid Russocentric framing. Use Ukrainian names for cities/people.
+| primary_sources | 15 | 3 | 100% | 24% | 23.8% |
+| engagement | 9 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
+| decolonization | 15 | 2 | 100% | 14% | 14.3% |
+| cultural | 3 | 4 | 75% | 10% | 7.1% |
+| visual | 12 | 4 | 100% | 10% | 9.5% |
+| variety | 0.97 | - | 97% | 5% | 4.6% |
+| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
+| questions | 40 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **97.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 15 | Included in Core |
-| **Крим 1954: Передача УРСР** | ⚪️ | 0 | Skipped |
-| **Вступ** | ✅ | 2 | Included in Core |
-| **Основний зміст** | ⚪️ | 2 | Skipped |
-| **Історичне значення** | ⚪️ | 1 | Skipped |
-| **Ключові постаті** | ⚪️ | 2 | Skipped |
-| **Первинні джерела** | ✅ | 4 | Included in Core |
-| **Підсумок** | ✅ | 1 | Included in Core |
+| **Крим 1954: Передача УРСР** | ⚪️ | 35 | Skipped |
+| **Вступ: «Подарунок» чи рішення?** | ✅ | 405 | Included in Core |
+| **Контекст: Крим до 1954 року** | ✅ | 771 | Included in Core |
+| **Передача: як це відбулося** | ⚪️ | 895 | Skipped |
+| **Первинні джерела** | ✅ | 724 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 543 | Included in Core |
+| **Читання** | ✅ | 148 | Included in Core |
+| **Підсумок: Від 1954 до 2014** | ✅ | 453 | Included in Core |

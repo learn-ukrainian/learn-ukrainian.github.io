@@ -1,14 +1,108 @@
-module: b2-hist-111
+module: surgunlik
 level: B2-HIST
+sequence: 111
 slug: surgunlik
-version: '2.0'
+version: '3.0'
+title: 'Sürgünlik: Депортації кримських татар та інших народів'
+subtitle: 'Sürgünlik and Soviet Deportations of Minorities 1941-1949'
 id: b2-hist-111
+transliteration: none
 naturalness:
   score: 10
   status: PASS
-  justification: Академічний український для історії репресій
+  justification: Академічний український для історії репресій та депортацій
+content_outline:
+- section: 'Вступ: Радянська політика депортацій'
+  words: 400
+  points:
+  - 'Контекст: депортації як інструмент Сталіна'
+  - 'Хронологія: 1941-1949'
+  - 'Sürgünlik: 18 травня 1944 як найтрагічніша дата'
+- section: 'Сургунлік: Депортація кримських татар'
+  words: 1600
+  points:
+  - 'Механізм депортації (700 слів)'
+  - 'Сталінський наказ: звинувачення у «зраді»'
+  - Як відбувалась депортація 18 травня
+  - Вагони для худоби та смерть у дорозі
+  - 'Життя в засланні (900 слів)'
+  - Узбекистан та інші місця заслання
+  - 'Голод, хвороби, смертність: 46% загиблих'
+  - Заборона повертатись до 1989
+  - Втрата землі, мови та культури
+- section: 'Інші жертви: Греки, німці та інші народи'
+  words: 900
+  points:
+  - 'Греки Криму та Приазов''я (1944-1949)'
+  - Депортація до Казахстану та Середньої Азії
+  - Втрата грецької мови та культури
+  - 'Німці України / Volksdeutsche (1941-1945)'
+  - Депортація на початку війни
+  - Спецпоселення в Сибіру та Казахстані
+  - 'Інші: болгари, вірмени, румуни (коротко)'
+- section: Первинні джерела
+  words: 500
+  points:
+  - Свідчення вижилих кримських татар
+  - Спогади греків та німців
+  - Документи НКВД про депортації
+- section: Деколонізаційний погляд
+  words: 400
+  points:
+  - 'Радянський наратив: «зрадники» та «колаборанти»'
+  - 'Реальність: етнічна чистка за національною ознакою'
+  - Визнання Sürgünlik як геноциду
+  - Паралелі з іншими депортаціями
+- section: 'Підсумок: Пам''ять та боротьба'
+  words: 200
+  points:
+  - Рух за повернення кримських татар
+  - Повернення після 1989
+  - Окупація Криму 2014 та нові репресії
+word_target: 4000
+vocabulary_hints:
+  required:
+  - депортація (deportation)
+  - геноцид (genocide)
+  - заслання (exile)
+  - кримські татари (Crimean Tatars)
+  - греки (Greeks)
+  - німці (Germans)
+  - репресії (repressions)
+  - повернення (return)
+  - етнічна чистка (ethnic cleansing)
+  - пам'ять (memory)
+  - спецпоселення (special settlement)
+  recommended:
+  - вагон (wagon)
+  - смертність (mortality)
+  - реабілітація (rehabilitation)
+  - батьківщина (homeland)
+  - вижилі (survivors)
+  - меджліс (Mejlis)
+  - Приазов'я (Azov region)
+  - колаборант (collaborator)
+  - звинувачення (accusation)
+activity_hints:
+- type: reading
+  id: reading-tatar-testimony
+  focus: Свідчення вижилих кримських татар
+  source: Усна історія
+  items: 4
+- type: reading
+  id: reading-greek-tragedy
+  focus: Спогади греків Приазов'я про депортацію
+  source: Усна історія
+  items: 3
+- type: true-false
+  focus: Порівняння депортацій різних народів
+  items: 12+
+- type: essay-response
+  focus: Чому депортація кримських татар є геноцидом?
+  word_target: 250
+focus: history
+pedagogy: CBI
 duration: 120
-transliteration: none
 build:
-  last_modified: '2026-01-26'
-phase: HIST.10 [WWII & Soviet Terror]
+  last_modified: '2026-01-29'
+phase: HIST.11 [Post-War Soviet Ukraine]

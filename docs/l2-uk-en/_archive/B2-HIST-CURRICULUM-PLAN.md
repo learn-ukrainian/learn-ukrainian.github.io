@@ -191,7 +191,7 @@ This expanded track tells the complete story of Ukraine from prehistoric times t
 |---|------|------------|-----|------|
 | 109 | povoienne-vidbudova | Повоєнна відбудова | 1945-1953 | NEW |
 | 110 | deportatsii-ukraintsiv | Депортації українців 1944-1951 | 1944-1951 | EXPANDED |
-| 111 | surgunlik | Сургунлік: Депортація кримських татар | 1944 | |
+| 111 | surgunlik | Сургунлік: Депортації кримських татар та інших народів | 1941-1949 | EXPANDED |
 | 112 | krym-1954 | Крим 1954: Передача УРСР | 1954 | NEW |
 | 113 | destalinizatsiia | Десталінізація в Україні | 1953-1964 | NEW |
 | 114 | shistdesiatnyky | Шістдесятники | 1960s | |

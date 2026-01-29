@@ -1,0 +1,103 @@
+# Vocabulary for Крим 1954: Передача УРСР
+# Skeleton - to be enriched after track completion
+
+items:
+  - lemma: передача
+    translation: transfer
+    note: юридичний термін; передача території
+
+  - lemma: указ
+    translation: decree
+    note: офіційний документ вищої влади
+
+  - lemma: президія
+    translation: presidium
+    note: керівний орган радянської влади
+
+  - lemma: автономія
+    translation: autonomy
+    note: самоврядування регіону
+
+  - lemma: депортація
+    translation: deportation
+    note: примусове переселення народу
+
+  - lemma: анексія
+    translation: annexation
+    note: незаконне захоплення території
+
+  - lemma: юридичний
+    translation: legal, juridical
+    note: юридичні підстави, юридична легітимність
+
+  - lemma: законодавство
+    translation: legislation
+    note: система законів; радянське законодавство
+
+  - lemma: доцільність
+    translation: expediency, advisability
+    note: економічна доцільність передачі
+
+  - lemma: легітимність
+    translation: legitimacy
+    note: юридична легітимність рішення
+
+  - lemma: референдум
+    translation: referendum
+    note: народне голосування; псевдореферендум
+
+  - lemma: суверенітет
+    translation: sovereignty
+    note: державний суверенітет України
+
+  - lemma: територія
+    translation: territory
+    note: передача території; територіальна цілісність
+
+  - lemma: пропаганда
+    translation: propaganda
+    note: російська пропаганда; імперська пропаганда
+
+  - lemma: постанова
+    translation: resolution, decree
+    note: постанова Ради Міністрів
+
+  - lemma: клопотання
+    translation: petition, request
+    note: офіційне звернення; клопотання про передачу
+
+  - lemma: обґрунтування
+    translation: justification, rationale
+    note: офіційне обґрунтування рішення
+
+  - lemma: ініціатива
+    translation: initiative
+    note: ініціатива передачі
+
+  - lemma: колегіальний
+    translation: collegial
+    note: колегіальне рішення; не одноосібне
+
+  - lemma: адміністративний
+    translation: administrative
+    note: адміністративна процедура; адміністративні кордони
+
+  - lemma: міфологізація
+    translation: mythologization
+    note: створення міфів; імперська міфологізація
+
+  - lemma: деколонізація
+    translation: decolonization
+    note: деколонізаційний підхід до історії
+
+  - lemma: агентність
+    translation: agency
+    note: історична агентність народу
+
+  - lemma: зрошення
+    translation: irrigation
+    note: система зрошення; Північно-Кримський канал
+
+  - lemma: інфраструктура
+    translation: infrastructure
+    note: транспортна інфраструктура; енергетична інфраструктура
