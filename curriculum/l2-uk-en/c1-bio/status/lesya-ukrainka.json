@@ -2,12 +2,12 @@
   "module": "lesya-ukrainka",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-29T22:02:57.658479Z",
+  "last_audit": "2026-01-29T22:04:01.577307Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-29T22:00:39.294092Z",
-    "meta": "2026-01-29T21:27:50.056006Z",
-    "activities": "2026-01-29T22:02:36.739875Z",
+    "meta": "2026-01-29T22:03:20.600670Z",
+    "activities": "2026-01-29T22:03:54.821116Z",
     "vocabulary": "2026-01-29T21:38:22.795458Z",
     "plan": null
   },

@@ -2,7 +2,7 @@
 **Level:** C1 | **Module:** M62 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-29 22:02:57
+**Generated:** 2026-01-29 22:04:01
 
 ## Configuration
 **Type:** C1-biography
@@ -23,7 +23,7 @@
 | 1 | quiz | Голос Лесі: Поезія і Драма | 8 | 5 | ✅ |
 | 2 | true-false | Правда чи Міф: Леся і Кобилянська | 5 | 5 | ✅ |
 | 3 | reading | Читання: Символізм Мавки | 1 | 1 | ✅ |
-| 4 | critical-analysis | Критичний аналіз: Символіка в 'Лісовій пісні' | 1 | 1 | ✅ |
+| 4 | critical-analysis | Критичний аналіз: Символіка Лісової пісні | 1 | 1 | ✅ |
 | 5 | quiz | Вікторина: Лісова пісня | 6 | 5 | ✅ |
 | 6 | essay-response | Аналіз: Леся і Фемінізм | 1 | 1 | ✅ |
 | 7 | comparative-study | Порівняння: Леся і Франко | 1 | 1 | ✅ |
