@@ -102,3 +102,23 @@ sources:
   url: https://www.huri.harvard.edu/publications/lost-kingdom-the-quest-for-empire-and-the-making-of-the-russian-nation
   type: secondary
   notes: Modern analysis of Russian imperial nationalism
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+  word_target: 300
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
