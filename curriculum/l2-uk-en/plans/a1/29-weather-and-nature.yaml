@@ -9,31 +9,40 @@ content_outline:
 - section: Warm-up
   words: 54
   points:
-  - Content for Warm-up
-- section: Grammar
+  - Погода як щоденна тема розмови
+  - Типова погода в Україні
+- section: Presentation
   words: 137
   points:
-  - Content for Grammar
-- section: Asking About Weather
+  - Тепло, холодно, спекотно, прохолодно (прислівники)
+  - Йде дощ, йде сніг, світить сонце
+  - Сьогодні... / Вчора було... / Завтра буде...
+- section: Presentation
   words: 69
   points:
-  - Content for Asking About Weather
-- section: Seasons
+  - Яка сьогодні погода?
+  - Чи буде дощ?
+  - Яка температура?
+- section: Presentation
   words: 39
   points:
-  - Content for Seasons
-- section: Examples in Context
+  - Весна, літо, осінь, зима
+  - Прийменник у/взимку (Взимку холодно)
+- section: Presentation
   words: 183
   points:
-  - Content for Examples in Context
-- section: Dialogues
+  - Опис погоди в різні пори року
+  - Прогноз погоди
+- section: Practice
   words: 374
   points:
-  - Content for Dialogues
-- section: Практика
+  - Діалог про погоду сьогодні
+  - Діалог про плани залежно від погоди
+  - Обговорення улюбленої пори року
+- section: Practice
   words: 13
   points:
-  - Content for Практика
+  - Опис погоди у вашому місті сьогодні
 word_target: 869
 vocabulary_hints:
   required:

@@ -6,15 +6,42 @@ version: '2.0'
 title: 'Кримське ханство: Золотоординська спадщина'
 subtitle: Виникнення та державність Гіреїв
 content_outline:
-- section: Контекст
-  words: 550
+- section: Вступ
+  words: 625
+  points:
+  - Кримське ханство як ключовий гравець регіону
+  - Складні відносини з українськими землями
 - section: Читання
-  words: 2800
+  words: 2015
+  points:
+  - Народження ханства (1441-1478)
+  - Державний устрій Гіреїв
+  - Ясир — трагедія степового кордону
 - section: Первинні джерела
-  words: 400
+  words: 517
+  points:
+  - Європейські свідчення про Крим
+  - Опис Кафи та невільничого ринку
 - section: Деколонізаційний погляд
-  words: 403
-word_target: 4153
+  words: 502
+  points:
+  - Кримсько-козацькі союзи проти Польщі
+  - Культурні зв'язки та запозичення
+  - Крим як частина української історії
+- section: 'Економіка: Сади, сіль та каравани'
+  words: 276
+  points:
+  - Економічна основа ханства
+- section: Підсумок — Спадщина для сучасності
+  words: 244
+  points:
+  - Анексія 1783 року та депортація 1944-го
+  - Кримські татари як корінний народ
+- section: Потрібно більше практики?
+  words: 242
+  points:
+  - Додаткові ресурси
+word_target: 4421
 focus: history
 pedagogy: CBI
 objectives:
@@ -25,3 +52,30 @@ grammar:
 - Historical narrative style
 - Descriptive constructions
 phase: B2.3c [Українська історія]
+vocabulary_hints:
+  required:
+  - історія (history)
+  - держава (state)
+  - народ (people)
+  - влада (power)
+  - період (period)
+  - подія (event)
+  - джерело (source)
+  - спадщина (heritage)
+  recommended:
+  - аналіз (analysis)
+  - контекст (context)
+  - вплив (influence)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+  word_target: 300
+- type: timeline
+  focus: Хронологія подій
+- type: true-false
+  focus: Факти та міфи
+  items: 10

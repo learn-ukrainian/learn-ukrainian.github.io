@@ -8,19 +8,27 @@ content_outline:
 - section: Warm-up
   words: 151
   points:
-  - Content for Warm-up
+  - Види транспорту між містами (поїзд, автобус, маршрутка)
+  - Залізничні вокзали України
 - section: Presentation
   words: 257
   points:
-  - Content for Presentation
-- section: Практика
+  - Запит квитка (Один квиток до..., будь ласка)
+  - Уточнення (Туди й назад / В один бік)
+  - Клас та місце (Купе / Плацкарт / Сидячий)
+  - Розклад (О котрій відправлення? / Коли прибуття?)
+  - Платформа (На якій платформі? / В якому вагоні?)
+- section: Practice
   words: 204
   points:
-  - Content for Практика
-- section: 'Narrative: A Trip to the Mountains (Поїздка в гори)'
+  - Діалог 1: Купівля квитка на поїзд до Львова
+  - Діалог 2: Запитання про розклад автобусів
+  - Діалог 3: Зміна квитка
+- section: Warm-up
   words: 138
   points:
-  - 'Content for Narrative: A Trip to the Mountains (Поїздка в гори)'
+  - Наратив про подорож у Карпати
+  - Практична лексика в контексті
 word_target: 750
 vocabulary_hints:
   required:

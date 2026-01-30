@@ -9,11 +9,15 @@ content_outline:
 - section: Warm-up
   words: 32
   points:
-  - Content for Warm-up
-- section: Grammar
+  - Чому важливо знати час
+  - Як українці питають про час
+- section: Presentation
   words: 251
   points:
-  - Content for Grammar
+  - Питання про час (Котра година? / О котрій?)
+  - Повні години (Перша година, друга година...)
+  - Половина та чверть (Пів на другу, чверть на третю)
+  - Хвилини (Десять хвилин на третю / Без десяти третя)
 - section: Days of the Week
   words: 77
   points:
@@ -32,18 +36,20 @@ content_outline:
   - о + locative (at a time)
   - до + genitive (until)
   - після + genitive (after)
-- section: Examples in Context
+- section: Presentation
   words: 260
   points:
-  - Content for Examples in Context
-- section: Dialogues
+  - Розклад дня (О восьмій ранку я прокидаюся)
+  - Призначення зустрічей (Зустрінемося о п'ятій)
+- section: Practice
   words: 210
   points:
-  - Content for Dialogues
-- section: Практика
+  - Діалог про час (Котра година? — П'ята година)
+  - Діалог про плани на тиждень
+- section: Practice
   words: 19
   points:
-  - Content for Практика
+  - Складання розкладу українською
 word_target: 1064
 vocabulary_hints:
   required:

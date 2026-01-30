@@ -6,15 +6,41 @@ version: '2.0'
 title: 'Бояри та шляхта: Соціальна еліта'
 subtitle: Лицарська честь та політична суб'єктність
 content_outline:
-- section: Контекст
-  words: 600
+- section: Вступ
+  words: 492
+  points:
+  - Поняття "аристократія" в українському контексті
+  - Різниця між боярами та дружиною
 - section: Читання
-  words: 2600
+  words: 2106
+  points:
+  - Феномен боярської олігархії в Галичині
+  - '"Золота вольність" шляхти та коріння демократії'
+  - Економічна база: Фільварки та аграрна держава
+  - Каста магнатів: Володарі України
+  - Трансформація у шляхетський стан
+  - Полонізація та збереження ідентичності
 - section: Первинні джерела
-  words: 350
+  words: 647
+  points:
+  - Грамота короля Сигізмунда ІІ Августа (1569)
+  - Свідчення літописця про Боярську раду
 - section: Деколонізаційний погляд
-  words: 502
-word_target: 4052
+  words: 567
+  points:
+  - Спростування міфу про "відсутність власної еліти"
+  - Шляхта як носій української політичної культури
+- section: Підсумок — Еліта вільної України
+  words: 263
+  points:
+  - Еволюція еліти
+  - Юридичні гарантії
+  - Лицарська культура
+- section: Потрібно більше практики?
+  words: 247
+  points:
+  - Додаткові ресурси
+word_target: 4322
 focus: history
 pedagogy: CBI
 objectives:
@@ -25,3 +51,30 @@ grammar:
 - Social terminology
 - Formal address forms
 phase: B2.3a [Українська історія]
+vocabulary_hints:
+  required:
+  - історія (history)
+  - держава (state)
+  - народ (people)
+  - влада (power)
+  - період (period)
+  - подія (event)
+  - джерело (source)
+  - спадщина (heritage)
+  recommended:
+  - аналіз (analysis)
+  - контекст (context)
+  - вплив (influence)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+  word_target: 300
+- type: timeline
+  focus: Хронологія подій
+- type: true-false
+  focus: Факти та міфи
+  items: 10

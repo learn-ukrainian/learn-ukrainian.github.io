@@ -7,14 +7,44 @@ title: Українські землі у ВКЛ
 subtitle: Регіональна автономія та магнатська влада
 content_outline:
 - section: Вступ
-  words: 727
+  words: 720
+  points:
+  - Особливий статус руських земель у ВКЛ
+  - Баланс між інтеграцією та самобутністю
 - section: Читання
-  words: 2500
+  words: 2103
+  points:
+  - Київське князівство — тінь минулої слави
+  - Волинь — серце руської шляхти
+  - Магнатські роди — нова еліта
 - section: Первинні джерела
-  words: 400
+  words: 314
+  points:
+  - Острозька Біблія (1581)
+  - Князь Василь-Костянтин Острозький як меценат
 - section: Деколонізаційний погляд
-  words: 438
-word_target: 4065
+  words: 370
+  points:
+  - Чи було ВКЛ "колонією" для русинів?
+  - Участь у владі vs підпорядкування
+- section: Критерії оцінювання
+  words: 0
+  points:
+  - Інструкція для оцінювання
+- section: Зразок відповіді
+  words: 422
+  points:
+  - Приклад виконання завдання
+- section: Підсумок — Напередодні Люблінської унії
+  words: 170
+  points:
+  - 1569 рік як переломний момент
+  - Наслідки переходу до Корони Польської
+- section: Потрібно більше практики?
+  words: 224
+  points:
+  - Додаткові ресурси
+word_target: 4323
 focus: history
 pedagogy: CBI
 objectives:
@@ -25,3 +55,30 @@ grammar:
 - Administrative terminology
 - Regional descriptions
 phase: B2.3b [Українська історія]
+vocabulary_hints:
+  required:
+  - історія (history)
+  - держава (state)
+  - народ (people)
+  - влада (power)
+  - період (period)
+  - подія (event)
+  - джерело (source)
+  - спадщина (heritage)
+  recommended:
+  - аналіз (analysis)
+  - контекст (context)
+  - вплив (influence)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+  word_target: 300
+- type: timeline
+  focus: Хронологія подій
+- type: true-false
+  focus: Факти та міфи
+  items: 10

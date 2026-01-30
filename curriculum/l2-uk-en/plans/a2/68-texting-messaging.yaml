@@ -6,26 +6,26 @@ version: '2.0'
 title: Texting and Messaging
 subtitle: Chatting with Friends
 content_outline:
-- section: Introduction (Вступ)
+- section: Introduction / Вступ
   words: 140
   points:
   - Messaging culture
   - Popular apps
-- section: Presentation (Презентація)
+- section: Presentation / Презентація
   words: 325
   points:
   - Texting vocabulary
   - Common abbreviations
-- section: Practice (Практика)
+- section: Practice / Практика
   words: 30
   points:
   - Chat with friends
-- section: Dialogues (Діалоги)
+- section: Dialogues / Діалоги
   words: 115
   points:
   - Text conversations
   - Making plans
-- section: Narrative (Розповідь)
+- section: Narrative / Розповідь
   words: 305
   points:
   - Messaging story

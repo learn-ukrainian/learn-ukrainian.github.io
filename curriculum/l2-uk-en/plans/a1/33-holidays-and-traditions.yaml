@@ -9,31 +9,40 @@ content_outline:
 - section: Warm-up
   words: 100
   points:
-  - Content for Warm-up
-- section: Граматика (Grammar)
+  - Головні свята (Новий рік, Різдво, Великдень)
+  - Чим відрізняються українські свята
+- section: Presentation
   words: 126
   points:
-  - Content for Граматика (Grammar)
-- section: Making Wishes (Побажання)
+  - Конструкція "З + орудний" (З Новим роком!)
+  - Дієслово вітати + зі святом
+  - Дієслово бажати + родовий (Бажаю щастя!)
+- section: Presentation
   words: 100
   points:
-  - Content for Making Wishes (Побажання)
-- section: When Is Your Birthday? (Коли твій день народження?)
+  - Типові побажання (здоров'я, щастя, успіхів, любові)
+  - Відповіді на побажання (Взаємно! / Дякую!)
+- section: Presentation
   words: 100
   points:
-  - Content for When Is Your Birthday? (Коли твій день народження?)
-- section: Приклади (Examples)
+  - Питання про дату (Коли твій день народження?)
+  - Відповідь (П'ятого травня)
+  - Святкування дня народження
+- section: Practice
   words: 100
   points:
-  - Content for Приклади (Examples)
-- section: Діалоги (Dialogues)
+  - Привітання з різними святами
+  - Підписання листівки
+- section: Practice
   words: 358
   points:
-  - Content for Діалоги (Dialogues)
-- section: Практика (Practice)
-  words: -134
+  - Діалог про Новий рік
+  - Діалог на дні народження
+  - Обмін подарунками
+- section: Practice
+  words: 100
   points:
-  - Content for Практика (Practice)
+  - Написання привітання з днем народження
 word_target: 750
 vocabulary_hints:
   required:

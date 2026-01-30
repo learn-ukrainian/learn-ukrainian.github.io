@@ -8,19 +8,28 @@ content_outline:
 - section: Warm-up
   words: 134
   points:
-  - Content for Warm-up
+  - Як українці відповідають на телефон (Алло! / Слухаю!)
+  - Формальні vs неформальні дзвінки
 - section: Presentation
   words: 248
   points:
-  - Content for Presentation
-- section: Практика
+  - Початок розмови (Алло! / Добрий день, це...)
+  - Запитання про людину (Чи можу я поговорити з...?)
+  - Уточнення (Повторіть, будь ласка / Хвилинку)
+  - Завершення (Дякую за дзвінок / До зв'язку!)
+  - Помилкові номери (Вибачте, я помилився номером)
+  - Повідомлення та смс
+- section: Practice
   words: 179
   points:
-  - Content for Практика
-- section: 'Narrative: The Delivery (Доставка)'
+  - Діалог 1: Дзвінок другу
+  - Діалог 2: Дзвінок на рецепцію готелю
+  - Діалог 3: Помилковий номер
+- section: Warm-up
   words: 189
   points:
-  - 'Content for Narrative: The Delivery (Доставка)'
+  - Наратив про телефонну розмову з кур'єром
+  - Практичні фрази для доставки їжі
 word_target: 750
 vocabulary_hints:
   required:

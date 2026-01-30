@@ -9,19 +9,27 @@ content_outline:
 - section: Warm-up
   words: 159
   points:
-  - Content for Warm-up
+  - Питання Де? в повсякденному житті
+  - Основні місця (дім, робота, школа)
 - section: Presentation
   words: 593
   points:
-  - Content for Presentation
+  - 'Закінчення: -і/-ї для більшості іменників'
+  - Чергування приголосних (к→ц, г→з, х→с)
+  - Прийменник у/в (у школі, в офісі)
+  - Прийменник на (на роботі, на вулиці)
+  - Коли в, коли на (основні правила)
 - section: Practice
   words: 365
   points:
-  - Content for Practice
+  - Трансформація називний → місцевий
+  - Вибір у/в чи на
+  - Діалоги "Де знаходиться...?"
 - section: Production
   words: 214
   points:
-  - Content for Production
+  - Опис своєї кімнати (Книга на столі)
+  - Опис розташування в місті
 word_target: 1331
 vocabulary_hints:
   required:

@@ -6,15 +6,38 @@ version: '2.0'
 title: Занепад Галицько-Волинської держави
 subtitle: Трагедія 1340 року та боротьба за спадщину
 content_outline:
-- section: Контекст
-  words: 484
+- section: Вступ
+  words: 399
+  points:
+  - Криза династії Романовичів
+  - 1340 рік як переломний момент
 - section: Читання
-  words: 2800
+  words: 1969
+  points:
+  - Останні Романовичі (1264-1323)
+  - Юрій ІІ Болеслав — князь-чужинець
+  - Боротьба за спадщину
+  - Польща vs Литва vs Угорщина
 - section: Первинні джерела
-  words: 350
+  words: 1195
+  points:
+  - Галицько-Волинський літопис обривається 1292 роком
+  - Польські хроніки про події 1340 року
 - section: Деколонізаційний погляд
-  words: 509
-word_target: 4143
+  words: 515
+  points:
+  - Чому занепад держави не означав кінець народу
+  - Галицьке боярство під польською владою
+- section: Підсумок — Уроки державності
+  words: 256
+  points:
+  - Причини краху
+  - Паралелі з іншими періодами історії
+- section: Потрібно більше практики?
+  words: 234
+  points:
+  - Додаткові ресурси
+word_target: 4568
 focus: history
 pedagogy: CBI
 objectives:
@@ -25,3 +48,30 @@ grammar:
 - Expressing cause and effect
 - Tragic narrative style
 phase: B2.3a [Українська історія]
+vocabulary_hints:
+  required:
+  - історія (history)
+  - держава (state)
+  - народ (people)
+  - влада (power)
+  - період (period)
+  - подія (event)
+  - джерело (source)
+  - спадщина (heritage)
+  recommended:
+  - аналіз (analysis)
+  - контекст (context)
+  - вплив (influence)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+  word_target: 300
+- type: timeline
+  focus: Хронологія подій
+- type: true-false
+  focus: Факти та міфи
+  items: 10

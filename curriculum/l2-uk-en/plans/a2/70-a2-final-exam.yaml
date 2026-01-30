@@ -6,7 +6,7 @@ version: '2.0'
 title: A2 Final Exam
 subtitle: Level Completion
 content_outline:
-- section: Overview (Огляд)
+- section: Overview / Огляд
   words: 130
   points:
   - Exam format overview
@@ -31,7 +31,7 @@ content_outline:
   points:
   - Word formation
   - Roots and prefixes
-- section: Integration Challenge (Інтеграційне завдання)
+- section: Integration Challenge / Інтеграційне завдання
   words: 365
   points:
   - Combined skills dialogue

@@ -9,39 +9,52 @@ content_outline:
 - section: Warm-up
   words: 71
   points:
-  - Content for Warm-up
-- section: Grammar
+  - Де ти живеш? (місце)
+  - Куди ти йдеш? (напрямок)
+  - Звідки ти? (походження)
+- section: Presentation
   words: 46
   points:
-  - Content for Grammar
-- section: 'Location: Де? (Where?)'
+  - Три типи запитань про місце
+  - Прийменники для кожного типу
+- section: 'Місце: Де?'
   words: 78
   points:
-  - 'Content for Location: Де? (Where?)'
-- section: 'Direction: Куди? (Where to?)'
+  - Прийменники у/в + місцевий відмінок
+  - Прийменник на + місцевий відмінок
+  - Коли в, коли на (у школі vs на роботі)
+- section: 'Напрямок: Куди?'
   words: 119
   points:
-  - 'Content for Direction: Куди? (Where to?)'
-- section: 'Origin: Звідки? (Where from?)'
+  - Прийменники у/в + знахідний відмінок
+  - Прийменник на + знахідний відмінок
+  - Прийменник до + родовий відмінок
+- section: 'Походження: Звідки?'
   words: 80
   points:
-  - 'Content for Origin: Звідки? (Where from?)'
-- section: Location vs Direction Pairs
+  - Прийменник з + родовий відмінок
+  - Прийменник від + родовий відмінок
+  - Різниця між з та від
+- section: Presentation
   words: 38
   points:
-  - Content for Location vs Direction Pairs
-- section: Examples in Context
+  - у школі → до школи / в школу
+  - на роботі → на роботу
+- section: Presentation
   words: 139
   points:
-  - Content for Examples in Context
-- section: Dialogues
+  - Маршрут по місту (з дому в метро)
+  - Опис повсякденних переміщень
+- section: Practice
   words: 352
   points:
-  - Content for Dialogues
-- section: Практика
+  - Як дістатися до...?
+  - Звідки ви приїхали?
+  - Де знаходиться...?
+- section: Practice
   words: 13
   points:
-  - Content for Практика
+  - Інтеграційні вправи
 word_target: 936
 vocabulary_hints:
   required:

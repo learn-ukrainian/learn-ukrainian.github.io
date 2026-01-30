@@ -9,23 +9,30 @@ content_outline:
 - section: Warm-up
   words: 60
   points:
-  - Content for Warm-up
+  - Що я бачу в кімнаті? (називний)
+  - Перехід до знахідного відмінка
 - section: Presentation
   words: 593
   points:
-  - Content for Presentation
+  - Коли вживається знахідний (прямий додаток)
+  - 'Жіночий рід: -а → -у, -я → -ю (книга → книгу)'
+  - 'Чоловічий рід неістот: без змін (стіл → стіл)'
+  - 'Середній рід: без змін (вікно → вікно)'
+  - Дієслова зі знахідним (бачити, чути, брати, мати, хотіти, купувати)
 - section: Practice
   words: 88
   points:
-  - Content for Practice
+  - Трансформація називного → знахідний
+  - Заповнення речень правильною формою
 - section: Production
   words: 63
   points:
-  - Content for Production
+  - Описати, що є в магазині (Я бачу...)
+  - Список покупок (Я хочу купити...)
 - section: Cultural Insight
   words: 51
   points:
-  - Content for Cultural Insight
+  - Типові покупки в українському магазині
 word_target: 855
 vocabulary_hints:
   required:

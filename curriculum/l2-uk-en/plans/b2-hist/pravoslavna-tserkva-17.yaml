@@ -4,76 +4,90 @@ sequence: 34
 slug: pravoslavna-tserkva-17
 version: '2.0'
 title: Православна церква XVII століття
+subtitle: 'The Orthodox Church in 17th Century: Struggle for Survival'
 content_outline:
-- section: Вступ
+- section: 'Вступ: Боротьба за віру та ідентичність'
   words: 449
-  title: Боротьба за віру та ідентичність
-- section: Відновлення ієрархії
-  words: 1798
-  subsections:
-  - title: 'Історичне тло: У горнилі конфлікту'
-  - title: 'Основні події: Велика гра Сагайдачного'
-  - title: 'Процес легалізації: Пункти заспокоєння'
+  points:
+  - Криза православної церкви після Берестейської унії 1596 року
+  - Ліквідація легальної православної ієрархії в Речі Посполитій
+  - Початок підпільного існування православ'я під тиском унії
+- section: 'Відновлення ієрархії: Велика гра Сагайдачного'
+  words: 900
+  points:
+  - Православні братства як центри опору унії та полонізації
+  - Роль козацтва в захисті православної віри
+  - Петро Конашевич-Сагайдачний як гетьман та захисник православ'я
+  - 1620 рік — таємне відновлення православної ієрархії в Києві
+  - Висвячення Йова Борецького на митрополита Київського
+- section: 'Легалізація: Пункти заспокоєння'
+  words: 898
+  points:
+  - Переговори з польською владою про визнання православної церкви
+  - Пункти заспокоєння руського народу 1632 року
+  - Легалізація православної ієрархії після смерті Сагайдачного
+  - Обмежені права православних у Речі Посполитій
 - section: 'Читання: Голоси епохи'
   words: 180
-  title: Голоси епохи
+  points:
+  - Аналіз текстів православних полемістів XVII століття
+  - Твори Івана Вишенського та Мелетія Смотрицького
 - section: Первинні джерела
   words: 854
-  subsections:
-  - title: 'Документ 1: Протестація Йова Борецького (1621)'
-  - title: 'Документ 2: Пункти заспокоєння руського народу (1632)'
-- section: Деколонізаційний погляд
+  points:
+  - Протестація Йова Борецького 1621 року
+  - Богословська аргументація проти підпорядкування Риму
+  - Пункти заспокоєння — умови легалізації
+  - Гарантії прав православних вірян
+- section: 'Деколонізаційний погляд: Міфи та реальність'
   words: 584
-  subsections:
-  - title: 'Міфи 및 реальність: Спростування імперських наративів'
-  - title: 'Сучасність: Гідність та незалежність у ХХІ столітті'
-- section: Потрібно більше практики?
+  points:
+  - Міф про добровільність унії та її благодатність
+  - Насильницький характер полонізації та окатоличення
+  - Православна церква як опора української ідентичності
+  - Паралелі з Томосом 2019 року та автокефалією ПЦУ
+- section: Підсумок
   words: 135
-  title: Практика
+  points:
+  - Значення боротьби за віру для української ідентичності
+  - Від підпілля до легалізації
 word_target: 4000
 vocabulary_hints:
   required:
-  - ієрархія
-  - митрополит
-  - висвячення
-  - легітимність
-  - братство
-  - унія
-  - полеміка
-  - маєстат
-  - сповідувати
-  - патріарх
+  - ієрархія (hierarchy)
+  - митрополит (metropolitan)
+  - висвячення (ordination)
+  - братство (brotherhood)
+  - унія (union)
+  - полеміка (polemics)
+  - патріарх (patriarch)
+  - легалізація (legalization)
+  recommended:
+  - богослов'я (theology)
+  - апологетика (apologetics)
+  - єпископ (bishop)
+  - автокефалія (autocephaly)
 activity_hints:
 - type: reading
-  focus: primary source analysis
-- type: critical-analysis
-  focus: linguistic analysis
+  focus: Аналіз первинних джерел XVII століття
+  items: 4
 - type: essay-response
-  focus: historical argumentation
+  focus: Роль Сагайдачного у захисті православ'я
+  word_target: 300
+- type: timeline
+  focus: Від унії 1596 до легалізації 1632
 - type: true-false
-  focus: factual accuracy
-- type: comparative-study
-  focus: analytical comparison
+  focus: Факти про православну церкву XVII століття
+  items: 10
 focus: history
 pedagogy: CBI
-learning_outcomes:
-- Understand the status of the Orthodox Church after the Union of Brest
-- Analyze the restoration of the Kyiv Metropolitanate in 1620
-- Evaluate the role of Petro Sahaidachny in protecting the Church
-- Discuss the 'Articles for the Pacification of the Ruthenian People' (1632)
-grammar:
-- Historical narrative tenses (Past/Present Historical)
-- Passive voice in official documents
-- Religious and ecclesiastical terminology
-sources:
-- name: Історія України-Руси (Грушевський)
-  url: http://litopys.org.ua/hrushrus/iur.htm
-  type: secondary
-- name: Енциклопедія українознавства
-  url: http://www.encyclopediaofukraine.com/
-  type: reference
-phase: HIST.4 [Lithuanian-Polish Era]
 objectives:
-- Analyze the causes and consequences of православна церква xvii століття
-- Evaluate the historical significance of вступ
-- Trace the development of потрібно більше практики?
+- Учень може пояснити статус православної церкви після Берестейської унії
+- Учень може проаналізувати відновлення Київської митрополії 1620 року
+- Учень може оцінити роль Петра Сагайдачного у захисті церкви
+- Учень може охарактеризувати Пункти заспокоєння 1632 року
+grammar:
+- Історичний наратив
+- Церковна та богословська термінологія
+register: публіцистичний
+phase: HIST.4 [Lithuanian-Polish Era]

@@ -4,18 +4,86 @@ sequence: 123
 slug: pomarancheva-revoliutsiia
 version: '2.0'
 title: Помаранчева революція
+subtitle: 'Orange Revolution: Ukraine''s Democratic Awakening'
 focus: history
 pedagogy: CBI
 objectives:
-- Understand the causes and timeline of the Orange Revolution
-- 'Identify key figures: Yushchenko, Tymoshenko'
-- Explain the role of civil society and peaceful protest
-- Analyze the significance of the 2004 Supreme Court decision
+- Учень може пояснити причини та хронологію Помаранчевої революції
+- Учень може охарактеризувати роль Ющенка та Тимошенко
+- Учень може проаналізувати роль громадянського суспільства
+- Учень може оцінити значення рішення Верховного Суду 2004 року
 content_outline:
+- section: 'Вступ: Передумови революції'
+  words: 500
+  points:
+  - Вибори 2004 року та кандидати
+  - Фальсифікації першого та другого туру
+  - Отруєння Ющенка — міжнародний скандал
 - section: 'Медіа та суспільство: Інформаційний прорив'
-  words: 4000
-  subsections:
-  - Role of 'Channel 5' vs state censorship
-  - Internet (Ukrayinska Pravda) and SMS coordination
-  - Information warfare
+  words: 1000
+  points:
+  - 5 канал як голос протесту проти державної цензури
+  - Незалежні журналісти та прямі трансляції з Майдану
+  - Українська Правда як перша незалежна інтернет-газета
+  - Координація протестів через SMS та мобільні мережі
+- section: 'Майдан: Народний спротив'
+  words: 1000
+  points:
+  - Оранжевий колір як символ руху
+  - Наметове містечко на Майдані Незалежності
+  - Мирний характер протестів
+  - Роль студентства та громадянського суспільства
+- section: 'Судова перемога: Рішення Верховного Суду'
+  words: 800
+  points:
+  - Оскарження результатів виборів
+  - Рішення Верховного Суду 3 грудня 2004
+  - Повторний третій тур виборів
+  - Перемога Ющенка 26 грудня 2004
+- section: 'Деколонізаційний погляд: Українці обирають Європу'
+  words: 400
+  points:
+  - Геополітичний вибір України
+  - Російський вплив проти європейської інтеграції
+  - Помаранчева революція як крок до незалежності
+- section: Первинні джерела
+  words: 200
+  points:
+  - Відеозаписи з Майдану 2004
+  - Статті з Української Правди
+  - Рішення Верховного Суду
+- section: Підсумок
+  words: 100
+  points:
+  - Значення революції для демократизації
+  - Уроки для Революції Гідності 2014
 word_target: 4000
+vocabulary_hints:
+  required:
+  - Майдан (Maidan square)
+  - фальсифікація (falsification)
+  - Верховний Суд (Supreme Court)
+  - цензура (censorship)
+  - протест (protest)
+  - мобілізація (mobilization)
+  - помаранчевий (orange)
+  - демократія (democracy)
+  recommended:
+  - трансляція (broadcast)
+  - координація (coordination)
+  - спостерігач (observer)
+  - оскарження (appeal)
+activity_hints:
+- type: reading
+  focus: Статті з Української Правди 2004 року
+  items: 4
+- type: essay-response
+  focus: Роль медіа в демократичних змінах
+  word_target: 300
+- type: timeline
+  focus: Хронологія подій від виборів до перемоги
+- type: true-false
+  focus: Факти про фальсифікації та судові рішення
+  items: 10
+register: публіцистичний
+phase: HIST.12 [Independence & Modern Ukraine]

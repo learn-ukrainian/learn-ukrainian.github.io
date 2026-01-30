@@ -9,23 +9,31 @@ content_outline:
 - section: Warm-up
   words: 99
   points:
-  - Content for Warm-up
+  - Контраст з неістотами (книгу vs брата)
+  - Введення поняття "істота"
 - section: Presentation
   words: 315
   points:
-  - Content for Presentation
+  - Чому істоти особливі (знахідний = родовий)
+  - 'Чоловічий рід: брат → брата, тато → тата'
+  - 'Жіночий рід: як неістоти (сестра → сестру)'
+  - Тварини як істоти (кіт → кота, пес → пса)
 - section: Practice
   words: 260
   points:
-  - Content for Practice
+  - Розрізнення істот і неістот
+  - Трансформація речень з людьми
+  - Дієслова з людьми (бачити, знати, любити, чекати)
 - section: Production
   words: 438
   points:
-  - Content for Production
+  - Опис сім'ї (Я люблю маму, тата, брата...)
+  - Діалог про друзів (Ти знаєш Андрія?)
 - section: Cultural Insight
   words: 262
   points:
-  - Content for Cultural Insight
+  - Українські імена та їх відмінювання
+  - Як питати про людей ввічливо
 word_target: 1374
 vocabulary_hints:
   required:

@@ -6,34 +6,48 @@ version: '2.0'
 title: 'Checkpoint: Core Grammar'
 subtitle: Confirm Grammar Readiness Before Practical Scenarios
 content_outline:
-- section: Огляд (Overview)
+- section: Overview
   words: 145
   points:
-  - Content for Огляд (Overview)
-- section: 'Skill 1: Reading Cyrillic (Читання)'
+  - Фінальна перевірка граматики A1 перед практикою
+  - Структура контрольної точки
+  - Як оцінити свої результати
+- section: 'Skill 1: Читання кирилиці'
   words: 167
   points:
-  - 'Content for Skill 1: Reading Cyrillic (Читання)'
-- section: 'Skill 2: Gender & Agreement (Рід та узгодження)'
+  - Швидке читання без транслітерації
+  - Складні поєднання літер (щ, ї, ь)
+  - Наголос та інтонація
+- section: 'Skill 2: Рід та узгодження'
   words: 146
   points:
-  - 'Content for Skill 2: Gender & Agreement (Рід та узгодження)'
-- section: 'Skill 3: Verb System (Дієслова)'
+  - Визначення роду за закінченням
+  - Узгодження прикметників (гарний дім, гарна книга)
+  - Узгодження присвійних займенників
+- section: 'Skill 3: Система дієслів'
   words: 125
   points:
-  - 'Content for Skill 3: Verb System (Дієслова)'
-- section: 'Skill 4: Case System (Відмінки)'
+  - Теперішній час (I та II дієвідміни)
+  - Минулий час (був, була, було, були)
+  - Майбутній час (буду + інфінітив, -тиму)
+- section: 'Skill 4: Система відмінків'
   words: 135
   points:
-  - 'Content for Skill 4: Case System (Відмінки)'
-- section: 'Skill 5: Practical Skills (Практичні навички)'
+  - Називний — хто? що?
+  - Знахідний — кого? що? куди?
+  - Родовий — кого? чого? звідки?
+  - Місцевий — де? на чому?
+- section: 'Skill 5: Практичні ситуації'
   words: 119
   points:
-  - 'Content for Skill 5: Practical Skills (Практичні навички)'
-- section: Інтеграційне завдання
+  - Замовлення в кафе
+  - Покупки в магазині
+  - Запитання про дорогу
+- section: Integration Task
   words: 125
   points:
-  - Content for Інтеграційне завдання
+  - Комплексний діалог з усіма граматичними елементами
+  - Готовність до практичних сценаріїв A1.4
 word_target: 962
 vocabulary_hints:
   required:

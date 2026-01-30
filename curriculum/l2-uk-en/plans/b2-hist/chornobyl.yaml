@@ -43,3 +43,30 @@ objectives:
 - Trace the development of деколонізаційний погляд
 phase: HIST.11 [Post-War Soviet Ukraine]
 learning_outcomes: []
+vocabulary_hints:
+  required:
+  - історія (history)
+  - держава (state)
+  - народ (people)
+  - влада (power)
+  - період (period)
+  - подія (event)
+  - джерело (source)
+  - спадщина (heritage)
+  recommended:
+  - аналіз (analysis)
+  - контекст (context)
+  - вплив (influence)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+  word_target: 300
+- type: timeline
+  focus: Хронологія подій
+- type: true-false
+  focus: Факти та міфи
+  items: 10

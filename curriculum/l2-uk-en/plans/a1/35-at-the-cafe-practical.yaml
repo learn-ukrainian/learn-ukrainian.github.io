@@ -9,19 +9,28 @@ content_outline:
 - section: Warm-up
   words: 146
   points:
-  - Content for Warm-up
+  - Культура кав'ярень в Україні (особливо Львів!)
+  - Чим відрізняється кав'ярня від ресторану?
 - section: Presentation
   words: 417
   points:
-  - Content for Presentation
-- section: Практика
+  - Привітання (Добрий день! / Привіт!)
+  - Запитання про меню (Що ви порадите?)
+  - Замовлення (Мені, будь ласка... / Я візьму...)
+  - Уточнення (З молоком? Великий чи маленький?)
+  - Оплата (Можна рахунок? Готівкою / Карткою)
+  - Подяка та прощання
+- section: Practice
   words: 125
   points:
-  - Content for Практика
-- section: 'Narrative: Morning in Lviv (Ранок у Львові)'
+  - Діалог 1: Замовлення кави та круасана
+  - Діалог 2: Питання про Wi-Fi та розетку
+  - Діалог 3: Оплата рахунку
+- section: Warm-up
   words: 137
   points:
-  - 'Content for Narrative: Morning in Lviv (Ранок у Львові)'
+  - Наратив про візит до львівської кав'ярні
+  - Атмосфера та типові фрази в контексті
 word_target: 825
 vocabulary_hints:
   required:

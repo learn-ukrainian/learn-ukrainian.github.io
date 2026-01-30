@@ -85,3 +85,15 @@ sources:
 immersion: 100% Ukrainian
 phase: B2-HIST.1 [Kyivan Rus]
 word_target: 4000
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+  word_target: 300
+- type: timeline
+  focus: Хронологія подій
+- type: true-false
+  focus: Факти та міфи
+  items: 10

@@ -9,23 +9,31 @@ content_outline:
 - section: Warm-up
   words: 144
   points:
-  - Content for Warm-up
+  - Основні місця в українському місті
+  - Як запитати дорогу
 - section: Presentation
   words: 650
   points:
-  - Content for Presentation
+  - Напрямки (прямо, наліво, направо, назад)
+  - Міська інфраструктура (зупинка, станція, аптека, пошта)
+  - Прийменники місця (біля, навпроти, за, перед)
+  - Запитання про дорогу (Як дістатися до...? / Де знаходиться...?)
 - section: Practice
   words: 387
   points:
-  - Content for Practice
+  - Слідування інструкціям на мапі
+  - Діалоги про напрямки
+  - Опис маршруту
 - section: Production
   words: 225
   points:
-  - Content for Production
+  - Пояснити дорогу до свого дому
+  - Рольова гра — турист і місцевий
 - section: Cultural Insight
   words: 196
   points:
-  - Content for Cultural Insight
+  - Особливості українських міст
+  - Як українці дають вказівки
 word_target: 1602
 vocabulary_hints:
   required:

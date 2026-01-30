@@ -57,14 +57,26 @@ activity_hints:
 focus: history
 pedagogy: CBI
 objectives:
-- Learner can identify the causes and consequences of the Kosynskyi and Nalyvaiko
-  uprisings
-- Learner can analyze the social and religious motivations behind the first cossack
-  wars
-- Learner can understand the significance of these uprisings for the formation of
-  national identity
+- Learner can identify the causes and consequences of the Kosynskyi and Nalyvaiko uprisings
+- Learner can analyze the social and religious motivations behind the first cossack wars
+- Learner can understand the significance of these uprisings for the formation of national identity
 grammar:
 - 'Historical narrative: complex sentences with causal links'
 - Conditionals in historical analysis (якби... то...)
 register: публіцистичний
 phase: HIST.5 [Rise of Cossacks]
+vocabulary_hints:
+  required:
+  - історія (history)
+  - держава (state)
+  - народ (people)
+  - влада (power)
+  - період (period)
+  - подія (event)
+  - джерело (source)
+  - спадщина (heritage)
+  recommended:
+  - аналіз (analysis)
+  - контекст (context)
+  - вплив (influence)
+  - наслідки (consequences)

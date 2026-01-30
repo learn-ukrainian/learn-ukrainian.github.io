@@ -9,35 +9,43 @@ content_outline:
 - section: Warm-up
   words: 47
   points:
-  - Content for Warm-up
-- section: Grammar
+  - Опис предметів навколо
+  - Питання Який? Яка? Яке?
+- section: Presentation
   words: 133
   points:
-  - Content for Grammar
-- section: Soft Stem Adjective Endings
+  - Тверда група (-ий/-а/-е/-і)
+  - Приклади (новий дім, нова книга, нове вікно)
+  - Узгодження з родом іменника
+- section: Presentation
   words: 98
   points:
-  - Content for Soft Stem Adjective Endings
-- section: Adjective Position
+  - Закінчення -ій/-я/-є/-і
+  - Приклади (синій, синя, синє, сині)
+- section: Presentation
   words: 24
   points:
-  - Content for Adjective Position
-- section: Common Antonym Pairs
+  - Прикметник перед іменником (гарний день)
+  - Прикметник після бути (День гарний)
+- section: Presentation
   words: 61
   points:
-  - Content for Common Antonym Pairs
-- section: Examples in Context
+  - Великий ↔ малий, новий ↔ старий
+  - Добрий ↔ поганий, дорогий ↔ дешевий
+- section: Presentation
   words: 211
   points:
-  - Content for Examples in Context
-- section: Dialogues
+  - Опис кімнати (велика кімната, біле вікно)
+  - Опис людей (молода жінка, добрий чоловік)
+- section: Practice
   words: 259
   points:
-  - Content for Dialogues
-- section: Практика
+  - Діалог про новий телефон
+  - Діалог про квартиру
+- section: Practice
   words: 20
   points:
-  - Content for Практика
+  - Опис свого дому/кімнати
 word_target: 853
 vocabulary_hints:
   required:

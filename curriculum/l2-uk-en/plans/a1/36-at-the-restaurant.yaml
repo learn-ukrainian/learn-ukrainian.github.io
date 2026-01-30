@@ -8,19 +8,28 @@ content_outline:
 - section: Warm-up
   words: 124
   points:
-  - Content for Warm-up
+  - Структура українського меню (перше, друге, десерт)
+  - Етикет у ресторані
 - section: Presentation
   words: 329
   points:
-  - Content for Presentation
-- section: Практика
+  - Резервація (Я хотів би замовити столик на...)
+  - Отримання столика (Столик на двох, будь ласка)
+  - Читання меню та запитання (Що таке...? / З чого це?)
+  - Замовлення страв (Мені перше... і на друге...)
+  - Особливі потреби (Без м'яса / Без глютену)
+  - Рахунок та чайові (Скільки з мене?)
+- section: Practice
   words: 160
   points:
-  - Content for Практика
-- section: 'Narrative: Dinner with Friends (Вечеря з друзями)'
+  - Діалог 1: Замовлення повної вечері
+  - Діалог 2: Скарга на страву (ввічливо)
+  - Діалог 3: Розподіл рахунку між друзями
+- section: Warm-up
   words: 137
   points:
-  - 'Content for Narrative: Dinner with Friends (Вечеря з друзями)'
+  - Наратив про вечерю в українському ресторані
+  - Типові страви та культурний контекст
 word_target: 750
 vocabulary_hints:
   required:

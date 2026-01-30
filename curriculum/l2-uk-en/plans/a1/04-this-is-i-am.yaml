@@ -9,23 +9,32 @@ content_outline:
 - section: Warm-up
   words: 139
   points:
-  - Content for Warm-up
+  - Ukrainian skips "am/is/are" in present tense (zero copula)
+  - 'Pattern: Я студент (I student = I am a student)'
+  - Pro-drop language family inheritance from Proto-Slavic
 - section: Presentation
   words: 864
   points:
-  - Content for Presentation
+  - Personal pronouns (я, ти, він, вона, воно, ми, ви, вони)
+  - 'Formal vs informal: Ви vs ти — when to use each'
+  - 'Zero copula pattern: Subject + Predicate (no verb)'
+  - 'Examples: Я студент, Він українець, Це книга'
+  - Linking verb є exists but rarely used in speech
 - section: Practice
   words: 153
   points:
-  - Content for Practice
+  - Transformation exercises with personal pronouns
+  - Формальність — choosing Ви vs ти in scenarios
 - section: Production
   words: 126
   points:
-  - Content for Production
+  - Self-introduction without "to be" verb
+  - Describing people and objects using zero copula
 - section: Cultural Insight
   words: 166
   points:
-  - Content for Cultural Insight
+  - Modern Ukraine — young people often use ти immediately
+  - When in doubt, start with Ви — always safer
 word_target: 1448
 vocabulary_hints:
   required:

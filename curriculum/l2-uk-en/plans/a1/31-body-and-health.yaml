@@ -9,31 +9,41 @@ content_outline:
 - section: Warm-up
   words: 94
   points:
-  - Content for Warm-up
-- section: Grammar
+  - Частини тіла (голова, рука, нога, живіт)
+  - Питання про здоров'я
+- section: Presentation
   words: 157
   points:
-  - Content for Grammar
-- section: Common Health Expressions
+  - Конструкція "У мене болить + частина тіла"
+  - Конструкція "Мені погано/добре"
+  - Температура (У мене температура)
+  - Симптоми (кашель, нежить, головний біль)
+- section: Вирази про здоров'я
   words: 96
   points:
-  - Content for Common Health Expressions
-- section: At the Pharmacy (В аптеці)
+  - Хворий ↔ здоровий
+  - Почувати себе добре/погано
+  - Мені потрібно до лікаря
+- section: Presentation
   words: 75
   points:
-  - Content for At the Pharmacy (В аптеці)
-- section: Examples in Context
+  - Купівля ліків без рецепту
+  - Запитання про ліки від...
+- section: Presentation
   words: 56
   points:
-  - Content for Examples in Context
-- section: Dialogues
+  - Розмова з лікарем
+  - Покупка в аптеці
+- section: Practice
   words: 329
   points:
-  - Content for Dialogues
-- section: Практика
+  - Діалог у лікаря (Що вас турбує?)
+  - Діалог в аптеці (Мені потрібно щось від головного болю)
+  - Діалог з другом про самопочуття
+- section: Practice
   words: 13
   points:
-  - Content for Практика
+  - Опис симптомів хвороби
 word_target: 820
 vocabulary_hints:
   required:

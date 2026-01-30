@@ -9,43 +9,50 @@ content_outline:
 - section: Warm-up
   words: 31
   points:
-  - Content for Warm-up
-- section: Grammar
+  - Три типи модальності в повсякденному житті
+- section: Presentation
   words: 176
   points:
-  - Content for Grammar
-- section: 'Expressing Obligation: повинен, треба, мусити'
+  - Могти — фізична можливість (Я можу бігати)
+  - Вміти — навичка (Я вмію плавати)
+  - Дієвідміна могти (можу, можеш, може...)
+- section: Presentation
   words: 159
   points:
-  - 'Content for Expressing Obligation: повинен, треба, мусити'
-- section: 'Expressing Permission: можна / не можна'
+  - Треба/потрібно + інфінітив (Треба працювати)
+  - Повинен узгоджується з родом (Він повинен / Вона повинна)
+  - Мусити як сильний обов'язок
+- section: Presentation
   words: 48
   points:
-  - 'Content for Expressing Permission: можна / не можна'
-- section: Recommendations and Advice
+  - Можна + інфінітив (Можна увійти?)
+  - Не можна — заборона
+- section: Presentation
   words: 23
   points:
-  - Content for Recommendations and Advice
-- section: Trying and Succeeding
+  - Варто + інфінітив (Варто спробувати)
+- section: Presentation
   words: 61
   points:
-  - Content for Trying and Succeeding
-- section: Modal Adjectives
+  - Пробувати, намагатися, вдаватися
+- section: Presentation
   words: 60
   points:
-  - Content for Modal Adjectives
-- section: Examples in Context
+  - Необхідний, обов'язковий, можливий
+- section: Presentation
   words: 188
   points:
-  - Content for Examples in Context
-- section: Dialogues
+  - Правила в школі/офісі (Не можна курити)
+  - Плани (Я повинен/повинна закінчити...)
+- section: Practice
   words: 285
   points:
-  - Content for Dialogues
-- section: Практика
+  - Діалог про дозвіл (Можна взяти?)
+  - Діалог про обов'язки на роботі
+- section: Practice
   words: 18
   points:
-  - Content for Практика
+  - Опис своїх обов'язків та можливостей
 word_target: 1049
 vocabulary_hints:
   required:

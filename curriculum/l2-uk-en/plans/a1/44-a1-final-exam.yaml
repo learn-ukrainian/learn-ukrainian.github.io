@@ -8,27 +8,39 @@ content_outline:
 - section: Warm-up
   words: 121
   points:
-  - Content for Warm-up
-- section: Grammar Review (Повторення граматики)
+  - Структура фінального тесту
+  - Як оцінюється кожна частина
+  - Поради для успішного складання
+- section: Presentation
   words: 117
   points:
-  - Content for Grammar Review (Повторення граматики)
-- section: Lexicon (Лексика)
+  - Іменники та рід
+  - Дієслова (теперішній, минулий, майбутній час)
+  - Відмінки (називний, знахідний, родовий, місцевий)
+  - Узгодження прикметників та займенників
+- section: Presentation
   words: 100
   points:
-  - Content for Lexicon (Лексика)
-- section: Practical Skills (Навички)
+  - Тематичні групи (їжа, транспорт, покупки)
+  - Базові фрази для спілкування
+  - Числа та час
+- section: Presentation
   words: 100
   points:
-  - Content for Practical Skills (Навички)
-- section: Practice
+  - Аудіювання (розуміння простих діалогів)
+  - Читання (розуміння коротких текстів)
+  - Говоріння (рольові ситуації)
+- section: Comprehensive Test
   words: 123
   points:
-  - Content for Practice
-- section: 'Narrative: My First Trip (Моя перша подорож)'
+  - Інтеграційні завдання
+  - Практичні сценарії
+- section: Warm-up
   words: 189
   points:
-  - 'Content for Narrative: My First Trip (Моя перша подорож)'
+  - Фінальний наратив про подорож Україною
+  - Застосування всіх навичок A1
+  - Готовність до рівня A2
 word_target: 750
 vocabulary_hints:
   required:

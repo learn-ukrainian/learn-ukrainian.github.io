@@ -9,23 +9,32 @@ content_outline:
 - section: Warm-up
   words: 100
   points:
-  - Content for Warm-up
+  - Conversations need questions and answers, not just statements
+  - Ukrainian is simpler — just add чи or use rising intonation
+  - Negation — just put не before the verb
 - section: Presentation
   words: 717
   points:
-  - Content for Presentation
+  - 'Yes/No questions with чи: Чи ти читаєш? (Do you read?)'
+  - Casual alternative — rising intonation without чи
+  - 'Answers: Так (yes), Ні (no)'
+  - 'Question words: що, хто, де, куди, звідки, коли, чому, як, скільки'
+  - No "do/does" needed — question word signals the question
 - section: Practice
   words: 38
   points:
-  - Content for Practice
+  - Forming questions from statements
+  - Choosing correct question word for context
 - section: Production
   words: 152
   points:
-  - Content for Production
+  - Mini-dialogues at café with questions
+  - Question-and-answer practice
 - section: Cultural Insight
   words: 124
   points:
-  - Content for Cultural Insight
+  - Register difference — formal uses чи, casual uses intonation
+  - Pop culture examples from Ukrainian dubbing
 word_target: 1131
 vocabulary_hints:
   required:

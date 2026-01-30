@@ -9,27 +9,36 @@ content_outline:
 - section: Warm-up
   words: 104
   points:
-  - Content for Warm-up
-- section: Граматика (Grammar)
+  - Члени сім'ї (мама, тато, брат, сестра)
+  - Питання про сім'ю
+- section: Presentation
   words: 149
   points:
-  - Content for Граматика (Grammar)
-- section: Describing Family Members (Опис членів сім'ї)
+  - Близька родина (батьки, діти, брати, сестри)
+  - Розширена родина (дідусь, бабуся, дядько, тітка)
+  - Родинні стосунки (чоловік, дружина, онук, онука)
+- section: Presentation
   words: 255
   points:
-  - Content for Describing Family Members (Опис членів сім'ї)
-- section: Приклади (Examples)
+  - Вік (Моєму братові 25 років)
+  - Професія (Мій тато — лікар)
+  - Характер (Моя сестра дуже добра)
+  - Зовнішність (Моя мама має темне волосся)
+- section: Practice
   words: 101
   points:
-  - Content for Приклади (Examples)
-- section: Діалоги (Dialogues)
+  - Представлення своєї сім'ї
+  - Розповідь про родину
+- section: Practice
   words: 294
   points:
-  - Content for Діалоги (Dialogues)
-- section: Практика (Practice)
+  - Діалог про сім'ю друга
+  - Діалог про родинне свято
+  - Показ сімейних фото
+- section: Practice
   words: 13
   points:
-  - Content for Практика (Practice)
+  - Опис своєї сім'ї
 word_target: 916
 vocabulary_hints:
   required:

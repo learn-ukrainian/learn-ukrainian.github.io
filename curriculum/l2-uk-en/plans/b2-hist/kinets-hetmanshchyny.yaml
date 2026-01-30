@@ -8,16 +8,43 @@ subtitle: The End of the Hetmanate
 content_outline:
 - section: Вступ
   words: 200
+  points:
+  - Контекст занепаду автономії Гетьманщини у XVIII столітті
+  - Російська імперська політика централізації влади
+  - Значення ліквідації гетьманства для української історії
 - section: Читання
   words: 2900
+  points:
+  - Скасування гетьманства Катериною II у 1764 році
+  - Знищення Запорізької Січі у 1775 році
+  - Запровадження кріпацтва на українських землях
+  - Ліквідація козацьких привілеїв та автономії
+  - Російська колонізація та русифікація українських земель
+  - Політика асиміляції української еліти
+  - Економічні наслідки інкорпорації до Російської імперії
+  - Культурний занепад та втрата національних інституцій
 - section: Деколонізаційний погляд
   words: 150
+  points:
+  - Ліквідація Гетьманщини як акт колонізації
+  - Спростування російських наративів про «об'єднання братніх народів»
+  - Наслідки втрати державності для української нації
 - section: Первинні джерела
   words: 450
+  points:
+  - Укази Катерини II про скасування гетьманства
+  - Свідчення сучасників про руйнування Січі
+  - Документи про впровадження кріпацтва
+  - Листи та спогади українських козаків про трагедію
 - section: Підсумок
   words: 150
+  points:
+  - Ліквідація Гетьманщини як кінець української державності
+  - Початок нового періоду колонізації та русифікації
 - section: Потрібно більше практики?
   words: 150
+  points:
+  - Додаткові матеріали для поглибленого вивчення теми
 word_target: 4000
 focus: history
 pedagogy: CBI
@@ -31,3 +58,31 @@ grammar:
 - Історична термінологія
 register: публіцистичний
 phase: B2.3b [Українська історія]
+vocabulary_hints:
+  required:
+  - ліквідація (liquidation)
+  - кріпацтво (serfdom)
+  - скасування (abolition)
+  - централізація (centralization)
+  - асиміляція (assimilation)
+  - русифікація (Russification)
+  - автономія (autonomy)
+  - колонізація (colonization)
+  recommended:
+  - інкорпорація (incorporation)
+  - занепад (decline)
+  - привілеї (privileges)
+  - козацька старшина (Cossack officers)
+activity_hints:
+- type: reading
+  focus: The destruction of Ukrainian statehood
+  items: 1
+- type: essay-response
+  focus: Decolonizing the Russian imperial narrative
+  items: 1
+- type: timeline
+  focus: Key events leading to the end of the Hetmanate
+  items: 1
+- type: true-false
+  focus: Consequences of Russian centralization
+  items: 1

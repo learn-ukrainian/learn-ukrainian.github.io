@@ -9,23 +9,31 @@ content_outline:
 - section: Warm-up
   words: 99
   points:
-  - Content for Warm-up
+  - Ситуація з загубленими речами
+  - Питання "Чий? Чия? Чиє?"
 - section: Presentation
   words: 643
   points:
-  - Content for Presentation
+  - Змінювані форми (мій/моя/моє/мої, твій/твоя/твоє/твої)
+  - Узгодження з родом іменника
+  - Незмінювані форми (його, її, їхній)
+  - Формальне ваш/ваша/ваше
+  - Наш/наша/наше для групи
 - section: Practice
   words: 201
   points:
-  - Content for Practice
+  - Вибір правильної форми займенника
+  - Заміна іменника на займенник
 - section: Production
   words: 179
   points:
-  - Content for Production
+  - Опис своїх речей (Це мій телефон)
+  - Діалог про власність (Чия це сумка?)
 - section: Cultural Insight
   words: 185
   points:
-  - Content for Cultural Insight
+  - Ввічливість та займенники (ваш vs твій)
+  - Коли вживати формальні форми
 word_target: 1307
 vocabulary_hints:
   required:

@@ -6,27 +6,27 @@ version: '2.0'
 title: Asking for Directions
 subtitle: Getting Around Town
 content_outline:
-- section: Introduction (Вступ)
+- section: Introduction / Вступ
   words: 150
   points:
   - Getting around cities
   - Motion verbs review
-- section: Presentation (Презентація)
+- section: Presentation / Презентація
   words: 390
   points:
   - йти vs їхати
   - Transport vocabulary
   - Direction phrases
-- section: Practice (Практика)
+- section: Practice / Практика
   words: 45
   points:
   - Plan a route
-- section: Dialogues (Діалоги)
+- section: Dialogues / Діалоги
   words: 165
   points:
   - Direction conversations
   - Multi-step directions
-- section: Narrative (Розповідь)
+- section: Narrative / Розповідь
   words: 325
   points:
   - Navigation story

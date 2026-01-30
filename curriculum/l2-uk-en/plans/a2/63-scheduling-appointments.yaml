@@ -6,18 +6,18 @@ version: '2.0'
 title: Scheduling Appointments
 subtitle: Making and Changing Plans
 content_outline:
-- section: Introduction (Вступ)
+- section: Introduction / Вступ
   words: 130
   points:
   - Appointment culture
   - Phone vs online booking
-- section: Presentation (Презентиція)
+- section: Presentation / Презентація
   words: 430
   points:
   - Я хочу записатися на...
   - Choosing date and time
   - Phone etiquette
-- section: Practice (Практика)
+- section: Practice / Практика
   words: 320
   points:
   - Make appointment calls

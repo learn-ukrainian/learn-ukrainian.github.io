@@ -6,34 +6,49 @@ version: '2.0'
 title: 'Checkpoint: Navigation'
 subtitle: Can You Do the A1.2 Skills?
 content_outline:
-- section: Огляд
+- section: Overview
   words: 97
   points:
-  - Content for Огляд
-- section: 'Skill 1: Accusative Case'
+  - Мета контрольної точки — перевірити відмінки
+  - Самооцінка перед A1.3
+  - Стратегії для слабких місць
+- section: 'Skill 1: Знахідний відмінок'
   words: 155
   points:
-  - 'Content for Skill 1: Accusative Case'
-- section: 'Skill 2: Locative Case'
+  - Прямий додаток (Я бачу книгу)
+  - Неістоти без змін (Я читаю журнал)
+  - Істоти зі зміною (Я знаю Марію)
+  - Напрямок руху (Іду в магазин)
+- section: 'Skill 2: Місцевий відмінок'
   words: 199
   points:
-  - 'Content for Skill 2: Locative Case'
-- section: 'Skill 3: Genitive Case'
+  - Місце з прийменниками у/в, на
+  - Закінчення -і/-ї (у школі, на роботі)
+  - Чергування приголосних (книга → у книзі)
+  - Питання Де?
+- section: 'Skill 3: Родовий відмінок'
   words: 153
   points:
-  - 'Content for Skill 3: Genitive Case'
-- section: 'Skill 4: Possessive Pronouns'
+  - Відсутність з немає (Немає часу)
+  - Кількість з числівниками (два студенти)
+  - Походження з прийменником з (Я з України)
+- section: 'Skill 4: Присвійні займенники'
   words: 172
   points:
-  - 'Content for Skill 4: Possessive Pronouns'
-- section: 'Skill 5: Practical Navigation'
+  - Мій/моя/моє та твій/твоя/твоє
+  - Узгодження з іменником
+  - Його/її/їхній без змін
+- section: 'Skill 5: Орієнтування в місті'
   words: 176
   points:
-  - 'Content for Skill 5: Practical Navigation'
-- section: Integration Challenge
+  - Питання про напрямок (Де знаходиться...?)
+  - Вказівки (наліво, направо, прямо)
+  - Покупки (Скільки коштує?)
+- section: Integration Task
   words: 121
   points:
-  - Content for Integration Challenge
+  - Діалог у магазині — застосування відмінків
+  - Оцінка готовності до минулого часу
 word_target: 1073
 vocabulary_hints:
   required:

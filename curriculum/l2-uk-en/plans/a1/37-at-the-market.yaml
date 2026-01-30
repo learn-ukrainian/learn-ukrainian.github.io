@@ -8,19 +8,27 @@ content_outline:
 - section: Warm-up
   words: 144
   points:
-  - Content for Warm-up
+  - Культура ринків в Україні (Бессарабський, Привоз)
+  - Чому українці люблять ринки
 - section: Presentation
   words: 330
   points:
-  - Content for Presentation
-- section: Практика
+  - Одиниці виміру (кілограм, грам, штука, пучок)
+  - Запитання про ціну (Скільки коштує...? / По скільки...?)
+  - Прохання (Дайте, будь ласка... / Можна...?)
+  - Якість (свіжий, стиглий, солодкий)
+  - Торгування (ввічливе) (А дешевше можна?)
+- section: Practice
   words: 175
   points:
-  - Content for Практика
-- section: 'Narrative: A Saturday Morning at the Market (Суботній ранок на ринку)'
+  - Діалог 1: Купівля овочів (картопля, помідори)
+  - Діалог 2: Купівля фруктів на вагу
+  - Діалог 3: Запитання про здачу
+- section: Warm-up
   words: 144
   points:
-  - 'Content for Narrative: A Saturday Morning at the Market (Суботній ранок на ринку)'
+  - Наратив про похід на ринок
+  - Атмосфера українського базару
 word_target: 793
 vocabulary_hints:
   required:

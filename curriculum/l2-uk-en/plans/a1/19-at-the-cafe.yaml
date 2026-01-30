@@ -9,23 +9,31 @@ content_outline:
 - section: Warm-up
   words: 52
   points:
-  - Content for Warm-up
+  - Типова кав'ярня в Україні
+  - Що зазвичай замовляють
 - section: Presentation
   words: 517
   points:
-  - Content for Presentation
+  - Привітання офіціанта (Добрий день! Що бажаєте?)
+  - Замовлення (Мені, будь ласка... / Я візьму...)
+  - Уточнення (З молоком? / Великий чи маленький?)
+  - Рахунок (Можна рахунок? / Скільки з мене?)
+  - Оплата (Готівкою / Карткою)
 - section: Practice
   words: 280
   points:
-  - Content for Practice
+  - Діалоги офіціант-клієнт
+  - Читання меню
+  - Рольова гра замовлення
 - section: Production
   words: 92
   points:
-  - Content for Production
+  - Створення власного діалогу в кафе
 - section: Cultural Insight
   words: 134
   points:
-  - Content for Cultural Insight
+  - Кавова культура в Україні (особливо Львів)
+  - Етикет у кафе та чайові
 word_target: 1075
 vocabulary_hints:
   required:

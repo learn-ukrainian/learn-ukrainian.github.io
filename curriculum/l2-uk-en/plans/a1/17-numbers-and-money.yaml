@@ -9,19 +9,27 @@ content_outline:
 - section: Warm-up
   words: 75
   points:
-  - Content for Warm-up
+  - Числа в повсякденному житті
+  - Де ми використовуємо числа
 - section: Presentation
   words: 599
   points:
-  - Content for Presentation
+  - Числа 1-20 (один, два, три... двадцять)
+  - Десятки (двадцять, тридцять... сто)
+  - Узгодження з іменниками (1 гривня, 2 гривні, 5 гривень)
+  - Запитання про ціну (Скільки коштує?)
+  - Українська валюта (гривня, копійка)
 - section: Practice
   words: 221
   points:
-  - Content for Practice
+  - Лічба та арифметика
+  - Діалоги про ціни
+  - Рольова гра — покупки
 - section: Cultural Insight
   words: 196
   points:
-  - Content for Cultural Insight
+  - Історія гривні
+  - Типові ціни в Україні
 word_target: 1091
 vocabulary_hints:
   required:
