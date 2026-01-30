@@ -104,3 +104,23 @@ connects_to:
 - c2-22 (Rhythm & prosody builds on devices)
 - c2-23 (Intertextuality uses allusion as device)
 - 'c2-28 (Poetics: verse analysis uses devices)'
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+  word_target: 400
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1

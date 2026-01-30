@@ -103,3 +103,23 @@ connects_to:
 - c2-22 (Rhythm & prosody builds on syntax)
 - c2-16 (Text coherence uses syntactic linking)
 - c2-14 (Individual voice through syntactic preferences)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+  word_target: 400
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1

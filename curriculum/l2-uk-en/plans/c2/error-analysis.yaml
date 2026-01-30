@@ -104,3 +104,23 @@ connects_to:
 - c2-81 (Native-Like Fluency)
 - c2-82 (Teaching Ukrainian I)
 - c2-95 (Final Review I)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+  word_target: 400
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1

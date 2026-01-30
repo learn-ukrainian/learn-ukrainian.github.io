@@ -103,3 +103,23 @@ connects_to:
 - c2-23 (Intertextuality includes biblical allusions)
 - c2-77 (Rare/archaic forms)
 - c2-30 (Intertextuality in C2.2)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+  word_target: 400
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1

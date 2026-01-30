@@ -104,3 +104,23 @@ connects_to:
 - c2-17 (Practice I uses coherence in portfolio)
 - c2-32 (Writing literary essays requires coherence)
 - c2-52 (Professional documents need flow)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+  word_target: 400
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1

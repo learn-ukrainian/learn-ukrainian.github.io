@@ -106,3 +106,23 @@ connects_to:
 - c2-20 (C2.1 Checkpoint — formal assessment)
 - c2-21 (Stylistic devices mastery begins C2.1b)
 - c2-26 (C2.2 Literary mastery)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+  word_target: 400
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1

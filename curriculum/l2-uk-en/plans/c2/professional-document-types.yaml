@@ -56,7 +56,8 @@ content_outline:
   points:
   - Аналіз реальних документів з різних категорій
   - Ідентифікація структурних елементів
-  - Типові помилки та як їх уникати
+  - Помилки в реквізитах — пропуск обов'язкових елементів
+  - Змішування стилів — розмовна лексика в офіційному документі
 word_target: 4000
 vocabulary:
   required:
@@ -92,3 +93,23 @@ connects_to:
 - c2-52 (Writing Professional Documents I)
 - c2-53 (Writing Professional Documents II)
 - c2-56 (Professional Correspondence)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+  word_target: 400
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1

@@ -96,3 +96,23 @@ connects_to:
 - c2-63 (Legal Ukrainian III — Court procedures)
 - c2-64 (Legal Ukrainian IV — Legal writing)
 - c2-65 (Legal Ukrainian V — Case analysis)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+  word_target: 400
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
