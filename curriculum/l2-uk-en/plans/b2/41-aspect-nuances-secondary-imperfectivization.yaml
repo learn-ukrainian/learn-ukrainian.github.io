@@ -6,12 +6,12 @@ version: '2.0'
 title: 'Видові нюанси I: Вторинна імперфективація'
 subtitle: Secondary Imperfectivization - Deriving Imperfective from Perfective
 content_outline:
-- section: Вступ — Вторинна імперфективація
-  words: 471
+- section: Розминка — Навіщо два недоконані види?
+  words: 400
   points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-  - Роль у системі української мови
+  - Базова пара (читати → прочитати) vs трійка (читати → прочитати → перечитувати)
+  - Коли потрібен вторинний НДВ (повторювана дія, процес у минулому)
+  - Типові префікси, що породжують вторинну імперфективацію
 - section: Key Mechanics
   words: 588
   points:
@@ -23,12 +23,13 @@ content_outline:
   points:
   - '"I used to do this repeatedly" (Iterative)'
   - '"I was in the middle of re-doing it" (Process)'
-- section: Практика та підсумок
-  words: 353
+- section: Практика — утворення вторинних НДВ
+  words: 400
   points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
+  - Утворити вторинний НДВ від заданих ДВ (переписати → ?)
+  - Обрати правильний вид у контексті (повторювана дія vs одноразова)
+  - Перекласти речення з англійської з used to / was doing
+  - Аналіз тексту — знайти вторинні імперфективи та пояснити їх значення
 word_target: 2000
 focus: grammar
 pedagogy: TTT
@@ -43,3 +44,23 @@ grammar:
 - Vowel alternation in roots
 - Aspectual pairs with prefixes
 phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - термін (term)
+  - поняття (concept)
+  - процес (process)
+  - метод (method)
+  recommended:
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - дослідження (research)
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+  word_target: 200
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8

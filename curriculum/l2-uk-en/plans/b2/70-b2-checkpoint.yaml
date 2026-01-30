@@ -6,11 +6,12 @@ version: '2.0'
 title: Контрольна точка B2.2
 subtitle: B2.2 Checkpoint
 content_outline:
-- section: Вступ — Контрольна точка B2.2
-  words: 308
+- section: Огляд — Контрольна точка B2.2
+  words: 200
   points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
+  - Мета — перевірити засвоєння M41-M69
+  - Структура тесту (фразеологія, синоніми, сполучники, комплексний текст)
+  - Критерії оцінювання та прохідний бал
 - section: Pedagogical Structure
   words: 308
   points:
@@ -26,25 +27,18 @@ content_outline:
   - 'Technology: алгоритм, програма, дані, штучний інтелект, мережа'
   - 'Science: гіпотеза, теорія, експеримент, дослідження, результати'
   - 'Arts: жанр, метафора, стиль, образ, критика'
-- section: Pedagogical Structure
-  words: 308
-  points:
-  - Master professional email and report writing
-  - Develop news analysis and media literacy skills
-  - Build presentation and public speaking abilities
-  - Practice discussion and debate techniques
-  - Pass comprehensive B2 certification exam
 - section: Professional Communication (M85-88)
   words: 308
   points:
   - 'Email: лист, адресат, тема, вкладення, відповідь, пересилання'
   - 'Reports: звіт, структура, висновок, рекомендація, дані, графік'
-- section: Практика та підсумок
-  words: 460
+- section: Підсумок та результати
+  words: 400
   points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
+  - Інтерпретація результатів — сильні та слабкі сторони
+  - Рекомендації для повторення (M41-M69)
+  - Підготовка до фази B2.3 (доменна лексика, академічне письмо)
+  - Огляд пройденого шляху B2.1 + B2.2
 word_target: 2000
 focus: checkpoint
 pedagogy: Assessment
@@ -59,3 +53,23 @@ grammar:
 immersion: 100
 register: академічний
 phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - термін (term)
+  - поняття (concept)
+  - процес (process)
+  - метод (method)
+  recommended:
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - дослідження (research)
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+  word_target: 200
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8

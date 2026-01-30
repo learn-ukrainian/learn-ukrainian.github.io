@@ -6,12 +6,12 @@ version: '2.0'
 title: 'Словотворення: назви місць та об''єктів'
 subtitle: 'Word Formation: Place and Object Names'
 content_outline:
-- section: Вступ — назви місць та об'єктів
-  words: 400
+- section: Розминка — Як утворюються назви місць
+  words: 300
   points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-  - Роль у системі української мови
+  - Чому місце дії має спеціальну назву (їсти → їдальня)
+  - Три основні суфікси для місць (-ня, -ище, -арня)
+  - Зв'язок із назвами осіб (лікар → лікарня)
 - section: Suffix -ня (place of activity)
   words: 400
   points:
@@ -33,12 +33,13 @@ content_outline:
   - друкар → друкарня (printing house)
   - пекар → пекарня (bakery)
   - перукар → перукарня (hair salon)
-- section: Практика та підсумок
-  words: 300
+- section: Практика — утворення назв місць
+  words: 500
   points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
+  - Утворити назви місць від заданих дієслів (зберігати → ?)
+  - Визначити суфікс і твірне слово (кав'ярня ← кава)
+  - Аналіз тексту — знайти всі назви місць та їхнє походження
+  - Описати свій район, використовуючи назви закладів
 word_target: 2000
 focus: grammar
 pedagogy: TTT
@@ -55,3 +56,23 @@ grammar:
 immersion: 100
 register: науковий
 phase: B2.1c [Grammar Completion]
+vocabulary_hints:
+  required:
+  - термін (term)
+  - поняття (concept)
+  - процес (process)
+  - метод (method)
+  recommended:
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - дослідження (research)
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+  word_target: 200
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8

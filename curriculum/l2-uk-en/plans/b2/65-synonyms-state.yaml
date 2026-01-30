@@ -6,11 +6,12 @@ version: '2.0'
 title: 'Синоніми: Стан та Буття'
 subtitle: Synonyms - State and Existence
 content_outline:
-- section: Вступ — Стан та Буття
-  words: 471
+- section: Розминка — Бути чи існувати?
+  words: 350
   points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
+  - Бути vs існувати vs перебувати — різні аспекти буття
+  - Знаходитися vs становити — місцезнаходження vs склад
+  - Здаватися vs виглядати vs виявлятися — сприйняття vs реальність
 - section: Be/Exist
   words: 588
   points:
@@ -27,12 +28,13 @@ content_outline:
   - видаватися (appear - impression)
   - виявлятися (turn out to be)
   - справляти враження (make impression)
-- section: Практика та підсумок
-  words: 353
+- section: Практика — опис стану
+  words: 400
   points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
+  - Обрати дієслово буття відповідно до контексту (філософський текст vs новина)
+  - Описати стан справ з різними дієсловами стану
+  - Написати опис ситуації з використанням виглядати/здаватися/виявлятися
+  - Зв'язок з M55 (емоції) — опис внутрішнього стану
 word_target: 2000
 focus: phraseology
 pedagogy: CBI
@@ -47,3 +49,22 @@ grammar:
 immersion: 100
 register: науковий
 phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - синонім (synonym)
+  - вираз (expression)
+  - значення (meaning)
+  - контекст (context)
+  recommended:
+  - переносне значення (figurative meaning)
+  - стилістичне забарвлення (stylistic coloring)
+activity_hints:
+- type: reading
+  focus: Контекстне використання
+  items: 4
+- type: fill-in-the-blank
+  focus: Практичне застосування
+  items: 10
+- type: true-false
+  focus: Розуміння значень
+  items: 8

@@ -6,25 +6,40 @@ version: '2.0'
 title: Інтеграційна практика B2.1
 subtitle: B2.1 Integration Practice
 content_outline:
-- section: Вступ — Інтеграційна практика B2.1
-  words: 667
+- section: Огляд — Що ми вивчили в B2.1
+  words: 300
   points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-  - Роль у системі української мови
-- section: Інтеграція навичок
-  words: 833
+  - Пасивний стан — чотири форми
+  - Дієприкметники — активні та пасивні
+  - Регістри — науковий, офіційний, публіцистичний, розмовний
+  - Доменна лексика — політика, право, економіка
+- section: Інтеграційний текст 1 — Офіційний документ
+  words: 450
   points:
-  - Passive voice in appropriate contexts
-  - Participle recognition in texts
-  - Register-appropriate vocabulary
-  - Complex sentence construction
-- section: Практика та підсумок
-  words: 500
+  - Читання офіційного листа або постанови
+  - Виділення пасивних конструкцій
+  - Аналіз регістру та лексики
+  - Трансформація в інший регістр
+- section: Інтеграційний текст 2 — Новина
+  words: 450
   points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
+  - Читання політичної або економічної новини
+  - Виділення дієприкметників і дієприкметникових зворотів
+  - Аналіз структури заголовка та ліду
+  - Написання власного ліду
+- section: Інтеграційний текст 3 — Науковий опис
+  words: 400
+  points:
+  - Читання науково-популярного тексту
+  - Номіналізація та безособові конструкції
+  - Термінологія та точність
+  - Спрощення для розмовного стилю
+- section: Підсумкове завдання
+  words: 400
+  points:
+  - Комплексна вправа — одна тема, три регістри
+  - Самооцінка готовності до контрольної точки
+  - Рекомендації щодо прогалин
 word_target: 2000
 focus: grammar
 pedagogy: TTT
@@ -37,3 +52,23 @@ grammar:
 - Cross-skill application in authentic contexts
 register: varies
 phase: B2.1c [Register & Domain Vocab]
+vocabulary_hints:
+  required:
+  - термін (term)
+  - поняття (concept)
+  - процес (process)
+  - метод (method)
+  recommended:
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - дослідження (research)
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+  word_target: 200
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8

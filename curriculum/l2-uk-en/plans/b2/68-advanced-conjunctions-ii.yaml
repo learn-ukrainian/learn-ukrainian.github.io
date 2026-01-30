@@ -6,11 +6,12 @@ version: '2.0'
 title: 'Складні Сполучники II: Час та Умова'
 subtitle: Advanced Conjunctions II - Temporal and Conditional
 content_outline:
-- section: Вступ — Час та Умова
-  words: 471
+- section: Розминка — Коли і якщо
+  words: 350
   points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
+  - Часові сполучники — коли vs щойно vs поки vs перед тим як
+  - Умовні сполучники — якщо (реальна умова) vs якби (нереальна умова)
+  - Офіційні формули (у випадку якщо, за умови що)
 - section: Temporal Conjunctions
   words: 588
   points:
@@ -27,12 +28,13 @@ content_outline:
   - коли б (if/when - conditional)
   - у випадку якщо (in case)
   - за умови що (on condition that)
-- section: Практика та підсумок
-  words: 353
+- section: Практика — часові та умовні зв'язки
+  words: 400
   points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
+  - Об'єднати речення з часовими сполучниками (послідовність подій)
+  - Трансформувати реальну умову в нереальну (якщо → якби)
+  - Написати інструкцію з використанням різних часових сполучників
+  - Зв'язок з M67 — комплексний аналіз складного речення
 word_target: 2000
 focus: grammar
 pedagogy: Grammar
@@ -48,3 +50,23 @@ grammar:
 immersion: 100
 register: публіцистичний
 phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - термін (term)
+  - поняття (concept)
+  - процес (process)
+  - метод (method)
+  recommended:
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - дослідження (research)
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+  word_target: 200
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8

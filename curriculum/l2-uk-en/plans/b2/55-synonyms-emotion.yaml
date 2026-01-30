@@ -5,11 +5,12 @@ slug: 55-synonyms-emotion
 version: '2.0'
 title: 'Синоніми: Емоції та почуття'
 content_outline:
-- section: Вступ — Емоції та почуття
-  words: 471
+- section: Розминка — Нюанси емоційної лексики
+  words: 350
   points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
+  - Чому "сум" і "журба" — не одне й те саме
+  - Інтенсивність, регістр, стилістичне забарвлення
+  - Зв'язок з фразеологією M47-54 (емоції в ідіомах)
 - section: Joy
   words: 588
   points:
@@ -26,12 +27,13 @@ content_outline:
   - смуток (sorrow - deeper)
   - горе (grief - intense)
   - туга (longing - nostalgic)
-- section: Практика та підсумок
-  words: 353
+- section: Практика — вибір точного слова
+  words: 400
   points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
+  - Обрати синонім відповідно до контексту (офіційний лист vs художній текст)
+  - Градуювати синоніми за інтенсивністю (сум → журба → горе)
+  - Переписати текст, замінивши нейтральні слова на експресивні
+  - Написати психологічний портрет з багатою емоційною лексикою
 word_target: 2000
 focus: phraseology
 pedagogy: CBI
@@ -45,3 +47,22 @@ grammar:
 - Register and intensity
 register: varies
 phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - синонім (synonym)
+  - вираз (expression)
+  - значення (meaning)
+  - контекст (context)
+  recommended:
+  - переносне значення (figurative meaning)
+  - стилістичне забарвлення (stylistic coloring)
+activity_hints:
+- type: reading
+  focus: Контекстне використання
+  items: 4
+- type: fill-in-the-blank
+  focus: Практичне застосування
+  items: 10
+- type: true-false
+  focus: Розуміння значень
+  items: 8

@@ -6,11 +6,12 @@ version: '2.0'
 title: 'Синоніми: Дія та Перетворення'
 subtitle: Synonyms - Action and Transformation
 content_outline:
-- section: Вступ — Дія та Перетворення
-  words: 471
+- section: Розминка — Що значить "робити"?
+  words: 350
   points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
+  - Робити vs чинити vs діяти — різні сфери вживання
+  - Виконувати vs здійснювати — офіційний стиль
+  - Брати vs хапати vs отримувати — манера дії
 - section: Do/Make
   words: 588
   points:
@@ -27,12 +28,13 @@ content_outline:
   - хапати (grab - quick)
   - вихоплювати (snatch - sudden)
   - отримувати (receive - get given)
-- section: Практика та підсумок
-  words: 353
+- section: Практика — дієслова дії
+  words: 400
   points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
+  - Обрати дієслово дії відповідно до контексту (офіційний документ vs розповідь)
+  - Переписати текст, змінивши манеру дії (швидко vs повільно, різко vs плавно)
+  - Написати інструкцію з точними дієсловами дії
+  - Зв'язок з M57 (рух) — комплексний опис діяльності
 word_target: 2000
 focus: phraseology
 pedagogy: CBI
@@ -47,3 +49,22 @@ grammar:
 immersion: 100
 register: публіцистичний
 phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - синонім (synonym)
+  - вираз (expression)
+  - значення (meaning)
+  - контекст (context)
+  recommended:
+  - переносне значення (figurative meaning)
+  - стилістичне забарвлення (stylistic coloring)
+activity_hints:
+- type: reading
+  focus: Контекстне використання
+  items: 4
+- type: fill-in-the-blank
+  focus: Практичне застосування
+  items: 10
+- type: true-false
+  focus: Розуміння значень
+  items: 8

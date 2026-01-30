@@ -6,11 +6,12 @@ version: '2.0'
 title: 'Синоніми: Абстрактні Поняття та Ідеї'
 subtitle: Synonyms - Abstract Concepts and Ideas
 content_outline:
-- section: Вступ — Абстрактні Поняття та Ідеї
-  words: 471
+- section: Розминка — Думка чи ідея?
+  words: 350
   points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
+  - Думка vs ідея vs погляд — різні рівні абстракції
+  - Поняття vs концепція vs теорія — ступені узагальнення
+  - Академічна лексика для наукового дискурсу
 - section: Thought/Idea
   words: 588
   points:
@@ -27,12 +28,13 @@ content_outline:
   - концепція (conception - framework)
   - теорія (theory - systematic)
   - гіпотеза (hypothesis - tentative)
-- section: Практика та підсумок
-  words: 353
+- section: Практика — абстрактна лексика
+  words: 400
   points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
+  - Обрати слово для опису інтелектуальної діяльності (наукова стаття vs есе)
+  - Написати вступ до дослідження з використанням концепція/теорія/гіпотеза
+  - Порівняти на моєму погляді vs на мою думку — регістрові відтінки
+  - Систематизувати синоніми M55-66 — підсумкова таблиця
 word_target: 2000
 focus: phraseology
 pedagogy: CBI
@@ -47,3 +49,22 @@ grammar:
 immersion: 100
 register: науковий
 phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - синонім (synonym)
+  - вираз (expression)
+  - значення (meaning)
+  - контекст (context)
+  recommended:
+  - переносне значення (figurative meaning)
+  - стилістичне забарвлення (stylistic coloring)
+activity_hints:
+- type: reading
+  focus: Контекстне використання
+  items: 4
+- type: fill-in-the-blank
+  focus: Практичне застосування
+  items: 10
+- type: true-false
+  focus: Розуміння значень
+  items: 8

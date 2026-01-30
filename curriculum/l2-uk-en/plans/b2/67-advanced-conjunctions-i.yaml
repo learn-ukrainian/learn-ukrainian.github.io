@@ -6,11 +6,12 @@ version: '2.0'
 title: 'Складні Сполучники I: Причина та Допуск'
 subtitle: Advanced Conjunctions I - Causal and Concessive
 content_outline:
-- section: Вступ — Причина та Допуск
-  words: 471
+- section: Розминка — Чому і незважаючи на
+  words: 350
   points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
+  - Причинові сполучники — бо (розм.) vs тому що (нейтр.) vs оскільки (офіц.)
+  - Допустові сполучники — хоча vs незважаючи на те що vs попри те що
+  - Регістрові відмінності та пунктуація
 - section: Causal Conjunctions
   words: 588
   points:
@@ -27,12 +28,13 @@ content_outline:
   - попри те що (in spite of)
   - дарма що (even though)
   - хай (let/even if)
-- section: Практика та підсумок
-  words: 353
+- section: Практика — складні речення
+  words: 400
   points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
+  - Об'єднати прості речення складним причиновим сполучником
+  - Переписати текст, змінивши сполучники на офіційніші/розмовніші
+  - Написати аргументативний параграф з причиновими та допустовими зв'язками
+  - Виправити помилки в пунктуації складних речень
 word_target: 2000
 focus: grammar
 pedagogy: Grammar
@@ -48,3 +50,23 @@ grammar:
 immersion: 100
 register: публіцистичний
 phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - термін (term)
+  - поняття (concept)
+  - процес (process)
+  - метод (method)
+  recommended:
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - дослідження (research)
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+  word_target: 200
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8

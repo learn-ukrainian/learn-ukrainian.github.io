@@ -6,12 +6,12 @@ version: '2.0'
 title: Односкладні речення
 subtitle: One-member Sentences
 content_outline:
-- section: Вступ — Односкладні речення
-  words: 333
+- section: Розминка — Речення без підмета
+  words: 300
   points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
-  - Роль у системі української мови
+  - Чому деякі речення не мають підмета
+  - Чотири типи односкладних речень
+  - Стилістичний ефект — емоційність, лаконічність
 - section: Означено-особові (Definite-personal)
   words: 333
   points:
@@ -36,12 +36,13 @@ content_outline:
   - Дорога довга. Чагарі, долини. (A long road. Bushes, valleys.)
   - Ніч. Тиша. Зорі. (Night. Silence. Stars.)
   - Київ! Древня столиця! (Kyiv! Ancient capital!)
-- section: Практика та підсумок
-  words: 300
+- section: Практика — односкладні речення
+  words: 400
   points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
+  - Визначити тип односкладного речення
+  - Трансформувати двоскладне речення в односкладне
+  - Написати поетичний опис природи з номінативними реченнями
+  - Аналіз тексту Шевченка — знайти односкладні речення
 word_target: 2000
 focus: grammar
 pedagogy: TTT
@@ -56,3 +57,23 @@ grammar:
 - Безособові речення
 - Номінативні речення
 phase: B2.1c [Register & Domain Vocab]
+vocabulary_hints:
+  required:
+  - термін (term)
+  - поняття (concept)
+  - процес (process)
+  - метод (method)
+  recommended:
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - дослідження (research)
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+  word_target: 200
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8

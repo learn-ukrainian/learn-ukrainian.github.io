@@ -6,11 +6,12 @@ version: '2.0'
 title: 'Синоніми: Кількість та Міра'
 subtitle: Synonyms - Quantity and Measure
 content_outline:
-- section: Вступ — Кількість та Міра
-  words: 471
+- section: Розминка — Багато чи мало?
+  words: 350
   points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
+  - Багато vs чимало vs безліч — ступені інтенсивності
+  - Розмовні слова (купа, маса) vs нейтральні (багато)
+  - Мало vs трохи — негативна vs позитивна конотація
 - section: Much/Many
   words: 588
   points:
@@ -27,12 +28,13 @@ content_outline:
   - трохи (a little - positive)
   - кілька (several - countable)
   - декілька (a few - formal)
-- section: Практика та підсумок
-  words: 353
+- section: Практика — опис кількості
+  words: 400
   points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
+  - Обрати слово кількості відповідно до регістру (звіт vs лист другу)
+  - Переписати текст, змінивши сприйняття кількості (перебільшення vs применшення)
+  - Написати статистичний огляд з різними кількісними словами
+  - Зв'язок з M32 (числівники) — комплексне вираження кількості
 word_target: 2000
 focus: phraseology
 pedagogy: CBI
@@ -49,3 +51,22 @@ grammar:
 immersion: 100
 register: публіцистичний
 phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - синонім (synonym)
+  - вираз (expression)
+  - значення (meaning)
+  - контекст (context)
+  recommended:
+  - переносне значення (figurative meaning)
+  - стилістичне забарвлення (stylistic coloring)
+activity_hints:
+- type: reading
+  focus: Контекстне використання
+  items: 4
+- type: fill-in-the-blank
+  focus: Практичне застосування
+  items: 10
+- type: true-false
+  focus: Розуміння значень
+  items: 8

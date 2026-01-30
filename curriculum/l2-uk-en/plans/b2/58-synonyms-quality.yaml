@@ -6,11 +6,12 @@ version: '2.0'
 title: 'Синоніми: Якість та Оцінка'
 subtitle: Synonyms - Quality and Evaluation
 content_outline:
-- section: Вступ — Якість та Оцінка
-  words: 471
+- section: Розминка — Добре чи погано?
+  words: 350
   points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
+  - Добрий vs хороший vs гарний — різні сфери оцінки
+  - Поганий vs злий — моральна vs загальна оцінка
+  - Підсилення та пом'якшення оцінки в різних регістрах
 - section: Good
   words: 588
   points:
@@ -27,12 +28,13 @@ content_outline:
   - кепський (lousy - colloquial)
   - огидний (disgusting - strong)
   - жахливий (terrible - intense)
-- section: Практика та підсумок
-  words: 353
+- section: Практика — оцінювання в тексті
+  words: 400
   points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
+  - Обрати оцінний прикметник відповідно до контексту (рецензія, лист, новина)
+  - Переписати текст з нейтральної оцінки на емоційну
+  - Написати відгук на фільм/книгу з використанням 5+ оцінних слів
+  - Порівняти ступені інтенсивності оцінки (чудовий → прекрасний → неперевершений)
 word_target: 2000
 focus: phraseology
 pedagogy: CBI
@@ -45,3 +47,22 @@ grammar:
 immersion: 100
 register: публіцистичний
 phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - синонім (synonym)
+  - вираз (expression)
+  - значення (meaning)
+  - контекст (context)
+  recommended:
+  - переносне значення (figurative meaning)
+  - стилістичне забарвлення (stylistic coloring)
+activity_hints:
+- type: reading
+  focus: Контекстне використання
+  items: 4
+- type: fill-in-the-blank
+  focus: Практичне застосування
+  items: 10
+- type: true-false
+  focus: Розуміння значень
+  items: 8

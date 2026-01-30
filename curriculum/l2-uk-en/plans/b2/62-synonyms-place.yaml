@@ -6,11 +6,12 @@ version: '2.0'
 title: 'Синоніми: Місце та Простір'
 subtitle: Synonyms - Place and Space
 content_outline:
-- section: Вступ — Місце та Простір
-  words: 471
+- section: Розминка — Де і куди?
+  words: 350
   points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
+  - Статичне положення (тут, там) vs напрямок (туди, звідти)
+  - Зменшувальні форми (тутечки, тамтечки) — розмовний стиль
+  - Офіційні вирази місця (на цьому місці, у даному випадку)
 - section: Here
   words: 588
   points:
@@ -25,12 +26,13 @@ content_outline:
   - он там (over there - pointing)
   - туди (to there - direction)
   - звідти (from there - origin)
-- section: Практика та підсумок
-  words: 353
+- section: Практика — просторовий опис
+  words: 400
   points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
+  - Обрати прислівник місця відповідно до контексту
+  - Написати опис маршруту з різними просторовими словами
+  - Порівняти опис місця в офіційному та розмовному стилях
+  - Зв'язок з M35 (назви місць) — комплексний опис локації
 word_target: 2000
 focus: phraseology
 pedagogy: CBI
@@ -45,3 +47,22 @@ grammar:
 immersion: 100
 register: публіцистичний
 phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - синонім (synonym)
+  - вираз (expression)
+  - значення (meaning)
+  - контекст (context)
+  recommended:
+  - переносне значення (figurative meaning)
+  - стилістичне забарвлення (stylistic coloring)
+activity_hints:
+- type: reading
+  focus: Контекстне використання
+  items: 4
+- type: fill-in-the-blank
+  focus: Практичне застосування
+  items: 10
+- type: true-false
+  focus: Розуміння значень
+  items: 8

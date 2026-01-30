@@ -6,11 +6,12 @@ version: '2.0'
 title: 'Синоніми: Комунікація та Мовлення'
 subtitle: Synonyms - Communication and Speech
 content_outline:
-- section: Вступ — Комунікація та Мовлення
-  words: 471
+- section: Розминка — Як сказати "сказати"
+  words: 350
   points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
+  - Казати vs говорити vs розповідати — різниця у вживанні
+  - Офіційне мовлення (повідомляти, заявляти, стверджувати)
+  - Різні способи запитувати (питати, цікавитися, допитувати)
 - section: Say
   words: 588
   points:
@@ -27,12 +28,13 @@ content_outline:
   - цікавитися (be interested/inquire)
   - розпитувати (question - detailed)
   - допитувати (interrogate - intense)
-- section: Практика та підсумок
-  words: 353
+- section: Практика — дієслова мовлення
+  words: 400
   points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
+  - Обрати дієслово мовлення відповідно до контексту (інтерв'ю, суд, дружня розмова)
+  - Переписати пряму мову в непряму з правильним вибором дієслова
+  - Написати діалог з різними дієсловами мовлення (5+ синонімів)
+  - Порівняти українські та англійські дієслова мовлення в перекладі
 word_target: 2000
 focus: phraseology
 pedagogy: CBI
@@ -47,3 +49,22 @@ grammar:
 immersion: 100
 register: публіцистичний
 phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - синонім (synonym)
+  - вираз (expression)
+  - значення (meaning)
+  - контекст (context)
+  recommended:
+  - переносне значення (figurative meaning)
+  - стилістичне забарвлення (stylistic coloring)
+activity_hints:
+- type: reading
+  focus: Контекстне використання
+  items: 4
+- type: fill-in-the-blank
+  focus: Практичне застосування
+  items: 10
+- type: true-false
+  focus: Розуміння значень
+  items: 8
