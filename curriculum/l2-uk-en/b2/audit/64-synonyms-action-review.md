@@ -1,25 +1,23 @@
 # Audit Report: M64 — 64-synonyms-action.md
-
-**Level:** B2 | **Module:** M64 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
+**Level:** B2 | **Module:** M64 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:28:28
+**Generated:** 2026-01-30 21:18:18
 
 ## Configuration
-
 **Type:** B2-vocab
-**Word Target:** 1750 words
+**Word Target:** 2000 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
 **Priority Types:** mark-the-words, match-up, quiz, translate
+**Required Types:** fill-in-the-blank, reading, true-false
 **Engagement:** ≥6 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥35 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть характер дії | 12 | 8 | ✅ |
@@ -42,22 +40,22 @@
 - Total activities: 15 (target: 10-14) ❌
 - Unique types: 11 (minimum: 4) ✅
 - Priority types used: 3/4 (match-up, quiz, translate) ✅
+- Required types used: 1/3 (true-false) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
+- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['fill-in-the-blank']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
+  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 64-synonyms-action.yaml: Schema validation error at key '13': {'type': 'select', 'title': 'Творча та Технічна Дія', 'instruction': 'Оберіть усі слова, що описують складні та інноваційні процеси (6 елементів).', 'items': [{'question': 'Які терміни вказують на модернізацію та розвиток? (Оберіть 6)', 'options': [{'text': 'модернізувати', 'correct': True}, {'text': 'оптимізувати', 'correct': True}, {'text': 'інтегрувати', 'correct': True}, {'text': 'впроваджувати', 'correct': True}, {'text': 'трансформувати', 'correct': True}, {'text': 'удосконалювати', 'correct': True}]}, {'question': "Оберіть синоніми до слова 'створювати':", 'options': [{'text': 'творити', 'correct': True}, {'text': 'засновувати', 'correct': True}, {'text': 'фундадувати', 'correct': True}, {'text': 'руйнувати', 'correct': False}]}, {'question': "Які слова описують 'швидку реакцію':", 'options': [{'text': 'оперативно', 'correct': True}, {'text': 'негайно', 'correct': True}, {'text': 'миттєво', 'correct': True}, {'text': 'повільно', 'correct': False}]}, {'question': 'Оберіть слова для опису професійної дії:', 'options': [{'text': 'кваліфіковано', 'correct': True}, {'text': 'фахово', 'correct': True}, {'text': 'майстерно', 'correct': True}, {'text': 'абияк', 'correct': False}]}, {'question': "Які слова вказують на 'результативність':", 'options': [{'text': 'ефективно', 'correct': True}, {'text': 'продуктивно', 'correct': True}, {'text': 'успішно', 'correct': True}, {'text': 'марно', 'correct': False}]}, {'question': "Оберіть назви 'творчих процесів':", 'options': [{'text': 'натхнення', 'correct': True}, {'text': 'візуалізація', 'correct': True}, {'text': 'репетиція', 'correct': True}, {'text': 'рутина', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-
 **📝 UPDATE** (severity 5/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 
 ## Gates
-
-- **Words:** ✅ 2180/1750 (raw: 2387)
+- **Words:** ✅ 2180/2000 (raw: 2387)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
@@ -67,36 +65,31 @@
 - **Vocab:** ⚠️ 14 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (vocab))
-- **Richness:** ✅ 98% (grammar)
+- **Richness:** ✅ 97% (phraseology)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-
-**Score:** 98% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 97% (minimum: 95%)
+**Module Type:** phraseology
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 68 | 24 | 100% | 20% | 20.0% |
-| engagement | 9 | 5 | 100% | 15% | 15.0% |
-| dialogues | 5 | 4 | 100% | 15% | 15.0% |
-| variety | 0.96 | - | 96% | 10% | 9.6% |
-| cultural | 3 | 3 | 100% | 10% | 10.0% |
-| realworld | 8 | 3 | 100% | 10% | 10.0% |
-| visual | 6 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.82 | - | 82% | 5% | 4.1% |
-| questions | 9 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **98.7%** |
+| engagement | 9 | 4 | 100% | 25% | 25.0% |
+| variety | 0.96 | - | 96% | 17% | 16.0% |
+| cultural | 3 | - | 100% | 17% | 16.7% |
+| visual | 6 | 3 | 100% | 8% | 8.3% |
+| paragraph_var | 0.82 | - | 82% | 8% | 6.8% |
+| examples | 67 | - | 100% | 8% | 8.3% |
+| realworld | 8 | - | 100% | 8% | 8.3% |
+| questions | 9 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **97.8%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 87 | Included in Core |

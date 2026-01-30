@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M19 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 23:38:51
+**Generated:** 2026-01-30 13:32:31
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4569/4000 (raw: 4616)
+- **Words:** ✅ 4285/4000 (raw: 4332)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/2 types
@@ -46,13 +46,13 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.7% (target 90-100% (history))
-- **Richness:** ✅ 100% (history)
+- **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
+- **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 100% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
@@ -62,25 +62,24 @@
 | engagement | 6 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 8 | 4 | 100% | 10% | 9.5% |
+| cultural | 7 | 4 | 100% | 10% | 9.5% |
 | visual | 4 | 4 | 100% | 10% | 9.5% |
-| variety | 1.00 | - | 100% | 5% | 4.8% |
+| variety | 0.99 | - | 99% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 3 | 3 | 100% | 5% | 4.8% |
+| questions | 4 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 62 | Included in Core |
+| **Intro/Narrative** | ✅ | 78 | Included in Core |
 | **Вступ — Русь у міжнародному контексті** | ✅ | 658 | Included in Core |
-| **Русь і Візантія** | ⚪️ | 828 | Skipped |
-| **Русь і Польща** | ⚪️ | 618 | Skipped |
-| **Русь і Угорщина** | ⚪️ | 509 | Skipped |
-| **Степові сусіди** | ⚪️ | 626 | Skipped |
-| **Скандинавія та Захід** | ⚪️ | 488 | Skipped |
-| **Деколонізаційний погляд** | ✅ | 187 | Included in Core |
-| **Читання** | ✅ | 58 | Included in Core |
-| **Первинні джерела** | ✅ | 109 | Included in Core |
-| **Підсумок** | ✅ | 370 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 56 | Skipped |
+| **Русь і Візантія (Читання)** | ✅ | 818 | Included in Core |
+| **Русь і Польща** | ⚪️ | 588 | Skipped |
+| **Русь і Угорщина** | ⚪️ | 408 | Skipped |
+| **Степові сусіди** | ⚪️ | 387 | Skipped |
+| **Скандинавія та Захiд** | ⚪️ | 385 | Skipped |
+| **Деколонізаційний погляд** | ✅ | 286 | Included in Core |
+| **Первинні джерела** | ✅ | 276 | Included in Core |
+| **Підсумок** | ✅ | 251 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 150 | Skipped |

@@ -2,14 +2,14 @@
   "module": "44-checkpoint-word-formation",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T12:23:55.516087Z",
+  "last_audit": "2026-01-30T21:12:52.801346Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-08T14:11:55.768174Z",
+    "md": "2026-01-27T15:24:10.363245Z",
     "meta": "2026-01-26T17:21:18.927313Z",
     "activities": "2026-01-27T12:23:40.478767Z",
     "vocabulary": "2026-01-25T18:00:39.781038Z",
-    "plan": "2026-01-27T12:23:50.718082Z"
+    "plan": "2026-01-30T12:31:49.635062Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "985/800 (raw: 1382)"
+      "message": "985/855 (raw: 1382)"
     },
     "activities": {
       "status": "pass",

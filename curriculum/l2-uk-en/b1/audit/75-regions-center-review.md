@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M75 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 19:15:47
+**Generated:** 2026-01-30 00:32:37
 
 ## Configuration
 **Type:** B1-culture
@@ -43,7 +43,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1790/1500 (raw: 1892)
+- **Words:** ✅ 1793/1500 (raw: 1888)
 - **Activities:** ✅ 14/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 12/4 types
@@ -55,7 +55,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.1% (target 85-100% (B1.7-8 Ukraine))
+- **Immersion:** 🇺🇦 99.2% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 97% (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -81,11 +81,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 40 | Included in Core |
-| **Вступ** | ✅ | 138 | Included in Core |
+| **Вступ — Центр: Серце України** | ✅ | 138 | Included in Core |
 | **Сучасність** | ⚪️ | 208 | Skipped |
 | **Історія та культура** | ✅ | 674 | Included in Core |
 | **Практика** | ⚪️ | 151 | Skipped |
 | **Продукція** | ⚪️ | 310 | Skipped |
-| **Підсумок** | ✅ | 0 | Included in Core |
-| **Що ви дізналися** | ⚪️ | 159 | Skipped |
+| **Підсумок — Звідси все починалось** | ✅ | 162 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

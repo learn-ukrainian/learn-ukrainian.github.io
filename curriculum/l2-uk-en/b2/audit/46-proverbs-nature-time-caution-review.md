@@ -1,25 +1,23 @@
 # Audit Report: M46 — 46-proverbs-nature-time-caution.md
-
-**Level:** B2 | **Module:** M46 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
+**Level:** B2 | **Module:** M46 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:28:16
+**Generated:** 2026-01-30 21:18:00
 
 ## Configuration
-
 **Type:** B2-vocab
-**Word Target:** 1750 words
+**Word Target:** 2000 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
 **Priority Types:** mark-the-words, match-up, quiz, translate
+**Required Types:** essay-response, reading, true-false
 **Engagement:** ≥6 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥35 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Значення прислів'їв | 10 | 8 | ✅ |
@@ -41,10 +39,10 @@
 - Total activities: 14 (target: 10-14) ✅
 - Unique types: 12 (minimum: 4) ✅
 - Priority types used: 4/4 (mark-the-words, match-up, quiz, translate) ✅
+- Required types used: 2/3 (essay-response, true-false) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "**Регістр:** Нейтральний, часто вживається в бізнес-контексті.". Shares significant keywords with sentence at index 34.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (71% overlap): "«Краще синиця в руках, ніж журавель у небі», — порадив батько.". Shares significant keywords with sentence at index 100.
@@ -59,14 +57,12 @@
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-
 **📝 UPDATE** (severity 15/100)
 
 - 6 violations (moderate)
 
 ## Gates
-
-- **Words:** ✅ 2876/1750 (raw: 3287)
+- **Words:** ✅ 2877/2000 (raw: 3288)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -79,33 +75,28 @@
 - **Pedagogy:** ❌ 6 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (vocab))
-- **Richness:** ✅ 97% (grammar)
+- **Richness:** ✅ 96% (phraseology)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-
-**Score:** 97% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 96% (minimum: 95%)
+**Module Type:** phraseology
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 55 | 24 | 100% | 20% | 20.0% |
-| engagement | 12 | 5 | 100% | 15% | 15.0% |
-| dialogues | 26 | 4 | 100% | 15% | 15.0% |
-| variety | 0.77 | - | 77% | 10% | 7.7% |
-| cultural | 12 | 3 | 100% | 10% | 10.0% |
-| realworld | 5 | 3 | 100% | 10% | 10.0% |
-| visual | 4 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 12 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **97.7%** |
+| engagement | 12 | 4 | 100% | 25% | 25.0% |
+| variety | 0.77 | - | 77% | 17% | 12.8% |
+| cultural | 12 | - | 100% | 17% | 16.7% |
+| visual | 4 | 3 | 100% | 8% | 8.3% |
+| paragraph_var | 1.00 | - | 100% | 8% | 8.3% |
+| examples | 55 | - | 100% | 8% | 8.3% |
+| realworld | 5 | - | 100% | 8% | 8.3% |
+| questions | 12 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **96.2%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 56 | Included in Core |
@@ -115,6 +106,6 @@
 | **Вживання у контексті** | ✅ | 325 | Included in Core |
 | **Тематична класифікація прислів'їв** | ⚪️ | 0 | Skipped |
 | **Міні-діалоги для практики** | ✅ | 150 | Included in Core |
-| **Історичний контекст українських прислів'їв про природу і час** | ✅ | 384 | Included in Core |
+| **Історичний контекст українських прислів'їв про природу і час** | ✅ | 385 | Included in Core |
 | **Підсумок** | ✅ | 141 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

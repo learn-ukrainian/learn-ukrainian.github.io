@@ -2,14 +2,14 @@
   "module": "32-numeral-declension-compound-numbers",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:28:06.433273Z",
+  "last_audit": "2026-01-30T21:18:09.700101Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-11T21:59:43.896550Z",
-    "meta": "2026-01-26T17:21:19.156798Z",
+    "md": "2026-01-27T15:24:10.351824Z",
+    "meta": "2026-01-29T07:39:04.699157Z",
     "activities": "2026-01-11T23:20:02.155220Z",
     "vocabulary": "2026-01-21T22:54:29.464533Z",
-    "plan": "2026-01-26T17:21:19.156539Z"
+    "plan": "2026-01-30T15:04:49.257645Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2113/1750 (raw: 3678)"
+      "message": "2113/2000 (raw: 3678)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,8 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "3 Outline Compliance Errors"
+      "5 Outline Compliance Errors",
+      "Missing required activity types: reading"
     ],
     "pass_count": 4,
     "fail_count": 0

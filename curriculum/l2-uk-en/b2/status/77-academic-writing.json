@@ -2,14 +2,14 @@
   "module": "77-academic-writing",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:28:37.557226Z",
+  "last_audit": "2026-01-30T21:17:49.090348Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-12T22:59:01.415434Z",
-    "meta": "2026-01-26T17:21:19.252893Z",
+    "md": "2026-01-27T15:24:10.352082Z",
+    "meta": "2026-01-29T07:39:04.729867Z",
     "activities": "2026-01-12T23:03:25.918075Z",
     "vocabulary": "2026-01-21T22:54:36.142892Z",
-    "plan": "2026-01-26T17:21:19.252643Z"
+    "plan": "2026-01-30T15:04:49.337406Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2848/1750 (raw: 2930) | pedagogy: 1 violations"
+      "message": "2848/2000 (raw: 2930) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -42,7 +42,7 @@
     "status": "fail",
     "blocking_issues": [
       "1 Critical Template Violations",
-      "2 Outline Compliance Errors"
+      "5 Outline Compliance Errors"
     ],
     "pass_count": 3,
     "fail_count": 1

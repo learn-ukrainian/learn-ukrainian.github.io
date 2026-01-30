@@ -1,26 +1,23 @@
 # Audit Report: M90 — 90-news-analysis-advanced.md
-
-**Level:** B2 | **Module:** M90 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2 | **Module:** M90 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:28:46
+**Generated:** 2026-01-30 21:17:51
 
 ## Configuration
-
 **Type:** B2-history
-**Word Target:** 4000 words
+**Word Target:** 2000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading
+**Required Types:** essay-response, reading, true-false
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розпізнавання упередженості в новинах | 10 | 8 | ✅ |
@@ -42,12 +39,11 @@
 - Total activities: 14 (target: 3-9) ❌
 - Unique types: 13 (minimum: 2) ✅
 - Priority types used: 2/4 (comparative-study, essay-response) ✅
-- Required types used: 1/2 (essay-response) ❌
+- Required types used: 2/3 (essay-response, true-false) ❌
 - Low density activities: 0
 
 ## Gates
-
-- **Words:** ✅ 4057/4000 (raw: 4179)
+- **Words:** ✅ 4057/2000 (raw: 4179)
 - **Activities:** ✅ 14/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 13/2 types
@@ -65,12 +61,10 @@
 - **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
-
 **Score:** 95% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 20 | 15 | 100% | 25% | 25.0% |
@@ -84,7 +78,6 @@
 | **TOTAL** | | | | | **95.2%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 109 | Included in Core |

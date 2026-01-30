@@ -1,25 +1,23 @@
 # Audit Report: M50 — 50-idioms-body-hands-legs.md
-
-**Level:** B2 | **Module:** M50 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
+**Level:** B2 | **Module:** M50 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:28:19
+**Generated:** 2026-01-30 21:17:49
 
 ## Configuration
-
 **Type:** B2-vocab
-**Word Target:** 1750 words
+**Word Target:** 2000 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
 **Priority Types:** mark-the-words, match-up, quiz, translate
+**Required Types:** essay-response, reading, true-false
 **Engagement:** ≥6 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥35 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Значення соматичних фразеологізмів | 16 | 8 | ✅ |
@@ -42,11 +40,11 @@
 - Total activities: 15 (target: 10-14) ❌
 - Unique types: 12 (minimum: 4) ✅
 - Priority types used: 4/4 (mark-the-words, match-up, quiz, translate) ✅
+- Required types used: 2/3 (essay-response, true-false) ❌
 - Low density activities: 0
 
 ## Gates
-
-- **Words:** ✅ 1867/1750 (raw: 2276)
+- **Words:** ❌ 1867/2000 (raw: 2276)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -59,44 +57,28 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 90-100% (vocab))
-- **Richness:** ❌ 86% < 95% min (grammar)
+- **Richness:** ✅ 98% (phraseology)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-
-**Score:** 86% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 98% (minimum: 95%)
+**Module Type:** phraseology
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 57 | 24 | 100% | 20% | 20.0% |
-| engagement | 4 | 5 | 80% | 15% | 12.0% |
-| dialogues | 21 | 4 | 100% | 15% | 15.0% |
-| variety | 0.99 | - | 99% | 10% | 9.9% |
-| cultural | 2 | 3 | 67% | 10% | 6.7% |
-| realworld | 1 | 3 | 33% | 10% | 3.3% |
-| visual | 6 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.85 | - | 85% | 5% | 4.2% |
-| questions | 18 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **86.2%** |
-
-### Dryness Flags & Fixes
-
-- ❌ **ABSTRACT_ONLY**
-  - FIX:
-    Add 3+ real-world boxes. Use this exact format:
-
-    > 🌍 **У реальному житті**
-    >
-    > [Specific scenario: "На співбесіді...", "У магазині...", "На вокзалі..."]
-    > [Example sentence showing grammar in that context]
+| engagement | 4 | 4 | 100% | 25% | 25.0% |
+| variety | 0.99 | - | 99% | 17% | 16.5% |
+| cultural | 2 | - | 100% | 17% | 16.7% |
+| visual | 6 | 3 | 100% | 8% | 8.3% |
+| paragraph_var | 0.84 | - | 84% | 8% | 7.0% |
+| examples | 57 | - | 100% | 8% | 8.3% |
+| realworld | 1 | - | 100% | 8% | 8.3% |
+| questions | 18 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **98.5%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 56 | Included in Core |

@@ -2,11 +2,11 @@
   "module": "zborivska-bila-tserkva",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T23:39:20.980726Z",
+  "last_audit": "2026-01-29T23:39:34.657963Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.347292Z",
-    "meta": "2026-01-26T22:20:13.824403Z",
+    "meta": "2026-01-29T07:38:18.645969Z",
     "activities": "2026-01-27T20:09:06.974020Z",
     "vocabulary": "2026-01-27T11:35:40.876122Z",
     "plan": null
@@ -39,8 +39,10 @@
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
+    "status": "fail",
+    "blocking_issues": [
+      "1 Critical Template Violations"
+    ],
     "pass_count": 5,
     "fail_count": 0
   }

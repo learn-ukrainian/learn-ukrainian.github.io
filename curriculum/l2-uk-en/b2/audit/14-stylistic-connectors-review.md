@@ -1,14 +1,12 @@
 # Audit Report: M14 — 14-stylistic-connectors.md
-
-**Level:** B2 | **Module:** M14 | **Phase:** B2 | **Pedagogy:** Not Specified | **Target:** 1750
+**Level:** B2 | **Module:** M14 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:27:53
+**Generated:** 2026-01-30 21:18:04
 
 ## Configuration
-
 **Type:** B2-grammar
-**Word Target:** 1750 words
+**Word Target:** 3800 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Теоретичні основи стилістичних сполучників | 16 | 8 | ✅ |
@@ -46,7 +43,6 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (71% overlap): "Незважаючи на те що умови змінилися, контракт залишається чинним.". Shares significant keywords with sentence at index 125.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (71% overlap): "Незважаючи на те що умови змінилися, контракт залишається чинним.". Shares significant keywords with sentence at index 125.
@@ -60,14 +56,12 @@
   - FIX: Vary sentence structure.
 
 ## Recommendation
-
 **📝 UPDATE** (severity 15/100)
 
 - 5 violations (moderate)
 
 ## Gates
-
-- **Words:** ✅ 2451/1750 (raw: 3435)
+- **Words:** ❌ 2451/3800 (raw: 3435)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -85,12 +79,10 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
 **Score:** 99% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 70 | 24 | 100% | 20% | 20.0% |
@@ -106,7 +98,6 @@
 | **TOTAL** | | | | | **99.2%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 66 | Included in Core |

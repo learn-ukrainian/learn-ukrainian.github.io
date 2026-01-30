@@ -1,26 +1,23 @@
 # Audit Report: M18 — petro-sahaidachny.md
-
 **Level:** C1 | **Module:** M18 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:56:04
+**Generated:** 2026-01-30 21:15:04
 
 ## Configuration
-
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
 **Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** essay-response, quiz, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥24 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Вірші на жалісний погреб Сагайдачного | 1 | 1 | ✅ |
@@ -33,23 +30,20 @@
 - Total activities: 5 (target: 3-9) ✅
 - Unique types: 5 (minimum: 3) ✅
 - Priority types used: 5/6 (authorial-intent, comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 2/3 (essay-response, reading) ❌
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'основна частина...'.
   - FIX: Vary sentence structure.
 
 ## Recommendation
-
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
 - **Words:** ❌ 1676/4000 (raw: 1931)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
@@ -68,12 +62,10 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-
 **Score:** 61% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 1 | 4 | 25% | 19% | 4.8% |
@@ -89,16 +81,14 @@
 | **TOTAL** | | | | | **61.9%** |
 
 ### Dryness Flags & Fixes
-
 - ❌ **NO_QUOTES**
   - FIX:
     Add 2+ direct quotes from the subject. Use this format:
-
+    
     > «[Exact quote from the person]»
     > — *[Person name], [context/year]*
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 91 | Included in Core |

@@ -1,12 +1,10 @@
 # Audit Report: M64 — 64-halychyna.md
-
-**Level:** C1 | **Module:** M64 | **Phase:** C1 | **Pedagogy:** Immersion & Analysis | **Target:** 3000
+**Level:** C1 | **Module:** M64 | **Phase:** C1.5 | **Pedagogy:** Immersion & Analysis | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:34
+**Generated:** 2026-01-30 21:14:35
 
 ## Configuration
-
-**Type:** C1
+**Type:** C1-culture
 **Word Target:** 3000 words
 **Activities:** 12-16 required
 **Items per Activity:** ≥12 items
@@ -18,7 +16,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Культурні маркери Галичини | 5 | 5 | ✅ |
@@ -42,13 +39,11 @@
 - Low density activities: 0
 
 ## Recommendation
-
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
 - **Words:** ❌ 2119/3000 (raw: 2394)
 - **Activities:** ✅ 13/12
 - **Density:** ✅ All > 12
@@ -61,32 +56,29 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (13 activities)
-- **Immersion:** 🇺🇦 99.8% (target 90-100%)
-- **Richness:** ✅ 96% (content)
+- **Immersion:** 🇺🇦 99.8% (target 90-100% (culture))
+- **Richness:** ❌ 86% < 95% min (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
-**Score:** 96% (minimum: 95%)
-**Module Type:** content
+**Score:** 86% (minimum: 95%)
+**Module Type:** cultural
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 42 | 15 | 100% | 25% | 25.0% |
-| engagement | 7 | 5 | 100% | 19% | 18.7% |
-| variety | 0.97 | - | 97% | 12% | 12.1% |
-| cultural | 3 | 4 | 75% | 12% | 9.4% |
-| realworld | 3 | 3 | 100% | 12% | 12.5% |
-| visual | 4 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 4 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **96.5%** |
+| cultural | 3 | 5 | 60% | 33% | 20.0% |
+| engagement | 7 | 6 | 100% | 20% | 20.0% |
+| visual | 4 | 4 | 100% | 13% | 13.3% |
+| variety | 0.97 | - | 97% | 7% | 6.5% |
+| paragraph_var | 1.00 | - | 100% | 7% | 6.7% |
+| examples | 42 | - | 100% | 7% | 6.7% |
+| realworld | 3 | - | 100% | 7% | 6.7% |
+| questions | 4 | 4 | 100% | 7% | 6.7% |
+| **TOTAL** | | | | | **86.5%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 77 | Included in Core |

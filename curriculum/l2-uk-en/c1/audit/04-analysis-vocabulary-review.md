@@ -1,14 +1,12 @@
 # Audit Report: M04 — 04-analysis-vocabulary.md
-
-**Level:** C1 | **Module:** M04 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
+**Level:** C1 | **Module:** M04 | **Phase:** C1.1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:28:51
+**Generated:** 2026-01-30 21:13:58
 
 ## Configuration
-
 **Type:** C1-vocab
-**Word Target:** 3000 words
+**Word Target:** 4000 words
 **Activities:** 12-16 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Ключові терміни аналізу | 8 | 6 | ✅ |
@@ -50,20 +47,17 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 04-analysis-vocabulary.yaml: Schema validation error at key 'words': ['Глибокий', 'аналіз', 'зібраних', 'даних', 'дозволив', 'вченим', 'виявити', 'приховані', 'закономірності', 'розвитку', 'системи'] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ❌ 2546/3000 (raw: 2890)
+- **Words:** ❌ 2546/4000 (raw: 2890)
 - **Activities:** ✅ 18/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 8/4 types
@@ -76,31 +70,28 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 96.9% (target 90-100% (vocab))
-- **Richness:** ❌ 91% < 95% min (content)
+- **Richness:** ✅ 97% (vocabulary)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
-**Score:** 91% (minimum: 95%)
-**Module Type:** content
+**Score:** 97% (minimum: 95%)
+**Module Type:** vocabulary
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 62 | 15 | 100% | 25% | 25.0% |
-| engagement | 12 | 5 | 100% | 19% | 18.7% |
-| variety | 0.98 | - | 98% | 12% | 12.2% |
-| cultural | 4 | 4 | 100% | 12% | 12.5% |
-| realworld | 1 | 3 | 33% | 12% | 4.1% |
-| visual | 15 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 18 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **91.4%** |
+| collocations | 18 | 20 | 90% | 25% | 22.5% |
+| usage_examples | 61 | 15 | 100% | 20% | 20.0% |
+| engagement | 12 | 4 | 100% | 15% | 15.0% |
+| cultural | 4 | 3 | 100% | 10% | 10.0% |
+| visual | 15 | 3 | 100% | 10% | 10.0% |
+| register_notes | 8 | 5 | 100% | 10% | 10.0% |
+| variety | 0.98 | - | 98% | 5% | 4.9% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **97.4%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 116 | Included in Core |

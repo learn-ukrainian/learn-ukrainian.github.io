@@ -2,14 +2,14 @@
   "module": "41-degrees-of-certainty",
   "level": "C1",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:29:20.100544Z",
+  "last_audit": "2026-01-30T21:14:22.134998Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-10T16:10:25.574974Z",
-    "meta": "2026-01-26T17:21:19.470881Z",
+    "md": "2026-01-27T15:24:10.366858Z",
+    "meta": "2026-01-29T07:39:04.768048Z",
     "activities": "2026-01-10T23:44:51.442012Z",
     "vocabulary": null,
-    "plan": "2026-01-26T17:21:19.470684Z"
+    "plan": "2026-01-30T11:45:09.964226Z"
   },
   "gates": {
     "meta": {
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "1970/3000 (raw: 2242) | richness: 90% < 95% min (content)"
+      "violations": 1,
+      "message": "1970/3000 (raw: 2242)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "1 Outline Compliance Errors",
+      "3 Outline Compliance Errors",
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],
     "pass_count": 1,

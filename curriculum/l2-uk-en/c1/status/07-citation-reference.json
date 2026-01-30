@@ -2,14 +2,14 @@
   "module": "07-citation-reference",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:28:53.889042Z",
+  "last_audit": "2026-01-30T21:14:00.819881Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-13T12:08:09.724051Z",
-    "meta": "2026-01-26T17:21:19.326931Z",
+    "md": "2026-01-27T15:24:10.366619Z",
+    "meta": "2026-01-29T07:39:04.749892Z",
     "activities": "2026-01-11T00:20:28.430686Z",
     "vocabulary": null,
-    "plan": "2026-01-26T17:21:19.326744Z"
+    "plan": "2026-01-29T07:45:40.786257Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2414/3000 (raw: 2510)"
+      "message": "2414/4000 (raw: 2510)"
     },
     "activities": {
       "status": "pass",

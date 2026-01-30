@@ -2,14 +2,14 @@
   "module": "94-shevchenko-shchodennyk-lysty",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:29:53.547396Z",
+  "last_audit": "2026-01-30T21:14:49.080094Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-13T22:19:16.333046Z",
-    "meta": "2026-01-26T17:21:19.574986Z",
+    "md": "2026-01-27T15:24:10.367254Z",
+    "meta": "2026-01-29T07:39:04.794594Z",
     "activities": "2026-01-13T22:20:20.448931Z",
     "vocabulary": null,
-    "plan": "2026-01-26T17:21:19.574742Z"
+    "plan": "2026-01-30T11:55:20.978294Z"
   },
   "gates": {
     "meta": {
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 3,
-      "message": "2003/3500 (raw: 2310) | pedagogy: 1 violations | richness: 88% < 95% min (content)"
+      "violations": 2,
+      "message": "2003/3000 (raw: 2310) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "2 Outline Compliance Errors",
+      "3 Outline Compliance Errors",
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],
     "pass_count": 1,

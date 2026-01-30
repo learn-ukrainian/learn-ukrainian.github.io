@@ -1,11 +1,9 @@
 # Audit Report: M76 — 76-klasychna-muzyka-1-vytoky.md
-
-**Level:** C1 | **Module:** M76 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 3000
+**Level:** C1 | **Module:** M76 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:41
+**Generated:** 2026-01-30 21:14:42
 
 ## Configuration
-
 **Type:** C1-fine-arts
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -18,7 +16,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Аналіз партитури Березовського | 3 | 3 | ✅ |
@@ -43,13 +40,11 @@
 - Low density activities: 0
 
 ## Recommendation
-
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
 - **Words:** ❌ 2501/3000 (raw: 2987)
 - **Activities:** ✅ 14/12
 - **Density:** ✅ All > 12
@@ -68,12 +63,10 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
 **Score:** 96% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 27 | 15 | 100% | 25% | 25.0% |
@@ -87,7 +80,6 @@
 | **TOTAL** | | | | | **96.6%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 95 | Included in Core |

@@ -2,14 +2,14 @@
   "module": "49-work-professions",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T12:41:07.792514Z",
+  "last_audit": "2026-01-30T21:12:55.319966Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-08T20:56:33.587119Z",
+    "md": "2026-01-27T15:24:10.363327Z",
     "meta": "2026-01-26T17:21:18.943796Z",
     "activities": "2026-01-11T10:24:58.340461Z",
     "vocabulary": "2026-01-25T16:02:17.872365Z",
-    "plan": "2026-01-27T12:35:54.443572Z"
+    "plan": "2026-01-30T12:31:49.646370Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1637/1000 (raw: 2161)"
+      "message": "1637/1600 (raw: 2161)"
     },
     "activities": {
       "status": "pass",

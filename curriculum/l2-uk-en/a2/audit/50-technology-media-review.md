@@ -1,14 +1,12 @@
 # Audit Report: M50 — 50-technology-media.md
-
-**Level:** A2 | **Module:** M50 | **Phase:** A2.5 | **Pedagogy:** PPP | **Target:** 1000
+**Level:** A2 | **Module:** M50 | **Phase:** A2.5 | **Pedagogy:** PPP | **Target:** 1350
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 12:41:08
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-30 21:12:55
 
 ## Configuration
-
 **Type:** A2-vocab
-**Word Target:** 1000 words
+**Word Target:** 1350 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Tech Quiz | 8 | 8 | ✅ |
@@ -43,8 +40,7 @@
 - Low density activities: 0
 
 ## Gates
-
-- **Words:** ✅ 1153/1000 (raw: 1641)
+- **Words:** ❌ 1153/1350 (raw: 1641)
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
@@ -61,7 +57,6 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

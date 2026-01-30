@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M10 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 23:38:36
+**Generated:** 2026-01-30 13:32:25
 
 ## Configuration
 **Type:** B2-history
@@ -34,12 +34,12 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4228/4000 (raw: 4412)
+- **Words:** ✅ 4493/4000 (raw: 4682)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 9/5
+- **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 17 < 20 (soft target)
 - **Structure:** ✅ Valid Structure
@@ -58,12 +58,12 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 3 | 3 | 100% | 24% | 23.8% |
-| engagement | 9 | 6 | 100% | 14% | 14.3% |
+| primary_sources | 4 | 3 | 100% | 24% | 23.8% |
+| engagement | 10 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 8 | 4 | 100% | 10% | 9.5% |
-| visual | 7 | 4 | 100% | 10% | 9.5% |
+| visual | 8 | 4 | 100% | 10% | 9.5% |
 | variety | 0.98 | - | 98% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 13 | 3 | 100% | 5% | 4.8% |
@@ -75,7 +75,7 @@
 | **Intro/Narrative** | ✅ | 68 | Included in Core |
 | **Вступ** | ✅ | 129 | Included in Core |
 | **Читання** | ✅ | 1018 | Included in Core |
-| **Первинні джерела** | ✅ | 130 | Included in Core |
+| **Первинні джерела** | ✅ | 395 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 2635 | Included in Core |
 | **Підсумок** | ✅ | 76 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 172 | Skipped |

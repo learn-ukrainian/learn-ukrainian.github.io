@@ -1,14 +1,12 @@
 # Audit Report: M17 — 17-irregular-verbs-complete.md
-
-**Level:** C1 | **Module:** M17 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
+**Level:** C1 | **Module:** M17 | **Phase:** C1.1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:04
+**Generated:** 2026-01-30 21:14:07
 
 ## Configuration
-
 **Type:** C1-grammar
-**Word Target:** 3000 words
+**Word Target:** 4000 words
 **Activities:** 12-16 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння граматичної теорії та тексту | 12 | 5 | ✅ |
@@ -44,20 +41,17 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 17-irregular-verbs-complete.yaml: Schema validation error at key 'min_words': 150 is less than the minimum of 200
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ❌ 2124/3000 (raw: 2397)
+- **Words:** ❌ 2124/4000 (raw: 2397)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
@@ -70,31 +64,30 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.6% (target 90-100% (grammar))
-- **Richness:** ❌ 93% < 95% min (content)
+- **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
-**Score:** 93% (minimum: 95%)
-**Module Type:** content
+**Score:** 96% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 31 | 15 | 100% | 25% | 25.0% |
-| engagement | 8 | 5 | 100% | 19% | 18.7% |
-| variety | 0.99 | - | 99% | 12% | 12.4% |
-| cultural | 2 | 4 | 50% | 12% | 6.2% |
-| realworld | 5 | 3 | 100% | 12% | 12.5% |
-| visual | 7 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 7 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **93.6%** |
+| examples | 31 | 24 | 100% | 20% | 20.0% |
+| engagement | 8 | 5 | 100% | 15% | 15.0% |
+| dialogues | 6 | 4 | 100% | 15% | 15.0% |
+| variety | 0.99 | - | 99% | 10% | 9.9% |
+| cultural | 2 | 3 | 67% | 10% | 6.7% |
+| realworld | 5 | 3 | 100% | 10% | 10.0% |
+| visual | 7 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 7 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **96.6%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

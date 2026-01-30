@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M15 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 23:39:16
+**Generated:** 2026-01-30 13:32:28
 
 ## Configuration
 **Type:** B2-history
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4460/4000 (raw: 4823)
+- **Words:** ✅ 4751/4000 (raw: 5111)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -62,19 +62,19 @@
 | primary_sources | 15 | 3 | 100% | 24% | 23.8% |
 | engagement | 6 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
-| decolonization | 13 | 2 | 100% | 14% | 14.3% |
+| decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 6 | 4 | 100% | 10% | 9.5% |
 | visual | 7 | 4 | 100% | 10% | 9.5% |
 | variety | 0.98 | - | 98% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 17 | 3 | 100% | 5% | 4.8% |
+| questions | 18 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 141 | Included in Core |
-| **Вступ** | ✅ | 78 | Included in Core |
+| **Вступ** | ✅ | 107 | Included in Core |
 | **Читання: Момент істини в Києві** | ✅ | 322 | Included in Core |
 | **Хронологія: Шлях до великого княжіння** | ✅ | 658 | Included in Core |
 | **Глибоке занурення: Династична криза 1093-1113 років: Шлях крізь темряву** | ✅ | 194 | Included in Core |
@@ -83,11 +83,11 @@
 | **Культура: Культурний ренесанс епохи Мономаха** | ✅ | 208 | Included in Core |
 | **Глибоке занурення: «Повчання дітям»: Літературний шедевр епохи** | ✅ | 233 | Included in Core |
 | **Розмова: Родина Мономаха: Династія великих справ та європейські зв'язки** | ✅ | 262 | Included in Core |
-| **Сьогодення: Економічне життя та Побут Русі** | ✅ | 98 | Included in Core |
-| **Погляд: Військове мистецтво та Озброєння** | ✅ | 44 | Included in Core |
+| **Сьогодення: Економічне життя та Побут Русі** | ✅ | 156 | Included in Core |
+| **Погляд: Військове мистецтво та Озброєння** | ✅ | 87 | Included in Core |
 | **Первинні джерела: Голоси вічності** | ✅ | 433 | Included in Core |
-| **Деколонізаційний погляд: Мономах — наш, а не їхній** | ✅ | 146 | Included in Core |
-| **Підсумкове есе** | ⚪️ | 59 | Skipped |
+| **Деколонізаційний погляд: Мономах — наш, а не їхній** | ✅ | 159 | Included in Core |
+| **Підсумкове есе** | ⚪️ | 106 | Skipped |
 | **Оцінювання есе** | ⚪️ | 416 | Skipped |
-| **Підсумок** | ✅ | 33 | Included in Core |
-| **Погляд: Потрібно більше практики?** | ✅ | 45 | Included in Core |
+| **Підсумок** | ✅ | 56 | Included in Core |
+| **Погляд: Потрібно більше практики?** | ✅ | 123 | Included in Core |

@@ -1,8 +1,8 @@
 # Audit Report: M70 — danylo-apostol.md
 **Level:** B2 | **Module:** M70 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 23:37:57
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-29 23:39:57
 
 ## Configuration
 **Type:** B2-history
@@ -32,6 +32,15 @@
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
+
+## TEMPLATE COMPLIANCE
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Читання|Хід|Основні події|Діяльність|Свідки|Великий рейд|Відбудова' found: Читання: Епоха Данила Апостола, Підсумок: Захід сонця, Адміністративна та правова діяльність
+  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 4075/4000 (raw: 4172)

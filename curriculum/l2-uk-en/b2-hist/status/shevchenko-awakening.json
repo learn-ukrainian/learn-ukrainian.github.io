@@ -2,11 +2,11 @@
   "module": "shevchenko-awakening",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-28T11:16:23.942296Z",
+  "last_audit": "2026-01-29T23:39:08.113012Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-28T11:11:17.252450Z",
-    "meta": "2026-01-28T11:03:29.072892Z",
+    "meta": "2026-01-29T07:38:18.669696Z",
     "activities": "2026-01-27T21:41:49.933543Z",
     "vocabulary": "2026-01-28T11:03:21.355962Z",
     "plan": null

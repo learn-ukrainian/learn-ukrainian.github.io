@@ -1,14 +1,12 @@
 # Audit Report: M26 — 26-media-landscape.md
-
-**Level:** C1 | **Module:** M26 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
+**Level:** C1 | **Module:** M26 | **Phase:** C1.2 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:10
+**Generated:** 2026-01-30 21:14:12
 
 ## Configuration
-
 **Type:** C1
-**Word Target:** 3000 words
+**Word Target:** 4000 words
 **Activities:** 12-16 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | group-sort | Типи медіа | 12 | 12 | ✅ |
@@ -44,20 +41,17 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 26-media-landscape.yaml: Schema validation error at key 'min_words': 150 is less than the minimum of 200
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ❌ 2030/3000 (raw: 2097)
+- **Words:** ❌ 2030/4000 (raw: 2097)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 8/4 types
@@ -75,12 +69,10 @@
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
 **Score:** 96% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 15 | 15 | 100% | 25% | 25.0% |
@@ -94,7 +86,6 @@
 | **TOTAL** | | | | | **96.8%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 76 | Included in Core |

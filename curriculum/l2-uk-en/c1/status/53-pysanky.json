@@ -2,14 +2,14 @@
   "module": "53-pysanky",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:29:27.433517Z",
+  "last_audit": "2026-01-30T21:14:29.390438Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-10T15:30:34.995997Z",
-    "meta": "2026-01-26T17:21:19.494554Z",
+    "md": "2026-01-27T15:24:10.366960Z",
+    "meta": "2026-01-29T07:39:04.771919Z",
     "activities": "2026-01-11T00:20:28.164532Z",
     "vocabulary": null,
-    "plan": "2026-01-26T17:21:19.494370Z"
+    "plan": "2026-01-30T11:46:27.702600Z"
   },
   "gates": {
     "meta": {
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "1902/4000 (raw: 2090) | richness: 91% < 95% min (content)"
+      "violations": 1,
+      "message": "1902/3000 (raw: 2090)"
     },
     "activities": {
       "status": "pass",
@@ -42,8 +42,9 @@
     "status": "fail",
     "blocking_issues": [
       "1 Critical Template Violations",
-      "1 Outline Compliance Errors",
+      "4 Outline Compliance Errors",
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
+      "4 forbidden activity types (use --fix to remove)",
       "Missing required activity types: reading"
     ],
     "pass_count": 1,

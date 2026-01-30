@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M84 | **Phase:** HIST.8 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-28 14:00:36
+**Generated:** 2026-01-29 23:40:01
 
 ## Configuration
 **Type:** B2-history

@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M85 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 20:14:48
+**Generated:** 2026-01-30 00:51:43
 
 ## Configuration
 **Type:** B1-culture
@@ -43,7 +43,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1855/1500 (raw: 2215)
+- **Words:** ✅ 1855/1500 (raw: 2217)
 - **Activities:** ✅ 14/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 12/4 types
@@ -70,7 +70,7 @@
 | cultural | 11 | 5 | 100% | 33% | 33.3% |
 | engagement | 9 | 6 | 100% | 20% | 20.0% |
 | visual | 6 | 4 | 100% | 13% | 13.3% |
-| variety | 0.98 | - | 98% | 7% | 6.5% |
+| variety | 0.97 | - | 97% | 7% | 6.5% |
 | paragraph_var | 0.83 | - | 83% | 7% | 5.5% |
 | examples | 23 | - | 100% | 7% | 6.7% |
 | realworld | 6 | - | 100% | 7% | 6.7% |
@@ -86,5 +86,5 @@
 | **Інтеграція** | ⚪️ | 733 | Skipped |
 | **Практика** | ⚪️ | 311 | Skipped |
 | **Продукція** | ⚪️ | 323 | Skipped |
-| **Підсумок** | ✅ | 171 | Included in Core |
+| **Підсумок — Смачного!** | ✅ | 171 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

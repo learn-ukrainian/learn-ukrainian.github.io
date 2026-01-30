@@ -2,14 +2,14 @@
   "module": "80-analiz-tekstu",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:28:39.482375Z",
+  "last_audit": "2026-01-30T21:17:54.755171Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-13T10:28:25.793593Z",
-    "meta": "2026-01-26T17:21:19.258619Z",
+    "md": "2026-01-27T15:24:10.352107Z",
+    "meta": "2026-01-29T07:39:04.731661Z",
     "activities": "2026-01-13T10:25:08.915051Z",
     "vocabulary": "2026-01-21T22:54:36.457211Z",
-    "plan": "2026-01-26T17:21:19.258390Z"
+    "plan": "2026-01-30T15:04:49.346370Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2147/1750 (raw: 2324) | pedagogy: 1 violations"
+      "message": "2147/2000 (raw: 2324) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -42,7 +42,8 @@
     "status": "fail",
     "blocking_issues": [
       "1 Critical Template Violations",
-      "2 Outline Compliance Errors"
+      "6 Outline Compliance Errors",
+      "Missing required activity types: reading, true-false"
     ],
     "pass_count": 3,
     "fail_count": 1

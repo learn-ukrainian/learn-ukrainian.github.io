@@ -1,24 +1,21 @@
 # Audit Report: M102 — 102-kotsiubynskyi.md
-
-**Level:** C1 | **Module:** M102 | **Phase:** C1 | **Pedagogy:** Literary Analysis | **Target:** 3500
+**Level:** C1 | **Module:** M102 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:28:57
+**Generated:** 2026-01-30 21:14:54
 
 ## Configuration
-
-**Type:** C1-literature
-**Word Target:** 3500 words
+**Type:** C1
+**Word Target:** 3000 words
 **Activities:** 12-16 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
-**Priority Types:** cloze, fill-in, quiz
-**Engagement:** ≥5 callouts
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥7 callouts
 **Immersion:** 90-100%
-**Vocab Target:** ≥24 words
+**Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння аналізу імпресіонізму Коцюбинського | 12 | 5 | ✅ |
@@ -38,11 +35,10 @@
 **Summary:**
 - Total activities: 13 (target: 12-16) ✅
 - Unique types: 12 (minimum: 4) ✅
-- Priority types used: 3/3 (cloze, fill-in, quiz) ✅
+- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "---
 
 ### Первинний аналіз
@@ -50,43 +46,43 @@
 **Питання для першого читання:**
 
 1.". Shares significant keywords with sentence at index 40.
-- FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 102-kotsiubynskyi.yaml: Schema validation error at key 'words': ['Мова', 'Коцюбинського', 'відзначається', 'вишуканістю', 'ритмічністю', 'та', 'багатством', 'художніх', 'засобів', 'особливо', 'епітетів'] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
-## Recommendation
+## TEMPLATE COMPLIANCE
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Аналіз' found: Літературний аналіз, Аналіз «Intermezzo»: Конфлікт і Образна система, Первинний аналіз, Аналіз «Тіней забутих предків»: Тематика і Стиль, Порівняльний аналіз: Коцюбинський vs. Стефаник
+  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 
+## Recommendation
 **📝 UPDATE** (severity 25/100)
 
-- 2 violations (minor)
+- 3 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ❌ 1917/3500 (raw: 2132)
+- **Words:** ❌ 1917/3000 (raw: 2132)
 - **Activities:** ✅ 13/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/5
+- **Engagement:** ❌ 6/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 24 (soft target)
+- **Vocab:** ⚠️ 0 < 25 (soft target)
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 2 violations
-- **Content_heavy:** ✅ Content-heavy OK (13 activities)
-- **Immersion:** 🇺🇦 99.0% (target 90-100% (literature))
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 99.0% (target 90-100%)
 - **Richness:** ❌ 84% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
 **Score:** 84% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 44 | 15 | 100% | 25% | 25.0% |
@@ -100,18 +96,16 @@
 | **TOTAL** | | | | | **84.1%** |
 
 ### Dryness Flags & Fixes
-
 - ❌ **ABSTRACT_ONLY**
   - FIX:
     Add 3+ real-world boxes. Use this exact format:
-
+    
     > 🌍 **У реальному житті**
     >
     > [Specific scenario: "На співбесіді...", "У магазині...", "На вокзалі..."]
     > [Example sentence showing grammar in that context]
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 71 | Included in Core |

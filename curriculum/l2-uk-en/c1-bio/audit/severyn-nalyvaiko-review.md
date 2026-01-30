@@ -1,26 +1,23 @@
 # Audit Report: M15 — severyn-nalyvaiko.md
-
 **Level:** C1 | **Module:** M15 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:56:02
+**Generated:** 2026-01-30 21:15:02
 
 ## Configuration
-
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
 **Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** essay-response, quiz, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥24 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Трагедія на Солониці (1596) | 1 | 1 | ✅ |
@@ -33,17 +30,15 @@
 - Total activities: 5 (target: 3-9) ✅
 - Unique types: 5 (minimum: 3) ✅
 - Priority types used: 5/6 (authorial-intent, comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 2/3 (essay-response, reading) ❌
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
 ## Recommendation
-
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
 - **Words:** ❌ 3265/4000 (raw: 3403)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
@@ -62,12 +57,10 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-
 **Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 6 | 4 | 100% | 19% | 19.0% |
@@ -83,7 +76,6 @@
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 115 | Included in Core |

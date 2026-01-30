@@ -2,14 +2,14 @@
   "module": "15-register-introduction",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:27:54.377378Z",
+  "last_audit": "2026-01-30T21:18:11.337299Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-11T21:16:41.184342Z",
-    "meta": "2026-01-26T17:21:19.108238Z",
+    "md": "2026-01-27T15:24:10.351737Z",
+    "meta": "2026-01-29T07:39:04.683393Z",
     "activities": "2026-01-14T13:26:52.951219Z",
     "vocabulary": "2026-01-21T22:54:26.491384Z",
-    "plan": "2026-01-26T17:21:19.108059Z"
+    "plan": "2026-01-29T07:45:40.599459Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "3120/1750 (raw: 3931)"
+      "status": "fail",
+      "violations": 2,
+      "message": "3120/3800 (raw: 3931) | richness: 74% < 95% min (style)"
     },
     "activities": {
       "status": "pass",
@@ -44,7 +44,7 @@
       "7 Outline Compliance Errors",
       "Missing required activity types: reading"
     ],
-    "pass_count": 3,
-    "fail_count": 1
+    "pass_count": 2,
+    "fail_count": 2
   }
 }

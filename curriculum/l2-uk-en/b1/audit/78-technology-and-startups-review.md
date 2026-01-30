@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M78 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 19:16:10
+**Generated:** 2026-01-30 00:45:16
 
 ## Configuration
 **Type:** B1-culture
@@ -42,19 +42,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1621/1500 (raw: 1950)
+- **Words:** ✅ 1657/1500 (raw: 1994)
 - **Activities:** ✅ 13/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/5
+- **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 42/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 96.1% (target 85-100% (B1.7-8 Ukraine))
+- **Immersion:** 🇺🇦 95.8% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 98% (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -67,22 +67,23 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | cultural | 8 | 5 | 100% | 33% | 33.3% |
-| engagement | 7 | 6 | 100% | 20% | 20.0% |
+| engagement | 8 | 6 | 100% | 20% | 20.0% |
 | visual | 4 | 4 | 100% | 13% | 13.3% |
-| variety | 0.96 | - | 96% | 7% | 6.4% |
+| variety | 0.94 | - | 94% | 7% | 6.3% |
 | paragraph_var | 0.76 | - | 76% | 7% | 5.1% |
-| examples | 17 | - | 100% | 7% | 6.7% |
+| examples | 18 | - | 100% | 7% | 6.7% |
 | realworld | 3 | - | 100% | 7% | 6.7% |
-| questions | 25 | 4 | 100% | 7% | 6.7% |
-| **TOTAL** | | | | | **98.1%** |
+| questions | 26 | 4 | 100% | 7% | 6.7% |
+| **TOTAL** | | | | | **98.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 113 | Included in Core |
+| **Intro/Narrative** | ✅ | 36 | Included in Core |
+| **Вступ** | ✅ | 113 | Included in Core |
 | **Історія та культура** | ✅ | 229 | Included in Core |
 | **Сучасність** | ⚪️ | 511 | Skipped |
 | **Практика** | ⚪️ | 122 | Skipped |
 | **Продукція** | ⚪️ | 354 | Skipped |
-| **Підсумок** | ✅ | 182 | Included in Core |
+| **Підсумок — Майбутнє за технологіями** | ✅ | 182 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

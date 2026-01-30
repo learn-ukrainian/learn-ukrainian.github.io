@@ -2,11 +2,11 @@
   "module": "pravoslavna-tserkva-17",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T23:38:45.802752Z",
+  "last_audit": "2026-01-30T13:32:41.652388Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.347081Z",
-    "meta": "2026-01-26T22:20:13.468845Z",
+    "md": "2026-01-30T13:30:10.428813Z",
+    "meta": "2026-01-30T13:28:03.083048Z",
     "activities": "2026-01-27T15:34:54.522788Z",
     "vocabulary": "2026-01-22T22:35:35.884717Z",
     "plan": null
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "5023/4000 (raw: 5099)"
+      "message": "5023/4000 (raw: 5097)"
     },
     "activities": {
       "status": "pass",

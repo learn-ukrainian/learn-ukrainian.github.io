@@ -1,14 +1,12 @@
 # Audit Report: M15 — 15-register-introduction.md
-
-**Level:** B2 | **Module:** M15 | **Phase:** B2 | **Pedagogy:** Not Specified | **Target:** 1750
+**Level:** B2 | **Module:** M15 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:27:54
+**Generated:** 2026-01-30 21:18:11
 
 ## Configuration
-
 **Type:** B2-grammar
-**Word Target:** 1750 words
+**Word Target:** 3800 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Визначення функціонального стилю | 16 | 8 | ✅ |
@@ -46,8 +43,7 @@
 - Low density activities: 0
 
 ## Gates
-
-- **Words:** ✅ 3120/1750 (raw: 3931)
+- **Words:** ❌ 3120/3800 (raw: 3931)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -60,33 +56,38 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
-- **Richness:** ✅ 99% (grammar)
+- **Richness:** ❌ 74% < 95% min (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
-**Score:** 99% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 74% (minimum: 95%)
+**Module Type:** style
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 82 | 24 | 100% | 20% | 20.0% |
+| exemplar_texts | 0 | 2 | 0% | 25% | 0.0% |
+| model_answers | 82 | 3 | 100% | 20% | 20.0% |
 | engagement | 13 | 5 | 100% | 15% | 15.0% |
-| dialogues | 31 | 4 | 100% | 15% | 15.0% |
-| variety | 0.97 | - | 97% | 10% | 9.7% |
-| cultural | 3 | 3 | 100% | 10% | 10.0% |
-| realworld | 3 | 3 | 100% | 10% | 10.0% |
-| visual | 14 | 3 | 100% | 5% | 5.0% |
+| register_analysis | 15 | 5 | 100% | 15% | 15.0% |
+| visual | 14 | 4 | 100% | 10% | 10.0% |
+| variety | 0.97 | - | 97% | 5% | 4.9% |
+| cultural | 3 | - | 100% | 5% | 5.0% |
 | paragraph_var | 0.94 | - | 94% | 5% | 4.7% |
-| questions | 45 | 5 | 100% | 5% | 5.0% |
-| proverbs | 3 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.4%** |
+| **TOTAL** | | | | | **74.5%** |
+
+### Dryness Flags & Fixes
+- ❌ **NO_EXEMPLAR_TEXTS**
+  - FIX:
+    Add 2+ exemplar text excerpts. Use this format:
+    
+    **Зразок [style type]:**
+    
+    > «[Extended quote showing the style, 50+ words]»
+    > — *[Source]*
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 68 | Included in Core |

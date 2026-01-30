@@ -1,14 +1,12 @@
 # Audit Report: M34 — 34-review.md
-
-**Level:** C1 | **Module:** M34 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
+**Level:** C1 | **Module:** M34 | **Phase:** C1.2 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:15
+**Generated:** 2026-01-30 21:14:17
 
 ## Configuration
-
 **Type:** C1
-**Word Target:** 3000 words
+**Word Target:** 4000 words
 **Activities:** 12-16 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Комплексний огляд | 8 | 5 | ✅ |
@@ -44,20 +41,17 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 34-review.yaml: Schema validation error at key 'min_words': 150 is less than the minimum of 200
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ❌ 2128/3000 (raw: 2233)
+- **Words:** ❌ 2128/4000 (raw: 2233)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
@@ -70,37 +64,27 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.9% (target 90-100%)
-- **Richness:** ❌ 85% < 95% min (content)
+- **Richness:** ✅ 100% (checkpoint)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
-**Score:** 85% (minimum: 95%)
-**Module Type:** content
+**Score:** 100% (minimum: 85%)
+**Module Type:** checkpoint
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 6 | 15 | 40% | 25% | 10.0% |
-| engagement | 8 | 5 | 100% | 19% | 18.7% |
-| variety | 1.00 | - | 100% | 12% | 12.5% |
-| cultural | 4 | 4 | 100% | 12% | 12.5% |
-| realworld | 6 | 3 | 100% | 12% | 12.5% |
-| visual | 10 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 9 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **85.0%** |
-
-### Dryness Flags & Fixes
-
-- ❌ **NO_EXAMPLES**
-  - FIX:
-    Add 24+ example sentences. Each grammar point needs 3-4 examples showing the pattern in context.
+| activity_types | 9 | 8 | 100% | 25% | 25.0% |
+| review_sections | 17 | 3 | 100% | 20% | 20.0% |
+| variety | 1.00 | - | 100% | 15% | 15.0% |
+| engagement | 8 | 3 | 100% | 10% | 10.0% |
+| cultural | 4 | - | 100% | 10% | 10.0% |
+| visual | 10 | 3 | 100% | 10% | 10.0% |
+| paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
+| **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

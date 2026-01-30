@@ -1,11 +1,9 @@
 # Audit Report: M44 — 44-intimate-register.md
-
-**Level:** C1 | **Module:** M44 | **Phase:** C1 | **Pedagogy:** Sociolinguistics | **Target:** 3000
+**Level:** C1 | **Module:** M44 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:21
+**Generated:** 2026-01-30 21:14:23
 
 ## Configuration
-
 **Type:** C1
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -18,7 +16,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння текстів модуля | 5 | 5 | ✅ |
@@ -41,19 +38,16 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 44-intimate-register.yaml: Schema validation error at key 'words': ['Ти', 'найкраще', 'і', 'найдорожче', 'що', 'є', 'у', 'моєму', 'житті', 'моє', 'золотце'] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
 - **Words:** ❌ 2041/3000 (raw: 2233)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
@@ -67,31 +61,28 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
 - **Immersion:** 🇺🇦 99.4% (target 90-100%)
-- **Richness:** ❌ 94% < 95% min (content)
+- **Richness:** ✅ 97% (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
-**Score:** 94% (minimum: 95%)
-**Module Type:** content
+**Score:** 97% (minimum: 95%)
+**Module Type:** style
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 57 | 15 | 100% | 25% | 25.0% |
-| engagement | 7 | 5 | 100% | 19% | 18.7% |
-| variety | 1.00 | - | 100% | 12% | 12.5% |
-| cultural | 4 | 4 | 100% | 12% | 12.5% |
-| realworld | 2 | 3 | 67% | 12% | 8.4% |
-| visual | 3 | 4 | 75% | 6% | 4.7% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 21 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **94.3%** |
+| exemplar_texts | 15 | 2 | 100% | 25% | 25.0% |
+| model_answers | 54 | 3 | 100% | 20% | 20.0% |
+| engagement | 7 | 5 | 100% | 15% | 15.0% |
+| register_analysis | 15 | 5 | 100% | 15% | 15.0% |
+| visual | 3 | 4 | 75% | 10% | 7.5% |
+| variety | 1.00 | - | 100% | 5% | 5.0% |
+| cultural | 4 | - | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **97.5%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 82 | Included in Core |

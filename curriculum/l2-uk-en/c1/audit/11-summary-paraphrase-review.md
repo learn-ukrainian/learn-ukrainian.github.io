@@ -1,14 +1,12 @@
 # Audit Report: M11 — 11-summary-paraphrase.md
-
-**Level:** C1 | **Module:** M11 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
+**Level:** C1 | **Module:** M11 | **Phase:** C1.1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:01
+**Generated:** 2026-01-30 21:14:03
 
 ## Configuration
-
 **Type:** C1-grammar
-**Word Target:** 3000 words
+**Word Target:** 4000 words
 **Activities:** 12-16 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння концепції переказу | 9 | 5 | ✅ |
@@ -48,20 +45,17 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 11-summary-paraphrase.yaml: Schema validation error at key 'min_words': 100 is less than the minimum of 200
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ❌ 2026/3000 (raw: 2110)
+- **Words:** ❌ 2026/4000 (raw: 2110)
 - **Activities:** ✅ 16/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 12/4 types
@@ -74,31 +68,30 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
-- **Richness:** ❌ 93% < 95% min (content)
+- **Richness:** ❌ 92% < 95% min (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
-**Score:** 93% (minimum: 95%)
-**Module Type:** content
+**Score:** 92% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 40 | 15 | 100% | 25% | 25.0% |
-| engagement | 7 | 5 | 100% | 19% | 18.7% |
-| variety | 0.99 | - | 99% | 12% | 12.4% |
-| cultural | 2 | 4 | 50% | 12% | 6.2% |
-| realworld | 16 | 3 | 100% | 12% | 12.5% |
-| visual | 11 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 14 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **93.6%** |
+| examples | 40 | 24 | 100% | 20% | 20.0% |
+| engagement | 7 | 5 | 100% | 15% | 15.0% |
+| dialogues | 3 | 4 | 75% | 15% | 11.2% |
+| variety | 0.99 | - | 99% | 10% | 9.9% |
+| cultural | 2 | 3 | 67% | 10% | 6.7% |
+| realworld | 16 | 3 | 100% | 10% | 10.0% |
+| visual | 11 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 14 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **92.8%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 60 | Included in Core |

@@ -1,25 +1,23 @@
 # Audit Report: M37 — 37-word-formation-adverbs-integration.md
-
-**Level:** B2 | **Module:** M37 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 1750
+**Level:** B2 | **Module:** M37 | **Phase:** B2.1b | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:28:09
+**Generated:** 2026-01-30 21:18:12
 
 ## Configuration
-
 **Type:** B2-grammar
-**Word Target:** 1750 words
+**Word Target:** 2000 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
 **Priority Types:** cloze, error-correction, fill-in, unjumble
+**Required Types:** essay-response, reading, true-false
 **Engagement:** ≥6 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Творення прислівників від прикметників | 16 | 8 | ✅ |
@@ -40,11 +38,11 @@
 - Total activities: 13 (target: 10-14) ✅
 - Unique types: 12 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Required types used: 2/3 (essay-response, true-false) ❌
 - Low density activities: 0
 
 ## Gates
-
-- **Words:** ✅ 2042/1750 (raw: 2842)
+- **Words:** ✅ 2042/2000 (raw: 2842)
 - **Activities:** ✅ 13/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -62,12 +60,10 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-
 **Score:** 95% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 78 | 24 | 100% | 20% | 20.0% |
@@ -83,7 +79,6 @@
 | **TOTAL** | | | | | **95.1%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 67 | Included in Core |

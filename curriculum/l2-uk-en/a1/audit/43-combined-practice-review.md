@@ -1,12 +1,10 @@
 # Audit Report: M43 — 43-combined-practice.md
-
-**Level:** A1 | **Module:** M43 | **Phase:** A1 | **Pedagogy:** PPP | **Target:** 750
+**Level:** A1 | **Module:** M43 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:26:02
+**Generated:** 2026-01-30 21:16:45
 
 ## Configuration
-
 **Type:** A1
 **Word Target:** 750 words
 **Activities:** 8-12 required
@@ -20,7 +18,6 @@
 **Transliteration:** Allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Locations and Actions | 10 | 8 | ✅ |
@@ -40,8 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-
-- **Words:** ✅ 810/750 (raw: 920)
+- **Words:** ✅ 1101/750 (raw: 1208)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -53,18 +49,17 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 50.1% (target 35-55% (M43))
+- **Immersion:** 🇺🇦 46.8% (target 35-55% (M43))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Warm-up** | ✅ | 129 | Included in Core |
-| **Presentation** | ✅ | 152 | Included in Core |
-| **Практика** | ⚪️ | 160 | Skipped |
-| **Narrative: A Busy Saturday (Зайнята субота)** | ✅ | 180 | Included in Core |
+| **Overview** | ⚪️ | 237 | Skipped |
+| **Complex Scenarios** | ⚪️ | 233 | Skipped |
+| **Practice** | ⚪️ | 194 | Skipped |
+| **Warm-up** | ✅ | 248 | Included in Core |
 | **Summary** | ✅ | 171 | Included in Core |
 | **Need More Practice?** | ⚪️ | 18 | Skipped |

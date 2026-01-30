@@ -1,14 +1,12 @@
 # Audit Report: M34 — 34-checkpoint-core-grammar.md
-
-**Level:** A1 | **Module:** M34 | **Phase:** A1 | **Pedagogy:** TTT | **Target:** 750
+**Level:** A1 | **Module:** M34 | **Phase:** A1.3 | **Pedagogy:** TTT | **Target:** 962
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:25:57
+**Generated:** 2026-01-30 21:13:09
 
 ## Configuration
-
 **Type:** A1-checkpoint
-**Word Target:** 750 words
+**Word Target:** 962 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥10 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Cyrillic Mastery | 12 | 8 | ✅ |
@@ -44,8 +41,7 @@
 - Low density activities: 0
 
 ## Gates
-
-- **Words:** ✅ 1351/750 (raw: 1490)
+- **Words:** ✅ 1351/962 (raw: 1493)
 - **Activities:** ✅ 12/8
 - **Density:** ✅ All > 10
 - **Unique_types:** ✅ 7/4 types
@@ -62,7 +58,6 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
@@ -72,6 +67,6 @@
 | **Skill 3: Verb System (Дієслова)** | ⚪️ | 158 | Skipped |
 | **Skill 4: Case System (Відмінки)** | ⚪️ | 200 | Skipped |
 | **Skill 5: Practical Skills (Практичні навички)** | ⚪️ | 164 | Skipped |
-| **Інтеграційне завдання** | ⚪️ | 146 | Skipped |
+| **Integration Task** | ⚪️ | 146 | Skipped |
 | **Підсумок (Summary)** | ✅ | 86 | Included in Core |
 | **Need More Practice?** | ⚪️ | 35 | Skipped |

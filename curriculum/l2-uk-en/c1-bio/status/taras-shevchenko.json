@@ -2,12 +2,12 @@
   "module": "taras-shevchenko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:56:12.458463Z",
+  "last_audit": "2026-01-30T21:15:08.737801Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-17T21:45:15.856988Z",
-    "meta": "2026-01-26T17:21:21.099828Z",
-    "activities": "2026-01-17T21:45:15.809447Z",
+    "md": "2026-01-27T15:24:10.348815Z",
+    "meta": "2026-01-29T07:39:04.906159Z",
+    "activities": "2026-01-27T15:34:56.873388Z",
     "vocabulary": null,
     "plan": null
   },
@@ -25,7 +25,7 @@
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "15/3"
+      "message": "6/3"
     },
     "vocabulary": {
       "status": "warn",

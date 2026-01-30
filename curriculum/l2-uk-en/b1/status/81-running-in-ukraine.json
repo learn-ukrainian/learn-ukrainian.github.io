@@ -2,14 +2,14 @@
   "module": "81-running-in-ukraine",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T20:14:46.546319Z",
+  "last_audit": "2026-01-30T00:51:40.521448Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T20:01:49.623375Z",
+    "md": "2026-01-30T00:49:29.847261Z",
     "meta": "2026-01-26T15:44:41.708684Z",
     "activities": "2026-01-27T20:01:28.350128Z",
     "vocabulary": "2026-01-25T16:02:18.774287Z",
-    "plan": "2026-01-27T20:00:55.867526Z"
+    "plan": "2026-01-30T00:50:32.652654Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1627/1500 (raw: 1708)"
+      "message": "1627/1500 (raw: 1711)"
     },
     "activities": {
       "status": "pass",

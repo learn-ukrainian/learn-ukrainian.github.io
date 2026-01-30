@@ -2,14 +2,14 @@
   "module": "21-register-technical-scientific",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:27:58.643560Z",
+  "last_audit": "2026-01-30T21:18:07.369875Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-11T21:07:40.016301Z",
-    "meta": "2026-01-26T17:21:19.131716Z",
+    "meta": "2026-01-29T07:39:04.686582Z",
     "activities": "2026-01-11T23:20:02.155465Z",
     "vocabulary": "2026-01-21T22:54:27.620201Z",
-    "plan": "2026-01-26T17:21:19.131397Z"
+    "plan": "2026-01-30T15:04:49.229582Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "1858/1750 (raw: 2220)"
+      "status": "fail",
+      "violations": 1,
+      "message": "1858/2000 (raw: 2220)"
     },
     "activities": {
       "status": "pass",
@@ -41,9 +41,10 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "2 Outline Compliance Errors"
+      "5 Outline Compliance Errors",
+      "Missing required activity types: reading"
     ],
-    "pass_count": 4,
-    "fail_count": 0
+    "pass_count": 3,
+    "fail_count": 1
   }
 }

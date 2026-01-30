@@ -2,11 +2,11 @@
   "module": "bitva-pid-zhovtymy-vodamy",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T23:37:52.875064Z",
+  "last_audit": "2026-01-29T23:39:53.002685Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.346726Z",
-    "meta": "2026-01-26T22:20:12.934573Z",
+    "meta": "2026-01-29T07:38:18.645216Z",
     "activities": "2026-01-27T15:34:53.651637Z",
     "vocabulary": "2026-01-27T11:35:40.685186Z",
     "plan": null

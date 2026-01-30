@@ -2,14 +2,14 @@
   "module": "27-law-justice-vocabulary",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:28:02.930818Z",
+  "last_audit": "2026-01-30T21:18:12.503598Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-11T22:15:47.800785Z",
-    "meta": "2026-01-26T17:21:19.146693Z",
+    "meta": "2026-01-29T07:39:04.695246Z",
     "activities": "2026-01-11T22:51:47.036038Z",
     "vocabulary": "2026-01-21T22:54:28.882642Z",
-    "plan": "2026-01-26T17:21:19.146462Z"
+    "plan": "2026-01-30T15:04:49.245172Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2437/1750 (raw: 2713)"
+      "message": "2437/2000 (raw: 2713)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,8 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "2 Outline Compliance Errors"
+      "5 Outline Compliance Errors",
+      "Missing required activity types: reading"
     ],
     "pass_count": 5,
     "fail_count": 0

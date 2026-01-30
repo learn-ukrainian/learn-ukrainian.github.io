@@ -1,24 +1,21 @@
 # Audit Report: M97 — 97-franko-liryka.md
-
-**Level:** C1 | **Module:** M97 | **Phase:** C1 | **Pedagogy:** Literary Analysis | **Target:** 3500
+**Level:** C1 | **Module:** M97 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:55
+**Generated:** 2026-01-30 21:14:50
 
 ## Configuration
-
-**Type:** C1-literature
-**Word Target:** 3500 words
+**Type:** C1
+**Word Target:** 3000 words
 **Activities:** 12-16 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
-**Priority Types:** cloze, fill-in, quiz
-**Engagement:** ≥5 callouts
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥7 callouts
 **Immersion:** 90-100%
-**Vocab Target:** ≥24 words
+**Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння аналізу лірики Франка | 12 | 5 | ✅ |
@@ -38,41 +35,42 @@
 **Summary:**
 - Total activities: 13 (target: 12-16) ✅
 - Unique types: 12 (minimum: 4) ✅
-- Priority types used: 3/3 (cloze, fill-in, quiz) ✅
+- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
 - Low density activities: 0
 
+## TEMPLATE COMPLIANCE
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Аналіз' found: Первинний аналіз, Порівняльний аналіз: «Каменярі» vs. «Зів’яле листя», Літературний аналіз
+  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+
 ## Recommendation
+**📝 UPDATE** (severity 25/100)
 
-**📝 UPDATE** (severity 20/100)
-
+- 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ❌ 2090/3500 (raw: 2399)
+- **Words:** ❌ 2090/3000 (raw: 2399)
 - **Activities:** ✅ 13/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/5
+- **Engagement:** ❌ 5/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 24 (soft target)
+- **Vocab:** ⚠️ 0 < 25 (soft target)
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (13 activities)
-- **Immersion:** 🇺🇦 99.9% (target 90-100% (literature))
+- **Immersion:** 🇺🇦 99.9% (target 90-100%)
 - **Richness:** ❌ 85% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
 **Score:** 85% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 50 | 15 | 100% | 25% | 25.0% |
@@ -86,7 +84,6 @@
 | **TOTAL** | | | | | **85.1%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 82 | Included in Core |

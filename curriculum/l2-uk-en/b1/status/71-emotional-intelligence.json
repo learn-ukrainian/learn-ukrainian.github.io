@@ -2,14 +2,14 @@
   "module": "71-emotional-intelligence",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T19:15:41.617599Z",
+  "last_audit": "2026-01-30T00:26:59.819393Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-11T20:27:28.551008Z",
+    "md": "2026-01-30T00:26:55.345301Z",
     "meta": "2026-01-27T18:51:22.999870Z",
     "activities": "2026-01-27T18:57:59.217516Z",
     "vocabulary": "2026-01-25T15:44:17.256024Z",
-    "plan": "2026-01-27T19:14:06.351095Z"
+    "plan": "2026-01-29T23:54:52.668878Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1748/1500 (raw: 2484)"
+      "message": "2703/1500 (raw: 3624)"
     },
     "activities": {
       "status": "pass",

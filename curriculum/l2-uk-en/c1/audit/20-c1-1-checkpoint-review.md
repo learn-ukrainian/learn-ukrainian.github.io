@@ -1,31 +1,27 @@
 # Audit Report: M20 — 20-c1-1-checkpoint.md
-
-**Level:** C1 | **Module:** M20 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 1750
+**Level:** C1 | **Module:** M20 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:06
+**Generated:** 2026-01-30 21:14:09
 
 ## Configuration
-
-**Type:** C1-checkpoint
-**Word Target:** 1750 words
-**Activities:** 14-18 required
-**Items per Activity:** ≥14 items
+**Type:** C1
+**Word Target:** 3000 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
-**Priority Types:** cloze, error-correction, fill-in, quiz
-**Required Types:** cloze, essay-response, fill-in, match-up, quiz
-**Engagement:** ≥4 callouts
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥7 callouts
 **Immersion:** 90-100%
-**Vocab Target:** ≥15 words
+**Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Академічний стиль (M02) | 9 | 5 | ✅ |
 | 2 | match-up | Дослідницькі дієслова (M03) | 14 | 6 | ✅ |
-| 3 | group-sort | Термінологія аналізу (M04) | 16 | 14 | ✅ |
+| 3 | group-sort | Термінологія аналізу (M04) | 16 | 12 | ✅ |
 | 4 | fill-in | Логічні конектори (M05) | 8 | 6 | ✅ |
 | 5 | quiz | Hedging - Ступінь впевненості (M06) | 8 | 5 | ✅ |
 | 6 | match-up | Цитування (M07) | 12 | 6 | ✅ |
@@ -35,12 +31,12 @@
 | 10 | fill-in | Парафраз (M11) | 8 | 6 | ✅ |
 | 11 | match-up | Секції статті (M12) | 8 | 6 | ✅ |
 | 12 | fill-in | Написання анотації (M13) | 8 | 6 | ✅ |
-| 13 | group-sort | Огляд літератури (M14) | 16 | 14 | ✅ |
+| 13 | group-sort | Огляд літератури (M14) | 16 | 12 | ✅ |
 | 14 | match-up | Доповідь (M15) | 8 | 6 | ✅ |
 | 15 | quiz | Розділові знаки (M16) | 8 | 5 | ✅ |
 | 16 | fill-in | Неправильні дієслова (M17) | 8 | 6 | ✅ |
-| 17 | cloze | Інтеграція: Науковий текст (M01-19) | 14 | 14 | ✅ |
-| 18 | cloze | Інтеграція: Рецензія (M19) | 14 | 14 | ✅ |
+| 17 | cloze | Інтеграція: Науковий текст (M01-19) | 14 | 12 | ✅ |
+| 18 | cloze | Інтеграція: Рецензія (M19) | 14 | 12 | ✅ |
 | 19 | error-correction | Стилістичні помилки | 6 | 5 | ✅ |
 | 20 | mark-the-words | Неакадемічна лексика | 6 | 5 | ✅ |
 | 21 | quiz | Порівняння анотацій | 8 | 5 | ✅ |
@@ -50,14 +46,12 @@
 | 25 | essay-response | Підсумкове есе | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 25 (target: 14-18) ❌
+- Total activities: 25 (target: 12-16) ❌
 - Unique types: 9 (minimum: 4) ✅
-- Priority types used: 4/4 (cloze, error-correction, fill-in, quiz) ✅
-- Required types used: 5/5 (cloze, essay-response, fill-in, match-up, quiz) ✅
+- Priority types used: 2/3 (error-correction, fill-in) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (95% overlap): "## Перевірка знань
 
 Ця контрольна точка перевіряє такі навички:
@@ -65,53 +59,51 @@
 - **Академічний стиль:** використан...". Shares significant keywords with sentence at index 3.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 
-## Recommendation
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ' per template 'c1-module-template.md'
+  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/c1-module-template.md.md
 
+## Recommendation
 **📝 UPDATE** (severity 25/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ✅ 2012/1750 (raw: 2187)
-- **Activities:** ✅ 25/14
-- **Density:** ✅ All > 14
+- **Words:** ❌ 2012/3000 (raw: 2187)
+- **Activities:** ✅ 25/12
+- **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/4
+- **Engagement:** ✅ 8/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 15 (soft target)
+- **Vocab:** ⚠️ 0 < 25 (soft target)
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 97.9% (checkpoint - no gate)
-- **Richness:** ❌ 93% < 95% min (content)
+- **Immersion:** 🇺🇦 97.9% (target 90-100%)
+- **Richness:** ✅ 99% (checkpoint)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
-**Score:** 93% (minimum: 95%)
-**Module Type:** content
+**Score:** 99% (minimum: 85%)
+**Module Type:** checkpoint
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 41 | 15 | 100% | 25% | 25.0% |
-| engagement | 8 | 5 | 100% | 19% | 18.7% |
-| variety | 0.95 | - | 95% | 12% | 11.9% |
-| cultural | 2 | 4 | 50% | 12% | 6.2% |
-| realworld | 5 | 3 | 100% | 12% | 12.5% |
-| visual | 14 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 20 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **93.1%** |
+| activity_types | 9 | 8 | 100% | 25% | 25.0% |
+| review_sections | 23 | 3 | 100% | 20% | 20.0% |
+| variety | 0.95 | - | 95% | 15% | 14.2% |
+| engagement | 8 | 3 | 100% | 10% | 10.0% |
+| cultural | 2 | - | 100% | 10% | 10.0% |
+| visual | 14 | 3 | 100% | 10% | 10.0% |
+| paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
+| **TOTAL** | | | | | **99.2%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 43 | Included in Core |

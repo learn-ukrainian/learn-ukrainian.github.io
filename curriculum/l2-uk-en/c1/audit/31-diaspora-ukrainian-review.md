@@ -1,14 +1,12 @@
 # Audit Report: M31 — 31-diaspora-ukrainian.md
-
-**Level:** C1 | **Module:** M31 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
+**Level:** C1 | **Module:** M31 | **Phase:** C1.2 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:13
+**Generated:** 2026-01-30 21:14:15
 
 ## Configuration
-
 **Type:** C1
-**Word Target:** 3000 words
+**Word Target:** 4000 words
 **Activities:** 12-16 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Історія хвиль еміграції | 8 | 5 | ✅ |
@@ -44,20 +41,17 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 31-diaspora-ukrainian.yaml: Schema validation error at key 'min_words': 150 is less than the minimum of 200
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ❌ 2267/3000 (raw: 2519)
+- **Words:** ❌ 2267/4000 (raw: 2519)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
@@ -70,20 +64,18 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.7% (target 90-100%)
-- **Richness:** ✅ 95% (content)
+- **Richness:** ❌ 74% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
-**Score:** 95% (minimum: 95%)
+**Score:** 74% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 17 | 15 | 100% | 25% | 25.0% |
+| examples | 2 | 15 | 13% | 25% | 3.2% |
 | engagement | 7 | 5 | 100% | 19% | 18.7% |
 | variety | 0.99 | - | 99% | 12% | 12.4% |
 | cultural | 5 | 4 | 100% | 12% | 12.5% |
@@ -91,10 +83,14 @@
 | visual | 9 | 4 | 100% | 6% | 6.2% |
 | paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
 | questions | 4 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **95.8%** |
+| **TOTAL** | | | | | **74.0%** |
+
+### Dryness Flags & Fixes
+- ❌ **NO_EXAMPLES**
+  - FIX:
+    Add 24+ example sentences. Each grammar point needs 3-4 examples showing the pattern in context.
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 46 | Included in Core |

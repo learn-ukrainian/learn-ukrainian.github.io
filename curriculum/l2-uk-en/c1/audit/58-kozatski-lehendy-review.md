@@ -1,11 +1,9 @@
 # Audit Report: M58 — 58-kozatski-lehendy.md
-
-**Level:** C1 | **Module:** M58 | **Phase:** C1 | **Pedagogy:** Immersion & Analysis | **Target:** 3000
+**Level:** C1 | **Module:** M58 | **Phase:** C1.5 | **Pedagogy:** Immersion & Analysis | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:30
+**Generated:** 2026-01-30 21:14:31
 
 ## Configuration
-
 **Type:** C1-vocab
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -18,7 +16,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Козацький етос та ідеали | 5 | 5 | ✅ |
@@ -41,19 +38,16 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 58-kozatski-lehendy.yaml: Schema validation error at key 'words': ['Козацький', 'етос', 'базувався', 'на', 'демократизмі', 'релігійній', 'самовідданості', 'та', 'культі', 'вічного', 'побратимства'] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
 - **Words:** ❌ 2033/3000 (raw: 2349)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
@@ -67,31 +61,28 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (vocab))
-- **Richness:** ❌ 92% < 95% min (content)
+- **Richness:** ✅ 96% (vocabulary)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
-**Score:** 92% (minimum: 95%)
-**Module Type:** content
+**Score:** 96% (minimum: 95%)
+**Module Type:** vocabulary
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 18 | 15 | 100% | 25% | 25.0% |
-| engagement | 6 | 5 | 100% | 19% | 18.7% |
-| variety | 0.99 | - | 99% | 12% | 12.4% |
-| cultural | 6 | 4 | 100% | 12% | 12.5% |
-| realworld | 2 | 3 | 67% | 12% | 8.4% |
-| visual | 2 | 4 | 50% | 6% | 3.1% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 7 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **92.6%** |
+| collocations | 30 | 20 | 100% | 25% | 25.0% |
+| usage_examples | 18 | 15 | 100% | 20% | 20.0% |
+| engagement | 6 | 4 | 100% | 15% | 15.0% |
+| cultural | 6 | 3 | 100% | 10% | 10.0% |
+| visual | 2 | 3 | 67% | 10% | 6.7% |
+| register_notes | 5 | 5 | 100% | 10% | 10.0% |
+| variety | 0.99 | - | 99% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **96.7%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 89 | Included in Core |

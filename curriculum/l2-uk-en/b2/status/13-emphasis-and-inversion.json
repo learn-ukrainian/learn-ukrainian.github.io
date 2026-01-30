@@ -2,14 +2,14 @@
   "module": "13-emphasis-and-inversion",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:27:52.864051Z",
+  "last_audit": "2026-01-30T21:17:48.722824Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-11T21:16:40.409477Z",
-    "meta": "2026-01-26T17:21:19.099371Z",
+    "md": "2026-01-27T15:24:10.351754Z",
+    "meta": "2026-01-29T07:39:04.682383Z",
     "activities": "2026-01-11T23:20:02.171092Z",
     "vocabulary": "2026-01-21T22:54:26.243387Z",
-    "plan": "2026-01-26T17:21:19.099188Z"
+    "plan": "2026-01-29T07:45:40.590389Z"
   },
   "gates": {
     "meta": {
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 1,
-      "message": "2596/1750 (raw: 3121) | pedagogy: 2 violations"
+      "violations": 2,
+      "message": "2596/3800 (raw: 3121) | pedagogy: 2 violations"
     },
     "activities": {
       "status": "pass",

@@ -1,26 +1,23 @@
 # Audit Report: M20 — 20-cult-of-shevchenko.md
-
-**Level:** LIT | **Module:** M20 | **Phase:** LIT.3 | **Pedagogy:** Seminar | **Target:** 4000
+**Level:** LIT | **Module:** M20 | **Phase:** LIT.3 | **Pedagogy:** Seminar | **Target:** 4500
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:57:55
+**Generated:** 2026-01-30 21:16:19
 
 ## Configuration
-
-**Type:** LIT
-**Word Target:** 4000 words
+**Type:** LIT-literature
+**Word Target:** 4500 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, group-sort, match-up, quiz, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥4 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥0 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Квантовий стрибок Шевченка | 2 | 1 | ✅ |
@@ -33,18 +30,16 @@
 - Total activities: 5 (target: 3-9) ✅
 - Unique types: 3 (minimum: 2) ✅
 - Priority types used: 3/4 (critical-analysis, essay-response, reading) ✅
-- Required types used: 2/5 (essay-response, reading) ❌
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
 ## Recommendation
-
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ❌ 3505/4000 (raw: 3912)
+- **Words:** ❌ 3505/4500 (raw: 3912)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 3/2 types
@@ -55,35 +50,30 @@
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.8% (target 95-100%)
-- **Richness:** ✅ 96% (literature)
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Immersion:** 🇺🇦 98.8% (target 95-100% (literature))
+- **Richness:** ❌ 93% < 95% min (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-
-**Score:** 96% (minimum: 90%)
-**Module Type:** literature
+**Score:** 93% (minimum: 95%)
+**Module Type:** cultural
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
-| literary_citations | 4 | 5 | 80% | 17% | 13.9% |
-| engagement | 4 | 4 | 100% | 13% | 13.0% |
-| historical_context | 30 | 3 | 100% | 13% | 13.0% |
-| essays | 2 | 2 | 100% | 13% | 13.0% |
-| resources | 3 | 3 | 100% | 9% | 8.7% |
-| variety | 0.98 | - | 98% | 4% | 4.3% |
-| cultural | 9 | - | 100% | 4% | 4.3% |
-| visual | 6 | 1 | 100% | 4% | 4.3% |
-| paragraph_var | 1.00 | - | 100% | 4% | 4.3% |
-| **TOTAL** | | | | | **96.4%** |
+| cultural | 9 | 5 | 100% | 33% | 33.3% |
+| engagement | 4 | 6 | 67% | 20% | 13.4% |
+| visual | 6 | 4 | 100% | 13% | 13.3% |
+| variety | 0.98 | - | 98% | 7% | 6.5% |
+| paragraph_var | 1.00 | - | 100% | 7% | 6.7% |
+| examples | 28 | - | 100% | 7% | 6.7% |
+| realworld | 3 | - | 100% | 7% | 6.7% |
+| questions | 26 | 4 | 100% | 7% | 6.7% |
+| **TOTAL** | | | | | **93.3%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 32 | Included in Core |

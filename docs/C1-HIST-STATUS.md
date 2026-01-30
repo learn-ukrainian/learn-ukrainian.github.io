@@ -1,21 +1,21 @@
 # C1-HIST Module Status
 
-**Generated:** 2026-01-26 22:34:05
+**Generated:** 2026-01-30 21:19:46
 **Total Modules:** 135
-**Status:** 0 passing, 0 failing, 0 stubs, 135 errors
+**Status:** 1 passing, 0 failing, 0 stubs, 134 errors
 
 ## Quick Summary
 
-- ✅ **Passing:** 0/135 (0%)
+- ✅ **Passing:** 1/135 (0%)
 - ❌ **Failing:** 0/135
 - 📝 **Stubs:** 0/135
-- ⚠️ **Errors:** 135/135
+- ⚠️ **Errors:** 134/135
 
 ## Module Details
 
 | # | Slug | Status | Words | Issues |
 |---|------|--------|-------|--------|
-| 001 | shcho-take-istoriohrafiia | ⚠️ MISSING | 0/0 | no_file |
+| 001 | shcho-take-istoriohrafiia | ✅ PASS | 4898/4000 | - |
 | 002 | ukrainska-istoriohrafichna-tradytsiia | ⚠️ MISSING | 0/0 | no_file |
 | 003 | rosiiska-imperialna-istoriohrafiia | ⚠️ MISSING | 0/0 | no_file |
 | 004 | radyanska-istoriohrafiia | ⚠️ MISSING | 0/0 | no_file |

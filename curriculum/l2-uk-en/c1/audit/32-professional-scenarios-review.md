@@ -1,14 +1,12 @@
 # Audit Report: M32 — 32-professional-scenarios.md
-
-**Level:** C1 | **Module:** M32 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
+**Level:** C1 | **Module:** M32 | **Phase:** C1.2 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:14
+**Generated:** 2026-01-30 21:14:16
 
 ## Configuration
-
 **Type:** C1
-**Word Target:** 3000 words
+**Word Target:** 4000 words
 **Activities:** 12-16 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння тексту | 12 | 5 | ✅ |
@@ -45,14 +42,12 @@
 - Low density activities: 0
 
 ## Recommendation
-
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ❌ 2756/3000 (raw: 2985)
+- **Words:** ❌ 2756/4000 (raw: 2985)
 - **Activities:** ✅ 13/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
@@ -70,15 +65,13 @@
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
 **Score:** 96% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 61 | 15 | 100% | 25% | 25.0% |
+| examples | 63 | 15 | 100% | 25% | 25.0% |
 | engagement | 9 | 5 | 100% | 19% | 18.7% |
 | variety | 0.99 | - | 99% | 12% | 12.4% |
 | cultural | 3 | 4 | 75% | 12% | 9.4% |
@@ -89,7 +82,6 @@
 | **TOTAL** | | | | | **96.8%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 63 | Included in Core |

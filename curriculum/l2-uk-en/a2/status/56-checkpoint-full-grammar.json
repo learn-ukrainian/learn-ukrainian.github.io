@@ -2,14 +2,14 @@
   "module": "56-checkpoint-full-grammar",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T13:04:38.808050Z",
+  "last_audit": "2026-01-30T21:12:59.848762Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-15T15:59:37.730858Z",
+    "md": "2026-01-27T15:24:10.363286Z",
     "meta": "2026-01-26T17:21:18.965538Z",
     "activities": "2026-01-27T13:04:01.182234Z",
     "vocabulary": "2026-01-25T01:40:11.939211Z",
-    "plan": "2026-01-27T13:04:30.783217Z"
+    "plan": "2026-01-30T12:31:49.660318Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1015/800 (raw: 1305)"
+      "message": "1015/810 (raw: 1305)"
     },
     "activities": {
       "status": "pass",

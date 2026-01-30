@@ -2,14 +2,14 @@
   "module": "88-interviu-ta-podkasty",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T20:14:39.627150Z",
+  "last_audit": "2026-01-30T01:08:36.201028Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.350213Z",
+    "md": "2026-01-30T01:08:32.166883Z",
     "meta": "2026-01-26T15:44:41.735535Z",
     "activities": "2026-01-11T23:20:02.221226Z",
     "vocabulary": "2026-01-25T18:00:40.762777Z",
-    "plan": "2026-01-27T20:01:57.913421Z"
+    "plan": "2026-01-30T01:08:28.585676Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2162/1500 (raw: 2271)"
+      "message": "2162/1500 (raw: 2274)"
     },
     "activities": {
       "status": "pass",

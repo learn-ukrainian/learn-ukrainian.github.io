@@ -2,14 +2,14 @@
   "module": "40-b21c-checkpoint",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:28:12.061904Z",
+  "last_audit": "2026-01-30T21:18:14.793891Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-11T22:52:00.285679Z",
-    "meta": "2026-01-26T17:21:19.176692Z",
+    "md": "2026-01-27T15:24:10.351896Z",
+    "meta": "2026-01-29T07:39:04.704571Z",
     "activities": "2026-01-11T23:20:02.149748Z",
     "vocabulary": "2026-01-21T22:54:30.460433Z",
-    "plan": "2026-01-26T17:21:19.176456Z"
+    "plan": "2026-01-30T15:04:49.280309Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2355/1750 (raw: 2606) | richness: 81% < 95% min (grammar) - REWRITE needed"
+      "status": "pass",
+      "violations": 0,
+      "message": "2355/2000 (raw: 2606)"
     },
     "activities": {
       "status": "pass",
@@ -41,9 +41,10 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "6 Outline Compliance Errors"
+      "5 Outline Compliance Errors",
+      "Missing required activity types: reading, true-false"
     ],
-    "pass_count": 3,
-    "fail_count": 1
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

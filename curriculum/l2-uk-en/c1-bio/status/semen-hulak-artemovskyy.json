@@ -2,20 +2,20 @@
   "module": "semen-hulak-artemovskyy",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:56:11.825385Z",
+  "last_audit": "2026-01-30T21:15:08.127191Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-17T21:45:15.855503Z",
-    "meta": "2026-01-26T17:21:21.043700Z",
-    "activities": "2026-01-17T21:45:15.806906Z",
-    "vocabulary": null,
+    "md": "2026-01-29T22:43:06.537745Z",
+    "meta": "2026-01-29T22:43:06.535414Z",
+    "activities": "2026-01-29T22:43:06.510539Z",
+    "vocabulary": "2026-01-29T22:13:17.824594Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
       "status": "fail",
@@ -25,12 +25,12 @@
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "15/3"
+      "message": "6/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 24 (soft target)"
+      "message": "25/24"
     },
     "naturalness": {
       "status": "fail",
@@ -42,10 +42,9 @@
     "status": "fail",
     "blocking_issues": [
       "6 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
       "Missing required activity types: critical-analysis"
     ],
-    "pass_count": 1,
-    "fail_count": 3
+    "pass_count": 3,
+    "fail_count": 2
   }
 }

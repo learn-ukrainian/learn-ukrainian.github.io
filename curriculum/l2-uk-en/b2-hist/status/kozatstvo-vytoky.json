@@ -2,11 +2,11 @@
   "module": "kozatstvo-vytoky",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T23:38:23.454236Z",
+  "last_audit": "2026-01-29T23:38:37.688609Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.346972Z",
-    "meta": "2026-01-26T22:20:13.243155Z",
+    "meta": "2026-01-29T07:38:18.636172Z",
     "activities": "2026-01-27T15:34:54.184048Z",
     "vocabulary": "2026-01-24T15:24:58.043014Z",
     "plan": null

@@ -1,12 +1,10 @@
 # Audit Report: M40 — 40-adj-suffixes.md
-
 **Level:** A2 | **Module:** M40 | **Phase:** A2.3 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 12:19:35
+**Generated:** 2026-01-30 21:12:51
 
 ## Configuration
-
 **Type:** A2-grammar
 **Word Target:** 1000 words
 **Activities:** 10-14 required
@@ -19,7 +17,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Suffix Match | 10 | 8 | ✅ |
@@ -40,7 +37,6 @@
 - Low density activities: 0
 
 ## Gates
-
 - **Words:** ✅ 1477/1000 (raw: 1583)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
@@ -58,7 +54,6 @@
 - **Naturalness:** ✅ 8/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

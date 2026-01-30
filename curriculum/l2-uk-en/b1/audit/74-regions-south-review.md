@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M74 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 19:15:46
+**Generated:** 2026-01-30 00:32:36
 
 ## Configuration
 **Type:** B1-culture
@@ -43,7 +43,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1699/1500 (raw: 1792)
+- **Words:** ✅ 1699/1500 (raw: 1801)
 - **Activities:** ✅ 14/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 12/4 types
@@ -81,10 +81,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 45 | Included in Core |
-| **Вступ** | ✅ | 146 | Included in Core |
+| **Вступ — Південь: Вікно у світ** | ✅ | 146 | Included in Core |
 | **Сучасність** | ⚪️ | 208 | Skipped |
 | **Історія та культура** | ✅ | 650 | Included in Core |
 | **Практика** | ⚪️ | 89 | Skipped |
 | **Продукція** | ⚪️ | 274 | Skipped |
-| **Підсумок** | ✅ | 177 | Included in Core |
+| **Підсумок — Південь повернеться** | ✅ | 177 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M04 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 23:38:58
+**Generated:** 2026-01-30 13:32:21
 
 ## Configuration
 **Type:** B2-history
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 5563/4000 (raw: 5680)
+- **Words:** ✅ 5563/4000 (raw: 5676)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/2 types

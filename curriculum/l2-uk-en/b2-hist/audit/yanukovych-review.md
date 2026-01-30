@@ -1,8 +1,8 @@
-# Audit Report: M125 — yanukovych.md
-**Level:** B2 | **Module:** M125 | **Phase:** HIST.12 | **Pedagogy:** CBI | **Target:** 4000
+# Audit Report: M124 — yanukovych.md
+**Level:** B2 | **Module:** M124 | **Phase:** HIST.12 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-27 23:39:17
+**Generated:** 2026-01-29 23:39:31
 
 ## Configuration
 **Type:** B2-history

@@ -2,11 +2,11 @@
   "module": "khotynska-viyna",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T23:38:15.792936Z",
+  "last_audit": "2026-01-29T23:38:30.322966Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T18:58:06.253350Z",
-    "meta": "2026-01-26T22:20:13.164913Z",
+    "meta": "2026-01-29T07:38:18.639817Z",
     "activities": "2026-01-27T18:55:56.792856Z",
     "vocabulary": "2026-01-27T11:35:39.239763Z",
     "plan": null

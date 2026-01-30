@@ -1,26 +1,23 @@
 # Audit Report: M14 — 14-son.md
-
-**Level:** LIT | **Module:** M14 | **Phase:** LIT.3 | **Pedagogy:** literature | **Target:** 4000
+**Level:** LIT | **Module:** M14 | **Phase:** LIT.3 | **Pedagogy:** literature | **Target:** 4500
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:57:46
+**Generated:** 2026-01-30 21:16:10
 
 ## Configuration
-
 **Type:** LIT-literature
-**Word Target:** 4000 words
+**Word Target:** 4500 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, group-sort, match-up, quiz, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥4 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥0 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | essay-response | Есе-Роздум: Десакралізація Влади | 1 | 1 | ✅ |
@@ -32,18 +29,16 @@
 - Total activities: 4 (target: 3-9) ✅
 - Unique types: 4 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 2/5 (essay-response, reading) ❌
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
 ## Recommendation
-
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ❌ 3543/4000 (raw: 3749)
+- **Words:** ❌ 3543/4500 (raw: 3749)
 - **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/2 types
@@ -61,12 +56,10 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-
 **Score:** 99% (minimum: 90%)
 **Module Type:** literature
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
@@ -82,7 +75,6 @@
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

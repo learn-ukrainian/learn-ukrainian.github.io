@@ -2,14 +2,14 @@
   "module": "87-novyny-yak-chytaty",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T20:14:29.240050Z",
+  "last_audit": "2026-01-30T01:08:16.373874Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.350214Z",
+    "md": "2026-01-30T01:08:11.875840Z",
     "meta": "2026-01-26T15:44:41.731443Z",
     "activities": "2026-01-27T20:13:18.389718Z",
     "vocabulary": "2026-01-25T18:00:40.754182Z",
-    "plan": "2026-01-27T20:01:57.909766Z"
+    "plan": "2026-01-30T01:08:08.064627Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2359/1500 (raw: 3061)"
+      "message": "2359/1500 (raw: 3065)"
     },
     "activities": {
       "status": "pass",

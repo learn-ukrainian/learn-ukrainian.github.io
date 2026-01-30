@@ -2,14 +2,14 @@
   "module": "35-speaking-practice",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:29:16.437401Z",
+  "last_audit": "2026-01-30T21:14:18.478379Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-13T19:18:38.023851Z",
-    "meta": "2026-01-26T17:21:19.458992Z",
+    "md": "2026-01-27T15:24:10.366802Z",
+    "meta": "2026-01-29T07:39:04.764113Z",
     "activities": "2026-01-13T20:16:12.701643Z",
     "vocabulary": null,
-    "plan": "2026-01-26T17:21:19.458819Z"
+    "plan": "2026-01-29T07:45:40.891189Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "2341/1750 (raw: 2486) | pedagogy: 1 violations | richness: 93% < 95% min (content)"
+      "message": "2341/4000 (raw: 2486) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",

@@ -1,12 +1,10 @@
 # Audit Report: M03 — 03-the-gender-code.md
-
-**Level:** A1 | **Module:** M03 | **Phase:** A1 | **Pedagogy:** PPP | **Target:** 300
+**Level:** A1 | **Module:** M03 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 300
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:25:39
+**Generated:** 2026-01-30 15:03:41
 
 ## Configuration
-
 **Type:** A1-grammar
 **Word Target:** 300 words
 **Activities:** 8-12 required
@@ -20,7 +18,6 @@
 **Transliteration:** Allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Gender Recognition | 12 | 8 | ✅ |
@@ -40,7 +37,6 @@
 - Low density activities: 0
 
 ## Gates
-
 - **Words:** ✅ 1045/300 (raw: 1260)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
@@ -58,7 +54,6 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

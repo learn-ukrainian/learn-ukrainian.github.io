@@ -2,14 +2,14 @@
   "module": "45-proverbs-work-wisdom-character",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:28:15.550954Z",
+  "last_audit": "2026-01-30T21:17:58.494250Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-12T00:22:44.502774Z",
-    "meta": "2026-01-26T17:21:19.186941Z",
+    "md": "2026-01-27T15:24:10.351882Z",
+    "meta": "2026-01-29T07:39:04.707897Z",
     "activities": "2026-01-12T00:05:27.482035Z",
     "vocabulary": "2026-01-21T22:54:31.099644Z",
-    "plan": "2026-01-26T17:21:19.186704Z"
+    "plan": "2026-01-30T15:04:49.291977Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2089/1750 (raw: 2309) | pedagogy: 1 violations"
+      "message": "2089/2000 (raw: 2309) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,8 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "2 Outline Compliance Errors"
+      "5 Outline Compliance Errors",
+      "Missing required activity types: reading"
     ],
     "pass_count": 3,
     "fail_count": 1

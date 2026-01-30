@@ -2,12 +2,12 @@
   "module": "mariia-prymachenko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:56:45.592490Z",
+  "last_audit": "2026-01-30T21:15:37.552511Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-17T21:45:15.830544Z",
-    "meta": "2026-01-26T17:21:20.858992Z",
-    "activities": "2026-01-17T21:45:15.796313Z",
+    "md": "2026-01-27T15:24:10.348550Z",
+    "meta": "2026-01-29T07:39:04.940423Z",
+    "activities": "2026-01-27T15:34:56.004383Z",
     "vocabulary": null,
     "plan": null
   },
@@ -19,13 +19,13 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "2576/4000 (raw: 2901) | pedagogy: 1 violations"
+      "violations": 1,
+      "message": "2576/4000 (raw: 2901)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "12/3"
+      "message": "3/3"
     },
     "vocabulary": {
       "status": "warn",

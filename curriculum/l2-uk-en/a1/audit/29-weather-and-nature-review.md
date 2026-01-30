@@ -1,14 +1,12 @@
 # Audit Report: M29 — 29-weather-and-nature.md
-
-**Level:** A1 | **Module:** M29 | **Phase:** A1 | **Pedagogy:** PPP | **Target:** 750
+**Level:** A1 | **Module:** M29 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 869
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:25:54
+**Generated:** 2026-01-30 21:09:28
 
 ## Configuration
-
 **Type:** A1-vocab
-**Word Target:** 750 words
+**Word Target:** 869 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Weather Expressions | 10 | 8 | ✅ |
@@ -42,8 +39,7 @@
 - Low density activities: 0
 
 ## Gates
-
-- **Words:** ✅ 937/750 (raw: 1296)
+- **Words:** ✅ 927/869 (raw: 1291)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -55,21 +51,16 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 39.1% (target 35-55% (M29))
+- **Immersion:** 🇺🇦 40.5% (target 35-55% (M29))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 65 | Included in Core |
-| **Grammar** | ⚪️ | 53 | Skipped |
-| **Asking About Weather** | ⚪️ | 0 | Skipped |
-| **Seasons** | ⚪️ | 0 | Skipped |
-| **Examples in Context** | ✅ | 239 | Included in Core |
-| **Dialogues** | ✅ | 496 | Included in Core |
-| **Практика** | ⚪️ | 13 | Skipped |
+| **Presentation** | ✅ | 262 | Included in Core |
+| **Practice** | ⚪️ | 529 | Skipped |
 | **Підсумок** | ✅ | 55 | Included in Core |
 | **Need More Practice?** | ⚪️ | 16 | Skipped |

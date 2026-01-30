@@ -2,12 +2,12 @@
   "module": "sofia-andrukhovych",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:57:19.671214Z",
+  "last_audit": "2026-01-30T21:15:53.096536Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-17T21:45:15.855903Z",
-    "meta": "2026-01-26T17:21:21.068624Z",
-    "activities": "2026-01-17T21:45:15.807459Z",
+    "md": "2026-01-27T15:24:10.348770Z",
+    "meta": "2026-01-29T07:39:04.954331Z",
+    "activities": "2026-01-27T15:34:56.758628Z",
     "vocabulary": null,
     "plan": null
   },
@@ -23,9 +23,9 @@
       "message": "2014/4000 (raw: 2198) | pedagogy: 1 violations"
     },
     "activities": {
-      "status": "pass",
-      "violations": 0,
-      "message": "12/3"
+      "status": "fail",
+      "violations": 2,
+      "message": "2/3 | unique_types: 2/3 types"
     },
     "vocabulary": {
       "status": "warn",
@@ -46,7 +46,7 @@
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
       "Missing required activity types: reading"
     ],
-    "pass_count": 1,
-    "fail_count": 3
+    "pass_count": 0,
+    "fail_count": 4
   }
 }

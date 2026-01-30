@@ -1,14 +1,12 @@
 # Audit Report: M26 — 26-describing-things-adjectives.md
-
-**Level:** A1 | **Module:** M26 | **Phase:** A1 | **Pedagogy:** PPP | **Target:** 750
+**Level:** A1 | **Module:** M26 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 853
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:25:52
+**Generated:** 2026-01-30 15:30:46
 
 ## Configuration
-
 **Type:** A1-grammar
-**Word Target:** 750 words
+**Word Target:** 853 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Antonym Pairs | 10 | 8 | ✅ |
@@ -40,35 +37,28 @@
 - Low density activities: 0
 
 ## Gates
-
-- **Words:** ✅ 962/750 (raw: 1337)
+- **Words:** ✅ 985/853 (raw: 1191)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 6/1
+- **Vocab:** ✅ 11/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 43.7% (target 35-55% (M26))
+- **Immersion:** 🇺🇦 35.9% (target 35-55% (M26))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Warm-up** | ✅ | 54 | Included in Core |
-| **Grammar** | ⚪️ | 58 | Skipped |
-| **Soft Stem Adjective Endings** | ⚪️ | 69 | Skipped |
-| **Adjective Position** | ⚪️ | 26 | Skipped |
-| **Common Antonym Pairs** | ⚪️ | 9 | Skipped |
-| **Examples in Context** | ✅ | 301 | Included in Core |
-| **Dialogues** | ✅ | 344 | Included in Core |
-| **Практика** | ⚪️ | 23 | Skipped |
-| **Підсумок** | ✅ | 59 | Included in Core |
-| **Need More Practice?** | ⚪️ | 19 | Skipped |
+| **Warm-up** | ✅ | 86 | Included in Core |
+| **Presentation** | ✅ | 463 | Included in Core |
+| **Practice** | ⚪️ | 379 | Skipped |
+| **Підсумок** | ✅ | 41 | Included in Core |
+| **Need More Practice?** | ⚪️ | 16 | Skipped |

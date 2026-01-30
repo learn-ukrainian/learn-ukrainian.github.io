@@ -2,14 +2,14 @@
   "module": "32-my-family",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:25:56.325377Z",
+  "last_audit": "2026-01-30T21:12:20.440926Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-16T00:51:56.627678Z",
+    "md": "2026-01-30T21:12:17.093269Z",
     "meta": "2026-01-26T21:56:47.968452Z",
     "activities": "2026-01-16T00:52:20.638113Z",
-    "vocabulary": "2026-01-25T18:00:39.422705Z",
-    "plan": "2026-01-26T21:43:00.374399Z"
+    "vocabulary": "2026-01-30T21:11:13.588566Z",
+    "plan": "2026-01-30T12:24:45.245269Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "912/750 (raw: 1358)"
+      "message": "958/916 (raw: 1405)"
     },
     "activities": {
       "status": "pass",
@@ -30,7 +30,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "9/1"
+      "message": "11/1"
     },
     "naturalness": {
       "status": "pass",

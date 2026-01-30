@@ -2,14 +2,14 @@
   "module": "78-technology-and-startups",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T19:16:10.358313Z",
+  "last_audit": "2026-01-30T00:45:16.395817Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.350163Z",
+    "md": "2026-01-30T00:44:55.942863Z",
     "meta": "2026-01-27T18:55:08.902943Z",
     "activities": "2026-01-27T19:07:32.132303Z",
     "vocabulary": "2026-01-25T16:02:18.732536Z",
-    "plan": "2026-01-27T19:14:06.426774Z"
+    "plan": "2026-01-30T00:44:05.172722Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1621/1500 (raw: 1950)"
+      "message": "1657/1500 (raw: 1994)"
     },
     "activities": {
       "status": "pass",

@@ -1,24 +1,22 @@
 # Audit Report: M85 — 85-professional-email-basics.md
-
-**Level:** B2 | **Module:** M85 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
+**Level:** B2 | **Module:** M85 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:28:42
+**Generated:** 2026-01-30 21:18:02
 
 ## Configuration
-
 **Type:** B2-skills
-**Word Target:** 1750 words
+**Word Target:** 2000 words
 **Activities:** 14-18 required
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥5 types required
 **Priority Types:** cloze, fill-in, quiz, translate
+**Required Types:** essay-response, reading, true-false
 **Engagement:** ≥6 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Офіційні та розмовні відповідники | 16 | 8 | ✅ |
@@ -41,11 +39,11 @@
 - Total activities: 15 (target: 14-18) ✅
 - Unique types: 11 (minimum: 5) ✅
 - Priority types used: 4/4 (cloze, fill-in, quiz, translate) ✅
+- Required types used: 1/3 (true-false) ❌
 - Low density activities: 0
 
 ## Gates
-
-- **Words:** ⚠️ 1727/1750 (raw: 1840) (23 short)
+- **Words:** ❌ 1727/2000 (raw: 1840)
 - **Activities:** ✅ 15/14
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/5 types
@@ -58,52 +56,28 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (15 activities)
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (skills))
-- **Richness:** ❌ 79% < 95% min (grammar) - REWRITE needed
+- **Richness:** ✅ 96% (skills)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
-**Score:** 79% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 96% (minimum: 80%)
+**Module Type:** skills
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 65 | 24 | 100% | 20% | 20.0% |
-| engagement | 7 | 5 | 100% | 15% | 15.0% |
-| dialogues | 1 | 4 | 25% | 15% | 3.8% |
-| variety | 0.93 | - | 93% | 10% | 9.3% |
-| cultural | 1 | 3 | 33% | 10% | 3.3% |
-| realworld | 4 | 3 | 100% | 10% | 10.0% |
-| visual | 18 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.58 | - | 58% | 5% | 2.9% |
-| questions | 9 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **79.2%** |
-
-### Dryness Flags & Fixes
-
-- ❌ **LOW_DIALOGUE**
-  - FIX:
-    Add more mini-dialogues (need 4+ total). Use this exact format:
-
-    **Діалог: [Location in Ukraine]**
-
-    > — [Speaker 1 line with **bolded** grammar examples]
-    > — [Speaker 2 response with **bolded** grammar examples]
-    > — [Speaker 1 continuation]
-    > — [Speaker 2 conclusion]
-- ❌ **LOW_CULTURAL_ANCHOR**
-  - FIX:
-    Add more cultural references (need 3+ total). Include:
-    - Named Ukrainian places (Поділ, Бесарабський ринок, Острозька академія)
-    - Ukrainian traditions or customs
-    - Contemporary Ukrainian life examples
+| examples | 65 | 15 | 100% | 26% | 25.5% |
+| engagement | 7 | 5 | 100% | 19% | 19.4% |
+| variety | 0.93 | - | 93% | 12% | 11.4% |
+| cultural | 1 | - | 100% | 12% | 12.2% |
+| realworld | 4 | 3 | 100% | 12% | 12.2% |
+| visual | 18 | 2 | 100% | 6% | 6.1% |
+| paragraph_var | 0.58 | - | 58% | 6% | 3.6% |
+| questions | 9 | 4 | 100% | 6% | 6.1% |
+| **TOTAL** | | | | | **96.6%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 34 | Included in Core |

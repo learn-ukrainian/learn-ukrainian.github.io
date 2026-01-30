@@ -2,14 +2,14 @@
   "module": "91-vocabulary-in-context",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T20:45:11.345685Z",
+  "last_audit": "2026-01-30T01:10:27.651256Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T20:39:19.122674Z",
+    "md": "2026-01-30T01:09:49.577946Z",
     "meta": "2026-01-26T15:44:41.751529Z",
     "activities": "2026-01-27T20:40:53.634449Z",
     "vocabulary": "2026-01-25T15:44:17.429635Z",
-    "plan": "2026-01-27T20:29:10.032292Z"
+    "plan": "2026-01-30T01:10:23.596948Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1984/1500 (raw: 2283)"
+      "message": "1984/1500 (raw: 2288)"
     },
     "activities": {
       "status": "pass",

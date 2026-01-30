@@ -2,11 +2,11 @@
   "module": "severyn-nalyvaiko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:56:02.231612Z",
+  "last_audit": "2026-01-30T21:15:02.958428Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-21T10:46:24.798799Z",
-    "meta": "2026-01-26T17:21:21.064389Z",
+    "md": "2026-01-27T15:24:10.348791Z",
+    "meta": "2026-01-29T07:39:04.896714Z",
     "activities": "2026-01-19T22:57:29.360649Z",
     "vocabulary": null,
     "plan": null
@@ -41,8 +41,8 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: quiz"
+      "4 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],
     "pass_count": 2,
     "fail_count": 2

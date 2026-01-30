@@ -2,14 +2,14 @@
   "module": "46-proverbs-nature-time-caution",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:28:16.251915Z",
+  "last_audit": "2026-01-30T21:18:00.479756Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-12T00:23:17.540720Z",
-    "meta": "2026-01-26T17:21:19.189008Z",
+    "md": "2026-01-27T15:24:10.351916Z",
+    "meta": "2026-01-29T07:39:04.708582Z",
     "activities": "2026-01-12T00:27:06.602694Z",
     "vocabulary": "2026-01-21T22:54:31.311872Z",
-    "plan": "2026-01-26T17:21:19.188752Z"
+    "plan": "2026-01-30T15:04:49.294470Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2876/1750 (raw: 3287) | pedagogy: 6 violations"
+      "message": "2877/2000 (raw: 3288) | pedagogy: 6 violations"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,8 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "2 Outline Compliance Errors"
+      "2 Outline Compliance Errors",
+      "Missing required activity types: reading"
     ],
     "pass_count": 3,
     "fail_count": 1

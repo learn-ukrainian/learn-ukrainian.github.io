@@ -2,7 +2,7 @@
   "module": "kakhovska-hes",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-28T18:36:53.238059Z",
+  "last_audit": "2026-01-29T23:40:12.893424Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-28T18:36:47.947620Z",
@@ -39,8 +39,10 @@
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
+    "status": "fail",
+    "blocking_issues": [
+      "1 Critical Template Violations"
+    ],
     "pass_count": 5,
     "fail_count": 0
   }

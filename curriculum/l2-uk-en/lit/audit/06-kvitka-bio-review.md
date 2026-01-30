@@ -1,26 +1,23 @@
 # Audit Report: M06 — 06-kvitka-bio.md
-
-**Level:** LIT | **Module:** M06 | **Phase:** LIT.2 | **Pedagogy:** literature | **Target:** 4000
+**Level:** LIT | **Module:** M06 | **Phase:** LIT.2 | **Pedagogy:** literature | **Target:** 4500
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:57:37
+**Generated:** 2026-01-30 21:16:02
 
 ## Configuration
-
-**Type:** LIT-biography
-**Word Target:** 4000 words
+**Type:** LIT-literature
+**Word Target:** 4500 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** cloze, essay-response, match-up, quiz, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥4 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥0 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | essay-response | Есе-Міркування: Феномен Малих Справ | 1 | 1 | ✅ |
@@ -33,18 +30,16 @@
 - Total activities: 5 (target: 3-9) ✅
 - Unique types: 4 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 2/5 (essay-response, reading) ❌
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
 ## Recommendation
-
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ❌ 3637/4000 (raw: 3989)
+- **Words:** ❌ 3637/4500 (raw: 3989)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/2 types
@@ -56,34 +51,31 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.5% (target 95-100% (biography))
-- **Richness:** ✅ 96% (literature)
+- **Immersion:** 🇺🇦 99.5% (target 95-100% (literature))
+- **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-
-**Score:** 96% (minimum: 90%)
-**Module Type:** literature
+**Score:** 99% (minimum: 95%)
+**Module Type:** biography
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
-| literary_citations | 6 | 5 | 100% | 17% | 17.4% |
-| engagement | 8 | 4 | 100% | 13% | 13.0% |
-| historical_context | 30 | 3 | 100% | 13% | 13.0% |
-| essays | 5 | 2 | 100% | 13% | 13.0% |
-| resources | 2 | 3 | 67% | 9% | 5.8% |
-| variety | 0.98 | - | 98% | 4% | 4.3% |
-| cultural | 12 | - | 100% | 4% | 4.3% |
-| visual | 12 | 1 | 100% | 4% | 4.3% |
-| paragraph_var | 1.00 | - | 100% | 4% | 4.3% |
-| **TOTAL** | | | | | **97.0%** |
+| primary_sources | 8 | 4 | 100% | 19% | 19.0% |
+| engagement | 8 | 6 | 100% | 14% | 14.3% |
+| quotes | 6 | 3 | 100% | 14% | 14.3% |
+| cultural | 12 | 4 | 100% | 10% | 9.5% |
+| visual | 12 | 4 | 100% | 10% | 9.5% |
+| timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
+| legacy | 15 | 2 | 100% | 10% | 9.5% |
+| variety | 0.98 | - | 98% | 5% | 4.7% |
+| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
+| questions | 20 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 39 | Included in Core |

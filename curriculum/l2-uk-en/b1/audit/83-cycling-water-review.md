@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M83 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 20:14:47
+**Generated:** 2026-01-30 00:51:42
 
 ## Configuration
 **Type:** B1-culture
@@ -41,7 +41,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1800/1500 (raw: 1883)
+- **Words:** ✅ 1800/1500 (raw: 1886)
 - **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 12/4 types
@@ -84,5 +84,5 @@
 | **Інтеграція** | ⚪️ | 735 | Skipped |
 | **Практика** | ⚪️ | 112 | Skipped |
 | **Продукція** | ⚪️ | 435 | Skipped |
-| **Підсумок** | ✅ | 145 | Included in Core |
+| **Підсумок — Активне літо** | ✅ | 145 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

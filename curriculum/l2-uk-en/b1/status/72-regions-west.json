@@ -2,14 +2,14 @@
   "module": "72-regions-west",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T19:15:42.656393Z",
+  "last_audit": "2026-01-30T00:32:17.922871Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.350152Z",
+    "md": "2026-01-30T00:32:08.010564Z",
     "meta": "2026-01-27T18:54:45.104318Z",
     "activities": "2026-01-27T19:08:21.562790Z",
     "vocabulary": "2026-01-25T18:00:40.645464Z",
-    "plan": "2026-01-27T19:14:06.361003Z"
+    "plan": "2026-01-30T00:31:13.019887Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1792/1500 (raw: 1885)"
+      "message": "1795/1500 (raw: 1897)"
     },
     "activities": {
       "status": "pass",

@@ -2,14 +2,14 @@
   "module": "95-shevchenko-poeziia",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:29:54.179898Z",
+  "last_audit": "2026-01-30T21:14:49.713542Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-13T22:35:59.128916Z",
-    "meta": "2026-01-26T17:21:19.577302Z",
+    "md": "2026-01-27T15:24:10.367289Z",
+    "meta": "2026-01-29T07:39:04.795115Z",
     "activities": "2026-01-13T22:33:36.125563Z",
     "vocabulary": null,
-    "plan": "2026-01-26T17:21:19.576558Z"
+    "plan": "2026-01-30T11:55:27.425551Z"
   },
   "gates": {
     "meta": {
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "2073/3500 (raw: 2400) | richness: 87% < 95% min (content)"
+      "violations": 3,
+      "message": "2073/3000 (raw: 2400) | engagement: 5/7 | richness: 87% < 95% min (content)"
     },
     "activities": {
       "status": "pass",
@@ -30,7 +30,7 @@
     "vocabulary": {
       "status": "warn",
       "violations": 0,
-      "message": "0 < 24 (soft target)"
+      "message": "0 < 25 (soft target)"
     },
     "naturalness": {
       "status": "fail",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "2 Outline Compliance Errors",
+      "1 Critical Template Violations",
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],
     "pass_count": 1,

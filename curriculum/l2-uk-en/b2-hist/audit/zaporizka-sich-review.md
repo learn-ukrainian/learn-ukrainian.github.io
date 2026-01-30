@@ -1,8 +1,8 @@
 # Audit Report: M42 — zaporizka-sich.md
 **Level:** B2 | **Module:** M42 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 23:39:19
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-29 23:39:33
 
 ## Configuration
 **Type:** B2-history
@@ -32,6 +32,15 @@
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Low density activities: 0
+
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ' per template 'b2-history-module-template.md'
+  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md.md
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 4027/4000 (raw: 4218)

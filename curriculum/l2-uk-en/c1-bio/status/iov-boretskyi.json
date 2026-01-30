@@ -2,11 +2,11 @@
   "module": "iov-boretskyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:56:02.880972Z",
+  "last_audit": "2026-01-30T21:15:03.636273Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-21T10:46:24.797725Z",
-    "meta": "2026-01-26T17:21:20.724982Z",
+    "md": "2026-01-27T15:24:10.348363Z",
+    "meta": "2026-01-29T07:39:04.897362Z",
     "activities": "2026-01-19T17:57:25.316198Z",
     "vocabulary": null,
     "plan": null
@@ -41,9 +41,8 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "4 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: fill-in, group-sort, match-up, quiz"
+      "1 Outline Compliance Errors",
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],
     "pass_count": 3,
     "fail_count": 1

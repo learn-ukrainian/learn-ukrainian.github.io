@@ -1,11 +1,9 @@
 # Audit Report: M39 — 39-euphemism-taboo.md
-
-**Level:** C1 | **Module:** M39 | **Phase:** C1 | **Pedagogy:** Immersion | **Target:** 3000
+**Level:** C1 | **Module:** M39 | **Phase:** C1.4 | **Pedagogy:** Immersion | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:18
+**Generated:** 2026-01-30 21:14:20
 
 ## Configuration
-
 **Type:** C1
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -18,7 +16,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння природи евфемізмів | 5 | 5 | ✅ |
@@ -41,24 +38,20 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 39-euphemism-taboo.yaml: Schema validation error at key 'min_words': 150 is less than the minimum of 200
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ' per template 'c1-module-template.md'
   - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/c1-module-template.md.md
 
 ## Recommendation
-
 **📝 UPDATE** (severity 25/100)
 
 - 2 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
 - **Words:** ❌ 1999/3000 (raw: 2228)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
@@ -72,40 +65,28 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
 - **Immersion:** 🇺🇦 99.4% (target 90-100%)
-- **Richness:** ❌ 90% < 95% min (content)
+- **Richness:** ✅ 99% (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
-**Score:** 90% (minimum: 95%)
-**Module Type:** content
+**Score:** 99% (minimum: 95%)
+**Module Type:** style
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 71 | 15 | 100% | 25% | 25.0% |
-| engagement | 7 | 5 | 100% | 19% | 18.7% |
-| variety | 0.99 | - | 99% | 12% | 12.4% |
-| cultural | 1 | 4 | 25% | 12% | 3.1% |
-| realworld | 3 | 3 | 100% | 12% | 12.5% |
-| visual | 7 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 12 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **90.5%** |
-
-### Dryness Flags & Fixes
-
-- ❌ **LOW_CULTURAL_ANCHOR**
-  - FIX:
-    Add more cultural references (need 3+ total). Include:
-    - Named Ukrainian places (Поділ, Бесарабський ринок, Острозька академія)
-    - Ukrainian traditions or customs
-    - Contemporary Ukrainian life examples
+| exemplar_texts | 15 | 2 | 100% | 25% | 25.0% |
+| model_answers | 69 | 3 | 100% | 20% | 20.0% |
+| engagement | 7 | 5 | 100% | 15% | 15.0% |
+| register_analysis | 15 | 5 | 100% | 15% | 15.0% |
+| visual | 7 | 4 | 100% | 10% | 10.0% |
+| variety | 0.99 | - | 99% | 5% | 5.0% |
+| cultural | 1 | - | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 70 | Included in Core |

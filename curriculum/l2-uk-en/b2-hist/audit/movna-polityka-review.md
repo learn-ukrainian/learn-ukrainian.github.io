@@ -1,8 +1,8 @@
-# Audit Report: M126 — movna-polityka.md
-**Level:** B2 | **Module:** M126 | **Phase:** HIST.12 | **Pedagogy:** CBI | **Target:** 4000
+# Audit Report: M125 — movna-polityka.md
+**Level:** B2 | **Module:** M125 | **Phase:** HIST.12 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-27 23:38:33
+**Generated:** 2026-01-29 23:38:47
 
 ## Configuration
 **Type:** B2-history
@@ -26,7 +26,7 @@
   - FIX: Add a essay-response activity to meet advanced richness standards.
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
   - FIX: Add a comparative-study activity to meet advanced richness standards.
-- **[STATE_STANDARD_LOW_IMMERSION]** Module 126 has 21.4% immersion (target: 90.0%+)
+- **[STATE_STANDARD_LOW_IMMERSION]** Module 125 has 21.4% immersion (target: 90.0%+)
   - FIX: Add more Ukrainian content to reach 90.0%+ immersion
 
 ## TEMPLATE COMPLIANCE

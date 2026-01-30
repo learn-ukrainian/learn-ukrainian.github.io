@@ -2,11 +2,11 @@
   "module": "valuevskyi-emskyi",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-28T11:21:22.328736Z",
+  "last_audit": "2026-01-29T23:39:27.375606Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-28T11:21:11.511963Z",
-    "meta": "2026-01-28T11:12:48.381854Z",
+    "meta": "2026-01-29T07:38:18.670776Z",
     "activities": "2026-01-27T21:50:49.652053Z",
     "vocabulary": "2026-01-28T11:12:41.394054Z",
     "plan": null

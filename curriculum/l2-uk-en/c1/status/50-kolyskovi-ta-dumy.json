@@ -2,14 +2,14 @@
   "module": "50-kolyskovi-ta-dumy",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:29:25.620388Z",
+  "last_audit": "2026-01-30T21:14:27.562934Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-10T15:24:20.275786Z",
-    "meta": "2026-01-26T17:21:19.489065Z",
+    "md": "2026-01-27T15:24:10.366951Z",
+    "meta": "2026-01-29T07:39:04.769883Z",
     "activities": "2026-01-11T00:20:29.278141Z",
     "vocabulary": null,
-    "plan": "2026-01-26T17:21:19.488842Z"
+    "plan": "2026-01-30T11:45:52.481662Z"
   },
   "gates": {
     "meta": {
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "2086/4000 (raw: 2273) | richness: 91% < 95% min (content)"
+      "violations": 1,
+      "message": "2086/3000 (raw: 2273)"
     },
     "activities": {
       "status": "pass",
@@ -41,8 +41,9 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "2 Outline Compliance Errors",
+      "4 Outline Compliance Errors",
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
+      "4 forbidden activity types (use --fix to remove)",
       "Missing required activity types: reading"
     ],
     "pass_count": 1,

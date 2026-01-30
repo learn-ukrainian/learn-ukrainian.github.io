@@ -2,14 +2,14 @@
   "module": "75-regions-center",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T19:15:47.501957Z",
+  "last_audit": "2026-01-30T00:32:37.075159Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.350178Z",
+    "md": "2026-01-30T00:30:28.874924Z",
     "meta": "2026-01-27T18:54:51.262380Z",
     "activities": "2026-01-27T19:08:24.051494Z",
     "vocabulary": "2026-01-25T16:02:18.712836Z",
-    "plan": "2026-01-27T19:14:06.392911Z"
+    "plan": "2026-01-30T00:31:52.065356Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1790/1500 (raw: 1892)"
+      "message": "1793/1500 (raw: 1888)"
     },
     "activities": {
       "status": "pass",

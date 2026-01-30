@@ -2,11 +2,11 @@
   "module": "pacyfikatsiia",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-28T22:20:41.246988Z",
+  "last_audit": "2026-01-29T23:38:52.817037Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-28T22:20:26.697091Z",
-    "meta": "2026-01-28T22:20:34.826713Z",
+    "meta": "2026-01-29T07:38:18.705516Z",
     "activities": "2026-01-28T16:43:04.462938Z",
     "vocabulary": "2026-01-28T16:49:00.444310Z",
     "plan": null

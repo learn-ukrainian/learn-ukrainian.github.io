@@ -1,14 +1,12 @@
 # Audit Report: M04 — 04-reflexive-passive.md
-
-**Level:** B2 | **Module:** M04 | **Phase:** B2 | **Pedagogy:** Not Specified | **Target:** 1750
+**Level:** B2 | **Module:** M04 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:27:46
+**Generated:** 2026-01-30 21:18:19
 
 ## Configuration
-
 **Type:** B2-grammar
-**Word Target:** 1750 words
+**Word Target:** 3800 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Утворення рефлексивного пасиву | 16 | 8 | ✅ |
@@ -46,8 +43,7 @@
 - Low density activities: 0
 
 ## Gates
-
-- **Words:** ✅ 1962/1750 (raw: 2467)
+- **Words:** ❌ 1962/3800 (raw: 2467)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -65,12 +61,10 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
 **Score:** 99% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 59 | 24 | 100% | 20% | 20.0% |
@@ -86,7 +80,6 @@
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 55 | Included in Core |

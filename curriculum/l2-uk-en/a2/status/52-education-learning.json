@@ -2,14 +2,14 @@
   "module": "52-education-learning",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T12:41:09.887126Z",
+  "last_audit": "2026-01-30T21:12:57.256684Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-08T21:01:02.935176Z",
+    "md": "2026-01-27T15:24:10.363274Z",
     "meta": "2026-01-26T17:21:18.953593Z",
     "activities": "2026-01-11T10:24:58.403897Z",
     "vocabulary": "2026-01-25T18:00:39.856241Z",
-    "plan": "2026-01-27T12:40:45.576962Z"
+    "plan": "2026-01-30T12:31:49.652183Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "1068/1000 (raw: 1407)"
+      "message": "1068/1150 (raw: 1407) (82 short)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
+    "pass_count": 4,
     "fail_count": 0
   }
 }

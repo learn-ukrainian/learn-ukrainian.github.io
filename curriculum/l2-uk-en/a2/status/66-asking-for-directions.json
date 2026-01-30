@@ -2,14 +2,14 @@
   "module": "66-asking-for-directions",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T13:14:21.145312Z",
+  "last_audit": "2026-01-30T21:13:03.513681Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-17T21:45:15.599884Z",
+    "md": "2026-01-27T15:24:10.363299Z",
     "meta": "2026-01-26T17:21:18.997138Z",
     "activities": "2026-01-17T21:45:15.607056Z",
     "vocabulary": "2026-01-25T16:02:17.945407Z",
-    "plan": "2026-01-27T13:14:17.194138Z"
+    "plan": "2026-01-30T12:32:20.137458Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1221/1000 (raw: 1389)"
+      "message": "1221/1145 (raw: 1389)"
     },
     "activities": {
       "status": "pass",

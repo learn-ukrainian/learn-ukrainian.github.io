@@ -2,11 +2,11 @@
   "module": "pivden-novorosiia",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-28T00:34:56.550992Z",
+  "last_audit": "2026-01-29T23:38:57.557265Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-28T00:34:49.374823Z",
-    "meta": "2026-01-28T00:34:52.949260Z",
+    "meta": "2026-01-29T07:38:18.665226Z",
     "activities": "2026-01-27T23:20:55.329790Z",
     "vocabulary": "2026-01-25T23:19:10.280156Z",
     "plan": null

@@ -1,6 +1,6 @@
 # A1 Module Status
 
-**Generated:** 2026-01-26 22:33:48
+**Generated:** 2026-01-30 21:19:46
 **Total Modules:** 44
 **Status:** 44 passing, 0 failing, 0 stubs, 0 errors
 
@@ -22,8 +22,8 @@
 | 006 | 06-the-living-verb-i | ✅ PASS | 1407/500 | - |
 | 007 | 07-questions-and-negation | ✅ PASS | 1041/500 | - |
 | 008 | 08-the-living-verb-ii | ✅ PASS | 972/500 | - |
-| 009 | 09-reflexive-verbs | ✅ PASS | 557/500 | - |
-| 010 | 10-checkpoint-first-contact | ✅ PASS | 1145/500 | - |
+| 009 | 09-reflexive-verbs | ✅ PASS | 977/750 | - |
+| 010 | 10-checkpoint-first-contact | ✅ PASS | 1224/875 | - |
 | 011 | 11-the-accusative-i-things | ✅ PASS | 921/750 | - |
 | 012 | 12-the-accusative-ii-people | ✅ PASS | 1342/750 | - |
 | 013 | 13-the-locative-where-things-are | ✅ PASS | 1396/750 | - |
@@ -33,31 +33,31 @@
 | 017 | 17-numbers-and-money | ✅ PASS | 1133/750 | - |
 | 018 | 18-food-and-shopping | ✅ PASS | 810/750 | - |
 | 019 | 19-at-the-cafe | ✅ PASS | 1165/750 | - |
-| 020 | 20-checkpoint-navigation | ✅ PASS | 1406/750 | - |
+| 020 | 20-checkpoint-navigation | ✅ PASS | 1439/1073 | - |
 | 021 | 21-yesterday-past-tense | ✅ PASS | 1121/750 | - |
-| 022 | 22-tomorrow-future-tense | ✅ PASS | 1217/750 | - |
+| 022 | 22-tomorrow-future-tense | ✅ PASS | 1217/1082 | - |
 | 023 | 23-what-time-is-it | ✅ PASS | 1073/750 | - |
-| 024 | 24-can-must-want-modals | ✅ PASS | 962/750 | - |
-| 025 | 25-my-daily-routine | ✅ PASS | 845/750 | - |
-| 026 | 26-describing-things-adjectives | ✅ PASS | 962/750 | - |
-| 027 | 27-colors-and-clothing | ✅ PASS | 846/750 | - |
-| 028 | 28-description-adverbs | ✅ PASS | 886/750 | - |
-| 029 | 29-weather-and-nature | ✅ PASS | 937/750 | - |
-| 030 | 30-prepositions-iii | ✅ PASS | 1050/750 | - |
-| 031 | 31-body-and-health | ✅ PASS | 800/750 | - |
-| 032 | 32-my-family | ✅ PASS | 912/750 | - |
-| 033 | 33-holidays-and-traditions | ✅ PASS | 805/750 | - |
-| 034 | 34-checkpoint-core-grammar | ✅ PASS | 1351/750 | - |
+| 024 | 24-can-must-want-modals | ✅ PASS | 962/1049 | - |
+| 025 | 25-my-daily-routine | ✅ PASS | 934/750 | - |
+| 026 | 26-describing-things-adjectives | ✅ PASS | 985/853 | - |
+| 027 | 27-colors-and-clothing | ✅ PASS | 1158/750 | - |
+| 028 | 28-description-adverbs | ✅ PASS | 1053/750 | - |
+| 029 | 29-weather-and-nature | ✅ PASS | 927/869 | - |
+| 030 | 30-prepositions-iii | ✅ PASS | 1121/936 | - |
+| 031 | 31-body-and-health | ✅ PASS | 904/820 | - |
+| 032 | 32-my-family | ✅ PASS | 958/916 | - |
+| 033 | 33-holidays-and-traditions | ✅ PASS | 892/750 | - |
+| 034 | 34-checkpoint-core-grammar | ✅ PASS | 1351/962 | - |
 | 035 | 35-at-the-cafe-practical | ✅ PASS | 908/750 | - |
-| 036 | at-the-restaurant | ✅ PASS | 808/750 | - |
-| 037 | at-the-market | ✅ PASS | 812/750 | - |
-| 038 | at-the-store | ✅ PASS | 754/750 | - |
-| 039 | buying-tickets | ✅ PASS | 769/750 | - |
-| 040 | taking-transport | ✅ PASS | 820/750 | - |
-| 041 | phone-basics | ✅ PASS | 813/750 | - |
-| 042 | emergencies | ✅ PASS | 798/750 | - |
-| 043 | combined-practice | ✅ PASS | 810/750 | - |
-| 044 | a1-final-exam | ✅ PASS | 834/750 | - |
+| 036 | 36-at-the-restaurant | ✅ PASS | 808/750 | - |
+| 037 | 37-at-the-market | ✅ PASS | 812/750 | - |
+| 038 | 38-at-the-store | ✅ PASS | 754/750 | - |
+| 039 | 39-buying-tickets | ✅ PASS | 769/750 | - |
+| 040 | 40-taking-transport | ✅ PASS | 820/750 | - |
+| 041 | 41-phone-basics | ✅ PASS | 813/750 | - |
+| 042 | 42-emergencies | ✅ PASS | 798/750 | - |
+| 043 | 43-combined-practice | ✅ PASS | 1101/750 | - |
+| 044 | 44-a1-final-exam | ✅ PASS | 1075/750 | - |
 
 ---
 

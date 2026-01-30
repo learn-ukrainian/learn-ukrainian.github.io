@@ -1,25 +1,23 @@
 # Audit Report: M83 — 83-b2-pidsumkovyy-ohlyad.md
-
-**Level:** B2 | **Module:** M83 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 1750
+**Level:** B2 | **Module:** M83 | **Phase:** B2.4 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:28:41
+**Generated:** 2026-01-30 21:18:10
 
 ## Configuration
-
 **Type:** B2-checkpoint
-**Word Target:** 1750 words
+**Word Target:** 2000 words
 **Activities:** 15-19 required
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
 **Priority Types:** cloze, error-correction, fill-in, quiz
+**Required Types:** essay-response, reading, true-false
 **Engagement:** ≥4 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥10 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Пасивні форми | 12 | 8 | ✅ |
@@ -48,22 +46,20 @@
 - Total activities: 21 (target: 15-19) ❌
 - Unique types: 10 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, quiz) ✅
+- Required types used: 2/3 (essay-response, true-false) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 83-b2-pidsumkovyy-ohlyad.yaml: Schema validation error at key '14': {'type': 'quiz', 'title': 'Тип помилки', 'items': [{'question': 'Визначте тип помилки у реченні «Я рахую, що це рішення є правильним».', 'options': [{'text': 'Лексична помилка (калька з російської)', 'correct': True}, {'text': 'Граматична помилка у відмінку', 'correct': False}, {'text': 'Орфографічна помилка у слові', 'correct': False}, {'text': 'У цьому реченні немає жодної помилки', 'correct': False}]}, {'question': 'Яка помилка допущена у фразі «Я нарешті поїхав до величного Львову»?', 'options': [{'text': 'Граматична помилка (правильно — до Львова)', 'correct': True}, {'text': 'Лексична помилка у значенні слова', 'correct': False}, {'text': 'Стилістична помилка у побудові фрази', 'correct': False}, {'text': 'Помилка у написанні великої літери', 'correct': False}]}, {'question': 'Яку помилку ви бачите у реченні «Він являється директором цієї компанії»?', 'options': [{'text': 'Лексична помилка (правильно — він є директором)', 'correct': True}, {'text': 'Граматична помилка у відмінюванні дієслова', 'correct': False}, {'text': 'Орфографічна помилка у закінченні слова', 'correct': False}, {'text': 'Речення побудовано абсолютно правильно', 'correct': False}]}, {'question': 'Як ви оцінюєте статус вітання «Доброго дня!» у сучасній розмовній українській мові?', 'options': [{'text': 'Це правильна та поширена форма вітання', 'correct': True}, {'text': 'Це груба граматична помилка у відмінку', 'correct': False}, {'text': 'Це застарілий сленг молодіжних груп', 'correct': False}, {'text': 'Це архаїзм, який більше не використовується', 'correct': False}]}, {'question': 'Вкажіть на граматичну помилку у конструкції «Він самий розумний у нашому класі».', 'options': [{'text': 'Граматична (правильно — найрозумніший)', 'correct': True}, {'text': 'Лексична (неправильне вживання слова)', 'correct': False}, {'text': 'Стилістична (порушення норм реєстру)', 'correct': False}, {'text': 'У цій конструкції немає жодної помилки', 'correct': False}]}, {'question': 'Чому фраза «Я вибачаюсь» часто вважається небажаною в офіційній українській мові?', 'options': [{'text': 'Через постфікс -ся, що означає дію на себе', 'correct': True}, {'text': 'Через орфографічну помилку в корені слова', 'correct': False}, {'text': 'Бо вона є діалектизмом західних регіонів', 'correct': False}, {'text': 'Бо це слово занадто довге для вимови', 'correct': False}]}, {'question': 'Чи вважається помилковим вираз «Зробити власні висновки» в українській мові?', 'options': [{'text': 'Ні, це цілком правильна і нормативна фраза', 'correct': True}, {'text': 'Так, це груба лексична помилка та калька', 'correct': False}, {'text': 'Так, це русизм, якого варто уникати', 'correct': False}, {'text': 'Це вважається діалектною формою мовлення', 'correct': False}]}, {'question': 'Яку лексичну помилку допущено у сталому виразі «Приймати участь у конкурсі»?', 'options': [{'text': 'Лексична помилка (правильно — брати участь)', 'correct': True}, {'text': 'Граматична помилка у формі дієслова', 'correct': False}, {'text': 'Стилістична помилка у виборі прийменника', 'correct': False}, {'text': 'Це речення є зразком ідеальної української', 'correct': False}]}], 'instruction': 'Оберіть правильну класифікацію наведеної мовної помилки.'} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
-
-- **Words:** ✅ 1802/1750 (raw: 1987)
+- **Words:** ❌ 1802/2000 (raw: 1987)
 - **Activities:** ✅ 21/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 10/4 types
@@ -76,56 +72,27 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ⚠️ Too many activities: 21 (target 15-19)
 - **Immersion:** 🇺🇦 99.1% (checkpoint - no gate)
-- **Richness:** ❌ 77% < 95% min (grammar) - REWRITE needed
+- **Richness:** ✅ 98% (checkpoint)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-
-**Score:** 77% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 98% (minimum: 85%)
+**Module Type:** checkpoint
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 50 | 24 | 100% | 20% | 20.0% |
-| engagement | 6 | 5 | 100% | 15% | 15.0% |
-| dialogues | 0 | 4 | 0% | 15% | 0.0% |
-| variety | 0.92 | - | 92% | 10% | 9.2% |
-| cultural | 9 | 3 | 100% | 10% | 10.0% |
-| realworld | 1 | 3 | 33% | 10% | 3.3% |
-| visual | 10 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 24 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **77.5%** |
-
-### Dryness Flags & Fixes
-
-- ❌ **NO_DIALOGUE**
-  - FIX:
-    Add 4+ mini-dialogues. Use this exact format:
-
-    **Діалог: [Location in Ukraine]**
-
-    > — [Speaker 1 line with **bolded** grammar examples]
-    > — [Speaker 2 response with **bolded** grammar examples]
-    > — [Speaker 1 continuation]
-    > — [Speaker 2 conclusion]
-
-    Example locations: На Бесарабському ринку, У львівській кав'ярні, В одеському трамваї, На Подолі
-- ❌ **ABSTRACT_ONLY**
-  - FIX:
-    Add 3+ real-world boxes. Use this exact format:
-
-    > 🌍 **У реальному житті**
-    >
-    > [Specific scenario: "На співбесіді...", "У магазині...", "На вокзалі..."]
-    > [Example sentence showing grammar in that context]
+| activity_types | 10 | 8 | 100% | 25% | 25.0% |
+| review_sections | 23 | 3 | 100% | 20% | 20.0% |
+| variety | 0.92 | - | 92% | 15% | 13.8% |
+| engagement | 6 | 3 | 100% | 10% | 10.0% |
+| cultural | 9 | - | 100% | 10% | 10.0% |
+| visual | 10 | 3 | 100% | 10% | 10.0% |
+| paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
+| **TOTAL** | | | | | **98.8%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 71 | Included in Core |

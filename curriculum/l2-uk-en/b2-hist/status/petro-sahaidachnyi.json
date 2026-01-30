@@ -2,11 +2,11 @@
   "module": "petro-sahaidachnyi",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T23:38:42.593059Z",
+  "last_audit": "2026-01-29T23:38:56.880261Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T18:06:54.832584Z",
-    "meta": "2026-01-26T22:20:13.435880Z",
+    "meta": "2026-01-29T07:38:18.639076Z",
     "activities": "2026-01-27T18:06:17.817096Z",
     "vocabulary": "2026-01-23T21:56:38.586049Z",
     "plan": null

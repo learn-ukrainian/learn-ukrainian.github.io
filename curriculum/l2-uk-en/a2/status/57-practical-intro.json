@@ -2,14 +2,14 @@
   "module": "57-practical-intro",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T13:06:18.111045Z",
+  "last_audit": "2026-01-30T21:13:00.466448Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-17T21:45:15.596199Z",
+    "md": "2026-01-27T15:24:10.363293Z",
     "meta": "2026-01-26T17:21:18.968584Z",
     "activities": "2026-01-27T13:05:30.884844Z",
     "vocabulary": "2026-01-25T01:42:21.136687Z",
-    "plan": "2026-01-27T13:06:00.006506Z"
+    "plan": "2026-01-30T12:31:49.662248Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1184/1000 (raw: 1323)"
+      "message": "1184/980 (raw: 1323)"
     },
     "activities": {
       "status": "pass",

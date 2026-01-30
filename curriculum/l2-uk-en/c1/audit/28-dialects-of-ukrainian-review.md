@@ -1,14 +1,12 @@
 # Audit Report: M28 — 28-dialects-of-ukrainian.md
-
-**Level:** C1 | **Module:** M28 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
+**Level:** C1 | **Module:** M28 | **Phase:** C1.2 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:12
+**Generated:** 2026-01-30 21:14:13
 
 ## Configuration
-
 **Type:** C1-grammar
-**Word Target:** 3000 words
+**Word Target:** 4000 words
 **Activities:** 12-16 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | group-sort | Діалектні групи | 14 | 12 | ✅ |
@@ -44,21 +41,20 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "> [!important]
 > **Визначення:**
 > Спочатку "суржиком" називали суміш жита і пшениці (борошно низько...". Shares significant keywords with sentence at index 20.
-- FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Сьогодні це мовлення, де українська граматика змішана з російськими словами.". Shares significant keywords with sentence at index 21.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): ">
 > - **Діалект:** Має історію століть, має свої правила.". Shares significant keywords with sentence at index 22.
-- FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "> [!example]
 > **Анатомія Суржику:**
 >
 > - *Суржик:* "Я *поняв*, шо нада *робить*".". Shares significant keywords with sentence at index 23.
-- FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Сучасна література (наприклад, п'єси Леся Подерв'янського) використовує суржик як художній прийом, щ...". Shares significant keywords with sentence at index 25.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Сміятися з суржику можна, але говорити ним на іспиті — ні.". Shares significant keywords with sentence at index 29.
@@ -73,7 +69,6 @@
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
@@ -81,8 +76,7 @@
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ❌ 2237/3000 (raw: 2357)
+- **Words:** ❌ 2237/4000 (raw: 2357)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 8/4 types
@@ -95,31 +89,30 @@
 - **Pedagogy:** ❌ 10 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.2% (target 90-100% (grammar))
-- **Richness:** ✅ 98% (content)
+- **Richness:** ✅ 97% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
-**Score:** 98% (minimum: 95%)
-**Module Type:** content
+**Score:** 97% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 22 | 15 | 100% | 25% | 25.0% |
-| engagement | 14 | 5 | 100% | 19% | 18.7% |
-| variety | 0.92 | - | 92% | 12% | 11.5% |
-| cultural | 13 | 4 | 100% | 12% | 12.5% |
-| realworld | 3 | 3 | 100% | 12% | 12.5% |
-| visual | 29 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 0.95 | - | 95% | 6% | 5.9% |
-| questions | 13 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **98.7%** |
+| examples | 22 | 24 | 92% | 20% | 18.4% |
+| engagement | 14 | 5 | 100% | 15% | 15.0% |
+| dialogues | 4 | 4 | 100% | 15% | 15.0% |
+| variety | 0.92 | - | 92% | 10% | 9.2% |
+| cultural | 13 | 3 | 100% | 10% | 10.0% |
+| realworld | 3 | 3 | 100% | 10% | 10.0% |
+| visual | 29 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.95 | - | 95% | 5% | 4.8% |
+| questions | 13 | 5 | 100% | 5% | 5.0% |
+| proverbs | 4 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **97.4%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 77 | Included in Core |

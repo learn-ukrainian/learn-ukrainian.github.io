@@ -2,14 +2,14 @@
   "module": "25-my-daily-routine",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:25:52.349782Z",
+  "last_audit": "2026-01-30T15:29:35.758435Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-16T00:32:07.772538Z",
+    "md": "2026-01-30T15:14:09.961304Z",
     "meta": "2026-01-26T21:56:47.943131Z",
     "activities": "2026-01-16T00:33:05.585207Z",
     "vocabulary": "2026-01-25T01:42:20.946803Z",
-    "plan": "2026-01-26T21:42:56.478315Z"
+    "plan": "2026-01-30T12:24:45.222471Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "845/750 (raw: 978)"
+      "message": "934/750 (raw: 1079)"
     },
     "activities": {
       "status": "pass",

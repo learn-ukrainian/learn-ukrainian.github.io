@@ -2,14 +2,14 @@
   "module": "54-sports-fitness",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T12:41:11.079749Z",
+  "last_audit": "2026-01-30T21:12:58.416372Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-08T21:09:11.189245Z",
+    "md": "2026-01-27T15:24:10.366152Z",
     "meta": "2026-01-26T17:21:18.959883Z",
     "activities": "2026-01-11T10:24:58.447858Z",
     "vocabulary": "2026-01-25T18:00:39.874951Z",
-    "plan": "2026-01-27T12:41:00.363051Z"
+    "plan": "2026-01-30T12:31:49.656471Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "1339/1000 (raw: 1709)"
+      "message": "1339/1405 (raw: 1709) (66 short)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
+    "pass_count": 4,
     "fail_count": 0
   }
 }

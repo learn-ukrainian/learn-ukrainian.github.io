@@ -2,14 +2,14 @@
   "module": "02-academic-style-markers",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:28:50.609445Z",
+  "last_audit": "2026-01-30T21:13:57.361566Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-13T11:55:56.364567Z",
-    "meta": "2026-01-26T17:21:19.307822Z",
+    "md": "2026-01-27T15:24:10.366556Z",
+    "meta": "2026-01-29T07:39:04.747575Z",
     "activities": "2026-01-11T00:20:27.867826Z",
     "vocabulary": null,
-    "plan": "2026-01-26T17:21:19.307652Z"
+    "plan": "2026-01-29T07:45:40.766368Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "2487/3000 (raw: 2821) | pedagogy: 3 violations"
+      "message": "2487/4000 (raw: 2821) | pedagogy: 3 violations"
     },
     "activities": {
       "status": "pass",

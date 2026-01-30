@@ -1,25 +1,23 @@
 # Audit Report: M31 — 31-numeral-declension-time-dates.md
-
-**Level:** B2 | **Module:** M31 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 1750
+**Level:** B2 | **Module:** M31 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:28:05
+**Generated:** 2026-01-30 21:18:20
 
 ## Configuration
-
 **Type:** B2-grammar
-**Word Target:** 1750 words
+**Word Target:** 2000 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
 **Priority Types:** cloze, error-correction, fill-in, unjumble
+**Required Types:** essay-response, reading, true-false
 **Engagement:** ≥6 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Вибір правильного вираження часу | 16 | 8 | ✅ |
@@ -40,22 +38,20 @@
 - Total activities: 13 (target: 10-14) ✅
 - Unique types: 12 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Required types used: 2/3 (essay-response, true-false) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 31-numeral-declension-time-dates.yaml: Schema validation error at key '11': {'type': 'fill-in', 'title': 'Заповніть розклад заходів', 'items': [{'sentence': 'Збори починаються ___ (09:00).', 'answer': "о дев'ятій", 'options': ["о дев'ятій", "в дев'ять", "на дев'яту", "дев'ять нуль нуль"]}, {'sentence': 'Обід ___ (13:30).', 'answer': 'о пів на другу', 'options': ['о пів на другу', 'в пол другого', 'о тринадцять тридцять', 'тринадцять тридцять']}, {'sentence': 'Презентація ___ (15:15).', 'answer': 'о чверть на четверту', 'options': ['о чверть на четверту', "в п'ятнадцять четвертого", "о третій п'ятнадцять", "п'ятнадцять на четверту"]}, {'sentence': 'Кава-брейк ___ (16:45).', 'answer': "за чверть п'ята", 'options': ["за чверть п'ята", "без чверті п'ять", "о шістнадцять сорок п'ять", "шістнадцять сорок п'ять"]}, {'sentence': 'Вечеря ___ (19:00).', 'answer': "о дев'ятнадцятій", 'options': ["о дев'ятнадцятій", "в дев'ятнадцять", 'на сьому вечора', "дев'ятнадцять нуль нуль"]}, {'sentence': 'Концерт ___ (20:00).', 'answer': 'о двадцятій', 'options': ['о двадцятій', 'в двадцять', 'на восьму', 'двадцять годин']}, {'sentence': 'Салют ___ (22:00).', 'answer': 'о двадцять другій', 'options': ['о двадцять другій', 'в двадцять два', 'на десяту', 'двадцять друга']}, {'sentence': "Від'їзд ___ (23:30).", 'answer': 'о пів на дванадцяту', 'options': ['о пів на дванадцяту', 'в пол дванадцятого', 'о двадцять три тридцять', 'двадцять три тридцять']}], 'instruction': 'Запишіть час словами у правильній формі.'} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
-
-- **Words:** ✅ 1837/1750 (raw: 2043)
+- **Words:** ❌ 1837/2000 (raw: 2043)
 - **Activities:** ✅ 13/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -73,12 +69,10 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-
 **Score:** 95% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 19 | 24 | 79% | 20% | 15.8% |
@@ -94,7 +88,6 @@
 | **TOTAL** | | | | | **95.2%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 90 | Included in Core |

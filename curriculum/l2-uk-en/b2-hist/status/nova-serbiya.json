@@ -2,11 +2,11 @@
   "module": "nova-serbiya",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-28T00:42:13.404169Z",
+  "last_audit": "2026-01-29T23:38:49.464021Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-28T00:42:08.753793Z",
-    "meta": "2026-01-28T00:35:23.345737Z",
+    "meta": "2026-01-29T07:38:18.666230Z",
     "activities": "2026-01-27T23:28:31.247697Z",
     "vocabulary": "2026-01-25T23:35:16.518225Z",
     "plan": null

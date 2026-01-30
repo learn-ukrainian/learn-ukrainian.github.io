@@ -2,14 +2,14 @@
   "module": "10-checkpoint-passive-voice",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:27:50.739080Z",
+  "last_audit": "2026-01-30T21:18:00.079038Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-10T19:14:21.926360Z",
-    "meta": "2026-01-26T17:21:19.086004Z",
+    "md": "2026-01-27T15:24:10.351736Z",
+    "meta": "2026-01-29T07:39:04.681021Z",
     "activities": "2026-01-14T11:05:21.300544Z",
     "vocabulary": "2026-01-21T22:54:25.928953Z",
-    "plan": "2026-01-26T17:21:19.085788Z"
+    "plan": "2026-01-29T07:45:40.576719Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "1717/1750 (raw: 1921) (33 short) | pedagogy: 1 violations | richness: 74% < 95% min (grammar) - REWRITE needed"
+      "message": "1717/3500 (raw: 1921) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",

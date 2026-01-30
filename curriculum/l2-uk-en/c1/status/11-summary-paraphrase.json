@@ -2,14 +2,14 @@
   "module": "11-summary-paraphrase",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:29:01.099191Z",
+  "last_audit": "2026-01-30T21:14:03.482107Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-13T12:19:23.005851Z",
-    "meta": "2026-01-26T17:21:19.354609Z",
+    "md": "2026-01-27T15:24:10.366697Z",
+    "meta": "2026-01-29T07:39:04.751837Z",
     "activities": "2026-01-13T13:22:59.359510Z",
     "vocabulary": null,
-    "plan": "2026-01-26T17:21:19.354418Z"
+    "plan": "2026-01-29T07:45:40.801266Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 3,
-      "message": "2026/3000 (raw: 2110) | pedagogy: 1 violations | richness: 93% < 95% min (content)"
+      "message": "2026/4000 (raw: 2110) | pedagogy: 1 violations | richness: 92% < 95% min (grammar)"
     },
     "activities": {
       "status": "pass",

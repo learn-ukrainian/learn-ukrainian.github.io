@@ -2,14 +2,14 @@
   "module": "16-biblical-themes",
   "level": "LIT",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:57:49.254789Z",
+  "last_audit": "2026-01-30T21:16:12.655829Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-18T21:39:17.841456Z",
-    "meta": "2026-01-26T17:21:21.836283Z",
+    "md": "2026-01-27T15:24:10.349649Z",
+    "meta": "2026-01-29T07:39:04.967232Z",
     "activities": "2026-01-18T21:40:53.880537Z",
     "vocabulary": null,
-    "plan": "2026-01-26T17:21:21.835895Z"
+    "plan": "2026-01-27T15:19:02.568035Z"
   },
   "gates": {
     "meta": {
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 1,
-      "message": "3917/4000 (raw: 4301) (83 short) | pedagogy: 1 violations"
+      "violations": 2,
+      "message": "3917/4500 (raw: 4301) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -42,8 +42,7 @@
     "status": "fail",
     "blocking_issues": [
       "5 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: cloze, group-sort, match-up, quiz"
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],
     "pass_count": 3,
     "fail_count": 2

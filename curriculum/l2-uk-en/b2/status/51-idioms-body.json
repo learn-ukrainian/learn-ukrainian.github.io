@@ -2,14 +2,14 @@
   "module": "51-idioms-body",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:28:19.658201Z",
+  "last_audit": "2026-01-30T21:18:18.892537Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-14T21:37:26.718114Z",
-    "meta": "2026-01-26T17:21:19.199106Z",
+    "md": "2026-01-27T15:24:10.351937Z",
+    "meta": "2026-01-29T07:39:04.712037Z",
     "activities": "2026-01-11T23:22:25.879071Z",
     "vocabulary": "2026-01-21T22:54:32.144704Z",
-    "plan": "2026-01-26T17:21:19.198860Z"
+    "plan": "2026-01-30T15:04:49.308454Z"
   },
   "gates": {
     "meta": {
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "1977/1750 (raw: 2107) | pedagogy: 1 violations | richness: 93% < 95% min (grammar)"
+      "violations": 1,
+      "message": "1977/2000 (raw: 2107) (23 short) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,8 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "4 Outline Compliance Errors"
+      "4 Outline Compliance Errors",
+      "Missing required activity types: reading"
     ],
     "pass_count": 3,
     "fail_count": 1

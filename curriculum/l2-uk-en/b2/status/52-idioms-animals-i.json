@@ -2,14 +2,14 @@
   "module": "52-idioms-animals-i",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:28:20.325366Z",
+  "last_audit": "2026-01-30T21:18:17.767344Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-11T23:31:30.535905Z",
-    "meta": "2026-01-26T17:21:19.201208Z",
+    "md": "2026-01-27T15:24:10.351963Z",
+    "meta": "2026-01-29T07:39:04.712802Z",
     "activities": "2026-01-11T23:31:30.552092Z",
     "vocabulary": "2026-01-21T22:54:32.303021Z",
-    "plan": "2026-01-26T17:21:19.200977Z"
+    "plan": "2026-01-30T15:05:14.159650Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "1950/1750 (raw: 2098) | pedagogy: 1 violations"
+      "message": "1950/2000 (raw: 2098) (50 short) | pedagogy: 2 violations"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,8 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "4 Outline Compliance Errors"
+      "4 Outline Compliance Errors",
+      "Missing required activity types: fill-in-the-blank, reading"
     ],
     "pass_count": 3,
     "fail_count": 1

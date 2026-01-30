@@ -1,25 +1,23 @@
 # Audit Report: M53 — 53-idioms-animals-ii.md
-
-**Level:** B2 | **Module:** M53 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
+**Level:** B2 | **Module:** M53 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:28:20
+**Generated:** 2026-01-30 21:17:58
 
 ## Configuration
-
 **Type:** B2-vocab
-**Word Target:** 1750 words
+**Word Target:** 2000 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
 **Priority Types:** mark-the-words, match-up, quiz, translate
+**Required Types:** fill-in-the-blank, reading, true-false
 **Engagement:** ≥6 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥35 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть значення | 12 | 8 | ✅ |
@@ -41,22 +39,22 @@
 - Total activities: 14 (target: 10-14) ✅
 - Unique types: 11 (minimum: 4) ✅
 - Priority types used: 3/4 (match-up, quiz, translate) ✅
+- Required types used: 1/3 (true-false) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
+- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['fill-in-the-blank']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
+  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 53-idioms-animals-ii.yaml: Schema validation error at key '12': {'type': 'quiz', 'title': 'Походження та Традиції', 'instruction': 'Перевірте свої знання культурного контексту ідіом.', 'items': [{'question': "В якій п'єсі головний герой намагався 'вбити двох зайців' (одружитися з двома дівчатами)?", 'options': [{'text': 'За двома зайцями', 'correct': True}, {'text': 'Лісова пісня', 'correct': False}, {'text': 'Intermezzo', 'correct': False}, {'text': 'Тіні забутих предків', 'correct': False}], 'explanation': 'Це класична українська комедія.'}, {'question': "Яке конкретне значення символізує маленька 'муха' в популярній ідіомі 'муха не сідала'?", 'options': [{'text': 'Будь-яке, навіть найменше, втручання чи слід', 'correct': True}, {'text': 'Бруд або небезпечну хворобу', 'correct': False}, {'text': 'Швидкість пересування у просторі', 'correct': False}, {'text': 'Специфічний звук польоту комахи', 'correct': False}], 'explanation': 'Якщо навіть муха не сідала, значить річ незаймана.'}, {'question': "Чому саме 'ґави' та 'ворони' історично стали в українській мові головними символами неуважності?", 'options': [{'text': 'Через постійне спостереження за ними в небі замість роботи', 'correct': True}, {'text': 'Бо самі ці птахи вважаються дуже неуважними у природі', 'correct': False}, {'text': 'Бо вони часто крадуть блискучі речі у людей', 'correct': False}, {'text': 'Це був абсолютно випадковий вибір народної мови без причини', 'correct': False}], 'explanation': 'Людина відволікалася на птахів у небі.'}, {'question': 'Яка велична українська річка, згадана в тексті, є джерелом багатьох популярних рибних метафор?', 'options': [{'text': 'Дніпро', 'correct': True}, {'text': 'Дунай', 'correct': False}, {'text': 'Тиса', 'correct': False}, {'text': 'Прут', 'correct': False}], 'explanation': 'Дніпро — головна водна артерія України.'}, {'question': "В якому регіоні України знаходяться відомі Шацькі озера, згадані у зв'язку з творчістю Лесі Українки?", 'options': [{'text': 'Волинь', 'correct': True}, {'text': 'Галичина', 'correct': False}, {'text': 'Поділля', 'correct': False}, {'text': 'Слобожанщина', 'correct': False}], 'explanation': 'Леся Українка родом з Волині.'}, {'question': 'Який фразеологічний вираз найкраще описує дуже впевненого у собі та досвідченого продавця на ринку в Одесі?', 'options': [{'text': 'Як риба у воді', 'correct': True}, {'text': 'Як муха на склі', 'correct': False}, {'text': 'Рахує ворон', 'correct': False}, {'text': "Ні риба ні м'ясо", 'correct': False}], 'explanation': 'Одеса — морське місто, там рибні метафори дуже популярні.'}, {'question': "Що саме означає вираз 'ловити рибу в мутній воді' у сучасному політичному або діловому контексті?", 'options': [{'text': 'Свідома маніпуляція кризою або хаосом заради власної наживи', 'correct': True}, {'text': 'Процес фізичного очищення природних водойм від бруду', 'correct': False}, {'text': 'Створення нових справедливих законів для всіх громадян', 'correct': False}, {'text': 'Захист екології та навколишнього середовища регіону', 'correct': False}], 'explanation': 'Це опис корисливої поведінки під час хаосу.'}, {'question': 'Який з перерахованих нижче виразів вважається найбільш образливим для характеристики людини в українській мові?', 'options': [{'text': "Ні риба ні м'ясо", 'correct': True}, {'text': 'Як риба у воді', 'correct': False}, {'text': 'Вбити двох зайців', 'correct': False}, {'text': 'Муха не сідала', 'correct': False}], 'explanation': 'Це вказує на безхарактерність і нікчемність.'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-
 **📝 UPDATE** (severity 5/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 
 ## Gates
-
-- **Words:** ✅ 1982/1750 (raw: 2138)
+- **Words:** ⚠️ 1982/2000 (raw: 2138) (18 short)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
@@ -66,36 +64,31 @@
 - **Vocab:** ⚠️ 10 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (vocab))
-- **Richness:** ✅ 99% (grammar)
+- **Richness:** ✅ 99% (phraseology)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-
 **Score:** 99% (minimum: 95%)
-**Module Type:** grammar
+**Module Type:** phraseology
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 24 | 24 | 100% | 20% | 20.0% |
-| engagement | 9 | 5 | 100% | 15% | 15.0% |
-| dialogues | 11 | 4 | 100% | 15% | 15.0% |
-| variety | 0.99 | - | 99% | 10% | 9.9% |
-| cultural | 6 | 3 | 100% | 10% | 10.0% |
-| realworld | 8 | 3 | 100% | 10% | 10.0% |
-| visual | 3 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.97 | - | 97% | 5% | 4.9% |
-| questions | 14 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.8%** |
+| engagement | 9 | 4 | 100% | 25% | 25.0% |
+| variety | 0.99 | - | 99% | 17% | 16.5% |
+| cultural | 6 | - | 100% | 17% | 16.7% |
+| visual | 3 | 3 | 100% | 8% | 8.3% |
+| paragraph_var | 0.97 | - | 97% | 8% | 8.1% |
+| examples | 40 | - | 100% | 8% | 8.3% |
+| realworld | 8 | - | 100% | 8% | 8.3% |
+| questions | 14 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **99.6%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 77 | Included in Core |

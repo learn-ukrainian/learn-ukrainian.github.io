@@ -1,14 +1,12 @@
 # Audit Report: M32 — 32-my-family.md
-
-**Level:** A1 | **Module:** M32 | **Phase:** A1 | **Pedagogy:** PPP | **Target:** 750
+**Level:** A1 | **Module:** M32 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 916
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:25:56
+**Generated:** 2026-01-30 21:12:20
 
 ## Configuration
-
 **Type:** A1-vocab
-**Word Target:** 750 words
+**Word Target:** 916 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Family Members | 10 | 8 | ✅ |
@@ -41,45 +38,30 @@
 - Required types used: 2/2 (fill-in, match-up) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: рід, середній
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-
-## Recommendation
-
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-
-- **Words:** ✅ 912/750 (raw: 1358)
+- **Words:** ✅ 958/916 (raw: 1405)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 9/1
+- **Vocab:** ✅ 11/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 46.6% (target 35-55% (M32))
+- **Immersion:** 🇺🇦 48.4% (target 35-55% (M32))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 108 | Included in Core |
-| **Граматика (Grammar)** | ⚪️ | 66 | Skipped |
-| **Describing Family Members (Опис членів сім'ї)** | ⚪️ | 144 | Skipped |
-| **Приклади (Examples)** | ⚪️ | 132 | Skipped |
+| **Presentation** | ✅ | 342 | Included in Core |
 | **Діалоги (Dialogues)** | ✅ | 373 | Included in Core |
-| **Практика (Practice)** | ⚪️ | 13 | Skipped |
+| **Practice** | ⚪️ | 59 | Skipped |
 | **Підсумок (Summary)** | ✅ | 58 | Included in Core |
 | **Need More Practice?** | ⚪️ | 18 | Skipped |

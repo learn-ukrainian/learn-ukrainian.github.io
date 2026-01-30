@@ -2,14 +2,14 @@
   "module": "20-cult-of-shevchenko",
   "level": "LIT",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:57:55.577165Z",
+  "last_audit": "2026-01-30T21:16:19.151559Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-18T21:57:09.011529Z",
-    "meta": "2026-01-26T17:21:21.853565Z",
+    "md": "2026-01-27T15:24:10.349677Z",
+    "meta": "2026-01-29T07:39:04.969681Z",
     "activities": "2026-01-18T21:56:50.613170Z",
     "vocabulary": null,
-    "plan": "2026-01-26T17:21:21.853294Z"
+    "plan": "2026-01-27T15:19:02.583472Z"
   },
   "gates": {
     "meta": {
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 1,
-      "message": "3505/4000 (raw: 3912)"
+      "violations": 2,
+      "message": "3505/4500 (raw: 3912) | richness: 93% < 95% min (cultural)"
     },
     "activities": {
       "status": "pass",
@@ -42,8 +42,7 @@
     "status": "fail",
     "blocking_issues": [
       "5 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: group-sort, match-up, quiz"
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],
     "pass_count": 3,
     "fail_count": 2

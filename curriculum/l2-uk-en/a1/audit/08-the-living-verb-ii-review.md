@@ -1,12 +1,10 @@
 # Audit Report: M08 — 08-the-living-verb-ii.md
-
-**Level:** A1 | **Module:** M08 | **Phase:** A1 | **Pedagogy:** PPP | **Target:** 500
+**Level:** A1 | **Module:** M08 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 500
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:25:42
+**Generated:** 2026-01-30 15:03:43
 
 ## Configuration
-
 **Type:** A1-grammar
 **Word Target:** 500 words
 **Activities:** 8-12 required
@@ -20,7 +18,6 @@
 **Transliteration:** Allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Second Conjugation or First Conjugation? | 12 | 8 | ✅ |
@@ -40,7 +37,6 @@
 - Low density activities: 0
 
 ## Gates
-
 - **Words:** ✅ 972/500 (raw: 1337)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
@@ -58,7 +54,6 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

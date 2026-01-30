@@ -2,14 +2,14 @@
   "module": "93-discussion-debate",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:28:48.432733Z",
+  "last_audit": "2026-01-30T21:17:58.902227Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-21T10:46:24.786227Z",
-    "meta": "2026-01-26T17:21:19.296699Z",
+    "meta": "2026-01-29T07:39:04.745838Z",
     "activities": "2026-01-21T11:05:20.959257Z",
     "vocabulary": "2026-01-21T22:54:39.138269Z",
-    "plan": "2026-01-26T17:21:19.296437Z"
+    "plan": "2026-01-30T15:04:49.390834Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4228/1750 (raw: 4400)"
+      "message": "4228/2000 (raw: 4400)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,8 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "2 Outline Compliance Errors"
+      "5 Outline Compliance Errors",
+      "Missing required activity types: essay-response, reading"
     ],
     "pass_count": 4,
     "fail_count": 0

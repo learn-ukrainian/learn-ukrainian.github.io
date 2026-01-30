@@ -1,24 +1,21 @@
 # Audit Report: M99 — 99-lesya-ukrainka-liryka.md
-
-**Level:** C1 | **Module:** M99 | **Phase:** C1 | **Pedagogy:** Literary Analysis | **Target:** 3500
+**Level:** C1 | **Module:** M99 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:56
+**Generated:** 2026-01-30 21:14:52
 
 ## Configuration
-
-**Type:** C1-literature
-**Word Target:** 3500 words
+**Type:** C1
+**Word Target:** 3000 words
 **Activities:** 12-16 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
-**Priority Types:** cloze, fill-in, quiz
-**Engagement:** ≥5 callouts
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥7 callouts
 **Immersion:** 90-100%
-**Vocab Target:** ≥24 words
+**Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння аналізу лірики Лесі Українки | 12 | 5 | ✅ |
@@ -38,50 +35,49 @@
 **Summary:**
 - Total activities: 13 (target: 12-16) ✅
 - Unique types: 12 (minimum: 4) ✅
-- Priority types used: 3/3 (cloze, fill-in, quiz) ✅
+- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (85% overlap): "я буду крізь сльози сміятись,
 > Серед лиха співати пісні,
 > Без надії таки сподіватись,
 > Буду жити!". Shares significant keywords with sentence at index 36.
-- FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+
+## TEMPLATE COMPLIANCE
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Аналіз' found: Літературний аналіз, Первинний аналіз, Порівняльний аналіз: Леся Українка vs. Тарас Шевченко
+  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 
 ## Recommendation
-
 **📝 UPDATE** (severity 25/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ❌ 2332/3500 (raw: 2689)
+- **Words:** ❌ 2332/3000 (raw: 2689)
 - **Activities:** ✅ 13/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/5
+- **Engagement:** ❌ 5/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 24 (soft target)
+- **Vocab:** ⚠️ 0 < 25 (soft target)
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (13 activities)
-- **Immersion:** 🇺🇦 99.2% (target 90-100% (literature))
+- **Immersion:** 🇺🇦 99.2% (target 90-100%)
 - **Richness:** ❌ 87% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
 **Score:** 87% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 58 | 15 | 100% | 25% | 25.0% |
@@ -95,18 +91,16 @@
 | **TOTAL** | | | | | **87.4%** |
 
 ### Dryness Flags & Fixes
-
 - ❌ **ABSTRACT_ONLY**
   - FIX:
     Add 3+ real-world boxes. Use this exact format:
-
+    
     > 🌍 **У реальному житті**
     >
     > [Specific scenario: "На співбесіді...", "У магазині...", "На вокзалі..."]
     > [Example sentence showing grammar in that context]
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 95 | Included in Core |

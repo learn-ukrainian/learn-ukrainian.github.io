@@ -1,67 +1,53 @@
 # Audit Report: M63 — solomiya-krushelnytska.md
-
 **Level:** C1 | **Module:** M63 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:56:29
+**Generated:** 2026-01-30 21:15:22
 
 ## Configuration
-
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
 **Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** essay-response, fill-in, group-sort, match-up, quiz, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥24 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | «Тріумф Соломії Крушельницької» | 12 | 5 | ✅ |
-| 2 | fill-in | «Музична лексика та оперний світ» | 12 | 6 | ✅ |
-| 3 | error-correction | «Граматика в описі оперної зірки» | 12 | 5 | ✅ |
-| 4 | match-up | «Музична термінологія» | 12 | 6 | ✅ |
-| 5 | select | «Лінгвістичний аналіз джерел» | 5 | 5 | ✅ |
-| 6 | true-false | «Історичні факти про Соломію» | 12 | 5 | ✅ |
-| 7 | reading | «Голос, що підкорив світ: Свідчення сучасників» | 3 | 1 | ✅ |
-| 8 | reading | «Соломія Крушельницька та Джакомо Пуччіні» | 3 | 1 | ✅ |
-| 9 | essay-response | «Культурна місія Соломії» | 1 | 1 | ✅ |
-| 10 | comparative-study | «Порівняння оперних легенд» | 1 | 1 | ✅ |
-| 11 | critical-analysis | «Аналіз філософії успіху Соломії» | 1 | 1 | ✅ |
-| 12 | unjumble | «Відновлення музичних тез» | 12 | 5 | ✅ |
-| 13 | translate | «Світ музики та слави» | 12 | 5 | ✅ |
-| 14 | mark-the-words | «Пошук музичних професій та термінів» | 10 | 5 | ✅ |
+| 1 | true-false | «Історичні факти про Соломію» | 12 | 5 | ✅ |
+| 2 | reading | «Голос, що підкорив світ: Свідчення сучасників» | 3 | 1 | ✅ |
+| 3 | reading | «Соломія Крушельницька та Джакомо Пуччіні» | 3 | 1 | ✅ |
+| 4 | essay-response | «Культурна місія Соломії» | 1 | 1 | ✅ |
+| 5 | comparative-study | «Порівняння оперних легенд» | 1 | 1 | ✅ |
+| 6 | critical-analysis | «Аналіз філософії успіху Соломії» | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 14 (target: 3-9) ❌
-- Unique types: 13 (minimum: 3) ✅
-- Priority types used: 5/6 (comparative-study, critical-analysis, essay-response, quiz, reading) ✅
-- Required types used: 5/6 (essay-response, fill-in, match-up, quiz, reading) ❌
+- Total activities: 6 (target: 3-9) ✅
+- Unique types: 5 (minimum: 3) ✅
+- Priority types used: 4/6 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
-- **[YAML_SCHEMA_VIOLATION]** Schema error in solomiya-krushelnytska.yaml: Schema validation error at key '7': {'type': 'reading', 'title': '«Соломія Крушельницька та Джакомо Пуччіні»', 'resource': {'type': 'article', 'url': 'https://localhistory.org.ua/texts/statti/solomiia-krushelnitska-ukrayinska-priiatelka-puchchini/', 'title': '«Українська приятелька Пуччіні: Історія одного тріумфу»'}, 'tasks': ['«Як саме Соломія змінила трактування образу Чіо-Чіо-сан?»', '«Які емоції переживав композитор Пуччіні після тріумфу в Брешії?»', "«Яку роль відіграв цей успіх у подальшій світовій кар'єрі Крушельницької?»"]} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in solomiya-krushelnytska.yaml: Schema validation error at key '2': {'type': 'reading', 'title': '«Соломія Крушельницька та Джакомо Пуччіні»', 'resource': {'type': 'article', 'url': 'https://localhistory.org.ua/texts/statti/solomiia-krushelnitska-ukrayinska-priiatelka-puchchini/', 'title': '«Українська приятелька Пуччіні: Історія одного тріумфу»'}, 'tasks': ['«Як саме Соломія змінила трактування образу Чіо-Чіо-сан?»', '«Які емоції переживав композитор Пуччіні після тріумфу в Брешії?»', "«Яку роль відіграв цей успіх у подальшій світовій кар'єрі Крушельницької?»"]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
-
 - **Words:** ❌ 2081/4000 (raw: 2323)
-- **Activities:** ✅ 14/3
+- **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 13/3 types
+- **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
@@ -69,19 +55,17 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ⚠️ Too many activities: 14 (target 3-9)
+- **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 99.8% (target 95-100% (biography))
 - **Richness:** ✅ 95% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
 **Score:** 95% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 8 | 4 | 100% | 19% | 19.0% |
@@ -97,7 +81,6 @@
 | **TOTAL** | | | | | **95.2%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 83 | Included in Core |

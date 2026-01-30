@@ -2,14 +2,14 @@
   "module": "06-passive-in-context",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:27:47.908229Z",
+  "last_audit": "2026-01-30T21:17:48.304432Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-11T21:11:29.944852Z",
-    "meta": "2026-01-26T17:21:19.067553Z",
+    "md": "2026-01-27T15:24:10.351695Z",
+    "meta": "2026-01-29T07:39:04.679209Z",
     "activities": "2026-01-11T23:20:02.161638Z",
     "vocabulary": "2026-01-21T22:54:25.244912Z",
-    "plan": "2026-01-26T17:21:19.067343Z"
+    "plan": "2026-01-29T07:45:40.557332Z"
   },
   "gates": {
     "meta": {
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 1,
-      "message": "2114/1750 (raw: 2518) | pedagogy: 1 violations"
+      "violations": 2,
+      "message": "2114/3800 (raw: 2518) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",

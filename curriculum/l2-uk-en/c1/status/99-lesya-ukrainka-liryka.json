@@ -2,14 +2,14 @@
   "module": "99-lesya-ukrainka-liryka",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:29:56.755214Z",
+  "last_audit": "2026-01-30T21:14:52.228009Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-13T22:57:38.662169Z",
-    "meta": "2026-01-26T17:21:19.587781Z",
+    "md": "2026-01-27T15:24:10.367322Z",
+    "meta": "2026-01-29T07:39:04.797163Z",
     "activities": "2026-01-13T22:57:43.536458Z",
     "vocabulary": null,
-    "plan": "2026-01-26T17:21:19.587210Z"
+    "plan": "2026-01-30T11:55:53.625009Z"
   },
   "gates": {
     "meta": {
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 3,
-      "message": "2332/3500 (raw: 2689) | pedagogy: 1 violations | richness: 87% < 95% min (content)"
+      "violations": 4,
+      "message": "2332/3000 (raw: 2689) | engagement: 5/7 | pedagogy: 1 violations | richness: 87% < 95% min (content)"
     },
     "activities": {
       "status": "pass",
@@ -30,7 +30,7 @@
     "vocabulary": {
       "status": "warn",
       "violations": 0,
-      "message": "0 < 24 (soft target)"
+      "message": "0 < 25 (soft target)"
     },
     "naturalness": {
       "status": "fail",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "2 Outline Compliance Errors",
+      "1 Critical Template Violations",
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],
     "pass_count": 1,

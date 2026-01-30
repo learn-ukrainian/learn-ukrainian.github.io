@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M72 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 19:15:42
+**Generated:** 2026-01-30 00:32:17
 
 ## Configuration
 **Type:** B1-culture
@@ -43,7 +43,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1792/1500 (raw: 1885)
+- **Words:** ✅ 1795/1500 (raw: 1897)
 - **Activities:** ✅ 14/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 12/4 types
@@ -81,11 +81,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 40 | Included in Core |
-| **Вступ** | ✅ | 115 | Included in Core |
+| **Вступ — Захід як вікно в Європу** | ✅ | 115 | Included in Core |
 | **Сучасність** | ⚪️ | 211 | Skipped |
 | **Історія та культура** | ✅ | 684 | Included in Core |
 | **Практика** | ⚪️ | 139 | Skipped |
-| **Продукція** | ⚪️ | 340 | Skipped |
-| **Підсумок** | ✅ | 0 | Included in Core |
-| **Що ви дізналися** | ⚪️ | 153 | Skipped |
+| **Продукція та бренди Заходу** | ⚪️ | 340 | Skipped |
+| **Підсумок — Захід у серці України** | ✅ | 156 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

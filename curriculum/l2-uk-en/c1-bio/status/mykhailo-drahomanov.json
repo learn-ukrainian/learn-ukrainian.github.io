@@ -2,12 +2,12 @@
   "module": "mykhailo-drahomanov",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:56:15.681654Z",
+  "last_audit": "2026-01-30T21:15:10.801941Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-17T21:45:15.850306Z",
-    "meta": "2026-01-26T17:21:20.900981Z",
-    "activities": "2026-01-17T21:45:15.798725Z",
+    "md": "2026-01-27T15:24:10.348654Z",
+    "meta": "2026-01-29T07:39:04.909841Z",
+    "activities": "2026-01-27T15:34:56.174218Z",
     "vocabulary": null,
     "plan": null
   },
@@ -25,7 +25,7 @@
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "17/3"
+      "message": "6/3"
     },
     "vocabulary": {
       "status": "warn",

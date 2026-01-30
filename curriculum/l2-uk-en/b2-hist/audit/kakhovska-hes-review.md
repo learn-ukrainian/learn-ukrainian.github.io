@@ -1,8 +1,8 @@
 # Audit Report: M135 — kakhovska-hes.md
 **Level:** B2 | **Module:** M135 | **Phase:** HIST.13 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-28 18:36:53
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-29 23:40:12
 
 ## Configuration
 **Type:** B2-history
@@ -32,6 +32,15 @@
 - Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
+
+## TEMPLATE COMPLIANCE
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Читання|Хід|Основні події|Діяльність|Свідки|Великий рейд|Відбудова' found: Масштаб необхідної відбудови, Підсумок: Відбудова, Читання
+  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 4398/4000 (raw: 4592)

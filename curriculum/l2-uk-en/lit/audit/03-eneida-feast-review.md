@@ -1,26 +1,23 @@
 # Audit Report: M03 — 03-eneida-feast.md
-
-**Level:** LIT | **Module:** M03 | **Phase:** LIT.1 | **Pedagogy:** literature | **Target:** 4000
+**Level:** LIT | **Module:** M03 | **Phase:** LIT.1 | **Pedagogy:** literature | **Target:** 4500
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:57:33
+**Generated:** 2026-01-30 21:15:58
 
 ## Configuration
-
 **Type:** LIT-literature
-**Word Target:** 4000 words
+**Word Target:** 4500 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** cloze, essay-response, group-sort, match-up, quiz, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥4 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥0 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Іван Котляревський: Енеїда (Бенкет) | 2 | 1 | ✅ |
@@ -32,18 +29,16 @@
 - Total activities: 4 (target: 3-9) ✅
 - Unique types: 3 (minimum: 2) ✅
 - Priority types used: 3/4 (critical-analysis, essay-response, reading) ✅
-- Required types used: 2/6 (essay-response, reading) ❌
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
 ## Recommendation
-
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ❌ 3888/4000 (raw: 4310)
+- **Words:** ❌ 3891/4500 (raw: 4313)
 - **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 3/2 types
@@ -61,12 +56,10 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-
 **Score:** 96% (minimum: 90%)
 **Module Type:** literature
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
@@ -82,7 +75,6 @@
 | **TOTAL** | | | | | **96.5%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 19 | Included in Core |
@@ -113,7 +105,7 @@
 | **Частина XXIV: Сучасні Відлуння 🔉** | ✅ | 81 | Included in Core |
 | **Частина XXV: Космогонія Бенкету: Від Шлунку до Всесвіту 🌌** | ✅ | 110 | Included in Core |
 | **Частина XXVI: Етимологічний Бенкет: Сила Слова ✍️** | ✅ | 119 | Included in Core |
-| **🏛️ Читальна Зала** | ⚪️ | 138 | Skipped |
+| **🏛️ Читальна Зала** | ⚪️ | 141 | Skipped |
 | **✍️ Аналітичний Практикум** | ⚪️ | 0 | Skipped |
 | **Тема Есе (350-500 слів)** | ⚪️ | 151 | Skipped |
 | **Додаткове Завдання (Дискусія)** | ⚪️ | 33 | Skipped |

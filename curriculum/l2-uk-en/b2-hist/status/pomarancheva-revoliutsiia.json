@@ -2,11 +2,11 @@
   "module": "pomarancheva-revoliutsiia",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-28T14:31:32.476929Z",
+  "last_audit": "2026-01-29T23:38:58.165744Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-28T14:08:13.256389Z",
-    "meta": "2026-01-28T14:08:13.252938Z",
+    "meta": "2026-01-29T07:38:18.731704Z",
     "activities": "2026-01-27T15:34:54.486601Z",
     "vocabulary": null,
     "plan": null
@@ -41,6 +41,7 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
+      "1 Critical Template Violations",
       "1 Outline Compliance Errors",
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
       "Missing required activity types: reading"

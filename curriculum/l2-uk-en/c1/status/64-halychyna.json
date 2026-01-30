@@ -2,14 +2,14 @@
   "module": "64-halychyna",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:29:34.237407Z",
+  "last_audit": "2026-01-30T21:14:35.005251Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-10T16:55:38.833650Z",
-    "meta": "2026-01-26T17:21:19.514205Z",
+    "md": "2026-01-27T15:24:10.367044Z",
+    "meta": "2026-01-29T07:39:04.778116Z",
     "activities": "2026-01-10T16:55:17.674890Z",
     "vocabulary": null,
-    "plan": "2026-01-26T17:21:19.514001Z"
+    "plan": "2026-01-30T11:48:49.052095Z"
   },
   "gates": {
     "meta": {
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 1,
-      "message": "2119/3000 (raw: 2394)"
+      "violations": 2,
+      "message": "2119/3000 (raw: 2394) | richness: 86% < 95% min (cultural)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "1 Outline Compliance Errors",
+      "4 Outline Compliance Errors",
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],
     "pass_count": 1,

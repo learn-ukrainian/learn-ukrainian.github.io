@@ -1,14 +1,12 @@
 # Audit Report: M66 — 66-asking-for-directions.md
-
-**Level:** A2 | **Module:** M66 | **Phase:** A2.6 | **Pedagogy:** PPP | **Target:** 1000
+**Level:** A2 | **Module:** M66 | **Phase:** A2.6 | **Pedagogy:** PPP | **Target:** 1145
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 13:14:21
+**Generated:** 2026-01-30 21:13:03
 
 ## Configuration
-
 **Type:** A2
-**Word Target:** 1000 words
+**Word Target:** 1145 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | [stage: 🔍 Recognition] Transport Vocabulary | 12 | 8 | ✅ |
@@ -42,19 +39,16 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: місцевий
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
-
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
-
-- **Words:** ✅ 1221/1000 (raw: 1389)
+- **Words:** ✅ 1221/1145 (raw: 1389)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
@@ -71,7 +65,6 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

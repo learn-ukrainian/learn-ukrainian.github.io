@@ -2,14 +2,14 @@
   "module": "09-ethnography",
   "level": "LIT",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:57:41.847275Z",
+  "last_audit": "2026-01-30T21:16:04.827503Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-18T20:58:35.605318Z",
-    "meta": "2026-01-26T17:21:21.804302Z",
+    "md": "2026-01-27T15:24:10.349583Z",
+    "meta": "2026-01-29T07:39:04.962685Z",
     "activities": "2026-01-18T20:58:33.420511Z",
     "vocabulary": null,
-    "plan": "2026-01-26T17:21:21.803988Z"
+    "plan": "2026-01-27T15:19:02.540649Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4126/4000 (raw: 4624)"
+      "status": "fail",
+      "violations": 2,
+      "message": "4126/4500 (raw: 4624) | richness: 86% < 95% min (cultural)"
     },
     "activities": {
       "status": "pass",
@@ -42,10 +42,9 @@
     "status": "fail",
     "blocking_issues": [
       "5 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: cloze, group-sort, match-up, quiz"
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],
-    "pass_count": 4,
-    "fail_count": 1
+    "pass_count": 3,
+    "fail_count": 2
   }
 }

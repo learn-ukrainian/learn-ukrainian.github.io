@@ -1,26 +1,23 @@
 # Audit Report: M09 — lev-danylovych.md
-
 **Level:** C1 | **Module:** M09 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:55:58
+**Generated:** 2026-01-29 23:47:38
 
 ## Configuration
-
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
 **Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** essay-response, fill-in, group-sort, match-up, quiz, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥24 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Літописна оповідь про розбудову Львова | 1 | 1 | ✅ |
@@ -30,72 +27,60 @@
 | 5 | reading | Лев Данилович та Золота Орда | 1 | 1 | ✅ |
 | 6 | critical-analysis | Аналіз стратегії виживання | 1 | 1 | ✅ |
 | 7 | comparative-study | Порівняння стратегій: Лев Данилович vs Вацлав II | 1 | 1 | ✅ |
-| 8 | quiz | Перевірка знань про епоху Князя Лева | 5 | 5 | ✅ |
 
 **Summary:**
-- Total activities: 8 (target: 3-9) ✅
-- Unique types: 6 (minimum: 3) ✅
-- Priority types used: 6/6 (authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading) ✅
-- Required types used: 3/6 (essay-response, quiz, reading) ❌
+- Total activities: 7 (target: 3-9) ✅
+- Unique types: 5 (minimum: 3) ✅
+- Priority types used: 5/6 (authorial-intent, comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
-## Recommendation
-
-**📝 UPDATE** (severity 20/100)
-
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
-
 ## Gates
-
-- **Words:** ✅ 4014/4000 (raw: 4282)
-- **Activities:** ✅ 8/3
+- **Words:** ❌ 3335/4000 (raw: 3390)
+- **Activities:** ✅ 7/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 6/3 types
+- **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/5
+- **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 24 (soft target)
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Vocab:** ✅ 25/24
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (8 activities)
+- **Content_heavy:** ✅ Content-heavy OK (7 activities)
 - **Immersion:** 🇺🇦 99.8% (target 95-100% (biography))
-- **Richness:** ✅ 95% (biography)
+- **Richness:** ❌ 94% < 95% min (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-
-**Score:** 95% (minimum: 95%)
+**Score:** 94% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 3 | 4 | 75% | 19% | 14.3% |
-| engagement | 8 | 6 | 100% | 14% | 14.3% |
+| engagement | 6 | 6 | 100% | 14% | 14.3% |
 | quotes | 3 | 3 | 100% | 14% | 14.3% |
 | cultural | 4 | 4 | 100% | 10% | 9.5% |
-| visual | 7 | 4 | 100% | 10% | 9.5% |
+| visual | 5 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.97 | - | 97% | 5% | 4.6% |
+| variety | 0.94 | - | 94% | 5% | 4.5% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 12 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **95.1%** |
+| questions | 4 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **95.0%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 99 | Included in Core |
-| **Вступ** | ✅ | 210 | Included in Core |
-| **Життєпис** | ⚪️ | 1625 | Skipped |
-| **Історичний контекст** | ✅ | 549 | Included in Core |
-| **Внесок** | ⚪️ | 524 | Skipped |
-| **Порівняльний аналіз** | ✅ | 316 | Included in Core |
-| **Критичне мислення: Питання для глибокого аналізу** | ✅ | 134 | Included in Core |
-| **Останні роки: Завершення земного шляху** | ⚪️ | 205 | Skipped |
-| **Підсумок** | ✅ | 243 | Included in Core |
+| **Вступ — Князь, що дав місту своє ім'я** | ✅ | 488 | Included in Core |
+| **Життєпис** | ⚪️ | 846 | Skipped |
+| **Внесок** | ⚪️ | 1088 | Skipped |
+| **Останні роки** | ⚪️ | 192 | Skipped |
+| **Спадщина** | ⚪️ | 228 | Skipped |
+| **Підсумок — Князь-будівничий** | ✅ | 275 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 109 | Skipped |
+| **Vocabulary** | ➖ | 10 | Excluded Type |

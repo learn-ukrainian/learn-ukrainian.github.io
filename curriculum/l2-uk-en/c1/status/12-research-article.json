@@ -2,14 +2,14 @@
   "module": "12-research-article",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:29:01.757427Z",
+  "last_audit": "2026-01-30T21:14:04.146541Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-13T12:12:40.990363Z",
-    "meta": "2026-01-26T17:21:19.359157Z",
+    "md": "2026-01-27T15:24:10.366658Z",
+    "meta": "2026-01-29T07:39:04.752389Z",
     "activities": "2026-01-13T12:19:46.245128Z",
     "vocabulary": null,
-    "plan": "2026-01-26T17:21:19.358960Z"
+    "plan": "2026-01-29T07:45:40.805233Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 3,
-      "message": "2056/3000 (raw: 2158) | pedagogy: 1 violations | richness: 90% < 95% min (content)"
+      "message": "2056/4000 (raw: 2158) | pedagogy: 1 violations | richness: 82% < 95% min (grammar) - REWRITE needed"
     },
     "activities": {
       "status": "pass",

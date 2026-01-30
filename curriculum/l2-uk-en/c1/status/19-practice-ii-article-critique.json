@@ -2,14 +2,14 @@
   "module": "19-practice-ii-article-critique",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:29:06.167068Z",
+  "last_audit": "2026-01-30T21:14:08.674612Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-09T21:35:37.256618Z",
-    "meta": "2026-01-26T17:21:19.389192Z",
+    "md": "2026-01-27T15:24:10.366707Z",
+    "meta": "2026-01-29T07:39:04.755785Z",
     "activities": "2026-01-13T13:45:39.157549Z",
     "vocabulary": null,
-    "plan": "2026-01-26T17:21:19.388867Z"
+    "plan": "2026-01-29T07:45:40.831784Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "2015/3000 (raw: 2273) | richness: 90% < 95% min (content)"
+      "message": "2015/4000 (raw: 2273) | richness: 90% < 95% min (content)"
     },
     "activities": {
       "status": "pass",

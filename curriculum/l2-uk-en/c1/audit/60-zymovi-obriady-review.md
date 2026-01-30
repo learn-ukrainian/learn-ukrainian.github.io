@@ -1,12 +1,10 @@
 # Audit Report: M60 — 60-zymovi-obriady.md
-
-**Level:** C1 | **Module:** M60 | **Phase:** C1 | **Pedagogy:** Immersion & Analysis | **Target:** 3000
+**Level:** C1 | **Module:** M60 | **Phase:** C1.5 | **Pedagogy:** Immersion & Analysis | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:31
+**Generated:** 2026-01-30 21:14:32
 
 ## Configuration
-
-**Type:** C1
+**Type:** C1-culture
 **Word Target:** 3000 words
 **Activities:** 12-16 required
 **Items per Activity:** ≥12 items
@@ -18,7 +16,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Символіка Святвечора | 5 | 5 | ✅ |
@@ -41,13 +38,11 @@
 - Low density activities: 0
 
 ## Recommendation
-
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
 - **Words:** ❌ 2066/3000 (raw: 2392)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
@@ -60,32 +55,29 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
-- **Immersion:** 🇺🇦 99.8% (target 90-100%)
-- **Richness:** ✅ 98% (content)
+- **Immersion:** 🇺🇦 99.8% (target 90-100% (culture))
+- **Richness:** ✅ 96% (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
-**Score:** 98% (minimum: 95%)
-**Module Type:** content
+**Score:** 96% (minimum: 95%)
+**Module Type:** cultural
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 17 | 15 | 100% | 25% | 25.0% |
-| engagement | 8 | 5 | 100% | 19% | 18.7% |
-| variety | 0.98 | - | 98% | 12% | 12.2% |
-| cultural | 8 | 4 | 100% | 12% | 12.5% |
-| realworld | 5 | 3 | 100% | 12% | 12.5% |
-| visual | 3 | 4 | 75% | 6% | 4.7% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 5 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **98.2%** |
+| cultural | 8 | 5 | 100% | 33% | 33.3% |
+| engagement | 8 | 6 | 100% | 20% | 20.0% |
+| visual | 3 | 4 | 75% | 13% | 10.0% |
+| variety | 0.98 | - | 98% | 7% | 6.5% |
+| paragraph_var | 1.00 | - | 100% | 7% | 6.7% |
+| examples | 17 | - | 100% | 7% | 6.7% |
+| realworld | 5 | - | 100% | 7% | 6.7% |
+| questions | 5 | 4 | 100% | 7% | 6.7% |
+| **TOTAL** | | | | | **96.5%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 78 | Included in Core |

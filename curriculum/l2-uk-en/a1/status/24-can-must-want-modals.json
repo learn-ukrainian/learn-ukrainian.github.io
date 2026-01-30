@@ -2,14 +2,14 @@
   "module": "24-can-must-want-modals",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:25:51.784570Z",
+  "last_audit": "2026-01-30T15:29:32.764809Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-16T00:30:58.782187Z",
     "meta": "2026-01-26T21:56:47.940930Z",
     "activities": "2026-01-16T00:31:20.389343Z",
     "vocabulary": "2026-01-25T15:14:11.290607Z",
-    "plan": "2026-01-26T21:45:01.881600Z"
+    "plan": "2026-01-30T12:24:45.219741Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "962/750 (raw: 1707)"
+      "message": "962/1049 (raw: 1707) (87 short)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
+    "pass_count": 4,
     "fail_count": 0
   }
 }

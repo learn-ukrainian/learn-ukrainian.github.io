@@ -2,14 +2,14 @@
   "module": "72-tekhnolohii-ta-shi",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:28:34.115767Z",
+  "last_audit": "2026-01-30T21:18:10.562582Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-12T22:19:34.136087Z",
-    "meta": "2026-01-26T17:21:19.242909Z",
+    "meta": "2026-01-29T07:39:04.726678Z",
     "activities": "2026-01-12T22:21:12.653572Z",
     "vocabulary": "2026-01-21T22:54:34.752898Z",
-    "plan": "2026-01-26T17:21:19.242696Z"
+    "plan": "2026-01-30T15:04:49.324021Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 3,
-      "message": "1787/4000 (raw: 2364) | pedagogy: 2 violations | richness: 90% < 95% min (grammar)"
+      "message": "1787/2000 (raw: 2364) | pedagogy: 2 violations | richness: 90% < 95% min (grammar)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,8 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "3 Outline Compliance Errors",
+      "5 Outline Compliance Errors",
+      "11 forbidden activity types (use --fix to remove)",
       "Missing required activity types: reading"
     ],
     "pass_count": 4,

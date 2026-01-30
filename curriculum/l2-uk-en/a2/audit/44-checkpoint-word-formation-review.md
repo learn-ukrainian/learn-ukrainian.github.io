@@ -1,14 +1,12 @@
 # Audit Report: M44 — 44-checkpoint-word-formation.md
-
-**Level:** A2 | **Module:** M44 | **Phase:** A2.4 | **Pedagogy:** TTT | **Target:** 800
+**Level:** A2 | **Module:** M44 | **Phase:** A2.4 | **Pedagogy:** TTT | **Target:** 855
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 12:23:55
+**Generated:** 2026-01-30 21:12:52
 
 ## Configuration
-
 **Type:** A2-checkpoint
-**Word Target:** 800 words
+**Word Target:** 855 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥10 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | fill-in | Word Formation Fill-In | 8 | 8 | ✅ |
@@ -44,8 +41,7 @@
 - Low density activities: 0
 
 ## Gates
-
-- **Words:** ✅ 985/800 (raw: 1382)
+- **Words:** ✅ 985/855 (raw: 1382)
 - **Activities:** ✅ 12/10
 - **Density:** ✅ All > 10
 - **Unique_types:** ✅ 10/4 types
@@ -62,7 +58,6 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

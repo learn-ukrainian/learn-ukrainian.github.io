@@ -2,12 +2,12 @@
   "module": "tamara-horikha-zernya",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:57:17.620438Z",
+  "last_audit": "2026-01-30T21:15:51.229647Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-17T21:45:15.856579Z",
-    "meta": "2026-01-26T17:21:21.091233Z",
-    "activities": "2026-01-17T21:45:15.809099Z",
+    "md": "2026-01-27T15:24:10.348826Z",
+    "meta": "2026-01-29T07:39:04.952973Z",
+    "activities": "2026-01-27T15:34:56.844115Z",
     "vocabulary": null,
     "plan": null
   },
@@ -23,9 +23,9 @@
       "message": "1996/4000 (raw: 2185) | pedagogy: 1 violations"
     },
     "activities": {
-      "status": "pass",
-      "violations": 0,
-      "message": "12/3"
+      "status": "fail",
+      "violations": 2,
+      "message": "2/3 | unique_types: 2/3 types"
     },
     "vocabulary": {
       "status": "warn",
@@ -45,7 +45,7 @@
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
       "Missing required activity types: reading"
     ],
-    "pass_count": 1,
-    "fail_count": 3
+    "pass_count": 0,
+    "fail_count": 4
   }
 }

@@ -2,14 +2,14 @@
   "module": "42-aspect-nuances-imperative-infinitive",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:28:13.500036Z",
+  "last_audit": "2026-01-30T21:18:13.686462Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-11T22:56:18.120905Z",
-    "meta": "2026-01-26T17:21:19.180679Z",
+    "md": "2026-01-27T15:24:10.351915Z",
+    "meta": "2026-01-29T07:39:04.705916Z",
     "activities": "2026-01-11T23:26:18.627774Z",
     "vocabulary": "2026-01-21T22:54:30.616442Z",
-    "plan": "2026-01-26T17:21:19.180447Z"
+    "plan": "2026-01-30T15:04:49.284732Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2303/1750 (raw: 2706) | pedagogy: 1 violations"
+      "message": "2303/2000 (raw: 2706) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,8 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "1 Outline Compliance Errors"
+      "2 Outline Compliance Errors",
+      "Missing required activity types: reading"
     ],
     "pass_count": 3,
     "fail_count": 1

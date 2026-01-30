@@ -1,14 +1,12 @@
 # Audit Report: M46 — 46-home-and-furniture.md
-
-**Level:** A2 | **Module:** M46 | **Phase:** A2.5 | **Pedagogy:** PPP | **Target:** 1000
+**Level:** A2 | **Module:** M46 | **Phase:** A2.5 | **Pedagogy:** PPP | **Target:** 1500
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 12:41:05
+**Generated:** 2026-01-30 21:12:54
 
 ## Configuration
-
 **Type:** A2-vocab
-**Word Target:** 1000 words
+**Word Target:** 1500 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Home Words | 12 | 8 | ✅ |
@@ -43,19 +40,16 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: місцевий, вид
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: вид, місцевий
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
-
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
-
-- **Words:** ✅ 1505/1000 (raw: 2100)
+- **Words:** ✅ 1505/1500 (raw: 2100)
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
@@ -72,7 +66,6 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

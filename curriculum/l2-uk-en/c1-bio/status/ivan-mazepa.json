@@ -2,35 +2,35 @@
   "module": "ivan-mazepa",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:56:06.663426Z",
+  "last_audit": "2026-01-30T21:15:06.266291Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-17T21:45:15.825062Z",
-    "meta": "2026-01-26T17:21:20.740865Z",
-    "activities": "2026-01-17T21:45:15.788572Z",
-    "vocabulary": null,
+    "md": "2026-01-29T22:43:06.532957Z",
+    "meta": "2026-01-29T22:43:06.534805Z",
+    "activities": "2026-01-29T22:43:06.509730Z",
+    "vocabulary": "2026-01-29T20:56:13.161779Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "2111/4000 (raw: 2275) | pedagogy: 1 violations"
+      "violations": 1,
+      "message": "2111/4000 (raw: 2275)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "16/3"
+      "message": "6/3"
     },
     "vocabulary": {
       "status": "warn",
       "violations": 0,
-      "message": "0 < 24 (soft target)"
+      "message": "15 < 24 (soft target)"
     },
     "naturalness": {
       "status": "fail",
@@ -43,10 +43,9 @@
     "blocking_issues": [
       "1 Critical Template Violations",
       "6 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
       "Missing required activity types: reading"
     ],
-    "pass_count": 1,
-    "fail_count": 3
+    "pass_count": 2,
+    "fail_count": 2
   }
 }

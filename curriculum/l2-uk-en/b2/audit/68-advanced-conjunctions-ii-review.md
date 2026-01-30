@@ -1,25 +1,23 @@
 # Audit Report: M68 — 68-advanced-conjunctions-ii.md
-
-**Level:** B2 | **Module:** M68 | **Phase:** B2 | **Pedagogy:** Grammar | **Target:** 1750
+**Level:** B2 | **Module:** M68 | **Phase:** B2.2 | **Pedagogy:** Grammar | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:28:31
+**Generated:** 2026-01-30 21:17:45
 
 ## Configuration
-
 **Type:** B2-grammar
-**Word Target:** 1750 words
+**Word Target:** 2000 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
 **Priority Types:** cloze, error-correction, fill-in, unjumble
+**Required Types:** essay-response, reading, true-false
 **Engagement:** ≥6 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть часову межу | 12 | 8 | ✅ |
@@ -42,22 +40,20 @@
 - Total activities: 15 (target: 10-14) ❌
 - Unique types: 11 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Required types used: 2/3 (essay-response, true-false) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: Schema validation error at key '13': {'type': 'select', 'title': 'Часові сполучники', 'instruction': 'Оберіть усі правильні сполучники часу (до 6 елементів).', 'items': [{'question': "Які слова відповідають на питання 'Коли?' в українській мові?", 'options': [{'text': 'щойно', 'correct': True}, {'text': 'поки', 'correct': True}, {'text': 'відколи', 'correct': True}, {'text': 'після того як', 'correct': True}, {'text': 'перед тим як', 'correct': True}, {'text': 'доки', 'correct': True}]}, {'question': 'Які слова найкраще описують тривалість певної дії чи процесу?', 'options': [{'text': 'поки', 'correct': True}, {'text': 'доки', 'correct': True}, {'text': 'протягом', 'correct': True}, {'text': 'раптово', 'correct': False}]}, {'question': 'Оберіть найбільш влучні сполучники для ретроспективи (погляду в минуле):', 'options': [{'text': 'відколи', 'correct': True}, {'text': 'відтоді як', 'correct': True}, {'text': 'з того часу як', 'correct': True}, {'text': 'завтра як', 'correct': False}]}, {'question': 'Які слова вказують на паралельність двох або більше подій?', 'options': [{'text': 'поки', 'correct': True}, {'text': 'в той час як', 'correct': True}, {'text': 'тим часом як', 'correct': True}, {'text': 'після', 'correct': False}]}, {'question': 'Оберіть терміни для позначення часової послідовності:', 'options': [{'text': 'спочатку', 'correct': True}, {'text': 'потім', 'correct': True}, {'text': 'згодом', 'correct': True}, {'text': 'разом', 'correct': False}]}, {'question': "Які сполучники мають значення 'відразу після' певної події?", 'options': [{'text': 'щойно', 'correct': True}, {'text': 'тільки-но', 'correct': True}, {'text': 'ледве', 'correct': True}, {'text': 'давно', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
-
-- **Words:** ✅ 2165/1750 (raw: 2361)
+- **Words:** ✅ 2165/2000 (raw: 2361)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
@@ -75,12 +71,10 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-
 **Score:** 99% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 32 | 24 | 100% | 20% | 20.0% |
@@ -96,7 +90,6 @@
 | **TOTAL** | | | | | **99.6%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 76 | Included in Core |

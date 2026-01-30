@@ -1,13 +1,11 @@
 # Audit Report: M33 — 33-holidays-and-traditions.md
-
-**Level:** A1 | **Module:** M33 | **Phase:** A1 | **Pedagogy:** PPP | **Target:** 750
+**Level:** A1 | **Module:** M33 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:25:56
+**Generated:** 2026-01-30 21:12:55
 
 ## Configuration
-
-**Type:** A1-cultural
+**Type:** A1-culture
 **Word Target:** 750 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
@@ -20,7 +18,6 @@
 **Transliteration:** Allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Holidays and Greetings | 10 | 8 | ✅ |
@@ -41,8 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-
-- **Words:** ✅ 805/750 (raw: 1063)
+- **Words:** ✅ 892/750 (raw: 1153)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -54,21 +50,17 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 46.6% (target 35-55% (M33))
+- **Immersion:** 🇺🇦 44.1% (target 35-55% (M33))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Warm-up** | ✅ | 86 | Included in Core |
-| **Граматика (Grammar)** | ⚪️ | 56 | Skipped |
-| **Making Wishes (Побажання)** | ⚪️ | 21 | Skipped |
-| **When Is Your Birthday? (Коли твій день народження?)** | ⚪️ | 14 | Skipped |
-| **Приклади (Examples)** | ⚪️ | 84 | Skipped |
+| **Warm-up** | ✅ | 159 | Included in Core |
+| **Presentation** | ✅ | 166 | Included in Core |
 | **Діалоги (Dialogues)** | ✅ | 432 | Included in Core |
-| **Практика (Practice)** | ⚪️ | 13 | Skipped |
+| **Practice** | ⚪️ | 36 | Skipped |
 | **Підсумок (Summary)** | ✅ | 79 | Included in Core |
 | **Need More Practice?** | ⚪️ | 20 | Skipped |

@@ -2,11 +2,11 @@
   "module": "scythians-sarmatians",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T23:38:53.413736Z",
+  "last_audit": "2026-01-30T13:32:19.861855Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.347190Z",
-    "meta": "2026-01-26T22:20:13.542809Z",
+    "md": "2026-01-30T09:56:58.495124Z",
+    "meta": "2026-01-29T07:38:18.601685Z",
     "activities": "2026-01-27T15:34:54.714090Z",
     "vocabulary": "2026-01-27T15:50:10.900002Z",
     "plan": null
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4038/4000 (raw: 4217)"
+      "message": "4504/4000 (raw: 4664)"
     },
     "activities": {
       "status": "pass",

@@ -1,25 +1,23 @@
 # Audit Report: M94 — 94-b2-final-exam.md
-
-**Level:** B2 | **Module:** M94 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 1750
+**Level:** B2 | **Module:** M94 | **Phase:** B2.4 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:28:49
+**Generated:** 2026-01-30 21:18:08
 
 ## Configuration
-
 **Type:** B2-checkpoint
-**Word Target:** 1750 words
+**Word Target:** 2000 words
 **Activities:** 15-19 required
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
 **Priority Types:** cloze, error-correction, fill-in, quiz
+**Required Types:** essay-response, reading, true-false
 **Engagement:** ≥4 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥10 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Професійна електронна пошта - Формальність | 10 | 8 | ✅ |
@@ -45,22 +43,20 @@
 - Total activities: 18 (target: 15-19) ✅
 - Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, quiz) ✅
+- Required types used: 2/3 (essay-response, true-false) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (75% overlap): "- ☐ Чи використовуєте конкретні цифри та факти замість загальних фраз?". Shares significant keywords with sentence at index 42.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 
 ## Recommendation
-
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
-
-- **Words:** ✅ 2566/1750 (raw: 2756)
+- **Words:** ✅ 2566/2000 (raw: 2756)
 - **Activities:** ✅ 18/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -73,42 +69,27 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (18 activities)
 - **Immersion:** 🇺🇦 99.1% (checkpoint - no gate)
-- **Richness:** ❌ 83% < 95% min (grammar)
+- **Richness:** ✅ 99% (checkpoint)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
-
-**Score:** 83% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 99% (minimum: 85%)
+**Module Type:** checkpoint
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 38 | 24 | 100% | 20% | 20.0% |
-| engagement | 3 | 5 | 60% | 15% | 9.0% |
-| dialogues | 3 | 4 | 75% | 15% | 11.2% |
-| variety | 0.95 | - | 95% | 10% | 9.5% |
-| cultural | 1 | 3 | 33% | 10% | 3.3% |
-| realworld | 3 | 3 | 100% | 10% | 10.0% |
-| visual | 7 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 49 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **83.0%** |
-
-### Dryness Flags & Fixes
-
-- ❌ **LOW_CULTURAL_ANCHOR**
-  - FIX:
-    Add more cultural references (need 3+ total). Include:
-    - Named Ukrainian places (Поділ, Бесарабський ринок, Острозька академія)
-    - Ukrainian traditions or customs
-    - Contemporary Ukrainian life examples
+| activity_types | 13 | 8 | 100% | 25% | 25.0% |
+| review_sections | 24 | 3 | 100% | 20% | 20.0% |
+| variety | 0.95 | - | 95% | 15% | 14.2% |
+| engagement | 3 | 3 | 100% | 10% | 10.0% |
+| cultural | 1 | - | 100% | 10% | 10.0% |
+| visual | 7 | 3 | 100% | 10% | 10.0% |
+| paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
+| **TOTAL** | | | | | **99.2%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

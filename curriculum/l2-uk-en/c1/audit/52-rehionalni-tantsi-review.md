@@ -1,13 +1,11 @@
 # Audit Report: M52 — 52-rehionalni-tantsi.md
-
-**Level:** C1 | **Module:** M52 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** C1 | **Module:** M52 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:26
+**Generated:** 2026-01-30 21:14:28
 
 ## Configuration
-
 **Type:** C1-history
-**Word Target:** 4000 words
+**Word Target:** 3000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
@@ -19,7 +17,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Теоретичні основи регіональної хореографії | 5 | 5 | ✅ |
@@ -43,14 +40,12 @@
 - Low density activities: 0
 
 ## Recommendation
-
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ❌ 1903/4000 (raw: 2130)
+- **Words:** ❌ 1903/3000 (raw: 2130)
 - **Activities:** ✅ 12/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 12/3 types
@@ -63,31 +58,29 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⚠️ Too many activities: 12 (target 3-9)
 - **Immersion:** 🇺🇦 99.7% (target 95-100% (history))
-- **Richness:** ✅ 99% (content)
+- **Richness:** ✅ 100% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
-**Score:** 99% (minimum: 95%)
-**Module Type:** content
+**Score:** 100% (minimum: 95%)
+**Module Type:** history
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 16 | 15 | 100% | 25% | 25.0% |
-| engagement | 7 | 5 | 100% | 19% | 18.7% |
-| variety | 1.00 | - | 100% | 12% | 12.5% |
-| cultural | 6 | 4 | 100% | 12% | 12.5% |
-| realworld | 3 | 3 | 100% | 12% | 12.5% |
-| visual | 9 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 5 | 4 | 100% | 6% | 6.2% |
+| primary_sources | 7 | 3 | 100% | 24% | 23.8% |
+| engagement | 7 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 13 | 10 | 100% | 14% | 14.3% |
+| decolonization | 5 | 2 | 100% | 14% | 14.3% |
+| cultural | 6 | 4 | 100% | 10% | 9.5% |
+| visual | 9 | 4 | 100% | 10% | 9.5% |
+| variety | 1.00 | - | 100% | 5% | 4.8% |
+| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
+| questions | 5 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 86 | Included in Core |

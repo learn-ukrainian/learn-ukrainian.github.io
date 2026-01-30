@@ -1,26 +1,23 @@
 # Audit Report: M10 — 10-kvitka-language.md
-
-**Level:** LIT | **Module:** M10 | **Phase:** LIT.2 | **Pedagogy:** literature | **Target:** 4000
+**Level:** LIT | **Module:** M10 | **Phase:** LIT.2 | **Pedagogy:** literature | **Target:** 4500
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:57:43
+**Generated:** 2026-01-30 21:16:06
 
 ## Configuration
-
-**Type:** LIT
-**Word Target:** 4000 words
+**Type:** LIT-literature
+**Word Target:** 4500 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** cloze, essay-response, group-sort, match-up, quiz, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥4 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥0 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | essay-response | Есе-Роздум: Сльози і Сміх | 1 | 1 | ✅ |
@@ -32,18 +29,16 @@
 - Total activities: 4 (target: 3-9) ✅
 - Unique types: 4 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 2/6 (essay-response, reading) ❌
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
 ## Recommendation
-
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ❌ 3752/4000 (raw: 4341)
+- **Words:** ❌ 3752/4500 (raw: 4341)
 - **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/2 types
@@ -54,35 +49,30 @@
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.7% (target 95-100%)
-- **Richness:** ✅ 99% (literature)
+- **Content_heavy:** ✅ Content-heavy OK (4 activities)
+- **Immersion:** 🇺🇦 99.7% (target 95-100% (literature))
+- **Richness:** ✅ 96% (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-
-**Score:** 99% (minimum: 90%)
-**Module Type:** literature
+**Score:** 96% (minimum: 95%)
+**Module Type:** style
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
-| literary_citations | 5 | 5 | 100% | 17% | 17.4% |
-| engagement | 4 | 4 | 100% | 13% | 13.0% |
-| historical_context | 21 | 3 | 100% | 13% | 13.0% |
-| essays | 5 | 2 | 100% | 13% | 13.0% |
-| resources | 6 | 3 | 100% | 9% | 8.7% |
-| variety | 0.97 | - | 97% | 4% | 4.2% |
-| cultural | 14 | - | 100% | 4% | 4.3% |
-| visual | 11 | 1 | 100% | 4% | 4.3% |
-| paragraph_var | 1.00 | - | 100% | 4% | 4.3% |
-| **TOTAL** | | | | | **99.9%** |
+| exemplar_texts | 5 | 2 | 100% | 25% | 25.0% |
+| model_answers | 24 | 3 | 100% | 20% | 20.0% |
+| engagement | 4 | 5 | 80% | 15% | 12.0% |
+| register_analysis | 13 | 5 | 100% | 15% | 15.0% |
+| visual | 11 | 4 | 100% | 10% | 10.0% |
+| variety | 0.97 | - | 97% | 5% | 4.9% |
+| cultural | 14 | - | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **96.8%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

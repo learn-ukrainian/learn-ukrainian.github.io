@@ -2,14 +2,14 @@
   "module": "09-reflexive-verbs",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:25:43.125556Z",
+  "last_audit": "2026-01-30T15:06:25.983631Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-16T00:05:30.158914Z",
+    "md": "2026-01-30T15:06:21.370723Z",
     "meta": "2026-01-26T21:56:47.909284Z",
     "activities": "2026-01-16T00:08:19.349744Z",
     "vocabulary": "2026-01-25T18:00:39.384187Z",
-    "plan": "2026-01-26T21:42:47.450643Z"
+    "plan": "2026-01-30T12:14:52.721354Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "557/500 (raw: 710)"
+      "message": "977/750 (raw: 1134)"
     },
     "activities": {
       "status": "pass",

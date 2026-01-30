@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M118 | **Phase:** HIST.11 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-27 23:38:00
+**Generated:** 2026-01-29 23:40:00
 
 ## Configuration
 **Type:** B2-history
@@ -37,10 +37,14 @@
 - **[YAML_SCHEMA_VIOLATION]** Schema error in diaspora.yaml: Schema validation error at key '4': {'type': 'true-false', 'title': 'Які мовні засоби використовуються в тексті для опису ролі діаспори?', 'instruction': 'Визначте, чи використовується цей засіб.', 'items': [{'statement': 'Метафора «ковчег» для позначення рятівної місії.', 'correct': True}, {'statement': 'Урочиста лексика (клейноди, святиня, місія).', 'correct': True}, {'statement': 'Використання жаргонізмів та сленгу.', 'correct': False}, {'statement': 'Історичні терміни (Директорія, УНР, екзил).', 'correct': True}, {'statement': 'Емоційно забарвлені слова (плакали, надія, гідність).', 'correct': True}, {'statement': 'Науковий стиль без емоцій.', 'correct': False}, {'statement': 'Риторичні запитання для привернення уваги.', 'correct': True}, {'statement': 'Велика кількість запозичень з англійської мови.', 'correct': False}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
+## TEMPLATE COMPLIANCE
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Читання|Хід|Основні події|Діяльність|Свідки|Великий рейд|Відбудова' found: Читання, Політична діяльність та лобізм
+  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+
 ## Recommendation
 **📝 UPDATE** (severity 25/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates

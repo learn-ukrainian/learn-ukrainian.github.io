@@ -1,25 +1,23 @@
 # Audit Report: M38 — 38-one-member-sentences.md
-
-**Level:** B2 | **Module:** M38 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 1750
+**Level:** B2 | **Module:** M38 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:28:10
+**Generated:** 2026-01-30 21:18:15
 
 ## Configuration
-
 **Type:** B2-grammar
-**Word Target:** 1750 words
+**Word Target:** 2000 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
 **Priority Types:** cloze, error-correction, fill-in, unjumble
+**Required Types:** essay-response, reading, true-false
 **Engagement:** ≥6 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Визначення типу односкладного речення | 16 | 8 | ✅ |
@@ -38,22 +36,20 @@
 - Total activities: 11 (target: 10-14) ✅
 - Unique types: 10 (minimum: 4) ✅
 - Priority types used: 3/4 (error-correction, fill-in, unjumble) ✅
+- Required types used: 1/3 (essay-response) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'знайдіть речення,...'.
   - FIX: Vary sentence structure.
 
 ## Recommendation
-
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
-
-- **Words:** ✅ 1956/1750 (raw: 2526)
+- **Words:** ⚠️ 1956/2000 (raw: 2526) (44 short)
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 10/4 types
@@ -71,12 +67,10 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-
 **Score:** 98% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 100 | 24 | 100% | 20% | 20.0% |
@@ -92,7 +86,6 @@
 | **TOTAL** | | | | | **98.4%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 49 | Included in Core |

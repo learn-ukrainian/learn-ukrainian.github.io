@@ -1,26 +1,23 @@
 # Audit Report: M26 — 26-nechuy-levytsky.md
-
-**Level:** LIT | **Module:** M26 | **Phase:** LIT.5 | **Pedagogy:** Seminar | **Target:** 4000
+**Level:** LIT | **Module:** M26 | **Phase:** LIT.5 | **Pedagogy:** Seminar | **Target:** 4500
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:58:00
+**Generated:** 2026-01-30 21:16:23
 
 ## Configuration
-
 **Type:** LIT-literature
-**Word Target:** 4000 words
+**Word Target:** 4500 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** cloze, essay-response, match-up, quiz, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥4 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥0 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Біографія Нечуя-Левицького | 3 | 1 | ✅ |
@@ -33,18 +30,16 @@
 - Total activities: 5 (target: 3-9) ✅
 - Unique types: 4 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 2/5 (essay-response, reading) ❌
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
 ## Recommendation
-
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ❌ 3556/4000 (raw: 3799)
+- **Words:** ❌ 3556/4500 (raw: 3799)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/2 types
@@ -62,12 +57,10 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-
 **Score:** 74% (minimum: 90%)
 **Module Type:** literature
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
@@ -83,25 +76,23 @@
 | **TOTAL** | | | | | **74.2%** |
 
 ### Dryness Flags & Fixes
-
 - ❌ **NO_LITERARY_CITATIONS**
   - FIX:
     Add 3+ literary citations. Use this exact format:
-
+    
     «[Quote from the literary work, minimum 20 characters]»
-
+    
     Example: «Зібравши троянців в остатки / І швидше прийнявши присягу»
 - ❌ **NO_RESOURCES**
   - FIX:
     Add 2+ resource blocks. Use this format:
-
+    
     > [!resources] Додаткові ресурси
     >
     > - [Resource 1 with link or description]
     > - [Resource 2 with link or description]
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 43 | Included in Core |

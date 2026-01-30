@@ -2,14 +2,14 @@
   "module": "19-shevchenkos-diary",
   "level": "LIT",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:57:53.627885Z",
+  "last_audit": "2026-01-30T21:16:17.166463Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-17T21:45:15.874359Z",
-    "meta": "2026-01-26T17:21:21.849085Z",
+    "md": "2026-01-27T15:24:10.349677Z",
+    "meta": "2026-01-29T07:39:04.969044Z",
     "activities": "2026-01-18T21:55:48.869107Z",
     "vocabulary": null,
-    "plan": "2026-01-26T17:21:21.848849Z"
+    "plan": "2026-01-27T15:19:02.579445Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "3441/4000 (raw: 3761)"
+      "message": "3441/4500 (raw: 3761)"
     },
     "activities": {
       "status": "pass",
@@ -42,8 +42,7 @@
     "status": "fail",
     "blocking_issues": [
       "5 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: cloze, match-up, quiz"
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],
     "pass_count": 3,
     "fail_count": 2

@@ -1,12 +1,10 @@
 # Audit Report: M75 — 75-podillia-ta-volyn.md
-
-**Level:** C1 | **Module:** M75 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 3000
+**Level:** C1 | **Module:** M75 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:41
+**Generated:** 2026-01-30 21:14:41
 
 ## Configuration
-
-**Type:** C1
+**Type:** C1-culture
 **Word Target:** 3000 words
 **Activities:** 12-16 required
 **Items per Activity:** ≥12 items
@@ -18,7 +16,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Автентичний опис подільського весілля | 3 | 3 | ✅ |
@@ -43,19 +40,16 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 75-podillia-ta-volyn.yaml: Schema validation error at key 'words': ['Розуміння', 'регіональних', 'відмінностей', 'дозволяє', 'глибше', 'осягнути', 'багатогранність', 'спільної', 'культурної', 'спадщини', 'України'] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
 - **Words:** ⚠️ 2999/3000 (raw: 3550) (1 short)
 - **Activities:** ✅ 14/12
 - **Density:** ✅ All > 12
@@ -68,32 +62,29 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (14 activities)
-- **Immersion:** 🇺🇦 98.8% (target 90-100%)
-- **Richness:** ✅ 99% (content)
+- **Immersion:** 🇺🇦 98.8% (target 90-100% (culture))
+- **Richness:** ✅ 99% (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
 **Score:** 99% (minimum: 95%)
-**Module Type:** content
+**Module Type:** cultural
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 39 | 15 | 100% | 25% | 25.0% |
-| engagement | 7 | 5 | 100% | 19% | 18.7% |
-| variety | 0.99 | - | 99% | 12% | 12.4% |
-| cultural | 9 | 4 | 100% | 12% | 12.5% |
-| realworld | 5 | 3 | 100% | 12% | 12.5% |
-| visual | 11 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 7 | 4 | 100% | 6% | 6.2% |
+| cultural | 9 | 5 | 100% | 33% | 33.3% |
+| engagement | 7 | 6 | 100% | 20% | 20.0% |
+| visual | 11 | 4 | 100% | 13% | 13.3% |
+| variety | 0.99 | - | 99% | 7% | 6.6% |
+| paragraph_var | 1.00 | - | 100% | 7% | 6.7% |
+| examples | 39 | - | 100% | 7% | 6.7% |
+| realworld | 5 | - | 100% | 7% | 6.7% |
+| questions | 7 | 4 | 100% | 7% | 6.7% |
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 69 | Included in Core |

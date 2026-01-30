@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M140 | **Phase:** HIST.13 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-27 23:39:07
+**Generated:** 2026-01-29 23:39:21
 
 ## Configuration
 **Type:** B2-history
@@ -33,14 +33,9 @@
 - Required types used: 1/2 (essay-response) ❌
 - Low density activities: 0
 
-## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Європейський контекст: Еволюція війни, Вступ: Поворотний момент історії
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-
 ## Recommendation
-**📝 UPDATE** (severity 25/100)
+**📝 UPDATE** (severity 20/100)
 
-- 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates

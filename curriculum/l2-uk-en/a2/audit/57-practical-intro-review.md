@@ -1,14 +1,12 @@
 # Audit Report: M57 — 57-practical-intro.md
-
-**Level:** A2 | **Module:** M57 | **Phase:** A2.6 | **Pedagogy:** PPP | **Target:** 1000
+**Level:** A2 | **Module:** M57 | **Phase:** A2.6 | **Pedagogy:** PPP | **Target:** 980
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 13:06:18
+**Generated:** 2026-01-30 21:13:00
 
 ## Configuration
-
 **Type:** A2
-**Word Target:** 1000 words
+**Word Target:** 980 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Grammar Master | 12 | 8 | ✅ |
@@ -43,19 +40,16 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: іменник, доконаний, родовий, знахідний, вид
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: іменник, називний, вид, місцевий, знахідний
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
-
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
-
-- **Words:** ✅ 1184/1000 (raw: 1323)
+- **Words:** ✅ 1184/980 (raw: 1323)
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
@@ -72,7 +66,6 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

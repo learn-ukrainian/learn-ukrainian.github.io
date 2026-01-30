@@ -2,14 +2,14 @@
   "module": "88-professional-reports-advanced",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:28:44.937158Z",
+  "last_audit": "2026-01-30T21:18:18.562556Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-21T13:28:19.471478Z",
-    "meta": "2026-01-26T17:21:19.282832Z",
+    "meta": "2026-01-29T07:39:04.742755Z",
     "activities": "2026-01-21T10:46:24.787298Z",
     "vocabulary": "2026-01-21T22:54:37.817376Z",
-    "plan": "2026-01-26T17:21:19.282601Z"
+    "plan": "2026-01-30T15:04:49.373918Z"
   },
   "gates": {
     "meta": {
@@ -39,8 +39,10 @@
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
+    "status": "fail",
+    "blocking_issues": [
+      "Missing required activity types: essay-response, reading"
+    ],
     "pass_count": 4,
     "fail_count": 0
   }

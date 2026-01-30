@@ -1,12 +1,10 @@
 # Audit Report: M11 — 11-the-accusative-i-things.md
-
-**Level:** A1 | **Module:** M11 | **Phase:** A1 | **Pedagogy:** PPP | **Target:** 750
+**Level:** A1 | **Module:** M11 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:25:44
+**Generated:** 2026-01-30 15:03:45
 
 ## Configuration
-
 **Type:** A1-grammar
 **Word Target:** 750 words
 **Activities:** 8-12 required
@@ -20,7 +18,6 @@
 **Transliteration:** Allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Accusative Recognition | 12 | 8 | ✅ |
@@ -41,7 +38,6 @@
 - Low density activities: 0
 
 ## Gates
-
 - **Words:** ✅ 921/750 (raw: 1203)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
@@ -59,7 +55,6 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

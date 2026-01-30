@@ -2,11 +2,11 @@
   "module": "afhanistan",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T23:37:48.849241Z",
+  "last_audit": "2026-01-29T23:39:48.938915Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-17T21:45:15.703379Z",
-    "meta": "2026-01-26T22:20:12.894674Z",
+    "meta": "2026-01-29T07:38:18.727145Z",
     "activities": "2026-01-17T21:45:15.662633Z",
     "vocabulary": null,
     "plan": null

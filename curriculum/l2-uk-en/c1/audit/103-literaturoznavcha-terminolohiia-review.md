@@ -1,11 +1,9 @@
 # Audit Report: M103 — 103-literaturoznavcha-terminolohiia.md
-
-**Level:** C1 | **Module:** M103 | **Phase:** C1 | **Pedagogy:** Academic | **Target:** 3000
+**Level:** C1 | **Module:** M103 | **Phase:** C1.6 | **Pedagogy:** Academic | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:28:58
+**Generated:** 2026-01-30 21:14:54
 
 ## Configuration
-
 **Type:** C1
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -18,7 +16,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Літературознавчі терміни та їх визначення | 12 | 6 | ✅ |
@@ -42,19 +39,16 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 103-literaturoznavcha-terminolohiia.yaml: Schema validation error at key 'words': ['Науковий', 'дискурс', 'вимагає', 'точного', 'використання', 'термінології', 'для', "об'єктивного", 'аналізу', 'художнього', 'тексту'] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
 - **Words:** ❌ 2378/3000 (raw: 2629)
 - **Activities:** ✅ 13/12
 - **Density:** ✅ All > 12
@@ -73,12 +67,10 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
 **Score:** 87% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 27 | 15 | 100% | 25% | 25.0% |
@@ -92,11 +84,10 @@
 | **TOTAL** | | | | | **87.2%** |
 
 ### Dryness Flags & Fixes
-
 - ❌ **NO_CULTURAL_ANCHOR**
   - FIX:
     Add 3+ cultural references. Use this exact format:
-
+    
     > 🇺🇦 **Культурний момент**
     >
     > [Reference to Ukrainian place (Київ, Львів, Одеса, Карпати), tradition, or custom]
@@ -104,7 +95,6 @@
     > [Example sentence using the grammar with cultural context]
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 74 | Included in Core |

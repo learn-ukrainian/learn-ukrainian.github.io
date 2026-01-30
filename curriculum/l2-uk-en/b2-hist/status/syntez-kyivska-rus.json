@@ -2,11 +2,11 @@
   "module": "syntez-kyivska-rus",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-27T23:39:04.184768Z",
+  "last_audit": "2026-01-30T13:32:32.139372Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.347183Z",
-    "meta": "2026-01-26T22:20:13.650581Z",
+    "meta": "2026-01-29T07:38:18.617682Z",
     "activities": "2026-01-27T16:20:37.171456Z",
     "vocabulary": "2026-01-27T16:20:46.722823Z",
     "plan": null

@@ -2,11 +2,11 @@
   "module": "povnomasshtabne-vtorhnessnia",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-28T17:47:57.788668Z",
+  "last_audit": "2026-01-29T23:38:58.840394Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-28T17:47:52.471033Z",
-    "meta": "2026-01-26T22:20:13.455497Z",
+    "meta": "2026-01-29T07:38:18.737849Z",
     "activities": "2026-01-28T17:41:02.285428Z",
     "vocabulary": "2026-01-28T17:41:02.508889Z",
     "plan": null

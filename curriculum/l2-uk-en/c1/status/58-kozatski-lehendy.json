@@ -2,14 +2,14 @@
   "module": "58-kozatski-lehendy",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:29:30.540683Z",
+  "last_audit": "2026-01-30T21:14:31.841496Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-10T16:18:41.960205Z",
-    "meta": "2026-01-26T17:21:19.503534Z",
+    "md": "2026-01-27T15:24:10.366974Z",
+    "meta": "2026-01-29T07:39:04.774706Z",
     "activities": "2026-01-10T16:17:43.658234Z",
     "vocabulary": null,
-    "plan": "2026-01-26T17:21:19.503261Z"
+    "plan": "2026-01-30T11:47:22.779509Z"
   },
   "gates": {
     "meta": {
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 3,
-      "message": "2033/3000 (raw: 2349) | pedagogy: 1 violations | richness: 92% < 95% min (content)"
+      "violations": 2,
+      "message": "2033/3000 (raw: 2349) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "1 Outline Compliance Errors",
+      "4 Outline Compliance Errors",
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],
     "pass_count": 1,

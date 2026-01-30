@@ -1,26 +1,23 @@
 # Audit Report: M73 — 73-nauka-i-doslidzhennia.md
-
-**Level:** B2 | **Module:** M73 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2 | **Module:** M73 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:28:34
+**Generated:** 2026-01-30 21:17:56
 
 ## Configuration
-
 **Type:** B2-history
-**Word Target:** 4000 words
+**Word Target:** 2000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading
+**Required Types:** essay-response, reading, true-false
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть відповідність: наукові терміни | 12 | 8 | ✅ |
@@ -42,25 +39,22 @@
 - Total activities: 14 (target: 3-9) ❌
 - Unique types: 11 (minimum: 2) ✅
 - Priority types used: 1/4 (essay-response) ✅
-- Required types used: 1/2 (essay-response) ❌
+- Required types used: 2/3 (essay-response, true-false) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 73-nauka-i-doslidzhennia.yaml: Schema validation error at key '12': {'type': 'fill-in', 'title': 'Заповніть грант-заявку', 'instruction': 'Оберіть правильні слова для заявки на грант.', 'items': [{'answer': 'проекту', 'options': ['проекту', 'гранту', 'статті', 'дисертації'], 'sentence': 'Назва ***: «Вплив зміни клімату на екосистеми»'}, {'answer': 'Мета', 'options': ['Мета', 'Результат', 'Висновок', 'Гіпотеза'], 'sentence': '***: Дослідити вплив глобального потепління на біорізноманіття'}, {'answer': 'Актуальність', 'options': ['Актуальність', 'Результат', 'Методика', 'Бюджет'], 'sentence': '***: проект є актуальним через кліматичні зміни'}, {'answer': 'Методологія', 'options': ['Методологія', 'Гіпотеза', 'Результат', 'Мета'], 'sentence': '***: польові дослідження, лабораторний аналіз'}, {'answer': 'результати', 'options': ['результати', 'методи', 'гіпотези', 'гранти'], 'sentence': 'Очікувані ***: наукові публікації, рекомендації для політики'}, {'answer': 'Тривалість', 'options': ['Тривалість', 'Результат', 'Бюджет', 'Мета'], 'sentence': '***: 12 місяців'}, {'answer': 'Бюджет', 'options': ['Бюджет', 'Грант', 'Результат', 'Зарплата'], 'sentence': '___: 500 000 грн'}, {'answer': 'проекту', 'options': ['проекту', 'гранту', 'лабораторії', 'університету'], 'sentence': 'Керівник ___: д-р Іваненко, професор'}]} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 73-nauka-i-doslidzhennia.yaml: Schema validation error at key '12': {'type': 'fill-in', 'title': 'Заповніть грант-заявку', 'instruction': 'Оберіть правильні слова для заявки на грант.', 'items': [{'answer': 'проекту', 'options': ['проекту', 'гранту', 'статті', 'дисертації'], 'sentence': 'Назва ___: «Вплив зміни клімату на екосистеми»'}, {'answer': 'Мета', 'options': ['Мета', 'Результат', 'Висновок', 'Гіпотеза'], 'sentence': '___: Дослідити вплив глобального потепління на біорізноманіття'}, {'answer': 'Актуальність', 'options': ['Актуальність', 'Результат', 'Методика', 'Бюджет'], 'sentence': '___: проект є актуальним через кліматичні зміни'}, {'answer': 'Методологія', 'options': ['Методологія', 'Гіпотеза', 'Результат', 'Мета'], 'sentence': '___: польові дослідження, лабораторний аналіз'}, {'answer': 'результати', 'options': ['результати', 'методи', 'гіпотези', 'гранти'], 'sentence': 'Очікувані ___: наукові публікації, рекомендації для політики'}, {'answer': 'Тривалість', 'options': ['Тривалість', 'Результат', 'Бюджет', 'Мета'], 'sentence': '___: 12 місяців'}, {'answer': 'Бюджет', 'options': ['Бюджет', 'Грант', 'Результат', 'Зарплата'], 'sentence': '___: 500 000 грн'}, {'answer': 'проекту', 'options': ['проекту', 'гранту', 'лабораторії', 'університету'], 'sentence': 'Керівник ___: д-р Іваненко, професор'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
   - FIX: Add a comparative-study activity to meet advanced richness standards.
 
 ## Recommendation
-
 **📝 UPDATE** (severity 5/100)
 
 - 2 violations (minor)
 
 ## Gates
-
-- **Words:** ❌ 1946/4000 (raw: 2227)
+- **Words:** ⚠️ 1946/2000 (raw: 2227) (54 short)
 - **Activities:** ✅ 14/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 11/2 types
@@ -78,12 +72,10 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-
 **Score:** 84% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 33 | 24 | 100% | 20% | 20.0% |
@@ -99,22 +91,20 @@
 | **TOTAL** | | | | | **84.6%** |
 
 ### Dryness Flags & Fixes
-
 - ❌ **NO_DIALOGUE**
   - FIX:
     Add 4+ mini-dialogues. Use this exact format:
-
+    
     **Діалог: [Location in Ukraine]**
-
+    
     > — [Speaker 1 line with **bolded** grammar examples]
     > — [Speaker 2 response with **bolded** grammar examples]
     > — [Speaker 1 continuation]
     > — [Speaker 2 conclusion]
-
+    
     Example locations: На Бесарабському ринку, У львівській кав'ярні, В одеському трамваї, На Подолі
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 46 | Included in Core |

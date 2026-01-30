@@ -2,11 +2,11 @@
   "module": "syntez-nezalezhnist",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T23:39:05.623479Z",
+  "last_audit": "2026-01-29T23:39:19.422048Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-17T21:45:15.757302Z",
-    "meta": "2026-01-26T22:20:13.664155Z",
+    "meta": "2026-01-29T07:38:18.736507Z",
     "activities": "2026-01-17T21:45:15.694026Z",
     "vocabulary": null,
     "plan": null

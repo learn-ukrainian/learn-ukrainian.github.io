@@ -1,26 +1,23 @@
 # Audit Report: M82 — 82-capstone-prezentatsiya.md
-
-**Level:** B2 | **Module:** M82 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2 | **Module:** M82 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:28:40
+**Generated:** 2026-01-30 21:18:00
 
 ## Configuration
-
 **Type:** B2-history
-**Word Target:** 4000 words
+**Word Target:** 2000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading
+**Required Types:** essay-response, reading, true-false
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Термінологія виступу | 12 | 8 | ✅ |
@@ -43,25 +40,22 @@
 - Total activities: 15 (target: 3-9) ❌
 - Unique types: 6 (minimum: 2) ✅
 - Priority types used: 1/4 (essay-response) ✅
-- Required types used: 1/2 (essay-response) ❌
+- Required types used: 2/3 (essay-response, true-false) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 82-capstone-prezentatsiya.yaml: Schema validation error at key '13': {'type': 'true-false', 'title': 'Фінальний чек-лист', 'items': [{'statement': 'Я знаю свою тему на 100%.', 'correct': True, 'explanation': 'Компетентність — основа впевненості.'}, {'statement': 'Я перевірив презентацію на помилки.', 'correct': True, 'explanation': 'Помилки псують враження.'}, {'statement': 'Я знаю, скільки часу займає мій виступ.', 'correct': True, 'explanation': 'Таймінг — це повага до публіки.'}, {'statement': 'Я підготував відповіді на можливі питання.', 'correct': True, 'explanation': 'Щоб не розгубитися.'}, {'statement': 'Я виспався перед виступом.', 'correct': True, 'explanation': 'Втомлений оратор — нудний оратор.'}, {'statement': 'Я перевірив техніку (проектор, мікрофон).', 'correct': True, 'explanation': 'Техніка часто підводить.'}, {'statement': 'Я взяв воду.', 'correct': True, 'explanation': 'Голос може сісти.'}, {'statement': 'Я налаштований позитивно.', 'correct': True, 'explanation': 'Усмішка — ваша зброя.'}], 'instruction': 'Визначте, чи твердження правильне.'} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
   - FIX: Add a comparative-study activity to meet advanced richness standards.
 
 ## Recommendation
-
 **📝 UPDATE** (severity 5/100)
 
 - 2 violations (minor)
 
 ## Gates
-
-- **Words:** ❌ 1868/4000 (raw: 1964)
+- **Words:** ❌ 1868/2000 (raw: 1964)
 - **Activities:** ✅ 15/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/2 types
@@ -79,12 +73,10 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-
 **Score:** 70% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 13 | 24 | 54% | 20% | 10.8% |
@@ -100,31 +92,29 @@
 | **TOTAL** | | | | | **70.7%** |
 
 ### Dryness Flags & Fixes
-
 - ❌ **NO_DIALOGUE**
   - FIX:
     Add 4+ mini-dialogues. Use this exact format:
-
+    
     **Діалог: [Location in Ukraine]**
-
+    
     > — [Speaker 1 line with **bolded** grammar examples]
     > — [Speaker 2 response with **bolded** grammar examples]
     > — [Speaker 1 continuation]
     > — [Speaker 2 conclusion]
-
+    
     Example locations: На Бесарабському ринку, У львівській кав'ярні, В одеському трамваї, На Подолі
 - ❌ **NO_PROVERBS**
   - FIX:
     Add 1+ Ukrainian proverb. Use this format:
-
+    
     Українці кажу|ть: «[Proverb in Ukrainian]»
-
+    
     Зверніть увагу: **[word]** — [aspect] вид, бо [explanation why this aspect is used].
-
+    
     Example: «Не кажи гоп, поки не перескочиш» — **перескочиш** is perfective because it's about the result.
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

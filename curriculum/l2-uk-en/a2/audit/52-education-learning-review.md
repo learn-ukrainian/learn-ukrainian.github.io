@@ -1,14 +1,12 @@
 # Audit Report: M52 — 52-education-learning.md
-
-**Level:** A2 | **Module:** M52 | **Phase:** A2.5 | **Pedagogy:** PPP | **Target:** 1000
+**Level:** A2 | **Module:** M52 | **Phase:** A2.5 | **Pedagogy:** PPP | **Target:** 1150
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 12:41:09
+**Generated:** 2026-01-30 21:12:57
 
 ## Configuration
-
 **Type:** A2-vocab
-**Word Target:** 1000 words
+**Word Target:** 1150 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Education Facts | 12 | 8 | ✅ |
@@ -42,8 +39,7 @@
 - Low density activities: 0
 
 ## Gates
-
-- **Words:** ✅ 1068/1000 (raw: 1407)
+- **Words:** ⚠️ 1068/1150 (raw: 1407) (82 short)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
@@ -60,7 +56,6 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

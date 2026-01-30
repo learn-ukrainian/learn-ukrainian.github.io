@@ -2,11 +2,11 @@
   "module": "revoliutsiia-hidnosti",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T23:38:47.129376Z",
+  "last_audit": "2026-01-29T23:39:01.500029Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.347093Z",
-    "meta": "2026-01-26T22:20:13.482284Z",
+    "meta": "2026-01-29T07:38:18.733659Z",
     "activities": "2026-01-27T15:34:54.559556Z",
     "vocabulary": null,
     "plan": null
@@ -41,6 +41,7 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
+      "1 Critical Template Violations",
       "5 Outline Compliance Errors",
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
       "Missing required activity types: reading"

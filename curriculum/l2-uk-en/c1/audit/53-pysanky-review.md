@@ -1,13 +1,11 @@
 # Audit Report: M53 — 53-pysanky.md
-
-**Level:** C1 | **Module:** M53 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** C1 | **Module:** M53 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:27
+**Generated:** 2026-01-30 21:14:29
 
 ## Configuration
-
 **Type:** C1-history
-**Word Target:** 4000 words
+**Word Target:** 3000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
@@ -19,7 +17,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Теоретичні основи писанкарства | 5 | 5 | ✅ |
@@ -43,20 +40,17 @@
 - Low density activities: 0
 
 ## TEMPLATE COMPLIANCE
-
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Аналіз' per template 'c1-module-template.md'
   - FIX: Add '## Аналіз' section as specified in docs/l2-uk-en/templates/c1-module-template.md.md
 
 ## Recommendation
-
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ❌ 1902/4000 (raw: 2090)
+- **Words:** ❌ 1902/3000 (raw: 2090)
 - **Activities:** ✅ 12/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 12/3 types
@@ -69,31 +63,29 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⚠️ Too many activities: 12 (target 3-9)
 - **Immersion:** 🇺🇦 99.8% (target 95-100% (history))
-- **Richness:** ❌ 91% < 95% min (content)
+- **Richness:** ✅ 100% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
-**Score:** 91% (minimum: 95%)
-**Module Type:** content
+**Score:** 100% (minimum: 95%)
+**Module Type:** history
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 16 | 15 | 100% | 25% | 25.0% |
-| engagement | 8 | 5 | 100% | 19% | 18.7% |
-| variety | 1.00 | - | 100% | 12% | 12.5% |
-| cultural | 5 | 4 | 100% | 12% | 12.5% |
-| realworld | 1 | 3 | 33% | 12% | 4.1% |
-| visual | 10 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 6 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **91.6%** |
+| primary_sources | 4 | 3 | 100% | 24% | 23.8% |
+| engagement | 8 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 15 | 10 | 100% | 14% | 14.3% |
+| decolonization | 6 | 2 | 100% | 14% | 14.3% |
+| cultural | 5 | 4 | 100% | 10% | 9.5% |
+| visual | 10 | 4 | 100% | 10% | 9.5% |
+| variety | 1.00 | - | 100% | 5% | 4.8% |
+| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
+| questions | 6 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 76 | Included in Core |

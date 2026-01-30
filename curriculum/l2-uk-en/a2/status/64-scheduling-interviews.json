@@ -2,14 +2,14 @@
   "module": "64-scheduling-interviews",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T13:12:59.286600Z",
+  "last_audit": "2026-01-30T21:13:02.250439Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-17T21:45:15.599285Z",
+    "md": "2026-01-27T15:24:10.366074Z",
     "meta": "2026-01-26T17:21:18.990479Z",
     "activities": "2026-01-17T21:45:15.604014Z",
     "vocabulary": "2026-01-25T15:44:11.622890Z",
-    "plan": "2026-01-27T13:12:55.164830Z"
+    "plan": "2026-01-30T12:32:20.137237Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1359/1000 (raw: 1505)"
+      "message": "1359/1300 (raw: 1505)"
     },
     "activities": {
       "status": "pass",

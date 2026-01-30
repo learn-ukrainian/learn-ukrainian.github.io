@@ -2,14 +2,14 @@
   "module": "33-case-studies",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:29:15.188707Z",
+  "last_audit": "2026-01-30T21:14:17.235871Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-10T14:55:33.889565Z",
-    "meta": "2026-01-26T17:21:19.451758Z",
+    "md": "2026-01-27T15:24:10.366822Z",
+    "meta": "2026-01-29T07:39:04.762970Z",
     "activities": "2026-01-13T19:14:20.945967Z",
     "vocabulary": null,
-    "plan": "2026-01-26T17:21:19.451571Z"
+    "plan": "2026-01-29T07:45:40.883546Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2241/3000 (raw: 2318)"
+      "message": "2241/4000 (raw: 2318)"
     },
     "activities": {
       "status": "pass",

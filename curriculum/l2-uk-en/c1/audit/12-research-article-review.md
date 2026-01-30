@@ -1,14 +1,12 @@
 # Audit Report: M12 — 12-research-article.md
-
-**Level:** C1 | **Module:** M12 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
+**Level:** C1 | **Module:** M12 | **Phase:** C1.1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:01
+**Generated:** 2026-01-30 21:14:04
 
 ## Configuration
-
 **Type:** C1-grammar
-**Word Target:** 3000 words
+**Word Target:** 4000 words
 **Activities:** 12-16 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Архітектура статті (IMRaD) | 8 | 6 | ✅ |
@@ -50,20 +47,17 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '[ ]...'.
   - FIX: Vary sentence structure.
 
 ## Recommendation
-
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ❌ 2056/3000 (raw: 2158)
+- **Words:** ❌ 2056/4000 (raw: 2158)
 - **Activities:** ✅ 18/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 4/4 types
@@ -76,31 +70,40 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.5% (target 90-100% (grammar))
-- **Richness:** ❌ 90% < 95% min (content)
+- **Richness:** ❌ 82% < 95% min (grammar) - REWRITE needed
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
-**Score:** 90% (minimum: 95%)
-**Module Type:** content
+**Score:** 82% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 95 | 15 | 100% | 25% | 25.0% |
-| engagement | 7 | 5 | 100% | 19% | 18.7% |
-| variety | 1.00 | - | 100% | 12% | 12.5% |
-| cultural | 1 | 4 | 25% | 12% | 3.1% |
-| realworld | 9 | 3 | 100% | 12% | 12.5% |
-| visual | 8 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 17 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **90.6%** |
+| examples | 95 | 24 | 100% | 20% | 20.0% |
+| engagement | 7 | 5 | 100% | 15% | 15.0% |
+| dialogues | 1 | 4 | 25% | 15% | 3.8% |
+| variety | 1.00 | - | 100% | 10% | 10.0% |
+| cultural | 1 | 3 | 33% | 10% | 3.3% |
+| realworld | 9 | 3 | 100% | 10% | 10.0% |
+| visual | 8 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 17 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **82.0%** |
 
 ### Dryness Flags & Fixes
-
+- ❌ **LOW_DIALOGUE**
+  - FIX:
+    Add more mini-dialogues (need 4+ total). Use this exact format:
+    
+    **Діалог: [Location in Ukraine]**
+    
+    > — [Speaker 1 line with **bolded** grammar examples]
+    > — [Speaker 2 response with **bolded** grammar examples]
+    > — [Speaker 1 continuation]
+    > — [Speaker 2 conclusion]
 - ❌ **LOW_CULTURAL_ANCHOR**
   - FIX:
     Add more cultural references (need 3+ total). Include:
@@ -109,7 +112,6 @@
     - Contemporary Ukrainian life examples
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 89 | Included in Core |

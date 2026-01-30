@@ -2,12 +2,12 @@
   "module": "oleksandr-bohomazov",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:56:33.040431Z",
+  "last_audit": "2026-01-30T21:15:25.758645Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-17T21:45:15.852726Z",
-    "meta": "2026-01-26T17:21:20.969061Z",
-    "activities": "2026-01-22T00:32:26.240313Z",
+    "md": "2026-01-27T15:24:10.348904Z",
+    "meta": "2026-01-29T07:39:04.925051Z",
+    "activities": "2026-01-27T15:34:56.458500Z",
     "vocabulary": null,
     "plan": null
   },
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "2398/4000 (raw: 2605) | pedagogy: 2 violations"
+      "message": "2398/4000 (raw: 2605) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "18/3"
+      "message": "7/3"
     },
     "vocabulary": {
       "status": "warn",
@@ -43,8 +43,7 @@
     "blocking_issues": [
       "1 Critical Template Violations",
       "6 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: group-sort"
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],
     "pass_count": 1,
     "fail_count": 3

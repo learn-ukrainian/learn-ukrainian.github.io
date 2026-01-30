@@ -1,14 +1,12 @@
 # Audit Report: M54 — 54-sports-fitness.md
-
-**Level:** A2 | **Module:** M54 | **Phase:** A2.5 | **Pedagogy:** PPP | **Target:** 1000
+**Level:** A2 | **Module:** M54 | **Phase:** A2.5 | **Pedagogy:** PPP | **Target:** 1405
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 12:41:11
+**Generated:** 2026-01-30 21:12:58
 
 ## Configuration
-
 **Type:** A2-vocab
-**Word Target:** 1000 words
+**Word Target:** 1405 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Sports Knowledge | 12 | 8 | ✅ |
@@ -42,19 +39,16 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: вид
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
-
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
-
-- **Words:** ✅ 1339/1000 (raw: 1709)
+- **Words:** ⚠️ 1339/1405 (raw: 1709) (66 short)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
@@ -71,7 +65,6 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

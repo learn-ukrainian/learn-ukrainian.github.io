@@ -2,11 +2,11 @@
   "module": "tsentralna-rada",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-28T15:34:08.275257Z",
+  "last_audit": "2026-01-29T23:39:24.161397Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-28T15:33:34.806009Z",
-    "meta": "2026-01-28T15:25:48.182837Z",
+    "meta": "2026-01-29T07:38:18.678993Z",
     "activities": "2026-01-28T15:33:55.190596Z",
     "vocabulary": "2026-01-28T15:04:21.420471Z",
     "plan": null

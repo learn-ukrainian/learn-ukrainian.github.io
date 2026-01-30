@@ -1,11 +1,9 @@
 # Audit Report: M84 — 84-teatralne-mystetstvo-1.md
-
-**Level:** C1 | **Module:** M84 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 3000
+**Level:** C1 | **Module:** M84 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:46
+**Generated:** 2026-01-30 21:14:45
 
 ## Configuration
-
 **Type:** C1-fine-arts
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -18,7 +16,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Історія українського театру | 12 | 5 | ✅ |
@@ -42,7 +39,6 @@
 - Low density activities: 2
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Історія українського театру' Q1 prompt length 4 (target: 8-30)
   - FIX: Adjust prompt length to 8-30 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Історія українського театру' Q2 prompt length 5 (target: 8-30)
@@ -73,7 +69,6 @@
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-
 **🔄 REWRITE** (severity 80/100)
 
 - 14 violations (severe - consider revision)
@@ -81,7 +76,6 @@
 - Activity density below minimum
 
 ## Gates
-
 - **Words:** ❌ 1945/3000 (raw: 2040)
 - **Activities:** ✅ 13/12
 - **Density:** ❌ 2 < 12
@@ -100,12 +94,10 @@
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
 **Score:** 96% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 23 | 15 | 100% | 25% | 25.0% |
@@ -119,14 +111,13 @@
 | **TOTAL** | | | | | **96.8%** |
 
 ## Low Density Activities
-
 | Activity | Type | Items | Required | Fix |
 |----------|------|-------|----------|-----|
 | Реформа Леся Курбаса | cloze | 9 | 12 | Add 3 more items |
 | Театральні жанри | select | 3 | 5 | Add 2 more items |
 
-## Section Audit
 
+## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 98 | Included in Core |

@@ -2,12 +2,12 @@
   "module": "sofiya-okunevska",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:56:23.945422Z",
+  "last_audit": "2026-01-30T21:15:18.309884Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-17T21:45:15.855991Z",
-    "meta": "2026-01-26T17:21:21.073053Z",
-    "activities": "2026-01-17T21:45:15.808050Z",
+    "md": "2026-01-27T15:24:10.348774Z",
+    "meta": "2026-01-29T07:39:04.917671Z",
+    "activities": "2026-01-27T15:34:56.773334Z",
     "vocabulary": null,
     "plan": null
   },
@@ -19,13 +19,13 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "2162/4000 (raw: 2419) | pedagogy: 1 violations"
+      "violations": 1,
+      "message": "2162/4000 (raw: 2419)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "12/3"
+      "message": "4/3"
     },
     "vocabulary": {
       "status": "warn",

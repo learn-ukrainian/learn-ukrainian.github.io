@@ -1,25 +1,23 @@
 # Audit Report: M40 — 40-b21c-checkpoint.md
-
-**Level:** B2 | **Module:** M40 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 1750
+**Level:** B2 | **Module:** M40 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:28:12
+**Generated:** 2026-01-30 21:18:14
 
 ## Configuration
-
 **Type:** B2-checkpoint
-**Word Target:** 1750 words
+**Word Target:** 2000 words
 **Activities:** 15-19 required
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
 **Priority Types:** cloze, error-correction, fill-in, quiz
+**Required Types:** essay-response, reading, true-false
 **Engagement:** ≥4 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥10 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Комплексний тест: Відмінювання числівників (М31-32) | 10 | 8 | ✅ |
@@ -43,11 +41,11 @@
 - Total activities: 16 (target: 15-19) ✅
 - Unique types: 8 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, quiz) ✅
+- Required types used: 1/3 (essay-response) ❌
 - Low density activities: 0
 
 ## Gates
-
-- **Words:** ✅ 2355/1750 (raw: 2606)
+- **Words:** ✅ 2355/2000 (raw: 2606)
 - **Activities:** ✅ 16/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 8/4 types
@@ -60,52 +58,27 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (checkpoint - no gate)
-- **Richness:** ❌ 81% < 95% min (grammar) - REWRITE needed
+- **Richness:** ✅ 98% (checkpoint)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-
-**Score:** 81% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 98% (minimum: 85%)
+**Module Type:** checkpoint
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 61 | 24 | 100% | 20% | 20.0% |
-| engagement | 8 | 5 | 100% | 15% | 15.0% |
-| dialogues | 1 | 4 | 25% | 15% | 3.8% |
-| variety | 0.93 | - | 93% | 10% | 9.3% |
-| cultural | 1 | 3 | 33% | 10% | 3.3% |
-| realworld | 3 | 3 | 100% | 10% | 10.0% |
-| visual | 8 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 40 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **81.3%** |
-
-### Dryness Flags & Fixes
-
-- ❌ **LOW_DIALOGUE**
-  - FIX:
-    Add more mini-dialogues (need 4+ total). Use this exact format:
-
-    **Діалог: [Location in Ukraine]**
-
-    > — [Speaker 1 line with **bolded** grammar examples]
-    > — [Speaker 2 response with **bolded** grammar examples]
-    > — [Speaker 1 continuation]
-    > — [Speaker 2 conclusion]
-- ❌ **LOW_CULTURAL_ANCHOR**
-  - FIX:
-    Add more cultural references (need 3+ total). Include:
-    - Named Ukrainian places (Поділ, Бесарабський ринок, Острозька академія)
-    - Ukrainian traditions or customs
-    - Contemporary Ukrainian life examples
+| activity_types | 8 | 8 | 100% | 25% | 25.0% |
+| review_sections | 35 | 3 | 100% | 20% | 20.0% |
+| variety | 0.93 | - | 93% | 15% | 14.0% |
+| engagement | 8 | 3 | 100% | 10% | 10.0% |
+| cultural | 1 | - | 100% | 10% | 10.0% |
+| visual | 8 | 3 | 100% | 10% | 10.0% |
+| paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
+| **TOTAL** | | | | | **99.0%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 51 | Included in Core |

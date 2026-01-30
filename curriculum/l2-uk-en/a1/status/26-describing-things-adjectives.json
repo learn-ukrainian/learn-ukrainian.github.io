@@ -2,14 +2,14 @@
   "module": "26-describing-things-adjectives",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:25:52.942616Z",
+  "last_audit": "2026-01-30T15:30:46.340362Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-25T02:15:54.154855Z",
-    "meta": "2026-01-26T21:56:47.948096Z",
+    "md": "2026-01-30T15:30:39.455899Z",
+    "meta": "2026-01-30T15:29:53.865979Z",
     "activities": "2026-01-16T00:34:35.770963Z",
-    "vocabulary": "2026-01-25T18:00:39.411682Z",
-    "plan": "2026-01-26T21:42:57.030336Z"
+    "vocabulary": "2026-01-30T15:20:01.271023Z",
+    "plan": "2026-01-30T12:24:45.225717Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "962/750 (raw: 1337)"
+      "message": "985/853 (raw: 1191)"
     },
     "activities": {
       "status": "pass",
@@ -30,7 +30,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "6/1"
+      "message": "11/1"
     },
     "naturalness": {
       "status": "pass",

@@ -1,25 +1,23 @@
 # Audit Report: M78 — 78-text-analysis.md
-
-**Level:** B2 | **Module:** M78 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 1750
+**Level:** B2 | **Module:** M78 | **Phase:** B2.4 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:28:38
+**Generated:** 2026-01-30 21:17:53
 
 ## Configuration
-
 **Type:** B2-skills
-**Word Target:** 1750 words
+**Word Target:** 2000 words
 **Activities:** 14-18 required
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥5 types required
 **Priority Types:** cloze, fill-in, quiz, translate
+**Required Types:** essay-response, reading, true-false
 **Engagement:** ≥6 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Основи аналізу тексту | 8 | 8 | ✅ |
@@ -42,10 +40,10 @@
 - Total activities: 15 (target: 14-18) ✅
 - Unique types: 13 (minimum: 5) ✅
 - Priority types used: 4/4 (cloze, fill-in, quiz, translate) ✅
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Культура діалогу в Україні базується на взаємній повазі до аргументів та фактів.". Shares significant keywords with sentence at index 118.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Наш аналіз має залишатися об'єктивним, незважаючи на будь-які особисті симпатії.". Shares significant keywords with sentence at index 119.
@@ -54,19 +52,16 @@
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення' per template 'b2-module-template.md'
   - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md.md
 
 ## Recommendation
-
 **📝 UPDATE** (severity 15/100)
 
 - 4 violations (moderate)
 
 ## Gates
-
-- **Words:** ✅ 2441/1750 (raw: 2528)
+- **Words:** ✅ 2441/2000 (raw: 2528)
 - **Activities:** ✅ 15/14
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/5 types
@@ -79,33 +74,28 @@
 - **Pedagogy:** ❌ 3 violations
 - **Content_heavy:** ✅ Content-heavy OK (15 activities)
 - **Immersion:** 🇺🇦 99.0% (target 90-100% (skills))
-- **Richness:** ✅ 99% (grammar)
+- **Richness:** ✅ 99% (skills)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-
-**Score:** 99% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 99% (minimum: 80%)
+**Module Type:** skills
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 88 | 24 | 100% | 20% | 20.0% |
-| engagement | 7 | 5 | 100% | 15% | 15.0% |
-| dialogues | 8 | 4 | 100% | 15% | 15.0% |
-| variety | 0.98 | - | 98% | 10% | 9.8% |
-| cultural | 3 | 3 | 100% | 10% | 10.0% |
-| realworld | 6 | 3 | 100% | 10% | 10.0% |
-| visual | 3 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 13 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| examples | 88 | 15 | 100% | 26% | 25.5% |
+| engagement | 7 | 5 | 100% | 19% | 19.4% |
+| variety | 0.98 | - | 98% | 12% | 12.0% |
+| cultural | 3 | - | 100% | 12% | 12.2% |
+| realworld | 6 | 3 | 100% | 12% | 12.2% |
+| visual | 3 | 2 | 100% | 6% | 6.1% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.1% |
+| questions | 13 | 4 | 100% | 6% | 6.1% |
 | **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 69 | Included in Core |

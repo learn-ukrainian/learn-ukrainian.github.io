@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M11 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 23:39:16
+**Generated:** 2026-01-30 13:32:25
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4048/4000 (raw: 4339)
+- **Words:** ✅ 4048/4000 (raw: 4340)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/2 types
@@ -76,7 +76,7 @@
 | **Володимир і хрещення — 988 рік** | ⚪️ | 57 | Skipped |
 | **Розминка** | ⚪️ | 162 | Skipped |
 | **Читання: Князь Володимир: від язичника до святого** | ✅ | 608 | Included in Core |
-| **Корсунський похід і шлюб із Анною** | ⚪️ | 459 | Skipped |
+| **Корсунська кампанія і шлюб із Анною** | ⚪️ | 459 | Skipped |
 | **Первинні джерела** | ✅ | 251 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 355 | Included in Core |
 | **Значення хрещення для культури** | ✅ | 1970 | Included in Core |

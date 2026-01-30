@@ -2,11 +2,11 @@
   "module": "liublinska-uniia",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T23:38:28.107403Z",
+  "last_audit": "2026-01-30T13:32:39.565142Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T16:56:17.584877Z",
-    "meta": "2026-01-26T22:20:13.288727Z",
+    "md": "2026-01-30T12:16:27.203018Z",
+    "meta": "2026-01-30T13:28:03.076766Z",
     "activities": "2026-01-27T16:57:14.763555Z",
     "vocabulary": "2026-01-27T16:53:15.022787Z",
     "plan": null
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4550/4000 (raw: 4753)"
+      "message": "4550/4000 (raw: 4754)"
     },
     "activities": {
       "status": "pass",

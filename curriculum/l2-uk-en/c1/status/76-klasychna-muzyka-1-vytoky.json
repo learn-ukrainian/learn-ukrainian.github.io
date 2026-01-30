@@ -2,14 +2,14 @@
   "module": "76-klasychna-muzyka-1-vytoky",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:29:41.696851Z",
+  "last_audit": "2026-01-30T21:14:42.555973Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-13T18:31:45.298144Z",
-    "meta": "2026-01-26T17:21:19.536237Z",
+    "md": "2026-01-27T15:24:10.367146Z",
+    "meta": "2026-01-29T07:39:04.784853Z",
     "activities": "2026-01-13T17:31:56.382520Z",
     "vocabulary": null,
-    "plan": "2026-01-26T17:21:19.536025Z"
+    "plan": "2026-01-30T11:51:29.672410Z"
   },
   "gates": {
     "meta": {
@@ -41,7 +41,7 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "2 Outline Compliance Errors",
+      "3 Outline Compliance Errors",
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],
     "pass_count": 1,

@@ -1,14 +1,12 @@
 # Audit Report: M51 — 51-hobbies-leisure.md
-
-**Level:** A2 | **Module:** M51 | **Phase:** A2.5 | **Pedagogy:** PPP | **Target:** 1000
+**Level:** A2 | **Module:** M51 | **Phase:** A2.5 | **Pedagogy:** PPP | **Target:** 1430
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 12:41:09
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-30 21:12:56
 
 ## Configuration
-
 **Type:** A2-vocab
-**Word Target:** 1000 words
+**Word Target:** 1430 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Hobby Quiz | 12 | 8 | ✅ |
@@ -43,19 +40,16 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: знахідний, місцевий
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
-
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
-
-- **Words:** ✅ 1280/1000 (raw: 1728)
+- **Words:** ❌ 1280/1430 (raw: 1728)
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
@@ -72,7 +66,6 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

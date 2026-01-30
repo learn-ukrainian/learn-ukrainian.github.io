@@ -2,14 +2,14 @@
   "module": "51-hopak-i-kozachok",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:29:26.224491Z",
+  "last_audit": "2026-01-30T21:14:28.171741Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-10T15:25:24.526230Z",
-    "meta": "2026-01-26T17:21:19.491019Z",
+    "md": "2026-01-27T15:24:10.366931Z",
+    "meta": "2026-01-29T07:39:04.770519Z",
     "activities": "2026-01-11T00:20:29.397747Z",
     "vocabulary": null,
-    "plan": "2026-01-26T17:21:19.490824Z"
+    "plan": "2026-01-30T11:46:04.433750Z"
   },
   "gates": {
     "meta": {
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "1993/4000 (raw: 2193) | richness: 91% < 95% min (content)"
+      "violations": 1,
+      "message": "1993/3000 (raw: 2193)"
     },
     "activities": {
       "status": "pass",
@@ -41,8 +41,9 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "2 Outline Compliance Errors",
+      "4 Outline Compliance Errors",
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
+      "4 forbidden activity types (use --fix to remove)",
       "Missing required activity types: reading"
     ],
     "pass_count": 1,

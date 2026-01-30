@@ -2,14 +2,14 @@
   "module": "43-combined-practice",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:26:02.552548Z",
+  "last_audit": "2026-01-30T21:16:45.220547Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-16T01:13:38.301672Z",
+    "md": "2026-01-30T21:16:40.719604Z",
     "meta": "2026-01-26T21:56:47.991725Z",
     "activities": "2026-01-16T01:13:28.537782Z",
     "vocabulary": "2026-01-25T01:33:30.069700Z",
-    "plan": "2026-01-26T21:43:06.469736Z"
+    "plan": "2026-01-30T12:24:45.284444Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "810/750 (raw: 920)"
+      "message": "1101/750 (raw: 1208)"
     },
     "activities": {
       "status": "pass",

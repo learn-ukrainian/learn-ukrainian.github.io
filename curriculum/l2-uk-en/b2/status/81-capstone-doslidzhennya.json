@@ -2,14 +2,14 @@
   "module": "81-capstone-doslidzhennya",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:28:40.109083Z",
+  "last_audit": "2026-01-30T21:18:05.846970Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-14T21:56:41.159132Z",
-    "meta": "2026-01-26T17:21:19.260503Z",
+    "md": "2026-01-27T15:24:10.352107Z",
+    "meta": "2026-01-29T07:39:04.732283Z",
     "activities": "2026-01-13T10:33:35.306758Z",
     "vocabulary": null,
-    "plan": "2026-01-26T17:21:19.260287Z"
+    "plan": "2026-01-30T15:04:49.348964Z"
   },
   "gates": {
     "meta": {
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 3,
-      "message": "2147/4000 (raw: 2315) | pedagogy: 2 violations | richness: 91% < 95% min (grammar)"
+      "violations": 2,
+      "message": "2147/2000 (raw: 2315) | pedagogy: 2 violations | richness: 91% < 95% min (grammar)"
     },
     "activities": {
       "status": "pass",
@@ -41,9 +41,10 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "2 Outline Compliance Errors",
+      "6 Outline Compliance Errors",
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: reading"
+      "11 forbidden activity types (use --fix to remove)",
+      "Missing required activity types: reading, true-false"
     ],
     "pass_count": 2,
     "fail_count": 2

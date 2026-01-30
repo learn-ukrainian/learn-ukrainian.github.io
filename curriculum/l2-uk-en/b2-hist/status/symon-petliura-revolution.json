@@ -2,11 +2,11 @@
   "module": "symon-petliura-revolution",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-28T20:39:28.640462Z",
+  "last_audit": "2026-01-29T23:39:14.763796Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-28T20:18:40.204798Z",
-    "meta": "2026-01-28T20:18:49.247074Z",
+    "meta": "2026-01-29T07:38:18.686759Z",
     "activities": "2026-01-28T19:04:17.867571Z",
     "vocabulary": "2026-01-28T18:58:37.289156Z",
     "plan": null

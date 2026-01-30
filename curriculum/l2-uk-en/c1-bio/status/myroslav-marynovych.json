@@ -2,12 +2,12 @@
   "module": "myroslav-marynovych",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:56:51.902505Z",
+  "last_audit": "2026-01-30T21:15:43.788350Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-17T21:45:15.851630Z",
-    "meta": "2026-01-26T17:21:20.939629Z",
-    "activities": "2026-01-17T21:45:15.802104Z",
+    "md": "2026-01-27T15:24:10.348643Z",
+    "meta": "2026-01-29T07:39:04.946807Z",
+    "activities": "2026-01-27T15:34:56.346858Z",
     "vocabulary": null,
     "plan": null
   },
@@ -25,7 +25,7 @@
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "14/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "warn",

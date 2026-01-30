@@ -1,14 +1,12 @@
 # Audit Report: M58 — 58-practical-warm-up.md
-
-**Level:** A2 | **Module:** M58 | **Phase:** A2.6 | **Pedagogy:** PPP | **Target:** 1000
+**Level:** A2 | **Module:** M58 | **Phase:** A2.6 | **Pedagogy:** PPP | **Target:** 1185
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 13:08:04
+**Generated:** 2026-01-30 21:13:01
 
 ## Configuration
-
 **Type:** A2
-**Word Target:** 1000 words
+**Word Target:** 1185 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Reading Comprehension (Text 1) | 8 | 8 | ✅ |
@@ -44,19 +41,16 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: орудний, знахідний, називний, місцевий
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: орудний, називний, знахідний, місцевий
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
-
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
-
-- **Words:** ✅ 1304/1000 (raw: 1402)
+- **Words:** ✅ 1304/1185 (raw: 1402)
 - **Activities:** ✅ 12/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 12/4 types
@@ -73,7 +67,6 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

@@ -1,13 +1,11 @@
 # Audit Report: M106 — 106-c1-6-checkpoint.md
-
-**Level:** C1 | **Module:** M106 | **Phase:** C1 | **Pedagogy:** Assessment | **Target:** 1750
+**Level:** C1 | **Module:** M106 | **Phase:** C1.6 | **Pedagogy:** Assessment | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:00
+**Generated:** 2026-01-30 21:14:56
 
 ## Configuration
-
 **Type:** C1-checkpoint
-**Word Target:** 1750 words
+**Word Target:** 3000 words
 **Activities:** 14-18 required
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
@@ -18,7 +16,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Літературні терміни та приклади | 14 | 6 | ✅ |
@@ -52,7 +49,6 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Ваші аргументовані висновки мають базуватися на глибокому знанні тексту та контексту.". Shares significant keywords with sentence at index 9.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Використання термінологічного апарату дозволяє нам артикулювати власні враження у науковому дискурсі...". Shares significant keywords with sentence at index 63.
@@ -69,7 +65,6 @@
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
@@ -77,8 +72,7 @@
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ✅ 2523/1750 (raw: 2681)
+- **Words:** ❌ 2523/3000 (raw: 2681)
 - **Activities:** ✅ 23/14
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -91,31 +85,27 @@
 - **Pedagogy:** ❌ 7 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.9% (checkpoint - no gate)
-- **Richness:** ✅ 95% (content)
+- **Richness:** ✅ 98% (checkpoint)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
-**Score:** 95% (minimum: 95%)
-**Module Type:** content
+**Score:** 98% (minimum: 85%)
+**Module Type:** checkpoint
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 15 | 15 | 100% | 25% | 25.0% |
-| engagement | 5 | 5 | 100% | 19% | 18.7% |
-| variety | 0.90 | - | 90% | 12% | 11.2% |
-| cultural | 3 | 4 | 75% | 12% | 9.4% |
-| realworld | 4 | 3 | 100% | 12% | 12.5% |
-| visual | 8 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 24 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **95.6%** |
+| activity_types | 13 | 8 | 100% | 25% | 25.0% |
+| review_sections | 23 | 3 | 100% | 20% | 20.0% |
+| variety | 0.90 | - | 90% | 15% | 13.5% |
+| engagement | 5 | 3 | 100% | 10% | 10.0% |
+| cultural | 3 | - | 100% | 10% | 10.0% |
+| visual | 8 | 3 | 100% | 10% | 10.0% |
+| paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
+| **TOTAL** | | | | | **98.5%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 107 | Included in Core |

@@ -1,13 +1,11 @@
 # Audit Report: M54 — 54-vyshyvanka.md
-
-**Level:** C1 | **Module:** M54 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** C1 | **Module:** M54 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:28
+**Generated:** 2026-01-30 21:14:29
 
 ## Configuration
-
 **Type:** C1-history
-**Word Target:** 4000 words
+**Word Target:** 3000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
@@ -19,7 +17,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Теоретичні основи вишивального мистецтва | 5 | 5 | ✅ |
@@ -43,20 +40,17 @@
 - Low density activities: 0
 
 ## TEMPLATE COMPLIANCE
-
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Аналіз' per template 'c1-module-template.md'
   - FIX: Add '## Аналіз' section as specified in docs/l2-uk-en/templates/c1-module-template.md.md
 
 ## Recommendation
-
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ❌ 1956/4000 (raw: 2073)
+- **Words:** ❌ 1956/3000 (raw: 2073)
 - **Activities:** ✅ 12/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 12/3 types
@@ -69,31 +63,29 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⚠️ Too many activities: 12 (target 3-9)
 - **Immersion:** 🇺🇦 99.5% (target 95-100% (history))
-- **Richness:** ❌ 89% < 95% min (content)
+- **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
-**Score:** 89% (minimum: 95%)
-**Module Type:** content
+**Score:** 99% (minimum: 95%)
+**Module Type:** history
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 14 | 15 | 93% | 25% | 23.2% |
-| engagement | 7 | 5 | 100% | 19% | 18.7% |
-| variety | 0.97 | - | 97% | 12% | 12.1% |
-| cultural | 9 | 4 | 100% | 12% | 12.5% |
-| realworld | 1 | 3 | 33% | 12% | 4.1% |
-| visual | 8 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 7 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **89.5%** |
+| primary_sources | 6 | 3 | 100% | 24% | 23.8% |
+| engagement | 7 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 12 | 10 | 100% | 14% | 14.3% |
+| decolonization | 6 | 2 | 100% | 14% | 14.3% |
+| cultural | 9 | 4 | 100% | 10% | 9.5% |
+| visual | 8 | 4 | 100% | 10% | 9.5% |
+| variety | 0.97 | - | 97% | 5% | 4.6% |
+| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
+| questions | 7 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 96 | Included in Core |

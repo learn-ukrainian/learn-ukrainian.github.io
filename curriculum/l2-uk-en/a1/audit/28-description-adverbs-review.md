@@ -1,12 +1,10 @@
 # Audit Report: M28 — 28-description-adverbs.md
-
-**Level:** A1 | **Module:** M28 | **Phase:** A1 | **Pedagogy:** PPP | **Target:** 750
+**Level:** A1 | **Module:** M28 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:25:54
+**Generated:** 2026-01-30 21:08:48
 
 ## Configuration
-
 **Type:** A1-grammar
 **Word Target:** 750 words
 **Activities:** 8-12 required
@@ -20,7 +18,6 @@
 **Transliteration:** Allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Adjective → Adverb | 10 | 8 | ✅ |
@@ -41,8 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-
-- **Words:** ✅ 886/750 (raw: 1129)
+- **Words:** ✅ 1053/750 (raw: 1299)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -54,21 +50,16 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 38.9% (target 35-55% (M28))
+- **Immersion:** 🇺🇦 38.5% (target 35-55% (M28))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Warm-up** | ✅ | 58 | Included in Core |
-| **Grammar** | ⚪️ | 73 | Skipped |
-| **Frequency Adverbs: How Often?** | ⚪️ | 120 | Skipped |
-| **Degree Adverbs: How Much?** | ⚪️ | 0 | Skipped |
-| **Examples in Context** | ✅ | 185 | Included in Core |
-| **Dialogues** | ✅ | 363 | Included in Core |
-| **Практика** | ⚪️ | 18 | Skipped |
+| **Warm-up** | ✅ | 167 | Included in Core |
+| **Presentation** | ✅ | 378 | Included in Core |
+| **Practice** | ⚪️ | 439 | Skipped |
 | **Підсумок** | ✅ | 50 | Included in Core |
 | **Need More Practice?** | ⚪️ | 19 | Skipped |

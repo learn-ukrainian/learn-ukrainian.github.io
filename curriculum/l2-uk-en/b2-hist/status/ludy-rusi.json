@@ -2,12 +2,12 @@
   "module": "ludy-rusi",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T23:38:29.491276Z",
+  "last_audit": "2026-01-30T13:32:30.791712Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.347206Z",
-    "meta": "2026-01-26T22:20:13.302095Z",
-    "activities": "2026-01-27T15:34:54.252050Z",
+    "meta": "2026-01-30T13:25:18.337114Z",
+    "activities": "2026-01-30T13:25:32.833886Z",
     "vocabulary": "2026-01-26T23:26:53.339473Z",
     "plan": null
   },
@@ -25,7 +25,7 @@
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "5/3"
+      "message": "6/3"
     },
     "vocabulary": {
       "status": "pass",

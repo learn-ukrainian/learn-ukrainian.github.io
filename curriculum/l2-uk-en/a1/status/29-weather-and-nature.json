@@ -2,14 +2,14 @@
   "module": "29-weather-and-nature",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:25:54.633851Z",
+  "last_audit": "2026-01-30T21:09:28.067316Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-16T00:45:49.733854Z",
+    "md": "2026-01-30T21:09:24.647289Z",
     "meta": "2026-01-26T21:56:47.958707Z",
     "activities": "2026-01-16T00:45:26.129036Z",
     "vocabulary": "2026-01-25T18:00:39.417804Z",
-    "plan": "2026-01-26T21:42:58.693059Z"
+    "plan": "2026-01-30T12:24:45.235295Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "937/750 (raw: 1296)"
+      "message": "927/869 (raw: 1291)"
     },
     "activities": {
       "status": "pass",

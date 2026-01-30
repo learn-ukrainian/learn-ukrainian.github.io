@@ -1,14 +1,12 @@
 # Audit Report: M31 — 31-body-and-health.md
-
-**Level:** A1 | **Module:** M31 | **Phase:** A1 | **Pedagogy:** PPP | **Target:** 750
+**Level:** A1 | **Module:** M31 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 820
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:25:55
+**Generated:** 2026-01-30 21:10:38
 
 ## Configuration
-
 **Type:** A1-vocab
-**Word Target:** 750 words
+**Word Target:** 820 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Body Parts | 10 | 8 | ✅ |
@@ -42,8 +39,7 @@
 - Low density activities: 0
 
 ## Gates
-
-- **Words:** ✅ 800/750 (raw: 1159)
+- **Words:** ✅ 904/820 (raw: 1267)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -55,21 +51,18 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 39.4% (target 35-55% (M31))
+- **Immersion:** 🇺🇦 37.4% (target 35-55% (M31))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Warm-up** | ✅ | 101 | Included in Core |
-| **Grammar** | ⚪️ | 90 | Skipped |
-| **Common Health Expressions** | ⚪️ | 0 | Skipped |
-| **At the Pharmacy (В аптеці)** | ⚪️ | 13 | Skipped |
-| **Examples in Context** | ✅ | 87 | Included in Core |
+| **Warm-up** | ✅ | 182 | Included in Core |
+| **Presentation** | ✅ | 81 | Included in Core |
+| **Вирази про здоров'я** | ⚪️ | 100 | Skipped |
 | **Dialogues** | ✅ | 433 | Included in Core |
-| **Практика** | ⚪️ | 13 | Skipped |
+| **Practice** | ⚪️ | 45 | Skipped |
 | **Підсумок (Summary)** | ✅ | 41 | Included in Core |
 | **Need More Practice?** | ⚪️ | 22 | Skipped |

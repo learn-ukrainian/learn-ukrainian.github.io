@@ -1,8 +1,8 @@
 # Audit Report: M47 — kozatska-kultura.md
 **Level:** B2 | **Module:** M47 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 23:38:21
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-29 23:38:35
 
 ## Configuration
 **Type:** B2-history
@@ -32,6 +32,15 @@
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 4/4 (comparative-study, essay-response, reading, true-false) ✅
 - Low density activities: 0
+
+## TEMPLATE COMPLIANCE
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Читання|Хід|Основні події|Діяльність|Свідки|Великий рейд|Відбудова' found: Вплив на Східну Європу: Експорт знань, Відмінності від західного бароко, Первинні джерела та Читання
+  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 4492/4000 (raw: 4702)

@@ -1,79 +1,64 @@
 # Audit Report: M23 — 23-black-council-plot.md
-
-**Level:** LIT | **Module:** M23 | **Phase:** LIT.4 | **Pedagogy:** Analysis | **Target:** 4000
+**Level:** LIT | **Module:** M23 | **Phase:** LIT.4 | **Pedagogy:** Analysis | **Target:** 4500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:57:57
+**Generated:** 2026-01-30 21:16:21
 
 ## Configuration
-
 **Type:** LIT-literature
-**Word Target:** 4000 words
+**Word Target:** 4500 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** cloze, essay-response, match-up, quiz, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥4 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥0 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Літературний квіз: Сюжет | 5 | 1 | ✅ |
-| 2 | match-up | Аналіз персонажів: Архетипи | 5 | 1 | ✅ |
-| 3 | essay-response | Есе: Хутір і Січ | 1 | 1 | ✅ |
-| 4 | comparative-study | Порівняльний аналіз: Вальтер Скотт | 1 | 1 | ✅ |
-| 5 | critical-analysis | Критичний аналіз: Романтизм | 1 | 1 | ✅ |
+| 1 | essay-response | Есе: Хутір і Січ | 1 | 1 | ✅ |
+| 2 | comparative-study | Порівняльний аналіз: Вальтер Скотт | 1 | 1 | ✅ |
+| 3 | critical-analysis | Критичний аналіз: Романтизм | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 5 (target: 3-9) ✅
-- Unique types: 5 (minimum: 2) ✅
+- Total activities: 3 (target: 3-9) ✅
+- Unique types: 3 (minimum: 2) ✅
 - Priority types used: 3/4 (comparative-study, critical-analysis, essay-response) ✅
-- Required types used: 3/5 (essay-response, match-up, quiz) ❌
+- Required types used: 1/2 (essay-response) ❌
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 23-black-council-plot.yaml: Schema validation error at key 'pairs': [{'left': 'Яким Сомко', 'right': 'Ідеальний правитель-лицар'}, {'left': 'Іван Брюховецький', 'right': 'Демагог і трикстер'}, {'left': 'Михайло Черевань', 'right': 'Пасивний обиватель (хуторянин)'}, {'left': 'Кирило Тур', 'right': 'Романтичний бунтар (байронічний герой)'}, {'left': 'Полковник Шрам', 'right': 'Священик-воїтель (поборник традиції)'}] is too short
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
 ## Recommendation
+**📝 UPDATE** (severity 20/100)
 
-**📝 UPDATE** (severity 25/100)
-
-- 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ❌ 3773/4000 (raw: 4226)
-- **Activities:** ✅ 5/3
+- **Words:** ❌ 3773/4500 (raw: 4226)
+- **Activities:** ✅ 3/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 5/2 types
+- **Unique_types:** ✅ 3/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/4
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 0/0
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (3 activities)
 - **Immersion:** 🇺🇦 99.5% (target 95-100% (literature))
 - **Richness:** ✅ 92% (literature)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-
 **Score:** 92% (minimum: 90%)
 **Module Type:** literature
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
@@ -89,7 +74,6 @@
 | **TOTAL** | | | | | **92.9%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 96 | Included in Core |

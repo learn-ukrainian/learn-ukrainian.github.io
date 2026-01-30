@@ -2,14 +2,14 @@
   "module": "26-politics-government-vocabulary",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:28:02.208084Z",
+  "last_audit": "2026-01-30T21:18:08.892515Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-11T22:06:41.377192Z",
-    "meta": "2026-01-26T17:21:19.144710Z",
+    "md": "2026-01-27T15:24:10.351825Z",
+    "meta": "2026-01-29T07:39:04.690256Z",
     "activities": "2026-01-11T22:51:46.975015Z",
     "vocabulary": "2026-01-21T22:54:28.403923Z",
-    "plan": "2026-01-26T17:21:19.144463Z"
+    "plan": "2026-01-30T15:04:49.242311Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "1891/1750 (raw: 2251)"
+      "status": "fail",
+      "violations": 1,
+      "message": "1891/2000 (raw: 2251)"
     },
     "activities": {
       "status": "pass",
@@ -41,9 +41,10 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "2 Outline Compliance Errors"
+      "5 Outline Compliance Errors",
+      "Missing required activity types: reading"
     ],
-    "pass_count": 4,
-    "fail_count": 0
+    "pass_count": 3,
+    "fail_count": 1
   }
 }

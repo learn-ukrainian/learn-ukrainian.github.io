@@ -2,13 +2,13 @@
   "module": "galytsko-volynska-derzhava",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T23:38:04.186114Z",
+  "last_audit": "2026-01-30T13:32:34.820909Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.346941Z",
-    "meta": "2026-01-26T22:20:13.050469Z",
-    "activities": "2026-01-25T21:29:25.436550Z",
-    "vocabulary": "2026-01-22T21:48:18.529599Z",
+    "md": "2026-01-30T10:12:33.679474Z",
+    "meta": "2026-01-30T13:28:03.031693Z",
+    "activities": "2026-01-30T13:32:06.862512Z",
+    "vocabulary": "2026-01-30T00:02:37.930238Z",
     "plan": null
   },
   "gates": {
@@ -18,19 +18,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "4552/4000 (raw: 4709)"
+      "message": "3919/4000 (raw: 4035) (81 short)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "5/3"
+      "message": "6/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 20 (soft target)"
+      "message": "20/20"
     },
     "naturalness": {
       "status": "pass",

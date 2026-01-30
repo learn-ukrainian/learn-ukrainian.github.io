@@ -1,25 +1,23 @@
 # Audit Report: M52 — 52-idioms-animals-i.md
-
-**Level:** B2 | **Module:** M52 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
+**Level:** B2 | **Module:** M52 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:28:20
+**Generated:** 2026-01-30 21:18:17
 
 ## Configuration
-
 **Type:** B2-vocab
-**Word Target:** 1750 words
+**Word Target:** 2000 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
 **Priority Types:** mark-the-words, match-up, quiz, translate
+**Required Types:** fill-in-the-blank, reading, true-false
 **Engagement:** ≥6 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥35 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть відповідність | 16 | 8 | ✅ |
@@ -42,22 +40,22 @@
 - Total activities: 15 (target: 10-14) ❌
 - Unique types: 10 (minimum: 4) ✅
 - Priority types used: 3/4 (match-up, quiz, translate) ✅
+- Required types used: 1/3 (true-false) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
+- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['fill-in-the-blank']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
+  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 52-idioms-animals-i.yaml: Schema validation error at key '12': {'type': 'quiz', 'title': 'Культурний контекст', 'items': [{'question': 'З якого історичного періоду походить багато українських фразеологізмів про коней, що символізують волю та військову доблесть?', 'options': [{'text': 'Козацька доба', 'correct': True}, {'text': 'Радянський період', 'correct': False}, {'text': 'Княжа доба', 'correct': False}, {'text': 'Сучасність', 'correct': False}], 'explanation': 'Козаки надзвичайно цінували коней, тому багато ідіом походить з того часу.'}, {'question': 'Яка тварина в українській фразеології часто асоціюється з професійною майстерністю та глибоким знанням справи?', 'options': [{'text': 'Собака', 'correct': True}, {'text': 'Вовк', 'correct': False}, {'text': 'Кіт', 'correct': False}, {'text': 'Ведмідь', 'correct': False}], 'explanation': "Вираз «собаку з''їв» означає бути майстром."}, {'question': 'Що означає традиційний український вираз «кінь не валявся» у контексті виконання сільськогосподарських робіт?', 'options': [{'text': 'Робота ще не почалася', 'correct': True}, {'text': 'Кінь захворів', 'correct': False}, {'text': 'Робота вже зроблена', 'correct': False}, {'text': 'Час відпочивати', 'correct': False}], 'explanation': 'Це походить від звичаю давати коню повалятися перед запряганням.'}, {'question': 'Який образ в українській літературі (наприклад, у Стефаника) символізує тяжку, виснажливу селянську працю?', 'options': [{'text': 'Кінь', 'correct': True}, {'text': 'Собака', 'correct': False}, {'text': 'Вовк', 'correct': False}, {'text': 'Лис', 'correct': False}], 'explanation': 'Кінь — символ важкої праці на землі.'}, {'question': 'Як українці традиційно ставляться до вовка у фольклорі та фразеології?', 'options': [{'text': 'Зі страхом і повагою', 'correct': True}, {'text': "З любов'ю", 'correct': False}, {'text': 'З байдужістю', 'correct': False}, {'text': 'З насмішкою', 'correct': False}], 'explanation': 'Вовк — сильний і небезпечний хижак, якого поважали.'}, {'question': 'Який вираз має античне походження, але активно використовується в сучасній українській публіцистиці?', 'options': [{'text': 'Троянський кінь', 'correct': True}, {'text': 'Темна конячка', 'correct': False}, {'text': 'Вовком вити', 'correct': False}, {'text': "Собаку з'їсти", 'correct': False}], 'explanation': 'Це запозичення з грецької міфології.'}, {'question': 'Чому вираз «собаці собача смерть» вважається дуже сильним і категоричним в українській культурі?', 'options': [{'text': 'Бо він виражає вищу справедливість і осуд', 'correct': True}, {'text': 'Бо українці не люблять собак', 'correct': False}, {'text': 'Бо це просто смішно', 'correct': False}, {'text': 'Бо це про мисливство', 'correct': False}], 'explanation': 'Це проклін або жорстка констатація ганебного кінця негідника.'}, {'question': 'Який фразеологізм найкраще ілюструє українську гостинність, коли раптовий гість сприймається з гумором?', 'options': [{'text': 'Про вовка промовка', 'correct': True}, {'text': 'Кінь не валявся', 'correct': False}, {'text': 'Вовком вити', 'correct': False}, {'text': 'Темна конячка', 'correct': False}], 'explanation': "Цей вираз пом'якшує несподіванку появи гостя."}], 'instruction': 'Оберіть правильну відповідь.'} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-
 **📝 UPDATE** (severity 5/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 
 ## Gates
-
-- **Words:** ✅ 1950/1750 (raw: 2098)
+- **Words:** ⚠️ 1950/2000 (raw: 2098) (50 short)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 10/4 types
@@ -67,36 +65,31 @@
 - **Vocab:** ⚠️ 13 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.7% (target 90-100% (vocab))
-- **Richness:** ✅ 99% (grammar)
+- **Richness:** ✅ 98% (phraseology)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-
-**Score:** 99% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 98% (minimum: 95%)
+**Module Type:** phraseology
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 34 | 24 | 100% | 20% | 20.0% |
-| engagement | 9 | 5 | 100% | 15% | 15.0% |
-| dialogues | 11 | 4 | 100% | 15% | 15.0% |
-| variety | 0.99 | - | 99% | 10% | 9.9% |
-| cultural | 5 | 3 | 100% | 10% | 10.0% |
-| realworld | 6 | 3 | 100% | 10% | 10.0% |
-| visual | 3 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.87 | - | 87% | 5% | 4.4% |
-| questions | 14 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.2%** |
+| engagement | 9 | 4 | 100% | 25% | 25.0% |
+| variety | 0.99 | - | 99% | 17% | 16.5% |
+| cultural | 5 | - | 100% | 17% | 16.7% |
+| visual | 3 | 3 | 100% | 8% | 8.3% |
+| paragraph_var | 0.87 | - | 87% | 8% | 7.3% |
+| examples | 34 | - | 100% | 8% | 8.3% |
+| realworld | 6 | - | 100% | 8% | 8.3% |
+| questions | 14 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **98.7%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 75 | Included in Core |

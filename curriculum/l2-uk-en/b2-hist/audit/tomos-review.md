@@ -1,8 +1,8 @@
-# Audit Report: M124 — tomos.md
-**Level:** B2 | **Module:** M124 | **Phase:** HIST.12 | **Pedagogy:** CBI | **Target:** 4000
+# Audit Report: M129 — tomos.md
+**Level:** B2 | **Module:** M129 | **Phase:** HIST.12 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-27 23:39:08
+**Generated:** 2026-01-29 23:39:22
 
 ## Configuration
 **Type:** B2-history

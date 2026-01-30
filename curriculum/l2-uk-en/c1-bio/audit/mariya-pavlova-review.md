@@ -1,94 +1,72 @@
 # Audit Report: M44 — mariya-pavlova.md
-
 **Level:** C1 | **Module:** M44 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:56:18
+**Generated:** 2026-01-30 21:15:13
 
 ## Configuration
-
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
 **Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** essay-response, fill-in, group-sort, match-up, quiz, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥24 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | «Розуміння наукового шляху Марії Павлової» | 12 | 5 | ✅ |
-| 2 | unjumble | «Наукові тези Марії Павлової» | 6 | 5 | ✅ |
-| 3 | cloze | «Марія Павлова — Науковий прорив» | 14 | 1 | ✅ |
-| 4 | select | «Аналіз викликів для жінок у науці» | 6 | 5 | ✅ |
-| 5 | fill-in | «Академічна та палеонтологічна лексика» | 12 | 6 | ✅ |
-| 6 | error-correction | «Граматика в науковому тексті про Павлову» | 12 | 5 | ✅ |
-| 7 | match-up | «Наукова термінологія та визначення» | 12 | 6 | ✅ |
-| 8 | critical-analysis | «Лінгвістичний аналіз наукового стилю» | 1 | 1 | ✅ |
-| 9 | critical-analysis | «Аналіз наукового методу Павлової» | 1 | 1 | ✅ |
-| 10 | group-sort | «Класифікація концептів — Наука та Ідентичність» | 20 | 1 | ✅ |
-| 11 | group-sort | «Порівняння — Пчілка, Кобринська, Заньковецька та Павлова» | 12 | 1 | ✅ |
-| 12 | essay-response | «Аналіз — Наука як інструмент емансипації» | 1 | 1 | ✅ |
-| 13 | comparative-study | «Павлова та Ковалевська — Дві зірки» | 1 | 1 | ✅ |
+| 1 | critical-analysis | «Лінгвістичний аналіз наукового стилю» | 1 | 1 | ✅ |
+| 2 | critical-analysis | «Аналіз наукового методу Павлової» | 1 | 1 | ✅ |
+| 3 | essay-response | «Аналіз — Наука як інструмент емансипації» | 1 | 1 | ✅ |
+| 4 | comparative-study | «Павлова та Ковалевська — Дві зірки» | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 13 (target: 3-9) ❌
-- Unique types: 11 (minimum: 3) ✅
-- Priority types used: 4/6 (comparative-study, critical-analysis, essay-response, quiz) ✅
-- Required types used: 5/6 (essay-response, fill-in, group-sort, match-up, quiz) ❌
+- Total activities: 4 (target: 3-9) ✅
+- Unique types: 3 (minimum: 3) ✅
+- Priority types used: 3/6 (comparative-study, critical-analysis, essay-response) ✅
+- Required types used: 1/2 (essay-response) ❌
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-
-- **[YAML_SCHEMA_VIOLATION]** Schema error in mariya-pavlova.yaml: Schema validation error at key '3': {'type': 'select', 'title': '«Аналіз викликів для жінок у науці»', 'instruction': 'Проаналізуйте наведені твердження та оберіть усі правильні варіанти відповідей.', 'items': [{'question': '«З якими основними труднощами стикалися жінки-науковиці наприкінці ХІХ століття?»', 'options': [{'text': '«Відсутність законодавчого права на вищу освіту в багатьох країнах.»', 'correct': True}, {'text': '«Скептичне та упереджене ставлення з боку колег-чоловіків.»', 'correct': True}, {'text': '«Брак фінансової підтримки та стипендій для жінок.»', 'correct': True}, {'text': '«Заборона жінкам читати будь-які книги крім кулінарних.»', 'correct': False}, {'text': '«Обмеження у виборі професій та академічних посад.»', 'correct': True}], 'min_correct': 4}, {'question': "«Які саме фактори допомогли Марії Павловій подолати ці жорсткі бар'єри?»", 'options': [{'text': '«Навчання у ліберальному середовищі Парижа (Сорбонна).»', 'correct': True}, {'text': '«Підтримка з боку чоловіка-науковця.»', 'correct': True}, {'text': '«Величезна працездатність та якість її наукових праць.»', 'correct': True}, {'text': "«Відмова від української ідентичності заради кар'єри.»", 'correct': False}, {'text': '«Випадковий виграш у лотерею.»', 'correct': False}], 'min_correct': 3}, {'question': "«Чому палеонтологія вважалася традиційно 'нежіночою' справою?»", 'options': [{'text': '«Через необхідність важкої фізичної праці на розкопках.»', 'correct': True}, {'text': '«Через тривалі та небезпечні експедиції.»', 'correct': True}, {'text': '«Бо жінки нібито не здатні розуміти анатомію.»', 'correct': False}, {'text': "«Через заборону жінкам торкатися скам'янілостей.»", 'correct': False}, {'text': '«Через брак модного одягу для розкопок.»', 'correct': False}], 'min_correct': 2}, {'question': '«Які результати діяльності Павлової стали справжнім маніфестом рівності?»', 'options': [{'text': '«Отримання нагород від іноземних академій.»', 'correct': True}, {'text': '«Здобуття професорського звання.»', 'correct': True}, {'text': '«Створення власної наукової школи.»', 'correct': True}, {'text': '«Відмова від публічних виступів.»', 'correct': False}, {'text': '«Ігнорування чоловічої думки.»', 'correct': False}], 'min_correct': 3}, {'question': '«Як сучасне прогресивне суспільство вшановує жінок у науці?»', 'options': [{'text': '«Через створення спеціальних грантів та програм підтримки.»', 'correct': True}, {'text': "«Встановлюючи пам'ятники видатним науковицям.»", 'correct': True}, {'text': '«Через популяризацію їхніх біографій у підручниках.»', 'correct': True}, {'text': '«Забороняючи чоловікам займатися наукою.»', 'correct': False}, {'text': '«Закриваючи університети для чоловіків.»', 'correct': False}], 'min_correct': 3}, {'question': '«Які риси характеру дозволили Марії Павловій досягти успіху?»', 'options': [{'text': '«Наполегливість та цілеспрямованість.»', 'correct': True}, {'text': '«Любов до своєї справи.»', 'correct': True}, {'text': '«Вміння працювати в команді.»', 'correct': True}, {'text': '«Байдужість до результатів.»', 'correct': False}, {'text': '«Лінь та апатія.»', 'correct': False}], 'min_correct': 3}]} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
 ## TEMPLATE COMPLIANCE
-
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Останні роки' per template 'c1-biography-module-template.md'
   - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Спадщина|Вплив' found: Спадщина, Вплив на розвиток еволюціонізму
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Спадщина|Вплив' found: Вплив на розвиток еволюціонізму, Спадщина
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 
 ## Recommendation
-
 **📝 UPDATE** (severity 25/100)
 
-- 3 violations (minor)
+- 2 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
 - **Words:** ❌ 2092/4000 (raw: 2389)
-- **Activities:** ✅ 13/3
+- **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 11/3 types
+- **Unique_types:** ✅ 3/3 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 0 < 24 (soft target)
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ⚠️ Too many activities: 13 (target 3-9)
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (4 activities)
 - **Immersion:** 🇺🇦 100.0% (target 95-100% (biography))
 - **Richness:** ✅ 97% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
 **Score:** 97% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 6 | 4 | 100% | 19% | 19.0% |
@@ -104,7 +82,6 @@
 | **TOTAL** | | | | | **97.5%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 77 | Included in Core |

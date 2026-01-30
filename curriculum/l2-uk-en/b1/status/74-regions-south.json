@@ -2,14 +2,14 @@
   "module": "74-regions-south",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T19:15:46.355808Z",
+  "last_audit": "2026-01-30T00:32:36.230430Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-24T22:46:29.033760Z",
+    "md": "2026-01-30T00:30:21.810380Z",
     "meta": "2026-01-27T18:54:49.304924Z",
     "activities": "2026-01-27T19:08:23.168673Z",
     "vocabulary": "2026-01-25T16:02:18.707556Z",
-    "plan": "2026-01-27T19:14:06.382114Z"
+    "plan": "2026-01-30T00:31:39.608614Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1699/1500 (raw: 1792)"
+      "message": "1699/1500 (raw: 1801)"
     },
     "activities": {
       "status": "pass",

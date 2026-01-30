@@ -2,14 +2,14 @@
   "module": "05-natalka-poltavka",
   "level": "LIT",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:57:35.755963Z",
+  "last_audit": "2026-01-30T21:16:01.179069Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-07T23:21:59.086767Z",
-    "meta": "2026-01-26T17:21:21.784940Z",
+    "md": "2026-01-27T15:24:10.349541Z",
+    "meta": "2026-01-29T07:39:04.959952Z",
     "activities": "2026-01-18T20:33:22.878082Z",
     "vocabulary": null,
-    "plan": "2026-01-26T17:21:21.784523Z"
+    "plan": "2026-01-27T15:19:02.525044Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "3848/4000 (raw: 4233)"
+      "message": "3851/4500 (raw: 4236)"
     },
     "activities": {
       "status": "pass",
@@ -42,8 +42,7 @@
     "status": "fail",
     "blocking_issues": [
       "5 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: cloze, match-up, quiz"
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],
     "pass_count": 3,
     "fail_count": 2

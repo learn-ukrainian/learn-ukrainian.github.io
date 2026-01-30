@@ -1,25 +1,23 @@
 # Audit Report: M63 — 63-synonyms-quantity.md
-
-**Level:** B2 | **Module:** M63 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
+**Level:** B2 | **Module:** M63 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:28:27
+**Generated:** 2026-01-30 21:18:15
 
 ## Configuration
-
 **Type:** B2-vocab
-**Word Target:** 1750 words
+**Word Target:** 2000 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
 **Priority Types:** mark-the-words, match-up, quiz, translate
+**Required Types:** fill-in-the-blank, reading, true-false
 **Engagement:** ≥6 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥35 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть точну міру | 12 | 8 | ✅ |
@@ -42,22 +40,22 @@
 - Total activities: 15 (target: 10-14) ❌
 - Unique types: 11 (minimum: 4) ✅
 - Priority types used: 3/4 (match-up, quiz, translate) ✅
+- Required types used: 1/3 (true-false) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
+- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['fill-in-the-blank']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
+  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 63-synonyms-quantity.yaml: Schema validation error at key '13': {'type': 'select', 'title': 'Кількісна етика', 'instruction': 'Оберіть усі слова, що позначають позитивний підхід до ресурсів (6 елементів).', 'items': [{'question': 'Які терміни вказують на розумне споживання? (Оберіть 6)', 'options': [{'text': 'ощадливий', 'correct': True}, {'text': 'раціональний', 'correct': True}, {'text': 'виважений', 'correct': True}, {'text': 'оптимальний', 'correct': True}, {'text': 'щедрий', 'correct': True}, {'text': 'поміркований', 'correct': True}]}, {'question': "Оберіть синоніми до слова 'достатньо':", 'options': [{'text': 'доволі', 'correct': True}, {'text': 'вдосталь', 'correct': True}, {'text': 'вистачить', 'correct': True}, {'text': 'замало', 'correct': False}]}, {'question': "Які слова описують 'надлишок':", 'options': [{'text': 'надмір', 'correct': True}, {'text': 'забагато', 'correct': True}, {'text': 'перебір', 'correct': True}, {'text': 'дефіцит', 'correct': False}]}, {'question': 'Оберіть слова для опису великих фінансів:', 'options': [{'text': 'капітал', 'correct': True}, {'text': 'бюджет', 'correct': True}, {'text': 'інвестиції', 'correct': True}, {'text': 'копійка', 'correct': False}]}, {'question': "Які слова вказують на 'важливість внеску':", 'options': [{'text': 'вагомий', 'correct': True}, {'text': 'суттєвий', 'correct': True}, {'text': 'значний', 'correct': True}, {'text': 'мізерний', 'correct': False}]}, {'question': "Оберіть назви 'масштабних процесів':", 'options': [{'text': 'глобальний', 'correct': True}, {'text': 'колосальний', 'correct': True}, {'text': 'масштабний', 'correct': True}, {'text': 'точковий', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-
 **📝 UPDATE** (severity 5/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 
 ## Gates
-
-- **Words:** ✅ 1784/1750 (raw: 1937)
+- **Words:** ❌ 1784/2000 (raw: 1937)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
@@ -67,36 +65,31 @@
 - **Vocab:** ⚠️ 9 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 90-100% (vocab))
-- **Richness:** ✅ 95% (grammar)
+- **Richness:** ✅ 98% (phraseology)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-
-**Score:** 95% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 98% (minimum: 95%)
+**Module Type:** phraseology
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 57 | 24 | 100% | 20% | 20.0% |
-| engagement | 7 | 5 | 100% | 15% | 15.0% |
-| dialogues | 5 | 4 | 100% | 15% | 15.0% |
-| variety | 0.99 | - | 99% | 10% | 9.9% |
-| cultural | 2 | 3 | 67% | 10% | 6.7% |
-| realworld | 6 | 3 | 100% | 10% | 10.0% |
-| visual | 4 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.88 | - | 88% | 5% | 4.4% |
-| questions | 8 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **96.0%** |
+| engagement | 7 | 4 | 100% | 25% | 25.0% |
+| variety | 0.99 | - | 99% | 17% | 16.5% |
+| cultural | 2 | - | 100% | 17% | 16.7% |
+| visual | 4 | 3 | 100% | 8% | 8.3% |
+| paragraph_var | 0.88 | - | 88% | 8% | 7.3% |
+| examples | 56 | - | 100% | 8% | 8.3% |
+| realworld | 6 | - | 100% | 8% | 8.3% |
+| questions | 8 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **98.8%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 69 | Included in Core |

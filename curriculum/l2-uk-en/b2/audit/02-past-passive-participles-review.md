@@ -1,14 +1,12 @@
 # Audit Report: M02 — 02-past-passive-participles.md
-
-**Level:** B2 | **Module:** M02 | **Phase:** B2 | **Pedagogy:** Not Specified | **Target:** 1750
+**Level:** B2 | **Module:** M02 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:27:45
+**Generated:** 2026-01-30 21:18:10
 
 ## Configuration
-
 **Type:** B2-grammar
-**Word Target:** 1750 words
+**Word Target:** 3800 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Творення дієприкметників | 16 | 8 | ✅ |
@@ -50,21 +47,18 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'рід) -...'.
   - FIX: Vary sentence structure.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 02-past-passive-participles.yaml: Schema validation error at key 'blanks': [{'id': 1, 'answer': 'прийнято', 'options': ['прийнято', 'прийняв', 'прийняли', 'приймає']}, {'id': 2, 'answer': 'прийняв', 'options': ['прийняв', 'прийнято', 'приймається', 'приймав']}, {'id': 3, 'answer': 'виконано', 'options': ['виконано', 'виконали', 'виконуємо', 'виконана']}, {'id': 4, 'answer': 'виконали', 'options': ['виконали', 'виконано', 'виконується', 'виконуємо']}, {'id': 5, 'answer': 'написано', 'options': ['написано', 'написав', 'написана', 'пишеться']}, {'id': 6, 'answer': 'написав', 'options': ['написав', 'написано', 'написаний', 'пишу']}, {'id': 7, 'answer': 'прийнято', 'options': ['прийнято', 'прийняли', 'приймають', 'прийняв']}, {'id': 8, 'answer': 'прийняв', 'options': ['прийняв', 'прийнято', 'приймав', 'прийме']}, {'id': 9, 'answer': 'підписано', 'options': ['підписано', 'підписав', 'підписана', 'підписують']}, {'id': 10, 'answer': 'підписав', 'options': ['підписав', 'підписано', 'підписував', 'підпише']}, {'id': 11, 'answer': 'завершено', 'options': ['завершено', 'завершили', 'завершена', 'завершують']}, {'id': 12, 'answer': 'завершили', 'options': ['завершили', 'завершено', 'завершували', 'завершують']}, {'id': 13, 'answer': 'укладено', 'options': ['укладено', 'уклали', 'укладена', 'укладають']}, {'id': 14, 'answer': 'уклали', 'options': ['уклали', 'укладено', 'укладали', 'укладають']}] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-
 **📝 UPDATE** (severity 5/100)
 
 - 2 violations (minor)
 
 ## Gates
-
-- **Words:** ✅ 2124/1750 (raw: 3026)
+- **Words:** ❌ 2124/3800 (raw: 3026)
 - **Activities:** ✅ 18/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -82,12 +76,10 @@
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
 **Score:** 96% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 85 | 24 | 100% | 20% | 20.0% |
@@ -103,7 +95,6 @@
 | **TOTAL** | | | | | **96.2%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 38 | Included in Core |

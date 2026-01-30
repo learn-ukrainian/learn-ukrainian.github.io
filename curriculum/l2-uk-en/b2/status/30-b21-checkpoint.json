@@ -2,14 +2,14 @@
   "module": "30-b21-checkpoint",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:28:05.045158Z",
+  "last_audit": "2026-01-30T21:18:15.553995Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-11T22:41:50.760811Z",
-    "meta": "2026-01-26T17:21:19.152632Z",
+    "md": "2026-01-27T15:24:10.351782Z",
+    "meta": "2026-01-29T07:39:04.697802Z",
     "activities": "2026-01-11T23:20:02.161372Z",
     "vocabulary": "2026-01-21T22:54:29.287643Z",
-    "plan": "2026-01-26T17:21:19.152400Z"
+    "plan": "2026-01-30T15:04:49.252600Z"
   },
   "gates": {
     "meta": {
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "2130/1750 (raw: 2351) | pedagogy: 1 violations | richness: 77% < 95% min (grammar) - REWRITE needed"
+      "violations": 1,
+      "message": "2130/2000 (raw: 2351) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,8 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "4 Outline Compliance Errors"
+      "6 Outline Compliance Errors",
+      "Missing required activity types: essay-response, reading"
     ],
     "pass_count": 3,
     "fail_count": 1

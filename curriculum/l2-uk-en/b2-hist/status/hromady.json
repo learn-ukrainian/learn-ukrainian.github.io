@@ -2,11 +2,11 @@
   "module": "hromady",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-28T11:24:15.466441Z",
+  "last_audit": "2026-01-29T23:40:08.197116Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T22:23:08.799790Z",
-    "meta": "2026-01-28T11:23:48.720398Z",
+    "meta": "2026-01-29T07:38:18.671817Z",
     "activities": "2026-01-27T22:17:40.228493Z",
     "vocabulary": "2026-01-28T11:23:40.364346Z",
     "plan": null
@@ -39,8 +39,10 @@
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
+    "status": "fail",
+    "blocking_issues": [
+      "1 Critical Template Violations"
+    ],
     "pass_count": 5,
     "fail_count": 0
   }

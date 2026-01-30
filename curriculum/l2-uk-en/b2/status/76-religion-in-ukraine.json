@@ -2,14 +2,14 @@
   "module": "76-religion-in-ukraine",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:28:36.894709Z",
+  "last_audit": "2026-01-30T21:18:16.674031Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-12T22:31:59.713830Z",
-    "meta": "2026-01-26T17:21:19.250481Z",
+    "meta": "2026-01-29T07:39:04.729142Z",
     "activities": "2026-01-12T22:32:01.785224Z",
     "vocabulary": "2026-01-21T22:54:35.997465Z",
-    "plan": "2026-01-26T17:21:19.250280Z"
+    "plan": "2026-01-30T15:04:49.334725Z"
   },
   "gates": {
     "meta": {
@@ -19,18 +19,18 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 3,
-      "message": "3032/4000 (raw: 3125) | pedagogy: 2 violations | richness: 94% < 95% min (grammar)"
+      "violations": 1,
+      "message": "3032/2000 (raw: 3125) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "15/3"
+      "message": "15/10"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "47/20"
+      "message": "47/25"
     },
     "naturalness": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "2 Outline Compliance Errors"
+      "4 Outline Compliance Errors"
     ],
     "pass_count": 4,
     "fail_count": 1

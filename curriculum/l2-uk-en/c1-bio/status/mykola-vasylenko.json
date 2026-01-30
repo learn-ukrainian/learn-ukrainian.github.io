@@ -2,12 +2,12 @@
   "module": "mykola-vasylenko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:56:24.576871Z",
+  "last_audit": "2026-01-30T21:15:18.923326Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-17T21:45:15.851388Z",
-    "meta": "2026-01-26T17:21:20.935387Z",
-    "activities": "2026-01-17T21:45:15.801546Z",
+    "md": "2026-01-27T15:24:10.348611Z",
+    "meta": "2026-01-29T07:39:04.918146Z",
+    "activities": "2026-01-27T15:34:56.332091Z",
     "vocabulary": null,
     "plan": null
   },
@@ -19,13 +19,13 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "1965/4000 (raw: 2226) | pedagogy: 1 violations"
+      "violations": 1,
+      "message": "1965/4000 (raw: 2226)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "12/3"
+      "message": "4/3"
     },
     "vocabulary": {
       "status": "warn",

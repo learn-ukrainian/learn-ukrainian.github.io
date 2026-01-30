@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M106 | **Phase:** HIST.10 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-28 22:53:16
+**Generated:** 2026-01-29 23:39:50
 
 ## Configuration
 **Type:** B2-history

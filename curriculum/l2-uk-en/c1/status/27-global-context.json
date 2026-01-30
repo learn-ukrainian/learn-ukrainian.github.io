@@ -2,14 +2,14 @@
   "module": "27-global-context",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:29:11.400942Z",
+  "last_audit": "2026-01-30T21:14:13.231525Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-13T17:46:50.749371Z",
-    "meta": "2026-01-26T17:21:19.428832Z",
+    "md": "2026-01-27T15:24:10.366722Z",
+    "meta": "2026-01-29T07:39:04.759511Z",
     "activities": "2026-01-13T17:52:17.225301Z",
     "vocabulary": null,
-    "plan": "2026-01-26T17:21:19.428487Z"
+    "plan": "2026-01-29T07:45:40.860957Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "1902/3000 (raw: 2004) | pedagogy: 1 violations"
+      "message": "1902/4000 (raw: 2004) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",

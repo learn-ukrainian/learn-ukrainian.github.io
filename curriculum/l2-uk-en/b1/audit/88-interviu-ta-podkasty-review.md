@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M88 | **Phase:** B1.8 | **Pedagogy:** CBI | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 20:14:39
+**Generated:** 2026-01-30 01:08:36
 
 ## Configuration
 **Type:** B1-skills
@@ -40,7 +40,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2162/1500 (raw: 2271)
+- **Words:** ✅ 2162/1500 (raw: 2274)
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
@@ -82,5 +82,5 @@
 | **Огляд** | ⚪️ | 1085 | Skipped |
 | **Практика** | ⚪️ | 410 | Skipped |
 | **Продукція** | ⚪️ | 262 | Skipped |
-| **Підсумок** | ✅ | 105 | Included in Core |
+| **Підсумок — Слухай щодня** | ✅ | 105 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

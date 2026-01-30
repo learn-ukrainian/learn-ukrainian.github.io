@@ -1,14 +1,12 @@
 # Audit Report: M10 — 10-checkpoint-first-contact.md
-
-**Level:** A1 | **Module:** M10 | **Phase:** A1 | **Pedagogy:** TTT | **Target:** 500
+**Level:** A1 | **Module:** M10 | **Phase:** A1.1 | **Pedagogy:** TTT | **Target:** 875
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:25:43
+**Generated:** 2026-01-30 15:06:43
 
 ## Configuration
-
 **Type:** A1-checkpoint
-**Word Target:** 500 words
+**Word Target:** 875 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥10 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Cyrillic Reading | 12 | 8 | ✅ |
@@ -43,8 +40,7 @@
 - Low density activities: 0
 
 ## Gates
-
-- **Words:** ✅ 1145/500 (raw: 1409)
+- **Words:** ✅ 1224/875 (raw: 1488)
 - **Activities:** ✅ 11/8
 - **Density:** ✅ All > 10
 - **Unique_types:** ✅ 7/4 types
@@ -56,16 +52,15 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 29.5% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 26.0% (checkpoint - no gate)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Огляд** | ⚪️ | 79 | Skipped |
+| **Overview** | ⚪️ | 158 | Skipped |
 | **Skill 1: Reading Cyrillic** | ⚪️ | 0 | Skipped (using YAML) |
 | **Skill 2: Identifying Gender** | ⚪️ | 162 | Skipped |
 | **Skill 3: Conjugating Verbs** | ⚪️ | 266 | Skipped |

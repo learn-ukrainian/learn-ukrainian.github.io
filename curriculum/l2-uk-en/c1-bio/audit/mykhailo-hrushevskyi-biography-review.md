@@ -1,55 +1,38 @@
 # Audit Report: M56 — mykhailo-hrushevskyi-biography.md
-
 **Level:** C1 | **Module:** M56 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:56:25
+**Generated:** 2026-01-30 21:15:19
 
 ## Configuration
-
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
 **Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** essay-response, fill-in, group-sort, match-up, quiz, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥24 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | «Науковий спадок та формування національної ідентичності» | 5 | 5 | ✅ |
-| 2 | match-up | «Хронологія життя та політичної боротьби» | 8 | 6 | ✅ |
-| 3 | fill-in | «Державотворча та політична термінологія» | 6 | 6 | ✅ |
-| 4 | true-false | «Факти, оцінки та історичні контексти» | 5 | 5 | ✅ |
-| 5 | select | «Політичні досягнення та ідеї лідера» | 5 | 5 | ✅ |
-| 6 | error-correction | «Граматика та академічний стиль» | 5 | 5 | ✅ |
-| 7 | group-sort | «Сфери діяльності та наукові акценти» | 12 | 1 | ✅ |
-| 8 | unjumble | «Декларації української самостійності» | 5 | 5 | ✅ |
-| 9 | quiz | «Трагічний фінал та вічна пам'ять» | 5 | 5 | ✅ |
-| 10 | essay-response | «Грушевський — Битва за минуле як битва за майбутнє» | 1 | 1 | ✅ |
-| 11 | critical-analysis | «Аналіз державотворчої філософії Грушевського» | 1 | 1 | ✅ |
-| 12 | comparative-study | «Професори-президенти — Грушевський та Масарик» | 1 | 1 | ✅ |
+| 1 | true-false | «Факти, оцінки та історичні контексти» | 5 | 5 | ✅ |
+| 2 | essay-response | «Грушевський — Битва за минуле як битва за майбутнє» | 1 | 1 | ✅ |
+| 3 | critical-analysis | «Аналіз державотворчої філософії Грушевського» | 1 | 1 | ✅ |
+| 4 | comparative-study | «Професори-президенти — Грушевський та Масарик» | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 12 (target: 3-9) ❌
-- Unique types: 11 (minimum: 3) ✅
-- Priority types used: 4/6 (comparative-study, critical-analysis, essay-response, quiz) ✅
-- Required types used: 5/6 (essay-response, fill-in, group-sort, match-up, quiz) ❌
+- Total activities: 4 (target: 3-9) ✅
+- Unique types: 4 (minimum: 3) ✅
+- Priority types used: 3/6 (comparative-study, critical-analysis, essay-response) ✅
+- Required types used: 1/2 (essay-response) ❌
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-
-- **[YAML_SCHEMA_VIOLATION]** Schema error in mykhailo-hrushevskyi-biography.yaml: Schema validation error at key '7': {'type': 'unjumble', 'title': '«Декларації української самостійності»', 'items': [{'words': ['«Віднині»', '«Українська»', '«Народна»', '«Республіка»', '«стає»', '«самостійною»', '«ні»', '«від»', '«кого»', '«незалежною»', '«вільною»', '«суверенною»', '«державою»', '«всього»', '«українського»', '«народу»'], 'answer': '«Віднині Українська Народна Республіка стає самостійною ні від кого незалежною вільною суверенною державою всього українського народу»'}, {'words': ['«Ми»', '«маємо»', '«науково»', '«довести»', '«що»', '«українська»', '«історія»', '«має»', '«свої»', '«витоки»', '«у»', '«княжому»', '«Києві»', '«а»', '«не»', '«у»', '«московських»', '«болотах»'], 'answer': '«Ми маємо науково довести що українська історія має свої витоки у княжому Києві а не у московських болотах»'}, {'words': ['«Тільки»', '«через»', '«пізнання»', '«власного»', '«минулого»', '«нація»', '«може»', '«здобути»', '«справжню»', '«інтелектуальну»', '«свободу»', '«та»', '«збудувати»', '«своє»', '«власне»', '«щасливе»', '«майбутнє»'], 'answer': '«Тільки через пізнання власного минулого нація може здобути справжню інтелектуальну свободу та збудувати своє власне щасливе майбутнє»'}, {'words': ['«Наша»', '«головна»', '«мета»', '«це»', '«соборна»', '«демократична»', '«Україна»', '«яка»', '«буде»', '«рівною»', '«серед»', '«рівних»', '«у»', '«великій»', '«родині»', '«європейських»', '«вільних»', '«народів»'], 'answer': '«Наша головна мета це соборна демократична Україна яка буде рівною серед рівних у великій родині європейських вільних народів»'}, {'words': ['«Вчений»', '«має»', '«йти»', '«попереду»', '«свого»', '«народу»', '«вказуючи»', '«йому»', '«шлях»', '«до»', '«правди»', '«навіть»', '«якщо»', '«цей»', '«шлях»', '«буде»', '«надзвичайно»', '«важким»'], 'answer': '«Вчений має йти попереду свого народу вказуючи йому шлях до правди навіть якщо цей шлях буде надзвичайно важким»'}]} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
 ## TEMPLATE COMPLIANCE
-
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template.md'
   - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template.md'
@@ -62,38 +45,34 @@
   - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
 
 ## Recommendation
-
 **📝 UPDATE** (severity 35/100)
 
-- 6 violations (moderate)
+- 5 violations (moderate)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
 - **Words:** ❌ 1947/4000 (raw: 2196)
-- **Activities:** ✅ 12/3
+- **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 11/3 types
+- **Unique_types:** ✅ 4/3 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 0 < 24 (soft target)
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ⚠️ Too many activities: 12 (target 3-9)
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (4 activities)
 - **Immersion:** 🇺🇦 100.0% (target 95-100% (biography))
 - **Richness:** ✅ 100% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
 **Score:** 100% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 8 | 4 | 100% | 19% | 19.0% |
@@ -109,7 +88,6 @@
 | **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 87 | Included in Core |

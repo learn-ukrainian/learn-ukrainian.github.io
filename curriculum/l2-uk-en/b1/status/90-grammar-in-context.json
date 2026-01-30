@@ -2,14 +2,14 @@
   "module": "90-grammar-in-context",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T20:14:40.256030Z",
+  "last_audit": "2026-01-30T01:09:42.423360Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.350230Z",
+    "md": "2026-01-30T01:09:38.016998Z",
     "meta": "2026-01-26T15:44:41.744181Z",
     "activities": "2026-01-11T23:20:02.216802Z",
     "vocabulary": "2026-01-25T16:02:18.836986Z",
-    "plan": "2026-01-27T20:01:57.920988Z"
+    "plan": "2026-01-30T01:09:29.732646Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2084/1500 (raw: 2613)"
+      "message": "2084/1500 (raw: 2617)"
     },
     "activities": {
       "status": "pass",

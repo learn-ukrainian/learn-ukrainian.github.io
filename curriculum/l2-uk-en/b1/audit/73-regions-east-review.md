@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M73 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 19:15:45
+**Generated:** 2026-01-30 00:32:31
 
 ## Configuration
 **Type:** B1-culture
@@ -43,7 +43,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1888/1500 (raw: 1982)
+- **Words:** ✅ 1891/1500 (raw: 1985)
 - **Activities:** ✅ 14/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 12/4 types
@@ -81,11 +81,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 67 | Included in Core |
-| **Вступ** | ✅ | 127 | Included in Core |
+| **Вступ — Схід: Промислове серце** | ✅ | 127 | Included in Core |
 | **Сучасність** | ⚪️ | 172 | Skipped |
 | **Історія та культура** | ✅ | 687 | Included in Core |
 | **Практика** | ⚪️ | 190 | Skipped |
 | **Продукція** | ⚪️ | 362 | Skipped |
-| **Підсумок** | ✅ | 0 | Included in Core |
-| **Що ви дізналися** | ⚪️ | 173 | Skipped |
+| **Підсумок — Схід це Україна** | ✅ | 176 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

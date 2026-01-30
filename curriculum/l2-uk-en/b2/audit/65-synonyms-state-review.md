@@ -1,25 +1,23 @@
 # Audit Report: M65 — 65-synonyms-state.md
-
-**Level:** B2 | **Module:** M65 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
+**Level:** B2 | **Module:** M65 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:28:29
+**Generated:** 2026-01-30 21:18:05
 
 ## Configuration
-
 **Type:** B2-vocab
-**Word Target:** 1750 words
+**Word Target:** 2000 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
 **Priority Types:** mark-the-words, match-up, quiz, translate
+**Required Types:** fill-in-the-blank, reading, true-false
 **Engagement:** ≥6 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥35 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть відтінок стану | 12 | 8 | ✅ |
@@ -42,22 +40,22 @@
 - Total activities: 15 (target: 10-14) ❌
 - Unique types: 11 (minimum: 4) ✅
 - Priority types used: 3/4 (match-up, quiz, translate) ✅
+- Required types used: 1/3 (true-false) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
+- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['fill-in-the-blank']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
+  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 65-synonyms-state.yaml: Schema validation error at key '13': {'type': 'select', 'title': 'Складні стани', 'instruction': 'Оберіть усі слова, що описують стабільність та гармонію (6 елементів).', 'items': [{'question': 'Які терміни вказують на врівноважений стан? (Оберіть 6)', 'options': [{'text': 'стабільність', 'correct': True}, {'text': 'гармонія', 'correct': True}, {'text': 'рівновага', 'correct': True}, {'text': 'спокій', 'correct': True}, {'text': 'впевненість', 'correct': True}, {'text': 'непохитність', 'correct': True}]}, {'question': "Оберіть синоніми до слова 'становище':", 'options': [{'text': 'положення', 'correct': True}, {'text': 'ситуація', 'correct': True}, {'text': 'обставини', 'correct': True}, {'text': 'мить', 'correct': False}]}, {'question': "Які слова описують 'соціальний стан':", 'options': [{'text': 'престиж', 'correct': True}, {'text': 'авторитет', 'correct': True}, {'text': 'репутація', 'correct': True}, {'text': 'вага', 'correct': False}]}, {'question': "Оберіть слова для опису 'здоров'я':", 'options': [{'text': 'самопочуття', 'correct': True}, {'text': 'тонус', 'correct': True}, {'text': 'бадьорість', 'correct': True}, {'text': 'час', 'correct': False}]}, {'question': "Які слова вказують на 'негативний стан':", 'options': [{'text': 'занепад', 'correct': True}, {'text': 'криза', 'correct': True}, {'text': 'деградація', 'correct': True}, {'text': 'розквіт', 'correct': False}]}, {'question': "Оберіть назви 'психологічних станів':", 'options': [{'text': 'стрес', 'correct': True}, {'text': 'тривога', 'correct': True}, {'text': 'апатія', 'correct': True}, {'text': 'чин', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-
 **📝 UPDATE** (severity 5/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 
 ## Gates
-
-- **Words:** ✅ 2047/1750 (raw: 2235)
+- **Words:** ✅ 2047/2000 (raw: 2235)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
@@ -67,36 +65,31 @@
 - **Vocab:** ⚠️ 3 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (vocab))
-- **Richness:** ✅ 98% (grammar)
+- **Richness:** ✅ 97% (phraseology)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-
-**Score:** 98% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 97% (minimum: 95%)
+**Module Type:** phraseology
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 66 | 24 | 100% | 20% | 20.0% |
-| engagement | 10 | 5 | 100% | 15% | 15.0% |
-| dialogues | 5 | 4 | 100% | 15% | 15.0% |
-| variety | 0.95 | - | 95% | 10% | 9.5% |
-| cultural | 7 | 3 | 100% | 10% | 10.0% |
-| realworld | 5 | 3 | 100% | 10% | 10.0% |
-| visual | 6 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.79 | - | 79% | 5% | 4.0% |
-| questions | 10 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **98.5%** |
+| engagement | 10 | 4 | 100% | 25% | 25.0% |
+| variety | 0.95 | - | 95% | 17% | 15.8% |
+| cultural | 7 | - | 100% | 17% | 16.7% |
+| visual | 6 | 3 | 100% | 8% | 8.3% |
+| paragraph_var | 0.79 | - | 79% | 8% | 6.6% |
+| examples | 65 | - | 100% | 8% | 8.3% |
+| realworld | 5 | - | 100% | 8% | 8.3% |
+| questions | 10 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **97.4%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 80 | Included in Core |

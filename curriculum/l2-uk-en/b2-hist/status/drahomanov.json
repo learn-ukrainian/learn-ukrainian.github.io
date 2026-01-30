@@ -2,11 +2,11 @@
   "module": "drahomanov",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-28T14:00:36.077882Z",
+  "last_audit": "2026-01-29T23:40:01.580807Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-28T11:29:15.745043Z",
-    "meta": "2026-01-28T14:00:32.336824Z",
+    "meta": "2026-01-29T07:38:18.673521Z",
     "activities": "2026-01-27T22:34:47.932474Z",
     "vocabulary": "2026-01-28T11:27:10.239884Z",
     "plan": null

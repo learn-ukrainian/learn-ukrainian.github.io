@@ -2,14 +2,14 @@
   "module": "22-register-literary-ukrainian",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:27:59.359645Z",
+  "last_audit": "2026-01-30T21:17:56.618510Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-11T21:10:22.335777Z",
-    "meta": "2026-01-26T17:21:19.134282Z",
+    "md": "2026-01-27T15:24:10.351823Z",
+    "meta": "2026-01-29T07:39:04.687496Z",
     "activities": "2026-01-11T23:20:02.157065Z",
     "vocabulary": "2026-01-21T22:54:27.726523Z",
-    "plan": "2026-01-26T17:21:19.133867Z"
+    "plan": "2026-01-30T15:04:49.232197Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2199/1750 (raw: 2751)"
+      "message": "2199/2000 (raw: 2751)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,8 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "3 Outline Compliance Errors"
+      "5 Outline Compliance Errors",
+      "Missing required activity types: reading"
     ],
     "pass_count": 4,
     "fail_count": 0

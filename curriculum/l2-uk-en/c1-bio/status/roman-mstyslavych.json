@@ -2,20 +2,20 @@
   "module": "roman-mstyslavych",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:55:56.468824Z",
+  "last_audit": "2026-01-29T23:47:24.721136Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-19T23:14:42.156826Z",
-    "meta": "2026-01-26T17:21:21.035140Z",
+    "md": "2026-01-29T22:43:06.537612Z",
+    "meta": "2026-01-29T07:39:04.889253Z",
     "activities": "2026-01-19T21:42:56.039798Z",
-    "vocabulary": null,
+    "vocabulary": "2026-01-29T22:01:04.700663Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
       "status": "pass",
@@ -28,9 +28,9 @@
       "message": "8/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 24 (soft target)"
+      "message": "25/24"
     },
     "naturalness": {
       "status": "pass",
@@ -41,11 +41,9 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "6 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: fill-in, group-sort, match-up, quiz"
+      "6 Outline Compliance Errors"
     ],
-    "pass_count": 3,
-    "fail_count": 1
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

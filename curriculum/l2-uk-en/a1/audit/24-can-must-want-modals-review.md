@@ -1,14 +1,12 @@
 # Audit Report: M24 — 24-can-must-want-modals.md
-
-**Level:** A1 | **Module:** M24 | **Phase:** A1 | **Pedagogy:** PPP | **Target:** 750
+**Level:** A1 | **Module:** M24 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 1049
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:25:51
+**Generated:** 2026-01-30 15:29:32
 
 ## Configuration
-
 **Type:** A1-grammar
-**Word Target:** 750 words
+**Word Target:** 1049 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Modal Meanings | 10 | 8 | ✅ |
@@ -40,8 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-
-- **Words:** ✅ 962/750 (raw: 1707)
+- **Words:** ⚠️ 962/1049 (raw: 1707) (87 short)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -58,7 +54,6 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

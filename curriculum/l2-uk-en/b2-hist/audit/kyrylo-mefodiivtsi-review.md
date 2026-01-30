@@ -1,8 +1,8 @@
 # Audit Report: M80 — kyrylo-mefodiivtsi.md
 **Level:** B2 | **Module:** M80 | **Phase:** HIST.8 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-28 00:46:29
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-29 23:38:41
 
 ## Configuration
 **Type:** B2-history
@@ -32,6 +32,15 @@
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
+
+## TEMPLATE COMPLIANCE
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Читання|Хід|Основні події|Діяльність|Свідки|Великий рейд|Відбудова' found: Соціальна діяльність та просвіта: Йти в народ, Читання: Голоси Братства
+  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 4120/4000 (raw: 4304)

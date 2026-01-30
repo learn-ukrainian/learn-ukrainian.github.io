@@ -1,25 +1,23 @@
 # Audit Report: M49 — 49-idioms-body-head-face.md
-
-**Level:** B2 | **Module:** M49 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
+**Level:** B2 | **Module:** M49 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:28:18
+**Generated:** 2026-01-30 21:18:06
 
 ## Configuration
-
 **Type:** B2-vocab
-**Word Target:** 1750 words
+**Word Target:** 2000 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
 **Priority Types:** mark-the-words, match-up, quiz, translate
+**Required Types:** essay-response, reading, true-false
 **Engagement:** ≥6 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥35 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Значення фразеологізмів | 15 | 8 | ✅ |
@@ -39,11 +37,11 @@
 - Total activities: 12 (target: 10-14) ✅
 - Unique types: 11 (minimum: 4) ✅
 - Priority types used: 4/4 (mark-the-words, match-up, quiz, translate) ✅
+- Required types used: 1/3 (essay-response) ❌
 - Low density activities: 0
 
 ## Gates
-
-- **Words:** ✅ 2147/1750 (raw: 2510)
+- **Words:** ✅ 2147/2000 (raw: 2510)
 - **Activities:** ✅ 12/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
@@ -56,33 +54,28 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.8% (target 90-100% (vocab))
-- **Richness:** ✅ 98% (grammar)
+- **Richness:** ✅ 97% (phraseology)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-
-**Score:** 98% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 97% (minimum: 95%)
+**Module Type:** phraseology
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 49 | 24 | 100% | 20% | 20.0% |
-| engagement | 10 | 5 | 100% | 15% | 15.0% |
-| dialogues | 29 | 4 | 100% | 15% | 15.0% |
-| variety | 0.92 | - | 92% | 10% | 9.2% |
-| cultural | 6 | 3 | 100% | 10% | 10.0% |
-| realworld | 6 | 3 | 100% | 10% | 10.0% |
-| visual | 4 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.79 | - | 79% | 5% | 4.0% |
-| questions | 15 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **98.2%** |
+| engagement | 10 | 4 | 100% | 25% | 25.0% |
+| variety | 0.92 | - | 92% | 17% | 15.3% |
+| cultural | 6 | - | 100% | 17% | 16.7% |
+| visual | 4 | 3 | 100% | 8% | 8.3% |
+| paragraph_var | 0.79 | - | 79% | 8% | 6.6% |
+| examples | 49 | - | 100% | 8% | 8.3% |
+| realworld | 6 | - | 100% | 8% | 8.3% |
+| questions | 15 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **96.9%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 72 | Included in Core |

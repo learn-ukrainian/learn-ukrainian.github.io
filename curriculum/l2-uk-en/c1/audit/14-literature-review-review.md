@@ -1,14 +1,12 @@
 # Audit Report: M14 — 14-literature-review.md
-
-**Level:** C1 | **Module:** M14 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
+**Level:** C1 | **Module:** M14 | **Phase:** C1.1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:03
+**Generated:** 2026-01-30 21:14:05
 
 ## Configuration
-
 **Type:** C1-grammar
-**Word Target:** 3000 words
+**Word Target:** 4000 words
 **Activities:** 12-16 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Функції огляду | 8 | 5 | ✅ |
@@ -48,20 +45,17 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 14-literature-review.yaml: Schema validation error at key 'min_words': 100 is less than the minimum of 200
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ❌ 1909/3000 (raw: 2007)
+- **Words:** ❌ 1909/4000 (raw: 2007)
 - **Activities:** ✅ 16/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 8/4 types
@@ -74,35 +68,37 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.6% (target 90-100% (grammar))
-- **Richness:** ❌ 78% < 95% min (content)
+- **Richness:** ❌ 68% < 95% min (grammar) - REWRITE needed
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
-**Score:** 78% (minimum: 95%)
-**Module Type:** content
+**Score:** 68% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 10 | 15 | 67% | 25% | 16.8% |
-| engagement | 12 | 5 | 100% | 19% | 18.7% |
-| variety | 0.98 | - | 98% | 12% | 12.2% |
-| cultural | 0 | 4 | 0% | 12% | 0.0% |
-| realworld | 8 | 3 | 100% | 12% | 12.5% |
-| visual | 8 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 12 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **79.0%** |
+| examples | 9 | 24 | 38% | 20% | 7.6% |
+| engagement | 12 | 5 | 100% | 15% | 15.0% |
+| dialogues | 3 | 4 | 75% | 15% | 11.2% |
+| variety | 0.98 | - | 98% | 10% | 9.8% |
+| cultural | 0 | 3 | 0% | 10% | 0.0% |
+| realworld | 8 | 3 | 100% | 10% | 10.0% |
+| visual | 8 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 12 | 5 | 100% | 5% | 5.0% |
+| proverbs | 0 | 1 | 0% | 5% | 0.0% |
+| **TOTAL** | | | | | **68.7%** |
 
 ### Dryness Flags & Fixes
-
+- ❌ **NO_EXAMPLES**
+  - FIX:
+    Add 24+ example sentences. Each grammar point needs 3-4 examples showing the pattern in context.
 - ❌ **NO_CULTURAL_ANCHOR**
   - FIX:
     Add 3+ cultural references. Use this exact format:
-
+    
     > 🇺🇦 **Культурний момент**
     >
     > [Reference to Ukrainian place (Київ, Львів, Одеса, Карпати), tradition, or custom]
@@ -110,7 +106,6 @@
     > [Example sentence using the grammar with cultural context]
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 91 | Included in Core |

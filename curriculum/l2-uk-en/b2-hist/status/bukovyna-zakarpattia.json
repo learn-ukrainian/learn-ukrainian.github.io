@@ -2,11 +2,11 @@
   "module": "bukovyna-zakarpattia",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-28T11:13:54.568923Z",
+  "last_audit": "2026-01-30T13:32:43.699834Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.346766Z",
-    "meta": "2026-01-26T22:20:12.967202Z",
+    "meta": "2026-01-29T07:38:18.632163Z",
     "activities": "2026-01-27T15:34:53.690827Z",
     "vocabulary": "2026-01-27T11:24:53.717567Z",
     "plan": null

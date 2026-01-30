@@ -1,12 +1,10 @@
 # Audit Report: M27 — 27-colors-and-clothing.md
-
-**Level:** A1 | **Module:** M27 | **Phase:** A1 | **Pedagogy:** PPP | **Target:** 750
+**Level:** A1 | **Module:** M27 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:25:53
+**Generated:** 2026-01-30 21:03:00
 
 ## Configuration
-
 **Type:** A1-vocab
 **Word Target:** 750 words
 **Activities:** 8-12 required
@@ -20,7 +18,6 @@
 **Transliteration:** Allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Колір і одяг | 10 | 8 | ✅ |
@@ -40,34 +37,28 @@
 - Low density activities: 0
 
 ## Gates
-
-- **Words:** ✅ 846/750 (raw: 1060)
+- **Words:** ✅ 1158/750 (raw: 1301)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/3
+- **Engagement:** ✅ 4/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 28/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 37.5% (target 35-55% (M27))
+- **Immersion:** 🇺🇦 50.2% (target 35-55% (M27))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Warm-up** | ✅ | 41 | Included in Core |
-| **Grammar** | ⚪️ | 56 | Skipped |
-| **Describing What You Wear** | ⚪️ | 119 | Skipped |
-| **Pluralia Tantum (Always Plural)** | ⚪️ | 28 | Skipped |
-| **Examples in Context** | ✅ | 189 | Included in Core |
-| **Dialogues** | ✅ | 325 | Included in Core |
-| **Практика** | ⚪️ | 21 | Skipped |
-| **Підсумок** | ✅ | 48 | Included in Core |
-| **Need More Practice?** | ⚪️ | 19 | Skipped |
+| **Warm-up** | ✅ | 170 | Included in Core |
+| **Presentation** | ✅ | 425 | Included in Core |
+| **Practice** | ⚪️ | 509 | Skipped |
+| **Підсумок** | ✅ | 38 | Included in Core |
+| **Need More Practice?** | ⚪️ | 16 | Skipped |

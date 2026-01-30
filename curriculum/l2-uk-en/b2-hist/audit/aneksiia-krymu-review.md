@@ -1,8 +1,8 @@
-# Audit Report: M128 — aneksiia-krymu.md
-**Level:** B2 | **Module:** M128 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
+# Audit Report: M127 — aneksiia-krymu.md
+**Level:** B2 | **Module:** M127 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 23:37:50
+**Generated:** 2026-01-29 23:39:50
 
 ## Configuration
 **Type:** B2-history

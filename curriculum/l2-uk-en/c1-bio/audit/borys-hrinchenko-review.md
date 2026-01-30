@@ -1,75 +1,59 @@
 # Audit Report: M49 — borys-hrinchenko.md
-
 **Level:** C1 | **Module:** M49 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:56:21
+**Generated:** 2026-01-30 21:15:15
 
 ## Configuration
-
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
 **Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** essay-response, fill-in, group-sort, match-up, quiz, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥24 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Розуміння наукового подвигу Грінченка | 8 | 5 | ✅ |
-| 2 | fill-in | Лексикологія та просвітницька термінологія | 8 | 6 | ✅ |
-| 3 | error-correction | Граматична сумлінність у біографії | 8 | 5 | ✅ |
-| 4 | match-up | Термінологія лінгвістики та фольклору | 12 | 6 | ✅ |
-| 5 | select | Лінгвістичний аналіз риторики Грінченка | 9 | 5 | ✅ |
-| 6 | unjumble | Принципи вартового українського слова | 8 | 5 | ✅ |
-| 7 | cloze | Мовний заповіт Грінченка | 15 | 1 | ✅ |
-| 8 | true-false | Історична правда про Бориса Грінченка | 8 | 5 | ✅ |
-| 9 | group-sort | Структура здобутків Грінченка | 15 | 1 | ✅ |
-| 10 | mark-the-words | Визначення лінгвістичних термінів | 8 | 5 | ✅ |
-| 11 | comparative-study | Грінченко та Даль - Два полюси лексикографії | 1 | 1 | ✅ |
-| 12 | reading | Дослідження Словника Грінченка | 3 | 1 | ✅ |
-| 13 | reading | Просвітницька публіцистика вченого | 3 | 1 | ✅ |
-| 14 | critical-analysis | Деконструкція імперського міфу про мову | 1 | 1 | ✅ |
-| 15 | authorial-intent | Наміри Грінченка у статті про вчителя | 1 | 1 | ✅ |
-| 16 | essay-response | «Мова як фортеця нації: Спадщина Бориса Грінченка» | 1 | 1 | ✅ |
+| 1 | true-false | Історична правда про Бориса Грінченка | 8 | 5 | ✅ |
+| 2 | comparative-study | Грінченко та Даль - Два полюси лексикографії | 1 | 1 | ✅ |
+| 3 | reading | Дослідження Словника Грінченка | 3 | 1 | ✅ |
+| 4 | reading | Просвітницька публіцистика вченого | 3 | 1 | ✅ |
+| 5 | critical-analysis | Деконструкція імперського міфу про мову | 1 | 1 | ✅ |
+| 6 | authorial-intent | Наміри Грінченка у статті про вчителя | 1 | 1 | ✅ |
+| 7 | essay-response | «Мова як фортеця нації: Спадщина Бориса Грінченка» | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 16 (target: 3-9) ❌
-- Unique types: 15 (minimum: 3) ✅
-- Priority types used: 6/6 (authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading) ✅
-- Required types used: 6/6 (essay-response, fill-in, group-sort, match-up, quiz, reading) ✅
+- Total activities: 7 (target: 3-9) ✅
+- Unique types: 6 (minimum: 3) ✅
+- Priority types used: 5/6 (authorial-intent, comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
-- **[YAML_SCHEMA_VIOLATION]** Schema error in borys-hrinchenko.yaml: Schema validation error at key '12': {'type': 'reading', 'title': 'Просвітницька публіцистика вченого', 'resource': {'type': 'primary_source', 'url': 'https://shron1.chtyvo.org.ua/Hrinchenko_Borys/Lysty_z_Ukrainy_Naddniprianskoi.pdf', 'title': '«Борис Грінченко: «Листи з України Наддніпрянської»»'}, 'tasks': ['«Проаналізуйте гостроту критики, яку Грінченко спрямовує проти байдужої інтелігенції.»', '«Випишіть 5-7 термінів, що описують стан тогочасної освіти та культури в підросійській Україні.»', '«Який заклик до дії формулює автор у заключній частині своїх листів?»']} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in borys-hrinchenko.yaml: Schema validation error at key '3': {'type': 'reading', 'title': 'Просвітницька публіцистика вченого', 'resource': {'type': 'primary_source', 'url': 'https://shron1.chtyvo.org.ua/Hrinchenko_Borys/Lysty_z_Ukrainy_Naddniprianskoi.pdf', 'title': '«Борис Грінченко: «Листи з України Наддніпрянської»»'}, 'tasks': ['«Проаналізуйте гостроту критики, яку Грінченко спрямовує проти байдужої інтелігенції.»', '«Випишіть 5-7 термінів, що описують стан тогочасної освіти та культури в підросійській Україні.»', '«Який заклик до дії формулює автор у заключній частині своїх листів?»']} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-
 - ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Спадщина|Вплив' found: Спадщина, Вплив на сучасників
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 
 ## Recommendation
-
 **📝 UPDATE** (severity 25/100)
 
 - 2 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
 - **Words:** ❌ 1917/4000 (raw: 2163)
-- **Activities:** ✅ 16/3
+- **Activities:** ✅ 7/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 15/3 types
+- **Unique_types:** ✅ 6/3 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
@@ -77,19 +61,17 @@
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ⚠️ Too many activities: 16 (target 3-9)
+- **Content_heavy:** ✅ Content-heavy OK (7 activities)
 - **Immersion:** 🇺🇦 100.0% (target 95-100% (biography))
 - **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
 **Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 5 | 4 | 100% | 19% | 19.0% |
@@ -105,7 +87,6 @@
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 73 | Included in Core |

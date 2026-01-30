@@ -1,14 +1,12 @@
 # Audit Report: M45 — 45-food-and-cooking.md
-
-**Level:** A2 | **Module:** M45 | **Phase:** A2.5 | **Pedagogy:** PPP | **Target:** 1000
+**Level:** A2 | **Module:** M45 | **Phase:** A2.5 | **Pedagogy:** PPP | **Target:** 1400
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 12:25:36
+**Generated:** 2026-01-30 21:12:53
 
 ## Configuration
-
 **Type:** A2-vocab
-**Word Target:** 1000 words
+**Word Target:** 1400 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Kitchen Words | 12 | 8 | ✅ |
@@ -42,8 +39,7 @@
 - Low density activities: 0
 
 ## Gates
-
-- **Words:** ✅ 1414/1000 (raw: 1952)
+- **Words:** ✅ 1414/1400 (raw: 1952)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 8/4 types
@@ -60,7 +56,6 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

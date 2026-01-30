@@ -1,14 +1,12 @@
 # Audit Report: M18 — 18-essay-writing-practice.md
-
-**Level:** C1 | **Module:** M18 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
+**Level:** C1 | **Module:** M18 | **Phase:** C1.1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:05
+**Generated:** 2026-01-30 21:14:08
 
 ## Configuration
-
 **Type:** C1
-**Word Target:** 3000 words
+**Word Target:** 4000 words
 **Activities:** 12-16 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Анатомія тексту: Структура | 8 | 6 | ✅ |
@@ -44,14 +41,12 @@
 - Low density activities: 0
 
 ## Recommendation
-
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ❌ 1907/3000 (raw: 2091)
+- **Words:** ❌ 1907/4000 (raw: 2091)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 8/4 types
@@ -69,15 +64,13 @@
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
 **Score:** 93% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 45 | 15 | 100% | 25% | 25.0% |
+| examples | 46 | 15 | 100% | 25% | 25.0% |
 | engagement | 8 | 5 | 100% | 19% | 18.7% |
 | variety | 1.00 | - | 100% | 12% | 12.5% |
 | cultural | 2 | 4 | 50% | 12% | 6.2% |
@@ -88,7 +81,6 @@
 | **TOTAL** | | | | | **93.8%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

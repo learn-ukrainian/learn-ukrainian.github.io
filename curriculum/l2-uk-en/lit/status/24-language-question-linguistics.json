@@ -2,14 +2,14 @@
   "module": "24-language-question-linguistics",
   "level": "LIT",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:57:58.383185Z",
+  "last_audit": "2026-01-30T21:16:21.995455Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-18T00:44:21.753364Z",
-    "meta": "2026-01-26T17:21:21.871809Z",
-    "activities": "2026-01-18T09:35:30.383583Z",
+    "md": "2026-01-27T15:24:10.349727Z",
+    "meta": "2026-01-29T07:39:04.972567Z",
+    "activities": "2026-01-27T15:34:57.199205Z",
     "vocabulary": null,
-    "plan": "2026-01-26T17:21:21.871384Z"
+    "plan": "2026-01-27T15:19:02.599237Z"
   },
   "gates": {
     "meta": {
@@ -19,13 +19,13 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "3411/4000 (raw: 3588) | pedagogy: 1 violations"
+      "violations": 1,
+      "message": "3411/4500 (raw: 3588)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "6/3"
+      "message": "3/3"
     },
     "vocabulary": {
       "status": "pass",
@@ -43,7 +43,7 @@
     "blocking_issues": [
       "5 Outline Compliance Errors",
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: cloze, group-sort, reading"
+      "Missing required activity types: reading"
     ],
     "pass_count": 3,
     "fail_count": 2

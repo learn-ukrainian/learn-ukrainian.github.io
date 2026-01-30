@@ -1,14 +1,12 @@
 # Audit Report: M09 — 09-reflexive-verbs.md
-
-**Level:** A1 | **Module:** M09 | **Phase:** A1 | **Pedagogy:** PPP | **Target:** 500
+**Level:** A1 | **Module:** M09 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:25:43
+**Generated:** 2026-01-30 15:06:25
 
 ## Configuration
-
 **Type:** A1-grammar
-**Word Target:** 500 words
+**Word Target:** 750 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Reflexive Verbs Meanings | 10 | 8 | ✅ |
@@ -40,8 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-
-- **Words:** ✅ 557/500 (raw: 710)
+- **Words:** ✅ 977/750 (raw: 1134)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 4/4 types
@@ -53,18 +49,16 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 26.4% (target 15-35% (M09))
+- **Immersion:** 🇺🇦 17.4% (target 15-35% (M09))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Warm-up** | ✅ | 105 | Included in Core |
-| **Presentation** | ✅ | 255 | Included in Core |
-| **Practice** | ⚪️ | 90 | Skipped |
+| **Warm-up** | ✅ | 228 | Included in Core |
+| **Presentation** | ✅ | 642 | Included in Core |
 | **Cultural Insight** | ✅ | 45 | Included in Core |
 | **Підсумок** | ✅ | 43 | Included in Core |
 | **Need More Practice?** | ⚪️ | 19 | Skipped |

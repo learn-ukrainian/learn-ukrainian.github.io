@@ -1,12 +1,10 @@
 # Audit Report: M07 — 07-spatial-prepositions.md
-
-**Level:** A2 | **Module:** M07 | **Phase:** A2 | **Pedagogy:** PPP | **Target:** 1000
+**Level:** A2 | **Module:** M07 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:26:07
+**Generated:** 2026-01-30 21:12:39
 
 ## Configuration
-
 **Type:** A2-grammar
 **Word Target:** 1000 words
 **Activities:** 10-14 required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Preposition Meanings | 12 | 8 | ✅ |
@@ -43,7 +40,6 @@
 - Low density activities: 0
 
 ## Gates
-
 - **Words:** ✅ 1411/1000 (raw: 1563)
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
@@ -61,7 +57,6 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

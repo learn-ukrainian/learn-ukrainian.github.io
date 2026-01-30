@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M131 | **Phase:** HIST.13 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-28 17:33:38
+**Generated:** 2026-01-29 23:39:28
 
 ## Configuration
 **Type:** B2-history

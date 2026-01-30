@@ -2,14 +2,14 @@
   "module": "39-register-religious-epistolary",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:28:11.369999Z",
+  "last_audit": "2026-01-30T21:17:59.279847Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-11T22:46:39.402742Z",
-    "meta": "2026-01-26T17:21:19.173925Z",
+    "md": "2026-01-27T15:24:10.351927Z",
+    "meta": "2026-01-29T07:39:04.703888Z",
     "activities": "2026-01-11T22:51:47.600622Z",
     "vocabulary": "2026-01-21T22:54:30.369423Z",
-    "plan": "2026-01-26T17:21:19.173691Z"
+    "plan": "2026-01-30T15:04:49.277356Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2137/1750 (raw: 2610)"
+      "message": "2137/2000 (raw: 2610)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,8 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "2 Outline Compliance Errors"
+      "3 Outline Compliance Errors",
+      "Missing required activity types: reading"
     ],
     "pass_count": 4,
     "fail_count": 0

@@ -1,13 +1,11 @@
 # Audit Report: M94 — 94-shevchenko-shchodennyk-lysty.md
-
-**Level:** C1 | **Module:** M94 | **Phase:** C1 | **Pedagogy:** Immersion & Analysis | **Target:** 3500
+**Level:** C1 | **Module:** M94 | **Phase:** C1.6 | **Pedagogy:** Immersion & Analysis | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:53
+**Generated:** 2026-01-30 21:14:49
 
 ## Configuration
-
 **Type:** C1-literature
-**Word Target:** 3500 words
+**Word Target:** 3000 words
 **Activities:** 12-16 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -18,7 +16,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Емоційна Палітра Щоденника | 12 | 6 | ✅ |
@@ -45,20 +42,17 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 94-shevchenko-shchodennyk-lysty.yaml: Schema validation error at key 'words': ['Я', 'не', 'став', 'ні', 'запеклим', 'ні', 'лихим', 'ні', 'розчарованим', 'бо', 'вірю', 'в', 'Бога', 'і', 'люблю', 'людей', 'так', 'само', 'як', 'і', 'раніше'] is too long
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ❌ 2003/3500 (raw: 2310)
+- **Words:** ❌ 2003/3000 (raw: 2310)
 - **Activities:** ✅ 16/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 12/4 types
@@ -71,31 +65,30 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (16 activities)
 - **Immersion:** 🇺🇦 99.8% (target 90-100% (literature))
-- **Richness:** ❌ 88% < 95% min (content)
+- **Richness:** ✅ 99% (literature)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
-**Score:** 88% (minimum: 95%)
-**Module Type:** content
+**Score:** 99% (minimum: 90%)
+**Module Type:** literature
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 22 | 15 | 100% | 25% | 25.0% |
-| engagement | 7 | 5 | 100% | 19% | 18.7% |
-| variety | 0.99 | - | 99% | 12% | 12.4% |
-| cultural | 3 | 4 | 75% | 12% | 9.4% |
-| realworld | 1 | 3 | 33% | 12% | 4.1% |
-| visual | 10 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 19 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **88.4%** |
+| analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
+| literary_citations | 11 | 5 | 100% | 17% | 17.4% |
+| engagement | 7 | 4 | 100% | 13% | 13.0% |
+| historical_context | 27 | 3 | 100% | 13% | 13.0% |
+| essays | 3 | 2 | 100% | 13% | 13.0% |
+| resources | 5 | 3 | 100% | 9% | 8.7% |
+| variety | 0.99 | - | 99% | 4% | 4.3% |
+| cultural | 3 | - | 100% | 4% | 4.3% |
+| visual | 10 | 1 | 100% | 4% | 4.3% |
+| paragraph_var | 1.00 | - | 100% | 4% | 4.3% |
+| **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 86 | Included in Core |

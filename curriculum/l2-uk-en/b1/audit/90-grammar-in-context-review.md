@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M90 | **Phase:** B1.9 | **Pedagogy:** TBL | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 20:14:40
+**Generated:** 2026-01-30 01:09:42
 
 ## Configuration
 **Type:** B1-skills
@@ -42,7 +42,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2084/1500 (raw: 2613)
+- **Words:** ✅ 2084/1500 (raw: 2617)
 - **Activities:** ✅ 13/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
@@ -84,5 +84,5 @@
 | **Огляд** | ⚪️ | 1072 | Skipped |
 | **Інтеграція** | ⚪️ | 305 | Skipped |
 | **Практика** | ⚪️ | 289 | Skipped |
-| **Підсумок** | ✅ | 124 | Included in Core |
+| **Підсумок — Граматика як інструмент** | ✅ | 124 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

@@ -1,12 +1,10 @@
 # Audit Report: M23 — 23-what-time-is-it.md
-
-**Level:** A1 | **Module:** M23 | **Phase:** A1 | **Pedagogy:** PPP | **Target:** 750
+**Level:** A1 | **Module:** M23 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:25:51
+**Generated:** 2026-01-30 15:03:52
 
 ## Configuration
-
 **Type:** A1-grammar
 **Word Target:** 750 words
 **Activities:** 8-12 required
@@ -20,7 +18,6 @@
 **Transliteration:** Allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Days of the Week | 10 | 8 | ✅ |
@@ -41,8 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-
-- **Words:** ✅ 1073/750 (raw: 1703)
+- **Words:** ✅ 1073/750 (raw: 1701)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -59,17 +55,14 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 37 | Included in Core |
-| **Grammar** | ⚪️ | 150 | Skipped |
+| **Presentation** | ✅ | 345 | Included in Core |
 | **Days of the Week** | ⚪️ | 20 | Skipped |
 | **Months of the Year** | ⚪️ | 24 | Skipped |
 | **Time Prepositions** | ⚪️ | 68 | Skipped |
-| **Examples in Context** | ✅ | 345 | Included in Core |
-| **Dialogues** | ✅ | 306 | Included in Core |
-| **Практика** | ⚪️ | 21 | Skipped |
+| **Practice** | ⚪️ | 21 | Skipped |
 | **Підсумок** | ✅ | 83 | Included in Core |
 | **Need More Practice?** | ⚪️ | 19 | Skipped |

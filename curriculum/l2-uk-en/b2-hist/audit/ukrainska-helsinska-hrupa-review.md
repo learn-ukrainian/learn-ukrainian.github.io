@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M115 | **Phase:** HIST.11 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-27 23:39:11
+**Generated:** 2026-01-29 23:39:25
 
 ## Configuration
 **Type:** B2-history

@@ -1,12 +1,10 @@
 # Audit Report: M62 — 62-khrestyny-ta-vesillia.md
-
-**Level:** C1 | **Module:** M62 | **Phase:** C1 | **Pedagogy:** Immersion & Analysis | **Target:** 3000
+**Level:** C1 | **Module:** M62 | **Phase:** C1.5 | **Pedagogy:** Immersion & Analysis | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:32
+**Generated:** 2026-01-30 21:14:33
 
 ## Configuration
-
-**Type:** C1
+**Type:** C1-culture
 **Word Target:** 3000 words
 **Activities:** 12-16 required
 **Items per Activity:** ≥12 items
@@ -18,7 +16,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Традиції хрестин | 5 | 5 | ✅ |
@@ -41,13 +38,11 @@
 - Low density activities: 0
 
 ## Recommendation
-
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
 - **Words:** ❌ 2023/3000 (raw: 2352)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
@@ -60,32 +55,29 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
-- **Immersion:** 🇺🇦 99.9% (target 90-100%)
-- **Richness:** ✅ 96% (content)
+- **Immersion:** 🇺🇦 99.9% (target 90-100% (culture))
+- **Richness:** ❌ 89% < 95% min (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
-**Score:** 96% (minimum: 95%)
-**Module Type:** content
+**Score:** 89% (minimum: 95%)
+**Module Type:** cultural
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 14 | 15 | 93% | 25% | 23.2% |
-| engagement | 8 | 5 | 100% | 19% | 18.7% |
-| variety | 0.99 | - | 99% | 12% | 12.4% |
-| cultural | 4 | 4 | 100% | 12% | 12.5% |
-| realworld | 4 | 3 | 100% | 12% | 12.5% |
-| visual | 3 | 4 | 75% | 6% | 4.7% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 11 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **96.6%** |
+| cultural | 4 | 5 | 80% | 33% | 26.7% |
+| engagement | 8 | 6 | 100% | 20% | 20.0% |
+| visual | 3 | 4 | 75% | 13% | 10.0% |
+| variety | 0.99 | - | 99% | 7% | 6.6% |
+| paragraph_var | 1.00 | - | 100% | 7% | 6.7% |
+| examples | 14 | - | 100% | 7% | 6.7% |
+| realworld | 4 | - | 100% | 7% | 6.7% |
+| questions | 11 | 4 | 100% | 7% | 6.7% |
+| **TOTAL** | | | | | **89.9%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 95 | Included in Core |

@@ -1,11 +1,9 @@
 # Audit Report: M42 — 42-politeness-strategies.md
-
-**Level:** C1 | **Module:** M42 | **Phase:** C1 | **Pedagogy:** Sociolinguistics | **Target:** 3000
+**Level:** C1 | **Module:** M42 | **Phase:** C1.4 | **Pedagogy:** Sociolinguistics | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:20
+**Generated:** 2026-01-30 21:14:22
 
 ## Configuration
-
 **Type:** C1
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -18,7 +16,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння стратегій ввічливості | 5 | 5 | ✅ |
@@ -43,13 +40,11 @@
 - Low density activities: 0
 
 ## Recommendation
-
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
 - **Words:** ❌ 2370/3000 (raw: 2626)
 - **Activities:** ✅ 14/12
 - **Density:** ✅ All > 12
@@ -63,40 +58,28 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (14 activities)
 - **Immersion:** 🇺🇦 99.5% (target 90-100%)
-- **Richness:** ❌ 90% < 95% min (content)
+- **Richness:** ✅ 99% (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
-**Score:** 90% (minimum: 95%)
-**Module Type:** content
+**Score:** 99% (minimum: 95%)
+**Module Type:** style
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 47 | 15 | 100% | 25% | 25.0% |
-| engagement | 9 | 5 | 100% | 19% | 18.7% |
-| variety | 0.96 | - | 96% | 12% | 12.0% |
-| cultural | 1 | 4 | 25% | 12% | 3.1% |
-| realworld | 7 | 3 | 100% | 12% | 12.5% |
-| visual | 4 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 12 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **90.1%** |
-
-### Dryness Flags & Fixes
-
-- ❌ **LOW_CULTURAL_ANCHOR**
-  - FIX:
-    Add more cultural references (need 3+ total). Include:
-    - Named Ukrainian places (Поділ, Бесарабський ринок, Острозька академія)
-    - Ukrainian traditions or customs
-    - Contemporary Ukrainian life examples
+| exemplar_texts | 15 | 2 | 100% | 25% | 25.0% |
+| model_answers | 47 | 3 | 100% | 20% | 20.0% |
+| engagement | 9 | 5 | 100% | 15% | 15.0% |
+| register_analysis | 15 | 5 | 100% | 15% | 15.0% |
+| visual | 4 | 4 | 100% | 10% | 10.0% |
+| variety | 0.96 | - | 96% | 5% | 4.8% |
+| cultural | 1 | - | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 89 | Included in Core |

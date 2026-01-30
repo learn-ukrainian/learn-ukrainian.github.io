@@ -1,14 +1,12 @@
 # Audit Report: M17 — 17-register-business-ukrainian.md
-
-**Level:** B2 | **Module:** M17 | **Phase:** B2 | **Pedagogy:** Not Specified | **Target:** 1750
+**Level:** B2 | **Module:** M17 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:27:55
+**Generated:** 2026-01-30 21:18:16
 
 ## Configuration
-
 **Type:** B2-grammar
-**Word Target:** 1750 words
+**Word Target:** 3800 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Структура та формули ділового листування | 16 | 8 | ✅ |
@@ -46,21 +43,18 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (88% overlap): "Просимо надати нам можливість провести безкоштовну презентацію для Вашої команди.". Shares significant keywords with sentence at index 9.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✅ правильно:...'.
   - FIX: Vary sentence structure.
 
 ## Recommendation
-
 **📝 UPDATE** (severity 5/100)
 
 - 2 violations (minor)
 
 ## Gates
-
-- **Words:** ✅ 2164/1750 (raw: 2968)
+- **Words:** ❌ 2164/3800 (raw: 2968)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -73,33 +67,28 @@
 - **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.2% (target 90-100% (grammar))
-- **Richness:** ✅ 99% (grammar)
+- **Richness:** ✅ 99% (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
 **Score:** 99% (minimum: 95%)
-**Module Type:** grammar
+**Module Type:** style
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 98 | 24 | 100% | 20% | 20.0% |
+| exemplar_texts | 5 | 2 | 100% | 25% | 25.0% |
+| model_answers | 98 | 3 | 100% | 20% | 20.0% |
 | engagement | 9 | 5 | 100% | 15% | 15.0% |
-| dialogues | 30 | 4 | 100% | 15% | 15.0% |
-| variety | 0.92 | - | 92% | 10% | 9.2% |
-| cultural | 4 | 3 | 100% | 10% | 10.0% |
-| realworld | 5 | 3 | 100% | 10% | 10.0% |
-| visual | 24 | 3 | 100% | 5% | 5.0% |
+| register_analysis | 15 | 5 | 100% | 15% | 15.0% |
+| visual | 24 | 4 | 100% | 10% | 10.0% |
+| variety | 0.92 | - | 92% | 5% | 4.6% |
+| cultural | 4 | - | 100% | 5% | 5.0% |
 | paragraph_var | 0.97 | - | 97% | 5% | 4.9% |
-| questions | 37 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.0%** |
+| **TOTAL** | | | | | **99.4%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 61 | Included in Core |

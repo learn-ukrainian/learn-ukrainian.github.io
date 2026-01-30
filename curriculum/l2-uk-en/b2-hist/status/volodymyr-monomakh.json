@@ -2,11 +2,11 @@
   "module": "volodymyr-monomakh",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T23:39:16.809569Z",
+  "last_audit": "2026-01-30T13:32:28.710055Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.347263Z",
-    "meta": "2026-01-26T22:20:13.782492Z",
+    "md": "2026-01-30T10:52:01.820767Z",
+    "meta": "2026-01-29T07:38:18.613247Z",
     "activities": "2026-01-27T15:34:55.162983Z",
     "vocabulary": "2026-01-26T23:26:52.733603Z",
     "plan": null
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4460/4000 (raw: 4823)"
+      "message": "4751/4000 (raw: 5111)"
     },
     "activities": {
       "status": "pass",

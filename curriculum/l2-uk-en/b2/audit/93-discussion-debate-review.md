@@ -1,25 +1,23 @@
 # Audit Report: M93 — 93-discussion-debate.md
-
-**Level:** B2 | **Module:** M93 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
+**Level:** B2 | **Module:** M93 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:28:48
+**Generated:** 2026-01-30 21:17:58
 
 ## Configuration
-
 **Type:** B2-skills
-**Word Target:** 1750 words
+**Word Target:** 2000 words
 **Activities:** 14-18 required
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥5 types required
 **Priority Types:** cloze, fill-in, quiz, translate
+**Required Types:** essay-response, reading, true-false
 **Engagement:** ≥6 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння структури дискусії | 10 | 8 | ✅ |
@@ -41,11 +39,11 @@
 - Total activities: 14 (target: 14-18) ✅
 - Unique types: 11 (minimum: 5) ✅
 - Priority types used: 4/4 (cloze, fill-in, quiz, translate) ✅
+- Required types used: 1/3 (true-false) ❌
 - Low density activities: 0
 
 ## Gates
-
-- **Words:** ✅ 4228/1750 (raw: 4400)
+- **Words:** ✅ 4228/2000 (raw: 4400)
 - **Activities:** ✅ 14/14
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/5 types
@@ -58,31 +56,28 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (14 activities)
 - **Immersion:** 🇺🇦 97.2% (target 90-100% (skills))
-- **Richness:** ✅ 98% (content)
+- **Richness:** ✅ 98% (skills)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
-
-**Score:** 98% (minimum: 95%)
-**Module Type:** content
+**Score:** 98% (minimum: 80%)
+**Module Type:** skills
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 100 | 15 | 100% | 25% | 25.0% |
-| engagement | 13 | 5 | 100% | 19% | 18.7% |
-| variety | 0.97 | - | 97% | 12% | 12.1% |
-| cultural | 4 | 4 | 100% | 12% | 12.5% |
-| realworld | 15 | 3 | 100% | 12% | 12.5% |
-| visual | 4 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 0.78 | - | 78% | 6% | 4.9% |
-| questions | 21 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **98.2%** |
+| examples | 100 | 15 | 100% | 26% | 25.5% |
+| engagement | 13 | 5 | 100% | 19% | 19.4% |
+| variety | 0.97 | - | 97% | 12% | 11.9% |
+| cultural | 4 | - | 100% | 12% | 12.2% |
+| realworld | 15 | 3 | 100% | 12% | 12.2% |
+| visual | 4 | 2 | 100% | 6% | 6.1% |
+| paragraph_var | 0.78 | - | 78% | 6% | 4.8% |
+| questions | 21 | 4 | 100% | 6% | 6.1% |
+| **TOTAL** | | | | | **98.3%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 101 | Included in Core |

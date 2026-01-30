@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M02 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 23:38:53
+**Generated:** 2026-01-30 13:32:19
 
 ## Configuration
 **Type:** B2-history
@@ -35,19 +35,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4038/4000 (raw: 4217)
+- **Words:** ✅ 4504/4000 (raw: 4664)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 14/5
+- **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
-- **Immersion:** 🇺🇦 97.4% (target 90-100% (history))
+- **Immersion:** 🇺🇦 97.9% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -59,27 +59,27 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 12 | 3 | 100% | 24% | 23.8% |
-| engagement | 14 | 6 | 100% | 14% | 14.3% |
+| primary_sources | 4 | 3 | 100% | 24% | 23.8% |
+| engagement | 10 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
-| decolonization | 11 | 2 | 100% | 14% | 14.3% |
-| cultural | 7 | 4 | 100% | 10% | 9.5% |
-| visual | 15 | 4 | 100% | 10% | 9.5% |
+| decolonization | 15 | 2 | 100% | 14% | 14.3% |
+| cultural | 5 | 4 | 100% | 10% | 9.5% |
+| visual | 11 | 4 | 100% | 10% | 9.5% |
 | variety | 0.94 | - | 94% | 5% | 4.5% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 10 | 3 | 100% | 5% | 4.8% |
+| questions | 13 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 83 | Included in Core |
-| **Скіфи та сармати — Володарі степу** | ⚪️ | 55 | Skipped |
-| **Розминка** | ⚪️ | 194 | Skipped |
-| **Читання: Скіфи: Імперія золота** | ✅ | 696 | Included in Core |
-| **Сармати: Жінки-воїни та Катафракти** | ⚪️ | 889 | Skipped |
-| **Культура та Мистецтво** | ✅ | 678 | Included in Core |
-| **Первинні джерела** | ✅ | 503 | Included in Core |
-| **Деколонізаційний погляд** | ✅ | 242 | Included in Core |
-| **Підсумок** | ✅ | 394 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Скіфи та сармати — Володарі степу** | ⚪️ | 73 | Skipped |
+| **Розминка** | ⚪️ | 376 | Skipped |
+| **Читання: Скіфи: Імперія золота** | ✅ | 1037 | Included in Core |
+| **Сармати: Жінки-воїни та Катафракти** | ⚪️ | 836 | Skipped |
+| **Культура та Мистецтво** | ✅ | 675 | Included in Core |
+| **Первинні джерела** | ✅ | 495 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 306 | Included in Core |
+| **Підсумок** | ✅ | 436 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 187 | Skipped |

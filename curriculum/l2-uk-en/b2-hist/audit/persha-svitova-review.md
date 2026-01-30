@@ -1,8 +1,8 @@
 # Audit Report: M88 — persha-svitova.md
 **Level:** B2 | **Module:** M88 | **Phase:** HIST.9 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-28 15:23:12
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-29 23:38:54
 
 ## Configuration
 **Type:** B2-history
@@ -33,6 +33,15 @@
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
+
+## TEMPLATE COMPLIANCE
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Читання|Хід|Основні події|Діяльність|Свідки|Великий рейд|Відбудова' found: Діяльність СВУ в таборах полонених, Читання
+  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 5076/4000 (raw: 5248)

@@ -1,25 +1,23 @@
 # Audit Report: M92 — 92-presentation-skills-advanced.md
-
-**Level:** B2 | **Module:** M92 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 1750
+**Level:** B2 | **Module:** M92 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:28:47
+**Generated:** 2026-01-30 21:18:13
 
 ## Configuration
-
 **Type:** B2-skills
-**Word Target:** 1750 words
+**Word Target:** 2000 words
 **Activities:** 14-18 required
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥5 types required
 **Priority Types:** cloze, fill-in, quiz, translate
+**Required Types:** essay-response, reading, true-false
 **Engagement:** ≥6 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Техніки роботи з питаннями | 10 | 8 | ✅ |
@@ -41,11 +39,11 @@
 - Total activities: 14 (target: 14-18) ✅
 - Unique types: 11 (minimum: 5) ✅
 - Priority types used: 3/4 (cloze, fill-in, quiz) ✅
+- Required types used: 2/3 (essay-response, true-false) ❌
 - Low density activities: 0
 
 ## Gates
-
-- **Words:** ✅ 3939/1750 (raw: 4088)
+- **Words:** ✅ 3939/2000 (raw: 4088)
 - **Activities:** ✅ 14/14
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/5 types
@@ -58,33 +56,28 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (14 activities)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (skills))
-- **Richness:** ❌ 89% < 95% min (grammar)
+- **Richness:** ✅ 90% (skills)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
-
-**Score:** 89% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 90% (minimum: 80%)
+**Module Type:** skills
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 86 | 24 | 100% | 20% | 20.0% |
-| engagement | 13 | 5 | 100% | 15% | 15.0% |
-| dialogues | 5 | 4 | 100% | 15% | 15.0% |
-| variety | 0.97 | - | 97% | 10% | 9.7% |
-| cultural | 2 | 3 | 67% | 10% | 6.7% |
-| realworld | 10 | 3 | 100% | 10% | 10.0% |
-| visual | 0 | 3 | 0% | 5% | 0.0% |
-| paragraph_var | 0.58 | - | 58% | 5% | 2.9% |
-| questions | 48 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **89.3%** |
+| examples | 86 | 15 | 100% | 26% | 25.5% |
+| engagement | 13 | 5 | 100% | 19% | 19.4% |
+| variety | 0.97 | - | 97% | 12% | 11.9% |
+| cultural | 2 | - | 100% | 12% | 12.2% |
+| realworld | 10 | 3 | 100% | 12% | 12.2% |
+| visual | 0 | 2 | 0% | 6% | 0.0% |
+| paragraph_var | 0.58 | - | 58% | 6% | 3.6% |
+| questions | 48 | 4 | 100% | 6% | 6.1% |
+| **TOTAL** | | | | | **90.9%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 59 | Included in Core |

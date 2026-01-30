@@ -2,14 +2,14 @@
   "module": "23-register-media-journalistic",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:28:00.073550Z",
+  "last_audit": "2026-01-30T21:18:03.587942Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-11T21:16:22.187307Z",
-    "meta": "2026-01-26T17:21:19.136531Z",
+    "md": "2026-01-27T15:24:10.351851Z",
+    "meta": "2026-01-29T07:39:04.688174Z",
     "activities": "2026-01-11T23:20:02.166004Z",
     "vocabulary": "2026-01-21T22:54:27.952265Z",
-    "plan": "2026-01-26T17:21:19.136276Z"
+    "plan": "2026-01-30T15:04:49.234862Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2086/1750 (raw: 2578)"
+      "message": "2086/2000 (raw: 2578)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,8 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "3 Outline Compliance Errors"
+      "5 Outline Compliance Errors",
+      "Missing required activity types: reading"
     ],
     "pass_count": 4,
     "fail_count": 0

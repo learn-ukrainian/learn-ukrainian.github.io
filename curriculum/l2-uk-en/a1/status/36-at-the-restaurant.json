@@ -2,14 +2,14 @@
   "module": "36-at-the-restaurant",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:25:58.609198Z",
+  "last_audit": "2026-01-30T15:04:00.783297Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-16T00:58:22.253623Z",
     "meta": "2026-01-26T21:56:47.977393Z",
     "activities": "2026-01-16T00:58:18.682793Z",
     "vocabulary": "2026-01-25T01:31:45.030501Z",
-    "plan": "2026-01-26T21:43:02.626575Z"
+    "plan": "2026-01-30T12:24:45.262781Z"
   },
   "gates": {
     "meta": {

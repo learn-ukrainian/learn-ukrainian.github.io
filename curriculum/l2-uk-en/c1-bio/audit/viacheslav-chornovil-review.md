@@ -1,57 +1,43 @@
 # Audit Report: M107 — viacheslav-chornovil.md
-
 **Level:** C1 | **Module:** M107 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:56:50
+**Generated:** 2026-01-30 21:15:42
 
 ## Configuration
-
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
 **Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** essay-response, fill-in, group-sort, match-up, quiz, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥24 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Первинні джерела: Промова В'ячеслава Чорновола | 3 | 1 | ✅ |
 | 2 | reading | Науковий нарис про дисидентський рух | 3 | 1 | ✅ |
-| 3 | quiz | Розуміння біографії | 5 | 5 | ✅ |
-| 4 | fill-in | Політична лексика | 6 | 6 | ✅ |
-| 5 | select | Лінгвістичний аналіз політичного тексту | 5 | 5 | ✅ |
-| 6 | error-correction | Граматика в політичному контексті | 5 | 5 | ✅ |
-| 7 | match-up | Термінологія державотворення | 8 | 6 | ✅ |
-| 8 | true-false | Факти про Чорновола та Рух | 5 | 5 | ✅ |
-| 9 | unjumble | Аналіз політичних тез | 5 | 5 | ✅ |
-| 10 | group-sort | Постаті та поняття незалежності | 12 | 1 | ✅ |
-| 11 | cloze | Шлях борця | 12 | 1 | ✅ |
-| 12 | group-sort | Лексика політичного активізму | 12 | 1 | ✅ |
-| 13 | essay-response | Творча робота: Уроки Чорновола | 1 | 1 | ✅ |
-| 14 | comparative-study | Чорновіл та дисиденти: Порівняння | 1 | 1 | ✅ |
+| 3 | true-false | Факти про Чорновола та Рух | 5 | 5 | ✅ |
+| 4 | essay-response | Творча робота: Уроки Чорновола | 1 | 1 | ✅ |
+| 5 | comparative-study | Чорновіл та дисиденти: Порівняння | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 14 (target: 3-9) ❌
-- Unique types: 12 (minimum: 3) ✅
-- Priority types used: 4/6 (comparative-study, essay-response, quiz, reading) ✅
-- Required types used: 6/6 (essay-response, fill-in, group-sort, match-up, quiz, reading) ✅
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 4 (minimum: 3) ✅
+- Priority types used: 3/6 (comparative-study, essay-response, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
-- **[YAML_SCHEMA_VIOLATION]** Schema error in viacheslav-chornovil.yaml: Schema validation error at key 'options': ['журналіст', 'інженер', 'військовий'] is too short
+- **[YAML_SCHEMA_VIOLATION]** Schema error in viacheslav-chornovil.yaml: Schema validation error at key '1': {'type': 'reading', 'title': 'Науковий нарис про дисидентський рух', 'resource': {'type': 'article', 'url': 'https://history.vn.ua/pidruchniki/ukraine-history-11-class-vlasov-2019-standard-level/16.php', 'title': "Дисидентський рух: В'ячеслав Чорновіл та «Український вісник»"}, 'tasks': ['Яку роль відіграв часопис «Український вісник» у прориві інформаційної блокади?', 'Проаналізуйте лексику, що описує судові процеси над дисидентами.', 'Як історики оцінюють внесок Чорновола у перехід від правозахисної до політичної боротьби?']} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template.md'
   - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template.md'
@@ -62,18 +48,16 @@
   - FIX: Add '## Спадщина' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 
 ## Recommendation
-
 **📝 UPDATE** (severity 35/100)
 
 - 5 violations (moderate)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
 - **Words:** ❌ 1984/4000 (raw: 2252)
-- **Activities:** ✅ 14/3
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 12/3 types
+- **Unique_types:** ✅ 4/3 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
@@ -81,19 +65,17 @@
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ⚠️ Too many activities: 14 (target 3-9)
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
 - **Richness:** ✅ 95% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
 **Score:** 95% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 8 | 4 | 100% | 19% | 19.0% |
@@ -109,7 +91,6 @@
 | **TOTAL** | | | | | **95.2%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 71 | Included in Core |

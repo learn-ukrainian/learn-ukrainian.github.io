@@ -1,13 +1,11 @@
 # Audit Report: M91 — 91-c1-5-checkpoint.md
-
-**Level:** C1 | **Module:** M91 | **Phase:** C1 | **Pedagogy:** Assessment | **Target:** 1750
+**Level:** C1 | **Module:** M91 | **Phase:** C1.5 | **Pedagogy:** Assessment | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:51
+**Generated:** 2026-01-30 21:14:47
 
 ## Configuration
-
 **Type:** C1-checkpoint
-**Word Target:** 1750 words
+**Word Target:** 3000 words
 **Activities:** 14-18 required
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
@@ -18,7 +16,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Народна музика та епос | 14 | 5 | ✅ |
@@ -43,14 +40,12 @@
 - Low density activities: 0
 
 ## Recommendation
-
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ✅ 1891/1750 (raw: 2128)
+- **Words:** ❌ 1891/3000 (raw: 2128)
 - **Activities:** ✅ 14/14
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -63,31 +58,27 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (14 activities)
 - **Immersion:** 🇺🇦 99.2% (checkpoint - no gate)
-- **Richness:** ❌ 94% < 95% min (content)
+- **Richness:** ✅ 98% (checkpoint)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
-**Score:** 94% (minimum: 95%)
-**Module Type:** content
+**Score:** 98% (minimum: 85%)
+**Module Type:** checkpoint
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 22 | 15 | 100% | 25% | 25.0% |
-| engagement | 5 | 5 | 100% | 19% | 18.7% |
-| variety | 0.92 | - | 92% | 12% | 11.5% |
-| cultural | 13 | 4 | 100% | 12% | 12.5% |
-| realworld | 2 | 3 | 67% | 12% | 8.4% |
-| visual | 7 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 24 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **94.9%** |
+| activity_types | 12 | 8 | 100% | 25% | 25.0% |
+| review_sections | 30 | 3 | 100% | 20% | 20.0% |
+| variety | 0.92 | - | 92% | 15% | 13.8% |
+| engagement | 5 | 3 | 100% | 10% | 10.0% |
+| cultural | 13 | - | 100% | 10% | 10.0% |
+| visual | 7 | 3 | 100% | 10% | 10.0% |
+| paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
+| **TOTAL** | | | | | **98.8%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 92 | Included in Core |

@@ -2,11 +2,11 @@
   "module": "pereyaslavska-uhoda",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T23:38:39.824534Z",
+  "last_audit": "2026-01-29T23:38:54.157250Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-24T21:37:36.121398Z",
-    "meta": "2026-01-26T22:20:13.408572Z",
+    "meta": "2026-01-29T07:38:18.647313Z",
     "activities": "2026-01-27T20:32:13.397035Z",
     "vocabulary": "2026-01-27T11:59:24.231549Z",
     "plan": null

@@ -1,8 +1,8 @@
 # Audit Report: M79 — 79-sports-in-ukraine.md
-**Level:** B1 | **Module:** M79 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 1500
+**Level:** B1 | **Module:** M79 | **Phase:** B1 | **Pedagogy:** Not Specified | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 19:16:11
+**Generated:** 2026-01-30 00:45:17
 
 ## Configuration
 **Type:** B1-culture
@@ -11,7 +11,6 @@
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
 **Priority Types:** fill-in, match-up, quiz, reading
-**Required Types:** fill-in, match-up, quiz, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥25 words
@@ -38,7 +37,6 @@
 - Total activities: 13 (target: 8-12) ❌
 - Unique types: 12 (minimum: 4) ✅
 - Priority types used: 4/4 (fill-in, match-up, quiz, reading) ✅
-- Required types used: 4/4 (fill-in, match-up, quiz, reading) ✅
 - Low density activities: 0
 
 ## Gates

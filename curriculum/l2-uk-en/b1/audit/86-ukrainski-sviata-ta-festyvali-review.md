@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M86 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 20:14:49
+**Generated:** 2026-01-30 01:07:36
 
 ## Configuration
 **Type:** B1-culture
@@ -42,7 +42,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2045/1500 (raw: 2121)
+- **Words:** ✅ 2045/1500 (raw: 2130)
 - **Activities:** ✅ 13/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 12/4 types
@@ -70,24 +70,20 @@
 | engagement | 9 | 6 | 100% | 20% | 20.0% |
 | visual | 4 | 4 | 100% | 13% | 13.3% |
 | variety | 0.95 | - | 95% | 7% | 6.3% |
-| paragraph_var | 0.86 | - | 86% | 7% | 5.7% |
+| paragraph_var | 0.87 | - | 87% | 7% | 5.8% |
 | examples | 44 | - | 100% | 7% | 6.7% |
 | realworld | 6 | - | 100% | 7% | 6.7% |
 | questions | 30 | 4 | 100% | 7% | 6.7% |
-| **TOTAL** | | | | | **98.7%** |
+| **TOTAL** | | | | | **98.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 136 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Вступ** | ✅ | 136 | Included in Core |
 | **Історія та культура** | ✅ | 793 | Included in Core |
 | **Сучасність** | ⚪️ | 265 | Skipped |
 | **Практика** | ⚪️ | 177 | Skipped |
-| **Продукція** | ⚪️ | 0 | Skipped |
-| **Діалог 1: Запрошення на свято** | ✅ | 90 | Included in Core |
-| **Діалог 2: Розмова про фестиваль** | ✅ | 90 | Included in Core |
-| **Діалог 3: Привітання зі святом** | ✅ | 107 | Included in Core |
-| **Діалог 4: Обговорення Івана Купала** | ✅ | 141 | Included in Core |
-| **Підсумок** | ✅ | 136 | Included in Core |
-| **Ресурси** | ⚪️ | 0 | Skipped |
+| **Продукція** | ⚪️ | 428 | Skipped |
+| **Підсумок — Як святкують українці** | ✅ | 136 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M36 | **Phase:** B2.3a | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-28 11:06:07
+**Generated:** 2026-01-30 13:32:43
 
 ## Configuration
 **Type:** B2-history
@@ -77,7 +77,7 @@
 | **Вступ** | ✅ | 429 | Included in Core |
 | **Реформація та Контрреформація** | ⚪️ | 582 | Skipped |
 | **Феномен братств** | ⚪️ | 926 | Skipped |
-| **Освітня діяльність братств** | ⚪️ | 895 | Skipped |
+| **Освітня дiяльність братств** | ⚪️ | 895 | Skipped |
 | **Острозька академія: «Волинські Афіни»** | ⚪️ | 602 | Skipped |
 | **Читання** | ✅ | 397 | Included in Core |
 | **Первинні джерела** | ✅ | 560 | Included in Core |

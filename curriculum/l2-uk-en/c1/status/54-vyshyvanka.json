@@ -2,14 +2,14 @@
   "module": "54-vyshyvanka",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:29:28.033816Z",
+  "last_audit": "2026-01-30T21:14:29.998473Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-10T15:26:30.878982Z",
-    "meta": "2026-01-26T17:21:19.496248Z",
+    "md": "2026-01-27T15:24:10.366932Z",
+    "meta": "2026-01-29T07:39:04.772555Z",
     "activities": "2026-01-11T00:20:28.925839Z",
     "vocabulary": null,
-    "plan": "2026-01-26T17:21:19.496067Z"
+    "plan": "2026-01-30T11:46:38.505134Z"
   },
   "gates": {
     "meta": {
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "1956/4000 (raw: 2073) | richness: 89% < 95% min (content)"
+      "violations": 1,
+      "message": "1956/3000 (raw: 2073)"
     },
     "activities": {
       "status": "pass",
@@ -42,8 +42,9 @@
     "status": "fail",
     "blocking_issues": [
       "1 Critical Template Violations",
-      "1 Outline Compliance Errors",
+      "4 Outline Compliance Errors",
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
+      "4 forbidden activity types (use --fix to remove)",
       "Missing required activity types: reading"
     ],
     "pass_count": 1,

@@ -2,14 +2,14 @@
   "module": "73-regions-east",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T19:15:45.002630Z",
+  "last_audit": "2026-01-30T00:32:31.827516Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.350162Z",
+    "md": "2026-01-30T00:30:14.576128Z",
     "meta": "2026-01-27T18:54:47.221669Z",
     "activities": "2026-01-27T19:08:22.506641Z",
     "vocabulary": "2026-01-25T16:02:18.691963Z",
-    "plan": "2026-01-27T19:14:06.371973Z"
+    "plan": "2026-01-30T00:31:27.208848Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1888/1500 (raw: 1982)"
+      "message": "1891/1500 (raw: 1985)"
     },
     "activities": {
       "status": "pass",

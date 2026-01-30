@@ -2,13 +2,13 @@
   "module": "danylo-halytskyi",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T23:37:58.302537Z",
+  "last_audit": "2026-01-30T13:32:34.154031Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.346817Z",
-    "meta": "2026-01-26T22:20:12.985759Z",
-    "activities": "2026-01-25T21:29:25.271963Z",
-    "vocabulary": "2026-01-22T21:48:18.520052Z",
+    "md": "2026-01-29T23:56:54.161600Z",
+    "meta": "2026-01-30T13:28:03.024922Z",
+    "activities": "2026-01-30T13:31:11.966201Z",
+    "vocabulary": "2026-01-29T23:55:30.600326Z",
     "plan": null
   },
   "gates": {
@@ -20,17 +20,17 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4397/4000 (raw: 4556)"
+      "message": "4408/4000 (raw: 4579)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "5/3"
+      "message": "6/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 20 (soft target)"
+      "message": "20/20"
     },
     "naturalness": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
+    "pass_count": 5,
     "fail_count": 0
   }
 }

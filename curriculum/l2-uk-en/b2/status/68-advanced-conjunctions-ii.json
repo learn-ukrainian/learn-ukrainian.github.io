@@ -2,14 +2,14 @@
   "module": "68-advanced-conjunctions-ii",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:28:31.282097Z",
+  "last_audit": "2026-01-30T21:17:45.691311Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-12T12:14:32.199657Z",
-    "meta": "2026-01-26T17:21:19.234434Z",
+    "md": "2026-01-27T15:24:10.352053Z",
+    "meta": "2026-01-29T07:39:04.724140Z",
     "activities": "2026-01-12T12:16:44.045904Z",
     "vocabulary": "2026-01-21T22:54:34.125353Z",
-    "plan": "2026-01-26T17:21:19.234185Z"
+    "plan": "2026-01-30T15:04:49.313401Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2165/1750 (raw: 2361) | pedagogy: 1 violations"
+      "message": "2165/2000 (raw: 2361) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,8 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "4 Outline Compliance Errors"
+      "4 Outline Compliance Errors",
+      "Missing required activity types: reading"
     ],
     "pass_count": 3,
     "fail_count": 1

@@ -2,11 +2,11 @@
   "module": "mekhanizm-teroru",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-28T22:38:03.109198Z",
+  "last_audit": "2026-01-29T23:38:45.042502Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-28T19:06:37.369157Z",
-    "meta": "2026-01-28T19:06:53.770684Z",
+    "meta": "2026-01-29T07:38:18.712345Z",
     "activities": "2026-01-28T19:05:48.471577Z",
     "vocabulary": "2026-01-28T19:08:47.568112Z",
     "plan": null

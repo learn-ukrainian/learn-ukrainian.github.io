@@ -1,14 +1,12 @@
 # Audit Report: M35 — 35-speaking-practice.md
-
-**Level:** C1 | **Module:** M35 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 1750
+**Level:** C1 | **Module:** M35 | **Phase:** C1.2 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:16
+**Generated:** 2026-01-30 21:14:18
 
 ## Configuration
-
 **Type:** C1-checkpoint
-**Word Target:** 1750 words
+**Word Target:** 4000 words
 **Activities:** 14-18 required
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Структура дебатів | 8 | 6 | ✅ |
@@ -46,20 +43,17 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'чи можете...'.
   - FIX: Vary sentence structure.
 
 ## Recommendation
-
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ✅ 2341/1750 (raw: 2486)
+- **Words:** ❌ 2341/4000 (raw: 2486)
 - **Activities:** ✅ 14/14
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 7/4 types
@@ -72,31 +66,27 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.8% (checkpoint - no gate)
-- **Richness:** ❌ 93% < 95% min (content)
+- **Richness:** ✅ 96% (checkpoint)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
-**Score:** 93% (minimum: 95%)
-**Module Type:** content
+**Score:** 96% (minimum: 85%)
+**Module Type:** checkpoint
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 23 | 15 | 100% | 25% | 25.0% |
-| engagement | 10 | 5 | 100% | 19% | 18.7% |
-| variety | 0.98 | - | 98% | 12% | 12.2% |
-| cultural | 2 | 4 | 50% | 12% | 6.2% |
-| realworld | 12 | 3 | 100% | 12% | 12.5% |
-| visual | 11 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 28 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **93.5%** |
+| activity_types | 7 | 8 | 88% | 25% | 22.0% |
+| review_sections | 33 | 3 | 100% | 20% | 20.0% |
+| variety | 0.98 | - | 98% | 15% | 14.7% |
+| engagement | 10 | 3 | 100% | 10% | 10.0% |
+| cultural | 2 | - | 100% | 10% | 10.0% |
+| visual | 11 | 3 | 100% | 10% | 10.0% |
+| paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
+| **TOTAL** | | | | | **96.7%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

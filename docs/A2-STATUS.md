@@ -1,13 +1,13 @@
 # A2 Module Status
 
-**Generated:** 2026-01-27 13:24:16
+**Generated:** 2026-01-30 21:19:46
 **Total Modules:** 70
-**Status:** 70 passing, 0 failing, 0 stubs, 0 errors
+**Status:** 67 passing, 3 failing, 0 stubs, 0 errors
 
 ## Quick Summary
 
-- ✅ **Passing:** 70/70 (100%)
-- ❌ **Failing:** 0/70
+- ✅ **Passing:** 67/70 (95%)
+- ❌ **Failing:** 3/70
 - 📝 **Stubs:** 0/70
 
 ## Module Details
@@ -57,33 +57,33 @@
 | 041 | 41-root-families-i | ✅ PASS | 1540/1000 | - |
 | 042 | 42-root-families-ii | ✅ PASS | 1362/1000 | - |
 | 043 | 43-wf-mastery | ✅ PASS | 1117/1000 | - |
-| 044 | 44-checkpoint-word-formation | ✅ PASS | 985/800 | - |
-| 045 | 45-food-and-cooking | ✅ PASS | 1414/1000 | - |
-| 046 | 46-home-and-furniture | ✅ PASS | 1505/1000 | - |
+| 044 | 44-checkpoint-word-formation | ✅ PASS | 985/855 | - |
+| 045 | 45-food-and-cooking | ✅ PASS | 1414/1400 | - |
+| 046 | 46-home-and-furniture | ✅ PASS | 1505/1500 | - |
 | 047 | 47-nature-and-weather | ✅ PASS | 1696/1000 | - |
-| 048 | 48-emotions-personality | ✅ PASS | 1967/1000 | - |
-| 049 | 49-work-professions | ✅ PASS | 1637/1000 | - |
-| 050 | 50-technology-media | ✅ PASS | 1153/1000 | - |
-| 051 | 51-hobbies-leisure | ✅ PASS | 1280/1000 | - |
-| 052 | 52-education-learning | ✅ PASS | 1068/1000 | - |
-| 053 | 53-shopping-services | ✅ PASS | 1328/1000 | - |
-| 054 | 54-sports-fitness | ✅ PASS | 1339/1000 | - |
+| 048 | 48-emotions-personality | ✅ PASS | 1967/1600 | - |
+| 049 | 49-work-professions | ✅ PASS | 1637/1600 | - |
+| 050 | 50-technology-media | ❌ FAIL | 1153/1350 | - |
+| 051 | 51-hobbies-leisure | ❌ FAIL | 1280/1430 | - |
+| 052 | 52-education-learning | ✅ PASS | 1068/1150 | - |
+| 053 | 53-shopping-services | ❌ FAIL | 1328/1440 | - |
+| 054 | 54-sports-fitness | ✅ PASS | 1339/1405 | - |
 | 055 | 55-health-body | ✅ PASS | 949/1000 | - |
-| 056 | 56-checkpoint-full-grammar | ✅ PASS | 1015/800 | - |
-| 057 | 57-practical-intro | ✅ PASS | 1184/1000 | - |
-| 058 | 58-practical-warm-up | ✅ PASS | 1304/1000 | - |
-| 059 | 59-doctor-visit | ✅ PASS | 1022/1000 | - |
+| 056 | 56-checkpoint-full-grammar | ✅ PASS | 1015/810 | - |
+| 057 | 57-practical-intro | ✅ PASS | 1184/980 | - |
+| 058 | 58-practical-warm-up | ✅ PASS | 1304/1185 | - |
+| 059 | 59-doctor-visit | ✅ PASS | 1022/955 | - |
 | 060 | 60-at-the-pharmacy | ✅ PASS | 1112/1000 | - |
 | 061 | 61-hotel-accommodation | ✅ PASS | 1089/1000 | - |
 | 062 | 62-rental-accommodation | ✅ PASS | 1050/1000 | - |
 | 063 | 63-scheduling-appointments | ✅ PASS | 1616/1000 | - |
-| 064 | 64-scheduling-interviews | ✅ PASS | 1359/1000 | - |
-| 065 | 65-giving-directions | ✅ PASS | 1176/1000 | - |
-| 066 | 66-asking-for-directions | ✅ PASS | 1221/1000 | - |
-| 067 | 67-social-media-ukrainian | ✅ PASS | 1110/1000 | - |
+| 064 | 64-scheduling-interviews | ✅ PASS | 1359/1300 | - |
+| 065 | 65-giving-directions | ✅ PASS | 1176/1095 | - |
+| 066 | 66-asking-for-directions | ✅ PASS | 1221/1145 | - |
+| 067 | 67-social-media-ukrainian | ✅ PASS | 1110/1045 | - |
 | 068 | 68-texting-messaging | ✅ PASS | 1038/1000 | - |
 | 069 | 69-online-services | ✅ PASS | 1145/1000 | - |
-| 070 | 70-a2-final-exam | ✅ PASS | 1163/800 | - |
+| 070 | 70-a2-final-exam | ✅ PASS | 1163/1025 | - |
 
 ---
 

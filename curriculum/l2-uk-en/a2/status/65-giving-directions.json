@@ -2,14 +2,14 @@
   "module": "65-giving-directions",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T13:13:39.791503Z",
+  "last_audit": "2026-01-30T21:13:02.834471Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-17T21:45:15.599582Z",
+    "md": "2026-01-27T15:24:10.366038Z",
     "meta": "2026-01-26T17:21:18.993555Z",
     "activities": "2026-01-17T21:45:15.604457Z",
     "vocabulary": "2026-01-25T15:44:11.625119Z",
-    "plan": "2026-01-27T13:13:35.381475Z"
+    "plan": "2026-01-30T12:32:20.137351Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1176/1000 (raw: 1331)"
+      "message": "1176/1095 (raw: 1331)"
     },
     "activities": {
       "status": "pass",

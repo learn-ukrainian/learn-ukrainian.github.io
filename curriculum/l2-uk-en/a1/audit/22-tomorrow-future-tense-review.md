@@ -1,14 +1,12 @@
 # Audit Report: M22 — 22-tomorrow-future-tense.md
-
-**Level:** A1 | **Module:** M22 | **Phase:** A1 | **Pedagogy:** PPP | **Target:** 750
+**Level:** A1 | **Module:** M22 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 1082
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:25:50
+**Generated:** 2026-01-30 15:13:04
 
 ## Configuration
-
 **Type:** A1-grammar
-**Word Target:** 750 words
+**Word Target:** 1082 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Time Expressions | 10 | 8 | ✅ |
@@ -39,27 +36,15 @@
 - Required types used: 1/1 (fill-in) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: дієслово
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-
-## Recommendation
-
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-
-- **Words:** ✅ 1217/750 (raw: 1741)
+- **Words:** ✅ 1217/1082 (raw: 1742)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 5/1
+- **Vocab:** ✅ 6/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -69,17 +54,16 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Introduction** | ✅ | 30 | Included in Core |
-| **Grammar** | ⚪️ | 169 | Skipped |
-| **Expressing Plans and Intentions** | ⚪️ | 163 | Skipped |
-| **Time Expressions for the Future** | ⚪️ | 38 | Skipped |
-| **Useful Adverbs** | ⚪️ | 82 | Skipped |
-| **Examples in Context** | ✅ | 240 | Included in Core |
-| **Dialogues** | ✅ | 339 | Included in Core |
-| **Практика** | ⚪️ | 21 | Skipped |
+| **Warm-up** | ✅ | 30 | Included in Core |
+| **Presentation** | ✅ | 169 | Included in Core |
+| **Presentatіon: Plans and Intentions** | ⚪️ | 163 | Skipped |
+| **Presentatіon: Time Expressions** | ⚪️ | 38 | Skipped |
+| **Presentatіon: Useful Adverbs** | ⚪️ | 82 | Skipped |
+| **Presentatіon: Examples in Context** | ✅ | 240 | Included in Core |
+| **Presentatіon: Dialogues** | ✅ | 339 | Included in Core |
+| **Practice** | ⚪️ | 21 | Skipped |
 | **Підсумок** | ✅ | 116 | Included in Core |
 | **Need More Practice?** | ⚪️ | 19 | Skipped |

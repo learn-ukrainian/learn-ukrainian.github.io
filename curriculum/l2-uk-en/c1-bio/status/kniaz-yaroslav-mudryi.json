@@ -2,20 +2,20 @@
   "module": "kniaz-yaroslav-mudryi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:55:55.182895Z",
+  "last_audit": "2026-01-30T21:14:59.015461Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-19T14:03:07.158545Z",
-    "meta": "2026-01-26T17:21:20.789035Z",
-    "activities": "2026-01-19T14:01:50.183972Z",
-    "vocabulary": null,
+    "md": "2026-01-29T22:43:06.533641Z",
+    "meta": "2026-01-29T07:39:04.887133Z",
+    "activities": "2026-01-29T22:43:06.509953Z",
+    "vocabulary": "2026-01-29T21:10:02.298804Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
       "status": "pass",
@@ -28,9 +28,9 @@
       "message": "5/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 24 (soft target)"
+      "message": "25/24"
     },
     "naturalness": {
       "status": "pass",
@@ -41,11 +41,9 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "6 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: fill-in, group-sort, match-up, quiz"
+      "6 Outline Compliance Errors"
     ],
-    "pass_count": 3,
-    "fail_count": 1
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

@@ -2,11 +2,11 @@
   "module": "kostiantyn-vasyl-ostrozky",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:56:01.630404Z",
+  "last_audit": "2026-01-30T21:15:02.311772Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-20T00:19:53.205416Z",
-    "meta": "2026-01-26T17:21:20.811112Z",
+    "md": "2026-01-27T15:24:10.348518Z",
+    "meta": "2026-01-29T07:39:04.895871Z",
     "activities": "2026-01-19T22:57:29.321576Z",
     "vocabulary": null,
     "plan": null
@@ -42,8 +42,7 @@
     "status": "fail",
     "blocking_issues": [
       "4 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: quiz"
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],
     "pass_count": 2,
     "fail_count": 2

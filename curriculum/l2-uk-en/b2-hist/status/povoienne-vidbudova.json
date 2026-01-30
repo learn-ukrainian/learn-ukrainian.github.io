@@ -2,11 +2,11 @@
   "module": "povoienne-vidbudova",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-28T23:48:07.448037Z",
+  "last_audit": "2026-01-29T23:38:59.514448Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-28T23:31:47.915642Z",
-    "meta": "2026-01-28T23:46:45.973064Z",
+    "meta": "2026-01-29T07:38:18.721421Z",
     "activities": "2026-01-28T23:38:58.811212Z",
     "vocabulary": "2026-01-28T22:57:08.258846Z",
     "plan": null

@@ -2,14 +2,14 @@
   "module": "85-ukrainian-cuisine",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T20:14:48.994618Z",
+  "last_audit": "2026-01-30T00:51:43.943187Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T20:08:32.422189Z",
+    "md": "2026-01-30T00:49:47.829122Z",
     "meta": "2026-01-26T15:44:41.723566Z",
     "activities": "2026-01-27T20:07:59.130399Z",
     "vocabulary": "2026-01-25T18:00:40.736681Z",
-    "plan": "2026-01-27T20:01:57.902559Z"
+    "plan": "2026-01-30T00:51:35.249900Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1855/1500 (raw: 2215)"
+      "message": "1855/1500 (raw: 2217)"
     },
     "activities": {
       "status": "pass",

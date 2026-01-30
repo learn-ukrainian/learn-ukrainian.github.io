@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M06 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 23:39:20
+**Generated:** 2026-01-30 13:32:22
 
 ## Configuration
 **Type:** B2-history
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4084/4000 (raw: 4369)
+- **Words:** ✅ 4136/4000 (raw: 4422)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/2 types
@@ -81,6 +81,6 @@
 | **Первинні джерела** | ✅ | 242 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 359 | Included in Core |
 | **Археологічні свідчення** | ⚪️ | 334 | Skipped |
-| **Хронологія: Легенди та археологія** | ✅ | 225 | Included in Core |
+| **Хронологія: Легенди та археологія** | ✅ | 277 | Included in Core |
 | **Підсумок** | ✅ | 227 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 243 | Skipped |

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M21 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 23:38:31
+**Generated:** 2026-01-30 13:32:32
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4264/4000 (raw: 4502)
+- **Words:** ✅ 4264/4000 (raw: 4499)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types

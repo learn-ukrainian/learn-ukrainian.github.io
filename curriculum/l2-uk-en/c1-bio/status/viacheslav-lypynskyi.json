@@ -2,12 +2,12 @@
   "module": "viacheslav-lypynskyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:56:33.676624Z",
+  "last_audit": "2026-01-30T21:15:26.382094Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-17T21:45:15.858178Z",
-    "meta": "2026-01-26T17:21:21.134106Z",
-    "activities": "2026-01-17T21:45:15.811216Z",
+    "md": "2026-01-27T15:24:10.348888Z",
+    "meta": "2026-01-29T07:39:04.928078Z",
+    "activities": "2026-01-27T15:34:56.974802Z",
     "vocabulary": null,
     "plan": null
   },
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "2153/4000 (raw: 2385) | pedagogy: 2 violations"
+      "message": "2153/4000 (raw: 2385) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "14/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "warn",

@@ -2,14 +2,14 @@
   "module": "01-passive-voice-system",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:27:44.300166Z",
+  "last_audit": "2026-01-30T21:18:02.845824Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-11T21:07:11.449301Z",
-    "meta": "2026-01-26T17:21:19.045131Z",
+    "meta": "2026-01-29T07:39:04.676359Z",
     "activities": "2026-01-14T09:02:56.020174Z",
     "vocabulary": "2026-01-21T22:54:24.705522Z",
-    "plan": "2026-01-26T17:21:19.044837Z"
+    "plan": "2026-01-30T12:04:00.853914Z"
   },
   "gates": {
     "meta": {
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 1,
-      "message": "1943/1750 (raw: 2337) | pedagogy: 1 violations"
+      "violations": 2,
+      "message": "1943/3800 (raw: 2337) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",

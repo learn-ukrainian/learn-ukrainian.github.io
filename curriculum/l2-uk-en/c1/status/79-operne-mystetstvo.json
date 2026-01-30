@@ -2,14 +2,14 @@
   "module": "79-operne-mystetstvo",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:29:43.849377Z",
+  "last_audit": "2026-01-30T21:14:43.947226Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-13T18:24:25.985557Z",
-    "meta": "2026-01-26T17:21:19.542095Z",
+    "md": "2026-01-27T15:24:10.367186Z",
+    "meta": "2026-01-29T07:39:04.786614Z",
     "activities": "2026-01-13T18:04:58.154778Z",
     "vocabulary": null,
-    "plan": "2026-01-26T17:21:19.541885Z"
+    "plan": "2026-01-30T11:51:48.177387Z"
   },
   "gates": {
     "meta": {
@@ -42,7 +42,7 @@
     "status": "fail",
     "blocking_issues": [
       "1 Critical Template Violations",
-      "1 Outline Compliance Errors",
+      "3 Outline Compliance Errors",
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],
     "pass_count": 1,

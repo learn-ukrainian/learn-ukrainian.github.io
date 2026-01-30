@@ -2,14 +2,14 @@
   "module": "47-set-expressions-i-body-animals",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:28:16.944380Z",
+  "last_audit": "2026-01-30T21:18:03.950235Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-12T00:29:12.837353Z",
-    "meta": "2026-01-26T17:21:19.191059Z",
+    "md": "2026-01-27T15:24:10.351895Z",
+    "meta": "2026-01-29T07:39:04.709287Z",
     "activities": "2026-01-12T00:29:00.473178Z",
     "vocabulary": "2026-01-21T22:54:31.558326Z",
-    "plan": "2026-01-26T17:21:19.190831Z"
+    "plan": "2026-01-30T15:04:49.296783Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2121/1750 (raw: 2521)"
+      "message": "2121/2000 (raw: 2521)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,8 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "2 Outline Compliance Errors"
+      "4 Outline Compliance Errors",
+      "Missing required activity types: reading"
     ],
     "pass_count": 4,
     "fail_count": 0

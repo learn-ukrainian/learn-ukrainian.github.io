@@ -1,11 +1,9 @@
 # Audit Report: M40 — 40-rhetorical-questions.md
-
-**Level:** C1 | **Module:** M40 | **Phase:** C1 | **Pedagogy:** Immersion | **Target:** 3000
+**Level:** C1 | **Module:** M40 | **Phase:** C1.4 | **Pedagogy:** Immersion | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:19
+**Generated:** 2026-01-30 21:14:21
 
 ## Configuration
-
 **Type:** C1
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -18,7 +16,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Сутність риторичного питання | 5 | 5 | ✅ |
@@ -41,24 +38,20 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 40-rhetorical-questions.yaml: Schema validation error at key 'min_words': 100 is less than the minimum of 200
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ' per template 'c1-module-template.md'
   - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/c1-module-template.md.md
 
 ## Recommendation
-
 **📝 UPDATE** (severity 25/100)
 
 - 2 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
 - **Words:** ❌ 2011/3000 (raw: 2121)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
@@ -72,31 +65,28 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
 - **Immersion:** 🇺🇦 99.1% (target 90-100%)
-- **Richness:** ✅ 96% (content)
+- **Richness:** ✅ 99% (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
-**Score:** 96% (minimum: 95%)
-**Module Type:** content
+**Score:** 99% (minimum: 95%)
+**Module Type:** style
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 76 | 15 | 100% | 25% | 25.0% |
-| engagement | 8 | 5 | 100% | 19% | 18.7% |
-| variety | 0.99 | - | 99% | 12% | 12.4% |
-| cultural | 3 | 4 | 75% | 12% | 9.4% |
-| realworld | 7 | 3 | 100% | 12% | 12.5% |
-| visual | 7 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 0.97 | - | 97% | 6% | 6.1% |
-| questions | 71 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **96.6%** |
+| exemplar_texts | 15 | 2 | 100% | 25% | 25.0% |
+| model_answers | 68 | 3 | 100% | 20% | 20.0% |
+| engagement | 8 | 5 | 100% | 15% | 15.0% |
+| register_analysis | 5 | 5 | 100% | 15% | 15.0% |
+| visual | 7 | 4 | 100% | 10% | 10.0% |
+| variety | 0.99 | - | 99% | 5% | 5.0% |
+| cultural | 3 | - | 100% | 5% | 5.0% |
+| paragraph_var | 0.97 | - | 97% | 5% | 4.9% |
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 63 | Included in Core |

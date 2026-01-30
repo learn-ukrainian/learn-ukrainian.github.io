@@ -1,14 +1,12 @@
 # Audit Report: M70 — 70-a2-final-exam.md
-
-**Level:** A2 | **Module:** M70 | **Phase:** A2.6 | **Pedagogy:** TTT | **Target:** 800
+**Level:** A2 | **Module:** M70 | **Phase:** A2.6 | **Pedagogy:** TTT | **Target:** 1025
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 13:23:33
+**Generated:** 2026-01-30 21:13:04
 
 ## Configuration
-
 **Type:** A2-checkpoint
-**Word Target:** 800 words
+**Word Target:** 1025 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥10 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | [етап: 🔍 Розпізнавання] Перевірка лексики A2 | 12 | 8 | ✅ |
@@ -42,19 +39,16 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: родовий, доконаний, кличний, місцевий, орудний
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: орудний, місцевий, вид, доконаний, знахідний
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
-
 **📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
-
-- **Words:** ✅ 1163/800 (raw: 1349)
+- **Words:** ✅ 1163/1025 (raw: 1349)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 10
 - **Unique_types:** ✅ 10/4 types
@@ -71,7 +65,6 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

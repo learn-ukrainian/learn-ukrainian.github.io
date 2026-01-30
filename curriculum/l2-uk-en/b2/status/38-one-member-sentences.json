@@ -2,14 +2,14 @@
   "module": "38-one-member-sentences",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:28:10.677257Z",
+  "last_audit": "2026-01-30T21:18:15.166268Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-11T22:44:02.179723Z",
-    "meta": "2026-01-26T17:21:19.171762Z",
+    "md": "2026-01-27T15:24:10.351851Z",
+    "meta": "2026-01-29T07:39:04.703153Z",
     "activities": "2026-01-11T22:45:15.376743Z",
     "vocabulary": "2026-01-21T22:54:30.229767Z",
-    "plan": "2026-01-26T17:21:19.171532Z"
+    "plan": "2026-01-30T15:04:49.274762Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "1956/1750 (raw: 2526) | pedagogy: 1 violations"
+      "message": "1956/2000 (raw: 2526) (44 short) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,8 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "6 Outline Compliance Errors"
+      "6 Outline Compliance Errors",
+      "Missing required activity types: reading, true-false"
     ],
     "pass_count": 3,
     "fail_count": 1

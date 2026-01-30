@@ -1,26 +1,23 @@
 # Audit Report: M81 — 81-capstone-doslidzhennya.md
-
-**Level:** B2 | **Module:** M81 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2 | **Module:** M81 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:28:40
+**Generated:** 2026-01-30 21:18:05
 
 ## Configuration
-
 **Type:** B2-history
-**Word Target:** 4000 words
+**Word Target:** 2000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading
+**Required Types:** essay-response, reading, true-false
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Термінологія дослідження | 14 | 8 | ✅ |
@@ -40,26 +37,23 @@
 - Total activities: 12 (target: 3-9) ❌
 - Unique types: 6 (minimum: 2) ✅
 - Priority types used: 1/4 (essay-response) ✅
-- Required types used: 1/2 (essay-response) ❌
+- Required types used: 1/3 (essay-response) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 81-capstone-doslidzhennya.yaml: Schema validation error at key '9': {'type': 'fill-in', 'title': 'Лексика дослідника в дії', 'items': [{'sentence': 'Перед початком роботи ми повинні чітко сформулювати робочу ___.', 'answer': 'гіпотезу', 'options': ['гіпотезу', 'анотацію', 'цитату', 'бібліографію']}, {'sentence': 'Для глибокого розуміння проблеми необхідно опрацювати українські ___.', 'answer': 'першоджерела', 'options': ['першоджерела', 'чутки', 'реклами', 'міфи']}, {'sentence': 'Правильне ___ авторів захищає вас від звинувачень у плагіаті.', 'answer': 'цитування', 'options': ['цитування', 'читання', 'малювання', 'ігнорування']}, {'sentence': 'Ваш ___ має містити вступ, основну частину та ґрунтовні висновки.', 'answer': 'звіт', 'options': ['звіт', 'заголовок', 'папір', 'шрифт']}, {'sentence': 'Ми використовуємо ___ аналізу для структурування отриманих даних.', 'answer': 'метод', 'options': ['метод', 'колір', 'звук', 'смак']}, {'sentence': 'Кожна ___ має бути підкріплена перевіреними фактами.', 'answer': 'теза', 'options': ['теза', 'кома', 'цифра', 'книга']}, {'sentence': 'Ретельний ___ джерел дозволяє уникнути помилок у логіці.', 'answer': 'аналіз', 'options': ['аналіз', 'пошук', 'друк', 'вибір']}, {'sentence': "Об'єктивність — це головна ___ будь-якого чесного науковця.", 'answer': 'риса', 'options': ['риса', 'вада', 'помилка', 'проблема']}], 'instruction': 'Вставте правильне дослідницьке поняття у речення.'} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
   - FIX: Add a comparative-study activity to meet advanced richness standards.
 
 ## Recommendation
-
 **📝 UPDATE** (severity 25/100)
 
 - 2 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ❌ 2147/4000 (raw: 2315)
+- **Words:** ✅ 2147/2000 (raw: 2315)
 - **Activities:** ✅ 12/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/2 types
@@ -77,12 +71,10 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-
 **Score:** 91% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 14 | 24 | 58% | 20% | 11.6% |
@@ -98,7 +90,6 @@
 | **TOTAL** | | | | | **91.3%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

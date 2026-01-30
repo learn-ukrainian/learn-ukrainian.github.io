@@ -1,58 +1,48 @@
 # Audit Report: M11 — kostiantyn-ostrozky-elder.md
-
 **Level:** C1 | **Module:** M11 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:55:59
+**Generated:** 2026-01-30 21:15:00
 
 ## Configuration
-
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
 **Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** essay-response, quiz, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥24 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Літописна оповідь про битву під Оршею | 1 | 1 | ✅ |
-| 2 | quiz | Розуміння тексту | 5 | 5 | ✅ |
-| 3 | fill-in | Біографічна лексика | 12 | 6 | ✅ |
-| 4 | match-up | Термінологія | 12 | 6 | ✅ |
-| 5 | group-sort | Визначення регістру | 10 | 1 | ✅ |
-| 6 | error-correction | Граматика в контексті | 10 | 5 | ✅ |
-| 7 | critical-analysis | Аналіз військової тактики Острозького | 1 | 1 | ✅ |
-| 8 | authorial-intent | Ідеологічне значення перемоги | 1 | 1 | ✅ |
-| 9 | essay-response | Есе: Костянтин Острозький — захисник віри та держави | 1 | 1 | ✅ |
-| 10 | comparative-study | Порівняння лідерів: Острозький vs Вишневецький | 1 | 1 | ✅ |
+| 2 | critical-analysis | Аналіз військової тактики Острозького | 1 | 1 | ✅ |
+| 3 | authorial-intent | Ідеологічне значення перемоги | 1 | 1 | ✅ |
+| 4 | essay-response | Есе: Костянтин Острозький — захисник віри та держави | 1 | 1 | ✅ |
+| 5 | comparative-study | Порівняння лідерів: Острозький vs Вишневецький | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 10 (target: 3-9) ❌
-- Unique types: 10 (minimum: 3) ✅
-- Priority types used: 6/6 (authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading) ✅
-- Required types used: 3/3 (essay-response, quiz, reading) ✅
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 3) ✅
+- Priority types used: 5/6 (authorial-intent, comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
 ## Recommendation
-
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
 - **Words:** ✅ 4132/4000 (raw: 4436)
-- **Activities:** ✅ 10/3
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 10/3 types
+- **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
@@ -60,19 +50,17 @@
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ Too many activities: 10 (target 3-9)
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
 - **Richness:** ✅ 95% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-
 **Score:** 95% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 3 | 4 | 75% | 19% | 14.3% |
@@ -88,7 +76,6 @@
 | **TOTAL** | | | | | **95.0%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 201 | Included in Core |
@@ -107,3 +94,4 @@
 | **Роль Острозького в зміцненні стратегічної обороноздатності ВКЛ** | ⚪️ | 145 | Skipped |
 | **Підсумок** | ✅ | 134 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 140 | Skipped |
+| **Activities** | ➖ | 0 | Excluded Type |

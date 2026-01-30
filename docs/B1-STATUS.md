@@ -1,6 +1,6 @@
 # B1 Module Status
 
-**Generated:** 2026-01-28 16:32:00
+**Generated:** 2026-01-30 21:19:46
 **Total Modules:** 92
 **Status:** 92 passing, 0 failing, 0 stubs, 0 errors
 
@@ -84,14 +84,14 @@
 | 068 | 68-synonymy-thinking-verbs | ✅ PASS | 1765/1500 | - |
 | 069 | 69-synonymy-speaking-verbs | ✅ PASS | 1745/1500 | - |
 | 070 | 70-collocations-expressions | ✅ PASS | 1750/1500 | - |
-| 071 | 71-emotional-intelligence | ✅ PASS | 1748/1500 | - |
-| 072 | 72-regions-west | ✅ PASS | 1792/1500 | - |
-| 073 | 73-regions-east | ✅ PASS | 1888/1500 | - |
+| 071 | 71-emotional-intelligence | ✅ PASS | 2703/1500 | - |
+| 072 | 72-regions-west | ✅ PASS | 1795/1500 | - |
+| 073 | 73-regions-east | ✅ PASS | 1891/1500 | - |
 | 074 | 74-regions-south | ✅ PASS | 1699/1500 | - |
-| 075 | 75-regions-center | ✅ PASS | 1790/1500 | - |
+| 075 | 75-regions-center | ✅ PASS | 1793/1500 | - |
 | 076 | 76-ukrainian-music-today | ✅ PASS | 1730/1500 | - |
 | 077 | 77-ukrainian-cinema-and-tv | ✅ PASS | 1708/1500 | - |
-| 078 | 78-technology-and-startups | ✅ PASS | 1621/1500 | - |
+| 078 | 78-technology-and-startups | ✅ PASS | 1657/1500 | - |
 | 079 | 79-sports-in-ukraine | ✅ PASS | 1844/1500 | - |
 | 080 | 80-active-lifestyle | ✅ PASS | 2085/1500 | - |
 | 081 | 81-running-in-ukraine | ✅ PASS | 1627/1500 | - |

@@ -2,11 +2,11 @@
   "module": "rus-ta-susidy",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-27T23:38:51.966025Z",
+  "last_audit": "2026-01-30T13:32:31.458837Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.347134Z",
-    "meta": "2026-01-26T22:20:13.528843Z",
+    "md": "2026-01-30T10:59:03.543511Z",
+    "meta": "2026-01-29T07:38:18.616958Z",
     "activities": "2026-01-27T15:34:54.689658Z",
     "vocabulary": "2026-01-27T16:20:00.105653Z",
     "plan": null
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4569/4000 (raw: 4616)"
+      "message": "4285/4000 (raw: 4332)"
     },
     "activities": {
       "status": "pass",

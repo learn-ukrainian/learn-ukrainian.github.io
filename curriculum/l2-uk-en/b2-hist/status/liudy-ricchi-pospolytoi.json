@@ -2,11 +2,11 @@
   "module": "liudy-ricchi-pospolytoi",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-28T11:13:56.376853Z",
+  "last_audit": "2026-01-30T13:32:45.035368Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.347031Z",
-    "meta": "2026-01-26T22:20:13.295732Z",
+    "meta": "2026-01-30T13:28:03.096694Z",
     "activities": "2026-01-27T15:34:54.238395Z",
     "vocabulary": "2026-01-27T11:24:54.090895Z",
     "plan": null

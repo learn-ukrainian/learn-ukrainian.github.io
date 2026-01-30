@@ -1,14 +1,12 @@
 # Audit Report: M30 — 30-prepositions-iii.md
-
-**Level:** A1 | **Module:** M30 | **Phase:** A1 | **Pedagogy:** PPP | **Target:** 750
+**Level:** A1 | **Module:** M30 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 936
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:25:55
+**Generated:** 2026-01-30 21:10:07
 
 ## Configuration
-
 **Type:** A1-grammar
-**Word Target:** 750 words
+**Word Target:** 936 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Question Words | 10 | 8 | ✅ |
@@ -41,8 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-
-- **Words:** ✅ 1050/750 (raw: 1418)
+- **Words:** ✅ 1121/936 (raw: 1488)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -54,23 +50,21 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 39.5% (target 35-55% (M30))
+- **Immersion:** 🇺🇦 38.1% (target 35-55% (M30))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Warm-up** | ✅ | 84 | Included in Core |
-| **Grammar** | ⚪️ | 22 | Skipped |
-| **Location: Де? (Where?)** | ⚪️ | 53 | Skipped |
-| **Direction: Куди? (Where to?)** | ⚪️ | 66 | Skipped |
-| **Origin: Звідки? (Where from?)** | ⚪️ | 50 | Skipped |
-| **Location vs Direction Pairs** | ⚪️ | 0 | Skipped |
+| **Warm-up** | ✅ | 143 | Included in Core |
+| **Presentation** | ✅ | 17 | Included in Core |
+| **Місце: Де?** | ⚪️ | 53 | Skipped |
+| **Напрямок: Куди?** | ⚪️ | 66 | Skipped |
+| **Походження: Звідки?** | ⚪️ | 50 | Skipped |
 | **Examples in Context** | ✅ | 192 | Included in Core |
 | **Dialogues** | ✅ | 472 | Included in Core |
-| **Практика** | ⚪️ | 13 | Skipped |
+| **Practice** | ⚪️ | 30 | Skipped |
 | **Підсумок** | ✅ | 82 | Included in Core |
 | **Need More Practice?** | ⚪️ | 16 | Skipped |

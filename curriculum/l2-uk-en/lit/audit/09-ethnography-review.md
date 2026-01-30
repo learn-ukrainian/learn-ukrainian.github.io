@@ -1,26 +1,23 @@
 # Audit Report: M09 — 09-ethnography.md
-
-**Level:** LIT | **Module:** M09 | **Phase:** LIT.2 | **Pedagogy:** literature | **Target:** 4000
+**Level:** LIT | **Module:** M09 | **Phase:** LIT.2 | **Pedagogy:** literature | **Target:** 4500
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:57:41
+**Generated:** 2026-01-30 21:16:04
 
 ## Configuration
-
-**Type:** LIT
-**Word Target:** 4000 words
+**Type:** LIT-literature
+**Word Target:** 4500 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** cloze, essay-response, group-sort, match-up, quiz, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥4 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥0 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | comparative-study | Аналіз: Весілля vs Похорон | 1 | 1 | ✅ |
@@ -32,18 +29,16 @@
 - Total activities: 4 (target: 3-9) ✅
 - Unique types: 4 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 2/6 (essay-response, reading) ❌
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
 ## Recommendation
-
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ✅ 4126/4000 (raw: 4624)
+- **Words:** ❌ 4126/4500 (raw: 4624)
 - **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/2 types
@@ -54,35 +49,40 @@
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.7% (target 95-100%)
-- **Richness:** ✅ 99% (literature)
+- **Content_heavy:** ✅ Content-heavy OK (4 activities)
+- **Immersion:** 🇺🇦 99.7% (target 95-100% (literature))
+- **Richness:** ❌ 86% < 95% min (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-
-**Score:** 99% (minimum: 90%)
-**Module Type:** literature
+**Score:** 86% (minimum: 95%)
+**Module Type:** cultural
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
-| literary_citations | 15 | 5 | 100% | 17% | 17.4% |
-| engagement | 4 | 4 | 100% | 13% | 13.0% |
-| historical_context | 11 | 3 | 100% | 13% | 13.0% |
-| essays | 2 | 2 | 100% | 13% | 13.0% |
-| resources | 4 | 3 | 100% | 9% | 8.7% |
-| variety | 1.00 | - | 100% | 4% | 4.3% |
-| cultural | 14 | - | 100% | 4% | 4.3% |
-| visual | 9 | 1 | 100% | 4% | 4.3% |
-| paragraph_var | 1.00 | - | 100% | 4% | 4.3% |
-| **TOTAL** | | | | | **100.0%** |
+| cultural | 14 | 5 | 100% | 33% | 33.3% |
+| engagement | 4 | 6 | 67% | 20% | 13.4% |
+| visual | 9 | 4 | 100% | 13% | 13.3% |
+| variety | 1.00 | - | 100% | 7% | 6.7% |
+| paragraph_var | 1.00 | - | 100% | 7% | 6.7% |
+| examples | 53 | - | 100% | 7% | 6.7% |
+| realworld | 0 | - | 0% | 7% | 0.0% |
+| questions | 18 | 4 | 100% | 7% | 6.7% |
+| **TOTAL** | | | | | **86.7%** |
+
+### Dryness Flags & Fixes
+- ❌ **ABSTRACT_ONLY**
+  - FIX:
+    Add 3+ real-world boxes. Use this exact format:
+    
+    > 🌍 **У реальному житті**
+    >
+    > [Specific scenario: "На співбесіді...", "У магазині...", "На вокзалі..."]
+    > [Example sentence showing grammar in that context]
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 89 | Included in Core |

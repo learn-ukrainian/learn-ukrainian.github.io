@@ -2,12 +2,12 @@
   "module": "dmytro-dontsov",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:56:35.581259Z",
+  "last_audit": "2026-01-30T21:15:28.214704Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-17T21:45:15.822330Z",
-    "meta": "2026-01-26T17:21:20.690267Z",
-    "activities": "2026-01-17T21:45:15.785825Z",
+    "md": "2026-01-27T15:24:10.348180Z",
+    "meta": "2026-01-29T07:39:04.929473Z",
+    "activities": "2026-01-27T15:34:55.455378Z",
     "vocabulary": null,
     "plan": null
   },
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "1985/4000 (raw: 2196) | pedagogy: 2 violations"
+      "message": "1985/4000 (raw: 2196) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "14/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "warn",

@@ -2,12 +2,12 @@
   "module": "vasyl-stus",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:56:51.222171Z",
+  "last_audit": "2026-01-30T21:15:43.176297Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-17T21:45:15.857719Z",
-    "meta": "2026-01-26T17:21:21.112628Z",
-    "activities": "2026-01-17T21:45:15.810564Z",
+    "md": "2026-01-27T15:24:10.348858Z",
+    "meta": "2026-01-29T07:39:04.946172Z",
+    "activities": "2026-01-27T15:34:56.916895Z",
     "vocabulary": null,
     "plan": null
   },
@@ -25,7 +25,7 @@
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "15/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "warn",

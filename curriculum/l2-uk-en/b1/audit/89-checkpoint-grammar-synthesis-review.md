@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M89 | **Phase:** B1.8 | **Pedagogy:** TTT | **Target:** 1200
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 20:14:34
+**Generated:** 2026-01-30 01:09:15
 
 ## Configuration
 **Type:** B1-checkpoint
@@ -43,7 +43,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1651/1200 (raw: 2029)
+- **Words:** ✅ 1651/1200 (raw: 2033)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
@@ -68,7 +68,7 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | activity_types | 10 | 8 | 100% | 25% | 25.0% |
-| review_sections | 21 | 3 | 100% | 20% | 20.0% |
+| review_sections | 22 | 3 | 100% | 20% | 20.0% |
 | variety | 0.88 | - | 88% | 15% | 13.2% |
 | engagement | 6 | 3 | 100% | 10% | 10.0% |
 | cultural | 3 | - | 100% | 10% | 10.0% |
@@ -86,5 +86,5 @@
 | **Навичка 3: Складні речення** | ⚪️ | 264 | Skipped |
 | **Навичка 4: Дієприкметники та пасив** | ⚪️ | 255 | Skipped |
 | **Інтеграція** | ⚪️ | 370 | Skipped |
-| **Підсумок** | ✅ | 22 | Included in Core |
+| **Підсумок — Готовність до B2** | ✅ | 22 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 140 | Skipped |

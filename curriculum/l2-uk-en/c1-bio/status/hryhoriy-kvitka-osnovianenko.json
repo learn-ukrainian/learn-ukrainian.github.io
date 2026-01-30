@@ -1,0 +1,47 @@
+{
+  "module": "hryhoriy-kvitka-osnovianenko",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-01-29T22:41:46.758092Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-29T22:28:36.004507Z",
+    "meta": "2026-01-29T22:36:56.208388Z",
+    "activities": "2026-01-29T22:22:18.214319Z",
+    "vocabulary": "2026-01-29T22:10:36.918025Z",
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4001/4000 (raw: 4049)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/3"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "25/24"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

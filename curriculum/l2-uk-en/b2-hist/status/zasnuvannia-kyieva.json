@@ -2,11 +2,11 @@
   "module": "zasnuvannia-kyieva",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T23:39:20.285647Z",
+  "last_audit": "2026-01-30T13:32:22.590022Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.347288Z",
-    "meta": "2026-01-26T22:20:13.817699Z",
+    "md": "2026-01-30T10:20:53.202516Z",
+    "meta": "2026-01-29T07:38:18.605960Z",
     "activities": "2026-01-25T21:29:25.280770Z",
     "vocabulary": "2026-01-27T15:50:11.693520Z",
     "plan": null
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4084/4000 (raw: 4369)"
+      "message": "4136/4000 (raw: 4422)"
     },
     "activities": {
       "status": "pass",

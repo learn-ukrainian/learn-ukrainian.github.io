@@ -2,12 +2,12 @@
   "module": "marko-vovchok",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:56:14.368028Z",
+  "last_audit": "2026-01-30T21:15:09.392646Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-17T21:45:15.831544Z",
-    "meta": "2026-01-26T17:21:20.884347Z",
-    "activities": "2026-01-17T21:45:15.798142Z",
+    "md": "2026-01-27T15:24:10.348594Z",
+    "meta": "2026-01-29T07:39:04.907924Z",
+    "activities": "2026-01-27T15:34:56.131593Z",
     "vocabulary": null,
     "plan": null
   },
@@ -25,7 +25,7 @@
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "15/3"
+      "message": "7/3"
     },
     "vocabulary": {
       "status": "warn",
@@ -42,8 +42,7 @@
     "status": "fail",
     "blocking_issues": [
       "2 Critical Template Violations",
-      "6 Outline Compliance Errors",
-      "Missing required activity types: group-sort"
+      "6 Outline Compliance Errors"
     ],
     "pass_count": 2,
     "fail_count": 2

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M34 | **Phase:** HIST.4 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 23:38:45
+**Generated:** 2026-01-30 13:32:41
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** comparative-study, critical-analysis, essay-response, reading, true-false
+**Required Types:** essay-response, reading, true-false
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -30,11 +30,11 @@
 - Total activities: 5 (target: 3-9) ✅
 - Unique types: 5 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 5/5 (comparative-study, critical-analysis, essay-response, reading, true-false) ✅
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 5023/4000 (raw: 5099)
+- **Words:** ✅ 5023/4000 (raw: 5097)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -75,7 +75,8 @@
 | **Intro/Narrative** | ✅ | 40 | Included in Core |
 | **Православна церква XVII століття** | ⚪️ | 80 | Skipped |
 | **Вступ** | ✅ | 522 | Included in Core |
-| **Відновлення ієрархії** | ⚪️ | 2248 | Skipped |
+| **Відновлення ієрархії** | ⚪️ | 1868 | Skipped |
+| **Легалізація: Пункти заспокоєння** | ⚪️ | 380 | Skipped |
 | **Читання: Голоси епохи** | ✅ | 206 | Included in Core |
 | **Первинні джерела** | ✅ | 955 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 634 | Included in Core |

@@ -2,14 +2,14 @@
   "module": "50-idioms-body-hands-legs",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:28:19.004154Z",
+  "last_audit": "2026-01-30T21:17:49.797261Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-12T00:40:17.843835Z",
-    "meta": "2026-01-26T17:21:19.197108Z",
+    "md": "2026-01-27T15:24:10.351963Z",
+    "meta": "2026-01-29T07:39:04.711261Z",
     "activities": "2026-01-11T23:20:02.151146Z",
     "vocabulary": "2026-01-21T22:54:32.004989Z",
-    "plan": "2026-01-26T17:21:19.196883Z"
+    "plan": "2026-01-30T15:04:49.306080Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "1867/1750 (raw: 2276) | richness: 86% < 95% min (grammar)"
+      "message": "1867/2000 (raw: 2276)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,8 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "4 Outline Compliance Errors"
+      "2 Outline Compliance Errors",
+      "Missing required activity types: reading"
     ],
     "pass_count": 3,
     "fail_count": 1

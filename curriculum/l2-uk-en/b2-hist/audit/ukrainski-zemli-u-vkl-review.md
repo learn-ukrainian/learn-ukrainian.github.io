@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M30 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 23:39:12
+**Generated:** 2026-01-30 13:32:38
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading
+**Required Types:** essay-response, reading, true-false
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -30,11 +30,11 @@
 - Total activities: 5 (target: 3-9) ✅
 - Unique types: 5 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 2/2 (essay-response, reading) ✅
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4472/4000 (raw: 4719)
+- **Words:** ✅ 4472/4000 (raw: 4723)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -80,5 +80,5 @@
 | **Деколонізаційний погляд** | ✅ | 370 | Included in Core |
 | **Критерії оцінювання** | ⚪️ | 0 | Skipped |
 | **Зразок відповіді** | ⚪️ | 422 | Skipped |
-| **Підсумок** | ✅ | 170 | Included in Core |
+| **Підсумок — Напередодні Люблінської унії** | ✅ | 170 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 224 | Skipped |

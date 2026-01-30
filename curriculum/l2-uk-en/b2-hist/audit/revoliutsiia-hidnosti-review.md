@@ -1,8 +1,8 @@
-# Audit Report: M127 — revoliutsiia-hidnosti.md
-**Level:** B2 | **Module:** M127 | **Phase:** HIST.13 | **Pedagogy:** CBI | **Target:** 4000
+# Audit Report: M126 — revoliutsiia-hidnosti.md
+**Level:** B2 | **Module:** M126 | **Phase:** HIST.13 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-27 23:38:47
+**Generated:** 2026-01-29 23:39:01
 
 ## Configuration
 **Type:** B2-history
@@ -35,10 +35,14 @@
 - **[YAML_SCHEMA_VIOLATION]** Schema error in revoliutsiia-hidnosti.yaml: Insufficient activities: 3 found, minimum 5 required for B2-HIST
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
+## TEMPLATE COMPLIANCE
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Читання|Хід|Основні події|Діяльність|Свідки|Великий рейд|Відбудова' found: Основні події, Читання: Хроніка спротиву
+  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+
 ## Recommendation
 **📝 UPDATE** (severity 25/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates

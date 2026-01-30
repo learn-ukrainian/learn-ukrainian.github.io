@@ -1,14 +1,12 @@
 # Audit Report: M56 — 56-checkpoint-full-grammar.md
-
-**Level:** A2 | **Module:** M56 | **Phase:** A2.5 | **Pedagogy:** TTT | **Target:** 800
+**Level:** A2 | **Module:** M56 | **Phase:** A2.5 | **Pedagogy:** TTT | **Target:** 810
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 13:04:38
+**Generated:** 2026-01-30 21:12:59
 
 ## Configuration
-
 **Type:** A2-checkpoint
-**Word Target:** 800 words
+**Word Target:** 810 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥10 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Vocabulary Categories | 12 | 8 | ✅ |
@@ -44,8 +41,7 @@
 - Low density activities: 0
 
 ## Gates
-
-- **Words:** ✅ 1015/800 (raw: 1305)
+- **Words:** ✅ 1015/810 (raw: 1305)
 - **Activities:** ✅ 12/10
 - **Density:** ✅ All > 10
 - **Unique_types:** ✅ 10/4 types
@@ -62,7 +58,6 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

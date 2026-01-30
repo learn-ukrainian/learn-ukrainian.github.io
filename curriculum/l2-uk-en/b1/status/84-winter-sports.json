@@ -2,14 +2,14 @@
   "module": "84-winter-sports",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T20:14:48.372565Z",
+  "last_audit": "2026-01-30T00:51:43.091803Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T20:07:32.458555Z",
+    "md": "2026-01-30T00:49:46.637993Z",
     "meta": "2026-01-26T15:44:41.719756Z",
     "activities": "2026-01-27T20:07:03.361928Z",
     "vocabulary": "2026-01-25T18:00:40.726164Z",
-    "plan": "2026-01-27T20:01:57.899008Z"
+    "plan": "2026-01-30T00:51:25.660336Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1724/1500 (raw: 1803)"
+      "message": "1724/1500 (raw: 1807)"
     },
     "activities": {
       "status": "pass",

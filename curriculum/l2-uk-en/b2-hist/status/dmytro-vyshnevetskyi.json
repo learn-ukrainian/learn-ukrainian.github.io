@@ -2,11 +2,11 @@
   "module": "dmytro-vyshnevetskyi",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T23:38:00.832456Z",
+  "last_audit": "2026-01-29T23:40:00.914940Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T17:56:21.143611Z",
-    "meta": "2026-01-26T22:20:13.011878Z",
+    "meta": "2026-01-29T07:38:18.637754Z",
     "activities": "2026-01-27T17:58:35.570602Z",
     "vocabulary": "2026-01-23T21:47:24.889795Z",
     "plan": null

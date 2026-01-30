@@ -2,14 +2,14 @@
   "module": "37-word-formation-adverbs-integration",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:28:09.995832Z",
+  "last_audit": "2026-01-30T21:18:12.095293Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-11T22:41:53.577139Z",
-    "meta": "2026-01-26T17:21:19.169106Z",
+    "md": "2026-01-27T15:24:10.351884Z",
+    "meta": "2026-01-29T07:39:04.702501Z",
     "activities": "2026-01-11T22:51:47.528640Z",
     "vocabulary": "2026-01-21T22:54:30.081376Z",
-    "plan": "2026-01-26T17:21:19.168829Z"
+    "plan": "2026-01-30T15:04:49.271844Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2042/1750 (raw: 2842)"
+      "message": "2042/2000 (raw: 2842)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,8 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "3 Outline Compliance Errors"
+      "3 Outline Compliance Errors",
+      "Missing required activity types: reading"
     ],
     "pass_count": 4,
     "fail_count": 0

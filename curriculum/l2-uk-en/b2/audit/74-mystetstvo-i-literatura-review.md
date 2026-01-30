@@ -1,26 +1,23 @@
 # Audit Report: M74 — 74-mystetstvo-i-literatura.md
-
-**Level:** B2 | **Module:** M74 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2 | **Module:** M74 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:28:35
+**Generated:** 2026-01-30 21:17:52
 
 ## Configuration
-
 **Type:** B2-history
-**Word Target:** 4000 words
+**Word Target:** 2000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading
+**Required Types:** essay-response, reading, true-false
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть відповідність: мистецькі терміни | 12 | 8 | ✅ |
@@ -39,25 +36,22 @@
 - Total activities: 11 (target: 3-9) ❌
 - Unique types: 8 (minimum: 2) ✅
 - Priority types used: 1/4 (essay-response) ✅
-- Required types used: 1/2 (essay-response) ❌
+- Required types used: 2/3 (essay-response, true-false) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 74-mystetstvo-i-literatura.yaml: Schema validation error at key '9': {'type': 'fill-in', 'title': 'Заповніть мистецьку критику', 'instruction': 'Оберіть правильні слова для опису твору.', 'items': [{'answer': 'вражає', 'options': ['вражає', 'дивує', 'шокує', 'вражає'], 'sentence': 'Цей твір ___ своєю глибиною.'}, {'answer': 'майстерно', 'options': ['майстерно', 'погано', 'рідко', 'ніколи'], 'sentence': 'Автор ___ використовує метафори.'}, {'answer': 'тривоги', 'options': ['тривоги', 'веселощів', 'байдужості', 'нудьги'], 'sentence': 'Картина створює атмосферу ___.'}, {'answer': 'збалансована', 'options': ['збалансована', 'порушена', 'забута', 'змінена'], 'sentence': 'Композиція вдало ***.'}, {'answer': 'Стиль', 'options': ['Стиль', 'Жанр', 'Сюжет', 'Автор'], 'sentence': '*** нагадує імпресіонізм.'}, {'answer': 'відображає', 'options': ['відображає', 'приховує', 'ігнорує', 'змінює'], 'sentence': 'Твір ___ дух епохи.'}, {'answer': 'тему', 'options': ['тему', 'мету', 'ціль', 'помилку'], 'sentence': 'Визначте головну ___ твору.'}, {'answer': 'символіку', 'options': ['символіку', 'кількість', 'вартість', 'назву'], 'sentence': 'Проаналізуйте ___ образів.'}]} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 74-mystetstvo-i-literatura.yaml: Schema validation error at key '9': {'type': 'fill-in', 'title': 'Заповніть мистецьку критику', 'instruction': 'Оберіть правильні слова для опису твору.', 'items': [{'answer': 'вражає', 'options': ['вражає', 'дивує', 'шокує', 'вражає'], 'sentence': 'Цей твір ___ своєю глибиною.'}, {'answer': 'майстерно', 'options': ['майстерно', 'погано', 'рідко', 'ніколи'], 'sentence': 'Автор ___ використовує метафори.'}, {'answer': 'тривоги', 'options': ['тривоги', 'веселощів', 'байдужості', 'нудьги'], 'sentence': 'Картина створює атмосферу ___.'}, {'answer': 'збалансована', 'options': ['збалансована', 'порушена', 'забута', 'змінена'], 'sentence': 'Композиція вдало ___.'}, {'answer': 'Стиль', 'options': ['Стиль', 'Жанр', 'Сюжет', 'Автор'], 'sentence': '___ нагадує імпресіонізм.'}, {'answer': 'відображає', 'options': ['відображає', 'приховує', 'ігнорує', 'змінює'], 'sentence': 'Твір ___ дух епохи.'}, {'answer': 'тему', 'options': ['тему', 'мету', 'ціль', 'помилку'], 'sentence': 'Визначте головну ___ твору.'}, {'answer': 'символіку', 'options': ['символіку', 'кількість', 'вартість', 'назву'], 'sentence': 'Проаналізуйте ___ образів.'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
   - FIX: Add a comparative-study activity to meet advanced richness standards.
 
 ## Recommendation
-
 **📝 UPDATE** (severity 5/100)
 
 - 2 violations (minor)
 
 ## Gates
-
-- **Words:** ❌ 2002/4000 (raw: 2270)
+- **Words:** ✅ 2002/2000 (raw: 2270)
 - **Activities:** ✅ 11/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 8/2 types
@@ -75,12 +69,10 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-
 **Score:** 91% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 56 | 24 | 100% | 20% | 20.0% |
@@ -96,7 +88,6 @@
 | **TOTAL** | | | | | **91.0%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 50 | Included in Core |

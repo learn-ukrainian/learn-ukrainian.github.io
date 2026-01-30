@@ -1,95 +1,71 @@
 # Audit Report: M22 — ivan-mazepa.md
-
 **Level:** C1 | **Module:** M22 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:56:06
+**Generated:** 2026-01-30 21:15:06
 
 ## Configuration
-
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
 **Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** critical-analysis, essay-response, fill-in, group-sort, match-up, quiz, reading
+**Required Types:** critical-analysis, essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥24 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Державницька та культурна візія Івана Мазепи | 8 | 5 | ✅ |
-| 2 | match-up | Термінологія епохи Мазепинського відродження | 12 | 6 | ✅ |
-| 3 | fill-in | Політика та культура Мазепи: Аналітичний контекст | 12 | 6 | ✅ |
-| 4 | essay-response | Есе: Мазепа як символ європейського вибору | 1 | 1 | ✅ |
-| 5 | comparative-study | Порівняльне дослідження: Моделі лідерства Хмельницького та Мазепи | 1 | 1 | ✅ |
-| 6 | select | Культурна та ідеологічна спадщина Мазепи | 8 | 5 | ✅ |
-| 7 | true-false | Деконструкція пропагандистських міфів про Мазепу | 9 | 5 | ✅ |
-| 8 | mark-the-words | Лексика Бароко та Суверенітету | 7 | 5 | ✅ |
-| 9 | unjumble | Відновлення державницьких декларацій Мазепи | 8 | 5 | ✅ |
-| 10 | cloze | Аналіз культурного суверенітету гетьмана | 12 | 1 | ✅ |
-| 11 | group-sort | Класифікація сфер меценатства Мазепи | 15 | 1 | ✅ |
-| 12 | translate | Професійний переклад державницького дискурсу | 8 | 5 | ✅ |
-| 13 | error-correction | Корекція академічного стилю в нарисах про Мазепу | 9 | 5 | ✅ |
-| 14 | true-false | Перевірка знань про Мазепинське Бароко | 8 | 5 | ✅ |
-| 15 | authorial-intent | Аналіз стратегічних намірів гетьмана-мецената | 1 | 1 | ✅ |
-| 16 | critical-analysis | Критичний розбір Полтавської трагедії | 1 | 1 | ✅ |
+| 1 | essay-response | Есе: Мазепа як символ європейського вибору | 1 | 1 | ✅ |
+| 2 | comparative-study | Порівняльне дослідження: Моделі лідерства Хмельницького та Мазепи | 1 | 1 | ✅ |
+| 3 | true-false | Деконструкція пропагандистських міфів про Мазепу | 9 | 5 | ✅ |
+| 4 | true-false | Перевірка знань про Мазепинське Бароко | 8 | 5 | ✅ |
+| 5 | authorial-intent | Аналіз стратегічних намірів гетьмана-мецената | 1 | 1 | ✅ |
+| 6 | critical-analysis | Критичний розбір Полтавської трагедії | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 16 (target: 3-9) ❌
-- Unique types: 15 (minimum: 3) ✅
-- Priority types used: 5/6 (authorial-intent, comparative-study, critical-analysis, essay-response, quiz) ✅
-- Required types used: 6/7 (critical-analysis, essay-response, fill-in, group-sort, match-up, quiz) ❌
+- Total activities: 6 (target: 3-9) ✅
+- Unique types: 5 (minimum: 3) ✅
+- Priority types used: 4/6 (authorial-intent, comparative-study, critical-analysis, essay-response) ✅
+- Required types used: 2/3 (critical-analysis, essay-response) ❌
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-
-- **[YAML_SCHEMA_VIOLATION]** Schema error in ivan-mazepa.yaml: Schema validation error at key '13': {'type': 'true-false', 'title': 'Перевірка знань про Мазепинське Бароко', 'instruction': 'Визначте правильність тверджень про культурні здобутки епохи.', 'items': [{'statement': 'За часів Мазепи Києво-Печерська лавра була оточена новими мурованими стінами з вежами.', 'correct': True, 'explanation': 'Так, гетьман дбав про безпеку та велич головної святині України.'}, {'statement': 'Богоявленський собор на Подолі був збудований виключно за проектами італійських архітекторів.', 'correct': False, 'explanation': 'Собор був взірцем українського бароко, де поєднувалися місцеві та західні традиції.'}, {'statement': 'Мазепа особисто писав вірші, що були опубліковані у тогочасних збірках.', 'correct': True, 'explanation': 'Гетьман був відомий своєю освіченістю та літературним талантом.'}, {'statement': 'За кошти Мазепи було збудовано понад 20 великих храмів по всій території Гетьманщини.', 'correct': True, 'explanation': 'Це був небачений масштаб меценатства, що визначив обличчя багатьох українських міст.'}, {'statement': 'Мазепа заборонив вивчення латини в академії, щоб запобігти католицьким впливам.', 'correct': False, 'explanation': 'Навпаки, латина залишалася мовою науки та дипломатії, що забезпечувало європейський рівень освіти.'}, {'statement': 'Стиль мазепинського бароко обмежувався лише церковною архітектурою і не впливав на світське будівництво.', 'correct': False, 'explanation': 'Цей стиль проявлявся і в цивільних спорудах (колегіуми, палаци), а також у літературі та графіці.'}, {'statement': 'Гравюри на честь Мазепи часто зображували його герб та алегоричні фігури слави.', 'correct': True, 'explanation': 'Мистецтво гравюри переживало розквіт, прославляючи мецената як мудрого правителя.'}, {'statement': 'Після Полтави російська влада зберегла всі написи з іменем Мазепи на його будівлях.', 'correct': False, 'explanation': "Навпаки, ім'я гетьмана було сколото з фасадів церков у рамках кампанії «забуття пам'яті»."}]} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
 ## TEMPLATE COMPLIANCE
-
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Останні роки' per template 'c1-biography-module-template.md'
   - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 
 ## Recommendation
+**📝 UPDATE** (severity 5/100)
 
-**📝 UPDATE** (severity 25/100)
-
-- 2 violations (minor)
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
+- 1 violations (minor)
 
 ## Gates
-
 - **Words:** ❌ 2111/4000 (raw: 2275)
-- **Activities:** ✅ 16/3
+- **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 15/3 types
+- **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 24 (soft target)
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Vocab:** ⚠️ 15 < 24 (soft target)
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ⚠️ Too many activities: 16 (target 3-9)
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 99.5% (target 95-100% (biography))
 - **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
 **Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 6 | 4 | 100% | 19% | 19.0% |
@@ -105,7 +81,6 @@
 | **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 84 | Included in Core |

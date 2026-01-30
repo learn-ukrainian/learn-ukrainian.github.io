@@ -1,14 +1,12 @@
 # Audit Report: M19 — 19-practice-ii-article-critique.md
-
-**Level:** C1 | **Module:** M19 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
+**Level:** C1 | **Module:** M19 | **Phase:** C1.1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:06
+**Generated:** 2026-01-30 21:14:08
 
 ## Configuration
-
 **Type:** C1
-**Word Target:** 3000 words
+**Word Target:** 4000 words
 **Activities:** 12-16 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Структура рецензії | 8 | 6 | ✅ |
@@ -44,14 +41,12 @@
 - Low density activities: 0
 
 ## Recommendation
-
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ❌ 2015/3000 (raw: 2273)
+- **Words:** ❌ 2015/4000 (raw: 2273)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
@@ -69,12 +64,10 @@
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
 **Score:** 90% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 70 | 15 | 100% | 25% | 25.0% |
@@ -88,7 +81,6 @@
 | **TOTAL** | | | | | **90.2%** |
 
 ### Dryness Flags & Fixes
-
 - ❌ **LOW_CULTURAL_ANCHOR**
   - FIX:
     Add more cultural references (need 3+ total). Include:
@@ -97,7 +89,6 @@
     - Contemporary Ukrainian life examples
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M107 | **Phase:** HIST.10 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-28 22:54:14
+**Generated:** 2026-01-29 23:39:26
 
 ## Configuration
 **Type:** B2-history

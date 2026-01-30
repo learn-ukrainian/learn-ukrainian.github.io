@@ -2,14 +2,14 @@
   "module": "17-register-business-ukrainian",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:27:55.793308Z",
+  "last_audit": "2026-01-30T21:18:16.287775Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-11T21:19:38.055387Z",
-    "meta": "2026-01-26T17:21:19.116799Z",
+    "md": "2026-01-27T15:24:10.351737Z",
+    "meta": "2026-01-29T07:39:04.684319Z",
     "activities": "2026-01-14T13:27:12.540753Z",
     "vocabulary": "2026-01-21T22:54:26.730886Z",
-    "plan": "2026-01-26T17:21:19.116586Z"
+    "plan": "2026-01-29T07:45:40.608158Z"
   },
   "gates": {
     "meta": {
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 1,
-      "message": "2164/1750 (raw: 2968) | pedagogy: 2 violations"
+      "violations": 2,
+      "message": "2164/3800 (raw: 2968) | pedagogy: 2 violations"
     },
     "activities": {
       "status": "pass",

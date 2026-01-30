@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M91 | **Phase:** B1.9 | **Pedagogy:** TBL | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 20:45:11
+**Generated:** 2026-01-30 01:10:27
 
 ## Configuration
 **Type:** B1-skills
@@ -42,7 +42,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1984/1500 (raw: 2283)
+- **Words:** ✅ 1984/1500 (raw: 2288)
 - **Activities:** ✅ 13/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
@@ -88,5 +88,5 @@
 | **Cultural Contexts** | ✅ | 245 | Included in Core |
 | **Інтеграція** | ⚪️ | 136 | Skipped |
 | **Practice: Integrated Tasks** | ⚪️ | 206 | Skipped |
-| **Підсумок** | ✅ | 84 | Included in Core |
+| **Підсумок — Від слова до тексту** | ✅ | 84 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 99 | Skipped |

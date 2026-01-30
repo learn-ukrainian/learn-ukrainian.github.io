@@ -2,14 +2,14 @@
   "module": "33-word-formation-person-suffixes",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:28:07.147039Z",
+  "last_audit": "2026-01-30T21:18:05.501183Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-11T22:32:07.828906Z",
-    "meta": "2026-01-26T17:21:19.159262Z",
+    "md": "2026-01-27T15:24:10.351793Z",
+    "meta": "2026-01-29T07:39:04.699822Z",
     "activities": "2026-01-11T23:20:02.154152Z",
     "vocabulary": "2026-01-21T22:54:29.575314Z",
-    "plan": "2026-01-26T17:21:19.158994Z"
+    "plan": "2026-01-30T15:04:49.260532Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "1975/1750 (raw: 2600)"
+      "message": "1975/2000 (raw: 2600) (25 short)"
     },
     "activities": {
       "status": "pass",
@@ -41,9 +41,10 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "4 Outline Compliance Errors"
+      "5 Outline Compliance Errors",
+      "Missing required activity types: reading"
     ],
-    "pass_count": 4,
+    "pass_count": 3,
     "fail_count": 0
   }
 }

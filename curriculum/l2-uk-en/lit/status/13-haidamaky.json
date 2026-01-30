@@ -2,14 +2,14 @@
   "module": "13-haidamaky",
   "level": "LIT",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:57:46.003375Z",
+  "last_audit": "2026-01-30T21:16:09.233912Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-17T23:22:46.144011Z",
-    "meta": "2026-01-26T17:21:21.822876Z",
+    "md": "2026-01-27T15:24:10.349640Z",
+    "meta": "2026-01-29T07:39:04.965394Z",
     "activities": "2026-01-18T21:10:08.373142Z",
     "vocabulary": null,
-    "plan": "2026-01-26T17:21:21.822609Z"
+    "plan": "2026-01-27T15:19:02.556720Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4007/4000 (raw: 4396)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4007/4500 (raw: 4396)"
     },
     "activities": {
       "status": "pass",
@@ -42,10 +42,9 @@
     "status": "fail",
     "blocking_issues": [
       "5 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: cloze, match-up, quiz"
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],
-    "pass_count": 4,
-    "fail_count": 1
+    "pass_count": 3,
+    "fail_count": 2
   }
 }

@@ -1,93 +1,71 @@
 # Audit Report: M104 — dmytro-pavlychko.md
-
 **Level:** C1 | **Module:** M104 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:56:48
+**Generated:** 2026-01-30 21:15:40
 
 ## Configuration
-
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
 **Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** essay-response, fill-in, group-sort, match-up, quiz, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥24 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Розуміння біографії | 5 | 5 | ✅ |
-| 2 | fill-in | Лексика поезії та політики | 6 | 6 | ✅ |
-| 3 | error-correction | Граматика в біографії | 5 | 5 | ✅ |
-| 4 | match-up | Символи та поняття | 8 | 6 | ✅ |
-| 5 | select | Аналіз діяльності Павличка | 5 | 5 | ✅ |
-| 6 | group-sort | Сфери діяльності | 15 | 1 | ✅ |
-| 7 | fill-in | Прислівники та характеристики | 6 | 6 | ✅ |
-| 8 | error-correction | Складні речення | 5 | 5 | ✅ |
-| 9 | quiz | Критичне мислення | 5 | 5 | ✅ |
-| 10 | true-false | Правда чи міф | 12 | 5 | ✅ |
-| 11 | essay-response | Феномен «Двох кольорів» | 1 | 1 | ✅ |
-| 12 | comparative-study | Поет і влада: Павличко і Тичина | 1 | 1 | ✅ |
+| 1 | true-false | Правда чи міф | 12 | 5 | ✅ |
+| 2 | essay-response | Феномен «Двох кольорів» | 1 | 1 | ✅ |
+| 3 | comparative-study | Поет і влада: Павличко і Тичина | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 12 (target: 3-9) ❌
-- Unique types: 9 (minimum: 3) ✅
-- Priority types used: 3/6 (comparative-study, essay-response, quiz) ✅
-- Required types used: 5/6 (essay-response, fill-in, group-sort, match-up, quiz) ❌
+- Total activities: 3 (target: 3-9) ✅
+- Unique types: 3 (minimum: 3) ✅
+- Priority types used: 2/6 (comparative-study, essay-response) ✅
+- Required types used: 1/2 (essay-response) ❌
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-
-- **[YAML_SCHEMA_VIOLATION]** Schema error in dmytro-pavlychko.yaml: Schema validation error at key '7': {'type': 'error-correction', 'title': 'Складні речення', 'items': [{'sentence': 'Павличко який був поетом став політиком.', 'error': 'Павличко який', 'answer': 'Павличко, який', 'options': ['Павличко який', 'Павличко, який', 'Павличко: який', 'none'], 'explanation': 'Виділення підрядного речення комами.'}, {'sentence': 'Він знав що шлях до свободи важкий.', 'error': 'знав що', 'answer': 'знав, що', 'options': ['знав що', 'знав, що', 'знав: що', 'none'], 'explanation': 'Кома перед «що».'}, {'sentence': 'Коли Україна стала вільною він заплакав.', 'error': 'вільною він', 'answer': 'вільною, він', 'options': ['вільною він', 'вільною, він', 'вільною: він', 'none'], 'explanation': 'Кома між частинами складного речення.'}, {'sentence': 'Це була пісня, яку співали всі.', 'error': 'none', 'answer': '✓', 'options': ['пісня', 'яку', 'співали', '✓'], 'explanation': 'Речення побудоване правильно.'}, {'sentence': "Він хотів, щоб народ пам'ятав історію.", 'error': 'none', 'answer': '✓', 'options': ['хотів', 'щоб', "пам'ятав", '✓'], 'explanation': 'Речення побудоване правильно.'}]} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
 ## TEMPLATE COMPLIANCE
-
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template.md'
   - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template.md'
   - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 
 ## Recommendation
-
 **📝 UPDATE** (severity 25/100)
 
-- 3 violations (minor)
+- 2 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
 - **Words:** ❌ 2155/4000 (raw: 2463)
-- **Activities:** ✅ 12/3
+- **Activities:** ✅ 3/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 9/3 types
+- **Unique_types:** ✅ 3/3 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 0 < 24 (soft target)
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ⚠️ Too many activities: 12 (target 3-9)
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (3 activities)
 - **Immersion:** 🇺🇦 100.0% (target 95-100% (biography))
 - **Richness:** ✅ 97% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
 **Score:** 97% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 6 | 4 | 100% | 19% | 19.0% |
@@ -103,7 +81,6 @@
 | **TOTAL** | | | | | **97.5%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 74 | Included in Core |

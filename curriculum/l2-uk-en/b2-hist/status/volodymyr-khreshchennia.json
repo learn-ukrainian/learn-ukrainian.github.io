@@ -2,11 +2,11 @@
   "module": "volodymyr-khreshchennia",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-27T23:39:16.072717Z",
+  "last_audit": "2026-01-30T13:32:25.985929Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T16:21:14.384126Z",
-    "meta": "2026-01-26T22:20:13.773206Z",
+    "md": "2026-01-30T10:36:49.507312Z",
+    "meta": "2026-01-29T07:38:18.610028Z",
     "activities": "2026-01-27T15:34:55.142690Z",
     "vocabulary": "2026-01-26T23:26:51.950263Z",
     "plan": null
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4048/4000 (raw: 4339)"
+      "message": "4048/4000 (raw: 4340)"
     },
     "activities": {
       "status": "pass",

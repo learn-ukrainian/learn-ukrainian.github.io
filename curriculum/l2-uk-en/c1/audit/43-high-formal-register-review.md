@@ -1,11 +1,9 @@
 # Audit Report: M43 — 43-high-formal-register.md
-
-**Level:** C1 | **Module:** M43 | **Phase:** C1 | **Pedagogy:** Academic | **Target:** 3000
+**Level:** C1 | **Module:** M43 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:21
+**Generated:** 2026-01-30 21:14:23
 
 ## Configuration
-
 **Type:** C1
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -18,7 +16,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Розуміння офіційних текстів | 5 | 5 | ✅ |
@@ -41,13 +38,11 @@
 - Low density activities: 0
 
 ## Recommendation
-
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
 - **Words:** ❌ 2004/3000 (raw: 2166)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
@@ -61,31 +56,28 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
 - **Immersion:** 🇺🇦 98.3% (target 90-100%)
-- **Richness:** ❌ 83% < 95% min (content)
+- **Richness:** ✅ 97% (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
-**Score:** 83% (minimum: 95%)
-**Module Type:** content
+**Score:** 97% (minimum: 95%)
+**Module Type:** style
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 45 | 15 | 100% | 25% | 25.0% |
-| engagement | 8 | 5 | 100% | 19% | 18.7% |
-| variety | 0.98 | - | 98% | 12% | 12.2% |
-| cultural | 2 | 4 | 50% | 12% | 6.2% |
-| realworld | 1 | 3 | 33% | 12% | 4.1% |
-| visual | 3 | 4 | 75% | 6% | 4.7% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 10 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **83.6%** |
+| exemplar_texts | 13 | 2 | 100% | 25% | 25.0% |
+| model_answers | 40 | 3 | 100% | 20% | 20.0% |
+| engagement | 8 | 5 | 100% | 15% | 15.0% |
+| register_analysis | 15 | 5 | 100% | 15% | 15.0% |
+| visual | 3 | 4 | 75% | 10% | 7.5% |
+| variety | 0.98 | - | 98% | 5% | 4.9% |
+| cultural | 2 | - | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **97.4%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 70 | Included in Core |
