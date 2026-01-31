@@ -26,19 +26,26 @@ content_outline:
   - Таблиці (рядки, стовпці, дані)
   - Фотографії та ілюстрації (на зображенні ми бачимо...)
 - section: Мовні засоби презентатора
-  words: 350
+  words: 300
   points:
   - Привернення уваги (Зверніть увагу на...)
   - Пояснення (Це означає, що...)
   - Наголошення (Особливо важливо...)
   - Переходи (Тепер перейдемо до...)
+- section: Узагальнення та резюмування
+  words: 300
+  points:
+  - Як узагальнювати інформацію (Загалом..., Підсумовуючи...)
+  - Резюмування з різних джерел (За даними..., Згідно з...)
+  - Ключові фрази для висновків (Отже..., Таким чином...)
+  - CEFR B1 skill - summarize information from different sources
 - section: Практика — Міні-презентація
   words: 350
   points:
   - 3-хвилинна презентація з візуальним матеріалом
   - Чекліст самооцінки
   - Поширені помилки та як їх уникнути
-word_target: 1750
+word_target: 1900
 vocabulary_hints:
   required:
   - презентація (presentation)
@@ -56,6 +63,11 @@ vocabulary_hints:
   - тенденція (trend)
   - показник (indicator)
   - частка (share/portion)
+  # Summarizing vocabulary
+  - узагальнювати (to summarize/generalize)
+  - резюмувати (to summarize)
+  - джерело (source)
+  - згідно з (according to)
 activity_hints:
 - type: fill-in
   focus: Complete presentation phrases
@@ -83,6 +95,7 @@ objectives:
 - Learner can describe graphs, charts, and tables accurately
 - Learner can use appropriate transition phrases
 - Learner can engage audience with visual materials
+- Learner can summarize information from different sources (CEFR B1)
 grammar:
 - Presentation phrases (Дозвольте представити..., Як бачимо...)
 - Describing trends (зростає на X%, падає вдвічі)

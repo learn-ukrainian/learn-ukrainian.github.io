@@ -1,7 +1,7 @@
 # B1 Curriculum: Path to 10/10
 
 **Created:** 2025-01-31
-**Current Score:** 8.5/10 (updated 2026-01-31)
+**Current Score:** 9.0/10 (updated 2026-01-31)
 **Target Score:** 10/10
 
 ---
@@ -11,14 +11,14 @@
 | Criterion | Weight | Score | Weighted |
 |-----------|--------|-------|----------|
 | Grammar/Content coverage | 15% | 9/10 | 1.35 |
-| Vocabulary coverage | 10% | 8/10 | 0.80 |
-| Skills balance | 15% | 8/10 | 1.20 |
-| State Standard compliance | 15% | 8/10 | 1.20 |
-| CEFR alignment | 10% | 8/10 | 0.80 |
-| Internal consistency | 10% | 8/10 | 0.80 |
+| Vocabulary coverage | 10% | 9/10 | 0.90 |
+| Skills balance | 15% | 9/10 | 1.35 |
+| State Standard compliance | 15% | 9/10 | 1.35 |
+| CEFR alignment | 10% | 9/10 | 0.90 |
+| Internal consistency | 10% | 9/10 | 0.90 |
 | Checkpoint structure | 10% | 8/10 | 0.80 |
 | Audit pass rate | 15% | 10/10 | 1.50 |
-| **Total** | 100% | — | **8.45/10** |
+| **Total** | 100% | — | **9.05/10** |
 
 ---
 
