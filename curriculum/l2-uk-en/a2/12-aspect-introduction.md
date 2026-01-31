@@ -44,7 +44,7 @@ This is the most frequent method. A prefix (like про-, на-, з-, по-, в�
 - **бачити** (seeing) -> **побачити** (noticing/catching sight of)
 - **вчити** (studying) -> **вивчити** (learning/mastering)
 
-**Method 2: Sufffixation (Зміна суфікса)**
+**Method 2: Suffixation (Зміна суфікса)**
 Sometimes the middle of the word changes. These are slightly more complex but very rhythmic once you get used to them.
 
 - **купувати** (process of buying) -> **купити** (the result: a purchase is made)
@@ -53,8 +53,10 @@ Sometimes the middle of the word changes. These are slightly more complex but ve
 **Method 3: Suppletion (Різні корені)**
 Some of the most basic verbs use completely different roots for each aspect. You must memorize these like irregular verbs.
 
-- **говорити** (speaking/talking) -> **сказати** (saying/stating)
+- **казати** (saying/telling) -> **сказати** (said/told - completed)
 - **брати** (taking) -> **взяти** (taken)
+
+> **Note:** You may see **говорити/сказати** paired in some textbooks. However, these verbs have slightly different meanings: говорити = to speak/talk (general), сказати = to say (specific statement). A true aspectual pair shares the same core meaning.
 
 ### Aspect Selection Strategy (Як обрати аспект?)
 
@@ -66,6 +68,27 @@ To choose the right aspect, always ask yourself: **"Am I describing a duration o
    - *Вона завжди купує квіти.* (She always buys flowers).
 3. **Completion markers:** These require the Perfective. Watch out for **нарешті** (at last), **вже** (already), **раптом** (suddenly).
    - *Я вже зробив домашнє завдання!* (I have already done the homework!).
+
+```mermaid
+flowchart TD
+    Q["🎬 What are you describing?"] --> Process{"Process?<br/>Duration?<br/>Repetition?"}
+    Q --> Result{"Result?<br/>Completion?<br/>One-time?"}
+
+    Process -->|"довго, часто,<br/>завжди, кожен день"| Imp["<b>IMPERFECTIVE</b><br/>Недоконаний вид<br/>читати, писати, робити"]
+
+    Result -->|"вже, нарешті,<br/>раптом"| Perf["<b>PERFECTIVE</b><br/>Доконаний вид<br/>прочитати, написати, зробити"]
+
+    Imp --> Movie["🎥 Like a movie<br/>Він <b>читав</b> книгу"]
+    Perf --> Photo["📷 Like a photo<br/>Він <b>прочитав</b> книгу"]
+
+    style Q fill:#fff,stroke:#333,color:#000
+    style Process fill:#fff,stroke:#2e7d32,color:#2e7d32
+    style Result fill:#fff,stroke:#1565c0,color:#1565c0
+    style Imp fill:#fff,stroke:#2e7d32,color:#000
+    style Perf fill:#fff,stroke:#1565c0,color:#000
+    style Movie fill:#fff,stroke:#2e7d32,color:#000
+    style Photo fill:#fff,stroke:#1565c0,color:#000
+```
 
 > [!reflection] **The Philosophy of Done**
 > In Ukrainian culture, there is a strong distinction between the effort (imperfective) and the achievement (perfective). Using the perfective aspect often implies a sense of responsibility and pride in having reached a goal. Коли ви кажете «Я вивчив», ви заявляєте про свою перемогу над темою. Це не просто опис дії, а опис вашого успіху.

@@ -2,12 +2,12 @@
   "module": "12-aspect-introduction",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:12:40.419832Z",
+  "last_audit": "2026-01-31T19:06:16.482220Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.352864Z",
+    "md": "2026-01-31T19:06:00.685488Z",
     "meta": "2026-01-29T07:39:04.586162Z",
-    "activities": "2026-01-25T17:31:56.362574Z",
+    "activities": "2026-01-31T19:06:10.619953Z",
     "vocabulary": "2026-01-25T17:31:26.296475Z",
     "plan": "2026-01-30T12:31:49.568308Z"
   },
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1469/1000 (raw: 1547)"
+      "message": "1575/1000 (raw: 1653)"
     },
     "activities": {
       "status": "pass",

@@ -2,7 +2,7 @@
 **Level:** A2 | **Module:** M12 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 21:12:40
+**Generated:** 2026-01-31 19:06:16
 
 ## Configuration
 **Type:** A2-grammar
@@ -40,7 +40,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1469/1000 (raw: 1547)
+- **Words:** ✅ 1575/1000 (raw: 1653)
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
@@ -52,7 +52,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 48.5% (target 40-50% (A2.1))
+- **Immersion:** 🇺🇦 46.0% (target 40-50% (A2.1))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
@@ -61,7 +61,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Introduction / Вступ** | ✅ | 229 | Included in Core |
-| **Presentation / Презентація** | ✅ | 623 | Included in Core |
+| **Presentation / Презентація** | ✅ | 729 | Included in Core |
 | **Practice / Практика** | ⚪️ | 213 | Skipped |
 | **Dialogues / Діалоги** | ✅ | 244 | Included in Core |
 | **Summary / Підсумок** | ✅ | 102 | Included in Core |
