@@ -4,27 +4,40 @@ sequence: 61
 slug: professional-communication
 version: '2.0'
 title: Професійна комунікація
-subtitle: Professional Communication
+subtitle: Professional & Educational Communication
 content_outline:
 - section: Вступ
-  words: 319
+  words: 250
   points:
-  - Workplace communication needs
+  - Workplace and education communication needs
   - Formal vs informal register
-  - Professional context
-- section: Читання
-  words: 979
+  - Professional and academic context
+- section: На роботі — Робоча комунікація
+  words: 600
   points:
-  - Professional texts and documents
-  - Workplace scenarios
-- section: Діалоги
-  words: 1702
-  points:
-  - Professional dialogues
+  - Workplace vocabulary (колега, керівник, нарада, звіт)
+  - Professional dialogues and scenarios
   - Formal correspondence
-word_target: 3000
+- section: В університеті — Освітня комунікація
+  words: 500
+  points:
+  - Education vocabulary (студент, викладач, лекція, семінар)
+  - Academic communication (іспит, залік, курсова робота)
+  - University life (гуртожиток, бібліотека, деканат)
+- section: Діалоги — Робота та навчання
+  words: 500
+  points:
+  - Professional dialogues (at work scenarios)
+  - Academic dialogues (with professor, classmates)
+- section: Практика
+  words: 400
+  points:
+  - Role-play work and education scenarios
+  - Written communication practice
+word_target: 2250
 vocabulary_hints:
   required:
+  # Work
   - колега (colleague)
   - керівник (manager/supervisor)
   - нарада (meeting)
@@ -33,11 +46,23 @@ vocabulary_hints:
   - співпрацювати (to collaborate)
   - обговорювати (to discuss)
   - відділ (department)
+  # Education (State Standard 3.8)
+  - студент (student)
+  - викладач (lecturer/instructor)
+  - лекція (lecture)
+  - семінар (seminar)
+  - іспит (exam)
+  - залік (credit/pass)
   recommended:
   - презентація (presentation)
   - протокол (minutes/protocol)
   - делегувати (to delegate)
   - координувати (to coordinate)
+  # Education extended
+  - курсова робота (term paper)
+  - гуртожиток (dormitory)
+  - деканат (dean's office)
+  - стипендія (scholarship)
 activity_hints:
 - type: match-up
   focus: Professional noun phrases

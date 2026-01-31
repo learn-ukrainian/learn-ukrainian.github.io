@@ -254,8 +254,8 @@ B1.9: M90-99 (Communication Skills)
 - [x] Created 4 new plans (M89-92)
 - [x] Updated curriculum.yaml
 
-### Phase 7: Thematic Gaps (Priority: Low)
-- [ ] Expand M61 vocabulary (education)
+### Phase 7: Thematic Gaps ✅ COMPLETE
+- [x] Expand M61 vocabulary (education) - added university/academic vocabulary
 
 ---
 

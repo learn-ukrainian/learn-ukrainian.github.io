@@ -81,31 +81,37 @@ This document analyzes compliance gaps between our curriculum plans and the offi
 
 ## B1 Compliance
 
-**Status:** ⚠️ Partial coverage - needs participle phrases and one-member sentences
+**Status:** ✅ Good coverage (updated 2026-01-31)
 
 ### Covered by Curriculum
 
 - ✅ Aspect mastery (perfective/imperfective distinction)
 - ✅ Motion verb pairs (їхати/їздити, летіти/літати)
 - ✅ All verbal forms (tenses, moods)
-- ✅ Passive voice (basics)
+- ✅ Passive voice (including -но/-то forms in M47)
 - ✅ Complex sentence types
 - ✅ Indirect speech
+- ✅ Односкладні речення (added to M50 - означено-особові, неозначено-особові, безособові, інфінітивні)
+- ✅ Participle phrases (M42-46 cover adverbial and passive participles)
+- ✅ Education theme vocabulary (added to M61)
 
-### Gaps to Address
+### Resolved Gaps (2026-01-31)
 
-| Gap | State Standard Requirement | Action |
-|-----|---------------------------|--------|
-| Participle phrases | Дієприкметниковий зворот | Add dedicated module on adjectival participle phrases |
-| Gerund phrases | Дієприслівниковий зворот | Add dedicated module on adverbial participle phrases |
-| One-member sentences | Односкладні речення | Add coverage: означено-особові, неозначено-особові, безособові |
-| Impersonal constructions | Безособові речення | Expand beyond basic "болить" pattern |
-| Synthetic future | Майбутній синтетичний (читатиму) | Add explicit teaching of synthetic future forms |
-| Passive -но/-то | Пасивні форми на -но/-то | Add coverage: Книгу написано. Двері зачинено. |
+| Gap | Resolution |
+|-----|------------|
+| One-member sentences | ✅ Added to M50 (Integrated Grammar Lab) |
+| Passive -но/-то | ✅ Already covered in M47 (Passive Constructions) |
+| Education vocabulary | ✅ Added to M61 (Professional & Educational Communication) |
+
+### Remaining Minor Gaps
+
+| Gap | State Standard Requirement | Priority |
+|-----|---------------------------|----------|
+| Synthetic future | Майбутній синтетичний (читатиму) | Low - covered implicitly, explicit section optional |
 
 ### Priority
 
-**High** - Grammar-heavy level requires explicit participle and sentence structure coverage.
+**Low** - B1 is now well-aligned with State Standard 2024.
 
 ---
 
@@ -252,7 +258,7 @@ Expected requirements include:
 |-------|----------|----------|----------|
 | A1 | ✅ Good | Vocative basics | Low |
 | A2 | ⚠️ Partial | Aspect pairs explicit, свій contrastive | Medium |
-| B1 | ⚠️ Partial | Participle phrases, one-member sentences, synthetic future | High |
+| B1 | ✅ Good | Односкладні + -но/-то added (2026-01-31) | Low |
 | B2 | 🔴 Critical | 0% implemented | Critical |
 | C1 | ✅ Good | Syntactic Period added to M48 | Low |
 | C2 | ✅ Good | Meta-skills strategy for domains | Low |
