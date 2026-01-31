@@ -68,9 +68,9 @@ activity_hints:
   focus: Фрагменти книги «Холодний Яр»
   source: Юрій Горліс-Горський
   items: 4
-- type: true-false
-  focus: Міфи та правда про Холодний Яр
-  items: 10
+- type: critical-analysis
+  focus: 'Спростування міфів: Міфи та правда про Холодний Яр'
+  items: 5
 - type: essay-response
   focus: Чому більшовики називали повстанців «бандитами»?
   word_target: 250

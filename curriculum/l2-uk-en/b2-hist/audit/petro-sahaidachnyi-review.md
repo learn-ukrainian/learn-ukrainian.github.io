@@ -1,12 +1,12 @@
 # Audit Report: M45 — petro-sahaidachnyi.md
-**Level:** B2 | **Module:** M45 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2 | **Module:** M45 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 5200
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-29 23:38:56
+**Generated:** 2026-01-31 12:56:09
 
 ## Configuration
 **Type:** B2-history
-**Word Target:** 4000 words
+**Word Target:** 5200 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 5431/4000 (raw: 5583)
+- **Words:** ✅ 5431/5200 (raw: 5583)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types

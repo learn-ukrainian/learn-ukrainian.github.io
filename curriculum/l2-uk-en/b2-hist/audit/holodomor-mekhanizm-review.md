@@ -1,8 +1,8 @@
 # Audit Report: M101 — holodomor-mekhanizm.md
 **Level:** B2 | **Module:** M101 | **Phase:** HIST.10 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-29 23:40:06
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-31 15:14:27
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** critical-analysis, essay-response, reading
+**Required Types:** comparative-study, critical-analysis, essay-response, reading, true-false
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -30,8 +30,17 @@
 - Total activities: 5 (target: 3-9) ✅
 - Unique types: 5 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
+- Required types used: 5/5 (comparative-study, critical-analysis, essay-response, reading, true-false) ✅
 - Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[INVALID_META_YAML]** Meta YAML Schema Violation at 'content_outline -> 4 -> points -> 0': {'Буксирні бригади': 'методи роботи'} is not of type 'string'
+  - FIX: Correct the YAML structure to match schemas/meta-module.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 4315/4000 (raw: 4364)
@@ -44,7 +53,7 @@
 - **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (history))
 - **Richness:** ✅ 98% (history)

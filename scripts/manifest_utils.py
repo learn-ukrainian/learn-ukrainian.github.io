@@ -102,31 +102,52 @@ def clear_manifest_cache():
 
 @lru_cache(maxsize=256)
 def _load_meta_file(level: str, slug: str) -> dict:
-    """Load and cache meta file for a module."""
+    """Load and cache meta file for a module.
+
+    Also checks plan file for title if meta doesn't have it.
+    """
+    result = {}
+
+    # First try meta file
     meta_dir = CURRICULUM_PATH / level / 'meta'
     meta_path = meta_dir / f"{slug}.yaml"
 
     if meta_path.exists():
         with open(meta_path) as f:
-            return yaml.safe_load(f) or {}
+            result = yaml.safe_load(f) or {}
+    else:
+        # Search for matching meta file by slug field inside or filename match
+        if meta_dir.exists():
+            for meta_file in meta_dir.glob('*.yaml'):
+                try:
+                    content = yaml.safe_load(meta_file.read_text()) or {}
+                    # Match by slug field or filename
+                    if content.get('slug') == slug or meta_file.stem == slug:
+                        result = content
+                        break
+                    # Handle numbered filenames matching numbered slugs
+                    _, base_slug = parse_numbered_slug(slug)
+                    _, file_base = parse_numbered_slug(meta_file.stem)
+                    if file_base == base_slug:
+                        result = content
+                        break
+                except Exception:
+                    continue
 
-    # Search for matching meta file by slug field inside or filename match
-    if meta_dir.exists():
-        for meta_file in meta_dir.glob('*.yaml'):
+    # If no title in meta, check plan file
+    if not result.get('title'):
+        plan_dir = CURRICULUM_PATH / 'plans' / level
+        plan_path = plan_dir / f"{slug}.yaml"
+        if plan_path.exists():
             try:
-                content = yaml.safe_load(meta_file.read_text()) or {}
-                # Match by slug field or filename
-                if content.get('slug') == slug or meta_file.stem == slug:
-                    return content
-                # Handle numbered filenames matching numbered slugs
-                _, base_slug = parse_numbered_slug(slug)
-                _, file_base = parse_numbered_slug(meta_file.stem)
-                if file_base == base_slug:
-                    return content
+                with open(plan_path) as f:
+                    plan_data = yaml.safe_load(f) or {}
+                    if plan_data.get('title'):
+                        result['title'] = plan_data['title']
             except Exception:
-                continue
+                pass
 
-    return {}
+    return result
 
 
 def parse_numbered_slug(slug: str) -> tuple[Optional[int], str]:
@@ -260,6 +281,69 @@ def validate_manifest() -> list[str]:
     return errors
 
 
+def validate_filesystem_match(level: str = None) -> list[str]:
+    """Validate that manifest matches filesystem state.
+
+    Checks:
+    - Every module in manifest has a corresponding .md file
+    - Every .md file has a corresponding manifest entry
+
+    Args:
+        level: Optional level to check (None = all levels)
+
+    Returns:
+        List of error messages (empty if valid)
+    """
+    errors = []
+    manifest = load_manifest()
+
+    levels_to_check = [level] if level else list(manifest.get('levels', {}).keys())
+
+    for lvl in levels_to_check:
+        level_data = manifest.get('levels', {}).get(lvl, {})
+        if not level_data:
+            errors.append(f"{lvl}: not found in manifest")
+            continue
+
+        level_dir = CURRICULUM_PATH / lvl
+        if not level_dir.exists():
+            errors.append(f"{lvl}: directory not found at {level_dir}")
+            continue
+
+        # Get manifest slugs (clean of comments)
+        manifest_slugs = set()
+        for mod_slug in level_data.get('modules', []):
+            if isinstance(mod_slug, str):
+                _, base_slug = parse_numbered_slug(mod_slug)
+                manifest_slugs.add(base_slug)
+
+        # Get filesystem slugs
+        filesystem_slugs = set()
+
+        # Check for numbered files (core levels): 01-slug.md
+        for md_file in level_dir.glob('[0-9]*-*.md'):
+            match = re.match(r'^\d+-(.+)\.md$', md_file.name)
+            if match:
+                filesystem_slugs.add(match.group(1))
+
+        # Check for slug-only files (tracks): slug.md
+        for md_file in level_dir.glob('*.md'):
+            if not md_file.name[0].isdigit() and not md_file.name.startswith('_'):
+                filesystem_slugs.add(md_file.stem)
+
+        # Find mismatches
+        in_manifest_not_fs = manifest_slugs - filesystem_slugs
+        in_fs_not_manifest = filesystem_slugs - manifest_slugs
+
+        for slug in sorted(in_manifest_not_fs):
+            errors.append(f"{lvl}: manifest has '{slug}' but no .md file found")
+
+        for slug in sorted(in_fs_not_manifest):
+            errors.append(f"{lvl}: filesystem has '{slug}.md' but not in manifest")
+
+    return errors
+
+
 def get_manifest_stats() -> dict:
     """Get statistics about the manifest."""
     manifest = load_manifest()
@@ -294,6 +378,7 @@ def main():
     if len(sys.argv) < 2:
         print("Usage:")
         print("  .venv/bin/python scripts/manifest_utils.py validate")
+        print("  .venv/bin/python scripts/manifest_utils.py validate-fs [level]")
         print("  .venv/bin/python scripts/manifest_utils.py stats")
         print("  .venv/bin/python scripts/manifest_utils.py lookup <slug>")
         print("  .venv/bin/python scripts/manifest_utils.py level <level>")
@@ -310,6 +395,18 @@ def main():
             sys.exit(1)
         else:
             print("Manifest is valid!")
+
+    elif cmd == 'validate-fs':
+        level = sys.argv[2] if len(sys.argv) > 2 else None
+        errors = validate_filesystem_match(level)
+        if errors:
+            print(f"Found {len(errors)} filesystem mismatches:\n")
+            for err in errors:
+                print(f"  - {err}")
+            sys.exit(1)
+        else:
+            scope = level or "all levels"
+            print(f"Filesystem matches manifest for {scope}!")
 
     elif cmd == 'stats':
         stats = get_manifest_stats()

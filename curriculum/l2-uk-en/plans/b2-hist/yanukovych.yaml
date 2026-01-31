@@ -68,9 +68,9 @@ activity_hints:
   focus: Документи та розслідування про корупцію
   source: Журналістські матеріали
   items: 4
-- type: true-false
-  focus: Факти про режим Януковича
-  items: 10
+- type: critical-analysis
+  focus: 'Верифікація фактів: Факти про режим Януковича'
+  items: 5
 - type: essay-response
   focus: Як політика Януковича призвела до Революції Гідності?
   word_target: 250

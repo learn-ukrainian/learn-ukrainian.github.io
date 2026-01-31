@@ -40,13 +40,29 @@ cd docusaurus && pnpm start  # In separate terminal
 ### Step 1: Audit Module
 
 ```bash
-# Audit single module (Python)
-.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/05-my-world-objects.md
+# Audit entire level
+npm run audit -- b1
 
-# Audit range (shell loop)
-for i in {1..20}; do
-  .venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/$i-*.md
-done
+# Audit single module
+npm run audit -- b1 5
+
+# Audit range of modules
+npm run audit -- b1 1-10
+
+# Audit specific modules
+npm run audit -- b1 1,3,5,7
+
+# Mixed ranges and numbers
+npm run audit -- b1 1-5,10,15-20
+
+# With auto-fix for YAML issues
+npm run audit -- b1 --fix
+
+# Verbose output (show details)
+npm run audit -- b1 5 --verbose
+
+# Direct script invocation (single file)
+.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/05-my-world-objects.md
 ```
 
 ### Step 2: Generate Output
@@ -147,22 +163,68 @@ Generate human-readable status reports from per-module JSON cache:
 - `scripts/generate_level_status.py {level}` - Generates `docs/{LEVEL}-STATUS.md`
 - `npm run status:{level}` - Shortcut for the above (e.g., `npm run status:b2-hist`)
 
+### Manifest Utilities (RFC #410)
+
+The curriculum manifest (`curriculum.yaml`) is the single source of truth for module ordering.
+
+```bash
+# Validate manifest (no duplicate slugs)
+.venv/bin/python scripts/manifest_utils.py validate
+
+# Validate manifest matches filesystem
+.venv/bin/python scripts/manifest_utils.py validate-fs
+.venv/bin/python scripts/manifest_utils.py validate-fs b2-hist  # Specific level
+
+# Show manifest statistics
+.venv/bin/python scripts/manifest_utils.py stats
+
+# Lookup module by slug
+.venv/bin/python scripts/manifest_utils.py lookup trypillian-civilization
+
+# List modules for level
+.venv/bin/python scripts/manifest_utils.py level b2-hist
+```
+
+**Features:**
+- `[slug:xxx]` link resolution for stable cross-module links
+- Module title fallback: meta YAML → plan YAML → slug
+- Supports both numbered (`01-slug.md`) and slug-only filenames
+
+### Plan Validation
+
+Validate that plan files match the config.py constraints.
+
+```bash
+# Validate plans vs config.py (RUN BEFORE GENERATING CONTENT)
+.venv/bin/python scripts/validate_plan_config.py b1
+.venv/bin/python scripts/validate_plan_config.py b2-hist
+
+# Fix plan word_targets if mismatched
+.venv/bin/python scripts/fix_plan_word_targets.py b1 --dry-run
+.venv/bin/python scripts/fix_plan_word_targets.py b1 --fix
+
+# Fix invalid activity types in B2-HIST plans
+.venv/bin/python scripts/fix_b2hist_activity_types.py --dry-run
+.venv/bin/python scripts/fix_b2hist_activity_types.py --apply
+```
+
 ---
 
 ## Related Documentation
 
-| Document                                         | Purpose                                                                                                  |
-| ------------------------------------------------ | -------------------------------------------------------------------------------------------------------- |
-| `claude_extensions/phases/module-*.md`           | **9-Phase workflow** - Current module creation process (RFC-001)                                         |
-| `claude_extensions/commands/module*.md`          | Module commands reference (`/module`, `/module-sync`, etc.)                                              |
-| `docs/ARCHITECTURE.md`                           | System architecture and quality validation overview                                                      |
-| `docs/ARCHITECTURE-PLANS.md`                     | **Three-layer architecture** - Plans, content, status separation                                         |
-| `docs/l2-uk-en/claude-review-prompt.md`          | Review prompts for Claude - Use these to fix audit issues                                                |
-| `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md` | Quality standards by level (consolidated)                                                                |
-| `docs/MARKDOWN-FORMAT.md`                        | Markdown syntax specification                                                                            |
-| `docs/CONTENT-QUALITY-AUDIT.md`                  | Content quality review system (LLM-based)                                                                |
-| `claude_extensions/commands/review-content-v4.md` | Content quality review command (modular tier system)                                        |
-| `claude_extensions/commands/review-tiers/*.md` | Tier-specific review criteria (beginner, core, seminar, advanced)                                        |
+| Document                                          | Purpose                                                          |
+| ------------------------------------------------- | ---------------------------------------------------------------- |
+| `docs/ARCHITECTURE-PLANS.md`                      | **Three-layer architecture** - Plans, content, status separation |
+| `docs/STATUS-SYSTEM.md`                           | **Status caching system** - Per-module JSON cache                |
+| `docs/RFC-410-MANIFEST-DRIVEN-ARCHITECTURE.md`    | **Manifest architecture** - curriculum.yaml as single source     |
+| `claude_extensions/stages/module-*.md`            | 9-Phase workflow - Module creation process (RFC-001)             |
+| `claude_extensions/commands/module*.md`           | Module commands (`/module`, `/module-sync`, etc.)                |
+| `docs/ARCHITECTURE.md`                            | System architecture and quality validation overview              |
+| `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`  | Quality standards by level (consolidated)                        |
+| `docs/MARKDOWN-FORMAT.md`                         | Markdown syntax specification                                    |
+| `docs/CONTENT-QUALITY-AUDIT.md`                   | Content quality review system (LLM-based)                        |
+| `claude_extensions/commands/review-content-v4.md` | Content quality review command (modular tier system)             |
+| `claude_extensions/commands/review-tiers/*.md`    | Tier-specific review criteria (beginner, core, seminar, advanced)|
 
 ---
 
@@ -371,11 +433,11 @@ Comprehensive check-and-fix loop for a complete module. Orchestrates all QA chec
 | >3 in one component | Rebuild that component |
 | >10 or structural | Consider full rebuild |
 
-**Related QA phases:**
-- `phases/module-meta-qa.md` - Meta validation
-- `phases/module-lesson-qa.md` - Lesson validation
-- `phases/module-act-qa.md` - Activities validation
-- `phases/module-vocab-qa.md` - Vocabulary validation
+**Related QA stages:**
+- `claude_extensions/stages/module-meta-qa.md` - Meta validation
+- `claude_extensions/stages/module-lesson-qa.md` - Lesson validation
+- `claude_extensions/stages/module-act-qa.md` - Activities validation
+- `claude_extensions/stages/module-vocab-qa.md` - Vocabulary validation
 
 ### /meta-fix Command
 
@@ -438,7 +500,7 @@ This command:
 
 **When to use:** After Phase 7 (module-vocab) creates skeleton entries, use this for batch enrichment. For single modules, Phase 7-8 handles vocabulary creation and validation.
 
-**Phase files:** `claude_extensions/phases/module-*.md`
+**Phase files:** `claude_extensions/stages/module-*.md`
 **Command files:** `claude_extensions/commands/module-*.md`
 
 ---
@@ -447,15 +509,18 @@ This command:
 
 ### Core Pipeline (Python)
 
-| Script                  | Purpose                        | Command                                                      |
-| ----------------------- | ------------------------------ | ------------------------------------------------------------ |
-| `pipeline.py`           | Full validation pipeline       | `npm run pipeline l2-uk-en a1 5`                             |
-| `generate_mdx.py`       | Generate MDX for Docusaurus    | `npm run generate l2-uk-en a1 5`                             |
-| `generate_json.py`      | Generate JSON for Vibe app     | `npm run generate:json l2-uk-en a1 5`                        |
-| `validate_mdx.py`       | Validate MDX content integrity | `npm run validate:mdx l2-uk-en a1 5`                         |
-| `validate_html.py`      | Validate browser rendering     | `npm run validate:html l2-uk-en a1 5`                        |
-| `audit_module.py`       | Module quality checker         | `.venv/bin/python scripts/audit_module.py <file>`            |
-| `validate_meta_yaml.py` | Meta YAML schema validation    | `.venv/bin/python scripts/validate_meta_yaml.py --level lit` |
+| Script                    | Purpose                        | Command                                                      |
+| ------------------------- | ------------------------------ | ------------------------------------------------------------ |
+| `audit_level.py`          | Audit level/module/range       | `npm run audit -- b1` or `npm run audit -- b1 1-10`          |
+| `audit_module.py`         | Module quality checker         | `.venv/bin/python scripts/audit_module.py <file>`            |
+| `pipeline.py`             | Full validation pipeline       | `npm run pipeline l2-uk-en a1 5`                             |
+| `generate_mdx.py`         | Generate MDX for Docusaurus    | `npm run generate l2-uk-en a1 5`                             |
+| `generate_json.py`        | Generate JSON for Vibe app     | `npm run generate:json l2-uk-en a1 5`                        |
+| `validate_mdx.py`         | Validate MDX content integrity | `npm run validate:mdx l2-uk-en a1 5`                         |
+| `validate_html.py`        | Validate browser rendering     | `npm run validate:html l2-uk-en a1 5`                        |
+| `validate_meta_yaml.py`   | Meta YAML schema validation    | `.venv/bin/python scripts/validate_meta_yaml.py --level lit` |
+| `manifest_utils.py`       | Manifest validation & lookup   | `.venv/bin/python scripts/manifest_utils.py validate`        |
+| `validate_plan_config.py` | Plan vs config.py validation   | `.venv/bin/python scripts/validate_plan_config.py b1`        |
 
 ### Meta & Vocabulary (Python)
 
@@ -1278,9 +1343,24 @@ npm run status:all             # Generate all levels
 ## NPM Scripts Summary
 
 ```bash
-# Level Status
-npm run status:a2             # Generate A2 status index
-npm run status:b2-hist        # Generate B2-HIST status index
+# Audit (Level/Module/Range)
+npm run audit -- b1           # Audit entire B1 level
+npm run audit -- b1 5         # Audit B1 module 5
+npm run audit -- b1 1-10      # Audit B1 modules 1-10
+npm run audit -- b1 1,3,5     # Audit B1 modules 1, 3, 5
+npm run audit -- b1 --fix     # Audit with YAML auto-fix
+
+# Level Status (per-level shortcuts)
+npm run status:a1             # Generate A1 status
+npm run status:a2             # Generate A2 status
+npm run status:b1             # Generate B1 status
+npm run status:b2             # Generate B2 status
+npm run status:c1             # Generate C1 status
+npm run status:c2             # Generate C2 status
+npm run status:b2-hist        # Generate B2-HIST status
+npm run status:c1-bio         # Generate C1-BIO status
+npm run status:c1-hist        # Generate C1-HIST status
+npm run status:lit            # Generate LIT status
 npm run status:all            # Generate all level status indices
 
 # Full Pipeline (Python)

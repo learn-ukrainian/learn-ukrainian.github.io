@@ -67,8 +67,9 @@ activity_hints:
   focus: The Black Sea strategy of the Zaporozhian Host
 - type: comparative-study
   focus: Cossack Chayka vs. Ottoman Galley
-- type: true-false
-  focus: Technical facts about seafaring
+- type: critical-analysis
+  focus: 'Верифікація фактів: Technical facts about seafaring'
+  items: 4
 focus: history
 pedagogy: CBI
 objectives:

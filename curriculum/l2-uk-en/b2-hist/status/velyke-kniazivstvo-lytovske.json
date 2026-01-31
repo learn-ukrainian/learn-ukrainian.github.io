@@ -2,7 +2,7 @@
   "module": "velyke-kniazivstvo-lytovske",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T13:32:38.196191Z",
+  "last_audit": "2026-01-31T12:55:58.770426Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-30T10:16:01.146479Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4676/4000 (raw: 4927)"
+      "message": "4676/4542 (raw: 4927)"
     },
     "activities": {
       "status": "pass",

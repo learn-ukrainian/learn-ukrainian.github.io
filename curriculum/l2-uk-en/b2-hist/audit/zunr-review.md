@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M92 | **Phase:** HIST.9 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-31 00:45:38
+**Generated:** 2026-01-31 14:27:06
 
 ## Configuration
 **Type:** B2-history
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4749/4000 (raw: 4881)
+- **Words:** ✅ 4732/4000 (raw: 4862)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/2 types
@@ -75,8 +75,8 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 130 | Included in Core |
 | **Вступ: Листопадовий зрив** | ✅ | 460 | Included in Core |
+| **Читання** | ✅ | 69 | Included in Core |
 | **ЗУНР: Держава** | ⚪️ | 745 | Skipped |
-| **Читання: Хроніка подій** | ✅ | 86 | Included in Core |
 | **Акт Злуки (22 січня 1919)** | ⚪️ | 1148 | Skipped |
 | **Первинні джерела** | ✅ | 881 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 517 | Included in Core |

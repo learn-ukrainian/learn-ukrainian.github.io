@@ -62,8 +62,9 @@ activity_hints:
   focus: Administrative documents and chronicles
 - type: essay-response
   focus: Continuity of state-building traditions
-- type: true-false
-  focus: Myths about the Hetmanate governance
+- type: critical-analysis
+  focus: 'Спростування міфів: Myths about the Hetmanate governance'
+  items: 4
 - type: comparative-study
   focus: Cossack vs. Polish administrative models
 focus: history

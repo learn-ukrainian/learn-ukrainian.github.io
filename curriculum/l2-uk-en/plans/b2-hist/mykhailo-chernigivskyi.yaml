@@ -62,7 +62,9 @@ activity_hints:
   title: Подорож Михайла до Орди та його рішення
 - type: essay-response
   prompt: Чому Михайло Чернігівський відмовився виконати язичницькі обряди?
-- type: timeline
-  events: Життєвий шлях князя Михайла від Чернігова до Орди
-- type: true-false
-  topic: Порівняння стратегій українських та московських князів
+- type: critical-analysis
+  focus: 'Критичний аналіз послідовності: '
+  items: 3
+- type: critical-analysis
+  focus: 'Критична оцінка: '
+  items: 4

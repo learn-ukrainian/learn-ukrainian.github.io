@@ -69,8 +69,9 @@ activity_hints:
   focus: The tragedy of the partition of Ukraine
 - type: comparative-study
   focus: Zboriv vs. Andrusovo
-- type: true-false
-  focus: Myths about the truce
+- type: critical-analysis
+  focus: 'Спростування міфів: Myths about the truce'
+  items: 4
 focus: history
 pedagogy: CBI
 objectives:

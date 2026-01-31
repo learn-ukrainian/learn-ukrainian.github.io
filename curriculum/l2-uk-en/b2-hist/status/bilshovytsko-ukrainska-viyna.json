@@ -2,12 +2,12 @@
   "module": "bilshovytsko-ukrainska-viyna",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-29T23:39:52.340957Z",
+  "last_audit": "2026-01-31T14:30:33.543097Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-28T20:24:37.754908Z",
-    "meta": "2026-01-29T07:38:18.690850Z",
-    "activities": "2026-01-28T20:24:32.842547Z",
+    "md": "2026-01-31T14:30:27.507771Z",
+    "meta": "2026-01-31T13:36:52.480576Z",
+    "activities": "2026-01-31T14:29:04.120311Z",
     "vocabulary": "2026-01-28T20:19:16.578930Z",
     "plan": null
   },
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "5063/4000 (raw: 5137)"
+      "message": "4496/4000 (raw: 4601)"
     },
     "activities": {
       "status": "pass",

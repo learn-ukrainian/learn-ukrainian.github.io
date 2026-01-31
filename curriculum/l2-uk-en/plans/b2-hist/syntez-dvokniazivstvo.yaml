@@ -72,7 +72,9 @@ activity_hints:
   title: Порівняння політичних систем Галича та Бахчисарая
 - type: essay-response
   prompt: Як монгольська навала змінила траєкторію розвитку українських земель?
-- type: timeline
-  events: Від падіння Києва до коронації Данила Галицького
-- type: true-false
-  topic: Інституційна спадкоємність Київської Русі
+- type: critical-analysis
+  focus: 'Критичний аналіз послідовності: '
+  items: 3
+- type: critical-analysis
+  focus: 'Критична оцінка: '
+  items: 4

@@ -68,9 +68,9 @@ activity_hints:
   focus: Фрагменти «Історії України-Руси»
   source: Наукові тексти
   items: 4
-- type: true-false
-  focus: Міфи про Грушевського
-  items: 10
+- type: critical-analysis
+  focus: 'Спростування міфів: Міфи про Грушевського'
+  items: 5
 - type: essay-response
   focus: Чому концепція Грушевського досі важлива для української ідентичності?
   word_target: 250

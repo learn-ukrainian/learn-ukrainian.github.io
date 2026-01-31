@@ -68,9 +68,9 @@ activity_hints:
   focus: Програма Руху та виступи лідерів
   source: Архівні документи
   items: 4
-- type: true-false
-  focus: Факти про Рух
-  items: 10
+- type: critical-analysis
+  focus: 'Верифікація фактів: Факти про Рух'
+  items: 5
 - type: essay-response
   focus: Яку роль відіграв Рух у здобутті незалежності України?
   word_target: 250

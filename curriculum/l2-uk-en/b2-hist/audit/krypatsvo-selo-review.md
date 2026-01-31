@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M79 | **Phase:** HIST.8 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-29 23:38:40
+**Generated:** 2026-01-31 13:24:11
 
 ## Configuration
 **Type:** B2-history

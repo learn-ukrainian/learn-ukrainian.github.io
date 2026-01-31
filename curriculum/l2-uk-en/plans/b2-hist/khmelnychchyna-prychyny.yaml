@@ -63,8 +63,9 @@ activity_hints:
   focus: Causes of the uprising
 - type: comparative-study
   focus: Polish vs. Cossack perspective
-- type: true-false
-  focus: Facts about the battles
+- type: critical-analysis
+  focus: 'Верифікація фактів: Facts about the battles'
+  items: 4
 focus: history
 pedagogy: CBI
 objectives:

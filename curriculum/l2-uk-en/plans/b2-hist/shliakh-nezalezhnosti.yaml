@@ -68,9 +68,9 @@ activity_hints:
   focus: Текст Акту про незалежність
   source: Офіційні документи
   items: 4
-- type: true-false
-  focus: Факти про незалежність
-  items: 10
+- type: critical-analysis
+  focus: 'Верифікація фактів: Факти про незалежність'
+  items: 5
 - type: essay-response
   focus: Чому референдум 1 грудня 1991 року став вирішальним для незалежності?
   word_target: 250

@@ -95,6 +95,10 @@ activity_hints:
   - type: essay-response
     focus: Чому міжнародне визнання Голодомору геноцидом важливе для України?
     word_target: 250
+prerequisites:
+  - "b2-hist-101 (Голодомор: Механізм)"
+connects_to:
+  - "b2-hist-103 (Механізм терору)"
 sources:
   - name: 'Голодомор в Україні (1932—1933) — Вікіпедія'
     url: 'https://uk.wikipedia.org/wiki/Голодомор_в_Україні_(1932—1933)'

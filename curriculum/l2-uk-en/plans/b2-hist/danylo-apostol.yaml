@@ -75,11 +75,12 @@ activity_hints:
 - type: essay-response
   focus: Порівняння двох гетьманів
   word_target: 300
-- type: timeline
-  focus: Період від обрання Апостола до ліквідації гетьманства (1727-1764)
-- type: true-false
-  focus: Факти про правління двох гетьманів
-  items: 10
+- type: critical-analysis
+  focus: 'Критичний аналіз послідовності: Період від обрання Апостола до ліквідації гетьманства (1727-1764)'
+  items: 3
+- type: critical-analysis
+  focus: 'Верифікація фактів: Факти про правління двох гетьманів'
+  items: 5
 focus: history
 pedagogy: CBI
 objectives:

@@ -1,8 +1,8 @@
 # Audit Report: M98 — rozstriliane-vidrodzennia.md
-**Level:** B2 | **Module:** M98 | **Phase:** HIST.10 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2 | **Module:** M98 | **Phase:** HIST.10 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-29 23:39:03
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-31 15:15:48
 
 ## Configuration
 **Type:** B2-history
@@ -34,50 +34,50 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4005/4000 (raw: 4124)
+- **Words:** ✅ 4075/4000 (raw: 4188)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 9/5
+- **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 98.3% (target 90-100% (history))
-- **Richness:** ✅ 99% (history)
+- **Immersion:** 🇺🇦 100.0% (target 90-100% (history))
+- **Richness:** ✅ 95% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
+**Score:** 95% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 15 | 3 | 100% | 24% | 23.8% |
-| engagement | 9 | 6 | 100% | 14% | 14.3% |
-| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
+| primary_sources | 10 | 3 | 100% | 24% | 23.8% |
+| engagement | 5 | 6 | 83% | 14% | 11.9% |
+| timeline_markers | 27 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 4 | 4 | 100% | 10% | 9.5% |
-| visual | 10 | 4 | 100% | 10% | 9.5% |
-| variety | 0.99 | - | 99% | 5% | 4.7% |
+| cultural | 3 | 4 | 75% | 10% | 7.1% |
+| visual | 5 | 4 | 100% | 10% | 9.5% |
+| variety | 0.98 | - | 98% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 10 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **100.0%** |
+| questions | 15 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **95.1%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Розстріляне відродження: Постаті** | ⚪️ | 107 | Skipped |
-| **Вступ: Покоління мрійників** | ✅ | 345 | Included in Core |
-| **Читання** | ✅ | 181 | Included in Core |
-| **Ключові постаті** | ⚪️ | 834 | Skipped |
-| **Будинок «Слово»** | ⚪️ | 786 | Skipped |
-| **Первинні джерела** | ✅ | 889 | Included in Core |
-| **Деколонізаційний погляд** | ✅ | 436 | Included in Core |
-| **Підсумок: Сандармох і пам'ять** | ✅ | 427 | Included in Core |
+| **Intro/Narrative** | ✅ | 131 | Included in Core |
+| **Вступ: Покоління мрійників** | ✅ | 440 | Included in Core |
+| **Читання: Хроніка злету і падіння** | ✅ | 46 | Included in Core |
+| **Ключові постаті** | ⚪️ | 938 | Skipped |
+| **Будинок «Слово»** | ⚪️ | 543 | Skipped |
+| **Первинні джерела** | ✅ | 738 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 550 | Included in Core |
+| **Підсумок: Сандармох і пам'ять** | ✅ | 485 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 204 | Skipped |

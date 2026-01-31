@@ -68,9 +68,9 @@ activity_hints:
   focus: Тексти Валуєвського циркуляра та Емського указу
   source: Архівні документи
   items: 4
-- type: true-false
-  focus: Факти про мовні заборони
-  items: 10
+- type: critical-analysis
+  focus: 'Верифікація фактів: Факти про мовні заборони'
+  items: 5
 - type: essay-response
   focus: Чому заборони української мови можна вважати культурним геноцидом?
   word_target: 250

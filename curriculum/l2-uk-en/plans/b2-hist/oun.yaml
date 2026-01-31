@@ -68,9 +68,9 @@ activity_hints:
   focus: Програмові документи ОУН
   source: Архівні матеріали
   items: 4
-- type: true-false
-  focus: Міфи про ОУН
-  items: 10
+- type: critical-analysis
+  focus: 'Спростування міфів: Міфи про ОУН'
+  items: 5
 - type: essay-response
   focus: Як історичний контекст вплинув на радикалізацію українського націоналізму?
   word_target: 250

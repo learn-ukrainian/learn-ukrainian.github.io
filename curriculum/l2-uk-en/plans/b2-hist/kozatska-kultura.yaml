@@ -75,8 +75,9 @@ activity_hints:
   focus: The impact of kobzarstvo on national identity
 - type: comparative-study
   focus: Cossack Baroque vs. Western Baroque styles
-- type: true-false
-  focus: Facts about education and guilds
+- type: critical-analysis
+  focus: 'Верифікація фактів: Facts about education and guilds'
+  items: 4
 focus: history
 pedagogy: CBI
 objectives:

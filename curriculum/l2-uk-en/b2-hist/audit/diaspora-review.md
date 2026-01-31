@@ -1,8 +1,7 @@
 # Audit Report: M118 — diaspora.md
 **Level:** B2 | **Module:** M118 | **Phase:** HIST.11 | **Pedagogy:** CBI | **Target:** 4000
-**Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-29 23:40:00
+**Generated:** 2026-01-31 15:15:19
 
 ## Configuration
 **Type:** B2-history
@@ -17,82 +16,73 @@
 **Vocab Target:** ≥20 words
 **Transliteration:** Not allowed
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | true-false | Визначте, чи є твердження правдивими. | 8 | 8 | ✅ |
-| 2 | true-false | Виберіть правильні відповіді | 8 | 8 | ✅ |
-| 3 | essay-response | Ваша думка | 1 | 1 | ✅ |
-| 4 | comparative-study | Роль діаспори та материка | 1 | 1 | ✅ |
-| 5 | true-false | Які мовні засоби використовуються в тексті для опису ролі діаспори? | 8 | 8 | ✅ |
-
-**Summary:**
-- Total activities: 5 (target: 3-9) ✅
-- Unique types: 3 (minimum: 2) ✅
-- Priority types used: 2/4 (comparative-study, essay-response) ✅
-- Required types used: 1/2 (essay-response) ❌
-- Low density activities: 0
-
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in diaspora.yaml: Schema validation error at key '4': {'type': 'true-false', 'title': 'Які мовні засоби використовуються в тексті для опису ролі діаспори?', 'instruction': 'Визначте, чи використовується цей засіб.', 'items': [{'statement': 'Метафора «ковчег» для позначення рятівної місії.', 'correct': True}, {'statement': 'Урочиста лексика (клейноди, святиня, місія).', 'correct': True}, {'statement': 'Використання жаргонізмів та сленгу.', 'correct': False}, {'statement': 'Історичні терміни (Директорія, УНР, екзил).', 'correct': True}, {'statement': 'Емоційно забарвлені слова (плакали, надія, гідність).', 'correct': True}, {'statement': 'Науковий стиль без емоцій.', 'correct': False}, {'statement': 'Риторичні запитання для привернення уваги.', 'correct': True}, {'statement': 'Велика кількість запозичень з англійської мови.', 'correct': False}]} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in diaspora.yaml: YAML parse error: while parsing a block mapping
+  in "<unicode string>", line 43, column 7:
+        - statement: Василь Барка написав  ... 
+          ^
+expected <block end>, but found '<scalar>'
+  in "<unicode string>", line 45, column 32:
+          explanation: "Тигролови" написав Іван Багряний. Барка нап ... 
+                                   ^
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Читання|Хід|Основні події|Діяльність|Свідки|Великий рейд|Відбудова' found: Читання, Політична діяльність та лобізм
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
+  - FIX: Add a essay-response activity to meet advanced richness standards.
+- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
+  - FIX: Add a comparative-study activity to meet advanced richness standards.
 
 ## Recommendation
-**📝 UPDATE** (severity 25/100)
+**📝 UPDATE** (severity 30/100)
 
-- 2 violations (minor)
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
+- 3 violations (minor)
+- Activity count below minimum
+- Activity density below minimum
 
 ## Gates
-- **Words:** ❌ 2054/4000 (raw: 2215)
-- **Activities:** ✅ 5/3
-- **Density:** ✅ All > 1
-- **Unique_types:** ✅ 3/2 types
-- **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 20/5
+- **Words:** ✅ 4014/4000 (raw: 4221)
+- **Activities:** ❌ 0/3
+- **Density:** ❌ 0 < 1
+- **Unique_types:** ❌ 0/2 types
+- **Priority:** ❌ No priority types
+- **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 20 (soft target)
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Vocab:** ✅ 23/20
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 96.9% (target 90-100% (history))
-- **Richness:** ✅ 99% (history)
+- **Pedagogy:** ❌ 3 violations
+- **Content_heavy:** ⚠️ Too few activities: 0 (target 3-9)
+- **Immersion:** 🇺🇦 99.0% (target 90-100% (history))
+- **Richness:** ✅ 100% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 10/10 (High)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
+**Score:** 100% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 15 | 3 | 100% | 24% | 23.8% |
-| engagement | 20 | 6 | 100% | 14% | 14.3% |
+| primary_sources | 13 | 3 | 100% | 24% | 23.8% |
+| engagement | 9 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 4 | 4 | 100% | 10% | 9.5% |
-| visual | 19 | 4 | 100% | 10% | 9.5% |
-| variety | 0.97 | - | 97% | 5% | 4.6% |
-| paragraph_var | 0.98 | - | 98% | 5% | 4.7% |
-| questions | 5 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.8%** |
+| cultural | 9 | 4 | 100% | 10% | 9.5% |
+| visual | 9 | 4 | 100% | 10% | 9.5% |
+| variety | 1.00 | - | 100% | 5% | 4.8% |
+| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
+| questions | 3 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Діаспора: Ковчег Держави** | ⚪️ | 90 | Skipped |
-| **Читання** | ✅ | 178 | Included in Core |
-| **Уряд УНР в екзилі** | ⚪️ | 253 | Skipped |
-| **Діаспорні інституції** | ⚪️ | 833 | Skipped |
-| **Передача клейнодів** | ⚪️ | 198 | Skipped |
-| **Первинні джерела** | ✅ | 183 | Included in Core |
-| **Деколонізаційний погляд** | ✅ | 154 | Included in Core |
-| **Підсумок** | ✅ | 55 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Intro/Narrative** | ✅ | 89 | Included in Core |
+| **Вступ: Чому українці покидали батьківщину** | ✅ | 479 | Included in Core |
+| **Читання** | ✅ | 368 | Included in Core |
+| **Перша хвиля (1880-1914): Трудова еміграція** | ⚪️ | 752 | Skipped |
+| **Друга хвиля (1920-1939): Політична еміграція** | ⚪️ | 495 | Skipped |
+| **Третя хвиля (1945-1950): ДіПі та Велика втеча** | ⚪️ | 737 | Skipped |
+| **Первинні джерела** | ✅ | 352 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 389 | Included in Core |
+| **Підсумок: Діаспора сьогодні** | ✅ | 353 | Included in Core |

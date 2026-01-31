@@ -1,12 +1,12 @@
 # Audit Report: M27 — krymske-khanstvo.md
-**Level:** B2 | **Module:** M27 | **Phase:** B2.3c | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2 | **Module:** M27 | **Phase:** B2.3c | **Pedagogy:** CBI | **Target:** 4421
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 13:32:36
+**Generated:** 2026-01-31 12:55:57
 
 ## Configuration
 **Type:** B2-history
-**Word Target:** 4000 words
+**Word Target:** 4421 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4539/4000 (raw: 4699)
+- **Words:** ✅ 4539/4421 (raw: 4699)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/2 types

@@ -80,9 +80,9 @@ activity_hints:
 - type: essay-response
   focus: Decolonizing the Russian imperial narrative
   items: 1
-- type: timeline
-  focus: Key events leading to the end of the Hetmanate
+- type: critical-analysis
+  focus: 'Критичний аналіз послідовності: Key events leading to the end of the Hetmanate'
   items: 1
-- type: true-false
-  focus: Consequences of Russian centralization
+- type: critical-analysis
+  focus: 'Критична оцінка: Consequences of Russian centralization'
   items: 1

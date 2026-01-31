@@ -1,12 +1,12 @@
 # Audit Report: M40 — syntez-lytva-polska.md
-**Level:** B2 | **Module:** M40 | **Phase:** HIST.4 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2 | **Module:** M40 | **Phase:** HIST.4 | **Pedagogy:** CBI | **Target:** 4500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 13:32:45
+**Generated:** 2026-01-31 12:56:06
 
 ## Configuration
 **Type:** B2-history
-**Word Target:** 4000 words
+**Word Target:** 4500 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4730/4000 (raw: 5827)
+- **Words:** ✅ 4730/4500 (raw: 5827)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types

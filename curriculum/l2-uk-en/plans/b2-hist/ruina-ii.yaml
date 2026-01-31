@@ -72,8 +72,9 @@ activity_hints:
   focus: Was the Turkish alliance a mistake?
 - type: comparative-study
   focus: Doroshenko vs. Sirko
-- type: true-false
-  focus: Myths about the 'traitor' Doroshenko
+- type: critical-analysis
+  focus: 'Спростування міфів: Myths about the ''traitor'' Doroshenko'
+  items: 4
 focus: history
 pedagogy: CBI
 objectives:

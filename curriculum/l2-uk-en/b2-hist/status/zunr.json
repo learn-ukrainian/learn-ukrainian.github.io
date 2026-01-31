@@ -2,10 +2,10 @@
   "module": "zunr",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-31T00:45:38.750764Z",
+  "last_audit": "2026-01-31T14:27:06.005803Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-31T00:45:35.497192Z",
+    "md": "2026-01-31T14:27:01.261873Z",
     "meta": "2026-01-31T00:03:20.084419Z",
     "activities": "2026-01-31T00:03:42.908311Z",
     "vocabulary": "2026-01-28T17:04:28.655962Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4749/4000 (raw: 4881)"
+      "message": "4732/4000 (raw: 4862)"
     },
     "activities": {
       "status": "pass",

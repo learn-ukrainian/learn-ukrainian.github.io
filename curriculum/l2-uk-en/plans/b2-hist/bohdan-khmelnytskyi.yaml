@@ -68,8 +68,9 @@ activity_hints:
   focus: Evaluation of his political decisions
 - type: comparative-study
   focus: Khmelnytsky vs. Cromwell
-- type: true-false
-  focus: Myths and facts
+- type: critical-analysis
+  focus: 'Спростування міфів: Myths and facts'
+  items: 4
 focus: biography
 pedagogy: CBI
 objectives:

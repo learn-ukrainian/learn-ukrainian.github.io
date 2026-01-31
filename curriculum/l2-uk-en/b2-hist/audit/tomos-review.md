@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M129 | **Phase:** HIST.12 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-29 23:39:22
+**Generated:** 2026-01-31 13:24:44
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading, true-false
+**Required Types:** critical-analysis, essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -29,7 +29,7 @@
 - Total activities: 4 (target: 3-9) ✅
 - Unique types: 3 (minimum: 2) ✅
 - Priority types used: 2/4 (comparative-study, essay-response) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Required types used: 1/3 (essay-response) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS

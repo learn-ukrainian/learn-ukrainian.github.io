@@ -1,14 +1,29 @@
-module: b2-hist-119
-level: B2-HIST
-slug: shliakh-nezalezhnosti
-version: '2.0'
-id: b2-hist-119
-naturalness:
-  score: 10
-  status: PASS
-  justification: Академічний український для політичної історії
-duration: 120
-transliteration: none
-build:
-  last_modified: '2026-01-26'
-phase: HIST.12 [Independence & Modern Era]
+module: b2-119
+title: "Шлях до незалежності"
+phase: "HIST.12"
+pedagogy: "CBI"
+word_target: 4000
+naturalness_score: 10
+content_hash: '0143228d7408612f2c507d27e1f26073'
+timestamps:
+  created: "2026-01-31T14:15:00Z"
+  updated: "2026-01-31T14:15:00Z"
+content_outline:
+  - "Вступ: Крах імперії"
+  - "Основні події: Шлях до незалежності"
+  - "Первинні джерела"
+  - "Деколонізаційний погляд"
+  - "Підсумок: Нова держава"
+activity_hints:
+  reading:
+    - "Текст Акту про незалежність"
+  essay-response:
+    - "Референдум 1 грудня 1991 року"
+  critical-analysis:
+    - "Верифікація фактів: Факти про незалежність"
+activity_types:
+  - reading
+  - critical-analysis
+  - essay-response
+  - true-false
+  - comparative-study

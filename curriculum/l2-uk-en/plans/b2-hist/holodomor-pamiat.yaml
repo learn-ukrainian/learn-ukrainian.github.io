@@ -68,9 +68,9 @@ activity_hints:
   focus: Статті Гарета Джонса
   source: Архівні матеріали
   items: 4
-- type: true-false
-  focus: Факти та міфи про Голодомор
-  items: 10
+- type: critical-analysis
+  focus: 'Спростування міфів: Факти та міфи про Голодомор'
+  items: 5
 - type: essay-response
   focus: Чому міжнародне визнання Голодомору геноцидом важливе для України?
   word_target: 250

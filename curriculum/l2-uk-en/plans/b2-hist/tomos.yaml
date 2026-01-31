@@ -68,9 +68,9 @@ activity_hints:
   focus: Текст Томосу
   source: Церковні документи
   items: 4
-- type: true-false
-  focus: Факти про автокефалію
-  items: 10
+- type: critical-analysis
+  focus: 'Верифікація фактів: Факти про автокефалію'
+  items: 5
 - type: essay-response
   focus: Чому отримання Томосу називають духовною незалежністю?
   word_target: 250

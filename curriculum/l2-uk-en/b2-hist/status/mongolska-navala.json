@@ -2,7 +2,7 @@
   "module": "mongolska-navala",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T13:32:32.808581Z",
+  "last_audit": "2026-01-31T12:55:53.474388Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-30T12:05:13.277793Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4264/4000 (raw: 4499)"
+      "message": "4264/4024 (raw: 4499)"
     },
     "activities": {
       "status": "pass",

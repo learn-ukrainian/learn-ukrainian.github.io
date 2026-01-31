@@ -1,12 +1,12 @@
 # Audit Report: M127 — aneksiia-krymu.md
-**Level:** B2 | **Module:** M127 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2 | **Module:** M127 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4202
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-29 23:39:50
+**Generated:** 2026-01-31 13:24:43
 
 ## Configuration
 **Type:** B2-history
-**Word Target:** 4000 words
+**Word Target:** 4202 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4144/4000 (raw: 4300)
+- **Words:** ⚠️ 4144/4202 (raw: 4300) (58 short)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types

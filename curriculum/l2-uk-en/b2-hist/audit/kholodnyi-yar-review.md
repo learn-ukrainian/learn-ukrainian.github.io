@@ -1,8 +1,8 @@
 # Audit Report: M96 — kholodnyi-yar.md
-**Level:** B2 | **Module:** M96 | **Phase:** HIST.9 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2 | **Module:** M96 | **Phase:** HIST.9 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-29 23:40:14
+**Generated:** 2026-01-31 13:24:22
 
 ## Configuration
 **Type:** B2-history

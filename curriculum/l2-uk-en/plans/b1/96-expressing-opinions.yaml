@@ -1,0 +1,93 @@
+module: b1-96
+level: B1
+sequence: 96
+slug: expressing-opinions
+version: '2.0'
+title: Вираження думки
+subtitle: Expressing Opinions in Everyday Conversations
+content_outline:
+- section: Розминка — Культура обговорень
+  words: 250
+  points:
+  - Як українці діляться думками в розмовах
+  - Різниця між висловленням думки та сперечанням
+  - Коли краще промовчати
+- section: Фрази для вираження думки
+  words: 400
+  points:
+  - Базові формули (Я думаю, що..., На мою думку...)
+  - Впевненість (Я впевнений/а, що..., Точно знаю...)
+  - Невпевненість (Здається, Мабуть, Може)
+  - М'яке вираження (Якось мені здається...)
+- section: Згода та незгода в розмові
+  words: 400
+  points:
+  - Згода (Згоден/згодна, Так, правда, Саме так)
+  - Часткова згода (З одного боку..., але...)
+  - М'яка незгода (Не впевнений/а, Та ні, Навряд чи)
+  - Категорична незгода (Ні, це не так, Повна нісенітниця)
+- section: Аргументація в розмові
+  words: 350
+  points:
+  - Пояснення (бо, тому що, через те що)
+  - Приклади (наприклад, скажімо, от)
+  - Порівняння (як і, на відміну від)
+  - Висновки (отже, тому, значить)
+- section: Практика — Обговорення тем
+  words: 350
+  points:
+  - Діалоги про повсякденні теми
+  - Обговорення новин
+  - Дискусія про фільм/книгу/подію
+  - Як змінити тему розмови
+word_target: 1750
+vocabulary_hints:
+  required:
+  - думка (opinion)
+  - висловлювати (to express)
+  - погоджуватися (to agree)
+  - не погоджуватися (to disagree)
+  - аргумент (argument)
+  - приклад (example)
+  - доказ (proof, evidence)
+  - обговорювати (to discuss)
+  recommended:
+  - впевнений/а (certain, sure)
+  - невпевнений/а (uncertain)
+  - мабуть (probably, maybe)
+  - здається (it seems)
+  - навряд чи (unlikely)
+  - категоричний/а (categorical)
+activity_hints:
+- type: match-up
+  focus: Opinion phrases and their strength levels
+  items: 15
+- type: dialogue-practice
+  focus: Practice agreeing/disagreeing in conversations
+  items: 10
+- type: quiz
+  focus: Choose appropriate opinion phrase for situation
+  items: 12
+- type: role-play
+  focus: Discuss everyday topics with partner
+  items: 5
+- type: cloze
+  focus: Complete opinion expressions in dialogue
+  items: 10
+focus: practical
+pedagogy: PPP
+prerequisites:
+- b1-95 (Note-taking)
+connects_to:
+- b1-97 (Casual Debates)
+objectives:
+- Learner can express opinions in everyday Ukrainian
+- Learner can agree and disagree politely in conversations
+- Learner can support opinions with simple arguments
+- Learner can adjust certainty level appropriately
+grammar:
+- Certainty markers (точно, напевно, мабуть)
+- Causal conjunctions (бо, тому що, через те що)
+- Contrastive structures (але, проте, з іншого боку)
+register: розмовний
+phase: B1.9

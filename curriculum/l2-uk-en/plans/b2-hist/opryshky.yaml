@@ -121,9 +121,9 @@ activity_hints:
   word_target: 300
 - type: map-study
   focus: Територія діяльності опришків
-- type: true-false
-  focus: Легенди vs історичні факти
-  items: 10
+- type: critical-analysis
+  focus: 'Верифікація фактів: Легенди vs історичні факти'
+  items: 5
 focus: history
 pedagogy: CBI
 objectives:

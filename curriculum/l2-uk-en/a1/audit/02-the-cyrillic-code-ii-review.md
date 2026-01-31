@@ -1,12 +1,12 @@
 # Audit Report: M02 — 02-the-cyrillic-code-ii.md
-**Level:** A1 | **Module:** M02 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 300
+**Level:** A1 | **Module:** M02 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1531
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 15:03:40
+**Generated:** 2026-01-31 12:46:18
 
 ## Configuration
 **Type:** A1-grammar
-**Word Target:** 300 words
+**Word Target:** 1531 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1463/300 (raw: 1964)
+- **Words:** ⚠️ 1463/1531 (raw: 1964) (68 short)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types

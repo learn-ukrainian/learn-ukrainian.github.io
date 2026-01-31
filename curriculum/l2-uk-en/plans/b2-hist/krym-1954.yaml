@@ -68,9 +68,9 @@ activity_hints:
   focus: Указ 1954 року про передачу Криму
   source: Архівні документи
   items: 4
-- type: true-false
-  focus: Міфи про «подарунок» Криму
-  items: 10
+- type: critical-analysis
+  focus: 'Спростування міфів: Міфи про «подарунок» Криму'
+  items: 5
 - type: essay-response
   focus: Чому російська міфологія про «подарунок» Криму — це пропаганда?
   word_target: 250

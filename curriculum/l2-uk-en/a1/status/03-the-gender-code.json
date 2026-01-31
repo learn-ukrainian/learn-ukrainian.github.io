@@ -2,7 +2,7 @@
   "module": "03-the-gender-code",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T15:03:41.197091Z",
+  "last_audit": "2026-01-31T12:46:19.116838Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.351125Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1045/300 (raw: 1260)"
+      "message": "1045/934 (raw: 1260)"
     },
     "activities": {
       "status": "pass",

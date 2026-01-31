@@ -912,9 +912,32 @@ CALLOUT_MAP = {
     'realworld': {'type': 'tip', 'icon': '🌐', 'title': 'Real World', 'uk_title': 'Реальний світ'},
 }
 
+def resolve_slug_links(content: str) -> str:
+    """Resolve [slug:xxx] links to actual module paths and titles.
+
+    Transforms:
+        [slug:my-world-objects] → [My World Objects](/a1/module-05)
+        [slug:trypillian-civilization] → [Трипільська цивілізація](/b2-hist/trypillian-civilization)
+
+    RFC #410 Phase 1: Allows stable cross-module links that don't break when modules are renumbered.
+    """
+    def replace_slug_link(match):
+        slug = match.group(1)
+        module = get_module_by_slug(slug)
+        if module:
+            return f"[{module.title}]({module.path})"
+        else:
+            # Keep original if not found (will be caught by validation)
+            print(f"Warning: Unknown slug in link: {slug}")
+            return match.group(0)
+
+    # Pattern: [slug:some-module-name]
+    return re.sub(r'\[slug:([a-z0-9-]+)\]', replace_slug_link, content)
+
+
 def convert_callouts(content: str, is_ukrainian_forced: bool = False) -> str:
     """Convert GitHub-style callouts to Docusaurus admonitions.
-    
+
     Robustly handles:
     1. Standard: > [!type]
     2. Lazy: [!type] (missing marker)
@@ -1251,6 +1274,9 @@ title: "{escape_jsx(fm.get('title', 'Untitled'))}"
 description: "{escape_jsx(fm.get('subtitle', ''))}"
 ---
 '''
+
+    # 0. Resolve slug links [slug:xxx] to actual paths (RFC #410)
+    body = resolve_slug_links(body)
 
     # 1. Clean up body: Remove existing Vocabulary, Activities, and Resources placeholders
     # Remove Activities

@@ -2,7 +2,7 @@
   "module": "01-the-cyrillic-code-i",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T15:03:39.913532Z",
+  "last_audit": "2026-01-31T12:46:17.997913Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.351124Z",
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "958/300 (raw: 1327)"
+      "message": "958/1019 (raw: 1327) (61 short)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
+    "pass_count": 4,
     "fail_count": 0
   }
 }

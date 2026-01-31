@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M82 | **Phase:** HIST.8 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-29 23:39:27
+**Generated:** 2026-01-31 14:26:32
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading, true-false
+**Required Types:** critical-analysis, essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -22,62 +22,63 @@
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Валуєвський циркуляр | 3 | 1 | ✅ |
 | 2 | reading | Емський указ | 3 | 1 | ✅ |
-| 3 | true-false | Факти про імперські заборони | 16 | 8 | ✅ |
-| 4 | essay-response | Мова як зброя | 1 | 1 | ✅ |
-| 5 | comparative-study | Імперська політика: XIX vs XXI століття | 1 | 1 | ✅ |
+| 3 | true-false | Факти про імперські заборони | 10 | 8 | ✅ |
+| 4 | critical-analysis | Аналіз: Механіка лінгвоциду | 1 | 1 | ✅ |
+| 5 | comparative-study | Порівняння: Росія vs Австрія (Мова) | 1 | 1 | ✅ |
+| 6 | essay-response | Мова як зброя | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 5 (target: 3-9) ✅
-- Unique types: 4 (minimum: 2) ✅
-- Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
-- Required types used: 3/3 (essay-response, reading, true-false) ✅
+- Total activities: 6 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4367/4000 (raw: 4587)
-- **Activities:** ✅ 5/3
+- **Words:** ✅ 4632/4000 (raw: 4762)
+- **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 4/2 types
+- **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 11/5
+- **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (history))
-- **Richness:** ✅ 99% (history)
+- **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
+**Score:** 97% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 15 | 3 | 100% | 24% | 23.8% |
-| engagement | 11 | 6 | 100% | 14% | 14.3% |
+| engagement | 5 | 6 | 83% | 14% | 11.9% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 10 | 4 | 100% | 10% | 9.5% |
-| visual | 11 | 4 | 100% | 10% | 9.5% |
-| variety | 0.99 | - | 99% | 5% | 4.7% |
+| cultural | 6 | 4 | 100% | 10% | 9.5% |
+| visual | 5 | 4 | 100% | 10% | 9.5% |
+| variety | 0.98 | - | 98% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 15 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **100.0%** |
+| questions | 12 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **97.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 108 | Included in Core |
-| **Вступ: Мова як загроза імперії** | ✅ | 363 | Included in Core |
-| **Валуєвський циркуляр (1863)** | ⚪️ | 809 | Skipped |
-| **Емський указ (1876)** | ⚪️ | 818 | Skipped |
-| **Читання** | ✅ | 128 | Included in Core |
-| **Первинні джерела** | ✅ | 986 | Included in Core |
-| **Деколонізаційний погляд** | ✅ | 507 | Included in Core |
-| **Підсумок: Наслідки заборон** | ✅ | 481 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 167 | Skipped |
+| **Intro/Narrative** | ✅ | 152 | Included in Core |
+| **Вступ: Мова як загроза імперії** | ✅ | 459 | Included in Core |
+| **Валуєвський циркуляр (1863)** | ⚪️ | 790 | Skipped |
+| **Емський указ (1876)** | ⚪️ | 809 | Skipped |
+| **Читання: Хроніка спротиву** | ✅ | 292 | Included in Core |
+| **Первинні джерела** | ✅ | 844 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 500 | Included in Core |
+| **Підсумок: Наслідки заборон** | ✅ | 577 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 209 | Skipped |

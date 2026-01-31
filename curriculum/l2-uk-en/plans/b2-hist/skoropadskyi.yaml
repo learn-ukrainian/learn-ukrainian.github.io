@@ -68,9 +68,9 @@ activity_hints:
   focus: Грамота про Українську Державу
   source: Архівні документи
   items: 4
-- type: true-false
-  focus: Факти про Гетьманат
-  items: 10
+- type: critical-analysis
+  focus: 'Верифікація фактів: Факти про Гетьманат'
+  items: 5
 - type: essay-response
   focus: Чи був Гетьманат Скоропадського українською державою?
   word_target: 250

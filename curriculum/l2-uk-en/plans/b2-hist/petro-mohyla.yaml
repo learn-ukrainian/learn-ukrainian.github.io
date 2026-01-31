@@ -79,8 +79,9 @@ vocabulary_hints:
   - бароко
   - меценат
 activity_hints:
-- type: true-false
-  focus: facts
+- type: critical-analysis
+  focus: 'Верифікація фактів: facts'
+  items: 4
 focus: history
 pedagogy: CBI
 objectives:

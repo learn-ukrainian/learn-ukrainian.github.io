@@ -3,23 +3,121 @@ level: B2-HIST
 slug: holodomor-mekhanizm
 version: '2.14'
 id: b2-hist-101
+title: 'Голодомор I: Механізм'
+subtitle: 'Holodomor I: The Mechanism of Genocide'
+phase: HIST.10
 duration: 120
 transliteration: none
+word_target: 4000
 tags:
 - history
 - holodomor
 - genocide
 - trauma
 vocabulary_count: 25
-build:
-  last_modified: '2026-01-26'
-phase: HIST.10
+content_outline:
+- section: Вступ
+  words: 345
+  points:
+  - 'Контекст: «Великий перелом» 1929 року'
+  - 'Сталінська політика: «українське питання»'
+  - Зв'язок колективізації та голоду
+- section: Читання
+  words: 434
+  points:
+  - Офіційні документи ДПУ (аналіз мови)
+  - Свідчення очевидців (аналіз мови)
+- section: Колективізація та опір селянства
+  words: 781
+  points:
+  - Розкуркулення як знищення еліти села
+  - Повстання 1930 року (Павлоград, Чернігівщина)
+  - Психологічний злам селянства
+- section: Закон про п'ять колосків та Чорні дошки
+  words: 789
+  points:
+  - 'Закон від 7 серпня 1932 року: аналіз тексту'
+  - 'Система «чорних дощок»: механізм блокади'
+  - Список заблокованих сіл
+- section: Терор голодом як інструмент упокорення
+  words: 670
+  points:
+  - Буксирні бригади: методи роботи
+  - Паспортизація та заборона виїзду
+  - Інформаційна блокада
+- section: Первинні джерела
+  words: 400
+  points:
+  - Листи селян до влади
+  - Щоденники партійців
+  - Іноземні звіти (італійські консули)
+- section: Деколонізаційний погляд
+  words: 224
+  points:
+  - Голодомор як інструмент русифікації
+  - Знищення соціальної структури нації
+  - Відмінність від голоду в Росії
+- section: Спадщина
+  words: 357
+  points:
+  - Трансгенераційна травма
+  - Вплив на сучасну поведінку українців
+  - Пам'ять як зброя
+objectives:
+- Учень може пояснити механізм штучного голоду
+- Учень може проаналізувати документи 1932-33 років
+- Учень може описати опір українського селянства
+- Учень може аргументувати кваліфікацію Голодомору як геноциду
+grammar:
+- Пасивний стан (було вилучено, було знищено)
+- Безособові речення в офіційних документах
+- Часи минулого для опису травматичного досвіду
+vocabulary_hints:
+  required:
+  - голодомор (Holodomor)
+  - геноцид (genocide)
+  - розкуркулення (dekulakization)
+  - чорна дошка (black board/list)
+  - п'ять колосків (five ears of grain)
+  - буксирна бригада (towing brigade/search squad)
+  - вилучення (confiscation)
+  - блокада (blockade)
+  - опір (resistance)
+  - виживання (survival)
+  recommended:
+  - колгосп (kolkhoz)
+  - трудодень (labor day)
+  - норма (norm/quota)
+  - постанова (resolution)
+  - директива (directive)
+  - терор (terror)
+activity_hints:
+- type: reading
+  focus: 'Офіційні документи: мова тоталітаризму'
+  items: 1
+- type: true-false
+  focus: 'Факти та міфи про Голодомор'
+  items: 10
+- type: critical-analysis
+  focus: 'Аналіз «Закону про п''ять колосків»'
+  items: 1
+- type: essay-response
+  focus: 'Чому Голодомор є геноцидом українського народу?'
+  word_target: 250
+- type: comparative-study
+  focus: 'Голод 1921 vs 1932: Причини та наслідки'
+  items: 1
+sources:
+- name: "Національна книга пам'яті жертв Голодомору"
+  url: "https://holodomormuseum.org.ua/nacionalna-knyha-pam-yati/"
+  type: primary
+  notes: Свідчення очевидців.
+- name: "Джеймс Мейс. Ваші мертві вибрали мене"
+  url: "https://day.kyiv.ua/uk/library/books/dzheyms-meys-vashi-mertvi-vybraly-mene"
+  type: secondary
+  notes: Дослідження механізму геноциду.
 naturalness:
   score: 9
   status: PASS
-activity_hints:
-- type: reading
-- type: true-false
-- type: critical-analysis
-- type: essay-response
-- type: comparative-study
+build:
+  last_modified: '2026-01-26'

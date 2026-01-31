@@ -33,6 +33,7 @@
     "claude:deploy": "rsync -av claude_extensions/ .claude/ && rsync -av claude_extensions/ .agent/ && rsync -av claude_extensions/commands/ .agent/workflows/",
     "lint:md": "markdownlint-cli2 \"curriculum/**/*.md\" \"docs/**/*.md\" \"*.md\"",
     "lint:md:fix": "markdownlint-cli2 --fix \"curriculum/**/*.md\" \"docs/**/*.md\" \"*.md\"",
+    "audit": ".venv/bin/python scripts/audit_level.py",
     "audit:rehash": ".venv/bin/python scripts/rehash_module.py",
     "status:a1": ".venv/bin/python scripts/generate_level_status.py a1",
     "status:a2": ".venv/bin/python scripts/generate_level_status.py a2",

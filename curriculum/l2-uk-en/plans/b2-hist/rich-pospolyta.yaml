@@ -101,7 +101,9 @@ activity_hints:
   title: Умови життя селян в Речі Посполитій
 - type: essay-response
   prompt: Порівняйте становище української шляхти та селянства в Речі Посполитій
-- type: timeline
-  events: Ключові дати інкорпорації українських земель
-- type: true-false
-  topic: Процеси полонізації та культурного спротиву
+- type: critical-analysis
+  focus: 'Критичний аналіз послідовності: '
+  items: 3
+- type: critical-analysis
+  focus: 'Критична оцінка: '
+  items: 4

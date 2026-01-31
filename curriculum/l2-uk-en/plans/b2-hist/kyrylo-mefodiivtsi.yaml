@@ -68,9 +68,9 @@ activity_hints:
   focus: Фрагменти «Книг буття українського народу»
   source: Архівні документи
   items: 4
-- type: true-false
-  focus: Міфи про братство
-  items: 10
+- type: critical-analysis
+  focus: 'Спростування міфів: Міфи про братство'
+  items: 5
 - type: essay-response
   focus: Чому імперія так жорстоко покарала мирних просвітників?
   word_target: 250

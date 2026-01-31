@@ -2,51 +2,49 @@
   "module": "diaspora",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-29T23:40:00.252651Z",
+  "last_audit": "2026-01-31T15:15:19.058205Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.346830Z",
-    "meta": "2026-01-26T22:20:13.005649Z",
-    "activities": "2026-01-27T15:34:53.766902Z",
-    "vocabulary": null,
+    "md": "2026-01-31T15:13:42.806213Z",
+    "meta": "2026-01-31T15:08:50.991591Z",
+    "activities": "2026-01-31T15:15:09.897635Z",
+    "vocabulary": "2026-01-31T13:51:06.279260Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "2054/4000 (raw: 2215) | pedagogy: 1 violations"
+      "violations": 1,
+      "message": "4014/4000 (raw: 4221) | pedagogy: 3 violations"
     },
     "activities": {
-      "status": "pass",
-      "violations": 0,
-      "message": "5/3"
+      "status": "fail",
+      "violations": 4,
+      "message": "0/3 | density: 0 < 1 | unique_types: 0/2 types | priority: No priority types"
     },
     "vocabulary": {
-      "status": "warn",
-      "violations": 0,
-      "message": "0 < 20 (soft target)"
-    },
-    "naturalness": {
       "status": "pass",
       "violations": 0,
-      "message": "10/10 (High)"
+      "message": "23/20"
+    },
+    "naturalness": {
+      "status": "fail",
+      "violations": 1,
+      "message": "0/10 (PENDING) - Naturalness check required"
     }
   },
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "1 Critical Template Violations",
-      "6 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: reading"
+      "3 Outline Compliance Errors",
+      "Missing required activity types: essay-response, reading"
     ],
     "pass_count": 2,
-    "fail_count": 2
+    "fail_count": 3
   }
 }

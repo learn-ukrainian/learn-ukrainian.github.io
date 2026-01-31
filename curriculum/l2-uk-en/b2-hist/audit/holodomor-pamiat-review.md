@@ -1,8 +1,8 @@
 # Audit Report: M102 — holodomor-pamiat.md
-**Level:** B2 | **Module:** M102 | **Phase:** HIST.10 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2 | **Module:** M102 | **Phase:** HIST.10 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-29 23:40:06
+**Generated:** 2026-01-31 15:12:29
 
 ## Configuration
 **Type:** B2-history

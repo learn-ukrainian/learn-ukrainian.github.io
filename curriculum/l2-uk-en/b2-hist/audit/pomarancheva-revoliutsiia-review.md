@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M123 | **Phase:** B2.3d | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-29 23:38:58
+**Generated:** 2026-01-31 13:24:40
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading
+**Required Types:** critical-analysis, essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -30,7 +30,7 @@
 - Total activities: 5 (target: 3-9) ✅
 - Unique types: 3 (minimum: 2) ✅
 - Priority types used: 2/4 (comparative-study, essay-response) ✅
-- Required types used: 1/2 (essay-response) ❌
+- Required types used: 1/3 (essay-response) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
@@ -96,7 +96,7 @@
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Читання|Хід|Основні події|Діяльність|Свідки|Великий рейд|Відбудова' found: Основні події: Сімнадцять днів спротиву, Читання
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Читання|Хід|Основні події|Діяльність|Свідки|Великий рейд|Відбудова' found: Читання, Основні події: Сімнадцять днів спротиву
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 
 ## Recommendation

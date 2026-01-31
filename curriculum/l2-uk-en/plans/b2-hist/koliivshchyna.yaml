@@ -140,8 +140,9 @@ activity_hints:
   word_target: 300
 - type: comparative-study
   focus: Польська vs українська інтерпретація подій
-- type: timeline
-  focus: Хронологія подій 1768 року
+- type: critical-analysis
+  focus: 'Аналіз: Хронологія подій 1768 року'
+  items: 3
 focus: history
 pedagogy: CBI
 objectives:

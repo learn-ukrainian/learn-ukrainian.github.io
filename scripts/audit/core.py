@@ -633,7 +633,10 @@ def load_yaml_vocab(md_file_path: str) -> list[dict] | None:
     try:
         with open(yaml_path, 'r', encoding='utf-8') as f:
             data = yaml.safe_load(f)
-            return data.get('items', [])
+            # Support both 'items' (legacy?) and 'vocabulary' (standard) keys
+            if isinstance(data, list):
+                 return data
+            return data.get('vocabulary', data.get('items', []))
     except Exception:
         return None
 

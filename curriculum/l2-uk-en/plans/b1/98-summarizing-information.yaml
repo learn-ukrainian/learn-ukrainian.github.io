@@ -1,0 +1,93 @@
+module: b1-98
+level: B1
+sequence: 98
+slug: summarizing-information
+version: '2.0'
+title: Резюмування інформації
+subtitle: Summarizing Information in Speech and Writing
+content_outline:
+- section: Розминка — Навіщо резюмувати?
+  words: 250
+  points:
+  - Резюме в повсякденному житті
+  - Різниця між переказом та резюме
+  - Ключові навички резюмування
+- section: Техніка резюмування тексту
+  words: 400
+  points:
+  - Крок 1: Визначення головної ідеї
+  - Крок 2: Виділення ключових фактів
+  - Крок 3: Відкидання деталей
+  - Крок 4: Перефразування власними словами
+- section: Усне резюме
+  words: 350
+  points:
+  - Як переказати статтю/відео (Головне, що..., Йдеться про...)
+  - Як переказати розмову (Він/вона сказав/ла, що...)
+  - Як коротко описати подію (Спочатку..., потім..., врешті...)
+  - Як уникнути зайвих деталей
+- section: Письмове резюме
+  words: 400
+  points:
+  - Структура письмового резюме
+  - Вступне речення (Стаття розповідає про...)
+  - Основна частина (2-3 речення)
+  - Завершення (Автор робить висновок, що...)
+- section: Практика — Різні типи резюме
+  words: 350
+  points:
+  - Резюме новинної статті
+  - Резюме епізоду подкасту
+  - Резюме зустрічі/розмови
+  - Порівняння: коротке vs детальне резюме
+word_target: 1750
+vocabulary_hints:
+  required:
+  - резюме (summary)
+  - резюмувати (to summarize)
+  - головна ідея (main idea)
+  - ключовий факт (key fact)
+  - переказувати (to retell)
+  - скорочувати (to shorten)
+  - суть (essence, gist)
+  - висновок (conclusion)
+  recommended:
+  - перефразувати (to paraphrase)
+  - опускати (to omit)
+  - стислий (concise)
+  - основне (the main thing)
+  - деталь (detail)
+  - коротко (briefly)
+activity_hints:
+- type: reading-summary
+  focus: Summarize news articles
+  items: 5
+- type: listening-summary
+  focus: Summarize audio clips
+  items: 4
+- type: cloze
+  focus: Complete summary templates
+  items: 12
+- type: comparison
+  focus: Compare good vs weak summaries
+  items: 8
+- type: writing-task
+  focus: Write summaries of different lengths
+  items: 4
+focus: practical
+pedagogy: PPP
+prerequisites:
+- b1-97 (Casual Debates)
+connects_to:
+- b1-99 (B1 Final Exam)
+objectives:
+- Learner can summarize texts accurately in Ukrainian
+- Learner can give oral summaries of articles and conversations
+- Learner can write concise written summaries
+- Learner can distinguish essential from non-essential information
+grammar:
+- Reported speech (Автор пише, що...)
+- Sequential connectors (спочатку, далі, нарешті)
+- Summarizing phrases (Коротко кажучи, Загалом)
+register: нейтральний
+phase: B1.9

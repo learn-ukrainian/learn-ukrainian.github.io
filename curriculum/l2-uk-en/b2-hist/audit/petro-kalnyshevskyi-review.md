@@ -1,8 +1,8 @@
 # Audit Report: M73 — petro-kalnyshevskyi.md
-**Level:** B2 | **Module:** M73 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2 | **Module:** M73 | **Phase:** HIST.7 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-29 23:38:55
+**Generated:** 2026-01-31 13:24:06
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading
+**Required Types:** critical-analysis, essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -30,7 +30,7 @@
 - Total activities: 5 (target: 3-9) ✅
 - Unique types: 5 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 2/2 (essay-response, reading) ✅
+- Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates

@@ -80,10 +80,11 @@ activity_hints:
 - type: essay-response
   focus: Роль медіа в демократичних змінах
   word_target: 300
-- type: timeline
-  focus: Хронологія подій від виборів до перемоги
-- type: true-false
-  focus: Факти про фальсифікації та судові рішення
-  items: 10
+- type: critical-analysis
+  focus: 'Аналіз: Хронологія подій від виборів до перемоги'
+  items: 3
+- type: critical-analysis
+  focus: 'Верифікація фактів: Факти про фальсифікації та судові рішення'
+  items: 5
 register: публіцистичний
 phase: HIST.12 [Independence & Modern Ukraine]

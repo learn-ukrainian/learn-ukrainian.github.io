@@ -1,12 +1,12 @@
 # Audit Report: M30 — ukrainski-zemli-u-vkl.md
-**Level:** B2 | **Module:** M30 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2 | **Module:** M30 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4323
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 13:32:38
+**Generated:** 2026-01-31 12:55:59
 
 ## Configuration
 **Type:** B2-history
-**Word Target:** 4000 words
+**Word Target:** 4323 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4472/4000 (raw: 4723)
+- **Words:** ✅ 4472/4323 (raw: 4723)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types

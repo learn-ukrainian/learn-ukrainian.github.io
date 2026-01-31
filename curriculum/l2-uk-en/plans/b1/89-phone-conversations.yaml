@@ -1,0 +1,93 @@
+module: b1-89
+level: B1
+sequence: 89
+slug: phone-conversations
+version: '2.0'
+title: Розмови по телефону
+subtitle: Telephone Conversations in Ukrainian
+content_outline:
+- section: Розминка — Телефонний етикет
+  words: 250
+  points:
+  - Як українці відповідають на дзвінки
+  - Різниця між «Алло» та «Слухаю»
+  - Формальний vs неформальний тон
+- section: Початок та завершення розмови
+  words: 350
+  points:
+  - Привітання по телефону (Добрий день, це..., Говорить...)
+  - Прохання покликати когось (Чи можу я поговорити з...?)
+  - Прощання (До побачення, До зв'язку, Ще зателефоную)
+  - Що сказати, якщо номер неправильний
+- section: Типові телефонні ситуації
+  words: 400
+  points:
+  - Дзвінок другу/подрузі (неформально)
+  - Дзвінок на роботу (формально)
+  - Запис до лікаря / бронювання (напівформально)
+  - Дзвінок в службу підтримки
+- section: Проблеми зі зв'язком
+  words: 350
+  points:
+  - Погано чути (Повторіть, будь ласка, Вас погано чути)
+  - Перервана розмова (Зв'язок перервався, Передзвоню)
+  - Голосова пошта (Залиште повідомлення)
+  - Очікування (Зачекайте хвилинку, Не кладіть слухавку)
+- section: Практика — Телефонні діалоги
+  words: 400
+  points:
+  - Рольові ігри: запис на прийом
+  - Рольові ігри: замовлення їжі
+  - Рольові ігри: виклик таксі
+  - Обговорення планів з другом
+word_target: 1750
+vocabulary_hints:
+  required:
+  - телефон (telephone)
+  - дзвінок (call)
+  - дзвонити (to call)
+  - відповідати (to answer)
+  - слухавка (receiver)
+  - голосова пошта (voicemail)
+  - зв'язок (connection)
+  - передзвонити (to call back)
+  recommended:
+  - набирати номер (to dial)
+  - абонент (subscriber)
+  - сигнал (signal)
+  - роумінг (roaming)
+  - пропущений дзвінок (missed call)
+  - кнопки (buttons/keys)
+activity_hints:
+- type: dialogue-practice
+  focus: Role-play phone conversations
+  items: 10
+- type: match-up
+  focus: Phone phrases and situations
+  items: 15
+- type: listening-comprehension
+  focus: Listen to phone conversations
+  items: 8
+- type: cloze
+  focus: Complete phone dialogue
+  items: 12
+- type: quiz
+  focus: Choose appropriate phone phrase
+  items: 15
+focus: practical
+pedagogy: PPP
+prerequisites:
+- b1-88 (Інтерв'ю та подкасти)
+connects_to:
+- b1-90 (Personal Email)
+objectives:
+- Learner can make and receive phone calls in Ukrainian
+- Learner can handle common phone situations (booking, ordering)
+- Learner can manage connection problems politely
+- Learner uses appropriate register for formal/informal calls
+grammar:
+- Imperative for polite requests (Зачекайте, Повторіть)
+- Question forms (Чи можу я...?, Чи не могли б ви...?)
+- Conditional politeness (Я хотів би / хотіла б...)
+register: розмовний
+phase: B1.9

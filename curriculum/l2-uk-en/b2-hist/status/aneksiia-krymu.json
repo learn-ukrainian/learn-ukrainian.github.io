@@ -2,7 +2,7 @@
   "module": "aneksiia-krymu",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-29T23:39:50.311603Z",
+  "last_audit": "2026-01-31T13:24:43.321863Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.346733Z",
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "4144/4000 (raw: 4300)"
+      "message": "4144/4202 (raw: 4300) (58 short)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
+    "pass_count": 4,
     "fail_count": 0
   }
 }

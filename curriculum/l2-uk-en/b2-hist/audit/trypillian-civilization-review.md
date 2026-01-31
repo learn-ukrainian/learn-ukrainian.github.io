@@ -1,12 +1,12 @@
 # Audit Report: M01 — trypillian-civilization.md
-**Level:** B2 | **Module:** M01 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
+**Level:** B2 | **Module:** M01 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 6133
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 13:32:19
+**Generated:** 2026-01-31 12:55:40
 
 ## Configuration
 **Type:** B2-history
-**Word Target:** 4000 words
+**Word Target:** 6133 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 6403/4000 (raw: 6491)
+- **Words:** ✅ 6403/6133 (raw: 6491)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types

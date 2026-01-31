@@ -68,9 +68,9 @@ activity_hints:
   focus: Документи Головної Руської Ради
   source: Архівні документи
   items: 4
-- type: true-false
-  focus: Порівняння Австрії та Росії
-  items: 10
+- type: critical-analysis
+  focus: 'Критична оцінка: Порівняння Австрії та Росії'
+  items: 5
 - type: essay-response
   focus: Чому Галичина стала «Українським П'ємонтом»?
   word_target: 250

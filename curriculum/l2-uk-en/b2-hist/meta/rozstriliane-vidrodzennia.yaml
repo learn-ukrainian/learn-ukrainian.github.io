@@ -65,19 +65,35 @@ vocabulary_hints:
   required:
   - відродження (renaissance)
   - репресії (repressions)
-  - письменник (writer)
-  - митець (artist)
-  - розстріл (execution)
-  - НКВД (NKVD)
-  - культура (culture)
-  - геноцид (genocide)
-  recommended:
-  - неокласики (neoclassicists)
-  - авангард (avant-garde)
+  - література (literature)
   - театр (theater)
-  - живопис (painting)
-  - Сандармох (Sandarmokh)
-  - реабілітація (rehabilitation)
+  - цензура (censorship)
+  - арешт (arrest)
+  - розстріл (execution)
+  - пам'ять (memory)
+  - покоління (generation)
+  - талант (talent)
+  recommended:
+  - модернізм (modernism)
+  - авангард (avant-garde)
+  - проза (prose)
+  - поезія (poetry)
+  - драматургія (drama)
+  - режим (regime)
+sources:
+  - name: "Енциклопедія історії України: Розстріляне відродження"
+    url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Rozstriliane_vidrodzhennia"
+    type: secondary
+    notes: Академічна стаття про феномен.
+  - name: "Слово (будинок)"
+    url: "https://uk.wikipedia.org/wiki/Слово_(будинок)"
+    type: secondary
+    notes: Стаття про будинок письменників у Харкові.
+  - name: "Микола Хвильовий. Україна чи Малоросія?"
+    url: "https://ukrclassic.com.ua/katalog/kh/khvilovij-mikola/2304-mikola-khvilovij-ukrajina-chi-malorosiya"
+    type: primary
+    notes: Памфлети Хвильового.
+
 activity_hints:
 - type: reading
   focus: Уривки з творів Хвильового

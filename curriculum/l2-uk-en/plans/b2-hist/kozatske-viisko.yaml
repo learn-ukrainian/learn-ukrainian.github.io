@@ -68,8 +68,9 @@ activity_hints:
   focus: Cossack military ethics and modern parallels
 - type: comparative-study
   focus: Cossack vs Western European military organization
-- type: true-false
-  focus: Facts about weaponry and ranks
+- type: critical-analysis
+  focus: 'Верифікація фактів: Facts about weaponry and ranks'
+  items: 4
 focus: history
 pedagogy: CBI
 objectives:

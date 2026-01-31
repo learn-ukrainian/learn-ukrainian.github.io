@@ -1,8 +1,7 @@
 # Audit Report: M120 — rukh.md
 **Level:** B2 | **Module:** M120 | **Phase:** HIST.12 | **Pedagogy:** CBI | **Target:** 4000
-**Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-29 23:39:05
+**Generated:** 2026-01-31 13:57:06
 
 ## Configuration
 **Type:** B2-history
@@ -11,118 +10,91 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading, true-false
+**Required Types:** essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
 **Transliteration:** Not allowed
 
-## PEDAGOGICAL VIOLATIONS
-- **[HEADING_LEVEL]** Main section 'Підсумок' uses H2 (##) but spec requires H1 (#)
-  - FIX: Change '## Підсумок' to '# Підсумок' for top-level TOC compliance
-- **[YAML_SCHEMA_VIOLATION]** Schema error in rukh.yaml: Insufficient activities: 1 found, minimum 5 required for B2-HIST
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
-  - FIX: Add a essay-response activity to meet advanced richness standards.
-- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
-  - FIX: Add a comparative-study activity to meet advanced richness standards.
-- **[STATE_STANDARD_LOW_IMMERSION]** Module 120 has 20.5% immersion (target: 90.0%+)
-  - FIX: Add more Ukrainian content to reach 90.0%+ immersion
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Програма Руху | 0 | 1 | ❌ |
+| 2 | critical-analysis | Верифікація фактів: Рух | 1 | 1 | ✅ |
+| 3 | essay-response | Есе: Феномен Руху | 1 | 1 | ✅ |
+| 4 | comparative-study | Рух vs Солідарність | 1 | 1 | ✅ |
+| 5 | true-false | Історія Руху | 3 | 8 | ❌ |
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Читання' per template 'b2-history-module-template.md'
-  - FIX: Add '## Читання' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Деколонізаційний погляд' per template 'b2-history-module-template.md'
-  - FIX: Add '## Деколонізаційний погляд' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md.md
-- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!myth-buster]' per template 'b2-history-module-template.md'
-  - FIX: Add a `> [!myth-buster]` box as specified in the template. This enhances module quality.
-- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!history-bite]' per template 'b2-history-module-template.md'
-  - FIX: Add a `> [!history-bite]` box as specified in the template. This enhances module quality.
-- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!quote]' per template 'b2-history-module-template.md'
-  - FIX: Add a `> [!quote]` box as specified in the template. This enhances module quality.
+**Summary:**
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
+- Low density activities: 2
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY]** reading 'Програма Руху' has 0 items (minimum: 1)
+  - FIX: Add more items. B2 reading requires at least 1 items.
+- **[COMPLEXITY]** true-false 'Історія Руху' has 3 items (minimum: 8)
+  - FIX: Add more items. B2 true-false requires at least 8 items.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in rukh.yaml: Schema validation error at key '4': {'type': 'true-false', 'title': 'Історія Руху', 'items': [{'statement': 'Гаслом Руху було «За нашу і вашу свободу».', 'explanation': 'Це традиційне гасло дисидентів, яке підкреслювало демократичний характер руху.', 'correct': True}, {'statement': 'Рух виступав за збереження СРСР.', 'explanation': 'У 1990 році Рух офіційно змінив програму, проголосивши мету — повну державну незалежність України.', 'correct': False}, {'statement': 'Шахтарі Донбасу підтримували Рух у 1989-1990 роках.', 'explanation': 'Страйкові комітети співпрацювали з Рухом, вимагаючи не лише зарплат, а й політичних змін.', 'correct': True}], 'instruction': 'Визначте, чи твердження правильне.'} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-**🔄 REWRITE** (severity 100/100)
+**📝 UPDATE** (severity 15/100)
 
-- 10 violations (significant)
-- Immersion 70% off target (major rebalancing needed)
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
-- Activity count below minimum
+- 3 violations (minor)
 - Activity density below minimum
 
 ## Gates
-- **Words:** ❌ 27/4000 (raw: 103)
-- **Activities:** ❌ 0/3
-- **Density:** ❌ 0 < 1
-- **Unique_types:** ❌ 0/2 types
-- **Priority:** ❌ No priority types
-- **Engagement:** ❌ 0/5
+- **Words:** ❌ 731/4000 (raw: 780)
+- **Activities:** ✅ 5/3
+- **Density:** ❌ 2 < 1
+- **Unique_types:** ✅ 5/2 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 20 (soft target)
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Vocab:** ✅ 20/20
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 4 violations
-- **Content_heavy:** ⚠️ Too few activities: 0 (target 3-9)
-- **Immersion:** ❌ 20.5% LOW (target 90-100% (history))
-- **Richness:** ❌ 7% < 95% min (history) - REWRITE needed
+- **Pedagogy:** ❌ 3 violations
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Immersion:** 🇺🇦 99.7% (target 90-100% (history))
+- **Richness:** ❌ 94% < 95% min (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 10/10 (High)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 7% (minimum: 95%)
+**Score:** 94% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 0 | 3 | 0% | 24% | 0.0% |
-| engagement | 0 | 6 | 0% | 14% | 0.0% |
-| timeline_markers | 2 | 10 | 20% | 14% | 2.9% |
-| decolonization | 0 | 2 | 0% | 14% | 0.0% |
-| cultural | 0 | 4 | 0% | 10% | 0.0% |
-| visual | 0 | 4 | 0% | 10% | 0.0% |
-| variety | 0.50 | - | 50% | 5% | 2.4% |
-| paragraph_var | 0.50 | - | 50% | 5% | 2.4% |
-| questions | 0 | 3 | 0% | 5% | 0.0% |
-| **TOTAL** | | | | | **7.6%** |
+| primary_sources | 6 | 3 | 100% | 24% | 23.8% |
+| engagement | 5 | 6 | 83% | 14% | 11.9% |
+| timeline_markers | 24 | 10 | 100% | 14% | 14.3% |
+| decolonization | 11 | 2 | 100% | 14% | 14.3% |
+| cultural | 3 | 4 | 75% | 10% | 7.1% |
+| visual | 5 | 4 | 100% | 10% | 9.5% |
+| variety | 1.00 | - | 100% | 5% | 4.8% |
+| paragraph_var | 0.86 | - | 86% | 5% | 4.1% |
+| questions | 4 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **94.5%** |
 
-### Dryness Flags & Fixes
-- ❌ **NO_ENGAGEMENT**
-  - FIX:
-    Add 2+ engagement boxes. Use this exact format:
-    
-    > 💡 **Чи знали ви?**
-    >
-    > [Interesting fact about the grammar/vocabulary topic in Ukrainian]
-    
-    > 🇺🇦 **Культурний момент**
-    >
-    > [Cultural context connecting grammar to Ukrainian life/places]
-    
-    > 🌍 **У реальному житті**
-    >
-    > [Practical scenario where this grammar is used]
-- ❌ **NO_PRIMARY_SOURCES**
-  - FIX:
-    Add 2+ primary source quotes. Use this format:
-    
-    > «[Exact quote from historical document]»
-    > — *[Source name], [year]*
-- ❌ **NO_TIMELINE**
-  - FIX:
-    Add 5+ timeline markers: specific years (1876, 1918), periods (XVIII ст.), sequences (спочатку... потім... нарешті).
-- ❌ **NO_DECOLONIZATION_PERSPECTIVE**
-  - FIX:
-    Add Ukrainian perspective on historical events. Avoid Russocentric framing. Use Ukrainian names for cities/people.
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| Програма Руху | reading | 0 | 1 | Add 1 more items |
+| Історія Руху | true-false | 3 | 8 | Add 5 more items |
+
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 15 | Included in Core |
-| **Рух: Народний рух України** | ⚪️ | 0 | Skipped |
-| **Вступ** | ✅ | 2 | Included in Core |
-| **Основний зміст** | ⚪️ | 2 | Skipped |
-| **Історичне значення** | ⚪️ | 1 | Skipped |
-| **Ключові постаті** | ⚪️ | 2 | Skipped |
-| **Первинні джерела** | ✅ | 4 | Included in Core |
-| **Підсумок** | ✅ | 1 | Included in Core |
+| **Intro/Narrative** | ✅ | 43 | Included in Core |
+| **Вступ: Перебудова в Україні** | ✅ | 87 | Included in Core |
+| **Основні події: Історія Народного Руху** | ⚪️ | 248 | Skipped |
+| **Первинні джерела** | ✅ | 111 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 110 | Included in Core |
+| **Підсумок: Спадщина Руху** | ✅ | 132 | Included in Core |

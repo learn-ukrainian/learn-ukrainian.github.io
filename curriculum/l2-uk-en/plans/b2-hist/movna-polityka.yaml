@@ -68,9 +68,9 @@ activity_hints:
   focus: Фрагменти мовних законів
   source: Законодавство України
   items: 4
-- type: true-false
-  focus: Міфи про «утиски російської мови»
-  items: 10
+- type: critical-analysis
+  focus: 'Спростування міфів: Міфи про «утиски російської мови»'
+  items: 5
 - type: essay-response
   focus: Чому захист української мови — це деколонізація, а не дискримінація?
   word_target: 250

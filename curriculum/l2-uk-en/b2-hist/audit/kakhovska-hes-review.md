@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M135 | **Phase:** HIST.13 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-29 23:40:12
+**Generated:** 2026-01-31 13:24:48
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Читання|Хід|Основні події|Діяльність|Свідки|Великий рейд|Відбудова' found: Масштаб необхідної відбудови, Підсумок: Відбудова, Читання
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Читання|Хід|Основні події|Діяльність|Свідки|Великий рейд|Відбудова' found: Читання, Підсумок: Відбудова, Масштаб необхідної відбудови
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 
 ## Recommendation

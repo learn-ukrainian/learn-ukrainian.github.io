@@ -89,6 +89,11 @@ activity_hints:
 - type: essay-response
   focus: Як пацифікація вплинула на радикалізацію українського руху?
   word_target: 250
+prerequisites:
+- "b2-hist-103 (ОУН: Формування)"
+connects_to:
+- "b2-hist-105 (Друга світова: Початок)"
+- "b2-hist-106 (Бабин Яр)"
 sources:
 - name: Пацифікація у Галичині 1930 — Вікіпедія
   url: https://uk.wikipedia.org/wiki/Пацифікація_у_Галичині_1930

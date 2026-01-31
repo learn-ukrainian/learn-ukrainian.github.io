@@ -73,8 +73,9 @@ activity_hints:
   focus: The myth of reunification vs historical reality
 - type: comparative-study
   focus: Cossack vs. Muscovite political culture
-- type: true-false
-  focus: Facts about the oath and opposition
+- type: critical-analysis
+  focus: 'Верифікація фактів: Facts about the oath and opposition'
+  items: 4
 focus: history
 pedagogy: CBI
 objectives:

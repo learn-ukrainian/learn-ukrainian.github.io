@@ -102,7 +102,9 @@ activity_hints:
   focus: аналіз указу про ліквідацію Січі
 - type: essay-response
   focus: причини знищення козацької вольниці
-- type: timeline
-  focus: життя Калнишевського від обрання до смерті
-- type: true-false
-  focus: факти про соловецьке ув'язнення
+- type: critical-analysis
+  focus: 'Критичний аналіз послідовності: життя Калнишевського від обрання до смерті'
+  items: 3
+- type: critical-analysis
+  focus: 'Верифікація фактів: факти про соловецьке ув''язнення'
+  items: 4

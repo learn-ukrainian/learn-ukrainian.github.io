@@ -1,12 +1,12 @@
 # Audit Report: M21 — mongolska-navala.md
-**Level:** B2 | **Module:** M21 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2 | **Module:** M21 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4024
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 13:32:32
+**Generated:** 2026-01-31 12:55:53
 
 ## Configuration
 **Type:** B2-history
-**Word Target:** 4000 words
+**Word Target:** 4024 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4264/4000 (raw: 4499)
+- **Words:** ✅ 4264/4024 (raw: 4499)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types

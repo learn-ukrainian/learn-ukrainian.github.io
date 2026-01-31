@@ -2,19 +2,18 @@ module: b2-117
 title: 'Чорнобиль: Трагедія і Попередження'
 phase: 'HIST.11'
 pedagogy: 'CBI'
-word_target: 3400
+word_target: 3300
 naturalness_score: 10
-content_hash: 'bd3750ed496781e8e0313a5eb13a2100'
+content_hash: ef6a0d8edbfed604bb2a6274d01660a6
 timestamps:
   created: '2026-01-30T22:30:00Z'
-  updated: '2026-01-31T00:10:00Z'
+  updated: '2026-01-31T13:45:00Z'
 content_outline:
   - "Вступ — Мирний атом?"
-  - "Аварія 1986 року"
+  - "Основні події"
   - "Первинні джерела"
   - "Деколонізаційний погляд"
-  - "Читання"
-  - "Підсумок"
+  - "Підсумок: Уроки Чорнобиля"
 activity_hints:
   reading:
     - "Голоси Прип'яті"

@@ -1,0 +1,93 @@
+module: b1-94
+level: B1
+sequence: 94
+slug: podcast-comprehension
+version: '2.0'
+title: Розуміння подкастів
+subtitle: Podcast Comprehension Strategies
+content_outline:
+- section: Розминка — Українські подкасти
+  words: 250
+  points:
+  - Популярні українські подкасти (різні теми)
+  - Де слухати (Spotify, Apple Podcasts, YouTube)
+  - Вибір подкасту для свого рівня
+- section: Стратегії активного слухання
+  words: 400
+  points:
+  - Перше прослуховування — загальна ідея
+  - Друге прослуховування — деталі
+  - Використання контексту для незнайомих слів
+  - Коли можна пропустити фрагмент vs коли перемотати
+- section: Типи подкастів
+  words: 350
+  points:
+  - Інтерв'ю (запитання-відповіді, інтонація)
+  - Розмовні (діалог, жарти, відступи від теми)
+  - Освітні (структуровані, термінологія)
+  - Новинні (швидкий темп, факти)
+- section: Ведення нотаток під час прослуховування
+  words: 350
+  points:
+  - Ключові слова та фрази
+  - Структура (вступ, основні точки, висновок)
+  - Питання для себе
+  - Нова лексика для запам'ятовування
+- section: Практика — Аналіз подкастів
+  words: 400
+  points:
+  - Прослуховування фрагментів
+  - Вправи на розуміння
+  - Обговорення почутого
+  - Висловлення своєї думки про подкаст
+word_target: 1750
+vocabulary_hints:
+  required:
+  - подкаст (podcast)
+  - слухати (to listen)
+  - епізод (episode)
+  - ведучий (host)
+  - гість (guest)
+  - тема (topic, theme)
+  - розуміти (to understand)
+  - нотатки (notes)
+  recommended:
+  - прослуховувати (to listen through)
+  - передплатитися (to subscribe)
+  - швидкість відтворення (playback speed)
+  - транскрипція (transcript)
+  - сприймати на слух (to comprehend by ear)
+activity_hints:
+- type: listening-comprehension
+  focus: Listen to podcast excerpt and answer questions
+  items: 3
+- type: true-false
+  focus: Statements about podcast content
+  items: 12
+- type: quiz
+  focus: Understanding main ideas and details
+  items: 15
+- type: note-taking
+  focus: Take notes while listening
+  items: 2
+- type: discussion
+  focus: Discuss opinions about podcast topic
+  items: 5
+focus: practical
+pedagogy: PPP
+prerequisites:
+- b1-88 (Інтерв'ю та подкасти)
+- b1-93 (Formal Letter)
+connects_to:
+- b1-95 (Note-taking Skills)
+objectives:
+- Learner can understand main ideas in Ukrainian podcasts
+- Learner can use listening strategies effectively
+- Learner can take notes while listening
+- Learner can discuss podcast content
+grammar:
+- Listening for key verbs and nouns
+- Understanding informal speech patterns
+- Recognizing discourse markers (отже, власне, наприклад)
+register: розмовний
+phase: B1.9

@@ -68,9 +68,9 @@ activity_hints:
   focus: Свідчення постраждалих від пацифікації
   source: Архівні матеріали
   items: 4
-- type: true-false
-  focus: Міфи про пацифікацію
-  items: 10
+- type: critical-analysis
+  focus: 'Спростування міфів: Міфи про пацифікацію'
+  items: 5
 - type: essay-response
   focus: Як пацифікація вплинула на радикалізацію українського руху?
   word_target: 250

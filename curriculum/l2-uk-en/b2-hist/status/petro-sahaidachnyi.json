@@ -2,7 +2,7 @@
   "module": "petro-sahaidachnyi",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-29T23:38:56.880261Z",
+  "last_audit": "2026-01-31T12:56:09.561411Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T18:06:54.832584Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "5431/4000 (raw: 5583)"
+      "message": "5431/5200 (raw: 5583)"
     },
     "activities": {
       "status": "pass",

@@ -68,9 +68,9 @@ activity_hints:
   focus: Журналістські розслідування 1990-х
   source: Медіа-архіви
   items: 4
-- type: true-false
-  focus: Факти про 1990-ті
-  items: 10
+- type: critical-analysis
+  focus: 'Верифікація фактів: Факти про 1990-ті'
+  items: 5
 - type: essay-response
   focus: Як формування олігархії вплинуло на розвиток України?
   word_target: 250

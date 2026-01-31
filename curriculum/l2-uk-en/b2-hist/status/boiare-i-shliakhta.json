@@ -2,7 +2,7 @@
   "module": "boiare-i-shliakhta",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T13:32:35.493410Z",
+  "last_audit": "2026-01-31T12:55:56.120218Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-30T10:15:57.086446Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4454/4000 (raw: 4626)"
+      "message": "4454/4322 (raw: 4626)"
     },
     "activities": {
       "status": "pass",

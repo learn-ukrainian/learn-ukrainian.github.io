@@ -68,9 +68,9 @@ activity_hints:
   focus: Останні листи розстріляних
   source: Архівні документи
   items: 4
-- type: true-false
-  focus: Міфи про «ворогів народу»
-  items: 10
+- type: critical-analysis
+  focus: 'Спростування міфів: Міфи про «ворогів народу»'
+  items: 5
 - type: essay-response
   focus: Чому знищення української інтелігенції — це геноцид?
   word_target: 250

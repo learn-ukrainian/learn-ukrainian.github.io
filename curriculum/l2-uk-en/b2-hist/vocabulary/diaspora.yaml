@@ -1,80 +1,93 @@
-- word: діаспора (diaspora)
-  translation: diaspora
-  ipa: "dʲiˈɑsporɑ"
-  context: "Українська діаспора є однією з найчисельніших у світі."
-- word: еміграція (emigration)
-  translation: emigration
-  ipa: "emiˈɦrɑt͡sʲijɑ"
-  context: "Економічна еміграція почалася наприкінці XIX століття."
-- word: імміграція (immigration)
-  translation: immigration
-  ipa: "imiˈɦrɑt͡sʲijɑ"
-  context: "Імміграція до Канади вимагала важкої праці на землі."
-- word: громада (community)
-  translation: community (esp. ethnic/religious)
-  ipa: "ɦroˈmɑdɑ"
-  context: "Українська громада будувала школи та церкви за власні кошти."
-- word: біженець (refugee)
-  translation: refugee
-  ipa: "ˈbʲiʒenet͡sʲ"
-  context: "Тисячі біженців тікали від більшовицького терору."
-- word: переміщена особа (displaced person)
-  translation: displaced person (DP)
-  ipa: "pereˈmʲiʃt͡ʃenɑ oˈsobɑ"
-  context: "Табори для переміщених осіб у Німеччині стали осередками культури."
-- word: екзиль (exile)
-  translation: exile
-  ipa: "ekˈzɪlʲ"
-  context: "Уряд УНР в екзилі продовжував діяти до 1992 року."
-- word: асиміляція (assimilation)
-  translation: assimilation
-  ipa: "asymʲiˈlʲɑt͡sʲijɑ"
-  context: "Повна асиміляція загрожує втратою національної ідентичності."
-- word: репатріація (repatriation)
-  translation: repatriation
-  ipa: "repɑtriˈɑt͡sʲijɑ"
-  context: "Примусова репатріація до СРСР часто означала смерть у ГУЛАГу."
-- word: лобіювання (lobbying)
-  translation: lobbying
-  ipa: "lobijuˈwɑnʲːɑ"
-  context: "Діаспора вела активне лобіювання інтересів України у Конгресі США."
-- word: культурна спадщина (cultural heritage)
-  translation: cultural heritage
-  ipa: "kulʲˈturnɑ ˈspɑdt͡ʃynɑ"
-  context: "Збереження культурної спадщини було головним завданням емігрантів."
-- word: ідентичність (identity)
-  translation: identity
-  ipa: "idenˈtɪt͡ʃnʲisʲtʲ"
-  context: "Національна ідентичність гартувалася в умовах життя на чужині."
-- word: інтеграція (integration)
-  translation: integration
-  ipa: "inteˈɦrɑt͡sʲijɑ"
-  context: "Успішна інтеграція в нове суспільство не означала відмову від коріння."
-- word: двомовність (bilingualism)
-  translation: bilingualism
-  ipa: "dwoˈmownʲisʲtʲ"
-  context: "Двомовність стала нормою для нових поколінь діаспори."
-- word: заробітчанин (migrant worker)
-  translation: migrant worker
-  ipa: "zɑrobitˈt͡ʃɑnɪn"
-  context: "Перші заробітчани їхали до Бразилії у пошуках кращої долі."
-- word: гуртуватися (to unite/group together)
-  translation: to unite, to group together
-  ipa: "ɦurtuˈwɑtɪsʲɑ"
-  context: "Українці почали гуртуватися навколо церков."
-- word: пласт (Plast)
-  translation: Plast (Ukrainian scouting organization)
-  ipa: "plɑst"
-  context: "Пласт виховував молодь у патріотичному дусі далеко від дому."
-- word: домівка (home/hearth)
-  translation: home, hearth (affectionate)
-  ipa: "doˈmʲiwkɑ"
-  context: "Думи про домівку не полишали емігрантів все життя."
-- word: туга (longing/homesickness)
-  translation: longing, homesickness
-  ipa: "ˈtuɦɑ"
-  context: "Туга за Україною звучить у піснях першої хвилі еміграції."
-- word: внесок (contribution)
-  translation: contribution
-  ipa: "ˈwnɛsok"
-  context: "Внесок діаспори у здобуття незалежності неможливо переоцінити."
+vocabulary:
+  - lemma: діаспора
+    translation: diaspora
+    ipa: "dʲiˈɑsporɑ"
+    context: "Українська діаспора є однією з найчисельніших у світі."
+  - lemma: еміграція
+    translation: emigration
+    ipa: "emiˈɦrɑt͡sʲijɑ"
+    context: "Економічна еміграція почалася наприкінці XIX століття."
+  - lemma: імміграція
+    translation: immigration
+    ipa: "imiˈɦrɑt͡sʲijɑ"
+    context: "Імміграція до Канади вимагала важкої праці на землі."
+  - lemma: громада
+    translation: community (esp. ethnic/religious)
+    ipa: "ɦroˈmɑdɑ"
+    context: "Українська громада будувала школи та церкви за власні кошти."
+  - lemma: біженець
+    translation: refugee
+    ipa: "ˈbʲiʒenet͡sʲ"
+    context: "Тисячі біженців тікали від більшовицького терору."
+  - lemma: переміщена особа
+    translation: displaced person (DP)
+    ipa: "pereˈmʲiʃt͡ʃenɑ oˈsobɑ"
+    context: "Табори для переміщених осіб у Німеччині стали осередками культури."
+  - lemma: екзиль
+    translation: exile
+    ipa: "ekˈzɪlʲ"
+    context: "Уряд УНР в екзилі продовжував діяти до 1992 року."
+  - lemma: асиміляція
+    translation: assimilation
+    ipa: "asymʲiˈlʲɑt͡sʲijɑ"
+    context: "Повна асиміляція загрожує втратою національної ідентичності."
+  - lemma: репатріація
+    translation: repatriation
+    ipa: "repɑtriˈɑt͡sʲijɑ"
+    context: "Примусова репатріація до СРСР часто означала смерть у ГУЛАГу."
+  - lemma: лобіювання
+    translation: lobbying
+    ipa: "lobijuˈwɑnʲːɑ"
+    context: "Діаспора вела активне лобіювання інтересів України у Конгресі США."
+  - lemma: культурна спадщина
+    translation: cultural heritage
+    ipa: "kulʲˈturnɑ ˈspɑdt͡ʃynɑ"
+    context: "Збереження культурної спадщини було головним завданням емігрантів."
+  - lemma: ідентичність
+    translation: identity
+    ipa: "idenˈtɪt͡ʃnʲisʲtʲ"
+    context: "Національна ідентичність гартувалася в умовах життя на чужині."
+  - lemma: інтеграція
+    translation: integration
+    ipa: "inteˈɦrɑt͡sʲijɑ"
+    context: "Успішна інтеграція в нове суспільство не означала відмову від коріння."
+  - lemma: двомовність
+    translation: bilingualism
+    ipa: "dwoˈmownʲisʲtʲ"
+    context: "Двомовність стала нормою для нових поколінь діаспори."
+  - lemma: заробітчанин
+    translation: migrant worker
+    ipa: "zɑrobitˈt͡ʃɑnɪn"
+    context: "Перші заробітчани їхали до Бразилії у пошуках кращої долі."
+  - lemma: гуртуватися
+    translation: to unite/group together
+    ipa: "ɦurtuˈwɑtɪsʲɑ"
+    context: "Українці почали гуртуватися навколо церков."
+  - lemma: пласт
+    translation: Plast (Ukrainian scouting organization)
+    ipa: "plɑst"
+    context: "Пласт виховував молодь у патріотичному дусі далеко від дому."
+  - lemma: домівка
+    translation: home/hearth
+    ipa: "doˈmʲiwkɑ"
+    context: "Думи про домівку не полишали емігрантів все життя."
+  - lemma: туга
+    translation: longing/homesickness
+    ipa: "ˈtuɦɑ"
+    context: "Туга за Україною звучить у піснях першої хвилі еміграції."
+  - lemma: внесок
+    translation: contribution
+    ipa: "ˈwnɛsok"
+    context: "Внесок діаспори у здобуття незалежності неможливо переоцінити."
+  - lemma: земельний голод
+    translation: land hunger
+    ipa: "zeˈmɛlʲnɪj ˈɦɔlod"
+    context: "Земельний голод змусив селян емігрувати."
+  - lemma: гомстед
+    translation: homestead
+    ipa: "ˈɦɔmsted"
+    context: "Уряд надавав переселенцям безкоштовний гомстед."
+  - lemma: бурдей
+    translation: sod house
+    ipa: "burˈdɛj"
+    context: "Першу зиму родина прожила в холодному бурдеї."

@@ -74,11 +74,12 @@ activity_hints:
 - type: essay-response
   focus: Роль Сагайдачного у захисті православ'я
   word_target: 300
-- type: timeline
-  focus: Від унії 1596 до легалізації 1632
-- type: true-false
-  focus: Факти про православну церкву XVII століття
-  items: 10
+- type: critical-analysis
+  focus: 'Критичний аналіз послідовності: Від унії 1596 до легалізації 1632'
+  items: 3
+- type: critical-analysis
+  focus: 'Верифікація фактів: Факти про православну церкву XVII століття'
+  items: 5
 focus: history
 pedagogy: CBI
 objectives:

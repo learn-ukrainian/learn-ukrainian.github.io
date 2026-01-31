@@ -2,7 +2,7 @@
   "module": "kozatski-povstannia-16",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-29T23:38:37.022147Z",
+  "last_audit": "2026-01-31T12:56:08.859524Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T18:02:18.626980Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4862/4000 (raw: 5035)"
+      "message": "4862/4800 (raw: 5035)"
     },
     "activities": {
       "status": "pass",

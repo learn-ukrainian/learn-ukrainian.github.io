@@ -65,8 +65,9 @@ activity_hints:
 - type: essay-response
   focus: Критичний аналіз
   word_target: 300
-- type: timeline
-  focus: Хронологія подій
-- type: true-false
-  focus: Факти та міфи
-  items: 10
+- type: critical-analysis
+  focus: Аналіз причинно-наслідкових зв'язків між подіями
+  items: 3
+- type: critical-analysis
+  focus: Критична оцінка історичних тверджень та міфів
+  items: 5

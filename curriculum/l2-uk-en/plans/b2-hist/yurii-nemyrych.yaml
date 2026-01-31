@@ -78,8 +78,9 @@ activity_hints:
   focus: Why the European choice failed in the 17th century
 - type: comparative-study
   focus: Pereiaslav vs. Hadiach models
-- type: true-false
-  focus: Facts about the Grand Duchy of Rus'
+- type: critical-analysis
+  focus: 'Верифікація фактів: Facts about the Grand Duchy of Rus'''
+  items: 4
 focus: history
 pedagogy: CBI
 objectives:

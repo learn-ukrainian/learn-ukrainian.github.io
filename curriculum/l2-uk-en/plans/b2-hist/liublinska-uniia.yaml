@@ -96,9 +96,9 @@ activity_hints:
 - type: essay-response
   focus: Consequences of incorporation into Poland
   items: 1
-- type: timeline
-  focus: Events leading to the Union of Lublin
+- type: critical-analysis
+  focus: 'Критичний аналіз послідовності: Events leading to the Union of Lublin'
   items: 1
-- type: true-false
-  focus: Political and cultural changes after 1569
+- type: critical-analysis
+  focus: 'Критична оцінка: Political and cultural changes after 1569'
   items: 1

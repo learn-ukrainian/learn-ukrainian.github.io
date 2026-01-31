@@ -1,0 +1,101 @@
+module: b1-99
+level: B1
+sequence: 99
+slug: b1-final-exam
+version: '2.0'
+title: Фінальний іспит B1
+subtitle: B1 Level Final Assessment
+content_outline:
+- section: Про іспит
+  words: 200
+  points:
+  - Структура фінального іспиту
+  - Як оцінювати результати
+  - Що означає готовність до B2
+- section: Частина 1 — Читання
+  words: 400
+  points:
+  - Текст 1: Новинна стаття (розуміння фактів)
+  - Текст 2: Особистий лист (розуміння намірів)
+  - Текст 3: Інструкція/оголошення (практичне читання)
+- section: Частина 2 — Аудіювання
+  words: 350
+  points:
+  - Аудіо 1: Телефонна розмова
+  - Аудіо 2: Фрагмент подкасту
+  - Аудіо 3: Оголошення / повідомлення
+- section: Частина 3 — Граматика та лексика
+  words: 400
+  points:
+  - Вид дієслова в контексті
+  - Дієслова руху з префіксами
+  - Складні речення
+  - Лексика B1 рівня
+- section: Частина 4 — Письмо
+  words: 250
+  points:
+  - Завдання 1: Неформальний email (80-100 слів)
+  - Завдання 2: Формальний лист або резюме (100-120 слів)
+- section: Частина 5 — Говоріння
+  words: 200
+  points:
+  - Монолог: Висловлення думки на тему
+  - Діалог: Обговорення ситуації
+  - Резюме: Переказ короткого тексту
+- section: Результати та рекомендації
+  words: 150
+  points:
+  - Як інтерпретувати результати
+  - Що робити далі (перехід до B2)
+word_target: 1950
+vocabulary_hints:
+  required:
+  - іспит (exam)
+  - оцінка (grade, assessment)
+  - результат (result)
+  - частина (part, section)
+  - завдання (task)
+  - читання (reading)
+  - аудіювання (listening)
+  - письмо (writing)
+  recommended:
+  - говоріння (speaking)
+  - бал (point, score)
+  - проходити (to pass)
+  - готовність (readiness)
+  - рівень (level)
+  - критерій (criterion)
+activity_hints:
+- type: reading-comprehension
+  focus: B1 level reading passages
+  items: 15
+- type: listening-comprehension
+  focus: B1 level audio comprehension
+  items: 12
+- type: cloze
+  focus: Grammar and vocabulary in context
+  items: 25
+- type: writing-task
+  focus: Email and formal letter
+  items: 2
+- type: speaking-prompt
+  focus: Monologue and dialogue prompts
+  items: 3
+focus: checkpoint
+pedagogy: TTT
+prerequisites:
+- b1-98 (Summarizing Information)
+connects_to:
+- b2-01 (Start of B2)
+objectives:
+- Learner demonstrates B1 reading comprehension
+- Learner demonstrates B1 listening comprehension
+- Learner demonstrates B1 grammar and vocabulary mastery
+- Learner demonstrates B1 writing ability
+- Learner demonstrates B1 speaking ability
+grammar:
+- All B1 grammar (aspect, motion verbs, complex sentences, participles)
+- Vocabulary from M52-88
+- Communication skills from M89-98
+register: нейтральний
+phase: B1.9

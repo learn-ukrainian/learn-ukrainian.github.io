@@ -68,9 +68,9 @@ activity_hints:
   focus: Карти та описи Півдня XVIII століття
   source: Архівні матеріали
   items: 4
-- type: true-false
-  focus: Міфи «Новоросії»
-  items: 10
+- type: critical-analysis
+  focus: 'Спростування міфів: Міфи «Новоросії»'
+  items: 5
 - type: essay-response
   focus: Чому російський міф «Новоросія» — це пропаганда?
   word_target: 250

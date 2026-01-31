@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M128 | **Phase:** HIST.12 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-29 23:38:39
+**Generated:** 2026-01-31 13:24:43
 
 ## Configuration
 **Type:** B2-history

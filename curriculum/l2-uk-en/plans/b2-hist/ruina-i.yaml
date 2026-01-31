@@ -70,8 +70,9 @@ activity_hints:
   focus: 'Causes of the Ruin: internal or external?'
 - type: comparative-study
   focus: Vyhovsky vs. Briukhovetsky policies
-- type: true-false
-  focus: Facts about Konotop and Nizhyn
+- type: critical-analysis
+  focus: 'Верифікація фактів: Facts about Konotop and Nizhyn'
+  items: 4
 focus: history
 pedagogy: CBI
 objectives:

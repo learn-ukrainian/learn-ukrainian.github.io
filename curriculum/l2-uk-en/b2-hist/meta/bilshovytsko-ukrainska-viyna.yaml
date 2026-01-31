@@ -93,9 +93,12 @@ sources:
 - name: Український інститут національної пам’яті — Радянсько-українська війна
   url: https://uinp.gov.ua/vystavky/radiyansko-ukrayinska-viyna
   type: reference
+connects_to:
+  - b2-hist-90
+  - b2-hist-97
 naturalness:
   score: 10
   status: PASS
   justification: Академічний український для воєнної історії
 build:
-  last_modified: '2026-01-28'
+  last_modified: '2026-01-31'

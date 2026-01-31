@@ -68,8 +68,9 @@ activity_hints:
   focus: Analysis of diplomatic documents
 - type: essay-response
   focus: Evolution of Cossack autonomy
-- type: true-false
-  focus: Common myths about the compromises
+- type: critical-analysis
+  focus: 'Спростування міфів: Common myths about the compromises'
+  items: 4
 - type: comparative-study
   focus: Zboriv vs. Bila Tserkva territorial changes
 focus: history

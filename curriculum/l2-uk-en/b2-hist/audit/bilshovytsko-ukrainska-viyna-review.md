@@ -1,8 +1,8 @@
 # Audit Report: M95 — bilshovytsko-ukrainska-viyna.md
-**Level:** B2 | **Module:** M95 | **Phase:** HIST.9 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2 | **Module:** M95 | **Phase:** HIST.9 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-29 23:39:52
+**Generated:** 2026-01-31 14:30:33
 
 ## Configuration
 **Type:** B2-history
@@ -21,10 +21,10 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Аналіз ультиматуму Раднаркому | 3 | 1 | ✅ |
-| 2 | comparative-study | Крути vs Сучасність | 1 | 1 | ✅ |
-| 3 | critical-analysis | Аналіз: "Громадянська війна" як конструкт | 1 | 1 | ✅ |
-| 4 | essay-response | Есе: Ціна незалежності | 1 | 1 | ✅ |
-| 5 | authorial-intent | Аналіз: Риторика Леніна | 1 | 1 | ✅ |
+| 2 | critical-analysis | Аналіз: "Громадянська війна" як конструкт | 1 | 1 | ✅ |
+| 3 | comparative-study | Порівняння: 1917 vs 2014 | 1 | 1 | ✅ |
+| 4 | essay-response | Ціна незалежності | 1 | 1 | ✅ |
+| 5 | true-false | Факти про війну | 10 | 8 | ✅ |
 
 **Summary:**
 - Total activities: 5 (target: 3-9) ✅
@@ -34,50 +34,50 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 5063/4000 (raw: 5137)
+- **Words:** ✅ 4496/4000 (raw: 4601)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/5
+- **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.7% (target 90-100% (history))
-- **Richness:** ✅ 96% (history)
+- **Immersion:** 🇺🇦 100.0% (target 90-100% (history))
+- **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 96% (minimum: 95%)
+**Score:** 97% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 15 | 3 | 100% | 24% | 23.8% |
-| engagement | 7 | 6 | 100% | 14% | 14.3% |
+| engagement | 5 | 6 | 83% | 14% | 11.9% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 6 | 4 | 100% | 10% | 9.5% |
-| visual | 4 | 4 | 100% | 10% | 9.5% |
-| variety | 0.97 | - | 97% | 5% | 4.6% |
+| visual | 5 | 4 | 100% | 10% | 9.5% |
+| variety | 1.00 | - | 100% | 5% | 4.8% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 1 | 3 | 33% | 5% | 1.6% |
-| **TOTAL** | | | | | **96.7%** |
+| questions | 7 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **97.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 45 | Included in Core |
-| **Більшовицько-українська війна** | ⚪️ | 135 | Skipped |
-| **Вступ: Боротьба за існування** | ✅ | 469 | Included in Core |
-| **Перша більшовицька агресія (1917-1918)** | ⚪️ | 594 | Skipped |
-| **Друга хвиля: Червоні та Білі** | ⚪️ | 734 | Skipped |
-| **Читання** | ✅ | 622 | Included in Core |
-| **Первинні джерела: Свідчення боротьби** | ✅ | 821 | Included in Core |
-| **Деколонізаційний погляд** | ✅ | 731 | Included in Core |
-| **Підсумок: Уроки поразки** | ✅ | 912 | Included in Core |
+| **Intro/Narrative** | ✅ | 161 | Included in Core |
+| **Вступ: Боротьба за незалежність** | ✅ | 431 | Included in Core |
+| **Читання** | ✅ | 112 | Included in Core |
+| **Перша більшовицька агресія (1917-1918)** | ⚪️ | 730 | Skipped |
+| **Друга хвиля: Війна з білогвардійцями і червоними** | ⚪️ | 742 | Skipped |
+| **Первинні джерела** | ✅ | 926 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 605 | Included in Core |
+| **Підсумок: Уроки поразки** | ✅ | 550 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 239 | Skipped |

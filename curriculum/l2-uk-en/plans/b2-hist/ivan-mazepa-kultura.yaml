@@ -107,9 +107,9 @@ activity_hints:
 - type: essay-response
   focus: Decolonizing the narrative about Mazepa
   items: 1
-- type: timeline
-  focus: Major cultural projects during Mazepa's rule
+- type: critical-analysis
+  focus: 'Критичний аналіз послідовності: Major cultural projects during Mazepa''s rule'
   items: 1
-- type: true-false
-  focus: Baroque architecture and art
+- type: critical-analysis
+  focus: 'Критична оцінка: Baroque architecture and art'
   items: 1

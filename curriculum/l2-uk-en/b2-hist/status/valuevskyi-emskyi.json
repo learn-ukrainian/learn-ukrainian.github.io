@@ -2,12 +2,12 @@
   "module": "valuevskyi-emskyi",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-29T23:39:27.375606Z",
+  "last_audit": "2026-01-31T14:26:32.360509Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-28T11:21:11.511963Z",
-    "meta": "2026-01-29T07:38:18.670776Z",
-    "activities": "2026-01-27T21:50:49.652053Z",
+    "md": "2026-01-31T14:26:27.382733Z",
+    "meta": "2026-01-31T13:35:54.169169Z",
+    "activities": "2026-01-31T14:21:37.722056Z",
     "vocabulary": "2026-01-28T11:12:41.394054Z",
     "plan": null
   },
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4367/4000 (raw: 4587)"
+      "message": "4632/4000 (raw: 4762)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "5/3"
+      "message": "6/3"
     },
     "vocabulary": {
       "status": "pass",

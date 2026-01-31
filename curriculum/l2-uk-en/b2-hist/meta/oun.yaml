@@ -95,6 +95,10 @@ activity_hints:
   - type: essay-response
     focus: Як історичний контекст вплинув на радикалізацію українського націоналізму?
     word_target: 250
+prerequisites:
+  - "b2-hist-102 (Голодомор: Пам'ять)"
+connects_to:
+  - "b2-hist-104 (Карпатська Україна)"
 sources:
   - name: 'Організація українських націоналістів — Вікіпедія'
     url: 'https://uk.wikipedia.org/wiki/Організація_українських_націоналістів'

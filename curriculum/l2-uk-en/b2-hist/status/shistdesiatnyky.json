@@ -2,12 +2,12 @@
   "module": "shistdesiatnyky",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T22:29:09.422843Z",
+  "last_audit": "2026-01-31T13:24:35.132384Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-30T22:27:26.337669Z",
     "meta": "2026-01-30T22:29:04.013294Z",
-    "activities": "2026-01-30T22:29:06.161952Z",
+    "activities": "2026-01-30T22:29:45.156429Z",
     "vocabulary": "2026-01-30T22:21:28.892535Z",
     "plan": null
   },

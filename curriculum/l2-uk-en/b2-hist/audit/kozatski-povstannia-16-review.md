@@ -1,12 +1,12 @@
 # Audit Report: M44 — kozatski-povstannia-16.md
-**Level:** B2 | **Module:** M44 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2 | **Module:** M44 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 4800
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-29 23:38:37
+**Generated:** 2026-01-31 12:56:08
 
 ## Configuration
 **Type:** B2-history
-**Word Target:** 4000 words
+**Word Target:** 4800 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4862/4000 (raw: 5035)
+- **Words:** ✅ 4862/4800 (raw: 5035)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
