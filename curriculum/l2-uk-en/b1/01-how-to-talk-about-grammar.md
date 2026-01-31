@@ -95,22 +95,23 @@ This structural intuition is vital. Spotting a word ending in **-ого** should
 
 Grammar isn't just about rules; it's about relationships.
 
-- **Imennik** names the reality.
-- **Prykmetnyk** colors the reality.
-- **Diieslovo** moves the reality.
-- **Pryslivnyk** describes the movement.
+- **Іменник** names the reality.
+- **Прикметник** colors the reality.
+- **Дієслово** moves the reality.
+- **Прислівник** describes the movement.
 
 Combining them creates a sentence: *Гарний студент швидко читає.* (Reality + Color + Movement + Description).
 
 > ⚠️ **Common Learner Confusion**
 >
-> Beginners often confuse adjectives (прикметники) and adverbs (прислівники) because they look similar in English translation ("good" vs "well").
-> In Ukrainian, the distinction is strict:
+> Beginners often confuse adjectives (прикметники) and adverbs (прислівники) because they share the same root. Learn to see the difference:
 >
-> - **Це добрий борщ.** (*Dobryi* modifies *borscht* — adjective/прикметник).
-> - **Я добре чую.** (*Dobre* modifies *hear* — adverb/прислівник).
+> - **Це швидкий потяг.** — "швидк**ий**" describes the *noun* потяг → прикметник
+> - **Потяг їде швидко.** — "швидк**о**" describes *how* it moves (the *verb*) → прислівник
 >
-> If you are describing a *thing* (noun), use a **прикметник**. If you are describing an *action* (verb), use a **прислівник**.
+> Same root *швидк-*, but different endings: **-ий** for adjective, **-о** for adverb.
+>
+> **Simple rule:** Describing a thing (noun)? Use прикметник (-ий/-а/-е). Describing an action (verb)? Use прислівник (-о).
 
 ### Function Words (Службові частини мови)
 
@@ -134,6 +135,23 @@ And when you stub your toe? **Ой, як боляче!** That **ой** is a ви
 | **частина мови** | part of speech | The category a word belongs to |
 
 The частка is particularly interesting — it's a small word that adds nuance to sentences. The most common частка is "не", which negates verbs and adjectives. The word "частка" itself means "small part" — these are the smallest functional elements of speech. Other common частки include "хай" for imperatives, "би" for conditionals, and "ні" for emphatic negation.
+
+> 🗣️ **Colloquial Corner: Ukrainian "Yep" and "Nope"**
+>
+> Beyond standard **так** and **ні**, Ukrainian has expressive alternatives:
+>
+> | Phrase | Meaning | Usage |
+> |--------|---------|-------|
+> | **Та** | Yep / Yeah | Casual agreement |
+> | **Ага** / **Угу** | Uh-huh / Yep | Informal agreement |
+> | **Авжеж** / **Еге ж** | Of course / Sure | Emphatic yes |
+> | **Та ні** | Oh no / Not really | Soft disagreement |
+> | **Та де!** | No way! / Not at all! | Emotional denial |
+> | **Де там!** | Not a chance! | When something's unlikely |
+> | **Аж ніяк** | By no means | Categorical denial |
+> | **Отож-бо й воно** | That's just it | Ironic negation (very Ukrainian) |
+>
+> These add color and emotion that plain так/ні can't convey.
 
 ---
 
@@ -216,7 +234,7 @@ Let's look closer at each case so you can talk about them with precision.
 - **Keyword:** Tool / With / As
 - **Questions:** Ким? Чим?
 - **Function:** How something is done (with a pen), accompaniment (with mom), or identity (working as a doctor).
-- **Example:** "Я пишу **ручкою**." (Writing with a pen). "Він працює **лікраем**." (He works as a doctor).
+- **Example:** "Я пишу **ручкою**." (Writing with a pen). "Він працює **лікарем**." (He works as a doctor).
 - **Metalanguage:** "Орудний відмінок означає інструмент дії." (Instrumental case signifies the tool of action).
 
 #### 6. Місцевий відмінок
@@ -243,11 +261,22 @@ Let's look closer at each case so you can talk about them with precision.
 
 The mnemonic in Діалог 4 — "На Різдво Дід Загубив Орішки Між Ковбасками" — is a genuine Ukrainian school tradition. Students learn this phrase early on, and it stays with them for life. You'll find that native speakers can recite the cases in order without thinking, because this mnemonic made the sequence automatic.
 
+> ✅ **Перевірте себе / Check Yourself**
+>
+> Зупиніться на хвилину. Чи можете ви:
+> - Назвати всі сім відмінків по порядку?
+> - Пригадати питання для родового відмінка? (кого? чого?)
+> - Пояснити, чому кличний відмінок особливий?
+>
+> Якщо так — чудово! Якщо ні — перегляньте таблицю ще раз. Це важливо для наступних модулів.
+
 ---
 
 ## Basic Sentence Terms
 
-To understand grammar explanations, you need words for sentence structure. These terms appear constantly in grammar textbooks, online resources, and language learning apps. When you read an explanation like "Дієслово змінюється за особами та числами" (The verb changes according to person and number), you need to know what особа and число mean.
+Ви вже знаєте частини мови та відмінки — це чудовий прогрес! Тепер додамо ще кілька термінів, які постійно з'являються в граматичних поясненнях.
+
+When you read an explanation like "Дієслово змінюється за особами та числами" (The verb changes according to person and number), you need to know what особа and число mean. These terms appear constantly in grammar textbooks, online resources, and language learning apps.
 
 The concept of рід is fundamental to Ukrainian grammar. Every noun has a gender — чоловічий, жіночий, or середній — and this gender determines how adjectives, pronouns, and past-tense verbs agree with the noun. The term число refers to whether something is однина or множина:
 
@@ -266,7 +295,7 @@ See how these work together: **Новий студент прийшов.** vs. *
 
 #### 1. Рід
 
-Ukrainian grammar is obsessed with gender. Everything matches the gender of the noun.
+Like most European languages, Ukrainian uses grammatical gender. Adjectives, verbs, and pronouns all agree with the noun's gender.
 
 - **Чоловічий рід:** Usually consonant endings (*дім, стіл, брат*).
 - **Жіночий рід:** Usually -а/-я endings (*мама, пісня, кава*).
@@ -316,17 +345,13 @@ You will dive deep into **вид** in Module 06, but you need the word now. Why?
 
 And особа? Watch: **Я читаю.** (перша особа — I), **Ти читаєш.** (друга особа — you), **Він читає.** (третя особа — he). The закінчення of the verb tells you who's doing the action.
 
-> 🎬 **Pop Culture Moment: Language Learning in Ukraine**
->
-> In Ukrainian schools, grammar is taught rigorously. A typical exercise might say: "Визначте відмінок іменників у реченні" (Determine the case of the nouns in the sentence). Ukrainian students do this from around age 8. Now you're learning what they learned as children — but you're doing it faster because you already understand the concepts in English.
-
 ### Why Grammar Terminology Matters for Self-Study
 
 When you study independently using Ukrainian resources, you'll encounter instructions like "Утворіть форму орудного відмінка" (Form the instrumental case). Without knowing that орудний means instrumental and відмінок means case, you can't complete the exercise. Similarly, online forums where Ukrainians discuss language learning use these terms constantly. If someone writes "Тут потрібен давальний" (Here you need dative), you need to know what давальний means.
 
 Imagine you're watching a grammar video from Kyiv and the teacher says: **«Зверніть увагу на закінчення дієслова в третій особі.»** If you know the terms, you hear: "Pay attention to the verb ending in third person." If you don't, it's just noise.
 
-Or you're reading a forum post from Львів: **«У цьому реченні підмет стоїть після присудка.»** Now you understand: "In this sentence, the subject comes after the predicate."
+Or you're reading a forum post from Львів: **«Тут потрібен родовий відмінок, бо це заперечення.»** Now you understand: "Here you need genitive case, because it's a negation."
 
 The good news is that once you learn these twenty-five terms, they unlock an entire world of Ukrainian-language learning resources. Grammar textbooks written for native speakers become accessible. YouTube explanations in Ukrainian make sense. Even the error messages in language learning apps that explain why your answer was wrong — those become comprehensible when you know the terminology.
 
@@ -455,18 +480,22 @@ Knowing these six verbs will let you read 90% of rule explanations.
 
 In this module, you learned the core grammar terminology in Ukrainian:
 
-**Parts of Speech (Частини мови):**
+**Частини мови (10):**
 
 - іменник, дієслово, прикметник, прислівник, займенник, числівник
 - прийменник, сполучник, частка, вигук
 
-**The Seven Cases (Відмінки):**
+**Відмінки (7):**
 
 - називний, родовий, давальний, знахідний, орудний, місцевий, кличний
 
-**Sentence Elements:**
+**Граматичні категорії (5):**
 
-- слово, речення, рід, число, особа, закінчення
+- рід, число, особа, час, вид
+
+**Основні поняття (3):**
+
+- слово, речення, закінчення
 
 > ✅ **Self-Check**
 >
