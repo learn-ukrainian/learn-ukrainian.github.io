@@ -203,23 +203,29 @@ After implementing Phase 1:
 
 ---
 
-## Phase 6: Clarify Overlapping Content
+## Phase 6: Clarify Overlapping Content ✅ COMPLETE
 
-### 6.1 Document Intentional Progression
+### 6.1 Resolution
 
-| Module Pair | Differentiation |
-|-------------|-----------------|
-| M54 vs M96 | M54 = vocabulary (words/phrases), M96 = discourse (conversation flow) |
-| M55 vs M97 | M55 = phrases (agree/disagree), M97 = extended debate (argumentation) |
-| M88 vs M94 | M88 = intro strategies, M94 = advanced comprehension + note-taking |
+**Original problem:** M94 and M97 duplicated M88 and M55 content.
 
-**Action:** Update module subtitles to clarify:
-- M54: "Expressing Opinions — Vocabulary"
-- M96: "Expressing Opinions — Conversation Skills"
-- M55: "Agreement & Disagreement — Phrases"
-- M97: "Casual Debates — Argumentation Practice"
+**Solution:** Completely redefined M94 and M97 with unique, practical skills:
 
-**Deliverable:** Update plan subtitles
+| Old Module | Problem | New Module |
+|------------|---------|------------|
+| M94 Podcast Comprehension | Duplicated M88 (Interviews & Podcasts) | **Presentations & Describing Visual Information** — structure presentations, describe graphs/charts/tables |
+| M97 Casual Debates | Duplicated M55 (Agreement & Disagreement) | **Feedback, Negotiation & Making Complaints** — give/receive feedback, negotiate, make complaints |
+
+**Also clarified subtitles:**
+- M54: "Expressing Opinions — Vocabulary & Phrases"
+- M96: "Expressing Opinions — Conversation Practice"
+- M55: "Agreement & Disagreement — Vocabulary & Phrases"
+- M88: "Interviews & Podcasts — Introduction to Listening"
+
+**Files updated:**
+- `curriculum/l2-uk-en/plans/b1/94-presentations-visuals.yaml` (renamed + rewritten)
+- `curriculum/l2-uk-en/plans/b1/97-feedback-negotiation-complaints.yaml` (renamed + rewritten)
+- `curriculum/l2-uk-en/curriculum.yaml` (slugs updated)
 
 ---
 
@@ -269,14 +275,15 @@ After implementing Phase 1:
 - [ ] Verify b1.yaml is correct
 - [ ] Update STATE-STANDARD-COMPLIANCE-ANALYSIS.md after Phase 1
 
-### Phase 6: Overlap Clarification (Priority: Low)
-- [x] Update M54 subtitle ✅ Done (2026-01-31) — "Expressing Opinions — Vocabulary & Phrases"
-- [x] Update M96 subtitle ✅ Done (2026-01-31) — "Expressing Opinions — Conversation Practice"
-- [x] Update M55 subtitle ✅ Done (2026-01-31) — "Agreement & Disagreement — Vocabulary & Phrases"
-- [x] Update M97 subtitle ✅ Done (2026-01-31) — "Casual Debates — Argumentation Practice"
-- [x] Update M88 subtitle ✅ Done (2026-01-31) — "Interviews & Podcasts — Introduction to Listening"
-- [x] Update M94 subtitle ✅ Done (2026-01-31) — "Podcast Comprehension — Advanced Strategies & Note-Taking"
-- [x] Fix M96 slug mismatch ✅ Done (2026-01-31)
+### Phase 6: Overlap Clarification (Priority: Low) ✅ COMPLETE
+- [x] Update M54 subtitle ✅ "Expressing Opinions — Vocabulary & Phrases"
+- [x] Update M96 subtitle ✅ "Expressing Opinions — Conversation Practice"
+- [x] Update M55 subtitle ✅ "Agreement & Disagreement — Vocabulary & Phrases"
+- [x] Update M88 subtitle ✅ "Interviews & Podcasts — Introduction to Listening"
+- [x] Fix M96 slug mismatch ✅
+- [x] **REDEFINE M94** ✅ Was "Podcast Comprehension" (duplicated M88) → Now "Presentations & Describing Visual Information"
+- [x] **REDEFINE M97** ✅ Was "Casual Debates" (duplicated M55) → Now "Feedback, Negotiation & Making Complaints"
+- [x] Update curriculum.yaml slugs ✅
 
 ### Phase 7: Thematic Gaps (Priority: Low)
 - [ ] Expand M61 vocabulary (education)

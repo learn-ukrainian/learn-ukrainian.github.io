@@ -1,0 +1,93 @@
+module: b1-94
+level: B1
+sequence: 94
+slug: presentations-visuals
+version: '3.0'
+title: Презентації та візуалізація
+subtitle: Presentations & Describing Visual Information
+content_outline:
+- section: Вступ — Навіщо презентувати?
+  words: 200
+  points:
+  - Презентації в навчанні, на роботі, в житті
+  - Структура цього модуля
+- section: Структура презентації
+  words: 400
+  points:
+  - Початок (привітання, тема, план)
+  - Основна частина (пункти, переходи)
+  - Завершення (підсумок, запитання)
+  - Фрази для кожної частини
+- section: Опис візуальної інформації
+  words: 450
+  points:
+  - Графіки (зростає, падає, стабільний)
+  - Діаграми (частка, відсоток, порівняння)
+  - Таблиці (рядки, стовпці, дані)
+  - Фотографії та ілюстрації (на зображенні ми бачимо...)
+- section: Мовні засоби презентатора
+  words: 350
+  points:
+  - Привернення уваги (Зверніть увагу на...)
+  - Пояснення (Це означає, що...)
+  - Наголошення (Особливо важливо...)
+  - Переходи (Тепер перейдемо до...)
+- section: Практика — Міні-презентація
+  words: 350
+  points:
+  - 3-хвилинна презентація з візуальним матеріалом
+  - Чекліст самооцінки
+  - Поширені помилки та як їх уникнути
+word_target: 1750
+vocabulary_hints:
+  required:
+  - презентація (presentation)
+  - слайд (slide)
+  - графік (graph/chart)
+  - діаграма (diagram)
+  - таблиця (table)
+  - дані (data)
+  - зростати (to grow/increase)
+  - падати (to fall/decrease)
+  recommended:
+  - аудиторія (audience)
+  - висновок (conclusion)
+  - наочний (visual)
+  - тенденція (trend)
+  - показник (indicator)
+  - частка (share/portion)
+activity_hints:
+- type: fill-in
+  focus: Complete presentation phrases
+  items: 15
+- type: match-up
+  focus: Match visual description to graph type
+  items: 12
+- type: quiz
+  focus: Choose correct phrase for situation
+  items: 15
+- type: describe
+  focus: Describe charts and graphs in Ukrainian
+  items: 6
+- type: monologue
+  focus: 3-minute presentation practice
+  items: 3
+focus: practical
+pedagogy: PPP
+prerequisites:
+- b1-61 (Professional Communication — workplace vocabulary)
+- b1-56 (Discourse Markers — transitions)
+connects_to:
+- b1-95 (Note-taking Skills)
+objectives:
+- Learner can structure a 3-5 minute presentation in Ukrainian
+- Learner can describe graphs, charts, and tables accurately
+- Learner can use appropriate transition phrases
+- Learner can engage audience with visual materials
+grammar:
+- Presentation phrases (Дозвольте представити..., Як бачимо...)
+- Describing trends (зростає на X%, падає вдвічі)
+- Comparison structures (порівняно з..., на відміну від...)
+register: розмовний
+phase: B1.9
+note: "RENAMED from podcast-comprehension. Teaches SKILLS not covered in M61 vocabulary."

@@ -1,0 +1,94 @@
+module: b1-97
+level: B1
+sequence: 97
+slug: feedback-negotiation-complaints
+version: '3.0'
+title: Зворотний зв'язок, переговори, скарги
+subtitle: Feedback, Negotiation & Making Complaints
+content_outline:
+- section: Вступ — Складні розмови
+  words: 200
+  points:
+  - Чому ці навички важливі
+  - Культурний контекст в Україні
+  - Структура модуля
+- section: Давати та отримувати зворотний зв'язок
+  words: 400
+  points:
+  - Позитивний фідбек (Ви чудово впоралися з...)
+  - Конструктивна критика (Можливо, варто було б...)
+  - Як приймати критику (Дякую за зауваження, я врахую...)
+  - Сендвіч-метод (похвала → критика → похвала)
+- section: Основи переговорів
+  words: 400
+  points:
+  - Позиція vs інтерес (чого ви насправді хочете?)
+  - Пропозиція (Я пропоную... / Що якщо...?)
+  - Компроміс (Давайте знайдемо середину)
+  - Згода та підтвердження (Домовились! / Отже, ми вирішили...)
+- section: Скарги та вирішення проблем
+  words: 400
+  points:
+  - Ввічлива скарга (На жаль, маю повідомити...)
+  - Пояснення проблеми (Справа в тому, що...)
+  - Вимога вирішення (Я очікую, що... / Прошу...)
+  - Реагування на скаргу (Перепрошую за незручності...)
+- section: Практика — Рольові ігри
+  words: 350
+  points:
+  - Сценарій 1: Фідбек колезі
+  - Сценарій 2: Переговори про ціну/умови
+  - Сценарій 3: Скарга в магазині/ресторані
+word_target: 1750
+vocabulary_hints:
+  required:
+  - зворотний зв'язок (feedback)
+  - критика (criticism)
+  - похвала (praise)
+  - переговори (negotiation)
+  - пропозиція (proposal/offer)
+  - компроміс (compromise)
+  - скарга (complaint)
+  - вирішення (solution/resolution)
+  recommended:
+  - конструктивний (constructive)
+  - врахувати (to take into account)
+  - домовитися (to agree/negotiate)
+  - незручності (inconvenience)
+  - компенсація (compensation)
+  - поступка (concession)
+activity_hints:
+- type: role-play
+  focus: Practice feedback conversations
+  items: 6
+- type: fill-in
+  focus: Complete negotiation dialogues
+  items: 15
+- type: quiz
+  focus: Choose appropriate complaint phrase
+  items: 12
+- type: match-up
+  focus: Match situation to response type
+  items: 15
+- type: error-correction
+  focus: Fix too aggressive/passive phrases
+  items: 10
+focus: practical
+pedagogy: PPP
+prerequisites:
+- b1-55 (Agreement & Disagreement — vocabulary foundation)
+- b1-61 (Professional Communication — workplace vocabulary)
+connects_to:
+- b1-98 (Summarizing Information)
+objectives:
+- Learner can give constructive feedback in Ukrainian
+- Learner can receive criticism gracefully
+- Learner can negotiate and reach compromises
+- Learner can make complaints politely but firmly
+grammar:
+- Conditional for suggestions (Можливо, варто було б...)
+- Polite request forms (Прошу..., Я очікую...)
+- Softening phrases (На жаль..., Перепрошую, але...)
+register: розмовний
+phase: B1.9
+note: "RENAMED from casual-debates. Teaches practical SKILLS not covered elsewhere."
