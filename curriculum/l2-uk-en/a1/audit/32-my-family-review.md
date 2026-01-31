@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M32 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 916
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 21:12:20
+**Generated:** 2026-01-31 15:30:00
 
 ## Configuration
 **Type:** A1-vocab
@@ -30,9 +30,11 @@
 | 8 | quiz | Marital Status | 8 | 8 | ✅ |
 | 9 | unjumble | Family Sentences | 12 | 6 | ✅ |
 | 10 | true-false | Family Facts | 12 | 8 | ✅ |
+| 11 | match-up | Vocative Forms (Кличний відмінок) | 10 | 8 | ✅ |
+| 12 | fill-in | Calling Family Members | 8 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 10 (target: 8-12) ✅
+- Total activities: 12 (target: 8-12) ✅
 - Unique types: 6 (minimum: 4) ✅
 - Priority types used: 4/5 (fill-in, match-up, quiz, unjumble) ✅
 - Required types used: 2/2 (fill-in, match-up) ✅
@@ -40,7 +42,7 @@
 
 ## Gates
 - **Words:** ✅ 958/916 (raw: 1405)
-- **Activities:** ✅ 10/8
+- **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used

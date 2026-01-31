@@ -661,3 +661,183 @@ activities:
       correct: false
     explanation: Наше means "our" (neuter).
   instruction: Choose the correct answer.
+- type: quiz
+  title: Свій vs Його/Її (Reflexive Possessive)
+  items:
+  - question: Він читає ___ книгу. (He reads his OWN book.)
+    options:
+    - text: свою
+      correct: true
+    - text: його
+      correct: false
+    - text: її
+      correct: false
+    - text: мою
+      correct: false
+    explanation: свою = his own (subject = possessor)
+  - question: Він читає ___ книгу. (He reads HER book — another person's.)
+    options:
+    - text: її
+      correct: true
+    - text: свою
+      correct: false
+    - text: його
+      correct: false
+    - text: твою
+      correct: false
+    explanation: її = her (someone else's book)
+  - question: Марія любить ___ маму. (Maria loves her OWN mom.)
+    options:
+    - text: свою
+      correct: true
+    - text: її
+      correct: false
+    - text: його
+      correct: false
+    - text: мою
+      correct: false
+    explanation: свою = her own (Maria = subject = possessor)
+  - question: Марія любить ___ маму. (Maria loves HIS mom — another man's.)
+    options:
+    - text: його
+      correct: true
+    - text: свою
+      correct: false
+    - text: її
+      correct: false
+    - text: твою
+      correct: false
+    explanation: його = his (someone else's mom)
+  - question: Він бере ___ телефон. (He takes his OWN phone.)
+    options:
+    - text: свій
+      correct: true
+    - text: його
+      correct: false
+    - text: її
+      correct: false
+    - text: мій
+      correct: false
+    explanation: свій = his own (subject = possessor)
+  - question: Вона бере ___ телефон. (She takes HIS phone — not her own.)
+    options:
+    - text: його
+      correct: true
+    - text: свій
+      correct: false
+    - text: її
+      correct: false
+    - text: твій
+      correct: false
+    explanation: його = his (someone else's phone)
+  - question: Діти люблять ___ батьків. (Children love their OWN parents.)
+    options:
+    - text: своїх
+      correct: true
+    - text: їхніх
+      correct: false
+    - text: його
+      correct: false
+    - text: наших
+      correct: false
+    explanation: своїх = their own (subject = possessor)
+  - question: Він знає ___ адресу. (He knows his OWN address.)
+    options:
+    - text: свою
+      correct: true
+    - text: його
+      correct: false
+    - text: її
+      correct: false
+    - text: твою
+      correct: false
+    explanation: свою = his own (subject = possessor)
+  instruction: "Оберіть правильну відповідь. Зверніть увагу: свій = «one's own», його/її = someone else's."
+- type: true-false
+  title: Свій — Key Concepts
+  items:
+  - statement: «Свій» means «one's own» and refers back to the subject.
+    correct: true
+    explanation: Correct! свій always refers to the subject of the sentence.
+  - statement: «Він читає свою книгу» means he reads someone else's book.
+    correct: false
+    explanation: Incorrect! свою = his OWN book. For someone else's, use його/її.
+  - statement: «Він читає його книгу» means he reads another man's book.
+    correct: true
+    explanation: Correct! його = his (referring to another person, not the subject).
+  - statement: In «Марія любить свою маму», the mom belongs to Maria.
+    correct: true
+    explanation: Correct! свою = Maria's own mom.
+  - statement: In «Марія любить її маму», the mom belongs to Maria.
+    correct: false
+    explanation: Incorrect! її = another woman's mom, not Maria's.
+  - statement: «Свій» changes form like мій (свій/своя/своє/свої).
+    correct: true
+    explanation: Correct! свій agrees with the noun in gender and number.
+  - statement: «Я люблю свою маму» and «Я люблю мою маму» mean the same thing.
+    correct: true
+    explanation: Correct! In 1st/2nd person, both are acceptable and mean the same.
+  - statement: «Він любить свою маму» and «Він любить його маму» mean the same thing.
+    correct: false
+    explanation: Incorrect! In 3rd person, the difference matters! свою = his own, його = another man's.
+  instruction: Визначте, чи твердження правильне.
+- type: fill-in
+  title: Свій in Context
+  items:
+  - sentence: Вона забула ___ ключі вдома. (She forgot her OWN keys at home.)
+    answer: свої
+    options:
+    - свої
+    - її
+    - його
+    - їхні
+  - sentence: Він показує ___ фото. (He shows HER photo — another woman's.)
+    answer: її
+    options:
+    - її
+    - свою
+    - його
+    - мою
+  - sentence: Марко любить ___ собаку. (Marko loves his OWN dog.)
+    answer: свою
+    options:
+    - свою
+    - його
+    - її
+    - мою
+  - sentence: Ганна бачить ___ брата. (Hanna sees HIS brother — another man's.)
+    answer: його
+    options:
+    - його
+    - свого
+    - її
+    - твого
+  - sentence: Ми знаємо ___ адресу. (We know our OWN address.)
+    answer: свою
+    options:
+    - свою
+    - нашу
+    - вашу
+    - їхню
+  - sentence: Він узяв ___ сумку. (He took his OWN bag.)
+    answer: свою
+    options:
+    - свою
+    - його
+    - її
+    - мою
+  - sentence: Вона читає ___ книгу. (She reads HIS book — another man's.)
+    answer: його
+    options:
+    - його
+    - свою
+    - її
+    - мою
+  - sentence: Петро шукає ___ ключі. (Petro is looking for his OWN keys.)
+    answer: свої
+    options:
+    - свої
+    - його
+    - її
+    - їхні
+  instruction: "Оберіть правильне слово. Пам'ятайте: свій = subject's own."

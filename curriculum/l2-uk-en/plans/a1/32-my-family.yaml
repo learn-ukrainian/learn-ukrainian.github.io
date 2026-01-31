@@ -70,6 +70,12 @@ activity_hints:
 - type: fill-in
   focus: Describe your family
   items: 6
+- type: match-up
+  focus: Vocative forms (Nominative → Vocative)
+  items: 10
+- type: fill-in
+  focus: Calling family members (vocative practice)
+  items: 8
 focus: vocabulary
 pedagogy: PPP
 prerequisites:
@@ -83,9 +89,11 @@ objectives:
 - Learner can describe family relationships
 - Learner can talk about their own family
 - Learner can use possessives with family terms
+- Learner can use basic vocative forms to address family members
 grammar:
 - Family vocabulary
 - Possessives with family members
 - Genitive for relationships (батько + name)
+- Basic vocative forms (мамо, тату, бабусю, дідусю)
 register: розмовний
 phase: A1.3 [Consolidation]

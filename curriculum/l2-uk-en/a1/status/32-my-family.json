@@ -2,14 +2,14 @@
   "module": "32-my-family",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:12:20.440926Z",
+  "last_audit": "2026-01-31T15:30:00.500924Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-30T21:12:17.093269Z",
     "meta": "2026-01-26T21:56:47.968452Z",
-    "activities": "2026-01-16T00:52:20.638113Z",
+    "activities": "2026-01-31T15:28:48.664308Z",
     "vocabulary": "2026-01-30T21:11:13.588566Z",
-    "plan": "2026-01-30T12:24:45.245269Z"
+    "plan": "2026-01-31T15:29:36.009881Z"
   },
   "gates": {
     "meta": {
@@ -25,7 +25,7 @@
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "10/8"
+      "message": "12/8"
     },
     "vocabulary": {
       "status": "pass",

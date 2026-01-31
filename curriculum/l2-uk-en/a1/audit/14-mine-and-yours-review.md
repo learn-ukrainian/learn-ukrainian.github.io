@@ -1,17 +1,17 @@
 # Audit Report: M14 — 14-mine-and-yours.md
-**Level:** A1 | **Module:** M14 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 750
+**Level:** A1 | **Module:** M14 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 1307
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 15:03:47
+**Generated:** 2026-01-31 15:30:30
 
 ## Configuration
 **Type:** A1-grammar
-**Word Target:** 750 words
+**Word Target:** 1307 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
 **Priority Types:** anagram, fill-in, match-up, quiz, unjumble
-**Required Types:** fill-in, match-up
+**Required Types:** fill-in, match-up, quiz, true-false
 **Engagement:** ≥3 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
@@ -28,17 +28,20 @@
 | 6 | quiz | Possessive Sentence Order | 15 | 8 | ✅ |
 | 7 | group-sort | Invariant vs Variable | 12 | 12 | ✅ |
 | 8 | quiz | Cultural Context | 12 | 8 | ✅ |
+| 9 | quiz | Свій vs Його/Її (Reflexive Possessive) | 8 | 8 | ✅ |
+| 10 | true-false | Свій — Key Concepts | 8 | 8 | ✅ |
+| 11 | fill-in | Свій in Context | 8 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 8 (target: 8-12) ✅
+- Total activities: 11 (target: 8-12) ✅
 - Unique types: 5 (minimum: 4) ✅
 - Priority types used: 3/5 (fill-in, match-up, quiz) ✅
-- Required types used: 2/2 (fill-in, match-up) ✅
+- Required types used: 4/4 (fill-in, match-up, quiz, true-false) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1430/750 (raw: 1786)
-- **Activities:** ✅ 8/8
+- **Words:** ✅ 1430/1307 (raw: 1786)
+- **Activities:** ✅ 11/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
 - **Priority:** ✅ Priority types used

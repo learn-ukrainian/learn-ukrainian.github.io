@@ -63,6 +63,15 @@ activity_hints:
 - type: fill-in
   focus: Whose is this? conversations
   items: 6
+- type: quiz
+  focus: Свій vs його/її contrastive (reflexive possessive)
+  items: 8
+- type: true-false
+  focus: Свій key concepts
+  items: 8
+- type: fill-in
+  focus: Свій in context
+  items: 6
 focus: grammar
 pedagogy: PPP
 prerequisites:
@@ -75,9 +84,11 @@ objectives:
 - Learner can match possessive pronouns to noun gender (m/f/n/pl)
 - Learner can ask and answer questions about possession
 - Learner can distinguish variable and invariable possessives
+- Learner can use свій correctly to show reflexive possession
 grammar:
 - Possessive pronouns
 - Gender agreement
 - Variable vs invariable forms
+- Reflexive possessive свій (свій vs його/її)
 register: розмовний
 phase: A1.2 [Navigation]

@@ -2,14 +2,14 @@
   "module": "14-mine-and-yours",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T15:03:47.420195Z",
+  "last_audit": "2026-01-31T15:30:30.035031Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.351148Z",
     "meta": "2026-01-26T21:56:47.919757Z",
-    "activities": "2026-01-16T00:15:30.454876Z",
+    "activities": "2026-01-31T15:30:24.722130Z",
     "vocabulary": "2026-01-25T15:14:11.267079Z",
-    "plan": "2026-01-30T12:24:45.188740Z"
+    "plan": "2026-01-31T15:29:54.369019Z"
   },
   "gates": {
     "meta": {
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1430/750 (raw: 1786)"
+      "message": "1430/1307 (raw: 1786)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "8/8"
+      "message": "11/8"
     },
     "vocabulary": {
       "status": "pass",

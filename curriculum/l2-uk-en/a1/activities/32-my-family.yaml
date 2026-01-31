@@ -539,3 +539,87 @@
   - statement: ««Молодший» means «younger.».»
     correct: true
   instruction: Визначте, чи твердження правильне.
+- type: match-up
+  title: Vocative Forms (Кличний відмінок)
+  pairs:
+  - left: мама
+    right: Мамо!
+  - left: тато
+    right: Тату!
+  - left: бабуся
+    right: Бабусю!
+  - left: дідусь
+    right: Дідусю!
+  - left: брат
+    right: Брате!
+  - left: сестра
+    right: Сестро!
+  - left: Оксана
+    right: Оксано!
+  - left: Іван
+    right: Іване!
+  - left: друг
+    right: Друже!
+  - left: Марія
+    right: Маріє!
+  instruction: З'єднайте називний відмінок із кличним.
+- type: fill-in
+  title: Calling Family Members
+  items:
+  - sentence: ___, де ти? (Mom, where are you?)
+    answer: Мамо
+    options:
+    - Мамо
+    - Мама
+    - Маму
+    - Мамі
+  - sentence: ___, допоможи мені! (Dad, help me!)
+    answer: Тату
+    options:
+    - Тату
+    - Тато
+    - Тата
+    - Татові
+  - sentence: ___, розкажи казку! (Grandma, tell a story!)
+    answer: Бабусю
+    options:
+    - Бабусю
+    - Бабуся
+    - Бабусі
+    - Бабусею
+  - sentence: ___, ходімо гуляти! (Grandpa, let's go for a walk!)
+    answer: Дідусю
+    options:
+    - Дідусю
+    - Дідусь
+    - Дідуся
+    - Дідусеві
+  - sentence: ___, чекай на мене! (Brother, wait for me!)
+    answer: Брате
+    options:
+    - Брате
+    - Брат
+    - Брата
+    - Братові
+  - sentence: ___, подивися! (Sister, look!)
+    answer: Сестро
+    options:
+    - Сестро
+    - Сестра
+    - Сестри
+    - Сестрі
+  - sentence: ___, привіт! (Ivan, hello!)
+    answer: Іване
+    options:
+    - Іване
+    - Іван
+    - Івана
+    - Івану
+  - sentence: ___, як справи? (Oksana, how are you?)
+    answer: Оксано
+    options:
+    - Оксано
+    - Оксана
+    - Оксани
+    - Оксані
+  instruction: Оберіть правильну форму кличного відмінка.
