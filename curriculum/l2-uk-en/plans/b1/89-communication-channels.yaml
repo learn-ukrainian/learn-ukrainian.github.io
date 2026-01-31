@@ -1,0 +1,92 @@
+module: b1-89
+level: B1
+sequence: 89
+slug: communication-channels
+version: '1.0'
+title: Канали комунікації
+subtitle: Communication Channels — Phone, Email & Formal Letters
+content_outline:
+- section: Вступ — Вибір каналу комунікації
+  words: 200
+  points:
+  - Коли телефонувати, коли писати
+  - Формальність залежно від ситуації
+  - Культурні особливості в Україні
+- section: Телефонні розмови
+  words: 400
+  points:
+  - Телефонний етикет (Алло, Слухаю, Говорить...)
+  - Початок та завершення розмови
+  - Типові ситуації (запис до лікаря, замовлення, служба підтримки)
+  - Проблеми зі зв'язком (Повторіть, Вас погано чути)
+- section: Особисті листи та повідомлення
+  words: 350
+  points:
+  - Структура особистого email (привітання, зміст, підпис)
+  - Тон та стиль (ти/ви, емоджі — коли доречні)
+  - Типові ситуації (запрошення, планування, подяка)
+- section: Формальне листування
+  words: 400
+  points:
+  - Структура формального листа (шапка, звертання, підпис)
+  - Офіційні формули (Шановний/-а, З повагою, Був би вдячний)
+  - Типи листів (запит, скарга, заява)
+  - Різниця між паперовим та електронним форматом
+- section: Практика — Комунікаційні сценарії
+  words: 400
+  points:
+  - Рольова гра: телефонний запис на прийом
+  - Написання email другу про зустріч
+  - Написання формального запиту
+  - Вибір каналу для різних ситуацій
+word_target: 1750
+vocabulary_hints:
+  required:
+  - телефон (telephone)
+  - дзвінок (call)
+  - електронна пошта (email)
+  - лист (letter)
+  - формальний (formal)
+  - неформальний (informal)
+  - звертання (greeting, salutation)
+  - підпис (signature)
+  recommended:
+  - слухавка (receiver)
+  - передзвонити (to call back)
+  - шановний (dear, respected)
+  - вдячний (grateful)
+  - прикріплений файл (attachment)
+  - тема листа (subject line)
+activity_hints:
+- type: dialogue-practice
+  focus: Role-play phone conversations
+  items: 6
+- type: match-up
+  focus: Match phrase to channel and register
+  items: 15
+- type: cloze
+  focus: Complete email and letter templates
+  items: 12
+- type: writing-task
+  focus: Write formal and informal messages
+  items: 2
+- type: quiz
+  focus: Choose appropriate channel for situation
+  items: 10
+focus: practical
+pedagogy: PPP
+prerequisites:
+- b1-88 (Interviews & Podcasts)
+connects_to:
+- b1-90 (Presentations & Visuals)
+objectives:
+- Learner can make and receive phone calls in Ukrainian
+- Learner can write personal emails to Ukrainian friends
+- Learner can write formal letters for everyday situations
+- Learner can choose appropriate communication channel and register
+grammar:
+- Imperative for polite requests (Зачекайте, Повторіть, Прошу)
+- Question forms (Чи можу я...?, Чи не могли б ви...?)
+- Conditional politeness (Був би вдячний, Я хотів би...)
+register: різні (formal, informal, semi-formal)
+phase: B1.9 [Communication Skills]

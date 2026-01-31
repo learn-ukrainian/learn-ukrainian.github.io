@@ -212,17 +212,10 @@ levels:
       - 86-ukrainski-sviata-ta-festyvali
       - 87-novyny-yak-chytaty
       - 88-interviu-ta-podkasty
-      - 89-phone-conversations
-      - 90-personal-email
-      - 91-informal-messages
-      - 92-social-media-basics
-      - 93-formal-letter
-      - 94-presentations-visuals
-      - 95-note-taking
-      - 96-expressing-opinions-practice
-      - 97-feedback-negotiation-complaints
-      - 98-summarizing-information
-      - 99-b1-final-exam
+      - 89-communication-channels
+      - 90-presentations-visuals
+      - 91-feedback-negotiation-complaints
+      - 92-b1-final-exam
   b2:
     type: core
     modules:

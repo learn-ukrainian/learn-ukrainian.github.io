@@ -1,8 +1,8 @@
-module: b1-97
+module: b1-91
 level: B1
-sequence: 97
+sequence: 91
 slug: feedback-negotiation-complaints
-version: '3.0'
+version: '1.0'
 title: Зворотний зв'язок, переговори, скарги
 subtitle: Feedback, Negotiation & Making Complaints
 content_outline:
@@ -18,7 +18,7 @@ content_outline:
   - Позитивний фідбек (Ви чудово впоралися з...)
   - Конструктивна критика (Можливо, варто було б...)
   - Як приймати критику (Дякую за зауваження, я врахую...)
-  - Сендвіч-метод (похвала → критика → похвала)
+  - Сендвіч-метод (похвала — критика — похвала)
 - section: Основи переговорів
   words: 400
   points:
@@ -76,10 +76,9 @@ activity_hints:
 focus: practical
 pedagogy: PPP
 prerequisites:
-- b1-55 (Agreement & Disagreement — vocabulary foundation)
-- b1-61 (Professional Communication — workplace vocabulary)
+- b1-90 (Presentations & Visuals)
 connects_to:
-- b1-98 (Summarizing Information)
+- b1-92 (B1 Final Exam)
 objectives:
 - Learner can give constructive feedback in Ukrainian
 - Learner can receive criticism gracefully
@@ -90,5 +89,4 @@ grammar:
 - Polite request forms (Прошу..., Я очікую...)
 - Softening phrases (На жаль..., Перепрошую, але...)
 register: розмовний
-phase: B1.9
-note: "RENAMED from casual-debates. Teaches practical SKILLS not covered elsewhere."
+phase: B1.9 [Communication Skills]

@@ -1,8 +1,8 @@
-module: b1-94
+module: b1-90
 level: B1
-sequence: 94
+sequence: 90
 slug: presentations-visuals
-version: '3.0'
+version: '1.0'
 title: Презентації та візуалізація
 subtitle: Presentations & Describing Visual Information
 content_outline:
@@ -75,10 +75,9 @@ activity_hints:
 focus: practical
 pedagogy: PPP
 prerequisites:
-- b1-61 (Professional Communication — workplace vocabulary)
-- b1-56 (Discourse Markers — transitions)
+- b1-89 (Communication Channels)
 connects_to:
-- b1-95 (Note-taking Skills)
+- b1-91 (Feedback & Negotiation)
 objectives:
 - Learner can structure a 3-5 minute presentation in Ukrainian
 - Learner can describe graphs, charts, and tables accurately
@@ -88,6 +87,5 @@ grammar:
 - Presentation phrases (Дозвольте представити..., Як бачимо...)
 - Describing trends (зростає на X%, падає вдвічі)
 - Comparison structures (порівняно з..., на відміну від...)
-register: розмовний
-phase: B1.9
-note: "RENAMED from podcast-comprehension. Teaches SKILLS not covered in M61 vocabulary."
+register: напівформальний
+phase: B1.9 [Communication Skills]

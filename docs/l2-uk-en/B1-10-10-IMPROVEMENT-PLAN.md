@@ -26,11 +26,28 @@
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| Total Modules | 99 | ✅ Complete |
-| Audit Pass Rate | 100% (99/99) | ✅ |
-| State Standard | 6/10 | ⚠️ Gaps |
-| Skills Balance | 5/10 | ⚠️ Production weak |
-| Checkpoints | 5/10 | ⚠️ 48 modules without |
+| Total Modules | 92 | ✅ Complete (reduced from 99) |
+| Audit Pass Rate | 100% | ✅ |
+| State Standard | 8/10 | ✅ Односкладні + -но/-то added |
+| Skills Balance | 7/10 | ✅ Improved (cut padding) |
+| Checkpoints | 6/10 | ⚠️ Better spacing now |
+
+### Major Restructuring (2026-01-31)
+
+**Cut M89-99 (11 modules) → M89-92 (4 modules)**
+
+| Old | Problem | New |
+|-----|---------|-----|
+| M89-93 | 5 separate modules for basic communication | M89: Communication Channels (merged) |
+| M92 | Duplicate of A2 social media | DELETED |
+| M94 | Duplicate of M88 | M90: Presentations & Visuals |
+| M95 | Study skill, not language | DELETED |
+| M96 | Duplicate of M54 | DELETED |
+| M97 | Good content | M91: Feedback, Negotiation & Complaints |
+| M98 | Could integrate elsewhere | DELETED |
+| M99 | Final exam | M92: B1 Final Exam |
+
+**Result:** Tighter, more focused curriculum without padding.
 
 ---
 
@@ -88,63 +105,33 @@
 
 ---
 
-## Phase 3: Add Productive Skills (Major)
+## Phase 3: Add Productive Skills ✅ ADDRESSED BY RESTRUCTURING
 
-### 3.1 Writing Production Enhancement
+**Previous concern:** Too much template-based writing, not enough production.
 
-**Current State:** M90-93 are template-based (email, messages, letters)
+**Resolution:** New M89-91 structure includes production practice:
+- M89 (Communication Channels): Writing tasks for email + formal letter
+- M90 (Presentations): Monologue practice with visual aids
+- M91 (Feedback/Negotiation): Role-play scenarios
 
-**Action:** Add free writing practice components
-
-| Module | Current | Add |
-|--------|---------|-----|
-| M90 (Personal Email) | Templates | Free composition: "Write an email to a friend about your weekend" |
-| M91 (Informal Messages) | Templates | Open chat simulation |
-| M93 (Formal Letter) | Templates | Free composition: complaint letter, inquiry |
-| M98 (Summarizing) | Structured | Open summary of unseen text |
-
-**Deliverable:** Update M90, M91, M93, M98 plans with free writing activities
-
-### 3.2 Speaking Production Enhancement
-
-**Current State:** M96-97 focus on phrases, not production
-
-**Action:** Add speaking rubrics and production activities
-
-| Module | Current | Add |
-|--------|---------|-----|
-| M96 (Expressing Opinions) | Phrases | Monologue task: "Express your opinion on [topic] for 2 minutes" |
-| M97 (Casual Debates) | Dialogue phrases | Role-play rubric: fluency, coherence, vocabulary, grammar |
-
-**Deliverable:** Create speaking rubrics, add to M96-97 plans
-
-### 3.3 Audio Comprehension Enhancement
-
-**Current State:** No actual audio files, text-based "listening"
-
-**Action:** Define audio activity requirements
-
-| Module | Add |
-|--------|-----|
-| M88 (Інтерв'ю та подкасти) | Audio transcript pairs |
-| M89 (Phone Conversations) | Audio dialogues |
-| M94 (Podcast Comprehension) | Real podcast excerpts |
-
-**Note:** Actual audio production is Phase 2 work; plans should specify requirements.
+**Remaining:** Audio comprehension still needs actual audio files (Phase 2 work).
 
 ---
 
-## Phase 4: Add Checkpoints
+## Phase 4: Add Checkpoints ✅ IMPROVED BY RESTRUCTURING
 
-### 4.1 Current Checkpoint Distribution
+### 4.1 New Checkpoint Distribution
 
 ```
-M15 → M25 → M34 → M41 → M51 → [48 modules] → M99
+M15 → M25 → M34 → M41 → M51 → M71 → M86 → M92
 ```
 
-### 4.2 Add Intermediate Checkpoints
+Gap from M51 to M92 = 41 modules (vocabulary + culture + skills)
+- Add checkpoint section to M71 (Emotional Intelligence) for vocabulary
+- Add checkpoint section to M86 (Holidays & Festivals) for culture
+- M92 is final exam
 
-**Action:** Convert existing modules to checkpoints OR add checkpoint sections
+### 4.2 Remaining Checkpoint Actions
 
 | Position | Module | Action |
 |----------|--------|--------|
@@ -180,52 +167,48 @@ B1.9: M90-99 (Communication Skills)
 ```
 
 **Full Update List:**
-- [ ] Change "92 Modules" → "99 Modules"
-- [ ] Update B1.8 range: M87-92 → M87-89
-- [ ] Add B1.9: M90-99 Communication Skills
-- [ ] Update checkpoint list: add M99
-- [ ] Fix template references
-- [ ] Update final exam module: M92 → M99
+- [x] Update to show 92 modules ✅ Done (2026-01-31)
+- [x] Update B1.9 range: M89-92 ✅ Done (2026-01-31)
+- [x] Update final exam module: M92 ✅ Done (2026-01-31)
 
 ### 5.2 Update b1.yaml Level Plan
 
-**Already done** in previous session. Verify:
-- [ ] B1.8 modules: [87, 89]
-- [ ] B1.9 modules: [90, 99]
-- [ ] Checkpoint at M99
+- [ ] Update B1.8 modules: [87, 88]
+- [ ] Update B1.9 modules: [89, 92]
+- [ ] Checkpoint at M92
 
 ### 5.3 Update STATE-STANDARD-COMPLIANCE-ANALYSIS.md
 
-After implementing Phase 1:
 - [ ] Mark односкладні речення as covered
 - [ ] Mark passive -но/-то as covered
 - [ ] Update B1 status from ⚠️ Partial to ✅ Good
 
 ---
 
-## Phase 6: Clarify Overlapping Content ✅ COMPLETE
+## Phase 6: Restructure M89-99 ✅ COMPLETE
 
-### 6.1 Resolution
+### 6.1 Major Restructuring
 
-**Original problem:** M94 and M97 duplicated M88 and M55 content.
+**Problem:** M89-99 had padding, duplicates, and weak content.
 
-**Solution:** Completely redefined M94 and M97 with unique, practical skills:
+**Solution:** Cut from 11 modules to 4 focused modules.
 
-| Old Module | Problem | New Module |
-|------------|---------|------------|
-| M94 Podcast Comprehension | Duplicated M88 (Interviews & Podcasts) | **Presentations & Describing Visual Information** — structure presentations, describe graphs/charts/tables |
-| M97 Casual Debates | Duplicated M55 (Agreement & Disagreement) | **Feedback, Negotiation & Making Complaints** — give/receive feedback, negotiate, make complaints |
+| Deleted | Reason |
+|---------|--------|
+| M89-93 (5 modules) | Merged into one M89 |
+| M92 Social Media | Duplicate of A2 |
+| M95 Note-taking | Study skill, not language |
+| M96 Opinions Practice | Duplicate of M54 |
+| M98 Summarizing | Could integrate elsewhere |
 
-**Also clarified subtitles:**
-- M54: "Expressing Opinions — Vocabulary & Phrases"
-- M96: "Expressing Opinions — Conversation Practice"
-- M55: "Agreement & Disagreement — Vocabulary & Phrases"
-- M88: "Interviews & Podcasts — Introduction to Listening"
+| New | Content |
+|-----|---------|
+| M89 Communication Channels | Phone + Email + Formal Letters (merged) |
+| M90 Presentations & Visuals | Structure, describe graphs/charts |
+| M91 Feedback/Negotiation/Complaints | Practical communication skills |
+| M92 B1 Final Exam | Comprehensive assessment |
 
-**Files updated:**
-- `curriculum/l2-uk-en/plans/b1/94-presentations-visuals.yaml` (renamed + rewritten)
-- `curriculum/l2-uk-en/plans/b1/97-feedback-negotiation-complaints.yaml` (renamed + rewritten)
-- `curriculum/l2-uk-en/curriculum.yaml` (slugs updated)
+**Result:** B1 now has 92 focused modules instead of 99 padded ones.
 
 ---
 
@@ -235,59 +218,44 @@ After implementing Phase 1:
 
 | Theme | Gap | Action |
 |-------|-----|--------|
-| 3.8 Education | No dedicated B1 module | Add education vocabulary to M61 (Professional Communication) |
-| 3.12 Services | Minimal coverage | Add services context to M89 (Phone Conversations) |
+| 3.8 Education | No dedicated B1 module | Add education vocabulary to M61 |
+| 3.12 Services | Minimal coverage | M89 now covers services (phone bookings) |
 
-**Deliverable:** Expand M61 and M89 vocabulary lists
+**Deliverable:** Expand M61 vocabulary list
 
 ---
 
 ## Implementation Checklist
 
-### Phase 1: State Standard (Priority: Critical)
-- [x] Update M50 plan: add односкладні речення section ✅ Done (2026-01-31)
-- [x] Update M50 content: add односкладні речення ✅ Done (2026-01-31)
-- [x] Update M47 plan: expand -но/-то coverage ✅ Already comprehensive
-- [x] Update M47 content: add -но/-то section ✅ Already has full coverage
+### Phase 1: State Standard ✅ COMPLETE
+- [x] Update M50 plan: add односкладні речення section
+- [x] Update M50 content: add односкладні речення
+- [x] M47 already has comprehensive -но/-то coverage
 
-### Phase 2: Grammar (Priority: Low)
-- [ ] No action needed
+### Phase 2: Grammar
+- [x] No action needed
 
-### Phase 3: Skills (Priority: High)
-- [ ] Update M90 plan: add free writing activity
-- [ ] Update M91 plan: add free writing activity
-- [ ] Update M93 plan: add free writing activity
-- [ ] Update M98 plan: add free writing activity
-- [ ] Create speaking rubric document
-- [ ] Update M96 plan: add speaking production task
-- [ ] Update M97 plan: add speaking rubric
-- [ ] Update M88 plan: specify audio requirements
-- [ ] Update M89 plan: specify audio requirements
-- [ ] Update M94 plan: specify audio requirements
+### Phase 3: Skills ✅ ADDRESSED BY RESTRUCTURING
+- [x] M89-91 now include production practice
+- [ ] Specify audio requirements for M88 (future work)
 
-### Phase 4: Checkpoints (Priority: Medium)
-- [ ] Update M71 plan: add checkpoint section
-- [ ] Update M86 plan: add checkpoint section
-- [ ] Update M98 plan: add checkpoint section
+### Phase 4: Checkpoints
+- [ ] Update M71 plan: add checkpoint section (vocabulary)
+- [ ] Update M86 plan: add checkpoint section (culture)
+- [x] M92 is now final exam/checkpoint
 
-### Phase 5: Documentation (Priority: Medium)
-- [ ] Update claude_extensions/quick-ref/b1.md
-- [ ] Verify b1.yaml is correct
-- [ ] Update STATE-STANDARD-COMPLIANCE-ANALYSIS.md after Phase 1
+### Phase 5: Documentation
+- [ ] Update claude_extensions/quick-ref/b1.md (92 modules)
+- [ ] Update plans/b1.yaml level plan
+- [ ] Update STATE-STANDARD-COMPLIANCE-ANALYSIS.md
 
-### Phase 6: Overlap Clarification (Priority: Low) ✅ COMPLETE
-- [x] Update M54 subtitle ✅ "Expressing Opinions — Vocabulary & Phrases"
-- [x] Update M96 subtitle ✅ "Expressing Opinions — Conversation Practice"
-- [x] Update M55 subtitle ✅ "Agreement & Disagreement — Vocabulary & Phrases"
-- [x] Update M88 subtitle ✅ "Interviews & Podcasts — Introduction to Listening"
-- [x] Fix M96 slug mismatch ✅
-- [x] **REDEFINE M94** ✅ Was "Podcast Comprehension" (duplicated M88) → Now "Presentations & Describing Visual Information"
-- [x] **REDEFINE M97** ✅ Was "Casual Debates" (duplicated M55) → Now "Feedback, Negotiation & Making Complaints"
-- [x] Update curriculum.yaml slugs ✅
+### Phase 6: Restructuring ✅ COMPLETE
+- [x] Deleted 11 old plan files (M89-99)
+- [x] Created 4 new plans (M89-92)
+- [x] Updated curriculum.yaml
 
 ### Phase 7: Thematic Gaps (Priority: Low)
 - [ ] Expand M61 vocabulary (education)
-- [ ] Expand M89 vocabulary (services)
 
 ---
 

@@ -1,8 +1,8 @@
-module: b1-99
+module: b1-92
 level: B1
-sequence: 99
+sequence: 92
 slug: b1-final-exam
-version: '2.0'
+version: '1.0'
 title: Фінальний іспит B1
 subtitle: B1 Level Final Assessment
 content_outline:
@@ -35,13 +35,13 @@ content_outline:
   words: 250
   points:
   - Завдання 1: Неформальний email (80-100 слів)
-  - Завдання 2: Формальний лист або резюме (100-120 слів)
+  - Завдання 2: Формальний лист (100-120 слів)
 - section: Частина 5 — Говоріння
   words: 200
   points:
   - Монолог: Висловлення думки на тему
   - Діалог: Обговорення ситуації
-  - Резюме: Переказ короткого тексту
+  - Міні-презентація з візуальним матеріалом
 - section: Результати та рекомендації
   words: 150
   points:
@@ -79,12 +79,12 @@ activity_hints:
   focus: Email and formal letter
   items: 2
 - type: speaking-prompt
-  focus: Monologue and dialogue prompts
+  focus: Monologue, dialogue, mini-presentation
   items: 3
 focus: checkpoint
 pedagogy: TTT
 prerequisites:
-- b1-98 (Summarizing Information)
+- b1-91 (Feedback, Negotiation & Complaints)
 connects_to:
 - b2-01 (Start of B2)
 objectives:
@@ -95,7 +95,7 @@ objectives:
 - Learner demonstrates B1 speaking ability
 grammar:
 - All B1 grammar (aspect, motion verbs, complex sentences, participles)
-- Vocabulary from M52-88
-- Communication skills from M89-98
+- Vocabulary from M52-86
+- Communication skills from M87-91
 register: нейтральний
-phase: B1.9
+phase: B1.9 [Communication Skills]
