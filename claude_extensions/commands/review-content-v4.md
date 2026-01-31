@@ -1,136 +1,117 @@
-# Review-Content-Scoring Prompt v4.0 (Modular Tier System)
+# Review-Content-Scoring Prompt v4.1 (Deep Review)
 
 ```yaml
 ---
 name: review-content-v4
-description: 0-10 scoring rubric with tier-specific experience assessment
-version: '4.0'
+description: Deep content review with thorough linguistic verification
+version: '4.1'
 category: quality
 dependencies: audit_module.py
-changelog: v4.0 - Modular tier architecture for all levels
+changelog: v4.1 - Deep review first, scoring second. No shortcuts.
 ---
 ```
 
 ---
 
-## STEP 1: DETECT TIER AND READ TIER FILE
+## CRITICAL: DEEP REVIEW IS MANDATORY
 
-**CRITICAL: Before reviewing, determine tier and read the tier-specific file.**
+**This is not a template-filling exercise. You must actually read and verify every word.**
 
-### Tier Detection
+Before you write ANY report or score, you MUST:
 
-| Level | Tier | File to Read |
-|-------|------|--------------|
-| A1, A2 | Tier 1 (Beginner) | `claude_extensions/commands/review-tiers/tier-1-beginner.md` |
-| B1, B2 Core, B2-PRO | Tier 2 (Core) | `claude_extensions/commands/review-tiers/tier-2-core.md` |
-| B2-HIST, C1-HIST, C1-BIO, LIT | Tier 3 (Seminar) | `claude_extensions/commands/review-tiers/tier-3-seminar.md` |
-| C1 Core, C1-PRO, C2 | Tier 4 (Advanced) | `claude_extensions/commands/review-tiers/tier-4-advanced.md` |
+1. **Read every line** of the lesson content (`.md` file)
+2. **Read every activity item** in the activities file (`.yaml`)
+3. **Verify every Ukrainian sentence** is grammatically correct and natural
+4. **Check every linguistic claim** (grammar rules, aspectual pairs, etc.) is accurate
+5. **Identify real issues** — not template categories
 
-**Read the tier file NOW before continuing.**
+**If you skip this, the review is worthless.**
 
 ---
 
-## STEP 2: MANDATORY OUTPUT FORMAT
+## STEP 1: LOAD ALL CONTENT
 
-### File Naming
-```
-{slug}-review.md
-```
+Read these files in full (not skimming):
 
-### Save Location
 ```
-curriculum/l2-uk-en/{level}/review/{slug}-review.md
+curriculum/l2-uk-en/{level}/{slug}.md           # Full lesson content
+curriculum/l2-uk-en/{level}/activities/{slug}.yaml   # All activities
+curriculum/l2-uk-en/{level}/vocabulary/{slug}.yaml   # Vocabulary (if exists)
 ```
 
-### Header Format (COPY EXACTLY)
+**Do not proceed until you have read every line.**
+
+---
+
+## STEP 2: DEEP UKRAINIAN VERIFICATION
+
+**You are a native Ukrainian speaker. Every Ukrainian word is your responsibility.**
+
+### For Lesson Content (.md):
+
+Go through the file section by section. For each Ukrainian sentence:
+
+- Is the grammar correct? (cases, verb forms, agreement)
+- Does it sound natural? (not robotic, not calqued from English)
+- Are there Russianisms? (see list below)
+- Is the vocabulary appropriate for the level?
+
+### For Activities (.yaml):
+
+Check EVERY item:
+
+- **quiz**: Is each question grammatically correct? Are all options valid Ukrainian? Is exactly one answer correct?
+- **fill-in**: Is the sentence correct with the answer filled in? Are distractors plausible?
+- **match-up**: Are all pairs correct? No duplicates?
+- **true-false**: Are the true statements actually true? Are false statements clearly false?
+- **unjumble**: Does the answer form a correct, natural sentence?
+- **cloze**: Is the target word appropriate? Is the sentence natural?
+- **error-correction**: Is the "error" actually an error? Is the correction correct?
+- **mark-the-words**: Are the target words correctly identified?
+- **group-sort**: Are items correctly categorized?
+
+### For Grammar Modules:
+
+Verify all linguistic claims:
+
+- **Aspectual pairs**: Both verbs must share the same core meaning, differing only in aspect
+  - ✅ казати/сказати (say/said)
+  - ✅ читати/прочитати (read/finished reading)
+  - ❌ говорити/сказати (speak vs say — different meanings)
+  - ❌ шукати/знайти (search vs find — different meanings)
+- **Case rules**: Verify examples match stated rules
+- **Verb conjugations**: Check all forms are correct
+
+---
+
+## STEP 3: DOCUMENT REAL ISSUES
+
+As you read, note every issue you find. Be specific:
+
 ```markdown
-# Module {NUM}: {Ukrainian Title}
+## Issues Found
 
-**Template:** {template-name}.md | **Compliance:** ✅ PASS / ❌ FAIL
-**Overall Score:** {X.X}/10
-**Status:** ✅ PASS / ❌ FAIL
-**Generated:** {YYYY-MM-DD HH:MM:SS}
-**Reviewer:** Claude
-**Tier:** {1-4} ({Beginner/Core/Seminar/Advanced})
+### Line 45: Incorrect aspectual pair
+**Original:** говорити/сказати as aspectual pair
+**Problem:** These have different core meanings (speak vs say)
+**Fix:** Replace with казати/сказати, add note about говорити/сказати difference
 
-## Scores Breakdown
+### Activity 7, Item 3: Grammar error
+**Original:** Він написав довгого листа
+**Problem:** "лист" is inanimate, accusative = nominative
+**Fix:** Він написав довгий лист
 
-| Dimension | Score | Notes |
-|-----------|-------|-------|
-| **Experience Quality** | X/10 | {note} ← TOP PRIORITY |
-| Coherence | X/10 | {note} |
-| Relevance | X/10 | {note} |
-| Educational | X/10 | {note} |
-| Language | X/10 | {note} |
-| Pedagogy | X/10 | {note} |
-| Immersion | X/10 | {note} |
-| Activities | X/10 | {note} |
-| Richness | X/10 | {note} |
-| Humanity | X/10 | {note} |
-| LLM Fingerprint | X/10 | {note} |
-| Linguistic Accuracy | X/10 | {note} |
-```
-
-**Note:** "Experience Quality" adapts per tier:
-- Tier 1: Lesson Quality (tutoring experience)
-- Tier 2: Teaching Quality (learning effectiveness)
-- Tier 3: Lecture Quality (seminar engagement)
-- Tier 4: Learning Quality (intellectual depth)
-
----
-
-## STEP 3: EXECUTE TIER-SPECIFIC EXPERIENCE AUDIT
-
-**Follow the tier file you read in Step 1.** Each tier has:
-- Tier-specific "Would I...?" test
-- Appropriate arc structure for level
-- Pacing requirements
-- Emotional/intellectual journey mapping
-- Weak moment categories
-- A+ checklist
-
-**This is TOP PRIORITY. Do this FIRST.**
-
----
-
-## STEP 4: SCORE ALL 12 DIMENSIONS
-
-### Dimension List (All Tiers)
-
-1. **Experience Quality (0-10):** Tier-specific assessment (see tier file)
-2. **Coherence (0-10):** Logical flow, transitions, progressive difficulty
-3. **Relevance (0-10):** Alignment with module goals, curriculum plan
-4. **Educational (0-10):** Clear explanations, useful examples
-5. **Language (0-10):** Ukrainian quality, no Russianisms, euphony
-6. **Pedagogy (0-10):** Teaching approach, scaffolding, level-appropriateness
-7. **Immersion (0-10):** Ukrainian-to-English ratio per level
-8. **Activities (0-10):** Quality, density, variety, correctness
-9. **Richness (0-10):** Examples, engagement, cultural references
-10. **Humanity (0-10):** Teacher voice, warmth (tier-adjusted thresholds)
-11. **LLM Fingerprint (0-10):** AI patterns vs. authentic writing
-12. **Linguistic Accuracy (0-10):** Factual correctness (AUTO-FAIL if wrong)
-
-### Scoring Philosophy
-
-- **0-6 FAIL** (fix immediately)
-- **7-8 INSUFFICIENT** (improve to 9+)
-- **9-10 PASS** (acceptable)
-
-**ONLY 9-10 IS ACCEPTABLE.**
-
-### Overall Score Calculation
-
-```
-Overall = (Experience × 1.5 + Coherence × 1.0 + Relevance × 1.0 + Educational × 1.2 +
-          Language × 1.1 + Pedagogy × 1.2 + Immersion × 0.8 + Activities × 1.3 +
-          Richness × 0.9 + Humanity × 0.8 + LLM × 1.1 + Linguistic_Accuracy × 1.5) / 13.4
+### Line 89: Unnatural phrasing
+**Original:** Це є дуже важливо
+**Problem:** Calque from English "This is very important"
+**Fix:** Це дуже важливо
 ```
 
 ---
 
-## STEP 5: CHECK SHARED QUALITY GATES
+## STEP 4: AUTO-FAIL CHECKLIST
 
-### Auto-fail Russianisms
+### Russianisms (Auto-fail)
 
 | ❌ Wrong | ✅ Correct |
 |----------|-----------|
@@ -139,89 +120,95 @@ Overall = (Experience × 1.5 + Coherence × 1.0 + Relevance × 1.0 + Educational
 | самий кращий | найкращий |
 | слідуючий | наступний |
 | на протязі | протягом |
+| любий (any) | будь-який |
+| отвічати | відповідати |
 
-### Auto-fail Calques
+### Calques (Auto-fail)
 
 | ❌ Wrong | ✅ Correct |
 |----------|-----------|
 | робити сенс | мати сенс |
 | брати місце | відбуватися |
+| це є | це (usually) |
+| мати місце | відбуватися |
 
-### Activity Structure (All Tiers)
+### Activity Errors (Auto-fail)
 
-- ❌ Duplicate items
-- ❌ Wrong format/broken YAML
-- ❌ Wrong answer marked correct
-- ❌ Multiple valid answers but only one accepted
-- ❌ Russianisms in content
-
-### Linguistic Accuracy (Grammar Modules)
-
-For aspectual pairs, verify:
-1. Both verbs share same core meaning
-2. Differ only in aspect
-3. Cross-reference: Ohoiko "500+ Ukrainian Verbs", slovnyk.ua
-
-**Common Error:** шукати/знайти is NOT a pair (different meanings). Correct: шукати/пошукати.
+- Wrong answer marked as correct
+- Multiple valid answers but only one accepted
+- Grammatically incorrect sentences
+- Duplicate items
+- Broken YAML structure
 
 ---
 
-## STEP 6: APPLY FIXES
+## STEP 5: APPLY FIXES
 
-### Safe Fixes (Apply Immediately)
+**Fix issues as you find them.** Don't just report — fix.
 
-**Category 1: Structure** — Remove duplicates, fix typos, fix tables, fix euphony
-**Category 2: Language** — Replace Russianisms, fix calques, fix grammar errors
-**Category 6: Warmth** — Add direct address, encouragement (tier-adjusted)
-**Category 7: AI Slop** — Remove LLM clichés, break bullet barrages
-**Category 8: Accuracy** — Correct factual errors immediately
+### Fix Immediately:
+- Grammar errors
+- Russianisms
+- Incorrect linguistic claims
+- Activity errors
+- Typos
 
-### Risky Fixes (User Approval)
-
-- Rewriting >50% content
+### Ask Before Fixing:
+- Rewriting >50% of content
 - Changing pedagogical approach
-- Removing sections
+- Removing entire sections
 
 ---
 
-## STEP 7: GENERATE REPORT
+## STEP 6: WRITE REPORT
 
-### Required Sections
+**Only after completing deep review**, write the report.
+
+### Save Location
+```
+curriculum/l2-uk-en/{level}/review/{slug}-review.md
+```
+
+### Report Format
 
 ```markdown
-## Experience Analysis (Tier {N})
+# Review: {Module Title}
 
-**Arc:** {element ✅/❌} → {element ✅/❌} → ...
-**Emotional/Intellectual Beats:** {count per category}
-**Pacing Issues:** {list}
+**Level:** {level} | **Module:** {num}
+**Status:** ✅ PASS / ❌ FAIL
+**Reviewed:** {date}
 
-## Weak Moments & Rewrites
+## Issues Found and Fixed
 
-### Weak Moment 1: {Category}
-**Location:** Line {X}
-**Original:** > {text}
-**Problem:** {why}
-**Rewrite:** > {fixed}
+{List each issue with location, problem, and fix applied}
 
-## Linguistic Accuracy Issues
+## Issues Requiring Manual Review
 
-- {issue} → {fix} — {source}
+{Any issues you couldn't fix automatically}
 
-## Strengths
+## Verification Summary
 
-- {3-5 specific strengths}
-
-## Issues
-
-- {all issues by category}
+- Lines read: {X}
+- Activity items checked: {X}
+- Ukrainian sentences verified: {X}
+- Issues found: {X}
+- Issues fixed: {X}
 
 ## Recommendation
 
-{✅ PASS / ❌ FAIL} — {summary}
+{PASS/FAIL with brief explanation}
+```
 
-## Action Items
+**Note:** The old 12-dimension scoring system is deprecated. Focus on finding and fixing real issues, not filling out score tables.
 
-1. {fix} — ✅ APPLIED / ⏳ MANUAL
+---
+
+## STEP 7: RUN AUDIT
+
+After fixes, verify the module still passes technical audit:
+
+```bash
+.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/{level}/{slug}.md
 ```
 
 ---
@@ -229,8 +216,8 @@ For aspectual pairs, verify:
 ## Usage
 
 ```
+/review-content-v4 [LEVEL] [NUM]        # Single module (recommended)
 /review-content-v4 [LEVEL]              # All modules in level
-/review-content-v4 [LEVEL] [NUM]        # Single module
 /review-content-v4 [LEVEL] [START-END]  # Range
 ```
 
@@ -239,18 +226,21 @@ For aspectual pairs, verify:
 1. Read `curriculum/l2-uk-en/curriculum.yaml`
 2. Find level section
 3. Module N = index N-1 in modules list
-4. File: `curriculum/l2-uk-en/{level}/{slug}.md`
 
 ---
 
-## Batch Mode
+## Tier-Specific Guidance
 
-For multiple modules, spawn subagents:
-```
-For each module:
-  Task agent → "/review-content-v4 {level} {num}"
-  Wait → Log result → Continue (fresh context)
-```
+For level-specific expectations, read the appropriate tier file:
+
+| Level | Tier File |
+|-------|-----------|
+| A1, A2 | `claude_extensions/commands/review-tiers/tier-1-beginner.md` |
+| B1, B2 Core | `claude_extensions/commands/review-tiers/tier-2-core.md` |
+| B2-HIST, C1-BIO, LIT | `claude_extensions/commands/review-tiers/tier-3-seminar.md` |
+| C1, C2 | `claude_extensions/commands/review-tiers/tier-4-advanced.md` |
+
+These provide additional context on tone, pacing, and level-appropriate complexity. But the core requirement remains: **read everything, verify everything, fix everything.**
 
 ---
 
