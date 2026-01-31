@@ -1,14 +1,32 @@
-module: b2-hist-087
+module: hrushevskyi
 level: B2-HIST
 slug: hrushevskyi
 version: '2.0'
-id: b2-hist-087
+id: b2-hist-87
 naturalness:
   score: 10
   status: PASS
-  justification: Академічний український для біографії науковця
-duration: 120
+  justification: Strong historical narrative
+duration: 90
 transliteration: none
 build:
-  last_modified: '2026-01-26'
-phase: HIST.9 [WWI & Revolution]
+  last_modified: '2026-01-30'
+title: Михайло Грушевський
+subtitle: 'Mykhailo Hrushevsky: Architect of Identity'
+activity_hints:
+- type: reading
+  focus: IV Універсал Центральної Ради
+  items: 4
+- type: essay-response
+  focus: Історик як політик
+  word_target: 300
+- type: true-false
+  focus: Факти про Грушевського
+  items: 10
+- type: critical-analysis
+  focus: Схема історії східного слов'янства
+  items: 1
+- type: comparative-study
+  focus: Грушевський vs Міхновський
+  items: 1
+pedagogy: CBI

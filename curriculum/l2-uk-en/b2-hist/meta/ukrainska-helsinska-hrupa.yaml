@@ -2,13 +2,90 @@ module: b2-hist-115
 level: B2-HIST
 slug: ukrainska-helsinska-hrupa
 version: '2.0'
-id: b2-hist-115
+status: skeleton
+transliteration: none
 naturalness:
   score: 10
   status: PASS
-  justification: Академічний український для історії дисидентського руху
-duration: 120
-transliteration: none
+track: history
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-01-30'
 phase: HIST.11 [Post-War Soviet Ukraine]
+id: b2-hist-115
+title: Українська Гельсінська група
+content_outline:
+- section: 'Вступ: Гельсінські угоди'
+  words: 400
+  points:
+  - '1975: Гельсінський акт'
+  - Права людини як зброя
+  - Чому виникли Гельсінські групи
+- section: Створення УГГ (1976)
+  words: 800
+  points:
+  - 'Засновники: Руденко, Тихий, Лук''яненко'
+  - Меморандум групи
+  - Цілі та методи
+  - 'Зв''язок із шістдесятниками'
+- section: Діяльність та репресії
+  words: 1000
+  points:
+  - Документування порушень
+  - Арешти членів групи
+  - 'Табори та в''язниці'
+  - Загибель Олекси Тихого та Василя Стуса
+  - Група в еміграції
+- section: 'Біографічні портрети: Обличчя опору'
+  words: 1000
+  points:
+  - 'Микола Руденко: Від сталініста до дисидента'
+  - 'Олекса Тихий: Голос Донбасу'
+  - 'Петро Григоренко: Генерал-захисник'
+  - 'Оксана Мешко: Козацька матір'
+- section: Первинні джерела
+  words: 800
+  points:
+  - Меморандум УГГ
+  - Документи групи
+  - Листи з таборів
+- section: Деколонізаційний погляд
+  words: 500
+  points:
+  - 'Радянський наратив: «антирадянська діяльність»'
+  - 'Реальність: мирна боротьба за права'
+  - УГГ як передвісник незалежності
+- section: 'Підсумок: Від УГГ до Руху'
+  words: 500
+  points:
+  - Спадщина групи
+  - Члени УГГ в незалежній Україні
+  - 'Левко Лук''яненко та День Незалежності'
+vocabulary_hints:
+  required:
+  - правозахисний (human rights)
+  - група (group)
+  - дисидент (dissident)
+  - репресії (repressions)
+  - табір (camp)
+  - арешт (arrest)
+  - меморандум (memorandum)
+  - права людини (human rights)
+  recommended:
+  - політв'язень (political prisoner)
+  - Гельсінкі (Helsinki)
+  - документування (documentation)
+  - еміграція (emigration)
+  - реабілітація (rehabilitation)
+  - спадщина (legacy)
+sources:
+  - url: https://khpg.org/en/1508272993
+    name: "Українська Гельсінська група. Документи і матеріали"
+    type: primary
+  - url: https://zakon.rada.gov.ua/laws/show/995_058
+    name: "Гельсінський Заключний акт 1975 року"
+    type: primary
+activity_hints:
+  - type: reading
+    focus: Меморандум УГГ
+  - type: essay-response
+    focus: Яку роль відіграла УГГ у боротьбі за незалежність?

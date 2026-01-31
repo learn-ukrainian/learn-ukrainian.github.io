@@ -6,11 +6,12 @@ version: '2.0'
 title: 'Імпресіонізм: Коцюбинський'
 subtitle: 'Impressionism: Kotsiubynsky'
 content_outline:
-- section: Вступ — Коцюбинський
-  words: 1000
+- section: Розминка — Імпресіоніст з Вінниці
+  words: 700
   points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
+  - "Тіні забутих предків" — гуцульське життя, кохання, смерть
+  - "Intermezzo" — психологічна глибина
+  - Вплив на кіно — Параджанов та візуальна поезія
 - section: Content Areas
   words: 1250
   points:
@@ -19,12 +20,13 @@ content_outline:
   - 'Fata Morgana: peasant revolution'
   - 'Impressionist techniques: sensory detail, mood'
   - Influence on Ukrainian cinema (Параджанов)
-- section: Практика та підсумок
-  words: 750
+- section: Практика — імпресіоністичний аналіз
+  words: 1050
   points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
+  - Проаналізувати сенсорну образність у "Тінях забутих предків"
+  - Порівняти повість та фільм Параджанова
+  - Написати есе про потік свідомості в "Intermezzo"
+  - Обговорити роль природи та кольору у прозі Коцюбинського
 word_target: 3000
 focus: literature
 pedagogy: Literary Analysis

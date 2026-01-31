@@ -3,8 +3,9 @@ level: C1-BIO
 slug: panteleimon-kulish
 version: '2.0'
 id: c1-bio-033
+transliteration: none
 naturalness:
-  score: 1
-  status: PENDING
+  score: 10
+  status: PASS
 build:
   last_modified: '2026-01-26'

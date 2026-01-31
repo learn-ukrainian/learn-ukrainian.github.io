@@ -1,14 +1,35 @@
-module: b2-hist-072
+module: opryshky
 level: B2-HIST
 slug: opryshky
 version: '2.0'
-id: b2-hist-072
+id: b2-hist-72
 naturalness:
   score: 10
   status: PASS
-  justification: Академічний український для регіональної історії
-duration: 120
+  justification: Excellent heroic narrative
+duration: 90
 transliteration: none
 build:
   last_modified: '2026-01-26'
-phase: HIST.7 [Mazepa & End of Hetmanate]
+title: 'Опришки Карпат: Легенда Довбуша'
+subtitle: 'Opryshky of the Carpathians: The Legend of Dovbush'
+activity_hints:
+- type: reading
+  focus: Народна балада про Довбуша
+  items: 3
+- type: reading
+  focus: Протокол допиту опришка (XVIII ст.)
+  items: 3
+- type: essay-response
+  focus: Довбуш як символ незламності
+  word_target: 300
+- type: comparative-study
+  focus: Порівняння опришківства та гайдамаччини
+  items: 1
+- type: true-false
+  focus: Правда чи міф про опришків
+  items: 10
+- type: critical-analysis
+  focus: Опришківство як соціальний феномен
+  items: 1
+pedagogy: CBI

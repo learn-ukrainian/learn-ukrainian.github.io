@@ -2,10 +2,10 @@
   "module": "skoropadskyi",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-29T23:39:10.683797Z",
+  "last_audit": "2026-01-31T00:41:32.168494Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-28T16:37:43.054259Z",
+    "md": "2026-01-31T00:01:20.899932Z",
     "meta": "2026-01-29T07:38:18.679855Z",
     "activities": "2026-01-28T15:36:02.616648Z",
     "vocabulary": "2026-01-28T15:35:34.727495Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4218/4000 (raw: 4336)"
+      "message": "4371/4000 (raw: 4501)"
     },
     "activities": {
       "status": "pass",
@@ -39,10 +39,8 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "1 Critical Template Violations"
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 5,
     "fail_count": 0
   }

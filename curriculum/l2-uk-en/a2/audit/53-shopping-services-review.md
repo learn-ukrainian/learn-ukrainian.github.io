@@ -1,8 +1,8 @@
 # Audit Report: M53 — 53-shopping-services.md
 **Level:** A2 | **Module:** M53 | **Phase:** A2.5 | **Pedagogy:** PPP | **Target:** 1440
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:12:57
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-30 21:37:22
 
 ## Configuration
 **Type:** A2-vocab
@@ -39,29 +39,20 @@
 - Required types used: 3/3 (cloze, fill-in, match-up) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: місцевий
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ❌ 1328/1440 (raw: 1689)
+- **Words:** ✅ 1743/1440 (raw: 2108)
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 47/1
+- **Vocab:** ✅ 23/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 75.6% (target 75-85% (A2.3))
+- **Immersion:** 🇺🇦 77.6% (target 75-85% (A2.3))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
@@ -69,8 +60,8 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Вступ** | ✅ | 145 | Included in Core |
+| **Вступ** | ✅ | 282 | Included in Core |
 | **Граматика** | ⚪️ | 387 | Skipped |
-| **Практика** | ⚪️ | 642 | Skipped |
+| **Практика** | ⚪️ | 920 | Skipped |
 | **Підсумок** | ✅ | 129 | Included in Core |
 | **Need More Practice?** | ⚪️ | 25 | Skipped |

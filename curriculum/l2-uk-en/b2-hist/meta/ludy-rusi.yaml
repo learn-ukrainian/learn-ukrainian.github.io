@@ -15,3 +15,13 @@ tags:
 build:
   last_modified: '2026-01-26'
 phase: B2-HIST.1 [Kyivan Rus]
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+  word_target: 300
+- type: true-false
+  focus: Факти та міфи
+  items: 10

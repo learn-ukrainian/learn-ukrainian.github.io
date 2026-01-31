@@ -1,0 +1,126 @@
+vocabulary:
+  - id: pravopys
+    term: правопис
+    translation: orthography
+    ipa: [prɑwoˈpɪs]
+    context: "Куліш створив перший фонетичний правопис, відомий як 'кулішівка'."
+  - id: kulishivka
+    term: кулішівка
+    translation: Kulishka (Kulish orthography)
+    ipa: [kuliˈʃʲiwkɑ]
+    context: "Кулішівка лягла в основу сучасного українського правопису."
+  - id: fonetychnyy-print syp
+    term: фонетичний принцип
+    translation: phonetic principle
+    ipa: [fonɛˈtɪtʃnɪj ˈprɪntsɪp]
+    context: "Пиши як чуєш, читай як бачиш — це і є фонетичний принцип."
+  - id: movotvorennia
+    term: мовотворення
+    translation: language creation / glottogenesis
+    ipa: [mowoˈtwɔrɛnʲːɑ]
+    context: "Його внесок у мовотворення важко переоцінити."
+  - id: bratstvo
+    term: братство
+    translation: brotherhood
+    ipa: [ˈbrɑtstwo]
+    context: "Він був членом Кирило-Мефодіївського братства."
+  - id: zaslannia
+    term: заслання
+    translation: exile
+    ipa: [zɑsˈlɑnʲːɑ]
+    context: "Після арешту його відправили у заслання до Тули."
+  - id: pereklad
+    term: переклад
+    translation: translation
+    ipa: [pɛˈrɛklɑd]
+    context: "Переклад Біблії став справою всього його життя."
+  - id: bibliia
+    term: Біблія
+    translation: Bible
+    ipa: [ˈbʲiblʲijɑ]
+    context: "Перший повний переклад Біблії українською мовою."
+  - id: literaturna-mova
+    term: літературна мова
+    translation: literary language
+    ipa: [lʲitɛrɑˈturnɑ ˈmɔwɑ]
+    context: "Куліш нормалізував українську літературну мову."
+  - id: polemika
+    term: полеміка
+    translation: polemic / debate
+    ipa: [poˈlɛmikɑ]
+    context: "Його полеміка з Шевченком була гострою, але плідною."
+  - id: yazychiie
+    term: язичіє
+    translation: yazychiie (macaronic language)
+    ipa: [jɑˈzɪtʃʲijɛ]
+    context: "Він виступав проти використання 'язичія' в літературі."
+  - id: slov-ianska-federatsiia
+    term: слов'янська федерація
+    translation: Slavic federation
+    ipa: [sloˈwjansʲkɑ fɛdɛˈrɑtsʲijɑ]
+    context: "Братчики мріяли про вільну слов'янську федерацію."
+  - id: chorna-rada
+    term: Чорна рада
+    translation: The Black Council
+    ipa: [ˈtʃɔrnɑ ˈrɑdɑ]
+    context: "Перший український історичний роман 'Чорна рада'."
+  - id: normalizatsiia
+    term: нормалізація
+    translation: normalization / standardization
+    ipa: [normɑlʲiˈzɑtsʲijɑ]
+    context: "Нормалізація граматики вимагала титанічної праці."
+  - id: yevropeizatsiia
+    term: європеїзація
+    translation: Europeanization
+    ipa: [jewropɛjiˈzɑtsʲijɑ]
+    context: "Куліш прагнув європеїзації української культури."
+  - id: intelektual
+    term: інтелектуал
+    translation: intellectual
+    ipa: [intɛlɛkˈtuɑl]
+    context: "Він був справжнім європейським інтелектуалом."
+  - id: khutir
+    term: хутір
+    translation: khutir (farmstead)
+    ipa: [ˈxutʲir]
+    context: "Його філософія 'хуторянства' викликала багато дискусій."
+  - id: rozbrat
+    term: розбрат
+    translation: discord / strife
+    ipa: [ˈrɔzbrɑt]
+    context: "Роман описує період Руїни та козацького розбрату."
+  - id: myslytel
+    term: мислитель
+    translation: thinker
+    ipa: [mɪsˈlɪtɛlʲ]
+    context: "Куліш був не лише письменником, а й глибоким мислителем."
+  - id: spadshchyna
+    term: спадщина
+    translation: legacy / heritage
+    ipa: [ˈspɑdʒtʃɪnɑ]
+    context: "Його літературна спадщина є фундаментом нашої культури."
+  - id: prosvita
+    term: просвіта
+    translation: enlightenment / education
+    ipa: [proˈswitɑ]
+    context: "Він присвятив життя справі народної просвіти."
+  - id: tsaryzm
+    term: царизм
+    translation: tsarism
+    ipa: [tsɑˈrɪzm]
+    context: "Царизм жорстоко переслідував українське слово."
+  - id: samosvidomist
+    term: самосвідомість
+    translation: self-awareness / identity
+    ipa: [sɑmoˈswidomistʲ]
+    context: "Зростання національної самосвідомості українців."
+  - id: movoznavets
+    term: мовознавець
+    translation: linguist
+    ipa: [mowoˈznɑwɛtsʲ]
+    context: "Видатний мовознавець XIX століття."
+  - id: perкладач
+    term: перекладач
+    translation: translator
+    ipa: [pɛrɛklɑˈdɑtʃ]
+    context: "Талановитий перекладач творів Шекспіра та Байрона."

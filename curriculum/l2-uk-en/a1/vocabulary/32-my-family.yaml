@@ -43,3 +43,12 @@ items:
   translation: aunt
   pos: noun
   gender: f
+- lemma: рід
+  ipa: /rid/
+  translation: gender
+  pos: noun
+  gender: m
+- lemma: середній
+  ipa: /sɛˈrɛdnʲij/
+  translation: middle
+  pos: adj

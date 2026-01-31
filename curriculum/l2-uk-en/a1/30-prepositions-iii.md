@@ -9,29 +9,29 @@
 > — **Куди ти йдеш?** (Where are you going?) → Я йду **в парк**. (I'm going to the park.)
 > — **Звідки ти?** (Where are you from?) → Я **з України**. (I'm from Ukraine.)
 >
-> Same preposition «в» — but different CASE depending on the question!
+> Same preposition «в» — but different CASE depending on the question! In this lesson, we will explore these important differences. We will talk about where you live (місце), where you are going right now (напрямок), and where you are from (походження). Understanding these three paths will make your Ukrainian sound natural and correct. It is a very important part of daily conversations. Let's start! (Let's begin our journey with prepositions!)
 
 ---
 
-## Grammar
+## Presentation
 
 ### The Three Key Questions
 
 > [!observe] Спостереження (Pattern Discovery)
->
-> Look at these question-answer pairs:
->
+
+Look at these question-answer pairs:
+
 | Question                  | IPA            | Case Needed         | Example                          |
 | ------------------------- | -------------- | ------------------- | -------------------------------- |
 | **Де?** (Where?)          | /dɛ/           | Locative            | Я **в парку**.                   |
 | **Куди?** (Where to?)     | /kʊˈdɪ/        | Accusative/Genitive | Я йду **в парк** / **до парку**. |
 | **Звідки?** (Where from?) | /ˈzvidkɪ/      | Genitive            | Я **зі Львова**.                 |
->
-> The QUESTION determines which CASE to use!
+
+The QUESTION determines which CASE to use!
 
 ---
 
-## Location: Де? (Where?)
+## Місце: Де?
 
 For **location** (where something IS), use **Locative case**:
 
@@ -48,7 +48,7 @@ For **location** (where something IS), use **Locative case**:
 
 ---
 
-## Direction: Куди? (Where to?)
+## Напрямок: Куди?
 
 For **direction** (where something is GOING), use **Accusative** or **Genitive**:
 
@@ -66,7 +66,7 @@ For **direction** (where something is GOING), use **Accusative** or **Genitive**
 
 ---
 
-## Origin: Звідки? (Where from?)
+## Походження: Звідки?
 
 For **origin** (where something is FROM), use **Genitive** with **з** or **від**:
 
@@ -83,7 +83,7 @@ For **origin** (where something is FROM), use **Genitive** with **з** or **ві
 
 ---
 
-## Location vs Direction Pairs
+### Location vs Direction Pairs
 
 | Location (Де?)               | Direction (Куди?)                     |
 | ---------------------------- | ------------------------------------- |
@@ -204,9 +204,14 @@ For **origin** (where something is FROM), use **Genitive** with **з** or **ві
 
 ---
 
-## Практика
+## Practice
 
-Використовуйте ці вправи. Це гарна практика. (Use these exercises. This is good practice.)
+### Мій шлях додому
+
+Опишіть свій шлях додому сьогодні. (Describe your way home today.)
+
+> [!model-answer]
+> Сьогодні я йду **з роботи** **в магазин**. Потім я йду **додому**. Мій будинок **близько**. Я вже **вдома**.
 
 # Підсумок
 

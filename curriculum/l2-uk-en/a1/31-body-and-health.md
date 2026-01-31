@@ -4,29 +4,29 @@
 
 > 💡 **Що болить? (What Hurts?)**
 >
-> Oh no! You're feeling a bit under the weather in Kyiv? Don't worry, you've got this! Learning how to say what's wrong is your first step to feeling better.
+> Oh no! You're feeling a bit under the weather in Kyiv? Don't worry, you've got this! Learning how to say what's wrong is your first step to feeling better. Imagine you are at home and suddenly you feel a bit sick. Maybe your head is heavy, or your throat feels strange. What do you do? Who do you call? Knowing basic health words is essential for safety and comfort in a new country.
 > — **У мене болить голова.** (My head hurts. — Literally: «At me hurts head.»)
 > — **Я хворий/хвора.** (I'm sick. — m/f)
 > — **У мене температура.** (I have a fever.)
 >
-> **Aha! Moment:** Notice that we use «болить» (3rd person singular) even though YOU are the one hurting! In Ukrainian, the *body part* is the one doing the hurting to you.
+> **Aha! Moment:** Notice that we use «болить» (3rd person singular) even though YOU are the one hurting! In Ukrainian, the *body part* is the one doing the hurting to you. This is a very interesting grammatical structure that we will explore today. We will also learn parts of the body and how to talk to a doctor. It's time to take care of your health in Ukrainian!
 
 ---
 
-## Grammar
+## Presentation
 
 ### Expressing Pain: Болить...
 
 > [!observe] Спостереження (Pattern Discovery)
->
-> Look at these sentences Oksana is saying to her doctor:
->
-> - У мене **болить голова**. (My head hurts.)
-> - У мене **болить живіт**. (My stomach hurts.)
-> - У мене **болить горло**. (My throat hurts.)
->
-> Pattern: **У мене болить** + [body part in Nominative]
-> The body part is the SUBJECT (nominative), not the object! It's like saying "To me, the head hurts."
+
+Look at these sentences Oksana is saying to her doctor:
+
+- У мене **болить голова**. (My head hurts.)
+- У мене **болить живіт**. (My stomach hurts.)
+- У мене **болить горло**. (My throat hurts.)
+
+Pattern: **У мене болить** + [body part in Nominative]
+The body part is the SUBJECT (nominative), not the object! It's like saying "To me, the head hurts."
 
 ### Pain Formula
 
@@ -48,7 +48,7 @@ It's simpler than it looks! Just check if you're talking about one thing or many
 
 ---
 
-## Common Health Expressions
+## Вирази про здоров'я
 
 | Ukrainian             | IPA | English              |
 | --------------------- | --- | -------------------- |
@@ -63,7 +63,7 @@ It's simpler than it looks! Just check if you're talking about one thing or many
 
 ---
 
-## At the Pharmacy (В аптеці)
+### At the Pharmacy (В аптеці)
 
 Imagine walking into a bright **аптека** on Khreshchatyk Street. You'll hear these phrases:
 
@@ -76,7 +76,7 @@ Imagine walking into a bright **аптека** on Khreshchatyk Street. You'll he
 
 ---
 
-## Examples in Context
+### Examples in Context
 
 > [!example] Поодинокий біль (Singular Pain)
 >
@@ -166,9 +166,14 @@ Imagine walking into a bright **аптека** on Khreshchatyk Street. You'll he
 
 ---
 
-## Практика
+## Practice
 
-Використовуйте ці вправи. Це гарна практика. (Use these exercises. This is good practice.)
+### Мій стан здоров'я
+
+Опишіть свій стан здоров'я. Що у вас болить сьогодні? (Describe your health condition. What hurts you today?)
+
+> [!model-answer]
+> Сьогодні я почуваю себе **погано**. У мене **болить голова** і **горло**. Також у мене є **кашель**. Мені потрібні **ліки** від застуди. Я йду в **аптеку**.
 
 # Підсумок (Summary)
 

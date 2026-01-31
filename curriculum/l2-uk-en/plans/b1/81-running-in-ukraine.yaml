@@ -6,19 +6,37 @@ version: '2.0'
 title: Біг в Україні
 subtitle: Running Culture and Marathon Events
 content_outline:
-- section: Огляд
+- section: "Огляд"
   words: 4
-- section: Інтеграція
+  points:
+  - Бігова культура в Україні — гачок
+- section: "Інтеграція"
   words: 841
-- section: Практика
+  points:
+  - Бігова культура в Україні
+  - Чому біг став популярним
+  - Київський марафон
+  - Wizz Air Kyiv City Marathon
+  - Регіональні забіги (Львів, Харків, Одеса)
+  - Забіги на підтримку армії
+  - Ветеранські спортивні проекти
+  - Parkrun в Україні
+  - Як знайти бігову спільноту
+- section: "Практика"
   words: 76
-- section: Продукція
+  points:
+  - Ключові концепції
+- section: "Продукція"
   words: 402
-- section: Підсумок
-  words: 114
-- section: Потрібно більше практики?
+  points:
+  - Діалоги про реєстрацію, тренування, фініш
+- section: "Підсумок — Перший крок"
+  words: 139
+  points:
+  - Як почати бігати
+- section: "Потрібно більше практики?"
   words: 109
-word_target: 1546
+word_target: 1571
 vocabulary_hints:
   required:
   - біг (running)

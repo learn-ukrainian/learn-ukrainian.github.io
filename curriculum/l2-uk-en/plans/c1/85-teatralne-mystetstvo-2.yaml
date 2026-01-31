@@ -6,11 +6,12 @@ version: '2.0'
 title: Театральне мистецтво II
 subtitle: Theater Arts II — Contemporary Stage
 content_outline:
-- section: Вступ — Театральне мистецтво II
-  words: 1000
+- section: Розминка — Сучасний український театр
+  words: 700
   points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
+  - Головні театри України — Франка, Молодий, Лівий берег
+  - Експериментальний театр — Dakh Daughters
+  - Театр під час війни
 - section: Content Areas
   words: 1250
   points:
@@ -18,12 +19,13 @@ content_outline:
   - 'Contemporary directors: Сучасна режисура, нові імена'
   - 'Experimental: Dakh Daughters, театр-перформанс'
   - 'War and theater: Театр під час війни, cultural resistance'
-- section: Практика та підсумок
-  words: 750
+- section: Практика — театральна критика
+  words: 1050
   points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
+  - Написати рецензію на уявну виставу театру Франка
+  - Проаналізувати феномен Dakh Daughters — музика, театр, перформанс
+  - Обговорити роль театру в культурному спротиві
+  - Порівняти український та європейський сучасний театр
 word_target: 3000
 focus: fine-arts
 pedagogy: CBI

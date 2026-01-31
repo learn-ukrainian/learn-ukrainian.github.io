@@ -250,7 +250,9 @@ At a café:
 
 ---
 
-## Інтеграційне завдання
+## Integration Task
+
+### Інтеграційне завдання
 
 **Read this story about Oleg, then answer the questions.**
 

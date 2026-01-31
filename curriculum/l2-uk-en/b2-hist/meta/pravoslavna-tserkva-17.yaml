@@ -15,3 +15,16 @@ build:
   last_modified: '2026-01-26'
 phase: HIST.4 [Lithuanian-Polish Era]
 id: b2-hist-034
+activity_hints:
+- type: reading
+  focus: Аналіз первинних джерел XVII століття
+  items: 4
+- type: essay-response
+  focus: Роль Сагайдачного у захисті православ'я
+  word_target: 300
+- type: true-false
+  focus: Від унії 1596 до легалізації 1632
+  items: 10
+- type: true-false
+  focus: Факти про православну церкву XVII століття
+  items: 10

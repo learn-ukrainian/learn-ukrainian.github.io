@@ -8,7 +8,7 @@
 
 ---
 
-## Grammar
+## Presentation
 
 ### Telling Time
 
@@ -134,7 +134,7 @@ Or in conversation:
 
 ---
 
-## Examples in Context
+## Presentation
 
 > [!example] Asking About Time
 >
@@ -180,7 +180,7 @@ Or in conversation:
 
 ---
 
-## Dialogues
+## Practice
 
 > [!conversation] Scheduling a Meeting
 >
@@ -238,7 +238,7 @@ Or in conversation:
 
 ---
 
-## Практика
+## Practice
 
 ### Вправа 1: Переклад
 

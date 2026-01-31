@@ -1,0 +1,76 @@
+items:
+- id: hetman
+  text: гетьман
+  translation: hetman
+  ipa: "ˈɦɛtʲmɑn"
+  pos: noun
+- id: metsenat
+  text: меценат
+  translation: patron (of arts)
+  ipa: "mɛt͡sɛˈnɑt"
+  pos: noun
+- id: baroko
+  text: бароко
+  translation: baroque
+  ipa: "bɑˈrɔkɔ"
+  pos: noun
+- id: anafema
+  text: анафема
+  translation: anathema
+  ipa: "ɑˈnɑfɛmɑ"
+  pos: noun
+- id: zrada
+  text: зрада
+  translation: treason / betrayal
+  ipa: "ˈzrɑdɑ"
+  pos: noun
+- id: avtonomiia
+  text: автономія
+  translation: autonomy
+  ipa: "ɑu̯tɔˈnɔmʲijɑ"
+  pos: noun
+- id: soiuz
+  text: союз
+  translation: alliance / union
+  ipa: "sɔˈjuz"
+  pos: noun
+- id: vyhnannia
+  text: вигнання
+  translation: exile
+  ipa: "vɪɦˈnɑnʲːɑ"
+  pos: noun
+- id: universal
+  text: універсал
+  translation: universal (decree)
+  ipa: "unʲiʋɛrˈsɑl"
+  pos: noun
+- id: rezydentsiia
+  text: резиденція
+  translation: residence
+  ipa: "rɛzɪˈdɛnt͡sʲijɑ"
+  pos: noun
+- id: klejnody
+  text: клейноди
+  translation: regalia (insignia)
+  ipa: "klɛi̯ˈnɔdɪ"
+  pos: noun
+- id: starshyna
+  text: старшина
+  translation: officer class (seniority)
+  ipa: "stɑrˈʃɪnɑ"
+  pos: noun
+- id: hetmanshchyna
+  text: гетьманщина
+  translation: Hetmanate
+  ipa: "ɦɛtʲˈmɑnʃt͡ʃɪnɑ"
+  pos: noun
+- id: protektorat
+  text: протекторат
+  translation: protectorate
+  ipa: "prɔtɛktɔˈrɑt"
+  pos: noun
+- id: kapituliatsiia
+  text: капітуляція
+  translation: capitulation
+  ipa: "kɑp⁽ʲ⁾itulʲˈjɑt͡sʲijɑ"
+  pos: noun

@@ -1,0 +1,151 @@
+items:
+- lemma: композитор
+  ipa: /kɔmpɔˈzɪtɔr/
+  translation: composer
+  pos: noun
+  gender: m
+  note: творець музики
+- lemma: етнографія
+  ipa: /ɛtnɔˈɦrafʲijɐ/
+  translation: ethnography
+  pos: noun
+  gender: f
+  note: наука про народ
+- lemma: фольклор
+  ipa: /fɔlʲˈklɔr/
+  translation: folklore
+  pos: noun
+  gender: m
+  note: народна творчість
+- lemma: обробка
+  ipa: /ɔˈbrɔbkɑ/
+  translation: arrangement
+  pos: noun
+  gender: f
+  note: музична адаптація
+- lemma: опера
+  ipa: /ˈɔpɛrɑ/
+  translation: opera
+  pos: noun
+  gender: f
+  note: музичний жанр
+- lemma: кантата
+  ipa: /kɑnˈtɑtɑ/
+  translation: cantata
+  pos: noun
+  gender: f
+  note: вокально-інструментальний твір
+- lemma: рапсодія
+  ipa: /rɑpˈsɔdʲijɑ/
+  translation: rhapsody
+  pos: noun
+  gender: f
+  note: інструментальний твір
+- lemma: консерваторія
+  ipa: /kɔnsɛrʋɑˈtɔrʲijɑ/
+  translation: conservatory
+  pos: noun
+  gender: f
+  note: музичний вуз
+- lemma: піаніст
+  ipa: /pʲiɑˈnʲist/
+  translation: pianist
+  pos: noun
+  gender: m
+  note: виконавець
+- lemma: диригент
+  ipa: /dɪrɪˈɦɛnt/
+  translation: conductor
+  pos: noun
+  gender: m
+  note: керівник оркестру
+- lemma: музикознавство
+  ipa: /muzɪkɔˈznɑustʋɔ/
+  translation: musicology
+  pos: noun
+  gender: n
+  note: наука про музику
+- lemma: партитура
+  ipa: /pɑrtɪˈturɑ/
+  translation: score
+  pos: noun
+  gender: f
+  note: нотний запис
+- lemma: віртуоз
+  ipa: /ʋʲirtuˈɔz/
+  translation: virtuoso
+  pos: noun
+  gender: m
+  note: майстерний виконавець
+- lemma: романтизм
+  ipa: /rɔmɑnˈtɪzm/
+  translation: romanticism
+  pos: noun
+  gender: m
+  note: мистецький напрям
+- lemma: націоналізм
+  ipa: /nɑt͡sʲiɔnɑˈlʲizm/
+  translation: nationalism
+  pos: noun
+  gender: m
+  note: музичний рух
+- lemma: школа
+  ipa: /ˈʃkɔlɑ/
+  translation: school
+  pos: noun
+  gender: f
+  note: напрям, традиція
+- lemma: спадщина
+  ipa: /ˈspɑdʃt͡ʃɪnɑ/
+  translation: heritage
+  pos: noun
+  gender: f
+  note: культурний набуток
+- lemma: ідентичність
+  ipa: /idɛnˈtɪt͡ʃnʲistʲ/
+  translation: identity
+  pos: noun
+  gender: f
+  note: самоусвідомлення
+- lemma: меценат
+  ipa: /mɛt͡sɛˈnɑt/
+  translation: patron
+  pos: noun
+  gender: m
+  note: покровитель
+- lemma: громадський діяч
+  ipa: /ɦrɔˈmɑdsʲkɪj dʲiˈjɑt͡ʃ/
+  translation: public figure
+  pos: phrase
+  gender: m
+  note: активіст
+- lemma: просвіта
+  ipa: /prɔˈsʋʲitɑ/
+  translation: enlightenment / Prosvita
+  pos: noun
+  gender: f
+  note: культурне товариство
+- lemma: заборона
+  ipa: /zɑbɔˈrɔnɑ/
+  translation: ban / prohibition
+  pos: noun
+  gender: f
+  note: обмеження (Емський указ)
+- lemma: виконання
+  ipa: /ʋɪkɔˈnɑnʲːɑ/
+  translation: performance
+  pos: noun
+  gender: n
+  note: гра на інструменті
+- lemma: мелодика
+  ipa: /mɛˈlɔdɪkɑ/
+  translation: melodicism
+  pos: noun
+  gender: f
+  note: характер мелодії
+- lemma: героїка
+  ipa: /ɦɛˈrɔjikɑ/
+  translation: heroism
+  pos: noun
+  gender: f
+  note: героїчний зміст

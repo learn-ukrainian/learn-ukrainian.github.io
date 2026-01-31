@@ -4,7 +4,7 @@
 
 > 💡 **Щасливих свят! (Happy Holidays!)**
 >
-> Ukrainians love to celebrate! Whether it's the smell of fresh **паска** at Easter or the sound of carols at Christmas, holidays are a big deal. You're almost at the end of A1—celebrate your progress!
+> Ukrainians love to celebrate! Whether it's the smell of fresh **паска** at Easter or the sound of carols at Christmas, holidays are a big deal. You're almost at the end of A1—celebrate your progress! Imagine a big table with many delicious dishes. There is music, laughter, and many gifts. This is how Ukrainians spend their holidays. In this lesson, we will learn how to greet our friends and family, how to make sincere wishes, and how to talk about our birthdays. Every culture has its unique traditions, and Ukraine is especially rich in them. From the ancient songs to modern celebrations, there is so much to explore!
 > — **З Новим роком!** (Happy New Year!)
 > — **З Днем народження!** (Happy Birthday!)
 > — **Вітаю!** (Congratulations!)
@@ -13,20 +13,20 @@
 
 ---
 
-## Граматика (Grammar)
+## Presentation
 
 ### Holiday Greetings (Святкові привітання)
 
 > [!observe] Спостереження (Pattern Discovery)
->
-> Learn these greetings as fixed phrases:
->
-> - **З Новим роком!** (Happy New Year!)
-> - **З Різдвом!** (Merry Christmas!)
-> - **З Великоднем!** (Happy Easter!)
-> - **З Днем народження!** (Happy Birthday!)
->
-> Memorize these complete phrases! You'll learn the grammar behind them in Level A2.
+
+Learn these greetings as fixed phrases:
+
+- **З Новим роком!** (Happy New Year!)
+- **З Різдвом!** (Merry Christmas!)
+- **З Великоднем!** (Happy Easter!)
+- **З Днем народження!** (Happy Birthday!)
+
+Memorize these complete phrases! You'll learn the grammar behind them in Level A2.
 
 ### Common Holiday Greetings (Популярні привітання)
 
@@ -41,7 +41,7 @@
 
 ---
 
-## Making Wishes (Побажання)
+### Making Wishes (Побажання)
 
 В Україні зазвичай бажають «щастя і здоров'я» (Happiness and Health). Це найважливіші слова!
 
@@ -56,7 +56,7 @@
 
 ---
 
-## When Is Your Birthday? (Коли твій день народження?)
+### When Is Your Birthday? (Коли твій день народження?)
 
 | Питання (Question)             | Відповідь (Answer)                         |
 | ------------------------------ | ------------------------------------------ |
@@ -67,7 +67,7 @@
 
 ---
 
-## Приклади (Examples)
+### Приклади (Examples)
 
 > [!example] Привітання (Greetings)
 >
@@ -147,9 +147,14 @@
 
 ---
 
-## Практика (Practice)
+## Practice
 
-Використовуйте ці вправи. Це гарна практика. (Use these exercises. This is good practice.)
+### Листівка з днем народження
+
+Напишіть коротке привітання з днем народження. (Write a short birthday greeting.)
+
+> [!model-answer]
+> Дорога Оксано! Вітаю тебе з днем народження! Бажаю тобі **щастя**, **здоров'я** та великих успіхів. Хай збуваються всі твої мрії! Твій друг, Андрій.
 
 # Підсумок (Summary)
 

@@ -1,8 +1,8 @@
 # Audit Report: M70 — danylo-apostol.md
 **Level:** B2 | **Module:** M70 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-29 23:39:57
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-30 22:22:19
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading
+**Required Types:** comparative-study, essay-response, reading, true-false
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -30,20 +30,11 @@
 - Total activities: 5 (target: 3-9) ✅
 - Unique types: 5 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 2/2 (essay-response, reading) ✅
+- Required types used: 4/4 (comparative-study, essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Читання|Хід|Основні події|Діяльність|Свідки|Великий рейд|Відбудова' found: Читання: Епоха Данила Апостола, Підсумок: Захід сонця, Адміністративна та правова діяльність
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 4075/4000 (raw: 4172)
+- **Words:** ✅ 4123/4000 (raw: 4220)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -82,11 +73,11 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 94 | Included in Core |
-| **Вступ: Між молотом і ковадлом** | ✅ | 339 | Included in Core |
+| **Вступ: Між молотом і ковадлом** | ✅ | 354 | Included in Core |
 | **Читання: Епоха Данила Апостола** | ✅ | 734 | Included in Core |
 | **Економіка та суспільство: Стабільність і криза** | ⚪️ | 685 | Skipped |
 | **Епоха Розумовського: Європейська мрія** | ⚪️ | 755 | Skipped |
 | **Первинні джерела: Голоси епохи** | ✅ | 499 | Included in Core |
 | **Деколонізаційний погляд: Дві стратегії виживання** | ✅ | 492 | Included in Core |
-| **Підсумок: Захід сонця** | ✅ | 376 | Included in Core |
+| **Підсумок: Згасання автономії** | ✅ | 409 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 101 | Skipped |

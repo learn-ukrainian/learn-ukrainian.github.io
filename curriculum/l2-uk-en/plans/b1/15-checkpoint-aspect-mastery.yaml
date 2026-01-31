@@ -11,36 +11,46 @@ content_outline:
   points:
   - Checkpoint introduction
   - Self-assessment overview
-- section: 'Skill 1: Вид у минулому часі'
+- section: 'Навичка 1: Вид у минулому часі'
   words: 661
   points:
-  - Past tense aspect review
-  - Practice exercises
-- section: 'Skill 2: Вид у майбутньому часі'
+  - Доконаний — одноразова дія з результатом (Я написав листа)
+  - Недоконаний — процес або повторення (Я писав листи)
+  - Типові помилки студентів
+  - Самоперевірка з відповідями
+- section: 'Навичка 2: Вид у майбутньому часі'
   words: 392
   points:
-  - Future tense aspect review
-  - Practice exercises
-- section: 'Skill 3: Вид у запереченні'
+  - Буду + НДВ для процесів (Буду читати)
+  - ДВ для результату (Прочитаю)
+  - Вибір виду в контексті планування
+  - Самоперевірка
+- section: 'Навичка 3: Вид у запереченні'
   words: 637
   points:
-  - Negation aspect review
-  - Practice exercises
-- section: 'Skill 4: Вид у наказовому способі'
+  - Чому заперечення часто вимагає НДВ
+  - Не + ДВ для категоричної відмови
+  - Не + НДВ для загального заперечення
+  - Практика розрізнення
+- section: 'Навичка 4: Вид у наказовому способі'
   words: 527
   points:
-  - Imperative aspect review
-  - Practice exercises
-- section: 'Skill 5: Видові пари'
+  - ДВ для одноразового наказу (Закрий двері!)
+  - НДВ для процесу або ввічливості (Закривайте двері!)
+  - Заборони з НДВ (Не відкривай!)
+  - Самоперевірка
+- section: 'Навичка 5: Видові пари'
   words: 306
   points:
-  - Aspect pairs review
-  - Practice exercises
+  - 40 основних видових пар
+  - Словотвірні моделі (-ати/-ити, префікси)
+  - Тест на знання пар
 - section: Інтеграційне завдання
   words: 342
   points:
-  - Integrated challenge
-  - Self-check
+  - Комплексний текст з вибором виду
+  - Письмове завдання — розповідь про вчорашній день
+  - Оцінка готовності до фази дієслів руху
 word_target: 3000
 vocabulary_hints:
   required:

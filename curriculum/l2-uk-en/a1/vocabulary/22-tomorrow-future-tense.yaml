@@ -19,6 +19,11 @@ items:
   ipa: /pisljazˈaʋtra/
   translation: the day after tomorrow
   pos: adv
+- lemma: дієслово
+  ipa: /dijɛslˈɔʋɔ/
+  translation: verb
+  pos: noun
+  gender: n
 - lemma: урка
   ipa: /ˈurka/
   translation: urka

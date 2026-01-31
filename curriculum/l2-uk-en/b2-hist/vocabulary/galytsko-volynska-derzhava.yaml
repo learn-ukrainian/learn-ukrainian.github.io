@@ -1,4 +1,84 @@
 module: galytsko-volynska-derzhava
 level: B2-HIST
 version: '2.0'
-items: []
+items:
+  - term: розквіт
+    ipa: rɔzˈkwʲit
+    translation: flourish, bloom, heyday
+    pos: noun
+  - term: оплот
+    ipa: ɔˈplɔt
+    translation: stronghold, bulwark
+    pos: noun
+  - term: єдність
+    ipa: ˈjɛdnistʲ
+    translation: unity
+    pos: noun
+  - term: коаліція
+    ipa: kɔaˈlʲit͡s⁽ʲ⁾ijɐ
+    translation: coalition
+    pos: noun
+  - term: спадкоємець
+    ipa: spɐdˈkɔjɛmɛt͡sʲ
+    translation: heir, successor
+    pos: noun
+  - term: міжусобиця
+    ipa: mʲiʒuˈsɔbɪt͡sʲɐ
+    translation: internecine strife, civil war
+    pos: noun
+  - term: самодержець
+    ipa: sɐmɔˈdɛrʒɛt͡sʲ
+    translation: autocrat (in medieval sense - independent ruler)
+    pos: noun
+  - term: опозиція
+    ipa: ɔpɔˈzɪt͡s⁽ʲ⁾ijɐ
+    translation: opposition
+    pos: noun
+  - term: скрипторій
+    ipa: skrɪpˈtɔr⁽ʲ⁾ij
+    translation: scriptorium
+    pos: noun
+  - term: іконопис
+    ipa: iˈkɔnɔpɪs
+    translation: iconography, icon painting
+    pos: noun
+  - term: ренесанс
+    ipa: rɛnɛˈsans
+    translation: renaissance
+    pos: noun
+  - term: Магдебурзьке право
+    ipa: mɐɦdɛˈburzʲkɛ ˈprawɔ
+    translation: Magdeburg rights (city law)
+    pos: phrase
+  - term: суб'єктність
+    ipa: subˈjɛktnistʲ
+    translation: subjectivity, agency
+    pos: noun
+  - term: тяглість
+    ipa: ˈtʲahlistʲ
+    translation: continuity
+    pos: noun
+  - term: олігархія
+    ipa: ɔlʲiˈɦarxʲijɐ
+    translation: oligarchy
+    pos: noun
+  - term: латифундія
+    ipa: lɐtɪˈfund⁽ʲ⁾ijɐ
+    translation: latifundium
+    pos: noun
+  - term: Осмомисл
+    ipa: ɔsmɔˈmɪsl
+    translation: Osmomysl (one who thinks for eight)
+    pos: proper noun
+  - term: золотокований
+    ipa: zɔlɔtɔkɔˈwanɪi̯
+    translation: gold-forged
+    pos: adjective
+  - term: легітимізація
+    ipa: leɦitɪmʲiˈzat͡s⁽ʲ⁾ijɐ
+    translation: legitimization
+    pos: noun
+  - term: П'ємонт
+    ipa: p⁽ʲ⁾jɛˈmɔnt
+    translation: Piedmont (symbol of national unification)
+    pos: proper noun

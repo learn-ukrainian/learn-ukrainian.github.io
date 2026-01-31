@@ -19,6 +19,7 @@
     "validate:mdx": ".venv/bin/python scripts/validate_mdx.py",
     "validate:html": ".venv/bin/python scripts/validate_html.py",
     "validate:yaml": ".venv/bin/python scripts/validate_yaml.py",
+    "validate:plans": ".venv/bin/python scripts/validate_plans.py",
     "convert:md-to-yaml": ".venv/bin/python scripts/md_to_yaml.py",
     "vocab:init": "python3 scripts/vocab_init.py",
     "vocab:init:force": "python3 scripts/vocab_init.py l2-uk-en --force",

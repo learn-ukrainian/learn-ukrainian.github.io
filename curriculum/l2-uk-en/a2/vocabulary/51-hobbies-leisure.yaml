@@ -2,231 +2,129 @@ module: 51-hobbies-leisure
 level: A2
 version: '2.0'
 items:
-- lemma: агенція
-  ipa: /aɦˈɛnt͡sija/
-  translation: agency
-  pos: noun
-  gender: f
-- lemma: безмежний
-  ipa: /bɛzmˈɛʒnɪj/
-  translation: limitless, boundless
-  pos: adj
-- lemma: буковель
-  ipa: /bukɔʋˈɛlʲ/
-  translation: Bukovel
-  pos: noun
-  gender: m
-- lemma: вагатися
-  ipa: /ʋaɦˈatɪsja/
-  translation: to hesitate
+- lemma: малювати
+  ipa: /mɐlʲʊˈʋate/
+  translation: to draw
   pos: verb
-- lemma: вдень
-  ipa: /ʋdɛnʲ/
-  translation: during the day
-  pos: adv
-- lemma: веселитися
-  ipa: /ʋɛsɛlˈɪtɪsja/
-  translation: to have fun
+- lemma: співати
+  ipa: /sʲpʲiˈʋate/
+  translation: to sing
   pos: verb
-- lemma: веселощі
-  ipa: /ʋɛsˈɛlɔʃt͡ʃi/
-  translation: fun, merriment
-  pos: noun
-- lemma: вечорниця
-  ipa: /ʋɛt͡ʃɔrnɪt͡sja/
-  translation: vechornytsi (traditional evening gathering)
-  pos: noun
-- lemma: галерея
-  ipa: /ɦalɛrˈɛja/
-  translation: gallery
+- lemma: танцювати
+  ipa: /tɐnʲt͡sʲʊˈʋate/
+  translation: to dance
+  pos: verb
+- lemma: грати
+  ipa: /ˈɦrate/
+  translation: to play
+  pos: verb
+- lemma: фотографувати
+  ipa: /fotɔɦrɐfʊˈʋate/
+  translation: to photograph
+  pos: verb
+- lemma: писати
+  ipa: /peˈsate/
+  translation: to write
+  pos: verb
+- lemma: читати
+  ipa: /t͡ʃeˈtate/
+  translation: to read
+  pos: verb
+- lemma: колекціонувати
+  ipa: /kɔlekt͡sʲionʊˈʋate/
+  translation: to collect
+  pos: verb
+- lemma: подорожувати
+  ipa: /pɔdɔrɔʒʊˈʋate/
+  translation: to travel
+  pos: verb
+- lemma: відвідувати
+  ipa: /ʋʲidʲˈʋidʊʋɐte/
+  translation: to visit
+  pos: verb
+- lemma: оглядати
+  ipa: /ɔɦlʲɐˈdate/
+  translation: to sightsee
+  pos: verb
+- lemma: збирати
+  ipa: /zbeˈrate/
+  translation: to pack
+  pos: verb
+- lemma: подорож
+  ipa: /ˈpɔdɔrɔʒ/
+  translation: trip/journey
   pos: noun
   gender: f
-- lemma: глядач
-  ipa: /ɦljadˈat͡ʃ/
-  translation: spectator, viewer
-  pos: noun
-  gender: m
-- lemma: говерла
-  ipa: /ɦɔʋˈɛrla/
-  translation: Hoverla (mountain)
-  pos: noun
-  gender: f
-- lemma: гітара
-  ipa: /ɦitˈara/
-  translation: guitar
-  pos: noun
-  gender: f
-- lemma: далекий
-  ipa: /dalˈɛkɪj/
-  translation: distant, far
-  pos: adj
-- lemma: дизайнерка
-  ipa: /dɪzˈajnɛrka/
-  translation: designer (female)
-  pos: noun
-  gender: f
-- lemma: дмитре
-  ipa: /dmɪtrɛ/
-  translation: Dmytro (vocative)
-  pos: noun
-  gender: n
-- lemma: дозвілля
-  ipa: /dɔzʋˈillja/
-  translation: leisure, free time
-  pos: noun
-  gender: n
-- lemma: драгобрат
-  ipa: /draɦɔbrat/
-  translation: Drahobrat (place)
-  pos: noun
-  gender: m
-- lemma: живопис
-  ipa: /ʒɪʋˈɔpɪs/
-  translation: painting, fine art
-  pos: noun
-  gender: m
-- lemma: зоряний
-  ipa: /zˈɔrjanɪj/
-  translation: starry, stellar
-  pos: adj
-- lemma: каремат
-  ipa: /karɛmat/
-  translation: sleeping mat, yoga mat
-  pos: noun
-  gender: m
-- lemma: клуб
-  ipa: /klub/
-  translation: club
-  pos: noun
-  gender: m
-- lemma: кохання
-  ipa: /kɔxˈannja/
-  translation: love (romantic)
-  pos: noun
-  gender: n
-- lemma: крутий
-  ipa: /krutˈɪj/
-  translation: cool, steep
-  pos: adj
-- lemma: любий
-  ipa: /lˈjubɪj/
-  translation: dear, beloved
-  pos: adj
-- lemma: мак
-  ipa: /mak/
-  translation: poppy
-  pos: noun
-- lemma: малювання
-  ipa: /maljuʋˈannja/
-  translation: drawing, painting
-  pos: noun
-  gender: n
-- lemma: мистецький
-  ipa: /mɪstˈɛt͡sʲkɪj/
-  translation: artistic
-  pos: adj
-- lemma: мішок
-  ipa: /miʃˈɔk/
-  translation: bag, sack
-  pos: noun
-  gender: m
 - lemma: намет
-  ipa: /namˈɛt/
+  ipa: /nɐˈmɛt/
   translation: tent
   pos: noun
   gender: m
-- lemma: несамовитий
-  ipa: /nɛsamɔʋˈɪtɪj/
-  translation: frantic, furious
+- lemma: квиток
+  ipa: /keˈʋitɔk/
+  translation: ticket
+  pos: noun
+  gender: m
+- lemma: кіно
+  ipa: /kʲiˈnɔ/
+  translation: cinema
+  pos: noun
+  gender: n
+- lemma: театр
+  ipa: /teˈat r/
+  translation: theater
+  pos: noun
+  gender: m
+- lemma: концерт
+  ipa: /kɔnʲˈt͡sɛrt/
+  translation: concert
+  pos: noun
+  gender: m
+- lemma: виставка
+  ipa: /ˈʋestɐu̯kɐ/
+  translation: exhibition
+  pos: noun
+  gender: f
+- lemma: музей
+  ipa: /mʊˈzɛi̯/
+  translation: museum
+  pos: noun
+  gender: m
+- lemma: сцена
+  ipa: /ˈst͡sɛnɐ/
+  translation: stage
+  pos: noun
+  gender: f
+- lemma: глядач
+  ipa: /ɦlʲɐˈdat͡ʃ/
+  translation: spectator
+  pos: noun
+  gender: m
+- lemma: вільний час
+  ipa: /ˈʋʲilʲneɪ̯ t͡ʃas/
+  translation: free time
+  pos: noun
+  gender: m
+- lemma: хобі
+  ipa: /ˈxɔbʲi/
+  translation: hobby
+  pos: noun
+  gender: n
+- lemma: захоплення
+  ipa: /zɐxɔpˈlɛnnʲɐ/
+  translation: passion
+  pos: noun
+  gender: n
+- lemma: відпочинок
+  ipa: /ʋʲidpɔˈt͡ʃenɔk/
+  translation: rest/leisure
+  pos: noun
+  gender: m
+- lemma: місцевий
+  ipa: /mʲisʲˈt͡sɛʋɪj/
+  translation: local/locative
   pos: adj
-- lemma: ночувати
-  ipa: /nɔt͡ʃuʋˈatɪ/
-  translation: to stay overnight
-  pos: verb
-- lemma: партер
-  ipa: /partˈɛr/
-  translation: parterre, stalls
-  pos: noun
-  gender: m
-- lemma: пензель
-  ipa: /pˈɛnzɛlʲ/
-  translation: brush (artist's)
-  pos: noun
-  gender: m
-- lemma: похмурий
-  ipa: /pɔxmˈurɪj/
-  translation: gloomy, overcast
-  pos: adj
-- lemma: рекламний
-  ipa: /rɛklˈamnɪj/
-  translation: advertising (adj)
-  pos: adj
-- lemma: розвага
-  ipa: /rɔzʋˈaɦa/
-  translation: entertainment, amusement
-  pos: noun
-  gender: f
-- lemma: розпалювати
-  ipa: /rɔzpˈaljuʋatɪ/
-  translation: to kindle (imperfective)
-  pos: verb
-- lemma: самотність
-  ipa: /samˈɔtnistʲ/
-  translation: loneliness
-  pos: noun
-  gender: f
-- lemma: сенцов
-  ipa: /sɛnt͡sɔʋ/
-  translation: Sentsov (name)
-  pos: noun
-  gender: m
-- lemma: соняшник
-  ipa: /sˈɔnjaʃnɪk/
-  translation: sunflower
-  pos: noun
-- lemma: східній
-  ipa: /sxˈidnij/
-  translation: western
-  pos: adj
-- lemma: танець
-  ipa: /tˈanɛt͡sʲ/
-  translation: dance
-  pos: noun
-  gender: m
-- lemma: техно-рейвести
-  ipa: /tˈɛxnɔ-rɛjʋɛstɪ/
-  translation: techno-rave (to rave)
-  pos: verb
-- lemma: узяти
-  ipa: /uzˈjatɪ/
-  translation: to take (perfective)
-  pos: verb
-- lemma: фотоапарат
-  ipa: /fɔtɔaparˈat/
-  translation: camera
-  pos: noun
-  gender: m
-- lemma: художниця
-  ipa: /xudˈɔʒnɪt͡sja/
-  translation: painter, artist (female)
-  pos: noun
-  gender: f
-- lemma: церква
-  ipa: /t͡sˈɛrkʋa/
-  translation: church
-  pos: noun
-  gender: f
-- lemma: яремча
-  ipa: /jarˈɛmt͡ʃa/
-  translation: Yaremche
-  pos: noun
-  gender: f
-- lemma: європейка
-  ipa: /jɛʋrɔpˈɛjka/
-  translation: European woman
-  pos: noun
-  gender: f
-- lemma: івано-франківський
-  ipa: /iʋanɔ-frankˈiʋsʲkɪj/
-  translation: Ivano-Frankivsk (adj)
+- lemma: знахідний
+  ipa: /znɐˈxʲidnɪj/
+  translation: accusative
   pos: adj

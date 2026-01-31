@@ -1,8 +1,8 @@
 # Audit Report: M59 — ruina-ii.md
 **Level:** B2 | **Module:** M59 | **Phase:** HIST.6 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-29 23:39:04
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-30 22:13:55
 
 ## Configuration
 **Type:** B2-history
@@ -33,17 +33,8 @@
 - Required types used: 4/4 (comparative-study, essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Читання|Хід|Основні події|Діяльність|Свідки|Великий рейд|Відбудова' found: Похід султана і Бучацький мир 1672, Читання
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 5504/4000 (raw: 5583)
+- **Words:** ✅ 5502/4000 (raw: 5581)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -86,9 +77,9 @@
 | **Петро Дорошенко: Шлях до булави** | ⚪️ | 626 | Skipped |
 | **Турецький вектор: Союз чи зрада?** | ⚪️ | 719 | Skipped |
 | **Читання** | ✅ | 140 | Included in Core |
-| **Похід султана і Бучацький мир 1672** | ⚪️ | 661 | Skipped |
+| **Наступ султана і Бучацький мир 1672** | ⚪️ | 659 | Skipped |
 | **Внутрішній фронт: Дорошенко проти Сірка** | ⚪️ | 573 | Skipped |
-| **Чигиринські походи: Оборона столиці** | ⚪️ | 680 | Skipped |
+| **Чигиринські кампанії: Оборона столиці** | ⚪️ | 680 | Skipped |
 | **Первинні джерела: Свідчення іноземців** | ✅ | 279 | Included in Core |
 | **Капітуляція і доля гетьмана** | ⚪️ | 365 | Skipped |
 | **Деколонізаційний погляд** | ✅ | 480 | Included in Core |

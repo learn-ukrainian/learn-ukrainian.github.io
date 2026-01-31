@@ -1,39 +1,35 @@
-module: b2-hist-092
+module: zunr
 level: B2-HIST
 slug: zunr
 version: '2.0'
-id: b2-hist-092
+id: b2-hist-92
 naturalness:
   score: 10
   status: PASS
-  justification: Академічний український для політичної історії
-duration: 120
+  justification: Strong historical narrative
+duration: 90
 transliteration: none
 build:
-  last_modified: '2026-01-28'
-phase: HIST.9 [WWI & Revolution]
+  last_modified: '2026-01-30'
+title: ЗУНР та Акт Злуки
+subtitle: 'ZUNR and the Act of Union'
 activity_hints:
 - type: reading
-  focus: Текст Акту Злуки
-  items: 12
+  focus: Універсал про Злуку
+  items: 4
 - type: essay-response
-  focus: Чому Акт Злуки не привів до реального об'єднання?
-  word_target: 250
-- type: critical-analysis
-  focus: Листопадовий чин
-  items: 12
+  focus: Історичне значення Акту Злуки
+  word_target: 300
 - type: true-false
   focus: Факти про ЗУНР
-  items: 12
-- type: multiple-choice
-  focus: Державне будівництво ЗУНР
-  items: 12
-- type: matching
-  focus: Діячі та їхні ролі
-  items: 12
-- type: cloze
-  focus: Універсал Соборності
-  items: 12
-- type: sorting
-  focus: Хронологія подій 1918-1919
-  items: 12
+  items: 10
+- type: comparative-study
+  focus: УНР та ЗУНР
+  items: 1
+- type: critical-analysis
+  focus: Листопадовий чин
+  items: 1
+- type: authorial-intent
+  focus: Риторика Соборності
+  items: 1
+pedagogy: CBI

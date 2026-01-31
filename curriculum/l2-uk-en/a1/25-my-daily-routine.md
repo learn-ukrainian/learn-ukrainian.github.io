@@ -1,6 +1,10 @@
 # My Day — A Typical Routine
 
-## Introduction
+## Warm-up
+
+What does your typical day look like? Do you wake up early, drink coffee, and rush to work, or do you prefer a slow morning with a book? In this module, we will learn how to describe these daily sequences in Ukrainian. You already have the building blocks: verbs, time expressions, and reflexive particles. Now, we will put them together to tell the story of your day.
+
+Describing a routine is more than just listing actions; it's about connecting them using sequence words like "first," "then," and "after that." This skill is essential for survival in Ukraine, as it allows you to explain your schedule, make appointments, and understand when things happen. Let's start by looking at the core actions that define our daily lives.
 
 > 🕰️ **Мій типовий день**
 >
@@ -20,39 +24,34 @@
 
 ## Presentation
 
-### Examples in Context
+### Sequence Words (Сполучники послідовності)
 
-> [!example] Morning Routine
->
-> - Я **прокидаюся** о сьомій ранку. (I wake up at 7 in the morning.)
-> - **Спочатку** я **вмиваюся**. (First I wash my face.)
-> - **Потім** я **чищу зуби**. (Then I brush my teeth.)
-> - Він **голиться** кожного ранку. (He shaves every morning.)
-> - Вона **одягається** швидко. (She gets dressed quickly.)
-> - Ми **снідаємо** о восьмій. (We have breakfast at 8.)
+To describe a routine, you need words that show the order of events. These "glue" your sentences together into a coherent story.
 
-> [!example] Daytime Activities
->
-> - Я **виходжу** з дому о восьмій. (I leave home at 8.)
-> - Вона **їде** на роботу автобусом. (She goes to work by bus.)
-> - Він **приходить** на роботу о дев'ятій. (He arrives at work at 9.)
-> - Ми **працюємо** з дев'ятої до шостої. (We work from 9 to 6.)
-> - Вони **обідають** опівдні. (They have lunch at noon.)
+- **Спочатку** (first) — Я спочатку п'ю каву.
+- **Потім** (then / later) — Потім я йду на роботу.
+- **Після того** (after that) — Після того я обідаю.
+- **Нарешті** (finally) — Нарешті я відпочиваю.
 
-> [!example] Evening Activities
->
-> - Я **повертаюся** додому о сьомій. (I return home at 7.)
-> - Ми **вечеряємо** разом. (We have dinner together.)
-> - Вона **відпочиває** після роботи. (She rests after work.)
-> - Він **дивиться телевізор** увечері. (He watches TV in the evening.)
-> - Вони **гуляють** у парку. (They walk in the park.)
+### Morning Routine (Ранок)
 
-> [!example] Night Routine
->
-> - Я **лягаю спати** о десятій. (I go to bed at 10.)
-> - Вона **засинає** швидко. (She falls asleep quickly.)
-> - **Зазвичай** я **читаю** ввечері. (Usually I read in the evening.)
-> - Він **ніколи** не лягає пізно. (He never goes to bed late.)
+Many routine verbs are **reflexive** (ending in -ся) because the action is directed at yourself.
+
+- **прокидатися** (to wake up) — Я прокидаюся о 7 годині.
+- **вмиватися** (to wash one's face) — Я вмиваюся.
+- **чистити зуби** (to brush teeth) — Я чищу зуби.
+- **снідати** (to have breakfast) — Я снідаю на кухні.
+
+### Afternoon and Evening (День і вечір)
+
+- **працювати** (to work) — Я працюю в офісі.
+- **обідати** (to have lunch) — Я обідаю о 1 годині.
+- **повертатися** (to return) — Я повертаюся додому.
+- **вечеряти** (to have dinner) — Я вечеряю з сім'єю.
+- **відпочивати** (to rest) — Я відпочиваю ввечері.
+- **лягати спати** (to go to bed) — Я лягаю спати об 11 годині.
+
+These verbs form the backbone of your daily narrative. Notice how some are regular verbs you've seen before (працювати, снідати), while others use the reflexive suffix you recently learned (прокидатися, повертатися). Mastering the mix of these forms is key to sounding natural.
 
 ---
 

@@ -1,8 +1,8 @@
 # Audit Report: M50 — 50-technology-media.md
 **Level:** A2 | **Module:** M50 | **Phase:** A2.5 | **Pedagogy:** PPP | **Target:** 1350
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:12:55
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-30 21:30:28
 
 ## Configuration
 **Type:** A2-vocab
@@ -40,7 +40,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 1153/1350 (raw: 1641)
+- **Words:** ✅ 1539/1350 (raw: 2144)
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
@@ -52,7 +52,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 81.8% (target 75-85% (A2.3))
+- **Immersion:** 🇺🇦 80.3% (target 75-85% (A2.3))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
@@ -61,7 +61,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Вступ** | ✅ | 183 | Included in Core |
-| **Граматика** | ⚪️ | 253 | Skipped |
-| **Практика** | ⚪️ | 588 | Skipped |
+| **Граматика** | ⚪️ | 420 | Skipped |
+| **Практика** | ⚪️ | 807 | Skipped |
 | **Підсумок** | ✅ | 109 | Included in Core |
 | **Need More Practice?** | ⚪️ | 20 | Skipped |

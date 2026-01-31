@@ -1,8 +1,8 @@
 # Audit Report: M51 — 51-hobbies-leisure.md
 **Level:** A2 | **Module:** M51 | **Phase:** A2.5 | **Pedagogy:** PPP | **Target:** 1430
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:12:56
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-30 21:35:49
 
 ## Configuration
 **Type:** A2-vocab
@@ -39,29 +39,20 @@
 - Required types used: 3/3 (cloze, match-up, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: знахідний, місцевий
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ❌ 1280/1430 (raw: 1728)
+- **Words:** ✅ 1549/1430 (raw: 2019)
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 50/1
+- **Vocab:** ✅ 28/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 83.0% (target 75-85% (A2.3))
+- **Immersion:** 🇺🇦 78.5% (target 75-85% (A2.3))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
@@ -69,8 +60,8 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Вступ** | ✅ | 173 | Included in Core |
-| **Граматика** | ⚪️ | 280 | Skipped |
-| **Практика** | ⚪️ | 688 | Skipped |
-| **Підсумок** | ✅ | 114 | Included in Core |
-| **Need More Practice?** | ⚪️ | 25 | Skipped |
+| **Вступ** | ✅ | 280 | Included in Core |
+| **Граматика** | ⚪️ | 434 | Skipped |
+| **Практика** | ⚪️ | 697 | Skipped |
+| **Підсумок** | ✅ | 112 | Included in Core |
+| **Need More Practice?** | ⚪️ | 26 | Skipped |

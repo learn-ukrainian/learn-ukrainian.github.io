@@ -2,10 +2,10 @@
   "module": "50-technology-media",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:12:55.984277Z",
+  "last_audit": "2026-01-30T21:30:28.631446Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.363260Z",
+    "md": "2026-01-30T21:30:24.679128Z",
     "meta": "2026-01-26T17:21:18.946983Z",
     "activities": "2026-01-27T12:37:28.725201Z",
     "vocabulary": "2026-01-25T18:00:39.843155Z",
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1153/1350 (raw: 1641)"
+      "status": "pass",
+      "violations": 0,
+      "message": "1539/1350 (raw: 2144)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 1
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

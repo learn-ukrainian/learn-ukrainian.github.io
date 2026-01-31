@@ -1,8 +1,8 @@
 # Audit Report: M54 — zborivska-bila-tserkva.md
 **Level:** B2 | **Module:** M54 | **Phase:** HIST.6 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-29 23:39:34
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-30 22:13:54
 
 ## Configuration
 **Type:** B2-history
@@ -32,15 +32,6 @@
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 4/4 (comparative-study, essay-response, reading, true-false) ✅
 - Low density activities: 0
-
-## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Читання|Хід|Основні події|Діяльність|Свідки|Великий рейд|Відбудова' found: Читання: Тексти угод та дипломатична мова епохи, Деколонізаційний погляд: Вихід з-під польського права
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 4465/4000 (raw: 4527)
@@ -89,6 +80,6 @@
 | **Читання: Тексти угод та дипломатична мова епохи** | ✅ | 440 | Included in Core |
 | **Первинні джерела** | ✅ | 385 | Included in Core |
 | **Аналіз: Дипломатія як складне мистецтво можливого** | ✅ | 355 | Included in Core |
-| **Деколонізаційний погляд: Вихід з-під польського права** | ✅ | 414 | Included in Core |
+| **Деколонізаційний погляд: Звільнення від польського права** | ✅ | 414 | Included in Core |
 | **Спадщина угод та історична пам'ять** | ⚪️ | 374 | Skipped |
 | **Підсумок** | ✅ | 337 | Included in Core |

@@ -1,22 +1,17 @@
 # Checkpoint - Navigation
 
-## Огляд
+## Overview
 
-**Вітаємо!** /vʲiˈtɑjemɔ/ You've completed Phase A1.2 — Navigation! Now let's check: **can you DO the skills?**
+Welcome to your second Checkpoint! You have just completed one of the most challenging and rewarding phases of the A1 level: the introduction to the Case system. In modules 11 through 19, you moved beyond simple subject-verb sentences and learned how to describe movement, location, and possession with grammatical precision.
 
-This checkpoint reviews five core abilities from Modules 11-19:
+This Checkpoint will verify your mastery of:
+1. **The Accusative Case**: Objects of actions (I see a car).
+2. **The Locative Case**: Location (I am in the city).
+3. **The Genitive Case**: Expressing absence (There is no bread).
+4. **Possessive Pronouns**: Saying "my," "your," and "his" correctly in different cases.
+5. **City and Navigation**: Asking for directions and identifying places.
 
-1. **Accusative Case** - Using direct objects in daily context.
-2. **Locative Case** - Saying where things are (у vs на).
-3. **Genitive Case** - Expressing absence (немає) and quantities.
-4. **Possessive Pronouns** - Matching possessives to noun gender.
-5. **Practical Navigation** - Surviving in the city and café.
-
-> 💡 **Did You Know?**
->
-> With just three cases (Accusative, Locative, Genitive) plus Nominative from A1.1, you can now handle most daily situations in Ukraine — ordering food, asking directions, shopping, and more!
-
----
+By the end of this module, you should feel confident navigating a Ukrainian city and describing basic spatial relationships. This foundation is essential for everything that follows in A2. Let's dive in!
 
 ## Skill 1: Accusative Case
 

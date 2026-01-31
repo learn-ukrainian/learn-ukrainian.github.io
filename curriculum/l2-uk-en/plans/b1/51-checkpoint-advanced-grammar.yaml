@@ -12,46 +12,57 @@ content_outline:
   - Review B1.4 objectives
   - Identify strengths and gaps
   - Set checkpoint goals
-- section: 'Skill 1: Дієприслівники недоконаного виду (M42)'
+- section: 'Навичка 1: Дієприслівники недоконаного виду'
   words: 235
   points:
-  - Imperfective adverbial participles (-ючи, -ачи)
-  - Model, Practice, Self-Check
-- section: 'Skill 2: Дієприслівники доконаного виду (M43)'
+  - Утворення (-ючи, -ачи від НДВ)
+  - Читаючи книгу, він заснув
+  - Одночасність дій
+  - Самоперевірка
+- section: 'Навичка 2: Дієприслівники доконаного виду'
   words: 235
   points:
-  - Perfective adverbial participles (-вши, -ши)
-  - Model, Practice, Self-Check
-- section: 'Skill 3: Активні дієприкметники (M44)'
+  - Утворення (-вши, -ши від ДВ)
+  - Прочитавши книгу, він заснув
+  - Послідовність дій (спочатку прочитав, потім заснув)
+  - Самоперевірка
+- section: 'Навичка 3: Активні дієприкметники'
   words: 298
   points:
-  - Active participles formation
-  - Model, Practice, Self-Check
-- section: 'Skill 4: Пасивні дієприкметники — повна форма (M45)'
+  - Теперішній час (-учий/-ючий, -ачий/-ячий)
+  - Минулий час (-лий)
+  - Узгодження з іменником
+  - Самоперевірка
+- section: 'Навичка 4: Пасивні дієприкметники — повна форма'
   words: 217
   points:
-  - Full form passive participles
-  - Model, Practice, Self-Check
-- section: 'Skill 5: Пасивні дієприкметники — коротка форма (M46)'
+  - Утворення (-ний/-тий)
+  - Написана книга, відкриті двері
+  - Узгодження з іменником (рід, число, відмінок)
+- section: 'Навичка 5: Пасивні дієприкметники — коротка форма'
   words: 253
   points:
-  - Short form passive participles
-  - Model, Practice, Self-Check
-- section: 'Skill 6: Пасивні конструкції (M47)'
+  - Утворення (написано, відкрито)
+  - Вживання в безособових конструкціях
+  - Книгу написано
+- section: 'Навичка 6: Пасивні конструкції'
   words: 199
   points:
-  - Three passive construction types
-  - Context-appropriate selection
-- section: 'Skill 7: Демінутиви (M48)'
+  - Три способи вираження пасиву
+  - Вибір форми залежно від регістру
+  - Порівняння активу і пасиву
+- section: 'Навичка 7: Демінутиви'
   words: 262
   points:
-  - Diminutive pragmatics
-  - Stylistic usage
-- section: 'Skill 8: Збірні числівники та дроби (M49)'
+  - Суфікси демінутивів (-ик, -ок, -очок, -еньк-)
+  - Прагматика — пестливість, іронія, применшення
+  - Стилістичне вживання
+- section: 'Навичка 8: Збірні числівники та дроби'
   words: 253
   points:
-  - Collective numerals
-  - Fractions and percentages
+  - Збірні числівники (двоє, троє, четверо)
+  - Дроби (одна друга, три чверті)
+  - Відсотки (п'ять відсотків)
 - section: Інтеграційне завдання
   words: 633
   points:

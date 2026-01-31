@@ -1,8 +1,8 @@
 # Audit Report: M92 — zunr.md
 **Level:** B2 | **Module:** M92 | **Phase:** HIST.9 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-29 23:39:35
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-31 00:45:38
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading
+**Required Types:** authorial-intent, comparative-study, critical-analysis, essay-response, reading, true-false
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -20,75 +20,65 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | reading | Аналіз: Універсал про Злуку | 6 | 1 | ✅ |
-| 2 | comparative-study | УНР та ЗУНР: Порівняння політичних систем | 1 | 1 | ✅ |
-| 3 | critical-analysis | Аналіз: "Листопадовий чин" | 1 | 1 | ✅ |
-| 4 | essay-response | Есе: Історичне значення Акту Злуки | 1 | 1 | ✅ |
-| 5 | true-false | Факти про ЗУНР та Акт Злуки | 12 | 8 | ✅ |
-| 6 | reading | Аналіз: "Передвступний договір" | 4 | 1 | ✅ |
-| 7 | authorial-intent | Наміри авторів Універсалу | 1 | 1 | ✅ |
+| 1 | reading | Універсал про Злуку | 4 | 1 | ✅ |
+| 2 | true-false | Факти про ЗУНР | 10 | 8 | ✅ |
+| 3 | comparative-study | УНР та ЗУНР: Порівняння | 1 | 1 | ✅ |
+| 4 | critical-analysis | Аналіз Листопадового чину | 1 | 1 | ✅ |
+| 5 | essay-response | Есе: Соборність України | 1 | 1 | ✅ |
+| 6 | authorial-intent | Риторика Соборності | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 7 (target: 3-9) ✅
+- Total activities: 6 (target: 3-9) ✅
 - Unique types: 6 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 2/2 (essay-response, reading) ✅
+- Required types used: 6/6 (authorial-intent, comparative-study, critical-analysis, essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Читання|Хід|Основні події|Діяльність|Свідки|Великий рейд|Відбудова' found: Первинні джерела: Свідки Державотворення, Читання
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 4607/4000 (raw: 4790)
-- **Activities:** ✅ 7/3
+- **Words:** ✅ 4749/4000 (raw: 4881)
+- **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/5
+- **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 24/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (7 activities)
-- **Immersion:** 🇺🇦 99.9% (target 90-100% (history))
-- **Richness:** ✅ 99% (history)
+- **Content_heavy:** ✅ Content-heavy OK (6 activities)
+- **Immersion:** 🇺🇦 100.0% (target 90-100% (history))
+- **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
+**Score:** 97% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 15 | 3 | 100% | 24% | 23.8% |
-| engagement | 8 | 6 | 100% | 14% | 14.3% |
+| engagement | 5 | 6 | 83% | 14% | 11.9% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 7 | 4 | 100% | 10% | 9.5% |
-| visual | 6 | 4 | 100% | 10% | 9.5% |
-| variety | 0.99 | - | 99% | 5% | 4.7% |
+| cultural | 6 | 4 | 100% | 10% | 9.5% |
+| visual | 5 | 4 | 100% | 10% | 9.5% |
+| variety | 0.96 | - | 96% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 16 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **100.0%** |
+| questions | 8 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **97.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 157 | Included in Core |
-| **Вступ: Листопадовий зрив — Ніч, коли нація переграла Імперію** | ✅ | 578 | Included in Core |
-| **ЗУНР: Держава як правовий феномен** | ⚪️ | 851 | Skipped |
-| **Акт Злуки (22 січня 1919): Соборність як політичний маніфест** | ⚪️ | 774 | Skipped |
-| **Читання** | ✅ | 350 | Included in Core |
-| **Первинні джерела: Свідки Державотворення** | ✅ | 560 | Included in Core |
-| **Деколонізаційний погляд: Руйнування Імперських Наративів** | ✅ | 439 | Included in Core |
-| **Підсумок: Поразка, що стала Наріжним Каменем Національної Пам'яті** | ✅ | 567 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 331 | Skipped |
+| **Intro/Narrative** | ✅ | 130 | Included in Core |
+| **Вступ: Листопадовий зрив** | ✅ | 460 | Included in Core |
+| **ЗУНР: Держава** | ⚪️ | 745 | Skipped |
+| **Читання: Хроніка подій** | ✅ | 86 | Included in Core |
+| **Акт Злуки (22 січня 1919)** | ⚪️ | 1148 | Skipped |
+| **Первинні джерела** | ✅ | 881 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 517 | Included in Core |
+| **Підсумок: Поразка та невмируща спадщина** | ✅ | 635 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 147 | Skipped |

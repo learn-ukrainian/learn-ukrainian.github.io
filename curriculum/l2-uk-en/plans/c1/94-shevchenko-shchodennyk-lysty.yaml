@@ -6,11 +6,12 @@ version: '2.0'
 title: 'Шевченко: Щоденник та листи'
 subtitle: 'Shevchenko: Diary and Letters'
 content_outline:
-- section: Вступ — Щоденник та листи
-  words: 1000
+- section: Розминка — Інтимний Шевченко
+  words: 700
   points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
+  - Щоденник на засланні — внутрішній голос
+  - Листи до Костомарова та Куліша
+  - Двомовність — українська та російська
 - section: Content Areas
   words: 1250
   points:
@@ -19,12 +20,13 @@ content_outline:
   - Vernacular vs. Imperial Russian in correspondence
   - The "Artist" (Художник) novella excerpts
   - Social commentary in private writings
-- section: Практика та підсумок
-  words: 750
+- section: Практика — аналіз прози
+  words: 1050
   points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
+  - Проаналізувати запис з Щоденника — настрій, стиль
+  - Порівняти лист українською та російською — перемикання кодів
+  - Написати есе про внутрішнє життя Шевченка на засланні
+  - Обговорити "Художника" як автобіографічний твір
 word_target: 3000
 focus: literature
 pedagogy: Immersion & Analysis

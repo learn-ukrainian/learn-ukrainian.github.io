@@ -94,8 +94,8 @@ When issues occur: fix documentation/tools **first**, then validate with manual 
 # Fix plan word_targets if mismatched
 .venv/bin/python scripts/fix_plan_word_targets.py --fix {level}
 
-# Update status (after module completion)
-.venv/bin/python scripts/update_status.py {level}
+# Generate status report (from per-module JSON cache)
+npm run status:{level}  # or: .venv/bin/python scripts/generate_level_status.py {level}
 
 # Extract plans from meta (migration tool)
 .venv/bin/python scripts/extract_plans.py {level}
@@ -123,19 +123,13 @@ curriculum/l2-uk-en/
 │   └── {level}/                  # Module plans
 │       └── {slug}.yaml           # What to build: objectives, outline, vocab
 │
-├── {level}/                      # LAYER 2: BUILD ARTIFACTS
-│   ├── meta/{slug}.yaml          # How to build: pedagogy, duration, grammar
-│   ├── {num}-{slug}.md           # Content prose
-│   ├── activities/{slug}.yaml    # Activities (bare list at root)
-│   ├── vocabulary/{slug}.yaml    # Vocabulary data
-│   └── audit/                    # Review reports
-│
-└── status/                       # LAYER 3: TRACKING (DEPRECATED)
-    └── {level}.yaml              # Use per-module JSON cache instead
-
-New Tracking structure:
-curriculum/l2-uk-en/{level}/status/
-└── {slug}.json                   # LAYER 3: CACHED AUDIT RESULTS
+└── {level}/                      # LAYER 2: BUILD ARTIFACTS
+    ├── meta/{slug}.yaml          # How to build: pedagogy, duration, grammar
+    ├── {num}-{slug}.md           # Content prose
+    ├── activities/{slug}.yaml    # Activities (bare list at root)
+    ├── vocabulary/{slug}.yaml    # Vocabulary data
+    ├── audit/                    # Review reports
+    └── status/{slug}.json        # LAYER 3: CACHED AUDIT RESULTS
 ```
 
 **Module counts**: A1 (44), A2 (70), B1 (92), B2 (94), C1 (106), C2 (100)

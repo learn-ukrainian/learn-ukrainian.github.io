@@ -1,10 +1,31 @@
-module: b2-hist-117
-level: B2
-slug: chornobyl
-version: '2.0'
-status: skeleton
-track: history
-build:
-  last_modified: '2026-01-26'
-phase: HIST.11 [Post-War Soviet Ukraine]
-id: b2-hist-117
+module: b2-117
+title: 'Чорнобиль: Трагедія і Попередження'
+phase: 'HIST.11'
+pedagogy: 'CBI'
+word_target: 3400
+naturalness_score: 10
+content_hash: 'bd3750ed496781e8e0313a5eb13a2100'
+timestamps:
+  created: '2026-01-30T22:30:00Z'
+  updated: '2026-01-31T00:10:00Z'
+content_outline:
+  - "Вступ — Мирний атом?"
+  - "Аварія 1986 року"
+  - "Первинні джерела"
+  - "Деколонізаційний погляд"
+  - "Читання"
+  - "Підсумок"
+activity_hints:
+  reading:
+    - "Голоси Прип'яті"
+    - "Аналіз первинних джерел"
+  essay-response:
+    - "Есе про ціну мовчання"
+  comparative-study:
+    - "Офіційна версія vs Щоденники"
+activity_types:
+  - reading
+  - true-false
+  - essay-response
+  - comparative-study
+  - critical-analysis

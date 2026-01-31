@@ -22,6 +22,28 @@ items:
   ipa: /sˈɪlʲnɪj/
   translation: strong
   pos: adj
+- lemma: чоловічий
+  ipa: /t͡ʃɔlɔʋˈit͡ʃɪj/
+  translation: masculine
+  pos: adj
+- lemma: жіночий
+  ipa: /ʒinˈɔt͡ʃɪj/
+  translation: feminine
+  pos: adj
+- lemma: середній
+  ipa: /sɛrˈɛdnʲij/
+  translation: neuter
+  pos: adj
+- lemma: рід
+  ipa: /rˈid/
+  translation: gender
+  pos: noun
+  gender: m
+- lemma: множина
+  ipa: /mnɔʒɪnˈa/
+  translation: plural
+  pos: noun
+  gender: f
 - lemma: узгодження
   ipa: /uzɦˈɔdʒɛnnja/
   translation: agreement, coordination

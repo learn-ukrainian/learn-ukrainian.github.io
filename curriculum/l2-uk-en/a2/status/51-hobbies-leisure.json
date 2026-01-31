@@ -2,13 +2,13 @@
   "module": "51-hobbies-leisure",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:12:56.654744Z",
+  "last_audit": "2026-01-30T21:35:49.656955Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.363282Z",
+    "md": "2026-01-30T21:35:45.393918Z",
     "meta": "2026-01-26T17:21:18.950286Z",
     "activities": "2026-01-27T12:38:13.570801Z",
-    "vocabulary": "2026-01-25T18:00:39.851635Z",
+    "vocabulary": "2026-01-30T21:30:44.365921Z",
     "plan": "2026-01-30T12:31:49.650300Z"
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1280/1430 (raw: 1728)"
+      "status": "pass",
+      "violations": 0,
+      "message": "1549/1430 (raw: 2019)"
     },
     "activities": {
       "status": "pass",
@@ -30,7 +30,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "50/1"
+      "message": "28/1"
     },
     "naturalness": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 1
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

@@ -1,33 +1,28 @@
-module: b2-hist-070
+module: danylo-apostol
 level: B2-HIST
 slug: danylo-apostol
 version: '2.0'
+id: b2-hist-70
 naturalness:
   score: 9
   status: PASS
+  justification: Strong historical narrative
 duration: 90
 transliteration: none
-tags:
-- history
-- cossack-era
-- apostol
-- razumovsky
-- reforms
-- culture
-vocabulary_focus: null
-vocabulary_count: 35
-activity_types:
-- reading
-- quiz
-- essay-response
-- comparative-study
-- true-false
-- match-up
-- unjumble
-- fill-in
-- error-correction
-- select
 build:
   last_modified: '2026-01-26'
-phase: B2.3b [Українська історія]
-id: b2-hist-070
+title: Данило Апостол та Кирило Розумовський
+subtitle: 'The Last Hetmans: Apostol and Rozumovsky'
+activity_hints:
+- type: reading
+  focus: Фрагменти з Рішительних пунктів
+  items: 4
+- type: essay-response
+  focus: Порівняння двох гетьманів
+  word_target: 300
+- type: comparative-study
+  focus: Період від обрання Апостола до ліквідації гетьманства (1727-1764)
+- type: true-false
+  focus: Факти про правління двох гетьманів
+  items: 10
+pedagogy: CBI

@@ -39,15 +39,15 @@ levels:
       - 33-holidays-and-traditions
       - 34-checkpoint-core-grammar
       - 35-at-the-cafe-practical
-      - at-the-restaurant
-      - at-the-market
-      - at-the-store
-      - buying-tickets
-      - taking-transport
-      - phone-basics
-      - emergencies
-      - combined-practice
-      - a1-final-exam
+      - 36-at-the-restaurant
+      - 37-at-the-market
+      - 38-at-the-store
+      - 39-buying-tickets
+      - 40-taking-transport
+      - 41-phone-basics
+      - 42-emergencies
+      - 43-combined-practice
+      - 44-a1-final-exam
   a2:
     type: core
     modules:

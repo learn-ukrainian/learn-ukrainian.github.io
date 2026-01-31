@@ -6,21 +6,43 @@ version: '2.0'
 title: Гори та трейлраннінг
 subtitle: Hiking and Trail Running in the Carpathians
 content_outline:
-- section: Огляд
+- section: "Огляд"
   words: 14
-- section: Вступ
-  words: 229
-- section: Інтеграція
+  points:
+  - Цілі модуля
+- section: "Вступ"
+  words: 215
+  points:
+  - Українські гори як місце відпочинку
+  - Від туристів до трейлраннерів
+- section: "Інтеграція"
   words: 815
-- section: Практика
+  points:
+  - Говерла та інші вершини
+  - Найвища точка України (2061 м)
+  - Піп Іван, Петрос, Хом'як
+  - Трейлраннінг в Україні
+  - Популярні траси і змагання
+  - Chornohora Sky Marathon
+  - Карпатські полонини
+  - Маршрути для початківців
+  - Де зупинитися в горах
+  - Спорядження і безпека
+- section: "Практика"
   words: 73
-- section: Продукція
+  points:
+  - Ключові концепції
+- section: "Продукція"
   words: 385
-- section: Підсумок
-  words: 105
-- section: Потрібно більше практики?
+  points:
+  - Діалоги про гори та трейлраннінг
+- section: "Підсумок — Побачимось на вершині!"
+  words: 126
+  points:
+  - Гори як терапія і натхнення
+- section: "Потрібно більше практики?"
   words: 109
-word_target: 1730
+word_target: 1737
 vocabulary_hints:
   required:
   - гора (mountain)

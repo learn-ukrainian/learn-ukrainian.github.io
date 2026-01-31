@@ -8,11 +8,11 @@
 > — Він **гарно** малює. (He draws **beautifully**.)
 > — Вона **швидко** бігає. (She runs **fast**.)
 >
-> These are **adverbs** — they describe HOW someone does something!
+> These are **adverbs** — they describe HOW someone does something! Imagine you are watching a sports game or a concert. You want to say how the athletes run or how the musicians play. Are they fast? Are they loud? Or are they slow and quiet? Adverbs give us these important details. In this lesson, we will learn how to turn our familiar adjectives into powerful adverbs. It is very simple and logical in Ukrainian! Привіт! Сьогодні ми вивчаємо прислівники. Ці слова відповідають на питання «Як?». Наприклад: добре, швидко, тихо. Ви хочете вчити ці слова? Поїхали! (Today we study adverbs. These words answer the question "How?". For example: well, quickly, quietly. Do you want to learn these words? Let's go!)
 
 ---
 
-## Grammar
+## Presentation
 
 ### How to Form Adverbs
 
@@ -46,7 +46,7 @@
 
 ---
 
-## Frequency Adverbs: How Often?
+### Frequency Adverbs: How Often?
 
 > [!observe] Шкала частотності (Frequency Scale)
 >
@@ -70,7 +70,7 @@
 
 ---
 
-## Degree Adverbs: How Much?
+### Degree Adverbs: How Much?
 
 | Adverb  | Meaning    | Example                                                        |
 | ------- | ---------- | -------------------------------------------------------------- |
@@ -81,7 +81,7 @@
 
 ---
 
-## Examples in Context
+### Examples in Context
 
 > [!example] Опис дій (Describing Actions)
 >
@@ -114,7 +114,9 @@
 
 ---
 
-## Dialogues
+## Practice
+
+### Dialogues
 
 > [!conversation] Як ти це робиш? (How Do You Do It?)
 >
@@ -178,7 +180,12 @@
 
 ---
 
-## Практика
+### Опис звичок
+
+Тепер ваша черга! (Now it is your turn!) Describe your habits. How do you do things? Use frequency adverbs and adverbs of manner.
+
+> [!model-answer]
+> Я **зазвичай** снідаю **швидко**. Я **завжди** п'ю каву. Я **часто** працюю вдома. Я розмовляю **тихо**, але **добре**. Мій друг **часто** читає книги. Він читає **повільно**. Ми **іноді** гуляємо разом. Це **дуже** приємно.
 
 ### Вправа 1: Переклад
 

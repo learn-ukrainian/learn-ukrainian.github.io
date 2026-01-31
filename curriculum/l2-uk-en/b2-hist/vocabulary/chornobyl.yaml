@@ -1,0 +1,61 @@
+vocabulary:
+  - lemma: радіація
+    translation: radiation
+    ipa: "rɑ.dʲi.ˈɑ.t͡sʲi.jɐ"
+  - lemma: евакуація
+    translation: evacuation
+    ipa: "e.wɑ.ku.ˈɑ.t͡sʲi.jɐ"
+  - lemma: ліквідатор
+    translation: liquidator
+    ipa: "lʲik.wi.ˈdɑ.tor"
+  - lemma: реактор
+    translation: reactor
+    ipa: "re.ˈɑk.tor"
+  - lemma: вибух
+    translation: explosion
+    ipa: "ˈwɪ.bux"
+  - lemma: зона відчуження
+    translation: exclusion zone
+    ipa: "ˈzo.nɐ wid.ˈt͡ʃu.ʒen.nʲɐ"
+  - lemma: саркофаг
+    translation: sarcophagus
+    ipa: "sɑr.ko.ˈfɑɦ"
+  - lemma: променева хвороба
+    translation: radiation sickness
+    ipa: "pro.me.ˈnɛ.wɐ xwo.ˈro.bɐ"
+  - lemma: приховування
+    translation: cover-up/concealment
+    ipa: "prɪ.ˈxo.wu.wɑn.nʲɐ"
+  - lemma: недбалість
+    translation: negligence
+    ipa: "ned.ˈbɑ.lʲisʲtʲ"
+  - lemma: атомград
+    translation: atomgrad (nuclear city)
+    ipa: "ɑ.tom.ˈɦrɑd"
+  - lemma: експеримент
+    translation: experiment
+    ipa: "eks.pe.rɪ.ˈmɛnt"
+  - lemma: доза
+    translation: dose
+    ipa: "ˈdo.zɐ"
+  - lemma: опромінення
+    translation: irradiation/exposure
+    ipa: "o.pro.ˈmi.nɛn.nʲɐ"
+  - lemma: наслідок
+    translation: consequence
+    ipa: "ˈnɑs.lʲi.dok"
+  - lemma: трагедія
+    translation: tragedy
+    ipa: "trɑ.ˈɦɛ.dʲi.jɐ"
+  - lemma: брехня
+    translation: lie
+    ipa: "brɛx.ˈnʲɑ"
+  - lemma: герой
+    translation: hero
+    ipa: "ɦe.ˈroj"
+  - lemma: жертва
+    translation: victim
+    ipa: "ˈʒɛrt.wɐ"
+  - lemma: пам'ять
+    translation: memory
+    ipa: "ˈpɑm.jɑtʲ"

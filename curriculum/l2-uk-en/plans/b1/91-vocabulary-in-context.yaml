@@ -6,23 +6,56 @@ version: '2.0'
 title: Лексика в контексті
 subtitle: Applying Vocabulary to Practical Communication
 content_outline:
-- section: Introduction
+- section: "Огляд"
+  words: 74
+  points:
+  - Огляд модуля
+- section: "Introduction: Vocabulary for Communication"
   words: 275
-- section: Professional Contexts
+  points:
+  - Лексика як ресурс
+  - Контекстний вибір слів
+  - Регістр і стиль
+- section: "Professional Contexts"
   words: 267
-- section: Social Contexts
+  points:
+  - Лексика робочого середовища
+  - Формальний регістр
+  - Ділова комунікація
+- section: "Social Contexts"
   words: 266
-- section: Academic Contexts
-  words: 219
-- section: Cultural Contexts
+  points:
+  - Неформальний регістр
+  - Соціальна лексика
+  - Повсякденна комунікація
+- section: "Academic Contexts"
+  words: 214
+  points:
+  - Академічна лексика
+  - Формальний дискурс
+  - Аргументація
+- section: "Cultural Contexts"
   words: 237
-- section: Practice
+  points:
+  - Культурна лексика
+  - Ідіоматичні вирази
+  - Регіональна специфіка
+- section: "Інтеграція"
+  words: 117
+  points:
+  - Поєднання контекстів
+  - Універсальні принципи
+- section: "Practice: Integrated Tasks"
   words: 170
-- section: Підсумок
+  points:
+  - Завдання на регістр та контекст
+- section: "Підсумок — Від слова до тексту"
   words: 72
-- section: Потрібно більше практики?
+  points:
+  - Готовність до B2
+- section: "Потрібно більше практики?"
   words: 100
-word_target: 1606
+word_target: 1792
 vocabulary_hints:
   required:
   - лексика (vocabulary)

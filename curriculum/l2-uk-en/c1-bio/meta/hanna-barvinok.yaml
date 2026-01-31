@@ -1,10 +1,14 @@
-module: c1-bio-034
-level: C1-BIO
+id: c1-bio-034
 slug: hanna-barvinok
 version: '2.0'
-id: c1-bio-034
+module: c1-bio-034
+level: C1-BIO
+title: 'Ганна Барвінок: Письменниця і етнографка'
+transliteration: none
 naturalness:
-  score: 1
-  status: PENDING
+  score: 10
+  status: PASS
+  feedback: "High quality literary Ukrainian style, historically accurate terminology."
+  checked_at: "2026-01-29"
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-01-29'

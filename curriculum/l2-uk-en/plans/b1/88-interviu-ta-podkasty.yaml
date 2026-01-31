@@ -6,19 +6,34 @@ version: '2.0'
 title: Інтерв'ю та подкасти
 subtitle: Listening to Ukrainian Interviews and Podcasts
 content_outline:
-- section: Вступ
+- section: "Вступ"
   words: 142
-- section: Огляд
-  words: 982
-- section: Практика
-  words: 359
-- section: Продукція
-  words: 215
-- section: Підсумок
-  words: 85
-- section: Потрібно більше практики?
+  points:
+  - Подкасти як інструмент вивчення мови
+  - Переваги аудіо над текстом
+- section: "Огляд"
+  words: 700
+  points:
+  - Стратегія 1: Активне слухання
+  - Стратегія 2: Виділення головної думки
+  - Стратегія 3: Робота з незнайомими словами
+  - Автентичний текст з анотаціями
+- section: "Практика"
+  words: 400
+  points:
+  - Практичні тексти різної складності
+- section: "Продукція"
+  words: 250
+  points:
+  - Завдання на резюме подкасту
+  - Самооцінка
+- section: "Підсумок — Слухай щодня"
+  words: 150
+  points:
+  - Три стратегії та як продовжувати практику
+- section: "Потрібно більше практики?"
   words: 109
-word_target: 1892
+word_target: 1751
 vocabulary_hints:
   required:
   - інтерв'ю (interview)

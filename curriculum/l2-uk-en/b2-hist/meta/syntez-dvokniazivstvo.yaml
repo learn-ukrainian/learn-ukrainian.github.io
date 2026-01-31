@@ -24,3 +24,13 @@ build:
   last_modified: '2026-01-26'
 phase: B2.3 [Ukrainian History] Synthesis
 id: b2-hist-028
+activity_hints:
+- type: reading
+  title: Порівняння політичних систем Галича та Бахчисарая
+- type: essay-response
+  prompt: Як монгольська навала змінила траєкторію розвитку українських земель?
+- type: true-false
+  focus: Chronology
+  items: 10
+- type: true-false
+  topic: Інституційна спадкоємність Київської Русі

@@ -13,20 +13,20 @@
 
 ---
 
-## Grammar
+## Presentation
 
 ### Impersonal Weather Expressions
 
 > [!observe] Спостереження (Pattern Discovery)
->
-> Look at these sentences:
->
-> - **Тепло.** (It's warm.)
-> - **Холодно.** (It's cold.)
-> - **Сонячно.** (It's sunny.)
-> - **Хмарно.** (It's cloudy.)
->
-> No subject! No «it»! Ukrainian just states the condition directly.
+
+Look at these sentences:
+
+- **Тепло.** (It's warm.)
+- **Холодно.** (It's cold.)
+- **Сонячно.** (It's sunny.)
+- **Хмарно.** (It's cloudy.)
+
+No subject! No «it»! Ukrainian just states the condition directly.
 
 ### Weather Vocabulary
 
@@ -52,7 +52,7 @@ For rain and snow, Ukrainian uses «йде» /jdɛ/ (goes):
 
 ---
 
-## Asking About Weather
+### Asking About Weather
 
 | Question | IPA | Answer |
 | --- | --- | --- |
@@ -65,7 +65,7 @@ For rain and snow, Ukrainian uses «йде» /jdɛ/ (goes):
 
 ---
 
-## Seasons
+### Seasons
 
 | Season | IPA | When? | Weather |
 | --- | --- | --- | --- |
@@ -76,38 +76,40 @@ For rain and snow, Ukrainian uses «йде» /jdɛ/ (goes):
 
 ---
 
-## Examples in Context
+### Examples in Context
 
 > [!example] Погода в Україні (Weather in Ukraine)
->
-> - **Влітку** в Україні **жарко**. (In summer in Ukraine it's hot.)
-> - **Взимку** в Карпатах **йде сніг**. (In winter in the Carpathians it snows.)
-> - **Весною** тепло і **йде дощ**. (In spring it's warm and it rains.)
-> - **Восени** часто **хмарно**. (In autumn it's often cloudy.)
-> - У Львові сьогодні **вітряно**. (In Lviv today it's windy.)
-> - В Одесі завжди **сонячно**. (In Odesa it's always sunny.)
+
+- **Влітку** в Україні **жарко**. (In summer in Ukraine it's hot.)
+- **Взимку** в Карпатах **йде сніг**. (In winter in the Carpathians it snows.)
+- **Весною** тепло і **йде дощ**. (In spring it's warm and it rains.)
+- **Восени** часто **хмарно**. (In autumn it's often cloudy.)
+- У Львові сьогодні **вітряно**. (In Lviv today it's windy.)
+- В Одесі завжди **сонячно**. (In Odesa it's always sunny.)
 
 > [!example] Природа України (Ukrainian Nature)
->
-> - Україна має гарну **природу**. (Ukraine has beautiful nature.)
-> - У Карпатах є **гори** і **ліси**. (In the Carpathians there are mountains and forests.)
-> - **Дніпро** — це велика **річка**. (The Dnipro is a big river.)
-> - **Чорне море** — на півдні. (The Black Sea is in the south.)
-> - У **парку** багато **дерев** і **квіток**. (In the park there are many trees and flowers.)
-> - Я люблю **озеро** Світязь. (I love Lake Svityaz.)
+
+- Україна має гарну **природу**. (Ukraine has beautiful nature.)
+- У Карпатах є **гори** і **ліси**. (In the Carpathians there are mountains and forests.)
+- **Дніпро** — це велика **річка**. (The Dnipro is a big river.)
+- **Чорне море** — на півдні. (The Black Sea is in the south.)
+- У **парку** багато **дерев** і **квіток**. (In the park there are many trees and flowers.)
+- Я люблю **озеро** Світязь. (I love Lake Svityaz.)
 
 > [!example] Тварини (Animals)
->
-> - У мене є **собака**. (I have a dog.)
-> - Моя **кішка** — біла. (My cat is white.)
-> - У парку багато **птахів**. (In the park there are many birds.)
-> - У річці є **риба**. (In the river there are fish.)
-> - Мій **пес** дуже веселий. (My dog is very cheerful.)
-> - Її **кіт** — рудий. (Her cat is ginger.)
+
+- У мене є **собака**. (I have a dog.)
+- Моя **кішка** — біла. (My cat is white.)
+- У парку багато **птахів**. (In the park there are many birds.)
+- У річці є **риба**. (In the river there are fish.)
+- Мій **пес** дуже веселий. (My dog is very cheerful.)
+- Її **кіт** — рудий. (Her cat is ginger.)
 
 ---
 
-## Dialogues
+## Practice
+
+### Dialogues
 
 > [!conversation] Яка погода? (What's the Weather?)
 >
@@ -184,9 +186,12 @@ For rain and snow, Ukrainian uses «йде» /jdɛ/ (goes):
 
 ---
 
-## Практика
+### Погода у вашому місті
 
-Використовуйте ці вправи. Це гарна практика. (Use these exercises. This is good practice.)
+Опишіть погоду у вашому місті сьогодні. (Describe the weather in your city today.)
+
+> [!model-answer]
+> Сьогодні у моєму місті **тепло** і **сонячно**. **Дощ** не йде. **Вітер** не сильний. Мені подобається така погода.
 
 # Підсумок
 

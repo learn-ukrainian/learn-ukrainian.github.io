@@ -1,10 +1,72 @@
 module: b2-hist-116
-level: B2
+level: B2-HIST
 slug: afhanistan
 version: '2.0'
 status: skeleton
+transliteration: none
+naturalness:
+  score: 10
+  status: PASS
 track: history
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-01-30'
 phase: HIST.11 [Post-War Soviet Ukraine]
 id: b2-hist-116
+title: Українці в Афганістані
+activity_hints:
+  - type: reading
+    focus: Первинні джерела
+  - type: essay-response
+    focus: Критичний аналіз
+  - type: true-false
+    focus: Хронологія та факти
+  - type: comparative-study
+    focus: Пропаганда vs Реальність
+  - type: critical-analysis
+    focus: Спогади ветерана
+content_outline:
+- section: Вступ — Чужа війна
+  words: 615
+  points:
+  - Context of the Cold War and the Brezhnev era stagnation
+  - The concept of 'international duty' (інтернаціональний обов'язок)
+  - Disproportionate conscription of Ukrainians into the Soviet Army
+- section: Війна в Афганістані (1979-1989)
+  words: 1538
+  points:
+  - The invasion of December 1979 and the storming of Amin's palace
+  - 'Combat conditions: guerilla warfare in the mountains vs. Soviet mechanized doctrine'
+  - 'Daily life of a soldier: disease, isolation, and ''didschyna'' (hazing)'
+  - The 'Black Tulip' flights and 'Cargo 200' returning to Ukrainian cities
+- section: Первинні джерела
+  words: 923
+  points:
+  - Letters from Ukrainian soldiers to their families (censorship vs. reality)
+  - Memoirs of veterans describing the disconnect between propaganda and the front
+  - Official Soviet reports masking casualties
+- section: Деколонізаційний погляд
+  words: 924
+  points:
+  - 'Myth: Defending the southern borders of the Motherland'
+  - 'Reality: Imperial aggression using colonized people as cannon fodder'
+  - The trauma of the 'Afgantsi' generation in independent Ukraine
+  - 'Parallel: How Russia uses non-Russians in modern wars (e.g., against Ukraine)'
+  - The role of the Afghan war in delegitimizing the Soviet system
+  - The social and psychological legacy of the war in 1990s Ukraine
+  - Commemoration vs. glorification
+vocabulary_hints:
+  required:
+  - історія (history)
+  - держава (state)
+  - народ (people)
+  - влада (power)
+  - період (period)
+  - подія (event)
+  - джерело (source)
+  - спадщина (heritage)
+  recommended:
+  - аналіз (analysis)
+  - контекст (context)
+  - вплив (influence)
+  - наслідки (consequences)
+

@@ -6,19 +6,34 @@ version: '2.0'
 title: Граматика в контексті
 subtitle: Applying Grammar to Practical Communication
 content_outline:
-- section: Діагностика
-  words: 115
-- section: Огляд
-  words: 1230
-- section: Інтеграція
-  words: 282
-- section: Практика
+- section: "Діагностика"
+  words: 150
+  points:
+  - Діагностичний тест: Уся лексика B1
+- section: "Огляд"
+  words: 1100
+  points:
+  - Домен 1: Абстрактні концепції
+  - Домен 2: Думки та дискусії
+  - Домен 3: Навколишнє середовище та суспільство
+  - Домен 4: Професійна та особиста сфера
+  - Домен 5: Культура та регіони
+- section: "Інтеграція"
+  words: 200
+  points:
+  - Інтегровані тексти
+- section: "Практика"
   words: 236
-- section: Підсумок
+  points:
+  - Написання текстів
+  - Самооцінка
+- section: "Підсумок — Граматика як інструмент"
   words: 115
-- section: Потрібно більше практики?
+  points:
+  - Від знання до навички
+- section: "Потрібно більше практики?"
   words: 109
-word_target: 2087
+word_target: 1910
 vocabulary_hints:
   required:
   - граматика (grammar)

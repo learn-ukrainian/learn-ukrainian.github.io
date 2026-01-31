@@ -10,6 +10,78 @@ naturalness:
 duration: 60
 transliteration: none
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-01-30'
 title: Describing Things - Adjectives
 subtitle: Adjective Agreement in Gender and Number
+content_outline:
+- section: Warm-up
+  words: 47
+  points:
+  - Опис предметів навколо
+  - Питання Який? Яка? Яке?
+- section: Presentation
+  words: 133
+  points:
+  - Тверда група (-ий/-а/-е/-і)
+  - Приклади (новий дім, нова книга, нове вікно)
+  - Узгодження з родом іменника
+- section: Presentation
+  words: 98
+  points:
+  - Закінчення -ій/-я/-є/-і
+  - Приклади (синій, синя, синє, сині)
+- section: Presentation
+  words: 24
+  points:
+  - Прикметник перед іменником (гарний день)
+  - Прикметник після бути (День гарний)
+- section: Presentation
+  words: 61
+  points:
+  - Великий ↔ малий, новий ↔ старий
+  - Добрий ↔ поганий, дорогий ↔ дешевий
+- section: Presentation
+  words: 211
+  points:
+  - Опис кімнати (велика кімната, біле вікно)
+  - Опис людей (молода жінка, добрий чоловік)
+- section: Practice
+  words: 259
+  points:
+  - Діалог про новий телефон
+  - Діалог про квартиру
+- section: Practice
+  words: 20
+  points:
+  - Опис свого дому/кімнати
+word_target: 853
+vocabulary_hints:
+  required:
+  - новий (new)
+  - старий (old)
+  - гарний (beautiful, nice)
+  - великий (big)
+  - малий (small)
+  - добрий (good, kind)
+  - поганий (bad)
+  - цікавий (interesting)
+  recommended:
+  - синій (blue)
+  - червоний (red)
+  - молодий (young)
+  - дорогий (expensive)
+  - дешевий (cheap)
+  - смачний (tasty)
+activity_hints:
+- type: fill-in
+  focus: Change adjective gender
+  items: 25
+- type: fill-in
+  focus: Complete with correct adjective form
+  items: 20
+- type: match-up
+  focus: Match adjectives to nouns
+  items: 15
+- type: fill-in
+  focus: Describe pictures using adjectives
+  items: 8

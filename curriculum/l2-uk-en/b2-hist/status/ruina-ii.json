@@ -2,10 +2,10 @@
   "module": "ruina-ii",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-29T23:39:04.865209Z",
+  "last_audit": "2026-01-30T22:13:55.326975Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.347128Z",
+    "md": "2026-01-30T22:13:37.754294Z",
     "meta": "2026-01-29T07:38:18.649636Z",
     "activities": "2026-01-27T20:32:44.567024Z",
     "vocabulary": "2026-01-24T00:11:07.724363Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "5504/4000 (raw: 5583)"
+      "message": "5502/4000 (raw: 5581)"
     },
     "activities": {
       "status": "pass",
@@ -39,10 +39,8 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "1 Critical Template Violations"
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 4,
     "fail_count": 0
   }

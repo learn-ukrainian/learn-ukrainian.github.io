@@ -13,7 +13,7 @@
 
 ---
 
-## Граматика (Grammar)
+## Presentation
 
 ### Talking About Family (Розмова про сім'ю)
 
@@ -46,7 +46,7 @@
 
 ---
 
-## Describing Family Members (Опис членів сім'ї)
+### Describing Family Members (Опис членів сім'ї)
 
 ### Вік (Age)
 
@@ -112,7 +112,7 @@
 
 ---
 
-## Приклади (Examples)
+### Приклади (Examples)
 
 > [!example] Моя сім'я (My Family)
 >
@@ -185,9 +185,14 @@
 
 ---
 
-## Практика (Practice)
+## Practice
 
-Використовуйте ці вправи. Це гарна практика. (Use these exercises. This is good practice.)
+### Моя сім'я
+
+Опишіть свою сім'ю. Хто у вас є? Як їх звати? (Describe your family. Who do you have? What are their names?)
+
+> [!model-answer]
+> У мене є велика **сім'я**. У мене є **мама**, **тато** і **брат**. Мою маму звати Олена. Мого тата звати Петро. Мій брат **молодший**, його звати Андрій. Ми живемо у Києві. Я дуже люблю свою **родину**.
 
 # Підсумок (Summary)
 

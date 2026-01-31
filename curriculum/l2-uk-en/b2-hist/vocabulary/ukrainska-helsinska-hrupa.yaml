@@ -1,0 +1,79 @@
+module: b2-hist-115
+level: B2-HIST
+slug: ukrainska-helsinska-hrupa
+items:
+- lemma: правозахисний
+  translation: human rights (adj)
+  note: правозахисний рух — human rights movement
+- lemma: дисидент
+  translation: dissident
+  note: one who opposes official policy
+- lemma: репресія
+  translation: repression
+  note: political persecution
+- lemma: табір
+  translation: camp
+  note: labor camp, gulag
+- lemma: арешт
+  translation: arrest
+  note: taking someone into custody
+- lemma: меморандум
+  translation: memorandum
+  note: a written report or message
+- lemma: політв'язень
+  translation: political prisoner
+  note: person imprisoned for political beliefs
+- lemma: Гельсінкі
+  translation: Helsinki
+  note: capital of Finland, place of 1975 Accords
+- lemma: документування
+  translation: documentation
+  note: recording evidence
+- lemma: еміграція
+  translation: emigration
+  note: leaving one's country
+- lemma: реабілітація
+  translation: rehabilitation
+  note: restoration of reputation/rights
+- lemma: спадщина
+  translation: legacy
+  note: what is left behind
+- lemma: угода
+  translation: agreement
+  note: treaty, pact
+- lemma: порушення
+  translation: violation
+  note: breach of law/rights
+- lemma: вимога
+  translation: demand
+  note: requirement, request
+- lemma: громадянин
+  translation: citizen
+  note: member of a state
+- lemma: закон
+  translation: law
+  note: rule established by authority
+- lemma: опір
+  translation: resistance
+  note: refusal to comply
+- lemma: гласність
+  translation: glasnost / publicity
+  note: openness, transparency
+- lemma: наклеп
+  translation: slander / libel
+  note: false statement damaging reputation
+- lemma: вирок
+  translation: sentence / verdict
+  note: decision of a court
+- lemma: заслання
+  translation: exile
+  note: forced absence from home
+- lemma: каральна система
+  translation: punitive system
+  note: system of punishment
+- lemma: самовизначення
+  translation: self-determination
+  note: right of a people to decide their own government
+- lemma: гідність
+  translation: dignity
+  note: worthiness, honor

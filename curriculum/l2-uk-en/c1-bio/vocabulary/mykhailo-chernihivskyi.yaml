@@ -1,0 +1,151 @@
+items:
+  - lemma: мученик
+    ipa: /ˈmut͡ʃenɪk/
+    translation: martyr
+    pos: noun
+    gender: m
+    note: той, хто страждає за віру
+  - lemma: ярлик
+    ipa: /jɐrˈlɪk/
+    translation: yarlyk (charter)
+    pos: noun
+    gender: m
+    note: грамота монгольських ханів на правління
+  - lemma: обряд
+    ipa: /obˈrʲɐd/
+    translation: ritual / rite
+    pos: noun
+    gender: m
+    note: сукупність встановлених дій
+  - lemma: ідолопоклонство
+    ipa: /idolo-poklo-ˈnstʋo/
+    translation: idolatry
+    pos: noun
+    gender: n
+    note: поклоніння ідолам
+  - lemma: канонізація
+    ipa: /kɐnonʲizˈɑt͡sʲijɐ/
+    translation: canonization
+    pos: noun
+    gender: f
+    note: причислення до лику святих
+  - lemma: агіографія
+    ipa: /ɐɦʲioˈɦrɑfʲijɐ/
+    translation: hagiography
+    pos: noun
+    gender: f
+    note: життєписи святих
+  - lemma: місія
+    ipa: /ˈmʲisʲijɐ/
+    translation: mission
+    pos: noun
+    gender: f
+    note: важливе доручення або роль
+  - lemma: коаліція
+    ipa: /koɐˈlʲit͡sʲijɐ/
+    translation: coalition
+    pos: noun
+    gender: f
+    note: об'єднання для спільних дій
+  - lemma: навала
+    ipa: /nɐˈʋɑlɐ/
+    translation: invasion / onslaught
+    pos: noun
+    gender: f
+    note: масовий напад ворогів
+  - lemma: ієрарх
+    ipa: /ijeˈrɑrx/
+    translation: hierarch
+    pos: noun
+    gender: m
+    note: вищий представник духовенства
+  - lemma: опір
+    ipa: /ˈopʲir/
+    translation: resistance
+    pos: noun
+    gender: m
+    note: збройна або моральна протидія
+  - lemma: деколонізація
+    ipa: /de-kolo-nʲi-ˈzɑ-t͡sʲijɐ/
+    translation: decolonization
+    pos: noun
+    gender: f
+    note: процес звільнення від імперського впливу
+  - lemma: автентичність
+    ipa: /ɐu̯tɛnˈtɪt͡ʃnʲisʲtʲ/
+    translation: authenticity
+    pos: noun
+    gender: f
+    note: справжність та самобутність
+  - lemma: легітимність
+    ipa: /leɦʲiˈtɪmnʲisʲtʲ/
+    translation: legitimacy
+    pos: noun
+    gender: f
+    note: законність влади в очах народу
+  - lemma: іконографія
+    ipa: /ikonoˈɦrɑfʲijɐ/
+    translation: iconography
+    pos: noun
+    gender: f
+    note: система зображення святих
+  - lemma: сповідник
+    ipa: /spoˈʋʲidnɪk/
+    translation: confessor
+    pos: noun
+    gender: m
+    note: той, хто відкрито визнає свою віру
+  - lemma: ультиматум
+    ipa: /ulʲtɪˈmɑtum/
+    translation: ultimatum
+    pos: noun
+    gender: m
+    note: рішуча вимога з погрозою
+  - lemma: посол
+    ipa: /poˈsɔl/
+    translation: ambassador
+    pos: noun
+    gender: m
+    note: офіційний представник держави
+  - lemma: протекторат
+    ipa: /protɛktoˈrɑt/
+    translation: protectorate
+    pos: noun
+    gender: m
+    note: форма залежності однієї держави від іншої
+  - lemma: баскак
+    ipa: /bɐsˈkɑk/
+    translation: baskak
+    pos: noun
+    gender: m
+    note: монгольський збирач данини
+  - lemma: гривня
+    ipa: /ˈɦrɪu̯nʲɐ/
+    translation: hryvnia
+    pos: noun
+    gender: f
+    note: грошова та вагова одиниця Русі
+  - lemma: собор
+    ipa: /soˈbɔr/
+    translation: cathedral / council
+    pos: noun
+    gender: m
+    note: головний храм або збори ієрархів
+  - lemma: митрополія
+    ipa: /mɪtropoˈlʲijɐ/
+    translation: metropolitanate
+    pos: noun
+    gender: f
+    note: центр церковного управління
+  - lemma: вочина
+    ipa: /ˈʋɔt͡ʃɪnɐ/
+    translation: patrimony
+    pos: noun
+    gender: f
+    note: спадкова земельна власність князя
+  - lemma: ярмо
+    ipa: /jɐrˈmɔ/
+    translation: yoke
+    pos: noun
+    gender: n
+    note: символ неволі та гніту

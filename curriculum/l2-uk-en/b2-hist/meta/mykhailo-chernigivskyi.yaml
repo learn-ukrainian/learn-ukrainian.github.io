@@ -13,3 +13,13 @@ build:
   last_modified: '2026-01-26'
 phase: HIST.3 [Mongol Era & Galicia-Volhynia]
 id: b2-hist-022
+activity_hints:
+- type: reading
+  title: Подорож Михайла до Орди та його рішення
+- type: essay-response
+  prompt: Чому Михайло Чернігівський відмовився виконати язичницькі обряди?
+- type: true-false
+  focus: Chronology
+  items: 10
+- type: true-false
+  topic: Порівняння стратегій українських та московських князів

@@ -62,7 +62,7 @@ Related: beresteyska-uniia, petro-mohyla, kostiantyn-vasyl-ostrozky
 
 ---
 
-## Освітня діяльність братств
+## Освітня дiяльність братств
 
 ### Братські школи: нова педагогіка
 

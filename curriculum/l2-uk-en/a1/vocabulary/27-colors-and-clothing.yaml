@@ -2,127 +2,129 @@ module: 27-colors-and-clothing
 level: A1
 version: '2.0'
 items:
-- lemma: блакитний
-  ipa: /blakˈɪtnɪj/
-  translation: light blue, azure
-  pos: adj
-- lemma: біл
-  ipa: /bil/
-  translation: bill
-  pos: noun
-  gender: m
-- lemma: біла
-  ipa: /bˈila/
-  translation: white (female)
-  pos: noun
-  gender: f
 - lemma: білий
   ipa: /bˈilɪj/
-  translation: white (male)
-  pos: noun
-  gender: m
-- lemma: білий
-  ipa: /bˈili/
   translation: white
-  pos: noun
-- lemma: взуття
-  ipa: /ʋzuttˈja/
-  translation: footwear, shoes
-  pos: noun
-  gender: n
-- lemma: вишиванка
-  ipa: /ʋɪʃˈɪʋanka/
-  translation: vyshyvanka (embroidered shirt)
-  pos: noun
-  gender: f
+  pos: adj
+- lemma: чорний
+  ipa: /t͡ʃˈɔrnɪj/
+  translation: black
+  pos: adj
+- lemma: червоний
+  ipa: /t͡ʃɛrˈvɔnɪj/
+  translation: red
+  pos: adj
+- lemma: синій
+  ipa: /sɪnij/
+  translation: blue
+  pos: adj
+- lemma: зелений
+  ipa: /zɛˈlɛnɪj/
+  translation: green
+  pos: adj
 - lemma: жовтий
   ipa: /ʒˈɔʋtɪj/
   translation: yellow
+  pos: adj
+- lemma: блакитний
+  ipa: /blakˈɪtnɪj/
+  translation: light blue, azure
   pos: adj
 - lemma: коричневий
   ipa: /kɔrˈɪt͡ʃnɛʋɪj/
   translation: brown
   pos: adj
-- lemma: красиво
-  ipa: /krasˈɪʋɔ/
-  translation: beautifully
-  pos: adv
-- lemma: небо
-  ipa: /nˈɛbɔ/
-  translation: sky
-  pos: noun
-  gender: n
-- lemma: пальто
-  ipa: /palʲtˈɔ/
-  translation: coat
-  pos: noun
-  gender: n
 - lemma: світлий
   ipa: /sʋˈitlɪj/
   translation: light, bright
   pos: adj
-- lemma: світло-зелений
-  ipa: /sʋˈitlɔ-zɛlɛnɪj/
-  translation: light green
+- lemma: темний
+  ipa: /tˈɛmnɪj/
+  translation: dark
   pos: adj
-- lemma: синь
-  ipa: /sɪnʲ/
-  translation: blueness
-  pos: noun
-  gender: f
-- lemma: синіти
-  ipa: /sɪnˈitɪ/
-  translation: to turn blue, to appear blue
-  pos: verb
+- lemma: яскравій
+  ipa: /jaskrˈaʋɪj/
+  translation: bright, vivid
+  pos: adj
+- lemma: середній
+  ipa: /sɛˈrɛdnʲij/
+  translation: average, medium
+  pos: adj
 - lemma: сорочка
   ipa: /sɔrˈɔt͡ʃka/
   translation: shirt
   pos: noun
   gender: f
-- lemma: сіро-білий
-  ipa: /sˈirɔ-bili/
-  translation: grey-white
+- lemma: штани
+  ipa: /ʃtɑˈnɪ/
+  translation: pants
   pos: noun
-- lemma: темний
-  ipa: /tˈɛmna/
-  translation: dark
+  gender: pl
+- lemma: плаття
+  ipa: /plˈatʲtʲa/
+  translation: dress
+  pos: noun
+  gender: n
+- lemma: куртка
+  ipa: /kˈurtka/
+  translation: jacket
   pos: noun
   gender: f
-- lemma: темно-коричневий
-  ipa: /tˈɛmnɔ-kɔrɪt͡ʃnɛʋɪj/
-  translation: dark brown
-  pos: adj
-- lemma: темно-синій
-  ipa: /tˈɛmnɔ-sɪnij/
-  translation: dark blue
-  pos: adj
+- lemma: светр
+  ipa: /sʋɛtr/
+  translation: sweater
+  pos: noun
+  gender: m
 - lemma: футболка
   ipa: /futbˈɔlka/
   translation: T-shirt
   pos: noun
   gender: f
-- lemma: черевик
-  ipa: /t͡ʃɛrɛʋˈɪk/
-  translation: shoe, boot
+- lemma: взуття
+  ipa: /ʋzuttˈja/
+  translation: footwear, shoes
   pos: noun
-- lemma: чорна
-  ipa: /t͡ʃˈɔrna/
-  translation: black (female)
+  gender: n
+- lemma: джинси
+  ipa: /dʒˈɪnsɪ/
+  translation: jeans
   pos: noun
-  gender: f
-- lemma: чорно-білий
-  ipa: /t͡ʃˈɔrnɔ-bilɪj/
-  translation: black and white
-  pos: adj
+  gender: pl
+- lemma: окуляри
+  ipa: /ɔkulʲˈarɪ/
+  translation: glasses
+  pos: noun
+  gender: pl
 - lemma: шорти
   ipa: /ʃˈɔrtɪ/
   translation: shorts
   pos: noun
-- lemma: яскравий
-  ipa: /jaskrˈaʋɪj/
-  translation: bright, vivid
-  pos: adj
-- lemma: яскраво-жовтий
-  ipa: /jaskrˈaʋɔ-ʒɔʋtɪj/
-  translation: bright yellow
-  pos: adj
+  gender: pl
+- lemma: кросівки
+  ipa: /krɔˈsivkɪ/
+  translation: sneakers
+  pos: noun
+  gender: pl
+- lemma: вишиванка
+  ipa: /ʋɪʃˈɪʋanka/
+  translation: vyshyvanka (embroidered shirt)
+  pos: noun
+  gender: f
+- lemma: носити
+  ipa: /nɔˈsɪtɪ/
+  translation: to wear
+  pos: verb
+- lemma: одягати
+  ipa: /ɔdʲaˈɦatɪ/
+  translation: to put on
+  pos: verb
+- lemma: іменник
+  ipa: /iˈmɛnnɪk/
+  translation: noun
+  pos: noun
+  gender: m
+- lemma: дієслово
+  ipa: /diɛˈslɔʋɔ/
+  translation: verb
+  pos: noun
+  gender: n

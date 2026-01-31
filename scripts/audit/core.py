@@ -740,7 +740,9 @@ def audit_module(file_path: str) -> bool:
         ]
         for field in PLAN_FIELDS_TO_MERGE:
             if field in plan_data:
-                meta_data[field] = plan_data[field]
+                # Allow Meta to override Plan (e.g. for refined activity_hints)
+                if field not in meta_data:
+                    meta_data[field] = plan_data[field]
 
     vocab_data = load_yaml_vocab(file_path)
     
@@ -785,6 +787,8 @@ def audit_module(file_path: str) -> bool:
     
     # Check word target
     target = get_word_target(level_code, module_num, module_focus)
+    if meta_data and meta_data.get('word_target'):
+        target = meta_data['word_target']
     print(f"   File: {file_path} | Target: {target} words")
 
     # Required Metadata Check

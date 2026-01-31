@@ -2,25 +2,25 @@
   "module": "chornobyl",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-29T23:39:56.977009Z",
+  "last_audit": "2026-01-31T00:04:20.989392Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.346883Z",
-    "meta": "2026-01-29T07:38:18.727704Z",
-    "activities": "2026-01-27T15:34:53.709931Z",
-    "vocabulary": null,
+    "md": "2026-01-31T00:04:19.567424Z",
+    "meta": "2026-01-31T00:03:55.170565Z",
+    "activities": "2026-01-30T23:58:12.682766Z",
+    "vocabulary": "2026-01-30T23:56:33.211833Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "2228/4000 (raw: 2387) | pedagogy: 2 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "3439/3400 (raw: 3542)"
     },
     "activities": {
       "status": "pass",
@@ -41,11 +41,10 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "4 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: reading"
+      "1 Critical Template Violations",
+      "3 Outline Compliance Errors"
     ],
-    "pass_count": 1,
-    "fail_count": 3
+    "pass_count": 3,
+    "fail_count": 1
   }
 }

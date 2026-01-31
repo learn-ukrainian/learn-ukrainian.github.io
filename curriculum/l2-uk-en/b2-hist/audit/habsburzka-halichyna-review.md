@@ -1,8 +1,8 @@
 # Audit Report: M76 — habsburzka-halichyna.md
 **Level:** B2 | **Module:** M76 | **Phase:** HIST.8 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-29 23:40:05
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-30 22:26:00
 
 ## Configuration
 **Type:** B2-history
@@ -32,15 +32,6 @@
 - Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
-
-## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Читання|Хід|Основні події|Діяльність|Свідки|Великий рейд|Відбудова' found: Читання, Документ 2: Зі звіту австрійського губернатора про діяльність «Просвіти» (1890-ті)
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
 
 ## Gates
 - **Words:** ⚠️ 3933/4000 (raw: 4021) (67 short)

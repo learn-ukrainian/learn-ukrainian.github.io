@@ -1,0 +1,129 @@
+module: hryhoriy-kvitka-osnovianenko
+level: C1
+version: '2.0'
+items:
+  - lemma: прозаїк
+    ipa: /prɔˈzɑjik/
+    translation: prose writer
+    pos: noun
+    gender: m
+  - lemma: сентименталізм
+    ipa: /sɛntɪmɛntɐˈlʲizm/
+    translation: sentimentalism
+    pos: noun
+    gender: m
+  - lemma: сатира
+    ipa: /sɐˈtɪrɐ/
+    translation: satire
+    pos: noun
+    gender: f
+  - lemma: повість
+    ipa: /ˈpɔwʲistʲ/
+    translation: novella, tale
+    pos: noun
+    gender: f
+  - lemma: відьма
+    ipa: /ˈʋʲidʲmɐ/
+    translation: witch
+    pos: noun
+    gender: f
+  - lemma: етнографія
+    ipa: /ɛtnɔˈɦrɑfʲijɐ/
+    translation: ethnography
+    pos: noun
+    gender: f
+  - lemma: Слобожанщина
+    ipa: /slɔbɔˈʒɑnʃt͡ʃɪnɐ/
+    translation: Slobozhanshchyna region
+    pos: noun
+    gender: f
+  - lemma: псевдонім
+    ipa: /psɛwdɔˈnʲim/
+    translation: pseudonym
+    pos: noun
+    gender: m
+  - lemma: дворянин
+    ipa: /dwɔrʲɐˈnɪn/
+    translation: nobleman
+    pos: noun
+    gender: m
+  - lemma: селянство
+    ipa: /sɛˈlʲanstwo/
+    translation: peasantry
+    pos: noun
+    gender: n
+  - lemma: козацька старшина
+    ipa: /kɔˈzɑt͡sʲkɐ stɐrʃɪˈnɑ/
+    translation: Cossack officers
+    pos: noun phrase
+    gender: f
+  - lemma: народні звичаї
+    ipa: /nɐˈrɔdnʲi ˈzwɪt͡ʃɐji/
+    translation: folk customs
+    pos: noun phrase
+    gender: pl
+  - lemma: полеміка
+    ipa: /pɔˈlɛmɪkɐ/
+    translation: polemic, controversy
+    pos: noun
+    gender: f
+  - lemma: ідеалізація
+    ipa: /ideɐlʲiˈzɑt͡sʲijɐ/
+    translation: idealization
+    pos: noun
+    gender: f
+  - lemma: трагічна любов
+    ipa: /trɐˈɦʲit͡ʃnɐ lʲuˈbɔw/
+    translation: tragic love
+    pos: noun phrase
+    gender: f
+  - lemma: побутописання
+    ipa: /pɔbutɔpɪˈsɑnʲːɐ/
+    translation: description of everyday life
+    pos: noun
+    gender: n
+  - lemma: розмовна мова
+    ipa: /rɔzˈmɔwnɐ ˈmɔwɐ/
+    translation: colloquial language
+    pos: noun phrase
+    gender: f
+  - lemma: провінційність
+    ipa: /prɔwʲinˈt͡sʲijnʲistʲ/
+    translation: provinciality
+    pos: noun
+    gender: f
+  - lemma: фольклористика
+    ipa: /fɔlʲklɔˈrɪstɪkɐ/
+    translation: folklore studies
+    pos: noun
+    gender: f
+  - lemma: забобон
+    ipa: /zɐbɔˈbɔn/
+    translation: superstition
+    pos: noun
+    gender: m
+  - lemma: реалізм
+    ipa: /rɛɐˈlʲizm/
+    translation: realism
+    pos: noun
+    gender: m
+  - lemma: драматург
+    ipa: /drɐmɐˈturɦ/
+    translation: playwright
+    pos: noun
+    gender: m
+  - lemma: оповідання
+    ipa: /ɔpɔwʲiˈdɑnʲːɐ/
+    translation: short story
+    pos: noun
+    gender: n
+  - lemma: літературна мова
+    ipa: /lʲitɛrɐˈturnɐ ˈmɔwɐ/
+    translation: literary language
+    pos: noun phrase
+    gender: f
+  - lemma: просвітництво
+    ipa: /prɔsʲwʲitˈnɪt͡stwo/
+    translation: enlightenment
+    pos: noun
+    gender: n

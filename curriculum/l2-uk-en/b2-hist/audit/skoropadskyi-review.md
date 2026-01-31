@@ -1,8 +1,8 @@
 # Audit Report: M91 — skoropadskyi.md
 **Level:** B2 | **Module:** M91 | **Phase:** HIST.9 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-29 23:39:10
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-31 00:41:32
 
 ## Configuration
 **Type:** B2-history
@@ -34,22 +34,13 @@
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Читання|Хід|Основні події|Діяльність|Свідки|Великий рейд|Відбудова' found: Читання, Грамота про федерацію: Зрада чи вимушений хід?, Прихід до влади
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 4218/4000 (raw: 4336)
+- **Words:** ✅ 4371/4000 (raw: 4501)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/5
+- **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure
@@ -57,36 +48,36 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (history))
-- **Richness:** ✅ 99% (history)
+- **Richness:** ✅ 95% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
+**Score:** 95% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 12 | 3 | 100% | 24% | 23.8% |
-| engagement | 7 | 6 | 100% | 14% | 14.3% |
+| primary_sources | 9 | 3 | 100% | 24% | 23.8% |
+| engagement | 5 | 6 | 83% | 14% | 11.9% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 7 | 4 | 100% | 10% | 9.5% |
-| visual | 4 | 4 | 100% | 10% | 9.5% |
+| cultural | 3 | 4 | 75% | 10% | 7.1% |
+| visual | 5 | 4 | 100% | 10% | 9.5% |
 | variety | 0.98 | - | 98% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 7 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.9%** |
+| questions | 9 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **95.1%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 158 | Included in Core |
-| **Вступ: Консервативна альтернатива** | ✅ | 656 | Included in Core |
-| **Прихід до влади** | ⚪️ | 697 | Skipped |
-| **Політика Гетьманату** | ⚪️ | 1085 | Skipped |
-| **Первинні джерела** | ✅ | 638 | Included in Core |
-| **Читання** | ✅ | 73 | Included in Core |
-| **Деколонізаційний погляд** | ✅ | 428 | Included in Core |
-| **Підсумок: Доля Скоропадського** | ✅ | 483 | Included in Core |
+| **Intro/Narrative** | ✅ | 131 | Included in Core |
+| **Вступ: Консервативна альтернатива** | ✅ | 532 | Included in Core |
+| **Прихід до влади** | ⚪️ | 782 | Skipped |
+| **Політика Гетьманату** | ⚪️ | 1157 | Skipped |
+| **Первинні джерела** | ✅ | 731 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 466 | Included in Core |
+| **Підсумок: Доля Скоропадського** | ✅ | 413 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 159 | Skipped |

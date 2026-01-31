@@ -1,20 +1,32 @@
-module: b2-hist-083
+module: hromady
 level: B2-HIST
 slug: hromady
 version: '2.0'
-id: b2-hist-083
+id: b2-hist-83
 naturalness:
   score: 10
   status: PASS
-  justification: Академічний український для соціальної історії
-duration: 120
+  justification: Strong historical narrative
+duration: 90
 transliteration: none
-practice:
-- true-false
-- essay-response
-- comparative-study
-- reading
-- critical-analysis
 build:
-  last_modified: '2026-01-28'
-phase: HIST.8 [Imperial Era]
+  last_modified: '2026-01-30'
+title: Громадівський рух
+subtitle: 'The Hromada Movement: Cultural Resistance'
+activity_hints:
+- type: reading
+  focus: Журнал "Основа"
+  items: 4
+- type: essay-response
+  focus: Культурний спротив
+  word_target: 300
+- type: true-false
+  focus: Факти про громади
+  items: 10
+- type: comparative-study
+  focus: Антонович vs Драгоманов
+  items: 1
+- type: critical-analysis
+  focus: Аналіз тактики 'малих справ'
+  items: 3
+pedagogy: CBI

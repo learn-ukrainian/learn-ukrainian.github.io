@@ -6,11 +6,12 @@ version: '2.0'
 title: 'Франко: Проза'
 subtitle: Franko's Prose
 content_outline:
-- section: Вступ — Проза
-  words: 1000
+- section: Розминка — Франко-прозаїк
+  words: 700
   points:
-  - Визначення та сфери застосування
-  - Зв'язок із попередніми модулями
+  - "Захар Беркут" — історичний роман, Карпати
+  - "Борислав сміється" — соціальний реалізм
+  - Оповідання — сільська Галичина
 - section: Content Areas
   words: 1250
   points:
@@ -19,12 +20,13 @@ content_outline:
   - 'Оповідання: short stories, rural Galician life'
   - 'Prose techniques: realism, psychological depth'
   - Franko as literary critic and scholar
-- section: Практика та підсумок
-  words: 750
+- section: Практика — проза Франка
+  words: 1050
   points:
-  - Практичні вправи на закріплення
-  - Інтеграція з попередніми модулями
-  - Підготовка до наступного модуля
+  - Проаналізувати фрагмент "Захара Беркута" — історичний контекст
+  - Порівняти соціальну критику Франка з європейським реалізмом
+  - Написати есе про психологічну глибину оповідань
+  - Обговорити діалектні елементи в прозі Франка
 word_target: 3000
 focus: literature
 pedagogy: Literary Analysis

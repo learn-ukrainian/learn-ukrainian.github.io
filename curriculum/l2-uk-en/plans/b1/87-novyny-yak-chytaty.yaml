@@ -6,19 +6,34 @@ version: '2.0'
 title: 'Новини: як читати'
 subtitle: News Reading Strategies for Ukrainian Media
 content_outline:
-- section: Вступ
-  words: 106
-- section: Огляд
-  words: 1177
-- section: Практика
-  words: 513
-- section: Продукція
-  words: 249
-- section: Підсумок
+- section: "Вступ"
+  words: 175
+  points:
+  - Новини як спосіб вивчення мови
+  - Де шукати якісні джерела
+- section: "Огляд"
+  words: 1100
+  points:
+  - Стратегія 1: Розуміння заголовків
+  - Стратегія 2: Читання ліду
+  - Стратегія 3: Факти проти думок
+  - Стратегія 4: Оцінка надійності джерел
+  - Автентична стаття з анотаціями
+- section: "Практика"
+  words: 450
+  points:
+  - Тексти з культурними, економічними новинами
+- section: "Продукція"
+  words: 300
+  points:
+  - Діалоги про обговорення новин
+- section: "Підсумок — Читай, думай, перевіряй"
   words: 193
-- section: Потрібно більше практики?
+  points:
+  - Рекомендації для самостійної практики
+- section: "Потрібно більше практики?"
   words: 109
-word_target: 2347
+word_target: 2327
 vocabulary_hints:
   required:
   - новини (news)

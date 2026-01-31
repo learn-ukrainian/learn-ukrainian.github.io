@@ -1,4 +1,84 @@
 module: danylo-halytskyi
 level: B2-HIST
 version: '2.0'
-items: []
+items:
+  - term: коронація
+    ipa: korɔˈnat͡sʲijɐ
+    translation: coronation
+    pos: noun
+  - term: легітимність
+    ipa: leɦiˈtɪmnistʲ
+    translation: legitimacy
+    pos: noun
+  - term: суверенітет
+    ipa: suvereɲiˈtɛt
+    translation: sovereignty
+    pos: noun
+  - term: дипломатія
+    ipa: dɪplɔˈmat⁽ʲ⁾ijɐ
+    translation: diplomacy
+    pos: noun
+  - term: ярлик
+    ipa: jɐrˈlɪk
+    translation: yarlyk (mongol patent for ruling)
+    pos: noun
+  - term: ідентичність
+    ipa: identɪt͡ʃˈnistʲ
+    translation: identity
+    pos: noun
+  - term: деколонізація
+    ipa: dɛkɔlɔɲiˈzat͡s⁽ʲ⁾ijɐ
+    translation: decolonization
+    pos: noun
+  - term: спадщина
+    ipa: ˈspadt͡ʃɪnɐ
+    translation: heritage, legacy
+    pos: noun
+  - term: опозиція
+    ipa: ɔpɔˈzɪt͡s⁽ʲ⁾ijɐ
+    translation: opposition
+    pos: noun
+  - term: консолідація
+    ipa: kɔnsɔlʲiˈdat͡s⁽ʲ⁾ijɐ
+    translation: consolidation
+    pos: noun
+  - term: фортифікація
+    ipa: fɔrtɪfʲiˈkat͡s⁽ʲ⁾ijɐ
+    translation: fortification
+    pos: noun
+  - term: лицарство
+    ipa: ˈlɪt͡sɐrstwɔ
+    translation: knighthood, chivalry
+    pos: noun
+  - term: унія
+    ipa: ˈun⁽ʲ⁾ijɐ
+    translation: union
+    pos: noun
+  - term: легат
+    ipa: leˈɦat
+    translation: legate
+    pos: noun
+  - term: ойкумена
+    ipa: ɔi̯kuˈmɛnɐ
+    translation: oikoumene (inhabited world)
+    pos: noun
+  - term: суб'єктність
+    ipa: subˈjɛktnistʲ
+    translation: subjectivity, agency
+    pos: noun
+  - term: деспотія
+    ipa: dɛspɔˈt⁽ʲ⁾ijɐ
+    translation: despotism
+    pos: noun
+  - term: асиміляція
+    ipa: asɪm⁽ʲ⁾iˈlʲat͡s⁽ʲ⁾ijɐ
+    translation: assimilation
+    pos: noun
+  - term: інтеграція
+    ipa: inteˈɦrat͡s⁽ʲ⁾ijɐ
+    translation: integration
+    pos: noun
+  - term: модернізація
+    ipa: mɔdɛrɲiˈzat͡s⁽ʲ⁾ijɐ
+    translation: modernization
+    pos: noun

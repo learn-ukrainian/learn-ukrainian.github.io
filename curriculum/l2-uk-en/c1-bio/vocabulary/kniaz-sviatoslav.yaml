@@ -1,0 +1,76 @@
+items:
+  - word: воїн
+    ipa: ˈwɔjin
+    pos: noun
+    translation: warrior
+    example: "Князь Святослав був видатним воїном свого часу."
+  - word: завойовник
+    ipa: zɐwɔˈjɔwnɪk
+    pos: noun
+    translation: conqueror
+    example: "Його називали великим завойовником за розширення кордонів Русі."
+  - word: каганат
+    ipa: kɐɦɐˈnɑt
+    pos: noun
+    translation: khaganate
+    example: "Хазарський каганат перестав існувати після походу Святослава."
+  - word: похід
+    ipa: pɔˈxʲid
+    pos: noun
+    translation: campaign/march
+    example: "Балканський похід Святослава змінив геополітику регіону."
+  - word: дружина
+    ipa: drʊˈʒɪnɐ
+    pos: noun
+    translation: retinue/warband
+    example: "Князь завжди радився зі своєю вірною дружиною."
+  - word: печеніги
+    ipa: pet͡ʃeˈn⁽ʲ⁾iɦɪ
+    pos: noun
+    translation: Pechenegs
+    example: "Печеніги чатували на князя біля дніпровських порогів."
+  - word: пороги
+    ipa: pɔˈrɔɦɪ
+    pos: noun
+    translation: rapids
+    example: "Дніпровські пороги були небезпечною перешкодою для мандрівників."
+  - word: засідка
+    ipa: ˈzɑs⁽ʲ⁾idkɐ
+    pos: noun
+    translation: ambush
+    example: "Князь потрапив у засідку, влаштовану печенігами."
+  - word: данник
+    ipa: ˈdɑnnɪk
+    pos: noun
+    translation: tributary
+    example: "Багато племен стали данниками Києва за часів Святослава."
+  - word: договір
+    ipa: dɔˈɦɔw⁽ʲ⁾ir
+    pos: noun
+    translation: treaty
+    example: "Мирний договір із Візантією був підписаний у 971 році."
+  - word: чаша
+    ipa: ˈt͡ʃɑʃɐ
+    pos: noun
+    translation: cup/goblet
+    example: "Легенда про чашу з черепа свідчить про повагу ворога."
+  - word: череп
+    ipa: ˈt͡ʃerep
+    pos: noun
+    translation: skull
+    example: "З черепа князя печенізький хан наказав зробити чашу."
+  - word: здобич
+    ipa: ˈzdɔbɪt͡ʃ
+    pos: noun
+    translation: spoils/booty
+    example: "Військо повернулося з походу з великою здобиччю."
+  - word: облога
+    ipa: ɔbˈlɔɦɐ
+    pos: noun
+    translation: siege
+    example: "Облога Доростола тривала три місяці."
+  - word: перемога
+    ipa: peremˈɔɦɐ
+    pos: noun
+    translation: victory
+    example: "Кожна перемога зміцнювала авторитет київського князя."

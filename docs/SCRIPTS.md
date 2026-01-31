@@ -141,11 +141,11 @@ Convert YAML plans to readable markdown for review and comparison.
 - Compare old curriculum plans with new YAML-based plans
 - Generate documentation for stakeholder review
 
-### Legacy Status Scripts (Deprecated)
+### Status Generation
 
-The following scripts are kept for backward compatibility but are superseded by the JSON cache system:
-- `scripts/update_status.py` (Updates level-wide YAML status)
-- `scripts/generate_level_status.py` (Updates `docs/*-STATUS.md` - now uses cache!)
+Generate human-readable status reports from per-module JSON cache:
+- `scripts/generate_level_status.py {level}` - Generates `docs/{LEVEL}-STATUS.md`
+- `npm run status:{level}` - Shortcut for the above (e.g., `npm run status:b2-hist`)
 
 ---
 

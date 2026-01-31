@@ -1,0 +1,151 @@
+items:
+  - lemma: законодавець
+    ipa: /zɐkonodɑˈʋet͡sʲ/
+    translation: lawgiver
+    pos: noun
+    gender: m
+    note: творець системи законів
+  - lemma: правда
+    ipa: /ˈprɑu̯dɐ/
+    translation: law code / justice
+    pos: noun
+    gender: f
+    note: Руська Правда — перший звід законів
+  - lemma: віра
+    ipa: /ˈʋirɐ/
+    translation: wergeld (fine for murder)
+    pos: noun
+    gender: f
+    note: грошовий штраф за вбивство
+  - lemma: скрипторій
+    ipa: /skrɪpˈtɔrʲij/
+    translation: scriptorium
+    pos: noun
+    gender: m
+    note: майстерня для переписування книг
+  - lemma: митрополія
+    ipa: /mɪtropoˈlʲijɐ/
+    translation: metropolitanate
+    pos: noun
+    gender: f
+    note: центр церковного управління
+  - lemma: усобиця
+    ipa: /uˈsɔbɪt͡sʲɐ/
+    translation: internecine strife
+    pos: noun
+    gender: f
+    note: внутрішній воєнний конфлікт
+  - lemma: собор
+    ipa: /soˈbɔr/
+    translation: cathedral
+    pos: noun
+    gender: m
+    note: головний храм міста
+  - lemma: грамота
+    ipa: /ˈɦrɑmotɐ/
+    translation: literacy / charter
+    pos: noun
+    gender: f
+    note: знання читання та письма
+  - lemma: династія
+    ipa: /dɪˈnɑstʲijɐ/
+    translation: dynasty
+    pos: noun
+    gender: f
+    note: ряд правителів одного роду
+  - lemma: завіт
+    ipa: /zɐˈʋit/
+    translation: testament / covenant
+    pos: noun
+    gender: m
+    note: повчальна настанова нащадкам
+  - lemma: мозаїка
+    ipa: /mozɐˈjikɐ/
+    translation: mosaic
+    pos: noun
+    gender: f
+    note: зображення зі шматочків смальти
+  - lemma: фреска
+    ipa: /ˈfrɛskɐ/
+    translation: fresco
+    pos: noun
+    gender: f
+    note: розпис водяними фарбами по вологому тиньку
+  - lemma: посадник
+    ipa: /poˈsɑdnɪk/
+    translation: governor / burgomaster
+    pos: noun
+    gender: m
+    note: намісник князя у місті
+  - lemma: віче
+    ipa: /ˈʋit͡ʃe/
+    translation: assembly / viche
+    pos: noun
+    gender: n
+    note: народні збори на Русі
+  - lemma: престол
+    ipa: /presˈtɔl/
+    translation: throne
+    pos: noun
+    gender: m
+    note: символ монаршої влади
+  - lemma: дуумвірат
+    ipa: /duumʋʲiˈrɑt/
+    translation: duumvirate
+    pos: noun
+    gender: m
+    note: спільне правління двох осіб
+  - lemma: кодифікація
+    ipa: /kodɪfʲikˈɑt͡sʲijɐ/
+    translation: codification
+    pos: noun
+    gender: f
+    note: систематизація законів
+  - lemma: регент
+    ipa: /ˈrɛɦent/
+    translation: regent
+    pos: noun
+    gender: m
+    note: тимчасовий правитель при малолітньому монарху
+  - lemma: саркофаг
+    ipa: /sɐrkoˈfɑɦ/
+    translation: sarcophagus
+    pos: noun
+    gender: m
+    note: оздоблена кам'яна труна
+  - lemma: літопис
+    ipa: /ˈlʲitopɪs/
+    translation: chronicle
+    pos: noun
+    gender: m
+    note: історичний твір з погодовим записом подій
+  - lemma: скрипторій
+    ipa: /skrɪpˈtɔrʲij/
+    translation: scriptorium
+    pos: noun
+    gender: m
+    note: майстерня з переписування книг
+  - lemma: реформатор
+    ipa: /reformˈɑtor/
+    translation: reformer
+    pos: noun
+    gender: m
+    note: творець глибоких суспільних змін
+  - lemma: гуманізація
+    ipa: /ɦumɐnʲizˈɑt͡sʲijɐ/
+    translation: humanization
+    pos: noun
+    gender: f
+    note: пом'якшення та олюднення законів
+  - lemma: мегаполіс
+    ipa: /meɦɐˈpɔlʲis/
+    translation: metropolis
+    pos: noun
+    gender: m
+    note: велике місто з розвиненою структурою
+  - lemma: суверенітет
+    ipa: /suʋerenʲiˈtɛt/
+    translation: sovereignty
+    pos: noun
+    gender: m
+    note: повна незалежність держави

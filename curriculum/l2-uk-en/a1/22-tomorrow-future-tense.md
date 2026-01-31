@@ -1,6 +1,6 @@
 # Tomorrow - Future Tense
 
-## Introduction
+## Warm-up
 
 > [!summary] Learning Goals
 >
@@ -10,7 +10,7 @@
 
 ---
 
-## Grammar
+## Presentation
 
 ### The Compound Future Tense
 
@@ -71,7 +71,7 @@ You might see a shorter future form in books or formal speech. It's called the *
 
 ---
 
-## Expressing Plans and Intentions
+## Presentatіon: Plans and Intentions
 
 > [!tip] Levels of Certainty
 >
@@ -109,7 +109,7 @@ You might see a shorter future form in books or formal speech. It's called the *
 
 ---
 
-## Time Expressions for the Future
+## Presentatіon: Time Expressions
 
 > [!observe] Pattern Discovery
 >
@@ -137,7 +137,7 @@ You might see a shorter future form in books or formal speech. It's called the *
 
 ---
 
-## Useful Adverbs
+## Presentatіon: Useful Adverbs
 
 **вже** (already) — something happened or will happen sooner than expected:
 
@@ -156,7 +156,7 @@ You might see a shorter future form in books or formal speech. It's called the *
 
 ---
 
-## Examples in Context
+## Presentatіon: Examples in Context
 
 > [!example] Making Plans
 >
@@ -186,7 +186,7 @@ You might see a shorter future form in books or formal speech. It's called the *
 
 ---
 
-## Dialogues
+## Presentatіon: Dialogues
 
 > [!conversation] Planning the Weekend
 >
@@ -236,7 +236,7 @@ You might see a shorter future form in books or formal speech. It's called the *
 
 ---
 
-## Практика
+## Practice
 
 ### Вправа 1: Переклад
 

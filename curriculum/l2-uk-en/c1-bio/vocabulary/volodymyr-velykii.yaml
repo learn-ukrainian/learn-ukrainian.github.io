@@ -1,0 +1,149 @@
+items:
+  - lemma: хрещення
+    ipa: /ˈxrɛʃt͡ʃenʲːɐ/
+    translation: baptism / Christianization
+    pos: noun
+    gender: n
+    note: Хрещення Русі 988 року
+  - lemma: язичництво
+    ipa: /jɐˈzɪt͡ʃnɪt͡stʋo/
+    translation: paganism
+    pos: noun
+    gender: n
+    note: дохристиянські вірування
+  - lemma: хреститель
+    ipa: /xresˈtɪtelʲ/
+    translation: baptizer / christener
+    pos: noun
+    gender: m
+    note: Володимир — хреститель Русі
+  - lemma: рівноапостольний
+    ipa: /rʲiwnoɐˈpɔstolʲnɪj/
+    translation: equal-to-the-apostles
+    pos: adjective
+    note: титул святого правителя
+  - lemma: пантеон
+    ipa: /pɐnˈtɛon/
+    translation: pantheon
+    pos: noun
+    gender: m
+    note: сукупність богів
+  - lemma: ідол
+    ipa: /ˈidɔl/
+    translation: idol / cult image
+    pos: noun
+    gender: m
+    note: язичницький кумир
+  - lemma: десятина
+    ipa: /desʲɐˈtɪnɐ/
+    translation: tithe
+    pos: noun
+    gender: f
+    note: податок на користь церкви
+  - lemma: усобиця
+    ipa: /uˈsɔbɪt͡sʲɐ/
+    translation: internecine war / civil strife
+    pos: noun
+    gender: f
+    note: князівські міжусобиці
+  - lemma: порфірородна
+    ipa: /porfʲiroˈrɔdnɐ/
+    translation: born in the purple
+    pos: adjective
+    note: титул візантійської принцеси
+  - lemma: Корсунь
+    ipa: /ˈkɔrsunʲ/
+    translation: Chersonesus
+    pos: noun
+    gender: f
+    note: давнє місто в Криму
+  - lemma: клятва
+    ipa: /ˈklʲɐtʋɐ/
+    translation: oath / vow
+    pos: noun
+    gender: f
+    note: урочиста обіцянка
+  - lemma: святиня
+    ipa: /sʲwɐˈtɪnʲɐ/
+    translation: shrine / sanctuary
+    pos: noun
+    gender: f
+    note: сакральне місце
+  - lemma: монастир
+    ipa: /monɐsˈtɪr/
+    translation: monastery
+    pos: noun
+    gender: m
+    note: релігійна громада та комплекс споруд
+  - lemma: єпископ
+    ipa: /jepˈiskop/
+    translation: bishop
+    pos: noun
+    gender: m
+    note: вищий духовний чин
+  - lemma: грамота
+    ipa: /ˈɦrɑmotɐ/
+    translation: charter / literacy
+    pos: noun
+    gender: f
+    note: здатність читати та писати
+  - lemma: карбування
+    ipa: /kɐrˈbuʋɐnʲːɐ/
+    translation: minting / coining
+    pos: noun
+    gender: n
+    note: виготовлення монет
+  - lemma: златник
+    ipa: /ˈzlɑtnɪk/
+    translation: zlatnyk (gold coin)
+    pos: noun
+    gender: m
+    note: перша золота монета Русі
+  - lemma: срібник
+    ipa: /ˈsrʲibnɪk/
+    translation: sribnyk (silver coin)
+    pos: noun
+    gender: m
+    note: перша срібна монета Русі
+  - lemma: легітимність
+    ipa: /leɦʲiˈtɪmnʲisʲtʲ/
+    translation: legitimacy
+    pos: noun
+    gender: f
+    note: законність влади
+  - lemma: централізація
+    ipa: /t͡sɛntrɐlʲiˈzɑt͡sʲijɐ/
+    translation: centralization
+    pos: noun
+    gender: f
+    note: зосередження влади в центрі
+  - lemma: тризуб
+    ipa: /ˈtrɪzub/
+    translation: trident
+    pos: noun
+    gender: m
+    note: Державний Герб України
+  - lemma: фундамент
+    ipa: /funˈdɑment/
+    translation: foundation / basis
+    pos: noun
+    gender: m
+    note: основа будівлі або держави
+  - lemma: місіонер
+    ipa: /mʲisʲioˈnɛr/
+    translation: missionary
+    pos: noun
+    gender: m
+    note: проповідник релігії
+  - lemma: саркофаг
+    ipa: /sɐrkoˈfɑɦ/
+    translation: sarcophagus
+    pos: noun
+    gender: m
+    note: кам'яна труна
+  - lemma: билина
+    ipa: /ˈbɪlɪnɐ/
+    translation: bylina (heroic epic)
+    pos: noun
+    gender: f
+    note: давньоруська епічна пісня

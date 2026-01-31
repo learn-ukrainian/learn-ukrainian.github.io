@@ -17,3 +17,10 @@ build:
   last_modified: '2026-01-26'
 phase: B2.3a [Українська історія]
 id: b2-hist-032
+activity_hints:
+- type: reading
+  title: Умови життя селян в Речі Посполитій
+- type: essay-response
+  prompt: Порівняйте становище української шляхти та селянства в Речі Посполитій
+- type: true-false
+  topic: Процеси полонізації та культурного спротиву

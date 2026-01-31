@@ -1,16 +1,17 @@
 # Checkpoint - First Contact
 
-## Огляд
+## Overview
 
-**Вітаємо!** /vʲiˈtɑjemɔ/ You've completed nine modules of Ukrainian. Now let's check: **can you DO the skills?**
+Congratulations! You have reached your first Checkpoint in the Ukrainian language journey. Over the last nine modules, you have built a solid foundation, moving from the mysterious symbols of the Cyrillic alphabet to ordering food in a cafe and describing your daily life. This module is designed to help you consolidate everything you've learned and verify that you are ready to move on to the next phase: The Cases.
 
-This checkpoint reviews five core abilities from Modules 1-9:
+In this Checkpoint, we will review:
+1. **The Cyrillic Code**: Mastering the sounds and letters.
+2. **Gender and Agreement**: Identifying masculine, feminine, and neuter nouns.
+3. **The Living Verb**: Conjugating in the Present Tense (First and Second groups).
+4. **Questions and Negation**: Building real conversations.
+5. **Practical Survival**: Navigating greetings and food.
 
-1. **Reading Cyrillic** - Recognizing all 33 letters and sound patterns.
-2. **Identifying Gender** - Determining noun gender by endings.
-3. **Conjugating Verbs** - Basic present tense for -ати and -ити verbs.
-4. **Asking Questions** - Using essential question words (хто, що, де, як).
-5. **Ordering Food** - Basic survival at a Ukrainian Café.
+Take your time with the exercises. If you find a particular skill difficult, don't hesitate to go back and review the corresponding module. Mastery at this stage will make everything that follows much easier! Let's get started.
 
 ---
 

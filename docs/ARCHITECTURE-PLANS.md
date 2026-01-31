@@ -219,17 +219,18 @@ modules:
 .venv/bin/python scripts/extract_plans.py --validate b1
 ```
 
-### Update Status
+### Status Generation
+
+Status is tracked per-module in JSON cache files at `{level}/status/{slug}.json`, created automatically by `audit_module.py`.
 
 ```bash
-# Update all modules in a level
-.venv/bin/python scripts/update_status.py b1
+# Generate human-readable status report from cache
+.venv/bin/python scripts/generate_level_status.py b2-hist
+# Or use npm shortcut:
+npm run status:b2-hist
 
-# Initialize status file from scratch
-.venv/bin/python scripts/update_status.py --init b1
-
-# Update all levels
-.venv/bin/python scripts/update_status.py all
+# Generate for all levels
+npm run status:all
 ```
 
 ## Schemas
@@ -251,6 +252,6 @@ The three-layer architecture was implemented in January 2026 to:
 
 1. Created `schemas/level-status.schema.json`
 2. Created `scripts/extract_plans.py` to extract plans from meta
-3. Created `scripts/update_status.py` to generate status files
+3. Created per-module JSON status cache (`{level}/status/{slug}.json`)
 4. Extracted 736 module plans across all levels
-5. Generated status files for all 10 levels
+5. Replaced level-wide YAML status with per-module JSON cache (Jan 2026)
