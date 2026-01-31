@@ -63,14 +63,14 @@ phases:
 
   - id: B1.8
     name: "Media Skills"
-    modules: [87, 89]
-    focus: "News reading, podcasts, phone conversations"
+    modules: [87, 88]
+    focus: "News reading, podcasts/interviews"
 
   - id: B1.9
     name: "Communication Skills"
-    modules: [90, 99]
-    focus: "Written communication (email, letters, social media), oral skills (debates, summarizing)"
-    checkpoint: 99  # B1 Final Exam
+    modules: [89, 92]
+    focus: "Communication channels, presentations, feedback/negotiation"
+    checkpoint: 92  # B1 Final Exam
 
 grammar_scope:
   - Verbal aspect (full mastery)
@@ -86,5 +86,7 @@ notes: |
   metalanguage bridge at start.
 
   Grammar checkpoints at M15, M25, M34, M41, M51.
-  Final assessment at M99 (B1 Final Exam).
+  Final assessment at M92 (B1 Final Exam).
   Phases B1.5-B1.9 focus on vocabulary, culture, and practical skills.
+
+  92 modules total (reduced from 99 in 2026-01 restructuring).
