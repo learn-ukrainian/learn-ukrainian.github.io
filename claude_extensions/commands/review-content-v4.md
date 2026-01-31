@@ -77,8 +77,10 @@ Verify all linguistic claims:
 - **Aspectual pairs**: Both verbs must share the same core meaning, differing only in aspect
   - ✅ казати/сказати (say/said)
   - ✅ читати/прочитати (read/finished reading)
+  - ✅ іти/піти (go/went)
   - ❌ говорити/сказати (speak vs say — different meanings)
   - ❌ шукати/знайти (search vs find — different meanings)
+  - ❌ іти/прийти (go vs arrive — different meanings)
 - **Case rules**: Verify examples match stated rules
 - **Verb conjugations**: Check all forms are correct
 
