@@ -1,13 +1,13 @@
-# Review-Content-Scoring Prompt v4.1 (Deep Review)
+# Review-Content-Scoring Prompt v4.2 (Deep Review + Dimensions)
 
 ```yaml
 ---
 name: review-content-v4
 description: Deep content review with thorough linguistic verification
-version: '4.1'
+version: '4.2'
 category: quality
 dependencies: audit_module.py
-changelog: v4.1 - Deep review first, scoring second. No shortcuts.
+changelog: v4.2 - Restored 12 dimensions as post-review checklist
 ---
 ```
 
@@ -25,7 +25,7 @@ Before you write ANY report or score, you MUST:
 4. **Check every linguistic claim** (grammar rules, aspectual pairs, etc.) is accurate
 5. **Identify real issues** — not template categories
 
-**If you skip this, the review is worthless.**
+**If you skip this, the review is worthless. Scores mean nothing without thorough reading.**
 
 ---
 
@@ -160,9 +160,56 @@ As you read, note every issue you find. Be specific:
 
 ---
 
-## STEP 6: WRITE REPORT
+## STEP 6: SCORE DIMENSIONS (Based on Deep Review)
 
-**Only after completing deep review**, write the report.
+**Only after completing Steps 1-5**, score each dimension based on what you actually found.
+
+### The 12 Dimensions
+
+| # | Dimension | What to Assess | Auto-fail Threshold |
+|---|-----------|----------------|---------------------|
+| 1 | **Experience Quality** | Does it feel like a good lesson? Warm, clear, engaging? | <7 |
+| 2 | **Coherence** | Logical flow, transitions, progressive difficulty | <7 |
+| 3 | **Relevance** | Aligned with module goals, curriculum plan | <7 |
+| 4 | **Educational** | Clear explanations, useful examples, scaffolded | <7 |
+| 5 | **Language** | Ukrainian quality, no Russianisms, natural phrasing | <8 |
+| 6 | **Pedagogy** | Teaching approach appropriate for level | <7 |
+| 7 | **Immersion** | Ukrainian-to-English ratio appropriate for level | <6 |
+| 8 | **Activities** | Quality, density, variety, correctness of items | <7 |
+| 9 | **Richness** | Examples, cultural references, memorable hooks | <6 |
+| 10 | **Humanity** | Teacher voice, warmth, encouragement | <6 |
+| 11 | **LLM Fingerprint** | Authentic writing vs AI patterns/clichés | <7 |
+| 12 | **Linguistic Accuracy** | Factual correctness of grammar rules, examples | <9 |
+
+### Scoring Rules
+
+- **9-10**: Excellent, no issues found in this dimension
+- **7-8**: Good, minor issues found
+- **5-6**: Needs work, multiple issues
+- **<5**: Serious problems, major rewrite needed
+
+**IMPORTANT:** Scores must reflect what you actually found during deep review. If you found 3 grammar errors, Language cannot be 9. If activities had wrong answers, Activities cannot be 8.
+
+### Experience Quality by Tier
+
+- **Tier 1 (A1/A2)**: Lesson Quality — warm tutoring, quick wins, not overwhelming
+- **Tier 2 (B1/B2)**: Teaching Quality — effective learning, clear progression
+- **Tier 3 (Seminar)**: Lecture Quality — engaging narrative, intellectual depth
+- **Tier 4 (C1/C2)**: Learning Quality — nuance, sophistication, mastery
+
+### Overall Score
+
+```
+Overall = (Experience × 1.5 + Coherence × 1.0 + Relevance × 1.0 + Educational × 1.2 +
+          Language × 1.1 + Pedagogy × 1.2 + Immersion × 0.8 + Activities × 1.3 +
+          Richness × 0.9 + Humanity × 0.8 + LLM × 1.1 + Linguistic_Accuracy × 1.5) / 13.4
+```
+
+**Pass threshold: 8.5+ overall, no dimension below its auto-fail threshold**
+
+---
+
+## STEP 7: WRITE REPORT
 
 ### Save Location
 ```
@@ -175,16 +222,37 @@ curriculum/l2-uk-en/{level}/review/{slug}-review.md
 # Review: {Module Title}
 
 **Level:** {level} | **Module:** {num}
+**Overall Score:** {X.X}/10
 **Status:** ✅ PASS / ❌ FAIL
 **Reviewed:** {date}
 
+## Scores Breakdown
+
+| Dimension | Score | Notes |
+|-----------|-------|-------|
+| Experience Quality | X/10 | {what you found} |
+| Coherence | X/10 | {what you found} |
+| Relevance | X/10 | {what you found} |
+| Educational | X/10 | {what you found} |
+| Language | X/10 | {what you found} |
+| Pedagogy | X/10 | {what you found} |
+| Immersion | X/10 | {what you found} |
+| Activities | X/10 | {what you found} |
+| Richness | X/10 | {what you found} |
+| Humanity | X/10 | {what you found} |
+| LLM Fingerprint | X/10 | {what you found} |
+| Linguistic Accuracy | X/10 | {what you found} |
+
 ## Issues Found and Fixed
 
-{List each issue with location, problem, and fix applied}
+### Issue 1: {Category}
+**Location:** Line X / Activity Y, Item Z
+**Original:** {text}
+**Problem:** {why it's wrong}
+**Fix:** {what you changed}
+**Status:** ✅ Fixed / ⏳ Manual
 
-## Issues Requiring Manual Review
-
-{Any issues you couldn't fix automatically}
+{Repeat for each issue}
 
 ## Verification Summary
 
@@ -196,14 +264,12 @@ curriculum/l2-uk-en/{level}/review/{slug}-review.md
 
 ## Recommendation
 
-{PASS/FAIL with brief explanation}
+{✅ PASS / ❌ FAIL} — {brief explanation linking to specific findings}
 ```
-
-**Note:** The old 12-dimension scoring system is deprecated. Focus on finding and fixing real issues, not filling out score tables.
 
 ---
 
-## STEP 7: RUN AUDIT
+## STEP 8: RUN AUDIT
 
 After fixes, verify the module still passes technical audit:
 
@@ -239,8 +305,6 @@ For level-specific expectations, read the appropriate tier file:
 | B1, B2 Core | `claude_extensions/commands/review-tiers/tier-2-core.md` |
 | B2-HIST, C1-BIO, LIT | `claude_extensions/commands/review-tiers/tier-3-seminar.md` |
 | C1, C2 | `claude_extensions/commands/review-tiers/tier-4-advanced.md` |
-
-These provide additional context on tone, pacing, and level-appropriate complexity. But the core requirement remains: **read everything, verify everything, fix everything.**
 
 ---
 
