@@ -29,6 +29,16 @@ content_outline:
   points:
   - Buying products in specific quantities at a market
 word_target: 1000
+activity_hints:
+- type: quiz
+  focus: Accusative with numerals (animate vs inanimate)
+  items: 8
+- type: fill-in
+  focus: Dative with numerals
+  items: 8
+- type: true-false
+  focus: Numeral case rules
+  items: 8
 focus: grammar
 pedagogy: PPP
 objectives:
@@ -36,6 +46,8 @@ objectives:
 - Learner can identify agreement zones for compound numbers
 - Learner can use numerals in shopping contexts
 - Learner can count years and age
+- Learner can use numerals in accusative (animate vs inanimate)
+- Learner can use numerals in dative case
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Numerals

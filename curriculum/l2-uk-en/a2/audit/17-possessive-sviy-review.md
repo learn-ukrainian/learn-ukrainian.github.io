@@ -1,12 +1,10 @@
 # Audit Report: M17 — 17-possessive-sviy.md
-
-**Level:** A2 | **Module:** M17 | **Phase:** A2 | **Pedagogy:** PPP | **Target:** 1000
+**Level:** A2 | **Module:** M17 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-26 22:26:12
+**Generated:** 2026-01-31 15:41:41
 
 ## Configuration
-
 **Type:** A2-grammar
 **Word Target:** 1000 words
 **Activities:** 10-14 required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Свій vs Його | 10 | 8 | ✅ |
@@ -42,7 +39,6 @@
 - Low density activities: 0
 
 ## Gates
-
 - **Words:** ✅ 1100/1000 (raw: 1263)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
@@ -60,7 +56,6 @@
 - **Naturalness:** ✅ 8/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

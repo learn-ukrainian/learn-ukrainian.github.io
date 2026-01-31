@@ -483,3 +483,183 @@
     {тридцять|тридцяти|тридцятьом|тридцятьма} років. А університет вони закінчили
     сорок один {рік|роки|років|роком} тому.
   instruction: Заповніть пропуски, обравши правильні слова.
+- type: quiz
+  title: Accusative with Numerals
+  items:
+  - question: "Я бачу ___ (3 books) на великому столі біля вікна."
+    options:
+    - text: три книги
+      correct: true
+    - text: трьох книг
+      correct: false
+    - text: три книг
+      correct: false
+    - text: трьом книгам
+      correct: false
+    explanation: "Inanimate objects in accusative = nominative form (три книги)"
+  - question: "Учитель бачить ___ (2 students) у класі біля дошки."
+    options:
+    - text: двох студентів
+      correct: true
+    - text: два студенти
+      correct: false
+    - text: двом студентам
+      correct: false
+    - text: два студента
+      correct: false
+    explanation: "Animate objects in accusative = genitive form (двох студентів)"
+  - question: "Вона купила ___ (5 apples) на ринку для пирога."
+    options:
+    - text: п'ять яблук
+      correct: true
+    - text: п'ятьох яблук
+      correct: false
+    - text: п'ять яблука
+      correct: false
+    - text: п'ятьом яблукам
+      correct: false
+    explanation: "Inanimate, Zone 3: п'ять яблук (Genitive Plural)"
+  - question: "Ми зустріли ___ (4 friends) у кафе після роботи."
+    options:
+    - text: чотирьох друзів
+      correct: true
+    - text: чотири друзі
+      correct: false
+    - text: чотирьом друзям
+      correct: false
+    - text: чотири друзів
+      correct: false
+    explanation: "Animate in accusative uses genitive forms (чотирьох друзів)"
+  - question: "Він замовив ___ (3 coffees) для себе і колег."
+    options:
+    - text: три кави
+      correct: true
+    - text: трьох кав
+      correct: false
+    - text: три каву
+      correct: false
+    - text: трьом кавам
+      correct: false
+    explanation: "Inanimate in accusative = nominative (три кави)"
+  - question: "Вона запросила ___ (2 girlfriends) на свій день народження."
+    options:
+    - text: двох подруг
+      correct: true
+    - text: дві подруги
+      correct: false
+    - text: двом подругам
+      correct: false
+    - text: дві подруг
+      correct: false
+    explanation: "Animate feminine in accusative = genitive (двох подруг)"
+  - question: "Я взяв ___ (1 pencil) зі столу для нотаток."
+    options:
+    - text: один олівець
+      correct: true
+    - text: одного олівця
+      correct: false
+    - text: одному олівцю
+      correct: false
+    - text: одним олівцем
+      correct: false
+    explanation: "Inanimate masculine in accusative = nominative (один олівець)"
+  - question: "Вони побачили ___ (5 children) у парку біля фонтана."
+    options:
+    - text: п'ятьох дітей
+      correct: true
+    - text: п'ять дітей
+      correct: false
+    - text: п'ятьом дітям
+      correct: false
+    - text: п'ять діти
+      correct: false
+    explanation: "Animate in accusative uses genitive forms (п'ятьох дітей)"
+  instruction: "Оберіть правильну форму числівника з іменником у знахідному відмінку."
+- type: fill-in
+  title: Dative with Numerals
+  items:
+  - sentence: Я дав книги ___ студентам. (2)
+    answer: двом
+    options:
+    - двом
+    - два
+    - двох
+    - двома
+  - sentence: Вона написала листи ___ друзям. (3)
+    answer: трьом
+    options:
+    - трьом
+    - три
+    - трьох
+    - трьома
+  - sentence: Ми допомогли ___ людям. (5)
+    answer: п'ятьом
+    options:
+    - п'ятьом
+    - п'ять
+    - п'ятьох
+    - п'ятьма
+  - sentence: Вчитель пояснив правило ___ учням. (4)
+    answer: чотирьом
+    options:
+    - чотирьом
+    - чотири
+    - чотирьох
+    - чотирма
+  - sentence: Я купив подарунки ___ дітям. (6)
+    answer: шістьом
+    options:
+    - шістьом
+    - шість
+    - шістьох
+    - шістьма
+  - sentence: Він подякував ___ колегам. (7)
+    answer: сімом
+    options:
+    - сімом
+    - сім
+    - сімох
+    - сімома
+  - sentence: Ми надіслали запрошення ___ гостям. (10)
+    answer: десятьом
+    options:
+    - десятьом
+    - десять
+    - десятьох
+    - десятьма
+  - sentence: Вона розповіла історію ___ сестрам. (2)
+    answer: двом
+    options:
+    - двом
+    - дві
+    - двох
+    - двома
+  instruction: "Оберіть правильну форму числівника у давальному відмінку."
+- type: true-false
+  title: Numeral Case Rules
+  items:
+  - statement: "In accusative, inanimate nouns with numerals use the same form as nominative."
+    correct: true
+    explanation: "Correct! Inanimate accusative = nominative (три книги = три книги)"
+  - statement: "In accusative, animate nouns with numerals use genitive forms."
+    correct: true
+    explanation: "Correct! Animate accusative = genitive (двох студентів, not два студенти)"
+  - statement: "The numeral 'два' in dative case is 'двом'."
+    correct: true
+    explanation: "Correct! два → двом (dative)"
+  - statement: "The numeral 'п'ять' in dative case is 'п'ять'."
+    correct: false
+    explanation: "Incorrect! п'ять → п'ятьом (dative)"
+  - statement: "When counting people in accusative, we use the same forms as nominative."
+    correct: false
+    explanation: "Incorrect! People are animate, so accusative = genitive forms"
+  - statement: "The phrase 'Я бачу три книги' is grammatically correct."
+    correct: true
+    explanation: "Correct! Books are inanimate, so accusative = nominative (три книги)"
+  - statement: "The phrase 'Я бачу два студенти' is grammatically correct."
+    correct: false
+    explanation: "Incorrect! Students are animate, so we need genitive: двох студентів"
+  - statement: "Numerals 2-4 in dative end in '-ом' (двом, трьом, чотирьом)."
+    correct: true
+    explanation: "Correct! двом, трьом, чотирьом are the dative forms"
+  instruction: "Визначте, чи твердження правильне."

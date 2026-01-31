@@ -2,7 +2,7 @@
 **Level:** A2 | **Module:** M21 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 21:12:43
+**Generated:** 2026-01-31 15:45:04
 
 ## Configuration
 **Type:** A2-grammar
@@ -11,6 +11,7 @@
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
 **Priority Types:** error-correction, fill-in, unjumble
+**Required Types:** fill-in, quiz, true-false
 **Engagement:** ≥4 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
@@ -29,18 +30,22 @@
 | 8 | match-up | Noun Forms | 10 | 8 | ✅ |
 | 9 | cloze | The Modern Bookstore | 12 | 12 | ✅ |
 | 10 | cloze | Age Expressions | 12 | 12 | ✅ |
+| 11 | quiz | Accusative with Numerals | 8 | 8 | ✅ |
+| 12 | fill-in | Dative with Numerals | 8 | 8 | ✅ |
+| 13 | true-false | Numeral Case Rules | 8 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 10 (target: 10-14) ✅
-- Unique types: 7 (minimum: 4) ✅
+- Total activities: 13 (target: 10-14) ✅
+- Unique types: 8 (minimum: 4) ✅
 - Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
+- Required types used: 3/3 (fill-in, quiz, true-false) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ✅ 1577/1000 (raw: 1772)
-- **Activities:** ✅ 10/10
+- **Activities:** ✅ 13/10
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 7/4 types
+- **Unique_types:** ✅ 8/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio
