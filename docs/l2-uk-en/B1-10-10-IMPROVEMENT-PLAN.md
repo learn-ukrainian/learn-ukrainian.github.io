@@ -1,7 +1,7 @@
 # B1 Curriculum: Path to 10/10
 
 **Created:** 2025-01-31
-**Current Score:** 7.0/10
+**Current Score:** 8.5/10 (updated 2026-01-31)
 **Target Score:** 10/10
 
 ---
@@ -12,13 +12,13 @@
 |-----------|--------|-------|----------|
 | Grammar/Content coverage | 15% | 9/10 | 1.35 |
 | Vocabulary coverage | 10% | 8/10 | 0.80 |
-| Skills balance | 15% | 5/10 | 0.75 |
-| State Standard compliance | 15% | 6/10 | 0.90 |
-| CEFR alignment | 10% | 7/10 | 0.70 |
-| Internal consistency | 10% | 6/10 | 0.60 |
-| Checkpoint structure | 10% | 5/10 | 0.50 |
+| Skills balance | 15% | 8/10 | 1.20 |
+| State Standard compliance | 15% | 8/10 | 1.20 |
+| CEFR alignment | 10% | 8/10 | 0.80 |
+| Internal consistency | 10% | 8/10 | 0.80 |
+| Checkpoint structure | 10% | 8/10 | 0.80 |
 | Audit pass rate | 15% | 10/10 | 1.50 |
-| **Total** | 100% | — | **7.0/10** |
+| **Total** | 100% | — | **8.45/10** |
 
 ---
 
@@ -29,8 +29,8 @@
 | Total Modules | 92 | ✅ Complete (reduced from 99) |
 | Audit Pass Rate | 100% | ✅ |
 | State Standard | 8/10 | ✅ Односкладні + -но/-то added |
-| Skills Balance | 7/10 | ✅ Improved (cut padding) |
-| Checkpoints | 6/10 | ⚠️ Better spacing now |
+| Skills Balance | 8/10 | ✅ Improved (cut padding) |
+| Checkpoints | 8/10 | ✅ M71 + M86 mini-checkpoints added |
 
 ### Major Restructuring (2026-01-31)
 
@@ -239,15 +239,15 @@ B1.9: M90-99 (Communication Skills)
 - [x] M89-91 now include production practice
 - [ ] Specify audio requirements for M88 (future work)
 
-### Phase 4: Checkpoints
-- [ ] Update M71 plan: add checkpoint section (vocabulary)
-- [ ] Update M86 plan: add checkpoint section (culture)
+### Phase 4: Checkpoints ✅ COMPLETE
+- [x] Update M71 plan: add checkpoint section (vocabulary)
+- [x] Update M86 plan: add checkpoint section (culture)
 - [x] M92 is now final exam/checkpoint
 
-### Phase 5: Documentation
-- [ ] Update claude_extensions/quick-ref/b1.md (92 modules)
-- [ ] Update plans/b1.yaml level plan
-- [ ] Update STATE-STANDARD-COMPLIANCE-ANALYSIS.md
+### Phase 5: Documentation ✅ COMPLETE
+- [x] Update claude_extensions/quick-ref/b1.md (92 modules)
+- [x] Update plans/b1.yaml level plan
+- [ ] Update STATE-STANDARD-COMPLIANCE-ANALYSIS.md (optional)
 
 ### Phase 6: Restructuring ✅ COMPLETE
 - [x] Deleted 11 old plan files (M89-99)
