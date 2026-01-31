@@ -239,10 +239,10 @@ After implementing Phase 1:
 ## Implementation Checklist
 
 ### Phase 1: State Standard (Priority: Critical)
-- [ ] Update M50 plan: add односкладні речення section
-- [ ] Update M50 content: add односкладні речення
-- [ ] Update M47 plan: expand -но/-то coverage
-- [ ] Update M47 content: add -но/-то section
+- [x] Update M50 plan: add односкладні речення section ✅ Done (2026-01-31)
+- [x] Update M50 content: add односкладні речення ✅ Done (2026-01-31)
+- [x] Update M47 plan: expand -но/-то coverage ✅ Already comprehensive
+- [x] Update M47 content: add -но/-то section ✅ Already has full coverage
 
 ### Phase 2: Grammar (Priority: Low)
 - [ ] No action needed
@@ -270,10 +270,13 @@ After implementing Phase 1:
 - [ ] Update STATE-STANDARD-COMPLIANCE-ANALYSIS.md after Phase 1
 
 ### Phase 6: Overlap Clarification (Priority: Low)
-- [ ] Update M54 subtitle
-- [ ] Update M96 subtitle
-- [ ] Update M55 subtitle
-- [ ] Update M97 subtitle
+- [x] Update M54 subtitle ✅ Done (2026-01-31) — "Expressing Opinions — Vocabulary & Phrases"
+- [x] Update M96 subtitle ✅ Done (2026-01-31) — "Expressing Opinions — Conversation Practice"
+- [x] Update M55 subtitle ✅ Done (2026-01-31) — "Agreement & Disagreement — Vocabulary & Phrases"
+- [x] Update M97 subtitle ✅ Done (2026-01-31) — "Casual Debates — Argumentation Practice"
+- [x] Update M88 subtitle ✅ Done (2026-01-31) — "Interviews & Podcasts — Introduction to Listening"
+- [x] Update M94 subtitle ✅ Done (2026-01-31) — "Podcast Comprehension — Advanced Strategies & Note-Taking"
+- [x] Fix M96 slug mismatch ✅ Done (2026-01-31)
 
 ### Phase 7: Thematic Gaps (Priority: Low)
 - [ ] Expand M61 vocabulary (education)
