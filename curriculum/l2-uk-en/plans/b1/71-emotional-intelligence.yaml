@@ -34,12 +34,18 @@ content_outline:
   - Як приймати і давати фідбек
   - Слова для самоаналізу
 - section: "Підсумок — EQ у повсякденному житті"
-  words: 218
+  words: 150
   points:
   - Практичні поради для розвитку EQ
+- section: "Міні-чекпоінт: Лексика B1.5-B1.6"
+  words: 200
+  points:
+  - Самооцінка словникового запасу M52-71
+  - Тест на 20 ключових слів з абстрактної лексики
+  - Тест на 20 ключових слів з професійної/емоційної лексики
 - section: "Потрібно більше практики?"
   words: 109
-word_target: 1877
+word_target: 1900
 vocabulary_hints:
   required:
   - емоційний інтелект (emotional intelligence)
@@ -68,6 +74,9 @@ activity_hints:
 - type: quiz
   focus: Discuss EQ topics
   items: 10
+- type: checkpoint-vocab
+  focus: Test vocabulary from M52-71
+  items: 40
 focus: vocabulary
 pedagogy: TTT
 prerequisites:

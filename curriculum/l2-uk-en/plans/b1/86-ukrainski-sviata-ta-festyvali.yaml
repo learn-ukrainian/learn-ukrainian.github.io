@@ -31,12 +31,18 @@ content_outline:
   points:
   - Діалоги про свята та фестивалі
 - section: "Підсумок — Як святкують українці"
-  words: 124
+  words: 100
   points:
   - Як привітати українською
+- section: "Міні-чекпоінт: Культура B1.7"
+  words: 200
+  points:
+  - Самооцінка знань про сучасну Україну
+  - Тест на регіони (M72-75)
+  - Тест на культуру та спорт (M76-86)
 - section: "Потрібно більше практики?"
   words: 109
-word_target: 1864
+word_target: 1900
 vocabulary_hints:
   required:
   - свято (holiday)
@@ -65,6 +71,9 @@ activity_hints:
 - type: quiz
   focus: Compare cultural traditions
   items: 10
+- type: checkpoint-culture
+  focus: Test cultural knowledge from M72-86
+  items: 30
 focus: culture
 pedagogy: CBI
 prerequisites:
