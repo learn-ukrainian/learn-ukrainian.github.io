@@ -72,17 +72,9 @@ Check EVERY item:
 
 ### For Grammar Modules:
 
-Verify all linguistic claims:
+Verify all linguistic claims as a native speaker would. If a grammar rule is stated, check that the examples actually demonstrate it. If aspectual pairs are listed, verify both verbs share the same core meaning. If case rules are explained, confirm the examples follow them.
 
-- **Aspectual pairs**: Both verbs must share the same core meaning, differing only in aspect
-  - ✅ казати/сказати (say/said)
-  - ✅ читати/прочитати (read/finished reading)
-  - ✅ іти/піти (go/went)
-  - ❌ говорити/сказати (speak vs say — different meanings)
-  - ❌ шукати/знайти (search vs find — different meanings)
-  - ❌ іти/прийти (go vs arrive — different meanings)
-- **Case rules**: Verify examples match stated rules
-- **Verb conjugations**: Check all forms are correct
+Trust your knowledge of Ukrainian. If something looks wrong, it probably is.
 
 ---
 
