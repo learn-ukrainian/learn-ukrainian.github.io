@@ -47,44 +47,120 @@
 - **Grammar Preference**: "Declension Group" (structural) approach over simple ending rules.
 - **Goal**: Theory-first curriculum; Vibe app is a secondary practice tool.
 
-## Work Status (Migration Completed Jan 2026)
+## Work Status (Active: B2 History Rebuild)
 
 - **Architecture Migration (Epic #465)**: ✅ **COMPLETE**. All levels migrated to V2.0 structure.
-- **A1 (01-34)**: ✅ Migrated to V2.0. Status: **COMPLETE**.
-- **A2 (01-57)**: ✅ Migrated to V2.0. Status: **COMPLETE**.
-- **B1 (01-86)**: ✅ Migrated to V2.0. Status: **CONTENT DRAFTED**.
-- **B2 (01-145)**: ✅ Migrated to V2.0. Status: **PLANNED** (Content pending).
-- **C1 (01-182)**: ✅ Migrated to V2.0. Status: **PLANNED** (Content pending).
-- **C2 (01-100)**: ✅ Migrated to V2.0. Status: **PLANNED**.
-- **Tracks (HIST, BIO, LIT)**: ✅ Migrated to V2.0. Status: **PLANNED**.
+- **B2 History Rebuild (Epic #463)**: 🚧 **IN PROGRESS**.
+  - **Workflow**: "One-Shot Rebuild" (Diagnose -> Batch Rewrite -> Audit).
+  - **Status**: Tier 3 modules (M09, M13, M17) complete. Moving to HIST.1/HIST.2.
+- **A1 (01-34)**: ✅ **COMPLETE**. Audited & Verified.
+- **A2 (01-57)**: ✅ **COMPLETE**. Audited & Verified.
+- **B1 (01-86)**: ✅ **CONTENT DRAFTED**. Migration complete, pending deep review.
+- **B2 Core (01-145)**: 🗓️ **PLANNED**.
+- **C1 (01-182)**: 🗓️ **PLANNED**.
+- **C2 (01-100)**: 🗓️ **PLANNED**.
+- **Tracks (BIO, LIT)**: 🗓️ **PLANNED**.
 
 ## Critical Workflow Rules (Gemini)
 
 0. **Plan Immutability (CRITICAL)**: Plans in `plans/` are IMMUTABLE source of truth.
-   - **READ** plans to understand requirements (`content_outline`, `word_target`).
-   - **NEVER** modify plan files.
-   - **REPORT** if build cannot meet plan; do not lower targets yourself.
-1. **Meta is Build Config**: `meta/{slug}.yaml` stores mutable build data (`naturalness`, `timestamps`), NOT planning data.
-2. **Audit & Status**:
-   - Run `audit_module.py` to validate content and update the JSON status cache.
-   - Use `/module-status` or `/level-status` for instant status checks.
-3. **Use Mandatory Templates**: Every module MUST follow the structural guide in `docs/l2-uk-en/templates/`.
-4. **Read Specs First**: Always read the Plan (`plans/{level}/{slug}.yaml`) before generating.
-5. **Narrative Vocabulary**: Use "Passive Vocabulary" freely in narratives; restrict "Active Vocabulary" (drills) to the target list.
+1. **Meta is Build Config**: `meta/{slug}.yaml` stores mutable build data (`naturalness`, `timestamps`).
+2. **Audit & Status**: Always run `audit_module.py` and `npm run generate` before considering a task done.
+3. **Vital Status (Biographies)**: **CRITICAL**: Check if the subject is ALIVE.
+   - **Living**: Do NOT use "Legacy" or "Last Years". Use "Modern Period" or "Impact".
+   - **Deceased**: Standard biography headers apply.
+4. **Communication with Claude**: Use `scripts/gemini_bridge.py` (See "Inter-Agent Communication" section).
+5. **Batch Operations**: For large refactors, prefer creating disposable `fix_batch_*.py` scripts over manual editing.
 6. **Strict Header Hierarchy**: `# Summary`, `# Activities` (H1), `##` (H2).
 7. **Regenerate HTML**: Always regenerate HTML output immediately after fixing module markdown.
-8. **Decolonization & Patriotism (MANDATORY)**: Include Myth Buster, History Bite, and celebrate Ukrainian identity. Use "Prosecutor's Voice".
+8. **Decolonization & Patriotism (MANDATORY)**: Include Myth Buster, History Bite, and celebrate Ukrainian identity.
 9. **Issue Tracking**: Use GitHub Issues. Do not use `docs/issues/`.
-10. **Workflow/Command Loading**: Load from `claude_extensions/commands/`.
-11. **Virtual Environment**: Always use `.venv/bin/python`.
-12. **BROKEN TOOL AVOIDANCE**: Use `run_shell_command("rg ...")` instead of `search_file_content`.
-13. **Typography & JSX Safety**: ALWAYS use Ukrainian angular quotes `«...»`.
-14. **Seminar Pedagogy (RFC #409)**: `c1-bio`, `b2-hist`, `lit` require `reading`, `critical-analysis`, `essay-response` activities.
-16. **Definition of Done (CRITICAL)**: A module is NOT done until:
-    1. `audit_module.py` passes (✅).
-    2. `npm run generate` has been executed to update the website.
-    3. `status/{slug}.json` is updated.
-    **NEVER** stop at audit pass. ALWAYS run generation.
+10. **Virtual Environment**: Always use `.venv/bin/python`.
+11. **BROKEN TOOL AVOIDANCE**: Use `run_shell_command("rg ...")` instead of `search_file_content`.
+12. **Typography**: ALWAYS use Ukrainian angular quotes `«...»`.
+
+## Inter-Agent Communication (Claude <-> Gemini)
+
+### Architecture
+All communication goes through SQLite Event Bus at `.mcp/servers/message-broker/messages.db`
+
+**Session tracking:** The `sessions` table stores CLI session IDs per task for multi-turn conversations with full context.
+
+### How to Send Messages to Claude
+
+```bash
+# Send a query (ask Claude a question)
+.venv/bin/python scripts/gemini_bridge.py send "Your question here" --type query --task-id your-task
+
+# Send a response (answer Claude's question)
+.venv/bin/python scripts/gemini_bridge.py send "Your answer" --type response --task-id task-id
+
+# Send a handoff (transfer task with context)
+.venv/bin/python scripts/gemini_bridge.py send "Task context here" --type handoff --task-id task-id
+
+# Send with attached data file
+.venv/bin/python scripts/gemini_bridge.py send "Message" --type handoff --data path/to/file.yaml --task-id task-id
+```
+
+### How to INVOKE Claude (Headless) - PREFERRED METHOD
+
+**Use `ask-claude` for one-step communication - sends AND invokes Claude automatically:**
+
+```bash
+# ONE COMMAND: Send message + invoke Claude (auto-resumes session if exists)
+.venv/bin/python scripts/gemini_bridge.py ask-claude "Your question or request" --task-id my-task
+
+# With message type
+.venv/bin/python scripts/gemini_bridge.py ask-claude "Review this code" --task-id code-review --type request
+
+# Force new session (ignore existing session for task)
+.venv/bin/python scripts/gemini_bridge.py ask-claude "Start fresh analysis" --task-id my-task --new-session
+```
+
+**Session behavior:**
+- First call on a task: Creates new Claude session, stores session ID in DB
+- Subsequent calls on same task: Auto-resumes with `--resume <session_id>`
+- Claude maintains full conversation context across calls
+- Claude's response goes to your inbox (check with `inbox` command)
+
+### How to Check for Messages from Claude
+
+```bash
+# Check inbox (DO THIS AT START OF EVERY SESSION)
+.venv/bin/python scripts/gemini_bridge.py inbox
+
+# Read specific message
+.venv/bin/python scripts/gemini_bridge.py read <message_id>
+
+# Get full conversation
+.venv/bin/python scripts/gemini_bridge.py conversation <task_id>
+
+# Acknowledge a message
+.venv/bin/python scripts/gemini_bridge.py ack <message_id>
+```
+
+### Message Types
+| Type | When to Use |
+|------|-------------|
+| `query` | Ask Claude a question |
+| `response` | Answer Claude's question |
+| `request` | Request Claude to do work |
+| `handoff` | Transfer task with full context |
+| `context` | Share state/decisions |
+| `feedback` | Comment on Claude's work |
+
+### When to Contact Claude
+- Need clarification on requirements
+- Hit a blocker and need help
+- Finished a task and need review
+- Want to discuss an approach
+- Have a question about the codebase
+
+### Important
+- **Use `process-claude` for seamless invocation** - Claude runs headlessly and responds
+- **Always use task_id** - enables session tracking for multi-turn conversations
+- **Check inbox at start of session** - Claude may have left messages
+- **Sessions are per-task** - same task_id = same conversation context
 
 ## File Structure Reference (V2.0)
 

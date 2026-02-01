@@ -32,13 +32,53 @@
 
 **ALWAYS** use `.venv/bin/python`, **NEVER** `python3` or `python` directly.
 ```bash
-.venv/bin/python scripts/audit_module.py {path}  # Correct
+scripts/audit_module.sh {path}                    # Correct - auto-saves log
+.venv/bin/python scripts/audit_module.py {path}  # Direct call (no log save)
 python3 scripts/audit_module.py {path}           # WRONG - missing deps
 ```
+
+**Python Environment:**
+- Uses **pyenv** with Python 3.12.8 (see `.python-version`)
+- Compiled with `--enable-loadable-sqlite-extensions` for sqlite-vec support
+- venv created from pyenv Python (not Homebrew Python)
+- If recreating venv: `rm -rf .venv && ~/.pyenv/versions/3.12.8/bin/python -m venv .venv`
 
 ### 3. Use Modern CLI Tools
 
 Prefer fast tools: `rg` (grep), `fd` (find), `bat` (cat), `sd` (sed), `yq` (yaml), `jq` (json).
+
+### 3a. Terminal Emulator (Ghostty)
+
+**[Ghostty](https://ghostty.org/)** is a fast, GPU-accelerated terminal with native UI and zero-config setup.
+
+**Key Benefits for This Workflow:**
+- **GPU Acceleration**: Smooth rendering for long audit outputs and logs
+- **Native macOS UI**: Better system integration (Quick Look, Force Touch, window state recovery)
+- **Zero Configuration**: Works perfectly out-of-box with sensible defaults
+- **Split Windows**: Run audit in one pane while editing in another (⌘+D horizontal, ⌘+Shift+D vertical)
+- **Tab Auto-Naming**: Tabs auto-name based on recent commands (e.g., "audit_module.sh M15")
+- **Nerd Fonts Built-in**: Starship prompts and CLI tools work without setup
+- **Terminal Inspector**: Real-time debugging tool for terminal activity
+
+**Optional Configuration** (if desired):
+```bash
+# Config location: ~/.config/ghostty/config
+# View all defaults: ghostty +show-config --default --docs | less
+
+# Example config (optional):
+theme = dark:Moonkai Pro,light:Catppuccin Latte
+font-family = JetBrains Mono
+```
+
+**Productivity Tips:**
+- Use Vim-style keybindings: Create trigger sequences like `ctrl+a>o` for tab overview
+- Tab search: When managing multiple modules, use searchable tab overview
+- Built-in themes: 20+ pre-installed (no external searching needed)
+
+**Resources:**
+- [Ghostty Documentation](https://ghostty.org/docs)
+- [Feature Overview](https://itsfoss.com/ghostty-terminal-features/)
+- [GitHub Repository](https://github.com/ghostty-org/ghostty)
 
 ### 4. Fix Source, Not Symptoms
 
@@ -52,11 +92,10 @@ When issues occur: fix documentation/tools **first**, then validate with manual 
 
 ### 6. External LLM Access
 
-**No direct API keys** - use MCP server for Gemini access.
+**No direct API keys** - use gemini-cli for external validation.
 - gemini-cli installed with Google AI Pro subscription
-- MCP server: `.mcp/servers/ukrainian-validator/server.py`
-- Provides `validate_ukrainian` tool for grammar checks
-- Python scripts can call same MCP server via `mcp` client library
+- Call directly via Bash when needed for grammar validation
+- Python scripts can also invoke gemini-cli via subprocess
 - See issue #412 for content naturalness detection extension
 
 </critical>
@@ -85,8 +124,8 @@ When issues occur: fix documentation/tools **first**, then validate with manual 
 ## Quick Commands
 
 ```bash
-# Audit module
-.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/{level}/{file}.md
+# Audit module (saves log automatically)
+scripts/audit_module.sh curriculum/l2-uk-en/{level}/{file}.md
 
 # Validate plans vs config.py (RUN BEFORE GENERATING CONTENT)
 .venv/bin/python scripts/validate_plan_config.py {level}
@@ -170,12 +209,294 @@ See `docs/ACTIVITY-YAML-REFERENCE.md` for all activity types.
 
 </critical>
 
+### Interview Protocol (Specification Before Building)
+
+**Reduce rework through comprehensive upfront questioning.**
+
+**When to use `/interview` skill:**
+
+✅ **Required for:**
+- Complex features (>30 min work)
+- Unclear requirements
+- Multiple valid approaches
+- Broad requests ("improve X", "add Y")
+- New module types or workflows
+
+❌ **Skip for:**
+- Trivial fixes (< 5 min)
+- Crystal-clear specifications
+- Simple bug fixes
+- User says "just do it"
+
+**Interview Process (60-question framework)**:
+
+1. **Phase 1: Understand the Goal** (10-15 questions)
+   - What are we building and why?
+   - Who benefits?
+   - What does success/failure look like?
+   - Scope and boundaries?
+
+2. **Phase 2: Technical Requirements** (15-20 questions)
+   - Functional requirements (what it does)
+   - Non-functional requirements (quality, performance)
+   - Constraints (technical, time, resources)
+
+3. **Phase 3: Preferences & Alternatives** (10-15 questions)
+   - Design preferences
+   - Approaches to avoid
+   - Alternatives considered
+   - Examples and anti-patterns
+
+4. **Phase 4: Success Criteria** (5-10 questions)
+   - How we verify completion
+   - Acceptance criteria
+   - Follow-up plans
+
+**Output**: Complete specification document + recommendation (Proceed/Clarify/Revise/Block)
+
+**Benefits**:
+- Build once instead of iterating 5 times
+- Aligned expectations upfront
+- Documented decisions
+- Learn specification skills together
+
+**Example**:
+```
+/interview Create integrated checkpoint activities for B1 grammar
+
+[40-60 questions about scope, requirements, examples, success criteria]
+
+→ Complete specification
+→ Get approval
+→ Build with confidence
+```
+
+**Time Investment**: 10-20 min interview vs. hours of rework
+
+---
+
+### Enhanced Prompting Patterns
+
+**Get better output through better prompts. Learn these patterns.**
+
+#### Pattern 1: Self-Review
+
+**Instead of accepting first draft:**
+```
+"Review your own work on M15:
+1. Does it match the plan outline exactly?
+2. Are there any sections that feel thin or robotic?
+3. Are all Ukrainian sentences natural (no calques)?
+4. Would a Ukrainian teacher approve this?
+5. What would make it pedagogically stronger?"
+```
+
+**Why it works:** I catch my own mistakes before you have to point them out.
+
+#### Pattern 2: Elegant Solutions
+
+**When first attempt is functional but mediocre:**
+```
+"That's functional, but let's make it pedagogically excellent.
+
+Current issue: The examples feel disconnected from real life.
+
+Make it better:
+- Use authentic scenarios Ukrainian B1 learners face
+- Add cultural context where appropriate
+- Make transitions smoother between examples
+- Ensure engaging progression"
+```
+
+**Why it works:** Specific direction > vague "make it better".
+
+#### Pattern 3: Upfront Specifications
+
+**Before I start generating:**
+```
+"Before you write M20, confirm you've read:
+1. curriculum/l2-uk-en/plans/b1/motion-approaching-departing.yaml
+2. curriculum/l2-uk-en/b1/meta/motion-approaching-departing.yaml
+3. claude_extensions/quick-ref/B1.md
+4. docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md
+
+Tell me:
+- Word target?
+- Key grammar focus?
+- Required activity types?
+- Any special considerations?"
+```
+
+**Why it works:** Forces me to load context before generating, prevents waste.
+
+#### Pattern 4: Constraints Upfront
+
+**Define limits and priorities clearly:**
+```
+"Generate B1 M25 checkpoint with these constraints:
+
+MUST:
+- Test modules 16-24 (all motion verbs)
+- 3000 words minimum
+- Use TTT approach for checkpoints
+- All activities must be checkpoint-style (testing, not teaching)
+
+MUST NOT:
+- Introduce new grammar (test only)
+- Use vocabulary outside M16-24 range
+- Include teaching explanations (this tests, doesn't teach)
+
+Priority: Comprehensive testing > engagement > word count"
+```
+
+**Why it works:** Clear boundaries = less back-and-forth.
+
+#### Pattern 5: Comparative Examples
+
+**Show what you want vs. what you don't:**
+```
+"M18 feel too robotic. Here's an example:
+
+❌ Current (robotic):
+'Тепер ми розглянемо дієслово "переходити"...'
+
+✅ Better (natural):
+'Уявіть: ви стоїте на одному боці вулиці. Щоб потрапити на другий бік, ви...'
+
+Apply this pattern: start with scenario, then introduce grammar.
+Fix M18 using this approach."
+```
+
+**Why it works:** Concrete examples > abstract instructions.
+
+#### Pattern 6: Explain Your Reasoning
+
+**Ask me to explain decisions:**
+```
+"Explain why you structured M12 aspect pairs this way:
+- Why this grouping?
+- Why this sequence?
+- What's the pedagogical rationale?
+- Are there alternatives we should consider?"
+```
+
+**Why it works:** You learn the methodology, catch issues I might miss.
+
+#### Pattern 7: Iterative Refinement
+
+**Build in stages with checkpoints:**
+```
+"Generate M30 outline only (no content yet).
+
+Include:
+- All sections from plan
+- Word allocation per section
+- Key points to cover in each
+
+Wait for my approval before writing content."
+```
+
+**Why it works:** Catch structural issues before investing in full content.
+
+#### Pattern 8: Reference Previous Success
+
+**Point to what worked:**
+```
+"M87 and M88 passed with high scores. Use those as templates for M89.
+
+Specifically:
+- Same engagement level
+- Similar activity density
+- Natural Ukrainian like M87
+- Cultural references like M88"
+```
+
+**Why it works:** Concrete benchmarks > vague quality standards.
+
+---
+
+## Inter-Agent Communication (Claude <-> Gemini)
+
+**Gemini is your colleague.** You can communicate via a shared SQLite message queue.
+
+> **CHECK INBOX AT SESSION START!**
+> ```python
+> mcp__message-broker__check_inbox(for_llm="claude")
+> ```
+> Gemini may have sent you messages. Don't wait for the user to tell you - check proactively!
+
+### How to Contact Gemini (PREFERRED: One-Step)
+
+```bash
+# ONE COMMAND: Send message + invoke Gemini automatically
+Bash('.venv/bin/python scripts/gemini_bridge.py ask-gemini "Your message" --task-id your-task')
+
+# Then check inbox for response
+mcp__message-broker__receive_messages(for_llm="claude", unread_only=True)
+```
+
+**Session tracking:** Same task-id = same conversation context across calls.
+
+### Alternative: Two-Step Method
+
+```python
+# 1. Send message via MCP
+mcp__message-broker__send_message(
+    to="gemini",
+    from_llm="claude",
+    content="Your message",
+    message_type="query",  # query, request, handoff, context, feedback
+    task_id="your-task-id"  # REQUIRED for session tracking
+)
+
+# 2. Trigger processing via Bash
+Bash(".venv/bin/python scripts/gemini_bridge.py process <msg_id>")
+
+# 3. Read response
+mcp__message-broker__receive_messages(for_llm="claude")
+```
+
+### Message Types
+
+| Type | When to Use |
+|------|-------------|
+| `query` | Ask Gemini a question |
+| `request` | Request Gemini to do work |
+| `handoff` | Transfer task with full context |
+| `context` | Share state/decisions |
+| `feedback` | Comment on Gemini's work |
+
+### Check for Messages from Gemini
+
+```python
+# Quick check
+mcp__message-broker__check_inbox(for_llm="claude")
+
+# Get unread messages
+mcp__message-broker__receive_messages(for_llm="claude", unread_only=True)
+```
+
+### When to Contact Gemini
+
+- **Ukrainian content writing** - Gemini excels at natural Ukrainian
+- **Code logic review** - Use Gemini Pro for review
+- **Second opinion** - Cross-review improves quality
+- **Parallel work** - Gemini can work on tasks while you do other things
+
+### Message Archive
+
+View all communication: `http://localhost:5055` (run `scripts/message_viewer.py`)
+
+Database: `.mcp/servers/message-broker/messages.db`
+
 ---
 
 ## Documentation Index
 
 | Topic | Location |
 |-------|----------|
+| **Developer guide (human)** | `docs/DEVELOPER-GUIDE.md` ⭐ |
+| **Claude-Gemini cooperation** | `docs/CLAUDE-GEMINI-COOPERATION.md` ⭐ NEW |
 | **Module plans (source)** | `curriculum/l2-uk-en/plans/{level}/{slug}.yaml` ⭐ |
 | **Module status (cache)** | `curriculum/l2-uk-en/{level}/status/{slug}.json` ⭐ |
 | **Level status (human)** | `docs/{LEVEL}-STATUS.md` (auto-generated) |
@@ -203,3 +524,178 @@ Previous failures (Dec 2024) stemmed from ignoring documented workflows. Key les
 - **Fix source first** - Update docs/tools before manual fixes
 
 **Following instructions > Being "helpful"**
+
+---
+
+## Lessons Learned
+
+**This section documents recurring issues and patterns to avoid.**
+
+### Module Generation
+
+❌ **DON'T:**
+- Generate content before reading plan file
+- Add vocabulary not in the plan ("helpful" additions)
+- Write from memory or general knowledge
+- Skip reading meta, quick-ref, or templates
+- Create activities below minimum item counts
+- Ignore outline structure from plan
+
+✅ **DO:**
+- Always read plan → meta → quick-ref → templates → generate
+- Use ONLY vocabulary from the plan
+- Follow outline structure exactly (all subsections required)
+- Meet word count targets (95%+ minimum)
+- Generate activities meeting richness guidelines
+- Verify every Ukrainian sentence is natural
+
+### Common Module Failures
+
+**#1 Issue: Outline Compliance** (69/92 B1 modules failing)
+- **Problem**: Missing subsections from plan outline
+- **Cause**: Not reading plan carefully, or skipping subsections
+- **Fix**: Read plan.content_outline, create EVERY subsection listed
+- **Prevention**: Check outline compliance before declaring "done"
+
+**#2 Issue: Word Count Shortfalls**
+- **Problem**: Modules at 1500-2500 words vs 3000 target
+- **Cause**: Insufficient detail, examples, or practice sections
+- **Fix**: Expand explanations, add more examples, develop practice sections
+- **Prevention**: Run word count during generation, not just at end
+
+**#3 Issue: Activity Gaps**
+- **Problem**: Missing required activity types
+- **Cause**: Not reading activity requirements or richness guidelines
+- **Fix**: Check MODULE-RICHNESS-GUIDELINES-v2.md for minimum counts
+- **Prevention**: Generate activities for EACH major concept taught
+
+**#4 Issue: Checkpoint Confusion**
+- **Problem**: Checkpoint modules missing checkpoint-specific activities
+- **Cause**: Treating checkpoints like regular modules
+- **Fix**: Checkpoints test ALL prior modules in phase, not just one module
+- **Prevention**: Read checkpoint template, use TTT approach
+
+### Quality Standards
+
+**Ukrainian Language:**
+- Every sentence must sound natural, not translated
+- No Russianisms (кушать→їсти, приймати участь→брати участь)
+- No calques (робити сенс→мати сенс, брати місце→відбуватися)
+- Case agreement, verb aspects, gender agreement must be perfect
+- **Standard**: This is for a nation's education - accept nothing less than native quality
+
+**Pedagogical Approach:**
+- Scaffolding: simple → complex
+- Context before rules
+- Examples before practice
+- Warm, encouraging tone (not robotic)
+- Cultural references appropriate to level
+- **Mission**: We're fighting for Ukrainian language and culture - quality matters
+
+### Process Discipline
+
+**Before generating ANY content:**
+1. Read plan file completely
+2. Read meta file for pedagogy notes
+3. Read level quick-ref for constraints
+4. Read template for required sections
+5. Confirm vocabulary list
+
+**After generating content:**
+1. Self-review: Does it match the plan outline?
+2. Word count: Meet target?
+3. Activities: All required types?
+4. Audit: Run audit_module.sh
+5. Fix issues until audit passes
+
+**Never:**
+- Declare "done" without running audit
+- Ignore audit failures ("close enough")
+- Skip reading source files
+- Add unapproved vocabulary
+- Compromise on Ukrainian language quality
+
+### Workflow Optimizations
+
+**What works:**
+- Reading all source files in parallel (plan, meta, quick-ref, template)
+- Generating outline first, then filling sections
+- Running audit during generation (not just at end)
+- Fixing issues immediately (not batching)
+- Using exact vocabulary from plan (prevents scope creep)
+
+**What doesn't work:**
+- Generating from memory
+- "Quick drafts" that need complete rewrites
+- Batching fixes (lose context between modules)
+- Approximating word counts ("around 3000")
+- Skipping self-review before audit
+
+### Bug Fix Protocol
+
+**How to give me issues for efficient fixes:**
+
+❌ **Don't say:**
+```
+"M09 has outline compliance errors"
+"The module failed audit"
+"Fix the word count issue"
+```
+
+✅ **Do say:**
+```
+"Fix M09. Here's the full audit log:
+
+[paste curriculum/l2-uk-en/b1/audit/aspect-future-audit.log]
+
+Fix all issues:
+1. Read plan file first to see what's missing
+2. Add missing subsections from outline
+3. Expand content to meet word target (3000)
+4. Re-audit until pass
+
+Use the plan as source of truth."
+```
+
+**Why this works:**
+- I have exact errors (no guessing)
+- I know what "success" looks like
+- I have clear steps
+- I can work autonomously until audit passes
+
+**For multiple module fixes:**
+```
+"Fix B1 modules 9-12. For each:
+1. Read audit log from curriculum/l2-uk-en/b1/audit/{slug}-audit.log
+2. Read plan file
+3. Fix outline compliance (add missing subsections)
+4. Expand to meet word targets
+5. Re-audit
+6. Continue to next module
+
+Stop only when all 4 modules pass audit."
+```
+
+**Self-review before asking me:**
+
+Before saying "module failed", always provide:
+- ✅ Audit log (run `scripts/audit_module.sh {path}`)
+- ✅ What specifically failed (outline? word count? activities?)
+- ✅ What the target/goal is
+- ✅ Any constraints I should know
+
+**Batch fixing pattern:**
+```
+"Batch fix outline compliance for B1 modules 15-20.
+
+For each module:
+- Read plan outline
+- Compare to actual sections in .md
+- Add any missing subsections
+- Ensure each subsection has content
+- Re-audit
+
+Work systematically, don't skip any."
+```
+
+---
