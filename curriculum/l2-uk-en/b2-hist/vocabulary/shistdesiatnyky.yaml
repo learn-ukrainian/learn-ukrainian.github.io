@@ -1,4 +1,141 @@
 module: shistdesiatnyky
 level: B2-HIST
 version: '2.0'
-items: []
+items:
+- lemma: відлига
+  ipa: /ʋidlˈɪɦa/
+  translation: thaw
+  pos: noun
+  gender: f
+- lemma: шістдесятник
+  ipa: /ʃistdɛsˈjatnɪk/
+  translation: sixtiers (generation of the 60s)
+  pos: noun
+- lemma: тоталітаризм
+  ipa: /tɔtalitarˈɪzm/
+  translation: totalitarianism
+  pos: noun
+  gender: m
+- lemma: цензура
+  ipa: /t͡sɛnzˈura/
+  translation: censorship
+  pos: noun
+  gender: f
+- lemma: дисидент
+  ipa: /dɪsɪdˈɛnt/
+  translation: dissident
+  pos: noun
+  gender: m
+- lemma: самвидав
+  ipa: /samʋɪdˈaʋ/
+  translation: samizdat (self-publishing)
+  pos: noun
+  gender: m
+- lemma: русифікація
+  ipa: /rusɪfikˈat͡sija/
+  translation: russification
+  pos: noun
+  gender: f
+- lemma: репресія
+  ipa: /rɛprˈɛsija/
+  translation: repressions
+  pos: noun
+  gender: f
+- lemma: національна свідомість
+  ipa: /nat͡siɔnˈalʲna sʋidɔmistʲ/
+  translation: national consciousness
+  pos: noun
+  gender: f
+- lemma: конформізм
+  ipa: /kɔnfɔrmˈizm/
+  translation: conformity
+  pos: noun
+  gender: m
+- lemma: інтелігенція
+  ipa: /intɛliɦˈɛnt͡sija/
+  translation: intelligentsia
+  pos: noun
+  gender: f
+- lemma: реабілітація
+  ipa: /rɛabilitˈat͡sija/
+  translation: rehabilitation
+  pos: noun
+  gender: f
+- lemma: нонконформізм
+  ipa: /nɔnkɔnfɔrmˈizm/
+  translation: nonconformity
+  pos: noun
+  gender: m
+- lemma: соцреалізм
+  ipa: /sɔt͡srɛalˈizm/
+  translation: socialist realism
+  pos: noun
+  gender: m
+- lemma: автентичність
+  ipa: /aʋtɛntˈɪt͡ʃnistʲ/
+  translation: authenticity
+  pos: noun
+  gender: f
+- lemma: залізна завіса
+  ipa: /zalˈizna zaʋisa/
+  translation: iron curtain
+  pos: noun
+  gender: f
+- lemma: громадянська мужність
+  ipa: /ɦrɔmadˈjansʲka muʒnistʲ/
+  translation: civil courage
+  pos: noun
+  gender: f
+- lemma: культ особа
+  ipa: /kulʲt ɔsˈɔba/
+  translation: cult of personality
+  pos: noun
+- lemma: деколонізація
+  ipa: /dɛkɔlɔnizˈat͡sija/
+  translation: decolonization
+  pos: noun
+  gender: f
+- lemma: манкурт
+  ipa: /mankˈurt/
+  translation: mankurt (a person without memory/identity)
+  pos: noun
+  gender: m
+- lemma: лінгвоцид
+  ipa: /linɦʋɔt͡sˈɪd/
+  translation: linguicide
+  pos: noun
+  gender: m
+- lemma: покіс
+  ipa: /pɔkˈis/
+  translation: mowing (metaphor for a wave of arrests)
+  pos: noun
+  gender: m
+- lemma: застінок
+  ipa: /zastinɔk/
+  translation: dungeons/torture chambers
+  pos: noun
+- lemma: соборність
+  ipa: /sɔbˈɔrnistʲ/
+  translation: unity/sobornist
+  pos: noun
+  gender: f
+- lemma: суб'єктність
+  ipa: /subˈjɛktnistʲ/
+  translation: agency/subjectivity
+  pos: noun
+  gender: f
+- lemma: безкомпромісність
+  ipa: /bɛzkɔmprɔmˈisnistʲ/
+  translation: uncompromising nature
+  pos: noun
+  gender: f
+- lemma: спадкоємність
+  ipa: /spadkɔˈjɛmnistʲ/
+  translation: continuity/succession
+  pos: noun
+  gender: f
+- lemma: уніфікація
+  ipa: /unifikˈat͡sija/
+  translation: unification/standardization
+  pos: noun
+  gender: f

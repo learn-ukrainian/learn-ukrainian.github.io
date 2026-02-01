@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M35 | **Phase:** HIST.4 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-31 12:56:02
+**Generated:** 2026-02-01 14:54:05
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** true-false
+**Required Types:** critical-analysis
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -30,7 +30,7 @@
 - Total activities: 5 (target: 3-9) ✅
 - Unique types: 5 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 1/1 (true-false) ✅
+- Required types used: 1/1 (critical-analysis) ✅
 - Low density activities: 0
 
 ## Gates

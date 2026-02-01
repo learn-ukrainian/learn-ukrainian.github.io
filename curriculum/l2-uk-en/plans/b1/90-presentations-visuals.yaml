@@ -78,12 +78,12 @@ activity_hints:
 - type: quiz
   focus: Choose correct phrase for situation
   items: 15
-- type: describe
-  focus: Describe charts and graphs in Ukrainian
-  items: 6
-- type: monologue
-  focus: 3-minute presentation practice
-  items: 3
+- type: cloze
+  focus: Fill in presentation and summarizing phrases
+  items: 12
+- type: unjumble
+  focus: Reorder presentation sentences
+  items: 8
 focus: practical
 pedagogy: PPP
 prerequisites:

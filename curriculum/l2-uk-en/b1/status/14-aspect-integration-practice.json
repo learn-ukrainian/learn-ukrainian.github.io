@@ -2,14 +2,14 @@
   "module": "14-aspect-integration-practice",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T16:25:49.134791Z",
+  "last_audit": "2026-02-01T17:52:15.019586Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.349983Z",
-    "meta": "2026-01-26T15:44:41.482111Z",
+    "md": "2026-02-01T16:16:40.761941Z",
+    "meta": "2026-01-29T07:39:04.638441Z",
     "activities": "2026-01-11T10:24:11.988847Z",
     "vocabulary": "2026-01-25T16:02:18.169216Z",
-    "plan": "2026-01-27T16:01:14.091162Z"
+    "plan": "2026-01-29T07:45:40.305086Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "1800/1500 (raw: 2172)"
+      "message": "2991/3000 (raw: 3544) (9 short)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
+    "pass_count": 4,
     "fail_count": 0
   }
 }

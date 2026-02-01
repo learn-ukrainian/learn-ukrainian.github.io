@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M86 | **Phase:** HIST.8 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-31 13:24:15
+**Generated:** 2026-02-01 14:54:35
 
 ## Configuration
 **Type:** B2-history
@@ -42,7 +42,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 20 (soft target)
+- **Vocab:** ✅ 24/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

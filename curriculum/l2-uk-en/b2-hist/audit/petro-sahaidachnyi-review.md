@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M45 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 5200
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-31 12:56:09
+**Generated:** 2026-02-01 14:54:11
 
 ## Configuration
 **Type:** B2-history

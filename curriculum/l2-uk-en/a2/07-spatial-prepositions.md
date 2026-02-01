@@ -2,20 +2,60 @@
 
 ## Introduction / Вступ
 
-Prepositions are small but mighty words that connect nouns to the rest of the sentence. In English, prepositions like «in,» «on,» «to,» and «from» are straightforward. But in Ukrainian, prepositions work hand-in-hand with grammatical cases — and some prepositions even change meaning depending on which case follows them! This is one of the most exciting parts of learning Ukrainian because it allows you to be extremely precise about where things are and where they are going. Mastering this is like unlocking a 3D map of the language.
+Привіт! Ready to navigate Ukraine like a local? Prepositions are small but mighty words that connect nouns to the rest of the sentence. In English, prepositions like «in,» «on,» «to,» and «from» are straightforward. But in Ukrainian, prepositions work hand-in-hand with grammatical cases — and some prepositions even change meaning depending on which case follows them! This is one of the most exciting parts of learning Ukrainian because it allows you to be extremely precise about where things are and where they are going. Mastering this is like unlocking a 3D map of the language.
 
 This module is your comprehensive guide to Ukrainian spatial prepositions. By the end, you'll understand how to combine prepositions with the correct cases to express location and motion accurately. Understanding these spatial relationships is the key to navigating any Ukrainian city, describing your home, or simply finding your keys! Whether you are asking for directions to the Maidan or explaining that your cat is under the sofa, these tiny words are your best allies.
 
-**Why this matters:** Incorrect preposition-case combinations are one of the most common errors learners make. Mastering these patterns will immediately make your Ukrainian sound more natural and precise. It's not just about the words; it's about the logic of space. Коли ви розумієте просторову логіку, мова стає логічною структурою, а не просто набором звуків. Це фундамент для вільного спілкування.
+**Що ви навчитеся:**
+- Відповідати на питання **Де?**, **Куди?**, **Звідки?** правильно
+- Обирати правильний відмінок для кожного прийменника
+- Орієнтуватися в українському місті як місцевий житель
+
+**Чому це важливо:** Неправильне поєднання прийменників і відмінків — одна з найпоширеніших помилок. Опанування цих шаблонів одразу зробить вашу українську мову природнішою і точнішою. Це не просто слова, це логіка простору. Коли ви розумієте просторову логіку, мова стає чіткою структурою, а не набором звуків. Це фундамент для вільного спілкування.
 
 ## Presentation / Презентація
 
 ### The Primary Logic: Motion vs. Location (Рух чи місце?)
 
+Найважливіша концепція — це різниця між "Де?" (**Where?**) і "Куди?" (**Where to?**). В українській мові прийменники змінюють відмінок залежно від цього розрізнення. Це геніальна особливість мови, яка запобігає двозначності.
+
 The most important concept to master is the difference between "Where?" (**Де?**) and "Where to?" (**Куди?**). In Ukrainian, several prepositions change the case they govern based on this distinction. This is a brilliant feature of the language that prevents ambiguity.
 
-1. **РУХ** (Motion / Куди?): We use the **Accusative case** (**знахідний відмінок**). This shows the target or destination of an action.
-2. **МІСЦЕ** (Location / Де?): We use either the **Locative** (**місцевий**) or **Instrumental** (**орудний**) case. This shows a static state of being.
+| Питання | Прийменник | Відмінок | Приклад |
+|---------|------------|----------|---------|
+| **Куди?** | в, на, під, за | Знахідний | Йду **в парк** |
+| **Куди?** | до | Родовий | Йду **до парку** |
+| **Де?** | в, на | Місцевий | Я **в парку** |
+| **Де?** | під, над, за, перед, між | Орудний | Під **столом** |
+| **Де?** | біля, коло, напроти | Родовий | Біля **парку** |
+| **Звідки?** | з, від | Родовий | Іду **з парку** |
+
+```mermaid
+flowchart TD
+    Q["❓ <b>What's the question?</b>"] --> Motion{"<b>Куди?</b><br/>(Where to?)"}
+    Q --> Location{"<b>Де?</b><br/>(Where?)"}
+    Q --> Origin{"<b>Звідки?</b><br/>(From where?)"}
+
+    Motion -->|"в / на"| Acc["<b>ACCUSATIVE</b><br/>Йду <b>в парк</b>"]
+    Motion -->|"до"| GenMove["<b>GENITIVE</b><br/>Йду <b>до парку</b>"]
+
+    Location -->|"в / на"| Loc["<b>LOCATIVE</b><br/>Я <b>в парку</b>"]
+    Location -->|"під / над / за<br/>перед / між"| Instr["<b>INSTRUMENTAL</b><br/><b>Під</b> столом"]
+    Location -->|"біля / коло<br/>напроти"| GenLoc["<b>GENITIVE</b><br/><b>Біля</b> парку"]
+
+    Origin -->|"з / від"| GenOrig["<b>GENITIVE</b><br/>Іду <b>з парку</b>"]
+
+    style Q fill:#fff,stroke:#333,color:#000
+    style Motion fill:#fff,stroke:#1565c0,color:#1565c0
+    style Location fill:#fff,stroke:#2e7d32,color:#2e7d32
+    style Origin fill:#fff,stroke:#c2185b,color:#c2185b
+    style Acc fill:#fff,stroke:#1565c0,color:#000
+    style Loc fill:#fff,stroke:#2e7d32,color:#000
+    style Instr fill:#fff,stroke:#ef6c00,color:#000
+    style GenMove fill:#fff,stroke:#c2185b,color:#000
+    style GenLoc fill:#fff,stroke:#c2185b,color:#000
+    style GenOrig fill:#fff,stroke:#c2185b,color:#000
+```
 
 | Прийменник | Рух                  | Місце                  |
 | :--------- | :------------------- | :--------------------- |
@@ -36,7 +76,16 @@ The Instrumental case is very versatile. Besides "means" and "roles," it is the 
 - **за** (behind) -> Сад знаходиться **за будинком**.
 - **між** (between) -> Дзеркало висить **між вікнами**.
 
-Ці прийменники завжди вимагають орудного відмінка, коли ми описуємо, де знаходиться предмет. Пам’ятайте про закінчення: **-ом / -ем** для чоловічого роду та **-ою / -ею** для жіночого. Наприклад: **перед школою**, **над містом**. Це дуже важливо для правильної вимови та письма. Використання орудного відмінка тут показує, що предмет знаходиться у певному просторовому контексті відносно іншого предмета.
+Ці прийменники завжди вимагають орудного відмінка, коли ми описуємо, де знаходиться предмет.
+
+| Рід | Закінчення | Приклад |
+|-----|------------|---------|
+| Чоловічий | **-ом** / **-ем** | під стол**ом**, перед учител**ем** |
+| Жіночий | **-ою** / **-ею** | за шаф**ою**, над земл**ею** |
+| Середній | **-ом** / **-ем** | над вікн**ом**, під мор**ем** |
+| Plural | **-ами** / **-ями** | між вікн**ами**, перед двер**има** |
+
+Note: Some nouns have special plural forms (двері → двер**има**, діти → діть**ми**).
 
 ### Genitive Prepositions (З родовим відмінком)
 
@@ -90,14 +139,19 @@ Choose the correct ending (Accusative for motion, Locative for location or state
 5. Він їде до (місто) -> **Він їде до міста.** (Direction / Gen)
 
 > [!important] **Always Check the Question!**
-> Before you choose an ending, ask yourself: **Де?** (Location) or **Куди?** (Direction). This simple check will save you from 90% of prepositional mistakes in Ukrainian. If there is movement involved, aim for the Accusative target!
+> Before you choose an ending, ask yourself: **Де?** (Location), **Куди?** (Direction), or **Звідки?** (Origin). Then check which preposition you need — the preposition determines the case, not just the question!
+> - Куди? + **в/на** → Accusative (Йду **в парк**)
+> - Куди? + **до** → Genitive (Йду **до парку**)
+> - Де? + **в/на** → Locative (Я **в парку**)
+> - Де? + **під/над/за** → Instrumental (Під **столом**)
+> - Звідки? + **з/від** → Genitive (Іду **з парку**)
 
 ## Dialogues / Діалоги
 
 ### Пошук дороги (Finding the way)
 
-**А:** Вибачте, де тут **біля** метро є банк? (Excuse me, is there a bank near the metro?)
-**Б:** Так, ідіть прямо **до** перехрестя, а потім поверніть **за** той великий будинок. (Yes, go straight to the intersection, and then turn behind that big building.)
+**А:** Вибачте, чи є тут банк **біля** метро? (Excuse me, is there a bank near the metro?)
+**Б:** Так, ідіть прямо **до** перехрестя, потім поверніть праворуч. Банк буде **за** рогом. (Yes, go straight to the intersection, then turn right. The bank will be around the corner.)
 **А:** Це далеко **від** парку? (Is it far from the park?)
 **Б:** Ні, це **напроти** аптеки, **між** магазином і кафе. (No, it's opposite the pharmacy, between the shop and the cafe.)
 **А:** Дякую! Це було дуже зрозуміло.
@@ -115,14 +169,15 @@ Choose the correct ending (Accusative for motion, Locative for location or state
 
 # Summary / Підсумок
 
-У цьому модулі ми розібрали основні принципи просторової орієнтації:
+**Вітаємо!** Тепер ви можете:
 
-- Різницю між рухом (**куди?**) та місцем (**де?**). (Difference between motion and location.)
-- Вживання прийменників з знахідним, місцевим, родовим та орудним відмінками. (Usage with Acc, Loc, Gen, and Instr cases.)
-- Чергування **у/в** для милозвучності. (Alternation of u/v for euphony.)
-- Основні просторові прийменники (**під, за, над, перед, між, до, з, біля, напроти, вздовж, навколо**).
+- ✅ Відповідати на **Де?** — використовуючи місцевий, орудний або родовий відмінок
+- ✅ Відповідати на **Куди?** — використовуючи знахідний (в/на) або родовий (до)
+- ✅ Відповідати на **Звідки?** — використовуючи родовий відмінок (з/від)
+- ✅ Застосовувати чергування **у/в** для милозвучності
+- ✅ Правильно обирати закінчення орудного відмінка для всіх родів
 
-Proximity and direction are fundamental to communication. By mastering these small words, you gain the power to describe the world around you with clarity, precision, and confidence.
+You've mastered one of the trickiest parts of Ukrainian grammar! These 12+ prepositions are your spatial toolkit. Whether you're asking for directions to the Maidan or describing where your cat is hiding, you now have the precision of a native speaker.
 
 ## Need More Practice?
 

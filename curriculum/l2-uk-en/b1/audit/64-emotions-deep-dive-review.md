@@ -1,12 +1,12 @@
 # Audit Report: M64 — 64-emotions-deep-dive.md
-**Level:** B1 | **Module:** M64 | **Phase:** B1.6 | **Pedagogy:** PPP | **Target:** 1500
+**Level:** B1 | **Module:** M64 | **Phase:** B1.6 | **Pedagogy:** PPP | **Target:** 1600
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 19:01:37
+**Generated:** 2026-02-01 17:52:43
 
 ## Configuration
 **Type:** B1-vocab
-**Word Target:** 1500 words
+**Word Target:** 1600 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -42,7 +42,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1694/1500 (raw: 2351)
+- **Words:** ✅ 1694/1600 (raw: 2351)
 - **Activities:** ✅ 13/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -55,28 +55,26 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.0% (target 85-100% (B1.5-6 Vocab))
-- **Richness:** ✅ 95% (grammar)
+- **Richness:** ✅ 99% (vocabulary)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 95% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 99% (minimum: 95%)
+**Module Type:** vocabulary
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 19 | 24 | 79% | 20% | 15.8% |
-| engagement | 13 | 5 | 100% | 15% | 15.0% |
-| dialogues | 13 | 4 | 100% | 15% | 15.0% |
-| variety | 0.99 | - | 99% | 10% | 9.9% |
+| collocations | 29 | 20 | 100% | 25% | 25.0% |
+| usage_examples | 19 | 15 | 100% | 20% | 20.0% |
+| engagement | 13 | 4 | 100% | 15% | 15.0% |
 | cultural | 4 | 3 | 100% | 10% | 10.0% |
-| realworld | 3 | 3 | 100% | 10% | 10.0% |
-| visual | 5 | 3 | 100% | 5% | 5.0% |
+| visual | 5 | 3 | 100% | 10% | 10.0% |
+| register_notes | 13 | 5 | 100% | 10% | 10.0% |
+| variety | 0.99 | - | 99% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 24 | 5 | 100% | 5% | 5.0% |
-| proverbs | 3 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **95.7%** |
+| **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

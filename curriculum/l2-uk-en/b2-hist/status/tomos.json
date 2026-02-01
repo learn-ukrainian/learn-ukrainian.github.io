@@ -2,35 +2,35 @@
   "module": "tomos",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-31T13:24:44.488320Z",
+  "last_audit": "2026-02-01T14:55:01.122899Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.347196Z",
+    "md": "2026-01-31T23:31:13.502830Z",
     "meta": "2026-01-29T07:38:18.735851Z",
-    "activities": "2026-01-27T15:34:55.017135Z",
-    "vocabulary": null,
+    "activities": "2026-01-31T23:15:35.738590Z",
+    "vocabulary": "2026-01-31T23:00:43.086129Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "1737/4000 (raw: 1915) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "4422/4000 (raw: 4482)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "4/3"
+      "message": "5/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 20 (soft target)"
+      "message": "20/20"
     },
     "naturalness": {
       "status": "pass",
@@ -39,13 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: critical-analysis, reading"
-    ],
-    "pass_count": 2,
-    "fail_count": 2
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

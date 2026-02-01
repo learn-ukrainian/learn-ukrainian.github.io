@@ -1,29 +1,68 @@
-module: b2-119
-title: "Шлях до незалежності"
-phase: "HIST.12"
-pedagogy: "CBI"
+module: b2-hist-119
+level: B2-HIST
+slug: shliakh-nezalezhnosti
+version: '2.0'
+id: b2-hist-119
+title: 'Шлях до незалежності'
+subtitle: 'The Path to Independence (1989-1991)'
+phase: HIST.11
+duration: 150
+transliteration: none
 word_target: 4000
-naturalness_score: 10
-content_hash: '0143228d7408612f2c507d27e1f26073'
-timestamps:
-  created: "2026-01-31T14:15:00Z"
-  updated: "2026-01-31T14:15:00Z"
+tags:
+- history
+- independence
+- revolution
+- rukh
+vocabulary_count: 25
 content_outline:
-  - "Вступ: Крах імперії"
-  - "Основні події: Шлях до незалежності"
-  - "Первинні джерела"
-  - "Деколонізаційний погляд"
-  - "Підсумок: Нова держава"
+- section: 'Вступ: Крах імперії'
+  words: 400
+- section: 'Читання'
+  words: 1200
+- section: '1991: Рік незалежності'
+  words: 1000
+- section: 'Первинні джерела'
+  words: 600
+- section: 'Деколонізаційний погляд'
+  words: 500
+- section: 'Підсумок: Нова держава'
+  words: 300
+objectives:
+- Учень може проаналізувати причини розпаду СРСР та роль України в цьому процесі
+- Учень може описати ключові події 1989-1991 років (Рух, Живий ланцюг, Революція на граніті)
+- Учень може пояснити значення Декларації про суверенітет та Акту про незалежність
+- Учень може аргументувати легітимність української незалежності через результати референдуму
+grammar:
+- Складнопідрядні речення з підрядними мети та причини
+- Офіційно-діловий стиль у документах
+- Часи дієслова для опису історичної хроніки
+vocabulary_hints:
+  required:
+  - суверенітет
+  - незалежність
+  - референдум
+  - путч
+  - декларація
+  - акт
+  recommended:
+  - перебудова
+  - гласність
+  - пробудження
+  - легітимність
 activity_hints:
-  reading:
-    - "Текст Акту про незалежність"
-  essay-response:
-    - "Референдум 1 грудня 1991 року"
-  critical-analysis:
-    - "Верифікація фактів: Факти про незалежність"
-activity_types:
-  - reading
-  - critical-analysis
-  - essay-response
-  - true-false
-  - comparative-study
+- type: reading
+  focus: 'Акт проголошення незалежності'
+- type: true-false
+  focus: 'Факти про шлях до незалежності'
+- type: comparative-study
+  focus: '1918 vs 1991'
+- type: critical-analysis
+  focus: 'Аналіз Декларації про суверенітет'
+- type: essay-response
+  focus: 'Роль народу у здобутті незалежності'
+naturalness:
+  score: 9
+  status: PASS
+build:
+  last_modified: '2026-01-31'

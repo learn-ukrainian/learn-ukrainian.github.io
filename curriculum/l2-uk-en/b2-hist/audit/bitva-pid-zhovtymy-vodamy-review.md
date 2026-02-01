@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M53 | **Phase:** HIST.6 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-31 12:53:42
+**Generated:** 2026-02-01 14:54:16
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** comparative-study, essay-response, reading, true-false
+**Required Types:** comparative-study, critical-analysis, essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -31,7 +31,7 @@
 - Total activities: 6 (target: 3-9) ✅
 - Unique types: 5 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 4/4 (comparative-study, essay-response, reading, true-false) ✅
+- Required types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates

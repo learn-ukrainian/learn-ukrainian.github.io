@@ -6,48 +6,52 @@ version: '1.0'
 title: Фінальний іспит B1
 subtitle: B1 Level Final Assessment
 content_outline:
+- section: Огляд
+  words: 55
+  points:
+  - Список навичок
 - section: Про іспит
-  words: 200
+  words: 130
   points:
-  - Структура фінального іспиту
-  - Як оцінювати результати
-  - Що означає готовність до B2
-- section: Частина 1 — Читання
-  words: 400
+  - Структура іспиту
+  - Оцінювання
+- section: "Навичка 1: Читання"
+  words: 455
   points:
-  - Текст 1: Новинна стаття (розуміння фактів)
-  - Текст 2: Особистий лист (розуміння намірів)
-  - Текст 3: Інструкція/оголошення (практичне читання)
-- section: Частина 2 — Аудіювання
-  words: 350
+  - Читання текстів
+- section: "Навичка 2: Аудіювання"
+  words: 300
   points:
-  - Аудіо 1: Телефонна розмова
-  - Аудіо 2: Фрагмент подкасту
-  - Аудіо 3: Оголошення / повідомлення
-- section: Частина 3 — Граматика та лексика
-  words: 400
+  - Аудіювання
+- section: "Навичка 3: Граматика — Вид дієслова"
+  words: 80
   points:
-  - Вид дієслова в контексті
-  - Дієслова руху з префіксами
+  - Вид дієслова
+- section: "Навичка 4: Дієслова руху"
+  words: 75
+  points:
+  - Дієслова руху
+- section: "Навичка 5: Складні речення"
+  words: 65
+  points:
   - Складні речення
-  - Лексика B1 рівня
+- section: "Навичка 6: Лексика B1"
+  words: 70
+  points:
+  - Лексика B1
 - section: Частина 4 — Письмо
-  words: 250
+  words: 165
   points:
-  - Завдання 1: Неформальний email (80-100 слів)
-  - Завдання 2: Формальний лист (100-120 слів)
+  - Письмові завдання
 - section: Частина 5 — Говоріння
-  words: 200
+  words: 125
   points:
-  - Монолог: Висловлення думки на тему
-  - Діалог: Обговорення ситуації
-  - Міні-презентація з візуальним матеріалом
+  - Усні завдання
 - section: Результати та рекомендації
-  words: 150
+  words: 75
   points:
-  - Як інтерпретувати результати
-  - Що робити далі (перехід до B2)
-word_target: 1950
+  - Таблиця результатів
+word_target: 1600
 vocabulary_hints:
   required:
   - іспит (exam)
@@ -66,21 +70,21 @@ vocabulary_hints:
   - рівень (level)
   - критерій (criterion)
 activity_hints:
-- type: reading-comprehension
-  focus: B1 level reading passages
-  items: 15
-- type: listening-comprehension
-  focus: B1 level audio comprehension
-  items: 12
+- type: quiz
+  focus: B1 level reading comprehension questions
+  items: 16
+- type: true-false
+  focus: B1 level comprehension verification
+  items: 16
 - type: cloze
   focus: Grammar and vocabulary in context
   items: 25
-- type: writing-task
-  focus: Email and formal letter
-  items: 2
-- type: speaking-prompt
-  focus: Monologue, dialogue, mini-presentation
-  items: 3
+- type: fill-in
+  focus: Grammar practice
+  items: 12
+- type: match-up
+  focus: Vocabulary matching
+  items: 10
 focus: checkpoint
 pedagogy: TTT
 prerequisites:

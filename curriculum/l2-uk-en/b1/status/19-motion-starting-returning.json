@@ -2,14 +2,14 @@
   "module": "19-motion-starting-returning",
   "level": "B1",
   "plan_version": "1.0",
-  "last_audit": "2026-01-27T16:25:50.815122Z",
+  "last_audit": "2026-02-01T17:52:17.842748Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.349998Z",
-    "meta": "2026-01-26T15:44:41.500886Z",
+    "meta": "2026-02-01T16:58:38.077626Z",
     "activities": "2026-01-24T21:33:18.433731Z",
     "vocabulary": "2026-01-25T18:00:40.197756Z",
-    "plan": "2026-01-27T16:01:39.152193Z"
+    "plan": "2026-01-29T07:45:40.322872Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "1720/1500 (raw: 2122)"
+      "message": "1720/1800 (raw: 2122) (80 short)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
+    "pass_count": 4,
     "fail_count": 0
   }
 }

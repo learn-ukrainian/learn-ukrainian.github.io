@@ -1,13 +1,28 @@
 module: b1-70
 level: B1
-slug: collocations-expressions
-version: '2.0'
+slug: 70-collocations-expressions
+version: '1.0'
 id: b1-70
 naturalness:
   score: 9
   status: PASS
-  justification: Essential for natural language production
 duration: 90
 transliteration: none
+tags:
+- vocab
+- collocations
+- expressions
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-01'
+word_target: 1550
+content_outline:
+- section: Вступ
+  words: 114
+- section: Вживання
+  words: 436
+- section: Читання
+  words: 229
+- section: Діалоги
+  words: 264
+- section: Лексика
+  words: 549

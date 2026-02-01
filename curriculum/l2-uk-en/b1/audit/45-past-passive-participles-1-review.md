@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M45 | **Phase:** B1.4a | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 18:08:35
+**Generated:** 2026-02-01 17:52:32
 
 ## Configuration
 **Type:** B1-grammar

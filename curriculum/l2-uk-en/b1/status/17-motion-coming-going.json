@@ -2,14 +2,14 @@
   "module": "17-motion-coming-going",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T16:25:50.144951Z",
+  "last_audit": "2026-02-01T17:52:16.736186Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.349972Z",
-    "meta": "2026-01-26T15:44:41.493503Z",
+    "meta": "2026-02-01T16:58:38.073805Z",
     "activities": "2026-01-11T10:24:12.074411Z",
     "vocabulary": "2026-01-25T18:00:40.161617Z",
-    "plan": "2026-01-27T16:01:37.928009Z"
+    "plan": "2026-01-29T07:45:40.316615Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "1742/1500 (raw: 2240)"
+      "message": "1742/1800 (raw: 2240) (58 short)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
+    "pass_count": 4,
     "fail_count": 0
   }
 }

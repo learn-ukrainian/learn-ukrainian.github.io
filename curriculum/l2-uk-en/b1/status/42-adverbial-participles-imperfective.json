@@ -2,14 +2,14 @@
   "module": "42-adverbial-participles-imperfective",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T18:08:33.832990Z",
+  "last_audit": "2026-02-01T17:52:31.066343Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.350112Z",
-    "meta": "2026-01-26T15:44:41.583102Z",
+    "meta": "2026-02-01T17:10:44.562605Z",
     "activities": "2026-01-11T10:24:12.802763Z",
     "vocabulary": "2026-01-25T18:00:40.398313Z",
-    "plan": "2026-01-27T18:05:08.956715Z"
+    "plan": "2026-01-29T07:45:40.396137Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "1705/1500 (raw: 2089)"
+      "message": "1705/1736 (raw: 2089) (31 short)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
+    "pass_count": 4,
     "fail_count": 0
   }
 }

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M115 | **Phase:** HIST.11 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-31 13:24:35
+**Generated:** 2026-02-01 14:54:52
 
 ## Configuration
 **Type:** B2-history
@@ -34,49 +34,49 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4297/4000 (raw: 4456)
+- **Words:** ✅ 4293/4000 (raw: 4366)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 10/5
+- **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.5% (target 90-100% (history))
-- **Richness:** ✅ 97% (history)
+- **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
+- **Richness:** ✅ 95% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 97% (minimum: 95%)
+**Score:** 95% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 15 | 3 | 100% | 24% | 23.8% |
-| engagement | 10 | 6 | 100% | 14% | 14.3% |
-| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
+| engagement | 6 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 18 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 3 | 4 | 75% | 10% | 7.1% |
-| visual | 11 | 4 | 100% | 10% | 9.5% |
+| cultural | 2 | 4 | 50% | 10% | 4.8% |
+| visual | 6 | 4 | 100% | 10% | 9.5% |
 | variety | 0.98 | - | 98% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 17 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **97.5%** |
+| questions | 27 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **95.1%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Українська Гельсінська група: Слово проти імперії** | ⚪️ | 110 | Skipped |
-| **Вступ: Гельсінські угоди — Троянський кінь для імперії** | ✅ | 442 | Included in Core |
-| **Створення УГГ (1976)** | ⚪️ | 929 | Skipped |
-| **Діяльність та репресії** | ⚪️ | 1459 | Skipped |
-| **Первинні джерела** | ✅ | 751 | Included in Core |
-| **Деколонізаційний погляд** | ✅ | 321 | Included in Core |
-| **Підсумок: Від УГГ до Руху** | ✅ | 285 | Included in Core |
+| **Intro/Narrative** | ✅ | 167 | Included in Core |
+| **Вступ: Гельсінські угоди — Троянський кінь для імперії** | ✅ | 817 | Included in Core |
+| **Створення УГГ (1976): Виклик системі** | ⚪️ | 948 | Skipped |
+| **Діяльність та репресії: Ціна правди** | ⚪️ | 958 | Skipped |
+| **Первинні джерела** | ✅ | 729 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 236 | Included in Core |
+| **Підсумок: Від УГГ до Руху** | ✅ | 229 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 209 | Skipped |

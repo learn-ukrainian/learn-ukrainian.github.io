@@ -1,12 +1,12 @@
 # Audit Report: M41 — 41-checkpoint-complex-sentences-2.md
-**Level:** B1 | **Module:** M41 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 1200
+**Level:** B1 | **Module:** M41 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 1803
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 18:08:32
+**Generated:** 2026-02-01 17:52:30
 
 ## Configuration
 **Type:** B1-checkpoint
-**Word Target:** 1200 words
+**Word Target:** 1803 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -43,7 +43,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2114/1200 (raw: 2310)
+- **Words:** ✅ 2114/1803 (raw: 2310)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -81,13 +81,13 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 142 | Included in Core |
 | **Огляд** | ⚪️ | 92 | Skipped |
-| **Skill 1: Допустові речення** | ⚪️ | 143 | Skipped |
-| **Skill 2: Причинові та наслідкові речення** | ⚪️ | 163 | Skipped |
-| **Skill 3: Часові речення** | ⚪️ | 176 | Skipped |
-| **Skill 4: Інтеграція типів підрядних речень** | ⚪️ | 163 | Skipped |
-| **Skill 5: Непряма мова — твердження** | ⚪️ | 137 | Skipped |
-| **Skill 6: Непряма мова — питання** | ⚪️ | 132 | Skipped |
-| **Skill 7: Непряма мова — накази та прохання** | ⚪️ | 131 | Skipped |
+| **Навичка 1: Допустові речення** | ⚪️ | 143 | Skipped |
+| **Навичка 2: Причинові та наслідкові речення** | ⚪️ | 163 | Skipped |
+| **Навичка 3: Часові речення** | ⚪️ | 176 | Skipped |
+| **Навичка 4: Інтеграція типів підрядних речень** | ⚪️ | 163 | Skipped |
+| **Навичка 5: Непряма мова — твердження** | ⚪️ | 137 | Skipped |
+| **Навичка 6: Непряма мова — питання** | ⚪️ | 132 | Skipped |
+| **Навичка 7: Непряма мова — накази та прохання** | ⚪️ | 131 | Skipped |
 | **Integration Challenge** | ⚪️ | 220 | Skipped |
 | **Практика** | ⚪️ | 293 | Skipped |
 | **Підсумок** | ✅ | 212 | Included in Core |

@@ -2,13 +2,13 @@
   "module": "shliakh-nezalezhnosti",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-31T13:57:06.092639Z",
+  "last_audit": "2026-02-01T14:54:55.214657Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-31T13:55:40.764421Z",
-    "meta": "2026-01-31T13:55:57.107338Z",
-    "activities": "2026-01-31T13:55:00.005986Z",
-    "vocabulary": "2026-01-31T13:38:46.938138Z",
+    "md": "2026-01-31T16:27:12.532405Z",
+    "meta": "2026-01-31T16:25:56.614764Z",
+    "activities": "2026-01-31T16:06:20.795330Z",
+    "vocabulary": "2026-01-31T16:06:37.385136Z",
     "plan": null
   },
   "gates": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "1140/4000 (raw: 1211) | pedagogy: 3 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "4345/4000 (raw: 4444)"
     },
     "activities": {
-      "status": "fail",
-      "violations": 1,
-      "message": "5/3 | density: 2 < 1"
+      "status": "pass",
+      "violations": 0,
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "pass",
@@ -33,17 +33,15 @@
       "message": "20/20"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "0/10 (PENDING) - Naturalness check required"
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors"
-    ],
-    "pass_count": 2,
-    "fail_count": 3
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

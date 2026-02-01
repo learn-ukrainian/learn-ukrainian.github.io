@@ -1,13 +1,28 @@
 module: b1-65
 level: B1
-slug: relationships
-version: '2.0'
+slug: 65-relationships
+version: '1.0'
 id: b1-65
 naturalness:
   score: 9
   status: PASS
-  justification: Essential for social and personal discourse
 duration: 90
 transliteration: none
+tags:
+- vocab
+- relationships
+- society
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-01'
+word_target: 1700
+content_outline:
+- section: Вступ
+  words: 96
+- section: Вживання
+  words: 342
+- section: Читання
+  words: 325
+- section: Діалоги
+  words: 265
+- section: Лексика
+  words: 690

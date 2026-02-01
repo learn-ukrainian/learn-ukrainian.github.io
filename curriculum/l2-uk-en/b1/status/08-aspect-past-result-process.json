@@ -2,14 +2,14 @@
   "module": "08-aspect-past-result-process",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T16:25:47.071975Z",
+  "last_audit": "2026-02-01T17:52:11.479599Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:33:45.469715Z",
-    "meta": "2026-01-27T15:24:52.421953Z",
+    "md": "2026-02-01T14:58:22.308138Z",
+    "meta": "2026-01-29T07:39:04.633534Z",
     "activities": "2026-01-27T14:28:30.316634Z",
     "vocabulary": "2026-01-27T15:28:48.185390Z",
-    "plan": "2026-01-27T12:02:43.997062Z"
+    "plan": "2026-01-29T07:45:40.284339Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2837/1500 (raw: 3463)"
+      "message": "3446/3000 (raw: 4028)"
     },
     "activities": {
       "status": "pass",

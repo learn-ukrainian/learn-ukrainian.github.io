@@ -1,13 +1,28 @@
 module: b1-61
 level: B1
-slug: professional-communication
-version: '2.0'
+slug: 61-professional-communication
+version: '1.0'
 id: b1-61
 naturalness:
   score: 9
   status: PASS
-  justification: Essential for workplace success
 duration: 90
 transliteration: none
+tags:
+- vocab
+- professional
+- business
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-01'
+word_target: 1900
+content_outline:
+- section: Вступ
+  words: 74
+- section: Вживання
+  words: 330
+- section: Читання
+  words: 219
+- section: Діалоги
+  words: 265
+- section: Лексика
+  words: 1107

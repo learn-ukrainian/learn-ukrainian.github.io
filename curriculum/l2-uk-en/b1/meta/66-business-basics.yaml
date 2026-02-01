@@ -1,13 +1,28 @@
 module: b1-66
 level: B1
-slug: business-basics
-version: '2.0'
+slug: 66-business-basics
+version: '1.0'
 id: b1-66
 naturalness:
   score: 9
   status: PASS
-  justification: Essential for professional contexts
 duration: 90
 transliteration: none
+tags:
+- vocab
+- business
+- work
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-01'
+word_target: 1600
+content_outline:
+- section: Вступ
+  words: 83
+- section: Вживання
+  words: 158
+- section: Читання
+  words: 236
+- section: Діалоги
+  words: 293
+- section: Лексика
+  words: 797

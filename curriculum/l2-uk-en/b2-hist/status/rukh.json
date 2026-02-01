@@ -2,13 +2,13 @@
   "module": "rukh",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-31T13:57:06.692665Z",
+  "last_audit": "2026-02-01T14:54:55.787906Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-31T13:56:47.164950Z",
-    "meta": "2026-01-31T13:57:02.335808Z",
-    "activities": "2026-01-31T13:55:00.636150Z",
-    "vocabulary": "2026-01-31T13:41:46.181807Z",
+    "md": "2026-01-31T16:48:36.581334Z",
+    "meta": "2026-01-31T16:27:48.766521Z",
+    "activities": "2026-01-31T16:30:37.921319Z",
+    "vocabulary": "2026-01-31T16:29:24.532671Z",
     "plan": null
   },
   "gates": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 3,
-      "message": "731/4000 (raw: 780) | pedagogy: 3 violations | richness: 94% < 95% min (history)"
+      "status": "pass",
+      "violations": 0,
+      "message": "4272/4000 (raw: 4343)"
     },
     "activities": {
-      "status": "fail",
-      "violations": 1,
-      "message": "5/3 | density: 2 < 1"
+      "status": "pass",
+      "violations": 0,
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "pass",
@@ -33,17 +33,15 @@
       "message": "20/20"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "0/10 (PENDING) - Naturalness check required"
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors"
-    ],
-    "pass_count": 2,
-    "fail_count": 3
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

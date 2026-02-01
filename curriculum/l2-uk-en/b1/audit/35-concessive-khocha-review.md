@@ -1,12 +1,12 @@
 # Audit Report: M35 — 35-concessive-khocha.md
-**Level:** B1 | **Module:** M35 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M35 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 1755
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 16:25:56
+**Generated:** 2026-02-01 17:52:26
 
 ## Configuration
 **Type:** B1-grammar
-**Word Target:** 1500 words
+**Word Target:** 1755 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -41,7 +41,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1727/1500 (raw: 2099)
+- **Words:** ⚠️ 1727/1755 (raw: 2099) (28 short)
 - **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types

@@ -268,7 +268,7 @@ curriculum/l2-uk-en/{level}/review/{slug}-review.md
 After fixes, verify the module still passes technical audit:
 
 ```bash
-.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/{level}/{slug}.md
+scripts/audit_module.sh curriculum/l2-uk-en/{level}/{slug}.md
 ```
 
 ---

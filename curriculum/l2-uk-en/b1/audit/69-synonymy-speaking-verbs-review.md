@@ -1,12 +1,12 @@
 # Audit Report: M69 — 69-synonymy-speaking-verbs.md
-**Level:** B1 | **Module:** M69 | **Phase:** B1.6 | **Pedagogy:** PPP | **Target:** 1500
+**Level:** B1 | **Module:** M69 | **Phase:** B1.6 | **Pedagogy:** PPP | **Target:** 1828
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 19:01:54
+**Generated:** 2026-02-01 17:52:46
 
 ## Configuration
 **Type:** B1-vocab
-**Word Target:** 1500 words
+**Word Target:** 1828 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -42,7 +42,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1745/1500 (raw: 2336)
+- **Words:** ⚠️ 1745/1828 (raw: 2336) (83 short)
 - **Activities:** ✅ 13/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -55,28 +55,26 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.8% (target 85-100% (B1.7-8 Ukraine))
-- **Richness:** ✅ 99% (grammar)
+- **Richness:** ✅ 99% (vocabulary)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
-**Module Type:** grammar
+**Module Type:** vocabulary
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 27 | 24 | 100% | 20% | 20.0% |
-| engagement | 17 | 5 | 100% | 15% | 15.0% |
-| dialogues | 14 | 4 | 100% | 15% | 15.0% |
-| variety | 0.96 | - | 96% | 10% | 9.6% |
+| collocations | 30 | 20 | 100% | 25% | 25.0% |
+| usage_examples | 27 | 15 | 100% | 20% | 20.0% |
+| engagement | 17 | 4 | 100% | 15% | 15.0% |
 | cultural | 4 | 3 | 100% | 10% | 10.0% |
-| realworld | 5 | 3 | 100% | 10% | 10.0% |
-| visual | 8 | 3 | 100% | 5% | 5.0% |
+| visual | 8 | 3 | 100% | 10% | 10.0% |
+| register_notes | 15 | 5 | 100% | 10% | 10.0% |
+| variety | 0.96 | - | 96% | 5% | 4.8% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 17 | 5 | 100% | 5% | 5.0% |
-| proverbs | 2 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.6%** |
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

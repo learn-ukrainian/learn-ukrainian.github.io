@@ -11,3 +11,13 @@ duration: 90
 transliteration: none
 build:
   last_modified: '2026-01-26'
+word_target: 1645
+content_outline:
+- section: Тест
+  words: 120
+- section: Граматика
+  words: 284
+- section: Поглиблення
+  words: 685
+- section: Практика
+  words: 189

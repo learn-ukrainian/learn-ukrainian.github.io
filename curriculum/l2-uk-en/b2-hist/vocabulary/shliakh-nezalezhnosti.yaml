@@ -1,80 +1,103 @@
-- word: незалежність (independence)
+module: b2-hist-119
+level: B2-HIST
+items:
+- lemma: незалежність
+  ipa: nezɑˈlɛʒnʲisʲtʲ
   translation: independence
-  ipa: "nezɑˈlɛʒnʲisʲtʲ"
-  context: "Акт проголошення незалежності України був ухвалений 24 серпня."
-- word: референдум (referendum)
+  pos: noun
+  gender: f
+- lemma: референдум
+  ipa: refeˈrɛndum
   translation: referendum
-  ipa: "refeˈrɛndum"
-  context: "Всеукраїнський референдум підтвердив вибір народу."
-- word: суверенітет (sovereignty)
+  pos: noun
+  gender: m
+- lemma: суверенітет
+  ipa: suvereniˈtɛt
   translation: sovereignty
-  ipa: "suvereniˈtɛt"
-  context: "Декларація про державний суверенітет стала першим кроком."
-- word: декларація (declaration)
+  pos: noun
+  gender: m
+- lemma: декларація
+  ipa: deklɑˈrɑt͡sʲijɑ
   translation: declaration
-  ipa: "deklɑˈrɑt͡sʲijɑ"
-  context: "Прийняття Декларації відбулося 16 липня 1990 року."
-- word: акт (act)
+  pos: noun
+  gender: f
+- lemma: акт
+  ipa: ɑkt
   translation: act (document)
-  ipa: "ɑkt"
-  context: "Акт проголошення незалежності зачитав Левко Лук'яненко."
-- word: проголошення (proclamation)
+  pos: noun
+  gender: m
+- lemma: проголошення
+  ipa: proɦoˈlɔʃenʲːɑ
   translation: proclamation
-  ipa: "proɦoˈlɔʃenʲːɑ"
-  context: "Проголошення незалежності змінило геополітичну карту Європи."
-- word: голосування (voting)
+  pos: noun
+  gender: n
+- lemma: голосування
+  ipa: holosuˈwɑnʲːɑ
   translation: voting
-  ipa: "holosuˈwɑnʲːɑ"
-  context: "Голосування було одностайним, комуністи теж підтримали Акт."
-- word: держава (state)
+  pos: noun
+  gender: n
+- lemma: держава
+  ipa: derˈʒɑvɑ
   translation: state (country)
-  ipa: "derˈʒɑvɑ"
-  context: "Україна відбулася як суверенна держава."
-- word: путч (coup)
+  pos: noun
+  gender: f
+- lemma: путч
+  ipa: put͡ʃ
   translation: coup (failed)
-  ipa: "put͡ʃ"
-  context: "Серпневий путч у Москві прискорив розпад СРСР."
-- word: розпад (dissolution/collapse)
+  pos: noun
+  gender: m
+- lemma: розпад
+  ipa: ˈrozpɑd
   translation: dissolution, collapse
-  ipa: "ˈrozpɑd"
-  context: "Розпад Радянського Союзу був неминучим історичним процесом."
-- word: конституція (constitution)
+  pos: noun
+  gender: m
+- lemma: конституція
+  ipa: konstɪˈtut͡sʲijɑ
   translation: constitution
-  ipa: "konstɪˈtut͡sʲijɑ"
-  context: "Робота над новою Конституцією почалася одразу після проголошення незалежності."
-- word: президент (president)
+  pos: noun
+  gender: f
+- lemma: президент
+  ipa: prezɪˈdɛnt
   translation: president
-  ipa: "prezɪˈdɛnt"
-  context: "Першим президентом незалежної України став Леонід Кравчук."
-- word: парламент (parliament)
+  pos: noun
+  gender: m
+- lemma: парламент
+  ipa: pɑrˈlɑment
   translation: parliament
-  ipa: "pɑrˈlɑment"
-  context: "Український парламент (Верховна Рада) відіграв ключову роль у 1991 році."
-- word: визнання (recognition)
+  pos: noun
+  gender: m
+- lemma: визнання
+  ipa: vɪznɑˈnʲːɑ
   translation: recognition
-  ipa: "vɪznɑˈnʲːɑ"
-  context: "Міжнародне визнання України почалося з Польщі та Канади."
-- word: ланцюг (chain)
+  pos: noun
+  gender: n
+- lemma: ланцюг
+  ipa: lɑnˈt͡sʲuɦ
   translation: chain
-  ipa: "lɑnˈt͡sʲuɦ"
-  context: "Живий ланцюг з'єднав Київ та Львів у січні 1990 року."
-- word: єднання (unity/unification)
+  pos: noun
+  gender: m
+- lemma: єднання
+  ipa: jedˈnɑnʲːɑ
   translation: unity, unification
-  ipa: "jedˈnɑnʲːɑ"
-  context: "День Соборності символізує єднання східних і західних земель."
-- word: голодування (hunger strike)
+  pos: noun
+  gender: n
+- lemma: голодування
+  ipa: holoduˈwɑnʲːɑ
   translation: hunger strike
-  ipa: "holoduˈwɑnʲːɑ"
-  context: "Студентське голодування на граніті змусило владу піти на поступки."
-- word: намет (tent)
+  pos: noun
+  gender: n
+- lemma: намет
+  ipa: nɑˈmɛt
   translation: tent
-  ipa: "nɑˈmɛt"
-  context: "На майдані з'явилися перші намети протестувальників."
-- word: барикада (barricade)
+  pos: noun
+  gender: m
+- lemma: барикада
+  ipa: bɑrɪˈkɑdɑ
   translation: barricade
-  ipa: "bɑrɪˈkɑdɑ"
-  context: "У Москві будували барикади проти танків ГКЧП."
-- word: свобода (freedom)
+  pos: noun
+  gender: f
+- lemma: свобода
+  ipa: svoˈbodɑ
   translation: freedom
-  ipa: "svoˈbodɑ"
-  context: "Дух свободи наповнював вулиці українських міст."
+  pos: noun
+  gender: f

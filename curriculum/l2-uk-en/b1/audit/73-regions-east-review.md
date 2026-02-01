@@ -1,12 +1,12 @@
 # Audit Report: M73 — 73-regions-east.md
-**Level:** B1 | **Module:** M73 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 1500
+**Level:** B1 | **Module:** M73 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 1552
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 00:32:31
+**Generated:** 2026-02-01 17:52:48
 
 ## Configuration
 **Type:** B1-culture
-**Word Target:** 1500 words
+**Word Target:** 1552 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -43,7 +43,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1891/1500 (raw: 1985)
+- **Words:** ✅ 1891/1552 (raw: 1985)
 - **Activities:** ✅ 14/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 12/4 types

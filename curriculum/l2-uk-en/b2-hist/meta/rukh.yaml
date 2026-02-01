@@ -1,29 +1,70 @@
-module: b2-120
-title: "Рух: Народний рух України"
-phase: "HIST.12"
-pedagogy: "CBI"
+module: b2-hist-120
+level: B2-HIST
+slug: rukh
+version: '2.0'
+id: b2-hist-120
+title: 'Рух: Народний рух України'
+subtitle: 'Rukh: The People''s Movement of Ukraine'
+phase: HIST.11
+duration: 150
+transliteration: none
 word_target: 4000
-naturalness_score: 10
-content_hash: '78c0613db0118c79d7cf15713cbd062c'
-timestamps:
-  created: "2026-01-31T14:30:00Z"
-  updated: "2026-01-31T14:30:00Z"
+tags:
+- history
+- rukh
+- transition
+- politics
+vocabulary_count: 25
 content_outline:
-  - "Вступ: Перебудова в Україні"
-  - "Основні події: Історія Народного Руху"
-  - "Первинні джерела"
-  - "Деколонізаційний погляд"
-  - "Підсумок: Спадщина Руху"
+- section: 'Вступ: Перебудова в Україні'
+  words: 400
+- section: 'Створення Руху (1989)'
+  words: 800
+- section: 'Читання'
+  words: 400
+- section: 'Діяльність Руху (1989-1991)'
+  words: 1000
+- section: 'Первинні джерела'
+  words: 600
+- section: 'Деколонізаційний погляд'
+  words: 500
+- section: 'Підсумок: Спадщина Руху'
+  words: 300
+objectives:
+- Учень може пояснити причини виникнення Народного Руху України
+- Учень може описати роль В'ячеслава Чорновола та інших лідерів Руху
+- Учень може проаналізувати вплив масових акцій Руху на свідомість суспільства
+- Учень може оцінити значення Руху як антиколоніальної сили
+grammar:
+- Складнопідрядні речення з підрядними з'ясувальними
+- Публіцистичний стиль (політичні промови)
+- Використання цитат у тексті
+vocabulary_hints:
+  required:
+  - перебудова
+  - гласність
+  - демократизація
+  - опозиція
+  - установчий з'їзд
+  - солідарність
+  recommended:
+  - маніфест
+  - номенклатура
+  - конфедерація
+  - суб'єктність
 activity_hints:
-  reading:
-    - "Програма Руху та виступи лідерів"
-  essay-response:
-    - "Роль Руху у здобутті незалежності"
-  critical-analysis:
-    - "Верифікація фактів: Факти про Рух"
-activity_types:
-  - reading
-  - critical-analysis
-  - essay-response
-  - true-false
-  - comparative-study
+- type: reading
+  focus: 'Програма Руху'
+- type: true-false
+  focus: 'Історія та факти про Рух'
+- type: comparative-study
+  focus: 'Рух vs Солідарність (Польща)'
+- type: critical-analysis
+  focus: 'Виступи лідерів Руху'
+- type: essay-response
+  focus: 'Чому Рух став масовою силою?'
+naturalness:
+  score: 9
+  status: PASS
+build:
+  last_modified: '2026-01-31'

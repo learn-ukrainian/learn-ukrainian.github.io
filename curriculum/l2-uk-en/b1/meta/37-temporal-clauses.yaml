@@ -1,13 +1,26 @@
 module: b1-37
 level: B1
-slug: temporal-clauses
-version: '2.0'
+slug: 37-temporal-clauses
+version: '1.0'
 id: b1-37
 naturalness:
   score: 9
   status: PASS
-  justification: Essential temporal structure
 duration: 90
 transliteration: none
+tags:
+- grammar
+- temporal-clauses
+- syntax
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-01'
+word_target: 1500
+content_outline:
+- section: Тест
+  words: 141
+- section: Пояснення
+  words: 822
+- section: Практика
+  words: 183
+- section: Діалоги
+  words: 229

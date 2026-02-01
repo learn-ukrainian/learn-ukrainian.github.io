@@ -1,12 +1,12 @@
 # Audit Report: M48 — 48-diminutives-master-class.md
-**Level:** B1 | **Module:** M48 | **Phase:** B1.4b | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M48 | **Phase:** B1.4b | **Pedagogy:** TTT | **Target:** 1854
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 18:08:38
+**Generated:** 2026-02-01 17:52:34
 
 ## Configuration
 **Type:** B1-grammar
-**Word Target:** 1500 words
+**Word Target:** 1854 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -40,7 +40,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1668/1500 (raw: 2074)
+- **Words:** ⚠️ 1761/1854 (raw: 2167) (93 short)
 - **Activities:** ✅ 11/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -52,7 +52,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.9% (target 85-100% (B1.5-6 Vocab))
+- **Immersion:** 🇺🇦 95.1% (target 85-100% (B1.5-6 Vocab))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -70,7 +70,7 @@
 | variety | 0.98 | - | 98% | 10% | 9.8% |
 | cultural | 9 | 3 | 100% | 10% | 10.0% |
 | realworld | 4 | 3 | 100% | 10% | 10.0% |
-| visual | 3 | 3 | 100% | 5% | 5.0% |
+| visual | 5 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | questions | 38 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
@@ -82,7 +82,7 @@
 | **Intro/Narrative** | ✅ | 56 | Included in Core |
 | **Тест** | ⚪️ | 102 | Skipped |
 | **Пояснення** | ⚪️ | 836 | Skipped |
-| **Практика** | ⚪️ | 187 | Skipped |
+| **Практика** | ⚪️ | 280 | Skipped |
 | **Діалоги** | ✅ | 221 | Included in Core |
 | **Підсумок** | ✅ | 156 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

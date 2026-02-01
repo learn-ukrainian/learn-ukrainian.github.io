@@ -2,7 +2,7 @@
   "module": "84-winter-sports",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T00:51:43.091803Z",
+  "last_audit": "2026-02-01T17:52:54.869869Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-30T00:49:46.637993Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1724/1500 (raw: 1807)"
+      "message": "1724/1640 (raw: 1807)"
     },
     "activities": {
       "status": "pass",

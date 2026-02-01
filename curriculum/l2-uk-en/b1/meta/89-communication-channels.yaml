@@ -1,0 +1,13 @@
+module: b1-89
+level: B1
+slug: communication-channels
+version: '2.0'
+id: b1-89
+naturalness:
+  score: 9
+  status: PASS
+  justification: Essential practical communication skills for daily life
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-31'

@@ -267,7 +267,7 @@ act_file → activities/{slug}.yaml
 vocab_file → vocabulary/{slug}.yaml
 
 # Run ONE audit
-.venv/bin/python scripts/audit_module.py {md_file}
+scripts/audit_module.sh {md_file}
 
 # Read audit review
 audit/{slug}-review.md
@@ -295,7 +295,7 @@ Order matters: meta → vocab → activities → markdown
 **Step 3 - VERIFY (Single Final Audit):**
 ```bash
 # Run audit once after all fixes
-.venv/bin/python scripts/audit_module.py {md_file}
+scripts/audit_module.sh {md_file}
 
 # Should pass or have only minor issues
 # If still violations, repeat cycle (rare with comprehensive fix)

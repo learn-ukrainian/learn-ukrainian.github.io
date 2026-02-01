@@ -1,10 +1,28 @@
 module: b2-01
 level: B2
 slug: 01-passive-voice-system
-version: '1.0'
+version: '2.0'
+title: 'Пасивний стан: повна система'
 id: b2-01
 naturalness:
   score: 1
   status: PENDING
+content_outline:
+  - section: "Вступ — Що таке пасивний стан?"
+    words: 500
+  - section: "Форма 1 — Дієприкметники на -ний/-тий"
+    words: 700
+  - section: "Форма 2 — Безособові конструкції на -но/-то"
+    words: 700
+  - section: "Форма 3 — Зворотний пасив із -ся"
+    words: 600
+  - section: "Форма 4 — Третя особа множини"
+    words: 600
+  - section: "Вибір форми пасиву за контекстом"
+    words: 500
+  - section: "Підсумок і практика"
+    words: 200
+word_target: 3800
+transliteration: none
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-01'

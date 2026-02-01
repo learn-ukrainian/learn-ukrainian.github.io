@@ -1,15 +1,15 @@
 {
   "module": "50-integrated-grammar-lab",
   "level": "B1",
-  "plan_version": "2.0",
-  "last_audit": "2026-01-27T18:08:39.510749Z",
+  "plan_version": "1.0",
+  "last_audit": "2026-02-01T17:52:35.650547Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-24T22:24:00.089654Z",
-    "meta": "2026-01-26T15:44:41.609100Z",
+    "md": "2026-01-31T21:02:09.417234Z",
+    "meta": "2026-02-01T17:13:38.677207Z",
     "activities": "2026-01-11T22:51:43.254389Z",
     "vocabulary": "2026-01-25T18:00:40.508987Z",
-    "plan": "2026-01-27T18:05:50.885171Z"
+    "plan": "2026-01-31T21:02:18.671113Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1686/1500 (raw: 2234)"
+      "message": "1743/1500 (raw: 2365)"
     },
     "activities": {
       "status": "pass",

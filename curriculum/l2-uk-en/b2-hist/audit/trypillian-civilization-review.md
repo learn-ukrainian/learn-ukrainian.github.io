@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M01 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 6133
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-31 12:55:40
+**Generated:** 2026-02-01 19:09:20
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** comparative-study, critical-analysis, essay-response, reading, true-false
+**Required Types:** comparative-study, critical-analysis, essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -30,11 +30,11 @@
 - Total activities: 5 (target: 3-9) ✅
 - Unique types: 5 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 5/5 (comparative-study, critical-analysis, essay-response, reading, true-false) ✅
+- Required types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 6403/6133 (raw: 6491)
+- **Words:** ✅ 6365/6133 (raw: 6405)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.2% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.9% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -72,13 +72,12 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 38 | Included in Core |
-| **Трипільська цивілізація** | ⚪️ | 56 | Skipped |
+| **Intro/Narrative** | ✅ | 56 | Included in Core |
 | **Вступ** | ✅ | 491 | Included in Core |
 | **Читання** | ✅ | 493 | Included in Core |
 | **Історія відкриття** | ⚪️ | 509 | Skipped |
 | **Первинні джерела** | ✅ | 347 | Included in Core |
-| **Протоміста-гіганти: Майданецьке та Тальянки** | ⚪️ | 1165 | Skipped |
+| **Протоміста** | ⚪️ | 1165 | Skipped |
 | **Господарство та економіка** | ⚪️ | 666 | Skipped |
 | **Ремесла та технології** | ⚪️ | 821 | Skipped |
 | **Духовний світ та суспільний устрій** | ⚪️ | 595 | Skipped |

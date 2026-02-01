@@ -1,12 +1,12 @@
 # Audit Report: M44 — 44-active-participles-phrases.md
-**Level:** B1 | **Module:** M44 | **Phase:** B1.4a | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M44 | **Phase:** B1.4a | **Pedagogy:** TTT | **Target:** 1702
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 18:08:35
+**Generated:** 2026-02-01 17:52:32
 
 ## Configuration
 **Type:** B1-grammar
-**Word Target:** 1500 words
+**Word Target:** 1702 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -40,7 +40,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1623/1500 (raw: 2085)
+- **Words:** ⚠️ 1623/1702 (raw: 2085) (79 short)
 - **Activities:** ✅ 11/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types

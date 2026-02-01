@@ -4,6 +4,9 @@ slug: shistdesiatnyky
 version: '2.0'
 status: skeleton
 track: history
+naturalness:
+  score: 9
+  status: PASS
 build:
   last_modified: '2026-01-30'
 phase: HIST.11 [Post-War Soviet Ukraine]
@@ -16,6 +19,7 @@ pedagogy: seminar
 register: публіцистичний
 tags: [history, soviet-ukraine, culture, dissent, literature]
 duration: 150
+transliteration: none
 objectives:
   - "Проаналізувати причини та наслідки появи шістдесятників як феномену"
   - "Оцінити історичне значення «хрущовської відлиги» для української культури"
@@ -91,6 +95,5 @@ activity_hints:
     focus: Критичний аналіз
   - type: comparative-study
     focus: Факти та міфи
-  - type: quiz
-    focus: Перевірка знань
-
+  - type: critical-analysis
+    focus: Аналіз джерел

@@ -1,12 +1,12 @@
 # Audit Report: M61 — 61-professional-communication.md
-**Level:** B1 | **Module:** M61 | **Phase:** B1.5 | **Pedagogy:** PPP | **Target:** 1500
+**Level:** B1 | **Module:** M61 | **Phase:** B1.5 | **Pedagogy:** PPP | **Target:** 1900
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 19:01:29
+**Generated:** 2026-02-01 17:52:41
 
 ## Configuration
 **Type:** B1-vocab
-**Word Target:** 1500 words
+**Word Target:** 1900 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -42,41 +42,39 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1752/1500 (raw: 2623)
+- **Words:** ⚠️ 1865/1900 (raw: 2978) (35 short)
 - **Activities:** ✅ 13/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 13/5
+- **Engagement:** ✅ 14/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 31 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 97.7% (target 85-100% (B1.5-6 Vocab))
-- **Richness:** ✅ 99% (grammar)
+- **Immersion:** 🇺🇦 97.8% (target 85-100% (B1.5-6 Vocab))
+- **Richness:** ✅ 99% (vocabulary)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
-**Module Type:** grammar
+**Module Type:** vocabulary
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 25 | 24 | 100% | 20% | 20.0% |
-| engagement | 13 | 5 | 100% | 15% | 15.0% |
-| dialogues | 11 | 4 | 100% | 15% | 15.0% |
-| variety | 0.97 | - | 97% | 10% | 9.7% |
+| collocations | 30 | 20 | 100% | 25% | 25.0% |
+| usage_examples | 25 | 15 | 100% | 20% | 20.0% |
+| engagement | 14 | 4 | 100% | 15% | 15.0% |
 | cultural | 5 | 3 | 100% | 10% | 10.0% |
-| realworld | 7 | 3 | 100% | 10% | 10.0% |
-| visual | 12 | 3 | 100% | 5% | 5.0% |
+| visual | 14 | 3 | 100% | 10% | 10.0% |
+| register_notes | 15 | 5 | 100% | 10% | 10.0% |
+| variety | 0.97 | - | 97% | 5% | 4.9% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 30 | 5 | 100% | 5% | 5.0% |
-| proverbs | 6 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.7%** |
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -87,5 +85,5 @@
 | **Читання** | ✅ | 250 | Included in Core |
 | **Діалоги** | ✅ | 273 | Included in Core |
 | **Підсумок** | ✅ | 164 | Included in Core |
-| **Лексика** | ⚪️ | 520 | Skipped |
+| **Лексика** | ⚪️ | 633 | Skipped |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

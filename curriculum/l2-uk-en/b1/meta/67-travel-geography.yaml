@@ -1,13 +1,28 @@
 module: b1-67
 level: B1
-slug: travel-geography
-version: '2.0'
+slug: 67-travel-geography
+version: '1.0'
 id: b1-67
 naturalness:
   score: 9
   status: PASS
-  justification: Essential for travel and cultural discourse
 duration: 90
 transliteration: none
+tags:
+- vocab
+- travel
+- geography
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-01'
+word_target: 1700
+content_outline:
+- section: Вступ
+  words: 103
+- section: Вживання
+  words: 207
+- section: Читання
+  words: 403
+- section: Діалоги
+  words: 190
+- section: Лексика
+  words: 732

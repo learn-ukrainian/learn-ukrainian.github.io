@@ -1,14 +1,50 @@
 module: b1-71
 level: B1
-slug: emotional-intelligence
-version: '2.0'
+slug: 71-emotional-intelligence
+version: '1.0'
 id: b1-71
-focus: vocabulary
 naturalness:
   score: 9
   status: PASS
-  justification: Essential for interpersonal competence
 duration: 90
 transliteration: none
+tags:
+- vocab
+- psychology
+- society
+- emotional-intelligence
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-01'
+word_target: 1600
+content_outline:
+- section: "Вступ — Що таке емоційний інтелект?"
+  words: 94
+- section: "Емпатія та співчуття — Чути серцем"
+  words: 297
+- section: "Конфлікти та примирення"
+  words: 292
+- section: "Вживання"
+  words: 231
+- section: "Читання"
+  words: 313
+- section: "Діалоги — Підтримка друга"
+  words: 273
+- section: "Зворотний зв'язок та саморефлексія"
+  words: 405
+- section: "Словник термінів"
+  words: 636
+- section: "Міні-чекпоінт: Лексика B1.5-B1.6"
+  words: 115
+activity_hints:
+- type: match-up
+  focus: EQ vocabulary definitions
+  items: 14+
+- type: quiz
+  focus: Situational usage of EQ phrases
+  items: 15+
+- type: fill-in
+  focus: Collocations with EQ verbs
+  items: 15+
+- type: cloze
+  focus: Integrated text about conflict resolution
+  items: 12+

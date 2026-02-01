@@ -6,9 +6,21 @@ id: b2-hist-124
 naturalness:
   score: 10
   status: PASS
-  justification: Академічний український для політичної історії
+  justification: Публіцистичний стиль про політичну історію
 duration: 120
 transliteration: none
+tags:
+- history
+- modern-ukraine
+- yanukovych
+- corruption
+activity_hints:
+- type: reading
+  focus: Документи та розслідування про корупцію
+- type: essay-response
+  focus: Як політика Януковича призвела до Революції Гідності?
+- type: critical-analysis
+  focus: Режим Януковича
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-01-31'
 phase: HIST.12 [Independence & Modern Era]

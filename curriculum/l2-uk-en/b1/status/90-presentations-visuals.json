@@ -1,0 +1,47 @@
+{
+  "module": "90-presentations-visuals",
+  "level": "B1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-01T17:52:58.163852Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-31T23:54:01.835129Z",
+    "meta": "2026-01-31T23:35:26.174891Z",
+    "activities": "2026-01-31T23:52:00.074476Z",
+    "vocabulary": "2026-01-31T23:49:12.612755Z",
+    "plan": "2026-01-31T23:48:07.055590Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "2120/1900 (raw: 2798)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "11/10"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "18/15"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

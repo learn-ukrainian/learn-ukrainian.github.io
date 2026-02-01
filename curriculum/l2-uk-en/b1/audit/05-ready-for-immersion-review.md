@@ -1,12 +1,12 @@
 # Audit Report: M05 — 05-ready-for-immersion.md
-**Level:** B1 | **Module:** M05 | **Phase:** B1.0 | **Pedagogy:** TTT | **Target:** 1200
+**Level:** B1 | **Module:** M05 | **Phase:** B1.0 | **Pedagogy:** TTT | **Target:** 3000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 16:25:45
+**Generated:** 2026-02-01 17:52:09
 
 ## Configuration
 **Type:** B1-bridge
-**Word Target:** 1200 words
+**Word Target:** 3000 words
 **Activities:** 12-16 required
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥5 types required
@@ -54,7 +54,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 3410/1200 (raw: 3916)
+- **Words:** ✅ 3410/3000 (raw: 3916)
 - **Activities:** ✅ 25/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/5 types

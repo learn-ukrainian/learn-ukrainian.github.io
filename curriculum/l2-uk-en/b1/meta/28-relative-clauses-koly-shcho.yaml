@@ -1,13 +1,28 @@
 module: b1-28
 level: B1
-slug: relative-clauses-koly-shcho
-version: '2.0'
+slug: 28-relative-clauses-koly-shcho
+version: '1.0'
 id: b1-28
 naturalness:
   score: 9
   status: PASS
-  justification: Essential time/fact clause structure
 duration: 90
 transliteration: none
+tags:
+- grammar
+- complex-sentences
+- syntax
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-01'
+word_target: 2000
+content_outline:
+- section: Тест
+  words: 178
+- section: Теорія (Аналіз)
+  words: 359
+- section: Поглиблення
+  words: 992
+- section: Практика
+  words: 29
+- section: Діалоги
+  words: 210

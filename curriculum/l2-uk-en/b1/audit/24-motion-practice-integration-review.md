@@ -1,12 +1,12 @@
 # Audit Report: M24 — 24-motion-practice-integration.md
-**Level:** B1 | **Module:** M24 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M24 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 2433
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 16:25:52
+**Generated:** 2026-02-01 17:52:20
 
 ## Configuration
 **Type:** B1-grammar
-**Word Target:** 1500 words
+**Word Target:** 2433 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -41,7 +41,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2229/1500 (raw: 2481)
+- **Words:** ⚠️ 2346/2433 (raw: 2598) (87 short)
 - **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -53,7 +53,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 96.6% (target 85-100% (B1.3-4 Complex))
+- **Immersion:** 🇺🇦 92.6% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -68,21 +68,21 @@
 | examples | 48 | 24 | 100% | 20% | 20.0% |
 | engagement | 8 | 5 | 100% | 15% | 15.0% |
 | dialogues | 9 | 4 | 100% | 15% | 15.0% |
-| variety | 0.96 | - | 96% | 10% | 9.6% |
+| variety | 0.94 | - | 94% | 10% | 9.4% |
 | cultural | 5 | 3 | 100% | 10% | 10.0% |
 | realworld | 9 | 3 | 100% | 10% | 10.0% |
-| visual | 6 | 3 | 100% | 5% | 5.0% |
+| visual | 8 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | questions | 24 | 5 | 100% | 5% | 5.0% |
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.6%** |
+| **TOTAL** | | | | | **99.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 70 | Included in Core |
 | **Тест** | ⚪️ | 127 | Skipped |
-| **Пояснення** | ⚪️ | 1235 | Skipped |
+| **Пояснення** | ⚪️ | 1352 | Skipped |
 | **Практика** | ⚪️ | 92 | Skipped |
 | **Діалоги** | ✅ | 168 | Included in Core |
 | **Підсумок** | ✅ | 73 | Included in Core |

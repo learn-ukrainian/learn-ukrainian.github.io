@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M92 | **Phase:** HIST.9 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-31 14:27:06
+**Generated:** 2026-02-01 14:54:39
 
 ## Configuration
 **Type:** B2-history

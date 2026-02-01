@@ -2,7 +2,7 @@
   "module": "73-regions-east",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T00:32:31.827516Z",
+  "last_audit": "2026-02-01T17:52:48.700172Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-30T00:30:14.576128Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1891/1500 (raw: 1985)"
+      "message": "1891/1552 (raw: 1985)"
     },
     "activities": {
       "status": "pass",

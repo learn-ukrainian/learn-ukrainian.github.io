@@ -1,12 +1,12 @@
 # Audit Report: M38 — 38-complex-sentence-integration.md
-**Level:** B1 | **Module:** M38 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M38 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 1576
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 16:25:57
+**Generated:** 2026-02-01 17:52:28
 
 ## Configuration
 **Type:** B1-grammar
-**Word Target:** 1500 words
+**Word Target:** 1576 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -40,7 +40,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1581/1500 (raw: 1872)
+- **Words:** ✅ 1581/1576 (raw: 1872)
 - **Activities:** ✅ 11/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types

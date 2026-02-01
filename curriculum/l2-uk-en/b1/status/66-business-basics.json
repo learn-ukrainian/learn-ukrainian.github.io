@@ -1,15 +1,15 @@
 {
   "module": "66-business-basics",
   "level": "B1",
-  "plan_version": "2.0",
-  "last_audit": "2026-01-27T19:01:42.149588Z",
+  "plan_version": "1.0",
+  "last_audit": "2026-02-01T17:52:44.795336Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-11T20:06:17.723240Z",
-    "meta": "2026-01-26T15:44:41.660769Z",
+    "meta": "2026-02-01T17:25:45.803050Z",
     "activities": "2026-01-27T18:57:20.167154Z",
     "vocabulary": "2026-01-25T18:00:40.615669Z",
-    "plan": "2026-01-27T18:50:19.695468Z"
+    "plan": "2026-01-29T07:45:40.462991Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1755/1500 (raw: 2382)"
+      "message": "1755/1600 (raw: 2382)"
     },
     "activities": {
       "status": "pass",

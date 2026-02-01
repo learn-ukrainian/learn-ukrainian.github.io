@@ -1,12 +1,12 @@
 # Audit Report: M15 — 15-checkpoint-aspect-mastery.md
-**Level:** B1 | **Module:** M15 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 1200
+**Level:** B1 | **Module:** M15 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 3000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 16:25:49
+**Generated:** 2026-02-01 17:52:15
 
 ## Configuration
 **Type:** B1-checkpoint
-**Word Target:** 1200 words
+**Word Target:** 3000 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -45,52 +45,49 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1829/1200 (raw: 2071)
+- **Words:** ✅ 3025/3000 (raw: 3356)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 9/3
+- **Engagement:** ✅ 7/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 60/10
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.8% (checkpoint - no gate)
-- **Richness:** ✅ 99% (grammar)
+- **Immersion:** 🇺🇦 97.1% (checkpoint - no gate)
+- **Richness:** ✅ 99% (checkpoint)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 99% (minimum: 85%)
+**Module Type:** checkpoint
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 30 | 24 | 100% | 20% | 20.0% |
-| engagement | 6 | 5 | 100% | 15% | 15.0% |
-| dialogues | 10 | 4 | 100% | 15% | 15.0% |
-| variety | 0.92 | - | 92% | 10% | 9.2% |
-| cultural | 3 | 3 | 100% | 10% | 10.0% |
-| realworld | 7 | 3 | 100% | 10% | 10.0% |
-| visual | 8 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 44 | 5 | 100% | 5% | 5.0% |
-| proverbs | 4 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.2%** |
+| activity_types | 11 | 8 | 100% | 25% | 25.0% |
+| review_sections | 26 | 3 | 100% | 20% | 20.0% |
+| variety | 0.98 | - | 98% | 15% | 14.7% |
+| engagement | 6 | 3 | 100% | 10% | 10.0% |
+| cultural | 1 | - | 100% | 10% | 10.0% |
+| visual | 6 | 3 | 100% | 10% | 10.0% |
+| paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
+| **TOTAL** | | | | | **99.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 70 | Included in Core |
-| **Огляд** | ⚪️ | 64 | Skipped |
-| **Skill 1: Вид у минулому часі** | ⚪️ | 327 | Skipped |
-| **Skill 2: Вид у майбутньому часі** | ⚪️ | 208 | Skipped |
-| **Skill 3: Вид у запереченні** | ⚪️ | 326 | Skipped |
-| **Skill 4: Вид у наказовому способі** | ⚪️ | 280 | Skipped |
-| **Skill 5: Видові пари** | ⚪️ | 152 | Skipped |
-| **Інтеграційне завдання** | ⚪️ | 159 | Skipped |
-| **Підсумок** | ✅ | 133 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Контрольна точка: Опанування виду** | ⚪️ | 68 | Skipped |
+| **Огляд** | ⚪️ | 135 | Skipped |
+| **Навичка 1: Вид у минулому часі** | ⚪️ | 694 | Skipped |
+| **Навичка 2: Вид у майбутньому часі** | ⚪️ | 368 | Skipped |
+| **Навичка 3: Вид у запереченні** | ⚪️ | 621 | Skipped |
+| **Навичка 4: Вид у наказовому способі** | ⚪️ | 343 | Skipped |
+| **Навичка 5: Видові пари** | ⚪️ | 383 | Skipped |
+| **Інтеграційне завдання** | ⚪️ | 326 | Skipped |
+| **Підсумок** | ✅ | 87 | Included in Core |

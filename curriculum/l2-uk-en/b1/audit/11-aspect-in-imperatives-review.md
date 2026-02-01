@@ -1,12 +1,12 @@
 # Audit Report: M11 — 11-aspect-in-imperatives.md
-**Level:** B1 | **Module:** M11 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M11 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 3000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 16:25:48
+**Generated:** 2026-02-01 17:52:13
 
 ## Configuration
 **Type:** B1-grammar
-**Word Target:** 1500 words
+**Word Target:** 3000 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -41,19 +41,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1624/1500 (raw: 2246)
+- **Words:** ✅ 4046/3000 (raw: 4109)
 - **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 10/5
+- **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 122/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 97.8% (target 85-100% (B1.2 Motion))
+- **Immersion:** 🇺🇦 98.3% (target 85-100% (B1.2 Motion))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -65,25 +65,25 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 84 | 24 | 100% | 20% | 20.0% |
-| engagement | 8 | 5 | 100% | 15% | 15.0% |
-| dialogues | 12 | 4 | 100% | 15% | 15.0% |
-| variety | 0.98 | - | 98% | 10% | 9.8% |
+| examples | 48 | 24 | 100% | 20% | 20.0% |
+| engagement | 6 | 5 | 100% | 15% | 15.0% |
+| dialogues | 31 | 4 | 100% | 15% | 15.0% |
+| variety | 0.97 | - | 97% | 10% | 9.7% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
-| realworld | 12 | 3 | 100% | 10% | 10.0% |
-| visual | 10 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.91 | - | 91% | 5% | 4.6% |
-| questions | 23 | 5 | 100% | 5% | 5.0% |
-| proverbs | 2 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **96.0%** |
+| realworld | 13 | 3 | 100% | 10% | 10.0% |
+| visual | 7 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 27 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **96.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 55 | Included in Core |
-| **Тест** | ⚪️ | 154 | Skipped |
-| **Пояснення** | ⚪️ | 390 | Skipped |
-| **Практика** | ⚪️ | 402 | Skipped |
-| **Діалоги** | ✅ | 366 | Included in Core |
-| **Підсумок** | ✅ | 147 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Вид у наказовому способі** | ⚪️ | 175 | Skipped |
+| **Тест** | ⚪️ | 347 | Skipped |
+| **Пояснення** | ⚪️ | 1222 | Skipped |
+| **Практика** | ⚪️ | 758 | Skipped |
+| **Діалоги** | ✅ | 958 | Included in Core |
+| **Підсумок** | ✅ | 586 | Included in Core |

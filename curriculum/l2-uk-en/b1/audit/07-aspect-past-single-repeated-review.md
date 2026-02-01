@@ -1,12 +1,12 @@
 # Audit Report: M07 — 07-aspect-past-single-repeated.md
-**Level:** B1 | **Module:** M07 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M07 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 3000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 16:25:46
+**Generated:** 2026-02-01 17:52:10
 
 ## Configuration
 **Type:** B1-grammar
-**Word Target:** 1500 words
+**Word Target:** 3000 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 3353/1500 (raw: 3659)
+- **Words:** ✅ 3353/3000 (raw: 3659)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types

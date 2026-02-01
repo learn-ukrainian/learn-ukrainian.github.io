@@ -1,13 +1,26 @@
 module: b1-30
 level: B1
-slug: purpose-shchob-past-form
-version: '2.0'
+slug: 30-purpose-shchob-past-form
+version: '1.0'
 id: b1-30
 naturalness:
   score: 9
   status: PASS
-  justification: Essential subjunctive structure
 duration: 90
 transliteration: none
+tags:
+- grammar
+- complex-sentences
+- syntax
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-01'
+word_target: 1700
+content_outline:
+- section: Тест
+  words: 99
+- section: Пояснення
+  words: 797
+- section: Практика
+  words: 371
+- section: Діалоги
+  words: 356

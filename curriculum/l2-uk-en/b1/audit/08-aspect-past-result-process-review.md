@@ -1,12 +1,12 @@
 # Audit Report: M08 — 08-aspect-past-result-process.md
-**Level:** B1 | **Module:** M08 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M08 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 3000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 16:25:47
+**Generated:** 2026-02-01 17:52:11
 
 ## Configuration
 **Type:** B1-grammar
-**Word Target:** 1500 words
+**Word Target:** 3000 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -37,19 +37,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2837/1500 (raw: 3463)
+- **Words:** ✅ 3446/3000 (raw: 4028)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/5
+- **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 92.6% (target 85-100% (B1.1 Aspect))
+- **Immersion:** 🇺🇦 97.5% (target 85-100% (B1.1 Aspect))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -61,27 +61,28 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 88 | 24 | 100% | 20% | 20.0% |
-| engagement | 8 | 5 | 100% | 15% | 15.0% |
-| dialogues | 28 | 4 | 100% | 15% | 15.0% |
-| variety | 0.99 | - | 99% | 10% | 9.9% |
-| cultural | 5 | 3 | 100% | 10% | 10.0% |
-| realworld | 12 | 3 | 100% | 10% | 10.0% |
-| visual | 12 | 3 | 100% | 5% | 5.0% |
+| examples | 67 | 24 | 100% | 20% | 20.0% |
+| engagement | 7 | 5 | 100% | 15% | 15.0% |
+| dialogues | 19 | 4 | 100% | 15% | 15.0% |
+| variety | 0.97 | - | 97% | 10% | 9.7% |
+| cultural | 3 | 3 | 100% | 10% | 10.0% |
+| realworld | 10 | 3 | 100% | 10% | 10.0% |
+| visual | 10 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 78 | 5 | 100% | 5% | 5.0% |
-| proverbs | 1 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.9%** |
+| questions | 52 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 65 | Included in Core |
-| **Тест** | ⚪️ | 349 | Skipped |
-| **Пояснення** | ⚪️ | 773 | Skipped |
-| **Контраст** | ⚪️ | 421 | Skipped |
-| **Практика** | ⚪️ | 444 | Skipped |
-| **Діалоги** | ✅ | 507 | Included in Core |
-| **Культурний погляд: Результативність українців** | ✅ | 86 | Included in Core |
-| **Шпаргалка (Cheat Sheet)** | ⚪️ | 32 | Skipped |
-| **Підсумок** | ✅ | 160 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Вид у минулому: результат і процес** | ⚪️ | 114 | Skipped |
+| **Тест** | ⚪️ | 520 | Skipped |
+| **Пояснення** | ⚪️ | 897 | Skipped |
+| **Контраст** | ⚪️ | 379 | Skipped |
+| **Практика** | ⚪️ | 486 | Skipped |
+| **Діалоги** | ✅ | 637 | Included in Core |
+| **Культурний аспект: Результативність українців** | ✅ | 112 | Included in Core |
+| **Шпаргалка для успіху** | ⚪️ | 47 | Skipped |
+| **Підсумок** | ✅ | 254 | Included in Core |

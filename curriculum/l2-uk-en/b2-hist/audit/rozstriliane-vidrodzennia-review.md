@@ -1,8 +1,8 @@
 # Audit Report: M98 — rozstriliane-vidrodzennia.md
 **Level:** B2 | **Module:** M98 | **Phase:** HIST.10 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-31 15:15:48
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 14:54:42
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4075/4000 (raw: 4188)
+- **Words:** ✅ 4198/4000 (raw: 4311)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -60,7 +60,7 @@
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 10 | 3 | 100% | 24% | 23.8% |
 | engagement | 5 | 6 | 83% | 14% | 11.9% |
-| timeline_markers | 27 | 10 | 100% | 14% | 14.3% |
+| timeline_markers | 28 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 3 | 4 | 75% | 10% | 7.1% |
 | visual | 5 | 4 | 100% | 10% | 9.5% |
@@ -76,8 +76,8 @@
 | **Вступ: Покоління мрійників** | ✅ | 440 | Included in Core |
 | **Читання: Хроніка злету і падіння** | ✅ | 46 | Included in Core |
 | **Ключові постаті** | ⚪️ | 938 | Skipped |
-| **Будинок «Слово»** | ⚪️ | 543 | Skipped |
+| **Будинок «Слово»** | ⚪️ | 645 | Skipped |
 | **Первинні джерела** | ✅ | 738 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 550 | Included in Core |
-| **Підсумок: Сандармох і пам'ять** | ✅ | 485 | Included in Core |
+| **Підсумок: Сандармох і пам'ять** | ✅ | 506 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 204 | Skipped |

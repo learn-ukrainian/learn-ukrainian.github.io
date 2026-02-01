@@ -1,0 +1,88 @@
+module: 89-communication-channels
+level: B1
+version: '2.0'
+items:
+- lemma: дзвінок
+  ipa: /dzvˈinɔk/
+  translation: call, ring
+  pos: noun
+  gender: m
+- lemma: телефонувати
+  ipa: /tɛlɛfɔnuʋˈatɪ/
+  translation: to call (by phone)
+  pos: verb
+- lemma: слухавка
+  ipa: /sluxˈaʋka/
+  translation: receiver, handset
+  pos: noun
+  gender: f
+- lemma: передзвонити
+  ipa: /pɛrɛdzvɔnˈɪtɪ/
+  translation: to call back
+  pos: verb
+- lemma: електронна пошта
+  ipa: /ɛlɛktrˈɔnna pˈɔʃta/
+  translation: email
+  pos: noun
+  gender: f
+- lemma: лист
+  ipa: /lɪst/
+  translation: letter
+  pos: noun
+  gender: m
+- lemma: звертання
+  ipa: /zʋɛrtˈannja/
+  translation: salutation, greeting
+  pos: noun
+  gender: n
+- lemma: підпис
+  ipa: /pˈidpɪs/
+  translation: signature
+  pos: noun
+  gender: m
+- lemma: формальний
+  ipa: /fɔrmˈalʲnɪj/
+  translation: formal
+  pos: adj
+- lemma: неформальний
+  ipa: /nɛfɔrmˈalʲnɪj/
+  translation: informal
+  pos: adj
+- lemma: шановний
+  ipa: /ʃanɔʋnˈɪj/
+  translation: dear, respected
+  pos: adj
+- lemma: вдячний
+  ipa: /ʋdjˈat͡ʃnɪj/
+  translation: grateful
+  pos: adj
+- lemma: прикріплений файл
+  ipa: /prɪkrˈiplɛnɪj fajl/
+  translation: attachment
+  pos: noun
+  gender: m
+- lemma: тема листа
+  ipa: /tˈɛma lˈɪsta/
+  translation: subject line
+  pos: noun
+  gender: f
+- lemma: адресат
+  ipa: /adrɛsˈat/
+  translation: addressee
+  pos: noun
+  gender: m
+- lemma: зв'язок
+  ipa: /zvjazˈɔk/
+  translation: connection, contact
+  pos: noun
+  gender: m
+- lemma: повідомлення
+  ipa: /pɔʋidˈɔmlɛnnja/
+  translation: message
+  pos: noun
+  gender: n
+- lemma: месенджер
+  ipa: /mɛsˈɛndʒɛr/
+  translation: messenger (app)
+  pos: noun
+  gender: m

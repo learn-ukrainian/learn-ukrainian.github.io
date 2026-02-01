@@ -1,14 +1,30 @@
 module: b1-34
 level: B1
-slug: checkpoint-complex-sentences-1
-version: '2.0'
+slug: 34-checkpoint-complex-sentences-1
+version: '1.0'
 id: b1-34
-focus: checkpoint
 naturalness:
   score: 9
   status: PASS
-  justification: Complex sentences checkpoint
 duration: 90
 transliteration: none
+tags:
+- checkpoint
+- complex-sentences
+- grammar
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-01'
+word_target: 1250
+content_outline:
+- section: Огляд
+  words: 71
+- section: Skill 1
+  words: 115
+- section: Skill 2
+  words: 90
+- section: Skill 3
+  words: 114
+- section: Integration Challenge
+  words: 121
+- section: Практика
+  words: 193

@@ -1,12 +1,12 @@
 # Audit Report: M28 — 28-relative-clauses-koly-shcho.md
-**Level:** B1 | **Module:** M28 | **Phase:** B1.3a | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M28 | **Phase:** B1.3a | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 16:25:53
+**Generated:** 2026-02-01 17:52:23
 
 ## Configuration
 **Type:** B1-grammar
-**Word Target:** 1500 words
+**Word Target:** 2000 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -42,7 +42,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2037/1500 (raw: 2589)
+- **Words:** ✅ 2037/2000 (raw: 2589)
 - **Activities:** ✅ 13/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types

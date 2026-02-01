@@ -1,13 +1,34 @@
 module: b1-45
 level: B1
-slug: past-passive-participles-1
-version: '2.0'
+slug: 45-past-passive-participles-1
+version: '1.0'
 id: b1-45
 naturalness:
   score: 9
   status: PASS
-  justification: Foundation for passive voice
 duration: 90
 transliteration: none
+tags:
+- grammar
+- participles
+- passive
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-01'
+word_target: 1500
+content_outline:
+- section: Вступний тест
+  words: 72
+- section: Теоретичне пояснення
+  words: 589
+- section: Практика
+  words: 176
+- section: Приклади використання
+  words: 197
+- section: Пасивні дієприкметники у формальному листуванні
+  words: 103
+- section: Пасивні дієприкметники в українській культурі та літературі
+  words: 241
+- section: Порівняння з активними конструкціями
+  words: 71
+- section: Практичні поради для запам'ятовування
+  words: 92

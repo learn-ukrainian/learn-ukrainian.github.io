@@ -1,0 +1,99 @@
+module: hromadske-suspilstvo
+level: b2-hist
+version: "2.0"
+items:
+  - lemma: громадянське суспільство
+    translation: "civil society"
+    ipa: "ɦrɔmɐˈdʲɑnʲsʲkɛ sʊsˈpʲilʲstvɔ"
+    pos: phrase
+  - lemma: волонтер
+    translation: "volunteer"
+    ipa: "vɔlɔnˈtɛr"
+    pos: noun
+    gender: m
+  - lemma: благодійний фонд
+    translation: "charitable foundation"
+    ipa: "blɐɦɔˈdʲij nɪj fɔnd"
+    pos: phrase
+  - lemma: громадська організація
+    translation: "non-governmental organization (NGO)"
+    ipa: "ɦrɔˈmɑdʲsʲkɐ ɔrɦɐnʲiˈzɑt͡sʲijɐ"
+    pos: phrase
+  - lemma: ініціатива
+    translation: "initiative"
+    ipa: "inʲit͡sʲiɐˈtɪvɐ"
+    pos: noun
+    gender: f
+  - lemma: петиція
+    translation: "petition"
+    ipa: "pɛˈtɪt͡sʲijɐ"
+    pos: noun
+    gender: f
+  - lemma: збір коштів
+    translation: "fundraising"
+    ipa: "zbʲir ˈkɔʃtʲiv"
+    pos: phrase
+  - lemma: донат
+    translation: "donation (slang)"
+    ipa: "dɔˈnɑt"
+    pos: noun
+    gender: m
+  - lemma: солідарність
+    translation: "solidarity"
+    ipa: "sɔlʲiˈdɑrnʲisʲtʲ"
+    pos: noun
+    gender: f
+  - lemma: активіст
+    translation: "activist"
+    ipa: "ɐktɪˈvʲist"
+    pos: noun
+    gender: m
+  - lemma: правозахисник
+    translation: "human rights activist"
+    ipa: "prɐvɔzɐˈxɪsnɪk"
+    pos: noun
+    gender: m
+  - lemma: реформа
+    translation: "reform"
+    ipa: "rɛˈfɔrmɐ"
+    pos: noun
+    gender: f
+  - lemma: вплив
+    translation: "influence / impact"
+    ipa: "vplɪu̯"
+    pos: noun
+    gender: m
+  - lemma: підзвітність
+    translation: "accountability"
+    ipa: "pʲidˈzvʲitnʲisʲtʲ"
+    pos: noun
+    gender: f
+  - lemma: прозорість
+    translation: "transparency"
+    ipa: "prɔˈzɔrʲisʲtʲ"
+    pos: noun
+    gender: f
+  - lemma: взаємодія
+    translation: "interaction / cooperation"
+    ipa: "vzɐjɛmɔˈdʲijɐ"
+    pos: noun
+    gender: f
+  - lemma: довіра
+    translation: "trust"
+    ipa: "dɔˈvʲirɐ"
+    pos: noun
+    gender: f
+  - lemma: самоорганізація
+    translation: "self-organization"
+    ipa: "sɐmɔɔrɦɐnʲiˈzɑt͡sʲijɐ"
+    pos: noun
+    gender: f
+  - lemma: спільнота
+    translation: "community"
+    ipa: "sʲpʲilʲˈnɔtɐ"
+    pos: noun
+    gender: f
+  - lemma: гуртуватися
+    translation: "to unite / to gather together"
+    ipa: "ɦʊrtʊˈvɑtɪsʲɐ"
+    pos: verb

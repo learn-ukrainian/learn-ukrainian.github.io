@@ -1,12 +1,12 @@
 # Audit Report: M86 — 86-ukrainski-sviata-ta-festyvali.md
-**Level:** B1 | **Module:** M86 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 1500
+**Level:** B1 | **Module:** M86 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 1800
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 01:07:36
+**Generated:** 2026-02-01 19:05:50
 
 ## Configuration
 **Type:** B1-culture
-**Word Target:** 1500 words
+**Word Target:** 1800 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -42,39 +42,39 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2045/1500 (raw: 2130)
+- **Words:** ✅ 2176/1800 (raw: 2339)
 - **Activities:** ✅ 13/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 12/5
+- **Engagement:** ✅ 13/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 65/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 97.5% (target 85-100% (B1.7-8 Ukraine))
-- **Richness:** ✅ 98% (cultural)
+- **Immersion:** 🇺🇦 97.6% (target 85-100% (B1.7-8 Ukraine))
+- **Richness:** ✅ 99% (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 98% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** cultural
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | cultural | 14 | 5 | 100% | 33% | 33.3% |
-| engagement | 9 | 6 | 100% | 20% | 20.0% |
-| visual | 4 | 4 | 100% | 13% | 13.3% |
-| variety | 0.95 | - | 95% | 7% | 6.3% |
-| paragraph_var | 0.87 | - | 87% | 7% | 5.8% |
-| examples | 44 | - | 100% | 7% | 6.7% |
+| engagement | 10 | 6 | 100% | 20% | 20.0% |
+| visual | 5 | 4 | 100% | 13% | 13.3% |
+| variety | 0.94 | - | 94% | 7% | 6.3% |
+| paragraph_var | 0.91 | - | 91% | 7% | 6.1% |
+| examples | 56 | - | 100% | 7% | 6.7% |
 | realworld | 6 | - | 100% | 7% | 6.7% |
-| questions | 30 | 4 | 100% | 7% | 6.7% |
-| **TOTAL** | | | | | **98.8%** |
+| questions | 38 | 4 | 100% | 7% | 6.7% |
+| **TOTAL** | | | | | **99.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -86,4 +86,5 @@
 | **Практика** | ⚪️ | 177 | Skipped |
 | **Продукція** | ⚪️ | 428 | Skipped |
 | **Підсумок — Як святкують українці** | ✅ | 136 | Included in Core |
+| **Міні-чекпоінт: Культура B1.7** | ✅ | 131 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

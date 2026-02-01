@@ -21,6 +21,8 @@ A beginner sees a jumble of words. A grammar-savvy learner sees architecture:
 
 Grammar books analyze this utilizing specific terms. The **головне речення** (main clause) holds the weight. The **підрядне речення** (subordinate clause) adds depth. The **вставне слово** (parenthetical word) adds attitude. Without this terminology, you cannot follow the analysis or correct your own mistakes.
 
+This knowledge isn't just academic. When you read Ukrainian news articles, literary texts, or academic papers, complex sentences are everywhere. Being able to mentally break them down into components is what separates fluent reading from struggling translation. It's like knowing how to read an architectural blueprint versus just staring at a building — you understand WHY the structure holds together.
+
 > 💡 **Did You Know?**
 >
 > Ukrainian syntax terminology comes from Greek and Latin linguistic traditions. **Синтаксис** literally means «arrangement together» — how words are arranged to form sentences. Unlike English, where word order is rigid (SVO), Ukrainian relies on *inflection* (endings) to show structure, allowing the **порядок слів** (word order) to be flexible for emphasis.
@@ -125,6 +127,61 @@ In «Марія читає цікаву книгу в бібліотеці»:
 ### How to Parse a Sentence (Синтаксичний розбір)
 
 Parsing is a logical process. Follow this algorithm:
+
+```mermaid
+flowchart TB
+    START(["🔍 Почніть аналіз речення"]) --> STEP1
+
+    subgraph STEP1 ["Крок 1: Присудок"]
+        direction TB
+        Q1["<b>Що робить? Що відбувається?</b><br/>Знайдіть дієслово"]
+        Q1 --> A1["присудок<br/>(дія або стан)"]
+    end
+
+    STEP1 --> STEP2
+
+    subgraph STEP2 ["Крок 2: Підмет"]
+        direction TB
+        Q2["<b>Хто? Що?</b><br/>Хто виконує дію?"]
+        Q2 --> A2["підмет<br/>(називний відмінок)"]
+    end
+
+    STEP2 --> CORE["✅ Граматична основа знайдена"]
+    CORE --> STEP3
+
+    subgraph STEP3 ["Крок 3: Додаток"]
+        direction TB
+        Q3["<b>Кого? Що? Кому? Чим?</b><br/>На кого/що спрямована дія?"]
+        Q3 --> A3["додаток<br/>(прямий або непрямий)"]
+    end
+
+    STEP3 --> STEP4
+
+    subgraph STEP4 ["Крок 4: Означення"]
+        direction TB
+        Q4["<b>Який? Яка? Чий?</b><br/>Що описує іменник?"]
+        Q4 --> A4["означення<br/>(прикметник, займенник)"]
+    end
+
+    STEP4 --> STEP5
+
+    subgraph STEP5 ["Крок 5: Обставина"]
+        direction TB
+        Q5["<b>Де? Коли? Як? Чому?</b><br/>Обставини дії"]
+        Q5 --> A5["обставина<br/>(місця, часу, способу)"]
+    end
+
+    STEP5 --> DONE(["✅ Аналіз завершено"])
+
+    style START fill:#e8f5e9,stroke:#4caf50,stroke-width:2px,color:#333
+    style DONE fill:#e8f5e9,stroke:#4caf50,stroke-width:2px,color:#333
+    style CORE fill:#fff3e0,stroke:#ff9800,stroke-width:2px,color:#333
+    style STEP1 fill:#e3f2fd,stroke:#2196f3,stroke-width:1px,color:#333
+    style STEP2 fill:#e3f2fd,stroke:#2196f3,stroke-width:1px,color:#333
+    style STEP3 fill:#fce4ec,stroke:#e91e63,stroke-width:1px,color:#333
+    style STEP4 fill:#fce4ec,stroke:#e91e63,stroke-width:1px,color:#333
+    style STEP5 fill:#fce4ec,stroke:#e91e63,stroke-width:1px,color:#333
+```
 
 1.  Identify the **action** (Присудок).
     - *Question:* Що робить? (What is happening?)
@@ -300,7 +357,7 @@ Ukrainian uses French-style «gliders» as primary quotation marks. English "quo
 **Governance (Керування):**
 
 - "Читаю книгу" (Accusative). The verb "читати" acts as a boss demanding the Accusative form.
-- "Дякую брату" (Dative). The verb "дякувати" demands Dative. This is **керування**.
+- "Дякую брату" (Dative). The verb "дякувати" demands Dative — that's **керування** in action.
 
 **Inversion (Інверсія):**
 
@@ -327,6 +384,22 @@ Analyze this sentence:
 - **Додаток:** книгу, українську мову
 - **Означення:** цікаву, який вивчає українську мову
 - **Обставина:** в бібліотеці
+
+Try another example on your own:
+
+*«Викладач, який працює в університеті, пояснює складні правила граматики студентам.»*
+
+**Step-by-step breakdown:**
+
+First, locate the verb: **пояснює** (explains) — your anchor point.
+
+Second, ask "Who explains?" — **Викладач** (the lecturer), serving as the subject.
+
+Third, find the objects: **правила** (rules - what is being explained), **студентам** (to the students - indirect object).
+
+Fourth, identify the attributes: **який працює в університеті** describes the lecturer, **складні** describes the rules, **граматики** further specifies which rules.
+
+This systematic approach transforms confusion into clarity. Every time you encounter a long sentence, you now have a mental checklist to work through methodically.
 
 ### Pattern Recognition
 

@@ -2,25 +2,25 @@
   "module": "yanukovych",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-31T13:24:41.361847Z",
+  "last_audit": "2026-02-01T14:54:58.147230Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.347270Z",
-    "meta": "2026-01-29T07:38:18.732436Z",
-    "activities": "2026-01-27T15:34:55.185173Z",
-    "vocabulary": null,
+    "md": "2026-01-31T22:07:07.451720Z",
+    "meta": "2026-01-31T20:58:53.362731Z",
+    "activities": "2026-01-31T21:00:16.327281Z",
+    "vocabulary": "2026-01-31T20:59:03.502616Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "1843/4000 (raw: 2025) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "4629/4000 (raw: 4704)"
     },
     "activities": {
       "status": "pass",
@@ -28,9 +28,9 @@
       "message": "5/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 20 (soft target)"
+      "message": "20/20"
     },
     "naturalness": {
       "status": "pass",
@@ -39,13 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: critical-analysis, reading"
-    ],
-    "pass_count": 2,
-    "fail_count": 2
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

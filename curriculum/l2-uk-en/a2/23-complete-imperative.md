@@ -48,6 +48,26 @@ flowchart TD
     N --> Q["ви + <b>ЬТЕ</b>"]
     O --> R["ви + <b>ТЕ</b>"]
     P --> S["ви + <b>ЙТЕ</b>"]
+
+    style A fill:#fff,stroke:#4a90d9,stroke-width:2px,color:#333
+    style B fill:#fff,stroke:#666,stroke-width:1px,color:#333
+    style C fill:#fff,stroke:#666,stroke-width:1px,color:#333
+    style D fill:#fff,stroke:#f5a623,stroke-width:2px,color:#333
+    style E fill:#fff,stroke:#7ed321,stroke-width:2px,color:#333
+    style F fill:#fff,stroke:#bd10e0,stroke-width:2px,color:#333
+    style G fill:#fff,stroke:#7ed321,stroke-width:1px,color:#333
+    style H fill:#fff,stroke:#7ed321,stroke-width:1px,color:#333
+    style I fill:#fff,stroke:#7ed321,stroke-width:1px,color:#333
+    style J fill:#fff,stroke:#f5a623,stroke-width:2px,color:#333
+    style K fill:#fff,stroke:#bd10e0,stroke-width:1px,color:#333
+    style L fill:#fff,stroke:#bd10e0,stroke-width:1px,color:#333
+    style M fill:#fff,stroke:#bd10e0,stroke-width:1px,color:#333
+    style N fill:#fff,stroke:#bd10e0,stroke-width:1px,color:#333
+    style O fill:#fff,stroke:#bd10e0,stroke-width:1px,color:#333
+    style P fill:#fff,stroke:#bd10e0,stroke-width:1px,color:#333
+    style Q fill:#fff,stroke:#bd10e0,stroke-width:1px,color:#333
+    style R fill:#fff,stroke:#bd10e0,stroke-width:1px,color:#333
+    style S fill:#fff,stroke:#bd10e0,stroke-width:1px,color:#333
 ```
 
 #### Step-by-Step / Крок за кроком
@@ -147,6 +167,12 @@ flowchart LR
     B --> C["Хай він спить"]
     B --> D["Хай він допоможе"]
     B --> E["Хай все буде добре"]
+
+    style A fill:#fff,stroke:#4a90d9,stroke-width:2px,color:#333
+    style B fill:#fff,stroke:#666,stroke-width:1px,color:#333
+    style C fill:#fff,stroke:#7ed321,stroke-width:1px,color:#333
+    style D fill:#fff,stroke:#7ed321,stroke-width:1px,color:#333
+    style E fill:#fff,stroke:#7ed321,stroke-width:1px,color:#333
 ```
 
 - **хай** — розмовний стиль, неформально.
@@ -173,6 +199,14 @@ flowchart TD
     B --> E["Let's get this <b>DONE</b><br/>Давай зателефонуємо!"]
     C --> F["Let's do something<br/>Давай будемо дружити!"]
     D --> G["Let's do it <b>NOW</b><br/>Давай їсти!"]
+
+    style A fill:#fff,stroke:#4a90d9,stroke-width:2px,color:#333
+    style B fill:#fff,stroke:#f5a623,stroke-width:1px,color:#333
+    style C fill:#fff,stroke:#f5a623,stroke-width:1px,color:#333
+    style D fill:#fff,stroke:#f5a623,stroke-width:1px,color:#333
+    style E fill:#fff,stroke:#7ed321,stroke-width:1px,color:#333
+    style F fill:#fff,stroke:#7ed321,stroke-width:1px,color:#333
+    style G fill:#fff,stroke:#7ed321,stroke-width:1px,color:#333
 ```
 
 | Конструкція | Значення | Приклад |

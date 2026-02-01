@@ -1,14 +1,28 @@
 module: b1-76
 level: B1
-slug: ukrainian-music-today
-version: '2.0'
+slug: 76-ukrainian-music-today
+version: '1.0'
 id: b1-76
-focus: cultural
 naturalness:
   score: 9
   status: PASS
-  justification: Essential contemporary cultural knowledge
 duration: 90
 transliteration: none
+tags:
+- culture
+- music
+- arts
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-01'
+word_target: 1400
+content_outline:
+- section: "Вступ — Музика як ідентичність"
+  words: 130
+- section: "Історія та культура"
+  words: 460
+- section: "Сучасність"
+  words: 211
+- section: "Практика"
+  words: 314
+- section: "Продукція"
+  words: 338

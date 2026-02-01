@@ -1,8 +1,8 @@
 # Audit Report: M139 — zlochyny-stiikist.md
 **Level:** B2 | **Module:** M139 | **Phase:** HIST.13 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-31 13:24:50
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 14:55:07
 
 ## Configuration
 **Type:** B2-history
@@ -20,73 +20,74 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | true-false | Аналіз окупації | 8 | 8 | ✅ |
-| 2 | true-false | Крилаті вислови війни | 8 | 8 | ✅ |
-| 3 | true-false | Визначте правдивість тверджень про звільнення територій. | 8 | 8 | ✅ |
-| 4 | essay-response | Ціна і Сенс Стійкості | 1 | 1 | ✅ |
-| 5 | comparative-study | Дві стратегії терору | 1 | 1 | ✅ |
+| 1 | reading | Свідчення про злочини: Ізюм та Буча | 3 | 1 | ✅ |
+| 2 | true-false | Аналіз окупації | 10 | 8 | ✅ |
+| 3 | true-false | Крилаті вислови війни | 10 | 8 | ✅ |
+| 4 | true-false | Звільнення територій | 10 | 8 | ✅ |
+| 5 | essay-response | Ціна і Сенс Стійкості | 1 | 1 | ✅ |
+| 6 | comparative-study | Дві стратегії терору | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 5 (target: 3-9) ✅
-- Unique types: 3 (minimum: 2) ✅
-- Priority types used: 2/4 (comparative-study, essay-response) ✅
-- Required types used: 1/2 (essay-response) ❌
+- Total activities: 6 (target: 3-9) ✅
+- Unique types: 4 (minimum: 2) ✅
+- Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in zlochyny-stiikist.yaml: Schema validation error at key '2': {'type': 'true-false', 'items': [{'explanation': 'Звільнення було результатом тривалої операції та вогневого контролю.', 'statement': 'Російські війська залишили Херсон без жодного опору з боку ЗСУ.', 'correct': False}, {'explanation': 'В лісі під Ізюмом знайшли понад 400 могил.', 'statement': 'Після деокупації Ізюма були виявлені численні масові поховання.', 'correct': True}, {'explanation': 'Це був спосіб зберегти енергосистему після атак.', 'statement': 'Світло в Україні вимикали за графіками для економії енергії.', 'correct': True}, {'explanation': 'Допомога енергообладнанням була масовою.', 'statement': 'Міжнародна спільнота не надає Україні генератори та трансформатори.', 'correct': False}, {'explanation': 'Боротьба за повернення кожної дитини триває.', 'statement': 'Українські діти, депортовані в Росію, вже всі повернулися додому.', 'correct': False}, {'explanation': 'Її підтримують десятки країн-партнерів.', 'statement': 'Спеціальний трибунал — це ідея лише української влади.', 'correct': False}, {'explanation': 'Україна стала прикладом боротьби за цінності.', 'statement': 'Стійкість українців надихнула багато народів світу.', 'correct': True}, {'explanation': 'Бойові дії та окупація значних територій тривають.', 'statement': 'Війна закінчилася одразу після звільнення Херсона.', 'correct': False}], 'title': 'Визначте правдивість тверджень про звільнення територій.', 'instruction': 'Визначте, чи твердження правильне.'} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+## TEMPLATE COMPLIANCE
+- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!myth-buster]' per template 'b2-history-module-template.md'
+  - FIX: Add a `> [!myth-buster]` box as specified in the template. This enhances module quality.
 
 ## Recommendation
-**📝 UPDATE** (severity 25/100)
+**📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ❌ 2009/4000 (raw: 2175)
-- **Activities:** ✅ 5/3
+- **Words:** ✅ 4163/4000 (raw: 4294)
+- **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 3/2 types
+- **Unique_types:** ✅ 4/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 11/5
+- **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 20 (soft target)
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Vocab:** ✅ 20/20
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 96.1% (target 90-100% (history))
-- **Richness:** ✅ 97% (history)
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (6 activities)
+- **Immersion:** 🇺🇦 98.6% (target 90-100% (history))
+- **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 97% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 10 | 3 | 100% | 24% | 23.8% |
-| engagement | 11 | 6 | 100% | 14% | 14.3% |
-| timeline_markers | 24 | 10 | 100% | 14% | 14.3% |
-| decolonization | 14 | 2 | 100% | 14% | 14.3% |
-| cultural | 3 | 4 | 75% | 10% | 7.1% |
-| visual | 9 | 4 | 100% | 10% | 9.5% |
-| variety | 0.99 | - | 99% | 5% | 4.7% |
+| primary_sources | 15 | 3 | 100% | 24% | 23.8% |
+| engagement | 7 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 29 | 10 | 100% | 14% | 14.3% |
+| decolonization | 15 | 2 | 100% | 14% | 14.3% |
+| cultural | 4 | 4 | 100% | 10% | 9.5% |
+| visual | 8 | 4 | 100% | 10% | 9.5% |
+| variety | 0.97 | - | 97% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 14 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **97.6%** |
+| questions | 11 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Злочини і Стійкість: Біль та Перемога** | ⚪️ | 111 | Skipped |
-| **Вступ: Обличчя окупації** | ✅ | 251 | Included in Core |
-| **Читання: Тріумф визволення та випробування темрявою** | ✅ | 850 | Included in Core |
-| **Первинні джерела** | ✅ | 320 | Included in Core |
-| **Деколонізаційний погляд** | ✅ | 289 | Included in Core |
-| **Підсумок** | ✅ | 78 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Злочини і стійкість: Ціна свободи** | ⚪️ | 83 | Skipped |
+| **Вступ: Злочин та відплата** | ✅ | 498 | Included in Core |
+| **Воєнні злочини** | ⚪️ | 800 | Skipped |
+| **Стійкість** | ⚪️ | 605 | Skipped |
+| **Первинні джерела** | ✅ | 703 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 481 | Included in Core |
+| **Читання** | ✅ | 328 | Included in Core |
+| **Підсумок** | ✅ | 665 | Included in Core |

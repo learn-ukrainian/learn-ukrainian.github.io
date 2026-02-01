@@ -13,4 +13,14 @@ tags:
 - motion-verbs
 - verbs
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-01'
+word_target: 2000
+content_outline:
+- section: Вступ
+  words: 300
+- section: Пояснення
+  words: 350
+- section: Практика
+  words: 1000
+- section: Діалоги
+  words: 350

@@ -1,15 +1,15 @@
 {
   "module": "76-ukrainian-music-today",
   "level": "B1",
-  "plan_version": "2.0",
-  "last_audit": "2026-01-30T00:45:15.148137Z",
+  "plan_version": "1.0",
+  "last_audit": "2026-02-01T19:05:38.127953Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-11T20:32:44.157912Z",
-    "meta": "2026-01-27T18:54:53.050471Z",
+    "md": "2026-02-01T17:50:29.416220Z",
+    "meta": "2026-02-01T17:50:25.518328Z",
     "activities": "2026-01-27T19:08:24.706663Z",
     "vocabulary": "2026-01-25T18:00:40.670743Z",
-    "plan": "2026-01-29T23:55:56.643076Z"
+    "plan": "2026-01-30T10:40:11.167188Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1730/1500 (raw: 2123)"
+      "message": "1730/1400 (raw: 2127)"
     },
     "activities": {
       "status": "pass",

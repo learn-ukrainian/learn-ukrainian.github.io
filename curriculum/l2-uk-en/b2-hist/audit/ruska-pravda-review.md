@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M13 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-31 12:55:48
+**Generated:** 2026-02-01 14:53:52
 
 ## Configuration
 **Type:** B2-history

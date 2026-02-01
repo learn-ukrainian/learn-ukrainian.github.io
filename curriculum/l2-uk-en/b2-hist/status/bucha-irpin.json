@@ -2,10 +2,10 @@
   "module": "bucha-irpin",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-31T13:24:47.750650Z",
+  "last_audit": "2026-02-01T14:55:04.090349Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-28T18:19:39.696238Z",
+    "md": "2026-02-01T10:06:19.966275Z",
     "meta": "2026-01-26T22:20:12.960388Z",
     "activities": "2026-01-28T18:08:00.704078Z",
     "vocabulary": "2026-01-28T18:07:47.088393Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4595/4000 (raw: 4799)"
+      "message": "4934/4000 (raw: 5138)"
     },
     "activities": {
       "status": "pass",
@@ -39,10 +39,8 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "1 Critical Template Violations"
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 5,
     "fail_count": 0
   }

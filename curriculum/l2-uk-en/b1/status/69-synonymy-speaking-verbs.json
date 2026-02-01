@@ -2,14 +2,14 @@
   "module": "69-synonymy-speaking-verbs",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T19:01:54.809871Z",
+  "last_audit": "2026-02-01T17:52:46.442976Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-11T20:15:51.261051Z",
-    "meta": "2026-01-26T15:44:41.670380Z",
+    "meta": "2026-02-01T17:18:53.396798Z",
     "activities": "2026-01-27T18:58:25.020646Z",
     "vocabulary": "2026-01-25T15:44:17.244833Z",
-    "plan": "2026-01-27T18:50:24.508944Z"
+    "plan": "2026-01-29T07:45:40.470094Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "1745/1500 (raw: 2336)"
+      "message": "1745/1828 (raw: 2336) (83 short)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
+    "pass_count": 3,
     "fail_count": 0
   }
 }

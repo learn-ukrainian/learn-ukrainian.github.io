@@ -2,13 +2,13 @@
   "module": "diaspora",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-31T15:15:19.058205Z",
+  "last_audit": "2026-02-01T14:54:54.635329Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-31T15:13:42.806213Z",
-    "meta": "2026-01-31T15:08:50.991591Z",
-    "activities": "2026-01-31T15:15:09.897635Z",
-    "vocabulary": "2026-01-31T13:51:06.279260Z",
+    "md": "2026-01-31T16:02:26.342129Z",
+    "meta": "2026-01-31T16:01:57.949136Z",
+    "activities": "2026-01-31T16:04:31.004852Z",
+    "vocabulary": "2026-01-31T15:59:09.316928Z",
     "plan": null
   },
   "gates": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "4014/4000 (raw: 4221) | pedagogy: 3 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "4230/4000 (raw: 4443)"
     },
     "activities": {
-      "status": "fail",
-      "violations": 4,
-      "message": "0/3 | density: 0 < 1 | unique_types: 0/2 types | priority: No priority types"
+      "status": "pass",
+      "violations": 0,
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "pass",
@@ -33,18 +33,15 @@
       "message": "23/20"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "0/10 (PENDING) - Naturalness check required"
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "3 Outline Compliance Errors",
-      "Missing required activity types: essay-response, reading"
-    ],
-    "pass_count": 2,
-    "fail_count": 3
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

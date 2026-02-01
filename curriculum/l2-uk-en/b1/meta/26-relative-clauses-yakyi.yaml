@@ -11,3 +11,15 @@ duration: 90
 transliteration: none
 build:
   last_modified: '2026-01-26'
+word_target: 1599
+content_outline:
+- section: Тест
+  words: 131
+- section: Теорія
+  words: 205
+- section: Поглиблення
+  words: 561
+- section: Практика
+  words: 5
+- section: Діалоги
+  words: 204

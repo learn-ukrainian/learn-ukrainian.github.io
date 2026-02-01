@@ -1,61 +1,101 @@
-vocabulary:
-  - lemma: інтервенція
-    translation: intervention
-    ipa: "in.ter.ˈvɛn.t͡sʲi.jɐ"
-  - lemma: окупація
-    translation: occupation
-    ipa: "o.ku.ˈpɑ.t͡sʲi.jɐ"
-  - lemma: контингент
-    translation: contingent
-    ipa: "kon.ten.ˈɦɛnt"
-  - lemma: моджахед
-    translation: mujahideen
-    ipa: "mod.ʒɑ.ˈxɛd"
-  - lemma: партизан
-    translation: partisan/guerilla
-    ipa: "pɑr.tɪ.ˈzɑn"
-  - lemma: цинкова труна
-    translation: zinc coffin
-    ipa: "ˈt͡sɪn.ko.wɐ tru.ˈnɑ"
-  - lemma: вантаж 200
-    translation: Cargo 200 (killed in action)
-    ipa: "wɑn.ˈtɑʒ dwi.sʲtʲi"
-  - lemma: призов
-    translation: conscription
-    ipa: "ˈprɪ.zow"
-  - lemma: дедовщина
-    translation: hazing (dedovshchina)
-    ipa: "dɛ.dow.ˈʃt͡ʃɪ.nɐ"
-  - lemma: гарматне м'ясо
-    translation: cannon fodder
-    ipa: "ɦɑr.ˈmɑt.nɛ ˈmjɑ.so"
-  - lemma: імперіалізм
-    translation: imperialism
-    ipa: "im.pe.ri.ɑ.ˈlizm"
-  - lemma: колоніальний
-    translation: colonial
-    ipa: "ko.lo.ni.ˈɑlʲ.nɪj"
-  - lemma: травма
-    translation: trauma
-    ipa: "ˈtrɑw.mɐ"
-  - lemma: синдром
-    translation: syndrome
-    ipa: "sɪn.ˈdrom"
-  - lemma: ветеран
-    translation: veteran
-    ipa: "we.te.ˈrɑn"
-  - lemma: обов'язок
-    translation: duty
-    ipa: "o.ˈbo.wjɑ.zok"
-  - lemma: пастка
-    translation: trap
-    ipa: "ˈpɑst.kɐ"
-  - lemma: зрада
-    translation: betrayal/treason
-    ipa: "ˈzrɑ.dɐ"
-  - lemma: чужий
-    translation: alien/foreign
-    ipa: "t͡ʃu.ˈʒɪj"
-  - lemma: повернення
-    translation: return
-    ipa: "po.ˈwɛr.nɛn.nʲɐ"
+module: b2-hist-116
+level: B2-HIST
+items:
+- lemma: інтервенція
+  ipa: in.ter.ˈvɛn.t͡sʲi.jɐ
+  translation: intervention
+  pos: noun
+  gender: f
+- lemma: окупація
+  ipa: o.ku.ˈpɑ.t͡sʲi.jɐ
+  translation: occupation
+  pos: noun
+  gender: f
+- lemma: контингент
+  ipa: kon.ten.ˈɦɛnt
+  translation: contingent
+  pos: noun
+  gender: m
+- lemma: моджахед
+  ipa: mod.ʒɑ.ˈxɛd
+  translation: mujahideen
+  pos: noun
+  gender: m
+- lemma: партизан
+  ipa: pɑr.tɪ.ˈzɑn
+  translation: partisan/guerilla
+  pos: noun
+  gender: m
+- lemma: цинкова труна
+  ipa: ˈt͡sɪn.ko.wɐ tru.ˈnɑ
+  translation: zinc coffin
+  pos: noun
+  gender: f
+- lemma: вантаж 200
+  ipa: wɑn.ˈtɑʒ dwi.sʲtʲi
+  translation: Cargo 200 (killed in action)
+  pos: noun
+- lemma: призов
+  ipa: ˈprɪ.zow
+  translation: conscription
+  pos: noun
+  gender: m
+- lemma: дедовщин
+  ipa: dɛ.dow.ˈʃt͡ʃɪ.nɐ
+  translation: hazing (dedovshchina)
+  pos: noun
+  gender: m
+- lemma: гарматне м'ясо
+  ipa: ɦɑr.ˈmɑt.nɛ ˈmjɑ.so
+  translation: cannon fodder
+  pos: noun
+  gender: n
+- lemma: імперіалізм
+  ipa: im.pe.ri.ɑ.ˈlizm
+  translation: imperialism
+  pos: noun
+  gender: m
+- lemma: колоніальний
+  ipa: ko.lo.ni.ˈɑlʲ.nɪj
+  translation: colonial
+  pos: adj
+- lemma: травма
+  ipa: ˈtrɑw.mɐ
+  translation: trauma
+  pos: noun
+  gender: f
+- lemma: синдром
+  ipa: sɪn.ˈdrom
+  translation: syndrome
+  pos: noun
+  gender: m
+- lemma: ветеран
+  ipa: we.te.ˈrɑn
+  translation: veteran
+  pos: noun
+  gender: m
+- lemma: обов'язок
+  ipa: o.ˈbo.wjɑ.zok
+  translation: duty
+  pos: noun
+  gender: m
+- lemma: пастка
+  ipa: ˈpɑst.kɐ
+  translation: trap
+  pos: noun
+  gender: f
+- lemma: зрада
+  ipa: ˈzrɑ.dɐ
+  translation: betrayal/treason
+  pos: noun
+  gender: f
+- lemma: чужий
+  ipa: t͡ʃu.ˈʒɪj
+  translation: alien/foreign
+  pos: noun
+  gender: m
+- lemma: повернення
+  ipa: po.ˈwɛr.nɛn.nʲɐ
+  translation: return
+  pos: noun
+  gender: n

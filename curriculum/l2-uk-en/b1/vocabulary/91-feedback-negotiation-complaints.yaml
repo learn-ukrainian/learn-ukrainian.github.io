@@ -1,0 +1,89 @@
+module: 91-feedback-negotiation-complaints
+level: B1
+version: '2.0'
+items:
+- lemma: зворотний зв'язок
+  ipa: /zvɔrˈɔtnɪj zvjazˈɔk/
+  translation: feedback
+  pos: noun
+  gender: m
+- lemma: критика
+  ipa: /krˈɪtɪka/
+  translation: criticism
+  pos: noun
+  gender: f
+- lemma: похвала
+  ipa: /pɔxvˈala/
+  translation: praise
+  pos: noun
+  gender: f
+- lemma: переговори
+  ipa: /pɛrɛhɔvˈɔrɪ/
+  translation: negotiation
+  pos: noun
+  gender: pl
+- lemma: пропозиція
+  ipa: /prɔpɔzˈɪt͡sija/
+  translation: proposal, offer
+  pos: noun
+  gender: f
+- lemma: компроміс
+  ipa: /kɔmprɔmˈis/
+  translation: compromise
+  pos: noun
+  gender: m
+- lemma: скарга
+  ipa: /skˈarɦa/
+  translation: complaint
+  pos: noun
+  gender: f
+- lemma: вирішення
+  ipa: /ʋɪrˈiʃɛnnja/
+  translation: solution, resolution
+  pos: noun
+  gender: n
+- lemma: конструктивний
+  ipa: /kɔnstruktˈɪʋnɪj/
+  translation: constructive
+  pos: adj
+- lemma: врахувати
+  ipa: /ʋraxuʋˈatɪ/
+  translation: to take into account
+  pos: verb
+- lemma: домовитися
+  ipa: /dɔmɔʋˈɪtɪsja/
+  translation: to agree, to negotiate
+  pos: verb
+- lemma: незручності
+  ipa: /nɛzrˈut͡ʃnɔsti/
+  translation: inconvenience
+  pos: noun
+  gender: pl
+- lemma: компенсація
+  ipa: /kɔmpɛnsˈat͡sija/
+  translation: compensation
+  pos: noun
+  gender: f
+- lemma: поступка
+  ipa: /pɔstˈupka/
+  translation: concession
+  pos: noun
+  gender: f
+- lemma: зауваження
+  ipa: /zauʋˈaʒɛnnja/
+  translation: remark, comment
+  pos: noun
+  gender: n
+- lemma: домовленість
+  ipa: /dɔmɔʋlˈɛnistʲ/
+  translation: agreement
+  pos: noun
+  gender: f
+- lemma: перепрошую
+  ipa: /pɛrɛprˈɔʃuju/
+  translation: I apologize
+  pos: verb
+- lemma: пом'якшувати
+  ipa: /pɔmjˈakʃuʋatɪ/
+  translation: to soften
+  pos: verb

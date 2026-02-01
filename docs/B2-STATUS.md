@@ -1,6 +1,6 @@
 # B2 Module Status
 
-**Generated:** 2026-01-30 21:19:46
+**Generated:** 2026-02-01 19:28:24
 **Total Modules:** 94
 **Status:** 0 passing, 94 failing, 0 stubs, 0 errors
 
@@ -98,8 +98,8 @@
 | 082 | 82-capstone-prezentatsiya | ❌ FAIL | 1868/2000 | 6 Outline Compliance Errors, 12 forbidden activity types (use --fix to remove), Missing required activity types: reading |
 | 083 | 83-b2-pidsumkovyy-ohlyad | ❌ FAIL | 1802/2000 | 6 Outline Compliance Errors, Missing required activity types: reading |
 | 084 | 84-checkpoint-register-synthesis | ❌ FAIL | 1798/2000 | 7 Outline Compliance Errors, Missing required activity types: true-false |
-| 085 | professional-email-basics | ❌ FAIL | 1727/2000 | 6 Outline Compliance Errors, Missing required activity types: essay-response, reading |
-| 086 | professional-email-advanced | ❌ FAIL | 4154/1750 | 12 forbidden activity types (use --fix to remove), Missing required activity types: essay-response, reading |
+| 085 | 85-professional-email-basics | ❌ FAIL | 1727/2000 | 6 Outline Compliance Errors, Missing required activity types: essay-response, reading |
+| 086 | 86-professional-email-advanced | ❌ FAIL | 4154/1750 | 12 forbidden activity types (use --fix to remove), Missing required activity types: essay-response, reading |
 | 087 | 87-professional-reports-basics | ❌ FAIL | 4554/1750 | Missing required activity types: essay-response, reading |
 | 088 | 88-professional-reports-advanced | ❌ FAIL | 3799/1750 | Missing required activity types: essay-response, reading |
 | 089 | 89-news-analysis-basics | ❌ FAIL | 4258/1750 | Missing required activity types: essay-response, reading |

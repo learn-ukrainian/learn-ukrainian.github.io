@@ -1,8 +1,8 @@
 # Audit Report: M23 — 23-complete-imperative.md
 **Level:** A2 | **Module:** M23 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 8/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 21:12:44
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-31 20:25:05
 
 ## Configuration
 **Type:** A2-grammar
@@ -41,24 +41,25 @@
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 15/100)
 
 - 1 violations (minor)
+- Immersion 9% off target (minor)
 
 ## Gates
-- **Words:** ✅ 1106/1000 (raw: 1268)
+- **Words:** ✅ 1555/1000 (raw: 1981)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/4
+- **Engagement:** ✅ 7/4
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 40/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 51.5% (target 50-65% (A2.2))
+- **Immersion:** ❌ 41.0% LOW (target 50-65% (A2.2))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
 
@@ -67,8 +68,9 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Introduction / Вступ** | ✅ | 238 | Included in Core |
-| **Presentation / Презентація** | ✅ | 388 | Included in Core |
+| **Presentation / Презентація** | ✅ | 831 | Included in Core |
 | **Practice / Практика** | ⚪️ | 212 | Skipped |
 | **Dialogues / Діалоги** | ✅ | 138 | Included in Core |
 | **Summary / Підсумок** | ✅ | 86 | Included in Core |
 | **Need More Practice?** | ⚪️ | 44 | Skipped |
+| **Quick Reference / Швидка довідка** | ⚪️ | 6 | Skipped |

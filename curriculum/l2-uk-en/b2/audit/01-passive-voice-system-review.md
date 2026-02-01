@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M01 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:02
+**Generated:** 2026-02-01 19:28:33
 
 ## Configuration
 **Type:** B2-grammar

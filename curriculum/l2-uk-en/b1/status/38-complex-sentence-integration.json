@@ -2,14 +2,14 @@
   "module": "38-complex-sentence-integration",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T16:25:57.205702Z",
+  "last_audit": "2026-02-01T17:52:28.737978Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.350074Z",
-    "meta": "2026-01-26T15:44:41.569404Z",
+    "meta": "2026-02-01T17:02:22.435974Z",
     "activities": "2026-01-11T10:42:06.623574Z",
     "vocabulary": "2026-01-25T16:02:18.412998Z",
-    "plan": "2026-01-27T16:20:19.478753Z"
+    "plan": "2026-01-29T07:45:40.384698Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1581/1500 (raw: 1872)"
+      "message": "1581/1576 (raw: 1872)"
     },
     "activities": {
       "status": "pass",

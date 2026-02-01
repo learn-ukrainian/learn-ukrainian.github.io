@@ -1,15 +1,15 @@
 {
   "module": "40-reported-questions-commands",
   "level": "B1",
-  "plan_version": "2.0",
-  "last_audit": "2026-01-27T16:25:57.855108Z",
+  "plan_version": "1.0",
+  "last_audit": "2026-02-01T17:52:29.942859Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.350102Z",
-    "meta": "2026-01-26T15:44:41.575976Z",
+    "meta": "2026-02-01T17:06:50.750796Z",
     "activities": "2026-01-11T22:51:42.996668Z",
     "vocabulary": "2026-01-25T01:42:53.246365Z",
-    "plan": "2026-01-27T16:20:20.202218Z"
+    "plan": "2026-01-29T07:45:40.389918Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1645/1500 (raw: 2140)"
+      "message": "1645/1600 (raw: 2140)"
     },
     "activities": {
       "status": "pass",

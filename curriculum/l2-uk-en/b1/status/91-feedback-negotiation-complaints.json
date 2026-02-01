@@ -1,0 +1,47 @@
+{
+  "module": "91-feedback-negotiation-complaints",
+  "level": "B1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-01T17:52:58.698582Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-01T00:07:47.127663Z",
+    "meta": "2026-01-31T23:35:27.606368Z",
+    "activities": "2026-01-31T23:59:11.143908Z",
+    "vocabulary": "2026-01-31T23:56:01.364963Z",
+    "plan": "2026-01-31T23:54:29.882724Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "1984/1750 (raw: 2633)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "11/10"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "18/15"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

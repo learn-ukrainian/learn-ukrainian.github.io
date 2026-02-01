@@ -1,12 +1,12 @@
 # Audit Report: M27 — 27-relative-clauses-de-kudy-zvidky.md
-**Level:** B1 | **Module:** M27 | **Phase:** B1.3a | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M27 | **Phase:** B1.3a | **Pedagogy:** TTT | **Target:** 1712
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 16:25:53
+**Generated:** 2026-02-01 17:52:22
 
 ## Configuration
 **Type:** B1-grammar
-**Word Target:** 1500 words
+**Word Target:** 1712 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -42,7 +42,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1788/1500 (raw: 2059)
+- **Words:** ✅ 1788/1712 (raw: 2059)
 - **Activities:** ✅ 13/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types

@@ -1,12 +1,12 @@
 # Audit Report: M23 — 23-motion-patterns-other-verbs.md
-**Level:** B1 | **Module:** M23 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M23 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 1963
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 16:25:52
+**Generated:** 2026-02-01 17:52:20
 
 ## Configuration
 **Type:** B1-grammar
-**Word Target:** 1500 words
+**Word Target:** 1963 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -41,7 +41,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2081/1500 (raw: 2307)
+- **Words:** ✅ 2081/1963 (raw: 2307)
 - **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types

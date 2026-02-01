@@ -1,12 +1,12 @@
 # Audit Report: M12 — 12-aspect-pairs-essential-40.md
-**Level:** B1 | **Module:** M12 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M12 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 3000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 16:25:48
+**Generated:** 2026-02-01 17:52:13
 
 ## Configuration
 **Type:** B1-grammar
-**Word Target:** 1500 words
+**Word Target:** 3000 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -41,19 +41,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1670/1500 (raw: 2405)
+- **Words:** ✅ 3668/3000 (raw: 3761)
 - **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 11/5
+- **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 93/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 97.0% (target 85-100% (B1.2 Motion))
+- **Immersion:** 🇺🇦 96.1% (target 85-100% (B1.2 Motion))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -65,25 +65,26 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 30 | 24 | 100% | 20% | 20.0% |
-| engagement | 11 | 5 | 100% | 15% | 15.0% |
-| dialogues | 14 | 4 | 100% | 15% | 15.0% |
-| variety | 0.96 | - | 96% | 10% | 9.6% |
+| examples | 31 | 24 | 100% | 20% | 20.0% |
+| engagement | 6 | 5 | 100% | 15% | 15.0% |
+| dialogues | 41 | 4 | 100% | 15% | 15.0% |
+| variety | 0.99 | - | 99% | 10% | 9.9% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
-| realworld | 3 | 3 | 100% | 10% | 10.0% |
-| visual | 4 | 3 | 100% | 5% | 5.0% |
+| realworld | 9 | 3 | 100% | 10% | 10.0% |
+| visual | 6 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 32 | 5 | 100% | 5% | 5.0% |
+| questions | 61 | 5 | 100% | 5% | 5.0% |
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.6%** |
+| **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 43 | Included in Core |
-| **Тест** | ⚪️ | 138 | Skipped |
-| **Пояснення** | ⚪️ | 569 | Skipped |
-| **Практика** | ⚪️ | 345 | Skipped |
-| **Діалоги** | ✅ | 288 | Included in Core |
-| **Підсумок** | ✅ | 177 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Видові пари: 40 найважливіших** | ⚪️ | 111 | Skipped |
+| **Тест** | ⚪️ | 230 | Skipped |
+| **Пояснення** | ⚪️ | 1477 | Skipped |
+| **Практика** | ⚪️ | 731 | Skipped |
+| **Діалоги** | ✅ | 816 | Included in Core |
+| **Підсумок** | ✅ | 193 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

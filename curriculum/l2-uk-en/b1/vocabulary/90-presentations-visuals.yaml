@@ -1,0 +1,88 @@
+module: 90-presentations-visuals
+level: B1
+version: '2.0'
+items:
+- lemma: презентація
+  ipa: /prɛzɛntˈat͡sija/
+  translation: presentation
+  pos: noun
+  gender: f
+- lemma: слайд
+  ipa: /slajd/
+  translation: slide
+  pos: noun
+  gender: m
+- lemma: графік
+  ipa: /ɦrˈafik/
+  translation: graph, chart
+  pos: noun
+  gender: m
+- lemma: діаграма
+  ipa: /diahˈrama/
+  translation: diagram
+  pos: noun
+  gender: f
+- lemma: таблиця
+  ipa: /tablˈɪt͡sja/
+  translation: table
+  pos: noun
+  gender: f
+- lemma: дані
+  ipa: /dˈani/
+  translation: data
+  pos: noun
+  gender: pl
+- lemma: зростати
+  ipa: /zrɔstˈatɪ/
+  translation: to grow, to increase
+  pos: verb
+- lemma: падати
+  ipa: /pˈadatɪ/
+  translation: to fall, to decrease
+  pos: verb
+- lemma: аудиторія
+  ipa: /audɪtˈɔrija/
+  translation: audience
+  pos: noun
+  gender: f
+- lemma: висновок
+  ipa: /ʋˈɪsnɔʋɔk/
+  translation: conclusion
+  pos: noun
+  gender: m
+- lemma: наочний
+  ipa: /naˈɔt͡ʃnɪj/
+  translation: visual
+  pos: adj
+- lemma: тенденція
+  ipa: /tɛndˈɛnt͡sija/
+  translation: trend
+  pos: noun
+  gender: f
+- lemma: показник
+  ipa: /pɔkˈaznɪk/
+  translation: indicator, index
+  pos: noun
+  gender: m
+- lemma: частка
+  ipa: /t͡ʃˈastka/
+  translation: share, portion
+  pos: noun
+  gender: f
+- lemma: узагальнювати
+  ipa: /uzaɦˈalʲnjuʋatɪ/
+  translation: to summarize, to generalize
+  pos: verb
+- lemma: резюмувати
+  ipa: /rɛzʲumˈuʋatɪ/
+  translation: to summarize
+  pos: verb
+- lemma: джерело
+  ipa: /dʒɛrɛlˈɔ/
+  translation: source
+  pos: noun
+  gender: n
+- lemma: згідно з
+  ipa: /zɦˈidnɔ z/
+  translation: according to
+  pos: prep

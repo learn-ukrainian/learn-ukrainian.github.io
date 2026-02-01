@@ -1,13 +1,28 @@
 module: b1-63
 level: B1
-slug: health-wellness
-version: '2.0'
+slug: 63-health-wellness
+version: '1.0'
 id: b1-63
 naturalness:
   score: 9
   status: PASS
-  justification: Essential for personal well-being discussions
 duration: 90
 transliteration: none
+tags:
+- vocab
+- health
+- wellness
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-01'
+word_target: 1650
+content_outline:
+- section: Вступ
+  words: 106
+- section: Вживання
+  words: 265
+- section: Читання
+  words: 342
+- section: Діалоги
+  words: 332
+- section: Лексика
+  words: 621

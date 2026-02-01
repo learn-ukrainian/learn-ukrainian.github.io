@@ -1,30 +1,3 @@
----
-module: b2-hist-01
-title: 'Трипільська цивілізація'
-subtitle: 'Trypillian Civilization — Origins of Ukrainian Land'
-version: '2.0'
-phase: 'B2-HIST.1 [Витоки]'
-pedagogy: seminar
-focus: history
-duration: 150
-transliteration: none
-register: публіцистичний
-tags:
-  - history
-  - era: eneolithic
-  - archaeology
-  - decolonization
----
-
-<!-- SCOPE
-Covers: Трипільська культура як одна з найдавніших цивілізацій Європи — історія відкриття, протоміста, господарство, ремесла, духовний світ
-Not covered:
-  - Скіфи та сармати → scythians-sarmatians
-  - Слов'янські племена → sloviany-origins
-  - Синтез фази Витоки → syntez-vytoky-1
-Related: scythians-sarmatians, sloviany-origins, syntez-vytoky-1
--->
-
 # Трипільська цивілізація
 
 > **Чому це важливо?**
@@ -114,7 +87,7 @@ Related: scythians-sarmatians, sloviany-origins, syntez-vytoky-1
 
 *Приклад:* «Хвойка відмовився підпорядкувати свої висновки імперській ідеології, яка заперечувала окремішність української історії.»
 
-## Протоміста-гіганти: Майданецьке та Тальянки
+## Протоміста
 
 Після відкриттів Хвойки дослідження Трипільської культури продовжилися, залучаючи нові покоління вчених та все складніші методи аналізу.
 

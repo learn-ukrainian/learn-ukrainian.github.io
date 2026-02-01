@@ -1,13 +1,26 @@
 module: b1-40
 level: B1
-slug: reported-questions-commands
-version: '2.0'
+slug: 40-reported-questions-commands
+version: '1.0'
 id: b1-40
 naturalness:
   score: 9
   status: PASS
-  justification: Complete reported speech coverage
 duration: 90
 transliteration: none
+tags:
+- grammar
+- reported-speech
+- syntax
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-01'
+word_target: 1600
+content_outline:
+- section: Тест
+  words: 183
+- section: Пояснення
+  words: 787
+- section: Практика
+  words: 233
+- section: Діалоги
+  words: 199

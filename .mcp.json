@@ -1,12 +1,9 @@
 {
   "mcpServers": {
-    "ukrainian-validator": {
+    "message-broker": {
       "command": ".venv/bin/python",
-      "args": [".mcp/servers/ukrainian-validator/server.py"],
-      "env": {
-        "PYTHONPATH": "."
-      },
-      "description": "Ukrainian grammar validator using gemini-cli"
+      "args": [".mcp/servers/message-broker/server.py"],
+      "env": {}
     }
   }
 }

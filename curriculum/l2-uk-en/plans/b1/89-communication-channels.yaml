@@ -58,21 +58,21 @@ vocabulary_hints:
   - прикріплений файл (attachment)
   - тема листа (subject line)
 activity_hints:
-- type: dialogue-practice
-  focus: Role-play phone conversations
-  items: 6
+- type: fill-in
+  focus: Complete phone conversation phrases
+  items: 12
 - type: match-up
   focus: Match phrase to channel and register
   items: 15
 - type: cloze
   focus: Complete email and letter templates
-  items: 12
-- type: writing-task
-  focus: Write formal and informal messages
-  items: 2
+  items: 14
 - type: quiz
   focus: Choose appropriate channel for situation
-  items: 10
+  items: 12
+- type: unjumble
+  focus: Reorder dialogue sentences
+  items: 8
 focus: practical
 pedagogy: PPP
 prerequisites:

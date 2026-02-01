@@ -1,12 +1,12 @@
 # Audit Report: M57 — 57-discourse-markers-advanced.md
-**Level:** B1 | **Module:** M57 | **Phase:** B1.5 | **Pedagogy:** PPP | **Target:** 1500
+**Level:** B1 | **Module:** M57 | **Phase:** B1.5 | **Pedagogy:** PPP | **Target:** 1600
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 18:24:11
+**Generated:** 2026-02-01 17:52:39
 
 ## Configuration
 **Type:** B1-vocab
-**Word Target:** 1500 words
+**Word Target:** 1600 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -42,7 +42,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1874/1500 (raw: 2776)
+- **Words:** ✅ 1874/1600 (raw: 2776)
 - **Activities:** ✅ 13/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -55,28 +55,26 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 85-100% (B1.5-6 Vocab))
-- **Richness:** ✅ 96% (grammar)
+- **Richness:** ✅ 96% (vocabulary)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 96% (minimum: 95%)
-**Module Type:** grammar
+**Module Type:** vocabulary
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 24 | 24 | 100% | 20% | 20.0% |
-| engagement | 13 | 5 | 100% | 15% | 15.0% |
-| dialogues | 14 | 4 | 100% | 15% | 15.0% |
-| variety | 0.95 | - | 95% | 10% | 9.5% |
+| collocations | 30 | 20 | 100% | 25% | 25.0% |
+| usage_examples | 24 | 15 | 100% | 20% | 20.0% |
+| engagement | 13 | 4 | 100% | 15% | 15.0% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
-| realworld | 5 | 3 | 100% | 10% | 10.0% |
-| visual | 10 | 3 | 100% | 5% | 5.0% |
+| visual | 10 | 3 | 100% | 10% | 10.0% |
+| register_notes | 13 | 5 | 100% | 10% | 10.0% |
+| variety | 0.95 | - | 95% | 5% | 4.8% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 22 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **96.2%** |
+| **TOTAL** | | | | | **96.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -9,6 +9,22 @@ naturalness:
   justification: Сучасний український для політичного наративу
 duration: 120
 transliteration: none
+tags:
+- history
+- modern-ukraine
+- revolution
+- euromaidan
+activity_hints:
+- type: reading
+  focus: Свідчення учасників Майдану
+- type: essay-response
+  focus: Чому Революцію 2014 року називають «Революцією Гідності»?
+- type: critical-analysis
+  focus: Аналіз наративів
+- type: comparative-study
+  focus: Майдан 2004 та 2013
+- type: true-false
+  focus: Хронологія та факти
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-01-31'
 phase: HIST.13 [Russian Aggression]

@@ -1,12 +1,12 @@
 # Audit Report: M88 — 88-interviu-ta-podkasty.md
-**Level:** B1 | **Module:** M88 | **Phase:** B1.8 | **Pedagogy:** CBI | **Target:** 1500
+**Level:** B1 | **Module:** M88 | **Phase:** B1.8 | **Pedagogy:** CBI | **Target:** 1751
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 01:08:36
+**Generated:** 2026-02-01 17:52:57
 
 ## Configuration
 **Type:** B1-skills
-**Word Target:** 1500 words
+**Word Target:** 1751 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -40,7 +40,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2162/1500 (raw: 2274)
+- **Words:** ✅ 2162/1751 (raw: 2274)
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types

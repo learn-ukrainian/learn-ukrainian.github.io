@@ -1,12 +1,12 @@
 # Audit Report: M01 — 01-how-to-talk-about-grammar.md
-**Level:** B1 | **Module:** M01 | **Phase:** B1.0 | **Pedagogy:** PPP | **Target:** 1200
+**Level:** B1 | **Module:** M01 | **Phase:** B1.0 | **Pedagogy:** PPP | **Target:** 3000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-28 16:32:00
+**Generated:** 2026-02-01 17:52:07
 
 ## Configuration
 **Type:** B1-bridge
-**Word Target:** 1200 words
+**Word Target:** 3000 words
 **Activities:** 12-16 required
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥5 types required
@@ -45,7 +45,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 3367/1200 (raw: 3923)
+- **Words:** ✅ 3543/3000 (raw: 4099)
 - **Activities:** ✅ 16/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/5 types
@@ -57,7 +57,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 36.4% (B1.1 Aspect)
+- **Immersion:** 🇺🇦 38.3% (B1.1 Aspect)
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -69,27 +69,27 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 56 | 24 | 100% | 20% | 20.0% |
+| examples | 57 | 24 | 100% | 20% | 20.0% |
 | engagement | 8 | 5 | 100% | 15% | 15.0% |
 | dialogues | 13 | 4 | 100% | 15% | 15.0% |
-| variety | 0.97 | - | 97% | 10% | 9.7% |
-| cultural | 6 | 3 | 100% | 10% | 10.0% |
-| realworld | 15 | 3 | 100% | 10% | 10.0% |
+| variety | 0.96 | - | 96% | 10% | 9.6% |
+| cultural | 5 | 3 | 100% | 10% | 10.0% |
+| realworld | 14 | 3 | 100% | 10% | 10.0% |
 | visual | 6 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 85 | 5 | 100% | 5% | 5.0% |
+| questions | 92 | 5 | 100% | 5% | 5.0% |
 | proverbs | 4 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.7%** |
+| **TOTAL** | | | | | **99.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 78 | Included in Core |
-| **Introduction - Why Learn Grammar in Ukrainian?** | ✅ | 331 | Included in Core |
-| **Parts of Speech (Частини мови)** | ⚪️ | 778 | Skipped |
-| **Case Names (Відмінки)** | ⚪️ | 707 | Skipped |
-| **Basic Sentence Terms** | ⚪️ | 699 | Skipped |
+| **Introduction - Why Learn Grammar in Ukrainian?** | ✅ | 335 | Included in Core |
+| **Parts of Speech (Частини мови)** | ⚪️ | 940 | Skipped |
+| **Case Names (Відмінки)** | ⚪️ | 764 | Skipped |
+| **Basic Sentence Terms** | ⚪️ | 649 | Skipped |
 | **Practice Reading Grammar Explanations** | ⚪️ | 0 | Skipped (using YAML) |
 | **Mini-Dialogues** | ✅ | 298 | Included in Core |
-| **Summary and Self-Assessment** | ✅ | 103 | Included in Core |
+| **Summary and Self-Assessment** | ✅ | 106 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

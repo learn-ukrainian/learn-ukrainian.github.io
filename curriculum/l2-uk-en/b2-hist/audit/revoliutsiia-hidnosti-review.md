@@ -1,8 +1,8 @@
 # Audit Report: M126 — revoliutsiia-hidnosti.md
 **Level:** B2 | **Module:** M126 | **Phase:** HIST.13 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-31 13:24:42
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 14:54:59
 
 ## Configuration
 **Type:** B2-history
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading
+**Required Types:** comparative-study, critical-analysis, essay-response, reading, true-false
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -20,75 +20,64 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | true-false | Визначте правдивість тверджень про хід революції. | 8 | 8 | ✅ |
-| 2 | essay-response | Есе: Революція Гідності та ідентичність | 1 | 1 | ✅ |
-| 3 | comparative-study | Порівняльний аналіз: Майдан 2004 та 2013 | 1 | 1 | ✅ |
+| 1 | reading | Свідчення учасників Майдану | 3 | 1 | ✅ |
+| 2 | essay-response | Есе: Чому «Гідність»? | 1 | 1 | ✅ |
+| 3 | critical-analysis | Аналіз наративів: Революція чи переворот? | 1 | 1 | ✅ |
+| 4 | comparative-study | Порівняльний аналіз: Майдан 2004 та 2013 | 1 | 1 | ✅ |
+| 5 | true-false | Хронологія та факти Майдану | 10 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 3 (target: 3-9) ✅
-- Unique types: 3 (minimum: 2) ✅
-- Priority types used: 2/4 (comparative-study, essay-response) ✅
-- Required types used: 1/2 (essay-response) ❌
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 5/5 (comparative-study, critical-analysis, essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in revoliutsiia-hidnosti.yaml: Insufficient activities: 3 found, minimum 5 required for B2-HIST
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Читання|Хід|Основні події|Діяльність|Свідки|Великий рейд|Відбудова' found: Основні події, Читання: Хроніка спротиву
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-
-## Recommendation
-**📝 UPDATE** (severity 25/100)
-
-- 2 violations (minor)
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
-
 ## Gates
-- **Words:** ❌ 2139/4000 (raw: 2258)
-- **Activities:** ✅ 3/3
+- **Words:** ✅ 4688/4000 (raw: 4746)
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 3/2 types
+- **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 13/5
+- **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 20 (soft target)
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Vocab:** ✅ 20/20
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ✅ Content-heavy OK (3 activities)
-- **Immersion:** 🇺🇦 96.8% (target 90-100% (history))
-- **Richness:** ✅ 100% (history)
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Immersion:** 🇺🇦 99.5% (target 90-100% (history))
+- **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 100% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 4 | 3 | 100% | 24% | 23.8% |
-| engagement | 13 | 6 | 100% | 14% | 14.3% |
-| timeline_markers | 22 | 10 | 100% | 14% | 14.3% |
+| primary_sources | 15 | 3 | 100% | 24% | 23.8% |
+| engagement | 6 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 26 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 4 | 4 | 100% | 10% | 9.5% |
-| visual | 8 | 4 | 100% | 10% | 9.5% |
-| variety | 1.00 | - | 100% | 5% | 4.8% |
+| cultural | 6 | 4 | 100% | 10% | 9.5% |
+| visual | 6 | 4 | 100% | 10% | 9.5% |
+| variety | 0.95 | - | 95% | 5% | 4.5% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 8 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **100.0%** |
+| questions | 10 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Революція Гідності** | ⚪️ | 76 | Skipped |
-| **Вступ та контекст** | ✅ | 231 | Included in Core |
-| **Читання: Хроніка спротиву** | ✅ | 1266 | Included in Core |
-| **Первинні джерела** | ✅ | 132 | Included in Core |
-| **Деколонізаційний погляд** | ✅ | 256 | Included in Core |
-| **Підсумок** | ✅ | 68 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Intro/Narrative** | ✅ | 134 | Included in Core |
+| **Вступ: Чому «Гідність»?** | ✅ | 585 | Included in Core |
+| **Читання** | ✅ | 130 | Included in Core |
+| **Хронологія подій** | ✅ | 945 | Included in Core |
+| **Небесна Сотня** | ⚪️ | 776 | Skipped |
+| **Первинні джерела** | ✅ | 869 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 438 | Included in Core |
+| **Підсумок: Наслідки революції** | ✅ | 661 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 150 | Skipped |

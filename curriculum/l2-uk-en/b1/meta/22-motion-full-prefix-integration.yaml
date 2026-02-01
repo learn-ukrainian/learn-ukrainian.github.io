@@ -14,3 +14,13 @@ tags:
 - prefixes
 build:
   last_modified: '2026-01-26'
+word_target: 1800
+content_outline:
+- section: Тест
+  words: 130
+- section: Пояснення
+  words: 654
+- section: Практика
+  words: 251
+- section: Діалоги
+  words: 242

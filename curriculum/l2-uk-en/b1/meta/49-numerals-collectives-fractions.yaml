@@ -1,13 +1,28 @@
 module: b1-49
 level: B1
-slug: numerals-collectives-fractions
-version: '2.0'
+slug: 49-numerals-collectives-fractions
+version: '1.0'
 id: b1-49
 naturalness:
   score: 9
   status: PASS
-  justification: Essential numeral system expansion
 duration: 90
 transliteration: none
+tags:
+- grammar
+- numerals
+- vocab
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-01'
+word_target: 1500
+content_outline:
+- section: Тест
+  words: 199
+- section: Пояснення
+  words: 515
+- section: Дроби та відсотки
+  words: 369
+- section: Практика
+  words: 150
+- section: Діалоги
+  words: 292

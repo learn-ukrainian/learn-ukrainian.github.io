@@ -2,14 +2,14 @@
   "module": "03-reading-grammar-rules",
   "level": "B1",
   "plan_version": "1.0",
-  "last_audit": "2026-01-27T16:25:45.166554Z",
+  "last_audit": "2026-02-01T17:52:08.410592Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.349931Z",
-    "meta": "2026-01-26T15:44:41.440299Z",
+    "meta": "2026-01-29T07:39:04.626576Z",
     "activities": "2026-01-12T16:10:56.494698Z",
     "vocabulary": "2026-01-25T18:00:39.970384Z",
-    "plan": "2026-01-27T12:02:43.966849Z"
+    "plan": "2026-01-29T07:45:40.265795Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "3064/1200 (raw: 3837)"
+      "message": "3064/3000 (raw: 3837)"
     },
     "activities": {
       "status": "pass",

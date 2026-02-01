@@ -1,12 +1,12 @@
 # Audit Report: M46 — 46-past-passive-participles-2.md
-**Level:** B1 | **Module:** M46 | **Phase:** B1.4a | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M46 | **Phase:** B1.4a | **Pedagogy:** TTT | **Target:** 1659
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 18:08:36
+**Generated:** 2026-02-01 17:52:33
 
 ## Configuration
 **Type:** B1-grammar
-**Word Target:** 1500 words
+**Word Target:** 1659 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -40,7 +40,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1586/1500 (raw: 2076)
+- **Words:** ⚠️ 1586/1659 (raw: 2076) (73 short)
 - **Activities:** ✅ 11/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types

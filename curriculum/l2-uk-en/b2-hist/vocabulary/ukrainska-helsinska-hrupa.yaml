@@ -3,77 +3,126 @@ level: B2-HIST
 slug: ukrainska-helsinska-hrupa
 items:
 - lemma: правозахисний
+  ipa: /praʋɔzaxɪsnˈɪj/
   translation: human rights (adj)
-  note: правозахисний рух — human rights movement
+  pos: adj
 - lemma: дисидент
+  ipa: /dɪsɪdˈɛnt/
   translation: dissident
-  note: one who opposes official policy
+  pos: noun
+  gender: m
 - lemma: репресія
+  ipa: /rɛprˈɛsija/
   translation: repression
-  note: political persecution
+  pos: noun
+  gender: f
 - lemma: табір
+  ipa: /tˈabir/
   translation: camp
-  note: labor camp, gulag
+  pos: noun
+  gender: m
 - lemma: арешт
+  ipa: /arˈɛʃt/
   translation: arrest
-  note: taking someone into custody
+  pos: noun
+  gender: m
 - lemma: меморандум
+  ipa: /mɛmɔrˈandum/
   translation: memorandum
-  note: a written report or message
+  pos: noun
+  gender: m
 - lemma: політв'язень
+  ipa: /pɔlitʋˈjazɛnʲ/
   translation: political prisoner
-  note: person imprisoned for political beliefs
-- lemma: Гельсінкі
+  pos: noun
+  gender: m
+- lemma: гельсінкі
+  ipa: /ɦˈɛlʲsinki/
   translation: Helsinki
-  note: capital of Finland, place of 1975 Accords
+  pos: noun
+  gender: n
 - lemma: документування
+  ipa: /dɔkumɛntuʋˈannja/
   translation: documentation
-  note: recording evidence
+  pos: noun
+  gender: n
 - lemma: еміграція
+  ipa: /ɛmiɦrˈat͡sija/
   translation: emigration
-  note: leaving one's country
+  pos: noun
+  gender: f
 - lemma: реабілітація
+  ipa: /rɛabilitˈat͡sija/
   translation: rehabilitation
-  note: restoration of reputation/rights
+  pos: noun
+  gender: f
 - lemma: спадщина
+  ipa: /spˈadʃt͡ʃɪna/
   translation: legacy
-  note: what is left behind
+  pos: noun
+  gender: f
 - lemma: угода
+  ipa: /uɦˈɔda/
   translation: agreement
-  note: treaty, pact
+  pos: noun
+  gender: f
 - lemma: порушення
+  ipa: /pɔrˈuʃɛnnja/
   translation: violation
-  note: breach of law/rights
+  pos: noun
+  gender: n
 - lemma: вимога
+  ipa: /ʋɪmˈɔɦa/
   translation: demand
-  note: requirement, request
+  pos: noun
+  gender: f
 - lemma: громадянин
+  ipa: /ɦrɔmadˈjanɪn/
   translation: citizen
-  note: member of a state
+  pos: noun
+  gender: m
 - lemma: закон
+  ipa: /zakˈɔn/
   translation: law
-  note: rule established by authority
+  pos: noun
+  gender: m
 - lemma: опір
+  ipa: /ˈɔpir/
   translation: resistance
-  note: refusal to comply
+  pos: noun
+  gender: m
 - lemma: гласність
+  ipa: /ɦlˈasnistʲ/
   translation: glasnost / publicity
-  note: openness, transparency
+  pos: noun
+  gender: f
 - lemma: наклеп
+  ipa: /nˈaklɛp/
   translation: slander / libel
-  note: false statement damaging reputation
+  pos: noun
+  gender: m
 - lemma: вирок
+  ipa: /ʋɪrɔk/
   translation: sentence / verdict
-  note: decision of a court
+  pos: noun
+  gender: m
 - lemma: заслання
+  ipa: /zaslˈannja/
   translation: exile
-  note: forced absence from home
+  pos: noun
+  gender: n
 - lemma: каральна система
+  ipa: /karˈalʲna sɪstɛma/
   translation: punitive system
-  note: system of punishment
+  pos: noun
+  gender: f
 - lemma: самовизначення
+  ipa: /samɔʋˈɪznat͡ʃɛnnja/
   translation: self-determination
-  note: right of a people to decide their own government
+  pos: noun
+  gender: n
 - lemma: гідність
+  ipa: /ɦˈidnistʲ/
   translation: dignity
-  note: worthiness, honor
+  pos: noun
+  gender: f

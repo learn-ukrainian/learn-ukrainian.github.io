@@ -127,11 +127,24 @@ def extract_markdown_sections(md_path: Path) -> Dict[str, Dict[str, any]]:
 
 def load_content_outline(md_path: Path) -> Optional[List[Dict]]:
     """
-    Load content_outline from meta YAML file OR plan YAML file (Split Architecture).
+    Load content_outline from meta YAML (Override) or plan YAML (Base).
 
     Returns list of sections or None if no outline exists.
     """
-    # 1. Try Plan File first (Split Architecture)
+    # 1. Try Meta File first (Override)
+    meta_dir = md_path.parent / "meta"
+    meta_file = meta_dir / f"{md_path.stem}.yaml"
+
+    if meta_file.exists():
+        try:
+            with open(meta_file, "r", encoding="utf-8") as f:
+                meta_data = yaml.safe_load(f)
+            if meta_data and "content_outline" in meta_data:
+                return meta_data["content_outline"]
+        except Exception:
+            pass
+
+    # 2. Fallback to Plan File (Base)
     try:
         # Determine level from path or parent name
         level = md_path.parent.name

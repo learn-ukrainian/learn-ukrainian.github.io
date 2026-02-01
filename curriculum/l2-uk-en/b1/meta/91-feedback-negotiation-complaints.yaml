@@ -1,0 +1,13 @@
+module: b1-91
+level: B1
+slug: feedback-negotiation-complaints
+version: '2.0'
+id: b1-91
+naturalness:
+  score: 9
+  status: PASS
+  justification: Essential interpersonal communication skills
+duration: 90
+transliteration: none
+build:
+  last_modified: '2026-01-31'

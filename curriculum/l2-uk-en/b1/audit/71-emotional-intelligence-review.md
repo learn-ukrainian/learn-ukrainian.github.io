@@ -1,12 +1,12 @@
 # Audit Report: M71 — 71-emotional-intelligence.md
-**Level:** B1 | **Module:** M71 | **Phase:** B1.6 | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M71 | **Phase:** B1.6 | **Pedagogy:** TTT | **Target:** 1600
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 00:26:59
+**Generated:** 2026-02-01 19:05:33
 
 ## Configuration
 **Type:** B1-vocab
-**Word Target:** 1500 words
+**Word Target:** 1600 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -42,19 +42,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2703/1500 (raw: 3624)
+- **Words:** ✅ 2810/1600 (raw: 3876)
 - **Activities:** ✅ 13/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 16/5
+- **Engagement:** ✅ 17/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 42/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.4% (target 85-100% (B1.7-8 Ukraine))
+- **Immersion:** 🇺🇦 98.5% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 99% (vocabulary)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -67,10 +67,10 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | collocations | 30 | 20 | 100% | 25% | 25.0% |
-| usage_examples | 94 | 15 | 100% | 20% | 20.0% |
-| engagement | 16 | 4 | 100% | 15% | 15.0% |
+| usage_examples | 95 | 15 | 100% | 20% | 20.0% |
+| engagement | 17 | 4 | 100% | 15% | 15.0% |
 | cultural | 5 | 3 | 100% | 10% | 10.0% |
-| visual | 8 | 3 | 100% | 10% | 10.0% |
+| visual | 10 | 3 | 100% | 10% | 10.0% |
 | register_notes | 15 | 5 | 100% | 10% | 10.0% |
 | variety | 0.96 | - | 96% | 5% | 4.8% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
@@ -88,5 +88,6 @@
 | **Діалоги — Підтримка друга** | ✅ | 281 | Included in Core |
 | **Зворотний зв'язок та саморефлексія** | ⚪️ | 422 | Skipped |
 | **Підсумок — EQ у повсякденному житті** | ✅ | 153 | Included in Core |
-| **Лексика** | ⚪️ | 292 | Skipped |
+| **Словник термінів** | ⚪️ | 292 | Skipped |
+| **Міні-чекпоінт: Лексика B1.5-B1.6** | ⚪️ | 107 | Skipped |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

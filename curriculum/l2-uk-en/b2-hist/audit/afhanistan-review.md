@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M116 | **Phase:** HIST.11 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-31 13:24:36
+**Generated:** 2026-02-01 14:54:53
 
 ## Configuration
 **Type:** B2-history
@@ -34,49 +34,49 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4487/4000 (raw: 4640)
+- **Words:** ✅ 4237/4000 (raw: 4317)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/5
+- **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 20 (soft target)
+- **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.5% (target 90-100% (history))
-- **Richness:** ✅ 97% (history)
+- **Immersion:** 🇺🇦 100.0% (target 90-100% (history))
+- **Richness:** ✅ 95% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 97% (minimum: 95%)
+**Score:** 95% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 15 | 3 | 100% | 24% | 23.8% |
-| engagement | 7 | 6 | 100% | 14% | 14.3% |
-| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
+| engagement | 6 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 19 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 4 | 4 | 100% | 10% | 9.5% |
-| visual | 3 | 4 | 75% | 10% | 7.1% |
+| cultural | 2 | 4 | 50% | 10% | 4.8% |
+| visual | 6 | 4 | 100% | 10% | 9.5% |
 | variety | 0.99 | - | 99% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 22 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **97.6%** |
+| questions | 28 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **95.2%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 43 | Included in Core |
-| **Українці в Афганістані: Чужа війна** | ⚪️ | 83 | Skipped |
-| **Вступ: Чужа війна** | ✅ | 687 | Included in Core |
-| **Війна в Афганістані (1979-1989): Хроніка трагедії** | ⚪️ | 1660 | Skipped |
-| **Первинні джерела** | ✅ | 873 | Included in Core |
-| **Деколонізаційний погляд** | ✅ | 608 | Included in Core |
-| **Підсумок** | ✅ | 164 | Included in Core |
-| **Читання** | ✅ | 369 | Included in Core |
+| **Intro/Narrative** | ✅ | 130 | Included in Core |
+| **Вступ — Чужа війна** | ✅ | 814 | Included in Core |
+| **Війна в Афганістані (1979-1989): Механіка катастрофи** | ⚪️ | 958 | Skipped |
+| **Читання — Листи з іншого світу** | ✅ | 394 | Included in Core |
+| **Первинні джерела — Голоси з прірви** | ✅ | 975 | Included in Core |
+| **Деколонізаційний погляд — Повернення національної пам'яті** | ✅ | 469 | Included in Core |
+| **Підсумок** | ✅ | 267 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 230 | Skipped |

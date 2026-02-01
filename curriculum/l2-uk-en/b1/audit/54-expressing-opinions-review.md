@@ -1,12 +1,12 @@
 # Audit Report: M54 — 54-expressing-opinions.md
-**Level:** B1 | **Module:** M54 | **Phase:** B1.5 | **Pedagogy:** PPP | **Target:** 1500
+**Level:** B1 | **Module:** M54 | **Phase:** B1.5 | **Pedagogy:** PPP | **Target:** 1600
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 18:24:01
+**Generated:** 2026-02-01 17:52:37
 
 ## Configuration
 **Type:** B1-vocab
-**Word Target:** 1500 words
+**Word Target:** 1600 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -45,7 +45,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1632/1500 (raw: 2348)
+- **Words:** ✅ 1632/1600 (raw: 2348)
 - **Activities:** ✅ 16/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -58,28 +58,26 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 85-100% (B1.5-6 Vocab))
-- **Richness:** ✅ 96% (grammar)
+- **Richness:** ✅ 99% (vocabulary)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 96% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 99% (minimum: 95%)
+**Module Type:** vocabulary
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 20 | 24 | 83% | 20% | 16.6% |
-| engagement | 11 | 5 | 100% | 15% | 15.0% |
-| dialogues | 15 | 4 | 100% | 15% | 15.0% |
-| variety | 0.94 | - | 94% | 10% | 9.4% |
+| collocations | 30 | 20 | 100% | 25% | 25.0% |
+| usage_examples | 20 | 15 | 100% | 20% | 20.0% |
+| engagement | 11 | 4 | 100% | 15% | 15.0% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
-| realworld | 4 | 3 | 100% | 10% | 10.0% |
-| visual | 8 | 3 | 100% | 5% | 5.0% |
+| visual | 8 | 3 | 100% | 10% | 10.0% |
+| register_notes | 15 | 5 | 100% | 10% | 10.0% |
+| variety | 0.94 | - | 94% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 24 | 5 | 100% | 5% | 5.0% |
-| proverbs | 1 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **96.0%** |
+| **TOTAL** | | | | | **99.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

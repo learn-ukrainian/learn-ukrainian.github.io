@@ -1,12 +1,12 @@
 # Audit Report: M18 — 18-motion-passing-crossing.md
-**Level:** B1 | **Module:** M18 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M18 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 1700
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 16:25:50
+**Generated:** 2026-02-01 17:52:17
 
 ## Configuration
 **Type:** B1-grammar
-**Word Target:** 1500 words
+**Word Target:** 1700 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -41,7 +41,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1756/1500 (raw: 2393)
+- **Words:** ✅ 1756/1700 (raw: 2393)
 - **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types

@@ -1,0 +1,93 @@
+module: voienna-ekonomika
+level: b2-hist
+version: "2.0"
+items:
+  - lemma: ВВП
+    ipa: "vɛ-vɛ-ˈpɛ"
+    pos: noun
+    gender: m
+    translation: GDP (Gross Domestic Product)
+  - lemma: інфляція
+    ipa: "inˈfʲlʲɑtsʲijɐ"
+    pos: noun
+    gender: f
+    translation: inflation
+  - lemma: девальвація
+    ipa: "dɛvɐlʲʊˈɑtsʲijɐ"
+    pos: noun
+    gender: f
+    translation: devaluation
+  - lemma: релокація
+    ipa: "rɛlokˈɑtsʲijɐ"
+    pos: noun
+    gender: f
+    translation: relocation (of business)
+  - lemma: блекаут
+    ipa: "blɛkˈɑut"
+    pos: noun
+    gender: m
+    translation: blackout
+  - lemma: енергетичний терор
+    ipa: "ɛnɛrɦɛˈtɪtʃnɪi tɛˈrɔr"
+    pos: phrase
+    translation: energy terror
+  - lemma: зерновий коридор
+    ipa: "zɛrnoˈvɪi korɪˈdɔr"
+    pos: phrase
+    translation: grain corridor
+  - lemma: логістика
+    ipa: "loˈɦʲistɪkɐ"
+    pos: noun
+    gender: f
+    translation: logistics
+  - lemma: військовий збір
+    ipa: "vʲiiˈsʲkɔvɪi zbʲir"
+    pos: phrase
+    translation: military tax
+  - lemma: золотовалютні резерви
+    ipa: "zolotovɐˈlʲutʲnʲi rɛˈzɛrvɪ"
+    pos: phrase
+    translation: foreign exchange reserves
+  - lemma: облікова ставка
+    ipa: "oblʲiˈkɔvɐ ˈstɑvkɐ"
+    pos: phrase
+    translation: discount rate / base rate
+  - lemma: дефіцит бюджету
+    ipa: "dɛfʲiˈtsɪt bʲʊˈdʒɛtʊ"
+    pos: phrase
+    translation: budget deficit
+  - lemma: макроекономічна стабільність
+    ipa: "mɐkroɛkonoˈmʲitʃnɐ stɐˈbʲilʲnʲistʲ"
+    pos: phrase
+    translation: macroeconomic stability
+  - lemma: стійкість
+    ipa: "ˈstʲiiˈkʲistʲ"
+    pos: noun
+    gender: f
+    translation: resilience / stability
+  - lemma: волонтерський рух
+    ipa: "volonˈtɛrsʲkɪi rukh"
+    pos: phrase
+    translation: volunteer movement
+  - lemma: відбудова
+    ipa: "vʲidbʊˈdɔvɐ"
+    pos: noun
+    gender: f
+    translation: reconstruction / rebuilding
+  - lemma: репарації
+    ipa: "rɛpɐˈrɑtsʲiji"
+    pos: noun
+    gender: pl
+    translation: reparations
+  - lemma: конфіскація активів
+    ipa: "konfʲisˈkɑtsʲijɐ ɐkˈtɪvʲiv"
+    pos: phrase
+    translation: confiscation of assets
+  - lemma: експортна виручка
+    ipa: "ˈɛksportnɐ ˈvɪrʊtʃkɐ"
+    pos: phrase
+    translation: export earnings
+  - lemma: критична інфраструктура
+    ipa: "krɪˈtɪtʃnɐ infrɐstrʊkˈturɐ"
+    pos: phrase
+    translation: critical infrastructure

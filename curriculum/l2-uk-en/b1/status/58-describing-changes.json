@@ -2,14 +2,14 @@
   "module": "58-describing-changes",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T18:24:15.979673Z",
+  "last_audit": "2026-02-01T17:52:40.172043Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T18:22:15.031520Z",
-    "meta": "2026-01-26T15:44:41.635249Z",
+    "meta": "2026-02-01T17:22:45.881345Z",
     "activities": "2026-01-27T18:10:04.558688Z",
     "vocabulary": "2026-01-25T18:00:40.553461Z",
-    "plan": "2026-01-27T18:17:43.534933Z"
+    "plan": "2026-01-29T07:45:40.442996Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1742/1500 (raw: 2429)"
+      "message": "1742/1600 (raw: 2429)"
     },
     "activities": {
       "status": "pass",

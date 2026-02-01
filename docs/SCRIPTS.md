@@ -61,7 +61,10 @@ npm run audit -- b1 --fix
 # Verbose output (show details)
 npm run audit -- b1 5 --verbose
 
-# Direct script invocation (single file)
+# Direct script invocation (single file) - RECOMMENDED: Use wrapper
+scripts/audit_module.sh curriculum/l2-uk-en/a1/05-my-world-objects.md
+
+# Direct Python call (no log saved)
 .venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/05-my-world-objects.md
 ```
 
@@ -88,8 +91,8 @@ npm run validate:html l2-uk-en a1 5
 ### Step 4: Verify
 
 ```bash
-# Re-run audit to confirm all passes
-.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/05-*.md
+# Re-run audit to confirm all passes (saves log)
+scripts/audit_module.sh curriculum/l2-uk-en/a1/05-my-world-objects.md
 ```
 
 ---
@@ -765,9 +768,51 @@ Or with issues:
 
 ---
 
-### audit_module.py
+### audit_module.sh (Wrapper) ⭐ RECOMMENDED
+
+**Purpose:** Wrapper around `audit_module.py` that **automatically saves audit logs** for review and debugging.
+
+**What it does:**
+
+1. Runs `audit_module.py` on the specified module
+2. Auto-saves output to `curriculum/l2-uk-en/{level}/audit/{slug}-audit.log`
+3. Adds metadata (date, path, exit code)
+4. Returns proper exit code (0 = pass, 1 = fail)
+
+**Why use the wrapper:**
+
+- ✅ Audit logs saved automatically (no manual `tee` needed)
+- ✅ Historical record of issues and fixes
+- ✅ Claude can reference logs for context
+- ✅ Debugging failed modules is easier
+
+**Usage:**
+
+```bash
+# Audit single module (recommended)
+scripts/audit_module.sh curriculum/l2-uk-en/b1/09-aspect-future.md
+
+# Output saved to:
+# curriculum/l2-uk-en/b1/audit/aspect-future-audit.log
+```
+
+**Log file includes:**
+
+- Full audit output
+- Timestamp (UTC)
+- Module path
+- Exit code
+
+---
+
+### audit_module.py (Direct)
 
 **Purpose:** Comprehensive module quality checker (Python). Validates against MODULE-RICHNESS-GUIDELINES-v2.md requirements.
+
+**Use the wrapper (`audit_module.sh`) instead unless:**
+- You need to pipe output elsewhere
+- Running in automated scripts that handle logging differently
+- Testing audit system changes
 
 **Checks:**
 
@@ -781,7 +826,7 @@ Or with issues:
 - **Meta YAML Validation (Seminar Modules):** Enforces strict adherence to `schemas/meta-module.schema.json`.
 - **Activity Hints Enforcement:** Reads `activity_hints` from `meta.yaml` and **FAILS** if any specified activity types are missing from `activities.yaml`. This ensures activities match the meta specification.
 
-**Usage:**
+**Direct usage (no log saved):**
 
 ```bash
 .venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/b1/06-*.md
@@ -1388,8 +1433,204 @@ npm run vocab:rebuild         # Full rebuild (init:force + scan)
 npm run sync:landing          # Update landing pages with current stats
 npm run sync:landing:dry      # Preview changes without applying
 
-# Claude Skills
-npm run claude:deploy         # Deploy skills to .claude/
+# Claude Skills Reference
+
+## Workflow Enhancement Skills
+
+### /explain-decision - Learn Design Rationale
+
+**Purpose**: Understand "why" behind curriculum decisions, not just "what"
+
+**Usage**:
+```
+/explain-decision [topic]                    # General explanation
+/explain-decision module [level] [num]       # Module-specific
+/explain-decision compare [A] vs [B]         # Compare approaches
+```
+
+**Examples**:
+```
+/explain-decision aspect-teaching-sequence   # Why aspect at B1, not A2?
+/explain-decision module b1 9                # Why is M9 structured this way?
+/explain-decision compare aspect-first vs motion-first
+```
+
+**Output**: Provides pedagogical rationale, CEFR alignment, trade-offs, alternatives, Ukrainian-specific factors
+
+**File**: `claude_extensions/commands/explain-decision.md`
+
+### /interview - Specification Through Questioning
+
+**Purpose**: Reduce rework by gathering complete specifications upfront (40-60 questions)
+
+**Usage**:
+```
+/interview [task description]                # Basic interview
+/interview [task] --mode focused             # Focused (20-30 questions)
+/interview [task] --mode rapid               # Rapid (10-15 questions)
+```
+
+**Examples**:
+```
+/interview Create checkpoint activities for B1 grammar modules
+/interview Add ML-based content quality scoring --mode focused
+```
+
+**Interview Phases**:
+1. Understand the Goal (10-15 questions)
+2. Technical Requirements (15-20 questions)
+3. Preferences & Alternatives (10-15 questions)
+4. Success Criteria (5-10 questions)
+
+**Output**: Complete specification document + recommendation (Proceed/Clarify/Revise/Block)
+
+**File**: `claude_extensions/commands/interview.md`
+
+### /review-content-quick - Fast Pre-Check Filter
+
+**Purpose**: Catch obvious quality issues in 3-5 minutes before deep review
+
+**Usage**:
+```
+/review-content-quick [LEVEL] [NUM]          # Single module
+/review-content-quick [LEVEL]                # All modules in level
+/review-content-quick [LEVEL] [START-END]    # Range
+```
+
+**What It Catches**:
+- ✅ Duplicated content (copy-paste sections)
+- ✅ Robotic AI patterns (generic openings, filler phrases)
+- ✅ Russianisms & calques (auto-fail items)
+- ✅ Grammar errors (spot-check 5-10 sentences)
+- ✅ Activity errors (wrong answers)
+- ✅ Coherence issues (flow, consistency)
+
+**When to Use**: During content generation, before committing modules
+
+**Output**: `curriculum/l2-uk-en/{level}/audit/{slug}-quick-review.md`
+
+**File**: `claude_extensions/commands/review-content-quick.md`
+
+### /review-content-v4 - Deep Quality Validation
+
+**Purpose**: Comprehensive quality review (20-25 min) before final publication
+
+**What It Validates**:
+- All 12 quality dimensions
+- Exhaustive Ukrainian verification (every sentence)
+- All activity items tested
+- Linguistic accuracy claims verified
+- Naturalness scoring
+
+**When to Use**: Before final publication, when level complete
+
+**Optimization Guide**: See `review-content-deep-optimized.md` for 35% time savings
+
+**Files**:
+- `claude_extensions/commands/review-content-v4.md`
+- `claude_extensions/commands/review-content-deep-optimized.md`
+
+---
+
+---
+
+## Inter-Agent Communication (Claude <-> Gemini)
+
+**Purpose**: Enable bidirectional communication between Claude, Gemini, and future agents.
+
+**Architecture**: SQLite Event Bus with MCP + CLI bridges.
+
+**See**: `docs/CLAUDE-GEMINI-COOPERATION.md` for full architecture.
+
+### Message Types
+
+| Type | Purpose |
+|------|---------|
+| `query` | Ask another agent a question |
+| `response` | Answer to a query |
+| `request` | Request work/action |
+| `handoff` | Transfer task with context |
+| `context` | Share state/knowledge |
+| `feedback` | Review or comment |
+
+### Gemini Bridge CLI
+
+```bash
+# Check inbox for messages from Claude
+.venv/bin/python scripts/gemini_bridge.py inbox
+
+# Read specific message
+.venv/bin/python scripts/gemini_bridge.py read <message_id>
+
+# Send message to Claude (with type)
+.venv/bin/python scripts/gemini_bridge.py send "Your message" --type query --task-id my-task
+
+# Auto-process with Gemini CLI (read → process → respond)
+.venv/bin/python scripts/gemini_bridge.py process <message_id> --model gemini-3-pro-preview
+
+# Get full conversation history
+.venv/bin/python scripts/gemini_bridge.py conversation <task_id>
+
+# Interactive mode
+.venv/bin/python scripts/gemini_bridge.py interactive
+```
+
+### Signal Script (Gemini → Claude notification)
+
+```bash
+# Send message + trigger macOS notification
+.venv/bin/python scripts/signal_claude.py "Your message here"
+```
+
+### Message Viewer (Web UI)
+
+```bash
+# Start web viewer
+.venv/bin/python scripts/message_viewer.py
+
+# Open: http://localhost:5055
+```
+
+Features: Stats dashboard, filter by sender/task/type, conversation grouping.
+
+### MCP Message Broker (For Claude)
+
+Available via MCP tools:
+- `send_message(to, from_llm, content, task_id, message_type)`
+- `receive_messages(for_llm, unread_only, task_id)`
+- `check_inbox(for_llm)`
+- `get_conversation(task_id)`
+- `acknowledge_message(message_id)`
+- `list_tasks()`
+
+### Files
+
+| File | Purpose |
+|------|---------|
+| `.mcp/servers/message-broker/server.py` | MCP server for Claude |
+| `scripts/gemini_bridge.py` | CLI bridge for Gemini |
+| `scripts/signal_claude.py` | Notification trigger |
+| `scripts/message_viewer.py` | Web UI for message archive |
+| `.mcp.json` | MCP configuration |
+| `.mcp/servers/message-broker/messages.db` | SQLite message queue |
+
+### Memory Contexts
+
+- **Claude**: `CLAUDE.md` (Inter-Agent Communication section)
+- **Gemini**: `.gemini/GEMINI.md` (Inter-Agent Communication section)
+
+---
+
+## Deployment
+
+```bash
+# Deploy all skills to .claude/ and .agent/
+npm run claude:deploy
+```
+
+**Edits**: Make changes in `claude_extensions/commands/`, then deploy
+
+---
 
 # Development
 cd docusaurus && pnpm start    # Start Docusaurus dev server (for HTML validation)

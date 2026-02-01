@@ -2,7 +2,7 @@
   "module": "75-regions-center",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T00:32:37.075159Z",
+  "last_audit": "2026-02-01T17:52:49.813413Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-30T00:30:28.874924Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1793/1500 (raw: 1888)"
+      "message": "1793/1494 (raw: 1888)"
     },
     "activities": {
       "status": "pass",

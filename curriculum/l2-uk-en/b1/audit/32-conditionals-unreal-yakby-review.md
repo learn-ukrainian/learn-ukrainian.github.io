@@ -1,12 +1,12 @@
 # Audit Report: M32 — 32-conditionals-unreal-yakby.md
-**Level:** B1 | **Module:** M32 | **Phase:** B1.3a | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M32 | **Phase:** B1.3a | **Pedagogy:** TTT | **Target:** 1767
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 16:25:55
+**Generated:** 2026-02-01 17:52:25
 
 ## Configuration
 **Type:** B1-grammar
-**Word Target:** 1500 words
+**Word Target:** 1767 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -41,7 +41,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1725/1500 (raw: 2131)
+- **Words:** ⚠️ 1725/1767 (raw: 2131) (42 short)
 - **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types

@@ -1,12 +1,12 @@
 # Audit Report: M03 — 03-reading-grammar-rules.md
-**Level:** B1 | **Module:** M03 | **Phase:** B1.0 | **Pedagogy:** PPP | **Target:** 1200
+**Level:** B1 | **Module:** M03 | **Phase:** B1.0 | **Pedagogy:** PPP | **Target:** 3000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 16:25:45
+**Generated:** 2026-02-01 17:52:08
 
 ## Configuration
 **Type:** B1-bridge
-**Word Target:** 1200 words
+**Word Target:** 3000 words
 **Activities:** 12-16 required
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥5 types required
@@ -41,7 +41,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 3064/1200 (raw: 3837)
+- **Words:** ✅ 3064/3000 (raw: 3837)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/5 types

@@ -1,12 +1,12 @@
 # Audit Report: M17 — 17-motion-coming-going.md
-**Level:** B1 | **Module:** M17 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M17 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 1800
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 16:25:50
+**Generated:** 2026-02-01 17:52:16
 
 ## Configuration
 **Type:** B1-grammar
-**Word Target:** 1500 words
+**Word Target:** 1800 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -41,7 +41,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1742/1500 (raw: 2240)
+- **Words:** ⚠️ 1742/1800 (raw: 2240) (58 short)
 - **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types

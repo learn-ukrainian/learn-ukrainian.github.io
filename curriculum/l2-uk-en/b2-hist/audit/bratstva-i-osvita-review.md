@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M36 | **Phase:** B2.3a | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-31 12:56:03
+**Generated:** 2026-02-01 14:54:06
 
 ## Configuration
 **Type:** B2-history

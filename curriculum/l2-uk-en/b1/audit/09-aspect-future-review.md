@@ -1,12 +1,12 @@
 # Audit Report: M09 — 09-aspect-future.md
-**Level:** B1 | **Module:** M09 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M09 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 3000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 16:25:47
+**Generated:** 2026-02-01 17:52:12
 
 ## Configuration
 **Type:** B1-grammar
-**Word Target:** 1500 words
+**Word Target:** 3000 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -42,53 +42,49 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1857/1500 (raw: 2538)
+- **Words:** ✅ 3375/3000 (raw: 3539)
 - **Activities:** ✅ 13/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/5
+- **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 144/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.6% (target 85-100% (B1.1 Aspect))
-- **Richness:** ✅ 95% (grammar)
+- **Immersion:** 🇺🇦 98.3% (target 85-100% (B1.1 Aspect))
+- **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 95% (minimum: 95%)
+**Score:** 96% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 42 | 24 | 100% | 20% | 20.0% |
-| engagement | 21 | 5 | 100% | 15% | 15.0% |
-| dialogues | 24 | 4 | 100% | 15% | 15.0% |
-| variety | 0.93 | - | 93% | 10% | 9.3% |
+| examples | 89 | 24 | 100% | 20% | 20.0% |
+| engagement | 6 | 5 | 100% | 15% | 15.0% |
+| dialogues | 19 | 4 | 100% | 15% | 15.0% |
+| variety | 0.99 | - | 99% | 10% | 9.9% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
-| realworld | 7 | 3 | 100% | 10% | 10.0% |
-| visual | 22 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.99 | - | 99% | 5% | 5.0% |
-| questions | 31 | 5 | 100% | 5% | 5.0% |
-| proverbs | 1 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **96.0%** |
+| realworld | 11 | 3 | 100% | 10% | 10.0% |
+| visual | 8 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 34 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **96.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 9 | Included in Core |
-| **Тест** | ⚪️ | 167 | Skipped |
-| **Пояснення** | ⚪️ | 430 | Skipped |
-| **Практика** | ⚪️ | 315 | Skipped |
-| **Діалоги** | ✅ | 612 | Included in Core |
-| **Підсумок** | ✅ | 0 | Included in Core |
-| **Три форми майбутнього часу** | ⚪️ | 65 | Skipped |
-| **Коли що використовувати** | ⚪️ | 0 | Skipped |
-| **Практична порада** | ⚪️ | 24 | Skipped |
-| **Самоперевірка** | ⚪️ | 176 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 59 | Skipped |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Вид у майбутньому часі** | ⚪️ | 144 | Skipped |
+| **Тест** | ⚪️ | 487 | Skipped |
+| **Пояснення** | ⚪️ | 855 | Skipped |
+| **Практика** | ⚪️ | 576 | Skipped |
+| **Діалоги** | ✅ | 915 | Included in Core |
+| **Підсумок** | ✅ | 398 | Included in Core |

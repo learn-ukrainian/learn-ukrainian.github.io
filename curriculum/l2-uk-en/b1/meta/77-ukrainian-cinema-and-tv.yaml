@@ -1,14 +1,29 @@
 module: b1-77
 level: B1
-slug: ukrainian-cinema-and-tv
-version: '2.0'
+slug: 77-ukrainian-cinema-and-tv
+version: '1.0'
 id: b1-77
-focus: cultural
 naturalness:
   score: 9
   status: PASS
-  justification: Essential media literacy for cultural immersion
 duration: 90
 transliteration: none
+tags:
+- culture
+- cinema
+- tv
+- arts
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-01'
+word_target: 1400
+content_outline:
+- section: "Вступ"
+  words: 99
+- section: "Історія та культура"
+  words: 581
+- section: "Сучасність"
+  words: 500
+- section: "Практика"
+  words: 200
+- section: "Продукція"
+  words: 250

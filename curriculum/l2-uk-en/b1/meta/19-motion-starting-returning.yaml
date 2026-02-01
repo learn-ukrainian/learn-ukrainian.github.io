@@ -14,3 +14,15 @@ tags:
 - prefixes
 build:
   last_modified: '2026-01-26'
+word_target: 1800
+content_outline:
+- section: Діагностика
+  words: 110
+- section: Пояснення
+  words: 597
+- section: Поглиблення
+  words: 394
+- section: Практика
+  words: 109
+- section: Діалоги
+  words: 219

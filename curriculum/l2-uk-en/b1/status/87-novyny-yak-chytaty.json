@@ -2,7 +2,7 @@
   "module": "87-novyny-yak-chytaty",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T01:08:16.373874Z",
+  "last_audit": "2026-02-01T17:52:56.548141Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-30T01:08:11.875840Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2359/1500 (raw: 3065)"
+      "message": "2359/2327 (raw: 3065)"
     },
     "activities": {
       "status": "pass",

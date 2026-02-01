@@ -1,12 +1,12 @@
 # Audit Report: M85 — 85-ukrainian-cuisine.md
-**Level:** B1 | **Module:** M85 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 1500
+**Level:** B1 | **Module:** M85 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 1778
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 00:51:43
+**Generated:** 2026-02-01 17:52:55
 
 ## Configuration
 **Type:** B1-culture
-**Word Target:** 1500 words
+**Word Target:** 1778 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -43,7 +43,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1855/1500 (raw: 2217)
+- **Words:** ✅ 1855/1778 (raw: 2217)
 - **Activities:** ✅ 14/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 12/4 types

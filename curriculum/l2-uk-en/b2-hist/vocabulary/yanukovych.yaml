@@ -1,0 +1,80 @@
+- term: президент
+  ipa: /prezɪˈdɛnt/
+  pos: noun
+  translation: president
+- term: авторитаризм
+  ipa: /ɐu̯torɪtɐˈrɪzm/
+  pos: noun
+  translation: authoritarianism
+- term: корупція
+  ipa: /koˈrupt͡s⁽ʲ⁾ijɐ/
+  pos: noun
+  translation: corruption
+- term: режим
+  ipa: /reˈʒɪm/
+  pos: noun
+  translation: regime
+- term: «Сім'я»
+  ipa: /ˈs⁽ʲ⁾imjɐ/
+  pos: noun
+  translation: The Family (Yanukovych's inner circle)
+- term: євроінтеграція
+  ipa: /jeu̯rointerˈɦrat͡s⁽ʲ⁾ijɐ/
+  pos: noun
+  translation: European integration
+- term: ув'язнення
+  ipa: /uˈʋjɐznʲenʲːɐ/
+  pos: noun
+  translation: imprisonment
+- term: угода
+  ipa: /uˈɦɔdɐ/
+  pos: noun
+  translation: agreement, treaty
+- term: олігарх
+  ipa: /olʲiˈɦarx/
+  pos: noun
+  translation: oligarch
+- term: Межигір'я
+  ipa: /meʒɪˈɦirjɐ/
+  pos: proper noun
+  translation: Mezhyhirya (Yanukovych's residence)
+- term: медіа
+  ipa: /ˈmɛd⁽ʲ⁾ijɐ/
+  pos: noun
+  translation: media
+- term: суд
+  ipa: /sud/
+  pos: noun
+  translation: court
+- term: опозиція
+  ipa: /opoˈzɪt͡s⁽ʲ⁾ijɐ/
+  pos: noun
+  translation: opposition
+- term: протест
+  ipa: /proˈtest/
+  pos: noun
+  translation: protest
+- term: реванш
+  ipa: /reˈʋanʃ/
+  pos: noun
+  translation: revenge, revanche
+- term: Харківські угоди
+  ipa: /ˈxark⁽ʲ⁾iu̯sʲk⁽ʲ⁾i uˈɦɔdɪ/
+  pos: noun phrase
+  translation: Kharkiv Pacts
+- term: закон про мови
+  ipa: /zɐˈkɔn pro ˈmɔʋɪ/
+  pos: noun phrase
+  translation: language law
+- term: фальсифікація
+  ipa: /fɐlʲsɪfʲiˈkɑt͡sʲijɐ/
+  pos: noun
+  translation: falsification
+- term: громадянське суспільство
+  ipa: /ɦromɐˈdʲanʲsʲke susˈpʲilʲstʋo/
+  pos: noun phrase
+  translation: civil society
+- term: деколонізація
+  ipa: /dekolonʲizˈat͡sʲijɐ/
+  pos: noun
+  translation: decolonization

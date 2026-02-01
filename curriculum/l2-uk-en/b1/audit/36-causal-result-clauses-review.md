@@ -1,12 +1,12 @@
 # Audit Report: M36 — 36-causal-result-clauses.md
-**Level:** B1 | **Module:** M36 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M36 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 1800
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 16:25:56
+**Generated:** 2026-02-01 17:52:27
 
 ## Configuration
 **Type:** B1-grammar
-**Word Target:** 1500 words
+**Word Target:** 1800 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -40,7 +40,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1727/1500 (raw: 2175)
+- **Words:** ✅ 1826/1800 (raw: 2274)
 - **Activities:** ✅ 11/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -52,7 +52,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.7% (target 85-100% (B1.3-4 Complex))
+- **Immersion:** 🇺🇦 94.2% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 98% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -70,9 +70,9 @@
 | variety | 0.93 | - | 93% | 10% | 9.3% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
 | realworld | 5 | 3 | 100% | 10% | 10.0% |
-| visual | 5 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.94 | - | 94% | 5% | 4.7% |
-| questions | 39 | 5 | 100% | 5% | 5.0% |
+| visual | 7 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.93 | - | 93% | 5% | 4.7% |
+| questions | 41 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.0%** |
 
@@ -82,7 +82,7 @@
 | **Intro/Narrative** | ✅ | 54 | Included in Core |
 | **Тест** | ⚪️ | 114 | Skipped |
 | **Пояснення** | ⚪️ | 857 | Skipped |
-| **Практика** | ⚪️ | 208 | Skipped |
+| **Практика** | ⚪️ | 307 | Skipped |
 | **Діалоги** | ✅ | 229 | Included in Core |
 | **Підсумок** | ✅ | 155 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

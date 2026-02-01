@@ -2,10 +2,10 @@
   "module": "kakhovska-hes",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-31T13:24:48.433958Z",
+  "last_audit": "2026-02-01T14:55:04.698356Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-28T18:36:47.947620Z",
+    "md": "2026-02-01T10:11:41.590692Z",
     "meta": "2026-01-26T22:20:13.138180Z",
     "activities": "2026-01-28T18:27:00.478843Z",
     "vocabulary": "2026-01-28T18:34:23.813161Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4398/4000 (raw: 4592)"
+      "message": "5197/4000 (raw: 5391)"
     },
     "activities": {
       "status": "pass",
@@ -39,10 +39,8 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "1 Critical Template Violations"
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 5,
     "fail_count": 0
   }

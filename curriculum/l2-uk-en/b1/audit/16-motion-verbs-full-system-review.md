@@ -1,12 +1,12 @@
 # Audit Report: M16 — 16-motion-verbs-full-system.md
-**Level:** B1 | **Module:** M16 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M16 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 16:25:49
+**Generated:** 2026-02-01 17:52:16
 
 ## Configuration
 **Type:** B1-grammar
-**Word Target:** 1500 words
+**Word Target:** 2000 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -41,19 +41,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1658/1500 (raw: 2399)
+- **Words:** ✅ 2064/2000 (raw: 2832)
 - **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 9/5
+- **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 115/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.5% (target 85-100% (B1.2 Motion))
+- **Immersion:** 🇺🇦 97.3% (target 85-100% (B1.2 Motion))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -66,24 +66,24 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 50 | 24 | 100% | 20% | 20.0% |
-| engagement | 9 | 5 | 100% | 15% | 15.0% |
-| dialogues | 15 | 4 | 100% | 15% | 15.0% |
-| variety | 0.95 | - | 95% | 10% | 9.5% |
+| engagement | 10 | 5 | 100% | 15% | 15.0% |
+| dialogues | 20 | 4 | 100% | 15% | 15.0% |
+| variety | 0.96 | - | 96% | 10% | 9.6% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
 | realworld | 4 | 3 | 100% | 10% | 10.0% |
-| visual | 6 | 3 | 100% | 5% | 5.0% |
+| visual | 7 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 37 | 5 | 100% | 5% | 5.0% |
-| proverbs | 1 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **96.2%** |
+| questions | 51 | 5 | 100% | 5% | 5.0% |
+| proverbs | 2 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **96.3%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 54 | Included in Core |
-| **Вступ** | ✅ | 204 | Included in Core |
+| **Вступ** | ✅ | 331 | Included in Core |
 | **Пояснення** | ⚪️ | 216 | Skipped |
-| **Практика** | ⚪️ | 676 | Skipped |
-| **Діалоги** | ✅ | 222 | Included in Core |
+| **Практика** | ⚪️ | 869 | Skipped |
+| **Діалоги** | ✅ | 308 | Included in Core |
 | **Підсумок** | ✅ | 176 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

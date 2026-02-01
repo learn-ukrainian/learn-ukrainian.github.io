@@ -1,13 +1,32 @@
 module: b1-50
 level: B1
-slug: integrated-grammar-lab
-version: '2.0'
+slug: 50-integrated-grammar-lab
+version: '1.0'
 id: b1-50
 naturalness:
   score: 9
   status: PASS
-  justification: B1.4 grammar synthesis
 duration: 90
 transliteration: none
+tags:
+- grammar
+- integration
+- skills
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-01'
+word_target: 1500
+content_outline:
+- section: Вступний тест
+  words: 238
+- section: Пояснення
+  words: 180
+- section: Сценарій 1
+  words: 201
+- section: Сценарій 2
+  words: 265
+- section: Сценарій 3
+  words: 171
+- section: Практика
+  words: 235
+- section: Діалоги
+  words: 264

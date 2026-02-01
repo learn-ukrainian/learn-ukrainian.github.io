@@ -2,14 +2,14 @@
   "module": "24-motion-practice-integration",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T16:25:52.507177Z",
+  "last_audit": "2026-02-01T17:52:20.671284Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.350041Z",
-    "meta": "2026-01-26T15:44:41.519504Z",
+    "md": "2026-01-31T20:55:52.398756Z",
+    "meta": "2026-02-01T16:58:38.086590Z",
     "activities": "2026-01-24T21:41:59.583354Z",
     "vocabulary": "2026-01-25T18:00:40.264513Z",
-    "plan": "2026-01-27T16:16:55.792449Z"
+    "plan": "2026-01-29T07:45:40.342157Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "2229/1500 (raw: 2481)"
+      "message": "2346/2433 (raw: 2598) (87 short)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
+    "pass_count": 4,
     "fail_count": 0
   }
 }

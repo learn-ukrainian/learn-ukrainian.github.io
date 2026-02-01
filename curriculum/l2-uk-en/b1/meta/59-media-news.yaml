@@ -11,3 +11,15 @@ duration: 90
 transliteration: none
 build:
   last_modified: '2026-01-26'
+word_target: 1600
+content_outline:
+- section: Вступ
+  words: 84
+- section: Вживання
+  words: 435
+- section: Читання
+  words: 256
+- section: Діалоги
+  words: 277
+- section: Лексика
+  words: 684

@@ -1,14 +1,88 @@
 module: b2-hist-138
-level: B2-HIST
-slug: mizhnarodna-pidtrymka
-version: '2.0'
 id: b2-hist-138
+title: "Міжнародна підтримка"
+subtitle: "International Support"
+slug: mizhnarodna-pidtrymka
+version: "2.0"
+phase: "HIST.13"
+focus: history
+pedagogy: CBI
+register: публіцистичний
+transliteration: none
+timestamps:
+  created: "2026-02-02"
+  last_updated: "2026-02-02"
+word_target: 4000
 naturalness:
   score: 10
   status: PASS
-  justification: Сучасний український для міжнародної тематики
-duration: 120
-transliteration: none
-build:
-  last_modified: '2026-01-26'
-phase: HIST.13 [Russian Aggression]
+  hash: "a388e1849c1c95bacdc56c2a06d013a3fe7d92c3bb33f453b41175483fe46673"
+  justification: "Verified generated authentic content."
+
+content_outline:
+  - section: "Вступ: Україна не сама"
+    words: 400
+    points:
+      - "24 лютого 2022: світ реагує"
+      - "Від слів до дій"
+      - "Чому підтримка України важлива для світу"
+  - section: "Військова допомога"
+    words: 800
+    points:
+      - "США: найбільший донор"
+      - "Великобританія: перші поставки"
+      - "Європейський Союз та його країни"
+      - "Еволюція: від касок до танків"
+  - section: "Санкції та економічний тиск"
+    words: 1000
+    points:
+      - "Заморожування активів"
+      - "Відключення від SWIFT"
+      - "Енергетичні санкції"
+      - "Персональні санкції"
+      - "Ефективність санкцій"
+  - section: "Первинні джерела"
+    words: 800
+    points:
+      - "Промови світових лідерів"
+      - "Резолюції ООН"
+      - "Статистика допомоги"
+  - section: "Деколонізаційний погляд"
+    words: 500
+    points:
+      - "Чому Захід так довго ігнорував Росію"
+      - "Уроки для світової безпеки"
+      - "Україна як форпост демократії"
+  - section: "Підсумок: Довга перспектива"
+    words: 500
+    points:
+      - "Перспектива членства в ЄС та НАТО"
+      - "План відбудови України"
+      - "Глобальний південь: неоднозначна позиція"
+
+vocabulary_hints:
+  required:
+    - підтримка (support)
+    - допомога (aid)
+    - санкції (sanctions)
+    - союзник (ally)
+    - донор (donor)
+    - резолюція (resolution)
+    - солідарність (solidarity)
+    - відбудова (reconstruction)
+  recommended:
+    - заморожування (freezing)
+    - активи (assets)
+    - членство (membership)
+    - форпост (outpost)
+    - дипломатія (diplomacy)
+    - коаліція (coalition)
+
+activity_hints:
+  types_required:
+    - reading
+    - essay-response
+    - true-false
+    - comparative-study
+  min_items_per_type: 6
+  total_min_items: 20

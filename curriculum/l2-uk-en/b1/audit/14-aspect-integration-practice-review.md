@@ -1,12 +1,12 @@
 # Audit Report: M14 — 14-aspect-integration-practice.md
-**Level:** B1 | **Module:** M14 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M14 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 3000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 16:25:49
+**Generated:** 2026-02-01 17:52:15
 
 ## Configuration
 **Type:** B1-grammar
-**Word Target:** 1500 words
+**Word Target:** 3000 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -41,7 +41,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1800/1500 (raw: 2172)
+- **Words:** ⚠️ 2991/3000 (raw: 3544) (9 short)
 - **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -53,37 +53,38 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.1% (target 85-100% (B1.2 Motion))
-- **Richness:** ✅ 96% (grammar)
+- **Immersion:** 🇺🇦 97.5% (target 85-100% (B1.2 Motion))
+- **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 96% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 50 | 24 | 100% | 20% | 20.0% |
+| examples | 66 | 24 | 100% | 20% | 20.0% |
 | engagement | 7 | 5 | 100% | 15% | 15.0% |
-| dialogues | 14 | 4 | 100% | 15% | 15.0% |
-| variety | 0.95 | - | 95% | 10% | 9.5% |
-| cultural | 2 | 3 | 67% | 10% | 6.7% |
-| realworld | 9 | 3 | 100% | 10% | 10.0% |
-| visual | 3 | 3 | 100% | 5% | 5.0% |
+| dialogues | 26 | 4 | 100% | 15% | 15.0% |
+| variety | 0.96 | - | 96% | 10% | 9.6% |
+| cultural | 4 | 3 | 100% | 10% | 10.0% |
+| realworld | 18 | 3 | 100% | 10% | 10.0% |
+| visual | 4 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 34 | 5 | 100% | 5% | 5.0% |
-| proverbs | 1 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **96.2%** |
+| questions | 46 | 5 | 100% | 5% | 5.0% |
+| proverbs | 2 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 74 | Included in Core |
-| **Тест** | ⚪️ | 134 | Skipped |
-| **Пояснення** | ⚪️ | 795 | Skipped |
-| **Застосування на практиці** | ⚪️ | 165 | Skipped |
-| **Діалоги** | ✅ | 292 | Included in Core |
-| **Підсумок** | ✅ | 230 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Інтеграційна практика виду** | ⚪️ | 95 | Skipped |
+| **Тест** | ⚪️ | 253 | Skipped |
+| **Пояснення** | ⚪️ | 1296 | Skipped |
+| **Застосування на практиці** | ⚪️ | 329 | Skipped |
+| **Діалоги** | ✅ | 652 | Included in Core |
+| **Підсумок** | ✅ | 256 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

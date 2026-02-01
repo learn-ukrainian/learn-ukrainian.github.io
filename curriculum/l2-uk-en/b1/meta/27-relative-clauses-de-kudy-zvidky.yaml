@@ -11,3 +11,17 @@ duration: 90
 transliteration: none
 build:
   last_modified: '2026-01-26'
+word_target: 1712
+content_outline:
+- section: Тест
+  words: 121
+- section: Теорія
+  words: 274
+- section: Поглиблення
+  words: 646
+- section: Практика
+  words: 57
+- section: Діалоги
+  words: 218
+- section: Українське прислів'я
+  words: 74

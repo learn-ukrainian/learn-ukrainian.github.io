@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M50 | **Phase:** B1.4b | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 18:08:39
+**Generated:** 2026-02-01 17:52:35
 
 ## Configuration
 **Type:** B1-grammar
@@ -40,12 +40,12 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1686/1500 (raw: 2234)
+- **Words:** ✅ 1743/1500 (raw: 2365)
 - **Activities:** ✅ 11/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 11/5
+- **Engagement:** ✅ 12/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 89/25
 - **Structure:** ✅ Valid Structure
@@ -64,24 +64,24 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 27 | 24 | 100% | 20% | 20.0% |
-| engagement | 8 | 5 | 100% | 15% | 15.0% |
+| examples | 38 | 24 | 100% | 20% | 20.0% |
+| engagement | 9 | 5 | 100% | 15% | 15.0% |
 | dialogues | 18 | 4 | 100% | 15% | 15.0% |
-| variety | 0.96 | - | 96% | 10% | 9.6% |
+| variety | 0.95 | - | 95% | 10% | 9.5% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
 | realworld | 9 | 3 | 100% | 10% | 10.0% |
-| visual | 6 | 3 | 100% | 5% | 5.0% |
+| visual | 7 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | questions | 21 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **96.3%** |
+| **TOTAL** | | | | | **96.2%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 52 | Included in Core |
 | **Вступний тест** | ✅ | 215 | Included in Core |
-| **Пояснення** | ⚪️ | 85 | Skipped |
+| **Пояснення** | ⚪️ | 142 | Skipped |
 | **Сценарій 1: Офіційний звіт** | ⚪️ | 150 | Skipped |
 | **Сценарій 2: Сімейна розмова** | ✅ | 234 | Included in Core |
 | **Сценарій 3: Новини** | ⚪️ | 148 | Skipped |

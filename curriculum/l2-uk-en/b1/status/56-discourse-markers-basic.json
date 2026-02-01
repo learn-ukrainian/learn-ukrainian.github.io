@@ -2,14 +2,14 @@
   "module": "56-discourse-markers-basic",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T18:24:08.555635Z",
+  "last_audit": "2026-02-01T17:52:39.060505Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-11T19:42:59.257396Z",
-    "meta": "2026-01-26T15:44:41.628165Z",
+    "meta": "2026-02-01T17:22:45.877022Z",
     "activities": "2026-01-11T19:44:05.360766Z",
     "vocabulary": "2026-01-25T16:02:18.591139Z",
-    "plan": "2026-01-27T18:17:43.185535Z"
+    "plan": "2026-01-29T07:45:40.437289Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1660/1500 (raw: 2560)"
+      "message": "1660/1600 (raw: 2560)"
     },
     "activities": {
       "status": "pass",

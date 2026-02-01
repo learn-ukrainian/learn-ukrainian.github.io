@@ -1,15 +1,15 @@
 {
   "module": "61-professional-communication",
   "level": "B1",
-  "plan_version": "2.0",
-  "last_audit": "2026-01-27T19:01:29.148087Z",
+  "plan_version": "1.0",
+  "last_audit": "2026-02-01T17:52:41.868891Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-24T22:35:23.927051Z",
-    "meta": "2026-01-26T15:44:41.644683Z",
+    "md": "2026-01-31T22:51:20.000187Z",
+    "meta": "2026-02-01T17:19:07.302994Z",
     "activities": "2026-01-27T18:56:02.642597Z",
     "vocabulary": "2026-01-25T18:00:40.572326Z",
-    "plan": "2026-01-27T18:49:48.421965Z"
+    "plan": "2026-01-31T22:11:45.558064Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "1752/1500 (raw: 2623)"
+      "message": "1865/1900 (raw: 2978) (35 short)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
+    "pass_count": 3,
     "fail_count": 0
   }
 }

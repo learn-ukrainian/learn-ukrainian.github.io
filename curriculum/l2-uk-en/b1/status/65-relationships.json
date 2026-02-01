@@ -1,15 +1,15 @@
 {
   "module": "65-relationships",
   "level": "B1",
-  "plan_version": "2.0",
-  "last_audit": "2026-01-27T19:01:39.893434Z",
+  "plan_version": "1.0",
+  "last_audit": "2026-02-01T17:52:44.073205Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T18:54:15.906557Z",
-    "meta": "2026-01-26T15:44:41.657605Z",
+    "meta": "2026-02-01T17:25:38.854500Z",
     "activities": "2026-01-27T18:57:18.038285Z",
     "vocabulary": "2026-01-25T15:14:12.343640Z",
-    "plan": "2026-01-27T18:49:49.705177Z"
+    "plan": "2026-01-29T07:45:40.460612Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1750/1500 (raw: 2542)"
+      "message": "1750/1700 (raw: 2542)"
     },
     "activities": {
       "status": "pass",

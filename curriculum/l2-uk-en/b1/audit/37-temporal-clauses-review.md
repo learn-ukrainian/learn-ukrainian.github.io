@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M37 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 16:25:56
+**Generated:** 2026-02-01 17:52:28
 
 ## Configuration
 **Type:** B1-grammar

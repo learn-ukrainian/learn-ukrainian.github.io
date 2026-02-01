@@ -1,8 +1,8 @@
 # Audit Report: M134 — bucha-irpin.md
 **Level:** B2 | **Module:** M134 | **Phase:** HIST.13 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-31 13:24:47
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 14:55:04
 
 ## Configuration
 **Type:** B2-history
@@ -33,17 +33,8 @@
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
-## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Читання|Хід|Основні події|Діяльність|Свідки|Великий рейд|Відбудова' found: Читання, Відбудова громад
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 4595/4000 (raw: 4799)
+- **Words:** ✅ 4934/4000 (raw: 5138)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/2 types
@@ -55,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 98.2% (target 90-100% (history))
+- **Immersion:** 🇺🇦 98.3% (target 90-100% (history))
 - **Richness:** ✅ 95% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -85,10 +76,10 @@
 | **Буча та Ірпінь: Правда про злочини** | ⚪️ | 97 | Skipped |
 | **Вступ: Лютий-березень 2022** | ✅ | 414 | Included in Core |
 | **Хроніка окупації** | ⚪️ | 1016 | Skipped |
-| **Виявлення злочинів** | ⚪️ | 667 | Skipped |
+| **Виявлення злочинів** | ⚪️ | 795 | Skipped |
 | **Читання** | ✅ | 186 | Included in Core |
 | **Первинні джерела** | ✅ | 825 | Included in Core |
-| **Міжнародне правосуддя** | ⚪️ | 387 | Skipped |
+| **Міжнародне правосуддя** | ⚪️ | 497 | Skipped |
 | **Деколонізаційний погляд** | ✅ | 394 | Included in Core |
-| **Пам'ять і спротив** | ⚪️ | 464 | Skipped |
+| **Пам'ять і спротив** | ⚪️ | 565 | Skipped |
 | **Підсумок** | ✅ | 145 | Included in Core |

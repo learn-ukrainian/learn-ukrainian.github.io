@@ -2,7 +2,7 @@
   "module": "74-regions-south",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T00:32:36.230430Z",
+  "last_audit": "2026-02-01T17:52:49.253923Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-30T00:30:21.810380Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1699/1500 (raw: 1801)"
+      "message": "1699/1563 (raw: 1801)"
     },
     "activities": {
       "status": "pass",

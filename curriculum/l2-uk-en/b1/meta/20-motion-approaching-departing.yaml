@@ -11,6 +11,18 @@ transliteration: none
 tags:
 - grammar
 - motion-verbs
-- prefixes
+- verbs
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-01'
+word_target: 2000
+content_outline:
+- section: Тест
+  words: 114
+- section: Пояснення
+  words: 665
+- section: Поглиблення
+  words: 374
+- section: Практика
+  words: 177
+- section: Діалоги
+  words: 439

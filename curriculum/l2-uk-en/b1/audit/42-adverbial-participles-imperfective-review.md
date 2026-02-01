@@ -1,12 +1,12 @@
 # Audit Report: M42 — 42-adverbial-participles-imperfective.md
-**Level:** B1 | **Module:** M42 | **Phase:** B1.4a | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M42 | **Phase:** B1.4a | **Pedagogy:** TTT | **Target:** 1736
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 18:08:33
+**Generated:** 2026-02-01 17:52:31
 
 ## Configuration
 **Type:** B1-grammar
-**Word Target:** 1500 words
+**Word Target:** 1736 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -40,7 +40,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1705/1500 (raw: 2089)
+- **Words:** ⚠️ 1705/1736 (raw: 2089) (31 short)
 - **Activities:** ✅ 11/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types

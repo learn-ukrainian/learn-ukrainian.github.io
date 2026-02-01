@@ -2,14 +2,14 @@
   "module": "59-media-news",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T18:24:18.607472Z",
+  "last_audit": "2026-02-01T17:52:40.725299Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T18:22:46.569731Z",
-    "meta": "2026-01-26T15:44:41.638368Z",
+    "meta": "2026-02-01T17:22:45.883283Z",
     "activities": "2026-01-11T22:51:43.613426Z",
     "vocabulary": "2026-01-25T16:02:18.609399Z",
-    "plan": "2026-01-27T18:17:43.713257Z"
+    "plan": "2026-01-29T07:45:40.445893Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1721/1500 (raw: 2582)"
+      "message": "1721/1600 (raw: 2582)"
     },
     "activities": {
       "status": "pass",

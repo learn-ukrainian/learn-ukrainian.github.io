@@ -2,14 +2,14 @@
   "module": "10-aspect-negation",
   "level": "B1",
   "plan_version": "1.0",
-  "last_audit": "2026-01-27T16:25:47.781561Z",
+  "last_audit": "2026-02-01T17:52:12.665706Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-24T20:38:47.637605Z",
-    "meta": "2026-01-26T15:44:41.467666Z",
+    "md": "2026-02-01T15:14:20.703491Z",
+    "meta": "2026-01-29T07:39:04.635172Z",
     "activities": "2026-01-24T20:38:35.870044Z",
     "vocabulary": "2026-01-25T18:00:40.063581Z",
-    "plan": "2026-01-27T15:47:39.177916Z"
+    "plan": "2026-01-29T07:45:40.291466Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1929/1500 (raw: 2685)"
+      "message": "3529/3000 (raw: 3582)"
     },
     "activities": {
       "status": "pass",

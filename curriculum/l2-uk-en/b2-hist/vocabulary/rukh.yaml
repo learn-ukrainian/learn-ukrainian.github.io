@@ -1,80 +1,102 @@
-- word: рух (movement)
+module: b2-hist-120
+level: B2-HIST
+items:
+- lemma: рух
+  ipa: rux
   translation: movement
-  ipa: "rux"
-  context: "Народний рух України став рушійною силою змін."
-- word: незалежність (independence)
+  pos: noun
+  gender: m
+- lemma: незалежність
+  ipa: nezɑˈlɛʒnʲisʲtʲ
   translation: independence
-  ipa: "nezɑˈlɛʒnʲisʲtʲ"
-  context: "Боротьба за незалежність об'єднала мільйони."
-- word: перебудова (perestroika)
+  pos: noun
+  gender: f
+- lemma: перебудова
+  ipa: perebuˈdowɑ
   translation: perestroika (restructuring)
-  ipa: "perebuˈdowɑ"
-  context: "Перебудова відкрила шлях до створення громадських організацій."
-- word: демократія (democracy)
+  pos: noun
+  gender: f
+- lemma: демократія
+  ipa: demokˈrɑt͡sʲijɑ
   translation: democracy
-  ipa: "demokˈrɑt͡sʲijɑ"
-  context: "Рух виступав за демократію та права людини."
-- word: референдум (referendum)
+  pos: noun
+  gender: f
+- lemma: референдум
+  ipa: refeˈrɛndum
   translation: referendum
-  ipa: "refeˈrɛndum"
-  context: "Рух активно агітував за незалежність перед референдумом."
-- word: партія (party)
+  pos: noun
+  gender: m
+- lemma: партія
+  ipa: ˈpɑrtʲijɑ
   translation: party (political)
-  ipa: "ˈpɑrtʲijɑ"
-  context: "Згодом Рух трансформувався у політичну партію."
-- word: з'їзд (congress)
+  pos: noun
+  gender: f
+- lemma: з'їзд
+  ipa: zjizd
   translation: congress, convention
-  ipa: "zjizd"
-  context: "Установчий з'їзд Руху відбувся у вересні 1989 року."
-- word: програма (program)
+  pos: noun
+  gender: m
+- lemma: програма
+  ipa: proˈɦrɑmɑ
   translation: program
-  ipa: "proˈɦrɑmɑ"
-  context: "Програма Руху передбачала відродження української мови."
-- word: гласність (glasnost)
+  pos: noun
+  gender: f
+- lemma: гласність
+  ipa: ˈhlɑsnʲisʲtʲ
   translation: glasnost (openness)
-  ipa: "ˈhlɑsnʲisʲtʲ"
-  context: "Політика гласності дозволила говорити про заборонені теми."
-- word: опозиція (opposition)
+  pos: noun
+  gender: f
+- lemma: опозиція
+  ipa: opoˈzɪt͡sʲijɑ
   translation: opposition
-  ipa: "opoˈzɪt͡sʲijɑ"
-  context: "Рух став першою реальною опозицією до КПРС."
-- word: мітинг (rally)
+  pos: noun
+  gender: f
+- lemma: мітинг
+  ipa: ˈmʲitɪnɦ
   translation: rally, meeting
-  ipa: "ˈmʲitɪnɦ"
-  context: "Багатотисячні мітинги проходили під синьо-жовтими прапорами."
-- word: самовизначення (self-determination)
+  pos: noun
+  gender: m
+- lemma: самовизначення
+  ipa: sɑmovɪznɑˈt͡ʃenʲːɑ
   translation: self-determination
-  ipa: "sɑmovɪznɑˈt͡ʃenʲːɑ"
-  context: "Право націй на самовизначення було ключовим принципом."
-- word: суверенітет (sovereignty)
+  pos: noun
+  gender: n
+- lemma: суверенітет
+  ipa: suvereniˈtɛt
   translation: sovereignty
-  ipa: "suvereniˈtɛt"
-  context: "Економічний суверенітет був важливою вимогою."
-- word: декларація (declaration)
+  pos: noun
+  gender: m
+- lemma: декларація
+  ipa: deklɑˈrɑt͡sʲijɑ
   translation: declaration
-  ipa: "deklɑˈrɑt͡sʲijɑ"
-  context: "Декларація принципів Руху була опублікована в «Літературній Україні»."
-- word: установчий (constituent/founding)
+  pos: noun
+  gender: f
+- lemma: установчий
+  ipa: ustɑˈnɔwt͡ʃɪj
   translation: constituent, founding
-  ipa: "ustɑˈnɔwt͡ʃɪj"
-  context: "Установчий з'їзд зібрав делегатів з усієї України."
-- word: осередок (center/cell)
+  pos: adj
+- lemma: осередок
+  ipa: oseˈrɛdok
   translation: center, cell (of organization)
-  ipa: "oseˈrɛdok"
-  context: "Осередки Руху створювалися на заводах і в інститутах."
-- word: спілка (union)
+  pos: noun
+  gender: m
+- lemma: спілка
+  ipa: ˈspʲilkɑ
   translation: union, alliance
-  ipa: "ˈspʲilkɑ"
-  context: "Спілка письменників України стала колискою Руху."
-- word: відродження (revival/renaissance)
+  pos: noun
+  gender: f
+- lemma: відродження
+  ipa: vidˈrod͡ʒenʲːɑ
   translation: revival, renaissance
-  ipa: "vidˈrod͡ʒenʲːɑ"
-  context: "Національне відродження почалося з культури."
-- word: багатопартійність (multi-party system)
+  pos: noun
+  gender: n
+- lemma: багатопартійність
+  ipa: bɑhɑtopɑrˈtʲijnʲisʲtʲ
   translation: multi-party system
-  ipa: "bɑhɑtopɑrˈtʲijnʲisʲtʲ"
-  context: "Скасування 6-ї статті Конституції відкрило шлях до багатопартійності."
-- word: консолідація (consolidation)
+  pos: noun
+  gender: f
+- lemma: консолідація
+  ipa: konsoliˈdɑt͡sʲijɑ
   translation: consolidation
-  ipa: "konsoliˈdɑt͡sʲijɑ"
-  context: "Консолідація нації була головною метою."
+  pos: noun
+  gender: f

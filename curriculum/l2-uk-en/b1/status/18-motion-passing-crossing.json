@@ -2,14 +2,14 @@
   "module": "18-motion-passing-crossing",
   "level": "B1",
   "plan_version": "1.0",
-  "last_audit": "2026-01-27T16:25:50.483309Z",
+  "last_audit": "2026-02-01T17:52:17.287728Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.350002Z",
-    "meta": "2026-01-26T15:44:41.497355Z",
+    "meta": "2026-02-01T17:00:24.658902Z",
     "activities": "2026-01-11T10:24:12.098299Z",
     "vocabulary": "2026-01-25T18:00:40.179897Z",
-    "plan": "2026-01-27T16:01:38.551000Z"
+    "plan": "2026-01-29T07:45:40.319786Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1756/1500 (raw: 2393)"
+      "message": "1756/1700 (raw: 2393)"
     },
     "activities": {
       "status": "pass",

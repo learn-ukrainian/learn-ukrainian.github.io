@@ -1,12 +1,12 @@
 # Audit Report: M25 — 25-checkpoint-motion-verbs.md
-**Level:** B1 | **Module:** M25 | **Phase:** B1.2 | **Pedagogy:** Checkpoint | **Target:** 1200
+**Level:** B1 | **Module:** M25 | **Phase:** B1.2 | **Pedagogy:** Checkpoint | **Target:** 2451
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 16:25:52
+**Generated:** 2026-02-01 17:52:21
 
 ## Configuration
 **Type:** B1-checkpoint
-**Word Target:** 1200 words
+**Word Target:** 2451 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -43,7 +43,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2817/1200 (raw: 3068)
+- **Words:** ✅ 2817/2451 (raw: 3068)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
@@ -56,28 +56,25 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (checkpoint - no gate)
-- **Richness:** ✅ 95% (grammar)
+- **Richness:** ✅ 98% (checkpoint)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 95% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 98% (minimum: 85%)
+**Module Type:** checkpoint
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 64 | 24 | 100% | 20% | 20.0% |
-| engagement | 7 | 5 | 100% | 15% | 15.0% |
-| dialogues | 7 | 4 | 100% | 15% | 15.0% |
-| variety | 0.90 | - | 90% | 10% | 9.0% |
-| cultural | 2 | 3 | 67% | 10% | 6.7% |
-| realworld | 6 | 3 | 100% | 10% | 10.0% |
-| visual | 11 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 58 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **95.7%** |
+| activity_types | 10 | 8 | 100% | 25% | 25.0% |
+| review_sections | 43 | 3 | 100% | 20% | 20.0% |
+| variety | 0.90 | - | 90% | 15% | 13.5% |
+| engagement | 7 | 3 | 100% | 10% | 10.0% |
+| cultural | 2 | - | 100% | 10% | 10.0% |
+| visual | 11 | 3 | 100% | 10% | 10.0% |
+| paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
+| **TOTAL** | | | | | **98.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

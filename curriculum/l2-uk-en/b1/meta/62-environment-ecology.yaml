@@ -1,13 +1,28 @@
 module: b1-62
 level: B1
-slug: environment-ecology
-version: '2.0'
+slug: 62-environment-ecology
+version: '1.0'
 id: b1-62
 naturalness:
   score: 9
   status: PASS
-  justification: Essential for modern discourse
 duration: 90
 transliteration: none
+tags:
+- vocab
+- environment
+- ecology
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-01'
+word_target: 1700
+content_outline:
+- section: Вступ
+  words: 88
+- section: Вживання
+  words: 429
+- section: Читання
+  words: 317
+- section: Діалоги
+  words: 258
+- section: Лексика
+  words: 613

@@ -1,12 +1,12 @@
 # Audit Report: M34 — 34-checkpoint-complex-sentences-1.md
-**Level:** B1 | **Module:** M34 | **Phase:** B1.3a | **Pedagogy:** TTT | **Target:** 1200
+**Level:** B1 | **Module:** M34 | **Phase:** B1.3a | **Pedagogy:** TTT | **Target:** 1250
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 16:25:55
+**Generated:** 2026-02-01 17:52:26
 
 ## Configuration
 **Type:** B1-checkpoint
-**Word Target:** 1200 words
+**Word Target:** 1250 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -41,7 +41,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1271/1200 (raw: 1346)
+- **Words:** ✅ 1271/1250 (raw: 1346)
 - **Activities:** ✅ 12/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types

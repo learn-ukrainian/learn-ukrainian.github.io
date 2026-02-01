@@ -2,13 +2,13 @@
   "module": "chornobyl",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-31T14:10:50.407786Z",
+  "last_audit": "2026-02-01T14:54:54.053961Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-31T13:58:12.481764Z",
-    "meta": "2026-01-31T14:10:33.869183Z",
-    "activities": "2026-01-31T14:10:20.442037Z",
-    "vocabulary": "2026-01-30T23:56:33.211833Z",
+    "md": "2026-01-31T15:56:24.189454Z",
+    "meta": "2026-01-31T15:56:46.734756Z",
+    "activities": "2026-01-31T15:44:14.271108Z",
+    "vocabulary": "2026-01-31T15:56:40.636720Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "3327/3300 (raw: 3431) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "4320/4000 (raw: 4404)"
     },
     "activities": {
       "status": "pass",
@@ -33,17 +33,15 @@
       "message": "20/20"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "0/10 (PENDING) - Naturalness check required"
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "3 Outline Compliance Errors"
-    ],
-    "pass_count": 3,
-    "fail_count": 2
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

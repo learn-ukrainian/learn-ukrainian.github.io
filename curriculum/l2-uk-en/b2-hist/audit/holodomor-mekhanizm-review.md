@@ -1,8 +1,8 @@
 # Audit Report: M101 — holodomor-mekhanizm.md
 **Level:** B2 | **Module:** M101 | **Phase:** HIST.10 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-31 15:14:27
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 14:54:44
 
 ## Configuration
 **Type:** B2-history
@@ -33,17 +33,8 @@
 - Required types used: 5/5 (comparative-study, critical-analysis, essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[INVALID_META_YAML]** Meta YAML Schema Violation at 'content_outline -> 4 -> points -> 0': {'Буксирні бригади': 'методи роботи'} is not of type 'string'
-  - FIX: Correct the YAML structure to match schemas/meta-module.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 4315/4000 (raw: 4364)
+- **Words:** ✅ 4602/4000 (raw: 4651)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -53,7 +44,7 @@
 - **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (history))
 - **Richness:** ✅ 98% (history)
@@ -84,9 +75,9 @@
 | **Intro/Narrative** | ✅ | 114 | Included in Core |
 | **Вступ** | ✅ | 380 | Included in Core |
 | **Читання** | ✅ | 657 | Included in Core |
-| **Колективізація та опір селянства** | ⚪️ | 445 | Skipped |
-| **Закон про п'ять колосків та Чорні дошки** | ⚪️ | 580 | Skipped |
-| **Терор голодом як інструмент упокорення** | ⚪️ | 484 | Skipped |
+| **Колективізація та опір селянства** | ⚪️ | 543 | Skipped |
+| **Закон про п'ять колосків та Чорні дошки** | ⚪️ | 655 | Skipped |
+| **Терор голодом як інструмент упокорення** | ⚪️ | 598 | Skipped |
 | **Первинні джерела** | ✅ | 670 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 423 | Included in Core |
 | **Спадщина** | ⚪️ | 354 | Skipped |

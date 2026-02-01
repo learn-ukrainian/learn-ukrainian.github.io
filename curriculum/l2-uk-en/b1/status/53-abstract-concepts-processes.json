@@ -2,14 +2,14 @@
   "module": "53-abstract-concepts-processes",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T18:23:58.997416Z",
+  "last_audit": "2026-02-01T17:52:37.350049Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T18:19:02.084357Z",
-    "meta": "2026-01-26T15:44:41.618728Z",
+    "meta": "2026-02-01T17:22:45.870325Z",
     "activities": "2026-01-27T18:09:13.681266Z",
     "vocabulary": "2026-01-25T18:00:40.527925Z",
-    "plan": "2026-01-27T18:17:11.917580Z"
+    "plan": "2026-01-29T07:45:40.428392Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1818/1500 (raw: 2613)"
+      "message": "1818/1600 (raw: 2613)"
     },
     "activities": {
       "status": "pass",

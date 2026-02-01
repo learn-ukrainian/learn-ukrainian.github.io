@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M109 | **Phase:** HIST.11 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-31 13:24:31
+**Generated:** 2026-02-01 14:54:49
 
 ## Configuration
 **Type:** B2-history

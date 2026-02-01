@@ -2,14 +2,14 @@
   "module": "39-reported-statements",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T16:25:57.538617Z",
+  "last_audit": "2026-02-01T17:52:29.395497Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.350112Z",
-    "meta": "2026-01-26T15:44:41.572610Z",
+    "meta": "2026-02-01T17:02:22.437758Z",
     "activities": "2026-01-11T10:43:30.362134Z",
     "vocabulary": "2026-01-25T18:00:40.376762Z",
-    "plan": "2026-01-27T16:20:19.836036Z"
+    "plan": "2026-01-29T07:45:40.387232Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "1646/1500 (raw: 2142)"
+      "message": "1646/1744 (raw: 2142) (98 short)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
+    "pass_count": 4,
     "fail_count": 0
   }
 }

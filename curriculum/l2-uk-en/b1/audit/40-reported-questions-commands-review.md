@@ -1,12 +1,12 @@
 # Audit Report: M40 — 40-reported-questions-commands.md
-**Level:** B1 | **Module:** M40 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 1500
+**Level:** B1 | **Module:** M40 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 1600
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 16:25:57
+**Generated:** 2026-02-01 17:52:29
 
 ## Configuration
 **Type:** B1-grammar
-**Word Target:** 1500 words
+**Word Target:** 1600 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -40,7 +40,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1645/1500 (raw: 2140)
+- **Words:** ✅ 1645/1600 (raw: 2140)
 - **Activities:** ✅ 11/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types

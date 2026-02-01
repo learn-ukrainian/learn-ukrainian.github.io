@@ -1,562 +1,424 @@
 # Current Project Status
 
-**Last Updated**: January 26, 2026
-**Session**: Curriculum Architecture v2.0 (Plan-Build-Status)
+**Last Updated**: February 1, 2026
+**Session**: Productivity Improvements & B1 Module Quality
 
 ---
 
-## 🚧 Current Work (January 26, 2026)
+## 🚧 Current Work (February 1, 2026)
 
-### Milestone 5: Clean Up & Documentation ✅ COMPLETE
+### Productivity Enhancement Initiative
 
-**Architectural Migration**: ✅ PASS
-- All 10 levels migrated to Split Architecture
-- Mixed `meta.yaml` files split into `plans/` (immutable) and `meta/` (mutable)
-- `audit_module.py` upgraded to use `plans/` and generate JSON status cache
-- `generate_level_status.py` optimized to use JSON cache (~15x speed improvement)
+**Status**: Phase 2 Complete, Phase 3-4 In Progress
+- ✅ Implementing Claude Code workflow optimizations (Boris Cherny methodology)
+- ✅ Two-tier review system created (quick + deep)
+- ✅ Learning enhancement tools added
+- ✅ Terminal environment documented (Ghostty)
+- 🚧 Interview system protocol (next)
 
-**Documentation Updated**:
-- `docs/ARCHITECTURE.md` - New v2.0 section added
-- `docs/SCRIPTS.md` - Status cache commands added
-- `CLAUDE.md` - New tracking structure documented
-- `claude_extensions/NON-NEGOTIABLE-RULES.md` - Plan Immutability rule added
+**Recent Improvements**:
+- `scripts/audit_module.sh` - Wrapper that auto-saves audit logs
+- `review-content-quick.md` - Fast pre-check filter (3-5 min, catches obvious issues)
+- `review-content-deep-optimized.md` - Workflow optimization guide (35% time savings)
+- `explain-decision.md` - Learning tool for curriculum design rationale
+- `interview.md` - Systematic specification through 40-60 questions
+- `docs/DEVELOPER-GUIDE.md` - **NEW**: Human developer guide (tools, workflows, best practices)
+- Enhanced prompting patterns in CLAUDE.md (8 patterns)
+- Bug fix protocol in CLAUDE.md (efficient issue reporting)
+- Ghostty terminal setup documentation
 
----
-
-## 🎯 Recent Completions (January 26, 2026)
-
-### Epic #465: Plan-Build-Status System ✅ COMPLETE
-
-**Milestone 1: Design & Document (#466)** ✅
-- Defined 3-layer architecture
-- Created JSON schemas for Level Plan, Module Plan, and Status Cache
-
-**Milestone 2: Create Detailed Plans (#467)** ✅
-- Created level plans for all tracks
-- Hydrated `content_outline` for all 506 Core modules and 440 Specialized modules
-- Extended automation scripts to support C2 and history tracks
-
-**Milestone 3: Migrate Existing Content (#468)** ✅
-- Executed migration script `scripts/migrate_to_v2.py` across all levels
-- Verified no data loss during split
-- Successfully backfilled status cache for B1
-
-**Milestone 4: Update Workflow Commands (#469)** ✅
-- All `/module-*` commands updated to read from `plans/`
-- New `/module-status` and `/level-status` commands implemented
-- Cache-first status generation enabled
+**Task Tracking**: Using Claude Code task system for systematic implementation
+- Phase 1 (Documentation): ✅ Complete (3/3 tasks)
+- Phase 2 (Learning & Enhancement): ✅ Complete (2/2 tasks)
+- Phase 3 (Interview System): 🚧 Next (2 tasks)
+- Phase 4 (Status Update): 🚧 In Progress (1 task)
 
 ---
 
-## 🎯 Recent Completions (January 18, 2026)
+## 🚧 B1 Level: Module Quality Improvement
 
-### C1-HIST Meta Specification Files ✅ COMPLETE
+### B1 Level: Module Quality Improvement
 
-**Status**: All 135 meta files created
-**Location**: `curriculum/l2-uk-en/c1-hist/meta/`
+**Current Status**: 23/92 modules passing (25%)
+- ✅ Modules 89-92 completed (Communication Channels, Presentations, Feedback/Negotiation, Final Exam)
+- ✅ Recent content updates: M90, M61, M71, M86
+- 🚧 69 modules failing (primarily outline compliance + word count issues)
 
-**What Was Done**:
-All 135 C1-HIST modules now have detailed YAML meta specification files ready for agent-driven content generation. Each spec includes:
+**Recent Achievements**:
+- B1 reduced from 99 → 92 modules (removed padding)
+- M90 "Presentations & Visuals" created with CEFR mapping
+- M89-92 created and passing audits
+- Score improvement: 8.45/10
 
-- **sources**: Reference URLs (Wikipedia, primary sources)
-- **content_outline**: Section-by-section breakdown with word targets
-- **vocabulary_hints**: Required and recommended academic vocabulary
-- **activity_hints**: Suggested activity types and focus areas
-- **prerequisites**: Module dependencies
-- **connects_to**: Cross-references to related modules
-
-**Phase Breakdown**:
-
-| Phase | Modules | Title |
-|-------|---------|-------|
-| C1H.1 | 01-10 | Historiography & Methodology |
-| C1H.2 | 11-18 | Medieval Primary Sources |
-| C1H.3 | 19-28 | Cossack Primary Sources |
-| C1H.4 | 29-38 | Modern Primary Sources |
-| C1H.5 | 39-44 | Dissident Sources |
-| C1H.6 | 45-51 | Holodomor Studies |
-| C1H.7 | 52-57 | Executed Renaissance |
-| C1H.8 | 58-63 | Religious Identity |
-| C1H.9 | 64-69 | Diaspora Studies |
-| C1H.10 | 70-75 | Regional Perspectives I |
-| C1H.11 | 76-80 | Regional Perspectives II |
-| C1H.12 | 81-88 | Imperial Mechanisms |
-| C1H.13 | 89-94 | Crossroads |
-| C1H.14 | 95-102 | The West & Ukraine |
-| C1H.15 | 103-107 | Economic Exploitation |
-| C1H.16 | 108-113 | Information Warfare |
-| C1H.17 | 114-117 | Polish-Ukrainian Relations |
-| C1H.18 | 118-121 | Jewish-Ukrainian Relations |
-| C1H.19 | 122-125 | Cultural Revival Cycles |
-| C1H.20 | 126-133 | Ukrainian Agency |
-| C1H.21 | 134-135 | Final Synthesis |
-
-**Total**: 135 meta files × ~3500 words target = ~472,500 words planned content
-
-**Next Steps**: Content generation can now proceed using `/module-stage-1` through `/module-stage-4` workflow commands with the meta specs as input.
+**Next Priority**: Fix failing B1 modules
+- Primary issues: Outline compliance errors (missing subsections)
+- Word count shortfalls (most modules < 3000 words target)
+- Activities missing for many modules
 
 ---
 
-### LIT M29 Audit Fix ✅ COMPLETE
+## 🔧 Python Environment Update
 
-**Issue**: `audit_module.py` was failing for LIT M29 (Мова реалізму: Діалект і Лайка)
+**Major Change**: Migrated from Homebrew Python to pyenv
 
-**Problems Found**:
-1. **URL validation failure**: Activity title "Уривок: Лайка Кайдашихи" didn't match page content keywords
-2. **Naturalness check PENDING**: Meta file had `score: 10` but missing `status: PASS`
+**Current Setup**:
+- Python 3.12.8 via pyenv
+- Compiled with `--enable-loadable-sqlite-extensions`
+- venv created from pyenv Python
+- `.python-version` file pins project to 3.12.8
 
-**Fixes Applied**:
-1. Changed activity title to include author/work name: "Нечуй-Левицький: Кайдашева сім'я — Сцена сварки"
-2. Added `status: PASS` to naturalness section in meta file
+**Why**: Required for SQLite extension support (future use)
 
-**Result**: ✅ AUDIT PASSED
-
----
-
-## 🎯 Previous Completions (January 9, 2026)
-
-### Issue #402: Full Ukrainian Immersion ✅ COMPLETE
-
-**Status**: Closed
-**Commits**: b461ad49, 0b20df3a
-
-**What Was Done**:
-1. **Templates updated** (26 files):
-   - B1 grammar/vocab/checkpoint/cultural/integration templates
-   - B2 module template
-   - C1 module template
-   - C2 module template
-   - All now use Ukrainian section names and engagement boxes
-
-2. **Modules updated** (361 files):
-   - B1 M06-91 (first immersed → all)
-   - All B2 modules
-   - All C1 modules
-   - Engagement box translations:
-     - 💡 Did You Know? → **Чи знали ви?**
-     - 🎬 Pop Culture Moment → **Момент поп-культури**
-     - 🌍 Real World → **Реальний світ**
-     - 🎯 Fun Fact → **Цікавий факт**
-     - 🎮 Gamer's Corner → **Куточок геймера**
-     - Need More Practice? → **Потрібно більше практики?**
-
-3. **Typography improvements**:
-   - Replaced straight quotes ("") with angular quotes («») in narrative text
-   - Applied throughout B1+ modules
-
-4. **Validation**:
-   - B1 M06: 99.4% immersion ✅
-   - C1 M21: 98.0% immersion ✅
-
-**Result**: B1 M06+, B2, C1, C2 achieve 100% Ukrainian immersion (except vocabulary translation columns and pedagogically required metalanguage)
+**Critical Rule**: Always use `.venv/bin/python`, never system `python3`
 
 ---
 
-### Issue #399: Claude Code 2.1 Integration ✅ PHASES 1-3 COMPLETE
+## 🛠️ Workflow Improvements (February 2026)
 
-**Status**: Open (Phases 1-3 done, Phase 4 optional)
-**Commits**: 8ae57e64, 0b20df3a, 3b234674, 4bf8a714
+### Quality Review System
 
-#### Phase 1: Wildcard Permissions ✅
+**Two-Tier Approach**: Strategic use of review depth based on resources
 
-**Commit**: 8ae57e64
+**Quick Review** (`review-content-quick.md`):
+- **Model**: Sonnet (cost-effective)
+- **Time**: 3-5 minutes per module
+- **Purpose**: Pre-check filter for obvious issues
+- **Catches**: Duplication, AI patterns, Russianisms, grammar errors, activity errors
+- **When**: During content generation, before committing
+- **Output**: `curriculum/l2-uk-en/{level}/audit/{slug}-quick-review.md`
 
-**Implementation**:
-- Created `claude_extensions/settings.json` with 80+ wildcard patterns
-- Expanded from 8 → 80+ patterns
+**Deep Review** (`review-content-v4.md` + optimization guide):
+- **Model**: Opus (comprehensive quality validation)
+- **Time**: 20-25 minutes (optimized from 30-40 minutes)
+- **Purpose**: Final quality validation before release
+- **Validates**: All 12 dimensions, exhaustive Ukrainian verification
+- **When**: Before publication, when level complete
+- **Optimizations**: Batch operations, parallel loading, systematic workflow
 
-**Coverage includes**:
-- Modern CLI tools: `rg`, `fd`, `sd`, `yq`, `jq`, `bat`, `eza`
-- Git operations: 17+ patterns (status, diff, log, checkout, branch, merge, etc.)
-- Python: All venv variants (`.venv/bin/python`, absolute paths, `python3`)
-- Node/npm ecosystem: `node`, `npx`, `npm`
-- GitHub CLI: 6+ patterns (`gh issue`, `gh api`, `gh run`, etc.)
-- Shell constructs: `for`, `do`, `done`, `if`, `then`, `else`, `fi`, `while`
-- Unix commands: 20+ patterns (echo, cat, grep, head, tail, wc, ls, find, etc.)
-- File operations: `mkdir`, `mv`, `cp`, `chmod`
-- Web operations: `WebFetch`, `WebSearch` (blanket allow)
+**Strategy**: Quick review now (finish A1-C1 content), deep review before release
 
-**Result**: ~90% reduction in permission prompts (100+ → <10 per session)
+### Audit Automation
 
-#### Phase 2: Agent Lifecycle Hooks ✅
-
-**Commits**: 0b20df3a, 3b234674
-
-**Implementation**:
-
-**1. Curriculum Maintainer Agent**
-- File: `claude_extensions/agents/curriculum-maintainer.md`
-- Auto-active when working in curriculum directory
-
-**Pre-Tool Hooks** (warnings before save):
-- 📝 Curriculum markdown → "Will validate after save..."
-- 🎯 Activity YAML → "Will validate YAML structure..."
-- 📚 Vocabulary YAML → "Will validate vocabulary structure..."
-
-**Post-Tool Hooks** (validation after save):
-- ✅ Curriculum modules → Auto-run `audit_module.py` (blocks if fails)
-- ✅ Activity YAML → Validates YAML syntax
-- ✅ Vocabulary YAML → Validates syntax + global vocab audit
-- ✅ Git commits → Updates curriculum status tracking
-
-**Stop Hook**:
-- Shows session summary on exit
-
-**2. Hot-Reload Skills**
-- 12+ reusable curriculum task skills deployed:
-  - `module-workflow/` - Module CRUD operations
-  - `vocabulary-enrichment/` - IPA/gender/POS enrichment
-  - `grammar-module-architect/` - Grammar module generation
-  - `vocab-module-architect/` - Vocabulary module generation
-  - `cultural-module-architect/` - Cultural module generation
-  - `history-module-architect/` - History module generation
-  - `literature-module-architect/` - Literature module generation
-  - `integration-module-architect/` - Integration module generation
-  - Plus: checkpoint, grammar-check, vocab-enrichment
-
-**Result**: Automatic quality validation after every edit, <2s feedback
-
-#### Phase 3: Custom Slash Commands ✅
-
-**Commit**: 0b20df3a (commands created and deployed)
-
-**Commands Available**:
-
-1. **`/curriculum-validate`** - Full curriculum validation
-   - Validates all levels (A1-C2)
-   - Schema validation
-   - Vocabulary database check
-   - Pipeline readiness
-   - Summary report
-
-2. **`/audit-level`** - Deep audit of specific level
-   - Audits all modules in level
-   - Reports violations by severity
-   - Completion statistics
-   - Usage: `claude /audit-level b2`
-
-3. **`/enrich-vocab`** - Vocabulary enrichment
-   - IPA pronunciation
-   - Part-of-speech tags
-   - Gender information
-   - Validates against vocabulary.db
-   - Usage: `claude /enrich-vocab l2-uk-en a2 15`
-
-**Plus 9 more commands**:
-- `/module-create` - Generate module from plan
-- `/module-stage-1` to `/module-stage-4` - Staged development
-- `/grammar-validate` - Ukrainian NLP validation
-- `/review-content` - Comprehensive review
-
-**Multilingual Mode**: Enabled (`language: "ukrainian"` in settings)
-
-**Result**: One-command workflows, 5-10x faster than typing full paths
-
-#### Phase 4: Collaboration Features (OPTIONAL - Not Implemented)
-
-**Status**: Lower priority, implement if needed
-
-**Potential features**:
-- Session teleportation (share work across devices)
-- GitHub issues automation
-- Named sessions for different tasks
-
----
-
-## 📊 Combined Impact of #399 Phases 1-3
-
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| Permission prompts | 100+/session | <10/session | 90% reduction |
-| Audit execution | Manual | Automatic | 100% automation |
-| Validation time | 30s+ | <2s | 15x faster |
-| Commands | Full paths | One word | 5-10x faster |
-| Quality gate | Manual | Automatic | 100% coverage |
-
-**Overall**: 3-5x faster workflow with automatic quality gates
-
----
-
-## 🔧 What's Currently Active
-
-### 1. Wildcard Permissions
-
-- **Location**: `claude_extensions/settings.json` → deployed to `.claude/settings.json`
-- **Status**: Active right now
-- **Effect**: You should see ~90% fewer permission prompts
-
-### 2. Curriculum Maintainer Agent
-
-- **Location**: `claude_extensions/agents/curriculum-maintainer.md` → deployed to `.claude/agents/`
-- **Status**: Auto-active when editing curriculum files
-- **Effect**: Every curriculum save triggers automatic validation
-
-### 3. Custom Slash Commands
-
-- **Location**: `claude_extensions/commands/*.md` → deployed to `.claude/commands/`
-- **Status**: Available immediately
-- **Usage**: Type `claude /curriculum-validate` or any other command
-
-### 4. Multilingual Mode
-
-- **Setting**: `language: "ukrainian"` in `.claude/settings.json`
-- **Status**: Active
-- **Effect**: Claude responds in Ukrainian when reviewing Ukrainian curriculum
-
-### 5. Hot-Reload Skills
-
-- **Location**: `claude_extensions/skills/` → deployed to `.claude/skills/`
-- **Status**: Available for complex tasks
-- **Usage**: Claude can invoke these automatically when needed
-
----
-
-## 📁 System Architecture Changes
-
-### Configuration Files
-
-**Source** (version-controlled in git):
-```
-claude_extensions/
-├── settings.json           # Wildcard permissions
-├── agents/
-│   └── curriculum-maintainer.md  # Lifecycle hooks
-├── commands/               # Slash commands (13 files)
-│   ├── curriculum-validate.md
-│   ├── audit-level.md
-│   ├── enrich-vocab.md
-│   └── ...
-└── skills/                 # Hot-reload skills (12 directories)
-    ├── module-workflow/
-    ├── vocabulary-enrichment/
-    └── ...
+**audit_module.sh** (NEW):
+```bash
+# Auto-saves logs to curriculum/l2-uk-en/{level}/audit/{slug}-audit.log
+scripts/audit_module.sh curriculum/l2-uk-en/b1/09-aspect-future.md
 ```
 
-**Deployed** (git-ignored, local runtime):
-```
-.claude/                    # Claude Code runtime
-├── settings.json
-├── agents/
-├── commands/
-└── skills/
+**Benefits**:
+- No manual `tee` commands needed
+- Preserves full audit output for debugging
+- Claude can reference audit logs for fixes
+- Consistent log naming convention
 
-.agent/                     # Antigravity runtime
-├── settings.json
-├── agents/
-└── workflows/              # Commands deployed here too
-```
+### Learning Tools
 
-**Deployment command**: `npm run claude:deploy`
-- Syncs `claude_extensions/` → `.claude/` and `.agent/`
-- Run after any changes to extensions
+**explain-decision.md** (`/explain-decision` skill):
+- Explains curriculum design rationale
+- Pedagogical reasoning for decisions
+- CEFR alignment justification
+- Trade-offs and alternatives considered
+- **Purpose**: Learn curriculum design, not just execute tasks
 
----
+**Examples**:
+- `/explain-decision aspect-teaching-sequence`
+- `/explain-decision module b1 9`
+- `/explain-decision compare aspect-first vs motion-first`
 
-## 🐛 Additional Fixes Applied
+### Terminal Environment
 
-### Error-Correction Hint Removal
+**Ghostty Terminal** (installed):
+- GPU-accelerated rendering (smooth for long audit outputs)
+- Native macOS UI with system integration
+- Zero-config setup with sensible defaults
+- Split windows (⌘+D) for audit + editing simultaneously
+- Tab auto-naming based on commands
+- Nerd fonts built-in (Starship prompts work)
+- Config: `~/.config/ghostty/config` (optional)
 
-- **Issue**: 119 error-correction activities had error words highlighted with `**bold**`
-- **Problem**: Highlighting ruins pedagogy by giving away the answer
-- **Fix**: Removed all markdown formatting from sentence fields where it matched error field
-- **Affected**: 20 modules (19 A2, 1 C1)
-- **Commit**: Part of 0b20df3a
+### Documentation Enhancements
 
-### Angular Quotes Typography Check
+**CLAUDE.md Updates**:
+- ✅ Enhanced Prompting Patterns (8 patterns for better output)
+- ✅ Bug Fix Protocol (efficient issue reporting format)
+- ✅ Ghostty terminal documentation
+- ✅ Python environment details
+- ✅ Lessons Learned section (recurring issues)
 
-- **Issue**: Typography audit checked for angular quotes («») in markdown
-- **Problem**: Angular quotes incompatible with YAML (activities are in YAML sidecars)
-- **Fix**: Disabled typography check in `scripts/audit/core.py`
-- **Commit**: Part of 0b20df3a
-
-### Audit System Enhancement
-
-- **Added**: `check_error_correction_hints()` function in `scripts/audit/checks/activities.py`
-- **Purpose**: Detect and flag any future error-correction hints
-- **Result**: Prevents pedagogical issue from recurring
-
----
-
-## 📈 Curriculum Completion Status
-
-| Level | Modules | Status | Pipeline | Notes |
-|-------|---------|--------|----------|-------|
-| A1 | 34/34 | ✅ Complete | ✅ Pass | Ready for production |
-| A2 | 57/57 | ✅ Complete | ✅ Pass | Ready for production |
-| B1 | 91/91 | ✅ Complete | ✅ Pass | Ready for production |
-| B2 | 131/145 | 🚧 90% | ⏳ Partial | M132-145 remaining |
-| C1 | 202/202 | ✅ Complete | ✅ Pass | Ready for production |
-| C2 | 0/100 | 📋 Planned | ❌ Not started | Waiting for C1 review |
-
-**Current focus**: B2 completion (14 modules remaining: M132-145 Skills & Capstone)
+**SCRIPTS.md Updates**:
+- ✅ audit_module.sh documented (recommended wrapper)
+- ✅ Usage examples updated
 
 ---
 
-## 🧪 Validation Results
+## 📊 Level Status Summary
 
-### Recent Module Audits (January 9, 2026)
+| Level | Modules | Passing | Status | Notes |
+|-------|---------|---------|--------|-------|
+| A1 | 44/44 | 44 | ✅ Complete | Production ready |
+| A2 | 70/70 | 70 | ✅ Complete | Production ready |
+| B1 | 92/92 | 23 | 🚧 25% | Quality fixes needed |
+| B2 | 94/94 | TBD | 🚧 In progress | - |
+| B2-HIST | 140/140 | TBD | 🚧 Content phase | - |
+| C1 | 106/106 | TBD | 🚧 In progress | - |
+| C1-BIO | 128/128 | TBD | 📋 Planned | - |
+| C1-HIST | 135/135 | TBD | 📋 Planned | - |
+| C2 | 100/100 | 0 | 📋 Planned | - |
+| LIT | 30/30 | TBD | 📋 Planned | - |
 
-**B1 M06** (Aspect Complete System):
-- ✅ Immersion: 99.4% (target 85-100%)
-- ✅ Richness: 96% (grammar)
-- ⚠️ Template violation: Missing "Need More Practice?" section (minor)
-
-**C1 M21** (CV/Resume Writing):
-- ✅ Immersion: 98.0% (target 98-100%)
-- ✅ Richness: 99% (content)
-- ✅ All checks passed
-
-**B2 M01** (Passive Voice System):
-- ❌ Failed (pre-existing issues, not from recent changes)
-- Issues: Missing sections, activity richness
-- Note: B2 modules need systematic review (separate task)
+**Total**: 1,009 modules planned across 10 tracks
 
 ---
 
-## 📚 Documentation
+## 🎯 Recent Completions
 
-### Key Documents Created/Updated
+### B1 Module Restructuring ✅
 
-1. **`docs/issues/claude-code-2.1-phase-1-2-3-complete.md`**
-   - Comprehensive guide to Phases 1-3
-   - Implementation details
-   - Testing results
-   - Maintenance procedures
+**Issue #474**: B1 from 99 → 92 modules
+- Removed duplicate/padding modules (M93-99)
+- Redefined M94, M97 to eliminate duplication
+- Updated quick-ref and level plan
+- **Commits**: 79bfeb8c, c9adb0fd, b436a8ac, e9fdf890
 
-2. **`docs/issues/claude-code-2.1-integration-plan.md`**
-   - Original integration plan
-   - All phases outlined
-   - Success metrics
+### B1 Modules 89-92 Created ✅
 
-3. **`CLAUDE.md`** (project root)
-   - Updated with claude:deploy workflow
-   - Documents claude_extensions/ structure
+**New Professional Communication Modules**:
+1. M89: Communication Channels
+2. M90: Presentations & Visuals
+3. M91: Feedback, Negotiation & Complaints
+4. M92: B1 Final Exam
 
-4. **This file** (`docs/CURRENT-STATUS.md`)
-   - Current project state
-   - Recent completions
-   - What's active now
+**Features**:
+- All passing audits
+- CEFR B1.2 mapping
+- Comprehensive activity sets
+- **Commits**: 76822820, f2a402e5, 985aa795
+
+### Content Updates ✅
+
+**Updated modules**:
+- M61: Professional Communication (added education vocabulary)
+- M71: Emotional Intelligence (mini-checkpoint section)
+- M86: Ukrainian Holidays & Festivals (mini-checkpoint section)
+- M90: Added summarizing skills, CEFR mapping
+
+**Commits**: b9b1eed2, f2a402e5, 985aa795
 
 ---
 
-## 🔄 Maintenance & Deployment
+## 🐛 Issues to Address
 
-### How to Deploy Changes
+### B1 Quality Gaps
+
+**69 modules failing** with common patterns:
+
+1. **Outline Compliance** (most modules):
+   - Missing subsections from plan outline
+   - Incomplete section development
+   - Need to expand content to match plan
+
+2. **Word Count** (most modules):
+   - Target: 3000 words for core modules
+   - Actual: 1500-2500 words average
+   - Need substantial content expansion
+
+3. **Activities** (some modules):
+   - Missing required activity types
+   - Below minimum item counts
+   - Need activity generation/enrichment
+
+4. **Checkpoints** (special cases):
+   - M25, M34, M41, M51: Missing checkpoint-specific activities
+   - M71, M86: Missing checkpoint-vocab/culture activities
+
+---
+
+## 🔄 Architecture & Workflow
+
+### Three-Layer System
+
+**Layer 1: Plans** (source of truth)
+- `curriculum/l2-uk-en/plans/{level}/{slug}.yaml`
+- Immutable module specifications
+- Content outline, vocabulary, objectives
+
+**Layer 2: Build Artifacts**
+- `curriculum/l2-uk-en/{level}/{num}-{slug}.md` (content)
+- `curriculum/l2-uk-en/{level}/meta/{slug}.yaml` (config)
+- `curriculum/l2-uk-en/{level}/activities/{slug}.yaml`
+- `curriculum/l2-uk-en/{level}/vocabulary/{slug}.yaml`
+
+**Layer 3: Status Cache**
+- `curriculum/l2-uk-en/{level}/status/{slug}.json`
+- Generated by `audit_module.py`
+- Consumed by `generate_level_status.py`
+- ~15x faster than live audits
+
+### Status Generation
 
 ```bash
-# After editing any file in claude_extensions/
-npm run claude:deploy
+# Update single module cache
+.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/b1/90-presentations-visuals.md
+
+# Regenerate level status from cache
+npm run status:b1
+# or: .venv/bin/python scripts/generate_level_status.py b1
+
+# Regenerate all level statuses
+npm run status:all
 ```
-
-This command:
-1. Syncs `claude_extensions/` → `.claude/`
-2. Syncs `claude_extensions/` → `.agent/`
-3. Syncs `claude_extensions/commands/` → `.agent/workflows/`
-
-### Updating Wildcards
-
-If you notice new permission prompts:
-1. Check `.claude/settings.local.json` for new patterns
-2. Add high-frequency patterns to `claude_extensions/settings.json`
-3. Run `npm run claude:deploy`
-
-### Updating Agent Hooks
-
-If validation logic changes:
-1. Edit `claude_extensions/agents/curriculum-maintainer.md`
-2. Run `npm run claude:deploy`
-3. Hooks take effect immediately in next edit
-
-### Adding New Commands
-
-For new workflow commands:
-1. Create `claude_extensions/commands/new-command.md`
-2. Follow existing command format (bash shebang, clear description)
-3. Run `npm run claude:deploy`
-4. Use: `claude /new-command`
 
 ---
 
-## 🎯 Next Possible Tasks
+## 🚀 Active Workflows
 
-### Option 1: Complete B2 (14 modules remaining)
+### Module Development Pipeline
 
-- M132-145: Skills & Capstone modules
-- Integration modules combining all B2 concepts
-- Final capstone project
+**Stage 1**: Skeleton creation (from plan)
+**Stage 2**: Content generation (prose)
+**Stage 3**: Activities generation
+**Stage 4**: Review & fix loop (until audit passes)
 
-### Option 2: Continue C1 Development
+### Quality Gates
 
-- Complete remaining C1 modules (156 remaining)
-- Focus areas: Biography, stylistics, folk culture, literature
+**Every module must pass**:
+1. ✅ Outline compliance (all sections from plan)
+2. ✅ Word count (≥95% of target)
+3. ✅ Activities (required types + minimum counts)
+4. ✅ Vocabulary (matches plan)
+5. ✅ Structure (proper markdown format)
 
-### Option 3: Issue #399 Phase 4 (Collaboration)
-
-- Session teleportation
-- GitHub issues automation
-- Named sessions
-- **Priority**: Lower (implement if collaboration needs increase)
-
-### Option 4: Issue #400 (LSP Integration)
-
-- Structural validation via Language Server Protocol
-- YAML/JSON schema validation
-- Real-time content validation
-- **Status**: Separate track, not started
-
-### Option 5: Systematic B2 Review
-
-- Many B2 modules have pre-existing template violations
-- Could benefit from systematic review and fixes
-- Would bring B2 to same quality standard as A1/A2/B1
+**Audit command**:
+```bash
+.venv/bin/python scripts/audit_module.py {path}
+```
 
 ---
 
-## 🚀 System Performance
+## 🔧 Configuration Changes
 
-### Current Workflow Speed
+### Removed MCP Servers
 
-**Module editing** (with Phase 2 hooks):
-```
-1. Edit file (manual)
-2. Save → <2s → auto-validated ✅
-3. If issues → fix → save → <2s → re-validated ✅
-4. Commit → status auto-updated ✅
-```
+**Previous**: Had MCP servers for memory-service and ukrainian-validator
+**Current**: `.mcp.json` has empty `mcpServers: {}`
+**Reason**: Not working with Claude Code CLI
+**Alternative**: Call gemini-cli directly via Bash when needed
 
-**Full validation** (with Phase 3 commands):
-```
-claude /curriculum-validate
-→ Validates all 6 levels + schema + vocabulary
-→ Complete report in ~30-60 seconds
-```
+### Python Environment
 
-**Permission prompts**: ~90% reduction
-- Before: 100+ prompts per session
-- After: <10 prompts per session
+**File**: `.python-version` → `3.12.8`
+**Setup**:
+```bash
+# Python installed via pyenv with SQLite extensions
+PYTHON_CONFIGURE_OPTS="--enable-loadable-sqlite-extensions" \
+LDFLAGS="-L/opt/homebrew/opt/sqlite/lib" \
+CPPFLAGS="-I/opt/homebrew/opt/sqlite/include" \
+pyenv install 3.12.8
+
+# Venv created from pyenv Python
+~/.pyenv/versions/3.12.8/bin/python -m venv .venv
+```
 
 ---
 
-## 💾 Git Commits to Remember
+## 📚 Key Documentation
 
-| Commit | Date | Description |
-|--------|------|-------------|
-| 8ae57e64 | Jan 9 | Wildcard permissions (Issue #399 Phase 1) |
-| b461ad49 | Jan 9 | Ukrainian immersion Phases 1-4 (Issue #402) |
-| 0b20df3a | Jan 9 | Complete Issue #402 + cleanup + agent setup |
-| 3b234674 | Jan 9 | Agent lifecycle hooks Phase 2 complete |
-| 4bf8a714 | Jan 9 | Document Issue #399 Phases 1-3 completion |
+**Updated files**:
+- `CLAUDE.md` - Removed MCP references, added Python env notes
+- `docs/B1-STATUS.md` - Auto-generated, shows 23/92 passing
+- `docs/B2-HIST-STATUS.md` - Auto-generated
+- `docs/CURRENT-STATUS.md` - This file
+
+**Quick reference docs**:
+- `claude_extensions/quick-ref/B1.md` - B1 level requirements
+- `docs/ARCHITECTURE-PLANS.md` - Three-layer architecture
+- `docs/STATUS-SYSTEM.md` - Status caching system
+- `docs/MODULE-RICHNESS-GUIDELINES-v2.md` - Activity requirements
+
+---
+
+## 🎯 Next Tasks
+
+### Immediate: Complete Productivity Improvements
+
+**Phase 3 - Interview System** (Next):
+- Task #12: Create generic Interview skill
+- Task #13: Document Interview Protocol in CLAUDE.md
+- **Purpose**: Systematic 40+ question interviews before building
+- **Benefit**: Reduce rework through upfront specification
+
+**In Progress: Claude-Gemini Cooperation** (Task #18):
+- **Plan**: `docs/CLAUDE-GEMINI-COOPERATION.md` ⭐
+- **Vision**: LLM Committee System - mutual review, bidirectional communication
+- **Infrastructure Created**:
+  - MCP Message Broker (`.mcp/servers/message-broker/server.py`)
+  - Gemini Bridge CLI (`scripts/gemini_bridge.py`)
+- **Next**: Test message exchange, run Ukrainian test experiment (1000 sentences)
+- **Phases**: Communication ✅ → Ukrainian Test → Context Packaging → Skills → Automation
+
+### High Priority: Fix B1 Failing Modules
+
+**Current**: 23/92 passing (25%)
+**Target**: 80%+ passing
+
+**Approach**:
+1. Start with highest-value modules (aspect, motion verbs)
+2. Use new Bug Fix Protocol (paste audit log + clear steps)
+3. For each failing module:
+   - Read plan: `curriculum/l2-uk-en/plans/b1/{slug}.yaml`
+   - Identify missing sections (outline compliance)
+   - Expand content to meet word targets
+   - Add missing activities
+   - Re-audit until passing
+
+**Tools Available**:
+- `scripts/audit_module.sh` (auto-saves logs)
+- `/explain-decision` (understand design rationale)
+- Bug fix protocol (efficient communication)
+
+### Medium Priority: Complete B2-HIST
+
+- 140 history modules in content phase
+- Many need final review and activities
+- Will use quick review during development
+- Deep review before publication
+
+### Lower Priority
+
+- C1 core modules
+- C1-BIO track (128 modules)
+- C1-HIST track (135 modules)
+- C2 core (100 modules)
+- LIT track (30 modules)
+
+---
+
+## 💾 Recent Commits (Last 10)
+
+```
+76822820f feat(b1): create M90 Presentations & Visuals content
+b9b1eed24 feat(b1): update M61, M71, M86 content to match plans
+f2a402e53 feat(b1): add summarizing skills to M90, CEFR mapping doc (#474)
+985aa7950 feat(b1): add education vocabulary to M61, update compliance docs (#474)
+5b1c4fcfe docs(b1): update improvement plan - score now 8.45/10
+e9fdf890f feat(b1): add mini-checkpoint sections to M71 and M86
+1d617f1ba docs(b1): update quick-ref and level plan to 92 modules
+79bfeb8c7 refactor(b1): cut from 99 to 92 modules, remove padding (#474)
+c9adb0fd6 fix(b1): redefine M94 and M97 to eliminate content duplication (#474)
+b436a8ac7 docs(b1): update improvement plan with Phase 1 and Phase 6 completion
+```
 
 ---
 
 ## 🔗 Related Issues
 
-- **#399** - Claude Code 2.1 Integration Plan (Phases 1-3 ✅ complete)
-- **#402** - Full Ukrainian Immersion (✅ complete)
-- **#400** - LSP Integration (separate track, not started)
+- **#474** - B1 Module Restructuring (99 → 92 modules) ✅ Complete
+- **#412** - Content naturalness detection (planned)
+- **#402** - Full Ukrainian Immersion ✅ Complete
+- **#399** - Claude Code 2.1 Integration ✅ Complete
 
 ---
 
 **End of Status Document**
 
-*This document serves as memory context for future sessions. Update after major completions.*
+*This document serves as memory context for AI sessions. Update after major completions.*

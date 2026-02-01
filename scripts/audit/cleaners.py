@@ -117,6 +117,7 @@ def extract_ukrainian_sentences(text: str) -> list[str]:
     Extract Ukrainian sentences from text (lines with Cyrillic content).
 
     Excludes:
+    - Code blocks (```...```) including mermaid diagrams
     - Table rows (lines starting with |)
     - Numbered list headers (lines like **1. Title:**)
     - Lines starting with # (markdown headers)
@@ -127,6 +128,10 @@ def extract_ukrainian_sentences(text: str) -> list[str]:
     - Word lists (comma-separated items like "при, від, на, до")
     """
     sentences = []
+
+    # Remove code blocks (```...```) before processing
+    # This handles mermaid diagrams, code examples, etc.
+    text = re.sub(r'```[\s\S]*?```', '', text)
 
     # Filter out non-prose lines
     lines = text.split('\n')

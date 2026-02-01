@@ -1,13 +1,45 @@
 module: b1-86
 level: B1
-slug: ukrainski-sviata-ta-festyvali
-version: '2.0'
+slug: 86-ukrainski-sviata-ta-festyvali
+version: '1.0'
 id: b1-86
 naturalness:
   score: 9
   status: PASS
-  justification: Essential cultural knowledge for participation
 duration: 90
 transliteration: none
+tags:
+- culture
+- festivals
+- traditions
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-01'
+word_target: 1800
+content_outline:
+- section: "Вступ"
+  words: 130
+- section: "Історія та культура"
+  words: 716
+- section: "Сучасність"
+  words: 240
+- section: "Практика"
+  words: 156
+- section: "Продукція"
+  words: 419
+- section: "Підсумок — Як святкують українці"
+  words: 124
+- section: "Міні-чекпоінт: Культура B1.7"
+  words: 125
+activity_hints:
+- type: match-up
+  focus: Festival names and dates
+  items: 12+
+- type: quiz
+  focus: Traditions and customs
+  items: 15+
+- type: fill-in
+  focus: Holiday-specific vocabulary
+  items: 15+
+- type: reading
+  focus: Descriptive text about a specific festival
+  items: 3+

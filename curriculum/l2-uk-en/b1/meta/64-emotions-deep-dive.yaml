@@ -1,13 +1,28 @@
 module: b1-64
 level: B1
-slug: emotions-deep-dive
-version: '2.0'
+slug: 64-emotions-deep-dive
+version: '1.0'
 id: b1-64
 naturalness:
   score: 9
   status: PASS
-  justification: Essential for deep emotional expression
 duration: 90
 transliteration: none
+tags:
+- vocab
+- emotions
+- psychology
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-01'
+word_target: 1600
+content_outline:
+- section: Вступ
+  words: 87
+- section: Вживання
+  words: 240
+- section: Читання
+  words: 260
+- section: Діалоги
+  words: 305
+- section: Лексика
+  words: 670

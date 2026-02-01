@@ -2,14 +2,14 @@
   "module": "55-agreement-disagreement",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T18:24:05.283893Z",
+  "last_audit": "2026-02-01T17:52:38.498070Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-24T22:33:27.055507Z",
-    "meta": "2026-01-26T15:44:41.624977Z",
+    "meta": "2026-02-01T17:22:45.874842Z",
     "activities": "2026-01-27T18:09:14.048295Z",
     "vocabulary": "2026-01-25T16:02:18.585978Z",
-    "plan": "2026-01-27T18:17:12.175218Z"
+    "plan": "2026-01-31T21:00:33.600049Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1693/1500 (raw: 2483)"
+      "message": "1693/1600 (raw: 2483)"
     },
     "activities": {
       "status": "pass",

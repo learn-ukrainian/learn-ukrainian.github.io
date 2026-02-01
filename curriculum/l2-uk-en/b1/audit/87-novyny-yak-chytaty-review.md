@@ -1,12 +1,12 @@
 # Audit Report: M87 — 87-novyny-yak-chytaty.md
-**Level:** B1 | **Module:** M87 | **Phase:** B1.8 | **Pedagogy:** CBI | **Target:** 1500
+**Level:** B1 | **Module:** M87 | **Phase:** B1.8 | **Pedagogy:** CBI | **Target:** 2327
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 01:08:16
+**Generated:** 2026-02-01 17:52:56
 
 ## Configuration
 **Type:** B1-skills
-**Word Target:** 1500 words
+**Word Target:** 2327 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -43,7 +43,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2359/1500 (raw: 3065)
+- **Words:** ✅ 2359/2327 (raw: 3065)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 13/4 types

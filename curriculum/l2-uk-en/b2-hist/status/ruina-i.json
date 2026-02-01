@@ -2,7 +2,7 @@
   "module": "ruina-i",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-31T12:53:45.964836Z",
+  "last_audit": "2026-02-01T14:54:19.222925Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T20:35:13.065574Z",
@@ -28,9 +28,9 @@
       "message": "5/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 20 (soft target)"
+      "message": "25/20"
     },
     "naturalness": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
+    "pass_count": 5,
     "fail_count": 0
   }
 }

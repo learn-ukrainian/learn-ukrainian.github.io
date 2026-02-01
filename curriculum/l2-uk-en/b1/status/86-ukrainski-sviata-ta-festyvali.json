@@ -1,15 +1,15 @@
 {
   "module": "86-ukrainski-sviata-ta-festyvali",
   "level": "B1",
-  "plan_version": "2.0",
-  "last_audit": "2026-01-30T01:07:36.469524Z",
+  "plan_version": "1.0",
+  "last_audit": "2026-02-01T19:05:50.255460Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-30T01:07:32.102382Z",
-    "meta": "2026-01-26T15:44:41.727695Z",
+    "md": "2026-01-31T22:52:15.093993Z",
+    "meta": "2026-02-01T17:51:51.885912Z",
     "activities": "2026-01-27T20:08:13.260539Z",
     "vocabulary": "2026-01-25T16:02:18.811900Z",
-    "plan": "2026-01-30T01:07:18.809062Z"
+    "plan": "2026-01-31T22:09:15.623377Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2045/1500 (raw: 2130)"
+      "message": "2176/1800 (raw: 2339)"
     },
     "activities": {
       "status": "pass",

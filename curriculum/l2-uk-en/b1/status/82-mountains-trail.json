@@ -2,7 +2,7 @@
   "module": "82-mountains-trail",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T00:51:41.365320Z",
+  "last_audit": "2026-02-01T17:52:53.787620Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-30T00:49:43.565467Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1808/1500 (raw: 1890)"
+      "message": "1808/1737 (raw: 1890)"
     },
     "activities": {
       "status": "pass",

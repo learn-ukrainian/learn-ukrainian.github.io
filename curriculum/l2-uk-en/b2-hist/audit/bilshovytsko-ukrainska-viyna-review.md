@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M95 | **Phase:** HIST.9 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-31 14:30:33
+**Generated:** 2026-02-01 14:54:41
 
 ## Configuration
 **Type:** B2-history

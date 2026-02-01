@@ -1,30 +1,92 @@
-module: b2-117
+module: b2-hist-117
+level: B2
+slug: chornobyl
+version: '2.0'
+status: skeleton
+track: history
+naturalness:
+  score: 10
+  status: PASS
+build:
+  last_modified: '2026-01-30'
+phase: HIST.11 [Post-War Soviet Ukraine]
+id: b2-hist-117
 title: 'Чорнобиль: Трагедія і Попередження'
-phase: 'HIST.11'
-pedagogy: 'CBI'
-word_target: 3300
-naturalness_score: 10
-content_hash: ef6a0d8edbfed604bb2a6274d01660a6
-timestamps:
-  created: '2026-01-30T22:30:00Z'
-  updated: '2026-01-31T13:45:00Z'
+word_target: 4000
+focus: history
+pedagogy: seminar
+register: публіцистичний
+tags: [history, soviet-ukraine, ecology, disaster, trauma]
+duration: 150
+transliteration: none
+objectives:
+  - "Проаналізувати причини та наслідки Чорнобильської катастрофи"
+  - "Оцінити роль радянської системи приховування інформації в масштабах трагедії"
+  - "Визначити вплив аварії на зростання національно-визвольного руху в Україні"
+grammar:
+  - "Пасивні конструкції для опису технічних процесів"
+  - "Складні речення з підрядними з'ясувальними"
+  - "Лексика на тему екології та ядерної фізики"
 content_outline:
-  - "Вступ — Мирний атом?"
-  - "Основні події"
-  - "Первинні джерела"
-  - "Деколонізаційний погляд"
-  - "Підсумок: Уроки Чорнобиля"
+  - section: Вступ — Мирний атом?
+    words: 615
+    points:
+      - "Прип'ять як модельне радянське місто майбутнього"
+      - "Нарратив про «безпечний» мирний атом"
+      - "Роль України як енергетичного хабу СРСР"
+  - section: Аварія 1986 року
+    words: 1538
+    points:
+      - "Ніч 26 квітня: вибух та перші пожежники"
+      - "36-годинна затримка евакуації та радіоактивна хмара"
+      - "Ліквідатори: героїзм та самопожертва мобілізованих"
+      - "Будівництво Саркофага"
+  - section: Первинні джерела
+    words: 923
+    points:
+      - "Стенограми переговорів диспетчерів"
+      - "Офіційне повідомлення про евакуацію"
+      - "Уривки зі щоденників мешканців Прип'яті"
+  - section: Деколонізаційний погляд
+    words: 924
+    points:
+      - "Злочинне мовчання Москви: парад 1 травня під радіацією"
+      - "Колоніальна експлуатація українських територій"
+      - "Чорнобиль як каталізатор руху за незалежність (еконаціоналізм)"
+      - "Зона відчуження та сучасна поп-культура"
+  - section: Підсумок
+    words: 200
+    points:
+      - "Уроки Чорнобиля для сучасної України та світу"
+vocabulary_hints:
+  required:
+    - аварія (accident)
+    - радіація (radiation)
+    - ліквідатор (liquidator)
+    - евакуація (evacuation)
+    - саркофаг (sarcophagus)
+    - приховування (concealment)
+    - екологія (ecology)
+    - наслідки (consequences)
+  recommended:
+    - техногенний (technogenic)
+    - вибух (explosion)
+    - зона відчуження (exclusion zone)
+    - опромінення (irradiation)
+    - дезактивація (decontamination)
+sources:
+  - url: https://chornobylmuseum.kiev.ua/uk/
+    name: "Національний музей Чорнобиль"
+    type: primary
+  - url: https://zakon.rada.gov.ua/laws/show/791а-12
+    name: "Закон України про статус і соціальний захист громадян, які постраждали внаслідок Чорнобильської катастрофи"
+    type: primary
 activity_hints:
-  reading:
-    - "Голоси Прип'яті"
-    - "Аналіз первинних джерел"
-  essay-response:
-    - "Есе про ціну мовчання"
-  comparative-study:
-    - "Офіційна версія vs Щоденники"
-activity_types:
-  - reading
-  - true-false
-  - essay-response
-  - comparative-study
-  - critical-analysis
+  - type: reading
+    focus: Первинні джерела
+  - type: essay-response
+    focus: Ціна брехні
+  - type: comparative-study
+    focus: Офіційна версія vs Реальність
+  - type: critical-analysis
+    focus: Культурна травма
