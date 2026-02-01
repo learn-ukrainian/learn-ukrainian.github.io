@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Activity Design Playground</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 320px 1fr 380px;
+      height: 100vh;
+    }
+
+    .back-link {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      color: #3b82f6;
+      text-decoration: none;
+      font-size: 12px;
+      z-index: 100;
+    }
+
+    .back-link:hover { text-decoration: underline; }
+
+    .sidebar {
+      background: #1e293b;
+      padding: 20px;
+      padding-top: 40px;
+      overflow-y: auto;
+      border-right: 1px solid #334155;
+    }
+
+    .sidebar h2 {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #94a3b8;
+      margin-bottom: 16px;
+    }
+
+    .sidebar h3 {
+      font-size: 12px;
+      color: #64748b;
+      margin: 20px 0 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .activity-types {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .activity-type-btn {
+      padding: 10px 14px;
+      font-size: 13px;
+      background: #334155;
+      border: 1px solid #475569;
+      color: #e2e8f0;
+      border-radius: 8px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.15s;
+    }
+
+    .activity-type-btn:hover { background: #475569; }
+    .activity-type-btn.active { background: #3b82f6; border-color: #60a5fa; }
+
+    .activity-type-btn .type-name {
+      font-weight: 600;
+      display: block;
+    }
+
+    .activity-type-btn .type-desc {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-top: 2px;
+    }
+
+    .activity-type-btn.active .type-desc { color: #bfdbfe; }
+
+    .config-section {
+      margin-top: 20px;
+    }
+
+    .config-row {
+      margin-bottom: 16px;
+    }
+
+    .config-label {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .config-input {
+      width: 100%;
+      padding: 8px 12px;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      color: #e2e8f0;
+      font-size: 13px;
+    }
+
+    .config-input:focus {
+      outline: none;
+      border-color: #3b82f6;
+    }
+
+    .config-slider {
+      width: 100%;
+      margin-top: 4px;
+    }
+
+    .slider-value {
+      font-size: 12px;
+      color: #3b82f6;
+      float: right;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 0;
+    }
+
+    .checkbox-row input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+    }
+
+    .preview-area {
+      padding: 24px;
+      overflow-y: auto;
+      background: #0f172a;
+    }
+
+    .preview-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 24px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .preview-header {
+      margin-bottom: 20px;
+    }
+
+    .preview-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .preview-instruction {
+      font-size: 14px;
+      color: #94a3b8;
+    }
+
+    /* Quiz styles */
+    .quiz-question {
+      margin-bottom: 24px;
+    }
+
+    .quiz-question-text {
+      font-size: 15px;
+      margin-bottom: 12px;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .quiz-option {
+      padding: 12px 16px;
+      background: #334155;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .quiz-option:hover { background: #475569; }
+
+    .quiz-option.correct { background: #166534; }
+    .quiz-option.incorrect { background: #991b1b; }
+
+    .quiz-option-marker {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #64748b;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .quiz-option.correct .quiz-option-marker {
+      background: #10b981;
+      border-color: #10b981;
+    }
+
+    /* Match-up styles */
+    .matchup-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .matchup-column h4 {
+      font-size: 12px;
+      color: #64748b;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .matchup-item {
+      padding: 12px 16px;
+      background: #334155;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .matchup-item:hover { background: #475569; }
+    .matchup-item.selected { background: #3b82f6; }
+    .matchup-item.matched { background: #166534; opacity: 0.7; }
+
+    /* Fill-in styles */
+    .fill-in-text {
+      font-size: 16px;
+      line-height: 2;
+    }
+
+    .fill-in-blank {
+      display: inline-block;
+      min-width: 100px;
+      padding: 4px 12px;
+      background: #334155;
+      border-radius: 4px;
+      border-bottom: 2px solid #3b82f6;
+      margin: 0 4px;
+    }
+
+    .fill-in-blank.filled {
+      background: #166534;
+      border-color: #10b981;
+    }
+
+    .word-bank {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #334155;
+    }
+
+    .word-bank-item {
+      padding: 8px 14px;
+      background: #475569;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .word-bank-item:hover { background: #64748b; }
+    .word-bank-item.used { opacity: 0.4; pointer-events: none; }
+
+    /* Mark-the-words styles */
+    .mark-text {
+      font-size: 16px;
+      line-height: 2;
+    }
+
+    .mark-word {
+      display: inline;
+      padding: 2px 6px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .mark-word:hover { background: #334155; }
+    .mark-word.marked { background: #3b82f6; }
+    .mark-word.correct { background: #166534; }
+    .mark-word.incorrect { background: #991b1b; }
+
+    /* Ordering styles */
+    .order-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .order-item {
+      padding: 14px 18px;
+      background: #334155;
+      border-radius: 8px;
+      cursor: grab;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .order-item:active { cursor: grabbing; }
+
+    .order-number {
+      width: 28px;
+      height: 28px;
+      background: #475569;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* YAML output panel */
+    .yaml-panel {
+      background: #1e293b;
+      border-left: 1px solid #334155;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .yaml-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid #334155;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .yaml-header h3 {
+      font-size: 12px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .copy-btn {
+      padding: 6px 14px;
+      font-size: 12px;
+      background: #3b82f6;
+      border: none;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .copy-btn:hover { background: #2563eb; }
+    .copy-btn.copied { background: #10b981; }
+
+    .yaml-content {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+    }
+
+    .yaml-code {
+      font-family: ui-monospace, 'SF Mono', monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      color: #e2e8f0;
+      white-space: pre;
+    }
+
+    .yaml-key { color: #7dd3fc; }
+    .yaml-string { color: #86efac; }
+    .yaml-bool { color: #fbbf24; }
+    .yaml-comment { color: #64748b; }
+
+    /* Add items button */
+    .add-item-btn {
+      width: 100%;
+      padding: 10px;
+      background: transparent;
+      border: 2px dashed #334155;
+      border-radius: 8px;
+      color: #64748b;
+      cursor: pointer;
+      margin-top: 12px;
+      transition: all 0.15s;
+    }
+
+    .add-item-btn:hover {
+      border-color: #3b82f6;
+      color: #3b82f6;
+    }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="back-link">← Back to Playgrounds</a>
+  <div class="container">
+    <aside class="sidebar">
+      <h2>Activity Design</h2>
+
+      <h3>Activity Type</h3>
+      <div class="activity-types" id="activity-types"></div>
+
+      <div class="config-section" id="config-section"></div>
+    </aside>
+
+    <main class="preview-area">
+      <div class="preview-card" id="preview"></div>
+    </main>
+
+    <aside class="yaml-panel">
+      <div class="yaml-header">
+        <h3>Generated YAML</h3>
+        <button class="copy-btn" onclick="copyYaml()">Copy YAML</button>
+      </div>
+      <div class="yaml-content">
+        <pre class="yaml-code" id="yaml-output"></pre>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    // ==================== ACTIVITY TYPES ====================
+
+    const ACTIVITY_TYPES = {
+      quiz: {
+        name: 'Quiz',
+        desc: 'Multiple choice questions',
+        defaults: {
+          title: 'Vocabulary Quiz',
+          instruction: 'Choose the correct answer.',
+          items: [
+            { question: 'Як перекладається "hello"?', options: ['привіт', 'бувай', 'дякую', 'будь ласка'], correct: 0 },
+            { question: 'Що означає "дякую"?', options: ['hello', 'goodbye', 'thank you', 'please'], correct: 2 }
+          ]
+        }
+      },
+      'fill-in': {
+        name: 'Fill in the Blanks',
+        desc: 'Complete sentences with missing words',
+        defaults: {
+          title: 'Complete the Sentences',
+          instruction: 'Fill in the blanks with the correct words.',
+          items: [
+            { text: 'Я ___ українською мовою.', blank: 'говорю' },
+            { text: 'Вона ___ каву щоранку.', blank: 'п\'є' }
+          ],
+          wordBank: true
+        }
+      },
+      'match-up': {
+        name: 'Match Up',
+        desc: 'Connect related items',
+        defaults: {
+          title: 'Match Ukrainian to English',
+          instruction: 'Match each Ukrainian word with its English translation.',
+          pairs: [
+            { left: 'книга', right: 'book' },
+            { left: 'стіл', right: 'table' },
+            { left: 'вікно', right: 'window' },
+            { left: 'двері', right: 'door' }
+          ]
+        }
+      },
+      'mark-the-words': {
+        name: 'Mark the Words',
+        desc: 'Identify specific words in text',
+        defaults: {
+          title: 'Find the Nouns',
+          instruction: 'Click on all the nouns in the sentence.',
+          text: 'Гарний день приніс радість у серце.',
+          answers: ['день', 'радість', 'серце']
+        }
+      },
+      ordering: {
+        name: 'Ordering',
+        desc: 'Arrange items in correct order',
+        defaults: {
+          title: 'Order the Sentence',
+          instruction: 'Drag the words into the correct order.',
+          items: ['Я', 'люблю', 'читати', 'книги', 'ввечері']
+        }
+      },
+      'true-false': {
+        name: 'True/False',
+        desc: 'Judge statements as true or false',
+        defaults: {
+          title: 'True or False?',
+          instruction: 'Decide if each statement is true or false.',
+          items: [
+            { statement: 'Київ — столиця України.', answer: true },
+            { statement: 'В українській мові 32 літери.', answer: false }
+          ]
+        }
+      }
+    };
+
+    // ==================== STATE ====================
+
+    const state = {
+      type: 'quiz',
+      config: JSON.parse(JSON.stringify(ACTIVITY_TYPES.quiz.defaults))
+    };
+
+    // ==================== RENDERING ====================
+
+    function renderActivityTypes() {
+      const container = document.getElementById('activity-types');
+      container.innerHTML = Object.entries(ACTIVITY_TYPES).map(([id, type]) => `
+        <button class="activity-type-btn ${state.type === id ? 'active' : ''}" onclick="selectType('${id}')">
+          <span class="type-name">${type.name}</span>
+          <span class="type-desc">${type.desc}</span>
+        </button>
+      `).join('');
+    }
+
+    function renderConfig() {
+      const container = document.getElementById('config-section');
+      const type = state.type;
+
+      let html = `
+        <h3>Configuration</h3>
+        <div class="config-row">
+          <label class="config-label">Title</label>
+          <input class="config-input" type="text" value="${state.config.title || ''}" onchange="updateConfig('title', this.value)">
+        </div>
+        <div class="config-row">
+          <label class="config-label">Instruction</label>
+          <input class="config-input" type="text" value="${state.config.instruction || ''}" onchange="updateConfig('instruction', this.value)">
+        </div>
+      `;
+
+      if (type === 'quiz') {
+        html += `
+          <h3>Questions (${state.config.items.length})</h3>
+          ${state.config.items.map((item, i) => `
+            <div class="config-row" style="background: #334155; padding: 12px; border-radius: 8px; margin-bottom: 8px;">
+              <input class="config-input" type="text" value="${item.question}" placeholder="Question ${i + 1}" onchange="updateQuizQuestion(${i}, 'question', this.value)" style="margin-bottom: 8px;">
+              ${item.options.map((opt, j) => `
+                <div style="display: flex; gap: 8px; margin-bottom: 4px;">
+                  <input type="radio" name="correct-${i}" ${item.correct === j ? 'checked' : ''} onchange="updateQuizQuestion(${i}, 'correct', ${j})">
+                  <input class="config-input" type="text" value="${opt}" onchange="updateQuizOption(${i}, ${j}, this.value)" style="flex: 1;">
+                </div>
+              `).join('')}
+            </div>
+          `).join('')}
+          <button class="add-item-btn" onclick="addQuizQuestion()">+ Add Question</button>
+        `;
+      } else if (type === 'fill-in') {
+        html += `
+          <div class="checkbox-row">
+            <input type="checkbox" id="word-bank" ${state.config.wordBank ? 'checked' : ''} onchange="updateConfig('wordBank', this.checked)">
+            <label for="word-bank">Show word bank</label>
+          </div>
+          <h3>Sentences (${state.config.items.length})</h3>
+          ${state.config.items.map((item, i) => `
+            <div class="config-row" style="background: #334155; padding: 12px; border-radius: 8px; margin-bottom: 8px;">
+              <input class="config-input" type="text" value="${item.text}" placeholder="Sentence with ___ blank" onchange="updateFillInItem(${i}, 'text', this.value)" style="margin-bottom: 8px;">
+              <input class="config-input" type="text" value="${item.blank}" placeholder="Answer word" onchange="updateFillInItem(${i}, 'blank', this.value)">
+            </div>
+          `).join('')}
+          <button class="add-item-btn" onclick="addFillInItem()">+ Add Sentence</button>
+        `;
+      } else if (type === 'match-up') {
+        html += `
+          <h3>Pairs (${state.config.pairs.length})</h3>
+          ${state.config.pairs.map((pair, i) => `
+            <div class="config-row" style="display: flex; gap: 8px; margin-bottom: 8px;">
+              <input class="config-input" type="text" value="${pair.left}" onchange="updateMatchPair(${i}, 'left', this.value)">
+              <span style="color: #64748b;">↔</span>
+              <input class="config-input" type="text" value="${pair.right}" onchange="updateMatchPair(${i}, 'right', this.value)">
+            </div>
+          `).join('')}
+          <button class="add-item-btn" onclick="addMatchPair()">+ Add Pair</button>
+        `;
+      } else if (type === 'mark-the-words') {
+        html += `
+          <div class="config-row">
+            <label class="config-label">Text</label>
+            <textarea class="config-input" rows="3" onchange="updateConfig('text', this.value)">${state.config.text}</textarea>
+          </div>
+          <div class="config-row">
+            <label class="config-label">Correct words (comma-separated)</label>
+            <input class="config-input" type="text" value="${state.config.answers.join(', ')}" onchange="updateConfig('answers', this.value.split(',').map(s => s.trim()))">
+          </div>
+        `;
+      } else if (type === 'ordering') {
+        html += `
+          <h3>Items to Order</h3>
+          <div class="config-row">
+            <label class="config-label">Items (one per line, in correct order)</label>
+            <textarea class="config-input" rows="6" onchange="updateConfig('items', this.value.split('\\n').filter(s => s.trim()))">${state.config.items.join('\n')}</textarea>
+          </div>
+        `;
+      } else if (type === 'true-false') {
+        html += `
+          <h3>Statements (${state.config.items.length})</h3>
+          ${state.config.items.map((item, i) => `
+            <div class="config-row" style="background: #334155; padding: 12px; border-radius: 8px; margin-bottom: 8px;">
+              <input class="config-input" type="text" value="${item.statement}" onchange="updateTFItem(${i}, 'statement', this.value)" style="margin-bottom: 8px;">
+              <label style="display: flex; align-items: center; gap: 8px; font-size: 13px;">
+                <input type="checkbox" ${item.answer ? 'checked' : ''} onchange="updateTFItem(${i}, 'answer', this.checked)">
+                Answer is TRUE
+              </label>
+            </div>
+          `).join('')}
+          <button class="add-item-btn" onclick="addTFItem()">+ Add Statement</button>
+        `;
+      }
+
+      container.innerHTML = html;
+    }
+
+    function renderPreview() {
+      const container = document.getElementById('preview');
+      const c = state.config;
+
+      let html = `
+        <div class="preview-header">
+          <div class="preview-title">${c.title || 'Activity Title'}</div>
+          <div class="preview-instruction">${c.instruction || 'Instructions here'}</div>
+        </div>
+      `;
+
+      if (state.type === 'quiz') {
+        html += c.items.map((item, i) => `
+          <div class="quiz-question">
+            <div class="quiz-question-text">${i + 1}. ${item.question}</div>
+            <div class="quiz-options">
+              ${item.options.map((opt, j) => `
+                <div class="quiz-option ${j === item.correct ? 'correct' : ''}">
+                  <div class="quiz-option-marker"></div>
+                  <span>${opt}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `).join('');
+      } else if (state.type === 'fill-in') {
+        html += '<div class="fill-in-text">';
+        c.items.forEach(item => {
+          const parts = item.text.split('___');
+          html += parts[0] + `<span class="fill-in-blank">${item.blank}</span>` + (parts[1] || '');
+          html += '<br>';
+        });
+        html += '</div>';
+
+        if (c.wordBank) {
+          html += '<div class="word-bank">';
+          const shuffled = [...c.items.map(i => i.blank)].sort(() => Math.random() - 0.5);
+          shuffled.forEach(word => {
+            html += `<span class="word-bank-item">${word}</span>`;
+          });
+          html += '</div>';
+        }
+      } else if (state.type === 'match-up') {
+        const shuffledRight = [...c.pairs].sort(() => Math.random() - 0.5);
+        html += `
+          <div class="matchup-container">
+            <div class="matchup-column">
+              <h4>Ukrainian</h4>
+              ${c.pairs.map(p => `<div class="matchup-item">${p.left}</div>`).join('')}
+            </div>
+            <div class="matchup-column">
+              <h4>English</h4>
+              ${shuffledRight.map(p => `<div class="matchup-item">${p.right}</div>`).join('')}
+            </div>
+          </div>
+        `;
+      } else if (state.type === 'mark-the-words') {
+        const words = c.text.split(/(\s+)/);
+        html += '<div class="mark-text">';
+        words.forEach(word => {
+          const cleanWord = word.replace(/[.,!?;:]/g, '');
+          if (c.answers.includes(cleanWord)) {
+            html += `<span class="mark-word correct">${word}</span>`;
+          } else if (word.trim()) {
+            html += `<span class="mark-word">${word}</span>`;
+          } else {
+            html += word;
+          }
+        });
+        html += '</div>';
+      } else if (state.type === 'ordering') {
+        const shuffled = [...c.items].sort(() => Math.random() - 0.5);
+        html += '<div class="order-list">';
+        shuffled.forEach((item, i) => {
+          html += `
+            <div class="order-item">
+              <span class="order-number">${i + 1}</span>
+              <span>${item}</span>
+            </div>
+          `;
+        });
+        html += '</div>';
+      } else if (state.type === 'true-false') {
+        html += c.items.map((item, i) => `
+          <div class="quiz-question">
+            <div class="quiz-question-text">${i + 1}. ${item.statement}</div>
+            <div class="quiz-options">
+              <div class="quiz-option ${item.answer ? 'correct' : ''}">
+                <div class="quiz-option-marker"></div>
+                <span>True</span>
+              </div>
+              <div class="quiz-option ${!item.answer ? 'correct' : ''}">
+                <div class="quiz-option-marker"></div>
+                <span>False</span>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      container.innerHTML = html;
+    }
+
+    function renderYaml() {
+      const container = document.getElementById('yaml-output');
+      const c = state.config;
+      let yaml = '';
+
+      yaml += `<span class="yaml-key">- type:</span> <span class="yaml-string">${state.type}</span>\n`;
+      yaml += `  <span class="yaml-key">title:</span> <span class="yaml-string">${c.title}</span>\n`;
+      yaml += `  <span class="yaml-key">instruction:</span> <span class="yaml-string">${c.instruction}</span>\n`;
+
+      if (state.type === 'quiz') {
+        yaml += `  <span class="yaml-key">questions:</span>\n`;
+        c.items.forEach(item => {
+          yaml += `    - <span class="yaml-key">question:</span> <span class="yaml-string">${item.question}</span>\n`;
+          yaml += `      <span class="yaml-key">options:</span>\n`;
+          item.options.forEach((opt, j) => {
+            yaml += `        - <span class="yaml-string">${opt}</span>${j === item.correct ? ' <span class="yaml-comment"># correct</span>' : ''}\n`;
+          });
+          yaml += `      <span class="yaml-key">correct:</span> <span class="yaml-string">${item.options[item.correct]}</span>\n`;
+        });
+      } else if (state.type === 'fill-in') {
+        yaml += `  <span class="yaml-key">sentences:</span>\n`;
+        c.items.forEach(item => {
+          yaml += `    - <span class="yaml-key">text:</span> <span class="yaml-string">${item.text}</span>\n`;
+          yaml += `      <span class="yaml-key">answer:</span> <span class="yaml-string">${item.blank}</span>\n`;
+        });
+        if (c.wordBank) {
+          yaml += `  <span class="yaml-key">show_word_bank:</span> <span class="yaml-bool">true</span>\n`;
+        }
+      } else if (state.type === 'match-up') {
+        yaml += `  <span class="yaml-key">pairs:</span>\n`;
+        c.pairs.forEach(pair => {
+          yaml += `    - <span class="yaml-key">left:</span> <span class="yaml-string">${pair.left}</span>\n`;
+          yaml += `      <span class="yaml-key">right:</span> <span class="yaml-string">${pair.right}</span>\n`;
+        });
+      } else if (state.type === 'mark-the-words') {
+        yaml += `  <span class="yaml-key">text:</span> <span class="yaml-string">${c.text}</span>\n`;
+        yaml += `  <span class="yaml-key">answers:</span>\n`;
+        c.answers.forEach(answer => {
+          yaml += `    - <span class="yaml-string">${answer}</span>\n`;
+        });
+      } else if (state.type === 'ordering') {
+        yaml += `  <span class="yaml-key">items:</span> <span class="yaml-comment"># in correct order</span>\n`;
+        c.items.forEach(item => {
+          yaml += `    - <span class="yaml-string">${item}</span>\n`;
+        });
+      } else if (state.type === 'true-false') {
+        yaml += `  <span class="yaml-key">statements:</span>\n`;
+        c.items.forEach(item => {
+          yaml += `    - <span class="yaml-key">statement:</span> <span class="yaml-string">${item.statement}</span>\n`;
+          yaml += `      <span class="yaml-key">answer:</span> <span class="yaml-bool">${item.answer}</span>\n`;
+        });
+      }
+
+      container.innerHTML = yaml;
+    }
+
+    function updateAll() {
+      renderActivityTypes();
+      renderConfig();
+      renderPreview();
+      renderYaml();
+    }
+
+    // ==================== INTERACTIONS ====================
+
+    function selectType(type) {
+      state.type = type;
+      state.config = JSON.parse(JSON.stringify(ACTIVITY_TYPES[type].defaults));
+      updateAll();
+    }
+
+    function updateConfig(key, value) {
+      state.config[key] = value;
+      updateAll();
+    }
+
+    function updateQuizQuestion(index, key, value) {
+      state.config.items[index][key] = value;
+      updateAll();
+    }
+
+    function updateQuizOption(qIndex, oIndex, value) {
+      state.config.items[qIndex].options[oIndex] = value;
+      updateAll();
+    }
+
+    function addQuizQuestion() {
+      state.config.items.push({
+        question: 'New question?',
+        options: ['Option A', 'Option B', 'Option C', 'Option D'],
+        correct: 0
+      });
+      updateAll();
+    }
+
+    function updateFillInItem(index, key, value) {
+      state.config.items[index][key] = value;
+      updateAll();
+    }
+
+    function addFillInItem() {
+      state.config.items.push({ text: 'New sentence with ___ blank.', blank: 'word' });
+      updateAll();
+    }
+
+    function updateMatchPair(index, key, value) {
+      state.config.pairs[index][key] = value;
+      updateAll();
+    }
+
+    function addMatchPair() {
+      state.config.pairs.push({ left: 'слово', right: 'word' });
+      updateAll();
+    }
+
+    function updateTFItem(index, key, value) {
+      state.config.items[index][key] = value;
+      updateAll();
+    }
+
+    function addTFItem() {
+      state.config.items.push({ statement: 'New statement.', answer: true });
+      updateAll();
+    }
+
+    function copyYaml() {
+      // Get plain text version
+      const c = state.config;
+      let yaml = `- type: ${state.type}\n`;
+      yaml += `  title: ${c.title}\n`;
+      yaml += `  instruction: ${c.instruction}\n`;
+
+      if (state.type === 'quiz') {
+        yaml += `  questions:\n`;
+        c.items.forEach(item => {
+          yaml += `    - question: ${item.question}\n`;
+          yaml += `      options:\n`;
+          item.options.forEach(opt => yaml += `        - ${opt}\n`);
+          yaml += `      correct: ${item.options[item.correct]}\n`;
+        });
+      } else if (state.type === 'fill-in') {
+        yaml += `  sentences:\n`;
+        c.items.forEach(item => {
+          yaml += `    - text: ${item.text}\n`;
+          yaml += `      answer: ${item.blank}\n`;
+        });
+        if (c.wordBank) yaml += `  show_word_bank: true\n`;
+      } else if (state.type === 'match-up') {
+        yaml += `  pairs:\n`;
+        c.pairs.forEach(pair => {
+          yaml += `    - left: ${pair.left}\n`;
+          yaml += `      right: ${pair.right}\n`;
+        });
+      } else if (state.type === 'mark-the-words') {
+        yaml += `  text: ${c.text}\n`;
+        yaml += `  answers:\n`;
+        c.answers.forEach(a => yaml += `    - ${a}\n`);
+      } else if (state.type === 'ordering') {
+        yaml += `  items:\n`;
+        c.items.forEach(item => yaml += `    - ${item}\n`);
+      } else if (state.type === 'true-false') {
+        yaml += `  statements:\n`;
+        c.items.forEach(item => {
+          yaml += `    - statement: ${item.statement}\n`;
+          yaml += `      answer: ${item.answer}\n`;
+        });
+      }
+
+      navigator.clipboard.writeText(yaml).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy YAML';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    // ==================== INIT ====================
+
+    updateAll();
+  </script>
+</body>
+</html>

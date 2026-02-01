@@ -1,8 +1,8 @@
-# Audit Report: M67 — symon-petliura.md
-**Level:** C1 | **Module:** M67 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M69 — symon-petliura.md
+**Level:** C1 | **Module:** M69 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:15:24
+**Generated:** 2026-02-01 23:29:34
 
 ## Configuration
 **Type:** C1-biography

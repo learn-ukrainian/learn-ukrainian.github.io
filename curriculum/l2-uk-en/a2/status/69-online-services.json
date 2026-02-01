@@ -2,14 +2,14 @@
   "module": "69-online-services",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T13:22:41.475189Z",
+  "last_audit": "2026-02-01T23:59:02.103822Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-17T21:45:15.600845Z",
     "meta": "2026-01-26T17:21:19.007556Z",
     "activities": "2026-01-27T13:22:36.912994Z",
     "vocabulary": "2026-01-25T15:45:32.418550Z",
-    "plan": "2026-01-27T13:21:58.946762Z"
+    "plan": "2026-01-30T12:32:20.137874Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1145/1000 (raw: 1292)"
+      "message": "1145/1090 (raw: 1292)"
     },
     "activities": {
       "status": "pass",

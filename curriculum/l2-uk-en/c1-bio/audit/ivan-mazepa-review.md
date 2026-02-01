@@ -1,8 +1,8 @@
-# Audit Report: M22 — ivan-mazepa.md
-**Level:** C1 | **Module:** M22 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M24 — ivan-mazepa.md
+**Level:** C1 | **Module:** M24 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:15:06
+**Generated:** 2026-02-01 23:29:13
 
 ## Configuration
 **Type:** C1-biography

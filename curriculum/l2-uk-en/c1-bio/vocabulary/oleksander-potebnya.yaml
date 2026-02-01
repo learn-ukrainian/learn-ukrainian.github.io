@@ -1,0 +1,75 @@
+- word: мовознавець
+  translation: linguist
+  ipa: [mɔwɔzˈnawɛt͡sʲ]
+  definition: Фахівець з мовознавства.
+  usage_example: Олександр Потебня — видатний український мовознавець.
+- word: філологія
+  translation: philology
+  ipa: [fʲiɫɔˈɫɔɦijɐ]
+  definition: Сукупність наук, що вивчають культуру народу через його мову та літературу.
+  usage_example: Він присвятив своє життя філології.
+- word: внутрішня форма слова
+  translation: inner form of word
+  ipa: [wnuˈtrʲiʃnʲɐ ˈfɔrmɐ ˈsɫɔwɐ]
+  definition: Спосіб, яким мова представляє значення слова; етимологічний образ.
+  usage_example: Внутрішня форма слова є ключовим поняттям теорії Потебні.
+- word: семіотика
+  translation: semiotics
+  ipa: [sɛmʲiˈɔtɪkɐ]
+  definition: Наука про знаки та знакові системи.
+  usage_example: Ідеї Потебні випередили розвиток семіотики.
+- word: етимологія
+  translation: etymology
+  ipa: [ɛtɪmɔˈɫɔɦijɐ]
+  definition: Наука про походження слів.
+  usage_example: Етимологія допомагає зрозуміти історію мови.
+- word: граматика
+  translation: grammar
+  ipa: [ɦrɑˈmɑtɪkɐ]
+  definition: Будова мови та наука про неї.
+  usage_example: Він написав ґрунтовну працю з граматики.
+- word: фонетика
+  translation: phonetics
+  ipa: [fɔˈnɛtɪkɐ]
+  definition: Розділ мовознавства, що вивчає звуковий лад мови.
+  usage_example: Фонетика української мови має свої особливості.
+- word: мислення
+  translation: thinking
+  ipa: [ˈmɪsɫɛnʲːɐ]
+  definition: Процес пізнавальної діяльності людини.
+  usage_example: Мова нерозривно пов'язана з мисленням.
+- word: філософія мови
+  translation: philosophy of language
+  ipa: [fʲiɫɔˈsɔfʲijɐ ˈmɔwɪ]
+  definition: Розділ філософії, що вивчає природу та функції мови.
+  usage_example: Потебня вважається основоположником української філософії мови.
+- word: наукова школа
+  translation: scientific school
+  ipa: [nɐuˈkɔwɐ ˈʃkɔɫɐ]
+  definition: Група вчених, об'єднаних спільними поглядами та методами.
+  usage_example: Харківська філологічна школа виховала багато талантів.
+- word: когнітивний
+  translation: cognitive
+  ipa: [kɔɦnʲiˈtɪwnɪj]
+  definition: Пов'язаний з пізнанням, мисленням.
+  usage_example: Когнітивний підхід у лінгвістиці стає дедалі популярнішим.
+- word: психолінгвістика
+  translation: psycholinguistics
+  ipa: [psɪxɔlʲinˈɦwistɪkɐ]
+  definition: Наука про психологічні та нейробіологічні фактори, що дозволяють людям набувати, використовувати та розуміти мову.
+  usage_example: Психолінгвістика досліджує зв'язок між мозком і мовою.
+- word: морфологія
+  translation: morphology
+  ipa: [mɔrfɔˈɫɔɦijɐ]
+  definition: Розділ граматики, що вивчає форму слова.
+  usage_example: Морфологія вивчає частини мови.
+- word: синтаксис
+  translation: syntax
+  ipa: [ˈsɪntɐksɪs]
+  definition: Розділ граматики, що вивчає будову речень.
+  usage_example: Синтаксис регулює порядок слів у реченні.
+- word: діалектологія
+  translation: dialectology
+  ipa: [dʲiɐlɛktɔˈɫɔɦijɐ]
+  definition: Наука про місцеві різновиди мови (діалекти).
+  usage_example: Він зібрав багато матеріалу з діалектології.

@@ -2,14 +2,14 @@
   "module": "10-at-the-post-office-and-bank",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:26:08.901729Z",
+  "last_audit": "2026-02-01T23:58:34.213185Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-25T09:43:07.126121Z",
-    "meta": "2026-01-26T17:21:18.820447Z",
+    "meta": "2026-01-29T07:39:04.584855Z",
     "activities": "2026-01-17T21:45:15.602062Z",
     "vocabulary": "2026-01-25T09:42:40.535941Z",
-    "plan": "2026-01-26T17:21:18.819933Z"
+    "plan": "2026-01-30T12:31:49.564694Z"
   },
   "gates": {
     "meta": {

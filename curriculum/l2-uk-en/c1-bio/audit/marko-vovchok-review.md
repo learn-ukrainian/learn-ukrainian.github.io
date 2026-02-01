@@ -1,8 +1,8 @@
-# Audit Report: M35 — marko-vovchok.md
-**Level:** C1 | **Module:** M35 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M37 — marko-vovchok.md
+**Level:** C1 | **Module:** M37 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:15:09
+**Generated:** 2026-02-01 23:29:20
 
 ## Configuration
 **Type:** C1-biography

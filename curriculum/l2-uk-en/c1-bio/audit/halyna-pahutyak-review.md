@@ -1,8 +1,8 @@
-# Audit Report: M116 — halyna-pahutyak.md
-**Level:** C1 | **Module:** M116 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M120 — halyna-pahutyak.md
+**Level:** C1 | **Module:** M120 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:15:47
+**Generated:** 2026-02-01 23:29:55
 
 ## Configuration
 **Type:** C1-biography

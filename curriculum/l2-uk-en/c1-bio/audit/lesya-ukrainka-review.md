@@ -1,8 +1,8 @@
-# Audit Report: M62 — lesya-ukrainka.md
-**Level:** C1 | **Module:** M62 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4000
+# Audit Report: M64 — lesya-ukrainka.md
+**Level:** C1 | **Module:** M64 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-29 22:43:08
+**Generated:** 2026-02-01 23:29:32
 
 ## Configuration
 **Type:** C1-biography

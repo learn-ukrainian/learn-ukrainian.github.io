@@ -1,0 +1,116 @@
+module: petro-mohyla
+level: C1-BIO
+sequence: 21
+slug: petro-mohyla
+version: '2.0'
+title: 'Петро Могила: Засновник академії та реформатор церкви'
+content_outline:
+- section: Вступ — Будівничий української освіти
+  words: 400
+  points:
+  - Велич Петра Могили для української культури
+  - Епоха релігійного протистояння
+  - Засновник першого вищого навчального закладу Східної Європи
+- section: Походження та молодість
+  words: 600
+  points:
+  - Молдавська господарська родина
+  - Освіта в Європі (Львів, Замостя, Париж)
+  - Шлях до чернецтва
+- section: Архімандрит Києво-Печерської лаври
+  words: 700
+  points:
+  - Обрання архімандритом (1627)
+  - Відновлення лаври після занепаду
+  - Археологічні відкриття (гробниці князів)
+  - Розбудова друкарні
+- section: Заснування Києво-Могилянської академії
+  words: 800
+  points:
+  - Києво-братська школа та її проблеми
+  - Об'єднання шкіл (1632)
+  - Програма та методи навчання (латина, філософія, богослов'я)
+  - Значення для української та європейської освіти
+- section: Митрополит Київський
+  words: 700
+  points:
+  - Обрання митрополитом (1633)
+  - Церковні реформи
+  - «Православне сповідання віри» (1640)
+  - Боротьба з унією та захист православ'я
+- section: Культурна та видавнича діяльність
+  words: 500
+  points:
+  - Друкарня Києво-Печерської лаври
+  - Видання богослужбових книг
+  - «Требник» Петра Могили (1646)
+- section: Спадщина та канонізація
+  words: 300
+  points:
+  - Смерть та поховання (1647)
+  - Канонізація (1996)
+  - Києво-Могилянська академія після Могили
+  - Сучасне значення
+word_target: 4000
+vocabulary_hints:
+  required:
+  - митрополит (metropolitan)
+  - архімандрит (archimandrite)
+  - академія (academy)
+  - православ'я (Orthodoxy)
+  - унія (church union)
+  - братство (brotherhood/confraternity)
+  - друкарня (printing house)
+  - требник (book of needs/euchologion)
+  - канонізація (canonization)
+  - лавра (lavra - major monastery)
+  recommended:
+  - богослов'я (theology)
+  - схоластика (scholasticism)
+  - катехизис (catechism)
+  - єпархія (diocese)
+activity_hints:
+- type: reading
+  focus: Фрагменти «Православного сповідання віри»
+  source: Первинне джерело
+  items: 3 passages
+- type: essay-response
+  focus: Роль Могили у збереженні української православної ідентичності
+  word_target: 300
+  output: Аргументований есей
+- type: critical-analysis
+  focus: Порівняння освітньої реформи Могили з європейськими аналогами
+focus: biography
+prerequisites:
+- b2-hist/bratstva-i-osvita
+- b2-hist/pravoslavna-tserkva-17
+connects_to:
+- c1-bio/iov-boretskyi
+- c1-bio/meletii-smotrytskyi
+- c1-bio/sylvestr-kosiv
+module_type: biography
+sources:
+- name: Петро Могила (Енциклопедія історії України)
+  url: https://esu.com.ua/article-10852
+  type: primary
+  notes: Академічна біографія
+- name: «Православне сповідання віри» (1640)
+  type: primary
+  notes: Головний богословський твір Могили
+- name: Жуковський А. Петро Могила й питання єдності Церков
+  type: reference
+  notes: Монографія про екуменічну діяльність
+immersion: 100% Ukrainian
+phase: C1-BIO
+objectives:
+- Дізнатися про життя та діяльність Петра Могили
+- Зрозуміти значення Києво-Могилянської академії
+- Проаналізувати церковні реформи Могили
+- Оцінити внесок у збереження української православної ідентичності
+notes: |
+  Petro Mohyla transformed Ukrainian Orthodox education and church life.
+  The Kyiv-Mohyla Academy became the first institution of higher learning
+  in Eastern Europe, educating generations of Ukrainian, Russian, and
+  Balkan clergy and intellectuals. His "Orthodox Confession of Faith"
+  became a foundational document for Orthodox theology. He was canonized
+  by the Ukrainian Orthodox Church in 1996.

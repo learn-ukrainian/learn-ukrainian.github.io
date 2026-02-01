@@ -1,0 +1,10 @@
+module: c1-bio-089
+level: C1-BIO
+slug: oleksandr-dovzhenko
+version: '2.0'
+id: c1-bio-089
+naturalness:
+  score: null
+  status: PENDING
+build:
+  last_modified: '2026-02-01'

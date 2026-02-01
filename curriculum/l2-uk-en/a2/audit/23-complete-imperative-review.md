@@ -1,8 +1,8 @@
 # Audit Report: M23 — 23-complete-imperative.md
 **Level:** A2 | **Module:** M23 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 8/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-31 20:25:05
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-02 00:04:39
 
 ## Configuration
 **Type:** A2-grammar
@@ -36,30 +36,20 @@
 - Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: однина, множина
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-
-## Recommendation
-**📝 UPDATE** (severity 15/100)
-
-- 1 violations (minor)
-- Immersion 9% off target (minor)
-
 ## Gates
-- **Words:** ✅ 1555/1000 (raw: 1981)
+- **Words:** ✅ 1469/1000 (raw: 1855)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 40/1
+- **Vocab:** ✅ 42/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 41.0% LOW (target 50-65% (A2.2))
+- **Immersion:** 🇺🇦 57.4% (target 50-65% (A2.2))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
 
@@ -67,10 +57,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Introduction / Вступ** | ✅ | 238 | Included in Core |
-| **Presentation / Презентація** | ✅ | 831 | Included in Core |
-| **Practice / Практика** | ⚪️ | 212 | Skipped |
-| **Dialogues / Діалоги** | ✅ | 138 | Included in Core |
-| **Summary / Підсумок** | ✅ | 86 | Included in Core |
-| **Need More Practice?** | ⚪️ | 44 | Skipped |
-| **Quick Reference / Швидка довідка** | ⚪️ | 6 | Skipped |
+| **Introduction / Вступ** | ✅ | 211 | Included in Core |
+| **Presentation / Презентація** | ✅ | 805 | Included in Core |
+| **Practice / Практика** | ⚪️ | 200 | Skipped |
+| **Dialogues / Діалоги** | ✅ | 127 | Included in Core |
+| **Summary / Підсумок** | ✅ | 119 | Included in Core |
+| **Швидка довідка** | ⚪️ | 7 | Skipped |

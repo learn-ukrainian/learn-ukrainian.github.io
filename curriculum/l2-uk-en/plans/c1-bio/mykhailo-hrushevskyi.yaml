@@ -1,7 +1,7 @@
-module: mykhailo-hrushevskyi-biography
+module: mykhailo-hrushevskyi
 level: C1-BIO
 sequence: 56
-slug: mykhailo-hrushevskyi-biography
+slug: mykhailo-hrushevskyi
 version: '2.0'
 title: 'Михайло Грушевський: Історик і президент'
 content_outline:

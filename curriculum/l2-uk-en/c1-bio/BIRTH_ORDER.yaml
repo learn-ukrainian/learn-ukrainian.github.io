@@ -15,6 +15,8 @@ modules:
   - iov-boretskyi           # ~1560-1631
   - sylvestr-kosiv          # ~1590-1657
   - bohdan-khmelnytskyy     # 1595-1657
+  - petro-mohyla            # 1596-1647
+  - ivan-sirko              # ~1610-1680
   - yuriy-nemyrych          # 1612-1659
 
   # Cossack Era (1650-1750)
@@ -52,7 +54,7 @@ modules:
   - sofiya-okunevska        # 1865-1926
 
   - mykola-vasylenko        # 1866-1935
-  - mykhailo-hrushevskyi-biography # 1866-1934
+  - mykhailo-hrushevskyi # 1866-1934
   - liudmyla-starytska      # 1868-1941
   - mariia-voiakovska       # 1868-19?? (Wife of Hrushevsky)
   - yulian-bachynskyi       # 1870-1940
@@ -76,7 +78,9 @@ modules:
   - olha-basarab            # 1889-1924
   - klavdiya-latysheva      # 1889-1956
   - olena-stepaniv          # 1892-1963
+  - mykola-kulish           # 1892-1937
   - mykola-khvylovyi        # 1893-1933
+  - oleksandr-dovzhenko     # 1894-1956
   - vira-kholodna           # 1893-1919
   - borys-liatoshynskyi     # 1895-1968
   - vasyl-vyshyvanyi        # 1895-1948 (Archduke Wilhelm)

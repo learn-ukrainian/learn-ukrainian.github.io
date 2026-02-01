@@ -1,12 +1,10 @@
 # Audit Report: M61 — 61-hotel-accommodation.md
-
 **Level:** A2 | **Module:** M61 | **Phase:** A2.6 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 13:09:33
+**Generated:** 2026-02-01 23:58:58
 
 ## Configuration
-
 **Type:** A2
 **Word Target:** 1000 words
 **Activities:** 10-14 required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Hotel Vocabulary | 12 | 8 | ✅ |
@@ -42,7 +39,6 @@
 - Low density activities: 0
 
 ## Gates
-
 - **Words:** ✅ 1089/1000 (raw: 1171)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
@@ -60,7 +56,6 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

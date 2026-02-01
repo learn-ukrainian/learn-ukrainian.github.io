@@ -1,0 +1,116 @@
+module: mykola-kulish
+level: C1-BIO
+sequence: 86
+slug: mykola-kulish
+version: '2.0'
+title: 'Микола Куліш: Геній українського театру'
+content_outline:
+- section: Вступ — Найбільший драматург XX століття
+  words: 400
+  points:
+  - Куліш як геній українського театру
+  - Доля митця в тоталітарній системі
+  - Його місце в Розстріляному відродженні
+- section: Ранні роки та освіта
+  words: 600
+  points:
+  - Дитинство на Херсонщині (Чаплинка, 1892)
+  - Освіта та перші літературні спроби
+  - Участь у визвольних змаганнях (1917-1920)
+- section: Становлення драматурга
+  words: 700
+  points:
+  - «97» — перша велика п'єса (1924)
+  - Співпраця з театром «Березіль»
+  - Творчий тандем із Лесем Курбасом
+- section: Великі п'єси
+  words: 800
+  points:
+  - «Комуна в степах» (1925)
+  - «Народний Малахій» (1927)
+  - «Мина Мазайло» (1929) — сатира на русифікацію
+  - «Патетична соната» (1929)
+  - «Маклена Граса» (1933)
+- section: Художній світ Куліша
+  words: 600
+  points:
+  - Експресіонізм та модернізм
+  - Мовне питання у творчості
+  - Сатира та трагедія
+  - Український характер у п'єсах
+- section: Переслідування та загибель
+  words: 500
+  points:
+  - Критика та цькування (початок 1930-х)
+  - Арешт 1934 року
+  - Соловки
+  - Розстріл у Сандармосі (3 листопада 1937)
+- section: Спадщина та реабілітація
+  words: 400
+  points:
+  - Реабілітація (1957)
+  - Повернення на сцену
+  - Куліш у сучасному театрі
+  - Значення для української культури
+word_target: 4000
+vocabulary_hints:
+  required:
+  - драматург (playwright)
+  - п'єса (play)
+  - театр «Березіль» (Berezil Theatre)
+  - режисер (director)
+  - експресіонізм (expressionism)
+  - Розстріляне відродження (Executed Renaissance)
+  - русифікація (Russification)
+  - реабілітація (rehabilitation)
+  - Соловки (Solovki)
+  - Сандармох (Sandarmokh)
+  recommended:
+  - модернізм (modernism)
+  - сатира (satire)
+  - абсурд (absurd)
+  - тоталітаризм (totalitarianism)
+activity_hints:
+- type: reading
+  focus: Фрагменти п'єси «Мина Мазайло»
+  source: Первинне джерело
+  items: 3 passages
+- type: essay-response
+  focus: Мовне питання у творчості Куліша
+  word_target: 300
+  output: Аргументований есей
+- type: critical-analysis
+  focus: Порівняння долі Куліша та Курбаса
+focus: biography
+prerequisites:
+- b2-hist/rozstriliane-vidrodzennia
+- b2-hist/mekhanizm-teroru
+connects_to:
+- c1-bio/les-kurbas
+- c1-bio/mykola-khvylovyi
+module_type: biography
+sources:
+- name: Микола Куліш (Енциклопедія історії України)
+  url: https://esu.com.ua/article-7980
+  type: primary
+  notes: Академічна біографія
+- name: Куліш М. П'єси
+  type: primary
+  notes: Збірка драматичних творів
+- name: Жулинський М. Микола Куліш
+  type: reference
+  notes: Монографія про творчість
+immersion: 100% Ukrainian
+phase: C1-BIO
+objectives:
+- Дізнатися про життя та творчість Миколи Куліша
+- Проаналізувати його найважливіші п'єси
+- Зрозуміти значення Куліша для українського театру
+- Осмислити трагедію Розстріляного відродження
+notes: |
+  Mykola Kulish is considered the greatest Ukrainian playwright of the 20th century.
+  His plays combined modernist techniques with deep exploration of Ukrainian identity
+  and the absurdities of Soviet reality. "Myna Mazailo" brilliantly satirized
+  linguistic assimilation. His partnership with director Les Kurbas created
+  legendary theatrical productions. Both were arrested in 1934 and executed on
+  the same day (November 3, 1937) in the Sandarmokh mass execution.

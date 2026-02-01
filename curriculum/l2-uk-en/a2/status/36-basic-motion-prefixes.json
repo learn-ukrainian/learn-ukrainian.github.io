@@ -2,14 +2,14 @@
   "module": "36-basic-motion-prefixes",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:26:23.708143Z",
+  "last_audit": "2026-02-01T23:58:46.268785Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-25T14:45:13.802981Z",
-    "meta": "2026-01-26T17:21:18.903924Z",
+    "meta": "2026-01-29T07:39:04.606849Z",
     "activities": "2026-01-12T14:00:47.160468Z",
     "vocabulary": "2026-01-25T18:00:39.674169Z",
-    "plan": "2026-01-26T17:21:18.903510Z"
+    "plan": "2026-01-30T12:31:49.618197Z"
   },
   "gates": {
     "meta": {

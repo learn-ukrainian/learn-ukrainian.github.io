@@ -2,14 +2,14 @@
   "module": "60-at-the-pharmacy",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T13:09:28.622590Z",
+  "last_audit": "2026-02-01T23:58:57.693062Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T12:26:24.715991Z",
     "meta": "2026-01-26T17:21:18.978064Z",
     "activities": "2026-01-25T17:23:15.746358Z",
     "vocabulary": "2026-01-25T17:23:51.364371Z",
-    "plan": "2026-01-27T12:23:09.728105Z"
+    "plan": "2026-01-30T12:31:49.668663Z"
   },
   "gates": {
     "meta": {

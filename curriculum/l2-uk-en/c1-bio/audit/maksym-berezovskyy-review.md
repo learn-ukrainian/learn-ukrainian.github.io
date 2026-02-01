@@ -1,90 +1,67 @@
-# Audit Report: M27 — maksym-berezovskyy.md
-
-**Level:** C1 | **Module:** M27 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M29 — maksym-berezovskyy.md
+**Level:** C1 | **Module:** M29 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:56:09
+**Generated:** 2026-02-01 23:29:15
 
 ## Configuration
-
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
 **Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** critical-analysis, essay-response, fill-in, group-sort, match-up, quiz, reading
+**Required Types:** critical-analysis, essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥24 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Життєвий та творчий шлях Максима Березовського | 8 | 5 | ✅ |
-| 2 | match-up | Музичний лексикон епохи бароко та класицизму | 12 | 6 | ✅ |
-| 3 | fill-in | Трагічна доля генія: Текстуальна реконструкція | 12 | 6 | ✅ |
-| 4 | essay-response | Есе: Березовський як міст між культурами | 1 | 1 | ✅ |
-| 5 | comparative-study | Компаративістика: Березовський vs Бортнянський | 1 | 1 | ✅ |
-| 6 | select | Мистецький внесок Максима Березовського | 6 | 5 | ✅ |
-| 7 | true-false | Деконструкція міфів про трагічного генія | 9 | 5 | ✅ |
-| 8 | mark-the-words | Термінологічна експертиза: Музика та Спадщина | 9 | 5 | ✅ |
-| 9 | unjumble | Відновлення мистецьких тез про Березовського | 6 | 5 | ✅ |
-| 10 | cloze | Аналіз 'Італійського тріумфу' композитора | 12 | 1 | ✅ |
-| 11 | group-sort | Класифікація творчої спадщини Березовського | 15 | 1 | ✅ |
-| 12 | translate | Академічний переклад музикознавчих тез | 6 | 5 | ✅ |
-| 13 | error-correction | Корекція мистецтвознавчого дискурсу | 8 | 5 | ✅ |
-| 14 | true-false | Деталі оперної реформи та італійського успіху | 8 | 5 | ✅ |
-| 15 | authorial-intent | Аналіз стратегічних намірів композитора-академіка | 1 | 1 | ✅ |
-| 16 | critical-analysis | Критичний аналіз: Березовський як жертва системного тиску | 1 | 1 | ✅ |
+| 1 | essay-response | Есе: Березовський як міст між культурами | 1 | 1 | ✅ |
+| 2 | comparative-study | Компаративістика: Березовський vs Бортнянський | 1 | 1 | ✅ |
+| 3 | true-false | Деконструкція міфів про трагічного генія | 9 | 5 | ✅ |
+| 4 | true-false | Деталі оперної реформи та італійського успіху | 8 | 5 | ✅ |
+| 5 | authorial-intent | Аналіз стратегічних намірів композитора-академіка | 1 | 1 | ✅ |
+| 6 | critical-analysis | Критичний аналіз: Березовський як жертва системного тиску | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 16 (target: 3-9) ❌
-- Unique types: 15 (minimum: 3) ✅
-- Priority types used: 5/6 (authorial-intent, comparative-study, critical-analysis, essay-response, quiz) ✅
-- Required types used: 6/7 (critical-analysis, essay-response, fill-in, group-sort, match-up, quiz) ❌
+- Total activities: 6 (target: 3-9) ✅
+- Unique types: 5 (minimum: 3) ✅
+- Priority types used: 4/6 (authorial-intent, comparative-study, critical-analysis, essay-response) ✅
+- Required types used: 2/3 (critical-analysis, essay-response) ❌
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-
-- **[YAML_SCHEMA_VIOLATION]** Schema error in maksym-berezovskyy.yaml: Schema validation error at key '13': {'type': 'true-false', 'title': 'Деталі оперної реформи та італійського успіху', 'instruction': 'Перевірка знань про професійні аспекти діяльності Березовського.', 'items': [{'statement': 'Березовський став першим українцем, чия опера була поставлена в професійному італійському театрі.', 'correct': True, 'explanation': 'Це був історичний прецедент для всього східноєвропейського мистецтва.'}, {'statement': "Музика опери 'Демофонт' була повністю втрачена під час пожежі в Петербурзі.", 'correct': False, 'explanation': 'Значна частина партитури збереглася і була віднайдена музикознавцями у XX столітті.'}, {'statement': 'Березовський виступав як віртуозний вокаліст, виконуючи головні партії у власних творах.', 'correct': True, 'explanation': 'Його досвід співака капели дозволяв йому досконало розуміти природу людського голосу.'}, {'statement': 'Академічне звання в Болоньї давало Березовському право на довічну пенсію від італійського уряду.', 'correct': False, 'explanation': 'Це було почесне наукове та мистецьке звання, що свідчило про статус, але не гарантувало фінансів.'}, {'statement': 'Сковорода та Березовський належали до одного покоління українських просвітників XVIII століття.', 'correct': True, 'explanation': 'Обидва митці втілювали високу культуру Гетьманщини у різних сферах — філософії та музиці.'}, {'statement': 'Березовський відмовився від пропозиції залишитися в Італії назавжди.', 'correct': True, 'explanation': 'Він прагнув розвивати музичну освіту саме на Батьківщині, тому повернувся.'}, {'statement': 'Імператриця Катерина II особисто запросила Березовського стати директором придворної капели.', 'correct': False, 'explanation': 'Навпаки, він не отримав обіцяної посади директора Кременчуцької академії і був усунутий на другий план.'}, {'statement': 'Творчість Березовського вплинула на формування стилю наступних поколінь українських композиторів.', 'correct': True, 'explanation': 'Його синтез європейського і національного став взірцем для митців XIX-XX століть.'}]} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
 ## Recommendation
+**📝 UPDATE** (severity 20/100)
 
-**📝 UPDATE** (severity 25/100)
-
-- 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
 - **Words:** ❌ 2140/4000 (raw: 2309)
-- **Activities:** ✅ 16/3
+- **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 15/3 types
+- **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 0 < 24 (soft target)
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ⚠️ Too many activities: 16 (target 3-9)
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 99.8% (target 95-100% (biography))
 - **Richness:** ✅ 95% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
 **Score:** 95% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 4 | 4 | 100% | 19% | 19.0% |
@@ -100,7 +77,6 @@
 | **TOTAL** | | | | | **95.2%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 109 | Included in Core |

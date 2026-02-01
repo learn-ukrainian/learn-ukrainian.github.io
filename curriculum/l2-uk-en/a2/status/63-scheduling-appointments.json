@@ -2,14 +2,14 @@
   "module": "63-scheduling-appointments",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T13:12:21.972275Z",
+  "last_audit": "2026-02-01T23:58:59.148137Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-17T21:45:15.598906Z",
     "meta": "2026-01-26T17:21:18.987487Z",
     "activities": "2026-01-17T21:45:15.603637Z",
     "vocabulary": "2026-01-25T18:00:39.904986Z",
-    "plan": "2026-01-27T13:12:18.017644Z"
+    "plan": "2026-01-30T12:32:02.544114Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1616/1000 (raw: 1786)"
+      "message": "1616/1600 (raw: 1786)"
     },
     "activities": {
       "status": "pass",

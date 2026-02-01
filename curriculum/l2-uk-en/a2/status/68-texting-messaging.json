@@ -2,14 +2,14 @@
   "module": "68-texting-messaging",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T13:15:46.994249Z",
+  "last_audit": "2026-02-01T23:59:01.608662Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-17T21:45:15.600581Z",
     "meta": "2026-01-26T17:21:19.004006Z",
     "activities": "2026-01-17T21:45:15.607970Z",
     "vocabulary": "2026-01-25T18:00:39.912105Z",
-    "plan": "2026-01-27T13:15:42.242257Z"
+    "plan": "2026-01-30T12:32:20.137771Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1038/1000 (raw: 1196)"
+      "message": "1038/965 (raw: 1196)"
     },
     "activities": {
       "status": "pass",

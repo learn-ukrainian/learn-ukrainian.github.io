@@ -2,10 +2,10 @@
   "module": "kniaz-yaroslav-mudryi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:14:59.015461Z",
+  "last_audit": "2026-02-01T23:55:20.301443Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-29T22:43:06.533641Z",
+    "md": "2026-02-01T23:22:27.593429Z",
     "meta": "2026-01-29T07:39:04.887133Z",
     "activities": "2026-01-29T22:43:06.509953Z",
     "vocabulary": "2026-01-29T21:10:02.298804Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4018/4000 (raw: 4217)"
+      "message": "4385/4000 (raw: 4429)"
     },
     "activities": {
       "status": "pass",
@@ -39,10 +39,8 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "6 Outline Compliance Errors"
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 5,
     "fail_count": 0
   }

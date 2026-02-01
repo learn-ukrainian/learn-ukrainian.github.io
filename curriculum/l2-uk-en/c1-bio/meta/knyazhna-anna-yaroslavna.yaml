@@ -1,11 +1,11 @@
-module: c1-bio-005
+module: c1-bio-05
 level: C1-BIO
 slug: knyazhna-anna-yaroslavna
 version: '2.0'
-id: c1-bio-005
+id: c1-bio-05
 naturalness:
   score: 10
-  status: APPROVED
+  status: PASS
 duration: 120
 transliteration: none
 tags:
@@ -14,5 +14,18 @@ tags:
 - middle-ages
 - women
 - royalty
+content_outline:
+- section: Вступ — Руська принцеса на французькому троні
+  words: 400
+- section: Життєпис
+  words: 2500
+- section: Внесок
+  words: 300
+- section: Останні роки
+  words: 300
+- section: Спадщина
+  words: 300
+- section: Підсумок
+  words: 300
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-01'

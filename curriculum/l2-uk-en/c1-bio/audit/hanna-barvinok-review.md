@@ -1,8 +1,8 @@
-# Audit Report: M34 — hanna-barvinok.md
-**Level:** C1 | **Module:** M34 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M36 — hanna-barvinok.md
+**Level:** C1 | **Module:** M36 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 09:53:43
+**Generated:** 2026-02-01 23:29:19
 
 ## Configuration
 **Type:** C1-biography
@@ -41,7 +41,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 24 (soft target)
+- **Vocab:** ⚠️ 15 < 24 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

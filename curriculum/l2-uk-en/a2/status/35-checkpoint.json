@@ -2,14 +2,14 @@
   "module": "35-checkpoint",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:26:23.137891Z",
+  "last_audit": "2026-02-01T23:58:45.801390Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-26T08:44:16.574517Z",
-    "meta": "2026-01-26T17:21:18.901114Z",
+    "meta": "2026-01-29T07:39:04.605931Z",
     "activities": "2026-01-11T23:20:54.285472Z",
     "vocabulary": "2026-01-25T22:13:41.472892Z",
-    "plan": "2026-01-26T17:21:18.900708Z"
+    "plan": "2026-01-30T12:31:49.616150Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1576/800 (raw: 1923)"
+      "message": "1576/1000 (raw: 1923)"
     },
     "activities": {
       "status": "pass",

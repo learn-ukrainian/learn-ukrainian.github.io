@@ -1,8 +1,8 @@
 # Audit Report: M05 — knyazhna-anna-yaroslavna.md
 **Level:** C1 | **Module:** M05 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
-**Naturalness:** 10/10 (APPROVED)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:14:59
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-02 00:08:05
 
 ## Configuration
 **Type:** C1-biography
@@ -37,50 +37,50 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4091/4000 (raw: 4296)
+- **Words:** ✅ 4529/4000 (raw: 4577)
 - **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 11/5
+- **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (8 activities)
-- **Immersion:** 🇺🇦 99.8% (target 95-100% (biography))
-- **Richness:** ✅ 99% (biography)
+- **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
+- **Richness:** ✅ 95% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 10/10 (APPROVED) - Naturalness check required
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
+**Score:** 95% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 15 | 4 | 100% | 19% | 19.0% |
-| engagement | 11 | 6 | 100% | 14% | 14.3% |
-| quotes | 9 | 3 | 100% | 14% | 14.3% |
-| cultural | 4 | 4 | 100% | 10% | 9.5% |
-| visual | 12 | 4 | 100% | 10% | 9.5% |
+| primary_sources | 7 | 4 | 100% | 19% | 19.0% |
+| engagement | 5 | 6 | 83% | 14% | 11.9% |
+| quotes | 3 | 3 | 100% | 14% | 14.3% |
+| cultural | 3 | 4 | 75% | 10% | 7.1% |
+| visual | 7 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.98 | - | 98% | 5% | 4.7% |
+| variety | 0.97 | - | 97% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 12 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.9%** |
+| questions | 14 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **95.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 119 | Included in Core |
-| **Вступ — Руська принцеса на французькому троні** | ✅ | 353 | Included in Core |
-| **Життєпис** | ⚪️ | 2854 | Skipped |
-| **Внесок** | ⚪️ | 212 | Skipped |
-| **Порівняльний аналіз** | ✅ | 165 | Included in Core |
-| **Критичне мислення** | ⚪️ | 112 | Skipped |
-| **Підсумок — Міст між світами** | ✅ | 116 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 160 | Skipped |
+| **Вступ — Руська принцеса на французькому троні** | ✅ | 380 | Included in Core |
+| **Життєпис** | ⚪️ | 2616 | Skipped |
+| **Внесок** | ⚪️ | 263 | Skipped |
+| **Останні роки** | ⚪️ | 239 | Skipped |
+| **Спадщина** | ⚪️ | 357 | Skipped |
+| **Підсумок** | ✅ | 294 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 261 | Skipped |

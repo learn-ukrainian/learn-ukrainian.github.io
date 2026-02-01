@@ -2,14 +2,14 @@
   "module": "62-rental-accommodation",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T13:11:57.376757Z",
+  "last_audit": "2026-02-01T23:58:58.659884Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T13:09:46.582217Z",
-    "meta": "2026-01-27T13:11:53.654724Z",
+    "meta": "2026-01-29T07:39:04.620508Z",
     "activities": "2026-01-27T12:36:43.293135Z",
     "vocabulary": "2026-01-25T17:25:45.076273Z",
-    "plan": "2026-01-27T13:10:30.207110Z"
+    "plan": "2026-01-30T12:31:49.672696Z"
   },
   "gates": {
     "meta": {

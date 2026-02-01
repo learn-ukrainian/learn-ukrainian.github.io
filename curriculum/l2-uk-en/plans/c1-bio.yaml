@@ -6,7 +6,7 @@ track: biography
 version: "1.0"
 
 overview:
-  total_modules: 130
+  total_modules: 132
   description: "Comprehensive biographies of significant Ukrainians across all fields and eras"
   prerequisites: [c1]
   target_audience: "Advanced learners seeking deep knowledge of Ukrainian historical figures"

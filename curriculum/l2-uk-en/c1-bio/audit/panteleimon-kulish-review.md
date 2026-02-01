@@ -1,8 +1,8 @@
-# Audit Report: M33 — panteleimon-kulish.md
-**Level:** C1 | **Module:** M33 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M35 — panteleimon-kulish.md
+**Level:** C1 | **Module:** M35 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-29 22:55:07
+**Generated:** 2026-02-01 23:29:19
 
 ## Configuration
 **Type:** C1-biography
@@ -42,7 +42,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 24 (soft target)
+- **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

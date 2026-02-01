@@ -1,8 +1,8 @@
-# Audit Report: M30 — hryhoriy-kvitka-osnovianenko.md
-**Level:** C1 | **Module:** M30 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
-**Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-29 22:41:46
+# Audit Report: M32 — hryhoriy-kvitka-osnovianenko.md
+**Level:** C1 | **Module:** M32 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+**Naturalness:** 1/10 (PENDING)
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-01 23:29:17
 
 ## Configuration
 **Type:** C1-biography
@@ -53,7 +53,7 @@
 - **Immersion:** 🇺🇦 99.8% (target 95-100% (biography))
 - **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 10/10 (High)
+- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)

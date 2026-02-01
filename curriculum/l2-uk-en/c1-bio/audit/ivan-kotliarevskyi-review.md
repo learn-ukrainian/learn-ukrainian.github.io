@@ -1,8 +1,8 @@
-# Audit Report: M29 — ivan-kotliarevskyi.md
-**Level:** C1 | **Module:** M29 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M31 — ivan-kotliarevskyi.md
+**Level:** C1 | **Module:** M31 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:15:07
+**Generated:** 2026-02-01 23:29:16
 
 ## Configuration
 **Type:** C1-biography
@@ -40,7 +40,7 @@
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Спадщина|Вплив' found: Спадщина, Вплив на розвиток мови
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Спадщина|Вплив' found: Вплив на розвиток мови, Спадщина
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 
 ## Recommendation

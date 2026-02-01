@@ -2,12 +2,12 @@
   "module": "yuriy-nemyrych",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:56:05.998564Z",
+  "last_audit": "2026-02-01T23:29:12.658367Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-17T21:45:15.870687Z",
-    "meta": "2026-01-26T17:21:21.193691Z",
-    "activities": "2026-01-17T21:45:15.814219Z",
+    "meta": "2026-01-29T07:39:04.900673Z",
+    "activities": "2026-01-27T15:34:57.127607Z",
     "vocabulary": null,
     "plan": null
   },
@@ -19,13 +19,13 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "2127/4000 (raw: 2301) | pedagogy: 1 violations"
+      "violations": 1,
+      "message": "2127/4000 (raw: 2301)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "16/3"
+      "message": "6/3"
     },
     "vocabulary": {
       "status": "warn",

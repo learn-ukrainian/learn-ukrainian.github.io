@@ -2,7 +2,7 @@
 **Level:** A2 | **Module:** M08 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 21:12:39
+**Generated:** 2026-02-01 23:58:33
 
 ## Configuration
 **Type:** A2-grammar
@@ -41,7 +41,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: родовий, іменник, знахідний
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: знахідний, іменник, родовий
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation

@@ -2,12 +2,12 @@
   "module": "volodymyr-velykii",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:14:58.354935Z",
+  "last_audit": "2026-02-01T23:55:17.202062Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-29T22:43:06.551054Z",
+    "md": "2026-02-01T23:11:28.762139Z",
     "meta": "2026-01-29T07:39:04.886460Z",
-    "activities": "2026-01-29T22:43:06.510975Z",
+    "activities": "2026-02-01T23:07:38.398345Z",
     "vocabulary": "2026-01-29T20:57:20.584161Z",
     "plan": null
   },
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4013/4000 (raw: 4191)"
+      "message": "4470/4000 (raw: 4515)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "4/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "pass",
@@ -39,11 +39,8 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "7 Outline Compliance Errors",
-      "Missing required activity types: reading"
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 5,
     "fail_count": 0
   }

@@ -74,3 +74,53 @@ items:
     pos: noun
     translation: victory
     example: "Кожна перемога зміцнювала авторитет київського князя."
+  - word: аскетизм
+    ipa: ɐskeˈtɪzm
+    pos: noun
+    translation: asceticism
+    example: "Князь вражав сучасників своїм аскетизмом."
+  - word: етос
+    ipa: ˈɛtɔs
+    pos: noun
+    translation: ethos
+    example: "Воїнський етос Святослава став легендарним."
+  - word: звитяга
+    ipa: zwɪˈtʲɑɦɐ
+    pos: noun
+    translation: valor/bravery
+    example: "Його походи — це приклад справжньої козацької звитяги."
+  - word: ініціація
+    ipa: init͡s⁽ʲ⁾iˈɑt͡s⁽ʲ⁾ijɐ
+    pos: noun
+    translation: initiation
+    example: "Битва з древлянами стала для нього ініціацією війною."
+  - word: легітимація
+    ipa: leɦitɪˈmat͡s⁽ʲ⁾ijɐ
+    pos: noun
+    translation: legitimation
+    example: "Перемога забезпечила легітимацію його влади."
+  - word: престиж
+    ipa: presˈtɪʒ
+    pos: noun
+    translation: prestige
+    example: "Військові успіхи підняли престиж Київської держави."
+  - word: суб'єктність
+    ipa: subjekˈtnistʲ
+    pos: noun
+    translation: agency/subjectivity
+    example: "Україна утверджувала свою політичну суб'єктність."
+  - word: тяглість
+    ipa: ˈtʲɑɦlistʲ
+    pos: noun
+    translation: continuity
+    example: "Ми бачимо тяглість воєнних традицій від князів до козаків."
+  - word: фатальний
+    ipa: fɐˈtɑlʲnɪj
+    pos: adj
+    translation: fatal
+    example: "Зустріч на порогах виявилася фатальною."
+  - word: щит
+    ipa: ʃt͡ʃɪt
+    pos: noun
+    translation: shield
+    example: "Хазарія була щитом, що стримував кочовиків."

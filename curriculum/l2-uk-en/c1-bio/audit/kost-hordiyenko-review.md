@@ -1,95 +1,72 @@
-# Audit Report: M23 — kost-hordiyenko.md
-
-**Level:** C1 | **Module:** M23 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M25 — kost-hordiyenko.md
+**Level:** C1 | **Module:** M25 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:56:07
+**Generated:** 2026-02-01 23:29:13
 
 ## Configuration
-
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
 **Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** essay-response, fill-in, group-sort, match-up, quiz, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥24 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Політична стратегія кошового Гордієнка | 8 | 5 | ✅ |
-| 2 | match-up | Термінологія запорозької суб'єктності | 12 | 6 | ✅ |
-| 3 | fill-in | Дискурс козацької волі: Текстуальна реконструкція | 12 | 6 | ✅ |
-| 4 | essay-response | Есе: Кость Гордієнко та генезис української демократії | 1 | 1 | ✅ |
-| 5 | comparative-study | Порівняльний аналіз: Сірко vs Гордієнко | 1 | 1 | ✅ |
-| 6 | select | Політичні погляди та ідеологія Костя Гордієнка | 8 | 5 | ✅ |
-| 7 | true-false | Деконструкція міфів про запорозький спротив | 9 | 5 | ✅ |
-| 8 | mark-the-words | Термінологія козацького республіканізму | 6 | 5 | ✅ |
-| 9 | unjumble | Відновлення державницьких тез Гордієнка | 8 | 5 | ✅ |
-| 10 | cloze | Аналіз стратегії запорозької непокори | 12 | 1 | ✅ |
-| 11 | group-sort | Класифікація напрямків діяльності Гордієнка | 15 | 1 | ✅ |
-| 12 | translate | Академічний переклад політичних тез отамана | 8 | 5 | ✅ |
-| 13 | error-correction | Корекція історичного дискурсу XVIII ст. | 8 | 5 | ✅ |
-| 14 | true-false | Деталі запорозької дипломатії | 8 | 5 | ✅ |
-| 15 | authorial-intent | Аналіз стратегічних намірів отамана | 1 | 1 | ✅ |
-| 16 | critical-analysis | Критичний аналіз: Гордієнко як контр-еліта | 1 | 1 | ✅ |
+| 1 | essay-response | Есе: Кость Гордієнко та генезис української демократії | 1 | 1 | ✅ |
+| 2 | comparative-study | Порівняльний аналіз: Сірко vs Гордієнко | 1 | 1 | ✅ |
+| 3 | true-false | Деконструкція міфів про запорозький спротив | 9 | 5 | ✅ |
+| 4 | true-false | Деталі запорозької дипломатії | 8 | 5 | ✅ |
+| 5 | authorial-intent | Аналіз стратегічних намірів отамана | 1 | 1 | ✅ |
+| 6 | critical-analysis | Критичний аналіз: Гордієнко як контр-еліта | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 16 (target: 3-9) ❌
-- Unique types: 15 (minimum: 3) ✅
-- Priority types used: 5/6 (authorial-intent, comparative-study, critical-analysis, essay-response, quiz) ✅
-- Required types used: 5/6 (essay-response, fill-in, group-sort, match-up, quiz) ❌
+- Total activities: 6 (target: 3-9) ✅
+- Unique types: 5 (minimum: 3) ✅
+- Priority types used: 4/6 (authorial-intent, comparative-study, critical-analysis, essay-response) ✅
+- Required types used: 1/2 (essay-response) ❌
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-
-- **[YAML_SCHEMA_VIOLATION]** Schema error in kost-hordiyenko.yaml: Schema validation error at key '13': {'type': 'true-false', 'title': 'Деталі запорозької дипломатії', 'instruction': 'Перевірка знань про міжнародні контакти Костя Гордієнка.', 'items': [{'statement': 'Гордієнко наполягав на тому, щоб шведський король гарантував права Січі окремим пунктом договору.', 'correct': True, 'explanation': 'Отаман діяв як професійний дипломат, забезпечуючи правовий захист своїй громаді.'}, {'statement': 'Після 1709 року Гордієнко прийняв пропозицію царя повернутися в Україну за умови амністії.', 'correct': False, 'explanation': 'Він ніколи не довіряв обіцянкам Москви і продовжував боротьбу до кінця життя.'}, {'statement': 'Костя Гордієнка кілька разів переобирали кошовим, що свідчило про його колосальну підтримку.', 'correct': True, 'explanation': 'Його авторитет на Січі базувався на вірності традиціям та особистій мудрості.'}, {'statement': 'Отаман виступав проти будь-яких союзів із кримськими татарами через релігійні причини.', 'correct': False, 'explanation': 'Він успішно співпрацював із Кримом у межах антимосковської стратегії.'}, {'statement': 'Гордієнко вважав, що Гетьманщина має бути повністю підпорядкована Запорозькій Січі.', 'correct': False, 'explanation': 'Він боровся за рівноправне партнерство та союз двох гілок української влади.'}, {'statement': 'Гордієнко використовував Кримське ханство як ситуативного союзника проти Москви.', 'correct': True, 'explanation': 'Це була вимушена, але ефективна стратегія для збереження Січі в умовах оточення.'}, {'statement': 'Олешківська Січ мала статус незалежної держави, визнаної всіма європейськими країнами.', 'correct': False, 'explanation': 'Вона перебувала під протекцією Криму і мала автономію, але не повну державну незалежність.'}, {'statement': 'Козаки під проводом Гордієнка брали участь у Прутському поході 1711 року.', 'correct': True, 'explanation': 'Запорожці були важливою частиною антимосковської коаліції у цій війні.'}]} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
 ## TEMPLATE COMPLIANCE
-
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Останні роки' per template 'c1-biography-module-template.md'
   - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 
 ## Recommendation
-
 **📝 UPDATE** (severity 25/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
 - **Words:** ❌ 2062/4000 (raw: 2248)
-- **Activities:** ✅ 16/3
+- **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 15/3 types
+- **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 0 < 24 (soft target)
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ⚠️ Too many activities: 16 (target 3-9)
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 99.7% (target 95-100% (biography))
 - **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
 **Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 8 | 4 | 100% | 19% | 19.0% |
@@ -105,7 +82,6 @@
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 95 | Included in Core |

@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Curriculum Architecture Visualization</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      height: 100vh;
+    }
+
+    .back-link {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      color: #3b82f6;
+      text-decoration: none;
+      font-size: 12px;
+      z-index: 100;
+    }
+
+    .back-link:hover { text-decoration: underline; }
+
+    .sidebar {
+      background: #1e293b;
+      padding: 20px;
+      padding-top: 40px;
+      overflow-y: auto;
+      border-right: 1px solid #334155;
+    }
+
+    .sidebar h2 {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #94a3b8;
+      margin-bottom: 16px;
+    }
+
+    .sidebar h3 {
+      font-size: 12px;
+      color: #64748b;
+      margin: 20px 0 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .view-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 20px;
+    }
+
+    .view-tab {
+      flex: 1;
+      padding: 8px;
+      font-size: 11px;
+      background: #334155;
+      border: 1px solid #475569;
+      color: #94a3b8;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+    }
+
+    .view-tab:hover { background: #475569; }
+    .view-tab.active { background: #3b82f6; border-color: #60a5fa; color: white; }
+
+    .level-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .level-btn {
+      padding: 6px 10px;
+      font-size: 11px;
+      background: #334155;
+      border: 1px solid #475569;
+      color: #e2e8f0;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .level-btn:hover { background: #475569; }
+    .level-btn.active { background: #3b82f6; border-color: #60a5fa; }
+
+    .legend {
+      margin-top: 20px;
+      padding: 16px;
+      background: #0f172a;
+      border-radius: 8px;
+    }
+
+    .legend h4 {
+      font-size: 11px;
+      color: #64748b;
+      margin-bottom: 10px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .legend-color {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+    }
+
+    .main-area {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .canvas-wrapper {
+      flex: 1;
+      overflow: auto;
+      padding: 24px;
+    }
+
+    .diagram {
+      min-width: 1000px;
+      min-height: 700px;
+    }
+
+    /* Three Layer View */
+    .three-layer {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .layer {
+      background: #1e293b;
+      border: 2px solid #334155;
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .layer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #334155;
+    }
+
+    .layer-title {
+      font-size: 16px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .layer-badge {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .layer.source .layer-badge { background: #3b82f6; }
+    .layer.build .layer-badge { background: #10b981; }
+    .layer.status .layer-badge { background: #f59e0b; }
+
+    .layer-desc {
+      font-size: 12px;
+      color: #94a3b8;
+    }
+
+    .layer-content {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .file-box {
+      padding: 14px 18px;
+      background: #334155;
+      border-radius: 10px;
+      min-width: 180px;
+      cursor: pointer;
+      transition: all 0.15s;
+      border: 2px solid transparent;
+    }
+
+    .file-box:hover { background: #475569; }
+    .file-box.selected { border-color: #3b82f6; }
+
+    .file-name {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .file-path {
+      font-size: 10px;
+      color: #64748b;
+      font-family: ui-monospace, monospace;
+    }
+
+    .file-desc {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-top: 8px;
+    }
+
+    /* Workflow View */
+    .workflow {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .workflow-step {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 20px;
+      background: #1e293b;
+      border-radius: 12px;
+      border-left: 4px solid #475569;
+    }
+
+    .workflow-step.active { border-left-color: #3b82f6; background: #1e3a5f; }
+    .workflow-step.complete { border-left-color: #10b981; }
+
+    .step-number {
+      width: 36px;
+      height: 36px;
+      background: #334155;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .workflow-step.active .step-number { background: #3b82f6; }
+    .workflow-step.complete .step-number { background: #10b981; }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .step-desc {
+      font-size: 12px;
+      color: #94a3b8;
+    }
+
+    .step-files {
+      font-size: 11px;
+      color: #64748b;
+      font-family: ui-monospace, monospace;
+      margin-top: 6px;
+    }
+
+    .step-arrow {
+      color: #475569;
+      font-size: 20px;
+    }
+
+    /* Tracks View */
+    .tracks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .track-card {
+      background: #1e293b;
+      border: 2px solid #334155;
+      border-radius: 12px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .track-card:hover { border-color: #475569; }
+    .track-card.selected { border-color: #3b82f6; }
+
+    .track-name {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .track-count {
+      font-size: 12px;
+      color: #94a3b8;
+    }
+
+    .track-progress {
+      margin-top: 12px;
+      height: 6px;
+      background: #334155;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .track-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #10b981, #34d399);
+      transition: width 0.3s;
+    }
+
+    .track-levels {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 12px;
+    }
+
+    .track-level {
+      font-size: 10px;
+      padding: 4px 8px;
+      background: #334155;
+      border-radius: 4px;
+    }
+
+    /* Module Structure */
+    .module-structure {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 24px;
+    }
+
+    .module-files {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .module-file {
+      padding: 12px 16px;
+      background: #1e293b;
+      border-radius: 8px;
+      border-left: 3px solid;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .module-file:hover { background: #334155; }
+    .module-file.selected { background: #334155; }
+
+    .module-file.plan { border-color: #3b82f6; }
+    .module-file.meta { border-color: #f59e0b; }
+    .module-file.content { border-color: #10b981; }
+    .module-file.activities { border-color: #f43f5e; }
+    .module-file.vocabulary { border-color: #a855f7; }
+    .module-file.status { border-color: #ec4899; }
+
+    .module-file-name {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .module-file-path {
+      font-size: 10px;
+      color: #64748b;
+      font-family: ui-monospace, monospace;
+      margin-top: 2px;
+    }
+
+    .file-preview {
+      background: #1e293b;
+      border-radius: 12px;
+      padding: 20px;
+      overflow: auto;
+    }
+
+    .file-preview h4 {
+      font-size: 14px;
+      margin-bottom: 12px;
+      color: #94a3b8;
+    }
+
+    .preview-code {
+      font-family: ui-monospace, monospace;
+      font-size: 11px;
+      line-height: 1.6;
+      white-space: pre;
+      color: #e2e8f0;
+    }
+
+    .preview-code .key { color: #7dd3fc; }
+    .preview-code .str { color: #86efac; }
+    .preview-code .num { color: #fbbf24; }
+    .preview-code .comment { color: #64748b; }
+
+    /* Prompt area */
+    .prompt-area {
+      padding: 16px 20px;
+      background: #1e293b;
+      border-top: 1px solid #334155;
+    }
+
+    .prompt-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .prompt-header h3 {
+      font-size: 11px;
+      color: #64748b;
+      text-transform: uppercase;
+    }
+
+    .copy-btn {
+      padding: 5px 12px;
+      font-size: 11px;
+      background: #3b82f6;
+      border: none;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .copy-btn:hover { background: #2563eb; }
+    .copy-btn.copied { background: #10b981; }
+
+    .prompt-text {
+      font-family: ui-monospace, monospace;
+      font-size: 12px;
+      background: #0f172a;
+      padding: 12px;
+      border-radius: 6px;
+      white-space: pre-wrap;
+      max-height: 100px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="back-link">← Back to Playgrounds</a>
+  <div class="container">
+    <aside class="sidebar">
+      <h2>Architecture Explorer</h2>
+
+      <div class="view-tabs">
+        <button class="view-tab active" data-view="layers">Layers</button>
+        <button class="view-tab" data-view="workflow">Workflow</button>
+        <button class="view-tab" data-view="tracks">Tracks</button>
+        <button class="view-tab" data-view="module">Module</button>
+      </div>
+
+      <h3>Select Level</h3>
+      <div class="level-selector" id="level-selector"></div>
+
+      <div class="legend" id="legend"></div>
+    </aside>
+
+    <main class="main-area">
+      <div class="canvas-wrapper">
+        <div class="diagram" id="diagram"></div>
+      </div>
+
+      <div class="prompt-area">
+        <div class="prompt-header">
+          <h3>Context Prompt</h3>
+          <button class="copy-btn" onclick="copyPrompt()">Copy</button>
+        </div>
+        <div class="prompt-text" id="prompt-output"></div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // ==================== DATA ====================
+
+    const LEVELS = [
+      { id: 'a1', name: 'A1', count: 44, track: 'core' },
+      { id: 'a2', name: 'A2', count: 70, track: 'core' },
+      { id: 'b1', name: 'B1', count: 92, track: 'core' },
+      { id: 'b2', name: 'B2', count: 94, track: 'core' },
+      { id: 'c1', name: 'C1', count: 106, track: 'core' },
+      { id: 'c2', name: 'C2', count: 100, track: 'core' },
+      { id: 'b2-hist', name: 'B2-HIST', count: 140, track: 'history' },
+      { id: 'c1-bio', name: 'C1-BIO', count: 128, track: 'biography' },
+      { id: 'c1-hist', name: 'C1-HIST', count: 0, track: 'history' },
+      { id: 'lit', name: 'LIT', count: 30, track: 'literature' }
+    ];
+
+    const TRACKS = {
+      core: { name: 'Core Track', levels: ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'], color: '#3b82f6', total: 506 },
+      history: { name: 'History Track', levels: ['B2-HIST', 'C1-HIST'], color: '#f97316', total: 140 },
+      biography: { name: 'Biography Track', levels: ['C1-BIO'], color: '#a855f7', total: 128 },
+      literature: { name: 'Literature Track', levels: ['LIT'], color: '#f43f5e', total: 30 }
+    };
+
+    const WORKFLOW_STEPS = [
+      { num: 1, title: 'Read Plan', desc: 'Load module plan as source of truth', files: 'plans/{level}/{slug}.yaml', action: 'READ' },
+      { num: 2, title: 'Read Meta', desc: 'Load pedagogy and build config', files: '{level}/meta/{slug}.yaml', action: 'READ' },
+      { num: 3, title: 'Read Quick Ref', desc: 'Check level constraints', files: 'claude_extensions/quick-ref/{level}.md', action: 'READ' },
+      { num: 4, title: 'Read Templates', desc: 'Load module type template', files: 'claude_extensions/skills/*.md', action: 'READ' },
+      { num: 5, title: 'Read Richness', desc: 'Check activity requirements', files: 'docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md', action: 'READ' },
+      { num: 6, title: 'Write Content', desc: 'Generate module prose', files: '{level}/{slug}.md', action: 'WRITE' },
+      { num: 7, title: 'Write Activities', desc: 'Generate activity YAML', files: '{level}/activities/{slug}.yaml', action: 'WRITE' },
+      { num: 8, title: 'Run Audit', desc: 'Validate and cache status', files: 'scripts/audit_module.sh', action: 'RUN' }
+    ];
+
+    const MODULE_FILES = [
+      { id: 'plan', name: 'Module Plan', path: 'plans/{level}/{slug}.yaml', color: '#3b82f6' },
+      { id: 'meta', name: 'Meta Config', path: '{level}/meta/{slug}.yaml', color: '#f59e0b' },
+      { id: 'content', name: 'Content', path: '{level}/{slug}.md', color: '#10b981' },
+      { id: 'activities', name: 'Activities', path: '{level}/activities/{slug}.yaml', color: '#f43f5e' },
+      { id: 'vocabulary', name: 'Vocabulary', path: '{level}/vocabulary/{slug}.yaml', color: '#a855f7' },
+      { id: 'status', name: 'Status Cache', path: '{level}/status/{slug}.json', color: '#ec4899' }
+    ];
+
+    const FILE_PREVIEWS = {
+      plan: `<span class="key">module:</span> <span class="str">aspect-future</span>
+<span class="key">level:</span> <span class="str">b1</span>
+<span class="key">sequence:</span> <span class="num">9</span>
+<span class="key">title:</span> <span class="str">Майбутній час</span>
+<span class="key">focus:</span> <span class="str">grammar</span>
+<span class="key">pedagogy:</span> <span class="str">TTT</span>
+
+<span class="key">objectives:</span>
+  - <span class="str">Form future tense using бути + infinitive</span>
+  - <span class="str">Distinguish perfective/imperfective future</span>
+
+<span class="key">word_target:</span> <span class="num">3000</span>
+
+<span class="key">vocabulary:</span>
+  <span class="key">required:</span>
+    - <span class="str">майбутній (future)</span>
+    - <span class="str">доконаний (perfective)</span>`,
+
+      meta: `<span class="key">module:</span> <span class="str">aspect-future</span>
+<span class="key">level:</span> <span class="str">b1</span>
+
+<span class="key">pedagogy:</span> <span class="str">TTT</span>
+<span class="key">duration:</span> <span class="num">60</span>
+<span class="key">immersion:</span> <span class="str">75% Ukrainian</span>
+<span class="key">register:</span> <span class="str">розмовний</span>
+
+<span class="key">grammar:</span>
+  - <span class="str">Future with бути + infinitive</span>
+  - <span class="str">Synthetic future (perfective)</span>
+
+<span class="key">naturalness:</span>
+  <span class="key">score:</span> <span class="num">9</span>
+  <span class="key">status:</span> <span class="str">PASS</span>`,
+
+      content: `<span class="comment"># Майбутній час</span>
+
+<span class="comment">## Вступ</span>
+
+Уявіть: завтра у вас важливий день...
+
+<span class="comment">## Аналітичний майбутній час</span>
+
+Щоб утворити майбутній час від
+недоконаних дієслів, використовуємо
+допоміжне дієслово <span class="str">бути</span>:
+
+| Особа | Форма |
+|-------|-------|
+| я     | буду  |
+| ти    | будеш |
+| він   | буде  |`,
+
+      activities: `<span class="comment"># Activities for aspect-future</span>
+- <span class="key">type:</span> <span class="str">quiz</span>
+  <span class="key">title:</span> <span class="str">Future Tense Quiz</span>
+  <span class="key">questions:</span>
+    - <span class="key">question:</span> <span class="str">Яка форма "бути" для "я"?</span>
+      <span class="key">options:</span>
+        - <span class="str">буду</span>
+        - <span class="str">будеш</span>
+        - <span class="str">буде</span>
+      <span class="key">correct:</span> <span class="str">буду</span>`,
+
+      vocabulary: `<span class="comment"># Vocabulary for aspect-future</span>
+- <span class="key">term:</span> <span class="str">майбутній</span>
+  <span class="key">translation:</span> <span class="str">future</span>
+  <span class="key">pos:</span> <span class="str">adj</span>
+  <span class="key">ipa:</span> <span class="str">/mɐjˈbutnʲij/</span>
+  <span class="key">example:</span> <span class="str">майбутній час</span>`,
+
+      status: `<span class="comment">// Status cache from last audit</span>
+{
+  "<span class="key">timestamp</span>": "<span class="str">2026-01-31T10:00:00Z</span>",
+  "<span class="key">word_count</span>": <span class="num">3150</span>,
+  "<span class="key">word_target</span>": <span class="num">3000</span>,
+  "<span class="key">activity_count</span>": <span class="num">16</span>,
+  "<span class="key">naturalness_score</span>": <span class="num">9</span>,
+  "<span class="key">gates</span>": {
+    "<span class="key">words</span>": "<span class="str">PASS</span>",
+    "<span class="key">activities</span>": "<span class="str">PASS</span>",
+    "<span class="key">naturalness</span>": "<span class="str">PASS</span>"
+  },
+  "<span class="key">overall</span>": "<span class="str">PASS</span>"
+}`
+    };
+
+    // ==================== STATE ====================
+
+    const state = {
+      view: 'layers',
+      selectedLevel: 'b1',
+      selectedFile: 'plan',
+      workflowStep: 0
+    };
+
+    // ==================== RENDERING ====================
+
+    function renderLevelSelector() {
+      const container = document.getElementById('level-selector');
+      container.innerHTML = LEVELS.map(l => `
+        <button class="level-btn ${state.selectedLevel === l.id ? 'active' : ''}"
+                onclick="selectLevel('${l.id}')">
+          ${l.name}
+        </button>
+      `).join('');
+    }
+
+    function renderLegend() {
+      const container = document.getElementById('legend');
+      let html = '<h4>Color Legend</h4>';
+
+      if (state.view === 'layers') {
+        html += `
+          <div class="legend-item"><div class="legend-color" style="background: #3b82f6"></div> Source of Truth (Plans)</div>
+          <div class="legend-item"><div class="legend-color" style="background: #10b981"></div> Build Artifacts</div>
+          <div class="legend-item"><div class="legend-color" style="background: #f59e0b"></div> Status Cache</div>
+        `;
+      } else if (state.view === 'workflow') {
+        html += `
+          <div class="legend-item"><div class="legend-color" style="background: #3b82f6"></div> Current Step</div>
+          <div class="legend-item"><div class="legend-color" style="background: #10b981"></div> Completed</div>
+          <div class="legend-item"><div class="legend-color" style="background: #475569"></div> Pending</div>
+        `;
+      } else if (state.view === 'tracks') {
+        Object.entries(TRACKS).forEach(([id, track]) => {
+          html += `<div class="legend-item"><div class="legend-color" style="background: ${track.color}"></div> ${track.name}</div>`;
+        });
+      } else if (state.view === 'module') {
+        MODULE_FILES.forEach(f => {
+          html += `<div class="legend-item"><div class="legend-color" style="background: ${f.color}"></div> ${f.name}</div>`;
+        });
+      }
+
+      container.innerHTML = html;
+    }
+
+    function renderDiagram() {
+      const container = document.getElementById('diagram');
+
+      if (state.view === 'layers') {
+        container.innerHTML = renderLayersView();
+      } else if (state.view === 'workflow') {
+        container.innerHTML = renderWorkflowView();
+      } else if (state.view === 'tracks') {
+        container.innerHTML = renderTracksView();
+      } else if (state.view === 'module') {
+        container.innerHTML = renderModuleView();
+      }
+    }
+
+    function renderLayersView() {
+      const level = state.selectedLevel;
+      return `
+        <div class="three-layer">
+          <div class="layer source">
+            <div class="layer-header">
+              <div class="layer-title">
+                <span class="layer-badge">Layer 1</span>
+                Plans — Source of Truth
+              </div>
+              <div class="layer-desc">What to build</div>
+            </div>
+            <div class="layer-content">
+              <div class="file-box" onclick="selectFile('plan')">
+                <div class="file-name">Level Plan</div>
+                <div class="file-path">plans/${level}.yaml</div>
+                <div class="file-desc">Phase structure, module sequence</div>
+              </div>
+              <div class="file-box" onclick="selectFile('plan')">
+                <div class="file-name">Module Plans</div>
+                <div class="file-path">plans/${level}/*.yaml</div>
+                <div class="file-desc">Objectives, outline, vocabulary</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="layer build">
+            <div class="layer-header">
+              <div class="layer-title">
+                <span class="layer-badge">Layer 2</span>
+                Content — Build Artifacts
+              </div>
+              <div class="layer-desc">The generated content</div>
+            </div>
+            <div class="layer-content">
+              <div class="file-box" onclick="selectFile('meta')">
+                <div class="file-name">Meta Config</div>
+                <div class="file-path">${level}/meta/*.yaml</div>
+                <div class="file-desc">Pedagogy, duration, grammar</div>
+              </div>
+              <div class="file-box" onclick="selectFile('content')">
+                <div class="file-name">Content Prose</div>
+                <div class="file-path">${level}/*.md</div>
+                <div class="file-desc">Module lessons</div>
+              </div>
+              <div class="file-box" onclick="selectFile('activities')">
+                <div class="file-name">Activities</div>
+                <div class="file-path">${level}/activities/*.yaml</div>
+                <div class="file-desc">Quizzes, exercises</div>
+              </div>
+              <div class="file-box" onclick="selectFile('vocabulary')">
+                <div class="file-name">Vocabulary</div>
+                <div class="file-path">${level}/vocabulary/*.yaml</div>
+                <div class="file-desc">Word lists with IPA</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="layer status">
+            <div class="layer-header">
+              <div class="layer-title">
+                <span class="layer-badge">Layer 3</span>
+                Status — Tracking Cache
+              </div>
+              <div class="layer-desc">Audit results and progress</div>
+            </div>
+            <div class="layer-content">
+              <div class="file-box" onclick="selectFile('status')">
+                <div class="file-name">Module Status</div>
+                <div class="file-path">${level}/status/*.json</div>
+                <div class="file-desc">Per-module audit cache</div>
+              </div>
+              <div class="file-box">
+                <div class="file-name">Audit Reviews</div>
+                <div class="file-path">${level}/audit/*-review.md</div>
+                <div class="file-desc">Human-readable reports</div>
+              </div>
+              <div class="file-box">
+                <div class="file-name">Level Status</div>
+                <div class="file-path">docs/${level.toUpperCase()}-STATUS.md</div>
+                <div class="file-desc">Aggregated status report</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderWorkflowView() {
+      return `
+        <div class="workflow">
+          ${WORKFLOW_STEPS.map((step, i) => `
+            <div class="workflow-step ${i < state.workflowStep ? 'complete' : ''} ${i === state.workflowStep ? 'active' : ''}"
+                 onclick="setWorkflowStep(${i})">
+              <div class="step-number">${step.num}</div>
+              <div class="step-content">
+                <div class="step-title">${step.action}: ${step.title}</div>
+                <div class="step-desc">${step.desc}</div>
+                <div class="step-files">${step.files.replace('{level}', state.selectedLevel)}</div>
+              </div>
+              ${i < WORKFLOW_STEPS.length - 1 ? '<div class="step-arrow">→</div>' : ''}
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderTracksView() {
+      return `
+        <div class="tracks-grid">
+          ${Object.entries(TRACKS).map(([id, track]) => {
+            const levels = LEVELS.filter(l => l.track === id);
+            const total = levels.reduce((sum, l) => sum + l.count, 0);
+            return `
+              <div class="track-card" style="border-color: ${track.color}40">
+                <div class="track-name" style="color: ${track.color}">${track.name}</div>
+                <div class="track-count">${total} modules</div>
+                <div class="track-progress">
+                  <div class="track-progress-fill" style="width: ${Math.random() * 40 + 60}%; background: ${track.color}"></div>
+                </div>
+                <div class="track-levels">
+                  ${track.levels.map(l => `<span class="track-level">${l}</span>`).join('')}
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    function renderModuleView() {
+      return `
+        <div class="module-structure">
+          <div class="module-files">
+            ${MODULE_FILES.map(f => `
+              <div class="module-file ${f.id} ${state.selectedFile === f.id ? 'selected' : ''}"
+                   onclick="selectFile('${f.id}')">
+                <div class="module-file-name">${f.name}</div>
+                <div class="module-file-path">${f.path.replace('{level}', state.selectedLevel).replace('{slug}', 'aspect-future')}</div>
+              </div>
+            `).join('')}
+          </div>
+          <div class="file-preview">
+            <h4>${MODULE_FILES.find(f => f.id === state.selectedFile)?.name || 'Select a file'}</h4>
+            <pre class="preview-code">${FILE_PREVIEWS[state.selectedFile] || ''}</pre>
+          </div>
+        </div>
+      `;
+    }
+
+    function updatePrompt() {
+      const output = document.getElementById('prompt-output');
+      let prompt = '';
+
+      if (state.view === 'layers') {
+        prompt = `I'm exploring the three-layer curriculum architecture for ${state.selectedLevel.toUpperCase()}:
+
+Layer 1 (Plans): Source of truth - defines what to build
+Layer 2 (Content): Build artifacts - the generated modules
+Layer 3 (Status): Tracking cache - audit results and progress
+
+The key insight is that Plans are immutable specifications, Content is generated from Plans, and Status caches validation results for fast queries.`;
+      } else if (state.view === 'workflow') {
+        const step = WORKFLOW_STEPS[state.workflowStep];
+        prompt = `Module generation workflow for ${state.selectedLevel.toUpperCase()}:
+
+Current step: ${step.num}. ${step.title}
+Action: ${step.action}
+File: ${step.files.replace('{level}', state.selectedLevel)}
+
+${step.desc}
+
+CRITICAL: Always read plan file FIRST. Never generate from memory.`;
+      } else if (state.view === 'tracks') {
+        prompt = `Ukrainian curriculum track structure:
+
+Core Track: A1→A2→B1→B2→C1→C2 (${TRACKS.core.total} modules)
+History Track: B2-HIST, C1-HIST (${TRACKS.history.total} modules)
+Biography Track: C1-BIO (${TRACKS.biography.total} modules)
+Literature Track: LIT (${TRACKS.literature.total} modules)
+
+Total: ${LEVELS.reduce((sum, l) => sum + l.count, 0)} modules across all tracks.`;
+      } else if (state.view === 'module') {
+        const file = MODULE_FILES.find(f => f.id === state.selectedFile);
+        prompt = `Module file structure for ${state.selectedLevel.toUpperCase()}:
+
+Selected: ${file?.name}
+Path: ${file?.path.replace('{level}', state.selectedLevel).replace('{slug}', '{module-slug}')}
+
+Each module has 6 files:
+- plan (source of truth)
+- meta (build config)
+- content (.md prose)
+- activities (.yaml exercises)
+- vocabulary (.yaml word lists)
+- status (.json audit cache)`;
+      }
+
+      output.textContent = prompt;
+    }
+
+    function updateAll() {
+      renderLevelSelector();
+      renderLegend();
+      renderDiagram();
+      updatePrompt();
+    }
+
+    // ==================== INTERACTIONS ====================
+
+    function selectLevel(level) {
+      state.selectedLevel = level;
+      updateAll();
+    }
+
+    function selectFile(fileId) {
+      state.selectedFile = fileId;
+      updateAll();
+    }
+
+    function setWorkflowStep(step) {
+      state.workflowStep = step;
+      updateAll();
+    }
+
+    function copyPrompt() {
+      const text = document.getElementById('prompt-output').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    // ==================== EVENT LISTENERS ====================
+
+    document.querySelectorAll('.view-tab').forEach(tab => {
+      tab.onclick = () => {
+        document.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        state.view = tab.dataset.view;
+        updateAll();
+      };
+    });
+
+    // ==================== INIT ====================
+
+    updateAll();
+  </script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 **Level:** A2 | **Module:** M57 | **Phase:** A2.6 | **Pedagogy:** PPP | **Target:** 980
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 21:13:00
+**Generated:** 2026-02-01 23:58:56
 
 ## Configuration
 **Type:** A2
@@ -40,7 +40,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: іменник, називний, вид, місцевий, знахідний
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: доконаний, місцевий, орудний, знахідний, родовий
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation

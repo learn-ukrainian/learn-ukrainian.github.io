@@ -1,8 +1,8 @@
-# Audit Report: M78 — olha-basarab.md
-**Level:** C1 | **Module:** M78 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M80 — olha-basarab.md
+**Level:** C1 | **Module:** M80 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:15:30
+**Generated:** 2026-02-01 23:29:40
 
 ## Configuration
 **Type:** C1-biography

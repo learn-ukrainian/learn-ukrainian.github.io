@@ -1,95 +1,72 @@
-# Audit Report: M21 — yuriy-nemyrych.md
-
-**Level:** C1 | **Module:** M21 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M23 — yuriy-nemyrych.md
+**Level:** C1 | **Module:** M23 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:56:05
+**Generated:** 2026-02-01 23:29:12
 
 ## Configuration
-
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
 **Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** critical-analysis, essay-response, fill-in, group-sort, match-up, quiz, reading
+**Required Types:** critical-analysis, essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥24 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Інтелектуальна візія Юрія Немирича | 8 | 5 | ✅ |
-| 2 | match-up | Правовий глосарій Гадяцької унії | 12 | 6 | ✅ |
-| 3 | fill-in | Дипломатичний дискурс Немирича: Текст із пропусками | 12 | 6 | ✅ |
-| 4 | essay-response | Есе: Гадяцька унія як альтернативна доля України | 1 | 1 | ✅ |
-| 5 | comparative-study | Порівняльний аналіз: Переяслав vs Гадяч | 1 | 1 | ✅ |
-| 6 | select | Політична філософія та ідеологія Немирича | 8 | 5 | ✅ |
-| 7 | true-false | Аналіз історичних реалій та деконструкція маніпуляцій | 9 | 5 | ✅ |
-| 8 | mark-the-words | Дипломатична та правова термінологія | 9 | 5 | ✅ |
-| 9 | unjumble | Відновлення візіонерських тез Немирича | 8 | 5 | ✅ |
-| 10 | cloze | Аналіз інтелектуального спротиву | 12 | 1 | ✅ |
-| 11 | group-sort | Структура Великого Князівства Руського | 15 | 1 | ✅ |
-| 12 | translate | Академічний переклад політичних тез | 8 | 5 | ✅ |
-| 13 | error-correction | Стилістична правка історичних нарисів | 8 | 5 | ✅ |
-| 14 | true-false | Перевірка знань про Гадяцьку унію | 8 | 5 | ✅ |
-| 15 | authorial-intent | Аналіз стратегічних намірів Немирича | 1 | 1 | ✅ |
-| 16 | critical-analysis | Критичний аналіз: Чому Гадяч не став реальністю? | 1 | 1 | ✅ |
+| 1 | essay-response | Есе: Гадяцька унія як альтернативна доля України | 1 | 1 | ✅ |
+| 2 | comparative-study | Порівняльний аналіз: Переяслав vs Гадяч | 1 | 1 | ✅ |
+| 3 | true-false | Аналіз історичних реалій та деконструкція маніпуляцій | 9 | 5 | ✅ |
+| 4 | true-false | Перевірка знань про Гадяцьку унію | 8 | 5 | ✅ |
+| 5 | authorial-intent | Аналіз стратегічних намірів Немирича | 1 | 1 | ✅ |
+| 6 | critical-analysis | Критичний аналіз: Чому Гадяч не став реальністю? | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 16 (target: 3-9) ❌
-- Unique types: 15 (minimum: 3) ✅
-- Priority types used: 5/6 (authorial-intent, comparative-study, critical-analysis, essay-response, quiz) ✅
-- Required types used: 6/7 (critical-analysis, essay-response, fill-in, group-sort, match-up, quiz) ❌
+- Total activities: 6 (target: 3-9) ✅
+- Unique types: 5 (minimum: 3) ✅
+- Priority types used: 4/6 (authorial-intent, comparative-study, critical-analysis, essay-response) ✅
+- Required types used: 2/3 (critical-analysis, essay-response) ❌
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-
-- **[YAML_SCHEMA_VIOLATION]** Schema error in yuriy-nemyrych.yaml: Schema validation error at key '13': {'type': 'true-false', 'title': 'Перевірка знань про Гадяцьку унію', 'instruction': 'Визначте правильність деталей договору 1658 року.', 'items': [{'statement': 'Велике Князівство Руське мало мати власного канцлера та окремий трибунал.', 'correct': True, 'explanation': 'Це були ключові вимоги для забезпечення адміністративної та судової незалежності.'}, {'statement': 'Угода передбачала повне скасування Берестейської церковної унії на українських землях.', 'correct': True, 'explanation': 'Однією з умов була ліквідація унії та повернення прав православній церкві.'}, {'statement': 'Немирич пропонував зробити Київ столицею всієї Речі Посполитої замість Варшави.', 'correct': False, 'explanation': 'Київ мав стати столицею Великого Князівства Руського, а не всієї конфедерації.'}, {'statement': 'Гадяцький договір дозволяв Україні укладати самостійні союзи з іноземними державами без згоди Сейму.', 'correct': False, 'explanation': 'Зовнішня політика мала бути узгодженою в межах триєдиної держави, що було компромісом.'}, {'statement': 'Проект передбачав створення окремої грошової системи та карбування монети в Україні.', 'correct': True, 'explanation': 'Це було важливим атрибутом економічного суверенітету Великого Князівства Руського.'}, {'statement': 'Немирич був єдиним автором тексту Гадяцької угоди і не радився з жодним іншим дипломатом.', 'correct': False, 'explanation': 'Хоча він був ідеологом, над текстом працювала група дипломатів, включаючи Виговського.'}, {'statement': 'Ідея Великого Князівства Руського передбачала повну відмову від власних збройних сил.', 'correct': False, 'explanation': 'Навпаки, утверджувалося право на власну 30-тисячну козацьку армію.'}, {'statement': 'Соціальна база підтримки Гадяча була вузькою через недовіру рядового козацтва до шляхетських ідей.', 'correct': True, 'explanation': 'Елітарний характер проекту не був зрозумілий широким масам, що використала Москва.'}]} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
 ## TEMPLATE COMPLIANCE
-
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Останні роки' per template 'c1-biography-module-template.md'
   - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 
 ## Recommendation
-
 **📝 UPDATE** (severity 25/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
 - **Words:** ❌ 2127/4000 (raw: 2301)
-- **Activities:** ✅ 16/3
+- **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 15/3 types
+- **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 0 < 24 (soft target)
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ⚠️ Too many activities: 16 (target 3-9)
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 99.7% (target 95-100% (biography))
 - **Richness:** ✅ 97% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
 **Score:** 97% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 11 | 4 | 100% | 19% | 19.0% |
@@ -105,7 +82,6 @@
 | **TOTAL** | | | | | **97.5%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 92 | Included in Core |

@@ -344,16 +344,18 @@ WHILE true:
 END WHILE
 
 # ========================================
-# 6.4 GENERATE MDX (After Audit Passes)
+# 6.4 GENERATE MDX (MANDATORY - After Audit Passes)
 # ========================================
 
-Once audit passes, generate MDX:
+⚠️ MANDATORY: Generate MDX immediately after audit passes:
 
 ```bash
 .venv/bin/python scripts/generate_mdx.py l2-uk-en ${level} ${num}
+# Example: .venv/bin/python scripts/generate_mdx.py l2-uk-en a2 23
 ```
 
 This ensures the MDX is always up-to-date with the fixed content.
+Module is NOT complete until MDX is generated.
 ```
 
 **Why This Works:**

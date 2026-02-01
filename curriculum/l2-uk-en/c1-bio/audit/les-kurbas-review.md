@@ -1,8 +1,8 @@
-# Audit Report: M77 — les-kurbas.md
-**Level:** C1 | **Module:** M77 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M79 — les-kurbas.md
+**Level:** C1 | **Module:** M79 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:15:30
+**Generated:** 2026-02-01 23:29:40
 
 ## Configuration
 **Type:** C1-biography
@@ -45,7 +45,7 @@
   - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Останні роки' per template 'c1-biography-module-template.md'
   - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Спадщина|Вплив' found: Вплив на сучасний театральний процес, Вплив на світову театральну думку
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Спадщина|Вплив' found: Вплив на світову театральну думку, Вплив на сучасний театральний процес
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 
 ## Recommendation

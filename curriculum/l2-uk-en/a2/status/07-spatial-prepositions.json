@@ -2,10 +2,10 @@
   "module": "07-spatial-prepositions",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-31T16:21:56.301226Z",
+  "last_audit": "2026-02-01T23:58:32.821473Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-31T16:19:21.094140Z",
+    "md": "2026-01-31T16:24:47.356125Z",
     "meta": "2026-01-29T07:39:04.582514Z",
     "activities": "2026-01-31T16:18:11.097731Z",
     "vocabulary": "2026-01-25T16:02:17.642613Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1520/1000 (raw: 1813)"
+      "message": "1532/1000 (raw: 1825)"
     },
     "activities": {
       "status": "pass",

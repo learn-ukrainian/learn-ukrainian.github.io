@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude-Gemini Communication Visualizer</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 260px 1fr 320px;
+      height: 100vh;
+    }
+
+    .back-link {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      color: #3b82f6;
+      text-decoration: none;
+      font-size: 12px;
+      z-index: 100;
+    }
+
+    .back-link:hover { text-decoration: underline; }
+
+    .sidebar {
+      background: #1e293b;
+      padding: 20px;
+      padding-top: 40px;
+      overflow-y: auto;
+      border-right: 1px solid #334155;
+    }
+
+    .sidebar h2 {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #94a3b8;
+      margin-bottom: 16px;
+    }
+
+    .sidebar h3 {
+      font-size: 12px;
+      color: #64748b;
+      margin: 20px 0 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .task-item {
+      padding: 10px 12px;
+      background: #334155;
+      border: 1px solid #475569;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .task-item:hover { background: #475569; }
+    .task-item.active { background: #3b82f6; border-color: #60a5fa; }
+
+    .task-id {
+      font-size: 11px;
+      color: #94a3b8;
+      font-family: ui-monospace, monospace;
+    }
+
+    .task-item.active .task-id { color: #bfdbfe; }
+
+    .task-name {
+      font-size: 13px;
+      font-weight: 500;
+      margin-top: 2px;
+    }
+
+    .task-meta {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 4px;
+    }
+
+    .task-item.active .task-meta { color: #93c5fd; }
+
+    .new-task-btn {
+      width: 100%;
+      padding: 10px;
+      background: transparent;
+      border: 2px dashed #334155;
+      border-radius: 8px;
+      color: #64748b;
+      cursor: pointer;
+      margin-top: 12px;
+      transition: all 0.15s;
+    }
+
+    .new-task-btn:hover {
+      border-color: #3b82f6;
+      color: #3b82f6;
+    }
+
+    .main-area {
+      display: flex;
+      flex-direction: column;
+      background: #0f172a;
+    }
+
+    .flow-diagram {
+      flex: 1;
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .agent-box {
+      width: 180px;
+      padding: 20px;
+      background: #1e293b;
+      border: 2px solid #334155;
+      border-radius: 16px;
+      text-align: center;
+    }
+
+    .agent-box.claude {
+      border-color: #f97316;
+      background: linear-gradient(135deg, #1e293b 0%, #431407 100%);
+    }
+
+    .agent-box.gemini {
+      border-color: #3b82f6;
+      background: linear-gradient(135deg, #1e293b 0%, #1e3a5f 100%);
+    }
+
+    .agent-icon {
+      font-size: 36px;
+      margin-bottom: 8px;
+    }
+
+    .agent-name {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .agent-status {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 4px;
+    }
+
+    .flow-arrow {
+      width: 200px;
+      height: 80px;
+      position: relative;
+      margin: 0 20px;
+    }
+
+    .arrow-line {
+      position: absolute;
+      height: 3px;
+      background: #475569;
+      border-radius: 2px;
+    }
+
+    .arrow-line.top {
+      top: 20px;
+      left: 0;
+      right: 0;
+    }
+
+    .arrow-line.bottom {
+      bottom: 20px;
+      left: 0;
+      right: 0;
+    }
+
+    .arrow-head {
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-style: solid;
+    }
+
+    .arrow-head.right {
+      right: 0;
+      top: 14px;
+      border-width: 9px 0 9px 12px;
+      border-color: transparent transparent transparent #f97316;
+    }
+
+    .arrow-head.left {
+      left: 0;
+      bottom: 14px;
+      border-width: 9px 12px 9px 0;
+      border-color: transparent #3b82f6 transparent transparent;
+    }
+
+    .arrow-label {
+      position: absolute;
+      font-size: 10px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .arrow-label.top {
+      top: 4px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .arrow-label.bottom {
+      bottom: 4px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .broker-box {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 12px 20px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .broker-name {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .broker-path {
+      font-size: 10px;
+      color: #64748b;
+      font-family: ui-monospace, monospace;
+      margin-top: 2px;
+    }
+
+    .conversation-panel {
+      background: #1e293b;
+      border-left: 1px solid #334155;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .conv-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid #334155;
+    }
+
+    .conv-header h3 {
+      font-size: 12px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .conv-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+    }
+
+    .message {
+      margin-bottom: 16px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .message.claude { flex-direction: row; }
+    .message.gemini { flex-direction: row-reverse; }
+
+    .message-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .message.claude .message-avatar {
+      background: #431407;
+      border: 2px solid #f97316;
+    }
+
+    .message.gemini .message-avatar {
+      background: #1e3a5f;
+      border: 2px solid #3b82f6;
+    }
+
+    .message-content {
+      max-width: 220px;
+    }
+
+    .message-meta {
+      font-size: 10px;
+      color: #64748b;
+      margin-bottom: 4px;
+    }
+
+    .message.gemini .message-meta { text-align: right; }
+
+    .message-bubble {
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .message.claude .message-bubble {
+      background: #431407;
+      border-bottom-left-radius: 4px;
+    }
+
+    .message.gemini .message-bubble {
+      background: #1e3a5f;
+      border-bottom-right-radius: 4px;
+    }
+
+    .message-type {
+      display: inline-block;
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .message-type.query { background: #3b82f6; }
+    .message-type.response { background: #10b981; }
+    .message-type.request { background: #f59e0b; }
+    .message-type.handoff { background: #a855f7; }
+    .message-type.feedback { background: #f43f5e; }
+
+    .conv-input {
+      padding: 16px;
+      border-top: 1px solid #334155;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .input-select {
+      padding: 8px 12px;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      color: #e2e8f0;
+      font-size: 12px;
+    }
+
+    .input-textarea {
+      width: 100%;
+      padding: 10px;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      color: #e2e8f0;
+      font-size: 13px;
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    .input-textarea:focus, .input-select:focus {
+      outline: none;
+      border-color: #3b82f6;
+    }
+
+    .send-btn {
+      width: 100%;
+      padding: 10px;
+      background: #3b82f6;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    .send-btn:hover { background: #2563eb; }
+
+    .prompt-area {
+      padding: 16px 20px;
+      background: #1e293b;
+      border-top: 1px solid #334155;
+    }
+
+    .prompt-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .prompt-header h4 {
+      font-size: 11px;
+      color: #64748b;
+      text-transform: uppercase;
+    }
+
+    .copy-btn {
+      padding: 4px 10px;
+      font-size: 11px;
+      background: #3b82f6;
+      border: none;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .copy-btn:hover { background: #2563eb; }
+    .copy-btn.copied { background: #10b981; }
+
+    .prompt-code {
+      font-family: ui-monospace, monospace;
+      font-size: 11px;
+      background: #0f172a;
+      padding: 10px;
+      border-radius: 6px;
+      overflow-x: auto;
+      white-space: pre;
+      color: #94a3b8;
+    }
+
+    .prompt-code .fn { color: #fbbf24; }
+    .prompt-code .str { color: #86efac; }
+    .prompt-code .key { color: #7dd3fc; }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="back-link">← Back to Playgrounds</a>
+  <div class="container">
+    <aside class="sidebar">
+      <h2>Message Broker</h2>
+
+      <h3>Active Tasks</h3>
+      <div class="task-list" id="task-list"></div>
+      <button class="new-task-btn" onclick="createTask()">+ New Task</button>
+
+      <h3>Message Types</h3>
+      <div style="font-size: 12px; color: #94a3b8; line-height: 1.6;">
+        <div><strong style="color: #3b82f6;">query</strong> - Ask a question</div>
+        <div><strong style="color: #10b981;">response</strong> - Answer a query</div>
+        <div><strong style="color: #f59e0b;">request</strong> - Request work</div>
+        <div><strong style="color: #a855f7;">handoff</strong> - Transfer task</div>
+        <div><strong style="color: #f43f5e;">feedback</strong> - Comment on work</div>
+      </div>
+
+      <h3>Quick Actions</h3>
+      <button class="new-task-btn" onclick="checkInbox()" style="border-style: solid; border-color: #475569;">
+        📥 Check Inbox
+      </button>
+    </aside>
+
+    <main class="main-area">
+      <div class="flow-diagram">
+        <div class="agent-box claude">
+          <div class="agent-icon">🧡</div>
+          <div class="agent-name">Claude</div>
+          <div class="agent-status">Opus 4.5 • Main Agent</div>
+        </div>
+
+        <div class="flow-arrow">
+          <div class="arrow-line top" style="background: linear-gradient(90deg, #f97316, #475569);"></div>
+          <div class="arrow-head right"></div>
+          <span class="arrow-label top">send_message →</span>
+
+          <div class="arrow-line bottom" style="background: linear-gradient(90deg, #475569, #3b82f6);"></div>
+          <div class="arrow-head left"></div>
+          <span class="arrow-label bottom">← receive_messages</span>
+        </div>
+
+        <div class="agent-box gemini">
+          <div class="agent-icon">💙</div>
+          <div class="agent-name">Gemini</div>
+          <div class="agent-status">2.5 Pro • Validator</div>
+        </div>
+
+        <div class="broker-box">
+          <div class="broker-name">SQLite Message Broker</div>
+          <div class="broker-path">.mcp/servers/message-broker/messages.db</div>
+        </div>
+      </div>
+
+      <div class="prompt-area">
+        <div class="prompt-header">
+          <h4>Generated Code</h4>
+          <button class="copy-btn" onclick="copyPrompt()">Copy</button>
+        </div>
+        <pre class="prompt-code" id="prompt-output"></pre>
+      </div>
+    </main>
+
+    <aside class="conversation-panel">
+      <div class="conv-header">
+        <h3>Conversation Thread</h3>
+      </div>
+
+      <div class="conv-messages" id="messages"></div>
+
+      <div class="conv-input">
+        <div class="input-row">
+          <select class="input-select" id="from-select">
+            <option value="claude">From: Claude</option>
+            <option value="gemini">From: Gemini</option>
+          </select>
+          <select class="input-select" id="type-select">
+            <option value="query">query</option>
+            <option value="response">response</option>
+            <option value="request">request</option>
+            <option value="handoff">handoff</option>
+            <option value="feedback">feedback</option>
+          </select>
+        </div>
+        <textarea class="input-textarea" id="message-input" placeholder="Type a message..."></textarea>
+        <button class="send-btn" onclick="sendMessage()">Send Message</button>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    // ==================== SAMPLE DATA ====================
+
+    const sampleTasks = [
+      {
+        id: 'content-review-m15',
+        name: 'Review M15 Content',
+        status: 'active',
+        messages: [
+          { from: 'claude', type: 'request', content: 'Please review B1 M15 for Ukrainian naturalness. Focus on verb aspect usage and check for any Russianisms.', time: '10:32' },
+          { from: 'gemini', type: 'response', content: 'Reviewed M15. Found 3 issues:\n1. Line 45: "робити сенс" → "мати сенс"\n2. Line 89: aspect mismatch in conditional\n3. Line 112: unnatural word order', time: '10:35' },
+          { from: 'claude', type: 'feedback', content: 'Thanks! Fixed all three. Can you verify the fixes?', time: '10:38' }
+        ]
+      },
+      {
+        id: 'grammar-validation',
+        name: 'Validate Grammar Examples',
+        status: 'active',
+        messages: [
+          { from: 'claude', type: 'query', content: 'Is "Я ходив до магазину" or "Я йшов до магазину" correct for a single completed trip?', time: '09:15' },
+          { from: 'gemini', type: 'response', content: '"Я ходив до магазину" is correct for a completed round trip. "Йшов" would emphasize the process of going (one direction, incomplete).', time: '09:17' }
+        ]
+      },
+      {
+        id: 'activity-design',
+        name: 'Design Checkpoint Activities',
+        status: 'completed',
+        messages: [
+          { from: 'claude', type: 'handoff', content: 'Taking over checkpoint activity design. I\'ll create the quiz and matching exercises while you handle the fill-in activities.', time: 'Yesterday' },
+          { from: 'gemini', type: 'response', content: 'Acknowledged. I\'ll prepare 8 fill-in sentences testing aspect pairs.', time: 'Yesterday' }
+        ]
+      }
+    ];
+
+    // ==================== STATE ====================
+
+    const state = {
+      tasks: sampleTasks,
+      selectedTask: sampleTasks[0],
+      newMessageFrom: 'claude',
+      newMessageType: 'query'
+    };
+
+    // ==================== RENDERING ====================
+
+    function renderTasks() {
+      const container = document.getElementById('task-list');
+      container.innerHTML = state.tasks.map(task => `
+        <div class="task-item ${state.selectedTask?.id === task.id ? 'active' : ''}"
+             onclick="selectTask('${task.id}')">
+          <div class="task-id">${task.id}</div>
+          <div class="task-name">${task.name}</div>
+          <div class="task-meta">${task.messages.length} messages • ${task.status}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderMessages() {
+      const container = document.getElementById('messages');
+
+      if (!state.selectedTask) {
+        container.innerHTML = '<div style="text-align: center; color: #64748b; padding: 40px;">Select a task to view messages</div>';
+        return;
+      }
+
+      container.innerHTML = state.selectedTask.messages.map(msg => `
+        <div class="message ${msg.from}">
+          <div class="message-avatar">${msg.from === 'claude' ? '🧡' : '💙'}</div>
+          <div class="message-content">
+            <div class="message-meta">${msg.from} • ${msg.time}</div>
+            <div class="message-bubble">
+              <span class="message-type ${msg.type}">${msg.type}</span>
+              <div>${msg.content.replace(/\n/g, '<br>')}</div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function renderPrompt() {
+      const container = document.getElementById('prompt-output');
+
+      if (!state.selectedTask) {
+        container.innerHTML = '# Select a task to see code examples';
+        return;
+      }
+
+      const task = state.selectedTask;
+      const lastMsg = task.messages[task.messages.length - 1];
+
+      let code = `<span class="fn"># Send a message to Gemini</span>
+<span class="fn">mcp__message-broker__send_message</span>(
+  <span class="key">to</span>=<span class="str">"gemini"</span>,
+  <span class="key">from_llm</span>=<span class="str">"claude"</span>,
+  <span class="key">content</span>=<span class="str">"Your message here"</span>,
+  <span class="key">message_type</span>=<span class="str">"query"</span>,
+  <span class="key">task_id</span>=<span class="str">"${task.id}"</span>
+)
+
+<span class="fn"># Or use the bridge script (auto-invokes Gemini)</span>
+Bash('<span class="str">.venv/bin/python scripts/gemini_bridge.py ask-gemini "Your message" --task-id ${task.id}</span>')
+
+<span class="fn"># Check for responses</span>
+<span class="fn">mcp__message-broker__receive_messages</span>(
+  <span class="key">for_llm</span>=<span class="str">"claude"</span>,
+  <span class="key">task_id</span>=<span class="str">"${task.id}"</span>,
+  <span class="key">unread_only</span>=<span class="str">True</span>
+)`;
+
+      container.innerHTML = code;
+    }
+
+    function updateAll() {
+      renderTasks();
+      renderMessages();
+      renderPrompt();
+    }
+
+    // ==================== INTERACTIONS ====================
+
+    function selectTask(id) {
+      state.selectedTask = state.tasks.find(t => t.id === id);
+      updateAll();
+    }
+
+    function createTask() {
+      const id = `task-${Date.now()}`;
+      const task = {
+        id: id,
+        name: 'New Task',
+        status: 'active',
+        messages: []
+      };
+      state.tasks.unshift(task);
+      state.selectedTask = task;
+      updateAll();
+    }
+
+    function sendMessage() {
+      if (!state.selectedTask) return;
+
+      const input = document.getElementById('message-input');
+      const content = input.value.trim();
+      if (!content) return;
+
+      const from = document.getElementById('from-select').value;
+      const type = document.getElementById('type-select').value;
+
+      state.selectedTask.messages.push({
+        from: from,
+        type: type,
+        content: content,
+        time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+      });
+
+      input.value = '';
+      updateAll();
+    }
+
+    function checkInbox() {
+      alert('In Claude Code, run:\n\nmcp__message-broker__check_inbox(for_llm="claude")');
+    }
+
+    function copyPrompt() {
+      const text = document.getElementById('prompt-output').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    // ==================== INIT ====================
+
+    updateAll();
+  </script>
+</body>
+</html>

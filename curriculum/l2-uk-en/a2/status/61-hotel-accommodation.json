@@ -2,14 +2,14 @@
   "module": "61-hotel-accommodation",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-27T13:09:33.725714Z",
+  "last_audit": "2026-02-01T23:58:58.170673Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T12:28:01.436188Z",
     "meta": "2026-01-26T17:21:18.981222Z",
     "activities": "2026-01-25T17:24:25.006314Z",
     "vocabulary": "2026-01-25T17:24:52.552319Z",
-    "plan": "2026-01-27T12:23:09.728313Z"
+    "plan": "2026-01-30T12:31:49.670607Z"
   },
   "gates": {
     "meta": {

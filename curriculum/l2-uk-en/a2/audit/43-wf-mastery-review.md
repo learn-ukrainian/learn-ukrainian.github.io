@@ -1,14 +1,12 @@
 # Audit Report: M43 — 43-wf-mastery.md
-
-**Level:** A2 | **Module:** M43 | **Phase:** A2.4 | **Pedagogy:** PPP | **Target:** 1000
+**Level:** A2 | **Module:** M43 | **Phase:** A2.4 | **Pedagogy:** PPP | **Target:** 900
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 12:22:17
+**Generated:** 2026-02-01 23:58:49
 
 ## Configuration
-
 **Type:** A2-grammar
-**Word Target:** 1000 words
+**Word Target:** 900 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | group-sort | Root Sorting (Сортування коренів) | 15 | 12 | ✅ |
@@ -43,8 +40,7 @@
 - Low density activities: 0
 
 ## Gates
-
-- **Words:** ✅ 1117/1000 (raw: 1210)
+- **Words:** ✅ 1117/900 (raw: 1210)
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
@@ -61,7 +57,6 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

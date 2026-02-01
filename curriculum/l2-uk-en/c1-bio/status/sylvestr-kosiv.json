@@ -2,11 +2,11 @@
   "module": "sylvestr-kosiv",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:56:04.713459Z",
+  "last_audit": "2026-02-01T23:29:11.551458Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-19T20:58:40.374711Z",
-    "meta": "2026-01-26T17:21:21.082180Z",
+    "meta": "2026-01-29T07:39:04.899551Z",
     "activities": "2026-01-19T20:29:29.827229Z",
     "vocabulary": null,
     "plan": null
@@ -42,8 +42,7 @@
     "status": "fail",
     "blocking_issues": [
       "4 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: fill-in, group-sort, match-up, quiz"
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],
     "pass_count": 3,
     "fail_count": 1

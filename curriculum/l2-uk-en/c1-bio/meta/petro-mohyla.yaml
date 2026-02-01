@@ -1,0 +1,10 @@
+module: c1-bio-021
+level: C1-BIO
+slug: petro-mohyla
+version: '2.0'
+id: c1-bio-021
+naturalness:
+  score: null
+  status: PENDING
+build:
+  last_modified: '2026-02-01'

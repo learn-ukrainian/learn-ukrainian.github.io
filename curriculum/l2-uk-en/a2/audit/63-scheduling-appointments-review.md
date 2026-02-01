@@ -1,14 +1,12 @@
 # Audit Report: M63 — 63-scheduling-appointments.md
-
-**Level:** A2 | **Module:** M63 | **Phase:** A2.6 | **Pedagogy:** PPP | **Target:** 1000
+**Level:** A2 | **Module:** M63 | **Phase:** A2.6 | **Pedagogy:** PPP | **Target:** 1600
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 13:12:21
+**Generated:** 2026-02-01 23:58:59
 
 ## Configuration
-
 **Type:** A2
-**Word Target:** 1000 words
+**Word Target:** 1600 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,7 +18,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | [stage: 🔍 Recognition] Appointment Vocabulary | 12 | 8 | ✅ |
@@ -42,8 +39,7 @@
 - Low density activities: 0
 
 ## Gates
-
-- **Words:** ✅ 1616/1000 (raw: 1786)
+- **Words:** ✅ 1616/1600 (raw: 1786)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
@@ -60,7 +56,6 @@
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

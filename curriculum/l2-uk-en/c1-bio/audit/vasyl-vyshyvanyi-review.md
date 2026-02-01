@@ -1,8 +1,8 @@
-# Audit Report: M87 — vasyl-vyshyvanyi.md
-**Level:** C1 | **Module:** M87 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M91 — vasyl-vyshyvanyi.md
+**Level:** C1 | **Module:** M91 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:15:34
+**Generated:** 2026-02-01 23:29:43
 
 ## Configuration
 **Type:** C1-biography

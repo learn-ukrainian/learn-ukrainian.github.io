@@ -2,14 +2,14 @@
   "module": "11-checkpoint-cases",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:26:09.494118Z",
+  "last_audit": "2026-02-01T23:58:34.701692Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-25T17:30:21.319895Z",
-    "meta": "2026-01-26T17:21:18.824606Z",
+    "meta": "2026-01-29T07:39:04.585557Z",
     "activities": "2026-01-11T23:20:54.282986Z",
     "vocabulary": "2026-01-25T17:27:07.017036Z",
-    "plan": "2026-01-26T17:21:18.824240Z"
+    "plan": "2026-01-30T12:31:49.566346Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1545/800 (raw: 1697)"
+      "message": "1545/1000 (raw: 1697)"
     },
     "activities": {
       "status": "pass",

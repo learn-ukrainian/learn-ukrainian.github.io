@@ -165,3 +165,13 @@ items:
   ipa: /pɛrɛdˈatɪ/
   translation: to pass, to give (perfective)
   pos: verb
+- lemma: множина
+  ipa: /mnoʒˈɪna/
+  translation: plural (grammatical number)
+  pos: noun
+  gender: f
+- lemma: однина
+  ipa: /odnˈɪna/
+  translation: singular (grammatical number)
+  pos: noun
+  gender: f

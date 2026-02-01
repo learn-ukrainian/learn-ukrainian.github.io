@@ -1,8 +1,8 @@
-# Audit Report: M28 — dmytro-bortnyanskyy.md
-**Level:** C1 | **Module:** M28 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M30 — dmytro-bortnyanskyy.md
+**Level:** C1 | **Module:** M30 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:15:06
+**Generated:** 2026-02-01 23:29:16
 
 ## Configuration
 **Type:** C1-biography

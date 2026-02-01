@@ -1385,6 +1385,62 @@ npm run status:all             # Generate all levels
 
 ---
 
+## Playgrounds (Interactive Visualizations)
+
+Interactive HTML playgrounds for exploring and prototyping curriculum architecture.
+
+### Scripts
+
+| Script | Purpose | Command |
+|--------|---------|---------|
+| `generate_playground_data.py` | Aggregate status data from JSON cache | `npm run playgrounds:data` |
+| `build_playgrounds.py` | Build HTML with embedded real data | `npm run playgrounds:build` |
+
+### npm Commands
+
+```bash
+npm run playgrounds:data      # Generate playgrounds/data/status.json from audit cache
+npm run playgrounds:build     # Rebuild HTML files with embedded data
+npm run playgrounds           # Full rebuild + open landing page in browser
+```
+
+### Available Playgrounds
+
+| Playground | File | Purpose |
+|------------|------|---------|
+| **Landing Page** | `playgrounds/index.html` | Links to all playgrounds with summary stats |
+| **Curriculum Architecture** | `playgrounds/playground-curriculum-architecture.html` | Three-layer architecture, 4-stage workflow, track structure |
+| **Module Status Dashboard** | `playgrounds/playground-module-status.html` | Real-time status across all levels (uses real audit data) |
+| **Activity Design Studio** | `playgrounds/playground-activity-design.html` | Prototype activities with live preview + YAML export |
+| **Claude-Gemini Communication** | `playgrounds/playground-claude-gemini.html` | Message broker visualization, conversation threads |
+
+### Data Flow
+
+```
+curriculum/l2-uk-en/{level}/status/*.json   ← Per-module audit cache
+                ↓
+scripts/generate_playground_data.py         ← Aggregates to single file
+                ↓
+playgrounds/data/status.json                ← 692 modules, all levels
+                ↓
+scripts/build_playgrounds.py                ← Embeds data in HTML
+                ↓
+playgrounds/playground-module-status.html   ← Interactive dashboard
+```
+
+### Updating After Audits
+
+After running audits that update status cache:
+
+```bash
+# Regenerate playground data and rebuild
+npm run playgrounds
+```
+
+This ensures the Module Status Dashboard reflects the latest audit results.
+
+---
+
 ## NPM Scripts Summary
 
 ```bash
@@ -1631,6 +1687,11 @@ npm run claude:deploy
 **Edits**: Make changes in `claude_extensions/commands/`, then deploy
 
 ---
+
+# Playgrounds (Visualization)
+npm run playgrounds:data      # Generate status data from audit cache
+npm run playgrounds:build     # Build HTML with embedded data
+npm run playgrounds           # Full rebuild + open in browser
 
 # Development
 cd docusaurus && pnpm start    # Start Docusaurus dev server (for HTML validation)

@@ -134,4 +134,4 @@ if [ -z "$CLAUDE_BIN" ]; then
         exit 1
     fi
 fi
-"$CLAUDE_BIN" --permission-mode bypassPermissions "$@"
+"$CLAUDE_BIN" --chrome --permission-mode bypassPermissions "$@"

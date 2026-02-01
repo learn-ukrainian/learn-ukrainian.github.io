@@ -1,8 +1,8 @@
-# Audit Report: M72 — petro-bolbochan.md
-**Level:** C1 | **Module:** M72 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M74 — petro-bolbochan.md
+**Level:** C1 | **Module:** M74 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:15:27
+**Generated:** 2026-02-01 23:29:37
 
 ## Configuration
 **Type:** C1-biography

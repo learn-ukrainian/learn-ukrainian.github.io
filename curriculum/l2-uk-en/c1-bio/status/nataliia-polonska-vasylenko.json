@@ -2,12 +2,12 @@
   "module": "nataliia-polonska-vasylenko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:56:36.211014Z",
+  "last_audit": "2026-02-01T23:29:38.432161Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-17T21:45:15.851828Z",
-    "meta": "2026-01-26T17:21:20.943846Z",
-    "activities": "2026-01-17T21:45:15.802349Z",
+    "meta": "2026-01-29T07:39:04.929937Z",
+    "activities": "2026-01-27T15:34:56.364769Z",
     "vocabulary": null,
     "plan": null
   },
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "2027/4000 (raw: 2181) | pedagogy: 2 violations"
+      "message": "2027/4000 (raw: 2181) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "14/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "warn",

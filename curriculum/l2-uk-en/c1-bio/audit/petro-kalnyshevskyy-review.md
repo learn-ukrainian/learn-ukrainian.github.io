@@ -1,95 +1,72 @@
-# Audit Report: M25 — petro-kalnyshevskyy.md
-
-**Level:** C1 | **Module:** M25 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M27 — petro-kalnyshevskyy.md
+**Level:** C1 | **Module:** M27 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:56:08
+**Generated:** 2026-02-01 23:29:14
 
 ## Configuration
-
 **Type:** C1-biography
 **Word Target:** 4000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
 **Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** critical-analysis, essay-response, fill-in, group-sort, match-up, quiz, reading
+**Required Types:** critical-analysis, essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥24 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Політичний та господарський чин Петра Калнишевського | 8 | 5 | ✅ |
-| 2 | match-up | Термінологія козацького мучеництва | 12 | 6 | ✅ |
-| 3 | fill-in | Доля Останнього Лицаря: Текстуальна реконструкція | 12 | 6 | ✅ |
-| 4 | essay-response | Есе: Петро Калнишевський як дзеркало української трагедії та величі | 1 | 1 | ✅ |
-| 5 | comparative-study | Порівняльний аналіз: Мазепа vs Калнишевський | 1 | 1 | ✅ |
-| 6 | select | Політична система та господарство останньої Січі | 8 | 5 | ✅ |
-| 7 | true-false | Деконструкція імперських наративів про останнього кошового | 8 | 5 | ✅ |
-| 8 | mark-the-words | Лексика Козацького Мучеництва | 7 | 5 | ✅ |
-| 9 | unjumble | Відновлення тез про останнього лицаря | 8 | 5 | ✅ |
-| 10 | cloze | Аналіз 'Соловецької Голгофи' отамана | 12 | 1 | ✅ |
-| 11 | group-sort | Класифікація сфер впливу отамана Калнишевського | 15 | 1 | ✅ |
-| 12 | translate | Переклад тез про історичну зраду та стійкість | 8 | 5 | ✅ |
-| 13 | select | Мовний практикум: Академічний стиль | 8 | 5 | ✅ |
-| 14 | true-false | Деталі життя та канонізації отамана | 8 | 5 | ✅ |
-| 15 | authorial-intent | Аналіз стратегічних намірів отамана-господарника | 1 | 1 | ✅ |
-| 16 | critical-analysis | Критичний аналіз: Калнишевський як архітектор ідентичності | 1 | 1 | ✅ |
+| 1 | essay-response | Есе: Петро Калнишевський як дзеркало української трагедії та величі | 1 | 1 | ✅ |
+| 2 | comparative-study | Порівняльний аналіз: Мазепа vs Калнишевський | 1 | 1 | ✅ |
+| 3 | true-false | Деконструкція імперських наративів про останнього кошового | 8 | 5 | ✅ |
+| 4 | true-false | Деталі життя та канонізації отамана | 8 | 5 | ✅ |
+| 5 | authorial-intent | Аналіз стратегічних намірів отамана-господарника | 1 | 1 | ✅ |
+| 6 | critical-analysis | Критичний аналіз: Калнишевський як архітектор ідентичності | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 16 (target: 3-9) ❌
-- Unique types: 14 (minimum: 3) ✅
-- Priority types used: 5/6 (authorial-intent, comparative-study, critical-analysis, essay-response, quiz) ✅
-- Required types used: 6/7 (critical-analysis, essay-response, fill-in, group-sort, match-up, quiz) ❌
+- Total activities: 6 (target: 3-9) ✅
+- Unique types: 5 (minimum: 3) ✅
+- Priority types used: 4/6 (authorial-intent, comparative-study, critical-analysis, essay-response) ✅
+- Required types used: 2/3 (critical-analysis, essay-response) ❌
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-
-- **[YAML_SCHEMA_VIOLATION]** Schema error in petro-kalnyshevskyy.yaml: Schema validation error at key '13': {'type': 'true-false', 'title': 'Деталі життя та канонізації отамана', 'instruction': 'Перевірка знань про конкретні факти біографії та вшанування.', 'items': [{'statement': 'Калнишевський був особисто знайомий з Григорієм Сковородою та підтримував його філософські пошуки.', 'correct': True, 'explanation': 'Ці два великі сучасники належали до однієї інтелектуальної еліти того часу.'}, {'statement': 'Після звільнення у 1801 році Калнишевський отримав титул генерала російської армії.', 'correct': False, 'explanation': 'Він відмовився від будь-яких імперських подачок і залишився простим послушником монастиря.'}, {'statement': 'Церква, збудована Калнишевським у Ромнах, була зруйнована більшовиками у XX столітті.', 'correct': True, 'explanation': "Багато пам'яток отамана-мецената постраждали під час радянського богоборства."}, {'statement': "Калнишевський вмів читати і писати кількома мовами, включаючи церковнослов'янську та латину.", 'correct': True, 'explanation': "Його освіченість була невід'ємною частиною його державного авторитету."}, {'statement': 'Останній отаман був заарештований під час урочистого прийому в палаці Катерини II.', 'correct': False, 'explanation': 'Він був підступно схоплений на самій Січі після її оточення військами.'}, {'statement': 'Соловецький монастир розташований на теплому узбережжі Чорного моря.', 'correct': False, 'explanation': 'Він знаходиться на холодному Білому морі, на півночі Росії.'}, {'statement': 'Калнишевський помер у той самий рік, коли його було звільнено.', 'correct': False, 'explanation': 'Він помер через два роки після звільнення, у 1803 році.'}, {'statement': "Пам'ять про Калнишевського зберігалася в народних переказах століттями.", 'correct': True, 'explanation': "Незважаючи на заборони, народ пам'ятав свого останнього отамана."}]} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
 ## TEMPLATE COMPLIANCE
-
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Останні роки' per template 'c1-biography-module-template.md'
   - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 
 ## Recommendation
-
 **📝 UPDATE** (severity 25/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
 - **Words:** ❌ 2308/4000 (raw: 2497)
-- **Activities:** ✅ 16/3
+- **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 14/3 types
+- **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 0 < 24 (soft target)
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ⚠️ Too many activities: 16 (target 3-9)
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 99.8% (target 95-100% (biography))
 - **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-
 **Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 9 | 4 | 100% | 19% | 19.0% |
@@ -105,7 +82,6 @@
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 96 | Included in Core |
