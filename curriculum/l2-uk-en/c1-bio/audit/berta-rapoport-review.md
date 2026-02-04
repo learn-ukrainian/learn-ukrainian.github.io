@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M103 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-04 11:42:10
+**Generated:** 2026-02-05 00:47:56
 
 ## Configuration
 **Type:** C1-biography
@@ -40,18 +40,10 @@
 - **[YAML_SCHEMA_VIOLATION]** Schema error in berta-rapoport.yaml: Schema validation error at key '5': {'type': 'reading', 'title': 'Морський статут та етика', 'resource': {'type': 'primary_source', 'url': 'https://zakon.rada.gov.ua/', 'title': 'Кодекс торговельного мореплавства України'}, 'tasks': ['Знайдіть у тексті обов’язки капітана судна.', 'Які терміни використовуються для опису аварійних ситуацій?', 'Поясніть значення слова «фрахтування».']} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Останні роки' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-
 ## Recommendation
-**📝 UPDATE** (severity 35/100)
+**📝 UPDATE** (severity 25/100)
 
-- 5 violations (moderate)
+- 2 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates

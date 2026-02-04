@@ -3,9 +3,35 @@ level: C1-BIO
 slug: panteleimon-kulish
 version: '2.0'
 id: c1-bio-040
-transliteration: none
+title: "Пантелеймон Куліш: Будівничий української мови"
 naturalness:
   score: 10
   status: PASS
+duration: 120
+transliteration: none
+tags:
+- history
+- biography
+- literature
+- language
+- prose
+content_outline:
+- section: Вступ — Архітектор української писемності
+  words: 400
+- section: Ранні роки та освіта (1819-1840)
+  words: 600
+- section: Кирило-Мефодіївське братство (1845-1847)
+  words: 700
+- section: Дружба та полеміка з Шевченком
+  words: 700
+- section: Мовотворча діяльність
+  words: 800
+- section: Літературна спадщина та пізні роки (1860-1897)
+  words: 800
+- section: Історичний контекст
+  words: 400
+word_target: 4000
+vital_status: deceased
+vocabulary_hints: true
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-04'

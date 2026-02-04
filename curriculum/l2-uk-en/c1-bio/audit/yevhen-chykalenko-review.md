@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M54 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-04 11:41:45
+**Generated:** 2026-02-05 00:47:30
 
 ## Configuration
 **Type:** C1-biography
@@ -38,14 +38,10 @@
 - **[YAML_SCHEMA_VIOLATION]** Schema error in yevhen-chykalenko.yaml: Schema validation error at key '3': {'type': 'reading', 'title': 'Епістолярна спадщина мецената', 'resource': {'type': 'primary_source', 'url': 'https://shron1.chtyvo.org.ua/Chykalenko_Yevhen/Lysty_do_M_Hrushevskoho.pdf', 'title': '«Листи Євгена Чикаленка до Михайла Грушевського»'}, 'tasks': ['«Проаналізуйте офіційно-ввічливий стиль звертань, який використовує Чикаленко у листуванні з видатним істориком.»', "«Які практичні питання видавничої справи обговорюються у листах? Випишіть терміни, пов'язані з друкарством та поширенням газет.»", "«Знайдіть у листах приклади емоційної напруги, пов'язаної з труднощами фінансування українських проектів.»"]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
-## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple headers contain 'Спадщина': Спадщина, Вплив на сучасників
-  - FIX: RENAME one header to NOT contain 'Спадщина'. Example: 'Агіографічна спадщина' → 'Житійна творчість' (removes the duplicate word).
-
 ## Recommendation
 **📝 UPDATE** (severity 25/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates

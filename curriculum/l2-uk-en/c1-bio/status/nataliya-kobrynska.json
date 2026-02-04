@@ -2,50 +2,48 @@
   "module": "nataliya-kobrynska",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:41:44.041209Z",
+  "last_audit": "2026-02-04T21:18:22.008835Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.348652Z",
-    "meta": "2026-02-02T23:23:00.062402Z",
-    "activities": "2026-01-27T15:34:56.385553Z",
-    "vocabulary": null,
+    "md": "2026-02-04T21:18:11.521046Z",
+    "meta": "2026-02-04T21:14:27.792847Z",
+    "activities": "2026-02-04T21:16:30.525318Z",
+    "vocabulary": "2026-02-04T21:12:37.934154Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "1907/4000 (raw: 2145) | pedagogy: 1 violations"
+      "message": "3527/4000 (raw: 3567) | richness: 73% < 95% min (biography)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "4/3"
+      "message": "6/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 24 (soft target)"
+      "message": "24/24"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1/10 (PENDING) - Naturalness check required"
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
     }
   },
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "1 Critical Template Violations",
-      "6 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
+      "3 Outline Compliance Errors"
     ],
-    "pass_count": 1,
-    "fail_count": 3
+    "pass_count": 4,
+    "fail_count": 1
   }
 }

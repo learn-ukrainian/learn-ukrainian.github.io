@@ -2,30 +2,30 @@
   "module": "oleksander-potebnya",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:41:39.249925Z",
+  "last_audit": "2026-02-05T00:47:25.269354Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-01T22:46:28.984744Z",
-    "meta": "2026-02-02T23:23:00.030255Z",
-    "activities": "2026-02-01T22:47:10.086496Z",
+    "md": "2026-02-04T22:50:26.837751Z",
+    "meta": "2026-02-04T22:39:56.896702Z",
+    "activities": "2026-02-04T22:48:08.411319Z",
     "vocabulary": "2026-02-01T22:45:21.188367Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Summary'"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 3,
-      "message": "2138/4000 (raw: 2274) | pedagogy: 7 violations | richness: 54% < 95% min (biography)"
+      "status": "pass",
+      "violations": 0,
+      "message": "4642/4000 (raw: 4686)"
     },
     "activities": {
-      "status": "fail",
-      "violations": 1,
-      "message": "5/3 | density: 1 < 1"
+      "status": "pass",
+      "violations": 0,
+      "message": "6/3"
     },
     "vocabulary": {
       "status": "warn",
@@ -33,19 +33,15 @@
       "message": "15 < 24 (soft target)"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "10/10 (PENDING) - Naturalness check required"
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "6 Critical Template Violations",
-      "5 Outline Compliance Errors",
-      "Structure: Missing '## Summary'"
-    ],
-    "pass_count": 0,
-    "fail_count": 4
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

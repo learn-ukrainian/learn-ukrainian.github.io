@@ -1,7 +1,50 @@
 # Research-First Workflow for Historical & Literary Tracks
 
-> **Applies to:** `b2-hist`, `c1-bio`, `c1-hist`, `lit`, `oes`, `rut`
+> **Applies to:** `b2-hist`, `c1-bio`, `c1-hist`, `lit`, `oes`, `ruth`
 > **Purpose**: This workflow ensures high-quality content by requiring deep research BEFORE writing.
+
+---
+
+## ⛔ Research Gate (Smart Enforcement)
+
+**As of February 2026, the `/module` skill enforces research for seminar tracks - but only where it matters.**
+
+### When Research is Required
+
+| Scenario | Research Required? |
+|----------|-------------------|
+| **New module** (no .md exists) | ✅ Yes - must research first |
+| **Existing module under word target** | ✅ Yes - before expansion |
+| **Existing module passing audit** | ❌ No - already has content |
+| **Using `--from=lesson` flag** | ✅ Yes - rewriting content |
+
+### Examples
+
+```bash
+# New module - BLOCKED without research
+/module c1-bio 28
+  → No content exists
+  → ⛔ "Research required. Run /research first."
+
+# Existing module passing word count - ALLOWED
+/module c1-bio 15
+  → Content exists: 3800 words (target 3500)
+  → ✅ "Research gate: SKIPPED (module already has content)"
+
+# Existing module under target - BLOCKED
+/module c1-bio 22
+  → Content exists: 2100 words (target 3500)
+  → ⛔ "Research required for expansion."
+```
+
+**Quick commands:**
+```bash
+/research "Данило Апостол"       # Research topic (saves to audit/)
+/module c1-bio 28                # Smart gate check
+/module c1-bio 28 --no-research  # Skip check (NOT recommended)
+```
+
+**Task integration:** If `/task` is active, research completion auto-updates the issue.
 
 ---
 

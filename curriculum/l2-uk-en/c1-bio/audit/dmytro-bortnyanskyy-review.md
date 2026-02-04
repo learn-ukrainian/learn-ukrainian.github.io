@@ -1,8 +1,8 @@
 # Audit Report: M35 — dmytro-bortnyanskyy.md
 **Level:** C1-BIO | **Module:** M35 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
-**Naturalness:** None/10 (PENDING)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-04 11:41:34
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 00:47:20
 
 ## Configuration
 **Type:** C1-biography
@@ -20,78 +20,67 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | essay-response | Критичний аналіз: Митець та Імперія | 1 | 1 | ✅ |
-| 2 | comparative-study | Порівняння: Бортнянський vs Березовський | 1 | 1 | ✅ |
-| 3 | true-false | Факти та інтерпретації | 8 | 5 | ✅ |
-| 4 | reading | Аналіз музикознавчого нарису | 3 | 1 | ✅ |
-| 5 | reading | Дослідження спадщини | 3 | 1 | ✅ |
-| 6 | essay-response | Порівняльне есе: Бортнянський та Березовський | 1 | 1 | ✅ |
+| 1 | reading | Аналіз музичної спадщини: Хоровий концерт №32 | 3 | 1 | ✅ |
+| 2 | reading | Дмитро Бортнянський: Лобіст української культури | 3 | 1 | ✅ |
+| 3 | essay-response | Есе: Культурне привласнення чи універсалізм? | 1 | 1 | ✅ |
+| 4 | critical-analysis | Критичний аналіз: Музика як "м'яка сила" | 1 | 1 | ✅ |
+| 5 | comparative-study | Порівняльний аналіз: Бортнянський та Березовський | 1 | 1 | ✅ |
+| 6 | authorial-intent | Аналіз творчого задуму: "Скажи ми, Господи, кончину мою" | 1 | 1 | ✅ |
+| 7 | quiz | Концептуальний чек | 5 | 5 | ✅ |
 
 **Summary:**
-- Total activities: 6 (target: 3-9) ✅
-- Unique types: 4 (minimum: 3) ✅
-- Priority types used: 3/6 (comparative-study, essay-response, reading) ✅
-- Required types used: 2/3 (essay-response, reading) ❌
+- Total activities: 7 (target: 3-9) ✅
+- Unique types: 6 (minimum: 3) ✅
+- Priority types used: 6/6 (authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading) ✅
+- Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in dmytro-bortnyanskyy.yaml: Schema validation error at key '4': {'type': 'reading', 'title': 'Дослідження спадщини', 'resource': {'type': 'primary_source', 'url': 'https://www.youtube.com/watch?v=R6w6_79VnOQ', 'title': "Дмитро Бортнянський: Концерт №32 'Скажи ми, Господи, кончину мою'"}, 'tasks': ['Прослухайте твір та опишіть його емоційну динаміку, використовуючи лексику модуля.', "Які музичні інструменти (якщо є) ви чуєте? Чому для Бортнянського було важливо саме хорове виконання 'a cappella'?", 'Знайдіть у тексті (або почуйте) ключові слова, що вказують на релігійний зміст твору.']} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 25/100)
-
-- 1 violations (minor)
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
-
 ## Gates
-- **Words:** ❌ 2073/4000 (raw: 2287)
-- **Activities:** ✅ 6/3
+- **Words:** ✅ 4798/4000 (raw: 4835)
+- **Activities:** ✅ 7/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 4/3 types
+- **Unique_types:** ✅ 6/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 10/5
+- **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 24 (soft target)
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Vocab:** ✅ 28/24
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ✅ Content-heavy OK (6 activities)
-- **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
-- **Richness:** ✅ 95% (biography)
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (7 activities)
+- **Immersion:** 🇺🇦 99.7% (target 95-100% (biography))
+- **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 95% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 6 | 4 | 100% | 19% | 19.0% |
-| engagement | 9 | 6 | 100% | 14% | 14.3% |
-| quotes | 11 | 3 | 100% | 14% | 14.3% |
-| cultural | 2 | 4 | 50% | 10% | 4.8% |
-| visual | 9 | 4 | 100% | 10% | 9.5% |
-| timeline_markers | 22 | 8 | 100% | 10% | 9.5% |
+| engagement | 6 | 6 | 100% | 14% | 14.3% |
+| quotes | 14 | 3 | 100% | 14% | 14.3% |
+| cultural | 4 | 4 | 100% | 10% | 9.5% |
+| visual | 7 | 4 | 100% | 10% | 9.5% |
+| timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.98 | - | 98% | 5% | 4.7% |
+| variety | 0.93 | - | 93% | 5% | 4.4% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 13 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **95.1%** |
+| **TOTAL** | | | | | **99.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 70 | Included in Core |
-| **Вступ** | ✅ | 322 | Included in Core |
-| **Життєпис** | ⚪️ | 392 | Skipped |
-| **Внесок** | ⚪️ | 189 | Skipped |
-| **Спадщина** | ⚪️ | 123 | Skipped |
-| **Історичний контекст** | ✅ | 327 | Included in Core |
-| **Порівняльний аналіз** | ✅ | 126 | Included in Core |
-| **Критичне мислення** | ⚪️ | 78 | Skipped |
-| **Есе** | ⚪️ | 298 | Skipped |
-| **Підсумок** | ✅ | 80 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 68 | Skipped |
+| **Intro/Narrative** | ✅ | 134 | Included in Core |
+| **Вступ — Між Україною та імперією** | ✅ | 451 | Included in Core |
+| **Глухівське походження** | ⚪️ | 680 | Skipped |
+| **Італійські роки** | ⚪️ | 721 | Skipped |
+| **Придворна кар'єра** | ⚪️ | 735 | Skipped |
+| **Музична спадщина** | ⚪️ | 816 | Skipped |
+| **Спірне питання ідентичності** | ⚪️ | 641 | Skipped |
+| **Підсумок — Між світами** | ✅ | 444 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 176 | Skipped |

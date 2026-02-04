@@ -1,17 +1,17 @@
 # Audit Report: M05 — knyazhna-anna-yaroslavna.md
-**Level:** C1-BIO | **Module:** M05 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** C1-BIO | **Module:** M05 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4300
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-04 11:41:17
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-05 00:47:03
 
 ## Configuration
 **Type:** C1-biography
-**Word Target:** 4000 words
+**Word Target:** 4300 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
 **Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** critical-analysis, essay-response, reading
+**Required Types:** creative-writing, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥24 words
@@ -33,11 +33,22 @@
 - Total activities: 8 (target: 3-9) ✅
 - Unique types: 5 (minimum: 3) ✅
 - Priority types used: 5/6 (authorial-intent, comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
+- Required types used: 1/2 (reading) ❌
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[INVALID_META_YAML]** Meta YAML Schema Violation at 'activity_hints -> 1 -> type': 'creative-writing' is not one of ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent', 'etymology-trace', 'transcription', 'grammar-identify']
+  - FIX: Correct the YAML structure to match schemas/meta-module.schema.json
+- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['creative-writing']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent', 'etymology-trace', 'transcription', 'grammar-identify', 'paleography-analysis', 'dialect-comparison', 'translation-critique', 'phonology-lab', 'grammar-lab', 'parallel-text', 'historical-writing', 'register-identify', 'loanword-trace', 'comparative-style']
+  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent, etymology-trace, transcription, grammar-identify, paleography-analysis, dialect-comparison, translation-critique, phonology-lab, grammar-lab, parallel-text, historical-writing, register-identify, loanword-trace, comparative-style
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 2 violations (minor)
+
 ## Gates
-- **Words:** ✅ 4466/4000 (raw: 4516)
+- **Words:** ✅ 4466/4300 (raw: 4516)
 - **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
@@ -47,7 +58,7 @@
 - **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ✅ Content-heavy OK (8 activities)
 - **Immersion:** 🇺🇦 99.8% (target 95-100% (biography))
 - **Richness:** ✅ 95% (biography)

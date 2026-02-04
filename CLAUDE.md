@@ -3,9 +3,9 @@
 > **⚠️ READ FIRST: `claude_extensions/NON-NEGOTIABLE-RULES.md`**
 >
 > **These rules are ABSOLUTE. No negotiation. No exceptions.**
-> - Word count targets: MUST meet them
+> - Word count targets: MUST meet or exceed them (targets are MINIMUMS, not maximums)
 > - Audit gates: ALL must pass (✅)
-> - Section targets: MUST hit each one
+> - Section targets: MUST hit each one (exceeding is encouraged for rich content)
 > - Stage 4 loop: Work until COMPLETE
 > - Quality standards: NO shortcuts
 >
@@ -97,6 +97,19 @@ When issues occur: fix documentation/tools **first**, then validate with manual 
 - Call directly via Bash when needed for grammar validation
 - Python scripts can also invoke gemini-cli via subprocess
 - See issue #412 for content naturalness detection extension
+
+### 7. Word Targets Are Minimums
+
+**CRITICAL: Word targets are MINIMUMS, not maximums.**
+
+- Content about Ukrainian historical figures, literature, and history is inherently rich
+- Exceeding word targets is expected and good
+- **NEVER** reduce content quality to meet a target
+- **NEVER** change the word_target in meta files to match existing (short) content
+- If content is under target: **expand the content**, don't lower the bar
+- Seminar tracks (C1-BIO, B2-HIST, LIT) often need 4000+ words - this is intentional
+
+**The mission is Ukrainian education - quality and depth matter.**
 
 </critical>
 
@@ -611,6 +624,35 @@ mcp__message-broker__receive_messages(for_llm="claude", unread_only=True)
 - **Second opinion** - Cross-review improves quality
 - **Parallel work** - Gemini can work on tasks while you do other things
 
+**Proactive Collaboration (DO THIS MORE):**
+- Before writing biography content: Ask Gemini for research on the historical figure
+- After writing Ukrainian prose: Send to Gemini for naturalness review
+- For complex modules: Split work (Claude structures, Gemini writes Ukrainian)
+- Working together saves context - one agent researches while other writes
+
+### Handling Gemini Cooldown
+
+Gemini has rate limits. When you get a cooldown/quota error:
+
+1. **Check the error message** for retry time (usually 60 seconds)
+2. **Queue the message** - send via MCP but don't invoke bridge immediately
+3. **Continue other work** while waiting
+4. **Retry after cooldown** - use `scripts/gemini_bridge.py process-all` to catch up
+
+```bash
+# If Gemini is on cooldown, queue message and continue:
+mcp__message-broker__send_message(to="gemini", content="...", task_id="...")
+# Don't call bridge immediately - let it queue
+# Later: .venv/bin/python scripts/gemini_bridge.py process-all
+```
+
+### MCP Tool Retry Logic
+
+If an MCP tool fails to connect:
+1. Retry once automatically before reporting failure
+2. If still failing, check `~/.config/claude-code/settings.json` for MCP config
+3. Restart the MCP server if needed: check `ps aux | grep mcp`
+
 ### Message Archive
 
 View all communication: `http://localhost:5055` (run `scripts/message_viewer.py`)
@@ -641,6 +683,47 @@ Database: `.mcp/servers/message-broker/messages.db`
 | **Level quick-refs** | `claude_extensions/quick-ref/{level}.md` |
 | **Stage workflows** | `claude_extensions/stages/stage-{1-4}-*.md` |
 | **Track scoring system** | `scripts/scoring/README.md` ⭐ NEW |
+| **Task workflow (GH Issues)** | `docs/TASK-WORKFLOW.md` ⭐ NEW |
+
+---
+
+## Task Workflow (GitHub Issues)
+
+**Purpose:** Track complex multi-step tasks via GitHub Issues with full integration.
+
+### When to Use
+
+- **Complex work:** Batch operations (3+ modules), research-first writing, multi-phase work
+- **Cross-agent:** Work requiring Claude ↔ Gemini handoffs
+- **Skip for:** Single module fixes, quick edits
+
+### Quick Commands
+
+```bash
+/task create "Title"           # Create GH issue, set as active
+/task update #N "Progress"     # Add progress comment
+/task close #N                 # Close with summary
+/task list                     # Show active tasks
+/task handoff #N gemini "msg"  # Hand to Gemini for review
+```
+
+### Full Integration
+
+When active task is set, other skills auto-update the issue:
+- `/research` → 📚 Research completed
+- `/expand` → 📝 Expanded {file}
+- `/module-fix` → 🔨 Fixed issues
+- Commits → Suggests adding (#N)
+
+### Labels
+
+| Label | Purpose |
+|-------|---------|
+| `working:claude` | Claude actively working |
+| `review:gemini` | Ready for Gemini review |
+| `task` | Base task label |
+
+**Full documentation:** `docs/TASK-WORKFLOW.md`
 
 ---
 

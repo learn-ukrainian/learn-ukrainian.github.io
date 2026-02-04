@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M129 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-04 11:42:24
+**Generated:** 2026-02-05 00:48:08
 
 ## Configuration
 **Type:** C1-biography
@@ -37,16 +37,10 @@
 - **[YAML_SCHEMA_VIOLATION]** Schema error in myroslav-marynovych.yaml: Schema validation error at key '1': {'type': 'reading', 'title': 'Науковий нарис про Українську Гельсінську групу', 'resource': {'type': 'article', 'url': 'https://uinp.gov.ua/informaciyni-materialy/vchytelyam/metodychni-rekomendaciyi/ukrayinska-gelsinska-grupa-pravo-na-pravdu', 'title': 'Українська Гельсінська група: право на правду'}, 'tasks': ['Яка роль Мирослава Мариновича у заснуванні УГГ?', 'Знайдіть у тексті лексику, що описує репресивний апарат СРСР.', 'Як історики оцінюють ненасильницький характер дисидентського опору?']} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
-## TEMPLATE COMPLIANCE
-- ❌ **[FORBIDDEN_HEADER_TONE]** Header '## Сучасний етап' is inappropriate for a deceased person. Use '## Останні роки' instead.
-  - FIX: Rename '## Сучасний етап' to '## Останні роки' to maintain correct biographical tone.
-- ❌ **[FORBIDDEN_HEADER_TONE]** Header '## Вплив' is inappropriate for a deceased person. Use '## Спадщина' instead.
-  - FIX: Rename '## Вплив' to '## Спадщина' to maintain correct biographical tone.
-
 ## Recommendation
 **📝 UPDATE** (severity 25/100)
 
-- 3 violations (minor)
+- 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates

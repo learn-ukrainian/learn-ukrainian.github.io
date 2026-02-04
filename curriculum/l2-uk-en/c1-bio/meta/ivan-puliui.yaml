@@ -1,10 +1,56 @@
-module: c1-bio-048
+module: c1-bio-054
 level: C1-BIO
 slug: ivan-puliui
 version: '2.0'
-id: c1-bio-048
+id: c1-bio-054
+title: "Іван Пулюй: Першовідкривач X-променів"
 naturalness:
-  score: 1
-  status: PENDING
+  score: 10
+  status: PASS
+duration: 120
+transliteration: none
+tags:
+- history
+- biography
+- science
+- physics
+- language
+content_outline:
+- section: Вступ — Світовий геній української науки
+  words: 600
+  points:
+  - Пулюй як піонер сучасної фізики
+  - Відкриття X-променів
+- section: Життєпис
+  words: 1600
+  points:
+  - Походження та освіта
+  - Віденський та Празький періоди
+- section: Історичний контекст
+  words: 600
+  points:
+  - Золота доба європейської фізики
+  - Українська еміграція
+- section: Внесок
+  words: 400
+  points:
+  - Лампа Пулюя
+  - Наукові праці
+- section: Останні роки
+  words: 400
+  points:
+  - Переклад Біблії
+  - Громадська діяльність
+- section: Спадщина
+  words: 400
+  points:
+  - Питання пріоритету
+  - Вшанування пам'яті
+- section: Підсумок
+  words: 300
+  points:
+  - Пулюй як символ нації
+word_target: 4300
+vital_status: deceased
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-05'

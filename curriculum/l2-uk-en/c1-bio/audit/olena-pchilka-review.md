@@ -1,8 +1,7 @@
 # Audit Report: M49 — olena-pchilka.md
-**Level:** C1-BIO | **Module:** M49 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
-**Naturalness:** 1/10 (PENDING)
+**Level:** C1-BIO | **Module:** M49 | **Phase:** C1 | **Pedagogy:** immersion | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-04 11:41:42
+**Generated:** 2026-02-05 00:47:28
 
 ## Configuration
 **Type:** C1-biography
@@ -20,79 +19,70 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | essay-response | Критичний аналіз: Виховання еліти | 1 | 1 | ✅ |
-| 2 | comparative-study | Мати і Донька | 1 | 1 | ✅ |
-| 3 | reading | Спогади про Пчілку | 3 | 1 | ✅ |
-| 4 | reading | Стаття про фемінізм | 3 | 1 | ✅ |
-| 5 | essay-response | Есе: Інженер душі | 1 | 1 | ✅ |
+| 1 | reading | Читання: "Товаришки" | 3 | 1 | ✅ |
+| 2 | essay-response | Есе: Мати і Донька | 1 | 1 | ✅ |
+| 3 | critical-analysis | Аналіз: Націоналізм проти Соціалізму | 1 | 1 | ✅ |
+| 4 | quiz | Вікторина: Залізна Леді | 5 | 5 | ✅ |
+| 5 | comparative-study | Порівняння: Пчілка та Драгоманов | 1 | 1 | ✅ |
+| 6 | true-false | Правда чи Міф: Олена Пчілка | 10 | 5 | ✅ |
 
 **Summary:**
-- Total activities: 5 (target: 3-9) ✅
-- Unique types: 3 (minimum: 3) ✅
-- Priority types used: 3/6 (comparative-study, essay-response, reading) ✅
+- Total activities: 6 (target: 3-9) ✅
+- Unique types: 6 (minimum: 3) ✅
+- Priority types used: 5/6 (comparative-study, critical-analysis, essay-response, quiz, reading) ✅
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in olena-pchilka.yaml: Schema validation error at key '3': {'type': 'reading', 'title': 'Стаття про фемінізм', 'resource': {'type': 'article', 'url': 'https://povaha.org.ua/olena-pchilka-persha-ukrajinska-feministka/', 'title': 'Олена Пчілка — перша українська феміністка?'}, 'tasks': ['Які аргументи наводить автор на користь фемінізму Пчілки?', 'Як вона поєднувала традиційні сімейні цінності з емансипацією?', "Яку роль відіграв альманах 'Перший вінок' у жіночому русі?"]} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 25/100)
-
-- 1 violations (minor)
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
-
 ## Gates
-- **Words:** ❌ 2037/4000 (raw: 2288)
-- **Activities:** ✅ 5/3
+- **Words:** ✅ 4623/4000 (raw: 4677)
+- **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 3/3 types
+- **Unique_types:** ✅ 6/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/5
+- **Engagement:** ✅ 13/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 24 (soft target)
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Vocab:** ⚠️ 20 < 24 (soft target)
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 100.0% (target 95-100% (biography))
-- **Richness:** ✅ 99% (biography)
+- **Richness:** ❌ 85% < 95% min (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
+**Score:** 85% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 5 | 4 | 100% | 19% | 19.0% |
-| engagement | 6 | 6 | 100% | 14% | 14.3% |
-| quotes | 7 | 3 | 100% | 14% | 14.3% |
-| cultural | 6 | 4 | 100% | 10% | 9.5% |
-| visual | 7 | 4 | 100% | 10% | 9.5% |
-| timeline_markers | 23 | 8 | 100% | 10% | 9.5% |
-| legacy | 13 | 2 | 100% | 10% | 9.5% |
-| variety | 0.95 | - | 95% | 5% | 4.5% |
+| primary_sources | 2 | 4 | 50% | 19% | 9.5% |
+| engagement | 10 | 6 | 100% | 14% | 14.3% |
+| quotes | 2 | 3 | 67% | 14% | 9.6% |
+| cultural | 10 | 4 | 100% | 10% | 9.5% |
+| visual | 14 | 4 | 100% | 10% | 9.5% |
+| timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
+| legacy | 15 | 2 | 100% | 10% | 9.5% |
+| variety | 0.99 | - | 99% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 12 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.8%** |
+| questions | 6 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **85.7%** |
+
+### Dryness Flags & Fixes
+- ❌ **WALL_OF_TEXT**
+  - FIX:
+    Break paragraphs > 500 words. Insert headers (##), bullet lists, or callout boxes every 200-300 words.
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 78 | Included in Core |
-| **Вступ** | ✅ | 145 | Included in Core |
-| **Життєпис** | ⚪️ | 551 | Skipped |
-| **Спадщина** | ⚪️ | 53 | Skipped |
-| **Внесок** | ⚪️ | 237 | Skipped |
-| **Історичний контекст** | ✅ | 494 | Included in Core |
-| **Порівняльний аналіз** | ✅ | 50 | Included in Core |
-| **Критичне мислення** | ⚪️ | 76 | Skipped |
-| **Есе** | ⚪️ | 35 | Skipped |
-| **Критерії оцінювання** | ⚪️ | 0 | Skipped |
-| **Зразок відповіді** | ⚪️ | 249 | Skipped |
-| **Підсумок** | ✅ | 55 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 14 | Skipped |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Вступ — Мати українського відродження** | ✅ | 365 | Included in Core |
+| **Ранні роки та родина Косачів (1849-1868)** | ⚪️ | 946 | Skipped |
+| **Шлюб та літературні початки (1868-1880)** | ⚪️ | 1008 | Skipped |
+| **Видавнича та просвітницька діяльність (1880-1905)** | ⚪️ | 783 | Skipped |
+| **Революційні роки та трагедії (1905-1920)** | ⚪️ | 726 | Skipped |
+| **Останні роки та спадщина (1920-1930)** | ⚪️ | 679 | Skipped |
+| **Підсумок** | ✅ | 116 | Included in Core |

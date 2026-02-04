@@ -3,8 +3,55 @@ level: C1-BIO
 slug: volodymyr-vernadskyi
 version: '2.0'
 id: c1-bio-055
+title: "Володимир Вернадський: Батько української науки"
 naturalness:
-  score: 1
-  status: PENDING
+  score: 10
+  status: PASS
+duration: 120
+transliteration: none
+tags:
+- history
+- biography
+- science
+- ecology
+- philosophy
+content_outline:
+- section: Вступ — Вчений, який змінив науку
+  words: 600
+  points:
+  - Вернадський як мислитель планетарного масштабу
+  - Поєднання геології, біології та філософії
+- section: Життєпис
+  words: 1600
+  points:
+  - Аристократичне походження
+  - Наукова кар'єра в імперії
+  - Заснування Української академії наук 1918 р.
+- section: Історичний контекст
+  words: 600
+  points:
+  - Революція та боротьба за державність
+  - Стан світової науки
+- section: Внесок
+  words: 400
+  points:
+  - Біосфера та ноосфера
+  - Геохімія
+- section: Останні роки
+  words: 400
+  points:
+  - Робота під час війни
+  - Смерть 1945 р.
+- section: Спадщина
+  words: 400
+  points:
+  - Національна бібліотека
+  - Символ інтелектуальної України
+- section: Підсумок
+  words: 300
+  points:
+  - Вернадський як архітектор майбутнього
+word_target: 4300
+vital_status: deceased
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-05'

@@ -1,76 +1,75 @@
-vocabulary:
-  - term: король
-    translation: king
-    definition: Титул монарха.
-  - term: коронація
-    translation: coronation
-    definition: Урочиста церемонія коронування.
-  - term: регалії
-    translation: regalia
-    definition: Символи монаршої влади.
-  - term: ярлик
-    translation: yarlyk
-    definition: Грамота хана Золотої Орди.
-  - term: баскак
-    translation: baskak
-    definition: Представник хана на підкорених землях.
-  - term: данина
-    translation: tribute
-    definition: Податок на користь завойовника.
-  - term: орда
-    translation: horde
-    definition: Військово-адміністративна організація у кочівників.
-  - term: хан
-    translation: khan
-    definition: Титул правителя у тюркських народів.
-  - term: темник
-    translation: temnik
-    definition: Командир десяти тисяч воїнів.
-  - term: навала
-    translation: invasion
-    definition: Раптовий напад ворога.
-  - term: ярмо
-    translation: yoke
-    definition: Символ гноблення.
-  - term: фортеця
-    translation: fortress
-    definition: Укріплений пункт.
-  - term: дитинець
-    translation: citadel
-    definition: Внутрішня укріплена частина міста.
-  - term: острог
-    translation: burg
-    definition: Укріплене поселення.
-  - term: віче
-    translation: veche
-    definition: Збори громадян.
-  - term: союз
-    translation: alliance
-    definition: Об'єднання для спільної мети.
-  - term: коаліція
-    translation: coalition
-    definition: Тимчасовий союз держав.
-  - term: хрестовий похід
-    translation: crusade
-    definition: Військова експедиція християн.
-  - term: унія
-    translation: union
-    definition: Об'єднання церков.
-  - term: єпископ
-    translation: bishop
-    definition: Вищий духовний сан.
-  - term: митрополит
-    translation: metropolitan
-    definition: Глава церковної провінції.
-  - term: архієпископ
-    translation: archbishop
-    definition: Старший єпископ.
-  - term: дипломатія
-    translation: diplomacy
-    definition: Мистецтво ведення переговорів.
-  - term: суверенітет
-    translation: sovereignty
-    definition: Незалежність держави.
-  - term: незалежність
-    translation: independence
-    definition: Самостійність у внутрішній та зовнішній політиці.
+- lemma: король
+  ipa: /koˈrɔlʲ/
+  translation: king
+- lemma: коронація
+  ipa: /koronˈɑt͡sʲijɐ/
+  translation: coronation
+- lemma: регалії
+  ipa: /reˈɦɑlʲiji/
+  translation: regalia
+- lemma: ярлик
+  ipa: /jɐrˈɫɪk/
+  translation: yarlyk
+- lemma: баскак
+  ipa: /bɐsˈkɑk/
+  translation: baskak
+- lemma: данина
+  ipa: /dɐˈnɪnɐ/
+  translation: tribute
+- lemma: орда
+  ipa: /orˈdɑ/
+  translation: horde
+- lemma: хан
+  ipa: /xɑn/
+  translation: khan
+- lemma: темник
+  ipa: /ˈtɛmnɪk/
+  translation: temnik
+- lemma: навала
+  ipa: /nɐˈʋɑɫɐ/
+  translation: invasion
+- lemma: ярмо
+  ipa: /jɐrˈmɔ/
+  translation: yoke
+- lemma: фортеця
+  ipa: /forˈtɛt͡sʲɐ/
+  translation: fortress
+- lemma: дитинець
+  ipa: /dɪˈtɪnɛt͡sʲ/
+  translation: citadel
+- lemma: острог
+  ipa: /osˈtrɔɦ/
+  translation: burg
+- lemma: віче
+  ipa: /ˈʋʲit͡ʃe/
+  translation: veche
+- lemma: союз
+  ipa: /soˈjuz/
+  translation: alliance
+- lemma: коаліція
+  ipa: /koɐˈlʲit͡sʲijɐ/
+  translation: coalition
+- lemma: хрестовий похід
+  ipa: /xrɛsˈtɔʋɪi̯ poˈxʲid/
+  translation: crusade
+- lemma: унія
+  ipa: /ˈunʲijɐ/
+  translation: union
+- lemma: єпископ
+  ipa: /jeˈpɪskop/
+  translation: bishop
+- lemma: митрополит
+  ipa: /mɪtropoˈɫɪt/
+  translation: metropolitan
+- lemma: архієпископ
+  ipa: /ɐrxʲijeˈpɪskop/
+  translation: archbishop
+- lemma: дипломатія
+  ipa: /dɪpɫoˈmɑtʲijɐ/
+  translation: diplomacy
+- lemma: суверенітет
+  ipa: /suʋerenʲiˈtɛt/
+  translation: sovereignty
+- lemma: незалежність
+  ipa: /nezɐˈɫɛʒnʲistʲ/
+  translation: independence

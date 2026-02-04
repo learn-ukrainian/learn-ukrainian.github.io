@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M73 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-04 11:41:55
+**Generated:** 2026-02-05 00:47:40
 
 ## Configuration
 **Type:** C1-biography
@@ -38,14 +38,10 @@
 - **[YAML_SCHEMA_VIOLATION]** Schema error in mykola-leontovych.yaml: Schema validation error at key '2': {'type': 'reading', 'title': '«Розслідування вбивства генія»', 'resource': {'type': 'article', 'url': 'https://www.istpravda.com.ua/articles/2011/01/21/17345/', 'title': '«Убивство Леонтовича: Справа чекіста Грищенка»'}, 'tasks': ['«Які докази причетності ДПУ до вбивства Леонтовича наводяться в статті?»', '«Як родина композитора намагалася зберегти правду про ту страшну ніч?»', '«Порівняйте радянську версію подій із даними відкритих архівів.»']} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Останні роки' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ❌ 1937/4000 (raw: 2159)

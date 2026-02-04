@@ -1,14 +1,14 @@
 # C1-BIO Module Status
 
-**Generated:** 2026-02-04 11:43:34
+**Generated:** 2026-02-04 12:37:42
 **Total Modules:** 148
-**Status:** 18 passing, 96 failing, 34 stubs, 0 errors
+**Status:** 23 passing, 93 failing, 32 stubs, 0 errors
 
 ## Quick Summary
 
-- ✅ **Passing:** 18/148 (12%)
-- ❌ **Failing:** 96/148
-- 📝 **Stubs:** 34/148
+- ✅ **Passing:** 23/148 (15%)
+- ❌ **Failing:** 93/148
+- 📝 **Stubs:** 32/148
 
 ## Module Details
 
@@ -29,15 +29,15 @@
 | 013 | kostiantyn-ostrozky-elder | ✅ PASS | 4964/4000 | - |
 | 014 | roksolana | ✅ PASS | 4208/4000 | - |
 | 015 | dmytro-vyshnevetsky | ✅ PASS | 4271/4000 | - |
-| 016 | kostiantyn-vasyl-ostrozky | ❌ FAIL | 3092/4000 | 1 Critical Template Violations, 5 Outline Compliance Errors |
-| 017 | severyn-nalyvaiko | ❌ FAIL | 3265/4000 | 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 018 | iov-boretskyi | ❌ FAIL | 4280/4000 | 1 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 019 | meletii-smotrytskyi | ❌ FAIL | 2636/4000 | 5 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 020 | petro-sahaidachny | ❌ FAIL | 1676/4000 | 5 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
+| 016 | kostiantyn-vasyl-ostrozky | ✅ PASS | 5114/4000 | - |
+| 017 | severyn-nalyvaiko | ✅ PASS | 4481/4000 | - |
+| 018 | iov-boretskyi | ✅ PASS | 4937/4600 | - |
+| 019 | meletii-smotrytskyi | ✅ PASS | 5010/4300 | - |
+| 020 | petro-sahaidachny | ✅ PASS | 4802/4300 | - |
 | 021 | sylvestr-kosiv | ❌ FAIL | 4547/4000 | 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
 | 022 | bohdan-khmelnytskyy | ❌ FAIL | 4050/4000 | 5 Outline Compliance Errors |
-| 023 | petro-mohyla | 📝 STUB | 9/4000 | 5 Critical Template Violations, 7 Outline Compliance Errors, Missing required activity types: critical-analysis, essay-response, reading |
-| 024 | ivan-vyhovskyi | 📝 STUB | 77/4000 | 2 Critical Template Violations, 7 Outline Compliance Errors, Missing required activity types: critical-analysis, essay-response, reading |
+| 023 | petro-mohyla | ❌ FAIL | 3985/3500 | - |
+| 024 | ivan-vyhovskyi | ❌ FAIL | 3476/4000 | 2 Outline Compliance Errors |
 | 025 | ivan-sirko | 📝 STUB | 9/4000 | 5 Critical Template Violations, 7 Outline Compliance Errors, Missing required activity types: critical-analysis, essay-response, reading |
 | 026 | yuriy-nemyrych | ❌ FAIL | 2127/4000 | 1 Critical Template Violations, 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
 | 027 | ivan-mazepa | ✅ PASS | 4533/4000 | - |

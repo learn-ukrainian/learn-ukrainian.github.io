@@ -2,49 +2,46 @@
   "module": "taras-shevchenko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:41:37.006006Z",
+  "last_audit": "2026-02-05T00:47:22.930561Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.348815Z",
-    "meta": "2026-02-02T23:23:00.004901Z",
-    "activities": "2026-01-27T15:34:56.873388Z",
-    "vocabulary": null,
+    "md": "2026-02-04T22:30:45.360058Z",
+    "meta": "2026-02-04T20:08:59.238507Z",
+    "activities": "2026-02-04T22:15:00.852557Z",
+    "vocabulary": "2026-02-04T22:14:33.365405Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "2018/4000 (raw: 2158) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "4833/4000 (raw: 4972)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "6/3"
+      "message": "7/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 24 (soft target)"
+      "message": "28/24"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1/10 (PENDING) - Naturalness check required"
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "7 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
-    ],
-    "pass_count": 1,
-    "fail_count": 3
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

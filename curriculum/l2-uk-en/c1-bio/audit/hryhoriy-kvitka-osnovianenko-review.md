@@ -1,8 +1,8 @@
 # Audit Report: M37 — hryhoriy-kvitka-osnovianenko.md
 **Level:** C1-BIO | **Module:** M37 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
-**Naturalness:** 1/10 (PENDING)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-04 11:41:35
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 00:47:21
 
 ## Configuration
 **Type:** C1-biography
@@ -20,40 +20,38 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | reading | Читання: Уривок з повісті «Маруся» | 1 | 1 | ✅ |
-| 2 | reading | Читання: Уривок з повісті «Конотопська відьма» | 1 | 1 | ✅ |
-| 3 | critical-analysis | Критичний аналіз: Сентименталізм у «Марусі» | 1 | 1 | ✅ |
-| 4 | critical-analysis | Критичний аналіз: Сатира на козацьку старшину | 1 | 1 | ✅ |
-| 5 | essay-response | Есе: Чому Квітку називають «батьком української прози»? | 1 | 1 | ✅ |
-| 6 | essay-response | Есе: Дві традиції Квітки | 1 | 1 | ✅ |
-| 7 | comparative-study | Порівняльний аналіз: Квітка і Котляревський | 1 | 1 | ✅ |
-| 8 | quiz | Вікторина: Життя і творчість Квітки | 5 | 5 | ✅ |
-| 9 | true-false | Правда чи міф: Квітка-Основ'яненко | 5 | 5 | ✅ |
+| 1 | reading | Аналіз «Марусі»: Сентименталізм чи маніфест? | 3 | 1 | ✅ |
+| 2 | reading | Квітка-Основ’яненко — будівничий Харкова | 3 | 1 | ✅ |
+| 3 | essay-response | Есе: Батько української прози | 1 | 1 | ✅ |
+| 4 | critical-analysis | Критичний аналіз: Сатира та соціальна критика | 1 | 1 | ✅ |
+| 5 | comparative-study | Порівняльний аналіз: Котляревський та Квітка | 1 | 1 | ✅ |
+| 6 | authorial-intent | Аналіз творчого задуму: Образ Марусі | 1 | 1 | ✅ |
+| 7 | quiz | Концептуальний чек | 5 | 5 | ✅ |
 
 **Summary:**
-- Total activities: 9 (target: 3-9) ✅
+- Total activities: 7 (target: 3-9) ✅
 - Unique types: 6 (minimum: 3) ✅
-- Priority types used: 5/6 (comparative-study, critical-analysis, essay-response, quiz, reading) ✅
+- Priority types used: 6/6 (authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading) ✅
 - Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4001/4000 (raw: 4049)
-- **Activities:** ✅ 9/3
+- **Words:** ✅ 5325/4000 (raw: 5453)
+- **Activities:** ✅ 7/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 13/5
+- **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/24
+- **Vocab:** ⚠️ 15 < 24 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (9 activities)
-- **Immersion:** 🇺🇦 99.8% (target 95-100% (biography))
+- **Content_heavy:** ✅ Content-heavy OK (7 activities)
+- **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
 - **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
@@ -62,29 +60,29 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 4 | 4 | 100% | 19% | 19.0% |
-| engagement | 13 | 6 | 100% | 14% | 14.3% |
-| quotes | 4 | 3 | 100% | 14% | 14.3% |
-| cultural | 11 | 4 | 100% | 10% | 9.5% |
-| visual | 13 | 4 | 100% | 10% | 9.5% |
+| primary_sources | 6 | 4 | 100% | 19% | 19.0% |
+| engagement | 8 | 6 | 100% | 14% | 14.3% |
+| quotes | 10 | 3 | 100% | 14% | 14.3% |
+| cultural | 4 | 4 | 100% | 10% | 9.5% |
+| visual | 9 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.94 | - | 94% | 5% | 4.5% |
-| paragraph_var | 0.90 | - | 90% | 5% | 4.3% |
+| variety | 0.93 | - | 93% | 5% | 4.4% |
+| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 10 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.2%** |
+| **TOTAL** | | | | | **99.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 62 | Included in Core |
-| **Вступ — Перший прозаїк** | ✅ | 396 | Included in Core |
-| **Життєпис** | ⚪️ | 37 | Skipped |
-| **Походження та молодість** | ⚪️ | 549 | Skipped |
-| **Звернення до української мови** | ⚪️ | 501 | Skipped |
-| **Сентиментальна проза** | ⚪️ | 587 | Skipped |
-| **Сатирична проза** | ⚪️ | 567 | Skipped |
-| **Внесок** | ⚪️ | 245 | Skipped |
-| **Етнографічна спадщина** | ⚪️ | 379 | Skipped |
-| **Останні роки та значення** | ⚪️ | 376 | Skipped |
-| **Підсумок — Міст між народом і літературою** | ✅ | 302 | Included in Core |
+| **Intro/Narrative** | ✅ | 137 | Included in Core |
+| **Вступ — Перший прозаїк** | ✅ | 467 | Included in Core |
+| **Походження та молодість** | ⚪️ | 583 | Skipped |
+| **Звернення до української мови** | ⚪️ | 648 | Skipped |
+| **Сентиментальна проза** | ⚪️ | 636 | Skipped |
+| **Сатирична проза** | ⚪️ | 644 | Skipped |
+| **Етнографічна спадщина** | ⚪️ | 616 | Skipped |
+| **Останні роки та значення** | ⚪️ | 631 | Skipped |
+| **Історичний контекст** | ✅ | 340 | Included in Core |
+| **Підсумок** | ✅ | 445 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 178 | Skipped |

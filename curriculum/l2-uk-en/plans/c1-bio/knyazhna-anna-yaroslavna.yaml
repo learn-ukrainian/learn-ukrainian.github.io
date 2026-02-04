@@ -1,112 +1,84 @@
-module: c1-bio-005
+module: c1-bio-004
 level: C1-BIO
-sequence: 5
+sequence: 4
 slug: knyazhna-anna-yaroslavna
 version: '2.0'
-title: 'Княжна Анна Ярославна: Королева Франції'
+title: 'Анна Ярославна: Королева Франції'
+word_target: 4300
 content_outline:
-- section: Вступ — Руська принцеса на французькому троні
-  words: 400
-  points:
-  - Унікальність Анни в європейській історії
-  - Значення для української та французької пам'яті
-- section: Життєпис
-  words: 100
-  points:
-  - Етапи життя королеви
-- section: Дитинство в Києві
+- section: Вступ — Руська княжна на престолі Франції
   words: 600
   points:
-  - Освіта при дворі Ярослава
-  - Грамотність та культура
-- section: Шлюб із Генріхом I
-  words: 700
+  - Анна як символ культурних зв'язків Русі та Європи
+  - Значення її постаті для міжнародного престижу династії
+  - "Реймське Євангеліє"
+- section: Життєпис
+  words: 1600
   points:
+  - Дитинство в Києві, освіта при дворі Ярослава
+  - Дипломатичне посольство Генріха I
   - Подорож до Франції
-  - Весілля в Реймсі 1051 року
-- section: Королева Франції
-  words: 700
+  - Коронація та життя в Парижі
+- section: Історичний контекст
+  words: 600
   points:
-  - Політичний вплив та регентство
-  - Реймське Євангеліє
-- section: 'Останні роки: Монастир у Санлісі'
+  - Династія Ярослава Мудрого - "тесть Європи"
+  - Стан Франції в XI ст.
+- section: Внесок
   words: 400
   points:
-  - Заснування монастиря
-  - Смерть та поховання
-- section: Внесок у європейську культуру
+  - Культурний вплив на французький двір
+  - Заснування монастиря святого Вікентія в Санлісі
+- section: Останні роки
   words: 400
   points:
-  - Культурний трансфер
-  - Поширення освіти
-- section: Спадщина та пам'ять
+  - Регентство при синові Філіпові I
+  - Другий шлюб з Раулем де Крепі
+  - Смерть та вшанування пам'яті
+- section: Спадщина
   words: 400
   points:
-  - Пам'ятники та вшанування
+  - Образ Анни у французькій та українській культурі
+  - Династичні зв'язки Капетингів з Руссю
 - section: Підсумок
-  words: 100
+  words: 300
   points:
-  - Анна як символ зв'язків Русі з Європою
-word_target: 4000
-vocabulary_hints:
-  required:
-  - княжна (princess)
-  - королева (queen)
-  - регент (regent)
-  - посольство (embassy)
-  - грамотність (literacy)
-  - вінчання (coronation/wedding)
-  - вдова (widow)
-  - спадкоємець (heir)
-  - монастир (monastery)
-  - євангеліє (gospel)
-  recommended:
-  - придане (dowry)
-  - династичний (dynastic)
-  - коронація (coronation)
-  - печатка (seal)
-  - абатство (abbey)
-activity_hints:
-- type: reading
-  focus: French chronicle descriptions of Anna
-  source: Adapted medieval sources
-  items: 3 passages
-- type: essay-response
-  focus: Compare Anna's life in Kyiv vs. Paris
-  word_target: 250
-  output: Comparative analysis
-- type: critical-analysis
-  focus: Evaluate competing Ukrainian and French claims to Anna
-  output: Balanced assessment
+  - Анна як міст між цивілізаціями
 focus: biography
-pedagogy: CBI
+pedagogy: seminar
 prerequisites:
-- c1-bio-04 (Yaroslav Mudryi - father)
-- Understanding of medieval European dynasties
+- c1-bio-01 (Ярослав Мудрий)
+- b2-hist anna-yaroslavna module
 connects_to:
-- c1-bio-04 (Yaroslav Mudryi - father and his dynasty)
-- c1-bio-06 (Mykhailo Chernihivskyi - later period)
-- c1-bio-07 (Roksolana - another Ukrainian woman abroad)
+- c1-bio-05 (Всеволод Ярославич)
+- b2-hist kyivan-rus-europe module
 objectives:
-- Зрозуміти роль Анни Ярославни в історії Європи
-- Проаналізувати вплив Київської Русі на міжнародну політику XI століття
-- Вивчити біографічну лексику та історичну термінологію
+- Оцінити роль Анни Ярославни у зміцненні міжнародного авторитету Русі
+- Проаналізувати культурні відмінності між Києвом та Парижем XI ст.
+- Дослідити легенди про "Реймське Євангеліє"
 grammar:
-- Narrative structures for biography
-- Historical past tense usage
+- Опис історичних портретів
+- Епістолярний стиль (реальний та легендарний)
 module_type: biography
 sources:
 - name: Анна Ярославна (Wikipedia UA)
   url: https://uk.wikipedia.org/wiki/Анна_Ярославна
   type: primary
-  notes: Biography, French queenship, regency
+  notes: Основні факти
 - name: Реймське Євангеліє
-  url: https://uk.wikipedia.org/wiki/Реймське_Євангеліє
+  url: https://archives.marne.fr/
   type: reference
-  notes: Her legacy in France
-- name: Генріх I (король Франції)
-  url: https://uk.wikipedia.org/wiki/Генріх_I_(король_Франції)
-  type: reference
-  notes: Context of her marriage
+  notes: Артефакт
 immersion: 100% Ukrainian
 phase: C1-BIO
+vocabulary_hints:
+  required:
+  - королева (queen)
+  - регент (regent)
+  - Капетинги (Capetians)
+activity_hints:
+- type: reading
+  focus: Аналіз підписів Анни (латина та кирилиця)
+  source: Diplomatic documents
+- type: creative-writing
+  focus: Лист Анни до батька (уявний)

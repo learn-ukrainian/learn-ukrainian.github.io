@@ -4,119 +4,81 @@ sequence: 25
 slug: ivan-sirko
 version: '2.0'
 title: 'Іван Сірко: Легендарний кошовий отаман'
+word_target: 4300
 content_outline:
 - section: Вступ — Легенда Запорозької Січі
+  words: 600
+  points:
+  - Сірко як символ непереможності
+  - "Урус-Шайтан": образ у ворогів
+  - Феномен характерництва
+- section: Життєпис
+  words: 1600
+  points:
+  - Походження та ранні роки
+  - Шлях до отаманства
+  - Десятикратне обрання кошовим
+  - Заслання до Сибіру та повернення
+- section: Історичний контекст
+  words: 600
+  points:
+  - Епоха Руїни
+  - Запорожжя як автономний центр сили
+- section: Внесок
   words: 400
   points:
-  - Чому Сірко — символ козацької звитяги
-  - Непереможний полководець
-  - Його місце в українській пам'яті
-- section: Ранні роки та становлення
-  words: 600
+  - Військова тактика (рейдова війна)
+  - Звільнення невільників
+- section: Останні роки
+  words: 400
   points:
-  - Походження та молодість (Мерефа, Слобожанщина)
-  - Шлях до Січі
-  - Перші військові походи
-- section: Кошовий отаман
-  words: 800
+  - Оборона Чигирина 1677–1678 рр.
+  - Життя на пасіці
+  - Смерть 1680 р.
+- section: Спадщина
+  words: 400
   points:
-  - Обрання на посаду (12-15 разів)
-  - Військова тактика та стратегія
-  - Походи проти Кримського ханства
-  - Походи проти Османської імперії
-  - 65+ перемог без поразок
-- section: Лист запорожців турецькому султану
-  words: 600
+  - Образ у фольклорі та мистецтві (Рєпін)
+  - Меморіал у Капулівці
+- section: Підсумок
+  words: 300
   points:
-  - Історичний контекст (вимога Мегмеда IV)
-  - Зміст та значення листа
-  - Картина Рєпіна та культурний вплив
-- section: Політична діяльність
-  words: 600
-  points:
-  - Відносини з гетьманами (Хмельницький, Дорошенко)
-  - Руїна та позиція Сірка
-  - Захист козацьких вольностей
-- section: Останні роки та смерть
-  words: 500
-  points:
-  - Останні походи
-  - Смерть та поховання (Капулівка, 1680)
-  - Легенда про руку Сірка
-- section: Спадщина та вшанування
-  words: 500
-  points:
-  - Військова спадщина
-  - Сірко в українській культурі
-  - Перепоховання 2000 року
-  - Сучасне вшанування
-word_target: 4000
-vocabulary_hints:
-  required:
-  - кошовий отаман (Koshovyi Otaman)
-  - Запорозька Січ (Zaporozhian Sich)
-  - полководець (military commander)
-  - хан (khan)
-  - чамбул (raiding party)
-  - ясир (captives taken for ransom/slavery)
-  - кримські татари (Crimean Tatars)
-  - Руїна (the Ruin period)
-  - османи (Ottomans)
-  - курінь (kuren - Cossack unit/barracks)
-  recommended:
-  - лист запорожців (Letter of the Zaporozhians)
-  - непереможний (undefeated)
-  - звитяга (valor/bravery)
-  - перепоховання (reburial)
-activity_hints:
-- type: reading
-  focus: Текст листа запорожців до турецького султана
-  source: Первинне джерело
-  items: 3 passages
-- type: essay-response
-  focus: Значення Сірка для української військової традиції
-  word_target: 300
-  output: Аргументований есей
-- type: critical-analysis
-  focus: Порівняння Сірка з іншими козацькими лідерами
+  - Сірко як вічний чатовий українського Степу
 focus: biography
+pedagogy: seminar
 prerequisites:
-- b2-hist/ivan-sirko
-- b2-hist/zaporizka-sich
+- c1-bio-24 (Іван Виговський)
+- Розуміння контексту турецько-татарських набігів
 connects_to:
-- c1-bio/bohdan-khmelnytskyy
-- c1-bio/kost-hordiyenko
+- c1-bio-26 (Юрій Немирич)
+- b2-hist ruina-ii module
+objectives:
+- Проаналізувати військові стратегії Івана Сірка
+- Оцінити роль Запорозької Січі в епоху Руїни
+- Дослідити міфологізацію постаті Сірка в народній культурі
+grammar:
+- Епічний стиль розповіді
+- Термінологія козацького звичаєвого права
 module_type: biography
 sources:
-- name: Іван Сірко (Енциклопедія історії України)
-  url: https://esu.com.ua/article-13004
+- name: Іван Сірко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Іван_Сірко
   type: primary
-  notes: Академічна біографія
-- name: Яворницький Д.І. Історія запорозьких козаків
+  notes: Біографія та походи
+- name: Дмитро Яворницький "Історія запорозьких козаків"
+  url: http://izbornyk.org.ua/
   type: reference
-  notes: Фундаментальна праця з історії Січі
-- name: Літопис Самовидця
-  type: primary
-  notes: Первинне джерело XVII ст.
+  notes: Класичне дослідження
 immersion: 100% Ukrainian
 phase: C1-BIO
-objectives:
-- Дізнатися про життя та подвиги Івана Сірка
-- Зрозуміти роль кошового отамана в Запорозькій Січі
-- Проаналізувати лист запорожців турецькому султану
-- Оцінити військовий геній Сірка та його спадщину
-notes: 'Ivan Sirko was elected Koshovyi Otaman of the Zaporozhian Sich an unprecedented
-
-  number of times (12-15 times by different accounts). He led over 50 military campaigns
-
-  against the Crimean Khanate and Ottoman Empire with no recorded defeats. The famous
-
-  "Reply of the Zaporozhian Cossacks" letter, immortalized in Repin''s painting, is
-
-  attributed to his leadership. After his death in 1680, legend says his hand was
-
-  preserved and carried into battle by later Cossacks for good luck. His remains were
-
-  returned to Ukraine and reburied in Kapulivka in 2000.
-
-  '
+vocabulary_hints:
+  required:
+  - характерник (kharakternyk)
+  - кошовий отаман (koshovyi otaman)
+  - невільник (slave / captive)
+activity_hints:
+- type: reading
+  focus: Лист запорожців турецькому султану (легендарний)
+  source: Folklore (adapted)
+- type: essay-response
+  focus: Феномен непереможності Сірка

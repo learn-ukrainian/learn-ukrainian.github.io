@@ -56,12 +56,21 @@ def check_template_compliance(
 def _check_required_sections(content: str, meta: dict, template: TemplateStructure) -> list[dict]:
     """
     Check that all required sections from template are present, not empty, and unique.
-    
+
     Severity: CRITICAL (causes FAIL)
+
+    Note: When module has a plan with content_outline, the plan sections take precedence
+    over template required sections. Template is guidance, plan is authority.
     """
     violations = []
-    
+
     if not template.required_sections:
+        return violations
+
+    # SKIP template section checks when plan has content_outline
+    # Plan sections take precedence over template sections (see module-restructure-guide.md)
+    if meta.get('content_outline'):
+        # Plan defines its own structure - template required_sections don't apply
         return violations
     
     # Extract sections with content ranges

@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M100 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 0/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-04 11:42:09
+**Generated:** 2026-02-05 00:47:54
 
 ## Configuration
 **Type:** C1-biography
@@ -18,8 +18,6 @@
 **Transliteration:** Not allowed
 
 ## PEDAGOGICAL VIOLATIONS
-- **[HEADING_LEVEL]** Main section 'Підсумок' uses H2 (##) but spec requires H1 (#)
-  - FIX: Change '## Підсумок' to '# Підсумок' for top-level TOC compliance
 - **[YAML_SCHEMA_VIOLATION]** Schema error in anatol-petrytskyi.yaml: Insufficient activities: 0 found, minimum 3 required for C1-BIO
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: biography) missing advanced activity type: essay-response
@@ -29,22 +27,10 @@
 - **[STATE_STANDARD_LOW_IMMERSION]** Module 100 has 4.3% immersion (target: 90.0%+)
   - FIX: Add more Ukrainian content to reach 90.0%+ immersion
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Останні роки' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Спадщина' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Спадщина' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Підсумок' is empty
-  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
-
 ## Recommendation
-**🔄 REWRITE** (severity 95/100)
+**🔄 REWRITE** (severity 80/100)
 
-- 10 violations (significant)
+- 4 violations (moderate)
 - Immersion 91% off target (major rebalancing needed)
 - Activity count below minimum
 - Activity density below minimum
@@ -60,7 +46,7 @@
 - **Vocab:** ⚠️ 0 < 24 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 4 violations
+- **Pedagogy:** ❌ 3 violations
 - **Content_heavy:** ⚠️ Too few activities: 0 (target 3-9)
 - **Immersion:** ❌ 4.3% LOW (target 95-100% (biography))
 - **Richness:** ❌ 11% < 95% min (biography) - REWRITE needed

@@ -1,12 +1,12 @@
 # Audit Report: M28 — danylo-apostol.md
-**Level:** C1-BIO | **Module:** M28 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4000
-**Naturalness:** 0/10 (PENDING)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-04 11:41:30
+**Level:** C1-BIO | **Module:** M28 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4300
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 00:47:16
 
 ## Configuration
 **Type:** C1-biography
-**Word Target:** 4000 words
+**Word Target:** 4300 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
@@ -17,102 +17,68 @@
 **Vocab Target:** ≥24 words
 **Transliteration:** Not allowed
 
-## PEDAGOGICAL VIOLATIONS
-- **[INVALID_META_YAML]** Meta YAML Schema Violation at 'root': 'activity_hints' is a required property
-  - FIX: Correct the YAML structure to match schemas/meta-module.schema.json
-- **[HEADING_LEVEL]** Main section 'Підсумок' uses H2 (##) but spec requires H1 (#)
-  - FIX: Change '## Підсумок' to '# Підсумок' for top-level TOC compliance
-- **[YAML_SCHEMA_VIOLATION]** Schema error in danylo-apostol.yaml: Insufficient activities: 0 found, minimum 3 required for C1-BIO
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: biography) missing advanced activity type: essay-response
-  - FIX: Add a essay-response activity to meet advanced richness standards.
-- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: biography) missing advanced activity type: comparative-study
-  - FIX: Add a comparative-study activity to meet advanced richness standards.
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Аналіз первинного джерела: "Рішительні пункти" (1728) | 3 | 1 | ✅ |
+| 2 | essay-response | Есе: Гетьман компромісу чи борець? | 1 | 1 | ✅ |
+| 3 | critical-analysis | Аналіз реформаторської діяльності | 1 | 1 | ✅ |
+| 4 | quiz | Реформи Данила Апостола | 5 | 5 | ✅ |
+| 5 | comparative-study | Порівняння: Конституція Орлика vs Рішительні пункти | 1 | 1 | ✅ |
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-
-## Recommendation
-**📝 UPDATE** (severity 40/100)
-
-- Revision recommended (severity 40/100)
-- 6 violations (moderate)
-- Activity count below minimum
-- Activity density below minimum
+**Summary:**
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 3) ✅
+- Priority types used: 5/6 (comparative-study, critical-analysis, essay-response, quiz, reading) ✅
+- Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 67/4000 (raw: 96)
-- **Activities:** ❌ 0/3
-- **Density:** ❌ 0 < 1
-- **Unique_types:** ❌ 0/3 types
-- **Priority:** ❌ No priority types
-- **Engagement:** ❌ 0/5
+- **Words:** ✅ 4327/4300 (raw: 4398)
+- **Activities:** ✅ 5/3
+- **Density:** ✅ All > 1
+- **Unique_types:** ✅ 5/3 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 24 (soft target)
+- **Vocab:** ✅ 24/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 5 violations
-- **Content_heavy:** ⚠️ Too few activities: 0 (target 3-9)
-- **Immersion:** 🇺🇦 100.0% (target 95-100% (biography))
-- **Richness:** ❌ 17% < 95% min (biography) - REWRITE needed
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Immersion:** 🇺🇦 99.8% (target 95-100% (biography))
+- **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 17% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 0 | 4 | 0% | 19% | 0.0% |
-| engagement | 0 | 6 | 0% | 14% | 0.0% |
-| quotes | 0 | 3 | 0% | 14% | 0.0% |
-| cultural | 1 | 4 | 25% | 10% | 2.4% |
-| visual | 0 | 4 | 0% | 10% | 0.0% |
-| timeline_markers | 3 | 8 | 38% | 10% | 3.6% |
-| legacy | 1 | 2 | 50% | 10% | 4.8% |
-| variety | 0.50 | - | 50% | 5% | 2.4% |
-| paragraph_var | 0.50 | - | 50% | 5% | 2.4% |
-| questions | 1 | 3 | 33% | 5% | 1.6% |
-| **TOTAL** | | | | | **17.1%** |
-
-### Dryness Flags & Fixes
-- ❌ **NO_ENGAGEMENT**
-  - FIX:
-    Add 2+ engagement boxes. Use this exact format:
-    
-    > 💡 **Чи знали ви?**
-    >
-    > [Interesting fact about the grammar/vocabulary topic in Ukrainian]
-    
-    > 🇺🇦 **Культурний момент**
-    >
-    > [Cultural context connecting grammar to Ukrainian life/places]
-    
-    > 🌍 **У реальному житті**
-    >
-    > [Practical scenario where this grammar is used]
-- ❌ **NO_QUOTES**
-  - FIX:
-    Add 2+ direct quotes from the subject. Use this format:
-    
-    > «[Exact quote from the person]»
-    > — *[Person name], [context/year]*
-- ❌ **NO_TIMELINE**
-  - FIX:
-    Add 5+ timeline markers: specific years (1876, 1918), periods (XVIII ст.), sequences (спочатку... потім... нарешті).
+| primary_sources | 10 | 4 | 100% | 19% | 19.0% |
+| engagement | 6 | 6 | 100% | 14% | 14.3% |
+| quotes | 9 | 3 | 100% | 14% | 14.3% |
+| cultural | 5 | 4 | 100% | 10% | 9.5% |
+| visual | 5 | 4 | 100% | 10% | 9.5% |
+| timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
+| legacy | 15 | 2 | 100% | 10% | 9.5% |
+| variety | 0.95 | - | 95% | 5% | 4.5% |
+| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
+| questions | 8 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 43 | Included in Core |
-| **Вступ** | ✅ | 3 | Included in Core |
-| **Життєпис** | ⚪️ | 3 | Skipped |
-| **Участь у Північній війні** | ⚪️ | 3 | Skipped |
-| **Обрання гетьманом** | ⚪️ | 3 | Skipped |
-| **Реформи та кодифікація** | ⚪️ | 3 | Skipped |
-| **Останні роки** | ⚪️ | 3 | Skipped |
-| **Спадщина** | ⚪️ | 3 | Skipped |
-| **Підсумок** | ✅ | 3 | Included in Core |
+| **Intro/Narrative** | ✅ | 130 | Included in Core |
+| **Вступ — Гетьман стабілізації** | ✅ | 618 | Included in Core |
+| **Життєпис** | ⚪️ | 1359 | Skipped |
+| **Історичний контекст** | ✅ | 710 | Included in Core |
+| **Внесок** | ⚪️ | 361 | Skipped |
+| **Останні роки** | ⚪️ | 358 | Skipped |
+| **Спадщина** | ⚪️ | 391 | Skipped |
+| **Підсумок** | ✅ | 281 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 119 | Skipped |

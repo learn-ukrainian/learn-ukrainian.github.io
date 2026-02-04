@@ -3,16 +3,55 @@ level: C1-BIO
 slug: bohdan-khmelnytskyy
 version: '2.0'
 id: c1-bio-022
+title: "Богдан Хмельницький: Гетьман-державотворець"
 naturalness:
-  score: 9
+  score: 10
   status: PASS
 duration: 120
 transliteration: none
 tags:
+- history
 - biography
-- cossack
+- war
 - politics
-- military
-vocabulary_count: 39
+- diplomacy
+content_outline:
+- section: Вступ — Творець козацької держави
+  words: 600
+  points:
+  - Хмельницький як символ суб'єктності
+  - Унікальність поєднання воїна та дипломата
+- section: Життєпис
+  words: 1600
+  points:
+  - Походження та освіта
+  - Початок Великої війни 1648 р.
+  - Тріумфальні перемоги
+- section: Історичний контекст
+  words: 600
+  points:
+  - Європа середини XVII ст.
+  - Геополітичний трикутник
+- section: Внесок
+  words: 400
+  points:
+  - Будівництво державних інституцій
+  - Військова реформа
+- section: Останні роки
+  words: 400
+  points:
+  - Переяславська рада 1654 р.
+  - Пошук нових союзників
+- section: Спадщина
+  words: 400
+  points:
+  - Образ "батька нації"
+  - Історичні оцінки
+- section: Підсумок
+  words: 300
+  points:
+  - Уроки Хмельниччини
+word_target: 4300
+vital_status: deceased
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-05'

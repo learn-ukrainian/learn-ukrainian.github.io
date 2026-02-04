@@ -2,13 +2,13 @@
   "module": "panteleimon-kulish",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:41:37.589976Z",
+  "last_audit": "2026-02-05T00:47:23.530630Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-29T22:54:39.448757Z",
-    "meta": "2026-02-02T23:23:00.013162Z",
-    "activities": "2026-01-29T22:44:21.213886Z",
-    "vocabulary": "2026-01-29T22:25:19.001430Z",
+    "md": "2026-02-04T22:30:45.345438Z",
+    "meta": "2026-02-04T22:16:13.800711Z",
+    "activities": "2026-02-04T22:17:27.397046Z",
+    "vocabulary": "2026-02-04T22:17:47.932993Z",
     "plan": null
   },
   "gates": {
@@ -20,17 +20,17 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4090/4000 (raw: 4143)"
+      "message": "4958/4000 (raw: 5081)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "6/3"
+      "message": "7/3"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "25/24"
+      "message": "28/24"
     },
     "naturalness": {
       "status": "pass",

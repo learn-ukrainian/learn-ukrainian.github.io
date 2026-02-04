@@ -2,10 +2,10 @@
   "module": "oleksandr-usyk",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:42:34.179619Z",
+  "last_audit": "2026-02-05T00:48:18.508244Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-02T13:16:35.312439Z",
+    "md": "2026-02-04T22:30:45.345314Z",
     "meta": "2026-02-02T23:23:00.402729Z",
     "activities": "2026-02-02T11:02:04.163008Z",
     "vocabulary": "2026-02-02T11:02:04.162830Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 5,
-      "message": "9/4000 (raw: 161) | engagement: 1/5 | pedagogy: 4 violations | immersion: 4.3% LOW (target 95-100% (biography)) | richness: 11% < 95% min (biography) - REWRITE needed"
+      "message": "9/4000 (raw: 161) | engagement: 1/5 | pedagogy: 3 violations | immersion: 4.3% LOW (target 95-100% (biography)) | richness: 11% < 95% min (biography) - REWRITE needed"
     },
     "activities": {
       "status": "fail",
@@ -41,7 +41,6 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "5 Critical Template Violations",
       "6 Outline Compliance Errors",
       "Missing required activity types: essay-response, reading"
     ],

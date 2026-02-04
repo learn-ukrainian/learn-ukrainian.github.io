@@ -3,8 +3,35 @@ level: C1-BIO
 slug: taras-shevchenko
 version: '2.0'
 id: c1-bio-039
+title: "Тарас Шевченко: Національний Пророк"
 naturalness:
-  score: 1
-  status: PENDING
+  score: 10
+  status: PASS
+duration: 120
+transliteration: none
+tags:
+- history
+- biography
+- literature
+- art
+- decolonization
+content_outline:
+- section: Вступ — Більше ніж поет
+  words: 400
+- section: Кріпацтво та ранні роки
+  words: 600
+- section: Викуп та становлення митця
+  words: 700
+- section: Кобзар та пробудження нації
+  words: 800
+- section: Кирило-Мефодіївське братство та заслання
+  words: 800
+- section: Останні роки та безсмертя
+  words: 500
+- section: Дискусія — Шевченко в деколонізаційному дискурсі
+  words: 200
+word_target: 4000
+vital_status: deceased
+vocabulary_hints: true
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-04'

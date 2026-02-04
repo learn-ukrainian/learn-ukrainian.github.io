@@ -150,20 +150,29 @@ def validate_required_metadata(frontmatter_str: str) -> list[str]:
     return missing
 
 
-def detect_level(file_path: str, frontmatter_str: str) -> tuple[str, int]:
+def detect_level(file_path: str, frontmatter_str: str) -> tuple[str, int, str]:
     """Detect level code and module number from file path."""
     # Parse phase from frontmatter
     phase_match = re.search(r'phase:\s*([A-Za-z0-9\.]+)', frontmatter_str)
     phase = phase_match.group(1) if phase_match else "A1"
 
-    # Detect level from file path
+    # Detect level and track from file path
     level_from_path = None
+    track_from_path = None  # Full track name for track-aware checks (e.g., C1-BIO)
     # Match a1, a2, b1, b2, c1, c2 (case insensitive)
-    # Also matches tracks like b2-hist, c1-bio by ignoring suffix
-    # Updated to also match OES and RUTH
-    path_match = re.search(r'/([abc][12]|oes|ruth)(?:-[a-z0-9]+)?/', file_path.lower())
+    # Also matches tracks like b2-hist, c1-bio, lit, oes, ruth
+    path_match = re.search(r'/([abc][12])(-[a-z0-9]+)?/', file_path.lower())
     if path_match:
-        level_from_path = path_match.group(1).upper()
+        base_level = path_match.group(1).upper()  # e.g., C1
+        track_suffix = path_match.group(2)  # e.g., -bio or None
+        level_from_path = base_level
+        track_from_path = f"{base_level}{track_suffix.upper()}" if track_suffix else base_level
+    else:
+        # Try to match special tracks (lit, oes, ruth)
+        special_match = re.search(r'/(lit|oes|ruth)/', file_path.lower())
+        if special_match:
+            level_from_path = special_match.group(1).upper()
+            track_from_path = level_from_path
 
     # Use path-detected level if available
     if phase == 'LIT':
@@ -176,6 +185,10 @@ def detect_level(file_path: str, frontmatter_str: str) -> tuple[str, int]:
             level_code = level_code[:-1]
         if level_code not in LEVEL_CONFIG:
             level_code = 'A1'
+
+    # Store track code for track-aware checks (will be used by check_markdown_format etc.)
+    # If no track detected, use level_code as fallback
+    track_code = track_from_path if track_from_path else level_code
 
     # Detect module number
     module_num = 999
@@ -195,7 +208,7 @@ def detect_level(file_path: str, frontmatter_str: str) -> tuple[str, int]:
     except:
         pass
 
-    return level_code, module_num
+    return level_code, module_num, track_code
 
 
 def detect_focus(frontmatter_str: str, level_code: str, module_num: int, title: str = "", file_path: str = "") -> str | None:
@@ -769,7 +782,7 @@ def audit_module(file_path: str) -> bool:
         sys.exit(1)
 
     # Detect Metadata
-    level_code, module_num = detect_level(file_path, frontmatter_str)
+    level_code, module_num, track_code = detect_level(file_path, frontmatter_str)
 
     # Detect full track identifier for display (e.g., "C1-BIO" instead of "C1")
     display_level = level_code
@@ -1583,8 +1596,8 @@ def audit_module(file_path: str) -> bool:
     )
     pedagogical_violations.extend(metalang_violations)
 
-    # Run markdown format checks
-    markdown_violations = check_markdown_format(content)
+    # Run markdown format checks (pass track_code for track-aware checks like heading levels)
+    markdown_violations = check_markdown_format(content, track_code)
     pedagogical_violations.extend(markdown_violations)
 
     # Run vocabulary table format checks

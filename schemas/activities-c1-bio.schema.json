@@ -1018,6 +1018,12 @@
         "instructions": {
           "type": "string",
           "description": "Additional instructions for the learner (alternative field name)"
+        },
+        "tasks": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Comprehension or analysis tasks for the reading"
         }
       }
     }

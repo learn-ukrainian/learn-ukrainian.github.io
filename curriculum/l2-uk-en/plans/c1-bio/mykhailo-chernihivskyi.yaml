@@ -4,117 +4,68 @@ sequence: 9
 slug: mykhailo-chernihivskyi
 version: '2.0'
 title: 'Михайло Чернігівський: Князь-мученик'
+word_target: 4300
 content_outline:
 - section: Вступ — Вибір між життям і вірою
-  words: 400
-  points:
-  - Трагічна доля Михайла
-  - Його значення як символу опору
-  - Джерела про його мученицьку смерть
-- section: Князь Чернігівський і Київський
   words: 600
   points:
-  - Походження та молодість
-  - Князювання в Чернігові
-  - Участь у міжкнязівських конфліктах
-  - Короткочасне княжіння в Києві
-- section: Монгольська навала
-  words: 700
+  - Михайло як символ духовного опору Орді
+  - Значення його мучеництва для ідентичності
+  - Формування етосу "страстотерпців"
+- section: 'Життєпис: Князь у часи випробувань'
+  words: 1600
   points:
-  - Прихід монголів на Русь
-  - Падіння Чернігова
-  - Спроби організувати опір
-  - Втеча та вигнання
-- section: Подорож до Орди
+  - Династія Ольговичів та боротьба за Київ
+  - Битва на Калці 1223 р.
+  - Подорож до Європи у пошуках союзників
+  - Повернення на понівечену батьківщину
+- section: 'Внесок: Подорож до Орди як духовний подвиг'
   words: 800
   points:
-  - Рішення поїхати до Батия
-  - Мета візиту — отримати ярлик
-  - Вимога пройти очисний ритуал
-  - Відмова зректися християнської віри
-- section: Мученицька смерть
-  words: 700
-  points:
-  - Опис страти за житієм
-  - Боярин Федір — спільник у мучеництві
-  - Символіка відмови від язичницького ритуалу
-  - Реакція сучасників
-- section: Канонізація та шанування
+  - Виклик до ставки хана Батия 1246 р.
+  - Відмова від язичницьких ритуалів
+  - Аргументація князя та боярина Федора
+- section: 'Останні роки: Мученицька смерть'
   words: 500
   points:
-  - Перенесення мощів
-  - Канонізація як святого мученика
-  - Храми на честь Михайла
+  - Деталі страти в Орді
+  - Свідчення Плано Карпіні
+  - Резонанс у християнському світі
+- section: 'Спадщина: Святий Михайло'
+  words: 500
+  points:
+  - Канонізація та перенесення мощів
+  - Іконографія та культ святого в Україні
   - Михайлівський Золотоверхий монастир
-- section: Підсумок — Віра вища за життя
+- section: 'Підсумок — Віра вища за життя'
   words: 300
   points:
-  - Михайло як приклад християнської стійкості
-  - Його образ у літературі
-  - Сучасне значення його вибору
-word_target: 4000
-vocabulary_hints:
-  required:
-  - мученик (martyr)
-  - ярлик (yarlyk/patent of authority)
-  - Орда (Horde)
-  - навала (invasion)
-  - зречення (renunciation)
-  - очищення (purification)
-  - канонізація (canonization)
-  - мощі (relics)
-  - житіє (hagiography)
-  - страта (execution)
-  recommended:
-  - ритуал (ritual)
-  - язичницький (pagan)
-  - боярин (boyar)
-  - стійкість (steadfastness)
-  - вогонь (fire - purification by fire)
-activity_hints:
-- type: reading
-  focus: Hagiographic account of Mykhailo's martyrdom
-  source: Medieval житіє (adapted)
-  items: 3 passages
-- type: essay-response
-  focus: Analyze Mykhailo's choice - faith vs. survival
-  word_target: 250
-  output: Ethical and historical analysis
-- type: critical-analysis
-  focus: Distinguish hagiographic elements from historical facts
-  output: Source criticism with examples
+  - Моральна перемога над загарбником
+  - Уроки для сучасного спротиву
 focus: biography
-pedagogy: CBI
+pedagogy: seminar
 prerequisites:
-- c1-bio-01 to c1-bio-05 (earlier Kyivan Rus period)
-- Understanding of Mongol invasion context
+- c1-bio-08 (Роман Мстиславич)
+- b2-hist mongolska-navala module
 connects_to:
-- c1-bio-07 (Roksolana - later foreign captivity)
-- c1-bio-08 (Iov Boretskyi - Orthodox faith defense)
-- c1-bio-77 (Vasyl Stus - another martyr for beliefs)
+- c1-bio-10 (Данило Галицький)
+- b2-hist hrystyianstvo module
 objectives:
-- Analyze the historical significance of Prince Mykhailo's martyrdom
-- Understand the concept of spiritual resistance in Ukrainian history
-- Compare political strategies of Mykhailo Chernihivskyi and Alexander Nevsky
-- Master vocabulary related to martyrdom, canonization, and medieval politics
+- Проаналізувати мотиви Михайла Чернігівського у протистоянні з Ордою
+- Оцінити вплив його вчинку на формування національної свідомості
+- Дослідити джерела (літописи, свідчення мандрівників) про його смерть
 grammar:
-- Historical narrative register
-- Church Slavonicisms
-- Rhetorical antithesis
-- Vocative case nuances
+- Агіографічний стиль (опис житія)
+- Теологічна лексика
 module_type: biography
 sources:
 - name: Михайло Всеволодович (Wikipedia UA)
   url: https://uk.wikipedia.org/wiki/Михайло_Всеволодович
   type: primary
-  notes: Biography, martyrdom, canonization
-- name: Монгольська навала на Русь
-  url: https://uk.wikipedia.org/wiki/Монгольська_навала_на_Русь
-  type: reference
-  notes: Historical context of Mongol invasion
-- name: Батий (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Батий
-  type: reference
-  notes: Context for encounter with Khan
+  notes: Життєпис та канонізація
+- name: Сказання про вбивство в Орді
+  url: http://izbornyk.org.ua/
+  type: primary
+  notes: Оригінальне джерело
 immersion: 100% Ukrainian
 phase: C1-BIO

@@ -2,10 +2,10 @@
   "module": "milena-rudnytska",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:42:05.556963Z",
+  "last_audit": "2026-02-05T00:47:51.006006Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-02T13:16:34.807952Z",
+    "md": "2026-02-04T22:30:45.356173Z",
     "meta": "2026-02-02T23:23:00.209424Z",
     "activities": "2026-02-02T11:02:04.083356Z",
     "vocabulary": "2026-02-02T11:02:04.083174Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 5,
-      "message": "9/4000 (raw: 161) | engagement: 1/5 | pedagogy: 4 violations | immersion: 4.3% LOW (target 95-100% (biography)) | richness: 11% < 95% min (biography) - REWRITE needed"
+      "message": "9/4000 (raw: 161) | engagement: 1/5 | pedagogy: 3 violations | immersion: 4.3% LOW (target 95-100% (biography)) | richness: 11% < 95% min (biography) - REWRITE needed"
     },
     "activities": {
       "status": "fail",
@@ -41,7 +41,6 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "5 Critical Template Violations",
       "6 Outline Compliance Errors",
       "Missing required activity types: essay-response, reading"
     ],

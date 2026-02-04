@@ -1,8 +1,8 @@
 # Audit Report: M38 — semen-hulak-artemovskyy.md
 **Level:** C1-BIO | **Module:** M38 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
-**Naturalness:** None/10 (PENDING)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-04 11:41:36
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 00:47:22
 
 ## Configuration
 **Type:** C1-biography
@@ -20,77 +20,68 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | essay-response | Критичний аналіз: Сміх як зброя | 1 | 1 | ✅ |
-| 2 | comparative-study | Порівняння: Гулак-Артемовський vs Лисенко | 1 | 1 | ✅ |
-| 3 | true-false | Факти про Гулака-Артемовського | 8 | 5 | ✅ |
-| 4 | reading | Аналіз оперного нарису | 3 | 1 | ✅ |
-| 5 | reading | Дослідження першоджерела | 3 | 1 | ✅ |
-| 6 | essay-response | Аналітичне есе: Національний маніфест | 1 | 1 | ✅ |
+| 1 | reading | Аналіз «Запорожця за Дунаєм»: Музика і театр | 3 | 1 | ✅ |
+| 2 | reading | Гулак-Артемовський — зірка оперної сцени | 3 | 1 | ✅ |
+| 3 | essay-response | Есе: Перша національна опера | 1 | 1 | ✅ |
+| 4 | critical-analysis | Критичний аналіз: Образ Карася як національний архетип | 1 | 1 | ✅ |
+| 5 | comparative-study | Порівняльний аналіз: Гулак-Артемовський та Лисенко | 1 | 1 | ✅ |
+| 6 | authorial-intent | Аналіз творчого задуму: Дует Оксани та Андрія | 1 | 1 | ✅ |
+| 7 | quiz | Концептуальний чек | 5 | 5 | ✅ |
 
 **Summary:**
-- Total activities: 6 (target: 3-9) ✅
-- Unique types: 4 (minimum: 3) ✅
-- Priority types used: 3/6 (comparative-study, essay-response, reading) ✅
-- Required types used: 2/3 (essay-response, reading) ❌
+- Total activities: 7 (target: 3-9) ✅
+- Unique types: 6 (minimum: 3) ✅
+- Priority types used: 6/6 (authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading) ✅
+- Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in semen-hulak-artemovskyy.yaml: Schema validation error at key '4': {'type': 'reading', 'title': 'Дослідження першоджерела', 'resource': {'type': 'primary_source', 'url': 'https://www.youtube.com/watch?v=Xun6_X_vntM', 'title': 'С. Гулак-Артемовський: Дует Одарки та Карася (фрагмент)'}, 'tasks': ['Прослухайте дует та проаналізуйте мовні засоби комізму в діалозі.', 'Як музика підкреслює характери персонажів? Наведіть приклади змін темпу чи динаміки.', 'Які народні вислови ви почули у тексті дуету?']} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ❌ 2063/4000 (raw: 2267)
-- **Activities:** ✅ 6/3
+- **Words:** ✅ 5340/4000 (raw: 5483)
+- **Activities:** ✅ 7/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 4/3 types
+- **Unique_types:** ✅ 6/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/5
+- **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/24
+- **Vocab:** ⚠️ 15 < 24 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ✅ Content-heavy OK (6 activities)
-- **Immersion:** 🇺🇦 100.0% (target 95-100% (biography))
-- **Richness:** ✅ 100% (biography)
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (7 activities)
+- **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
+- **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 100% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 6 | 4 | 100% | 19% | 19.0% |
+| primary_sources | 8 | 4 | 100% | 19% | 19.0% |
 | engagement | 8 | 6 | 100% | 14% | 14.3% |
-| quotes | 12 | 3 | 100% | 14% | 14.3% |
-| cultural | 5 | 4 | 100% | 10% | 9.5% |
+| quotes | 15 | 3 | 100% | 14% | 14.3% |
+| cultural | 8 | 4 | 100% | 10% | 9.5% |
 | visual | 8 | 4 | 100% | 10% | 9.5% |
-| timeline_markers | 26 | 8 | 100% | 10% | 9.5% |
+| timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 1.00 | - | 100% | 5% | 4.8% |
+| variety | 0.94 | - | 94% | 5% | 4.5% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 7 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **100.0%** |
+| questions | 12 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 81 | Included in Core |
-| **Вступ** | ✅ | 210 | Included in Core |
-| **Життєпис** | ⚪️ | 495 | Skipped |
-| **Внесок** | ⚪️ | 260 | Skipped |
-| **Історичний контекст** | ✅ | 435 | Included in Core |
-| **Порівняльний аналіз** | ✅ | 71 | Included in Core |
-| **Критичне мислення** | ⚪️ | 79 | Skipped |
-| **Есе** | ⚪️ | 286 | Skipped |
-| **Спадщина** | ⚪️ | 76 | Skipped |
-| **Підсумок** | ✅ | 57 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 13 | Skipped |
+| **Intro/Narrative** | ✅ | 132 | Included in Core |
+| **Вступ — Творець першої української опери** | ✅ | 605 | Included in Core |
+| **Молодість та музична освіта** | ⚪️ | 760 | Skipped |
+| **Оперна кар'єра в Петербурзі** | ⚪️ | 676 | Skipped |
+| **Створення "Запорожця за Дунаєм"** | ⚪️ | 718 | Skipped |
+| **Останні роки** | ⚪️ | 676 | Skipped |
+| **Спадщина** | ⚪️ | 667 | Skipped |
+| **Історичний контекст** | ✅ | 526 | Included in Core |
+| **Підсумок** | ✅ | 390 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 190 | Skipped |

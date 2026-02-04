@@ -2,6 +2,8 @@
 
 Check and fix a complete module until all audit gates pass.
 
+> **🤝 COLLABORATION RULE:** Fix issues yourself. Ask the other agent for help (research, facts, validation) when stuck. Never guess or hallucinate - collaboration is faster than guessing wrong.
+
 ## Usage
 
 ```bash

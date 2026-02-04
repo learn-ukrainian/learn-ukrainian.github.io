@@ -1,8 +1,8 @@
 # Audit Report: M52 — nataliya-kobrynska.md
 **Level:** C1-BIO | **Module:** M52 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
-**Naturalness:** 1/10 (PENDING)
+**Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-04 11:41:44
+**Generated:** 2026-02-04 21:18:22
 
 ## Configuration
 **Type:** C1-biography
@@ -20,82 +20,73 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | essay-response | Критичний аналіз: Економіка і Свобода | 1 | 1 | ✅ |
-| 2 | comparative-study | Порівняння епох | 1 | 1 | ✅ |
-| 3 | reading | Аналіз новели | 3 | 1 | ✅ |
-| 4 | essay-response | Есе: Право бути людиною | 1 | 1 | ✅ |
+| 1 | reading | Читання: Маніфест "Першого вінка" | 3 | 1 | ✅ |
+| 2 | essay-response | Есе: Жінка і Нація | 1 | 1 | ✅ |
+| 3 | critical-analysis | Аналіз: Задля кусника хліба | 1 | 1 | ✅ |
+| 4 | quiz | Вікторина: Життя піонерки | 5 | 5 | ✅ |
+| 5 | true-false | Правда чи Міф: Життя Кобринської | 10 | 5 | ✅ |
+| 6 | comparative-study | Порівняння: Кобринська та Пчілка | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 4 (target: 3-9) ✅
-- Unique types: 3 (minimum: 3) ✅
-- Priority types used: 3/6 (comparative-study, essay-response, reading) ✅
+- Total activities: 6 (target: 3-9) ✅
+- Unique types: 6 (minimum: 3) ✅
+- Priority types used: 5/6 (comparative-study, critical-analysis, essay-response, quiz, reading) ✅
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in nataliya-kobrynska.yaml: Schema validation error at key '2': {'type': 'reading', 'title': 'Аналіз новели', 'resource': {'type': 'text', 'url': 'https://www.ukrlib.com.ua/books/printit.php?tid=1027', 'title': 'Наталія Кобринська: Задля кусника хліба'}, 'tasks': ['Як авторка зображує психологічний стан героїні?', 'Які соціальні умови змушують героїню діяти проти власної волі?', 'У чому полягає трагізм ситуації?']} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Останні роки' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-
-## Recommendation
-**📝 UPDATE** (severity 25/100)
-
-- 2 violations (minor)
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
-
 ## Gates
-- **Words:** ❌ 1907/4000 (raw: 2145)
-- **Activities:** ✅ 4/3
+- **Words:** ❌ 3527/4000 (raw: 3567)
+- **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 3/3 types
+- **Unique_types:** ✅ 6/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/5
+- **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 24 (soft target)
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Vocab:** ✅ 24/24
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ✅ Content-heavy OK (4 activities)
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
-- **Richness:** ✅ 97% (biography)
+- **Richness:** ❌ 73% < 95% min (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 97% (minimum: 95%)
+**Score:** 73% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 4 | 4 | 100% | 19% | 19.0% |
-| engagement | 6 | 6 | 100% | 14% | 14.3% |
-| quotes | 9 | 3 | 100% | 14% | 14.3% |
-| cultural | 3 | 4 | 75% | 10% | 7.1% |
+| primary_sources | 1 | 4 | 25% | 19% | 4.8% |
+| engagement | 5 | 6 | 83% | 14% | 11.9% |
+| quotes | 1 | 3 | 33% | 14% | 4.7% |
+| cultural | 8 | 4 | 100% | 10% | 9.5% |
 | visual | 7 | 4 | 100% | 10% | 9.5% |
-| timeline_markers | 27 | 8 | 100% | 10% | 9.5% |
+| timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 11 | 2 | 100% | 10% | 9.5% |
 | variety | 0.98 | - | 98% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 12 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **97.5%** |
+| questions | 9 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **73.6%** |
+
+### Dryness Flags & Fixes
+- ❌ **NO_QUOTES**
+  - FIX:
+    Add 2+ direct quotes from the subject. Use this format:
+    
+    > «[Exact quote from the person]»
+    > — *[Person name], [context/year]*
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 76 | Included in Core |
-| **Вступ** | ✅ | 129 | Included in Core |
-| **Життєпис** | ⚪️ | 679 | Skipped |
-| **Спадщина** | ⚪️ | 56 | Skipped |
-| **Внесок** | ⚪️ | 54 | Skipped |
-| **Історичний контекст** | ✅ | 433 | Included in Core |
-| **Порівняльний аналіз** | ✅ | 47 | Included in Core |
-| **Критичне мислення** | ⚪️ | 70 | Skipped |
-| **Есе** | ⚪️ | 38 | Skipped |
-| **Критерії оцінювання** | ⚪️ | 0 | Skipped |
-| **Зразок відповіді** | ⚪️ | 238 | Skipped |
-| **Підсумок** | ✅ | 75 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 12 | Skipped |
+| **Intro/Narrative** | ✅ | 39 | Included in Core |
+| **Вступ — Народження українського фемінізму** | ✅ | 388 | Included in Core |
+| **Дитинство та освіта (1855-1875)** | ⚪️ | 444 | Skipped |
+| **Шлюб та переломний момент (1875-1883)** | ⚪️ | 484 | Skipped |
+| **«Перший вінок» та жіночий рух (1884-1893)** | ⚪️ | 679 | Skipped |
+| **Літературна творчість** | ⚪️ | 848 | Skipped |
+| **Останні роки та спадщина (1893-1920)** | ⚪️ | 539 | Skipped |
+| **Summary** | ✅ | 106 | Included in Core |

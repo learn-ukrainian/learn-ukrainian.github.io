@@ -2,10 +2,10 @@
   "module": "ivan-mazepa",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:41:30.506261Z",
+  "last_audit": "2026-02-05T00:47:15.852645Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-02T23:08:04.673981Z",
+    "md": "2026-02-04T23:17:44.304404Z",
     "meta": "2026-02-02T23:22:59.960081Z",
     "activities": "2026-02-02T23:08:05.639852Z",
     "vocabulary": "2026-02-02T21:48:04.210123Z",

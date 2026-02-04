@@ -1,8 +1,8 @@
 # Audit Report: M51 — mariya-pavlova.md
 **Level:** C1-BIO | **Module:** M51 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
-**Naturalness:** 1/10 (PENDING)
+**Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-04 11:41:43
+**Generated:** 2026-02-05 00:47:29
 
 ## Configuration
 **Type:** C1-biography
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
 **Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** essay-response, reading
+**Required Types:** critical-analysis, essay-response, quiz, reading, true-false
 **Engagement:** ≥5 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥24 words
@@ -20,80 +20,67 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | critical-analysis | «Лінгвістичний аналіз наукового стилю» | 1 | 1 | ✅ |
-| 2 | critical-analysis | «Аналіз наукового методу Павлової» | 1 | 1 | ✅ |
-| 3 | essay-response | «Аналіз — Наука як інструмент емансипації» | 1 | 1 | ✅ |
-| 4 | comparative-study | «Павлова та Ковалевська — Дві зірки» | 1 | 1 | ✅ |
+| 1 | reading | Спогади: Вернадський про Павлову | 4 | 1 | ✅ |
+| 2 | essay-response | Есе: Наука як емансипація | 1 | 1 | ✅ |
+| 3 | critical-analysis | Аналіз: Метод Ковалевського-Павлової | 1 | 1 | ✅ |
+| 4 | quiz | Вікторина: Життя і праця | 5 | 5 | ✅ |
+| 5 | comparative-study | Порівняння: Павлова та Ковалевська | 1 | 1 | ✅ |
+| 6 | critical-analysis | Аналіз: Загадка Гіпаріона | 1 | 1 | ✅ |
+| 7 | reading | Читання: Спогади Віри Варсаноф'євої | 3 | 1 | ✅ |
+| 8 | true-false | Правда чи Міф: Біографія вченої | 10 | 5 | ✅ |
 
 **Summary:**
-- Total activities: 4 (target: 3-9) ✅
-- Unique types: 3 (minimum: 3) ✅
-- Priority types used: 3/6 (comparative-study, critical-analysis, essay-response) ✅
-- Required types used: 1/2 (essay-response) ❌
+- Total activities: 8 (target: 3-9) ✅
+- Unique types: 6 (minimum: 3) ✅
+- Priority types used: 5/6 (comparative-study, critical-analysis, essay-response, quiz, reading) ✅
+- Required types used: 5/5 (critical-analysis, essay-response, quiz, reading, true-false) ✅
 - Low density activities: 0
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Останні роки' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple headers contain 'Спадщина': Вплив на розвиток еволюціонізму, Спадщина
-  - FIX: RENAME one header to NOT contain 'Спадщина'. Example: 'Агіографічна спадщина' → 'Житійна творчість' (removes the duplicate word).
-
-## Recommendation
-**📝 UPDATE** (severity 25/100)
-
-- 2 violations (minor)
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
-
 ## Gates
-- **Words:** ❌ 2092/4000 (raw: 2389)
-- **Activities:** ✅ 4/3
+- **Words:** ✅ 4135/4000 (raw: 4174)
+- **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 3/3 types
+- **Unique_types:** ✅ 6/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/5
+- **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 24 (soft target)
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Vocab:** ✅ 26/24
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (4 activities)
-- **Immersion:** 🇺🇦 100.0% (target 95-100% (biography))
-- **Richness:** ✅ 97% (biography)
+- **Content_heavy:** ✅ Content-heavy OK (8 activities)
+- **Immersion:** 🇺🇦 99.4% (target 95-100% (biography))
+- **Richness:** ❌ 91% < 95% min (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 97% (minimum: 95%)
+**Score:** 91% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 6 | 4 | 100% | 19% | 19.0% |
-| engagement | 7 | 6 | 100% | 14% | 14.3% |
-| quotes | 7 | 3 | 100% | 14% | 14.3% |
-| cultural | 3 | 4 | 75% | 10% | 7.1% |
-| visual | 10 | 4 | 100% | 10% | 9.5% |
-| timeline_markers | 20 | 8 | 100% | 10% | 9.5% |
-| legacy | 15 | 2 | 100% | 10% | 9.5% |
+| primary_sources | 4 | 4 | 100% | 19% | 19.0% |
+| engagement | 8 | 6 | 100% | 14% | 14.3% |
+| quotes | 2 | 3 | 67% | 14% | 9.6% |
+| cultural | 4 | 4 | 100% | 10% | 9.5% |
+| visual | 9 | 4 | 100% | 10% | 9.5% |
+| timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
+| legacy | 13 | 2 | 100% | 10% | 9.5% |
 | variety | 0.97 | - | 97% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 7 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **97.5%** |
+| questions | 1 | 3 | 33% | 5% | 1.6% |
+| **TOTAL** | | | | | **92.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 77 | Included in Core |
-| **Вступ** | ✅ | 209 | Included in Core |
-| **Життєпис** | ⚪️ | 193 | Skipped |
-| **Внесок** | ⚪️ | 480 | Skipped |
-| **Спадщина** | ⚪️ | 73 | Skipped |
-| **Історичний контекст** | ✅ | 433 | Included in Core |
-| **Порівняльний аналіз** | ✅ | 215 | Included in Core |
-| **Есе** | ⚪️ | 46 | Skipped |
-| **Критерії оцінювання** | ⚪️ | 0 | Skipped |
-| **Зразок відповіді** | ⚪️ | 310 | Skipped |
-| **Підсумок** | ✅ | 56 | Included in Core |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **Потрібно більше практики?** | ⚪️ | 17 | Skipped |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Вступ — Жінка, що читала кістки** | ✅ | 380 | Included in Core |
+| **Ранні роки та освіта (1854-1880)** | ⚪️ | 800 | Skipped |
+| **Наукова кар'єра в Парижі (1880-1886)** | ⚪️ | 659 | Skipped |
+| **Московський період (1886-1920)** | ⚪️ | 924 | Skipped |
+| **Наукові досягнення** | ⚪️ | 639 | Skipped |
+| **Останні роки та спадщина (1920-1938)** | ⚪️ | 604 | Skipped |
+| **Підсумок** | ✅ | 129 | Included in Core |

@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M128 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-04 11:42:23
+**Generated:** 2026-02-05 00:48:08
 
 ## Configuration
 **Type:** C1-biography
@@ -37,20 +37,10 @@
 - **[YAML_SCHEMA_VIOLATION]** Schema error in vasyl-stus.yaml: Schema validation error at key '1': {'type': 'reading', 'title': 'Науковий нарис про «Палімпсести»', 'resource': {'type': 'article', 'url': 'https://stus.center/uk/texts/palimpsesty-vasylya-stusa-v-konteksti-evropeyskogo-modernizmu', 'title': '«Палімпсести» Стуса в контексті європейського модернізму'}, 'tasks': ['Чому збірка Стуса отримала назву «Палімпсести»? Яке символічне значення цього терміна?', "Проаналізуйте зв'язок поезії Стуса з ідеями європейського екзистенціалізму.", 'Які лінгвістичні засоби використовує поет для передачі стану відчуження та внутрішньої свободи?']} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Останні роки' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Спадщина' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Спадщина' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-
 ## Recommendation
-**📝 UPDATE** (severity 35/100)
+**📝 UPDATE** (severity 25/100)
 
-- 5 violations (moderate)
+- 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates

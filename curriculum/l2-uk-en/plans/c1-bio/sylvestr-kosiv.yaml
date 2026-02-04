@@ -4,105 +4,81 @@ sequence: 21
 slug: sylvestr-kosiv
 version: '2.0'
 title: 'Сильвестр Косів: Освітянин і будівничий'
+word_target: 4300
 content_outline:
 - section: Вступ — Митрополит бурхливої епохи
-  words: 457
+  words: 600
   points:
-  - Косів між церквою та державою
-  - Його роль у період Хмельниччини
-  - Значення для церковної історії
-- section: Освіта та кар'єра до митрополитства
-  words: 685
+  - Косів як наступник Могили
+  - Життя у вогні Хмельниччини
+  - Збереження духовної незалежності
+- section: Життєпис
+  words: 1600
   points:
-  - Походження та молодість
-  - Навчання в європейських університетах
-  - Викладацька діяльність
-  - Зв'язок із Петром Могилою
-- section: Митрополит Київський
-  words: 800
+  - Походження та освіта (Замойська академія)
+  - Співпраця з Петром Могилою
+  - Робота в Лаврській школі
+  - Обрання митрополитом 1647 р.
+- section: Історичний контекст
+  words: 600
   points:
-  - Обрання на кафедру 1647 року
-  - Церковна реформа та управління
-  - Розвиток освіти та друкарства
-  - Будівельні проекти
-- section: Церква і Хмельницький
-  words: 914
+  - Хмельниччина та церква
+  - Проблема юрисдикції (Константинополь чи Москва)
+- section: Внесок
+  words: 400
   points:
-  - Позиція церкви щодо повстання
-  - Відносини з гетьманом
-  - Переяславська рада 1654 року
-  - Церковний статус після Переяслава
-- section: Останні роки та суперечки
-  words: 800
+  - Розбудова Києво-Могилянського колегіуму
+  - "Патерикон" та літературна діяльність
+- section: Останні роки
+  words: 400
   points:
-  - Конфлікт із московським патріархатом
-  - Захист автономії Київської митрополії
-  - Смерть та обставини
-  - Спадщина в церковній традиції
-- section: Підсумок — Дипломат духу
-  words: 344
+  - Переяславська рада та відмова від присяги царю
+  - Дипломатичне балансування
+  - Смерть 1657 р.
+- section: Спадщина
+  words: 400
   points:
-  - Косів як будівничий церкви
-  - Його роль у збереженні автономії
-  - Актуальність його боротьби сьогодні
-word_target: 4000
-vocabulary_hints:
-  required:
-  - митрополит (metropolitan)
-  - кафедра (see/cathedra)
-  - автономія (autonomy)
-  - патріархат (patriarchate)
-  - друкарня (printing house)
-  - академія (academy)
-  - єпископат (episcopate)
-  - ставропігія (stauropegia)
-  - собор (council)
-  - автокефалія (autocephaly)
-  recommended:
-  - архімандрит (archimandrite)
-  - лавра (lavra)
-  - грамота (charter)
-  - синод (synod)
-  - церковнослов'янська (Church Slavonic)
-activity_hints:
-- type: reading
-  focus: Church documents from Kosiv's era
-  source: Adapted historical sources
-  items: 3 passages
-- type: essay-response
-  focus: How did Kosiv balance church autonomy and political realities?
-  word_target: 250
-  output: Analysis with specific examples
+  - Ідеолог "київського християнства"
+  - Збереження автономії церкви
+- section: Підсумок
+  words: 300
+  points:
+  - Косів як інтелектуальний щит нації
 focus: biography
-pedagogy: CBI
+pedagogy: seminar
 prerequisites:
-- c1-bio-08 (Iov Boretskyi - predecessor)
-- Understanding of 17th century geopolitics
+- c1-bio-23 (Петро Могила)
+- Знання контексту Хотинської війни
 connects_to:
-- c1-bio-10 (Bohdan Khmelnytskyi - secular counterpart)
-- c1-bio-11 (Yuriy Nemyrych - Treaty of Hadiach context)
-- c1-bio-98 (Ivan Ohienko - later autocephaly struggle)
+- c1-bio-20 (Богдан Хмельницький)
+- b2-hist hmelnychyna module
 objectives:
-- Проаналізувати дипломатичну стратегію Сильвестра Косіва
-- Зрозуміти роль православної церкви в подіях Хмельниччини
-- Вивчити лексику, пов'язану з церковною автономією та правом
+- Оцінити роль Косіва у збереженні автономії української церкви
+- Проаналізувати його літературну спадщину
+- Дослідити позицію митрополита під час Переяславської ради
 grammar:
-- Historical narrative register
-- Legal and ecclesiastical terminology
-- Rhetorical argumentation
+- Церковно-слов'янізми (обмежено)
+- Текст-аналіз полеміки
 module_type: biography
 sources:
 - name: Сильвестр Косів (Wikipedia UA)
   url: https://uk.wikipedia.org/wiki/Сильвестр_Косів
   type: primary
-  notes: Biography, metropolitanate, relations with Khmelnytskyi
-- name: Києво-Могилянська академія
-  url: https://uk.wikipedia.org/wiki/Києво-Могилянська_академія
-  type: reference
-  notes: Educational institution context
-- name: Повстання Хмельницького
-  url: https://uk.wikipedia.org/wiki/Повстання_Хмельницького
-  type: reference
-  notes: Historical context
+  notes: Біографія та діяльність
+- name: Патерикон Сильвестра Косіва
+  url: http://izbornyk.org.ua/
+  type: primary
+  notes: Літературна праця
 immersion: 100% Ukrainian
 phase: C1-BIO
+vocabulary_hints:
+  required:
+  - митрополит (metropolitan)
+  - Патерикон (Paterikon)
+  - присяга (oath)
+activity_hints:
+- type: reading
+  focus: Аналіз "Патерикону" та листів до царя
+  source: Primary sources (adapted)
+- type: essay-response
+  focus: Церква як гарант суверенітету

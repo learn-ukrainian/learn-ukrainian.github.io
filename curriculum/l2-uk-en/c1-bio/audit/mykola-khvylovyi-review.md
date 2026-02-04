@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M96 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-04 11:42:07
+**Generated:** 2026-02-05 00:47:52
 
 ## Configuration
 **Type:** C1-biography
@@ -38,18 +38,10 @@
 - **[YAML_SCHEMA_VIOLATION]** Schema error in mykola-khvylovyi.yaml: Schema validation error at key '5': {'type': 'reading', 'title': 'Новела «Я (Романтика)»', 'resource': {'type': 'primary_source', 'url': 'https://ukrlib.com.ua/', 'title': 'Микола Хвильовий: Я (Романтика)'}, 'tasks': ['Знайдіть у тексті опис внутрішнього конфлікту чекіста.', 'Як автор використовує слово "запах"?', 'Які символи революції присутні в новелі?']} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Останні роки' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-
 ## Recommendation
-**📝 UPDATE** (severity 35/100)
+**📝 UPDATE** (severity 25/100)
 
-- 4 violations (moderate)
+- 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates

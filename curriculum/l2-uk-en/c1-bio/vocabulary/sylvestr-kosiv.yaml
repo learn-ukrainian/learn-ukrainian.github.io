@@ -1,0 +1,150 @@
+- lemma: митрополит
+  ipa: /mɪtroˈpɔlɪt/
+  translation: metropolitan
+  pos: noun
+  gender: m
+  note: глава церковної провінції
+- lemma: колегіум
+  ipa: /kɔˈlɛɦʲijum/
+  translation: collegium
+  pos: noun
+  gender: m
+  note: навчальний заклад
+- lemma: ієрарх
+  ipa: /ijeˈrɑrx/
+  translation: hierarch
+  pos: noun
+  gender: m
+  note: вищий священнослужитель
+- lemma: присяга
+  ipa: /prɪˈsʲɑɦɐ/
+  translation: oath
+  pos: noun
+  gender: f
+  note: урочиста обіцянка
+- lemma: суверенітет
+  ipa: /suʋerenʲiˈtɛt/
+  translation: sovereignty
+  pos: noun
+  gender: m
+  note: незалежність влади
+- lemma: патерик
+  ipa: /pɐteˈrɪk/
+  translation: paterikon
+  pos: noun
+  gender: m
+  note: збірка житій святих
+- lemma: полеміка
+  ipa: /poˈlɛmʲikɐ/
+  translation: polemics
+  pos: noun
+  gender: f
+  note: гостра дискусія
+- lemma: автономія
+  ipa: /ɐu̯toˈnɔmʲijɐ/
+  translation: autonomy
+  pos: noun
+  gender: f
+  note: самоврядування
+- lemma: дипломатія
+  ipa: /dɪplɔˈmɑtʲijɐ/
+  translation: diplomacy
+  pos: noun
+  gender: f
+  note: мистецтво переговорів
+- lemma: екзарх
+  ipa: /ekˈzɑrx/
+  translation: exarch
+  pos: noun
+  gender: m
+  note: намісник патріарха
+- lemma: кафедра
+  ipa: /kɐˈfɛdrɐ/
+  translation: cathedra / see
+  pos: noun
+  gender: f
+  note: місце служіння єпископа
+- lemma: префект
+  ipa: /preˈfɛkt/
+  translation: prefect
+  pos: noun
+  gender: m
+  note: керівник навчання
+- lemma: пакт
+  ipa: /pɑkt/
+  translation: pact
+  pos: noun
+  gender: m
+  note: договір
+- lemma: юрисдикція
+  ipa: /jurɪzˈdɪkt͡sʲijɐ/
+  translation: jurisdiction
+  pos: noun
+  gender: f
+  note: сфера повноважень
+- lemma: канон
+  ipa: /kɐˈnɔn/
+  translation: canon
+  pos: noun
+  gender: m
+  note: церковне правило
+- lemma: візантійство
+  ipa: /vʲizɐnˈtʲijstwo/
+  translation: Byzantinism
+  pos: noun
+  gender: n
+  note: східна церковна традиція
+- lemma: універсал
+  ipa: /unʲiʋerˈsɑl/
+  translation: universal (decree)
+  pos: noun
+  gender: m
+  note: гетьманський указ
+- lemma: схизма
+  ipa: /ˈsxɪzmɐ/
+  translation: schism
+  pos: noun
+  gender: f
+  note: розкол церкви
+- lemma: легітимність
+  ipa: /leɦʲitˈɪmnʲisʲtʲ/
+  translation: legitimacy
+  pos: noun
+  gender: f
+  note: законність
+- lemma: меценат
+  ipa: /met͡sɛˈnɑt/
+  translation: patron
+  pos: noun
+  gender: m
+  note: покровитель мистецтв
+- lemma: агіографія
+  ipa: /ɐɦioˈɦrɑfʲijɐ/
+  translation: hagiography
+  pos: noun
+  gender: f
+  note: житія святих
+- lemma: риторика
+  ipa: /rɪˈtɔrɪkɐ/
+  translation: rhetoric
+  pos: noun
+  gender: f
+  note: мистецтво красномовства
+- lemma: панегірик
+  ipa: /pɐneˈɦʲirɪk/
+  translation: panegyric
+  pos: noun
+  gender: m
+  note: хвалебна промова
+- lemma: конфлікт
+  ipa: /kɔnˈflʲikt/
+  translation: conflict
+  pos: noun
+  gender: m
+  note: зіткнення інтересів
+- lemma: нейтралітет
+  ipa: /nejtrɐlʲiˈtɛt/
+  translation: neutrality
+  pos: noun
+  gender: m
+  note: неучасть у конфлікті

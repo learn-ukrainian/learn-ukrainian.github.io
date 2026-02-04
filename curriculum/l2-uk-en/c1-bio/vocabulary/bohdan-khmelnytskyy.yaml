@@ -1,121 +1,150 @@
-items:
-- id: hetman
-  text: гетьман
+- lemma: гетьман
+  ipa: /ˈɦɛtʲmɐn/
   translation: hetman
-  ipa: "ˈɦɛtʲmɑn"
   pos: noun
-- id: povstannia
-  text: повстання
-  translation: uprising
-  ipa: "pɔu̯ˈstɑnʲːɑ"
+  gender: m
+  note: глава козацької держави
+- lemma: повстання
+  ipa: /pɔu̯sˈtɑnnʲɐ/
+  translation: uprising / rebellion
   pos: noun
-- id: kozatstvo
-  text: козацтво
-  translation: Cossackdom
-  ipa: "kɔˈzɑt͡stwɔ"
+  gender: n
+  note: збройний виступ
+- lemma: державотворення
+  ipa: /derʒɐʋɔˈtʋɔrennʲɐ/
+  translation: state-building
   pos: noun
-- id: reiestr
-  text: реєстр
-  translation: register
-  ipa: "rɛˈjɛstr"
-  pos: noun
-- id: sich
-  text: Січ
-  translation: Sich
-  ipa: "sʲit͡ʃ"
-  pos: noun
-- id: rada
-  text: рада
-  translation: council
-  ipa: "ˈrɑdɑ"
-  pos: noun
-- id: dohovir
-  text: договір
-  translation: treaty
-  ipa: "ˈdɔɦɔʋir"
-  pos: noun
-- id: polkovnyk
-  text: полковник
-  translation: colonel
-  ipa: "pɔlˈkɔu̯nɪk"
-  pos: noun
-- id: universal
-  text: універсал
+  gender: n
+  note: процес створення держави
+- lemma: універсал
+  ipa: /unʲiʋerˈsɑl/
   translation: universal (decree)
-  ipa: "uniʋɛrˈsɑl"
   pos: noun
-- id: ruina
-  text: Руїна
-  translation: Ruin (historical period)
-  ipa: "ruˈjinɑ"
+  gender: m
+  note: гетьманський указ
+- lemma: булава
+  ipa: /buˈlɑʋɐ/
+  translation: bulava (mace)
   pos: noun
-- id: bulava
-  text: булава
-  translation: mace (symbol of power)
-  ipa: "bʊlɑˈʋɑ"
+  gender: f
+  note: символ гетьманської влади
+- lemma: реєстр
+  ipa: /reˈjɛstr/
+  translation: register
   pos: noun
-- id: bunchuk
-  text: бунчук
-  translation: hhorsetail standard
-  ipa: "bʊnˈt͡ʃuk"
+  gender: m
+  note: список козаків
+- lemma: шляхта
+  ipa: /ˈʃlʲɐxtɐ/
+  translation: nobility
   pos: noun
-- id: osavul
-  text: осавул
-  translation: osavul (officer)
-  ipa: "ɔsɑˈʋul"
+  gender: f
+  note: привілейований стан
+- lemma: автономія
+  ipa: /ɐu̯toˈnɔmʲijɐ/
+  translation: autonomy
   pos: noun
-- id: mahnat
-  text: магнат
-  translation: magnate
-  ipa: "mɑɦˈnɑt"
-  pos: noun
-- id: shliakhta
-  text: шляхта
-  translation: nobility (szlachta)
-  ipa: "ˈʃlʲɑxtɑ"
-  pos: noun
-- id: derzhavotvorets
-  text: державотворець
-  translation: state-builder
-  ipa: "dɛrʒɑʋɔˈtʋɔrɛt͡sʲ"
-  pos: noun
-- id: subiektnist
-  text: суб'єктність
-  translation: subjecthood / agency
-  ipa: "sʊbˈjɛktnʲisʲtʲ"
-  pos: noun
-- id: lehitymnist
-  text: легітимність
-  translation: legitimacy
-  ipa: "lɛɦitɪmˈnʲisʲtʲ"
-  pos: noun
-- id: protektorat
-  text: протекторат
+  gender: f
+  note: самоврядування
+- lemma: протекторат
+  ipa: /protektoˈrɑt/
   translation: protectorate
-  ipa: "prɔtɛktɔˈrɑt"
   pos: noun
-- id: zrada
-  text: зрада
-  translation: betrayal / treason
-  ipa: "ˈzrɑdɑ"
+  gender: m
+  note: форма залежності
+- lemma: дипломатія
+  ipa: /dɪplɔˈmɑtʲijɐ/
+  translation: diplomacy
   pos: noun
-- id: starshyna
-  text: старшина
-  translation: officer corps / elders
-  ipa: "stɑrʃɪˈnɑ"
+  gender: f
+  note: зовнішня політика
+- lemma: союз
+  ipa: /soˈjuz/
+  translation: alliance
   pos: noun
-- id: maibutnie
-  text: майбутнє
-  translation: future
-  ipa: "mɑi̯ˈbutnʲɛ"
+  gender: m
+  note: об'єднання
+- lemma: перемога
+  ipa: /perɛˈmɔɦɐ/
+  translation: victory
   pos: noun
-- id: spadshchyna
-  text: спадщина
-  translation: legacy / heritage
-  ipa: "ˈspɑdʃt͡ʃɪnɑ"
+  gender: f
+  note: успіх у війні
+- lemma: поразка
+  ipa: /poˈrɑzkɐ/
+  translation: defeat
   pos: noun
-- id: vyzvolytel
-  text: визволитель
-  translation: liberator
-  ipa: "ʋɪzʋɔˈlɪtɛlʲ"
+  gender: f
+  note: невдача у війні
+- lemma: легітимність
+  ipa: /leɦʲitˈɪmnʲisʲtʲ/
+  translation: legitimacy
   pos: noun
+  gender: f
+  note: законність влади
+- lemma: суверенітет
+  ipa: /suʋerenʲiˈtɛt/
+  translation: sovereignty
+  pos: noun
+  gender: m
+  note: незалежність
+- lemma: старшина
+  ipa: /stɐrʃɪˈnɑ/
+  translation: starshyna (officers)
+  pos: noun
+  gender: f
+  note: козацька еліта
+- lemma: полковник
+  ipa: /pɔlˈkɔu̯nɪk/
+  translation: colonel
+  pos: noun
+  gender: m
+  note: командир полку
+- lemma: сотник
+  ipa: /ˈsɔtnɪk/
+  translation: captain
+  pos: noun
+  gender: m
+  note: командир сотні
+- lemma: хутір
+  ipa: /ˈxutʲir/
+  translation: khutir (farmstead)
+  pos: noun
+  gender: m
+  note: відокремлене господарство
+- lemma: суб'єктність
+  ipa: /subjekˈtnʲisʲtʲ/
+  translation: agency
+  pos: noun
+  gender: f
+  note: здатність діяти самостійно
+- lemma: нація
+  ipa: /ˈnɑt͡sʲijɐ/
+  translation: nation
+  pos: noun
+  gender: f
+  note: спільнота людей
+- lemma: воля
+  ipa: /ˈʋɔlʲɐ/
+  translation: freedom / will
+  pos: noun
+  gender: f
+  note: свобода
+- lemma: революція
+  ipa: /reʋoˈlʲut͡sʲijɐ/
+  translation: revolution
+  pos: noun
+  gender: f
+  note: докорінна зміна
+- lemma: трагедія
+  ipa: /trɐˈɦɛdʲijɐ/
+  translation: tragedy
+  pos: noun
+  gender: f
+  note: драматична подія
+- lemma: міф
+  ipa: /mʲif/
+  translation: myth
+  pos: noun
+  gender: m
+  note: легендарне уявлення

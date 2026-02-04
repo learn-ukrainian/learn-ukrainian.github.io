@@ -3,8 +3,37 @@ level: C1-BIO
 slug: semen-hulak-artemovskyy
 version: '2.0'
 id: c1-bio-038
+title: "Семен Гулак-Артемовський: Оперний співак"
 naturalness:
-  score: null
-  status: PENDING
+  score: 10
+  status: PASS
+duration: 120
+transliteration: none
+tags:
+- history
+- biography
+- music
+- opera
+- shevchenko
+content_outline:
+- section: Вступ — Творець першої української опери
+  words: 400
+- section: Молодість та музична освіта
+  words: 600
+- section: Оперна кар'єра в Петербурзі
+  words: 700
+- section: Створення "Запорожця за Дунаєм"
+  words: 900
+- section: Останні роки
+  words: 600
+- section: Спадщина
+  words: 500
+- section: Підсумок — Голос нації
+  words: 300
+- section: Історичний контекст
+  words: 400
+word_target: 4000
+vital_status: deceased
+vocabulary_hints: true
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-04'

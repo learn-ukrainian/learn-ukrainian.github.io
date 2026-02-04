@@ -3,8 +3,57 @@ level: C1-BIO
 slug: hryhoriy-skovoroda
 version: '2.0'
 id: c1-bio-033
+title: "Григорій Сковорода: Мандрівний філософ"
 naturalness:
-  score: null
-  status: PENDING
+  score: 10
+  status: PASS
+duration: 120
+transliteration: none
+tags:
+- history
+- biography
+- philosophy
+- literature
+- education
+content_outline:
+- section: Вступ — Український Сократ
+  words: 600
+  points:
+  - Сковорода як символ духовної свободи
+  - Філософія серця
+- section: Життєпис
+  words: 1600
+  points:
+  - Академічне навчання
+  - Європейська одіссея
+  - Конфлікт із системою
+  - Роки мандрів
+- section: Історичний контекст
+  words: 600
+  points:
+  - Українське Просвітництво
+  - Ліквідація автономії
+- section: Внесок
+  words: 400
+  points:
+  - Сродна праця
+  - Три світи
+  - Байки харківські
+- section: Останні роки
+  words: 400
+  points:
+  - Передчуття смерті
+  - Могила в Сковородинівці
+- section: Спадщина
+  words: 400
+  points:
+  - Вплив на ідентичність
+  - Сучасна актуальність
+- section: Підсумок
+  words: 300
+  points:
+  - Пророк внутрішньої незалежності
+word_target: 4300
+vital_status: deceased
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-05'

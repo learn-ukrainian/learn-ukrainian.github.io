@@ -1,9 +1,9 @@
-module: c1-bio-019
+module: c1-bio-018
 level: C1-BIO
 slug: meletii-smotrytskyi
 version: '2.0'
-id: c1-bio-019
-title: "Мелетій Смотрицький: Архітектор слов'янської граматики"
+id: c1-bio-018
+title: "Мелетій Смотрицький: Творець граматики"
 naturalness:
   score: 10
   status: PASS
@@ -12,25 +12,46 @@ transliteration: none
 tags:
 - history
 - biography
-- literature
-- education
-- linguistics
+- language
+- religion
+- baroque
 content_outline:
-- section: Вступ — Голос плачучої церкви
+- section: Вступ — Інтелектуальний титан доби бароко
   words: 600
+  points:
+  - Смотрицький як реформатор мови
+  - Роль у релігійній полеміці
 - section: Життєпис
   words: 1600
+  points:
+  - Походження та освіта в Європі
+  - Викладацька діяльність
+  - Зміна конфесії
 - section: Історичний контекст
   words: 600
+  points:
+  - Релігійна боротьба після Берестейської унії
+  - Стан церковнослов'янської мови
 - section: Внесок
   words: 400
+  points:
+  - Граматика словенська 1619 р.
+  - Унормування правопису
 - section: Останні роки
   words: 400
+  points:
+  - Служба в уніатській церкві
+  - Смерть в Дермані
 - section: Спадщина
   words: 400
-- section: Підсумок — Мова як фортеця
+  points:
+  - Вплив на слов'янські мови
+  - Ідеолог освіти
+- section: Підсумок
   words: 300
+  points:
+  - Постать на зламі культур
 word_target: 4300
 vital_status: deceased
 build:
-  last_modified: '2026-02-04'
+  last_modified: '2026-02-05'

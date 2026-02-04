@@ -1,5 +1,5 @@
 ---
-module: c1-bio-022
+module: c1-bio-027
 title: "Іван Мазепа: Гетьман-Меценат і Європейський Вибір"
 phase: "C1.3 Biographies"
 pedagogy: "CBI"

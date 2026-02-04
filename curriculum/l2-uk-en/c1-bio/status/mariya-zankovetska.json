@@ -2,50 +2,46 @@
   "module": "mariya-zankovetska",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:41:42.980446Z",
+  "last_audit": "2026-02-05T00:47:29.048306Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.348579Z",
-    "meta": "2026-02-02T23:23:00.055737Z",
-    "activities": "2026-01-27T15:34:56.074899Z",
-    "vocabulary": null,
+    "md": "2026-02-04T22:30:45.354325Z",
+    "meta": "2026-02-04T21:51:18.136300Z",
+    "activities": "2026-02-04T20:50:56.219932Z",
+    "vocabulary": "2026-02-04T20:46:22.197132Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "2002/4000 (raw: 2277) | pedagogy: 1 violations"
+      "violations": 1,
+      "message": "4354/4000 (raw: 4391) | richness: 88% < 95% min (biography)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "8/3"
+      "message": "7/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 24 (soft target)"
+      "message": "27/24"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1/10 (PENDING) - Naturalness check required"
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
     }
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [
-      "2 Critical Template Violations",
-      "6 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
-    ],
-    "pass_count": 1,
-    "fail_count": 3
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 1
   }
 }

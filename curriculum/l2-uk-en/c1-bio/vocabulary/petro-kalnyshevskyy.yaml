@@ -1,0 +1,142 @@
+- lemma: кошовий
+  ipa: /koʃoˈʋɪi̯/
+  translation: koshovyi (ataman)
+  pos: noun
+  gender: m
+  note: лідер коша
+- lemma: каземат
+  ipa: /kɐzeˈmɑt/
+  translation: casemate / dungeon
+  pos: noun
+  gender: m
+  note: місце ув'язнення
+- lemma: паланка
+  ipa: /pɐˈlɑnkɐ/
+  translation: palanka
+  pos: noun
+  gender: f
+  note: адміністративний округ Січі
+- lemma: зимівник
+  ipa: /zɪˈmʲiu̯nɪk/
+  translation: zimivnyk
+  pos: noun
+  gender: m
+  note: козацький хутор
+- lemma: меценат
+  ipa: /met͡seˈnɑt/
+  translation: patron of arts
+  pos: noun
+  gender: m
+  note: той, хто фінансує культуру
+- lemma: канонізація
+  ipa: /kɐnonʲizˈɑt͡sʲijɐ/
+  translation: canonization
+  pos: noun
+  gender: f
+  note: причислення до лику святих
+- lemma: підступність
+  ipa: /pʲidˈstupnʲistʲ/
+  translation: treachery / deceit
+  pos: noun
+  gender: f
+  note: прихована зрада
+- lemma: самопожертва
+  ipa: /sɐmopoˈʒɛrtʋɐ/
+  translation: self-sacrifice
+  pos: noun
+  gender: f
+  note: жертва власними інтересами
+- lemma: незламність
+  ipa: /neˈzlɑmnʲistʲ/
+  translation: resilience / steadfastness
+  pos: noun
+  gender: f
+  note: твердість духу
+- lemma: деспотія
+  ipa: /despoˈtʲijɐ/
+  translation: despotism
+  pos: noun
+  gender: f
+  note: необмежена влада тирана
+- lemma: суб'єктність
+  ipa: /subjekˈtnʲistʲ/
+  translation: agency / subjectivity
+  pos: noun
+  gender: f
+  note: здатність бути дієвою особою
+- lemma: анахронізм
+  ipa: /ɐnɐxroˈnʲizm/
+  translation: anachronism
+  pos: noun
+  gender: m
+  note: пережиток минулого
+- lemma: латифундія
+  ipa: /lɐtɪˈfundʲijɐ/
+  translation: latifundium
+  pos: noun
+  gender: f
+  note: велике земельне володіння
+- lemma: схимонах
+  ipa: /sxɪmoˈnɑx/
+  translation: schema-monk
+  pos: noun
+  gender: m
+  note: монах вищого ступеня
+- lemma: джура
+  ipa: /ˈdʒurɐ/
+  translation: dzhura (cossack apprentice)
+  pos: noun
+  gender: m
+  note: молодий зброєносець
+- lemma: писар
+  ipa: [ˈpɪsɐr]
+  translation: scribe / clerk
+  pos: noun
+  gender: m
+  note: військовий писар
+- lemma: праведний
+  ipa: /ˈprɑʋednɪi̯/
+  translation: righteous
+  pos: adj
+  note: святий у світі
+- lemma: капітуляція
+  ipa: /kɐpʲitulʲˈɑt͡sʲijɐ/
+  translation: capitulation
+  pos: noun
+  gender: f
+  note: припинення опору
+- lemma: кріпацтво
+  ipa: /krʲiˈpɑt͡stʋo/
+  translation: serfdom
+  pos: noun
+  gender: n
+  note: особиста залежність селян
+- lemma: буфер
+  ipa: /ˈbufɛr/
+  translation: buffer
+  pos: noun
+  gender: m
+  note: засіб пом'якшення зіткнення
+- lemma: осаджувати
+  ipa: /osˈɑdʒuʋɐtɪ/
+  translation: to settle / to found
+  pos: verb
+  note: заселяти вільні землі
+- lemma: протекторат
+  ipa: /protektoˈrɑt/
+  translation: protectorate
+  pos: noun
+  gender: m
+  note: форма міжнародної залежності
+- lemma: стоїцизм
+  ipa: /stojiˈt͡sɪzm/
+  translation: stoicism
+  pos: noun
+  gender: m
+  note: стійкість перед стражданнями
+- lemma: тяглість
+  ipa: /ˈtʲɑɦlʲisʲtʲ/
+  translation: continuity
+  pos: noun
+  gender: f
+  note: неперервність традиції

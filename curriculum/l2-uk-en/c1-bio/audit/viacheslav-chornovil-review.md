@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M127 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-04 11:42:23
+**Generated:** 2026-02-05 00:48:07
 
 ## Configuration
 **Type:** C1-biography
@@ -37,20 +37,10 @@
 - **[YAML_SCHEMA_VIOLATION]** Schema error in viacheslav-chornovil.yaml: Schema validation error at key '1': {'type': 'reading', 'title': 'Науковий нарис про дисидентський рух', 'resource': {'type': 'article', 'url': 'https://history.vn.ua/pidruchniki/ukraine-history-11-class-vlasov-2019-standard-level/16.php', 'title': "Дисидентський рух: В'ячеслав Чорновіл та «Український вісник»"}, 'tasks': ['Яку роль відіграв часопис «Український вісник» у прориві інформаційної блокади?', 'Проаналізуйте лексику, що описує судові процеси над дисидентами.', 'Як історики оцінюють внесок Чорновола у перехід від правозахисної до політичної боротьби?']} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Останні роки' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Спадщина' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Спадщина' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-
 ## Recommendation
-**📝 UPDATE** (severity 35/100)
+**📝 UPDATE** (severity 25/100)
 
-- 5 violations (moderate)
+- 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates

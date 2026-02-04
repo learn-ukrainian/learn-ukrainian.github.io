@@ -2,10 +2,10 @@
   "module": "nataliia-polonska-vasylenko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:41:59.941452Z",
+  "last_audit": "2026-02-05T00:47:45.502472Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-17T21:45:15.851828Z",
+    "md": "2026-02-04T22:30:45.348375Z",
     "meta": "2026-02-02T23:23:00.167223Z",
     "activities": "2026-01-27T15:34:56.364769Z",
     "vocabulary": null,
@@ -41,7 +41,6 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "3 Critical Template Violations",
       "6 Outline Compliance Errors",
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],

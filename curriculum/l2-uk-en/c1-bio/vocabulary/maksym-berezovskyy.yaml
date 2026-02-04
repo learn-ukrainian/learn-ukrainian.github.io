@@ -1,0 +1,143 @@
+- lemma: капельмейстер
+  ipa: /kɐpelʲˈmɛi̯ster/
+  translation: chapelmaster
+  pos: noun
+  gender: m
+  note: диригент хору
+- lemma: контрапункт
+  ipa: /kontrɐˈpunkt/
+  translation: counterpoint
+  pos: noun
+  gender: m
+  note: мистецтво поєднання голосів
+- lemma: партесний спів
+  ipa: /pɐrˈtɛsnɪi̯ sʲpʲiu̯/
+  translation: partes singing
+  pos: noun
+  gender: m
+  note: українське багатоголосся
+- lemma: класицизм
+  ipa: /klɐsɪˈt͡sɪzm/
+  translation: classicism
+  pos: noun
+  gender: m
+  note: художній стиль
+- lemma: психологізм
+  ipa: /psɪxoloˈɦʲizm/
+  translation: psychologism
+  pos: noun
+  gender: m
+  note: глибина внутрішнього світу
+- lemma: академік
+  ipa: /ɐkɐˈdɛmʲik/
+  translation: academician
+  pos: noun
+  gender: m
+  note: член наукової установи
+- lemma: колоніальний
+  ipa: /kolonʲiˈɑlʲnɪi̯/
+  translation: colonial
+  pos: adj
+  note: пов'язаний з пануванням імперії
+- lemma: апропріація
+  ipa: /ɐproprʲiˈɑt͡sʲijɐ/
+  translation: appropriation
+  pos: noun
+  gender: f
+  note: привласнення культурних надбань
+- lemma: секуляризація
+  ipa: /sekulʲɐrɪˈzɑt͡sʲijɐ/
+  translation: secularization
+  pos: noun
+  gender: f
+  note: звільнення від церковного впливу
+- lemma: ідентичність
+  ipa: /identˈɪt͡ʃnʲistʲ/
+  translation: identity
+  pos: noun
+  gender: f
+  note: усвідомлення себе
+- lemma: прем'єра
+  ipa: /premˈjɛrɐ/
+  translation: premiere
+  pos: noun
+  gender: f
+  note: перший показ вистави
+- lemma: спадщина
+  ipa: /ˈspɑdʃt͡ʃɪnɐ/
+  translation: legacy / heritage
+  pos: noun
+  gender: f
+  note: те, що залишилося від предків
+- lemma: мелодика
+  ipa: /meloˈdɪkɐ/
+  translation: melody
+  pos: noun
+  gender: f
+  note: сукупність музичних звуків
+- lemma: схоластика
+  ipa: /sxolˈɑstɪkɐ/
+  translation: scholasticism
+  pos: noun
+  gender: f
+  note: формальна вченість
+- lemma: уніфікація
+  ipa: /unʲifʲikˈɑt͡sʲijɐ/
+  translation: unification
+  pos: noun
+  gender: f
+  note: зведення до одного зразка
+- lemma: еміграція
+  ipa: /emʲiˈɦrɑt͡sʲijɐ/
+  translation: emigration
+  pos: noun
+  gender: f
+  note: виїзд в іншу країну
+- lemma: генокод
+  ipa: /ɦenoˈkɔd/
+  translation: genetic code
+  pos: noun
+  gender: m
+  note: основа ідентичності
+- lemma: камерна музика
+  ipa: /ˈkɐmɛrnɐ ˈmuzɪkɐ/
+  translation: chamber music
+  pos: noun
+  gender: f
+  note: музика для невеликого складу
+- lemma: соната
+  ipa: /soˈnɑtɐ/
+  translation: sonata
+  pos: noun
+  gender: f
+  note: музичний жанр
+- lemma: хорист
+  ipa: /xorˈɪst/
+  translation: chorister
+  pos: noun
+  gender: m
+  note: співак хору
+- lemma: суверенітет
+  ipa: /suʋerenʲiˈtɛt/
+  translation: sovereignty
+  pos: noun
+  gender: m
+  note: повна незалежність
+- lemma: аскеза
+  ipa: /ɐsˈkɛzɐ/
+  translation: asceticism
+  pos: noun
+  gender: f
+  note: самообмеження
+- lemma: просвітництво
+  ipa: /proˈsʲʋʲitnɪt͡stʋo/
+  translation: Enlightenment
+  pos: noun
+  gender: n
+  note: культурний рух XVIII ст.
+- lemma: реквієм
+  ipa: /rɛkˈʋʲijem/
+  translation: requiem
+  pos: noun
+  gender: m
+  note: заупокійна музика

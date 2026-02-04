@@ -1,0 +1,144 @@
+- lemma: канцлер
+  ipa: /kɐnˈt͡slɛr/
+  translation: chancellor
+  pos: noun
+  gender: m
+  note: вищий урядовець
+- lemma: трактат
+  ipa: /trɐkˈtɑt/
+  translation: treatise
+  pos: noun
+  gender: m
+  note: наукова праця
+- lemma: протестантизм
+  ipa: /protestɐnˈtɪzm/
+  translation: Protestantism
+  pos: noun
+  gender: m
+  note: напрям у християнстві
+- lemma: аріанин
+  ipa: /ɐrʲiˈɑnɪn/
+  translation: Arian
+  pos: noun
+  gender: m
+  note: послідовник аріанства
+- lemma: федерація
+  ipa: /fedeˈrɑt͡sʲijɐ/
+  translation: federation
+  pos: noun
+  gender: f
+  note: союз держав
+- lemma: республіка
+  ipa: /resˈpublʲikɐ/
+  translation: republic
+  pos: noun
+  gender: f
+  note: форма правління
+- lemma: сенат
+  ipa: /seˈnɑt/
+  translation: senate
+  pos: noun
+  gender: m
+  note: вища рада
+- lemma: унія
+  ipa: /ˈunʲijɐ/
+  translation: union
+  pos: noun
+  gender: f
+  note: союз (Гадяцька)
+- lemma: дипломатія
+  ipa: /dɪplɔˈmɑtʲijɐ/
+  translation: diplomacy
+  pos: noun
+  gender: f
+  note: мистецтво переговорів
+- lemma: шляхта
+  ipa: /ˈʃlʲɐxtɐ/
+  translation: nobility
+  pos: noun
+  gender: f
+  note: привілейований стан
+- lemma: магнат
+  ipa: /mɐɦˈnɑt/
+  translation: magnate
+  pos: noun
+  gender: m
+  note: великий землевласник
+- lemma: освіта
+  ipa: /osˈʋʲitɐ/
+  translation: education
+  pos: noun
+  gender: f
+  note: навчання
+- lemma: університет
+  ipa: /unʲiʋersiˈtɛt/
+  translation: university
+  pos: noun
+  gender: m
+  note: вищий навчальний заклад
+- lemma: толерантність
+  ipa: /toleˈrɑntnʲisʲtʲ/
+  translation: tolerance
+  pos: noun
+  gender: f
+  note: терпимість
+- lemma: війна
+  ipa: /ʋʲii̯ˈnɑ/
+  translation: war
+  pos: noun
+  gender: f
+  note: збройний конфлікт
+- lemma: мир
+  ipa: /mɪr/
+  translation: peace
+  pos: noun
+  gender: m
+  note: стан без війни
+- lemma: присяга
+  ipa: /prɪˈsʲɑɦɐ/
+  translation: oath
+  pos: noun
+  gender: f
+  note: клятва
+- lemma: полковник
+  ipa: /pɔlˈkɔu̯nɪk/
+  translation: colonel
+  pos: noun
+  gender: m
+  note: військовий чин
+- lemma: проєкт
+  ipa: /proˈjɛkt/
+  translation: project
+  pos: noun
+  gender: m
+  note: задум
+- lemma: візія
+  ipa: /ˈʋʲizʲijɐ/
+  translation: vision
+  pos: noun
+  gender: f
+  note: бачення майбутнього
+- lemma: суб'єктність
+  ipa: /suˈbjɛktnʲisʲtʲ/
+  translation: agency / subjectivity
+  pos: noun
+  gender: f
+  note: здатність діяти самостійно
+- lemma: конфедерація
+  ipa: /kɔnfederˈɑt͡sʲijɐ/
+  translation: confederation
+  pos: noun
+  gender: f
+  note: союз рівних держав
+- lemma: еліта
+  ipa: /eˈlʲitɐ/
+  translation: elite
+  pos: noun
+  gender: f
+  note: вища верства суспільства
+- lemma: інтелектуал
+  ipa: /intɛlektuˈɑl/
+  translation: intellectual
+  pos: noun
+  gender: m
+  note: людина розумової праці

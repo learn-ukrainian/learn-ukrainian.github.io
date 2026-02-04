@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M72 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-04 11:41:54
+**Generated:** 2026-02-05 00:47:40
 
 ## Configuration
 **Type:** C1-biography
@@ -39,14 +39,10 @@
 - **[YAML_SCHEMA_VIOLATION]** Schema error in oleksandr-hrekiv.yaml: Schema validation error at key 'id': 'c1-84-reading-2' does not match '^reading-[a-z0-9-]+$'
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Останні роки' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ❌ 2144/4000 (raw: 2380)

@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M74 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-04 11:41:55
+**Generated:** 2026-02-05 00:47:41
 
 ## Configuration
 **Type:** C1-biography
@@ -39,16 +39,10 @@
 - **[YAML_SCHEMA_VIOLATION]** Schema error in symon-petliura.yaml: Schema validation error at key '2': {'type': 'reading', 'title': '«Вбивство Петлюри: Паризький процес»', 'resource': {'type': 'article', 'url': 'https://www.radiosvoboda.org/a/symon-petliura-vbyvstvo-sud/27756854.html', 'title': '«Вбивство Петлюри: Як радянська пропаганда перетворила вбивцю на героя»'}, 'tasks': ['«Доведіть, що процес над Шварцбардом був спецоперацією спецслужб.»', '«Які аргументи захисту вбивці використовувалися в суді?»', '«Чому європейська преса зайняла антиукраїнську позицію?»']} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Останні роки' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple headers contain 'Спадщина': Спадщина, Спадщина Отамана
-  - FIX: RENAME one header to NOT contain 'Спадщина'. Example: 'Агіографічна спадщина' → 'Житійна творчість' (removes the duplicate word).
-
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 3 violations (minor)
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ❌ 2037/4000 (raw: 2264)

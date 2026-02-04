@@ -3,8 +3,37 @@ level: C1-BIO
 slug: hryhoriy-kvitka-osnovianenko
 version: '2.0'
 id: c1-bio-037
+title: "Григорій Квітка-Основ'яненко: Батько української прози"
 naturalness:
-  score: 1
-  status: PENDING
+  score: 10
+  status: PASS
+duration: 120
+transliteration: none
+tags:
+- history
+- biography
+- literature
+- prose
+- kharkiv
+content_outline:
+- section: Вступ — Перший прозаїк
+  words: 400
+- section: Походження та молодість
+  words: 600
+- section: Звернення до української мови
+  words: 600
+- section: Сентиментальна проза
+  words: 700
+- section: Сатирична проза
+  words: 700
+- section: Етнографічна спадщина
+  words: 500
+- section: Останні роки та значення
+  words: 500
+- section: Історичний контекст
+  words: 400
+word_target: 4000
+vital_status: deceased
+vocabulary_hints: true
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-04'

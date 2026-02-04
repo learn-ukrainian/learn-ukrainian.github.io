@@ -2,10 +2,10 @@
   "module": "mariya-matios",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:42:28.280857Z",
+  "last_audit": "2026-02-05T00:48:12.949536Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.348583Z",
+    "md": "2026-02-04T22:30:45.353699Z",
     "meta": "2026-02-02T23:23:00.365528Z",
     "activities": "2026-01-27T15:34:56.030325Z",
     "vocabulary": null,

@@ -3,8 +3,55 @@ level: C1-BIO
 slug: yuriy-nemyrych
 version: '2.0'
 id: c1-bio-026
+title: "Юрій Немирич: Дипломат і мислитель"
 naturalness:
-  score: null
-  status: PENDING
+  score: 10
+  status: PASS
+duration: 120
+transliteration: none
+tags:
+- history
+- biography
+- politics
+- diplomacy
+- philosophy
+content_outline:
+- section: Вступ — Архітектор нездійсненної держави
+  words: 600
+  points:
+  - Немирич як європейський інтелектуал
+  - Роль у Гадяцькій унії
+- section: Життєпис
+  words: 1600
+  points:
+  - Європейська освіта
+  - Перехід на бік козаків 1655 р.
+  - Канцлер при Виговському
+- section: Історичний контекст
+  words: 600
+  points:
+  - Шляхетська vs козацька культура
+  - Протестантизм в Україні
+- section: Внесок
+  words: 400
+  points:
+  - Гадяцький договір 1658 р.
+  - Дипломатична місія
+- section: Останні роки
+  words: 400
+  points:
+  - Конотопська битва
+  - Загибель 1659 р.
+- section: Спадщина
+  words: 400
+  points:
+  - Ідеї федералізму
+  - Європейська мрія України
+- section: Підсумок
+  words: 300
+  points:
+  - Немирич як пророк європейського шляху
+word_target: 4300
+vital_status: deceased
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-05'

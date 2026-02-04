@@ -53,21 +53,31 @@ def check_frontmatter_spacing(content: str) -> list[dict]:
     return violations
 
 
-def check_heading_levels(content: str) -> list[dict]:
+def check_heading_levels(content: str, level_code: str = None) -> list[dict]:
     """
     Check that section headings follow the hierarchy from docs/MARKDOWN-FORMAT.md.
-    
+
     1. Page Title must be H1 (#)
     2. Main Sections (Activities, Summary, Vocabulary) must be H1 (#)
     3. Subsection headers (warm-up, exercises, etc.) must be H2 (##)
+
+    Note: Seminar tracks (c1-bio, b2-hist, c1-hist, lit, oes, ruth) use a different
+    structure where Підсумок is H2, not H1, since all content sections are at H2 level.
     """
     violations = []
 
-    # Main Sections that MUST be H1 (#)
+    # Seminar tracks use flat H2 structure for all content sections
+    seminar_tracks = ['c1-bio', 'b2-hist', 'c1-hist', 'lit', 'oes', 'ruth']
+    is_seminar = level_code and any(track in level_code.lower() for track in seminar_tracks)
+
+    # Main Sections that MUST be H1 (#) - but not for seminar tracks
     h1_required_sections = [
         'summary', 'activities', 'vocabulary',  # English
-        'підсумок', 'вправи', 'словник'          # Ukrainian
+        'вправи', 'словник'                      # Ukrainian (always H1)
     ]
+    # Підсумок is H1 only for core curriculum, H2 for seminar tracks
+    if not is_seminar:
+        h1_required_sections.append('підсумок')
     
     # Content sub-sections that SHOULD be H2 (##)
     h2_preferred_sections = [
@@ -287,12 +297,13 @@ def check_forbidden_headers(content: str) -> list[dict]:
     return violations
 
 
-def check_markdown_format(content: str) -> list[dict]:
+def check_markdown_format(content: str, level_code: str = None) -> list[dict]:
     """
     Run all markdown format validation checks.
 
     Args:
         content: Full module content
+        level_code: Optional level code (e.g., 'c1-bio', 'b2-hist') for track-aware checks
 
     Returns:
         List of violation dictionaries with 'type', 'issue', and 'fix' keys
@@ -301,7 +312,7 @@ def check_markdown_format(content: str) -> list[dict]:
 
     # Structure checks (run first)
     violations.extend(check_frontmatter_spacing(content))
-    violations.extend(check_heading_levels(content))
+    violations.extend(check_heading_levels(content, level_code))
     violations.extend(check_table_column_consistency(content))
     
     # Clean MD Standard checks (Issue #398)

@@ -1,12 +1,12 @@
 # Audit Report: M09 — mykhailo-chernihivskyi.md
-**Level:** C1-BIO | **Module:** M09 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** C1-BIO | **Module:** M09 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4300
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-04 11:41:19
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-05 00:47:05
 
 ## Configuration
 **Type:** C1-biography
-**Word Target:** 4000 words
+**Word Target:** 4300 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
@@ -36,8 +36,17 @@
 - Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[INVALID_META_YAML]** Meta YAML Schema Violation at 'root': 'vocabulary_hints' is a required property
+  - FIX: Correct the YAML structure to match schemas/meta-module.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
-- **Words:** ✅ 4165/4000 (raw: 4231)
+- **Words:** ❌ 4165/4300 (raw: 4231)
 - **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
@@ -47,7 +56,7 @@
 - **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (8 activities)
 - **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
 - **Richness:** ✅ 99% (biography)

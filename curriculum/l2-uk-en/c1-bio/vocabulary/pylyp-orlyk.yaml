@@ -1,0 +1,144 @@
+- lemma: канцелярист
+  ipa: /kɐnt͡selʲɐˈrɪst/
+  translation: chancellor / scribe
+  pos: noun
+  gender: m
+  note: чиновник канцелярії
+- lemma: діаріуш
+  ipa: /dʲiˈɑrʲiu̯ʃ/
+  translation: diary / journal
+  pos: noun
+  gender: m
+  note: щоденник (застаріле)
+- lemma: конституціоналізм
+  ipa: /konstɪtut͡sʲionɐˈlʲizm/
+  translation: constitutionalism
+  pos: noun
+  gender: m
+  note: політична теорія
+- lemma: легітимність
+  ipa: /leɦʲiˈtɪmnʲistʲ/
+  translation: legitimacy
+  pos: noun
+  gender: f
+  note: законність влади
+- lemma: одіссея
+  ipa: /odʲiˈsɛjɐ/
+  translation: odyssey
+  pos: noun
+  gender: f
+  note: тривалі мандри
+- lemma: передмур'я
+  ipa: /perɛdˈmurjɐ/
+  translation: bulwark / outpost
+  pos: noun
+  gender: n
+  note: захисна споруда
+- lemma: екзиль
+  ipa: /ekˈzɪlʲ/
+  translation: exile
+  pos: noun
+  gender: m
+  note: вигнання
+- lemma: меморандум
+  ipa: /memorˈɑndum/
+  translation: memorandum
+  pos: noun
+  gender: m
+  note: дипломатичний документ
+- lemma: патрон
+  ipa: /pɐˈtrɔn/
+  translation: patron / protector
+  pos: noun
+  gender: m
+  note: покровитель
+- lemma: ренесанс
+  ipa: /reneˈsɑns/
+  translation: renaissance
+  pos: noun
+  gender: m
+  note: відродження
+- lemma: тяглість
+  ipa: /ˈtʲɑɦlʲisʲtʲ/
+  translation: continuity
+  pos: noun
+  gender: f
+  note: неперервність
+- lemma: космополітизм
+  ipa: /kosmopolʲiˈtɪzm/
+  translation: cosmopolitanism
+  pos: noun
+  gender: m
+  note: світогляд світового громадянина
+- lemma: прецедент
+  ipa: /pret͡seˈdɛnt/
+  translation: precedent
+  pos: noun
+  gender: m
+  note: випадок у минулому
+- lemma: асиміляція
+  ipa: /sɪmʲilʲˈɑt͡sʲijɐ/
+  translation: assimilation
+  pos: noun
+  gender: f
+  note: поглинання культури
+- lemma: деспотія
+  ipa: /despoˈtʲijɐ/
+  translation: despotism
+  pos: noun
+  gender: f
+  note: необмежена влада
+- lemma: суб'єктність
+  ipa: /subjekˈtnʲistʲ/
+  translation: agency / subjectivity
+  pos: noun
+  gender: f
+  note: здатність бути дієвою особою
+- lemma: кон'юнктура
+  ipa: /konjunˈkturɐ/
+  translation: conjuncture
+  pos: noun
+  gender: f
+  note: збіг обставин
+- lemma: пантеон
+  ipa: /pɐnteˈɔn/
+  translation: pantheon
+  pos: noun
+  gender: m
+  note: сукупність богів або героїв
+- lemma: коаліція
+  ipa: /koɐˈlʲit͡sʲijɐ/
+  translation: coalition
+  pos: noun
+  gender: f
+  note: об'єднання сил
+- lemma: верховенство
+  ipa: /ʋerxoˈʋɛnstʋo/
+  translation: supremacy / rule
+  pos: noun
+  gender: n
+  note: верховенство права
+- lemma: протекторат
+  ipa: /protektoˈrɑt/
+  translation: protectorate
+  pos: noun
+  gender: m
+  note: форма залежності
+- lemma: шляхтич
+  ipa: /ˈʃlʲɑxtɪt͡ʃ/
+  translation: nobleman
+  pos: noun
+  gender: m
+  note: представник привілейованого стану
+- lemma: універсал
+  ipa: /unʲiʋerˈsɑl/
+  translation: universal (decree)
+  pos: noun
+  gender: m
+  note: акт гетьманської влади
+- lemma: писар
+  ipa: [ˈpɪsɐr]
+  translation: scribe / clerk
+  pos: noun
+  gender: m
+  note: генеральний писар

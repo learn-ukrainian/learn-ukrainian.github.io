@@ -2,10 +2,10 @@
   "module": "valentyna-radzymovska",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:42:00.518062Z",
+  "last_audit": "2026-02-05T00:47:46.031949Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.348872Z",
+    "md": "2026-02-04T22:30:45.365183Z",
     "meta": "2026-02-02T23:23:00.170498Z",
     "activities": "2026-01-27T15:34:56.889176Z",
     "vocabulary": null,
@@ -41,7 +41,6 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "4 Critical Template Violations",
       "7 Outline Compliance Errors",
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],

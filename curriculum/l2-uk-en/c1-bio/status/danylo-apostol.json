@@ -2,13 +2,13 @@
   "module": "danylo-apostol",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:41:30.998863Z",
+  "last_audit": "2026-02-05T00:47:16.419152Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-02T13:49:06.735389Z",
-    "meta": "2026-02-02T23:22:59.964297Z",
-    "activities": "2026-02-02T13:56:05.886931Z",
-    "vocabulary": "2026-02-02T13:56:05.886831Z",
+    "md": "2026-02-04T23:37:00.528090Z",
+    "meta": "2026-02-05T00:39:42.669520Z",
+    "activities": "2026-02-05T00:22:38.892414Z",
+    "vocabulary": "2026-02-04T23:30:53.977741Z",
     "plan": null
   },
   "gates": {
@@ -18,34 +18,30 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 4,
-      "message": "67/4000 (raw: 96) | engagement: 0/5 | pedagogy: 5 violations | richness: 17% < 95% min (biography) - REWRITE needed"
+      "status": "pass",
+      "violations": 0,
+      "message": "4327/4300 (raw: 4398)"
     },
     "activities": {
-      "status": "fail",
-      "violations": 4,
-      "message": "0/3 | density: 0 < 1 | unique_types: 0/3 types | priority: No priority types"
+      "status": "pass",
+      "violations": 0,
+      "message": "5/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 24 (soft target)"
+      "message": "24/24"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "0/10 (PENDING) - Naturalness check required"
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "1 Critical Template Violations",
-      "7 Outline Compliance Errors",
-      "Missing required activity types: critical-analysis, essay-response, reading"
-    ],
-    "pass_count": 1,
-    "fail_count": 3
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

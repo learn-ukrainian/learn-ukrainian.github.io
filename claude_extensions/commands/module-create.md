@@ -1,5 +1,7 @@
 # Module Create (Full Pipeline)
 
+> **🤝 COLLABORATION RULE:** Write content yourself. Ask the other agent for help (research, facts, validation) when stuck. Never guess or hallucinate - collaboration is faster than guessing wrong.
+
 > **⚠️ ALWAYS use `.venv/bin/python` - NEVER use `python3` or `python` directly!**
 
 Create a new module OR migrate an existing module to YAML format.

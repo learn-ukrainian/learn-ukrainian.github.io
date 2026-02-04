@@ -2,11 +2,11 @@
   "module": "yuriy-kondratiuk",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:42:11.355712Z",
+  "last_audit": "2026-02-05T00:47:56.465009Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-02T13:16:34.949250Z",
-    "meta": "2026-02-02T23:23:00.255272Z",
+    "md": "2026-02-04T22:30:45.353308Z",
+    "meta": "2026-02-05T00:42:19.387806Z",
     "activities": "2026-02-02T11:02:04.324786Z",
     "vocabulary": "2026-02-02T11:02:04.324611Z",
     "plan": null
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 5,
-      "message": "9/4000 (raw: 161) | engagement: 1/5 | pedagogy: 4 violations | immersion: 4.3% LOW (target 95-100% (biography)) | richness: 11% < 95% min (biography) - REWRITE needed"
+      "message": "9/4300 (raw: 161) | engagement: 1/5 | pedagogy: 3 violations | immersion: 4.3% LOW (target 95-100% (biography)) | richness: 11% < 95% min (biography) - REWRITE needed"
     },
     "activities": {
       "status": "fail",
@@ -33,19 +33,18 @@
       "message": "0 < 24 (soft target)"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1/10 (PENDING) - Naturalness check required"
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
     }
   },
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "5 Critical Template Violations",
       "6 Outline Compliance Errors",
-      "Missing required activity types: essay-response, reading"
+      "Missing required activity types: critical-analysis, reading"
     ],
-    "pass_count": 1,
-    "fail_count": 3
+    "pass_count": 2,
+    "fail_count": 2
   }
 }

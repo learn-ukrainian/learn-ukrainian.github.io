@@ -1,76 +1,75 @@
-vocabulary:
-  - term: самодержець
-    translation: autocrat
-    definition: Правитель з необмеженою владою.
-  - term: боярство
-    translation: boyars
-    definition: Вища аристократія в Русі.
-  - term: олігархія
-    translation: oligarchy
-    definition: Влада небагатьох багатіїв.
-  - term: магнат
-    translation: magnate
-    definition: Великий землевласник.
-  - term: вотчина
-    translation: patrimony
-    definition: Спадкове земельне володіння.
-  - term: уділ
-    translation: appanage
-    definition: Частина князівства, що виділялася князю.
-  - term: роздробленість
-    translation: fragmentation
-    definition: Розпад держави на окремі частини.
-  - term: централізація
-    translation: centralization
-    definition: Зосередження влади в одних руках.
-  - term: вертикаль влади
-    translation: power vertical
-    definition: Ієрархічна система управління.
-  - term: легіон
-    translation: legion
-    definition: Військовий підрозділ.
-  - term: лицарство
-    translation: knighthood
-    definition: Військовий стан у середньовіччі.
-  - term: лати
-    translation: armor
-    definition: Металевий захисний одяг.
-  - term: обладунок
-    translation: armor
-    definition: Спорядження воїна.
-  - term: шолом
-    translation: helmet
-    definition: Захист голови.
-  - term: спис
-    translation: spear
-    definition: Колюча зброя.
-  - term: тара
-    translation: battering ram
-    definition: Облогова машина.
-  - term: галич
-    translation: Halych
-    definition: Столиця Галицького князівства.
-  - term: волинь
-    translation: Volhynia
-    definition: Історичний регіон на північному заході України.
-  - term: унія
-    translation: union
-    definition: Об'єднання.
-  - term: коронація
-    translation: coronation
-    definition: Церемонія покладання корони.
-  - term: легат
-    translation: legate
-    definition: Посол Папи Римського.
-  - term: папа
-    translation: Pope
-    definition: Глава католицької церкви.
-  - term: інтердикт
-    translation: interdict
-    definition: Тимчасова заборона богослужінь.
-  - term: скіпетр
-    translation: scepter
-    definition: Символ влади монарха.
-  - term: держава
-    translation: state
-    definition: Політична організація суспільства.
+- lemma: самодержець
+  ipa: /sɐmoˈdɛrʒɛt͡sʲ/
+  translation: autocrat
+- lemma: боярство
+  ipa: /boˈjɑrstʋo/
+  translation: boyars
+- lemma: олігархія
+  ipa: /olʲiˈɦɑrxʲijɐ/
+  translation: oligarchy
+- lemma: магнат
+  ipa: /mɐɦˈnɑt/
+  translation: magnate
+- lemma: вотчина
+  ipa: /ˈʋɔt͡ʃɪnɐ/
+  translation: patrimony
+- lemma: уділ
+  ipa: /uˈdʲil/
+  translation: appanage
+- lemma: роздробленість
+  ipa: /rozˈdrɔbɫenʲistʲ/
+  translation: fragmentation
+- lemma: централізація
+  ipa: /t͡sɛntrɐlʲizˈɑt͡sʲijɐ/
+  translation: centralization
+- lemma: вертикаль влади
+  ipa: /ʋɛrtɪˈkɑlʲ ˈʋɫɑdɪ/
+  translation: power vertical
+- lemma: легіон
+  ipa: /leɦʲiˈɔn/
+  translation: legion
+- lemma: лицарство
+  ipa: /ˈlɪt͡sɐrstʋo/
+  translation: knighthood
+- lemma: лати
+  ipa: /ˈɫɑtɪ/
+  translation: armor
+- lemma: обладунок
+  ipa: /obɫɐˈdunɔk/
+  translation: armor
+- lemma: шолом
+  ipa: /ʃoˈɫɔm/
+  translation: helmet
+- lemma: спис
+  ipa: /spɪs/
+  translation: spear
+- lemma: тара
+  ipa: /ˈtɑrɐ/
+  translation: battering ram
+- lemma: галич
+  ipa: /ˈɦɑlɪt͡ʃ/
+  translation: Halych
+- lemma: волинь
+  ipa: /ʋoˈɫɪnʲ/
+  translation: Volhynia
+- lemma: унія
+  ipa: /ˈunʲijɐ/
+  translation: union
+- lemma: коронація
+  ipa: /koronˈɑt͡sʲijɐ/
+  translation: coronation
+- lemma: легат
+  ipa: /leˈɦɑt/
+  translation: legate
+- lemma: папа
+  ipa: /ˈpɑpɐ/
+  translation: Pope
+- lemma: інтердикт
+  ipa: /interˈdɪkt/
+  translation: interdict
+- lemma: скіпетр
+  ipa: /ˈskʲipɛtr/
+  translation: scepter
+- lemma: держава
+  ipa: /derˈʒɑʋɐ/
+  translation: state

@@ -2,12 +2,12 @@
   "module": "ivan-nechuy-levytskyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:41:39.728134Z",
+  "last_audit": "2026-02-05T00:47:25.834890Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-02T13:16:34.522814Z",
-    "meta": "2026-02-02T23:23:00.034479Z",
-    "activities": "2026-02-02T11:02:04.002274Z",
+    "md": "2026-02-04T22:57:50.371535Z",
+    "meta": "2026-02-04T22:51:43.100115Z",
+    "activities": "2026-02-04T22:58:09.912676Z",
     "vocabulary": "2026-02-02T11:02:04.002124Z",
     "plan": null
   },
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 5,
-      "message": "9/4000 (raw: 161) | engagement: 1/5 | pedagogy: 4 violations | immersion: 4.3% LOW (target 95-100% (biography)) | richness: 11% < 95% min (biography) - REWRITE needed"
+      "status": "pass",
+      "violations": 0,
+      "message": "4220/4000 (raw: 4262)"
     },
     "activities": {
-      "status": "fail",
-      "violations": 4,
-      "message": "0/3 | density: 0 < 1 | unique_types: 0/3 types | priority: No priority types"
+      "status": "pass",
+      "violations": 0,
+      "message": "7/3"
     },
     "vocabulary": {
       "status": "warn",
@@ -33,19 +33,15 @@
       "message": "0 < 24 (soft target)"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1/10 (PENDING) - Naturalness check required"
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Critical Template Violations",
-      "7 Outline Compliance Errors",
-      "Missing required activity types: critical-analysis, essay-response, reading"
-    ],
-    "pass_count": 1,
-    "fail_count": 3
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

@@ -2,50 +2,46 @@
   "module": "olha-kobylianska",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:41:46.704484Z",
+  "last_audit": "2026-02-05T00:47:32.604978Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.348682Z",
-    "meta": "2026-02-02T23:23:00.081996Z",
-    "activities": "2026-01-27T15:34:56.597690Z",
-    "vocabulary": null,
+    "md": "2026-02-05T00:05:33.526149Z",
+    "meta": "2026-02-05T00:05:52.406387Z",
+    "activities": "2026-02-05T00:19:33.645254Z",
+    "vocabulary": "2026-02-05T00:19:30.688798Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "1983/4000 (raw: 2175) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "4718/4000 (raw: 4773)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "6/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "warn",
       "violations": 0,
-      "message": "0 < 24 (soft target)"
+      "message": "15 < 24 (soft target)"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1/10 (PENDING) - Naturalness check required"
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Critical Template Violations",
-      "6 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
-    ],
-    "pass_count": 1,
-    "fail_count": 3
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

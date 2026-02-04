@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M53 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-04 11:41:44
+**Generated:** 2026-02-05 00:47:30
 
 ## Configuration
 **Type:** C1-biography
@@ -40,14 +40,10 @@
 - **[YAML_SCHEMA_VIOLATION]** Schema error in ivan-franko.yaml: Schema validation error at key '3': {'type': 'reading', 'title': 'Дослідження поетичного модернізму', 'resource': {'type': 'primary_source', 'url': 'https://www.i-franko.name/uk/Poetry/ZivjaleLystja.html', 'title': "«Іван Франко — Збірка «Зів'яле листя»»"}, 'tasks': ['«Проаналізуйте використання емоційно забарвлених прикметників у першому «жмутку» поезій.»', '«Порівняйте мову інтимної лірики Франка з його публіцистичним стилем. Які відмінності у виборі дієслів ви помітили?»', '«Знайдіть приклади порівнянь та метафор, які автор використовує для опису душевного стану.»']} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
-## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple headers contain 'Спадщина': Спадщина, Вплив на сучасників
-  - FIX: RENAME one header to NOT contain 'Спадщина'. Example: 'Агіографічна спадщина' → 'Житійна творчість' (removes the duplicate word).
-
 ## Recommendation
 **📝 UPDATE** (severity 25/100)
 
-- 3 violations (minor)
+- 2 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates

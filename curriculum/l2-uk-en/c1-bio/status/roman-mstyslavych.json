@@ -2,13 +2,13 @@
   "module": "roman-mstyslavych",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:41:19.394325Z",
+  "last_audit": "2026-02-05T00:47:05.215314Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-02T21:52:43.692621Z",
+    "md": "2026-02-04T22:30:45.345155Z",
     "meta": "2026-02-02T23:22:59.881779Z",
     "activities": "2026-01-19T21:42:56.039798Z",
-    "vocabulary": "2026-02-02T21:27:46.055920Z",
+    "vocabulary": "2026-02-05T00:28:49.230329Z",
     "plan": null
   },
   "gates": {

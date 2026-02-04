@@ -2,13 +2,13 @@
   "module": "petro-mohyla",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T12:08:48.564656Z",
+  "last_audit": "2026-02-05T00:47:13.620500Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-04T12:08:39.095654Z",
-    "meta": "2026-02-04T12:07:05.848726Z",
+    "md": "2026-02-04T22:45:08.922233Z",
+    "meta": "2026-02-05T00:38:52.235145Z",
     "activities": "2026-02-04T12:06:26.763992Z",
-    "vocabulary": "2026-02-04T12:08:39.837129Z",
+    "vocabulary": "2026-02-04T13:37:14.793131Z",
     "plan": null
   },
   "gates": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "3985/3500 (raw: 4037) | richness: 90% < 95% min (biography)"
+      "message": "1882/4300 (raw: 1982)"
     },
     "activities": {
       "status": "pass",
@@ -28,9 +28,9 @@
       "message": "8/3"
     },
     "vocabulary": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "25/24"
+      "message": "20 < 24 (soft target)"
     },
     "naturalness": {
       "status": "pass",
@@ -40,8 +40,10 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [],
-    "pass_count": 4,
+    "blocking_issues": [
+      "6 Outline Compliance Errors"
+    ],
+    "pass_count": 3,
     "fail_count": 1
   }
 }

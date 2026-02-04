@@ -1,120 +1,84 @@
-module: c1-bio-001
+module: c1-bio-002
 level: C1-BIO
-sequence: 1
+sequence: 2
 slug: knyahynia-olha
 version: '2.0'
-title: 'Княгиня Ольга: Регент і Реформатор'
-subtitle: 'Olha of Kyiv: Regent and Reformer'
+title: 'Княгиня Ольга: Дипломатія та реформи'
+word_target: 4300
 content_outline:
-- section: Вступ — Легендарна постать у світлі історії та міфу
-  words: 500
-  points:
-  - Унікальність Ольги як жінки-правительки
-  - Проблема розмежування легенди та історії
-  - Значення для української державності
-- section: 'Життєпис: Від таємниці народження до вершини влади'
+- section: Вступ — Мудра володарка Києва
   words: 600
   points:
-  - Версії про походження
-  - Соціальний ландшафт Русі
-  - Шлюб та початок правління
-- section: 'Внесок у розбудову держави: Від сили до закону'
-  words: 800
+  - Ольга як символ державної мудрості
+  - Поєднання язичницької сили та християнського вибору
+  - Роль у зміцненні внутрішнього ладу
+- section: Життєпис
+  words: 1600
   points:
-  - Помста як інструмент влади
-  - Адміністративні реформи (уроки та погости)
-  - Централізація влади
-- section: 'Останні роки: Оборона Києва та духовний вибір'
-  words: 700
+  - Походження (легенди про Псков та болгарське коріння)
+  - Шлюб з Ігорем
+  - Трагедія 945 р. та помста древлянам
+  - Регентство при Святославі
+- section: Історичний контекст
+  words: 600
   points:
-  - Дипломатія з Візантією
-  - Особисте хрещення
-  - Відносини зі Святославом
-- section: Історіографічний та культурний аналіз постаті Ольги
-  words: 500
+  - Стан Русі в середині X ст.
+  - Стосунки з Візантією та Священною Римською імперією
+- section: Внесок
+  words: 400
   points:
-  - Образ у літописах vs реальність
-  - Роль у творенні національного міфу
-  - Деколонізація образу
-- section: 'Спадщина та канонізація: Вічна присутність у національному коді'
-  words: 500
+  - Податкова реформа (устави, уроки, погости)
+  - Встановлення перших державних кордонів
+- section: Останні роки
+  words: 400
   points:
-  - Канонізація
-  - Історична пам'ять
-  - Сучасне значення
+  - Дипломатична місія до Константинополя 957 р.
+  - Прийняття християнства
+  - Смерть та канонізація
+- section: Спадщина
+  words: 400
+  points:
+  - Ольга як "передвісниця" Хрещення Русі
+  - Образ у літописах та мистецтві
 - section: Підсумок
-  words: 200
+  words: 300
   points:
-  - Ольга як символ державності
-  - Цивілізаційний вибір
-  - Відповідальність за історію
-word_target: 4000
-vocabulary_hints:
-  required:
-  - регент (regent)
-  - данина (tribute)
-  - погост (administrative district)
-  - урок (fixed tribute)
-  - помста (revenge)
-  - древляни (Drevlians)
-  - хрещення (baptism)
-  - канонізація (canonization)
-  - рівноапостольна (equal-to-the-apostles)
-  - візантійський (Byzantine)
-  recommended:
-  - княгиня (princess/duchess)
-  - вдова (widow)
-  - посольство (embassy)
-  - літопис (chronicle)
-  - язичництво (paganism)
-activity_hints:
-- type: reading
-  focus: Close reading of chronicle excerpts about Olha's revenge
-  source: Повість минулих літ (adapted)
-  items: 3 passages
-- type: critical-analysis
-  focus: Compare chronicle narrative with modern historical interpretations
-  output: Identify 3+ differences
-- type: essay-response
-  focus: Analyze the significance of Olha's reforms
-  word_target: 300
-  output: Structured analysis with examples
-- type: comparative-study
-  focus: Olha vs. Elizabeth I of England - female rulers in patriarchal societies
-  output: Comparative table
-- type: authorial-intent
-  focus: 'Analyze the chroniclers intent: Why emphasize revenge?'
-  output: Analytical response
+  - Ольга як архітекторка регулярної держави
 focus: biography
 pedagogy: seminar
 prerequisites:
-- B2-HIST completion recommended
-- Vocabulary ~5,500 words
-- Familiarity with Kyivan Rus period
+- c1-bio-01 (Олег Віщий)
+- b2-hist knyahynia-olha module
 connects_to:
-- c1-bio-02 (Kniaz Sviatoslav - son of Olha)
-- c1-bio-03 (Volodymyr Velykyi - grandson, completed Christianization)
-- c1-bio-04 (Yaroslav Mudryi - continuation of reforms)
+- c1-bio-03 (Святослав Хоробрий)
+- b2-hist hrystyianstvo module
 objectives:
-- Analyze the administrative reforms of Princess Olha and their impact on state building
-- Evaluate the synthesis of pagan tradition and Christian mission in early Rus
-- Construct historical arguments based on chronicle excerpts
+- Проаналізувати адміністративні реформи Ольги
+- Оцінити дипломатичні успіхи у відносинах з Візантією
+- Дослідити причини та наслідки прийняття християнства
 grammar:
-- Academic biographical narrative
-- Complex causal structures
+- Архаїзми в літописному контексті
+- Офіційний регістр (опис реформ)
 module_type: biography
 sources:
 - name: Княгиня Ольга (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Ольга_(княгиня_київська)
+  url: https://uk.wikipedia.org/wiki/Княгиня_Ольга
   type: primary
-  notes: Biography, reign details, Byzantine relations
+  notes: Основне джерело фактів
 - name: Повість минулих літ
-  url: https://uk.wikipedia.org/wiki/Повість_минулих_літ
+  url: http://izbornyk.org.ua/
   type: primary
-  notes: Primary chronicle source for Olha narratives
-- name: Women in Kyivan Rus
-  url: https://uk.wikipedia.org/wiki/Жінки_Київської_Русі
-  type: reference
-  notes: Context for women's roles in medieval governance
+  notes: Літописні легенди
 immersion: 100% Ukrainian
 phase: C1-BIO
+vocabulary_hints:
+  required:
+  - регент (regent)
+  - погост (pohost - administrative center)
+  - урок (urok - fixed tax)
+activity_hints:
+- type: reading
+  focus: Аналіз літописної розповіді про помсту
+  source: Повість минулих літ (адаптовано)
+- type: critical-analysis
+  focus: Сутність податкової реформи

@@ -1,10 +1,24 @@
-module: c1-bio-049
-level: C1-BIO
 slug: olena-pchilka
-version: '2.0'
-id: c1-bio-049
-naturalness:
-  score: 1
-  status: PENDING
-build:
-  last_modified: '2026-01-26'
+title: "Олена Пчілка: Письменниця і громадська діячка"
+module_id: c1-bio-049
+level: c1-bio
+status: draft
+pedagogy: immersion
+transliteration: none
+word_count: 4000
+content_outline:
+- section: Вступ — Мати українського відродження
+  words: 400
+- section: Ранні роки та родина Косачів (1849-1868)
+  words: 600
+- section: Шлюб та літературні початки (1868-1880)
+  words: 700
+- section: Видавнича та просвітницька діяльність (1880-1905)
+  words: 800
+- section: Революційні роки та трагедії (1905-1920)
+  words: 800
+- section: Останні роки та спадщина (1920-1930)
+  words: 700
+timestamps:
+  created: 2026-02-04T20:45:00Z
+  updated: 2026-02-04T20:45:00Z

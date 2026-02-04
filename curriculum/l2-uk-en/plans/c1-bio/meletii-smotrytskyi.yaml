@@ -1,73 +1,84 @@
-module: c1-bio-019
+module: c1-bio-018
 level: C1-BIO
-sequence: 19
+sequence: 18
 slug: meletii-smotrytskyi
 version: '2.0'
-title: 'Мелетій Смотрицький: Архітектор слов''янської граматики'
-subtitle: 'Meletii Smotrytskyi: Architect of Slavic Grammar'
+title: 'Мелетій Смотрицький: Творець граматики'
+word_target: 4300
 content_outline:
-- section: Вступ — Голос плачучої церкви
+- section: Вступ — Інтелектуальний титан доби бароко
   words: 600
   points:
-  - Автор "Треносу" (Плачу)
-  - Творець першої повної граматики церковнослов'янської мови
-  - Інтелектуал, що розірвався між Сходом і Заходом
+  - Смотрицький як реформатор мови
+  - Роль у релігійній полеміці
+  - Світове значення його "Граматики"
 - section: Життєпис
   words: 1600
   points:
-  - Походження та освіта в Європі
-  - Видання "Треносу" та "Граматики"
-  - Архієпископство та криза сумління
-  - Перехід в унію та смерть
+  - Походження (Острожчина)
+  - Освіта в Європі (Німеччина)
+  - Викладацька діяльність
+  - Подорож на Схід та зміна конфесії
 - section: Історичний контекст
   words: 600
   points:
-  - Релігійна полеміка XVII ст.
-  - Розкол суспільства
-- section: Внесок та Спадщина
-  words: 600
+  - Релігійна боротьба після Берестейської унії
+  - Стан церковнослов'янської мови XVII ст.
+- section: Внесок
+  words: 400
   points:
-  - Кодифікація мови
-  - Вершина бароко
-- section: Порівняльний аналіз
-  words: 600
+  - "Граматика словенська" 1619 р.
+  - Унормування правопису та морфології
+- section: Останні роки
+  words: 400
   points:
-  - Смотрицький vs. Вишенський
-word_target: 4000
-vocabulary_hints:
-  required:
-  - граматика (grammar)
-  - полеміка (polemics)
-  - плач (lament/threnos)
-  - єресь (heresy)
-  - догмат (dogma)
-  - відступництво (apostasy)
-  - кодифікація (codification)
-  - синтаксис (syntax)
-  - православ'я (orthodoxy)
-  - унія (union)
-activity_hints:
-- type: reading
-  focus: Excerpts from "Threnos"
-- type: essay-response
-  focus: 'The tragedy of choice: Faith vs. Unity'
+  - Трагедія внутрішнього роздвоєння
+  - Служба в уніатській церкві
+  - Смерть та спадщина в Дермані
+- section: Спадщина
+  words: 400
+  points:
+  - Вплив на розвиток слов'янських мов (зокрема російської)
+  - Смотрицький як ідеолог освіти
+- section: Підсумок
+  words: 300
+  points:
+  - Постать на зламі культур
 focus: biography
-pedagogy: CBI
+pedagogy: seminar
+prerequisites:
+- c1-bio-17 (Іван Вишенський)
+- Знання про Острозьку академію
+connects_to:
+- c1-bio-19 (Петро Сагайдачний)
+- b2-hist ostrozka-akademіia module
 objectives:
-- Evaluate the impact of Smotrytskyi's Grammar (1619)
-- Understand the tragedy of the 'Threnos' and his conversion to Uniatism
+- Оцінити філологічний внесок Мелетія Смотрицького
+- Проаналізувати його роль у міжконфесійному діалозі
+- Дослідити вплив "Граматики" на слов'янський світ
 grammar:
-- Linguistic terminology
-- Theological vocabulary
+- Архаїчна граматична термінологія
+- Опис лінгвістичних реформ
+module_type: biography
 sources:
 - name: Мелетій Смотрицький (Wikipedia UA)
   url: https://uk.wikipedia.org/wiki/Мелетій_Смотрицький
   type: primary
-- name: Тренос
-  url: https://uk.wikipedia.org/wiki/Тренос
-  type: primary
+  notes: Життя та праці
 - name: Граматика Смотрицького
-  url: https://uk.wikipedia.org/wiki/Граматика_слов%27янська_(1619)
+  url: http://izbornyk.org.ua/
   type: primary
+  notes: Електронне видання 1619 р.
 immersion: 100% Ukrainian
 phase: C1-BIO
+vocabulary_hints:
+  required:
+  - граматика (grammar)
+  - церковнослов'янська (Church Slavonic)
+  - полеміка (polemics)
+activity_hints:
+- type: reading
+  focus: Аналіз передмови до "Граматики"
+  source: Original text (adapted)
+- type: critical-analysis
+  focus: Чому Смотрицький перейшов в унію?

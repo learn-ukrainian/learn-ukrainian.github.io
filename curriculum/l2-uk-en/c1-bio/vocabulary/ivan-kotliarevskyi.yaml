@@ -1,0 +1,76 @@
+items:
+- lemma: травестія
+  ipa: /trɑwɛˈstijɑ/
+  translation: travesty/burlesque
+  pos: noun
+  gender: f
+- lemma: літературна мова
+  ipa: /lʲitɛrɑˈturnɑ ˈmɔwɑ/
+  translation: literary language
+  pos: noun
+  gender: f
+- lemma: народна мова
+  ipa: /nɑˈrɔdnɑ ˈmɔwɑ/
+  translation: folk/vernacular language
+  pos: noun
+  gender: f
+- lemma: поема
+  ipa: /pɔˈɛmɑ/
+  translation: (long) poem
+  pos: noun
+  gender: f
+- lemma: драматургія
+  ipa: /drɑmɑturˈɦijɑ/
+  translation: dramaturgy
+  pos: noun
+  gender: f
+- lemma: опера
+  ipa: /ˈɔpɛrɑ/
+  translation: opera
+  pos: noun
+  gender: f
+- lemma: водевіль
+  ipa: /wɔdɛˈwilʲ/
+  translation: vaudeville
+  pos: noun
+  gender: m
+- lemma: класицизм
+  ipa: /klɑsɪˈt͡sɪzm/
+  translation: classicism
+  pos: noun
+  gender: m
+- lemma: бурлеск
+  ipa: /burˈlɛsk/
+  translation: burlesque
+  pos: noun
+  gender: m
+- lemma: просвітництво
+  ipa: /prɔˈswitnɪt͡stwɔ/
+  translation: enlightenment
+  pos: noun
+  gender: n
+- lemma: гумор
+  ipa: /ˈɦumɔr/
+  translation: humor
+  pos: noun
+  gender: m
+- lemma: сатира
+  ipa: /sɑˈtɪrɑ/
+  translation: satire
+  pos: noun
+  gender: f
+- lemma: народність
+  ipa: /nɑˈrɔdnistʲ/
+  translation: folk character/nationality
+  pos: noun
+  gender: f
+- lemma: меценат
+  ipa: /mɛt͡sɛˈnɑt/
+  translation: patron/Maecenas
+  pos: noun
+  gender: m
+- lemma: театр
+  ipa: /tɛˈɑtr/
+  translation: theater
+  pos: noun
+  gender: m

@@ -2,10 +2,10 @@
   "module": "vasyl-vyshyvanyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:42:10.332465Z",
+  "last_audit": "2026-02-05T00:47:55.465039Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.348904Z",
+    "md": "2026-02-04T22:30:45.346000Z",
     "meta": "2026-02-02T23:23:00.248337Z",
     "activities": "2026-01-27T15:34:56.943619Z",
     "vocabulary": null,
@@ -41,7 +41,6 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "3 Critical Template Violations",
       "7 Outline Compliance Errors",
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],

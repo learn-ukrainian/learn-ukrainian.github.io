@@ -2,10 +2,10 @@
   "module": "olena-stepaniv",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:42:06.120742Z",
+  "last_audit": "2026-02-05T00:47:51.532795Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.348725Z",
+    "md": "2026-02-04T22:30:45.344157Z",
     "meta": "2026-02-02T23:23:00.215608Z",
     "activities": "2026-01-27T15:34:56.547993Z",
     "vocabulary": null,
@@ -41,7 +41,6 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "3 Critical Template Violations",
       "6 Outline Compliance Errors",
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],

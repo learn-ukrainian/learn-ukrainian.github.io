@@ -2,10 +2,10 @@
   "module": "severyn-nalyvaiko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T12:33:39.637599Z",
+  "last_audit": "2026-02-05T00:47:10.272902Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-04T12:33:17.495459Z",
+    "md": "2026-02-04T22:30:45.346152Z",
     "meta": "2026-02-04T12:31:43.083673Z",
     "activities": "2026-01-19T22:57:29.360649Z",
     "vocabulary": "2026-02-04T11:49:22.381977Z",

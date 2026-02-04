@@ -1,0 +1,144 @@
+- lemma: отаман
+  ipa: /otɐˈmɑn/
+  translation: otaman / chieftain
+  pos: noun
+  gender: m
+  note: виборний лідер на Січі
+- lemma: кіш
+  ipa: /kʲiʃ/
+  translation: kish
+  pos: noun
+  gender: m
+  note: козацький табір / управління
+- lemma: воля
+  ipa: /ˈʋɔlʲɐ/
+  translation: freedom / will
+  pos: noun
+  gender: f
+  note: свобода
+- lemma: лицарство
+  ipa: /ˈlɪt͡sɐrstʋo/
+  translation: knighthood / chivalry
+  pos: noun
+  gender: n
+  note: козацький стан
+- lemma: протекторат
+  ipa: /prɔtɛktɔˈrɑt/
+  translation: protectorate
+  pos: noun
+  gender: m
+  note: заступництво держави
+- lemma: вигнання
+  ipa: /vɪɦˈnɑnnʲɐ/
+  translation: exile
+  pos: noun
+  gender: n
+  note: життя поза Батьківщиною
+- lemma: курінь
+  ipa: /kuˈrʲinʲ/
+  translation: kurin (barracks)
+  pos: noun
+  gender: m
+  note: козацька житлова одиниця
+- lemma: булава
+  ipa: /bulɐˈʋɑ/
+  translation: mace
+  pos: noun
+  gender: f
+  note: символ влади
+- lemma: автономія
+  ipa: /ɐu̯toˈnɔmʲijɐ/
+  translation: autonomy
+  pos: noun
+  gender: f
+  note: самоврядування
+- lemma: республіка
+  ipa: /resˈpublʲikɐ/
+  translation: republic
+  pos: noun
+  gender: f
+  note: форма правління
+- lemma: демократія
+  ipa: /demɔkrˈɑtʲijɐ/
+  translation: democracy
+  pos: noun
+  gender: f
+  note: народовладдя
+- lemma: союз
+  ipa: /sɔˈjuz/
+  translation: alliance / union
+  pos: noun
+  gender: m
+  note: об'єднання
+- lemma: зрада
+  ipa: /ˈzrɑdɑ/
+  translation: treason / betrayal
+  pos: noun
+  gender: f
+  note: порушення вірності
+- lemma: шляхтич
+  ipa: /ˈʃlʲɐxtɪt͡ʃ/
+  translation: nobleman
+  pos: noun
+  gender: m
+  note: представник шляхти
+- lemma: степ
+  ipa: /stɛp/
+  translation: steppe
+  pos: noun
+  gender: m
+  note: рівнина
+- lemma: поріг
+  ipa: /poˈrʲiɦ/
+  translation: rapid (on river)
+  pos: noun
+  gender: m
+  note: Дніпрові пороги
+- lemma: візіонер
+  ipa: /ʋʲizʲiɔˈnɛr/
+  translation: visionary
+  pos: noun
+  gender: m
+  note: людина з баченням майбутнього
+- lemma: суб'єктність
+  ipa: /suˈbjɛktnʲisʲtʲ/
+  translation: agency / subjectivity
+  pos: noun
+  gender: f
+  note: здатність до самостійної дії
+- lemma: меморіал
+  ipa: /mɛmɔrʲiˈɑl/
+  translation: memorial
+  pos: noun
+  gender: m
+  note: пам'ятне місце
+- lemma: курган
+  ipa: /kurˈɦɑn/
+  translation: kurgan / barrow
+  pos: noun
+  gender: m
+  note: високий насип над могилою
+- lemma: непохитність
+  ipa: /nɛpɔˈxɪtnʲisʲtʲ/
+  translation: steadfastness
+  pos: noun
+  gender: f
+  note: твердість у переконаннях
+- lemma: кон'юнктура
+  ipa: /kɔnjunkˈturɐ/
+  translation: conjuncture / situation
+  pos: noun
+  gender: f
+  note: обставини, що склалися
+- lemma: аскетизм
+  ipa: /ɐskɛˈtɪzm/
+  translation: asceticism
+  pos: noun
+  gender: m
+  note: самообмеження
+- lemma: істеблішмент
+  ipa: /istɛˈblʲiʃmɛnt/
+  translation: establishment
+  pos: noun
+  gender: m
+  note: панівна еліта

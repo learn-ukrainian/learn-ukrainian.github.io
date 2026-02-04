@@ -2,13 +2,13 @@
   "module": "hryhoriy-kvitka-osnovianenko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:41:35.910677Z",
+  "last_audit": "2026-02-05T00:47:21.741950Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-29T22:28:36.004507Z",
-    "meta": "2026-02-02T23:22:59.996790Z",
-    "activities": "2026-01-29T22:22:18.214319Z",
-    "vocabulary": "2026-01-29T22:10:36.918025Z",
+    "md": "2026-02-04T22:30:45.349818Z",
+    "meta": "2026-02-04T22:05:00.133184Z",
+    "activities": "2026-02-04T22:04:54.030100Z",
+    "vocabulary": "2026-02-04T20:35:28.957639Z",
     "plan": null
   },
   "gates": {
@@ -20,30 +20,28 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4001/4000 (raw: 4049)"
+      "message": "5325/4000 (raw: 5453)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "9/3"
+      "message": "7/3"
     },
     "vocabulary": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "25/24"
+      "message": "15 < 24 (soft target)"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1/10 (PENDING) - Naturalness check required"
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "3 Outline Compliance Errors"
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 4,
-    "fail_count": 1
+    "fail_count": 0
   }
 }

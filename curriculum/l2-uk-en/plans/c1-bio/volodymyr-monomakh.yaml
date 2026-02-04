@@ -3,68 +3,83 @@ level: C1-BIO
 sequence: 6
 slug: volodymyr-monomakh
 version: '2.0'
-title: 'Володимир Мономах: Миротворець і літописець'
-word_target: 4000
+title: 'Володимир Мономах: Укріплювач Русі'
+word_target: 4300
 content_outline:
-  - section: Вступ
-    words: 400
-    points:
-      - Мономах як символ
-      - Поєднання меча і пера
-  - section: Життєпис
-    words: 100
-    points:
-      - Основні віхи
-  - section: Біографія
-    words: 800
-    points:
-      - Походження
-      - Чернігівський період
-      - Любецький з'їзд
-      - Київське повстання
-  - section: Внесок
-    words: 1200
-    points:
-      - Устав Володимира Мономаха
-      - Військова реформа
-      - Повчання дітям
-      - Розбудова Києва
-  - section: Останні роки
-    words: 600
-    points:
-      - Централізація влади
-      - Літературна праця
-      - Смерть
-  - section: Спадщина
-    words: 600
-    points:
-      - Ідеалізований образ
-      - Шапка Мономаха
-      - Вплив на традицію
-  - section: Підсумок
-    words: 200
-    points:
-      - Квінтесенція правління
+- section: Вступ — Останній великий самодержець Києва
+  words: 600
+  points:
+  - Мономах як ідеал руського князя
+  - Успіхи у боротьбі з половцями
+  - Зупинення процесу розпаду держави
+- section: Життєпис
+  words: 1600
+  points:
+  - Походження та ранні роки
+  - Любецький з'їзд 1097 р.
+  - Шлях до київського престолу
+  - Правління в Києві (1113–1125)
+- section: Історичний контекст
+  words: 600
+  points:
+  - Феодальна роздробленість
+  - Половецька загроза
+  - Соціальні рухи в Києві
+- section: Внесок
+  words: 400
+  points:
+  - "Повчання дітям" як етичний кодекс
+  - Реформування законодавства ("Статут")
+- section: Останні роки
+  words: 400
+  points:
+  - Зміцнення династичних зв'язків
+  - Дипломатія з Візантією
+  - Смерть та поховання
+- section: Спадщина
+  words: 400
+  points:
+  - Образ Мономаха в літописах
+  - Символіка "Шапки Мономаха" (міфи та реальність)
+- section: Підсумок
+  words: 300
+  points:
+  - Значення правління для історії України
 focus: biography
 pedagogy: seminar
 prerequisites:
-  - c1-bio-04
+- c1-bio-05 (Всеволод Ярославич)
+- b2-hist monomakh module
 connects_to:
-  - c1-bio-07
+- c1-bio-07 (Мстислав Великий)
+- b2-hist rozdroblenist module
 objectives:
-  - Analize Povchannia
-  - Evaluate reforms
-  - Debunk myths
+- Проаналізувати політичну стратегію Мономаха щодо єдності Русі
+- Дослідити етичні засади "Повчання дітям"
+- Оцінити роль князя у захисті від степових кочовиків
 grammar:
-  - Archaism
-  - Rhetoric
+- Публіцистичний стиль (аналіз повчань)
+- Офіційно-діловий стиль (статути)
 module_type: biography
 sources:
-  - name: Povchannia
-    url: http://litopys.org.ua
-    type: primary
-  - name: Litopys
-    url: http://litopys.org.ua
-    type: primary
+- name: Володимир Мономах (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Володимир_Мономах
+  type: primary
+  notes: Детальний життєпис
+- name: "Повчання" Володимира Мономаха
+  url: http://izbornyk.org.ua/
+  type: primary
+  notes: Оригінальний текст та коментарі
 immersion: 100% Ukrainian
 phase: C1-BIO
+vocabulary_hints:
+  required:
+  - удільна роздробленість (feudal fragmentation)
+  - половці (Cumans)
+  - статут (statute)
+activity_hints:
+- type: reading
+  focus: Аналіз "Повчання дітям"
+  source: Primary sources (adapted)
+- type: critical-analysis
+  focus: Причини київського повстання 1113 р.

@@ -2,10 +2,10 @@
   "module": "sofiya-okunevska",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:41:48.769291Z",
+  "last_audit": "2026-02-05T00:47:34.614926Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.348774Z",
+    "md": "2026-02-04T22:30:45.349478Z",
     "meta": "2026-02-02T23:23:00.095247Z",
     "activities": "2026-01-27T15:34:56.773334Z",
     "vocabulary": null,
@@ -41,7 +41,6 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "4 Critical Template Violations",
       "6 Outline Compliance Errors",
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
       "Missing required activity types: reading"

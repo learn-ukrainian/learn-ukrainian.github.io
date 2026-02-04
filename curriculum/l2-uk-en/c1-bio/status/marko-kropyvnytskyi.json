@@ -2,12 +2,12 @@
   "module": "marko-kropyvnytskyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:41:40.252253Z",
+  "last_audit": "2026-02-05T00:47:26.395459Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.348595Z",
-    "meta": "2026-02-02T23:23:00.038541Z",
-    "activities": "2026-01-27T15:34:56.102012Z",
+    "md": "2026-02-04T23:03:18.958004Z",
+    "meta": "2026-02-04T22:58:46.329217Z",
+    "activities": "2026-02-04T23:03:40.070043Z",
     "vocabulary": null,
     "plan": null
   },
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "1914/4000 (raw: 2103) | pedagogy: 1 violations"
+      "status": "warn",
+      "violations": 0,
+      "message": "3959/4000 (raw: 4036) (41 short)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "6/3"
+      "message": "7/3"
     },
     "vocabulary": {
       "status": "warn",
@@ -33,18 +33,15 @@
       "message": "0 < 24 (soft target)"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1/10 (PENDING) - Naturalness check required"
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "1 Critical Template Violations",
-      "6 Outline Compliance Errors"
-    ],
-    "pass_count": 2,
-    "fail_count": 2
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 3,
+    "fail_count": 0
   }
 }

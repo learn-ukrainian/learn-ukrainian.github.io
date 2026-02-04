@@ -1,10 +1,38 @@
-module: c1-bio-051
-level: C1-BIO
-slug: mariya-pavlova
-version: '2.0'
 id: c1-bio-051
+slug: mariya-pavlova
+title: 'Марія Павлова: Видатний палеонтолог'
+type: biography
+level: C1-BIO
+transliteration: none
+tags:
+- biography
+- science
+- paleontology
+- women_in_science
+- history
+word_target: 4000
 naturalness:
-  score: 1
-  status: PENDING
-build:
-  last_modified: '2026-01-26'
+  status: PASS
+  score: 9
+  validation: Authentic scientific biography
+engagement_score: 10
+content_outline:
+- section: Вступ — Жінка, що читала кістки
+  words: 400
+- section: Ранні роки та освіта (1854-1880)
+  words: 600
+- section: Наукова кар'єра в Парижі (1880-1886)
+  words: 700
+- section: Московський період (1886-1920)
+  words: 800
+- section: Наукові досягнення
+  words: 700
+- section: Останні роки та спадщина (1920-1938)
+  words: 800
+activity_hints:
+- type: reading
+- type: essay-response
+- type: critical-analysis
+- type: quiz
+- type: true-false
+timestamp: 2026-02-04T20:55:00Z

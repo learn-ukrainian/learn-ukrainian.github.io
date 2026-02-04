@@ -2,6 +2,8 @@
 
 Enrich vocabulary for an entire track/course after all modules are content-complete.
 
+> **🤝 COLLABORATION RULE:** Write enrichments yourself. Ask the other agent for help (research, facts, validation) when stuck. Never guess or hallucinate - collaboration is faster than guessing wrong.
+
 > **Run this after all modules in the level have been deployed with skeleton vocab.**
 
 ## Usage

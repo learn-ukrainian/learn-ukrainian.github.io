@@ -1,8 +1,8 @@
 # Audit Report: M36 — ivan-kotliarevskyi.md
 **Level:** C1-BIO | **Module:** M36 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
-**Naturalness:** 1/10 (PENDING)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-04 11:41:35
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 00:47:21
 
 ## Configuration
 **Type:** C1-biography
@@ -20,51 +20,38 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | true-false | «Факти про життя Котляревського» | 12 | 5 | ✅ |
-| 2 | reading | «Сміх крізь сльози: «Енеїда»» | 3 | 1 | ✅ |
-| 3 | reading | «Історія першого видання» | 3 | 1 | ✅ |
-| 4 | essay-response | «Батько українського слова» | 1 | 1 | ✅ |
-| 5 | comparative-study | «Два світи: Сковорода та Котляревський» | 1 | 1 | ✅ |
-| 6 | critical-analysis | «Аналіз феномену «Енеїди»» | 1 | 1 | ✅ |
-| 7 | true-false | «Світогляд Котляревського» | 12 | 5 | ✅ |
+| 1 | reading | Аналіз літературного подвигу: «Енеїда» | 3 | 1 | ✅ |
+| 2 | reading | Котляревський — фундатор театру | 3 | 1 | ✅ |
+| 3 | essay-response | Есе: Сміх як стратегія виживання | 1 | 1 | ✅ |
+| 4 | critical-analysis | Критичний аналіз: Масонство та Просвітництво | 1 | 1 | ✅ |
+| 5 | comparative-study | Порівняльний аналіз: Котляревський та Вергілій | 1 | 1 | ✅ |
+| 6 | authorial-intent | Аналіз творчого задуму: Передмова до «Енеїди» | 1 | 1 | ✅ |
+| 7 | quiz | Концептуальний аналіз | 5 | 5 | ✅ |
 
 **Summary:**
 - Total activities: 7 (target: 3-9) ✅
-- Unique types: 5 (minimum: 3) ✅
-- Priority types used: 4/6 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Unique types: 6 (minimum: 3) ✅
+- Priority types used: 6/6 (authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading) ✅
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in ivan-kotliarevskyi.yaml: Schema validation error at key '2': {'type': 'reading', 'title': '«Історія першого видання»', 'resource': {'type': 'article', 'url': 'https://localhistory.org.ua/texts/statti/iak-kotliarevskii-eneidu-pisav-i-chomu-vona-stala-revoliutsiieiu/', 'title': '«Як Котляревський «Енеїду» писав і чому вона стала революцією»'}, 'tasks': ['«Як автор статті пояснює феномен успіху «Енеїди» серед російського дворянства?»', '«Які нові факти про видання Парпури наводяться у тексті?»', '«Чому Котляревський спочатку образився на першого видавця свого твору?»']} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple headers contain 'Спадщина': Спадщина, Вплив на розвиток мови
-  - FIX: RENAME one header to NOT contain 'Спадщина'. Example: 'Агіографічна спадщина' → 'Житійна творчість' (removes the duplicate word).
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 2 violations (minor)
-
 ## Gates
-- **Words:** ❌ 1978/4000 (raw: 2202)
+- **Words:** ✅ 5528/4000 (raw: 5664)
 - **Activities:** ✅ 7/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 5/3 types
+- **Unique_types:** ✅ 6/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/5
+- **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 24 (soft target)
+- **Vocab:** ⚠️ 15 < 24 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (7 activities)
-- **Immersion:** 🇺🇦 99.8% (target 95-100% (biography))
+- **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
 - **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
@@ -73,28 +60,28 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 7 | 4 | 100% | 19% | 19.0% |
-| engagement | 7 | 6 | 100% | 14% | 14.3% |
-| quotes | 6 | 3 | 100% | 14% | 14.3% |
-| cultural | 5 | 4 | 100% | 10% | 9.5% |
-| visual | 6 | 4 | 100% | 10% | 9.5% |
+| primary_sources | 11 | 4 | 100% | 19% | 19.0% |
+| engagement | 8 | 6 | 100% | 14% | 14.3% |
+| quotes | 12 | 3 | 100% | 14% | 14.3% |
+| cultural | 10 | 4 | 100% | 10% | 9.5% |
+| visual | 8 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.97 | - | 97% | 5% | 4.6% |
+| variety | 0.96 | - | 96% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 12 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.9%** |
+| questions | 11 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 80 | Included in Core |
-| **Вступ** | ✅ | 220 | Included in Core |
-| **Життєпис** | ⚪️ | 848 | Skipped |
-| **Внесок** | ⚪️ | 183 | Skipped |
-| **Спадщина** | ⚪️ | 377 | Skipped |
-| **Порівняльний аналіз** | ✅ | 111 | Included in Core |
-| **Підсумок** | ✅ | 71 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 88 | Skipped |
-| **Вправи** | ⚪️ | 0 | Skipped |
-| **Словник** | ⚪️ | 0 | Skipped |
+| **Intro/Narrative** | ✅ | 129 | Included in Core |
+| **Вступ — Народження нової літератури** | ✅ | 652 | Included in Core |
+| **Юність та освіта (1769-1789)** | ⚪️ | 781 | Skipped |
+| **Військова служба (1789-1808)** | ⚪️ | 723 | Skipped |
+| **«Енеїда» — літературна революція (1798-1842)** | ⚪️ | 720 | Skipped |
+| **Драматургія та громадська діяльність (1808-1838)** | ⚪️ | 686 | Skipped |
+| **Спадщина — Батько нової літератури** | ⚪️ | 680 | Skipped |
+| **Історичний контекст** | ✅ | 558 | Included in Core |
+| **Підсумок** | ✅ | 431 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 168 | Skipped |

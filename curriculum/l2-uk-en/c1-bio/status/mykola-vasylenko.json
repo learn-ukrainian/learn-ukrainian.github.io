@@ -2,10 +2,10 @@
   "module": "mykola-vasylenko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:41:49.295555Z",
+  "last_audit": "2026-02-05T00:47:35.132154Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.348611Z",
+    "md": "2026-02-04T22:30:45.346113Z",
     "meta": "2026-02-02T23:23:00.098647Z",
     "activities": "2026-01-27T15:34:56.332091Z",
     "vocabulary": null,
@@ -41,7 +41,6 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "5 Critical Template Violations",
       "6 Outline Compliance Errors",
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
       "Missing required activity types: reading"

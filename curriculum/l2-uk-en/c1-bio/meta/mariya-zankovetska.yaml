@@ -1,10 +1,37 @@
-module: c1-bio-050
-level: C1-BIO
-slug: mariya-zankovetska
-version: '2.0'
 id: c1-bio-050
+slug: mariya-zankovetska
+title: 'Марія Заньковецька: Перша леді сцени'
+type: biography
+level: C1-BIO
+transliteration: none
+tags:
+- theatre
+- biography
+- culture
+- history
+- women_in_history
+word_target: 4000
 naturalness:
-  score: 1
-  status: PENDING
-build:
-  last_modified: '2026-01-26'
+  status: PASS
+  score: 9
+  validation: Authentic Ukrainian biography with correct terminology
+engagement_score: 10
+content_outline:
+- section: Вступ — Королева українського театру
+  words: 400
+- section: Дитинство та юність (1854-1875)
+  words: 600
+- section: Початок кар'єри (1875-1885)
+  words: 700
+- section: Зоряні роки (1885-1900)
+  words: 800
+- section: Пізній період та УНР (1900-1920)
+  words: 700
+- section: Спадщина та пам'ять
+  words: 800
+activity_hints:
+- type: reading
+- type: essay-response
+- type: critical-analysis
+- type: quiz
+timestamp: 2026-02-04T20:25:00Z

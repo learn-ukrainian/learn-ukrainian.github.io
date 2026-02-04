@@ -1,8 +1,8 @@
 # Audit Report: M42 — marko-vovchok.md
 **Level:** C1-BIO | **Module:** M42 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
-**Naturalness:** 1/10 (PENDING)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-04 11:41:38
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 00:47:24
 
 ## Configuration
 **Type:** C1-biography
@@ -20,53 +20,37 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | true-false | «Життя та міфи» | 12 | 5 | ✅ |
+| 1 | true-false | «Життя та міфи» | 5 | 5 | ✅ |
 | 2 | reading | «Аналіз оповідання «Максим Гримач»» | 3 | 1 | ✅ |
-| 3 | reading | «Марко Вовчок у спогадах сучасників» | 3 | 1 | ✅ |
-| 4 | essay-response | «Феномен Марка Вовчка» | 1 | 1 | ✅ |
-| 5 | comparative-study | «Жіночі голоси епохи: Вовчок та Санд» | 1 | 1 | ✅ |
-| 6 | critical-analysis | «Аналіз психологізму «Інститутки»» | 1 | 1 | ✅ |
-| 7 | true-false | «Літературні погляди» | 12 | 5 | ✅ |
+| 3 | reading | «Філософія волі в «Інститутці»» | 3 | 1 | ✅ |
+| 4 | essay-response | «Феномен ідентичності» | 1 | 1 | ✅ |
+| 5 | critical-analysis | «Критичний погляд: Мовчазний сфінкс» | 1 | 1 | ✅ |
+| 6 | comparative-study | «Жіночі голоси: Вовчок та Жорж Санд» | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 7 (target: 3-9) ✅
+- Total activities: 6 (target: 3-9) ✅
 - Unique types: 5 (minimum: 3) ✅
 - Priority types used: 4/6 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in marko-vovchok.yaml: Schema validation error at key '2': {'type': 'reading', 'title': '«Марко Вовчок у спогадах сучасників»', 'resource': {'type': 'article', 'url': 'https://localhistory.org.ua/texts/statti/marko-vovchok-fatalna-zhinka-ukrayinskoyi-literaturi/', 'title': '«Марко Вовчок: фатальна жінка української літератури»'}, 'tasks': ['«Як описують зовнішність та характер письменниці її знайомі?»', '«Які нові деталі про її стосунки з Пантелеймоном Кулішем наводяться?»', '«Чому її називали «мовчазним сфінксом»?»']} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Останні роки' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple headers contain 'Спадщина': Спадщина, Вплив на європейську літературу
-  - FIX: RENAME one header to NOT contain 'Спадщина'. Example: 'Агіографічна спадщина' → 'Житійна творчість' (removes the duplicate word).
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 3 violations (minor)
-
 ## Gates
-- **Words:** ❌ 2035/4000 (raw: 2265)
-- **Activities:** ✅ 7/3
+- **Words:** ✅ 4539/4000 (raw: 4636)
+- **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/5
+- **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 0 < 24 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ✅ Content-heavy OK (7 activities)
-- **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (6 activities)
+- **Immersion:** 🇺🇦 99.5% (target 95-100% (biography))
 - **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
@@ -75,28 +59,28 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 6 | 4 | 100% | 19% | 19.0% |
-| engagement | 7 | 6 | 100% | 14% | 14.3% |
-| quotes | 6 | 3 | 100% | 14% | 14.3% |
-| cultural | 4 | 4 | 100% | 10% | 9.5% |
-| visual | 6 | 4 | 100% | 10% | 9.5% |
+| primary_sources | 4 | 4 | 100% | 19% | 19.0% |
+| engagement | 6 | 6 | 100% | 14% | 14.3% |
+| quotes | 9 | 3 | 100% | 14% | 14.3% |
+| cultural | 5 | 4 | 100% | 10% | 9.5% |
+| visual | 5 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
-| legacy | 12 | 2 | 100% | 10% | 9.5% |
-| variety | 0.98 | - | 98% | 5% | 4.7% |
+| legacy | 15 | 2 | 100% | 10% | 9.5% |
+| variety | 0.96 | - | 96% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 14 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.9%** |
+| questions | 3 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 70 | Included in Core |
-| **Вступ** | ✅ | 202 | Included in Core |
-| **Життєпис** | ⚪️ | 979 | Skipped |
-| **Внесок** | ⚪️ | 168 | Skipped |
-| **Спадщина** | ⚪️ | 348 | Skipped |
-| **Порівняльний аналіз** | ✅ | 115 | Included in Core |
-| **Підсумок** | ✅ | 59 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 94 | Skipped |
-| **Вправи** | ⚪️ | 0 | Skipped |
+| **Intro/Narrative** | ✅ | 25 | Included in Core |
+| **Марко Вовчок: Голос пригноблених** | ⚪️ | 101 | Skipped |
+| **Вступ — Росіянка, що стала українською письменницею** | ✅ | 577 | Included in Core |
+| **Ранні роки та шлюб (1833-1851)** | ⚪️ | 826 | Skipped |
+| **«Народні оповідання» (1851-1860)** | ⚪️ | 661 | Skipped |
+| **Європейський період (1860-1878)** | ⚪️ | 711 | Skipped |
+| **Повернення та пізня творчість (1878-1907)** | ⚪️ | 662 | Skipped |
+| **Спадщина та значення** | ⚪️ | 796 | Skipped |
+| **Підсумок** | ✅ | 180 | Included in Core |
 | **Словник** | ⚪️ | 0 | Skipped |

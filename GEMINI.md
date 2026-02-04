@@ -273,6 +273,141 @@ All communication goes through SQLite Event Bus at `.mcp/servers/message-broker/
 - **Check inbox at start of session** - Claude may have left messages
 - **Sessions are per-task** - same task_id = same conversation context
 
+## GitHub Issues Task Workflow (NEW)
+
+Claude uses `/task` skill to track complex work via GitHub Issues. **You should know about this because:**
+
+1. **You'll receive handoffs** - Claude uses `/task handoff #N gemini "message"` to transfer work to you
+2. **You can update issues** - Progress tracking happens in GH issues, not just messages
+3. **Labels matter** - When you're assigned, issue has `review:gemini` label
+
+### How Handoffs Work
+
+When Claude hands off to you:
+
+1. **Label changes**: `working:claude` → `review:gemini`
+2. **Issue comment**: `@gemini: {message}` added
+3. **Broker message**: You receive via inbox with `task_id: gh-{issue_number}`
+
+### Your Response Flow
+
+```bash
+# 1. Check inbox
+.venv/bin/python scripts/gemini_bridge.py inbox
+
+# 2. Read the handoff message (includes issue number)
+.venv/bin/python scripts/gemini_bridge.py read <id>
+
+# 3. View full issue context
+gh issue view <issue_number>
+
+# 4. Do the review/work
+
+# 5. Update issue with your findings
+gh issue comment <issue_number> --body "Review complete: ..."
+
+# 6. Send response to Claude
+.venv/bin/python scripts/gemini_bridge.py send "Review complete. Found 2 issues..." \
+  --type response --task-id gh-<issue_number>
+
+# 7. (Optional) Change label if work continues
+gh issue edit <issue_number> --remove-label "review:gemini" --add-label "working:claude"
+```
+
+### Task Labels Reference
+
+| Label | Meaning |
+|-------|---------|
+| `task` | Base task label |
+| `working:claude` | Claude actively working |
+| `working:gemini` | You are actively working |
+| `review:gemini` | Ready for your review |
+| `review:human` | Needs human review |
+| `blocked` | Waiting on something |
+
+### When to Use GH Issues vs MCP Messages
+
+| Use GH Issues | Use MCP Messages |
+|---------------|------------------|
+| Multi-step tasks | Quick questions |
+| Cross-session work | Single-turn queries |
+| Audit trail needed | Short reviews |
+| Human visibility needed | Fast feedback |
+
+**Full documentation**: `docs/TASK-WORKFLOW.md`
+
+## Research Requests (Seminar Tracks)
+
+Claude may request you to research topics for seminar tracks (b2-hist, c1-bio, c1-hist, lit, oes, ruth).
+
+### Why You'll Get Research Requests
+
+1. **Research gate enforced** - Claude's `/module` skill now blocks content generation without research
+2. **Ukrainian sources** - You excel at finding and synthesizing Ukrainian-language sources
+3. **Parallel work** - Claude can structure while you research
+
+### How to Handle Research Requests
+
+```bash
+# You'll receive a message like:
+"Research Данило Апостол for C1-BIO module. Save to audit/danylo-apostol-research.md"
+
+# Your workflow:
+1. Search Ukrainian sources (uk.wikipedia.org, esu.com.ua, history.org.ua, etc.)
+2. Compile notes using the template below
+3. Save to the specified path
+4. Send response to Claude
+```
+
+### Research Notes Template
+
+Save to `curriculum/l2-uk-en/{track}/audit/{slug}-research.md`:
+
+```markdown
+# Research Notes: {Topic}
+
+**Track**: {track}
+**Module**: {slug}
+**Researched**: {date}
+**Sources consulted**: {count}
+
+## Основні факти
+- Повне ім'я:
+- Роки життя: (або "живий/жива" якщо сучасник)
+- Ключові місця:
+
+## Хронологія
+1. [Рік] - Подія
+...
+
+## Первинні джерела (цитати українською)
+> "Цитата українською" — Джерело, рік
+
+## Деколонізаційні нотатки
+- Російські/радянські міфи для спростування:
+- Українська агентність для висвітлення:
+
+## Використані джерела
+1. [Назва](URL)
+...
+```
+
+### Quality Requirements
+
+- **3+ Ukrainian sources** (NEVER Russian sources)
+- **1+ primary source quote** in Ukrainian
+- **Decolonization notes** - myths to debunk
+- **5+ chronology events** with years
+
+### Response Pattern
+
+```bash
+.venv/bin/python scripts/gemini_bridge.py send \
+  "Research complete for Данило Апостол. Saved to audit/danylo-apostol-research.md.
+   5 sources, 2 primary quotes, 3 myths identified." \
+  --type response --task-id {task_id}
+```
+
 ## File Structure Reference (V2.0)
 
 - **Plans (Immutable)**: `curriculum/l2-uk-en/plans/{level}/{slug}.yaml`

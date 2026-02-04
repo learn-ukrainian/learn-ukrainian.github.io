@@ -2,50 +2,48 @@
   "module": "volodymyr-vernadskyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:41:45.615544Z",
+  "last_audit": "2026-02-05T00:47:31.433174Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-17T21:45:15.869436Z",
-    "meta": "2026-02-02T23:23:00.072467Z",
-    "activities": "2026-01-27T15:34:57.026500Z",
-    "vocabulary": null,
+    "md": "2026-02-04T22:30:45.358323Z",
+    "meta": "2026-02-05T00:44:31.229948Z",
+    "activities": "2026-02-04T22:04:19.603110Z",
+    "vocabulary": "2026-02-05T00:25:49.674956Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2122/4000 (raw: 2352)"
+      "status": "pass",
+      "violations": 0,
+      "message": "4938/4300 (raw: 4984)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "3/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "warn",
       "violations": 0,
-      "message": "0 < 24 (soft target)"
+      "message": "15 < 24 (soft target)"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1/10 (PENDING) - Naturalness check required"
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
     }
   },
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "7 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: reading"
+      "4 Outline Compliance Errors"
     ],
-    "pass_count": 1,
-    "fail_count": 3
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

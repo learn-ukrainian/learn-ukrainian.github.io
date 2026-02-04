@@ -4,109 +4,81 @@ sequence: 26
 slug: yuriy-nemyrych
 version: '2.0'
 title: 'Юрій Немирич: Дипломат і мислитель'
+word_target: 4300
 content_outline:
 - section: Вступ — Архітектор нездійсненної держави
+  words: 600
+  points:
+  - Немирич як європейський інтелектуал у козацькому середовищі
+  - Візія Великого Князівства Руського
+  - Роль у Гадяцькій унії
+- section: Життєпис
+  words: 1600
+  points:
+  - Походження та європейська освіта (Лейден, Оксфорд)
+  - Релігійний пошук (аріанство, православ'я)
+  - Перехід на бік козаків 1655 р.
+  - Канцлер при Івані Виговському
+- section: Історичний контекст
+  words: 600
+  points:
+  - Шляхетська республіка vs Козацька вольниця
+  - Протестантизм в Україні XVII ст.
+- section: Внесок
   words: 400
   points:
-  - Немирич як візіонер української державності
-  - Значення Гадяцького договору
-  - Трагедія "альтернативної історії"
-- section: Походження та освіта
-  words: 600
+  - Дипломатична місія до Швеції
+  - Співавторство Гадяцького договору 1658 р.
+- section: Останні роки
+  words: 400
   points:
-  - Знатний рід Немиричів
-  - Освіта в Європі
-  - Соціанство та релігійні погляди
-  - Інтелектуальне формування
-- section: Участь у політичному житті Речі Посполитої
-  words: 700
+  - Конотопська битва та участь Немирича
+  - Загибель у Свидовці 1659 р.
+  - Трагедія нерозуміння сучасниками
+- section: Спадщина
+  words: 400
   points:
-  - Діяльність у Сеймі
-  - Ставлення до козацтва
-  - Позиція під час повстання
-  - Перехід на бік Хмельницького
-- section: Гадяцький договір 1658 року
-  words: 900
-  points:
-  - Ідея Великого князівства Руського
-  - Структура запропонованої держави
-  - Переговори з Польщею
-  - Ратифікація та обмеження
-- section: Загибель та провал угоди
-  words: 600
-  points:
-  - Московський тиск
-  - Загибель Немирича 1659 року
-  - Причини невдачі Гадяцької угоди
-  - Що могло бути інакше?
-- section: Спадщина та оцінки
-  words: 500
-  points:
-  - Немирич у історіографії
-  - Гадяч як "європейський вибір"
-  - Актуальність його ідей
-  - Пам'ять про Немирича
-- section: Підсумок — Візія без реалізації
+  - Ідеї федералізму та толерантності
+  - Образ у сучасній історіографії
+- section: Підсумок
   words: 300
   points:
-  - Немирич як символ втрачених можливостей
-  - Порівняння з пізнішими спробами
-  - Уроки Гадяцької угоди
-word_target: 4000
-vocabulary_hints:
-  required:
-  - договір (treaty)
-  - князівство (principality/duchy)
-  - федерація (federation)
-  - автономія (autonomy)
-  - сейм (sejm/parliament)
-  - ратифікація (ratification)
-  - соціанство (Socinianism)
-  - шляхта (nobility)
-  - універсал (universal/decree)
-  - конфедерація (confederation)
-  recommended:
-  - канцлер (chancellor)
-  - трибунал (tribunal)
-  - привілей (privilege)
-  - воєводство (voivodeship)
-  - маршалок (marshal)
-activity_hints:
-- type: reading
-  focus: Excerpts from the Treaty of Hadiach
-  source: Original text (adapted)
-  items: 3 passages
-- type: essay-response
-  focus: Why did the Treaty of Hadiach fail?
-  word_target: 300
-  output: Multi-causal analysis
-- type: critical-analysis
-  focus: Compare Nemyrych's vision with modern European integration
-  output: Historical parallels
+  - Немирич як пророк європейського шляху України
 focus: biography
+pedagogy: seminar
 prerequisites:
-- c1-bio-10 (Bohdan Khmelnytskyi - context of uprising)
-- Understanding of Polish-Lithuanian Commonwealth structure
+- c1-bio-24 (Іван Виговський)
+- Знання про Хотинську війну та Гадяч
 connects_to:
-- c1-bio-12 (Ivan Mazepa - later European orientation)
-- c1-bio-14 (Pylyp Orlyk - constitutional thought)
-- c1-bio-51 (Viacheslav Lypynskyi - later federalist ideas)
+- c1-bio-28 (Пилип Орлик)
+- b2-hist ruina-i module
+objectives:
+- Оцінити інтелектуальний внесок Юрія Немирича в українську дипломатію
+- Проаналізувати проект Великого Князівства Руського
+- Дослідити вплив європейської політичної думки на Немирича
+grammar:
+- Науково-публіцистичний стиль
+- Латинізми в українському політичному контексті
 module_type: biography
 sources:
 - name: Юрій Немирич (Wikipedia UA)
   url: https://uk.wikipedia.org/wiki/Юрій_Немирич
   type: primary
-  notes: Biography, Hadiach Treaty, political thought
-- name: Гадяцький договір (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Гадяцький_договір
-  type: primary
-  notes: Treaty details and significance
-- name: Велике князівство Руське
-  url: https://uk.wikipedia.org/wiki/Велике_князівство_Руське
+  notes: Повна біографія
+- name: Гадяцький договір 1658
+  url: http://izbornyk.org.ua/
   type: reference
-  notes: Proposed state structure
+  notes: Аналіз документа
 immersion: 100% Ukrainian
 phase: C1-BIO
-objectives:
-- 'Analyze the life and legacy of юрій немирич: дипломат і мислитель'
-- Evaluate the contributions of архітектор нездійсненної держави
+vocabulary_hints:
+  required:
+  - Велике Князівство Руське (Grand Duchy of Ruthenia)
+  - аріанство (Arianism)
+  - канцлер (chancellor)
+activity_hints:
+- type: reading
+  focus: Аналіз промови Немирича на сеймі
+  source: Primary sources (adapted)
+- type: critical-analysis
+  focus: Конфлікт ідентичностей: шляхтич vs козак

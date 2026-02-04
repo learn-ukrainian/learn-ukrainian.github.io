@@ -3,8 +3,55 @@ level: C1-BIO
 slug: ivan-sirko
 version: '2.0'
 id: c1-bio-025
+title: "Іван Сірко: Легендарний кошовий отаман"
 naturalness:
-  score: null
-  status: PENDING
+  score: 10
+  status: PASS
+duration: 120
+transliteration: none
+tags:
+- history
+- biography
+- war
+- folklore
+- legend
+content_outline:
+- section: Вступ — Легенда Запорозької Січі
+  words: 600
+  points:
+  - Сірко як символ непереможності
+  - Феномен характерництва
+- section: Життєпис
+  words: 1600
+  points:
+  - Походження та шлях до отаманства
+  - Десятикратне обрання
+  - Заслання до Сибіру
+- section: Історичний контекст
+  words: 600
+  points:
+  - Епоха Руїни
+  - Запорожжя як центр сили
+- section: Внесок
+  words: 400
+  points:
+  - Військова тактика
+  - Звільнення невільників
+- section: Останні роки
+  words: 400
+  points:
+  - Оборона Чигирина
+  - Смерть 1680 р.
+- section: Спадщина
+  words: 400
+  points:
+  - Образ у мистецтві
+  - Меморіал у Капулівці
+- section: Підсумок
+  words: 300
+  points:
+  - Сірко як вічний чатовий Степу
+word_target: 4300
+vital_status: deceased
 build:
-  last_modified: '2026-02-01'
+  last_modified: '2026-02-05'

@@ -1,1 +1,144 @@
-vocabulary: []
+- lemma: отаман
+  ipa: /otɐˈmɑn/
+  translation: otaman / chieftain
+  pos: noun
+  gender: m
+  note: виборний лідер на Січі
+- lemma: кіш
+  ipa: /kʲiʃ/
+  translation: kish
+  pos: noun
+  gender: m
+  note: козацький табір / управління
+- lemma: характерник
+  ipa: /xɐrɐkˈtɛrnɪk/
+  translation: kharakternyk (sorcerer)
+  pos: noun
+  gender: m
+  note: козак-чаклун
+- lemma: похід
+  ipa: /poˈxʲid/
+  translation: campaign
+  pos: noun
+  gender: m
+  note: військова операція
+- lemma: невільник
+  ipa: /neˈʋʲilʲnɪk/
+  translation: captive / slave
+  pos: noun
+  gender: m
+  note: полонений
+- lemma: галера
+  ipa: /ɦɐˈlɛrɐ/
+  translation: galley
+  pos: noun
+  gender: f
+  note: гребне судно
+- lemma: легенда
+  ipa: /leˈɦɛndɐ/
+  translation: legend
+  pos: noun
+  gender: f
+  note: народна оповідь
+- lemma: запорожець
+  ipa: /zɐpoˈrɔʒet͡sʲ/
+  translation: Zaporozhian
+  pos: noun
+  gender: m
+  note: козак із Січі
+- lemma: шайтан
+  ipa: /ʃɐi̯ˈtɑn/
+  translation: shaitan / devil
+  pos: noun
+  gender: m
+  note: чорт (тюрк.)
+- lemma: лист
+  ipa: /lɪst/
+  translation: letter
+  pos: noun
+  gender: m
+  note: послання
+- lemma: гумор
+  ipa: /ɦuˈmɔr/
+  translation: humor
+  pos: noun
+  gender: m
+  note: здатність сміятися
+- lemma: тактика
+  ipa: /ˈtɑktɪkɐ/
+  translation: tactics
+  pos: noun
+  gender: f
+  note: ведення бою
+- lemma: рейд
+  ipa: /reid/
+  translation: raid
+  pos: noun
+  gender: m
+  note: набіг
+- lemma: степ
+  ipa: /stɛp/
+  translation: steppe
+  pos: noun
+  gender: m
+  note: рівнина
+- lemma: заслання
+  ipa: /zɐsˈlɑnnʲɐ/
+  translation: exile
+  pos: noun
+  gender: n
+  note: вигнання
+- lemma: слава
+  ipa: /ˈslɑʋɐ/
+  translation: glory
+  pos: noun
+  gender: f
+  note: відомість
+- lemma: захисник
+  ipa: /zɐxɪsˈnɪk/
+  translation: defender
+  pos: noun
+  gender: m
+  note: оборонець
+- lemma: віра
+  ipa: /ˈʋʲirɐ/
+  translation: faith
+  pos: noun
+  gender: f
+  note: релігійне переконання
+- lemma: фольклор
+  ipa: /fɔlʲkˈlɔr/
+  translation: folklore
+  pos: noun
+  gender: m
+  note: народна творчість
+- lemma: картина
+  ipa: /kɐrˈtɪnɐ/
+  translation: painting
+  pos: noun
+  gender: f
+  note: витвір живопису
+- lemma: характер
+  ipa: /ˈxɑrɐktɛr/
+  translation: character
+  pos: noun
+  gender: m
+  note: вдача / особливість
+- lemma: звитяга
+  ipa: /zʋɪˈtʲɑɦɐ/
+  translation: victory / valor
+  pos: noun
+  gender: f
+  note: військова перемога
+- lemma: пасіка
+  ipa: /ˈpɑsʲikɐ/
+  translation: apiary
+  pos: noun
+  gender: f
+  note: місце для бджіл
+- lemma: булава
+  ipa: /bulɐˈʋɑ/
+  translation: mace
+  pos: noun
+  gender: f
+  note: символ влади гетьмана

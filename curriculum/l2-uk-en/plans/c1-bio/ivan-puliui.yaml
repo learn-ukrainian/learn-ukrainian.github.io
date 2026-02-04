@@ -1,105 +1,84 @@
-module: c1-bio-048
+module: c1-bio-054
 level: C1-BIO
-sequence: 48
+sequence: 54
 slug: ivan-puliui
 version: '2.0'
-title: 'Іван Пулюй: Фізик, який відкрив Х-промені'
+title: 'Іван Пулюй: Першовідкривач X-променів'
+word_target: 4300
 content_outline:
-- section: Вступ — Фізик і патріот
-  words: 444
+- section: Вступ — Світовий геній української науки
+  words: 600
   points:
-  - Пулюй як піонер рентгенівських досліджень
-  - Український патріот у європейській науці
-  - Перекладач Біблії українською
-- section: Молодість у Галичині
-  words: 666
+  - Пулюй як піонер сучасної фізики
+  - Відкриття X-променів (раніше Рентгена)
+  - Поєднання науки та національної справи
+- section: Життєпис
+  words: 1600
   points:
-  - Народження в Гримайлові (1845)
-  - Навчання в духовній семінарії
-  - Вибір науки замість священства
-  - Віденський університет
-- section: Наукові відкриття
-  words: 888
+  - Походження та духовна освіта (Тернопільщина)
+  - Навчання у Віденському університеті
+  - Співпраця з провідними вченими Європи
+  - Академічна кар'єра у Празі
+- section: Історичний контекст
+  words: 600
   points:
-  - Дослідження катодних променів
-  - '"Лампа Пулюя" (1880-ті)'
-  - Перші рентгенівські знімки до Рентгена
-  - Чому Рентген отримав визнання першим
-- section: Професор у Празі
-  words: 666
+  - Золота доба європейської фізики
+  - Стан української еміграції в Австро-Угорщині
+- section: Внесок
+  words: 400
   points:
-  - Празька політехніка
-  - Ректор німецької політехніки
-  - Електрифікація Праги
-  - Міжнародне наукове визнання
-- section: Український патріот
-  words: 777
+  - "Лампа Пулюя" та її значення
+  - Наукові праці з електротехніки та фізики
+- section: Останні роки
+  words: 400
   points:
-  - Переклад Біблії з Кулішем
-  - Публіцистика про Україну
-  - '"Україна та її міжнародне становище"'
-  - Зв'язки з українським рухом
-- section: Спадщина вченого-патріота
-  words: 559
+  - Громадська діяльність (захист української мови)
+  - Переклад Біблії українською мовою
+  - Смерть та поховання у Празі
+- section: Спадщина
+  words: 400
   points:
-  - Смерть у Празі (1918)
-  - Забуття за радянських часів
-  - Відновлення пам'яті в незалежній Україні
-  - Пулюй як взірець поєднання науки та нації
-word_target: 4000
-vocabulary_hints:
-  required:
-  - фізик
-  - рентгенівські промені
-  - катодні промені
-  - відкриття
-  - патріот
-  - переклад
-  - електрифікація
-  - визнання
-  - публіцистика
-  - ректор
-  recommended:
-  - випромінювання
-  - лампа
-  - вакуум
-  - експеримент
-  - політехніка
-activity_hints:
-- type: reading
-  focus: Puliui's scientific papers and political writings
-  source: Historical archives
-  items: 3 passages
-- type: essay-response
-  focus: Why didn't Puliui receive credit for X-rays?
-  word_target: 300
-  output: Analysis of scientific recognition
+  - Питання пріоритету у відкритті променів
+  - Вшанування в Україні та світі
+- section: Підсумок
+  words: 300
+  points:
+  - Пулюй як символ інтелектуальної потуги нації
 focus: biography
+pedagogy: seminar
 prerequisites:
-- Basic physics concepts
-- 19th century European context
-- c1-bio-97
+- c1-bio-50 (Юрій Кондратюк)
+- Розуміння наукового контексту XIX ст.
 connects_to:
-- c1-bio-97
-- c1-bio-117
-- c1-bio-104
+- c1-bio-55 (Володимир Вернадський)
+- b2-hist ukrainians-world module
+objectives:
+- Оцінити науковий внесок Івана Пулюя
+- Проаналізувати його діяльність щодо популяризації української мови
+- Дослідити історію відкриття X-променів
+grammar:
+- Науковий стиль мовлення
+- Обговорення пріоритету та етики в науці
 module_type: biography
 sources:
 - name: Іван Пулюй (Wikipedia UA)
   url: https://uk.wikipedia.org/wiki/Пулюй_Іван_Павлович
   type: primary
-  notes: Biography, physics discoveries, Ukrainian activism
-- name: Рентгенівське випромінювання
-  url: https://uk.wikipedia.org/wiki/Рентгенівське_випромінювання
+  notes: Життя та відкриття
+- name: Пулюй та Рентген
+  url: https://puliui.org.ua/
   type: reference
-  notes: X-ray discovery context
-- name: Переклад Біблії Пулюя-Куліша
-  url: https://uk.wikipedia.org/wiki/Біблія_в_перекладі_Куліша,_Пулюя_та_Нечуя-Левицького
-  type: reference
-  notes: His Bible translation work
+  notes: Музей та архіви
 immersion: 100% Ukrainian
 phase: C1-BIO
-objectives:
-- 'Analyze the life and legacy of іван пулюй: фізик, який відкрив х-промені'
-- Evaluate the contributions of фізик і патріот
-- Trace the career and influence of спадщина вченого-патріота
+vocabulary_hints:
+  required:
+  - X-промені (X-rays)
+  - електротехніка (electrical engineering)
+  - переклад (translation)
+activity_hints:
+- type: reading
+  focus: Порівняння робіт Пулюя та Рентгена
+  source: Scientific articles (adapted)
+- type: critical-analysis
+  focus: Чому Нобелівську премію отримав не Пулюй?

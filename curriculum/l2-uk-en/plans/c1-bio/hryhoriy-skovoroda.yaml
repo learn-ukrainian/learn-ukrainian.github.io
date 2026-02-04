@@ -4,110 +4,85 @@ sequence: 33
 slug: hryhoriy-skovoroda
 version: '2.0'
 title: 'Григорій Сковорода: Мандрівний філософ'
+word_target: 4300
 content_outline:
 - section: Вступ — Український Сократ
+  words: 600
+  points:
+  - Сковорода як символ духовної свободи
+  - Філософія серця та її актуальність
+  - Образ мандрівного вчителя
+- section: Життєпис
+  words: 1600
+  points:
+  - Дитинство та навчання в Києво-Могилянській академії
+  - Перебування в придворній капелі в Петербурзі
+  - Подорож країнами Європи
+  - Педагогічна діяльність у Переяславі та Харкові
+  - Відмова від світської та церковної кар'єри
+  - Роки мандрів
+- section: Історичний контекст
+  words: 600
+  points:
+  - Українське Просвітництво
+  - Ліквідація автономії (Січ, кріпацтво)
+- section: Внесок
   words: 400
   points:
-  - Сковорода як унікальна постать
-  - Його місце у світовій філософії
-  - Значення його життєвого вибору
-- section: Молодість та освіта
-  words: 600
-  points:
-  - Походження з козацької родини
-  - Навчання в Києво-Могилянській академії
-  - Придворний співак
-  - Подорожі до Європи
-- section: Відмова від кар'єри
-  words: 600
-  points:
-  - Повернення до України
-  - Викладацька діяльність
-  - Конфлікти з церковною владою
-  - Вибір мандрівного життя
-- section: Філософія Сковороди
-  words: 900
-  points:
-  - Концепція "сродної праці"
-  - 'Три світи: макрокосмос, мікрокосмос, символічний'
-  - Ідея самопізнання
-  - Вплив античної філософії та Біблії
-  - Світ ловив мене, та не впіймав
-- section: Літературна спадщина
-  words: 600
-  points:
-  - Філософські діалоги та трактати
-  - Байки та притчі
-  - Поезія ("Сад божественних пісень")
-  - Мовні особливості
-- section: Останні роки та смерть
-  words: 500
-  points:
-  - Мандри Слобожанщиною
-  - Коло учнів та друзів
-  - Смерть та епітафія
-  - Поховання в Сковородинівці
-- section: Підсумок — Філософ свободи
+  - Вчення про "сродну працю"
+  - Три світи та дві природи
+  - Літературна спадщина (байки, пісні)
+- section: Останні роки
   words: 400
   points:
-  - Сковорода як символ внутрішньої свободи
-  - Його вплив на українську культуру
-  - Актуальність його ідей сьогодні
-word_target: 4000
-vocabulary_hints:
-  required:
-  - філософ (philosopher)
-  - мандрівник (wanderer)
-  - самопізнання (self-knowledge)
-  - сродна праця (congenial work)
-  - макрокосмос (macrocosm)
-  - мікрокосмос (microcosm)
-  - притча (parable)
-  - байка (fable)
-  - просвітництво (Enlightenment)
-  - епітафія (epitaph)
-  recommended:
-  - аскетизм (asceticism)
-  - символ (symbol)
-  - трактат (treatise)
-  - діалог (dialogue)
-  - мудрець (sage)
-activity_hints:
-- type: reading
-  focus: Excerpts from Skovoroda's dialogues
-  source: Original texts (adapted)
-  items: 4 passages
-- type: essay-response
-  focus: How is "сродна праця" relevant today?
-  word_target: 300
-  output: Personal reflection with philosophical analysis
-- type: critical-analysis
-  focus: Compare Skovoroda with Socrates or Diogenes
-  output: Comparative philosophy
+  - Життя на Слобожанщині
+  - Передчуття смерті та легенда про могилу
+  - Епітафія: "Світ ловив мене, та не спіймав"
+- section: Спадщина
+  words: 400
+  points:
+  - Вплив на український кордоцентризм
+  - Символ ідентичності (500 гривень)
+  - Знищення музею у Сковородинівці 2022 р.
+- section: Підсумок
+  words: 300
+  points:
+  - Сковорода як пророк внутрішньої незалежності
 focus: biography
+pedagogy: seminar
 prerequisites:
-- c1-bio-15 (Petro Kalnyshevskyy - same era)
-- Understanding of Enlightenment philosophy
+- c1-bio-31 (Кирило Розумовський)
+- Знання барокової культури
 connects_to:
-- c1-bio-17 (Maksym Berezovskyy - contemporary artist)
-- c1-bio-20 (Taras Shevchenko - spiritual heir)
-- c1-bio-77 (Vasyl Stus - later philosopher-poet)
+- c1-bio-34 (Іван Котляревський)
+- b2-hist prosvitnytstvo module
+objectives:
+- Проаналізувати філософську систему Сковороди
+- Оцінити стратегію інтелектуального спротиву імперії
+- Дослідити літературне новаторство (байки)
+grammar:
+- Філософська термінологія
+- Аналіз афоризмів та метафор
 module_type: biography
 sources:
 - name: Григорій Сковорода (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Григорій_Сковорода
+  url: https://uk.wikipedia.org/wiki/Сковорода_Григорій_Савич
   type: primary
-  notes: Biography, philosophy, works
-- name: Українське Просвітництво
-  url: https://uk.wikipedia.org/wiki/Українське_Просвітництво
-  type: reference
-  notes: Intellectual context
-- name: Києво-Могилянська академія
-  url: https://uk.wikipedia.org/wiki/Києво-Могилянська_академія
-  type: reference
-  notes: Educational background
+  notes: Життєпис та вчення
+- name: Повне зібрання творів Сковороди
+  url: http://izbornyk.org.ua/
+  type: primary
+  notes: Тексти творів
 immersion: 100% Ukrainian
 phase: C1-BIO
-objectives:
-- 'Analyze the life and legacy of григорій сковорода: мандрівний філософ'
-- Evaluate the contributions of український сократ
+vocabulary_hints:
+  required:
+  - сродна праця (work by calling)
+  - кордоцентризм (cordocentrism)
+  - аскеза (asceticism)
+activity_hints:
+- type: reading
+  focus: Аналіз філософських діалогів
+  source: Original text (adapted)
+- type: creative-writing
+  focus: Тлумачення афоризмів

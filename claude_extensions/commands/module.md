@@ -9,6 +9,24 @@ Unified entry point for building modules using the 7-phase workflow (content + s
 
 > **Vocabulary enrichment runs separately** after the entire track/course is content-complete.
 
+> **🤝 COLLABORATION RULE: Write yourself, ask for help when stuck.**
+>
+> - **YOU must write the content** - never delegate writing to the other agent
+> - **When stuck or uncertain** - ask the other agent for help (research, facts, validation, suggestions)
+> - **Never guess or hallucinate** - if you don't know, ask instead of making up content
+> - **Two agents = faster solutions** - use collaboration for research, fact-checking, Ukrainian validation
+>
+> **How to ask for help:**
+> ```bash
+> # Quick way (sends + invokes):
+> .venv/bin/python scripts/gemini_bridge.py ask-gemini "Your question here" --task-id module-help
+>
+> # Check for response:
+> mcp__message-broker__receive_messages(for_llm="claude", task_id="module-help")
+> ```
+>
+> Example: "Gemini, can you verify when Заньковецька received her title?" NOT "Gemini, write the biography section."
+
 ## Usage
 
 ```
@@ -70,12 +88,29 @@ Unified entry point for building modules using the 7-phase workflow (content + s
 
 Parse arguments: $ARGUMENTS
 
-> **📄 Seminar Tracks (b2-hist, c1-bio, c1-hist, lit):**
+> **📄 Seminar Tracks (b2-hist, c1-bio, c1-hist, lit, oes, ruth):**
 >
 > Before generating content, read `docs/RESEARCH-FIRST-WORKFLOW.md`
 >
 > These tracks require **Phase 0: Deep Research** before writing:
-> 1. Research topic → 2. Create outline → 3. Write with notes → 4. Activities (4-9 only!)
+> 1. **Run /research {topic}** → Uses Ukrainian sources only
+> 2. Create outline from research notes
+> 3. Write with notes → 4. Activities (4-9 only!)
+>
+> **⛔ RESEARCH GATE ENFORCED**: Module generation will check for research file.
+> If `audit/{slug}-research.md` does not exist, you MUST run `/research` first.
+> To skip (NOT recommended): `/module {level} {num} --no-research`
+>
+> Research notes saved to `audit/{slug}-research.md` for reference.
+
+> **📋 Plan vs Template Conflicts:**
+>
+> When plan `content_outline` differs from template required sections:
+> - **Plan sections take precedence** - use plan section names exactly
+> - Template is guidance, not strict requirements
+> - Ensure content COVERS template topics (under plan section names)
+> - See `claude_extensions/skills/module-restructure-guide.md` for details
+> - **DO NOT ask which approach to use** - plan always wins when it has content_outline
 
 **Quick Reference - File Naming:**
 
@@ -116,6 +151,124 @@ Extract:
 - ⚠️ Low vocabulary hints count
 
 **If pre-flight FAILS with blockers (❌):** Stop and fix before proceeding.
+
+### Step 1.6: Research Gate (Seminar Tracks Only)
+
+**For seminar tracks ONLY (b2-hist, c1-bio, c1-hist, lit, oes, ruth):**
+
+**SMART ENFORCEMENT**: Research is required only for:
+1. **New modules** - No .md file exists yet
+2. **Explicit rewrite** - Using `--from=lesson` flag
+3. **Word count failures** - Module under target needs expansion
+
+**NOT required for**: Existing modules that pass audit (content already written).
+
+```bash
+# Define seminar tracks
+SEMINAR_TRACKS="b2-hist c1-bio c1-hist lit oes ruth"
+
+# Check if current level is a seminar track
+if echo "$SEMINAR_TRACKS" | grep -qw "$level"; then
+  content_file="curriculum/l2-uk-en/${level}/${slug}.md"
+  research_file="curriculum/l2-uk-en/${level}/audit/${slug}-research.md"
+
+  # Determine if this is NEW content or existing content
+  if [[ -f "$content_file" ]]; then
+    # Content exists - check if it passes word count
+    word_count=$(wc -w < "$content_file" | tr -d ' ')
+    # Get word target from meta (default 3500 for seminar)
+    word_target=$(yq '.word_target // 3500' "curriculum/l2-uk-en/${level}/meta/${slug}.yaml" 2>/dev/null || echo "3500")
+    threshold=$((word_target * 95 / 100))
+
+    if [[ "$word_count" -ge "$threshold" ]]; then
+      # Content exists AND meets word target - SKIP research gate
+      echo "✅ Existing content passes word count ($word_count >= $threshold)"
+      echo "   Research gate: SKIPPED (module already has content)"
+
+      # Still show research file status if it exists
+      if [[ -f "$research_file" ]]; then
+        echo "   Research notes: Available at $research_file"
+      else
+        echo "   Research notes: Not found (optional for existing content)"
+      fi
+    else
+      # Content exists but UNDER word target - needs expansion with research
+      echo "⚠️ Content under target: $word_count / $word_target words"
+
+      if [[ ! -f "$research_file" ]]; then
+        if [[ "$flags" != *"--no-research"* ]]; then
+          echo "⛔ RESEARCH REQUIRED FOR EXPANSION"
+          echo ""
+          echo "Module content is under word target and needs expansion."
+          echo "Research is required before expanding content."
+          echo ""
+          echo "Run: /research '{topic}'"
+          echo "Then: /expand curriculum/l2-uk-en/${level}/${slug}.md"
+          echo ""
+          echo "To skip (NOT recommended): /module ${level} ${num} --no-research"
+          exit 1
+        fi
+      fi
+    fi
+  else
+    # NEW module - no content exists yet
+    echo "📝 New module detected (no existing content)"
+
+    if [[ ! -f "$research_file" ]]; then
+      # Research file missing for NEW module - BLOCK
+      if [[ "$flags" != *"--no-research"* ]]; then
+        echo "⛔ RESEARCH REQUIRED"
+        echo ""
+        echo "This is a NEW seminar track module. Research must be completed first."
+        echo ""
+        echo "Run: /research '{topic}'"
+        echo ""
+        echo "Expected file: $research_file"
+        echo ""
+        echo "To skip (NOT recommended): /module ${level} ${num} --no-research"
+        exit 1
+      else
+        echo "⚠️ WARNING: Skipping research gate (--no-research flag)"
+        echo "Content quality may suffer without research notes."
+      fi
+    else
+      # Research exists for new module - validate quality
+      echo "✅ Research file found: $research_file"
+
+      # Quick quality check
+      sources_count=$(grep -c "^\d\+\. \[" "$research_file" 2>/dev/null || echo "0")
+      has_quotes=$(grep -q "^>" "$research_file" && echo "yes" || echo "no")
+      has_decolonization=$(grep -q "## Деколонізаційні" "$research_file" && echo "yes" || echo "no")
+
+      echo "   Sources: ${sources_count}"
+      echo "   Primary quotes: ${has_quotes}"
+      echo "   Decolonization notes: ${has_decolonization}"
+
+      if [[ "$sources_count" -lt 3 ]]; then
+        echo "⚠️ WARNING: Research has fewer than 3 sources. Consider expanding."
+      fi
+    fi
+  fi
+fi
+```
+
+**Research Gate Decision Table:**
+
+| Scenario | Content Exists | Word Count | Research | Action |
+|----------|---------------|------------|----------|--------|
+| New module | No | - | Missing | ⛔ BLOCK |
+| New module | No | - | Exists | ✅ PASS |
+| Existing, passing | Yes | ≥95% target | - | ✅ SKIP gate |
+| Existing, under target | Yes | <95% target | Missing | ⛔ BLOCK (needs expansion) |
+| Existing, under target | Yes | <95% target | Exists | ✅ PASS |
+| --no-research flag | - | - | - | ⚠️ WARN, proceed |
+| Core levels | - | - | - | ✅ SKIP (not seminar) |
+
+**Why smart enforcement:**
+- Don't block work on modules that already have good content
+- DO require research for new content (prevents thin writing)
+- DO require research before expansion (ensures quality additions)
+- Research-first workflow where it matters most
 
 ### Step 2: Resolve Module Slug
 
@@ -228,6 +381,26 @@ Run phases sequentially from start phase:
 **For each phase:**
 
 1. Read phase instructions from `claude_extensions/phases/module-{phase}.md`
+
+**⚠️ CRITICAL FOR PHASE 3 (Lesson) - Seminar Tracks:**
+
+Before generating content, LOAD the research notes:
+
+```bash
+# For seminar tracks, read research notes into context
+if [[ -f "curriculum/l2-uk-en/${level}/audit/${slug}-research.md" ]]; then
+  echo "📚 Loading research notes..."
+  # Read the research file - use this as source material
+  cat "curriculum/l2-uk-en/${level}/audit/${slug}-research.md"
+fi
+```
+
+**Use research notes for:**
+- Specific dates, names, locations (don't guess!)
+- Primary source quotes (include at least 1)
+- Decolonization talking points
+- Cross-references to other modules
+- Chronological structure
 2. Execute phase
 3. If QA phase FAILS → stop and report
 4. If QA phase PASSES → continue to next phase
@@ -292,6 +465,8 @@ WHILE true:
      Lesson violations:
        - Word count shortfall → which sections under?
        - Missing sections → which ones from content_outline?
+       - **Outline compliance errors** → See `claude_extensions/skills/module-restructure-guide.md`
+         (Restructure content to match plan sections, don't ask which approach to use)
        - Missing callouts → how many needed?
        - Low immersion → where is English?
 
@@ -336,7 +511,9 @@ WHILE true:
 
   Lesson fixes:
     - Expand sections to meet word targets
+      **If significant word shortfall (>500 words): Use /expand skill**
       (OR redistribute from over-target sections - see SUBSECTION-FLEXIBILITY-GUIDE.md)
+    - **NEVER change word_target in meta to match short content**
     - Add missing sections from content_outline
     - Add missing callouts/engagement boxes
     - Increase immersion (reduce English)
@@ -404,6 +581,140 @@ Note: Vocabulary table is empty. Run /module-vocab-enrich {level}
 ## Batch Mode
 
 When input is a range (e.g., `/module b2-hist 1-5`):
+
+### Step 0: Pre-Batch Checks
+
+```bash
+# Check for Gemini messages first
+/check-gemini
+
+# Run batch audit to categorize modules
+/batch-fix {level} {range} --dry-run
+```
+
+This categorizes modules into:
+- **PASSED**: Skip (already done)
+- **FIXABLE**: Auto-fix schema/format issues
+- **NEEDS EXPANSION**: Require individual /research + /expand (word count issues)
+- **NEEDS RESEARCH**: (Seminar tracks) Missing research file
+
+### Step 0.5: Research Gate (Seminar Tracks - Smart Enforcement)
+
+**For seminar tracks (b2-hist, c1-bio, c1-hist, lit, oes, ruth):**
+
+Before building, categorize modules by research need:
+
+```bash
+SEMINAR_TRACKS="b2-hist c1-bio c1-hist lit oes ruth"
+
+if echo "$SEMINAR_TRACKS" | grep -qw "$level"; then
+  echo "📚 Analyzing research needs for batch..."
+
+  needs_research=()      # New modules without research
+  needs_expansion=()     # Existing but under word target, no research
+  ready_to_build=()      # Has research OR existing passing content
+
+  for num in {start..end}; do
+    slug=$(yq ".levels.\"${level}\".modules[$((num-1))]" curriculum/l2-uk-en/curriculum.yaml)
+    content_file="curriculum/l2-uk-en/${level}/${slug}.md"
+    research_file="curriculum/l2-uk-en/${level}/audit/${slug}-research.md"
+
+    if [[ -f "$content_file" ]]; then
+      # Content exists - check word count
+      word_count=$(wc -w < "$content_file" | tr -d ' ')
+      word_target=$(yq '.word_target // 3500' "curriculum/l2-uk-en/${level}/meta/${slug}.yaml" 2>/dev/null || echo "3500")
+      threshold=$((word_target * 95 / 100))
+
+      if [[ "$word_count" -ge "$threshold" ]]; then
+        # Passing content - ready (research optional)
+        ready_to_build+=("$num: $slug ✅ (${word_count}w)")
+      else
+        # Under target - needs expansion
+        if [[ -f "$research_file" ]]; then
+          ready_to_build+=("$num: $slug ⚠️ (needs expansion, has research)")
+        else
+          needs_expansion+=("$num: $slug (${word_count}/${word_target}w)")
+        fi
+      fi
+    else
+      # New module - check for research
+      if [[ -f "$research_file" ]]; then
+        ready_to_build+=("$num: $slug 📚 (new, has research)")
+      else
+        needs_research+=("$num: $slug")
+      fi
+    fi
+  done
+
+  # Report status
+  echo ""
+  echo "Ready to build: ${#ready_to_build[@]} modules"
+  for item in "${ready_to_build[@]}"; do
+    echo "   ✅ $item"
+  done
+
+  if [[ ${#needs_research[@]} -gt 0 ]]; then
+    echo ""
+    echo "⛔ NEED RESEARCH (new modules): ${#needs_research[@]}"
+    for item in "${needs_research[@]}"; do
+      echo "   - $item"
+    done
+  fi
+
+  if [[ ${#needs_expansion[@]} -gt 0 ]]; then
+    echo ""
+    echo "⛔ NEED RESEARCH (under word target): ${#needs_expansion[@]}"
+    for item in "${needs_expansion[@]}"; do
+      echo "   - $item"
+    done
+  fi
+
+  # Block if any need research (unless --no-research)
+  total_blocked=$((${#needs_research[@]} + ${#needs_expansion[@]}))
+  if [[ $total_blocked -gt 0 ]] && [[ "$flags" != *"--no-research"* ]]; then
+    echo ""
+    echo "Options:"
+    echo "1. Run /research for each topic first"
+    echo "2. Use --no-research flag (NOT recommended)"
+    echo "3. Ask Gemini to research in parallel (see below)"
+    exit 1
+  fi
+fi
+```
+
+**Parallel research pattern (for blocked modules):**
+```bash
+# Send batch research requests to Gemini
+for slug in needs_research; do
+  .venv/bin/python scripts/gemini_bridge.py ask-gemini \
+    "Research {topic} for ${level} module. Save to audit/${slug}-research.md" \
+    --task-id batch-research
+done
+
+# Continue with ready_to_build modules while Gemini researches
+```
+
+### Step 1: Auto-Fix Fixable Issues
+
+Use `/batch-fix` for non-content issues:
+```bash
+/batch-fix {level} {range}
+```
+
+This fixes: YAML schema, activity types, lint issues, callouts.
+**Does NOT fix word count** - those need proper expansion.
+
+### Step 2: Expand Under-Target Modules
+
+For each module flagged as NEEDS EXPANSION:
+```bash
+/research {topic}        # Gather Ukrainian sources
+/expand {module_path}    # Expand content using research
+```
+
+**NEVER change word_target to match short content.**
+
+### Step 3: Full Build for Remaining
 
 ```
 For each module_num in range:

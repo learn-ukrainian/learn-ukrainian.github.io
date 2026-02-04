@@ -1,72 +1,144 @@
-- word: гетьман
+- lemma: гетьман
+  ipa: /ˈɦɛtʲmɐn/
   translation: hetman
-  ipa: "[ˈɦɛtʲmɐn]"
-  audio: ""
-- word: булава
-  translation: mace (symbol of power)
-  ipa: "[bʊlɐˈvɑ]"
-  audio: ""
-- word: писар
-  translation: scribe/chancellor
-  ipa: "[ˈpɪsɐr]"
-  audio: ""
-- word: дипломатія
-  translation: diplomacy
-  ipa: "[dɪplɔˈmɑtʲijɐ]"
-  audio: ""
-- word: угода
-  translation: agreement/treaty
-  ipa: "[ʊˈɦɔdɐ]"
-  audio: ""
-- word: федерація
+  pos: noun
+  gender: m
+  note: глава держави
+- lemma: унія
+  ipa: /ˈunʲijɐ/
+  translation: union
+  pos: noun
+  gender: f
+  note: союз держав (Гадяцька)
+- lemma: канцлер
+  ipa: /kɐnˈt͡slɛr/
+  translation: chancellor
+  pos: noun
+  gender: m
+  note: вищий урядовець
+- lemma: дипломат
+  ipa: /dɪplɔˈmɑt/
+  translation: diplomat
+  pos: noun
+  gender: m
+  note: той, хто веде переговори
+- lemma: федерація
+  ipa: /fedeˈrɑt͡sʲijɐ/
   translation: federation
-  ipa: "[fɛdɛˈrɑt͡sʲijɐ]"
-  audio: ""
-- word: князівство
-  translation: principality/duchy
-  ipa: "[knʲɐˈzʲivstwɔ]"
-  audio: ""
-- word: шляхта
-  translation: nobility
-  ipa: "[ˈʃlʲɑxtɐ]"
-  audio: ""
-- word: старшина
-  translation: cossack officers
-  ipa: "[stɐrʃɪˈnɑ]"
-  audio: ""
-- word: опозиція
-  translation: opposition
-  ipa: "[ɔpɔˈzɪt͡sʲijɐ]"
-  audio: ""
-- word: повстання
-  translation: uprising
-  ipa: "[pɔu̯ˈstɑnʲːɐ]"
-  audio: ""
-- word: битва
-  translation: battle
-  ipa: "[ˈbɪtwɐ]"
-  audio: ""
-- word: облога
-  translation: siege
-  ipa: "[ɔbˈlɔɦɐ]"
-  audio: ""
-- word: найманці
-  translation: mercenaries
-  ipa: "[ˈnɑjrzɐnt͡sʲi]"
-  audio: ""
-- word: зрада
-  translation: betrayal/treason
-  ipa: "[ˈzrɑdɐ]"
-  audio: ""
-- word: страта
+  pos: noun
+  gender: f
+  note: союз рівних
+- lemma: князівство
+  ipa: /knʲɐˈzʲiʋstʋo/
+  translation: duchy / principality
+  pos: noun
+  gender: n
+  note: Велике Князівство Руське
+- lemma: старшина
+  ipa: /stɐrʃɪˈnɑ/
+  translation: starshyna
+  pos: noun
+  gender: f
+  note: еліта
+- lemma: чернь
+  ipa: /t͡ʃɛrnʲ/
+  translation: commoners / mob
+  pos: noun
+  gender: f
+  note: прості козаки (зневажливо)
+- lemma: бунт
+  ipa: /bunt/
+  translation: revolt
+  pos: noun
+  gender: m
+  note: повстання проти влади
+- lemma: перемога
+  ipa: /perɛˈmɔɦɐ/
+  translation: victory
+  pos: noun
+  gender: f
+  note: Конотопська перемога
+- lemma: зрада
+  ipa: /ˈzrɑdɐ/
+  translation: treason / betrayal
+  pos: noun
+  gender: f
+  note: порушення вірності
+- lemma: страта
+  ipa: /ˈstrɑtɐ/
   translation: execution
-  ipa: "[ˈstrɑtɐ]"
-  audio: ""
-- word: маніфест
+  pos: noun
+  gender: f
+  note: позбавлення життя
+- lemma: маніфест
+  ipa: /mɐnʲiˈfɛst/
   translation: manifesto
-  ipa: "[mɐnʲiˈfɛst]"
-  audio: ""
-- word: республіка
+  pos: noun
+  gender: m
+  note: звернення до народу
+- lemma: інтелектуал
+  ipa: /intelektuˈɑl/
+  translation: intellectual
+  pos: noun
+  gender: m
+  note: освічена людина
+- lemma: писар
+  ipa: /ˈpɪsɐr/
+  translation: scribe / secretary
+  pos: noun
+  gender: m
+  note: генеральний писар
+- lemma: коаліція
+  ipa: /koɐˈlʲit͡sʲijɐ/
+  translation: coalition
+  pos: noun
+  gender: f
+  note: військовий союз
+- lemma: автономізм
+  ipa: /ɐu̯tonomˈizm/
+  translation: autonomism
+  pos: noun
+  gender: m
+  note: прагнення до самоврядування
+- lemma: республіка
+  ipa: /resˈpublʲikɐ/
   translation: republic
-  ipa: "[rɛˈspublʲikɐ]"
-  audio: ""
+  pos: noun
+  gender: f
+  note: Річ Посполита (спільна справа)
+- lemma: воєводство
+  ipa: /ʋojeˈʋɔdstʋo/
+  translation: voivodeship
+  pos: noun
+  gender: n
+  note: адміністративна одиниця
+- lemma: сенат
+  ipa: /seˈnɑt/
+  translation: senate
+  pos: noun
+  gender: m
+  note: вища рада
+- lemma: компроміс
+  ipa: /kɔmproˈmʲis/
+  translation: compromise
+  pos: noun
+  gender: m
+  note: угода через поступки
+- lemma: візіонер
+  ipa: /vʲizʲioˈnɛr/
+  translation: visionary
+  pos: noun
+  gender: m
+  note: той, хто бачить майбутнє
+- lemma: геополітика
+  ipa: /ɦeopɔˈlʲitɪkɐ/
+  translation: geopolitics
+  pos: noun
+  gender: f
+  note: політика простору
+- lemma: еліта
+  ipa: /eˈlʲitɐ/
+  translation: elite
+  pos: noun
+  gender: f
+  note: кращі представники

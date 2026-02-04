@@ -108,8 +108,25 @@ def parse_naturalness(message: str) -> int:
         return 0
 
 
-def load_module_status(status_file: Path) -> dict:
-    """Load a single module's status from JSON file."""
+def extract_module_number(module_id: str) -> int:
+    """Extract module number from ID like 'b2-hist-116' or 'c1-bio-053'."""
+    try:
+        # Split by '-' and get the last part which should be the number
+        parts = module_id.split("-")
+        if len(parts) >= 2:
+            return int(parts[-1])
+    except (ValueError, IndexError):
+        pass
+    return 0
+
+
+def load_module_status(status_file: Path, level_path: Optional[Path] = None) -> dict:
+    """Load a single module's status from JSON file.
+
+    Args:
+        status_file: Path to the status JSON file
+        level_path: Optional path to the level directory (for loading meta files)
+    """
     try:
         with open(status_file) as f:
             data = json.load(f)
@@ -129,16 +146,35 @@ def load_module_status(status_file: Path) -> dict:
         status = overall.get("status", "pending")
 
         filename = status_file.stem
+        num = 0
+        title = filename.replace("-", " ").title()
+
+        # Try to extract number from filename like "04-this-is-i-am"
         try:
-            # Try to extract number from filename like "04-this-is-i-am"
             num = int(filename.split("-")[0])
-        except Exception:
-            num = 0
+        except (ValueError, IndexError):
+            # Filename doesn't start with a number (e.g., track modules like "ivan-franko")
+            # Try to get number from meta file
+            if level_path:
+                meta_file = level_path / "meta" / f"{filename}.yaml"
+                if meta_file.exists():
+                    try:
+                        with open(meta_file) as f:
+                            meta_data = yaml.safe_load(f)
+                        # Extract number from module ID like "c1-bio-053" or "b2-hist-116"
+                        # Prefer 'id' over 'module' since 'module' is sometimes just the slug
+                        module_id = meta_data.get("id") or meta_data.get("module", "")
+                        num = extract_module_number(module_id)
+                        # Use title from meta if available
+                        if meta_data.get("title"):
+                            title = meta_data["title"]
+                    except Exception:
+                        pass
 
         return {
             "id": filename,
             "num": num,
-            "title": filename.replace("-", " ").title(),
+            "title": title,
             "status": status,
             "wordCount": word_count,
             "wordTarget": word_target or 3000,
@@ -262,13 +298,15 @@ async def get_level_status(level: str):
             "pending_count": 0,
         }
 
+    level_dir = CURRICULUM_ROOT / level_info["path"]
     modules = []
     for status_file in sorted(status_dir.glob("*.json")):
-        module_data = load_module_status(status_file)
+        module_data = load_module_status(status_file, level_path=level_dir)
         if "error" not in module_data:
             modules.append(module_data)
 
-    modules.sort(key=lambda m: m["num"])
+    # Sort by number, then by id for stable ordering when numbers are equal
+    modules.sort(key=lambda m: (m["num"], m["id"]))
 
     pass_count = sum(1 for m in modules if m["status"] == "pass")
     fail_count = sum(1 for m in modules if m["status"] == "fail")
@@ -295,12 +333,13 @@ async def get_module_status(level: str, slug: str):
     if not level_info:
         raise HTTPException(status_code=404, detail=f"Level '{level}' not found")
 
-    status_file = CURRICULUM_ROOT / level_info["path"] / "status" / f"{slug}.json"
+    level_dir = CURRICULUM_ROOT / level_info["path"]
+    status_file = level_dir / "status" / f"{slug}.json"
 
     if not status_file.exists():
         raise HTTPException(status_code=404, detail=f"Module '{slug}' not found in level '{level}'")
 
-    return load_module_status(status_file)
+    return load_module_status(status_file, level_path=level_dir)
 
 
 # ==================== AUDIT ENDPOINTS ====================

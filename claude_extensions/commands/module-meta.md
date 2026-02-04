@@ -2,6 +2,8 @@
 
 Initialize module metadata from existing plan.
 
+> **🤝 COLLABORATION RULE:** Write meta yourself. Ask the other agent for help (research, facts, validation) when stuck. Never guess or hallucinate - collaboration is faster than guessing wrong.
+
 ## Usage
 
 ```

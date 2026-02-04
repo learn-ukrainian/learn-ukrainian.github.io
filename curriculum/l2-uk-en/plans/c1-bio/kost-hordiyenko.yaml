@@ -4,106 +4,82 @@ sequence: 30
 slug: kost-hordiyenko
 version: '2.0'
 title: 'Кость Гордієнко: Запорозький кошовий'
+word_target: 4300
 content_outline:
-- section: Вступ — Голос запорозької волі
+- section: Вступ — Лицар степу
+  words: 600
+  points:
+  - Гордієнко як символ запорозької суб'єктності
+  - Ідеолог козацької республіки
+  - Роль у союзі з Мазепою
+- section: Життєпис
+  words: 1600
+  points:
+  - Походження (Головко) та освіта в Могилянці
+  - Обрання кошовим 1702 р.
+  - Боротьба проти московських фортець у степу
+  - Союз із Мазепою та Карлом XII 1709 р.
+  - Участь у Полтавській битві
+- section: Історичний контекст
+  words: 600
+  points:
+  - Запорозька Січ vs Імперський абсолютизм
+  - Степ як територія волі
+- section: Внесок
   words: 400
   points:
-  - Гордієнко як символ козацького республіканізму
-  - Його роль у подіях 1708-1709 років
-  - Значення Січі в козацькій системі
-- section: 'Запорозька Січ: устрій і традиції'
-  words: 600
+  - Співавторство Конституції 1710 р. (Запорозькі статті)
+  - Дипломатія у вигнанні
+- section: Останні роки
+  words: 400
   points:
-  - Козацька демократія
-  - Роль кошового отамана
-  - Відносини з Гетьманщиною
-  - Традиції самоврядування
-- section: Шлях до кошового отаманства
-  words: 500
+  - Заснування Олешківської та Кам'янської Січей
+  - Смерть 1733 р. у Кам'янці
+  - Могила як національна святиня
+- section: Спадщина
+  words: 400
   points:
-  - Походження та молодість
-  - Козацька кар'єра
-  - Обрання кошовим
-  - Політичні погляди
-- section: Союз із Мазепою
-  words: 800
-  points:
-  - Переговори з гетьманом
-  - Рішення Січі підтримати Мазепу
-  - Маніфест до козаків
-  - Спільні дії проти Москви
-- section: Руйнування Січі та вигнання
-  words: 800
-  points:
-  - Полтавська поразка
-  - Руйнування Чортомлицької Січі
-  - Втеча на Кримське ханство
-  - Олешківська Січ
-- section: Продовження боротьби
-  words: 600
-  points:
-  - Дипломатичні зусилля
-  - Союз з Орликом
-  - Прутський похід
-  - Смерть та спадщина
-- section: Підсумок — Воля до останнього
+  - Образ отамана-характерника в фольклорі
+  - Традиція безкомпромісного спротиву
+- section: Підсумок
   words: 300
   points:
-  - Гордієнко як втілення козацького духу
-  - Січ як острів свободи
-  - Пам'ять про кошового
-word_target: 4000
-vocabulary_hints:
-  required:
-  - кошовий (koshovyi - Sich leader)
-  - Січ (Sich)
-  - отаман (otaman/ataman)
-  - рада (council)
-  - козацька демократія (Cossack democracy)
-  - курінь (kurin - Cossack unit)
-  - клейноди (regalia)
-  - паланка (palanka - district)
-  - вигнання (exile)
-  - маніфест (manifesto)
-  recommended:
-  - довбиш (drummer)
-  - осавул (osavul)
-  - писар (scribe)
-  - суддя (judge)
-  - булава (mace)
-activity_hints:
-- type: reading
-  focus: Hordiyenko's manifestos and appeals
-  source: Primary sources (adapted)
-  items: 3 passages
-- type: essay-response
-  focus: Why did the Sich support Mazepa?
-  word_target: 250
-  output: Analysis of Sich interests
+  - Гордієнко як хранитель коду волі
 focus: biography
+pedagogy: seminar
 prerequisites:
-- c1-bio-12 (Ivan Mazepa - alliance context)
-- Understanding of Cossack political structures
+- c1-bio-24 (Іван Мазепа)
+- b2-hist mazepa-war module
 connects_to:
-- c1-bio-14 (Pylyp Orlyk - fellow exile)
-- c1-bio-15 (Petro Kalnyshevskyy - last koshovyi)
-- c1-bio-53 (Petro Bolbochan - later military leader)
+- c1-bio-28 (Пилип Орлик)
+- b2-hist ruina-ii module
+objectives:
+- Проаналізувати політичну опозицію Гордієнка до Петра I
+- Оцінити значення союзу Січі та Гетьманщини
+- Дослідити козацький республіканізм у Конституції 1710 р.
+grammar:
+- Військово-політична термінологія
+- Риторика козацьких промов
 module_type: biography
 sources:
 - name: Кость Гордієнко (Wikipedia UA)
   url: https://uk.wikipedia.org/wiki/Кость_Гордієнко
   type: primary
-  notes: Biography, alliance with Mazepa, resistance
-- name: Запорозька Січ (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Запорозька_Січ
+  notes: Біографія та діяльність
+- name: Запорожці у вигнанні
+  url: http://resource.history.org.ua/
   type: reference
-  notes: Context of Sich governance
-- name: Олешківська Січ
-  url: https://uk.wikipedia.org/wiki/Олешківська_Січ
-  type: reference
-  notes: Exile period
+  notes: Олешківська та Кам'янська Січ
 immersion: 100% Ukrainian
 phase: C1-BIO
-objectives:
-- 'Analyze the life and legacy of кость гордієнко: запорозький кошовий'
-- Evaluate the contributions of голос запорозької волі
+vocabulary_hints:
+  required:
+  - кошовий отаман (koshovyi otaman)
+  - Кам'янська Січ (Kamianka Sich)
+  - характерник (kharakternyk - sorcerer)
+activity_hints:
+- type: reading
+  focus: Промова Гордієнка до Карла XII
+  source: Primary sources (adapted)
+- type: comparative-study
+  focus: Гордієнко vs Сірко

@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M108 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-04 11:42:13
+**Generated:** 2026-02-05 00:47:58
 
 ## Configuration
 **Type:** C1-biography
@@ -36,16 +36,10 @@
 - **[YAML_SCHEMA_VIOLATION]** Schema error in kateryna-bilokur.yaml: Schema validation error at key '0': {'type': 'reading', 'title': 'Епістолярна спадщина Білокур', 'resource': {'type': 'article', 'url': 'https://www.ukrlib.com.ua/bio/printit.php?tid=1553', 'title': 'Листи Катерини Білокур'}, 'tasks': ['Як художниця звертається до своїх адресатів? Який регістр вона використовує?', 'Випишіть 5 діалектних або застарілих слів, які роблять її мову автентичною.', 'Як у листах вона описує свій творчий процес? Знайдіть цитату про «розмову з квітами».']} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-
 ## Recommendation
 **📝 UPDATE** (severity 25/100)
 
-- 3 violations (minor)
+- 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates

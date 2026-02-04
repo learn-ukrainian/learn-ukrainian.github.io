@@ -2,49 +2,46 @@
   "module": "olena-pchilka",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:41:42.431334Z",
+  "last_audit": "2026-02-05T00:47:28.475730Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.348685Z",
-    "meta": "2026-02-02T23:23:00.052132Z",
-    "activities": "2026-01-27T15:34:56.534232Z",
-    "vocabulary": null,
+    "md": "2026-02-04T22:30:45.344307Z",
+    "meta": "2026-02-04T21:40:09.186589Z",
+    "activities": "2026-02-04T21:44:37.980299Z",
+    "vocabulary": "2026-02-04T21:35:19.889304Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "2037/4000 (raw: 2288) | pedagogy: 1 violations"
+      "violations": 1,
+      "message": "4623/4000 (raw: 4677) | richness: 85% < 95% min (biography)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "5/3"
+      "message": "6/3"
     },
     "vocabulary": {
       "status": "warn",
       "violations": 0,
-      "message": "0 < 24 (soft target)"
+      "message": "20 < 24 (soft target)"
     },
     "naturalness": {
       "status": "fail",
       "violations": 1,
-      "message": "1/10 (PENDING) - Naturalness check required"
+      "message": "0/10 (PENDING) - Naturalness check required"
     }
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [
-      "6 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
-    ],
-    "pass_count": 1,
-    "fail_count": 3
+    "blocking_issues": [],
+    "pass_count": 2,
+    "fail_count": 2
   }
 }

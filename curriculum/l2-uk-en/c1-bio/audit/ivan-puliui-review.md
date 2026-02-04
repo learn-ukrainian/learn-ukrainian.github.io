@@ -1,25 +1,23 @@
 # Audit Report: M48 — ivan-puliui.md
-**Level:** C1-BIO | **Module:** M48 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
-**Naturalness:** 1/10 (PENDING)
+**Level:** C1-BIO | **Module:** M48 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4300
+**Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-04 11:41:41
+**Generated:** 2026-02-05 00:47:27
 
 ## Configuration
 **Type:** C1-biography
-**Word Target:** 4000 words
+**Word Target:** 4300 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
 **Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** essay-response, reading
+**Required Types:** critical-analysis, essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥24 words
 **Transliteration:** Not allowed
 
 ## PEDAGOGICAL VIOLATIONS
-- **[HEADING_LEVEL]** Main section 'Підсумок' uses H2 (##) but spec requires H1 (#)
-  - FIX: Change '## Підсумок' to '# Підсумок' for top-level TOC compliance
 - **[YAML_SCHEMA_VIOLATION]** Schema error in ivan-puliui.yaml: Insufficient activities: 0 found, minimum 3 required for C1-BIO
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: biography) missing advanced activity type: essay-response
@@ -29,28 +27,16 @@
 - **[STATE_STANDARD_LOW_IMMERSION]** Module 48 has 4.3% immersion (target: 90.0%+)
   - FIX: Add more Ukrainian content to reach 90.0%+ immersion
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Останні роки' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Спадщина' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Спадщина' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Підсумок' is empty
-  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
-
 ## Recommendation
-**🔄 REWRITE** (severity 95/100)
+**🔄 REWRITE** (severity 80/100)
 
-- 10 violations (significant)
+- 4 violations (moderate)
 - Immersion 91% off target (major rebalancing needed)
 - Activity count below minimum
 - Activity density below minimum
 
 ## Gates
-- **Words:** ❌ 9/4000 (raw: 161)
+- **Words:** ❌ 9/4300 (raw: 161)
 - **Activities:** ❌ 0/3
 - **Density:** ❌ 0 < 1
 - **Unique_types:** ❌ 0/3 types
@@ -60,12 +46,12 @@
 - **Vocab:** ⚠️ 0 < 24 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 4 violations
+- **Pedagogy:** ❌ 3 violations
 - **Content_heavy:** ⚠️ Too few activities: 0 (target 3-9)
 - **Immersion:** ❌ 4.3% LOW (target 95-100% (biography))
 - **Richness:** ❌ 11% < 95% min (biography) - REWRITE needed
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
 **Score:** 11% (minimum: 95%)

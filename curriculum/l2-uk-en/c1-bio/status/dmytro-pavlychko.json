@@ -2,10 +2,10 @@
   "module": "dmytro-pavlychko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:42:21.436888Z",
+  "last_audit": "2026-02-05T00:48:06.250782Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.348310Z",
+    "md": "2026-02-04T22:30:45.351134Z",
     "meta": "2026-02-02T23:23:00.324501Z",
     "activities": "2026-01-27T15:34:55.470191Z",
     "vocabulary": null,
@@ -41,7 +41,6 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "2 Critical Template Violations",
       "6 Outline Compliance Errors",
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
       "Missing required activity types: reading"

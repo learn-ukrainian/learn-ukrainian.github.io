@@ -1,19 +1,57 @@
-module: c1-bio-001
+module: c1-bio-002
 level: C1-BIO
 slug: knyahynia-olha
 version: '2.0'
-id: c1-bio-001
+id: c1-bio-002
+title: "Княгиня Ольга: Дипломатія та реформи"
 naturalness:
-  score: 9
+  score: 10
   status: PASS
-duration: 150
+duration: 120
 transliteration: none
 tags:
 - history
 - biography
-- medieval
+- middle-ages
 - kyivan-rus
-- women-leaders
-vocabulary_count: 24
+- religion
+content_outline:
+- section: Вступ — Мудра володарка Києва
+  words: 600
+  points:
+  - Ольга як символ державної мудрості
+  - Роль у зміцненні внутрішнього ладу
+- section: Життєпис
+  words: 1600
+  points:
+  - Походження та шлюб
+  - Трагедія 945 р.
+  - Помста древлянам
+- section: Історичний контекст
+  words: 600
+  points:
+  - Стан Русі в X ст.
+  - Візантія та Європа
+- section: Внесок
+  words: 400
+  points:
+  - Адміністративна та податкова реформи
+  - Устави і погости
+- section: Останні роки
+  words: 400
+  points:
+  - Дипломатія в Константинополі
+  - Прийняття християнства
+- section: Спадщина
+  words: 400
+  points:
+  - Канонізація та пам'ять
+  - Передвісниця Хрещення
+- section: Підсумок
+  words: 300
+  points:
+  - Роль Ольги в державотворенні
+word_target: 4300
+vital_status: deceased
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-05'

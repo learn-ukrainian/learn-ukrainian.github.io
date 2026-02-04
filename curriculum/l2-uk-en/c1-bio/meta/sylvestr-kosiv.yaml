@@ -3,6 +3,7 @@ level: C1-BIO
 slug: sylvestr-kosiv
 version: '2.0'
 id: c1-bio-021
+title: "Сильвестр Косів: Освітянин і будівничий"
 naturalness:
   score: 10
   status: PASS
@@ -11,8 +12,44 @@ transliteration: none
 tags:
 - history
 - biography
-- religion
 - education
-- diplomacy
+- religion
+- war
+content_outline:
+- section: Вступ — Митрополит бурхливої епохи
+  words: 600
+  points:
+  - Косів як наступник Могили
+  - Збереження духовної незалежності
+- section: Життєпис
+  words: 1600
+  points:
+  - Походження та освіта
+  - Обрання митрополитом 1647 р.
+- section: Історичний контекст
+  words: 600
+  points:
+  - Хмельниччина
+  - Проблема юрисдикції
+- section: Внесок
+  words: 400
+  points:
+  - Розбудова Академії
+  - Літературна діяльність
+- section: Останні роки
+  words: 400
+  points:
+  - Переяславська рада
+  - Смерть 1657 р.
+- section: Спадщина
+  words: 400
+  points:
+  - Ідеолог київського християнства
+- section: Підсумок
+  words: 300
+  points:
+  - Роль Косіва в історії
+word_target: 4300
+vital_status: deceased
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-05'

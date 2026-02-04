@@ -1,10 +1,22 @@
 # Claude-Gemini Cooperation Workflow
 
-**Status**: Planning / Initial Implementation
+**Status**: Active Implementation
 **Created**: February 1, 2026
 **Task**: #18
 **GitHub Issue**: [#487](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/487)
-**Last Updated**: February 1, 2026 (incorporated Gemini's review feedback)
+**Last Updated**: February 5, 2026 (added `/task` skill for issue management)
+
+---
+
+> **🆕 Quick Reference: `/task` Skill (Claude)**
+> ```
+> /task create "Title"           # Create GH issue, set as active
+> /task handoff #N gemini "msg"  # Transfer to Gemini (label + broker)
+> /task update #N "Progress"     # Add progress comment
+> /task close #N                 # Close with summary
+> /task list                     # Show active tasks
+> ```
+> **Full docs**: `docs/TASK-WORKFLOW.md`
 
 ---
 
@@ -229,14 +241,21 @@ Same spec ──┬──▶ Claude generates
 
 ### Pattern 6: GitHub Issue Handoff (Async Collaboration)
 
+> **🆕 NEW**: Claude now has `/task` skill for streamlined issue management!
+> See `docs/TASK-WORKFLOW.md` for full documentation.
+
 ```
 Claude/Gemini                     GitHub Issue                    Other Agent
      │                                 │                               │
-     ├──▶ Create issue ───────────────▶│                               │
-     │    (full spec, checklist)       │                               │
-     │                                 │◀── Later session triggers ────┤
+     ├──▶ /task create ─────────────▶│                               │
+     │    (phases template)            │                               │
      │                                 │                               │
-     │◀── Read results ────────────────│◀── Work + update issue ───────┤
+     ├──▶ /task handoff #N gemini ───▶│───▶ Label: review:gemini ────▶│
+     │    + Broker message             │                               │
+     │                                 │                               │
+     │◀── Broker response ─────────────│◀── Work + gh issue comment ──┤
+     │                                 │                               │
+     ├──▶ /task close #N ────────────▶│ (Closed with summary)         │
 ```
 
 **Use for**:
@@ -272,14 +291,21 @@ Claude/Gemini                     GitHub Issue                    Other Agent
 | `handoff-plan-review.md` | Reviewing YAML plans pre-generation |
 | `handoff-bug-investigation.md` | Root cause analysis of bugs |
 
-**State Labels** (for tracking without parsing body):
+**State Labels** (updated for `/task` skill):
 | Label | Meaning |
 |-------|---------|
-| `status:in-progress` | Work actively happening |
-| `status:blocked` | Waiting on something (add comment explaining) |
-| `status:ready-for-review` | Work complete, needs review |
-| `agent:claude` | Claude is primary assignee |
-| `agent:gemini` | Gemini is primary assignee |
+| `task` | Base task label |
+| `working:claude` | Claude actively working |
+| `working:gemini` | Gemini actively working |
+| `working:unassigned` | Not yet claimed |
+| `review:gemini` | Ready for Gemini review |
+| `review:human` | Needs human review |
+| `blocked` | Waiting on something |
+| `task:content` | Content writing task |
+| `task:fix` | Bug fix task |
+| `task:feature` | Feature task |
+
+> **Note**: Old labels (`agent:claude`, `status:*`) still work but prefer the new `working:*` and `review:*` labels.
 
 **Benefits**:
 - ✅ Human can see progress via GH notifications
@@ -785,6 +811,40 @@ mcp__message-broker__get_conversation(task_id="the-task-id")
 - Gemini: Infrastructure (sampling.py, report.py patch) - via issue #488
 - Claude: Era-defining module reviews (parallel work)
 
+### 2026-02-05: `/task` Skill Implementation
+
+**Context**: Formalizing GitHub Issues workflow for complex tasks
+
+**Key Additions**:
+1. **`/task` skill** - Claude's unified command for issue management
+   - `/task create "Title"` - Creates issue with phases template
+   - `/task handoff #N gemini "msg"` - Transfers to Gemini with label change + broker message
+   - `/task close #N` - Closes with summary, prompts for lessons if errors occurred
+
+2. **New labels created**:
+   - `working:claude`, `working:gemini`, `working:unassigned` (assignment)
+   - `review:gemini`, `review:human` (review status)
+   - `task`, `task:content`, `task:fix`, `task:feature` (type)
+   - `blocked` (status)
+
+3. **Issue template**: `.github/ISSUE_TEMPLATE/complex-task.md`
+   - 4-phase structure: Planning → Implementation → Testing → QA
+   - Checkboxes for progress tracking
+   - Works for all task types (content, fix, feature)
+
+4. **Full Integration**:
+   - Other skills (`/research`, `/expand`, `/module-fix`) auto-update active task
+   - Commits prompt for issue reference: "Add (#N)?"
+   - Lessons captured on close if errors occurred
+
+**Benefits for Gemini**:
+- Clear handoff protocol with label transitions
+- Issue context always available via `gh issue view`
+- Broker message includes issue number for reference
+- Response flow documented in `GEMINI.md`
+
+**Documentation**: `docs/TASK-WORKFLOW.md`
+
 ---
 
 ## Related Documentation
@@ -792,6 +852,8 @@ mcp__message-broker__get_conversation(task_id="the-task-id")
 - `docs/DEVELOPER-GUIDE.md` - Developer workflow guide
 - `docs/CURRENT-STATUS.md` - Project status
 - `CLAUDE.md` - AI agent instructions
+- `GEMINI.md` - Gemini agent instructions ⭐
+- `docs/TASK-WORKFLOW.md` - GitHub Issues task workflow ⭐ NEW
 - `scripts/gemini_bridge.py` - Gemini bridge documentation
 
 ---

@@ -2,50 +2,46 @@
   "module": "dmytro-bortnyanskyy",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:41:34.759089Z",
+  "last_audit": "2026-02-05T00:47:20.515470Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.348170Z",
-    "meta": "2026-02-02T23:22:59.989375Z",
-    "activities": "2026-01-27T15:34:55.437154Z",
-    "vocabulary": null,
+    "md": "2026-02-04T22:30:45.351268Z",
+    "meta": "2026-02-04T20:08:04.458801Z",
+    "activities": "2026-02-04T21:07:57.070938Z",
+    "vocabulary": "2026-02-04T21:59:17.574116Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "2073/4000 (raw: 2287) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "4798/4000 (raw: 4835)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "6/3"
+      "message": "7/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 24 (soft target)"
+      "message": "28/24"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "None/10 (PENDING) - Naturalness check required"
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "6 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: critical-analysis"
-    ],
-    "pass_count": 1,
-    "fail_count": 3
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

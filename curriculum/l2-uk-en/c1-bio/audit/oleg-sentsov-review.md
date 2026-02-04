@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M144 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-04 11:42:31
+**Generated:** 2026-02-05 00:48:16
 
 ## Configuration
 **Type:** C1-biography
@@ -34,17 +34,11 @@
 - **[YAML_SCHEMA_VIOLATION]** Schema error in oleg-sentsov.yaml: Insufficient activities: 2 found, minimum 3 required for C1-BIO
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
-## TEMPLATE COMPLIANCE
-- ❌ **[FORBIDDEN_HEADER_TONE]** Header '## Сучасний етап' is inappropriate for a deceased person. Use '## Останні роки' instead.
-  - FIX: Rename '## Сучасний етап' to '## Останні роки' to maintain correct biographical tone.
-- ❌ **[FORBIDDEN_HEADER_TONE]** Header '## Вплив' is inappropriate for a deceased person. Use '## Спадщина' instead.
-  - FIX: Rename '## Вплив' to '## Спадщина' to maintain correct biographical tone.
-
 ## Recommendation
 **📝 UPDATE** (severity 40/100)
 
 - Revision recommended (severity 40/100)
-- 3 violations (minor)
+- 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 - Activity count below minimum
 

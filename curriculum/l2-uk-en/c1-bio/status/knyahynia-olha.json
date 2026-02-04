@@ -2,11 +2,11 @@
   "module": "knyahynia-olha",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:41:14.899090Z",
+  "last_audit": "2026-02-05T00:47:01.184433Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-03T12:10:55.906641Z",
-    "meta": "2026-01-29T07:39:04.884812Z",
+    "md": "2026-02-04T22:30:45.359941Z",
+    "meta": "2026-02-05T00:41:16.704666Z",
     "activities": "2026-02-03T10:44:08.740312Z",
     "vocabulary": "2026-02-02T21:47:51.688312Z",
     "plan": null
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4630/4000 (raw: 4917)"
+      "message": "4630/4300 (raw: 4917)"
     },
     "activities": {
       "status": "pass",
@@ -35,12 +35,14 @@
     "naturalness": {
       "status": "pass",
       "violations": 0,
-      "message": "9/10 (High)"
+      "message": "10/10 (High)"
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
+    "status": "fail",
+    "blocking_issues": [
+      "3 Outline Compliance Errors"
+    ],
     "pass_count": 4,
     "fail_count": 0
   }

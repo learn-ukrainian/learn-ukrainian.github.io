@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M75 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-04 11:41:56
+**Generated:** 2026-02-05 00:47:41
 
 ## Configuration
 **Type:** C1-biography
@@ -38,16 +38,10 @@
 - **[YAML_SCHEMA_VIOLATION]** Schema error in kazimir-malevich.yaml: Schema validation error at key '2': {'type': 'reading', 'title': '«Українське коріння Малевича: Дослідження»', 'resource': {'type': 'article', 'url': 'https://localhistory.org.ua/texts/statti/malevich-ukrayinskii-khudozhnik/', 'title': '«Казимір Малевич: Як українське село породило світовий авангард»'}, 'tasks': ['«Які саме дитячі спогади Малевича про українські села наводяться у статті?»', '«Як історики пояснюють вибір художником саме «української» ідентичності в анкетах?»', '«Знайдіть опис київського періоду роботи Малевича. Які проекти він не встиг реалізувати?»']} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Останні роки' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple headers contain 'Спадщина': Спадщина, Спадщина та вічність
-  - FIX: RENAME one header to NOT contain 'Спадщина'. Example: 'Агіографічна спадщина' → 'Житійна творчість' (removes the duplicate word).
-
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 3 violations (minor)
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ❌ 2006/4000 (raw: 2235)

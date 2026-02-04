@@ -2,50 +2,48 @@
   "module": "hryhoriy-skovoroda",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:41:33.682435Z",
+  "last_audit": "2026-02-05T00:47:19.335693Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-17T21:45:15.823567Z",
-    "meta": "2026-02-02T23:22:59.982417Z",
-    "activities": "2026-01-27T15:34:55.556150Z",
-    "vocabulary": null,
+    "md": "2026-02-04T22:30:45.351203Z",
+    "meta": "2026-02-05T00:43:58.983597Z",
+    "activities": "2026-02-04T17:29:30.240840Z",
+    "vocabulary": "2026-02-04T17:29:39.539886Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2091/4000 (raw: 2256)"
+      "message": "4803/4300 (raw: 4831) | pedagogy: 2 violations"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "6/3"
+      "message": "7/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 24 (soft target)"
+      "message": "24/24"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "None/10 (PENDING) - Naturalness check required"
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
     }
   },
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "6 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: reading"
+      "Missing required activity types: creative-writing"
     ],
-    "pass_count": 1,
-    "fail_count": 3
+    "pass_count": 4,
+    "fail_count": 1
   }
 }

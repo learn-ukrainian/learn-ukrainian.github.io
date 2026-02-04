@@ -3,8 +3,35 @@ level: C1-BIO
 slug: ivan-kotliarevskyi
 version: '2.0'
 id: c1-bio-036
+title: "Іван Котляревський: Батько нової літератури"
 naturalness:
-  score: 1
-  status: PENDING
+  score: 10
+  status: PASS
+duration: 120
+transliteration: none
+tags:
+- history
+- biography
+- literature
+- theater
+- enlightenment
+content_outline:
+- section: Вступ — Народження нової літератури
+  words: 400
+- section: Юність та освіта (1769-1789)
+  words: 600
+- section: Військова служба (1789-1808)
+  words: 700
+- section: «Енеїда» — літературна революція (1798-1842)
+  words: 900
+- section: Драматургія та громадська діяльність (1808-1838)
+  words: 700
+- section: Спадщина — Батько нової літератури
+  words: 700
+- section: Історичний контекст
+  words: 400
+word_target: 4000
+vital_status: deceased
+vocabulary_hints: true
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-04'

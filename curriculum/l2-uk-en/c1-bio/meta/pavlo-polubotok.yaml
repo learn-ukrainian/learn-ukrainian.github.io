@@ -3,19 +3,54 @@ level: C1-BIO
 slug: pavlo-polubotok
 version: '2.0'
 id: c1-bio-029
+title: "Павло Полуботок: Мученик за автономію"
 naturalness:
-  score: 0
-  status: PENDING
-word_target: 4000
+  score: 10
+  status: PASS
 duration: 120
 transliteration: none
 tags:
 - history
 - biography
-- hetmanate
+- politics
+- legend
 - resistance
-vocabulary_hints:
-  required: []
-  recommended: []
+content_outline:
+- section: Вступ — Символ нескореності
+  words: 600
+  points:
+  - Полуботок як символ морального опору
+  - Протистояння з імперською владою
+- section: Життєпис
+  words: 1600
+  points:
+  - Шлях магната і полковника
+  - Наказний гетьман
+  - Арешт і смерть
+- section: Історичний контекст
+  words: 600
+  points:
+  - Наступ імперії після Північної війни
+  - Малоросійська колегія
+- section: Внесок
+  words: 400
+  points:
+  - Захист прав народу
+  - Меценатство
+- section: Останні роки
+  words: 400
+  points:
+  - Ув'язнення і смерть
+- section: Спадщина
+  words: 400
+  points:
+  - Легенда про золото
+  - Символ гідності
+- section: Підсумок
+  words: 300
+  points:
+  - Значення постаті
+word_target: 4300
+vital_status: deceased
 build:
-  last_modified: '2026-02-02'
+  last_modified: '2026-02-05'

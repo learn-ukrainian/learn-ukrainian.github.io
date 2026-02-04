@@ -2,10 +2,10 @@
   "module": "roksolana",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:41:23.173179Z",
+  "last_audit": "2026-02-05T00:47:08.581474Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-02T23:12:47.104571Z",
+    "md": "2026-02-04T22:30:45.343126Z",
     "meta": "2026-02-02T23:22:59.907402Z",
     "activities": "2026-01-27T15:34:56.697722Z",
     "vocabulary": "2026-02-02T23:08:12.798126Z",

@@ -1,100 +1,120 @@
-- word: митрополит
-  translation: metropolitan
-  ipa: "[mɪtrɔpɔˈlɪt]"
-  audio: "assets/audio/placeholder.mp3"
-- word: архімандрит
-  translation: archimandrite
-  ipa: "[ɐrxіmɐnˈdrɪt]"
-  audio: "assets/audio/placeholder.mp3"
-- word: академія
+- lemma: академія
+  ipa: /ɐkɐˈdɛmʲijɐ/
   translation: academy
-  ipa: "[ɐkɐˈdɛmіjɐ]"
-  audio: "assets/audio/placeholder.mp3"
-- word: православ'я
-  translation: Orthodoxy
-  ipa: "[prɐwɔˈsɫɑwjɐ]"
-  audio: "assets/audio/placeholder.mp3"
-- word: унія
-  translation: church union
-  ipa: "[ˈunіjɐ]"
-  audio: "assets/audio/placeholder.mp3"
-- word: братство
-  translation: brotherhood, confraternity
-  ipa: "[ˈbrɑtstwɔ]"
-  audio: "assets/audio/placeholder.mp3"
-- word: друкарня
-  translation: printing house
-  ipa: "[drʊˈkɑrɲɐ]"
-  audio: "assets/audio/placeholder.mp3"
-- word: требник
-  translation: book of needs, euchologion
-  ipa: "[ˈtrɛbnɪk]"
-  audio: "assets/audio/placeholder.mp3"
-- word: канонізація
-  translation: canonization
-  ipa: "[kɐnɔnіˈzɑt͡sіjɐ]"
-  audio: "assets/audio/placeholder.mp3"
-- word: лавра
-  translation: lavra (major monastery)
-  ipa: "[ˈɫɑwrɐ]"
-  audio: "assets/audio/placeholder.mp3"
-- word: богослов'я
-  translation: theology
-  ipa: "[bɔɦɔˈsɫɔwjɐ]"
-  audio: "assets/audio/placeholder.mp3"
-- word: схоластика
-  translation: scholasticism
-  ipa: "[sxɔˈɫɑstɪkɐ]"
-  audio: "assets/audio/placeholder.mp3"
-- word: катехизис
-  translation: catechism
-  ipa: "[kɐtɛˈxɪzɪs]"
-  audio: "assets/audio/placeholder.mp3"
-- word: єпархія
-  translation: diocese
-  ipa: "[jɛˈpɑrxіjɐ]"
-  audio: "assets/audio/placeholder.mp3"
-- word: полеміка
-  translation: polemic, debate
-  ipa: "[pɔˈlɛmіkɐ]"
-  audio: "assets/audio/placeholder.mp3"
-- word: спудей
-  translation: student (archaic)
-  ipa: "[spʊˈdɛj]"
-  audio: "assets/audio/placeholder.mp3"
-- word: колегіум
+  pos: noun
+  gender: f
+  note: вищий навчальний заклад
+- lemma: колегіум
+  ipa: /kɔˈlɛɦʲijum/
   translation: collegium
-  ipa: "[kɔˈlɛɦіʊm]"
-  audio: "assets/audio/placeholder.mp3"
-- word: меценат
-  translation: patron of arts
-  ipa: "[mɛt͡sɛˈnɑt]"
-  audio: "assets/audio/placeholder.mp3"
-- word: ідентичність
-  translation: identity
-  ipa: "[іdɛnˈtɪt͡ʃnіstʲ]"
-  audio: "assets/audio/placeholder.mp3"
-- word: реформа
+  pos: noun
+  gender: m
+  note: школа європейського типу
+- lemma: митрополит
+  ipa: /mɪtroˈpɔlɪt/
+  translation: metropolitan
+  pos: noun
+  gender: m
+  note: глава церкви
+- lemma: требник
+  ipa: /ˈtrɛbnɪk/
+  translation: trebnyk (book of needs)
+  pos: noun
+  gender: m
+  note: книга церковних обрядів
+- lemma: катехизм
+  ipa: /kɐteˈxɪzm/
+  translation: catechism
+  pos: noun
+  gender: m
+  note: виклад основ віри
+- lemma: реформа
+  ipa: /reˈfɔrmɐ/
   translation: reform
-  ipa: "[rɛˈfɔrmɐ]"
-  audio: "assets/audio/placeholder.mp3"
-- word: бароко
+  pos: noun
+  gender: f
+  note: перетворення
+- lemma: латинізація
+  ipa: /lɐtɪnʲiˈzɑt͡sʲijɐ/
+  translation: latinization
+  pos: noun
+  gender: f
+  note: вплив латинської культури
+- lemma: бароко
+  ipa: /bɐˈrɔko/
   translation: baroque
-  ipa: "[bɐˈrɔkɔ]"
-  audio: "assets/audio/placeholder.mp3"
-- word: догмат
-  translation: dogma
-  ipa: "[ˈdɔɦmɐt]"
-  audio: "assets/audio/placeholder.mp3"
-- word: єресь
-  translation: heresy
-  ipa: "[ˈjɛrɛsʲ]"
-  audio: "assets/audio/placeholder.mp3"
-- word: спадщина
-  translation: heritage, legacy
-  ipa: "[ˈspɑdʃt͡ʃɪnɐ]"
-  audio: "assets/audio/placeholder.mp3"
-- word: освіта
+  pos: noun
+  gender: n
+  note: стиль в мистецтві
+- lemma: спудей
+  ipa: /spuˈdɛi̯/
+  translation: spudei (student)
+  pos: noun
+  gender: m
+  note: студент академії
+- lemma: друкарня
+  ipa: /druˈkɑrnʲɐ/
+  translation: printing house
+  pos: noun
+  gender: f
+  note: місце виготовлення книг
+- lemma: архімандрит
+  ipa: /ɐrxʲimɐnˈdrɪt/
+  translation: archimandrite
+  pos: noun
+  gender: m
+  note: настоятель монастиря
+- lemma: печера
+  ipa: /peˈt͡ʃɛrɐ/
+  translation: cave
+  pos: noun
+  gender: f
+  note: підземна келія
+- lemma: святитель
+  ipa: /sʲʋʲɐˈtɪtelʲ/
+  translation: saint / hierarch
+  pos: noun
+  gender: m
+  note: канонізований єпископ
+- lemma: уніфікація
+  ipa: /unʲifʲiˈkɑt͡sʲijɐ/
+  translation: unification
+  pos: noun
+  gender: f
+  note: приведення до одноманітності
+- lemma: дискурс
+  ipa: /dɪsˈkurs/
+  translation: discourse
+  pos: noun
+  gender: m
+  note: обговорення
+- lemma: ідентичність
+  ipa: /idenˈtɪt͡ʃnʲisʲtʲ/
+  translation: identity
+  pos: noun
+  gender: f
+  note: самовизначення
+- lemma: фундатор
+  ipa: /funˈdɑtɔr/
+  translation: founder
+  pos: noun
+  gender: m
+  note: засновник
+- lemma: заповіт
+  ipa: /zɐpɔˈʋʲit/
+  translation: testament
+  pos: noun
+  gender: m
+  note: остання воля
+- lemma: гуманізм
+  ipa: /ɦumɐˈnʲizm/
+  translation: humanism
+  pos: noun
+  gender: m
+  note: повага до людини
+- lemma: освіта
+  ipa: /osˈʋʲitɐ/
   translation: education
-  ipa: "[ɔˈswіtɐ]"
-  audio: "assets/audio/placeholder.mp3"
+  pos: noun
+  gender: f
+  note: навчання

@@ -2,10 +2,10 @@
   "module": "leonid-kadenyuk",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:42:25.702145Z",
+  "last_audit": "2026-02-05T00:48:10.397140Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.348492Z",
+    "md": "2026-02-04T22:30:45.357507Z",
     "meta": "2026-02-02T23:23:00.349946Z",
     "activities": "2026-01-27T15:34:55.867101Z",
     "vocabulary": null,
@@ -41,7 +41,6 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "3 Critical Template Violations",
       "6 Outline Compliance Errors",
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],

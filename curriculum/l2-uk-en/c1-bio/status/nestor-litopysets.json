@@ -2,10 +2,10 @@
   "module": "nestor-litopysets",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:41:18.754651Z",
+  "last_audit": "2026-02-05T00:47:04.641473Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-03T23:04:49.021088Z",
+    "md": "2026-02-04T22:30:45.350147Z",
     "meta": "2026-02-03T22:20:24.580509Z",
     "activities": "2026-02-03T22:19:06.802845Z",
     "vocabulary": "2026-02-03T23:04:54.546670Z",

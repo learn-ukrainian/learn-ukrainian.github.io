@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M47 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-04 11:41:41
+**Generated:** 2026-02-05 00:47:27
 
 ## Configuration
 **Type:** C1-biography
@@ -37,14 +37,10 @@
 - **[YAML_SCHEMA_VIOLATION]** Schema error in mykola-lysenko.yaml: Schema validation error at key '3': {'type': 'reading', 'title': 'Аналіз музично-критичних текстів', 'resource': {'type': 'article', 'url': 'https://mus.art.co.ua/mikola-lysenko-osnova-ukrainskoji-muzichnoji-kulturi/', 'title': 'Микола Лисенко: основа української музичної культури'}, 'tasks': ['Які саме риси стилю Лисенка автор статті називає «європейськими»?', 'Проаналізуйте аргументи щодо значення «Тараса Бульби» для світової опери.', 'Знайдіть цитати учнів Лисенка про його педагогічні методи.']} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Останні роки' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ❌ 2042/4000 (raw: 2359)

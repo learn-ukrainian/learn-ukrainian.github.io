@@ -4,148 +4,74 @@ items:
   translation: opera
   pos: noun
   gender: f
-  note: музично-драматичний твір
 - lemma: баритон
   ipa: /bɑrɪˈtɔn/
   translation: baritone
   pos: noun
   gender: m
-  note: співацький голос
 - lemma: лібрето
   ipa: /lʲiˈbrɛtɔ/
   translation: libretto
   pos: noun
   gender: n
-  note: текст опери
 - lemma: прем'єра
   ipa: /prɛmˈjɛrɑ/
   translation: premiere
   pos: noun
   gender: f
-  note: перший показ
 - lemma: композитор
   ipa: /kɔmpɔˈzɪtɔr/
   translation: composer
   pos: noun
   gender: m
-  note: автор музики
 - lemma: постановка
-  ipa: /pɔstɑˈnɔukɑ/
-  translation: staging
+  ipa: /pɔstɑˈnɔwkɑ/
+  translation: staging/production
   pos: noun
   gender: f
-  note: створення вистави
 - lemma: арія
-  ipa: /ˈɑrʲijɑ/
+  ipa: /ˈɑrijɑ/
   translation: aria
   pos: noun
   gender: f
-  note: сольний номер
 - lemma: театр
   ipa: /tɛˈɑtr/
   translation: theater
   pos: noun
   gender: m
-  note: вид мистецтва
 - lemma: сцена
   ipa: /ˈst͡sɛnɑ/
-  translation: stage
+  translation: stage/scene
   pos: noun
   gender: f
-  note: майданчик
 - lemma: партія
-  ipa: /ˈpɑrtʲijɑ/
-  translation: part / role
+  ipa: /ˈpɑrtijɑ/
+  translation: part/role
   pos: noun
   gender: f
-  note: роль в опері
 - lemma: антракт
   ipa: /ɑnˈtrɑkt/
   translation: intermission
   pos: noun
   gender: m
-  note: перерва
 - lemma: увертюра
-  ipa: /uʋɛrˈtʲurɑ/
+  ipa: /uwɛrˈtʲurɑ/
   translation: overture
   pos: noun
   gender: f
-  note: оркестровий вступ
 - lemma: хор
   ipa: /xɔr/
-  translation: chorus
+  translation: chorus/choir
   pos: noun
   gender: m
-  note: колектив співаків
 - lemma: диригент
   ipa: /dɪrɪˈɦɛnt/
   translation: conductor
   pos: noun
   gender: m
-  note: керівник оркестру
 - lemma: декорації
-  ipa: /dɛkɔˈrɑt͡siji/
-  translation: scenery
-  pos: noun
-  gender: p
-  note: оформлення сцени
-- lemma: цензура
-  ipa: /t͡sɛnˈzurɑ/
-  translation: censorship
+  ipa: /dɛkɔˈrɑt͡sij/
+  translation: scenery/decorations
   pos: noun
   gender: f
-  note: контроль влади
-- lemma: бельканто
-  ipa: /bɛlʲˈkɑntɔ/
-  translation: bel canto
-  pos: noun
-  gender: n
-  note: стиль співу
-- lemma: гідропатія
-  ipa: /ɦidrɔˈpɑtʲijɑ/
-  translation: hydropathy
-  pos: noun
-  gender: f
-  note: водолікування
-- lemma: вигнання
-  ipa: /ʋɪɦˈnɑnʲːɑ/
-  translation: exile
-  pos: noun
-  gender: n
-  note: примусова еміграція
-- lemma: туга
-  ipa: /ˈtuɦɑ/
-  translation: longing
-  pos: noun
-  gender: f
-  note: глибокий сум
-- lemma: ідентичність
-  ipa: /idɛnˈtɪt͡ʃnʲistʲ/
-  translation: identity
-  pos: noun
-  gender: f
-  note: самоусвідомлення
-- lemma: маніфест
-  ipa: /mɑnʲiˈfɛst/
-  translation: manifesto
-  pos: noun
-  gender: m
-  note: програмний документ
-- lemma: суб'єктність
-  ipa: /subˈjɛktnʲistʲ/
-  translation: agency
-  pos: noun
-  gender: f
-  note: здатність діяти
-- lemma: колорит
-  ipa: /kɔlɔˈrɪt/
-  translation: color / flavor
-  pos: noun
-  gender: m
-  note: своєрідність
-- lemma: шароварщина
-  ipa: /ʃɑrɔˈʋɑrʃt͡ʃɪnɑ/
-  translation: kitsch
-  pos: noun
-  gender: f
-  note: псевдонародність
+  plural_only: true

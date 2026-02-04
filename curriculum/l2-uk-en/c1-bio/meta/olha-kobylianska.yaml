@@ -1,10 +1,108 @@
 module: c1-bio-057
 level: C1-BIO
+sequence: 57
 slug: olha-kobylianska
-version: '2.0'
-id: c1-bio-057
 naturalness:
-  score: 1
-  status: PENDING
-build:
-  last_modified: '2026-01-26'
+  status: PASS
+  score: 9
+  timestamp: 2026-02-05T10:00:00Z
+version: '2.0'
+transliteration: none
+title: 'Ольга Кобилянська: Модерністка і феміністка'
+content_outline:
+- section: Вступ — Орлиця Буковини
+  words: 400
+  points:
+  - Кобилянська як першовідкривачка українського модернізму
+  - Поєднання феміністичних ідей та психологічної прози
+  - Буковинський контекст її творчості
+- section: Ранні роки та самоосвіта (1863-1887)
+  words: 600
+  points:
+  - Народження в Гура-Гуморі в родині дрібного урядовця
+  - Німецькомовне виховання та відкриття української ідентичності
+  - Самоосвіта через читання європейської літератури
+  - Вплив Ніцше та німецького романтизму
+- section: Чернівецький період (1887-1914)
+  words: 800
+  points:
+  - Переїзд до Чернівців
+  - Входження в українське культурне коло
+  - Дружба з Лесею Українкою
+  - Розвиток як письменниці
+- section: Головні твори
+  words: 800
+  points:
+  - «Людина» (1886) — маніфест емансипації
+  - «Царівна» (1895) — психологічний портрет
+  - «Земля» (1902) — епос буковинського села
+  - «В неділю рано зілля копала» (1909)
+- section: Феміністичний світогляд
+  words: 700
+  points:
+  - Ідея «нової жінки» в її творчості
+  - Критика патріархату та сільських традицій
+  - Зв'язки з європейським фемінізмом
+  - Листування з Наталією Кобринською
+- section: Останні роки та спадщина (1914-1942)
+  words: 700
+  points:
+  - Війни та окупації Буковини
+  - Продовження творчості в складних умовах
+  - Смерть у Чернівцях під румунською окупацією
+  - Вплив на українську літературу XX століття
+word_target: 4000
+vocabulary_hints:
+  required:
+  - модернізм (modernism)
+  - психологічна проза (psychological prose)
+  - емансипація (emancipation)
+  - феміністка (feminist)
+  - самоосвіта (self-education)
+  - Буковина (Bukovyna)
+  - новела (novella)
+  - «нова жінка» (new woman)
+  - патріархат (patriarchy)
+  - психологізм (psychologism)
+  recommended:
+  - Ніцше (Nietzsche)
+  - німецький романтизм (German Romanticism)
+  - селянський епос (peasant epic)
+  - листування (correspondence)
+  - символізм (symbolism)
+activity_hints:
+- type: reading
+  focus: Літературна творчість
+  source: Уривки з «Землі» та «Царівни»
+  items: 3 passages
+- type: essay-response
+  focus: Як Кобилянська змінила українську прозу?
+  word_target: 300
+  output: Літературознавче есе
+focus: biography
+prerequisites:
+- c1-bio-25 (Наталія Кобринська)
+connects_to:
+- c1-bio-40 (Леся Українка)
+- c1-bio-28 (Іван Франко)
+- c1-bio-86 (Оксана Забужко)
+module_type: biography
+sources:
+- name: Ольга Кобилянська (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Кобилянська_Ольга_Юліанівна
+  type: primary
+  notes: Біографія, творчість, світогляд
+- name: Музей Ольги Кобилянської (Чернівці)
+  url: https://kobylanska.cv.ua
+  type: reference
+  notes: Меморіальний музей та архів
+- name: Інститут літератури НАНУ
+  url: https://ilnan.gov.ua
+  type: reference
+  notes: Літературознавчі дослідження
+immersion: 100% Ukrainian
+phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of ольга кобилянська: модерністка і феміністка'
+- Evaluate the contributions of орлиця буковини
+- Trace the career and influence of останні роки та спадщина (1914-1942)
