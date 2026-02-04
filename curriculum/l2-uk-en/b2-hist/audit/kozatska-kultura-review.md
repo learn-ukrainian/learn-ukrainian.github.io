@@ -1,8 +1,8 @@
 # Audit Report: M47 — kozatska-kultura.md
-**Level:** B2 | **Module:** M47 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M47 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:12
+**Generated:** 2026-02-03 22:54:27
 
 ## Configuration
 **Type:** B2-history

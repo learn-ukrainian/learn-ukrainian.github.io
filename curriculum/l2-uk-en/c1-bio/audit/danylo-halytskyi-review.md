@@ -1,8 +1,8 @@
-# Audit Report: M08 — danylo-halytskyi.md
-**Level:** C1 | **Module:** M08 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4000
+# Audit Report: M10 — danylo-halytskyi.md
+**Level:** C1-BIO | **Module:** M10 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:05
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-04 11:41:20
 
 ## Configuration
 **Type:** C1-biography
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
 **Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** critical-analysis, essay-response, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥24 words
@@ -31,16 +31,16 @@
 - Total activities: 6 (target: 3-9) ✅
 - Unique types: 5 (minimum: 3) ✅
 - Priority types used: 5/6 (authorial-intent, comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4017/4000 (raw: 4285)
+- **Words:** ✅ 4286/4000 (raw: 4372)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 9/5
+- **Engagement:** ✅ 15/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
@@ -59,28 +59,26 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 10 | 4 | 100% | 19% | 19.0% |
-| engagement | 9 | 6 | 100% | 14% | 14.3% |
-| quotes | 7 | 3 | 100% | 14% | 14.3% |
-| cultural | 7 | 4 | 100% | 10% | 9.5% |
-| visual | 8 | 4 | 100% | 10% | 9.5% |
+| primary_sources | 15 | 4 | 100% | 19% | 19.0% |
+| engagement | 10 | 6 | 100% | 14% | 14.3% |
+| quotes | 15 | 3 | 100% | 14% | 14.3% |
+| cultural | 5 | 4 | 100% | 10% | 9.5% |
+| visual | 11 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
-| legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.97 | - | 97% | 5% | 4.6% |
+| legacy | 13 | 2 | 100% | 10% | 9.5% |
+| variety | 0.95 | - | 95% | 5% | 4.5% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 15 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.9%** |
+| questions | 12 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 103 | Included in Core |
-| **Вступ** | ✅ | 263 | Included in Core |
-| **Життєпис** | ⚪️ | 1878 | Skipped |
-| **Історичний контекст** | ✅ | 476 | Included in Core |
-| **Внесок** | ⚪️ | 397 | Skipped |
-| **Порівняльний аналіз** | ✅ | 256 | Included in Core |
-| **Критичне мислення: Питання для глибокого аналізу** | ✅ | 433 | Included in Core |
-| **Підсумок** | ✅ | 129 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 82 | Skipped |
-| **Activities** | ➖ | 0 | Excluded Type |
+| **Intro/Narrative** | ✅ | 124 | Included in Core |
+| **Вступ — Єдиний коронований король Русі** | ✅ | 397 | Included in Core |
+| **Життєпис: Шлях до влади** | ⚪️ | 1546 | Skipped |
+| **Внесок: Коронація та держава** | ⚪️ | 841 | Skipped |
+| **Останні роки: Боротьба до кінця** | ⚪️ | 500 | Skipped |
+| **Спадщина: Королівська традиція** | ⚪️ | 470 | Skipped |
+| **Підсумок — Король без королівства?** | ✅ | 238 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 170 | Skipped |

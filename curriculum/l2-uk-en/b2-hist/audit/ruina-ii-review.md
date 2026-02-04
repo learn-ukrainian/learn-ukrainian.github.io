@@ -1,8 +1,8 @@
 # Audit Report: M59 — ruina-ii.md
-**Level:** B2 | **Module:** M59 | **Phase:** HIST.6 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M59 | **Phase:** HIST.6 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:19
+**Generated:** 2026-02-03 22:54:34
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 5502/4000 (raw: 5581)
+- **Words:** ✅ 5502/4000 (raw: 5589)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.6% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -72,7 +72,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 103 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Руїна II: Дорошенко і надія** | ⚪️ | 103 | Skipped |
 | **Вступ: Людина, яка хотіла неможливого** | ✅ | 505 | Included in Core |
 | **Петро Дорошенко: Шлях до булави** | ⚪️ | 626 | Skipped |
 | **Турецький вектор: Союз чи зрада?** | ⚪️ | 719 | Skipped |

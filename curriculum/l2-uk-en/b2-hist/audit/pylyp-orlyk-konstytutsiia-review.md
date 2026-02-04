@@ -1,8 +1,8 @@
 # Audit Report: M67 — pylyp-orlyk-konstytutsiia.md
-**Level:** B2 | **Module:** M67 | **Phase:** HIST.7 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M67 | **Phase:** HIST.7 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:24
+**Generated:** 2026-02-03 22:54:38
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4754/4000 (raw: 4838)
+- **Words:** ✅ 4754/4000 (raw: 4846)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.5% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -72,7 +72,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 96 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Пилип Орлик і перша Конституція** | ⚪️ | 96 | Skipped |
 | **Вступ: Гетьман у вигнанні** | ✅ | 557 | Included in Core |
 | **Бендерська Конституція 1710 року: Архітектура свободи** | ⚪️ | 744 | Skipped |
 | **Демократичні ідеї: Україна vs Європа** | ⚪️ | 581 | Skipped |

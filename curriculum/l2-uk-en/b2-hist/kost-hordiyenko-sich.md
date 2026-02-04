@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: ivan-mazepa-poltava, zaporizka-sich, pylyp-orlyk-konstytutsiia, ivan-sirko
+-->
+
 # Кость Гордієнко та Січ
 
 > 🎯 **Чому це важливо?**

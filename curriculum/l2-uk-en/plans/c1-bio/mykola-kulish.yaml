@@ -1,6 +1,6 @@
-module: mykola-kulish
+module: c1-bio-095
 level: C1-BIO
-sequence: 86
+sequence: 95
 slug: mykola-kulish
 version: '2.0'
 title: 'Микола Куліш: Геній українського театру'
@@ -107,10 +107,17 @@ objectives:
 - Проаналізувати його найважливіші п'єси
 - Зрозуміти значення Куліша для українського театру
 - Осмислити трагедію Розстріляного відродження
-notes: |
-  Mykola Kulish is considered the greatest Ukrainian playwright of the 20th century.
+notes: 'Mykola Kulish is considered the greatest Ukrainian playwright of the 20th
+  century.
+
   His plays combined modernist techniques with deep exploration of Ukrainian identity
+
   and the absurdities of Soviet reality. "Myna Mazailo" brilliantly satirized
+
   linguistic assimilation. His partnership with director Les Kurbas created
+
   legendary theatrical productions. Both were arrested in 1934 and executed on
+
   the same day (November 3, 1937) in the Sandarmokh mass execution.
+
+  '

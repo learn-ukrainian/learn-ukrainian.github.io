@@ -1,8 +1,8 @@
 # Audit Report: M139 — zlochyny-stiikist.md
-**Level:** B2 | **Module:** M139 | **Phase:** HIST.13 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M139 | **Phase:** HIST.13 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:55:07
+**Generated:** 2026-02-03 22:55:21
 
 ## Configuration
 **Type:** B2-history

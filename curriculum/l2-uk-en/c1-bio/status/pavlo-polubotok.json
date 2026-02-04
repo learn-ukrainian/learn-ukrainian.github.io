@@ -1,0 +1,51 @@
+{
+  "module": "pavlo-polubotok",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-04T11:41:31.476624Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-02T13:49:11.509862Z",
+    "meta": "2026-02-02T23:22:59.967174Z",
+    "activities": "2026-02-02T13:56:05.887163Z",
+    "vocabulary": "2026-02-02T13:56:05.887054Z",
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 4,
+      "message": "63/4000 (raw: 94) | engagement: 0/5 | pedagogy: 5 violations | richness: 15% < 95% min (biography) - REWRITE needed"
+    },
+    "activities": {
+      "status": "fail",
+      "violations": 4,
+      "message": "0/3 | density: 0 < 1 | unique_types: 0/3 types | priority: No priority types"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 24 (soft target)"
+    },
+    "naturalness": {
+      "status": "fail",
+      "violations": 1,
+      "message": "0/10 (PENDING) - Naturalness check required"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "2 Critical Template Violations",
+      "7 Outline Compliance Errors",
+      "Missing required activity types: critical-analysis, essay-response, reading"
+    ],
+    "pass_count": 1,
+    "fail_count": 3
+  }
+}

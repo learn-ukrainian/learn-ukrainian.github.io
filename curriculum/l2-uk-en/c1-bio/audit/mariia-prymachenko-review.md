@@ -1,8 +1,8 @@
-# Audit Report: M100 — mariia-prymachenko.md
-**Level:** C1 | **Module:** M100 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M116 — mariia-prymachenko.md
+**Level:** C1-BIO | **Module:** M116 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:46
+**Generated:** 2026-02-04 11:42:17
 
 ## Configuration
 **Type:** C1-biography

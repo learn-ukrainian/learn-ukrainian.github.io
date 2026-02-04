@@ -1,0 +1,70 @@
+module: c1-bio-006
+level: C1-BIO
+sequence: 6
+slug: volodymyr-monomakh
+version: '2.0'
+title: 'Володимир Мономах: Миротворець і літописець'
+word_target: 4000
+content_outline:
+  - section: Вступ
+    words: 400
+    points:
+      - Мономах як символ
+      - Поєднання меча і пера
+  - section: Життєпис
+    words: 100
+    points:
+      - Основні віхи
+  - section: Біографія
+    words: 800
+    points:
+      - Походження
+      - Чернігівський період
+      - Любецький з'їзд
+      - Київське повстання
+  - section: Внесок
+    words: 1200
+    points:
+      - Устав Володимира Мономаха
+      - Військова реформа
+      - Повчання дітям
+      - Розбудова Києва
+  - section: Останні роки
+    words: 600
+    points:
+      - Централізація влади
+      - Літературна праця
+      - Смерть
+  - section: Спадщина
+    words: 600
+    points:
+      - Ідеалізований образ
+      - Шапка Мономаха
+      - Вплив на традицію
+  - section: Підсумок
+    words: 200
+    points:
+      - Квінтесенція правління
+focus: biography
+pedagogy: seminar
+prerequisites:
+  - c1-bio-04
+connects_to:
+  - c1-bio-07
+objectives:
+  - Analize Povchannia
+  - Evaluate reforms
+  - Debunk myths
+grammar:
+  - Archaism
+  - Rhetoric
+module_type: biography
+sources:
+  - name: Povchannia
+    url: http://litopys.org.ua
+    type: primary
+  - name: Litopys
+    url: http://litopys.org.ua
+    type: primary
+immersion: 100% Ukrainian
+phase: C1-BIO

@@ -1,0 +1,35 @@
+# Module Meta: Lab: The Thief Kuzma
+# Track: OES
+# Module: 011
+# Generated: 2026-02-04
+
+module_number: 11
+slug: lab-thief-kuzma
+title: "Лабораторія: Злодій Козьма"
+title_en: "Lab: The Thief Kuzma"
+
+type: lab
+phase: 1
+phase_id: vernacular-foundations
+
+# Pedagogy
+pedagogy: theory-first
+duration_minutes: 60
+word_target: 2500
+immersion_level: 100
+
+# Focus
+grammar_focus: "Analysis of the curse graffiti"
+vocabulary_focus: []
+cultural_focus: []
+
+# Activity hints (minimum counts)
+activity_hints:
+  - type: grammar-lab
+    min_items: 3
+  - type: transcription
+    min_items: 2
+
+# Prerequisites
+prerequisites:
+  - module: 10

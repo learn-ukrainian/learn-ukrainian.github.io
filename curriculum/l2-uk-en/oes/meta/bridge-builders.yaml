@@ -1,0 +1,37 @@
+# Module Meta: The Bridge Builders
+# Track: OES
+# Module: 048
+# Generated: 2026-02-04
+
+module_number: 48
+slug: bridge-builders
+title: "Мостники"
+title_en: "The Bridge Builders"
+
+type: lesson
+phase: 2
+phase_id: literary-tradition
+
+# Pedagogy
+pedagogy: theory-first
+duration_minutes: 60
+word_target: 3500
+immersion_level: 100
+
+# Focus
+grammar_focus: "First fee schedule — Economic vocabulary"
+vocabulary_focus: []
+cultural_focus: []
+
+# Activity hints (minimum counts)
+activity_hints:
+  - type: transcription
+    min_items: 2
+  - type: etymology-trace
+    min_items: 2
+  - type: grammar-identify
+    min_items: 3
+
+# Prerequisites
+prerequisites:
+  - module: 47

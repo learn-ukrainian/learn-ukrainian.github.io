@@ -2,10 +2,10 @@
   "module": "koliivshchyna",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:54:26.927839Z",
+  "last_audit": "2026-02-03T22:54:41.127067Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-25T22:34:18.826503Z",
+    "md": "2026-02-02T10:26:14.304904Z",
     "meta": "2026-01-29T07:38:18.659303Z",
     "activities": "2026-01-27T15:34:54.108248Z",
     "vocabulary": "2026-01-27T13:28:46.063602Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4137/4000 (raw: 4448)"
+      "message": "4137/4000 (raw: 4456)"
     },
     "activities": {
       "status": "pass",

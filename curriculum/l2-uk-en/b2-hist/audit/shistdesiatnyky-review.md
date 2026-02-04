@@ -1,8 +1,8 @@
 # Audit Report: M114 — shistdesiatnyky.md
-**Level:** B2 | **Module:** M114 | **Phase:** HIST.11 | **Pedagogy:** seminar | **Target:** 4000
+**Level:** B2-HIST | **Module:** M114 | **Phase:** HIST.11 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:52
+**Generated:** 2026-02-03 22:55:06
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 5046/4000 (raw: 5107)
+- **Words:** ✅ 5046/4000 (raw: 5115)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.9% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.7% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -72,7 +72,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 155 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Шістдесятники: Бунт проти сірості** | ⚪️ | 155 | Skipped |
 | **Вступ — Хрущовська відлига** | ✅ | 739 | Included in Core |
 | **Читання: Хроніка спротиву** | ✅ | 101 | Included in Core |
 | **Культурний вибух** | ✅ | 1429 | Included in Core |

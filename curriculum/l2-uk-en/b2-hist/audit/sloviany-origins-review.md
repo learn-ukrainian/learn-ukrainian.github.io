@@ -1,8 +1,8 @@
 # Audit Report: M04 — sloviany-origins.md
-**Level:** B2 | **Module:** M04 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
+**Level:** B2-HIST | **Module:** M04 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:53:47
+**Generated:** 2026-02-03 22:54:01
 
 ## Configuration
 **Type:** B2-history
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 5563/4000 (raw: 5676)
+- **Words:** ✅ 5563/4000 (raw: 5684)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/2 types
@@ -47,7 +47,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
-- **Immersion:** 🇺🇦 99.7% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.5% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -73,7 +73,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 99 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Слов'яни на українських землях: Витоки державності** | ⚪️ | 99 | Skipped |
 | **Вступ** | ✅ | 593 | Included in Core |
 | **Читання** | ✅ | 3143 | Included in Core |
 | **Первинні джерела** | ✅ | 666 | Included in Core |

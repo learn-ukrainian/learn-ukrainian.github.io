@@ -319,6 +319,18 @@ If outside range: Adjust largest section(s) to compensate.
 
 **Used in:** B2-HIST, C1-BIO, C1-HIST, LIT
 
+> **⚠️ REQUIRED: Read Research-First Workflow before generating seminar content!**
+>
+> 📄 `docs/RESEARCH-FIRST-WORKFLOW.md`
+>
+> Seminar tracks (4000+ words) require **Phase 0: Deep Research** before writing:
+> 1. Research the topic using corpus knowledge (Wikipedia, academic sources)
+> 2. List major events, achievements, quotes, dates, places
+> 3. Create structured outline with word targets per section
+> 4. THEN write with research notes open
+>
+> **This is mandatory for C1-BIO and B2-HIST. Do not skip.**
+
 **Content structure:**
 
 - **Вступ:** Context and significance
@@ -333,6 +345,7 @@ If outside range: Adjust largest section(s) to compensate.
 - Extended paragraphs (100-200 words each)
 - Academic register
 - Source citations
+- **4000+ words** (use section word targets from workflow)
 
 **Immersion:** 100% Ukrainian
 

@@ -1,8 +1,8 @@
 # Audit Report: M111 — surgunlik.md
-**Level:** B2 | **Module:** M111 | **Phase:** HIST.11 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M111 | **Phase:** HIST.11 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:50
+**Generated:** 2026-02-03 22:55:04
 
 ## Configuration
 **Type:** B2-history

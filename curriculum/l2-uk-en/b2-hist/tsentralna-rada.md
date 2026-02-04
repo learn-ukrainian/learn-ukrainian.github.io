@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: hrushevskyi, unr, skoropadskyi, bilshovytsko-ukrainska-viyna
+-->
+
 # Центральна Рада: Від автономії до незалежності
 
 > 🎯 **Чому це важливо?**

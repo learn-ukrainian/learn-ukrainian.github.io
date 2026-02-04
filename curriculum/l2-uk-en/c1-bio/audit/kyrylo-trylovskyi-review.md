@@ -1,8 +1,8 @@
-# Audit Report: M53 — kyrylo-trylovskyi.md
-**Level:** C1 | **Module:** M53 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M58 — kyrylo-trylovskyi.md
+**Level:** C1-BIO | **Module:** M58 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:27
+**Generated:** 2026-02-04 11:41:47
 
 ## Configuration
 **Type:** C1-biography
@@ -37,8 +37,8 @@
   - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template.md'
   - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Спадщина|Вплив' found: Спадщина в діаспорі: Січовий вогонь за океаном, Вплив на сучасників: Харизма лідера
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple headers contain 'Спадщина': Спадщина в діаспорі: Січовий вогонь за океаном, Вплив на сучасників: Харизма лідера
+  - FIX: RENAME one header to NOT contain 'Спадщина'. Example: 'Агіографічна спадщина' → 'Житійна творчість' (removes the duplicate word).
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Підсумок' per template 'c1-biography-module-template.md'
   - FIX: Add '## Підсумок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 - ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Потрібно більше практики?' is empty
@@ -56,7 +56,7 @@
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 11/5
+- **Engagement:** ✅ 12/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 0 < 24 (soft target)
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar

@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: kozatska-derzhava, khmelnychchyna-prychyny, pereyaslavska-uhoda, kozatske-viisko, ivan-vyhovsky
+-->
+
 # Богдан Хмельницький: Постать в історії
 
 > 🎯 **Чому це важливо?**

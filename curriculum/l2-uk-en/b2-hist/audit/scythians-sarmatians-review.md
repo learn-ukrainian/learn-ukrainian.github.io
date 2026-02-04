@@ -1,8 +1,8 @@
 # Audit Report: M02 — scythians-sarmatians.md
-**Level:** B2 | **Module:** M02 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
+**Level:** B2-HIST | **Module:** M02 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 19:07:00
+**Generated:** 2026-02-03 22:54:00
 
 ## Configuration
 **Type:** B2-history
@@ -40,7 +40,7 @@
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 10/5
+- **Engagement:** ✅ 12/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure

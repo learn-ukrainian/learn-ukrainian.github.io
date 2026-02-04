@@ -1,8 +1,8 @@
 # Audit Report: M38 — slobozhanshchyna.md
-**Level:** B2 | **Module:** M38 | **Phase:** HIST.4 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M38 | **Phase:** HIST.4 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:07
+**Generated:** 2026-02-03 22:54:21
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4425/4000 (raw: 4553)
+- **Words:** ✅ 4425/4000 (raw: 4561)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.9% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.6% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -72,7 +72,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 110 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Слобожанщина: Заселення і розвиток** | ⚪️ | 110 | Skipped |
 | **Вступ** | ✅ | 528 | Included in Core |
 | **Заселення Слобожанщини** | ⚪️ | 1100 | Skipped |
 | **П'ять слобідських козацьких полків** | ⚪️ | 735 | Skipped |

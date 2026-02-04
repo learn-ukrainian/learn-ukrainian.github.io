@@ -1,0 +1,35 @@
+# Module Meta: RUTH Capstone
+# Track: RUTH
+# Module: 100
+# Generated: 2026-02-04
+
+module_number: 100
+slug: ruth-capstone
+title: "Капстоун RUTH"
+title_en: "RUTH Capstone"
+
+type: checkpoint
+phase: 4
+phase_id: cossack-word
+
+# Pedagogy
+pedagogy: theory-first
+duration_minutes: 90
+word_target: 2500
+immersion_level: 100
+
+# Focus
+grammar_focus: "Tracing a word from 1529 to 1794"
+vocabulary_focus: []
+cultural_focus: []
+
+# Activity hints (minimum counts)
+activity_hints:
+  - type: transcription
+    min_items: 3
+  - type: grammar-identify
+    min_items: 5
+
+# Prerequisites
+prerequisites:
+  - module: 99

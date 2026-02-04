@@ -1,8 +1,8 @@
-# Audit Report: M46 — mariya-pavlova.md
-**Level:** C1 | **Module:** M46 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M51 — mariya-pavlova.md
+**Level:** C1-BIO | **Module:** M51 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:23
+**Generated:** 2026-02-04 11:41:43
 
 ## Configuration
 **Type:** C1-biography
@@ -35,8 +35,8 @@
 ## TEMPLATE COMPLIANCE
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Останні роки' per template 'c1-biography-module-template.md'
   - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Спадщина|Вплив' found: Вплив на розвиток еволюціонізму, Спадщина
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple headers contain 'Спадщина': Вплив на розвиток еволюціонізму, Спадщина
+  - FIX: RENAME one header to NOT contain 'Спадщина'. Example: 'Агіографічна спадщина' → 'Житійна творчість' (removes the duplicate word).
 
 ## Recommendation
 **📝 UPDATE** (severity 25/100)

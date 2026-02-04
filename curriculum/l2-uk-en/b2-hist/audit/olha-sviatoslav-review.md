@@ -1,8 +1,8 @@
 # Audit Report: M10 — olha-sviatoslav.md
-**Level:** B2 | **Module:** M10 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M10 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:53:51
+**Generated:** 2026-02-03 22:54:05
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4493/4000 (raw: 4682)
+- **Words:** ✅ 4493/4000 (raw: 4690)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 100.0% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.7% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -72,7 +72,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 68 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Ольга та Святослав: Дипломат і Воїн** | ⚪️ | 68 | Skipped |
 | **Вступ** | ✅ | 129 | Included in Core |
 | **Читання** | ✅ | 1018 | Included in Core |
 | **Первинні джерела** | ✅ | 395 | Included in Core |

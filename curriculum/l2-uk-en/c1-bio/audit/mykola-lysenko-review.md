@@ -1,8 +1,8 @@
-# Audit Report: M42 — mykola-lysenko.md
-**Level:** C1 | **Module:** M42 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M47 — mykola-lysenko.md
+**Level:** C1-BIO | **Module:** M47 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:22
+**Generated:** 2026-02-04 11:41:41
 
 ## Configuration
 **Type:** C1-biography
@@ -52,7 +52,7 @@
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/5
+- **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure

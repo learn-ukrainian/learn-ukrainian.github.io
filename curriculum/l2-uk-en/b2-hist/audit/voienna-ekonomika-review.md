@@ -1,8 +1,8 @@
 # Audit Report: M136 — voienna-ekonomika.md
-**Level:** B2 | **Module:** M136 | **Phase:** HIST.13 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M136 | **Phase:** HIST.13 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:55:05
+**Generated:** 2026-02-03 22:55:19
 
 ## Configuration
 **Type:** B2-history

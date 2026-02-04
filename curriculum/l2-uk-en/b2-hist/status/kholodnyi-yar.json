@@ -2,10 +2,10 @@
   "module": "kholodnyi-yar",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:54:41.682076Z",
+  "last_audit": "2026-02-03T22:54:55.819968Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-28T20:32:12.452264Z",
+    "md": "2026-02-02T10:59:28.378421Z",
     "meta": "2026-01-29T07:38:18.694636Z",
     "activities": "2026-01-28T20:27:20.946346Z",
     "vocabulary": "2026-01-28T20:25:23.278768Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4849/4000 (raw: 4926)"
+      "message": "4849/4000 (raw: 4934)"
     },
     "activities": {
       "status": "pass",

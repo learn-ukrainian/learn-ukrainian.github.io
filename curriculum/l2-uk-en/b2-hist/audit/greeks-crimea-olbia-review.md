@@ -1,8 +1,8 @@
 # Audit Report: M03 — greeks-crimea-olbia.md
-**Level:** B2 | **Module:** M03 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
+**Level:** B2-HIST | **Module:** M03 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:53:47
+**Generated:** 2026-02-03 22:54:01
 
 ## Configuration
 **Type:** B2-history
@@ -39,7 +39,7 @@
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 9/5
+- **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 30/20
 - **Structure:** ✅ Valid Structure

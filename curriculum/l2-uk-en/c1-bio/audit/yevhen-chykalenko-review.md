@@ -1,8 +1,8 @@
-# Audit Report: M49 — yevhen-chykalenko.md
-**Level:** C1 | **Module:** M49 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M54 — yevhen-chykalenko.md
+**Level:** C1-BIO | **Module:** M54 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:25
+**Generated:** 2026-02-04 11:41:45
 
 ## Configuration
 **Type:** C1-biography
@@ -39,8 +39,8 @@
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Спадщина|Вплив' found: Вплив на сучасників, Спадщина
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple headers contain 'Спадщина': Спадщина, Вплив на сучасників
+  - FIX: RENAME one header to NOT contain 'Спадщина'. Example: 'Агіографічна спадщина' → 'Житійна творчість' (removes the duplicate word).
 
 ## Recommendation
 **📝 UPDATE** (severity 25/100)

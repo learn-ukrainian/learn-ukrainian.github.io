@@ -1,0 +1,35 @@
+# Module Meta: Grammar Lab
+# Track: RUTH
+# Module: 048
+# Generated: 2026-02-04
+
+module_number: 48
+slug: grammar-lab-parsing
+title: "Граматична лабораторія"
+title_en: "Grammar Lab"
+
+type: lab
+phase: 2
+phase_id: sacred-word
+
+# Pedagogy
+pedagogy: theory-first
+duration_minutes: 60
+word_target: 2500
+immersion_level: 100
+
+# Focus
+grammar_focus: "Parsing a CS sentence using Smotrytsky's rules"
+vocabulary_focus: []
+cultural_focus: []
+
+# Activity hints (minimum counts)
+activity_hints:
+  - type: grammar-lab
+    min_items: 3
+  - type: transcription
+    min_items: 2
+
+# Prerequisites
+prerequisites:
+  - module: 47

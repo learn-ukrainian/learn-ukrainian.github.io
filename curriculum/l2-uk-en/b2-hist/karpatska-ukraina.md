@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: zunr, oun, druha-svitova-pochatok, bukovyna-zakarpattia
+-->
+
 # Карпатська Україна 1938-1939
 
 ## Вступ: Один день незалежності

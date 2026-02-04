@@ -1,0 +1,38 @@
+# Module Plan: The Nativity
+# Track: RUTH
+# Module: 028
+# Source: Gemini Research (ISSUE-494)
+# Generated: 2026-02-04
+
+module_number: 28
+slug: nativity-luke
+title_uk: "Різдво (Лука 2)"
+title_en: "The Nativity"
+
+phase: 2
+phase_id: sacred-word
+phase_name: "Sacred Word"
+
+focus: "Narrative style comparison"
+
+word_target: 3500
+
+# Content outline to be expanded during content generation
+content_outline:
+  - section: "Вступ"
+    description: "Introduction to The Nativity"
+  - section: "Основний матеріал"
+    description: "Primary source analysis and grammar focus"
+  - section: "Практика"
+    description: "Exercises and activities"
+  - section: "Підсумок"
+    description: "Summary and connection to next module"
+
+# Vocabulary hints (to be populated during content generation)
+vocabulary_hints: []
+
+# Activity types appropriate for this module
+activity_types:
+  - transcription
+  - etymology-trace
+  - grammar-identify

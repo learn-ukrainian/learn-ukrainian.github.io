@@ -1,0 +1,38 @@
+# Module Plan: Fables of Kharkiv
+# Track: RUTH
+# Module: 092
+# Source: Gemini Research (ISSUE-496)
+# Generated: 2026-02-04
+
+module_number: 92
+slug: fables-kharkiv
+title_uk: "Харківські байки"
+title_en: "Fables of Kharkiv"
+
+phase: 4
+phase_id: cossack-word
+phase_name: "Cossack Word"
+
+focus: "Genre of Fable — "The Bee and the Hornet""
+
+word_target: 3500
+
+# Content outline to be expanded during content generation
+content_outline:
+  - section: "Вступ"
+    description: "Introduction to Fables of Kharkiv"
+  - section: "Основний матеріал"
+    description: "Primary source analysis and grammar focus"
+  - section: "Практика"
+    description: "Exercises and activities"
+  - section: "Підсумок"
+    description: "Summary and connection to next module"
+
+# Vocabulary hints (to be populated during content generation)
+vocabulary_hints: []
+
+# Activity types appropriate for this module
+activity_types:
+  - transcription
+  - etymology-trace
+  - grammar-identify

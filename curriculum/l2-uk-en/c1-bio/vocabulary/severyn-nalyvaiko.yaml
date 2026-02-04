@@ -1,0 +1,150 @@
+- lemma: повстання
+  ipa: /pou̯ˈstɑnnʲɐ/
+  translation: uprising / rebellion
+  pos: noun
+  gender: n
+  note: масовий збройний виступ
+- lemma: бунт
+  ipa: /bunt/
+  translation: mutiny / riot
+  pos: noun
+  gender: m
+  note: стихійний опір владі
+- lemma: ватажок
+  ipa: /ʋɐtɐˈʒɔk/
+  translation: leader (of a group)
+  pos: noun
+  gender: m
+  note: керівник загону чи повстання
+- lemma: табір
+  ipa: /ˈtɑbʲir/
+  translation: camp
+  pos: noun
+  gender: m
+  note: місце дислокації війська
+- lemma: облога
+  ipa: /obˈlɔɦɐ/
+  translation: siege
+  pos: noun
+  gender: f
+  note: оточення міста чи фортеці
+- lemma: страта
+  ipa: /ˈstrɑtɐ/
+  translation: execution
+  pos: noun
+  gender: f
+  note: публічне позбавлення життя за вироком
+- lemma: зрада
+  ipa: /ˈzrɑdɐ/
+  translation: betrayal / treason
+  pos: noun
+  gender: f
+  note: порушення вірності чи присяги
+- lemma: найманець
+  ipa: /ˈnɑjmanet͡sʲ/
+  translation: mercenary
+  pos: noun
+  gender: m
+  note: воїн, що служить за плату
+- lemma: поразка
+  ipa: /poˈrɑzkɐ/
+  translation: defeat
+  pos: noun
+  gender: f
+  note: невдача у битві чи війні
+- lemma: артилерія
+  ipa: /ɐrtɪˈlɛrʲijɐ/
+  translation: artillery
+  pos: noun
+  gender: f
+  note: вогнепальна зброя великого калібру
+- lemma: мушкет
+  ipa: /muʃˈkɛt/
+  translation: musket
+  pos: noun
+  gender: m
+  note: ручна вогнепальна зброя
+- lemma: розправа
+  ipa: /rozˈprɑʋɐ/
+  translation: reprisal / crack down
+  pos: noun
+  gender: f
+  note: жорстоке покарання ворога
+- lemma: шляхтич
+  ipa: /ˈʃlʲɑxtɪt͡ʃ/
+  translation: nobleman
+  pos: noun
+  gender: m
+  note: представник привілейованого стану
+- lemma: вольниця
+  ipa: /ˈʋɔlʲnɪt͡sʲɐ/
+  translation: free company / freedom-loving group
+  pos: noun
+  gender: f
+  note: спільнота вільних людей
+- lemma: соратник
+  ipa: /soˈrɑtnɪk/
+  translation: comrade-in-arms
+  pos: noun
+  gender: m
+  note: товариш по зброї чи ідеї
+- lemma: децимація
+  ipa: /det͡sɪmˈɑt͡sʲijɐ/
+  translation: decimation
+  pos: noun
+  gender: f
+  note: страта кожного десятого
+- lemma: четвертування
+  ipa: /t͡ʃetʋertˈuʋɐnnʲɐ/
+  translation: quartering
+  pos: noun
+  gender: n
+  note: вид жорстокої страти
+- lemma: маніфест
+  ipa: /mɐnʲiˈfɛst/
+  translation: manifesto
+  pos: noun
+  gender: m
+  note: звернення до народу
+- lemma: дисципліна
+  ipa: /dɪst͡sɪˈplʲinɐ/
+  translation: discipline
+  pos: noun
+  gender: f
+  note: суворе дотримання правил
+- lemma: пасіонарність
+  ipa: /pɐsʲionˈɑrnʲisʲtʲ/
+  translation: passionarity / extreme drive
+  pos: noun
+  gender: f
+  note: надлишкова енергія лідера
+- lemma: фронтир
+  ipa: /fronˈtɪr/
+  translation: frontier
+  pos: noun
+  gender: m
+  note: межа між цивілізаціями
+- lemma: козакування
+  ipa: /kozɐˈkuʋɐnnʲɐ/
+  translation: leading a Cossack life
+  pos: noun
+  gender: n
+  note: спосіб життя козака
+- lemma: ультиматум
+  ipa: /ulʲtɪˈmɑtum/
+  translation: ultimatum
+  pos: noun
+  gender: m
+  note: категорична вимога
+- lemma: легітимність
+  ipa: /leɦʲitˈɪmnʲisʲtʲ/
+  translation: legitimacy
+  pos: noun
+  gender: f
+  note: законність влади
+- lemma: месія
+  ipa: /mesʲˈijɐ/
+  translation: messiah
+  pos: noun
+  gender: m
+  note: рятівник

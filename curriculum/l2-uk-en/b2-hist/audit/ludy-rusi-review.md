@@ -1,8 +1,8 @@
 # Audit Report: M18 — ludy-rusi.md
-**Level:** B2 | **Module:** M18 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M18 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:53:55
+**Generated:** 2026-02-03 22:54:10
 
 ## Configuration
 **Type:** B2-history
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4224/4000 (raw: 4319)
+- **Words:** ✅ 4224/4000 (raw: 4327)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -47,7 +47,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
-- **Immersion:** 🇺🇦 99.5% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.2% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -73,7 +73,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 154 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Люди Русі: Суспільство та побут** | ⚪️ | 154 | Skipped |
 | **Розминка** | ⚪️ | 186 | Skipped |
 | **Читання: Суспільство та повсякдення Київської Русі** | ✅ | 3033 | Included in Core |
 | **Первинні джерела: Голоси епохи** | ✅ | 413 | Included in Core |

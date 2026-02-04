@@ -78,8 +78,18 @@ if __name__ == "__main__":
         action="store_true",
         help="Automatically fix YAML schema violations"
     )
+    parser.add_argument(
+        "--naturalness",
+        action="store_true",
+        help="Auto-check naturalness via Gemini if PENDING"
+    )
 
     args = parser.parse_args()
+
+    # Set environment variable for naturalness auto-check
+    if args.naturalness:
+        import os
+        os.environ['AUDIT_AUTO_NATURALNESS'] = '1'
 
     if not args.files:
         print("Usage: python3 scripts/audit_module.py <file.md> [file2.md ...] [--fix]")

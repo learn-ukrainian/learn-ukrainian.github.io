@@ -2,11 +2,11 @@
   "module": "volodymyr-vernadskyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T23:29:25.906046Z",
+  "last_audit": "2026-02-04T11:41:45.615544Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-17T21:45:15.869436Z",
-    "meta": "2026-01-29T07:39:04.914454Z",
+    "meta": "2026-02-02T23:23:00.072467Z",
     "activities": "2026-01-27T15:34:57.026500Z",
     "vocabulary": null,
     "plan": null

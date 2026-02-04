@@ -1,8 +1,8 @@
 # Audit Report: M68 — hryhorii-skovoroda.md
-**Level:** B2 | **Module:** M68 | **Phase:** HIST.7 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M68 | **Phase:** HIST.7 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:25
+**Generated:** 2026-02-03 22:54:39
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4568/4000 (raw: 4619)
+- **Words:** ✅ 4572/4000 (raw: 4631)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.9% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.5% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -72,13 +72,14 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 86 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Григорій Сковорода: Мандрівний філософ** | ⚪️ | 86 | Skipped |
 | **Вступ: Український Сократ** | ✅ | 423 | Included in Core |
 | **Життєвий шлях: Від академії до дороги** | ⚪️ | 746 | Skipped |
 | **Філософія серця: Сродна праця** | ⚪️ | 958 | Skipped |
 | **Літературна спадщина: Сад божественних пісень** | ⚪️ | 587 | Skipped |
 | **Читання: Байки та афоризми** | ✅ | 555 | Included in Core |
 | **Первинні джерела: Листи до Михайла Ковалинського** | ✅ | 451 | Included in Core |
-| **Деколонізаційний погляд: Не «русский философ»** | ✅ | 526 | Included in Core |
+| **Деколонізаційний погляд: Не «русский философ»** | ✅ | 530 | Included in Core |
 | **Підсумок** | ✅ | 102 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 134 | Skipped |

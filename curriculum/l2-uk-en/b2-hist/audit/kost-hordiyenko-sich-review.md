@@ -1,8 +1,8 @@
 # Audit Report: M65 — kost-hordiyenko-sich.md
-**Level:** B2 | **Module:** M65 | **Phase:** HIST.7 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M65 | **Phase:** HIST.7 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:23
+**Generated:** 2026-02-03 22:54:37
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4301/4000 (raw: 4377)
+- **Words:** ✅ 4301/4000 (raw: 4385)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.5% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -72,7 +72,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 95 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Кость Гордієнко та Січ** | ⚪️ | 95 | Skipped |
 | **Вступ: Непримиренний кошовий** | ✅ | 495 | Included in Core |
 | **Запорозька Січ: Острів свободи в морі імперій** | ⚪️ | 586 | Skipped |
 | **Великий союз: Гордієнко, Мазепа та Карл XII** | ⚪️ | 780 | Skipped |

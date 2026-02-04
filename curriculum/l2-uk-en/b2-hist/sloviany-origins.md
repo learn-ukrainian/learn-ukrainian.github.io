@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: trypillian-civilization, khozary-i-sloviany, zasnuvannia-kyieva, scythians-sarmatians
+-->
+
 # Слов'яни на українських землях: Витоки державності
 
 > [!important] Чому це важливо?

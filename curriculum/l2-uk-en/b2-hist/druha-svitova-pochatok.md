@@ -5,6 +5,7 @@ Not covered:
   - UPA (M107)
   - 1942-1944 Occupation/Ostarbeiters (M108/General)
   - Post-war (M109)
+Related: babyn-yar, upa, karpatska-ukraina, bilshovytsko-ukrainska-viyna
 -->
 
 # Друга світова: Початок

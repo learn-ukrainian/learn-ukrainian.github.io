@@ -1,8 +1,8 @@
 # Audit Report: M94 — symon-petliura-revolution.md
-**Level:** B2 | **Module:** M94 | **Phase:** HIST.9 | **Pedagogy:** seminar | **Target:** 4000
+**Level:** B2-HIST | **Module:** M94 | **Phase:** HIST.9 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:40
+**Generated:** 2026-02-03 22:54:54
 
 ## Configuration
 **Type:** B2-history
@@ -36,7 +36,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4695/4000 (raw: 4767)
+- **Words:** ✅ 5052/4000 (raw: 5132)
 - **Activities:** ✅ 7/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -48,7 +48,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (7 activities)
-- **Immersion:** 🇺🇦 99.6% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.4% (target 90-100% (history))
 - **Richness:** ✅ 96% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -78,8 +78,8 @@
 | **Симон Петлюра: Головний отаман** | ⚪️ | 127 | Skipped |
 | **Вступ: Символ боротьби** | ✅ | 441 | Included in Core |
 | **Шлях до влади** | ⚪️ | 674 | Skipped |
-| **Війна за незалежність** | ⚪️ | 864 | Skipped |
-| **Читання: Відозви та накази Головного Отамана** | ✅ | 535 | Included in Core |
-| **Первинні джерела: Свідчення боротьби** | ✅ | 626 | Included in Core |
+| **Війна за незалежність** | ⚪️ | 867 | Skipped |
+| **Читання: Відозви та накази Головного Отамана** | ✅ | 742 | Included in Core |
+| **Первинні джерела: Свідчення боротьби** | ✅ | 772 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 594 | Included in Core |
-| **Підсумок: Париж, 1926** | ✅ | 781 | Included in Core |
+| **Підсумок: Париж, 1926** | ✅ | 782 | Included in Core |

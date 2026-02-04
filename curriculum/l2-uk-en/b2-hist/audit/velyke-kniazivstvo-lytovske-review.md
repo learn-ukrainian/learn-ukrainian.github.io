@@ -1,8 +1,8 @@
 # Audit Report: M29 — velyke-kniazivstvo-lytovske.md
-**Level:** B2 | **Module:** M29 | **Phase:** B2.3a | **Pedagogy:** CBI | **Target:** 4542
+**Level:** B2-HIST | **Module:** M29 | **Phase:** B2.3a | **Pedagogy:** CBI | **Target:** 4542
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:02
+**Generated:** 2026-02-03 22:54:16
 
 ## Configuration
 **Type:** B2-history

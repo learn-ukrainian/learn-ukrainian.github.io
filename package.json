@@ -48,7 +48,15 @@
     "status:all": ".venv/bin/python scripts/generate_level_status.py all",
     "playgrounds:data": ".venv/bin/python scripts/generate_playground_data.py",
     "playgrounds:build": ".venv/bin/python scripts/build_playgrounds.py",
-    "playgrounds": "npm run playgrounds:data && npm run playgrounds:build && open playgrounds/index.html"
+    "playgrounds": "npm run playgrounds:data && npm run playgrounds:build && open playgrounds/index.html",
+    "playground:serve": ".venv/bin/python scripts/playground_server.py",
+    "playground:serve:reload": ".venv/bin/python scripts/playground_server.py --reload",
+    "score:b2-hist": ".venv/bin/python scripts/score_track.py b2-hist",
+    "score:c1-bio": ".venv/bin/python scripts/score_track.py c1-bio",
+    "score:c1-hist": ".venv/bin/python scripts/score_track.py c1-hist",
+    "score:lit": ".venv/bin/python scripts/score_track.py lit",
+    "score:all": ".venv/bin/python scripts/score_track.py --all --summary",
+    "metrics:extract": ".venv/bin/python scripts/extract_track_metrics.py"
   },
   "repository": {
     "type": "git",

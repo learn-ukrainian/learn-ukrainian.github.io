@@ -1,8 +1,8 @@
 # Audit Report: M115 — ukrainska-helsinska-hrupa.md
-**Level:** B2 | **Module:** M115 | **Phase:** HIST.11 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M115 | **Phase:** HIST.11 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:52
+**Generated:** 2026-02-03 22:55:07
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4293/4000 (raw: 4366)
+- **Words:** ✅ 4680/4000 (raw: 4766)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.6% (target 90-100% (history))
 - **Richness:** ✅ 95% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -60,7 +60,7 @@
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 15 | 3 | 100% | 24% | 23.8% |
 | engagement | 6 | 6 | 100% | 14% | 14.3% |
-| timeline_markers | 18 | 10 | 100% | 14% | 14.3% |
+| timeline_markers | 19 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 2 | 4 | 50% | 10% | 4.8% |
 | visual | 6 | 4 | 100% | 10% | 9.5% |
@@ -72,11 +72,13 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 167 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Українська Гельсінська група: Слово проти імперії** | ⚪️ | 167 | Skipped |
 | **Вступ: Гельсінські угоди — Троянський кінь для імперії** | ✅ | 817 | Included in Core |
 | **Створення УГГ (1976): Виклик системі** | ⚪️ | 948 | Skipped |
-| **Діяльність та репресії: Ціна правди** | ⚪️ | 958 | Skipped |
-| **Первинні джерела** | ✅ | 729 | Included in Core |
-| **Деколонізаційний погляд** | ✅ | 236 | Included in Core |
-| **Підсумок: Від УГГ до Руху** | ✅ | 229 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 209 | Skipped |
+| **Діяльність та репресії: Ціна правди** | ⚪️ | 657 | Skipped |
+| **Біографічні портрети: Обличчя опору** | ⚪️ | 523 | Skipped |
+| **Первинні джерела** | ✅ | 803 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 284 | Included in Core |
+| **Підсумок: Від УГГ до Руху** | ✅ | 271 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 210 | Skipped |

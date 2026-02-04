@@ -2,13 +2,13 @@
   "module": "kyrylo-mefodiivtsi",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:54:32.277627Z",
+  "last_audit": "2026-02-03T22:54:46.421814Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-30T22:27:13.841346Z",
-    "meta": "2026-01-29T07:38:18.668417Z",
-    "activities": "2026-01-27T21:32:08.909300Z",
-    "vocabulary": "2026-01-25T23:43:00.508622Z",
+    "md": "2026-02-03T18:42:33.656350Z",
+    "meta": "2026-02-03T18:43:17.683991Z",
+    "activities": "2026-02-03T18:39:19.515659Z",
+    "vocabulary": "2026-02-03T18:32:16.114160Z",
     "plan": null
   },
   "gates": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4120/4000 (raw: 4304)"
+      "message": "4002/4000 (raw: 4095)"
     },
     "activities": {
       "status": "pass",
@@ -35,7 +35,7 @@
     "naturalness": {
       "status": "pass",
       "violations": 0,
-      "message": "10/10 (High)"
+      "message": "9/10 (High)"
     }
   },
   "overall": {

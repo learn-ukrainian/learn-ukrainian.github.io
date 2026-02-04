@@ -1,20 +1,66 @@
-module: c1-bio-008
+module: c1-bio-010
 level: C1-BIO
 slug: danylo-halytskyi
 version: '2.0'
-id: c1-bio-008
+id: c1-bio-010
 naturalness:
   score: 10
   status: PASS
-duration: 150
+word_target: 4000
+duration: 120
 transliteration: none
 tags:
 - history
 - biography
-- medieval
-- galicia-volhynia
+- middle-ages
 - royalty
-- mongol-era
-vocabulary_count: 28
+- diplomacy
+content_outline:
+- section: Вступ — Єдиний коронований король Русі
+  words: 400
+  points:
+  - Унікальність постаті
+  - Королівський титул
+- section: 'Життєпис: Шлях до влади'
+  words: 1500
+  points:
+  - Дитинство і вигнання
+  - Боротьба за спадщину
+  - Монгольська навала
+- section: 'Внесок: Коронація та держава'
+  words: 800
+  points:
+  - Коронація в Дорогочині
+  - Розбудова міст (Львів)
+  - Економічна політика
+- section: 'Останні роки: Боротьба до кінця'
+  words: 500
+  points:
+  - Спроби антимонгольської коаліції
+  - Розрив з Римом
+  - Смерть і поховання
+- section: 'Спадщина: Королівська традиція'
+  words: 500
+  points:
+  - Значення титулу Rex Russiae
+  - Вплив на українську ідентичність
+  - Пам'ять
+- section: 'Підсумок — Король без королівства?'
+  words: 300
+  points:
+  - Оцінка правління
+  - Уроки для сучасності
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: reading
+  focus: Chronicle descriptions of Roman's reign
+  source: Галицько-Волинський літопис (adapted)
+  items: 3 passages
+- type: essay-response
+  focus: Evaluate Roman's strategy for unifying Galicia and Volhynia
+  word_target: 250
+  output: Analytical argument with evidence
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-01'

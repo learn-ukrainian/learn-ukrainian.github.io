@@ -1,0 +1,37 @@
+# Module Meta: PVL: Olga's Revenge
+# Track: OES
+# Module: 024
+# Generated: 2026-02-04
+
+module_number: 24
+slug: pvl-olga-revenge
+title: "ПВЛ: Помста Ольги"
+title_en: "PVL: Olga's Revenge"
+
+type: lesson
+phase: 1
+phase_id: vernacular-foundations
+
+# Pedagogy
+pedagogy: theory-first
+duration_minutes: 60
+word_target: 3500
+immersion_level: 100
+
+# Focus
+grammar_focus: "Mixed tenses — Planning (Imp) vs Execution (Aor)"
+vocabulary_focus: []
+cultural_focus: []
+
+# Activity hints (minimum counts)
+activity_hints:
+  - type: transcription
+    min_items: 2
+  - type: etymology-trace
+    min_items: 2
+  - type: grammar-identify
+    min_items: 3
+
+# Prerequisites
+prerequisites:
+  - module: 23

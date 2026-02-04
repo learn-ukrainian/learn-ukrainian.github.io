@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: habsburzka-halichyna, unr, tsentralna-rada, hrushevskyi
+-->
+
 # Перша світова війна: Брат проти брата
 
 > 🎯 **Чому це важливо?**

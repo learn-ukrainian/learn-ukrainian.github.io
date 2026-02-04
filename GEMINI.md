@@ -76,8 +76,68 @@
 8. **Decolonization & Patriotism (MANDATORY)**: Include Myth Buster, History Bite, and celebrate Ukrainian identity.
 9. **Issue Tracking**: Use GitHub Issues. Do not use `docs/issues/`.
 10. **Virtual Environment**: Always use `.venv/bin/python`.
-11. **BROKEN TOOL AVOIDANCE**: Use `run_shell_command("rg ...")` instead of `search_file_content`.
+11. **BROKEN TOOL AVOIDANCE (CRITICAL)**: The `search_file_content` tool is BROKEN. It produces `--threads` argument errors. **ALWAYS** use `run_shell_command("rg ...")` instead.
 12. **Typography**: ALWAYS use Ukrainian angular quotes `«...»`.
+
+## Common Audit Errors & Fixes (Avoid Loops!)
+
+These are common audit failures that can cause fix loops if not understood correctly:
+
+### DUPLICATE_SYNONYMOUS_HEADERS
+
+**Error**: `Multiple headers contain 'Спадщина': Спадщина: Канон..., Агіографічна спадщина: ...`
+
+**Problem**: Two section headers contain the same keyword (e.g., "спадщина" appears twice).
+
+**WRONG FIX**: Trying to merge sections or delete one.
+
+**CORRECT FIX**: **RENAME** one header to NOT contain the duplicate word:
+- `Агіографічна спадщина: Моделі святості` → `Житійна творчість: Моделі святості`
+- The content stays the same, only the header text changes.
+
+### Engagement Callouts (4/5)
+
+**Error**: `Engagement ❌ 4/5`
+
+**Problem**: Not all callout types count as "engagement". Only these count:
+- `[!note]`, `[!tip]`, `[!warning]`, `[!caution]`, `[!important]`
+- `[!cultural]`, `[!history-bite]`, `[!myth-buster]`, `[!quote]`, `[!context]`
+- `[!analysis]`, `[!source]`, `[!legacy]`, `[!reflection]`, `[!fact]`
+- `[!culture]`, `[!military]`, `[!perspective]`, `[!biography]`
+
+**DON'T count**: `[!question]`, `[!thought-provoker]`, `[!insight]`, `[!timeline]`, `[!today-link]`, `[!local-flavor]`
+
+**FIX**: Change non-counted types to counted ones:
+- `[!question]` → `[!reflection]`
+- `[!thought-provoker]` → `[!note]`
+
+### Richness Below Threshold
+
+**Error**: `Richness ❌ 92% < 95% min`
+
+**Problem**: The richness score is a weighted combination of metrics. Check the breakdown in the audit review file to see which component is low.
+
+**Common cause**: Low `engagement` score (see above).
+
+### search_file_content Tool Broken
+
+**Error**: `The argument '--threads <NUM>' requires 1 values, but 2 were provided`
+
+**Problem**: The `search_file_content` tool wrapper constructs ripgrep commands incorrectly, injecting duplicate `--threads` flags.
+
+**WRONG FIX**: Trying to adjust arguments or retry.
+
+**CORRECT FIX**: **NEVER use `search_file_content`**. Use `run_shell_command` instead:
+
+```python
+# BROKEN - don't use
+search_file_content(pattern="somepattern", path=".")
+
+# CORRECT - use this
+run_shell_command("rg 'somepattern' .")
+```
+
+---
 
 ## Workflow Orchestration
 
@@ -207,6 +267,7 @@ All communication goes through SQLite Event Bus at `.mcp/servers/message-broker/
 - Have a question about the codebase
 
 ### Important
+- **Headless Session Awareness**: When using `ask-claude` or `process-claude`, a **headless Claude session** (different from the user's active session) may handle the request. Responses are still valid and stored in the inbox/conversation history, but the user's active session might not be immediately aware of them unless checking the full `conversation` for the `task_id`.
 - **Use `process-claude` for seamless invocation** - Claude runs headlessly and responds
 - **Always use task_id** - enables session tracking for multi-turn conversations
 - **Check inbox at start of session** - Claude may have left messages
@@ -228,6 +289,26 @@ All communication goes through SQLite Event Bus at `.mcp/servers/message-broker/
 ## B2+ Module Creation Workflow (V2.0)
 
 For B2+ levels (B2, C1, C2, Tracks), follow this EXACT workflow:
+
+### Phase 0: Deep Research (MANDATORY for Seminar Tracks)
+
+**For b2-hist, c1-bio, c1-hist, lit, oes, ruth tracks:**
+
+Before generating ANY content, read `docs/RESEARCH-FIRST-WORKFLOW.md` and complete research phase:
+
+1. **Research the topic** using web search, encyclopedias, primary sources
+2. **Take structured notes** with citations and key facts
+3. **Create outline** that integrates research with plan requirements
+4. **Write content** using research notes (not from memory!)
+5. **Generate activities** (4-9 only, seminar-style)
+
+**Why this matters:**
+- Biography modules require accurate dates, events, quotes
+- History modules need primary source references
+- Writing from memory leads to inaccuracies and thin content
+- Research-first produces richer, more authoritative content
+
+**Skip this phase** only for grammar-focused modules (A1, A2, B1 core).
 
 ### 1. Read Immutable Plan
 

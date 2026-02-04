@@ -17,6 +17,10 @@ vocabulary_focus:
   - 'Державотворча лексика'
 ---
 
+<!-- SCOPE
+Related: tsentralna-rada, dyrektoriia, bilshovytsko-ukrainska-viyna, zunr
+-->
+
 # Синтез: Українська революція
 
 > 🎯 **Чому це важливо?**

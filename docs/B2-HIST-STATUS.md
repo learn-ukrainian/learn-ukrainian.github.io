@@ -1,6 +1,6 @@
 # B2-HIST Module Status
 
-**Generated:** 2026-02-01 19:28:08
+**Generated:** 2026-02-03 23:02:56
 **Total Modules:** 140
 **Status:** 140 passing, 0 failing, 0 stubs, 0 errors
 
@@ -81,19 +81,19 @@
 | 065 | kost-hordiyenko-sich | ✅ PASS | 4301/4000 | - |
 | 066 | ivan-mazepa-poltava | ✅ PASS | 4687/4000 | - |
 | 067 | pylyp-orlyk-konstytutsiia | ✅ PASS | 4754/4000 | - |
-| 068 | hryhorii-skovoroda | ✅ PASS | 4568/4000 | - |
+| 068 | hryhorii-skovoroda | ✅ PASS | 4572/4000 | - |
 | 069 | pavlo-polubotok | ✅ PASS | 4091/4000 | - |
-| 070 | danylo-apostol | ✅ PASS | 4123/4000 | - |
+| 070 | danylo-apostol | ✅ PASS | 4124/4000 | - |
 | 071 | koliivshchyna | ✅ PASS | 4137/4000 | - |
-| 072 | opryshky | ✅ PASS | 4161/4000 | - |
+| 072 | opryshky | ✅ PASS | 4000/4000 | - |
 | 073 | petro-kalnyshevskyi | ✅ PASS | 4643/4000 | - |
-| 074 | kinets-hetmanshchyny | ✅ PASS | 4814/4000 | - |
+| 074 | kinets-hetmanshchyny | ✅ PASS | 4819/4000 | - |
 | 075 | rosiiska-imperiia-ukraina | ✅ PASS | 4119/4000 | - |
 | 076 | habsburzka-halichyna | ✅ PASS | 4470/4000 | - |
 | 077 | pivden-novorosiia | ✅ PASS | 4720/4000 | - |
 | 078 | nova-serbiya | ✅ PASS | 4396/4000 | - |
 | 079 | krypatsvo-selo | ✅ PASS | 4367/4000 | - |
-| 080 | kyrylo-mefodiivtsi | ✅ PASS | 4120/4000 | - |
+| 080 | kyrylo-mefodiivtsi | ✅ PASS | 4002/4000 | - |
 | 081 | shevchenko-awakening | ✅ PASS | 4265/4000 | - |
 | 082 | valuevskyi-emskyi | ✅ PASS | 4632/4000 | - |
 | 083 | hromady | ✅ PASS | 4438/4000 | - |
@@ -107,15 +107,15 @@
 | 091 | skoropadskyi | ✅ PASS | 4371/4000 | - |
 | 092 | zunr | ✅ PASS | 4732/4000 | - |
 | 093 | dyrektoriia | ✅ PASS | 4474/4000 | - |
-| 094 | symon-petliura-revolution | ✅ PASS | 4695/4000 | - |
+| 094 | symon-petliura-revolution | ✅ PASS | 5052/4000 | - |
 | 095 | bilshovytsko-ukrainska-viyna | ✅ PASS | 4496/4000 | - |
 | 096 | kholodnyi-yar | ✅ PASS | 4849/4000 | - |
 | 097 | syntez-revoliutsiia | ✅ PASS | 4315/4000 | - |
 | 098 | rozstriliane-vidrodzennia | ✅ PASS | 4198/4000 | - |
 | 099 | pacyfikatsiia | ✅ PASS | 5143/4000 | - |
-| 100 | oun | ✅ PASS | 4024/4000 | - |
+| 100 | oun | ✅ PASS | 4878/4000 | - |
 | 101 | holodomor-mekhanizm | ✅ PASS | 4602/4000 | - |
-| 102 | holodomor-pamiat | ✅ PASS | 4586/4000 | - |
+| 102 | holodomor-pamiat | ✅ PASS | 4876/4000 | - |
 | 103 | mekhanizm-teroru | ✅ PASS | 4074/4000 | - |
 | 104 | karpatska-ukraina | ✅ PASS | 4482/4000 | - |
 | 105 | druha-svitova-pochatok | ✅ PASS | 5411/4000 | - |
@@ -128,20 +128,20 @@
 | 112 | krym-1954 | ✅ PASS | 3989/4000 | - |
 | 113 | destalinizatsiia | ✅ PASS | 3945/4000 | - |
 | 114 | shistdesiatnyky | ✅ PASS | 5046/4000 | - |
-| 115 | ukrainska-helsinska-hrupa | ✅ PASS | 4293/4000 | - |
+| 115 | ukrainska-helsinska-hrupa | ✅ PASS | 4680/4000 | - |
 | 116 | afhanistan | ✅ PASS | 4237/4000 | - |
 | 117 | chornobyl | ✅ PASS | 4320/4000 | - |
 | 118 | diaspora | ✅ PASS | 4230/4000 | - |
 | 119 | shliakh-nezalezhnosti | ✅ PASS | 4345/4000 | - |
-| 120 | rukh | ✅ PASS | 4272/4000 | - |
+| 120 | rukh | ✅ PASS | 4659/4000 | - |
 | 121 | nezalezhnist-1991 | ✅ PASS | 4921/4000 | - |
 | 122 | ukraine-90s | ✅ PASS | 4946/4000 | - |
 | 123 | pomarancheva-revoliutsiia | ✅ PASS | 4355/4000 | - |
 | 124 | yanukovych | ✅ PASS | 4629/4000 | - |
-| 125 | movna-polityka | ✅ PASS | 4412/4000 | - |
+| 125 | movna-polityka | ✅ PASS | 4421/4000 | - |
 | 126 | revoliutsiia-hidnosti | ✅ PASS | 4688/4000 | - |
 | 127 | aneksiia-krymu | ✅ PASS | 4144/4202 | - |
-| 128 | krymski-tatary-pislia-2014 | ✅ PASS | 5016/4000 | - |
+| 128 | krymski-tatary-pislia-2014 | ✅ PASS | 5020/4000 | - |
 | 129 | tomos | ✅ PASS | 4422/4000 | - |
 | 130 | syntez-nezalezhnist | ✅ PASS | 4368/4000 | - |
 | 131 | viyna-donbas | ✅ PASS | 4183/4000 | - |

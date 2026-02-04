@@ -1,8 +1,8 @@
-# Audit Report: M126 — tamara-horikha-zernya.md
-**Level:** C1 | **Module:** M126 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M142 — tamara-horikha-zernya.md
+**Level:** C1-BIO | **Module:** M142 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:58
+**Generated:** 2026-02-04 11:42:30
 
 ## Configuration
 **Type:** C1-biography

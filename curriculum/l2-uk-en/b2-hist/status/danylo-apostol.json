@@ -2,10 +2,10 @@
   "module": "danylo-apostol",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:54:26.318686Z",
+  "last_audit": "2026-02-03T22:54:40.522501Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-30T22:22:06.486455Z",
+    "md": "2026-02-03T14:03:30.839805Z",
     "meta": "2026-01-30T22:16:56.525343Z",
     "activities": "2026-01-27T20:57:20.246099Z",
     "vocabulary": "2026-01-27T12:15:07.430593Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4123/4000 (raw: 4220)"
+      "message": "4124/4000 (raw: 4229)"
     },
     "activities": {
       "status": "pass",

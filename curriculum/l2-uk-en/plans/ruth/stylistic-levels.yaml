@@ -1,0 +1,39 @@
+# Module Plan: Stylistic Levels
+# Track: RUTH
+# Module: 058
+# Source: Gemini Research (ISSUE-495)
+# Generated: 2026-02-04
+
+module_number: 58
+slug: stylistic-levels
+title_uk: "Стилістичні рівні"
+title_en: "Stylistic Levels"
+
+phase: 3
+phase_id: baroque-fight
+phase_name: "Baroque Fight"
+
+focus: "High vs Low style distinctions"
+
+word_target: 3500
+
+# Content outline to be expanded during content generation
+content_outline:
+  - section: "Вступ"
+    description: "Introduction to Stylistic Levels"
+  - section: "Основний матеріал"
+    description: "Primary source analysis and grammar focus"
+  - section: "Практика"
+    description: "Exercises and activities"
+  - section: "Підсумок"
+    description: "Summary and connection to next module"
+
+# Vocabulary hints (to be populated during content generation)
+vocabulary_hints: []
+
+# Activity types appropriate for this module
+activity_types:
+  - transcription
+  - etymology-trace
+  - grammar-identify
+  - register-identify

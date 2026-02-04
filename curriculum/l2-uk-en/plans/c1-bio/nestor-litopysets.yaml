@@ -1,0 +1,64 @@
+module: c1-bio-007
+level: C1-BIO
+sequence: 7
+slug: nestor-litopysets
+version: '2.0'
+title: 'Нестор Літописець: Батько української історіографії'
+word_target: 4000
+content_outline:
+  - section: Вступ
+    words: 400
+    points:
+      - Нестор як символ історичної пам'яті
+      - Інтелектуальний контекст XI століття
+  - section: Життєпис
+    words: 800
+    points:
+      - Прихід до Лаври
+      - Послух у Феодосія
+      - Книжна освіта і побут
+  - section: Внесок
+    words: 1500
+    points:
+      - Повість минулих літ - аналіз
+      - Житія святих
+      - Методологія історика
+  - section: Останні роки
+    words: 600
+    points:
+      - Редакції літопису
+      - Політичні конфлікти
+      - Смерть і поховання
+  - section: Спадщина
+    words: 600
+    points:
+      - Канонізація
+      - Вплив на мову і культуру
+      - День писемності
+  - section: Підсумок
+    words: 200
+    points:
+      - Значення для нації
+focus: biography
+pedagogy: seminar
+prerequisites:
+  - c1-bio-04
+connects_to:
+  - c1-bio-06
+objectives:
+  - Analyze primary sources
+  - Evaluate historiography
+  - Understand monastic culture
+grammar:
+  - Church Slavonicisms
+  - Archaic syntax
+module_type: biography
+sources:
+  - name: Povist mynulykh lit
+    url: http://litopys.org.ua
+    type: primary
+  - name: Pateryk
+    url: http://litopys.org.ua
+    type: primary
+immersion: 100% Ukrainian
+phase: C1-BIO

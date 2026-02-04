@@ -16,6 +16,10 @@ vocabulary_focus:
   - 'Political/legal vocabulary'
 ---
 
+<!-- SCOPE
+Related: beresteyska-uniia, petro-mohyla, bratstva-i-osvita, bohdan-khmelnytskyi
+-->
+
 # Православна церква XVII століття
 
 > [!history-bite]

@@ -1,0 +1,74 @@
+module: c1-bio-006
+level: C1-BIO
+slug: volodymyr-monomakh
+version: '2.0'
+id: c1-bio-006
+naturalness:
+  score: 10
+  status: PASS
+duration: 150
+transliteration: none
+tags:
+- history
+- biography
+- medieval
+- kyivan-rus
+- law
+- ethics
+vocabulary_count: 30
+vocabulary_hints:
+  required: []
+  recommended:
+    - устав
+    - лихвар
+    - повчання
+    - міжусобиця
+    - регентство
+activity_hints:
+- type: reading
+  focus: "Аналіз 'Повчання дітям'"
+- type: critical-analysis
+  focus: "Оцінка соціальних реформ"
+- type: essay-response
+  focus: "Актуальність етики Мономаха"
+- type: comparative-study
+  focus: "Мономах vs Карл Великий"
+- type: authorial-intent
+  focus: "Педагогіка князя"
+- type: critical-analysis
+  focus: "Аналіз військової стратегії"
+build:
+  last_modified: '2026-02-03'
+content_outline:
+  - section: Вступ
+    words: 400
+    points:
+      - Мономах як символ
+      - Поєднання меча і пера
+  - section: Життєпис
+    words: 1100
+    points:
+      - Основні віхи
+  - section: Внесок
+    words: 1200
+    points:
+      - Устав Володимира Мономаха
+      - Військова реформа
+      - Повчання дітям
+      - Розбудова Києва
+  - section: Останні роки
+    words: 600
+    points:
+      - Централізація влади
+      - Літературна праця
+      - Смерть
+  - section: Спадщина
+    words: 600
+    points:
+      - Ідеалізований образ
+      - Шапка Мономаха
+      - Вплив на традицію
+  - section: Підсумок
+    words: 200
+    points:
+      - Квінтесенція правління

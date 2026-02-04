@@ -1,0 +1,47 @@
+{
+  "module": "intro-to-ruth",
+  "level": "RUTH",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-04T11:42:20.910666Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-04T11:28:33.223203Z",
+    "meta": "2026-02-04T11:28:08.610925Z",
+    "activities": "2026-02-04T11:19:04.106855Z",
+    "vocabulary": "2026-02-04T11:17:23.157036Z",
+    "plan": "2026-02-04T11:26:26.062075Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "3501/3500 (raw: 4543)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "7/6"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "12 < 30 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (Gemini: gemini-3-flash-preview, 2026-02-04)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
+  }
+}

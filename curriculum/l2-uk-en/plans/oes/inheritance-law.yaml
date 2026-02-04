@@ -1,0 +1,38 @@
+# Module Plan: Inheritance Law
+# Track: OES
+# Module: 053
+# Source: Gemini Research (ISSUE-491)
+# Generated: 2026-02-04
+
+module_number: 53
+slug: inheritance-law
+title_uk: "Спадкове право"
+title_en: "Inheritance Law"
+
+phase: 3
+phase_id: legal-tradition
+phase_name: "Legal Tradition"
+
+focus: "Family terms + Dative Case"
+
+word_target: 3500
+
+# Content outline to be expanded during content generation
+content_outline:
+  - section: "Вступ"
+    description: "Introduction to Inheritance Law"
+  - section: "Основний матеріал"
+    description: "Primary source analysis and grammar focus"
+  - section: "Практика"
+    description: "Exercises and activities"
+  - section: "Підсумок"
+    description: "Summary and connection to next module"
+
+# Vocabulary hints (to be populated during content generation)
+vocabulary_hints: []
+
+# Activity types appropriate for this module
+activity_types:
+  - transcription
+  - etymology-trace
+  - grammar-identify

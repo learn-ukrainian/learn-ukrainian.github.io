@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: kultura-kyivskoi-rusi, yaroslav-mudryi, volodymyr-velykyi, boiare-i-shliakhta
+-->
+
 # Люди Русі: Суспільство та побут
 
 > 🎯 **Чому це важливо?**

@@ -1,0 +1,37 @@
+# Module Meta: Orthography & The Yers
+# Track: OES
+# Module: 003
+# Generated: 2026-02-04
+
+module_number: 3
+slug: orthography-yers
+title: "Орфографія та єри (Ъ, Ь)"
+title_en: "Orthography & The Yers"
+
+type: lesson
+phase: 1
+phase_id: vernacular-foundations
+
+# Pedagogy
+pedagogy: theory-first
+duration_minutes: 60
+word_target: 3500
+immersion_level: 100
+
+# Focus
+grammar_focus: "Why we write ъ/ь and where they went"
+vocabulary_focus: []
+cultural_focus: []
+
+# Activity hints (minimum counts)
+activity_hints:
+  - type: transcription
+    min_items: 2
+  - type: etymology-trace
+    min_items: 2
+  - type: grammar-identify
+    min_items: 3
+
+# Prerequisites
+prerequisites:
+  - module: 2

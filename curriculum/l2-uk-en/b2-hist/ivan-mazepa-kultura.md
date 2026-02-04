@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: ivan-mazepa-derzhavnyk, ivan-mazepa-poltava, hryhorii-skovoroda, kyievo-mohylianska-akademiia
+-->
+
 # Іван Мазепа II: освіта і культура
 
 > 🎯 **Чому це важливо?**

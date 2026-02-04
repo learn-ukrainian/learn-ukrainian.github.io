@@ -1,8 +1,8 @@
 # Audit Report: M54 — zborivska-bila-tserkva.md
-**Level:** B2 | **Module:** M54 | **Phase:** HIST.6 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M54 | **Phase:** HIST.6 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:16
+**Generated:** 2026-02-03 22:54:31
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4465/4000 (raw: 4527)
+- **Words:** ✅ 4465/4000 (raw: 4535)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.9% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.6% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -72,7 +72,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 101 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Зборівська та Білоцерківська угоди** | ⚪️ | 101 | Skipped |
 | **Вступ: Між перемогами та миром** | ✅ | 533 | Included in Core |
 | **Зборівський договір (1649): Перше визнання** | ⚪️ | 626 | Skipped |
 | **Берестечко та трагічний поворот подій** | ⚪️ | 414 | Skipped |

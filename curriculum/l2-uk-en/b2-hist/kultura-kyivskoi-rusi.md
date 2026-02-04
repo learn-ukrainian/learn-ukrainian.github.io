@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: yaroslav-mudryi, vizantiia-khrestianstvo, volodymyr-velykyi, kniazivski-usobiytsi
+-->
+
 # Культура Київської Русі — Писемність, мистецтво, архітектура
 
 > 🎯 **Чому це важливо?**

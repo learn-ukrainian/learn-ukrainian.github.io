@@ -1,0 +1,38 @@
+# Module Plan: Printing Vocabulary
+# Track: RUTH
+# Module: 036
+# Source: Gemini Research (ISSUE-494)
+# Generated: 2026-02-04
+
+module_number: 36
+slug: printing-vocabulary
+title_uk: "Друкарська лексика"
+title_en: "Printing Vocabulary"
+
+phase: 2
+phase_id: sacred-word
+phase_name: "Sacred Word"
+
+focus: "Друкарня, Тисяч — Colophon terms"
+
+word_target: 3500
+
+# Content outline to be expanded during content generation
+content_outline:
+  - section: "Вступ"
+    description: "Introduction to Printing Vocabulary"
+  - section: "Основний матеріал"
+    description: "Primary source analysis and grammar focus"
+  - section: "Практика"
+    description: "Exercises and activities"
+  - section: "Підсумок"
+    description: "Summary and connection to next module"
+
+# Vocabulary hints (to be populated during content generation)
+vocabulary_hints: []
+
+# Activity types appropriate for this module
+activity_types:
+  - transcription
+  - etymology-trace
+  - grammar-identify

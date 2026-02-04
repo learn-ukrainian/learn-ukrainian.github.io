@@ -2,10 +2,10 @@
   "module": "petro-mohyla",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:54:05.719880Z",
+  "last_audit": "2026-02-03T22:54:19.914385Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.347059Z",
+    "md": "2026-02-02T10:58:34.458349Z",
     "meta": "2026-01-29T07:38:18.630581Z",
     "activities": "2026-01-27T17:23:25.811972Z",
     "vocabulary": "2026-01-22T22:35:35.929059Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4347/4000 (raw: 4444)"
+      "message": "4347/4000 (raw: 4452)"
     },
     "activities": {
       "status": "pass",

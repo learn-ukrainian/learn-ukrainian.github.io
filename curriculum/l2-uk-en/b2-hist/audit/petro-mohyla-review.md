@@ -1,8 +1,8 @@
 # Audit Report: M35 — petro-mohyla.md
-**Level:** B2 | **Module:** M35 | **Phase:** HIST.4 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M35 | **Phase:** HIST.4 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:05
+**Generated:** 2026-02-03 22:54:19
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4347/4000 (raw: 4444)
+- **Words:** ✅ 4347/4000 (raw: 4452)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.6% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.3% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -72,7 +72,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 46 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Петро Могила: Реформатор церкви** | ⚪️ | 46 | Skipped |
 | **Вступ** | ✅ | 554 | Included in Core |
 | **Шлях до митри: Від молдовського княжича до київського архімандрита** | ⚪️ | 934 | Skipped |
 | **Заснування Академії: Боротьба за знання** | ⚪️ | 918 | Skipped |

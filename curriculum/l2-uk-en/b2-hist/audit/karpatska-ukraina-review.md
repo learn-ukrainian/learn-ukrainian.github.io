@@ -1,8 +1,8 @@
 # Audit Report: M104 — karpatska-ukraina.md
-**Level:** B2 | **Module:** M104 | **Phase:** HIST.9 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M104 | **Phase:** HIST.9 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:46
+**Generated:** 2026-02-03 22:55:00
 
 ## Configuration
 **Type:** B2-history
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4482/4000 (raw: 4622)
+- **Words:** ✅ 4482/4000 (raw: 4630)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -47,7 +47,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
-- **Immersion:** 🇺🇦 99.9% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.7% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -74,6 +74,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Карпатська Україна 1938-1939** | ⚪️ | 0 | Skipped |
 | **Вступ: Один день незалежності** | ✅ | 1020 | Included in Core |
 | **Передісторія та автономія** | ⚪️ | 1001 | Skipped |
 | **Незалежність та оборона** | ⚪️ | 999 | Skipped |

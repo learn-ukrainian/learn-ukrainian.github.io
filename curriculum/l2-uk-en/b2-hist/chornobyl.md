@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: perestroika-ukraina, nezalezhnist-1991, rukh, shistdesiatnyky
+-->
+
 # Чорнобиль: Трагедія і Попередження
 
 > 🎯 **Чому це важливо?**

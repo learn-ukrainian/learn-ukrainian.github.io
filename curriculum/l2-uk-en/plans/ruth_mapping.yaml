@@ -1,0 +1,628 @@
+# RUTH Module Mapping
+# Source: Gemini Research (ISSUE-493, ISSUE-494, ISSUE-495, ISSUE-496)
+# Generated: 2026-02-04
+# Total: 100 modules
+
+# ============================================================
+# PHASE 1: «Канцелярія» — Legal & Administrative (M01-25)
+# Source: ISSUE-493-research.md
+# Focus: Lithuanian Statutes, Chancery Slavonic, Polonisms
+# ============================================================
+
+001:
+  slug: intro-to-ruth
+  title_uk: "Вступ до руської мови"
+  title_en: "Intro to RUTH"
+  focus: "Transition from OES to Ruthenian — Diglossia"
+
+002:
+  slug: sovereign-state
+  title_uk: "Господар і держава"
+  title_en: "Sovereign & State"
+  focus: "Господар, Панство — Concepts of statehood"
+
+003:
+  slug: szlachta-nobility
+  title_uk: "Шляхта"
+  title_en: "The Szlachta"
+  focus: "Rights and privileges of nobility"
+
+004:
+  slug: legal-personhood
+  title_uk: "Правова особа"
+  title_en: "Legal Personhood"
+  focus: "Особа, Чоловек — Who has rights?"
+
+005:
+  slug: land-law-basics
+  title_uk: "Основи земельного права"
+  title_en: "Land Law Basics"
+  focus: "Земля, Ім'єніє — Feudal tenure"
+
+006:
+  slug: criminal-law-murder
+  title_uk: "Кримінальне право: Вбивство"
+  title_en: "Criminal Law I: Murder"
+  focus: "Головщина revisited"
+
+007:
+  slug: courts-basic
+  title_uk: "Суди: Основи"
+  title_en: "The Courts"
+  focus: "Суд, Судія — Basic procedure"
+
+008:
+  slug: stylistic-contrast-gospel
+  title_uk: "Стилістичний контраст"
+  title_en: "Stylistic Contrast"
+  focus: "Peresopnytsia Gospel vs Chancery style"
+
+009:
+  slug: administrative-reform
+  title_uk: "Адміністративна реформа"
+  title_en: "Administrative Reform"
+  focus: "Воєводство, Повіт — Territorial units"
+
+010:
+  slug: the-seim
+  title_uk: "Сейм"
+  title_en: "The Seim"
+  focus: "Parliamentary vocabulary — Ухвала"
+
+011:
+  slug: judicial-procedure
+  title_uk: "Судовий процес"
+  title_en: "Judicial Procedure"
+  focus: "Позва, Свідченіє — Summons, Testimony"
+
+012:
+  slug: womens-rights
+  title_uk: "Права жінок"
+  title_en: "Women's Rights"
+  focus: "Віно, Материзна — Dowry, Inheritance"
+
+013:
+  slug: wills-testaments
+  title_uk: "Заповіти"
+  title_en: "Wills & Testaments"
+  focus: "Тестамент, Духовниця"
+
+014:
+  slug: guardianship-ruth
+  title_uk: "Опіка"
+  title_en: "Guardianship"
+  focus: "Опека — Protecting orphans"
+
+015:
+  slug: polonisms-in-law
+  title_uk: "Полонізми у праві"
+  title_en: "Polonisms in Law"
+  focus: "Identifying Polish loanwords"
+
+016:
+  slug: chancery-formulae-dating
+  title_uk: "Канцелярські формули: Датування"
+  title_en: "Chancery Formulae II"
+  focus: 'Dating clauses — "Pisan u Vilni..."'
+
+017:
+  slug: sovereignty-1588
+  title_uk: "Суверенітет (1588)"
+  title_en: "Sovereignty"
+  focus: "GDL independence rhetoric"
+
+018:
+  slug: treason
+  title_uk: "Зрада"
+  title_en: "Treason"
+  focus: "Образа Маєстату — High crimes"
+
+019:
+  slug: civil-liberties
+  title_uk: "Громадянські свободи"
+  title_en: "Civil Liberties"
+  focus: "Neminem captivabimus — Habeas Corpus"
+
+020:
+  slug: advanced-property
+  title_uk: "Розширене майнове право"
+  title_en: "Advanced Property"
+  focus: "Застава, Аренда — Mortgage, Lease"
+
+021:
+  slug: latinisms
+  title_uk: "Латинізми"
+  title_en: "Latinisms"
+  focus: "Акт, Протокол, Інстигатор"
+
+022:
+  slug: legal-profession
+  title_uk: "Юридична професія"
+  title_en: "The Legal Profession"
+  focus: "Прокуратор, Возний — Roles in court"
+
+023:
+  slug: document-types
+  title_uk: "Види документів"
+  title_en: "Document Types"
+  focus: "Привілей, Лист, Універсал"
+
+024:
+  slug: paleography-lab-skoropys
+  title_uk: "Палеографія: Скоропис"
+  title_en: "Paleography Lab: Skoropys"
+  focus: "Reading 16th c. Chancery Cursive"
+
+025:
+  slug: ruth-1-capstone
+  title_uk: "Капстоун фази 1"
+  title_en: "RUTH-1 Capstone"
+  focus: "Drafting a mock legal petition"
+
+# ============================================================
+# PHASE 2: «Священне слово» — Vernacular Scripture (M26-50)
+# Source: ISSUE-494-research.md
+# Focus: Peresopnytsia Gospel, Ostrih Bible, Prosta Mova
+# ============================================================
+
+026:
+  slug: translators-dedication
+  title_uk: "Перекладачі"
+  title_en: "The Translators"
+  focus: "Archimandrite Hryhorii & Mykhailo"
+
+027:
+  slug: vernacular-glosses
+  title_uk: "Народні глоси"
+  title_en: "Vernacular Glosses"
+  focus: 'Synonyms: чыто -> або — "Translating for the people"'
+
+028:
+  slug: nativity-luke
+  title_uk: "Різдво (Лука 2)"
+  title_en: "The Nativity"
+  focus: "Narrative style comparison"
+
+029:
+  slug: beatitudes-matthew
+  title_uk: "Заповіді блаженства (Матвій 5)"
+  title_en: "The Beatitudes"
+  focus: "Abstract vocabulary — Блаженні vs Щасливі"
+
+030:
+  slug: lords-prayer
+  title_uk: "Отче наш"
+  title_en: "The Lord's Prayer"
+  focus: "Liturgical vs Vernacular forms"
+
+031:
+  slug: parable-sower
+  title_uk: "Притча: Сіяч"
+  title_en: "The Parables I: Sower"
+  focus: "Agricultural vocabulary — Ролія, Зерно"
+
+032:
+  slug: parable-prodigal-son
+  title_uk: "Притча: Блудний син"
+  title_en: "The Parables II: Prodigal Son"
+  focus: "Family & emotional vocabulary"
+
+033:
+  slug: the-passion
+  title_uk: "Страсті"
+  title_en: "The Passion"
+  focus: "Dramatic narrative — Polish loanwords in legal terms"
+
+034:
+  slug: the-resurrection
+  title_uk: "Воскресіння"
+  title_en: "The Resurrection"
+  focus: '"High" moments in vernacular'
+
+035:
+  slug: art-orthography
+  title_uk: "Мистецтво та правопис"
+  title_en: "Art & Orthography"
+  focus: "Visual style of the manuscript"
+
+036:
+  slug: prince-ostrozky
+  title_uk: "Князь Острозький"
+  title_en: "Prince Ostrozky"
+  focus: "Cultural project of Ostrih Academy"
+
+037:
+  slug: genesis-creation
+  title_uk: "Буття: Створення"
+  title_en: "Genesis: Creation"
+  focus: "High Church Slavonic cosmology"
+
+038:
+  slug: psalms-liturgical
+  title_uk: "Псалми"
+  title_en: "Psalms"
+  focus: "Poetic structure — Liturgical standard"
+
+039:
+  slug: prophets-isaiah
+  title_uk: "Пророки: Ісая"
+  title_en: "Prophets: Isaiah"
+  focus: "Rhetorical complexity — Greek calques"
+
+040:
+  slug: nt-contrast-logos
+  title_uk: "Контраст: Логос"
+  title_en: "New Testament Contrast"
+  focus: "Ostrih vs Peresopnytsia (John 1)"
+
+041:
+  slug: epistles-romans
+  title_uk: "Послання: Римляни"
+  title_en: "The Epistles: Romans"
+  focus: "Theological terminology — Оправданіє, Благодать"
+
+042:
+  slug: revelations
+  title_uk: "Откровення"
+  title_en: "Revelations"
+  focus: "Apocalyptic imagery — Rare lexicon"
+
+043:
+  slug: herasym-smotrytsky-poems
+  title_uk: "Герасим Смотрицький: Вірші"
+  title_en: "Herasym Smotrytsky: Poems"
+  focus: "Early Ukrainian verse — Ключ Царства"
+
+044:
+  slug: printing-vocabulary
+  title_uk: "Друкарська лексика"
+  title_en: "Printing Vocabulary"
+  focus: "Друкарня, Тисяч — Colophon terms"
+
+045:
+  slug: ostrih-legacy
+  title_uk: "Спадщина Острога"
+  title_en: "Ostrih Legacy"
+  focus: "Impact on Muscovite/Russian norms"
+
+046:
+  slug: smotrytsky-grammar-intro
+  title_uk: "Граматика Смотрицького: Вступ"
+  title_en: "Smotrytsky's Grammar"
+  focus: "Codification of CS — Syntaxis, Prosodia"
+
+047:
+  slug: vyshensky-epistles
+  title_uk: "Листи Вишенського"
+  title_en: "Ivan Vyshensky: Epistles"
+  focus: 'Argument against vernacular — "Simple tongue is for pigs"'
+
+048:
+  slug: meletiy-smotrytsky-apologia
+  title_uk: "Мелетій Смотрицький: Апологія"
+  title_en: "Meletiy Smotrytsky: Apologia"
+  focus: 'Defense of Slavonic as "dignified" language'
+
+049:
+  slug: comparative-lab-parallel
+  title_uk: "Порівняльна лабораторія"
+  title_en: "Comparative Lab"
+  focus: "Analyzing one verse across 4 versions"
+
+050:
+  slug: ruth-2-capstone
+  title_uk: "Капстоун фази 2"
+  title_en: "RUTH-2 Capstone"
+  focus: 'Translating modern prayer to "Peresopnytsia Style"'
+
+# ============================================================
+# PHASE 3: «Барокова боротьба» — Polemics & Grammar (M51-75)
+# Source: ISSUE-495-research.md
+# Focus: Smotrytsky's Grammar, Vyshensky, Baroque Rhetoric
+# ============================================================
+
+051:
+  slug: need-for-norms
+  title_uk: "Потреба норм"
+  title_en: "The Need for Norms"
+  focus: "Why codify? The Latin challenge"
+
+052:
+  slug: orthography-letters
+  title_uk: "Орфографія: Літери"
+  title_en: "Orthography"
+  focus: 'The letter "Ґ" (G) vs "КГ"'
+
+053:
+  slug: parts-of-speech
+  title_uk: "Частини мови"
+  title_en: "Parts of Speech"
+  focus: "Noun declensions (standardized)"
+
+054:
+  slug: the-verb-conjugation
+  title_uk: "Дієслово"
+  title_en: "The Verb"
+  focus: "Conjugation patterns — Aspects"
+
+055:
+  slug: syntax-agreement
+  title_uk: "Синтаксис I: Узгодження"
+  title_en: "Syntax I"
+  focus: "Agreement and government rules"
+
+056:
+  slug: syntax-complex
+  title_uk: "Синтаксис II: Складні речення"
+  title_en: "Syntax II"
+  focus: "Subordinate clauses — Greek influence"
+
+057:
+  slug: prosody-meter
+  title_uk: "Просодія"
+  title_en: "Prosody"
+  focus: "Poetic rules — Quantitative vs Syllabic"
+
+058:
+  slug: stylistic-levels
+  title_uk: "Стилістичні рівні"
+  title_en: "Stylistic Levels"
+  focus: "High vs Low style distinctions"
+
+059:
+  slug: pedagogy-brotherhood
+  title_uk: "Педагогіка"
+  title_en: "Pedagogy"
+  focus: "How grammar was taught in brotherhood schools"
+
+060:
+  slug: grammar-lab-parsing
+  title_uk: "Граматична лабораторія"
+  title_en: "Grammar Lab"
+  focus: "Parsing a CS sentence using Smotrytsky's rules"
+
+061:
+  slug: holy-mountain-athos
+  title_uk: "Свята гора"
+  title_en: "The Holy Mountain"
+  focus: "Monastic context — Rejection of the World"
+
+062:
+  slug: attack-on-bishops
+  title_uk: "Напад на єпископів"
+  title_en: "Attack on Bishops"
+  focus: "Fierce invective — Wolves in shepherds' skins"
+
+063:
+  slug: baroque-lists
+  title_uk: "Барокові списки"
+  title_en: "Baroque Lists"
+  focus: "The heaping technique — Нагромадження"
+
+064:
+  slug: dialogue-with-latins
+  title_uk: "Діалог з латинами"
+  title_en: "Dialogue with Latins"
+  focus: "Arguments against Union of Brest"
+
+065:
+  slug: social-critique
+  title_uk: "Соціальна критика"
+  title_en: "Social Critique"
+  focus: "Defense of the poor vs rich prelates"
+
+066:
+  slug: simple-tongue-vyshensky
+  title_uk: "Проста мова"
+  title_en: "The Simple Tongue"
+  focus: "Why he mixed vernacular with CS"
+
+067:
+  slug: epistle-to-ostrozky
+  title_uk: "Лист до Острозького"
+  title_en: "Epistle to Ostrozky"
+  focus: "Political theology"
+
+068:
+  slug: vyshensky-legacy
+  title_uk: "Спадщина Вишенського"
+  title_en: "Vyshensky's Legacy"
+  focus: '"The Firebrand of Orthodoxy"'
+
+069:
+  slug: mother-church-weeps
+  title_uk: "Матір-Церква плаче"
+  title_en: "Mother Church Weeps"
+  focus: "Threnos — Central metaphor, Personification"
+
+070:
+  slug: apostasy
+  title_uk: "Апостазія"
+  title_en: "Apostasy"
+  focus: "Naming noble families who converted"
+
+071:
+  slug: baroque-syntax
+  title_uk: "Бароковий синтаксис"
+  title_en: "Baroque Syntax"
+  focus: "Complex, winding sentences"
+
+072:
+  slug: kyiv-mohyla-rhetoric
+  title_uk: "Риторика Могилянки"
+  title_en: "Kyiv-Mohyla Rhetoric"
+  focus: "Loci Communes — The 5 Canons"
+
+073:
+  slug: panegyric-style
+  title_uk: "Панегіричний стиль"
+  title_en: "Panegyric Style"
+  focus: "Praising patrons (Mazepa, Mohyla)"
+
+074:
+  slug: baroque-poetry
+  title_uk: "Барокова поезія"
+  title_en: "Baroque Poetry"
+  focus: "Curiosity verse, visual poetry"
+
+075:
+  slug: ruth-3-capstone
+  title_uk: "Капстоун фази 3"
+  title_en: "RUTH-3 Capstone"
+  focus: "Writing a short Baroque panegyric or lament"
+
+# ============================================================
+# PHASE 4: «Козацьке слово» — Chronicles & Philosophy (M76-100)
+# Source: ISSUE-496-research.md
+# Focus: Cossack Chronicles, Orlyk, Skovoroda
+# ============================================================
+
+076:
+  slug: eyewitness-samovydets
+  title_uk: "Самовидець"
+  title_en: "The Eye Witness"
+  focus: 'Intro to genre — "Year 1648"'
+
+077:
+  slug: the-ruin
+  title_uk: "Руїна"
+  title_en: "The Ruin"
+  focus: "Describing chaos — Vocabulary of war/destruction"
+
+078:
+  slug: glorifying-host
+  title_uk: "Прославлення Війська"
+  title_en: "Glorifying the Host"
+  focus: "Hrabianka — Origins of Cossacks (Khazars myth)"
+
+079:
+  slug: poetic-history
+  title_uk: "Поетична історія"
+  title_en: "Poetic History"
+  focus: "Verse in chronicles"
+
+080:
+  slug: monumental-style
+  title_uk: "Монументальний стиль"
+  title_en: "The Monumental Style"
+  focus: "Velychko — Documents as text"
+
+081:
+  slug: baroque-letters
+  title_uk: "Барокові листи"
+  title_en: "Baroque Letters"
+  focus: "Art of epistolography — Khmelnytsky's letters"
+
+082:
+  slug: cossack-hierarchy
+  title_uk: "Козацька ієрархія"
+  title_en: "Cossack Hierarchy"
+  focus: "Ranks and Titles — Старшина"
+
+083:
+  slug: black-council
+  title_uk: "Чорна Рада"
+  title_en: "The Black Council"
+  focus: "Political intrigue vocabulary"
+
+084:
+  slug: battle-descriptions
+  title_uk: "Описи битв"
+  title_en: "Battle Descriptions"
+  focus: "Comparing chroniclers on same event (Berestechko)"
+
+085:
+  slug: chronicle-lab
+  title_uk: "Лабораторія літопису"
+  title_en: "Chronicle Lab"
+  focus: "Drafting a chronicle entry for a modern event"
+
+086:
+  slug: constitution-preamble
+  title_uk: "Конституція: Преамбула"
+  title_en: "The Constitution"
+  focus: "Historical justification of Cossack rights"
+
+087:
+  slug: separation-of-powers
+  title_uk: "Розподіл влади"
+  title_en: "Separation of Powers"
+  focus: "Limiting the Hetman's power"
+
+088:
+  slug: social-contract
+  title_uk: "Суспільний договір"
+  title_en: "Social Contract"
+  focus: "Rights of widows, orphans, commoners"
+
+089:
+  slug: diplomatic-language
+  title_uk: "Дипломатична мова"
+  title_en: "Diplomatic Language"
+  focus: "Relations with Sweden and Crimea"
+
+090:
+  slug: orlyk-latin-comparison
+  title_uk: "Орлик: Порівняння з латиною"
+  title_en: "Orlyk's Latin"
+  focus: "Ruthenian vs Latin versions"
+
+091:
+  slug: wandering-philosopher
+  title_uk: "Мандрівний філософ"
+  title_en: "The Wandering Philosopher"
+  focus: "Skovoroda — Life as text"
+
+092:
+  slug: fables-kharkiv
+  title_uk: "Харківські байки"
+  title_en: "Fables of Kharkiv"
+  focus: 'Genre of Fable — "The Bee and the Hornet"'
+
+093:
+  slug: affinity-srodna-pratsia
+  title_uk: "Спорідненість"
+  title_en: "Affinity"
+  focus: "The concept of Сродна праця"
+
+094:
+  slug: the-heart
+  title_uk: "Серце"
+  title_en: "The Heart"
+  focus: "Cordocentrism — Кордоцентризм"
+
+095:
+  slug: divine-songs
+  title_uk: "Божественні пісні"
+  title_en: "Divine Songs"
+  focus: '"De Libertate" — Rhythm, meter, Baroque choral'
+
+096:
+  slug: two-natures
+  title_uk: "Дві природи"
+  title_en: "The Two Natures"
+  focus: "Visible vs Invisible world"
+
+097:
+  slug: skovoroda-language
+  title_uk: "Мова Сковороди"
+  title_en: "Skovoroda's Language"
+  focus: "Mix of CS, Ruthenian, and Russian features"
+
+098:
+  slug: transition-to-modern
+  title_uk: "Перехід до сучасності"
+  title_en: "Transition to Modern"
+  focus: "Bridging to Kotliarevsky's Eneida"
+
+099:
+  slug: philosophical-lab
+  title_uk: "Філософська лабораторія"
+  title_en: "Philosophical Lab"
+  focus: "Analyzing a Socratic dialogue"
+
+100:
+  slug: ruth-capstone
+  title_uk: "Капстоун RUTH"
+  title_en: "RUTH Capstone"
+  focus: "Tracing a word from 1529 to 1794"

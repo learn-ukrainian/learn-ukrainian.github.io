@@ -1,8 +1,8 @@
 # Audit Report: M19 — rus-ta-susidy.md
-**Level:** B2 | **Module:** M19 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M19 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:53:56
+**Generated:** 2026-02-03 22:54:10
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4285/4000 (raw: 4332)
+- **Words:** ✅ 4285/4000 (raw: 4340)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.5% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -72,7 +72,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 78 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Русь та сусіди: Візантія, Польща, Угорщина** | ⚪️ | 78 | Skipped |
 | **Вступ — Русь у міжнародному контексті** | ✅ | 658 | Included in Core |
 | **Русь і Візантія (Читання)** | ✅ | 818 | Included in Core |
 | **Русь і Польща** | ⚪️ | 588 | Skipped |

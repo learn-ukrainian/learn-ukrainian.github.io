@@ -2,10 +2,10 @@
   "module": "rosiiska-imperiia-ukraina",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:54:29.307872Z",
+  "last_audit": "2026-02-03T22:54:43.502350Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T22:37:22.713278Z",
+    "md": "2026-02-02T10:58:17.917471Z",
     "meta": "2026-01-29T07:38:18.663351Z",
     "activities": "2026-01-27T21:23:28.722985Z",
     "vocabulary": "2026-01-27T13:28:46.879528Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4119/4000 (raw: 4216)"
+      "message": "4119/4000 (raw: 4224)"
     },
     "activities": {
       "status": "pass",

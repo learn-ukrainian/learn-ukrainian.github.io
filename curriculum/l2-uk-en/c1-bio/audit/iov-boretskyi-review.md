@@ -1,8 +1,8 @@
-# Audit Report: M16 — iov-boretskyi.md
-**Level:** C1 | **Module:** M16 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
+# Audit Report: M18 — iov-boretskyi.md
+**Level:** C1-BIO | **Module:** M18 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:09
+**Generated:** 2026-02-04 12:12:24
 
 ## Configuration
 **Type:** C1-biography
@@ -36,25 +36,29 @@
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
-## Recommendation
-**📝 UPDATE** (severity 20/100)
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template.md'
+  - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 4280/4000 (raw: 4523)
+- **Words:** ✅ 4297/4000 (raw: 4353)
 - **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/5
+- **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 24 (soft target)
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Vocab:** ✅ 25/24
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (8 activities)
-- **Immersion:** 🇺🇦 99.8% (target 95-100% (biography))
+- **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
 - **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -66,32 +70,26 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 5 | 4 | 100% | 19% | 19.0% |
-| engagement | 7 | 6 | 100% | 14% | 14.3% |
+| primary_sources | 4 | 4 | 100% | 19% | 19.0% |
+| engagement | 6 | 6 | 100% | 14% | 14.3% |
 | quotes | 4 | 3 | 100% | 14% | 14.3% |
 | cultural | 7 | 4 | 100% | 10% | 9.5% |
-| visual | 7 | 4 | 100% | 10% | 9.5% |
+| visual | 5 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.95 | - | 95% | 5% | 4.5% |
+| variety | 0.96 | - | 96% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 18 | 3 | 100% | 5% | 4.8% |
+| questions | 6 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 111 | Included in Core |
-| **Вступ — Відновлення православної ієрархії** | ✅ | 546 | Included in Core |
-| **Життєпис** | ⚪️ | 372 | Skipped |
-| **Освітня діяльність: Ректорство як стратегія спротиву** | ⚪️ | 326 | Skipped |
-| **Берестейська унія та її наслідки: Криза і виклик** | ⚪️ | 381 | Skipped |
-| **Відновлення ієрархії 1620 року** | ⚪️ | 351 | Skipped |
-| **Останні роки** | ⚪️ | 402 | Skipped |
-| **Внесок: Творець інтелектуальної броні** | ⚪️ | 229 | Skipped |
-| **Спадщина** | ⚪️ | 431 | Skipped |
-| **Лінгвістичний аналіз та стратегія високого стилю** | ✅ | 446 | Included in Core |
-| **Порівняльний аналіз** | ✅ | 285 | Included in Core |
-| **Критичне мислення** | ⚪️ | 144 | Skipped |
-| **Підсумок — Віра як опір** | ✅ | 151 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 105 | Skipped |
+| **Intro/Narrative** | ✅ | 119 | Included in Core |
+| **Вступ — Відновлення православної ієрархії** | ✅ | 478 | Included in Core |
+| **Життєпис** | ⚪️ | 1289 | Skipped |
+| **Берестейська унія та її наслідки** | ⚪️ | 683 | Skipped |
+| **Відновлення ієрархії 1620 року** | ⚪️ | 623 | Skipped |
+| **Митрополитство та спадщина** | ⚪️ | 598 | Skipped |
+| **Підсумок — Віра як опір** | ✅ | 350 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 157 | Skipped |

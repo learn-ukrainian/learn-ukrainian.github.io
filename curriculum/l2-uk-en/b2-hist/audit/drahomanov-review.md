@@ -1,8 +1,8 @@
 # Audit Report: M84 — drahomanov.md
-**Level:** B2 | **Module:** M84 | **Phase:** HIST.8 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M84 | **Phase:** HIST.8 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:34
+**Generated:** 2026-02-03 22:54:48
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4315/4000 (raw: 4491)
+- **Words:** ✅ 4315/4000 (raw: 4499)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.7% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.5% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -72,7 +72,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 86 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Михайло Драгоманов: Архітектор Європейської України** | ⚪️ | 86 | Skipped |
 | **Вступ: Голос української політичної думки** | ✅ | 498 | Included in Core |
 | **Біографія та становлення** | ⚪️ | 924 | Skipped |
 | **Політичні ідеї** | ⚪️ | 934 | Skipped |

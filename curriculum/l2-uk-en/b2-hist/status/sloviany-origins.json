@@ -2,10 +2,10 @@
   "module": "sloviany-origins",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:53:47.728072Z",
+  "last_audit": "2026-02-03T22:54:01.823264Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-30T10:06:53.181459Z",
+    "md": "2026-02-02T11:00:20.099926Z",
     "meta": "2026-01-29T07:38:18.604054Z",
     "activities": "2026-01-22T15:08:35.248522Z",
     "vocabulary": "2026-01-27T15:50:11.295498Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "5563/4000 (raw: 5676)"
+      "message": "5563/4000 (raw: 5684)"
     },
     "activities": {
       "status": "pass",

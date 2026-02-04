@@ -1,8 +1,8 @@
 # Audit Report: M04 — kniaz-yaroslav-mudryi.md
-**Level:** C1 | **Module:** M04 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4000
+**Level:** C1-BIO | **Module:** M04 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 23:55:20
+**Generated:** 2026-02-04 11:41:16
 
 ## Configuration
 **Type:** C1-biography
@@ -25,27 +25,30 @@
 | 3 | essay-response | Еволюція права: Від помсти до віри | 1 | 1 | ✅ |
 | 4 | critical-analysis | Шлюбна дипломатія: Стратегія чи випадковість? | 1 | 1 | ✅ |
 | 5 | comparative-study | Ярослав Мудрий та Карл Великий | 1 | 1 | ✅ |
+| 6 | quiz | Вікторина: Епоха Ярослава Мудрого | 5 | 5 | ✅ |
+| 7 | true-false | Правда чи міф: Правління Ярослава Володимировича | 5 | 5 | ✅ |
+| 8 | authorial-intent | Намір літописця: Похвала книжній мудрості | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 5 (target: 3-9) ✅
-- Unique types: 4 (minimum: 3) ✅
-- Priority types used: 4/6 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Total activities: 8 (target: 3-9) ✅
+- Unique types: 7 (minimum: 3) ✅
+- Priority types used: 6/6 (authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading) ✅
 - Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4385/4000 (raw: 4429)
-- **Activities:** ✅ 5/3
+- **Words:** ✅ 4882/4000 (raw: 4925)
+- **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 4/3 types
+- **Unique_types:** ✅ 7/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/5
+- **Engagement:** ✅ 15/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Content_heavy:** ✅ Content-heavy OK (8 activities)
 - **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
 - **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -58,27 +61,29 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 8 | 4 | 100% | 19% | 19.0% |
-| engagement | 7 | 6 | 100% | 14% | 14.3% |
-| quotes | 6 | 3 | 100% | 14% | 14.3% |
-| cultural | 5 | 4 | 100% | 10% | 9.5% |
-| visual | 7 | 4 | 100% | 10% | 9.5% |
+| primary_sources | 15 | 4 | 100% | 19% | 19.0% |
+| engagement | 10 | 6 | 100% | 14% | 14.3% |
+| quotes | 14 | 3 | 100% | 14% | 14.3% |
+| cultural | 4 | 4 | 100% | 10% | 9.5% |
+| visual | 10 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.97 | - | 97% | 5% | 4.6% |
+| variety | 0.95 | - | 95% | 5% | 4.5% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 13 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.9%** |
+| questions | 14 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 119 | Included in Core |
-| **Вступ — Будівничий держави** | ✅ | 454 | Included in Core |
-| **Шлях до влади Життєпис** | ⚪️ | 605 | Skipped |
-| **Руська правда** | ⚪️ | 716 | Skipped |
-| **Культурний розквіт Внесок** | ✅ | 748 | Included in Core |
-| **Династична дипломатія** | ⚪️ | 675 | Skipped |
-| **Останні роки та спадщина Останні роки Спадщина** | ⚪️ | 592 | Skipped |
-| **Підсумок — Мудрий правитель** | ✅ | 234 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 242 | Skipped |
+| **Intro/Narrative** | ✅ | 106 | Included in Core |
+| **Вступ — Будівничий держави** | ✅ | 530 | Included in Core |
+| **Життєпис** | ⚪️ | 105 | Skipped |
+| **Шлях до влади** | ⚪️ | 545 | Skipped |
+| **Руська правда** | ⚪️ | 703 | Skipped |
+| **Культурний розквіт** | ✅ | 737 | Included in Core |
+| **Останні роки: Династична дипломатія** | ⚪️ | 648 | Skipped |
+| **Внесок у розбудову держави** | ⚪️ | 441 | Skipped |
+| **Спадщина та канонізація** | ⚪️ | 589 | Skipped |
+| **Підсумок** | ✅ | 106 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 372 | Skipped |

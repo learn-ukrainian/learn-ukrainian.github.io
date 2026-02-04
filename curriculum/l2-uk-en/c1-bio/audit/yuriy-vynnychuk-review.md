@@ -1,8 +1,8 @@
-# Audit Report: M117 — yuriy-vynnychuk.md
-**Level:** C1 | **Module:** M117 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M133 — yuriy-vynnychuk.md
+**Level:** C1-BIO | **Module:** M133 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:53
+**Generated:** 2026-02-04 11:42:26
 
 ## Configuration
 **Type:** C1-biography

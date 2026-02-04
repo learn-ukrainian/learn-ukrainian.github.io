@@ -141,11 +141,62 @@ The curriculum is designed for English speakers. Comparisons to Russian are ling
 *   ❌ **Forbidden:** Using `брать` (Russian) instead of `брати` (Ukrainian).
 *   **Reason:** This often happens when copy-pasting from poor resources. Always verify examples in a dictionary (`goroh.pp.ua`).
 
-### 3. No Russian Characters
+### 3. Context-Aware Character Validation (Issue #498)
 
-**Rule:** The following letters must NEVER appear in the content:
-*   **ё, ъ, ы, э**
-*   **EXCEPTION:** Use only in "Prosecutor's Voice" / "Myth Buster" sections to explicitly debunk Russian propaganda or explain historical suppression.
+The audit system distinguishes between **Russian-only characters** (always forbidden) and **historical Cyrillic characters** (allowed in specific contexts).
+
+#### Russian-Only Characters (FORBIDDEN IN PROSE)
+
+These letters are distinctly Russian and never appear in Ukrainian or historical texts:
+*   **ы, э, ё** — Flagged as `RUSSIAN_CHARACTERS` error when in prose
+*   **Fix:** Replace with Ukrainian equivalents: ы→и, э→е, ё→ьо/йо
+
+**Exception: Quoted Russian Text (Educational Context)**
+Russian characters ARE allowed inside quoted strings when showing what Russians said/wrote for educational purposes (debunking myths, highlighting propaganda, etc.). Always provide Ukrainian translation:
+```markdown
+✅ CORRECT (Russian quote with Ukrainian translation):
+"исконно русский Крым" (укр. «споконвічно російський Крим»)
+«Юго-Западный край» (укр. Південно-Західний край)
+
+❌ INCORRECT (Russian without context/translation):
+Крим завжди був исконно русским.
+```
+
+#### Historical Cyrillic Characters (CONTEXT-AWARE)
+
+These characters appear in authentic Old East Slavic, Ruthenian, and Church Slavonic texts:
+*   **ъ** (hard sign / yer) — e.g., сънъ → сон
+*   **ѣ** (yat) — e.g., лѣсъ → ліс
+*   **ѫ, ѧ** (yus) — nasal vowels
+*   **ѳ, ѵ, ѡ** (fita, izhitsa, omega) — Greek-origin letters
+
+**Where historical characters ARE allowed:**
+1.  **Blockquotes in historical tracks** (OES, RUTH, LIT, B2-HIST, C1-BIO, C1-HIST):
+    ```markdown
+    > Цитата з первинного джерела: «сънъ» означало...
+    ```
+2.  **Explicitly marked quote blocks:**
+    ```markdown
+    > **Оригінал:**
+    > Текст зъ історичними символами
+
+    > [!quote] Повість минулих літ
+    > Текст зъ історичними символами
+    ```
+3.  **YAML vocabulary fields** (`oes:`, `ruth:`, `original:`, `church_slavonic:`):
+    ```yaml
+    - oes: къняжь
+      modern: князівський
+    ```
+
+**Where historical characters are FORBIDDEN:**
+*   Modern Ukrainian prose (outside blockquotes)
+*   Activity content (unless in a historical quote)
+*   Vocabulary definitions (use `oes:` field for historical forms)
+
+**Audit Errors:**
+*   `RUSSIAN_CHARACTERS` — Russian-only chars (ы, э, ё) found anywhere
+*   `HISTORICAL_CHARS_IN_MODERN` — Historical chars (ъ, ѣ, etc.) outside quote context
 
 ### 4. The "Prosecutor's Voice" Exception
 

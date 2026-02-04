@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: kniazivski-usobiytsi, yaroslav-mudryi, ruska-pravda, mongolska-navala
+-->
+
 # Володимир Мономах: Останній велетень єдиної держави
 
 > 🎯 **Чому це важливо?**

@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: yaroslav-mudryi, volodymyr-velykyi, kultura-kyivskoi-rusi, vizantiia-khrestianstvo
+-->
+
 # Софія Київська та культурний розквіт
 
 > 🎯 **Чому це важливо?**

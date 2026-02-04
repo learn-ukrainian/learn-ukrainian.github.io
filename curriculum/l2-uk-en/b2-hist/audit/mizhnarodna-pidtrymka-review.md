@@ -1,8 +1,8 @@
 # Audit Report: M138 — mizhnarodna-pidtrymka.md
-**Level:** B2 | **Module:** M138 | **Phase:** HIST.13 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M138 | **Phase:** HIST.13 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:55:06
+**Generated:** 2026-02-03 22:55:21
 
 ## Configuration
 **Type:** B2-history

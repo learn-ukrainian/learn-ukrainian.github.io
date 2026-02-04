@@ -1,8 +1,8 @@
-# Audit Report: M67 — oleksandr-hrekiv.md
-**Level:** C1 | **Module:** M67 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M72 — oleksandr-hrekiv.md
+**Level:** C1-BIO | **Module:** M72 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:33
+**Generated:** 2026-02-04 11:41:54
 
 ## Configuration
 **Type:** C1-biography
@@ -54,7 +54,7 @@
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/5
+- **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 0 < 24 (soft target)
 - **Structure:** ✅ Valid Structure

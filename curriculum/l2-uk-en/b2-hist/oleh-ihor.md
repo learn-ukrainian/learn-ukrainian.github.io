@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: zasnuvannia-kyieva, olha-sviatoslav, khozary-i-sloviany, vizantiia-khrestianstvo
+-->
+
 # Олег та Ігор: Перші правителі
 
 > 🎯 **Чому це важливо?**

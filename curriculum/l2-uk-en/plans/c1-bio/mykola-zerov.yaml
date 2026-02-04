@@ -1,0 +1,89 @@
+module: c1-bio-084
+level: C1-BIO
+sequence: 84
+slug: mykola-zerov
+version: '2.0'
+title: 'Микола Зеров: <!-- Title -->'
+content_outline:
+- section: Вступ — Poet, translator, Neoclassicist leader
+  words: 400
+  points:
+  - <!-- point -->
+- section: Ранні роки та становлення
+  words: 600
+  points:
+  - <!-- point -->
+- section: Творчий шлях та основні здобутки
+  words: 800
+  points:
+  - <!-- point -->
+- section: Роль у Розстріляному відродженні
+  words: 800
+  points:
+  - <!-- point -->
+- section: Переслідування та трагічна доля
+  words: 700
+  points:
+  - <!-- point -->
+- section: Спадщина та значення
+  words: 700
+  points:
+  - <!-- point -->
+word_target: 4000
+vocabulary_hints:
+  required:
+  - Розстріляне відродження
+  - Микола Зеров
+  recommended:
+  - модернізм (modernism)
+  - сатира (satire)
+  - абсурд (absurd)
+  - тоталітаризм (totalitarianism)
+activity_hints:
+- type: reading
+  focus: Фрагменти п'єси «Мина Мазайло»
+  source: Первинне джерело
+  items: 3 passages
+- type: essay-response
+  focus: Мовне питання у творчості Куліша
+  word_target: 300
+  output: Аргументований есей
+- type: critical-analysis
+  focus: Порівняння долі Куліша та Курбаса
+focus: biography
+prerequisites:
+- b2-hist/rozstriliane-vidrodzennia
+- b2-hist/mekhanizm-teroru
+connects_to:
+- c1-bio/les-kurbas
+- c1-bio/mykola-khvylovyi
+module_type: biography
+sources:
+- name: Микола Куліш (Енциклопедія історії України)
+  url: https://esu.com.ua/article-7980
+  type: primary
+  notes: Академічна біографія
+- name: Куліш М. П'єси
+  type: primary
+  notes: Збірка драматичних творів
+- name: Жулинський М. Микола Куліш
+  type: reference
+  notes: Монографія про творчість
+immersion: 100% Ukrainian
+phase: C1-BIO
+objectives:
+- Дізнатися про життя та творчість Микола Зеров
+notes: 'Mykola Kulish is considered the greatest Ukrainian playwright of the 20th
+  century.
+
+  His plays combined modernist techniques with deep exploration of Ukrainian identity
+
+  and the absurdities of Soviet reality. "Myna Mazailo" brilliantly satirized
+
+  linguistic assimilation. His partnership with director Les Kurbas created
+
+  legendary theatrical productions. Both were arrested in 1934 and executed on
+
+  the same day (November 3, 1937) in the Sandarmokh mass execution.
+
+  '

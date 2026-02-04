@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: shevchenko-awakening, hromady, valuevskyi-emskyi, habsburzka-halichyna
+-->
+
 # Синтез: Імперська доба (XIX ст.)
 
 > **Чому це важливо?**

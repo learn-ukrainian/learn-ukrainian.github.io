@@ -1,8 +1,8 @@
 # Audit Report: M88 — persha-svitova.md
-**Level:** B2 | **Module:** M88 | **Phase:** HIST.9 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M88 | **Phase:** HIST.9 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:36
+**Generated:** 2026-02-03 22:54:51
 
 ## Configuration
 **Type:** B2-history
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 5076/4000 (raw: 5249)
+- **Words:** ✅ 5076/4000 (raw: 5257)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/2 types
@@ -47,7 +47,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
-- **Immersion:** 🇺🇦 100.0% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -73,7 +73,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 105 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Перша світова війна: Брат проти брата** | ⚪️ | 105 | Skipped |
 | **Вступ: Розділений народ** | ✅ | 623 | Included in Core |
 | **Українці в російській армії** | ⚪️ | 1118 | Skipped |
 | **Українці в австро-угорській армії** | ⚪️ | 1135 | Skipped |

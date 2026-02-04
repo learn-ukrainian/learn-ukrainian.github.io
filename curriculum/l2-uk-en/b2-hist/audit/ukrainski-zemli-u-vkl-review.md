@@ -1,8 +1,8 @@
 # Audit Report: M30 — ukrainski-zemli-u-vkl.md
-**Level:** B2 | **Module:** M30 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4323
+**Level:** B2-HIST | **Module:** M30 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4323
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:02
+**Generated:** 2026-02-03 22:54:16
 
 ## Configuration
 **Type:** B2-history

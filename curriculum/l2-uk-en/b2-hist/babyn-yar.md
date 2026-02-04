@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: druha-svitova-pochatok, upa, holodomor-pamiat, natsystska-okupatsiia
+-->
+
 # Бабин Яр та Голокост в Україні
 
 ## Вступ: Україна напередодні трагедії

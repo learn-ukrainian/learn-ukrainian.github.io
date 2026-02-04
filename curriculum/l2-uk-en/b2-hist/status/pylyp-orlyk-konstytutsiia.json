@@ -2,10 +2,10 @@
   "module": "pylyp-orlyk-konstytutsiia",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:54:24.509162Z",
+  "last_audit": "2026-02-03T22:54:38.809453Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.347076Z",
+    "md": "2026-02-02T10:57:26.295262Z",
     "meta": "2026-01-29T07:38:18.655438Z",
     "activities": "2026-01-27T20:54:15.107905Z",
     "vocabulary": "2026-01-27T12:15:06.838726Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4754/4000 (raw: 4838)"
+      "message": "4754/4000 (raw: 4846)"
     },
     "activities": {
       "status": "pass",

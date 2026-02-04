@@ -1,0 +1,35 @@
+# Module Meta: RUTH-3 Capstone
+# Track: RUTH
+# Module: 061
+# Generated: 2026-02-04
+
+module_number: 61
+slug: ruth-3-capstone
+title: "Капстоун фази 3"
+title_en: "RUTH-3 Capstone"
+
+type: checkpoint
+phase: 3
+phase_id: baroque-fight
+
+# Pedagogy
+pedagogy: theory-first
+duration_minutes: 90
+word_target: 2500
+immersion_level: 100
+
+# Focus
+grammar_focus: "Writing a short Baroque panegyric or lament"
+vocabulary_focus: []
+cultural_focus: []
+
+# Activity hints (minimum counts)
+activity_hints:
+  - type: transcription
+    min_items: 3
+  - type: grammar-identify
+    min_items: 5
+
+# Prerequisites
+prerequisites:
+  - module: 60

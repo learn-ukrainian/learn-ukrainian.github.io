@@ -1,8 +1,8 @@
-# Audit Report: M131 — oleksandra-matviichuk.md
-**Level:** C1 | **Module:** M131 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M147 — oleksandra-matviichuk.md
+**Level:** C1-BIO | **Module:** M147 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:30:00
+**Generated:** 2026-02-04 11:42:33
 
 ## Configuration
 **Type:** C1-biography
@@ -36,8 +36,8 @@
   - FIX: Rename '## Сучасний етап' to '## Останні роки' to maintain correct biographical tone.
 - ❌ **[FORBIDDEN_HEADER_TONE]** Header '## Вплив' is inappropriate for a deceased person. Use '## Спадщина' instead.
   - FIX: Rename '## Вплив' to '## Спадщина' to maintain correct biographical tone.
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Спадщина|Вплив' found: Вплив, Вплив на сучасників та глобальний рух
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple headers contain 'Вплив': Вплив, Вплив на сучасників та глобальний рух
+  - FIX: RENAME one header to NOT contain 'Вплив'. Example: 'Агіографічна спадщина' → 'Житійна творчість' (removes the duplicate word).
 
 ## Recommendation
 **📝 UPDATE** (severity 25/100)

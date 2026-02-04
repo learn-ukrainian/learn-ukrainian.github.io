@@ -2,10 +2,10 @@
   "module": "liudy-ricchi-pospolytoi",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:54:08.049803Z",
+  "last_audit": "2026-02-03T22:54:22.276362Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.347031Z",
+    "md": "2026-02-02T11:01:01.141397Z",
     "meta": "2026-01-30T13:28:03.096694Z",
     "activities": "2026-01-27T15:34:54.238395Z",
     "vocabulary": "2026-01-27T11:24:54.090895Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4260/4000 (raw: 4457)"
+      "message": "4260/4000 (raw: 4465)"
     },
     "activities": {
       "status": "pass",

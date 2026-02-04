@@ -1,8 +1,8 @@
-# Audit Report: M112 — vasyl-stus.md
-**Level:** C1 | **Module:** M112 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M128 — vasyl-stus.md
+**Level:** C1-BIO | **Module:** M128 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:51
+**Generated:** 2026-02-04 11:42:23
 
 ## Configuration
 **Type:** C1-biography

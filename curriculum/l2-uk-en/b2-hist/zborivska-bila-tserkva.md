@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: bohdan-khmelnytskyi, bitva-pid-zhovtymy-vodamy, pereyaslavska-uhoda, kozatska-derzhava
+-->
+
 # Зборівська та Білоцерківська угоди
 
 > 🎯 **Чому це важливо?**

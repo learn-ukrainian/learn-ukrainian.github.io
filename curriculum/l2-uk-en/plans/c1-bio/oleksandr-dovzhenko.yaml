@@ -1,6 +1,6 @@
-module: oleksandr-dovzhenko
+module: c1-bio-098
 level: C1-BIO
-sequence: 89
+sequence: 98
 slug: oleksandr-dovzhenko
 version: '2.0'
 title: 'Олександр Довженко: Батько українського кіно'
@@ -108,12 +108,20 @@ objectives:
 - Проаналізувати його найважливіші фільми
 - Зрозуміти його внесок у світове кіномистецтво
 - Оцінити складні відносини митця з радянською владою
-notes: |
-  Dovzhenko is considered one of the most important filmmakers in cinema history.
+notes: 'Dovzhenko is considered one of the most important filmmakers in cinema history.
+
   His poetic style influenced generations of directors worldwide. "Earth" (1930)
+
   is regularly listed among the greatest films ever made. His relationship with
+
   Soviet power was complex — he celebrated Ukrainian identity in his films while
+
   navigating censorship and political pressure. His banned screenplay "Ukraine in
+
   Flames" (1943) was a passionate defense of Ukrainian identity that Stalin
+
   personally condemned. Unlike Kurbas and Kulish, Dovzhenko survived but lived
+
   in creative anguish, as revealed in his diaries.
+
+  '

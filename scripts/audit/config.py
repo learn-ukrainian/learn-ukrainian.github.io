@@ -387,6 +387,64 @@ ACTIVITY_COMPLEXITY = {
         'C1': {'min_words': 400, 'min_items': 1},
         'C2': {'min_words': 600, 'min_items': 1},
     },
+    # =============================================================================
+    # OES/RUTH HISTORICAL LINGUISTICS TYPES (ISSUE-502)
+    # =============================================================================
+    'transcription': {
+        # Historical manuscript transcription
+        # Each transcription is a single exercise (original → answer), so min_items: 1
+        'OES': {'min_items': 1},
+        'RUTH': {'min_items': 1},
+    },
+    'etymology-trace': {
+        # Trace word evolution from OES/RUTH to modern Ukrainian
+        'OES': {'min_items': 2},
+        'RUTH': {'min_items': 2},
+    },
+    'grammar-identify': {
+        # Identify grammatical forms (Dual, Aorist, etc.)
+        'OES': {'min_items': 2},
+        'RUTH': {'min_items': 2},
+    },
+    'phonology-lab': {
+        # Step-by-step sound change reconstruction
+        'OES': {'min_items': 1},  # Labs are intensive, 1 is sufficient
+    },
+    'grammar-lab': {
+        # Structured morphological analysis (generic with focus field)
+        'OES': {'min_items': 1},
+        'RUTH': {'min_items': 1},
+    },
+    'parallel-text': {
+        # Compare passage across language stages/registers
+        'OES': {'min_items': 1},
+        'RUTH': {'min_items': 1},
+    },
+    'paleography-analysis': {
+        # Identify visual features of manuscripts
+        'OES': {'min_items': 1},
+        'RUTH': {'min_items': 1},
+    },
+    'historical-writing': {
+        # Composition in period-appropriate style
+        'OES': {'min_items': 1},
+        'RUTH': {'min_items': 1},
+    },
+    'register-identify': {
+        # Identify register (Vernacular/Literary/Chancery/Prosta)
+        'OES': {'min_items': 2},
+        'RUTH': {'min_items': 2},
+    },
+    'loanword-trace': {
+        # Trace foreign borrowings
+        'OES': {'min_items': 2},
+        'RUTH': {'min_items': 2},
+    },
+    'comparative-style': {
+        # Compare linguistic features across registers/periods
+        'OES': {'min_items': 1},
+        'RUTH': {'min_items': 1},
+    },
 }
 
 # Valid activity types
@@ -395,7 +453,18 @@ VALID_ACTIVITY_TYPES = [
     "error-correction", "anagram", "select", "translate", "cloze",
     "mark-the-words",
     # Seminar-style activities (LIT, HIST, BIO tracks)
-    "reading", "essay-response", "critical-analysis", "comparative-study", "authorial-intent"
+    "reading", "essay-response", "critical-analysis", "comparative-study", "authorial-intent",
+    # OES/RUTH specific (ISSUE-502: Historical Linguistics Types)
+    "etymology-trace", "transcription", "grammar-identify",
+    "paleography-analysis", "dialect-comparison", "translation-critique",
+    # New OES/RUTH types from ISSUE-502
+    "phonology-lab",      # Step-by-step sound change reconstruction
+    "grammar-lab",        # Structured morphological analysis (generic with focus field)
+    "parallel-text",      # Compare passage across language stages/registers
+    "historical-writing", # Composition in period-appropriate style
+    "register-identify",  # Identify register (Vernacular/Literary/Chancery/Prosta)
+    "loanword-trace",     # Trace foreign borrowings (Greek, Polish, Latin, Turkic)
+    "comparative-style",  # Compare linguistic features across registers/periods
 ]
 
 # Activity keywords for detection
@@ -404,7 +473,12 @@ ACTIVITY_KEYWORDS = [
     "fill-in", "error-correction", "anagram", "cloze",
     "select", "translate", "mark-the-words",
     # Seminar-style activities
-    "reading", "essay-response", "critical-analysis", "comparative-study", "authorial-intent"
+    "reading", "essay-response", "critical-analysis", "comparative-study", "authorial-intent",
+    # OES/RUTH specific (ISSUE-502)
+    "etymology-trace", "transcription", "grammar-identify",
+    "paleography-analysis", "dialect-comparison", "translation-critique",
+    "phonology-lab", "grammar-lab", "parallel-text", "historical-writing",
+    "register-identify", "loanword-trace", "comparative-style",
 ]
 
 # Core section keywords (not activities)
@@ -944,6 +1018,54 @@ LEVEL_CONFIG = {
         'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'},
         'required_types': {'reading', 'essay-response', 'critical-analysis'},  # Must have all three
         'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words'}
+    },
+    'OES': {
+        # OES Track: Historical Linguistics (post-B2)
+        # Source: Gemini Research ISSUE-490, ISSUE-491, ISSUE-492, ISSUE-501
+        'target_words': 3500,
+        'min_activities': 6,
+        'max_activities': 9,
+        'min_items_per_activity': 1,
+        'min_types_unique': 3,
+        'min_vocab': 30,
+        'min_engagement': 4,
+        'min_immersion': 97,   # Allow 3% for IPA notation and scholarly terms
+        'max_immersion': 100,
+        'transliteration_allowed': False,
+        'priority_types': {
+            'reading', 'essay-response', 'critical-analysis',
+            # Core OES types (ISSUE-502)
+            'etymology-trace', 'transcription', 'grammar-identify',
+            # New OES types (ISSUE-502)
+            'phonology-lab', 'grammar-lab', 'parallel-text',
+            'paleography-analysis', 'historical-writing', 'loanword-trace',
+        },
+        'required_types': {'transcription', 'etymology-trace', 'grammar-identify'},
+        'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words', 'group-sort', 'select', 'translate'}
+    },
+    'RUTH': {
+        # RUTH Track: Ruthenian/Middle Ukrainian (post-B2)
+        # Source: Gemini Research ISSUE-493, ISSUE-494, ISSUE-495, ISSUE-496
+        'target_words': 3500,
+        'min_activities': 6,
+        'max_activities': 9,
+        'min_items_per_activity': 1,
+        'min_types_unique': 3,
+        'min_vocab': 30,
+        'min_engagement': 4,
+        'min_immersion': 97,   # Allow 3% for IPA notation and scholarly terms
+        'max_immersion': 100,
+        'transliteration_allowed': False,
+        'priority_types': {
+            'reading', 'essay-response', 'critical-analysis',
+            # Core RUTH types (ISSUE-502)
+            'transcription', 'etymology-trace', 'grammar-identify',
+            # New RUTH types (ISSUE-502)
+            'grammar-lab', 'parallel-text', 'paleography-analysis',
+            'historical-writing', 'register-identify', 'loanword-trace', 'comparative-style',
+        },
+        'required_types': {'transcription', 'etymology-trace', 'grammar-identify'},
+        'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words', 'group-sort', 'select', 'translate'}
     },
     # =============================================================================
     # SEMINAR-STYLE TRACKS (Quality over Quantity)

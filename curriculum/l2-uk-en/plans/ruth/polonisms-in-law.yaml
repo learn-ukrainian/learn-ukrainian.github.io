@@ -1,0 +1,39 @@
+# Module Plan: Polonisms in Law
+# Track: RUTH
+# Module: 013
+# Source: Gemini Research (ISSUE-493)
+# Generated: 2026-02-04
+
+module_number: 13
+slug: polonisms-in-law
+title_uk: "Полонізми у праві"
+title_en: "Polonisms in Law"
+
+phase: 1
+phase_id: chancery-legal
+phase_name: "Chancery & Legal"
+
+focus: "Identifying Polish loanwords"
+
+word_target: 3500
+
+# Content outline to be expanded during content generation
+content_outline:
+  - section: "Вступ"
+    description: "Introduction to Polonisms in Law"
+  - section: "Основний матеріал"
+    description: "Primary source analysis and grammar focus"
+  - section: "Практика"
+    description: "Exercises and activities"
+  - section: "Підсумок"
+    description: "Summary and connection to next module"
+
+# Vocabulary hints (to be populated during content generation)
+vocabulary_hints: []
+
+# Activity types appropriate for this module
+activity_types:
+  - transcription
+  - etymology-trace
+  - grammar-identify
+  - loanword-trace

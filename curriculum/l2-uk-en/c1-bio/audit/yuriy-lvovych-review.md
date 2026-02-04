@@ -1,8 +1,8 @@
-# Audit Report: M10 — yuriy-lvovych.md
-**Level:** C1 | **Module:** M10 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4000
+# Audit Report: M12 — yuriy-lvovych.md
+**Level:** C1-BIO | **Module:** M12 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:06
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-04 11:41:21
 
 ## Configuration
 **Type:** C1-biography
@@ -32,60 +32,51 @@
 - Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
 - Low density activities: 0
 
-## Recommendation
-**📝 UPDATE** (severity 20/100)
-
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
-
 ## Gates
-- **Words:** ✅ 4585/4000 (raw: 4861)
+- **Words:** ✅ 4103/4000 (raw: 4153)
 - **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/3 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 24 (soft target)
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Vocab:** ✅ 25/24
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (4 activities)
-- **Immersion:** 🇺🇦 99.4% (target 95-100% (biography))
-- **Richness:** ✅ 99% (biography)
+- **Immersion:** 🇺🇦 99.1% (target 95-100% (biography))
+- **Richness:** ✅ 95% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
+**Score:** 95% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 8 | 4 | 100% | 19% | 19.0% |
-| engagement | 7 | 6 | 100% | 14% | 14.3% |
-| quotes | 9 | 3 | 100% | 14% | 14.3% |
-| cultural | 7 | 4 | 100% | 10% | 9.5% |
-| visual | 7 | 4 | 100% | 10% | 9.5% |
+| primary_sources | 3 | 4 | 75% | 19% | 14.3% |
+| engagement | 6 | 6 | 100% | 14% | 14.3% |
+| quotes | 5 | 3 | 100% | 14% | 14.3% |
+| cultural | 8 | 4 | 100% | 10% | 9.5% |
+| visual | 6 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
 | variety | 0.97 | - | 97% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 5 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.9%** |
+| questions | 3 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **95.1%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 172 | Included in Core |
-| **Вступ** | ✅ | 525 | Included in Core |
-| **Життєпис** | ⚪️ | 1514 | Skipped |
-| **Адміністративна реформа: Королівська канцелярія та новий правовий порядок** | ⚪️ | 352 | Skipped |
-| **Останні роки: Захід «Золотої Осені» та династична тривога перед бурею** | ⚪️ | 247 | Skipped |
-| **Внесок у розбудову держави та церкви: Системний Ohlyad досягнень** | ⚪️ | 664 | Skipped |
-| **Спадщина Короля Юрія в історії України: Від середньовічної Русі до сучасності** | ⚪️ | 192 | Skipped |
-| **Історичний контекст: Україна на цивілізаційному розломі Сходу і Заходу** | ✅ | 214 | Included in Core |
-| **Порівняльний аналіз: Дві стратегії державного будівництва в епоху великих змін** | ✅ | 342 | Included in Core |
-| **Підсумок** | ✅ | 182 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 181 | Skipped |
-| **Activities** | ➖ | 0 | Excluded Type |
+| **Intro/Narrative** | ✅ | 102 | Included in Core |
+| **Вступ — Король Русі** | ✅ | 525 | Included in Core |
+| **Життєпис** | ⚪️ | 942 | Skipped |
+| **Внесок** | ⚪️ | 1793 | Skipped |
+| **Останні роки** | ⚪️ | 207 | Skipped |
+| **Спадщина** | ⚪️ | 297 | Skipped |
+| **Підсумок — Завершення королівської епохи** | ✅ | 173 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 64 | Skipped |

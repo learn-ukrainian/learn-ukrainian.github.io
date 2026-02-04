@@ -262,6 +262,61 @@ a {
   border-left-color: var(--co-error);
 }
 
+/* ============= HISTORICAL / PRIMARY SOURCE ADMONITIONS ============= */
+/* For OES, RUTH, LIT tracks - Old Church Slavonic & historical text support */
+
+/* Primary source / historical quote styling */
+.alert--primary-source,
+.alert--historical,
+.alert--chronicle {
+  background: linear-gradient(135deg, #fdf6e3 0%, #f5eedc 100%);
+  border-left-color: var(--co-gold-dark);
+  color: #5c4b37;
+  /* Font stack with OCS fallback for historical characters (ъ, ѣ, ѫ, ѧ, ѡ) */
+  font-family: 'Noto Serif', 'Times New Roman', 'DejaVu Serif', serif;
+}
+
+.alert--primary-source .admonition-heading,
+.alert--historical .admonition-heading,
+.alert--chronicle .admonition-heading {
+  color: #8b6914;
+}
+
+/* Dark mode variant */
+[data-theme='dark'] .alert--primary-source,
+[data-theme='dark'] .alert--historical,
+[data-theme='dark'] .alert--chronicle {
+  background: linear-gradient(135deg, #2b2620 0%, #1f1a15 100%);
+  border-left-color: #8b7355;
+  color: #e0d5c1;
+}
+
+[data-theme='dark'] .alert--primary-source .admonition-heading,
+[data-theme='dark'] .alert--historical .admonition-heading,
+[data-theme='dark'] .alert--chronicle .admonition-heading {
+  color: #d4af37;
+}
+
+/* Historical text within any blockquote */
+.theme-doc-markdown blockquote.historical-text,
+.alert--primary-source p,
+.alert--historical p,
+.alert--chronicle p {
+  line-height: 1.8;
+  letter-spacing: 0.01em;
+}
+
+/* Quote admonition - for regular citations (not necessarily historical) */
+.alert--quote {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.12) 0%, rgba(255, 215, 0, 0.08) 100%);
+  border-left-color: var(--co-gold);
+  font-style: italic;
+}
+
+[data-theme='dark'] .alert--quote {
+  background: linear-gradient(135deg, rgba(139, 115, 85, 0.2) 0%, rgba(212, 175, 55, 0.1) 100%);
+}
+
 /* ============= CODE BLOCKS ============= */
 pre {
   border-radius: 12px !important;

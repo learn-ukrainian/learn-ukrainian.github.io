@@ -1,6 +1,6 @@
-module: petro-mohyla
+module: c1-bio-023
 level: C1-BIO
-sequence: 21
+sequence: 23
 slug: petro-mohyla
 version: '2.0'
 title: 'Петро Могила: Засновник академії та реформатор церкви'
@@ -107,10 +107,16 @@ objectives:
 - Зрозуміти значення Києво-Могилянської академії
 - Проаналізувати церковні реформи Могили
 - Оцінити внесок у збереження української православної ідентичності
-notes: |
-  Petro Mohyla transformed Ukrainian Orthodox education and church life.
+notes: 'Petro Mohyla transformed Ukrainian Orthodox education and church life.
+
   The Kyiv-Mohyla Academy became the first institution of higher learning
+
   in Eastern Europe, educating generations of Ukrainian, Russian, and
+
   Balkan clergy and intellectuals. His "Orthodox Confession of Faith"
+
   became a foundational document for Orthodox theology. He was canonized
+
   by the Ukrainian Orthodox Church in 1996.
+
+  '

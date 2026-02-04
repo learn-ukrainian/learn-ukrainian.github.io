@@ -1,0 +1,37 @@
+# Module Meta: PVL: Volodymyr's Choice
+# Track: OES
+# Module: 026
+# Generated: 2026-02-04
+
+module_number: 26
+slug: pvl-volodymyr-choice
+title: "ПВЛ: Вибір Володимира"
+title_en: "PVL: Volodymyr's Choice"
+
+type: lesson
+phase: 2
+phase_id: literary-tradition
+
+# Pedagogy
+pedagogy: theory-first
+duration_minutes: 60
+word_target: 3500
+immersion_level: 100
+
+# Focus
+grammar_focus: "Comparative religion vocabulary"
+vocabulary_focus: []
+cultural_focus: []
+
+# Activity hints (minimum counts)
+activity_hints:
+  - type: transcription
+    min_items: 2
+  - type: etymology-trace
+    min_items: 2
+  - type: grammar-identify
+    min_items: 3
+
+# Prerequisites
+prerequisites:
+  - module: 25

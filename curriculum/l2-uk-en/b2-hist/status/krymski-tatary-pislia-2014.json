@@ -2,10 +2,10 @@
   "module": "krymski-tatary-pislia-2014",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:55:00.526414Z",
+  "last_audit": "2026-02-03T22:55:15.076845Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-31T23:00:09.585883Z",
+    "md": "2026-02-03T14:06:45.258789Z",
     "meta": "2026-01-29T07:38:18.735164Z",
     "activities": "2026-01-31T16:02:46.693424Z",
     "vocabulary": "2026-01-31T15:58:00.057349Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "5016/4000 (raw: 5144)"
+      "message": "5020/4000 (raw: 5156)"
     },
     "activities": {
       "status": "pass",

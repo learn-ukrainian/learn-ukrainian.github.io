@@ -53,6 +53,25 @@ const config: Config = {
         docs: {
           sidebarPath: './sidebars.ts',
           // Editing disabled
+          // Custom admonition keywords for historical tracks (OES, RUTH, LIT, B2-HIST)
+          admonitions: {
+            keywords: [
+              // Standard Docusaurus admonitions
+              'note', 'tip', 'info', 'warning', 'danger', 'caution',
+              // Historical / primary source admonitions
+              'primary-source',  // For authentic historical documents
+              'historical',      // For historical context blocks
+              'chronicle',       // For chronicle/litopys quotes
+              'quote',           // For general citations
+              // Curriculum-specific admonitions
+              'myth-buster',     // For debunking myths
+              'history-bite',    // For historical trivia
+              'reflection',      // For reflection prompts
+              'resources',       // For further reading
+              'solution',        // For exercise solutions (collapsible)
+              'context',         // For contextual information
+            ],
+          },
         },
         blog: false,
         theme: {
@@ -122,6 +141,18 @@ const config: Config = {
             {
               label: 'LIT - Literature & Classics',
               to: '/docs/lit/',
+            },
+            {
+              type: 'html',
+              value: '<hr style="margin: 4px 12px; border-color: var(--ifm-color-emphasis-300);">',
+            },
+            {
+              label: 'OES - Old East Slavic',
+              to: '/docs/oes/',
+            },
+            {
+              label: 'RUTH - Ruthenian',
+              to: '/docs/ruth/',
             },
           ],
         },

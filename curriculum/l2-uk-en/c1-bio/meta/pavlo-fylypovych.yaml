@@ -1,0 +1,13 @@
+module: c1-bio-085
+level: C1-BIO
+slug: pavlo-fylypovych
+version: '1.0'
+id: c1-bio-085
+naturalness:
+  score: 0
+  status: PENDING
+duration: 90
+tags:
+- Executed Renaissance
+- Patriot
+validation_tier: llm-verified

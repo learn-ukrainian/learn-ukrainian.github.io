@@ -1,0 +1,37 @@
+# Module Meta: Sack of Kyiv
+# Track: OES
+# Module: 035
+# Generated: 2026-02-04
+
+module_number: 35
+slug: sack-of-kyiv
+title: "Розграбування Києва"
+title_en: "Sack of Kyiv"
+
+type: lesson
+phase: 2
+phase_id: literary-tradition
+
+# Pedagogy
+pedagogy: theory-first
+duration_minutes: 60
+word_target: 3500
+immersion_level: 100
+
+# Focus
+grammar_focus: "Bogolyubsky — The shift of power"
+vocabulary_focus: []
+cultural_focus: []
+
+# Activity hints (minimum counts)
+activity_hints:
+  - type: transcription
+    min_items: 2
+  - type: etymology-trace
+    min_items: 2
+  - type: grammar-identify
+    min_items: 3
+
+# Prerequisites
+prerequisites:
+  - module: 34

@@ -23,6 +23,7 @@ The skeleton includes:
 
 import sys
 import re
+import yaml
 from pathlib import Path
 from datetime import datetime
 
@@ -63,6 +64,8 @@ def determine_module_type(level: str, module_num: int) -> str:
         return 'b2-grammar'
     elif level == 'B2-HIST':
         return 'b2-history'
+    elif level == 'C1-BIO':
+        return 'c1-bio'
     elif level == 'C1':
         return 'c1'
     elif level == 'C2':
@@ -88,6 +91,7 @@ def get_template_path(level: str, module_type: str) -> Path:
         'b2-grammar': 'b2-grammar-module-template.md',
         'b2-checkpoint': 'b2-checkpoint-module-template.md',
         'b2-history': 'b2-history-module-template.md',
+        'c1-bio': 'ai/c1-biography-module-template.md',
         'c1': 'c1-module-template.md',
         'c2': 'c2-module-template.md',
     }
@@ -196,25 +200,53 @@ def get_activity_specs(level: str, module_type: str) -> list:
 def generate_skeleton(
     curriculum: str,
     level: str,
-    module_num: int,
+    module_id: str, # changed from int module_num
     output_path: Path = None
 ) -> str:
     """Generate skeleton content."""
 
     level = level.upper()
+    
+    # Handle int vs str module_id
+    try:
+        module_num = int(module_id)
+        slug_override = None
+    except ValueError:
+        module_num = 0
+        slug_override = module_id
+
     module_type = determine_module_type(level, module_num)
     template_path = get_template_path(level, module_type)
-    plan_path = get_curriculum_plan_path(curriculum, level)
+    
+    # Try Atomic YAML Plan first (V2)
+    yaml_plan_path = None
+    if slug_override:
+        yaml_plan_path = Path(f"curriculum/{curriculum}/plans/{level.lower()}/{slug_override}.yaml")
+    
+    if yaml_plan_path and yaml_plan_path.exists():
+        with open(yaml_plan_path, 'r', encoding='utf-8') as f:
+            plan_data = yaml.safe_load(f)
+        
+        title = plan_data.get('title', f'Title for {slug_override}')
+        focus = plan_data.get('focus', 'content')
+        grammar = plan_data.get('grammar', '')
+        vocab_notes = "See vocabulary YAML"
+        
+        # Override targets from plan if available
+        word_targets = get_word_targets(level, module_type)
+        if 'word_target' in plan_data:
+            word_targets['total'] = plan_data['word_target']
+            
+    else:
+        # Fallback to Markdown Plan (Legacy)
+        plan_path = get_curriculum_plan_path(curriculum, level)
+        module_info = parse_curriculum_plan(plan_path, module_num)
+        title = module_info.get('title', f'Module {module_num} Title')
+        focus = module_info.get('focus', 'grammar')
+        grammar = module_info.get('grammar', '')
+        vocab_notes = module_info.get('vocab_notes', '')
+        word_targets = get_word_targets(level, module_type)
 
-    # Get module info from curriculum plan
-    module_info = parse_curriculum_plan(plan_path, module_num)
-    title = module_info.get('title', f'Module {module_num} Title')
-    focus = module_info.get('focus', 'grammar')
-    grammar = module_info.get('grammar', '')
-    vocab_notes = module_info.get('vocab_notes', '')
-
-    # Get targets
-    word_targets = get_word_targets(level, module_type)
     activity_specs = get_activity_specs(level, module_type)
 
     # Determine phase
@@ -453,31 +485,47 @@ vocabulary_count: <!-- N -->
 
 def main():
     if len(sys.argv) < 4:
-        print("Usage: python3 scripts/generate_skeleton.py <curriculum> <level> <module_num>")
+        print("Usage: python3 scripts/generate_skeleton.py <curriculum> <level> <module_id> [--track TRACK]")
         print("Example: python3 scripts/generate_skeleton.py l2-uk-en b1 43")
+        print("Example: python3 scripts/generate_skeleton.py l2-uk-en c1-bio some-slug --track c1-bio")
         sys.exit(1)
 
     curriculum = sys.argv[1]
     level = sys.argv[2].upper()
-    module_num = int(sys.argv[3])
+    
+    # Handle module ID (can be int or string slug)
+    raw_id = sys.argv[3]
+    try:
+        module_num = int(raw_id)
+        slug = f"skeleton" 
+    except ValueError:
+        module_num = 0 # Placeholder for non-numeric
+        slug = raw_id
+
+    # Optional track override
+    track = None
+    if len(sys.argv) >= 6 and sys.argv[4] == '--track':
+        track = sys.argv[5]
 
     # Generate skeleton
-    skeleton = generate_skeleton(curriculum, level, module_num)
+    # If track is provided, treat it as the level for template/type determination
+    effective_level = track.upper() if track else level
+    
+    skeleton = generate_skeleton(curriculum, effective_level, raw_id)
 
     # Determine output path
-    module_type = determine_module_type(level, module_num)
-    slug = 'skeleton'  # Will be renamed by LLM after filling
-
     output_dir = Path(f'curriculum/{curriculum}/{level.lower()}')
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    output_path = output_dir / f'{module_num:02d}-{slug}.md'
+    if module_num > 0:
+        output_path = output_dir / f'{module_num:02d}-{slug}.md'
+    else:
+        output_path = output_dir / f'{slug}.md'
 
     # Write skeleton
     output_path.write_text(skeleton, encoding='utf-8')
 
     print(f"Generated: {output_path}")
-    print(f"Module type: {module_type}")
     print(f"Next step: Fill in content, then run check_gate.py content {output_path}")
 
 

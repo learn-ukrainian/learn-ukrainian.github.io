@@ -2,10 +2,10 @@
   "module": "kniazivski-usobiytsi",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-01T14:53:55.284111Z",
+  "last_audit": "2026-02-03T22:54:09.458199Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.346946Z",
+    "md": "2026-02-02T10:56:27.912080Z",
     "meta": "2026-01-29T07:38:18.614797Z",
     "activities": "2026-01-27T15:34:54.099710Z",
     "vocabulary": "2026-01-26T23:26:53.144606Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4007/4000 (raw: 4101)"
+      "message": "4007/4000 (raw: 4109)"
     },
     "activities": {
       "status": "pass",

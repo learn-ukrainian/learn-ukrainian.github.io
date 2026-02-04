@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: pomarancheva-revoliutsiia, aneksiia-krymu, donbas-2014, povnomasshtabne-vtorhnessnia
+-->
+
 # Революція Гідності: Євромайдан
 
 > 🎯 **Чому це важливо?**

@@ -388,6 +388,8 @@ For `essay-response` or `critical-analysis` types:
 
 Minimum activity counts by level (from MODULE-RICHNESS-GUIDELINES-v2.md):
 
+**Core Levels (Drill-Focused):**
+
 | Level | Total Activities | Quiz Items     | Fill-in Items | Other      |
 | ----- | ---------------- | -------------- | ------------- | ---------- |
 | A1    | 8-12             | 8+ quiz items  | 8+ fill-in    | 2-4 other  |
@@ -397,7 +399,17 @@ Minimum activity counts by level (from MODULE-RICHNESS-GUIDELINES-v2.md):
 | C1    | 15-22            | 18+ quiz items | 15+ fill-in   | 6-10 other |
 | C2    | 15-25            | 20+ quiz items | 15+ fill-in   | 6-12 other |
 
-**For history/biography/literature tracks:** Focus on reading, essay-response, and comprehension over drills.
+**Seminar Tracks (Analysis-Focused):**
+*Applies to: B2-HIST, C1-BIO, C1-HIST, LIT*
+
+| Level      | Total Activities | Reading | Essay | Quiz/Fill-in |
+| ---------- | ---------------- | ------- | ----- | ------------ |
+| Seminar    | 8-12             | 2-3     | 1-2   | 4-8 items    |
+
+**Note for Seminar Tracks:**
+- IGNORE the "C1" or "B2" rows above for these tracks.
+- Focus on `reading` (primary sources), `essay-response`, and `critical-analysis`.
+- Drills (quiz, fill-in) should be minimal and focus on comprehension/vocab, not grammar mechanics.
 
 ---
 

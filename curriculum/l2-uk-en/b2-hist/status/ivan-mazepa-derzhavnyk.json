@@ -2,10 +2,10 @@
   "module": "ivan-mazepa-derzhavnyk",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:54:22.178489Z",
+  "last_audit": "2026-02-03T22:54:36.472441Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.346922Z",
+    "md": "2026-02-02T10:25:34.976599Z",
     "meta": "2026-01-29T07:38:18.652656Z",
     "activities": "2026-01-27T20:41:51.294019Z",
     "vocabulary": "2026-01-27T11:59:25.179188Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4050/4000 (raw: 4118)"
+      "message": "4050/4000 (raw: 4126)"
     },
     "activities": {
       "status": "pass",

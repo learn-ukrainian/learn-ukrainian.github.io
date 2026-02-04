@@ -1,0 +1,149 @@
+- lemma: митрополит
+  ipa: /mɪtroˈpɔlɪt/
+  translation: metropolitan
+  pos: noun
+  gender: m
+  note: глава церковної провінції
+- lemma: єпископ
+  ipa: /jeˈpɪskɔp/
+  translation: bishop
+  pos: noun
+  gender: m
+  note: вищий священнослужитель
+- lemma: ієрархія
+  ipa: /ijerˈɑrxʲijɐ/
+  translation: hierarchy
+  pos: noun
+  gender: f
+  note: система підпорядкування в церкві
+- lemma: унія
+  ipa: /ˈunʲijɐ/
+  translation: union
+  pos: noun
+  gender: f
+  note: об'єднання церков (Берестейська 1596 р.)
+- lemma: православ'я
+  ipa: /prɐʋoˈslɑu̯jɐ/
+  translation: Orthodoxy
+  pos: noun
+  gender: n
+  note: християнська конфесія
+- lemma: братство
+  ipa: /ˈbrɑtstʋo/
+  translation: brotherhood / confraternity
+  pos: noun
+  gender: n
+  note: релігійно-громадська організація міщан
+- lemma: висвячення
+  ipa: /ʋɪˈsʲʋʲɐt͡ʃennʲɐ/
+  translation: ordination / consecration
+  pos: noun
+  gender: n
+  note: обряд надання духовного сану
+- lemma: полеміка
+  ipa: /poˈlɛmʲikɐ/
+  translation: polemics / debate
+  pos: noun
+  gender: f
+  note: публічна дискусія на релігійні теми
+- lemma: чернецтво
+  ipa: /t͡ʃerˈnɛt͡stʋo/
+  translation: monasticism
+  pos: noun
+  gender: n
+  note: стан ченців
+- lemma: патріарх
+  ipa: /pɐtrʲiˈɑrx/
+  translation: patriarch
+  pos: noun
+  gender: m
+  note: глава православної церкви
+- lemma: ректор
+  ipa: /ˈrɛktɔr/
+  translation: rector
+  pos: noun
+  gender: m
+  note: керівник навчального закладу
+- lemma: собор
+  ipa: /soˈbɔr/
+  translation: council / cathedral
+  pos: noun
+  gender: m
+  note: з'їзд вищого духовенства або головний храм
+- lemma: єпархія
+  ipa: /jeˈpɑrxʲijɐ/
+  translation: eparchy / diocese
+  pos: noun
+  gender: f
+  note: церковний адміністративний округ
+- lemma: канон
+  ipa: /kɐˈnɔn/
+  translation: canon
+  pos: noun
+  gender: m
+  note: сукупність церковних правил
+- lemma: схима
+  ipa: /ˈsxɪmɐ/
+  translation: schema (monastic vow)
+  pos: noun
+  gender: f
+  note: вищий ступінь чернецтва
+- lemma: протестація
+  ipa: /protestˈɑt͡sʲijɐ/
+  translation: protestation / formal protest
+  pos: noun
+  gender: f
+  note: офіційна заява проти несправедливості
+- lemma: етнарх
+  ipa: /etˈnɐrx/
+  translation: ethnarch
+  pos: noun
+  gender: m
+  note: духовний лідер нації без власної держави
+- lemma: латинізація
+  ipa: /lɐtɪnʲizˈɑt͡sʲijɐ/
+  translation: Latinization
+  pos: noun
+  gender: f
+  note: перехід на латинський обряд чи культуру
+- lemma: просвітництво
+  ipa: /prosˈʋʲitnɪt͡stʋo/
+  translation: enlightenment
+  pos: noun
+  gender: n
+  note: поширення знань та освіти
+- lemma: легітимність
+  ipa: /leɦʲitˈɪmnʲisʲtʲ/
+  translation: legitimacy
+  pos: noun
+  gender: f
+  note: законність влади
+- lemma: канонізація
+  ipa: /kɐnonʲizˈɑt͡sʲijɐ/
+  translation: canonization
+  pos: noun
+  gender: f
+  note: зарахування до лику святих
+- lemma: меценатство
+  ipa: /met͡sɛˈnɑtstʋo/
+  translation: philanthropy / patronage of arts
+  pos: noun
+  gender: n
+  note: підтримка культури та освіти
+- lemma: асиміляція
+  ipa: /ɐsɪmʲilʲˈɑt͡sʲijɐ/
+  translation: assimilation
+  pos: noun
+  gender: f
+  note: розчинення в іншому народі
+- lemma: конфесійний
+  ipa: /konfesʲˈijɪj/
+  translation: confessional / denominational
+  pos: adj
+  note: пов'язаний з віросповіданням
+- lemma: пасіонарій
+  ipa: /pɐsʲionˈɑrʲij/
+  translation: passionary
+  pos: noun
+  gender: m
+  note: людина великої духовної енергії

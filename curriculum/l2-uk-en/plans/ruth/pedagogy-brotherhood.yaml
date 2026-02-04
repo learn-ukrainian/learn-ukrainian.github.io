@@ -1,0 +1,38 @@
+# Module Plan: Pedagogy
+# Track: RUTH
+# Module: 059
+# Source: Gemini Research (ISSUE-495)
+# Generated: 2026-02-04
+
+module_number: 59
+slug: pedagogy-brotherhood
+title_uk: "Педагогіка"
+title_en: "Pedagogy"
+
+phase: 3
+phase_id: baroque-fight
+phase_name: "Baroque Fight"
+
+focus: "How grammar was taught in brotherhood schools"
+
+word_target: 3500
+
+# Content outline to be expanded during content generation
+content_outline:
+  - section: "Вступ"
+    description: "Introduction to Pedagogy"
+  - section: "Основний матеріал"
+    description: "Primary source analysis and grammar focus"
+  - section: "Практика"
+    description: "Exercises and activities"
+  - section: "Підсумок"
+    description: "Summary and connection to next module"
+
+# Vocabulary hints (to be populated during content generation)
+vocabulary_hints: []
+
+# Activity types appropriate for this module
+activity_types:
+  - transcription
+  - etymology-trace
+  - grammar-identify

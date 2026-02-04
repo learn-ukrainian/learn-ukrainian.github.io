@@ -1,0 +1,84 @@
+module: c1-bio-024
+level: C1-BIO
+slug: ivan-vyhovskyi
+version: '2.0'
+id: c1-bio-024
+title: 'Іван Виговський: Гетьман-дипломат'
+naturalness:
+  score: 10
+  status: PASS
+transliteration: none
+audio: assets/audio/placeholder.mp3
+build:
+  last_modified: '2026-02-04'
+content_outline:
+- section: Вступ
+  words: 400
+  points:
+  - Виговський як альтернатива московському курсу
+  - Значення Гадяцької угоди
+  - Трагедія невикористаного шансу
+- section: Шлях до булави
+  words: 600
+  points:
+  - Походження та освіта
+  - Служба генеральним писарем
+  - Довіра Хмельницького
+  - Обрання гетьманом 1657 р.
+- section: Гадяцький договір
+  words: 1000
+  points:
+  - Передумови та переговори
+  - Зміст угоди - Велике князівство Руське
+  - Реакція різних сторін
+  - Значення для української державності
+- section: Конотопська битва
+  words: 650
+  points:
+  - Перебіг битви 1659 р.
+  - Розгром московського війська
+  - Військовий талант Виговського
+- section: Падіння та загибель
+  words: 500
+  points:
+  - Внутрішня опозиція
+  - Зречення гетьманства
+  - Трагічна смерть 1664 р.
+- section: Спадщина
+  words: 350
+  points:
+  - Оцінки в історіографії
+  - Реабілітація образу
+  - Уроки для сучасності
+word_target: 3500
+vocabulary_hints:
+  required:
+  - гетьман (hetman)
+  - булава (mace - symbol of power)
+  - писар (scribe/chancellor)
+  - дипломатія (diplomacy)
+  - угода (agreement/treaty)
+  - федерація (federation)
+  - князівство (principality/duchy)
+  - Річ Посполита (Polish-Lithuanian Commonwealth)
+  - шляхта (nobility)
+  - старшина (cossack officers)
+  recommended:
+  - опозиція (opposition)
+  - повстання (uprising)
+  - битва (battle)
+  - облога (siege)
+  - найманці (mercenaries)
+  - зрада (betrayal/treason)
+  - страта (execution)
+activity_hints:
+- type: reading
+  focus: Текст Гадяцької угоди
+- type: comparative-study
+  focus: Переяслав vs Гадяч
+- type: essay-response
+  focus: Чому Гадяцький проєкт зазнав поразки?
+objectives:
+- Аналізувати альтернативні моделі української державності
+- Оцінити значення Гадяцької угоди
+- Порівняти з іншими федеративними проєктами

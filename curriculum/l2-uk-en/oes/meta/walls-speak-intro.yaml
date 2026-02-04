@@ -1,0 +1,31 @@
+module_number: 1
+slug: walls-speak-intro
+title: 'Софійські графіті: Стіни говорять'
+title_en: 'St. Sophia Graffiti: The Walls Speak'
+type: lesson
+phase: 1
+phase_id: vernacular-foundations
+pedagogy: theory-first
+duration_minutes: 60
+word_target: 3500
+immersion_level: 100
+transliteration: none
+grammar_focus: Intro to epigraphy, graffiti as historical source
+vocabulary_focus: []
+cultural_focus: []
+activity_hints:
+- type: transcription
+  min_items: 2
+- type: etymology-trace
+  min_items: 2
+- type: grammar-identify
+  min_items: 3
+prerequisites: []
+naturalness:
+  score: 10
+  status: PASS
+  feedback: Текст написаний надзвичайно живою та природною українською мовою, яка
+    ідеально підходить для освітнього контенту. Автору вдалося гармонійно поєднати
+    наукову термінологію з захопливим наративом, уникаючи кальок та штучних конструкцій.
+  checked_by: gemini-auto
+  checked_at: '2026-02-04T10:10:49.813952+00:00'

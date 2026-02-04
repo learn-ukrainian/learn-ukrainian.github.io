@@ -1,8 +1,8 @@
-# Audit Report: M129 — sofia-andrukhovych.md
-**Level:** C1 | **Module:** M129 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M145 — sofia-andrukhovych.md
+**Level:** C1-BIO | **Module:** M145 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:59
+**Generated:** 2026-02-04 11:42:32
 
 ## Configuration
 **Type:** C1-biography

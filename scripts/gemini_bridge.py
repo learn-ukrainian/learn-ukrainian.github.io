@@ -206,28 +206,50 @@ def read_message(message_id: int):
 
     return msg
 
-def send_message(content: str, task_id: str = None, msg_type: str = "response", data: str = None):
-    """Send a message from Gemini to Claude."""
+def send_message(content: str, task_id: str = None, msg_type: str = "response", data: str = None, from_llm: str = "gemini", to_llm: str = "claude", from_model: str = None, to_model: str = None):
+    """Send a message between agents.
+
+    Args:
+        from_llm: Agent family (gemini, claude) - for routing
+        to_llm: Target agent family - for routing
+        from_model: Exact model ID (e.g., 'claude-opus-4-5-20251101', 'gemini-3-flash-preview')
+        to_model: Target model ID
+    """
     conn = get_db()
     cursor = conn.cursor()
 
     timestamp = datetime.now(timezone.utc).isoformat()
 
+    # Store model info in data as JSON if provided
+    import json
+    metadata = {}
+    if data:
+        try:
+            metadata = json.loads(data) if isinstance(data, str) and data.startswith('{') else {"raw": data}
+        except:
+            metadata = {"raw": data}
+    if from_model:
+        metadata["from_model"] = from_model
+    if to_model:
+        metadata["to_model"] = to_model
+
+    data_json = json.dumps(metadata) if metadata else None
+
     cursor.execute("""
         INSERT INTO messages (task_id, from_llm, to_llm, message_type, content, data, timestamp, status)
-        VALUES (?, 'gemini', 'claude', ?, ?, ?, ?, 'pending')
-    """, (task_id, msg_type, content, data, timestamp))
+        VALUES (?, ?, ?, ?, ?, ?, ?, 'pending')
+    """, (task_id, from_llm, to_llm, msg_type, content, data_json, timestamp))
 
     msg_id = cursor.lastrowid
     conn.commit()
     conn.close()
 
-    print(f"✅ Message sent to Claude (ID: {msg_id})")
+    print(f"✅ Message sent to {to_llm.title()} (ID: {msg_id})")
 
     # Trigger macOS notification to alert human
     try:
         preview = content[:80].replace('"', '\\"').replace('\n', ' ')
-        notification = f'display notification "{preview}..." with title "Gemini → Claude" subtitle "Tell Claude to check inbox"'
+        notification = f'display notification "{preview}..." with title "{from_llm.title()} → {to_llm.title()}" subtitle "Check inbox"'
         subprocess.run(["osascript", "-e", notification], check=False, capture_output=True)
         print("🔔 Notification sent (tell Claude to check inbox)")
     except Exception:
@@ -236,14 +258,16 @@ def send_message(content: str, task_id: str = None, msg_type: str = "response", 
     return msg_id
 
 
-def ask_claude(content: str, task_id: str = None, msg_type: str = "query", data: str = None, new_session: bool = False):
+def ask_claude(content: str, task_id: str = None, msg_type: str = "query", data: str = None, new_session: bool = False, from_llm: str = "gemini", from_model: str = None, to_model: str = None):
     """Send message to Claude AND invoke Claude to process it. One-step communication.
 
-    This is the PREFERRED method for Gemini to communicate with Claude.
-    Combines send + process-claude into a single call.
+    Args:
+        from_llm: Sender agent family (gemini, claude) - for routing
+        from_model: Exact model ID of sender (e.g., 'claude-opus-4-5-20251101')
+        to_model: Target model ID (e.g., 'claude-sonnet-4')
     """
     # Step 1: Send the message
-    msg_id = send_message(content, task_id, msg_type, data)
+    msg_id = send_message(content, task_id, msg_type, data, from_llm=from_llm, to_llm="claude", from_model=from_model, to_model=to_model)
 
     # Step 2: Invoke Claude to process it
     print(f"\n🚀 Invoking Claude to process message #{msg_id}...")
@@ -252,34 +276,20 @@ def ask_claude(content: str, task_id: str = None, msg_type: str = "query", data:
     return msg_id
 
 
-def send_to_gemini(content: str, task_id: str = None, msg_type: str = "query", data: str = None):
-    """Send a message from Claude to Gemini (inverse of send_message)."""
-    conn = get_db()
-    cursor = conn.cursor()
-
-    timestamp = datetime.now(timezone.utc).isoformat()
-
-    cursor.execute("""
-        INSERT INTO messages (task_id, from_llm, to_llm, message_type, content, data, timestamp, status)
-        VALUES (?, 'claude', 'gemini', ?, ?, ?, ?, 'pending')
-    """, (task_id, msg_type, content, data, timestamp))
-
-    msg_id = cursor.lastrowid
-    conn.commit()
-    conn.close()
-
-    print(f"✅ Message sent to Gemini (ID: {msg_id})")
-    return msg_id
+def send_to_gemini(content: str, task_id: str = None, msg_type: str = "query", data: str = None, from_model: str = None, to_model: str = None):
+    """Send a message from Claude to Gemini."""
+    return send_message(content, task_id, msg_type, data, from_llm="claude", to_llm="gemini", from_model=from_model, to_model=to_model)
 
 
-def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data: str = None, model: str = "gemini-3-flash-preview"):
+def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data: str = None, model: str = "gemini-3-flash-preview", from_model: str = None):
     """Send message to Gemini AND invoke Gemini to process it. One-step communication.
 
-    This is the PREFERRED method for Claude to communicate with Gemini.
-    Combines send + process into a single call.
+    Args:
+        model: Gemini model to use (default: gemini-3-flash-preview)
+        from_model: Exact model ID of sender (e.g., 'claude-opus-4-5-20251101')
     """
-    # Step 1: Send the message
-    msg_id = send_to_gemini(content, task_id, msg_type, data)
+    # Step 1: Send the message (model param becomes to_model)
+    msg_id = send_to_gemini(content, task_id, msg_type, data, from_model=from_model, to_model=model)
 
     # Step 2: Invoke Gemini to process it
     print(f"\n🚀 Invoking Gemini to process message #{msg_id}...")
@@ -288,16 +298,65 @@ def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data:
     return msg_id
 
 
-def acknowledge(message_id: int):
-    """Mark message as acknowledged."""
+def acknowledge(message_ids: list[int]):
+    """Mark message(s) as acknowledged.
+
+    Args:
+        message_ids: Single ID or list of message IDs to acknowledge
+    """
+    if isinstance(message_ids, int):
+        message_ids = [message_ids]
+
     conn = get_db()
     cursor = conn.cursor()
 
-    cursor.execute("UPDATE messages SET acknowledged = 1 WHERE id = ?", (message_id,))
+    for msg_id in message_ids:
+        cursor.execute("UPDATE messages SET acknowledged = 1 WHERE id = ?", (msg_id,))
+
     conn.commit()
     conn.close()
 
-    print(f"✓ Message {message_id} acknowledged")
+    if len(message_ids) == 1:
+        print(f"✓ Message {message_ids[0]} acknowledged")
+    else:
+        print(f"✓ {len(message_ids)} messages acknowledged: {', '.join(map(str, message_ids))}")
+
+
+def acknowledge_all(for_llm: str):
+    """Acknowledge ALL unread messages for a given agent.
+
+    Args:
+        for_llm: 'claude' or 'gemini'
+    """
+    conn = get_db()
+    cursor = conn.cursor()
+
+    # Get unread message IDs first
+    cursor.execute("""
+        SELECT id FROM messages
+        WHERE to_llm = ? AND acknowledged = 0
+        ORDER BY id ASC
+    """, (for_llm,))
+
+    rows = cursor.fetchall()
+
+    if not rows:
+        print(f"📭 No unread messages to acknowledge for {for_llm}")
+        conn.close()
+        return
+
+    msg_ids = [row[0] for row in rows]
+
+    # Acknowledge all
+    cursor.execute("""
+        UPDATE messages SET acknowledged = 1
+        WHERE to_llm = ? AND acknowledged = 0
+    """, (for_llm,))
+
+    conn.commit()
+    conn.close()
+
+    print(f"✓ Acknowledged {len(msg_ids)} messages for {for_llm}: {', '.join(map(str, msg_ids))}")
 
 def get_conversation(task_id: str):
     """Get full conversation for a task."""
@@ -365,7 +424,7 @@ Format your response clearly.
             ["gemini", "-m", model, "-y", "-p", prompt],
             capture_output=True,
             text=True,
-            timeout=300  # 5 min timeout
+            timeout=600  # 10 min timeout for long-form content
         )
 
         if result.returncode != 0:
@@ -379,11 +438,15 @@ Format your response clearly.
         if len(response) > 500:
             print(f"\n... [{len(response) - 500} more characters]")
 
-        # Send response
+        # Send response with model info
         send_message(
             content=response,
             task_id=msg['task_id'],
-            msg_type="response"
+            msg_type="response",
+            from_llm="gemini",
+            to_llm="claude",
+            from_model=model,  # Track which Gemini model responded
+            to_model=None  # Response doesn't target specific model
         )
 
         # Acknowledge original message
@@ -464,9 +527,16 @@ Attached data:
 ---
 
 Respond appropriately using the MCP message broker tools:
-1. Use mcp__message-broker__send_message to send your response to Gemini
+1. Use mcp__message-broker__send_message to send your response with these params:
+   - to: "gemini" (or sender from above)
+   - from_llm: "claude"
+   - from_model: YOUR_MODEL_ID (e.g., "claude-sonnet-4-20250514" - use your actual model ID)
+   - content: your response
+   - task_id: same as above
+   - message_type: "response"
 2. Use mcp__message-broker__acknowledge_message to acknowledge this message
 
+IMPORTANT: Always include from_model with your exact model ID for audit tracking.
 Be concise and direct in your response.
 """
 
@@ -538,7 +608,9 @@ def interactive_mode():
             elif action == "send" and arg:
                 send_message(arg)
             elif action == "ack" and arg:
-                acknowledge(int(arg))
+                # Support multiple IDs: "ack 1 2 3" or single: "ack 1"
+                ids = [int(x) for x in arg.split()]
+                acknowledge(ids)
             elif action == "conv" and arg:
                 get_conversation(arg)
             elif action == "process" and arg:
@@ -551,6 +623,89 @@ def interactive_mode():
             break
         except Exception as e:
             print(f"Error: {e}")
+
+
+def process_all_gemini(model: str = "gemini-3-flash-preview"):
+    """Process ALL unread messages for Gemini in batch."""
+    conn = get_db()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT id, task_id, from_llm, message_type, substr(content, 1, 50)
+        FROM messages
+        WHERE to_llm = 'gemini' AND acknowledged = 0
+        ORDER BY id ASC
+    """)
+
+    rows = cursor.fetchall()
+    conn.close()
+
+    if not rows:
+        print("📭 No unread messages for Gemini to process")
+        return
+
+    print(f"📬 Processing {len(rows)} unread message(s) for Gemini...\n")
+
+    success = 0
+    failed = 0
+
+    for row in rows:
+        msg_id, task_id, from_llm, msg_type, preview = row
+        preview = preview.replace('\n', ' ')[:40]
+        print(f"━━━ Processing [{msg_id}] from {from_llm}: {preview}...")
+
+        try:
+            process_and_respond(msg_id, model)
+            success += 1
+            print(f"    ✅ Done\n")
+        except Exception as e:
+            failed += 1
+            print(f"    ❌ Failed: {e}\n")
+
+    print(f"\n{'═' * 50}")
+    print(f"📊 Results: {success} succeeded, {failed} failed out of {len(rows)} total")
+
+
+def process_all_claude(new_session: bool = False):
+    """Process ALL unread messages for Claude in batch (headless)."""
+    conn = get_db()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT id, task_id, from_llm, message_type, substr(content, 1, 50)
+        FROM messages
+        WHERE to_llm = 'claude' AND acknowledged = 0
+        ORDER BY id ASC
+    """)
+
+    rows = cursor.fetchall()
+    conn.close()
+
+    if not rows:
+        print("📭 No unread messages for Claude to process")
+        return
+
+    print(f"📬 Processing {len(rows)} unread message(s) for Claude (headless)...\n")
+
+    success = 0
+    failed = 0
+
+    for row in rows:
+        msg_id, task_id, from_llm, msg_type, preview = row
+        preview = preview.replace('\n', ' ')[:40]
+        print(f"━━━ Processing [{msg_id}] from {from_llm}: {preview}...")
+
+        try:
+            process_for_claude(msg_id, new_session)
+            success += 1
+            print(f"    ✅ Done\n")
+        except Exception as e:
+            failed += 1
+            print(f"    ❌ Failed: {e}\n")
+
+    print(f"\n{'═' * 50}")
+    print(f"📊 Results: {success} succeeded, {failed} failed out of {len(rows)} total")
+
 
 def main():
     parser = argparse.ArgumentParser(description="Gemini Bridge - Claude/Gemini Communication")
@@ -570,9 +725,13 @@ def main():
     send_parser.add_argument("--type", default="response", help="Message type")
     send_parser.add_argument("--data", help="Path to data file to attach")
 
-    # ack
-    ack_parser = subparsers.add_parser("ack", help="Acknowledge a message")
-    ack_parser.add_argument("message_id", type=int, help="Message ID")
+    # ack (supports multiple IDs)
+    ack_parser = subparsers.add_parser("ack", help="Acknowledge message(s)")
+    ack_parser.add_argument("message_ids", type=int, nargs='+', help="Message ID(s) to acknowledge")
+
+    # ack-all (acknowledge all unread for an agent)
+    ack_all_parser = subparsers.add_parser("ack-all", help="Acknowledge ALL unread messages for an agent")
+    ack_all_parser.add_argument("agent", choices=['claude', 'gemini'], help="Agent whose inbox to clear")
 
     # conversation
     conv_parser = subparsers.add_parser("conversation", help="Get conversation history")
@@ -597,6 +756,12 @@ def main():
     ask_claude_parser.add_argument("--data", help="Path to data file to attach")
     ask_claude_parser.add_argument("--new-session", dest="new_session", action="store_true",
                                    help="Force new session even if one exists")
+    ask_claude_parser.add_argument("--from", dest="from_llm", default="gemini",
+                                   help="Sender agent family (gemini, claude). Default: gemini")
+    ask_claude_parser.add_argument("--from-model", dest="from_model",
+                                   help="Exact sender model ID (e.g., claude-opus-4-5-20251101)")
+    ask_claude_parser.add_argument("--to-model", dest="to_model",
+                                   help="Target model ID (e.g., claude-sonnet-4)")
 
     # ask-gemini (PREFERRED: send + invoke in one step) - for Claude's use
     ask_gemini_parser = subparsers.add_parser("ask-gemini", help="Send message AND invoke Gemini (one-step communication)")
@@ -604,7 +769,18 @@ def main():
     ask_gemini_parser.add_argument("--task-id", required=True, help="Task ID (required for session tracking)")
     ask_gemini_parser.add_argument("--type", default="query", help="Message type (default: query)")
     ask_gemini_parser.add_argument("--data", help="Path to data file to attach")
-    ask_gemini_parser.add_argument("--model", default="gemini-3-flash-preview", help="Gemini model to use")
+    ask_gemini_parser.add_argument("--model", default="gemini-3-flash-preview", help="Gemini model to use (also used as to_model)")
+    ask_gemini_parser.add_argument("--from-model", dest="from_model",
+                                   help="Exact sender model ID (e.g., claude-opus-4-5-20251101)")
+
+    # process-all (batch process all unread for Gemini)
+    proc_all_parser = subparsers.add_parser("process-all", help="Process ALL unread messages with Gemini")
+    proc_all_parser.add_argument("--model", default="gemini-3-flash-preview", help="Gemini model")
+
+    # process-claude-all (batch process all unread for Claude)
+    proc_claude_all_parser = subparsers.add_parser("process-claude-all", help="Process ALL unread messages with Claude")
+    proc_claude_all_parser.add_argument("--new-session", dest="new_session", action="store_true",
+                                        help="Force new sessions for each message")
 
     # interactive
     subparsers.add_parser("interactive", help="Interactive mode")
@@ -621,7 +797,9 @@ def main():
             data = Path(args.data).read_text()
         send_message(args.content, args.task_id, args.type, data)
     elif args.command == "ack":
-        acknowledge(args.message_id)
+        acknowledge(args.message_ids)
+    elif args.command == "ack-all":
+        acknowledge_all(args.agent)
     elif args.command == "conversation":
         get_conversation(args.task_id)
     elif args.command == "process":
@@ -632,12 +810,16 @@ def main():
         data = None
         if args.data:
             data = Path(args.data).read_text()
-        ask_claude(args.content, args.task_id, args.type, data, args.new_session)
+        ask_claude(args.content, args.task_id, args.type, data, args.new_session, args.from_llm, args.from_model, args.to_model)
     elif args.command == "ask-gemini":
         data = None
         if args.data:
             data = Path(args.data).read_text()
-        ask_gemini(args.content, args.task_id, args.type, data, args.model)
+        ask_gemini(args.content, args.task_id, args.type, data, args.model, getattr(args, 'from_model', None))
+    elif args.command == "process-all":
+        process_all_gemini(args.model)
+    elif args.command == "process-claude-all":
+        process_all_claude(args.new_session)
     elif args.command == "interactive":
         interactive_mode()
     else:

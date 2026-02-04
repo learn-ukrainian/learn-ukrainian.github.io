@@ -1,0 +1,38 @@
+# Module Plan: Baroque Syntax
+# Track: RUTH
+# Module: 057
+# Source: Gemini Research (ISSUE-495)
+# Generated: 2026-02-04
+
+module_number: 57
+slug: baroque-syntax
+title_uk: "Бароковий синтаксис"
+title_en: "Baroque Syntax"
+
+phase: 3
+phase_id: baroque-fight
+phase_name: "Baroque Fight"
+
+focus: "Complex, winding sentences"
+
+word_target: 3500
+
+# Content outline to be expanded during content generation
+content_outline:
+  - section: "Вступ"
+    description: "Introduction to Baroque Syntax"
+  - section: "Основний матеріал"
+    description: "Primary source analysis and grammar focus"
+  - section: "Практика"
+    description: "Exercises and activities"
+  - section: "Підсумок"
+    description: "Summary and connection to next module"
+
+# Vocabulary hints (to be populated during content generation)
+vocabulary_hints: []
+
+# Activity types appropriate for this module
+activity_types:
+  - transcription
+  - etymology-trace
+  - grammar-identify

@@ -2,10 +2,10 @@
   "module": "karpatska-ukraina",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:54:46.352988Z",
+  "last_audit": "2026-02-03T22:55:00.647258Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-28T14:59:12.131617Z",
+    "md": "2026-02-02T10:57:43.264726Z",
     "meta": "2026-01-29T07:38:18.714503Z",
     "activities": "2026-01-28T14:58:24.979790Z",
     "vocabulary": "2026-01-28T13:57:26.582855Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4482/4000 (raw: 4622)"
+      "message": "4482/4000 (raw: 4630)"
     },
     "activities": {
       "status": "pass",

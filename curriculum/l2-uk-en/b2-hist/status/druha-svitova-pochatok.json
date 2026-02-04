@@ -2,10 +2,10 @@
   "module": "druha-svitova-pochatok",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:54:46.961277Z",
+  "last_audit": "2026-02-03T22:55:01.260410Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-28T22:39:51.771517Z",
+    "md": "2026-02-02T10:24:15.659242Z",
     "meta": "2026-01-26T22:20:13.025783Z",
     "activities": "2026-01-28T19:35:25.643801Z",
     "vocabulary": "2026-01-25T20:26:07.918921Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "5411/4000 (raw: 5577)"
+      "message": "5411/4000 (raw: 5582)"
     },
     "activities": {
       "status": "pass",

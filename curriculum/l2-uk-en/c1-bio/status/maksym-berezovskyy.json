@@ -2,11 +2,11 @@
   "module": "maksym-berezovskyy",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T23:29:15.835523Z",
+  "last_audit": "2026-02-04T11:41:34.222605Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-17T21:45:15.830422Z",
-    "meta": "2026-01-29T07:39:04.903474Z",
+    "meta": "2026-02-02T23:22:59.985942Z",
     "activities": "2026-01-27T15:34:55.988235Z",
     "vocabulary": null,
     "plan": null

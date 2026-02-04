@@ -2,11 +2,11 @@
   "module": "sylvestr-kosiv",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T23:29:11.551458Z",
+  "last_audit": "2026-02-04T11:41:27.206821Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-19T20:58:40.374711Z",
-    "meta": "2026-01-29T07:39:04.899551Z",
+    "meta": "2026-02-02T23:22:59.928499Z",
     "activities": "2026-01-19T20:29:29.827229Z",
     "vocabulary": null,
     "plan": null

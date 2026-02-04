@@ -2,25 +2,25 @@
   "module": "kostiantyn-ostrozky-elder",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T23:29:07.165145Z",
+  "last_audit": "2026-02-04T11:41:22.568290Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.348447Z",
-    "meta": "2026-01-29T07:39:04.893451Z",
+    "md": "2026-02-04T06:10:06.263916Z",
+    "meta": "2026-02-03T23:20:45.315748Z",
     "activities": "2026-01-27T15:34:55.824804Z",
-    "vocabulary": null,
+    "vocabulary": "2026-02-04T06:08:46.531526Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4132/4000 (raw: 4436)"
+      "message": "4964/4000 (raw: 5075)"
     },
     "activities": {
       "status": "pass",
@@ -28,9 +28,9 @@
       "message": "5/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 24 (soft target)"
+      "message": "30/24"
     },
     "naturalness": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
-    ],
-    "pass_count": 3,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

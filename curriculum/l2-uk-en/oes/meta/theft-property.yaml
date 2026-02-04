@@ -1,0 +1,37 @@
+# Module Meta: Theft (Property)
+# Track: OES
+# Module: 046
+# Generated: 2026-02-04
+
+module_number: 46
+slug: theft-property
+title: "Крадіжка (власність)"
+title_en: "Theft (Property)"
+
+type: lesson
+phase: 2
+phase_id: literary-tradition
+
+# Pedagogy
+pedagogy: theory-first
+duration_minutes: 60
+word_target: 3500
+immersion_level: 100
+
+# Focus
+grammar_focus: "Accusative Plural"
+vocabulary_focus: []
+cultural_focus: []
+
+# Activity hints (minimum counts)
+activity_hints:
+  - type: transcription
+    min_items: 2
+  - type: etymology-trace
+    min_items: 2
+  - type: grammar-identify
+    min_items: 3
+
+# Prerequisites
+prerequisites:
+  - module: 45

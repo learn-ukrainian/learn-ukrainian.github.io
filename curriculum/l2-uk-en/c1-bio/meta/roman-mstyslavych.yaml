@@ -1,19 +1,54 @@
-module: c1-bio-006
+module: c1-bio-008
 level: C1-BIO
 slug: roman-mstyslavych
 version: '2.0'
-id: c1-bio-006
+id: c1-bio-008
 naturalness:
   score: 10
   status: PASS
+word_target: 4000
 duration: 120
 transliteration: none
 tags:
 - history
 - biography
-- medieval
-- galicia-volhynia
+- middle-ages
 - state-building
-vocabulary_count: 25
+- royalty
+content_outline:
+- section: Вступ — Самодержець усієї Русі
+  words: 400
+  points:
+  - Титул "самодержець"
+  - Значення для державності
+- section: 'Життєпис: Від Волині до Галича'
+  words: 1500
+  points:
+  - Ранні роки
+  - Боротьба за Галич
+  - Об'єднання земель
+- section: 'Внесок: Створення Галицько-Волинської держави'
+  words: 800
+  points:
+  - Адміністративна реформа
+  - Військова реформа
+  - Зовнішня політика
+- section: 'Останні роки: Загибель під Завихостом'
+  words: 500
+  points:
+  - Похід на Польщу
+  - Засідка
+  - Криза після смерті
+- section: 'Спадщина: Від Романа до Данила'
+  words: 500
+  points:
+  - Династична спадковість
+  - Історична пам'ять
+  - Вплив на нащадків
+- section: 'Підсумок — Будівничий держави'
+  words: 300
+  points:
+  - Роль в історії
+  - Уроки для сучасності
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-01'

@@ -1,0 +1,40 @@
+# Module Plan: Paleography Lab: Skoropys
+# Track: RUTH
+# Module: 020
+# Source: Gemini Research (ISSUE-493)
+# Generated: 2026-02-04
+
+module_number: 20
+slug: paleography-lab-skoropys
+title_uk: "Палеографія: Скоропис"
+title_en: "Paleography Lab: Skoropys"
+
+phase: 1
+phase_id: chancery-legal
+phase_name: "Chancery & Legal"
+
+focus: "Reading 16th c. Chancery Cursive"
+
+word_target: 2500
+
+# Content outline to be expanded during content generation
+content_outline:
+  - section: "Вступ"
+    description: "Introduction to Paleography Lab: Skoropys"
+  - section: "Основний матеріал"
+    description: "Primary source analysis and grammar focus"
+  - section: "Практика"
+    description: "Exercises and activities"
+  - section: "Підсумок"
+    description: "Summary and connection to next module"
+
+# Vocabulary hints (to be populated during content generation)
+vocabulary_hints: []
+
+# Activity types appropriate for this module
+activity_types:
+  - transcription
+  - etymology-trace
+  - grammar-identify
+  - grammar-lab
+  - paleography-analysis

@@ -1,0 +1,38 @@
+# Module Plan: PVL: Polovtsian Wars
+# Track: OES
+# Module: 030
+# Source: Gemini Research (ISSUE-490)
+# Generated: 2026-02-04
+
+module_number: 30
+slug: pvl-polovtsian-wars
+title_uk: "ПВЛ: Половецькі війни"
+title_en: "PVL: Polovtsian Wars"
+
+phase: 2
+phase_id: literary-tradition
+phase_name: "Literary Tradition"
+
+focus: "Slovo context prep — Steppe vocabulary"
+
+word_target: 3500
+
+# Content outline to be expanded during content generation
+content_outline:
+  - section: "Вступ"
+    description: "Introduction to PVL: Polovtsian Wars"
+  - section: "Основний матеріал"
+    description: "Primary source analysis and grammar focus"
+  - section: "Практика"
+    description: "Exercises and activities"
+  - section: "Підсумок"
+    description: "Summary and connection to next module"
+
+# Vocabulary hints (to be populated during content generation)
+vocabulary_hints: []
+
+# Activity types appropriate for this module
+activity_types:
+  - transcription
+  - etymology-trace
+  - grammar-identify

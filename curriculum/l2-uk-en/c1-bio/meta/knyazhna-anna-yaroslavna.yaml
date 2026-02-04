@@ -1,31 +1,21 @@
-module: c1-bio-05
+module: c1-bio-005
 level: C1-BIO
 slug: knyazhna-anna-yaroslavna
 version: '2.0'
-id: c1-bio-05
+id: c1-bio-005
 naturalness:
   score: 10
   status: PASS
+word_target: 4000
 duration: 120
 transliteration: none
 tags:
 - history
 - biography
-- middle-ages
-- women
-- royalty
-content_outline:
-- section: Вступ — Руська принцеса на французькому троні
-  words: 400
-- section: Життєпис
-  words: 2500
-- section: Внесок
-  words: 300
-- section: Останні роки
-  words: 300
-- section: Спадщина
-  words: 300
-- section: Підсумок
-  words: 300
+- france
+- kyivan-rus
+vocabulary_hints:
+  required: []
+  recommended: []
 build:
   last_modified: '2026-02-01'

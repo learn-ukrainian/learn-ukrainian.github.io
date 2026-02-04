@@ -1,0 +1,35 @@
+# Module Meta: Lab: Zvenyhorod Letter #1
+# Track: OES
+# Module: 015
+# Generated: 2026-02-04
+
+module_number: 15
+slug: lab-zvenyhorod-1
+title: "Лабораторія: Звенигород №1"
+title_en: "Lab: Zvenyhorod Letter #1"
+
+type: lab
+phase: 1
+phase_id: vernacular-foundations
+
+# Pedagogy
+pedagogy: theory-first
+duration_minutes: 60
+word_target: 2500
+immersion_level: 100
+
+# Focus
+grammar_focus: "Detailed breakdown of the Govinova letter"
+vocabulary_focus: []
+cultural_focus: []
+
+# Activity hints (minimum counts)
+activity_hints:
+  - type: grammar-lab
+    min_items: 3
+  - type: transcription
+    min_items: 2
+
+# Prerequisites
+prerequisites:
+  - module: 14

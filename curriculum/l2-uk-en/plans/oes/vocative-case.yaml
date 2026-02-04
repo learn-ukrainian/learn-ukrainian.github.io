@@ -1,0 +1,38 @@
+# Module Plan: The Vocative Case
+# Track: OES
+# Module: 008
+# Source: Gemini Research (ISSUE-501)
+# Generated: 2026-02-04
+
+module_number: 8
+slug: vocative-case
+title_uk: "Кличний відмінок"
+title_en: "The Vocative Case"
+
+phase: 1
+phase_id: vernacular-foundations
+phase_name: "Vernacular Foundations"
+
+focus: "Addressing saints and thieves (Андрониче!)"
+
+word_target: 3500
+
+# Content outline to be expanded during content generation
+content_outline:
+  - section: "Вступ"
+    description: "Introduction to The Vocative Case"
+  - section: "Основний матеріал"
+    description: "Primary source analysis and grammar focus"
+  - section: "Практика"
+    description: "Exercises and activities"
+  - section: "Підсумок"
+    description: "Summary and connection to next module"
+
+# Vocabulary hints (to be populated during content generation)
+vocabulary_hints: []
+
+# Activity types appropriate for this module
+activity_types:
+  - transcription
+  - etymology-trace
+  - grammar-identify

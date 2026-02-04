@@ -224,8 +224,13 @@ def extract_vocab_items(content: str) -> list[dict]:
     if vocab_match:
         vocab_text = vocab_match.group(0)
         for line in vocab_text.split('\n'):
-            if line.strip().startswith('|') and '---' not in line:
-                parts = [p.strip() for p in line.split('|')]
+            clean_line = line.strip()
+            # Handle optional blockquote prefix
+            if clean_line.startswith('>'):
+                clean_line = clean_line[1:].strip()
+                
+            if clean_line.startswith('|') and '---' not in clean_line:
+                parts = [p.strip() for p in clean_line.split('|')]
                 # Remove empty parts from split
                 parts = [p for p in parts if p]
 
@@ -367,10 +372,13 @@ def count_vocab_rows(content: str) -> int:
     if vocab_section_match:
         vocab_text = vocab_section_match.group(1)
         lines = vocab_text.split('\n')
-        v_rows = len([
-            l for l in lines
-            if l.strip().startswith('|') and '---' not in l
-        ])
+        v_rows = 0
+        for l in lines:
+            clean_l = l.strip()
+            if clean_l.startswith('>'):
+                clean_l = clean_l[1:].strip()
+            if clean_l.startswith('|') and '---' not in clean_l:
+                v_rows += 1
         return max(0, v_rows - 1)  # Subtract header
     return 0
 
@@ -573,7 +581,7 @@ def check_metalanguage_scaffolding(
     violations = []
 
     level_upper = level.upper()
-    if level_upper in ('B1', 'B2', 'C1', 'C2', 'LIT'):
+    if level_upper in ('B1', 'B2', 'C1', 'C2', 'LIT', 'OES', 'RUTH'):
         return violations  # B1+ and LIT assumes all metalanguage known
 
     # Get metalanguage for this level and all earlier levels

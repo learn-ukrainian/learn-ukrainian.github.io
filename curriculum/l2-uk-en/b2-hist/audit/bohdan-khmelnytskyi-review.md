@@ -1,8 +1,8 @@
 # Audit Report: M52 — bohdan-khmelnytskyi.md
-**Level:** B2 | **Module:** M52 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M52 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:15
+**Generated:** 2026-02-03 22:54:30
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4266/4000 (raw: 4316)
+- **Words:** ✅ 4266/4000 (raw: 4325)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.6% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.2% (target 90-100% (history))
 - **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -73,7 +73,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 85 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Богдан Хмельницький: Постать в історії** | ⚪️ | 85 | Skipped |
 | **Вступ: Батько нації чи суперечлива фігура?** | ✅ | 401 | Included in Core |
 | **Ранні роки: Освіта і служба** | ⚪️ | 591 | Skipped |
 | **Особиста драма як іскра повстання** | ⚪️ | 645 | Skipped |

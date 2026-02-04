@@ -1,8 +1,8 @@
 # Audit Report: M49 — morski-pokhody.md
-**Level:** B2 | **Module:** M49 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M49 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:13
+**Generated:** 2026-02-03 22:54:28
 
 ## Configuration
 **Type:** B2-history

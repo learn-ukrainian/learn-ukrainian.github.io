@@ -1,0 +1,38 @@
+# Module Plan: The Body & Injury
+# Track: OES
+# Module: 045
+# Source: Gemini Research (ISSUE-490)
+# Generated: 2026-02-04
+
+module_number: 45
+slug: body-injury-dual
+title_uk: "Тіло та ушкодження"
+title_en: "The Body & Injury"
+
+phase: 2
+phase_id: literary-tradition
+phase_name: "Literary Tradition"
+
+focus: "Dual Number — Eyes, ears, legs"
+
+word_target: 3500
+
+# Content outline to be expanded during content generation
+content_outline:
+  - section: "Вступ"
+    description: "Introduction to The Body & Injury"
+  - section: "Основний матеріал"
+    description: "Primary source analysis and grammar focus"
+  - section: "Практика"
+    description: "Exercises and activities"
+  - section: "Підсумок"
+    description: "Summary and connection to next module"
+
+# Vocabulary hints (to be populated during content generation)
+vocabulary_hints: []
+
+# Activity types appropriate for this module
+activity_types:
+  - transcription
+  - etymology-trace
+  - grammar-identify

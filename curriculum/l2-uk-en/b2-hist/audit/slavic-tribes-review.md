@@ -1,8 +1,8 @@
 # Audit Report: M05 — slavic-tribes.md
-**Level:** B2 | **Module:** M05 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
+**Level:** B2-HIST | **Module:** M05 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:53:48
+**Generated:** 2026-02-03 22:54:02
 
 ## Configuration
 **Type:** B2-history

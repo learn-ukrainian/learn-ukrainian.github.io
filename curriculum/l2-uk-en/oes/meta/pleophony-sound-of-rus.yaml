@@ -1,0 +1,37 @@
+# Module Meta: Pleophony: The Sound of Rus'
+# Track: OES
+# Module: 004
+# Generated: 2026-02-04
+
+module_number: 4
+slug: pleophony-sound-of-rus
+title: "Повноголосся: Звук Русі"
+title_en: "Pleophony: The Sound of Rus'"
+
+type: lesson
+phase: 1
+phase_id: vernacular-foundations
+
+# Pedagogy
+pedagogy: theory-first
+duration_minutes: 60
+word_target: 3500
+immersion_level: 100
+
+# Focus
+grammar_focus: "ToroT/TereT vs TraT/TreT patterns"
+vocabulary_focus: []
+cultural_focus: []
+
+# Activity hints (minimum counts)
+activity_hints:
+  - type: transcription
+    min_items: 2
+  - type: etymology-trace
+    min_items: 2
+  - type: grammar-identify
+    min_items: 3
+
+# Prerequisites
+prerequisites:
+  - module: 3

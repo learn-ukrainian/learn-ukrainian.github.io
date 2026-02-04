@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: zaporizka-sich, kinets-hetmanshchyny, nova-serbiya, pivden-novorosiia
+-->
+
 # Петро Калнишевський: Останній кошовий
 
 > 🎯 **Чому це важливо?**

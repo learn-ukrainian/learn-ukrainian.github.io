@@ -1,8 +1,8 @@
 # Audit Report: M51 — khmelnychchyna-prychyny.md
-**Level:** B2 | **Module:** M51 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M51 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:15
+**Generated:** 2026-02-03 22:54:29
 
 ## Configuration
 **Type:** B2-history

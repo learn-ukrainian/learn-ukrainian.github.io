@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: shevchenko, drahomanov, hromady, hryhorii-skovoroda
+-->
+
 # Франко, Леся, Грінченко: Титани Українського Модернізму
 
 > **Чому це важливо?**

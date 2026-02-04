@@ -1,8 +1,8 @@
-module: c1-bio-023
+module: c1-bio-030
 level: C1-BIO
 slug: kost-hordiyenko
 version: '2.0'
-id: c1-bio-023
+id: c1-bio-030
 naturalness:
   score: null
   status: PENDING

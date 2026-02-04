@@ -116,6 +116,14 @@ async def list_tools() -> list[Tool]:
                         "type": "string",
                         "description": "Sender identity (e.g., 'claude', 'gemini')",
                         "enum": ["claude", "gemini"]
+                    },
+                    "from_model": {
+                        "type": "string",
+                        "description": "Exact sender model ID (e.g., 'claude-opus-4-5-20251101', 'gemini-3-flash-preview')"
+                    },
+                    "to_model": {
+                        "type": "string",
+                        "description": "Target model ID if specific model required"
                     }
                 },
                 "required": ["to", "content", "from_llm"]
@@ -240,6 +248,22 @@ async def handle_send_message(args: dict) -> list[TextContent]:
 
     timestamp = datetime.now(timezone.utc).isoformat()
 
+    # Merge model info into data field as JSON
+    data = args.get("data")
+    metadata = {}
+    if data:
+        try:
+            metadata = json.loads(data) if isinstance(data, str) and data.startswith('{') else {"raw": data}
+        except json.JSONDecodeError:
+            metadata = {"raw": data}
+
+    if args.get("from_model"):
+        metadata["from_model"] = args["from_model"]
+    if args.get("to_model"):
+        metadata["to_model"] = args["to_model"]
+
+    data_json = json.dumps(metadata) if metadata else None
+
     cursor.execute("""
         INSERT INTO messages (task_id, from_llm, to_llm, message_type, content, data, timestamp)
         VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -249,7 +273,7 @@ async def handle_send_message(args: dict) -> list[TextContent]:
         args["to"],
         args.get("message_type", "message"),
         args["content"],
-        args.get("data"),
+        data_json,
         timestamp
     ))
 
@@ -262,6 +286,8 @@ async def handle_send_message(args: dict) -> list[TextContent]:
         "message_id": msg_id,
         "from": args["from_llm"],
         "to": args["to"],
+        "from_model": args.get("from_model"),
+        "to_model": args.get("to_model"),
         "timestamp": timestamp
     }
 

@@ -1,14 +1,13 @@
-# C1-HIST Quick Reference (Advanced Historiography Track)
+# C1-HIST Quick Reference (Ukrainian Historiography Track)
 
 ## Track Overview
 
 **Modules:** 135 (M01-135)
-**Prerequisite:** B2-HIST Track (for factual foundation)
-**Pedagogy:** SEMINAR (academic analysis, not narrative)
+**Prerequisite:** B2-HIST Track (required for factual foundation)
+**Pedagogy:** CBI (Content-Based Instruction) with historiographical analysis
 **Immersion:** 95-100% Ukrainian
-**Focus:** HOW we know history, not WHAT happened
 
-> C1-HIST is the analytical complement to B2-HIST. It teaches historiographical methodology, source criticism, and interpretation of competing narratives.
+> **C1-HIST is NOT about historical facts (that's B2-HIST). It's about HOW we know history** — sources, methods, interpretations, contested narratives.
 
 ---
 
@@ -21,231 +20,200 @@
 | Max activities   | 9       | max_activities      |
 | Items/activity   | 1+      | min_items_per_activity |
 | Required types   | reading, essay-response, critical-analysis | required_types |
-| Essay word range | 500+    | essay_min_words     |
-| Vocabulary       | 25+     | min_vocab           |
+| Priority types   | reading, essay-response, critical-analysis, comparative-study | priority_types |
+| Forbidden types  | quiz, match-up, fill-in, unjumble, anagram, cloze, mark-the-words | forbidden_types |
+| Essay word range | 300-500 | essay_min/max_words |
+| Immersion        | 95-100% | min/max_immersion   |
+| Engagement       | 6+      | min_engagement      |
 
-**Note:** C1-HIST uses seminar-style activities. Quality over quantity. All essays require 500+ words with thesis, evidence, and analysis.
+**Note:** C1-HIST uses pure seminar-style activities. Traditional drill activities are FORBIDDEN.
+
+---
+
+## Valid Activity Types
+
+| Type | Use For |
+|------|---------|
+| `reading` | Primary source analysis, historiographical excerpts |
+| `critical-analysis` | Source evaluation, bias detection, methodology critique |
+| `comparative-study` | Comparing historiographical schools, interpretations |
+| `essay-response` | Analytical essays (300-500 words) |
+
+**Forbidden:** `quiz`, `match-up`, `fill-in`, `cloze`, `group-sort`, `unjumble`, `anagram`, `mark-the-words`
 
 ---
 
 ## Templates
 
-**Before writing any C1-HIST module, read the template:**
+**Before writing any C1-HIST module, read:**
 
-- **All modules** → `docs/l2-uk-en/templates/c1-history-module-template.md`
-
-> **Full documentation:** The template includes research strategy, anti-hallucination rules, and YAML examples.
-
----
-
-## Activity Types (Schema: activities-c1-hist.schema.json)
-
-### Required Types (Every Module)
-
-| Type | Purpose | Key Requirements |
-|------|---------|------------------|
-| `reading` | Primary source input | MUST have `id` for linking |
-| `essay-response` | Analytical output | 500+ words, thesis + evidence |
-| `critical-analysis` | Source criticism | 2-4 questions with model answers |
-
-### Recommended Types
-
-| Type | Purpose | When to Use |
-|------|---------|-------------|
-| `comparative-study` | Compare interpretations | Ukrainian vs Russian vs Western |
-| `source-evaluation` | 5-question method | Teaching methodology |
-| `debate` | Contested interpretations | Complex historiographical questions |
-
-### Source-Evaluation Activity
-
-Structured application of the 5-question method:
-
-```yaml
-- type: source-evaluation
-  title: "Оцінка джерела: [Name]"
-  source_text: "[Historical source excerpt]"
-  source_metadata:
-    author: "[Author]"
-    date: "[Date]"
-    type: "[chronicle/memoir/official/propaganda/academic]"
-    context: "[Historical context]"
-  evaluation_criteria:
-    - authorship
-    - date_and_context
-    - intended_audience
-    - purpose_and_bias
-    - omissions
-  guiding_questions:
-    - "Хто написав це джерело?"
-    - "Яким був контекст створення?"
-    - "Для кого це було написано?"
-    - "Яка мета автора?"
-    - "Що це джерело замовчує?"
-  model_evaluation: "[Model answer]"
-```
-
-### Debate Activity
-
-For contested historiographical interpretations:
-
-```yaml
-- type: debate
-  title: "Дискусія: [Question]"
-  debate_question: "[Contested historiographical question]"
-  historical_context: "[Background]"
-  positions:
-    - name: "[Position 1]"
-      proponents: "[Historians]"
-      argument: "[Core argument]"
-      evidence: ["[Evidence 1]", "[Evidence 2]"]
-      weaknesses: ["[Critique]"]
-    - name: "[Position 2]"
-      proponents: "[Historians]"
-      argument: "[Core argument]"
-      evidence: ["[Evidence]"]
-  analysis_tasks:
-    - "Визначте найсильніший аргумент."
-    - "Чи є спільні точки між позиціями?"
-  model_analysis: "[Model answer]"
-```
-
-### Forbidden Activity Types
-
-Per config.py, C1-HIST does NOT use drill activities:
-- `match-up`, `fill-in`, `cloze`, `group-sort`, `unjumble`, `anagram`, `mark-the-words`
-- `quiz` (unless testing methodology, not factual recall)
+- **History modules** → `docs/l2-uk-en/templates/c1-history-module-template.md`
+- **Tier 3 guidance** → `claude_extensions/commands/review-tiers/tier-3-seminar.md`
 
 ---
 
 ## Phase Structure (135 Modules)
 
-| Phase     | Modules | Focus                              |
-| --------- | ------- | ---------------------------------- |
-| C1H.1     | M01-10  | Historiography & Methodology       |
-| C1H.2-5   | M11-50  | Primary Sources (Medieval → Modern)|
-| C1H.6-9   | M51-80  | Thematic Studies (Holodomor, etc.) |
-| C1H.10-11 | M81-95  | Regional Perspectives              |
-| C1H.12-16 | M96-115 | Imperial Mechanisms & Patterns     |
-| C1H.17-21 | M116-135| Complex Questions & Synthesis      |
+| Phase   | Modules  | Focus                          |
+| ------- | -------- | ------------------------------ |
+| HIST.1  | M01-10   | Historiography fundamentals    |
+| HIST.2  | M11-18   | Medieval sources (PVL, Pateryk)|
+| HIST.3  | M19-28   | Cossack chronicles & documents |
+| HIST.4  | M29-42   | Imperial mechanisms            |
+| HIST.5  | M43-58   | Holodomor studies              |
+| HIST.6  | M59-72   | Soviet historiography          |
+| HIST.7  | M73-88   | Dissident & diaspora sources   |
+| HIST.8  | M89-104  | Independence era               |
+| HIST.9  | M105-120 | Contemporary & information war |
+| HIST.10 | M121-135 | Synthesis & methodology        |
 
 ---
 
 ## Pre-flight Checklist
 
-Before writing, confirm:
+Before writing any C1-HIST module:
 
-- [ ] Read module plan from `curriculum/l2-uk-en/plans/c1-hist/{slug}.yaml`
-- [ ] **Read the template** `docs/l2-uk-en/templates/c1-history-module-template.md`
-- [ ] **Research historiography** (WebSearch, WebFetch academic sources)
-- [ ] All metadata YAML fields ready
-- [ ] Activity plan: 3-9 seminar-style activities (must include reading + essay-response + critical-analysis)
-- [ ] Essay in YAML only (500+ words) — NO essay section in markdown
-- [ ] Immersion target: **95-100%** Ukrainian
+1. ✅ Read the plan: `curriculum/l2-uk-en/plans/c1-hist/{slug}.yaml`
+2. ✅ Read the meta: `curriculum/l2-uk-en/c1-hist/meta/{slug}.yaml`
+3. ✅ Read the template: `docs/l2-uk-en/templates/c1-history-module-template.md`
+4. ✅ Check curriculum.yaml for correct sequence number
 
-## Metadata YAML Template (`meta/{slug}.yaml`)
+---
+
+## Research-First Workflow (MANDATORY)
+
+**C1-HIST requires Phase 0: Deep Research before writing.**
+
+1. **Research the topic** using academic sources:
+   - [litopys.org.ua](https://litopys.org.ua) — Primary sources
+   - [history.org.ua](https://history.org.ua) — Institute of History NANU
+   - [nbuv.gov.ua](https://nbuv.gov.ua) — National Library
+   - [hrushevsky.nbuv.gov.ua](https://hrushevsky.nbuv.gov.ua) — Hrushevsky's works
+
+2. **Take structured notes** with citations and key facts
+
+3. **Create outline** integrating research with plan requirements
+
+4. **Write content** using research notes (NOT from memory!)
+
+5. **Generate activities** — 3-9 only, seminar-style
+
+> ⚠️ **Wikipedia Warning:** Ukrainian Wikipedia is contested territory subject to Russian information warfare. For historiography, NEVER rely on Wikipedia. Use .gov.ua and academic sources only.
+
+---
+
+## Anti-Hallucination Rules
+
+1. **NEVER invent historiographical debates** — verify which historians actually disagree
+2. **NEVER generate primary source text from memory** — always verify from litopys.org.ua
+3. **NEVER attribute views to historians without verification** — check their actual arguments
+4. **NEVER invent dating or authorship debates** — these are well-documented
+5. **When in doubt, mark as [NEEDS VERIFICATION]** — flag for review
+
+---
+
+## Activity Schema
+
+### critical-analysis
 
 ```yaml
-module: c1-hist-XX
-level: C1-HIST
-slug: '{slug}'
-version: '2.0'
-duration: 150
-transliteration: none
-tags:
-  - historiography
-  - [methodology/sources/decolonization/etc.]
-vocabulary_count: 30
-naturalness:
-  score: 10
-  status: PASS
-build:
-  last_modified: 'YYYY-MM-DD'
+- type: critical-analysis
+  title: "Оцінка джерела: ..."
+  target_text: |
+    [Primary source text or historiographical excerpt]
+  questions:
+    - "Question 1?"
+    - "Question 2?"
+  model_answers:
+    - "Answer 1"
+    - "Answer 2"
+```
+
+### reading
+
+```yaml
+- type: reading
+  title: "Первинне джерело: ..."
+  text: |
+    [Source text with context]
+  tasks:
+    - "Task 1"
+    - "Task 2"
+```
+
+### comparative-study
+
+```yaml
+- type: comparative-study
+  title: "Порівняльний аналіз: ..."
+  items_to_compare:
+    - "Item 1"
+    - "Item 2"
+  criteria:
+    - "Criterion 1"
+    - "Criterion 2"
+  prompt: "Analysis prompt"
+  model_answer: |
+    [Model comparative analysis]
+```
+
+### essay-response
+
+```yaml
+- type: essay-response
+  title: "Есе: ..."
+  prompt: |
+    [Essay prompt with requirements]
+  min_words: 300
+  model_answer: |
+    [Model essay response]
 ```
 
 ---
 
-## Content Requirements
+## Seminar Quality Standards
 
-| Metric            | Target    |
-| ----------------- | --------- |
-| Core Word Count   | 4000+     |
-| Immersion         | 95-100%   |
-| Vocabulary (YAML) | 25+       |
-| Engagement Boxes  | 6+        |
-| Primary Sources   | 1+        |
+**C1-HIST modules must achieve A+ seminar quality:**
 
----
+| Criterion | A+ Standard |
+|-----------|-------------|
+| Opening | Vivid scene, provocative question |
+| Primary Sources | Woven into narrative, analyzed |
+| Narrative Thread | Clear progression, conflict, resolution |
+| Decolonization | Integrated perspective, not preachy |
+| Emotional Peak | Moment of genuine impact |
+| Modern Relevance | Organic connection to today |
+| Closing | Memorable, quotable, actionable |
 
-## The 5-Question Method
-
-C1-HIST teaches critical source analysis using 5 questions:
-
-1. **Хто написав?** (Authorship, credentials, affiliation)
-2. **Коли?** (Date and historical context)
-3. **Для кого?** (Intended audience)
-4. **Чому?** (Purpose, agenda, motivation)
-5. **Що опущено?** (Omissions, silences, alternative perspectives)
-
-This method should be taught in M01 and applied throughout the track.
+**Lecture Quality minimum: 9/10**
 
 ---
 
-## Golden Rule for C1-HIST
+## Commands
 
-**"Does this teach HOW we know, not WHAT happened?"**
+```bash
+# Build module
+/module c1-hist {num}
 
-- If testing facts → Belongs in B2-HIST
-- If testing methodology → Belongs in C1-HIST
+# Resume from phase
+/module c1-hist {num} --from={phase}
 
-### C1-HIST Patterns (Tests Methodology)
+# Check status
+/module c1-hist {num} --check
 
-- "Застосуйте 5 питань критичного аналізу..."
-- "Порівняйте українську та російську інтерпретації..."
-- "Визначте упередження в цьому джерелі..."
-- "Як цей текст використовується в сучасній пропаганді?"
-
-### NOT C1-HIST Patterns (Tests Facts)
-
-- "У якому році..." (dates)
-- "Хто був..." (names)
-- "Де відбулося..." (places)
-
----
-
-## Engagement Boxes for C1-HIST
-
-```markdown
-> [!history-bite]
-> [Surprising historiographical fact]
-
-> [!quote]
-> [Primary source excerpt with attribution]
-
-> [!analysis]
-> [Critical analysis point]
-
-> [!caution]
-> [Methodological warning or propaganda alert]
-
-> [!source]
-> [Source criticism note]
-
-> [!reflection]
-> [Self-check or deeper thinking prompt]
+# Batch build
+/module c1-hist {start}-{end}
 ```
 
 ---
 
-## Related Documentation
+## Key Differences from B2-HIST
 
-- **C1-HIST Level Plan:** `curriculum/l2-uk-en/plans/c1-hist.yaml`
-- **C1-HIST Module Plans:** `curriculum/l2-uk-en/plans/c1-hist/{slug}.yaml`
-- **Template:** `docs/l2-uk-en/templates/c1-history-module-template.md`
-- **Activity Schema:** `schemas/activities-c1-hist.schema.json`
-- **Activity Reference:** `docs/ACTIVITY-YAML-REFERENCE.md`
-- **Sample Module:** `curriculum/l2-uk-en/c1-hist/01-shcho-take-istoriohrafiia.md`
-
----
-
-**Last Updated:** 2026-01-27
-**Version:** 1.0
+| Aspect | B2-HIST | C1-HIST |
+|--------|---------|---------|
+| Focus | What happened | How we know |
+| Content | Historical events | Historiographical debates |
+| Sources | Secondary narratives | Primary source analysis |
+| Activities | Reading + analysis | Source criticism + essays |
+| Complexity | B2 vocabulary | C1 academic vocabulary |
+| Length | 4000 words | 4000 words |

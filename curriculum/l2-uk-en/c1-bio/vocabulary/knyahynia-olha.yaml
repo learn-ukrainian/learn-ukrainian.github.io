@@ -1,4 +1,76 @@
 module: knyahynia-olha
-level: C1
+level: C1-BIO
 version: '2.0'
-items: []
+items:
+- lemma: регент
+  ipa: /rɛˈɦɛnt/
+  translation: regent
+  pos: noun
+  gender: m
+- lemma: данина
+  ipa: /danˈɪna/
+  translation: tribute
+  pos: noun
+  gender: f
+- lemma: погост
+  ipa: /pɔˈɦɔst/
+  translation: administrative district (historical)
+  pos: noun
+  gender: m
+- lemma: урок
+  ipa: /urˈɔk/
+  translation: fixed tribute (historical)
+  pos: noun
+  gender: m
+- lemma: помста
+  ipa: /pˈɔmsta/
+  translation: revenge
+  pos: noun
+  gender: f
+- lemma: древляни
+  ipa: /drɛʋlˈjanɪ/
+  translation: Drevlians (tribe)
+  pos: noun
+- lemma: хрещення
+  ipa: /xrˈɛʃt͡ʃɛnnja/
+  translation: baptism
+  pos: noun
+  gender: n
+- lemma: канонізація
+  ipa: /kanɔnizˈat͡sija/
+  translation: canonization
+  pos: noun
+  gender: f
+- lemma: рівноапостольна
+  ipa: /riʋnɔapˈɔstɔlʲna/
+  translation: equal-to-the-apostles
+  pos: adj
+- lemma: візантійський
+  ipa: /vizantˈijsʲkɪj/
+  translation: Byzantine
+  pos: adj
+- lemma: княгиня
+  ipa: /knjaɦˈɪnja/
+  translation: princess, duchess
+  pos: noun
+  gender: f
+- lemma: вдова
+  ipa: /ʋdɔˈʋa/
+  translation: widow
+  pos: noun
+  gender: f
+- lemma: посольство
+  ipa: /pɔsˈɔlʲstʋɔ/
+  translation: embassy
+  pos: noun
+  gender: n
+- lemma: літопис
+  ipa: /litˈɔpɪs/
+  translation: chronicle
+  pos: noun
+  gender: m
+- lemma: язичництво
+  ipa: /jazˈɪt͡ʃnɪt͡stʋɔ/
+  translation: paganism
+  pos: noun
+  gender: n

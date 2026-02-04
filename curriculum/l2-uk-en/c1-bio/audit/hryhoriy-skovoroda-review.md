@@ -1,8 +1,8 @@
-# Audit Report: M28 — hryhoriy-skovoroda.md
-**Level:** C1 | **Module:** M28 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M33 — hryhoriy-skovoroda.md
+**Level:** C1-BIO | **Module:** M33 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:15
+**Generated:** 2026-02-04 11:41:33
 
 ## Configuration
 **Type:** C1-biography
@@ -45,7 +45,7 @@
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 11/5
+- **Engagement:** ✅ 13/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 0 < 24 (soft target)
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar

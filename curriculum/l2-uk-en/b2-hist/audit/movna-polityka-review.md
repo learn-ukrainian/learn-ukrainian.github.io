@@ -1,8 +1,8 @@
 # Audit Report: M125 — movna-polityka.md
-**Level:** B2 | **Module:** M125 | **Phase:** HIST.12 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M125 | **Phase:** HIST.12 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:58
+**Generated:** 2026-02-03 22:55:13
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4412/4000 (raw: 4488)
+- **Words:** ✅ 4421/4000 (raw: 4505)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.5% (target 90-100% (history))
 - **Richness:** ✅ 96% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -73,10 +73,11 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Мовна політика незалежної України** | ⚪️ | 0 | Skipped |
 | **Вступ: Мова як поле битви** | ✅ | 613 | Included in Core |
 | **Мовна політика 1991-2012** | ⚪️ | 743 | Skipped |
 | **Закон Колесніченка-Ківалова та його наслідки** | ⚪️ | 808 | Skipped |
 | **Первинні джерела** | ✅ | 539 | Included in Core |
-| **Деколонізаційний погляд** | ✅ | 675 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 684 | Included in Core |
 | **Підсумок: Після 2022 року** | ✅ | 342 | Included in Core |
 | **Читання** | ✅ | 692 | Included in Core |

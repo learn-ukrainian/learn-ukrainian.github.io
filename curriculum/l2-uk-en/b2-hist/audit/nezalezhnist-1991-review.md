@@ -1,8 +1,8 @@
 # Audit Report: M121 — nezalezhnist-1991.md
-**Level:** B2 | **Module:** M121 | **Phase:** HIST.12 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M121 | **Phase:** HIST.12 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:56
+**Generated:** 2026-02-03 22:55:10
 
 ## Configuration
 **Type:** B2-history
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4921/4000 (raw: 5041)
+- **Words:** ✅ 4921/4000 (raw: 5049)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -47,7 +47,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
-- **Immersion:** 🇺🇦 99.9% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.7% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -73,7 +73,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 97 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Україна 1991-2004: Становлення та випробування** | ⚪️ | 97 | Skipped |
 | **Вступ: Народження держави** | ✅ | 505 | Included in Core |
 | **Читання: Хроніка першого десятиліття** | ✅ | 504 | Included in Core |
 | **Перші роки (1991-1994): Випробування на міцність** | ⚪️ | 773 | Skipped |

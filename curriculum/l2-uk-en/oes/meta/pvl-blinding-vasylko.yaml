@@ -1,0 +1,37 @@
+# Module Meta: PVL: Blinding of Vasylko
+# Track: OES
+# Module: 038
+# Generated: 2026-02-04
+
+module_number: 38
+slug: pvl-blinding-vasylko
+title: "ПВЛ: Осліплення Василька"
+title_en: "PVL: Blinding of Vasylko"
+
+type: lesson
+phase: 2
+phase_id: literary-tradition
+
+# Pedagogy
+pedagogy: theory-first
+duration_minutes: 60
+word_target: 3500
+immersion_level: 100
+
+# Focus
+grammar_focus: "Psychological horror — complex syntax"
+vocabulary_focus: []
+cultural_focus: []
+
+# Activity hints (minimum counts)
+activity_hints:
+  - type: transcription
+    min_items: 2
+  - type: etymology-trace
+    min_items: 2
+  - type: grammar-identify
+    min_items: 3
+
+# Prerequisites
+prerequisites:
+  - module: 37

@@ -1,8 +1,8 @@
 # Audit Report: M118 — diaspora.md
-**Level:** B2 | **Module:** M118 | **Phase:** HIST.11 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M118 | **Phase:** HIST.11 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:54
+**Generated:** 2026-02-03 22:55:08
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4230/4000 (raw: 4443)
+- **Words:** ✅ 4230/4000 (raw: 4451)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 100.0% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.7% (target 90-100% (history))
 - **Richness:** ✅ 100% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -72,7 +72,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 89 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Діаспора: Ковчег держави** | ⚪️ | 89 | Skipped |
 | **Вступ: Чому українці покидали батьківщину** | ✅ | 477 | Included in Core |
 | **Читання** | ✅ | 368 | Included in Core |
 | **Перша хвиля (1880-1914): Трудова еміграція** | ⚪️ | 744 | Skipped |

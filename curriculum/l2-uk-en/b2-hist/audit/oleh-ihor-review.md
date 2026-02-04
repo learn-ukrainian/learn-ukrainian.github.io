@@ -1,8 +1,8 @@
 # Audit Report: M09 — oleh-ihor.md
-**Level:** B2 | **Module:** M09 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M09 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:53:50
+**Generated:** 2026-02-03 22:54:04
 
 ## Configuration
 **Type:** B2-history
@@ -36,7 +36,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4102/4000 (raw: 4311)
+- **Words:** ✅ 4102/4000 (raw: 4319)
 - **Activities:** ✅ 7/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/2 types
@@ -48,7 +48,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (7 activities)
-- **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.4% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -74,7 +74,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 66 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Олег та Ігор: Перші правителі** | ⚪️ | 66 | Skipped |
 | **Вступ: Варяги та Київ** | ✅ | 807 | Included in Core |
 | **Суспільство та Культура** | ✅ | 495 | Included in Core |
 | **Читання: Князь Олег: Об'єднання земель** | ✅ | 317 | Included in Core |

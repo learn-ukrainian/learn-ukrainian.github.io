@@ -1,0 +1,35 @@
+# Module Meta: Phonology Lab: Fall of Yers
+# Track: OES
+# Module: 099
+# Generated: 2026-02-04
+
+module_number: 99
+slug: phonology-lab-yers
+title: "Фонологічна лабораторія: Єри"
+title_en: "Phonology Lab: Fall of Yers"
+
+type: lab
+phase: 4
+phase_id: literary-art
+
+# Pedagogy
+pedagogy: theory-first
+duration_minutes: 60
+word_target: 2500
+immersion_level: 100
+
+# Focus
+grammar_focus: "Tracing Yer loss & Yat evolution"
+vocabulary_focus: []
+cultural_focus: []
+
+# Activity hints (minimum counts)
+activity_hints:
+  - type: grammar-lab
+    min_items: 3
+  - type: transcription
+    min_items: 2
+
+# Prerequisites
+prerequisites:
+  - module: 98

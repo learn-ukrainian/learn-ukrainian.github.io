@@ -1,8 +1,8 @@
-# Audit Report: M24 — ivan-mazepa.md
-**Level:** C1 | **Module:** M24 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
-**Naturalness:** None/10 (PENDING)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:13
+# Audit Report: M27 — ivan-mazepa.md
+**Level:** C1-BIO | **Module:** M27 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-04 11:41:30
 
 ## Configuration
 **Type:** C1-biography
@@ -20,76 +20,68 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | essay-response | Есе: Мазепа як символ європейського вибору | 1 | 1 | ✅ |
-| 2 | comparative-study | Порівняльне дослідження: Моделі лідерства Хмельницького та Мазепи | 1 | 1 | ✅ |
-| 3 | true-false | Деконструкція пропагандистських міфів про Мазепу | 9 | 5 | ✅ |
-| 4 | true-false | Перевірка знань про Мазепинське Бароко | 8 | 5 | ✅ |
-| 5 | authorial-intent | Аналіз стратегічних намірів гетьмана-мецената | 1 | 1 | ✅ |
-| 6 | critical-analysis | Критичний розбір Полтавської трагедії | 1 | 1 | ✅ |
+| 1 | reading | Маніфест Івана Мазепи до війська та народу (1708) | 1 | 1 | ✅ |
+| 2 | essay-response | Есе: Геополітична дилема Івана Мазепи | 1 | 1 | ✅ |
+| 3 | critical-analysis | Критичний розбір: Мазепа в лещатах історіографій | 1 | 1 | ✅ |
+| 4 | comparative-study | Компаративний аналіз: Моделі лідерства Хмельницького та Мазепи | 1 | 1 | ✅ |
+| 5 | quiz | Перевірка знань про Мазепинську епоху | 5 | 5 | ✅ |
+| 6 | true-false | Деконструкція міфів та фактів про Івана Мазепу | 5 | 5 | ✅ |
 
 **Summary:**
 - Total activities: 6 (target: 3-9) ✅
-- Unique types: 5 (minimum: 3) ✅
-- Priority types used: 4/6 (authorial-intent, comparative-study, critical-analysis, essay-response) ✅
-- Required types used: 2/3 (critical-analysis, essay-response) ❌
+- Unique types: 6 (minimum: 3) ✅
+- Priority types used: 5/6 (comparative-study, critical-analysis, essay-response, quiz, reading) ✅
+- Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
 - Low density activities: 0
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Останні роки' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ❌ 2111/4000 (raw: 2275)
+- **Words:** ✅ 4533/4000 (raw: 4594)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 5/3 types
+- **Unique_types:** ✅ 6/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 10/5
+- **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 15 < 24 (soft target)
+- **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
-- **Immersion:** 🇺🇦 99.5% (target 95-100% (biography))
-- **Richness:** ✅ 99% (biography)
+- **Immersion:** 🇺🇦 98.9% (target 95-100% (biography))
+- **Richness:** ✅ 95% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
+**Score:** 95% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 6 | 4 | 100% | 19% | 19.0% |
-| engagement | 10 | 6 | 100% | 14% | 14.3% |
-| quotes | 8 | 3 | 100% | 14% | 14.3% |
-| cultural | 7 | 4 | 100% | 10% | 9.5% |
-| visual | 9 | 4 | 100% | 10% | 9.5% |
-| timeline_markers | 28 | 8 | 100% | 10% | 9.5% |
-| legacy | 12 | 2 | 100% | 10% | 9.5% |
+| primary_sources | 7 | 4 | 100% | 19% | 19.0% |
+| engagement | 6 | 6 | 100% | 14% | 14.3% |
+| quotes | 15 | 3 | 100% | 14% | 14.3% |
+| cultural | 10 | 4 | 100% | 10% | 9.5% |
+| visual | 2 | 4 | 50% | 10% | 4.8% |
+| timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
+| legacy | 15 | 2 | 100% | 10% | 9.5% |
 | variety | 0.99 | - | 99% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 14 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **100.0%** |
+| questions | 5 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **95.2%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 84 | Included in Core |
-| **Вступ** | ✅ | 196 | Included in Core |
-| **Життєпис** | ⚪️ | 866 | Skipped |
-| **Історичний контекст** | ✅ | 208 | Included in Core |
-| **Внесок** | ⚪️ | 224 | Skipped |
-| **Спадщина** | ⚪️ | 136 | Skipped |
-| **Порівняльний аналіз** | ✅ | 143 | Included in Core |
-| **Критичне мислення: Питання для глибокого аналізу** | ✅ | 103 | Included in Core |
-| **Підсумок** | ✅ | 109 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 42 | Skipped |
+| **Intro/Narrative** | ✅ | 45 | Included in Core |
+| **Іван Мазепа: Гетьман-Меценат і Європейський Вибір** | ⚪️ | 100 | Skipped |
+| **Вступ — Між зрадою та героїзмом** | ✅ | 434 | Included in Core |
+| **Життєпис — Молодість та шлях до влади** | ⚪️ | 661 | Skipped |
+| **Внесок — Гетьманування та культурний розквіт** | ✅ | 965 | Included in Core |
+| **Шлях до розриву з Москвою** | ⚪️ | 719 | Skipped |
+| **Полтава та вигнання** | ⚪️ | 627 | Skipped |
+| **Останні роки — Бендери та смерть** | ⚪️ | 259 | Skipped |
+| **Спадщина та реабілітація** | ⚪️ | 455 | Skipped |
+| **Підсумок — Трагічний вибір** | ✅ | 213 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 55 | Skipped |

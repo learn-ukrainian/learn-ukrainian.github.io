@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: pivden-novorosiia, nova-serbiya, krypatsvo-selo, petro-kalnyshevskyi
+-->
+
 # Південь України: Колонізація та міфи
 
 > 🎯 **Чому це важливо?**

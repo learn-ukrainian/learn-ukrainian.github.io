@@ -1,0 +1,38 @@
+# Module Plan: The Holy Mountain
+# Track: RUTH
+# Module: 049
+# Source: Gemini Research (ISSUE-494)
+# Generated: 2026-02-04
+
+module_number: 49
+slug: holy-mountain-athos
+title_uk: "Свята гора"
+title_en: "The Holy Mountain"
+
+phase: 2
+phase_id: sacred-word
+phase_name: "Sacred Word"
+
+focus: "Monastic context — Rejection of the World"
+
+word_target: 3500
+
+# Content outline to be expanded during content generation
+content_outline:
+  - section: "Вступ"
+    description: "Introduction to The Holy Mountain"
+  - section: "Основний матеріал"
+    description: "Primary source analysis and grammar focus"
+  - section: "Практика"
+    description: "Exercises and activities"
+  - section: "Підсумок"
+    description: "Summary and connection to next module"
+
+# Vocabulary hints (to be populated during content generation)
+vocabulary_hints: []
+
+# Activity types appropriate for this module
+activity_types:
+  - transcription
+  - etymology-trace
+  - grammar-identify

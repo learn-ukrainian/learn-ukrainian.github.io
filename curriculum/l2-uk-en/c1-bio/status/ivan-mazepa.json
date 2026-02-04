@@ -2,13 +2,13 @@
   "module": "ivan-mazepa",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T23:29:13.181375Z",
+  "last_audit": "2026-02-04T11:41:30.506261Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-29T22:43:06.532957Z",
-    "meta": "2026-01-29T22:43:06.534805Z",
-    "activities": "2026-01-29T22:43:06.509730Z",
-    "vocabulary": "2026-01-29T20:56:13.161779Z",
+    "md": "2026-02-02T23:08:04.673981Z",
+    "meta": "2026-02-02T23:22:59.960081Z",
+    "activities": "2026-02-02T23:08:05.639852Z",
+    "vocabulary": "2026-02-02T21:48:04.210123Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2111/4000 (raw: 2275)"
+      "status": "pass",
+      "violations": 0,
+      "message": "4533/4000 (raw: 4594)"
     },
     "activities": {
       "status": "pass",
@@ -28,24 +28,20 @@
       "message": "6/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "15 < 24 (soft target)"
+      "message": "25/24"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "None/10 (PENDING) - Naturalness check required"
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "1 Critical Template Violations",
-      "6 Outline Compliance Errors",
-      "Missing required activity types: reading"
-    ],
-    "pass_count": 2,
-    "fail_count": 2
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

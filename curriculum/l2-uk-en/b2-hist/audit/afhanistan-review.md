@@ -1,8 +1,8 @@
 # Audit Report: M116 — afhanistan.md
-**Level:** B2 | **Module:** M116 | **Phase:** HIST.11 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M116 | **Phase:** HIST.11 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:53
+**Generated:** 2026-02-03 22:55:07
 
 ## Configuration
 **Type:** B2-history
@@ -34,19 +34,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4237/4000 (raw: 4317)
+- **Words:** ✅ 4237/4000 (raw: 4325)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/5
+- **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 100.0% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
 - **Richness:** ✅ 95% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -60,7 +60,7 @@
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 15 | 3 | 100% | 24% | 23.8% |
 | engagement | 6 | 6 | 100% | 14% | 14.3% |
-| timeline_markers | 19 | 10 | 100% | 14% | 14.3% |
+| timeline_markers | 20 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 2 | 4 | 50% | 10% | 4.8% |
 | visual | 6 | 4 | 100% | 10% | 9.5% |
@@ -72,7 +72,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 130 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Українці в Афганістані: Чужа війна** | ⚪️ | 130 | Skipped |
 | **Вступ — Чужа війна** | ✅ | 814 | Included in Core |
 | **Війна в Афганістані (1979-1989): Механіка катастрофи** | ⚪️ | 958 | Skipped |
 | **Читання — Листи з іншого світу** | ✅ | 394 | Included in Core |

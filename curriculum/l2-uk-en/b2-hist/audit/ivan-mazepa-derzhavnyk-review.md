@@ -1,8 +1,8 @@
 # Audit Report: M63 — ivan-mazepa-derzhavnyk.md
-**Level:** B2 | **Module:** M63 | **Phase:** HIST.7 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M63 | **Phase:** HIST.7 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:22
+**Generated:** 2026-02-03 22:54:36
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4050/4000 (raw: 4118)
+- **Words:** ✅ 4050/4000 (raw: 4126)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.9% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.5% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -72,7 +72,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 95 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Іван Мазепа I: державник** | ⚪️ | 95 | Skipped |
 | **Вступ: Найвідоміший гетьман** | ✅ | 504 | Included in Core |
 | **Шлях до влади** | ⚪️ | 470 | Skipped |
 | **Гетьман-будівничий (1687-1708)** | ⚪️ | 1985 | Skipped |

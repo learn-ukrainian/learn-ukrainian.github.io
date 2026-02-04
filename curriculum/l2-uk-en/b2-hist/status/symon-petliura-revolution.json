@@ -2,12 +2,12 @@
   "module": "symon-petliura-revolution",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:54:40.480454Z",
+  "last_audit": "2026-02-03T22:54:54.620304Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-28T20:18:40.204798Z",
+    "md": "2026-02-03T15:58:46.630098Z",
     "meta": "2026-01-29T07:38:18.686759Z",
-    "activities": "2026-01-28T19:04:17.867571Z",
+    "activities": "2026-02-03T15:57:37.598867Z",
     "vocabulary": "2026-01-28T18:58:37.289156Z",
     "plan": null
   },
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4695/4000 (raw: 4767)"
+      "message": "5052/4000 (raw: 5132)"
     },
     "activities": {
       "status": "pass",

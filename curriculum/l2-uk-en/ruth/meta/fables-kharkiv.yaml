@@ -1,0 +1,37 @@
+# Module Meta: Fables of Kharkiv
+# Track: RUTH
+# Module: 092
+# Generated: 2026-02-04
+
+module_number: 92
+slug: fables-kharkiv
+title: "Харківські байки"
+title_en: "Fables of Kharkiv"
+
+type: lesson
+phase: 4
+phase_id: cossack-word
+
+# Pedagogy
+pedagogy: theory-first
+duration_minutes: 60
+word_target: 3500
+immersion_level: 100
+
+# Focus
+grammar_focus: "Genre of Fable — «The Bee and the Hornet»"
+vocabulary_focus: []
+cultural_focus: []
+
+# Activity hints (minimum counts)
+activity_hints:
+  - type: transcription
+    min_items: 2
+  - type: etymology-trace
+    min_items: 2
+  - type: grammar-identify
+    min_items: 3
+
+# Prerequisites
+prerequisites:
+  - module: 91

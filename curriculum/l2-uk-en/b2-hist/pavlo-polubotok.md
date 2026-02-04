@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: ivan-mazepa-poltava, kinets-hetmanshchyny, danylo-apostol, pylyp-orlyk-konstytutsiia
+-->
+
 # Павло Полуботок: Останній наказний
 
 > 🎯 **Чому це важливо?**

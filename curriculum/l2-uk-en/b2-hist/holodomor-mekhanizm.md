@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: holodomor-pamiat, rozkulachene, kolektyvizatsiia, shistdesiatnyky
+-->
+
 # Голодомор I: Механізм
 
 > [!important] **Чому це важливо?**

@@ -1,8 +1,8 @@
-# Audit Report: M14 — kostiantyn-vasyl-ostrozky.md
-**Level:** C1 | **Module:** M14 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
+# Audit Report: M16 — kostiantyn-vasyl-ostrozky.md
+**Level:** C1-BIO | **Module:** M16 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:08
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-04 12:08:58
 
 ## Configuration
 **Type:** C1-biography
@@ -33,25 +33,20 @@
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
-## Recommendation
-**📝 UPDATE** (severity 20/100)
-
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
-
 ## Gates
-- **Words:** ❌ 3012/4000 (raw: 3306)
+- **Words:** ✅ 4343/4000 (raw: 4465)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 24 (soft target)
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Vocab:** ✅ 25/24
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.8% (target 95-100% (biography))
+- **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
 - **Richness:** ✅ 95% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -63,27 +58,26 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 5 | 4 | 100% | 19% | 19.0% |
+| primary_sources | 3 | 4 | 75% | 19% | 14.3% |
 | engagement | 7 | 6 | 100% | 14% | 14.3% |
-| quotes | 2 | 3 | 67% | 14% | 9.6% |
+| quotes | 6 | 3 | 100% | 14% | 14.3% |
 | cultural | 4 | 4 | 100% | 10% | 9.5% |
-| visual | 9 | 4 | 100% | 10% | 9.5% |
+| visual | 6 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.98 | - | 98% | 5% | 4.7% |
+| variety | 0.96 | - | 96% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 17 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **95.2%** |
+| questions | 9 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **95.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 80 | Included in Core |
-| **Вступ** | ✅ | 220 | Included in Core |
-| **Життєпис** | ⚪️ | 1386 | Skipped |
-| **Історичний контекст** | ✅ | 199 | Included in Core |
-| **Внесок та Спадщина** | ⚪️ | 245 | Skipped |
-| **Порівняльний аналіз** | ✅ | 264 | Included in Core |
-| **Есе** | ⚪️ | 436 | Skipped |
-| **Підсумок** | ✅ | 97 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 85 | Skipped |
+| **Intro/Narrative** | ✅ | 132 | Included in Core |
+| **Вступ — Некоронований король Русі** | ✅ | 570 | Included in Core |
+| **Життєпис** | ⚪️ | 1491 | Skipped |
+| **Історичний контекст** | ✅ | 601 | Included in Core |
+| **Внесок та Спадщина** | ⚪️ | 575 | Skipped |
+| **Порівняльний аналіз** | ✅ | 517 | Included in Core |
+| **Підсумок — Урок національної суб'єктності та гідності** | ✅ | 275 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 182 | Skipped |

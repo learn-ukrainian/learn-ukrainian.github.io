@@ -1,0 +1,76 @@
+vocabulary:
+  - term: самодержець
+    translation: autocrat
+    definition: Правитель з необмеженою владою.
+  - term: усобиця
+    translation: internal strife
+    definition: Збройний конфлікт між членами однієї спільноти.
+  - term: віче
+    translation: veche (assembly)
+    definition: Народні збори в давній Русі.
+  - term: лихвар
+    translation: usurer
+    definition: Людина, яка позичає гроші під великий відсоток.
+  - term: закуп
+    translation: indentured servant
+    definition: Категорія напіввільних селян, що потрапили в залежність через борг.
+  - term: смерд
+    translation: peasant
+    definition: Вільний селянин-общинник.
+  - term: ізгой
+    translation: outcast
+    definition: Людина, що втратила зв'язок зі своїм соціальним середовищем.
+  - term: половці
+    translation: Cumans
+    definition: Тюркський кочовий народ.
+  - term: хрестовий похід
+    translation: crusade
+    definition: Релігійно вмотивована військова кампанія.
+  - term: повчання
+    translation: instruction
+    definition: Твір повчального характеру.
+  - term: заповіт
+    translation: testament
+    definition: Останнє волевиявлення.
+  - term: легітимність
+    translation: legitimacy
+    definition: Законність, визнання влади народом.
+  - term: династія
+    translation: dynasty
+    definition: Ряд правителів з одного роду.
+  - term: устав
+    translation: statute
+    definition: Зведення законів або правил.
+  - term: різ
+    translation: interest (financial)
+    definition: Відсоток за позикою в давній Русі.
+  - term: банкрутство
+    translation: bankruptcy
+    definition: Неспроможність боржника сплатити борги.
+  - term: консолідація
+    translation: consolidation
+    definition: Згуртування, об'єднання сил.
+  - term: сепаратизм
+    translation: separatism
+    definition: Прагнення до відокремлення.
+  - term: намісник
+    translation: viceroy
+    definition: Представник князя на місцях.
+  - term: тіун
+    translation: steward
+    definition: Управитель князівським господарством.
+  - term: хоругва
+    translation: banner
+    definition: Військовий прапор.
+  - term: шолом
+    translation: helmet
+    definition: Захисний головний убір воїна.
+  - term: кольчуга
+    translation: chainmail
+    definition: Обладунок з металевих кілець.
+  - term: меч
+    translation: sword
+    definition: Холодна зброя.
+  - term: щит
+    translation: shield
+    definition: Захисне озброєння.

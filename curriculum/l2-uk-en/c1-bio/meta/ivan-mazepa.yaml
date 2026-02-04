@@ -1,10 +1,31 @@
-module: c1-bio-022
+module: c1-bio-027
 level: C1-BIO
 slug: ivan-mazepa
 version: '2.0'
-id: c1-bio-022
+id: c1-bio-027
+title: "Іван Мазепа: Гетьман-Меценат і Європейський Вибір"
+vital_status: "deceased"
+transliteration: none
 naturalness:
-  score: null
-  status: PENDING
+  score: 9
+  status: PASS
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-02'
+content_outline:
+  - section: Вступ — Між зрадою та героїзмом
+    words: 300
+  - section: Життєпис — Молодість та шлях до влади
+    words: 700
+  - section: Внесок — Гетьманування та культурний розквіт
+    words: 1000
+  - section: Шлях до розриву з Москвою
+    words: 800
+  - section: Полтава та вигнання
+    words: 600
+  - section: Останні роки — Бендери та смерть
+    words: 200
+  - section: Спадщина та реабілітація
+    words: 250
+  - section: Підсумок — Трагічний вибір
+    words: 150
+word_target: 4000

@@ -227,6 +227,118 @@ Same spec ──┬──▶ Claude generates
 
 **Use for**: Comparing approaches, creative tasks
 
+### Pattern 6: GitHub Issue Handoff (Async Collaboration)
+
+```
+Claude/Gemini                     GitHub Issue                    Other Agent
+     │                                 │                               │
+     ├──▶ Create issue ───────────────▶│                               │
+     │    (full spec, checklist)       │                               │
+     │                                 │◀── Later session triggers ────┤
+     │                                 │                               │
+     │◀── Read results ────────────────│◀── Work + update issue ───────┤
+```
+
+**Use for**:
+- Async work that spans sessions
+- Tasks requiring human visibility (GH notifications)
+- Infrastructure work while other agent does different tasks
+- Persistent task specs that survive context resets
+- **Research spikes**: One agent researches & documents, other implements
+- **Human-in-the-Loop (HITL)**: Sensitive topics needing user approval (e.g., decolonization narratives)
+- **Dependency blocking**: When one agent is blocked by work better suited for the other
+
+**How it works**:
+1. **Initiator** creates GH issue with full task spec via `gh issue create`
+2. **Issue contains**: Overview, task checklist, Definition of Done, related docs
+3. **Later**: Other agent is triggered to work on the issue
+4. **Agent reads issue**, performs work, updates issue with progress
+5. **Completion**: Close issue or request review
+
+**Required Issue Structure** (see `docs/templates/handoff-issue.md`):
+- `## Overview` - What and why
+- `## Tasks` - Checklist of work items
+- `## Definition of Done` - Unambiguous completion criteria
+- `## Related Files` - Links to relevant status JSONs, audit logs, docs
+- `## Context` - Background info, decisions made, constraints
+
+**Specialized Templates** (in `docs/templates/`):
+| Template | Use Case |
+|----------|----------|
+| `handoff-issue.md` | Generic handoff (start here) |
+| `handoff-module-correction.md` | Fixing audit failures |
+| `handoff-infrastructure.md` | New tools, scripts, features |
+| `handoff-batch-review.md` | Large-scale quality audits |
+| `handoff-plan-review.md` | Reviewing YAML plans pre-generation |
+| `handoff-bug-investigation.md` | Root cause analysis of bugs |
+
+**State Labels** (for tracking without parsing body):
+| Label | Meaning |
+|-------|---------|
+| `status:in-progress` | Work actively happening |
+| `status:blocked` | Waiting on something (add comment explaining) |
+| `status:ready-for-review` | Work complete, needs review |
+| `agent:claude` | Claude is primary assignee |
+| `agent:gemini` | Gemini is primary assignee |
+
+**Benefits**:
+- ✅ Human can see progress via GH notifications
+- ✅ Task spec persists across sessions (no context loss)
+- ✅ Clear accountability (who's working on what)
+- ✅ Work can be paused/resumed
+- ✅ Both agents can read/update the same issue
+- ✅ Issues = "Long-term Memory", SQLite broker = "Short-term Memory"
+
+**When to use Pattern 6 vs MCP Messages**:
+| Criteria | Use Pattern 6 (GH Issue) | Use MCP Messages |
+|----------|--------------------------|------------------|
+| Task complexity | 3+ steps, multi-file | Simple, single action |
+| Duration | Cross-session | Within session |
+| Human visibility needed | Yes | No |
+| Persistence required | Yes | No |
+| Quick back-and-forth | No | Yes |
+| Output length | 1000+ words | < 500 words |
+
+> ⚠️ **MCP Timeout Limit**: The Gemini CLI has a 10-minute timeout. Long-form content generation (4000+ word modules) will timeout via MCP. For these tasks, create a **GitHub Issue** (Pattern 6) and the user will invoke Gemini directly.
+
+**Use MCP for:**
+- Reviews and feedback
+- Quick questions
+- Short content generation (< 500 words)
+- Status checks
+
+**Use GitHub Issues for:**
+- 4000+ word module writing
+- Any task requiring > 10 minutes of generation
+- Complex multi-section content
+- Async collaboration
+
+**Avoiding Issue Bloat**:
+- Reserve for tasks that actually benefit from persistence
+- Don't create issues for trivial tasks (use MCP messages instead)
+- Close issues promptly when done
+
+**Context Drift Rule**:
+> ⚠️ Always verify current file state before starting work on issues created >48h ago.
+
+**Example**:
+```bash
+# Gemini creates infrastructure task
+gh issue create \
+  --title "feat(scoring): Add LLM verification infrastructure" \
+  --body-file /tmp/issue-body.md \
+  --label "enhancement" --label "agent:gemini"
+
+# Returns: Issue #488
+
+# Later, Claude triggers Gemini to work on it
+.venv/bin/python scripts/gemini_bridge.py ask-gemini \
+  "Work on issue #488. Read it with 'gh issue view 488' and implement the tasks." \
+  --task-id issue-488-impl
+```
+
+**Tested**: 2026-02-02 - Gemini successfully created issue #488 via `gh` CLI.
+
 ---
 
 ## Context Packaging System (Gemini's Recommendations)
@@ -402,18 +514,40 @@ send_message(
     message_type="request"  # request|response|discussion|handoff|feedback
 )
 
-# Check inbox
+# Check inbox (quick count)
 check_inbox(for_llm="claude")
 
-# Receive messages
+# Receive unread messages
 receive_messages(for_llm="claude", unread_only=True)
 
-# Get conversation history
+# Get conversation history (IMPORTANT for collaborative tasks!)
 get_conversation(task_id="my-task")
 
 # Acknowledge message
 acknowledge_message(message_id=1)
 ```
+
+### Headless Session Awareness (CRITICAL)
+
+**Problem**: Multiple Claude sessions may be running. A headless session might:
+- Pick up Gemini's message before you see it
+- Acknowledge it (marking as read)
+- Complete the work without your awareness
+
+**When resuming collaborative work, ALWAYS:**
+```python
+# 1. Check full conversation history first
+get_conversation(task_id="the-task-id")
+
+# 2. Look for responses from other Claude sessions
+# 3. Only then check unread for new messages
+receive_messages(for_llm="claude", unread_only=True)
+```
+
+**Signs another Claude session responded:**
+- Message from "claude" to "gemini" you didn't send
+- Task appears complete but you didn't do it
+- `unread_only=True` returns nothing but work was requested
 
 ### Seamless Mode (Claude triggers Gemini)
 
@@ -443,12 +577,79 @@ receive_messages(for_llm="claude")
 # Auto-process with Gemini CLI (read, process, respond)
 .venv/bin/python scripts/gemini_bridge.py process <message_id> --model gemini-3-pro-preview
 
+# Process ALL unread messages (batch mode)
+.venv/bin/python scripts/gemini_bridge.py process-all
+
 # Get conversation history
 .venv/bin/python scripts/gemini_bridge.py conversation <task_id>
 
 # Interactive mode
 .venv/bin/python scripts/gemini_bridge.py interactive
 ```
+
+### Batch Processing Commands
+
+```bash
+# Process ALL unread messages for Gemini
+.venv/bin/python scripts/gemini_bridge.py process-all
+
+# Process ALL unread messages for Claude (headless)
+.venv/bin/python scripts/gemini_bridge.py process-claude-all
+
+# With options
+.venv/bin/python scripts/gemini_bridge.py process-all --model gemini-3-pro-preview
+.venv/bin/python scripts/gemini_bridge.py process-claude-all --new-session
+```
+
+**Use these to catch up on missed messages** after returning from a break or starting a new session.
+
+### Message Acknowledgment Commands
+
+```bash
+# Acknowledge single message
+.venv/bin/python scripts/gemini_bridge.py ack 42
+
+# Acknowledge multiple messages at once
+.venv/bin/python scripts/gemini_bridge.py ack 49 50 51 52
+
+# Acknowledge ALL unread messages for an agent
+.venv/bin/python scripts/gemini_bridge.py ack-all gemini
+.venv/bin/python scripts/gemini_bridge.py ack-all claude
+```
+
+**Inbox Zero Policy**: After processing messages, always acknowledge them to prevent:
+- Re-processing by headless sessions
+- False "unread" counts in inbox
+- Duplicate responses to the same message
+
+### GitHub Issue Handoff (Both Agents)
+
+```bash
+# Create issue with task spec (either agent can do this)
+gh issue create \
+  --title "feat: task title" \
+  --body "## Overview\n..." \
+  --label "enhancement"
+
+# View issue details
+gh issue view <issue_number>
+
+# Update issue with progress
+gh issue comment <issue_number> --body "Progress update..."
+
+# Close issue when done
+gh issue close <issue_number>
+
+# List open issues
+gh issue list --label "enhancement" --state open
+```
+
+**When to use GH Issue Handoff**:
+- Task spans multiple sessions
+- Human needs visibility into progress
+- Work can be paused and resumed later
+- Multiple agents collaborate on same task
+- Clear audit trail needed
 
 ---
 
@@ -533,6 +734,56 @@ OpenCode is connected to the learn-ukrainian GitHub organization. Potential futu
 5. File system = State of Truth (no session persistence)
 
 **Gemini's Verdict**: "The plan is a Go. Ready to execute Pattern 1 immediately."
+
+### 2026-02-02: Track Scoring System + GH Issue Pattern Discovery
+
+**Context**: Implementing Track Scoring Verification System
+
+**Key Discovery 1**: Gemini can create GitHub issues directly via `gh` CLI!
+
+**Key Discovery 2**: Headless session communication gap
+
+When checking for Gemini's responses, a **headless Claude session** may have already:
+1. Picked up Gemini's message
+2. Acknowledged it (marking it as read)
+3. Responded and completed the work
+
+**Problem**: If you only check `receive_messages(unread_only=True)`, you'll miss this entirely.
+
+**Solution**: For active collaborative tasks, always check **full conversation history**:
+```python
+# DON'T just check unread
+mcp__message-broker__receive_messages(for_llm="claude", unread_only=True)
+
+# DO check full task conversation
+mcp__message-broker__get_conversation(task_id="the-task-id")
+```
+
+**Pattern**: When resuming work on a collaborative task:
+1. First: `get_conversation(task_id)` to see full history
+2. Check if another Claude session already responded
+3. Then proceed with your work
+
+**Test Result**:
+- Claude asked Gemini to create issue for infrastructure work
+- Gemini successfully created issue #488
+- Gemini adapted to missing labels (used `infrastructure` instead of `scoring`)
+
+**New Pattern Added**: Pattern 6 - GitHub Issue Handoff
+- Enables async collaboration across sessions
+- Human visibility via GH notifications
+- Persistent task specs survive context resets
+- Both agents can read/update same issue
+
+**Gemini's LLM Review Sampling Recommendation**:
+- Tier 1: 100% Automated coverage (audit scripts)
+- Tier 2: Risk-based LLM spot-checks (low naturalness, sensitive topics)
+- Tier 3: Stratified sampling (~15-20% of track)
+- Add `validation_tier` metadata: automated | llm-verified | gold-standard
+
+**Division of Labor**:
+- Gemini: Infrastructure (sampling.py, report.py patch) - via issue #488
+- Claude: Era-defining module reviews (parallel work)
 
 ---
 

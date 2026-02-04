@@ -2,11 +2,11 @@
   "module": "petro-bolbochan",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T23:29:37.401011Z",
+  "last_audit": "2026-02-04T11:41:58.858425Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.348720Z",
-    "meta": "2026-01-29T07:39:04.929018Z",
+    "meta": "2026-02-02T23:23:00.159841Z",
     "activities": "2026-01-27T15:34:56.628470Z",
     "vocabulary": null,
     "plan": null

@@ -1,8 +1,8 @@
 # Audit Report: M73 — petro-kalnyshevskyi.md
-**Level:** B2 | **Module:** M73 | **Phase:** HIST.7 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M73 | **Phase:** HIST.7 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:28
+**Generated:** 2026-02-03 22:54:42
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4643/4000 (raw: 4746)
+- **Words:** ✅ 4643/4000 (raw: 4754)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.9% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.6% (target 90-100% (history))
 - **Richness:** ✅ 95% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -72,7 +72,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 137 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Петро Калнишевський: Останній кошовий** | ⚪️ | 137 | Skipped |
 | **Вступ: Трагічна велич останнього отамана та епоха великих надій** | ✅ | 529 | Included in Core |
 | **Шлях до булави: Від козака до стратега вільної республіки** | ⚪️ | 812 | Skipped |
 | **Чорна рада 1775 року: Кінець Війська Запорозького та тріумф підступності** | ⚪️ | 650 | Skipped |

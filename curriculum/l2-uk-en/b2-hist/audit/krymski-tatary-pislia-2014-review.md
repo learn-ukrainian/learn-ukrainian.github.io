@@ -1,8 +1,8 @@
 # Audit Report: M128 — krymski-tatary-pislia-2014.md
-**Level:** B2 | **Module:** M128 | **Phase:** HIST.12 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M128 | **Phase:** HIST.12 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:55:00
+**Generated:** 2026-02-03 22:55:15
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 5016/4000 (raw: 5144)
+- **Words:** ✅ 5020/4000 (raw: 5156)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.6% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.4% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -73,10 +73,11 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Кримські татари після 2014** | ⚪️ | 0 | Skipped |
 | **Вступ: Подвійні жертви** | ✅ | 629 | Included in Core |
 | **Російська окупація та репресії** | ⚪️ | 809 | Skipped |
 | **Спротив та еміграція** | ⚪️ | 1214 | Skipped |
 | **Первинні джерела** | ✅ | 477 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 773 | Included in Core |
 | **Підсумок: Боротьба триває** | ✅ | 338 | Included in Core |
-| **Читання** | ✅ | 776 | Included in Core |
+| **Читання** | ✅ | 780 | Included in Core |

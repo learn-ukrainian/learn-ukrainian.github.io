@@ -1,0 +1,38 @@
+# Module Plan: Ihor's Campaign (Chronicle)
+# Track: OES
+# Module: 036
+# Source: Gemini Research (ISSUE-490)
+# Generated: 2026-02-04
+
+module_number: 36
+slug: ihor-campaign-chronicle
+title_uk: "Похід Ігоря (літопис)"
+title_en: "Ihor's Campaign (Chronicle)"
+
+phase: 2
+phase_id: literary-tradition
+phase_name: "Literary Tradition"
+
+focus: "Link to Slovo — Historical vs Poetic"
+
+word_target: 3500
+
+# Content outline to be expanded during content generation
+content_outline:
+  - section: "Вступ"
+    description: "Introduction to Ihor's Campaign (Chronicle)"
+  - section: "Основний матеріал"
+    description: "Primary source analysis and grammar focus"
+  - section: "Практика"
+    description: "Exercises and activities"
+  - section: "Підсумок"
+    description: "Summary and connection to next module"
+
+# Vocabulary hints (to be populated during content generation)
+vocabulary_hints: []
+
+# Activity types appropriate for this module
+activity_types:
+  - transcription
+  - etymology-trace
+  - grammar-identify

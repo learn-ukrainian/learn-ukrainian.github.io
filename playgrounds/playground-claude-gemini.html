@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Claude-Gemini Communication Visualizer</title>
+  <title>Claude-Gemini Communication - Live</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -46,6 +46,9 @@
       letter-spacing: 0.5px;
       color: #94a3b8;
       margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .sidebar h3 {
@@ -55,6 +58,15 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
+
+    .api-badge {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .api-badge.connected { background: #166534; color: #bbf7d0; }
+    .api-badge.disconnected { background: #991b1b; color: #fecaca; }
 
     .task-list {
       display: flex;
@@ -113,6 +125,20 @@
       color: #3b82f6;
     }
 
+    .refresh-btn {
+      width: 100%;
+      padding: 8px;
+      margin-top: 8px;
+      background: #334155;
+      border: none;
+      border-radius: 6px;
+      color: #e2e8f0;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .refresh-btn:hover { background: #475569; }
+
     .main-area {
       display: flex;
       flex-direction: column;
@@ -161,6 +187,13 @@
       font-size: 11px;
       color: #64748b;
       margin-top: 4px;
+      font-family: ui-monospace, monospace;
+    }
+
+    .agent-models {
+      font-size: 10px;
+      color: #475569;
+      margin-top: 2px;
     }
 
     .flow-arrow {
@@ -200,59 +233,96 @@
       right: 0;
       top: 14px;
       border-width: 9px 0 9px 12px;
-      border-color: transparent transparent transparent #f97316;
+      border-color: transparent transparent transparent #475569;
     }
 
     .arrow-head.left {
       left: 0;
       bottom: 14px;
       border-width: 9px 12px 9px 0;
-      border-color: transparent #3b82f6 transparent transparent;
+      border-color: transparent #475569 transparent transparent;
     }
 
     .arrow-label {
       position: absolute;
       font-size: 10px;
-      color: #94a3b8;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      color: #64748b;
+      white-space: nowrap;
     }
 
-    .arrow-label.top {
-      top: 4px;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-
-    .arrow-label.bottom {
-      bottom: 4px;
-      left: 50%;
-      transform: translateX(-50%);
-    }
+    .arrow-label.top { top: 0; left: 50%; transform: translateX(-50%); }
+    .arrow-label.bottom { bottom: 0; left: 50%; transform: translateX(-50%); }
 
     .broker-box {
       position: absolute;
-      bottom: 24px;
+      bottom: 30px;
       left: 50%;
       transform: translateX(-50%);
-      padding: 12px 20px;
-      background: #1e293b;
-      border: 1px solid #334155;
+      padding: 10px 20px;
+      background: #334155;
       border-radius: 8px;
       text-align: center;
     }
 
     .broker-name {
-      font-size: 12px;
-      font-weight: 600;
+      font-size: 13px;
+      font-weight: 500;
     }
 
     .broker-path {
       font-size: 10px;
       color: #64748b;
       font-family: ui-monospace, monospace;
-      margin-top: 2px;
     }
+
+    .prompt-area {
+      padding: 16px;
+      background: #1e293b;
+      border-top: 1px solid #334155;
+    }
+
+    .prompt-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .prompt-header h4 {
+      font-size: 12px;
+      color: #94a3b8;
+      text-transform: uppercase;
+    }
+
+    .copy-btn {
+      padding: 4px 12px;
+      font-size: 11px;
+      background: #3b82f6;
+      border: none;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .copy-btn:hover { background: #2563eb; }
+    .copy-btn.copied { background: #10b981; }
+
+    .prompt-code {
+      font-family: ui-monospace, monospace;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #94a3b8;
+      background: #0f172a;
+      padding: 12px;
+      border-radius: 6px;
+      white-space: pre-wrap;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .prompt-code .fn { color: #60a5fa; }
+    .prompt-code .key { color: #f97316; }
+    .prompt-code .str { color: #10b981; }
 
     .conversation-panel {
       background: #1e293b;
@@ -262,15 +332,12 @@
     }
 
     .conv-header {
-      padding: 16px 20px;
+      padding: 16px;
       border-bottom: 1px solid #334155;
     }
 
     .conv-header h3 {
-      font-size: 12px;
-      color: #94a3b8;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      font-size: 14px;
     }
 
     .conv-messages {
@@ -280,13 +347,10 @@
     }
 
     .message {
-      margin-bottom: 16px;
       display: flex;
       gap: 10px;
+      margin-bottom: 16px;
     }
-
-    .message.claude { flex-direction: row; }
-    .message.gemini { flex-direction: row-reverse; }
 
     .message-avatar {
       width: 32px;
@@ -295,63 +359,60 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
+      font-size: 16px;
       flex-shrink: 0;
     }
 
-    .message.claude .message-avatar {
-      background: #431407;
-      border: 2px solid #f97316;
-    }
-
-    .message.gemini .message-avatar {
-      background: #1e3a5f;
-      border: 2px solid #3b82f6;
-    }
+    .message.claude .message-avatar { background: #431407; }
+    .message.gemini .message-avatar { background: #1e3a5f; }
 
     .message-content {
-      max-width: 220px;
+      flex: 1;
+      min-width: 0;
     }
 
     .message-meta {
-      font-size: 10px;
+      font-size: 11px;
       color: #64748b;
       margin-bottom: 4px;
     }
 
-    .message.gemini .message-meta { text-align: right; }
-
     .message-bubble {
-      padding: 10px 14px;
-      border-radius: 12px;
+      background: #334155;
+      padding: 10px 12px;
+      border-radius: 8px;
       font-size: 13px;
-      line-height: 1.4;
-    }
-
-    .message.claude .message-bubble {
-      background: #431407;
-      border-bottom-left-radius: 4px;
-    }
-
-    .message.gemini .message-bubble {
-      background: #1e3a5f;
-      border-bottom-right-radius: 4px;
     }
 
     .message-type {
       display: inline-block;
-      font-size: 9px;
+      font-size: 10px;
       padding: 2px 6px;
-      border-radius: 4px;
+      border-radius: 3px;
       margin-bottom: 6px;
-      text-transform: uppercase;
     }
 
-    .message-type.query { background: #3b82f6; }
-    .message-type.response { background: #10b981; }
-    .message-type.request { background: #f59e0b; }
-    .message-type.handoff { background: #a855f7; }
-    .message-type.feedback { background: #f43f5e; }
+    .message-type.query { background: #3b82f6; color: white; }
+    .message-type.response { background: #10b981; color: white; }
+    .message-type.request { background: #f97316; color: white; }
+    .message-type.handoff { background: #a855f7; color: white; }
+    .message-type.feedback { background: #64748b; color: white; }
+
+    .model-badge {
+      display: inline-block;
+      font-size: 9px;
+      padding: 1px 5px;
+      border-radius: 3px;
+      background: #1e3a5f;
+      color: #93c5fd;
+      font-family: ui-monospace, monospace;
+      margin-left: 6px;
+    }
+
+    .model-badge.target {
+      background: #3f3f46;
+      color: #a1a1aa;
+    }
 
     .conv-input {
       padding: 16px;
@@ -365,7 +426,8 @@
     }
 
     .input-select {
-      padding: 8px 12px;
+      flex: 1;
+      padding: 8px;
       background: #0f172a;
       border: 1px solid #334155;
       border-radius: 6px;
@@ -381,8 +443,8 @@
       border-radius: 6px;
       color: #e2e8f0;
       font-size: 13px;
-      resize: vertical;
-      min-height: 60px;
+      resize: none;
+      height: 80px;
     }
 
     .input-textarea:focus, .input-select:focus {
@@ -393,89 +455,76 @@
     .send-btn {
       width: 100%;
       padding: 10px;
+      margin-top: 10px;
       background: #3b82f6;
       border: none;
       border-radius: 6px;
       color: white;
       font-size: 13px;
-      font-weight: 500;
       cursor: pointer;
-      margin-top: 8px;
     }
 
     .send-btn:hover { background: #2563eb; }
+    .send-btn:disabled { background: #475569; cursor: not-allowed; }
 
-    .prompt-area {
-      padding: 16px 20px;
-      background: #1e293b;
-      border-top: 1px solid #334155;
-    }
-
-    .prompt-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .prompt-header h4 {
-      font-size: 11px;
+    /* Loading state */
+    .loading {
+      text-align: center;
+      padding: 40px;
       color: #64748b;
-      text-transform: uppercase;
     }
 
-    .copy-btn {
-      padding: 4px 10px;
-      font-size: 11px;
-      background: #3b82f6;
-      border: none;
-      color: white;
-      border-radius: 4px;
-      cursor: pointer;
+    .loading-spinner {
+      width: 24px;
+      height: 24px;
+      border: 2px solid #334155;
+      border-top-color: #3b82f6;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 12px;
     }
 
-    .copy-btn:hover { background: #2563eb; }
-    .copy-btn.copied { background: #10b981; }
-
-    .prompt-code {
-      font-family: ui-monospace, monospace;
-      font-size: 11px;
-      background: #0f172a;
-      padding: 10px;
-      border-radius: 6px;
-      overflow-x: auto;
-      white-space: pre;
-      color: #94a3b8;
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
 
-    .prompt-code .fn { color: #fbbf24; }
-    .prompt-code .str { color: #86efac; }
-    .prompt-code .key { color: #7dd3fc; }
+    .empty-state {
+      text-align: center;
+      color: #64748b;
+      padding: 40px 20px;
+    }
+
+    /* Polling indicator */
+    .polling-indicator {
+      font-size: 10px;
+      color: #64748b;
+      margin-left: 8px;
+    }
+
+    .polling-indicator.active {
+      color: #10b981;
+    }
   </style>
 </head>
 <body>
   <a href="index.html" class="back-link">← Back to Playgrounds</a>
   <div class="container">
     <aside class="sidebar">
-      <h2>Message Broker</h2>
+      <h2>Tasks <span class="api-badge disconnected" id="api-badge">Offline</span></h2>
 
-      <h3>Active Tasks</h3>
-      <div class="task-list" id="task-list"></div>
-      <button class="new-task-btn" onclick="createTask()">+ New Task</button>
-
-      <h3>Message Types</h3>
-      <div style="font-size: 12px; color: #94a3b8; line-height: 1.6;">
-        <div><strong style="color: #3b82f6;">query</strong> - Ask a question</div>
-        <div><strong style="color: #10b981;">response</strong> - Answer a query</div>
-        <div><strong style="color: #f59e0b;">request</strong> - Request work</div>
-        <div><strong style="color: #a855f7;">handoff</strong> - Transfer task</div>
-        <div><strong style="color: #f43f5e;">feedback</strong> - Comment on work</div>
+      <div class="task-list" id="task-list">
+        <div class="loading">
+          <div class="loading-spinner"></div>
+          <div>Loading tasks...</div>
+        </div>
       </div>
 
+      <button class="new-task-btn" onclick="createTask()">+ New Task</button>
+      <button class="refresh-btn" onclick="loadTasks()">↻ Refresh</button>
+
       <h3>Quick Actions</h3>
-      <button class="new-task-btn" onclick="checkInbox()" style="border-style: solid; border-color: #475569;">
-        📥 Check Inbox
-      </button>
+      <button class="refresh-btn" onclick="checkInbox('claude')">Check Claude Inbox</button>
+      <button class="refresh-btn" onclick="checkInbox('gemini')" style="margin-top:4px">Check Gemini Inbox</button>
     </aside>
 
     <main class="main-area">
@@ -483,23 +532,25 @@
         <div class="agent-box claude">
           <div class="agent-icon">🧡</div>
           <div class="agent-name">Claude</div>
-          <div class="agent-status">Opus 4.5 • Main Agent</div>
+          <div class="agent-status">opus-4.5 / sonnet-4</div>
+          <div class="agent-models">CLI Agent • Headless</div>
         </div>
 
         <div class="flow-arrow">
-          <div class="arrow-line top" style="background: linear-gradient(90deg, #f97316, #475569);"></div>
+          <div class="arrow-line top"></div>
           <div class="arrow-head right"></div>
-          <span class="arrow-label top">send_message →</span>
+          <div class="arrow-label top">query / request / handoff</div>
 
-          <div class="arrow-line bottom" style="background: linear-gradient(90deg, #475569, #3b82f6);"></div>
+          <div class="arrow-line bottom"></div>
           <div class="arrow-head left"></div>
-          <span class="arrow-label bottom">← receive_messages</span>
+          <div class="arrow-label bottom">response / feedback</div>
         </div>
 
         <div class="agent-box gemini">
           <div class="agent-icon">💙</div>
           <div class="agent-name">Gemini</div>
-          <div class="agent-status">2.5 Pro • Validator</div>
+          <div class="agent-status">3-flash / 3-pro</div>
+          <div class="agent-models">Naturalness • Research</div>
         </div>
 
         <div class="broker-box">
@@ -519,14 +570,16 @@
 
     <aside class="conversation-panel">
       <div class="conv-header">
-        <h3>Conversation Thread</h3>
+        <h3>Conversation Thread <span class="polling-indicator" id="polling-indicator"></span></h3>
       </div>
 
-      <div class="conv-messages" id="messages"></div>
+      <div class="conv-messages" id="messages">
+        <div class="empty-state">Select a task to view messages</div>
+      </div>
 
       <div class="conv-input">
         <div class="input-row">
-          <select class="input-select" id="from-select">
+          <select class="input-select" id="from-select" onchange="updateModelSelect()">
             <option value="claude">From: Claude</option>
             <option value="gemini">From: Gemini</option>
           </select>
@@ -538,89 +591,289 @@
             <option value="feedback">feedback</option>
           </select>
         </div>
+        <div class="input-row">
+          <select class="input-select" id="from-model-select">
+            <option value="claude-opus-4-5-20251101">claude-opus-4.5</option>
+            <option value="claude-sonnet-4-20250514">claude-sonnet-4</option>
+            <option value="gemini-3-flash-preview">gemini-3-flash</option>
+            <option value="gemini-3-pro-preview">gemini-3-pro</option>
+          </select>
+          <select class="input-select" id="to-model-select">
+            <option value="">Target: Auto</option>
+            <option value="claude-opus-4-5-20251101">claude-opus-4.5</option>
+            <option value="claude-sonnet-4-20250514">claude-sonnet-4</option>
+            <option value="gemini-3-flash-preview">gemini-3-flash</option>
+            <option value="gemini-3-pro-preview">gemini-3-pro</option>
+          </select>
+        </div>
         <textarea class="input-textarea" id="message-input" placeholder="Type a message..."></textarea>
-        <button class="send-btn" onclick="sendMessage()">Send Message</button>
+        <button class="send-btn" onclick="sendMessage()" id="send-btn" disabled>Send Message</button>
       </div>
     </aside>
   </div>
 
   <script>
-    // ==================== SAMPLE DATA ====================
+    // ==================== CONFIG ====================
 
-    const sampleTasks = [
-      {
-        id: 'content-review-m15',
-        name: 'Review M15 Content',
-        status: 'active',
-        messages: [
-          { from: 'claude', type: 'request', content: 'Please review B1 M15 for Ukrainian naturalness. Focus on verb aspect usage and check for any Russianisms.', time: '10:32' },
-          { from: 'gemini', type: 'response', content: 'Reviewed M15. Found 3 issues:\n1. Line 45: "робити сенс" → "мати сенс"\n2. Line 89: aspect mismatch in conditional\n3. Line 112: unnatural word order', time: '10:35' },
-          { from: 'claude', type: 'feedback', content: 'Thanks! Fixed all three. Can you verify the fixes?', time: '10:38' }
-        ]
-      },
-      {
-        id: 'grammar-validation',
-        name: 'Validate Grammar Examples',
-        status: 'active',
-        messages: [
-          { from: 'claude', type: 'query', content: 'Is "Я ходив до магазину" or "Я йшов до магазину" correct for a single completed trip?', time: '09:15' },
-          { from: 'gemini', type: 'response', content: '"Я ходив до магазину" is correct for a completed round trip. "Йшов" would emphasize the process of going (one direction, incomplete).', time: '09:17' }
-        ]
-      },
-      {
-        id: 'activity-design',
-        name: 'Design Checkpoint Activities',
-        status: 'completed',
-        messages: [
-          { from: 'claude', type: 'handoff', content: 'Taking over checkpoint activity design. I\'ll create the quiz and matching exercises while you handle the fill-in activities.', time: 'Yesterday' },
-          { from: 'gemini', type: 'response', content: 'Acknowledged. I\'ll prepare 8 fill-in sentences testing aspect pairs.', time: 'Yesterday' }
-        ]
-      }
-    ];
+    const API_BASE = window.location.origin;
+    const POLL_INTERVAL = 5000; // 5 seconds
 
     // ==================== STATE ====================
 
     const state = {
-      tasks: sampleTasks,
-      selectedTask: sampleTasks[0],
-      newMessageFrom: 'claude',
-      newMessageType: 'query'
+      tasks: [],
+      selectedTask: null,
+      messages: [],
+      apiConnected: false,
+      pollTimer: null,
+      lastMessageId: 0
     };
+
+    // ==================== API FUNCTIONS ====================
+
+    async function fetchAPI(endpoint) {
+      const response = await fetch(`${API_BASE}${endpoint}`);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.json();
+    }
+
+    async function initAPI() {
+      const badge = document.getElementById('api-badge');
+
+      try {
+        // Test API connection
+        await fetchAPI('/api/config');
+        state.apiConnected = true;
+        badge.className = 'api-badge connected';
+        badge.textContent = 'Live';
+
+        // Load tasks
+        await loadTasks();
+
+        // Start polling if a task is selected
+        if (state.selectedTask) {
+          startPolling();
+        }
+
+      } catch (error) {
+        state.apiConnected = false;
+        badge.className = 'api-badge disconnected';
+        badge.textContent = 'Offline';
+
+        document.getElementById('task-list').innerHTML = `
+          <div class="empty-state">
+            API not available.<br><br>
+            Start the server:<br>
+            <code style="font-size:11px">npm run playground:serve</code>
+          </div>
+        `;
+      }
+    }
+
+    async function loadTasks() {
+      if (!state.apiConnected) return;
+
+      try {
+        const tasks = await fetchAPI('/api/messages/tasks');
+        state.tasks = tasks;
+        renderTasks();
+      } catch (error) {
+        console.error('Failed to load tasks:', error);
+      }
+    }
+
+    async function loadConversation(taskId) {
+      if (!state.apiConnected || !taskId) return;
+
+      try {
+        const messages = await fetchAPI(`/api/messages/conversation/${taskId}`);
+        state.messages = messages;
+
+        // Track last message ID for polling
+        if (messages.length > 0) {
+          state.lastMessageId = messages[messages.length - 1].id;
+        }
+
+        renderMessages();
+      } catch (error) {
+        console.error('Failed to load conversation:', error);
+      }
+    }
+
+    async function sendMessage() {
+      const content = document.getElementById('message-input').value.trim();
+      if (!content || !state.selectedTask) return;
+
+      const from = document.getElementById('from-select').value;
+      const type = document.getElementById('type-select').value;
+      const fromModel = document.getElementById('from-model-select').value;
+      const toModel = document.getElementById('to-model-select').value;
+      const to = from === 'claude' ? 'gemini' : 'claude';
+
+      // Build data with model info
+      const data = JSON.stringify({
+        from_model: fromModel,
+        to_model: toModel || undefined
+      });
+
+      try {
+        const response = await fetch(`${API_BASE}/api/messages/send`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            to,
+            from_llm: from,
+            content,
+            message_type: type,
+            task_id: state.selectedTask.task_id,
+            data
+          })
+        });
+
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+        document.getElementById('message-input').value = '';
+
+        // Reload conversation
+        await loadConversation(state.selectedTask.task_id);
+
+      } catch (error) {
+        alert('Failed to send message: ' + error.message);
+      }
+    }
+
+    function updateModelSelect() {
+      const from = document.getElementById('from-select').value;
+      const fromModelSelect = document.getElementById('from-model-select');
+
+      // Set default model based on agent
+      if (from === 'claude') {
+        fromModelSelect.value = 'claude-opus-4-5-20251101';
+      } else {
+        fromModelSelect.value = 'gemini-3-flash-preview';
+      }
+    }
+
+    async function checkInbox(agent) {
+      if (!state.apiConnected) {
+        alert(`In Claude Code, run:\n\nmcp__message-broker__check_inbox(for_llm="${agent}")`);
+        return;
+      }
+
+      try {
+        const messages = await fetchAPI(`/api/messages/inbox/${agent}?unread_only=true&limit=10`);
+        if (messages.length === 0) {
+          alert(`No unread messages for ${agent}`);
+        } else {
+          alert(`${messages.length} unread message(s) for ${agent}:\n\n` +
+            messages.map(m => `[${m.id}] ${m.from_llm}: ${m.content.substring(0, 50)}...`).join('\n'));
+        }
+      } catch (error) {
+        alert('Failed to check inbox: ' + error.message);
+      }
+    }
+
+    function startPolling() {
+      if (state.pollTimer) clearInterval(state.pollTimer);
+
+      const indicator = document.getElementById('polling-indicator');
+      indicator.textContent = '(polling)';
+      indicator.className = 'polling-indicator active';
+
+      state.pollTimer = setInterval(async () => {
+        if (!state.selectedTask) return;
+
+        try {
+          const messages = await fetchAPI(`/api/messages/conversation/${state.selectedTask.task_id}`);
+
+          // Check if there are new messages
+          if (messages.length > state.messages.length) {
+            state.messages = messages;
+            state.lastMessageId = messages[messages.length - 1].id;
+            renderMessages();
+
+            // Flash indicator
+            indicator.textContent = '(new!)';
+            setTimeout(() => {
+              indicator.textContent = '(polling)';
+            }, 2000);
+          }
+        } catch (error) {
+          console.error('Polling error:', error);
+        }
+      }, POLL_INTERVAL);
+    }
+
+    function stopPolling() {
+      if (state.pollTimer) {
+        clearInterval(state.pollTimer);
+        state.pollTimer = null;
+      }
+      document.getElementById('polling-indicator').textContent = '';
+    }
 
     // ==================== RENDERING ====================
 
     function renderTasks() {
       const container = document.getElementById('task-list');
+
+      if (state.tasks.length === 0) {
+        container.innerHTML = '<div class="empty-state">No tasks yet.<br>Create one to start chatting!</div>';
+        return;
+      }
+
       container.innerHTML = state.tasks.map(task => `
-        <div class="task-item ${state.selectedTask?.id === task.id ? 'active' : ''}"
-             onclick="selectTask('${task.id}')">
-          <div class="task-id">${task.id}</div>
-          <div class="task-name">${task.name}</div>
-          <div class="task-meta">${task.messages.length} messages • ${task.status}</div>
+        <div class="task-item ${state.selectedTask?.task_id === task.task_id ? 'active' : ''}"
+             onclick="selectTask('${task.task_id}')">
+          <div class="task-id">${task.task_id}</div>
+          <div class="task-name">${formatTaskName(task.task_id)}</div>
+          <div class="task-meta">${task.message_count} messages</div>
         </div>
       `).join('');
+    }
+
+    function formatTaskName(taskId) {
+      return taskId.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
     }
 
     function renderMessages() {
       const container = document.getElementById('messages');
 
-      if (!state.selectedTask) {
-        container.innerHTML = '<div style="text-align: center; color: #64748b; padding: 40px;">Select a task to view messages</div>';
+      if (state.messages.length === 0) {
+        container.innerHTML = '<div class="empty-state">No messages in this task yet</div>';
         return;
       }
 
-      container.innerHTML = state.selectedTask.messages.map(msg => `
-        <div class="message ${msg.from}">
-          <div class="message-avatar">${msg.from === 'claude' ? '🧡' : '💙'}</div>
+      container.innerHTML = state.messages.map(msg => {
+        // Parse model info from data field
+        let fromModel = '';
+        let toModel = '';
+        if (msg.data) {
+          try {
+            const data = typeof msg.data === 'string' ? JSON.parse(msg.data) : msg.data;
+            fromModel = data.from_model || '';
+            toModel = data.to_model || '';
+          } catch (e) {}
+        }
+
+        const modelInfo = fromModel ? `<span class="model-badge">${fromModel}</span>` : '';
+        const toModelInfo = toModel ? ` → <span class="model-badge target">${toModel}</span>` : '';
+
+        return `
+        <div class="message ${msg.from_llm}">
+          <div class="message-avatar">${msg.from_llm === 'claude' ? '🧡' : '💙'}</div>
           <div class="message-content">
-            <div class="message-meta">${msg.from} • ${msg.time}</div>
+            <div class="message-meta">
+              ${msg.from_llm} → ${msg.to_llm} • ${formatTime(msg.timestamp)}
+              ${modelInfo}${toModelInfo}
+            </div>
             <div class="message-bubble">
-              <span class="message-type ${msg.type}">${msg.type}</span>
-              <div>${msg.content.replace(/\n/g, '<br>')}</div>
+              <span class="message-type ${msg.message_type}">${msg.message_type}</span>
+              <div>${escapeHtml(msg.content).replace(/\n/g, '<br>')}</div>
             </div>
           </div>
         </div>
-      `).join('');
+      `}).join('');
 
       container.scrollTop = container.scrollHeight;
     }
@@ -629,84 +882,68 @@
       const container = document.getElementById('prompt-output');
 
       if (!state.selectedTask) {
-        container.innerHTML = '# Select a task to see code examples';
+        container.innerHTML = '<span class="fn"># Select a task to see code examples</span>';
         return;
       }
 
-      const task = state.selectedTask;
-      const lastMsg = task.messages[task.messages.length - 1];
+      const taskId = state.selectedTask.task_id;
 
-      let code = `<span class="fn"># Send a message to Gemini</span>
+      container.innerHTML = `<span class="fn"># Send a message to Gemini (with model tracking)</span>
 <span class="fn">mcp__message-broker__send_message</span>(
   <span class="key">to</span>=<span class="str">"gemini"</span>,
   <span class="key">from_llm</span>=<span class="str">"claude"</span>,
+  <span class="key">from_model</span>=<span class="str">"claude-opus-4-5-20251101"</span>,
+  <span class="key">to_model</span>=<span class="str">"gemini-3-flash-preview"</span>,
   <span class="key">content</span>=<span class="str">"Your message here"</span>,
   <span class="key">message_type</span>=<span class="str">"query"</span>,
-  <span class="key">task_id</span>=<span class="str">"${task.id}"</span>
+  <span class="key">task_id</span>=<span class="str">"${taskId}"</span>
 )
 
-<span class="fn"># Or use the bridge script (auto-invokes Gemini)</span>
-Bash('<span class="str">.venv/bin/python scripts/gemini_bridge.py ask-gemini "Your message" --task-id ${task.id}</span>')
+<span class="fn"># Bridge script (auto-invokes Gemini with model tracking)</span>
+Bash('<span class="str">.venv/bin/python scripts/gemini_bridge.py ask-gemini "Your message" --task-id ${taskId} --from-model claude-opus-4-5-20251101</span>')
+
+<span class="fn"># Ask Claude headless (with model tracking)</span>
+Bash('<span class="str">.venv/bin/python scripts/gemini_bridge.py ask-claude "Your message" --task-id ${taskId} --from claude --from-model claude-opus-4-5-20251101 --to-model claude-sonnet-4</span>')
 
 <span class="fn"># Check for responses</span>
 <span class="fn">mcp__message-broker__receive_messages</span>(
   <span class="key">for_llm</span>=<span class="str">"claude"</span>,
-  <span class="key">task_id</span>=<span class="str">"${task.id}"</span>,
+  <span class="key">task_id</span>=<span class="str">"${taskId}"</span>,
   <span class="key">unread_only</span>=<span class="str">True</span>
 )`;
-
-      container.innerHTML = code;
     }
 
-    function updateAll() {
-      renderTasks();
-      renderMessages();
-      renderPrompt();
+    function formatTime(timestamp) {
+      const date = new Date(timestamp);
+      return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
     }
 
     // ==================== INTERACTIONS ====================
 
-    function selectTask(id) {
-      state.selectedTask = state.tasks.find(t => t.id === id);
-      updateAll();
+    function selectTask(taskId) {
+      state.selectedTask = state.tasks.find(t => t.task_id === taskId) || { task_id: taskId };
+      document.getElementById('send-btn').disabled = false;
+
+      renderTasks();
+      loadConversation(taskId);
+      renderPrompt();
+      startPolling();
     }
 
     function createTask() {
-      const id = `task-${Date.now()}`;
-      const task = {
-        id: id,
-        name: 'New Task',
-        status: 'active',
-        messages: []
-      };
-      state.tasks.unshift(task);
-      state.selectedTask = task;
-      updateAll();
-    }
+      const taskId = prompt('Enter task ID (e.g., "content-review-m15"):');
+      if (!taskId) return;
 
-    function sendMessage() {
-      if (!state.selectedTask) return;
-
-      const input = document.getElementById('message-input');
-      const content = input.value.trim();
-      if (!content) return;
-
-      const from = document.getElementById('from-select').value;
-      const type = document.getElementById('type-select').value;
-
-      state.selectedTask.messages.push({
-        from: from,
-        type: type,
-        content: content,
-        time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
-      });
-
-      input.value = '';
-      updateAll();
-    }
-
-    function checkInbox() {
-      alert('In Claude Code, run:\n\nmcp__message-broker__check_inbox(for_llm="claude")');
+      // Add to local state and select
+      const newTask = { task_id: taskId, message_count: 0 };
+      state.tasks.unshift(newTask);
+      selectTask(taskId);
     }
 
     function copyPrompt() {
@@ -724,7 +961,7 @@ Bash('<span class="str">.venv/bin/python scripts/gemini_bridge.py ask-gemini "Yo
 
     // ==================== INIT ====================
 
-    updateAll();
+    initAPI();
   </script>
 </body>
 </html>

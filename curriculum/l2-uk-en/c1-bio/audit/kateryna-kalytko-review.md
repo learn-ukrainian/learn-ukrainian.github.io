@@ -1,8 +1,8 @@
-# Audit Report: M130 — kateryna-kalytko.md
-**Level:** C1 | **Module:** M130 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M146 — kateryna-kalytko.md
+**Level:** C1-BIO | **Module:** M146 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:30:00
+**Generated:** 2026-02-04 11:42:33
 
 ## Configuration
 **Type:** C1-biography

@@ -1,10 +1,10 @@
-module: c1-bio-007
+module: c1-bio-009
 level: C1-BIO
 slug: mykhailo-chernihivskyi
 version: '2.0'
-id: c1-bio-007
+id: c1-bio-009
 naturalness:
-  score: 9
+  score: 10
   status: PASS
 duration: 120
 transliteration: none
@@ -12,8 +12,42 @@ tags:
 - history
 - biography
 - middle-ages
-- kyivan-rus
-- resistance
-- church
+- religion
+- martyrdom
+content_outline:
+- section: Вступ — Вибір між життям і вірою
+  words: 400
+  points:
+  - Трагічна доля
+  - Символ опору
+- section: 'Життєпис: Князь у часи випробувань'
+  words: 1300
+  points:
+  - Князювання в Чернігові
+  - Монгольська навала
+  - Втеча та пошук союзників
+- section: 'Внесок: Подорож до Орди як духовний подвиг'
+  words: 800
+  points:
+  - Рішення їхати до Батия
+  - Відмова від язичницьких ритуалів
+  - Політичний та духовний вимір вчинку
+- section: 'Останні роки: Мученицька смерть'
+  words: 700
+  points:
+  - Страта в Орді
+  - Боярин Федір
+  - Реакція сучасників
+- section: 'Спадщина: Святий Михайло'
+  words: 500
+  points:
+  - Канонізація
+  - Вшанування пам'яті
+  - Значення для церкви
+- section: 'Підсумок — Віра вища за життя'
+  words: 300
+  points:
+  - Уроки життя
+  - Сучасне значення
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-01'

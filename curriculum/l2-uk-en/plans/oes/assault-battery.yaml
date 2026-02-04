@@ -1,0 +1,38 @@
+# Module Plan: Assault & Battery
+# Track: OES
+# Module: 043
+# Source: Gemini Research (ISSUE-490)
+# Generated: 2026-02-04
+
+module_number: 43
+slug: assault-battery
+title_uk: "Побої та образи"
+title_en: "Assault & Battery"
+
+phase: 2
+phase_id: literary-tradition
+phase_name: "Literary Tradition"
+
+focus: "Instrumental Case review"
+
+word_target: 3500
+
+# Content outline to be expanded during content generation
+content_outline:
+  - section: "Вступ"
+    description: "Introduction to Assault & Battery"
+  - section: "Основний матеріал"
+    description: "Primary source analysis and grammar focus"
+  - section: "Практика"
+    description: "Exercises and activities"
+  - section: "Підсумок"
+    description: "Summary and connection to next module"
+
+# Vocabulary hints (to be populated during content generation)
+vocabulary_hints: []
+
+# Activity types appropriate for this module
+activity_types:
+  - transcription
+  - etymology-trace
+  - grammar-identify

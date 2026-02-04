@@ -1,8 +1,8 @@
 # Audit Report: M76 — habsburzka-halichyna.md
-**Level:** B2 | **Module:** M76 | **Phase:** HIST.8 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M76 | **Phase:** HIST.8 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:29
+**Generated:** 2026-02-03 22:54:44
 
 ## Configuration
 **Type:** B2-history
@@ -39,7 +39,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4470/4000 (raw: 4564)
+- **Words:** ✅ 4470/4000 (raw: 4572)
 - **Activities:** ✅ 10/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/2 types
@@ -51,7 +51,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⚠️ Too many activities: 10 (target 3-9)
-- **Immersion:** 🇺🇦 99.9% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.7% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -77,7 +77,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 145 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Габсбурзька Галичина** | ⚪️ | 145 | Skipped |
 | **Вступ: Дві долі українського народу** | ✅ | 414 | Included in Core |
 | **Читання** | ✅ | 95 | Included in Core |
 | **Початок австрійського правління (1772-1848)** | ⚪️ | 943 | Skipped |

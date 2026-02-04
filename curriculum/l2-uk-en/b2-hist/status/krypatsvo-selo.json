@@ -2,10 +2,10 @@
   "module": "krypatsvo-selo",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:54:31.670526Z",
+  "last_audit": "2026-02-03T22:54:45.848801Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-28T00:46:14.804091Z",
+    "md": "2026-02-02T10:58:16.353123Z",
     "meta": "2026-01-29T07:38:18.667086Z",
     "activities": "2026-01-28T00:44:06.154752Z",
     "vocabulary": "2026-01-25T23:39:34.036516Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4367/4000 (raw: 4492)"
+      "message": "4367/4000 (raw: 4500)"
     },
     "activities": {
       "status": "pass",

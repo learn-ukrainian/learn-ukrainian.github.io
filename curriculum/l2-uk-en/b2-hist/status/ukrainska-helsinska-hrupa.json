@@ -2,11 +2,11 @@
   "module": "ukrainska-helsinska-hrupa",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:54:52.908604Z",
+  "last_audit": "2026-02-03T22:55:07.202756Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-31T15:37:46.919657Z",
-    "meta": "2026-01-30T23:38:47.075680Z",
+    "md": "2026-02-03T17:42:10.470806Z",
+    "meta": "2026-02-03T17:41:40.436335Z",
     "activities": "2026-01-30T23:13:36.274706Z",
     "vocabulary": "2026-01-31T15:54:50.011384Z",
     "plan": null
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4293/4000 (raw: 4366)"
+      "message": "4680/4000 (raw: 4766)"
     },
     "activities": {
       "status": "pass",

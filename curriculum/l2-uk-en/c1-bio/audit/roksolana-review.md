@@ -1,8 +1,8 @@
-# Audit Report: M12 — roksolana.md
-**Level:** C1 | **Module:** M12 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
-**Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:07
+# Audit Report: M14 — roksolana.md
+**Level:** C1-BIO | **Module:** M14 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-04 11:41:23
 
 ## Configuration
 **Type:** C1-biography
@@ -36,33 +36,23 @@
 - Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (80% overlap): "Безумовно, вона стала частиною османської еліти і жила інтересами імперії.". Shares significant keywords with sentence at index 208.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-
-## Recommendation
-**📝 UPDATE** (severity 25/100)
-
-- 1 violations (minor)
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
-
 ## Gates
-- **Words:** ✅ 4037/4000 (raw: 4137)
+- **Words:** ✅ 4208/4000 (raw: 4283)
 - **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 9/5
+- **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 24 (soft target)
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Vocab:** ✅ 24/24
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (8 activities)
 - **Immersion:** 🇺🇦 99.5% (target 95-100% (biography))
 - **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 10/10 (High)
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
@@ -78,19 +68,19 @@
 | visual | 9 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.99 | - | 99% | 5% | 4.7% |
+| variety | 0.97 | - | 97% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 8 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **100.0%** |
+| questions | 6 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 95 | Included in Core |
-| **Вступ — Велична жінка Османської імперії** | ✅ | 453 | Included in Core |
-| **Життєпис** | ⚪️ | 925 | Skipped |
-| **Внесок** | ⚪️ | 789 | Skipped |
-| **Останні роки** | ⚪️ | 381 | Skipped |
-| **Спадщина** | ⚪️ | 1109 | Skipped |
-| **Підсумок** | ✅ | 186 | Included in Core |
+| **Вступ — Велична жінка Османської імперії** | ✅ | 435 | Included in Core |
+| **Життєпис** | ⚪️ | 782 | Skipped |
+| **Внесок** | ⚪️ | 802 | Skipped |
+| **Останні роки** | ⚪️ | 490 | Skipped |
+| **Спадщина** | ⚪️ | 1076 | Skipped |
+| **Підсумок — Жінка, що змінила імперію** | ✅ | 429 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 99 | Skipped |

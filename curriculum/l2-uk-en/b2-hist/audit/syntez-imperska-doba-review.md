@@ -1,8 +1,8 @@
 # Audit Report: M86 — syntez-imperska-doba.md
-**Level:** B2 | **Module:** M86 | **Phase:** HIST.8 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M86 | **Phase:** HIST.8 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:35
+**Generated:** 2026-02-03 22:54:49
 
 ## Configuration
 **Type:** B2-history
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4231/4000 (raw: 4389)
+- **Words:** ✅ 4231/4000 (raw: 4397)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -47,7 +47,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
-- **Immersion:** 🇺🇦 99.5% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.2% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -73,7 +73,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 103 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Синтез: Імперська доба (XIX ст.)** | ⚪️ | 103 | Skipped |
 | **Вступ: Дві імперії** | ✅ | 623 | Included in Core |
 | **Механізми панування** | ⚪️ | 731 | Skipped |
 | **Форми спротиву** | ⚪️ | 829 | Skipped |

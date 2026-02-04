@@ -1,28 +1,68 @@
-module: b2-hist-080
+module: b2-hist-80
 level: B2-HIST
 slug: kyrylo-mefodiivtsi
 version: '2.0'
-id: b2-hist-080
-naturalness:
-  score: 10
-  status: PASS
-  justification: Академічний український для інтелектуальної історії
-duration: 120
+id: b2-hist-80
+title: Кирило-Мефодіївське братство
+subtitle: The Cyril and Methodius Brotherhood
+phase: HIST.8
+duration: 150
 transliteration: none
 word_target: 4000
+tags:
+- history
+- 19th-century
+- brotherhood
+- identity
+vocabulary_count: 25
+content_outline:
+- section: 'Вступ: Таємне товариство'
+  words: 630
+- section: Засновники та учасники
+  words: 650
+- section: Ідеологія та програма
+  words: 680
+- section: Первинні джерела
+  words: 400
+- section: Деколонізаційний погляд
+  words: 500
+- section: 'Підсумок: Розгром та спадщина'
+  words: 330
+objectives:
+- Учень може описати цілі та програму Кирило-Мефодіївського братства
+- Учень може пояснити роль Шевченка, Костомарова та Куліша
+- Учень може проаналізувати «Книги буття українського народу»
+- Учень може оцінити значення братства для національного руху
+grammar:
+- Минулий час в історичному наративі
+- Політична та філософська лексика
+- Непряма мова для передачі ідей
+vocabulary_hints:
+  required:
+  - братство
+  - таємне товариство
+  - ідеологія
+  - панславізм
+  - федерація
+  - просвітництво
+  - арешт
+  - заслання
+  recommended:
+  - маніфест
+  - рівність
+  - свобода
+  - донос
+  - репресії
+  - пророк
 activity_hints:
 - type: reading
+  focus: Фрагменти «Книг буття українського народу»
 - type: critical-analysis
-- type: comparative-study
+  focus: 'Спростування міфів: Міфи про братство'
 - type: essay-response
-- type: true-false
+  focus: Чому імперія так жорстоко покарала мирних просвітників?
+naturalness:
+  score: 9
+  status: PASS
 build:
-  last_modified: '2026-01-27'
-phase: HIST.8 [Imperial Era]
-content_outline:
-  'Вступ: Таємне товариство': 400
-  Засновники та учасники: 800
-  Ідеологія та програма: 1000
-  Первинні джерела: 800
-  Деколонізаційний погляд: 500
-  'Підсумок: Розгром та спадщина': 500
+  last_modified: '2026-02-03'

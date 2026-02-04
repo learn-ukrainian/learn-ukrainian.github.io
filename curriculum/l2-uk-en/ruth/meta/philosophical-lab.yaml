@@ -1,0 +1,35 @@
+# Module Meta: Philosophical Lab
+# Track: RUTH
+# Module: 099
+# Generated: 2026-02-04
+
+module_number: 99
+slug: philosophical-lab
+title: "Філософська лабораторія"
+title_en: "Philosophical Lab"
+
+type: lab
+phase: 4
+phase_id: cossack-word
+
+# Pedagogy
+pedagogy: theory-first
+duration_minutes: 60
+word_target: 2500
+immersion_level: 100
+
+# Focus
+grammar_focus: "Analyzing a Socratic dialogue"
+vocabulary_focus: []
+cultural_focus: []
+
+# Activity hints (minimum counts)
+activity_hints:
+  - type: grammar-lab
+    min_items: 3
+  - type: transcription
+    min_items: 2
+
+# Prerequisites
+prerequisites:
+  - module: 98

@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: franko-lesia-hrinchenko, shevchenko, hromady, kyrylo-mefodiivtsi
+-->
+
 # Михайло Драгоманов: Архітектор Європейської України
 
 > **Чому це важливо?**

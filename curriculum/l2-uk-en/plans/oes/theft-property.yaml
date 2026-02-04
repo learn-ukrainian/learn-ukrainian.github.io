@@ -1,0 +1,38 @@
+# Module Plan: Theft (Property)
+# Track: OES
+# Module: 046
+# Source: Gemini Research (ISSUE-490)
+# Generated: 2026-02-04
+
+module_number: 46
+slug: theft-property
+title_uk: "Крадіжка (власність)"
+title_en: "Theft (Property)"
+
+phase: 2
+phase_id: literary-tradition
+phase_name: "Literary Tradition"
+
+focus: "Accusative Plural"
+
+word_target: 3500
+
+# Content outline to be expanded during content generation
+content_outline:
+  - section: "Вступ"
+    description: "Introduction to Theft (Property)"
+  - section: "Основний матеріал"
+    description: "Primary source analysis and grammar focus"
+  - section: "Практика"
+    description: "Exercises and activities"
+  - section: "Підсумок"
+    description: "Summary and connection to next module"
+
+# Vocabulary hints (to be populated during content generation)
+vocabulary_hints: []
+
+# Activity types appropriate for this module
+activity_types:
+  - transcription
+  - etymology-trace
+  - grammar-identify

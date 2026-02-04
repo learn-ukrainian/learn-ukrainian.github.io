@@ -1,8 +1,8 @@
 # Audit Report: M69 — pavlo-polubotok.md
-**Level:** B2 | **Module:** M69 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M69 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:25
+**Generated:** 2026-02-03 22:54:39
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4091/4000 (raw: 4139)
+- **Words:** ✅ 4091/4000 (raw: 4147)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.9% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.5% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -72,7 +72,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 72 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Павло Полуботок: Останній наказний** | ⚪️ | 72 | Skipped |
 | **Вступ: Тінь великого Петра** | ✅ | 327 | Included in Core |
 | **Читання: Конфлікт із Вельяміновим** | ✅ | 665 | Included in Core |
 | **Первинні джерела: Промова перед Петром** | ✅ | 462 | Included in Core |

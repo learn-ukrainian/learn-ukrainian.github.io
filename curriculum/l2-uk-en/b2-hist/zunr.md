@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: unr, dyrektoriia, sichovi-striltsi, habsburzka-halichyna
+-->
+
 # ЗУНР та Акт Злуки: Шлях до Соборності
 
 > 🎯 **Чому це важливо?**

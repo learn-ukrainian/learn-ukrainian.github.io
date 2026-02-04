@@ -1,8 +1,8 @@
-# Audit Report: M20 — bohdan-khmelnytskyy.md
-**Level:** C1 | **Module:** M20 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
+# Audit Report: M22 — bohdan-khmelnytskyy.md
+**Level:** C1-BIO | **Module:** M22 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:12
+**Generated:** 2026-02-04 11:41:27
 
 ## Configuration
 **Type:** C1-biography
@@ -56,7 +56,7 @@
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 14/5
+- **Engagement:** ✅ 19/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 24/24
 - **Structure:** ✅ Valid Structure

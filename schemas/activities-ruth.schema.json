@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://learn-ukrainian.github.io/schemas/activities-ruth.schema.json",
+  "title": "RUTH Track Module Activities (Ruthenian / Middle Ukrainian)",
+  "description": "Activity schema for RUTH track modules (XIV-XVIII century). Uses SEMINAR pedagogy. Required: reading + essay-response.",
+  "type": "array",
+  "minItems": 3,
+  "items": {
+    "oneOf": [
+      { "$ref": "activities-base.schema.json#/definitions/reading" },
+      { "$ref": "activities-base.schema.json#/definitions/essay-response" },
+      { "$ref": "activities-base.schema.json#/definitions/critical-analysis" },
+      { "$ref": "activities-base.schema.json#/definitions/comparative-study" },
+      { "$ref": "activities-base.schema.json#/definitions/authorial-intent" },
+      { "$ref": "activities-base.schema.json#/definitions/etymology-trace" },
+      { "$ref": "activities-base.schema.json#/definitions/transcription" },
+      { "$ref": "activities-base.schema.json#/definitions/grammar-identify" },
+      { "$ref": "activities-base.schema.json#/definitions/paleography-analysis" },
+      { "$ref": "activities-base.schema.json#/definitions/dialect-comparison" },
+      { "$ref": "activities-base.schema.json#/definitions/translation-critique" }
+    ]
+  }
+}

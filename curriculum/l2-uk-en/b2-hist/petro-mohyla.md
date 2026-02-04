@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: beresteyska-uniia, bratstva-i-osvita, kyievo-mohylianska-akademiia, pravoslavna-tserkva-17
+-->
+
 # Петро Могила: Реформатор церкви
 
 > [!history-bite]

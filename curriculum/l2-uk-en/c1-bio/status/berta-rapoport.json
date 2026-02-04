@@ -2,11 +2,11 @@
   "module": "berta-rapoport",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T23:29:44.148834Z",
+  "last_audit": "2026-02-04T11:42:10.866976Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.348135Z",
-    "meta": "2026-01-29T07:39:04.936657Z",
+    "meta": "2026-02-02T23:23:00.251828Z",
     "activities": "2026-01-27T15:34:55.344542Z",
     "vocabulary": null,
     "plan": null

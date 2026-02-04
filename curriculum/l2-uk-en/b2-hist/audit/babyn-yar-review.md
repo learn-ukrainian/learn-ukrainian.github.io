@@ -1,8 +1,8 @@
 # Audit Report: M106 — babyn-yar.md
-**Level:** B2 | **Module:** M106 | **Phase:** HIST.10 | **Pedagogy:** seminar | **Target:** 4000
+**Level:** B2-HIST | **Module:** M106 | **Phase:** HIST.10 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:47
+**Generated:** 2026-02-03 22:55:01
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4370/4000 (raw: 4425)
+- **Words:** ✅ 4370/4000 (raw: 4433)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.6% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.3% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -73,6 +73,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Бабин Яр та Голокост в Україні** | ⚪️ | 0 | Skipped |
 | **Вступ: Україна напередодні трагедії** | ✅ | 678 | Included in Core |
 | **Бабин Яр: 29-30 вересня 1941** | ⚪️ | 1030 | Skipped |
 | **Долі киян та реакція світу** | ⚪️ | 157 | Skipped |

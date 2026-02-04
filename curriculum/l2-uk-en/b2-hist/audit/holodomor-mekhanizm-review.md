@@ -1,8 +1,8 @@
 # Audit Report: M101 — holodomor-mekhanizm.md
-**Level:** B2 | **Module:** M101 | **Phase:** HIST.10 | **Pedagogy:** seminar | **Target:** 4000
+**Level:** B2-HIST | **Module:** M101 | **Phase:** HIST.10 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:44
+**Generated:** 2026-02-03 22:54:58
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4602/4000 (raw: 4651)
+- **Words:** ✅ 4602/4000 (raw: 4659)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.9% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.6% (target 90-100% (history))
 - **Richness:** ✅ 98% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -72,7 +72,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 114 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Голодомор I: Механізм** | ⚪️ | 114 | Skipped |
 | **Вступ** | ✅ | 380 | Included in Core |
 | **Читання** | ✅ | 657 | Included in Core |
 | **Колективізація та опір селянства** | ⚪️ | 543 | Skipped |

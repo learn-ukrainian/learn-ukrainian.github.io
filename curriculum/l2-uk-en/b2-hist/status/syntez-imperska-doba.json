@@ -2,10 +2,10 @@
   "module": "syntez-imperska-doba",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:54:35.772208Z",
+  "last_audit": "2026-02-03T22:54:49.866179Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T23:37:25.657155Z",
+    "md": "2026-02-02T11:02:00.890054Z",
     "meta": "2026-01-29T07:38:18.675495Z",
     "activities": "2026-01-27T23:35:33.998710Z",
     "vocabulary": "2026-01-27T23:18:03.733618Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4231/4000 (raw: 4389)"
+      "message": "4231/4000 (raw: 4397)"
     },
     "activities": {
       "status": "pass",

@@ -2,10 +2,10 @@
   "module": "olha-sviatoslav",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-01T14:53:51.159352Z",
+  "last_audit": "2026-02-03T22:54:05.340417Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-30T10:27:49.593058Z",
+    "md": "2026-02-02T10:56:26.045707Z",
     "meta": "2026-01-29T07:38:18.609236Z",
     "activities": "2026-01-27T15:34:54.370413Z",
     "vocabulary": "2026-01-27T15:50:12.481571Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4493/4000 (raw: 4682)"
+      "message": "4493/4000 (raw: 4690)"
     },
     "activities": {
       "status": "pass",

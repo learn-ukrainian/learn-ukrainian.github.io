@@ -1,4 +1,4 @@
-module: kniaz-yaroslav-mudryi
+module: c1-bio-004
 level: C1-BIO
 sequence: 4
 slug: kniaz-yaroslav-mudryi
@@ -11,6 +11,10 @@ content_outline:
   - Ярослав як законодавець і культуртрегер
   - Порівняння з європейськими монархами
   - Значення його правління для Русі
+- section: Життєпис
+  words: 100
+  points:
+  - Основні етапи життя князя
 - section: Шлях до влади
   words: 600
   points:
@@ -32,45 +36,29 @@ content_outline:
   - Золоті ворота
   - Заснування бібліотеки та скрипторію
   - Переклади та освіта
-- section: Династична дипломатія
+- section: 'Останні роки: Династична дипломатія'
   words: 700
   points:
   - Шлюби дітей з європейськими монархами
   - Анна — королева Франції
   - Міжнародний престиж Києва
   - Русь як частина європейської спільноти
-- section: Останні роки та спадщина
-  words: 500
+- section: Внесок у розбудову держави
+  words: 400
+  points:
+  - Формування правового поля
+  - Архітектурний канон Києва
+- section: Спадщина та канонізація
+  words: 400
   points:
   - Завіт синам
   - Смерть та поховання
-  - Проблема "кісток Ярослава"
   - Образ у пізнішій культурі
-- section: Підсумок — Мудрий правитель
-  words: 300
+- section: Підсумок
+  words: 100
   points:
-  - Чому "Мудрий"?
-  - Порівняння з Карлом Великим
-  - Спадщина для України
-word_target: 4000
+  - Квінтесенція правління Ярослава Мудрого
 vocabulary_hints:
-  required:
-  - законодавець (lawgiver)
-  - правда (law code/justice)
-  - віра (wergeld/fine for murder)
-  - скрипторій (scriptorium)
-  - митрополія (metropolitanate)
-  - усобиця (internecine strife)
-  - собор (cathedral)
-  - грамота (literacy/charter)
-  - династія (dynasty)
-  - завіт (testament)
-  recommended:
-  - мозаїка (mosaic)
-  - фреска (fresco)
-  - посадник (governor)
-  - віче (assembly)
-  - престол (throne)
 activity_hints:
 - type: reading
   focus: Excerpts from Ruska Pravda

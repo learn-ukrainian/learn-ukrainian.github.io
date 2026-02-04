@@ -1,8 +1,8 @@
 # Audit Report: M79 — krypatsvo-selo.md
-**Level:** B2 | **Module:** M79 | **Phase:** HIST.8 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M79 | **Phase:** HIST.8 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:31
+**Generated:** 2026-02-03 22:54:45
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4367/4000 (raw: 4492)
+- **Words:** ✅ 4367/4000 (raw: 4500)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.9% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.6% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -72,7 +72,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 113 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Кріпацтво на Півдні: Село та імперська експлуатація в українському степу** | ⚪️ | 113 | Skipped |
 | **Вступ: Рабство під іншою назвою** | ✅ | 523 | Included in Core |
 | **Запровадження кріпацтва** | ⚪️ | 778 | Skipped |
 | **Життя кріпаків** | ⚪️ | 952 | Skipped |

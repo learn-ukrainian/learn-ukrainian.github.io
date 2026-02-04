@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: rukh, chornobyl, nezalezhnist-1991, perestroika-ukraina
+-->
+
 # Шлях до незалежності
 
 > 🎯 **Чому це важливо?**

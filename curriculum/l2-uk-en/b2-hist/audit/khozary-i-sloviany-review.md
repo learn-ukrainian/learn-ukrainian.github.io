@@ -1,8 +1,8 @@
 # Audit Report: M07 — khozary-i-sloviany.md
-**Level:** B2 | **Module:** M07 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
+**Level:** B2-HIST | **Module:** M07 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:53:49
+**Generated:** 2026-02-03 22:54:03
 
 ## Configuration
 **Type:** B2-history
@@ -40,7 +40,7 @@
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 9/5
+- **Engagement:** ✅ 11/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 16 < 20 (soft target)
 - **Structure:** ✅ Valid Structure

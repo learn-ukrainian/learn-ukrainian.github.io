@@ -1,8 +1,8 @@
 # Audit Report: M12 — yaroslav-wise.md
-**Level:** B2 | **Module:** M12 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M12 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:53:52
+**Generated:** 2026-02-03 22:54:06
 
 ## Configuration
 **Type:** B2-history

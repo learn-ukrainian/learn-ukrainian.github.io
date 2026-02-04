@@ -1,8 +1,8 @@
-module: c1-bio-020
+module: c1-bio-022
 level: C1-BIO
 slug: bohdan-khmelnytskyy
 version: '2.0'
-id: c1-bio-020
+id: c1-bio-022
 naturalness:
   score: 9
   status: PASS

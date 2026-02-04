@@ -1,8 +1,8 @@
-# Audit Report: M50 — volodymyr-vernadskyi.md
-**Level:** C1 | **Module:** M50 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M55 — volodymyr-vernadskyi.md
+**Level:** C1-BIO | **Module:** M55 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:25
+**Generated:** 2026-02-04 11:41:45
 
 ## Configuration
 **Type:** C1-biography

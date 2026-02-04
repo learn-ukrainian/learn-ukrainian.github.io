@@ -2,11 +2,11 @@
   "module": "kost-hordiyenko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T23:29:13.703955Z",
+  "last_audit": "2026-02-04T11:41:32.030476Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-17T21:45:15.828357Z",
-    "meta": "2026-01-29T07:39:04.901610Z",
+    "meta": "2026-02-02T23:22:59.970251Z",
     "activities": "2026-01-27T15:34:55.814048Z",
     "vocabulary": null,
     "plan": null

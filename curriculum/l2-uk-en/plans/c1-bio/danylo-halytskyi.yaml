@@ -1,121 +1,68 @@
-module: c1-bio-danylo-halytskyi
+module: c1-bio-010
 level: C1-BIO
-sequence: 8
+sequence: 10
 slug: danylo-halytskyi
 version: '2.0'
 title: 'Данило Галицький: Король Русі'
-subtitle: 'Danylo of Halych: King of Rus'''
 content_outline:
 - section: Вступ — Єдиний коронований король Русі
-  words: 477
+  words: 150
   points:
-  - Унікальність королівської корони в історії Русі
-  - Данило як символ української державності
-  - Джерела про його життя
-- section: Дитинство та боротьба за спадщину
-  words: 572
+  - Унікальність постаті
+  - Королівський титул
+- section: 'Життєпис: Шлях до влади'
+  words: 400
   points:
-  - Народження та рання втрата батька (1205)
-  - Втеча з матір'ю до Угорщини
-  - Боярські інтриги та іноземна інтервенція
-  - Повернення до влади
-- section: Об'єднання батьківської спадщини
-  words: 667
+  - Дитинство і вигнання
+  - Боротьба за спадщину
+  - Монгольська навала
+- section: 'Внесок: Коронація та держава'
+  words: 500
   points:
-  - Відвоювання Волині
-  - Боротьба за Галич
-  - Остаточне об'єднання (1238)
-  - Заснування Львова
-- section: Монгольська навала та її наслідки
-  words: 762
+  - Коронація в Дорогочині
+  - Розбудова міст (Львів)
+  - Економічна політика
+- section: 'Останні роки: Боротьба до кінця'
+  words: 200
   points:
-  - Падіння Києва (1240)
-  - Візит до Батия в Орду
-  - Принизливий прийом та данницька залежність
-  - Стратегія виживання
-- section: Королівська корона
-  words: 667
+  - Спроби антимонгольської коаліції
+  - Розрив з Римом
+  - Смерть і поховання
+- section: 'Спадщина: Королівська традиція'
+  words: 150
   points:
-  - Переговори з папою Інокентієм IV
-  - Коронація в Дорогочині (1253)
-  - Титул "Rex Russiae"
-  - Нездійснені надії на хрестовий похід
-- section: Державне будівництво
-  words: 477
+  - Значення титулу Rex Russiae
+  - Вплив на українську ідентичність
+  - Пам'ять
+- section: 'Підсумок — Король без королівства?'
+  words: 100
   points:
-  - Розбудова міст і фортець
-  - Запрошення німецьких колоністів
-  - Економічний розвиток
-  - Культурне життя
-- section: Підсумок — Король без королівства?
-  words: 378
-  points:
-  - Оцінка правління Данила
-  - Спадщина для нащадків
-  - Місце в українській пам'яті
-word_target: 4000
-vocabulary_hints:
-  required:
-  - король (king)
-  - корона (crown)
-  - коронація (coronation)
-  - данник (tributary)
-  - Орда (Horde)
-  - навала (invasion)
-  - папа (pope)
-  - хрестовий похід (crusade)
-  - фортеця (fortress)
-  - спадщина (inheritance/legacy)
-  recommended:
-  - інтервенція (intervention)
-  - боярин (boyar)
-  - літопис (chronicle)
-  - дипломатія (diplomacy)
-  - колоніст (colonist)
-activity_hints:
-- type: reading
-  focus: Chronicle account of Danylo's visit to Batu Khan
-  source: Галицько-Волинський літопис (adapted)
-  items: 3 passages
-- type: essay-response
-  focus: Was Danylo's coronation a success or a failure?
-  word_target: 300
-  output: Balanced argument with evidence
-- type: critical-analysis
-  focus: Compare Danylo with Alexander Nevsky - different strategies
-  output: Comparative analysis
+  - Оцінка правління
+  - Уроки для сучасності
 focus: biography
 pedagogy: seminar
 prerequisites:
-- c1-bio-roman-mstyslavych (Roman - father)
-- c1-bio-06 (Mykhailo Chernihivskyi - contemporary)
-- Understanding of Mongol invasion
+- c1-bio-07 (Роман Мстиславич)
+- b2-hist danylo-halytskyi module
 connects_to:
-- c1-bio-roman-mstyslavych (Roman Mstyslavych - father)
-- c1-bio-lev-danylovych (Lev - son)
-- c1-bio-yuriy-lvovych (Yuriy - grandson)
-- c1-bio-06 (Mykhailo Chernihivskyi - different response to Mongols)
+- c1-bio-09 (Лев Данилович)
+- b2-hist mongolska-navala module
 objectives:
-- Analyze the significance of Danylo's royal coronation for Ukrainian statehood
-- Evaluate strategies of resistance and accommodation with the Mongol Horde
-- Master vocabulary related to medieval kingship and diplomacy
+- Аналізувати дипломатичні успіхи та поразки Данила
+- Оцінити значення коронації для української історії
+- Порівняти стратегії виживання в умовах монгольської навали
 grammar:
-- Royal and diplomatic register
-- Chronicle narrative style
-- Complex temporal sequences
+- Дипломатична лексика
+- Військова термінологія
 module_type: biography
 sources:
-- name: Данило Романович (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Данило_Романович
+- name: Данило Галицький (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Данило_Галицький
   type: primary
-  notes: Biography, coronation, Mongol relations
-- name: Галицько-Волинський літопис
+  notes: Біографія та діяльність
+- name: Галицько-Волинський літопис (Wikipedia UA)
   url: https://uk.wikipedia.org/wiki/Галицько-Волинський_літопис
   type: primary
-  notes: Primary chronicle source
-- name: Львів
-  url: https://uk.wikipedia.org/wiki/Львів
-  type: reference
-  notes: Founding of Lviv
+  notes: Основне джерело
 immersion: 100% Ukrainian
 phase: C1-BIO

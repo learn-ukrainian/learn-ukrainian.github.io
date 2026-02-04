@@ -1,8 +1,8 @@
-# Audit Report: M59 — mariia-voiakovska.md
-**Level:** C1 | **Module:** M59 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M64 — mariia-voiakovska.md
+**Level:** C1-BIO | **Module:** M64 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:30
+**Generated:** 2026-02-04 11:41:50
 
 ## Configuration
 **Type:** C1-biography
@@ -58,7 +58,7 @@
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/5
+- **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 0 < 24 (soft target)
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar

@@ -1,8 +1,8 @@
 # Audit Report: M129 — tomos.md
-**Level:** B2 | **Module:** M129 | **Phase:** HIST.12 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M129 | **Phase:** HIST.12 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:55:01
+**Generated:** 2026-02-03 22:55:15
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4422/4000 (raw: 4482)
+- **Words:** ✅ 4422/4000 (raw: 4490)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 100.0% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.7% (target 90-100% (history))
 - **Richness:** ✅ 95% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -72,7 +72,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 149 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Томос: Духовна незалежність** | ⚪️ | 149 | Skipped |
 | **Вступ: Церква та держава** | ✅ | 642 | Included in Core |
 | **Читання** | ✅ | 53 | Included in Core |
 | **Історія українського православ'я** | ⚪️ | 764 | Skipped |

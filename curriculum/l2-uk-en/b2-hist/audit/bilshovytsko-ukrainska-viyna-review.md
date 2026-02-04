@@ -1,8 +1,8 @@
 # Audit Report: M95 — bilshovytsko-ukrainska-viyna.md
-**Level:** B2 | **Module:** M95 | **Phase:** HIST.9 | **Pedagogy:** seminar | **Target:** 4000
+**Level:** B2-HIST | **Module:** M95 | **Phase:** HIST.9 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:41
+**Generated:** 2026-02-03 22:54:55
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4496/4000 (raw: 4601)
+- **Words:** ✅ 4496/4000 (raw: 4610)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 100.0% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.7% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -72,7 +72,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 161 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Більшовицько-українська війна: Битва за державність** | ⚪️ | 161 | Skipped |
 | **Вступ: Боротьба за незалежність** | ✅ | 431 | Included in Core |
 | **Читання** | ✅ | 112 | Included in Core |
 | **Перша більшовицька агресія (1917-1918)** | ⚪️ | 730 | Skipped |

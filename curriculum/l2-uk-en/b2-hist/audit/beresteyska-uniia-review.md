@@ -1,8 +1,8 @@
 # Audit Report: M33 — beresteyska-uniia.md
-**Level:** B2 | **Module:** M33 | **Phase:** B2.3a | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M33 | **Phase:** B2.3a | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:04
+**Generated:** 2026-02-03 22:54:18
 
 ## Configuration
 **Type:** B2-history

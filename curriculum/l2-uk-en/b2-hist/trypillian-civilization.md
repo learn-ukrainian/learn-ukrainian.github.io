@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: scythians-sarmatians, sloviany-origins, greeks-crimea-olbia, khozary-i-sloviany
+-->
+
 # Трипільська цивілізація
 
 > **Чому це важливо?**

@@ -1,8 +1,8 @@
 # Audit Report: M14 — sofiya-kyivska.md
-**Level:** B2 | **Module:** M14 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
+**Level:** B2-HIST | **Module:** M14 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:53:53
+**Generated:** 2026-02-03 22:54:07
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4038/4000 (raw: 4308)
+- **Words:** ✅ 4038/4000 (raw: 4316)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.5% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.2% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -72,7 +72,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 82 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Софія Київська та культурний розквіт** | ✅ | 82 | Included in Core |
 | **Вступ** | ✅ | 354 | Included in Core |
 | **Архітектура собору: Візантійський канон та київська сміливість** | ⚪️ | 458 | Skipped |
 | **Мозаїки та фрески: Біблія у кольорі** | ⚪️ | 519 | Skipped |

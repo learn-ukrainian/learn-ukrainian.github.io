@@ -1,0 +1,37 @@
+# Module Meta: Treaty of 911 (Oleg)
+# Track: OES
+# Module: 057
+# Generated: 2026-02-04
+
+module_number: 57
+slug: treaty-911-oleg
+title: "Договір 911 (Олег)"
+title_en: "Treaty of 911 (Oleg)"
+
+type: lesson
+phase: 3
+phase_id: legal-tradition
+
+# Pedagogy
+pedagogy: theory-first
+duration_minutes: 60
+word_target: 3500
+immersion_level: 100
+
+# Focus
+grammar_focus: "Diplomatic formulas — «My ot rodu ruskoho...»"
+vocabulary_focus: []
+cultural_focus: []
+
+# Activity hints (minimum counts)
+activity_hints:
+  - type: transcription
+    min_items: 2
+  - type: etymology-trace
+    min_items: 2
+  - type: grammar-identify
+    min_items: 3
+
+# Prerequisites
+prerequisites:
+  - module: 56

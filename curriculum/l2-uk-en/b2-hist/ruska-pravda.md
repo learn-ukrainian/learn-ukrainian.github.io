@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: yaroslav-mudryi, volodymyr-monomakh, ludy-rusi, kultura-kyivskoi-rusi
+-->
+
 # Руська Правда: Перший законодавчий кодекс
 
 > 🎯 **Чому це важливо?**

@@ -1,0 +1,35 @@
+# Module Meta: Phase 3 Checkpoint
+# Track: OES
+# Module: 061
+# Generated: 2026-02-04
+
+module_number: 61
+slug: phase-3-checkpoint
+title: "Контрольна точка фази 3"
+title_en: "Phase 3 Checkpoint"
+
+type: checkpoint
+phase: 3
+phase_id: legal-tradition
+
+# Pedagogy
+pedagogy: theory-first
+duration_minutes: 90
+word_target: 2500
+immersion_level: 100
+
+# Focus
+grammar_focus: "Dual Number & Legal translation exam"
+vocabulary_focus: []
+cultural_focus: []
+
+# Activity hints (minimum counts)
+activity_hints:
+  - type: transcription
+    min_items: 3
+  - type: grammar-identify
+    min_items: 5
+
+# Prerequisites
+prerequisites:
+  - module: 60

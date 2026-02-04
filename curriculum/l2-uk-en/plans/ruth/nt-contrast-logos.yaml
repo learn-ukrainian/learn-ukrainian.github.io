@@ -1,0 +1,39 @@
+# Module Plan: New Testament Contrast
+# Track: RUTH
+# Module: 032
+# Source: Gemini Research (ISSUE-494)
+# Generated: 2026-02-04
+
+module_number: 32
+slug: nt-contrast-logos
+title_uk: "Контраст: Логос"
+title_en: "New Testament Contrast"
+
+phase: 2
+phase_id: sacred-word
+phase_name: "Sacred Word"
+
+focus: "Ostrih vs Peresopnytsia (John 1)"
+
+word_target: 3500
+
+# Content outline to be expanded during content generation
+content_outline:
+  - section: "Вступ"
+    description: "Introduction to New Testament Contrast"
+  - section: "Основний матеріал"
+    description: "Primary source analysis and grammar focus"
+  - section: "Практика"
+    description: "Exercises and activities"
+  - section: "Підсумок"
+    description: "Summary and connection to next module"
+
+# Vocabulary hints (to be populated during content generation)
+vocabulary_hints: []
+
+# Activity types appropriate for this module
+activity_types:
+  - transcription
+  - etymology-trace
+  - grammar-identify
+  - parallel-text

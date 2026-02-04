@@ -1,0 +1,38 @@
+# Module Plan: Social Contract
+# Track: RUTH
+# Module: 088
+# Source: Gemini Research (ISSUE-496)
+# Generated: 2026-02-04
+
+module_number: 88
+slug: social-contract
+title_uk: "Суспільний договір"
+title_en: "Social Contract"
+
+phase: 4
+phase_id: cossack-word
+phase_name: "Cossack Word"
+
+focus: "Rights of widows, orphans, commoners"
+
+word_target: 3500
+
+# Content outline to be expanded during content generation
+content_outline:
+  - section: "Вступ"
+    description: "Introduction to Social Contract"
+  - section: "Основний матеріал"
+    description: "Primary source analysis and grammar focus"
+  - section: "Практика"
+    description: "Exercises and activities"
+  - section: "Підсумок"
+    description: "Summary and connection to next module"
+
+# Vocabulary hints (to be populated during content generation)
+vocabulary_hints: []
+
+# Activity types appropriate for this module
+activity_types:
+  - transcription
+  - etymology-trace
+  - grammar-identify

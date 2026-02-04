@@ -1,8 +1,9 @@
-module: c1-bio-016
+module: c1-bio-018
 level: C1-BIO
 slug: iov-boretskyi
 version: '2.0'
-id: c1-bio-016
+id: c1-bio-018
+title: "Йов Борецький: Захисник православ'я"
 naturalness:
   score: 10
   status: PASS
@@ -14,5 +15,26 @@ tags:
 - religion
 - education
 - cossacks
+content_outline:
+- section: Вступ — Відновлення православної ієрархії
+  words: 414
+- section: Життєпис
+  words: 1379
+- section: Берестейська унія та її наслідки
+  words: 644
+- section: Відновлення ієрархії 1620 року
+  words: 736
+- section: Митрополитство
+  words: 300
+- section: Внесок
+  words: 300
+- section: Останні роки
+  words: 252
+- section: Спадщина
+  words: 300
+- section: Підсумок — Віра як опір
+  words: 275
+word_target: 4600
+vital_status: deceased
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-04'

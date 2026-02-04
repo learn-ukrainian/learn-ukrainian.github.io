@@ -1,8 +1,8 @@
 # Audit Report: M56 — pereyaslavska-uhoda.md
-**Level:** B2 | **Module:** M56 | **Phase:** HIST.6 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M56 | **Phase:** HIST.6 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:18
+**Generated:** 2026-02-03 22:54:32
 
 ## Configuration
 **Type:** B2-history
@@ -34,19 +34,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 5029/4000 (raw: 5103)
+- **Words:** ✅ 5029/4000 (raw: 5111)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/5
+- **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 24/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.6% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -72,7 +72,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 109 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Переяславська угода 1654: Міфи та реальність** | ⚪️ | 109 | Skipped |
 | **Вступ** | ✅ | 594 | Included in Core |
 | **Дипломатична гра: Спроби знайти союзника** | ⚪️ | 619 | Skipped |
 | **Переяславська рада: Зіткнення політичних світів** | ⚪️ | 771 | Skipped |

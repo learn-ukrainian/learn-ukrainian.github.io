@@ -1,0 +1,35 @@
+# Module Meta: Lab: The Death of a Tsar
+# Track: OES
+# Module: 019
+# Generated: 2026-02-04
+
+module_number: 19
+slug: lab-death-of-tsar
+title: "Лабораторія: Смерть царя"
+title_en: "Lab: The Death of a Tsar"
+
+type: lab
+phase: 1
+phase_id: vernacular-foundations
+
+# Pedagogy
+pedagogy: theory-first
+duration_minutes: 60
+word_target: 2500
+immersion_level: 100
+
+# Focus
+grammar_focus: "Analyzing the 1054 graffiti on Yaroslav's death"
+vocabulary_focus: []
+cultural_focus: []
+
+# Activity hints (minimum counts)
+activity_hints:
+  - type: grammar-lab
+    min_items: 3
+  - type: transcription
+    min_items: 2
+
+# Prerequisites
+prerequisites:
+  - module: 18

@@ -1,8 +1,8 @@
 # Audit Report: M39 — liudy-ricchi-pospolytoi.md
-**Level:** B2 | **Module:** M39 | **Phase:** HIST.4 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M39 | **Phase:** HIST.4 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:08
+**Generated:** 2026-02-03 22:54:22
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4260/4000 (raw: 4457)
+- **Words:** ✅ 4260/4000 (raw: 4465)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.5% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -72,7 +72,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 125 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Люди Речі Посполитої: Суспільство** | ⚪️ | 125 | Skipped |
 | **Вступ** | ✅ | 514 | Included in Core |
 | **Шляхта і магнати** | ⚪️ | 1079 | Skipped |
 | **Міщани і ремісники: Життя в містах** | ⚪️ | 574 | Skipped |

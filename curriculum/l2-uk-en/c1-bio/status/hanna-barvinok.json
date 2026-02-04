@@ -2,11 +2,11 @@
   "module": "hanna-barvinok",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T23:29:19.631544Z",
+  "last_audit": "2026-02-04T11:41:38.172204Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-29T23:49:04.932592Z",
-    "meta": "2026-01-30T09:52:36.876640Z",
+    "meta": "2026-02-02T23:23:00.017168Z",
     "activities": "2026-01-29T23:10:44.920786Z",
     "vocabulary": "2026-01-29T22:56:23.420196Z",
     "plan": null

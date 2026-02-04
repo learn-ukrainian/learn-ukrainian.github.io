@@ -18,6 +18,10 @@ vocabulary_focus:
   - 'Терміни державотворення'
 ---
 
+<!-- SCOPE
+Related: symon-petliura, hrushevskyi, unr, bilshovytsko-ukrainska-viyna, zunr
+-->
+
 # Директорія УНР: Боротьба за республіку
 
 > 🎯 **Чому це важливо?**

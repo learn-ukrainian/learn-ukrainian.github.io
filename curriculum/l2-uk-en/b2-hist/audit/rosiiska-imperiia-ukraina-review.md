@@ -1,8 +1,8 @@
 # Audit Report: M75 — rosiiska-imperiia-ukraina.md
-**Level:** B2 | **Module:** M75 | **Phase:** HIST.8 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M75 | **Phase:** HIST.8 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:29
+**Generated:** 2026-02-03 22:54:43
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4119/4000 (raw: 4216)
+- **Words:** ✅ 4119/4000 (raw: 4224)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.5% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -72,7 +72,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 128 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Південь України: Колонізація та міфи** | ⚪️ | 128 | Skipped |
 | **Вступ: "Дике поле" чи Великий Луг?** | ✅ | 409 | Included in Core |
 | **Козацький Південь: Зимівники, паланки та слободи** | ⚪️ | 466 | Skipped |
 | **Міф про "Новоросію": Анатомія імперської брехні** | ⚪️ | 412 | Skipped |

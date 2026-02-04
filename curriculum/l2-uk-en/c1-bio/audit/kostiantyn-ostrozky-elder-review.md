@@ -1,8 +1,8 @@
-# Audit Report: M11 — kostiantyn-ostrozky-elder.md
-**Level:** C1 | **Module:** M11 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
+# Audit Report: M13 — kostiantyn-ostrozky-elder.md
+**Level:** C1-BIO | **Module:** M13 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:07
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-04 11:41:22
 
 ## Configuration
 **Type:** C1-biography
@@ -33,65 +33,51 @@
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
-## Recommendation
-**📝 UPDATE** (severity 20/100)
-
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
-
 ## Gates
-- **Words:** ✅ 4132/4000 (raw: 4436)
+- **Words:** ✅ 4964/4000 (raw: 5075)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/5
+- **Engagement:** ✅ 15/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 24 (soft target)
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Vocab:** ✅ 30/24
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
-- **Richness:** ✅ 95% (biography)
+- **Immersion:** 🇺🇦 99.7% (target 95-100% (biography))
+- **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 95% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 3 | 4 | 75% | 19% | 14.3% |
-| engagement | 7 | 6 | 100% | 14% | 14.3% |
-| quotes | 8 | 3 | 100% | 14% | 14.3% |
-| cultural | 7 | 4 | 100% | 10% | 9.5% |
-| visual | 7 | 4 | 100% | 10% | 9.5% |
+| primary_sources | 5 | 4 | 100% | 19% | 19.0% |
+| engagement | 11 | 6 | 100% | 14% | 14.3% |
+| quotes | 11 | 3 | 100% | 14% | 14.3% |
+| cultural | 8 | 4 | 100% | 10% | 9.5% |
+| visual | 14 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.95 | - | 95% | 5% | 4.5% |
+| variety | 0.98 | - | 98% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 3 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **95.0%** |
+| questions | 9 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 201 | Included in Core |
-| **Вступ** | ✅ | 433 | Included in Core |
-| **Життєпис** | ⚪️ | 973 | Skipped |
-| **Внесок у розбудову нації, культури та економіки** | ✅ | 495 | Included in Core |
-| **Костянтин Острозький та Києво-Печерська Лавра: Сакральний союз** | ⚪️ | 152 | Skipped |
-| **Архітектурні пам'ятки та меценатство: Застигла музика епохи** | ⚪️ | 201 | Skipped |
-| **Лицарський кодекс та воєнна ідеологія великого гетьмана** | ⚪️ | 235 | Skipped |
-| **Костянтин Острозький та Вільнюс: Православне серце столиці ВКЛ** | ⚪️ | 166 | Skipped |
-| **Дипломатичне листування з Папою та Європейськими монархами: Голос Русі** | ⚪️ | 152 | Skipped |
-| **Спадщина для майбутніх поколінь: Від лицарства до сучасної державності** | ⚪️ | 174 | Skipped |
-| **Історичний контекст: Україна на цивілізаційному зламі світів** | ✅ | 146 | Included in Core |
-| **Порівняльний аналіз: Різні шляхи до однієї мети в історії Русі** | ✅ | 213 | Included in Core |
-| **Поглиблений аналіз: Адміністративне управління та міське життя Волині** | ✅ | 172 | Included in Core |
-| **Роль Острозького в зміцненні стратегічної обороноздатності ВКЛ** | ⚪️ | 145 | Skipped |
-| **Підсумок** | ✅ | 134 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 140 | Skipped |
-| **Activities** | ➖ | 0 | Excluded Type |
+| **Intro/Narrative** | ✅ | 142 | Included in Core |
+| **Вступ — Гетьман двох народів** | ✅ | 725 | Included in Core |
+| **Життєпис** | ⚪️ | 1778 | Skipped |
+| **Історичний контекст** | ✅ | 682 | Included in Core |
+| **Внесок та Спадщина** | ⚪️ | 615 | Skipped |
+| **Порівняльний аналіз** | ✅ | 587 | Included in Core |
+| **Підсумок — Гетьман вічності** | ✅ | 245 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 190 | Skipped |

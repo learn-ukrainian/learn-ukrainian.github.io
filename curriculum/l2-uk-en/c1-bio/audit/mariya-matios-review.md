@@ -1,8 +1,8 @@
-# Audit Report: M121 — mariya-matios.md
-**Level:** C1 | **Module:** M121 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M137 — mariya-matios.md
+**Level:** C1-BIO | **Module:** M137 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:55
+**Generated:** 2026-02-04 11:42:28
 
 ## Configuration
 **Type:** C1-biography

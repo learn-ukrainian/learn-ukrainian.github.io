@@ -1,8 +1,8 @@
 # Audit Report: M55 — kozatska-derzhava.md
-**Level:** B2 | **Module:** M55 | **Phase:** HIST.6 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M55 | **Phase:** HIST.6 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:17
+**Generated:** 2026-02-03 22:54:31
 
 ## Configuration
 **Type:** B2-history

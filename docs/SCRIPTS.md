@@ -1350,6 +1350,109 @@ Activity_quality 📋 Quality validation available (optional)
 
 ---
 
+## Track Scoring Verification System
+
+**Purpose:** Automated scoring for curriculum tracks enabling objective 10/10 scoring without manual estimation.
+
+### Overview
+
+The system extracts quantitative metrics from curriculum modules and calculates weighted scores per track. All measurements are deterministic (no LLM calls), ensuring reproducible results.
+
+**Architecture:**
+```
+Layer 1: Metric Extraction (scripts/scoring/metrics.py)
+   ↓ Extracts callouts, agency markers, toponyms, citations, etc.
+Layer 2: Track Aggregation (scripts/scoring/aggregator.py)
+   ↓ Applies track-specific weights and critical caps
+Output: Verified 10/10 score with evidence
+```
+
+### Quick Start
+
+```bash
+# Score a single track
+npm run score:b2-hist
+
+# Score all tracks (summary table)
+npm run score:all
+
+# Extract raw metrics (for debugging)
+npm run metrics:extract b2-hist
+```
+
+### Scripts
+
+| Script | Purpose | Command |
+|--------|---------|---------|
+| `score_track.py` | Score tracks with weighted criteria | `npm run score:b2-hist` |
+| `extract_track_metrics.py` | Extract raw metrics from modules | `npm run metrics:extract b2-hist` |
+
+### npm Scripts
+
+```bash
+npm run score:b2-hist     # Score B2-HIST track
+npm run score:c1-bio      # Score C1-BIO track
+npm run score:c1-hist     # Score C1-HIST track
+npm run score:lit         # Score LIT track
+npm run score:all         # Score all tracks (summary)
+npm run metrics:extract   # Extract raw metrics
+```
+
+### Supported Tracks
+
+| Track | Modules | Key Criteria |
+|-------|---------|--------------|
+| `b2-hist` | 140 | Historical accuracy, primary sources, decolonization |
+| `c1-hist` | 30 | Source criticism, methodology, thematic coherence |
+| `c1-bio` | 128 | Biographical accuracy, legacy, cultural context |
+| `lit` | 30 | Literary depth, authentic texts, stylistic devices |
+| `a1`-`c2` | varies | Grammar/content coverage, skills balance, CEFR alignment |
+
+### Key Metrics Extracted
+
+- **Callouts:** `[!quote]`, `[!myth-buster]`, `[!history-bite]`, `[!analysis]`
+- **Agency markers:** Ukrainian subjects with active verbs (decolonization metric)
+- **Toponym compliance:** Colonial vs. correct Ukrainian place names
+- **Cross-references:** Internal links between modules
+- **Citation ratio:** Direct quotes vs. total text (for LIT track)
+- **Stylistic devices:** Literary terms and analysis sections
+
+### Critical Failure Caps
+
+Certain conditions cap maximum scores regardless of other criteria:
+
+| Condition | Cap | Track |
+|-----------|-----|-------|
+| 0 `[!myth-buster]` callouts | Decolonization ≤ 4/10 | HIST |
+| 0 `[!quote]` blocks | Primary sources ≤ 3/10 | HIST/BIO |
+| Citation ratio < 5% | Authentic engagement ≤ 5/10 | LIT |
+| 0 cross-references | Internal consistency ≤ 5/10 | All |
+
+### Sample Output
+
+```
+══════════════════════════════════════════════════════════════════
+  B2-HIST: Ukrainian History Scoring Report
+  Generated: 2026-02-02 | Modules: 140 | Coverage: 100%
+══════════════════════════════════════════════════════════════════
+
+CRITERIA SCORES:
+│ Criterion                       │ Weight │ Score │ Weighted │
+│ Audit Pass Rate                 │   15%  │ 10.0  │   1.50   │
+│ Primary Source Integration      │   15%  │ 10.0  │   1.50   │
+│ Decolonization Perspective      │   10%  │  8.0  │   0.80   │
+...
+│ TOTAL                           │  100%  │       │   9.35   │
+
+FINAL SCORE: 9.35/10
+```
+
+### Documentation
+
+Full technical documentation: `scripts/scoring/README.md`
+
+---
+
 ## Level Status Generation
 
 ### generate_level_status.py

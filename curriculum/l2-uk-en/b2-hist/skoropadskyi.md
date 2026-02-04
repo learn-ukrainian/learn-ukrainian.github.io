@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: tsentralna-rada, dyrektoriia, bilshovytsko-ukrainska-viyna, unr
+-->
+
 # Павло Скоропадський: Гетьманат
 
 > 🎯 **Чому це важливо?**

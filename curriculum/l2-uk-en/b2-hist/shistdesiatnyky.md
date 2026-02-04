@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: destalinizatsiia, rozstriliane-vidrodzennia, rukh, holodomor-pamiat
+-->
+
 # Шістдесятники: Бунт проти сірості
 
 > 🎯 **Чому це важливо?**

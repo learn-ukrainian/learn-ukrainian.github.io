@@ -2,10 +2,10 @@
   "module": "slobozhanshchyna",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:54:07.476827Z",
+  "last_audit": "2026-02-03T22:54:21.690336Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.347166Z",
+    "md": "2026-02-02T11:00:22.102673Z",
     "meta": "2026-01-30T13:28:03.091101Z",
     "activities": "2026-01-27T15:34:54.808946Z",
     "vocabulary": "2026-01-27T11:24:53.903773Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4425/4000 (raw: 4553)"
+      "message": "4425/4000 (raw: 4561)"
     },
     "activities": {
       "status": "pass",

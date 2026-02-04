@@ -1,8 +1,8 @@
 # Audit Report: M53 — bitva-pid-zhovtymy-vodamy.md
-**Level:** B2 | **Module:** M53 | **Phase:** HIST.6 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M53 | **Phase:** HIST.6 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:16
+**Generated:** 2026-02-03 22:54:30
 
 ## Configuration
 **Type:** B2-history
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4146/4000 (raw: 4208)
+- **Words:** ✅ 4146/4000 (raw: 4216)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -47,7 +47,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
-- **Immersion:** 🇺🇦 99.9% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.5% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -73,7 +73,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 91 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Битва під Жовтими Водами** | ⚪️ | 91 | Skipped |
 | **Вступ: Перший грім** | ✅ | 663 | Included in Core |
 | **Сили сторін: Давид проти Голіафа?** | ⚪️ | 433 | Skipped |
 | **Початок битви: Блокада табору** | ⚪️ | 395 | Skipped |

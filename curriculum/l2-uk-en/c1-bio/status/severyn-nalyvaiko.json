@@ -2,25 +2,25 @@
   "module": "severyn-nalyvaiko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T23:29:09.365279Z",
+  "last_audit": "2026-02-04T12:08:58.782284Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.348791Z",
-    "meta": "2026-01-29T07:39:04.896714Z",
+    "md": "2026-02-04T11:57:59.537648Z",
+    "meta": "2026-02-02T23:22:59.917258Z",
     "activities": "2026-01-19T22:57:29.360649Z",
-    "vocabulary": null,
+    "vocabulary": "2026-02-04T11:49:22.381977Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "3265/4000 (raw: 3403)"
+      "status": "pass",
+      "violations": 0,
+      "message": "4447/4000 (raw: 4552)"
     },
     "activities": {
       "status": "pass",
@@ -28,9 +28,9 @@
       "message": "5/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 24 (soft target)"
+      "message": "25/24"
     },
     "naturalness": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "4 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
-    ],
-    "pass_count": 2,
-    "fail_count": 2
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

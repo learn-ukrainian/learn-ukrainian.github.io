@@ -1,0 +1,35 @@
+# Module Meta: Slovo: Poetic Syntax Lab
+# Track: OES
+# Module: 086
+# Generated: 2026-02-04
+
+module_number: 86
+slug: slovo-poetic-syntax-lab
+title: "Слово: Лабораторія синтаксису"
+title_en: "Slovo: Poetic Syntax Lab"
+
+type: lab
+phase: 4
+phase_id: literary-art
+
+# Pedagogy
+pedagogy: theory-first
+duration_minutes: 60
+word_target: 2500
+immersion_level: 100
+
+# Focus
+grammar_focus: "Inversion, chiasmus, parallelism"
+vocabulary_focus: []
+cultural_focus: []
+
+# Activity hints (minimum counts)
+activity_hints:
+  - type: grammar-lab
+    min_items: 3
+  - type: transcription
+    min_items: 2
+
+# Prerequisites
+prerequisites:
+  - module: 85

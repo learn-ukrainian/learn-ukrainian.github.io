@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: zaporizka-sich, kozatske-viisko, petro-sahaidachnyi, kost-hordiyenko-sich
+-->
+
 # Іван Сірко: Легендарний кошовий
 
 > 🎯 **Чому це важливо?**

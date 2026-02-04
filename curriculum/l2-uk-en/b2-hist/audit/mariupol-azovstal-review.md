@@ -1,8 +1,8 @@
 # Audit Report: M133 — mariupol-azovstal.md
-**Level:** B2 | **Module:** M133 | **Phase:** HIST.13 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M133 | **Phase:** HIST.13 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:55:03
+**Generated:** 2026-02-03 22:55:18
 
 ## Configuration
 **Type:** B2-history

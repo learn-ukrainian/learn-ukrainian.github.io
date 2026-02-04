@@ -1,0 +1,13 @@
+module: c1-bio-084
+level: C1-BIO
+slug: mykola-zerov
+version: '1.0'
+id: c1-bio-084
+naturalness:
+  score: 0
+  status: PENDING
+duration: 90
+tags:
+- Executed Renaissance
+- Patriot
+validation_tier: llm-verified

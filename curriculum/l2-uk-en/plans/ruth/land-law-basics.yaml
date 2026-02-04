@@ -1,0 +1,38 @@
+# Module Plan: Land Law Basics
+# Track: RUTH
+# Module: 005
+# Source: Gemini Research (ISSUE-493)
+# Generated: 2026-02-04
+
+module_number: 5
+slug: land-law-basics
+title_uk: "Основи земельного права"
+title_en: "Land Law Basics"
+
+phase: 1
+phase_id: chancery-legal
+phase_name: "Chancery & Legal"
+
+focus: "Земля, Ім'єніє — Feudal tenure"
+
+word_target: 3500
+
+# Content outline to be expanded during content generation
+content_outline:
+  - section: "Вступ"
+    description: "Introduction to Land Law Basics"
+  - section: "Основний матеріал"
+    description: "Primary source analysis and grammar focus"
+  - section: "Практика"
+    description: "Exercises and activities"
+  - section: "Підсумок"
+    description: "Summary and connection to next module"
+
+# Vocabulary hints (to be populated during content generation)
+vocabulary_hints: []
+
+# Activity types appropriate for this module
+activity_types:
+  - transcription
+  - etymology-trace
+  - grammar-identify

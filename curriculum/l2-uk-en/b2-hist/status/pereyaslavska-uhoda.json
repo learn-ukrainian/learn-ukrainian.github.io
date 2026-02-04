@@ -2,10 +2,10 @@
   "module": "pereyaslavska-uhoda",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:54:18.050323Z",
+  "last_audit": "2026-02-03T22:54:32.342129Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-24T21:37:36.121398Z",
+    "md": "2026-02-02T10:56:41.564687Z",
     "meta": "2026-01-29T07:38:18.647313Z",
     "activities": "2026-01-27T20:32:13.397035Z",
     "vocabulary": "2026-01-27T11:59:24.231549Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "5029/4000 (raw: 5103)"
+      "message": "5029/4000 (raw: 5111)"
     },
     "activities": {
       "status": "pass",

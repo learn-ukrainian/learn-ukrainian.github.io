@@ -1,0 +1,37 @@
+# Module Meta: Restitution
+# Track: OES
+# Module: 058
+# Generated: 2026-02-04
+
+module_number: 58
+slug: restitution
+title: "Відшкодування"
+title_en: "Restitution"
+
+type: lesson
+phase: 3
+phase_id: legal-tradition
+
+# Pedagogy
+pedagogy: theory-first
+duration_minutes: 60
+word_target: 3500
+immersion_level: 100
+
+# Focus
+grammar_focus: "Verbs of obligation"
+vocabulary_focus: []
+cultural_focus: []
+
+# Activity hints (minimum counts)
+activity_hints:
+  - type: transcription
+    min_items: 2
+  - type: etymology-trace
+    min_items: 2
+  - type: grammar-identify
+    min_items: 3
+
+# Prerequisites
+prerequisites:
+  - module: 57

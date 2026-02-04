@@ -2,10 +2,10 @@
   "module": "revoliutsiia-hidnosti",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:54:59.317000Z",
+  "last_audit": "2026-02-03T22:55:13.842757Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-31T22:50:52.902091Z",
+    "md": "2026-02-02T10:56:57.306073Z",
     "meta": "2026-01-31T22:08:42.406516Z",
     "activities": "2026-01-31T22:48:07.541431Z",
     "vocabulary": "2026-01-31T22:08:21.960544Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4688/4000 (raw: 4746)"
+      "message": "4688/4000 (raw: 4754)"
     },
     "activities": {
       "status": "pass",

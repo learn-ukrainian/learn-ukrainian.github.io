@@ -1,8 +1,8 @@
 # Audit Report: M42 — zaporizka-sich.md
-**Level:** B2 | **Module:** M42 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M42 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:09
+**Generated:** 2026-02-03 22:54:24
 
 ## Configuration
 **Type:** B2-history
@@ -39,7 +39,7 @@
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 11/5
+- **Engagement:** ✅ 12/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 36/20
 - **Structure:** ✅ Valid Structure

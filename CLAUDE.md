@@ -119,6 +119,26 @@ When issues occur: fix documentation/tools **first**, then validate with manual 
 - Skip reading templates
 - Create activities below item counts
 
+### Research-First Workflow (Seminar Tracks)
+
+**For b2-hist, c1-bio, c1-hist, lit, oes, ruth tracks - MANDATORY Phase 0:**
+
+Before generating ANY content for seminar tracks, complete research phase:
+
+1. **Research the topic** - Use web search, encyclopedias, primary sources
+2. **Take structured notes** - Key facts, dates, quotes with citations
+3. **Create outline** - Integrate research with plan requirements
+4. **Write content** - Using research notes (NOT from memory!)
+5. **Generate activities** - 4-9 only, seminar-style
+
+**Why this matters:**
+- Biography modules need accurate dates, events, quotes
+- History modules need primary source references
+- Writing from memory → thin content, inaccuracies, failed word counts
+- Research-first → richer, authoritative, passing content
+
+**Full workflow:** `docs/RESEARCH-FIRST-WORKFLOW.md`
+
 ---
 
 ## Quick Commands
@@ -135,6 +155,11 @@ scripts/audit_module.sh curriculum/l2-uk-en/{level}/{file}.md
 
 # Generate status report (from per-module JSON cache)
 npm run status:{level}  # or: .venv/bin/python scripts/generate_level_status.py {level}
+
+# Track scoring (objective 10/10 verification)
+npm run score:b2-hist   # Score B2-HIST track
+npm run score:all       # Score all tracks (summary table)
+npm run metrics:extract {track}  # Extract raw metrics
 
 # Extract plans from meta (migration tool)
 .venv/bin/python scripts/extract_plans.py {level}
@@ -507,6 +532,27 @@ Specifically:
 > ```
 > Gemini may have sent you messages. Don't wait for the user to tell you - check proactively!
 
+> **HEADLESS SESSION AWARENESS!**
+> Multiple Claude sessions may run in parallel. A **headless session** might have already:
+> - Picked up Gemini's message and acknowledged it (marking as read)
+> - Completed the work without your knowledge
+>
+> **When resuming collaborative work:**
+> ```python
+> # Check FULL conversation history first (not just unread!)
+> mcp__message-broker__get_conversation(task_id="the-task-id")
+> ```
+> Look for responses from other Claude sessions before assuming work is pending.
+
+> **BATCH PROCESSING (catch up on missed messages):**
+> ```bash
+> # Process ALL unread messages for Gemini
+> .venv/bin/python scripts/gemini_bridge.py process-all
+>
+> # Process ALL unread messages for Claude (headless)
+> .venv/bin/python scripts/gemini_bridge.py process-claude-all
+> ```
+
 ### How to Contact Gemini (PREFERRED: One-Step)
 
 ```bash
@@ -594,6 +640,54 @@ Database: `.mcp/servers/message-broker/messages.db`
 | **Grammar validation** | `scripts/audit/ukrainian_grammar_validator_prompt.md` |
 | **Level quick-refs** | `claude_extensions/quick-ref/{level}.md` |
 | **Stage workflows** | `claude_extensions/stages/stage-{1-4}-*.md` |
+| **Track scoring system** | `scripts/scoring/README.md` ⭐ NEW |
+
+---
+
+## Track Scoring Verification System
+
+**Purpose:** Automated, objective 10/10 scoring for curriculum tracks without manual estimation.
+
+### When to Use
+
+- Verify track quality before claiming "10/10" in improvement plans
+- Identify specific gaps in track coverage (e.g., missing cross-references)
+- Generate evidence-backed scores for stakeholder reports
+
+### Quick Usage
+
+```bash
+npm run score:b2-hist     # Score B2-HIST track (full report)
+npm run score:all         # Score all tracks (summary table)
+npm run metrics:extract b2-hist  # Extract raw metrics only
+```
+
+### Key Concepts
+
+1. **Two-Layer Architecture:**
+   - **Layer 1 (metrics.py):** Extracts countable metrics (callouts, agency markers, toponyms)
+   - **Layer 2 (aggregator.py):** Applies weighted criteria and critical caps
+
+2. **Critical Caps:** Certain conditions cap scores regardless of other criteria:
+   - 0 `[!myth-buster]` callouts → Decolonization ≤ 4/10 (HIST tracks)
+   - 0 `[!quote]` blocks → Primary sources ≤ 3/10 (HIST/BIO tracks)
+   - Citation ratio < 5% → Authentic engagement ≤ 5/10 (LIT track)
+
+3. **Deterministic:** All measurements are automated (no LLM calls), ensuring reproducible results.
+
+### Track-Specific Criteria
+
+| Track | Key Criteria |
+|-------|--------------|
+| `b2-hist` | Historical accuracy, primary sources, decolonization perspective |
+| `c1-bio` | Biographical accuracy, legacy sections, cultural context |
+| `lit` | Literary depth, authentic text engagement, stylistic devices |
+| Standard | Grammar/content coverage, skills balance, CEFR alignment |
+
+### Documentation
+
+- **Full technical docs:** `scripts/scoring/README.md`
+- **Scripts reference:** `docs/SCRIPTS.md` (Track Scoring section)
 
 ---
 

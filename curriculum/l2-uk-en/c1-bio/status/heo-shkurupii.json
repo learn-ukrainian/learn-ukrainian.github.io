@@ -1,0 +1,51 @@
+{
+  "module": "heo-shkurupii",
+  "level": "C1",
+  "plan_version": "1.0",
+  "last_audit": "2026-02-04T11:42:14.249483Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-02T13:16:35.086575Z",
+    "meta": "2026-02-02T23:23:00.274183Z",
+    "activities": "2026-02-02T12:11:27.048303Z",
+    "vocabulary": "2026-02-02T12:11:27.048151Z",
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 5,
+      "message": "9/4000 (raw: 161) | engagement: 1/5 | pedagogy: 4 violations | immersion: 4.3% LOW (target 95-100% (biography)) | richness: 11% < 95% min (biography) - REWRITE needed"
+    },
+    "activities": {
+      "status": "fail",
+      "violations": 4,
+      "message": "0/3 | density: 0 < 1 | unique_types: 0/3 types | priority: No priority types"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 24 (soft target)"
+    },
+    "naturalness": {
+      "status": "fail",
+      "violations": 1,
+      "message": "0/10 (PENDING) - Naturalness check required"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Critical Template Violations",
+      "6 Outline Compliance Errors",
+      "Missing required activity types: critical-analysis, essay-response, reading"
+    ],
+    "pass_count": 1,
+    "fail_count": 3
+  }
+}

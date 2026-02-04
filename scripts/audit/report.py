@@ -164,15 +164,82 @@ def save_status_cache(
         "overall": overall
     }
     
-    # 5. Save File
+    # 5. Save File (merge with existing to preserve verification data)
     status_dir = base_path / 'status'
     status_dir.mkdir(parents=True, exist_ok=True)
     status_file = status_dir / f"{module_slug}.json"
-    
+
+    # Merge with existing data to preserve verification block
+    existing_data = {}
+    if status_file.exists():
+        try:
+            with open(status_file, 'r', encoding='utf-8') as f:
+                existing_data = json.load(f)
+        except (json.JSONDecodeError, IOError):
+            pass  # If file is corrupted, start fresh
+
+    # Preserve verification block from existing data
+    if 'verification' in existing_data:
+        cache_data['verification'] = existing_data['verification']
+
     with open(status_file, 'w', encoding='utf-8') as f:
         json.dump(cache_data, f, indent=2)
-        
+
     return str(status_file)
+
+
+def set_verification(
+    status_file: str,
+    tier: str,
+    reviewer: str,
+    score: float = None,
+    evidence: str = None,
+    critical_review: str = None
+) -> bool:
+    """
+    Set verification data on an existing status JSON file.
+
+    Args:
+        status_file: Path to status/{slug}.json
+        tier: 'llm-verified' or 'gold-standard'
+        reviewer: Agent name (e.g., 'claude', 'gemini', 'human')
+        score: Optional quality score (0-10)
+        evidence: Optional evidence summary
+        critical_review: Optional detailed review text
+
+    Returns:
+        True if successful, False otherwise
+    """
+    status_path = Path(status_file)
+    if not status_path.exists():
+        return False
+
+    try:
+        with open(status_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+    except (json.JSONDecodeError, IOError):
+        return False
+
+    # Build verification block
+    data['verification'] = {
+        'tier': tier,
+        'reviewer': reviewer,
+        'timestamp': datetime.now().isoformat() + 'Z',
+    }
+
+    if score is not None:
+        data['verification']['score'] = score
+    if evidence:
+        data['verification']['evidence'] = evidence
+    if critical_review:
+        data['verification']['critical_review'] = critical_review
+
+    try:
+        with open(status_path, 'w', encoding='utf-8') as f:
+            json.dump(data, f, indent=2)
+        return True
+    except IOError:
+        return False
 
 
 def generate_report(
@@ -198,10 +265,14 @@ def generate_report(
     config: dict = None,
     activity_details: list[dict] = None,
     unique_types: set = None,
-    module_focus: str = None
+    module_focus: str = None,
+    display_level: str = None
 ) -> str:
     """Generate markdown report content."""
     report_lines = []
+
+    # Use display_level for report output (e.g., "C1-BIO"), fall back to level_code
+    shown_level = display_level if display_level else level_code
 
     # Build header with module number if available
     header_title = f"# Audit Report: {os.path.basename(file_path)}"
@@ -210,7 +281,7 @@ def generate_report(
     report_lines.append(header_title)
 
     # Metadata line with module number
-    meta_line = f"**Level:** {level_code}"
+    meta_line = f"**Level:** {shown_level}"
     if module_num is not None:
         meta_line += f" | **Module:** M{module_num:02d}"
     meta_line += f" | **Phase:** {phase} | **Pedagogy:** {pedagogy} | **Target:** {target}"

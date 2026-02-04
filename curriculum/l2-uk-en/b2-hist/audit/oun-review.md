@@ -1,8 +1,8 @@
 # Audit Report: M100 — oun.md
-**Level:** B2 | **Module:** M100 | **Phase:** HIST.10 | **Pedagogy:** seminar | **Target:** 4000
+**Level:** B2-HIST | **Module:** M100 | **Phase:** HIST.10 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:44
+**Generated:** 2026-02-03 22:54:58
 
 ## Configuration
 **Type:** B2-history
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4024/4000 (raw: 4094)
+- **Words:** ✅ 4878/4000 (raw: 4960)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -47,13 +47,13 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
-- **Immersion:** 🇺🇦 99.5% (target 90-100% (history))
-- **Richness:** ✅ 97% (history)
+- **Immersion:** 🇺🇦 99.4% (target 90-100% (history))
+- **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 97% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
@@ -63,12 +63,12 @@
 | engagement | 9 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 3 | 4 | 75% | 10% | 7.1% |
+| cultural | 5 | 4 | 100% | 10% | 9.5% |
 | visual | 8 | 4 | 100% | 10% | 9.5% |
 | variety | 1.00 | - | 100% | 5% | 4.8% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 3 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **97.6%** |
+| **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -77,7 +77,8 @@
 | **ОУН: Формування українського націоналізму** | ⚪️ | 154 | Skipped |
 | **Вступ: Народження націоналізму** | ✅ | 404 | Included in Core |
 | **Витоки та ідеологія** | ⚪️ | 792 | Skipped |
-| **Діяльність у 1930-х** | ⚪️ | 885 | Skipped |
-| **Первинні джерела** | ✅ | 810 | Included in Core |
+| **Підпільна боротьба 1930-х** | ⚪️ | 994 | Skipped |
+| **Читання: Ідеологічна зброя** | ✅ | 652 | Included in Core |
+| **Первинні джерела** | ✅ | 811 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 507 | Included in Core |
-| **Підсумок: До Другої світової** | ✅ | 428 | Included in Core |
+| **Підсумок: До Другої світової** | ✅ | 520 | Included in Core |

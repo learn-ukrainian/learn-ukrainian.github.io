@@ -70,6 +70,13 @@ Unified entry point for building modules using the 7-phase workflow (content + s
 
 Parse arguments: $ARGUMENTS
 
+> **📄 Seminar Tracks (b2-hist, c1-bio, c1-hist, lit):**
+>
+> Before generating content, read `docs/RESEARCH-FIRST-WORKFLOW.md`
+>
+> These tracks require **Phase 0: Deep Research** before writing:
+> 1. Research topic → 2. Create outline → 3. Write with notes → 4. Activities (4-9 only!)
+
 **Quick Reference - File Naming:**
 
 | Level Type | Example | File Path |

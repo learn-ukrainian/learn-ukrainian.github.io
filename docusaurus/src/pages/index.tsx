@@ -233,6 +233,31 @@ export default function Home(): ReactNode {
                 isTrack
               />
             </div>
+
+            <Heading as="h2" className={clsx(styles.sectionTitle, 'margin-top--lg')}>
+              Linguistic Seminars
+            </Heading>
+            <p className={styles.sectionSubtitle}>
+              Advanced historical linguistics for scholars and enthusiasts
+            </p>
+            <div className="row">
+              <LevelCard
+                level="OES"
+                name="Old East Slavic"
+                description="Language of Kyivan Rus' (X-XIII century)"
+                modules={1}
+                color="#8D6E63"
+                isTrack
+              />
+              <LevelCard
+                level="RUTH"
+                name="Ruthenian"
+                description="Middle Ukrainian (XIV-XVIII century)"
+                modules={0}
+                color="#A1887F"
+                isTrack
+              />
+            </div>
           </div>
         </section>
 

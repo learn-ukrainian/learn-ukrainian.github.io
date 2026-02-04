@@ -1,8 +1,8 @@
 # Audit Report: M87 — hrushevskyi.md
-**Level:** B2 | **Module:** M87 | **Phase:** HIST.9 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M87 | **Phase:** HIST.9 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:36
+**Generated:** 2026-02-03 22:54:50
 
 ## Configuration
 **Type:** B2-history
@@ -36,7 +36,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4264/4000 (raw: 4347)
+- **Words:** ✅ 4264/4000 (raw: 4355)
 - **Activities:** ✅ 7/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/2 types
@@ -48,7 +48,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (7 activities)
-- **Immersion:** 🇺🇦 99.9% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.7% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -74,7 +74,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 125 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Михайло Грушевський: Архітектор української ідентичності** | ⚪️ | 125 | Skipped |
 | **Вступ: Людина-епоха** | ✅ | 371 | Included in Core |
 | **Біографія та наукова кар'єра** | ⚪️ | 815 | Skipped |
 | **Політична діяльність** | ⚪️ | 871 | Skipped |

@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: rich-pospolyta, boiare-i-shliakhta, liublinska-uniia, khmelnychchyna-prychyny
+-->
+
 # Люди Речі Посполитої: Суспільство
 
 > 🎯 **Чому це важливо?**

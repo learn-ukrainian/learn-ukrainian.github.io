@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: perestroika-ukraina, chornobyl, nezalezhnist-1991, rukh
+-->
+
 # Українці в Афганістані: Чужа війна
 
 > 🎯 **Чому це важливо?**

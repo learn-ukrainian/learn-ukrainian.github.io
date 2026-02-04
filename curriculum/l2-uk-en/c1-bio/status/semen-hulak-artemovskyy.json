@@ -2,11 +2,11 @@
   "module": "semen-hulak-artemovskyy",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T23:29:17.978216Z",
+  "last_audit": "2026-02-04T11:41:36.469835Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-29T22:43:06.537745Z",
-    "meta": "2026-01-29T22:43:06.535414Z",
+    "meta": "2026-02-02T23:23:00.001167Z",
     "activities": "2026-01-29T22:43:06.510539Z",
     "vocabulary": "2026-01-29T22:13:17.824594Z",
     "plan": null

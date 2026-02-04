@@ -1,8 +1,8 @@
 # Audit Report: M21 — mongolska-navala.md
-**Level:** B2 | **Module:** M21 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4024
+**Level:** B2-HIST | **Module:** M21 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4024
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:53:57
+**Generated:** 2026-02-03 22:54:11
 
 ## Configuration
 **Type:** B2-history

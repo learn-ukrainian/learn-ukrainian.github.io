@@ -1,0 +1,38 @@
+# Module Plan: The Parables II: Prodigal Son
+# Track: RUTH
+# Module: 026
+# Source: Gemini Research (ISSUE-494)
+# Generated: 2026-02-04
+
+module_number: 26
+slug: parable-prodigal-son
+title_uk: "Притча: Блудний син"
+title_en: "The Parables II: Prodigal Son"
+
+phase: 2
+phase_id: sacred-word
+phase_name: "Sacred Word"
+
+focus: "Family & emotional vocabulary"
+
+word_target: 3500
+
+# Content outline to be expanded during content generation
+content_outline:
+  - section: "Вступ"
+    description: "Introduction to The Parables II: Prodigal Son"
+  - section: "Основний матеріал"
+    description: "Primary source analysis and grammar focus"
+  - section: "Практика"
+    description: "Exercises and activities"
+  - section: "Підсумок"
+    description: "Summary and connection to next module"
+
+# Vocabulary hints (to be populated during content generation)
+vocabulary_hints: []
+
+# Activity types appropriate for this module
+activity_types:
+  - transcription
+  - etymology-trace
+  - grammar-identify

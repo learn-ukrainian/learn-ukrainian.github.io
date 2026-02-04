@@ -2,11 +2,11 @@
   "module": "oleksander-potebnya",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T23:29:20.687998Z",
+  "last_audit": "2026-02-04T11:41:39.249925Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-01T22:46:28.984744Z",
-    "meta": "2026-02-01T22:45:21.157394Z",
+    "meta": "2026-02-02T23:23:00.030255Z",
     "activities": "2026-02-01T22:47:10.086496Z",
     "vocabulary": "2026-02-01T22:45:21.188367Z",
     "plan": null
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 3,
-      "message": "2138/4000 (raw: 2274) | pedagogy: 9 violations | richness: 54% < 95% min (biography)"
+      "message": "2138/4000 (raw: 2274) | pedagogy: 7 violations | richness: 54% < 95% min (biography)"
     },
     "activities": {
       "status": "fail",

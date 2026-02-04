@@ -1,8 +1,8 @@
-module: c1-bio-097
+module: c1-bio-117
 level: C1-BIO
 slug: mykola-amosov
 version: '2.0'
-id: c1-bio-097
+id: c1-bio-117
 naturalness:
   score: 1
   status: PENDING

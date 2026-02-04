@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: andrusivske-peremyrya, ivan-vyhovsky, pereyaslavska-uhoda, ivan-mazepa-derzhavnyk
+-->
+
 # Руїна II: Дорошенко і надія
 
 > 🎯 **Чому це важливо?**

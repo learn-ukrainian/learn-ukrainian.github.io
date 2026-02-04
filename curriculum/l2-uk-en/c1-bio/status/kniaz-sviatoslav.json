@@ -2,12 +2,12 @@
   "module": "kniaz-sviatoslav",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-02T00:05:08.653708Z",
+  "last_audit": "2026-02-04T11:41:15.597522Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-01T23:04:36.427840Z",
+    "md": "2026-02-03T10:03:02.271876Z",
     "meta": "2026-01-29T07:39:04.885529Z",
-    "activities": "2026-01-27T15:34:55.775293Z",
+    "activities": "2026-02-03T10:25:51.277401Z",
     "vocabulary": "2026-02-01T22:57:04.741786Z",
     "plan": null
   },
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4559/4000 (raw: 4861)"
+      "message": "5863/4000 (raw: 6169)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "5/3"
+      "message": "8/3"
     },
     "vocabulary": {
       "status": "pass",

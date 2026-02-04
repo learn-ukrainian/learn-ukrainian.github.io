@@ -1,8 +1,8 @@
-# Audit Report: M128 — oleg-sentsov.md
-**Level:** C1 | **Module:** M128 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M144 — oleg-sentsov.md
+**Level:** C1-BIO | **Module:** M144 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:59
+**Generated:** 2026-02-04 11:42:31
 
 ## Configuration
 **Type:** C1-biography

@@ -2,10 +2,10 @@
   "module": "shevchenko-awakening",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:54:32.871186Z",
+  "last_audit": "2026-02-03T22:54:46.987551Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-28T11:11:17.252450Z",
+    "md": "2026-02-02T10:58:54.877156Z",
     "meta": "2026-01-29T07:38:18.669696Z",
     "activities": "2026-01-27T21:41:49.933543Z",
     "vocabulary": "2026-01-28T11:03:21.355962Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4265/4000 (raw: 4378)"
+      "message": "4265/4000 (raw: 4386)"
     },
     "activities": {
       "status": "pass",

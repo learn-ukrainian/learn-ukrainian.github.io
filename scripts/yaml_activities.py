@@ -203,6 +203,106 @@ class AnagramActivity:
 
 
 @dataclass
+class EtymologyItem:
+    word: str
+    modern: str
+    evolution: str
+
+
+@dataclass
+class EtymologyTraceActivity:
+    type: str = "etymology-trace"
+    title: str = ""
+    instruction: str = ""
+    items: list[EtymologyItem] = field(default_factory=list)
+
+
+@dataclass
+class GrammarIdentifyItem:
+    text: str
+    form: str
+    answer: str
+
+
+@dataclass
+class GrammarIdentifyActivity:
+    type: str = "grammar-identify"
+    title: str = ""
+    instruction: str = ""
+    items: list[GrammarIdentifyItem] = field(default_factory=list)
+
+
+@dataclass
+class TranscriptionActivity:
+    """OES/RUTH: Transcribe archaic script into modern Cyrillic."""
+    type: str = "transcription"
+    title: str = ""
+    instruction: str = ""  # Context about the script (e.g., Glagolitic, Ustav)
+    original: str = ""     # Archaic text (or image URL)
+    answer: str = ""       # Modern Cyrillic equivalent
+    hints: list[str] = field(default_factory=list)  # Optional hints
+
+
+@dataclass
+class PaleographyHotspot:
+    x: float  # X coordinate (percentage 0-100)
+    y: float  # Y coordinate (percentage 0-100)
+    label: str  # Feature name
+    explanation: str  # Why this feature matters
+
+
+@dataclass
+class PaleographyAnalysisActivity:
+    """OES/RUTH: Identify visual features of manuscripts via hotspots."""
+    type: str = "paleography-analysis"
+    title: str = ""
+    instruction: str = ""
+    image_url: str = ""  # URL to manuscript image
+    hotspots: list[PaleographyHotspot] = field(default_factory=list)
+    options: list[str] = field(default_factory=list)  # Possible feature terms
+
+
+@dataclass
+class DialectFeature:
+    feature_name: str
+    value_a: str
+    value_b: str
+    explanation: str
+
+
+@dataclass
+class DialectComparisonActivity:
+    """OES/RUTH: Side-by-side comparison of regional dialect features."""
+    type: str = "dialect-comparison"
+    title: str = ""
+    instruction: str = ""
+    text_a: str = ""  # First dialect text (e.g., Kyiv)
+    text_b: str = ""  # Second dialect text (e.g., Novgorod)
+    label_a: str = ""  # Label for text A
+    label_b: str = ""  # Label for text B
+    features: list[DialectFeature] = field(default_factory=list)
+
+
+@dataclass
+class TranslationItem:
+    translator: str
+    text: str
+    accuracy_score: int  # 1-10
+    notes: str
+
+
+@dataclass
+class TranslationCritiqueActivity:
+    """OES/RUTH: Evaluate and critique modern translations of archaic texts."""
+    type: str = "translation-critique"
+    title: str = ""
+    instruction: str = ""
+    original: str = ""  # Original OES/RUTH text
+    translations: list[TranslationItem] = field(default_factory=list)
+    focus_points: list[str] = field(default_factory=list)  # Key words often mistranslated
+
+
+@dataclass
 class ReadingActivity:
     type: str = "reading"
     title: str = ""
@@ -315,7 +415,8 @@ Activity = Union[
     TranslateActivity, AnagramActivity, ReadingActivity,
     EssayResponseActivity, CriticalAnalysisActivity,
     ComparativeStudyActivity, AuthorialIntentActivity,
-    SourceEvaluationActivity, DebateActivity
+    SourceEvaluationActivity, DebateActivity,
+    EtymologyTraceActivity, GrammarIdentifyActivity
 ]
 
 
@@ -386,6 +487,12 @@ class ActivityParser:
             'authorial-intent': self._parse_authorial_intent,
             'source-evaluation': self._parse_source_evaluation,
             'debate': self._parse_debate,
+            'etymology-trace': self._parse_etymology_trace,
+            'grammar-identify': self._parse_grammar_identify,
+            'transcription': self._parse_transcription,
+            'paleography-analysis': self._parse_paleography_analysis,
+            'dialect-comparison': self._parse_dialect_comparison,
+            'translation-critique': self._parse_translation_critique,
         }
         parser = parsers.get(activity_type)
         return parser(data) if parser else None
@@ -627,6 +734,96 @@ class ActivityParser:
             model_analysis=data.get('model_analysis', '')
         )
 
+    def _parse_etymology_trace(self, data: dict) -> EtymologyTraceActivity:
+        items = []
+        for item_data in data.get('items', []):
+            items.append(EtymologyItem(
+                word=item_data['word'],
+                modern=item_data['modern'],
+                evolution=item_data['evolution']
+            ))
+        return EtymologyTraceActivity(
+            title=data.get('title', ''),
+            instruction=data.get('instruction', ''),
+            items=items
+        )
+
+    def _parse_grammar_identify(self, data: dict) -> GrammarIdentifyActivity:
+        items = []
+        for item_data in data.get('items', []):
+            items.append(GrammarIdentifyItem(
+                text=item_data['text'],
+                form=item_data['form'],
+                answer=item_data['answer']
+            ))
+        return GrammarIdentifyActivity(
+            title=data.get('title', ''),
+            instruction=data.get('instruction', ''),
+            items=items
+        )
+
+    def _parse_transcription(self, data: dict) -> TranscriptionActivity:
+        return TranscriptionActivity(
+            title=data.get('title', ''),
+            instruction=data.get('instruction', ''),
+            original=data.get('original', ''),
+            answer=data.get('answer', ''),
+            hints=data.get('hints', [])
+        )
+
+    def _parse_paleography_analysis(self, data: dict) -> PaleographyAnalysisActivity:
+        hotspots = []
+        for h in data.get('hotspots', []):
+            hotspots.append(PaleographyHotspot(
+                x=h.get('x', 0),
+                y=h.get('y', 0),
+                label=h.get('label', ''),
+                explanation=h.get('explanation', '')
+            ))
+        return PaleographyAnalysisActivity(
+            title=data.get('title', ''),
+            instruction=data.get('instruction', ''),
+            image_url=data.get('image_url', ''),
+            hotspots=hotspots,
+            options=data.get('options', [])
+        )
+
+    def _parse_dialect_comparison(self, data: dict) -> DialectComparisonActivity:
+        features = []
+        for f in data.get('features', []):
+            features.append(DialectFeature(
+                feature_name=f.get('feature_name', ''),
+                value_a=f.get('value_a', ''),
+                value_b=f.get('value_b', ''),
+                explanation=f.get('explanation', '')
+            ))
+        return DialectComparisonActivity(
+            title=data.get('title', ''),
+            instruction=data.get('instruction', ''),
+            text_a=data.get('text_a', ''),
+            text_b=data.get('text_b', ''),
+            label_a=data.get('label_a', ''),
+            label_b=data.get('label_b', ''),
+            features=features
+        )
+
+    def _parse_translation_critique(self, data: dict) -> TranslationCritiqueActivity:
+        translations = []
+        for t in data.get('translations', []):
+            translations.append(TranslationItem(
+                translator=t.get('translator', ''),
+                text=t.get('text', ''),
+                accuracy_score=t.get('accuracy_score', 0),
+                notes=t.get('notes', '')
+            ))
+        return TranslationCritiqueActivity(
+            title=data.get('title', ''),
+            instruction=data.get('instruction', ''),
+            original=data.get('original', ''),
+            translations=translations,
+            focus_points=data.get('focus_points', [])
+        )
+
     def _escape_jsx(self, text: str) -> str:
         """Escapes characters that break JSX parsing when used as a string literal attribute."""
         if not text: return ""
@@ -680,6 +877,12 @@ class ActivityParser:
         if isinstance(activity, AuthorialIntentActivity): return self._authorial_intent_to_mdx(activity, is_ukrainian_forced)
         if isinstance(activity, SourceEvaluationActivity): return self._source_evaluation_to_mdx(activity, is_ukrainian_forced)
         if isinstance(activity, DebateActivity): return self._debate_to_mdx(activity, is_ukrainian_forced)
+        if isinstance(activity, EtymologyTraceActivity): return self._etymology_trace_to_mdx(activity, is_ukrainian_forced)
+        if isinstance(activity, GrammarIdentifyActivity): return self._grammar_identify_to_mdx(activity, is_ukrainian_forced)
+        if isinstance(activity, TranscriptionActivity): return self._transcription_to_mdx(activity, is_ukrainian_forced)
+        if isinstance(activity, PaleographyAnalysisActivity): return self._paleography_analysis_to_mdx(activity, is_ukrainian_forced)
+        if isinstance(activity, DialectComparisonActivity): return self._dialect_comparison_to_mdx(activity, is_ukrainian_forced)
+        if isinstance(activity, TranslationCritiqueActivity): return self._translation_critique_to_mdx(activity, is_ukrainian_forced)
         return ''
 
     def _quiz_to_mdx(self, activity: QuizActivity) -> str:
@@ -843,3 +1046,35 @@ class ActivityParser:
         tasks_prop = f' analysisTasks={{JSON.parse(`{self._dump_safe_json(activity.analysis_tasks)}`)}}' if activity.analysis_tasks else ''
 
         return f"### {self._escape_jsx(activity.title)}\n\n<Debate title=\"{self._escape_jsx(activity.title)}\"{instruction_prop} debateQuestion={{{json.dumps(activity.debate_question, ensure_ascii=False)}}}{context_prop} positions={{JSON.parse(`{self._dump_safe_json(positions_data)}`)}}{tasks_prop} modelAnalysis={{{json.dumps(activity.model_analysis, ensure_ascii=False)}}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+
+    def _etymology_trace_to_mdx(self, activity: EtymologyTraceActivity, is_ukrainian_forced: bool = False) -> str:
+        items = [{'word': str(i.word), 'modern': str(i.modern), 'evolution': str(i.evolution)} for i in activity.items]
+        return f"### {self._escape_jsx(activity.title)}\n\n<EtymologyTrace title=\"{self._escape_jsx(activity.title)}\" items={{JSON.parse(`{self._dump_safe_json(items)}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+
+    def _grammar_identify_to_mdx(self, activity: GrammarIdentifyActivity, is_ukrainian_forced: bool = False) -> str:
+        items = [{'text': str(i.text), 'form': str(i.form), 'answer': str(i.answer)} for i in activity.items]
+        return f"### {self._escape_jsx(activity.title)}\n\n<GrammarIdentify title=\"{self._escape_jsx(activity.title)}\" items={{JSON.parse(`{self._dump_safe_json(items)}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+
+    def _transcription_to_mdx(self, activity: TranscriptionActivity, is_ukrainian_forced: bool = False) -> str:
+        hints = self._dump_safe_json(activity.hints) if activity.hints else '[]'
+        instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
+        return f"### {self._escape_jsx(activity.title)}\n\n<Transcription title=\"{self._escape_jsx(activity.title)}\"{instruction_prop} original={{{json.dumps(activity.original, ensure_ascii=False)}}} answer={{{json.dumps(activity.answer, ensure_ascii=False)}}} hints={{JSON.parse(`{hints}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+
+    def _paleography_analysis_to_mdx(self, activity: PaleographyAnalysisActivity, is_ukrainian_forced: bool = False) -> str:
+        hotspots = [{'x': h.x, 'y': h.y, 'label': h.label, 'explanation': h.explanation} for h in activity.hotspots]
+        options = self._dump_safe_json(activity.options) if activity.options else '[]'
+        instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
+        return f"### {self._escape_jsx(activity.title)}\n\n<PaleographyAnalysis title=\"{self._escape_jsx(activity.title)}\"{instruction_prop} imageUrl={{{json.dumps(activity.image_url, ensure_ascii=False)}}} hotspots={{JSON.parse(`{self._dump_safe_json(hotspots)}`)}} options={{JSON.parse(`{options}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+
+    def _dialect_comparison_to_mdx(self, activity: DialectComparisonActivity, is_ukrainian_forced: bool = False) -> str:
+        features = [{'featureName': f.feature_name, 'valueA': f.value_a, 'valueB': f.value_b, 'explanation': f.explanation} for f in activity.features]
+        instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
+        label_a_prop = f' labelA={{{json.dumps(activity.label_a, ensure_ascii=False)}}}' if activity.label_a else ''
+        label_b_prop = f' labelB={{{json.dumps(activity.label_b, ensure_ascii=False)}}}' if activity.label_b else ''
+        return f"### {self._escape_jsx(activity.title)}\n\n<DialectComparison title=\"{self._escape_jsx(activity.title)}\"{instruction_prop} textA={{{json.dumps(activity.text_a, ensure_ascii=False)}}} textB={{{json.dumps(activity.text_b, ensure_ascii=False)}}}{label_a_prop}{label_b_prop} features={{JSON.parse(`{self._dump_safe_json(features)}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+
+    def _translation_critique_to_mdx(self, activity: TranslationCritiqueActivity, is_ukrainian_forced: bool = False) -> str:
+        translations = [{'translator': t.translator, 'text': t.text, 'accuracyScore': t.accuracy_score, 'notes': t.notes} for t in activity.translations]
+        focus_points = self._dump_safe_json(activity.focus_points) if activity.focus_points else '[]'
+        instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
+        return f"### {self._escape_jsx(activity.title)}\n\n<TranslationCritique title=\"{self._escape_jsx(activity.title)}\"{instruction_prop} original={{{json.dumps(activity.original, ensure_ascii=False)}}} translations={{JSON.parse(`{self._dump_safe_json(translations)}`)}} focusPoints={{JSON.parse(`{focus_points}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"

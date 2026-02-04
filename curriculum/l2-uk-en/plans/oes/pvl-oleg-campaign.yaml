@@ -1,0 +1,38 @@
+# Module Plan: PVL: Oleg's Campaign
+# Track: OES
+# Module: 028
+# Source: Gemini Research (ISSUE-490)
+# Generated: 2026-02-04
+
+module_number: 28
+slug: pvl-oleg-campaign
+title_uk: "ПВЛ: Похід Олега"
+title_en: "PVL: Oleg's Campaign"
+
+phase: 2
+phase_id: literary-tradition
+phase_name: "Literary Tradition"
+
+focus: "Military vocab — "Oleg ide na Greky""
+
+word_target: 3500
+
+# Content outline to be expanded during content generation
+content_outline:
+  - section: "Вступ"
+    description: "Introduction to PVL: Oleg's Campaign"
+  - section: "Основний матеріал"
+    description: "Primary source analysis and grammar focus"
+  - section: "Практика"
+    description: "Exercises and activities"
+  - section: "Підсумок"
+    description: "Summary and connection to next module"
+
+# Vocabulary hints (to be populated during content generation)
+vocabulary_hints: []
+
+# Activity types appropriate for this module
+activity_types:
+  - transcription
+  - etymology-trace
+  - grammar-identify

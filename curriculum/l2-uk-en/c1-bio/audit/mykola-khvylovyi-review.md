@@ -1,8 +1,8 @@
-# Audit Report: M87 — mykola-khvylovyi.md
-**Level:** C1 | **Module:** M87 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M96 — mykola-khvylovyi.md
+**Level:** C1-BIO | **Module:** M96 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:42
+**Generated:** 2026-02-04 11:42:07
 
 ## Configuration
 **Type:** C1-biography

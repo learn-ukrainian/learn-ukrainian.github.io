@@ -1,8 +1,8 @@
-# Audit Report: M38 — oleksander-potebnya.md
-**Level:** C1 | **Module:** M38 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M43 — oleksander-potebnya.md
+**Level:** C1-BIO | **Module:** M43 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 10/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:20
+**Generated:** 2026-02-04 11:41:39
 
 ## Configuration
 **Type:** C1-biography
@@ -34,8 +34,6 @@
 - Low density activities: 1
 
 ## PEDAGOGICAL VIOLATIONS
-- **[LINGUISTIC_PURITY]** Found forbidden or historical characters outside of allowed context: ы
-  - FIX: Remove non-Ukrainian characters (ё, ъ, ы, э, ѣ, etc.) or ensure they are inside a citation (> ) in the LIT track.
 - **[COMPLEXITY]** quiz 'Життєвий шлях Олександра Потебні' has 0 items (minimum: 5)
   - FIX: Add more items. C1 quiz requires at least 5 items.
 - **[HEADING_LEVEL]** Main section 'Vocabulary' uses H2 (##) but spec requires H1 (#)
@@ -48,8 +46,6 @@
   - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
 - **[SECTION_ORDER]** Content section '## Practice' appears after end section '# Activities'
   - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
-- **[LINGUISTIC_PURITY]** Found forbidden or historical characters outside of allowed context: ы
-  - FIX: Remove non-Ukrainian characters (ё, ъ, ы, э, ѣ, etc.) or ensure they are inside a citation (> ) in the LIT track.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in oleksander-potebnya.yaml: Schema validation error at key '0': {'question': 'Що відображають фольклорні символи за Потебнею?', 'answers': ['Давнє міфологічне мислення', 'Випадкові фантазії', 'Художні прийоми', 'Релігійні догми'], 'correct': 'Давнє міфологічне мислення'} is not of type 'string'
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
@@ -70,7 +66,7 @@
 ## Recommendation
 **🔄 REWRITE** (severity 80/100)
 
-- 15 violations (severe - consider revision)
+- 13 violations (severe - consider revision)
 - Structure issue: Missing '## Summary'
 - Activity density below minimum
 
@@ -85,7 +81,7 @@
 - **Vocab:** ⚠️ 15 < 24 (soft target)
 - **Structure:** ❌ Missing '## Summary'
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 9 violations
+- **Pedagogy:** ❌ 7 violations
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 98.9% (target 95-100% (biography))
 - **Richness:** ❌ 54% < 95% min (biography)

@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: ivan-mazepa-poltava, kost-hordiyenko-sich, ivan-mazepa-derzhavnyk, pavlo-polubotok
+-->
+
 # Пилип Орлик і перша Конституція
 
 > 🎯 **Чому це важливо?**

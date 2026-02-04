@@ -1,8 +1,8 @@
-module: c1-bio-062
+module: c1-bio-069
 level: C1-BIO
 slug: lesya-ukrainka
 version: '2.0'
-id: c1-bio-062
+id: c1-bio-069
 naturalness:
   score: 9
   status: PASS

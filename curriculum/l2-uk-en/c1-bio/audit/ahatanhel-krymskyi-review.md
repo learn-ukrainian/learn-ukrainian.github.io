@@ -1,8 +1,8 @@
-# Audit Report: M63 — ahatanhel-krymskyi.md
-**Level:** C1 | **Module:** M63 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M68 — ahatanhel-krymskyi.md
+**Level:** C1-BIO | **Module:** M68 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:31
+**Generated:** 2026-02-04 11:41:52
 
 ## Configuration
 **Type:** C1-biography

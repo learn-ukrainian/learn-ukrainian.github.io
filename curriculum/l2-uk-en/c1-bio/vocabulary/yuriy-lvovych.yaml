@@ -1,0 +1,149 @@
+- lemma: король
+  ipa: /koˈrɔlʲ/
+  translation: king
+  pos: noun
+  gender: m
+  note: титул монарха
+- lemma: королівство
+  ipa: /koroˈlʲiu̯stʋo/
+  translation: kingdom
+  pos: noun
+  gender: n
+  note: держава, очолювана королем
+- lemma: печатка
+  ipa: /peˈt͡ʃɑtkɐ/
+  translation: seal
+  pos: noun
+  gender: f
+  note: знак для засвідчення документів
+- lemma: митрополія
+  ipa: /mɪtroˈpɔlʲijɐ/
+  translation: metropolitanate
+  pos: noun
+  gender: f
+  note: церковна адміністративна одиниця
+- lemma: митрополит
+  ipa: /mɪtropoˈlɪt/
+  translation: metropolitan
+  pos: noun
+  gender: m
+  note: глава церковної провінції
+- lemma: престол
+  ipa: /preˈstɔl/
+  translation: throne
+  pos: noun
+  gender: m
+  note: символ монаршої влади
+- lemma: легітимація
+  ipa: /leɦʲitɪˈmɑt͡sʲijɐ/
+  translation: legitimization
+  pos: noun
+  gender: f
+  note: визнання законності
+- lemma: данник
+  ipa: /ˈdɑnnɪk/
+  translation: tributary
+  pos: noun
+  gender: m
+  note: той, хто платить данину
+- lemma: династія
+  ipa: /dɪˈnɑsʲtʲijɐ/
+  translation: dynasty
+  pos: noun
+  gender: f
+  note: ряд правителів з одного роду
+- lemma: престолонаслідування
+  ipa: /prestolonɐsˈlʲiduʋɐnnʲɐ/
+  translation: succession
+  pos: noun
+  gender: n
+  note: перехід влади від одного до іншого
+- lemma: скіпетр
+  ipa: /ˈsʲkʲipetr/
+  translation: scepter
+  pos: noun
+  gender: m
+  note: жезл, символ влади
+- lemma: суверенітет
+  ipa: /suʋerenʲiˈtɛt/
+  translation: sovereignty
+  pos: noun
+  gender: m
+  note: повна незалежність держави
+- lemma: єпархія
+  ipa: /jeˈpɑrxijɐ/
+  translation: eparchy / diocese
+  pos: noun
+  gender: f
+  note: церковний округ
+- lemma: канонічний
+  ipa: /kɐnoˈnʲit͡ʃnɪj/
+  translation: canonical
+  pos: adj
+  note: такий, що відповідає церковним законам
+- lemma: патримоній
+  ipa: /pɐtrɪˈmonʲij/
+  translation: patrimony
+  pos: noun
+  gender: m
+  note: спадкове володіння
+- lemma: сфрагістика
+  ipa: /sfrɐˈɦʲistɪkɐ/
+  translation: sphragistics
+  pos: noun
+  gender: f
+  note: наука про печатки
+- lemma: мантія
+  ipa: /ˈmɑntʲijɐ/
+  translation: mantle / robe
+  pos: noun
+  gender: f
+  note: урочистий одяг монарха
+- lemma: автокефалія
+  ipa: /ɐu̯tokefˈɑlʲijɐ/
+  translation: autocephaly
+  pos: noun
+  gender: f
+  note: незалежність церкви
+- lemma: намісник
+  ipa: /nɐˈmʲisnyk/
+  translation: viceroy / governor
+  pos: noun
+  gender: m
+  note: представник короля на місцях
+- lemma: баскак
+  ipa: /bɐsˈkɑk/
+  translation: baskak
+  pos: noun
+  gender: m
+  note: представник монгольського хана
+- lemma: улус
+  ipa: /uˈlus/
+  translation: ulus
+  pos: noun
+  gender: m
+  note: частина монгольської імперії
+- lemma: урбаністика
+  ipa: /urbɐˈnʲistɪkɐ/
+  translation: urbanistics / urban planning
+  pos: noun
+  gender: f
+  note: наука про розвиток міст
+- lemma: дипломатія
+  ipa: /dɪploˈmɑtʲijɐ/
+  translation: diplomacy
+  pos: noun
+  gender: f
+  note: мистецтво ведення переговорів
+- lemma: ієрарх
+  ipa: /ijeˈrɑrx/
+  translation: hierarch
+  pos: noun
+  gender: m
+  note: вищий священнослужитель
+- lemma: стабільність
+  ipa: /stɐˈbʲilʲnʲisʲtʲ/
+  translation: stability
+  pos: noun
+  gender: f
+  note: стійкість, постійність

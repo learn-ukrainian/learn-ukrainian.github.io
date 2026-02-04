@@ -74,3 +74,53 @@ items:
   translation: capitulation
   ipa: "kɑp⁽ʲ⁾itulʲˈjɑt͡sʲijɑ"
   pos: noun
+- id: fundatsiia
+  text: фундація
+  translation: foundation / donation
+  ipa: "funˈdɑt͡sʲijɑ"
+  pos: noun
+- id: spudei
+  text: спудеї
+  translation: students (archaic/academic)
+  ipa: "spuˈdɛji"
+  pos: noun
+- id: mazepynstvo
+  text: мазепинство
+  translation: Mazepinism (pro-independence movement)
+  ipa: "mɑzɛˈpɪnstʋɔ"
+  pos: noun
+- id: vasalitet
+  text: васалітет
+  translation: vassalage
+  ipa: "ʋɑsɑlʲiˈtɛt"
+  pos: noun
+- id: natsiogenez
+  text: націогенез
+  translation: nation-building / ethnogenesis
+  ipa: "nɑt͡sʲiɔɦɛˈnɛz"
+  pos: noun
+- id: subiektnist
+  text: суб'єктність
+  translation: agency / subjectivity
+  ipa: "suˈbjɛktnʲistʲ"
+  pos: noun
+- id: soratnyk
+  text: соратник
+  translation: ally / brother-in-arms
+  ipa: "sɔˈrɑtnɪk"
+  pos: noun
+- id: poshana
+  text: пошана
+  translation: respect / honor
+  ipa: "pɔˈʃɑnɑ"
+  pos: noun
+- id: postat
+  text: постать
+  translation: figure / personage
+  ipa: "ˈpɔstɑtʲ"
+  pos: noun
+- id: prosvitnytstvo
+  text: просвітництво
+  translation: enlightenment / education
+  ipa: "prɔs⁽ʲ⁾ʋʲitˈnɪt͡stʋɔ"
+  pos: noun

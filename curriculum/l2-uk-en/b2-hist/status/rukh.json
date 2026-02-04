@@ -2,11 +2,11 @@
   "module": "rukh",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:54:55.787906Z",
+  "last_audit": "2026-02-03T22:55:10.233639Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-31T16:48:36.581334Z",
-    "meta": "2026-01-31T16:27:48.766521Z",
+    "md": "2026-02-03T18:31:26.140805Z",
+    "meta": "2026-02-03T18:31:28.312290Z",
     "activities": "2026-01-31T16:30:37.921319Z",
     "vocabulary": "2026-01-31T16:29:24.532671Z",
     "plan": null
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4272/4000 (raw: 4343)"
+      "message": "4659/4000 (raw: 4741)"
     },
     "activities": {
       "status": "pass",

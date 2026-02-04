@@ -1,0 +1,123 @@
+# C1-BIO modules ordered by birth date
+# Generated from historical knowledge
+
+modules:
+  # Medieval Era (pre-1500)
+  - knyahynia-olha          # ~890-969
+  - kniaz-sviatoslav        # ~942-972
+  - volodymyr-velykii       # 958-1015 (Volodymyr the Great)
+  - kniaz-yaroslav-mudryi   # 978-1054
+  - knyazhna-anna-yaroslavna # ~1030-1075
+  - mykhailo-chernihivskyi  # ~1185-1246
+
+  # Renaissance/Early Modern (1500-1650)
+  - roksolana               # ~1502-1558
+  - iov-boretskyi           # ~1560-1631
+  - sylvestr-kosiv          # ~1590-1657
+  - bohdan-khmelnytskyy     # 1595-1657
+  - petro-mohyla            # 1596-1647
+  - ivan-sirko              # ~1610-1680
+  - yuriy-nemyrych          # 1612-1659
+
+  # Cossack Era (1650-1750)
+  - ivan-mazepa             # 1639-1709
+  - kost-hordiyenko         # ~1650-1733
+  - pylyp-orlyk             # 1672-1742
+  - petro-kalnyshevskyy     # 1691-1803
+
+  # Enlightenment (1720-1800)
+  - hryhoriy-skovoroda      # 1722-1794
+  - maksym-berezovskyy      # 1745-1777
+  - dmytro-bortnyanskyy     # 1751-1825
+  - ivan-kotliarevskyi      # 1769-1838
+
+  # Early 19th Century / National Revival
+  - semen-hulak-artemovskyy # 1813-1873
+  - taras-shevchenko        # 1814-1861
+  - panteleimon-kulish      # 1819-1897
+  - hanna-barvinok          # 1828-1911
+  - marko-vovchok           # 1833-1907
+  - marko-kropyvnytskyi     # 1840-1910
+  - mykhailo-drahomanov     # 1841-1895
+  - mykola-lysenko          # 1842-1912
+  - olena-pchilka           # 1849-1930
+  - mariya-zankovetska      # 1854-1934
+  - mariya-pavlova          # 1854-1938 (Paleontologist)
+  - nataliya-kobrynska      # 1855-1920
+  - ivan-franko             # 1856-1916
+  - yevhen-chykalenko       # 1861-1929
+  - volodymyr-vernadskyi    # 1863-1945
+  - borys-hrinchenko        # 1863-1910
+  - olha-kobylianska        # 1863-1942
+  - kyrylo-trylovskyi       # 1864-1941
+  - ivan-lypa               # 1865-1923
+  - sofiya-okunevska        # 1865-1926
+
+  - mykola-vasylenko        # 1866-1935
+  - mykhailo-hrushevskyi # 1866-1934
+  - liudmyla-starytska      # 1868-1941
+  - mariia-voiakovska       # 1868-19?? (Wife of Hrushevsky)
+  - yulian-bachynskyi       # 1870-1940
+  - lesya-ukrainka          # 1871-1913
+  - ahatanhel-krymskyi      # 1871-1942
+  - solomiya-krushelnytska  # 1872-1952
+  - mykola-mikhnovskyi      # 1873-1924
+  - oleksandr-hrekiv        # 1875-1959
+  - mykola-leontovych       # 1877-1921
+  - symon-petliura          # 1879-1926
+  - kazimir-malevich        # 1879-1935
+  - oleksandr-bohomazov     # 1880-1930
+  - viacheslav-lypynskyi    # 1882-1931
+  - ivan-ohienko            # 1882-1972
+  - petro-bolbochan         # 1883-1919
+  - dmytro-dontsov          # 1883-1973
+  - nataliia-polonska-vasylenko # 1884-1973
+  - valentyna-radzymovska   # 1886-1953 (Biochemist)
+  - oleksandr-arkhypenko    # 1887-1964
+  - les-kurbas              # 1887-1937
+  - olha-basarab            # 1889-1924
+  - klavdiya-latysheva      # 1889-1956
+  - olena-stepaniv          # 1892-1963
+  - mykola-kulish           # 1892-1937
+  - mykola-khvylovyi        # 1893-1933
+  - oleksandr-dovzhenko     # 1894-1956
+  - vira-kholodna           # 1893-1919
+  - borys-liatoshynskyi     # 1895-1968
+  - vasyl-vyshyvanyi        # 1895-1948 (Archduke Wilhelm)
+  - berta-rapoport          # 1896-1952
+  - kateryna-bilokur        # 1900-1961
+  - serge-lifar             # 1905-1986
+  - olena-teliha            # 1906-1942
+  - mariia-prymachenko      # 1909-1997
+  - kateryna-yushchenko     # 1919-2001 (Cyberneticist)
+  - mykola-pohribnyi        # 1921-2022
+  - levko-lukyanenko        # 1928-2018
+  - alla-horska             # 1929-1970
+  - dmytro-pavlychko        # 1929-2023
+  - lina-kostenko           # 1930-
+  - vasyl-symonenko         # 1935-1963
+  - viacheslav-chornovil    # 1937-1999
+  - vasyl-stus              # 1938-1985
+  - myroslav-marynovych     # 1949-
+  - volodymyr-ivasyuk       # 1949-1979
+  - vasyl-shkliar           # 1951-
+  - leonid-kadenyuk         # 1951-2018
+  - yuriy-vynnychuk         # 1952-
+  - kvitka-tsisyk           # 1953-1998
+  - halyna-pahutyak         # 1958-
+  - mariya-matios           # 1959-
+  - oksana-zabuzhko         # 1960-
+  - yaroslav-hrytsak        # 1960-
+  - vitaly-portnikov        # 1967-
+  - taras-prokhasko         # 1968-
+  - tamara-horikha-zernya   # 1971-
+  - serhiy-zhadan           # 1974-
+  - oleg-sentsov            # 1976-
+  - sofia-andrukhovych      # 1982-
+  - kateryna-kalytko        # 1982-
+  - oleksandra-matviichuk   # 1983-
+
+
+
+  # Checkpoint (place at end)
+  - c1-bio-checkpoint

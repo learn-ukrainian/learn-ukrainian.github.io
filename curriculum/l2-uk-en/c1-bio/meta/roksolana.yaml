@@ -1,10 +1,10 @@
-module: c1-bio-012
+module: c1-bio-014
 level: C1-BIO
 slug: roksolana
 version: '2.0'
-id: c1-bio-012
+id: c1-bio-014
 naturalness:
-  score: 10
+  score: 9
   status: PASS
 description: Biography of Roksolana (Hürrem Sultan), the Ukrainian slave girl who
   became the legal wife of Suleiman the Magnificent. Explores her political influence,
@@ -18,4 +18,18 @@ tags:
 - women-in-history
 - diplomacy
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-02'
+content_outline:
+- section: Вступ — Велична жінка Османської імперії
+  words: 400
+- section: Життєпис
+  words: 800
+- section: Внесок
+  words: 800
+- section: Останні роки
+  words: 500
+- section: Спадщина
+  words: 1100
+- section: Підсумок — Жінка, що змінила імперію
+  words: 400
+word_target: 4000

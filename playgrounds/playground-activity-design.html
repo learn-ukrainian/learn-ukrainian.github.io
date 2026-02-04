@@ -408,13 +408,119 @@
       border-color: #3b82f6;
       color: #3b82f6;
     }
+
+    /* Module selector styles */
+    .module-selector {
+      background: #0f172a;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .module-selector select {
+      width: 100%;
+      padding: 8px 12px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      color: #e2e8f0;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .module-selector select:focus {
+      outline: none;
+      border-color: #3b82f6;
+    }
+
+    .module-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .module-btn {
+      flex: 1;
+      padding: 8px 12px;
+      font-size: 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .module-btn.load {
+      background: #334155;
+      color: #e2e8f0;
+    }
+
+    .module-btn.load:hover { background: #475569; }
+
+    .module-btn.save {
+      background: #166534;
+      color: #bbf7d0;
+    }
+
+    .module-btn.save:hover { background: #15803d; }
+
+    .module-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .module-status {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 8px;
+      min-height: 16px;
+    }
+
+    .module-status.success { color: #10b981; }
+    .module-status.error { color: #ef4444; }
+
+    /* API status indicator */
+    .api-indicator {
+      font-size: 10px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: 8px;
+    }
+
+    .api-indicator.connected { background: #166534; color: #bbf7d0; }
+    .api-indicator.disconnected { background: #991b1b; color: #fecaca; }
+
+    .api-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
   </style>
 </head>
 <body>
   <a href="index.html" class="back-link">← Back to Playgrounds</a>
   <div class="container">
     <aside class="sidebar">
-      <h2>Activity Design</h2>
+      <h2>Activity Design <span class="api-indicator disconnected" id="api-indicator"><span class="api-dot"></span><span id="api-text">API</span></span></h2>
+
+      <div class="module-selector">
+        <select id="level-select" onchange="onLevelChange()">
+          <option value="">Select level...</option>
+        </select>
+        <select id="module-select" onchange="onModuleChange()" disabled>
+          <option value="">Select module...</option>
+        </select>
+        <div class="module-actions">
+          <button class="module-btn load" onclick="loadFromModule()" id="load-btn" disabled>Load Activities</button>
+          <button class="module-btn save" onclick="saveToModule()" id="save-btn" disabled>Save to Module</button>
+        </div>
+        <select id="activity-select" style="width:100%;margin-top:8px;display:none;" onchange="onActivityChange()">
+        </select>
+        <div class="module-status" id="module-status"></div>
+      </div>
 
       <h3>Activity Type</h3>
       <div class="activity-types" id="activity-types"></div>
@@ -515,10 +621,288 @@
 
     // ==================== STATE ====================
 
+    const API_BASE = window.location.origin;
+
     const state = {
       type: 'quiz',
-      config: JSON.parse(JSON.stringify(ACTIVITY_TYPES.quiz.defaults))
+      config: JSON.parse(JSON.stringify(ACTIVITY_TYPES.quiz.defaults)),
+      apiConnected: false,
+      levels: [],
+      modules: [],
+      selectedLevel: null,
+      selectedModule: null,
+      allActivities: [],  // Stores all activities from module (we edit one at a time)
+      currentActivityIndex: 0  // Which activity in allActivities we're editing
     };
+
+    // ==================== API FUNCTIONS ====================
+
+    async function fetchAPI(endpoint) {
+      const response = await fetch(`${API_BASE}${endpoint}`);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.json();
+    }
+
+    async function initAPI() {
+      const indicator = document.getElementById('api-indicator');
+      const text = document.getElementById('api-text');
+
+      try {
+        const config = await fetchAPI('/api/config');
+        state.levels = config.levels;
+        state.apiConnected = true;
+
+        indicator.className = 'api-indicator connected';
+        text.textContent = 'Live';
+
+        // Populate level dropdown
+        const levelSelect = document.getElementById('level-select');
+        levelSelect.innerHTML = '<option value="">Select level...</option>' +
+          state.levels.map(l => `<option value="${l.id}">${l.name}</option>`).join('');
+
+      } catch (error) {
+        state.apiConnected = false;
+        indicator.className = 'api-indicator disconnected';
+        text.textContent = 'Offline';
+        console.log('API not available - running in standalone mode');
+      }
+    }
+
+    async function onLevelChange() {
+      const levelSelect = document.getElementById('level-select');
+      const moduleSelect = document.getElementById('module-select');
+      const loadBtn = document.getElementById('load-btn');
+      const saveBtn = document.getElementById('save-btn');
+
+      state.selectedLevel = levelSelect.value;
+      state.selectedModule = null;
+
+      if (!state.selectedLevel) {
+        moduleSelect.disabled = true;
+        moduleSelect.innerHTML = '<option value="">Select module...</option>';
+        loadBtn.disabled = true;
+        saveBtn.disabled = true;
+        return;
+      }
+
+      setStatus('Loading modules...', '');
+
+      try {
+        const levelData = await fetchAPI(`/api/status/levels/${state.selectedLevel}`);
+        state.modules = levelData.modules;
+
+        moduleSelect.disabled = false;
+        moduleSelect.innerHTML = '<option value="">Select module...</option>' +
+          state.modules.map(m => `<option value="${m.id}">M${m.num}: ${m.title}</option>`).join('');
+
+        setStatus('', '');
+      } catch (error) {
+        setStatus('Failed to load modules', 'error');
+      }
+    }
+
+    function onModuleChange() {
+      const moduleSelect = document.getElementById('module-select');
+      const loadBtn = document.getElementById('load-btn');
+      const saveBtn = document.getElementById('save-btn');
+
+      state.selectedModule = moduleSelect.value;
+
+      loadBtn.disabled = !state.selectedModule;
+      saveBtn.disabled = !state.selectedModule;
+    }
+
+    async function loadFromModule() {
+      if (!state.selectedLevel || !state.selectedModule) return;
+
+      setStatus('Loading activities...', '');
+
+      try {
+        const data = await fetchAPI(`/api/activities/${state.selectedLevel}/${state.selectedModule}`);
+
+        if (!data.activities || data.activities.length === 0) {
+          setStatus('No activities found - creating new', '');
+          state.allActivities = [];
+          return;
+        }
+
+        state.allActivities = data.activities;
+        state.currentActivityIndex = 0;
+
+        // Show activity selector if multiple
+        updateActivitySelector();
+
+        // Load first activity into editor
+        if (state.allActivities.length > 0) {
+          loadActivityIntoEditor(state.allActivities[0]);
+        }
+
+        setStatus(`Loaded ${data.activities.length} activities`, 'success');
+      } catch (error) {
+        setStatus('Failed to load: ' + error.message, 'error');
+      }
+    }
+
+    function loadActivityIntoEditor(activity) {
+      const type = activity.type;
+      if (!ACTIVITY_TYPES[type]) {
+        console.warn('Unknown activity type:', type);
+        return;
+      }
+
+      state.type = type;
+
+      // Convert API format to editor format
+      const config = {
+        title: activity.title || '',
+        instruction: activity.instruction || ''
+      };
+
+      if (type === 'quiz') {
+        config.items = (activity.questions || []).map(q => ({
+          question: q.question,
+          options: q.options || [],
+          correct: q.options?.indexOf(q.correct) ?? 0
+        }));
+      } else if (type === 'fill-in') {
+        config.items = (activity.sentences || []).map(s => ({
+          text: s.text,
+          blank: s.answer
+        }));
+        config.wordBank = activity.show_word_bank ?? true;
+      } else if (type === 'match-up') {
+        config.pairs = activity.pairs || [];
+      } else if (type === 'mark-the-words') {
+        config.text = activity.text || '';
+        config.answers = activity.answers || [];
+      } else if (type === 'ordering') {
+        config.items = activity.items || [];
+      } else if (type === 'true-false') {
+        config.items = (activity.statements || []).map(s => ({
+          statement: s.statement,
+          answer: s.answer
+        }));
+      }
+
+      state.config = config;
+      updateAll();
+    }
+
+    async function saveToModule() {
+      if (!state.selectedLevel || !state.selectedModule) return;
+
+      setStatus('Saving...', '');
+
+      try {
+        // Convert editor format to YAML format
+        const activity = convertToYamlFormat();
+
+        // Non-destructive save: append to existing activities
+        // Replace first activity if loaded, or append as new
+        let activities;
+        if (state.allActivities.length > 0) {
+          // Replace the activity at current index (default: first)
+          activities = [...state.allActivities];
+          activities[state.currentActivityIndex || 0] = activity;
+        } else {
+          // No existing activities - start fresh
+          activities = [activity];
+        }
+
+        const response = await fetch(`${API_BASE}/api/activities/${state.selectedLevel}/${state.selectedModule}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ activities })
+        });
+
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+        // Update local state to reflect saved activities
+        state.allActivities = activities;
+
+        const result = await response.json();
+        setStatus(`Saved ${activities.length} activities to ${result.saved}`, 'success');
+      } catch (error) {
+        setStatus('Failed to save: ' + error.message, 'error');
+      }
+    }
+
+    function convertToYamlFormat() {
+      const c = state.config;
+      const activity = {
+        type: state.type,
+        title: c.title,
+        instruction: c.instruction
+      };
+
+      if (state.type === 'quiz') {
+        activity.questions = c.items.map(item => ({
+          question: item.question,
+          options: item.options,
+          correct: item.options[item.correct]
+        }));
+      } else if (state.type === 'fill-in') {
+        activity.sentences = c.items.map(item => ({
+          text: item.text,
+          answer: item.blank
+        }));
+        if (c.wordBank) activity.show_word_bank = true;
+      } else if (state.type === 'match-up') {
+        activity.pairs = c.pairs;
+      } else if (state.type === 'mark-the-words') {
+        activity.text = c.text;
+        activity.answers = c.answers;
+      } else if (state.type === 'ordering') {
+        activity.items = c.items;
+      } else if (state.type === 'true-false') {
+        activity.statements = c.items.map(item => ({
+          statement: item.statement,
+          answer: item.answer
+        }));
+      }
+
+      return activity;
+    }
+
+    function setStatus(message, type) {
+      const status = document.getElementById('module-status');
+      status.textContent = message;
+      status.className = 'module-status' + (type ? ' ' + type : '');
+    }
+
+    function updateActivitySelector() {
+      const select = document.getElementById('activity-select');
+      if (state.allActivities.length <= 1) {
+        select.style.display = 'none';
+        return;
+      }
+
+      select.style.display = 'block';
+      select.innerHTML = state.allActivities.map((a, i) =>
+        `<option value="${i}" ${i === state.currentActivityIndex ? 'selected' : ''}>
+          Activity ${i + 1}: ${a.type} - ${a.title || 'Untitled'}
+        </option>`
+      ).join('') + `<option value="new">+ Add New Activity</option>`;
+    }
+
+    function onActivityChange() {
+      const select = document.getElementById('activity-select');
+      const value = select.value;
+
+      if (value === 'new') {
+        // Add new activity
+        state.currentActivityIndex = state.allActivities.length;
+        state.allActivities.push(convertToYamlFormat());
+        updateActivitySelector();
+        // Reset to default quiz for new activity
+        selectType('quiz');
+        setStatus('New activity added - edit and save', '');
+      } else {
+        state.currentActivityIndex = parseInt(value);
+        loadActivityIntoEditor(state.allActivities[state.currentActivityIndex]);
+        setStatus(`Editing activity ${state.currentActivityIndex + 1}`, '');
+      }
+    }
 
     // ==================== RENDERING ====================
 
@@ -914,6 +1298,7 @@
     // ==================== INIT ====================
 
     updateAll();
+    initAPI();
   </script>
 </body>
 </html>

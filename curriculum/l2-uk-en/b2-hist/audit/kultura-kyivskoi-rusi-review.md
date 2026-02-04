@@ -1,8 +1,8 @@
 # Audit Report: M16 — kultura-kyivskoi-rusi.md
-**Level:** B2 | **Module:** M16 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M16 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:53:54
+**Generated:** 2026-02-03 22:54:08
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 5992/4000 (raw: 6078)
+- **Words:** ✅ 5992/4000 (raw: 6086)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.6% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -72,7 +72,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 69 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Культура Київської Русі — Писемність, мистецтво, архітектура** | ✅ | 69 | Included in Core |
 | **Читання** | ✅ | 228 | Included in Core |
 | **Вступ — Культурний світ Русі** | ✅ | 559 | Included in Core |
 | **Писемність та освіта** | ⚪️ | 520 | Skipped |

@@ -1,0 +1,47 @@
+{
+  "module": "petro-mohyla",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-04T12:08:48.564656Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-04T12:08:39.095654Z",
+    "meta": "2026-02-04T12:07:05.848726Z",
+    "activities": "2026-02-04T12:06:26.763992Z",
+    "vocabulary": "2026-02-04T12:08:39.837129Z",
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "3985/3500 (raw: 4037) | richness: 90% < 95% min (biography)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "8/3"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "25/24"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 1
+  }
+}

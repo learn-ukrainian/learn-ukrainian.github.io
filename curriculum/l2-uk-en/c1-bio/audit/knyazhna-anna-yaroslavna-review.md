@@ -1,8 +1,8 @@
 # Audit Report: M05 — knyazhna-anna-yaroslavna.md
-**Level:** C1 | **Module:** M05 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** C1-BIO | **Module:** M05 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-02 00:08:05
+**Generated:** 2026-02-04 11:41:17
 
 ## Configuration
 **Type:** C1-biography
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4529/4000 (raw: 4577)
+- **Words:** ✅ 4466/4000 (raw: 4516)
 - **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
@@ -49,7 +49,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (8 activities)
-- **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
+- **Immersion:** 🇺🇦 99.8% (target 95-100% (biography))
 - **Richness:** ✅ 95% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -61,11 +61,11 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 7 | 4 | 100% | 19% | 19.0% |
+| primary_sources | 10 | 4 | 100% | 19% | 19.0% |
 | engagement | 5 | 6 | 83% | 14% | 11.9% |
-| quotes | 3 | 3 | 100% | 14% | 14.3% |
+| quotes | 6 | 3 | 100% | 14% | 14.3% |
 | cultural | 3 | 4 | 75% | 10% | 7.1% |
-| visual | 7 | 4 | 100% | 10% | 9.5% |
+| visual | 5 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
 | variety | 0.97 | - | 97% | 5% | 4.6% |
@@ -76,11 +76,14 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 119 | Included in Core |
-| **Вступ — Руська принцеса на французькому троні** | ✅ | 380 | Included in Core |
-| **Життєпис** | ⚪️ | 2616 | Skipped |
-| **Внесок** | ⚪️ | 263 | Skipped |
-| **Останні роки** | ⚪️ | 239 | Skipped |
-| **Спадщина** | ⚪️ | 357 | Skipped |
-| **Підсумок** | ✅ | 294 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 261 | Skipped |
+| **Intro/Narrative** | ✅ | 101 | Included in Core |
+| **Вступ — Руська принцеса на французькому троні** | ✅ | 486 | Included in Core |
+| **Життєпис** | ⚪️ | 103 | Skipped |
+| **Дитинство в Києві** | ⚪️ | 592 | Skipped |
+| **Шлюб із Генріхом I** | ⚪️ | 668 | Skipped |
+| **Королева Франції** | ⚪️ | 731 | Skipped |
+| **Останні роки: Монастир у Санлісі** | ⚪️ | 428 | Skipped |
+| **Внесок у європейську культуру** | ✅ | 453 | Included in Core |
+| **Спадщина та пам'ять** | ⚪️ | 448 | Skipped |
+| **Підсумок** | ✅ | 98 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 358 | Skipped |

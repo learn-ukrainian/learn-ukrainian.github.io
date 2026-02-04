@@ -603,12 +603,14 @@ def count_items(text: str, activity: Activity | None = None) -> int:
             ClozeActivity, UnjumbleActivity, ErrorCorrectionActivity,
             MarkTheWordsActivity, TranslateActivity, AnagramActivity, ReadingActivity,
             SelectActivity, TrueFalseActivity, EssayResponseActivity,
-            CriticalAnalysisActivity, ComparativeStudyActivity, AuthorialIntentActivity
+            CriticalAnalysisActivity, ComparativeStudyActivity, AuthorialIntentActivity,
+            EtymologyTraceActivity, GrammarIdentifyActivity
         )
         
         if isinstance(activity, (QuizActivity, FillInActivity, UnjumbleActivity, 
                                  ErrorCorrectionActivity, TranslateActivity, AnagramActivity, 
-                                 SelectActivity, TrueFalseActivity)):
+                                 SelectActivity, TrueFalseActivity,
+                                 EtymologyTraceActivity, GrammarIdentifyActivity)):
             return len(activity.items)
         elif isinstance(activity, MatchUpActivity):
             return len(activity.pairs)
@@ -635,8 +637,15 @@ def count_items(text: str, activity: Activity | None = None) -> int:
             if activity.tasks:
                 count = max(count, len(activity.tasks))
             return count
-        elif isinstance(activity, (EssayResponseActivity, CriticalAnalysisActivity, 
+        elif isinstance(activity, (EssayResponseActivity, CriticalAnalysisActivity,
                                    ComparativeStudyActivity, AuthorialIntentActivity)):
+            return 1
+        # Handle transcription and other single-exercise types (no items array)
+        # These use original/answer fields, so count as 1 per activity
+        act_type = getattr(activity, 'type', '')
+        if act_type in ('transcription', 'phonology-lab', 'parallel-text',
+                        'paleography-analysis', 'historical-writing', 'register-identify',
+                        'loanword-trace', 'comparative-style'):
             return 1
         return 0
 

@@ -6,6 +6,8 @@ Checks if the lesson content is:
 - Actually teaches what it claims to teach
 - Educational (not word salad)
 - Has clear explanations and examples
+
+Also includes context-aware character validation for historical quotes (Issue #498).
 """
 
 import os
@@ -15,6 +17,373 @@ from typing import Optional
 
 # Check if LLM evaluation is enabled
 CONTENT_QUALITY_ENABLED = os.getenv('AUDIT_CONTENT_QUALITY', 'false').lower() == 'true'
+
+# =============================================================================
+# Character Classes for Historical Text Validation (Issue #498)
+# =============================================================================
+
+# Always invalid - distinctly Russian characters that never appear in Ukrainian
+# or historical East Slavic texts
+RUSSIAN_ONLY_CHARS = {
+    'ы',  # Russian ы (Ukrainian uses и/і)
+    'э',  # Russian э (Ukrainian uses е)
+    'ё',  # Russian ё (Ukrainian uses ьо/йо)
+    'Ы', 'Э', 'Ё',  # Uppercase variants
+}
+
+# Valid in historical quotes only - Old Church Slavonic / Old East Slavic characters
+# These appear in authentic historical texts (OES, RUTH, LIT, chronicles)
+HISTORICAL_CYRILLIC_CHARS = {
+    'ъ',  # Hard sign (yer) - e.g., сънъ → сон
+    'ѣ',  # Yat - e.g., лѣсъ → ліс
+    'ѫ',  # Big yus (nasal o)
+    'ѧ',  # Little yus (nasal e)
+    'ѳ',  # Fita (Greek theta)
+    'ѵ',  # Izhitsa (Greek upsilon)
+    'ѡ',  # Omega
+    'ѯ',  # Ksi
+    'ѱ',  # Psi
+    'ѭ',  # Iotified big yus
+    'ѩ',  # Iotified little yus
+    'ѥ',  # Iotified e
+    'ꙗ',  # Iotified a (alternative ya)
+    'ꙋ',  # Uk (digraph ou)
+    'Ъ', 'Ѣ', 'Ѫ', 'Ѧ', 'Ѳ', 'Ѵ', 'Ѡ',  # Uppercase variants
+    'Ѯ', 'Ѱ', 'Ѭ', 'Ѩ', 'Ѥ',
+}
+
+# Combined set for quick lookup
+ALL_FORBIDDEN_IN_MODERN = RUSSIAN_ONLY_CHARS | HISTORICAL_CYRILLIC_CHARS
+
+# Tracks that legitimately quote historical texts
+HISTORICAL_TRACKS = {'oes', 'ruth', 'lit', 'b2-hist', 'c1-bio', 'c1-hist'}
+
+# Tracks that TEACH historical linguistics - fully exempt from character checks
+# These tracks explicitly analyze historical Cyrillic (including Russian-like forms)
+LINGUISTIC_ANALYSIS_TRACKS = {'oes', 'ruth'}
+
+
+def is_inside_quoted_string(line: str, char_pos: int) -> bool:
+    """
+    Check if a character position is inside a quoted string.
+
+    Supports:
+    - Double quotes: "..."
+    - Guillemets: «...»
+    - Single quotes: '...'
+
+    This allows Russian characters in educational quotes (e.g., showing what
+    Russian propaganda says with Ukrainian translation).
+    """
+    # Count open/close quote pairs before this position
+    text_before = line[:char_pos]
+
+    # Check double quotes
+    double_quote_count = text_before.count('"')
+    if double_quote_count % 2 == 1:  # Odd number means we're inside
+        return True
+
+    # Check guillemets (Ukrainian/Russian quote marks)
+    open_guillemet = text_before.count('«')
+    close_guillemet = text_before.count('»')
+    if open_guillemet > close_guillemet:
+        return True
+
+    return False
+
+
+def is_historical_quote_line(line: str) -> bool:
+    """
+    Detect if a line is a historical quote that should allow historical characters.
+
+    Recognized patterns:
+    - Blockquotes: > ...
+    - Labeled quotes: > **Оригінал:** ...
+    - Callout quotes: > [!quote] ...
+    - Primary source markers: > [!primary-source] ...
+    """
+    stripped = line.strip()
+
+    # Must be a blockquote
+    if not stripped.startswith('>'):
+        return False
+
+    # All blockquotes in historical tracks are considered historical quotes
+    return True
+
+
+def is_historical_context_block(lines: list[str], line_idx: int) -> bool:
+    """
+    Check if a line is within a historical context block.
+
+    Looks for markers like:
+    - > **Оригінал:**
+    - > [!quote]
+    - > [!primary-source]
+    - Being part of a continuous blockquote section
+    """
+    # Check current line
+    current_line = lines[line_idx].strip()
+    if not current_line.startswith('>'):
+        return False
+
+    # Check for explicit markers in current line
+    quote_content = current_line[1:].strip().lower()
+    explicit_markers = [
+        '**оригінал',
+        '[!quote]',
+        '[!primary-source]',
+        '[!chronicle]',
+        '[!historical]',
+        '**первинне джерело',
+        '**джерело:',
+    ]
+    for marker in explicit_markers:
+        if marker in quote_content:
+            return True
+
+    # Check if part of a blockquote block that started with a marker
+    # Look backwards for the start of this blockquote section
+    for i in range(line_idx - 1, -1, -1):
+        prev_line = lines[i].strip()
+        if not prev_line.startswith('>'):
+            # End of blockquote section going backwards
+            break
+        prev_content = prev_line[1:].strip().lower()
+        for marker in explicit_markers:
+            if marker in prev_content:
+                return True
+
+    return False
+
+
+def detect_track_from_path(file_path: str) -> str | None:
+    """Extract track identifier from file path."""
+    if not file_path:
+        return None
+
+    path_lower = file_path.lower()
+
+    # Check for track directories
+    track_patterns = [
+        (r'/oes/', 'oes'),
+        (r'/ruth/', 'ruth'),
+        (r'/lit/', 'lit'),
+        (r'/b2-hist/', 'b2-hist'),
+        (r'/c1-bio/', 'c1-bio'),
+        (r'/c1-hist/', 'c1-hist'),
+    ]
+
+    for pattern, track in track_patterns:
+        if re.search(pattern, path_lower):
+            return track
+
+    return None
+
+
+# YAML fields that allow historical characters
+HISTORICAL_YAML_FIELDS = {
+    'oes',           # Old East Slavic original text
+    'ruth',          # Ruthenian original text
+    'original',      # Generic original historical text
+    'church_slavonic',  # Church Slavonic text
+    'source_text',   # Primary source text
+}
+
+
+def validate_yaml_vocabulary(yaml_content: str, file_path: str = "") -> list[dict]:
+    """
+    Validate character usage in YAML vocabulary files.
+
+    Allows historical characters in specific fields (oes, ruth, original, etc.)
+    but flags them in modern Ukrainian fields.
+
+    Args:
+        yaml_content: Raw YAML content string
+        file_path: Path to file for track detection
+
+    Returns:
+        List of violations
+    """
+    violations = []
+    track = detect_track_from_path(file_path)
+
+    # Parse line by line to identify field context
+    lines = yaml_content.split('\n')
+    current_field = None
+    russian_found = []
+    historical_in_modern = []
+
+    for idx, line in enumerate(lines):
+        # Detect field name from YAML structure
+        field_match = re.match(r'^[\s-]*(\w+):\s*(.*)$', line)
+        if field_match:
+            current_field = field_match.group(1).lower()
+            value = field_match.group(2)
+        else:
+            # Continuation of previous field or multiline
+            value = line
+
+        # Skip if in a historical field
+        if current_field in HISTORICAL_YAML_FIELDS:
+            # Still check for Russian-only chars even in historical fields
+            for char in value:
+                if char in RUSSIAN_ONLY_CHARS:
+                    russian_found.append({
+                        'char': char,
+                        'line': idx + 1,
+                        'field': current_field
+                    })
+            continue
+
+        # Check all characters in non-historical fields
+        for char in value:
+            if char in RUSSIAN_ONLY_CHARS:
+                russian_found.append({
+                    'char': char,
+                    'line': idx + 1,
+                    'field': current_field
+                })
+            elif char in HISTORICAL_CYRILLIC_CHARS:
+                historical_in_modern.append({
+                    'char': char,
+                    'line': idx + 1,
+                    'field': current_field
+                })
+
+    # Report violations
+    if russian_found:
+        chars = set(m['char'] for m in russian_found)
+        violations.append({
+            'type': 'RUSSIAN_CHARACTERS_YAML',
+            'severity': 'error',
+            'issue': f"Found Russian-only characters in vocabulary YAML: {', '.join(chars)}",
+            'fix': "Replace with Ukrainian equivalents: ы→и, э→е, ё→ьо/йо"
+        })
+
+    if historical_in_modern:
+        chars = set(m['char'] for m in historical_in_modern)
+        fields = set(m['field'] for m in historical_in_modern if m['field'])
+        violations.append({
+            'type': 'HISTORICAL_CHARS_IN_MODERN_YAML',
+            'severity': 'error',
+            'issue': f"Found historical characters in modern fields: {', '.join(chars)} (fields: {', '.join(fields) if fields else 'unknown'})",
+            'fix': f"Move historical text to 'oes:', 'ruth:', or 'original:' fields. Allowed fields: {', '.join(HISTORICAL_YAML_FIELDS)}"
+        })
+
+    return violations
+
+
+def validate_characters_in_content(
+    content: str,
+    level_code: str,
+    file_path: str = ""
+) -> list[dict]:
+    """
+    Context-aware character validation for historical quotes.
+
+    Rules:
+    - RUSSIAN_ONLY chars (ы, э, ё): Always flagged as errors
+    - HISTORICAL_CYRILLIC chars (ъ, ѣ, etc.):
+      - Allowed in historical quote blocks
+      - Allowed in historical tracks (OES, RUTH, LIT, B2-HIST, C1-BIO)
+      - Flagged in modern Ukrainian prose
+
+    Exception: OES and RUTH tracks are FULLY EXEMPT from these checks
+    because they explicitly teach historical Cyrillic orthography.
+
+    Returns list of violations.
+    """
+    violations = []
+
+    # Detect track from file path
+    track = detect_track_from_path(file_path)
+    is_historical_track = track in HISTORICAL_TRACKS if track else False
+
+    # Also check level_code for track info
+    level_lower = level_code.lower() if level_code else ''
+    if level_lower in HISTORICAL_TRACKS:
+        is_historical_track = True
+
+    # OES and RUTH are linguistic analysis tracks - fully exempt from character checks
+    # These tracks explicitly teach historical Cyrillic including forms like ы, ъ, ь, ѣ
+    is_linguistic_track = (track in LINGUISTIC_ANALYSIS_TRACKS if track else False) or \
+                          (level_lower in LINGUISTIC_ANALYSIS_TRACKS)
+    if is_linguistic_track:
+        return violations  # Skip all character checks for OES/RUTH
+
+    lines = content.split('\n')
+    russian_only_found = []
+    historical_in_modern_found = []
+
+    for idx, line in enumerate(lines):
+        # Check each character in the line
+        for char_pos, char in enumerate(line):
+            # Russian-only chars are invalid UNLESS inside quoted strings
+            # (educational context showing Russian terms with Ukrainian translation)
+            if char in RUSSIAN_ONLY_CHARS:
+                # Allow Russian chars inside quotes (for "Prosecutor's Voice" exception)
+                # e.g., "исконно русский Крым" (укр. «споконвічно російський Крим»)
+                if is_inside_quoted_string(line, char_pos):
+                    continue
+
+                russian_only_found.append({
+                    'char': char,
+                    'line': idx + 1,
+                    'context': line[:80]
+                })
+                continue
+
+            # Historical chars need context check
+            if char in HISTORICAL_CYRILLIC_CHARS:
+                # Check if this line is in a historical quote context
+                is_quote = is_historical_quote_line(line)
+                is_explicit_historical = is_historical_context_block(lines, idx)
+
+                # Allow if:
+                # 1. In a historical track AND in a blockquote
+                # 2. In an explicitly marked historical quote block
+                if is_historical_track and is_quote:
+                    continue
+                if is_explicit_historical:
+                    continue
+
+                # Otherwise, flag it
+                historical_in_modern_found.append({
+                    'char': char,
+                    'line': idx + 1,
+                    'context': line[:80]
+                })
+
+    # Report Russian-only chars (always error)
+    if russian_only_found:
+        chars = set(m['char'] for m in russian_only_found)
+        lines_affected = sorted(set(m['line'] for m in russian_only_found))[:5]
+        violations.append({
+            'type': 'RUSSIAN_CHARACTERS',
+            'severity': 'error',
+            'issue': f"Found Russian-only characters: {', '.join(chars)} (lines: {lines_affected})",
+            'fix': "Replace with Ukrainian equivalents: ы→и, э→е, ё→ьо/йо. These characters never appear in Ukrainian."
+        })
+
+    # Report historical chars in modern context
+    if historical_in_modern_found:
+        chars = set(m['char'] for m in historical_in_modern_found)
+        lines_affected = sorted(set(m['line'] for m in historical_in_modern_found))[:5]
+
+        if is_historical_track:
+            fix_msg = "Move historical text into a blockquote (> ) to mark it as a primary source quote."
+        else:
+            fix_msg = "Remove historical characters from modern Ukrainian prose, or use [!quote] callout for authentic historical quotes."
+
+        violations.append({
+            'type': 'HISTORICAL_CHARS_IN_MODERN',
+            'severity': 'error',
+            'issue': f"Found historical Cyrillic characters outside quote context: {', '.join(chars)} (lines: {lines_affected})",
+            'fix': fix_msg
+        })
+
+    return violations
 
 
 def extract_lesson_content(content: str) -> str:
@@ -214,9 +583,16 @@ Respond with ONLY valid JSON."""
         return None
 
 
-def check_content_quality(content: str, level_code: str, module_num: int) -> list[dict]:
+def check_content_quality(
+    content: str,
+    level_code: str,
+    module_num: int,
+    file_path: str = ""
+) -> list[dict]:
     """
     Check if lesson content is educational and coherent using LLM evaluation.
+
+    Also performs context-aware character validation (Issue #498).
 
     Returns:
         List of violations with format:
@@ -243,37 +619,11 @@ def check_content_quality(content: str, level_code: str, module_num: int) -> lis
                 is_surzhyk_module = True
                 break
 
-    # Check for Russian-only and Historical characters (ё, ъ, ы, э, ѣ, ѳ, ѵ)
-    # These are allowed in:
-    # 1. LIT track within citations (> blockquotes)
-    # 2. Surzhyk modules (teaching about mixed Ukrainian-Russian speech)
-    historical_chars = set('ёъыэѣѳѵЁЪЫЭѢѲѴ')
-    lines = content.split('\n')
-    bad_matches = []
-
+    # Context-aware character validation (Issue #498)
+    # Skip for Surzhyk modules which intentionally contain Russian
     if not is_surzhyk_module:
-        for line in lines:
-            found = [c for c in line if c in historical_chars]
-            if found:
-                is_citation = line.strip().startswith('>')
-                # Heuristic context check
-                context = line.lower()
-                has_context = 'russian' in context or 'rocійськ' in context or 'російськ' in context
-
-                if level_code.lower() == 'lit' and is_citation:
-                    # Allowed in literature citations
-                    continue
-
-                if not has_context:
-                    bad_matches.extend(found)
-
-        if bad_matches:
-             violations.append({
-                'type': 'LINGUISTIC_PURITY',
-                'severity': 'error',
-                'issue': f"Found forbidden or historical characters outside of allowed context: {', '.join(set(bad_matches))}",
-                'fix': "Remove non-Ukrainian characters (ё, ъ, ы, э, ѣ, etc.) or ensure they are inside a citation (> ) in the LIT track."
-            })
+        char_violations = validate_characters_in_content(content, level_code, file_path)
+        violations.extend(char_violations)
 
 
     if not CONTENT_QUALITY_ENABLED:

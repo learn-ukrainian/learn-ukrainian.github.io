@@ -1,0 +1,37 @@
+# Module Meta: Administrative Reform
+# Track: RUTH
+# Module: 009
+# Generated: 2026-02-04
+
+module_number: 9
+slug: administrative-reform
+title: "Адміністративна реформа"
+title_en: "Administrative Reform"
+
+type: lesson
+phase: 1
+phase_id: chancery-legal
+
+# Pedagogy
+pedagogy: theory-first
+duration_minutes: 60
+word_target: 3500
+immersion_level: 100
+
+# Focus
+grammar_focus: "Воєводство, Повіт — Territorial units"
+vocabulary_focus: []
+cultural_focus: []
+
+# Activity hints (minimum counts)
+activity_hints:
+  - type: transcription
+    min_items: 2
+  - type: etymology-trace
+    min_items: 2
+  - type: grammar-identify
+    min_items: 3
+
+# Prerequisites
+prerequisites:
+  - module: 8

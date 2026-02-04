@@ -1,8 +1,8 @@
 # Audit Report: M22 — mykhailo-chernigivskyi.md
-**Level:** B2 | **Module:** M22 | **Phase:** HIST.3 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M22 | **Phase:** HIST.3 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:53:58
+**Generated:** 2026-02-03 22:54:12
 
 ## Configuration
 **Type:** B2-history

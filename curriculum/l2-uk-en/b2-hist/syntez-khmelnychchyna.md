@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: bohdan-khmelnytskyi, kozatska-derzhava, pereyaslavska-uhoda, bitva-pid-zhovtymy-vodamy
+-->
+
 # Синтез: Козацька революція
 
 > 🎯 **Чому це важливо?**

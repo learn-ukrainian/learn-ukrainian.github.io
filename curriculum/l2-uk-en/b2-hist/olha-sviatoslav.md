@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: oleh-ihor, volodymyr-velykyi, vizantiia-khrestianstvo, khozary-i-sloviany
+-->
+
 # Ольга та Святослав: Дипломат і Воїн
 
 > 🎯 **Чому це важливо?**

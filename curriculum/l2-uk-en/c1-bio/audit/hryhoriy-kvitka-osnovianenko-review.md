@@ -1,8 +1,8 @@
-# Audit Report: M32 — hryhoriy-kvitka-osnovianenko.md
-**Level:** C1 | **Module:** M32 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M37 — hryhoriy-kvitka-osnovianenko.md
+**Level:** C1-BIO | **Module:** M37 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:17
+**Generated:** 2026-02-04 11:41:35
 
 ## Configuration
 **Type:** C1-biography

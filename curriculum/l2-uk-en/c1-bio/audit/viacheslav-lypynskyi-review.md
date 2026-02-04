@@ -1,8 +1,8 @@
-# Audit Report: M72 — viacheslav-lypynskyi.md
-**Level:** C1 | **Module:** M72 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M77 — viacheslav-lypynskyi.md
+**Level:** C1-BIO | **Module:** M77 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:36
+**Generated:** 2026-02-04 11:41:57
 
 ## Configuration
 **Type:** C1-biography
@@ -34,6 +34,10 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+- **[RUSSIAN_CHARACTERS]** Found Russian-only characters: ы (lines: [114])
+  - FIX: Replace with Ukrainian equivalents: ы→и, э→е, ё→ьо/йо. These characters never appear in Ukrainian.
+- **[RUSSIAN_CHARACTERS]** Found Russian-only characters: ы (lines: [114])
+  - FIX: Replace with Ukrainian equivalents: ы→и, э→е, ё→ьо/йо. These characters never appear in Ukrainian.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in viacheslav-lypynskyi.yaml: Schema validation error at key 'id': 'c1-86-reading-2' does not match '^reading-[a-z0-9-]+$'
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
@@ -42,13 +46,13 @@
   - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template.md'
   - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Спадщина|Вплив' found: Вплив на сучасників, Головні досягнення та теоретична спадщина
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple headers contain 'Спадщина': Головні досягнення та теоретична спадщина, Вплив на сучасників
+  - FIX: RENAME one header to NOT contain 'Спадщина'. Example: 'Агіографічна спадщина' → 'Житійна творчість' (removes the duplicate word).
 
 ## Recommendation
 **📝 UPDATE** (severity 35/100)
 
-- 4 violations (moderate)
+- 6 violations (moderate)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
@@ -62,7 +66,7 @@
 - **Vocab:** ⚠️ 0 < 24 (soft target)
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ❌ 3 violations
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
 - **Richness:** ✅ 95% (biography)

@@ -1,8 +1,8 @@
 # Audit Report: M45 — petro-sahaidachnyi.md
-**Level:** B2 | **Module:** M45 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 5200
+**Level:** B2-HIST | **Module:** M45 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 5200
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:11
+**Generated:** 2026-02-03 22:54:25
 
 ## Configuration
 **Type:** B2-history

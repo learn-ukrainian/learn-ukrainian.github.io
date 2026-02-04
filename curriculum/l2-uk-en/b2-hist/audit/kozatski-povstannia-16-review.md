@@ -1,8 +1,8 @@
 # Audit Report: M44 — kozatski-povstannia-16.md
-**Level:** B2 | **Module:** M44 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 4800
+**Level:** B2-HIST | **Module:** M44 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 4800
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:11
+**Generated:** 2026-02-03 22:54:25
 
 ## Configuration
 **Type:** B2-history

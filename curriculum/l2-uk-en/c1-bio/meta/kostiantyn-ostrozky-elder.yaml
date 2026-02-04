@@ -1,22 +1,50 @@
-module: c1-bio-011
+module: c1-bio-013
 level: C1-BIO
 slug: kostiantyn-ostrozky-elder
 version: '2.0'
-id: c1-bio-011
+id: c1-bio-013
 naturalness:
   score: 10
   status: PASS
-description: Biography of Kostiantyn Ostrozky (1460–1530), Grand Hetman of Lithuania,
-  focusing on his victory at the Battle of Orsha and his role as a patron of Orthodoxy.
-  Covers military terminology and historical narrative register.
 duration: 120
 transliteration: none
 tags:
 - history
 - biography
+- medieval
 - lithuania
 - military
 - orthodoxy
-vocabulary_count: 25
+vocabulary_count: 24
+content_outline:
+- section: Вступ — Гетьман двох народів
+  words: 600
+  points:
+  - Гетьман Литовський
+  - Православний магнат
+- section: Життєпис
+  words: 1500
+  points:
+  - Ранні роки
+  - Битва під Оршею
+  - Останні роки
+- section: Історичний контекст
+  words: 600
+  points:
+  - ВКЛ
+  - Москва
+- section: Внесок та Спадщина
+  words: 600
+  points:
+  - Меценатство
+  - Церква
+- section: Порівняльний аналіз
+  words: 600
+  points:
+  - Острозький vs Вишневецький
+- section: Підсумок
+  words: 300
+  points:
+  - Значення
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-03'

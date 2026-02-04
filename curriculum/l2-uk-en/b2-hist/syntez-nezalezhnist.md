@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: nezalezhnist-1991, pomarancheva-revoliutsiia, revoliutsiia-hidnosti, rukh
+-->
+
 # Синтез: Незалежна Україна (1991-2014)
 
 > 🎯 **Чому це важливо?**

@@ -1,0 +1,37 @@
+# Module Meta: Names & Identity
+# Track: OES
+# Module: 018
+# Generated: 2026-02-04
+
+module_number: 18
+slug: names-identity
+title: "Імена та ідентичність"
+title_en: "Names & Identity"
+
+type: lesson
+phase: 1
+phase_id: vernacular-foundations
+
+# Pedagogy
+pedagogy: theory-first
+duration_minutes: 60
+word_target: 3500
+immersion_level: 100
+
+# Focus
+grammar_focus: "Christian names vs Slavic nicknames (Ніженець)"
+vocabulary_focus: []
+cultural_focus: []
+
+# Activity hints (minimum counts)
+activity_hints:
+  - type: transcription
+    min_items: 2
+  - type: etymology-trace
+    min_items: 2
+  - type: grammar-identify
+    min_items: 3
+
+# Prerequisites
+prerequisites:
+  - module: 17

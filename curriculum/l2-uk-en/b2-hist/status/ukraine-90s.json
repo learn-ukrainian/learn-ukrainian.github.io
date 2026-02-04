@@ -2,10 +2,10 @@
   "module": "ukraine-90s",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:54:56.992338Z",
+  "last_audit": "2026-02-03T22:55:11.461885Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-31T20:51:04.038989Z",
+    "md": "2026-02-02T11:01:14.501300Z",
     "meta": "2026-01-29T07:38:18.730582Z",
     "activities": "2026-01-31T20:29:25.600153Z",
     "vocabulary": "2026-01-31T15:29:30.779873Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4946/4000 (raw: 5022)"
+      "message": "4946/4000 (raw: 5030)"
     },
     "activities": {
       "status": "pass",

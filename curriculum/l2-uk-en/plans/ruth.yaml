@@ -1,0 +1,172 @@
+# RUTH Track Plan - Руська мова (Ruthenian / Middle Ukrainian)
+# Source: Gemini Research (ISSUE-493, ISSUE-494, ISSUE-495, ISSUE-496)
+# Generated: 2026-02-04
+
+track_id: ruth
+track_name: "Руська мова"
+track_name_en: "Ruthenian (Middle Ukrainian)"
+period: "XIV–XVIII century (Grand Duchy of Lithuania → Cossack Era)"
+modules: 100
+prerequisite: "B2 Core, B2-HIST Phase 2-3, OES completion (recommended)"
+immersion: "100% Ukrainian"
+
+# Track Overview:
+# The RUTH track covers the "bridge" from medieval to modern Ukrainian.
+# Five centuries of linguistic evolution through document literacy,
+# stylistic analysis, and the polyphonic mix of registers.
+
+key_concepts:
+  - term: "Руська мова"
+    description: "The administrative and literary language of Ukrainian lands in the GDL and Polish-Lithuanian Commonwealth"
+  - term: "Проста мова"
+    description: '"Simple/vernacular language" — the written form closer to actual spoken Ukrainian'
+  - term: "Диглосія"
+    description: "Coexistence of Church Slavonic (high) and Ruthenian (middle/low) registers"
+  - term: "Канцелярський стиль"
+    description: "Chancery style — formal legal/administrative language"
+
+phases:
+  - id: 1
+    name_uk: "«Канцелярія» — Юридична традиція"
+    name_en: "Chancery — Legal & Administrative"
+    modules: 1-25
+    focus:
+      - "Lithuanian Statutes (1529, 1566, 1588)"
+      - "Charters and legal documents"
+      - "Chancery style and formulaic language"
+      - "Polish/Latin influence"
+      - "Paleography: Ruthenian Cursive (Skoropys)"
+    rationale: "Foundation of official written language in the GDL period."
+    source_issue: "#493"
+    primary_sources:
+      - name: "Литовський статут (1529)"
+        note: "First codification"
+      - name: "Литовський статут (1566)"
+        url: "http://litopys.org.ua/"
+      - name: "Литовський статут (1588)"
+        note: "The Grand Code"
+
+  - id: 2
+    name_uk: "«Священне слово» — Конфесійний стиль"
+    name_en: "Sacred Word — Vernacular Scripture"
+    modules: 26-50
+    focus:
+      - "Peresopnytsia Gospel (1556-1561)"
+      - "Ostrih Bible (1581)"
+      - "Emergence of Prosta Mova"
+      - "Translation strategies"
+      - "Diglossia: Church Slavonic vs Ruthenian"
+    rationale: "The tension between 'living' language and 'sacred' language."
+    source_issue: "#494"
+    primary_sources:
+      - name: "Пересопницьке Євангеліє"
+        url: "http://litopys.org.ua/peresop/peresop.htm"
+      - name: "Острозька Біблія"
+        url: "http://litopys.org.ua/ostrob/ostrob.htm"
+
+  - id: 3
+    name_uk: "«Барокова боротьба» — Полеміка та граматика"
+    name_en: "Baroque Fight — Polemics & Grammar"
+    modules: 51-75
+    focus:
+      - "Smotrytsky's Grammar (1619)"
+      - "Ivan Vyshensky's Epistles"
+      - "Threnos (Smotrytsky)"
+      - "Kyiv-Mohyla rhetorical tradition"
+      - "Linguistic standardization"
+      - "Baroque rhetoric"
+    rationale: "The 'high tension' between preserving Church Slavonic purity and mastering Latin rhetorical weapons."
+    source_issue: "#495"
+    primary_sources:
+      - name: "Граматика Смотрицького (1619)"
+        note: "First comprehensive CS grammar"
+      - name: "Листи Івана Вишенського"
+        note: "Ascetic polemics"
+      - name: "Тренос (1610)"
+        note: "The Lament"
+
+  - id: 4
+    name_uk: "«Козацьке слово» — Літописи та філософія"
+    name_en: "Cossack Word — Chronicles & Philosophy"
+    modules: 76-100
+    focus:
+      - "Cossack Chronicles (Samovydets, Hrabianka, Velychko)"
+      - "Pylyp Orlyk's Constitution (1710)"
+      - "Hryhorii Skovoroda"
+      - "Late Ruthenian"
+      - "Transition to Modern Ukrainian"
+    rationale: "Peak of Old Ukrainian literary language before transformation to modern vernacular."
+    source_issue: "#496"
+    primary_sources:
+      - name: "Літопис Самовидця"
+        note: "Eyewitness chronicle"
+      - name: "Літопис Граб'янки"
+        note: "Poetic history"
+      - name: "Літопис Величка"
+        note: "Monumental Baroque"
+      - name: "Конституція Пилипа Орлика (1710)"
+        note: "Social contract"
+      - name: "Твори Григорія Сковороди"
+        note: "Philosophy"
+
+timeline_key_texts:
+  - year: 1529
+    text: "Перший Литовський статут"
+    phase: 1
+  - year: "1556-1561"
+    text: "Пересопницьке Євангеліє"
+    phase: 2
+  - year: 1566
+    text: "Другий Литовський статут"
+    phase: 1
+  - year: 1569
+    text: "Люблінська унія"
+    phase: 1
+  - year: 1581
+    text: "Острозька Біблія"
+    phase: 2
+  - year: 1588
+    text: "Третій Литовський статут"
+    phase: 1
+  - year: 1596
+    text: "Берестейська унія"
+    phase: 3
+  - year: 1619
+    text: "Граматика Смотрицького"
+    phase: 3
+  - year: 1627
+    text: "Лексикон Памви Беринди"
+    phase: 3
+  - year: 1710
+    text: "Конституція Пилипа Орлика"
+    phase: 4
+  - year: "~1720"
+    text: "Літопис Величка"
+    phase: 4
+  - year: 1722
+    text: "Філософські твори Сковороди"
+    phase: 4
+  - year: 1798
+    text: "«Енеїда» Котляревського"
+    phase: 4
+
+linguistic_evolution:
+  # XIV century → XVIII century
+  # [Давньоруська / OES] → [Руська мова / RUTH] → [Нова українська]
+  registers:
+    high: "Church Slavonic (religious texts)"
+    middle: "Chancery Ruthenian (legal documents)"
+    low: "Prosta Mova (vernacular literature)"
+
+activity_types:
+  # See ISSUE-502-activity-spec.yaml for full schemas
+  - transcription
+  - etymology-trace
+  - grammar-identify
+  - grammar-lab
+  - parallel-text
+  - paleography-analysis
+  - historical-writing
+  - register-identify
+  - loanword-trace
+  - comparative-style

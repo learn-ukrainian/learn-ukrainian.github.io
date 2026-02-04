@@ -1,8 +1,8 @@
 # Audit Report: M127 — aneksiia-krymu.md
-**Level:** B2 | **Module:** M127 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4202
+**Level:** B2-HIST | **Module:** M127 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4202
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:59
+**Generated:** 2026-02-03 22:55:14
 
 ## Configuration
 **Type:** B2-history

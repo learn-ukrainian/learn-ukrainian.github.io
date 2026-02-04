@@ -1,0 +1,35 @@
+# Module Meta: Phase 1 Checkpoint
+# Track: OES
+# Module: 021
+# Generated: 2026-02-04
+
+module_number: 21
+slug: phase-1-checkpoint
+title: "Контрольна точка фази 1"
+title_en: "Phase 1 Checkpoint"
+
+type: checkpoint
+phase: 1
+phase_id: vernacular-foundations
+
+# Pedagogy
+pedagogy: theory-first
+duration_minutes: 90
+word_target: 2500
+immersion_level: 100
+
+# Focus
+grammar_focus: "Synthesis of Vernacular Foundations"
+vocabulary_focus: []
+cultural_focus: []
+
+# Activity hints (minimum counts)
+activity_hints:
+  - type: transcription
+    min_items: 3
+  - type: grammar-identify
+    min_items: 5
+
+# Prerequisites
+prerequisites:
+  - module: 20

@@ -1,8 +1,8 @@
 # Audit Report: M32 — rich-pospolyta.md
-**Level:** B2 | **Module:** M32 | **Phase:** B2.3a | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M32 | **Phase:** B2.3a | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:03
+**Generated:** 2026-02-03 22:54:18
 
 ## Configuration
 **Type:** B2-history
@@ -39,7 +39,7 @@
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 15/5
+- **Engagement:** ✅ 16/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure

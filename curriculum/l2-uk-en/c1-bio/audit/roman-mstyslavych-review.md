@@ -1,8 +1,8 @@
-# Audit Report: M06 — roman-mstyslavych.md
-**Level:** C1 | **Module:** M06 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4000
+# Audit Report: M08 — roman-mstyslavych.md
+**Level:** C1-BIO | **Module:** M08 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:04
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-04 11:41:19
 
 ## Configuration
 **Type:** C1-biography
@@ -37,12 +37,12 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4057/4000 (raw: 4333)
+- **Words:** ✅ 4123/4000 (raw: 4408)
 - **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 10/5
+- **Engagement:** ✅ 11/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
@@ -50,12 +50,12 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (8 activities)
 - **Immersion:** 🇺🇦 99.8% (target 95-100% (biography))
-- **Richness:** ✅ 97% (biography)
+- **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 97% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
@@ -64,26 +64,26 @@
 | primary_sources | 4 | 4 | 100% | 19% | 19.0% |
 | engagement | 10 | 6 | 100% | 14% | 14.3% |
 | quotes | 10 | 3 | 100% | 14% | 14.3% |
-| cultural | 3 | 4 | 75% | 10% | 7.1% |
-| visual | 10 | 4 | 100% | 10% | 9.5% |
+| cultural | 4 | 4 | 100% | 10% | 9.5% |
+| visual | 12 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
 | variety | 0.95 | - | 95% | 5% | 4.5% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 13 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **97.4%** |
+| questions | 15 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 106 | Included in Core |
-| **Вступ** | ✅ | 249 | Included in Core |
-| **Життєпис** | ⚪️ | 1301 | Skipped |
-| **Спадщина** | ⚪️ | 109 | Skipped |
+| **Вступ — Самодержець усієї Русі** | ✅ | 249 | Included in Core |
+| **Життєпис: Від Волині до Галича** | ⚪️ | 1136 | Skipped |
+| **Останні роки: Загибель під Завихостом** | ⚪️ | 165 | Skipped |
+| **Спадщина: Від Романа до Данила** | ⚪️ | 109 | Skipped |
 | **Історичний контекст** | ✅ | 673 | Included in Core |
-| **Внесок** | ⚪️ | 933 | Skipped |
+| **Внесок: Створення Галицько-Волинської держави** | ⚪️ | 933 | Skipped |
 | **Порівняльний аналіз** | ✅ | 342 | Included in Core |
-| **Критичне мислення: Питання для глибокого аналізу** | ✅ | 138 | Included in Core |
-| **Підсумок** | ✅ | 109 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 97 | Skipped |
-| **Activities** | ➖ | 0 | Excluded Type |
+| **Критичне мислення: Питання для глибокого аналізу** | ✅ | 159 | Included in Core |
+| **Підсумок — Будівничий держави** | ✅ | 109 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 142 | Skipped |

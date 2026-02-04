@@ -1,8 +1,8 @@
 # Audit Report: M13 — ruska-pravda.md
-**Level:** B2 | **Module:** M13 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M13 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:53:52
+**Generated:** 2026-02-03 22:54:07
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4274/4000 (raw: 4438)
+- **Words:** ✅ 4274/4000 (raw: 4446)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.6% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.4% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -72,7 +72,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 52 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Руська Правда: Перший законодавчий кодекс** | ⚪️ | 52 | Skipped |
 | **Вступ** | ✅ | 222 | Included in Core |
 | **Правда Ярослава (1016–1036)** | ⚪️ | 344 | Skipped |
 | **Правда Ярославичів та соціальна структура** | ⚪️ | 427 | Skipped |

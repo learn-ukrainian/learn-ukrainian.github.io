@@ -1,8 +1,8 @@
 # Audit Report: M120 — rukh.md
-**Level:** B2 | **Module:** M120 | **Phase:** HIST.11 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M120 | **Phase:** HIST.11 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:55
+**Generated:** 2026-02-03 22:55:10
 
 ## Configuration
 **Type:** B2-history
@@ -34,19 +34,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4272/4000 (raw: 4343)
+- **Words:** ✅ 4659/4000 (raw: 4741)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/5
+- **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 100.0% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -59,24 +59,26 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 15 | 3 | 100% | 24% | 23.8% |
-| engagement | 8 | 6 | 100% | 14% | 14.3% |
+| engagement | 9 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 5 | 4 | 100% | 10% | 9.5% |
-| visual | 8 | 4 | 100% | 10% | 9.5% |
+| cultural | 7 | 4 | 100% | 10% | 9.5% |
+| visual | 9 | 4 | 100% | 10% | 9.5% |
 | variety | 0.95 | - | 95% | 5% | 4.5% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 10 | 3 | 100% | 5% | 4.8% |
+| questions | 11 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 119 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Рух: Народний рух України** | ⚪️ | 119 | Skipped |
 | **Вступ: Перебудова в Україні** | ✅ | 509 | Included in Core |
+| **Спогади очевидця** | ⚪️ | 386 | Skipped |
 | **Створення Руху (1989)** | ⚪️ | 794 | Skipped |
 | **Діяльність Руху (1989-1991)** | ⚪️ | 853 | Skipped |
 | **Первинні джерела** | ✅ | 770 | Included in Core |
 | **Деколонізаційний погляд: Рух як антиколоніальна сила** | ✅ | 488 | Included in Core |
 | **Підсумок: Спадщина Руху** | ✅ | 476 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 263 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 264 | Skipped |

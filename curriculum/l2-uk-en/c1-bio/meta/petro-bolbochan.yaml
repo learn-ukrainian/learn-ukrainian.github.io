@@ -1,8 +1,8 @@
-module: c1-bio-072
+module: c1-bio-080
 level: C1-BIO
 slug: petro-bolbochan
 version: '2.0'
-id: c1-bio-072
+id: c1-bio-080
 naturalness:
   score: 1
   status: PENDING

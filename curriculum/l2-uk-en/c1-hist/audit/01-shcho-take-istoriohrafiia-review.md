@@ -1,12 +1,10 @@
 # Audit Report: M01 — 01-shcho-take-istoriohrafiia.md
-
-**Level:** C1 | **Module:** M01 | **Phase:** C1H.1 | **Pedagogy:** seminar | **Target:** 4000
+**Level:** C1-HIST | **Module:** M01 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-27 12:38:52
+**Generated:** 2026-02-03 23:24:09
 
 ## Configuration
-
 **Type:** C1-history
 **Word Target:** 4000 words
 **Activities:** 3-9 required
@@ -20,13 +18,12 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Порівняльне читання: Переяславська рада в двох інтерпретаціях | 3 | 1 | ✅ |
 | 2 | critical-analysis | Критичний аналіз: Лексичні маркери упередження | 1 | 1 | ✅ |
-| 3 | critical-analysis | Аналіз радянського тексту про Україну | 1 | 1 | ✅ |
-| 4 | critical-analysis | Методологічна рефлексія: 5 питань до джерела | 1 | 1 | ✅ |
+| 3 | critical-analysis | Оцінка джерела: Радянський підручник 1953 року | 1 | 1 | ✅ |
+| 4 | critical-analysis | Дискусія: Як інтерпретувати Переяславську угоду 1654 року? | 1 | 1 | ✅ |
 | 5 | comparative-study | Порівняльне дослідження: Історіографічні школи | 1 | 1 | ✅ |
 | 6 | essay-response | Есе: Чому важливо знати, хто написав історію? | 1 | 1 | ✅ |
 
@@ -38,7 +35,6 @@
 - Low density activities: 0
 
 ## Gates
-
 - **Words:** ✅ 4898/4000 (raw: 5113)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
@@ -57,12 +53,10 @@
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-
 **Score:** 99% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 15 | 3 | 100% | 24% | 23.8% |
@@ -77,7 +71,6 @@
 | **TOTAL** | | | | | **99.5%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |

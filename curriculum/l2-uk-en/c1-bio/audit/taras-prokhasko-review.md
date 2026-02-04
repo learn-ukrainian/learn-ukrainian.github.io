@@ -1,8 +1,8 @@
-# Audit Report: M125 — taras-prokhasko.md
-**Level:** C1 | **Module:** M125 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M141 — taras-prokhasko.md
+**Level:** C1-BIO | **Module:** M141 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:57
+**Generated:** 2026-02-04 11:42:30
 
 ## Configuration
 **Type:** C1-biography

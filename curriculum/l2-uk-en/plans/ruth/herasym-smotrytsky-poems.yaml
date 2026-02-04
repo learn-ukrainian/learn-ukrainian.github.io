@@ -1,0 +1,38 @@
+# Module Plan: Herasym Smotrytsky: Poems
+# Track: RUTH
+# Module: 035
+# Source: Gemini Research (ISSUE-494)
+# Generated: 2026-02-04
+
+module_number: 35
+slug: herasym-smotrytsky-poems
+title_uk: "Герасим Смотрицький: Вірші"
+title_en: "Herasym Smotrytsky: Poems"
+
+phase: 2
+phase_id: sacred-word
+phase_name: "Sacred Word"
+
+focus: "Early Ukrainian verse — Ключ Царства"
+
+word_target: 3500
+
+# Content outline to be expanded during content generation
+content_outline:
+  - section: "Вступ"
+    description: "Introduction to Herasym Smotrytsky: Poems"
+  - section: "Основний матеріал"
+    description: "Primary source analysis and grammar focus"
+  - section: "Практика"
+    description: "Exercises and activities"
+  - section: "Підсумок"
+    description: "Summary and connection to next module"
+
+# Vocabulary hints (to be populated during content generation)
+vocabulary_hints: []
+
+# Activity types appropriate for this module
+activity_types:
+  - transcription
+  - etymology-trace
+  - grammar-identify

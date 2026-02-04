@@ -1,8 +1,8 @@
-# Audit Report: M111 — viacheslav-chornovil.md
-**Level:** C1 | **Module:** M111 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M127 — viacheslav-chornovil.md
+**Level:** C1-BIO | **Module:** M127 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:50
+**Generated:** 2026-02-04 11:42:23
 
 ## Configuration
 **Type:** C1-biography

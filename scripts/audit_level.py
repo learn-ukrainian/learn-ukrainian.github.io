@@ -92,7 +92,7 @@ def parse_module_filter(filter_str: str) -> list[int]:
     return sorted(modules)
 
 
-def find_module_files(level: str, module_filter: str | None = None) -> list[Path]:
+def find_module_files(level: str, module_filter: str | None = None) -> tuple[list[Path], list[str]]:
     """Find module markdown files for the given level and optional filter.
 
     Supports two patterns:
@@ -101,8 +101,11 @@ def find_module_files(level: str, module_filter: str | None = None) -> list[Path
 
     For numbered modules, filter can be: 5, 1-10, 1,3,5
     For slug-only modules, filter can be: slug name or glob pattern
+    
+    Returns (found_files, missing_slugs)
     """
     base_path = Path(f"curriculum/l2-uk-en/{level}")
+    missing_slugs = []
 
     if not base_path.exists():
         print(f"Error: Level directory not found: {base_path}")
@@ -115,7 +118,17 @@ def find_module_files(level: str, module_filter: str | None = None) -> list[Path
     if numbered_files:
         # Numbered modules - use numeric filtering
         if module_filter is None:
-            return [Path(f) for f in numbered_files]
+            # Check for missing numbered files if curriculum.yaml exists
+            canonical = get_module_order_from_curriculum(level)
+            if canonical:
+                for slug in canonical:
+                    # Find any file starting with [0-9]*-slug.md
+                    found = list(base_path.glob(f"[0-9]*-{slug}.md"))
+                    if not found:
+                        # Try exact slug.md just in case
+                        if not (base_path / f"{slug}.md").exists():
+                            missing_slugs.append(slug)
+            return [Path(f) for f in numbered_files], missing_slugs
 
         # Parse numeric filter
         module_nums = parse_module_filter(module_filter)
@@ -131,7 +144,7 @@ def find_module_files(level: str, module_filter: str | None = None) -> list[Path
                 num = int(match.group(1))
                 if num in module_nums:
                     filtered_files.append(Path(file_path))
-        return filtered_files
+        return filtered_files, []
 
     # Try slug-only pattern (e.g., slug.md - no number prefix)
     # Get canonical order from curriculum.yaml
@@ -147,6 +160,8 @@ def find_module_files(level: str, module_filter: str | None = None) -> list[Path
         for slug in canonical_order:
             if slug in file_map:
                 slug_files.append(file_map[slug])
+            else:
+                missing_slugs.append(slug)
         # Add any files not in curriculum.yaml at the end (shouldn't happen normally)
         for slug, path in file_map.items():
             if path not in slug_files:
@@ -155,12 +170,12 @@ def find_module_files(level: str, module_filter: str | None = None) -> list[Path
         # Fallback to alphabetical if no curriculum.yaml entry
         slug_files = sorted(file_map.values(), key=lambda p: p.stem)
 
-    if not slug_files:
+    if not slug_files and not missing_slugs:
         print(f"Error: No module files found in {base_path}")
         sys.exit(1)
 
     if module_filter is None:
-        return slug_files
+        return slug_files, missing_slugs
 
     # Check if filter looks like numbers (for positional access)
     # e.g., "1", "1-5", "1,3,5", "1-3,5,7-9"
@@ -177,14 +192,14 @@ def find_module_files(level: str, module_filter: str | None = None) -> list[Path
                 filtered.append(slug_files[pos - 1])  # Convert to 0-based
             else:
                 print(f"Warning: Position {pos} out of range (1-{len(slug_files)})")
-        return filtered
+        return filtered, []
 
     # For slug-only modules, filter by glob pattern or exact match
     if '*' in module_filter or '?' in module_filter:
         # Glob pattern
         pattern = str(base_path / f"{module_filter}.md")
         matched = sorted(glob.glob(pattern))
-        return [Path(f) for f in matched]
+        return [Path(f) for f in matched], []
     else:
         # Comma-separated slugs or single slug
         slugs = [s.strip() for s in module_filter.split(',')]
@@ -193,7 +208,7 @@ def find_module_files(level: str, module_filter: str | None = None) -> list[Path
             stem = f.stem  # filename without .md
             if stem in slugs:
                 filtered.append(f)
-        return filtered
+        return filtered, []
 
 
 def run_audit(files: list[Path], fix: bool = False, verbose: bool = False) -> tuple[int, int, list[str]]:
@@ -248,18 +263,21 @@ def main():
     parser.add_argument("modules", nargs="?", help="Module number(s): 5, 1-10, or 1,3,5,7-9")
     parser.add_argument("--fix", action="store_true", help="Automatically fix YAML schema violations")
     parser.add_argument("--verbose", "-v", action="store_true", help="Show detailed output for each module")
+    parser.add_argument("--check-missing", action="store_true", help="Report missing content files listed in curriculum.yaml")
 
     args = parser.parse_args()
 
     # Find files (filter parsing happens inside find_module_files)
-    files = find_module_files(args.level, args.modules)
+    files, missing = find_module_files(args.level, args.modules)
 
-    if not files:
+    if not files and not missing:
         if args.modules:
             print(f"Error: No matching modules found for: {args.modules}")
         else:
             print(f"Error: No modules found for level: {args.level}")
         sys.exit(1)
+
+    total_planned = len(files) + len(missing)
 
     # Header
     level_upper = args.level.upper()
@@ -267,7 +285,11 @@ def main():
     if args.modules:
         print(f"  {level_upper} Audit: {len(files)} module(s)")
     else:
-        print(f"  {level_upper} Full Level Audit: {len(files)} modules")
+        print(f"  {level_upper} Full Level Audit: {total_planned} modules")
+    
+    if missing and args.check_missing:
+        print(f"  (Warning: {len(missing)} modules are missing content files)")
+    
     print("═" * 64)
     print()
 
@@ -280,12 +302,21 @@ def main():
     print("  Audit Summary")
     print("═" * 64)
     print()
-    print(f"Total:  {len(files)}")
-    print(f"Passed: {passed}")
-    print(f"Failed: {failed}")
+    print(f"Total Planned: {total_planned}")
+    print(f"Found:         {len(files)}")
+    print(f"Passed:        {passed}")
+    print(f"Failed:        {failed}")
+    
+    if args.check_missing:
+        print(f"Missing:       {len(missing)}")
+
     print()
 
-    if failed > 0:
+    if missing and args.check_missing:
+        print(f"MISSING MODULES: {', '.join(missing)}")
+        print()
+
+    if failed > 0 or (len(missing) > 0 and args.check_missing):
         print(f"Failed modules: {', '.join(failed_modules)}")
         print()
         print("To audit a specific module:")

@@ -2,10 +2,10 @@
   "module": "ruska-pravda",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-01T14:53:52.913490Z",
+  "last_audit": "2026-02-03T22:54:07.073569Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.347105Z",
+    "md": "2026-02-02T11:00:23.667801Z",
     "meta": "2026-01-29T07:38:18.611514Z",
     "activities": "2026-01-27T15:34:54.700456Z",
     "vocabulary": "2026-01-26T23:26:52.342205Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4274/4000 (raw: 4438)"
+      "message": "4274/4000 (raw: 4446)"
     },
     "activities": {
       "status": "pass",

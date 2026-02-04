@@ -1,0 +1,37 @@
+# Module Meta: Ilarion's Sermon (Intro)
+# Track: OES
+# Module: 096
+# Generated: 2026-02-04
+
+module_number: 96
+slug: ilarion-sermon-intro
+title: "Проповідь Іларіона: Вступ"
+title_en: "Ilarion's Sermon (Intro)"
+
+type: lesson
+phase: 4
+phase_id: literary-art
+
+# Pedagogy
+pedagogy: theory-first
+duration_minutes: 60
+word_target: 3500
+immersion_level: 100
+
+# Focus
+grammar_focus: "Law (Moses) vs Grace (Jesus)"
+vocabulary_focus: []
+cultural_focus: []
+
+# Activity hints (minimum counts)
+activity_hints:
+  - type: transcription
+    min_items: 2
+  - type: etymology-trace
+    min_items: 2
+  - type: grammar-identify
+    min_items: 3
+
+# Prerequisites
+prerequisites:
+  - module: 95

@@ -1,8 +1,8 @@
-# Audit Report: M79 — les-kurbas.md
-**Level:** C1 | **Module:** M79 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M88 — les-kurbas.md
+**Level:** C1-BIO | **Module:** M88 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:40
+**Generated:** 2026-02-04 11:42:03
 
 ## Configuration
 **Type:** C1-biography
@@ -45,8 +45,8 @@
   - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Останні роки' per template 'c1-biography-module-template.md'
   - FIX: Add '## Останні роки' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Спадщина|Вплив' found: Вплив на світову театральну думку, Вплив на сучасний театральний процес
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple headers contain 'Вплив': Вплив на світову театральну думку, Вплив на сучасний театральний процес
+  - FIX: RENAME one header to NOT contain 'Вплив'. Example: 'Агіографічна спадщина' → 'Житійна творчість' (removes the duplicate word).
 
 ## Recommendation
 **📝 UPDATE** (severity 35/100)

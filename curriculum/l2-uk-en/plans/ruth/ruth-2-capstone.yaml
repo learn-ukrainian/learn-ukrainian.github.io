@@ -1,0 +1,39 @@
+# Module Plan: RUTH-2 Capstone
+# Track: RUTH
+# Module: 040
+# Source: Gemini Research (ISSUE-494)
+# Generated: 2026-02-04
+
+module_number: 40
+slug: ruth-2-capstone
+title_uk: "Капстоун фази 2"
+title_en: "RUTH-2 Capstone"
+
+phase: 2
+phase_id: sacred-word
+phase_name: "Sacred Word"
+
+focus: "Translating modern prayer to "Peresopnytsia Style""
+
+word_target: 2500
+
+# Content outline to be expanded during content generation
+content_outline:
+  - section: "Вступ"
+    description: "Introduction to RUTH-2 Capstone"
+  - section: "Основний матеріал"
+    description: "Primary source analysis and grammar focus"
+  - section: "Практика"
+    description: "Exercises and activities"
+  - section: "Підсумок"
+    description: "Summary and connection to next module"
+
+# Vocabulary hints (to be populated during content generation)
+vocabulary_hints: []
+
+# Activity types appropriate for this module
+activity_types:
+  - transcription
+  - etymology-trace
+  - grammar-identify
+  - historical-writing

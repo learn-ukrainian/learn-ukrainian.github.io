@@ -1,0 +1,37 @@
+# Module Meta: Slovo: Review
+# Track: OES
+# Module: 090
+# Generated: 2026-02-04
+
+module_number: 90
+slug: slovo-review
+title: "Слово: Підсумок"
+title_en: "Slovo: Review"
+
+type: review
+phase: 4
+phase_id: literary-art
+
+# Pedagogy
+pedagogy: theory-first
+duration_minutes: 45
+word_target: 2500
+immersion_level: 100
+
+# Focus
+grammar_focus: "Recitation & Comprehension"
+vocabulary_focus: []
+cultural_focus: []
+
+# Activity hints (minimum counts)
+activity_hints:
+  - type: transcription
+    min_items: 2
+  - type: etymology-trace
+    min_items: 2
+  - type: grammar-identify
+    min_items: 3
+
+# Prerequisites
+prerequisites:
+  - module: 89

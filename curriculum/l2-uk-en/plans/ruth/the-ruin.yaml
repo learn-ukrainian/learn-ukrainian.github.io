@@ -1,0 +1,38 @@
+# Module Plan: The Ruin
+# Track: RUTH
+# Module: 063
+# Source: Gemini Research (ISSUE-495)
+# Generated: 2026-02-04
+
+module_number: 63
+slug: the-ruin
+title_uk: "Руїна"
+title_en: "The Ruin"
+
+phase: 3
+phase_id: baroque-fight
+phase_name: "Baroque Fight"
+
+focus: "Describing chaos — Vocabulary of war/destruction"
+
+word_target: 3500
+
+# Content outline to be expanded during content generation
+content_outline:
+  - section: "Вступ"
+    description: "Introduction to The Ruin"
+  - section: "Основний матеріал"
+    description: "Primary source analysis and grammar focus"
+  - section: "Практика"
+    description: "Exercises and activities"
+  - section: "Підсумок"
+    description: "Summary and connection to next module"
+
+# Vocabulary hints (to be populated during content generation)
+vocabulary_hints: []
+
+# Activity types appropriate for this module
+activity_types:
+  - transcription
+  - etymology-trace
+  - grammar-identify

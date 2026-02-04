@@ -1,8 +1,8 @@
 # Audit Report: M43 — dmytro-vyshnevetskyi.md
-**Level:** B2 | **Module:** M43 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M43 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:10
+**Generated:** 2026-02-03 22:54:24
 
 ## Configuration
 **Type:** B2-history

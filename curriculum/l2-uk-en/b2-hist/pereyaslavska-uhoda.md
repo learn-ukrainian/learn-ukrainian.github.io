@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: bohdan-khmelnytskyi, kozatska-derzhava, khmelnychchyna-prychyny, ivan-vyhovsky
+-->
+
 # Переяславська угода 1654: Міфи та реальність
 
 > 🎯 **Чому це важливо?**

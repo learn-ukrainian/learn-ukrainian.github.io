@@ -2,11 +2,11 @@
   "module": "mykola-lysenko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T23:29:22.277768Z",
+  "last_audit": "2026-02-04T11:41:41.337663Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-29T22:43:06.536244Z",
-    "meta": "2026-01-29T22:43:06.535238Z",
+    "meta": "2026-02-02T23:23:00.045340Z",
     "activities": "2026-01-29T22:43:06.510231Z",
     "vocabulary": "2026-01-29T22:14:46.370239Z",
     "plan": null

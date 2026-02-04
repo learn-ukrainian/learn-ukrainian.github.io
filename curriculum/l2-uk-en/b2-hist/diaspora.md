@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: holodomor-pamiat, nezalezhnist-1991, deportatsii-ukraintsiv, rukh
+-->
+
 # Діаспора: Ковчег держави
 
 > [!context]

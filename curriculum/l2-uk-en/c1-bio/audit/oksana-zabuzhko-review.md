@@ -1,8 +1,8 @@
-# Audit Report: M122 — oksana-zabuzhko.md
-**Level:** C1 | **Module:** M122 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M138 — oksana-zabuzhko.md
+**Level:** C1-BIO | **Module:** M138 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:56
+**Generated:** 2026-02-04 11:42:28
 
 ## Configuration
 **Type:** C1-biography

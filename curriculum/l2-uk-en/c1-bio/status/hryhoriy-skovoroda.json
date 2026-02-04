@@ -2,11 +2,11 @@
   "module": "hryhoriy-skovoroda",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T23:29:15.296397Z",
+  "last_audit": "2026-02-04T11:41:33.682435Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-17T21:45:15.823567Z",
-    "meta": "2026-01-29T07:39:04.903006Z",
+    "meta": "2026-02-02T23:22:59.982417Z",
     "activities": "2026-01-27T15:34:55.556150Z",
     "vocabulary": null,
     "plan": null

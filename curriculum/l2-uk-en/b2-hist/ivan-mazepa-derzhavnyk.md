@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: ivan-mazepa-kultura, ivan-mazepa-poltava, pylyp-orlyk-konstytutsiia, kinets-hetmanshchyny
+-->
+
 # Іван Мазепа I: державник
 
 > 🎯 **Чому це важливо?**

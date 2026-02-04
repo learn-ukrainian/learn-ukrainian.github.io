@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: persha-svitova, zunr, habsburzka-halichyna, bilshovytsko-ukrainska-viyna
+-->
+
 # Українські січові стрільці
 
 > 🎯 **Чому це важливо?**

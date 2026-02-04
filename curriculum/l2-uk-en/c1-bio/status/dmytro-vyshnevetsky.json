@@ -2,25 +2,25 @@
   "module": "dmytro-vyshnevetsky",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T23:29:08.281083Z",
+  "last_audit": "2026-02-04T11:41:23.793496Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.348360Z",
-    "meta": "2026-01-29T07:39:04.895169Z",
+    "md": "2026-02-04T06:24:02.595199Z",
+    "meta": "2026-02-02T23:22:59.911473Z",
     "activities": "2026-01-27T15:34:55.481205Z",
-    "vocabulary": null,
+    "vocabulary": "2026-02-04T06:10:45.043863Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "3299/4000 (raw: 3570)"
+      "status": "pass",
+      "violations": 0,
+      "message": "4271/4000 (raw: 4378)"
     },
     "activities": {
       "status": "pass",
@@ -28,9 +28,9 @@
       "message": "5/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 24 (soft target)"
+      "message": "25/24"
     },
     "naturalness": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
-    ],
-    "pass_count": 2,
-    "fail_count": 2
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

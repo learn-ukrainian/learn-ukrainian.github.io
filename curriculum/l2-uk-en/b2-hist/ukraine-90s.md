@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: nezalezhnist-1991, pomarancheva-revoliutsiia, rukh, shliakh-nezalezhnosti
+-->
+
 # Україна 1990-х: Кучма та олігархи
 
 > 🎯 **Чому це важливо?**

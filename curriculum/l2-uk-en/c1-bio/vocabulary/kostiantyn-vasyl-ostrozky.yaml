@@ -1,0 +1,150 @@
+- lemma: академія
+  ipa: /ɐkɐˈdɛmʲijɐ/
+  translation: academy
+  pos: noun
+  gender: f
+  note: вищий навчальний заклад
+- lemma: біблія
+  ipa: /ˈbʲiblʲijɐ/
+  translation: Bible
+  pos: noun
+  gender: f
+  note: святе письмо
+- lemma: друкарня
+  ipa: /druˈkɑrnʲɐ/
+  translation: printing house
+  pos: noun
+  gender: f
+  note: підприємство для друку книг
+- lemma: освіта
+  ipa: /osˈʋʲitɐ/
+  translation: education
+  pos: noun
+  gender: f
+  note: знання, здобуті в школі чи академії
+- lemma: полеміка
+  ipa: /poˈlɛmʲikɐ/
+  translation: polemics / debate
+  pos: noun
+  gender: f
+  note: публічна дискусія
+- lemma: унія
+  ipa: /ˈunʲijɐ/
+  translation: union
+  pos: noun
+  gender: f
+  note: об'єднання церков
+- lemma: воєвода
+  ipa: /ʋojeˈʋɔdɐ/
+  translation: voivode / governor
+  pos: noun
+  gender: m
+  note: голова воєводства
+- lemma: меценат
+  ipa: /met͡sɛˈnɑt/
+  translation: philanthropist / patron of arts
+  pos: noun
+  gender: m
+  note: покровитель культури
+- lemma: реформація
+  ipa: /reformˈɑt͡sʲijɐ/
+  translation: Reformation
+  pos: noun
+  gender: f
+  note: релігійний рух за оновлення церкви
+- lemma: контрреформація
+  ipa: /kontrreformˈɑt͡sʲijɐ/
+  translation: Counter-Reformation
+  pos: noun
+  gender: f
+  note: католицький рух проти реформації
+- lemma: магнат
+  ipa: /mɐɦˈnɑt/
+  translation: magnate
+  pos: noun
+  gender: m
+  note: багатий і впливовий аристократ
+- lemma: просвітник
+  ipa: /prosˈʋʲitnɪk/
+  translation: enlightener
+  pos: noun
+  gender: m
+  note: той, хто поширює знання
+- lemma: конфесія
+  ipa: /konfesʲˈijɐ/
+  translation: confession / denomination
+  pos: noun
+  gender: f
+  note: віросповідання
+- lemma: маршалок
+  ipa: /mɐrˈʃɑlɔk/
+  translation: marshal
+  pos: noun
+  gender: m
+  note: голова дворянства або сойму
+- lemma: статут
+  ipa: /stɐˈtut/
+  translation: statute / charter
+  pos: noun
+  gender: m
+  note: звід законів
+- lemma: латинізація
+  ipa: /lɐtɪnʲizˈɑt͡sʲijɐ/
+  translation: Latinization
+  pos: noun
+  gender: f
+  note: перехід на латинську мову чи обряд
+- lemma: ієрархія
+  ipa: /ijerˈɑrxʲijɐ/
+  translation: hierarchy
+  pos: noun
+  gender: f
+  note: система підпорядкування
+- lemma: патріарх
+  ipa: /pɐtrʲiˈɑrx/
+  translation: patriarch
+  pos: noun
+  gender: m
+  note: вищий священнослужитель
+- lemma: гуманізм
+  ipa: /ɦumɐˈnʲizm/
+  translation: humanism
+  pos: noun
+  gender: m
+  note: течія, що цінує людську особистість
+- lemma: схоластика
+  ipa: /sxolˈɑstɪkɐ/
+  translation: scholasticism
+  pos: noun
+  gender: f
+  note: середньовічна релігійна філософія
+- lemma: канон
+  ipa: /kɐˈnɔn/
+  translation: canon
+  pos: noun
+  gender: m
+  note: сукупність правил чи священних книг
+- lemma: тримовність
+  ipa: /trɪˈmɔu̯nʲisʲtʲ/
+  translation: trilingualism
+  pos: noun
+  gender: f
+  note: володіння трьома мовами (грецька, латина, слов'янська)
+- lemma: друкар
+  ipa: /druˈkɑr/
+  translation: printer
+  pos: noun
+  gender: m
+  note: фахівець із друкарської справи
+- lemma: резиденція
+  ipa: /rezɪdˈɛnt͡sʲijɐ/
+  translation: residence
+  pos: noun
+  gender: f
+  note: місце проживання високої особи
+- lemma: суб'єктність
+  ipa: /subjekˈtnʲisʲtʲ/
+  translation: agency / subjectivity
+  pos: noun
+  gender: f
+  note: здатність бути суб'єктом дій

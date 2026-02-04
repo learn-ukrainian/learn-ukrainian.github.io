@@ -1,0 +1,37 @@
+# Module Meta: Mother Church Weeps
+# Track: RUTH
+# Module: 069
+# Generated: 2026-02-04
+
+module_number: 69
+slug: mother-church-weeps
+title: "Матір-Церква плаче"
+title_en: "Mother Church Weeps"
+
+type: lesson
+phase: 3
+phase_id: baroque-fight
+
+# Pedagogy
+pedagogy: theory-first
+duration_minutes: 60
+word_target: 3500
+immersion_level: 100
+
+# Focus
+grammar_focus: "Threnos — Central metaphor, Personification"
+vocabulary_focus: []
+cultural_focus: []
+
+# Activity hints (minimum counts)
+activity_hints:
+  - type: transcription
+    min_items: 2
+  - type: etymology-trace
+    min_items: 2
+  - type: grammar-identify
+    min_items: 3
+
+# Prerequisites
+prerequisites:
+  - module: 68

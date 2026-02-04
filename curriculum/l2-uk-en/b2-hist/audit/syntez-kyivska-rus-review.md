@@ -1,8 +1,8 @@
 # Audit Report: M20 — syntez-kyivska-rus.md
-**Level:** B2 | **Module:** M20 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M20 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:53:57
+**Generated:** 2026-02-03 22:54:11
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4748/4000 (raw: 4885)
+- **Words:** ✅ 4748/4000 (raw: 4893)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.6% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.4% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -72,7 +72,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 76 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Синтез: Київська Русь — спадщина** | ⚪️ | 76 | Skipped |
 | **Вступ — Три століття Русі** | ✅ | 285 | Included in Core |
 | **Політичний розвиток: від племені до імперії** | ⚪️ | 434 | Skipped |
 | **Культурні досягнення** | ✅ | 892 | Included in Core |

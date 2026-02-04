@@ -1,8 +1,8 @@
 # Audit Report: M117 — chornobyl.md
-**Level:** B2 | **Module:** M117 | **Phase:** HIST.11 | **Pedagogy:** seminar | **Target:** 4000
+**Level:** B2-HIST | **Module:** M117 | **Phase:** HIST.11 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:54
+**Generated:** 2026-02-03 22:55:08
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4320/4000 (raw: 4404)
+- **Words:** ✅ 4320/4000 (raw: 4412)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 100.0% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.7% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -60,7 +60,7 @@
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 15 | 3 | 100% | 24% | 23.8% |
 | engagement | 7 | 6 | 100% | 14% | 14.3% |
-| timeline_markers | 29 | 10 | 100% | 14% | 14.3% |
+| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 4 | 4 | 100% | 10% | 9.5% |
 | visual | 7 | 4 | 100% | 10% | 9.5% |
@@ -72,7 +72,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 142 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Чорнобиль: Трагедія і Попередження** | ⚪️ | 142 | Skipped |
 | **Вступ — Мирний атом?** | ✅ | 692 | Included in Core |
 | **Аварія 1986 року: Хроніка пекла** | ⚪️ | 1140 | Skipped |
 | **Читання — Голоси Прип'яті** | ✅ | 447 | Included in Core |

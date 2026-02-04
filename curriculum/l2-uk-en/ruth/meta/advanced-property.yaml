@@ -1,0 +1,37 @@
+# Module Meta: Advanced Property
+# Track: RUTH
+# Module: 016
+# Generated: 2026-02-04
+
+module_number: 16
+slug: advanced-property
+title: "Розширене майнове право"
+title_en: "Advanced Property"
+
+type: lesson
+phase: 1
+phase_id: chancery-legal
+
+# Pedagogy
+pedagogy: theory-first
+duration_minutes: 60
+word_target: 3500
+immersion_level: 100
+
+# Focus
+grammar_focus: "Застава, Аренда — Mortgage, Lease"
+vocabulary_focus: []
+cultural_focus: []
+
+# Activity hints (minimum counts)
+activity_hints:
+  - type: transcription
+    min_items: 2
+  - type: etymology-trace
+    min_items: 2
+  - type: grammar-identify
+    min_items: 3
+
+# Prerequisites
+prerequisites:
+  - module: 15

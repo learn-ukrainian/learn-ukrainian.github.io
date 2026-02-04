@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: rosiiska-imperiia-ukraina, hromady, habsburzka-halichyna, shevchenko-awakening
+-->
+
 # Валуєвський циркуляр та Емський указ: Хроніка лінгвоциду
 
 > 🎯 **Чому це важливо?**

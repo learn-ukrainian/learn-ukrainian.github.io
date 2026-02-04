@@ -2,10 +2,10 @@
   "module": "tsentralna-rada",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:54:38.122989Z",
+  "last_audit": "2026-02-03T22:54:52.231752Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-28T15:33:34.806009Z",
+    "md": "2026-02-02T10:59:45.065246Z",
     "meta": "2026-01-29T07:38:18.678993Z",
     "activities": "2026-01-28T15:33:55.190596Z",
     "vocabulary": "2026-01-28T15:04:21.420471Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4272/4000 (raw: 4415)"
+      "message": "4272/4000 (raw: 4423)"
     },
     "activities": {
       "status": "pass",

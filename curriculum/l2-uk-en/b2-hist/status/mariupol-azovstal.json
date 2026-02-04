@@ -2,10 +2,10 @@
   "module": "mariupol-azovstal",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:55:03.490677Z",
+  "last_audit": "2026-02-03T22:55:18.114862Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-01T14:30:07.286408Z",
+    "md": "2026-02-03T14:01:56.605869Z",
     "meta": "2026-01-29T07:38:18.738492Z",
     "activities": "2026-01-28T17:57:34.757061Z",
     "vocabulary": "2026-01-28T17:57:53.993063Z",

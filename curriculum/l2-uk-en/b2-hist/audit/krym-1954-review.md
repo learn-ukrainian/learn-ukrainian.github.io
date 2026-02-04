@@ -1,8 +1,8 @@
 # Audit Report: M112 — krym-1954.md
-**Level:** B2 | **Module:** M112 | **Phase:** HIST.11 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M112 | **Phase:** HIST.11 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:51
+**Generated:** 2026-02-03 22:55:05
 
 ## Configuration
 **Type:** B2-history

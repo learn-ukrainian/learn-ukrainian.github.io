@@ -971,7 +971,359 @@
             }
           }
         }
-      ]
-    }
-  }
-}
+            ]
+          },
+          "etymology-trace": {
+            "type": "object",
+            "description": "Trace word from OES to modern Ukrainian",
+            "required": ["type", "title", "items"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "const": "etymology-trace" },
+              "title": { "type": "string", "minLength": 1 },
+              "instruction": { "type": "string" },
+              "items": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": ["word", "modern", "evolution"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "word": { "type": "string", "minLength": 1, "description": "Original OES word" },
+                    "modern": { "type": "string", "minLength": 1, "description": "Modern Ukrainian equivalent" },
+                    "evolution": { "type": "string", "minLength": 1, "description": "Linguistic explanation of changes" }
+                  }
+                }
+              }
+            }
+          },
+          "transcription": {
+            "type": "object",
+            "description": "Read and transcribe OES text",
+            "required": ["type", "title", "original", "answer"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "const": "transcription" },
+              "title": { "type": "string", "minLength": 1 },
+              "instruction": { "type": "string" },
+              "original": { "type": "string", "minLength": 1, "description": "OES text to transcribe" },
+              "answer": { "type": "string", "minLength": 1, "description": "Correct transcription or modern equivalent" },
+              "hints": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Optional hints for the learner"
+              }
+            }
+          },
+          "grammar-identify": {
+            "type": "object",
+            "description": "Identify grammatical forms (Dual, Aorist, etc.)",
+            "required": ["type", "title", "items"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "const": "grammar-identify" },
+              "title": { "type": "string", "minLength": 1 },
+              "instruction": { "type": "string" },
+              "items": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": ["text", "form", "answer"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "text": { "type": "string", "minLength": 1, "description": "OES excerpt" },
+                    "form": { "type": "string", "minLength": 1, "description": "Form to identify" },
+                    "answer": { "type": "string", "minLength": 1, "description": "Correct identification" }
+                  }
+                }
+              }
+            }
+          },
+          "paleography-analysis": {
+            "type": "object",
+            "description": "Identify visual features of manuscripts via hotspots",
+            "required": ["type", "title", "image_url", "hotspots"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "const": "paleography-analysis" },
+              "title": { "type": "string", "minLength": 1 },
+              "instruction": { "type": "string" },
+              "image_url": { "type": "string", "minLength": 1, "description": "URL to manuscript image" },
+              "hotspots": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": ["x", "y", "label", "explanation"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "x": { "type": "number", "description": "X coordinate (percentage 0-100)" },
+                    "y": { "type": "number", "description": "Y coordinate (percentage 0-100)" },
+                    "label": { "type": "string", "minLength": 1, "description": "Feature name" },
+                    "explanation": { "type": "string", "minLength": 1, "description": "Why this feature matters" }
+                  }
+                }
+              },
+              "options": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "List of possible feature terms (e.g., Ustav, Skoropys)"
+              }
+            }
+          },
+          "dialect-comparison": {
+            "type": "object",
+            "description": "Side-by-side comparison of regional dialect features",
+            "required": ["type", "title", "text_a", "text_b", "features"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "const": "dialect-comparison" },
+              "title": { "type": "string", "minLength": 1 },
+              "instruction": { "type": "string" },
+              "text_a": { "type": "string", "minLength": 1, "description": "First dialect text (e.g., Kyiv)" },
+              "text_b": { "type": "string", "minLength": 1, "description": "Second dialect text (e.g., Novgorod)" },
+              "label_a": { "type": "string", "description": "Label for text A (e.g., 'Київський текст')" },
+              "label_b": { "type": "string", "description": "Label for text B (e.g., 'Новгородський текст')" },
+              "features": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": ["feature_name", "value_a", "value_b", "explanation"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "feature_name": { "type": "string", "minLength": 1 },
+                    "value_a": { "type": "string", "minLength": 1 },
+                    "value_b": { "type": "string", "minLength": 1 },
+                    "explanation": { "type": "string", "minLength": 1 }
+                  }
+                }
+              }
+            }
+          },
+          "translation-critique": {
+            "type": "object",
+            "description": "Evaluate and critique modern translations of archaic texts",
+            "required": ["type", "title", "original", "translations"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "const": "translation-critique" },
+              "title": { "type": "string", "minLength": 1 },
+              "instruction": { "type": "string" },
+              "original": { "type": "string", "minLength": 1, "description": "Original OES/RUTH text" },
+              "translations": {
+                "type": "array",
+                "minItems": 2,
+                "items": {
+                  "type": "object",
+                  "required": ["translator", "text", "accuracy_score", "notes"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "translator": { "type": "string", "minLength": 1 },
+                    "text": { "type": "string", "minLength": 1 },
+                    "accuracy_score": { "type": "integer", "minimum": 1, "maximum": 10 },
+                    "notes": { "type": "string", "description": "Expert notes on this translation" }
+                  }
+                }
+              },
+              "focus_points": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Key words that are often mistranslated"
+              }
+            }
+          },
+          "phonology-lab": {
+            "type": "object",
+            "description": "Step-by-step reconstruction of sound changes (ISSUE-502)",
+            "required": ["type", "title", "input", "law", "output"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "const": "phonology-lab" },
+              "title": { "type": "string", "minLength": 1 },
+              "instruction": { "type": "string" },
+              "input": { "type": "string", "minLength": 1, "description": "Original OES form" },
+              "law": { "type": "string", "minLength": 1, "description": "Linguistic law being applied (e.g., Havlik's Law)" },
+              "output": { "type": "string", "minLength": 1, "description": "Result after law applied" },
+              "steps": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Step-by-step explanation of the transformation"
+              },
+              "explanation": { "type": "string" }
+            }
+          },
+          "grammar-lab": {
+            "type": "object",
+            "description": "Structured morphological analysis with focus field (ISSUE-502)",
+            "required": ["type", "title", "focus", "items"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "const": "grammar-lab" },
+              "title": { "type": "string", "minLength": 1 },
+              "instruction": { "type": "string" },
+              "focus": { "type": "string", "minLength": 1, "description": "Grammar focus (e.g., Dual Number, Aorist)" },
+              "items": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": ["form", "analysis", "modern_equivalent"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "form": { "type": "string", "minLength": 1, "description": "OES/RUTH form to analyze" },
+                    "analysis": {
+                      "type": "object",
+                      "description": "Morphological breakdown"
+                    },
+                    "modern_equivalent": { "type": "string", "minLength": 1 },
+                    "explanation": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "parallel-text": {
+            "type": "object",
+            "description": "Compare passage across language stages or registers (ISSUE-502)",
+            "required": ["type", "title", "versions"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "const": "parallel-text" },
+              "title": { "type": "string", "minLength": 1 },
+              "instruction": { "type": "string" },
+              "versions": {
+                "type": "array",
+                "minItems": 2,
+                "items": {
+                  "type": "object",
+                  "required": ["label", "text"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "label": { "type": "string", "minLength": 1, "description": "Version label (e.g., 'OES (XI ст.)')" },
+                    "text": { "type": "string", "minLength": 1 }
+                  }
+                }
+              },
+              "comparison_points": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Key differences to note"
+              }
+            }
+          },
+          "historical-writing": {
+            "type": "object",
+            "description": "Composition in period-appropriate style (ISSUE-502)",
+            "required": ["type", "title", "prompt", "constraints", "model_answer"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "const": "historical-writing" },
+              "title": { "type": "string", "minLength": 1 },
+              "instruction": { "type": "string" },
+              "prompt": { "type": "string", "minLength": 1, "description": "Writing task description" },
+              "constraints": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Required elements (e.g., 'Use челомъ бью')"
+              },
+              "model_answer": { "type": "string", "minLength": 1 },
+              "rubric": {
+                "type": "object",
+                "properties": {
+                  "orthography": { "type": "integer", "minimum": 0, "maximum": 100 },
+                  "morphology": { "type": "integer", "minimum": 0, "maximum": 100 },
+                  "vocabulary": { "type": "integer", "minimum": 0, "maximum": 100 },
+                  "style": { "type": "integer", "minimum": 0, "maximum": 100 }
+                },
+                "description": "Evaluation criteria weights (percent)"
+              }
+            }
+          },
+          "register-identify": {
+            "type": "object",
+            "description": "Identify register (Vernacular/Literary/Chancery/Prosta) (ISSUE-502)",
+            "required": ["type", "title", "items"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "const": "register-identify" },
+              "title": { "type": "string", "minLength": 1 },
+              "instruction": { "type": "string" },
+              "items": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": ["text", "options", "answer"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "text": { "type": "string", "minLength": 1, "description": "Text excerpt to classify" },
+                    "options": {
+                      "type": "array",
+                      "minItems": 2,
+                      "items": { "type": "string" },
+                      "description": "Possible registers"
+                    },
+                    "answer": { "type": "string", "minLength": 1 },
+                    "explanation": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "loanword-trace": {
+            "type": "object",
+            "description": "Trace foreign borrowings (Greek, Polish, Latin, Turkic) (ISSUE-502)",
+            "required": ["type", "title", "items"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "const": "loanword-trace" },
+              "title": { "type": "string", "minLength": 1 },
+              "instruction": { "type": "string" },
+              "items": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": ["word", "source_language", "meaning"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "word": { "type": "string", "minLength": 1, "description": "The borrowed word" },
+                    "source_language": { "type": "string", "minLength": 1, "description": "Origin (e.g., 'Polish (urząd)')" },
+                    "meaning": { "type": "string", "minLength": 1 },
+                    "modern_reflex": { "type": "string", "description": "Modern Ukrainian form if different" }
+                  }
+                }
+              }
+            }
+          },
+          "comparative-style": {
+            "type": "object",
+            "description": "Compare linguistic features across registers or periods (ISSUE-502)",
+            "required": ["type", "title", "items_to_compare", "criteria", "model_answer"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "const": "comparative-style" },
+              "title": { "type": "string", "minLength": 1 },
+              "instruction": { "type": "string" },
+              "source_reading": { "type": "string", "description": "ID of source reading activity" },
+              "items_to_compare": {
+                "type": "array",
+                "minItems": 2,
+                "items": { "type": "string" },
+                "description": "Texts or registers to compare"
+              },
+              "criteria": {
+                "type": "array",
+                "minItems": 1,
+                "items": { "type": "string" },
+                "description": "Comparison dimensions (e.g., syntax, loanwords)"
+              },
+              "model_answer": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+      

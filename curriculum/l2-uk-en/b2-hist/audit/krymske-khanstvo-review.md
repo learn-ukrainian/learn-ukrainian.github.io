@@ -1,8 +1,8 @@
 # Audit Report: M27 — krymske-khanstvo.md
-**Level:** B2 | **Module:** M27 | **Phase:** B2.3c | **Pedagogy:** CBI | **Target:** 4421
+**Level:** B2-HIST | **Module:** M27 | **Phase:** B2.3c | **Pedagogy:** CBI | **Target:** 4421
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:01
+**Generated:** 2026-02-03 22:54:15
 
 ## Configuration
 **Type:** B2-history

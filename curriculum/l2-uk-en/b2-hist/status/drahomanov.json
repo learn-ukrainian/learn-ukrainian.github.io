@@ -2,10 +2,10 @@
   "module": "drahomanov",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:54:34.637329Z",
+  "last_audit": "2026-02-03T22:54:48.728099Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-28T11:29:15.745043Z",
+    "md": "2026-02-02T10:56:59.373267Z",
     "meta": "2026-01-29T07:38:18.673521Z",
     "activities": "2026-01-27T22:34:47.932474Z",
     "vocabulary": "2026-01-28T11:27:10.239884Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4315/4000 (raw: 4491)"
+      "message": "4315/4000 (raw: 4499)"
     },
     "activities": {
       "status": "pass",

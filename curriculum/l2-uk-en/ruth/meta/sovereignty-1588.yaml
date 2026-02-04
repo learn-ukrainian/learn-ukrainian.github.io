@@ -1,0 +1,37 @@
+# Module Meta: Sovereignty
+# Track: RUTH
+# Module: 015
+# Generated: 2026-02-04
+
+module_number: 15
+slug: sovereignty-1588
+title: "Суверенітет (1588)"
+title_en: "Sovereignty"
+
+type: lesson
+phase: 1
+phase_id: chancery-legal
+
+# Pedagogy
+pedagogy: theory-first
+duration_minutes: 60
+word_target: 3500
+immersion_level: 100
+
+# Focus
+grammar_focus: "GDL independence rhetoric"
+vocabulary_focus: []
+cultural_focus: []
+
+# Activity hints (minimum counts)
+activity_hints:
+  - type: transcription
+    min_items: 2
+  - type: etymology-trace
+    min_items: 2
+  - type: grammar-identify
+    min_items: 3
+
+# Prerequisites
+prerequisites:
+  - module: 14

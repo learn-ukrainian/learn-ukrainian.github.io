@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: kyrylo-mefodiivtsi, hromady, drahomanov, franko-lesia-hrinchenko
+-->
+
 # Шевченко і пробудження: Архітектор нації
 
 > 🎯 **Чому це важливо?**

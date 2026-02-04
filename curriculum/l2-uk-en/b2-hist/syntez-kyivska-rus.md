@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: volodymyr-velykyi, yaroslav-mudryi, kultura-kyivskoi-rusi, sofiya-kyivska
+-->
+
 # Синтез: Київська Русь — спадщина
 
 > 🎯 **Чому це важливо?**

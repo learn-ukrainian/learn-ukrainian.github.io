@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: bohdan-khmelnytskyi, khmelnychchyna-prychyny, kozatska-derzhava, zborivska-bila-tserkva
+-->
+
 # Битва під Жовтими Водами
 
 > 🎯 **Чому це важливо?**

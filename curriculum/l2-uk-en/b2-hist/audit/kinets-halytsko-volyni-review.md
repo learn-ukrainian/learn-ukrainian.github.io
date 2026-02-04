@@ -1,8 +1,8 @@
 # Audit Report: M26 — kinets-halytsko-volyni.md
-**Level:** B2 | **Module:** M26 | **Phase:** B2.3a | **Pedagogy:** CBI | **Target:** 4568
+**Level:** B2-HIST | **Module:** M26 | **Phase:** B2.3a | **Pedagogy:** CBI | **Target:** 4568
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:00
+**Generated:** 2026-02-03 22:54:14
 
 ## Configuration
 **Type:** B2-history

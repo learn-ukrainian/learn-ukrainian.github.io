@@ -1,8 +1,8 @@
-module: c1-bio-010
+module: c1-bio-012
 level: C1-BIO
 slug: yuriy-lvovych
 version: '2.0'
-id: c1-bio-010
+id: c1-bio-012
 naturalness:
   score: 10
   status: PASS
@@ -16,5 +16,39 @@ tags:
 - royalty
 - church
 vocabulary_count: 24
+content_outline:
+- section: Вступ — Король Русі
+  words: 420
+  points:
+  - Титул Rex Russiae
+  - Спадщина
+- section: Життєпис
+  words: 1150
+  points:
+  - Молодість у Белзі
+  - Об'єднання земель
+  - Династичні шлюби
+- section: Внесок
+  words: 2100
+  points:
+  - Королівський титул
+  - Галицька митрополія
+  - Економічний розквіт
+  - Зовнішня політика
+- section: Останні роки
+  words: 200
+  points:
+  - Озброєний нейтралітет
+  - Смерть та поховання
+- section: Спадщина
+  words: 300
+  points:
+  - Ідея королівства
+  - Європейська ідентичність
+- section: Підсумок — Завершення королівської епохи
+  words: 320
+  points:
+  - Кінець династії
+  - Історичне значення
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-03'

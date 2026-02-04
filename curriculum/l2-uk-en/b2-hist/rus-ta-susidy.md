@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: yaroslav-mudryi, volodymyr-velykyi, vizantiia-khrestianstvo, mongolska-navala
+-->
+
 # Русь та сусіди: Візантія, Польща, Угорщина
 
 > 🎯 **Чому це важливо?**

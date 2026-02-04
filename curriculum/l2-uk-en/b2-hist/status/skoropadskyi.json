@@ -2,10 +2,10 @@
   "module": "skoropadskyi",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:54:38.712677Z",
+  "last_audit": "2026-02-03T22:54:52.816265Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-31T00:01:20.899932Z",
+    "md": "2026-02-02T10:59:47.968863Z",
     "meta": "2026-01-29T07:38:18.679855Z",
     "activities": "2026-01-28T15:36:02.616648Z",
     "vocabulary": "2026-01-28T15:35:34.727495Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4371/4000 (raw: 4501)"
+      "message": "4371/4000 (raw: 4509)"
     },
     "activities": {
       "status": "pass",

@@ -1,8 +1,8 @@
-# Audit Report: M64 — lesya-ukrainka.md
-**Level:** C1 | **Module:** M64 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4000
+# Audit Report: M69 — lesya-ukrainka.md
+**Level:** C1-BIO | **Module:** M69 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:32
+**Generated:** 2026-02-04 11:41:52
 
 ## Configuration
 **Type:** C1-biography
@@ -43,7 +43,7 @@
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/5
+- **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure

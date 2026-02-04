@@ -2,10 +2,10 @@
   "module": "rozstriliane-vidrodzennia",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:54:42.829507Z",
+  "last_audit": "2026-02-03T22:54:57.003613Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-31T15:19:21.155847Z",
+    "md": "2026-02-02T10:58:12.602830Z",
     "meta": "2026-01-31T15:00:03.662182Z",
     "activities": "2026-01-28T16:31:14.122743Z",
     "vocabulary": "2026-01-28T15:22:18.391675Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4198/4000 (raw: 4311)"
+      "message": "4198/4000 (raw: 4319)"
     },
     "activities": {
       "status": "pass",

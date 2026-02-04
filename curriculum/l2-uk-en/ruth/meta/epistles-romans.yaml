@@ -1,0 +1,37 @@
+# Module Meta: The Epistles: Romans
+# Track: RUTH
+# Module: 033
+# Generated: 2026-02-04
+
+module_number: 33
+slug: epistles-romans
+title: "Послання: Римляни"
+title_en: "The Epistles: Romans"
+
+type: lesson
+phase: 2
+phase_id: sacred-word
+
+# Pedagogy
+pedagogy: theory-first
+duration_minutes: 60
+word_target: 3500
+immersion_level: 100
+
+# Focus
+grammar_focus: "Theological terminology — Оправданіє, Благодать"
+vocabulary_focus: []
+cultural_focus: []
+
+# Activity hints (minimum counts)
+activity_hints:
+  - type: transcription
+    min_items: 2
+  - type: etymology-trace
+    min_items: 2
+  - type: grammar-identify
+    min_items: 3
+
+# Prerequisites
+prerequisites:
+  - module: 32

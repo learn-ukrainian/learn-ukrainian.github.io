@@ -2,10 +2,10 @@
   "module": "hromady",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:54:34.047328Z",
+  "last_audit": "2026-02-03T22:54:48.151706Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-30T23:04:43.247867Z",
+    "md": "2026-02-02T10:57:09.025941Z",
     "meta": "2026-01-30T22:56:08.102722Z",
     "activities": "2026-01-30T22:59:34.662537Z",
     "vocabulary": "2026-01-28T11:23:40.364346Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4438/4000 (raw: 4555)"
+      "message": "4438/4000 (raw: 4563)"
     },
     "activities": {
       "status": "pass",

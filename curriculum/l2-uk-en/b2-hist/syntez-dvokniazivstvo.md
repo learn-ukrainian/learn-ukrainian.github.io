@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: mongolska-navala, galytsko-volynska-derzhava, danylo-halytskyi, krymske-khanstvo
+-->
+
 # Синтез: Від монгольської навали до кримської державності
 
 > 🎯 **Чому це важливо?**

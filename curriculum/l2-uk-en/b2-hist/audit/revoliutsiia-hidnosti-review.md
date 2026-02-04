@@ -1,8 +1,8 @@
 # Audit Report: M126 — revoliutsiia-hidnosti.md
-**Level:** B2 | **Module:** M126 | **Phase:** HIST.13 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M126 | **Phase:** HIST.13 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:59
+**Generated:** 2026-02-03 22:55:13
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4688/4000 (raw: 4746)
+- **Words:** ✅ 4688/4000 (raw: 4754)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.5% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.2% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -60,7 +60,7 @@
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 15 | 3 | 100% | 24% | 23.8% |
 | engagement | 6 | 6 | 100% | 14% | 14.3% |
-| timeline_markers | 26 | 10 | 100% | 14% | 14.3% |
+| timeline_markers | 27 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 6 | 4 | 100% | 10% | 9.5% |
 | visual | 6 | 4 | 100% | 10% | 9.5% |
@@ -72,7 +72,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 134 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Революція Гідності: Євромайдан** | ⚪️ | 134 | Skipped |
 | **Вступ: Чому «Гідність»?** | ✅ | 585 | Included in Core |
 | **Читання** | ✅ | 130 | Included in Core |
 | **Хронологія подій** | ✅ | 945 | Included in Core |

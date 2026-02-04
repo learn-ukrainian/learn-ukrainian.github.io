@@ -1,0 +1,628 @@
+# OES Module Mapping
+# Source: Gemini Research (ISSUE-501, ISSUE-490, ISSUE-491, ISSUE-492)
+# Generated: 2026-02-04
+# Total: 100 modules
+
+# ============================================================
+# PHASE 1: «Голос народу» — Vernacular Foundations (M01-25)
+# Source: ISSUE-501-research.md
+# Focus: St. Sophia Graffiti, Birch Bark Letters, Phonology
+# ============================================================
+
+001:
+  slug: walls-speak-intro
+  title_uk: "Софійські графіті: Стіни говорять"
+  title_en: "St. Sophia Graffiti: The Walls Speak"
+  focus: "Intro to epigraphy, graffiti as historical source"
+
+002:
+  slug: alphabet-glagolitic-cyrillic
+  title_uk: "Алфавіт: Від глаголиці до кирилиці"
+  title_en: "Alphabet: Glagolitic to Cyrillic"
+  focus: "Early scripts in St. Sophia"
+
+003:
+  slug: orthography-yers
+  title_uk: "Орфографія та єри (Ъ, Ь)"
+  title_en: "Orthography & The Yers"
+  focus: "Why we write ъ/ь and where they went"
+
+004:
+  slug: pleophony-sound-of-rus
+  title_uk: "Повноголосся: Звук Русі"
+  title_en: "Pleophony: The Sound of Rus'"
+  focus: "ToroT/TereT vs TraT/TreT patterns"
+
+005:
+  slug: yat-mystery
+  title_uk: "Загадка яті (ѣ)"
+  title_en: "The Yat' Mystery"
+  focus: "The unique sound of ѣ and its Ukrainian path"
+
+006:
+  slug: greetings-invocations
+  title_uk: "Вітання та звертання"
+  title_en: "Greetings & Invocations"
+  focus: '"Господи, помози..." — Dative case in prayers'
+
+007:
+  slug: nouns-o-a-stems
+  title_uk: "Іменники I: О-основи та А-основи"
+  title_en: "Nouns I: O-stems & A-stems"
+  focus: "Basic declension in common names"
+
+008:
+  slug: vocative-case
+  title_uk: "Кличний відмінок"
+  title_en: "The Vocative Case"
+  focus: "Addressing saints and thieves (Андрониче!)"
+
+009:
+  slug: pronouns-self-other
+  title_uk: "Займенники: Я та інші"
+  title_en: "Pronouns: Self and Other"
+  focus: "Я, ти, мьнѣ, тобѣ in personal letters"
+
+010:
+  slug: verbs-present-tense
+  title_uk: "Дієслова I: Теперішній час"
+  title_en: "Verbs I: Present Tense"
+  focus: "Action in the moment (graffiti examples)"
+
+011:
+  slug: verbs-aorist
+  title_uk: "Дієслова II: Аорист"
+  title_en: "Verbs II: The Aorist"
+  focus: "Simple past in quick notes"
+
+012:
+  slug: verbs-perfect
+  title_uk: "Дієслова III: Перфект"
+  title_en: "Verbs III: The Perfect"
+  focus: '"Вкрав єси..." — Origin of modern past tense'
+
+013:
+  slug: lab-thief-kuzma
+  title_uk: "Лабораторія: Злодій Козьма"
+  title_en: "Lab: The Thief Kuzma"
+  focus: "Analysis of the curse graffiti"
+
+014:
+  slug: numbers-currency
+  title_uk: "Числа та валюта"
+  title_en: "Numbers & Currency"
+  focus: "Куни, ногати, гривні (Zvenyhorod #1)"
+
+015:
+  slug: prepositions-space
+  title_uk: "Прийменники та простір"
+  title_en: "Prepositions & Space"
+  focus: "Въ, на, къ — Direction vs Location"
+
+016:
+  slug: legal-language-debt
+  title_uk: "Юридична мова: Борги"
+  title_en: "Legal Language: Debt & Duty"
+  focus: 'Conditional "Оли..." in Zvenyhorod letters'
+
+017:
+  slug: lab-zvenyhorod-1
+  title_uk: "Лабораторія: Звенигород №1"
+  title_en: "Lab: Zvenyhorod Letter #1"
+  focus: "Detailed breakdown of the Govinova letter"
+
+018:
+  slug: names-identity
+  title_uk: "Імена та ідентичність"
+  title_en: "Names & Identity"
+  focus: "Christian names vs Slavic nicknames (Ніженець)"
+
+019:
+  slug: syntax-simple-sentences
+  title_uk: "Синтаксис: Прості речення"
+  title_en: "Syntax: Simple Sentences"
+  focus: "Word order in vernacular vs Church Slavonic"
+
+020:
+  slug: adjectives-agreement
+  title_uk: "Прикметники та узгодження"
+  title_en: "Adjectives & Agreement"
+  focus: "Куни лодійні — Agreement in case/gender"
+
+021:
+  slug: dual-number-intro
+  title_uk: "Двоїна: Вступ"
+  title_en: "The Dual Number"
+  focus: "Handling pairs (eyes, hands, two people)"
+
+022:
+  slug: family-kinship
+  title_uk: "Родина та спорідненість"
+  title_en: "Family & Kinship"
+  focus: "Небіж, мати, брат in graffiti contexts"
+
+023:
+  slug: lab-death-of-tsar
+  title_uk: "Лабораторія: Смерть царя"
+  title_en: "Lab: The Death of a Tsar"
+  focus: "Analyzing the 1054 graffiti on Yaroslav's death"
+
+024:
+  slug: daily-life-vocabulary
+  title_uk: "Побутова лексика"
+  title_en: "Daily Life Vocabulary"
+  focus: "Bread, meat, horses, boats (Vernacular vs Liturgical)"
+
+025:
+  slug: phase-1-checkpoint
+  title_uk: "Контрольна точка фази 1"
+  title_en: "Phase 1 Checkpoint"
+  focus: "Synthesis of Vernacular Foundations"
+
+# ============================================================
+# PHASE 2: «Книжне слово» — Literary Tradition (M26-50)
+# Source: ISSUE-490-research.md
+# Focus: PVL, Kyivan Chronicle, Aorist/Imperfect
+# ============================================================
+
+026:
+  slug: pvl-intro-geography
+  title_uk: "ПВЛ: Вступ та географія"
+  title_en: "PVL: Intro & Geography"
+  focus: "Imperfect tense — describing tribal customs"
+
+027:
+  slug: pvl-varangians
+  title_uk: "ПВЛ: Варяги"
+  title_en: "PVL: The Varangians"
+  focus: 'Aorist intro — "Riksha" (They said)'
+
+028:
+  slug: pvl-oleg-campaign
+  title_uk: "ПВЛ: Похід Олега"
+  title_en: "PVL: Oleg's Campaign"
+  focus: 'Military vocab — "Oleg ide na Greky"'
+
+029:
+  slug: pvl-death-of-igor
+  title_uk: "ПВЛ: Смерть Ігоря"
+  title_en: "PVL: Death of Igor"
+  focus: "Aorist mastery — dramatic narrative"
+
+030:
+  slug: pvl-olga-revenge
+  title_uk: "ПВЛ: Помста Ольги"
+  title_en: "PVL: Olga's Revenge"
+  focus: "Mixed tenses — Planning (Imp) vs Execution (Aor)"
+
+031:
+  slug: pvl-sviatoslav
+  title_uk: "ПВЛ: Святослав"
+  title_en: "PVL: Sviatoslav"
+  focus: 'The Warrior Prince — "Idu na vy"'
+
+032:
+  slug: pvl-volodymyr-choice
+  title_uk: "ПВЛ: Вибір Володимира"
+  title_en: "PVL: Volodymyr's Choice"
+  focus: "Comparative religion vocabulary"
+
+033:
+  slug: pvl-baptism-of-rus
+  title_uk: "ПВЛ: Хрещення Русі"
+  title_en: "PVL: Baptism of Rus'"
+  focus: 'Ritual vocabulary — "Povele" (He commanded)'
+
+034:
+  slug: pvl-yaroslav-wise
+  title_uk: "ПВЛ: Ярослав Мудрий"
+  title_en: "PVL: Yaroslav the Wise"
+  focus: "Law & Culture — Ruska Pravda context"
+
+035:
+  slug: pvl-three-brothers
+  title_uk: "ПВЛ: Три брати"
+  title_en: "PVL: The Three Brothers"
+  focus: "Yaroslavychi — Feudal terminology"
+
+036:
+  slug: pvl-polovtsian-wars
+  title_uk: "ПВЛ: Половецькі війни"
+  title_en: "PVL: Polovtsian Wars"
+  focus: "Slovo context prep — Steppe vocabulary"
+
+037:
+  slug: pvl-lyubech-congress
+  title_uk: "ПВЛ: Любецький з'їзд"
+  title_en: "PVL: Lyubech Congress"
+  focus: '"Let us not ruin the Rus land" — Hortative mood'
+
+038:
+  slug: pvl-blinding-vasylko
+  title_uk: "ПВЛ: Осліплення Василька"
+  title_en: "PVL: Blinding of Vasylko"
+  focus: "Psychological horror — complex syntax"
+
+039:
+  slug: monomakh-instruction
+  title_uk: "Повчання Мономаха"
+  title_en: "Monomakh's Instruction"
+  focus: "Didactic genre — Imperative mood"
+
+040:
+  slug: death-of-monomakh
+  title_uk: "Смерть Мономаха"
+  title_en: "Death of Monomakh"
+  focus: "Eulogy style"
+
+041:
+  slug: olgovychi-monomakhovychi
+  title_uk: "Ольговичі проти Мономаховичів"
+  title_en: "Olgovychi vs Monomakhovychi"
+  focus: "Political intrigue vocabulary"
+
+042:
+  slug: izyaslav-mstyslavych
+  title_uk: "Ізяслав Мстиславич"
+  title_en: "Izyaslav Mstyslavych"
+  focus: 'The "Honor" code of princes'
+
+043:
+  slug: sack-of-kyiv
+  title_uk: "Розграбування Києва"
+  title_en: "Sack of Kyiv"
+  focus: "Bogolyubsky — The shift of power"
+
+044:
+  slug: ihor-campaign-chronicle
+  title_uk: "Похід Ігоря (літопис)"
+  title_en: "Ihor's Campaign (Chronicle)"
+  focus: "Link to Slovo — Historical vs Poetic"
+
+045:
+  slug: sviatoslav-vsevolodovych
+  title_uk: "Святослав Всеволодович"
+  title_en: "Sviatoslav Vsevolodovych"
+  focus: '"Golden Word" context'
+
+046:
+  slug: roman-mstyslavych
+  title_uk: "Роман Мстиславич"
+  title_en: "Roman Mstyslavych"
+  focus: "Rise of Galicia-Volhynia"
+
+047:
+  slug: battle-of-kalka
+  title_uk: "Битва на Калці"
+  title_en: "Battle of Kalka"
+  focus: "The Mongol threat appearing"
+
+048:
+  slug: fall-of-kyiv
+  title_uk: "Падіння Києва"
+  title_en: "Fall of Kyiv"
+  focus: "Destruction vocabulary — End of an era"
+
+049:
+  slug: review-princely-cycle
+  title_uk: "Огляд: Княжий цикл"
+  title_en: "Review: The Princely Cycle"
+  focus: "Consolidating dynastic terms"
+
+050:
+  slug: phase-2-checkpoint
+  title_uk: "Контрольна точка фази 2"
+  title_en: "Phase 2 Checkpoint"
+  focus: "Aorist/Imperfect assessment"
+
+# ============================================================
+# PHASE 3: «Право землі» — Legal Tradition (M51-75)
+# Source: ISSUE-491-research.md
+# Focus: Ruska Pravda, Dual Number, Treaties
+# ============================================================
+
+051:
+  slug: law-intro
+  title_uk: "Вступ до права"
+  title_en: "Intro to Law"
+  focus: 'Pravda, Zakon, Sud — "If" (Ashche) clauses'
+
+052:
+  slug: murder-blood-revenge
+  title_uk: "Вбивство та кровна помста"
+  title_en: "Murder & Blood Revenge"
+  focus: "The concept of Vyra (Weregild)"
+
+053:
+  slug: assault-battery
+  title_uk: "Побої та образи"
+  title_en: "Assault & Battery"
+  focus: "Instrumental Case review"
+
+054:
+  slug: weaponry-laws
+  title_uk: "Закони про зброю"
+  title_en: "Weaponry Laws"
+  focus: "Vocabulary of arms"
+
+055:
+  slug: body-injury-dual
+  title_uk: "Тіло та ушкодження"
+  title_en: "The Body & Injury"
+  focus: "Dual Number — Eyes, ears, legs"
+
+056:
+  slug: theft-property
+  title_uk: "Крадіжка (власність)"
+  title_en: "Theft (Property)"
+  focus: "Accusative Plural"
+
+057:
+  slug: cheliadin-slaves
+  title_uk: "Челядь (невільники)"
+  title_en: "The Cheliadin (Slaves)"
+  focus: "Social hierarchy intro"
+
+058:
+  slug: restitution
+  title_uk: "Відшкодування"
+  title_en: "Restitution"
+  focus: "Verbs of obligation"
+
+059:
+  slug: witnesses-oaths
+  title_uk: "Свідки та присяги"
+  title_en: "Witnesses & Oaths"
+  focus: 'Dual — "Two witnesses"'
+
+060:
+  slug: bridge-builders
+  title_uk: "Мостники"
+  title_en: "The Bridge Builders"
+  focus: "First fee schedule — Economic vocabulary"
+
+061:
+  slug: princely-administration
+  title_uk: "Княжа адміністрація"
+  title_en: "The Princely Administration"
+  focus: "Administrative titles"
+
+062:
+  slug: smerd-peasants
+  title_uk: "Смерди (селяни)"
+  title_en: "The Smerd (Peasants)"
+  focus: "Feudal relationships"
+
+063:
+  slug: zakup-indentured
+  title_uk: "Закупи"
+  title_en: "The Zakup (Indentured)"
+  focus: "Debt slavery laws"
+
+064:
+  slug: property-boundaries
+  title_uk: "Межі власності"
+  title_en: "Property Boundaries"
+  focus: "Spatial prepositions"
+
+065:
+  slug: inheritance-law
+  title_uk: "Спадкове право"
+  title_en: "Inheritance Law"
+  focus: "Family terms + Dative Case"
+
+066:
+  slug: women-in-law
+  title_uk: "Жінки у праві"
+  title_en: "Women in Law"
+  focus: "Gender roles & legal rights"
+
+067:
+  slug: guardianship
+  title_uk: "Опіка"
+  title_en: "Guardianship"
+  focus: "Welfare concepts"
+
+068:
+  slug: monomakh-statute-usury
+  title_uk: "Статут Мономаха (лихварство)"
+  title_en: "Monomakh's Statute (Usury)"
+  focus: "Financial vocabulary"
+
+069:
+  slug: bankrupt-merchants
+  title_uk: "Банкрути-купці"
+  title_en: "Bankrupt Merchants"
+  focus: "Trade law basics"
+
+070:
+  slug: review-social-pyramid
+  title_uk: "Огляд: Соціальна піраміда"
+  title_en: "Review: Social Pyramid"
+  focus: "Consolidation of social terms"
+
+071:
+  slug: treaty-911-oleg
+  title_uk: "Договір 911 (Олег)"
+  title_en: "Treaty of 911 (Oleg)"
+  focus: 'Diplomatic formulas — "My ot rodu ruskoho..."'
+
+072:
+  slug: trade-rights
+  title_uk: "Торговельні права"
+  title_en: "Trade Rights"
+  focus: '"Mesyachnoe" (Monthly allowance)'
+
+073:
+  slug: crimes-abroad
+  title_uk: "Злочини за кордоном"
+  title_en: "Crimes Abroad"
+  focus: "Extradition & International justice"
+
+074:
+  slug: treaty-944-igor
+  title_uk: "Договір 944 (Ігор)"
+  title_en: "Treaty of 944 (Igor)"
+  focus: "Christian vs Pagan oath-taking"
+
+075:
+  slug: phase-3-checkpoint
+  title_uk: "Контрольна точка фази 3"
+  title_en: "Phase 3 Checkpoint"
+  focus: "Dual Number & Legal translation exam"
+
+# ============================================================
+# PHASE 4: «Висока поезія» — Literary Art (M76-100)
+# Source: ISSUE-492-research.md
+# Focus: Slovo, Patericon, Fall of Yers
+# ============================================================
+
+076:
+  slug: slovo-bard-intro
+  title_uk: "Слово: Вступ барда"
+  title_en: "Slovo: The Bard's Intro"
+  focus: '"Ne lěpo li ny..." — Poetic vs Historical truth'
+
+077:
+  slug: slovo-solar-eclipse
+  title_uk: "Слово: Сонячне затемнення"
+  title_en: "Slovo: The Solar Eclipse"
+  focus: "Nature as actor — Omen vocabulary"
+
+078:
+  slug: slovo-mustering
+  title_uk: "Слово: Збір війська"
+  title_en: "Slovo: The Mustering"
+  focus: "Advanced military terminology"
+
+079:
+  slug: slovo-first-battle
+  title_uk: "Слово: Перша битва"
+  title_en: "Slovo: The First Battle"
+  focus: "Aorist/Imperfect poetic usage"
+
+080:
+  slug: slovo-defeat
+  title_uk: "Слово: Поразка"
+  title_en: "Slovo: The Defeat"
+  focus: 'Metaphor — "Sowing fields with bones"'
+
+081:
+  slug: slovo-svyatoslav-dream
+  title_uk: "Слово: Сон Святослава"
+  title_en: "Slovo: Svyatoslav's Dream"
+  focus: "Symbolism (Pearls, wines, roofs)"
+
+082:
+  slug: slovo-golden-word
+  title_uk: "Слово: Золоте слово"
+  title_en: "Slovo: The Golden Word"
+  focus: "Rhetoric — The plea for unity"
+
+083:
+  slug: slovo-yaroslavna-lament
+  title_uk: "Слово: Плач Ярославни"
+  title_en: "Slovo: Yaroslavna's Lament"
+  focus: "Lyrical genre — Address to Wind/Sun/Dnipro"
+
+084:
+  slug: slovo-escape
+  title_uk: "Слово: Втеча"
+  title_en: "Slovo: The Escape"
+  focus: "Action verbs — Transformation motif"
+
+085:
+  slug: slovo-return
+  title_uk: "Слово: Повернення"
+  title_en: "Slovo: The Return"
+  focus: "Joyous vocabulary — Doxology"
+
+086:
+  slug: slovo-poetic-syntax-lab
+  title_uk: "Слово: Лабораторія синтаксису"
+  title_en: "Slovo: Poetic Syntax Lab"
+  focus: "Inversion, chiasmus, parallelism"
+
+087:
+  slug: slovo-hapax-legomena
+  title_uk: "Слово: Унікальні слова"
+  title_en: "Slovo: Hapax Legomena"
+  focus: "Striltsy, Shereshiry, Karnu/Zhylya"
+
+088:
+  slug: slovo-mythology
+  title_uk: "Слово: Міфологія"
+  title_en: "Slovo: Mythology"
+  focus: "Veles, Div, Troyan — Pagan stratum"
+
+089:
+  slug: slovo-authenticity-debate
+  title_uk: "Слово: Дискусія про автентичність"
+  title_en: "Slovo: The Authenticity Debate"
+  focus: "Arguments for/against 12th c. origin"
+
+090:
+  slug: slovo-review
+  title_uk: "Слово: Підсумок"
+  title_en: "Slovo: Review"
+  focus: "Recitation & Comprehension"
+
+091:
+  slug: hagiography-intro
+  title_uk: "Вступ до агіографії"
+  title_en: "Intro to Hagiography"
+  focus: 'Genre conventions — "Life" (Zhitiye)'
+
+092:
+  slug: building-of-lavra
+  title_uk: "Будівництво Лаври"
+  title_en: "The Building of the Lavra"
+  focus: "Architectural & miraculous vocabulary"
+
+093:
+  slug: saint-anthony
+  title_uk: "Святий Антоній"
+  title_en: "Saint Anthony"
+  focus: "Asceticism terminology"
+
+094:
+  slug: saint-theodosius
+  title_uk: "Святий Феодосій"
+  title_en: "Saint Theodosius"
+  focus: "Monastic community organization"
+
+095:
+  slug: demonology
+  title_uk: "Демонологія"
+  title_en: "Demonology"
+  focus: "Isaac the Recluse — Spiritual struggle"
+
+096:
+  slug: ilarion-sermon-intro
+  title_uk: "Проповідь Іларіона: Вступ"
+  title_en: "Ilarion's Sermon (Intro)"
+  focus: "Law (Moses) vs Grace (Jesus)"
+
+097:
+  slug: rus-panegyric
+  title_uk: "Панегірик Русі"
+  title_en: "The Rus' Panegyric"
+  focus: "Praise of Volodymyr & Yaroslav"
+
+098:
+  slug: daniel-the-exile
+  title_uk: "Данило Заточник"
+  title_en: "Daniel the Exile"
+  focus: "Courtly wit vs Monastic solemnity"
+
+099:
+  slug: phonology-lab-yers
+  title_uk: "Фонологічна лабораторія: Єри"
+  title_en: "Phonology Lab: Fall of Yers"
+  focus: "Tracing Yer loss & Yat evolution"
+
+100:
+  slug: oes-capstone
+  title_uk: "Капстоун OES"
+  title_en: "OES Capstone"
+  focus: "Final exam — Reading an unknown text"

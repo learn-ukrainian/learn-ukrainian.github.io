@@ -1,0 +1,38 @@
+# Module Plan: Phase 3 Checkpoint
+# Track: OES
+# Module: 061
+# Source: Gemini Research (ISSUE-491)
+# Generated: 2026-02-04
+
+module_number: 61
+slug: phase-3-checkpoint
+title_uk: "Контрольна точка фази 3"
+title_en: "Phase 3 Checkpoint"
+
+phase: 3
+phase_id: legal-tradition
+phase_name: "Legal Tradition"
+
+focus: "Dual Number & Legal translation exam"
+
+word_target: 2500
+
+# Content outline to be expanded during content generation
+content_outline:
+  - section: "Вступ"
+    description: "Introduction to Phase 3 Checkpoint"
+  - section: "Основний матеріал"
+    description: "Primary source analysis and grammar focus"
+  - section: "Практика"
+    description: "Exercises and activities"
+  - section: "Підсумок"
+    description: "Summary and connection to next module"
+
+# Vocabulary hints (to be populated during content generation)
+vocabulary_hints: []
+
+# Activity types appropriate for this module
+activity_types:
+  - transcription
+  - etymology-trace
+  - grammar-identify

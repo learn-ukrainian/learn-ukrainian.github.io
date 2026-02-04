@@ -176,12 +176,15 @@ def _check_required_sections(content: str, meta: dict, template: TemplateStructu
                 # Filter to unique header texts to avoid flagging same header twice if multi-line or something
                 unique_headers = list(set(s['header'] for s in found_alts))
                 if len(unique_headers) > 1:
+                    # Extract the matching keyword that caused the collision
+                    matching_keywords = [kw for kw in required.split('|') if any(kw.lower() in h.lower() for h in unique_headers)]
+                    keyword_hint = matching_keywords[0] if matching_keywords else required.split('|')[0]
                     violations.append({
                         'type': 'DUPLICATE_SYNONYMOUS_HEADERS',
                         'severity': 'CRITICAL',
                         'line': found_alts[0]['line'],
-                        'issue': f"Multiple aliases for '{required}' found: {', '.join(unique_headers)}",
-                        'fix': f"Keep only one version of the header (preferably the primary one or the one with more content)."
+                        'issue': f"Multiple headers contain '{keyword_hint}': {', '.join(unique_headers)}",
+                        'fix': f"RENAME one header to NOT contain '{keyword_hint}'. Example: 'Агіографічна спадщина' → 'Житійна творчість' (removes the duplicate word)."
                     })
             
             # Check for empty sections (Issue mentioned by user)

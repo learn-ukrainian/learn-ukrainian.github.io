@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: franko-lesia-hrinchenko, drahomanov, persha-svitova, bukovyna-zakarpattia
+-->
+
 # Габсбурзька Галичина
 
 > 🎯 **Чому це важливо?**

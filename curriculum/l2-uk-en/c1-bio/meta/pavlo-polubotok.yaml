@@ -1,0 +1,21 @@
+module: c1-bio-029
+level: C1-BIO
+slug: pavlo-polubotok
+version: '2.0'
+id: c1-bio-029
+naturalness:
+  score: 0
+  status: PENDING
+word_target: 4000
+duration: 120
+transliteration: none
+tags:
+- history
+- biography
+- hetmanate
+- resistance
+vocabulary_hints:
+  required: []
+  recommended: []
+build:
+  last_modified: '2026-02-02'

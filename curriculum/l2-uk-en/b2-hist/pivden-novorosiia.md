@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: nova-serbiya, rosiiska-imperiia-ukraina, krypatsvo-selo, petro-kalnyshevskyi
+-->
+
 # Південь України: Міфи «Новоросії»
 
 > 🎯 **Чому це важливо?**

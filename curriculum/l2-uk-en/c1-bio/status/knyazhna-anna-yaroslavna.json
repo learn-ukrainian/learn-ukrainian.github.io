@@ -2,12 +2,12 @@
   "module": "knyazhna-anna-yaroslavna",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-02T00:08:05.051355Z",
+  "last_audit": "2026-02-04T11:41:17.524975Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-02T00:07:59.943023Z",
-    "meta": "2026-02-02T00:05:34.867896Z",
-    "activities": "2026-01-19T17:44:34.282537Z",
+    "md": "2026-02-03T10:48:20.336743Z",
+    "meta": "2026-02-02T23:22:59.866549Z",
+    "activities": "2026-02-03T22:14:20.373576Z",
     "vocabulary": "2026-01-29T21:23:00.145992Z",
     "plan": null
   },
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4529/4000 (raw: 4577)"
+      "message": "4466/4000 (raw: 4516)"
     },
     "activities": {
       "status": "pass",

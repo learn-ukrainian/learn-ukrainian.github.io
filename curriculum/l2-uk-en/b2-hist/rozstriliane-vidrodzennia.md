@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: mekhanizm-teroru, holodomor-mekhanizm, shistdesiatnyky, destalinizatsiia
+-->
+
 # Розстріляне відродження: Втрачене покоління
 
 > 🎯 **Чому це важливо?**

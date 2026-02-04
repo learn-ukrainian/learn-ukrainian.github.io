@@ -1,8 +1,8 @@
-# Audit Report: M65 — solomiya-krushelnytska.md
-**Level:** C1 | **Module:** M65 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M70 — solomiya-krushelnytska.md
+**Level:** C1-BIO | **Module:** M70 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:32
+**Generated:** 2026-02-04 11:41:53
 
 ## Configuration
 **Type:** C1-biography
@@ -49,7 +49,7 @@
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/5
+- **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 0 < 24 (soft target)
 - **Structure:** ✅ Valid Structure

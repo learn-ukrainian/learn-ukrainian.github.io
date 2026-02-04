@@ -1,8 +1,8 @@
-# Audit Report: M15 — severyn-nalyvaiko.md
-**Level:** C1 | **Module:** M15 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
+# Audit Report: M17 — severyn-nalyvaiko.md
+**Level:** C1-BIO | **Module:** M17 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:09
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-04 12:08:58
 
 ## Configuration
 **Type:** C1-biography
@@ -33,21 +33,16 @@
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
-## Recommendation
-**📝 UPDATE** (severity 20/100)
-
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
-
 ## Gates
-- **Words:** ❌ 3265/4000 (raw: 3403)
+- **Words:** ✅ 4447/4000 (raw: 4552)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/5
+- **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 24 (soft target)
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Vocab:** ✅ 25/24
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
@@ -63,26 +58,27 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 6 | 4 | 100% | 19% | 19.0% |
-| engagement | 6 | 6 | 100% | 14% | 14.3% |
-| quotes | 3 | 3 | 100% | 14% | 14.3% |
-| cultural | 10 | 4 | 100% | 10% | 9.5% |
-| visual | 6 | 4 | 100% | 10% | 9.5% |
-| timeline_markers | 18 | 8 | 100% | 10% | 9.5% |
-| legacy | 10 | 2 | 100% | 10% | 9.5% |
-| variety | 0.98 | - | 98% | 5% | 4.7% |
+| primary_sources | 4 | 4 | 100% | 19% | 19.0% |
+| engagement | 7 | 6 | 100% | 14% | 14.3% |
+| quotes | 10 | 3 | 100% | 14% | 14.3% |
+| cultural | 7 | 4 | 100% | 10% | 9.5% |
+| visual | 7 | 4 | 100% | 10% | 9.5% |
+| timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
+| legacy | 15 | 2 | 100% | 10% | 9.5% |
+| variety | 0.97 | - | 97% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 12 | 3 | 100% | 5% | 4.8% |
+| questions | 9 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 115 | Included in Core |
-| **Вступ — Перший бунтар** | ✅ | 396 | Included in Core |
-| **Життєпис** | ⚪️ | 1278 | Skipped |
-| **Історичний контекст** | ✅ | 417 | Included in Core |
-| **Внесок та Спадщина** | ⚪️ | 676 | Skipped |
-| **Порівняльний аналіз** | ✅ | 199 | Included in Core |
-| **Підсумок** | ✅ | 101 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 83 | Skipped |
+| **Intro/Narrative** | ✅ | 121 | Included in Core |
+| **Вступ — Перший бунтар** | ✅ | 514 | Included in Core |
+| **Життєпис** | ⚪️ | 1244 | Skipped |
+| **Останні роки** | ⚪️ | 436 | Skipped |
+| **Історичний контекст** | ✅ | 521 | Included in Core |
+| **Внесок та Спадщина** | ⚪️ | 513 | Skipped |
+| **Порівняльний аналіз** | ✅ | 698 | Included in Core |
+| **Підсумок — Месник і Пророк Дикого Поля** | ✅ | 217 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 183 | Skipped |

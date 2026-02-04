@@ -1,8 +1,8 @@
 # Audit Report: M70 — danylo-apostol.md
-**Level:** B2 | **Module:** M70 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M70 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:26
+**Generated:** 2026-02-03 22:54:40
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4123/4000 (raw: 4220)
+- **Words:** ✅ 4124/4000 (raw: 4229)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.7% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.4% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -72,9 +72,10 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 94 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Данило Апостол та Кирило Розумовський: Останні гетьмани** | ⚪️ | 94 | Skipped |
 | **Вступ: Між молотом і ковадлом** | ✅ | 354 | Included in Core |
-| **Читання: Епоха Данила Апостола** | ✅ | 734 | Included in Core |
+| **Читання: Епоха Данила Апостола** | ✅ | 735 | Included in Core |
 | **Економіка та суспільство: Стабільність і криза** | ⚪️ | 685 | Skipped |
 | **Епоха Розумовського: Європейська мрія** | ⚪️ | 755 | Skipped |
 | **Первинні джерела: Голоси епохи** | ✅ | 499 | Included in Core |

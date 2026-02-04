@@ -1,8 +1,8 @@
 # Audit Report: M40 — syntez-lytva-polska.md
-**Level:** B2 | **Module:** M40 | **Phase:** HIST.4 | **Pedagogy:** CBI | **Target:** 4500
+**Level:** B2-HIST | **Module:** M40 | **Phase:** HIST.4 | **Pedagogy:** CBI | **Target:** 4500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:08
+**Generated:** 2026-02-03 22:54:22
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4730/4500 (raw: 5827)
+- **Words:** ✅ 4730/4500 (raw: 5835)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.2% (target 90-100% (history))
+- **Immersion:** 🇺🇦 98.9% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -72,7 +72,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 55 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Синтез: Литовсько-польська доба** | ⚪️ | 55 | Skipped |
 | **Вступ** | ✅ | 1123 | Included in Core |
 | **Первинні джерела** | ✅ | 451 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 339 | Included in Core |

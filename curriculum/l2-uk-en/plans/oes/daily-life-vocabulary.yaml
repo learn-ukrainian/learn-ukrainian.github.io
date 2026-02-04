@@ -1,0 +1,38 @@
+# Module Plan: Daily Life Vocabulary
+# Track: OES
+# Module: 020
+# Source: Gemini Research (ISSUE-501)
+# Generated: 2026-02-04
+
+module_number: 20
+slug: daily-life-vocabulary
+title_uk: "Побутова лексика"
+title_en: "Daily Life Vocabulary"
+
+phase: 1
+phase_id: vernacular-foundations
+phase_name: "Vernacular Foundations"
+
+focus: "Bread, meat, horses, boats (Vernacular vs Liturgical)"
+
+word_target: 3500
+
+# Content outline to be expanded during content generation
+content_outline:
+  - section: "Вступ"
+    description: "Introduction to Daily Life Vocabulary"
+  - section: "Основний матеріал"
+    description: "Primary source analysis and grammar focus"
+  - section: "Практика"
+    description: "Exercises and activities"
+  - section: "Підсумок"
+    description: "Summary and connection to next module"
+
+# Vocabulary hints (to be populated during content generation)
+vocabulary_hints: []
+
+# Activity types appropriate for this module
+activity_types:
+  - transcription
+  - etymology-trace
+  - grammar-identify

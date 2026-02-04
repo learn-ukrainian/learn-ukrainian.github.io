@@ -2,10 +2,10 @@
   "module": "ludy-rusi",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:53:55.858048Z",
+  "last_audit": "2026-02-03T22:54:10.027913Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.347206Z",
+    "md": "2026-02-02T10:56:40.022531Z",
     "meta": "2026-01-30T13:25:18.337114Z",
     "activities": "2026-01-30T13:25:32.833886Z",
     "vocabulary": "2026-01-26T23:26:53.339473Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4224/4000 (raw: 4319)"
+      "message": "4224/4000 (raw: 4327)"
     },
     "activities": {
       "status": "pass",

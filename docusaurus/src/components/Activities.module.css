@@ -1605,3 +1605,660 @@
     font-size: 1.2rem;
   }
 }
+
+/* ============= ETYMOLOGY TRACE ============= */
+.etymologyList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.etymologyItem {
+  background: var(--ifm-color-emphasis-100);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  border-left: 4px solid var(--ifm-color-primary);
+}
+
+.etymologyHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.etymologyWords {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.etymologyOriginal {
+  font-family: 'Noto Serif', serif;
+  font-size: 1.1rem;
+  color: var(--ifm-color-primary-dark);
+}
+
+.etymologyArrow {
+  font-size: 1.25rem;
+  color: var(--ifm-color-emphasis-600);
+}
+
+.etymologyModern {
+  font-size: 1.1rem;
+  color: var(--ifm-color-success-dark);
+}
+
+.etymologyEvolution {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--ifm-color-emphasis-300);
+  color: var(--ifm-color-emphasis-800);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.revealButton {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  background: var(--ifm-color-primary-lightest);
+  color: var(--ifm-color-primary-dark);
+  border: 1px solid var(--ifm-color-primary-light);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.revealButton:hover {
+  background: var(--ifm-color-primary-light);
+  color: white;
+}
+
+/* ============= GRAMMAR IDENTIFY ============= */
+.grammarList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.grammarItem {
+  background: var(--ifm-color-emphasis-100);
+  border-radius: 12px;
+  padding: 1.25rem;
+  border-left: 4px solid var(--ifm-color-warning);
+}
+
+.grammarText {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.oesText {
+  font-family: 'Noto Serif', serif;
+  font-style: italic;
+  color: var(--ifm-color-primary-dark);
+}
+
+.grammarTask {
+  color: var(--ifm-color-emphasis-700);
+  margin-bottom: 0.75rem;
+}
+
+.grammarInput {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.grammarInput input {
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  border: 2px solid var(--ifm-color-emphasis-300);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.grammarInput input:focus {
+  outline: none;
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 0 0 3px rgba(var(--ifm-color-primary-rgb), 0.15);
+}
+
+.grammarInput input.correct {
+  border-color: var(--ifm-color-success);
+  background: rgba(var(--ifm-color-success-rgb), 0.1);
+}
+
+.grammarInput input.incorrect {
+  border-color: var(--ifm-color-danger);
+  background: rgba(var(--ifm-color-danger-rgb), 0.1);
+}
+
+.correctAnswer {
+  color: var(--ifm-color-success-dark);
+  font-size: 0.9rem;
+  padding: 0.5rem;
+  background: rgba(var(--ifm-color-success-rgb), 0.1);
+  border-radius: 6px;
+}
+
+.secondaryButton {
+  padding: 0.6rem 1.25rem;
+  font-size: 1rem;
+  background: var(--ifm-color-emphasis-200);
+  color: var(--ifm-color-emphasis-800);
+  border: 1px solid var(--ifm-color-emphasis-400);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.secondaryButton:hover {
+  background: var(--ifm-color-emphasis-300);
+}
+
+/* ============= TRANSCRIPTION ACTIVITY ============= */
+.transcriptionOriginal {
+  background: linear-gradient(135deg, #f5f0e6 0%, #ebe4d4 100%);
+  border: 2px solid #c9b896;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.archaicText {
+  font-family: 'Old Standard TT', 'Times New Roman', Georgia, serif;
+  font-size: 1.75rem;
+  line-height: 1.8;
+  color: #3d2b1f;
+  letter-spacing: 0.05em;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.historicalKeyboard {
+  background: var(--ifm-color-emphasis-100);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.keyboardLabel {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--ifm-color-emphasis-600);
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.charButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.charButton {
+  min-width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.25rem;
+  font-family: 'Old Standard TT', serif;
+  background: var(--ifm-background-color);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.charButton:hover {
+  background: var(--ifm-color-primary-lighter);
+  border-color: var(--ifm-color-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.charButton:active {
+  transform: translateY(0);
+}
+
+.transcriptionInput textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 1rem;
+  font-size: 1.1rem;
+  font-family: 'Old Standard TT', serif;
+  border: 2px solid var(--ifm-color-emphasis-300);
+  border-radius: 10px;
+  resize: vertical;
+  transition: border-color 0.2s ease;
+}
+
+.transcriptionInput textarea:focus {
+  outline: none;
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 0 0 3px rgba(var(--ifm-color-primary-rgb), 0.1);
+}
+
+.transcriptionInput textarea.correct {
+  border-color: var(--ifm-color-success);
+  background: rgba(var(--ifm-color-success-rgb), 0.05);
+}
+
+.transcriptionInput textarea.incorrect {
+  border-color: var(--ifm-color-danger);
+  background: rgba(var(--ifm-color-danger-rgb), 0.05);
+}
+
+.hintsList {
+  background: var(--ifm-color-emphasis-100);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.hintsList ul {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.hintsList li {
+  margin-bottom: 0.5rem;
+  color: var(--ifm-color-emphasis-700);
+}
+
+/* ============= PALEOGRAPHY ANALYSIS ============= */
+.paleographyContainer {
+  margin-bottom: 1.5rem;
+}
+
+.manuscriptWrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  max-width: 100%;
+  border: 3px solid var(--ifm-color-emphasis-300);
+  border-radius: 12px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f5f0e6 0%, #ebe4d4 100%);
+}
+
+.manuscriptImage {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.hotspot {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--ifm-color-primary);
+  color: white;
+  border: 3px solid white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hotspot:hover {
+  transform: translate(-50%, -50%) scale(1.15);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.hotspotActive {
+  background: var(--ifm-color-warning);
+  transform: translate(-50%, -50%) scale(1.2);
+  box-shadow: 0 0 0 4px rgba(255, 193, 7, 0.3);
+}
+
+.hotspotCorrect {
+  background: #34A853 !important;
+}
+
+.hotspotIncorrect {
+  background: #EA4335 !important;
+}
+
+.hotspotPanel {
+  background: var(--ifm-background-surface-color);
+  border: 2px solid var(--ifm-color-emphasis-300);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-top: 1rem;
+}
+
+.hotspotPanel h4 {
+  margin: 0 0 1rem 0;
+  color: var(--ifm-color-primary);
+}
+
+.hotspotExplanation {
+  margin-top: 0.75rem;
+  padding: 1rem;
+  background: var(--ifm-color-emphasis-100);
+  border-radius: 8px;
+}
+
+.hotspotExplanation strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--ifm-color-primary);
+}
+
+.hotspotExplanation p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.featureSelect {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 2px solid var(--ifm-color-emphasis-300);
+  border-radius: 8px;
+  background: var(--ifm-background-color);
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+.featureSelect:focus {
+  outline: none;
+  border-color: var(--ifm-color-primary);
+}
+
+.featureInput {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 2px solid var(--ifm-color-emphasis-300);
+  border-radius: 8px;
+  background: var(--ifm-background-color);
+  margin-bottom: 1rem;
+}
+
+.featureInput:focus {
+  outline: none;
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 0 0 3px rgba(0, 87, 183, 0.15);
+}
+
+.instructionText {
+  text-align: center;
+  color: var(--ifm-color-emphasis-600);
+  font-style: italic;
+  padding: 1rem;
+}
+
+/* ============= DIALECT COMPARISON ============= */
+.dialectSplit {
+  display: flex;
+  gap: 0;
+  border: 2px solid var(--ifm-color-emphasis-300);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.dialectPane {
+  flex: 1;
+  padding: 1.25rem;
+  background: var(--ifm-background-surface-color);
+}
+
+.dialectPane:first-child {
+  border-right: none;
+}
+
+.dialectLabel {
+  margin: 0 0 0.75rem 0;
+  font-size: 1rem;
+  color: var(--ifm-color-primary);
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--ifm-color-emphasis-200);
+}
+
+.dialectText {
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+.dialectDivider {
+  width: 2px;
+  background: var(--ifm-color-emphasis-300);
+}
+
+.dialectHighlight {
+  background: rgba(255, 193, 7, 0.3);
+  padding: 0.1rem 0.3rem;
+  border-radius: 3px;
+  font-weight: 600;
+}
+
+.featureTable {
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+}
+
+.featureTable table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.featureTable th,
+.featureTable td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.featureTable th {
+  background: var(--ifm-color-emphasis-100);
+  font-weight: 700;
+  color: var(--ifm-heading-color);
+}
+
+.featureTable tr:hover {
+  background: var(--ifm-color-emphasis-100);
+}
+
+.featureTable tr.featureSelected {
+  background: rgba(0, 87, 183, 0.1);
+}
+
+.dialectValueA {
+  color: var(--ifm-color-primary-dark);
+  font-weight: 500;
+}
+
+.dialectValueB {
+  color: var(--ifm-color-success-dark);
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .dialectSplit {
+    flex-direction: column;
+  }
+
+  .dialectDivider {
+    width: 100%;
+    height: 2px;
+  }
+
+  .dialectPane:first-child {
+    border-right: none;
+    border-bottom: none;
+  }
+}
+
+/* ============= TRANSLATION CRITIQUE ============= */
+.originalTextSection {
+  margin-bottom: 1.5rem;
+}
+
+.originalTextSection h4 {
+  margin: 0 0 0.75rem 0;
+  color: var(--ifm-heading-color);
+}
+
+.focusPointsSection {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: var(--ifm-color-emphasis-100);
+  border-radius: 10px;
+}
+
+.focusPointsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.focusPointTag {
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  background: var(--ifm-color-primary);
+  color: white;
+  border-radius: 15px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.focusHighlight {
+  background: rgba(255, 193, 7, 0.4);
+  padding: 0.1rem 0.2rem;
+  border-radius: 3px;
+}
+
+.translationsSection h4 {
+  margin: 0 0 1rem 0;
+  color: var(--ifm-heading-color);
+}
+
+.translationCards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.translationCard {
+  border: 2px solid var(--ifm-color-emphasis-300);
+  border-radius: 12px;
+  padding: 1.25rem;
+  background: var(--ifm-background-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.translationCard:hover {
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.translationSelected {
+  border-color: var(--ifm-color-primary);
+  background: rgba(0, 87, 183, 0.05);
+}
+
+.translationHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.translatorName {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--ifm-heading-color);
+}
+
+.accuracyScore {
+  padding: 0.3rem 0.75rem;
+  border-radius: 15px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.scoreHigh {
+  background: rgba(52, 168, 83, 0.15);
+  color: #137333;
+}
+
+.scoreMedium {
+  background: rgba(251, 188, 4, 0.2);
+  color: #B06000;
+}
+
+.scoreLow {
+  background: rgba(234, 67, 53, 0.15);
+  color: #C5221F;
+}
+
+.translationText {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin-bottom: 0.75rem;
+}
+
+.expertVerdict {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--ifm-color-emphasis-100);
+  border-radius: 8px;
+  border-left: 4px solid var(--ifm-color-primary);
+}
+
+.expertVerdict strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--ifm-color-primary);
+}
+
+.expertVerdict p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Dark mode adjustments for new components */
+[data-theme='dark'] .manuscriptWrapper {
+  background: linear-gradient(135deg, #2d2a26 0%, #3d3830 100%);
+  border-color: var(--ifm-color-emphasis-400);
+}
+
+[data-theme='dark'] .hotspot {
+  border-color: var(--ifm-color-emphasis-600);
+}
+
+[data-theme='dark'] .dialectHighlight,
+[data-theme='dark'] .focusHighlight {
+  background: rgba(255, 193, 7, 0.25);
+}
+
+[data-theme='dark'] .scoreHigh {
+  background: rgba(52, 168, 83, 0.25);
+  color: #81C995;
+}
+
+[data-theme='dark'] .scoreMedium {
+  background: rgba(251, 188, 4, 0.25);
+  color: #FDD663;
+}
+
+[data-theme='dark'] .scoreLow {
+  background: rgba(234, 67, 53, 0.25);
+  color: #F28B82;
+}

@@ -1,3 +1,7 @@
+<!-- SCOPE
+Related: ivan-vyhovsky, pereyaslavska-uhoda, kozatska-derzhava, bohdan-khmelnytskyi
+-->
+
 # Юрій Немирич: Гадяцька угода
 
 > 🎯 **Чому це важливо?**

@@ -1,151 +1,76 @@
-items:
-  - lemma: король
-    ipa: /koˈrɔlʲ/
+vocabulary:
+  - term: король
     translation: king
-    pos: noun
-    gender: m
-    note: титул монарха
-  - lemma: корона
-    ipa: /koˈrɔnɐ/
-    translation: crown
-    pos: noun
-    gender: f
-    note: символ королівської влади
-  - lemma: коронація
-    ipa: /koronˈɑt͡sʲijɐ/
+    definition: Титул монарха.
+  - term: коронація
     translation: coronation
-    pos: noun
-    gender: f
-    note: акт покладання корони
-  - lemma: данник
-    ipa: /ˈdɑnnɪk/
-    translation: tributary
-    pos: noun
-    gender: m
-    note: той, хто платить данину
-  - lemma: Орда
-    ipa: /orˈdɑ/
-    translation: Horde
-    pos: noun
-    gender: f
-    note: монголо-татарське військо та держава
-  - lemma: навала
-    ipa: /nɐˈʋɑlɐ/
+    definition: Урочиста церемонія коронування.
+  - term: регалії
+    translation: regalia
+    definition: Символи монаршої влади.
+  - term: ярлик
+    translation: yarlyk
+    definition: Грамота хана Золотої Орди.
+  - term: баскак
+    translation: baskak
+    definition: Представник хана на підкорених землях.
+  - term: данина
+    translation: tribute
+    definition: Податок на користь завойовника.
+  - term: орда
+    translation: horde
+    definition: Військово-адміністративна організація у кочівників.
+  - term: хан
+    translation: khan
+    definition: Титул правителя у тюркських народів.
+  - term: темник
+    translation: temnik
+    definition: Командир десяти тисяч воїнів.
+  - term: навала
     translation: invasion
-    pos: noun
-    gender: f
-    note: масовий напад ворогів
-  - lemma: папа
-    ipa: /ˈpɑpɐ/
-    translation: pope
-    pos: noun
-    gender: m
-    note: голова католицької церкви
-  - lemma: хрестовий похід
-    ipa: /xrɛstˈɔʋɪj poˈxʲid/
-    translation: crusade
-    pos: noun
-    gender: m
-    note: воєнна експедиція християн
-  - lemma: фортеця
-    ipa: /forˈtɛt͡sʲɐ/
+    definition: Раптовий напад ворога.
+  - term: ярмо
+    translation: yoke
+    definition: Символ гноблення.
+  - term: фортеця
     translation: fortress
-    pos: noun
-    gender: f
-    note: оборонна споруда
-  - lemma: спадщина
-    ipa: /ˈspɑdʃt͡ʃɪnɐ/
-    translation: legacy / inheritance
-    pos: noun
-    gender: f
-    note: те, що передається нащадкам
-  - lemma: інтервенція
-    ipa: /intɛrˈʋɛnt͡sʲijɐ/
-    translation: intervention
-    pos: noun
-    gender: f
-    note: втручання іншої держави
-  - lemma: боярин
-    ipa: /boˈjɑrɪn/
-    translation: boyar
-    pos: noun
-    gender: m
-    note: представник вищого стану
-  - lemma: літопис
-    ipa: /ˈlʲitopɪs/
-    translation: chronicle
-    pos: noun
-    gender: m
-    note: історичний запис подій
-  - lemma: дипломатія
-    ipa: /dɪploˈmɑtʲijɐ/
-    translation: diplomacy
-    pos: noun
-    gender: f
-    note: мистецтво ведення переговорів
-  - lemma: колоніст
-    ipa: /koloˈnʲist/
-    translation: colonist
-    pos: noun
-    gender: m
-    note: переселенець на нові землі
-  - lemma: легітимність
-    ipa: /leɦʲiˈtɪmnʲisʲtʲ/
-    translation: legitimacy
-    pos: noun
-    gender: f
-    note: законність влади
-  - lemma: коаліція
-    ipa: /koɐˈlʲit͡sʲijɐ/
+    definition: Укріплений пункт.
+  - term: дитинець
+    translation: citadel
+    definition: Внутрішня укріплена частина міста.
+  - term: острог
+    translation: burg
+    definition: Укріплене поселення.
+  - term: віче
+    translation: veche
+    definition: Збори громадян.
+  - term: союз
+    translation: alliance
+    definition: Об'єднання для спільної мети.
+  - term: коаліція
     translation: coalition
-    pos: noun
-    gender: f
-    note: об'єднання для спільних дій
-  - lemma: суверенітет
-    ipa: /suʋɛrenʲiˈtɛt/
-    translation: sovereignty
-    pos: noun
-    gender: m
-    note: повна незалежність держави
-  - lemma: резиденція
-    ipa: /rɛzɪˈdɛnt͡sʲijɐ/
-    translation: residence
-    pos: noun
-    gender: f
-    note: місце постійного перебування правителя
-  - lemma: лицар
-    ipa: /ˈlɪt͡sɐr/
-    translation: knight
-    pos: noun
-    gender: m
-    note: шляхетний воїн
-  - lemma: маніфест
-    ipa: /mɐnʲiˈfɛst/
-    translation: manifesto
-    pos: noun
-    gender: m
-    note: програмне висловлювання
-  - lemma: унія
-    ipa: /ˈunʲijɐ/
+    definition: Тимчасовий союз держав.
+  - term: хрестовий похід
+    translation: crusade
+    definition: Військова експедиція християн.
+  - term: унія
     translation: union
-    pos: noun
-    gender: f
-    note: союз держав або церков
-  - lemma: бастіон
-    ipa: /bɐstʲiˈon/
-    translation: bastion
-    pos: noun
-    gender: m
-    note: опора, захист
-  - lemma: суб'єктність
-    ipa: /sub-jɛkˈtɪʋnʲisʲtʲ/
-    translation: agency / subjectivity
-    pos: noun
-    gender: f
-    note: здатність діяти самостійно
-  - lemma: ідентичність
-    ipa: /idɛnˈtɪt͡ʃnʲisʲtʲ/
-    translation: identity
-    pos: noun
-    gender: f
-    note: самоусвідомлення себе частиною групи
+    definition: Об'єднання церков.
+  - term: єпископ
+    translation: bishop
+    definition: Вищий духовний сан.
+  - term: митрополит
+    translation: metropolitan
+    definition: Глава церковної провінції.
+  - term: архієпископ
+    translation: archbishop
+    definition: Старший єпископ.
+  - term: дипломатія
+    translation: diplomacy
+    definition: Мистецтво ведення переговорів.
+  - term: суверенітет
+    translation: sovereignty
+    definition: Незалежність держави.
+  - term: незалежність
+    translation: independence
+    definition: Самостійність у внутрішній та зовнішній політиці.

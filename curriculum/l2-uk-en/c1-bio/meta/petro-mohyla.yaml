@@ -1,10 +1,74 @@
-module: c1-bio-021
+module: c1-bio-023
 level: C1-BIO
 slug: petro-mohyla
 version: '2.0'
-id: c1-bio-021
+id: c1-bio-023
+title: 'Петро Могила: Засновник академії та реформатор церкви'
 naturalness:
-  score: null
-  status: PENDING
+  score: 10
+  status: PASS
+transliteration: none
+audio: assets/audio/placeholder.mp3
 build:
-  last_modified: '2026-02-01'
+  last_modified: '2026-02-04'
+content_outline:
+- section: Вступ
+  words: 400
+  points:
+  - Велич Петра Могили
+  - Епоха протистояння
+- section: Життєпис
+  words: 1100
+  points:
+  - Походження та освіта
+  - Військова кар'єра
+  - Архімандрит Лаври
+- section: Внесок
+  words: 1400
+  points:
+  - Заснування Академії
+  - Митрополиче служіння
+  - Видавнича діяльність
+- section: Останні роки
+  words: 250
+  points:
+  - Заповіт та смерть
+- section: Спадщина
+  words: 350
+  points:
+  - Канонізація
+  - Сучасне значення
+word_target: 3500
+vocabulary_hints:
+  required:
+  - митрополит (metropolitan)
+  - архімандрит (archimandrite)
+  - академія (academy)
+  - православ'я (Orthodoxy)
+  - унія (church union)
+  - братство (brotherhood/confraternity)
+  - друкарня (printing house)
+  - требник (book of needs/euchologion)
+  - канонізація (canonization)
+  - лавра (lavra - major monastery)
+  recommended:
+  - богослов'я (theology)
+  - схоластика (scholasticism)
+  - катехизис (catechism)
+  - єпархія (diocese)
+activity_hints:
+- type: reading
+  focus: Фрагменти «Православного сповідання віри»
+  source: Первинне джерело
+  items: 3 passages
+- type: essay-response
+  focus: Роль Могили у збереженні української православної ідентичності
+  word_target: 300
+  output: Аргументований есей
+- type: critical-analysis
+  focus: Порівняння освітньої реформи Могили з європейськими аналогами
+objectives:
+- Дізнатися про життя та діяльність Петра Могили
+- Зрозуміти значення Києво-Могилянської академії
+- Проаналізувати церковні реформи Могили
+- Оцінити внесок у збереження української православної ідентичності

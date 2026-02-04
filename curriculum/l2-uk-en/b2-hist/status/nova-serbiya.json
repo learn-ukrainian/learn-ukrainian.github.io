@@ -2,10 +2,10 @@
   "module": "nova-serbiya",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:54:31.069250Z",
+  "last_audit": "2026-02-03T22:54:45.270310Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-28T00:42:08.753793Z",
+    "md": "2026-02-02T10:58:32.010994Z",
     "meta": "2026-01-29T07:38:18.666230Z",
     "activities": "2026-01-27T23:28:31.247697Z",
     "vocabulary": "2026-01-25T23:35:16.518225Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4396/4000 (raw: 4516)"
+      "message": "4396/4000 (raw: 4524)"
     },
     "activities": {
       "status": "pass",

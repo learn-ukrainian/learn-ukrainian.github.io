@@ -1,0 +1,74 @@
+module: c1-bio-007
+level: C1-BIO
+slug: nestor-litopysets
+version: '2.0'
+id: c1-bio-007
+naturalness:
+  score: 10
+  status: PASS
+duration: 150
+transliteration: none
+tags:
+- history
+- literature
+- religion
+- kyivan-rus
+- historiography
+vocabulary_count: 30
+vocabulary_hints:
+  required: []
+  recommended:
+    - літопис
+    - агіографія
+    - пергамент
+    - скрипторій
+    - канонізація
+activity_hints:
+- type: reading
+  focus: "Вступ до ПВЛ"
+- type: authorial-intent
+  focus: "Покликання варягів"
+- type: essay-response
+  focus: "Нестор як архітектор"
+- type: critical-analysis
+  focus: "Деколонізація образа"
+- type: comparative-study
+  focus: "Нестор та хроністи"
+- type: critical-analysis
+  focus: "Редакції літопису"
+build:
+  last_modified: '2026-02-03'
+content_outline:
+  - section: Вступ
+    words: 400
+    points:
+      - Нестор як символ історичної пам'яті
+      - Інтелектуальний контекст XI століття
+  - section: Життєпис
+    words: 800
+    points:
+      - Прихід до Лаври
+      - Послух у Феодосія
+      - Книжна освіта і побут
+  - section: Внесок
+    words: 1500
+    points:
+      - Повість минулих літ - аналіз
+      - Житія святих
+      - Методологія історика
+  - section: Останні роки
+    words: 600
+    points:
+      - Редакції літопису
+      - Політичні конфлікти
+      - Смерть і поховання
+  - section: Спадщина
+    words: 600
+    points:
+      - Канонізація
+      - Вплив на мову і культуру
+      - День писемності
+  - section: Підсумок
+    words: 200
+    points:
+      - Значення для нації

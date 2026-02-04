@@ -1,8 +1,8 @@
 # Audit Report: M25 — boiare-i-shliakhta.md
-**Level:** B2 | **Module:** M25 | **Phase:** B2.3a | **Pedagogy:** CBI | **Target:** 4322
+**Level:** B2-HIST | **Module:** M25 | **Phase:** B2.3a | **Pedagogy:** CBI | **Target:** 4322
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:53:59
+**Generated:** 2026-02-03 22:54:14
 
 ## Configuration
 **Type:** B2-history

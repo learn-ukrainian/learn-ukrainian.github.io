@@ -1,0 +1,37 @@
+# Module Meta: Slovo: The Return
+# Track: OES
+# Module: 085
+# Generated: 2026-02-04
+
+module_number: 85
+slug: slovo-return
+title: "Слово: Повернення"
+title_en: "Slovo: The Return"
+
+type: lesson
+phase: 4
+phase_id: literary-art
+
+# Pedagogy
+pedagogy: theory-first
+duration_minutes: 60
+word_target: 3500
+immersion_level: 100
+
+# Focus
+grammar_focus: "Joyous vocabulary — Doxology"
+vocabulary_focus: []
+cultural_focus: []
+
+# Activity hints (minimum counts)
+activity_hints:
+  - type: transcription
+    min_items: 2
+  - type: etymology-trace
+    min_items: 2
+  - type: grammar-identify
+    min_items: 3
+
+# Prerequisites
+prerequisites:
+  - module: 84

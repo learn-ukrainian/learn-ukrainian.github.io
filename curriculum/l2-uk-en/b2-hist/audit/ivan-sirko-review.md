@@ -1,8 +1,8 @@
 # Audit Report: M61 — ivan-sirko.md
-**Level:** B2 | **Module:** M61 | **Phase:** HIST.6 | **Pedagogy:** seminar | **Target:** 4000
+**Level:** B2-HIST | **Module:** M61 | **Phase:** HIST.6 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:21
+**Generated:** 2026-02-03 22:54:35
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4635/4000 (raw: 4709)
+- **Words:** ✅ 4635/4000 (raw: 4717)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.9% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.6% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -72,7 +72,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 203 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Іван Сірко: Легендарний кошовий** | ⚪️ | 203 | Skipped |
 | **Вступ: «Характерник» української історії** | ✅ | 659 | Included in Core |
 | **Ранні роки та становлення** | ⚪️ | 627 | Skipped |
 | **На чолі Січі: Походи та політика** | ⚪️ | 744 | Skipped |

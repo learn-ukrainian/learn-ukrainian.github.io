@@ -2,10 +2,10 @@
   "module": "pacyfikatsiia",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:54:43.435551Z",
+  "last_audit": "2026-02-03T22:54:57.659448Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-28T22:20:26.697091Z",
+    "md": "2026-02-02T10:59:26.243085Z",
     "meta": "2026-01-31T15:10:30.600405Z",
     "activities": "2026-01-28T16:43:04.462938Z",
     "vocabulary": "2026-01-28T16:49:00.444310Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "5143/4000 (raw: 5188)"
+      "message": "5143/4000 (raw: 5196)"
     },
     "activities": {
       "status": "pass",

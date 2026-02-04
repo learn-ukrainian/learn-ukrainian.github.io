@@ -160,7 +160,8 @@ def detect_level(file_path: str, frontmatter_str: str) -> tuple[str, int]:
     level_from_path = None
     # Match a1, a2, b1, b2, c1, c2 (case insensitive)
     # Also matches tracks like b2-hist, c1-bio by ignoring suffix
-    path_match = re.search(r'/([abc][12])(?:-[a-z0-9]+)?/', file_path.lower())
+    # Updated to also match OES and RUTH
+    path_match = re.search(r'/([abc][12]|oes|ruth)(?:-[a-z0-9]+)?/', file_path.lower())
     if path_match:
         level_from_path = path_match.group(1).upper()
 
@@ -770,6 +771,14 @@ def audit_module(file_path: str) -> bool:
     # Detect Metadata
     level_code, module_num = detect_level(file_path, frontmatter_str)
 
+    # Detect full track identifier for display (e.g., "C1-BIO" instead of "C1")
+    display_level = level_code
+    track_match = re.search(r'/([abc][12]-[a-z]+)/', file_path.lower())
+    if track_match:
+        display_level = track_match.group(1).upper()  # e.g., "C1-BIO", "B2-HIST"
+    elif re.search(r'/lit/', file_path.lower()):
+        display_level = 'LIT'
+
     # If module number not detected (999), try curriculum.yaml lookup
     if module_num == 999:
         curriculum_module_num = get_module_number_from_curriculum(file_path, level_code)
@@ -786,7 +795,7 @@ def audit_module(file_path: str) -> bool:
     title_match = re.search(r"title:\s*['\"]?([^'\"\n]+)['\"]?", frontmatter_str)
     module_title = title_match.group(1).strip() if title_match else os.path.basename(file_path)
 
-    print(f"\n📋 Auditing: {level_code} M{module_num:02d} — {module_title}")
+    print(f"\n📋 Auditing: {display_level} M{module_num:02d} — {module_title}")
     
     # Check word target
     target = get_word_target(level_code, module_num, module_focus)
@@ -949,7 +958,7 @@ def audit_module(file_path: str) -> bool:
         
     # Final structure evaluation (Clean MD Standard)
     # Applied to all production-ready levels that use sidecars
-    is_clean_md_standard = level_code in ('A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'LIT')
+    is_clean_md_standard = level_code in ('A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'LIT', 'OES', 'RUTH')
     
     # Clean MD Logic: headers are optional IF data exists in sidecars.
     # However, Summary (# Підсумок) is ALWAYS required in Markdown.
@@ -1021,8 +1030,8 @@ def audit_module(file_path: str) -> bool:
 
     # Engagement pattern - includes B2+ history/cultural callouts
     engagement_pattern = re.compile(
-        r'(>\s*[💡⚡🎬🎭🔗🌍🎁🗣️🏠🧭🚌🚇🎟️📱🕵️🌤️🌦️🎱🔮🇺🇦🕰️❓🛠️💂🥪🍺🛍️🏫🏥💊👵🔬🎨🔄📅🍃❄️🚂⏳📚🍲🥣🥗🥙🥚🥛🧩⚠️🛑🎯🎮🎓🔍])|'
-        r'(>\s*\[!(note|tip|warning|caution|important|cultural|history-bite|myth-buster|quote|context|analysis|source|legacy|reflection)\])'
+        r'(>\s*[💡⚡🎬🎭📜⚔️🔗🌍🎁🗣️🏠🧭🚌🚇🎟️📱🕵️🌤️🌦️🎱🔮🇺🇦🕰️❓🛠️💂🥪🍺🛍️🏫🏥💊👵🔬🎨🔄📅🍃❄️🚂⏳📚🍲🥣🥗🥙🥚🥛🧩⚠️🛑🎯🎮🎓🔍])|'
+        r'(>\s*\[!(note|tip|warning|caution|important|cultural|history-bite|myth-buster|quote|context|analysis|source|legacy|reflection|fact|culture|military|perspective|biography)\])'
     )
     engagement_count = len(engagement_pattern.findall(content))
 
@@ -1039,7 +1048,7 @@ def audit_module(file_path: str) -> bool:
     low_density_activities = []  # Track activities with insufficient items
     activity_details = []  # Track ALL activities for detailed report
 
-    print(f"\n📋 Auditing: {level_code} M{module_num:02d} — {module_title}")
+    print(f"\n📋 Auditing: {display_level} M{module_num:02d} — {module_title}")
     print(f"   File: {file_path} | Target: {target} words\n")
 
     # Check for YAML activities file using shared parser (Issue #394)
@@ -1595,7 +1604,7 @@ def audit_module(file_path: str) -> bool:
         })
     
     # Run content quality checks (LLM-based + deterministic purity checks)
-    content_quality_violations = check_content_quality(content, level_code, module_num)
+    content_quality_violations = check_content_quality(content, level_code, module_num, file_path)
     
     # Run content purity checks (Redundancy, Roboticness, Mirroring)
     yaml_content_str = ""
@@ -1871,8 +1880,15 @@ def audit_module(file_path: str) -> bool:
         nat_score = meta_data['naturalness'].get('score', 0)
         nat_status = meta_data['naturalness'].get('status', 'PENDING')
 
-    # Naturalness is evaluated by agents (Claude/Gemini) during module creation/fixing
-    # Audit just flags PENDING - agents evaluate and update meta.yaml with score
+    # Auto-check naturalness via Gemini if PENDING and --naturalness flag provided
+    # Or if environment variable AUDIT_AUTO_NATURALNESS=1
+    auto_naturalness = os.environ.get('AUDIT_AUTO_NATURALNESS', '0') == '1'
+    if nat_status == "PENDING" and auto_naturalness:
+        try:
+            from .naturalness_check import check_naturalness
+            nat_score, nat_status = check_naturalness(file_path, update_meta=True)
+        except Exception as e:
+            print(f"  ⚠️ Auto naturalness check failed: {e}")
 
     results['naturalness'] = evaluate_naturalness(nat_score, nat_status)
     if results['naturalness'].status == 'FAIL':
@@ -2005,7 +2021,8 @@ def audit_module(file_path: str) -> bool:
         config=config,
         activity_details=activity_details,
         unique_types=unique_types,
-        module_focus=module_focus
+        module_focus=module_focus,
+        display_level=display_level
     )
     report_path = save_report(file_path, report_content)
     print(f"\nReport: {report_path}")

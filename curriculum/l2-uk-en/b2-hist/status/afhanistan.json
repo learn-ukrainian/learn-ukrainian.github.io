@@ -2,10 +2,10 @@
   "module": "afhanistan",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:54:53.477857Z",
+  "last_audit": "2026-02-03T22:55:07.787846Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-31T15:41:18.886724Z",
+    "md": "2026-02-02T10:25:51.557643Z",
     "meta": "2026-01-30T23:51:19.061442Z",
     "activities": "2026-01-30T23:50:44.622341Z",
     "vocabulary": "2026-01-31T15:55:05.416005Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4237/4000 (raw: 4317)"
+      "message": "4237/4000 (raw: 4325)"
     },
     "activities": {
       "status": "pass",

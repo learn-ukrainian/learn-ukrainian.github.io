@@ -1,8 +1,8 @@
 # Audit Report: M122 — ukraine-90s.md
-**Level:** B2 | **Module:** M122 | **Phase:** HIST.12 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M122 | **Phase:** HIST.12 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:54:56
+**Generated:** 2026-02-03 22:55:11
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4946/4000 (raw: 5022)
+- **Words:** ✅ 4946/4000 (raw: 5030)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.6% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -72,7 +72,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 155 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Україна 1990-х: Кучма та олігархи** | ⚪️ | 155 | Skipped |
 | **Вступ: Народження держави** | ✅ | 627 | Included in Core |
 | **Економічна криза** | ⚪️ | 971 | Skipped |
 | **Президентство Кучми** | ⚪️ | 965 | Skipped |

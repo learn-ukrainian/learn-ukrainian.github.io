@@ -1,6 +1,6 @@
-module: ivan-sirko
+module: c1-bio-025
 level: C1-BIO
-sequence: 22
+sequence: 25
 slug: ivan-sirko
 version: '2.0'
 title: 'Іван Сірко: Легендарний кошовий отаман'
@@ -105,11 +105,18 @@ objectives:
 - Зрозуміти роль кошового отамана в Запорозькій Січі
 - Проаналізувати лист запорожців турецькому султану
 - Оцінити військовий геній Сірка та його спадщину
-notes: |
-  Ivan Sirko was elected Koshovyi Otaman of the Zaporozhian Sich an unprecedented
+notes: 'Ivan Sirko was elected Koshovyi Otaman of the Zaporozhian Sich an unprecedented
+
   number of times (12-15 times by different accounts). He led over 50 military campaigns
+
   against the Crimean Khanate and Ottoman Empire with no recorded defeats. The famous
-  "Reply of the Zaporozhian Cossacks" letter, immortalized in Repin's painting, is
+
+  "Reply of the Zaporozhian Cossacks" letter, immortalized in Repin''s painting, is
+
   attributed to his leadership. After his death in 1680, legend says his hand was
+
   preserved and carried into battle by later Cossacks for good luck. His remains were
+
   returned to Ukraine and reburied in Kapulivka in 2000.
+
+  '

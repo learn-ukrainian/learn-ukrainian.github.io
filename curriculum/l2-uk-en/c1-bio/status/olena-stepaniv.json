@@ -2,11 +2,11 @@
   "module": "olena-stepaniv",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T23:29:41.567993Z",
+  "last_audit": "2026-02-04T11:42:06.120742Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.348725Z",
-    "meta": "2026-01-29T07:39:04.934250Z",
+    "meta": "2026-02-02T23:23:00.215608Z",
     "activities": "2026-01-27T15:34:56.547993Z",
     "vocabulary": null,
     "plan": null

@@ -1,0 +1,38 @@
+# Module Plan: OES Capstone
+# Track: OES
+# Module: 100
+# Source: Gemini Research (ISSUE-492)
+# Generated: 2026-02-04
+
+module_number: 100
+slug: oes-capstone
+title_uk: "Капстоун OES"
+title_en: "OES Capstone"
+
+phase: 4
+phase_id: literary-art
+phase_name: "Literary Art"
+
+focus: "Final exam — Reading an unknown text"
+
+word_target: 2500
+
+# Content outline to be expanded during content generation
+content_outline:
+  - section: "Вступ"
+    description: "Introduction to OES Capstone"
+  - section: "Основний матеріал"
+    description: "Primary source analysis and grammar focus"
+  - section: "Практика"
+    description: "Exercises and activities"
+  - section: "Підсумок"
+    description: "Summary and connection to next module"
+
+# Vocabulary hints (to be populated during content generation)
+vocabulary_hints: []
+
+# Activity types appropriate for this module
+activity_types:
+  - transcription
+  - etymology-trace
+  - grammar-identify

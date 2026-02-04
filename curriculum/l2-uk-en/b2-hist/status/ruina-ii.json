@@ -2,10 +2,10 @@
   "module": "ruina-ii",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T14:54:19.833707Z",
+  "last_audit": "2026-02-03T22:54:34.156344Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-30T22:13:37.754294Z",
+    "md": "2026-02-02T11:00:01.484359Z",
     "meta": "2026-01-29T07:38:18.649636Z",
     "activities": "2026-01-27T20:32:44.567024Z",
     "vocabulary": "2026-01-24T00:11:07.724363Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "5502/4000 (raw: 5581)"
+      "message": "5502/4000 (raw: 5589)"
     },
     "activities": {
       "status": "pass",

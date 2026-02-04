@@ -1,0 +1,130 @@
+# OES Track Plan - Давньоруська мова (Old East Slavic)
+# Source: Gemini Research (ISSUE-501, ISSUE-490, ISSUE-491, ISSUE-492)
+# Generated: 2026-02-04
+
+track_id: oes
+track_name: "Давньоруська мова"
+track_name_en: "Old East Slavic"
+period: "X–XIII century (Kyivan Rus')"
+modules: 100
+prerequisite: "B2 Core, B2-HIST Phase 1 (Kyivan Rus')"
+immersion: "100% Ukrainian"
+
+# Linguistic Model: Diglossia (Two-Register System)
+# Based on Shevelov, Nimchuk, and Moisiyenko
+registers:
+  high_literary:
+    name_uk: "Книжна мова"
+    description: "Church Slavonic + East Slavic hybrid. Chronicles, religious texts."
+  vernacular:
+    name_uk: "Давньоукраїнська народно-розмовна мова"
+    description: "What people actually spoke. Graffiti, birch bark letters."
+
+# Key insight: Regional dialects were ALREADY distinct in 6th-9th c. — NOT a later "split."
+
+terminology:
+  use:
+    - "Давньоруська мова (Old Rus' Language)"
+    - "Давньоукраїнська народно-розмовна мова (Old Ukrainian Vernacular)"
+  avoid:
+    - '"Old Russian" (imperialist)'
+    - '"Common East Slavic" (implies uniformity)'
+
+phases:
+  - id: 1
+    name_uk: "«Голос народу» — Народна основа"
+    name_en: "Voice of the People — Vernacular Foundations"
+    modules: 1-25
+    register: vernacular
+    focus:
+      - "St. Sophia graffiti"
+      - "Zvenyhorod birch bark letters"
+      - "Alphabet (Glagolitic → Cyrillic)"
+      - "Phonology: Yers (Ъ, Ь), Pleophony, Yat' (ѣ)"
+      - "Basic grammar (nouns, verbs, cases)"
+    rationale: "Start with vernacular to show 'raw' Ukrainian roots — immediate similarities to modern Ukrainian."
+    source_issue: "#501"
+    primary_sources:
+      - name: "Софійські графіті"
+        url: "https://st-sophia.org.ua/"
+      - name: "Берестяні грамоти Звенигорода"
+        url: "http://litopys.org.ua/oldukr/zven.htm"
+
+  - id: 2
+    name_uk: "«Книжне слово» — Літописна традиція"
+    name_en: "The Written Word — Literary Tradition"
+    modules: 26-50
+    register: literary
+    focus:
+      - "Повість врем'яних літ (PVL)"
+      - "Kyivan Chronicle"
+      - "Historical narrative"
+      - "Aorist vs Imperfect tenses"
+      - "Participles"
+    rationale: "Move to literary tradition — CS influence, sophisticated syntax of Kyivan elite."
+    source_issue: "#490"
+    primary_sources:
+      - name: "Повість врем'яних літ"
+        url: "http://litopys.org.ua/pvlyar/yar.htm"
+      - name: "Kyivan Chronicle (Hypatian Codex)"
+        url: "http://litopys.org.ua/ipatlit/ipat.htm"
+
+  - id: 3
+    name_uk: "«Право землі» — Юридична традиція"
+    name_en: "Law of the Land — Legal Tradition"
+    modules: 51-75
+    register: legal
+    focus:
+      - "Руська Правда (Short & Extensive)"
+      - "Legal vocabulary"
+      - "Social structure (smerd, kholop, zakup)"
+      - "Dual number (двоїна)"
+      - "Conditional syntax"
+      - "Treaties with Greeks"
+    rationale: "Secular legal register — notably FREE of Church Slavonic, 'purer' East Slavic."
+    source_issue: "#491"
+    primary_sources:
+      - name: "Руська Правда"
+        url: "http://litopys.org.ua/rizne/pravdstat.htm"
+      - name: "Treaties (PVL)"
+        url: "http://litopys.org.ua/pvlyar/yar01.htm"
+
+  - id: 4
+    name_uk: "«Висока поезія» — Літературне мистецтво"
+    name_en: "High Poetry — Literary Art"
+    modules: 76-100
+    register: literary_art
+    focus:
+      - "Слово о полку Ігоревім"
+      - "Kyiv-Pechersk Patericon"
+      - "Ilarion's Sermon"
+      - "Poetry, metaphor, mythology"
+      - "Fall of the Yers (phonological evolution)"
+    rationale: "Capstone — sophisticated literary language, mythology, nature imagery."
+    source_issue: "#492"
+    primary_sources:
+      - name: "Слово о полку Ігоревім"
+        url: "http://litopys.org.ua/slovo/slovo.htm"
+      - name: "Kyiv-Pechersk Patericon"
+        url: "http://litopys.org.ua/pateryk/"
+
+key_scholars:
+  - name: "Юрій Шевельов (George Shevelov)"
+    work: "A Historical Phonology of the Ukrainian Language"
+    contribution: "Definitive argument for independent Ukrainian sound system"
+  - name: "Василь Німчук"
+    work: "Origins of the Ukrainian Language"
+    contribution: 'Authority on "Old Ukrainian" terminology'
+  - name: "Віктор Мойсієнко"
+    work: "St. Sophia graffiti research"
+    contribution: "Vernacular phase documentation"
+
+activity_types:
+  # See ISSUE-502-activity-spec.yaml for full schemas
+  - transcription
+  - etymology-trace
+  - grammar-identify
+  - phonology-lab
+  - grammar-lab
+  - parallel-text
+  - paleography-analysis

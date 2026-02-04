@@ -1,8 +1,8 @@
-# Audit Report: M17 — meletii-smotrytskyi.md
-**Level:** C1 | **Module:** M17 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
+# Audit Report: M19 — meletii-smotrytskyi.md
+**Level:** C1-BIO | **Module:** M19 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:10
+**Generated:** 2026-02-04 12:08:40
 
 ## Configuration
 **Type:** C1-biography
@@ -45,7 +45,7 @@
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/5
+- **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 0 < 24 (soft target)
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar

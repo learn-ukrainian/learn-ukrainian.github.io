@@ -1,8 +1,8 @@
-# Audit Report: M116 — leonid-kadenyuk.md
-**Level:** C1 | **Module:** M116 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M132 — leonid-kadenyuk.md
+**Level:** C1-BIO | **Module:** M132 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 23:29:53
+**Generated:** 2026-02-04 11:42:25
 
 ## Configuration
 **Type:** C1-biography

@@ -1,0 +1,39 @@
+# Module Plan: Lab: The Thief Kuzma
+# Track: OES
+# Module: 011
+# Source: Gemini Research (ISSUE-501)
+# Generated: 2026-02-04
+
+module_number: 11
+slug: lab-thief-kuzma
+title_uk: "Лабораторія: Злодій Козьма"
+title_en: "Lab: The Thief Kuzma"
+
+phase: 1
+phase_id: vernacular-foundations
+phase_name: "Vernacular Foundations"
+
+focus: "Analysis of the curse graffiti"
+
+word_target: 2500
+
+# Content outline to be expanded during content generation
+content_outline:
+  - section: "Вступ"
+    description: "Introduction to Lab: The Thief Kuzma"
+  - section: "Основний матеріал"
+    description: "Primary source analysis and grammar focus"
+  - section: "Практика"
+    description: "Exercises and activities"
+  - section: "Підсумок"
+    description: "Summary and connection to next module"
+
+# Vocabulary hints (to be populated during content generation)
+vocabulary_hints: []
+
+# Activity types appropriate for this module
+activity_types:
+  - transcription
+  - etymology-trace
+  - grammar-identify
+  - grammar-lab

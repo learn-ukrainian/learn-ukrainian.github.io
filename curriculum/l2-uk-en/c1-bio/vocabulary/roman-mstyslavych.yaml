@@ -1,151 +1,76 @@
-items:
-  - lemma: самодержець
-    ipa: /sɐmoˈdɛrʒet͡sʲ/
+vocabulary:
+  - term: самодержець
     translation: autocrat
-    pos: noun
-    gender: m
-    note: абсолютний правитель
-  - lemma: об'єднувач
-    ipa: /ob-jed-ˈnu-ʋɐt͡ʃ/
-    translation: unifier
-    pos: noun
-    gender: m
-    note: той, хто збирає землі разом
-  - lemma: усобиця
-    ipa: /uˈsɔbɪt͡sʲɐ/
-    translation: internecine war
-    pos: noun
-    gender: f
-    note: внутрішній воєнний конфлікт
-  - lemma: вочина
-    ipa: /ˈʋɔt͡ʃɪnɐ/
+    definition: Правитель з необмеженою владою.
+  - term: боярство
+    translation: boyars
+    definition: Вища аристократія в Русі.
+  - term: олігархія
+    translation: oligarchy
+    definition: Влада небагатьох багатіїв.
+  - term: магнат
+    translation: magnate
+    definition: Великий землевласник.
+  - term: вотчина
     translation: patrimony
-    pos: noun
-    gender: f
-    note: спадкова земельна власність
-  - lemma: легітимність
-    ipa: /le-ɦi-tɪ-ˈmnʲistʲ/
-    translation: legitimacy
-    pos: noun
-    gender: f
-    note: законність влади
-  - lemma: суверенітет
-    ipa: /su-ʋe-re-ni-ˈtɛt/
-    translation: sovereignty
-    pos: noun
-    gender: m
-    note: повна незалежність держави
-  - lemma: корона
-    ipa: /koroˈnɐ/
-    translation: crown
-    pos: noun
-    gender: f
-    note: символ монаршої влади
-  - lemma: дипломатія
-    ipa: /dɪploˈmɑtʲijɐ/
-    translation: diplomacy
-    pos: noun
-    gender: f
-    note: мистецтво ведення міжнародних переговорів
-  - lemma: регентство
-    ipa: /ˈrɛɦentstʋo/
-    translation: regency
-    pos: noun
-    gender: n
-    note: правління від імені малолітнього монарха
-  - lemma: літописець
-    ipa: /lʲitoˈpɪset͡sʲ/
-    translation: chronicler
-    pos: noun
-    gender: m
-    note: автор історичного твору
-  - lemma: меценатство
-    ipa: /met͡seˈnɑtstʋo/
-    translation: patronage
-    pos: noun
-    gender: n
-    note: підтримка культури та мистецтва
-  - lemma: аристократія
-    ipa: /ɐrɪstoˈkrɑtʲijɐ/
-    translation: aristocracy
-    pos: noun
-    gender: f
-    note: вищий стан суспільства
-  - lemma: спадщина
-    ipa: /ˈspɑdt͡ʃɪnɐ/
-    translation: legacy / heritage
-    pos: noun
-    gender: f
-    note: матеріальні та духовні цінності минулого
-  - lemma: експансія
-    ipa: /ek-ˈspɑn-sʲijɐ/
-    translation: expansion
-    pos: noun
-    gender: f
-    note: розширення впливу або територій
-  - lemma: феодал
-    ipa: /fɛoˈdɑl/
-    translation: feudal lord
-    pos: noun
-    gender: m
-    note: землевласник у середньовіччі
-  - lemma: намісник
-    ipa: /nɐˈmʲisnɪk/
-    translation: governor / lieutenant
-    pos: noun
-    gender: m
-    note: представник князя у місті чи землі
-  - lemma: грамота
-    ipa: /ˈɦrɑmotɐ/
-    translation: charter / literacy
-    pos: noun
-    gender: f
-    note: офіційний документ або знання письма
-  - lemma: печатка
-    ipa: /peˈt͡ʃɑtkɐ/
-    translation: seal
-    pos: noun
-    gender: f
-    note: інструмент для засвідчення автентичності
-  - lemma: династія
-    ipa: /dɪˈnɑstʲijɐ/
-    translation: dynasty
-    pos: noun
-    gender: f
-    note: ряд монархів з одного роду
-  - lemma: кодифікація
-    ipa: /kodɪfʲikˈɑt͡sʲijɐ/
-    translation: codification
-    pos: noun
-    gender: f
-    note: систематизація правових норм
-  - lemma: престол
-    ipa: /presˈtɔl/
-    translation: throne
-    pos: noun
-    gender: m
-    note: символ влади правителя
-  - lemma: васал
-    ipa: /ʋɐˈsɐl/
-    translation: vassal
-    pos: noun
-    gender: m
-    note: залежний від сеньйора землевласник
-  - lemma: ієрархія
-    ipa: /ijeˈrɑrxʲijɐ/
-    translation: hierarchy
-    pos: noun
-    gender: f
-    note: система підпорядкування нижчих вищим
-  - lemma: централізація
-    ipa: /t͡sɛntrɐlʲiˈzɑt͡sʲijɐ/
+    definition: Спадкове земельне володіння.
+  - term: уділ
+    translation: appanage
+    definition: Частина князівства, що виділялася князю.
+  - term: роздробленість
+    translation: fragmentation
+    definition: Розпад держави на окремі частини.
+  - term: централізація
     translation: centralization
-    pos: noun
-    gender: f
-    note: зосередження влади в одному центрі
-  - lemma: суб'єктність
-    ipa: /sub-jɛk-ˈtɪw-nʲistʲ/
-    translation: subjectivity / agency
-    pos: noun
-    gender: f
-    note: здатність діяти як самостійна сила
+    definition: Зосередження влади в одних руках.
+  - term: вертикаль влади
+    translation: power vertical
+    definition: Ієрархічна система управління.
+  - term: легіон
+    translation: legion
+    definition: Військовий підрозділ.
+  - term: лицарство
+    translation: knighthood
+    definition: Військовий стан у середньовіччі.
+  - term: лати
+    translation: armor
+    definition: Металевий захисний одяг.
+  - term: обладунок
+    translation: armor
+    definition: Спорядження воїна.
+  - term: шолом
+    translation: helmet
+    definition: Захист голови.
+  - term: спис
+    translation: spear
+    definition: Колюча зброя.
+  - term: тара
+    translation: battering ram
+    definition: Облогова машина.
+  - term: галич
+    translation: Halych
+    definition: Столиця Галицького князівства.
+  - term: волинь
+    translation: Volhynia
+    definition: Історичний регіон на північному заході України.
+  - term: унія
+    translation: union
+    definition: Об'єднання.
+  - term: коронація
+    translation: coronation
+    definition: Церемонія покладання корони.
+  - term: легат
+    translation: legate
+    definition: Посол Папи Римського.
+  - term: папа
+    translation: Pope
+    definition: Глава католицької церкви.
+  - term: інтердикт
+    translation: interdict
+    definition: Тимчасова заборона богослужінь.
+  - term: скіпетр
+    translation: scepter
+    definition: Символ влади монарха.
+  - term: держава
+    translation: state
+    definition: Політична організація суспільства.

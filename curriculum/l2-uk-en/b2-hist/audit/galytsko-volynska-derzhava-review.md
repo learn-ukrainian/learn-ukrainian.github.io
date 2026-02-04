@@ -1,8 +1,8 @@
 # Audit Report: M24 — galytsko-volynska-derzhava.md
-**Level:** B2 | **Module:** M24 | **Phase:** B2.3a | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2-HIST | **Module:** M24 | **Phase:** B2.3a | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 14:53:59
+**Generated:** 2026-02-03 22:54:13
 
 ## Configuration
 **Type:** B2-history
