@@ -2,13 +2,13 @@
   "module": "ivan-vyhovskyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T12:12:35.508456Z",
+  "last_audit": "2026-02-04T12:31:38.834288Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-04T12:12:17.417114Z",
-    "meta": "2026-02-04T12:10:35.906238Z",
-    "activities": "2026-02-04T12:12:19.461260Z",
-    "vocabulary": "2026-02-04T12:10:37.996620Z",
+    "md": "2026-02-04T12:31:36.350388Z",
+    "meta": "2026-02-04T12:26:35.396484Z",
+    "activities": "2026-02-04T12:25:30.612920Z",
+    "vocabulary": "2026-02-04T12:25:32.650870Z",
     "plan": null
   },
   "gates": {
@@ -20,17 +20,17 @@
     "lesson": {
       "status": "fail",
       "violations": 4,
-      "message": "1550/3500 (raw: 1605) | engagement: 3/5 | pedagogy: 1 violations | richness: 71% < 95% min (biography)"
+      "message": "3476/4000 (raw: 3530) | engagement: 4/5 | pedagogy: 1 violations | richness: 73% < 95% min (biography)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "7/3"
+      "message": "5/3"
     },
     "vocabulary": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "25/24"
+      "message": "18 < 24 (soft target)"
     },
     "naturalness": {
       "status": "pass",
@@ -41,10 +41,9 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "3 Critical Template Violations",
-      "6 Outline Compliance Errors"
+      "2 Outline Compliance Errors"
     ],
-    "pass_count": 4,
+    "pass_count": 3,
     "fail_count": 1
   }
 }

@@ -3,6 +3,89 @@
 > **Applies to:** `b2-hist`, `c1-bio`, `c1-hist`, `lit`, `oes`, `rut`
 > **Purpose**: This workflow ensures high-quality content by requiring deep research BEFORE writing.
 
+---
+
+## CRITICAL: Ukrainian-Only Research Policy
+
+> **All research MUST be conducted in Ukrainian using Ukrainian sources.**
+> **Russian-language sources are STRICTLY PROHIBITED.**
+
+### Why This Matters
+
+1. **Decolonization** — Russian sources often contain imperial narratives, distortions, or outright falsifications of Ukrainian history
+2. **Language Quality** — Ukrainian sources provide authentic Ukrainian terminology, phrasing, and academic vocabulary
+3. **Curriculum Integrity** — Students learning Ukrainian should encounter Ukrainian scholarship, not translations or Russian interpretations
+
+### Allowed Sources (Ukrainian .ua Domains)
+
+| Source | Domain | Use Case |
+|--------|--------|----------|
+| **Українська Вікіпедія** | `uk.wikipedia.org` | General research starting point |
+| **Ізборник** | `litopys.org.ua` | Primary sources, chronicles, historical texts |
+| **Институт історії України** | `history.org.ua` | Academic historical research |
+| **Електронна бібліотека** | `elib.nlu.org.ua` | National library digitized texts |
+| **Лексика** | `lcorp.ulif.org.ua` | Linguistic corpus |
+| **Словники України** | `sum.in.ua`, `slovnyk.ua` | Ukrainian dictionaries |
+| **Енциклопедія сучасної України** | `esu.com.ua` | Encyclopedia |
+| **Chytomo** | `chytomo.com` | Literary analysis |
+| **Читанка** | `chtyvo.org.ua` | Ukrainian literature |
+| **Українська правда** | `pravda.com.ua` | Contemporary context |
+
+### Blocked Sources (NEVER Use)
+
+| Source | Why Blocked |
+|--------|-------------|
+| `ru.wikipedia.org` | Russian language, imperial narratives |
+| `*.ru` domains | Russian sources |
+| `cyberleninka.ru` | Russian academic repository |
+| `lib.ru` | Russian library |
+| Any source in Russian | Language policy violation |
+
+### Web Search Configuration
+
+When using `WebSearch`, always include domain restrictions:
+
+```python
+# CORRECT — Ukrainian sources only
+WebSearch(
+    query="Іван Мазепа гетьман",
+    allowed_domains=["uk.wikipedia.org", "litopys.org.ua", "history.org.ua", "esu.com.ua"]
+)
+
+# WRONG — Opens Russian results
+WebSearch(query="Иван Мазепа")  # Russian query = Russian results
+WebSearch(query="Ivan Mazepa")  # English query may return Russian sources
+```
+
+### Search Query Language Rules
+
+| ✅ DO | ❌ DON'T |
+|-------|----------|
+| `Богдан Хмельницький повстання` | `Богдан Хмельницкий восстание` |
+| `Київська Русь історія` | `Киевская Русь история` |
+| `Тарас Шевченко біографія` | `Тарас Шевченко биография` |
+| `козацтво Запорозька Січ` | `казачество Запорожская Сечь` |
+
+### Verification Checklist
+
+Before using ANY source, verify:
+
+- [ ] Domain is `.ua` or `uk.wikipedia.org`
+- [ ] Text is in Ukrainian (not Russian)
+- [ ] Author/institution is Ukrainian
+- [ ] Content reflects Ukrainian scholarly perspective
+- [ ] No Russian imperial terminology (e.g., "Малороссия", "воссоединение")
+
+### Red Flags — Reject Source If:
+
+- Uses "Малороссия" instead of "Україна"
+- Uses "воссоединение" instead of "приєднання" or "договір"
+- Frames Ukrainian history as subset of Russian history
+- Uses Russian-language quotations without Ukrainian translation
+- Published by Russian institution or in Russia
+
+---
+
 ## The Problem (Solved)
 
 Complex historical and literary modules were failing because:
@@ -14,14 +97,39 @@ Complex historical and literary modules were failing because:
 
 ### Phase 0: Deep Research (BEFORE writing)
 
-**Required steps:**
-1. Search corpus for the figure - Ukrainian Wikipedia, academic sources
-2. List all major life events, achievements, quotes, controversies
-3. Find primary source quotes (their own words, contemporaries)
-4. Identify connections to other Ukrainian figures (for cross-references)
-5. Note specific dates, places, works, institutions
+> **LANGUAGE REQUIREMENT**: All searches and sources MUST be in Ukrainian.
+> Use `allowed_domains` parameter to restrict to `.ua` sites.
 
-**Output**: Research notes with specific details to reference while writing.
+**Required steps:**
+1. **Search Ukrainian Wikipedia** (`uk.wikipedia.org`) for the figure — NEVER `ru.wikipedia.org`
+2. **Search academic sources** — `history.org.ua`, `esu.com.ua`, `litopys.org.ua`
+3. List all major life events, achievements, quotes, controversies
+4. Find primary source quotes (their own words, contemporaries) — in Ukrainian
+5. Identify connections to other Ukrainian figures (for cross-references)
+6. Note specific dates, places, works, institutions
+
+**Search Example:**
+```python
+# For biographical research
+WebSearch(
+    query="Леся Українка біографія життєпис",
+    allowed_domains=["uk.wikipedia.org", "esu.com.ua", "chytomo.com"]
+)
+
+# For historical events
+WebSearch(
+    query="Батуринська трагедія 1708",
+    allowed_domains=["uk.wikipedia.org", "history.org.ua", "litopys.org.ua"]
+)
+
+# For primary sources (OES/RUTH)
+WebSearch(
+    query="Літопис Самовидця текст",
+    allowed_domains=["litopys.org.ua", "izbornyk.org.ua"]
+)
+```
+
+**Output**: Research notes with specific details to reference while writing — ALL IN UKRAINIAN.
 
 ### Phase 1: Structured Outline with Word Targets
 

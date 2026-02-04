@@ -2,11 +2,11 @@
   "module": "iov-boretskyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T12:12:24.697828Z",
+  "last_audit": "2026-02-04T12:14:20.460803Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-04T12:12:17.896117Z",
-    "meta": "2026-02-02T23:22:59.919654Z",
+    "md": "2026-02-04T12:14:16.805403Z",
+    "meta": "2026-02-04T12:12:58.952356Z",
     "activities": "2026-01-19T17:57:25.316198Z",
     "vocabulary": "2026-02-04T11:58:30.285584Z",
     "plan": null
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4297/4000 (raw: 4353)"
+      "message": "4937/4600 (raw: 4993)"
     },
     "activities": {
       "status": "pass",
@@ -39,10 +39,8 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "1 Critical Template Violations"
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 5,
     "fail_count": 0
   }

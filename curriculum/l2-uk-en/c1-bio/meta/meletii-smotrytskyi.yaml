@@ -3,6 +3,7 @@ level: C1-BIO
 slug: meletii-smotrytskyi
 version: '2.0'
 id: c1-bio-019
+title: "Мелетій Смотрицький: Архітектор слов'янської граматики"
 naturalness:
   score: 10
   status: PASS
@@ -11,10 +12,25 @@ transliteration: none
 tags:
 - history
 - biography
-- linguistics
-- polemics
-- church
+- literature
 - education
-vocabulary_count: 25
+- linguistics
+content_outline:
+- section: Вступ — Голос плачучої церкви
+  words: 600
+- section: Життєпис
+  words: 1600
+- section: Історичний контекст
+  words: 600
+- section: Внесок
+  words: 400
+- section: Останні роки
+  words: 400
+- section: Спадщина
+  words: 400
+- section: Підсумок — Мова як фортеця
+  words: 300
+word_target: 4300
+vital_status: deceased
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-04'

@@ -2,11 +2,11 @@
   "module": "kostiantyn-vasyl-ostrozky",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T12:08:58.131194Z",
+  "last_audit": "2026-02-04T12:36:39.688964Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-04T11:48:55.513097Z",
-    "meta": "2026-02-02T23:22:59.914342Z",
+    "md": "2026-02-04T12:36:30.219921Z",
+    "meta": "2026-02-04T12:23:46.000849Z",
     "activities": "2026-01-19T22:57:29.321576Z",
     "vocabulary": "2026-02-04T11:41:58.831616Z",
     "plan": null
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4343/4000 (raw: 4465)"
+      "message": "5114/4000 (raw: 5305)"
     },
     "activities": {
       "status": "pass",

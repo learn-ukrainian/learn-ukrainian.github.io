@@ -1,0 +1,150 @@
+- lemma: гетьман
+  ipa: /ˈɦɛtʲmɐn/
+  translation: hetman
+  pos: noun
+  gender: m
+  note: глава козацького війська
+- lemma: козацтво
+  ipa: /koˈzɑt͡stʋo/
+  translation: Cossacks / Cossackdom
+  pos: noun
+  gender: n
+  note: суспільний стан в Україні
+- lemma: чайка
+  ipa: /ˈt͡ʃɑi̯kɐ/
+  translation: chayka (Cossack boat)
+  pos: noun
+  gender: f
+  note: легкий козацький човен
+- lemma: мушкет
+  ipa: /muˈʃkɛt/
+  translation: musket
+  pos: noun
+  gender: m
+  note: вогнепальна зброя
+- lemma: реєстр
+  ipa: /reˈjɛstr/
+  translation: register
+  pos: noun
+  gender: m
+  note: список найманих козаків
+- lemma: братство
+  ipa: /ˈbrɑtstʋo/
+  translation: brotherhood / confraternity
+  pos: noun
+  gender: n
+  note: релігійно-громадська організація
+- lemma: меценат
+  ipa: /met͡sɛˈnɑt/
+  translation: patron / philanthropist
+  pos: noun
+  gender: m
+  note: покровитель культури та освіти
+- lemma: ієрархія
+  ipa: /ijerˈɑrxʲijɐ/
+  translation: hierarchy
+  pos: noun
+  gender: f
+  note: система підпорядкування
+- lemma: легітимація
+  ipa: /leɦʲitɪmˈɑt͡sʲijɐ/
+  translation: legitimation
+  pos: noun
+  gender: f
+  note: визнання законності
+- lemma: стратегія
+  ipa: /strɐˈtɛɦʲijɐ/
+  translation: strategy
+  pos: noun
+  gender: f
+  note: план дій на довгий термін
+- lemma: перемога
+  ipa: /perɛˈmɔɦɐ/
+  translation: victory
+  pos: noun
+  gender: f
+  note: успіх у битві чи змаганні
+- lemma: облога
+  ipa: /oˈblɔɦɐ/
+  translation: siege
+  pos: noun
+  gender: f
+  note: оточення фортеці ворогом
+- lemma: яничари
+  ipa: /jɐnɪˈt͡ʃɑrɪ/
+  translation: janissaries
+  pos: noun
+  gender: m
+  note: елітна турецька піхота
+- lemma: шляхта
+  ipa: /ˈʃlʲɐxtɐ/
+  translation: nobility / gentry
+  pos: noun
+  gender: f
+  note: привілейований стан
+- lemma: заповіт
+  ipa: /zɐpɔˈʋʲit/
+  translation: testament / will
+  pos: noun
+  gender: m
+  note: документ про волю померлого
+- lemma: сагайдак
+  ipa: /sɐɦɐi̯ˈdɑk/
+  translation: quiver
+  pos: noun
+  gender: m
+  note: чохол для стріл
+- lemma: союз
+  ipa: /soˈjuz/
+  translation: union / alliance
+  pos: noun
+  gender: m
+  note: об'єднання сил
+- lemma: лицарство
+  ipa: /ˈlɪt͡sɐrstʋo/
+  translation: knighthood / chivalry
+  pos: noun
+  gender: n
+  note: воїнська гідність та стан
+- lemma: суб'єктність
+  ipa: /subjekˈtnʲisʲtʲ/
+  translation: agency / subjecthood
+  pos: noun
+  gender: f
+  note: здатність діяти самостійно
+- lemma: державотворець
+  ipa: /derʒɐʋɔˈtʋɔret͡sʲ/
+  translation: state-builder
+  pos: noun
+  gender: m
+  note: творець держави
+- lemma: дисципліна
+  ipa: /dɪst͡sɪˈplʲinɐ/
+  translation: discipline
+  pos: noun
+  gender: f
+  note: суворе дотримання правил
+- lemma: муштра
+  ipa: /ˈmuʃtrɐ/
+  translation: drill
+  pos: noun
+  gender: f
+  note: військове навчання
+- lemma: звільнення
+  ipa: /zʲʋʲˈilʲnennʲɐ/
+  translation: liberation / release
+  pos: noun
+  gender: n
+  note: надання волі
+- lemma: дипломатія
+  ipa: /dɪplɔˈmɑtʲijɐ/
+  translation: diplomacy
+  pos: noun
+  gender: f
+  note: мистецтво ведення переговорів
+- lemma: фундамент
+  ipa: /funˈdɑment/
+  translation: foundation
+  pos: noun
+  gender: m
+  note: основа чогось великого

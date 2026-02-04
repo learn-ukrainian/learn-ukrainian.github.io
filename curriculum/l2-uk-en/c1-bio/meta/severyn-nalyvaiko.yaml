@@ -3,6 +3,7 @@ level: C1-BIO
 slug: severyn-nalyvaiko
 version: '2.0'
 id: c1-bio-017
+title: "Северин Наливайко: Лідер козацького повстання"
 naturalness:
   score: 10
   status: PASS
@@ -11,9 +12,23 @@ transliteration: none
 tags:
 - history
 - biography
+- military
 - cossacks
 - rebellion
-- war
-vocabulary_count: 25
+content_outline:
+- section: Вступ — Перший бунтар
+  words: 600
+- section: Життєпис
+  words: 1600
+- section: Історичний контекст
+  words: 600
+- section: Внесок
+  words: 400
+- section: Останні роки
+  words: 400
+- section: Спадщина
+  words: 400
+word_target: 4000
+vital_status: deceased
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-04'

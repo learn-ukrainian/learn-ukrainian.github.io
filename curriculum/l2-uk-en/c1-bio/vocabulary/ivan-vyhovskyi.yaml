@@ -1,100 +1,72 @@
 - word: гетьман
   translation: hetman
   ipa: "[ˈɦɛtʲmɐn]"
-  audio: "assets/audio/placeholder.mp3"
+  audio: ""
 - word: булава
   translation: mace (symbol of power)
-  ipa: "[bʊɫɐˈwɑ]"
-  audio: "assets/audio/placeholder.mp3"
+  ipa: "[bʊlɐˈvɑ]"
+  audio: ""
 - word: писар
-  translation: scribe, chancellor
+  translation: scribe/chancellor
   ipa: "[ˈpɪsɐr]"
-  audio: "assets/audio/placeholder.mp3"
+  audio: ""
 - word: дипломатія
   translation: diplomacy
-  ipa: "[dɪpɫɔˈmɑt⁽ʲ⁾ijɐ]"
-  audio: "assets/audio/placeholder.mp3"
+  ipa: "[dɪplɔˈmɑtʲijɐ]"
+  audio: ""
 - word: угода
-  translation: agreement, treaty
+  translation: agreement/treaty
   ipa: "[ʊˈɦɔdɐ]"
-  audio: "assets/audio/placeholder.mp3"
+  audio: ""
 - word: федерація
   translation: federation
-  ipa: "[fɛdɛˈrɑt͡s⁽ʲ⁾ijɐ]"
-  audio: "assets/audio/placeholder.mp3"
+  ipa: "[fɛdɛˈrɑt͡sʲijɐ]"
+  audio: ""
 - word: князівство
-  translation: principality, duchy
-  ipa: "[knʲɐˈz⁽ʲ⁾iwstwɔ]"
-  audio: "assets/audio/placeholder.mp3"
-- word: Річ Посполита
-  translation: Polish-Lithuanian Commonwealth
-  ipa: "[r⁽ʲ⁾it͡ʃ pɔspɔˈɫɪtɐ]"
-  audio: "assets/audio/placeholder.mp3"
+  translation: principality/duchy
+  ipa: "[knʲɐˈzʲivstwɔ]"
+  audio: ""
 - word: шляхта
   translation: nobility
   ipa: "[ˈʃlʲɑxtɐ]"
-  audio: "assets/audio/placeholder.mp3"
+  audio: ""
 - word: старшина
-  translation: cossack officers (collective)
+  translation: cossack officers
   ipa: "[stɐrʃɪˈnɑ]"
-  audio: "assets/audio/placeholder.mp3"
+  audio: ""
 - word: опозиція
   translation: opposition
-  ipa: "[ɔpɔˈzɪt͡s⁽ʲ⁾ijɐ]"
-  audio: "assets/audio/placeholder.mp3"
+  ipa: "[ɔpɔˈzɪt͡sʲijɐ]"
+  audio: ""
 - word: повстання
-  translation: uprising, rebellion
-  ipa: "[pɔwˈstɑnʲːɐ]"
-  audio: "assets/audio/placeholder.mp3"
+  translation: uprising
+  ipa: "[pɔu̯ˈstɑnʲːɐ]"
+  audio: ""
 - word: битва
   translation: battle
   ipa: "[ˈbɪtwɐ]"
-  audio: "assets/audio/placeholder.mp3"
-- word: перемога
-  translation: victory
-  ipa: "[pɛrɛˈmɔɦɐ]"
-  audio: "assets/audio/placeholder.mp3"
+  audio: ""
 - word: облога
   translation: siege
-  ipa: "[ɔˈbɫɔɦɐ]"
-  audio: "assets/audio/placeholder.mp3"
+  ipa: "[ɔbˈlɔɦɐ]"
+  audio: ""
 - word: найманці
   translation: mercenaries
-  ipa: "[ˈnɑjmɐnt͡s⁽ʲ⁾i]"
-  audio: "assets/audio/placeholder.mp3"
-- word: татари
-  translation: Tatars
-  ipa: "[tɐˈtɑrɪ]"
-  audio: "assets/audio/placeholder.mp3"
+  ipa: "[ˈnɑjrzɐnt͡sʲi]"
+  audio: ""
 - word: зрада
-  translation: betrayal, treason
+  translation: betrayal/treason
   ipa: "[ˈzrɑdɐ]"
-  audio: "assets/audio/placeholder.mp3"
+  audio: ""
 - word: страта
   translation: execution
   ipa: "[ˈstrɑtɐ]"
-  audio: "assets/audio/placeholder.mp3"
-- word: реабілітація
-  translation: rehabilitation
-  ipa: "[rɛɐbіlіˈtɑt͡s⁽ʲ⁾ijɐ]"
-  audio: "assets/audio/placeholder.mp3"
-- word: державність
-  translation: statehood
-  ipa: "[dɛrˈʒɑwn⁽ʲ⁾isʲtʲ]"
-  audio: "assets/audio/placeholder.mp3"
-- word: автономія
-  translation: autonomy
-  ipa: "[ɐwtɔˈnɔmіjɐ]"
-  audio: "assets/audio/placeholder.mp3"
-- word: сейм
-  translation: Sejm (parliament)
-  ipa: "[sɛjm]"
-  audio: "assets/audio/placeholder.mp3"
-- word: сенат
-  translation: senate
-  ipa: "[sɛˈnɑt]"
-  audio: "assets/audio/placeholder.mp3"
-- word: унія
-  translation: union (church or state)
-  ipa: "[ˈun⁽ʲ⁾ijɐ]"
-  audio: "assets/audio/placeholder.mp3"
+  audio: ""
+- word: маніфест
+  translation: manifesto
+  ipa: "[mɐnʲiˈfɛst]"
+  audio: ""
+- word: республіка
+  translation: republic
+  ipa: "[rɛˈspublʲikɐ]"
+  audio: ""

@@ -2,25 +2,25 @@
   "module": "meletii-smotrytskyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T12:08:40.548764Z",
+  "last_audit": "2026-02-04T12:19:22.526675Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.348596Z",
-    "meta": "2026-02-02T23:22:59.923212Z",
+    "md": "2026-02-04T12:19:18.168256Z",
+    "meta": "2026-02-04T12:14:31.148771Z",
     "activities": "2026-01-21T10:46:24.796287Z",
-    "vocabulary": null,
+    "vocabulary": "2026-02-04T12:15:59.428252Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2636/4000 (raw: 2881)"
+      "status": "pass",
+      "violations": 0,
+      "message": "5010/4300 (raw: 5168)"
     },
     "activities": {
       "status": "pass",
@@ -28,9 +28,9 @@
       "message": "6/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 24 (soft target)"
+      "message": "25/24"
     },
     "naturalness": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
-    ],
-    "pass_count": 2,
-    "fail_count": 2
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

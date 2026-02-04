@@ -1,0 +1,150 @@
+- lemma: граматика
+  ipa: /ɦrɐˈmɑtɪkɐ/
+  translation: grammar
+  pos: noun
+  gender: f
+  note: система правил мови
+- lemma: полеміка
+  ipa: /poˈlɛmʲikɐ/
+  translation: polemics / debate
+  pos: noun
+  gender: f
+  note: гостра дискусія на релігійні теми
+- lemma: плач
+  ipa: /plɑt͡ʃ/
+  translation: lament / threnos
+  pos: noun
+  gender: m
+  note: жанр барокової літератури (Тренос)
+- lemma: єресь
+  ipa: /ˈjɛrɛsʲ/
+  translation: heresy
+  pos: noun
+  gender: f
+  note: відступ від офіційної доктрини
+- lemma: догмат
+  ipa: /ˈdɔɦmɐt/
+  translation: dogma
+  pos: noun
+  gender: m
+  note: основне положення віри
+- lemma: відступництво
+  ipa: /ʋʲidˈstupnɪt͡stʋo/
+  translation: apostasy
+  pos: noun
+  gender: n
+  note: перехід в іншу конфесію
+- lemma: кодифікація
+  ipa: /kodɪfʲiˈkɑt͡sʲijɐ/
+  translation: codification
+  pos: noun
+  gender: f
+  note: упорядкування мовних норм
+- lemma: синтаксис
+  ipa: /sɪnˈtɑksɪs/
+  translation: syntax
+  pos: noun
+  gender: m
+  note: розділ граматики про речення
+- lemma: православ'я
+  ipa: /prɐʋoˈslɑu̯jɐ/
+  translation: Orthodoxy
+  pos: noun
+  gender: n
+  note: християнська конфесія
+- lemma: унія
+  ipa: /ˈunʲijɐ/
+  translation: union
+  pos: noun
+  gender: f
+  note: об'єднання церков
+- lemma: архієпископ
+  ipa: /ɐrxʲijeˈpɪskɔp/
+  translation: archbishop
+  pos: noun
+  gender: m
+  note: високий церковний сан
+- lemma: філологія
+  ipa: /fʲiloˈlɔɦʲijɐ/
+  translation: philology
+  pos: noun
+  gender: f
+  note: наука про мову та літературу
+- lemma: бароко
+  ipa: /bɐˈrɔko/
+  translation: baroque
+  pos: noun
+  gender: n
+  note: стиль мистецтва та літератури
+- lemma: апологетика
+  ipa: /ɐpɔloˈɦɛtɪkɐ/
+  translation: apologetics
+  pos: noun
+  gender: f
+  note: захист певного вчення
+- lemma: етнарх
+  ipa: /etˈnɐrx/
+  translation: ethnarch
+  pos: noun
+  gender: m
+  note: духовний лідер народу
+- lemma: кодифікатор
+  ipa: /kodɪfʲiˈkɑtɔr/
+  translation: codifier
+  pos: noun
+  gender: m
+  note: той, хто встановлює правила
+- lemma: морфологія
+  ipa: /mɔrfoˈlɔɦʲijɐ/
+  translation: morphology
+  pos: noun
+  gender: f
+  note: розділ граматики про будову слів
+- lemma: просодія
+  ipa: /prɔˈsɔdʲijɐ/
+  translation: prosody
+  pos: noun
+  gender: f
+  note: вчення про наголос та віршування
+- lemma: антитеза
+  ipa: /ɐntɪˈtɛzɐ/
+  translation: antithesis
+  pos: noun
+  gender: f
+  note: стилістична фігура протиставлення
+- lemma: алегорія
+  ipa: /ɐleˈɦɔrʲijɐ/
+  translation: allegory
+  pos: noun
+  gender: f
+  note: інакомовлення
+- lemma: гуманізм
+  ipa: /ɦumɐˈnʲizm/
+  translation: humanism
+  pos: noun
+  gender: m
+  note: течія думки Ренесансу
+- lemma: конотація
+  ipa: /kɔnoˈtɑt͡sʲijɐ/
+  translation: connotation
+  pos: noun
+  gender: f
+  note: додаткове значення слова
+- lemma: дискурс
+  ipa: /dɪsˈkurs/
+  translation: discourse
+  pos: noun
+  gender: m
+  note: сукупність висловлювань
+- lemma: парадигма
+  ipa: /pɐrɐˈdɪɦmɐ/
+  translation: paradigm
+  pos: noun
+  gender: f
+  note: система поглядів або зразок
+- lemma: суб'єктність
+  ipa: /subjekˈtnʲisʲtʲ/
+  translation: agency / subjecthood
+  pos: noun
+  gender: f
+  note: здатність бути діючою особою

@@ -3,6 +3,7 @@ level: C1-BIO
 slug: petro-sahaidachny
 version: '2.0'
 id: c1-bio-020
+title: "Петро Сагайдачний: Гетьман-Державник"
 naturalness:
   score: 10
   status: PASS
@@ -11,10 +12,25 @@ transliteration: none
 tags:
 - history
 - biography
-- cossacks
 - military
-- kyiv
-- church
-vocabulary_count: 25
+- education
+- cossacks
+content_outline:
+- section: Вступ — Меч і Хрест
+  words: 615
+- section: Життєпис
+  words: 1538
+- section: Історичний контекст
+  words: 615
+- section: Внесок
+  words: 615
+- section: Останні роки
+  words: 300
+- section: Спадщина
+  words: 317
+- section: Підсумок
+  words: 300
+word_target: 4300
+vital_status: deceased
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-04'

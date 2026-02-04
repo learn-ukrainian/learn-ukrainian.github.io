@@ -1,12 +1,12 @@
 # Audit Report: M18 — iov-boretskyi.md
-**Level:** C1-BIO | **Module:** M18 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
+**Level:** C1-BIO | **Module:** M18 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4600
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-04 12:12:24
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-04 12:14:20
 
 ## Configuration
 **Type:** C1-biography
-**Word Target:** 4000 words
+**Word Target:** 4600 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
@@ -36,17 +36,8 @@
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template.md'
-  - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 4297/4000 (raw: 4353)
+- **Words:** ✅ 4937/4600 (raw: 4993)
 - **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
@@ -72,7 +63,7 @@
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 4 | 4 | 100% | 19% | 19.0% |
 | engagement | 6 | 6 | 100% | 14% | 14.3% |
-| quotes | 4 | 3 | 100% | 14% | 14.3% |
+| quotes | 6 | 3 | 100% | 14% | 14.3% |
 | cultural | 7 | 4 | 100% | 10% | 9.5% |
 | visual | 5 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
@@ -86,10 +77,13 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 119 | Included in Core |
-| **Вступ — Відновлення православної ієрархії** | ✅ | 478 | Included in Core |
-| **Життєпис** | ⚪️ | 1289 | Skipped |
-| **Берестейська унія та її наслідки** | ⚪️ | 683 | Skipped |
-| **Відновлення ієрархії 1620 року** | ⚪️ | 623 | Skipped |
-| **Митрополитство та спадщина** | ⚪️ | 598 | Skipped |
+| **Вступ — Відновлення православної ієрархії** | ✅ | 495 | Included in Core |
+| **Життєпис** | ⚪️ | 1142 | Skipped |
+| **Берестейська унія та її наслідки** | ⚪️ | 712 | Skipped |
+| **Відновлення ієрархії 1620 року** | ⚪️ | 716 | Skipped |
+| **Митрополитство** | ⚪️ | 309 | Skipped |
+| **Внесок** | ⚪️ | 267 | Skipped |
+| **Останні роки** | ⚪️ | 280 | Skipped |
+| **Спадщина** | ⚪️ | 390 | Skipped |
 | **Підсумок — Віра як опір** | ✅ | 350 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 157 | Skipped |

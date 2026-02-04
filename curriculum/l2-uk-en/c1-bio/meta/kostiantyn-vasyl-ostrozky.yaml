@@ -3,6 +3,7 @@ level: C1-BIO
 slug: kostiantyn-vasyl-ostrozky
 version: '2.0'
 id: c1-bio-016
+title: "Костянтин-Василь Острозький: Князь-Просвітник"
 naturalness:
   score: 10
   status: PASS
@@ -12,9 +13,24 @@ tags:
 - history
 - biography
 - education
-- ostroh-academy
-- bible
-- culture
-vocabulary_count: 25
+- religion
+- enlightenment
+content_outline:
+- section: Вступ — Некоронований король Русі
+  words: 615
+- section: Життєпис
+  words: 1538
+- section: Історичний контекст
+  words: 615
+- section: Внесок
+  words: 400
+- section: Останні роки
+  words: 215
+- section: Спадщина
+  words: 317
+- section: Підсумок — Урок національної суб'єктності та гідності
+  words: 300
+word_target: 4000
+vital_status: deceased
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-04'

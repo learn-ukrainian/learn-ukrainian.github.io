@@ -8,7 +8,7 @@ naturalness:
   score: 10
   status: PASS
 transliteration: none
-audio: assets/audio/placeholder.mp3
+audio: assets/audio/c1-bio/ivan-vyhovskyi.mp3
 build:
   last_modified: '2026-02-04'
 content_outline:
@@ -18,39 +18,32 @@ content_outline:
   - Виговський як альтернатива московському курсу
   - Значення Гадяцької угоди
   - Трагедія невикористаного шансу
-- section: Шлях до булави
-  words: 600
+- section: Життєпис
+  words: 1200
   points:
   - Походження та освіта
+  - Шлюб з Оленою Стеткевич
   - Служба генеральним писарем
   - Довіра Хмельницького
-  - Обрання гетьманом 1657 р.
-- section: Гадяцький договір
-  words: 1000
+  - Обрання гетьманом
+- section: Внесок
+  words: 1600
   points:
-  - Передумови та переговори
-  - Зміст угоди - Велике князівство Руське
-  - Реакція різних сторін
-  - Значення для української державності
-- section: Конотопська битва
-  words: 650
-  points:
-  - Перебіг битви 1659 р.
-  - Розгром московського війська
-  - Військовий талант Виговського
-- section: Падіння та загибель
-  words: 500
+  - Гадяцький договір (Князівство Руське)
+  - Конотопська битва (Стратегія і Тактика)
+  - Дипломатичні успіхи
+- section: Останні роки
+  words: 400
   points:
   - Внутрішня опозиція
   - Зречення гетьманства
-  - Трагічна смерть 1664 р.
+  - Страта
 - section: Спадщина
-  words: 350
+  words: 400
   points:
   - Оцінки в історіографії
   - Реабілітація образу
-  - Уроки для сучасності
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - гетьман (hetman)
@@ -69,7 +62,7 @@ vocabulary_hints:
   - битва (battle)
   - облога (siege)
   - найманці (mercenaries)
-  - зрада (betrayal/treason)
+  - зрада (betrayal, treason)
   - страта (execution)
 activity_hints:
 - type: reading

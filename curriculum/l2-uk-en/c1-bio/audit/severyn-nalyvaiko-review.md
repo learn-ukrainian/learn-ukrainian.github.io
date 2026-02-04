@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M17 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-04 12:08:58
+**Generated:** 2026-02-04 12:33:39
 
 ## Configuration
 **Type:** C1-biography
@@ -34,12 +34,12 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4447/4000 (raw: 4552)
+- **Words:** ✅ 4481/4000 (raw: 4622)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/5
+- **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
@@ -47,38 +47,38 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
-- **Richness:** ✅ 99% (biography)
+- **Richness:** ✅ 97% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
+**Score:** 97% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 4 | 4 | 100% | 19% | 19.0% |
-| engagement | 7 | 6 | 100% | 14% | 14.3% |
-| quotes | 10 | 3 | 100% | 14% | 14.3% |
-| cultural | 7 | 4 | 100% | 10% | 9.5% |
-| visual | 7 | 4 | 100% | 10% | 9.5% |
+| engagement | 5 | 6 | 83% | 14% | 11.9% |
+| quotes | 7 | 3 | 100% | 14% | 14.3% |
+| cultural | 6 | 4 | 100% | 10% | 9.5% |
+| visual | 6 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
 | variety | 0.97 | - | 97% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 9 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.9%** |
+| questions | 11 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **97.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 121 | Included in Core |
-| **Вступ — Перший бунтар** | ✅ | 514 | Included in Core |
-| **Життєпис** | ⚪️ | 1244 | Skipped |
-| **Останні роки** | ⚪️ | 436 | Skipped |
-| **Історичний контекст** | ✅ | 521 | Included in Core |
-| **Внесок та Спадщина** | ⚪️ | 513 | Skipped |
-| **Порівняльний аналіз** | ✅ | 698 | Included in Core |
-| **Підсумок — Месник і Пророк Дикого Поля** | ✅ | 217 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 183 | Skipped |
+| **Intro/Narrative** | ✅ | 132 | Included in Core |
+| **Вступ — Перший бунтар** | ✅ | 606 | Included in Core |
+| **Життєпис** | ⚪️ | 1409 | Skipped |
+| **Останні роки** | ⚪️ | 435 | Skipped |
+| **Спадщина** | ⚪️ | 483 | Skipped |
+| **Історичний контекст** | ✅ | 497 | Included in Core |
+| **Внесок** | ⚪️ | 371 | Skipped |
+| **Підсумок — Месник і Пророк Дикого Поля** | ✅ | 306 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 242 | Skipped |
