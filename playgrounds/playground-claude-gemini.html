@@ -900,10 +900,10 @@
 )
 
 <span class="fn"># Bridge script (auto-invokes Gemini with model tracking)</span>
-Bash('<span class="str">.venv/bin/python scripts/gemini_bridge.py ask-gemini "Your message" --task-id ${taskId} --from-model claude-opus-4-5-20251101</span>')
+Bash('<span class="str">.venv/bin/python scripts/ai_agent_bridge.py ask-gemini "Your message" --task-id ${taskId} --from-model claude-opus-4-5-20251101</span>')
 
 <span class="fn"># Ask Claude headless (with model tracking)</span>
-Bash('<span class="str">.venv/bin/python scripts/gemini_bridge.py ask-claude "Your message" --task-id ${taskId} --from claude --from-model claude-opus-4-5-20251101 --to-model claude-sonnet-4</span>')
+Bash('<span class="str">.venv/bin/python scripts/ai_agent_bridge.py ask-claude "Your message" --task-id ${taskId} --from claude --from-model claude-opus-4-5-20251101 --to-model claude-sonnet-4</span>')
 
 <span class="fn"># Check for responses</span>
 <span class="fn">mcp__message-broker__receive_messages</span>(

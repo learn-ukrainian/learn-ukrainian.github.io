@@ -490,7 +490,12 @@ Format your response clearly.
 
 
 def process_for_claude(message_id: int, new_session: bool = False):
-    """Read message addressed to Claude, invoke Claude CLI headlessly, send response back to Gemini.
+    """Read message addressed to Claude, invoke Claude CLI headlessly, send response back to sender.
+
+    Works symmetrically with process_and_respond (Gemini):
+    - Captures Claude's stdout response
+    - Routes response back via send_message()
+    - Handles errors gracefully with error message type
 
     Session handling:
     - If task has existing Claude session ID: uses --resume to continue
@@ -539,36 +544,31 @@ def process_for_claude(message_id: int, new_session: bool = False):
     print(f"   Task: {msg['task_id'] or 'N/A'}")
     print(f"   Session: {claude_session_id[:8] + '...' if claude_session_id else 'NEW'}")
 
-    # Prepare prompt for Claude
-    prompt = f"""You are Claude, receiving a message from Gemini via the message broker.
+    # Prepare prompt for Claude - ask for direct response (no MCP tools needed)
+    # The bridge will handle routing the response back
+    prompt = f"""You are Claude, receiving a message from {msg['from'].title()} via the message broker.
 
-Check and respond to this message from Gemini:
+This message is being processed headlessly by the bridge. Your stdout response will be automatically routed back to the sender.
 
 ---
 Task ID: {msg['task_id'] or 'none'}
 Type: {msg['type']}
-Content: {msg['content']}
+From: {msg['from']}
+
+{msg['content']}
 """
     if msg['data']:
         prompt += f"""
+---
 Attached data:
 {msg['data']}
 """
     prompt += """
 ---
 
-Respond appropriately using the MCP message broker tools:
-1. Use mcp__message-broker__send_message to send your response with these params:
-   - to: "gemini" (or sender from above)
-   - from_llm: "claude"
-   - from_model: YOUR_MODEL_ID (e.g., "claude-sonnet-4-20250514" - use your actual model ID)
-   - content: your response
-   - task_id: same as above
-   - message_type: "response"
-2. Use mcp__message-broker__acknowledge_message to acknowledge this message
-
-IMPORTANT: Always include from_model with your exact model ID for audit tracking.
-Be concise and direct in your response.
+Respond directly to this message. Be concise and helpful.
+Your response will be automatically sent back to the sender via the message broker.
+Do NOT use MCP tools to send your response - just output your response directly.
 """
 
     print(f"\n🤖 Processing with Claude CLI (headless)...")
@@ -598,7 +598,19 @@ Be concise and direct in your response.
         )
 
         if result.returncode != 0:
-            print(f"❌ Claude CLI error: {result.stderr}")
+            error_msg = result.stderr.strip() or "Unknown error"
+            print(f"❌ Claude CLI error: {error_msg}")
+
+            # Send error message back to sender
+            send_message(
+                content=f"[Bridge Error] Claude CLI failed:\n{error_msg}",
+                task_id=msg['task_id'],
+                msg_type="error",
+                from_llm="claude",
+                to_llm=msg['from'],  # Route back to original sender
+                from_model="claude-bridge-error"
+            )
+            acknowledge(message_id)
             return
 
         response = result.stdout.strip()
@@ -607,14 +619,43 @@ Be concise and direct in your response.
         print(response[:500])
         if len(response) > 500:
             print(f"\n... [{len(response) - 500} more characters]")
-            
-        # IMPORTANT: Acknowledge the message so it's not processed again
+
+        # Route response back to sender (symmetric with process_and_respond)
+        send_message(
+            content=response,
+            task_id=msg['task_id'],
+            msg_type="response",
+            from_llm="claude",
+            to_llm=msg['from'],  # Route back to original sender
+            from_model=None,  # Claude's model ID not easily extractable from stdout
+            to_model=None
+        )
+
+        # Acknowledge the original message
         acknowledge(message_id)
 
     except subprocess.TimeoutExpired:
         print("❌ Claude CLI timed out")
+        # Send timeout error back to sender
+        send_message(
+            content="[Bridge Error] Claude CLI timed out after 10 minutes",
+            task_id=msg['task_id'],
+            msg_type="error",
+            from_llm="claude",
+            to_llm=msg['from'],
+            from_model="claude-bridge-timeout"
+        )
+        acknowledge(message_id)
     except FileNotFoundError:
         print("❌ claude CLI not found. Is it installed?")
+        send_message(
+            content="[Bridge Error] Claude CLI not found on system",
+            task_id=msg['task_id'],
+            msg_type="error",
+            from_llm="claude",
+            to_llm=msg['from'],
+            from_model="claude-bridge-not-found"
+        )
 
 
 def interactive_mode():

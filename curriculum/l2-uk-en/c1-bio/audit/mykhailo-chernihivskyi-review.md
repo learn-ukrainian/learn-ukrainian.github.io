@@ -1,8 +1,8 @@
 # Audit Report: M09 — mykhailo-chernihivskyi.md
 **Level:** C1-BIO | **Module:** M09 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4300
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 11:17:01
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 12:39:33
 
 ## Configuration
 **Type:** C1-biography
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
 **Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** critical-analysis, essay-response, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥24 words
@@ -33,20 +33,11 @@
 - Total activities: 8 (target: 3-9) ✅
 - Unique types: 5 (minimum: 3) ✅
 - Priority types used: 5/6 (authorial-intent, comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[INVALID_META_YAML]** Meta YAML Schema Violation at 'root': 'vocabulary_hints' is a required property
-  - FIX: Correct the YAML structure to match schemas/meta-module.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ❌ 4165/4300 (raw: 4231)
+- **Words:** ✅ 4924/4300 (raw: 4992)
 - **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
@@ -56,7 +47,7 @@
 - **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (8 activities)
 - **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
 - **Richness:** ✅ 99% (biography)
@@ -75,21 +66,21 @@
 | quotes | 6 | 3 | 100% | 14% | 14.3% |
 | cultural | 7 | 4 | 100% | 10% | 9.5% |
 | visual | 10 | 4 | 100% | 10% | 9.5% |
-| timeline_markers | 26 | 8 | 100% | 10% | 9.5% |
+| timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.97 | - | 97% | 5% | 4.6% |
+| variety | 0.96 | - | 96% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 11 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.9%** |
+| questions | 10 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 129 | Included in Core |
-| **Вступ — Вибір між життям і вірою** | ✅ | 455 | Included in Core |
-| **Життєпис: Князь у часи випробувань** | ⚪️ | 1138 | Skipped |
-| **Внесок: Подорож до Орди як духовний подвиг** | ⚪️ | 770 | Skipped |
-| **Останні роки: Мученицька смерть** | ⚪️ | 677 | Skipped |
-| **Спадщина: Святий Михайло** | ⚪️ | 551 | Skipped |
-| **Підсумок — Віра вища за життя** | ✅ | 225 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 220 | Skipped |
+| **Intro/Narrative** | ✅ | 153 | Included in Core |
+| **Вступ — Вибір між життям і вірою** | ✅ | 635 | Included in Core |
+| **Життєпис: Князь у часи випробувань** | ⚪️ | 1322 | Skipped |
+| **Внесок: Подорож до Орди як духовний подвиг** | ⚪️ | 877 | Skipped |
+| **Останні роки: Мученицька смерть** | ⚪️ | 736 | Skipped |
+| **Спадщина: Святий Михайло** | ⚪️ | 595 | Skipped |
+| **Підсумок — Віра вища за життя** | ✅ | 333 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 273 | Skipped |

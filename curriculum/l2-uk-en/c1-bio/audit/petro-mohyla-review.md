@@ -1,8 +1,8 @@
 # Audit Report: M23 — petro-mohyla.md
-**Level:** C1-BIO | **Module:** M23 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4300
+**Level:** C1-BIO | **Module:** M23 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4300
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-05 10:51:58
+**Generated:** 2026-02-05 12:39:42
 
 ## Configuration
 **Type:** C1-biography
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
 **Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** critical-analysis, essay-response, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥24 words
@@ -33,7 +33,7 @@
 - Total activities: 8 (target: 3-9) ✅
 - Unique types: 8 (minimum: 3) ✅
 - Priority types used: 5/6 (authorial-intent, comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
@@ -44,7 +44,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 20 < 24 (soft target)
+- **Vocab:** ✅ 24/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

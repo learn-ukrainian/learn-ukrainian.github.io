@@ -1,1 +1,145 @@
-vocabulary: []
+items:
+- lemma: траєкторія
+  ipa: /trɐjɛkˈtɔrʲijɐ/
+  translation: trajectory
+  pos: noun
+  gender: f
+  note: траса Кондратюка
+- lemma: космонавтика
+  ipa: /kɔsmɔˈnɑu̯tɪkɐ/
+  translation: cosmonautics / astronautics
+  pos: noun
+  gender: f
+  note: піонер космонавтики
+- lemma: багатоступеневий
+  ipa: /bɐɦɐtɔstʊpɛˈnɛʋɪj/
+  translation: multi-stage
+  pos: adj
+  gender: m
+  note: багатоступенева ракета
+- lemma: гравітація
+  ipa: /ɦrɐʋʲitˈɑt͡sʲijɐ/
+  translation: gravity
+  pos: noun
+  gender: f
+  note: гравітаційний маневр
+- lemma: ідентичність
+  ipa: /idɛnˈtɪt͡ʃnʲistʲ/
+  translation: identity
+  pos: noun
+  gender: f
+  note: прихована ідентичність
+- lemma: елеватор
+  ipa: /elɛˈʋɑtɔr/
+  translation: elevator (grain)
+  pos: noun
+  gender: m
+  note: будівництво елеваторів
+- lemma: репресії
+  ipa: /rɛˈprɛsʲiji/
+  translation: repressions
+  pos: noun
+  gender: pl
+  note: сталінські репресії
+- lemma: пророк
+  ipa: /prɔˈrɔk/
+  translation: prophet
+  pos: noun
+  gender: m
+  note: пророк космосу
+- lemma: розрахунок
+  ipa: /rɔzˈrɑxʊnɔk/
+  translation: calculation
+  pos: noun
+  gender: m
+  note: точний розрахунок
+- lemma: паливо
+  ipa: /ˈpɑlɪʋɔ/
+  translation: fuel
+  pos: noun
+  gender: n
+  note: ракетне паливо
+- lemma: опір
+  ipa: /ˈɔpʲir/
+  translation: resistance
+  pos: noun
+  gender: m
+  note: опір атмосфери
+- lemma: стикування
+  ipa: /stɪˈkuʋɐnʲnʲɐ/
+  translation: docking
+  pos: noun
+  gender: n
+  note: стикування на орбіті
+- lemma: модуль
+  ipa: /ˈmɔdʊlʲ/
+  translation: module
+  pos: noun
+  gender: m
+  note: місячний модуль
+- lemma: прискорення
+  ipa: /prɪsˈkɔrɛnʲnʲɐ/
+  translation: acceleration
+  pos: noun
+  gender: n
+  note: реактивне прискорення
+- lemma: винахід
+  ipa: /ˈʋɪnɐxʲid/
+  translation: invention
+  pos: noun
+  gender: m
+  note: геніальний винахід
+- lemma: конструктор
+  ipa: /kɔnˈstrʊktɔr/
+  translation: designer / constructor
+  pos: noun
+  gender: m
+  note: авіаконструктор
+- lemma: стратосфера
+  ipa: /strɐtɔˈsfɛrɐ/
+  translation: stratosphere
+  pos: noun
+  gender: f
+  note: політ у стратосферу
+- lemma: авангард
+  ipa: /ɐʋɐnˈɦɑrd/
+  translation: avant-garde / forefront
+  pos: noun
+  gender: m
+  note: науковий авангард
+- lemma: маскування
+  ipa: /mɐsˈkuʋɐnʲnʲɐ/
+  translation: masking / disguise
+  pos: noun
+  gender: n
+  note: маскування імені
+- lemma: самородок
+  ipa: /sɐmɔˈrɔdɔk/
+  translation: self-taught genius
+  pos: noun
+  gender: m
+  note: геній-самородок
+- lemma: вітроелектростанція
+  ipa: /ʋʲitrɔelɛktrɔˈstɐnt͡sʲijɐ/
+  translation: wind power plant
+  pos: noun
+  gender: f
+  note: проект Кримської ВЕС
+- lemma: окупація
+  ipa: /ɔkupˈɑt͡sʲijɐ/
+  translation: occupation
+  pos: noun
+  gender: f
+  note: німецька окупація
+- lemma: невагомість
+  ipa: /nɛʋɐˈɦɔmʲistʲ/
+  translation: weightlessness
+  pos: noun
+  gender: f
+  note: стан невагомості
+- lemma: орбіта
+  ipa: /ɔrˈbʲitɐ/
+  translation: orbit
+  pos: noun
+  gender: f
+  note: навколоземна орбіта

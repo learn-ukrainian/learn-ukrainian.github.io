@@ -2,13 +2,13 @@
   "module": "ivan-puliui",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T11:16:59.074342Z",
+  "last_audit": "2026-02-05T12:39:57.150710Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-04T22:30:45.365811Z",
-    "meta": "2026-02-05T00:41:34.317033Z",
-    "activities": "2026-02-02T11:02:04.022698Z",
-    "vocabulary": "2026-02-02T11:02:04.022523Z",
+    "md": "2026-02-05T11:38:59.981703Z",
+    "meta": "2026-02-05T11:34:43.040838Z",
+    "activities": "2026-02-05T11:35:08.916878Z",
+    "vocabulary": "2026-02-05T11:34:52.325602Z",
     "plan": null
   },
   "gates": {
@@ -18,19 +18,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 5,
-      "message": "9/4300 (raw: 161) | engagement: 1/5 | pedagogy: 3 violations | immersion: 4.3% LOW (target 95-100% (biography)) | richness: 11% < 95% min (biography) - REWRITE needed"
+      "status": "pass",
+      "violations": 0,
+      "message": "5550/4300 (raw: 5779)"
     },
     "activities": {
-      "status": "fail",
-      "violations": 4,
-      "message": "0/3 | density: 0 < 1 | unique_types: 0/3 types | priority: No priority types"
+      "status": "pass",
+      "violations": 0,
+      "message": "5/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 24 (soft target)"
+      "message": "24/24"
     },
     "naturalness": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "6 Outline Compliance Errors",
-      "Missing required activity types: critical-analysis, essay-response, reading"
-    ],
-    "pass_count": 2,
-    "fail_count": 2
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

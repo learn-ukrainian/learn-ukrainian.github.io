@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M05 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4300
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-05 11:22:25
+**Generated:** 2026-02-05 12:39:31
 
 ## Configuration
 **Type:** C1-biography
@@ -37,12 +37,12 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4723/4300 (raw: 4783)
+- **Words:** ✅ 4738/4300 (raw: 4796)
 - **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/5
+- **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
@@ -50,38 +50,38 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (8 activities)
 - **Immersion:** 🇺🇦 99.8% (target 95-100% (biography))
-- **Richness:** ✅ 95% (biography)
+- **Richness:** ✅ 97% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 95% (minimum: 95%)
+**Score:** 97% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 10 | 4 | 100% | 19% | 19.0% |
-| engagement | 5 | 6 | 83% | 14% | 11.9% |
+| engagement | 6 | 6 | 100% | 14% | 14.3% |
 | quotes | 6 | 3 | 100% | 14% | 14.3% |
 | cultural | 3 | 4 | 75% | 10% | 7.1% |
-| visual | 5 | 4 | 100% | 10% | 9.5% |
+| visual | 7 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
 | variety | 0.97 | - | 97% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 14 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **95.0%** |
+| **TOTAL** | | | | | **97.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 101 | Included in Core |
-| **Вступ — Руська принцеса на французькому троні** | ✅ | 486 | Included in Core |
-| **Життєпис** | ⚪️ | 592 | Skipped |
-| **Історичний контекст** | ✅ | 1656 | Included in Core |
-| **Останні роки** | ⚪️ | 428 | Skipped |
+| **Вступ — Руська княжна на престолі Франції** | ✅ | 486 | Included in Core |
+| **Життєпис** | ⚪️ | 2109 | Skipped |
+| **Історичний контекст** | ✅ | 257 | Included in Core |
 | **Внесок** | ⚪️ | 453 | Skipped |
+| **Останні роки** | ⚪️ | 428 | Skipped |
 | **Спадщина** | ⚪️ | 448 | Skipped |
 | **Підсумок** | ✅ | 98 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 358 | Skipped |

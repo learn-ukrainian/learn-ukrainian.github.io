@@ -185,7 +185,7 @@ gh issue comment N --body "🔄 Handed off to Gemini"
 
 ```bash
 # Send SHORT message (issue reference only) - uses --type handoff which auto-enables async
-.venv/bin/python scripts/gemini_bridge.py ask-gemini \
+.venv/bin/python scripts/ai_agent_bridge.py ask-gemini \
   "Issue #N is assigned to you. Read it at: https://github.com/{repo}/issues/N" \
   --task-id gh-N --type handoff
 
@@ -197,7 +197,7 @@ gh issue comment N --body "🔄 Handed off to Gemini"
 - Message queued ✅
 - NO immediate CLI invocation (avoids 10min timeout on complex tasks)
 - Gemini picks it up from his inbox when he starts a session
-- User can trigger manually: `.venv/bin/python scripts/gemini_bridge.py process {msg_id}`
+- User can trigger manually: `.venv/bin/python scripts/ai_agent_bridge.py process {msg_id}`
 ```
 
 **Example (correct):**

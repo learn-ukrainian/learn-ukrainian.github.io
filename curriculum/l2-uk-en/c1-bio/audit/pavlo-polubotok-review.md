@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M29 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4300
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-05 11:16:57
+**Generated:** 2026-02-05 12:39:45
 
 ## Configuration
 **Type:** C1-biography
@@ -25,7 +25,7 @@
 | 3 | essay-response | Есе: Ціна гідності | 1 | 1 | ✅ |
 | 4 | critical-analysis | Критичний аналіз: Методи боротьби Полуботка | 1 | 1 | ✅ |
 | 5 | comparative-study | Порівняння: Полуботок vs Мазепа | 1 | 1 | ✅ |
-| 6 | true-false | Правда чи Міф: Життя і легенда Полуботка | 5 | 5 | ✅ |
+| 6 | true-false | Правда чи Міф: Життя і легенда Полуботка | 11 | 5 | ✅ |
 
 **Summary:**
 - Total activities: 6 (target: 3-9) ✅

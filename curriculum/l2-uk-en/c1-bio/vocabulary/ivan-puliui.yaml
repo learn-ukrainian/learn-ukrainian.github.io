@@ -1,1 +1,145 @@
-vocabulary: []
+items:
+- lemma: випромінювання
+  ipa: /ʋɪprɔmʲiˈnʲuʋɐnʲnʲɐ/
+  translation: radiation
+  pos: noun
+  gender: n
+  note: X-випромінювання
+- lemma: вакуум
+  ipa: /ˈʋɑkuum/
+  translation: vacuum
+  pos: noun
+  gender: m
+  note: вакуумна трубка
+- lemma: першовідкривач
+  ipa: /pɛrʃɔʋʲidkrɪˈʋɑt͡ʃ/
+  translation: discoverer / pioneer
+  pos: noun
+  gender: m
+  note: першовідкривач променів
+- lemma: електротехніка
+  ipa: /elɛktrɔˈtɛxnʲikɐ/
+  translation: electrical engineering
+  pos: noun
+  gender: f
+  note: празька школа електротехніки
+- lemma: скрипторій
+  ipa: /skrɪpˈtɔrʲij/
+  translation: scriptorium
+  pos: noun
+  gender: m
+  note: місце для переписування книг
+- lemma: теологія
+  ipa: /teɔˈlɔɦʲijɐ/
+  translation: theology
+  pos: noun
+  gender: f
+  note: богословська освіта
+- lemma: пріоритет
+  ipa: /prʲiɔrɪˈtɛt/
+  translation: priority
+  pos: noun
+  gender: m
+  note: науковий пріоритет
+- lemma: деколонізація
+  ipa: /dekɔlɔnʲizˈɑt͡sʲijɐ/
+  translation: decolonization
+  pos: noun
+  gender: f
+  note: відновлення ідентичності
+- lemma: винахідник
+  ipa: /ʋɪnɐˈxʲidnɪk/
+  translation: inventor
+  pos: noun
+  gender: m
+  note: видатний винахідник
+- lemma: монографія
+  ipa: /mɔnɔˈɦrɑfʲijɐ/
+  translation: monograph
+  pos: noun
+  gender: f
+  note: наукова праця
+- lemma: рентгенологія
+  ipa: /rɛntɦenɔˈlɔɦʲijɐ/
+  translation: radiology
+  pos: noun
+  gender: f
+  note: наука про промені
+- lemma: електростанція
+  ipa: /elɛktrɔˈstɐnt͡sʲijɐ/
+  translation: power plant
+  pos: noun
+  gender: f
+  note: будівництво електростанцій
+- lemma: мислитель
+  ipa: /mɪsˈlɪtɛlʲ/
+  translation: thinker
+  pos: noun
+  gender: m
+  note: філософ і мислитель
+- lemma: просвітництво
+  ipa: /prɔsˈʋʲitnɪt͡stʋɔ/
+  translation: enlightenment
+  pos: noun
+  gender: n
+  note: культурна місія
+- lemma: референт
+  ipa: /rɛfɛˈrɛnt/
+  translation: referent / advisor
+  pos: noun
+  gender: m
+  note: науковий референт
+- lemma: термінологія
+  ipa: /tɛrmʲinɔˈlɔɦʲijɐ/
+  translation: terminology
+  pos: noun
+  gender: f
+  note: створення української термінології
+- lemma: ідентичність
+  ipa: /idɛnˈtɪt͡ʃnʲistʲ/
+  translation: identity
+  pos: noun
+  gender: f
+  note: національна ідентичність
+- lemma: суб'єктність
+  ipa: /subjɛkˈtnʲistʲ/
+  translation: agency / subjecthood
+  pos: noun
+  gender: f
+  note: політична суб'єктність
+- lemma: меценат
+  ipa: /met͡sɛˈnɑt/
+  translation: patron
+  pos: noun
+  gender: m
+  note: підтримка студентів
+- lemma: кафедра
+  ipa: /kɐˈfɛdrɐ/
+  translation: department / chair
+  pos: noun
+  gender: f
+  note: завідувач кафедри
+- lemma: експеримент
+  ipa: /ekspɛrɪˈmɛnt/
+  translation: experiment
+  pos: noun
+  gender: m
+  note: фізичний експеримент
+- lemma: патент
+  ipa: /pɐˈtɛnt/
+  translation: patent
+  pos: noun
+  gender: m
+  note: отримання патенту
+- lemma: переклад
+  ipa: /perɛˈklɑd/
+  translation: translation
+  pos: noun
+  gender: m
+  note: переклад Біблії
+- lemma: асиміляція
+  ipa: /ɐsɪmʲilʲɐˈt͡sʲijɐ/
+  translation: assimilation
+  pos: noun
+  gender: f
+  note: протидія асиміляції

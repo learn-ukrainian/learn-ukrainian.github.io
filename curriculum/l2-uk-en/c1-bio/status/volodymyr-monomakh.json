@@ -2,10 +2,10 @@
   "module": "volodymyr-monomakh",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T11:18:04.964198Z",
+  "last_audit": "2026-02-05T12:39:32.036139Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T11:18:01.469609Z",
+    "md": "2026-02-05T11:46:23.855934Z",
     "meta": "2026-02-05T00:44:48.304214Z",
     "activities": "2026-02-03T22:18:47.922679Z",
     "vocabulary": "2026-02-02T21:27:20.502319Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4798/4300 (raw: 4937)"
+      "message": "5114/4300 (raw: 5259)"
     },
     "activities": {
       "status": "pass",

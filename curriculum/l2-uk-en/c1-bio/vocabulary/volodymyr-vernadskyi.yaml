@@ -1,45 +1,126 @@
-- lemma: "біосфера"
-  ipa: "bʲiɔsˈfɛrɑ"
-  translation: "biosphere"
-- lemma: "ноосфера"
-  ipa: "nɔɔsˈfɛrɑ"
-  translation: "noosphere"
-- lemma: "геохімія"
-  ipa: "ɦɛɔˈxʲimʲijɑ"
-  translation: "geochemistry"
-- lemma: "мінералогія"
-  ipa: "mʲinɛrɑˈlɔɦʲijɑ"
-  translation: "mineralogy"
-- lemma: "Академія наук"
-  ipa: "ɑkɑˈdɛmʲijɑ nɑˈuk"
-  translation: "Academy of Sciences"
-- lemma: "науковець"
-  ipa: "nɑuˈkɔwɛt͡sʲ"
-  translation: "scientist, scholar"
-- lemma: "дослідження"
-  ipa: "dɔsˈlʲid͡ʒɛnʲːɑ"
-  translation: "research, study"
-- lemma: "концепція"
-  ipa: "kɔnˈt͡sɛpt͡sʲijɑ"
-  translation: "concept"
-- lemma: "еволюція"
-  ipa: "ɛvɔˈlʲut͡sʲijɑ"
-  translation: "evolution"
-- lemma: "спадщина"
-  ipa: "ˈspɑdʃt͡ʃɪnɑ"
-  translation: "legacy, heritage"
-- lemma: "жива речовина"
-  ipa: "ʒɪˈvɑ rɛt͡ʃɔvɪˈnɑ"
-  translation: "living matter"
-- lemma: "космізм"
-  ipa: "kɔsˈmʲizm"
-  translation: "cosmism"
-- lemma: "біогеохімія"
-  ipa: "bʲiɔɦɛɔˈxʲimʲijɑ"
-  translation: "biogeochemistry"
-- lemma: "інституціалізація"
-  ipa: "instɪtut͡sʲiɑlʲiˈzɑt͡sʲijɑ"
-  translation: "institutionalization"
-- lemma: "науковий метод"
-  ipa: "nɑuˈkɔwɪj ˈmɛtɔd"
-  translation: "scientific method"
+module: volodymyr-vernadskyi
+level: C1-BIO
+version: '2.0'
+items:
+- lemma: біосфера
+  ipa: /biɔˈsfɛra/
+  translation: biosphere
+  pos: noun
+  gender: f
+- lemma: ноосфера
+  ipa: /nɔɔˈsfɛra/
+  translation: noosphere
+  pos: noun
+  gender: f
+- lemma: академія
+  ipa: /akadˈɛmija/
+  translation: academy
+  pos: noun
+  gender: f
+- lemma: радіоактивність
+  ipa: /radiɔaktˈɪʋnʲistʲ/
+  translation: radioactivity
+  pos: noun
+  gender: f
+- lemma: геохімія
+  ipa: /ɦɛɔxˈimija/
+  translation: geochemistry
+  pos: noun
+  gender: f
+- lemma: еволюція
+  ipa: /ɛʋɔlʲˈut͡sija/
+  translation: evolution
+  pos: noun
+  gender: f
+- lemma: цивілізація
+  ipa: /t͡sɪʋilʲizˈat͡sija/
+  translation: civilization
+  pos: noun
+  gender: f
+- lemma: ідентичність
+  ipa: /idɛntˈɪt͡ʃnʲistʲ/
+  translation: identity
+  pos: noun
+  gender: f
+- lemma: патріот
+  ipa: /patriˈɔt/
+  translation: patriot
+  pos: noun
+  gender: m
+- lemma: науковець
+  ipa: /nauˈkɔʋɛt͡sʲ/
+  translation: scientist
+  pos: noun
+  gender: m
+- lemma: відкриття
+  ipa: /ʋidkrˈɪttja/
+  translation: discovery
+  pos: noun
+  gender: n
+- lemma: експедиція
+  ipa: /ɛkspɛdˈit͡sija/
+  translation: expedition
+  pos: noun
+  gender: f
+- lemma: лабораторія
+  ipa: /labɔratˈɔrija/
+  translation: laboratory
+  pos: noun
+  gender: f
+- lemma: професор
+  ipa: /prɔfˈɛsɔr/
+  translation: professor
+  pos: noun
+  gender: m
+- lemma: філософія
+  ipa: /filɔsˈɔfija/
+  translation: philosophy
+  pos: noun
+  gender: f
+- lemma: суб'єктність
+  ipa: /sub-jɛk-ˈtɪw-nʲistʲ/
+  translation: agency / subjectivity
+  pos: noun
+  gender: f
+- lemma: радіогеологія
+  ipa: /rɐ-dʲi-o-ɦe-o-ˈɫɔ-ɦʲi-jɐ/
+  translation: radiogeology
+  pos: noun
+  gender: f
+- lemma: біогеохімія
+  ipa: /bʲi-o-ɦe-o-ˈxʲi-mʲi-jɐ/
+  translation: biogeochemistry
+  pos: noun
+  gender: f
+- lemma: автотрофність
+  ipa: /ɐu̯-to-ˈtrɔf-nʲistʲ/
+  translation: autotrophy
+  pos: noun
+  gender: f
+- lemma: коеволюція
+  ipa: /ko-e-ʋo-ˈlʲu-t͡sʲijɐ/
+  translation: coevolution
+  pos: noun
+  gender: f
+- lemma: антропоцентризм
+  ipa: /ɐn-tro-po-t͡sɛn-ˈtrɪzm/
+  translation: anthropocentrism
+  pos: noun
+  gender: m
+- lemma: сталий розвиток
+  ipa: /ˈstɑ-ɫɪj ˈrɔ-zʋɪ-tɔk/
+  translation: sustainable development
+  pos: phrase
+- lemma: інтелектуальний
+  ipa: /in-te-lek-tu-ˈɑlʲ-nɪj/
+  translation: intellectual
+  pos: adj
+- lemma: пророчий
+  ipa: /pro-ˈrɔ-t͡ʃɪj/
+  translation: prophetic
+  pos: adj
+- lemma: державність
+  ipa: /der-ˈʒɑu̯-nʲistʲ/
+  translation: statehood
+  pos: noun
+  gender: f

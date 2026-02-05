@@ -287,6 +287,18 @@ All communication goes through SQLite Event Bus at `.mcp/servers/message-broker/
 - **Check inbox at start of session** - Claude may have left messages
 - **Sessions are per-task** - same task_id = same conversation context
 - **PRESERVE task_id when responding** - When you reply to a message, use the SAME task_id from the incoming message. Don't create your own task_id. Example: if Claude's message has `task_id: tooling-feedback`, your response MUST use `--task-id tooling-feedback`
+- **Symmetric Response Routing**: `process_for_claude` now routes responses back via `send_message()` (matching the Gemini-side workflow).
+- **Error Handling**: If the Claude CLI crashes or times out, an `error` type message will be received instead of silence.
+- **Agent Watcher Daemon (Auto-Trigger)**: Polls `messages.db` and auto-triggers agents. Includes loop prevention (max 10 turns/task).
+    ```bash
+    # Check status
+    .venv/bin/python scripts/agent_watcher.py --status
+    # Start daemon (background)
+    .venv/bin/python scripts/agent_watcher.py --daemon
+    # Stop daemon
+    .venv/bin/python scripts/agent_watcher.py --stop
+    ```
+- **Documentation**: See `docs/SCRIPTS.md` (Inter-Agent Communication section) for full technical reference.
 
 ## GitHub Issues Task Workflow (NEW)
 

@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M55 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4300
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-05 11:23:28
+**Generated:** 2026-02-05 12:40:00
 
 ## Configuration
 **Type:** C1-biography
@@ -34,51 +34,51 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4938/4300 (raw: 4991)
+- **Words:** ✅ 5374/4300 (raw: 5480)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 13/5
+- **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 15 < 24 (soft target)
+- **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.4% (target 95-100% (biography))
-- **Richness:** ✅ 95% (biography)
+- **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
+- **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 95% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 4 | 4 | 100% | 19% | 19.0% |
-| engagement | 12 | 6 | 100% | 14% | 14.3% |
-| quotes | 2 | 3 | 67% | 14% | 9.6% |
-| cultural | 9 | 4 | 100% | 10% | 9.5% |
-| visual | 15 | 4 | 100% | 10% | 9.5% |
+| primary_sources | 15 | 4 | 100% | 19% | 19.0% |
+| engagement | 8 | 6 | 100% | 14% | 14.3% |
+| quotes | 15 | 3 | 100% | 14% | 14.3% |
+| cultural | 6 | 4 | 100% | 10% | 9.5% |
+| visual | 11 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
 | variety | 0.95 | - | 95% | 5% | 4.5% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 17 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **95.0%** |
+| questions | 12 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Вступ — Вчений, який змінив науку** | ✅ | 555 | Included in Core |
-| **Життєпис** | ⚪️ | 871 | Skipped |
-| **Історичний контекст** | ✅ | 835 | Included in Core |
-| **Внесок** | ⚪️ | 1526 | Skipped |
-| **Останні роки** | ⚪️ | 0 | Skipped |
-| **Спадщина** | ⚪️ | 533 | Skipped |
-| **Дискусія — Наука та нація** | ⚪️ | 343 | Skipped |
-| **Підсумок** | ✅ | 275 | Included in Core |
+| **Вступ — Вчений, який змінив науку** | ✅ | 727 | Included in Core |
+| **Життєпис** | ⚪️ | 1954 | Skipped |
+| **Історичний контекст** | ✅ | 549 | Included in Core |
+| **Внесок** | ⚪️ | 661 | Skipped |
+| **Останні роки** | ⚪️ | 448 | Skipped |
+| **Спадщина** | ⚪️ | 579 | Skipped |
+| **Дискусія — Наука та нація** | ⚪️ | 111 | Skipped |
+| **Підсумок** | ✅ | 345 | Included in Core |

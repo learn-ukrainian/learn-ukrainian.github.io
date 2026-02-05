@@ -352,7 +352,7 @@ pyenv install 3.12.8
 - **Vision**: LLM Committee System - mutual review, bidirectional communication
 - **Infrastructure Created**:
   - MCP Message Broker (`.mcp/servers/message-broker/server.py`)
-  - Gemini Bridge CLI (`scripts/gemini_bridge.py`)
+  - Gemini Bridge CLI (`scripts/ai_agent_bridge.py`)
 - **Next**: Test message exchange, run Ukrainian test experiment (1000 sentences)
 - **Phases**: Communication ✅ → Ukrainian Test → Context Packaging → Skills → Automation
 

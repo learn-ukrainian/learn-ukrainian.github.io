@@ -74,3 +74,52 @@ items:
   translation: paganism
   pos: noun
   gender: n
+- lemma: суб'єктність
+  ipa: /sub-jɛk-ˈtɪw-nʲistʲ/
+  translation: agency / subjectivity
+  pos: noun
+  gender: f
+- lemma: адміністративна
+  ipa: /ɐd-mʲi-nʲi-strɐ-ˈtɪw-nɐ/
+  translation: administrative
+  pos: adj
+- lemma: реформа
+  ipa: /re-ˈfɔr-mɐ/
+  translation: reform
+  pos: noun
+  gender: f
+- lemma: архонтиса
+  ipa: /ɐr-xɔn-ˈtɪ-sɐ/
+  translation: archontissa (ruler)
+  pos: noun
+  gender: f
+- lemma: лодія
+  ipa: /ɫɔ-ˈdʲi-jɐ/
+  translation: longship / boat
+  pos: noun
+  gender: f
+- lemma: тіун
+  ipa: /tʲi-ˈun/
+  translation: tiun (steward)
+  pos: noun
+  gender: m
+- lemma: смерд
+  ipa: /smɛrd/
+  translation: smerd (free peasant)
+  pos: noun
+  gender: m
+- lemma: дружина
+  ipa: /dru-ˈʒɪ-nɐ/
+  translation: druzhina (military retinue)
+  pos: noun
+  gender: f
+- lemma: дипломатія
+  ipa: /dɪ-pɫo-ˈmɑ-tʲi-jɐ/
+  translation: diplomacy
+  pos: noun
+  gender: f
+- lemma: легітимність
+  ipa: /le-ɦi-ˈtɪm-nʲistʲ/
+  translation: legitimacy
+  pos: noun
+  gender: f

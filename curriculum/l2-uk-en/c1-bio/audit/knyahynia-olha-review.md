@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M01 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4300
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-05 11:19:45
+**Generated:** 2026-02-05 12:39:28
 
 ## Configuration
 **Type:** C1-biography
@@ -44,7 +44,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 15 < 24 (soft target)
+- **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

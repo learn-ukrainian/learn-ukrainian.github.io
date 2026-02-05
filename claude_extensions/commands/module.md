@@ -19,7 +19,7 @@ Unified entry point for building modules using the 7-phase workflow (content + s
 > **How to ask for help:**
 > ```bash
 > # Quick way (sends + invokes):
-> .venv/bin/python scripts/gemini_bridge.py ask-gemini "Your question here" --task-id module-help
+> .venv/bin/python scripts/ai_agent_bridge.py ask-gemini "Your question here" --task-id module-help
 >
 > # Check for response:
 > mcp__message-broker__receive_messages(for_llm="claude", task_id="module-help")
@@ -686,7 +686,7 @@ fi
 ```bash
 # Send batch research requests to Gemini
 for slug in needs_research; do
-  .venv/bin/python scripts/gemini_bridge.py ask-gemini \
+  .venv/bin/python scripts/ai_agent_bridge.py ask-gemini \
     "Research {topic} for ${level} module. Save to audit/${slug}-research.md" \
     --task-id batch-research
 done

@@ -323,7 +323,7 @@ For complex research, leverage both agents:
 ```bash
 # Claude structures, Gemini researches (parallel)
 # Send research request to Gemini:
-.venv/bin/python scripts/gemini_bridge.py ask-gemini \
+.venv/bin/python scripts/ai_agent_bridge.py ask-gemini \
   "Research Данило Апостол for C1-BIO module. Save notes to audit/danylo-apostol-research.md" \
   --task-id gh-500
 

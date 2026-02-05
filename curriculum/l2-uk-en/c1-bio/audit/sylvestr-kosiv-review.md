@@ -1,8 +1,8 @@
 # Audit Report: M21 — sylvestr-kosiv.md
 **Level:** C1-BIO | **Module:** M21 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4300
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 11:16:55
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 12:39:40
 
 ## Configuration
 **Type:** C1-biography
@@ -37,51 +37,51 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 3407/4300 (raw: 3449)
+- **Words:** ✅ 4499/4300 (raw: 4566)
 - **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/5
+- **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (8 activities)
-- **Immersion:** 🇺🇦 98.3% (target 95-100% (biography))
-- **Richness:** ✅ 99% (biography)
+- **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
+- **Richness:** ✅ 97% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
+**Score:** 97% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 4 | 4 | 100% | 19% | 19.0% |
-| engagement | 8 | 6 | 100% | 14% | 14.3% |
-| quotes | 7 | 3 | 100% | 14% | 14.3% |
-| cultural | 4 | 4 | 100% | 10% | 9.5% |
-| visual | 7 | 4 | 100% | 10% | 9.5% |
+| primary_sources | 5 | 4 | 100% | 19% | 19.0% |
+| engagement | 5 | 6 | 83% | 14% | 11.9% |
+| quotes | 9 | 3 | 100% | 14% | 14.3% |
+| cultural | 5 | 4 | 100% | 10% | 9.5% |
+| visual | 4 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
 | variety | 0.97 | - | 97% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 11 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.9%** |
+| questions | 9 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **97.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 110 | Included in Core |
-| **Вступ — Митрополит бурхливої епохи** | ✅ | 579 | Included in Core |
-| **Життєпис** | ⚪️ | 629 | Skipped |
-| **Історичний контекст** | ✅ | 618 | Included in Core |
-| **Внесок** | ⚪️ | 343 | Skipped |
-| **Останні роки** | ⚪️ | 260 | Skipped |
-| **Спадщина** | ⚪️ | 371 | Skipped |
-| **Підсумок** | ✅ | 219 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 278 | Skipped |
+| **Вступ — Митрополит бурхливої епохи** | ✅ | 630 | Included in Core |
+| **Життєпис** | ⚪️ | 1444 | Skipped |
+| **Історичний контекст** | ✅ | 605 | Included in Core |
+| **Внесок** | ⚪️ | 424 | Skipped |
+| **Останні роки** | ⚪️ | 374 | Skipped |
+| **Спадщина** | ⚪️ | 421 | Skipped |
+| **Підсумок** | ✅ | 376 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 115 | Skipped |

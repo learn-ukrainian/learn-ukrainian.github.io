@@ -1716,22 +1716,22 @@ npm run sync:landing:dry      # Preview changes without applying
 
 ```bash
 # Check inbox for messages from Claude
-.venv/bin/python scripts/gemini_bridge.py inbox
+.venv/bin/python scripts/ai_agent_bridge.py inbox
 
 # Read specific message
-.venv/bin/python scripts/gemini_bridge.py read <message_id>
+.venv/bin/python scripts/ai_agent_bridge.py read <message_id>
 
 # Send message to Claude (with type)
-.venv/bin/python scripts/gemini_bridge.py send "Your message" --type query --task-id my-task
+.venv/bin/python scripts/ai_agent_bridge.py send "Your message" --type query --task-id my-task
 
 # Auto-process with Gemini CLI (read → process → respond)
-.venv/bin/python scripts/gemini_bridge.py process <message_id> --model gemini-3-pro-preview
+.venv/bin/python scripts/ai_agent_bridge.py process <message_id> --model gemini-3-pro-preview
 
 # Get full conversation history
-.venv/bin/python scripts/gemini_bridge.py conversation <task_id>
+.venv/bin/python scripts/ai_agent_bridge.py conversation <task_id>
 
 # Interactive mode
-.venv/bin/python scripts/gemini_bridge.py interactive
+.venv/bin/python scripts/ai_agent_bridge.py interactive
 ```
 
 ### Signal Script (Gemini → Claude notification)
@@ -1762,16 +1762,46 @@ Available via MCP tools:
 - `acknowledge_message(message_id)`
 - `list_tasks()`
 
+### Agent Watcher Daemon (NEW)
+
+Monitors message broker and triggers agents automatically:
+
+```bash
+# Check status
+.venv/bin/python scripts/agent_watcher.py --status
+
+# Start daemon (foreground)
+.venv/bin/python scripts/agent_watcher.py
+
+# Start daemon (background)
+.venv/bin/python scripts/agent_watcher.py --daemon
+
+# Stop daemon
+.venv/bin/python scripts/agent_watcher.py --stop
+
+# Process one message and exit
+.venv/bin/python scripts/agent_watcher.py --once
+```
+
+**Features:**
+- Polls database every 5s (30s when idle)
+- Loop prevention: max 10 turns per task
+- User session awareness: backs off when user is active
+- Logs to `.mcp/servers/message-broker/watcher.log`
+
 ### Files
 
 | File | Purpose |
 |------|---------|
 | `.mcp/servers/message-broker/server.py` | MCP server for Claude |
-| `scripts/gemini_bridge.py` | CLI bridge for Gemini |
+| `scripts/ai_agent_bridge.py` | CLI bridge for agents |
+| `scripts/agent_watcher.py` | Watcher daemon for auto-triggering |
 | `scripts/signal_claude.py` | Notification trigger |
 | `scripts/message_viewer.py` | Web UI for message archive |
 | `.mcp.json` | MCP configuration |
 | `.mcp/servers/message-broker/messages.db` | SQLite message queue |
+| `.mcp/servers/message-broker/watcher.pid` | Daemon PID file |
+| `.mcp/servers/message-broker/watcher.log` | Daemon log file |
 
 ### Memory Contexts
 

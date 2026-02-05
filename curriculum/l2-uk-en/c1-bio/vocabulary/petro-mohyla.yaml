@@ -118,3 +118,27 @@
   pos: noun
   gender: f
   note: навчання
+- lemma: суб’єктність
+  ipa: /subˈjɛktnʲisʲtʲ/
+  translation: agency / subjectivity
+  pos: noun
+  gender: f
+  note: здатність діяти самостійно
+- lemma: легітимація
+  ipa: /leɦitɪˈmɑt͡sʲijɐ/
+  translation: legitimation
+  pos: noun
+  gender: f
+  note: визнання законності
+- lemma: реставрація
+  ipa: /restɐu̯ˈrɑt͡sʲijɐ/
+  translation: restoration
+  pos: noun
+  gender: f
+  note: відновлення пам'ятки
+- lemma: книгодрукування
+  ipa: /knɪɦodruˈkuʋɐnʲnʲɐ/
+  translation: book printing
+  pos: noun
+  gender: n
+  note: виготовлення друкованих книг

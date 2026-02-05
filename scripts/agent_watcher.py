@@ -1,0 +1,427 @@
+#!/usr/bin/env python3
+"""
+Agent Watcher Daemon - Monitors message broker and triggers agents automatically.
+
+This daemon watches the messages.db file for new unread messages and triggers
+the appropriate agent (Claude or Gemini) to process them.
+
+Features:
+- Watches SQLite database for new messages via polling
+- Triggers appropriate agent based on message recipient
+- Loop prevention: max turns per task, cooldown periods
+- User session awareness: backs off when user is active
+- Logging: writes to watcher.log for visibility
+
+Usage:
+    # Start daemon (foreground)
+    python scripts/agent_watcher.py
+
+    # Start daemon (background)
+    python scripts/agent_watcher.py --daemon
+
+    # Check status
+    python scripts/agent_watcher.py --status
+
+    # Stop daemon
+    python scripts/agent_watcher.py --stop
+"""
+
+import argparse
+import json
+import logging
+import os
+import signal
+import sqlite3
+import subprocess
+import sys
+import time
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+
+# Configuration
+DB_PATH = Path(__file__).parent.parent / ".mcp/servers/message-broker/messages.db"
+PID_FILE = Path(__file__).parent.parent / ".mcp/servers/message-broker/watcher.pid"
+LOG_FILE = Path(__file__).parent.parent / ".mcp/servers/message-broker/watcher.log"
+BRIDGE_SCRIPT = Path(__file__).parent / "ai_agent_bridge.py"
+
+# Timing configuration
+POLL_INTERVAL_SECONDS = 5  # How often to check for new messages
+IDLE_POLL_INTERVAL_SECONDS = 30  # Slower polling when no activity
+COOLDOWN_AFTER_TRIGGER_SECONDS = 10  # Wait after triggering an agent
+USER_ACTIVITY_WINDOW_SECONDS = 60  # Consider user active if recent messages from user
+
+# Loop prevention
+MAX_TURNS_PER_TASK = 10  # Max agent responses per task before requiring human intervention
+MAX_CONSECUTIVE_ERRORS = 3  # Stop processing after consecutive errors
+
+# Setup logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s [%(levelname)s] %(message)s',
+    handlers=[
+        logging.FileHandler(LOG_FILE),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
+
+
+def get_db():
+    """Get database connection."""
+    if not DB_PATH.exists():
+        return None
+    return sqlite3.connect(DB_PATH)
+
+
+def get_unread_messages(for_agent: str = None):
+    """Get unread messages, optionally filtered by recipient."""
+    conn = get_db()
+    if not conn:
+        return []
+
+    cursor = conn.cursor()
+
+    if for_agent:
+        cursor.execute("""
+            SELECT id, task_id, from_llm, to_llm, message_type, timestamp
+            FROM messages
+            WHERE to_llm = ? AND acknowledged = 0
+            ORDER BY id ASC
+        """, (for_agent,))
+    else:
+        cursor.execute("""
+            SELECT id, task_id, from_llm, to_llm, message_type, timestamp
+            FROM messages
+            WHERE acknowledged = 0
+            ORDER BY id ASC
+        """)
+
+    rows = cursor.fetchall()
+    conn.close()
+
+    return [
+        {
+            "id": row[0],
+            "task_id": row[1],
+            "from": row[2],
+            "to": row[3],
+            "type": row[4],
+            "timestamp": row[5]
+        }
+        for row in rows
+    ]
+
+
+def count_task_turns(task_id: str) -> int:
+    """Count how many messages have been exchanged in a task."""
+    if not task_id:
+        return 0
+
+    conn = get_db()
+    if not conn:
+        return 0
+
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT COUNT(*) FROM messages WHERE task_id = ?
+    """, (task_id,))
+    count = cursor.fetchone()[0]
+    conn.close()
+
+    return count
+
+
+def is_user_active() -> bool:
+    """Check if there's been recent user activity (Claude session with human input)."""
+    # Check for active Claude processes
+    try:
+        result = subprocess.run(
+            ["pgrep", "-f", "claude.*--interactive"],
+            capture_output=True,
+            text=True
+        )
+        if result.returncode == 0 and result.stdout.strip():
+            return True
+    except Exception:
+        pass
+
+    return False
+
+
+def trigger_agent(agent: str, message_id: int, task_id: str = None) -> bool:
+    """Trigger an agent to process a message.
+
+    Returns True if successful, False otherwise.
+    """
+    logger.info(f"Triggering {agent} to process message #{message_id} (task: {task_id or 'N/A'})")
+
+    try:
+        if agent == "gemini":
+            cmd = [
+                sys.executable,
+                str(BRIDGE_SCRIPT),
+                "process",
+                str(message_id)
+            ]
+        elif agent == "claude":
+            cmd = [
+                sys.executable,
+                str(BRIDGE_SCRIPT),
+                "process-claude",
+                str(message_id)
+            ]
+        else:
+            logger.error(f"Unknown agent: {agent}")
+            return False
+
+        # Run in project directory with timeout
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            timeout=660,  # 11 min (longer than bridge's 10 min)
+            cwd=str(Path(__file__).parent.parent)
+        )
+
+        if result.returncode == 0:
+            logger.info(f"Successfully processed message #{message_id}")
+            if result.stdout:
+                # Log first 500 chars of output
+                logger.debug(result.stdout[:500])
+            return True
+        else:
+            logger.error(f"Agent {agent} failed: {result.stderr[:500] if result.stderr else 'No error output'}")
+            return False
+
+    except subprocess.TimeoutExpired:
+        logger.error(f"Agent {agent} timed out processing message #{message_id}")
+        return False
+    except Exception as e:
+        logger.error(f"Error triggering {agent}: {e}")
+        return False
+
+
+def run_watcher():
+    """Main watcher loop."""
+    logger.info("=" * 60)
+    logger.info("Agent Watcher starting...")
+    logger.info(f"Database: {DB_PATH}")
+    logger.info(f"Poll interval: {POLL_INTERVAL_SECONDS}s (idle: {IDLE_POLL_INTERVAL_SECONDS}s)")
+    logger.info(f"Max turns per task: {MAX_TURNS_PER_TASK}")
+    logger.info("=" * 60)
+
+    consecutive_errors = 0
+    last_activity = datetime.now(timezone.utc)
+
+    # Track blocked tasks (hit turn limit)
+    blocked_tasks = set()
+
+    while True:
+        try:
+            # Check for unread messages
+            messages = get_unread_messages()
+
+            if not messages:
+                # No messages - use idle polling
+                time.sleep(IDLE_POLL_INTERVAL_SECONDS)
+                continue
+
+            # Check if user is active
+            if is_user_active():
+                logger.debug("User session detected - backing off")
+                time.sleep(POLL_INTERVAL_SECONDS * 2)
+                continue
+
+            # Process first eligible message
+            processed = False
+            for msg in messages:
+                # Skip if task is blocked
+                if msg['task_id'] and msg['task_id'] in blocked_tasks:
+                    logger.debug(f"Skipping blocked task: {msg['task_id']}")
+                    continue
+
+                # Loop prevention: check turn count
+                if msg['task_id']:
+                    turn_count = count_task_turns(msg['task_id'])
+                    if turn_count >= MAX_TURNS_PER_TASK:
+                        logger.warning(f"Task {msg['task_id']} hit {MAX_TURNS_PER_TASK} turns - blocking until human intervention")
+                        blocked_tasks.add(msg['task_id'])
+                        continue
+
+                # Skip error messages (don't auto-process)
+                if msg['type'] == 'error':
+                    logger.debug(f"Skipping error message #{msg['id']}")
+                    continue
+
+                # Trigger appropriate agent
+                success = trigger_agent(msg['to'], msg['id'], msg['task_id'])
+
+                if success:
+                    consecutive_errors = 0
+                    last_activity = datetime.now(timezone.utc)
+                    processed = True
+                    # Cooldown after successful trigger
+                    time.sleep(COOLDOWN_AFTER_TRIGGER_SECONDS)
+                else:
+                    consecutive_errors += 1
+                    if consecutive_errors >= MAX_CONSECUTIVE_ERRORS:
+                        logger.error(f"Too many consecutive errors ({consecutive_errors}) - pausing for 60s")
+                        time.sleep(60)
+                        consecutive_errors = 0
+
+                break  # Only process one message per loop iteration
+
+            if not processed:
+                # All messages were skipped (blocked or errors)
+                time.sleep(POLL_INTERVAL_SECONDS)
+
+        except KeyboardInterrupt:
+            logger.info("Shutdown requested")
+            break
+        except Exception as e:
+            logger.error(f"Watcher error: {e}")
+            consecutive_errors += 1
+            time.sleep(POLL_INTERVAL_SECONDS)
+
+
+def write_pid():
+    """Write PID file for daemon mode."""
+    PID_FILE.parent.mkdir(parents=True, exist_ok=True)
+    PID_FILE.write_text(str(os.getpid()))
+
+
+def read_pid() -> int:
+    """Read PID from file."""
+    if PID_FILE.exists():
+        try:
+            return int(PID_FILE.read_text().strip())
+        except:
+            pass
+    return None
+
+
+def is_running() -> bool:
+    """Check if watcher is running."""
+    pid = read_pid()
+    if pid:
+        try:
+            os.kill(pid, 0)  # Just check if process exists
+            return True
+        except OSError:
+            pass
+    return False
+
+
+def stop_daemon():
+    """Stop running daemon."""
+    pid = read_pid()
+    if pid:
+        try:
+            os.kill(pid, signal.SIGTERM)
+            print(f"Sent SIGTERM to watcher (PID {pid})")
+            # Wait for cleanup
+            time.sleep(1)
+            if PID_FILE.exists():
+                PID_FILE.unlink()
+            return True
+        except OSError as e:
+            print(f"Error stopping daemon: {e}")
+    else:
+        print("No watcher running (no PID file found)")
+    return False
+
+
+def show_status():
+    """Show watcher status."""
+    print(f"Database: {DB_PATH}")
+    print(f"PID file: {PID_FILE}")
+    print(f"Log file: {LOG_FILE}")
+    print()
+
+    if is_running():
+        pid = read_pid()
+        print(f"Status: RUNNING (PID {pid})")
+    else:
+        print("Status: STOPPED")
+
+    # Show pending messages
+    messages = get_unread_messages()
+    if messages:
+        print(f"\nPending messages: {len(messages)}")
+        for msg in messages[:5]:
+            print(f"  [{msg['id']}] {msg['from']} → {msg['to']} ({msg['type']})")
+        if len(messages) > 5:
+            print(f"  ... and {len(messages) - 5} more")
+    else:
+        print("\nNo pending messages")
+
+    # Show recent log entries
+    if LOG_FILE.exists():
+        print(f"\nRecent log entries:")
+        try:
+            with open(LOG_FILE) as f:
+                lines = f.readlines()[-10:]
+                for line in lines:
+                    print(f"  {line.rstrip()}")
+        except:
+            pass
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Agent Watcher Daemon")
+    parser.add_argument("--daemon", "-d", action="store_true", help="Run in daemon mode (background)")
+    parser.add_argument("--status", "-s", action="store_true", help="Show status")
+    parser.add_argument("--stop", action="store_true", help="Stop running daemon")
+    parser.add_argument("--once", action="store_true", help="Process one message and exit")
+
+    args = parser.parse_args()
+
+    if args.status:
+        show_status()
+        return
+
+    if args.stop:
+        stop_daemon()
+        return
+
+    if is_running():
+        print("Watcher is already running. Use --stop to stop it first.")
+        return
+
+    if args.daemon:
+        # Fork to background
+        pid = os.fork()
+        if pid > 0:
+            print(f"Watcher started in background (PID {pid})")
+            return
+        # Child process continues
+        os.setsid()
+
+    # Write PID file
+    write_pid()
+
+    # Handle cleanup on exit
+    def cleanup(signum, frame):
+        if PID_FILE.exists():
+            PID_FILE.unlink()
+        logger.info("Watcher stopped")
+        sys.exit(0)
+
+    signal.signal(signal.SIGTERM, cleanup)
+    signal.signal(signal.SIGINT, cleanup)
+
+    if args.once:
+        # Process one message and exit
+        messages = get_unread_messages()
+        if messages:
+            msg = messages[0]
+            trigger_agent(msg['to'], msg['id'], msg['task_id'])
+        else:
+            print("No pending messages")
+        cleanup(None, None)
+    else:
+        run_watcher()
+
+
+if __name__ == "__main__":
+    main()
