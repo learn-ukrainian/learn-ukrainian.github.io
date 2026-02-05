@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M15 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:01:19
+**Generated:** 2026-02-05 23:03:35
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,7 +44,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 3140/3800 (raw: 3948)
+- **Words:** ❌ 3167/3800 (raw: 3978)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -56,37 +56,27 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
-- **Richness:** ❌ 74% < 95% min (style)
+- **Immersion:** 🇺🇦 99.5% (target 90-100% (grammar))
+- **Richness:** ✅ 99% (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
-**Score:** 74% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** style
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| exemplar_texts | 0 | 2 | 0% | 25% | 0.0% |
-| model_answers | 82 | 3 | 100% | 20% | 20.0% |
+| exemplar_texts | 2 | 2 | 100% | 25% | 25.0% |
+| model_answers | 84 | 3 | 100% | 20% | 20.0% |
 | engagement | 13 | 5 | 100% | 15% | 15.0% |
 | register_analysis | 15 | 5 | 100% | 15% | 15.0% |
 | visual | 14 | 4 | 100% | 10% | 10.0% |
 | variety | 0.97 | - | 97% | 5% | 4.9% |
-| cultural | 3 | - | 100% | 5% | 5.0% |
+| cultural | 4 | - | 100% | 5% | 5.0% |
 | paragraph_var | 0.94 | - | 94% | 5% | 4.7% |
-| **TOTAL** | | | | | **74.5%** |
-
-### Dryness Flags & Fixes
-- ❌ **NO_EXEMPLAR_TEXTS**
-  - FIX:
-    Add 2+ exemplar text excerpts. Use this format:
-    
-    **Зразок [style type]:**
-    
-    > «[Extended quote showing the style, 50+ words]»
-    > — *[Source]*
+| **TOTAL** | | | | | **99.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -98,5 +88,5 @@
 | **Науковий стиль** | ⚪️ | 739 | Skipped |
 | **Офіційно-діловий стиль** | ⚪️ | 719 | Skipped |
 | **Публіцистичний стиль** | ⚪️ | 128 | Skipped |
-| **Практика і підсумок** | ✅ | 138 | Included in Core |
+| **Практика і підсумок** | ✅ | 165 | Included in Core |
 | **Підсумок** | ✅ | 12 | Included in Core |

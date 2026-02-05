@@ -1321,11 +1321,21 @@
       correct: false
   - source: Додаткове речення 7.
     options:
-    - переклад
+    - text: переклад
+      correct: true
+    - text: варіант 2
+      correct: false
+    - text: варіант 3
+      correct: false
     explanation: Пояснення.
   - source: Додаткове речення 8.
     options:
-    - переклад
+    - text: переклад
+      correct: true
+    - text: варіант 2
+      correct: false
+    - text: варіант 3
+      correct: false
     explanation: Пояснення.
   instruction: Оберіть найбільш влучний академічний переклад фрази для ведення професійної
     дискусії.

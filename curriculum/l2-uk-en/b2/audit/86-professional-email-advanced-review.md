@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M86 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:01:28
+**Generated:** 2026-02-05 23:04:49
 
 ## Configuration
 **Type:** B2-history
@@ -53,12 +53,12 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 4154/1750 (raw: 4234)
+- **Words:** ✅ 4272/1750 (raw: 4356)
 - **Activities:** ✅ 15/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 11/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/5
+- **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure
@@ -66,51 +66,30 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ⚠️ Too many activities: 15 (target 3-9)
 - **Immersion:** 🇺🇦 97.8% (target 90-100% (history))
-- **Richness:** ❌ 60% < 95% min (grammar) - REWRITE needed
+- **Richness:** ❌ 86% < 95% min (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
-**Score:** 60% (minimum: 95%)
+**Score:** 86% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 47 | 24 | 100% | 20% | 20.0% |
-| engagement | 4 | 5 | 80% | 15% | 12.0% |
-| dialogues | 0 | 4 | 0% | 15% | 0.0% |
+| examples | 55 | 24 | 100% | 20% | 20.0% |
+| engagement | 5 | 5 | 100% | 15% | 15.0% |
+| dialogues | 4 | 4 | 100% | 15% | 15.0% |
 | variety | 0.98 | - | 98% | 10% | 9.8% |
 | cultural | 0 | 3 | 0% | 10% | 0.0% |
 | realworld | 20 | 3 | 100% | 10% | 10.0% |
-| visual | 0 | 3 | 0% | 5% | 0.0% |
-| paragraph_var | 0.80 | - | 80% | 5% | 4.0% |
-| questions | 14 | 5 | 100% | 5% | 5.0% |
-| proverbs | 0 | 1 | 0% | 5% | 0.0% |
-| **TOTAL** | | | | | **60.8%** |
+| visual | 1 | 3 | 33% | 5% | 1.7% |
+| paragraph_var | 0.93 | - | 93% | 5% | 4.7% |
+| questions | 17 | 5 | 100% | 5% | 5.0% |
+| proverbs | 2 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **86.1%** |
 
 ### Dryness Flags & Fixes
-- ❌ **NO_DIALOGUE**
-  - FIX:
-    Add 4+ mini-dialogues. Use this exact format:
-    
-    **Діалог: [Location in Ukraine]**
-    
-    > — [Speaker 1 line with **bolded** grammar examples]
-    > — [Speaker 2 response with **bolded** grammar examples]
-    > — [Speaker 1 continuation]
-    > — [Speaker 2 conclusion]
-    
-    Example locations: На Бесарабському ринку, У львівській кав'ярні, В одеському трамваї, На Подолі
-- ❌ **NO_PROVERBS**
-  - FIX:
-    Add 1+ Ukrainian proverb. Use this format:
-    
-    Українці кажу|ть: «[Proverb in Ukrainian]»
-    
-    Зверніть увагу: **[word]** — [aspect] вид, бо [explanation why this aspect is used].
-    
-    Example: «Не кажи гоп, поки не перескочиш» — **перескочиш** is perfective because it's about the result.
 - ❌ **NO_CULTURAL_ANCHOR**
   - FIX:
     Add 3+ cultural references. Use this exact format:
@@ -128,5 +107,5 @@
 | **Вступ** | ✅ | 419 | Included in Core |
 | **Імерсивна розповідь** | ⚪️ | 1790 | Skipped |
 | **Аналіз** | ✅ | 1166 | Included in Core |
-| **Граматика в контексті** | ✅ | 612 | Included in Core |
+| **Граматика в контексті** | ✅ | 730 | Included in Core |
 | **Підсумок** | ✅ | 26 | Included in Core |
