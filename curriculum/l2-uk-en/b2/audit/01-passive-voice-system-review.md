@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M01 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 19:28:33
+**Generated:** 2026-02-05 21:34:31
 
 ## Configuration
 **Type:** B2-grammar
@@ -42,17 +42,8 @@
 - Required types used: 5/5 (essay-response, fill-in, group-sort, match-up, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✅ правильно:...'.
-  - FIX: Vary sentence structure.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ❌ 1943/3800 (raw: 2337)
+- **Words:** ❌ 3316/3800 (raw: 3926)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -62,41 +53,61 @@
 - **Vocab:** ⚠️ 5 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.0% (target 90-100% (grammar))
-- **Richness:** ✅ 95% (grammar)
+- **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
+- **Richness:** ❌ 77% < 95% min (grammar) - REWRITE needed
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 95% (minimum: 95%)
+**Score:** 77% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 99 | 24 | 100% | 20% | 20.0% |
-| engagement | 8 | 5 | 100% | 15% | 15.0% |
-| dialogues | 19 | 4 | 100% | 15% | 15.0% |
-| variety | 0.94 | - | 94% | 10% | 9.4% |
-| cultural | 2 | 3 | 67% | 10% | 6.7% |
-| realworld | 3 | 3 | 100% | 10% | 10.0% |
-| visual | 5 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.87 | - | 87% | 5% | 4.4% |
-| questions | 29 | 5 | 100% | 5% | 5.0% |
-| proverbs | 2 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **95.4%** |
+| examples | 100 | 24 | 100% | 20% | 20.0% |
+| engagement | 7 | 5 | 100% | 15% | 15.0% |
+| dialogues | 0 | 4 | 0% | 15% | 0.0% |
+| variety | 0.96 | - | 96% | 10% | 9.6% |
+| cultural | 1 | 3 | 33% | 10% | 3.3% |
+| realworld | 16 | 3 | 100% | 10% | 10.0% |
+| visual | 11 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 15 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **77.9%** |
+
+### Dryness Flags & Fixes
+- ❌ **NO_DIALOGUE**
+  - FIX:
+    Add 4+ mini-dialogues. Use this exact format:
+    
+    **Діалог: [Location in Ukraine]**
+    
+    > — [Speaker 1 line with **bolded** grammar examples]
+    > — [Speaker 2 response with **bolded** grammar examples]
+    > — [Speaker 1 continuation]
+    > — [Speaker 2 conclusion]
+    
+    Example locations: На Бесарабському ринку, У львівській кав'ярні, В одеському трамваї, На Подолі
+- ❌ **LOW_CULTURAL_ANCHOR**
+  - FIX:
+    Add more cultural references (need 3+ total). Include:
+    - Named Ukrainian places (Поділ, Бесарабський ринок, Острозька академія)
+    - Ukrainian traditions or customs
+    - Contemporary Ukrainian life examples
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 63 | Included in Core |
-| **Тест: Прочитайте текст** | ✅ | 153 | Included in Core |
-| **Пояснення** | ⚪️ | 916 | Skipped |
-| **Трансформації** | ⚪️ | 247 | Skipped |
-| **Діалоги** | ✅ | 316 | Included in Core |
-| **Підсумок** | ✅ | 0 | Included in Core |
-| **Ключові моменти** | ⚪️ | 67 | Skipped |
-| **Самооцінка** | ⚪️ | 71 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Intro/Narrative** | ✅ | 82 | Included in Core |
+| **Вступ — Що таке пасивний стан?** | ✅ | 415 | Included in Core |
+| **Практикум: Трансформаційна таблиця** | ⚪️ | 125 | Skipped |
+| **Форма 1 — Дієприкметники на -ний/-тий** | ⚪️ | 582 | Skipped |
+| **Форма 2 — Безособові конструкції на -но/-то** | ⚪️ | 585 | Skipped |
+| **Форма 3 — Зворотний пасив із -ся** | ⚪️ | 471 | Skipped |
+| **Форма 4 — Третя особа множини** | ⚪️ | 496 | Skipped |
+| **Вибір форми пасиву за контекстом** | ✅ | 370 | Included in Core |
+| **Підсумок і практика** | ✅ | 190 | Included in Core |

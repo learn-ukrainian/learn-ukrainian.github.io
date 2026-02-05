@@ -1,15 +1,15 @@
 {
   "module": "01-passive-voice-system",
   "level": "B2",
-  "plan_version": "1.0",
-  "last_audit": "2026-02-01T19:28:33.532517Z",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-05T21:34:31.559976Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-11T21:07:11.449301Z",
-    "meta": "2026-01-29T07:39:04.676359Z",
-    "activities": "2026-01-14T09:02:56.020174Z",
-    "vocabulary": "2026-01-21T22:54:24.705522Z",
-    "plan": "2026-01-30T12:04:00.853914Z"
+    "md": "2026-02-05T21:31:54.786396Z",
+    "meta": "2026-02-05T21:31:54.826396Z",
+    "activities": "2026-02-05T21:31:54.800396Z",
+    "vocabulary": "2026-02-05T21:31:54.833396Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "1943/3800 (raw: 2337) | pedagogy: 1 violations"
+      "message": "3316/3800 (raw: 3926) | richness: 77% < 95% min (grammar) - REWRITE needed"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "7 Outline Compliance Errors"
+      "2 Outline Compliance Errors"
     ],
     "pass_count": 2,
     "fail_count": 2
