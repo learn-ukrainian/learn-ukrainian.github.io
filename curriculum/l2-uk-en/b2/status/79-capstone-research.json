@@ -2,12 +2,12 @@
   "module": "79-capstone-research",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T23:04:42.405723Z",
+  "last_audit": "2026-02-05T23:09:20.039676Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-05T22:46:26.693646Z",
     "meta": "2026-02-05T22:46:26.734646Z",
-    "activities": "2026-02-05T22:53:41.352794Z",
+    "activities": "2026-02-05T23:06:42.199571Z",
     "vocabulary": "2026-02-05T22:46:26.741646Z",
     "plan": null
   },
@@ -19,13 +19,13 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 3,
-      "message": "1829/2000 (raw: 1989) | pedagogy: 1 violations | richness: 74% < 85% min (checkpoint)"
+      "violations": 2,
+      "message": "1829/2000 (raw: 1989) | pedagogy: 4 violations"
     },
     "activities": {
-      "status": "fail",
-      "violations": 4,
-      "message": "0/15 | density: 0 < 14 | unique_types: 0/4 types | priority: No priority types"
+      "status": "pass",
+      "violations": 0,
+      "message": "17/15"
     },
     "vocabulary": {
       "status": "warn",
@@ -41,10 +41,9 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "2 Outline Compliance Errors",
-      "Missing required activity types: essay-response, reading, true-false"
+      "2 Outline Compliance Errors"
     ],
-    "pass_count": 2,
-    "fail_count": 2
+    "pass_count": 3,
+    "fail_count": 1
   }
 }

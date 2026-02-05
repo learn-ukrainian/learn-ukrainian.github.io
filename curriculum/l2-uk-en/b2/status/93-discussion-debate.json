@@ -2,10 +2,10 @@
   "module": "93-discussion-debate",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T23:04:57.780534Z",
+  "last_audit": "2026-02-05T23:09:35.504940Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:56:30.278074Z",
+    "md": "2026-02-05T23:07:31.697356Z",
     "meta": "2026-02-05T22:46:26.735646Z",
     "activities": "2026-02-05T22:46:26.725646Z",
     "vocabulary": "2026-02-05T22:46:26.741646Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4235/2000 (raw: 4358)"
+      "message": "4237/2000 (raw: 4360)"
     },
     "activities": {
       "status": "pass",

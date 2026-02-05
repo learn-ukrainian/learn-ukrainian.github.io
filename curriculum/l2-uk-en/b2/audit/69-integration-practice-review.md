@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M69 | **Phase:** B2.2 | **Pedagogy:** Practice | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:05:29
+**Generated:** 2026-02-05 23:11:13
 
 ## Configuration
 **Type:** B2-vocab
@@ -53,13 +53,11 @@
   - FIX: Adjust prompt length to 5-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Кейс: Робота в Харкові' Q10 prompt length 3 (target: 5-25)
   - FIX: Adjust prompt length to 5-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 69-integration-practice.yaml: Schema validation error at key 'words': ['Незважаючи', 'на', 'те', 'що', 'ресурси', 'обмежені', 'ми', 'продовжуємо', 'працювати', 'бо', 'віримо', 'що', 'під', 'лежачий', 'камінь', 'вода', 'ніколи', 'не', 'тече'] is too long
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 15/100)
 
-- 5 violations (moderate)
+- 4 violations (moderate)
 
 ## Gates
 - **Words:** ✅ 2027/2000 (raw: 2112)
@@ -72,7 +70,7 @@
 - **Vocab:** ⚠️ 5 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 5 violations
+- **Pedagogy:** ❌ 4 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 90-100% (vocab))
 - **Richness:** ✅ 99% (grammar)

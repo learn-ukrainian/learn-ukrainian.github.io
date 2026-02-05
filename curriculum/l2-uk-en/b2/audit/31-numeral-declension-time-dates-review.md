@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M31 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:03:52
+**Generated:** 2026-02-05 23:08:30
 
 ## Configuration
 **Type:** B2-grammar
@@ -17,31 +17,52 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Вибір правильного вираження часу | 16 | 8 | ✅ |
+| 2 | fill-in | Доповніть вирази з датами | 10 | 8 | ✅ |
+| 3 | match-up | Зіставте час | 12 | 8 | ✅ |
+| 4 | error-correction | Виправте помилки у виразах часу та дат | 6 | 6 | ✅ |
+| 5 | true-false | Правда чи хибність | 10 | 8 | ✅ |
+| 6 | group-sort | Розподіліть місяці за сезонами | 16 | 14 | ✅ |
+| 7 | unjumble | Складіть речення про час і дати | 10 | 6 | ✅ |
+| 8 | cloze | Прочитайте розклад і заповніть пропуски | 14 | 14 | ✅ |
+| 9 | select | Оберіть усі правильні варіанти | 8 | 6 | ✅ |
+| 10 | translate | Перекладіть вирази часу та дат | 8 | 6 | ✅ |
+| 11 | mark-the-words | Знайдіть вирази часу та дати | 7 | 6 | ✅ |
+| 12 | fill-in | Заповніть розклад заходів | 10 | 8 | ✅ |
+| 13 | essay-response | Мій ідеальний день | 1 | 1 | ✅ |
+| 14 | reading | Текст для аналізу: Відмінювання числівників І: Час і дати | 3 | 3 | ✅ |
+
+**Summary:**
+- Total activities: 14 (target: 10-14) ✅
+- Unique types: 13 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
+- Low density activities: 0
+
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 31-numeral-declension-time-dates.yaml: Schema validation error at key '9': {'type': 'translate', 'title': 'Перекладіть вирази часу та дат', 'items': [{'source': "At 5 o'clock", 'options': [{'text': "О п'ятій годині", 'correct': True}, {'text': "В п'ять годин", 'correct': False}, {'text': "На п'яту годину", 'correct': False}]}, {'source': 'Half past two', 'options': [{'text': 'Пів на третю', 'correct': True}, {'text': 'Пів третього', 'correct': False}, {'text': 'Половина третього', 'correct': False}]}, {'source': 'On the first of May', 'options': [{'text': 'Першого травня', 'correct': True}, {'text': 'Перше травня', 'correct': False}, {'text': 'В перше травня', 'correct': False}]}, {'source': 'In 2020', 'options': [{'text': 'У дві тисячі двадцятому році', 'correct': True}, {'text': 'В дві тисячі двадцять році', 'correct': False}, {'text': 'У двадцять двадцять', 'correct': False}]}, {'source': 'Quarter to six', 'options': [{'text': 'За чверть шоста', 'correct': True}, {'text': 'Без чверті шість', 'correct': False}, {'text': 'Чверть до шостої', 'correct': False}]}, {'source': 'Twenty minutes past four', 'options': [{'text': "Двадцять хвилин на п'яту", 'correct': True}, {'text': "Двадцять хвилин п'ятого", 'correct': False}, {'text': 'Чотири двадцять', 'correct': False}]}, {'source': 'Додаткове речення 7.', 'options': ['переклад'], 'explanation': 'Пояснення.'}, {'source': 'Додаткове речення 8.', 'options': ['переклад'], 'explanation': 'Пояснення.'}], 'instruction': 'Оберіть правильний переклад.'} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 31-numeral-declension-time-dates.yaml: Schema validation error at key '3': {'type': 'error-correction', 'title': 'Виправте помилки у виразах часу та дат', 'items': [{'sentence': "Зустрінемося в п'ять годин.", 'error': "в п'ять годин", 'answer': "о п'ятій годині", 'options': ["о п'ятій годині", "на п'ять годин", "у п'ять годин", "біля п'яти годин"], 'explanation': 'Час події позначається прийменником "о" + місцевий відмінок.'}, {'sentence': "Зараз без п'ятнадцяти сім.", 'error': "без п'ятнадцяти сім", 'answer': 'за чверть сьома', 'options': ['за чверть сьома', "за п'ятнадцять сім", "п'ятнадцять до сьомої", 'без чверті сім'], 'explanation': 'Конструкція "без..." є калькою. Правильно "за...".'}, {'sentence': "Мій день народження п'ятого березня.", 'error': "п'ятого березня", 'answer': "п'яте березня", 'options': ["п'яте березня", "п'ятого березня", "п'ять березня", "п'ятому березня"], 'explanation': 'Якщо це констатація факту (називний), то "п\'яте". Якщо дата події (коли?), то "п\'ятого". У цьому контексті краще "п\'яте" (яке число?).'}, {'sentence': 'Поїзд прибуває в дванадцять тридцять.', 'error': 'в дванадцять тридцять', 'answer': 'о дванадцятій тридцять', 'options': ['о дванадцятій тридцять', 'на дванадцять тридцять', 'у дванадцять тридцять', 'біля дванадцяти тридцяти'], 'explanation': 'Офіційний час теж вимагає "о" + порядковий числівник.'}, {'sentence': 'Я чекаю тебе з двох годин.', 'error': 'з двох годин', 'answer': 'з другої години', 'options': ['з другої години', 'з двох', 'від двох годин', 'з другої'], 'explanation': '"З котрої?" - з другої.'}, {'sentence': 'Скільки годин?', 'error': 'Скільки годин', 'answer': 'Котра година', 'options': ['Котра година', 'Який час', 'Скільки часу', 'Яка година'], 'explanation': 'Стандартне питання про час.'}], 'instruction': 'Знайдіть помилку і оберіть правильний варіант.'} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: grammar) missing advanced activity type: essay-response
-  - FIX: Add a essay-response activity to meet advanced richness standards.
 
 ## Recommendation
-**📝 UPDATE** (severity 30/100)
+**📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
-- Activity count below minimum
-- Activity density below minimum
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ❌ 1859/2000 (raw: 2061)
-- **Activities:** ❌ 0/10
-- **Density:** ❌ 0 < 14
-- **Unique_types:** ❌ 0/4 types
-- **Priority:** ❌ No priority types
+- **Activities:** ✅ 14/10
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 13/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 2 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.6% (target 90-100% (grammar))
 - **Richness:** ✅ 95% (grammar)

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M11 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:03:30
+**Generated:** 2026-02-05 23:08:07
 
 ## Configuration
 **Type:** B2-grammar
@@ -56,7 +56,7 @@
 - 3 violations (minor)
 
 ## Gates
-- **Words:** ❌ 2169/3800 (raw: 2592)
+- **Words:** ❌ 2175/3800 (raw: 2598)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -97,7 +97,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 50 | Included in Core |
 | **Вступ — Багатоскладні речення** | ✅ | 158 | Included in Core |
-| **Складносурядні речення** | ⚪️ | 1048 | Skipped |
+| **Складносурядні речення** | ⚪️ | 1054 | Skipped |
 | **Складнопідрядні речення з одним підрядним** | ⚪️ | 332 | Skipped |
 | **Складнопідрядні речення з кількома підрядними** | ⚪️ | 333 | Skipped |
 | **Вкладені підрядні речення** | ⚪️ | 61 | Skipped |

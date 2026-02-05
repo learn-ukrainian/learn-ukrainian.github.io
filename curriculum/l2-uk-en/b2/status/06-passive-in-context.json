@@ -2,10 +2,10 @@
   "module": "06-passive-in-context",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T23:03:24.654786Z",
+  "last_audit": "2026-02-05T23:08:02.294072Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:57:16.747892Z",
+    "md": "2026-02-05T23:07:30.920359Z",
     "meta": "2026-02-05T22:46:26.732646Z",
     "activities": "2026-02-05T22:46:26.699646Z",
     "vocabulary": "2026-02-05T22:46:26.738646Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2137/3800 (raw: 2568)"
+      "message": "2139/3800 (raw: 2570)"
     },
     "activities": {
       "status": "pass",

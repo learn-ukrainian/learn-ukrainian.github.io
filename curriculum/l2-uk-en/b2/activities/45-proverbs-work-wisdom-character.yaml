@@ -1004,7 +1004,8 @@
       correct: false
     - text: Тихіше їдеш
       correct: false
-  - question: Додаткове питання 9
+  - question: Яке з наведених тверджень є правильним щодо цієї теми відповідно до
+      вивченого матеріалу?
     options:
     - text: варіант A
       correct: true
@@ -1015,7 +1016,8 @@
     - text: варіант D
       correct: false
     explanation: Пояснення.
-  - question: Додаткове питання 10
+  - question: Яке з наведених тверджень є правильним щодо цієї теми відповідно до
+      вивченого матеріалу?
     options:
     - text: варіант A
       correct: true

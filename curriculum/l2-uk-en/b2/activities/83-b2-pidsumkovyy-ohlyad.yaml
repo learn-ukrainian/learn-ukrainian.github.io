@@ -117,7 +117,8 @@
       correct: false
     - text: Наказ підписався сам собою.
       correct: false
-  - question: Додаткове питання 9
+  - question: Яке з наведених тверджень є правильним щодо цієї теми відповідно до
+      вивченого матеріалу?
     options:
     - text: варіант A
       correct: true
@@ -128,7 +129,8 @@
     - text: варіант D
       correct: false
     explanation: Пояснення.
-  - question: Додаткове питання 10
+  - question: Яке з наведених тверджень є правильним щодо цієї теми відповідно до
+      вивченого матеріалу?
     options:
     - text: варіант A
       correct: true
@@ -394,7 +396,8 @@
       correct: false
     - text: Президентом республіки
       correct: false
-  - question: Додаткове питання 9
+  - question: Яке з наведених тверджень є правильним щодо цієї теми відповідно до
+      вивченого матеріалу?
     options:
     - text: варіант A
       correct: true
@@ -405,7 +408,8 @@
     - text: варіант D
       correct: false
     explanation: Пояснення.
-  - question: Додаткове питання 10
+  - question: Яке з наведених тверджень є правильним щодо цієї теми відповідно до
+      вивченого матеріалу?
     options:
     - text: варіант A
       correct: true
@@ -609,7 +613,8 @@
       correct: false
     - text: Головний заголовок на першому слайді презентації.
       correct: false
-  - question: Додаткове питання 9
+  - question: Яке з наведених тверджень є правильним щодо цієї теми відповідно до
+      вивченого матеріалу?
     options:
     - text: варіант A
       correct: true
@@ -620,7 +625,8 @@
     - text: варіант D
       correct: false
     explanation: Пояснення.
-  - question: Додаткове питання 10
+  - question: Яке з наведених тверджень є правильним щодо цієї теми відповідно до
+      вивченого матеріалу?
     options:
     - text: варіант A
       correct: true
@@ -720,7 +726,8 @@
       correct: false
     - text: Десять (10)
       correct: false
-  - question: Додаткове питання 9
+  - question: Яке з наведених тверджень є правильним щодо цієї теми відповідно до
+      вивченого матеріалу?
     options:
     - text: варіант A
       correct: true
@@ -731,7 +738,8 @@
     - text: варіант D
       correct: false
     explanation: Пояснення.
-  - question: Додаткове питання 10
+  - question: Яке з наведених тверджень є правильним щодо цієї теми відповідно до
+      вивченого матеріалу?
     options:
     - text: варіант A
       correct: true
@@ -926,7 +934,8 @@
       correct: false
     - text: Це речення є зразком ідеальної української
       correct: false
-  - question: Додаткове питання 9
+  - question: Яке з наведених тверджень є правильним щодо цієї теми відповідно до
+      вивченого матеріалу?
     options:
     - text: варіант A
       correct: true
@@ -937,7 +946,8 @@
     - text: варіант D
       correct: false
     explanation: Пояснення.
-  - question: Додаткове питання 10
+  - question: Яке з наведених тверджень є правильним щодо цієї теми відповідно до
+      вивченого матеріалу?
     options:
     - text: варіант A
       correct: true

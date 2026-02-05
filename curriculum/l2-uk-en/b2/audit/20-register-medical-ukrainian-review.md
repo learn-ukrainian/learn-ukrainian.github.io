@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M20 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:03:40
+**Generated:** 2026-02-05 23:08:18
 
 ## Configuration
 **Type:** B2-grammar
@@ -54,7 +54,7 @@
 - 2 violations (minor)
 
 ## Gates
-- **Words:** ❌ 2805/3800 (raw: 3510)
+- **Words:** ❌ 2807/3800 (raw: 3512)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -95,7 +95,7 @@
 | **Вступ — Медичний регістр** | ✅ | 18 | Included in Core |
 | **Опис симптомів** | ⚪️ | 226 | Skipped |
 | **Діалог лікар-пацієнт** | ✅ | 829 | Included in Core |
-| **Медичні інструкції** | ⚪️ | 791 | Skipped |
+| **Медичні інструкції** | ⚪️ | 793 | Skipped |
 | **Медична документація** | ⚪️ | 599 | Skipped |
 | **Типові помилки та русизми** | ✅ | 77 | Included in Core |
 | **Практика і підсумок** | ✅ | 186 | Included in Core |

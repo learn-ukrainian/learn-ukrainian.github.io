@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M13 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:03:32
+**Generated:** 2026-02-05 23:08:10
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,18 +44,16 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (75% overlap): "Варто зазначити: *Відповідь:* **Книгу** (тема) *читає Марія* (рема).". Shares significant keywords with sentence at index 18.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "**Понад мільйон** користувачів завантажили його за перший місяць!". Shares significant keywords with sentence at index 111.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ❌ 2634/3800 (raw: 3174)
+- **Words:** ❌ 2638/3800 (raw: 3178)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -65,7 +63,7 @@
 - **Vocab:** ⚠️ 11 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
@@ -96,9 +94,9 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 59 | Included in Core |
 | **Вступ — Порядок слів в українській мові** | ✅ | 139 | Included in Core |
-| **Тема-рема структура** | ⚪️ | 1071 | Skipped |
+| **Тема-рема структура** | ⚪️ | 1073 | Skipped |
 | **Емфатичний порядок слів** | ⚪️ | 299 | Skipped |
-| **Інверсія для стилістичного ефекту** | ⚪️ | 653 | Skipped |
+| **Інверсія для стилістичного ефекту** | ⚪️ | 655 | Skipped |
 | **Виділення елементів речення** | ⚪️ | 291 | Skipped |
 | **Контекстуальний вибір** | ✅ | 110 | Included in Core |
 | **Практика і підсумок** | ✅ | 0 | Included in Core |

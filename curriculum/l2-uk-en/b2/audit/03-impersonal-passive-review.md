@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M03 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:03:21
+**Generated:** 2026-02-05 23:07:58
 
 ## Configuration
 **Type:** B2-grammar
@@ -46,13 +46,11 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✓ |...'.
   - FIX: Vary sentence structure.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 03-impersonal-passive.yaml: Schema validation error at key 'min_words': 100 is less than the minimum of 150
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ❌ 1943/3800 (raw: 2593)
@@ -65,7 +63,7 @@
 - **Vocab:** ⚠️ 8 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
 - **Richness:** ✅ 98% (grammar)

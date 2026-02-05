@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M78 | **Phase:** B2.4 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:05:32
+**Generated:** 2026-02-05 23:13:20
 
 ## Configuration
 **Type:** B2-skills
@@ -45,26 +45,18 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Основи аналізу тексту' Q9 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Основи аналізу тексту' Q10 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення цільової аудиторії' Q9 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення цільової аудиторії' Q10 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Культура діалогу в Україні базується на взаємній повазі до аргументів та фактів.". Shares significant keywords with sentence at index 118.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Наш аналіз має залишатися об'єктивним, незважаючи на будь-які особисті симпатії.". Shares significant keywords with sentence at index 119.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 
 ## Recommendation
-**📝 UPDATE** (severity 15/100)
+**📝 UPDATE** (severity 5/100)
 
-- 6 violations (moderate)
+- 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2443/2000 (raw: 2513)
+- **Words:** ✅ 2447/2000 (raw: 2517)
 - **Activities:** ✅ 16/14
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/5 types
@@ -74,7 +66,7 @@
 - **Vocab:** ⚠️ 6 < 20 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 6 violations
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ✅ Content-heavy OK (16 activities)
 - **Immersion:** 🇺🇦 99.1% (target 90-100% (skills))
 - **Richness:** ✅ 99% (skills)
@@ -106,5 +98,5 @@
 | **Факт vs думка** | ⚪️ | 327 | Skipped |
 | **Виявлення упередженості** | ⚪️ | 541 | Skipped |
 | **Риторичні прийоми** | ⚪️ | 482 | Skipped |
-| **Аналіз структури тексту** | ✅ | 293 | Included in Core |
+| **Аналіз структури тексту** | ✅ | 297 | Included in Core |
 | **Підсумок та практика** | ✅ | 391 | Included in Core |

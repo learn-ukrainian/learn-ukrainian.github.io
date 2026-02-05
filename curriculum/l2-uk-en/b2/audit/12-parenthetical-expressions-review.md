@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M12 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:03:31
+**Generated:** 2026-02-05 23:08:09
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,7 +43,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 2284/3800 (raw: 3069)
+- **Words:** ❌ 2286/3800 (raw: 3071)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -86,7 +86,7 @@
 | **Вступ — Вставні слова та вирази** | ✅ | 172 | Included in Core |
 | **Вставні слова для вираження впевненості та невпевненості** | ⚪️ | 1176 | Skipped |
 | **Вставні слова для вираження ставлення** | ⚪️ | 201 | Skipped |
-| **Вставні слова для позначення джерела інформації** | ✅ | 117 | Included in Core |
+| **Вставні слова для позначення джерела інформації** | ✅ | 119 | Included in Core |
 | **Вставні слова для організації висловлювання** | ⚪️ | 288 | Skipped |
 | **Пунктуація при вставних словах** | ⚪️ | 74 | Skipped |
 | **Практика і підсумок** | ✅ | 179 | Included in Core |

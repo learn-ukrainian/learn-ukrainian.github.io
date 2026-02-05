@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M76 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:05:30
+**Generated:** 2026-02-05 23:11:14
 
 ## Configuration
 **Type:** B2-culture
@@ -53,13 +53,11 @@
   - FIX: Adjust prompt length to 5-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз стилів у релігійному контексті' Q10 prompt length 3 (target: 5-25)
   - FIX: Adjust prompt length to 5-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 76-religion-in-ukraine.yaml: Schema validation error at key 'min_words': 100 is less than the minimum of 150
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 15/100)
 
-- 5 violations (moderate)
+- 4 violations (moderate)
 
 ## Gates
 - **Words:** ✅ 3030/2000 (raw: 3109)
@@ -72,7 +70,7 @@
 - **Vocab:** ✅ 47/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 5 violations
+- **Pedagogy:** ❌ 4 violations
 - **Content_heavy:** ⚠️ Too many activities: 16 (target 10-14)
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (culture))
 - **Richness:** ✅ 99% (cultural)

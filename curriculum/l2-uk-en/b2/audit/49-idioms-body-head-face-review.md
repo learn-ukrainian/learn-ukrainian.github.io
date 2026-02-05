@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M49 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-05 23:04:11
+**Generated:** 2026-02-05 23:08:49
 
 ## Configuration
 **Type:** B2-vocab
@@ -43,7 +43,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2161/2000 (raw: 2518)
+- **Words:** ✅ 2163/2000 (raw: 2520)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -84,5 +84,5 @@
 | **Розминка — Голова як центр мислення** | ⚪️ | 1370 | Skipped |
 | **Фразеологізми з "голова"** | ⚪️ | 263 | Skipped |
 | **Фразеологізми з частинами обличчя** | ✅ | 119 | Included in Core |
-| **Практика — ідіоми в діалозі** | ⚪️ | 325 | Skipped |
+| **Практика — ідіоми в діалозі** | ⚪️ | 327 | Skipped |
 | **Підсумок** | ✅ | 12 | Included in Core |

@@ -121,7 +121,8 @@
       correct: false
     - text: Офіційно-діловий
       correct: false
-  - question: Додаткове питання 9
+  - question: Яке з наведених тверджень є правильним щодо цієї теми відповідно до
+      вивченого матеріалу?
     options:
     - text: варіант A
       correct: true
@@ -132,7 +133,8 @@
     - text: варіант D
       correct: false
     explanation: Пояснення.
-  - question: Додаткове питання 10
+  - question: Яке з наведених тверджень є правильним щодо цієї теми відповідно до
+      вивченого матеріалу?
     options:
     - text: варіант A
       correct: true
@@ -263,7 +265,8 @@
       correct: false
     - text: Дослівна цитата відомої історичної постаті.
       correct: false
-  - question: Додаткове питання 9
+  - question: Яке з наведених тверджень є правильним щодо цієї теми відповідно до
+      вивченого матеріалу?
     options:
     - text: варіант A
       correct: true
@@ -274,7 +277,8 @@
     - text: варіант D
       correct: false
     explanation: Пояснення.
-  - question: Додаткове питання 10
+  - question: Яке з наведених тверджень є правильним щодо цієї теми відповідно до
+      вивченого матеріалу?
     options:
     - text: варіант A
       correct: true
@@ -566,7 +570,8 @@
       correct: false
     - text: Це адаптація
       correct: false
-  - question: Додаткове питання 9
+  - question: Яке з наведених тверджень є правильним щодо цієї теми відповідно до
+      вивченого матеріалу?
     options:
     - text: варіант A
       correct: true
@@ -577,7 +582,8 @@
     - text: варіант D
       correct: false
     explanation: Пояснення.
-  - question: Додаткове питання 10
+  - question: Яке з наведених тверджень є правильним щодо цієї теми відповідно до
+      вивченого матеріалу?
     options:
     - text: варіант A
       correct: true
@@ -781,7 +787,8 @@
       correct: false
     - text: Вимір
       correct: false
-  - question: Додаткове питання 9
+  - question: Яке з наведених тверджень є правильним щодо цієї теми відповідно до
+      вивченого матеріалу?
     options:
     - text: варіант A
       correct: true
@@ -792,7 +799,8 @@
     - text: варіант D
       correct: false
     explanation: Пояснення.
-  - question: Додаткове питання 10
+  - question: Яке з наведених тверджень є правильним щодо цієї теми відповідно до
+      вивченого матеріалу?
     options:
     - text: варіант A
       correct: true

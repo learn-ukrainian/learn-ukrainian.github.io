@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M62 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:05:24
+**Generated:** 2026-02-05 23:11:08
 
 ## Configuration
 **Type:** B2-vocab
@@ -55,13 +55,11 @@
   - FIX: Adjust prompt length to 5-25 words.
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'ми бачимо,...'.
   - FIX: Vary sentence structure.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 62-synonyms-place.yaml: Schema validation error at key 'words': ['Звідси', 'відкриватися', 'просто', 'неймовірний', 'та', 'захоплюючий', 'вид', 'на', 'могутній', 'Дніпро', 'який', 'несе', 'свої', 'води', 'через', 'усю', 'нашу', 'прекрасну', 'землю'] is too long
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 15/100)
 
-- 6 violations (moderate)
+- 5 violations (moderate)
 
 ## Gates
 - **Words:** ✅ 2127/2000 (raw: 2212)
@@ -74,7 +72,7 @@
 - **Vocab:** ⚠️ 15 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 6 violations
+- **Pedagogy:** ❌ 5 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.0% (target 90-100% (vocab))
 - **Richness:** ✅ 97% (phraseology)

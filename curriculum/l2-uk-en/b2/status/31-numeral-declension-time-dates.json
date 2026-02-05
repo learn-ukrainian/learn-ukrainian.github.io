@@ -2,12 +2,12 @@
   "module": "31-numeral-declension-time-dates",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T23:03:52.774490Z",
+  "last_audit": "2026-02-05T23:08:30.192901Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-05T22:57:16.768892Z",
     "meta": "2026-02-05T22:46:26.732646Z",
-    "activities": "2026-02-05T22:53:35.211822Z",
+    "activities": "2026-02-05T23:06:36.686594Z",
     "vocabulary": "2026-02-05T22:46:26.739646Z",
     "plan": null
   },
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "1859/2000 (raw: 2061) | pedagogy: 2 violations"
+      "message": "1859/2000 (raw: 2061) | pedagogy: 1 violations"
     },
     "activities": {
-      "status": "fail",
-      "violations": 4,
-      "message": "0/10 | density: 0 < 14 | unique_types: 0/4 types | priority: No priority types"
+      "status": "pass",
+      "violations": 0,
+      "message": "14/10"
     },
     "vocabulary": {
       "status": "warn",
@@ -41,10 +41,9 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "2 Outline Compliance Errors",
-      "Missing required activity types: essay-response, reading, true-false"
+      "2 Outline Compliance Errors"
     ],
-    "pass_count": 2,
-    "fail_count": 2
+    "pass_count": 3,
+    "fail_count": 1
   }
 }

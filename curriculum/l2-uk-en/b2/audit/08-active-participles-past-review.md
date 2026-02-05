@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M08 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:03:26
+**Generated:** 2026-02-05 23:08:04
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,9 +43,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (86% overlap): "- Зокрема, **Правильно:** Студент, який прочитав книгу, написав есе.". Shares significant keywords with sentence at index 41.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (75% overlap): "- Зокрема, **Правильно:** Документ, який підписав директор, набув чинності.". Shares significant keywords with sentence at index 74.
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (75% overlap): "- На додачу, зокрема, **Правильно:** Студент, який прочитав книгу, написав есе.". Shares significant keywords with sentence at index 41.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 08-active-participles-past.yaml: Duplicate key 'instruction' at line 663 (first defined at line 662)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
@@ -53,10 +51,10 @@
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 3 violations (minor)
+- 2 violations (minor)
 
 ## Gates
-- **Words:** ❌ 2164/3800 (raw: 2803)
+- **Words:** ❌ 2174/3800 (raw: 2813)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -66,7 +64,7 @@
 - **Vocab:** ⚠️ 15 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 3 violations
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
 - **Richness:** ✅ 98% (grammar)
@@ -100,7 +98,7 @@
 | **Утворення форм на -лий** | ⚪️ | 397 | Skipped |
 | **Легітимні лексикалізовані форми** | ⚪️ | 444 | Skipped |
 | **Русизми та їх уникання** | ⚪️ | 165 | Skipped |
-| **Синтетичний майбутній час** | ⚪️ | 596 | Skipped |
+| **Синтетичний майбутній час** | ⚪️ | 606 | Skipped |
 | **Розпізнавання в старих текстах** | ✅ | 65 | Included in Core |
 | **Практика і підсумок** | ✅ | 162 | Included in Core |
 | **Підсумок** | ✅ | 12 | Included in Core |

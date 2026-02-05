@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M43 | **Phase:** B2.2 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:05:16
+**Generated:** 2026-02-05 23:11:56
 
 ## Configuration
 **Type:** B2-grammar
@@ -49,7 +49,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 1912/2000 (raw: 2650) (88 short)
+- **Words:** ⚠️ 1914/2000 (raw: 2652) (86 short)
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
@@ -92,5 +92,5 @@
 | **Розминка — Парні слова у складних реченнях** | ⚪️ | 266 | Skipped |
 | **Common Pairs** | ⚪️ | 841 | Skipped |
 | **Examples** | ⚪️ | 533 | Skipped |
-| **Практика — побудова складних речень** | ⚪️ | 260 | Skipped |
+| **Практика — побудова складних речень** | ⚪️ | 262 | Skipped |
 | **Підсумок** | ✅ | 12 | Included in Core |

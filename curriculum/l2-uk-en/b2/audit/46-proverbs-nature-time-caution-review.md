@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M46 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:05:18
+**Generated:** 2026-02-05 23:13:19
 
 ## Configuration
 **Type:** B2-vocab
@@ -43,12 +43,6 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Вставте прислів'я в контекст' Q9 prompt length 3 (target: 5-25)
-  - FIX: Adjust prompt length to 5-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Вставте прислів'я в контекст' Q10 prompt length 3 (target: 5-25)
-  - FIX: Adjust prompt length to 5-25 words.
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (75% overlap): "Варто зазначити: **Регістр:** Нейтральний, часто вживається в бізнес-контексті.". Shares significant keywords with sentence at index 35.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (71% overlap): "«Краще синиця в руках, ніж журавель у небі», — порадив батько.". Shares significant keywords with sentence at index 101.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (83% overlap): "**Батько:** **Сім разів відміряй, один раз відріж**.". Shares significant keywords with sentence at index 82.
@@ -57,12 +51,12 @@
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 
 ## Recommendation
-**📝 UPDATE** (severity 15/100)
+**📝 UPDATE** (severity 5/100)
 
-- 6 violations (moderate)
+- 3 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2893/2000 (raw: 3293)
+- **Words:** ✅ 2895/2000 (raw: 3295)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -72,7 +66,7 @@
 - **Vocab:** ⚠️ 17 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 6 violations
+- **Pedagogy:** ❌ 3 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (vocab))
 - **Richness:** ✅ 96% (phraseology)
@@ -101,7 +95,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 56 | Included in Core |
 | **Розминка — Природа як вчитель** | ⚪️ | 171 | Skipped |
-| **Прислів'я про природу** | ⚪️ | 1543 | Skipped |
+| **Прислів'я про природу** | ⚪️ | 1545 | Skipped |
 | **Прислів'я про час** | ⚪️ | 325 | Skipped |
 | **Прислів'я про обережність** | ⚪️ | 150 | Skipped |
 | **Практика — прислів'я у контексті** | ✅ | 636 | Included in Core |

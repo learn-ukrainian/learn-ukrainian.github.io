@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M18 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:03:38
+**Generated:** 2026-02-05 23:08:15
 
 ## Configuration
 **Type:** B2-grammar
@@ -53,7 +53,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ❌ 2094/3800 (raw: 2937)
+- **Words:** ❌ 2096/3800 (raw: 2939)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -93,7 +93,7 @@
 | **Intro/Narrative** | ✅ | 57 | Included in Core |
 | **Вступ — Науковий стиль** | ✅ | 214 | Included in Core |
 | **Лексичні особливості** | ⚪️ | 722 | Skipped |
-| **Граматичні особливості** | ⚪️ | 334 | Skipped |
+| **Граматичні особливості** | ⚪️ | 336 | Skipped |
 | **Мовне хеджування** | ⚪️ | 495 | Skipped |
 | **Цитування та посилання** | ⚪️ | 74 | Skipped |
 | **Структура наукового тексту** | ✅ | 76 | Included in Core |

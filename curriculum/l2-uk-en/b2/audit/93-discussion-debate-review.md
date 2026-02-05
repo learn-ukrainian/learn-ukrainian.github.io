@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M93 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-05 23:04:57
+**Generated:** 2026-02-05 23:09:35
 
 ## Configuration
 **Type:** B2-skills
@@ -45,7 +45,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4235/2000 (raw: 4358)
+- **Words:** ✅ 4237/2000 (raw: 4360)
 - **Activities:** ✅ 16/14
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/5 types
@@ -87,6 +87,6 @@
 | **Вираження думки** | ⚪️ | 787 | Skipped |
 | **Згода та незгода** | ⚪️ | 316 | Skipped |
 | **Аргументація** | ⚪️ | 1240 | Skipped |
-| **Формальні дебати** | ⚪️ | 778 | Skipped |
+| **Формальні дебати** | ⚪️ | 780 | Skipped |
 | **Практика** | ⚪️ | 765 | Skipped |
 | **Підсумок** | ✅ | 12 | Included in Core |

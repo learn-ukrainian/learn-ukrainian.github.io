@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M06 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:03:24
+**Generated:** 2026-02-05 23:08:02
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,7 +44,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 2137/3800 (raw: 2568)
+- **Words:** ❌ 2139/3800 (raw: 2570)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -75,7 +75,7 @@
 | cultural | 5 | 3 | 100% | 10% | 10.0% |
 | realworld | 9 | 3 | 100% | 10% | 10.0% |
 | visual | 3 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.95 | - | 95% | 5% | 4.8% |
+| paragraph_var | 0.96 | - | 96% | 5% | 4.8% |
 | questions | 47 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.0%** |
@@ -87,7 +87,7 @@
 | **Вступ — Регістр і пасив** | ✅ | 337 | Included in Core |
 | **Таблиця регістрів і форм пасиву** | ⚪️ | 846 | Skipped |
 | **Практичні сценарії — Юридичний контекст** | ✅ | 349 | Included in Core |
-| **Практичні сценарії — Науковий контекст** | ✅ | 429 | Included in Core |
+| **Практичні сценарії — Науковий контекст** | ✅ | 431 | Included in Core |
 | **Практичні сценарії — Літературний та журналістичний контекст** | ✅ | 110 | Included in Core |
 | **Практичні сценарії — Розмовний контекст** | ✅ | 0 | Included in Core |
 | **Інтегрована практика** | ⚪️ | 0 | Skipped |
