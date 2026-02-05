@@ -1,12 +1,12 @@
 # Audit Report: M52 — nataliya-kobrynska.md
-**Level:** C1-BIO | **Module:** M52 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
-**Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-04 21:18:22
+**Level:** C1-BIO | **Module:** M52 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3800
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 17:39:09
 
 ## Configuration
 **Type:** C1-biography
-**Word Target:** 4000 words
+**Word Target:** 3800 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
@@ -35,12 +35,12 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 3527/4000 (raw: 3567)
+- **Words:** ✅ 3845/3800 (raw: 3885)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/5
+- **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 24/24
 - **Structure:** ✅ Valid Structure
@@ -48,45 +48,37 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
-- **Richness:** ❌ 73% < 95% min (biography)
+- **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 9/10 (High)
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 73% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 1 | 4 | 25% | 19% | 4.8% |
-| engagement | 5 | 6 | 83% | 14% | 11.9% |
-| quotes | 1 | 3 | 33% | 14% | 4.7% |
+| primary_sources | 4 | 4 | 100% | 19% | 19.0% |
+| engagement | 8 | 6 | 100% | 14% | 14.3% |
+| quotes | 4 | 3 | 100% | 14% | 14.3% |
 | cultural | 8 | 4 | 100% | 10% | 9.5% |
-| visual | 7 | 4 | 100% | 10% | 9.5% |
+| visual | 11 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 11 | 2 | 100% | 10% | 9.5% |
-| variety | 0.98 | - | 98% | 5% | 4.7% |
+| variety | 0.99 | - | 99% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 9 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **73.6%** |
-
-### Dryness Flags & Fixes
-- ❌ **NO_QUOTES**
-  - FIX:
-    Add 2+ direct quotes from the subject. Use this format:
-    
-    > «[Exact quote from the person]»
-    > — *[Person name], [context/year]*
+| questions | 12 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 39 | Included in Core |
 | **Вступ — Народження українського фемінізму** | ✅ | 388 | Included in Core |
-| **Дитинство та освіта (1855-1875)** | ⚪️ | 444 | Skipped |
+| **Дитинство та освіта (1855-1875)** | ⚪️ | 525 | Skipped |
 | **Шлюб та переломний момент (1875-1883)** | ⚪️ | 484 | Skipped |
-| **«Перший вінок» та жіночий рух (1884-1893)** | ⚪️ | 679 | Skipped |
-| **Літературна творчість** | ⚪️ | 848 | Skipped |
-| **Останні роки та спадщина (1893-1920)** | ⚪️ | 539 | Skipped |
-| **Summary** | ✅ | 106 | Included in Core |
+| **«Перший вінок» та жіночий рух (1884-1893)** | ⚪️ | 711 | Skipped |
+| **Літературна творчість** | ⚪️ | 880 | Skipped |
+| **Останні роки та спадщина (1893-1920)** | ⚪️ | 665 | Skipped |
+| **Підсумок** | ✅ | 153 | Included in Core |

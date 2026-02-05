@@ -3,8 +3,9 @@ level: C1-BIO
 slug: mykhailo-drahomanov
 version: '2.0'
 id: c1-bio-046
+transliteration: none
 naturalness:
-  score: 1
-  status: PENDING
+  score: 9
+  status: PASS
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-05'

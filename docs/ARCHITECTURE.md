@@ -524,11 +524,11 @@ npm run quality:finalize l2-uk-en b1 50
 
 For the complete end-to-end workflow including all validation systems:
 
-**👤 Human users:** **`docs/HUMAN-WORKFLOW-B1-PLUS.md`** - What commands YOU run
+**👤 Human users:** See **`docs/DEVELOPER-GUIDE.md`** - Human workflow guide
 
-**🤖 AI agents:** **`docs/B1-PLUS-MODULE-WORKFLOW.md`** - Comprehensive reference
+**🤖 AI agents:** See **`CLAUDE.md`** - Module workflow section (lines 118-153)
 
-**Human guide** covers:
+**Workflow covers:**
 - What commands you execute (copy-paste ready)
 - What Claude does automatically
 - Decision tree (when to run what)
@@ -693,9 +693,9 @@ See `vibe/docs/CO-VIBE-INTEGRATION.md` for the full spec.
 
 ### Workflows & Guides
 
-- **`docs/B1-PLUS-MODULE-WORKFLOW.md`** - Complete B1+ module creation & validation workflow
-- **`docs/STAGED-MODULE-CREATION.md`** - 4-stage creation pipeline overview
-- **`docs/MODULE-AUDIT-GUIDE.md`** - Legacy audit guide (deprecated, use B1+ workflow)
+- **`CLAUDE.md`** - Module workflow (lines 118-153) - Current 9-phase workflow
+- **`docs/RESEARCH-FIRST-WORKFLOW.md`** - Research-first workflow for seminar tracks
+- **`docs/MODULE-AUDIT-GUIDE.md`** - Audit guide
 
 ### Quality Validation
 

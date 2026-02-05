@@ -2,25 +2,25 @@
   "module": "mykhailo-drahomanov",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:39:55.992836Z",
+  "last_audit": "2026-02-05T17:33:28.359980Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-04T22:30:45.360445Z",
-    "meta": "2026-02-02T23:23:00.041960Z",
-    "activities": "2026-01-27T15:34:56.174218Z",
-    "vocabulary": null,
+    "md": "2026-02-05T17:33:23.973698Z",
+    "meta": "2026-02-05T17:31:35.658387Z",
+    "activities": "2026-02-05T17:31:03.817760Z",
+    "vocabulary": "2026-02-05T17:27:14.714650Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "2082/4000 (raw: 2340) | pedagogy: 1 violations"
+      "violations": 1,
+      "message": "3394/4000 (raw: 3509)"
     },
     "activities": {
       "status": "pass",
@@ -28,23 +28,22 @@
       "message": "6/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 24 (soft target)"
+      "message": "25/24"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1/10 (PENDING) - Naturalness check required"
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
     }
   },
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "6 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
+      "3 Outline Compliance Errors"
     ],
-    "pass_count": 1,
-    "fail_count": 3
+    "pass_count": 4,
+    "fail_count": 1
   }
 }

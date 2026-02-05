@@ -1,17 +1,17 @@
 # Audit Report: M50 — mariya-zankovetska.md
-**Level:** C1-BIO | **Module:** M50 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
-**Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 12:39:58
+**Level:** C1-BIO | **Module:** M50 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4300
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 17:08:18
 
 ## Configuration
 **Type:** C1-biography
-**Word Target:** 4000 words
+**Word Target:** 4300 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
 **Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** critical-analysis, essay-response, quiz, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥24 words
@@ -32,16 +32,16 @@
 - Total activities: 7 (target: 3-9) ✅
 - Unique types: 6 (minimum: 3) ✅
 - Priority types used: 5/6 (comparative-study, critical-analysis, essay-response, quiz, reading) ✅
-- Required types used: 4/4 (critical-analysis, essay-response, quiz, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4354/4000 (raw: 4391)
+- **Words:** ✅ 4507/4300 (raw: 4544)
 - **Activities:** ✅ 7/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 10/5
+- **Engagement:** ✅ 12/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 27/24
 - **Structure:** ✅ Valid Structure
@@ -49,28 +49,28 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (7 activities)
 - **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
-- **Richness:** ❌ 88% < 95% min (biography)
+- **Richness:** ✅ 98% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 9/10 (High)
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 88% (minimum: 95%)
+**Score:** 98% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 3 | 4 | 75% | 19% | 14.3% |
-| engagement | 8 | 6 | 100% | 14% | 14.3% |
-| quotes | 2 | 3 | 67% | 14% | 9.6% |
+| primary_sources | 4 | 4 | 100% | 19% | 19.0% |
+| engagement | 10 | 6 | 100% | 14% | 14.3% |
+| quotes | 3 | 3 | 100% | 14% | 14.3% |
 | cultural | 9 | 4 | 100% | 10% | 9.5% |
-| visual | 11 | 4 | 100% | 10% | 9.5% |
+| visual | 13 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
 | variety | 0.99 | - | 99% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 2 | 3 | 67% | 5% | 3.2% |
-| **TOTAL** | | | | | **88.9%** |
+| **TOTAL** | | | | | **98.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -78,8 +78,8 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Вступ — Королева українського театру** | ✅ | 622 | Included in Core |
 | **Дитинство та юність (1854-1875)** | ⚪️ | 709 | Skipped |
-| **Початок кар'єри (1875-1885)** | ⚪️ | 694 | Skipped |
-| **Зоряні роки (1885-1900)** | ⚪️ | 772 | Skipped |
+| **Початок кар'єри (1875-1885)** | ⚪️ | 739 | Skipped |
+| **Зоряні роки (1885-1900)** | ⚪️ | 820 | Skipped |
 | **Пізній період та УНР (1900-1920)** | ⚪️ | 647 | Skipped |
 | **Спадщина та пам'ять** | ⚪️ | 783 | Skipped |
-| **Підсумок** | ✅ | 127 | Included in Core |
+| **Підсумок** | ✅ | 187 | Included in Core |

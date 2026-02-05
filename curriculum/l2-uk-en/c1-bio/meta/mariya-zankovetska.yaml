@@ -1,37 +1,57 @@
-id: c1-bio-050
-slug: mariya-zankovetska
-title: 'Марія Заньковецька: Перша леді сцени'
-type: biography
+module: mariya-zankovetska
 level: C1-BIO
+slug: mariya-zankovetska
+version: '2.0'
+id: c1-bio-048
+title: "Марія Заньковецька: Перша леді сцени"
+naturalness:
+  score: 10
+  status: PASS
+duration: 120
 transliteration: none
 tags:
-- theatre
-- biography
-- culture
 - history
-- women_in_history
-word_target: 4000
-naturalness:
-  status: PASS
-  score: 9
-  validation: Authentic Ukrainian biography with correct terminology
-engagement_score: 10
+- biography
+- theatre
+- culture
+- women
 content_outline:
-- section: Вступ — Королева українського театру
+- section: "Вступ — Королева українського театру"
   words: 400
-- section: Дитинство та юність (1854-1875)
+  points:
+  - Заньковецька як символ нації
+  - Народна артистка
+- section: "Дитинство та юність (1854-1875)"
   words: 600
-- section: Початок кар'єри (1875-1885)
+  points:
+  - Дворянське походження
+  - Мрія про сцену vs родина
+- section: "Початок кар'єри (1875-1885)"
   words: 700
-- section: Зоряні роки (1885-1900)
+  points:
+  - Дебют у Єлисаветграді
+  - Роль Наталки Полтавки
+- section: "Зоряні роки (1885-1900)"
   words: 800
-- section: Пізній період та УНР (1900-1920)
+  points:
+  - Тріумф у Петербурзі
+  - Відмова царю
+  - Стосунки з Садовським
+- section: "Пізній період та УНР (1900-1920)"
   words: 700
-- section: Спадщина та пам'ять
+  points:
+  - Стаціонарний театр
+  - Підтримка УНР
+- section: "Спадщина та пам'ять"
   words: 800
-activity_hints:
-- type: reading
-- type: essay-response
-- type: critical-analysis
-- type: quiz
-timestamp: 2026-02-04T20:25:00Z
+  points:
+  - Театр ім. Заньковецької
+  - Значення для культури
+- section: Підсумок
+  words: 300
+  points:
+  - Жертва заради мистецтва
+word_target: 4300
+vital_status: deceased
+build:
+  last_modified: '2026-02-05'

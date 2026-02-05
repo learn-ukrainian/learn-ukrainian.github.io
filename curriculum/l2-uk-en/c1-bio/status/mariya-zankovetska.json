@@ -2,11 +2,11 @@
   "module": "mariya-zankovetska",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:39:58.332704Z",
+  "last_audit": "2026-02-05T17:08:18.235576Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-04T22:30:45.354325Z",
-    "meta": "2026-02-04T21:51:18.136300Z",
+    "md": "2026-02-05T17:07:55.154926Z",
+    "meta": "2026-02-05T17:02:38.482056Z",
     "activities": "2026-02-04T20:50:56.219932Z",
     "vocabulary": "2026-02-04T20:46:22.197132Z",
     "plan": null
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "4354/4000 (raw: 4391) | richness: 88% < 95% min (biography)"
+      "status": "pass",
+      "violations": 0,
+      "message": "4507/4300 (raw: 4544)"
     },
     "activities": {
       "status": "pass",
@@ -35,13 +35,13 @@
     "naturalness": {
       "status": "pass",
       "violations": 0,
-      "message": "9/10 (High)"
+      "message": "10/10 (High)"
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 1
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

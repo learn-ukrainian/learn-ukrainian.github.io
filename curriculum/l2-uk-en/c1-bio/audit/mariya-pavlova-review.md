@@ -1,17 +1,17 @@
 # Audit Report: M51 — mariya-pavlova.md
-**Level:** C1-BIO | **Module:** M51 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
-**Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 12:39:58
+**Level:** C1-BIO | **Module:** M51 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4300
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 17:32:29
 
 ## Configuration
 **Type:** C1-biography
-**Word Target:** 4000 words
+**Word Target:** 4300 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
 **Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** critical-analysis, essay-response, quiz, reading, true-false
+**Required Types:** essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥24 words
@@ -33,16 +33,16 @@
 - Total activities: 8 (target: 3-9) ✅
 - Unique types: 6 (minimum: 3) ✅
 - Priority types used: 5/6 (comparative-study, critical-analysis, essay-response, quiz, reading) ✅
-- Required types used: 5/5 (critical-analysis, essay-response, quiz, reading, true-false) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4135/4000 (raw: 4174)
+- **Words:** ✅ 4666/4300 (raw: 4709)
 - **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/5
+- **Engagement:** ✅ 15/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 26/24
 - **Structure:** ✅ Valid Structure
@@ -50,37 +50,37 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (8 activities)
 - **Immersion:** 🇺🇦 99.4% (target 95-100% (biography))
-- **Richness:** ❌ 91% < 95% min (biography)
+- **Richness:** ✅ 96% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 9/10 (High)
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 91% (minimum: 95%)
+**Score:** 96% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 4 | 4 | 100% | 19% | 19.0% |
-| engagement | 8 | 6 | 100% | 14% | 14.3% |
-| quotes | 2 | 3 | 67% | 14% | 9.6% |
-| cultural | 4 | 4 | 100% | 10% | 9.5% |
-| visual | 9 | 4 | 100% | 10% | 9.5% |
+| primary_sources | 6 | 4 | 100% | 19% | 19.0% |
+| engagement | 13 | 6 | 100% | 14% | 14.3% |
+| quotes | 4 | 3 | 100% | 14% | 14.3% |
+| cultural | 5 | 4 | 100% | 10% | 9.5% |
+| visual | 16 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
-| legacy | 13 | 2 | 100% | 10% | 9.5% |
-| variety | 0.97 | - | 97% | 5% | 4.6% |
+| legacy | 15 | 2 | 100% | 10% | 9.5% |
+| variety | 0.96 | - | 96% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 1 | 3 | 33% | 5% | 1.6% |
-| **TOTAL** | | | | | **92.0%** |
+| **TOTAL** | | | | | **96.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Вступ — Жінка, що читала кістки** | ✅ | 380 | Included in Core |
-| **Ранні роки та освіта (1854-1880)** | ⚪️ | 800 | Skipped |
-| **Наукова кар'єра в Парижі (1880-1886)** | ⚪️ | 659 | Skipped |
-| **Московський період (1886-1920)** | ⚪️ | 924 | Skipped |
-| **Наукові досягнення** | ⚪️ | 639 | Skipped |
-| **Останні роки та спадщина (1920-1938)** | ⚪️ | 604 | Skipped |
-| **Підсумок** | ✅ | 129 | Included in Core |
+| **Вступ — Жінка, що читала кістки** | ✅ | 417 | Included in Core |
+| **Ранні роки та освіта (1854-1880)** | ⚪️ | 837 | Skipped |
+| **Наукова кар'єра в Парижі (1880-1886)** | ⚪️ | 715 | Skipped |
+| **Московський період (1886-1920)** | ⚪️ | 1020 | Skipped |
+| **Наукові досягнення** | ⚪️ | 774 | Skipped |
+| **Останні роки та спадщина (1920-1938)** | ⚪️ | 730 | Skipped |
+| **Підсумок** | ✅ | 173 | Included in Core |
