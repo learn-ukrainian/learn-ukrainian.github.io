@@ -278,6 +278,47 @@
 
 ---
 
+## 2026-02-05 - Research-First Refinements (Gemini Insights)
+
+**Observation**: Gemini identified productive tensions and solutions in research-first workflow.
+
+**Why Research-First is Essential:**
+1. **Hallucination Shield**: Anchors content in documented facts (e.g., "24,000 ruble offer to Zankovetska")
+2. **Decolonization Strategy**: Architect [!myth-buster] callouts into structure upfront
+3. **Linguistic Richness**: Primary source quotes provide authentic "voice" for C1 learners
+
+**Tensions Identified:**
+1. **Depth vs. Context Window**: Exhaustive research for 5 modules hits token limits before writing
+2. **Writing Impulse**: AI default is to generate immediately after research
+3. **Search Specificity**: Generic searches yield SEO-heavy sites, not scholarly sources
+
+**Solutions (Gemini):**
+
+**1. Domain Sniping (Search Quality)**
+- Bad query: "Mariya Pavlova biography" (too broad, risks Russian sources)
+- Sniper query: `Марія Павлова біографія site:esu.com.ua OR site:history.org.ua OR site:zbruc.eu`
+- Primary sources: `Марія Павлова листи спогади site:elib.nlu.org.ua`
+
+**Trusted Ukrainian domains:**
+- esu.com.ua (Encyclopedia of Modern Ukraine)
+- history.org.ua (Institute of History)
+- zbruc.eu (Zbruc cultural portal)
+- elib.nlu.org.ua (National Library Archives)
+
+**2. Optimal Batch Size: 2-3 modules**
+- 1 module: Too slow, high overhead
+- 5 modules: Context window full, risk cross-contamination or shortened content
+- 2-3 modules: Sweet spot for holding research notes while writing 4000+ words each
+
+**Rule**:
+- Use domain-specific searches for all seminar research
+- Batch 2-3 modules maximum for research-first workflow
+- Never search "open web" - always use trusted Ukrainian academic sources
+
+**Applied**: 2026-02-05 (C1-BIO M49-50 batch using domain sniping)
+
+---
+
 ## Template for New Entries
 
 ```markdown

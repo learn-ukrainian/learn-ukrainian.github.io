@@ -48,6 +48,78 @@
 
 ---
 
+## 🎯 Domain Sniping Strategy (Search Quality)
+
+**Problem**: Generic web searches return SEO-heavy sites, Wikipedia summaries, or Russian sources instead of scholarly Ukrainian content.
+
+**Solution**: Use site-specific searches targeting trusted Ukrainian academic sources.
+
+### Trusted Ukrainian Domains
+
+| Domain | Purpose | Example Query |
+|--------|---------|---------------|
+| `esu.com.ua` | Encyclopedia of Modern Ukraine | `Марія Павлова біографія site:esu.com.ua` |
+| `history.org.ua` | Institute of History | `Данило Апостол site:history.org.ua` |
+| `zbruc.eu` | Zbruc cultural portal | `Леся Українка site:zbruc.eu` |
+| `elib.nlu.org.ua` | National Library Archives | `Марія Занковецька листи site:elib.nlu.org.ua` |
+| `wikipedia.org` | Ukrainian Wikipedia only | `site:uk.wikipedia.org NOT site:ru.wikipedia.org` |
+
+### Query Engineering Examples
+
+❌ **Bad Query** (too broad):
+```
+Mariya Pavlova biography
+→ Returns generic results, Russian sources, SEO spam
+```
+
+✅ **Sniper Query** (domain-filtered):
+```
+Марія Павлова біографія site:esu.com.ua OR site:history.org.ua OR site:zbruc.eu
+→ Returns Encyclopedia entries, Institute articles, cultural portals
+```
+
+✅ **Primary Source Query** (archival):
+```
+Марія Павлова листи спогади site:elib.nlu.org.ua
+→ Returns letters, memoirs, archival documents
+```
+
+### Why This Matters
+
+1. **Hallucination Shield**: Specific facts (e.g., "24,000 ruble offer to Zankovetska") vs. generic summaries
+2. **Decolonization**: Ukrainian scholarly sources vs. Russian imperial narratives
+3. **C1-Grade Authority**: Primary sources and academic research vs. Wikipedia paraphrasing
+
+**Rule**: Always use domain-specific searches. Never search "open web" for historical/biographical content.
+
+---
+
+## 📦 Optimal Batch Size
+
+**Goldilocks Zone: 2-3 modules per batch**
+
+### Why Not More or Less?
+
+| Batch Size | Result |
+|------------|--------|
+| **1 module** | ❌ Too slow - high overhead for single module |
+| **2-3 modules** | ✅ Sweet spot - full research notes in active memory, 4000+ words each |
+| **5+ modules** | ❌ Context window full - risk cross-contamination, shortened content, hallucination from module #1 into #5 |
+
+### Context Window Management
+
+**Problem**: Researching 5 complex biographies generates massive internal state. By module #5, token limits force either:
+- Shortened content (fails word targets)
+- Cross-contamination (facts from one figure bleed into another)
+- Rushed writing (loses depth)
+
+**Solution**: Batch 2-3 modules maximum. This allows:
+- Holding full research notes while writing
+- 4000+ unique words per module
+- Rigorous self-audit without rushing
+
+---
+
 ## CRITICAL: Ukrainian-Only Research Policy
 
 > **All research MUST be conducted in Ukrainian using Ukrainian sources.**
