@@ -2,13 +2,13 @@
   "module": "69-integration-practice",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:40:04.787359Z",
+  "last_audit": "2026-02-05T22:50:31.077929Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:18:57.564650Z",
-    "meta": "2026-02-05T22:07:11.271166Z",
-    "activities": "2026-02-05T22:02:48.098968Z",
-    "vocabulary": "2026-02-05T21:52:08.917796Z",
+    "md": "2026-02-05T22:46:26.691646Z",
+    "meta": "2026-02-05T22:46:26.734646Z",
+    "activities": "2026-02-05T22:46:26.717646Z",
+    "vocabulary": "2026-02-05T22:46:26.740646Z",
     "plan": null
   },
   "gates": {

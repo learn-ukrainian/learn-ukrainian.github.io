@@ -2,13 +2,13 @@
   "module": "72-tekhnolohii-ta-shi",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T22:40:07.910771Z",
+  "last_audit": "2026-02-05T22:50:34.170589Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:14:40.453441Z",
-    "meta": "2026-02-05T22:07:11.285166Z",
-    "activities": "2026-02-05T22:05:17.043392Z",
-    "vocabulary": "2026-02-05T21:52:08.917796Z",
+    "md": "2026-02-05T22:46:26.692646Z",
+    "meta": "2026-02-05T22:46:26.734646Z",
+    "activities": "2026-02-05T22:46:26.717646Z",
+    "vocabulary": "2026-02-05T22:46:26.740646Z",
     "plan": null
   },
   "gates": {

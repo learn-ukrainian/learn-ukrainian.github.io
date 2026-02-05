@@ -2,13 +2,13 @@
   "module": "53-idioms-animals-ii",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T22:39:48.029029Z",
+  "last_audit": "2026-02-05T22:50:14.722867Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:18:57.559650Z",
-    "meta": "2026-02-05T22:13:39.043083Z",
-    "activities": "2026-02-05T22:02:48.027969Z",
-    "vocabulary": "2026-02-05T21:52:08.917796Z",
+    "md": "2026-02-05T22:46:26.689646Z",
+    "meta": "2026-02-05T22:46:26.733646Z",
+    "activities": "2026-02-05T22:46:26.713646Z",
+    "vocabulary": "2026-02-05T22:46:26.740646Z",
     "plan": null
   },
   "gates": {

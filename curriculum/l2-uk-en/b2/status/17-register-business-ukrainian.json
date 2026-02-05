@@ -2,13 +2,13 @@
   "module": "17-register-business-ukrainian",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:39:08.729090Z",
+  "last_audit": "2026-02-05T22:49:35.901050Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:18:57.548650Z",
-    "meta": "2026-02-05T21:57:51.488195Z",
-    "activities": "2026-02-05T22:02:47.844971Z",
-    "vocabulary": "2026-02-05T21:52:08.915796Z",
+    "md": "2026-02-05T22:46:26.683646Z",
+    "meta": "2026-02-05T22:46:26.732646Z",
+    "activities": "2026-02-05T22:46:26.703646Z",
+    "vocabulary": "2026-02-05T22:46:26.738646Z",
     "plan": null
   },
   "gates": {

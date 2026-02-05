@@ -2,13 +2,13 @@
   "module": "86-professional-email-advanced",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T22:40:22.821488Z",
+  "last_audit": "2026-02-05T22:50:48.813182Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:18:57.567650Z",
-    "meta": "2026-02-05T22:07:21.902051Z",
-    "activities": "2026-02-05T22:12:32.310776Z",
-    "vocabulary": "2026-02-05T21:52:08.918796Z",
+    "md": "2026-02-05T22:46:26.695646Z",
+    "meta": "2026-02-05T22:46:26.734646Z",
+    "activities": "2026-02-05T22:46:26.721646Z",
+    "vocabulary": "2026-02-05T22:46:26.741646Z",
     "plan": null
   },
   "gates": {

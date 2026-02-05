@@ -2,13 +2,13 @@
   "module": "33-word-formation-person-suffixes",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:39:26.516421Z",
+  "last_audit": "2026-02-05T22:49:53.475328Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:18:57.553650Z",
-    "meta": "2026-02-05T21:52:08.909796Z",
-    "activities": "2026-02-05T22:02:47.931970Z",
-    "vocabulary": "2026-02-05T21:52:08.916796Z",
+    "md": "2026-02-05T22:46:26.686646Z",
+    "meta": "2026-02-05T22:46:26.733646Z",
+    "activities": "2026-02-05T22:46:26.707646Z",
+    "vocabulary": "2026-02-05T22:46:26.739646Z",
     "plan": null
   },
   "gates": {

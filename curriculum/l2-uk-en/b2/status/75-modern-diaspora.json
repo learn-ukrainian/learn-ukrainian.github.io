@@ -2,13 +2,13 @@
   "module": "75-modern-diaspora",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T22:40:10.992048Z",
+  "last_audit": "2026-02-05T22:50:37.232085Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:14:40.455441Z",
-    "meta": "2026-02-05T22:07:11.298166Z",
-    "activities": "2026-02-05T22:02:48.128968Z",
-    "vocabulary": "2026-02-05T21:52:08.917796Z",
+    "md": "2026-02-05T22:46:26.692646Z",
+    "meta": "2026-02-05T22:46:26.734646Z",
+    "activities": "2026-02-05T22:46:26.718646Z",
+    "vocabulary": "2026-02-05T22:46:26.740646Z",
     "plan": null
   },
   "gates": {

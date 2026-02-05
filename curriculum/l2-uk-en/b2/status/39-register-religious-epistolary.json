@@ -2,13 +2,13 @@
   "module": "39-register-religious-epistolary",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:39:33.205289Z",
+  "last_audit": "2026-02-05T22:50:00.081196Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:18:57.555650Z",
-    "meta": "2026-02-05T21:52:08.910796Z",
-    "activities": "2026-02-05T22:02:47.960970Z",
-    "vocabulary": "2026-02-05T21:52:08.916796Z",
+    "md": "2026-02-05T22:46:26.687646Z",
+    "meta": "2026-02-05T22:46:26.733646Z",
+    "activities": "2026-02-05T22:46:26.709646Z",
+    "vocabulary": "2026-02-05T22:46:26.739646Z",
     "plan": null
   },
   "gates": {

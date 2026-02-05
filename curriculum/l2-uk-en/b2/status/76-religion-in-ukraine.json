@@ -2,13 +2,13 @@
   "module": "76-religion-in-ukraine",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T22:40:12.108154Z",
+  "last_audit": "2026-02-05T22:50:38.311442Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:14:40.455441Z",
-    "meta": "2026-02-05T22:07:11.303165Z",
-    "activities": "2026-02-05T22:02:48.134968Z",
-    "vocabulary": "2026-02-05T21:52:08.918796Z",
+    "md": "2026-02-05T22:46:26.693646Z",
+    "meta": "2026-02-05T22:46:26.734646Z",
+    "activities": "2026-02-05T22:46:26.718646Z",
+    "vocabulary": "2026-02-05T22:46:26.741646Z",
     "plan": null
   },
   "gates": {

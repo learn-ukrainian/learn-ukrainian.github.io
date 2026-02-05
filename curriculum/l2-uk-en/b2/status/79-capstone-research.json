@@ -2,13 +2,13 @@
   "module": "79-capstone-research",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T22:40:15.255777Z",
+  "last_audit": "2026-02-05T22:50:41.388114Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:37:07.142915Z",
-    "meta": "2026-02-05T22:07:11.316165Z",
-    "activities": "2026-02-05T22:12:32.307776Z",
-    "vocabulary": "2026-02-05T21:52:08.918796Z",
+    "md": "2026-02-05T22:46:26.693646Z",
+    "meta": "2026-02-05T22:46:26.734646Z",
+    "activities": "2026-02-05T22:46:26.719646Z",
+    "vocabulary": "2026-02-05T22:46:26.741646Z",
     "plan": null
   },
   "gates": {

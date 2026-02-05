@@ -2,13 +2,13 @@
   "module": "83-b2-pidsumkovyy-ohlyad",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T22:40:19.405402Z",
+  "last_audit": "2026-02-05T22:50:45.431362Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:37:07.147915Z",
-    "meta": "2026-02-05T22:07:11.334165Z",
-    "activities": "2026-02-05T22:02:48.168967Z",
-    "vocabulary": "2026-02-05T21:52:08.918796Z",
+    "md": "2026-02-05T22:46:26.694646Z",
+    "meta": "2026-02-05T22:46:26.734646Z",
+    "activities": "2026-02-05T22:46:26.720646Z",
+    "vocabulary": "2026-02-05T22:46:26.741646Z",
     "plan": null
   },
   "gates": {
