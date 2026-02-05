@@ -4,7 +4,8 @@ slug: 15-register-introduction
 version: '1.0'
 id: b2-15
 naturalness:
-  score: 1
-  status: PENDING
+  score: 8
+  status: PASS
+transliteration: none
 build:
   last_modified: '2026-01-26'

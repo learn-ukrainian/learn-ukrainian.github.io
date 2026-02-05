@@ -4,7 +4,8 @@ slug: 09-participles-vs-relative-clauses
 version: '1.0'
 id: b2-09
 naturalness:
-  score: 1
-  status: PENDING
+  score: 8
+  status: PASS
+transliteration: none
 build:
   last_modified: '2026-01-26'

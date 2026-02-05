@@ -1,8 +1,8 @@
 # Audit Report: M15 — 15-register-introduction.md
 **Level:** B2 | **Module:** M15 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
-**Naturalness:** 1/10 (PENDING)
+**Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:11
+**Generated:** 2026-02-05 21:56:34
 
 ## Configuration
 **Type:** B2-grammar
@@ -42,8 +42,17 @@
 - Required types used: 5/6 (essay-response, fill-in, group-sort, match-up, quiz) ❌
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[SECTION_ORDER]** Content section '## Практика і підсумок' appears after end section '# Підсумок'
+  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
-- **Words:** ❌ 3120/3800 (raw: 3931)
+- **Words:** ❌ 3120/3800 (raw: 3928)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -53,12 +62,12 @@
 - **Vocab:** ⚠️ 14 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
 - **Richness:** ❌ 74% < 95% min (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
 **Score:** 74% (minimum: 95%)
@@ -74,8 +83,8 @@
 | visual | 14 | 4 | 100% | 10% | 10.0% |
 | variety | 0.97 | - | 97% | 5% | 4.9% |
 | cultural | 3 | - | 100% | 5% | 5.0% |
-| paragraph_var | 0.94 | - | 94% | 5% | 4.7% |
-| **TOTAL** | | | | | **74.5%** |
+| paragraph_var | 0.95 | - | 95% | 5% | 4.8% |
+| **TOTAL** | | | | | **74.6%** |
 
 ### Dryness Flags & Fixes
 - ❌ **NO_EXEMPLAR_TEXTS**
@@ -91,15 +100,11 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 68 | Included in Core |
-| **Вступи** | ✅ | 303 | Included in Core |
-| **Пояснення** | ⚪️ | 678 | Skipped |
-| **Милозвучність** | ⚪️ | 221 | Skipped |
-| **Як визначити стиль?** | ⚪️ | 126 | Skipped |
-| **Практика** | ⚪️ | 314 | Skipped |
-| **Діалоги** | ✅ | 425 | Included in Core |
-| **Трансформації** | ⚪️ | 719 | Skipped |
+| **Вступ — Що таке функціональний стиль?** | ✅ | 303 | Included in Core |
+| **Розмовний стиль** | ⚪️ | 899 | Skipped |
+| **Художній стиль** | ⚪️ | 126 | Skipped |
+| **Науковий стиль** | ⚪️ | 739 | Skipped |
+| **Офіційно-діловий стиль** | ⚪️ | 719 | Skipped |
 | **Підсумок** | ✅ | 0 | Included in Core |
-| **Що ми вивчили** | ⚪️ | 70 | Skipped |
-| **Самоперевірка** | ⚪️ | 58 | Skipped |
-| **Наступні кроки** | ⚪️ | 28 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Публіцистичний стиль** | ⚪️ | 128 | Skipped |
+| **Практика і підсумок** | ✅ | 138 | Included in Core |

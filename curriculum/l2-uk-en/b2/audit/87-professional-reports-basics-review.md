@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M87 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:19
+**Generated:** 2026-02-05 21:56:36
 
 ## Configuration
 **Type:** B2-skills
@@ -43,13 +43,15 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+- **[HEADING_LEVEL]** Main section 'Підсумок' uses H2 (##) but spec requires H1 (#)
+  - FIX: Change '## Підсумок' to '# Підсумок' for top-level TOC compliance
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'звіт для...'.
   - FIX: Vary sentence structure.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 
 ## Gates
 - **Words:** ✅ 4554/1750 (raw: 4957)
@@ -57,12 +59,12 @@
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 10/5 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/6
+- **Engagement:** ✅ 8/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 27/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ✅ Content-heavy OK (14 activities)
 - **Immersion:** 🇺🇦 98.3% (target 90-100% (skills))
 - **Richness:** ✅ 98% (skills)
@@ -82,18 +84,16 @@
 | cultural | 3 | - | 100% | 12% | 12.2% |
 | realworld | 10 | 3 | 100% | 12% | 12.2% |
 | visual | 4 | 2 | 100% | 6% | 6.1% |
-| paragraph_var | 0.80 | - | 80% | 6% | 4.9% |
-| questions | 19 | 4 | 100% | 6% | 6.1% |
-| **TOTAL** | | | | | **98.4%** |
+| paragraph_var | 0.84 | - | 84% | 6% | 5.1% |
+| questions | 18 | 4 | 100% | 6% | 6.1% |
+| **TOTAL** | | | | | **98.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 99 | Included in Core |
-| **Професійні звіти: Основи** | ⚪️ | 40 | Skipped |
+| **Intro/Narrative** | ✅ | 139 | Included in Core |
 | **Вступ** | ✅ | 440 | Included in Core |
 | **Імерсивна розповідь** | ⚪️ | 2153 | Skipped |
 | **Аналіз** | ✅ | 1124 | Included in Core |
-| **Граматика** | ⚪️ | 486 | Skipped |
-| **Підсумок** | ✅ | 178 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 34 | Skipped |
+| **Граматика в контексті** | ✅ | 486 | Included in Core |
+| **Підсумок** | ✅ | 34 | Included in Core |

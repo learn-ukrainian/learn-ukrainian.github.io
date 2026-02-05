@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M50 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:49
+**Generated:** 2026-02-05 21:56:35
 
 ## Configuration
 **Type:** B2-vocab
@@ -44,7 +44,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 1867/2000 (raw: 2276)
+- **Words:** ❌ 1867/2000 (raw: 2258)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -75,21 +75,15 @@
 | paragraph_var | 0.84 | - | 84% | 8% | 7.0% |
 | examples | 57 | - | 100% | 8% | 8.3% |
 | realworld | 1 | - | 100% | 8% | 8.3% |
-| questions | 18 | - | 100% | 8% | 8.3% |
+| questions | 17 | - | 100% | 8% | 8.3% |
 | **TOTAL** | | | | | **98.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 56 | Included in Core |
-| **Контекст** | ✅ | 41 | Included in Core |
-| **Фразеологізми** | ⚪️ | 326 | Skipped |
-| **Культурний код: Тіло як дзеркало душі** | ✅ | 209 | Included in Core |
-| **Вживання у контексті** | ✅ | 462 | Included in Core |
-| **Помилки у вживанні** | ✅ | 170 | Included in Core |
-| **Етимологія та символізм соматизмів** | ⚪️ | 167 | Skipped |
-| **Тематична класифікація** | ⚪️ | 0 | Skipped |
-| **Порівняння з іншими мовами** | ⚪️ | 112 | Skipped |
-| **Міні-діалоги для практики** | ✅ | 113 | Included in Core |
-| **Підсумок** | ✅ | 101 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Руки та ноги в мовленні** | ⚪️ | 367 | Skipped |
+| **Фразеологізми з "рука"** | ⚪️ | 841 | Skipped |
+| **Фразеологізми з "нога"** | ⚪️ | 167 | Skipped |
+| **Практика — вирази в розповіді** | ⚪️ | 225 | Skipped |
+| **Підсумок** | ✅ | 211 | Included in Core |
