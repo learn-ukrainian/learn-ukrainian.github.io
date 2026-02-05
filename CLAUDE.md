@@ -704,8 +704,22 @@ Database: `.mcp/servers/message-broker/messages.db`
 /task update #N "Progress"     # Add progress comment
 /task close #N                 # Close with summary
 /task list                     # Show active tasks
-/task handoff #N gemini "msg"  # Hand to Gemini for review
+/task handoff #N gemini "assigned"  # Hand to Gemini (SHORT msg only!)
 ```
+
+### CRITICAL: Handoff Pattern
+
+**Issue is source of truth. Message should be SHORT (issue reference only).**
+
+```
+✅ CORRECT: /task handoff #506 gemini "assigned"
+   → Gemini reads issue for details, checks configs himself
+
+❌ WRONG: /task handoff #506 gemini "Process 19 modules, word target 3500..."
+   → Duplicates issue content, errors propagate
+```
+
+**Validation:** If message > 200 chars, put details in issue instead.
 
 ### Full Integration
 

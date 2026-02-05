@@ -1,8 +1,8 @@
 # Audit Report: M24 — ivan-vyhovskyi.md
 **Level:** C1-BIO | **Module:** M24 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4300
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 00:47:14
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 10:18:35
 
 ## Configuration
 **Type:** C1-biography
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 1988/4300 (raw: 2086)
+- **Words:** ✅ 4479/4300 (raw: 4634)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/3 types
@@ -58,27 +58,27 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 7 | 4 | 100% | 19% | 19.0% |
+| primary_sources | 9 | 4 | 100% | 19% | 19.0% |
 | engagement | 5 | 6 | 83% | 14% | 11.9% |
-| quotes | 6 | 3 | 100% | 14% | 14.3% |
-| cultural | 5 | 4 | 100% | 10% | 9.5% |
+| quotes | 13 | 3 | 100% | 14% | 14.3% |
+| cultural | 8 | 4 | 100% | 10% | 9.5% |
 | visual | 5 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
-| legacy | 13 | 2 | 100% | 10% | 9.5% |
+| legacy | 15 | 2 | 100% | 10% | 9.5% |
 | variety | 0.99 | - | 99% | 5% | 4.7% |
-| paragraph_var | 0.97 | - | 97% | 5% | 4.6% |
+| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 10 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **97.4%** |
+| **TOTAL** | | | | | **97.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 97 | Included in Core |
-| **Вступ — Архітектор Гадяцької унії** | ✅ | 358 | Included in Core |
-| **Життєпис** | ⚪️ | 650 | Skipped |
-| **Історичний контекст** | ✅ | 194 | Included in Core |
-| **Внесок** | ⚪️ | 211 | Skipped |
-| **Останні роки** | ⚪️ | 145 | Skipped |
-| **Спадщина** | ⚪️ | 138 | Skipped |
-| **Підсумок** | ✅ | 99 | Included in Core |
+| **Вступ — Архітектор Гадяцької унії** | ✅ | 690 | Included in Core |
+| **Життєпис** | ⚪️ | 1477 | Skipped |
+| **Історичний контекст** | ✅ | 537 | Included in Core |
+| **Внесок** | ⚪️ | 484 | Skipped |
+| **Останні роки** | ⚪️ | 428 | Skipped |
+| **Спадщина** | ⚪️ | 399 | Skipped |
+| **Підсумок** | ✅ | 271 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 96 | Skipped |

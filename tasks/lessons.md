@@ -233,6 +233,23 @@
 
 ---
 
+## 2026-02-05 - CRITICAL: Word Targets from Memory
+
+**Mistake**: Told Gemini that C1-BIO word target is "3500+" when config.py clearly states 4000. Wrote from memory instead of checking the source of truth.
+
+**Correction**: User caught it immediately: "the config.py says 4000+ clearly, what made you to write 3500+?"
+
+**Rule**:
+- **NEVER state word targets from memory** - always check `scripts/audit/config.py`
+- Word targets are defined in ONE place: `config.py` → `'target_words': N`
+- Before handoff to Gemini or any batch task: verify numbers against config
+- Quick check: `grep -A5 "{track}" scripts/audit/config.py | grep target`
+- Word targets are MINIMUMS (per CLAUDE.md critical rules) - underestimating is worse than overestimating
+
+**Applied**: 2026-02-05 (sent correction to Gemini, updated issue #506)
+
+---
+
 ## Template for New Entries
 
 ```markdown

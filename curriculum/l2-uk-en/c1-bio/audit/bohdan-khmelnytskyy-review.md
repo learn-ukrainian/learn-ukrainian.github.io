@@ -1,8 +1,8 @@
 # Audit Report: M22 — bohdan-khmelnytskyy.md
 **Level:** C1-BIO | **Module:** M22 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4300
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 00:47:13
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 10:24:23
 
 ## Configuration
 **Type:** C1-biography
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 3460/4300 (raw: 3601)
+- **Words:** ✅ 4826/4300 (raw: 5017)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
@@ -47,7 +47,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
-- **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
+- **Immersion:** 🇺🇦 98.8% (target 95-100% (biography))
 - **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -59,27 +59,27 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 5 | 4 | 100% | 19% | 19.0% |
+| primary_sources | 6 | 4 | 100% | 19% | 19.0% |
 | engagement | 6 | 6 | 100% | 14% | 14.3% |
-| quotes | 6 | 3 | 100% | 14% | 14.3% |
-| cultural | 10 | 4 | 100% | 10% | 9.5% |
+| quotes | 7 | 3 | 100% | 14% | 14.3% |
+| cultural | 7 | 4 | 100% | 10% | 9.5% |
 | visual | 6 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.99 | - | 99% | 5% | 4.7% |
+| variety | 0.98 | - | 98% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 9 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **100.0%** |
+| questions | 8 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 119 | Included in Core |
-| **Вступ — Творець козацької держави** | ✅ | 567 | Included in Core |
-| **Життєпис** | ⚪️ | 1235 | Skipped |
-| **Історичний контекст** | ✅ | 351 | Included in Core |
-| **Внесок** | ⚪️ | 281 | Skipped |
-| **Останні роки** | ⚪️ | 276 | Skipped |
-| **Спадщина** | ⚪️ | 331 | Skipped |
-| **Підсумок** | ✅ | 195 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 105 | Skipped |
+| **Вступ — Творець козацької держави** | ✅ | 675 | Included in Core |
+| **Життєпис** | ⚪️ | 1442 | Skipped |
+| **Історичний контекст** | ✅ | 627 | Included in Core |
+| **Внесок** | ⚪️ | 454 | Skipped |
+| **Останні роки** | ⚪️ | 437 | Skipped |
+| **Спадщина** | ⚪️ | 502 | Skipped |
+| **Підсумок** | ✅ | 311 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 259 | Skipped |

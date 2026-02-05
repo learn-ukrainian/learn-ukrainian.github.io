@@ -2,10 +2,10 @@
   "module": "bohdan-khmelnytskyy",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T00:47:13.097442Z",
+  "last_audit": "2026-02-05T10:24:23.917304Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-04T22:40:35.118361Z",
+    "md": "2026-02-05T10:20:41.865719Z",
     "meta": "2026-02-05T00:38:34.268735Z",
     "activities": "2026-01-27T15:34:55.351375Z",
     "vocabulary": "2026-02-04T13:34:29.673742Z",
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "3460/4300 (raw: 3601)"
+      "status": "pass",
+      "violations": 0,
+      "message": "4826/4300 (raw: 5017)"
     },
     "activities": {
       "status": "pass",
@@ -39,11 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "4 Outline Compliance Errors"
-    ],
-    "pass_count": 4,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

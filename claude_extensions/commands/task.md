@@ -138,37 +138,85 @@ gh issue list --label "task" --state open --limit 10
 
 ### /task handoff #N gemini "message"
 
-Transfers task to Gemini for review.
+Transfers task to Gemini. **CRITICAL: Issue is the source of truth, not the message.**
 
-**Effects:**
-- Changes label: `working:claude` → `review:gemini`
-- Adds handoff comment
-- Sends message via broker
+**Pattern (CORRECT):**
+```
+/task handoff #506 gemini "assigned"
 
-```bash
-gh issue edit N --remove-label "working:claude" --add-label "review:gemini"
-gh issue comment N --body "@gemini: message"
+Message sent: "Issue #506 is assigned to you. Read it, then:
+  a) Start working + update issue with progress, OR
+  b) Request UI trigger for collaborative session with user"
 ```
 
-Then via message broker:
+**Anti-Pattern (WRONG - DO NOT DO THIS):**
+```
+/task handoff #506 gemini "Process these 19 modules: ivan-vyhovskyi, bohdan..."
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                          ❌ Duplicates issue content
+                          ❌ Errors propagate (wrong word targets, etc.)
+                          ❌ Issue becomes redundant
+```
+
+**Why this matters:**
+- **Single source of truth** - Gemini reads issue, not message
+- **No inherited errors** - Gemini checks config.py himself
+- **Proper workflow** - Gemini learns to use GitHub issues
+- **User monitoring** - Progress visible in GitHub, not buried in broker
+
+**Effects:**
+1. Changes label: `working:claude` → `working:gemini`
+2. Adds handoff comment with link
+3. Sends SHORT message via broker (issue reference only)
+
+**Validation (Claude MUST check):**
+- ⚠️ If message > 200 chars: "Message too long. Put details in issue, send only reference."
+- ⚠️ If issue doesn't exist: "Issue #N not found. Create it first."
+- ⚠️ If issue is closed: "Issue #N is closed. Reopen or create new."
+
+**Implementation:**
+```bash
+# Update label
+gh issue edit N --remove-label "working:claude" --add-label "working:gemini"
+
+# Add handoff comment (brief)
+gh issue comment N --body "🔄 Handed off to Gemini"
+```
+
 ```python
+# Send SHORT message (issue reference only)
 mcp__message-broker__send_message(
     to="gemini",
     from_llm="claude",
-    content="Review requested. Issue: #N. Message: ...",
-    message_type="request",
+    content="""Issue #N is assigned to you.
+
+Read it at: https://github.com/{repo}/issues/N
+
+Then either:
+a) Start working autonomously - update issue with progress as you go
+b) Request UI trigger if you want collaborative session with user
+
+Do NOT wait for detailed instructions - the issue has everything.""",
+    message_type="handoff",
     task_id="gh-N"
 )
 ```
 
-**Example:**
+**Example (correct):**
 ```
-/task handoff #500 gemini "Review M25-M29 naturalness"
+/task handoff #506 gemini "assigned"
 
-📋 Handed off #500 to Gemini
-   Labels: task, review:gemini
-   Broker message sent (task_id: gh-500)
+📋 Handed off #506 to Gemini
+   Labels: task, working:gemini
+   Message: "Issue #506 is assigned to you. Read it..."
+
+   ✅ Short message (issue reference only)
+   ✅ Gemini will read issue for details
 ```
+
+**Gemini's response options:**
+1. **Autonomous work**: Start immediately, update issue with progress
+2. **Request UI**: "I'd like to work on this with user present. Please trigger me from UI."
 
 ### /task clear
 

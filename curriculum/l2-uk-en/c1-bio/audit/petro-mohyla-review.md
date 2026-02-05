@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M23 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4300
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 00:47:13
+**Generated:** 2026-02-05 10:26:35
 
 ## Configuration
 **Type:** C1-biography
@@ -37,51 +37,51 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 1882/4300 (raw: 1982)
+- **Words:** ❌ 3759/4300 (raw: 3918)
 - **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 8/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/5
+- **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 20 < 24 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (8 activities)
-- **Immersion:** 🇺🇦 99.7% (target 95-100% (biography))
-- **Richness:** ✅ 98% (biography)
+- **Immersion:** 🇺🇦 98.3% (target 95-100% (biography))
+- **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 98% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 5 | 4 | 100% | 19% | 19.0% |
-| engagement | 6 | 6 | 100% | 14% | 14.3% |
-| quotes | 10 | 3 | 100% | 14% | 14.3% |
+| primary_sources | 8 | 4 | 100% | 19% | 19.0% |
+| engagement | 7 | 6 | 100% | 14% | 14.3% |
+| quotes | 15 | 3 | 100% | 14% | 14.3% |
 | cultural | 6 | 4 | 100% | 10% | 9.5% |
-| visual | 6 | 4 | 100% | 10% | 9.5% |
+| visual | 7 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.97 | - | 97% | 5% | 4.6% |
-| paragraph_var | 0.81 | - | 81% | 5% | 3.9% |
-| questions | 9 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.0%** |
+| variety | 0.98 | - | 98% | 5% | 4.7% |
+| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
+| questions | 10 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 78 | Included in Core |
-| **Вступ — Архітектор українського бароко** | ✅ | 322 | Included in Core |
-| **Життєпис** | ⚪️ | 525 | Skipped |
-| **Історичний контекст** | ✅ | 190 | Included in Core |
-| **Внесок** | ⚪️ | 209 | Skipped |
-| **Останні роки** | ⚪️ | 184 | Skipped |
-| **Спадщина** | ⚪️ | 195 | Skipped |
-| **Підсумок** | ✅ | 106 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 73 | Skipped |
+| **Intro/Narrative** | ✅ | 109 | Included in Core |
+| **Вступ — Архітектор українського бароко** | ✅ | 545 | Included in Core |
+| **Життєпис** | ⚪️ | 1048 | Skipped |
+| **Історичний контекст** | ✅ | 467 | Included in Core |
+| **Внесок** | ⚪️ | 377 | Skipped |
+| **Останні роки** | ⚪️ | 363 | Skipped |
+| **Спадщина** | ⚪️ | 324 | Skipped |
+| **Підсумок** | ✅ | 253 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 273 | Skipped |

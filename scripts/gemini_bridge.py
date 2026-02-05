@@ -288,6 +288,15 @@ def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data:
         model: Gemini model to use (default: gemini-3-flash-preview)
         from_model: Exact model ID of sender (e.g., 'claude-opus-4-5-20251101')
     """
+    # Validation: Warn if message is too long (handoff anti-pattern)
+    HANDOFF_WARNING_THRESHOLD = 500  # chars
+    if len(content) > HANDOFF_WARNING_THRESHOLD and task_id and task_id.startswith("gh-"):
+        print(f"⚠️  WARNING: Message is {len(content)} chars (>{HANDOFF_WARNING_THRESHOLD})")
+        print(f"   For task handoffs, the GitHub issue should contain details.")
+        print(f"   Consider sending a SHORT message with issue reference only:")
+        print(f"   'Issue #{task_id.replace('gh-', '')} is assigned to you. Read it for details.'")
+        print()
+
     # Step 1: Send the message (model param becomes to_model)
     msg_id = send_to_gemini(content, task_id, msg_type, data, from_model=from_model, to_model=model)
 

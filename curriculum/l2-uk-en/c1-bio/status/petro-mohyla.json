@@ -2,10 +2,10 @@
   "module": "petro-mohyla",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T00:47:13.620500Z",
+  "last_audit": "2026-02-05T10:26:35.466646Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-04T22:45:08.922233Z",
+    "md": "2026-02-05T10:26:31.344206Z",
     "meta": "2026-02-05T00:38:52.235145Z",
     "activities": "2026-02-04T12:06:26.763992Z",
     "vocabulary": "2026-02-04T13:37:14.793131Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "1882/4300 (raw: 1982)"
+      "message": "3759/4300 (raw: 3918)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "6 Outline Compliance Errors"
+      "3 Outline Compliance Errors"
     ],
     "pass_count": 3,
     "fail_count": 1

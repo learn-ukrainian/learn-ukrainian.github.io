@@ -29,6 +29,7 @@
 - **Production Support**:
   - **Model Answers**: Mandatory for all writing/speaking production tasks (B2+) using `> [!model-answer]`.
   - **Activity Density**: 8+ activities per module, 12+ items per activity.
+- **Track Scoring System**: Automated, objective scoring (10/10) for curriculum tracks based on metrics like `[!myth-buster]`, `[!quote]`, and citation ratios.
 
 ### Vocabulary Targets (Verified Dec 2025)
 
@@ -74,14 +75,15 @@
 6. **Strict Header Hierarchy**: `# Summary`, `# Activities` (H1), `##` (H2).
 7. **Regenerate HTML**: Always regenerate HTML output immediately after fixing module markdown.
 8. **Decolonization & Patriotism (MANDATORY)**: Include Myth Buster, History Bite, and celebrate Ukrainian identity.
-9. **Issue Tracking**: Use GitHub Issues. Do not use `docs/issues/`.
+9. **GitHub Issue Tracking**: Use `/task` skill for complex multi-step work.
 10. **Virtual Environment**: Always use `.venv/bin/python`.
 11. **BROKEN TOOL AVOIDANCE (CRITICAL)**: The `search_file_content` tool is BROKEN. It produces `--threads` argument errors. **ALWAYS** use `run_shell_command("rg ...")` instead.
 12. **Typography**: ALWAYS use Ukrainian angular quotes `«...»`.
+13. **Research-First Workflow**: MANDATORY for seminar tracks (`b2-hist`, `c1-bio`, `lit`, etc.).
+14. **Ukrainian-Only Research**: Russian-language sources are STRICTLY PROHIBITED. All searches must be in Ukrainian.
+15. **Word Targets are MINIMUMS**: NEVER reduce `word_target` to match short content. Expand content to meet targets.
 
 ## Common Audit Errors & Fixes (Avoid Loops!)
-
-These are common audit failures that can cause fix loops if not understood correctly:
 
 ### DUPLICATE_SYNONYMOUS_HEADERS
 
@@ -227,11 +229,20 @@ All communication goes through SQLite Event Bus at `.mcp/servers/message-broker/
 .venv/bin/python scripts/gemini_bridge.py ask-claude "Start fresh analysis" --task-id my-task --new-session
 ```
 
-**Session behavior:**
-- First call on a task: Creates new Claude session, stores session ID in DB
-- Subsequent calls on same task: Auto-resumes with `--resume <session_id>`
-- Claude maintains full conversation context across calls
-- Claude's response goes to your inbox (check with `inbox` command)
+**Batch Operations (NEW):**
+```bash
+# Process ALL unread messages for Gemini
+.venv/bin/python scripts/gemini_bridge.py process-all
+
+# Process ALL unread messages for Claude (headless)
+.venv/bin/python scripts/gemini_bridge.py process-claude-all
+
+# Acknowledge multiple messages
+.venv/bin/python scripts/gemini_bridge.py ack 49 50 51 52
+
+# Acknowledge ALL unread for an agent
+.venv/bin/python scripts/gemini_bridge.py ack-all gemini
+```
 
 ### How to Check for Messages from Claude
 
@@ -275,89 +286,84 @@ All communication goes through SQLite Event Bus at `.mcp/servers/message-broker/
 
 ## GitHub Issues Task Workflow (NEW)
 
-Claude uses `/task` skill to track complex work via GitHub Issues. **You should know about this because:**
+Claude uses `/task` skill to track complex work via GitHub Issues.
 
-1. **You'll receive handoffs** - Claude uses `/task handoff #N gemini "message"` to transfer work to you
-2. **You can update issues** - Progress tracking happens in GH issues, not just messages
-3. **Labels matter** - When you're assigned, issue has `review:gemini` label
+### CRITICAL: Issue is Source of Truth
 
-### How Handoffs Work
+**When you receive a handoff, the GitHub issue contains ALL the details.**
 
-When Claude hands off to you:
-
-1. **Label changes**: `working:claude` → `review:gemini`
-2. **Issue comment**: `@gemini: {message}` added
-3. **Broker message**: You receive via inbox with `task_id: gh-{issue_number}`
-
-### Your Response Flow
-
-```bash
-# 1. Check inbox
-.venv/bin/python scripts/gemini_bridge.py inbox
-
-# 2. Read the handoff message (includes issue number)
-.venv/bin/python scripts/gemini_bridge.py read <id>
-
-# 3. View full issue context
-gh issue view <issue_number>
-
-# 4. Do the review/work
-
-# 5. Update issue with your findings
-gh issue comment <issue_number> --body "Review complete: ..."
-
-# 6. Send response to Claude
-.venv/bin/python scripts/gemini_bridge.py send "Review complete. Found 2 issues..." \
-  --type response --task-id gh-<issue_number>
-
-# 7. (Optional) Change label if work continues
-gh issue edit <issue_number> --remove-label "review:gemini" --add-label "working:claude"
+The message from Claude will be SHORT (just issue reference):
 ```
+"Issue #506 is assigned to you. Read it, then:
+  a) Start working + update issue with progress, OR
+  b) Request UI trigger for collaborative session with user"
+```
+
+**You MUST read the issue yourself** - don't expect task details in the message:
+```bash
+gh issue view 506
+```
+
+**Why this pattern:**
+- ✅ GitHub issue = single source of truth
+- ✅ You check config.py for word targets (no inherited errors)
+- ✅ User monitors progress via GitHub
+- ✅ No duplication of information
+- ❌ OLD PATTERN: Claude sent all details in message → errors propagated
 
 ### Task Labels Reference
 
 | Label | Meaning |
 |-------|---------|
-| `task` | Base task label |
-| `working:claude` | Claude actively working |
-| `working:gemini` | You are actively working |
+| `working:claude` | Claude is working |
+| `working:gemini` | YOU are working |
 | `review:gemini` | Ready for your review |
 | `review:human` | Needs human review |
 | `blocked` | Waiting on something |
 
-### When to Use GH Issues vs MCP Messages
+### Your Handoff Response Flow
 
-| Use GH Issues | Use MCP Messages |
-|---------------|------------------|
-| Multi-step tasks | Quick questions |
-| Cross-session work | Single-turn queries |
-| Audit trail needed | Short reviews |
-| Human visibility needed | Fast feedback |
+1. **Check inbox**: `.venv/bin/python scripts/gemini_bridge.py inbox`
+2. **Read SHORT message** (issue reference only): `.venv/bin/python scripts/gemini_bridge.py read <id>`
+3. **Read the ISSUE for full details**: `gh issue view <issue_number>`
+4. **Check configs yourself** (don't trust message for numbers):
+   ```bash
+   grep -A10 "c1-bio" scripts/audit/config.py | grep target
+   ```
+5. **Choose work mode**:
+   - **Autonomous**: Start working, update issue with progress as you go
+   - **Collaborative**: Reply "Request UI trigger for collaborative session"
+6. **Update issue with progress**: `gh issue comment <N> --body "✅ module-1 complete"`
+7. **When done**, send response to Claude:
+   ```bash
+   .venv/bin/python scripts/gemini_bridge.py send "Work complete. See issue #N for details." --type response --task-id gh-N
+   ```
 
-**Full documentation**: `docs/TASK-WORKFLOW.md`
+### Progress Update Format
 
-## Research Requests (Seminar Tracks)
-
-Claude may request you to research topics for seminar tracks (b2-hist, c1-bio, c1-hist, lit, oes, ruth).
-
-### Why You'll Get Research Requests
-
-1. **Research gate enforced** - Claude's `/module` skill now blocks content generation without research
-2. **Ukrainian sources** - You excel at finding and synthesizing Ukrainian-language sources
-3. **Parallel work** - Claude can structure while you research
-
-### How to Handle Research Requests
-
+Update the issue as you work (user monitors this):
 ```bash
-# You'll receive a message like:
-"Research Данило Апостол for C1-BIO module. Save to audit/danylo-apostol-research.md"
-
-# Your workflow:
-1. Search Ukrainian sources (uk.wikipedia.org, esu.com.ua, history.org.ua, etc.)
-2. Compile notes using the template below
-3. Save to the specified path
-4. Send response to Claude
+gh issue comment 506 --body "✅ ivan-vyhovskyi - /module complete, audit passed"
+gh issue comment 506 --body "✅ bohdan-khmelnytskyy - /module complete, audit passed"
+gh issue comment 506 --body "⚠️ petro-mohyla - blocked on missing research notes"
 ```
+
+### Error Handling
+
+If something is wrong with the handoff:
+- **Issue doesn't exist**: Reply "Issue #N not found. Please create it."
+- **Issue is closed**: Reply "Issue #N is closed. Reopen or create new."
+- **Missing information in issue**: Reply "Issue #N missing: [what's missing]. Please update."
+- **Need clarification**: Reply with specific questions, don't guess
+
+## Research-First Mandate (Seminar Tracks)
+
+MANDATORY for `b2-hist`, `c1-bio`, `c1-hist`, `lit`, `oes`, `ruth`.
+
+### Workflow
+1. **Research topic** using ONLY Ukrainian sources (uk.wikipedia.org, esu.com.ua, history.org.ua, litopys.org.ua).
+2. **Prohibited**: Russian-language sources (`ru.wikipedia.org`) and `*.ru` domains are STRICTLY FORBIDDEN.
+3. **Notes**: Save structured notes to `curriculum/l2-uk-en/{track}/audit/{slug}-research.md`.
 
 ### Research Notes Template
 
@@ -393,20 +399,15 @@ Save to `curriculum/l2-uk-en/{track}/audit/{slug}-research.md`:
 ```
 
 ### Quality Requirements
-
 - **3+ Ukrainian sources** (NEVER Russian sources)
 - **1+ primary source quote** in Ukrainian
 - **Decolonization notes** - myths to debunk
 - **5+ chronology events** with years
 
-### Response Pattern
+## Track Scoring & Playgrounds
 
-```bash
-.venv/bin/python scripts/gemini_bridge.py send \
-  "Research complete for Данило Апостол. Saved to audit/danylo-apostol-research.md.
-   5 sources, 2 primary quotes, 3 myths identified." \
-  --type response --task-id {task_id}
-```
+- **npm run score:{track}**: Automated 10/10 scoring.
+- **npm run playgrounds**: Interactive HTML dashboards (`playgrounds/index.html`) using real audit data.
 
 ## File Structure Reference (V2.0)
 
@@ -416,6 +417,7 @@ Save to `curriculum/l2-uk-en/{track}/audit/{slug}-research.md`:
 - **Vocabulary**: `curriculum/l2-uk-en/{level}/vocabulary/{slug}.yaml`
 - **Build Meta**: `curriculum/l2-uk-en/{level}/meta/{slug}.yaml`
 - **Status Cache**: `curriculum/l2-uk-en/{level}/status/{slug}.json`
+- **Playgrounds**: `playgrounds/*.html`
 - **Key Scripts**:
   - `scripts/audit_module.py` (Validates build against plan, writes cache)
   - `scripts/generate_level_status.py` (Reads cache, generates reports)
@@ -423,55 +425,4 @@ Save to `curriculum/l2-uk-en/{track}/audit/{slug}-research.md`:
 
 ## B2+ Module Creation Workflow (V2.0)
 
-For B2+ levels (B2, C1, C2, Tracks), follow this EXACT workflow:
-
-### Phase 0: Deep Research (MANDATORY for Seminar Tracks)
-
-**For b2-hist, c1-bio, c1-hist, lit, oes, ruth tracks:**
-
-Before generating ANY content, read `docs/RESEARCH-FIRST-WORKFLOW.md` and complete research phase:
-
-1. **Research the topic** using web search, encyclopedias, primary sources
-2. **Take structured notes** with citations and key facts
-3. **Create outline** that integrates research with plan requirements
-4. **Write content** using research notes (not from memory!)
-5. **Generate activities** (4-9 only, seminar-style)
-
-**Why this matters:**
-- Biography modules require accurate dates, events, quotes
-- History modules need primary source references
-- Writing from memory leads to inaccuracies and thin content
-- Research-first produces richer, more authoritative content
-
-**Skip this phase** only for grammar-focused modules (A1, A2, B1 core).
-
-### 1. Read Immutable Plan
-
-Read `curriculum/l2-uk-en/plans/{level}/{slug}.yaml`. This contains the `content_outline`, `objectives`, and `word_target`.
-
-### 2. Create/Update Build Metadata
-
-Ensure `curriculum/l2-uk-en/{level}/meta/{slug}.yaml` exists (migrated from plan or created new). It tracks `naturalness` and build status.
-
-### 3. Create Vocabulary YAML
-
-Create `curriculum/l2-uk-en/{level}/vocabulary/{slug}.yaml` (enriched with IPA).
-
-### 4. Create Module Content
-
-Create `curriculum/l2-uk-en/{level}/{slug}.md`:
-- Follow `content_outline` from the **Plan** exactly.
-- Use B2+ history callouts: `[!history-bite]`, `[!myth-buster]`.
-- End with `> [!resources]`.
-
-### 5. Create Activities YAML
-
-Create `curriculum/l2-uk-en/{level}/activities/{slug}.yaml`.
-
-### 6. Run Audit (Updates Cache)
-
-```bash
-.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/{level}/{slug}.md
-```
-
-**All gates must pass before proceeding.**
+Follow Phase 0 (Research First) for all Seminar Tracks before writing content. Ensure all technical gates pass via `audit_module.py`.

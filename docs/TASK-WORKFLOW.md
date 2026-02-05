@@ -456,58 +456,113 @@ Continuing Phase 2...
 
 ## Gemini Handoff
 
-### How Handoffs Work
+### CRITICAL: Issue is Source of Truth
 
-1. **Label change:** `working:claude` → `review:gemini`
-2. **Issue comment:** Adds `@gemini: {message}`
-3. **Broker message:** Sends via message-broker MCP
+**The GitHub issue contains ALL task details. The handoff message should be SHORT (issue reference only).**
 
-### Handoff Message via Broker
+| Pattern | Status | Why |
+|---------|--------|-----|
+| Short message + issue reference | ✅ CORRECT | Gemini reads issue, checks configs |
+| Full task details in message | ❌ WRONG | Errors propagate, duplication |
 
+### Correct Handoff Pattern
+
+```
+/task handoff #506 gemini "assigned"
+```
+
+**What Claude sends (SHORT):**
 ```python
 mcp__message-broker__send_message(
     to="gemini",
     from_llm="claude",
-    content="Review requested. Issue: #500. Message: Review naturalness",
-    message_type="request",
-    task_id="gh-500"
+    content="""Issue #506 is assigned to you.
+
+Read it at: https://github.com/{repo}/issues/506
+
+Then either:
+a) Start working autonomously - update issue with progress as you go
+b) Request UI trigger if you want collaborative session with user
+
+Do NOT wait for detailed instructions - the issue has everything.""",
+    message_type="handoff",
+    task_id="gh-506"
 )
 ```
+
+### Why This Pattern
+
+| Benefit | Explanation |
+|---------|-------------|
+| **Single source of truth** | Issue has all details, no duplication |
+| **No inherited errors** | Gemini checks config.py himself |
+| **User monitoring** | Progress visible in GitHub |
+| **Proper workflow** | Gemini learns to use issues |
+
+### Anti-Pattern (DO NOT DO)
+
+```
+❌ /task handoff #506 gemini "Process these 19 modules: ivan-vyhovskyi, bohdan...
+   word target is 3500+, run /module and /review-content-v4 for each..."
+
+   Problems:
+   - Duplicates issue content
+   - Word target was WRONG (should be 4000, not 3500)
+   - Gemini doesn't learn to read issues
+   - Errors propagate without correction
+```
+
+### Validation Before Handoff
+
+**Claude MUST check:**
+- ⚠️ Message > 200 chars? → "Put details in issue, send only reference"
+- ⚠️ Issue doesn't exist? → "Issue #N not found. Create it first."
+- ⚠️ Issue closed? → "Issue #N is closed. Reopen or create new."
+
+### Gemini's Work Modes
+
+After receiving handoff, Gemini chooses:
+
+1. **Autonomous Mode** (default):
+   - Reads issue
+   - Checks configs (word targets, etc.)
+   - Starts working
+   - Updates issue with progress as he goes
+   - User monitors via GitHub
+
+2. **Collaborative Mode** (on request):
+   - Replies: "Request UI trigger for collaborative session"
+   - User invokes Gemini from terminal
+   - User watches and helps in real-time
 
 ### Gemini Response Flow
 
 ```
-Gemini reviews → sends response via broker:
+Gemini reads issue → works → updates issue → sends response:
 {
     to: "claude",
     from_llm: "gemini",
-    content: "Review complete. 2 suggestions: ...",
+    content: "Work complete. See issue #506 for details.",
     message_type: "response",
-    task_id: "gh-500"
+    task_id: "gh-506"
 }
 
 Claude picks up with /check-gemini:
 → Reads message
 → Acknowledges
 → Auto-comments to issue
-→ Can change label back: review:gemini → working:claude
 ```
 
-### Best Practices for Handoffs
+### Progress Tracking (in GitHub issue)
 
-**Good handoff messages:**
-```
-"Review M25-M29 for naturalness and Ukrainian authenticity"
-"Check historical accuracy of Danylo Apostol dates and events"
-"Validate grammar examples are natural, not calques"
+Gemini updates issue as he works:
+```bash
+gh issue comment 506 --body "✅ ivan-vyhovskyi - /module complete, audit passed"
+gh issue comment 506 --body "✅ bohdan-khmelnytskyy - /module complete, audit passed"
+gh issue comment 506 --body "⚠️ petro-mohyla - blocked on missing meta file"
 ```
 
-**Bad handoff messages:**
-```
-"Review this"  ← Too vague
-"Check everything"  ← No focus
-"Fix the issues"  ← Gemini reviews, doesn't fix
-```
+User can monitor this in real-time via GitHub.
 
 ---
 
