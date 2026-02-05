@@ -1,14 +1,14 @@
 # C1-BIO Module Status
 
-**Generated:** 2026-02-05 17:25:12
+**Generated:** 2026-02-05 20:12:58
 **Total Modules:** 148
-**Status:** 52 passing, 69 failing, 27 stubs, 0 errors
+**Status:** 54 passing, 68 failing, 26 stubs, 0 errors
 
 ## Quick Summary
 
-- ✅ **Passing:** 52/148 (35%)
-- ❌ **Failing:** 69/148
-- 📝 **Stubs:** 27/148
+- ✅ **Passing:** 54/148 (36%)
+- ❌ **Failing:** 68/148
+- 📝 **Stubs:** 26/148
 
 ## Module Details
 
@@ -59,13 +59,13 @@
 | 043 | oleksander-potebnya | ✅ PASS | 4642/4000 | - |
 | 044 | ivan-nechuy-levytskyi | ✅ PASS | 4220/4000 | - |
 | 045 | marko-kropyvnytskyi | ✅ PASS | 3959/4000 | - |
-| 046 | mykhailo-drahomanov | ❌ FAIL | 2082/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
+| 046 | mykhailo-drahomanov | ❌ FAIL | 3394/4000 | 3 Outline Compliance Errors |
 | 047 | mykola-lysenko | ❌ FAIL | 2042/4000 | 6 Outline Compliance Errors |
 | 048 | ivan-puliui | ✅ PASS | 5550/4300 | - |
 | 049 | olena-pchilka | ✅ PASS | 4858/4300 | - |
 | 050 | mariya-zankovetska | ✅ PASS | 4507/4300 | - |
-| 051 | mariya-pavlova | ❌ FAIL | 4135/4000 | - |
-| 052 | nataliya-kobrynska | 📝 STUB | 0/0 | empty |
+| 051 | mariya-pavlova | ✅ PASS | 4666/4300 | - |
+| 052 | nataliya-kobrynska | ✅ PASS | 3845/3800 | - |
 | 053 | ivan-franko | ❌ FAIL | 2003/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
 | 054 | yevhen-chykalenko | ❌ FAIL | 1939/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
 | 055 | volodymyr-vernadskyi | ✅ PASS | 5374/4300 | - |

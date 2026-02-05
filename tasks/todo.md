@@ -3,7 +3,7 @@
 **Goal**: Ensure modules 46-50 in the C1-BIO track are fully built, audited, and passing.
 
 ## Batch Status
-- [ ] M46: mykhailo-drahomanov (Failing - Word count, Outline, Vocab header)
+- [x] M46: mykhailo-drahomanov (Passing)
 - [ ] M47: mykola-lysenko (Failing - Word count, Outline)
 - [x] M48: ivan-puliui (Passing)
 - [x] M49: olena-pchilka (Passing)

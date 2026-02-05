@@ -2,25 +2,25 @@
   "module": "ivan-franko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:39:59.681769Z",
+  "last_audit": "2026-02-05T20:27:38.491503Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-04T22:30:45.357509Z",
-    "meta": "2026-02-02T23:23:00.065872Z",
-    "activities": "2026-01-27T15:34:55.580015Z",
-    "vocabulary": null,
+    "md": "2026-02-05T20:27:32.340714Z",
+    "meta": "2026-02-05T20:24:49.278580Z",
+    "activities": "2026-02-05T20:21:12.746491Z",
+    "vocabulary": "2026-02-05T20:18:41.795910Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "2003/4000 (raw: 2224) | pedagogy: 2 violations"
+      "message": "2895/3000 (raw: 2935) | richness: 90% < 95% min (biography)"
     },
     "activities": {
       "status": "pass",
@@ -28,23 +28,20 @@
       "message": "6/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 24 (soft target)"
+      "message": "25/24"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1/10 (PENDING) - Naturalness check required"
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
     }
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [
-      "6 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
-    ],
-    "pass_count": 1,
-    "fail_count": 3
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 1
   }
 }

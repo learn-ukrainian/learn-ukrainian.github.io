@@ -1,12 +1,12 @@
 # Audit Report: M53 — ivan-franko.md
-**Level:** C1-BIO | **Module:** M53 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
-**Naturalness:** 1/10 (PENDING)
+**Level:** C1-BIO | **Module:** M53 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
+**Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 12:39:59
+**Generated:** 2026-02-05 20:27:38
 
 ## Configuration
 **Type:** C1-biography
-**Word Target:** 4000 words
+**Word Target:** 3000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
@@ -20,78 +20,65 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | true-false | Історична правда про Івана Франка | 8 | 5 | ✅ |
-| 2 | comparative-study | Франко та Шевченко як два типи лідерства | 1 | 1 | ✅ |
-| 3 | reading | Аналіз публіцистичного стилю Франка | 3 | 1 | ✅ |
-| 4 | reading | Дослідження поетичного модернізму | 3 | 1 | ✅ |
-| 5 | authorial-intent | Наміри автора в поемі «Мойсей» | 1 | 1 | ✅ |
-| 6 | essay-response | «Іван Франко та Тарас Шевченко — Два обличчя українського відродження» | 1 | 1 | ✅ |
+| 1 | reading | Читання: Пролог до "Мойсея" | 3 | 1 | ✅ |
+| 2 | essay-response | Есе: Франко і Маркс | 1 | 1 | ✅ |
+| 3 | critical-analysis | Аналіз: Символ Каменяра | 1 | 1 | ✅ |
+| 4 | quiz | Вікторина: Життя Титана | 5 | 5 | ✅ |
+| 5 | comparative-study | Порівняння: Франко та Шевченко | 1 | 1 | ✅ |
+| 6 | true-false | Правда чи Міф: Іван Франко | 10 | 5 | ✅ |
 
 **Summary:**
 - Total activities: 6 (target: 3-9) ✅
-- Unique types: 5 (minimum: 3) ✅
-- Priority types used: 4/6 (authorial-intent, comparative-study, essay-response, reading) ✅
+- Unique types: 6 (minimum: 3) ✅
+- Priority types used: 5/6 (comparative-study, critical-analysis, essay-response, quiz, reading) ✅
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (75% overlap): "Його називають «Титаном праці» за колосальну продуктивність — понад 5000 творів у різних галузях зна...". Shares significant keywords with sentence at index 1.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in ivan-franko.yaml: Schema validation error at key '3': {'type': 'reading', 'title': 'Дослідження поетичного модернізму', 'resource': {'type': 'primary_source', 'url': 'https://www.i-franko.name/uk/Poetry/ZivjaleLystja.html', 'title': "«Іван Франко — Збірка «Зів'яле листя»»"}, 'tasks': ['«Проаналізуйте використання емоційно забарвлених прикметників у першому «жмутку» поезій.»', '«Порівняйте мову інтимної лірики Франка з його публіцистичним стилем. Які відмінності у виборі дієслів ви помітили?»', '«Знайдіть приклади порівнянь та метафор, які автор використовує для опису душевного стану.»']} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 25/100)
-
-- 2 violations (minor)
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
-
 ## Gates
-- **Words:** ❌ 2003/4000 (raw: 2224)
+- **Words:** ❌ 2895/3000 (raw: 2935)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 5/3 types
+- **Unique_types:** ✅ 6/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/5
+- **Engagement:** ✅ 13/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 24 (soft target)
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Vocab:** ✅ 25/24
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
-- **Immersion:** 🇺🇦 100.0% (target 95-100% (biography))
-- **Richness:** ✅ 99% (biography)
+- **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
+- **Richness:** ❌ 90% < 95% min (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
+**Score:** 90% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 4 | 4 | 100% | 19% | 19.0% |
-| engagement | 7 | 6 | 100% | 14% | 14.3% |
-| quotes | 7 | 3 | 100% | 14% | 14.3% |
-| cultural | 6 | 4 | 100% | 10% | 9.5% |
-| visual | 5 | 4 | 100% | 10% | 9.5% |
+| primary_sources | 3 | 4 | 75% | 19% | 14.3% |
+| engagement | 10 | 6 | 100% | 14% | 14.3% |
+| quotes | 2 | 3 | 67% | 14% | 9.6% |
+| cultural | 4 | 4 | 100% | 10% | 9.5% |
+| visual | 14 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.97 | - | 97% | 5% | 4.6% |
+| variety | 0.99 | - | 99% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 9 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.9%** |
+| questions | 3 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **90.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 69 | Included in Core |
-| **Вступ** | ✅ | 214 | Included in Core |
-| **Життєпис** | ⚪️ | 205 | Skipped |
-| **Внесок** | ⚪️ | 655 | Skipped |
-| **Спадщина** | ⚪️ | 199 | Skipped |
-| **Історичний контекст** | ✅ | 334 | Included in Core |
-| **Порівняльний аналіз** | ✅ | 152 | Included in Core |
-| **Підсумок** | ✅ | 159 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 16 | Skipped |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Вступ — Каменяр нації** | ✅ | 322 | Included in Core |
+| **Ранні роки та освіта (1856-1875)** | ⚪️ | 612 | Skipped |
+| **Політична боротьба та арешти (1875-1890)** | ⚪️ | 640 | Skipped |
+| **Наукова та літературна зрілість (1890-1905)** | ⚪️ | 606 | Skipped |
+| **Останні роки та хвороба (1905-1916)** | ⚪️ | 309 | Skipped |
+| **Спадщина та деколонізація** | ⚪️ | 279 | Skipped |
+| **Підсумок** | ✅ | 127 | Included in Core |

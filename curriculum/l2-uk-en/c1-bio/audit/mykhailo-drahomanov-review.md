@@ -1,8 +1,8 @@
 # Audit Report: M46 — mykhailo-drahomanov.md
 **Level:** C1-BIO | **Module:** M46 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 17:33:28
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 20:21:19
 
 ## Configuration
 **Type:** C1-biography
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 3394/4000 (raw: 3509)
+- **Words:** ✅ 4326/4000 (raw: 4441)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/3 types
@@ -66,21 +66,21 @@
 | visual | 4 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.99 | - | 99% | 5% | 4.7% |
+| variety | 0.97 | - | 97% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 3 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **95.2%** |
+| **TOTAL** | | | | | **95.1%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 74 | Included in Core |
-| **Вступ — Архітектор європейської України** | ✅ | 323 | Included in Core |
-| **Ранні роки та освіта (1841-1864)** | ⚪️ | 428 | Skipped |
-| **Київський період (1864-1876)** | ⚪️ | 525 | Skipped |
-| **Еміграція та політична діяльність (1876-1895)** | ⚪️ | 577 | Skipped |
-| **Політична філософія** | ⚪️ | 573 | Skipped |
-| **Останні роки та спадщина (1889-1895)** | ⚪️ | 698 | Skipped |
+| **Вступ — Архітектор європейської України** | ✅ | 439 | Included in Core |
+| **Ранні роки та освіта (1841-1864)** | ⚪️ | 560 | Skipped |
+| **Київський період (1864-1876)** | ⚪️ | 657 | Skipped |
+| **Еміграція та політична діяльність (1876-1895)** | ⚪️ | 734 | Skipped |
+| **Політична філософія** | ⚪️ | 732 | Skipped |
+| **Останні роки та спадщина (1889-1895)** | ⚪️ | 934 | Skipped |
 | **Порівняльний аналіз: Драгоманов і Донцов** | ✅ | 106 | Included in Core |
 | **Підсумок** | ✅ | 73 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 17 | Skipped |

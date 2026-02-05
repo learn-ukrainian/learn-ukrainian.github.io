@@ -1,10 +1,58 @@
-module: c1-bio-053
+module: ivan-franko
 level: C1-BIO
 slug: ivan-franko
 version: '2.0'
-id: c1-bio-053
+id: c1-bio-051
+title: "Іван Франко: Каменяр нації"
 naturalness:
-  score: 1
-  status: PENDING
+  score: 10
+  status: PASS
+duration: 120
+transliteration: none
+tags:
+- history
+- biography
+- literature
+- politics
+- philosophy
+content_outline:
+- section: "Вступ — Каменяр нації"
+  words: 300
+  points:
+  - Титан праці
+  - Універсалізм генія
+- section: "Ранні роки та освіта (1856-1875)"
+  words: 500
+  points:
+  - Нагуєвичі та батькова кузня
+  - Дрогобицька гімназія
+- section: "Політична боротьба та арешти (1875-1890)"
+  words: 600
+  points:
+  - Студентські роки
+  - Вплив Драгоманова
+  - Три арешти
+- section: "Наукова та літературна зрілість (1890-1905)"
+  words: 500
+  points:
+  - Радикальна партія
+  - Докторська дисертація у Відні
+  - Конфлікт з поляками
+- section: "Останні роки та хвороба (1905-1916)"
+  words: 300
+  points:
+  - Поема "Мойсей"
+  - Хвороба рук
+- section: "Спадщина та деколонізація"
+  words: 200
+  points:
+  - Франко як символ соборності
+  - Спростування радянських міфів
+- section: Підсумок
+  words: 100
+  points:
+  - Значення для сучасності
+word_target: 2800
+vital_status: deceased
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-05'
