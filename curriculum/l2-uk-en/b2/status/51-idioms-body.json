@@ -2,12 +2,12 @@
   "module": "51-idioms-body",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T22:50:12.731335Z",
+  "last_audit": "2026-02-05T23:00:20.083735Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-05T22:46:26.688646Z",
     "meta": "2026-02-05T22:46:26.733646Z",
-    "activities": "2026-02-05T22:46:26.713646Z",
+    "activities": "2026-02-05T22:53:37.700810Z",
     "vocabulary": "2026-02-05T22:46:26.739646Z",
     "plan": null
   },
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "1989/2000 (raw: 2100) (11 short) | pedagogy: 1 violations"
+      "message": "1989/2000 (raw: 2100) (11 short) | pedagogy: 2 violations"
     },
     "activities": {
       "status": "pass",

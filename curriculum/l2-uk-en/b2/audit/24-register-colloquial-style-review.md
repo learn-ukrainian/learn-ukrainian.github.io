@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M24 | **Phase:** B2.1b | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:49:43
+**Generated:** 2026-02-05 22:59:51
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,17 +43,8 @@
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✅ правильно:...'.
-  - FIX: Vary sentence structure.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ❌ 1881/2000 (raw: 2748)
+- **Words:** ❌ 1891/2000 (raw: 2758)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -63,7 +54,7 @@
 - **Vocab:** ⚠️ 11 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 90-100% (grammar))
 - **Richness:** ✅ 96% (grammar)
@@ -94,7 +85,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Розминка — Розмовний стиль** | ⚪️ | 68 | Skipped |
-| **Скорочення та сленг** | ⚪️ | 788 | Skipped |
+| **Скорочення та сленг** | ⚪️ | 798 | Skipped |
 | **Частки та наповнювачі** | ⚪️ | 308 | Skipped |
 | **Синтаксичні особливості** | ⚪️ | 514 | Skipped |
 | **Практика** | ⚪️ | 191 | Skipped |

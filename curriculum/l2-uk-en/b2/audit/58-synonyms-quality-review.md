@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M58 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:50:19
+**Generated:** 2026-02-05 23:00:27
 
 ## Configuration
 **Type:** B2-vocab
@@ -21,20 +21,20 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть відповідність (Якість) | 12 | 8 | ✅ |
-| 2 | quiz | Оберіть точну оцінку | 8 | 8 | ✅ |
+| 2 | quiz | Оберіть точну оцінку | 10 | 8 | ✅ |
 | 3 | group-sort | Градація оцінки | 18 | 14 | ✅ |
 | 4 | unjumble | Складіть оцінне речення | 8 | 6 | ✅ |
 | 5 | cloze | Відгук про поїздку | 19 | 14 | ✅ |
 | 6 | fill-in | Оберіть критерій | 10 | 8 | ✅ |
 | 7 | error-correction | Виправте оцінку | 8 | 6 | ✅ |
 | 8 | translate | Переклад якості | 8 | 6 | ✅ |
-| 9 | true-false | Нюанси оцінки | 8 | 8 | ✅ |
-| 10 | select | Всі відтінки досконалості | 6 | 6 | ✅ |
+| 9 | true-false | Нюанси оцінки | 10 | 8 | ✅ |
+| 10 | select | Всі відтінки досконалості | 8 | 6 | ✅ |
 | 11 | match-up | Регістри та Оцінки | 12 | 8 | ✅ |
 | 12 | match-up | Антоніми якості | 12 | 8 | ✅ |
-| 13 | quiz | Метафорична якість | 8 | 8 | ✅ |
+| 13 | quiz | Метафорична якість | 10 | 8 | ✅ |
 | 14 | essay-response | Творче завдання: Мистецтво оцінки | 1 | 1 | ✅ |
-| 15 | select | Соціальна оцінка | 6 | 6 | ✅ |
+| 15 | select | Соціальна оцінка | 8 | 6 | ✅ |
 | 16 | reading | Текст для аналізу: Синоніми: Якість та Оцінка | 3 | 3 | ✅ |
 
 **Summary:**
@@ -45,16 +45,24 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 58-synonyms-quality.yaml: Schema validation error at key '14': {'type': 'select', 'title': 'Соціальна оцінка', 'instruction': 'Оберіть слова, які описують соціальну значущість явища або людини.', 'items': [{'question': 'Яка лексика вказує на вагу в суспільстві?', 'options': [{'text': 'впливовий', 'correct': True}, {'text': 'авторитетний', 'correct': True}, {'text': 'незначний', 'correct': True}, {'text': 'пересічний', 'correct': True}, {'text': 'видатний', 'correct': True}, {'text': "дріб'язковий", 'correct': True}]}, {'question': "Оберіть синоніми до слова 'відомий':", 'options': [{'text': 'знаменитий', 'correct': True}, {'text': 'публічний', 'correct': True}, {'text': 'популярний', 'correct': True}, {'text': 'таємний', 'correct': False}]}, {'question': 'Які слова описують професійне визнання?', 'options': [{'text': 'кваліфікований', 'correct': True}, {'text': 'досвідчений', 'correct': True}, {'text': 'дилетантський', 'correct': False}, {'text': 'майстерний', 'correct': True}]}, {'question': "Оберіть антоніми до слова 'видатний':", 'options': [{'text': 'пересічний', 'correct': True}, {'text': 'непомітний', 'correct': True}, {'text': 'геніальний', 'correct': False}, {'text': 'звичайний', 'correct': True}]}, {'question': 'Слова для опису етичної якості лідера:', 'options': [{'text': 'справедливий', 'correct': True}, {'text': 'чесний', 'correct': True}, {'text': 'корумпований', 'correct': False}, {'text': 'відповідальний', 'correct': True}]}, {'question': 'Які терміни вказують на високий стандарт якості?', 'options': [{'text': 'еталонний', 'correct': True}, {'text': 'взірцевий', 'correct': True}, {'text': 'посередній', 'correct': False}, {'text': 'зразковий', 'correct': True}]}]} is not valid under any of the given schemas
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Оберіть точну оцінку' Q9 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Оберіть точну оцінку' Q10 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Метафорична якість' Q9 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Метафорична якість' Q10 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 58-synonyms-quality.yaml: Schema validation error at key 'words': ['Це', 'була', 'справді', 'гірка', 'поразка', 'для', 'нашої', 'команди', 'але', 'вона', 'згуртувала', 'нас', 'і', 'навчила', 'бути', 'значно', 'сильнішими', 'в', 'майбутньому'] is too long
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 15/100)
 
-- 1 violations (minor)
+- 5 violations (moderate)
 
 ## Gates
-- **Words:** ❌ 1789/2000 (raw: 1940)
+- **Words:** ❌ 1792/2000 (raw: 1943)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -64,7 +72,7 @@
 - **Vocab:** ⚠️ 3 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ❌ 5 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (vocab))
 - **Richness:** ✅ 98% (phraseology)
@@ -79,14 +87,14 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | engagement | 9 | 4 | 100% | 25% | 25.0% |
-| variety | 0.98 | - | 98% | 17% | 16.3% |
+| variety | 0.99 | - | 99% | 17% | 16.5% |
 | cultural | 9 | - | 100% | 17% | 16.7% |
 | visual | 4 | 3 | 100% | 8% | 8.3% |
 | paragraph_var | 0.85 | - | 85% | 8% | 7.1% |
 | examples | 53 | - | 100% | 8% | 8.3% |
 | realworld | 10 | - | 100% | 8% | 8.3% |
 | questions | 5 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **98.4%** |
+| **TOTAL** | | | | | **98.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -95,5 +103,5 @@
 | **Розминка — Добре чи погано?** | ⚪️ | 380 | Skipped |
 | **Good** | ⚪️ | 419 | Skipped |
 | **Bad** | ⚪️ | 571 | Skipped |
-| **Практика — оцінювання в тексті** | ✅ | 336 | Included in Core |
-| **Підсумок** | ✅ | 12 | Included in Core |
+| **Практика — оцінювання в тексті** | ✅ | 337 | Included in Core |
+| **Підсумок** | ✅ | 14 | Included in Core |

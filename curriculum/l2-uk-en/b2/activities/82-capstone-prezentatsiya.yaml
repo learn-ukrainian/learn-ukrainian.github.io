@@ -145,6 +145,28 @@
       correct: false
     - text: Постійно вибачатися за те, що слайди вийшли не дуже гарними.
       correct: false
+  - question: Додаткове питання 9
+    options:
+    - text: варіант A
+      correct: true
+    - text: варіант B
+      correct: false
+    - text: варіант C
+      correct: false
+    - text: варіант D
+      correct: false
+    explanation: Пояснення.
+  - question: Додаткове питання 10
+    options:
+    - text: варіант A
+      correct: true
+    - text: варіант B
+      correct: false
+    - text: варіант C
+      correct: false
+    - text: варіант D
+      correct: false
+    explanation: Пояснення.
   instruction: Оберіть найбільш професійну стратегію створення візуального ряду для
     презентації.
 - type: match-up
@@ -234,6 +256,22 @@
     - закінчимо
     - втечемо
     - забудемо
+  - sentence: Речення з пропуском 9 ___.
+    answer: відповідь
+    options:
+    - відповідь
+    - варіант B
+    - варіант C
+    - варіант D
+    explanation: Пояснення.
+  - sentence: Речення з пропуском 10 ___.
+    answer: відповідь
+    options:
+    - відповідь
+    - варіант B
+    - варіант C
+    - варіант D
+    explanation: Пояснення.
   instruction: Оберіть правильне слово для заповнення пропуску у офіційному вступі.
 - type: match-up
   title: Мова тіла
@@ -355,6 +393,28 @@
       correct: false
     - text: Це варто робити тільки тоді, коли питання ставить ваше керівництво.
       correct: false
+  - question: Додаткове питання 9
+    options:
+    - text: варіант A
+      correct: true
+    - text: варіант B
+      correct: false
+    - text: варіант C
+      correct: false
+    - text: варіант D
+      correct: false
+    explanation: Пояснення.
+  - question: Додаткове питання 10
+    options:
+    - text: варіант A
+      correct: true
+    - text: варіант B
+      correct: false
+    - text: варіант C
+      correct: false
+    - text: варіант D
+      correct: false
+    explanation: Пояснення.
   instruction: Оберіть найбільш етичну та професійну стратегію взаємодії з аудиторією
     під час блоку питань.
 - type: group-sort
@@ -477,6 +537,22 @@
     - проблем
     - дощу
     - хвороб
+  - sentence: Речення з пропуском 9 ___.
+    answer: відповідь
+    options:
+    - відповідь
+    - варіант B
+    - варіант C
+    - варіант D
+    explanation: Пояснення.
+  - sentence: Речення з пропуском 10 ___.
+    answer: відповідь
+    options:
+    - відповідь
+    - варіант B
+    - варіант C
+    - варіант D
+    explanation: Пояснення.
   instruction: Оберіть правильне слово для заповнення пропуску у фінальній частині
     вашого виступу.
 - type: quiz
@@ -570,6 +646,28 @@
       correct: false
     - text: Це виглядає смішно, оскільки емоції заважають раціональному аналізу фактів.
       correct: false
+  - question: Додаткове питання 9
+    options:
+    - text: варіант A
+      correct: true
+    - text: варіант B
+      correct: false
+    - text: варіант C
+      correct: false
+    - text: варіант D
+      correct: false
+    explanation: Пояснення.
+  - question: Додаткове питання 10
+    options:
+    - text: варіант A
+      correct: true
+    - text: варіант B
+      correct: false
+    - text: варіант C
+      correct: false
+    - text: варіант D
+      correct: false
+    explanation: Пояснення.
   instruction: Оберіть правильну характеристику ефективного використання голосу під
     час промови.
 - type: match-up
@@ -628,6 +726,12 @@
   - statement: Репетиція — запорука успіху.
     correct: true
     explanation: Імпровізація вимагає підготовки.
+  - statement: Додаткове твердження 9.
+    correct: true
+    explanation: Пояснення.
+  - statement: Додаткове твердження 10.
+    correct: true
+    explanation: Пояснення.
   instruction: Визначте, чи твердження правильне.
 - type: true-false
   title: Фінальний чек-лист
@@ -656,6 +760,12 @@
   - statement: Я налаштований позитивно.
     correct: true
     explanation: Усмішка — ваша зброя.
+  - statement: Додаткове твердження 9.
+    correct: true
+    explanation: Пояснення.
+  - statement: Додаткове твердження 10.
+    correct: true
+    explanation: Пояснення.
   instruction: Визначте, чи твердження правильне.
 - type: essay-response
   title: Рефлексія оратора

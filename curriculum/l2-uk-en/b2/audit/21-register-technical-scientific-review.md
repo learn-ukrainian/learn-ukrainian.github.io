@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M21 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:49:40
+**Generated:** 2026-02-05 22:59:47
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,7 +44,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 1870/2000 (raw: 2234)
+- **Words:** ❌ 1880/2000 (raw: 2244)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -85,7 +85,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Розминка — Що таке науково-технічний стиль** | ⚪️ | 46 | Skipped |
-| **Лексичні особливості** | ⚪️ | 868 | Skipped |
+| **Лексичні особливості** | ⚪️ | 878 | Skipped |
 | **Граматичні особливості** | ⚪️ | 276 | Skipped |
 | **Типи технічних текстів** | ✅ | 490 | Included in Core |
 | **Практика — аналіз і створення** | ✅ | 178 | Included in Core |

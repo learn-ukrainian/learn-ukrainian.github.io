@@ -2,10 +2,10 @@
   "module": "18-register-academic-ukrainian",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:49:37.002131Z",
+  "last_audit": "2026-02-05T22:59:44.711430Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:46:26.683646Z",
+    "md": "2026-02-05T22:57:16.758892Z",
     "meta": "2026-02-05T22:46:26.732646Z",
     "activities": "2026-02-05T22:46:26.703646Z",
     "vocabulary": "2026-02-05T22:46:26.738646Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "2081/3800 (raw: 2924) | pedagogy: 2 violations"
+      "message": "2094/3800 (raw: 2937) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",

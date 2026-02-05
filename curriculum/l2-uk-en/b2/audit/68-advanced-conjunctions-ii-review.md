@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M68 | **Phase:** B2.2 | **Pedagogy:** Grammar | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:50:30
+**Generated:** 2026-02-05 23:00:37
 
 ## Configuration
 **Type:** B2-grammar
@@ -21,19 +21,19 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть часову межу | 12 | 8 | ✅ |
-| 2 | quiz | Умова чи Час? | 8 | 8 | ✅ |
+| 2 | quiz | Умова чи Час? | 10 | 8 | ✅ |
 | 3 | group-sort | Часова лінія чи Умова? | 22 | 14 | ✅ |
 | 4 | unjumble | Складіть ланцюжок | 8 | 6 | ✅ |
 | 5 | cloze | Сценарій можливостей | 18 | 14 | ✅ |
 | 6 | fill-in | Точний сполучник | 10 | 8 | ✅ |
 | 7 | error-correction | Виправте сценарій | 8 | 6 | ✅ |
 | 8 | translate | Переклад зв'язків | 8 | 6 | ✅ |
-| 9 | true-false | Граматичні правила | 8 | 8 | ✅ |
-| 10 | select | Умовні конструкції | 6 | 6 | ✅ |
+| 9 | true-false | Граматичні правила | 10 | 8 | ✅ |
+| 10 | select | Умовні конструкції | 8 | 6 | ✅ |
 | 11 | match-up | Час та Події | 12 | 8 | ✅ |
 | 12 | match-up | Реальне проти Нереального | 12 | 8 | ✅ |
-| 13 | quiz | Сценарії майбутнього | 8 | 8 | ✅ |
-| 14 | select | Часові сполучники | 6 | 6 | ✅ |
+| 13 | quiz | Сценарії майбутнього | 10 | 8 | ✅ |
+| 14 | select | Часові сполучники | 8 | 6 | ✅ |
 | 15 | essay-response | Сценарій майбутнього | 1 | 1 | ✅ |
 | 16 | reading | Текст для аналізу: Складні Сполучники II: Час та Умова | 3 | 3 | ✅ |
 
@@ -45,13 +45,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: Schema validation error at key '13': {'type': 'select', 'title': 'Часові сполучники', 'instruction': 'Оберіть усі правильні сполучники часу (до 6 елементів).', 'items': [{'question': "Які слова відповідають на питання 'Коли?' в українській мові?", 'options': [{'text': 'щойно', 'correct': True}, {'text': 'поки', 'correct': True}, {'text': 'відколи', 'correct': True}, {'text': 'після того як', 'correct': True}, {'text': 'перед тим як', 'correct': True}, {'text': 'доки', 'correct': True}]}, {'question': 'Які слова найкраще описують тривалість певної дії чи процесу?', 'options': [{'text': 'поки', 'correct': True}, {'text': 'доки', 'correct': True}, {'text': 'протягом', 'correct': True}, {'text': 'раптово', 'correct': False}]}, {'question': 'Оберіть найбільш влучні сполучники для ретроспективи (погляду в минуле):', 'options': [{'text': 'відколи', 'correct': True}, {'text': 'відтоді як', 'correct': True}, {'text': 'з того часу як', 'correct': True}, {'text': 'завтра як', 'correct': False}]}, {'question': 'Які слова вказують на паралельність двох або більше подій?', 'options': [{'text': 'поки', 'correct': True}, {'text': 'в той час як', 'correct': True}, {'text': 'тим часом як', 'correct': True}, {'text': 'після', 'correct': False}]}, {'question': 'Оберіть терміни для позначення часової послідовності:', 'options': [{'text': 'спочатку', 'correct': True}, {'text': 'потім', 'correct': True}, {'text': 'згодом', 'correct': True}, {'text': 'разом', 'correct': False}]}, {'question': "Які сполучники мають значення 'відразу після' певної події?", 'options': [{'text': 'щойно', 'correct': True}, {'text': 'тільки-но', 'correct': True}, {'text': 'ледве', 'correct': True}, {'text': 'давно', 'correct': False}]}]} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Умова чи Час?' Q9 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Умова чи Час?' Q10 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Сценарії майбутнього' Q9 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Сценарії майбутнього' Q10 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 15/100)
 
-- 1 violations (minor)
+- 4 violations (moderate)
 
 ## Gates
 - **Words:** ✅ 2177/2000 (raw: 2260)
@@ -64,7 +70,7 @@
 - **Vocab:** ⚠️ 2 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ❌ 4 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)

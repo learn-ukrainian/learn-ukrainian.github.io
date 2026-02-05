@@ -2,10 +2,10 @@
   "module": "12-parenthetical-expressions",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:49:30.235173Z",
+  "last_audit": "2026-02-05T22:59:37.942160Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:46:26.682646Z",
+    "md": "2026-02-05T22:57:16.752892Z",
     "meta": "2026-02-05T22:46:26.732646Z",
     "activities": "2026-02-05T22:46:26.701646Z",
     "vocabulary": "2026-02-05T22:46:26.738646Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2248/3800 (raw: 3056)"
+      "message": "2284/3800 (raw: 3069)"
     },
     "activities": {
       "status": "pass",

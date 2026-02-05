@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M46 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:50:07
+**Generated:** 2026-02-05 23:00:14
 
 ## Configuration
 **Type:** B2-vocab
@@ -33,7 +33,7 @@
 | 11 | translate | Перекладіть прислів'я англійською | 8 | 6 | ✅ |
 | 12 | essay-response | Аналіз української пареміології | 1 | 1 | ✅ |
 | 13 | match-up | Англійські еквіваленти прислів'їв | 12 | 8 | ✅ |
-| 14 | quiz | Вставте прислів'я в контекст | 8 | 8 | ✅ |
+| 14 | quiz | Вставте прислів'я в контекст | 10 | 8 | ✅ |
 
 **Summary:**
 - Total activities: 14 (target: 10-14) ✅
@@ -43,18 +43,18 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "**Регістр:** Нейтральний, часто вживається в бізнес-контексті.". Shares significant keywords with sentence at index 35.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Вставте прислів'я в контекст' Q9 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Вставте прислів'я в контекст' Q10 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (75% overlap): "Варто зазначити: **Регістр:** Нейтральний, часто вживається в бізнес-контексті.". Shares significant keywords with sentence at index 35.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (71% overlap): "«Краще синиця в руках, ніж журавель у небі», — порадив батько.". Shares significant keywords with sentence at index 101.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (80% overlap): "**Міжмовна паралель:** Прислів'я латинського походження, відоме в усіх європейських мовах.". Shares significant keywords with sentence at index 61.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (83% overlap): "**Батько:** **Сім разів відміряй, один раз відріж**.". Shares significant keywords with sentence at index 82.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (83% overlap): "**Надія:** **Краще синиця в руках, ніж журавель у небі**.". Shares significant keywords with sentence at index 101.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 46-proverbs-nature-time-caution.yaml: Schema validation error at key '13': {'type': 'quiz', 'title': "Вставте прислів'я в контекст", 'instruction': "Оберіть правильне прислів'я для кожної ситуації.", 'items': [{'question': "Колега вже розповідає про підвищення, хоча ще нічого не підтверджено. Яке прислів'я найкраще описує цю ситуацію?", 'options': [{'text': 'Не кажи гоп, поки не перескочиш.', 'correct': True}, {'text': 'Вода камінь точить.', 'correct': False}, {'text': 'Краще пізно, ніж ніколи.', 'correct': False}, {'text': 'Час — гроші.', 'correct': False}]}, {'question': 'Підприємець почав готуватися до святкового сезону ще влітку. Який принцип він використовує?', 'options': [{'text': 'Готуй сани влітку, а воза взимку.', 'correct': True}, {'text': 'Що посієш, те й пожнеш.', 'correct': False}, {'text': 'Ранок вечора мудріший.', 'correct': False}, {'text': 'Вода камінь точить.', 'correct': False}]}, {'question': "Менеджер чекає на ідеальний проєкт замість того, щоб працювати над реальним. Що йому варто пам'ятати?", 'options': [{'text': 'Краще синиця в руках, ніж журавель у небі.', 'correct': True}, {'text': 'Обіцянка — цяцянка.', 'correct': False}, {'text': 'Одна ластівка весни не робить.', 'correct': False}, {'text': 'Довіряй, але перевіряй.', 'correct': False}]}, {'question': "Студент не вчився цілий семестр і тепер провалив іспит. Яке прислів'я йому варто сказати?", 'options': [{'text': 'Що посієш, те й пожнеш.', 'correct': True}, {'text': 'Краще пізно, ніж ніколи.', 'correct': False}, {'text': 'Час — гроші.', 'correct': False}, {'text': 'Одна ластівка весни не робить.', 'correct': False}]}, {'question': "Письменник отримує відмови вже п'ять років, але не здається. Яка мудрість його підтримує?", 'options': [{'text': 'Вода камінь точить.', 'correct': True}, {'text': 'Обіцянка — цяцянка.', 'correct': False}, {'text': 'Не кажи гоп.', 'correct': False}, {'text': 'Ранок вечора мудріший.', 'correct': False}]}, {'question': 'Хтось звільняється зі скандалом і ображає колег. Від чого застерігає народна мудрість?', 'options': [{'text': 'Не плюй у криницю.', 'correct': True}, {'text': 'Береженого Бог береже.', 'correct': False}, {'text': 'Сім разів відміряй.', 'correct': False}, {'text': 'Час — гроші.', 'correct': False}]}, {'question': 'Подруга попередила про складну ситуацію на дорозі перед вашою поїздкою. Чому це важливо?', 'options': [{'text': 'Попереджений — значить озброєний.', 'correct': True}, {'text': 'Краще синиця в руках.', 'correct': False}, {'text': 'Ранок вечора мудріший.', 'correct': False}, {'text': 'Довіряй, але перевіряй.', 'correct': False}]}, {'question': 'Вирішили відкласти прийняття рішення про покупку будинку до завтрашнього ранку. Чому?', 'options': [{'text': 'Ранок вечора мудріший.', 'correct': True}, {'text': 'Час — гроші.', 'correct': False}, {'text': 'Вода камінь точить.', 'correct': False}, {'text': 'Одна ластівка весни не робить.', 'correct': False}]}]} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 15/100)
@@ -62,7 +62,7 @@
 - 6 violations (moderate)
 
 ## Gates
-- **Words:** ✅ 2889/2000 (raw: 3289)
+- **Words:** ✅ 2893/2000 (raw: 3293)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -87,21 +87,21 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | engagement | 12 | 4 | 100% | 25% | 25.0% |
-| variety | 0.77 | - | 77% | 17% | 12.8% |
+| variety | 0.78 | - | 78% | 17% | 13.0% |
 | cultural | 12 | - | 100% | 17% | 16.7% |
 | visual | 4 | 3 | 100% | 8% | 8.3% |
 | paragraph_var | 1.00 | - | 100% | 8% | 8.3% |
 | examples | 55 | - | 100% | 8% | 8.3% |
 | realworld | 5 | - | 100% | 8% | 8.3% |
 | questions | 11 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **96.2%** |
+| **TOTAL** | | | | | **96.3%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 56 | Included in Core |
 | **Розминка — Природа як вчитель** | ⚪️ | 171 | Skipped |
-| **Прислів'я про природу** | ⚪️ | 1539 | Skipped |
+| **Прислів'я про природу** | ⚪️ | 1543 | Skipped |
 | **Прислів'я про час** | ⚪️ | 325 | Skipped |
 | **Прислів'я про обережність** | ⚪️ | 150 | Skipped |
 | **Практика — прислів'я у контексті** | ✅ | 636 | Included in Core |

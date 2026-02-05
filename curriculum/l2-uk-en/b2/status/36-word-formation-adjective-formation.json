@@ -2,10 +2,10 @@
   "module": "36-word-formation-adjective-formation",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:49:56.829318Z",
+  "last_audit": "2026-02-05T23:00:04.504129Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:46:26.686646Z",
+    "md": "2026-02-05T22:57:16.772892Z",
     "meta": "2026-02-05T22:46:26.733646Z",
     "activities": "2026-02-05T22:46:26.708646Z",
     "vocabulary": "2026-02-05T22:46:26.739646Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2113/2000 (raw: 2963)"
+      "message": "2129/2000 (raw: 2979)"
     },
     "activities": {
       "status": "pass",

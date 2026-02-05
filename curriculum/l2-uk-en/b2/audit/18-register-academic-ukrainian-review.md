@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M18 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:49:37
+**Generated:** 2026-02-05 22:59:44
 
 ## Configuration
 **Type:** B2-grammar
@@ -46,16 +46,14 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (83% overlap): "Результати дослідження вказують на потенційний негативний вплив соціальних мереж на комунікативну по...". Shares significant keywords with sentence at index 62.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✅ правильно:...'.
-  - FIX: Vary sentence structure.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ❌ 2081/3800 (raw: 2924)
+- **Words:** ❌ 2094/3800 (raw: 2937)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -65,9 +63,9 @@
 - **Vocab:** ⚠️ 7 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
@@ -80,7 +78,7 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | exemplar_texts | 7 | 2 | 100% | 25% | 25.0% |
-| model_answers | 93 | 3 | 100% | 20% | 20.0% |
+| model_answers | 92 | 3 | 100% | 20% | 20.0% |
 | engagement | 9 | 5 | 100% | 15% | 15.0% |
 | register_analysis | 15 | 5 | 100% | 15% | 15.0% |
 | visual | 15 | 4 | 100% | 10% | 10.0% |
@@ -94,8 +92,8 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 57 | Included in Core |
 | **Вступ — Науковий стиль** | ✅ | 214 | Included in Core |
-| **Лексичні особливості** | ⚪️ | 711 | Skipped |
-| **Граматичні особливості** | ⚪️ | 332 | Skipped |
+| **Лексичні особливості** | ⚪️ | 722 | Skipped |
+| **Граматичні особливості** | ⚪️ | 334 | Skipped |
 | **Мовне хеджування** | ⚪️ | 495 | Skipped |
 | **Цитування та посилання** | ⚪️ | 74 | Skipped |
 | **Структура наукового тексту** | ✅ | 76 | Included in Core |

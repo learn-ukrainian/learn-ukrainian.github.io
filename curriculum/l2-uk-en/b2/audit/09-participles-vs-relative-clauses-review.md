@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M09 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:49:26
+**Generated:** 2026-02-05 22:59:34
 
 ## Configuration
 **Type:** B2-grammar
@@ -42,17 +42,8 @@
 - Required types used: 6/6 (error-correction, essay-response, fill-in, group-sort, match-up, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✅ правильно:...'.
-  - FIX: Vary sentence structure.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ❌ 2493/3800 (raw: 3053)
+- **Words:** ❌ 2503/3800 (raw: 3063)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -62,7 +53,7 @@
 - **Vocab:** ⚠️ 9 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
@@ -93,7 +84,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 5 | Included in Core |
 | **Вступ — Два способи вираження ознаки за дією** | ✅ | 239 | Included in Core |
-| **Порівняльна таблиця форм** | ⚪️ | 971 | Skipped |
+| **Порівняльна таблиця форм** | ⚪️ | 981 | Skipped |
 | **Стилістичний вплив** | ⚪️ | 251 | Skipped |
 | **Коли обирати дієприкметники** | ⚪️ | 383 | Skipped |
 | **Коли обирати підрядні речення** | ⚪️ | 352 | Skipped |

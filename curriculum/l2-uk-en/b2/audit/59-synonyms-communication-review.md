@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M59 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:50:20
+**Generated:** 2026-02-05 23:00:28
 
 ## Configuration
 **Type:** B2-vocab
@@ -21,20 +21,20 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть контекст мовлення | 12 | 8 | ✅ |
-| 2 | quiz | Оберіть точне дієслово | 8 | 8 | ✅ |
+| 2 | quiz | Оберіть точне дієслово | 10 | 8 | ✅ |
 | 3 | group-sort | Рівень офіційності | 18 | 14 | ✅ |
 | 4 | unjumble | Складіть речення про діалог | 8 | 6 | ✅ |
 | 5 | cloze | Конференція в столиці | 18 | 14 | ✅ |
 | 6 | fill-in | Точність запитання | 10 | 8 | ✅ |
 | 7 | error-correction | Виправте помилки комунікації | 8 | 6 | ✅ |
 | 8 | translate | Переклад спілкування | 8 | 6 | ✅ |
-| 9 | true-false | Нюанси діалогу | 8 | 8 | ✅ |
-| 10 | select | Всі форми повідомлення | 6 | 6 | ✅ |
+| 9 | true-false | Нюанси діалогу | 10 | 8 | ✅ |
+| 10 | select | Всі форми повідомлення | 8 | 6 | ✅ |
 | 11 | match-up | Спілкування та Регістри | 12 | 8 | ✅ |
 | 12 | match-up | Антоніми спілкування | 12 | 8 | ✅ |
-| 13 | quiz | Метафоричне слово | 8 | 8 | ✅ |
+| 13 | quiz | Метафоричне слово | 10 | 8 | ✅ |
 | 14 | essay-response | Творче завдання: Сила слова | 1 | 1 | ✅ |
-| 15 | select | Професійна комунікація | 6 | 6 | ✅ |
+| 15 | select | Професійна комунікація | 8 | 6 | ✅ |
 | 16 | reading | Текст для аналізу: Синоніми: Комунікація та Мовлення | 3 | 3 | ✅ |
 
 **Summary:**
@@ -45,13 +45,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 59-synonyms-communication.yaml: Schema validation error at key '14': {'type': 'select', 'title': 'Професійна комунікація', 'instruction': 'Оберіть слова, які доречні в ділових переговорах.', 'items': [{'question': 'Яка лексика пасує для офіційних зустрічей?', 'options': [{'text': 'пропонувати', 'correct': True}, {'text': 'узгоджувати', 'correct': True}, {'text': 'базікати', 'correct': False}, {'text': 'підтверджувати', 'correct': True}, {'text': 'теревенити', 'correct': False}, {'text': 'резюмувати', 'correct': True}]}, {'question': 'Оберіть дієслова для підбиття підсумків:', 'options': [{'text': 'резюмувати', 'correct': True}, {'text': 'підсумовувати', 'correct': True}, {'text': 'базікати', 'correct': False}, {'text': 'висновувати', 'correct': True}]}, {'question': 'Які слова описують процес переконання?', 'options': [{'text': 'аргументувати', 'correct': True}, {'text': 'переконувати', 'correct': True}, {'text': 'обґрунтовувати', 'correct': True}, {'text': 'мовчати', 'correct': False}]}, {'question': 'Оберіть терміни для ділового спілкування:', 'options': [{'text': 'порядок денний', 'correct': True}, {'text': 'протокол', 'correct': True}, {'text': 'регламент', 'correct': True}, {'text': 'плітки', 'correct': False}]}, {'question': 'Які дієслова вказують на офіційне повідомлення?', 'options': [{'text': 'сповіщати', 'correct': True}, {'text': 'інформувати', 'correct': True}, {'text': 'повідомляти', 'correct': True}, {'text': 'шепотіти', 'correct': False}]}, {'question': 'Оберіть форми офіційного звернення:', 'options': [{'text': 'запит', 'correct': True}, {'text': 'заява', 'correct': True}, {'text': 'клопотання', 'correct': True}, {'text': 'балачка', 'correct': False}]}]} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Оберіть точне дієслово' Q9 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Оберіть точне дієслово' Q10 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Метафоричне слово' Q9 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Метафоричне слово' Q10 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 15/100)
 
-- 1 violations (minor)
+- 4 violations (moderate)
 
 ## Gates
 - **Words:** ❌ 1768/2000 (raw: 1909)
@@ -64,7 +70,7 @@
 - **Vocab:** ⚠️ 4 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ❌ 4 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (vocab))
 - **Richness:** ✅ 98% (phraseology)

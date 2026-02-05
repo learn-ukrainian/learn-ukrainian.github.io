@@ -2,10 +2,10 @@
   "module": "21-register-technical-scientific",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:49:40.290522Z",
+  "last_audit": "2026-02-05T22:59:47.994628Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:46:26.684646Z",
+    "md": "2026-02-05T22:57:16.761892Z",
     "meta": "2026-02-05T22:46:26.732646Z",
     "activities": "2026-02-05T22:46:26.704646Z",
     "vocabulary": "2026-02-05T22:46:26.738646Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "1870/2000 (raw: 2234)"
+      "message": "1880/2000 (raw: 2244)"
     },
     "activities": {
       "status": "pass",

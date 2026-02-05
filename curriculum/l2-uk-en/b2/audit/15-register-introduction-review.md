@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M15 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:49:33
+**Generated:** 2026-02-05 23:01:19
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,7 +44,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 3132/3800 (raw: 3940)
+- **Words:** ❌ 3140/3800 (raw: 3948)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -93,7 +93,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 68 | Included in Core |
 | **Вступ — Що таке функціональний стиль?** | ✅ | 303 | Included in Core |
-| **Розмовний стиль** | ⚪️ | 899 | Skipped |
+| **Розмовний стиль** | ⚪️ | 907 | Skipped |
 | **Художній стиль** | ⚪️ | 126 | Skipped |
 | **Науковий стиль** | ⚪️ | 739 | Skipped |
 | **Офіційно-діловий стиль** | ⚪️ | 719 | Skipped |

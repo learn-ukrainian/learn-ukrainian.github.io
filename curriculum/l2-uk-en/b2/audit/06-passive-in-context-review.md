@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M06 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:49:23
+**Generated:** 2026-02-05 22:59:31
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,17 +43,8 @@
 - Required types used: 6/6 (error-correction, essay-response, fill-in, group-sort, match-up, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✅ правильно:...'.
-  - FIX: Vary sentence structure.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ❌ 2126/3800 (raw: 2557)
+- **Words:** ❌ 2137/3800 (raw: 2568)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -63,7 +54,7 @@
 - **Vocab:** ⚠️ 5 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
 - **Richness:** ✅ 98% (grammar)
@@ -94,9 +85,9 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 54 | Included in Core |
 | **Вступ — Регістр і пасив** | ✅ | 337 | Included in Core |
-| **Таблиця регістрів і форм пасиву** | ⚪️ | 836 | Skipped |
+| **Таблиця регістрів і форм пасиву** | ⚪️ | 846 | Skipped |
 | **Практичні сценарії — Юридичний контекст** | ✅ | 349 | Included in Core |
-| **Практичні сценарії — Науковий контекст** | ✅ | 428 | Included in Core |
+| **Практичні сценарії — Науковий контекст** | ✅ | 429 | Included in Core |
 | **Практичні сценарії — Літературний та журналістичний контекст** | ✅ | 110 | Included in Core |
 | **Практичні сценарії — Розмовний контекст** | ✅ | 0 | Included in Core |
 | **Інтегрована практика** | ⚪️ | 0 | Skipped |

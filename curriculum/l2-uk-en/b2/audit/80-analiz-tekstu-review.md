@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M80 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:50:42
+**Generated:** 2026-02-05 23:00:49
 
 ## Configuration
 **Type:** B2-skills
@@ -21,22 +21,22 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Термінологія аналізу | 14 | 8 | ✅ |
-| 2 | quiz | Визначення стилю тексту | 8 | 8 | ✅ |
+| 2 | quiz | Визначення стилю тексту | 10 | 8 | ✅ |
 | 3 | match-up | Мета автора | 12 | 8 | ✅ |
-| 4 | quiz | Виявлення упередженості | 8 | 8 | ✅ |
+| 4 | quiz | Виявлення упередженості | 10 | 8 | ✅ |
 | 5 | match-up | Читаємо підтекст | 12 | 8 | ✅ |
-| 6 | fill-in | Структура аргументації | 8 | 8 | ✅ |
+| 6 | fill-in | Структура аргументації | 10 | 8 | ✅ |
 | 7 | match-up | Порядок частин есе | 12 | 8 | ✅ |
 | 8 | group-sort | Сортування джерел | 18 | 14 | ✅ |
 | 9 | match-up | Техніки маніпуляції | 12 | 8 | ✅ |
-| 10 | quiz | Плагіат чи ні? | 8 | 8 | ✅ |
-| 11 | fill-in | Лексика в контексті | 8 | 8 | ✅ |
+| 10 | quiz | Плагіат чи ні? | 10 | 8 | ✅ |
+| 11 | fill-in | Лексика в контексті | 10 | 8 | ✅ |
 | 12 | match-up | Види посилань | 12 | 8 | ✅ |
-| 13 | quiz | Факт чи думка? | 8 | 8 | ✅ |
+| 13 | quiz | Факт чи думка? | 10 | 8 | ✅ |
 | 14 | match-up | Логічні хиби | 12 | 8 | ✅ |
 | 15 | essay-response | Аналітичний розбір маніпуляції | 1 | 1 | ✅ |
 | 16 | reading | Текст для аналізу: Аналіз тексту | 3 | 3 | ✅ |
-| 17 | true-false | Правда чи хибність: Аналіз тексту | 8 | 8 | ✅ |
+| 17 | true-false | Правда чи хибність: Аналіз тексту | 10 | 8 | ✅ |
 
 **Summary:**
 - Total activities: 17 (target: 14-18) ✅
@@ -46,13 +46,27 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 80-analiz-tekstu.yaml: Schema validation error at key '16': {'type': 'true-false', 'title': 'Правда чи хибність: Аналіз тексту', 'items': [{'statement': 'Ця тема є важливою для рівня B2.', 'correct': True, 'explanation': 'Так, це є частиною програми B2.'}, {'statement': 'Цей матеріал не потрібен для професійного спілкування.', 'correct': False, 'explanation': 'Навпаки, цей матеріал є необхідним для професійного рівня.'}, {'statement': 'Вивчення цієї теми допомагає розуміти складні тексти.', 'correct': True, 'explanation': 'Правильно, це розширює комунікативну компетенцію.'}, {'statement': 'Ці конструкції використовуються тільки в розмовній мові.', 'correct': False, 'explanation': 'Вони використовуються в різних стилях мовлення.'}, {'statement': 'Для рівня B2 важливо розуміти різні регістри мови.', 'correct': True, 'explanation': 'Так, це є однією з ключових компетенцій B2.'}, {'statement': 'Цю тему можна вивчити без практики.', 'correct': False, 'explanation': 'Практика є необхідною для закріплення матеріалу.'}, {'statement': 'Знання цього матеріалу допомагає на іспиті B2.', 'correct': True, 'explanation': 'Так, це є частиною іспитових завдань.'}, {'statement': 'Ці конструкції існують тільки в українській мові.', 'correct': False, 'explanation': 'Подібні конструкції є в багатьох мовах, але з особливостями.'}]} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення стилю тексту' Q9 prompt length 3 (target: 5-20)
+  - FIX: Adjust prompt length to 5-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення стилю тексту' Q10 prompt length 3 (target: 5-20)
+  - FIX: Adjust prompt length to 5-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Виявлення упередженості' Q9 prompt length 3 (target: 5-20)
+  - FIX: Adjust prompt length to 5-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Виявлення упередженості' Q10 prompt length 3 (target: 5-20)
+  - FIX: Adjust prompt length to 5-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Плагіат чи ні?' Q9 prompt length 3 (target: 5-20)
+  - FIX: Adjust prompt length to 5-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Плагіат чи ні?' Q10 prompt length 3 (target: 5-20)
+  - FIX: Adjust prompt length to 5-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Факт чи думка?' Q9 prompt length 3 (target: 5-20)
+  - FIX: Adjust prompt length to 5-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Факт чи думка?' Q10 prompt length 3 (target: 5-20)
+  - FIX: Adjust prompt length to 5-20 words.
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 30/100)
 
-- 1 violations (minor)
+- 8 violations (significant)
 
 ## Gates
 - **Words:** ✅ 2141/2000 (raw: 2290)
@@ -65,7 +79,7 @@
 - **Vocab:** ⚠️ 1 < 20 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ❌ 8 violations
 - **Content_heavy:** ✅ Content-heavy OK (17 activities)
 - **Immersion:** 🇺🇦 98.8% (target 90-100% (skills))
 - **Richness:** ✅ 99% (skills)

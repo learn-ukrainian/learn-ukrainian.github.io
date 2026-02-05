@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M14 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:49:32
+**Generated:** 2026-02-05 22:59:40
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,25 +43,21 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (71% overlap): "Незважаючи на те що умови змінилися, контракт залишається чинним.". Shares significant keywords with sentence at index 125.
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (71% overlap): "Незважаючи на те що умови змінилися, контракт залишається чинним.". Shares significant keywords with sentence at index 127.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (71% overlap): "Незважаючи на те що умови змінилися, контракт залишається чинним.". Shares significant keywords with sentence at index 125.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (83% overlap): "→ Хоч умови змінилися, контракт залишається чинним.". Shares significant keywords with sentence at index 125.
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (71% overlap): "Незважаючи на те що умови змінилися, контракт залишається чинним.". Shares significant keywords with sentence at index 127.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (71% overlap): "(офіційніше)
-   **Варіант 2:** Завдання складне, хоч виконати можна.". Shares significant keywords with sentence at index 170.
+   **Варіант 2:** Завдання складне, хоч виконати можна.". Shares significant keywords with sentence at index 173.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✅ правильно:...'.
-  - FIX: Vary sentence structure.
 
 ## Recommendation
-**📝 UPDATE** (severity 15/100)
+**📝 UPDATE** (severity 5/100)
 
-- 5 violations (moderate)
+- 3 violations (minor)
 
 ## Gates
-- **Words:** ❌ 2463/3800 (raw: 3458)
+- **Words:** ❌ 2482/3800 (raw: 3477)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -71,7 +67,7 @@
 - **Vocab:** ⚠️ 4 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 5 violations
+- **Pedagogy:** ❌ 3 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
@@ -85,9 +81,9 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 70 | 24 | 100% | 20% | 20.0% |
+| examples | 67 | 24 | 100% | 20% | 20.0% |
 | engagement | 8 | 5 | 100% | 15% | 15.0% |
-| dialogues | 8 | 4 | 100% | 15% | 15.0% |
+| dialogues | 9 | 4 | 100% | 15% | 15.0% |
 | variety | 0.92 | - | 92% | 10% | 9.2% |
 | cultural | 5 | 3 | 100% | 10% | 10.0% |
 | realworld | 12 | 3 | 100% | 10% | 10.0% |
@@ -102,9 +98,9 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 66 | Included in Core |
 | **Вступ — Сполучники як засіб зв'язку** | ✅ | 188 | Included in Core |
-| **Сполучники протиставлення** | ⚪️ | 1016 | Skipped |
-| **Сполучники приєднання** | ⚪️ | 387 | Skipped |
-| **Сполучники наслідку** | ⚪️ | 403 | Skipped |
+| **Сполучники протиставлення** | ⚪️ | 1023 | Skipped |
+| **Сполучники приєднання** | ⚪️ | 392 | Skipped |
+| **Сполучники наслідку** | ⚪️ | 410 | Skipped |
 | **Допустові сполучники** | ⚪️ | 281 | Skipped |
 | **Вибір за регістром** | ⚪️ | 110 | Skipped |
 | **Практика і підсумок** | ✅ | 0 | Included in Core |

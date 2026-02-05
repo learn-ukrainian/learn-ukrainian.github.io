@@ -2,10 +2,10 @@
   "module": "08-active-participles-past",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:49:25.778575Z",
+  "last_audit": "2026-02-05T22:59:33.497947Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:46:26.682646Z",
+    "md": "2026-02-05T22:56:29.644076Z",
     "meta": "2026-02-05T22:46:26.732646Z",
     "activities": "2026-02-05T22:46:26.700646Z",
     "vocabulary": "2026-02-05T22:46:26.738646Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "2157/3800 (raw: 2796) | pedagogy: 3 violations"
+      "message": "2164/3800 (raw: 2803) | pedagogy: 3 violations"
     },
     "activities": {
       "status": "pass",

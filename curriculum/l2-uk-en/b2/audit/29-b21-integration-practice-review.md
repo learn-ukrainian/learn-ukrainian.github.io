@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M29 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:49:49
+**Generated:** 2026-02-05 22:59:56
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,7 +44,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 1862/2000 (raw: 1969)
+- **Words:** ❌ 1865/2000 (raw: 1972)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -70,7 +70,7 @@
 |--------|-------|--------|-------|--------|--------------|
 | examples | 31 | 24 | 100% | 20% | 20.0% |
 | engagement | 8 | 5 | 100% | 15% | 15.0% |
-| dialogues | 7 | 4 | 100% | 15% | 15.0% |
+| dialogues | 8 | 4 | 100% | 15% | 15.0% |
 | variety | 0.99 | - | 99% | 10% | 9.9% |
 | cultural | 4 | 3 | 100% | 10% | 10.0% |
 | realworld | 5 | 3 | 100% | 10% | 10.0% |
@@ -87,6 +87,6 @@
 | **Огляд — Що ми вивчили в B2.1** | ⚪️ | 156 | Skipped |
 | **Інтеграційний текст 1 — Офіційний документ** | ✅ | 904 | Included in Core |
 | **Інтеграційний текст 2 — Новина** | ✅ | 408 | Included in Core |
-| **Інтеграційний текст 3 — Науковий опис** | ✅ | 154 | Included in Core |
+| **Інтеграційний текст 3 — Науковий опис** | ✅ | 155 | Included in Core |
 | **Підсумкове завдання** | ⚪️ | 157 | Skipped |
-| **Підсумок** | ✅ | 12 | Included in Core |
+| **Підсумок** | ✅ | 14 | Included in Core |

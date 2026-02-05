@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M08 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:49:25
+**Generated:** 2026-02-05 22:59:33
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,9 +43,9 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "- **Правильно:** Студент, який прочитав книгу, написав есе.". Shares significant keywords with sentence at index 41.
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (86% overlap): "- Зокрема, **Правильно:** Студент, який прочитав книгу, написав есе.". Shares significant keywords with sentence at index 41.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (86% overlap): "- **Правильно:** Документ, який підписав директор, набув чинності.". Shares significant keywords with sentence at index 74.
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (75% overlap): "- Зокрема, **Правильно:** Документ, який підписав директор, набув чинності.". Shares significant keywords with sentence at index 74.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 08-active-participles-past.yaml: Duplicate key 'instruction' at line 663 (first defined at line 662)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
@@ -56,7 +56,7 @@
 - 3 violations (minor)
 
 ## Gates
-- **Words:** ❌ 2157/3800 (raw: 2796)
+- **Words:** ❌ 2164/3800 (raw: 2803)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -80,7 +80,7 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 45 | 24 | 100% | 20% | 20.0% |
+| examples | 47 | 24 | 100% | 20% | 20.0% |
 | engagement | 9 | 5 | 100% | 15% | 15.0% |
 | dialogues | 12 | 4 | 100% | 15% | 15.0% |
 | variety | 0.94 | - | 94% | 10% | 9.4% |
@@ -100,7 +100,7 @@
 | **Утворення форм на -лий** | ⚪️ | 397 | Skipped |
 | **Легітимні лексикалізовані форми** | ⚪️ | 444 | Skipped |
 | **Русизми та їх уникання** | ⚪️ | 165 | Skipped |
-| **Синтетичний майбутній час** | ⚪️ | 589 | Skipped |
+| **Синтетичний майбутній час** | ⚪️ | 596 | Skipped |
 | **Розпізнавання в старих текстах** | ✅ | 65 | Included in Core |
 | **Практика і підсумок** | ✅ | 162 | Included in Core |
 | **Підсумок** | ✅ | 12 | Included in Core |

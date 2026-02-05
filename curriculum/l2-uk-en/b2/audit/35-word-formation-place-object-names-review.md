@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M35 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:49:55
+**Generated:** 2026-02-05 23:00:03
 
 ## Configuration
 **Type:** B2-grammar
@@ -51,7 +51,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2344/2000 (raw: 2755)
+- **Words:** ✅ 2353/2000 (raw: 2764)
 - **Activities:** ✅ 13/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -77,7 +77,7 @@
 |--------|-------|--------|-------|--------|--------------|
 | examples | 61 | 24 | 100% | 20% | 20.0% |
 | engagement | 9 | 5 | 100% | 15% | 15.0% |
-| dialogues | 20 | 4 | 100% | 15% | 15.0% |
+| dialogues | 21 | 4 | 100% | 15% | 15.0% |
 | variety | 0.95 | - | 95% | 10% | 9.5% |
 | cultural | 4 | 3 | 100% | 10% | 10.0% |
 | realworld | 5 | 3 | 100% | 10% | 10.0% |
@@ -92,7 +92,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 67 | Included in Core |
 | **Розминка — Як утворюються назви місць** | ⚪️ | 244 | Skipped |
-| **Suffix -ня** | ⚪️ | 1227 | Skipped |
+| **Suffix -ня** | ⚪️ | 1236 | Skipped |
 | **Suffix -ище (place/area)** | ⚪️ | 229 | Skipped |
 | **Suffix -арня (workshop/establishment)** | ⚪️ | 381 | Skipped |
 | **Практика — утворення назв місць** | ⚪️ | 184 | Skipped |

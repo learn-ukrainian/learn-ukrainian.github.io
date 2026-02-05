@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M72 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:50:34
+**Generated:** 2026-02-05 23:01:24
 
 ## Configuration
 **Type:** B2-vocab
@@ -32,7 +32,7 @@
 | 10 | mark-the-words | Позначте IT-терміни | 14 | 6 | ✅ |
 | 11 | cloze | IT-діалог розробників | 18 | 14 | ✅ |
 | 12 | true-false | Кібербезпека: правда чи міф? | 16 | 8 | ✅ |
-| 13 | fill-in | Заповніть факти про українські IT-компанії | 8 | 8 | ✅ |
+| 13 | fill-in | Заповніть факти про українські IT-компанії | 10 | 8 | ✅ |
 | 14 | essay-response | Майбутнє технологій в Україні | 1 | 1 | ✅ |
 | 15 | reading | Текст для аналізу: Технології та ШІ | 3 | 3 | ✅ |
 
@@ -42,15 +42,6 @@
 - Priority types used: 4/4 (mark-the-words, match-up, quiz, translate) ✅
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
-
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 72-tekhnolohii-ta-shi.yaml: Schema validation error at key '12': {'type': 'fill-in', 'title': 'Заповніть факти про українські IT-компанії', 'instruction': 'Оберіть правильну інформацію про українські технологічні компанії.', 'items': [{'answer': 'Grammarly', 'options': ['Grammarly', 'Google', 'DeepL', 'Ginger'], 'sentence': '___ — сервіс перевірки граматики, заснований українцями.'}, {'answer': 'Сергій Лебедєв', 'options': ['Сергій Лебедєв', 'Алан Тюрінг', 'Стів Джобс', 'Білл Гейтс'], 'sentence': "Перший комп'ютер у континентальній Європі створив ___."}, {'answer': 'Preply', 'options': ['Preply', 'Duolingo', 'Babbel', 'Rosetta Stone'], 'sentence': '___ — українська платформа для вивчення мов.'}, {'answer': 'безпеки', 'options': ['безпеки', 'опалення', 'освітлення', 'розваг'], 'sentence': 'Ajax Systems виробляє розумні системи ___.'}, {'answer': 'Respeecher', 'options': ['Respeecher', 'Deepfake', 'Voice.ai', 'Synthesia'], 'sentence': '___ — технологія клонування голосу від української компанії.'}, {'answer': 'DOU', 'options': ['DOU', 'Reddit', 'Habr', 'Stack Overflow'], 'sentence': 'Головна українська IT-спільнота — ___.'}, {'answer': 'Prometheus', 'options': ['Prometheus', 'Coursera', 'Udemy', 'EdEra'], 'sentence': '___ — українська платформа безкоштовної онлайн-освіти.'}, {'answer': 'MacPaw', 'options': ['MacPaw', 'Microsoft', 'Apple', 'Adobe'], 'sentence': '___ — відома українська продуктова компанія, що створює програми для macOS.'}]} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
 
 ## Gates
 - **Words:** ❌ 1787/2000 (raw: 2355)
@@ -63,7 +54,7 @@
 - **Vocab:** ⚠️ 20 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⚠️ Too many activities: 15 (target 10-14)
 - **Immersion:** 🇺🇦 98.6% (target 90-100% (vocab))
 - **Richness:** ❌ 74% < 95% min (vocabulary)

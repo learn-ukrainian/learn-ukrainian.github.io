@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M30 | **Phase:** B2.1 | **Pedagogy:** checkpoint | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:49:50
+**Generated:** 2026-02-05 22:59:57
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -59,7 +59,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2130/2000 (raw: 2323)
+- **Words:** ✅ 2131/2000 (raw: 2324)
 - **Activities:** ✅ 21/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -98,7 +98,7 @@
 | **Intro/Narrative** | ✅ | 58 | Included in Core |
 | **Огляд — Контрольна точка B2.1** | ⚪️ | 88 | Skipped |
 | **Навичка 1: Пасивний стан** | ⚪️ | 231 | Skipped |
-| **Навичка 2: Дієприкметники** | ⚪️ | 403 | Skipped |
+| **Навичка 2: Дієприкметники** | ⚪️ | 404 | Skipped |
 | **Навичка 3: Регістри** | ⚪️ | 439 | Skipped |
 | **Навичка 4: Доменна лексика** | ⚪️ | 438 | Skipped |
 | **Підсумок та результати** | ✅ | 473 | Included in Core |

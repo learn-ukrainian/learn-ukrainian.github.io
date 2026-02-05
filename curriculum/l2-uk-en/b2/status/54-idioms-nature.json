@@ -2,12 +2,12 @@
   "module": "54-idioms-nature",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T22:50:15.724247Z",
+  "last_audit": "2026-02-05T23:00:23.037697Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-05T22:46:26.689646Z",
     "meta": "2026-02-05T22:46:26.733646Z",
-    "activities": "2026-02-05T22:46:26.713646Z",
+    "activities": "2026-02-05T22:53:38.067809Z",
     "vocabulary": "2026-02-05T22:46:26.740646Z",
     "plan": null
   },
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "1927/2000 (raw: 2034) (73 short) | pedagogy: 1 violations"
+      "message": "1927/2000 (raw: 2034) (73 short) | pedagogy: 4 violations"
     },
     "activities": {
       "status": "pass",

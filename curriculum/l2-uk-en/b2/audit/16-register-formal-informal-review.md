@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M16 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:49:34
+**Generated:** 2026-02-05 23:01:20
 
 ## Configuration
 **Type:** B2-grammar
@@ -47,16 +47,14 @@
 
 Шановна пані Оксано!". Shares significant keywords with sentence at index 62.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✅ правильно:...'.
-  - FIX: Vary sentence structure.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ❌ 2350/3800 (raw: 3041)
+- **Words:** ❌ 2364/3800 (raw: 3055)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -66,7 +64,7 @@
 - **Vocab:** ⚠️ 4 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
 - **Richness:** ❌ 74% < 95% min (style)
@@ -105,9 +103,9 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 67 | Included in Core |
 | **Вступ — Формальність у спілкуванні** | ✅ | 152 | Included in Core |
-| **Ти/Ви-розрізнення** | ⚪️ | 728 | Skipped |
-| **Форми звертання** | ⚪️ | 357 | Skipped |
-| **Формальні/неформальні лексичні пари** | ⚪️ | 333 | Skipped |
+| **Ти/Ви-розрізнення** | ⚪️ | 739 | Skipped |
+| **Форми звертання** | ⚪️ | 358 | Skipped |
+| **Формальні/неформальні лексичні пари** | ⚪️ | 335 | Skipped |
 | **Трансформація регістру** | ⚪️ | 417 | Skipped |
 | **Соціальні ситуації** | ⚪️ | 94 | Skipped |
 | **Практика і підсумок** | ✅ | 190 | Included in Core |

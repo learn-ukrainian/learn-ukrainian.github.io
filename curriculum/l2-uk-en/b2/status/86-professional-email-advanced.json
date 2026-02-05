@@ -2,11 +2,11 @@
   "module": "86-professional-email-advanced",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T22:50:48.813182Z",
+  "last_audit": "2026-02-05T23:01:28.237499Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-05T22:46:26.695646Z",
-    "meta": "2026-02-05T22:46:26.734646Z",
+    "meta": "2026-02-05T22:59:16.470409Z",
     "activities": "2026-02-05T22:46:26.721646Z",
     "vocabulary": "2026-02-05T22:46:26.741646Z",
     "plan": null
@@ -33,9 +33,9 @@
       "message": "20/20"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "0/10 (PENDING) - Naturalness check required"
+      "status": "pass",
+      "violations": 0,
+      "message": "8/10 (High)"
     }
   },
   "overall": {
@@ -43,7 +43,7 @@
     "blocking_issues": [
       "12 forbidden activity types (use --fix to remove)"
     ],
-    "pass_count": 3,
-    "fail_count": 2
+    "pass_count": 4,
+    "fail_count": 1
   }
 }

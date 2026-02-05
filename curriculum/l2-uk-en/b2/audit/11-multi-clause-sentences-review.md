@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M11 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:49:29
+**Generated:** 2026-02-05 22:59:36
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,23 +43,20 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (71% overlap): "Складнопідрядне з послідовним підпорядкуванням (2 підрядних: умовне, з'ясувальне)
-5.". Shares significant keywords with sentence at index 76.
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Книга, яку я читаю, написана автором, якого я поважаю.". Shares significant keywords with sentence at index 83.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Книга, яку я читаю, написана автором, якого я поважаю.". Shares significant keywords with sentence at index 79.
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (88% overlap): "Хоча було пізно, ми продовжували працювати і досягли мети.". Shares significant keywords with sentence at index 84.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (88% overlap): "Хоча було пізно, ми продовжували працювати і досягли мети.". Shares significant keywords with sentence at index 80.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✅ правильно:...'.
+- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'складнопідрядне з...'.
   - FIX: Vary sentence structure.
 
 ## Recommendation
-**📝 UPDATE** (severity 15/100)
+**📝 UPDATE** (severity 5/100)
 
-- 4 violations (moderate)
+- 3 violations (minor)
 
 ## Gates
-- **Words:** ❌ 2135/3800 (raw: 2558)
+- **Words:** ❌ 2169/3800 (raw: 2592)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -69,7 +66,7 @@
 - **Vocab:** ⚠️ 6 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 4 violations
+- **Pedagogy:** ❌ 3 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
@@ -83,9 +80,9 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 69 | 24 | 100% | 20% | 20.0% |
+| examples | 63 | 24 | 100% | 20% | 20.0% |
 | engagement | 11 | 5 | 100% | 15% | 15.0% |
-| dialogues | 14 | 4 | 100% | 15% | 15.0% |
+| dialogues | 16 | 4 | 100% | 15% | 15.0% |
 | variety | 0.94 | - | 94% | 10% | 9.4% |
 | cultural | 4 | 3 | 100% | 10% | 10.0% |
 | realworld | 7 | 3 | 100% | 10% | 10.0% |
@@ -100,8 +97,8 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 50 | Included in Core |
 | **Вступ — Багатоскладні речення** | ✅ | 158 | Included in Core |
-| **Складносурядні речення** | ⚪️ | 1038 | Skipped |
-| **Складнопідрядні речення з одним підрядним** | ⚪️ | 308 | Skipped |
+| **Складносурядні речення** | ⚪️ | 1048 | Skipped |
+| **Складнопідрядні речення з одним підрядним** | ⚪️ | 332 | Skipped |
 | **Складнопідрядні речення з кількома підрядними** | ⚪️ | 333 | Skipped |
 | **Вкладені підрядні речення** | ⚪️ | 61 | Skipped |
 | **Пунктуація у багатоскладних реченнях** | ⚪️ | 65 | Skipped |

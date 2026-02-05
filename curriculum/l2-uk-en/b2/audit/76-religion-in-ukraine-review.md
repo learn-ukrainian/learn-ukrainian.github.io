@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M76 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:50:38
+**Generated:** 2026-02-05 23:00:45
 
 ## Configuration
 **Type:** B2-culture
@@ -20,8 +20,8 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Релігійне різноманіття України | 8 | 8 | ✅ |
-| 2 | true-false | Міжконфесійний мир та традиції | 8 | 8 | ✅ |
+| 1 | quiz | Релігійне різноманіття України | 10 | 8 | ✅ |
+| 2 | true-false | Міжконфесійний мир та традиції | 10 | 8 | ✅ |
 | 3 | fill-in | Словник духовності | 10 | 8 | ✅ |
 | 4 | unjumble | Духовні концепції | 8 | 6 | ✅ |
 | 5 | group-sort | Релігійні свята та символи | 18 | 14 | ✅ |
@@ -29,10 +29,10 @@
 | 7 | cloze | Планування поїздки до Почаєва | 16 | 14 | ✅ |
 | 8 | error-correction | Релігійні вітання (корекція) | 8 | 6 | ✅ |
 | 9 | translate | Релігійні терміни англійською | 8 | 6 | ✅ |
-| 10 | select | Архітектура та символіка | 6 | 6 | ✅ |
+| 10 | select | Архітектура та символіка | 8 | 6 | ✅ |
 | 11 | cloze | Міжконфесійна злагода | 15 | 14 | ✅ |
 | 12 | translate | Пасивні конструкції в духовному тексті | 8 | 6 | ✅ |
-| 13 | quiz | Аналіз стилів у релігійному контексті | 8 | 8 | ✅ |
+| 13 | quiz | Аналіз стилів у релігійному контексті | 10 | 8 | ✅ |
 | 14 | match-up | Сталі вирази та дієслівні сполуки | 12 | 8 | ✅ |
 | 15 | essay-response | Релігійна толерантність | 1 | 1 | ✅ |
 | 16 | reading | Текст для аналізу: Релігія в Україні | 3 | 3 | ✅ |
@@ -45,13 +45,21 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Релігійне різноманіття України' Q9 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Релігійне різноманіття України' Q10 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз стилів у релігійному контексті' Q9 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз стилів у релігійному контексті' Q10 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 76-religion-in-ukraine.yaml: Schema validation error at key 'min_words': 100 is less than the minimum of 150
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 15/100)
 
-- 1 violations (minor)
+- 5 violations (moderate)
 
 ## Gates
 - **Words:** ✅ 3030/2000 (raw: 3109)
@@ -64,7 +72,7 @@
 - **Vocab:** ✅ 47/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ❌ 5 violations
 - **Content_heavy:** ⚠️ Too many activities: 16 (target 10-14)
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (culture))
 - **Richness:** ✅ 99% (cultural)

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M62 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:50:23
+**Generated:** 2026-02-05 23:00:31
 
 ## Configuration
 **Type:** B2-vocab
@@ -21,19 +21,19 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть місце | 12 | 8 | ✅ |
-| 2 | quiz | Орієнтування у просторі | 8 | 8 | ✅ |
+| 2 | quiz | Орієнтування у просторі | 10 | 8 | ✅ |
 | 3 | group-sort | Статика чи Напрямок? | 20 | 14 | ✅ |
 | 4 | unjumble | Складіть просторове речення | 8 | 6 | ✅ |
 | 5 | cloze | Шлях мандрівника | 23 | 14 | ✅ |
 | 6 | fill-in | Оберіть масштаб простору | 10 | 8 | ✅ |
 | 7 | error-correction | Виправте місце | 8 | 6 | ✅ |
 | 8 | translate | Переклад простору | 8 | 6 | ✅ |
-| 9 | true-false | Нюанси локацій | 8 | 8 | ✅ |
-| 10 | select | Всі форми вказівки | 6 | 6 | ✅ |
+| 9 | true-false | Нюанси локацій | 10 | 8 | ✅ |
+| 10 | select | Всі форми вказівки | 8 | 6 | ✅ |
 | 11 | match-up | Простір та Об'єкти | 12 | 8 | ✅ |
 | 12 | match-up | Антоніми простору | 12 | 8 | ✅ |
-| 13 | quiz | Простір пам'яті | 8 | 8 | ✅ |
-| 14 | select | Типи територій | 6 | 6 | ✅ |
+| 13 | quiz | Простір пам'яті | 10 | 8 | ✅ |
+| 14 | select | Типи територій | 8 | 6 | ✅ |
 | 15 | essay-response | Творче завдання: Мій простір | 1 | 1 | ✅ |
 | 16 | reading | Текст для аналізу: Синоніми: Місце та Простір | 3 | 3 | ✅ |
 
@@ -45,15 +45,23 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Орієнтування у просторі' Q9 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Орієнтування у просторі' Q10 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Простір пам'яті' Q9 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Простір пам'яті' Q10 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'ми бачимо,...'.
   - FIX: Vary sentence structure.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 62-synonyms-place.yaml: Schema validation error at key '13': {'type': 'select', 'title': 'Типи територій', 'instruction': 'Оберіть усі слова, що описують масштабні території (6 елементів).', 'items': [{'question': 'Які терміни вказують на великі простори? (Оберіть 6)', 'options': [{'text': 'область', 'correct': True}, {'text': 'територія', 'correct': True}, {'text': 'регіон', 'correct': True}, {'text': 'зона', 'correct': True}, {'text': 'район', 'correct': True}, {'text': 'країна', 'correct': True}]}, {'question': "Оберіть синоніми до слова 'місце':", 'options': [{'text': 'локація', 'correct': True}, {'text': 'точка', 'correct': True}, {'text': 'осередок', 'correct': True}, {'text': 'мить', 'correct': False}]}, {'question': "Які слова позначають 'кордони':", 'options': [{'text': 'межа', 'correct': True}, {'text': 'край', 'correct': True}, {'text': 'кордон', 'correct': True}, {'text': 'центр', 'correct': False}]}, {'question': 'Оберіть слова для опису міського простору:', 'options': [{'text': 'квартал', 'correct': True}, {'text': 'площа', 'correct': True}, {'text': 'майдан', 'correct': True}, {'text': 'ліс', 'correct': False}]}, {'question': "Які слова вказують на 'віддаленість':", 'options': [{'text': 'далеко', 'correct': True}, {'text': 'вдалині', 'correct': True}, {'text': 'на обрії', 'correct': True}, {'text': 'поруч', 'correct': False}]}, {'question': "Оберіть назви 'водних просторів':", 'options': [{'text': 'акваторія', 'correct': True}, {'text': 'плесо', 'correct': True}, {'text': 'гладь', 'correct': True}, {'text': 'гора', 'correct': False}]}]} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 62-synonyms-place.yaml: Schema validation error at key 'words': ['Звідси', 'відкриватися', 'просто', 'неймовірний', 'та', 'захоплюючий', 'вид', 'на', 'могутній', 'Дніпро', 'який', 'несе', 'свої', 'води', 'через', 'усю', 'нашу', 'прекрасну', 'землю'] is too long
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 15/100)
 
-- 2 violations (minor)
+- 6 violations (moderate)
 
 ## Gates
 - **Words:** ✅ 2127/2000 (raw: 2212)
@@ -66,7 +74,7 @@
 - **Vocab:** ⚠️ 15 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ❌ 6 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.0% (target 90-100% (vocab))
 - **Richness:** ✅ 97% (phraseology)

@@ -2,12 +2,12 @@
   "module": "84-checkpoint-register-synthesis",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T22:50:46.513396Z",
+  "last_audit": "2026-02-05T23:00:53.570455Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-05T22:46:26.694646Z",
     "meta": "2026-02-05T22:46:26.734646Z",
-    "activities": "2026-02-05T22:46:26.720646Z",
+    "activities": "2026-02-05T22:53:42.128791Z",
     "vocabulary": "2026-02-05T22:46:26.741646Z",
     "plan": null
   },
@@ -19,13 +19,13 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "1807/2000 (raw: 1984) | pedagogy: 1 violations"
+      "violations": 3,
+      "message": "1807/2000 (raw: 1984) | pedagogy: 1 violations | richness: 73% < 85% min (checkpoint)"
     },
     "activities": {
-      "status": "pass",
-      "violations": 0,
-      "message": "23/15"
+      "status": "fail",
+      "violations": 4,
+      "message": "0/15 | density: 0 < 14 | unique_types: 0/4 types | priority: No priority types"
     },
     "vocabulary": {
       "status": "warn",
@@ -41,9 +41,10 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "3 Outline Compliance Errors"
+      "3 Outline Compliance Errors",
+      "Missing required activity types: essay-response, reading, true-false"
     ],
-    "pass_count": 3,
-    "fail_count": 1
+    "pass_count": 2,
+    "fail_count": 2
   }
 }

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M63 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:50:24
+**Generated:** 2026-02-05 23:00:32
 
 ## Configuration
 **Type:** B2-vocab
@@ -21,19 +21,19 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть точну міру | 12 | 8 | ✅ |
-| 2 | quiz | Оберіть масштаб | 8 | 8 | ✅ |
+| 2 | quiz | Оберіть масштаб | 10 | 8 | ✅ |
 | 3 | group-sort | Багато чи Мало? | 20 | 14 | ✅ |
 | 4 | unjumble | Складіть кількісне речення | 8 | 6 | ✅ |
 | 5 | cloze | Звіт з ярмарку | 17 | 14 | ✅ |
 | 6 | fill-in | Офіційна міра | 10 | 8 | ✅ |
 | 7 | error-correction | Виправте кількість | 8 | 6 | ✅ |
 | 8 | translate | Переклад міри | 8 | 6 | ✅ |
-| 9 | true-false | Нюанси кількості | 8 | 8 | ✅ |
-| 10 | select | Всі відтінки багатоманітності | 6 | 6 | ✅ |
+| 9 | true-false | Нюанси кількості | 10 | 8 | ✅ |
+| 10 | select | Всі відтінки багатоманітності | 8 | 6 | ✅ |
 | 11 | match-up | Регістри та Кількість | 12 | 8 | ✅ |
 | 12 | match-up | Кількість та Об'єкти | 12 | 8 | ✅ |
-| 13 | quiz | Кількість у житті | 8 | 8 | ✅ |
-| 14 | select | Кількісна етика | 6 | 6 | ✅ |
+| 13 | quiz | Кількість у житті | 10 | 8 | ✅ |
+| 14 | select | Кількісна етика | 8 | 6 | ✅ |
 | 15 | essay-response | Творче завдання: Масштаб моїх планів | 1 | 1 | ✅ |
 | 16 | reading | Текст для аналізу: Синоніми: Кількість та Міра | 3 | 3 | ✅ |
 
@@ -45,13 +45,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 63-synonyms-quantity.yaml: Schema validation error at key '13': {'type': 'select', 'title': 'Кількісна етика', 'instruction': 'Оберіть усі слова, що позначають позитивний підхід до ресурсів (6 елементів).', 'items': [{'question': 'Які терміни вказують на розумне споживання? (Оберіть 6)', 'options': [{'text': 'ощадливий', 'correct': True}, {'text': 'раціональний', 'correct': True}, {'text': 'виважений', 'correct': True}, {'text': 'оптимальний', 'correct': True}, {'text': 'щедрий', 'correct': True}, {'text': 'поміркований', 'correct': True}]}, {'question': "Оберіть синоніми до слова 'достатньо':", 'options': [{'text': 'доволі', 'correct': True}, {'text': 'вдосталь', 'correct': True}, {'text': 'вистачить', 'correct': True}, {'text': 'замало', 'correct': False}]}, {'question': "Які слова описують 'надлишок':", 'options': [{'text': 'надмір', 'correct': True}, {'text': 'забагато', 'correct': True}, {'text': 'перебір', 'correct': True}, {'text': 'дефіцит', 'correct': False}]}, {'question': 'Оберіть слова для опису великих фінансів:', 'options': [{'text': 'капітал', 'correct': True}, {'text': 'бюджет', 'correct': True}, {'text': 'інвестиції', 'correct': True}, {'text': 'копійка', 'correct': False}]}, {'question': "Які слова вказують на 'важливість внеску':", 'options': [{'text': 'вагомий', 'correct': True}, {'text': 'суттєвий', 'correct': True}, {'text': 'значний', 'correct': True}, {'text': 'мізерний', 'correct': False}]}, {'question': "Оберіть назви 'масштабних процесів':", 'options': [{'text': 'глобальний', 'correct': True}, {'text': 'колосальний', 'correct': True}, {'text': 'масштабний', 'correct': True}, {'text': 'точковий', 'correct': False}]}]} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Оберіть масштаб' Q9 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Оберіть масштаб' Q10 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Кількість у житті' Q9 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Кількість у житті' Q10 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 15/100)
 
-- 1 violations (minor)
+- 4 violations (moderate)
 
 ## Gates
 - **Words:** ❌ 1794/2000 (raw: 1885)
@@ -64,7 +70,7 @@
 - **Vocab:** ⚠️ 9 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ❌ 4 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (vocab))
 - **Richness:** ✅ 98% (phraseology)

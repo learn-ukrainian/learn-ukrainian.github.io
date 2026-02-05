@@ -2,10 +2,10 @@
   "module": "29-b21-integration-practice",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:49:49.155878Z",
+  "last_audit": "2026-02-05T22:59:56.858582Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:46:26.685646Z",
+    "md": "2026-02-05T22:57:16.767892Z",
     "meta": "2026-02-05T22:46:26.732646Z",
     "activities": "2026-02-05T22:46:26.706646Z",
     "vocabulary": "2026-02-05T22:46:26.739646Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "1862/2000 (raw: 1969)"
+      "message": "1865/2000 (raw: 1972)"
     },
     "activities": {
       "status": "pass",

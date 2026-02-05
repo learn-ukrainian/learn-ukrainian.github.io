@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M37 | **Phase:** B2.1b | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-05 22:49:57
+**Generated:** 2026-02-05 23:00:05
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,7 +43,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2054/2000 (raw: 2851)
+- **Words:** ✅ 2059/2000 (raw: 2856)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -69,7 +69,7 @@
 |--------|-------|--------|-------|--------|--------------|
 | examples | 78 | 24 | 100% | 20% | 20.0% |
 | engagement | 16 | 5 | 100% | 15% | 15.0% |
-| dialogues | 16 | 4 | 100% | 15% | 15.0% |
+| dialogues | 17 | 4 | 100% | 15% | 15.0% |
 | variety | 0.95 | - | 95% | 10% | 9.5% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
 | realworld | 3 | 3 | 100% | 10% | 10.0% |
@@ -83,7 +83,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 67 | Included in Core |
-| **Розминка — Від прикметника до прислівника** | ⚪️ | 1159 | Skipped |
+| **Розминка — Від прикметника до прислівника** | ⚪️ | 1164 | Skipped |
 | **Adverbs from Adjectives** | ⚪️ | 367 | Skipped |
 | **Diminutives and Augmentatives** | ⚪️ | 251 | Skipped |
 | **Практика — інтеграція словотвору** | ⚪️ | 198 | Skipped |

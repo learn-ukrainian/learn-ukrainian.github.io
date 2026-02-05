@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M43 | **Phase:** B2.2 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:50:04
+**Generated:** 2026-02-05 23:00:12
 
 ## Configuration
 **Type:** B2-grammar
@@ -49,7 +49,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 1904/2000 (raw: 2642) (96 short)
+- **Words:** ⚠️ 1912/2000 (raw: 2650) (88 short)
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
@@ -75,7 +75,7 @@
 |--------|-------|--------|-------|--------|--------------|
 | examples | 95 | 24 | 100% | 20% | 20.0% |
 | engagement | 12 | 5 | 100% | 15% | 15.0% |
-| dialogues | 17 | 4 | 100% | 15% | 15.0% |
+| dialogues | 18 | 4 | 100% | 15% | 15.0% |
 | variety | 0.92 | - | 92% | 10% | 9.2% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
 | realworld | 3 | 3 | 100% | 10% | 10.0% |
@@ -90,7 +90,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Розминка — Парні слова у складних реченнях** | ⚪️ | 266 | Skipped |
-| **Common Pairs** | ⚪️ | 834 | Skipped |
+| **Common Pairs** | ⚪️ | 841 | Skipped |
 | **Examples** | ⚪️ | 533 | Skipped |
-| **Практика — побудова складних речень** | ⚪️ | 259 | Skipped |
+| **Практика — побудова складних речень** | ⚪️ | 260 | Skipped |
 | **Підсумок** | ✅ | 12 | Included in Core |

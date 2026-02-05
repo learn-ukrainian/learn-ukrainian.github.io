@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M65 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:50:26
+**Generated:** 2026-02-05 23:00:34
 
 ## Configuration
 **Type:** B2-vocab
@@ -21,19 +21,19 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть відтінок стану | 12 | 8 | ✅ |
-| 2 | quiz | Оберіть точний стан | 8 | 8 | ✅ |
+| 2 | quiz | Оберіть точний стан | 10 | 8 | ✅ |
 | 3 | group-sort | Об'єктивне чи Суб'єктивне? | 20 | 14 | ✅ |
 | 4 | unjumble | Складіть речення про стан | 8 | 6 | ✅ |
 | 5 | cloze | Стан речей | 16 | 14 | ✅ |
 | 6 | fill-in | Аналітичний стан | 10 | 8 | ✅ |
 | 7 | error-correction | Виправте враження | 8 | 6 | ✅ |
 | 8 | translate | Переклад стану | 8 | 6 | ✅ |
-| 9 | true-false | Нюанси буття | 8 | 8 | ✅ |
-| 10 | select | Всі форми існування | 6 | 6 | ✅ |
+| 9 | true-false | Нюанси буття | 10 | 8 | ✅ |
+| 10 | select | Всі форми існування | 8 | 6 | ✅ |
 | 11 | match-up | Стан та Регістри | 12 | 8 | ✅ |
 | 12 | match-up | Стан та Чинники | 12 | 8 | ✅ |
-| 13 | quiz | Філософія буття | 8 | 8 | ✅ |
-| 14 | select | Складні стани | 6 | 6 | ✅ |
+| 13 | quiz | Філософія буття | 10 | 8 | ✅ |
+| 14 | select | Складні стани | 8 | 6 | ✅ |
 | 15 | essay-response | Творче завдання: Стан моєї душі | 1 | 1 | ✅ |
 | 16 | reading | Текст для аналізу: Синоніми: Стан та Буття | 3 | 3 | ✅ |
 
@@ -45,13 +45,21 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 65-synonyms-state.yaml: Schema validation error at key '13': {'type': 'select', 'title': 'Складні стани', 'instruction': 'Оберіть усі слова, що описують стабільність та гармонію (6 елементів).', 'items': [{'question': 'Які терміни вказують на врівноважений стан? (Оберіть 6)', 'options': [{'text': 'стабільність', 'correct': True}, {'text': 'гармонія', 'correct': True}, {'text': 'рівновага', 'correct': True}, {'text': 'спокій', 'correct': True}, {'text': 'впевненість', 'correct': True}, {'text': 'непохитність', 'correct': True}]}, {'question': "Оберіть синоніми до слова 'становище':", 'options': [{'text': 'положення', 'correct': True}, {'text': 'ситуація', 'correct': True}, {'text': 'обставини', 'correct': True}, {'text': 'мить', 'correct': False}]}, {'question': "Які слова описують 'соціальний стан':", 'options': [{'text': 'престиж', 'correct': True}, {'text': 'авторитет', 'correct': True}, {'text': 'репутація', 'correct': True}, {'text': 'вага', 'correct': False}]}, {'question': "Оберіть слова для опису 'здоров'я':", 'options': [{'text': 'самопочуття', 'correct': True}, {'text': 'тонус', 'correct': True}, {'text': 'бадьорість', 'correct': True}, {'text': 'час', 'correct': False}]}, {'question': "Які слова вказують на 'негативний стан':", 'options': [{'text': 'занепад', 'correct': True}, {'text': 'криза', 'correct': True}, {'text': 'деградація', 'correct': True}, {'text': 'розквіт', 'correct': False}]}, {'question': "Оберіть назви 'психологічних станів':", 'options': [{'text': 'стрес', 'correct': True}, {'text': 'тривога', 'correct': True}, {'text': 'апатія', 'correct': True}, {'text': 'чин', 'correct': False}]}]} is not valid under any of the given schemas
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Оберіть точний стан' Q9 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Оберіть точний стан' Q10 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Філософія буття' Q9 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Філософія буття' Q10 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 65-synonyms-state.yaml: Schema validation error at key 'words': ['Світ', '—', 'це', 'не', 'лише', 'рух', 'а', 'й', 'стан', 'і', 'вміння', 'точно', 'описати', 'стан', 'речей', 'визначає', 'справжню', 'глибину', 'вашого', 'аналізу'] is too long
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 15/100)
 
-- 1 violations (minor)
+- 5 violations (moderate)
 
 ## Gates
 - **Words:** ✅ 2059/2000 (raw: 2142)
@@ -64,7 +72,7 @@
 - **Vocab:** ⚠️ 3 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ❌ 5 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (vocab))
 - **Richness:** ✅ 97% (phraseology)

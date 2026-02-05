@@ -6,3 +6,7 @@ id: b2-86
 transliteration: none
 build:
   last_modified: '2026-01-26'
+naturalness:
+  score: 8
+  status: PASS
+  checked: '2025-12-01'

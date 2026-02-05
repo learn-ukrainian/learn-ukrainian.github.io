@@ -2,12 +2,12 @@
   "module": "61-synonyms-time",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:50:22.838219Z",
+  "last_audit": "2026-02-05T23:00:30.080008Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:46:26.690646Z",
+    "md": "2026-02-05T22:57:16.790892Z",
     "meta": "2026-02-05T22:46:26.733646Z",
-    "activities": "2026-02-05T22:46:26.715646Z",
+    "activities": "2026-02-05T22:53:38.999805Z",
     "vocabulary": "2026-02-05T22:46:26.740646Z",
     "plan": null
   },
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2188/2000 (raw: 2288) | pedagogy: 1 violations"
+      "message": "2191/2000 (raw: 2291) | pedagogy: 4 violations"
     },
     "activities": {
       "status": "pass",

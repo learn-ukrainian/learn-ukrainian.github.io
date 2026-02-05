@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M67 | **Phase:** B2.2 | **Pedagogy:** Grammar | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:50:29
+**Generated:** 2026-02-05 23:00:36
 
 ## Configuration
 **Type:** B2-grammar
@@ -21,19 +21,19 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть логічний зв'язок | 12 | 8 | ✅ |
-| 2 | quiz | Логіка речення | 8 | 8 | ✅ |
+| 2 | quiz | Логіка речення | 10 | 8 | ✅ |
 | 3 | group-sort | Причина чи Допуск? | 26 | 14 | ✅ |
 | 4 | unjumble | Складіть складне речення | 8 | 6 | ✅ |
 | 5 | cloze | Аналіз стійкості | 16 | 14 | ✅ |
 | 6 | fill-in | Оберіть сполучник | 10 | 8 | ✅ |
 | 7 | error-correction | Виправте логіку | 8 | 6 | ✅ |
 | 8 | translate | Переклад сполучників | 8 | 6 | ✅ |
-| 9 | true-false | Правила вживання | 8 | 8 | ✅ |
-| 10 | select | Причинні конструкції | 6 | 6 | ✅ |
+| 9 | true-false | Правила вживання | 10 | 8 | ✅ |
+| 10 | select | Причинні конструкції | 8 | 6 | ✅ |
 | 11 | match-up | Стилі та Сполучники | 12 | 8 | ✅ |
 | 12 | match-up | Логічні ланцюжки | 12 | 8 | ✅ |
-| 13 | quiz | Пунктуаційний квест | 8 | 8 | ✅ |
-| 14 | select | Допустові конструкції | 6 | 6 | ✅ |
+| 13 | quiz | Пунктуаційний квест | 10 | 8 | ✅ |
+| 14 | select | Допустові конструкції | 8 | 6 | ✅ |
 | 15 | essay-response | Аналітичний роздум | 1 | 1 | ✅ |
 | 16 | reading | Текст для аналізу: Складні Сполучники I: Причина та Допуск | 3 | 3 | ✅ |
 
@@ -45,13 +45,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: Schema validation error at key '13': {'type': 'select', 'title': 'Допустові конструкції', 'instruction': 'Оберіть усі сполучники допуску (до 6 елементів).', 'items': [{'question': 'Які слова вказують на допуск?', 'options': [{'text': 'хоча', 'correct': True}, {'text': 'незважаючи на те що', 'correct': True}, {'text': 'попри те що', 'correct': True}, {'text': 'дарма що', 'correct': True}, {'text': 'хай', 'correct': True}, {'text': 'нехай', 'correct': True}]}, {'question': "Оберіть синоніми до 'незважаючи на':", 'options': [{'text': 'попри', 'correct': True}, {'text': 'наперекір', 'correct': True}, {'text': 'всупереч', 'correct': True}, {'text': 'завдяки', 'correct': False}]}, {'question': 'Які слова виражають іронічний допуск?', 'options': [{'text': 'дарма що', 'correct': True}, {'text': 'хоч і', 'correct': True}, {'text': 'куди там', 'correct': True}, {'text': 'тому що', 'correct': False}]}, {'question': 'Оберіть сполучники для опису перешкод:', 'options': [{'text': 'хоча', 'correct': True}, {'text': 'незважаючи на', 'correct': True}, {'text': 'попри', 'correct': True}, {'text': 'оскільки', 'correct': False}]}, {'question': 'Які слова вказують на крайню поступку?', 'options': [{'text': 'хай', 'correct': True}, {'text': 'нехай', 'correct': True}, {'text': 'навіть якщо', 'correct': True}, {'text': 'бо', 'correct': False}]}, {'question': 'Оберіть ознаки допустового речення:', 'options': [{'text': 'наявність перешкоди', 'correct': True}, {'text': 'дія всупереч', 'correct': True}, {'text': 'логічний парадокс', 'correct': True}, {'text': 'проста причина', 'correct': False}]}]} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Логіка речення' Q9 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Логіка речення' Q10 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Пунктуаційний квест' Q9 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Пунктуаційний квест' Q10 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 15/100)
 
-- 1 violations (minor)
+- 4 violations (moderate)
 
 ## Gates
 - **Words:** ✅ 2274/2000 (raw: 2347)
@@ -64,7 +70,7 @@
 - **Vocab:** ⚠️ 4 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ❌ 4 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)

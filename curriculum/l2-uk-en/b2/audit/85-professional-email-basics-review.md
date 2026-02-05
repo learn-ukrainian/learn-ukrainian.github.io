@@ -1,7 +1,8 @@
 # Audit Report: M85 — 85-professional-email-basics.md
 **Level:** B2 | **Module:** M85 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
+**Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:50:47
+**Generated:** 2026-02-05 23:00:54
 
 ## Configuration
 **Type:** B2-skills
@@ -60,7 +61,7 @@
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (skills))
 - **Richness:** ✅ 96% (skills)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
 **Score:** 96% (minimum: 80%)

@@ -2,10 +2,10 @@
   "module": "94-b2-final-exam",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T22:50:57.924661Z",
+  "last_audit": "2026-02-05T23:01:04.928031Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:46:26.697646Z",
+    "md": "2026-02-05T22:56:30.286073Z",
     "meta": "2026-02-05T22:46:26.735646Z",
     "activities": "2026-02-05T22:46:26.725646Z",
     "vocabulary": "2026-02-05T22:46:26.741646Z",
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2604/2000 (raw: 2794) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "2605/2000 (raw: 2795)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 1
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

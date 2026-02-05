@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M87 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:50:49
+**Generated:** 2026-02-05 23:00:57
 
 ## Configuration
 **Type:** B2-skills
@@ -54,7 +54,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 4552/1750 (raw: 4953)
+- **Words:** ✅ 4554/1750 (raw: 4955)
 - **Activities:** ✅ 16/14
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/5 types
@@ -93,7 +93,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 139 | Included in Core |
 | **Вступ** | ✅ | 440 | Included in Core |
-| **Імерсивна розповідь** | ⚪️ | 2151 | Skipped |
+| **Імерсивна розповідь** | ⚪️ | 2153 | Skipped |
 | **Аналіз** | ✅ | 1124 | Included in Core |
 | **Граматика в контексті** | ✅ | 664 | Included in Core |
 | **Підсумок** | ✅ | 34 | Included in Core |

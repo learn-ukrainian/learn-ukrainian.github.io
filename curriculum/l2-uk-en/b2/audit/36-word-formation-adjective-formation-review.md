@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M36 | **Phase:** B2.1b | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:49:56
+**Generated:** 2026-02-05 23:00:04
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,7 +44,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2113/2000 (raw: 2963)
+- **Words:** ✅ 2129/2000 (raw: 2979)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -75,17 +75,17 @@
 | cultural | 5 | 3 | 100% | 10% | 10.0% |
 | realworld | 5 | 3 | 100% | 10% | 10.0% |
 | visual | 18 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.79 | - | 79% | 5% | 4.0% |
+| paragraph_var | 0.78 | - | 78% | 5% | 3.9% |
 | questions | 30 | 5 | 100% | 5% | 5.0% |
 | proverbs | 4 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **98.8%** |
+| **TOTAL** | | | | | **98.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 64 | Included in Core |
 | **Розминка — Словотвір прикметників** | ⚪️ | 249 | Skipped |
-| **Suffix -ський/-цький (belonging/origin)** | ⚪️ | 1146 | Skipped |
+| **Suffix -ський/-цький (belonging/origin)** | ⚪️ | 1162 | Skipped |
 | **Suffix -ний/-альний (quality/relation)** | ⚪️ | 180 | Skipped |
 | **Compound Adjectives** | ⚪️ | 281 | Skipped |
 | **Практика — утворення прикметників** | ⚪️ | 181 | Skipped |

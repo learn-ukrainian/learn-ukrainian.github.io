@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M81 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:50:43
+**Generated:** 2026-02-05 23:00:50
 
 ## Configuration
 **Type:** B2-skills
@@ -22,18 +22,18 @@
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Термінологія дослідження | 14 | 8 | ✅ |
 | 2 | group-sort | Етапи дослідження | 18 | 14 | ✅ |
-| 3 | quiz | Вибір теми: Добра чи Погана? | 8 | 8 | ✅ |
+| 3 | quiz | Вибір теми: Добра чи Погана? | 10 | 8 | ✅ |
 | 4 | match-up | Типи джерел | 12 | 8 | ✅ |
 | 5 | match-up | Метод і мета | 12 | 8 | ✅ |
-| 6 | quiz | Структура роботи | 8 | 8 | ✅ |
+| 6 | quiz | Структура роботи | 10 | 8 | ✅ |
 | 7 | match-up | Стилі цитування (впізнавання) | 12 | 8 | ✅ |
-| 8 | quiz | Плагіат: Повторення | 8 | 8 | ✅ |
+| 8 | quiz | Плагіат: Повторення | 10 | 8 | ✅ |
 | 9 | match-up | Методи пошуку ідей | 12 | 8 | ✅ |
-| 10 | fill-in | Лексика дослідника в дії | 8 | 8 | ✅ |
+| 10 | fill-in | Лексика дослідника в дії | 10 | 8 | ✅ |
 | 11 | cloze | Шлях молодого науковця | 15 | 14 | ✅ |
 | 12 | essay-response | Пропозиція проєкту (Project Proposal) | 1 | 1 | ✅ |
 | 13 | reading | Текст для аналізу: Capstone: Дослідження | 3 | 3 | ✅ |
-| 14 | true-false | Правда чи хибність: Capstone: Дослідження | 8 | 8 | ✅ |
+| 14 | true-false | Правда чи хибність: Capstone: Дослідження | 10 | 8 | ✅ |
 
 **Summary:**
 - Total activities: 14 (target: 14-18) ✅
@@ -43,13 +43,23 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 81-capstone-doslidzhennya.yaml: Schema validation error at key '13': {'type': 'true-false', 'title': 'Правда чи хибність: Capstone: Дослідження', 'items': [{'statement': 'Ця тема є важливою для рівня B2.', 'correct': True, 'explanation': 'Так, це є частиною програми B2.'}, {'statement': 'Цей матеріал не потрібен для професійного спілкування.', 'correct': False, 'explanation': 'Навпаки, цей матеріал є необхідним для професійного рівня.'}, {'statement': 'Вивчення цієї теми допомагає розуміти складні тексти.', 'correct': True, 'explanation': 'Правильно, це розширює комунікативну компетенцію.'}, {'statement': 'Ці конструкції використовуються тільки в розмовній мові.', 'correct': False, 'explanation': 'Вони використовуються в різних стилях мовлення.'}, {'statement': 'Для рівня B2 важливо розуміти різні регістри мови.', 'correct': True, 'explanation': 'Так, це є однією з ключових компетенцій B2.'}, {'statement': 'Цю тему можна вивчити без практики.', 'correct': False, 'explanation': 'Практика є необхідною для закріплення матеріалу.'}, {'statement': 'Знання цього матеріалу допомагає на іспиті B2.', 'correct': True, 'explanation': 'Так, це є частиною іспитових завдань.'}, {'statement': 'Ці конструкції існують тільки в українській мові.', 'correct': False, 'explanation': 'Подібні конструкції є в багатьох мовах, але з особливостями.'}]} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Вибір теми: Добра чи Погана?' Q9 prompt length 3 (target: 5-20)
+  - FIX: Adjust prompt length to 5-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Вибір теми: Добра чи Погана?' Q10 prompt length 3 (target: 5-20)
+  - FIX: Adjust prompt length to 5-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Структура роботи' Q9 prompt length 3 (target: 5-20)
+  - FIX: Adjust prompt length to 5-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Структура роботи' Q10 prompt length 3 (target: 5-20)
+  - FIX: Adjust prompt length to 5-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Плагіат: Повторення' Q9 prompt length 3 (target: 5-20)
+  - FIX: Adjust prompt length to 5-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Плагіат: Повторення' Q10 prompt length 3 (target: 5-20)
+  - FIX: Adjust prompt length to 5-20 words.
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 15/100)
 
-- 1 violations (minor)
+- 6 violations (moderate)
 
 ## Gates
 - **Words:** ✅ 2159/2000 (raw: 2296)
@@ -62,7 +72,7 @@
 - **Vocab:** ⚠️ 5 < 20 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ❌ 6 violations
 - **Content_heavy:** ✅ Content-heavy OK (14 activities)
 - **Immersion:** 🇺🇦 98.1% (target 90-100% (skills))
 - **Richness:** ✅ 97% (skills)

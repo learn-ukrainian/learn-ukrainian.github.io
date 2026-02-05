@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M04 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:49:21
+**Generated:** 2026-02-05 22:59:28
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,7 +43,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 1974/3800 (raw: 2494)
+- **Words:** ❌ 1984/3800 (raw: 2504)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -84,7 +84,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 55 | Included in Core |
 | **Вступ — Зворотний пасив** | ✅ | 260 | Included in Core |
-| **Утворення зворотного пасиву** | ⚪️ | 780 | Skipped |
+| **Утворення зворотного пасиву** | ⚪️ | 790 | Skipped |
 | **Акцент на процесі** | ⚪️ | 237 | Skipped |
 | **Вираження агента** | ⚪️ | 520 | Skipped |
 | **Контексти вживання** | ✅ | 110 | Included in Core |

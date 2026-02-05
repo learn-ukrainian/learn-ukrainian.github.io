@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M64 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:50:25
+**Generated:** 2026-02-05 23:00:33
 
 ## Configuration
 **Type:** B2-vocab
@@ -21,19 +21,19 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть характер дії | 12 | 8 | ✅ |
-| 2 | quiz | Оберіть точну дію | 8 | 8 | ✅ |
+| 2 | quiz | Оберіть точну дію | 10 | 8 | ✅ |
 | 3 | group-sort | Дія чи Результат? | 20 | 14 | ✅ |
 | 4 | unjumble | Складіть дієве речення | 8 | 6 | ✅ |
 | 5 | cloze | Проєкт перетворення | 18 | 14 | ✅ |
 | 6 | fill-in | Професійне дієслово | 10 | 8 | ✅ |
 | 7 | error-correction | Виправте вчинок | 8 | 6 | ✅ |
 | 8 | translate | Переклад дії | 8 | 6 | ✅ |
-| 9 | true-false | Нюанси чину | 8 | 8 | ✅ |
-| 10 | select | Всі форми активності | 6 | 6 | ✅ |
+| 9 | true-false | Нюанси чину | 10 | 8 | ✅ |
+| 10 | select | Всі форми активності | 8 | 6 | ✅ |
 | 11 | match-up | Дія та Регістри | 12 | 8 | ✅ |
 | 12 | match-up | Дія та Її Об'єкт | 12 | 8 | ✅ |
-| 13 | quiz | Філософія чину | 8 | 8 | ✅ |
-| 14 | select | Творча та Технічна Дія | 6 | 6 | ✅ |
+| 13 | quiz | Філософія чину | 10 | 8 | ✅ |
+| 14 | select | Творча та Технічна Дія | 8 | 6 | ✅ |
 | 15 | essay-response | Творче завдання: Людина дії | 1 | 1 | ✅ |
 | 16 | reading | Текст для аналізу: Синоніми: Дія та Перетворення | 3 | 3 | ✅ |
 
@@ -45,13 +45,21 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 64-synonyms-action.yaml: Schema validation error at key '13': {'type': 'select', 'title': 'Творча та Технічна Дія', 'instruction': 'Оберіть усі слова, що описують складні та інноваційні процеси (6 елементів).', 'items': [{'question': 'Які терміни вказують на модернізацію та розвиток? (Оберіть 6)', 'options': [{'text': 'модернізувати', 'correct': True}, {'text': 'оптимізувати', 'correct': True}, {'text': 'інтегрувати', 'correct': True}, {'text': 'впроваджувати', 'correct': True}, {'text': 'трансформувати', 'correct': True}, {'text': 'удосконалювати', 'correct': True}]}, {'question': "Оберіть синоніми до слова 'створювати':", 'options': [{'text': 'творити', 'correct': True}, {'text': 'засновувати', 'correct': True}, {'text': 'фундадувати', 'correct': True}, {'text': 'руйнувати', 'correct': False}]}, {'question': "Які слова описують 'швидку реакцію':", 'options': [{'text': 'оперативно', 'correct': True}, {'text': 'негайно', 'correct': True}, {'text': 'миттєво', 'correct': True}, {'text': 'повільно', 'correct': False}]}, {'question': 'Оберіть слова для опису професійної дії:', 'options': [{'text': 'кваліфіковано', 'correct': True}, {'text': 'фахово', 'correct': True}, {'text': 'майстерно', 'correct': True}, {'text': 'абияк', 'correct': False}]}, {'question': "Які слова вказують на 'результативність':", 'options': [{'text': 'ефективно', 'correct': True}, {'text': 'продуктивно', 'correct': True}, {'text': 'успішно', 'correct': True}, {'text': 'марно', 'correct': False}]}, {'question': "Оберіть назви 'творчих процесів':", 'options': [{'text': 'натхнення', 'correct': True}, {'text': 'візуалізація', 'correct': True}, {'text': 'репетиція', 'correct': True}, {'text': 'рутина', 'correct': False}]}]} is not valid under any of the given schemas
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Оберіть точну дію' Q9 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Оберіть точну дію' Q10 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Філософія чину' Q9 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Філософія чину' Q10 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 64-synonyms-action.yaml: Schema validation error at key 'words': ['Кожен', 'наш', 'вчинок', '—', 'це', 'внесок', 'у', 'наше', 'спільне', 'майбутнє', 'яке', 'ми', 'будуємо', 'разом', 'через', 'власну', 'щоденну', 'наполегливу', 'працю'] is too long
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 15/100)
 
-- 1 violations (minor)
+- 5 violations (moderate)
 
 ## Gates
 - **Words:** ✅ 2192/2000 (raw: 2280)
@@ -64,7 +72,7 @@
 - **Vocab:** ⚠️ 14 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ❌ 5 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (vocab))
 - **Richness:** ✅ 97% (phraseology)

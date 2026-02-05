@@ -2,10 +2,10 @@
   "module": "37-word-formation-adverbs-integration",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:49:57.921383Z",
+  "last_audit": "2026-02-05T23:00:05.612363Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:46:26.686646Z",
+    "md": "2026-02-05T22:57:16.773892Z",
     "meta": "2026-02-05T22:46:26.733646Z",
     "activities": "2026-02-05T22:46:26.709646Z",
     "vocabulary": "2026-02-05T22:46:26.739646Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2054/2000 (raw: 2851)"
+      "message": "2059/2000 (raw: 2856)"
     },
     "activities": {
       "status": "pass",

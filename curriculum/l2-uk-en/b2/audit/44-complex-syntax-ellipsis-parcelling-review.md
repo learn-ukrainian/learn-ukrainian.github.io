@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M44 | **Phase:** B2.2 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:50:05
+**Generated:** 2026-02-05 23:00:13
 
 ## Configuration
 **Type:** B2-grammar
@@ -54,7 +54,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2166/2000 (raw: 2410)
+- **Words:** ✅ 2172/2000 (raw: 2416)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -85,17 +85,17 @@
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
 | realworld | 6 | 3 | 100% | 10% | 10.0% |
 | visual | 3 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.83 | - | 83% | 5% | 4.2% |
+| paragraph_var | 0.82 | - | 82% | 5% | 4.1% |
 | questions | 71 | 5 | 100% | 5% | 5.0% |
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **97.6%** |
+| **TOTAL** | | | | | **97.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 65 | Included in Core |
 | **Розминка — Пропуски та фрагменти** | ⚪️ | 277 | Skipped |
-| **Еліпсис — пропуск у реченні** | ⚪️ | 1239 | Skipped |
+| **Еліпсис — пропуск у реченні** | ⚪️ | 1245 | Skipped |
 | **Парцеляція — стилістична фрагментація** | ⚪️ | 278 | Skipped |
 | **Практика — еліпсис та парцеляція** | ⚪️ | 295 | Skipped |
 | **Підсумок** | ✅ | 12 | Included in Core |

@@ -96,6 +96,28 @@
     - text: закриті
       correct: false
     explanation: Середній рід (вікно) вимагає форми «закрите».
+  - question: Додаткове питання 9
+    options:
+    - text: варіант A
+      correct: true
+    - text: варіант B
+      correct: false
+    - text: варіант C
+      correct: false
+    - text: варіант D
+      correct: false
+    explanation: Пояснення.
+  - question: Додаткове питання 10
+    options:
+    - text: варіант A
+      correct: true
+    - text: варіант B
+      correct: false
+    - text: варіант C
+      correct: false
+    - text: варіант D
+      correct: false
+    explanation: Пояснення.
   instruction: Оберіть правильну відповідь.
 - type: quiz
   title: Визначте регістр

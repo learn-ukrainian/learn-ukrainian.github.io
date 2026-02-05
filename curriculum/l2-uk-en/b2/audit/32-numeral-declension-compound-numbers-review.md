@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M32 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-05 22:49:52
+**Generated:** 2026-02-05 23:00:00
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,7 +44,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2123/2000 (raw: 3697)
+- **Words:** ✅ 2213/2000 (raw: 3713)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -56,7 +56,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.1% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -70,7 +70,7 @@
 |--------|-------|--------|-------|--------|--------------|
 | examples | 100 | 24 | 100% | 20% | 20.0% |
 | engagement | 17 | 5 | 100% | 15% | 15.0% |
-| dialogues | 17 | 4 | 100% | 15% | 15.0% |
+| dialogues | 18 | 4 | 100% | 15% | 15.0% |
 | variety | 0.96 | - | 96% | 10% | 9.6% |
 | cultural | 4 | 3 | 100% | 10% | 10.0% |
 | realworld | 4 | 3 | 100% | 10% | 10.0% |
@@ -85,7 +85,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 53 | Included in Core |
 | **Розминка — Складні числівники** | ⚪️ | 260 | Skipped |
-| **Складені кількісні числівники** | ⚪️ | 1338 | Skipped |
+| **Складені кількісні числівники** | ⚪️ | 1428 | Skipped |
 | **Складені порядкові числівники** | ⚪️ | 350 | Skipped |
 | **Числівники в статистиці та новинах** | ⚪️ | 110 | Skipped |
 | **Практика** | ⚪️ | 0 | Skipped |

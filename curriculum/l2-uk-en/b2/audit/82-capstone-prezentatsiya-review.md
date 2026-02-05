@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M82 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:50:44
+**Generated:** 2026-02-05 23:00:51
 
 ## Configuration
 **Type:** B2-skills
@@ -22,18 +22,18 @@
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Термінологія виступу | 12 | 8 | ✅ |
 | 2 | group-sort | Структура презентації | 18 | 14 | ✅ |
-| 3 | quiz | Дизайн слайдів: Так чи Ні? | 8 | 8 | ✅ |
+| 3 | quiz | Дизайн слайдів: Так чи Ні? | 10 | 8 | ✅ |
 | 4 | match-up | Риторичні прийоми | 12 | 8 | ✅ |
-| 5 | fill-in | Фрази для вступу | 8 | 8 | ✅ |
+| 5 | fill-in | Фрази для вступу | 10 | 8 | ✅ |
 | 6 | match-up | Мова тіла | 12 | 8 | ✅ |
-| 7 | quiz | Складні запитання | 8 | 8 | ✅ |
+| 7 | quiz | Складні запитання | 10 | 8 | ✅ |
 | 8 | group-sort | Підготовка vs Виступ | 22 | 14 | ✅ |
 | 9 | match-up | Фрази-переходи | 12 | 8 | ✅ |
-| 10 | fill-in | Фрази для висновку | 8 | 8 | ✅ |
-| 11 | quiz | Голос оратора | 8 | 8 | ✅ |
+| 10 | fill-in | Фрази для висновку | 10 | 8 | ✅ |
+| 11 | quiz | Голос оратора | 10 | 8 | ✅ |
 | 12 | match-up | Візуальні засоби | 12 | 8 | ✅ |
-| 13 | true-false | Міфи про публічні виступи | 8 | 8 | ✅ |
-| 14 | true-false | Фінальний чек-лист | 8 | 8 | ✅ |
+| 13 | true-false | Міфи про публічні виступи | 10 | 8 | ✅ |
+| 14 | true-false | Фінальний чек-лист | 10 | 8 | ✅ |
 | 15 | essay-response | Рефлексія оратора | 1 | 1 | ✅ |
 | 16 | reading | Текст для аналізу: Capstone: Презентація | 3 | 3 | ✅ |
 
@@ -45,13 +45,23 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 82-capstone-prezentatsiya.yaml: Schema validation error at key '13': {'type': 'true-false', 'title': 'Фінальний чек-лист', 'items': [{'statement': 'Я знаю свою тему на 100%.', 'correct': True, 'explanation': 'Компетентність — основа впевненості.'}, {'statement': 'Я перевірив презентацію на помилки.', 'correct': True, 'explanation': 'Помилки псують враження.'}, {'statement': 'Я знаю, скільки часу займає мій виступ.', 'correct': True, 'explanation': 'Таймінг — це повага до публіки.'}, {'statement': 'Я підготував відповіді на можливі питання.', 'correct': True, 'explanation': 'Щоб не розгубитися.'}, {'statement': 'Я виспався перед виступом.', 'correct': True, 'explanation': 'Втомлений оратор — нудний оратор.'}, {'statement': 'Я перевірив техніку (проектор, мікрофон).', 'correct': True, 'explanation': 'Техніка часто підводить.'}, {'statement': 'Я взяв воду.', 'correct': True, 'explanation': 'Голос може сісти.'}, {'statement': 'Я налаштований позитивно.', 'correct': True, 'explanation': 'Усмішка — ваша зброя.'}], 'instruction': 'Визначте, чи твердження правильне.'} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Дизайн слайдів: Так чи Ні?' Q9 prompt length 3 (target: 5-20)
+  - FIX: Adjust prompt length to 5-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Дизайн слайдів: Так чи Ні?' Q10 prompt length 3 (target: 5-20)
+  - FIX: Adjust prompt length to 5-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Складні запитання' Q9 prompt length 3 (target: 5-20)
+  - FIX: Adjust prompt length to 5-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Складні запитання' Q10 prompt length 3 (target: 5-20)
+  - FIX: Adjust prompt length to 5-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Голос оратора' Q9 prompt length 3 (target: 5-20)
+  - FIX: Adjust prompt length to 5-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Голос оратора' Q10 prompt length 3 (target: 5-20)
+  - FIX: Adjust prompt length to 5-20 words.
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 15/100)
 
-- 1 violations (minor)
+- 6 violations (moderate)
 
 ## Gates
 - **Words:** ❌ 1880/2000 (raw: 1948)
@@ -64,7 +74,7 @@
 - **Vocab:** ⚠️ 8 < 20 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ❌ 6 violations
 - **Content_heavy:** ✅ Content-heavy OK (16 activities)
 - **Immersion:** 🇺🇦 98.8% (target 90-100% (skills))
 - **Richness:** ✅ 96% (skills)

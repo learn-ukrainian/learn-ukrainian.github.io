@@ -2,10 +2,10 @@
   "module": "09-participles-vs-relative-clauses",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:49:26.948131Z",
+  "last_audit": "2026-02-05T22:59:34.663272Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:46:26.682646Z",
+    "md": "2026-02-05T22:57:16.750892Z",
     "meta": "2026-02-05T22:46:26.732646Z",
     "activities": "2026-02-05T22:46:26.700646Z",
     "vocabulary": "2026-02-05T22:46:26.738646Z",
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "2493/3800 (raw: 3053) | pedagogy: 1 violations"
+      "violations": 1,
+      "message": "2503/3800 (raw: 3063)"
     },
     "activities": {
       "status": "pass",

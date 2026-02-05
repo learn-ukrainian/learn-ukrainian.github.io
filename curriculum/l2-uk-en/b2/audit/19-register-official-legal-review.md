@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M19 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:49:38
+**Generated:** 2026-02-05 22:59:45
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,17 +43,8 @@
 - Required types used: 6/6 (error-correction, essay-response, fill-in, match-up, quiz, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✅ правильно:...'.
-  - FIX: Vary sentence structure.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ❌ 1943/3800 (raw: 2702)
+- **Words:** ❌ 1956/3800 (raw: 2715)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -63,7 +54,7 @@
 - **Vocab:** ⚠️ 8 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (style)
@@ -93,7 +84,7 @@
 | **Intro/Narrative** | ✅ | 60 | Included in Core |
 | **Вступ — Офіційно-діловий стиль** | ✅ | 18 | Included in Core |
 | **Мовні засоби офіційного стилю** | ⚪️ | 188 | Skipped |
-| **Типи документів** | ⚪️ | 782 | Skipped |
+| **Типи документів** | ⚪️ | 795 | Skipped |
 | **Структура офіційних документів** | ⚪️ | 201 | Skipped |
 | **Законодавчі тексти** | ✅ | 405 | Included in Core |
 | **Типові помилки** | ✅ | 86 | Included in Core |

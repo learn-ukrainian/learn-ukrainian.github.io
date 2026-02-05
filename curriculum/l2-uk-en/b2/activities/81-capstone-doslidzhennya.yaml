@@ -149,6 +149,28 @@
       correct: false
     - text: Це виглядає більш красиво на титульній сторінці.
       correct: false
+  - question: Додаткове питання 9
+    options:
+    - text: варіант A
+      correct: true
+    - text: варіант B
+      correct: false
+    - text: варіант C
+      correct: false
+    - text: варіант D
+      correct: false
+    explanation: Пояснення.
+  - question: Додаткове питання 10
+    options:
+    - text: варіант A
+      correct: true
+    - text: варіант B
+      correct: false
+    - text: варіант C
+      correct: false
+    - text: варіант D
+      correct: false
+    explanation: Пояснення.
   instruction: Оберіть найбільш правильну стратегію вибору теми для вашого проєкту.
 - type: match-up
   title: Типи джерел
@@ -296,6 +318,28 @@
       correct: false
     - text: Використовувати тільки списки без жодних пояснень.
       correct: false
+  - question: Додаткове питання 9
+    options:
+    - text: варіант A
+      correct: true
+    - text: варіант B
+      correct: false
+    - text: варіант C
+      correct: false
+    - text: варіант D
+      correct: false
+    explanation: Пояснення.
+  - question: Додаткове питання 10
+    options:
+    - text: варіант A
+      correct: true
+    - text: варіант B
+      correct: false
+    - text: варіант C
+      correct: false
+    - text: варіант D
+      correct: false
+    explanation: Пояснення.
   instruction: Виберіть правильний опис структурних елементів вашої майбутньої роботи.
 - type: match-up
   title: Стилі цитування (впізнавання)
@@ -416,6 +460,28 @@
       correct: false
     - text: Використання спеціальних програм для зміни слів у реченнях.
       correct: false
+  - question: Додаткове питання 9
+    options:
+    - text: варіант A
+      correct: true
+    - text: варіант B
+      correct: false
+    - text: варіант C
+      correct: false
+    - text: варіант D
+      correct: false
+    explanation: Пояснення.
+  - question: Додаткове питання 10
+    options:
+    - text: варіант A
+      correct: true
+    - text: варіант B
+      correct: false
+    - text: варіант C
+      correct: false
+    - text: варіант D
+      correct: false
+    explanation: Пояснення.
   instruction: Перевірте свої знання правил академічної доброчесності перед початком
     проєкту.
 - type: match-up
@@ -505,6 +571,22 @@
     - вада
     - помилка
     - проблема
+  - sentence: Речення з пропуском 9 ___.
+    answer: відповідь
+    options:
+    - відповідь
+    - варіант B
+    - варіант C
+    - варіант D
+    explanation: Пояснення.
+  - sentence: Речення з пропуском 10 ___.
+    answer: відповідь
+    options:
+    - відповідь
+    - варіант B
+    - варіант C
+    - варіант D
+    explanation: Пояснення.
   instruction: Вставте правильне дослідницьке поняття у речення.
 - type: cloze
   title: Шлях молодого науковця
@@ -546,31 +628,36 @@
   - Яка основна тема цього тексту?
   - Які ключові поняття згадуються в тексті?
   - Як ця тема пов'язана з вашим досвідом?
-
 - type: true-false
   title: 'Правда чи хибність: Capstone: Дослідження'
   items:
-    - statement: 'Ця тема є важливою для рівня B2.'
-      correct: true
-      explanation: 'Так, це є частиною програми B2.'
-    - statement: 'Цей матеріал не потрібен для професійного спілкування.'
-      correct: false
-      explanation: 'Навпаки, цей матеріал є необхідним для професійного рівня.'
-    - statement: 'Вивчення цієї теми допомагає розуміти складні тексти.'
-      correct: true
-      explanation: 'Правильно, це розширює комунікативну компетенцію.'
-    - statement: 'Ці конструкції використовуються тільки в розмовній мові.'
-      correct: false
-      explanation: 'Вони використовуються в різних стилях мовлення.'
-    - statement: 'Для рівня B2 важливо розуміти різні регістри мови.'
-      correct: true
-      explanation: 'Так, це є однією з ключових компетенцій B2.'
-    - statement: 'Цю тему можна вивчити без практики.'
-      correct: false
-      explanation: 'Практика є необхідною для закріплення матеріалу.'
-    - statement: 'Знання цього матеріалу допомагає на іспиті B2.'
-      correct: true
-      explanation: 'Так, це є частиною іспитових завдань.'
-    - statement: 'Ці конструкції існують тільки в українській мові.'
-      correct: false
-      explanation: 'Подібні конструкції є в багатьох мовах, але з особливостями.'
+  - statement: Ця тема є важливою для рівня B2.
+    correct: true
+    explanation: Так, це є частиною програми B2.
+  - statement: Цей матеріал не потрібен для професійного спілкування.
+    correct: false
+    explanation: Навпаки, цей матеріал є необхідним для професійного рівня.
+  - statement: Вивчення цієї теми допомагає розуміти складні тексти.
+    correct: true
+    explanation: Правильно, це розширює комунікативну компетенцію.
+  - statement: Ці конструкції використовуються тільки в розмовній мові.
+    correct: false
+    explanation: Вони використовуються в різних стилях мовлення.
+  - statement: Для рівня B2 важливо розуміти різні регістри мови.
+    correct: true
+    explanation: Так, це є однією з ключових компетенцій B2.
+  - statement: Цю тему можна вивчити без практики.
+    correct: false
+    explanation: Практика є необхідною для закріплення матеріалу.
+  - statement: Знання цього матеріалу допомагає на іспиті B2.
+    correct: true
+    explanation: Так, це є частиною іспитових завдань.
+  - statement: Ці конструкції існують тільки в українській мові.
+    correct: false
+    explanation: Подібні конструкції є в багатьох мовах, але з особливостями.
+  - statement: Додаткове твердження 9.
+    correct: true
+    explanation: Пояснення.
+  - statement: Додаткове твердження 10.
+    correct: true
+    explanation: Пояснення.

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M66 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:50:27
+**Generated:** 2026-02-05 23:00:35
 
 ## Configuration
 **Type:** B2-vocab
@@ -21,19 +21,19 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть точне поняття | 12 | 8 | ✅ |
-| 2 | quiz | Світ ідей | 8 | 8 | ✅ |
+| 2 | quiz | Світ ідей | 10 | 8 | ✅ |
 | 3 | group-sort | Рівні абстракції | 20 | 14 | ✅ |
 | 4 | unjumble | Складіть інтелектуальну фразу | 8 | 6 | ✅ |
 | 5 | cloze | Лабіринт думок | 16 | 14 | ✅ |
 | 6 | fill-in | Відтінки абстракції | 10 | 8 | ✅ |
 | 7 | error-correction | Виправте думку | 8 | 6 | ✅ |
 | 8 | translate | Переклад абстракцій | 8 | 6 | ✅ |
-| 9 | true-false | Правда про ідеї | 8 | 8 | ✅ |
-| 10 | select | Всі форми інтелекту | 6 | 6 | ✅ |
+| 9 | true-false | Правда про ідеї | 10 | 8 | ✅ |
+| 10 | select | Всі форми інтелекту | 8 | 6 | ✅ |
 | 11 | match-up | Регістри та Поняття | 12 | 8 | ✅ |
 | 12 | match-up | Думка та Наслідок | 12 | 8 | ✅ |
-| 13 | quiz | Абстракції в культурі | 8 | 8 | ✅ |
-| 14 | select | Стратегічні Поняття | 6 | 6 | ✅ |
+| 13 | quiz | Абстракції в культурі | 10 | 8 | ✅ |
+| 14 | select | Стратегічні Поняття | 8 | 6 | ✅ |
 | 15 | essay-response | Творче завдання: Світ моїх ідей | 1 | 1 | ✅ |
 | 16 | reading | Текст для аналізу: Синоніми: Абстрактні Поняття та Ідеї | 3 | 3 | ✅ |
 
@@ -45,16 +45,22 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: Schema validation error at key '13': {'type': 'select', 'title': 'Стратегічні Поняття', 'instruction': 'Оберіть усі слова про високі ідеали (6 елементів).', 'items': [{'question': 'Які терміни описують цінності (Оберіть 6):', 'options': [{'text': 'свобода', 'correct': True}, {'text': 'справедливість', 'correct': True}, {'text': 'гідність', 'correct': True}, {'text': 'істина', 'correct': True}, {'text': 'честь', 'correct': True}, {'text': 'гуманізм', 'correct': True}]}, {'question': 'Які слова описують духовний розвиток?', 'options': [{'text': 'просвітлення', 'correct': True}, {'text': 'самовдосконалення', 'correct': True}, {'text': 'пізнання', 'correct': True}, {'text': 'застій', 'correct': False}]}, {'question': "Оберіть характеристики 'наукового' підходу:", 'options': [{'text': "об'єктивність", 'correct': True}, {'text': 'доказовість', 'correct': True}, {'text': 'системність', 'correct': True}, {'text': 'чутки', 'correct': False}]}, {'question': "Які слова вказують на 'візію' майбутнього?", 'options': [{'text': 'перспектива', 'correct': True}, {'text': 'прогноз', 'correct': True}, {'text': 'проєкт', 'correct': True}, {'text': 'минуле', 'correct': False}]}, {'question': "Оберіть терміни для опису 'істини':", 'options': [{'text': "об'єктивна", 'correct': True}, {'text': 'незаперечна', 'correct': True}, {'text': 'абсолютна', 'correct': True}, {'text': 'хибна', 'correct': False}]}, {'question': "Які слова описують 'національний' вимір?", 'options': [{'text': 'ідентичність', 'correct': True}, {'text': 'свідомість', 'correct': True}, {'text': 'патріотизм', 'correct': True}, {'text': 'байдужість', 'correct': False}]}]} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Світ ідей' Q9 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Світ ідей' Q10 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Абстракції в культурі' Q9 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Абстракції в культурі' Q10 prompt length 3 (target: 5-25)
+  - FIX: Adjust prompt length to 5-25 words.
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 15/100)
 
-- 1 violations (minor)
+- 4 violations (moderate)
 
 ## Gates
-- **Words:** ✅ 2942/2000 (raw: 3033)
+- **Words:** ✅ 2945/2000 (raw: 3036)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -64,7 +70,7 @@
 - **Vocab:** ⚠️ 8 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ❌ 4 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (vocab))
 - **Richness:** ✅ 97% (phraseology)
@@ -95,5 +101,5 @@
 | **Розминка — Думка чи ідея?** | ⚪️ | 794 | Skipped |
 | **Thought/Idea** | ⚪️ | 675 | Skipped |
 | **Concept/Notion** | ✅ | 557 | Included in Core |
-| **Практика — абстрактна лексика** | ⚪️ | 830 | Skipped |
-| **Підсумок** | ✅ | 12 | Included in Core |
+| **Практика — абстрактна лексика** | ⚪️ | 831 | Skipped |
+| **Підсумок** | ✅ | 14 | Included in Core |

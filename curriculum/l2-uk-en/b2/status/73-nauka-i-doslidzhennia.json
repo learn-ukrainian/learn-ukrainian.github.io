@@ -2,12 +2,12 @@
   "module": "73-nauka-i-doslidzhennia",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T22:50:35.196151Z",
+  "last_audit": "2026-02-05T23:01:25.058020Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-05T22:46:26.692646Z",
     "meta": "2026-02-05T22:46:26.734646Z",
-    "activities": "2026-02-05T22:46:26.718646Z",
+    "activities": "2026-02-05T22:53:40.596798Z",
     "vocabulary": "2026-02-05T22:46:26.740646Z",
     "plan": null
   },
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "1946/2000 (raw: 2216) (54 short) | pedagogy: 1 violations | richness: 71% < 95% min (vocabulary)"
+      "violations": 1,
+      "message": "1946/2000 (raw: 2216) (54 short) | richness: 71% < 95% min (vocabulary)"
     },
     "activities": {
       "status": "pass",

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M42 | **Phase:** B2.2 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:50:03
+**Generated:** 2026-02-05 23:00:11
 
 ## Configuration
 **Type:** B2-grammar
@@ -58,7 +58,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2315/2000 (raw: 2715)
+- **Words:** ✅ 2318/2000 (raw: 2718)
 - **Activities:** ✅ 20/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -98,7 +98,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 61 | Included in Core |
-| **Розминка — Вид у командах та заборонах** | ⚪️ | 1236 | Skipped |
+| **Розминка — Вид у командах та заборонах** | ⚪️ | 1239 | Skipped |
 | **Infinitive Nuances** | ⚪️ | 745 | Skipped |
 | **Практика — вибір виду в командах** | ⚪️ | 261 | Skipped |
 | **Підсумок** | ✅ | 12 | Included in Core |

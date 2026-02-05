@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M50 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:50:11
+**Generated:** 2026-02-05 23:00:19
 
 ## Configuration
 **Type:** B2-vocab
@@ -45,7 +45,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 1879/2000 (raw: 2270)
+- **Words:** ❌ 1882/2000 (raw: 2273)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -86,5 +86,5 @@
 | **Розминка — Руки та ноги в мовленні** | ⚪️ | 367 | Skipped |
 | **Фразеологізми з "рука"** | ⚪️ | 841 | Skipped |
 | **Фразеологізми з "нога"** | ⚪️ | 167 | Skipped |
-| **Практика — вирази в розповіді** | ⚪️ | 436 | Skipped |
-| **Підсумок** | ✅ | 12 | Included in Core |
+| **Практика — вирази в розповіді** | ⚪️ | 437 | Skipped |
+| **Підсумок** | ✅ | 14 | Included in Core |
