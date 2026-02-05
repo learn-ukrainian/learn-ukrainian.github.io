@@ -1,8 +1,8 @@
 # Audit Report: M06 — volodymyr-monomakh.md
 **Level:** C1-BIO | **Module:** M06 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4300
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 09:45:14
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 11:18:04
 
 ## Configuration
 **Type:** C1-biography
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4393/4300 (raw: 4504)
+- **Words:** ✅ 4798/4300 (raw: 4937)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
@@ -75,8 +75,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Вступ — Останній великий князь** | ✅ | 546 | Included in Core |
-| **Життєпис** | ⚪️ | 1050 | Skipped |
+| **Вступ — Останній великий самодержець Києва** | ✅ | 546 | Included in Core |
+| **Життєпис** | ⚪️ | 1122 | Skipped |
+| **Історичний контекст** | ✅ | 333 | Included in Core |
 | **Внесок** | ⚪️ | 1190 | Skipped |
 | **Останні роки** | ⚪️ | 512 | Skipped |
 | **Спадщина** | ⚪️ | 772 | Skipped |

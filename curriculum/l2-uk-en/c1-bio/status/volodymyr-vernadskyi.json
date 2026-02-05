@@ -2,10 +2,10 @@
   "module": "volodymyr-vernadskyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T00:47:31.433174Z",
+  "last_audit": "2026-02-05T11:23:28.992891Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-04T22:30:45.358323Z",
+    "md": "2026-02-05T11:23:23.478759Z",
     "meta": "2026-02-05T00:44:31.229948Z",
     "activities": "2026-02-04T22:04:19.603110Z",
     "vocabulary": "2026-02-05T00:25:49.674956Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4938/4300 (raw: 4984)"
+      "message": "4938/4300 (raw: 4991)"
     },
     "activities": {
       "status": "pass",
@@ -39,10 +39,8 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "4 Outline Compliance Errors"
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 4,
     "fail_count": 0
   }

@@ -1,8 +1,8 @@
 # Audit Report: M01 — knyahynia-olha.md
 **Level:** C1-BIO | **Module:** M01 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4300
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 00:47:01
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 11:19:45
 
 ## Configuration
 **Type:** C1-biography
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4630/4300 (raw: 4917)
+- **Words:** ✅ 4873/4300 (raw: 5163)
 - **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 7/3 types
@@ -64,7 +64,7 @@
 | primary_sources | 10 | 4 | 100% | 19% | 19.0% |
 | engagement | 6 | 6 | 100% | 14% | 14.3% |
 | quotes | 12 | 3 | 100% | 14% | 14.3% |
-| cultural | 7 | 4 | 100% | 10% | 9.5% |
+| cultural | 8 | 4 | 100% | 10% | 9.5% |
 | visual | 8 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
@@ -79,9 +79,9 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Вступ — Легендарна постать у світлі історії та міфу** | ✅ | 445 | Included in Core |
 | **Життєпис: Від таємниці народження до вершини влади** | ⚪️ | 1186 | Skipped |
-| **Внесок у розбудову держави: Від сили до закону** | ⚪️ | 1022 | Skipped |
+| **Історичний контекст** | ✅ | 243 | Included in Core |
+| **Внесок** | ⚪️ | 1022 | Skipped |
 | **Останні роки: Оборона Києва та духовний вибір** | ⚪️ | 830 | Skipped |
-| **Історіографічний та культурний аналіз постаті Ольги** | ✅ | 415 | Included in Core |
-| **Спадщина та канонізація: Вічна присутність у національному коді** | ⚪️ | 317 | Skipped |
+| **Спадщина** | ⚪️ | 732 | Skipped |
 | **Підсумок** | ✅ | 130 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 285 | Skipped |

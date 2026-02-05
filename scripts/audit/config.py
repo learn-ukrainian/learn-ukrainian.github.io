@@ -454,6 +454,7 @@ VALID_ACTIVITY_TYPES = [
     "mark-the-words",
     # Seminar-style activities (LIT, HIST, BIO tracks)
     "reading", "essay-response", "critical-analysis", "comparative-study", "authorial-intent",
+    "creative-writing",  # Imaginary letters, interpretations, creative exercises
     # OES/RUTH specific (ISSUE-502: Historical Linguistics Types)
     "etymology-trace", "transcription", "grammar-identify",
     "paleography-analysis", "dialect-comparison", "translation-critique",
@@ -474,6 +475,7 @@ ACTIVITY_KEYWORDS = [
     "select", "translate", "mark-the-words",
     # Seminar-style activities
     "reading", "essay-response", "critical-analysis", "comparative-study", "authorial-intent",
+    "creative-writing",
     # OES/RUTH specific (ISSUE-502)
     "etymology-trace", "transcription", "grammar-identify",
     "paleography-analysis", "dialect-comparison", "translation-critique",

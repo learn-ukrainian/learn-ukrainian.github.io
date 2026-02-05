@@ -55,5 +55,11 @@ content_outline:
   - Пророк внутрішньої незалежності
 word_target: 4300
 vital_status: deceased
+activity_hints:
+- type: reading
+  focus: Аналіз філософського діалогу
+  source: Наркіс
+- type: essay-response
+  focus: Концепція "сродної праці"
 build:
   last_modified: '2026-02-05'

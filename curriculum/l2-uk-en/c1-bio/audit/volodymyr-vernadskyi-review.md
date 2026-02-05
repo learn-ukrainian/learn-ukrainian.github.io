@@ -1,8 +1,8 @@
 # Audit Report: M55 — volodymyr-vernadskyi.md
 **Level:** C1-BIO | **Module:** M55 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4300
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 00:47:31
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 11:23:28
 
 ## Configuration
 **Type:** C1-biography
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4938/4300 (raw: 4984)
+- **Words:** ✅ 4938/4300 (raw: 4991)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
@@ -75,10 +75,10 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Вступ — Вчений, який змінив науку** | ✅ | 555 | Included in Core |
-| **Аристократичне походження** | ⚪️ | 871 | Skipped |
-| **Наукова кариєра в імперії** | ⚪️ | 835 | Skipped |
-| **Заснування Української академії наук** | ⚪️ | 822 | Skipped |
-| **Біосфера та ноосфера** | ⚪️ | 704 | Skipped |
-| **Останні роки та спадщина** | ⚪️ | 533 | Skipped |
+| **Життєпис** | ⚪️ | 871 | Skipped |
+| **Історичний контекст** | ✅ | 835 | Included in Core |
+| **Внесок** | ⚪️ | 1526 | Skipped |
+| **Останні роки** | ⚪️ | 0 | Skipped |
+| **Спадщина** | ⚪️ | 533 | Skipped |
 | **Дискусія — Наука та нація** | ⚪️ | 343 | Skipped |
 | **Підсумок** | ✅ | 275 | Included in Core |

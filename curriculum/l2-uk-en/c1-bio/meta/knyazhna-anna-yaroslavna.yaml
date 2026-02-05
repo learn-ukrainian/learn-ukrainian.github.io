@@ -52,5 +52,11 @@ content_outline:
   - Анна як міст між цивілізаціями
 word_target: 4300
 vital_status: deceased
+activity_hints:
+- type: reading
+  focus: Аналіз підписів Анни (латина та кирилиця)
+  source: Diplomatic documents
+- type: essay-response
+  focus: Лист Анни до батька (уявний)
 build:
   last_modified: '2026-02-05'
