@@ -1,8 +1,8 @@
 # Audit Report: M41 — 41-aspect-nuances-secondary-imperfectivization.md
 **Level:** B2 | **Module:** M41 | **Phase:** B2.2 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:18:31
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 23:21:01
 
 ## Configuration
 **Type:** B2-grammar
@@ -46,7 +46,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ⚠️ 1938/2000 (raw: 2720) (62 short)
+- **Words:** ✅ 2054/2000 (raw: 2836)
 - **Activities:** ✅ 17/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -58,7 +58,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.7% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 98.8% (target 90-100% (grammar))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -73,21 +73,21 @@
 | examples | 80 | 24 | 100% | 20% | 20.0% |
 | engagement | 13 | 5 | 100% | 15% | 15.0% |
 | dialogues | 10 | 4 | 100% | 15% | 15.0% |
-| variety | 0.98 | - | 98% | 10% | 9.8% |
+| variety | 0.99 | - | 99% | 10% | 9.9% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
 | realworld | 7 | 3 | 100% | 10% | 10.0% |
 | visual | 11 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | questions | 20 | 5 | 100% | 5% | 5.0% |
 | proverbs | 2 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **96.5%** |
+| **TOTAL** | | | | | **96.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 63 | Included in Core |
 | **Розминка — Навіщо два недоконані види?** | ⚪️ | 461 | Skipped |
-| **Key Mechanics** | ⚪️ | 466 | Skipped |
-| **Usage Contexts** | ✅ | 322 | Included in Core |
+| **Key Mechanics** | ⚪️ | 530 | Skipped |
+| **Usage Contexts** | ✅ | 374 | Included in Core |
 | **Практика — утворення вторинних НДВ** | ⚪️ | 614 | Skipped |
 | **Підсумок** | ✅ | 12 | Included in Core |

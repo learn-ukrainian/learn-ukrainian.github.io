@@ -2,10 +2,10 @@
   "module": "54-idioms-nature",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T23:18:28.956709Z",
+  "last_audit": "2026-02-05T23:21:15.127386Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:46:26.689646Z",
+    "md": "2026-02-05T23:19:16.515438Z",
     "meta": "2026-02-05T22:46:26.733646Z",
     "activities": "2026-02-05T23:11:38.790318Z",
     "vocabulary": "2026-02-05T22:46:26.740646Z",
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "1927/2000 (raw: 2034) (73 short)"
+      "message": "2044/2000 (raw: 2151)"
     },
     "activities": {
       "status": "pass",
@@ -39,11 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "1 Outline Compliance Errors"
-    ],
-    "pass_count": 3,
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
     "fail_count": 0
   }
 }

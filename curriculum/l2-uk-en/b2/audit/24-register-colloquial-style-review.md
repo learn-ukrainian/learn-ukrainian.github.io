@@ -1,8 +1,8 @@
 # Audit Report: M24 — 24-register-colloquial-style.md
 **Level:** B2 | **Module:** M24 | **Phase:** B2.1b | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:17:10
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 23:20:43
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,7 +44,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 1891/2000 (raw: 2758)
+- **Words:** ⚠️ 1964/2000 (raw: 2839) (36 short)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -88,5 +88,5 @@
 | **Скорочення та сленг** | ⚪️ | 798 | Skipped |
 | **Частки та наповнювачі** | ⚪️ | 308 | Skipped |
 | **Синтаксичні особливості** | ⚪️ | 514 | Skipped |
-| **Практика** | ⚪️ | 191 | Skipped |
+| **Практика** | ⚪️ | 264 | Skipped |
 | **Підсумок** | ✅ | 12 | Included in Core |

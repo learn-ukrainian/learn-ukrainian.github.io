@@ -1,8 +1,8 @@
 # Audit Report: M80 — 80-analiz-tekstu.md
 **Level:** B2 | **Module:** M80 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:18:32
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 23:21:41
 
 ## Configuration
 **Type:** B2-skills
@@ -46,7 +46,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2141/2000 (raw: 2290)
+- **Words:** ✅ 2257/2000 (raw: 2406)
 - **Activities:** ✅ 17/14
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 7/5 types
@@ -58,7 +58,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (17 activities)
-- **Immersion:** 🇺🇦 98.8% (target 90-100% (skills))
+- **Immersion:** 🇺🇦 98.9% (target 90-100% (skills))
 - **Richness:** ✅ 99% (skills)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -86,7 +86,7 @@
 | **Intro/Narrative** | ✅ | 105 | Included in Core |
 | **Розминка — Поглиблений аналіз** | ✅ | 420 | Included in Core |
 | **Аналіз авторської позиції** | ✅ | 491 | Included in Core |
-| **Контекстуальний аналіз** | ✅ | 183 | Included in Core |
+| **Контекстуальний аналіз** | ✅ | 249 | Included in Core |
 | **Аналіз аргументації** | ✅ | 406 | Included in Core |
-| **Стилістичний аналіз** | ✅ | 101 | Included in Core |
+| **Стилістичний аналіз** | ✅ | 151 | Included in Core |
 | **Підсумок та практика** | ✅ | 435 | Included in Core |

@@ -1,8 +1,8 @@
 # Audit Report: M50 — 50-idioms-body-hands-legs.md
 **Level:** B2 | **Module:** M50 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:17:11
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 23:21:11
 
 ## Configuration
 **Type:** B2-vocab
@@ -45,7 +45,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 1882/2000 (raw: 2273)
+- **Words:** ⚠️ 1979/2000 (raw: 2378) (21 short)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -58,12 +58,12 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 90-100% (vocab))
-- **Richness:** ✅ 98% (phraseology)
+- **Richness:** ✅ 99% (phraseology)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 98% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** phraseology
 
 ### Score Breakdown
@@ -73,11 +73,11 @@
 | variety | 0.99 | - | 99% | 17% | 16.5% |
 | cultural | 2 | - | 100% | 17% | 16.7% |
 | visual | 6 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 0.83 | - | 83% | 8% | 6.9% |
+| paragraph_var | 0.91 | - | 91% | 8% | 7.6% |
 | examples | 57 | - | 100% | 8% | 8.3% |
 | realworld | 1 | - | 100% | 8% | 8.3% |
 | questions | 17 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **98.4%** |
+| **TOTAL** | | | | | **99.1%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -86,5 +86,5 @@
 | **Розминка — Руки та ноги в мовленні** | ⚪️ | 367 | Skipped |
 | **Фразеологізми з "рука"** | ⚪️ | 841 | Skipped |
 | **Фразеологізми з "нога"** | ⚪️ | 167 | Skipped |
-| **Практика — вирази в розповіді** | ⚪️ | 437 | Skipped |
+| **Практика — вирази в розповіді** | ⚪️ | 534 | Skipped |
 | **Підсумок** | ✅ | 14 | Included in Core |

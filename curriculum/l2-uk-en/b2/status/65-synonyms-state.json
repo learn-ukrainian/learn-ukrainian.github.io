@@ -2,10 +2,10 @@
   "module": "65-synonyms-state",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T23:18:29.970074Z",
+  "last_audit": "2026-02-05T23:21:26.214255Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:46:26.690646Z",
+    "md": "2026-02-05T23:19:16.516438Z",
     "meta": "2026-02-05T22:46:26.734646Z",
     "activities": "2026-02-05T23:11:39.821314Z",
     "vocabulary": "2026-02-05T22:46:26.740646Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2059/2000 (raw: 2142)"
+      "message": "2119/2000 (raw: 2202)"
     },
     "activities": {
       "status": "pass",
@@ -39,10 +39,8 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "1 Outline Compliance Errors"
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 4,
     "fail_count": 0
   }

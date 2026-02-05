@@ -1,8 +1,8 @@
 # Audit Report: M65 — 65-synonyms-state.md
 **Level:** B2 | **Module:** M65 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:18:29
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 23:21:26
 
 ## Configuration
 **Type:** B2-vocab
@@ -45,7 +45,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2059/2000 (raw: 2142)
+- **Words:** ✅ 2119/2000 (raw: 2202)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -73,11 +73,11 @@
 | variety | 0.95 | - | 95% | 17% | 15.8% |
 | cultural | 6 | - | 100% | 17% | 16.7% |
 | visual | 6 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 0.77 | - | 77% | 8% | 6.4% |
+| paragraph_var | 0.78 | - | 78% | 8% | 6.5% |
 | examples | 65 | - | 100% | 8% | 8.3% |
 | realworld | 5 | - | 100% | 8% | 8.3% |
 | questions | 10 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **97.2%** |
+| **TOTAL** | | | | | **97.3%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -85,6 +85,6 @@
 | **Intro/Narrative** | ✅ | 80 | Included in Core |
 | **Розминка — Бути чи існувати?** | ⚪️ | 488 | Skipped |
 | **Be/Exist** | ⚪️ | 598 | Skipped |
-| **Seem/Appear** | ⚪️ | 364 | Skipped |
+| **Seem/Appear** | ⚪️ | 424 | Skipped |
 | **Практика — опис стану** | ⚪️ | 517 | Skipped |
 | **Підсумок** | ✅ | 12 | Included in Core |

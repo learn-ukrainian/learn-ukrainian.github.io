@@ -1,8 +1,8 @@
 # Audit Report: M54 — 54-idioms-nature.md
 **Level:** B2 | **Module:** M54 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:18:28
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 23:21:15
 
 ## Configuration
 **Type:** B2-vocab
@@ -44,7 +44,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ⚠️ 1927/2000 (raw: 2034) (73 short)
+- **Words:** ✅ 2044/2000 (raw: 2151)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -72,18 +72,18 @@
 | variety | 0.99 | - | 99% | 17% | 16.5% |
 | cultural | 8 | - | 100% | 17% | 16.7% |
 | visual | 4 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 0.94 | - | 94% | 8% | 7.8% |
+| paragraph_var | 0.96 | - | 96% | 8% | 8.0% |
 | examples | 46 | - | 100% | 8% | 8.3% |
 | realworld | 6 | - | 100% | 8% | 8.3% |
 | questions | 7 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **99.3%** |
+| **TOTAL** | | | | | **99.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 82 | Included in Core |
 | **Розминка — Чотири стихії** | ⚪️ | 509 | Skipped |
-| **Фразеологізми з водою та вогнем** | ⚪️ | 407 | Skipped |
-| **Фразеологізми з землею та вітром** | ⚪️ | 476 | Skipped |
+| **Фразеологізми з водою та вогнем** | ⚪️ | 471 | Skipped |
+| **Фразеологізми з землею та вітром** | ⚪️ | 529 | Skipped |
 | **Практика — природні образи** | ⚪️ | 441 | Skipped |
 | **Підсумок** | ✅ | 12 | Included in Core |
