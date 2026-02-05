@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M84 | **Phase:** B2.4 | **Pedagogy:** Test | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:37:44
+**Generated:** 2026-02-05 22:40:20
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -61,7 +61,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ❌ 1798/2000 (raw: 1969)
+- **Words:** ❌ 1807/2000 (raw: 1984)
 - **Activities:** ✅ 23/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
@@ -86,20 +86,20 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | activity_types | 11 | 8 | 100% | 25% | 25.0% |
-| review_sections | 22 | 3 | 100% | 20% | 20.0% |
-| variety | 0.90 | - | 90% | 15% | 13.5% |
+| review_sections | 25 | 3 | 100% | 20% | 20.0% |
+| variety | 0.91 | - | 91% | 15% | 13.7% |
 | engagement | 6 | 3 | 100% | 10% | 10.0% |
 | cultural | 2 | - | 100% | 10% | 10.0% |
 | visual | 10 | 3 | 100% | 10% | 10.0% |
 | paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
-| **TOTAL** | | | | | **98.5%** |
+| **TOTAL** | | | | | **98.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 52 | Included in Core |
 | **Огляд — Контрольна точка** | ⚪️ | 84 | Skipped |
-| **Навичка 1: Офіційно-діловий регістр** | ⚪️ | 45 | Skipped |
+| **Навичка 1: Офіційно-діловий регістр** | ⚪️ | 54 | Skipped |
 | **Навичка 2: Публіцистичний регістр** | ⚪️ | 285 | Skipped |
 | **Навичка 3: Науковий регістр** | ⚪️ | 269 | Skipped |
 | **Навичка 4: Перемикання регістрів** | ⚪️ | 320 | Skipped |

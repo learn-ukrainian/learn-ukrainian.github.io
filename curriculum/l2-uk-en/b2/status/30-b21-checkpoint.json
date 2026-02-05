@@ -2,10 +2,10 @@
   "module": "30-b21-checkpoint",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:38:05.786634Z",
+  "last_audit": "2026-02-05T22:39:23.268595Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:14:40.438441Z",
+    "md": "2026-02-05T22:38:19.140154Z",
     "meta": "2026-02-05T21:52:08.909796Z",
     "activities": "2026-02-05T22:12:32.299776Z",
     "vocabulary": "2026-02-05T21:52:08.916796Z",

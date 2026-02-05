@@ -705,7 +705,7 @@
     description: Відсутність грубих граматичних помилок у відмінюванні складних числівників.
 
 - type: reading
-  id: reading-32-numeral-declensio
+  id: reading-32-numeral-declension-compound-numbers
   title: 'Текст для аналізу: Відмінювання числівників ІІ: Складені числівники'
   source: 'Навчальний текст'
   text: |

@@ -1133,7 +1133,7 @@
       description: Відсутність помилок у структурі односкладних речень та відмінкових формах.
 
 - type: reading
-  id: reading-38-one-member-senten
+  id: reading-38-one-member-sentences
   title: 'Текст для аналізу: Односкладні речення'
   source: 'Навчальний текст'
   text: |

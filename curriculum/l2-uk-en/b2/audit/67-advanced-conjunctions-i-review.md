@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M67 | **Phase:** B2.2 | **Pedagogy:** Grammar | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:35:40
+**Generated:** 2026-02-05 22:40:02
 
 ## Configuration
 **Type:** B2-grammar
