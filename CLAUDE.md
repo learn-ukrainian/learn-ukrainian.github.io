@@ -566,6 +566,19 @@ Specifically:
 > .venv/bin/python scripts/ai_agent_bridge.py process-claude-all
 > ```
 
+> **AGENT WATCHER DAEMON (optional auto-trigger):**
+> ```bash
+> # Check daemon status
+> .venv/bin/python scripts/agent_watcher.py --status
+>
+> # Start daemon (background) - auto-triggers agents on new messages
+> .venv/bin/python scripts/agent_watcher.py --daemon
+>
+> # Stop daemon
+> .venv/bin/python scripts/agent_watcher.py --stop
+> ```
+> The watcher polls `messages.db` every 5s and triggers agents automatically. Has loop prevention (max 10 turns/task) and user session awareness.
+
 ### How to Contact Gemini (PREFERRED: One-Step)
 
 ```bash

@@ -250,6 +250,34 @@
 
 ---
 
+## 2026-02-05 - Research-First Workflow Success (VALIDATED)
+
+**Observation**: Gemini successfully one-shot biography modules using research-first workflow (#506).
+
+**Data (19 C1-BIO modules):**
+- **Average word count:** 4894 words (vs 4000 target = 122% achievement)
+- **Richness scores:** 97-99% across all modules
+- **Audit status:** All 19 passed on first try
+- **Range:** 4372-5779 words per module
+- **No rework needed:** Content quality sufficient from first generation
+
+**Key Success Factors**:
+- Research phase before content generation (web search, encyclopedias, primary sources)
+- Structured notes with citations
+- Outline integration with plan requirements
+- Ukrainian-only research skill ensures authentic sources
+
+**Rule**:
+- **ALWAYS use research-first workflow for seminar tracks** (B2-HIST, C1-BIO, C1-HIST, LIT, OES, RUTH)
+- Writing from memory → thin content (2000-3000 words), inaccuracies, failed word counts
+- Research-first → rich content (4500-5500 words), authoritative, passes audits
+- One-shot generation possible with proper research foundation
+- Document workflow in `docs/RESEARCH-FIRST-WORKFLOW.md`
+
+**Applied**: 2026-02-05 (C1-BIO batch #506, all 19 modules passed - data validated)
+
+---
+
 ## Template for New Entries
 
 ```markdown

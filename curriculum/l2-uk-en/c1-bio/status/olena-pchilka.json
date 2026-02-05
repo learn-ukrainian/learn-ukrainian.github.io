@@ -2,11 +2,11 @@
   "module": "olena-pchilka",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:39:57.746521Z",
+  "last_audit": "2026-02-05T16:48:57.877850Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-04T22:30:45.344307Z",
-    "meta": "2026-02-04T21:40:09.186589Z",
+    "md": "2026-02-05T16:48:50.161025Z",
+    "meta": "2026-02-05T16:47:39.197246Z",
     "activities": "2026-02-04T21:44:37.980299Z",
     "vocabulary": "2026-02-04T21:35:19.889304Z",
     "plan": null
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "4623/4000 (raw: 4677) | richness: 85% < 95% min (biography)"
+      "message": "4623/4300 (raw: 4677) | richness: 85% < 95% min (biography)"
     },
     "activities": {
       "status": "pass",
@@ -33,15 +33,15 @@
       "message": "20 < 24 (soft target)"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "0/10 (PENDING) - Naturalness check required"
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
     }
   },
   "overall": {
     "status": "fail",
     "blocking_issues": [],
-    "pass_count": 2,
-    "fail_count": 2
+    "pass_count": 3,
+    "fail_count": 1
   }
 }

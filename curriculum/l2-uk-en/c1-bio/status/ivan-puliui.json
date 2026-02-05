@@ -2,12 +2,12 @@
   "module": "ivan-puliui",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:39:57.150710Z",
+  "last_audit": "2026-02-05T16:45:43.498251Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-05T11:38:59.981703Z",
     "meta": "2026-02-05T11:34:43.040838Z",
-    "activities": "2026-02-05T11:35:08.916878Z",
+    "activities": "2026-02-05T16:45:34.965617Z",
     "vocabulary": "2026-02-05T11:34:52.325602Z",
     "plan": null
   },

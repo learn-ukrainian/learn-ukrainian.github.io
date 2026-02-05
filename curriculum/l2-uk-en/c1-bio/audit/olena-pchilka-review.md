@@ -1,11 +1,12 @@
 # Audit Report: M49 — olena-pchilka.md
-**Level:** C1-BIO | **Module:** M49 | **Phase:** C1 | **Pedagogy:** immersion | **Target:** 4000
+**Level:** C1-BIO | **Module:** M49 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4300
+**Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 12:39:57
+**Generated:** 2026-02-05 16:48:57
 
 ## Configuration
 **Type:** C1-biography
-**Word Target:** 4000 words
+**Word Target:** 4300 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
@@ -34,7 +35,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4623/4000 (raw: 4677)
+- **Words:** ✅ 4623/4300 (raw: 4677)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/3 types
@@ -49,7 +50,7 @@
 - **Immersion:** 🇺🇦 100.0% (target 95-100% (biography))
 - **Richness:** ❌ 85% < 95% min (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
 **Score:** 85% (minimum: 95%)
@@ -84,5 +85,4 @@
 | **Шлюб та літературні початки (1868-1880)** | ⚪️ | 1008 | Skipped |
 | **Видавнича та просвітницька діяльність (1880-1905)** | ⚪️ | 783 | Skipped |
 | **Революційні роки та трагедії (1905-1920)** | ⚪️ | 726 | Skipped |
-| **Останні роки та спадщина (1920-1930)** | ⚪️ | 679 | Skipped |
-| **Підсумок** | ✅ | 116 | Included in Core |
+| **Останні роки та спадщина (1920-1930)** | ⚪️ | 795 | Skipped |
